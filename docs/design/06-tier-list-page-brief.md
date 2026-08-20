@@ -12,7 +12,7 @@ information architecture, approved Music-detail contract, cited NOSTALGIA domain
 guidance, rhythm-game comparables, responsive systems, accessibility guidance, and
 the user-approved decision record`
 - Date started: 2026-08-01
-- Last decision update: 2026-08-20
+- Last decision update: 2026-08-21
 - Language: English
 - Parent information architecture:
   [02-information-architecture.md](./02-information-architecture.md)
@@ -161,6 +161,10 @@ renders the disclosure after its controls.
 
 - Keep the calculation/list guide available through one descriptive disclosure near
   the page introduction.
+- The rating-weight chart is "applicable" only on a Pianist list, because that is the only
+  source of the rating constant (`TIER-29`). On an S or Full Combo list the guide ends with
+  that goal's achievement requirement instead; the chart is not shown there, since the viewed
+  list's bands and the NosLog rating are different things.
 - It may include the current list description, last update, filter interpretation,
   and the Basic rating-weight explanation when applicable.
 - Keep the guide secondary to choosing a mode, goal, band, and chart. It is placed after
@@ -174,12 +178,13 @@ renders the disclosure after its controls.
 - When signed in, show the selected mode's official aggregate NOSTALGIA Grd as
   supporting planning context.
 - Show the total NosLog rating only where the current policy defines it.
-- Each published list defines its own NosLog rating, normalising the same maximum over
-  its own top-`70` tier constants (`TIER-25`, 2026-08-20). Because a chart's constant
-  differs between lists, the same chart contributes a different amount in each list.
-- Per-chart NosLog contribution is therefore shown wherever a contribution exists, not in
-  one mode-goal combination only. The single-list gate in the current implementation is
-  scaffolding, not policy.
+- The official NosLog rating constant comes from each mode's **Pianist** list only, so there
+  are exactly two ratings: Basic Pianist and Recital Pianist (`TIER-29`, 2026-08-21). The six
+  lists keep their own bands; only the rating source is narrowed.
+- Viewing another list of the same mode still shows a per-chart NosLog contribution, valued
+  from that mode's Pianist constant rather than the viewed list's constant.
+- A chart that is not placed in the Pianist list has no computable contribution, so the row is
+  omitted rather than shown empty.
 - Do not show an unavailable-rating explanation on every card or in every other
   mode-goal combination; omit the inapplicable metric.
 - Do not expose internal `top 70 included/excluded`, cutline, or calculation-debug
@@ -300,7 +305,8 @@ personal completion context.
     1. original Music title;
     2. selected chart difficulty and official level;
     3. that chart's selected-mode official Grd contribution when available; and
-    4. NosLog rating contribution only for the eligible `Basic · Pianist` context.
+    4. the chart's NosLog rating contribution, valued from that mode's Pianist list,
+       wherever one exists (`TIER-29`).
 - Do not show internal top-70 inclusion state, cutline debugging, projected score
   gains, full judgement diagnostics, or note-type success rates in the card.
 
@@ -622,10 +628,11 @@ as a template.
 | TIER-11 | Show actual S/FC/Pianist only; no inferred challenge state                                   | `Approved`   |
 | TIER-12 | Official per-chart Grd is detailed context; NosLog contribution is Basic Pianist only        | `Superseded` |
 | TIER-24 | Explanation and calculation guide follow the mode and goal controls                          | `Approved`   |
-| TIER-25 | Every published list defines its own NosLog rating; contribution is shown wherever it exists | `Approved`   |
+| TIER-25 | Every published list defines its own NosLog rating; contribution is shown wherever it exists | `Superseded` |
 | TIER-26 | Bands are a multi-select filter; an empty selection means no band constraint                 | `Approved`   |
 | TIER-27 | Selected bands stack in published order under sticky band headers                            | `Approved`   |
 | TIER-28 | The band navigator scrolls and holds the full band count with per-band counts                | `Approved`   |
+| TIER-29 | The rating constant comes from each mode's Pianist list; there are two ratings               | `Approved`   |
 | TIER-13 | Do not expose top-70 inclusion or calculation-debug badges                                   | `Rejected`   |
 | TIER-14 | The whole card directly opens exact Music detail for every authentication state              | `Approved`   |
 | TIER-15 | Browser Back restores planning controls, band selection, view, density, and scroll context   | `Approved`   |

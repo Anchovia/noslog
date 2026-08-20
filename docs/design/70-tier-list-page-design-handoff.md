@@ -7,7 +7,7 @@ Where the two differ, document 06 governs and this document is wrong.
 Figma file: `NosLog v2.0.0` — `cVbWCxhkfxFfHmAKLCyKrD`
 Page: `P4 · Tier List 조립` — `1291:2`
 
-> **The band model was replaced on 2026-08-20** (`TIER-26`–`TIER-29`, §7.1) and the page was
+> **The band model was replaced on 2026-08-20** (`TIER-26`–`TIER-28`, §7.1) and the page was
 > reworked to match: bands are a multi-select filter, the result region is a stack under
 > sticky band headers, and on mobile the band selection lives inside the staged filter layer.
 > The six `밴드 선택 열림` frames were deleted because that state no longer exists. Frame
@@ -77,18 +77,23 @@ their own domain labels; `SegmentedControl` does not replace them.
 
 ### 1.4 Decision boards
 
-Page `Z1 · 결정 기록` — `268:2`, approved section `268:3`. Pending section holds **0**.
+Page `Z1 · 결정 기록` — `268:2`, approved section `268:3` (89 boards). The pending section
+holds **1**, the P5 Global Rankings start decision, which belongs to the next page.
 
-| Board                                                                     | Node        |
-| ------------------------------------------------------------------------- | ----------- |
-| Tier controls = SegmentedControl · Select · Checkbox                      | `1294:7665` |
-| Detailed card score band = right aligned                                  | `1330:7677` |
-| Jacket score = `media-scrim` 60% + `content/on-media`                     | `1280:7674` |
-| Achievement = grade icon + ring + `FC` label; unplayed unchanged          | `1367:7689` |
-| Guide composition = C; weight chart per tier list; rating scope = all six | `1379:7745` |
-| Guide body inset = none (flush); description and guide after mode+goal    | `1412:7757` |
-| Band model = scroll multi-select, sticky header stack, default all        | `1434:8002` |
-| Band checkbox arrival state = empty means unconstrained                   | `1445:8129` |
+| Board                                                                                        | Node        |
+| -------------------------------------------------------------------------------------------- | ----------- |
+| Tier controls = SegmentedControl · Select · Checkbox                                         | `1294:7665` |
+| Detailed card score band = right aligned                                                     | `1330:7677` |
+| Jacket score = `media-scrim` 60% + `content/on-media`                                        | `1280:7674` |
+| Achievement = grade icon + ring + `FC` label; unplayed unchanged                             | `1367:7689` |
+| Guide composition = C (its weight-chart and rating-scope halves superseded by `TIER-29`)     | `1379:7745` |
+| Guide body inset = none (flush); description and guide after mode+goal                       | `1412:7757` |
+| Band model = scroll multi-select, sticky header stack, default all                           | `1434:8002` |
+| Band checkbox arrival state = empty means unconstrained                                      | `1445:8129` |
+| Filter-layer chrome corrected to the P3 precedent — recorded as a correction, not a decision | `1539:9159` |
+| `layer header` edge-icon optical = icon `24`, padding `8`                                    | `1541:9234` |
+| Hand-drawn Button frames replaced by C2 `Button` instances (32)                              | `1554:9243` |
+| Absence/error/loading band header = achieved count removed                                   | `1558:9245` |
 
 ---
 
@@ -162,10 +167,11 @@ Two columns at 390 gives cards of exactly `173`, the same square as the C6 Music
 jacket. Below the jacket, in document 06's order: original title → difficulty and
 official level → official Grd contribution → NosLog rating contribution.
 
-The rating row is present on every played card, because each list defines its own rating
-(`TIER-25`, §11.1). It is omitted where no contribution exists — an unplayed chart shows
-`tiers.unplayed` and no rows below it — which is document 06's instruction to omit an
-inapplicable metric rather than print an unavailable notice on every card.
+The rating row is present on a played card whenever that mode's Pianist list contains the
+chart, because the rating constant comes from the Pianist list only (`TIER-29`, §11.1).
+It is omitted where no contribution exists — an unplayed chart shows `tiers.unplayed` and
+no rows below it — which is document 06's instruction to omit an inapplicable metric
+rather than print an unavailable notice on every card.
 
 Contribution values in the frames are computed, not invented: `constant² ÷ theoretical
 max × 10,000` with the mastery curve's linear interpolation from `lib/tiers/basicRating.ts`,
@@ -257,7 +263,7 @@ instance of it. Verified precedent: Bootstrap 5.3 gives the accordion button and
 same `$accordion-padding-x`, and Carbon's `indented` and `flush` variants both keep title
 and content on one left edge. USWDS, GOV.UK, Spectrum and MUI were not verified.
 
-The chart itself is carried over from the shipped `TierRatingWeightChart`, not invented:
+The chart appears **only on a Pianist list** (`TIER-29`), because that list is the sole source of the rating constant. On an S or Full Combo list the guide ends with that goal's achievement requirement instead. The chart itself is carried over from the shipped `TierRatingWeightChart`, not invented:
 line series, x axis of tier constants `1–14.5`, y axis of maximum contribution, a formula
 footnote, and a goal-dependent footer (`sRequirement` / `fcRequirement`, or the score-ratio
 table for Pianist). Tokens: panel `surface/surface` + `radius/container 8` and grid/axis
@@ -460,7 +466,7 @@ every neighbouring band a separate interaction.
 | Result region    | selected bands stacked in published order, each under a sticky band header                               |
 | Band header      | `section-title` band value + `metric-value` achieved count, `surface/canvas`, 1px `border/default` below |
 | Arrival default  | all bands matching the committed filters                                                                 |
-| Checkbox state   | an empty selection is drawn as **zero checks**, not 136 checks (`TIER-29`)                               |
+| Checkbox state   | an empty selection is drawn as **zero checks**, not 136 checks (`TIER-26`)                               |
 | Mobile placement | inside the staged filter layer, above difficulty and level, committed by the one result action           |
 | Desktop          | always visible in the rail, applied immediately                                                          |
 
@@ -498,7 +504,7 @@ start point is not yet a selection.
 committed band selection is carried by the removable applied-condition tokens document 06
 already allows. A contiguous selection collapses to one token showing the band values
 (`12.5–13.5`); removing it drops the band constraint and returns to the unconstrained state,
-which is exactly the `TIER-29` rule. Non-contiguous selections fold with `tiers.moreSelected`,
+which is exactly the `TIER-26` rule. Non-contiguous selections fold with `tiers.moreSelected`,
 already real in all three locales. One token per band was rejected — eleven bands wrap to three
 rows and bury the difficulty and level tokens; a bare count was rejected because the token no
 longer says which bands are committed.
@@ -547,8 +553,8 @@ the signed-in case, and the rework had cloned it into the signed-out frames.
 from every compact frame; that vertical space returned to the results. The filter button is
 now the single entry point for bands, difficulty and level. Six `밴드 선택 열림` frames were
 deleted. Every result region became a band stack, and the state boards' result specimens
-gained a band header. `TIER-24` (page order), `TIER-25` (rating scope) and the guide inset
-decision were unaffected.
+gained a band header. `TIER-24` (page order) and the guide inset decision were
+unaffected; the rating scope was revised separately on 2026-08-21 by `TIER-29` (§11.1).
 
 **How the current band state stays visible without a page-level navigator.** Three existing
 mechanisms carry it, and no new device was invented: the filter button's applied indication
@@ -567,31 +573,57 @@ Recital.
 
 ---
 
+### 7.2 Filter-layer chrome follows the Discovery precedent
+
+Document 04 specifies the sticky action's label and commit behaviour but says nothing about
+its visual treatment, so the only authority is the Discovery layer `1194:262`, which is
+identical in Light and Dark:
+
+| Part            | Contract                                                               |
+| --------------- | ---------------------------------------------------------------------- |
+| `layer header`  | `surface/canvas` + `border/divider` **bottom** `1px` INSIDE            |
+| `body (스크롤)` | no fill; `clipsContent` false, content overruns and the layer clips    |
+| sticky bar      | `surface/canvas` + `border/divider` **top** `1px` INSIDE, padding `16` |
+| commit button   | `Button` instance, `Style=Primary · State=Default`, height `40`        |
+
+P4 diverged on every row except the body: the header had no fill and no stroke, the
+separator was a standalone `divider` node filled `border/subtle` — a different token and a
+different mechanism — and the sticky bar had no stroke at all, leaving scrolled content
+sliced against an identically-coloured plate. All 16 filter layers now read
+`60 / 712 / 72`, matching P3 exactly.
+
+The non-clipping scroll body is **not** a defect. It is how both pages represent a scroll
+region: the body shows its full content and the layer clips. P3 overruns by `352`, P4 by
+`144`. What made P4 look broken was the missing separator, not the overrun.
+
+---
+
 ## 8. Verification
 
 ### 8.1 Executed and passed
 
-Final audit over the whole page — 11 sections, 74 frames:
+Final audit over the whole page — 11 sections, 74 frames. Re-run in full on 2026-08-21
+after the correction pass in §8.4:
 
-| Check                                               | Result                                                                       |
-| --------------------------------------------------- | ---------------------------------------------------------------------------- |
-| spacing scale                                       | 0 off-scale                                                                  |
-| radius / stroke weight                              | 0 / 0 on product nodes                                                       |
-| Section-child containment · section overlap         | 0 / 0                                                                        |
-| **Child-to-child overlap inside a section**         | **0**                                                                        |
-| Page-level non-section nodes                        | 0                                                                            |
-| Clipping · frame escape · text overflow             | 0 / 0 / 0                                                                    |
-| Jacket squareness                                   | 0 non-square; covers `jacket` nodes and cards that are themselves the jacket |
-| Target sizes                                        | compact 44, desktop 40; 0 undersized                                         |
-| Text styles: raw values, composites, sub-12px       | 0 / 0 / 0                                                                    |
-| Locale text-style mapping                           | 0 mismatches                                                                 |
-| Variable binding                                    | 0 unbound visible fills or strokes                                           |
-| WCAG contrast, per effective mode, scrim composited | 3,248 texts (1,885 Light, 1,363 Dark), **0 failures**; minimum `4.88`        |
-| Light↔Dark symmetry                                 | identical frame sizes and text counts                                        |
-| 320 reflow                                          | column counts hold in KO/JA/EN Light and KO Dark                             |
-| Band header total vs cards shown                    | 0 mismatches (new check)                                                     |
-| Condition state vs result state                     | 0 mismatches (new check)                                                     |
-| Intermediate 672–1055                               | 768 and 1024: compact, detailed and filter layer, Light and Dark             |
+| Check                                               | Result                                                                                 |
+| --------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| spacing scale                                       | 0 off-scale                                                                            |
+| radius / stroke weight                              | 0 / 0 on product nodes                                                                 |
+| Section-child containment · section overlap         | 0 / 0                                                                                  |
+| **Child-to-child overlap inside a section**         | **0**                                                                                  |
+| Page-level non-section nodes                        | 0                                                                                      |
+| Clipping · frame escape · text overflow             | 0 / 0 / 0                                                                              |
+| Jacket squareness                                   | 0 non-square; covers `jacket` nodes and cards that are themselves the jacket           |
+| Target sizes                                        | compact 44, desktop 40; 0 undersized                                                   |
+| Text styles: raw values, composites, sub-12px       | 0 / 0 / 0                                                                              |
+| Locale text-style mapping                           | 0 mismatches                                                                           |
+| Variable binding                                    | 0 unbound visible fills or strokes                                                     |
+| WCAG contrast, per effective mode, scrim composited | 3,128 texts with a resolvable background (3,216 total), **0 failures**; minimum `4.88` |
+| Light↔Dark symmetry                                 | identical frame sizes and text counts                                                  |
+| 320 reflow                                          | column counts hold in KO/JA/EN Light and KO Dark                                       |
+| Band header total vs cards shown                    | 0 mismatches (new check)                                                               |
+| Condition state vs result state                     | 0 mismatches (new check)                                                               |
+| Intermediate 672–1055                               | 768 and 1024: compact, detailed and filter layer, Light and Dark                       |
 
 The minimum `4.88` is `content/pending` on `surface/canvas` in the state boards, matching
 the value calculated when that token was approved.
@@ -621,26 +653,53 @@ being run**, and both hid real defects:
 
 ### 8.3 Defects found and fixed
 
-| Defect                                                                                                     | Found by                                  | Fix                                                                                                                                                      |
-| ---------------------------------------------------------------------------------------------------------- | ----------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| State messages could not wrap (`WIDTH_AND_HEIGHT`), so JA overflowed its 288 region by 32px and EN by 10px | JA/EN 320 scan                            | 25 texts set to fill width with automatic height                                                                                                         |
-| `S` and `Detailed view` bound to `*/ko` text styles although both are Latin                                | locale mapping scan                       | 42 nodes rebound to `*/latin`                                                                                                                            |
-| Cards squared along with jackets, collapsing signed-in cards to 88×88                                      | height compared against sibling           | auto-layout cards restored to hug; only jackets squared                                                                                                  |
-| `Checkbox` fixed at 200 wide with 134px of dead space                                                      | user observation                          | component set to hug its content (66)                                                                                                                    |
-| Compact section box 1800×384 while children reached 2190×1647                                              | section containment check                 | sections resized to their content                                                                                                                        |
-| **320 locale rows overlapped after the rating row was added**                                              | **user observation**                      | row pitch derived from measured row height instead of a constant                                                                                         |
-| **Curve vector displaced after `vectorPaths` reassignment**                                                | comparison board render                   | node origin set to the path minimum in all chart panels                                                                                                  |
-| **JA and EN 320 state boards showed the Korean failure sentence**                                          | applying `tiers.loadError`                | localised to `難易度データを…` and `Could not load the tier data.`                                                                                       |
-| **Guide body inset one-sided (`left 32 / right 0`)**                                                       | user observation                          | inset removed; body shares the trigger's left edge (§4.5)                                                                                                |
-| **Description and guide sat above the mode and goal controls**                                             | user observation                          | both moved below the goal selector across 32 frames plus the Wide rail (§4.5)                                                                            |
-| Chart tick set over-reduced to five ticks                                                                  | automated collision check                 | restored to seven; only `13` collides                                                                                                                    |
-| **Scroll indicators drawn at `radius 2`, outside the approved set**                                        | radius audit                              | bound to `radius/full`; renders identically and removes a hardcoded number                                                                               |
-| **All 36 default frames claimed no conditions while showing three bands**                                  | badge work                                | corrected to the top of the unconstrained document (§7.1)                                                                                                |
-| **30 signed-out cards collapsed to heights of 11–33px**                                                    | visual check after that correction        | those cards _are_ the jacket, so a squaring pass that looks for a `jacket` child skipped them; squared to card width and the placeholder icon re-centred |
-| **Signed-out band headers carried an achieved count**                                                      | default-state correction                  | removed; document 06 attaches it to the signed-in case                                                                                                   |
-| **Narrowed-band headers showed unfiltered band totals**                                                    | building the 320 narrowed specimens       | totals restated as the filtered counts; document 06 requires progress to use the committed filters                                                       |
-| **320 narrowed specimens had fewer cards than their headers claimed**                                      | band-total check                          | cards topped up per band; the default-state correction had reduced the source frames to 1–2 cards                                                        |
-| **The default-state correction removed the Intermediate column evidence**                                  | building the Intermediate detailed frames | those frames switched to the narrowed state so rows fill and the derived counts stay visible                                                             |
+| Defect                                                                                                     | Found by                                   | Fix                                                                                                                                                      |
+| ---------------------------------------------------------------------------------------------------------- | ------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| State messages could not wrap (`WIDTH_AND_HEIGHT`), so JA overflowed its 288 region by 32px and EN by 10px | JA/EN 320 scan                             | 25 texts set to fill width with automatic height                                                                                                         |
+| `S` and `Detailed view` bound to `*/ko` text styles although both are Latin                                | locale mapping scan                        | 42 nodes rebound to `*/latin`                                                                                                                            |
+| Cards squared along with jackets, collapsing signed-in cards to 88×88                                      | height compared against sibling            | auto-layout cards restored to hug; only jackets squared                                                                                                  |
+| `Checkbox` fixed at 200 wide with 134px of dead space                                                      | user observation                           | component set to hug its content (66)                                                                                                                    |
+| Compact section box 1800×384 while children reached 2190×1647                                              | section containment check                  | sections resized to their content                                                                                                                        |
+| **320 locale rows overlapped after the rating row was added**                                              | **user observation**                       | row pitch derived from measured row height instead of a constant                                                                                         |
+| **Curve vector displaced after `vectorPaths` reassignment**                                                | comparison board render                    | node origin set to the path minimum in all chart panels                                                                                                  |
+| **JA and EN 320 state boards showed the Korean failure sentence**                                          | applying `tiers.loadError`                 | localised to `難易度データを…` and `Could not load the tier data.`                                                                                       |
+| **Guide body inset one-sided (`left 32 / right 0`)**                                                       | user observation                           | inset removed; body shares the trigger's left edge (§4.5)                                                                                                |
+| **Description and guide sat above the mode and goal controls**                                             | user observation                           | both moved below the goal selector across 32 frames plus the Wide rail (§4.5)                                                                            |
+| Chart tick set over-reduced to five ticks                                                                  | automated collision check                  | restored to seven; only `13` collides                                                                                                                    |
+| **Scroll indicators drawn at `radius 2`, outside the approved set**                                        | radius audit                               | bound to `radius/full`; renders identically and removes a hardcoded number                                                                               |
+| **All 36 default frames claimed no conditions while showing three bands**                                  | badge work                                 | corrected to the top of the unconstrained document (§7.1)                                                                                                |
+| **30 signed-out cards collapsed to heights of 11–33px**                                                    | visual check after that correction         | those cards _are_ the jacket, so a squaring pass that looks for a `jacket` child skipped them; squared to card width and the placeholder icon re-centred |
+| **Signed-out band headers carried an achieved count**                                                      | default-state correction                   | removed; document 06 attaches it to the signed-in case                                                                                                   |
+| **Narrowed-band headers showed unfiltered band totals**                                                    | building the 320 narrowed specimens        | totals restated as the filtered counts; document 06 requires progress to use the committed filters                                                       |
+| **320 narrowed specimens had fewer cards than their headers claimed**                                      | band-total check                           | cards topped up per band; the default-state correction had reduced the source frames to 1–2 cards                                                        |
+| **The default-state correction removed the Intermediate column evidence**                                  | building the Intermediate detailed frames  | those frames switched to the narrowed state so rows fill and the derived counts stay visible                                                             |
+| **Commit buttons were hand-drawn frames, not `Button` instances**                                          | button audit after the sticky-bar question | 32 frames replaced by C2 `Button` instances; the sticky ones were `44` tall against the component's `40` (§8.4)                                          |
+| **The filter layer had no separator above its sticky commit bar**                                          | rendering the layer at 1x                  | header and sticky given the P3 chrome; the bar was `surface/canvas` on `surface/canvas` with no stroke (§7.2)                                            |
+| **`layer header` close icon was `20`, leaving a 4px optical asymmetry**                                    | `A17_edgeIconOptical`                      | icon raised to `24`; the Intermediate headers also moved from right padding `8` to `16`                                                                  |
+| **Scroll indicators carried a hardcoded `cornerRadius 9999`**                                              | radius audit re-run                        | all 18 bound to `radius/full`; the same class as the row above, so it recurred when the band navigator was rebuilt                                       |
+| **Two Dark state boards were titled `· Light`, and the 320 boards omitted their locale**                   | Dark render                                | all 8 state-board scaffolding titles aligned to their frame names                                                                                        |
+| **Wide 908 Neutral buttons were stretched to 506 and 681**                                                 | instance replacement                       | the component hugs its label, restoring `86` and `111` to match the 358 board                                                                            |
+
+### 8.4 Correction pass — 2026-08-21
+
+The `TIER-29` rating decision was applied at the end of the previous session and the audit
+was **not** re-run afterwards, so this session began by re-running it in full. The semantic
+checks passed unchanged — the weight chart appears only on a Pianist list, condition state
+matches result state across 44 frames, and jacket squareness holds for both the `jacket`
+nodes and the cards that are themselves the jacket. Six mechanical defects surfaced and are
+listed in §8.3.
+
+Three of them shared one cause worth recording: **the filter layer had been built by hand
+rather than from the Discovery precedent.** Its commit button was a drawn frame instead of a
+`Button` instance, which made it `44` tall and forced the sticky bar to padding `12` to reach
+a plausible height. Restoring the instance made the bar `16 + 40 + 16 = 72`, the same as P3,
+so the height difference that first looked like a design choice was a symptom. This is why
+the filter-layer board `1539:9159` is filed as a correction and not as a decision.
+
+`audit.js` cannot see this class of defect: the drawn buttons used bound colours, on-scale
+spacing and correct text styles, so every mechanical check passed. What they lacked was the
+component's `State` variants, which means `FOCUS-1B` and the pressed contract could not be
+expressed at all.
 
 ---
 
@@ -715,24 +774,25 @@ are not part of any approval.
 8. The whole card is one link to the exact Music difficulty with Tier & Evaluation
    selected; no intermediate modal, popover or expansion.
 
-### 11.1 Rating scope — the largest downstream change
+### 11.1 Rating scope
 
-The 2026-08-20 decision is that **every one of the six published tier lists defines its own
-NosLog rating**, each normalising `10,000` points over its own top `70` tier constants. The
-single-list gate in the shipped code is scaffolding, not policy.
+**Revised 2026-08-21 (`TIER-29`).** The NosLog rating constant comes from each mode's
+**Pianist** list only, so there are two ratings: Basic Pianist and Recital Pianist. The six
+lists keep their own bands; only the rating source is narrowed. The 2026-08-20 rule that every
+list defines its own rating is superseded — with six ratings the Global-Rankings metric switch
+(`Official Grd | NosLog Rating`) could not name one comparable scale.
 
-| Site                                 | Current                                      | Required                               |
-| ------------------------------------ | -------------------------------------------- | -------------------------------------- |
-| `lib/rankings.ts:200-201`            | `mode = 'basic' AND goal = 'pianist'`        | resolve per selected list              |
-| `app/(nevigation)/tiers/page.tsx:72` | `showRatingWeight = mode === 'basic'`        | remove the mode gate                   |
-| `app/(nevigation)/tiers/data.ts:123` | rejects lists whose `mode !== 'basic'`       | accept any published list              |
-| `tiers.weight.perSong`               | `Basic {goal} · 1곡 기준` — mode hard-coded  | parameterise the mode                  |
-| `rankings.ratingBasis`               | `현재 Basic Pianist 서열 상수 · 상위 70곡 …` | state the selected list instead        |
-| Detailed card row 4                  | Basic·Pianist only                           | present wherever a contribution exists |
+| Site                                 | Current                                | Required                                                                    |
+| ------------------------------------ | -------------------------------------- | --------------------------------------------------------------------------- |
+| `lib/rankings.ts:200-201`            | `mode = 'basic' AND goal = 'pianist'`  | keep `goal = 'pianist'`, resolve `mode` from the selection                  |
+| `app/(nevigation)/tiers/page.tsx:72` | `showRatingWeight = mode === 'basic'`  | show the chart only on a Pianist list, in either mode                       |
+| `app/(nevigation)/tiers/data.ts:123` | theoretical max from the selected list | always resolve that mode's Pianist list                                     |
+| `tiers.weight.perSong`               | `Basic {goal} · 1곡 기준`              | `{mode} Pianist · 1곡 기준`                                                 |
+| `rankings.ratingBasis`               | `현재 Basic Pianist 서열 상수 …`       | parameterise the mode                                                       |
+| Detailed card rating row             | Basic·Pianist only                     | any list of a mode whose Pianist list contains the chart; omitted otherwise |
 
-Because a chart's constant differs between lists, the same chart contributes different
-points in each list. That is the reason the weight chart is per list rather than one shared
-curve.
+Because the constant is the Pianist one, a chart placed in an S or Full Combo list but not in
+that mode's Pianist list has no computable contribution, and the row is omitted.
 
 ### 11.2 New catalogue keys
 
@@ -759,6 +819,15 @@ the band section introduced no other string.
   `String?`, and `official-tier-lists.json` holds Korean only for all six lists. The JA and
   EN frames therefore show Korean. This is a data-model gap, not undecided copy.
 - **Document 15 does not state a width for the `OrdinaryFooter` Compact/Wide switch** (§4.4).
+- **`필터 및 정렬` has no catalogue key and no JA/EN.** The applied-state label on
+  `FilterSortControl` is a design string satisfying document 04's "Filter and sort" trigger,
+  but it is absent from `lib/i18n/messageCatalogs/`. P3 carries the same Korean text in its
+  JA and EN frames, so this is a shared copy gap, not a P4 defect. The unapplied label is
+  fine — it uses the real `music.filter` (`필터` / `絞り込み` / `Filters`).
+- **The footer service notice is not in the repository at all.**
+  `© 2026 NosLog · NOSTALGIA 기록·랭킹·아카이브 비공식 팬 서비스` appears in 50 frames but
+  matches no catalogue key and no component string. It needs approval before it can be
+  localised; it was left in Korean rather than invented in JA and EN.
 - **Chart gridlines and the `3:1` threshold.** Resolved here by labelling the y axis (§4.5).
   The pattern-radar decision of 2026-08-13 described its grid as load-bearing while using
   the same `border/default`; whether that component needs the same treatment is not decided.

@@ -12,7 +12,7 @@ information architecture, approved Tier-list rating policy, cited leaderboard an
 design-system comparables, responsive and accessibility standards, and the
 user-approved decision record`
 - Date started: 2026-08-02
-- Last decision update: 2026-08-03
+- Last decision update: 2026-08-21
 - Language: English
 - Parent information architecture:
   [02-information-architecture.md](./02-information-architecture.md)
@@ -122,7 +122,10 @@ context.
 ## Approved Scope and Invariants
 
 - Preserve Basic and Recital as distinct NOSTALGIA comparison modes.
-- Preserve Official Grd for both modes and NosLog Rating for Basic only.
+- Preserve Official Grd for both modes. NosLog Rating exists in both modes as well, sourced
+  from that mode's Pianist tier list (`TIER-29`, 2026-08-21) — Basic Pianist and Recital
+  Pianist. This supersedes the Basic-only premise of `RANK-03` and `RANK-04`, which recorded a
+  missing Recital source rather than a policy.
 - Preserve the approved Basic Rating formula and source contract; this brief changes
   presentation and shared-rank semantics, not calculation inputs.
 - Preserve the four population meanings: all eligible users, Korea, Japan, and users
@@ -156,22 +159,18 @@ distribution charts, or multiple competing summaries.
 
 - Keep **Basic** and **Recital** as the always-visible primary exclusive choice.
 - Changing mode resets `page` to `1` and retains the current region when valid.
-- Changing to Recital deterministically selects Official Grd while no approved Recital
-  Rating source exists. The structure remains compatible with a separately approved
-  future Recital Rating.
+- Changing mode keeps the selected metric when it exists in the target mode. Both modes now
+  offer Official Grd and NosLog Rating (`TIER-29`).
 - Do not place Basic and Recital inside the region control or one mixed Select.
 
 ### Metric
 
-- In Basic, show one subordinate exclusive choice: **Official Grd** and **NosLog
-  Rating**.
-- In Recital, remove the metric switch entirely and show only the resolved Official
-  Grd context. Do not display a disabled Rating control and do not silently switch the
-  user back to Basic.
-- Changing Basic metric resets `page` to `1` and retains the selected region.
+- In both modes, show one subordinate exclusive choice: **Official Grd** and **NosLog
+  Rating**. Do not silently switch the user's mode when they pick a metric.
+- Changing metric resets `page` to `1` and retains the selected region.
 - When Rating is active, show one concise basis line identifying the current published
-  Basic Pianist Tier source and top-70 basis. Do not place the complete formula in the
-  persistent page hierarchy.
+  Pianist Tier source **for the selected mode** and the top-70 basis. Do not place the complete
+  formula in the persistent page hierarchy.
 
 ### Region
 
@@ -431,7 +430,8 @@ Normative compact example:
 | ------------------------- | ------------------------------------------------------------ | ----------------------------------------- |
 | Basic + Official Grd      | Mode, both Basic metrics, region, Grd rows                   | All approved controls available           |
 | Basic + Rating            | Mode, both Basic metrics, region, concise basis, Rating rows | Official Grd remains directly selectable  |
-| Recital                   | Mode, region, Official Grd context, Recital rows             | Rating control absent                     |
+| Recital + Official Grd    | Mode, both metrics, region, Grd rows                         | All approved controls available           |
+| Recital + Rating          | Mode, both metrics, region, concise basis, Rating rows       | Sourced from the Recital Pianist list     |
 | Signed in, off-page       | Compact My-rank summary                                      | My position opens containing page and row |
 | Signed in, on-page        | No duplicate summary; marked personal row                    | Profile link and pagination remain usable |
 | Signed in, ineligible     | Concise My-rank unavailable state when list exists           | Controls remain usable                    |
@@ -587,28 +587,29 @@ Validate at minimum:
 
 ## Decision Log
 
-| ID      | Decision                                                                                                  | Status     |
-| ------- | --------------------------------------------------------------------------------------------------------- | ---------- |
-| RANK-01 | Global rankings remain an independent public comparison destination                                       | `Approved` |
-| RANK-02 | Basic/Recital are the always-visible primary exclusive choice                                             | `Approved` |
-| RANK-03 | Official Grd exists in both modes; current NosLog Rating is Basic-only until a Recital source is approved | `Approved` |
-| RANK-04 | Recital hides the metric switch while unavailable and never redirects Rating to Basic                     | `Approved` |
-| RANK-05 | Region uses All/Korea/Japan/Other regions in one compact selector                                         | `Approved` |
-| RANK-06 | Internal `global` is labeled Other regions, not Global                                                    | `Approved` |
-| RANK-07 | Conditions and page are shareable and restorable through navigable history                                | `Approved` |
-| RANK-08 | Off-page personal position uses one compact summary and My-position action                                | `Approved` |
-| RANK-09 | On-page personal position removes the duplicate summary and marks the row                                 | `Approved` |
-| RANK-10 | Equal published Grd or Rating values use shared competition rank                                          | `Approved` |
-| RANK-11 | Player identity is avatar, username plus country marker, and second-line exam                             | `Approved` |
-| RANK-12 | Country and exam do not become separate desktop columns                                                   | `Approved` |
-| RANK-13 | Korea/Japan use flags and Other regions uses a globe with accessible names                                | `Approved` |
-| RANK-14 | Page size is fixed at 25 with no page-size selector                                                       | `Approved` |
-| RANK-15 | Explicit pagination replaces infinite or appended scrolling                                               | `Approved` |
-| RANK-16 | Loading preserves the last successful result and exposes busy state                                       | `Approved` |
-| RANK-17 | Empty, error, personal-ineligible, and Rating-unavailable states stay distinct                            | `Approved` |
-| RANK-18 | Compact layout reflows to 320px without document horizontal scrolling                                     | `Approved` |
-| RANK-19 | Wide layout uses comparison width while preserving integrated identity metadata                           | `Approved` |
-| RANK-20 | The first approved ranking structure, not the state-demo layout, governs composition                      | `Approved` |
+| ID      | Decision                                                                                                  | Status       |
+| ------- | --------------------------------------------------------------------------------------------------------- | ------------ |
+| RANK-01 | Global rankings remain an independent public comparison destination                                       | `Approved`   |
+| RANK-02 | Basic/Recital are the always-visible primary exclusive choice                                             | `Approved`   |
+| RANK-03 | Official Grd exists in both modes; current NosLog Rating is Basic-only until a Recital source is approved | `Superseded` |
+| RANK-04 | Recital hides the metric switch while unavailable and never redirects Rating to Basic                     | `Superseded` |
+| RANK-05 | Region uses All/Korea/Japan/Other regions in one compact selector                                         | `Approved`   |
+| RANK-06 | Internal `global` is labeled Other regions, not Global                                                    | `Approved`   |
+| RANK-07 | Conditions and page are shareable and restorable through navigable history                                | `Approved`   |
+| RANK-08 | Off-page personal position uses one compact summary and My-position action                                | `Approved`   |
+| RANK-09 | On-page personal position removes the duplicate summary and marks the row                                 | `Approved`   |
+| RANK-10 | Equal published Grd or Rating values use shared competition rank                                          | `Approved`   |
+| RANK-11 | Player identity is avatar, username plus country marker, and second-line exam                             | `Approved`   |
+| RANK-12 | Country and exam do not become separate desktop columns                                                   | `Approved`   |
+| RANK-13 | Korea/Japan use flags and Other regions uses a globe with accessible names                                | `Approved`   |
+| RANK-14 | Page size is fixed at 25 with no page-size selector                                                       | `Approved`   |
+| RANK-15 | Explicit pagination replaces infinite or appended scrolling                                               | `Approved`   |
+| RANK-16 | Loading preserves the last successful result and exposes busy state                                       | `Approved`   |
+| RANK-17 | Empty, error, personal-ineligible, and Rating-unavailable states stay distinct                            | `Approved`   |
+| RANK-18 | Compact layout reflows to 320px without document horizontal scrolling                                     | `Approved`   |
+| RANK-19 | Wide layout uses comparison width while preserving integrated identity metadata                           | `Approved`   |
+| RANK-20 | The first approved ranking structure, not the state-demo layout, governs composition                      | `Approved`   |
+| RANK-21 | Both modes offer Official Grd and NosLog Rating, each sourced from that mode's Pianist list               | `Approved`   |
 
 ## Handoff Boundary
 
