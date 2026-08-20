@@ -125,8 +125,8 @@ The mobile-first semantic order is:
 8. applied-condition and result summary;
 9. compact/detailed view control;
 10. the active band's chart collection; and
-11. continuation through explicit band selection rather than one uninterrupted
-    stack of every band.
+11. continuation by scrolling the selected bands in published order, each introduced
+    by its own band header.
 
 Wider layouts preserve this semantic order even when band navigation and filters move
 beside the result region.
@@ -192,27 +192,44 @@ renders the disclosure after its controls.
 ### Meaning
 
 - A band is the published ordered Tier value such as `13.5`, `13.0`, or `12.5`.
+- Band values run `1.0` to `14.5` in `0.1` steps, so a list can hold up to `136` bands.
+  With `2,159` charts across `578` musics, a fully populated list averages about `16`
+  charts per band.
 - Preserve administrator-defined band order and exact decimal labels.
 - Progress always uses the current mode, goal, and committed filters.
 
-### Mobile
+### Band Selection
 
-- Show one active band collection at a time.
-- Provide a compact band control containing the current value and, when signed in,
-  achieved count such as `6 / 21`.
-- Opening the control exposes the available ordered bands and their relevant counts
-  in a mobile-appropriate selection surface.
-- Selecting a band replaces the result collection without resetting mode, goal,
-  filters, view preference, or page context.
+**Revised 2026-08-20 (`TIER-26`).** Bands are a multi-select filter, not one active
+choice. The previous contract — one active band on mobile, an adjacent navigator on
+desktop — could not hold `136` entries and forced a separate interaction for every
+neighbouring band, while the planning question is a range scan.
 
-### Desktop
+- Bands are selected as a set. An empty selection means **no band constraint**: every
+  band that still matches the committed difficulty and level filters is shown.
+- Selecting bands narrows the set. Clearing the last selection returns to the
+  unconstrained state rather than an empty result. There is no state that shows zero bands.
+- Band selection composes with difficulty and level filters as `AND`.
+- Shareable state carries the selection; an absent band parameter means unconstrained, in
+  the same way the difficulty and level parameters already behave.
+- The navigator must accommodate the full band count. It scrolls, keeps a minimum target
+  size per row, and shows each band's value with its relevant count and, when signed in,
+  the achieved count.
+- Mobile exposes the navigator in a compact surface; desktop keeps it visible in the rail.
+  Both carry the same data and semantics.
+- Provide a way to clear the whole selection, and a way to select a contiguous range
+  without toggling every step.
 
-- Use the additional width to keep the ordered band navigator visible beside the
-  active result collection.
-- The visible navigator and active band must have the same semantics and data as the
-  mobile selector.
-- Do not merely enlarge the mobile single-column stack or render every band as one
-  continuous desktop document.
+### Result Composition
+
+- The result region presents the selected bands in published order, each introduced by a
+  band header carrying the band value and, when signed in, its achieved count.
+- The band header remains visible while its own band is being scrolled, so the reader
+  always knows which band the visible charts belong to.
+- The header text carries the boundary. A rule or surface change may support it but must
+  not be the only cue.
+- Load bands progressively as they approach the viewport, and keep Back restoration and
+  practical scroll position intact across a long result document.
 
 ## Filters and Result Summary
 
@@ -311,9 +328,9 @@ personal completion context.
 - Pointer hover and keyboard focus may provide click-affordance feedback only; no
   essential information may exist exclusively on hover.
 - Touch receives the stable card and direct destination without a first-tap preview.
-- Browser Back must restore the previous mode, goal, committed filters, active band,
+- Browser Back must restore the previous mode, goal, committed filters, band selection,
   compact/detailed preference, compact density, and practical scroll position.
-- The restored page must not unexpectedly return to the first band or refetch already
+- The restored page must not unexpectedly reset the band selection or refetch already
   valid results in a way that destroys context.
 
 ## Relationship to Goal-Specific Community Voting
@@ -331,7 +348,7 @@ personal completion context.
   administrator review, and data-separation rules are defined by
   [the Music-detail brief](./05-music-detail-page-brief.md).
 - Preserve the selected mode and goal in source/restoration state. A user who returns
-  after reading or voting must recover the same mode, goal, band, committed filters,
+  after reading or voting must recover the same mode, goal, band selection, committed filters,
   view preference, density, and practical scroll position.
 - Submitting or editing a vote invalidates the exact community aggregate and derived
   administrator candidate. It must not invalidate or rewrite the published Tier list
@@ -424,15 +441,18 @@ This mapping guides the future implementation session; it does not authorize cod
 changes in the current design-guide session.
 
 - Reuse the current `/[locale]/tiers` route and mode/goal/difficulty/level validation.
-- Extend navigation state to restore active band and view preferences without
-  invalidating shareable committed conditions.
+- Extend navigation state to restore the band selection and view preferences without
+  invalidating shareable committed conditions. An absent band parameter means
+  unconstrained.
 - Refactor `TierControls` so mobile filters stage values before Apply while desktop
   filters update immediately.
-- Refactor `TierBandBrowser` from a mandatory stacked-all-bands document into one
-  active-band collection plus mobile selector or desktop rail.
+- Keep `TierBandBrowser`'s stacked document and progressive band loading, and add the band
+  multi-select filter, the sticky band header, and a navigator that scrolls the full band
+  count. The 2.0 change is the selection model and the header, not the removal of the
+  stack.
 - Refactor `TierChartCard` so authenticated cards are links like public cards rather
   than inline record-expansion buttons.
-- Encode the selected Tier mode, goal, active band, and return context when linking to
+- Encode the selected Tier mode, goal, band selection, and return context when linking to
   Music detail; open the destination's Tier & Evaluation area rather than its generic
   default panel.
 - Retire `TierRecordDetail` from the Tier scanning surface; retain useful record data
@@ -454,6 +474,7 @@ Validation must include:
 - Basic S, Basic Full Combo, Basic Pianist, Recital S, Recital Full Combo, and
   Recital Pianist;
 - a band with fewer than one row, a typical band, and a dense band;
+- no band selected (unconstrained), one band selected, and a contiguous range selected;
 - signed out, signed in with mixed achievements, and signed in with no plays;
 - Normal, Hard, Expert, and Real, including Real 1–3;
 - no filters, one filter, and combined difficulty/level filters;
@@ -463,7 +484,7 @@ Validation must include:
 - no published list, no filtered matches, loading, replacement loading, request
   failure, and successful retry;
 - direct navigation to Music detail and Back restoration from a card near the end of
-  a non-default band; and
+  a narrowed band selection; and
 - eligible and ineligible card origins for all six mode-goal contexts, verifying that
   Music detail restores the exact vote scope without exposing an inline Tier-card vote.
 
@@ -496,36 +517,36 @@ Validation must include:
 The decision set uses a broad comparison instead of treating one product or framework
 as a template.
 
-| Source                                                                                                                     | Transferable finding                                                                                   | NosLog application                                                     | Limitation                                                       |
-| -------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| [Current Tier route](<../../app/(nevigation)/tiers/page.tsx>)                                                              | One public route already composes mode, goal, guide, filters, and published bands.                     | Preserve verified capability while replacing the long compact shell.   | Current presentation is not the visual authority.                |
-| [Current Tier controls](../../components/tiers/tierControls.tsx)                                                           | Query-backed mode, goal, difficulty, and level state already exists.                                   | Reuse validation and committed URL meaning.                            | Current mobile filters apply every click and are too persistent. |
-| [Current band browser](../../components/tiers/tierBandBrowser.tsx)                                                         | Band boundaries, progressive requests, local retry, and goal achievement are implemented.              | Preserve data boundaries while changing navigation.                    | Stacked bands and inline record expansion are rejected for 2.0.  |
-| [Approved IA](./02-information-architecture.md)                                                                            | Tier planning is independent and directly leads to exact Music detail.                                 | Keeps the page task and direct destination stable.                     | It does not define card geometry.                                |
-| [Approved Music-detail brief](./05-music-detail-page-brief.md)                                                             | Music plus selected difficulty is the stable detailed destination.                                     | Every Tier card can be one exact direct link.                          | Detail-page panels do not dictate Tier scanning density.         |
-| [Current goal predicate](../../lib/tiers.ts)                                                                               | S, Full Combo, and Pianist achievement conditions already have explicit domain logic.                  | Keeps progress and downstream vote eligibility semantically aligned.   | Recital requires additional participation proof.                 |
-| [NOSTALGIA official mode guidance](https://p.eagate.573.jp/game/nostalgia/op2/howto/entrance.html)                         | Basic and Recital are distinct play modes.                                                             | Retain them as primary context.                                        | It does not define a community Tier interface.                   |
-| [ArcadeStat tier example](https://arcadestat.app/en/pump/tier/s22)                                                         | A rhythm-game tier product may require exact-chart achievement before voting.                          | Supports moving a qualified vote into exact chart context.             | Its public layout and automatic aggregate are not adopted.       |
-| [NIST: Measures of location](https://itl.nist.gov/div898/handbook/eda/section3/eda351.htm)                                 | Median is less sensitive than mean to extreme tails.                                                   | Supports the downstream public median without changing official bands. | It does not define Tier-list card content.                       |
-| [Google SRE: On-call](https://sre.google/workbook/on-call/)                                                                | Human review signals should be actionable and high-signal.                                             | Supports keeping disagreement in an administrator queue, not cards.    | Reliability alerts are more urgent than editorial tier review.   |
-| [Apple HIG: Layout](https://developer.apple.com/design/human-interface-guidelines/layout)                                  | Several common iPhones are 390pt wide, while many other widths coexist.                                | Supports 390 as a representative canvas only.                          | Native points are not a universal web breakpoint.                |
-| [W3C WCAG: Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html)                                                | Content should preserve information and function at 320 CSS px except genuine two-dimensional content. | Establishes the compact minimum validation boundary.                   | It does not prescribe card columns or art direction.             |
-| [web.dev: Responsive design basics](https://web.dev/articles/responsive-web-design-basics)                                 | Start small and add breakpoints when content needs them, not for named devices.                        | Makes Tier transitions content-driven.                                 | Exact NosLog thresholds still require specimens.                 |
-| [MDN: Responsive design](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/CSS_layout/Responsive_Design) | Fluid layout and relative breakpoints serve the full device range.                                     | Rejects a fixed 390px application shell.                               | General web guidance does not set Tier density.                  |
-| [Android: Window size classes](https://developer.android.com/develop/ui/views/layout/use-window-size-classes)              | Phone portrait is a broad compact range below 600dp.                                                   | Confirms that one phone width cannot represent the full compact class. | Native dp classes are supporting web evidence only.              |
-| [Microsoft Fluent: Layout](https://fluent2.microsoft.design/layout)                                                        | Small is a 320–479 range and responsive layouts reflow, resize, and re-architect.                      | Supports mobile selector/desktop rail behavior with equal information. | Fluent visual tokens are not NosLog tokens.                      |
-| [GitHub Primer: Layout](https://primer.style/product/getting-started/foundations/layout/)                                  | Narrow layouts simplify multi-column regions and may turn side panes into sheets.                      | Supports compact band/filter triggers and wider visible rails.         | GitHub task density differs from a rhythm-game planner.          |
-| [IBM Carbon: 2x Grid](https://carbondesignsystem.com/elements/2x-grid/overview/)                                           | A fluid grid begins at a 320px small boundary and adds columns at larger boundaries.                   | Supports validated minimum card width and added desktop columns.       | Carbon's exact grid and spacing are not adopted.                 |
-| [Atlassian Grid](https://design-system-docs-proxy.services.atlassian.com/foundations/grid-beta)                            | The smallest grid covers 320–479px and changes columns, gutters, and margins by range.                 | Confirms range-based, not 390-only, validation.                        | Enterprise grid counts do not determine Tier cards.              |
-| [USWDS Layout Grid](https://designsystem.digital.gov/utilities/layout-grid/)                                               | A mobile-first flexible grid names 320px and 480px tokens while allowing configuration.                | Supports fluid outer layout and explicit compact testing.              | Government content patterns are not rhythm-game card patterns.   |
-| [Tailwind: Responsive design](https://tailwindcss.com/docs/responsive-design)                                              | Base styles are mobile-first; breakpoints and container queries can be customized.                     | Fits NosLog's stack and content/container-driven cards.                | Default 640px is not automatically a NosLog breakpoint.          |
-| [Bootstrap: Breakpoints](https://getbootstrap.com/docs/5.3/layout/breakpoints/)                                            | The mobile base is below 576px and provided ranges are foundations, not every device.                  | Reinforces that 390 is not a universal breakpoint.                     | NosLog does not use Bootstrap.                                   |
-| [GOV.UK: Layout](https://design-system.service.gov.uk/styles/layout/)                                                      | Start with small screens and do not assume specific devices.                                           | Supports one semantic hierarchy across widths.                         | Service forms are less image-dense than Tier results.            |
-| [React Spectrum: Layout](https://react-spectrum.adobe.com/v3/layout.html)                                                  | A smallest `base` value precedes customizable mobile-first breakpoints.                                | Supports base-first behavior without a magic mobile width.             | Spectrum components and visual language are not adopted.         |
-| [W3C WCAG: Content on Hover or Focus](https://www.w3.org/WAI/WCAG22/Understanding/content-on-hover-or-focus.html)          | Hover/focus content cannot become inaccessible or pointer-only.                                        | Keeps Tier-card essentials permanently available and touch direct.     | It does not prohibit all decorative hover feedback.              |
-| [Material Design: Cards](https://m3.material.io/components/cards/overview)                                                 | One card can group a related object and clear destination.                                             | Supports a single whole-card Music-detail link.                        | Material styling and elevation are not NosLog direction.         |
-| [Fluent 2: Card usage](https://fluent2.microsoft.design/components/web/react/core/card/usage)                              | Card hierarchy and interaction need to remain predictable across input methods.                        | Supports identical signed-in/signed-out card navigation.               | Fluent card anatomy is not copied.                               |
-| [osu! beatmap listing](https://osu.ppy.sh/beatmapsets)                                                                     | Rhythm-game discovery keeps chart identity, difficulty context, filters, and direct detail navigation. | Confirms domain value of quick chart-to-detail planning.               | osu! grouping and scoring do not map one-to-one to NOSTALGIA.    |
+| Source                                                                                                                     | Transferable finding                                                                                   | NosLog application                                                     | Limitation                                                                          |
+| -------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| [Current Tier route](<../../app/(nevigation)/tiers/page.tsx>)                                                              | One public route already composes mode, goal, guide, filters, and published bands.                     | Preserve verified capability while replacing the long compact shell.   | Current presentation is not the visual authority.                                   |
+| [Current Tier controls](../../components/tiers/tierControls.tsx)                                                           | Query-backed mode, goal, difficulty, and level state already exists.                                   | Reuse validation and committed URL meaning.                            | Current mobile filters apply every click and are too persistent.                    |
+| [Current band browser](../../components/tiers/tierBandBrowser.tsx)                                                         | Band boundaries, progressive requests, local retry, and goal achievement are implemented.              | Preserve data boundaries while changing navigation.                    | Inline record expansion is rejected for 2.0; the stack is retained under `TIER-26`. |
+| [Approved IA](./02-information-architecture.md)                                                                            | Tier planning is independent and directly leads to exact Music detail.                                 | Keeps the page task and direct destination stable.                     | It does not define card geometry.                                                   |
+| [Approved Music-detail brief](./05-music-detail-page-brief.md)                                                             | Music plus selected difficulty is the stable detailed destination.                                     | Every Tier card can be one exact direct link.                          | Detail-page panels do not dictate Tier scanning density.                            |
+| [Current goal predicate](../../lib/tiers.ts)                                                                               | S, Full Combo, and Pianist achievement conditions already have explicit domain logic.                  | Keeps progress and downstream vote eligibility semantically aligned.   | Recital requires additional participation proof.                                    |
+| [NOSTALGIA official mode guidance](https://p.eagate.573.jp/game/nostalgia/op2/howto/entrance.html)                         | Basic and Recital are distinct play modes.                                                             | Retain them as primary context.                                        | It does not define a community Tier interface.                                      |
+| [ArcadeStat tier example](https://arcadestat.app/en/pump/tier/s22)                                                         | A rhythm-game tier product may require exact-chart achievement before voting.                          | Supports moving a qualified vote into exact chart context.             | Its public layout and automatic aggregate are not adopted.                          |
+| [NIST: Measures of location](https://itl.nist.gov/div898/handbook/eda/section3/eda351.htm)                                 | Median is less sensitive than mean to extreme tails.                                                   | Supports the downstream public median without changing official bands. | It does not define Tier-list card content.                                          |
+| [Google SRE: On-call](https://sre.google/workbook/on-call/)                                                                | Human review signals should be actionable and high-signal.                                             | Supports keeping disagreement in an administrator queue, not cards.    | Reliability alerts are more urgent than editorial tier review.                      |
+| [Apple HIG: Layout](https://developer.apple.com/design/human-interface-guidelines/layout)                                  | Several common iPhones are 390pt wide, while many other widths coexist.                                | Supports 390 as a representative canvas only.                          | Native points are not a universal web breakpoint.                                   |
+| [W3C WCAG: Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html)                                                | Content should preserve information and function at 320 CSS px except genuine two-dimensional content. | Establishes the compact minimum validation boundary.                   | It does not prescribe card columns or art direction.                                |
+| [web.dev: Responsive design basics](https://web.dev/articles/responsive-web-design-basics)                                 | Start small and add breakpoints when content needs them, not for named devices.                        | Makes Tier transitions content-driven.                                 | Exact NosLog thresholds still require specimens.                                    |
+| [MDN: Responsive design](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/CSS_layout/Responsive_Design) | Fluid layout and relative breakpoints serve the full device range.                                     | Rejects a fixed 390px application shell.                               | General web guidance does not set Tier density.                                     |
+| [Android: Window size classes](https://developer.android.com/develop/ui/views/layout/use-window-size-classes)              | Phone portrait is a broad compact range below 600dp.                                                   | Confirms that one phone width cannot represent the full compact class. | Native dp classes are supporting web evidence only.                                 |
+| [Microsoft Fluent: Layout](https://fluent2.microsoft.design/layout)                                                        | Small is a 320–479 range and responsive layouts reflow, resize, and re-architect.                      | Supports mobile selector/desktop rail behavior with equal information. | Fluent visual tokens are not NosLog tokens.                                         |
+| [GitHub Primer: Layout](https://primer.style/product/getting-started/foundations/layout/)                                  | Narrow layouts simplify multi-column regions and may turn side panes into sheets.                      | Supports compact band/filter triggers and wider visible rails.         | GitHub task density differs from a rhythm-game planner.                             |
+| [IBM Carbon: 2x Grid](https://carbondesignsystem.com/elements/2x-grid/overview/)                                           | A fluid grid begins at a 320px small boundary and adds columns at larger boundaries.                   | Supports validated minimum card width and added desktop columns.       | Carbon's exact grid and spacing are not adopted.                                    |
+| [Atlassian Grid](https://design-system-docs-proxy.services.atlassian.com/foundations/grid-beta)                            | The smallest grid covers 320–479px and changes columns, gutters, and margins by range.                 | Confirms range-based, not 390-only, validation.                        | Enterprise grid counts do not determine Tier cards.                                 |
+| [USWDS Layout Grid](https://designsystem.digital.gov/utilities/layout-grid/)                                               | A mobile-first flexible grid names 320px and 480px tokens while allowing configuration.                | Supports fluid outer layout and explicit compact testing.              | Government content patterns are not rhythm-game card patterns.                      |
+| [Tailwind: Responsive design](https://tailwindcss.com/docs/responsive-design)                                              | Base styles are mobile-first; breakpoints and container queries can be customized.                     | Fits NosLog's stack and content/container-driven cards.                | Default 640px is not automatically a NosLog breakpoint.                             |
+| [Bootstrap: Breakpoints](https://getbootstrap.com/docs/5.3/layout/breakpoints/)                                            | The mobile base is below 576px and provided ranges are foundations, not every device.                  | Reinforces that 390 is not a universal breakpoint.                     | NosLog does not use Bootstrap.                                                      |
+| [GOV.UK: Layout](https://design-system.service.gov.uk/styles/layout/)                                                      | Start with small screens and do not assume specific devices.                                           | Supports one semantic hierarchy across widths.                         | Service forms are less image-dense than Tier results.                               |
+| [React Spectrum: Layout](https://react-spectrum.adobe.com/v3/layout.html)                                                  | A smallest `base` value precedes customizable mobile-first breakpoints.                                | Supports base-first behavior without a magic mobile width.             | Spectrum components and visual language are not adopted.                            |
+| [W3C WCAG: Content on Hover or Focus](https://www.w3.org/WAI/WCAG22/Understanding/content-on-hover-or-focus.html)          | Hover/focus content cannot become inaccessible or pointer-only.                                        | Keeps Tier-card essentials permanently available and touch direct.     | It does not prohibit all decorative hover feedback.                                 |
+| [Material Design: Cards](https://m3.material.io/components/cards/overview)                                                 | One card can group a related object and clear destination.                                             | Supports a single whole-card Music-detail link.                        | Material styling and elevation are not NosLog direction.                            |
+| [Fluent 2: Card usage](https://fluent2.microsoft.design/components/web/react/core/card/usage)                              | Card hierarchy and interaction need to remain predictable across input methods.                        | Supports identical signed-in/signed-out card navigation.               | Fluent card anatomy is not copied.                                                  |
+| [osu! beatmap listing](https://osu.ppy.sh/beatmapsets)                                                                     | Rhythm-game discovery keeps chart identity, difficulty context, filters, and direct detail navigation. | Confirms domain value of quick chart-to-detail planning.               | osu! grouping and scoring do not map one-to-one to NOSTALGIA.                       |
 
 ### Evidence Convergence
 
@@ -552,8 +573,13 @@ as a template.
   primary NOSTALGIA mode context.
 - **Show six permanent mode-goal buttons — Rejected:** it creates unnecessary visual
   control density.
-- **Stack every band as one long document — Superseded:** mobile selects one band and
-  desktop exposes an adjacent navigator.
+- **Stack every band as one long document — Reinstated 2026-08-20:** superseded in the
+  original draft, then restored with `TIER-26`. The original objection cited an audited
+  page height of about `3,953px`, which is an ordinary browsing length. The decisive
+  factor is that band selection filters the stack, so its length follows the committed
+  conditions.
+- **One active band at a time — Superseded by `TIER-26`:** it could not hold `136` bands
+  and made comparing neighbouring bands a repeated interaction.
 - **Apply every mobile filter toggle immediately — Superseded:** mobile stages and
   explicitly commits; desktop remains immediate.
 - **Use personal clear state, JUST, note-type rates, or MISS as Tier filters —
@@ -587,7 +613,7 @@ as a template.
 | TIER-02 | Basic/Recital stay as always-visible primary mode buttons                                    | `Approved`   |
 | TIER-03 | S/Full Combo/Pianist use one goal selector                                                   | `Approved`   |
 | TIER-04 | Keep one secondary calculation-guide disclosure                                              | `Approved`   |
-| TIER-05 | Mobile selects one band; desktop uses an adjacent visible navigator                          | `Approved`   |
+| TIER-05 | Mobile selects one band; desktop uses an adjacent visible navigator                          | `Superseded` |
 | TIER-06 | Progress uses current mode, goal, committed filters, and authenticated records               | `Approved`   |
 | TIER-07 | Filters are difficulty and official level only                                               | `Approved`   |
 | TIER-08 | Mobile stages filters and commits with a result action; desktop applies immediately          | `Approved`   |
@@ -597,9 +623,12 @@ as a template.
 | TIER-12 | Official per-chart Grd is detailed context; NosLog contribution is Basic Pianist only        | `Superseded` |
 | TIER-24 | Explanation and calculation guide follow the mode and goal controls                          | `Approved`   |
 | TIER-25 | Every published list defines its own NosLog rating; contribution is shown wherever it exists | `Approved`   |
+| TIER-26 | Bands are a multi-select filter; an empty selection means no band constraint                 | `Approved`   |
+| TIER-27 | Selected bands stack in published order under sticky band headers                            | `Approved`   |
+| TIER-28 | The band navigator scrolls and holds the full band count with per-band counts                | `Approved`   |
 | TIER-13 | Do not expose top-70 inclusion or calculation-debug badges                                   | `Rejected`   |
 | TIER-14 | The whole card directly opens exact Music detail for every authentication state              | `Approved`   |
-| TIER-15 | Browser Back restores planning controls, band, view, density, and scroll context             | `Approved`   |
+| TIER-15 | Browser Back restores planning controls, band selection, view, density, and scroll context   | `Approved`   |
 | TIER-16 | No essential hover-only content or mobile first-tap preview                                  | `Approved`   |
 | TIER-17 | 390px is a representative canvas, not a standard, breakpoint, or fixed width                 | `Approved`   |
 | TIER-18 | Require 320 CSS px Reflow and content-driven transitions                                     | `Approved`   |

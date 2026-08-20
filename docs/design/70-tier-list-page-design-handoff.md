@@ -7,6 +7,14 @@ Where the two differ, document 06 governs and this document is wrong.
 Figma file: `NosLog v2.0.0` — `cVbWCxhkfxFfHmAKLCyKrD`
 Page: `P4 · Tier List 조립` — `1291:2`
 
+> ⚠️ **The band model changed after these frames were built.** On 2026-08-20 the band
+> contract was replaced (`TIER-26`–`TIER-28`, §7.1): bands became a multi-select filter and
+> the result region became a stack under sticky band headers. **No P4 frame implements this
+> yet.** Every frame in §1 still shows the superseded single-active-band model with a
+> six-row navigator. Read §7.1 for the decided contract and treat the frames as pending
+> rework for anything band-related. Everything else in this document — composition, score
+> and achievement, the calculation guide, copy, contrast — is current.
+
 ---
 
 ## 1. Figma node map
@@ -75,6 +83,8 @@ Page `Z1 · 결정 기록` — `268:2`, approved section `268:3`. Pending sectio
 | Achievement = grade icon + ring + `FC` label; unplayed unchanged          | `1367:7689` |
 | Guide composition = C; weight chart per tier list; rating scope = all six | `1379:7745` |
 | Guide body inset = none (flush); description and guide after mode+goal    | `1412:7757` |
+| Band model = scroll multi-select, sticky header stack, default all        | `1434:8002` |
+| Band checkbox arrival state = empty means unconstrained                   | `1445:8129` |
 
 ---
 
@@ -405,6 +415,51 @@ view preference or page context.
 
 ---
 
+### 7.1 Band model — decided 2026-08-20, not yet drawn
+
+The contract below supersedes `TIER-05`. The frames in §1 predate it.
+
+**Why it changed.** Band values run `1.0`–`14.5` in `0.1` steps, so a list holds up to
+`136` bands, and `2,159` charts across `578` musics average about `16` charts per band.
+The built navigator shows six rows with no scroll affordance — it cannot hold the real
+band count. Separately, the planning question is a range scan, and one-band-at-a-time made
+every neighbouring band a separate interaction.
+
+**The contract.**
+
+| Aspect          | Decided                                                                                                  |
+| --------------- | -------------------------------------------------------------------------------------------------------- |
+| Selection       | multi-select; **empty selection = no band constraint**                                                   |
+| Clearing        | clearing the last band returns to unconstrained, never to an empty result                                |
+| Composition     | band selection `AND` difficulty `AND` level                                                              |
+| URL             | absent band parameter means unconstrained, matching the existing filter parameters                       |
+| Navigator       | scrolls the full count; row height `44`; band value is the checkbox's own label; per-band counts shown   |
+| Result region   | selected bands stacked in published order, each under a sticky band header                               |
+| Band header     | `section-title` band value + `metric-value` achieved count, `surface/canvas`, 1px `border/default` below |
+| Arrival default | all bands matching the committed filters                                                                 |
+
+**Measured consequence of the default.** At 390px in three columns: unfiltered `2,159`
+charts is roughly `112,000px`, about 133 phone screens; Expert alone (`578`) about
+`28,400px`; Expert 12 (`169`) about `9,300px`. The stack is excellent once filtered and
+unusable unfiltered, which is why progressive loading and scroll restoration are load
+bearing rather than optional. The user accepted this length knowingly.
+
+**A grid consequence to implement carefully.** Cards must hold the derived column width
+even when a row is not full. In a stack, every band ends with a partial row, so a `FILL`
+card in a one-item row expands to the full region and its jacket stops being `1:1`. Pin
+cards to the column width and left-align short rows.
+
+**Not settled here.** The sticky header's final surface and border treatment; the form and
+wording of the range-select control. The board's `전체 표시` / `범위로 선택` / `전체 해제`
+labels are placeholders, not catalogue strings — `tiers.selectAll` exists but has no
+counterpart for these, so new keys are required.
+
+**Rework scope.** Band trigger, band overlay, Wide rail band list, the `밴드 선택 열림`
+state frames, and every result region. `TIER-24` (page order), `TIER-25` (rating scope) and
+the guide inset decision are unaffected.
+
+---
+
 ## 8. Verification
 
 ### 8.1 Executed and passed
@@ -449,6 +504,8 @@ being run**, and both hid real defects:
 - **`Recital` beyond `Recital · S`.** Recital Full Combo and Recital Pianist have no frame.
 - **Intermediate in the filter-layer, band-open and detailed states.** Only the signed-in
   compact state is built at 768 and 1024.
+- **The entire band model of §7.1.** No frame shows the multi-select navigator, the sticky
+  band header, or a stacked result region. This is the largest outstanding item.
 - **Browser measurement, Pretendard re-check, runtime behaviour** (`aria-busy`, blocked
   activation, focus retention, Back restoration). These cannot be executed in Figma.
 
