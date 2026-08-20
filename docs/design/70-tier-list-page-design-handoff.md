@@ -19,17 +19,17 @@ Page: `P4 · Tier List 조립` — `1291:2`
 
 ### 1.1 Product frames
 
-| Section                                 | Node         | Frames                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| --------------------------------------- | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Tier · Compact 390`                    | `1291:3`     | Signed-out base `1291:4` (390×1114) · Signed-in compact `1321:104` (390×1186) · Detailed two-column `1323:191` (390×1695) · Filter layer `1334:267` (390×844) · Guide expanded Basic·S `1394:1989` (390×1599) · Basic·Full Combo `1397:2068` · Basic·Pianist `1397:2225` · Guide expanded Basic·Pianist `1397:27469` (390×1691) · Recital·S `1398:2313` · Guide expanded Recital·S `1398:2474` · Range-selection mode `1474:4956` · Narrowed bands with tokens `1474:31026` |
-| `Tier · Intermediate 768 / 1024`        | `1428:2973`  | 768 five-column `1428:2974` (768×1198) · 1024 seven-column `1428:3120` (1024×1181)                                                                                                                                                                                                                                                                                                                                                                                          |
-| `Tier · Wide 1280`                      | `1348:371`   | Rail exposed `1348:372` (1280×1252)                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| `Tier · 결과 영역 상태 (셸 반복 없음)`  | `1344:359`   | Compact state board `1344:360` (1950×339, five states)                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| `Tier · 결과 영역 상태 · Wide 908`      | `1429:29791` | Light `1429:29792` · Dark `1429:29882` (both 4700×344, same five states at the Wide result-region width)                                                                                                                                                                                                                                                                                                                                                                    |
-| `Tier · Compact 390 · Dark`             | `1352:492`   | `1352:493` · `1352:536` · `1352:613` · `1352:696` · `1398:27749` · `1398:27854` · `1398:27928` · `1398:28247` · `1398:28371` · `1398:28445` · `1474:31325` · `1474:31427`                                                                                                                                                                                                                                                                                                   |
-| `Tier · Intermediate 768 / 1024 · Dark` | `1429:3211`  | `1429:3212` · `1429:3319`                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| `Tier · Wide 1280 · Dark`               | `1352:26270` | `1352:26271` (1280×1252)                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| `Tier · 결과 영역 상태 · Dark`          | `1352:26219` | `1352:26220`                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| Section                                 | Node         | Frames                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| --------------------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `Tier · Compact 390`                    | `1291:3`     | Signed-out base `1291:4` (390×1114) · Signed-in compact `1321:104` (390×1186) · Detailed two-column `1323:191` (390×1695) · Filter layer `1334:267` (390×844) · Guide expanded Basic·S `1394:1989` (390×1599) · Basic·Full Combo `1397:2068` · Basic·Pianist `1397:2225` · Guide expanded Basic·Pianist `1397:27469` (390×1691) · Recital·S `1398:2313` · Guide expanded Recital·S `1398:2474` · Range-selection mode `1474:4956` · Narrowed bands with tokens `1474:31026` · Recital·Full Combo · Recital·Pianist |
+| `Tier · Intermediate 768 / 1024`        | `1428:2973`  | 768 five-column `1428:2974` · 1024 seven-column `1428:3120` · 768 detailed three-column · 1024 detailed five-column · 768 filter layer · 1024 filter layer                                                                                                                                                                                                                                                                                                                                                         |
+| `Tier · Wide 1280`                      | `1348:371`   | Rail exposed `1348:372` (1280×1252)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `Tier · 결과 영역 상태 (셸 반복 없음)`  | `1344:359`   | Compact state board `1344:360` (1950×339, five states)                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `Tier · 결과 영역 상태 · Wide 908`      | `1429:29791` | Light `1429:29792` · Dark `1429:29882` (both 4700×344, same five states at the Wide result-region width)                                                                                                                                                                                                                                                                                                                                                                                                           |
+| `Tier · Compact 390 · Dark`             | `1352:492`   | `1352:493` · `1352:536` · `1352:613` · `1352:696` · `1398:27749` · `1398:27854` · `1398:27928` · `1398:28247` · `1398:28371` · `1398:28445` · `1474:31325` · `1474:31427`                                                                                                                                                                                                                                                                                                                                          |
+| `Tier · Intermediate 768 / 1024 · Dark` | `1429:3211`  | the same six frames in Dark                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `Tier · Wide 1280 · Dark`               | `1352:26270` | `1352:26271` (1280×1252)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| `Tier · 결과 영역 상태 · Dark`          | `1352:26219` | `1352:26220`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 
 Light and Dark sections hold ten frames each in Compact and two each in Intermediate. The six `밴드 선택 열림` frames were deleted with `TIER-26` (§7.1); frame heights grew substantially because every result region is now a band stack.
 Dark frames are clones with `setExplicitVariableModeForCollection(Color, '70:2')`.
@@ -195,6 +195,19 @@ largest n where  (content − (n − 1) × gutter) / n  ≥  111.33
 \* At 1280 the rail takes `292` (3/12) and the result region `908` (9/12) with a `16`
 gutter, matching the Discovery Wide shell.
 
+The detailed view runs the same rule against its own minimum, the `173` the 390 canvas produces
+at two columns:
+
+| Width | Content | Columns | Card |
+| ----- | ------- | ------- | ---- |
+| 390   | 358     | 2       | 173  |
+| 320   | 288     | 2       | 138  |
+| 768   | 720     | 3       | 229  |
+| 1024  | 976     | 5       | 182  |
+
+Four detailed columns at 768 would give `168` and six at 1024 would give `149`; both fall under
+the minimum.
+
 Six columns at 768 would give `106.7` and eight at 1024 would give `108`; both fall under
 the minimum, so the counts stop at five and seven. `TIER-19` requires exactly this:
 density is container-driven, not one fixed product number. Mobile's 3 and desktop's 7
@@ -210,6 +223,12 @@ plus staged filter layer — and only the derived column count changes. The rail
 `1056`, the document 24 Intermediate/Wide boundary, with no page-local threshold invented.
 This follows the 2026-08-19 shell decision, which aligned every page family's side-by-side
 threshold with that boundary.
+
+The Intermediate frames deliberately show the **narrowed** state rather than the default one.
+Their purpose is to prove the derived column count, and the unconstrained default puts only one
+or two charts in the top bands, so no row ever fills and five or seven columns cannot be seen.
+The default state is already covered at 390, 320 and 1280. This was caught after the 2026-08-21
+default-state correction silently removed that evidence.
 
 `OrdinaryFooter` uses `Layout=Wide` from `672` upward. Document 15's footer contract does
 not state a width at which the variant switches, so this was derived by measurement: the
@@ -539,11 +558,20 @@ which show each band's achieved count while scrolling.
 
 ---
 
+All six mode-goal combinations now have a signed-in frame: `Basic · S`, `Basic · Full Combo`,
+`Basic · Pianist`, `Recital · S`, `Recital · Full Combo` and `Recital · Pianist`, each in Light
+and Dark. They differ only in the goal selector value, the guide title, and the list
+description, which is what document 06 defines as goal-dependent — `lib/tiers.ts`'s
+`isTierGoalAchieved` has no mode branch, so achievement itself does not change between Basic and
+Recital.
+
+---
+
 ## 8. Verification
 
 ### 8.1 Executed and passed
 
-Final audit over the whole page — 11 sections, 62 frames:
+Final audit over the whole page — 11 sections, 74 frames:
 
 | Check                                               | Result                                                                       |
 | --------------------------------------------------- | ---------------------------------------------------------------------------- |
@@ -563,7 +591,7 @@ Final audit over the whole page — 11 sections, 62 frames:
 | 320 reflow                                          | column counts hold in KO/JA/EN Light and KO Dark                             |
 | Band header total vs cards shown                    | 0 mismatches (new check)                                                     |
 | Condition state vs result state                     | 0 mismatches (new check)                                                     |
-| Intermediate 672–1055                               | 768 and 1024 built and measured                                              |
+| Intermediate 672–1055                               | 768 and 1024: compact, detailed and filter layer, Light and Dark             |
 
 The minimum `4.88` is `content/pending` on `surface/canvas` in the state boards, matching
 the value calculated when that token was approved.
@@ -581,35 +609,38 @@ being run**, and both hid real defects:
 
 ### 8.2 Not executed — not a pass
 
-- **Locale rows in Dark at 320 for JA and EN.** Only Korean is duplicated in Dark (§1.2).
-- **`Recital` beyond `Recital · S`.** Recital Full Combo and Recital Pianist have no frame.
-- **Intermediate in the filter-layer, band-open and detailed states.** Only the signed-in
-  compact state is built at 768 and 1024.
+- **Locale rows in Dark at 320 for JA and EN.** Only Korean is duplicated in Dark, on purpose
+  (§1.2): locale fit is a metric property and does not change with colour mode, so the extra
+  rows would add coverage without adding information.
+- **A `Recital · Pianist` calculation guide.** The score-ratio table is already specimened by
+  `Basic · Pianist`, and the mode parameterisation of `tiers.weight.perSong` by `Recital · S`;
+  a sixth guide frame would only repeat both.
 - **Japanese and English for the two range keys** (§11.2).
 - **Browser measurement, Pretendard re-check, runtime behaviour** (`aria-busy`, blocked
   activation, focus retention, Back restoration). These cannot be executed in Figma.
 
 ### 8.3 Defects found and fixed
 
-| Defect                                                                                                     | Found by                            | Fix                                                                                                                                                      |
-| ---------------------------------------------------------------------------------------------------------- | ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| State messages could not wrap (`WIDTH_AND_HEIGHT`), so JA overflowed its 288 region by 32px and EN by 10px | JA/EN 320 scan                      | 25 texts set to fill width with automatic height                                                                                                         |
-| `S` and `Detailed view` bound to `*/ko` text styles although both are Latin                                | locale mapping scan                 | 42 nodes rebound to `*/latin`                                                                                                                            |
-| Cards squared along with jackets, collapsing signed-in cards to 88×88                                      | height compared against sibling     | auto-layout cards restored to hug; only jackets squared                                                                                                  |
-| `Checkbox` fixed at 200 wide with 134px of dead space                                                      | user observation                    | component set to hug its content (66)                                                                                                                    |
-| Compact section box 1800×384 while children reached 2190×1647                                              | section containment check           | sections resized to their content                                                                                                                        |
-| **320 locale rows overlapped after the rating row was added**                                              | **user observation**                | row pitch derived from measured row height instead of a constant                                                                                         |
-| **Curve vector displaced after `vectorPaths` reassignment**                                                | comparison board render             | node origin set to the path minimum in all chart panels                                                                                                  |
-| **JA and EN 320 state boards showed the Korean failure sentence**                                          | applying `tiers.loadError`          | localised to `難易度データを…` and `Could not load the tier data.`                                                                                       |
-| **Guide body inset one-sided (`left 32 / right 0`)**                                                       | user observation                    | inset removed; body shares the trigger's left edge (§4.5)                                                                                                |
-| **Description and guide sat above the mode and goal controls**                                             | user observation                    | both moved below the goal selector across 32 frames plus the Wide rail (§4.5)                                                                            |
-| Chart tick set over-reduced to five ticks                                                                  | automated collision check           | restored to seven; only `13` collides                                                                                                                    |
-| **Scroll indicators drawn at `radius 2`, outside the approved set**                                        | radius audit                        | bound to `radius/full`; renders identically and removes a hardcoded number                                                                               |
-| **All 36 default frames claimed no conditions while showing three bands**                                  | badge work                          | corrected to the top of the unconstrained document (§7.1)                                                                                                |
-| **30 signed-out cards collapsed to heights of 11–33px**                                                    | visual check after that correction  | those cards _are_ the jacket, so a squaring pass that looks for a `jacket` child skipped them; squared to card width and the placeholder icon re-centred |
-| **Signed-out band headers carried an achieved count**                                                      | default-state correction            | removed; document 06 attaches it to the signed-in case                                                                                                   |
-| **Narrowed-band headers showed unfiltered band totals**                                                    | building the 320 narrowed specimens | totals restated as the filtered counts; document 06 requires progress to use the committed filters                                                       |
-| **320 narrowed specimens had fewer cards than their headers claimed**                                      | band-total check                    | cards topped up per band; the default-state correction had reduced the source frames to 1–2 cards                                                        |
+| Defect                                                                                                     | Found by                                  | Fix                                                                                                                                                      |
+| ---------------------------------------------------------------------------------------------------------- | ----------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| State messages could not wrap (`WIDTH_AND_HEIGHT`), so JA overflowed its 288 region by 32px and EN by 10px | JA/EN 320 scan                            | 25 texts set to fill width with automatic height                                                                                                         |
+| `S` and `Detailed view` bound to `*/ko` text styles although both are Latin                                | locale mapping scan                       | 42 nodes rebound to `*/latin`                                                                                                                            |
+| Cards squared along with jackets, collapsing signed-in cards to 88×88                                      | height compared against sibling           | auto-layout cards restored to hug; only jackets squared                                                                                                  |
+| `Checkbox` fixed at 200 wide with 134px of dead space                                                      | user observation                          | component set to hug its content (66)                                                                                                                    |
+| Compact section box 1800×384 while children reached 2190×1647                                              | section containment check                 | sections resized to their content                                                                                                                        |
+| **320 locale rows overlapped after the rating row was added**                                              | **user observation**                      | row pitch derived from measured row height instead of a constant                                                                                         |
+| **Curve vector displaced after `vectorPaths` reassignment**                                                | comparison board render                   | node origin set to the path minimum in all chart panels                                                                                                  |
+| **JA and EN 320 state boards showed the Korean failure sentence**                                          | applying `tiers.loadError`                | localised to `難易度データを…` and `Could not load the tier data.`                                                                                       |
+| **Guide body inset one-sided (`left 32 / right 0`)**                                                       | user observation                          | inset removed; body shares the trigger's left edge (§4.5)                                                                                                |
+| **Description and guide sat above the mode and goal controls**                                             | user observation                          | both moved below the goal selector across 32 frames plus the Wide rail (§4.5)                                                                            |
+| Chart tick set over-reduced to five ticks                                                                  | automated collision check                 | restored to seven; only `13` collides                                                                                                                    |
+| **Scroll indicators drawn at `radius 2`, outside the approved set**                                        | radius audit                              | bound to `radius/full`; renders identically and removes a hardcoded number                                                                               |
+| **All 36 default frames claimed no conditions while showing three bands**                                  | badge work                                | corrected to the top of the unconstrained document (§7.1)                                                                                                |
+| **30 signed-out cards collapsed to heights of 11–33px**                                                    | visual check after that correction        | those cards _are_ the jacket, so a squaring pass that looks for a `jacket` child skipped them; squared to card width and the placeholder icon re-centred |
+| **Signed-out band headers carried an achieved count**                                                      | default-state correction                  | removed; document 06 attaches it to the signed-in case                                                                                                   |
+| **Narrowed-band headers showed unfiltered band totals**                                                    | building the 320 narrowed specimens       | totals restated as the filtered counts; document 06 requires progress to use the committed filters                                                       |
+| **320 narrowed specimens had fewer cards than their headers claimed**                                      | band-total check                          | cards topped up per band; the default-state correction had reduced the source frames to 1–2 cards                                                        |
+| **The default-state correction removed the Intermediate column evidence**                                  | building the Intermediate detailed frames | those frames switched to the narrowed state so rows fill and the derived counts stay visible                                                             |
 
 ---
 
