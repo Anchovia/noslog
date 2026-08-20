@@ -44,16 +44,22 @@ Section `Tier · 320 검증` — `1356:954` (3536×5126). Three locale rows of s
 `Tier · 320 검증 · Dark (KO)` — `1429:29025` (3536×1710) for the Korean row in Dark. These
 test 320px reflow and locale fit. They are **not** product states.
 
-| Row      | Base         | Signed-in    | Detailed     | Filter layer | State board  |
-| -------- | ------------ | ------------ | ------------ | ------------ | ------------ |
-| KO Light | `1356:955`   | `1356:1082`  | `1356:1242`  | `1356:1399`  | `1358:1390`  |
-| JA Light | `1360:1299`  | `1360:1426`  | `1360:1586`  | `1360:1743`  | `1360:2006`  |
-| EN Light | `1361:1644`  | `1361:1771`  | `1361:1931`  | `1361:2088`  | `1361:2351`  |
-| KO Dark  | `1429:29026` | `1429:29069` | `1429:29143` | `1429:29228` | `1429:29396` |
+| Row      | Base         | Signed-in    | Detailed     | Filter layer | State board  | Range mode | Narrowed |
+| -------- | ------------ | ------------ | ------------ | ------------ | ------------ | ---------- | -------- |
+| KO Light | `1356:955`   | `1356:1082`  | `1356:1242`  | `1356:1399`  | `1358:1390`  | yes        | yes      |
+| JA Light | `1360:1299`  | `1360:1426`  | `1360:1586`  | `1360:1743`  | `1360:2006`  | yes        | yes      |
+| EN Light | `1361:1644`  | `1361:1771`  | `1361:1931`  | `1361:2088`  | `1361:2351`  | yes        | yes      |
+| KO Dark  | `1429:29026` | `1429:29069` | `1429:29143` | `1429:29228` | `1429:29396` | yes        | yes      |
 
 Only the Korean row is duplicated in Dark. Locale fit is a metric property and does not
 change with colour mode; the Dark row exists to prove nothing collapses at the minimum
 width in Dark, not to re-test JA and EN wrapping.
+
+The range-mode and narrowed specimens were added to all four rows on 2026-08-21. The band
+section header is the fit risk at `320`, because it carries a title plus two actions in `288`.
+Measured: KO `206`, EN `237`, JA `254` — all clear, JA with `34` to spare. That margin assumes
+the Korean placeholder for `tiers.selectRange` (`54`); a Japanese string as long as `範囲で選択`
+(about `70`) would still leave roughly `18`.
 
 ### 1.3 Components created for this page
 
@@ -537,25 +543,27 @@ which show each band's achieved count while scrolling.
 
 ### 8.1 Executed and passed
 
-Final audit over the whole page — 11 sections, 38 product frames:
+Final audit over the whole page — 11 sections, 62 frames:
 
-| Check                                               | Result                                                                    |
-| --------------------------------------------------- | ------------------------------------------------------------------------- |
-| spacing scale                                       | 0 off-scale                                                               |
-| radius / stroke weight                              | 0 / 0 on product nodes                                                    |
-| Section-child containment · section overlap         | 0 / 0                                                                     |
-| **Child-to-child overlap inside a section**         | **0**                                                                     |
-| Page-level non-section nodes                        | 0                                                                         |
-| Clipping · frame escape · text overflow             | 0 / 0 / 0                                                                 |
-| Jacket squareness                                   | 286 checked, 0 non-square (includes cards that are themselves the jacket) |
-| Target sizes                                        | compact 44, desktop 40; 0 undersized                                      |
-| Text styles: raw values, composites, sub-12px       | 0 / 0 / 0                                                                 |
-| Locale text-style mapping                           | 0 mismatches                                                              |
-| Variable binding                                    | 0 unbound visible fills or strokes                                        |
-| WCAG contrast, per effective mode, scrim composited | 1,940 texts, **0 failures**; minimum `4.88`                               |
-| Light↔Dark symmetry                                 | identical frame sizes and text counts                                     |
-| 320 reflow                                          | column counts hold in KO/JA/EN Light and KO Dark                          |
-| Intermediate 672–1055                               | 768 and 1024 built and measured                                           |
+| Check                                               | Result                                                                       |
+| --------------------------------------------------- | ---------------------------------------------------------------------------- |
+| spacing scale                                       | 0 off-scale                                                                  |
+| radius / stroke weight                              | 0 / 0 on product nodes                                                       |
+| Section-child containment · section overlap         | 0 / 0                                                                        |
+| **Child-to-child overlap inside a section**         | **0**                                                                        |
+| Page-level non-section nodes                        | 0                                                                            |
+| Clipping · frame escape · text overflow             | 0 / 0 / 0                                                                    |
+| Jacket squareness                                   | 0 non-square; covers `jacket` nodes and cards that are themselves the jacket |
+| Target sizes                                        | compact 44, desktop 40; 0 undersized                                         |
+| Text styles: raw values, composites, sub-12px       | 0 / 0 / 0                                                                    |
+| Locale text-style mapping                           | 0 mismatches                                                                 |
+| Variable binding                                    | 0 unbound visible fills or strokes                                           |
+| WCAG contrast, per effective mode, scrim composited | 2,332 texts, **0 failures**; minimum `4.88`                                  |
+| Light↔Dark symmetry                                 | identical frame sizes and text counts                                        |
+| 320 reflow                                          | column counts hold in KO/JA/EN Light and KO Dark                             |
+| Band header total vs cards shown                    | 0 mismatches (new check)                                                     |
+| Condition state vs result state                     | 0 mismatches (new check)                                                     |
+| Intermediate 672–1055                               | 768 and 1024 built and measured                                              |
 
 The minimum `4.88` is `content/pending` on `surface/canvas` in the state boards, matching
 the value calculated when that token was approved.
@@ -578,30 +586,30 @@ being run**, and both hid real defects:
 - **Intermediate in the filter-layer, band-open and detailed states.** Only the signed-in
   compact state is built at 768 and 1024.
 - **Japanese and English for the two range keys** (§11.2).
-- **Range mode and narrowed-band specimens at 320 and in the locale rows.** Both exist at 390
-  in Light and Dark only.
 - **Browser measurement, Pretendard re-check, runtime behaviour** (`aria-busy`, blocked
   activation, focus retention, Back restoration). These cannot be executed in Figma.
 
 ### 8.3 Defects found and fixed
 
-| Defect                                                                                                     | Found by                           | Fix                                                                                                                                                      |
-| ---------------------------------------------------------------------------------------------------------- | ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| State messages could not wrap (`WIDTH_AND_HEIGHT`), so JA overflowed its 288 region by 32px and EN by 10px | JA/EN 320 scan                     | 25 texts set to fill width with automatic height                                                                                                         |
-| `S` and `Detailed view` bound to `*/ko` text styles although both are Latin                                | locale mapping scan                | 42 nodes rebound to `*/latin`                                                                                                                            |
-| Cards squared along with jackets, collapsing signed-in cards to 88×88                                      | height compared against sibling    | auto-layout cards restored to hug; only jackets squared                                                                                                  |
-| `Checkbox` fixed at 200 wide with 134px of dead space                                                      | user observation                   | component set to hug its content (66)                                                                                                                    |
-| Compact section box 1800×384 while children reached 2190×1647                                              | section containment check          | sections resized to their content                                                                                                                        |
-| **320 locale rows overlapped after the rating row was added**                                              | **user observation**               | row pitch derived from measured row height instead of a constant                                                                                         |
-| **Curve vector displaced after `vectorPaths` reassignment**                                                | comparison board render            | node origin set to the path minimum in all chart panels                                                                                                  |
-| **JA and EN 320 state boards showed the Korean failure sentence**                                          | applying `tiers.loadError`         | localised to `難易度データを…` and `Could not load the tier data.`                                                                                       |
-| **Guide body inset one-sided (`left 32 / right 0`)**                                                       | user observation                   | inset removed; body shares the trigger's left edge (§4.5)                                                                                                |
-| **Description and guide sat above the mode and goal controls**                                             | user observation                   | both moved below the goal selector across 32 frames plus the Wide rail (§4.5)                                                                            |
-| Chart tick set over-reduced to five ticks                                                                  | automated collision check          | restored to seven; only `13` collides                                                                                                                    |
-| **Scroll indicators drawn at `radius 2`, outside the approved set**                                        | radius audit                       | bound to `radius/full`; renders identically and removes a hardcoded number                                                                               |
-| **All 36 default frames claimed no conditions while showing three bands**                                  | badge work                         | corrected to the top of the unconstrained document (§7.1)                                                                                                |
-| **30 signed-out cards collapsed to heights of 11–33px**                                                    | visual check after that correction | those cards _are_ the jacket, so a squaring pass that looks for a `jacket` child skipped them; squared to card width and the placeholder icon re-centred |
-| **Signed-out band headers carried an achieved count**                                                      | default-state correction           | removed; document 06 attaches it to the signed-in case                                                                                                   |
+| Defect                                                                                                     | Found by                            | Fix                                                                                                                                                      |
+| ---------------------------------------------------------------------------------------------------------- | ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| State messages could not wrap (`WIDTH_AND_HEIGHT`), so JA overflowed its 288 region by 32px and EN by 10px | JA/EN 320 scan                      | 25 texts set to fill width with automatic height                                                                                                         |
+| `S` and `Detailed view` bound to `*/ko` text styles although both are Latin                                | locale mapping scan                 | 42 nodes rebound to `*/latin`                                                                                                                            |
+| Cards squared along with jackets, collapsing signed-in cards to 88×88                                      | height compared against sibling     | auto-layout cards restored to hug; only jackets squared                                                                                                  |
+| `Checkbox` fixed at 200 wide with 134px of dead space                                                      | user observation                    | component set to hug its content (66)                                                                                                                    |
+| Compact section box 1800×384 while children reached 2190×1647                                              | section containment check           | sections resized to their content                                                                                                                        |
+| **320 locale rows overlapped after the rating row was added**                                              | **user observation**                | row pitch derived from measured row height instead of a constant                                                                                         |
+| **Curve vector displaced after `vectorPaths` reassignment**                                                | comparison board render             | node origin set to the path minimum in all chart panels                                                                                                  |
+| **JA and EN 320 state boards showed the Korean failure sentence**                                          | applying `tiers.loadError`          | localised to `難易度データを…` and `Could not load the tier data.`                                                                                       |
+| **Guide body inset one-sided (`left 32 / right 0`)**                                                       | user observation                    | inset removed; body shares the trigger's left edge (§4.5)                                                                                                |
+| **Description and guide sat above the mode and goal controls**                                             | user observation                    | both moved below the goal selector across 32 frames plus the Wide rail (§4.5)                                                                            |
+| Chart tick set over-reduced to five ticks                                                                  | automated collision check           | restored to seven; only `13` collides                                                                                                                    |
+| **Scroll indicators drawn at `radius 2`, outside the approved set**                                        | radius audit                        | bound to `radius/full`; renders identically and removes a hardcoded number                                                                               |
+| **All 36 default frames claimed no conditions while showing three bands**                                  | badge work                          | corrected to the top of the unconstrained document (§7.1)                                                                                                |
+| **30 signed-out cards collapsed to heights of 11–33px**                                                    | visual check after that correction  | those cards _are_ the jacket, so a squaring pass that looks for a `jacket` child skipped them; squared to card width and the placeholder icon re-centred |
+| **Signed-out band headers carried an achieved count**                                                      | default-state correction            | removed; document 06 attaches it to the signed-in case                                                                                                   |
+| **Narrowed-band headers showed unfiltered band totals**                                                    | building the 320 narrowed specimens | totals restated as the filtered counts; document 06 requires progress to use the committed filters                                                       |
+| **320 narrowed specimens had fewer cards than their headers claimed**                                      | band-total check                    | cards topped up per band; the default-state correction had reduced the source frames to 1–2 cards                                                        |
 
 ---
 
