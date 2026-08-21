@@ -19,7 +19,7 @@ user-approved decision record`
 - Related rating contract:
   [06-tier-list-page-brief.md](./06-tier-list-page-brief.md)
 - Scope: Public localized user rankings for NOSTALGIA Basic and Recital, with
-  Official Grd and Basic-only NosLog Rating comparison
+  Official Grd and NosLog Rating comparison in both modes (`RANK-21`)
 - Excluded: Per-chart ranking inside Music detail, profile-dashboard design, changes
   to the approved rating formula, administrator interfaces, final Foundation tokens,
   final high-fidelity composition, and production implementation in this session
@@ -37,7 +37,7 @@ user-approved decision record`
 
 This brief is authoritative for the approved Global-rankings behavior, hierarchy,
 responsive contract, and states. Exact typography, color, spacing, radius, shadows,
-avatar treatment, control dimensions, podium styling, and content-driven transition
+avatar treatment, control dimensions, and content-driven transition
 values remain Foundation and active high-fidelity design work. Later visual decisions
 may refine expression but must not remove or reinterpret this product contract.
 
@@ -240,8 +240,10 @@ distribution charts, or multiple competing summaries.
 - Raw values may determine a stable display order within one shared-rank group, but
   must not produce different visible ranks for the same published value.
 - If a tie crosses a page boundary, each affected row retains the same shared rank.
-- Podium styling must tolerate multiple players sharing first, second, or third place.
-  It must not imply unique medals when the rank is shared.
+- A top-three podium is **not used** (`RANK-22`, 2026-08-21); results are one ranked list
+  beginning at rank `1`. Shared ranks make a podium unable to carry the unique `1·2·3`
+  hierarchy that would justify it, and a podium would also disappear from page `2` onward.
+  This closes the `podium treatment` item that the Handoff Boundary had deferred.
 
 ## Player-Row Anatomy
 
@@ -354,8 +356,11 @@ Normative compact example:
 ### Wide Layout
 
 - Remove the fixed compact-shell constraint and use an intentional comparison width.
-- Present the same data as a quiet semantic table or table-like ranked list with
-  aligned Rank, Player identity, and active-value regions.
+- Present the same data as a quiet **table-like ranked list** with aligned Rank, Player
+  identity, and active-value regions (`RANK-23`, 2026-08-21). A semantic `table` with a
+  header row is not used: the header labels would be new copy in three locales, and the
+  header must be dropped at `320px`, which would split the semantics between widths. The
+  same ordered-list structure therefore holds at every width.
 - Preserve country marker and exam inside the Player identity group; do not reintroduce
   separate Region or Exam columns merely because space exists.
 - Align mode, metric, and region efficiently when space allows without changing their
@@ -465,7 +470,7 @@ Validate at minimum:
 
 1. Basic Official Grd with more than twenty pages and a signed-in user on page one;
 2. Basic NosLog Rating with a signed-in user on a later page;
-3. Recital showing no Rating control;
+3. Recital with both metrics, including Rating sourced from the Recital Pianist list;
 4. three or more players sharing one published Grd and a tie spanning pages;
 5. two users with distinct raw Rating but the same published integer;
 6. current user on the active page, off the active page, and ineligible;
@@ -483,8 +488,8 @@ Validate at minimum:
 
 - `/ko/rankings`, `/ja/rankings`, and `/en/rankings` resolve with localized metadata
   and equivalent behavior.
-- Basic shows Official Grd and NosLog Rating. Recital omits Rating until an approved
-  source, formula, and ranking contract exist.
+- Both Basic and Recital show Official Grd and NosLog Rating. Each mode's Rating is
+  sourced from that mode's published Pianist tier list (`RANK-21`, `TIER-29`).
 - Region changes reset page and recalculate population rank. `Other regions` excludes
   Korea and Japan and is never labeled Global.
 - Browser Back/Forward restores prior mode, metric, region, page, and useful scroll
@@ -519,7 +524,7 @@ Validate at minimum:
 | [Current Ranking browser](../../components/rankings/rankingBrowser.tsx)                                                   | Client caching and request-race IDs already protect some updates                                 | Reuse the verified request foundation                                   | Current controls are overly persistent and history uses Replace     |
 | [Current ranking queries](../../lib/rankings.ts)                                                                          | Defines region populations and Rating source/calculation                                         | Preserves domain meaning and exposes required tie changes               | Current ordinal ranks differ from approved shared ranks             |
 | [Approved IA](./02-information-architecture.md)                                                                           | Rankings are an independent Records-and-comparison destination                                   | Keeps direct Home/More access and public route                          | Does not define row anatomy                                         |
-| [Approved Tier brief](./06-tier-list-page-brief.md)                                                                       | Basic Rating is anchored to the published Basic Pianist Tier policy                              | Keeps Rating explanation and eligibility consistent                     | Tier navigation does not dictate ranking UI                         |
+| [Approved Tier brief](./06-tier-list-page-brief.md)                                                                       | Rating is anchored to the published Pianist tier list of the selected mode                       | Keeps Rating explanation and eligibility consistent                     | Tier navigation does not dictate ranking UI                         |
 | [NOSTALGIA official mode guidance](https://p.eagate.573.jp/game/nostalgia/op2/howto/entrance.html)                        | Basic and Recital are distinct game modes                                                        | Keeps mode above metric                                                 | Does not define NosLog ranking metrics                              |
 | [osu! global rankings](https://osu.ppy.sh/rankings/osu/global/performance)                                                | Uses country scope, explicit sort context, dense player comparison, and numbered pages           | Supports one scoped ranked dataset with profile identity and pagination | osu! exposes more metrics than NosLog needs                         |
 | [ScoreSaber player rankings](https://scoresaber.com/rankings)                                                             | Keeps rank, player identity, primary PP, country context, and explicit pages together            | Supports compact rhythm-game player rows                                | Beat Saber PP semantics do not map to Grd                           |
@@ -561,8 +566,10 @@ Validate at minimum:
 
 - **Keep four permanent region buttons — Superseded:** region becomes one compact
   secondary Select or popup.
-- **Show Rating in Recital and switch to Basic when activated — Rejected:** unavailable
-  metric controls must not change the primary mode unexpectedly.
+- **Switch the mode to Basic when Rating is activated in Recital — Rejected:** a metric
+  control must never change the primary mode unexpectedly. Since `RANK-21` gives Recital its
+  own Rating source, the situation this guarded against no longer arises, but the rule that a
+  metric choice does not rewrite the mode still holds.
 - **Keep page size seven — Superseded:** the approved fixed page contains 25 players.
 - **Offer a page-size selector — Rejected:** it adds control density without serving
   the primary comparison task.
@@ -610,11 +617,13 @@ Validate at minimum:
 | RANK-19 | Wide layout uses comparison width while preserving integrated identity metadata                           | `Approved`   |
 | RANK-20 | The first approved ranking structure, not the state-demo layout, governs composition                      | `Approved`   |
 | RANK-21 | Both modes offer Official Grd and NosLog Rating, each sourced from that mode's Pianist list               | `Approved`   |
+| RANK-22 | No top-three podium; results are one ranked list from rank 1                                              | `Approved`   |
+| RANK-23 | Wide results use the table-like ranked list, not a semantic table with a header row                       | `Approved`   |
 
 ## Handoff Boundary
 
 The active high-fidelity design stage may decide final type scale, control and row proportions, color,
-spacing, avatar fallback style, podium treatment, borders, surfaces, loading
+spacing, avatar fallback style, borders, surfaces, loading
 indicator, and exact content-driven layout transitions after the Foundation is
 approved. It must preserve the hierarchy, conditional controls, population meaning,
 integrated player identity, shared-rank semantics, personal-position behavior,
