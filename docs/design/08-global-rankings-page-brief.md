@@ -167,6 +167,10 @@ distribution charts, or multiple competing summaries.
 
 - In both modes, show one subordinate exclusive choice: **Official Grd** and **NosLog
   Rating**. Do not silently switch the user's mode when they pick a metric.
+- Subordination is expressed through a **different control form**, not a smaller copy of the
+  mode control (`RANK-24`, 2026-08-23). Mode uses the segmented control; metric uses the
+  underline-tab form, where the selected label carries both a heavier weight and a `2px`
+  underline so the cue is never colour alone. Metric and region share one secondary row.
 - Changing metric resets `page` to `1` and retains the selected region.
 - When Rating is active, show one concise basis line identifying the current published
   Pianist Tier source **for the selected mode** and the top-70 basis. Do not place the complete
@@ -619,6 +623,7 @@ Validate at minimum:
 | RANK-21 | Both modes offer Official Grd and NosLog Rating, each sourced from that mode's Pianist list               | `Approved`   |
 | RANK-22 | No top-three podium; results are one ranked list from rank 1                                              | `Approved`   |
 | RANK-23 | Wide results use the table-like ranked list, not a semantic table with a header row                       | `Approved`   |
+| RANK-24 | Metric subordination uses a different control form (underline tabs), not a second segmented control       | `Approved`   |
 
 ## Handoff Boundary
 
