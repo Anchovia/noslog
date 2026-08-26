@@ -451,20 +451,31 @@ feedback and from data-visualization series:
 | Role         | Source value                        | Applies to                              |
 | ------------ | ----------------------------------- | --------------------------------------- |
 | `full-combo` | SAP Fiori Horizon categorical green | The Full Combo clear mark, labeled `FC` |
-| `pianist`    | SAP Fiori Horizon categorical amber | The Pianist clear mark, labeled `P`     |
 
-- The values are the already-approved `LD-03` primitives, so no new source enters the
+- The value is an already-approved `LD-03` primitive, so no new source enters the
   system. The role is new; the primitive is not. A categorical palette is deliberately
-  non-semantic, which is why reusing its values here creates no meaning collision.
-- The mark always carries its short label. Colour never conveys the achievement alone,
-  and the two achievements differ in hue as well as label so they are not distinguished
-  by intensity.
-- Do not use these two roles for series, buckets, difficulty, judgement, or feedback,
-  and do not introduce further achievement colours without a new approved role.
+  non-semantic, which is why reusing its value here creates no meaning collision.
+- The mark always carries its short `FC` label. Colour never conveys the achievement
+  alone.
+- Do not use this role for series, buckets, difficulty, judgement, or feedback, and do
+  not introduce further achievement colours without a new approved role.
 - The current implementation's clear-mark colour is a framework default with no recorded
   source and is superseded by this role.
 
-Score grade is **not** a colour role. It is delivered as the official grade image,
+**Correction — 2026-08-27.** Pianist was previously listed here as a second achievement
+colour role labelled `P`. That was wrong and is removed. Pianist is a perfect result
+(`score >= 1,000,000` or `fc_type === 3`) and therefore sits at the top of the
+score-grade ladder above `S`, not beside Full Combo: the ladder is
+`Pianist > S > A+ > A > B+ > B > C > D`. It is delivered as the official `P` grade
+image in the score-grade slot, exactly like every other grade, and is never repeated in
+the Full Combo column. Full Combo remains a separate combo-based axis, so the two are
+not alternatives — a Pianist result also satisfies Full Combo and still shows the `FC`
+mark. The `achievement/pianist` variable is retained unchanged so no resolved colour
+moves; it currently carries no assigned role and its disposition is a later colour
+cleanup item. The governing row contract is the resolved composition in
+[document 05](./05-music-detail-page-brief.md).
+
+Score grade — including Pianist — is **not** a colour role. It is delivered as the official grade image,
 self-hosted from the game's published grade assets rather than hot-linked, so a
 third-party outage cannot blank the column. Grade therefore needs an image slot and an
 accessible name, not a token.

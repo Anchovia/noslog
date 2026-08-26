@@ -150,8 +150,9 @@ synced NOSTALGIA field.
 - Keep the Profile public and useful from public Rankings and record links.
 - Keep NosLog identity distinct from optional NOSTALGIA and Discord identity fields.
 - Preserve Basic and Recital as distinct NOSTALGIA performance modes.
-- Add approved Basic NosLog Rating to the Profile and reserve a conditional Recital
-  Rating slot without fabricating a value before a source is implemented.
+- Add the approved NosLog Rating to both modes. Each mode's rating constant comes from
+  that mode's published Pianist tier list, so Basic and Recital are symmetric
+  (`TIER-29`, `RANK-21`, `PROF-33`).
 - Preserve Official Grd, global and country-category rank, mode exam, Grade history,
   rank distribution, judgement summary, Best Plays, Recent Plays, and profile-wide
   Play count according to the hierarchy and privacy contract below.
@@ -186,6 +187,11 @@ promote account controls, sync details, currency, or inventory above performance
 
 - Show the avatar or approved fallback, NosLog username, and country-category marker
   as one identity group.
+- When no avatar image exists, the fallback is the first letter grapheme of the username,
+  uppercased where the script has case (`PROF-36`). Skip leading non-letter characters. If
+  the username contains no letter, or no username exists, fall back to the approved person
+  icon. The fallback glyph is decorative: it is excluded from the accessibility tree so the
+  username is not announced twice, and the image slot keeps its own accessible name.
 - Place the country marker immediately beside the username, not beside or before the
   avatar. Korea and Japan may use their approved flags. Other regions use a globe
   marker with a localized accessible name.
@@ -265,6 +271,10 @@ Provide five explicit visibility controls:
   judgement summary.
 - The selected mode and controlled region must be programmatically associated so its
   limited scope is clear to sighted and non-sighted users.
+- The selector is a two-segment segmented control sized to the performance region, using
+  the approved selected-segment treatment rather than a filled inverted segment
+  (`PROF-34`). It is the highest-priority control in the performance region; the
+  Progress metric control below it must read as subordinate.
 
 ### Competitive Summary
 
@@ -273,9 +283,10 @@ Provide five explicit visibility controls:
 - Official Grd remains the primary official metric. NosLog Rating is a clearly labeled
   NosLog-derived metric governed by the approved Tier and Rankings contracts.
 - Basic exposes both Official Grd and NosLog Rating.
-- Recital exposes Official Grd and ranks. Its NosLog Rating item is absent until an
-  approved Recital source and calculation exist; do not show zero, `Coming soon`, or a
-  disabled empty metric merely to preserve symmetry.
+- Recital exposes Official Grd, NosLog Rating, and ranks on the same terms as Basic;
+  its rating is sourced from the Recital Pianist tier list (`TIER-29`, `PROF-33`). When
+  that source is unavailable at runtime, reuse the approved rating-unavailable outcome
+  rather than showing zero, `Coming soon`, or a disabled empty metric.
 - Missing eligible Grd or rank uses a concise unavailable value and does not invent a
   percentile or projected result.
 
@@ -290,8 +301,12 @@ Provide five explicit visibility controls:
     - `NosLog Rating` when available for the active mode.
 - Do not overlay Official Grd and NosLog Rating in one chart because they use different
   scales and meanings.
-- The Basic/Recital selector controls the available series. Omit Recital Rating until
-  its data contract is implemented.
+- The Basic/Recital selector controls which mode's series are shown. Both modes offer
+  the Official Grd and NosLog Rating series (`PROF-33`).
+- Present the two controls on one secondary row above the plot: the metric control is an
+  underline tab pair carrying both metric labels, and the range control is a compact
+  select, separated to the row's outer edges (`PROF-35`). This keeps the metric
+  subordinate to the mode selector while still exposing both metric values.
 - Show start value, current value, and change as structured text outside the chart.
 - Retain meaningful daily history for the approved periods. Collapse identical
   same-value points when they add no information, but preserve the date boundary and
@@ -311,8 +326,24 @@ Provide five explicit visibility controls:
     - original Music title;
     - difficulty and level;
     - score;
-    - rank plus Full Combo or Pianist state when applicable; and
-    - the active mode's contribution value when it is necessary to explain ordering.
+    - the official score-grade image, which carries Pianist at the top of the grade
+      ladder, plus a separate Full Combo mark when applicable; and
+    - the contribution value of the selected metric.
+- Compose the row on two axes (`PROF-37`). The leading side answers what was played:
+  jacket carrying the Full Combo mark in its top corner, then the original title, then
+  difficulty, level, score, and the official grade image on one supporting line. The
+  trailing side answers what the play is worth: the contribution value, right-aligned
+  with tabular figures so the values line up across rows. Left padding is zero because
+  the jacket bleeds to the leading edge.
+- Offer a metric control for the contribution, scoped to Best Plays (`PROF-38`).
+  Official Grd is the default; NosLog Rating is the alternative. This control is not a
+  display toggle: the two metrics have different populations and ordering, so switching
+  re-queries the list. Official Grd draws on the top fifty charts with no score floor,
+  while NosLog Rating draws on the top seventy and contributes nothing below the
+  approved rating score floor, so plays under that floor are absent from the Rating
+  view. Change the sort label with the metric, keep the last committed list visible
+  until the new response commits, and never present the retained list as the new
+  metric's result.
 - The whole primary item opens the corresponding localized Music detail and selected
   difficulty. Auxiliary labels must not become competing links.
 - Provide **View all** when more than five eligible items exist.
@@ -606,7 +637,7 @@ Provide five explicit visibility controls:
 | State                  | Required visible outcome                                                                       | Interaction outcome                                       |
 | ---------------------- | ---------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
 | Public Basic           | Identity, Basic competitive summary, Basic trend and Best, public record overview and activity | Basic/Recital and public record links remain usable       |
-| Public Recital         | Identity, Recital Official Grd/ranks, Recital trend and Best; no fabricated Rating             | Basic remains directly selectable                         |
+| Public Recital         | Identity, Recital Official Grd, Rating and ranks, Recital trend and Best                       | Basic remains directly selectable                         |
 | Owner                  | Public Profile plus Share, Settings, sync state, and private-state context                     | Owner actions lead to their established destinations      |
 | Signed out             | Same public record contract without owner actions                                              | Public links remain usable; login is not required to read |
 | Play activity hidden   | No Last played, Recent preview, count, timestamps, or public recent route data                 | Owner can open Settings; visitor receives no placeholder  |
@@ -657,7 +688,7 @@ Validate at minimum:
 1. owner and signed-out visitor viewing the same fully populated public Profile;
 2. Korea, Japan, and Other-regions identities with and without avatars and exams;
 3. Basic with Official Grd, Rating, ranks, long history, and more than five Best Plays;
-4. Recital with Official Grd and Best Plays but no Rating source;
+4. Recital with Official Grd, Rating, Best Plays, and a Recital Pianist rating source, plus the case where that source is unavailable;
 5. no records, Basic-only records, one trend point, partial judgement coverage, and no
    Recent Plays;
 6. each optional privacy field hidden independently;
@@ -686,8 +717,9 @@ Validate at minimum:
   NosLog join date.
 - Basic/Recital changes only competitive summary, trend, and Best Plays; mode-neutral
   sections do not silently change.
-- Basic displays Official Grd and available NosLog Rating. Recital never fabricates or
-  reserves an empty Rating value.
+- Basic and Recital both display Official Grd and NosLog Rating, each sourced from that
+  mode's Pianist tier list. Neither mode fabricates a rating when its source is
+  unavailable.
 - Progress defaults to 90 days, shows one selected metric, provides exact start/current/
   change text, and exposes accessible underlying values.
 - Profile overview renders at most five Best and five Recent items and exposes View all
@@ -724,7 +756,7 @@ Validate at minimum:
 | ------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
 | [Current Profile data](<../../app/(nevigation)/profile/[id]/data.ts>)                                                     | Establishes implemented fields, cache boundary, list limits, mode ranks, and owner-only analytics                | Separates observed behavior from approved downstream changes                | Current presentation and privacy are not 2.0 authority                                  |
 | [Current Profile composition](../../components/profile/profile.tsx)                                                       | Shows present source order and global mode-state coupling                                                        | Identifies sections to preserve and re-scope                                | Current fixed compact composition is superseded                                         |
-| [Current Profile schema](../../prisma/schema.prisma)                                                                      | Confirms available identity, history, snapshot, sync, and privacy data                                           | Grounds retention and migration requirements                                | Missing approved visibility fields and Recital Rating                                   |
+| [Current Profile schema](../../prisma/schema.prisma)                                                                      | Confirms available identity, history, snapshot, sync, and privacy data                                           | Grounds retention and migration requirements                                | Missing approved visibility fields and a Recital rating calculation                     |
 | [Approved IA](./02-information-architecture.md)                                                                           | Defines Profile as public Records-and-comparison context and Header identity destination                         | Preserves access, purpose, and relationship to Settings                     | Does not define Profile anatomy                                                         |
 | [Approved Music detail brief](./05-music-detail-page-brief.md)                                                            | Defers profile-wide Play count and preserves Profile↔Music record links                                          | Resolves deferred data meaning and round-trip behavior                      | Chart-scoped metrics remain separate                                                    |
 | [Approved Tier brief](./06-tier-list-page-brief.md)                                                                       | Defines goal-specific Tier and Rating source behavior                                                            | Keeps Profile Rating derived from the same approved contract                | Does not define Profile layout                                                          |
@@ -780,8 +812,12 @@ Validate at minimum:
   competitive summary, Progress over time, and Best Plays.
 - **Show Basic and Recital summaries simultaneously on compact layouts — Rejected:**
   it raises opening density and weakens the active performance context.
-- **Show an empty or disabled Recital Rating slot — Rejected:** omit the metric until
-  an approved source and calculation exist.
+- **Show an empty or disabled Recital Rating slot — Rejected:** the metric is present in
+  both modes (`PROF-33`); an unavailable source uses the approved unavailable outcome, not
+  a disabled placeholder.
+- **Gate the Recital Rating slot on whether a Recital Pianist list is published —
+  Rejected (2026-08-26):** the item count of the competitive summary would differ per
+  player; runtime absence is a state, not a layout difference.
 - **Overlay Official Grd and Rating in one chart — Rejected:** different scales and
   meanings make a dual-line chart misleading.
 - **Use all four trend ranges as permanent buttons — Rejected:** one compact selector
@@ -809,40 +845,46 @@ Validate at minimum:
 
 ## Decision Log
 
-| ID      | Decision                                                                                                            | Status     |
-| ------- | ------------------------------------------------------------------------------------------------------------------- | ---------- |
-| PROF-01 | Profile is a public Records-and-comparison destination centered on identity, ability, progress, and record evidence | `Approved` |
-| PROF-02 | Source order is identity, competitive summary, progress, Best Plays, record overview, then Recent Plays             | `Approved` |
-| PROF-03 | Country marker sits beside username and mode exam labels sit below identity                                         | `Approved` |
-| PROF-04 | NosLog account join date is removed                                                                                 | `Approved` |
-| PROF-05 | Owner keeps compact Share and Settings actions and gains contextual sync freshness                                  | `Approved` |
-| PROF-06 | Logout is removed from Profile body                                                                                 | `Approved` |
-| PROF-07 | Basic/Recital selector controls only competitive summary, progress, and Best Plays                                  | `Approved` |
-| PROF-08 | Official Grd remains official primary metric and Basic adds the approved NosLog Rating                              | `Approved` |
-| PROF-09 | Recital Rating is structurally supported but omitted until its approved data source exists                          | `Approved` |
-| PROF-10 | Competitive summary integrates mode Grd, conditional Rating, global rank, and country-category rank                 | `Approved` |
-| PROF-11 | Progress defaults to 90 days with 30-day, 90-day, one-year, and all ranges in one selector                          | `Approved` |
-| PROF-12 | Progress shows one selected metric at a time and exposes exact start/current/change text                            | `Approved` |
-| PROF-13 | Overview shows five active-mode Best Plays and a complete-list destination                                          | `Approved` |
-| PROF-14 | Rank distribution and judgement remain mode-neutral public record overview data                                     | `Approved` |
-| PROF-15 | Profile-wide Play count is optional public information and never Clear count                                        | `Approved` |
-| PROF-16 | Overview shows five mode-neutral Recent Plays when Play activity is public                                          | `Approved` |
-| PROF-17 | Complete Best and Recent lists use explicit bounded loading and no infinite scroll                                  | `Approved` |
-| PROF-18 | Always-public performance includes identity, exams, metrics, ranks, progress, Best, distribution, and judgement     | `Approved` |
-| PROF-19 | User controls NOSTALGIA name, Discord, preferred arcade, Play count, and grouped Play activity                      | `Approved` |
-| PROF-20 | Last played and Recent Plays share one Play-activity visibility control                                             | `Approved` |
-| PROF-21 | Hidden visitor content is omitted without a `Private` placeholder                                                   | `Approved` |
-| PROF-22 | Meaningful daily history is retained without a thirty-item cap and identical events/snapshots are not duplicated    | `Approved` |
-| PROF-23 | Brooch, persistent NOS, arbitrary achievements, and social modules are excluded                                     | `Approved` |
-| PROF-24 | Compact layouts reflow without document horizontal scrolling through 320 CSS px                                     | `Approved` |
-| PROF-25 | Wide layouts use additional comparison space without becoming an unrelated dashboard                                | `Approved` |
-| PROF-26 | Use an owner-previewed 1200×630 card scoped to one selected mode                                                    | `Approved` |
-| PROF-27 | Include public identity and available selected-mode competition context                                             | `Approved` |
-| PROF-28 | Conditionally include only visible NOSTALGIA name, Play count, and preferred arcade name                            | `Approved` |
-| PROF-29 | Omit hidden/missing fields and exclude Discord, activity, NOS, sync, address, and operations data                   | `Approved` |
-| PROF-30 | Feature-detect system Share and provide save, supported copy, and accurate link fallbacks                           | `Approved` |
-| PROF-31 | Provide a public-safe localized Open Graph card and invalidate it after privacy changes                             | `Approved` |
-| PROF-32 | Provide a localized accessible equivalent and explicit loading, cancel, unsupported, and error behavior             | `Approved` |
+| ID      | Decision                                                                                                              | Status                               |
+| ------- | --------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
+| PROF-01 | Profile is a public Records-and-comparison destination centered on identity, ability, progress, and record evidence   | `Approved`                           |
+| PROF-02 | Source order is identity, competitive summary, progress, Best Plays, record overview, then Recent Plays               | `Approved`                           |
+| PROF-03 | Country marker sits beside username and mode exam labels sit below identity                                           | `Approved`                           |
+| PROF-04 | NosLog account join date is removed                                                                                   | `Approved`                           |
+| PROF-05 | Owner keeps compact Share and Settings actions and gains contextual sync freshness                                    | `Approved`                           |
+| PROF-06 | Logout is removed from Profile body                                                                                   | `Approved`                           |
+| PROF-07 | Basic/Recital selector controls only competitive summary, progress, and Best Plays                                    | `Approved`                           |
+| PROF-08 | Official Grd remains official primary metric and Basic adds the approved NosLog Rating                                | `Approved`                           |
+| PROF-09 | Recital Rating is structurally supported but omitted until its approved data source exists                            | `Superseded by PROF-33 — 2026-08-26` |
+| PROF-10 | Competitive summary integrates mode Grd, conditional Rating, global rank, and country-category rank                   | `Approved`                           |
+| PROF-11 | Progress defaults to 90 days with 30-day, 90-day, one-year, and all ranges in one selector                            | `Approved`                           |
+| PROF-12 | Progress shows one selected metric at a time and exposes exact start/current/change text                              | `Approved`                           |
+| PROF-13 | Overview shows five active-mode Best Plays and a complete-list destination                                            | `Approved`                           |
+| PROF-14 | Rank distribution and judgement remain mode-neutral public record overview data                                       | `Approved`                           |
+| PROF-15 | Profile-wide Play count is optional public information and never Clear count                                          | `Approved`                           |
+| PROF-16 | Overview shows five mode-neutral Recent Plays when Play activity is public                                            | `Approved`                           |
+| PROF-17 | Complete Best and Recent lists use explicit bounded loading and no infinite scroll                                    | `Approved`                           |
+| PROF-18 | Always-public performance includes identity, exams, metrics, ranks, progress, Best, distribution, and judgement       | `Approved`                           |
+| PROF-19 | User controls NOSTALGIA name, Discord, preferred arcade, Play count, and grouped Play activity                        | `Approved`                           |
+| PROF-20 | Last played and Recent Plays share one Play-activity visibility control                                               | `Approved`                           |
+| PROF-21 | Hidden visitor content is omitted without a `Private` placeholder                                                     | `Approved`                           |
+| PROF-22 | Meaningful daily history is retained without a thirty-item cap and identical events/snapshots are not duplicated      | `Approved`                           |
+| PROF-23 | Brooch, persistent NOS, arbitrary achievements, and social modules are excluded                                       | `Approved`                           |
+| PROF-24 | Compact layouts reflow without document horizontal scrolling through 320 CSS px                                       | `Approved`                           |
+| PROF-25 | Wide layouts use additional comparison space without becoming an unrelated dashboard                                  | `Approved`                           |
+| PROF-26 | Use an owner-previewed 1200×630 card scoped to one selected mode                                                      | `Approved`                           |
+| PROF-27 | Include public identity and available selected-mode competition context                                               | `Approved`                           |
+| PROF-28 | Conditionally include only visible NOSTALGIA name, Play count, and preferred arcade name                              | `Approved`                           |
+| PROF-29 | Omit hidden/missing fields and exclude Discord, activity, NOS, sync, address, and operations data                     | `Approved`                           |
+| PROF-30 | Feature-detect system Share and provide save, supported copy, and accurate link fallbacks                             | `Approved`                           |
+| PROF-31 | Provide a public-safe localized Open Graph card and invalidate it after privacy changes                               | `Approved`                           |
+| PROF-32 | Provide a localized accessible equivalent and explicit loading, cancel, unsupported, and error behavior               | `Approved`                           |
+| PROF-33 | Both modes expose NosLog Rating, each sourced from that mode's Pianist tier list                                      | `Approved — 2026-08-26`              |
+| PROF-34 | The Basic/Recital selector is a two-segment segmented control attached to the performance region                      | `Approved — 2026-08-26`              |
+| PROF-35 | Progress uses an underline metric switch with a compact range select on one secondary row                             | `Approved — 2026-08-26`              |
+| PROF-36 | A missing avatar falls back to the first letter grapheme of the username, uppercased                                  | `Approved — 2026-08-26`              |
+| PROF-37 | Best Plays rows use a two-axis composition: identity and play facts leading, contribution value trailing              | `Approved — 2026-08-27`              |
+| PROF-38 | Best Plays carries its own contribution metric control; Official Grd is the default and switching re-queries the list | `Approved — 2026-08-27`              |
 
 ## Handoff Boundary
 
@@ -856,7 +898,7 @@ sync trust context, states, accessibility, localization, and acceptance criteria
 The later Codex implementation session must compare the final approved Figma output against this
 brief. It must request a guide or design revision before implementing any result that
 reintroduces the NosLog join date, exposes hidden content, treats Basic/Recital as a
-global page mode, fabricates Recital Rating, overlays Grd and Rating, caps retained
+global page mode, omits or fabricates Recital Rating, overlays Grd and Rating, caps retained
 history at the overview count, uses infinite scroll, restores Logout or Brooch/NOS as
 Profile priorities, keeps a fixed phone-width desktop shell, or otherwise conflicts
 with the approved contract.
