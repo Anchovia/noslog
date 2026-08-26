@@ -336,6 +336,9 @@ Normative compact example:
   Retry action.
 - If the initial request fails, show a bounded result error with Retry while preserving
   all selection controls.
+- Separate the error message from its Retry action by the Foundation `24px` subsection
+  spacing primitive. Do not collapse this relationship to the `8px` tightly-related-control
+  gap or the `16px` related-content-block gap.
 - Do not transform an error into an empty result.
 
 ### Rating Source Unavailable
@@ -344,6 +347,8 @@ Normative compact example:
   state, not a zero-player ranking.
 - Explain concisely that NosLog Rating is temporarily unavailable and preserve a clear
   way to return to Official Grd.
+- Separate the unavailable explanation from the Official Grd recovery action by the
+  Foundation `24px` subsection spacing primitive.
 
 ## Responsive Contract
 
@@ -641,6 +646,7 @@ Validate at minimum:
 | RANK-25 | Personal position omits the duplicated metric value and remains one line with its action at 320px         | `Approved`   |
 | RANK-26 | NosLog Rating row values use a grouped integer followed by `pt`                                           | `Approved`   |
 | RANK-27 | Metric controls use visible `Grd` / `Rating` below 396px and full localized labels at 396px and above     | `Approved`   |
+| RANK-28 | Error and Rating-unavailable messages use `24px` separation before their recovery action                  | `Approved`   |
 
 ## Handoff Boundary
 
