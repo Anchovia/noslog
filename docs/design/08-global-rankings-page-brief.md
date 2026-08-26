@@ -12,7 +12,7 @@ information architecture, approved Tier-list rating policy, cited leaderboard an
 design-system comparables, responsive and accessibility standards, and the
 user-approved decision record`
 - Date started: 2026-08-02
-- Last decision update: 2026-08-21
+- Last decision update: 2026-08-26
 - Language: English
 - Parent information architecture:
   [02-information-architecture.md](./02-information-architecture.md)
@@ -143,11 +143,10 @@ Use one semantic `main` and the following mobile-first source order:
 1. Page identity and eligible-player count
 2. Basic/Recital mode selection
 3. Available metric selection and region scope
-4. Concise Rating basis when Rating is active
-5. Conditional personal-position summary
-6. Ranking result heading and update/error status
-7. Ranked player rows
-8. Explicit pagination
+4. Conditional personal-position summary
+5. Ranking result heading and update/error status
+6. Ranked player rows
+7. Explicit pagination
 
 Desktop may align the control groups and widen result columns, but it must preserve
 this hierarchy. Do not turn the page into a dashboard with unrelated statistics,
@@ -172,9 +171,9 @@ distribution charts, or multiple competing summaries.
   underline-tab form, where the selected label carries both a heavier weight and a `2px`
   underline so the cue is never colour alone. Metric and region share one secondary row.
 - Changing metric resets `page` to `1` and retains the selected region.
-- When Rating is active, show one concise basis line identifying the current published
-  Pianist Tier source **for the selected mode** and the top-70 basis. Do not place the complete
-  formula in the persistent page hierarchy.
+- Do not repeat the Rating source or top-70 basis in the persistent ranking-page hierarchy.
+  That explanation is redundant with the dedicated tier context and destabilizes the
+  compact control layout (`RANK-29`, 2026-08-26).
 
 ### Region
 
@@ -313,7 +312,12 @@ Normative compact example:
   loading.
 - Mark the results `aria-busy` and show a concise visible updating status close to the
   results. Do not blank the list or replace every row with unrelated skeleton cards.
-- The pending selection must be distinguishable from the last committed result.
+- The pending selection must be distinguishable from the last committed result. The
+  controls reflect the newest pending selection immediately, while retained rows keep
+  the last committed metric and its visible unit until the new result commits. The
+  representative fixture uses pending `Rating` with committed `Grd {value}` rows; do
+  not add status copy, dim retained rows, or rely on a new color treatment for this
+  distinction (`RANK-31`, 2026-08-26).
 - Cancel or ignore stale requests so an older response cannot overwrite the newest
   user choice.
 
@@ -442,11 +446,19 @@ Normative compact example:
 ### Row and State Content
 
 - Localize exam syntax without changing the underlying Basic/Recital mode or number.
-- Keep state copy concise:
+- Keep state copy concise. The approved compact personal and error strings are exact,
+  remain one line at the approved type size, and must not be solved by shrinking type
+  (`RANK-30`, 2026-08-26):
+    - personal unavailable: Korean `내 순위 없음`, Japanese `自分の順位なし`,
+      English `My rank unavailable`;
+    - signed-out personal prompt: Korean `로그인 후 내 랭킹을 확인할 수 있습니다.`,
+      Japanese `ログインして順位を確認`, English `Log in to view your ranking.`;
+    - ranking-load error: Korean `랭킹을 불러오지 못했습니다. 다시 시도해주세요.`,
+      Japanese `ランキングを読み込めませんでした。`, English
+      `Could not load the rankings. Please try again.`.
+- Other state copy remains concise:
     - ranking empty: equivalent of `랭킹 기록이 없습니다`;
-    - personal unavailable: equivalent of `내 순위 없음`;
-    - loading: equivalent of `랭킹을 갱신하고 있습니다`;
-    - error: equivalent of `랭킹을 불러오지 못했습니다` plus Retry.
+    - loading: equivalent of `랭킹을 갱신하고 있습니다`.
 - Format values with locale-aware grouping while preserving the domain's integer Grd
   and Rating meaning.
 - Test Korean, Japanese, and English control labels together; do not assume Korean is
@@ -454,21 +466,21 @@ Normative compact example:
 
 ## Runtime State Contract
 
-| State                     | Required visible outcome                                     | Interaction outcome                       |
-| ------------------------- | ------------------------------------------------------------ | ----------------------------------------- |
-| Basic + Official Grd      | Mode, both Basic metrics, region, Grd rows                   | All approved controls available           |
-| Basic + Rating            | Mode, both Basic metrics, region, concise basis, Rating rows | Official Grd remains directly selectable  |
-| Recital + Official Grd    | Mode, both metrics, region, Grd rows                         | All approved controls available           |
-| Recital + Rating          | Mode, both metrics, region, concise basis, Rating rows       | Sourced from the Recital Pianist list     |
-| Signed in, off-page       | Compact My-rank summary                                      | My position opens containing page and row |
-| Signed in, on-page        | No duplicate summary; marked personal row                    | Profile link and pagination remain usable |
-| Signed in, ineligible     | Concise My-rank unavailable state when list exists           | Controls remain usable                    |
-| Signed out                | Public list and low-emphasis login action                    | Login safely returns to same URL          |
-| Updating                  | Last committed rows plus visible busy state                  | Stale responses cannot win                |
-| Empty                     | One concise result message                                   | Controls remain usable; pagination hidden |
-| Error after data          | Last committed rows plus Retry                               | Retry repeats current requested context   |
-| Initial error             | Result error plus Retry                                      | Controls remain usable                    |
-| Rating source unavailable | Explicit unavailable metric state                            | Official Grd recovery remains clear       |
+| State                     | Required visible outcome                           | Interaction outcome                       |
+| ------------------------- | -------------------------------------------------- | ----------------------------------------- |
+| Basic + Official Grd      | Mode, both Basic metrics, region, Grd rows         | All approved controls available           |
+| Basic + Rating            | Mode, both Basic metrics, region, Rating rows      | Official Grd remains directly selectable  |
+| Recital + Official Grd    | Mode, both metrics, region, Grd rows               | All approved controls available           |
+| Recital + Rating          | Mode, both metrics, region, Rating rows            | Sourced from the Recital Pianist list     |
+| Signed in, off-page       | Compact My-rank summary                            | My position opens containing page and row |
+| Signed in, on-page        | No duplicate summary; marked personal row          | Profile link and pagination remain usable |
+| Signed in, ineligible     | Concise My-rank unavailable state when list exists | Controls remain usable                    |
+| Signed out                | Public list and low-emphasis login action          | Login safely returns to same URL          |
+| Updating                  | Last committed rows plus visible busy state        | Stale responses cannot win                |
+| Empty                     | One concise result message                         | Controls remain usable; pagination hidden |
+| Error after data          | Last committed rows plus Retry                     | Retry repeats current requested context   |
+| Initial error             | Result error plus Retry                            | Controls remain usable                    |
+| Rating source unavailable | Explicit unavailable metric state                  | Official Grd recovery remains clear       |
 
 ## Implementation Mapping
 
@@ -617,36 +629,39 @@ Validate at minimum:
 
 ## Decision Log
 
-| ID      | Decision                                                                                                  | Status       |
-| ------- | --------------------------------------------------------------------------------------------------------- | ------------ |
-| RANK-01 | Global rankings remain an independent public comparison destination                                       | `Approved`   |
-| RANK-02 | Basic/Recital are the always-visible primary exclusive choice                                             | `Approved`   |
-| RANK-03 | Official Grd exists in both modes; current NosLog Rating is Basic-only until a Recital source is approved | `Superseded` |
-| RANK-04 | Recital hides the metric switch while unavailable and never redirects Rating to Basic                     | `Superseded` |
-| RANK-05 | Region uses All/Korea/Japan/Other regions in one compact selector                                         | `Approved`   |
-| RANK-06 | Internal `global` is labeled Other regions, not Global                                                    | `Approved`   |
-| RANK-07 | Conditions and page are shareable and restorable through navigable history                                | `Approved`   |
-| RANK-08 | Off-page personal position uses one compact summary and My-position action                                | `Approved`   |
-| RANK-09 | On-page personal position removes the duplicate summary and marks the row                                 | `Approved`   |
-| RANK-10 | Equal published Grd or Rating values use shared competition rank                                          | `Approved`   |
-| RANK-11 | Player identity is avatar, username plus country marker, and second-line exam                             | `Approved`   |
-| RANK-12 | Country and exam do not become separate desktop columns                                                   | `Approved`   |
-| RANK-13 | Korea/Japan use flags and Other regions uses a globe with accessible names                                | `Approved`   |
-| RANK-14 | Page size is fixed at 25 with no page-size selector                                                       | `Approved`   |
-| RANK-15 | Explicit pagination replaces infinite or appended scrolling                                               | `Approved`   |
-| RANK-16 | Loading preserves the last successful result and exposes busy state                                       | `Approved`   |
-| RANK-17 | Empty, error, personal-ineligible, and Rating-unavailable states stay distinct                            | `Approved`   |
-| RANK-18 | Compact layout reflows to 320px without document horizontal scrolling                                     | `Approved`   |
-| RANK-19 | Wide layout uses comparison width while preserving integrated identity metadata                           | `Approved`   |
-| RANK-20 | The first approved ranking structure, not the state-demo layout, governs composition                      | `Approved`   |
-| RANK-21 | Both modes offer Official Grd and NosLog Rating, each sourced from that mode's Pianist list               | `Approved`   |
-| RANK-22 | No top-three podium; results are one ranked list from rank 1                                              | `Approved`   |
-| RANK-23 | Wide results use the table-like ranked list, not a semantic table with a header row                       | `Approved`   |
-| RANK-24 | Metric subordination uses a different control form (underline tabs), not a second segmented control       | `Approved`   |
-| RANK-25 | Personal position omits the duplicated metric value and remains one line with its action at 320px         | `Approved`   |
-| RANK-26 | NosLog Rating row values use a grouped integer followed by `pt`                                           | `Approved`   |
-| RANK-27 | Metric controls use visible `Grd` / `Rating` below 396px and full localized labels at 396px and above     | `Approved`   |
-| RANK-28 | Error and Rating-unavailable messages use `24px` separation before their recovery action                  | `Approved`   |
+| ID      | Decision                                                                                                    | Status       |
+| ------- | ----------------------------------------------------------------------------------------------------------- | ------------ |
+| RANK-01 | Global rankings remain an independent public comparison destination                                         | `Approved`   |
+| RANK-02 | Basic/Recital are the always-visible primary exclusive choice                                               | `Approved`   |
+| RANK-03 | Official Grd exists in both modes; current NosLog Rating is Basic-only until a Recital source is approved   | `Superseded` |
+| RANK-04 | Recital hides the metric switch while unavailable and never redirects Rating to Basic                       | `Superseded` |
+| RANK-05 | Region uses All/Korea/Japan/Other regions in one compact selector                                           | `Approved`   |
+| RANK-06 | Internal `global` is labeled Other regions, not Global                                                      | `Approved`   |
+| RANK-07 | Conditions and page are shareable and restorable through navigable history                                  | `Approved`   |
+| RANK-08 | Off-page personal position uses one compact summary and My-position action                                  | `Approved`   |
+| RANK-09 | On-page personal position removes the duplicate summary and marks the row                                   | `Approved`   |
+| RANK-10 | Equal published Grd or Rating values use shared competition rank                                            | `Approved`   |
+| RANK-11 | Player identity is avatar, username plus country marker, and second-line exam                               | `Approved`   |
+| RANK-12 | Country and exam do not become separate desktop columns                                                     | `Approved`   |
+| RANK-13 | Korea/Japan use flags and Other regions uses a globe with accessible names                                  | `Approved`   |
+| RANK-14 | Page size is fixed at 25 with no page-size selector                                                         | `Approved`   |
+| RANK-15 | Explicit pagination replaces infinite or appended scrolling                                                 | `Approved`   |
+| RANK-16 | Loading preserves the last successful result and exposes busy state                                         | `Approved`   |
+| RANK-17 | Empty, error, personal-ineligible, and Rating-unavailable states stay distinct                              | `Approved`   |
+| RANK-18 | Compact layout reflows to 320px without document horizontal scrolling                                       | `Approved`   |
+| RANK-19 | Wide layout uses comparison width while preserving integrated identity metadata                             | `Approved`   |
+| RANK-20 | The first approved ranking structure, not the state-demo layout, governs composition                        | `Approved`   |
+| RANK-21 | Both modes offer Official Grd and NosLog Rating, each sourced from that mode's Pianist list                 | `Approved`   |
+| RANK-22 | No top-three podium; results are one ranked list from rank 1                                                | `Approved`   |
+| RANK-23 | Wide results use the table-like ranked list, not a semantic table with a header row                         | `Approved`   |
+| RANK-24 | Metric subordination uses a different control form (underline tabs), not a second segmented control         | `Approved`   |
+| RANK-25 | Personal position omits the duplicated metric value and remains one line with its action at 320px           | `Approved`   |
+| RANK-26 | NosLog Rating row values use a grouped integer followed by `pt`                                             | `Approved`   |
+| RANK-27 | Metric controls use visible `Grd` / `Rating` below 396px and full localized labels at 396px and above       | `Approved`   |
+| RANK-28 | Error and Rating-unavailable messages use `24px` separation before their recovery action                    | `Approved`   |
+| RANK-29 | Omit the redundant Rating source and top-70 basis from the persistent ranking-page hierarchy                | `Approved`   |
+| RANK-30 | Exact compact personal and error copy stays one line at the approved type size in Korean, Japanese, English | `Approved`   |
+| RANK-31 | Updating controls show the pending selection while retained rows keep the committed metric and unit         | `Approved`   |
 
 ## Handoff Boundary
 
