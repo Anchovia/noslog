@@ -5,7 +5,7 @@
 - Status: `Approved`
 - Decision status: `Core Profile contract approved: public performance identity,
 mode-scoped competitive summary, progress and record hierarchy, privacy groups,
-five-item previews with complete-list destinations, owner sync status, public-safe
+five-item lists that expand in place, owner sync status, public-safe
 share card, runtime
 states, responsive composition, accessibility, localization, and browser
 acceptance`
@@ -24,8 +24,8 @@ internationalization references, and the user-approved decision record`
   [06-tier-list-page-brief.md](./06-tier-list-page-brief.md), and
   [08-global-rankings-page-brief.md](./08-global-rankings-page-brief.md)
 - Scope: Localized public user Profile, owner-only contextual actions, public
-  performance summary, progress, Best Plays, record overview, Recent Plays, and
-  dedicated complete-list destinations
+  performance summary, progress, Best Plays, record overview, and Recent Plays, all read
+  on the Profile itself
 - Excluded: Account-settings form design, data-sync guide design, social following,
   comments or messaging, profile customization themes, badges or Brooch display,
   persistent NOS currency display, administrator interfaces, final Foundation
@@ -346,11 +346,14 @@ Provide five explicit visibility controls:
   metric's result.
 - The whole primary item opens the corresponding localized Music detail and selected
   difficulty. Auxiliary labels must not become competing links.
-- Provide **View all** when more than five eligible items exist.
-- The complete Best Plays destination supports Basic/Recital, explicit bounded loading
-  through pagination or a user-initiated More action, direct restoration of the
-  selected mode and position, and no infinite scroll.
-- The overview preview limit must not cap retained or queryable best records.
+- When more eligible items exist, provide a user-initiated **More** action directly
+  below the list that fetches the next bounded batch and appends it in place, and a
+  paired **Collapse** action that returns the list to its five-item start (`PROF-39`).
+  Expansion never uses automatic infinite scroll and never leaves the Profile.
+- Expansion keeps the active Basic/Recital mode and the selected contribution metric.
+  Changing either resets the list to its five-item start, because the population and
+  order differ per metric.
+- The initial preview limit must not cap retained or queryable best records.
 
 ## Record Overview Contract
 
@@ -392,34 +395,39 @@ Provide five explicit visibility controls:
 - Each item includes jacket or fallback, localized/original title hierarchy,
   difficulty and level, score, rank, and localized exact play time.
 - The item opens the corresponding localized Music detail and selected difficulty.
-- Provide **View all** when more than five public history items exist.
-- The complete Recent Plays destination uses explicit bounded pagination or a
-  user-initiated More action, restores position when returning, and never uses
-  automatic infinite scroll.
-- Hiding Play activity removes Last played and both overview and complete Recent Plays
-  from public access. The owner may still inspect their private activity after clear
-  owner authentication.
+- When more public history items exist, provide the same in-place **More** and
+  **Collapse** pair used by Best Plays (`PROF-39`). Recent Plays stays mode-neutral, so
+  expansion is unaffected by the Basic/Recital selector.
+- Hiding Play activity removes Last played and Recent Plays, including every expanded
+  batch, from public access and from the public payload. The owner may still inspect
+  their private activity after clear owner authentication.
 
-## Complete-List Destination Contract
+## In-Place List Expansion Contract
 
-- Use dedicated localized Profile child destinations, with implementation mapping
-  equivalent to `/[locale]/profile/[id]/best` and
-  `/[locale]/profile/[id]/recent`.
-- Preserve player identity and a concise return path without duplicating the full
-  overview.
-- Best Plays retains the active mode. Recent Plays remains mode-neutral.
-- List scope, page/cursor, and mode where applicable must be restorable through direct
-  URL, Refresh, and Browser Back/Forward.
-- A visitor opening a hidden Recent Plays URL receives the same privacy-safe outcome as
-  the overview and never learns hidden counts or timestamps.
+Revised 2026-08-27 (`PROF-39`). Best and Recent history is read entirely on the Profile
+itself; there are no dedicated child destinations.
+
+- Each list starts at five items and grows in bounded batches through an explicit
+  **More** action. **Collapse** returns it to five. Neither action navigates away.
+- Each batch is a fetch, not a client-side slice of an already delivered payload, so the
+  initial response stays small and hidden history is never shipped to a visitor.
+- While a batch is loading, the committed rows stay visible, only the list region is
+  busy, and a stale response cannot win. Reaching the end removes the More action rather
+  than showing an empty batch.
+- Expansion state is view state, not addressable state. It is not encoded in the URL and
+  is not expected to survive Refresh or a Music-detail round trip; the list simply
+  returns to its five-item start. Do not fabricate a restoration that the design does not
+  provide.
 - Empty, Loading, Error, and end-of-list behavior follow the state contract below.
 
 ## URL, History, and Restoration Contract
 
-- Keep every Profile and complete-list URL localized and shareable.
+- Keep every Profile URL localized and shareable.
 - A Music-detail round trip from Best or Recent returns to the originating Profile
-  surface, active mode where applicable, list position, and practical scroll context.
-- Complete-list pagination or More state must be deterministic and restorable.
+  surface, active mode where applicable, and practical scroll context. List expansion is
+  view state and is not restored (`PROF-39`); the list returns to its five-item start.
+- Batch size and batch order must be deterministic, so the same More action always
+  yields the same next rows.
 - Exact overview mode-query syntax is deferred to implementation mapping, but Refresh
   and Browser Back/Forward must not unexpectedly change the user's active performance
   mode during one Profile visit.
@@ -489,7 +497,7 @@ Provide five explicit visibility controls:
 
 ### Section Update
 
-- A mode, metric, range, or complete-list update keeps the last committed content
+- A mode, metric, range, or list-expansion update keeps the last committed content
   visible, marks only the controlled region busy, and ignores stale responses.
 - Do not blank the entire Profile when only one section changes.
 
@@ -584,9 +592,9 @@ Provide five explicit visibility controls:
   Focus. Selection changes do not move Focus unexpectedly.
 - Country markers and exam labels have localized accessible names and never depend on
   color, flag image rendering, or badge shape alone.
-- Share, Settings, Data sync, View all, Music-detail items, range/metric selectors,
-  Retry, and complete-list navigation have descriptive accessible names and visible
-  Focus.
+- Share, Settings, Data sync, More, Collapse, Music-detail items, range/metric
+  selectors, and Retry have descriptive accessible names and visible Focus. Expanding a
+  list announces the change without moving Focus away from the control.
 - Every chart has an accessible name, exact text summary, data basis, and a method to
   obtain underlying values. Color is never the only series or state distinction.
 - Loading and committed section updates use restrained live status. Do not announce
@@ -629,7 +637,7 @@ Provide five explicit visibility controls:
 - Avoid ambiguous all-numeric dates without locale context.
 - Use tabular figures for scores, Grd, Rating, rank, Play count, judgement values, and
   trend summaries where alignment aids comparison.
-- Localize empty, hidden-owner, Loading, Error, Retry, View all, sync, and insufficient
+- Localize empty, hidden-owner, Loading, Error, Retry, More, Collapse, sync, and insufficient
   history labels in Korean, Japanese, and English with equivalent meaning.
 
 ## Runtime State Contract
@@ -658,8 +666,8 @@ Provide five explicit visibility controls:
 
 | Approved requirement                   | Current source                                                                                                                                                                                                                                                                                                   | Downstream change                                                                                                  |
 | -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| Public localized route and owner check | [`app/(nevigation)/profile/[id]/page.tsx`](<../../app/(nevigation)/profile/[id]/page.tsx>)                                                                                                                                                                                                                       | Preserve public access; compose approved owner/public states and complete-list links                               |
-| Public data query and cache            | [`app/(nevigation)/profile/[id]/data.ts`](<../../app/(nevigation)/profile/[id]/data.ts>)                                                                                                                                                                                                                         | Add Rating/progress/public analytics, privacy-safe payloads, five-item previews, totals, and complete-list queries |
+| Public localized route and owner check | [`app/(nevigation)/profile/[id]/page.tsx`](<../../app/(nevigation)/profile/[id]/page.tsx>)                                                                                                                                                                                                                       | Preserve public access and compose the approved owner and public states                                            |
+| Public data query and cache            | [`app/(nevigation)/profile/[id]/data.ts`](<../../app/(nevigation)/profile/[id]/data.ts>)                                                                                                                                                                                                                         | Add Rating/progress/public analytics, privacy-safe payloads, five-item starts, totals, and bounded batch queries   |
 | Profile composition and mode state     | [`components/profile/profile.tsx`](../../components/profile/profile.tsx)                                                                                                                                                                                                                                         | Scope Basic/Recital to performance, reorder approved sections, remove inline list expansion and Logout             |
 | Identity and owner actions             | [`components/profile/dashboard/profileHeader.tsx`](../../components/profile/dashboard/profileHeader.tsx)                                                                                                                                                                                                         | Remove join date/placeholders; add approved metadata privacy, last-play, and sync-status behavior                  |
 | Share preview and actions              | [`components/profile/dashboard/profileShareDialog.tsx`](../../components/profile/dashboard/profileShareDialog.tsx)                                                                                                                                                                                               | Add selected-mode preview, capability detection, save/copy fallbacks, accurate X link sharing, and accessible text |
@@ -667,17 +675,17 @@ Provide five explicit visibility controls:
 | Competitive summary                    | [`components/profile/dashboard/profileSummary.tsx`](../../components/profile/dashboard/profileSummary.tsx)                                                                                                                                                                                                       | Integrate Official Grd, conditional Rating, global/country ranks, and unavailable states                           |
 | Mode selector                          | [`components/profile/dashboard/profileModeTabs.tsx`](../../components/profile/dashboard/profileModeTabs.tsx)                                                                                                                                                                                                     | Attach selector semantically and visually to its controlled performance region                                     |
 | Grade trend                            | [`components/profile/dashboard/profileGradeTrend.tsx`](../../components/profile/dashboard/profileGradeTrend.tsx)                                                                                                                                                                                                 | Add range and metric selectors, Rating series, exact summary, and accessible data contract                         |
-| Best preview                           | [`components/profile/dashboard/profileBestPlays.tsx`](../../components/profile/dashboard/profileBestPlays.tsx)                                                                                                                                                                                                   | Use five-item preview, active-mode ordering, View all, localization, and Music-detail return context               |
-| Recent preview                         | [`components/profile/dashboard/profileRecentPlays.tsx`](../../components/profile/dashboard/profileRecentPlays.tsx)                                                                                                                                                                                               | Use five-item privacy-controlled preview and View all; keep mode-neutral                                           |
+| Best preview                           | [`components/profile/dashboard/profileBestPlays.tsx`](../../components/profile/dashboard/profileBestPlays.tsx)                                                                                                                                                                                                   | Use a five-item start, active-mode ordering, More/Collapse, localization, and Music-detail return context          |
+| Recent preview                         | [`components/profile/dashboard/profileRecentPlays.tsx`](../../components/profile/dashboard/profileRecentPlays.tsx)                                                                                                                                                                                               | Use a five-item privacy-controlled start with More/Collapse; keep mode-neutral                                     |
 | Rank distribution                      | [`components/profile/dashboard/profileRankDistribution.tsx`](../../components/profile/dashboard/profileRankDistribution.tsx)                                                                                                                                                                                     | Preserve approved rank taxonomy; remove inline expansion dependence and integrate optional Play count              |
 | Judgement summary                      | [`components/profile/dashboard/profileJudgementSummary.tsx`](../../components/profile/dashboard/profileJudgementSummary.tsx) and [`lib/profile/profileAnalytics.ts`](../../lib/profile/profileAnalytics.ts)                                                                                                      | Make privacy-safe public performance summary with full basis and valid-chart count                                 |
 | Profile settings                       | [`components/profile/profileSettingCard.tsx`](../../components/profile/profileSettingCard.tsx), [`app/(nevigation)/profile/settings/schema.ts`](<../../app/(nevigation)/profile/settings/schema.ts>), and [`app/(nevigation)/profile/settings/actions.ts`](<../../app/(nevigation)/profile/settings/actions.ts>) | Add preferred-arcade and grouped Play-activity visibility; explain public effects and invalidate caches            |
 | Privacy storage                        | [`prisma/schema.prisma`](../../prisma/schema.prisma)                                                                                                                                                                                                                                                             | Add explicit preferred-arcade and Play-activity visibility fields while preserving existing controls               |
-| Official play history                  | `ChartPlayHistory` in [`prisma/schema.prisma`](../../prisma/schema.prisma)                                                                                                                                                                                                                                       | Preserve deduplicated history beyond overview limits and support private/public complete lists                     |
+| Official play history                  | `ChartPlayHistory` in [`prisma/schema.prisma`](../../prisma/schema.prisma)                                                                                                                                                                                                                                       | Preserve deduplicated history beyond the five-item start and serve it in bounded batches                           |
 | Record snapshots                       | `ChartRecordSnapshot` and `UserBestGrade` in [`prisma/schema.prisma`](../../prisma/schema.prisma)                                                                                                                                                                                                                | Preserve changed-only history and support Grd/Rating trend ranges without duplicate points                         |
 | Sync ingestion                         | [`lib/services/user/updatePlayData.ts`](../../lib/services/user/updatePlayData.ts) and [`lib/services/user/updatePlayerProfile.ts`](../../lib/services/user/updatePlayerProfile.ts)                                                                                                                              | Keep duplicate suppression, expose owner-safe freshness, and retain complete meaningful history                    |
 | Basic Rating calculation               | [`lib/tiers/basicRating.ts`](../../lib/tiers/basicRating.ts) and [`lib/rankings.ts`](../../lib/rankings.ts)                                                                                                                                                                                                      | Reuse approved published Basic Rating contract; do not create a separate Profile formula                           |
-| Complete-list destinations             | New localized Profile child routes                                                                                                                                                                                                                                                                               | Add privacy-safe Best and Recent lists with restorable explicit bounds and Music-detail return context             |
+| In-place list expansion                | [`app/(nevigation)/profile/[id]/data.ts`](<../../app/(nevigation)/profile/[id]/data.ts>)                                                                                                                                                                                                                         | Add a bounded batch query for Best and Recent so More fetches the next batch; no child routes are added            |
 | Localized labels                       | [`lib/i18n/messageCatalogs`](../../lib/i18n/messageCatalogs)                                                                                                                                                                                                                                                     | Add complete Korean/Japanese/English Profile, privacy, range, metric, list, sync, and state strings                |
 | Existing automated evidence            | [`tests/profile.test.ts`](../../tests/profile.test.ts), [`tests/profile-analytics.test.ts`](../../tests/profile-analytics.test.ts), and profile/sync tests                                                                                                                                                       | Add privacy leaks, mode scope, Rating, preview/full lists, history, localization, 320px reflow, and state coverage |
 
@@ -693,9 +701,10 @@ Validate at minimum:
    Recent Plays;
 6. each optional privacy field hidden independently;
 7. Play activity hidden, confirming Last played and Recent Plays disappear together;
-8. hidden Recent child-route direct access by visitor and authenticated owner;
-9. more than one page/bound of Best and Recent history and exact return from Music
-   detail;
+8. Play activity hidden while a visitor and the authenticated owner each request further
+   Recent batches;
+9. more than one expansion batch of Best and Recent history, Collapse from an expanded
+   list, and a Music-detail round trip that returns the list to its five-item start;
 10. current sync, stale sync, syncing, partial sync, and failed sync for the owner;
 11. a valid maximum-length username and long NOSTALGIA, Discord, and arcade names;
 12. long original Japanese Music titles, translated/read-title search entry that
@@ -722,10 +731,10 @@ Validate at minimum:
   unavailable.
 - Progress defaults to 90 days, shows one selected metric, provides exact start/current/
   change text, and exposes accessible underlying values.
-- Profile overview renders at most five Best and five Recent items and exposes View all
-  only when more public items exist.
-- Complete-list state and the return from Music detail restore useful position and mode
-  context.
+- Profile Best and Recent lists start at five items and expose More only when more
+  public items exist; More appends a bounded batch in place and Collapse returns the
+  list to five.
+- Changing mode or contribution metric resets Best Plays to its five-item start.
 - NOSTALGIA name, Discord, preferred arcade, Play count, and Play activity obey their
   approved visibility controls in content, payloads, accessible names, and Share
   artifacts.
@@ -764,7 +773,7 @@ Validate at minimum:
 | [NOSTALGIA official Play Data](https://p.eagate.573.jp/game/nostalgia/op3/playdata/entrance.html)                         | Publishes player identity, Play count, Basic/Recital Grd, chart bests, judgement detail, and recent plays        | Validates core NOSTALGIA record vocabulary and data provenance              | Official inclusion does not make NOS or Brooch a NosLog priority                        |
 | [NOSTALGIA official mode guidance](https://p.eagate.573.jp/game/nostalgia/op2/howto/entrance.html)                        | Basic and Recital represent distinct game performance contexts                                                   | Supports scoped mode comparison                                             | Does not define NosLog Rating or public privacy                                         |
 | [osu! public Profile](https://osu.ppy.sh/users/11839754/osu)                                                              | Leads with identity and standing, then best, history, most-played, and recent performance                        | Supports performance-first hierarchy and complete supporting lists          | osu! PP, medals, and social context do not map directly                                 |
-| [osu! API Profile sections](https://osu.ppy.sh/docs/index.html)                                                           | Public Profile sections are independently addressable data groups                                                | Supports bounded Best/Recent destinations and explicit states               | API structure does not dictate visual composition                                       |
+| [osu! API Profile sections](https://osu.ppy.sh/docs/index.html)                                                           | Public Profile sections are independently addressable data groups                                                | Supports bounded Best/Recent batches and explicit states                    | API structure does not dictate visual composition                                       |
 | [ScoreSaber beginner guide](https://wiki.scoresaber.com/beginners-guide.html)                                             | Profile identity, total performance value, global/local rank, and score stats are tightly grouped                | Supports coherent competitive summary                                       | Beat Saber PP differs from Grd and NosLog Rating                                        |
 | [ScoreSaber ranking system](https://wiki.scoresaber.com/ranking-system.html)                                              | Weighted best performances explain public ranking and country position                                           | Supports Best Plays as evidence for derived Rating                          | Exact weighting is not NosLog policy                                                    |
 | [BeatLeader server and API](https://github.com/BeatLeader/beatleader-server)                                              | Performance profiles connect ranked scores, history, and replay-backed evidence                                  | Supports public record evidence and structured full lists                   | Replay and anti-cheat functions are outside NosLog scope                                |
@@ -781,7 +790,7 @@ Validate at minimum:
 | [USWDS Data visualizations](https://designsystem.digital.gov/components/data-visualizations/)                             | Charts need underlying data and plain-language summaries                                                         | Requires accessible Grd/Rating trend and judgement basis                    | Does not define rhythm-game metrics                                                     |
 | [GOV.UK Accordion](https://design-system.service.gov.uk/components/accordion/)                                            | Universally needed content should not be hidden; content should be simplified before adding disclosure           | Keeps core performance visible and avoids nested profile accordions         | Government content density differs from NosLog                                          |
 | [W3C WCAG: Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html)                                               | Ordinary vertical content must preserve information and function at 320 CSS px without two-dimensional scrolling | Rejects the current overflow and fixed compact desktop shell                | Does not prescribe exact layout tokens                                                  |
-| [W3C Tables tutorial](https://www.w3.org/WAI/tutorials/tables/)                                                           | Tabular relationships require clear headings and associations                                                    | Guides wide complete-list and metric comparison semantics                   | Compact records may use semantic lists instead                                          |
+| [W3C Tables tutorial](https://www.w3.org/WAI/tutorials/tables/)                                                           | Tabular relationships require clear headings and associations                                                    | Guides wide record-list and metric comparison semantics                     | Compact records may use semantic lists instead                                          |
 | [WAI-ARIA APG: Tabs](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/)                                                      | Tab-like exclusive controls need clear controlled relationships and keyboard behavior                            | Guides the scoped Basic/Recital selector if tab semantics are chosen        | Visual styling and whether tabs or segmented control are used remain open to Foundation |
 | [W3C Internationalization techniques](https://www.w3.org/International/techniques/authoring-html.en)                      | Language metadata and script-aware wrapping are required for multilingual text                                   | Supports Korean/Japanese/English labels and title reflow                    | Exact typography requires Foundation testing                                            |
 | [Korean Layout Requirements](https://w3c.github.io/klreq/)                                                                | Korean line breaking and typographic composition have language-specific constraints                              | Supports script-aware names, titles, and metadata                           | It does not determine NosLog visual identity                                            |
@@ -830,10 +839,12 @@ Validate at minimum:
   are omitted entirely.
 - **Make judgement owner-only — Superseded:** judgement becomes public competitive
   performance information with an explicit valid-data basis.
-- **Show ten or unlimited Best/Recent items inline — Superseded:** use five-item
-  previews and dedicated complete-list destinations.
-- **Use automatic infinite scroll for complete lists — Rejected:** explicit bounded
-  loading preserves position, history, and return behavior.
+- **Route Best/Recent history to dedicated child destinations — Superseded
+  (2026-08-27):** the lists expand in place on the Profile through More/Collapse, so two
+  extra routes and their duplicated identity, return path, and URL-restoration contracts
+  are not built (`PROF-39`).
+- **Use automatic infinite scroll — Rejected:** expansion stays explicit and bounded, so
+  the reader controls how much history is loaded.
 - **Keep Logout at the end of Profile — Rejected:** account termination belongs in the
   account/More or Settings context.
 - **Show Brooch or NOS as persistent Profile metrics — Rejected:** they do not serve
@@ -845,46 +856,47 @@ Validate at minimum:
 
 ## Decision Log
 
-| ID      | Decision                                                                                                              | Status                               |
-| ------- | --------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
-| PROF-01 | Profile is a public Records-and-comparison destination centered on identity, ability, progress, and record evidence   | `Approved`                           |
-| PROF-02 | Source order is identity, competitive summary, progress, Best Plays, record overview, then Recent Plays               | `Approved`                           |
-| PROF-03 | Country marker sits beside username and mode exam labels sit below identity                                           | `Approved`                           |
-| PROF-04 | NosLog account join date is removed                                                                                   | `Approved`                           |
-| PROF-05 | Owner keeps compact Share and Settings actions and gains contextual sync freshness                                    | `Approved`                           |
-| PROF-06 | Logout is removed from Profile body                                                                                   | `Approved`                           |
-| PROF-07 | Basic/Recital selector controls only competitive summary, progress, and Best Plays                                    | `Approved`                           |
-| PROF-08 | Official Grd remains official primary metric and Basic adds the approved NosLog Rating                                | `Approved`                           |
-| PROF-09 | Recital Rating is structurally supported but omitted until its approved data source exists                            | `Superseded by PROF-33 — 2026-08-26` |
-| PROF-10 | Competitive summary integrates mode Grd, conditional Rating, global rank, and country-category rank                   | `Approved`                           |
-| PROF-11 | Progress defaults to 90 days with 30-day, 90-day, one-year, and all ranges in one selector                            | `Approved`                           |
-| PROF-12 | Progress shows one selected metric at a time and exposes exact start/current/change text                              | `Approved`                           |
-| PROF-13 | Overview shows five active-mode Best Plays and a complete-list destination                                            | `Approved`                           |
-| PROF-14 | Rank distribution and judgement remain mode-neutral public record overview data                                       | `Approved`                           |
-| PROF-15 | Profile-wide Play count is optional public information and never Clear count                                          | `Approved`                           |
-| PROF-16 | Overview shows five mode-neutral Recent Plays when Play activity is public                                            | `Approved`                           |
-| PROF-17 | Complete Best and Recent lists use explicit bounded loading and no infinite scroll                                    | `Approved`                           |
-| PROF-18 | Always-public performance includes identity, exams, metrics, ranks, progress, Best, distribution, and judgement       | `Approved`                           |
-| PROF-19 | User controls NOSTALGIA name, Discord, preferred arcade, Play count, and grouped Play activity                        | `Approved`                           |
-| PROF-20 | Last played and Recent Plays share one Play-activity visibility control                                               | `Approved`                           |
-| PROF-21 | Hidden visitor content is omitted without a `Private` placeholder                                                     | `Approved`                           |
-| PROF-22 | Meaningful daily history is retained without a thirty-item cap and identical events/snapshots are not duplicated      | `Approved`                           |
-| PROF-23 | Brooch, persistent NOS, arbitrary achievements, and social modules are excluded                                       | `Approved`                           |
-| PROF-24 | Compact layouts reflow without document horizontal scrolling through 320 CSS px                                       | `Approved`                           |
-| PROF-25 | Wide layouts use additional comparison space without becoming an unrelated dashboard                                  | `Approved`                           |
-| PROF-26 | Use an owner-previewed 1200×630 card scoped to one selected mode                                                      | `Approved`                           |
-| PROF-27 | Include public identity and available selected-mode competition context                                               | `Approved`                           |
-| PROF-28 | Conditionally include only visible NOSTALGIA name, Play count, and preferred arcade name                              | `Approved`                           |
-| PROF-29 | Omit hidden/missing fields and exclude Discord, activity, NOS, sync, address, and operations data                     | `Approved`                           |
-| PROF-30 | Feature-detect system Share and provide save, supported copy, and accurate link fallbacks                             | `Approved`                           |
-| PROF-31 | Provide a public-safe localized Open Graph card and invalidate it after privacy changes                               | `Approved`                           |
-| PROF-32 | Provide a localized accessible equivalent and explicit loading, cancel, unsupported, and error behavior               | `Approved`                           |
-| PROF-33 | Both modes expose NosLog Rating, each sourced from that mode's Pianist tier list                                      | `Approved — 2026-08-26`              |
-| PROF-34 | The Basic/Recital selector is a two-segment segmented control attached to the performance region                      | `Approved — 2026-08-26`              |
-| PROF-35 | Progress uses an underline metric switch with a compact range select on one secondary row                             | `Approved — 2026-08-26`              |
-| PROF-36 | A missing avatar falls back to the first letter grapheme of the username, uppercased                                  | `Approved — 2026-08-26`              |
-| PROF-37 | Best Plays rows use a two-axis composition: identity and play facts leading, contribution value trailing              | `Approved — 2026-08-27`              |
-| PROF-38 | Best Plays carries its own contribution metric control; Official Grd is the default and switching re-queries the list | `Approved — 2026-08-27`              |
+| ID      | Decision                                                                                                              | Status                                |
+| ------- | --------------------------------------------------------------------------------------------------------------------- | ------------------------------------- |
+| PROF-01 | Profile is a public Records-and-comparison destination centered on identity, ability, progress, and record evidence   | `Approved`                            |
+| PROF-02 | Source order is identity, competitive summary, progress, Best Plays, record overview, then Recent Plays               | `Approved`                            |
+| PROF-03 | Country marker sits beside username and mode exam labels sit below identity                                           | `Approved`                            |
+| PROF-04 | NosLog account join date is removed                                                                                   | `Approved`                            |
+| PROF-05 | Owner keeps compact Share and Settings actions and gains contextual sync freshness                                    | `Approved`                            |
+| PROF-06 | Logout is removed from Profile body                                                                                   | `Approved`                            |
+| PROF-07 | Basic/Recital selector controls only competitive summary, progress, and Best Plays                                    | `Approved`                            |
+| PROF-08 | Official Grd remains official primary metric and Basic adds the approved NosLog Rating                                | `Approved`                            |
+| PROF-09 | Recital Rating is structurally supported but omitted until its approved data source exists                            | `Superseded by PROF-33 — 2026-08-26`  |
+| PROF-10 | Competitive summary integrates mode Grd, conditional Rating, global rank, and country-category rank                   | `Approved`                            |
+| PROF-11 | Progress defaults to 90 days with 30-day, 90-day, one-year, and all ranges in one selector                            | `Approved`                            |
+| PROF-12 | Progress shows one selected metric at a time and exposes exact start/current/change text                              | `Approved`                            |
+| PROF-13 | Best Plays starts at five active-mode items and expands in place                                                      | `Revised by PROF-39 — 2026-08-27`     |
+| PROF-14 | Rank distribution and judgement remain mode-neutral public record overview data                                       | `Approved`                            |
+| PROF-15 | Profile-wide Play count is optional public information and never Clear count                                          | `Approved`                            |
+| PROF-16 | Overview shows five mode-neutral Recent Plays when Play activity is public                                            | `Approved`                            |
+| PROF-17 | Best and Recent expansion uses explicit bounded loading and no infinite scroll                                        | `Approved — scope revised by PROF-39` |
+| PROF-18 | Always-public performance includes identity, exams, metrics, ranks, progress, Best, distribution, and judgement       | `Approved`                            |
+| PROF-19 | User controls NOSTALGIA name, Discord, preferred arcade, Play count, and grouped Play activity                        | `Approved`                            |
+| PROF-20 | Last played and Recent Plays share one Play-activity visibility control                                               | `Approved`                            |
+| PROF-21 | Hidden visitor content is omitted without a `Private` placeholder                                                     | `Approved`                            |
+| PROF-22 | Meaningful daily history is retained without a thirty-item cap and identical events/snapshots are not duplicated      | `Approved`                            |
+| PROF-23 | Brooch, persistent NOS, arbitrary achievements, and social modules are excluded                                       | `Approved`                            |
+| PROF-24 | Compact layouts reflow without document horizontal scrolling through 320 CSS px                                       | `Approved`                            |
+| PROF-25 | Wide layouts use additional comparison space without becoming an unrelated dashboard                                  | `Approved`                            |
+| PROF-26 | Use an owner-previewed 1200×630 card scoped to one selected mode                                                      | `Approved`                            |
+| PROF-27 | Include public identity and available selected-mode competition context                                               | `Approved`                            |
+| PROF-28 | Conditionally include only visible NOSTALGIA name, Play count, and preferred arcade name                              | `Approved`                            |
+| PROF-29 | Omit hidden/missing fields and exclude Discord, activity, NOS, sync, address, and operations data                     | `Approved`                            |
+| PROF-30 | Feature-detect system Share and provide save, supported copy, and accurate link fallbacks                             | `Approved`                            |
+| PROF-31 | Provide a public-safe localized Open Graph card and invalidate it after privacy changes                               | `Approved`                            |
+| PROF-32 | Provide a localized accessible equivalent and explicit loading, cancel, unsupported, and error behavior               | `Approved`                            |
+| PROF-33 | Both modes expose NosLog Rating, each sourced from that mode's Pianist tier list                                      | `Approved — 2026-08-26`               |
+| PROF-34 | The Basic/Recital selector is a two-segment segmented control attached to the performance region                      | `Approved — 2026-08-26`               |
+| PROF-35 | Progress uses an underline metric switch with a compact range select on one secondary row                             | `Approved — 2026-08-26`               |
+| PROF-36 | A missing avatar falls back to the first letter grapheme of the username, uppercased                                  | `Approved — 2026-08-26`               |
+| PROF-37 | Best Plays rows use a two-axis composition: identity and play facts leading, contribution value trailing              | `Approved — 2026-08-27`               |
+| PROF-38 | Best Plays carries its own contribution metric control; Official Grd is the default and switching re-queries the list | `Approved — 2026-08-27`               |
+| PROF-39 | Best and Recent expand in place through More/Collapse; no dedicated complete-list routes are built                    | `Approved — 2026-08-27`               |
 
 ## Handoff Boundary
 
@@ -892,7 +904,7 @@ The active high-fidelity design stage may determine the final type scale, visual
 appearance, column proportions, grid tracks, spacing, avatar fallback, country-marker
 treatment, control styling, responsive transition points, and motion after Foundation
 approval. It must preserve the approved source hierarchy, scoped Basic/Recital
-behavior, metric meanings, privacy groups, five-item previews, complete-list access,
+behavior, metric meanings, privacy groups, five-item starts, in-place expansion,
 sync trust context, states, accessibility, localization, and acceptance criteria.
 
 The later Codex implementation session must compare the final approved Figma output against this
