@@ -484,6 +484,13 @@ accessible name, not a token.
 
 - Use `lucide-react` as the single ordinary-UI icon family and review changed glyphs
   when upgrading the source package.
+- **Third-party brand marks are a bounded exception, approved 2026-08-27.** A brand such
+  as Discord has no Lucide equivalent, and substituting a generic glyph would misname the
+  service. Use the brand's own published symbol, vendored from the product source rather
+  than redrawn, sized to the same render step as the icon it sits with, and given the same
+  accessible treatment. A brand mark is filled artwork, not a `2px` stroked outline, so the
+  stroke rules above do not apply to it. This exception covers identity metadata that names
+  an external service; it does not admit brand marks into actions, navigation, or status.
 - Preserve the published `24×24` viewBox, `2px` stroke, round linecaps/linejoins, and
   outline treatment.
 - Render routine action/wayfinding glyphs at `20px`. Use `16px` only for compact

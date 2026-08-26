@@ -187,6 +187,15 @@ promote account controls, sync details, currency, or inventory above performance
 
 - Show the avatar or approved fallback, NosLog username, and country-category marker
   as one identity group.
+- The avatar is square and takes its size from the identity block beside it rather than
+  a fixed number, so it aligns with the first and last line of that block at every width
+  (`PROF-41`).
+- The country marker takes its size from the username composite it sits beside
+  (`PROF-41`): `24px` next to a promoted `page-title`, `16px` next to `control`, as the
+  ranking rows use. `24px` is an approved render size, and this is a bounded exception to
+  its documented role in document `24`, which otherwise reserves it for a prominent
+  standalone affordance or empty state. A flag keeps its source 4:3 ratio inside that
+  square box; the Other-regions globe fills it.
 - When no avatar image exists, the fallback is the first letter grapheme of the username,
   uppercased where the script has case (`PROF-36`). Skip leading non-letter characters. If
   the username contains no letter, or no username exists, fall back to the approved person
@@ -207,8 +216,11 @@ promote account controls, sync details, currency, or inventory above performance
 
 - Keep Share and Settings as compact owner-only actions associated with the identity
   area. They must not compete with the player name or performance summary.
-- Add one owner-only sync-freshness line such as `Last sync Jul 28 · Up to date` or
-  `Sync needed`, with a contextual Data sync action.
+- Add one owner-only line stating when NosLog last synced, such as `Last sync 3 days
+ago` (`PROF-40`). State only what NosLog can observe about its own import: do not
+  claim the profile is up to date or that a sync is needed, because that verdict would
+  require reading the external game service, which NosLog has no access or permission
+  to query.
 - Sync status is trust and maintenance context, not a public performance metric or a
   large dashboard card.
 - Remove Logout from the Profile body. Logout belongs to the approved account/More or
@@ -535,8 +547,14 @@ itself; there are no dedicated child destinations.
 
 ### Sync Status
 
-- `Up to date`, `Sync needed`, `Syncing`, `Partial`, and `Failed` are owner-only trust
-  states and remain distinct from public record Loading or Error.
+- The owner-only sync states are the observable outcomes of NosLog's own import job:
+  `Never synced`, `Last sync <time>`, `Syncing`, `Partial`, and `Failed`. They remain
+  distinct from public record Loading or Error.
+- There is no `Up to date` or `Sync needed` state (`PROF-40`). Deciding either would
+  require comparing against the external game service, and NosLog cannot query it, so
+  such a claim would be unverifiable.
+- A recovery action accompanies `Partial` and `Failed`, where there is something to
+  retry. The plain last-sync line carries no action.
 - Sync state links to the existing Data sync flow; it does not expose tokens, internal
   errors, or administrator health data.
 
@@ -637,6 +655,13 @@ itself; there are no dedicated child destinations.
 - Avoid ambiguous all-numeric dates without locale context.
 - Use tabular figures for scores, Grd, Rating, rank, Play count, judgement values, and
   trend summaries where alignment aids comparison.
+- Write a metric as value then unit, so the unit trails the number: `5,713 Grd` and
+  `6,240 pt` (`PROF-42`). Rank values take a `#` prefix: `#2`. The competitive summary
+  labels the country rank generically as country rank rather than naming the country,
+  because the value is a country-category position.
+- The four competitive-summary values share one dominant size so the summary reads as one
+  strip rather than one metric plus three captions (`PROF-42`). Official Grd stays primary
+  through order and cell width, not through type size.
 - Localize empty, hidden-owner, Loading, Error, Retry, More, Collapse, sync, and insufficient
   history labels in Korean, Japanese, and English with equivalent meaning.
 
@@ -659,7 +684,7 @@ itself; there are no dedicated child destinations.
 | Updating section       | Last committed section plus busy status                                                        | Stale responses cannot win                                |
 | Initial error          | Bounded Profile error and Retry                                                                | Ordinary localized shell remains usable                   |
 | Section error          | Last committed section plus local Retry                                                        | Unaffected Profile sections remain usable                 |
-| Sync needed/failed     | Owner-only concise sync status                                                                 | Opens Data sync recovery; no internal details exposed     |
+| Sync partial/failed    | Owner-only concise sync outcome                                                                | Opens Data sync recovery; no internal details exposed     |
 | Missing user           | Localized not-found outcome                                                                    | No empty or private Profile is fabricated                 |
 
 ## Implementation Mapping
@@ -705,7 +730,8 @@ Validate at minimum:
    Recent batches;
 9. more than one expansion batch of Best and Recent history, Collapse from an expanded
    list, and a Music-detail round trip that returns the list to its five-item start;
-10. current sync, stale sync, syncing, partial sync, and failed sync for the owner;
+10. never synced, a plain last-sync time, syncing, partial sync, and failed sync for the
+    owner;
 11. a valid maximum-length username and long NOSTALGIA, Discord, and arcade names;
 12. long original Japanese Music titles, translated/read-title search entry that
     resolves to original-title-only Profile items, and missing jacket;
@@ -862,7 +888,7 @@ Validate at minimum:
 | PROF-02 | Source order is identity, competitive summary, progress, Best Plays, record overview, then Recent Plays               | `Approved`                            |
 | PROF-03 | Country marker sits beside username and mode exam labels sit below identity                                           | `Approved`                            |
 | PROF-04 | NosLog account join date is removed                                                                                   | `Approved`                            |
-| PROF-05 | Owner keeps compact Share and Settings actions and gains contextual sync freshness                                    | `Approved`                            |
+| PROF-05 | Owner keeps compact Share and Settings actions and gains a last-sync line                                             | `Revised by PROF-40 — 2026-08-27`     |
 | PROF-06 | Logout is removed from Profile body                                                                                   | `Approved`                            |
 | PROF-07 | Basic/Recital selector controls only competitive summary, progress, and Best Plays                                    | `Approved`                            |
 | PROF-08 | Official Grd remains official primary metric and Basic adds the approved NosLog Rating                                | `Approved`                            |
@@ -897,6 +923,9 @@ Validate at minimum:
 | PROF-37 | Best Plays rows use a two-axis composition: identity and play facts leading, contribution value trailing              | `Approved — 2026-08-27`               |
 | PROF-38 | Best Plays carries its own contribution metric control; Official Grd is the default and switching re-queries the list | `Approved — 2026-08-27`               |
 | PROF-39 | Best and Recent expand in place through More/Collapse; no dedicated complete-list routes are built                    | `Approved — 2026-08-27`               |
+| PROF-40 | The sync line states only what NosLog observes about its own import; no up-to-date verdict                            | `Approved — 2026-08-27`               |
+| PROF-41 | Avatar and country-marker sizes derive from the adjacent identity composite, not fixed numbers                        | `Approved — 2026-08-27`               |
+| PROF-42 | Metric values are value-then-unit, ranks take a `#` prefix, and the summary values share one size                     | `Approved — 2026-08-27`               |
 
 ## Handoff Boundary
 

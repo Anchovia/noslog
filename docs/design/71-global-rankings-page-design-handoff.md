@@ -111,7 +111,7 @@ The ten previously wrapping JA/EN text nodes now remain `14px`, one line, and
 The updating fixture applies approved A:
 
 - the control immediately shows the newest pending `Rating` selection;
-- retained successful rows keep the committed `Grd {value}` unit until the new
+- retained successful rows keep the committed `{value} Grd` unit until the new
   response commits;
 - the existing generic centered updating message remains unchanged;
 - no new status copy, retained-content dimming, or pending-only color is added.
@@ -132,7 +132,9 @@ recorded as `RANK-31` in document 08.
 - Error and Rating-unavailable recovery actions use the approved `24px` subsection
   gap, never an invented `8px` or `16px` value.
 - Ranking rows are fixed at `60px`.
-- Rating values use `{grouped integer} pt`; Grd values use `Grd {grouped integer}`.
+- Both metrics put the unit after the grouped integer: `{value} pt` and `{value} Grd`.
+  Revised 2026-08-27 (`RANK-32`); Grd previously used a `Grd {value}` prefix. The Figma
+  `PlayerRankingRow` instances still carry the old prefix and are being updated.
 - The persistent Rating source/top-70 basis sentence is removed.
 - Page size is `25`; shared ranks use competition ranking, including page-boundary
   ties.
