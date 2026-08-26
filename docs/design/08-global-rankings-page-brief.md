@@ -211,7 +211,13 @@ distribution charts, or multiple competing summaries.
 ### Signed-In and Eligible
 
 - If the current user's row is not on the active page, show one compact summary:
-  `My rank {rank} / {population} · {metric value}` and one **My position** action.
+  `My rank {rank} / {population}` and one **My position** action.
+- Do not repeat the active Grd or Rating value in the personal-position summary. The
+  containing row exposes that value after My position navigation, so repeating it adds
+  width without adding information.
+- Keep the localized summary and My position action on one line down to `320 CSS px`.
+  Do not move the action to a second line, reduce the approved type size, or replace the
+  approved action boundary to solve reflow.
 - Activating My position navigates to the page containing the current user's row,
   updates the URL, and moves reading/focus context to that highlighted row.
 - If the current user's row is already on the active page, remove the separate summary
@@ -281,6 +287,8 @@ Normative compact example:
 - Missing exam removes the second-line value without leaving an empty badge or
   placeholder.
 - Numeric values use tabular figures and stable end alignment for comparison.
+- Display NosLog Rating row values as `{value} pt`, with the unit after the grouped
+  integer. Keep Official Grd in its existing `Grd {value}` form.
 
 ## Pagination Contract
 
@@ -356,6 +364,8 @@ Normative compact example:
   a first tap, or horizontal scrolling.
 - The personal summary and pagination must reflow without overlapping the Header or
   result rows.
+- The personal summary remains a single row at `320 CSS px`: localized My-rank label,
+  rank/population, and My-position action. It omits the duplicated active metric value.
 
 ### Wide Layout
 
@@ -415,6 +425,10 @@ Normative compact example:
     - Korean: `공식 Grd`, `NosLog 레이팅`
     - Japanese: `公式Grd`, `NosLogレーティング`
     - English: `Official Grd`, `NosLog Rating`
+- When the secondary control row has less than `396px` of available width, use the
+  content-fit visible labels `Grd` and `Rating` in every locale. Restore the approved
+  full localized labels at `396px` and above, and retain the full localized metric name
+  in the control's accessible name at compact widths.
 - Approved region labels:
     - Korean: `전체`, `대한민국`, `일본`, `기타 지역`
     - Japanese: `すべて`, `韓国`, `日本`, `その他地域`
@@ -624,6 +638,9 @@ Validate at minimum:
 | RANK-22 | No top-three podium; results are one ranked list from rank 1                                              | `Approved`   |
 | RANK-23 | Wide results use the table-like ranked list, not a semantic table with a header row                       | `Approved`   |
 | RANK-24 | Metric subordination uses a different control form (underline tabs), not a second segmented control       | `Approved`   |
+| RANK-25 | Personal position omits the duplicated metric value and remains one line with its action at 320px         | `Approved`   |
+| RANK-26 | NosLog Rating row values use a grouped integer followed by `pt`                                           | `Approved`   |
+| RANK-27 | Metric controls use visible `Grd` / `Rating` below 396px and full localized labels at 396px and above     | `Approved`   |
 
 ## Handoff Boundary
 
