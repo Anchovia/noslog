@@ -182,6 +182,12 @@ Copy-Item .env.example .env
 않는 배포와 실행을 차단합니다. Main과 Dev의 Neon 프로젝트 호스트를 각 환경에 따로
 지정해 교차 연결을 방지합니다.
 
+Neon의 pooled `DATABASE_URL`을 사용한다면 `DATABASE_EXPECTED_HOST`에도 같은
+`-pooler` 호스트를 지정해야 합니다. Vercel에서 내려받은 `.env.production.local`의
+Secret 값이 빈 문자열이면 하위 우선순위의 `.env` 값을 가리므로, 로컬 빌드에서는 해당
+빈 키를 제거하고 Dev DB 및 로컬 전용 Secret을 사용합니다. Production DB 주소나
+Production Secret을 로컬 검증용으로 복사하지 않습니다.
+
 선택 환경변수:
 
 - `MAINTENANCE_MODE=true`: 일반 페이지와 API에 점검 안내 표시
@@ -218,7 +224,13 @@ npm run lint
 npm run typecheck
 npm test
 npm run build
+npm audit
 ```
+
+Prisma CLI는 빌드·마이그레이션 도구이므로 `devDependencies`에 둡니다. 현재
+`@prisma/config`가 고정한 취약 버전 대신 패치된 `deepmerge-ts`를 `overrides`로
+적용합니다. Prisma를 업데이트할 때는 upstream 의존성이 패치됐는지 확인한 뒤 불필요해진
+override를 제거하고, `prisma validate`, 전체 테스트와 프로덕션 빌드를 다시 실행합니다.
 
 Playwright E2E는 로컬 테스트 DB에 마이그레이션과 E2E 시드를 적용하고 개발 서버를 실행한 상태에서 사용할 수 있습니다.
 
