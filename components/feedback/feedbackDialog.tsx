@@ -4,7 +4,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { put } from "@vercel/blob/client";
 import { ImagePlus, MessageSquareWarning, X } from "lucide-react";
 import Link from "next/link";
-import { ChangeEvent, useRef, useState } from "react";
+import { useRef, useState, type ChangeEvent } from "react";
 
 import {
     useLocale,

@@ -1,7 +1,7 @@
 "use client";
 
 import { FileCheck2, Upload } from "lucide-react";
-import { ChangeEvent, useState, useTransition } from "react";
+import { useState, useTransition, type ChangeEvent } from "react";
 
 import {
     importMusicTranslationsCsv,

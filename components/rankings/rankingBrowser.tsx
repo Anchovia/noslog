@@ -2,6 +2,10 @@
 
 import { useTranslations } from "@/components/i18n/localeProvider";
 import UserRankingTable from "@/components/rankings/userRankingTable";
+import {
+    userRankingsQueryKey,
+    userRankingsQueryOptions,
+} from "@/features/rankings/api/userRankings";
 import type {
     UserRankingMetric,
     UserRankingMode,
@@ -11,7 +15,8 @@ import type {
 import { cn } from "@/lib/utils";
 import { Globe2 } from "lucide-react";
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 
 const PAGE_SIZE = 7;
 
@@ -60,15 +65,6 @@ function RegionIcon({ icon }: { icon?: "kr" | "jp" | "global" }) {
     return null;
 }
 
-function cacheKey(
-    mode: UserRankingMode,
-    metric: UserRankingMetric,
-    region: UserRankingRegion,
-    page: number
-) {
-    return `${mode}:${metric}:${region}:${page}`;
-}
-
 export default function RankingBrowser({
     initialMode,
     initialMetric,
@@ -76,6 +72,7 @@ export default function RankingBrowser({
     initialData,
 }: RankingBrowserProps) {
     const t = useTranslations();
+    const queryClient = useQueryClient();
     const rankingMetrics: { value: UserRankingMetric; label: string }[] = [
         { value: "grade", label: t("rankings.metric.grade") },
         { value: "rating", label: t("rankings.metric.rating") },
@@ -89,19 +86,18 @@ export default function RankingBrowser({
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const requestId = useRef(0);
-    const cache = useRef(
-        new Map<string, UserRankingPayload>([
-            [
-                cacheKey(
-                    initialMode,
-                    initialMetric,
-                    initialRegion,
-                    initialData.page
-                ),
-                initialData,
-            ],
-        ])
-    );
+
+    useEffect(() => {
+        queryClient.setQueryData(
+            userRankingsQueryKey({
+                mode: initialMode,
+                metric: initialMetric,
+                region: initialRegion,
+                page: initialData.page,
+            }),
+            initialData
+        );
+    }, [initialData, initialMetric, initialMode, initialRegion, queryClient]);
 
     function updateUrl(
         mode: UserRankingMode,
@@ -127,8 +123,9 @@ export default function RankingBrowser({
         region: UserRankingRegion,
         page: number
     ) {
-        const key = cacheKey(mode, metric, region, page);
-        const cached = cache.current.get(key);
+        const query = { mode, metric, region, page };
+        const queryKey = userRankingsQueryKey(query);
+        const cached = queryClient.getQueryData<UserRankingPayload>(queryKey);
         const currentRequestId = ++requestId.current;
 
         setError(null);
@@ -141,20 +138,11 @@ export default function RankingBrowser({
 
         setIsLoading(true);
         try {
-            const params = new URLSearchParams({
-                mode,
-                metric,
-                region,
-                page: String(page),
-            });
-            const response = await fetch(`/api/rankings?${params}`, {
-                cache: "no-store",
-            });
-            if (!response.ok) throw new Error("ranking request failed");
-
-            const result = (await response.json()) as UserRankingPayload;
-            cache.current.set(
-                cacheKey(mode, metric, region, result.page),
+            const result = await queryClient.fetchQuery(
+                userRankingsQueryOptions(query)
+            );
+            queryClient.setQueryData(
+                userRankingsQueryKey({ ...query, page: result.page }),
                 result
             );
             if (currentRequestId !== requestId.current) return;

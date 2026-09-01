@@ -2,14 +2,14 @@
 
 import { revalidatePath, updateTag } from "next/cache";
 
+import type { ActionResult } from "@/lib/actions/result";
 import { CACHE_TAGS, getUserProfileTag } from "@/lib/cacheTags";
 import db from "@/lib/db";
 import { createTranslator, getMessages } from "@/lib/i18n/messages";
 import { isLocale, localizePath } from "@/lib/i18n/routing";
 import getSession from "@/lib/session";
 
-export type PreferredArcadeActionResult =
-    { success: true; message: string } | { success: false; message: string };
+export type PreferredArcadeActionResult = ActionResult;
 
 export async function setPreferredArcade(
     arcadeId: number,

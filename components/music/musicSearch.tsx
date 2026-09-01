@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 
-import { searchSchema, type searchType } from "@/app/(nevigation)/music/schema";
 import MusicFilterPanel from "@/components/music/search/musicFilterPanel";
 import MusicSearchBar from "@/components/music/search/musicSearchBar";
 import {
@@ -27,6 +26,10 @@ import {
     type MusicRecordFilter,
 } from "@/app/(nevigation)/music/query";
 import { useLocalizedHref } from "@/components/i18n/localeProvider";
+import {
+    musicSearchSchema,
+    type MusicSearchFormValues,
+} from "@/features/music/schemas/musicSearchSchema";
 
 export type { MusicSearchProps } from "@/components/music/search/musicSearchTypes";
 
@@ -62,12 +65,13 @@ export default function MusicSearch({
                       )
                 : []
     );
-    const { register, handleSubmit, getValues } = useForm<searchType>({
-        resolver: zodResolver(searchSchema),
-        defaultValues: {
-            search: searchParams.q ?? "",
-        },
-    });
+    const { register, handleSubmit, getValues } =
+        useForm<MusicSearchFormValues>({
+            resolver: zodResolver(musicSearchSchema),
+            defaultValues: {
+                search: searchParams.q ?? "",
+            },
+        });
 
     useEffect(() => {
         return () => {

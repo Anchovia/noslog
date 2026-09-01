@@ -55,11 +55,32 @@ viewer/editor Page Brief와 `S4`/`S6` 계획은 기능을 기록한 역사적 �
 
 - Next.js 16, React 19, TypeScript
 - Tailwind CSS 4, Radix UI
+- React Hook Form, Zod
+- TanStack Query, Zustand
 - PixiJS 8
 - Prisma 6, Neon PostgreSQL
 - Discord OAuth, iron-session
 - Vercel, Vercel Blob, Vercel Cron
 - Vitest, Playwright, ESLint, Prettier, Husky
+
+### 코드 구조 및 스타일
+
+NosLog의 코드 작성·디렉터리·API 응답·Server Action·Zod·React Hook Form 규칙은
+[코드 스타일 문서](./docs/code-style.md)를 따릅니다. 기존 Jeongbiseo와 Fit-again
+프런트엔드에서 검증된 공통 규칙을 Next.js App Router에 맞게 적용한 기준입니다.
+
+- `app/`은 route, layout, Route Handler와 Server Action 진입점을 담당합니다.
+- 재사용되는 도메인 코드는 `features/<domain>/` 아래 `api`, `components`, `hooks`,
+  `schemas`, `server`, `types` 책임으로 점진적으로 이동합니다.
+- 공통 UI는 `components/ui/`, 교차 도메인 기반 기능은 `lib/`에 둡니다.
+- 새 내부 Route Handler는 `isSuccess`, `code`, `message`, `result`가 있는 공통
+  `ApiResponse<T>`를 사용하고, 컴포넌트에는 정규화한 도메인 데이터만 전달합니다.
+- Axios는 추가하지 않으며 native `fetch`와 TanStack Query를 사용합니다.
+- 폼은 React Hook Form과 Zod를 사용하고 같은 스키마를 서버 경계에서 다시 검증합니다.
+- 한국어·일본어·영어 사용자 오류 문구를 지원하며 공용 스키마에 한국어 문구만
+  하드코딩하지 않습니다.
+- 외부 소비자가 있는 기존 API와 채보 viewer/editor 보존 범위는 코드 스타일 정리만으로
+  변경하지 않습니다.
 
 ### NosLog 2.0 디자인 권위
 

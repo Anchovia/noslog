@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 
+import type { ActionFailure } from "@/lib/actions/result";
 import {
     createImageUploadToken,
     deleteBlobIfOwned,
@@ -20,13 +21,9 @@ import {
 } from "@/lib/uploadRateLimit";
 import { updateTag } from "next/cache";
 
-import { settingSchema } from "./schema";
+import { settingSchema, type SettingType } from "./schema";
 
-type SettingActionResult = {
-    success: false;
-    message: string;
-    fieldErrors?: Record<string, string[]>;
-};
+type SettingActionResult = ActionFailure<Extract<keyof SettingType, string>>;
 
 // 프로필 입력값과 새 아바타를 한 번에 저장함
 export async function uploadUserSetting(

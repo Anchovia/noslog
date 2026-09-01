@@ -6,6 +6,21 @@ import {
     getInitialMusicDifficultyState,
     parseMusicCategories,
 } from "@/components/music/search/musicSearchUtils";
+import { musicSearchSchema } from "@/features/music/schemas/musicSearchSchema";
+
+describe("악곡 검색 폼 스키마", () => {
+    it("문자열 검색어를 폼 입력으로 허용한다", () => {
+        expect(musicSearchSchema.parse({ search: "Life" })).toEqual({
+            search: "Life",
+        });
+    });
+
+    it("문자열이 아닌 검색어를 거부한다", () => {
+        expect(musicSearchSchema.safeParse({ search: null }).success).toBe(
+            false
+        );
+    });
+});
 
 describe("악곡 검색 UI 쿼리 변환", () => {
     it("유효한 카테고리만 초기 선택값으로 사용한다", () => {

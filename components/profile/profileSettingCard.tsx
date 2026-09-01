@@ -2,7 +2,7 @@
 
 import { Camera, Languages, MapPin, Save } from "lucide-react";
 import Link from "next/link";
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState, type ChangeEvent } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { put } from "@vercel/blob/client";
 
@@ -13,14 +13,15 @@ import {
 import {
     PROFILE_COUNTRIES,
     PROFILE_LANGUAGES,
-    SettingType,
     settingSchema,
+    type SettingType,
 } from "@/app/(nevigation)/profile/settings/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import DiscordIcon from "@/components/ui/DiscordIcon";
 import ProfileAvatar from "@/components/profile/profileAvatar";
 import { Switch } from "@/components/ui/Switch";
 import { ThemeSetting } from "@/components/theme/themeToggle";
+import { applyFormFieldErrors } from "@/lib/forms/errors";
 import {
     useLocale,
     useLocalizedHref,
@@ -179,16 +180,7 @@ export default function ProfileSettingCard({
         formData.set("hidePlayCount", String(data.hidePlayCount));
 
         const result = await uploadUserSetting(formData);
-        if (result?.fieldErrors) {
-            for (const [field, messages] of Object.entries(
-                result.fieldErrors
-            )) {
-                const message = messages?.[0];
-                if (message && field in data) {
-                    setError(field as keyof SettingType, { message });
-                }
-            }
-        }
+        applyFormFieldErrors(setError, result?.fieldErrors);
         if (result) setSubmitError(result.message);
     });
 
