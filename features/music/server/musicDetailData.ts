@@ -1,3 +1,5 @@
+import "server-only";
+
 import db from "@/lib/db";
 import { CACHE_TAGS } from "@/lib/cacheTags";
 import { PUBLIC_DATA_REVALIDATE_SECONDS } from "@/lib/cachePolicy";

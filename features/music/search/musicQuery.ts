@@ -1,5 +1,6 @@
 import { normalizeMusicCategories } from "@/lib/musicCategories";
 
+/** URL search state shared by the music route and its client controls. */
 export interface MusicSearchParams {
     q?: string;
     categories?: string;

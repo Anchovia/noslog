@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-import type { MusicSearchParams } from "@/app/(nevigation)/music/query";
+import type { MusicSearchParams } from "@/features/music/search/musicQuery";
 import MusicList, { type MusicItem } from "./musicList";
 import MusicToolbar, {
     type SortMode,

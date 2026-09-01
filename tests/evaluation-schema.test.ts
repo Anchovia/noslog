@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
     chartEvaluationReactionSchema,
     chartEvaluationSchema,
-} from "@/app/(nevigation)/music/[index]/[difficulty]/evaluationSchema";
+} from "@/features/music/schemas/chartEvaluationSchema";
 import { patternItems } from "@/components/music/musicTierVoteConfig";
 
 const validEvaluation = {

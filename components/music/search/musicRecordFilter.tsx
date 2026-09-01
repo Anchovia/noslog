@@ -1,4 +1,4 @@
-import type { MusicRecordFilter as MusicRecordFilterValue } from "@/app/(nevigation)/music/query";
+import type { MusicRecordFilter as MusicRecordFilterValue } from "@/features/music/search/musicQuery";
 import {
     useLocalizedHref,
     useTranslations,

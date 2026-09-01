@@ -2,7 +2,7 @@ import MusicCategoryFilter from "./musicCategoryFilter";
 import MusicDifficultyFilter from "./musicDifficultyFilter";
 import MusicDifficultyRange from "./musicDifficultyRange";
 import MusicRecordFilter from "./musicRecordFilter";
-import type { MusicRecordFilter as MusicRecordFilterValue } from "@/app/(nevigation)/music/query";
+import type { MusicRecordFilter as MusicRecordFilterValue } from "@/features/music/search/musicQuery";
 import {
     MUSIC_DIFFICULTIES,
     type MusicCategory,

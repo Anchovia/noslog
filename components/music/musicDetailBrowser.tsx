@@ -9,15 +9,12 @@ import type {
 } from "./musicDetailTypes";
 import { useLocale } from "@/components/i18n/localeProvider";
 import { getLocalizedHref, type Locale } from "@/lib/i18n/routing";
-
-function cacheKey(
-    index: string,
-    difficulty: Difficulty,
-    tab: DetailTab,
-    page: number
-) {
-    return `${index}:${difficulty}:${tab}:${tab === "ranking" ? page : 1}`;
-}
+import {
+    musicDetailQueryKey,
+    musicDetailQueryOptions,
+    musicDetailQueryRootKey,
+} from "@/features/music/api/musicDetail";
+import { useQueryClient } from "@tanstack/react-query";
 
 function detailUrl(
     index: string,
@@ -44,22 +41,23 @@ export default function MusicDetailBrowser({
     initialData,
 }: MusicDetailBrowserProps) {
     const locale = useLocale();
+    const queryClient = useQueryClient();
     const [data, setData] = useState(initialData);
     const [isLoading, setIsLoading] = useState(false);
     const requestId = useRef(0);
-    const detailCache = useRef(
-        new Map<string, MusicDetailProps>([
-            [
-                cacheKey(
-                    initialData.music.index,
-                    initialData.difficulty,
-                    initialData.activeTab,
-                    initialData.ranking.page
-                ),
-                initialData,
-            ],
-        ])
-    );
+
+    useEffect(() => {
+        queryClient.setQueryData(
+            musicDetailQueryKey({
+                index: initialData.music.index,
+                difficulty: initialData.difficulty,
+                tab: initialData.activeTab,
+                page: initialData.ranking.page,
+                locale,
+            }),
+            initialData
+        );
+    }, [initialData, locale, queryClient]);
 
     const load = useCallback(
         async (
@@ -69,16 +67,20 @@ export default function MusicDetailBrowser({
             options?: { replaceUrl?: boolean; force?: boolean }
         ) => {
             const index = initialData.music.index;
-            const key = cacheKey(index, difficulty, tab, page);
+            const query = { index, difficulty, tab, page, locale };
+            const key = musicDetailQueryKey(query);
             const url = detailUrl(index, difficulty, tab, page, locale);
 
             if (options?.replaceUrl !== false) {
                 window.history.pushState(null, "", url);
             }
 
+            if (options?.force) {
+                queryClient.removeQueries({ queryKey: key, exact: true });
+            }
             const cached = options?.force
                 ? undefined
-                : detailCache.current.get(key);
+                : queryClient.getQueryData<MusicDetailProps>(key);
             if (cached) {
                 setData(cached);
                 return;
@@ -88,29 +90,15 @@ export default function MusicDetailBrowser({
             setIsLoading(true);
 
             try {
-                const query = new URLSearchParams({
-                    index,
-                    difficulty: difficulty.toLowerCase(),
-                    tab,
-                    page: String(page),
-                    locale,
-                });
-                const response = await fetch(`/api/music-detail?${query}`, {
-                    credentials: "same-origin",
-                });
-
-                if (!response.ok) {
-                    throw new Error("악곡 상세 정보를 불러오지 못했습니다.");
-                }
-
-                const nextData = (await response.json()) as MusicDetailProps;
-                detailCache.current.set(key, nextData);
+                const nextData = await queryClient.fetchQuery(
+                    musicDetailQueryOptions(query)
+                );
                 if (currentRequest === requestId.current) setData(nextData);
             } finally {
                 if (currentRequest === requestId.current) setIsLoading(false);
             }
         },
-        [initialData.music.index, locale]
+        [initialData.music.index, locale, queryClient]
     );
 
     useEffect(() => {
@@ -147,11 +135,9 @@ export default function MusicDetailBrowser({
         };
 
         const onInvalidate = () => {
-            for (const key of detailCache.current.keys()) {
-                if (key.startsWith(`${initialData.music.index}:`)) {
-                    detailCache.current.delete(key);
-                }
-            }
+            queryClient.removeQueries({
+                queryKey: musicDetailQueryRootKey(initialData.music.index),
+            });
             void load(data.difficulty, data.activeTab, data.ranking.page, {
                 replaceUrl: false,
                 force: true,
@@ -170,6 +156,7 @@ export default function MusicDetailBrowser({
         data.ranking.page,
         initialData.music.index,
         load,
+        queryClient,
     ]);
 
     return <MusicDetail {...data} isLoading={isLoading} onNavigate={load} />;

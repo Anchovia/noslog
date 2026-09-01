@@ -6,7 +6,7 @@ import {
     useTranslations,
     type MessageKey,
 } from "@/components/i18n/localeProvider";
-import type { MusicSort } from "@/app/(nevigation)/music/query";
+import type { MusicSort } from "@/features/music/search/musicQuery";
 import { cn } from "@/lib/utils";
 
 export type SortMode = MusicSort;

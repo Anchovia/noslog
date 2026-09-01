@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { normalizeMusicQuery } from "@/app/(nevigation)/music/query";
+import { normalizeMusicQuery } from "@/features/music/search/musicQuery";
 
 describe("normalizeMusicQuery", () => {
     it("필터가 없으면 Expert 8~12와 이름 오름차순을 기본값으로 사용한다", () => {

@@ -3,12 +3,12 @@ import { createPageMetadata } from "@/lib/metadata/site";
 import getSession from "@/lib/session";
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
-import { getCachedMusicDetail } from "./data";
+import { getCachedMusicDetail } from "@/features/music/server/musicDetailData";
 import {
     loadMusicDetail,
     normalizeMusicDetailTab,
     normalizeMusicDifficulty,
-} from "./loadMusicDetail";
+} from "@/features/music/server/loadMusicDetail";
 import { getServerI18n } from "@/lib/i18n/server";
 import { getLocalizedHref, localizePath } from "@/lib/i18n/routing";
 import { getMusicTitleDisplayPreference } from "@/lib/i18n/musicTitle";

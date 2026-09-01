@@ -2,7 +2,7 @@ import MusicResults from "@/components/music/musicResults";
 import MusicSearch from "@/components/music/musicSearch";
 import { createPageMetadata } from "@/lib/metadata/site";
 import { getMusicPage } from "./data";
-import type { MusicSearchParams } from "./query";
+import type { MusicSearchParams } from "@/features/music/search/musicQuery";
 import getSession from "@/lib/session";
 import { getServerI18n } from "@/lib/i18n/server";
 import { getMusicTitleDisplayPreference } from "@/lib/i18n/musicTitle";

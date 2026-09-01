@@ -14,7 +14,7 @@ import {
     getUserChartPeerScoreComparison,
     getUserChartPerformanceTrend,
     getUserChartScoreTrend,
-} from "./data";
+} from "./musicDetailData";
 import type { Locale } from "@/lib/i18n/routing";
 import { getLocalizedMusicTitle } from "@/lib/i18n/musicTitle";
 

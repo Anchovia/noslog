@@ -9,7 +9,7 @@ import {
     normalizeMusicQuery,
     type MusicSearchParams,
     type NormalizedMusicQuery,
-} from "./query";
+} from "@/features/music/search/musicQuery";
 
 const PAGE_SIZE = 20;
 

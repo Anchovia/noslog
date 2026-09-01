@@ -33,10 +33,10 @@ export const chartEvaluationDeleteSchema = z.object({
     evaluationId: z.number().int().positive(),
 });
 
-export type ChartEvaluationInput = z.infer<typeof chartEvaluationSchema>;
-export type ChartEvaluationReactionInput = z.infer<
+export type ChartEvaluationInput = z.input<typeof chartEvaluationSchema>;
+export type ChartEvaluationReactionInput = z.input<
     typeof chartEvaluationReactionSchema
 >;
-export type ChartEvaluationDeleteInput = z.infer<
+export type ChartEvaluationDeleteInput = z.input<
     typeof chartEvaluationDeleteSchema
 >;

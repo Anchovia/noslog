@@ -6,6 +6,7 @@ import { createTranslator, getMessages } from "@/lib/i18n/messages";
 import { isLocale, localizePath, type Locale } from "@/lib/i18n/routing";
 import getSession from "@/lib/session";
 import { revalidatePath, updateTag } from "next/cache";
+import type { ActionResult } from "@/lib/actions/result";
 import {
     chartEvaluationDeleteSchema,
     chartEvaluationReactionSchema,
@@ -13,12 +14,9 @@ import {
     type ChartEvaluationDeleteInput,
     type ChartEvaluationInput,
     type ChartEvaluationReactionInput,
-} from "./evaluationSchema";
+} from "@/features/music/schemas/chartEvaluationSchema";
 
-interface EvaluationActionResult {
-    success: boolean;
-    message: string;
-}
+type EvaluationActionResult = ActionResult;
 
 // 사용자별 채보 투표를 최초 등록하거나 기존 값으로 갱신함
 export async function submitChartEvaluation(

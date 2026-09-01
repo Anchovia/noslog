@@ -1,7 +1,7 @@
 "use client";
 
 import { getMoreMusics } from "@/app/(nevigation)/music/action";
-import type { MusicSearchParams } from "@/app/(nevigation)/music/query";
+import type { MusicSearchParams } from "@/features/music/search/musicQuery";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import MusicCard from "./musicCard";

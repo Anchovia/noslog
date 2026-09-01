@@ -1,7 +1,7 @@
 import type {
     MusicRecordFilter,
     MusicSearchParams,
-} from "@/app/(nevigation)/music/query";
+} from "@/features/music/search/musicQuery";
 import type { MusicCategory } from "@/lib/musicCategories";
 
 export type { MusicCategory } from "@/lib/musicCategories";

@@ -590,6 +590,14 @@ accessible name, not a token.
 - Render routine action/wayfinding glyphs at `20px`. Use `16px` only for compact
   supporting/metadata icons beside a visible label. Reserve `24px` for a proven
   prominent standalone affordance or empty state.
+- **Inline term-trigger icon `14px` — bounded exception, approved 2026-09-02 (P14).**
+  A domain-term tooltip trigger rendered inside running text (underlined term +
+  `Icon/circle-help` immediately after, `2px` gap, the current product's own
+  convention) sizes the icon to the **surrounding font size** so it reads as part of
+  the line: `14px` beside `14px` text. At `16px` the glyph visibly outweighs the
+  words (compared at 16/14/12 before approval). This exception exists only for
+  in-sentence term triggers; it is not a general small-icon size, and the trigger's
+  touch behavior belongs to the whole term group, not the icon alone.
 - Primary, unfamiliar, destructive, and low-frequency actions retain visible text.
   Icon-only controls are limited to universally understood contextual actions and
   require an explicit accessible name.

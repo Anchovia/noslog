@@ -1,7 +1,7 @@
 "use server";
 
 import { getMusicPage } from "./data";
-import type { MusicSearchParams } from "./query";
+import type { MusicSearchParams } from "@/features/music/search/musicQuery";
 import getSession from "@/lib/session";
 import { getRequestLocale } from "@/lib/i18n/server";
 import { getMusicTitleDisplayPreference } from "@/lib/i18n/musicTitle";

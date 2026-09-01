@@ -24,7 +24,7 @@ import {
 import {
     MUSIC_RECORD_FILTERS,
     type MusicRecordFilter,
-} from "@/app/(nevigation)/music/query";
+} from "@/features/music/search/musicQuery";
 import { useLocalizedHref } from "@/components/i18n/localeProvider";
 import {
     musicSearchSchema,
