@@ -3,6 +3,8 @@ import "server-only";
 import { del, get, head } from "@vercel/blob";
 import { generateClientTokenFromReadWriteToken } from "@vercel/blob/client";
 
+import { serverEnv } from "@/lib/env/server";
+
 export const MAX_IMAGE_SIZE = 4 * 1024 * 1024;
 export const IMAGE_CONTENT_TYPES = [
     "image/jpeg",
@@ -36,7 +38,7 @@ function hasBlobHostname(url: string, access: "public" | "private") {
 }
 
 function privateBlobToken() {
-    const token = process.env.PRIVATE_BLOB_READ_WRITE_TOKEN?.trim();
+    const token = serverEnv.PRIVATE_BLOB_READ_WRITE_TOKEN;
     if (!token) {
         throw new Error("PRIVATE_BLOB_READ_WRITE_TOKEN is not configured");
     }

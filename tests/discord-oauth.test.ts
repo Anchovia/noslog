@@ -19,6 +19,20 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock("@/lib/session", () => ({ default: mocks.getSession }));
 
+vi.mock("@/lib/env/server", () => ({
+    serverEnv: {
+        get DISCORD_CLIENT_ID() {
+            return process.env.DISCORD_CLIENT_ID;
+        },
+        get DISCORD_CLIENT_SECRET() {
+            return process.env.DISCORD_CLIENT_SECRET;
+        },
+        get DISCORD_REDIRECT_URI() {
+            return process.env.DISCORD_REDIRECT_URI;
+        },
+    },
+}));
+
 vi.mock("@/lib/db", () => ({
     default: {
         user: {

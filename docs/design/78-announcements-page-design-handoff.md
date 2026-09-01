@@ -30,10 +30,17 @@ duplicated here.
 ### Shell and measures
 
 Ordinary shell (`AppHeader` + `main` + `OrdinaryFooter`), 844 viewport floor,
-content-driven heights above it. Widths follow the P7 reading precedent: `768` uses a
-`720` measure, `1280` uses `container/reading 768` left-aligned inside ordinary
-margins, footer `Layout=Wide` at 1280. The Detail return control is the `SET-42` back
-pattern (`Icon/chevron-left` 16 + `공지사항`, 44 target).
+content-driven heights above it. `768` uses a `720` measure; `1280` uses a
+**centered** `container/reading 768` column, footer `Layout=Wide`. The Detail return
+control is the `SET-42` back pattern (`Icon/chevron-left` 16 + `공지사항`, 44 target).
+
+**Corrected 2026-09-01 (user report):** the wide frames were first built with the
+reading column **left-aligned**, copied from the P7 handoff — but that precedent is
+the minimal recovery shell only (the P8 decision record explicitly flags P7's `MIN`
+alignment as shell-specific). The ordinary-shell convention in this file is a centered
+bounded column (Home 640, the 1440 shell's centered 1280), and every news-archive
+reference composes a centered reading column. All four wide frames now center the
+column; nothing else changed.
 
 ---
 

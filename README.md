@@ -166,7 +166,7 @@ Copy-Item .env.example .env
 
 | 구분               | 환경변수                                                             |
 | ------------------ | -------------------------------------------------------------------- |
-| 데이터베이스       | `DATABASE_URL`                                                       |
+| 데이터베이스       | `DATABASE_URL`, optional `DATABASE_EXPECTED_HOST`                    |
 | 로그인 세션        | `COOKIE_PASSWORD`                                                    |
 | 북마클릿 서명      | `BOOKMARKLET_SECRET`                                                 |
 | 서비스 주소        | `APP_URL`                                                            |
@@ -177,6 +177,10 @@ Copy-Item .env.example .env
 | 개인정보 정리 Cron | `CRON_SECRET`                                                        |
 
 `COOKIE_PASSWORD`, `BOOKMARKLET_SECRET`, `CRON_SECRET`에는 충분히 긴 서로 다른 임의 문자열을 사용합니다. 실제 환경변수와 토큰은 Git에 커밋하지 않습니다.
+
+`DATABASE_EXPECTED_HOST`를 설정하면 `DATABASE_URL`의 실제 호스트가 정확히 일치하지
+않는 배포와 실행을 차단합니다. Main과 Dev의 Neon 프로젝트 호스트를 각 환경에 따로
+지정해 교차 연결을 방지합니다.
 
 선택 환경변수:
 

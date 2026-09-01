@@ -454,7 +454,7 @@ the neutral disabled treatment of the other button styles.
 
 These colors appear only on compact persistent difficulty markers in eligible
 repeated-scanning ordinary DOM UI. Names, levels, order, and pattern/selected cues
-remain visible. Do not color difficulty text, backgrounds, containers, selection,
+remain visible. Do not color difficulty backgrounds, containers, selection,
 focus, feedback, or actions.
 
 The approved compressed result marker is exactly `20×20px`: a `12×2px`
@@ -462,6 +462,33 @@ The approved compressed result marker is exactly `20×20px`: a `12×2px`
 level value. It has no fill or container. Four markers use fixed
 Normal → Hard → Expert → Real order with `4px` gaps for a total `92px` group. The
 number and fixed order remain the non-color cues.
+
+### Difficulty text ramp — amended 2026-09-02 (user decision, P13)
+
+The original "do not color difficulty text" clause is lifted for **difficulty
+name + level labels** only: colored difficulty text is the game's and the current
+product's native convention, and the P13 exam stage rows adopt it. Because the
+`DU-01` marker values fail `4.5:1` as text (`3.05–3.73` on Light surfaces), a
+dedicated **text ramp** exists as `difficulty/text-{normal,hard,expert,real}`
+aliases — same hue, adjusted lightness, all `≥4.5:1` on both `surface/canvas`
+and `surface/surface` in their mode:
+
+| Role   | Light                      | Dark                       |
+| ------ | -------------------------- | -------------------------- |
+| Normal | `#09834A` (new, 4.53)      | `#219563` (new, 4.55)      |
+| Hard   | `#BA5500` (new, 4.52)      | `#E06400` (existing, 4.91) |
+| Expert | `#CD2E1D` (existing, 4.94) | `#D85C4F` (new, 4.56)      |
+| Real   | `#9452CE` (new, 4.55)      | `#AD69E9` (existing, 4.90) |
+
+Five new primitives (`difficulty/09834A`, `219563`, `BA5500`, `D85C4F`,
+`9452CE`); three sides reuse existing `DU-01` primitives. Rules: the text ramp is
+for **text fills only** (label + level as one run, `metric-value` weight); the
+name text itself stays the non-color cue, so color is never the only signal; the
+`DU-01` marker values remain unchanged for non-text markers (2×20 bars, 12×2
+lines). Note the contrast reference plane: `difficulty/068850` reads `4.52` on
+canvas but only `4.26` on `surface/surface`, which is why the Light Normal text
+value is new. The C3 `DifficultyMarker` component was revised to this colored-text
+form (dot removed); its only instance consumers are C3 and P13.
 
 ## Local data color — `LD-03`, SAP Fiori Horizon
 

@@ -1,12 +1,13 @@
 import { NextResponse } from "next/server";
 
+import { serverEnv } from "@/lib/env/server";
 import { runPrivacyRetention } from "@/lib/privacyRetention";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
 export async function GET(request: Request) {
-    const cronSecret = process.env.CRON_SECRET?.trim();
+    const cronSecret = serverEnv.CRON_SECRET;
     if (
         !cronSecret ||
         request.headers.get("authorization") !== `Bearer ${cronSecret}`

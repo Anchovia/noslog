@@ -8,6 +8,7 @@ import {
 } from "@/lib/arcadeDetails";
 import { ARCADE_REGIONS, inferLegacyArcadeRegion } from "@/lib/arcadeRegions";
 import db from "@/lib/db";
+import { clientEnv } from "@/lib/env/client";
 
 import { createArcade, updateArcade } from "./actions";
 
@@ -85,7 +86,7 @@ function BusinessHoursFields({ value }: { value?: unknown }) {
 }
 
 export default async function AdminArcadesPage() {
-    const kakaoMapAppKey = process.env.NEXT_PUBLIC_KAKAO_MAP_APP_KEY ?? "";
+    const kakaoMapAppKey = clientEnv.NEXT_PUBLIC_KAKAO_MAP_APP_KEY ?? "";
     const arcades = await db.arcade.findMany({
         include: { _count: { select: { users: true } } },
         orderBy: [{ is_active: "desc" }, { name: "asc" }],

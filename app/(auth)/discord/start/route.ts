@@ -2,6 +2,7 @@ import { randomBytes } from "node:crypto";
 
 import { NextRequest, NextResponse } from "next/server";
 
+import { serverEnv } from "@/lib/env/server";
 import getSession from "@/lib/session";
 
 function safeReturnTo(value: string | null) {
@@ -11,8 +12,8 @@ function safeReturnTo(value: string | null) {
 export async function GET(request: NextRequest) {
     const returnTo = safeReturnTo(request.nextUrl.searchParams.get("returnTo"));
     const session = await getSession();
-    const clientId = process.env.DISCORD_CLIENT_ID;
-    const redirectUri = process.env.DISCORD_REDIRECT_URI;
+    const clientId = serverEnv.DISCORD_CLIENT_ID;
+    const redirectUri = serverEnv.DISCORD_REDIRECT_URI;
     if (!clientId || !redirectUri) {
         const url = new URL(session.id ? returnTo : "/login", request.url);
         url.searchParams.set(

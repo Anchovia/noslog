@@ -1,5 +1,6 @@
 import db from "@/lib/db";
 import { CACHE_TAGS, getUserProfileTag } from "@/lib/cacheTags";
+import { serverEnv } from "@/lib/env/server";
 import { isLocale } from "@/lib/i18n/routing";
 import getSession from "@/lib/session";
 import { revalidateTag } from "next/cache";
@@ -62,9 +63,9 @@ export async function GET(request: NextRequest) {
         return errorRedirect(request, "invalid_state", isLinking);
     }
 
-    const clientId = process.env.DISCORD_CLIENT_ID;
-    const clientSecret = process.env.DISCORD_CLIENT_SECRET;
-    const redirectUri = process.env.DISCORD_REDIRECT_URI;
+    const clientId = serverEnv.DISCORD_CLIENT_ID;
+    const clientSecret = serverEnv.DISCORD_CLIENT_SECRET;
+    const redirectUri = serverEnv.DISCORD_REDIRECT_URI;
     if (!clientId || !clientSecret || !redirectUri) {
         return errorRedirect(request, "oauth_config", isLinking);
     }

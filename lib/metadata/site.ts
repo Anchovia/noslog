@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { serverEnv } from "@/lib/env/server";
 import {
     getPathLocale,
     localizePath,
@@ -8,7 +9,7 @@ import {
 
 export const SITE_NAME = "NosLog";
 export const SITE_URL =
-    process.env.APP_URL?.trim().replace(/\/$/, "") || "https://noslog.app";
+    serverEnv.APP_URL?.replace(/\/$/, "") || "https://noslog.app";
 export const SITE_DESCRIPTION =
     "노스텔지어(NOSTALGIA) 플레이 기록, 유저 랭킹, 악곡 서열표, 검정과 빙고 정보를 확인하는 기록 아카이브";
 const SITE_DESCRIPTIONS: Record<Locale, string> = {

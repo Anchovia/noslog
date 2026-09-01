@@ -1,5 +1,6 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 
+import { serverEnv } from "@/lib/env/server";
 import { localizePath, type Locale } from "@/lib/i18n/routing";
 
 interface SyncTokenPayload {
@@ -68,14 +69,7 @@ const bookmarkletCopy = {
 } as const satisfies Record<Locale, Record<string, string>>;
 
 function syncSecret() {
-    const secret =
-        process.env.BOOKMARKLET_SECRET ?? process.env.COOKIE_PASSWORD;
-
-    if (!secret) {
-        throw new Error("BOOKMARKLET_SECRET is not configured");
-    }
-
-    return secret;
+    return serverEnv.BOOKMARKLET_SECRET;
 }
 
 function sign(value: string) {

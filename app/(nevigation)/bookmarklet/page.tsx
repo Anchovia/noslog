@@ -2,6 +2,7 @@ import BookmarkletInstall from "@/components/bookmarklet/bookmarkletInstall";
 import SyncResultSummary from "@/components/bookmarklet/syncResultSummary";
 import SyncTokenRegenerateButton from "@/components/bookmarklet/syncTokenRegenerateButton";
 import { createBookmarkletHref, createSyncToken } from "@/lib/bookmarklet";
+import { serverEnv } from "@/lib/env/server";
 import { localizePath } from "@/lib/i18n/routing";
 import { getServerI18n } from "@/lib/i18n/server";
 import { createPageMetadata } from "@/lib/metadata/site";
@@ -46,7 +47,7 @@ async function requestOrigin() {
             : "https");
 
     if (host) return `${protocol}://${host}`;
-    if (process.env.APP_URL) return process.env.APP_URL.replace(/\/$/, "");
+    if (serverEnv.APP_URL) return serverEnv.APP_URL.replace(/\/$/, "");
 
     throw new Error("Application origin could not be resolved");
 }
@@ -67,8 +68,8 @@ export default async function BookmarkletPage() {
           })
         : null;
     const protectionBypassSecret =
-        process.env.VERCEL_ENV === "preview"
-            ? process.env.VERCEL_AUTOMATION_BYPASS_SECRET
+        serverEnv.VERCEL_ENV === "preview"
+            ? serverEnv.VERCEL_AUTOMATION_BYPASS_SECRET
             : undefined;
     const bookmarkletHref = token
         ? createBookmarkletHref(

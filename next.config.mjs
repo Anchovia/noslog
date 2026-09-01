@@ -16,9 +16,10 @@ const contentSecurityPolicyReportOnly = [
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    agentRules: false,
     experimental: {
         staleTimes: {
-            dynamic: 300,
+            dynamic: 3600,
         },
     },
     async headers() {

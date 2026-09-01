@@ -1,5 +1,6 @@
 import GamecenterExplorer from "@/components/gamecenter/gamecenterExplorer";
 import { getGamecenterArcades } from "@/lib/arcades";
+import { clientEnv } from "@/lib/env/client";
 import { getServerI18n } from "@/lib/i18n/server";
 import { localizePath } from "@/lib/i18n/routing";
 import { createPageMetadata } from "@/lib/metadata/site";
@@ -23,7 +24,7 @@ export default async function GamecenterPage() {
     return (
         <div className="flex flex-col gap-4 px-4 py-5">
             <GamecenterExplorer
-                appKey={process.env.NEXT_PUBLIC_KAKAO_MAP_APP_KEY ?? ""}
+                appKey={clientEnv.NEXT_PUBLIC_KAKAO_MAP_APP_KEY ?? ""}
                 arcades={arcades.map((arcade) => ({
                     id: arcade.id,
                     name: arcade.name,
