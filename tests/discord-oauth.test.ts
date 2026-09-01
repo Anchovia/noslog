@@ -5,6 +5,7 @@ const mocks = vi.hoisted(() => ({
     session: {
         id: undefined as number | undefined,
         profileCompleted: undefined as boolean | undefined,
+        locale: undefined as "ko" | "ja" | "en" | undefined,
         discordOAuthState: undefined as string | undefined,
         discordOAuthReturnTo: undefined as string | undefined,
         save: vi.fn(),
@@ -83,6 +84,7 @@ describe("Discord OAuth", () => {
         vi.clearAllMocks();
         mocks.session.id = undefined;
         mocks.session.profileCompleted = undefined;
+        mocks.session.locale = undefined;
         mocks.session.discordOAuthState = undefined;
         mocks.session.discordOAuthReturnTo = undefined;
         mocks.getSession.mockResolvedValue(mocks.session);
@@ -168,11 +170,13 @@ describe("Discord OAuth", () => {
         mocks.session.id = 1;
         mocks.session.discordOAuthState = "state";
         mockDiscordSuccess();
-        mocks.userFindUnique.mockResolvedValueOnce({
-            id: 2,
-            avatar: null,
-            profile_completed_at: new Date(),
-        });
+        mocks.userFindUnique
+            .mockResolvedValueOnce({ id: 1, avatar: null })
+            .mockResolvedValueOnce({
+                id: 2,
+                avatar: null,
+                profile_completed_at: new Date(),
+            });
 
         const response = await completeDiscordOAuth(
             request("/discord/complete?code=code&state=state")
@@ -194,8 +198,8 @@ describe("Discord OAuth", () => {
         mocks.session.discordOAuthReturnTo = "/profile/settings";
         mockDiscordSuccess();
         mocks.userFindUnique
-            .mockResolvedValueOnce(null)
-            .mockResolvedValueOnce({ id: 1, avatar: customAvatar });
+            .mockResolvedValueOnce({ id: 1, avatar: customAvatar })
+            .mockResolvedValueOnce(null);
 
         const response = await completeDiscordOAuth(
             request("/discord/complete?code=code&state=state")
@@ -231,6 +235,30 @@ describe("Discord OAuth", () => {
         expect(mocks.session.id).toBe(7);
         expect(mocks.session.profileCompleted).toBe(false);
         expect(mocks.session.save).toHaveBeenCalledTimes(2);
+        expect(new URL(response.headers.get("location")!).pathname).toBe(
+            "/onboarding"
+        );
+    });
+
+    it("현재 DB에 없는 오래된 세션은 새 로그인으로 교체한다", async () => {
+        mocks.session.id = 99;
+        mocks.session.profileCompleted = true;
+        mocks.session.locale = "ja";
+        mocks.session.discordOAuthState = "state";
+        mockDiscordSuccess({ id: "new-discord" });
+        mocks.userFindUnique
+            .mockResolvedValueOnce(null)
+            .mockResolvedValueOnce(null);
+        mocks.userCreate.mockResolvedValueOnce({ id: 7, locale: null });
+
+        const response = await completeDiscordOAuth(
+            request("/discord/complete?code=code&state=state")
+        );
+
+        expect(mocks.userCreate).toHaveBeenCalledOnce();
+        expect(mocks.session.id).toBe(7);
+        expect(mocks.session.profileCompleted).toBe(false);
+        expect(mocks.session.locale).toBeUndefined();
         expect(new URL(response.headers.get("location")!).pathname).toBe(
             "/onboarding"
         );

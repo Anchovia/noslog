@@ -51,7 +51,18 @@ export async function GET(request: NextRequest) {
     const code = request.nextUrl.searchParams.get("code");
     const state = request.nextUrl.searchParams.get("state");
     const session = await getSession();
-    const isLinking = Boolean(session.id);
+    const currentUser = session.id
+        ? await db.user.findUnique({
+              where: { id: session.id },
+              select: { id: true, avatar: true },
+          })
+        : null;
+    if (session.id && !currentUser) {
+        delete session.id;
+        delete session.profileCompleted;
+        delete session.locale;
+    }
+    const isLinking = Boolean(currentUser);
     const expectedState = session.discordOAuthState;
     const returnTo = session.discordOAuthReturnTo ?? "/";
 
@@ -127,17 +138,9 @@ export async function GET(request: NextRequest) {
             },
         });
 
-        if (session.id) {
-            if (linkedUser && linkedUser.id !== session.id) {
+        if (currentUser) {
+            if (linkedUser && linkedUser.id !== currentUser.id) {
                 return errorRedirect(request, "already_linked", true);
-            }
-
-            const currentUser = await db.user.findUnique({
-                where: { id: session.id },
-                select: { id: true, avatar: true },
-            });
-            if (!currentUser) {
-                return errorRedirect(request, "user_missing", true);
             }
 
             await db.user.update({

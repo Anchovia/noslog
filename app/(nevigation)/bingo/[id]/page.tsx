@@ -9,8 +9,8 @@ import {
 import { getServerI18n } from "@/lib/i18n/server";
 import { localizePath } from "@/lib/i18n/routing";
 import { createPageMetadata } from "@/lib/metadata/site";
-import getSession from "@/lib/session";
 import { formatToComma } from "@/lib/utils";
+import { getUser } from "@/lib/user";
 import type { Metadata } from "next";
 import {
     getCachedBingoDetail,
@@ -59,13 +59,13 @@ export default async function BingoDetailPage({
 
     if (!Number.isInteger(bingoId)) notFound();
 
-    const [session, bingo] = await Promise.all([
-        getSession(),
+    const [user, bingo] = await Promise.all([
+        getUser(),
         getCachedBingoDetail(bingoId),
     ]);
 
     if (!bingo || !isBingoAvailable(bingo)) notFound();
-    const showLocalizedTitle = await getMusicTitleDisplayPreference(session.id);
+    const showLocalizedTitle = await getMusicTitleDisplayPreference(user?.id);
     const coverLocalizedTitle =
         !bingo.title || bingo.title === bingo.coverMusic.title
             ? getLocalizedMusicTitle(
@@ -87,9 +87,9 @@ export default async function BingoDetailPage({
         position: cell.position,
         categoryShort: cell.categoryShort,
     }));
-    const userProgress = session.id
+    const userProgress = user
         ? await getUserBingoCellProgress(
-              session.id,
+              user.id,
               bingo.cells.map((cell) => cell.id)
           )
         : [];
@@ -169,7 +169,7 @@ export default async function BingoDetailPage({
             <BingoPlate
                 cells={cells}
                 initialCompletedCellIds={[...completedCellIdSet]}
-                canEdit={Boolean(session.id)}
+                canEdit={Boolean(user)}
             />
         </div>
     );

@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import db from "@/lib/db";
 import { createTranslator, getMessages } from "@/lib/i18n/messages";
 import { isLocale } from "@/lib/i18n/routing";
-import getSession from "@/lib/session";
+import { getSessionUser } from "@/lib/user";
 
 export interface ToggleBingoCellResult {
     success: boolean;
@@ -21,9 +21,10 @@ export async function setBingoCellCompletion(
 ): Promise<ToggleBingoCellResult> {
     const locale = isLocale(requestedLocale) ? requestedLocale : "ko";
     const t = createTranslator(getMessages(locale));
-    const session = await getSession();
+    const { session, user } = await getSessionUser();
 
-    if (!session.id) {
+    if (!user) {
+        if (session.id) session.destroy();
         return {
             success: false,
             message: t("bingo.loginToSave"),
@@ -69,13 +70,13 @@ export async function setBingoCellCompletion(
     await db.bingoCellProgress.upsert({
         where: {
             userId_bingoCellId: {
-                userId: session.id,
+                userId: user.id,
                 bingoCellId,
             },
         },
         create: {
             bingoCellId,
-            userId: session.id,
+            userId: user.id,
             isCompleted,
             completionSource: "manual",
             completedAt: isCompleted ? now : null,

@@ -7,7 +7,7 @@ import {
 import { getServerI18n } from "@/lib/i18n/server";
 import { localizePath } from "@/lib/i18n/routing";
 import { createPageMetadata } from "@/lib/metadata/site";
-import getSession from "@/lib/session";
+import { getUser } from "@/lib/user";
 import {
     getCachedPublishedBingos,
     getUserBingoCellProgress,
@@ -25,17 +25,17 @@ export async function generateMetadata() {
 
 export default async function BingoPage() {
     const { locale } = await getServerI18n();
-    const [session, publishedBingos] = await Promise.all([
-        getSession(),
+    const [user, publishedBingos] = await Promise.all([
+        getUser(),
         getCachedPublishedBingos(),
     ]);
-    const showLocalizedTitle = await getMusicTitleDisplayPreference(session.id);
+    const showLocalizedTitle = await getMusicTitleDisplayPreference(user?.id);
     const bingos = publishedBingos.filter((bingo) => isBingoAvailable(bingo));
     const cellIds = bingos.flatMap((bingo) =>
         bingo.cells.map((cell) => cell.id)
     );
-    const userProgress = session.id
-        ? await getUserBingoCellProgress(session.id, cellIds)
+    const userProgress = user
+        ? await getUserBingoCellProgress(user.id, cellIds)
         : [];
     const completedCellIdSet = new Set(
         userProgress
