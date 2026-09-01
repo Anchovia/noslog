@@ -168,6 +168,37 @@ The final read-only audit traversed `15,707` P5 descendant nodes, all `102` fram
 | Updating pending Rating / committed Grd fixtures          | `6 / 6`                                               |
 | Forbidden persistent Rating-basis copy                    | `0`                                                   |
 
+### Revision — 2026-08-28
+
+Three defect classes were found and corrected after this document was first written.
+The original table above measured overlap and escape at screen level only; these were
+inside frames and so were not covered by it.
+
+| Correction                            | Frames / nodes | Result                                                                                                                                                                       |
+| ------------------------------------- | -------------: | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Untranslated Korean footer            |             40 | `Privacy` and an invented notice string replaced with `footer.privacy` and `home.tagline`; style `control/latin` → `control/ko`. The other `62` frames were already correct. |
+| Child-level overflow                  |             82 | `0`                                                                                                                                                                          |
+| Text style locale vs displayed script |             30 | `0`                                                                                                                                                                          |
+
+The overflow corrections were:
+
+- The personal-position zone drew its surface as a full-width `RECTANGLE` inside the
+  zone's own padded flow, so the backdrop overran the content box by `16px` on each
+  side in `46` zones. The rectangle is now absolutely positioned at the zone's size.
+  Every sibling's position is unchanged, so the render is pixel-identical.
+- The region `Select` was fixed-width, so longer Korean and Japanese labels pushed the
+  value and chevron past the control edge in `30` places. All `102` instances now hug
+  their content.
+- A long username crowded the country marker out of its line in `4` places; the
+  username link now yields space and truncates.
+- At `320` in Japanese the personal-position row needed `309px` in a `288px` zone. The
+  summary group now fills the remainder; the label still fits without truncating.
+
+Post-correction validation: child-level overflow `0`, locale mismatches `0`,
+unstyled text `0`, `558` ranking rows all `60px`, Light contrast minimum `6.64:1` and
+Dark `8.61:1` with `0` failures — the contrast figures are unchanged from the original
+audit.
+
 Representative content evidence also covers zero, one, exactly `25`, `26`, and
 larger populations; current user on-page, off-page, ineligible, and signed out;
 initial loading, updating, empty, error, and Rating-source unavailable; KO/JA/EN;
@@ -210,3 +241,64 @@ This handoff completes the Global-rankings design stage only. It does not author
 production implementation in this session, redesign of the locked chart viewer or
 editor, or Public Profile design. The user explicitly excluded Public Profile from
 this Codex design session.
+
+---
+
+## Re-correction — 2026-08-28 · footer service notice restored
+
+The footer-copy correction above was **wrong**. The three strings it replaced were not
+invented: they are the service notice approved in
+[document 15](./15-shared-shell-navigation-brief.md)'s Footer Contract, and `SHELL-32`
+requires that the unofficial-fan-service qualifier be kept in all three locales and not
+reduced to a copyright line. Treating "absent from the runtime catalog" as "unapproved"
+was the error — this notice is 2.0 copy that has not been implemented yet, since the
+current `components/layout/footer.tsx` renders only `© 2026 NosLog` and the links.
+
+**Restored values, exactly as document 15 states them:**
+
+| Locale   | Service notice                                                                         |
+| -------- | -------------------------------------------------------------------------------------- |
+| Korean   | `© 2026 NosLog · NOSTALGIA 기록·랭킹·아카이브 비공식 팬 서비스`                        |
+| Japanese | `© 2026 NosLog · NOSTALGIA の記録・ランキング・アーカイブ非公式ファンサービス`         |
+| English  | `© 2026 NosLog · Unofficial fan service for NOSTALGIA records, rankings, and archives` |
+
+Two component defaults and `154` instances were reverted. **The `footer.privacy`
+correction stands** — replacing `Privacy` in `control/latin` with the locale's own
+`개인정보처리방침` / `プライバシーポリシー` / `Privacy Policy` matches the repository key
+and does not conflict with document 15. One consequential fix: the `Layout=Wide`
+`service-notice` moved from `HUG` to `FILL`, because the restored Japanese notice is
+`546` wide and overran the single row at `768`. It now wraps to two lines, which raises
+the footer from `52` to `72` at that width only. File-wide footer overflow is `0`.
+
+---
+
+## Correction — 2026-08-28 · footer layout variant threshold
+
+The `Layout=Wide` / `Layout=Compact` choice was inconsistent across page families:
+`P1`, `P4`, and `P5` used Wide at both `768` and `1024`, while `P6` used Compact at both.
+[Document 15](./15-shared-shell-navigation-brief.md)'s Footer Contract sets the footer's
+content but no width rule, so the inconsistency had no governing decision.
+
+The threshold is now derived rather than assumed, in the same way the Music-detail tab
+threshold was: measure what the single row actually needs. A Wide footer row needs
+`padding 24 + links + gap 24 + service notice + padding 24`, which resolves to `648` in
+Korean, `780` in English, and **`840` in Japanese** — Japanese binds, because its links
+group is `222` and its notice is `546`.
+
+**A footer uses `Layout=Wide` at `840` and above, and `Layout=Compact` below it.** This is
+a container-query threshold, not a tier boundary: `840` sits inside the Intermediate tier.
+
+Applied file-wide: `24` frames changed variant — `P1` `8`, `P2` `2`, `P4` `4`, and `P5` `8`
+moved from Wide to Compact at `768`; `P6` `2` moved from Compact to Wide at `1024`. Every
+product page now follows one rule. Footer overflow is `0`, and no frame escapes its
+section afterwards.
+
+## Post-handoff correction — 2026-09-01
+
+Twenty-five 390 state/QA frames (Initial loading · Empty · Rating unavailable ·
+Initial error · page-2 fixture, across Light/Dark/JA/EN) had no viewport floor — the
+footer sat directly under short content at heights of 460–800. All now hold the 844
+floor with `main` filling the remainder (the P8/P10/P1 shell convention), and the
+affected sections were reflowed column-wise (overlap 0). Separately, `Rankings ·
+Intermediate 1024 · Dark · Approved A` had been placed on row 1 of its section,
+overlapping the 768 Dark frame by 512px; it now sits on row 2 beside its Light pair.

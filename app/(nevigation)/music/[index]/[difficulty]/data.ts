@@ -1,5 +1,6 @@
 import db from "@/lib/db";
 import { CACHE_TAGS } from "@/lib/cacheTags";
+import { PUBLIC_DATA_REVALIDATE_SECONDS } from "@/lib/cachePolicy";
 import {
     buildPeerScoreComparison,
     PEER_STORED_GRADE_RANGE,
@@ -108,7 +109,7 @@ export const getCachedChartDetailStats = unstable_cache(
     },
     ["music-detail-stats"],
     {
-        revalidate: 300,
+        revalidate: PUBLIC_DATA_REVALIDATE_SECONDS,
         tags: [CACHE_TAGS.chartEvaluations, CACHE_TAGS.chartRankings],
     }
 );
@@ -140,7 +141,7 @@ export const getCachedChartRanking = unstable_cache(
     },
     ["music-detail-ranking"],
     {
-        revalidate: 300,
+        revalidate: PUBLIC_DATA_REVALIDATE_SECONDS,
         tags: [CACHE_TAGS.chartRankings],
     }
 );
@@ -231,7 +232,7 @@ export const getCachedChartTier = unstable_cache(
     },
     ["music-detail-tier"],
     {
-        revalidate: 300,
+        revalidate: PUBLIC_DATA_REVALIDATE_SECONDS,
         tags: [CACHE_TAGS.chartEvaluations, CACHE_TAGS.tierLists],
     }
 );

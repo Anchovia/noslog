@@ -1,4 +1,5 @@
 import { CACHE_TAGS, getUserProfileTag } from "@/lib/cacheTags";
+import { PUBLIC_DATA_REVALIDATE_SECONDS } from "@/lib/cachePolicy";
 import db from "@/lib/db";
 import { buildProfileSJustAnalytics } from "@/lib/profile/profileAnalytics";
 import { getUserRankingPosition } from "@/lib/rankings";
@@ -198,7 +199,7 @@ async function queryProfileData(id: number) {
 // 프로필 공개 데이터는 사용자 ID별로 캐시함
 export function getCachedProfileData(id: number) {
     return unstable_cache(() => queryProfileData(id), ["profile", String(id)], {
-        revalidate: 300,
+        revalidate: PUBLIC_DATA_REVALIDATE_SECONDS,
         tags: [CACHE_TAGS.userProfiles, getUserProfileTag(id)],
     })();
 }

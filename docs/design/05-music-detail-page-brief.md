@@ -634,7 +634,77 @@ this brief already approves them.
 | Ranking           | Ranking with participant count / My rank / No rank                        | `랭킹 · 참가자 N명` / `내 순위` / `순위 없음`             |
 | Ranking           | Sign in to see my rank / Participants / score distribution                | `로그인하고 내 순위 보기` / `참가자 N명` / `점수 분포`    |
 | Tier & Evaluation | Basic Full Combo / Recital Full Combo / Aggregating                       | `Basic 풀콤보` / `Recital 풀콤보` / `집계 중`             |
+| Chart Info        | Chart-facts group heading, at every width                                 | `기본 정보`                                               |
+| Chart Info        | Community pattern-tendency radar block label and its help entry           | `패턴 경향` / `패턴 경향 기준`                            |
+| Tier & Evaluation | Contributor's pattern-rating and opinion form heading                     | `패턴 투표`                                               |
 | Localized title   | Japanese reading locale label                                             | `일본어 읽기`                                             |
+
+**Added 2026-08-28.** Three of the rows above were settled while assembling the wide
+composition. `기본 정보` names the chart-facts group, which otherwise carries no heading of its own
+while the radar beside or above it does. It applies at every width, not only where the two
+sit side by side: the single-column order puts the same unlabelled rows under a labelled
+radar card and reads with the same gap. it is not new wording, but the repository's existing
+`settings.basicInfo` value reused under a new `music.info.basic` key, so its Japanese and
+English are already fixed as `基本情報` and `Basic Information`. `패턴 경향` replaces the
+`패턴 성향` this design file had been using for the radar block: the repository string
+`music.info.patternTrend` is `패턴 경향` / `譜面傾向` / `Pattern Profile`, and the design
+file's variant had no recorded source. `패턴 투표` names the contributor form that carries
+the five pattern axes, the optional written opinion, and the submit action; its Japanese
+and English remain open.
+
+### Japanese and English for the Korean-only copy — approved 2026-08-28
+
+`Approved`. Every row below is grounded in an existing repository string or in this
+document's own English prose; none is free invention. The `Source` column names that
+grounding. Approval is a three-locale decision.
+
+| Korean                                        | Japanese                                           | English                                            | Source                                                                            |
+| --------------------------------------------- | -------------------------------------------------- | -------------------------------------------------- | --------------------------------------------------------------------------------- |
+| `길이`                                        | `楽曲の長さ`                                       | `Duration`                                         | `music.info.duration`; only the Korean was shortened here                         |
+| `베스트 기록`                                 | `ベスト記録`                                       | `Best performance`                                 | this document's Personal Record order; `ベストスコア` in `music.record.bestScore` |
+| `누적 요약`                                   | `累計サマリー`                                     | `Cumulative summary`                               | this document's Personal Record order                                             |
+| `판정 분석`                                   | `判定分析`                                         | `Judgement analysis`                               | this document's Personal Record order                                             |
+| `집계 중`                                     | `集計中`                                           | `Aggregating`                                      | this document's vote-aggregate contract                                           |
+| `패턴 투표`                                   | `譜面傾向の投票`                                   | `Pattern vote`                                     | `譜面傾向の投票` appears verbatim in `music.tier.confirmDelete`                   |
+| `패턴 경향 기준`                              | `譜面傾向の基準`                                   | `Pattern profile criteria`                         | this document's shared help entry; `music.info.patternTrend`                      |
+| `순위`                                        | `順位`                                             | `Rank`                                             | `profile.rank`                                                                    |
+| `플레이어`                                    | `プレイヤー`                                       | `Player`                                           | new; no repository equivalent exists                                              |
+| `점수`                                        | `スコア`                                           | `Score`                                            | `music.trend.score`                                                               |
+| `참가자 {count}명`                            | `参加者 {count}人`                                 | `{count} participants`                             | `music.info.players` counter pattern                                              |
+| `투표 {count}명`                              | `投票 {count}人`                                   | `{count} votes`                                    | same counter pattern                                                              |
+| `평가 {count}명`                              | `評価 {count}人`                                   | `{count} ratings`                                  | same counter pattern                                                              |
+| `평균`                                        | `平均`                                             | `Avg.`                                             | `music.judgement.average`                                                         |
+| `날짜`                                        | `日付`                                             | `Date`                                             | new; column header in the progress table                                          |
+| `{count}회`                                   | `{count}回`                                        | `{count} plays`                                    | `profile.playCount`                                                               |
+| `{value}점`                                   | `{value}点`                                        | `{value}`                                          | `music.record.points`; English drops the unit                                     |
+| `선택 해제`                                   | `選択解除`                                         | `Clear selection`                                  | this document's `Clear selection`; mirrors `tiers.selectAll`                      |
+| `평가 저장`                                   | `評価を保存`                                       | `Save evaluation`                                  | `settings.save`                                                                   |
+| `평가 삭제`                                   | `評価を削除`                                       | `Delete evaluation`                                | `music.opinion.delete` verb pattern                                               |
+| `의견 {count}`                                | `意見 {count}`                                     | `{count} Opinions`                                 | `music.opinion.title`, unchanged                                                  |
+| `의견 더 보기`                                | `意見をさらに表示`                                 | `Load more opinions`                               | this document's `Load more opinions`; mirrors `tiers` continuation wording        |
+| `추천순`                                      | `賛成順`                                           | `Helpful`                                          | this document names the two sorts; `意見に賛成` in `music.opinion.upvote`         |
+| `최신순`                                      | `新着順`                                           | `Newest`                                           | this document names the two sorts; `bingo.sort.*` uses the `~順` form             |
+| `의견 (선택)`                                 | `意見（任意）`                                     | `Opinion (optional)`                               | `feedback.attachImage` uses `（任意）`                                            |
+| `선택 입력 · 최대 120자`                      | `任意入力・120文字以内`                            | `Optional · 120 characters max`                    | `music.tier.commentMax` fixes the limit wording                                   |
+| `이 채보를 플레이하며 느낀 점을 남겨 주세요.` | `この譜面をプレーして感じたことを書いてください。` | `Share what you noticed while playing this chart.` | `music.tier.commentRequired` request form                                         |
+| `Basic 풀콤보 분포`                           | `Basic フルコンボ 分布`                            | `Basic Full Combo distribution`                    | `music.record.fullCombo`                                                          |
+
+Resolved while compiling this table: the **Japanese View-chart label is not open** after all.
+`music.info.viewChart` already carries `譜面を見る` and `View Chart`, which is the action
+this document wanted and is not the `譜面情報` panel name it warned against. Only the
+Korean changed, from `채보 확인` to the approved `채보 보기`.
+
+One row is `Proposed` rather than approved, because nothing grounds it. The public
+**edited indicator** that this document requires on an updated opinion has no string in
+the repository and no wording in this document. The Korean frames use `수정됨`; the
+locale frames carry `編集済み` and `Edited` as a proposal. Note that `music.tier.edit`
+renders the _action_ as `更新` / `Update`, so an approved indicator may prefer
+`更新済み` / `Updated` for consistency — that is exactly the choice this needs.
+
+Still genuinely open and not proposed here: the reaction label itself. This document calls
+it equivalently **Helpful**, the current frames show `추천`, and the repository carries the
+superseded `의견 추천`/`의견 비추천` pair. Naming the single positive reaction is a separate
+three-locale decision.
 
 `BPM` remains `BPM`. Existing approved Korean labels such as `채보 정보`, `내 기록`,
 `랭킹`, `서열·평가`, `베스트 스코어`, `성장 추이`, and `플레이 횟수` remain unchanged.
@@ -1372,6 +1442,14 @@ Resolved specimen values, approved 2026-08-13:
   recency descending.
 - Initially render ten opinions. An explicit **Load more opinions** action appends the
   next ten in the active sort without replacing the rows already read.
+  **Reverted 2026-08-28.** A `2026-08-28` revision briefly replaced **ten** with a
+  layout-derived **three**, on the measurement that ten opinions overran the adjacent
+  goal-vote block in the Wide `1280` composition. That measurement was taken against an
+  incomplete panel: the Tier & Evaluation reading order's fourth item, the contributor's
+  vote and chart-evaluation form, had never been assembled into the page. With that block
+  restored the left column measures `1530` (`vote block 536 + gap 32 + form 962`) against
+  `1545` for ten opinions — a `15` pixel difference. **Ten is correct and stands.** Do not
+  derive this count from layout.
 - Hide the continuation action when no more opinions exist, and preserve already
   loaded rows after a Helpful toggle or report submission.
 - Do not use infinite scroll, an Oldest sort, a page-size selector, or nested

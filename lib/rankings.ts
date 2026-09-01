@@ -1,4 +1,5 @@
 import { CACHE_TAGS } from "@/lib/cacheTags";
+import { PUBLIC_DATA_REVALIDATE_SECONDS } from "@/lib/cachePolicy";
 import db from "@/lib/db";
 import {
     BASIC_RATING_ACTIVE_CURVE,
@@ -155,7 +156,7 @@ const getCachedGradeRankingPage = unstable_cache(
     },
     ["user-grade-ranking-page"],
     {
-        revalidate: 300,
+        revalidate: PUBLIC_DATA_REVALIDATE_SECONDS,
         tags: [CACHE_TAGS.userRankings],
     }
 );
@@ -207,6 +208,15 @@ async function getBasicRatingSourceRevision() {
     const source = rows[0];
     return source?.status === "published" ? source : null;
 }
+
+const getCachedBasicRatingSourceRevision = unstable_cache(
+    getBasicRatingSourceRevision,
+    ["user-basic-rating-source-revision"],
+    {
+        revalidate: PUBLIC_DATA_REVALIDATE_SECONDS,
+        tags: [CACHE_TAGS.tierLists],
+    }
+);
 
 async function queryBasicRatingRankingRows(tierListId: number) {
     const tierList = await db.tierList.findUnique({
@@ -316,13 +326,13 @@ const getCachedBasicRatingRankingRows = unstable_cache(
     },
     ["user-basic-rating-ranking"],
     {
-        revalidate: 300,
+        revalidate: PUBLIC_DATA_REVALIDATE_SECONDS,
         tags: [CACHE_TAGS.userRankings, CACHE_TAGS.tierLists],
     }
 );
 
 async function getBasicRatingRankingRows(region: UserRankingRegion) {
-    const source = await getBasicRatingSourceRevision();
+    const source = await getCachedBasicRatingSourceRevision();
     if (!source) return [];
 
     const rows = await getCachedBasicRatingRankingRows(

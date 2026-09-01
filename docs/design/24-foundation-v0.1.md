@@ -355,6 +355,33 @@ Ordinary actions, navigation, links, tools, and equal-priority choices remain lo
 neutral hierarchy. External-brand and destructive actions use their own semantics.
 Radix has no filled-action alias.
 
+## Third-party brand color — `BR-A` — approved 2026-08-30
+
+`RPA-A` above already reserves external-brand actions for _their own semantics_ without
+naming any. This section names the first one.
+
+| Token              | Light     | Dark      | Scopes                     |
+| ------------------ | --------- | --------- | -------------------------- |
+| `brand/discord`    | `#5865F2` | `#5865F2` | `FRAME_FILL`, `SHAPE_FILL` |
+| `brand/on-discord` | `#FFFFFF` | `#FFFFFF` | `SHAPE_FILL`, `TEXT_FILL`  |
+
+- **The value is not new to the product.** `app/globals.css` already defines
+  `--color-discord: #5865f2` and the current login button already uses it. Document 17
+  requires one **Discord-branded** action.
+- **Brand color does not invert.** Both modes carry the same value, for the same reason
+  `content/on-media` is fixed white in both: the surface is owned by the brand, not by
+  the page. A mode-flipped Discord blurple would no longer be Discord's color.
+- **`brand/on-discord` cannot be replaced by `content/default`.** White on blurple
+  measures `4.61:1`; `content/default` `#111111` on blurple measures `4.10:1` and fails
+  normal-text AA. The current product's `text-text-primary` on `bg-discord` is therefore
+  a live contrast defect that this token fixes.
+- `4.61:1` clears AA for normal text with little headroom. The value is fixed by Discord
+  and is not ours to adjust; the label is `control 14/20`, and no smaller step is used on
+  this surface.
+- **Scope: one federated authentication action per provider.** Not for ordinary actions,
+  navigation, status, links, or decoration. Adding another provider requires its own
+  token pair and its own approval — there is no generic `brand/*` ramp.
+
 ## Material geometry — `MG-A`, Adobe Spectrum S2
 
 | Role                | Exact approved source alias/value                                                                                                     |
@@ -391,6 +418,30 @@ Atlassian danger text `#AE2E24/#FD9891`; invalid/destructive boundary uses
 `#C9372C/#F15B50`. Every state retains explicit title, copy, symbol/shape, and
 programmatic semantics. Carbon contributed only the restraint observation; no Carbon
 color is part of the mapping.
+
+### Filled destructive action — approved 2026-09-01
+
+Permanent-destruction entry and final-confirmation buttons (the first user-approved
+case is P10 account deletion) use a filled red button, `Button · Style=Destructive
+Filled`, alongside the existing outline `Style=Destructive`, which remains unchanged
+for every existing instance. Three alias tokens implement it with **zero new
+primitives**:
+
+- `feedback/destructive-surface` — Light `#C9372C` (white label `5.16:1`) / Dark
+  `#AE2E24` (white label `6.53:1`). The Dark marker `#F15B50` fails white text at
+  `3.31:1` and is not used as a face.
+- `feedback/destructive-surface-hover` — `#AE2E24` in both modes; also the pressed
+  face. Dark hover/pressed are therefore invisible color-wise — the ramp holds no
+  darker red — which follows the accepted Primary/Destructive pressed-residue
+  precedent above.
+- `feedback/on-destructive` — white in both modes (alias of `neutral/FFFFFF`),
+  scoped to the destructive face only. Same fixed-polarity structure as
+  `content/on-media`, different role.
+
+Focus follows `FI-C` unchanged: the face passes `3:1` against both focus polarities
+(Light `#000000` `4.07:1`, Dark `#FFFFFF` `6.53:1`), so the ordinary focus color
+gains a 1px inside border and no on-fill substitution is needed. Disabled mirrors
+the neutral disabled treatment of the other button styles.
 
 ## Difficulty markers — `DU-01`, Adobe Spectrum S2
 
@@ -457,6 +508,15 @@ feedback and from data-visualization series:
   non-semantic, which is why reusing its value here creates no meaning collision.
 - The mark always carries its short `FC` label. Colour never conveys the achievement
   alone.
+- **The `FC` label text is `content/default`, not the achievement colour; the mark's
+  `1px` border carries `full-combo`. Approved 2026-08-28.** At `#75980B` the Light value
+  reaches only `3.36:1` on `canvas`, `3.16:1` on `surface`, and `2.77:1` on `sunken`,
+  so it clears the `3:1` non-text threshold a border needs but not the `4.5:1` a label
+  needs. Dark passes on its own at `9.70:1`–`10.63:1`, but the label is one treatment
+  across both modes. With `content/default` the label reads `11.98:1`–`14.55:1` in Light
+  and `12.44:1`–`13.64:1` in Dark. The role is unchanged and no value moves: the colour
+  still identifies the mark, on the border, and the label it always carries is what
+  states the achievement.
 - Do not use this role for series, buckets, difficulty, judgement, or feedback, and do
   not introduce further achievement colours without a new approved role.
 - The current implementation's clear-mark colour is a framework default with no recorded
@@ -489,8 +549,15 @@ accessible name, not a token.
   service. Use the brand's own published symbol, vendored from the product source rather
   than redrawn, sized to the same render step as the icon it sits with, and given the same
   accessible treatment. A brand mark is filled artwork, not a `2px` stroked outline, so the
-  stroke rules above do not apply to it. This exception covers identity metadata that names
-  an external service; it does not admit brand marks into actions, navigation, or status.
+  stroke rules above do not apply to it.
+- **Amended 2026-08-30.** The exception previously read _"it does not admit brand marks
+  into actions, navigation, or status."_ That wording was written for identity metadata
+  and did not anticipate federated authentication. Document 17 requires one
+  **Discord-branded** action, and the product already ships `--color-discord: #5865f2`
+  on its login button. The exception therefore also covers **a federated authentication
+  action that launches the named provider** — one action per provider, carrying the
+  provider's mark and its brand surface. It still does not admit brand marks into
+  navigation, status, or any ordinary product action.
 - Preserve the published `24×24` viewBox, `2px` stroke, round linecaps/linejoins, and
   outline treatment.
 - Render routine action/wayfinding glyphs at `20px`. Use `16px` only for compact

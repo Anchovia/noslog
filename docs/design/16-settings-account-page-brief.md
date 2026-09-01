@@ -761,46 +761,57 @@ localized responsive interactions.
 
 ## Decision Log
 
-| ID     | Decision                                                                                                                              | Status       |
-| ------ | ------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
-| SET-01 | Use one public locale-prefixed `/[locale]/settings` destination for guests and authenticated users                                    | `Approved`   |
-| SET-02 | Preserve selected category in direct URL and browser history; exact syntax remains implementation mapping                             | `Approved`   |
-| SET-03 | Use Experience, Profile, Privacy, Connections, and Account in that order                                                              | `Approved`   |
-| SET-04 | Guests see usable Experience plus a compact sign-in note, not disabled account controls                                               | `Approved`   |
-| SET-05 | Compact layouts use overview-to-category navigation; wide layouts use persistent list-detail                                          | `Approved`   |
-| SET-06 | Language is immediate, locale-prefixed, account-owned when signed in, and browser-owned as guest                                      | `Approved`   |
-| SET-07 | Direct locale URLs render that locale without overwriting a stored explicit preference                                                | `Approved`   |
-| SET-08 | Theme offers System, Dark, and Light and remains device-local                                                                         | `Approved`   |
-| SET-09 | New users default to System; migrate existing explicit dark/light choices                                                             | `Approved`   |
-| SET-10 | Earlier direction added an immediate localized/reading-title visibility preference                                                    | `Superseded` |
-| SET-11 | Profile and Privacy each use an explicit category Save with dirty protection                                                          | `Approved`   |
-| SET-12 | Save remains in category and offers a separate View my profile action                                                                 | `Approved`   |
-| SET-13 | Avatar supports JPG/PNG/WebP up to 4 MB, staged 1:1 crop, circular preview, change, and remove                                        | `Approved`   |
-| SET-14 | Failed avatar save preserves the existing public avatar                                                                               | `Approved`   |
-| SET-15 | NosLog nickname is separate from NOSTALGIA official player name                                                                       | `Approved`   |
-| SET-16 | Nickname supports approved Unicode scripts and punctuation, display preservation, and normalized uniqueness                           | `Approved`   |
-| SET-17 | Keep numeric profile URLs canonical across nickname changes                                                                           | `Approved`   |
-| SET-18 | NOSTALGIA official player name stays synced, uppercase, read-only, and privacy-controlled                                             | `Approved`   |
-| SET-19 | Country/region means main play and regional-ranking region, independent from language                                                 | `Approved`   |
-| SET-20 | Country change uses a short consequence confirmation without proof or long cooldown                                                   | `Approved`   |
-| SET-21 | Preferred arcade uses searchable single-select, Clear, discovery link, and unavailable-value retention                                | `Approved`   |
-| SET-22 | Settings venue edits are staged; arcade-detail contextual set action may be immediate                                                 | `Approved`   |
-| SET-23 | Use five positive privacy controls; On always means public                                                                            | `Approved`   |
-| SET-24 | One Play activity control owns Last played and Recent Plays                                                                           | `Approved`   |
-| SET-25 | Discord identity is read-only and refreshed through OAuth without overwriting NosLog profile fields                                   | `Approved`   |
-| SET-26 | Change login account is a separate confirmed sensitive OAuth action                                                                   | `Approved`   |
-| SET-27 | Do not expose Disconnect while Discord is the sole login method                                                                       | `Approved`   |
-| SET-28 | Logout preserves device-local and guest browser preferences                                                                           | `Approved`   |
-| SET-29 | Keep Privacy globally in the footer while allowing contextual deletion access                                                         | `Approved`   |
-| SET-30 | Account deletion is immediate, permanent, and preceded by grouped consequences and reliable counts                                    | `Approved`   |
-| SET-31 | Require recent Discord reauthentication and an exact localized phrase before deletion                                                 | `Approved`   |
-| SET-32 | Deletion processing prevents duplicates/dismissal and reports partial failure truthfully                                              | `Approved`   |
-| SET-33 | Complete deletion clears session and sensitive cache, returns to localized Home, and does not restore later                           | `Approved`   |
-| SET-34 | Discord and official NOSTALGIA accounts remain unaffected by NosLog deletion                                                          | `Approved`   |
-| SET-35 | Exclude raw account-data export from NosLog 2.0 Settings                                                                              | `Rejected`   |
-| SET-36 | Keep profile-card Share separate as a social profile feature, never relabel it as export                                              | `Approved`   |
-| SET-37 | Future raw export, if justified, requires its own product, privacy, and operational brief                                             | `Approved`   |
-| SET-38 | Remove the localized/reading-title preference; original titles are persistent and translation disclosure belongs only to Music Detail | `Approved`   |
+| ID     | Decision                                                                                                                                                                                                     | Status       |
+| ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------ |
+| SET-01 | Use one public locale-prefixed `/[locale]/settings` destination for guests and authenticated users                                                                                                           | `Approved`   |
+| SET-02 | Preserve selected category in direct URL and browser history; exact syntax remains implementation mapping                                                                                                    | `Approved`   |
+| SET-03 | Use Experience, Profile, Privacy, Connections, and Account in that order                                                                                                                                     | `Approved`   |
+| SET-04 | Guests see usable Experience plus a compact sign-in note, not disabled account controls                                                                                                                      | `Approved`   |
+| SET-05 | Compact layouts use overview-to-category navigation; wide layouts use persistent list-detail                                                                                                                 | `Approved`   |
+| SET-06 | Language is immediate, locale-prefixed, account-owned when signed in, and browser-owned as guest                                                                                                             | `Approved`   |
+| SET-07 | Direct locale URLs render that locale without overwriting a stored explicit preference                                                                                                                       | `Approved`   |
+| SET-08 | Theme offers System, Dark, and Light and remains device-local                                                                                                                                                | `Approved`   |
+| SET-09 | New users default to System; migrate existing explicit dark/light choices                                                                                                                                    | `Approved`   |
+| SET-10 | Earlier direction added an immediate localized/reading-title visibility preference                                                                                                                           | `Superseded` |
+| SET-11 | Profile and Privacy each use an explicit category Save with dirty protection                                                                                                                                 | `Approved`   |
+| SET-12 | Save remains in category and offers a separate View my profile action                                                                                                                                        | `Approved`   |
+| SET-13 | Avatar supports JPG/PNG/WebP up to 4 MB, staged 1:1 crop, circular preview, change, and remove                                                                                                               | `Approved`   |
+| SET-14 | Failed avatar save preserves the existing public avatar                                                                                                                                                      | `Approved`   |
+| SET-15 | NosLog nickname is separate from NOSTALGIA official player name                                                                                                                                              | `Approved`   |
+| SET-16 | Nickname supports approved Unicode scripts and punctuation, display preservation, and normalized uniqueness                                                                                                  | `Approved`   |
+| SET-17 | Keep numeric profile URLs canonical across nickname changes                                                                                                                                                  | `Approved`   |
+| SET-18 | NOSTALGIA official player name stays synced, uppercase, read-only, and privacy-controlled                                                                                                                    | `Approved`   |
+| SET-19 | Country/region means main play and regional-ranking region, independent from language                                                                                                                        | `Approved`   |
+| SET-20 | Country change uses a short consequence confirmation without proof or long cooldown                                                                                                                          | `Approved`   |
+| SET-21 | Preferred arcade uses searchable single-select, Clear, discovery link, and unavailable-value retention                                                                                                       | `Approved`   |
+| SET-22 | Settings venue edits are staged; arcade-detail contextual set action may be immediate                                                                                                                        | `Approved`   |
+| SET-23 | Use five positive privacy controls; On always means public                                                                                                                                                   | `Approved`   |
+| SET-24 | One Play activity control owns Last played and Recent Plays                                                                                                                                                  | `Approved`   |
+| SET-25 | Discord identity is read-only and refreshed through OAuth without overwriting NosLog profile fields                                                                                                          | `Approved`   |
+| SET-26 | Change login account is a separate confirmed sensitive OAuth action                                                                                                                                          | `Approved`   |
+| SET-27 | Do not expose Disconnect while Discord is the sole login method                                                                                                                                              | `Approved`   |
+| SET-28 | Logout preserves device-local and guest browser preferences                                                                                                                                                  | `Approved`   |
+| SET-29 | Keep Privacy globally in the footer while allowing contextual deletion access                                                                                                                                | `Approved`   |
+| SET-30 | Account deletion is immediate, permanent, and preceded by grouped consequences and reliable counts                                                                                                           | `Approved`   |
+| SET-31 | Require recent Discord reauthentication and an exact localized phrase before deletion                                                                                                                        | `Approved`   |
+| SET-32 | Deletion processing prevents duplicates/dismissal and reports partial failure truthfully                                                                                                                     | `Approved`   |
+| SET-33 | Complete deletion clears session and sensitive cache, returns to localized Home, and does not restore later                                                                                                  | `Approved`   |
+| SET-34 | Discord and official NOSTALGIA accounts remain unaffected by NosLog deletion                                                                                                                                 | `Approved`   |
+| SET-35 | Exclude raw account-data export from NosLog 2.0 Settings                                                                                                                                                     | `Rejected`   |
+| SET-36 | Keep profile-card Share separate as a social profile feature, never relabel it as export                                                                                                                     | `Approved`   |
+| SET-37 | Future raw export, if justified, requires its own product, privacy, and operational brief                                                                                                                    | `Approved`   |
+| SET-38 | Remove the localized/reading-title preference; original titles are persistent and translation disclosure belongs only to Music Detail                                                                        | `Approved`   |
+| SET-39 | Approve the Korean, Japanese, and English copy set for the five categories, including the superseded negative privacy labels and the region labels aligned with document 08                                  | `Approved`   |
+| SET-40 | Name the Experience category `화면 설정` / `表示設定` / `Display settings`; reuse the existing `settings.appearance` key with a widened description covering language and theme                              | `Approved`   |
+| SET-41 | Compact overview lists each category with its name, a one-line summary, and a chevron; the summary is optional where it adds nothing                                                                         | `Approved`   |
+| SET-42 | Category-detail back control is `Icon/chevron-left` 16 beside the `설정` label with a 44px target, symmetric with the overview's chevron-right; the text-glyph arrow and a new arrow-left icon were rejected | `Approved`   |
+| SET-43 | The delete-account button is the filled red `Button · Style=Destructive Filled` (document 24 «Filled destructive action»); outline, sunken-area, and Danger-Zone forms were rejected                         | `Approved`   |
+| SET-44 | `View my profile` sits as a right-aligned link at the top of the Profile save zone; a title-row link was rejected                                                                                            | `Approved`   |
+| SET-45 | The Play activity control carries a helper line stating that Last played and Recent Plays are published together, in the form-helper style; the other four privacy labels remain self-evident and get none   | `Approved`   |
+| SET-46 | Overview category summaries are static feature descriptions, not current values; value summaries cannot compress Profile and Privacy honestly                                                                | `Approved`   |
+| SET-47 | Intermediate widths (672–1055) keep the drill-in composition with 24px margins; list-detail starts only at the document-24 Wide boundary (1056+), adding no bespoke threshold                                | `Approved`   |
+| SET-48 | Wide composition is a 292px (3-column) category rail, a 16px gutter, and a 640px bounded left-aligned detail column; the back link disappears because the rail is the navigation                             | `Approved`   |
+| SET-49 | The rail marks the current category with the `interaction/menu-set` fill plus `emphasis-label` weight — an NI-A-sanctioned use, with weight keeping color from being the only cue                            | `Approved`   |
 
 ## Handoff Boundary
 
@@ -817,3 +828,92 @@ storage, route, and test implications before coding. If an implementation limita
 would merge persistence boundaries, lose existing preferences, make deletion
 non-idempotent, or prevent the approved multilingual responsive behavior, report the
 conflict and obtain a guide revision instead of silently weakening this contract.
+
+## Korean, Japanese and English Copy — approved 2026-09-01
+
+`SET-39`. Sixty-eight `settings.*` keys exist in all three locales (corrected
+2026-09-01; an earlier draft said fifty-five), but they were written
+for a single "Profile settings" form. The rows below are what this brief supersedes or
+requires and the repository does not have.
+
+### Superseded
+
+| Key                                                                                         | Current                                                             | Approved                                                                                                     | Why                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `settings.title`                                                                            | `프로필 설정`                                                       | `설정` / `設定` / `Settings`                                                                                 | `SET-01` makes this the destination for all five categories, not a profile form                                                                        |
+| `settings.hideNostalgia`, `settings.hideDiscord`, `settings.hidePlayCount` (+ descriptions) | three negative `hide_*` controls                                    | five positive controls, below                                                                                | `SET-23`: On always means public                                                                                                                       |
+| `settings.localizedTitle`, `settings.localizedTitleDescription`                             | translated-title preference                                         | removed                                                                                                      | `SET-38`                                                                                                                                               |
+| `settings.country` (ko·en)                                                                  | `국가` · `Country`                                                  | `국가/지역` / `Country or region`                                                                            | Japanese already reads `国・地域`; ko and en both change (corrected 2026-09-01 — an earlier draft wrongly claimed en already read `Country or region`) |
+| `settings.appearance` (en)                                                                  | `Appearance`                                                        | `Display settings`                                                                                           | `SET-40` names the category in all three locales                                                                                                       |
+| `settings.languageTitle`                                                                    | `언어 및 곡명`                                                      | removed                                                                                                      | `SET-38` removed the title preference; the category now uses plain `언어` and `테마` section titles                                                    |
+| `settings.countryKorea` / `Japan` / `Global`                                                | `대한민국` · `일본` · `기타` (en `South Korea` · `Japan` · `Other`) | `대한민국` · `일본` · `기타 지역` / `韓国` · `日本` · `その他地域` / `Korea` · `Japan` · `Other regions`     | Document 08 fixed these labels; P5 and P9 already use them                                                                                             |
+| `settings.lightTheme` (+ description)                                                       | a single light-theme entry                                          | three options: `시스템` · `다크` · `라이트` / `システム` · `ダーク` · `ライト` / `System` · `Dark` · `Light` | `SET-08`                                                                                                                                               |
+| `settings.preferredArcade` (en)                                                             | `Favorite Arcade`                                                   | `Preferred arcade`                                                                                           | This brief's term                                                                                                                                      |
+| `settings.appearanceDescription`                                                            | theme only                                                          | covers language and theme                                                                                    | `SET-40`                                                                                                                                               |
+
+### New
+
+| Meaning                           | Korean                                                        | Japanese                                                                 | English                                                             |
+| --------------------------------- | ------------------------------------------------------------- | ------------------------------------------------------------------------ | ------------------------------------------------------------------- |
+| Category · Profile                | `프로필`                                                      | `プロフィール`                                                           | `Profile`                                                           |
+| Category · Connections            | `연결`                                                        | `連携`                                                                   | `Connections`                                                       |
+| Category · Account                | `계정`                                                        | `アカウント`                                                             | `Account`                                                           |
+| Guest note                        | `로그인하면 프로필·공개 설정·연결·계정을 관리할 수 있습니다.` | `ログインするとプロフィール・公開設定・連携・アカウントを管理できます。` | `Log in to manage your profile, privacy, connections, and account.` |
+| Avatar remove                     | `제거`                                                        | `削除`                                                                   | `Remove`                                                            |
+| NOSTALGIA player name (read-only) | `NOSTALGIA 플레이어명`                                        | `NOSTALGIA プレイヤー名`                                                 | `NOSTALGIA player name`                                             |
+| Privacy 1                         | `NOSTALGIA 플레이어명 공개`                                   | `NOSTALGIA プレイヤー名を公開`                                           | `Show NOSTALGIA player name`                                        |
+| Privacy 2                         | `Discord 정체성 공개`                                         | `Discord のアカウント情報を公開`                                         | `Show Discord identity`                                             |
+| Privacy 3                         | `선호 오락실 공개`                                            | `お気に入りゲームセンターを公開`                                         | `Show preferred arcade`                                             |
+| Privacy 4                         | `총 플레이 횟수 공개`                                         | `総プレー回数を公開`                                                     | `Show total play count`                                             |
+| Privacy 5                         | `플레이 활동 공개`                                            | `プレー活動を公開`                                                       | `Show play activity`                                                |
+| Refresh Discord                   | `Discord 정보 새로고침`                                       | `Discord 情報を更新`                                                     | `Refresh Discord information`                                       |
+| Change login account              | `로그인 계정 변경`                                            | `ログインアカウントを変更`                                               | `Change login account`                                              |
+| Save success                      | `저장했습니다.`                                               | `保存しました。`                                                         | `Saved.`                                                            |
+| Unsaved warning                   | `저장하지 않은 변경이 있습니다. 나가면 사라집니다.`           | `保存していない変更があります。移動すると破棄されます。`                 | `You have unsaved changes. Leaving will discard them.`              |
+| Arcade · change                   | `변경`                                                        | `変更`                                                                   | `Change`                                                            |
+| Arcade · clear                    | `해제`                                                        | `解除`                                                                   | `Clear`                                                             |
+| Arcade · unavailable              | `이용 불가`                                                   | `利用不可`                                                               | `Unavailable`                                                       |
+| Reauthentication notice           | `삭제하려면 Discord로 다시 인증해야 합니다.`                  | `削除するには Discord で再認証が必要です。`                              | `Re-authenticate with Discord to delete.`                           |
+
+`profile.logout` `로그아웃` / `ログアウト` / `Log out` is reused unchanged, as is the
+whole deletion set (`settings.delete*`), `settings.save`, `settings.saving`,
+`settings.cancel`, and the avatar format and error strings.
+
+### Second pass — approved 2026-09-01 (Korean; ja/en due at the locale pass)
+
+These strings appear in the built compact frames and were approved from the Z1
+context boards. Japanese and English follow at the locale pass, like other pages.
+
+| Meaning                                                                                                                      | Korean                                                                                                                                  |
+| ---------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| Overview summary · Display settings                                                                                          | `언어 · 테마`                                                                                                                           |
+| Overview summary · Profile                                                                                                   | `닉네임 · 국가/지역 · 선호 오락실`                                                                                                      |
+| Overview summary · Privacy                                                                                                   | `공개할 정보 5가지`                                                                                                                     |
+| Overview summary · Connections                                                                                               | `Discord 로그인 계정`                                                                                                                   |
+| Overview summary · Account                                                                                                   | `로그아웃 · 탈퇴`                                                                                                                       |
+| Section titles in Display settings                                                                                           | `언어` · `테마`                                                                                                                         |
+| Theme scope note                                                                                                             | `이 브라우저에서만 적용됩니다.`                                                                                                         |
+| Nickname helper (corrected — the first build omitted Japanese and internal spaces, violating `SET-16`)                       | `1–20자 · 한글·일본어·영문·숫자·공백과 . _ - 사용`                                                                                      |
+| Privacy section note                                                                                                         | `켜면 다른 사용자에게 보입니다.`                                                                                                        |
+| Dirty notice (derived from the approved leave warning's first sentence)                                                      | `저장하지 않은 변경이 있습니다.`                                                                                                        |
+| Deletion boundary sentence                                                                                                   | `Discord 계정과 공식 NOSTALGIA 계정은 영향을 받지 않습니다.`                                                                            |
+| Connections group label                                                                                                      | `로그인 계정`                                                                                                                           |
+| Profile link (`SET-44`)                                                                                                      | `내 프로필 보기`                                                                                                                        |
+| Play activity helper (`SET-45`)                                                                                              | `마지막 플레이와 최근 플레이가 함께 공개됩니다.`                                                                                        |
+| Leave-warning actions (cancel first)                                                                                         | `머무르기` · `나가기`                                                                                                                   |
+| Country-change dialog                                                                                                        | title `국가/지역 변경` · body `랭킹 비교 대상과 프로필에 표시되는 국가/지역이 바뀝니다.` · confirm `변경`                               |
+| Login-account-change dialog                                                                                                  | body `다음 로그인부터 새로 인증한 Discord 계정을 사용합니다. 계속하면 Discord 인증으로 이동합니다.` · confirm `계속`                    |
+| Deletion consequence groups (counts are runtime data; the public-presence group is omitted because it has no reliable count) | `플레이·동기화 기록` · `성장·등급 이력` · `서열 투표·커뮤니티 활동` · `빙고·검정 제출` · `업로드한 이미지`                              |
+| Deletion reauthentication                                                                                                    | action `Discord로 다시 인증` · done state `Discord 인증 완료`                                                                           |
+| Derivations                                                                                                                  | `settings.deletePrompt` resolved as `계속하려면 회원 탈퇴를 입력해주세요.` · `settings.deleteError` split into a status title/body pair |
+| Refresh busy label                                                                                                           | `새로고침 중`                                                                                                                           |
+| Arcade search placeholder                                                                                                    | `오락실 이름·지역 검색`                                                                                                                 |
+| Avatar crop zoom                                                                                                             | `축소` · `확대` (confirm reuses `common.confirm`)                                                                                       |
+| Offline notice                                                                                                               | `네트워크에 연결되어 있지 않습니다.` + `변경 내용은 전송되지 않고 남아 있습니다.`                                                       |
+
+### Category naming
+
+`SET-40`. The brief's own term is _Experience_, which has no natural Korean equivalent
+as a settings-category label — a literal `경험` reads as nothing. The category holds
+language and theme, so `화면 설정` names what it does. The key `settings.appearance`
+already exists with that Korean value; only its description widens to cover language.

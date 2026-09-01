@@ -469,6 +469,58 @@ Onboarding is account completion, not a product tour or Settings substitute.
 - Final legal wording requires privacy/legal review, but the approved product data
   boundary and minimum disclosure cannot be removed by copy editing.
 
+## Korean, Japanese and English Copy — approved 2026-08-30
+
+`Approved`. Thirty-one `auth.*`, `onboarding.*`, `common.login`, and `skip.main` keys
+already exist in all three locales and are reused unchanged wherever this section does
+not override them. The rows below are what this brief requires and the repository does
+not have, plus the strings this brief supersedes. Each row cites the clause that
+mandates it.
+
+### New
+
+| Meaning                       | Korean                                                                                         | Japanese                                                                                                | English                                                                                                                    | Basis                                                                                                                                                   |
+| ----------------------------- | ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Login purpose line            | `Discord 계정으로 NosLog에 로그인합니다.`                                                      | `DiscordアカウントでNosLogにログインします。`                                                           | `Log in to NosLog with your Discord account.`                                                                              | Login information order, item 3                                                                                                                         |
+| Destination context           | `로그인하면 {destination} 화면으로 돌아갑니다.`                                                | `ログイン後、{destination}に戻ります。`                                                                 | `After logging in, you will return to {destination}.`                                                                      | `AUTH-04`; the Return-Destination Contract forbids exposing raw paths                                                                                   |
+| Discord data disclosure       | `NosLog는 Discord 식별자, 표시 이름, 사용자명, 아바타를 계정 인증과 초기 정체성에 사용합니다.` | `NosLogはDiscordの識別子、表示名、ユーザー名、アバターをアカウント認証と初期プロフィールに使用します。` | `NosLog uses your Discord identifier, display name, username, and avatar for account authentication and initial identity.` | `AUTH-08`, which enumerates exactly these four fields. `auth.reviewBeforeLogin` stays as the adjacent Privacy-link sentence                             |
+| Discord action busy label     | `Discord로 이동 중`                                                                            | `Discordへ移動中`                                                                                       | `Opening Discord`                                                                                                          | The Primary Action clause requires a busy state that does not replace the accessible name. Follows the `{동작} 중` idiom used in eighteen existing keys |
+| Error · user cancelled        | `로그인이 완료되지 않았습니다.`                                                                | `ログインが完了しませんでした。`                                                                        | `Login was not completed.`                                                                                                 | `AUTH-22`; the error table separates cancellation from expiry, which the current build conflates                                                        |
+| Error · session expired       | `세션이 만료되었습니다. 다시 로그인해주세요.`                                                  | `セッションの有効期限が切れました。もう一度ログインしてください。`                                      | `Your session expired. Please log in again.`                                                                               | Error table, _Session expired before protected action_                                                                                                  |
+| Error · destination rejected  | `요청한 페이지로 이동할 수 없어 홈으로 이동합니다.`                                            | `リクエストされたページへ移動できないため、ホームへ移動します。`                                        | `That destination was unavailable, so you will continue to Home.`                                                          | Error table, _Return destination rejected_; `AUTH-06`                                                                                                   |
+| Onboarding destination reason | `{destination} 화면을 사용하려면 계정 설정을 완료해주세요.`                                    | `{destination}を利用するには、アカウント設定を完了してください。`                                       | `Complete your account setup to use {destination}.`                                                                        | `AUTH-18`; the brief's own example sentence                                                                                                             |
+| Connected-account row label   | `연결된 로그인 계정`                                                                           | `連携中のログインアカウント`                                                                            | `Connected login account`                                                                                                  | `AUTH-11`, which requires labelling the row as the login account and not as the NosLog nickname                                                         |
+| Nickname explanation          | `NosLog에서 표시되는 이름입니다. Discord 이름이나 공식 NOSTALGIA 플레이어명과는 다릅니다.`     | `NosLogで表示される名前です。Discordの名前や公式NOSTALGIAのプレイヤー名とは異なります。`                | `This is the name shown on NosLog. It is not your Discord name or your official NOSTALGIA player name.`                    | The NosLog Nickname clause requires exactly this distinction                                                                                            |
+| Region explanation            | `주로 플레이하는 지역이며 지역 랭킹에 사용됩니다. 화면 언어는 바뀌지 않습니다.`                | `主にプレーする地域で、地域ランキングに使用されます。表示言語は変わりません。`                          | `This is your main play region and is used for regional rankings. It does not change the interface language.`              | `AUTH-13`; the contract requires the independence to be stated, not merely implemented                                                                  |
+| Logout escape                 | `로그아웃하고 둘러보기`                                                                        | `ログアウトして見る`                                                                                    | `Log out and browse`                                                                                                       | `AUTH-20`. Inherits the word order of `auth.browseWithoutLogin`                                                                                         |
+
+### Superseded by this brief
+
+| Key                            | Current                               | Approved                                                                                                                     | Why it changes                                                                                                                                                                                                                         |
+| ------------------------------ | ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `auth.error.oauthConfig`       | `Discord 로그인 설정을 확인해주세요.` | `로그인을 일시적으로 사용할 수 없습니다.` / `ログインを一時的にご利用いただけません。` / `Login is temporarily unavailable.` | The Error and Recovery Contract forbids _"check configuration"_ operator instructions in user-facing text. The error table's own wording for this row is _Login is temporarily unavailable_                                            |
+| `onboarding.country.kr`        | `대한민국` / `韓国` / `South Korea`   | `대한민국` / `韓国` / `Korea`                                                                                                | Document 08 fixed the approved region labels and P5 is built with them                                                                                                                                                                 |
+| `onboarding.country.jp`        | `일본` / `日本` / `Japan`             | unchanged                                                                                                                    | Already correct                                                                                                                                                                                                                        |
+| `onboarding.country.global`    | `기타` / `その他` / `Other`           | `기타 지역` / `その他地域` / `Other regions`                                                                                 | Document 08: _"Do not label it `Global`, because it explicitly excludes Korea and Japan."_ The same value must not be named differently on two pages                                                                                   |
+| `onboarding.country` (ko only) | `국가`                                | `국가/지역`                                                                                                                  | Japanese and English already read `国・地域` and `country or region`; only Korean diverged                                                                                                                                             |
+| `onboarding.start`             | `NosLog 시작하기`                     | `계정 설정 완료` / `アカウント設定を完了` / `Complete account setup`                                                         | The Localization and Content Contract fixes the action vocabulary as _complete account setup_. The screen places this action beside `로그아웃하고 둘러보기`, and two actions with unrelated vocabulary obscure what is being completed |
+
+### Left alone deliberately
+
+`country.global` renders the same region as `글로벌` / `グローバル` / `Global`. It is
+outside this page family and is used by surfaces this brief does not govern, so it is
+recorded as a separate cleanup rather than changed here. The repository therefore
+carries three names for one value until that cleanup runs — `기타` (onboarding, fixed
+above), `글로벌` (`country.global`), and the approved `기타 지역`.
+
+### A Korean template constraint
+
+`{destination} 화면으로` and `{destination} 화면을` insert the fixed noun `화면` on
+purpose. Korean particle selection depends on whether the preceding syllable ends in a
+consonant, so `{destination}으로` cannot be a template — it would be wrong for roughly
+half of the destination names. Japanese and English have no such agreement and use the
+placeholder directly.
+
 ## Data and Representative Content Requirements
 
 Design and implementation specimens must include:
@@ -631,36 +683,42 @@ build checks do not substitute for this stateful browser verification.
 
 ## Decision Log
 
-| ID      | Decision                                                                                                           | Status       |
-| ------- | ------------------------------------------------------------------------------------------------------------------ | ------------ |
-| AUTH-01 | Keep Discord as the only NosLog 2.0 authentication provider                                                        | `Approved`   |
-| AUTH-02 | Use one “Continue with Discord” action; do not split Login and registration                                        | `Approved`   |
-| AUTH-03 | Keep public browsing available without authentication                                                              | `Approved`   |
-| AUTH-04 | Show a concise human destination context for action-triggered Login                                                | `Approved`   |
-| AUTH-05 | Preserve one server-validated internal destination across Login, OAuth, and Onboarding                             | `Approved`   |
-| AUTH-06 | Fall back to localized Home when no safe destination exists                                                        | `Approved`   |
-| AUTH-07 | Request only Discord `identify`; do not imply password, email, guild, or message access                            | `Approved`   |
-| AUTH-08 | Place concise Discord data disclosure and an inline Privacy link after the primary action                          | `Approved`   |
-| AUTH-09 | Do not require a separate consent checkbox unless later legal review changes the requirement                       | `Approved`   |
-| AUTH-10 | Use one-screen onboarding with NosLog nickname and country/region only                                             | `Approved`   |
-| AUTH-11 | Show Discord avatar and display name as a compact read-only connected-account confirmation                         | `Approved`   |
-| AUTH-12 | Reuse the Settings nickname rules and do not force uppercase                                                       | `Approved`   |
-| AUTH-13 | Keep country/region independent from UI language                                                                   | `Approved`   |
-| AUTH-14 | Earlier direction inherited explicit guest language and localized-title preferences                                | `Superseded` |
-| AUTH-15 | Do not add a progress indicator, tour, or extra profile/setup fields                                               | `Approved`   |
-| AUTH-16 | Gate incomplete authenticated profiles through Onboarding before ordinary or personalized use                      | `Approved`   |
-| AUTH-17 | Redirect direct Profile and other account-dependent access to Onboarding without a warning modal                   | `Approved`   |
-| AUTH-18 | Show a concise destination-aware reason inside Onboarding                                                          | `Approved`   |
-| AUTH-19 | Return directly to the validated destination after successful completion                                           | `Approved`   |
-| AUTH-20 | Provide “Log out and browse” and return to localized public Home                                                   | `Approved`   |
-| AUTH-21 | Resume the same incomplete account on later Login; never create a duplicate                                        | `Approved`   |
-| AUTH-22 | Distinguish OAuth cancellation, expiry/security, provider, and service failures                                    | `Approved`   |
-| AUTH-23 | Preserve form input and expose associated, programmatic error and status feedback                                  | `Approved`   |
-| AUTH-24 | Use the minimal identity-plus-trust-footer shell without profile, More, or bottom navigation                       | `Approved`   |
-| AUTH-25 | Use a fluid focused task column through 320 CSS px; do not fix the shell to 390px                                  | `Approved`   |
-| AUTH-26 | Keep the same semantic contract and recovery in Korean, Japanese, and English                                      | `Approved`   |
-| AUTH-27 | Require a seeded incomplete account in future browser and E2E acceptance                                           | `Approved`   |
-| AUTH-28 | Inherit only the approved explicit guest language preference into a new account; title disclosure is not a setting | `Approved`   |
+| ID      | Decision                                                                                                                                                  | Status       |
+| ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| AUTH-01 | Keep Discord as the only NosLog 2.0 authentication provider                                                                                               | `Approved`   |
+| AUTH-02 | Use one “Continue with Discord” action; do not split Login and registration                                                                               | `Approved`   |
+| AUTH-03 | Keep public browsing available without authentication                                                                                                     | `Approved`   |
+| AUTH-04 | Show a concise human destination context for action-triggered Login                                                                                       | `Approved`   |
+| AUTH-05 | Preserve one server-validated internal destination across Login, OAuth, and Onboarding                                                                    | `Approved`   |
+| AUTH-06 | Fall back to localized Home when no safe destination exists                                                                                               | `Approved`   |
+| AUTH-07 | Request only Discord `identify`; do not imply password, email, guild, or message access                                                                   | `Approved`   |
+| AUTH-08 | Place concise Discord data disclosure and an inline Privacy link after the primary action                                                                 | `Approved`   |
+| AUTH-09 | Do not require a separate consent checkbox unless later legal review changes the requirement                                                              | `Approved`   |
+| AUTH-10 | Use one-screen onboarding with NosLog nickname and country/region only                                                                                    | `Approved`   |
+| AUTH-11 | Show Discord avatar and display name as a compact read-only connected-account confirmation                                                                | `Approved`   |
+| AUTH-12 | Reuse the Settings nickname rules and do not force uppercase                                                                                              | `Approved`   |
+| AUTH-13 | Keep country/region independent from UI language                                                                                                          | `Approved`   |
+| AUTH-14 | Earlier direction inherited explicit guest language and localized-title preferences                                                                       | `Superseded` |
+| AUTH-15 | Do not add a progress indicator, tour, or extra profile/setup fields                                                                                      | `Approved`   |
+| AUTH-16 | Gate incomplete authenticated profiles through Onboarding before ordinary or personalized use                                                             | `Approved`   |
+| AUTH-17 | Redirect direct Profile and other account-dependent access to Onboarding without a warning modal                                                          | `Approved`   |
+| AUTH-18 | Show a concise destination-aware reason inside Onboarding                                                                                                 | `Approved`   |
+| AUTH-19 | Return directly to the validated destination after successful completion                                                                                  | `Approved`   |
+| AUTH-20 | Provide “Log out and browse” and return to localized public Home                                                                                          | `Approved`   |
+| AUTH-21 | Resume the same incomplete account on later Login; never create a duplicate                                                                               | `Approved`   |
+| AUTH-22 | Distinguish OAuth cancellation, expiry/security, provider, and service failures                                                                           | `Approved`   |
+| AUTH-23 | Preserve form input and expose associated, programmatic error and status feedback                                                                         | `Approved`   |
+| AUTH-24 | Use the minimal identity-plus-trust-footer shell without profile, More, or bottom navigation                                                              | `Approved`   |
+| AUTH-25 | Use a fluid focused task column through 320 CSS px; do not fix the shell to 390px                                                                         | `Approved`   |
+| AUTH-26 | Keep the same semantic contract and recovery in Korean, Japanese, and English                                                                             | `Approved`   |
+| AUTH-27 | Require a seeded incomplete account in future browser and E2E acceptance                                                                                  | `Approved`   |
+| AUTH-28 | Inherit only the approved explicit guest language preference into a new account; title disclosure is not a setting                                        | `Approved`   |
+| AUTH-29 | Approve the Korean, Japanese, and English copy set, including the superseded operator-oriented OAuth error and the region labels aligned with document 08 | `Approved`   |
+| AUTH-30 | Render the Discord action on Discord's own brand surface using `brand/discord` + `brand/on-discord`, not the neutral filled primary appearance            | `Approved`   |
+| AUTH-31 | Compose both auth screens as one vertically centred column on the plain canvas: identity, subtitle, action, escape, and a bottom fine-print area          | `Approved`   |
+| AUTH-32 | Drop the Login purpose line; the heading role is carried by the identity mark and the subtitle, and the action names the provider                         | `Approved`   |
+| AUTH-33 | Offer an explicit language control on the auth screens; country/region never changes the interface language                                               | `Approved`   |
+| AUTH-34 | Present recovery states as one line directly above the primary action rather than as a bordered message block                                             | `Approved`   |
 
 ## Handoff Boundary
 
@@ -678,3 +736,89 @@ localization, database, unit, E2E, and browser behavior. If Discord platform pol
 privacy/legal review, or implementation security requires a materially different
 scope, return flow, consent mechanism, or account state, report the conflict and obtain
 a guide revision before implementation.
+
+### Discord action surface — approved 2026-08-30
+
+`AUTH-30`. The action uses Discord's own brand color rather than the neutral filled
+primary appearance. Two alternatives were drawn in Z1 and the neutral one was rejected.
+
+- The Primary Action clause above already says **Discord-branded**, and the product
+  already ships `--color-discord: #5865f2` on this exact button. Nothing is invented.
+- Foundation `RPA-A` reserves external-brand actions for _their own semantics_; `BR-A`
+  now names the tokens. Foundation `IC-06` was amended the same day, because its brand
+  mark exception had excluded actions before federated authentication was considered.
+- White on blurple measures `4.61:1` — AA for normal text, with little headroom. The
+  value is Discord's and is not ours to adjust. The current product's dark label on this
+  surface measures `4.10:1` and fails; `brand/on-discord` fixes that.
+- The neutral option measured far better (`14.55:1` Light / `13.64:1` Dark) but left
+  provider identity to the mark and the word alone. On a page whose entire purpose is
+  connecting an external identity, the surface is part of naming the provider.
+
+The `Browse without login` secondary action stays a text action, so the brand surface
+does not create two filled buttons of equal weight.
+
+## Composition, measured — approved 2026-09-01
+
+The composition in this document was written before any reference measurement. Nine
+real login pages were then measured in a browser at `1280`, and the result contradicted
+the first build, which used a left-aligned full-width column.
+
+| Reference      | Column width | Heading alignment |
+| -------------- | ------------ | ----------------- |
+| Stack Overflow | `248`        | centre            |
+| Atlassian      | `320`        | centre            |
+| Spotify        | `324`        | centre            |
+| GitHub         | `352`        | centre            |
+| Notion         | `360`        | centre            |
+| Dropbox        | `368`        | centre            |
+| Last.fm        | `370`        | start             |
+| Twitch         | `488`        | —                 |
+| Bandcamp       | `516`        | centre            |
+
+Every one uses a narrow centred column; only Last.fm aligns its heading to the start.
+Netlify, Vercel, and Slack split the viewport and still keep the form itself narrow.
+
+### `AUTH-31` — the approved composition
+
+One column, vertically centred on `surface/canvas`, `358` wide (`288` at `320`). The
+column width does not grow with the viewport: GitHub holds `352` and Spotify `324` at
+`1280`, and this page does the same. There is no card, no split panel, and no ordinary
+footer.
+
+Order: identity mark (`display`), subtitle, `48`, optional state line, primary action,
+`24`, the browse escape. A bottom area carries the privacy sentence and the language
+control.
+
+### `AUTH-32` — no purpose line
+
+The Login information order asked for _"one concise purpose line"_. Measured against the
+references, none of the nine carries an explanatory sentence on this screen, and the
+line that had been written (`Discord 계정으로 NosLog에 로그인합니다.`) repeated what the
+identity, the subtitle, and the action label already say. It is removed.
+
+### `AUTH-33` — an explicit language control
+
+`AUTH-13` keeps country/region independent of interface language, and that stands: the
+region here is a play region, `기타 지역` has no language, and changing the page language
+from a radio input would be a context change on input (WCAG 2.2 SC 3.2.2). What was
+missing is any way to change language at all on these screens.
+
+The control shows only the current language — `Icon/globe` `16`, the language name in
+`control`, and `Icon/chevron-down` `16`, at `110×44`. This follows the measured pattern:
+Google `한국어 ⌄` at `91×32`, Notion `언어: 한국어` at `120×28`, Netflix a `select` at
+`124×32`. The repository's existing `LocaleSwitcher` lists all three languages in a grid,
+which suits the navigation panel it lives in but not this screen.
+
+The accessible name reuses `header.language`; the visible label is the language name, so
+no new string is introduced.
+
+The privacy sentence and the language control sit on separate rows. Measured: the
+sentence is `226` (ko), `300` (ja), `267` (en); with a `16` gap and the `110` control a
+single row needs `352`–`426`, which does not fit `288` at `320` in any locale and fits
+only Korean at `390`.
+
+### `AUTH-34` — recovery as one line
+
+The six recovery states render as a single `body-secondary` line in
+`feedback/error-text` directly above the action. A bordered `StatusMessage` was tried and
+removed: on a screen whose entire content is four elements, the block dominates.

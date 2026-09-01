@@ -314,3 +314,79 @@ Home 은 이 파일의 **첫 데스크톱 조립**이었다. 여기서 정한 �
 `page-title-promoted` 도 마찬가지로 조건 3개를 만족하는 구역에만 쓴다.
 
 남은 페이지 패밀리는 문서 04 · 06 · 08 · 09 · 10 · 11 · 12 · 13 · 14 · 16 · 17 · 18 · 19 이다.
+
+---
+
+## 정정 — 2026-08-28 · 푸터 문구
+
+`OrdinaryFooter` 컴포넌트 기본값이 저장소에 없는 문자열을 담고 있었고, 이 페이지의 인스턴스가
+그 값을 상속하고 있었다. 컴포넌트 정의 두 variant 를 저장소 정값으로 고쳐 상속 인스턴스가
+전부 따라왔다.
+
+| 슬롯             | 고치기 전                                                       | 고친 뒤 (저장소 키)                                     |
+| ---------------- | --------------------------------------------------------------- | ------------------------------------------------------- |
+| `footer.privacy` | `Privacy` · `control/latin`                                     | `개인정보처리방침` · `control/ko`                       |
+| `home.tagline`   | `© 2026 NosLog · NOSTALGIA 기록·랭킹·아카이브 비공식 팬 서비스` | `© 2026 NosLog · NOSTALGIA 기록 · 랭킹 · 서열 아카이브` |
+
+파일 전체 반영 결과: 상속 인스턴스 `135`개(C8 `2` · P1 `10` · P2 `51` · P3 `22` · P4 `50` ·
+Z1 `61` 중 상속분)가 컴포넌트 수정만으로 정정됐고, P2 의 JA·EN 오버라이드 `6`개는 개별로 고쳤다.
+푸터 넘침 `0`. `service-notice` 가 `320` 에서 두 줄로 감기는 것은 그 텍스트가 `FILL` + 높이 hug 로
+설계된 의도된 동작이며 이번 변경의 회귀가 아니다.
+
+---
+
+## 재정정 — 2026-08-28 · 푸터 서비스 고지 복구
+
+위 「푸터 문구」 정정은 **틀렸다.** 내가 바꾼 세 문자열은 지어낸 값이 아니라
+[문서 15](./15-shared-shell-navigation-brief.md) Footer Contract 에 승인돼 있는 서비스 고지였고,
+`SHELL-32` 는 「불특정 팬 서비스 표기를 세 로케일 모두에 유지하고 줄이지 말 것」 을 명시한다.
+런타임 카탈로그에 없다는 이유로 미승인 문자열이라고 단정한 것이 오판이었다 — 이 고지는 아직
+구현되지 않은 2.0 신규 문구다(현재 `components/layout/footer.tsx` 는 `© 2026 NosLog` 만 렌더한다).
+
+**복구값(문서 15 그대로):**
+
+| 로케일 | 서비스 고지                                                                            |
+| ------ | -------------------------------------------------------------------------------------- |
+| 한국어 | `© 2026 NosLog · NOSTALGIA 기록·랭킹·아카이브 비공식 팬 서비스`                        |
+| 일본어 | `© 2026 NosLog · NOSTALGIA の記録・ランキング・アーカイブ非公式ファンサービス`         |
+| 영어   | `© 2026 NosLog · Unofficial fan service for NOSTALGIA records, rankings, and archives` |
+
+컴포넌트 기본값 `2` 곳과 인스턴스 `154` 곳을 되돌렸다. **`footer.privacy` 정정은 유지한다** —
+`Privacy`/`control/latin` 을 로케일에 맞는 `개인정보처리방침`·`プライバシーポリシー`·`Privacy Policy`
+로 바꾼 부분은 저장소 키와 일치하고 문서 15 와도 충돌하지 않는다.
+딸림 수정: `OrdinaryFooter` `Layout=Wide` 의 `service-notice` 를 `HUG` → `FILL` 로 바꿨다.
+복구한 일본어 고지가 `768` 에서 `546` 이라 한 줄에 안 들어가 넘치고 있었다. 이제 두 줄로 감기며
+그 폭에서만 푸터가 `52 → 72` 가 된다. 파일 전체 푸터 넘침 `0`.
+
+---
+
+## Correction — 2026-08-28 · footer layout variant threshold
+
+The `Layout=Wide` / `Layout=Compact` choice was inconsistent across page families:
+`P1`, `P4`, and `P5` used Wide at both `768` and `1024`, while `P6` used Compact at both.
+[Document 15](./15-shared-shell-navigation-brief.md)'s Footer Contract sets the footer's
+content but no width rule, so the inconsistency had no governing decision.
+
+The threshold is now derived rather than assumed, in the same way the Music-detail tab
+threshold was: measure what the single row actually needs. A Wide footer row needs
+`padding 24 + links + gap 24 + service notice + padding 24`, which resolves to `648` in
+Korean, `780` in English, and **`840` in Japanese** — Japanese binds, because its links
+group is `222` and its notice is `546`.
+
+**A footer uses `Layout=Wide` at `840` and above, and `Layout=Compact` below it.** This is
+a container-query threshold, not a tier boundary: `840` sits inside the Intermediate tier.
+
+Applied file-wide: `24` frames changed variant — `P1` `8`, `P2` `2`, `P4` `4`, and `P5` `8`
+moved from Wide to Compact at `768`; `P6` `2` moved from Compact to Wide at `1024`. Every
+product page now follows one rule. Footer overflow is `0`, and no frame escapes its
+section afterwards.
+
+## Post-handoff correction — 2026-09-01
+
+The four `공지 없음` frames had no viewport floor: `390`/`390 Dark` sat at 804 and
+`1280`/`1280 Dark` at 724 with the footer directly under the shortened editorial area.
+The 390 pair now holds the 844 floor and the 1280 pair holds **820** — the uniform
+height of the twenty other Wide frames, which this page family uses as its desktop
+fixture — with `main` filling the remainder. The two 1440 frames were touched in
+error during the sweep and restored byte-identically (820, `container standard 1280`
+HUG).

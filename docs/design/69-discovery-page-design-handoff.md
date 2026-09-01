@@ -393,3 +393,73 @@ Two checks belong in every one of them, both learned the hard way here:
 - **Before raising a decision, ask whether the value is chosen by a person or derived by
   the implementation.** A snapshot that disagrees with a derived rule is an error to
   correct, not an option to choose.
+
+---
+
+## Correction — 2026-08-28 · footer copy
+
+The `OrdinaryFooter` component defaults carried strings that do not exist in the
+repository catalogs, and this page's instances inherited them. Both component variants
+were corrected to the repository values, so every inheriting instance followed.
+
+| Slot             | Before                                                          | After (repository key)                                  |
+| ---------------- | --------------------------------------------------------------- | ------------------------------------------------------- |
+| `footer.privacy` | `Privacy`, `control/latin`                                      | `개인정보처리방침`, `control/ko`                        |
+| `home.tagline`   | `© 2026 NosLog · NOSTALGIA 기록·랭킹·아카이브 비공식 팬 서비스` | `© 2026 NosLog · NOSTALGIA 기록 · 랭킹 · 서열 아카이브` |
+
+File-wide result: `135` inheriting instances were corrected by the component edit alone
+(C8 `2`, P1 `10`, P2 `51`, P3 `22`, P4 `50`, plus the inheriting Z1 boards), and P2's `6`
+Japanese/English overrides were corrected individually. Footer overflow `0`. The
+`service-notice` wrapping to two lines at `320` is the intended behaviour of that
+`FILL` + hug-height text, not a regression from this change.
+
+---
+
+## Re-correction — 2026-08-28 · footer service notice restored
+
+The footer-copy correction above was **wrong**. The three strings it replaced were not
+invented: they are the service notice approved in
+[document 15](./15-shared-shell-navigation-brief.md)'s Footer Contract, and `SHELL-32`
+requires that the unofficial-fan-service qualifier be kept in all three locales and not
+reduced to a copyright line. Treating "absent from the runtime catalog" as "unapproved"
+was the error — this notice is 2.0 copy that has not been implemented yet, since the
+current `components/layout/footer.tsx` renders only `© 2026 NosLog` and the links.
+
+**Restored values, exactly as document 15 states them:**
+
+| Locale   | Service notice                                                                         |
+| -------- | -------------------------------------------------------------------------------------- |
+| Korean   | `© 2026 NosLog · NOSTALGIA 기록·랭킹·아카이브 비공식 팬 서비스`                        |
+| Japanese | `© 2026 NosLog · NOSTALGIA の記録・ランキング・アーカイブ非公式ファンサービス`         |
+| English  | `© 2026 NosLog · Unofficial fan service for NOSTALGIA records, rankings, and archives` |
+
+Two component defaults and `154` instances were reverted. **The `footer.privacy`
+correction stands** — replacing `Privacy` in `control/latin` with the locale's own
+`개인정보처리방침` / `プライバシーポリシー` / `Privacy Policy` matches the repository key
+and does not conflict with document 15. One consequential fix: the `Layout=Wide`
+`service-notice` moved from `HUG` to `FILL`, because the restored Japanese notice is
+`546` wide and overran the single row at `768`. It now wraps to two lines, which raises
+the footer from `52` to `72` at that width only. File-wide footer overflow is `0`.
+
+---
+
+## Correction — 2026-08-28 · footer layout variant threshold
+
+The `Layout=Wide` / `Layout=Compact` choice was inconsistent across page families:
+`P1`, `P4`, and `P5` used Wide at both `768` and `1024`, while `P6` used Compact at both.
+[Document 15](./15-shared-shell-navigation-brief.md)'s Footer Contract sets the footer's
+content but no width rule, so the inconsistency had no governing decision.
+
+The threshold is now derived rather than assumed, in the same way the Music-detail tab
+threshold was: measure what the single row actually needs. A Wide footer row needs
+`padding 24 + links + gap 24 + service notice + padding 24`, which resolves to `648` in
+Korean, `780` in English, and **`840` in Japanese** — Japanese binds, because its links
+group is `222` and its notice is `546`.
+
+**A footer uses `Layout=Wide` at `840` and above, and `Layout=Compact` below it.** This is
+a container-query threshold, not a tier boundary: `840` sits inside the Intermediate tier.
+
+Applied file-wide: `24` frames changed variant — `P1` `8`, `P2` `2`, `P4` `4`, and `P5` `8`
+moved from Wide to Compact at `768`; `P6` `2` moved from Compact to Wide at `1024`. Every
+product page now follows one rule. Footer overflow is `0`, and no frame escapes its
+section afterwards.

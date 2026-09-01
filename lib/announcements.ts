@@ -3,6 +3,7 @@ import "server-only";
 import { unstable_cache } from "next/cache";
 
 import { CACHE_TAGS } from "./cacheTags";
+import { PUBLIC_DATA_REVALIDATE_SECONDS } from "./cachePolicy";
 import db from "./db";
 
 async function queryPublishedAnnouncements() {
@@ -27,5 +28,8 @@ async function queryPublishedAnnouncements() {
 export const getPublishedAnnouncements = unstable_cache(
     queryPublishedAnnouncements,
     ["published-announcements"],
-    { tags: [CACHE_TAGS.announcements], revalidate: 300 }
+    {
+        tags: [CACHE_TAGS.announcements],
+        revalidate: PUBLIC_DATA_REVALIDATE_SECONDS,
+    }
 );

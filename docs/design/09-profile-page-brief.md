@@ -320,6 +320,12 @@ Provide five explicit visibility controls:
   select, separated to the row's outer edges (`PROF-35`). This keeps the metric
   subordinate to the mode selector while still exposing both metric values.
 - Show start value, current value, and change as structured text outside the chart.
+- The plot takes its height from its own width at a `16:9` ratio, capped at the height
+  the wide row already derives (`PROF-50`). Every width then traces to something: a narrow
+  column is governed by the ratio, which also guarantees the plot stays wider than it is
+  tall, and a wide column stops at the height the neighbouring Record-overview card sets
+  through row parity. A single constant height was rejected because it made the plot
+  taller than it was wide at `320`, and because no constant explains itself.
 - Retain meaningful daily history for the approved periods. Collapse identical
   same-value points when they add no information, but preserve the date boundary and
   do not manufacture interpolation.
@@ -371,12 +377,22 @@ Provide five explicit visibility controls:
 
 ### Rank Distribution
 
-- Show the profile-wide Pianist, Full Combo, S, A+, A, B+, B, C, and D distribution.
+- Show the profile-wide Pianist, S, A+, A, B+, B, C, and D distribution — the score
+  grade ladder only. Revised 2026-08-28 (`PROF-49`): Full Combo was listed here, but it
+  is a combo-axis achievement, not a rung on the grade ladder, and every Pianist play is
+  also a Full Combo. Counting it as one more bar double-counts charts, so the bars stop
+  summing to the catalogue and the figure stops being a distribution. Full Combo stays
+  where it belongs — on the play row's own mark.
 - Do not label it a clear-status distribution. NOSTALGIA clear is not a useful
   differentiator for this purpose.
 - Keep the whole distribution mode-neutral unless a future verified data source can
   distinguish mode-specific chart achievement without changing its meaning.
 - Provide exact counts and a structured text equivalent for any visual encoding.
+- The count column is one width across every row, taken from the largest count in the
+  distribution, and the bar track fills what is left (`PROF-51`). Sizing the column to
+  each row's own digits gave a one-digit row a longer track than a three-digit row, so
+  bar length encoded digit count rather than value. `metric-value` figures are tabular,
+  so a shared column stays stable as the counts change.
 
 ### Judgement Summary
 
@@ -506,12 +522,39 @@ itself; there are no dedicated child destinations.
 - Reserve stable identity and major section regions and expose one concise loading
   status.
 - Do not fabricate ranks, scores, charts, or activity in skeleton content.
+- The skeleton and the status line are not alternatives (`PROF-46`). The skeleton rows
+  are hidden from the accessibility tree, so the status line is the only announcement;
+  the skeleton is what the sighted reader gets.
+- Use skeleton rows only where the arriving content is a list — Best Plays and Recent
+  Plays, which reuse the approved Discovery skeleton row. The trend chart, competitive
+  summary, rank distribution, and judgement summary reserve their geometry without
+  skeleton content, because a skeleton curve or a skeleton bar would be the fabricated
+  chart the clause above forbids.
+- Every value that is not yet known renders as a concise placeholder rather than a stale
+  or invented one: ranks, scores, contribution values, axis dates, and the judgement
+  basis count all wait.
 
 ### Section Update
 
 - A mode, metric, range, or list-expansion update keeps the last committed content
   visible, marks only the controlled region busy, and ignores stale responses.
 - Do not blank the entire Profile when only one section changes.
+- The busy region carries no visible sentence (`PROF-48`). The retained values take the
+  approved pending content colour, the region is marked busy programmatically, and the
+  restrained live status is announced without being drawn. A visible line would repeat,
+  in every region that can update, something the reader can already see.
+- Weakening is colour only. Opacity was rejected for content weakening when the pending
+  colour was approved, and that rejection holds here.
+
+### Section Error
+
+- Retain the last committed section content and place one concise failure line with an
+  inline Retry inside the failing card (`PROF-48`). The card the message sits in already
+  identifies which section failed, so the sentence does not name it — one sentence serves
+  every section, which also avoids a per-section string whose Korean object particle
+  would differ.
+- A message that carries no supporting sentence hides its body rather than leaving it
+  empty, so a single line stays vertically centred and a longer translation still wraps.
 
 ### No Synced Records
 
@@ -576,6 +619,39 @@ itself; there are no dedicated child destinations.
 - No essential value depends on Hover. Mobile does not add a tap-only replacement for
   decorative Hover detail.
 - Charts use their actual container width and retain text summaries outside the plot.
+- Compact card and region insets follow the compact grid margin rather than the wide
+  inset (`PROF-43`). The wide reading width carries a `24` subsection inset; compact
+  carries `16`, which is also what keeps a play row's difficulty, level, score, and grade
+  image on one line inside the narrower column.
+- The identity group reflows into three rows: avatar beside the name and exam group,
+  then the wrapping public metadata, then the owner-only sync line paired with the
+  owner-only Share and Settings actions. The avatar keeps deriving its square size from
+  the group beside it (`PROF-41`), which at compact is the name line plus exam labels.
+  Owner actions move out of the avatar row because the avatar, exam labels, and both
+  actions cannot share one compact row.
+- Do not centre the identity group. Public record profiles place the avatar beside or
+  above a left keyline so the identity shares its left edge with the metadata and cards
+  below; centring is an account-settings convention (`PROF-43`).
+- A Recent Play's timestamp sits at the end of the title line rather than in its own
+  trailing column, so the record metadata keeps the width it needs.
+- A section title and its controls may occupy separate rows when they cannot share one.
+  The two Progress controls still share a single secondary row (`PROF-35`).
+- Where a control's own labels are what overflow, shorten the labels before breaking the
+  row (`PROF-44`). The metric switch starts from its full labels and steps down to the
+  approved short pair used by the Rankings metric switch when the row cannot hold them;
+  it returns to the full labels as soon as the width allows. This is the same
+  width-driven label cascade the Home destination tiles use, and it keeps `PROF-35`
+  intact at `320` rather than carving out an exception to it. Shortening a label is not
+  the same as replacing it with an icon, which stays prohibited above.
+- The competitive summary reflows to two rows of two. Both rows share one left keyline.
+- Play titles stay on one line and truncate at the end. The full title remains available
+  through the record's Music-detail destination, so a Profile preview row does not need
+  to show it complete (`PROF-43`).
+- Timestamps use each locale's own short form rather than one translated pattern
+  (`PROF-45`). Japanese uses `8/27 21:40`; the long `8月27日` form is wide enough to take
+  the room the row's difficulty, level, score, and grade need. Shortening the timestamp
+  is preferred over restructuring the row, because the row structure is shared by every
+  width and language while the overflow comes from one locale's date width.
 
 ### Wide Layout
 
@@ -926,6 +1002,15 @@ Validate at minimum:
 | PROF-40 | The sync line states only what NosLog observes about its own import; no up-to-date verdict                            | `Approved — 2026-08-27`               |
 | PROF-41 | Avatar and country-marker sizes derive from the adjacent identity composite, not fixed numbers                        | `Approved — 2026-08-27`               |
 | PROF-42 | Metric values are value-then-unit, ranks take a `#` prefix, and the summary values share one size                     | `Approved — 2026-08-27`               |
+| PROF-43 | Compact insets follow the compact grid margin, identity stays left-keyed, and play titles truncate to one line        | `Approved — 2026-08-27`               |
+| PROF-44 | A control shortens its own labels before its row breaks, so the Progress controls stay on one row at `320`            | `Approved — 2026-08-27`               |
+| PROF-45 | Timestamps use each locale's own short form; Japanese uses `8/27 21:40`                                               | `Approved — 2026-08-27`               |
+| PROF-46 | Initial loading pairs list skeletons with one status line; non-list regions reserve geometry only                     | `Approved — 2026-08-28`               |
+| PROF-47 | State copy follows the repository's existing naming and phrasing conventions rather than new wording                  | `Approved — 2026-08-28`               |
+| PROF-48 | Section updates show no visible status line; section errors use one sentence with an inline Retry                     | `Approved — 2026-08-28`               |
+| PROF-49 | Rank distribution shows the grade ladder only; Full Combo is a separate axis and is not a bar                         | `Approved — 2026-08-28`               |
+| PROF-50 | The trend plot height is its width at `16:9`, capped at the wide row-parity height                                    | `Approved — 2026-08-28`               |
+| PROF-51 | The rank distribution count column shares one derived width so every bar track is equal length                        | `Approved — 2026-08-28`               |
 
 ## Handoff Boundary
 

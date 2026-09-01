@@ -269,6 +269,112 @@ The design may express numerator/denominator only when the denominator is meanin
 and derived from the user's played records. Never merge the three measures into one
 unexplained `sync percentage`.
 
+## Korean, Japanese and English Copy — approved 2026-08-28
+
+`Approved`. The design stage needs visible strings for every state this brief defines.
+Sixty-two `sync.*` keys already exist in all three locales and are reused unchanged
+wherever this brief does not override them. The rows below are the ones this brief
+either **supersedes** or requires and the repository does not have. Nothing here is free
+invention: each row cites the clause that mandates it or the repository string it
+extends.
+
+### Superseded by this brief
+
+The current wording is not wrong as generic labels; this brief asks for something more
+specific, so the existing keys are superseded rather than corrected.
+
+| Meaning             | Korean                 | Japanese                           | English                            | Why it changes                                                                                                                                                       |
+| ------------------- | ---------------------- | ---------------------------------- | ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Attempt metric 1    | `확인한 최근 플레이`   | `確認した最近のプレー`             | `Recent plays checked`             | `SYNC-15` names this label. `sync.received` `수신 기록` describes a payload, not the user's plays                                                                    |
+| Attempt metric 2    | `새로 저장된 플레이`   | `新しく保存されたプレー`           | `New plays saved`                  | `SYNC-15`. Extends `sync.newPlays` `새 플레이`, which omits that deduplication decided what was stored                                                               |
+| Attempt metric 3    | `갱신된 베스트 기록`   | `更新されたベスト記録`             | `Best records updated`             | `SYNC-15`, shortened on measurement — see below. Replaces `sync.changedCharts` `갱신 채보`; `베스트 기록` follows `music.record.bestScore`                           |
+| Recent-only scope   | `최근 30플레이`        | `最近の30プレー`                   | `Recent 30 plays`                  | `SYNC-07` and the localization contract require the window to stay visible and forbid a generic partial-sync reading. `sync.scope.recent` `최근 기록` loses the `30` |
+| Invalidation action | `기존 북마클릿 무효화` | `既存のブックマークレットを無効化` | `Invalidate existing bookmarklets` | `SYNC-18` requires labelling by consequence rather than the implementation term. `sync.regenerate` `연동 토큰 재발급` names the mechanism                            |
+
+`sync.scope.full` `전체 기록` / `全記録` / `All records` is already correct and stays.
+
+### New
+
+| Meaning                   | Korean                  | Japanese                   | English                         | Basis                                                                                                                            |
+| ------------------------- | ----------------------- | -------------------------- | ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| Persistent coverage group | `NosLog 보유 현황`      | `NosLog の保有状況`        | `NosLog coverage`               | This brief's user-facing term table. Korean avoids the loanword `커버리지`; the literal form remains an alternative if preferred |
+| Coverage measure 1        | `플레이한 채보`         | `プレー済み譜面`           | `Played charts`                 | Extends `sync.playedCharts` `플레이한 채보 기준`                                                                                 |
+| Coverage measure 2        | `판정 상세가 있는 채보` | `判定詳細がある譜面`       | `Charts with judgement details` | Extends `sync.judgementDetails` `판정 상세`                                                                                      |
+| Coverage measure 3        | `FAST/SLOW가 있는 채보` | `FAST/SLOWがある譜面`      | `Charts with FAST/SLOW`         | Same measure set                                                                                                                 |
+| Recurring primary action  | `NOSTALGIA 페이지 열기` | `NOSTALGIAページを開く`    | `Open NOSTALGIA page`           | `SYNC-06` names the action                                                                                                       |
+| History disclosure        | `동기화 이력`           | `同期履歴`                 | `Sync history`                  | `SYNC-17`. `同期履歴` already appears in `sync.none`                                                                             |
+| Setup disclosure          | `북마클릿 등록`         | `ブックマークレットの登録` | `Bookmarklet setup`             | `SYNC-04`, shortened on measurement — see below. Extends `sync.step.install`                                                     |
+| Large first import        | `첫 전체 기록 가져오기` | `初回の全記録取り込み`     | `First full record import`      | `SYNC-16` names it                                                                                                               |
+| Status · delayed          | `지연`                  | `遅延`                     | `Delayed`                       | `SYNC-11`. Joins the `sync.status.*` chip set                                                                                    |
+| Status · timed out        | `시간 초과`             | `タイムアウト`             | `Timed out`                     | `SYNC-11`                                                                                                                        |
+| Status · cooldown         | `대기 중`               | `待機中`                   | `Cooldown`                      | The status model's cooldown row                                                                                                  |
+| Status · partial          | `완료 · 일부 제외`      | `完了・一部除外`           | `Completed · some excluded`     | `SYNC-14` uses this exact form                                                                                                   |
+
+### Help and security section — approved 2026-08-30
+
+The Security and Privacy Contract mandates the content of these lines but not their
+wording, and the repository has no key for any of them. The three headings name the
+groups the contract's numbered clauses fall into; the two sentences are clauses 1 and 3
+stated plainly. Clause 2 reuses the wording already drawn on the frames, and clause 4
+is carried by the footer's Privacy link rather than repeated here.
+
+| Meaning                  | Korean                                                                    | Japanese                                                                                 | English                                                                         | Basis                                                                                                               |
+| ------------------------ | ------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| Help heading 1           | `무엇을 보내나요`                                                         | `何を送りますか`                                                                         | `What is sent`                                                                  | Contract clause 2, which requires stating what NosLog receives                                                      |
+| Help heading 2           | `진행 과정`                                                               | `手順`                                                                                   | `How it works`                                                                  | Names the ordinary content list of setup and execution steps. Not a step indicator — `SYNC-05` forbids that reading |
+| Help heading 3           | `제한 사항`                                                               | `制限事項`                                                                               | `Limitations`                                                                   | Groups the Basic Course scope statement the returning-order item 7 requires                                         |
+| Account-specific warning | `이 북마클릿은 현재 NosLog 계정 전용입니다. 다른 사람과 공유하지 마세요.` | `このブックマークレットは現在のNosLogアカウント専用です。他の人と共有しないでください。` | `This bookmarklet belongs to your NosLog account. Do not share it with anyone.` | Contract clause 1                                                                                                   |
+| Credential exclusion     | `p.eagate 비밀번호와 로그인 쿠키는 NosLog로 전송되지 않습니다.`           | `p.eagateのパスワードとログインCookieはNosLogへ送信されません。`                         | `Your p.eagate password and login cookie are never sent to NosLog.`             | Contract clause 3, stated as a negative fact rather than a reassurance                                              |
+
+These are placed near setup and in Help/Security, never as a persistent alarm banner,
+as the contract requires.
+
+### State messages the repository does not have
+
+The status model needs four messages and two recovery actions that no `sync.*` key
+covers. Everything else in the model is already written: `sync.processing`,
+`sync.processingHelp`, `sync.failed`, `sync.failedHelp`, `sync.none`, `sync.emptyHelp`,
+`sync.notice`, `sync.loginStatus`, and the whole regeneration modal.
+
+| Meaning                  | Korean                                                         | Japanese                                                    | English                                              | Basis                                                                                                       |
+| ------------------------ | -------------------------------------------------------------- | ----------------------------------------------------------- | ---------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| Delayed message          | `평소보다 오래 걸리고 있습니다.`                               | `いつもより時間がかかっています。`                          | `This is taking longer than usual.`                  | The status model's delayed row, which forbids a fake percentage and asks only that the user be told to wait |
+| Timed-out message        | `허용된 시간 안에 완료되지 않았습니다.`                        | `許可された時間内に完了しませんでした。`                    | `The attempt did not finish in the allowed time.`    | The status model's timed-out row at the `15` minute server boundary                                         |
+| Timed-out action         | `다시 동기화`                                                  | `もう一度同期`                                              | `Try sync again`                                     | `SYNC-13`; the action priority list names it                                                                |
+| Reinstall action         | `북마클릿 다시 등록`                                           | `ブックマークレットを登録し直す`                            | `Reinstall bookmarklet`                              | The action priority list. `sync.regenerateSuccess` already says `북마클릿을 다시 등록해주세요`              |
+| Cooldown message         | `방금 동기화했습니다. {count}초 후에 다시 시도할 수 있습니다.` | `同期したばかりです。{count}秒後にもう一度お試しください。` | `You just synced. You can try again in {count} sec.` | The cooldown row, whose countdown comes from the server response. Uses the `sync.seconds` `{count}초` form  |
+| NOSTALGIA sign-in action | `p.eagate NOSTALGIA 페이지에 로그인`                           | `p.eagate NOSTALGIAページにログイン`                        | `Log in to the p.eagate NOSTALGIA page`              | Reuses `sync.pegateLogin` unchanged                                                                         |
+
+### Two labels shortened on measurement
+
+Both were measured at `320`, the tightest width, against the real container arithmetic:
+a metric row leaves `225` for its label once the tabular value column takes `47` and the
+gap `16`; a disclosure title leaves `260` once the chevron takes `20` and its gap `8`.
+
+- **The setup disclosure did not fit.** `ブックマークレットの登録・再登録` measures `320`
+  and `Install or reinstall bookmarklet` `289`, overrunning by `60` and `29`. `SYNC-04`
+  requires the guidance to expand for first use and collapse for return use; it does not
+  fix this wording. Dropping `재등록` costs nothing, because the state that needs a
+  reinstall already reveals that guidance and the body explains it.
+- **The third metric fitted by `16px`, which is not headroom.** `Charts with updated best
+records` measures `209` against `225`. The file's production font is Pretendard and
+  IBM Plex is the current substitute, so a `7%` margin is inside what the swap can
+  consume. `SYNC-15` asks for **user-meaningful labels** rather than a fixed English
+  phrase, and `갱신된 베스트 기록` stays user-meaningful while matching the modifier-plus-noun
+  shape of the two metrics above it. The count still reads as charts because that is what
+  a best record belongs to. Slack becomes `71`.
+
+Shortening a brief's label when measurement demands it follows the same path as
+`PROF-44` and document 05's `곡 길이` to `길이`.
+
+### Reused unchanged
+
+`sync.none` `아직 동기화 기록이 없습니다.` serves the `Not synced yet` state.
+`sync.notice` `일부 미등록 채보는 개인 기록에서 제외되었습니다.` is the safe partial-exclusion
+explanation `SYNC-14` requires. The installation and execution guidance, duration
+formats, copy-address flow, regeneration modal body, and status chips for
+processing / completed / failed all keep their current strings.
+
 ## Approved Information Hierarchy
 
 ### Signed-Out Entry
@@ -923,33 +1029,37 @@ Validate at least:
 
 ## Decision Log
 
-| ID      | Decision                                                                                                                  | Status     |
-| ------- | ------------------------------------------------------------------------------------------------------------------------- | ---------- |
-| SYNC-01 | Keep Data Sync an independent localized Play-support destination and Home row                                             | `Approved` |
-| SYNC-02 | Serve informative signed-out, first-use signed-in, and returning signed-in states on one route                            | `Approved` |
-| SYNC-03 | Show returning users current status and one next action before setup instructions                                         | `Approved` |
-| SYNC-04 | Expand the required installation/run process for first use and collapse it for normal return use                          | `Approved` |
-| SYNC-05 | Use an ordinary process list for first setup; do not use a recurring stepper or manual installed checkbox                 | `Approved` |
-| SYNC-06 | Keep `Open NOSTALGIA page` as the primary recurring action and require explicit bookmarklet execution                     | `Approved` |
-| SYNC-07 | Distinguish `All records` from `Recent 30 plays` and treat both as valid outcomes                                         | `Approved` |
-| SYNC-08 | Explain `e-amusement Basic Course (Basic Pass)` once and describe its effect neutrally                                    | `Approved` |
-| SYNC-09 | Preserve prior full records and accumulated deduplicated history after recent-only sync                                   | `Approved` |
-| SYNC-10 | Separate latest-attempt scope/metrics from persistent NosLog coverage                                                     | `Approved` |
-| SYNC-11 | Use indeterminate processing, automatic status refresh, 10-minute delayed, and 15-minute retry states                     | `Approved` |
-| SYNC-12 | Announce meaningful status transitions without focus movement or repeated poll announcements                              | `Approved` |
-| SYNC-13 | Classify recovery by official login, expired token, cooldown, timeout/process failure, and repetition                     | `Approved` |
-| SYNC-14 | Treat unknown charts as `Completed · some excluded` and expose only a safe excluded count                                 | `Approved` |
-| SYNC-15 | Use the labels `Recent plays checked`, `New plays saved`, and `Charts with updated best records`                          | `Approved` |
-| SYNC-16 | Show at most three linked change previews and summarize a large first full import                                         | `Approved` |
-| SYNC-17 | Expose the latest five safe attempts in a collapsed Sync History                                                          | `Approved` |
-| SYNC-18 | Keep token invalidation in secondary Help/Security, explain immediate impact, and focus Cancel first                      | `Approved` |
-| SYNC-19 | Make reinstall the required next action after successful bookmarklet invalidation                                         | `Approved` |
-| SYNC-20 | State that the bookmarklet is account-specific, must not be shared, and never sends the p.eagate password or login cookie | `Approved` |
-| SYNC-21 | Never display/log a standalone raw token or include credentials/payloads in public diagnostics                            | `Approved` |
-| SYNC-22 | Retain complete text plus supplementary GIFs, enlargement, reduced-motion support, and deferred returning-user media      | `Approved` |
-| SYNC-23 | Document browser-specific bookmark editing limitations and honest supported fallbacks                                     | `Approved` |
-| SYNC-24 | Reflow at 320 CSS px and use purposeful two-area composition on sufficiently wide layouts                                 | `Approved` |
-| SYNC-25 | Keep administrator raw diagnostics and monitoring outside the user page                                                   | `Approved` |
+| ID      | Decision                                                                                                                                                                                                                                          | Status     |
+| ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| SYNC-01 | Keep Data Sync an independent localized Play-support destination and Home row                                                                                                                                                                     | `Approved` |
+| SYNC-02 | Serve informative signed-out, first-use signed-in, and returning signed-in states on one route                                                                                                                                                    | `Approved` |
+| SYNC-03 | Show returning users current status and one next action before setup instructions                                                                                                                                                                 | `Approved` |
+| SYNC-04 | Expand the required installation/run process for first use and collapse it for normal return use. Its disclosure is titled `북마클릿 등록` / `ブックマークレットの登録` / `Bookmarklet setup`; the longer `재등록` form overran `320` by `60`     | `Approved` |
+| SYNC-05 | Use an ordinary process list for first setup; do not use a recurring stepper or manual installed checkbox                                                                                                                                         | `Approved` |
+| SYNC-06 | Keep `Open NOSTALGIA page` as the primary recurring action and require explicit bookmarklet execution                                                                                                                                             | `Approved` |
+| SYNC-07 | Distinguish `All records` from `Recent 30 plays` and treat both as valid outcomes                                                                                                                                                                 | `Approved` |
+| SYNC-08 | Explain `e-amusement Basic Course (Basic Pass)` once and describe its effect neutrally                                                                                                                                                            | `Approved` |
+| SYNC-09 | Preserve prior full records and accumulated deduplicated history after recent-only sync                                                                                                                                                           | `Approved` |
+| SYNC-10 | Separate latest-attempt scope/metrics from persistent NosLog coverage                                                                                                                                                                             | `Approved` |
+| SYNC-11 | Use indeterminate processing, automatic status refresh, 10-minute delayed, and 15-minute retry states                                                                                                                                             | `Approved` |
+| SYNC-12 | Announce meaningful status transitions without focus movement or repeated poll announcements                                                                                                                                                      | `Approved` |
+| SYNC-13 | Classify recovery by official login, expired token, cooldown, timeout/process failure, and repetition                                                                                                                                             | `Approved` |
+| SYNC-14 | Treat unknown charts as `Completed · some excluded` and expose only a safe excluded count                                                                                                                                                         | `Approved` |
+| SYNC-15 | Use user-meaningful attempt-metric labels: `Recent plays checked`, `New plays saved`, and `Best records updated`. **Revised 2026-08-28** — the third was `Charts with updated best records` until measurement showed it left only `16px` at `320` | `Approved` |
+| SYNC-16 | Show at most three linked change previews and summarize a large first full import                                                                                                                                                                 | `Approved` |
+| SYNC-17 | Expose the latest five safe attempts in a collapsed Sync History                                                                                                                                                                                  | `Approved` |
+| SYNC-18 | Keep token invalidation in secondary Help/Security, explain immediate impact, and focus Cancel first                                                                                                                                              | `Approved` |
+| SYNC-19 | Make reinstall the required next action after successful bookmarklet invalidation                                                                                                                                                                 | `Approved` |
+| SYNC-20 | State that the bookmarklet is account-specific, must not be shared, and never sends the p.eagate password or login cookie                                                                                                                         | `Approved` |
+| SYNC-21 | Never display/log a standalone raw token or include credentials/payloads in public diagnostics                                                                                                                                                    | `Approved` |
+| SYNC-22 | Retain complete text plus supplementary GIFs, enlargement, reduced-motion support, and deferred returning-user media                                                                                                                              | `Approved` |
+| SYNC-23 | Document browser-specific bookmark editing limitations and honest supported fallbacks                                                                                                                                                             | `Approved` |
+| SYNC-24 | Reflow at 320 CSS px and use purposeful two-area composition on sufficiently wide layouts                                                                                                                                                         | `Approved` |
+| SYNC-25 | Keep administrator raw diagnostics and monitoring outside the user page                                                                                                                                                                           | `Approved` |
+| SYNC-26 | On wide layouts the two areas carry whichever content the state actually has: when a state has no result, installation guidance becomes the main area rather than leaving it empty                                                                | `Approved` |
+| SYNC-27 | At Compact widths the state's single primary action spans the content column; secondary and utility actions keep their intrinsic width, and Wide keeps the intrinsic width too                                                                    | `Approved` |
+| SYNC-28 | Render `No history` with the same chip-plus-line grammar as every other status row, and state the security boundary as one paragraph                                                                                                              | `Approved` |
+| SYNC-29 | Promote the partial-exclusion notice to an Information StatusMessage; keep every other status row surface-free                                                                                                                                    | `Approved` |
 
 ## Handoff Boundary
 
@@ -970,3 +1080,155 @@ coverage, exposes raw diagnostics or tokens, omits partial-exclusion meaning, sh
 unbounded change/history feed, focuses destructive invalidation first, fails to require
 reinstallation after invalidation, relies on GIFs without complete text, fixes desktop
 to phone width, or leaves processing and recovery inaccessible.
+
+### Locale sources for the guidance and modal strings — recorded 2026-08-30
+
+The Japanese and English locale frames reuse repository values verbatim for every string
+the _Reused unchanged_ clause above covers. This table records which key each visible
+line comes from, so the handoff does not have to re-derive them.
+
+| Korean on the frame                              | Key                      | Japanese                                                                                 | English                                                                       |
+| ------------------------------------------------ | ------------------------ | ---------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| `기록 동기화`                                    | `sync.step.run`          | `記録を同期`                                                                             | `Sync records`                                                                |
+| `1. p.eagate NOSTALGIA 페이지에 로그인`          | `sync.pegateLogin`       | `p.eagate NOSTALGIAページにログイン`                                                     | `Log in to the p.eagate NOSTALGIA page`                                       |
+| `2. 북마크바의 NosLog 동기화 클릭 …`             | `sync.runBookmarklet`    | `ブックマークバーの「NosLog 同期」をクリックして同期完了`                                | `Click NosLog Sync in the bookmarks bar and wait for completion`              |
+| `1. 현재 페이지를 브라우저 북마크에 추가합니다.` | `sync.mobileAdd`         | `1. このページをブラウザのブックマークに追加します。`                                    | `1. Add this page to your browser bookmarks.`                                 |
+| `2. 추가한 북마크의 주소를 편집하고 저장합니다.` | `sync.mobileEdit`        | `2. 追加したブックマークのアドレスを編集して保存します。`                                | `2. Edit the address of the bookmark you added and save it.`                  |
+| `북마클릿 주소 복사`                             | `sync.copyAddress`       | `ブックマークレットのアドレスをコピー`                                                   | `Copy bookmarklet address`                                                    |
+| `재발급하면 기존 북마클릿이 만료됩니다. …`       | `sync.regenerateWarning` | `再発行すると既存のブックマークレットは無効になります。再発行後に登録し直してください。` | `Regenerating expires the existing bookmarklet. Register it again afterward.` |
+| `12초`                                           | `sync.seconds`           | `12秒`                                                                                   | `12 sec`                                                                      |
+
+**One label has no localized source: the guidance media placeholders.**
+`sync.gifPlaceholder` is a frame — `{label} GIF 자리` / `{label} GIF用スペース` /
+`{label} GIF placeholder` — and the repository has no short label to fill it with. The
+only three-locale strings naming these three media are the sentence-shaped alternative
+texts `sync.pegateLoginAlt`, `sync.runBookmarkletAlt`, and `sync.mobileEditAlt`, which
+are written to be read aloud and are far too long for the slot. The Korean frames
+therefore carry design-stage labels that are **not approved product copy**, and the
+Japanese and English frames leave them untranslated pending a decision. This is an
+asset-slot caption, not a state message, so it does not block the states this brief
+defines.
+
+### Wide first-use composition — approved 2026-08-30
+
+`SYNC-26`. The Wide Composition clause lists the two areas by their returning-user
+content — result on the left, setup on the right — and requires the result area to
+carry more visual weight. Applied literally to the **first-use** and **not-signed-in**
+states it produces the opposite: those states have no result, so the main area held a
+`48` pixel status line beside a `1116` pixel column of installation guidance. That is
+precisely the _empty desktop dashboard_ the same clause forbids.
+
+**The areas follow the state, not fixed content slots.** When a state has no result,
+installation guidance is the main area and help/security is the supporting one. The
+measured frame is `805` main / `395` supporting — the same `8 : 4` split as the
+completed state, with the contents exchanged.
+
+Two alternatives were drawn and rejected:
+
+- **Keeping the current split** contradicts the clause it was meant to satisfy.
+- **One column bounded to `container/reading 768`** was rejected on measurement of the
+  rest of the file. Every ordinary shell page uses the full `1216` container with a
+  multi-area composition at `1280` — Home's zones, and the tier, ranking, and profile
+  families. The only frames that bound content to `768` are P7's minimal recovery and
+  maintenance shells, and they left-align it (`counterAxisAlignItems = MIN`) rather
+  than centring it. Bounding Data Sync to `768` would file an ordinary page with the
+  error screens. The user identified this; the recommendation in the comparison board
+  was wrong.
+
+The _readable line lengths_ requirement in the same clause is satisfied by the `805`
+area rather than by a narrower page container: instructional prose is no longer
+stretched across the full `1216`.
+
+### Compact primary-action width — approved 2026-08-30
+
+`SYNC-27`. At `320` and `390` the state's one primary action fills the content column
+(`288` and `358`). It had been `178` in a `358` column, left-aligned.
+
+**The file's own precedent decided this.** Actions attached to a content block are `FILL`
+at every width — `의견 더 보기` is `100%` at `288 / 358 / 720 / 976 / 395`, and the
+`채보 보기` / `플레이 영상` pair is `50%` at every width. `HUG` left-aligned is the grammar
+of P7's recovery actions inside the _minimal_ shell; this page is an ordinary shell.
+
+Supporting measurement, taken in a real browser rather than from documentation:
+
+| Reference          | 320        | 390        | 1280      |
+| ------------------ | ---------- | ---------- | --------- |
+| GOV.UK `Start now` | `290` full | `360` full | `158` hug |
+| GitHub `Sign up`   | —          | `334` full | —         |
+| MDN `Get involved` | —          | `123` hug  | —         |
+
+Guidance is genuinely split. Carbon requires a fluid button to hug a container edge and
+forbids it mid-flow, which this placement does not satisfy — the same objection applies
+to the already-approved `의견 더 보기`, so it is accepted knowingly. Shopify Polaris,
+Atlassian, Salesforce Lightning (`slds-max-small-button--stretch`), and Ant Design all
+ship an explicit full-width affordance for small form factors; the Scottish Government
+system justifies it by one-handed reach.
+
+**Scope.** Only the status zone's single primary action — `Open NOSTALGIA page`,
+`Try sync again`, `Reinstall bookmarklet`, `Try Again`, and the signed-out `Log in`.
+Deliberately excluded:
+
+- `기존 북마클릿 무효화` — secondary Help/Security, which `SYNC-18` keeps subordinate;
+- `북마클릿 주소 복사` — a utility inside the installation guidance;
+- `NosLog 동기화` — this is the bookmarklet itself, dragged to the bookmarks bar. A
+  full-width bar would misrepresent what the element is.
+
+**Wide keeps the intrinsic width.** `SYNC-27` does not extend past Compact: in the
+`805` main area the primary action stays `178`, left-aligned.
+
+The file's `의견 더 보기` is `FILL` even at `976`, but that button spans the list it acts
+on, so its width states its scope. This action does not act on the column — it leaves
+the site — and at `805` a filled bar would sit above four content zones and flatten them.
+The measured reference agrees: GOV.UK's `Start now` is full-width at `320` and `390` and
+reverts to `158` at `1280`.
+
+This is the same shape as Salesforce Lightning's `slds-max-small-button--stretch`, which
+is scoped to small form factors rather than applied at every width.
+
+### First-use opening and the exclusion notice — approved 2026-08-30
+
+Two changes to the same page, decided together because they are opposites.
+
+**`SYNC-28` — `No history` joins the status grammar.** The status model lists
+`No history` beside `Processing`, `Delayed`, `Completed`, `Failed`, and `Cooldown`.
+Eleven of those twelve rows render as a chip plus one factual line; `No history` alone
+rendered as two sentences, which is why the opening read as prose. It now uses
+`기록 없음` (reusing `profile.noRecord`, which exists in all three locales) plus the
+`Never synced` line that `PROF-40` approved for the same state on the profile page.
+
+The security note also collapses from two paragraphs to one. It still carries both
+required clauses — clause 1, that the bookmarklet must not be shared, and clause 3,
+that the p.eagate password and login cookie are never sent.
+
+Measured effect: the installation guidance starts at `292` instead of `348`, and the
+first-use frame drops from `1548` to `1492`.
+
+**`SYNC-29` — the exclusion notice becomes a StatusMessage.** `SYNC-14` requires the
+excluded count to be delivered safely, but it rendered as grey `body-secondary` among
+the metric captions, where it is easy to miss.
+
+A tinted surface was considered for `No history` first and rejected. The references
+agree on the distinction:
+
+- GOV.UK's notification banner is for what is _"not directly relevant to the thing
+  they're trying to do on that page"_, and it says to put directly relevant information
+  in the page body instead — plus research that people often miss banners.
+- USWDS scopes alerts to system status, errors, warnings, and changes, and warns that
+  too many will be ignored.
+- Atlassian separates an **empty state** from a **blank slate** — the latter being
+  someone who has _"never come across or tried a new feature before"_, which is a
+  content pattern rather than a notification.
+- Polaris scopes its empty-state component to a page that is empty; this page is not
+  empty in first use, since the whole installation guide follows.
+
+`No history` is permanent, expected, and seen by every new account; the exclusion is
+conditional and exceptional. Giving the surface to the exception means its presence is
+itself the signal that this attempt differed. Doing the reverse would have made the
+untroubled screen louder than the three `Failed` states, none of which has a surface.
+
+The profile page uses a page-level StatusMessage for its own `기록 없음`
+(`PROF-47`). That is not a counter-example: there the page has nothing else to show and
+the message replaces the content, whereas here it would sit above a full page.
+
+New string: the StatusMessage title `일부 채보 제외됨` / `一部の譜面を除外` /
+`Some charts excluded`. The body reuses `sync.notice` with the excluded count.
