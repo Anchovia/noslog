@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 import type { createTranslator } from "@/lib/i18n/messages";
-import { SUPPORTED_LOCALES } from "@/lib/i18n/routing";
+import { SUPPORTED_LOCALES, type Locale } from "@/lib/i18n/routing";
 
 type Translator = ReturnType<typeof createTranslator>;
 
@@ -21,17 +21,42 @@ export const profileCountrySchema = z.enum(["ko-KR", "ja-JP", "global"]);
 
 export const profileLocaleSchema = z.enum(SUPPORTED_LOCALES);
 
-export const profileUsernameSchema = z
-    .string()
-    .trim()
-    .min(1)
-    .max(20)
-    .transform((value) => value.toUpperCase());
+export function createOnboardingSchema(t: Translator) {
+    return z.object({
+        username: z
+            .string()
+            .trim()
+            .min(1, t("onboarding.error.nicknameRequired"))
+            .max(20, t("onboarding.error.nicknameMax"))
+            .transform((value) => value.toUpperCase()),
+        country: z.enum(profileCountrySchema.options, {
+            error: t("onboarding.error.countryRequired"),
+        }),
+    });
+}
 
-export const onboardingSchema = z.object({
-    username: profileUsernameSchema,
-    country: profileCountrySchema,
-});
+export type OnboardingSchema = ReturnType<typeof createOnboardingSchema>;
+export type OnboardingFormValues = z.input<OnboardingSchema>;
+export type OnboardingValues = z.output<OnboardingSchema>;
+
+export function onboardingInputFromFormData(formData: FormData) {
+    return {
+        username: String(formData.get("username") ?? ""),
+        country: String(formData.get("country") ?? ""),
+    };
+}
+
+export function createOnboardingFormData(
+    values: OnboardingValues,
+    locale: Locale
+) {
+    const formData = new FormData();
+    formData.set("username", values.username);
+    formData.set("country", values.country);
+    formData.set("locale", locale);
+
+    return formData;
+}
 
 export function createProfileSettingsSchema(t: Translator) {
     const discordUsernameSchema = z

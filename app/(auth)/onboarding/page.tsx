@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
-import OnboardingForm from "@/components/onboarding/onboardingForm";
+import OnboardingForm from "@/features/profile/components/onboardingForm";
 import db from "@/lib/db";
 import { getServerI18n } from "@/lib/i18n/server";
 import { localizePath } from "@/lib/i18n/routing";

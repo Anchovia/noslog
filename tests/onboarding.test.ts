@@ -13,6 +13,7 @@ const mocks = vi.hoisted(() => ({
     userUpdate: vi.fn(),
     updateTag: vi.fn(),
     redirect: vi.fn(),
+    logServerError: vi.fn(),
 }));
 
 vi.mock("@/lib/session", () => ({ default: mocks.getSession }));
@@ -26,15 +27,23 @@ vi.mock("@/lib/db", () => ({
 }));
 vi.mock("next/cache", () => ({ updateTag: mocks.updateTag }));
 vi.mock("next/navigation", () => ({ redirect: mocks.redirect }));
+vi.mock("@/lib/observability/server", () => ({
+    logServerError: mocks.logServerError,
+}));
 
 import { completeOnboarding } from "@/app/(auth)/onboarding/actions";
 import { GET as completeOnboardingSession } from "@/app/(auth)/onboarding/complete/route";
 import { proxy } from "@/proxy";
 
-function onboardingForm(username = "carol", country = "ko-KR") {
+function onboardingForm(
+    username = "carol",
+    country = "ko-KR",
+    locale?: string
+) {
     const formData = new FormData();
     formData.set("username", username);
     formData.set("country", country);
+    if (locale) formData.set("locale", locale);
     return formData;
 }
 
@@ -52,7 +61,7 @@ describe("최초 프로필 설정", () => {
     });
 
     it("닉네임과 국가를 저장하고 온보딩을 완료한다", async () => {
-        await completeOnboarding(null, onboardingForm());
+        await completeOnboarding(onboardingForm());
 
         expect(mocks.userUpdate).toHaveBeenCalledWith({
             where: { id: 9 },
@@ -69,7 +78,7 @@ describe("최초 프로필 설정", () => {
     });
 
     it("한 글자 닉네임을 허용한다", async () => {
-        await completeOnboarding(null, onboardingForm("n"));
+        await completeOnboarding(onboardingForm("n"));
 
         expect(mocks.userUpdate).toHaveBeenCalledWith({
             where: { id: 9 },
@@ -84,11 +93,52 @@ describe("최초 프로필 설정", () => {
 
     it("지원하지 않는 국가는 저장하지 않는다", async () => {
         await expect(
-            completeOnboarding(null, onboardingForm("carol", "unknown"))
+            completeOnboarding(onboardingForm("carol", "unknown"))
         ).resolves.toEqual(
-            expect.objectContaining({ message: "입력한 정보를 확인해주세요." })
+            expect.objectContaining({
+                success: false,
+                message: "입력한 정보를 확인해주세요.",
+            })
         );
         expect(mocks.userUpdate).not.toHaveBeenCalled();
+    });
+
+    it("서버 검증 오류를 현재 언어의 필드 오류로 반환한다", async () => {
+        await expect(
+            completeOnboarding(onboardingForm("", "", "ja"))
+        ).resolves.toEqual({
+            success: false,
+            message: "入力内容をご確認ください。",
+            fieldErrors: {
+                username: ["ニックネームを入力してください。"],
+                country: ["国・地域を選択してください。"],
+            },
+        });
+    });
+
+    it("중복 닉네임을 일반 저장 오류와 구분한다", async () => {
+        mocks.userUpdate.mockRejectedValueOnce({ code: "P2002" });
+
+        await expect(completeOnboarding(onboardingForm())).resolves.toEqual({
+            success: false,
+            message: "이미 사용 중인 닉네임입니다.",
+        });
+        expect(mocks.logServerError).not.toHaveBeenCalled();
+    });
+
+    it("예상하지 못한 저장 오류를 구조화해 기록한다", async () => {
+        const error = new Error("database unavailable");
+        mocks.userUpdate.mockRejectedValueOnce(error);
+
+        await expect(completeOnboarding(onboardingForm())).resolves.toEqual({
+            success: false,
+            message: "프로필 설정을 완료하지 못했습니다.",
+        });
+        expect(mocks.logServerError).toHaveBeenCalledWith(error, {
+            event: "profile.onboarding.save.failed",
+            routePath: "/onboarding",
+            routeType: "action",
+        });
     });
 
     it("미완료 사용자가 다른 화면에 접근하면 온보딩으로 보낸다", async () => {

@@ -3,7 +3,12 @@
 import { updateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
-import { onboardingSchema } from "@/features/profile/schemas/profileSettingsSchema";
+import {
+    createOnboardingSchema,
+    onboardingInputFromFormData,
+    type OnboardingFormValues,
+} from "@/features/profile/schemas/profileSettingsSchema";
+import type { ActionFailure } from "@/lib/actions/result";
 import { CACHE_TAGS, getUserProfileTag } from "@/lib/cacheTags";
 import db from "@/lib/db";
 import { createTranslator, getMessages } from "@/lib/i18n/messages";
@@ -13,20 +18,15 @@ import {
     localeFromCountry,
     localizePath,
 } from "@/lib/i18n/routing";
+import { logServerError } from "@/lib/observability/server";
 import getSession from "@/lib/session";
 
-export interface OnboardingActionState {
-    message: string;
-    fieldErrors?: {
-        username?: string[];
-        country?: string[];
-    };
-}
+type OnboardingFieldName = Extract<keyof OnboardingFormValues, string>;
+type OnboardingActionResult = ActionFailure<OnboardingFieldName>;
 
 export async function completeOnboarding(
-    _previousState: OnboardingActionState | null,
     formData: FormData
-): Promise<OnboardingActionState | never> {
+): Promise<OnboardingActionResult | never> {
     const requestedLocale = String(formData.get("locale") ?? "");
     const formLocale = isLocale(requestedLocale)
         ? requestedLocale
@@ -34,37 +34,20 @@ export async function completeOnboarding(
     const t = createTranslator(getMessages(formLocale));
     const session = await getSession();
     if (!session.id) {
-        return { message: t("onboarding.error.loginRequired") };
+        return {
+            success: false,
+            message: t("onboarding.error.loginRequired"),
+        };
     }
 
-    const result = onboardingSchema.safeParse({
-        username: String(formData.get("username") ?? ""),
-        country: String(formData.get("country") ?? ""),
-    });
+    const result = createOnboardingSchema(t).safeParse(
+        onboardingInputFromFormData(formData)
+    );
     if (!result.success) {
-        const usernameIssue = result.error.issues.find(
-            (issue) => issue.path[0] === "username"
-        );
-        const countryIssue = result.error.issues.find(
-            (issue) => issue.path[0] === "country"
-        );
-
         return {
+            success: false,
             message: t("onboarding.error.invalid"),
-            fieldErrors: {
-                username: usernameIssue
-                    ? [
-                          t(
-                              usernameIssue.code === "too_big"
-                                  ? "onboarding.error.nicknameMax"
-                                  : "onboarding.error.nicknameRequired"
-                          ),
-                      ]
-                    : undefined,
-                country: countryIssue
-                    ? [t("onboarding.error.countryRequired")]
-                    : undefined,
-            },
+            fieldErrors: result.error.flatten().fieldErrors,
         };
     }
 
@@ -86,7 +69,16 @@ export async function completeOnboarding(
                 ? String(error.code)
                 : null;
 
+        if (code !== "P2002") {
+            logServerError(error, {
+                event: "profile.onboarding.save.failed",
+                routePath: "/onboarding",
+                routeType: "action",
+            });
+        }
+
         return {
+            success: false,
             message:
                 code === "P2002"
                     ? t("onboarding.error.nicknameTaken")
