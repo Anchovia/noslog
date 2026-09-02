@@ -11,6 +11,7 @@ import {
     useTranslations,
 } from "@/components/i18n/localeProvider";
 
+// 계정과 연결 데이터를 영구 삭제하는 확인 흐름을 제공함
 export default function AccountDeletionCard() {
     const locale = useLocale();
     const href = useLocalizedHref();

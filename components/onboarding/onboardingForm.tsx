@@ -6,7 +6,7 @@ import {
     type OnboardingActionState,
     completeOnboarding,
 } from "@/app/(auth)/onboarding/actions";
-import { PROFILE_COUNTRIES } from "@/app/(nevigation)/profile/settings/schema";
+import { PROFILE_COUNTRIES } from "@/features/profile/schemas/profileSettingsSchema";
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import type { MessageKey } from "@/lib/i18n/messages";
 

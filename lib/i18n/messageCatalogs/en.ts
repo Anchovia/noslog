@@ -714,6 +714,19 @@ export const enMessages = {
     "settings.discordError": "An error occurred while connecting Discord.",
     "settings.loginRequired": "Login required.",
     "settings.checkInput": "Please check the information you entered.",
+    "settings.validation.avatarUrl": "Enter a valid image URL.",
+    "settings.validation.nicknameRequired": "Enter a nickname.",
+    "settings.validation.nicknameMax":
+        "Enter a nickname no longer than 20 characters.",
+    "settings.validation.countryRequired": "Choose a country.",
+    "settings.validation.localeRequired": "Choose a language.",
+    "settings.validation.discordNameMax":
+        "Enter a Discord name no longer than 32 characters.",
+    "settings.validation.discordTagCharacters":
+        "Use only letters, numbers, periods, and underscores in the Discord tag.",
+    "settings.validation.discordTagMax":
+        "Enter a Discord tag no longer than 32 characters.",
+    "settings.validation.arcadeRequired": "Choose the arcade again.",
     "settings.userNotFound": "Could not find your user information.",
     "settings.invalidAvatarUrl": "This profile image URL is not allowed.",
     "settings.arcadeNotFound": "Could not find the selected arcade.",

@@ -2,7 +2,7 @@
 
 import { Camera, Languages, MapPin, Save } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState, type ChangeEvent } from "react";
+import { useEffect, useMemo, useState, type ChangeEvent } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { put } from "@vercel/blob/client";
 
@@ -11,11 +11,13 @@ import {
     uploadUserSetting,
 } from "@/app/(nevigation)/profile/settings/actions";
 import {
+    createProfileSettingsFormData,
+    createProfileSettingsSchema,
     PROFILE_COUNTRIES,
     PROFILE_LANGUAGES,
-    settingSchema,
-    type SettingType,
-} from "@/app/(nevigation)/profile/settings/schema";
+    type ProfileSettingsFormValues,
+    type ProfileSettingsValues,
+} from "@/features/profile/schemas/profileSettingsSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import DiscordIcon from "@/components/ui/DiscordIcon";
 import ProfileAvatar from "@/components/profile/profileAvatar";
@@ -51,19 +53,12 @@ const inputClass =
     "border-border bg-bg text-input placeholder:text-text-disabled focus:border-focus focus:ring-focus/20 h-11 w-full rounded-card border px-3 outline-none transition focus:ring-2";
 
 function FieldError({ message }: { message?: string }) {
-    const locale = useLocale();
-    const t = useTranslations();
-    const visibleMessage =
-        message && locale !== "ko" && /[가-힣]/.test(message)
-            ? t("settings.checkInput")
-            : message;
-
-    return visibleMessage ? (
-        <p className="text-danger mt-1 text-xs">{visibleMessage}</p>
+    return message ? (
+        <p className="text-danger mt-1 text-xs">{message}</p>
     ) : null;
 }
 
-// 프로필 이미지와 공개 정보를 한 화면에서 수정함
+// 프로필 이미지와 공개 설정을 한 화면에서 수정함
 export default function ProfileSettingCard({
     user,
     arcades,
@@ -79,15 +74,19 @@ export default function ProfileSettingCard({
     const [preview, setPreview] = useState(user.avatar ?? "");
     const [file, setFile] = useState<File | null>(null);
     const [fileError, setFileError] = useState("");
-    const [submitError, setSubmitError] = useState("");
+    const profileSettingsSchema = useMemo(
+        () => createProfileSettingsSchema(t),
+        [t]
+    );
     const {
         register,
         handleSubmit,
         setError,
+        clearErrors,
         control,
         formState: { errors, isSubmitting },
-    } = useForm<SettingType>({
-        resolver: zodResolver(settingSchema),
+    } = useForm<ProfileSettingsFormValues, unknown, ProfileSettingsValues>({
+        resolver: zodResolver(profileSettingsSchema),
         defaultValues: {
             avatar: user.avatar ?? "",
             username: user.username ?? "",
@@ -139,14 +138,17 @@ export default function ProfileSettingCard({
         setPreview(URL.createObjectURL(selectedFile));
     };
 
-    const submit = handleSubmit(async (data) => {
-        setSubmitError("");
+    async function handleProfileSubmit(data: ProfileSettingsValues) {
+        clearErrors("root");
         let avatar = data.avatar;
 
         if (file) {
             const upload = await requestProfileAvatarUpload(file.type, locale);
             if (!upload.success) {
-                setSubmitError(upload.message);
+                setError("root.server", {
+                    type: "server",
+                    message: upload.message,
+                });
                 return;
             }
 
@@ -158,34 +160,28 @@ export default function ProfileSettingCard({
                 });
                 avatar = blob.url;
             } catch {
-                setSubmitError(t("settings.imageUploadError"));
+                setError("root.server", {
+                    type: "server",
+                    message: t("settings.imageUploadError"),
+                });
                 return;
             }
         }
 
-        const formData = new FormData();
-        formData.set("avatar", avatar);
-        formData.set("username", data.username);
-        formData.set("country", data.country);
-        formData.set("locale", data.locale);
-        formData.set(
-            "showLocalizedMusicTitle",
-            String(data.showLocalizedMusicTitle)
+        const result = await uploadUserSetting(
+            createProfileSettingsFormData({ ...data, avatar })
         );
-        formData.set("discordName", data.discordName);
-        formData.set("discordUsername", data.discordUsername);
-        formData.set("preferredArcadeId", data.preferredArcadeId);
-        formData.set("hideNostalgiaName", String(data.hideNostalgiaName));
-        formData.set("hideDiscordName", String(data.hideDiscordName));
-        formData.set("hidePlayCount", String(data.hidePlayCount));
+        applyFormFieldErrors(setError, result.fieldErrors);
+        setError("root.server", {
+            type: "server",
+            message: result.message,
+        });
+    }
 
-        const result = await uploadUserSetting(formData);
-        applyFormFieldErrors(setError, result?.fieldErrors);
-        if (result) setSubmitError(result.message);
-    });
+    const submit = handleSubmit(handleProfileSubmit);
 
     return (
-        <form onSubmit={submit} className="flex flex-col gap-4">
+        <form onSubmit={submit} noValidate className="flex flex-col gap-4">
             <section className="bg-surface rounded-card flex items-center gap-4 p-4">
                 <ProfileAvatar
                     avatar={preview || null}
@@ -478,9 +474,9 @@ export default function ProfileSettingCard({
                 </div>
             </section>
 
-            {submitError ? (
+            {errors.root?.server?.message ? (
                 <p className="border-danger/40 bg-danger/10 text-danger rounded-card border px-3 py-2 text-sm">
-                    {submitError}
+                    {errors.root.server.message}
                 </p>
             ) : null}
 

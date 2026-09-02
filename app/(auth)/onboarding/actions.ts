@@ -3,7 +3,7 @@
 import { updateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
-import { onboardingSchema } from "@/app/(nevigation)/profile/settings/schema";
+import { onboardingSchema } from "@/features/profile/schemas/profileSettingsSchema";
 import { CACHE_TAGS, getUserProfileTag } from "@/lib/cacheTags";
 import db from "@/lib/db";
 import { createTranslator, getMessages } from "@/lib/i18n/messages";

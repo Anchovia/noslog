@@ -715,6 +715,19 @@ export const jaMessages = {
         "Discordアカウントの連携中にエラーが発生しました。",
     "settings.loginRequired": "ログインが必要です。",
     "settings.checkInput": "入力内容を確認してください。",
+    "settings.validation.avatarUrl": "正しい画像URLを入力してください。",
+    "settings.validation.nicknameRequired": "ニックネームを入力してください。",
+    "settings.validation.nicknameMax":
+        "ニックネームは20文字以内で入力してください。",
+    "settings.validation.countryRequired": "国・地域を選択してください。",
+    "settings.validation.localeRequired": "言語を選択してください。",
+    "settings.validation.discordNameMax":
+        "Discordネームは32文字以内で入力してください。",
+    "settings.validation.discordTagCharacters":
+        "Discordタグには半角英数字、ピリオド、アンダースコアのみ使用できます。",
+    "settings.validation.discordTagMax":
+        "Discordタグは32文字以内で入力してください。",
+    "settings.validation.arcadeRequired": "店舗をもう一度選択してください。",
     "settings.userNotFound": "ユーザー情報が見つかりません。",
     "settings.invalidAvatarUrl": "許可されていないプロフィール画像URLです。",
     "settings.arcadeNotFound": "選択した店舗が見つかりません。",

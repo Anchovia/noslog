@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 
-import ProfileSettingCard from "@/components/profile/profileSettingCard";
-import AccountDeletionCard from "@/components/profile/accountDeletionCard";
+import ProfileSettingCard from "@/features/profile/components/profileSettingCard";
+import AccountDeletionCard from "@/features/profile/components/accountDeletionCard";
 import { getActiveArcades } from "@/lib/arcades";
 import db from "@/lib/db";
 import { localizePath } from "@/lib/i18n/routing";

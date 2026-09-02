@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 
-import type { ActionFailure } from "@/lib/actions/result";
+import type { ActionFailure, ActionResult } from "@/lib/actions/result";
 import {
     createImageUploadToken,
     deleteBlobIfOwned,
@@ -20,10 +20,23 @@ import {
     releaseUploadTokenQuota,
 } from "@/lib/uploadRateLimit";
 import { updateTag } from "next/cache";
+import { logServerError } from "@/lib/observability/server";
 
-import { settingSchema, type SettingType } from "./schema";
+import {
+    createProfileSettingsSchema,
+    profileSettingsInputFromFormData,
+    type ProfileSettingsFormValues,
+} from "@/features/profile/schemas/profileSettingsSchema";
 
-type SettingActionResult = ActionFailure<Extract<keyof SettingType, string>>;
+type ProfileSettingsFieldName = Extract<
+    keyof ProfileSettingsFormValues,
+    string
+>;
+type SettingActionResult = ActionFailure<ProfileSettingsFieldName>;
+type AvatarUploadActionResult = ActionResult<{
+    pathname: string;
+    token: string;
+}>;
 
 // 프로필 입력값과 새 아바타를 한 번에 저장함
 export async function uploadUserSetting(
@@ -37,20 +50,9 @@ export async function uploadUserSetting(
         return { success: false, message: t("settings.loginRequired") };
     }
 
-    const result = settingSchema.safeParse({
-        avatar: String(formData.get("avatar") ?? ""),
-        username: String(formData.get("username") ?? ""),
-        country: String(formData.get("country") ?? ""),
-        locale: String(formData.get("locale") ?? ""),
-        showLocalizedMusicTitle:
-            formData.get("showLocalizedMusicTitle") === "true",
-        discordName: String(formData.get("discordName") ?? ""),
-        discordUsername: String(formData.get("discordUsername") ?? ""),
-        preferredArcadeId: String(formData.get("preferredArcadeId") ?? ""),
-        hideNostalgiaName: formData.get("hideNostalgiaName") === "true",
-        hideDiscordName: formData.get("hideDiscordName") === "true",
-        hidePlayCount: formData.get("hidePlayCount") === "true",
-    });
+    const result = createProfileSettingsSchema(t).safeParse(
+        profileSettingsInputFromFormData(formData)
+    );
 
     if (!result.success) {
         return {
@@ -139,6 +141,11 @@ export async function uploadUserSetting(
                 message: t("settings.nicknameTaken"),
             };
         }
+        logServerError(error, {
+            event: "profile.settings.save.failed",
+            routePath: "/profile/settings",
+            routeType: "action",
+        });
         if (avatarChanged) await deleteBlobIfOwned(submittedAvatar);
         return { success: false, message: t("settings.saveError") };
     }
@@ -152,19 +159,19 @@ export async function uploadUserSetting(
 export async function requestProfileAvatarUpload(
     contentType: string,
     requestedLocale?: Locale
-) {
+): Promise<AvatarUploadActionResult> {
     const locale = isLocale(requestedLocale) ? requestedLocale : "ko";
     const t = createTranslator(getMessages(locale));
     const session = await getSession();
     if (!session.id) {
         return {
-            success: false as const,
+            success: false,
             message: t("settings.loginRequired"),
         };
     }
     if (!isImageContentType(contentType)) {
         return {
-            success: false as const,
+            success: false,
             message: t("settings.invalidImage"),
         };
     }
@@ -174,7 +181,7 @@ export async function requestProfileAvatarUpload(
         const quota = await claimUploadTokenQuota(session.id, "profile-avatar");
         if (!quota.allowed) {
             return {
-                success: false as const,
+                success: false,
                 message: getUploadLimitMessage(),
             };
         }
@@ -189,23 +196,29 @@ export async function requestProfileAvatarUpload(
                 () => null
             );
             return {
-                success: false as const,
+                success: false,
                 message: t("settings.invalidImage"),
             };
         }
 
         return {
-            success: true as const,
+            success: true,
+            message: "",
             ...upload,
         };
-    } catch {
+    } catch (error) {
+        logServerError(error, {
+            event: "profile.avatar-upload.request.failed",
+            routePath: "/profile/settings",
+            routeType: "action",
+        });
         if (grantId !== null) {
             await releaseUploadTokenQuota(session.id, grantId).catch(
                 () => null
             );
         }
         return {
-            success: false as const,
+            success: false,
             message: t("settings.uploadRequestError"),
         };
     }

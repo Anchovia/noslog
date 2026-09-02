@@ -701,6 +701,18 @@ export const koMessages = {
     "settings.discordError": "Discord 계정 연결 중 오류가 발생했습니다.",
     "settings.loginRequired": "로그인이 필요합니다.",
     "settings.checkInput": "입력한 정보를 확인해주세요.",
+    "settings.validation.avatarUrl": "올바른 이미지 주소가 아닙니다.",
+    "settings.validation.nicknameRequired": "닉네임을 입력해주세요.",
+    "settings.validation.nicknameMax": "닉네임은 20자 이하로 입력해주세요.",
+    "settings.validation.countryRequired": "국가를 선택해주세요.",
+    "settings.validation.localeRequired": "언어를 선택해주세요.",
+    "settings.validation.discordNameMax":
+        "Discord 닉네임은 32자 이하로 입력해주세요.",
+    "settings.validation.discordTagCharacters":
+        "Discord 태그는 영문, 숫자, 마침표, 밑줄만 사용할 수 있습니다.",
+    "settings.validation.discordTagMax":
+        "Discord 태그는 32자 이하로 입력해주세요.",
+    "settings.validation.arcadeRequired": "오락실을 다시 선택해주세요.",
     "settings.userNotFound": "사용자 정보를 찾을 수 없습니다.",
     "settings.invalidAvatarUrl": "허용되지 않은 프로필 이미지 주소입니다.",
     "settings.arcadeNotFound": "선택한 오락실을 찾을 수 없습니다.",
