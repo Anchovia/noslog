@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
     getBingoEditorCellLabel,
     getBingoEditorCellPrefix,
-} from "@/components/admin/bingo/bingoEditorUtils";
+} from "@/features/bingos/components/bingoEditorUtils";
 import {
     filterBingoMissions,
     getBingoCellLabel,

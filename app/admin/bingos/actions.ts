@@ -2,160 +2,218 @@
 
 import { Prisma } from "@prisma/client";
 import { revalidatePath, updateTag } from "next/cache";
-import { redirect } from "next/navigation";
 
+import {
+    bingoDeleteInputFromFormData,
+    bingoDeleteSchema,
+    bingoSaveInputFromFormData,
+    bingoSaveSchema,
+    type BingoFormFieldName,
+    type BingoSaveValues,
+} from "@/features/bingos/schemas/bingoEditorSchema";
+import type { ActionFieldErrors, ActionResult } from "@/lib/actions/result";
 import { requireAdmin } from "@/lib/admin";
 import { CACHE_TAGS } from "@/lib/cacheTags";
 import db from "@/lib/db";
+import { logServerError } from "@/lib/observability/server";
 
-function optionalText(value: FormDataEntryValue | null) {
-    const text = String(value ?? "").trim();
-    return text || null;
+type BingoActionResult = ActionResult<{ id: number }, BingoFormFieldName>;
+type BingoDeleteActionResult = ActionResult;
+
+function toNullableText(value: string) {
+    return value || null;
 }
 
-function optionalDate(value: FormDataEntryValue | null) {
-    const text = String(value ?? "").trim();
-    if (!text) return null;
-    const date = new Date(`${text}T00:00:00.000Z`);
-    return Number.isNaN(date.getTime()) ? null : date;
+function toNullableDate(value: string) {
+    return value ? new Date(`${value}T00:00:00.000Z`) : null;
 }
 
-export async function saveBingo(formData: FormData) {
+function parseRuleConfig(value: string) {
+    if (!value) return Prisma.DbNull;
+
+    try {
+        const parsed = JSON.parse(value) as Prisma.InputJsonValue | null;
+        return parsed === null ? Prisma.JsonNull : parsed;
+    } catch {
+        return { value } satisfies Prisma.InputJsonValue;
+    }
+}
+
+function getBingoFieldErrors(
+    issues: ReadonlyArray<{ path: PropertyKey[]; message: string }>
+) {
+    const fieldErrors: ActionFieldErrors<BingoFormFieldName> = {};
+
+    for (const issue of issues) {
+        if (issue.path[0] === "id") continue;
+        const field = issue.path.join(".") as BingoFormFieldName;
+        fieldErrors[field] ??= [];
+        fieldErrors[field]?.push(issue.message);
+    }
+
+    return fieldErrors;
+}
+
+function invalidBingoResult(
+    issues: ReadonlyArray<{ path: PropertyKey[]; message: string }>
+): BingoActionResult {
+    const fieldErrors = getBingoFieldErrors(issues);
+    const firstMessage = Object.values(fieldErrors).flat()[0];
+
+    return {
+        success: false,
+        message:
+            firstMessage ?? issues[0]?.message ?? "빙고 입력을 확인해주세요.",
+        ...(Object.keys(fieldErrors).length > 0 ? { fieldErrors } : {}),
+    };
+}
+
+function bingoData(input: BingoSaveValues) {
+    return {
+        title: input.title,
+        description: toNullableText(input.description),
+        coverMusicIndex: input.coverMusicIndex,
+        rewardNos: input.rewardNos,
+        requiredLines: input.requiredLines,
+        status: input.status,
+        startsAt: toNullableDate(input.startsAt),
+        endsAt: toNullableDate(input.endsAt),
+    };
+}
+
+function refreshBingos(bingoId?: number) {
+    updateTag(CACHE_TAGS.bingos);
+    revalidatePath("/admin");
+    revalidatePath("/admin/bingos");
+    revalidatePath("/bingo");
+    if (bingoId !== undefined) revalidatePath(`/bingo/${bingoId}`);
+}
+
+export async function saveBingo(
+    formData: FormData
+): Promise<BingoActionResult> {
     await requireAdmin();
-
-    const idValue = Number(formData.get("id"));
-    const id = Number.isInteger(idValue) && idValue > 0 ? idValue : null;
-    const title = String(formData.get("title") ?? "").trim();
-    const coverMusicIndex = String(
-        formData.get("coverMusicIndex") ?? ""
-    ).trim();
-    const rewardNos = Math.max(0, Number(formData.get("rewardNos")) || 0);
-    const requiredLines = Math.min(
-        12,
-        Math.max(1, Number(formData.get("requiredLines")) || 1)
+    const result = bingoSaveSchema.safeParse(
+        bingoSaveInputFromFormData(formData)
     );
-    const status = ["draft", "published", "archived"].includes(
-        String(formData.get("status"))
-    )
-        ? String(formData.get("status"))
-        : "draft";
+    if (!result.success) return invalidBingoResult(result.error.issues);
+    const input = result.data;
 
-    if (!title || !coverMusicIndex) return;
-    const coverExists = await db.music.count({
-        where: { index: coverMusicIndex },
-    });
-    if (!coverExists) return;
+    let bingoId = input.id;
+    try {
+        const coverExists = await db.music.count({
+            where: { index: input.coverMusicIndex },
+        });
+        if (!coverExists) {
+            return {
+                success: false,
+                message: "선택한 표지 악곡을 찾을 수 없습니다.",
+                fieldErrors: {
+                    coverMusicIndex: ["선택한 표지 악곡을 찾을 수 없습니다."],
+                },
+            };
+        }
 
-    const cells = Array.from({ length: 25 }, (_, offset) => {
-        const position = offset + 1;
-        const prefix = `cell-${position}`;
-        const ruleConfigText = String(
-            formData.get(`${prefix}-ruleConfig`) ?? ""
-        ).trim();
-        let ruleConfig: Prisma.InputJsonValue | typeof Prisma.DbNull =
-            Prisma.DbNull;
-        if (ruleConfigText) {
-            try {
-                ruleConfig = JSON.parse(
-                    ruleConfigText
-                ) as Prisma.InputJsonValue;
-            } catch {
-                ruleConfig = { value: ruleConfigText };
+        await db.$transaction(async (transaction) => {
+            if (input.id !== undefined) {
+                await transaction.bingo.update({
+                    where: { id: input.id },
+                    data: bingoData(input),
+                });
+            } else {
+                const created = await transaction.bingo.create({
+                    data: bingoData(input),
+                });
+                bingoId = created.id;
             }
-        }
 
-        const targetLevelText = String(
-            formData.get(`${prefix}-targetLevel`) ?? ""
-        ).trim();
-        return {
-            position,
-            title:
-                String(formData.get(`${prefix}-title`) ?? "").trim() ||
-                `${String.fromCharCode(64 + Math.ceil(position / 5))}${((position - 1) % 5) + 1}`,
-            missionType: String(
-                formData.get(`${prefix}-missionType`) || "record"
-            ),
-            ruleType: String(formData.get(`${prefix}-ruleType`) || "manual"),
-            ruleConfig,
-            categoryShort: optionalText(
-                formData.get(`${prefix}-categoryShort`)
-            ),
-            targetDifficulty: optionalText(
-                formData.get(`${prefix}-targetDifficulty`)
-            ),
-            targetLevel: targetLevelText ? Number(targetLevelText) : null,
-            musicIndex: optionalText(formData.get(`${prefix}-musicIndex`)),
-        };
-    });
+            for (const cell of input.cells) {
+                const data = {
+                    position: cell.position,
+                    title: cell.title,
+                    missionType: cell.missionType,
+                    ruleType: cell.ruleType,
+                    ruleConfig: parseRuleConfig(cell.ruleConfig),
+                    categoryShort: toNullableText(cell.categoryShort),
+                    targetDifficulty: toNullableText(cell.targetDifficulty),
+                    targetLevel: cell.targetLevel,
+                    musicIndex: toNullableText(cell.musicIndex),
+                };
 
-    let bingoId = id;
-    await db.$transaction(async (tx) => {
-        if (id) {
-            await tx.bingo.update({
-                where: { id },
-                data: {
-                    title,
-                    description: optionalText(formData.get("description")),
-                    coverMusicIndex,
-                    rewardNos,
-                    requiredLines,
-                    status,
-                    startsAt: optionalDate(formData.get("startsAt")),
-                    endsAt: optionalDate(formData.get("endsAt")),
-                },
-            });
-        } else {
-            const created = await tx.bingo.create({
-                data: {
-                    title,
-                    description: optionalText(formData.get("description")),
-                    coverMusicIndex,
-                    rewardNos,
-                    requiredLines,
-                    status,
-                    startsAt: optionalDate(formData.get("startsAt")),
-                    endsAt: optionalDate(formData.get("endsAt")),
-                },
-            });
-            bingoId = created.id;
-        }
-
-        for (const cell of cells) {
-            await tx.bingoCell.upsert({
-                where: {
-                    bingoId_position: {
-                        bingoId: bingoId!,
-                        position: cell.position,
+                await transaction.bingoCell.upsert({
+                    where: {
+                        bingoId_position: {
+                            bingoId: bingoId!,
+                            position: cell.position,
+                        },
                     },
-                },
-                create: { ...cell, bingoId: bingoId! },
-                update: cell,
-            });
-        }
-    });
+                    create: { ...data, bingoId: bingoId! },
+                    update: data,
+                });
+            }
+        });
+    } catch (error) {
+        logServerError(error, {
+            event: "admin.bingo.save.failed",
+            routePath: "/admin/bingos",
+            routeType: "action",
+        });
+        return {
+            success: false,
+            message: "빙고를 저장하지 못했습니다.",
+        };
+    }
 
-    updateTag(CACHE_TAGS.bingos);
-    revalidatePath("/admin");
-    revalidatePath("/admin/bingos");
-    revalidatePath("/bingo");
-    revalidatePath(`/bingo/${bingoId}`);
-    if (!id) redirect(`/admin/bingos/${bingoId}`);
+    refreshBingos(bingoId);
+    return {
+        success: true,
+        message:
+            input.id === undefined
+                ? "빙고를 추가했습니다."
+                : "빙고를 저장했습니다.",
+        id: bingoId!,
+    };
 }
 
-export async function deleteBingo(formData: FormData) {
+export async function deleteBingo(
+    formData: FormData
+): Promise<BingoDeleteActionResult> {
     await requireAdmin();
-    const id = Number(formData.get("id"));
-    if (!Number.isInteger(id)) return;
+    const result = bingoDeleteSchema.safeParse(
+        bingoDeleteInputFromFormData(formData)
+    );
+    if (!result.success) {
+        return {
+            success: false,
+            message: result.error.issues[0]?.message ?? "잘못된 빙고입니다.",
+        };
+    }
+    const { id } = result.data;
 
-    const progressCount = await db.bingoCellProgress.count({
-        where: { cell: { bingoId: id } },
-    });
-    if (progressCount > 0) return;
+    try {
+        const progressCount = await db.bingoCellProgress.count({
+            where: { cell: { bingoId: id } },
+        });
+        if (progressCount > 0) {
+            return {
+                success: false,
+                message: "진행 기록이 있는 빙고는 삭제할 수 없습니다.",
+            };
+        }
 
-    await db.bingo.delete({ where: { id } });
-    updateTag(CACHE_TAGS.bingos);
-    revalidatePath("/admin");
-    revalidatePath("/admin/bingos");
-    revalidatePath("/bingo");
-    redirect("/admin/bingos");
+        await db.bingo.delete({ where: { id } });
+    } catch (error) {
+        logServerError(error, {
+            event: "admin.bingo.delete.failed",
+            routePath: "/admin/bingos",
+            routeType: "action",
+        });
+        return {
+            success: false,
+            message: "빙고를 삭제하지 못했습니다.",
+        };
+    }
+
+    refreshBingos();
+    return { success: true, message: "빙고를 삭제했습니다." };
 }

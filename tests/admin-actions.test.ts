@@ -240,10 +240,13 @@ describe("관리자 액션", () => {
         const formData = new FormData();
         formData.set("id", "40");
 
-        await deleteBingo(formData);
+        const result = await deleteBingo(formData);
 
+        expect(result).toEqual({
+            success: false,
+            message: "진행 기록이 있는 빙고는 삭제할 수 없습니다.",
+        });
         expect(mocks.bingoDelete).not.toHaveBeenCalled();
-        expect(mocks.redirect).not.toHaveBeenCalled();
     });
 
     it("진행 기록이 없는 빙고를 삭제하고 캐시를 갱신한다", async () => {
@@ -251,11 +254,14 @@ describe("관리자 액션", () => {
         const formData = new FormData();
         formData.set("id", "40");
 
-        await deleteBingo(formData);
+        const result = await deleteBingo(formData);
 
+        expect(result).toEqual({
+            success: true,
+            message: "빙고를 삭제했습니다.",
+        });
         expect(mocks.bingoDelete).toHaveBeenCalledWith({ where: { id: 40 } });
         expect(mocks.updateTag).toHaveBeenCalledWith("bingos");
-        expect(mocks.redirect).toHaveBeenCalledWith("/admin/bingos");
     });
 
     it("관리자는 다른 사용자의 역할을 변경할 수 있다", async () => {
