@@ -1,4 +1,4 @@
-import FeedbackDialog from "@/components/feedback/feedbackDialog";
+import FeedbackDialog from "@/features/feedback/components/feedbackDialog";
 import HomeAnnouncements from "@/components/home/homeAnnouncements";
 import OfficialXTimeline from "@/components/home/officialXTimeline";
 import { getPublishedAnnouncements } from "@/lib/announcements";

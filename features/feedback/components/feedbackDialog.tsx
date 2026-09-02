@@ -1,21 +1,30 @@
 "use client";
 
 import * as Dialog from "@radix-ui/react-dialog";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { put } from "@vercel/blob/client";
 import { ImagePlus, MessageSquareWarning, X } from "lucide-react";
 import Link from "next/link";
-import { useRef, useState, type ChangeEvent } from "react";
+import { useMemo, useState, type ChangeEvent } from "react";
+import { useForm, useWatch } from "react-hook-form";
 
+import {
+    discardFeedbackImage,
+    requestFeedbackImageUpload,
+    submitFeedbackReport,
+} from "@/app/(nevigation)/(home)/feedbackActions";
 import {
     useLocale,
     useLocalizedHref,
     useTranslations,
 } from "@/components/i18n/localeProvider";
 import {
-    discardFeedbackImage,
-    requestFeedbackImageUpload,
-    submitFeedbackReport,
-} from "@/app/(nevigation)/(home)/feedbackActions";
+    createFeedbackReportFormData,
+    createFeedbackReportSchema,
+    type FeedbackReportFormValues,
+    type FeedbackReportValues,
+} from "@/features/feedback/schemas/feedbackReportSchema";
+import { applyFormFieldErrors } from "@/lib/forms/errors";
 
 export default function FeedbackDialog({
     isAuthenticated,
@@ -25,13 +34,35 @@ export default function FeedbackDialog({
     const localizedHref = useLocalizedHref();
     const locale = useLocale();
     const t = useTranslations();
+    const feedbackReportSchema = useMemo(
+        () => createFeedbackReportSchema(t),
+        [t]
+    );
     const [open, setOpen] = useState(false);
-    const [content, setContent] = useState("");
     const [file, setFile] = useState<File | null>(null);
-    const [message, setMessage] = useState("");
     const [submitted, setSubmitted] = useState(false);
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const fileInputRef = useRef<HTMLInputElement>(null);
+    const [successMessage, setSuccessMessage] = useState("");
+    const {
+        register,
+        handleSubmit,
+        setError,
+        clearErrors,
+        reset,
+        control,
+        formState: { errors, isSubmitting },
+    } = useForm<FeedbackReportFormValues, unknown, FeedbackReportValues>({
+        resolver: zodResolver(feedbackReportSchema),
+        defaultValues: {
+            content: "",
+            imageUrl: "",
+        },
+    });
+    const content = useWatch({ control, name: "content" });
+    const errorMessage =
+        errors.content?.message ??
+        errors.imageUrl?.message ??
+        errors.root?.file?.message ??
+        errors.root?.server?.message;
 
     function changeFile(event: ChangeEvent<HTMLInputElement>) {
         const nextFile = event.target.files?.[0] ?? null;
@@ -39,23 +70,27 @@ export default function FeedbackDialog({
         if (
             !["image/jpeg", "image/png", "image/webp"].includes(nextFile.type)
         ) {
-            setMessage(t("feedback.invalidImage"));
+            setError("root.file", {
+                type: "file",
+                message: t("feedback.invalidImage"),
+            });
             event.target.value = "";
             return;
         }
         if (nextFile.size > 4 * 1024 * 1024) {
-            setMessage(t("feedback.imageTooLarge"));
+            setError("root.file", {
+                type: "file",
+                message: t("feedback.imageTooLarge"),
+            });
             event.target.value = "";
             return;
         }
         setFile(nextFile);
-        setMessage("");
+        clearErrors("root");
     }
 
-    async function submit() {
-        if (isSubmitting) return;
-        setIsSubmitting(true);
-        setMessage("");
+    async function handleFeedbackSubmit(values: FeedbackReportValues) {
+        clearErrors();
         let uploadedUrl = "";
 
         try {
@@ -65,7 +100,10 @@ export default function FeedbackDialog({
                     locale
                 );
                 if (!upload.success) {
-                    setMessage(upload.message);
+                    setError("root.server", {
+                        type: "server",
+                        message: upload.message,
+                    });
                     return;
                 }
                 const blob = await put(upload.pathname, file, {
@@ -77,29 +115,39 @@ export default function FeedbackDialog({
             }
 
             const result = await submitFeedbackReport(
-                content,
-                uploadedUrl,
-                locale
+                createFeedbackReportFormData(
+                    { ...values, imageUrl: uploadedUrl || null },
+                    locale
+                )
             );
-            if (!result.success && uploadedUrl) {
-                await discardFeedbackImage(uploadedUrl).catch(() => null);
+            if (!result.success) {
+                if (uploadedUrl) {
+                    await discardFeedbackImage(uploadedUrl).catch(() => null);
+                }
+                applyFormFieldErrors(setError, result.fieldErrors);
+                setError("root.server", {
+                    type: "server",
+                    message: result.message,
+                });
+                return;
             }
-            setMessage(result.message);
-            if (result.success) {
-                setSubmitted(true);
-                setContent("");
-                setFile(null);
-                if (fileInputRef.current) fileInputRef.current.value = "";
-            }
+
+            setSuccessMessage(result.message);
+            setSubmitted(true);
+            reset({ content: "", imageUrl: "" });
+            setFile(null);
         } catch {
             if (uploadedUrl) {
                 await discardFeedbackImage(uploadedUrl).catch(() => null);
             }
-            setMessage(t("feedback.error"));
-        } finally {
-            setIsSubmitting(false);
+            setError("root.server", {
+                type: "server",
+                message: t("feedback.error"),
+            });
         }
     }
+
+    const submit = handleSubmit(handleFeedbackSubmit);
 
     return (
         <Dialog.Root
@@ -107,8 +155,9 @@ export default function FeedbackDialog({
             onOpenChange={(nextOpen) => {
                 setOpen(nextOpen);
                 if (nextOpen) {
-                    setMessage("");
+                    clearErrors();
                     setSubmitted(false);
+                    setSuccessMessage("");
                 }
             }}
         >
@@ -146,46 +195,50 @@ export default function FeedbackDialog({
                     ) : submitted ? (
                         <div className="mt-5 flex flex-col gap-4 text-center">
                             <p className="text-success text-sm font-semibold">
-                                {message}
+                                {successMessage}
                             </p>
                             <Dialog.Close className="bg-text-primary text-bg rounded-card h-11 cursor-pointer text-sm font-bold">
                                 {t("common.confirm")}
                             </Dialog.Close>
                         </div>
                     ) : (
-                        <div className="mt-4 flex flex-col gap-3">
+                        <form
+                            onSubmit={submit}
+                            noValidate
+                            className="mt-4 flex flex-col gap-3"
+                        >
                             <p className="text-caption">
                                 {t("feedback.description")}
                             </p>
                             <textarea
-                                value={content}
-                                onChange={(event) =>
-                                    setContent(event.target.value)
-                                }
                                 maxLength={1000}
                                 rows={6}
                                 placeholder={t("feedback.placeholder")}
+                                aria-invalid={Boolean(errors.content)}
                                 className="border-border bg-surface text-input placeholder:text-text-disabled focus:border-focus focus:ring-focus/20 rounded-card w-full resize-none border px-3 py-2 outline-none focus:ring-2"
+                                {...register("content")}
                             />
+                            <input type="hidden" {...register("imageUrl")} />
                             <label className="border-border hover:bg-surface-muted rounded-card flex h-10 cursor-pointer items-center justify-center gap-2 border text-sm font-semibold transition-colors">
                                 <ImagePlus className="size-4" aria-hidden />
                                 {file ? file.name : t("feedback.attachImage")}
                                 <input
-                                    ref={fileInputRef}
                                     type="file"
                                     accept="image/jpeg,image/png,image/webp"
                                     onChange={changeFile}
                                     className="sr-only"
                                 />
                             </label>
-                            {message ? (
-                                <p className="text-danger text-xs">{message}</p>
+                            {errorMessage ? (
+                                <p className="text-danger text-xs">
+                                    {errorMessage}
+                                </p>
                             ) : null}
                             <button
-                                type="button"
-                                onClick={() => void submit()}
+                                type="submit"
                                 disabled={
-                                    isSubmitting || content.trim().length < 10
+                                    isSubmitting ||
+                                    (content?.trim().length ?? 0) < 10
                                 }
                                 className="bg-text-primary text-bg rounded-card h-11 cursor-pointer text-sm font-bold disabled:cursor-not-allowed disabled:opacity-50"
                             >
@@ -193,7 +246,7 @@ export default function FeedbackDialog({
                                     ? t("feedback.submitting")
                                     : t("feedback.submit")}
                             </button>
-                        </div>
+                        </form>
                     )}
                 </Dialog.Content>
             </Dialog.Portal>
