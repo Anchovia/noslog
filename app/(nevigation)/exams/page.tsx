@@ -1,6 +1,6 @@
 import ExamDashboard, {
     type ExamDashboardItem,
-} from "@/components/exams/examDashboard";
+} from "@/features/exams/components/examDashboard";
 import {
     getLocalizedMusicTitle,
     getMusicTitleDisplayPreference,

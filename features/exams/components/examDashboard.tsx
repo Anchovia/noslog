@@ -9,10 +9,8 @@ import {
     requestExamProofUpload,
     submitExamProof,
 } from "@/app/(nevigation)/exams/actions";
-import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import ExamModeTabs from "@/components/exams/dashboard/examModeTabs";
 import ExamOverview from "@/components/exams/dashboard/examOverview";
-import ExamProofUpload from "@/components/exams/dashboard/examProofUpload";
 import ExamSelector from "@/components/exams/dashboard/examSelector";
 import ExamSimulation from "@/components/exams/dashboard/examSimulation";
 import ExamStageTable from "@/components/exams/dashboard/examStageTable";
@@ -25,7 +23,13 @@ import {
     canEnterExam,
     getDefaultExam,
 } from "@/components/exams/dashboard/examDashboardUtils";
+import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import { Switch } from "@/components/ui/Switch";
+import ExamProofUpload from "@/features/exams/components/examProofUpload";
+import {
+    createExamProofSubmissionFormData,
+    createExamProofSubmissionSchema,
+} from "@/features/exams/schemas/examProofSchema";
 
 export type { ExamDashboardItem } from "@/components/exams/dashboard/examDashboardTypes";
 
@@ -40,6 +44,10 @@ export default function ExamDashboard({
     const locale = useLocale();
     const t = useTranslations();
     const router = useRouter();
+    const submissionSchema = useMemo(
+        () => createExamProofSubmissionSchema(t),
+        [t]
+    );
     const initialMode: ExamMode = "basic";
     const [mode, setMode] = useState<ExamMode>(initialMode);
     const [selectedExamId, setSelectedExamId] = useState<number | null>(
@@ -48,7 +56,6 @@ export default function ExamDashboard({
                 ?.id ?? null
     );
     const [showAdvice, setShowAdvice] = useState(false);
-    const [isUploading, setIsUploading] = useState(false);
     const [uploadMessage, setUploadMessage] = useState<string | null>(null);
 
     const modeExams = useMemo(
@@ -72,7 +79,6 @@ export default function ExamDashboard({
     );
     const uploadDisabled =
         !isAuthenticated ||
-        isUploading ||
         !selectedExam ||
         !canEnterExam(selectedExam) ||
         selectedExam.isAchieved ||
@@ -93,22 +99,9 @@ export default function ExamDashboard({
         setUploadMessage(null);
     }
 
-    async function handleProofUpload(file: File | undefined) {
-        if (!file || !selectedExam) return;
-        if (
-            !(["image/jpeg", "image/png", "image/webp"] as string[]).includes(
-                file.type
-            )
-        ) {
-            setUploadMessage(t("exams.proof.invalidImage"));
-            return;
-        }
-        if (file.size > 4 * 1024 * 1024) {
-            setUploadMessage(t("exams.proof.imageTooLarge"));
-            return;
-        }
+    async function handleProofUpload(file: File) {
+        if (!selectedExam) return;
 
-        setIsUploading(true);
         setUploadMessage(null);
         let uploadedBlobUrl: string | null = null;
         try {
@@ -129,15 +122,15 @@ export default function ExamDashboard({
             });
             uploadedBlobUrl = blob.url;
 
-            const submit = await submitExamProof(
-                selectedExam.id,
-                blob.url,
-                locale
+            const submission = submissionSchema.parse({
+                examId: selectedExam.id,
+                proofImageUrl: blob.url,
+            });
+            const result = await submitExamProof(
+                createExamProofSubmissionFormData(submission, locale)
             );
-            setUploadMessage(
-                submit.success ? t("exams.proof.submitted") : submit.message
-            );
-            if (submit.success) router.refresh();
+            setUploadMessage(result.message);
+            if (result.success) router.refresh();
         } catch {
             if (uploadedBlobUrl) {
                 await discardExamProofUpload(
@@ -146,8 +139,6 @@ export default function ExamDashboard({
                 ).catch(() => null);
             }
             setUploadMessage(t("exams.proof.uploadError"));
-        } finally {
-            setIsUploading(false);
         }
     }
 
@@ -208,18 +199,13 @@ export default function ExamDashboard({
                                     }
                                 />
                                 {selectedExam.mode !== "event" ? (
-                                    <>
-                                        <ExamProofUpload
-                                            exam={selectedExam}
-                                            isAuthenticated={isAuthenticated}
-                                            isUploading={isUploading}
-                                            disabled={uploadDisabled}
-                                            message={uploadMessage}
-                                            onUpload={(file) =>
-                                                void handleProofUpload(file)
-                                            }
-                                        />
-                                    </>
+                                    <ExamProofUpload
+                                        exam={selectedExam}
+                                        isAuthenticated={isAuthenticated}
+                                        disabled={uploadDisabled}
+                                        message={uploadMessage}
+                                        onUpload={handleProofUpload}
+                                    />
                                 ) : null}
                             </>
                         ) : null}
