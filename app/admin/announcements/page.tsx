@@ -1,15 +1,6 @@
-import { Megaphone, Plus, Save, Trash2 } from "lucide-react";
-
+import AnnouncementDeleteButton from "@/features/announcements/components/announcementDeleteButton";
+import AnnouncementForm from "@/features/announcements/components/announcementForm";
 import db from "@/lib/db";
-
-import {
-    createAnnouncement,
-    deleteAnnouncement,
-    updateAnnouncement,
-} from "./actions";
-
-const inputClass =
-    "border-border bg-bg text-input placeholder:text-text-disabled w-full rounded-md border px-3 outline-none focus:border-focus";
 
 export default async function AdminAnnouncementsPage() {
     const announcements = await db.announcement.findMany({
@@ -26,38 +17,7 @@ export default async function AdminAnnouncementsPage() {
                 </p>
             </section>
 
-            <form
-                action={createAnnouncement}
-                className="bg-surface rounded-card grid gap-3 p-3"
-            >
-                <h2 className="text-section flex items-center gap-2">
-                    <Plus className="size-4" /> 공지 추가
-                </h2>
-                <input
-                    name="title"
-                    required
-                    maxLength={80}
-                    placeholder="공지 제목"
-                    className={`${inputClass} h-10`}
-                />
-                <textarea
-                    name="content"
-                    required
-                    maxLength={2000}
-                    rows={5}
-                    placeholder="공지 내용"
-                    className={`${inputClass} resize-y py-2`}
-                />
-                <div className="flex items-center justify-between gap-3">
-                    <label className="text-body-muted flex cursor-pointer items-center gap-2">
-                        <input type="checkbox" name="isPublished" />
-                        바로 공개
-                    </label>
-                    <button className="bg-text-primary text-bg flex h-10 cursor-pointer items-center gap-1.5 rounded-md px-3 text-sm font-bold">
-                        <Megaphone className="size-4" /> 등록
-                    </button>
-                </div>
-            </form>
+            <AnnouncementForm mode="create" />
 
             <section className="flex flex-col gap-3">
                 {announcements.map((announcement) => (
@@ -65,59 +25,16 @@ export default async function AdminAnnouncementsPage() {
                         key={announcement.id}
                         className="bg-surface rounded-card p-3"
                     >
-                        <form
-                            action={updateAnnouncement}
-                            className="grid gap-3"
-                        >
-                            <input
-                                type="hidden"
-                                name="id"
-                                value={announcement.id}
-                            />
-                            <input
-                                name="title"
-                                required
-                                maxLength={80}
-                                defaultValue={announcement.title}
-                                className={`${inputClass} h-10 font-semibold`}
-                            />
-                            <textarea
-                                name="content"
-                                required
-                                maxLength={2000}
-                                rows={5}
-                                defaultValue={announcement.content}
-                                className={`${inputClass} resize-y py-2`}
-                            />
-                            <div className="flex items-center justify-between gap-2">
-                                <label className="text-body-muted flex cursor-pointer items-center gap-2">
-                                    <input
-                                        type="checkbox"
-                                        name="isPublished"
-                                        defaultChecked={
-                                            announcement.isPublished
-                                        }
-                                    />
-                                    홈에 공개
-                                </label>
-                                <button className="border-border hover:bg-surface-muted flex h-9 cursor-pointer items-center gap-1.5 rounded-md border px-3 text-sm font-bold transition-colors">
-                                    <Save className="size-4" /> 저장
-                                </button>
-                            </div>
-                        </form>
-                        <form
-                            action={deleteAnnouncement}
-                            className="border-divider mt-3 border-t pt-3"
-                        >
-                            <input
-                                type="hidden"
-                                name="id"
-                                value={announcement.id}
-                            />
-                            <button className="border-danger/40 text-danger hover:bg-danger/10 flex h-9 w-full cursor-pointer items-center justify-center gap-1.5 rounded-md border text-sm font-bold transition-colors">
-                                <Trash2 className="size-4" /> 삭제
-                            </button>
-                        </form>
+                        <AnnouncementForm
+                            mode="update"
+                            announcement={{
+                                id: announcement.id,
+                                title: announcement.title,
+                                content: announcement.content,
+                                isPublished: announcement.isPublished,
+                            }}
+                        />
+                        <AnnouncementDeleteButton id={announcement.id} />
                     </article>
                 ))}
                 {announcements.length === 0 ? (
