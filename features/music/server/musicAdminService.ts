@@ -8,6 +8,10 @@ import {
     type ChartMetadataFieldName,
     type MusicMetadataFieldName,
 } from "@/features/music/schemas/musicAdminSchema";
+import {
+    normalizeMusicTranslationLocale,
+    normalizeMusicTranslationStatus,
+} from "@/features/music/schemas/musicTranslationAdminSchema";
 import type { AdminMusicDetail } from "@/features/music/types/musicAdmin";
 import type { ActionResult } from "@/lib/actions/result";
 import { requireAdmin } from "@/lib/admin";
@@ -107,11 +111,23 @@ export async function getAdminMusicDetail(
                 charts
                     .find((chart) => chart.duration_seconds !== null)
                     ?.duration_seconds?.toString() ?? "",
-            translations: music.translations.map((translation) => ({
-                locale: translation.locale,
-                title: translation.title,
-                status: translation.status,
-            })),
+            translations: music.translations.flatMap((translation) => {
+                const locale = normalizeMusicTranslationLocale(
+                    translation.locale
+                );
+                const status = normalizeMusicTranslationStatus(
+                    translation.status
+                );
+                if (!locale || !status) return [];
+
+                return [
+                    {
+                        locale,
+                        title: translation.title,
+                        status,
+                    },
+                ];
+            }),
             charts: charts.map((chart) => ({
                 id: chart.id,
                 difficulty: chart.difficulty,

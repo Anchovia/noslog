@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 
-import { parseMusicTranslationCsv } from "@/lib/musicTranslations/csv";
-import { serializeMusicTranslationCsv } from "@/lib/musicTranslations/export";
+import {
+    parseMusicTranslationCsv,
+    serializeMusicTranslationCsv,
+} from "@/features/music/csv/musicTranslationCsv";
 
 describe("parseMusicTranslationCsv", () => {
     it("index 기준 번역 행과 따옴표 안의 쉼표를 읽는다", () => {

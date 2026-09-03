@@ -229,10 +229,17 @@ describe("관리자 액션", () => {
         formData.set("musicIndex", "test-music");
         formData.set("locale", "en");
 
-        await approveMusicTranslation(formData);
+        await expect(approveMusicTranslation(formData)).resolves.toEqual({
+            success: true,
+            message: "악곡 번역을 승인했습니다.",
+        });
 
         expect(mocks.musicTranslationUpdateMany).toHaveBeenCalledWith({
-            where: { musicIndex: "test-music", locale: "en" },
+            where: {
+                musicIndex: "test-music",
+                locale: "en",
+                status: "draft",
+            },
             data: {
                 status: "approved",
                 reviewedAt: expect.any(Date),

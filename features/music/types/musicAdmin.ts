@@ -1,7 +1,51 @@
+import type {
+    MusicTranslationLocale,
+    MusicTranslationStatus,
+} from "@/features/music/schemas/musicTranslationAdminSchema";
+
 export interface AdminMusicTranslation {
-    locale: string;
-    status: string;
+    locale: MusicTranslationLocale;
+    status: MusicTranslationStatus;
     title: string;
+}
+
+export interface AdminMusicListItem {
+    artist: string | null;
+    categoryShort: string;
+    chartCount: number;
+    configuredChartCount: number;
+    index: string;
+    title: string;
+    translation: {
+        status: MusicTranslationStatus;
+        title: string;
+    } | null;
+}
+
+export interface AdminMusicTranslationCoverage {
+    approved: number;
+    draft: number;
+    label: string;
+    locale: MusicTranslationLocale;
+    missing: number;
+    total: number;
+}
+
+export interface MusicTranslationCsvPreview {
+    index: string;
+    locale: MusicTranslationLocale;
+    originalTitle: string;
+    status: MusicTranslationStatus;
+    title: string;
+}
+
+export interface AdminMusicListData {
+    activeLocale?: MusicTranslationLocale;
+    activeStatus?: MusicTranslationStatus | "missing";
+    coverage: AdminMusicTranslationCoverage[];
+    missingLevelConstant: boolean;
+    musics: AdminMusicListItem[];
+    query: string;
 }
 
 export interface AdminMusicChart {
