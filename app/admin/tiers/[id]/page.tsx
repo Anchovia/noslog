@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { deleteTierList, updateTierList } from "@/app/admin/tiers/actions";
-import TierBoard from "@/components/admin/tierBoard";
-import TierListForm from "@/components/admin/tierListForm";
-import TierPlacementEditor from "@/components/admin/tierPlacementEditor";
+import TierBoard from "@/features/tiers/components/tierBoard";
+import TierListDeleteButton from "@/features/tiers/components/tierListDeleteButton";
+import TierListForm from "@/features/tiers/components/tierListForm";
+import TierPlacementEditor from "@/features/tiers/components/tierPlacementEditor";
 import db from "@/lib/db";
 import {
     TIER_REAL_LEVELS,
@@ -175,7 +175,6 @@ export default async function EditTierListPage({
                     </summary>
                     <div className="border-divider mt-3 border-t pt-3">
                         <TierListForm
-                            action={updateTierList}
                             tierList={{
                                 id: tierList.id,
                                 slug: tierList.slug,
@@ -308,15 +307,9 @@ export default async function EditTierListPage({
             ) : null}
 
             {!tierList.goal ? (
-                <form
-                    action={deleteTierList}
-                    className="border-divider border-t pt-5"
-                >
-                    <input type="hidden" name="id" value={tierList.id} />
-                    <button className="border-danger/60 text-danger hover:bg-danger/10 h-10 w-full cursor-pointer rounded-md border text-sm font-bold">
-                        보관 서열표 삭제
-                    </button>
-                </form>
+                <div className="border-divider border-t pt-5">
+                    <TierListDeleteButton tierListId={tierList.id} />
+                </div>
             ) : null}
         </div>
     );

@@ -15,29 +15,32 @@ import {
 import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, useTransition } from "react";
+import { toast } from "sonner";
 
 import {
     addTierEntry,
     applyTierBoardLayout,
     searchTierCharts,
 } from "@/app/admin/tiers/actions";
-import TierBandCard from "@/components/admin/tierBoard/tierBandCard";
-import TierDragOverlay from "@/components/admin/tierBoard/tierDragOverlay";
+import { createTierEntryAddFormData } from "@/features/tiers/schemas/tierAdminSchema";
 import {
     type TierBandData,
     type TierChartSearchResult,
     type TierDropData,
-} from "@/components/admin/tierBoard/tierBoardTypes";
+} from "@/features/tiers/components/tierBoard/tierBoardTypes";
 import {
     getTierBoardChangeCount,
     getTierEntryPlacements,
     moveTierEntryInBoard,
     resolveTierDropTarget,
-} from "@/components/admin/tierBoard/tierBoardUtils";
+} from "@/features/tiers/components/tierBoard/tierBoardUtils";
 import { cn } from "@/lib/utils";
 import { Save } from "lucide-react";
 
-export type { TierBandData } from "@/components/admin/tierBoard/tierBoardTypes";
+import TierBandCard from "./tierBoard/tierBandCard";
+import TierDragOverlay from "./tierBoard/tierDragOverlay";
+
+export type { TierBandData } from "./tierBoard/tierBoardTypes";
 
 // 서열표 검색, 선택과 드래그 변경 액션을 하위 구간 카드에 연결함
 export default function TierBoard({
@@ -73,9 +76,17 @@ export default function TierBoard({
         const currentRequest = ++requestId.current;
         const timeout = window.setTimeout(() => {
             startSearch(async () => {
-                const nextResults = await searchTierCharts(query, tierListId);
-                if (currentRequest === requestId.current) {
-                    setResults(nextResults);
+                try {
+                    const nextResults = await searchTierCharts(
+                        query,
+                        tierListId
+                    );
+                    if (currentRequest === requestId.current) {
+                        setResults(nextResults);
+                    }
+                } catch {
+                    if (currentRequest === requestId.current) setResults([]);
+                    toast.error("채보를 검색하지 못했습니다.");
                 }
             });
         }, 250);
@@ -111,15 +122,27 @@ export default function TierBoard({
 
     function addChart(chartId: number, bandId: number) {
         startMutation(async () => {
-            const formData = new FormData();
-            formData.set("tierListId", String(tierListId));
-            formData.set("tierBandId", String(bandId));
-            formData.set("chartId", String(chartId));
-            await addTierEntry(formData);
-            setResults((current) =>
-                current.filter((chart) => chart.id !== chartId)
-            );
-            router.refresh();
+            try {
+                const result = await addTierEntry(
+                    createTierEntryAddFormData({
+                        tierListId,
+                        tierBandId: bandId,
+                        chartId,
+                    })
+                );
+                if (!result.success) {
+                    toast.error(result.message);
+                    return;
+                }
+
+                toast.success(result.message);
+                setResults((current) =>
+                    current.filter((chart) => chart.id !== chartId)
+                );
+                router.refresh();
+            } catch {
+                toast.error("채보를 추가하지 못했습니다.");
+            }
         });
     }
 
@@ -152,11 +175,21 @@ export default function TierBoard({
         if (changeCount === 0) return;
 
         startMutation(async () => {
-            await applyTierBoardLayout(
-                tierListId,
-                getTierEntryPlacements(draftBands)
-            );
-            router.refresh();
+            try {
+                const result = await applyTierBoardLayout(
+                    tierListId,
+                    getTierEntryPlacements(draftBands)
+                );
+                if (!result.success) {
+                    toast.error(result.message);
+                    return;
+                }
+
+                toast.success(result.message);
+                router.refresh();
+            } catch {
+                toast.error("서열표 배치를 적용하지 못했습니다.");
+            }
         });
     }
 

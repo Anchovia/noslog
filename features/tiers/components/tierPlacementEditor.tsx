@@ -1,7 +1,13 @@
+"use client";
+
 import { Save } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState, useTransition, type FormEvent } from "react";
+import { toast } from "sonner";
 
 import { moveTierEntryToBand } from "@/app/admin/tiers/actions";
 import MusicJacket from "@/components/music/musicJacket";
+import { createTierEntryMoveFormData } from "@/features/tiers/schemas/tierAdminSchema";
 import { formatOfficialChartLevel, formatTierValue } from "@/lib/tiers";
 
 interface TierPlacementEditorProps {
@@ -25,11 +31,40 @@ interface TierPlacementEditorProps {
 }
 
 export default function TierPlacementEditor({
-    tierListId,
     bands,
     entries,
     totalCount,
 }: TierPlacementEditorProps) {
+    const router = useRouter();
+    const [pendingEntryId, setPendingEntryId] = useState<number | null>(null);
+    const [isPending, startTransition] = useTransition();
+
+    function handleSubmit(event: FormEvent<HTMLFormElement>, entryId: number) {
+        event.preventDefault();
+        const formData = new FormData(event.currentTarget);
+        const tierBandId = Number(formData.get("tierBandId"));
+        setPendingEntryId(entryId);
+
+        startTransition(async () => {
+            try {
+                const result = await moveTierEntryToBand(
+                    createTierEntryMoveFormData({ entryId, tierBandId })
+                );
+                if (!result.success) {
+                    toast.error(result.message);
+                    return;
+                }
+
+                toast.success(result.message);
+                router.refresh();
+            } catch {
+                toast.error("채보의 서열 상수를 저장하지 못했습니다.");
+            } finally {
+                setPendingEntryId(null);
+            }
+        });
+    }
+
     return (
         <section className="flex flex-col gap-3">
             <p className="text-caption px-1">
@@ -39,15 +74,9 @@ export default function TierPlacementEditor({
                 {entries.map((entry, index) => (
                     <form
                         key={entry.id}
-                        action={moveTierEntryToBand}
+                        onSubmit={(event) => handleSubmit(event, entry.id)}
                         className={`flex min-h-18 items-center gap-2 p-3 ${index > 0 ? "border-divider border-t" : ""}`}
                     >
-                        <input type="hidden" name="entryId" value={entry.id} />
-                        <input
-                            type="hidden"
-                            name="tierListId"
-                            value={tierListId}
-                        />
                         <MusicJacket
                             index={entry.chart.music.index}
                             background={entry.chart.music.background}
@@ -80,11 +109,17 @@ export default function TierPlacementEditor({
                         </select>
                         <button
                             type="submit"
+                            disabled={isPending}
                             aria-label={`${entry.chart.music.title} 서열 상수 저장`}
                             title="서열 상수 저장"
-                            className="text-text-secondary hover:bg-surface-muted flex size-10 shrink-0 items-center justify-center rounded-md"
+                            className="text-text-secondary hover:bg-surface-muted flex size-10 shrink-0 items-center justify-center rounded-md disabled:cursor-not-allowed disabled:opacity-50"
                         >
-                            <Save className="size-4" />
+                            <Save className="size-4" aria-hidden />
+                            <span className="sr-only">
+                                {pendingEntryId === entry.id
+                                    ? "저장 중"
+                                    : "저장"}
+                            </span>
                         </button>
                     </form>
                 ))}

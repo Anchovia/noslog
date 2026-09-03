@@ -1,5 +1,4 @@
-import { createTierList } from "@/app/admin/tiers/actions";
-import TierListForm from "@/components/admin/tierListForm";
+import TierListForm from "@/features/tiers/components/tierListForm";
 
 export default function NewTierListPage() {
     return (
@@ -11,7 +10,6 @@ export default function NewTierListPage() {
                 </p>
             </section>
             <TierListForm
-                action={createTierList}
                 tierList={{
                     slug: "",
                     title: "",
