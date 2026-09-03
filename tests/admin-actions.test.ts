@@ -144,7 +144,10 @@ describe("관리자 액션", () => {
         formData.set("bpmMax", "180.6");
         formData.set("durationSeconds", "125.7");
 
-        await saveMusicMetadata(formData);
+        await expect(saveMusicMetadata(formData)).resolves.toEqual({
+            success: true,
+            message: "악곡 공통 정보를 저장했습니다.",
+        });
 
         expect(mocks.musicUpdate).toHaveBeenCalledWith({
             where: { index: "test-music" },
@@ -158,10 +161,26 @@ describe("관리자 액션", () => {
         expect(mocks.updateTag).toHaveBeenCalledWith("music-details");
     });
 
+    it("잘못된 악곡 공통 정보는 DB에 저장하지 않는다", async () => {
+        const formData = new FormData();
+        formData.set("musicIndex", "test-music");
+        formData.set("bpmMin", "0");
+
+        await expect(saveMusicMetadata(formData)).resolves.toMatchObject({
+            success: false,
+            fieldErrors: {
+                bpmMin: ["최소 BPM을 1 이상으로 입력해주세요."],
+            },
+        });
+        expect(mocks.musicUpdate).not.toHaveBeenCalled();
+        expect(mocks.musicChartUpdateMany).not.toHaveBeenCalled();
+    });
+
     it("채보 저장 시 레벨 상수 변경 이력을 생성한다", async () => {
         mocks.musicChartFindUnique.mockResolvedValue({
             level_constant: 11,
             difficulty: "Expert",
+            music_idx: "test-music",
         });
         const formData = new FormData();
         formData.set("chartId", "10");
@@ -170,7 +189,10 @@ describe("관리자 액션", () => {
         formData.set("noteCount", "1000");
         formData.set("releasedAt", "2026-07-17");
 
-        await saveChartMetadata(formData);
+        await expect(saveChartMetadata(formData)).resolves.toEqual({
+            success: true,
+            message: "채보 정보를 저장했습니다.",
+        });
 
         expect(mocks.musicChartUpdate).toHaveBeenCalledWith({
             where: { id: 10 },
@@ -183,6 +205,23 @@ describe("관리자 액션", () => {
         expect(mocks.constantHistoryCreate).toHaveBeenCalledWith({
             data: { chart_id: 10, value: 11.2 },
         });
+    });
+
+    it("다른 악곡의 채보는 수정하지 않는다", async () => {
+        mocks.musicChartFindUnique.mockResolvedValue({
+            level_constant: 11,
+            difficulty: "Expert",
+            music_idx: "other-music",
+        });
+        const formData = new FormData();
+        formData.set("chartId", "10");
+        formData.set("musicIndex", "test-music");
+
+        await expect(saveChartMetadata(formData)).resolves.toEqual({
+            success: false,
+            message: "저장할 채보를 찾을 수 없습니다.",
+        });
+        expect(mocks.musicChartUpdate).not.toHaveBeenCalled();
     });
 
     it("초안 번역을 승인하고 번역 캐시를 갱신한다", async () => {
