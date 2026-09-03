@@ -1,24 +1,30 @@
 import { ArrowDown, ArrowUp, Plus, Trash2 } from "lucide-react";
+import type { FieldErrors, UseFormRegister } from "react-hook-form";
 
+import type {
+    ExamEditorFormValues,
+    ExamStageEditor,
+    ScoringType,
+} from "@/features/exams/schemas/examEditorSchema";
 import { cn } from "@/lib/utils";
 
+import ExamFieldError from "./examFieldError";
 import {
     EXAM_INPUT_CLASS,
     EXAM_LABEL_CLASS,
-    type ExamStageEditor,
     getDifficultyColor,
-    type RequirementType,
-    type ScoringType,
 } from "./examEditorTypes";
 
 interface ExamStageSectionProps {
-    stages: ExamStageEditor[];
-    scoringType: ScoringType;
+    error?: string;
+    errors: FieldErrors<ExamEditorFormValues>;
     onAdd: () => void;
-    onUpdate: (index: number, changes: Partial<ExamStageEditor>) => void;
-    onToggleChart: (stageIndex: number, chartId: number) => void;
     onMove: (index: number, direction: -1 | 1) => void;
     onRemove: (index: number) => void;
+    onToggleChart: (stageIndex: number, chartId: number) => void;
+    register: UseFormRegister<ExamEditorFormValues>;
+    scoringType: ScoringType;
+    stages: ExamStageEditor[];
 }
 
 function getStageLabel(index: number) {
@@ -26,15 +32,16 @@ function getStageLabel(index: number) {
     return `${index + 1}${index === 0 ? "st" : "nd"}`;
 }
 
-// 과제곡 순서, 난이도와 통과 조건을 한곳에서 관리함
 export default function ExamStageSection({
-    stages,
-    scoringType,
+    error,
+    errors,
     onAdd,
-    onUpdate,
-    onToggleChart,
     onMove,
     onRemove,
+    onToggleChart,
+    register,
+    scoringType,
+    stages,
 }: ExamStageSectionProps) {
     return (
         <section>
@@ -59,7 +66,7 @@ export default function ExamStageSection({
             <div className="flex flex-col gap-2">
                 {stages.map((stage, index) => (
                     <article
-                        key={stage.musicIndex}
+                        key={stage.id ?? stage.musicIndex}
                         className="bg-surface rounded-card p-3"
                     >
                         <div className="flex items-start gap-2">
@@ -112,6 +119,7 @@ export default function ExamStageSection({
                                     <button
                                         key={chart.chartId}
                                         type="button"
+                                        aria-pressed={selected}
                                         onClick={() =>
                                             onToggleChart(index, chart.chartId)
                                         }
@@ -127,25 +135,35 @@ export default function ExamStageSection({
                                 );
                             })}
                         </div>
+                        <ExamFieldError
+                            message={
+                                errors.stages?.[index]?.allowedChartIds?.message
+                            }
+                        />
 
                         <div className="mt-3 grid grid-cols-2 gap-2">
                             <label>
                                 <span className={EXAM_LABEL_CLASS}>조건</span>
                                 <select
-                                    value={stage.requirementType}
-                                    onChange={(event) =>
-                                        onUpdate(index, {
-                                            requirementType: event.target
-                                                .value as RequirementType,
-                                        })
-                                    }
+                                    aria-invalid={Boolean(
+                                        errors.stages?.[index]?.requirementType
+                                    )}
                                     className={EXAM_INPUT_CLASS}
+                                    {...register(
+                                        `stages.${index}.requirementType`
+                                    )}
                                 >
                                     <option value="single">해당 곡</option>
                                     <option value="cumulative">
                                         누적 합계
                                     </option>
                                 </select>
+                                <ExamFieldError
+                                    message={
+                                        errors.stages?.[index]?.requirementType
+                                            ?.message
+                                    }
+                                />
                             </label>
                             <label>
                                 <span className={EXAM_LABEL_CLASS}>
@@ -157,15 +175,21 @@ export default function ExamStageSection({
                                     type="number"
                                     min={scoringType === "score" ? 1 : 0.1}
                                     step={scoringType === "score" ? 1 : 0.1}
-                                    value={stage.requiredValue}
-                                    onChange={(event) =>
-                                        onUpdate(index, {
-                                            requiredValue: Number(
-                                                event.target.value
-                                            ),
-                                        })
-                                    }
+                                    inputMode="decimal"
+                                    aria-invalid={Boolean(
+                                        errors.stages?.[index]?.requiredValue
+                                    )}
                                     className={EXAM_INPUT_CLASS}
+                                    {...register(
+                                        `stages.${index}.requiredValue`,
+                                        { valueAsNumber: true }
+                                    )}
+                                />
+                                <ExamFieldError
+                                    message={
+                                        errors.stages?.[index]?.requiredValue
+                                            ?.message
+                                    }
                                 />
                             </label>
                         </div>
@@ -178,6 +202,7 @@ export default function ExamStageSection({
                     </div>
                 ) : null}
             </div>
+            <ExamFieldError message={error} />
         </section>
     );
 }

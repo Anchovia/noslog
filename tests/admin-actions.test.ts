@@ -230,7 +230,10 @@ describe("관리자 액션", () => {
             _count: { submissions: 0, achievements: 0 },
         });
 
-        await expect(deleteExam(30)).resolves.toEqual({ success: true });
+        await expect(deleteExam(30)).resolves.toEqual({
+            success: true,
+            message: "검정을 삭제했습니다.",
+        });
         expect(mocks.examDelete).toHaveBeenCalledWith({ where: { id: 30 } });
         expect(mocks.updateTag).toHaveBeenCalledWith("exams");
     });

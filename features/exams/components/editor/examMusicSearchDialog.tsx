@@ -12,28 +12,27 @@ import {
 } from "./examEditorTypes";
 
 interface ExamMusicSearchDialogProps {
+    isSearching: boolean;
+    onChoose: (music: MusicSearchResult) => void;
+    onOpenChange: (open: boolean) => void;
+    onQueryChange: (query: string) => void;
+    onSearch: (event: FormEvent<HTMLFormElement>) => void;
     open: boolean;
     purpose: SearchPurpose;
     query: string;
     results: MusicSearchResult[];
-    isSearching: boolean;
-    onOpenChange: (open: boolean) => void;
-    onQueryChange: (query: string) => void;
-    onSearch: (event: FormEvent<HTMLFormElement>) => void;
-    onChoose: (music: MusicSearchResult) => void;
 }
 
-// 과제곡과 보상 악곡 검색 다이얼로그를 함께 관리함
 export default function ExamMusicSearchDialog({
+    isSearching,
+    onChoose,
+    onOpenChange,
+    onQueryChange,
+    onSearch,
     open,
     purpose,
     query,
     results,
-    isSearching,
-    onOpenChange,
-    onQueryChange,
-    onSearch,
-    onChoose,
 }: ExamMusicSearchDialogProps) {
     return (
         <Dialog.Root open={open} onOpenChange={onOpenChange}>

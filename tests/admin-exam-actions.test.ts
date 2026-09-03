@@ -59,14 +59,19 @@ function createExamInput(overrides: Record<string, unknown> = {}) {
         grade: null,
         shortLabel: "TEST",
         title: "테스트 검정",
-        description: null,
+        description: "",
         feeNos: 2000,
         requiredGrade: 0,
         status: "draft",
         stages: [
             {
                 musicIndex: "music-1",
-                position: 1,
+                title: "Music 1",
+                artist: "Artist",
+                charts: [
+                    { chartId: 11, difficulty: "hard", level: 10 },
+                    { chartId: 12, difficulty: "expert", level: 12 },
+                ],
                 label: "1st",
                 requirementType: "single",
                 requiredValue: 925000,
@@ -112,6 +117,10 @@ describe("관리자 검정 저장 액션", () => {
         expect(result).toEqual({
             success: false,
             message: "공개 검정은 과제곡 세 곡이 필요합니다.",
+            fieldErrors: {
+                stages: ["공개 검정은 과제곡 세 곡이 필요합니다."],
+                rewards: ["이벤트 검정의 합격 보상 악곡을 추가해주세요."],
+            },
         });
         expect(mocks.examFindFirst).not.toHaveBeenCalled();
         expect(mocks.transaction).not.toHaveBeenCalled();
@@ -123,6 +132,9 @@ describe("관리자 검정 저장 액션", () => {
         await expect(saveExam(createExamInput())).resolves.toEqual({
             success: false,
             message: "이미 사용 중인 식별자입니다.",
+            fieldErrors: {
+                slug: ["이미 사용 중인 식별자입니다."],
+            },
         });
         expect(mocks.chartFindMany).not.toHaveBeenCalled();
         expect(mocks.transaction).not.toHaveBeenCalled();
@@ -137,6 +149,9 @@ describe("관리자 검정 저장 액션", () => {
         await expect(saveExam(createExamInput())).resolves.toEqual({
             success: false,
             message: "과제곡의 허용 난이도를 다시 선택해주세요.",
+            fieldErrors: {
+                stages: ["과제곡의 허용 난이도를 다시 선택해주세요."],
+            },
         });
         expect(mocks.transaction).not.toHaveBeenCalled();
     });
@@ -169,6 +184,7 @@ describe("관리자 검정 저장 액션", () => {
     it("새 검정과 과제곡을 하나의 트랜잭션으로 저장한다", async () => {
         await expect(saveExam(createExamInput())).resolves.toEqual({
             success: true,
+            message: "검정을 추가했습니다.",
             id: 30,
         });
 

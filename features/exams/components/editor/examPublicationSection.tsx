@@ -1,16 +1,18 @@
+import type { ExamStatus } from "@/features/exams/schemas/examEditorSchema";
 import { cn } from "@/lib/utils";
 
-import type { ExamStatus } from "./examEditorTypes";
+import ExamFieldError from "./examFieldError";
 
 interface ExamPublicationSectionProps {
-    status: ExamStatus;
+    error?: string;
     onChange: (status: ExamStatus) => void;
+    status: ExamStatus;
 }
 
-// 검정 공개 상태를 한곳에서 관리함
 export default function ExamPublicationSection({
-    status,
+    error,
     onChange,
+    status,
 }: ExamPublicationSectionProps) {
     const isPublished = status === "published";
 
@@ -26,12 +28,14 @@ export default function ExamPublicationSection({
                 <button
                     type="button"
                     role="switch"
+                    aria-label="검정 공개 상태"
                     aria-checked={isPublished}
+                    aria-invalid={Boolean(error)}
                     onClick={() =>
                         onChange(isPublished ? "draft" : "published")
                     }
                     className={cn(
-                        "bg-surface-muted relative h-7 w-12 rounded-full",
+                        "bg-surface-muted relative h-7 w-12 shrink-0 rounded-full",
                         isPublished && "bg-success"
                     )}
                 >
@@ -45,6 +49,7 @@ export default function ExamPublicationSection({
                     />
                 </button>
             </div>
+            <ExamFieldError message={error} />
         </section>
     );
 }
