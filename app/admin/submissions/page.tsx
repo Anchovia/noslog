@@ -1,14 +1,13 @@
-import { Check, ExternalLink, Trash2, X } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 
+import ExamSubmissionCard from "@/features/exams/components/admin/examSubmissionCard";
 import {
-    deleteExamSubmission,
-    reviewExamSubmission,
-} from "@/app/admin/submissions/actions";
-import db from "@/lib/db";
+    examSubmissionStatusSchema,
+    normalizeExamSubmissionStatus,
+} from "@/features/exams/schemas/examSubmissionAdminSchema";
+import { listExamSubmissions } from "@/features/exams/server/examSubmissionAdminService";
 
-const statuses = ["pending", "approved", "rejected"] as const;
+const statuses = examSubmissionStatusSchema.options;
 
 export default async function AdminSubmissionsPage({
     searchParams,
@@ -16,20 +15,8 @@ export default async function AdminSubmissionsPage({
     searchParams: Promise<{ status?: string }>;
 }) {
     const params = await searchParams;
-    const status = statuses.includes(params.status as (typeof statuses)[number])
-        ? params.status!
-        : "pending";
-    const submissions = await db.examSubmission.findMany({
-        where: { status },
-        include: {
-            user: {
-                select: { username: true, nostalgia_name: true, avatar: true },
-            },
-            exam: { select: { title: true, mode: true, grade: true } },
-        },
-        orderBy: { submittedAt: "desc" },
-        take: 100,
-    });
+    const status = normalizeExamSubmissionStatus(params.status);
+    const submissions = await listExamSubmissions(status);
 
     return (
         <div className="flex flex-col gap-4 px-4 py-5">
@@ -57,117 +44,12 @@ export default async function AdminSubmissionsPage({
             </nav>
 
             <section className="flex flex-col gap-3">
-                {submissions.map((submission) => {
-                    const name =
-                        submission.user.nostalgia_name ??
-                        submission.user.username ??
-                        `유저 ${submission.userId}`;
-
-                    return (
-                        <article
-                            key={submission.id}
-                            className="bg-surface rounded-card overflow-hidden"
-                        >
-                            {submission.proofImageUrl ? (
-                                <a
-                                    href={`/api/admin/private-images/exam/${submission.id}`}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="bg-surface-muted relative block aspect-video"
-                                >
-                                    <Image
-                                        src={`/api/admin/private-images/exam/${submission.id}`}
-                                        alt="검정 합격 증빙"
-                                        fill
-                                        unoptimized
-                                        sizes="358px"
-                                        className="object-contain"
-                                    />
-                                    <span className="bg-bg/80 absolute top-2 right-2 flex size-8 items-center justify-center rounded-md">
-                                        <ExternalLink className="size-4" />
-                                    </span>
-                                </a>
-                            ) : (
-                                <div className="bg-surface-muted text-caption flex aspect-video items-center justify-center px-6 text-center">
-                                    보관 기간이 지나 증빙 이미지가
-                                    삭제되었습니다.
-                                </div>
-                            )}
-                            <div className="flex flex-col gap-3 p-3">
-                                <div className="flex items-start justify-between gap-3">
-                                    <div className="min-w-0">
-                                        <p className="text-body truncate font-bold">
-                                            {name}
-                                        </p>
-                                        <p className="text-caption truncate">
-                                            {submission.exam.title}
-                                        </p>
-                                    </div>
-                                    <time className="text-caption shrink-0 tabular-nums">
-                                        {submission.submittedAt.toLocaleDateString(
-                                            "ko-KR"
-                                        )}
-                                    </time>
-                                </div>
-                                {submission.status === "pending" ? (
-                                    <form
-                                        action={reviewExamSubmission}
-                                        className="flex flex-col gap-2"
-                                    >
-                                        <input
-                                            type="hidden"
-                                            name="submissionId"
-                                            value={submission.id}
-                                        />
-                                        <textarea
-                                            name="reviewerNote"
-                                            defaultValue={
-                                                submission.reviewerNote ?? ""
-                                            }
-                                            placeholder="심사 메모 또는 반려 사유"
-                                            rows={2}
-                                            className="border-border bg-bg text-input w-full resize-none rounded-md border px-3 py-2"
-                                        />
-                                        <div className="grid grid-cols-2 gap-2">
-                                            <button
-                                                name="status"
-                                                value="rejected"
-                                                className="border-danger/40 text-danger flex h-10 cursor-pointer items-center justify-center gap-1 rounded-md border text-sm font-bold"
-                                            >
-                                                <X className="size-4" /> 반려
-                                            </button>
-                                            <button
-                                                name="status"
-                                                value="approved"
-                                                className="bg-success text-bg flex h-10 cursor-pointer items-center justify-center gap-1 rounded-md text-sm font-bold"
-                                            >
-                                                <Check className="size-4" />{" "}
-                                                승인
-                                            </button>
-                                        </div>
-                                    </form>
-                                ) : submission.reviewerNote ? (
-                                    <p className="text-caption bg-bg rounded-md px-3 py-2">
-                                        심사 메모: {submission.reviewerNote}
-                                    </p>
-                                ) : null}
-                                <form action={deleteExamSubmission}>
-                                    <input
-                                        type="hidden"
-                                        name="submissionId"
-                                        value={submission.id}
-                                    />
-                                    <button className="border-danger/40 text-danger flex h-10 w-full cursor-pointer items-center justify-center gap-1 rounded-md border text-sm font-bold">
-                                        <Trash2 className="size-4" />
-                                        {submission.status === "approved"
-                                            ? "합격 이력 및 제출 삭제"
-                                            : "제출 기록 삭제"}
-                                    </button>
-                                </form>
-                            </div>
-                        </article>
-                    );
-                })}
+                {submissions.map((submission) => (
+                    <ExamSubmissionCard
+                        key={submission.id}
+                        submission={submission}
+                    />
+                ))}
                 {submissions.length === 0 ? (
                     <p className="text-body-muted bg-surface rounded-card py-12 text-center">
                         해당하는 인증이 없습니다.
