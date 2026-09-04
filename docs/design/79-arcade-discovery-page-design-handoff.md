@@ -123,3 +123,14 @@ C 색        하드코딩 0(map/media render 제외 규약) · 신설 토큰 없
    P10 form-state patterns rather than dedicated frames.
 5. **Photo carousel interaction** (swipe, counter advance, full-screen view) is
    annotated, not drawn; only the `1/3` resting state exists.
+
+## 6. Deep-verification amendments — 2026-09-04
+
+- `Arcades · 1280 · Detail (2A …)` (Light and Dark) was a FIXED 1236 frame whose main
+  column measured 1404 — the footer sat 280px outside the frame. Both frames are now
+  content-driven (1516) and the Wide sections were reflowed (no overlap).
+- Cluster count bubbles: `local-data/single` → `primary/default` (`ARC-DV-01`, brief 12).
+  The label stays `primary/on-primary`. Note for the contrast sweep: the bubble is a sibling
+  ellipse, so the automated background lookup reports the map placeholder instead —
+  the 52 P12 "cluster label" failures in the sweep are false positives.
+- Dark overlay shadow style swapped to `elevation/overlay-dark` on 1 node.

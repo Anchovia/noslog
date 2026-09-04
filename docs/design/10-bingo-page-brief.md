@@ -710,3 +710,9 @@ invents live game state, auto-completes missions, hides public reference content
 shows fake signed-out progress, merges unlock and full-board meaning, adds attempt
 history or availability UI, uses unreviewed/reverse-translated mission content, keeps
 a fixed phone-width desktop shell, or otherwise conflicts with the approved contract.
+
+### Decision Log addendum — 2026-09-04 (deep verification)
+
+| ID            | Decision                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `BINGO-DV-01` | **Cell-saving row drops the `interaction/menu-set` selection fill while busy.** `content/pending` on `menu-set` measured 4.02:1 Light / 3.71:1 Dark; on `surface/surface` it is 4.6 / 4.99. `DISC-44` makes the pending colour the visual cue for held content, so the selection highlight is redundant during the save and returns when the save settles. Keeping `menu-set` with `content/subdued` was rejected as a pending-contract violation. |

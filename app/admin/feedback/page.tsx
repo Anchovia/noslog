@@ -1,12 +1,13 @@
-import { Check, ExternalLink, RotateCcw } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 
-import db from "@/lib/db";
+import FeedbackReportCard from "@/features/feedback/components/admin/feedbackReportCard";
+import {
+    feedbackStatusSchema,
+    normalizeFeedbackStatus,
+} from "@/features/feedback/schemas/feedbackAdminSchema";
+import { listFeedbackReports } from "@/features/feedback/server/feedbackAdminService";
 
-import { updateFeedbackStatus } from "./actions";
-
-const statuses = ["open", "resolved"] as const;
+const statuses = feedbackStatusSchema.options;
 
 export default async function AdminFeedbackPage({
     searchParams,
@@ -14,19 +15,8 @@ export default async function AdminFeedbackPage({
     searchParams: Promise<{ status?: string }>;
 }) {
     const params = await searchParams;
-    const status = statuses.includes(params.status as (typeof statuses)[number])
-        ? params.status!
-        : "open";
-    const reports = await db.feedbackReport.findMany({
-        where: { status },
-        include: {
-            user: {
-                select: { id: true, username: true, nostalgia_name: true },
-            },
-        },
-        orderBy: { createdAt: "desc" },
-        take: 100,
-    });
+    const status = normalizeFeedbackStatus(params.status);
+    const reports = await listFeedbackReports(status);
 
     return (
         <div className="flex flex-col gap-4 px-4 py-5">
@@ -51,75 +41,7 @@ export default async function AdminFeedbackPage({
 
             <section className="flex flex-col gap-3">
                 {reports.map((report) => (
-                    <article
-                        key={report.id}
-                        className="bg-surface rounded-card overflow-hidden"
-                    >
-                        {report.imageUrl ? (
-                            <a
-                                href={`/api/admin/private-images/feedback/${report.id}`}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="bg-surface-muted relative block aspect-video"
-                            >
-                                <Image
-                                    src={`/api/admin/private-images/feedback/${report.id}`}
-                                    alt="피드백 첨부 이미지"
-                                    fill
-                                    unoptimized
-                                    sizes="358px"
-                                    className="object-contain"
-                                />
-                                <span className="bg-bg/80 absolute top-2 right-2 flex size-8 items-center justify-center rounded-md">
-                                    <ExternalLink className="size-4" />
-                                </span>
-                            </a>
-                        ) : null}
-                        <div className="flex flex-col gap-3 p-3">
-                            <div className="flex items-start justify-between gap-3">
-                                <Link
-                                    href={`/profile/${report.user.id}`}
-                                    className="text-body truncate font-bold hover:underline"
-                                >
-                                    {report.user.username ??
-                                        report.user.nostalgia_name ??
-                                        `유저 ${report.user.id}`}
-                                </Link>
-                                <time className="text-caption shrink-0 tabular-nums">
-                                    {report.createdAt.toLocaleDateString(
-                                        "ko-KR"
-                                    )}
-                                </time>
-                            </div>
-                            <p className="text-body break-words whitespace-pre-wrap">
-                                {report.content}
-                            </p>
-                            <form action={updateFeedbackStatus}>
-                                <input
-                                    type="hidden"
-                                    name="id"
-                                    value={report.id}
-                                />
-                                <input
-                                    type="hidden"
-                                    name="status"
-                                    value={
-                                        status === "open" ? "resolved" : "open"
-                                    }
-                                />
-                                <button className="border-border hover:bg-surface-muted flex h-10 w-full cursor-pointer items-center justify-center gap-2 rounded-md border text-sm font-bold transition-colors">
-                                    {status === "open" ? (
-                                        <Check className="text-success size-4" />
-                                    ) : (
-                                        <RotateCcw className="size-4" />
-                                    )}
-                                    {status === "open"
-                                        ? "처리 완료"
-                                        : "다시 열기"}
-                                </button>
-                            </form>
-                        </div>
-                    </article>
+                    <FeedbackReportCard key={report.id} report={report} />
                 ))}
                 {reports.length === 0 ? (
                     <p className="bg-surface text-body-muted rounded-card py-12 text-center">

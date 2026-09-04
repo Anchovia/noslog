@@ -119,3 +119,11 @@ C 색        하드코딩 0(자켓 평면 위 scrim 칩·흰 트랙 = on-media �
 6. **Sticky behavior** (wide board column) is annotated, gated on the brief's
    keyboard/zoom validation; 12-line chance calculation, batching restoration, and
    optimistic-save guards are implementation contracts in document 10.
+
+## 6. Deep-verification amendments — 2026-09-04
+
+- `셀 저장 중` state: the B4 row no longer carries `interaction/menu-set` while busy
+  (`BINGO-DV-01`, brief 10) — pending text on `surface/surface` measures 4.6 / 4.99.
+- Sweep exemptions confirmed as intended: `media render` covers (full-bleed, token-exempt),
+  `mini board chip` / `edge progress` internals (2px optical), `Icon/circle-help` 14 (IC-06
+  bounded exception). `audit.js` now whitelists these by name.

@@ -116,3 +116,10 @@ C 색        바인딩 100%(인쇄 시편 흰 배경 = 인쇄 규약) · 링크 
    조건.
 6. **인쇄 시편의 링크 처리**는 "유용한 링크 텍스트 유지"로 그렸다 — URL 병기가
    필요한 항목(이전 버전 등)은 print-CSS에서 결정.
+
+## 6. Deep-verification amendments — 2026-09-04
+
+- **Defect found and fixed:** `toc disclosure · open` in `Privacy · 390 · 목차 펼침` (Light
+  and Dark) was a FIXED 48 frame with 624 of content — the open TOC rendered collapsed.
+  Restored to HUG; the screen grew 5,147 → 5,723 and the two Compact sections were reflowed.
+  The `§1` height figure above (5,147) is the base screen; the TOC-open screen is 5,723.

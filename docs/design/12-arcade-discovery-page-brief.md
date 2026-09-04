@@ -940,3 +940,9 @@ availability and condition, treats edit time as verification, lets reports auto-
 hides Directions, expands full detail inside every result, publishes private evidence,
 adds an unrestricted review/gallery surface, assumes Korean location formats globally,
 or leaves required information accessible only through the map.
+
+### Decision Log addendum — 2026-09-04 (deep verification)
+
+| ID          | Decision                                                                                                                                                                                                                                                                                                                                                                   |
+| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ARC-DV-01` | **Map cluster count bubble = `primary/default` fill · `primary/on-primary` label** (14.55:1 Light / 13.64:1 Dark). The drawn `local-data/single` bubble with a white label measured 3.31 / 4.11 and fails text contrast; a `content/default` label on the same bubble (4.4 / 3.32) also fails, so the bubble surface moved to the primary ramp. 86 bubbles updated in P12. |

@@ -274,6 +274,17 @@ keeps an otherwise canvas-matching empty jacket or avatar slot locatable. Remove
 edge when real imagery fills the slot, and keep the approved icon/text fallback as
 the semantic cue.
 
+### Input control boundary — amended 2026-09-04 (deep verification, user decision)
+
+`FormField` · `TextArea` · `SearchField` · `Select` · `FilterSortControl` draw their resting
+boundary with **`border/strong`** (Light 4.88:1 · Dark 5.47:1 on `surface/canvas`), not
+`border/default` (1.71 / 1.94). For these controls the boundary is the only visual cue that
+a control exists — the label above a field describes it but does not delimit it — so WCAG
+1.4.11 non-text contrast (3:1) applies. `border/default` remains the decorative rhythm
+boundary (dividers, card edges, chart grids, tinted status containers) where a text label or
+fill already carries the meaning. Focus (`FOCUS-1B`), invalid, and disabled boundaries are
+unchanged. Same reasoning as the Neutral button move to `border/strong` (CONFLICT-18).
+
 ### Neutral interaction — `NI-A`
 
 There is no universal neutral hover, pressed, or selected fill. Preserve the approved
