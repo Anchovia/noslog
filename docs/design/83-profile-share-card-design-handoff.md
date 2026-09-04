@@ -119,3 +119,31 @@ C 색        raw 팔레트 규약(변수 바인딩 비대상 · 다크 전용) �
    `Intl.DateTimeFormat` 날짜만 쓴다.
 6. **접근성 대체 텍스트** — 공유 다이얼로그의 `profile.cardPreview` alt 계약은
    현행 유지(카드 자체는 이미지라 내부 시맨틱 없음).
+
+## 6. Decoration layer — approved 2026-09-04 (Z1 ⑲, C-5)
+
+Behind the content layer (unchanged), every card now carries four raw-palette decoration
+nodes, in z-order from the bottom:
+
+1. `gold tint · linear top-right` — 1200×630 linear gradient, `#d8b54f` 5 % → 0 % toward the
+   centre (diagonal from the top-right corner; **linear, not radial** — radial halos are an
+   AI-slop tell and were excluded on purpose).
+2. `diagonal band` — 1600×140, `#d8b54f` 5 %, rotated −18°, anchored bottom-left.
+3. `ring accent 2` — 1040 circle, 1 px `#d8b54f` at 12 %, centred top-right off-canvas.
+4. `ring accent` — 720 circle, 2 px `#d8b54f` at 24 %, same centre.
+
+Card background gradient strengthened to `#1a1a26 → #0b0b10 (60 %) → #241b0c`, 135° — the
+1.0 card's gradient with a warmer end. `clipsContent` on.
+
+The rings extend the avatar's gold ring and the brand mark's ring into the whole card; on the
+empty-state cards they fill the right half that used to be blank. Stronger versions
+(ring 35 / 18 %, tint 10 %) were rejected because the ring crossed the rank values.
+
+Contrast over the decoration (worst-case composites): bottom-row marks over the 5 % band —
+P 11.2 · FC 10.3 · S 7.9 · white 13.9 · Basic 5.5 · Recital 5.9; where a 24 % ring line
+crosses text — Basic 4.37, Recital 4.73, everything else ≥ 6.3. `#666674` meta stays the
+open WCAG item from §5-2 (2.74 / 2.19 here).
+
+Implementation: four absolutely positioned layers under the content in the `ImageResponse`
+tree (satori supports linear gradients, borders and `border-radius: 50%`; no blur or SVG
+filters are needed).
