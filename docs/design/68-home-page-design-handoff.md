@@ -390,3 +390,10 @@ height of the twenty other Wide frames, which this page family uses as its deskt
 fixture — with `main` filling the remainder. The two 1440 frames were touched in
 error during the sweep and restored byte-identically (820, `container standard 1280`
 HUG).
+
+## Deep-verification amendment — 2026-09-04
+
+- Destination tiles rebuilt as horizontal icon + label tiles (`HOME-22`): 2 columns on compact
+  (173×44 / 138×44 at 320), 4×2 at 768/1024 (inset 12) and 1280 (inset 24, 292×68). 53 zones,
+  424 tiles; every label fits at `control` in all locales and widths; zone height 212 at 390.
+- Search-preview popover edge now uses `border/overlay` (Light invisible, Dark visible).

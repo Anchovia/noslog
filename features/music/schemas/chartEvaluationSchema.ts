@@ -1,28 +1,73 @@
 import { z } from "zod";
 
-const patternScore = z.number().int().min(0).max(4);
+import type { createTranslator } from "@/lib/i18n/messages";
 
-// 체감 상수와 다섯 패턴 축의 투표 입력을 한곳에서 검증함
-export const chartEvaluationSchema = z.object({
-    chartId: z.number().int().positive(),
-    perceivedConstant: z
-        .number()
-        .min(1)
-        .max(14)
-        .refine((value) => Number.isInteger(value * 10), {
-            message: "체감 난이도는 0.1 단위로 입력해 주세요.",
-        }),
-    stairs: patternScore,
-    chord: patternScore,
-    trill: patternScore,
-    glissando: patternScore,
-    repetition: patternScore,
-    comment: z
-        .string()
-        .trim()
-        .min(1, "코멘트를 입력해 주세요.")
-        .max(120, "코멘트는 120자 이하로 입력해 주세요."),
-});
+type Translator = ReturnType<typeof createTranslator>;
+
+export function createChartEvaluationSchema(t: Translator) {
+    const patternMessage = t("music.tier.patternMissing");
+    const patternScoreSchema = z
+        .number({ error: patternMessage })
+        .int(patternMessage)
+        .min(0, patternMessage)
+        .max(4, patternMessage);
+
+    return z.object({
+        chartId: z.number().int().positive(),
+        perceivedConstant: z
+            .number({ error: t("music.tier.required") })
+            .min(1, t("music.tier.min"))
+            .max(14, t("music.tier.max"))
+            .refine((value) => Number.isInteger(value * 10), {
+                message: t("music.tier.step"),
+            }),
+        stairs: patternScoreSchema,
+        chord: patternScoreSchema,
+        trill: patternScoreSchema,
+        glissando: patternScoreSchema,
+        repetition: patternScoreSchema,
+        comment: z
+            .string({ error: t("music.tier.commentRequired") })
+            .trim()
+            .min(1, t("music.tier.commentRequired"))
+            .max(120, t("music.tier.commentMax")),
+    });
+}
+
+export function createChartEvaluationFormSchema(t: Translator) {
+    const schema = createChartEvaluationSchema(t).omit({ chartId: true });
+    // RHF starts unselected radios at null; successful parsing always returns a number.
+    const patternScoreSchema = schema.shape.stairs
+        .nullable()
+        .pipe(schema.shape.stairs);
+
+    return schema.extend({
+        stairs: patternScoreSchema,
+        chord: patternScoreSchema,
+        trill: patternScoreSchema,
+        glissando: patternScoreSchema,
+        repetition: patternScoreSchema,
+        // Preserve the input's raw 120-character limit before server normalization.
+        comment: z
+            .string({ error: t("music.tier.commentRequired") })
+            .max(120, t("music.tier.commentMax"))
+            .pipe(schema.shape.comment),
+    });
+}
+
+export type ChartEvaluationFormValues = z.input<
+    ReturnType<typeof createChartEvaluationFormSchema>
+>;
+export type ChartEvaluationValues = z.output<
+    ReturnType<typeof createChartEvaluationFormSchema>
+>;
+
+export function createChartEvaluationInput(
+    chartId: number,
+    values: ChartEvaluationValues
+): ChartEvaluationInput {
+    return { chartId, ...values };
+}
 
 export const chartEvaluationReactionSchema = z.object({
     evaluationId: z.number().int().positive(),
@@ -33,7 +78,9 @@ export const chartEvaluationDeleteSchema = z.object({
     evaluationId: z.number().int().positive(),
 });
 
-export type ChartEvaluationInput = z.input<typeof chartEvaluationSchema>;
+export type ChartEvaluationInput = z.input<
+    ReturnType<typeof createChartEvaluationSchema>
+>;
 export type ChartEvaluationReactionInput = z.input<
     typeof chartEvaluationReactionSchema
 >;

@@ -1,15 +1,5 @@
 import type { Difficulty } from "./musicDetailTypes";
 
-export interface EvaluationFormValues {
-    perceivedConstant: number;
-    stairs: number | null;
-    chord: number | null;
-    trill: number | null;
-    glissando: number | null;
-    repetition: number | null;
-    comment: string;
-}
-
 export interface ConstantHistoryItem {
     id: number;
     value: number;

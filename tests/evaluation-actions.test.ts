@@ -45,6 +45,8 @@ import {
     submitChartEvaluation,
     toggleChartEvaluationReaction,
 } from "@/app/(nevigation)/music/[index]/[difficulty]/action";
+import { createTranslator, getMessages } from "@/lib/i18n/messages";
+import { SUPPORTED_LOCALES } from "@/lib/i18n/routing";
 
 const evaluationInput = {
     chartId: 10,
@@ -93,6 +95,37 @@ describe("체감 난이도와 패턴 투표 액션", () => {
             submitChartEvaluation({ ...evaluationInput, stairs: 5 })
         ).resolves.toEqual(expect.objectContaining({ success: false }));
         expect(mocks.evaluationUpsert).not.toHaveBeenCalled();
+    });
+
+    it.each(SUPPORTED_LOCALES)(
+        "%s 서버 검증 실패 문구를 유지한다",
+        async (locale) => {
+            const t = createTranslator(getMessages(locale));
+            await expect(
+                submitChartEvaluation(
+                    { ...evaluationInput, comment: "  " },
+                    locale
+                )
+            ).resolves.toEqual({
+                success: false,
+                message: t("music.action.voteInvalid"),
+            });
+            expect(mocks.chartFindUnique).not.toHaveBeenCalled();
+            expect(mocks.evaluationUpsert).not.toHaveBeenCalled();
+        }
+    );
+
+    it("서버가 직접 받은 코멘트도 정규화한 뒤 저장한다", async () => {
+        await submitChartEvaluation({
+            ...evaluationInput,
+            comment: ` ${"a".repeat(120)} `,
+        });
+        expect(mocks.evaluationUpsert).toHaveBeenCalledWith(
+            expect.objectContaining({
+                create: expect.objectContaining({ comment: "a".repeat(120) }),
+                update: expect.objectContaining({ comment: "a".repeat(120) }),
+            })
+        );
     });
 
     it("플레이 기록이 없는 사용자는 투표할 수 없다", async () => {

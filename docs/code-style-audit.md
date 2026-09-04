@@ -53,6 +53,41 @@ Their implementations remain under `features/music/`; no translation feature
 or CSV behavior is removed. The deleted forwarding files remain recoverable
 from the baseline Git commit.
 
+## Music-evaluation follow-up (2026-09-05)
+
+Code baseline: `11a341f`. The form now uses a localized Zod resolver and inferred
+input/output types. Its nullable radio defaults are rejected during validation;
+successful output contains numbers and no non-null assertions are needed.
+The server reuses the shared schema factory and keeps its existing localized
+generic failure response. Authorization, storage, deletion/reaction behavior,
+cache invalidation, DOM, labels, and styling are unchanged.
+
+The client still checks the raw 120-character limit; the server still trims
+before checking its limit. The form composes that input constraint with the
+shared server fields rather than silently changing either contract. Schema
+construction is memoized by translator, so typing does not rebuild it.
+
+Tests now cover all three locales, constant boundaries/step, all five missing
+pattern values, malformed patterns, blank comments, 120/121-character content,
+normalization, the actual RHF resolver's field errors, and server-side localized
+failure/normalization. Existing action tests retain create/update, permissions,
+delete/reaction, and cache checks using mocked DB calls.
+
+Follow-up verification: **87 test files / 647 tests passed**, including 101
+evaluation schema/resolver/action cases. ESLint, independent typechecking,
+production build, changed-file formatting, and whitespace checks passed.
+
+Browser verification is limited to the signed-in user's unavailable-vote state:
+the profile currently shows no play records. Altale Normal/Expert navigation and
+the Expert vote tab were checked; Korean, Japanese, and English copy and disabled
+inputs remain present. Enabled input/error recovery/submission/reset interaction
+still requires a user with a synced chart record. No record was manufactured,
+permission bypassed, or real vote submitted/deleted to satisfy this check.
+DOM measurements found no document-level horizontal overflow at Korean
+320/1280px, Japanese 320px, and English 320/390/1280px. The inspected browser log
+contained no warnings/errors. These unavailable-vote checks do not establish
+enabled-form, error-state, or populated-opinion layout coverage.
+
 ## Observed migration gaps
 
 These are source-backed maintenance findings, not newly approved product
@@ -62,12 +97,12 @@ equate a directory move with a verified migration.
 
 ### Shared validation and action contracts
 
-| Evidence                                                                                                         | Remaining work                                                                                                                                                                                                                                                                                 | Required verification                                                                                                                                                                                                                          |
-| ---------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `components/music/musicTierVote.tsx`, `musicTierVoteTypes.ts`, `features/music/schemas/chartEvaluationSchema.ts` | RHF still has hand-written rules and a separate form interface; the server has a Zod schema. Schema messages are Korean, although the action currently returns a localized generic failure rather than those raw messages. Share a localized schema without changing the existing input rules. | Empty/whitespace/120-character comments, constant range/step, nullable unselected pattern scores, all three locales, create/update/delete/reaction and permission paths. Inspect raw versus trimmed comment-length semantics before migration. |
-| `app/(nevigation)/bingo/[id]/actions.ts`                                                                         | `ToggleBingoCellResult` still uses `success: boolean` with optional fields, and manually validates inputs. Normalize it with its consumers and a shared schema; preserve the current success state without inventing new visible copy.                                                         | Stale session, unavailable bingo, missing/invalid cell, explicit completion and undo, DB failures, cache paths, browser optimistic-state recovery.                                                                                             |
-| `app/(nevigation)/gamecenter/actions.ts`                                                                         | Preferred-arcade input uses a manual integer check instead of a shared input schema. Existing `ActionResult` is already normalized.                                                                                                                                                            | Login requirement, invalid/inactive/missing arcade, persistence failure, cache invalidation.                                                                                                                                                   |
-| `app/(nevigation)/bookmarklet/action.ts`                                                                         | Token regeneration has an inferred discriminated result and raw console error logging. Explicit shared result typing/structured failure reporting remains possible without changing the external bookmarklet protocol.                                                                         | Unauthenticated, successful mocked version increment, persistence failure; never rotate a real token solely for testing.                                                                                                                       |
+| Evidence                                                                                | Remaining work                                                                                                                                                                                                                         | Required verification                                                                                                                              |
+| --------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `components/music/musicTierVote.tsx`, `features/music/schemas/chartEvaluationSchema.ts` | Shared validation is implemented; see the follow-up above.                                                                                                                                                                             | Enabled-form browser interaction remains pending because the current signed-in user has no play records.                                           |
+| `app/(nevigation)/bingo/[id]/actions.ts`                                                | `ToggleBingoCellResult` still uses `success: boolean` with optional fields, and manually validates inputs. Normalize it with its consumers and a shared schema; preserve the current success state without inventing new visible copy. | Stale session, unavailable bingo, missing/invalid cell, explicit completion and undo, DB failures, cache paths, browser optimistic-state recovery. |
+| `app/(nevigation)/gamecenter/actions.ts`                                                | Preferred-arcade input uses a manual integer check instead of a shared input schema. Existing `ActionResult` is already normalized.                                                                                                    | Login requirement, invalid/inactive/missing arcade, persistence failure, cache invalidation.                                                       |
+| `app/(nevigation)/bookmarklet/action.ts`                                                | Token regeneration has an inferred discriminated result and raw console error logging. Explicit shared result typing/structured failure reporting remains possible without changing the external bookmarklet protocol.                 | Unauthenticated, successful mocked version increment, persistence failure; never rotate a real token solely for testing.                           |
 
 ### Remaining server orchestration
 
@@ -132,7 +167,7 @@ responses publicly or introduce automatic refetches.
   untouched. Do not claim `format:check` is green or silence them with ignore
   entries. Changed-file formatting is checked separately.
 
-## Verification record
+## Initial audit verification record
 
 Baseline full unit suite: 85 files / 559 tests passed. Baseline lint and
 dependency-only Knip checks passed. Full Knip and repository formatting checks
@@ -157,9 +192,9 @@ migrations still require browser verification; this audit does not waive it.
 
 ## Recommended continuation
 
-Start with the public music-evaluation form's shared validation boundary because
-it directly misses the agreed RHF/Zod convention. Then normalize the remaining
-public action/request contracts and extract the listed server orchestration in
-reviewable feature units. Treat external/protected and uncertain unused-code
+Complete enabled music-evaluation browser verification when synced records are
+available. The next code unit is the public bingo-completion input/result
+boundary, followed by the remaining public action/request contracts and server
+orchestration listed above. Treat external/protected and uncertain unused-code
 items separately. This is a concrete audit backlog, not a claim that the overall
 code-style migration is finished.

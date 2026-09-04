@@ -302,3 +302,8 @@ floor with `main` filling the remainder (the P8/P10/P1 shell convention), and th
 affected sections were reflowed column-wise (overlap 0). Separately, `Rankings ·
 Intermediate 1024 · Dark · Approved A` had been placed on row 1 of its section,
 overlapping the 768 Dark frame by 512px; it now sits on row 2 beside its Light pair.
+
+## Deep-verification amendment — 2026-09-04
+
+- `RANK-33`: 1 px `border/divider` between rows on every list ≥720 wide (Intermediate, Wide,
+  locale QA) — 24 lists, 120 dividers. Compact lists unchanged.

@@ -2,9 +2,14 @@ import { describe, expect, it } from "vitest";
 
 import {
     chartEvaluationReactionSchema,
-    chartEvaluationSchema,
+    createChartEvaluationSchema,
 } from "@/features/music/schemas/chartEvaluationSchema";
 import { patternItems } from "@/components/music/musicTierVoteConfig";
+import { createTranslator, getMessages } from "@/lib/i18n/messages";
+
+const chartEvaluationSchema = createChartEvaluationSchema(
+    createTranslator(getMessages("ko"))
+);
 
 const validEvaluation = {
     chartId: 1,

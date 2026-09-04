@@ -8,7 +8,10 @@ import type {
     UseFormRegisterReturn,
 } from "react-hook-form";
 import MusicPatternVoteGrid from "./musicPatternVoteGrid";
-import type { EvaluationFormValues } from "./musicTierVoteTypes";
+import type {
+    ChartEvaluationFormValues,
+    ChartEvaluationValues,
+} from "@/features/music/schemas/chartEvaluationSchema";
 import { useTranslations } from "@/components/i18n/localeProvider";
 
 interface MusicEvaluationFormProps {
@@ -17,8 +20,8 @@ interface MusicEvaluationFormProps {
     hasCurrentEvaluation: boolean;
     isCommentExpanded: boolean;
     message: string | null;
-    control: Control<EvaluationFormValues>;
-    errors: FieldErrors<EvaluationFormValues>;
+    control: Control<ChartEvaluationFormValues, unknown, ChartEvaluationValues>;
+    errors: FieldErrors<ChartEvaluationFormValues>;
     perceivedConstantField: UseFormRegisterReturn<"perceivedConstant">;
     commentField: UseFormRegisterReturn<"comment">;
     onChangeConstant: (amount: number) => void;

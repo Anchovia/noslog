@@ -6,14 +6,18 @@ import {
     toggleChartEvaluationReaction,
 } from "@/app/(nevigation)/music/[index]/[difficulty]/action";
 import { useForm, useWatch } from "react-hook-form";
-import { useState, useTransition } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMemo, useState, useTransition } from "react";
 import MusicEvaluationForm from "./musicEvaluationForm";
 import MusicOpinionList from "./musicOpinionList";
 import MusicTierSummary from "./musicTierSummary";
-import type {
-    EvaluationFormValues,
-    MusicTierVoteProps,
-} from "./musicTierVoteTypes";
+import type { MusicTierVoteProps } from "./musicTierVoteTypes";
+import {
+    createChartEvaluationFormSchema,
+    createChartEvaluationInput,
+    type ChartEvaluationFormValues,
+    type ChartEvaluationValues,
+} from "@/features/music/schemas/chartEvaluationSchema";
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 
 // 악곡별 서열 투표 상태와 서버 액션을 한곳에서 관리함
@@ -32,6 +36,10 @@ export default function MusicTierVote({
 }: MusicTierVoteProps) {
     const locale = useLocale();
     const t = useTranslations();
+    const evaluationFormSchema = useMemo(
+        () => createChartEvaluationFormSchema(t),
+        [t]
+    );
     const [isPending, startTransition] = useTransition();
     const [message, setMessage] = useState<string | null>(null);
     const [isCommentExpanded, setIsCommentExpanded] = useState(false);
@@ -53,7 +61,8 @@ export default function MusicTierVote({
         setValue,
         reset,
         formState: { errors },
-    } = useForm<EvaluationFormValues>({
+    } = useForm<ChartEvaluationFormValues, unknown, ChartEvaluationValues>({
+        resolver: zodResolver(evaluationFormSchema),
         defaultValues: {
             perceivedConstant: initialConstant,
             stairs: currentEvaluation?.stairs ?? null,
@@ -70,10 +79,9 @@ export default function MusicTierVote({
     });
     const parsedPerceivedConstant = Number(perceivedInput);
     const isPerceivedConstantValid =
-        Number.isFinite(parsedPerceivedConstant) &&
-        parsedPerceivedConstant >= 1 &&
-        parsedPerceivedConstant <= 14 &&
-        Number.isInteger(parsedPerceivedConstant * 10);
+        evaluationFormSchema.shape.perceivedConstant.safeParse(
+            parsedPerceivedConstant
+        ).success;
 
     const changeConstant = (amount: number) => {
         const current = isPerceivedConstantValid
@@ -90,7 +98,7 @@ export default function MusicTierVote({
         });
     };
 
-    const submitVote = (data: EvaluationFormValues) => {
+    const submitVote = (data: ChartEvaluationValues) => {
         if (!canVote) {
             setMessage(t("music.tier.playRequired"));
             return;
@@ -98,16 +106,7 @@ export default function MusicTierVote({
 
         startTransition(async () => {
             const result = await submitChartEvaluation(
-                {
-                    chartId,
-                    perceivedConstant: data.perceivedConstant,
-                    stairs: data.stairs!,
-                    chord: data.chord!,
-                    trill: data.trill!,
-                    glissando: data.glissando!,
-                    repetition: data.repetition!,
-                    comment: data.comment,
-                },
+                createChartEvaluationInput(chartId, data),
                 locale
             );
 
@@ -156,27 +155,8 @@ export default function MusicTierVote({
 
     const perceivedConstantField = register("perceivedConstant", {
         valueAsNumber: true,
-        required: t("music.tier.required"),
-        min: {
-            value: 1,
-            message: t("music.tier.min"),
-        },
-        max: {
-            value: 14,
-            message: t("music.tier.max"),
-        },
-        validate: (value) =>
-            Number.isInteger(value * 10) || t("music.tier.step"),
     });
-    const commentField = register("comment", {
-        required: t("music.tier.commentRequired"),
-        validate: (value) =>
-            value.trim().length > 0 || t("music.tier.commentRequired"),
-        maxLength: {
-            value: 120,
-            message: t("music.tier.commentMax"),
-        },
-    });
+    const commentField = register("comment");
 
     return (
         <div className="flex flex-col gap-3">

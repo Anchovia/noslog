@@ -3,13 +3,16 @@
 import { cn } from "@/lib/utils";
 import { Controller, type Control, type FieldErrors } from "react-hook-form";
 import { patternItems, patternLevelKeys } from "./musicTierVoteConfig";
-import type { EvaluationFormValues } from "./musicTierVoteTypes";
+import type {
+    ChartEvaluationFormValues,
+    ChartEvaluationValues,
+} from "@/features/music/schemas/chartEvaluationSchema";
 import { useTranslations } from "@/components/i18n/localeProvider";
 
 interface MusicPatternVoteGridProps {
     canVote: boolean;
-    control: Control<EvaluationFormValues>;
-    errors: FieldErrors<EvaluationFormValues>;
+    control: Control<ChartEvaluationFormValues, unknown, ChartEvaluationValues>;
+    errors: FieldErrors<ChartEvaluationFormValues>;
 }
 
 export default function MusicPatternVoteGrid({
@@ -45,11 +48,6 @@ export default function MusicPatternVoteGrid({
                         key={key}
                         name={key}
                         control={control}
-                        rules={{
-                            validate: (value) =>
-                                value !== null ||
-                                t("music.tier.patternMissing"),
-                        }}
                         render={({ field }) => (
                             <div className="contents">
                                 <span className="text-text-secondary text-sm">

@@ -10,7 +10,7 @@ import type { ActionResult } from "@/lib/actions/result";
 import {
     chartEvaluationDeleteSchema,
     chartEvaluationReactionSchema,
-    chartEvaluationSchema,
+    createChartEvaluationSchema,
     type ChartEvaluationDeleteInput,
     type ChartEvaluationInput,
     type ChartEvaluationReactionInput,
@@ -31,7 +31,7 @@ export async function submitChartEvaluation(
         return { success: false, message: t("music.action.voteLogin") };
     }
 
-    const parsed = chartEvaluationSchema.safeParse(input);
+    const parsed = createChartEvaluationSchema(t).safeParse(input);
 
     if (!parsed.success) {
         return {

@@ -285,6 +285,18 @@ boundary (dividers, card edges, chart grids, tinted status containers) where a t
 fill already carries the meaning. Focus (`FOCUS-1B`), invalid, and disabled boundaries are
 unchanged. Same reasoning as the Neutral button move to `border/strong` (CONFLICT-18).
 
+### Overlay boundary — `border/overlay` — approved 2026-09-04 (AI-generic check, decision ①)
+
+Floating surfaces (popover, listbox, menu, sheet, dialog, tooltip — the C8 overlay contract)
+take their 1 px edge from **`border/overlay`**: Light = alias of `surface/overlay` (the edge
+disappears; the `elevation/overlay-light` shadow lifts the face), Dark = alias of
+`border/default` (shadows are invisible on dark canvases, so the edge carries the face). Same
+mechanism as `border/empty-slot`. Reason: "1 px hairline + wide soft shadow" on a light popover
+is the shadcn/Radix default that AI-slop detectors list as a generated-UI signature, and every
+major system (Spectrum, Material, Carbon, Atlassian) lifts light overlays with shadow alone.
+Radius 10 and `elevation/overlay-*` are unchanged. 50 nodes rebound (C8 components + P2/P9/
+P12/P13/P14 instances and frames).
+
 ### Neutral interaction — `NI-A`
 
 There is no universal neutral hover, pressed, or selected fill. Preserve the approved
