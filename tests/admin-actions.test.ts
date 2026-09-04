@@ -13,7 +13,6 @@ const mocks = vi.hoisted(() => ({
     examDelete: vi.fn(),
     bingoProgressCount: vi.fn(),
     bingoDelete: vi.fn(),
-    userUpdate: vi.fn(),
     examSubmissionFindFirst: vi.fn(),
     examSubmissionFindMany: vi.fn(),
     examSubmissionFindUnique: vi.fn(),
@@ -61,7 +60,6 @@ vi.mock("@/lib/db", () => ({
         },
         bingoCellProgress: { count: mocks.bingoProgressCount },
         bingo: { delete: mocks.bingoDelete },
-        user: { update: mocks.userUpdate },
         examSubmission: {
             findFirst: mocks.examSubmissionFindFirst,
             findMany: mocks.examSubmissionFindMany,
@@ -91,7 +89,6 @@ import {
     saveMusicMetadata,
 } from "@/app/admin/music/actions";
 import { deleteBingo } from "@/app/admin/bingos/actions";
-import { updateUserRole } from "@/app/admin/users/actions";
 import {
     deleteExamSubmission,
     reviewExamSubmission,
@@ -109,7 +106,6 @@ describe("관리자 액션", () => {
         mocks.musicTranslationUpdateMany.mockResolvedValue({ count: 1 });
         mocks.examDelete.mockResolvedValue({ id: 30 });
         mocks.bingoDelete.mockResolvedValue({ id: 40 });
-        mocks.userUpdate.mockResolvedValue({ id: 2 });
         mocks.examSubmissionUpdate.mockResolvedValue({ id: 50 });
         mocks.examSubmissionFindMany.mockResolvedValue([]);
         mocks.examSubmissionDelete.mockResolvedValue({ id: 50 });
@@ -299,29 +295,6 @@ describe("관리자 액션", () => {
         });
         expect(mocks.bingoDelete).toHaveBeenCalledWith({ where: { id: 40 } });
         expect(mocks.updateTag).toHaveBeenCalledWith("bingos");
-    });
-
-    it("관리자는 다른 사용자의 역할을 변경할 수 있다", async () => {
-        const formData = new FormData();
-        formData.set("userId", "2");
-        formData.set("role", "admin");
-
-        await updateUserRole(formData);
-
-        expect(mocks.userUpdate).toHaveBeenCalledWith({
-            where: { id: 2 },
-            data: { role: "admin" },
-        });
-    });
-
-    it("관리자는 자신의 관리자 권한을 해제할 수 없다", async () => {
-        const formData = new FormData();
-        formData.set("userId", "1");
-        formData.set("role", "user");
-
-        await updateUserRole(formData);
-
-        expect(mocks.userUpdate).not.toHaveBeenCalled();
     });
 
     it("대기 상태가 아닌 검정 제출은 다시 심사하지 않는다", async () => {
