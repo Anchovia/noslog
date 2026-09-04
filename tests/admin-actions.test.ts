@@ -9,7 +9,6 @@ const mocks = vi.hoisted(() => ({
     musicChartUpdate: vi.fn(),
     constantHistoryCreate: vi.fn(),
     musicTranslationUpdateMany: vi.fn(),
-    evaluationDelete: vi.fn(),
     examFindUnique: vi.fn(),
     examDelete: vi.fn(),
     bingoProgressCount: vi.fn(),
@@ -56,7 +55,6 @@ vi.mock("@/lib/db", () => ({
         musicTranslation: {
             updateMany: mocks.musicTranslationUpdateMany,
         },
-        chartEvaluation: { delete: mocks.evaluationDelete },
         exam: {
             findUnique: mocks.examFindUnique,
             delete: mocks.examDelete,
@@ -86,7 +84,6 @@ vi.mock("next/navigation", () => ({
     redirect: mocks.redirect,
 }));
 
-import { deleteEvaluation } from "@/app/admin/community/actions";
 import { deleteExam } from "@/app/admin/exams/actions";
 import {
     approveMusicTranslation,
@@ -110,7 +107,6 @@ describe("관리자 액션", () => {
         mocks.musicChartUpdate.mockResolvedValue({ id: 10 });
         mocks.constantHistoryCreate.mockResolvedValue({ id: 1 });
         mocks.musicTranslationUpdateMany.mockResolvedValue({ count: 1 });
-        mocks.evaluationDelete.mockResolvedValue({ id: 20 });
         mocks.examDelete.mockResolvedValue({ id: 30 });
         mocks.bingoDelete.mockResolvedValue({ id: 40 });
         mocks.userUpdate.mockResolvedValue({ id: 2 });
@@ -247,18 +243,6 @@ describe("관리자 액션", () => {
         });
         expect(mocks.updateTag).toHaveBeenCalledWith("music-catalog");
         expect(mocks.updateTag).toHaveBeenCalledWith("music-details");
-    });
-
-    it("평가 전체 삭제 후 의견 캐시를 갱신한다", async () => {
-        const formData = new FormData();
-        formData.set("evaluationId", "20");
-
-        await deleteEvaluation(formData);
-
-        expect(mocks.evaluationDelete).toHaveBeenCalledWith({
-            where: { id: 20 },
-        });
-        expect(mocks.updateTag).toHaveBeenCalledWith("chart-evaluations");
     });
 
     it("인증 이력이 있는 검정은 삭제하지 않는다", async () => {

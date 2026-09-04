@@ -74,3 +74,34 @@ AppHeader 16/8 optical padding · SearchField A17 diff 4 (8 kept by decision) ·
 - 200–400 % zoom, keyboard order, screen-reader semantics (implementation contracts).
 - Locale variants beyond the frames that exist (JA/EN at non-390 widths on most pages).
 - Share-card WCAG basis (image asset) — open in handoff 83.
+
+## 8. Font handoff — Pretendard verification deferred to implementation (user decision, 2026-09-04)
+
+The Figma file stays on the substitute family (`IBM Plex Sans KR / JP / Latin`, via
+`font/family/ko·ja·latin`). The normative family is `Pretendard JP` (doc 24). The MCP
+renderer cannot load it without Figma shared fonts (Professional plan), and the user chose
+not to upgrade — the real-font check happens in the browser during implementation, which
+is also where the product actually renders.
+
+**Every judgment below was measured with IBM Plex widths and must be re-measured with
+Pretendard before it is treated as final.** Where the product string does not fit, the
+approved fallback order applies — do not invent a new size.
+
+| Where                                | Font-dependent judgment                                                                                                                                                                                          | Re-check                                                                                                                       |
+| ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| Shell / Home (`HOME-21`, `SHELL-29`) | Destination label cascade `control 14/20 → nav-fit 12/16 → approved abbreviation → two lines`. At 320 the IBM Plex fit set was JA `ランキング`·`データ連携`, EN `Data Sync` (nav-fit); everything else `control` | Re-run the fit per label at 320/390 and record which tier each lands on                                                        |
+| Home / SearchField                   | 320 placeholder truncation accepted for JA (208/163) and EN (164/153); KO fits (156/166)                                                                                                                         | Confirm which locales truncate at 320; 390+ must show all three in full                                                        |
+| Music Detail (`긴 제목 맞추기` A안)  | Title composite budget beside the 96 jacket: `page-title → section-title → component-title`                                                                                                                      | Re-run with the longest real KO/JA/EN titles                                                                                   |
+| Music Detail P1                      | Area switcher combobox→tabs at inline width **424** (EN labels 65·68·52·109 + pad 16/16)                                                                                                                         | Re-measure EN label widths; threshold moves with them                                                                          |
+| Music Detail P1                      | 320 radar plot scale 0.80 — limiting locale was **latin** (`Repetition` 56 · `Polyrhythm` 62)                                                                                                                    | Re-measure axis labels; scale is derived, not fixed                                                                            |
+| Footer (`SHELL-3x`)                  | Wide layout from **840** (`pad24 + links + gap24 + notice + pad24`; ja 840 widest)                                                                                                                               | Re-measure; breakpoint follows the widest locale                                                                               |
+| Profile P6 (`PROF-45`)               | JA date shortened to `8/27 21:40` because `8月27日 21:40` overflowed the 395 card by 1px                                                                                                                         | Re-measure; if Pretendard JP is narrower the short form may be unnecessary — but keep it unless the full form fits with margin |
+| Profile P6 (`PROF-44`)               | 320 control labels shortened (`Grd` / `Rating`) so `206 + 8 + 74` fits in 256                                                                                                                                    | Re-measure the tab labels at 320                                                                                               |
+| Rankings P5 / Profile P6             | `metric-value` / `metric-display` tabular figures — Pretendard's tabular feature (`tnum`) must be enabled in CSS                                                                                                 | Verify `font-variant-numeric: tabular-nums` is applied where the composite says tabular                                        |
+| Everywhere                           | Line heights are fixed per composite (e.g. 14/20, 16/24); Pretendard's ascent/descent differ from Plex, so vertical centring inside 40/44 targets must be re-checked visually at 1×                              | Spot-check buttons, chips, segment labels                                                                                      |
+| Share card P16                       | Card weights (700 in Figma vs 800/900 in the current route) — open item 83 §5-1                                                                                                                                  | Decide at implementation                                                                                                       |
+
+Rule for implementation: when a re-measured string breaks a fit, apply the approved
+cascade for that surface (documented in the relevant brief) and record the new tier in the
+handoff; a new size, a new abbreviation, or a locale-specific composite is a design decision
+and goes back through the brief.

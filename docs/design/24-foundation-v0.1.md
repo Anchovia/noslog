@@ -659,6 +659,34 @@ constant is `motion/press-scale`.
   invented per component. `primary/pressed` and
   `feedback/destructive-border-pressed` remain as the reduced-motion residue only.
 
+## Progress indication — approved 2026-09-04 (user decision, Z1 ⑯ · 24 references)
+
+The file had no loading contract; busy was expressed by label text alone. This section
+closes that gap. Four surfaces, each with one approved form:
+
+| Surface                                                      | Form                                                               | Spec                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| ------------------------------------------------------------ | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Content area whose layout is known (list, card, chart frame) | **Skeleton, pulse**                                                | Bones `surface/sunken` on the real container surface, geometry = the column ratios of the loaded content (Z1 2026-08-19). Motion: opacity `1 → 0.5 → 1`, ~2 s ease-in-out. `prefers-reduced-motion` → static bones. Never a spinner for a full page or a known layout.                                                                                                                                                                                                                     |
+| Control performing its own action (button)                   | **`Button · State=Busy`** — spinner 16 leading + progressive label | Spinner colour = the label colour of that Style (`currentColor`), so Primary shows `primary/on-primary`, Neutral `content/default`, Ghost `content/interactive`, Destructive `feedback/error-text`, Destructive Filled `feedback/on-destructive`. Label stays visible and changes to the progressive form (`다시 시도 중`, `저장 중`, `Retrying`) — doc 19 rule. Width grows by 24 (16 + gap 8); height 40 unchanged. Not disabled: contrast stays; repeat activation is blocked by state. |
+| Section refreshing in place (data already on screen)         | **`content/pending` only** (`DISC-44`)                             | No spinner, no sentence. `aria-busy` + live status for assistive tech.                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| Route transition                                             | **`RouteProgressBar`** (C8)                                        | 2 px bar at the very top of the viewport, `primary/default`, no track, indeterminate (30 % width sweeping left → right). The new page then renders its skeleton.                                                                                                                                                                                                                                                                                                                           |
+
+**Spinner geometry** (the only spinner in the system): arc 270° · stroke 2 (fixed, does not
+scale) · sizes on the icon scale 16 (inline, button) / 24 (section) / 48 (whole-view, only
+where no layout is known yet — expected to be rare) · one rotation ≈ 1 s · neutral, no track.
+Dots and shimmer are not used — one loading language.
+
+**Timing** — nothing is shown for waits under 1 s (Primer 300/1000 ms delay, Spectrum 1 s
+delay, Atlassian "> 1 s"); 1–3 s indeterminate; over 3 s determinate where the total is
+known (Primer, Apple HIG). At most one spinner per page (Atlassian). Reduced motion: the
+skeleton stops pulsing; a spinner keeps rotating (Atlassian exception — a frozen spinner
+reads as a stalled process).
+
+Rejected: spinner replacing the label (Atlassian LoadingButton / Spectrum pending / Polaris —
+conflicts with doc 19), shimmer skeleton (extra gradient layer, NN/g distraction note), a
+spinner beside every refreshing section title (violates one-spinner-per-page), static
+skeleton (library defaults are animated: shadcn, Chakra, MUI, Carbon).
+
 ## Ordinary data visualization — `DV-05`, GitHub Primer
 
 1. Provide a visible localized title and enough subtitle context to identify measure,

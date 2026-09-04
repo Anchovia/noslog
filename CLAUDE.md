@@ -364,6 +364,9 @@ Text Style `emphasis-label/ko·ja·latin` 3개를 포함해 문서 24와 Figma�
   → 현재 렌더는 `IBM Plex Sans KR/JP/Latin`. 수치는 문서 24의 proportional/tabular
   figures 계약을 따르며 `IBM Plex Mono`를 사용하지 않는다
   → 교체는 `font/family/ko·ja·latin` 변수 3개만 바꾸면 됨 (교체 후 레이아웃 재검수 필요)
+  → **2026-09-04 결정: Figma 파일은 IBM Plex 로 마감한다.** 제 런타임은 로컬 폰트를 못 보고
+  Pretendard 는 Figma 공유 폰트(Professional)로만 올릴 수 있는데 무료 플랜 유지를 택했다.
+  **Pretendard 검증은 구현 단계에서 실제 브라우저로** — 폰트 폭에 걸린 판정 목록은 문서 84 §8
 - 상태 파일 위치: **`~/.claude/projects/-Users-carol-Desktop-project-noslog/design-state/`**
   (`state.json` · `R2-conflicts.md` · `audit.js` · `brief-contracts-notes.md`)
   ⚠️ **세션 스크래치패드에 쓰지 말 것** — 2026-08-12 에 작업 중 통째로 삭제됐다.
@@ -490,6 +493,7 @@ Text Style `emphasis-label/ko·ja·latin` 3개를 포함해 문서 24와 Figma�
 | 입력 컨트롤 경계 | **`border/strong`**(문서 24 「Input control boundary」 신설, 2026-09-04) — FormField·TextArea·SearchField·Select·FilterSortControl 의 평상시 경계. `border/default` 는 1.71/1.94 로 WCAG 1.4.11 비텍스트 3:1 미달인데 이 컨트롤들엔 경계가 유일한 존재 단서였다. 깊은 검증의 대비 전수에서 발견 · Neutral 버튼 CONFLICT-18 과 같은 논리. 컴포넌트 5종 14 스트로크 + C5 Dark 인스턴스 오버라이드 9 정정. `border/default` 는 장식 구분선·카드 경계·차트 격자·틴트 상태 컨테이너에 그대로 | 2026-09-04 |
 | P12 지도 클러스터 라벨 | **버블 면 = `primary/default` · 라벨 `primary/on-primary`**(안 B, 14.55/13.64) — 현행 `local-data/single` 면 위 흰 라벨은 3.31/4.11 미달, `content/default` 라벨(안 A)도 4.4/3.32 로 미달이라 기각. 86 버블 반영. ⚠️ 대비 스크립트는 버블이 텍스트의 형제(ELLIPSE)라 배경을 못 잡는다 — P12 클러스터 라벨 52건은 오탐 | 2026-09-04 |
 | P14 셀 저장 중 | **menu-set 면 제거 · pending 글자 on `surface/surface`**(안 A, 4.6/4.99) — `content/pending` on `interaction/menu-set` 은 4.02/3.71 미달. DISC-44 가 pending 을 보류 콘텐츠의 시각 단서로 정했고 선택 강조는 저장 중엔 중복. 안 B(subdued 유지)는 pending 계약 위반이라 기각 | 2026-09-04 |
+| 로딩·진행 표시 | **A2 펄스 스켈레톤 · B4 Busy 버튼(스피너 16 + 진행형 라벨) · C1 중립 스피너 트랙 없음 · D1 pending 유지 + D3 라우트 상단 2px 바**(문서 24 「Progress indication」 신설, 2026-09-04) — 레퍼런스 24 실측(Carbon·Atlassian·Spectrum·Primer·NN/g·Material 등). `Button · State=Busy` 5 variant 신설 + 인스턴스 24 교체 · C8 `RouteProgressBar` 신설. ⚠️ 내 추천은 A1 정적이었는데 사용자가 뒤집었고 맞았다 — NN/g 「가장 흔한 형태」 는 형태 얘기지 모션 얘기가 아니었고, 라이브러리 기본값(shadcn·Chakra·MUI·Carbon)은 전부 애니메이션이다. **인용을 결론에 끼워 맞추지 말 것** | 2026-09-04 |
 
 > **폰트 교체 전제 복구됨** — 이전에는 텍스트가 Text Style 을 참조하지 않아
 > `font/family/ko·ja·latin` 3개를 바꿔도 전파되지 않았다. 소급 적용으로 이제 동작한다.
