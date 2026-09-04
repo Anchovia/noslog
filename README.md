@@ -75,6 +75,9 @@ NosLog의 코드 작성·디렉터리·API 응답·Server Action·Zod·React Hoo
 않습니다.
 
 - `app/`은 route, layout, Route Handler와 Server Action 진입점을 담당합니다.
+  이번에 확인한 잔여 액션·서열표 요청·관리자 집계의 코드 경계 정리는 반영했으며,
+  실제 저장 동작 등 남은 브라우저 검증과 유지한 미사용 후보는 전수 점검 기록에서
+  별도로 관리합니다.
 - 재사용되는 도메인 코드는 `features/<domain>/` 아래 `api`, `components`, `hooks`,
   `schemas`, `server`, `types` 책임으로 점진적으로 이동합니다.
 - 공통 UI는 `components/ui/`, 교차 도메인 기반 기능은 `lib/`에 둡니다.

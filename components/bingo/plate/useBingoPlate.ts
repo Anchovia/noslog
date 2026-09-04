@@ -96,7 +96,10 @@ export function useBingoPlate({
                 cellId,
                 !wasCompleted,
                 locale
-            );
+            ).catch(() => ({
+                success: false as const,
+                message: t("bingo.saveError"),
+            }));
 
             if (!result.success) {
                 setCompletedCellIds((current) => {

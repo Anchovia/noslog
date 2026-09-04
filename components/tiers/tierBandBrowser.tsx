@@ -1,6 +1,8 @@
 "use client";
 
-import { Fragment, useCallback, useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { tierBandQueryOptions } from "@/features/tiers/api/tierBands";
 
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import {
@@ -28,6 +30,8 @@ interface TierBandBrowserProps {
     difficulties: TierDifficulty[];
     levels: string[];
     showRecords: boolean;
+    viewerId: number | null;
+    showLocalizedTitle: boolean;
 }
 
 function TierBandSection({
@@ -38,6 +42,8 @@ function TierBandSection({
     difficulties,
     levels,
     showRecords,
+    viewerId,
+    showLocalizedTitle,
 }: {
     slug: string;
     summary: TierBandSummary;
@@ -46,50 +52,39 @@ function TierBandSection({
     difficulties: TierDifficulty[];
     levels: string[];
     showRecords: boolean;
+    viewerId: number | null;
+    showLocalizedTitle: boolean;
 }) {
     const locale = useLocale();
     const t = useTranslations();
     const containerRef = useRef<HTMLElement>(null);
-    const [band, setBand] = useState(initialData);
-    const [isLoading, setIsLoading] = useState(false);
-    const [hasError, setHasError] = useState(false);
+    const [isVisible, setIsVisible] = useState(false);
+    const {
+        data: band,
+        isError: hasError,
+        refetch,
+    } = useQuery({
+        ...tierBandQueryOptions({
+            slug,
+            bandId: summary.id,
+            difficulties,
+            levels,
+            locale,
+            viewerId,
+            showLocalizedTitle,
+        }),
+        initialData: initialData ?? undefined,
+        enabled: isVisible,
+    });
     const [selectedEntryId, setSelectedEntryId] = useState<number | null>(null);
 
-    const loadBand = useCallback(async () => {
-        if (band || isLoading) return;
-
-        setIsLoading(true);
-        setHasError(false);
-        try {
-            const query = new URLSearchParams();
-            if (difficulties.length > 0) {
-                query.set("difficulty", difficulties.join(","));
-            }
-            if (levels.length > 0) query.set("level", levels.join(","));
-            query.set("locale", locale);
-            const response = await fetch(
-                `/api/tiers/${encodeURIComponent(slug)}/bands/${summary.id}${query.size > 0 ? `?${query}` : ""}`,
-                { cache: "no-store" }
-            );
-            if (!response.ok) throw new Error("Tier band request failed");
-            const data = (await response.json()) as {
-                band: PublicTierBandPayload;
-            };
-            setBand(data.band);
-        } catch {
-            setHasError(true);
-        } finally {
-            setIsLoading(false);
-        }
-    }, [band, difficulties, isLoading, levels, locale, slug, summary.id]);
-
     useEffect(() => {
-        if (band || !containerRef.current) return;
+        if (band || isVisible || !containerRef.current) return;
 
         const observer = new IntersectionObserver(
             ([entry]) => {
                 if (entry.isIntersecting) {
-                    void loadBand();
+                    setIsVisible(true);
                     observer.disconnect();
                 }
             },
@@ -97,7 +92,7 @@ function TierBandSection({
         );
         observer.observe(containerRef.current);
         return () => observer.disconnect();
-    }, [band, loadBand]);
+    }, [band, isVisible]);
 
     const achievedCount =
         band?.entries.filter((entry) => isTierGoalAchieved(entry.record, goal))
@@ -129,7 +124,7 @@ function TierBandSection({
                     {hasError ? (
                         <button
                             type="button"
-                            onClick={() => void loadBand()}
+                            onClick={() => void refetch()}
                             className="border-border bg-surface-muted text-text-secondary cursor-pointer rounded-md border px-3 py-2 font-semibold"
                         >
                             {t("tiers.retry")}
@@ -204,8 +199,11 @@ export default function TierBandBrowser({
     difficulties,
     levels,
     showRecords,
+    viewerId,
+    showLocalizedTitle,
 }: TierBandBrowserProps) {
     const t = useTranslations();
+    const locale = useLocale();
     if (bands.length === 0) {
         return (
             <div className="bg-surface text-text-disabled rounded-card flex h-32 items-center justify-center px-4 text-center text-sm">
@@ -218,7 +216,7 @@ export default function TierBandBrowser({
         <section className="flex flex-col gap-4" aria-label={t("tiers.bands")}>
             {bands.map((band) => (
                 <TierBandSection
-                    key={`${band.id}:${difficulties.join(",")}:${levels.join(",")}`}
+                    key={`${slug}:${band.id}:${difficulties.join(",")}:${levels.join(",")}:${locale}:${viewerId}:${showLocalizedTitle}`}
                     slug={slug}
                     summary={band}
                     initialData={
@@ -228,6 +226,8 @@ export default function TierBandBrowser({
                     difficulties={difficulties}
                     levels={levels}
                     showRecords={showRecords}
+                    viewerId={viewerId}
+                    showLocalizedTitle={showLocalizedTitle}
                 />
             ))}
         </section>

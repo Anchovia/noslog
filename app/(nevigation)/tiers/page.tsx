@@ -149,6 +149,8 @@ export default async function TiersPage({ searchParams }: TiersPageProps) {
                         difficulties={difficulties}
                         levels={levels}
                         showRecords={Boolean(user)}
+                        viewerId={user?.id ?? null}
+                        showLocalizedTitle={showLocalizedTitle}
                     />
                 </>
             ) : (

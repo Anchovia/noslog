@@ -166,7 +166,12 @@ export default function GamecenterExplorer({
     function choosePreferredArcade(arcade: GamecenterArcade) {
         setNotice(null);
         startTransition(async () => {
-            const result = await setPreferredArcade(arcade.id, locale);
+            const result = await setPreferredArcade(arcade.id, locale).catch(
+                () => ({
+                    success: false as const,
+                    message: t("settings.saveError"),
+                })
+            );
             if (result.success) {
                 setPreferredArcadeId(arcade.id);
                 router.refresh();

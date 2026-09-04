@@ -88,59 +88,108 @@ DOM measurements found no document-level horizontal overflow at Korean
 contained no warnings/errors. These unavailable-vote checks do not establish
 enabled-form, error-state, or populated-opinion layout coverage.
 
-## Observed migration gaps
+## Remaining-boundary implementation (2026-09-05)
 
-These are source-backed maintenance findings, not newly approved product
-behavior. Resolve them feature by feature, retaining existing UI/authorization,
-request timing, ownership checks, cache invalidation, and localization. Do not
-equate a directory move with a verified migration.
+Implementation baseline: `c35c733` on `dev`. The user authorized the four
+remaining maintenance scopes. Their code changes are implemented; browser and
+data-dependent validation limitations are listed separately below.
 
 ### Shared validation and action contracts
 
-| Evidence                                                                                | Remaining work                                                                                                                                                                                                                         | Required verification                                                                                                                              |
-| --------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `components/music/musicTierVote.tsx`, `features/music/schemas/chartEvaluationSchema.ts` | Shared validation is implemented; see the follow-up above.                                                                                                                                                                             | Enabled-form browser interaction remains pending because the current signed-in user has no play records.                                           |
-| `app/(nevigation)/bingo/[id]/actions.ts`                                                | `ToggleBingoCellResult` still uses `success: boolean` with optional fields, and manually validates inputs. Normalize it with its consumers and a shared schema; preserve the current success state without inventing new visible copy. | Stale session, unavailable bingo, missing/invalid cell, explicit completion and undo, DB failures, cache paths, browser optimistic-state recovery. |
-| `app/(nevigation)/gamecenter/actions.ts`                                                | Preferred-arcade input uses a manual integer check instead of a shared input schema. Existing `ActionResult` is already normalized.                                                                                                    | Login requirement, invalid/inactive/missing arcade, persistence failure, cache invalidation.                                                       |
-| `app/(nevigation)/bookmarklet/action.ts`                                                | Token regeneration has an inferred discriminated result and raw console error logging. Explicit shared result typing/structured failure reporting remains possible without changing the external bookmarklet protocol.                 | Unauthenticated, successful mocked version increment, persistence failure; never rotate a real token solely for testing.                           |
+- Bingo completion now validates a feature-owned Zod schema and returns the
+  common discriminated `ActionResult<{ isCompleted: boolean }>`. Successful
+  completion/undo retains the existing silent UI (`message: ""`), ownership,
+  availability dates, idempotent upsert, and cache targets. DB failures return
+  existing localized failure copy. The client catches transport rejection so
+  the existing optimistic rollback also handles thrown requests.
+- Preferred arcade uses a feature-owned schema with the same integer input
+  policy and active/existing-arcade lookup. DB failures return the existing
+  localized profile-save error; transport failures also reach the notice UI.
+  Success preserves the session user's update and all cache paths/tags.
+- Token regeneration explicitly returns `ActionResult`, validates the optional
+  locale with its existing Korean fallback, and uses structured failure logging.
+  The session identity, version increment and bookmarklet protocol are unchanged.
 
-### Remaining server orchestration
+The old bingo/preferred-arcade result type exports remain forwarding exports for
+compatibility. They are not additional runtime code or unfinished orchestration.
 
-The following contain meaningful domain orchestration in route entry files,
-not just rendering or a single route-local helper:
+### Server orchestration
 
-- Admin announcements, arcades, and bingos: `app/admin/{announcements,arcades,bingos}/actions.ts`.
-  Their feature schemas/forms are already present; the service boundary is not.
-- Public onboarding and profile settings/uploads/deletion:
-  `app/(auth)/onboarding/actions.ts`,
-  `app/(nevigation)/profile/settings/{actions,securityActions}.ts`.
-- Public feedback/uploads and exam evidence:
-  `app/(nevigation)/(home)/feedbackActions.ts`,
-  `app/(nevigation)/exams/actions.ts`.
-- Public chart evaluation, bingo completion, preferred arcade, and token
-  regeneration listed above.
-- Admin dashboard and sync monitoring: `app/admin/page.tsx` and
-  `app/admin/syncs/page.tsx` mix multi-query aggregation with presentation.
-  Health-calculation unit tests exist, but do not independently test the full
-  page query/filter/normalization boundary.
+Twelve existing action entry files now delegate to feature-owned, explicitly
+server-only services:
 
-The existing action tests already cover many of these files. Moving the logic
-must preserve those tests and add boundary-specific failure coverage, not replace
-them with tests that only prove a wrapper calls a function.
+| Feature                                 | Service files under `features/`                                                                        |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| Announcement administration             | `announcements/server/announcementAdminService.ts`                                                     |
+| Arcade administration and preference    | `arcades/server/{arcadeAdminService,preferredArcadeService}.ts`                                        |
+| Bingo administration and progress       | `bingos/server/{bingoAdminService,bingoProgressService}.ts`                                            |
+| Onboarding, profile, deletion and token | `profile/server/{onboardingService,profileSettingsService,accountDeletionService,syncTokenService}.ts` |
+| Feedback and private uploads            | `feedback/server/feedbackReportService.ts`                                                             |
+| Exam evidence                           | `exams/server/examProofService.ts`                                                                     |
+| Music evaluation                        | `music/server/chartEvaluationService.ts`                                                               |
 
-### Client request boundary
+The nine pure extractions were compared with their baseline contents: aside from
+the server-entry directive becoming `import "server-only"`, their bodies are
+identical. Existing action tests still exercise these implementations through the
+original entry paths. Upload ownership, quotas, cleanup order, redirects,
+authorization and cache invalidation were not reinterpreted.
 
-`components/tiers/tierBandBrowser.tsx` still constructs a URL, fetches, asserts
-the response type, and manages request state locally. Its paired
-`app/api/tiers/[slug]/bands/[bandId]/route.ts` returns `{ band }` or `{ message }`,
-not `ApiResponse`.
+Admin dashboard and sync-monitoring queries/aggregation now live in
+`features/admin/server/{adminDashboardService,adminSyncService}.ts`.
+Both services check administrator authority before querying. The sync filter
+uses `adminSyncFilterSchema`; unknown status still means `all`. The existing
+24-hour/10-minute windows, seven-day calendar aggregation, 100-row limit,
+coverage counts and health calculation are preserved. JSX and styling stay in
+the pages. Query failures propagate rather than becoming invented zero totals.
 
-Before changing it, audit the endpoint's consumers and preserve lazy intersection
-loading, initial data, filters, locale, user-specific records, retry behavior,
-and `private, no-store`. Existing `tier-data.test.ts` is not a dedicated Route
-Handler contract test. Add paired request/handler tests and browser checks.
-Do not interpret the one-hour server cache policy as permission to cache personal
-responses publicly or introduce automatic refetches.
+### Tier-band client requests
+
+`features/tiers/api/tierBands.ts` owns native fetch, response unwrapping and
+TanStack Query options. `TierBandSection` uses the query state and retains
+intersection loading with a 240px margin, server initial data, explicit retry,
+filters, locale and record-detail presentation.
+
+Keys include slug, band, difficulty/level filters, locale, viewer identity and
+title preference. The server still resolves identity/preferences itself; they
+are not trusted query parameters. Mount-lifetime data has no background polling,
+focus/reconnect refetch or automatic retry; inactive queries are collected
+immediately. Server one-hour caches are unchanged.
+
+The paired Route Handler now returns `ApiResponse`, meaningful 400/404/500
+statuses and `private, no-store` on all branches. A top-level `band` remains
+alongside `result.band` for already-open legacy clients during rollout.
+Repository search identified the tier browser as the application consumer.
+The external bookmarklet, OAuth, health, binary and CSV protocols are untouched.
+
+### Verification and remaining limitations
+
+- Full automated results are recorded below. New coverage tests malformed
+  inputs, session requirements, unavailable bingo dates/cells, completion/undo,
+  persistence failure, cache targets, all three token/preference locales,
+  admin authorization, filters, windows, coverage/health normalization, HTTP
+  contracts, cancellation forwarding, query-key isolation and lazy/error/retry
+  query transitions. Database writes are mocked.
+- Browser: signed-in Korean tier initial data, deferred bands, Expert filtering,
+  Pianist goal, Recital mode and the unplayed-record detail panel were checked.
+  Japanese/English title and locale rendering were checked. No document-level
+  overflow was observed in Korean/Japanese 320px and English 1280px samples.
+- Browser: admin dashboard counts/seven-day chart and sync-monitoring empty
+  state rendered; the failed-status filter reached its correct URL. Admin
+  syncs at 1280px had no document-level overflow. A populated sync history was
+  unavailable, so its counts/health mapping is covered by unit tests, not a
+  populated browser run.
+- Browser: stopping the agent-started local server produced Japanese tier retry
+  buttons. Restarting the dev server caused a browser connection-error page
+  before manual recovery could be verified. The Browser control surface then
+  refused access to that error document. **Manual retry-to-success browser
+  recovery is still unverified**, despite automated query recovery coverage.
+- No real bingo completion, preferred-arcade save, token rotation, upload,
+  account deletion, evaluation vote or administrative content write was
+  performed. Their full end-to-end write/error recovery and the earlier enabled
+  evaluation form remain validation follow-ups requiring appropriate disposable
+  fixtures or user-controlled activity. No real account data was manufactured.
+- These are bounded runtime-validation caveats, not additional unimplemented
+  service migrations and not a claim of whole-application browser coverage.
 
 ## Retained exceptions and separately scoped findings
 
@@ -160,12 +209,10 @@ responses publicly or introduce automatic refetches.
   `components/music/musicTitle.tsx`, and `components/ui/Card.tsx`.
   The first is an executable legacy external-data script; import-graph absence
   cannot establish whether it is used manually. These files were not removed.
-- Whole-repository Prettier checks find pre-existing differences in
-  `.github/ISSUE_TEMPLATE/{bug,config,data-correction,feature}.yml` and
-  `docs/design/specimens/foundation-v0.1-integrated-regression.html`.
-  They are outside this code-boundary patch, and the design specimen is left
-  untouched. Do not claim `format:check` is green or silence them with ignore
-  entries. Changed-file formatting is checked separately.
+- The initial Prettier findings included four GitHub issue templates and the
+  Foundation regression HTML. The issue-template formatting is now corrected;
+  the design specimen remains untouched. See the current handoff for the latest
+  full-check findings. No warning is silenced through ignore entries.
 
 ## Initial audit verification record
 
@@ -190,11 +237,32 @@ No live write action, E2E DB seed, or whole-application browser regression was
 performed for this tooling/unused-forwarder-only patch. Future behavioral
 migrations still require browser verification; this audit does not waive it.
 
-## Recommended continuation
+## Current handoff
 
-Complete enabled music-evaluation browser verification when synced records are
-available. The next code unit is the public bingo-completion input/result
-boundary, followed by the remaining public action/request contracts and server
-orchestration listed above. Treat external/protected and uncertain unused-code
-items separately. This is a concrete audit backlog, not a claim that the overall
-code-style migration is finished.
+The requested input/result, tier request and listed server-orchestration code
+migrations are implemented. The unused/format candidate review is also complete;
+review does not authorize blindly deleting every warning. Do not reopen these
+implementation items from the initial audit text.
+
+Current verification: **90 test files / 704 tests passed**. Lint, independent
+typecheck, dependency-only Knip, production build and scoped
+formatting/whitespace checks passed. The build used the existing local
+environment; it did not run deployment migrations or change environment files.
+
+The four GitHub issue-template files had only trailing blank-line differences;
+these were formatted with no content changes. Full repository formatting is
+still not clean: the preserved Foundation regression HTML and concurrently
+edited `docs/design/84-deep-verification-report.md` were reported. Neither
+design artifact was edited by this maintenance task.
+
+Full Knip reports 4 unused files, 57 exports and 45 exported types. The two extra
+type warnings relative to the earlier 43 are the retained bingo/preferred-arcade
+compatibility re-exports. The three UI-file candidates were read and searched
+again; no current imports were found. They remain candidates, not removed
+features. The manually executable legacy import script and all viewer/editor
+warnings remain protected from automatic removal.
+
+No new dependency, DB schema/migration, environment, deployment or viewer/editor
+change is needed for this patch. Concurrent changes in `CLAUDE.md` and
+`docs/design/` belong to the other ongoing work and are excluded from this
+maintenance scope. The user retains commit/push/PR ownership.

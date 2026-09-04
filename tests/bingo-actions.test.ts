@@ -9,7 +9,10 @@ const mocks = vi.hoisted(() => ({
     cellFindUnique: vi.fn(),
     progressUpsert: vi.fn(),
     revalidatePath: vi.fn(),
+    log: vi.fn(),
 }));
+
+vi.mock("@/lib/observability/server", () => ({ logServerError: mocks.log }));
 
 vi.mock("@/lib/user", () => ({
     getSessionUser: mocks.getSessionUser,
@@ -103,6 +106,7 @@ describe("빙고 진행 상태 액션", () => {
     it("완료 요청은 사용자와 칸 조합으로 멱등 저장한다", async () => {
         await expect(setBingoCellCompletion(3, true)).resolves.toEqual({
             success: true,
+            message: "",
             isCompleted: true,
         });
 
@@ -123,6 +127,7 @@ describe("빙고 진행 상태 액션", () => {
     it("완료 해제도 최근 변경 시각을 남기도록 상태를 저장한다", async () => {
         await expect(setBingoCellCompletion(3, false)).resolves.toEqual({
             success: true,
+            message: "",
             isCompleted: false,
         });
 
@@ -142,4 +147,47 @@ describe("빙고 진행 상태 액션", () => {
             }),
         });
     });
+
+    it.each([NaN, Infinity, -1, 1.5, "3", null])(
+        "잘못된 ID %s는 DB에 전달하지 않는다",
+        async (id) => {
+            expect(
+                (await setBingoCellCompletion(id as number, true)).success
+            ).toBe(false);
+            expect(mocks.cellFindUnique).not.toHaveBeenCalled();
+        }
+    );
+
+    it.each([
+        null,
+        {
+            ...availableCell,
+            bingo: { ...availableCell.bingo, startsAt: new Date("2999-01-01") },
+        },
+        {
+            ...availableCell,
+            bingo: { ...availableCell.bingo, endsAt: new Date("2000-01-01") },
+        },
+    ])("없는 칸·시작 전·종료 후는 저장하지 않는다", async (cell) => {
+        mocks.cellFindUnique.mockResolvedValue(cell);
+        expect((await setBingoCellCompletion(3, true)).success).toBe(false);
+        expect(mocks.progressUpsert).not.toHaveBeenCalled();
+        expect(mocks.revalidatePath).not.toHaveBeenCalled();
+    });
+
+    it.each(["lookup", "save"])(
+        "%s DB 실패는 실패 응답으로 반환한다",
+        async (stage) => {
+            (stage === "lookup"
+                ? mocks.cellFindUnique
+                : mocks.progressUpsert
+            ).mockRejectedValueOnce(new Error("database unavailable"));
+            expect(await setBingoCellCompletion(3, true)).toEqual({
+                success: false,
+                message: "완료 상태를 저장하지 못했습니다.",
+            });
+            expect(mocks.revalidatePath).not.toHaveBeenCalled();
+            expect(mocks.log).toHaveBeenCalledOnce();
+        }
+    );
 });
