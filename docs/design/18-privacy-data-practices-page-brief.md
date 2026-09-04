@@ -966,3 +966,9 @@ truth, update tests, and obtain the recorded legal and translation approvals. If
 legal review changes age eligibility, consent, controller identification, rights,
 international-transfer wording, external-embed loading, or retention, return to this
 guide for explicit revision before implementation or release.
+
+### Decision Log addendum — 2026-09-04
+
+| ID                  | Decision                                                                                                                                                                                                                                                                                                                                                                    |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `PRIV-36` (amended) | At-a-glance group titles use **`component-title 16/24 · 600`**, not `emphasis-label`. Doc 24 scopes `emphasis-label` to StatusMessage titles and selected segment labels; the summary groups are bundled modules (the P8 subsection-title correction applies). Body `body-secondary` and the `자세히 보기` link (`control`) are unchanged. 68 titles across all P15 frames. |

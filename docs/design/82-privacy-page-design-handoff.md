@@ -123,3 +123,5 @@ C 색        바인딩 100%(인쇄 시편 흰 배경 = 인쇄 규약) · 링크 
   and Dark) was a FIXED 48 frame with 624 of content — the open TOC rendered collapsed.
   Restored to HUG; the screen grew 5,147 → 5,723 and the two Compact sections were reflowed.
   The `§1` height figure above (5,147) is the base screen; the TOC-open screen is 5,723.
+
+- 2026-09-04: at-a-glance group titles `emphasis-label` → `component-title 16/24` (`PRIV-36` amended, Z1 ⑳). Group block 427 → 443 at 390.
