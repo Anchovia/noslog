@@ -282,11 +282,27 @@ maintenance scope. The user retains commit/push/PR ownership.
   HTTP failure and manual recovery, not every offline/timeout scenario.
 - No application code, DB schema, environment or deployment configuration was
   changed for this check. No seed or destructive recovery operation was run.
-- Actual image submission, changed-value saves, bingo completion/undo and token
-  rotation remain pending confirmation of an appropriate test account and
-  permitted test data. The account-use question was sent before those actions;
-  no answer had arrived when this record was written. Existing-avatar replacement
-  and account deletion are excluded. Token rotation needs a separate explicit
-  acknowledgement because it invalidates the existing bookmarklet token.
+- After explicit account-use approval, changed the Discord-name privacy setting
+  from off to on, saved and reopened settings to verify persistence. Restored
+  off, saved and reopened settings again to verify restoration. This checks
+  setting persistence; it does not establish a separate logged-out privacy test.
+- Submitted one clearly labelled verification-only feedback report with
+  `public/icon/checkBox.png`. The UI confirmed receipt. Admin feedback displayed
+  report `1`, the exact test content and the private attachment; the image loaded
+  with natural dimensions of 32 by 32. The report and image remain stored with
+  status `open`. An attempted change to `resolved` was blocked by the automatic
+  safety review for lack of explicit status-change approval; it was not retried
+  or bypassed. No existing report or avatar was deleted or replaced.
+- Bingo `1`, cell A1: started at 0/25, completed only A1 and reopened the page to
+  verify 1/25 and CLEAR. Undid that completion and reopened the page to verify
+  0/25, 25 incomplete cells and zero complete cells. The normal upsert/undo path
+  restores the completion state, not necessarily the absence of a progress row
+  or its timestamps; no direct DB cleanup was performed.
+- Preferred-arcade changed-value verification remains unavailable: the current
+  gamecenter list has no entries and profile settings offer only the unset
+  option. No fabricated arcade or shared-DB seed was added for this check.
+- Token rotation still needs separate explicit acknowledgement because it
+  invalidates the existing bookmarklet token. It was not executed. Existing-avatar
+  replacement, account deletion and fabricated exam proof remain excluded.
 - The earlier unit/lint/type/build results above are historical results from the
   committed refactor; they were not rerun for this documentation-only follow-up.
