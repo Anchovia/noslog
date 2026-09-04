@@ -52,6 +52,8 @@ Do not add a `src/` wrapper solely to resemble a Vite project.
 
 Formatting is controlled by Prettier. Do not manually align code against its
 output. ESLint owns code-quality rules; Prettier owns formatting rules.
+The existing type-import rule is enforced by ESLint for `features/**/*.{ts,tsx}`.
+This scoped check does not migrate or change the preserved chart viewer/editor.
 Application code may use `console.warn` and `console.error` when appropriate;
 prefer the structured observability helper for server failures. CLI imports,
 maintenance scripts, and server synchronization progress jobs may use console
@@ -158,3 +160,7 @@ During gradual migration, a legacy directory may coexist with a new feature
 directory. Remove the legacy file only after all imports, tests, and runtime
 consumers have moved. Do not use code-style cleanup as authorization to change
 product behavior, visual design, external API contracts, or database data.
+
+The [code-style audit](./code-style-audit.md) records verified migration gaps,
+retained exceptions, and verification limitations. Passing static checks does
+not mean every legacy feature has completed migration or browser verification.

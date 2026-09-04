@@ -17,6 +17,12 @@ export default defineConfig([
         },
     },
     {
+        files: ["features/**/*.{ts,tsx}"],
+        rules: {
+            "@typescript-eslint/consistent-type-imports": "error",
+        },
+    },
+    {
         files: [
             "app/api/getPlayerData.js",
             "lib/services/**/*.{js,ts}",

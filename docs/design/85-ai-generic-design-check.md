@@ -71,3 +71,52 @@ npx sailop scan ./app              # DNA score 0–100 per dimension
 Motion (`transition-all`, bounce easing, image hover transforms, pulsing dots), copy cadence in
 rendered pages, line length, cramped padding at runtime, skipped heading levels, overflow
 clipping of popovers. `npx impeccable detect` covers all of these deterministically.
+
+---
+
+## 6. Cross-check — Codex (independent, 2026-09-04)
+
+Two independent agents (screen evaluation · detection-criteria review), Figma read-only, no
+external service received the file. Scope: Home at 320/390/768/1280, ko/ja/en, Light/Dark and
+search states; plus music list, detail records, rankings, data sync.
+
+**Verdict** — "흔한 AI 생성 디자인의 특징이 강하지 않다. Home의 시각적 개성은 약하고,
+NosLog의 고유성은 정보 구조와 내부 화면에서 더 분명하다." Not a judgment about who made it.
+
+| Codex observation                                                                                                                          | Agreement with §1–2                                                                                                                                                                                                              |
+| ------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Home base frames: gradients and effects 0; no glow / glass / decorative emphasis                                                           | Matches (rules row: purple/glow/glass 0).                                                                                                                                                                                        |
+| Card repetition is purposeful — tiles are real destinations; inner screens change structure (list · record analysis · ranking · procedure) | Matches the "data list ≠ feature card" reading.                                                                                                                                                                                  |
+| Product specificity present — real titles and levels, Basic/Recital, official Grd vs tier rating, account-bound bookmarklet procedure      | Matches.                                                                                                                                                                                                                         |
+| **Home composition (N ring → service name → search → icon tiles) is portable to any portal — clean, few memorable features**               | **Converges with §3-2.** Two independent readings name Home as the most generic surface. Codex frames it as weak identity rather than an AI tell, and explicitly does _not_ conclude the neutral palette or equal tiles must go. |
+| Overlay 1px border + shadow (§3-1)                                                                                                         | Not covered by Codex (not in the 27 slop-detect patterns it referenced). Stands as this report's finding.                                                                                                                        |
+
+**Tool runs (Codex):** `slop-detect` (27 DOM/CSS patterns) has no Figma/image path;
+`impeccable` local detector was executed but failed on a missing Puppeteer dependency — the
+`[]` it returned after the error is **not "0 findings"**. So neither review holds an official
+slop score; both are hand-applied rule checks on Figma. Codex also warns that the detectors
+miss context: the difficulty colour ramp is an information code and the bookmarklet step
+numbers are a real sequence — removing them to lower a score would worsen the product.
+
+**New improvement candidate from Codex (usability, not an AI tell):**
+
+3. **Desktop rankings row tracking** — [`1801-2978`](https://www.figma.com/design/cVbWCxhkfxFfHmAKLCyKrD?node-id=1801-2978):
+   name at the left, value at the far right, no row divider, so horizontal reading can
+   attach a neighbour's score to the wrong name. Suggested comparison: narrower data
+   region vs the existing neutral row divider. This reopens the approved Wide B / `RANK-23`
+   table-like list; Codex made no change.
+
+**Nielsen-heuristic pass (Codex):** status visibility, domain match, consistency,
+recognition, minimal aesthetics — confirmed on the static frames. User control (Back /
+Escape / cancel), error prevention behaviour, execution efficiency, error recovery behaviour,
+and the explanatory power of the sync GIFs — **not verifiable in Figma**, deferred to
+implementation. Returning users get fast recognition; first-time users still meet compressed
+game vocabulary (level numbers) that assumes NOSTALGIA knowledge.
+
+## 7. Combined decision list
+
+| #   | Item                                                     | Source       | Type                       |
+| --- | -------------------------------------------------------- | ------------ | -------------------------- |
+| 1   | Overlay edge: keep 1px + shadow, or shadow-only in Light | this report  | AI-tell (shadcn signature) |
+| 2   | Home destination tiles: portable icon-over-label grid    | both reviews | identity / AI-tell         |
+| 3   | Desktop rankings: row tracking between name and value    | Codex        | usability                  |

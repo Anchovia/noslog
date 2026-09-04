@@ -69,6 +69,11 @@ NosLog의 코드 작성·디렉터리·API 응답·Server Action·Zod·React Hoo
 [코드 스타일 문서](./docs/code-style.md)를 따릅니다. 기존 Jeongbiseo와 Fit-again
 프런트엔드에서 검증된 공통 규칙을 Next.js App Router에 맞게 적용한 기준입니다.
 
+[코드 스타일 전수 점검 기록](./docs/code-style-audit.md)에 실제 미정리 범위와 유지할
+예외를 구분합니다. 정적 검사 통과와 전체 리팩터링 완료는 다릅니다. `features/`의
+타입 전용 import는 ESLint가 검사하며, 채보 viewer/editor에는 이 이관 규칙을 확대하지
+않습니다.
+
 - `app/`은 route, layout, Route Handler와 Server Action 진입점을 담당합니다.
 - 재사용되는 도메인 코드는 `features/<domain>/` 아래 `api`, `components`, `hooks`,
   `schemas`, `server`, `types` 책임으로 점진적으로 이동합니다.
