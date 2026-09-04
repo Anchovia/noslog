@@ -181,8 +181,9 @@ The external bookmarklet, OAuth, health, binary and CSV protocols are untouched.
 - Browser: stopping the agent-started local server produced Japanese tier retry
   buttons. Restarting the dev server caused a browser connection-error page
   before manual recovery could be verified. The Browser control surface then
-  refused access to that error document. **Manual retry-to-success browser
-  recovery is still unverified**, despite automated query recovery coverage.
+  refused access to that error document. That attempt did not verify recovery.
+  The follow-up below subsequently verified manual retry-to-success without
+  stopping the application server.
 - No real bingo completion, preferred-arcade save, token rotation, upload,
   account deletion, evaluation vote or administrative content write was
   performed. Their full end-to-end write/error recovery and the earlier enabled
@@ -266,3 +267,26 @@ No new dependency, DB schema/migration, environment, deployment or viewer/editor
 change is needed for this patch. Concurrent changes in `CLAUDE.md` and
 `docs/design/` belong to the other ongoing work and are excluded from this
 maintenance scope. The user retains commit/push/PR ownership.
+
+### Browser validation follow-up — 2026-09-05
+
+- Profile settings: submitted the signed-in account's existing values without
+  editing fields. The save completed and redirected to its profile. This is an
+  unchanged-value save check, not coverage of changed settings or invalid input.
+- Tier recovery: a temporary, local, read-only forwarding server injected one
+  HTTP 503 for `basic-s` band `832` (the 13.0 band). Other visible bands loaded.
+  The browser displayed the affected band's `다시 불러오기` button. Clicking it
+  issued the same GET again, returned HTTP 200, removed the retry button and
+  rendered `달성 0/78` with the song cards. The application server stayed running.
+  The temporary forwarding server was then stopped. This verifies a transient
+  HTTP failure and manual recovery, not every offline/timeout scenario.
+- No application code, DB schema, environment or deployment configuration was
+  changed for this check. No seed or destructive recovery operation was run.
+- Actual image submission, changed-value saves, bingo completion/undo and token
+  rotation remain pending confirmation of an appropriate test account and
+  permitted test data. The account-use question was sent before those actions;
+  no answer had arrived when this record was written. Existing-avatar replacement
+  and account deletion are excluded. Token rotation needs a separate explicit
+  acknowledgement because it invalidates the existing bookmarklet token.
+- The earlier unit/lint/type/build results above are historical results from the
+  committed refactor; they were not rerun for this documentation-only follow-up.
