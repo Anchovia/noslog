@@ -328,3 +328,11 @@ Visual verification passed for 390 Light/Dark (1602:4, 1806:6), 320 Light/Dark
 (1798:2506, 1798:2703), and 1280 Light/Dark (1801:2792, 1801:2978).
 Runtime tabular-figure rendering, keyboard behavior, and Pretendard remain
 implementation-stage checks; no application code was changed.
+
+## Correction — 2026-09-06 · D-1 re-bound to a Text Style
+
+The 231 rank numerals described above had been given a raw IBM Plex Sans Bold face,
+which cleared their Text Style (231 `B1_noTextStyle_raw` audit hits on P5). They
+are now bound to `emphasis-label/latin` (14/20 · 600), the composite drawn on the
+approved Z1 ㉒ specimen (b). Remaining 327 numerals stay `metric-value/latin`.
+P5 scoped re-audit (Compact 390 · Wide 1280): clean; raw-text count 0.

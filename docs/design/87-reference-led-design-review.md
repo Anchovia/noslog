@@ -360,3 +360,9 @@ This decision supersedes all earlier Proposed labels and the Suggested review
 order above. Original observations and coverage limitations remain preserved
 as evidence; they do not establish pending change work. See the user disposition
 at the end of document 86 for the three adopted items.
+
+### Update — 2026-09-06
+
+Representative real artwork is now **approved and applied** through document 86
+item 4.1 (Z1 ㉒ C (b), `DISC-46`); the 2026-09-05 rejection above no longer covers
+it. Every other proposal in this report remains rejected.

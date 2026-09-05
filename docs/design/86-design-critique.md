@@ -102,3 +102,17 @@ separate stage. The six completed design-guide blocks remain complete.
   across 14 non-empty archives and preservation of all 174 existing rows.
 - D-7: No Figma mutation yet; the user has been asked whether thumbnails belong
   in all photo-bearing result rows or only the selected-venue preview.
+
+### User disposition update — 2026-09-06
+
+- **4.1 (C · representative art) — Approved** on the Z1 ㉒ specimen (b). This
+  supersedes the 2026-09-05 rejection of the "representative-artwork" proposals in
+  document 87. Applied to the default Light + Dark frames of P1, P3, P4, P6, P13
+  (`DISC-46` and the page handoffs). 4.2 (bingo covers) stays as drawn — no bingo
+  cover art exists in the repository.
+- **D-1** — implementation corrected to the `emphasis-label` Text Style (document 24
+  correction); the emphasis rule itself stands.
+- **D-3** — stands as applied on 2026-09-05 (`section-title` group headings, brief 14).
+  The Z1 ㉒ specimen had drawn the heading at `emphasis-label` 14/20; that is outside
+  the composite's two approved roles, so the applied form is the one that stands.
+- **D-7 scope resolved** — all discovery result rows (`ARC-DV-02`), applied.

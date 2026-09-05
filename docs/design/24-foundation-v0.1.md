@@ -513,6 +513,14 @@ canvas but only `4.26` on `surface/surface`, which is why the Light Normal text
 value is new. The C3 `DifficultyMarker` component was revised to this colored-text
 form (dot removed); its only instance consumers are C3 and P13.
 
+**Consumer extension — 2026-09-05 (B · 난이도 표기 통일, Z1 ㉒).** The text ramp is now
+the single grammar for difficulty level numbers in result and play rows as well:
+C6 `ResultCollection` Music List / Music Grid / Chart grouped cells, P3 result rows,
+P4 tier cards and P6 play rows set each level as `metric-value` 14/20 in
+`difficulty/text-*`; the 12×2 colour bars under the numbers were removed. The
+2×20 selected-chart accent bar and other non-text markers keep the `DU-01` marker
+values. Applied: C6 24 component cells, 736 instance cells, P6 370 texts.
+
 ## Local data color — `LD-03`, SAP Fiori Horizon
 
 Use exact `sap_horizon` / `sap_horizon_dark` chart tokens.
@@ -739,9 +747,16 @@ separate `FPR-04` gate in document `63`; they do not reopen this Foundation.
 
 ## Approved component weight exception — 2026-09-05 · D-1
 
-P5 PlayerRankingRow's published shared-rank numeral uses the existing bold 700
-weight for displayed ranks 1–3. It retains metric-value size, line height,
-tabular figures, and all existing color/geometry bindings. The user explicitly
-approved this limited emphasis in document 86 item 5.1. Other ranks and other
-metric-value consumers are unchanged. This adds no primitive or shared
-typographic composite; the condition belongs to the ranking row.
+P5 PlayerRankingRow's published shared-rank numeral is emphasised for displayed
+ranks 1–3. The user explicitly approved this limited emphasis in document 86
+item 5.1. Other ranks and other metric-value consumers are unchanged.
+
+**Correction — 2026-09-06.** The first application (2026-09-05, parallel Codex
+session) set the 231 numerals to a raw IBM Plex Sans Bold 700 face, which cleared
+their Text Style and left 231 `B1_noTextStyle_raw` audit hits. That is not a
+weight exception this Foundation grants: raw font assignment is forbidden
+file-wide. The approved Z1 ㉒ specimen (b) uses the existing composite
+**`emphasis-label/latin` 14/20 · 600** (a Text Style), and the 231 nodes were
+re-bound to it. Geometry, the 28×20 rank box and colour bindings are unchanged;
+proportional figures replace tabular for these single-digit numerals, which does
+not move the column. No 700 exception exists.

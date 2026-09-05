@@ -463,3 +463,11 @@ Applied file-wide: `24` frames changed variant — `P1` `8`, `P2` `2`, `P4` `4`,
 moved from Wide to Compact at `768`; `P6` `2` moved from Compact to Wide at `1024`. Every
 product page now follows one rule. Footer overflow is `0`, and no frame escapes its
 section afterwards.
+
+## Amendment — 2026-09-05 / 06 · difficulty grammar and representative art
+
+- `DISC-45`: level cells in every result row are now `metric-value` 14/20 in the
+  `difficulty/text-*` ramp; the 12×2 bars are gone (C6 24 component cells, 736 instance
+  cells file-wide). Scoped re-audit of C6 and P3: clean.
+- `DISC-46`: the three representative frames (390 list, 390 grid, 1280; Light + Dark)
+  show real jacket art (`public/bg`, 64 px fixtures). All other frames keep placeholders.

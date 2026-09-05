@@ -930,3 +930,11 @@ Applied file-wide: `24` frames changed variant — `P1` `8`, `P2` `2`, `P4` `4`,
 moved from Wide to Compact at `768`; `P6` `2` moved from Compact to Wide at `1024`. Every
 product page now follows one rule. Footer overflow is `0`, and no frame escapes its
 section afterwards.
+
+## Amendment — 2026-09-05 / 06 · difficulty grammar and representative art
+
+- Tier card level text follows `DISC-45` (text ramp, bars removed).
+- Representative frames `Tier · 390 · 기본`, `Tier · 390 · 서명됨 · Compact`,
+  `Tier · 1280 · 서명됨 · 레일 노출` (Light + Dark) carry real jacket art; the
+  signed-out card, whose frame is itself the jacket, takes the image fill directly.
+  Other frames keep the empty-slot convention.

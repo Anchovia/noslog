@@ -134,3 +134,14 @@ C 색        하드코딩 0(map/media render 제외 규약) · 신설 토큰 없
   ellipse, so the automated background lookup reports the map placeholder instead —
   the 52 P12 "cluster label" failures in the sweep are false positives.
 - Dark overlay shadow style swapped to `elevation/overlay-dark` on 1 node.
+
+## 7. Amendment — 2026-09-06 · D-7 result-row thumbnails
+
+`ARC-DV-02` applied to all 96 result rows (84 in the `list` frames — 390, 320, 768,
+state suite, JA, EN, Light + Dark — and 12 in the Wide `list column`): each row is now
+horizontal with a 64×64 `media render` slot (`radius/container` bound, raw fill by the
+media convention) and a FILL content column. Row heights are content-derived (92 / 88).
+Scoped re-audit (Compact 390 Light/Dark, Wide 1280, state suite): no new findings —
+the remaining hard-coded fills are the map and media placeholders already documented
+in report 84 §5. The photo-less fallback (empty-slot convention with `Icon/map-pin`)
+is a contract note; no such row is drawn because every fixture venue has a photo.

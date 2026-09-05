@@ -697,3 +697,9 @@ the existing bold 700 weight as a conditional component-level exception.
 Other ranks and other metric-value consumers retain their existing treatment.
 RANK-22's no-podium decision remains. Apply consistently across appearances,
 locales, and widths.
+
+### Correction — 2026-09-06 · D-1 typography
+
+The emphasis is the existing `emphasis-label` composite (14/20 · 600), applied
+as a Text Style, not a raw 700 weight. Ranks 4 and beyond stay `metric-value`.
+The eligibility rule (published rank 1–3, all tied players) is unchanged.

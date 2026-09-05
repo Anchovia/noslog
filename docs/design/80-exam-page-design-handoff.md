@@ -143,3 +143,9 @@ C 색        하드코딩 0(증빙 미리보기 = media render 규약 제외) ·
 6. **Practice-analysis note-type cue** (weak-note line in the current product) was
    not drawn; the brief permits it where data is valid, and it can join the
    analysis rows without changing the card contract.
+
+## Amendment — 2026-09-06 · representative art
+
+`Exams · 390 · Basic 8급 · 로그인 · 기본` and `Exams · 1280 · Basic 8급 · 로그인 (분석 접힘)`
+(Light + Dark) show real jacket art in the three tracklist rows. Other frames keep the
+empty-slot convention.

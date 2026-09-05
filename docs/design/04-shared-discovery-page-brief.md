@@ -1712,3 +1712,10 @@ The approved discovery taxonomy, result contracts, and transient-response behavi
 remain upstream constraints for Foundation, downstream design, and implementation.
 Later briefs may add contextual entry and return behavior but must not silently reopen
 the approved shared-discovery contract.
+
+### Decision Log addendum — 2026-09-05 / 06 (Z1 ㉒)
+
+| ID        | Decision                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `DISC-45` | **Difficulty level numbers in result rows use the difficulty text ramp** (`difficulty/text-*`, `metric-value` 14/20) — the P13 grammar (`EXAM-32`). The 12×2 colour bars under the numbers are removed. Applies to C6 Music List / Music Grid / Chart grouped cells, and by the same decision to P4 tier cards and P6 play rows. Position and order stay the non-colour cue.                                                 |
+| `DISC-46` | **Representative frames carry real jacket art** (document 86 item 4.1, approved 2026-09-06). P3 `Music · 390 · 기본`, `Music · 390 · 그리드 뷰`, `Music · 1280 · 레일 노출` (Light + Dark) use four `public/bg` jackets at 64 px as image fills; the empty-slot icon and `border/empty-slot` are hidden there. Every other state, locale and width frame keeps the empty-slot convention. Fixture only — no contract change. |

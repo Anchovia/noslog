@@ -147,3 +147,9 @@ open WCAG item from §5-2 (2.74 / 2.19 here).
 Implementation: four absolutely positioned layers under the content in the `ImageResponse`
 tree (satori supports linear gradients, borders and `border-radius: 50%`; no blur or SVG
 filters are needed).
+
+## 7. Export dialog — 2026-09-06 (`PROF-52`)
+
+The dialog that hosts this card in the product is now drawn: C8 `ProfileShareDialog`
+and twelve P6 frames — see handoff 72 amendment 2026-09-06. The card preview inside the
+dialog is a PNG export of `card · 기본` (1200×630 → 286×150 compact / 720×378 wide).

@@ -236,3 +236,9 @@ Open items carried out of this session:
    both mode groups, and this page follows it. Document 05 also says each goal-specific
    vote has its own edit and delete action in its exact scope, which would mean one row per
    expanded scope. The two readings were not reconciled in this session.
+
+## Amendment — 2026-09-06 · representative art
+
+`Music Detail · 390 · Information` and `Music Detail · 1280 · 채보 정보` (Light + Dark)
+show a real 96 px jacket; the category badge stays, the empty-slot icon is hidden.
+Document 86 §2 (jacket-led hero) remains rejected — this is a fixture, not a layout change.

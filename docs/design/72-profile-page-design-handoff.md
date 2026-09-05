@@ -330,3 +330,40 @@ section afterwards.
 Six state frames (초기 오류 · 기록 없음 · 없는 사용자, Light and Dark) had no viewport
 floor (heights 308–600, footer directly under content). All now hold the 844 floor
 with the content region filling the remainder, matching the P8/P10/P1 shell convention.
+
+## Amendment — 2026-09-05 / 06 · difficulty grammar and representative art
+
+- Best Plays / Recent Plays level text follows `DISC-45` (370 texts re-tagged to the
+  `difficulty/text-*` ramp, bars removed).
+- `Profile · 390/1280 · Light/Dark · SignedIn · Owner · Basic` show real jacket art
+  (10 jackets each); the FC mark stays. Other frames keep placeholders.
+
+## Amendment — 2026-09-06 · share dialog (`PROF-52`)
+
+The dialog between the header share trigger and the P16 card did not exist in the file.
+It is now C8 `ProfileShareDialog` (component set, `Layout` Compact 334 / Wide 768 ×
+`State` Default · Preparing · Copied · ImageError · CardError) and twelve P6 frames:
+`Profile · 390 · Light/Dark · 공유 다이얼로그 · {열림 · 준비 중 · 클립보드 복사 완료 · 이미지 처리 실패 · 카드 생성 실패}`
+in the two 상태 sections, and `Profile · 1280 · Light/Dark · 공유 다이얼로그 · 열림` in the
+Wide section. Each is the owner Basic frame capped at 844 with a `surface/scrim` rectangle and
+the dialog instance centred (absolute), the P10 탈퇴 dialog precedent.
+
+- Actions: **이미지 저장** primary, **클립보드 복사**, **공유** (system share sheet). The user
+  chose the current product's three-button composition over the document 09 ordering
+  (share sheet as primary) and replaced the third label `X 공유` with `공유`; on a browser without
+  the share sheet the same slot falls back to the X Web Intent (`profile.shareX`), which is the
+  contract's own fallback. Compact stacks primary full-width over a two-up secondary row; Wide
+  right-aligns the three, primary last (DeleteConfirmDialog order).
+- Preparing: preview slot as a `surface/sunken` skeleton (pulse per the 2026-09-04 progress
+  contract), `이미지를 준비하고 있습니다.` in `body-secondary` `content/subdued`, all three
+  buttons `State=Disabled` (no image to act on yet — this is disabled, not busy).
+- Copied / ImageError: C4 `StatusMessage` Success / Danger with `Body=false` and the inline
+  action hidden; actions stay. CardError: `StatusMessage` Danger + a primary **다시 시도** in
+  the actions row (the inline action does not fit at 286 with the sentence, so the row pattern
+  of this dialog is used in both layouts).
+- Strings: all nine keys exist in the catalog (`profile.shareTitle` … `profile.cardError`);
+  no new copy. Preview `aria` = `profile.cardPreview`; close = Esc + button.
+- Checks: spacing all in scale · text styles 100% · hard-coded fills 0 (preview is an image
+  paint, skeleton is `surface/sunken`) · buttons 40 · close ink 26 from the edge vs title 24
+  (A17 within 2) · section containment 0 · overlap 0. Open: Wide 768 overlay width is
+  borrowed from the reading container and needs a Foundation decision.

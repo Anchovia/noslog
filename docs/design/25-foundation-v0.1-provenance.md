@@ -371,3 +371,8 @@ while retaining metric-value geometry and tabular figures. No new primitive or
 global metric-style revision is involved. Equal published ranks receive equal
 emphasis. The corresponding scoped contract is recorded in document 24 and
 the Global Rankings page brief.
+
+**Correction — 2026-09-06.** The exception above was applied as a raw 700 face
+that cleared the Text Style on 231 nodes. It was replaced by the approved
+`emphasis-label/latin` composite (14/20 · 600); no weight exception is in force.
+See document 24 "Approved component weight exception" correction.
