@@ -348,3 +348,15 @@ same-endpoint calls continued to succeed and were stopped after the inventory an
 4. Resolve the explicitly unverified scroll and specimen-annotation observations.
 
 This is a proposal order, not approval or a list of reopened guide blocks.
+
+## User disposition — 2026-09-05
+
+**Rejected.** The user retained only D-1 Rankings, D-3 Announcements, and D-7
+Arcade thumbnails from document 86 (items 5.1, 5.3, and 5.7). All proposed changes
+in this report, including A–F, representative-artwork changes, and suggested
+specimen/annotation follow-ups, are rejected.
+
+This decision supersedes all earlier Proposed labels and the Suggested review
+order above. Original observations and coverage limitations remain preserved
+as evidence; they do not establish pending change work. See the user disposition
+at the end of document 86 for the three adopted items.

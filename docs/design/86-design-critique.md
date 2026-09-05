@@ -30,7 +30,7 @@ identity is thin.
 | 1.2 | The share card (P16) now has a gold ring-and-band motif that exists nowhere in the product UI. The product UI is entirely neutral; gold only lives on the avatar ring in the card.                       | Adopt the **gold ring as the product's single brand motif** — used sparingly on empty, sparse and brand surfaces only: Login, 404/recovery, "기록 없음" states, the Home identity block. Never on controls (primary stays neutral, `RPA-A`). Two or three quiet appearances make the card and the product feel like one thing. | Login 390 is ~60 % empty canvas; Recovery 390 is ~70 % empty; both are exactly where GitHub (octocat 404), Spotify (brand-colour login) and Notion place a brand moment.                                                                     |
 | 1.3 | Home 1280: the identity block (ring, name, tagline) stacks vertically and pushes search below the first 200 px; on 390 the three-line stack is fine.                                                     | On Wide, set the identity **inline** (mark + wordmark + tagline in one row) so search rises into the first view.                                                                                                                                                                                                               | Home Wide 1280 render: ring 54 + name 32/40 + tagline 14/20 + 24 gaps ≈ 180 px before the field. MS Learn / AWS / Coursera put search at the top edge.                                                                                       |
 
-## 2. Music Detail — let the jacket lead
+## 2. Music Detail — let the jacket lead — **REJECTED 2026-09-04 (Z1 ㉑, user: 현행 유지)**
 
 | #   | Observation                                                                                                                                                       | Suggestion                                                                                                                                                                                           | Evidence                                                                                                                                                                                               |
 | --- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -78,3 +78,27 @@ identity is thin.
 3. **3.1** (one difficulty grammar) — consistency; touches C6, P3, P4, P6.
 4. **4.1** (real art in representative frames) — costs an afternoon, changes how every page is judged.
 5. §5 items as time allows.
+
+## User disposition — 2026-09-05
+
+This explicit user decision supersedes the proposal status and priority order
+above. Original critique text remains intact as evidence.
+
+| User ID                            | Original item                                                             | Decision              | Scope                                                                                                                                                                                           |
+| ---------------------------------- | ------------------------------------------------------------------------- | --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| D-1                                | 5.1 Rankings                                                              | Approved              | Bold the published rank numeral for ranks 1–3, including all players sharing an eligible rank. Preserve the existing single ranked list.                                                        |
+| D-3                                | 5.3 Announcements                                                         | Approved              | Add localized year/month headings to chronological archive groups while retaining every title/date, order, and existing pagination.                                                             |
+| D-7                                | 5.7 Arcade thumbnail                                                      | Approved in principle | Use a 64px venue-photo thumbnail. Ordinary result rows versus selected-venue preview scope is awaiting the user's clarification; no thumbnail mutation is authorized beyond the resolved scope. |
+| All other critique recommendations | Other items in this document and all improvement proposals in document 87 | Rejected              | The user retained only D-1, D-3, and D-7. Do not recover the remaining suggestions or former priority orders as pending work.                                                                   |
+
+This decision is for downstream Figma design. Application implementation is a
+separate stage. The six completed design-guide blocks remain complete.
+
+### Delivery status for the adopted items — 2026-09-05
+
+- D-1: Applied and verified in Figma P5. See document 71 for the 231 rank-text
+  changes across 77 frames and the complete rank-condition preservation check.
+- D-3: Applied and verified in Figma P11. See document 78 for 54 month headings
+  across 14 non-empty archives and preservation of all 174 existing rows.
+- D-7: No Figma mutation yet; the user has been asked whether thumbnails belong
+  in all photo-bearing result rows or only the selected-venue preview.

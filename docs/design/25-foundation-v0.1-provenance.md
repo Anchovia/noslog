@@ -362,3 +362,12 @@ The active guide keeps this consolidated provenance record and the normative doc
 `24`. Deleted serial research files and interactive comparison artifacts remain in Git
 history for forensic review. They must not be treated as current scope, active
 specimens, pending approvals, or implementation targets.
+
+## Downstream weight exception provenance — 2026-09-05 · D-1
+
+**Approved — explicit user decision.** Document 86 item 5.1 was selected as D-1:
+bold the published rank numeral for ranks 1–3. It reuses the existing 700 weight
+while retaining metric-value geometry and tabular figures. No new primitive or
+global metric-style revision is involved. Equal published ranks receive equal
+emphasis. The corresponding scoped contract is recorded in document 24 and
+the Global Rankings page brief.

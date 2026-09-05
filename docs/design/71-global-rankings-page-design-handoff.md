@@ -307,3 +307,24 @@ overlapping the 768 Dark frame by 512px; it now sits on row 2 beside its Light p
 
 - `RANK-33`: 1 px `border/divider` between rows on every list ≥720 wide (Intermediate, Wide,
   locale QA) — 24 lists, 120 dividers. Compact lists unchanged.
+
+## Applied critique amendment — 2026-09-05 · D-1
+
+The user-approved bold-rank treatment is applied on P5 only: 231 published-rank
+text instances across 77 frames (77 displayed rank 1 and 154 displayed rank 2).
+The current fixtures contain no displayed rank 3; the implementation condition
+is still published rank 1–3, including all tied players.
+
+A final sweep covered all 558 published-rank texts. Eligible nodes resolve to
+700; the remaining 327 retain 500. The original 14/20 typography, 28×20 rank
+box, and fill/family/size/line-height bindings passed the preservation checks.
+
+Figma uses IBM Plex Sans Bold plus the existing type/weight/bold binding.
+Assigning this instance-level font face clears textStyleId on those 231 nodes;
+this is the explicit scoped weight override approved in document 24, not a
+change to the shared metric style. C7 and other page families were not modified.
+
+Visual verification passed for 390 Light/Dark (1602:4, 1806:6), 320 Light/Dark
+(1798:2506, 1798:2703), and 1280 Light/Dark (1801:2792, 1801:2978).
+Runtime tabular-figure rendering, keyboard behavior, and Pretendard remain
+implementation-stage checks; no application code was changed.

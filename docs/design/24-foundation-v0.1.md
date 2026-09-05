@@ -736,3 +736,12 @@ Eligible ordinary UI must retain all meaning and operation under:
 `FPR-03` promoted these contracts together as the approved Foundation v0.1 normative
 authority on 2026-08-11. Reusable component and pattern responsibilities remain a
 separate `FPR-04` gate in document `63`; they do not reopen this Foundation.
+
+## Approved component weight exception — 2026-09-05 · D-1
+
+P5 PlayerRankingRow's published shared-rank numeral uses the existing bold 700
+weight for displayed ranks 1–3. It retains metric-value size, line height,
+tabular figures, and all existing color/geometry bindings. The user explicitly
+approved this limited emphasis in document 86 item 5.1. Other ranks and other
+metric-value consumers are unchanged. This adds no primitive or shared
+typographic composite; the condition belongs to the ranking row.

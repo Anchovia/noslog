@@ -909,3 +909,16 @@ title and the Detail return-link label. Three strings are new:
 
 Visible dates follow the Home row format (`2026. 8. 15.` in Korean). Pagination reuses
 the C7 `Pagination` component and its existing labels.
+
+## Approved downstream amendment — 2026-09-05 · D-3
+
+The user approved document 86 item 5.3: localized year/month headings organize
+the public Archive by original publication date. Each row retains its complete
+title and date; reverse chronology, the 20-notice page limit, pagination
+visibility, and URLs remain unchanged.
+
+Group headings use section-title and existing color/spacing roles. They label
+months present on the current page and are not notice records; a month that
+continues on another page is labeled there too. Empty archives have no month
+headings. Groups do not collapse. Detail and Home notice previews retain their
+existing composition.

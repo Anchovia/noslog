@@ -684,3 +684,16 @@ shell, or another conflicting behavior.
 | ID        | Decision                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `RANK-33` | **Row dividers on the table-like list at ≥768.** A 1 px `border/divider` sits between `PlayerRankingRow`s wherever the list is 720 px or wider (Intermediate, Wide, locale QA). Codex's review found that with the name at the left and the value at the far right of a 1,216 px row and no row edge, horizontal reading can attach a neighbour's value to the wrong name. Dividers add no height to rows and change no value position; zebra fill and a narrower 768 data region were drawn and rejected (new surface rule / Wide re-derivation). Compact lists (358) are unchanged. 24 lists, 120 dividers. |
+
+## Approved downstream amendment — 2026-09-05 · D-1
+
+The user approved document 86 item 5.1: bold the existing published rank numeral
+for ranks 1, 2, and 3. Use the published shared-rank value, not row position.
+Every player tied at an eligible rank receives equal emphasis. Competition
+ranking, pagination, row order, current-user cues, and all geometry remain.
+
+The numeral retains metric-value size, line height, and tabular figures with
+the existing bold 700 weight as a conditional component-level exception.
+Other ranks and other metric-value consumers retain their existing treatment.
+RANK-22's no-podium decision remains. Apply consistently across appearances,
+locales, and widths.

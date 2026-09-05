@@ -108,3 +108,23 @@ C 색        하드코딩 0 · 링크 = content/interactive 바인딩 + 밑줄
 3. **A near-limit 5,000-character body** and the middle pagination page were not drawn;
    both are data-scale variations of drawn states.
 4. **ja/en fixture translations have not had a native review** (same caveat as P9/P10).
+
+## Applied critique amendment — 2026-09-05 · D-3
+
+Localized year/month headings are applied to all 14 non-empty Archive frames:
+54 headings with 54 auto-layout wrappers. Korean Light/Dark 320, 390, 768, and
+1280 specimens, last-page/three-record states, and Japanese/English specimens
+are covered. The existing section-title 20/28 at 600, content/default, and
+approved 0/8/24 spacing variables are reused.
+
+Eight long frames gained 336px height each. Eight canvas sections were spaced
+to accommodate the growth; some Detail frames moved on the canvas only.
+Both empty archives retain no group headings. All 14 Detail frames retain
+their internal content and dimensions.
+
+Verification preserved all 174 archive row IDs, row order, titles, and dates.
+Existing text and pagination across all 30 page frames matched the baseline.
+Frame, list, and canvas-section overflow/overlap checks returned zero findings.
+Screenshots were inspected at 390 Light/Dark, 320 Light/Dark, 1280 Light,
+Japanese, and English. This is static Figma verification; runtime reflow,
+keyboard behavior, and application implementation remain separate.
