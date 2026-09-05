@@ -289,10 +289,13 @@ maintenance scope. The user retains commit/push/PR ownership.
 - Submitted one clearly labelled verification-only feedback report with
   `public/icon/checkBox.png`. The UI confirmed receipt. Admin feedback displayed
   report `1`, the exact test content and the private attachment; the image loaded
-  with natural dimensions of 32 by 32. The report and image remain stored with
-  status `open`. An attempted change to `resolved` was blocked by the automatic
-  safety review for lack of explicit status-change approval; it was not retried
-  or bypassed. No existing report or avatar was deleted or replaced.
+  with natural dimensions of 32 by 32. An initial change to `resolved` was blocked
+  by automatic safety review until separate explicit status-change approval.
+  After the user supplied that approval, the browser action succeeded: report
+  `1` disappeared from the open list and appeared in the resolved list with a
+  reopen button. A read-only DB check confirmed `resolved` and a populated
+  resolution timestamp. The test report and image remain stored, not deleted.
+  No existing report or avatar was deleted or replaced.
 - Bingo `1`, cell A1: started at 0/25, completed only A1 and reopened the page to
   verify 1/25 and CLEAR. Undid that completion and reopened the page to verify
   0/25, 25 incomplete cells and zero complete cells. The normal upsert/undo path
@@ -301,8 +304,16 @@ maintenance scope. The user retains commit/push/PR ownership.
 - Preferred-arcade changed-value verification remains unavailable: the current
   gamecenter list has no entries and profile settings offer only the unset
   option. No fabricated arcade or shared-DB seed was added for this check.
-- Token rotation still needs separate explicit acknowledgement because it
-  invalidates the existing bookmarklet token. It was not executed. Existing-avatar
-  replacement, account deletion and fabricated exam proof remain excluded.
+- After separate explicit acknowledgement of bookmarklet invalidation, executed
+  token regeneration once in the current local signed-in account. The confirmation
+  dialog closed through its success path; a read-only DB check confirmed account
+  `1` and persisted `sync_token_version: 1`. Reopening the bookmarklet page rendered
+  its registration section and NosLog sync link. No token value was printed,
+  copied to the clipboard or recorded. The user must register the replacement
+  bookmarklet for this environment. Actual NOSTALGIA-side execution of the new
+  bookmarklet and an old-token rejection request were not performed.
+- Existing-avatar replacement, account deletion and fabricated exam proof remain
+  excluded. No production deployment or separate production-account token
+  rotation was performed.
 - The earlier unit/lint/type/build results above are historical results from the
   committed refactor; they were not rerun for this documentation-only follow-up.
