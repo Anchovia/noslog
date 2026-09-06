@@ -153,3 +153,12 @@ filters are needed).
 The dialog that hosts this card in the product is now drawn: C8 `ProfileShareDialog`
 and twelve P6 frames — see handoff 72 amendment 2026-09-06. The card preview inside the
 dialog is a PNG export of `card · 기본` (1200×630 → 286×150 compact / 720×378 wide).
+
+## 8. Exam plates — 2026-09-06
+
+The bottom-row exam group on `card · 기본` (`Basic` coloured word + `8급`) is replaced by
+the profile's plate language at card scale: 44-high plate `#24242C`, radius 8, 10 px tier
+band (Dark tier values: 10–8급 `#8A8A8A`, 7–5 `#3FA2FF`, 4–3 `#AD69E9`, 2 `#D85C4F`, 1
+`#F2A634`), mode initial + grade in Bold 24 `#F2F2F5`. The mode colours `#7c9cc6` /
+`#c98fb0` are no longer used for the exam. The C8 share-dialog previews were re-exported
+from the card.

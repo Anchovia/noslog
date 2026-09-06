@@ -703,3 +703,9 @@ locales, and widths.
 The emphasis is the existing `emphasis-label` composite (14/20 · 600), applied
 as a Text Style, not a raw 700 weight. Ranks 4 and beyond stay `metric-value`.
 The eligibility rule (published rank 1–3, all tied players) is unchanged.
+
+### Decision Log addendum — 2026-09-06 · `RANK-34`
+
+| ID        | Decision                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `RANK-34` | **Active-mode exam in the ranking row is the C3 `ExamBadge` plate** (`PROF-56` language), replacing the `metadata` text `{mode} {exam}급`. The badge sits under the username with gap 4; the row grows 60 → 72 (12 + 20 + 4 + 24 + 12). Rows whose player has no exam hide the badge and keep 72 so every row in a list is the same height. Locale grade strings (`2級`, `Class 2`) are the badge's grade text. User decision, extending PROF-56 from the Profile identity to the ranking row. |

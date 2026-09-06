@@ -336,3 +336,11 @@ which cleared their Text Style (231 `B1_noTextStyle_raw` audit hits on P5). They
 are now bound to `emphasis-label/latin` (14/20 · 600), the composite drawn on the
 approved Z1 ㉒ specimen (b). Remaining 327 numerals stay `metric-value/latin`.
 P5 scoped re-audit (Compact 390 · Wide 1280): clean; raw-text count 0.
+
+## Amendment — 2026-09-06 · exam badge in rows (`RANK-34`)
+
+C7 `PlayerRankingRow` (4 variants): the `active-mode exam` text became an `ExamBadge`
+instance (identity stack gap 4). All 558 row instances updated — 461 carry Mode/Tier
+and the locale grade string, 97 without an exam hide the badge and are fixed at 72 so the
+list stays uniform. Every P5 section was re-stacked column-wise (rows are 12 px taller);
+containment 0, overlap 0 after the reflow. Scoped audits (Compact 390, Wide 1280) clean.
