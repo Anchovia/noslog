@@ -369,3 +369,21 @@ dialog precedent. (A first pass capped the shells at 844, which the A16 pad audi
   paint, skeleton is `surface/sunken`) · buttons 40 · close ink 26 from the edge vs title 24
   (A17 within 2) · section containment 0 · overlap 0. Wide 768 was approved on Z1 ㉔
   (2026-09-06; 640 and 334 drawn and rejected) and is recorded in document 24 "Overlay width".
+
+## Amendment — 2026-09-06 · surfaces, mode selector, metadata chips (`PROF-53`–`55`)
+
+Applied to all 54 Profile frames that carry the identity block (every width, mode, locale
+and state, including the share-dialog shells):
+
+- Identity block and body sections ③④⑤⑥: fill removed, inset 0 (was 16 compact / 24
+  wide); body stack spacing 32 → 48; 1280 grid row spacing 24 → 48, column gap 16 kept
+  (8:4 = 805/395 unchanged). Grid row heights re-derived from the taller card. Judgement
+  stacked bars re-scaled to the new full width by largest remainder (sum check = width, 0 misses).
+- `② 모드 선택기 + 경쟁 요약` split into a wrapper (gap 16): SegmentedControl at content
+  width, then the summary card unchanged (`surface/surface`, radius 8, inset 16/24).
+- Public metadata: 214 chips (4 per frame, 3 where a field is hidden), 44 high, wrap gap 8.
+- Checks: section containment 0 · overlap 0 · text overflow 0 · scoped audits (Compact 390,
+  Wide 1280, 상태 Light) clean. Frame heights shrank (390: 2709 → 2641; 1280: 1654 → 1558).
+- Codex drew the original comparison (Z1 V05, 390 Dark); Light 390 and 1280 pairs were added
+  before approval. The two user modifications (selector outside, chips) are not on the Codex
+  board — the applied frames are the authority.

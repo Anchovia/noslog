@@ -116,3 +116,11 @@ separate stage. The six completed design-guide blocks remain complete.
   The Z1 ㉒ specimen had drawn the heading at `emphasis-label` 14/20; that is outside
   the composite's two approved roles, so the applied form is the one that stands.
 - **D-7 scope resolved** — all discovery result rows (`ARC-DV-02`), applied.
+
+### Follow-up — 2026-09-06 · Codex V05 and the header actions
+
+- Codex's V05 (Profile — remove stacked surfaces) was **approved** with two user
+  modifications (mode selector outside the card, metadata as chips): brief 09 `PROF-53`–`55`,
+  handoff 72. This is the layered-surface concern of §5.2 answered from a different angle.
+- The user's own observation on Music Detail Wide (604 px buttons) became `MDET-91`
+  (Z1 ㉕): actions join the identity row at Intermediate+.

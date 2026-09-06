@@ -242,3 +242,14 @@ Open items carried out of this session:
 `Music Detail · 390 · Information` and `Music Detail · 1280 · 채보 정보` (Light + Dark)
 show a real 96 px jacket; the category badge stays, the empty-slot icon is hidden.
 Document 86 §2 (jacket-led hero) remains rejected — this is a fixture, not a layout change.
+
+## Amendment — 2026-09-06 · header actions at Intermediate+ (`MDET-91`)
+
+C6 `MusicEntityHeader` gained a `Layout` property: the four existing variants are
+`Layout=Compact`, and four `Layout=Wide` variants (1216 wide) put `contextual-actions` at
+the end of the `identity` row (HUG, buttons HUG, row `CENTER`, identity-text FILL). All 24
+instances in the 768 / 1024 / 1280 frames (Light + Dark) switched to `Layout=Wide`; the 8
+instances at 768 carry a one-line artist override (`…Sound Team "A…`, box 408), the 16
+at 1024 / 1280 fit untrimmed. Compact and 320 instances are untouched. Checks: header text
+overflow 0 · section containment 0 · overlap 0 · scoped audits (Wide 1280, Intermediate 768)
+clean. Frame heights drop by 56 (e.g. 1280 채보 정보 992 → 936).
