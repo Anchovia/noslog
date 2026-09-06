@@ -23,6 +23,7 @@ import {
     serializeGlobalRankingQuery,
 } from "@/features/rankings/schemas/globalRankingSchema";
 import type { GlobalRankingQuery } from "@/features/rankings/schemas/globalRankingSchema";
+import { BASIC_RATING_TOP_COUNT } from "@/lib/tiers/basicRating";
 
 const query: GlobalRankingQuery = {
     mode: "basic",
@@ -58,6 +59,55 @@ beforeEach(() => {
             value: 14.5,
         })),
         theoreticalMax: 70 * 14.5 ** 2,
+    });
+});
+
+describe("Basic NosLog rating population", () => {
+    beforeEach(() => {
+        mocks.users.mockResolvedValue([
+            users[0],
+            { ...users[1], country: "ja-JP" },
+        ]);
+        mocks.records.mockResolvedValue([
+            ...Array.from({ length: BASIC_RATING_TOP_COUNT }, (_, index) => ({
+                user_id: 1,
+                chart_id: index + 1,
+                score: 1_000_000,
+            })),
+            { user_id: 2, chart_id: 1, score: 990_000 },
+        ]);
+    });
+
+    it("calculates the top songs from the current published Pianist basis", async () => {
+        const page = await getGlobalRankingPage(
+            { ...query, metric: "rating" },
+            null
+        );
+        expect(mocks.basis).toHaveBeenCalledWith("basic");
+        expect(page.totalCount).toBe(2);
+        expect(page.rows[0]).toMatchObject({
+            id: 1,
+            rank: 1,
+            value: 10000,
+            rating: 10000,
+            filledSlots: BASIC_RATING_TOP_COUNT,
+        });
+        expect(page.rows[1]).toMatchObject({
+            id: 2,
+            rank: 2,
+            value: 103,
+            rating: 103,
+            filledSlots: 1,
+        });
+    });
+
+    it("recalculates rating rank within the selected region", async () => {
+        const page = await getGlobalRankingPage(
+            { ...query, metric: "rating", region: "jp" },
+            null
+        );
+        expect(page.totalCount).toBe(1);
+        expect(page.rows[0]).toMatchObject({ id: 2, rank: 1, rating: 103 });
     });
 });
 

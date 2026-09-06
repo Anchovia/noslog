@@ -5,6 +5,43 @@ approval. The implementation and full page-suite verification are incomplete.
 No commit, push, branch operation, or pull request has been performed by the
 implementation agent.
 
+## Legacy ranking cleanup — 2026-09-06
+
+The user explicitly authorized completing the previously blocked ranking cleanup.
+A TypeScript module-resolution scan of repository JS/TS sources found only four
+imports from outside the 11-file legacy group: profile data, two ranking test
+files, and the legacy table-helper test import. The production Rankings page and
+API already use the new `features/rankings` implementation.
+
+The profile's `getUserRankingPosition` function moved to
+`features/rankings/server/rankingPosition.ts`; its function body was compared with
+the original and is identical. Profile data and its tests now import that module.
+After migration, the reference scan found zero imports from outside the legacy
+group. The nine `components/rankings/` files, obsolete
+`features/rankings/api/userRankings.ts`, and former `lib/rankings.ts` were then
+removed. A final source search found no remaining references to those paths.
+
+The three existing position tests and the real-database profile/ranking consistency
+test remain. Two Basic Rating tests now exercise `getGlobalRankingPage`. Five tests
+of deleted table helpers and superseded behavior were removed: formatting, two old
+pagination cases, old URL assembly, and Basic-only Rating normalization. Current
+formatting, URL, pagination, and Recital Rating behavior retain coverage in the
+current ranking unit/browser suites. This accounts for the total changing from
+750 to 745 unit tests; no failing test was skipped to obtain a pass.
+
+Verification passed: full ESLint, standalone TypeScript, the production build, all
+745 Vitest tests across 99 files, and 32 ranking/profile browser cases. Six existing
+duplicate desktop cases remain skipped. The six new profile cases use real local
+API responses to compare Basic/Recital global and country ranks in KO/JA/EN at
+mobile and desktop sizes. Results are in `/tmp/noslog-ranking-cleanup.ZZOVZf`.
+
+The in-app browser confirmed ranking-to-profile navigation, 5,683 Basic / 5,210
+Recital Grd, and the fixture's unchanged global/country rank. P5 compact Figma node
+`1806:6` was reopened through MCP and compared with Rankings; 24px/32px heading
+type and 72px rows are unchanged. No active UI component, style, font, public API,
+viewer/editor, administrator route, or database schema was modified. The paused
+implementation and previously recorded repository-wide E2E caveats remain separate.
+
 ## Single-file font correction — 2026-09-06
 
 After the user committed and pushed the checkpoint, the user explicitly rejected
@@ -186,8 +223,9 @@ P5's Figma wide list contains 72px rows separated by 1px sibling dividers. Its m
 row step is 73px, which takes visual precedence over the brief's older inset-divider
 sentence. Public rank uses the rounded displayed value, while My position uses the
 actual ordered row index so a tie crossing a page boundary opens the correct page.
-The old, now-unreferenced ranking browser chain remains in the repository. Automatic
-approval review rejected an attempted bulk deletion; that deletion was not performed.
+At the checkpoint, automatic approval review rejected a bulk deletion of the old
+ranking browser chain. The subsequent user-authorized cleanup is now complete and
+recorded above; the formerly blocked files no longer remain in the repository.
 
 ## Required before delivery
 

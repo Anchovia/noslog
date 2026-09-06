@@ -12,7 +12,7 @@ vi.mock("@/lib/db", async () => {
 });
 import db from "@/lib/db";
 import { getGlobalRankingPage } from "@/features/rankings/server/globalRankingData";
-import { getUserRankingPosition } from "@/lib/rankings";
+import { getUserRankingPosition } from "@/features/rankings/server/rankingPosition";
 
 describe.skipIf(!process.env.COMMUNITY_TEST_DATABASE_URL)(
     "global competition ranking with local PostgreSQL",

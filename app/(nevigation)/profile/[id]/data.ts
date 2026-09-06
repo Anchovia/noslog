@@ -2,7 +2,7 @@ import { CACHE_TAGS, getUserProfileTag } from "@/lib/cacheTags";
 import { PUBLIC_DATA_REVALIDATE_SECONDS } from "@/lib/cachePolicy";
 import db from "@/lib/db";
 import { buildProfileSJustAnalytics } from "@/lib/profile/profileAnalytics";
-import { getUserRankingPosition } from "@/lib/rankings";
+import { getUserRankingPosition } from "@/features/rankings/server/rankingPosition";
 import { normalizeStoredGrade } from "@/lib/utils";
 import { unstable_cache } from "next/cache";
 
