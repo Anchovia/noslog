@@ -760,3 +760,13 @@ file-wide. The approved Z1 ㉒ specimen (b) uses the existing composite
 re-bound to it. Geometry, the 28×20 rank box and colour bindings are unchanged;
 proportional figures replace tabular for these single-digit numerals, which does
 not move the column. No 700 exception exists.
+
+## Overlay width — 2026-09-06 (Z1 ㉔)
+
+Dialogs have two widths, both existing values: **Compact 334** (the DeleteConfirmDialog
+width, `390 − 2×28`) and **Wide 768**, which reuses the `reading` container measure as the
+dialog width when the dialog carries a media preview that must stay legible (the profile
+share card: 720×378 inside 768). The user chose 768 over 640 (the Home bounded width) and
+334 on a drawn comparison. This is a bounded reuse of the reading measure for an overlay
+box, not a new primitive; dialogs that carry only text and actions stay at 334 in every
+width.

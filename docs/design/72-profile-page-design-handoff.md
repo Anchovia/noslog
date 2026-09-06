@@ -365,5 +365,5 @@ the dialog instance centred (absolute), the P10 탈퇴 dialog precedent.
   no new copy. Preview `aria` = `profile.cardPreview`; close = Esc + button.
 - Checks: spacing all in scale · text styles 100% · hard-coded fills 0 (preview is an image
   paint, skeleton is `surface/sunken`) · buttons 40 · close ink 26 from the edge vs title 24
-  (A17 within 2) · section containment 0 · overlap 0. Open: Wide 768 overlay width is
-  borrowed from the reading container and needs a Foundation decision.
+  (A17 within 2) · section containment 0 · overlap 0. Wide 768 was approved on Z1 ㉔
+  (2026-09-06; 640 and 334 drawn and rejected) and is recorded in document 24 "Overlay width".
