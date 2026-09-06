@@ -5,7 +5,60 @@ approval. The implementation and full page-suite verification are incomplete.
 No commit, push, branch operation, or pull request has been performed by the
 implementation agent.
 
-## P2 HOME-23 and fluid desktop layout — 2026-09-06
+## Compact common layout and P2 update alignment — 2026-09-07
+
+The user selected the osu! approach after rejecting the earlier 90% layout and
+1200px proposal. Ordinary header/main/footer content now shares a centered
+1000px maximum outer shell. `AppShell` owns body horizontal padding once through
+`.nl-main__content`; `PageContainer` owns vertical rhythm. Legacy ordinary page
+roots no longer add another 16px inset. Padding is 16px below 672px and 24px
+thereafter. At a 1470px browser viewport, measured shell bounds are x=235,
+width=1000, with body content x=259, width=952. Large monitors do not expand this
+shell. Backgrounds and dividing lines continue across the viewport.
+
+The user's subsequent request also places Home official news and NosLog
+announcements on the same fluid, centered 640px column as search/navigation.
+The three regions share one CSS rule. Existing Home update side-by-side rules
+were removed. Foundation 24, provenance 25, and briefs 03/15 record these
+explicit supersessions; the twelve production comparisons and their access
+limitations are in provenance 25.
+
+The expanded common-layout browser matrix covers all twelve rendered public
+ordinary routes, three locales, and sixteen widths from 320 to 2560px, including
+1000px and MacBook widths 1440/1470/1512. It now checks each page root's actual
+content edge and padding, rather than conditionally checking only pages with
+`PageContainer`. It also checks horizontal overflow on every route, Home update
+alignment, menu anchoring/focus/inert behavior, and the viewer's original shell.
+The authenticated settings page was separately inspected in the browser at
+1280px and 320px, without saving changes. Its content edges align and it has no
+horizontal overflow. Narrow English profile dates and the grade/unit needed
+wrapping corrections discovered by this stronger audit.
+
+Figma MCP screenshots were reopened for C8 header `247:14` and P2 intermediate
+`1164:5819` in `cVbWCxhkfxFfHmAKLCyKrD`. Earlier P2 context covers the compact and
+wide variants as recorded below. The approved width changes take precedence
+over wider Figma specimens; remaining Home icon/label geometry, tile sizes,
+spacing, surfaces, and type tokens still pass the existing multilingual,
+two-theme P2 matrix. Desktop and 320px screenshots were visually inspected.
+Discovery/Tiers column assertions now reflect the actual available result area
+inside the smaller shell; their components and filter behavior were not changed.
+
+Verification: ESLint, TypeScript, production build, all 745 unit tests in 99 files, changed-code
+formatting, whitespace checks, and the layout detector passed. The complete
+current `noslog-v2-*.spec.ts` browser selection passed with 149 passed and 45
+conditional project/matrix skips. Initial failures were nine stale column-count
+expectations; they were corrected for the approved narrower shell and the full
+selection rerun. No failing assertions were skipped. Browser artifacts/log:
+`/tmp/noslog-layout-1000-final` and `/tmp/noslog-layout-1000-final.log`.
+Production build log: `/tmp/noslog-layout-1000-build.log` (exit 0).
+
+Limitations: the local Home has no published announcement entries. Their shared
+container and styling are updated, but a populated announcement screenshot is
+not claimed. This checkpoint does not complete later P-pages or resolve the
+older repository-wide E2E limitations recorded below. Viewer/editor and admin
+implementation, font assets, dependencies, and database schema are unchanged.
+
+## P2 HOME-23 and fluid desktop layout — 2026-09-06 (width rule superseded)
 
 Scope: the user's updated Home destination collection and requested proportional
 desktop space. No later P-page implementation is included. Home navigation now

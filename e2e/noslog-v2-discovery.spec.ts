@@ -153,8 +153,8 @@ for (const locale of ["ko", "ja", "en"]) {
             [390, 2],
             [768, 4],
             [1024, 5],
-            [1280, 4],
-            [1600, 5],
+            [1280, 3],
+            [1600, 3],
         ]) {
             await page.setViewportSize({ width, height: 900 });
             await expect

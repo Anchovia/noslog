@@ -375,6 +375,43 @@ separate circle/square contract.
 
 ## Evidence retention policy
 
+### Approved compact common-layout correction — 2026-09-07
+
+The user rejected the near-full-width 90% shell and the proposed 1200px MacBook
+ceiling, requested comparable compact record/catalog services, then explicitly
+selected the osu! approach. The approved NosLog implementation uses one centered
+1000 CSS px maximum shell. Foundation 24 owns the exact contract. This supersedes
+the earlier 1440px/90% refinement; large corporate and commerce layouts are not
+the comparison basis for this correction.
+
+The following production references were inspected in the browser. Values are
+observed CSS geometry, not physical screenshot pixels. Public login views are
+explicitly distinguished from authenticated record views. No color or font
+primitive is selected from this audit.
+
+| Production reference                                                                | Observed layout and applicable role                                                                                                                               | Limit                                                                                                           |
+| ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| [osu! rankings](https://osu.ppy.sh/rankings/osu/global/performance)                 | At 1280px, header/content wrappers cap at 1000px; ranking contents occupy 900px after internal padding. Bounded record/ranking composition is the selected model. | NosLog retains its own approved spacing tokens, rather than copying osu!'s 50px inset or decorative background. |
+| [Letterboxd films](https://letterboxd.com/films/)                                   | At 1280px, content wrapper is 950px. Compact poster, review, and record discovery is comparable.                                                                  | Its fixed desktop geometry is not copied as mobile behavior.                                                    |
+| [maimai DX NET](https://maimaidx.jp/maimai-mobile/)                                 | At 1440px, public wrapper is 480px with a 450px inner region. Strong continuity with arcade mobile use.                                                           | Public login/news inspected; authenticated records were not inspected.                                          |
+| [chunirec players](https://chunirec.net/users/)                                     | At 1440px, container max is 1140px with 28px inline padding. Player-table comparison is relevant.                                                                 | A broader comparison layout, not the selected default width.                                                    |
+| [SDVX Info](https://reboot.sdvx.info/)                                              | At 1280px, container max is 1180px with 20px padding; tool links and search use narrower areas. Record, bingo, and rating tasks overlap NosLog.                   | Its broader tool navigation is not a NosLog requirement.                                                        |
+| [Official NOSTALGIA](https://p.eagate.573.jp/game/nostalgia/op3/welcome/index.html) | At 1440px, the public content wrapper is 980px. Same-game context supports a compact central region.                                                              | Welcome portal only; authenticated record pages were not inspected.                                             |
+| [arcade-songs](https://arcade-songs.zetaraku.dev/)                                  | At 1280px, container max is 1185px with 32px padding. Related arcade catalog discovery.                                                                           | Broader game chooser, not the selected shell.                                                                   |
+| [Donder Hiroba](https://donderhiroba.jp/login.php)                                  | Compact public login/news and sequential controls support the mobile arcade context.                                                                              | No reliable numeric width recorded; authenticated records were not inspected.                                   |
+| [Last.fm charts](https://www.last.fm/charts)                                        | At 1280px, a 1200px row supports three parallel chart columns.                                                                                                    | Parallel comparison explains the extra width; not equivalent to NosLog's default compact page.                  |
+| [PvPoke rankings](https://pvpoke.com/rankings/)                                     | Visually centered narrow search/ranking column with expandable detail and outside advertising.                                                                    | Numeric geometry was not reliably observable; no inferred pixel value is authoritative.                         |
+| [Kamaitachi](https://kamai.tachi.ac/) / [Tachi](https://tachi.ac/)                  | Public login container max is 576px at 1280px. Score history, goals, and rivals are a close functional comparison.                                                | Login width is not evidence of authenticated score-page geometry.                                               |
+| [AniList search](https://anilist.co/search/anime)                                   | At 1280px, catalog container is 1140px with 30px padding; header wrapper max is 1050px.                                                                           | Multiple poster columns justify a broader catalog; its differing header alignment is not copied.                |
+
+The accepted principle is to bound the shared shell independently of monitor
+width while retaining fluid mobile reflow. Global layout owns horizontal page
+padding once; individual pages and the header/footer do not invent separate
+baselines. Home's search, destinations, official news, and announcements share
+the existing 640px inner measure by the user's subsequent explicit decision.
+That Home decision supersedes wider update specimens without changing the
+remaining Figma component values, font delivery, or preservation boundaries.
+
 The active guide keeps this consolidated provenance record and the normative document
 `24`. Deleted serial research files and interactive comparison artifacts remain in Git
 history for forensic review. They must not be treated as current scope, active

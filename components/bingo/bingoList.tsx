@@ -33,7 +33,7 @@ export default function BingoList({ bingos }: { bingos: BingoListItem[] }) {
     );
 
     return (
-        <div className="flex flex-col gap-4 px-4 py-4">
+        <div className="flex flex-col gap-4 py-4">
             <div className="flex items-end justify-between">
                 <h1 className="text-title">{t("bingo.title")}</h1>
                 <p className="text-caption">

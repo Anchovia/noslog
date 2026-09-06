@@ -95,7 +95,7 @@ export default async function BookmarkletPage() {
               });
 
     return (
-        <div className="flex flex-col gap-3 px-4 py-5">
+        <div className="flex flex-col gap-3 py-5">
             <header>
                 <h1 className="text-title">{t("sync.title")}</h1>
                 <p className="text-body-muted mt-2">{t("sync.description")}</p>

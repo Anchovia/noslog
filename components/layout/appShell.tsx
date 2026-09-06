@@ -48,7 +48,7 @@ export default function AppShell({
             </a>
             <AppHeader account={account} />
             <main id="main-content" className="nl-main" tabIndex={-1}>
-                {children}
+                <div className="nl-main__content">{children}</div>
             </main>
             {footer}
         </div>

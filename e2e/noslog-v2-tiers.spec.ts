@@ -464,8 +464,8 @@ for (const locale of ["ko", "ja", "en"])
                     expect(size.scroll).toBeLessThanOrEqual(size.width);
                     expect(size.font).toContain("Pretendard JP Variable");
                     const expected = detailed
-                        ? { 320: 2, 390: 2, 768: 3, 1024: 5, 1280: 4, 1600: 5 }
-                        : { 320: 3, 390: 3, 768: 5, 1024: 7, 1280: 6, 1600: 8 };
+                        ? { 320: 2, 390: 2, 768: 3, 1024: 5, 1280: 3, 1600: 3 }
+                        : { 320: 3, 390: 3, 768: 5, 1024: 7, 1280: 5, 1600: 5 };
                     expect(size.columns).toBe(
                         expected[width as keyof typeof expected]
                     );

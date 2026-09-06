@@ -54,7 +54,7 @@ export default async function ProfileSettingsPage({
     if (!user) redirect(localizePath("/login", locale));
 
     return (
-        <div className="flex flex-col gap-5 px-4 py-5">
+        <div className="flex flex-col gap-5 py-5">
             <header>
                 <h1 className="text-title">{t("settings.title")}</h1>
                 <p className="text-caption mt-1">{t("settings.description")}</p>

@@ -170,7 +170,7 @@ export default async function ExamsPage() {
     });
 
     return (
-        <div className="flex flex-col gap-3 px-4 py-3">
+        <div className="flex flex-col gap-3 py-3">
             <h1 className="text-title">{t("exams.title")}</h1>
             <ExamDashboard
                 exams={items}

@@ -82,7 +82,7 @@ export default function ProfileHeader({
                             </Badge>
                         ) : null}
                     </div>
-                    <p className="text-caption mt-1.5 whitespace-nowrap">
+                    <p className="text-caption mt-1.5">
                         {t("profile.joined", {
                             date: formatProfileDate(
                                 user.created_at,

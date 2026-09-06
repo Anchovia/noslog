@@ -107,7 +107,7 @@ export default async function BingoDetailPage({
     );
 
     return (
-        <div className="flex flex-col gap-4 px-4 py-4">
+        <div className="flex flex-col gap-4 py-4">
             <section className="flex items-center gap-3">
                 <div
                     className="bg-surface-muted size-12 shrink-0 rounded-md bg-cover bg-center"

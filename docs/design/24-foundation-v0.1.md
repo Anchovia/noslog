@@ -191,41 +191,37 @@ page-level horizontal scrolling.
 | Container   | Maximum / measure                                | Default task family                                                          |
 | ----------- | ------------------------------------------------ | ---------------------------------------------------------------------------- |
 | `reading`   | `768px` shell; continuous prose capped at `68ex` | Guidance, policy, onboarding, settings/help                                  |
-| `standard`  | `1440px`                                         | Home, discovery, Tiers, Bingo, Exams                                         |
-| `wide`      | `1440px`                                         | Music analysis, Rankings, Profile, Arcade                                    |
+| `standard`  | `1000px` shared outer shell                      | Home, discovery, Tiers, Bingo, Exams                                         |
+| `wide`      | `1000px` shared outer shell                      | Music analysis, Rankings, Profile, Arcade                                    |
 | `workspace` | Fluid inside approved margins                    | Ordinary administrative or meaning-dependent professional visualization only |
 
 Container maximums are ceilings, never fixed canvases. Component recomposition uses
 its own measured failure point and a container query when nested.
 
-**Approved common-layout correction — 2026-09-06:** The user selected `1440px`
-as the ordinary layout maximum, including header and footer contents. Center these
-three regions; keep header/footer backgrounds and horizontal boundaries full width.
-Use the existing `16px / 24px / 32px` responsive inline margins for shell contents
-and the page grid. The `reading` measure is a narrower inner content constraint,
-not a narrower global header/footer. Viewer/editor and `/admin/*` are unchanged.
-This supersedes the former `standard = 1280px` ceiling and SHELL-34. Implementation
-reuses Figma's existing `container/wide = 1440px` through a shared layout alias;
-the raw exported `container/standard = 1280px` remains source evidence and must
-not be reapplied to ordinary pages. The existing Figma frames have not been edited
-by this implementation correction. See brief 15, SHELL-35.
+**Approved compact common-layout correction — 2026-09-07:** After reviewing
+comparable record/catalog services, the user selected the osu! approach: a bounded
+central application area that does not expand just because the display is large.
+Header contents, ordinary main layout, and footer contents share
+`width: 100%; max-width: 1000px` with automatic inline margins. Their backgrounds
+and horizontal boundaries remain full width. This supersedes the 2026-09-06
+`1440px` ceiling, subsequent `90%` implementation, and proposed `1200px` step.
 
-**Fluid desktop implementation refinement — 2026-09-06:** The user's subsequent
-MacBook review requested proportional outer space below the ceiling. At an
-available shell width of `1056px` or more, the shared header/main/footer wrappers
-use `90%` of that width, capped at `1440px`. Below that transition they use the
-available width. The existing inner `16px / 24px / 32px` margins respond to the
-resulting bounded page width, so all three regions retain matching alignment.
-For example, a `1440px` available shell yields a `1296px` wrapper with `32px`
-inner margins; a `1920px` shell yields the `1440px` ceiling. Home search and
-destinations retain their separate HOME-23 bound inside this wrapper.
+The global layout owns inline padding exactly once: `16px` below `672px` available
+shell width and `24px` thereafter. With the new ceiling, the `1056px` page-query
+wide geometry does not activate in ordinary pages. Page roots must not repeat
+inline padding; they own only their vertical rhythm and internal component spacing.
+At a `1440px` available viewport, the outer wrapper starts at `220px`; header,
+body, and footer contents begin at `244px`, with a shared `952px` usable width.
+Home search and destinations retain their approved narrower `640px` bound.
+The user's subsequent explicit correction also aligns official news and NosLog
+announcements to that same column; see the Home brief's 2026-09-07 addendum.
 
-This proportional-space implementation draws on the inspected
-[Microsoft production header and footer](https://www.microsoft.com/ko-kr),
-which used `5%` inline space at the reviewed desktop width. NosLog retains its
-own approved ceiling and inner spacing tokens; Microsoft's ceiling is not adopted.
-The user requested the fluid behavior; the `90%` mapping is the implementation
-choice stated during this task, rather than a new Figma variable value.
+The `reading` measure is an optional inner constraint, not an independent global
+shell. The implementation alias is `--nl-layout-max`; raw Figma exports of
+`container/standard = 1280px` and `container/wide = 1440px` remain source evidence
+and do not override this later user decision. No Figma frame was edited by this
+implementation. Viewer/editor and `/admin/*` remain outside the correction.
+See brief 15, SHELL-35, and document 25's compact-layout reference audit.
 
 ## Neutral color — Adobe Spectrum S2
 

@@ -4,7 +4,8 @@ import { expect, test } from "@playwright/test";
 import { expectNoHorizontalOverflow, localeCopy } from "./helpers";
 
 const widths = [
-    320, 390, 672, 768, 1055, 1056, 1173, 1174, 1280, 1440, 1600, 1920, 2560,
+    320, 390, 672, 768, 1000, 1055, 1056, 1173, 1174, 1280, 1440, 1470, 1512,
+    1600, 1920, 2560,
 ];
 const routes = [
     "",
@@ -13,6 +14,7 @@ const routes = [
     "/tiers",
     "/rankings",
     "/bingo",
+    "/bingo/1",
     "/exams",
     "/profile/1",
     "/privacy",
@@ -28,7 +30,7 @@ test.beforeEach(({}, testInfo) => {
 });
 
 for (const locale of ["ko", "ja", "en"] as const) {
-    test(`${locale} ordinary routes share a centered 1440px shell ceiling`, async ({
+    test(`${locale} ordinary routes share a centered 1000px shell and content alignment`, async ({
         page,
     }, testInfo) => {
         test.setTimeout(120_000);
@@ -56,19 +58,13 @@ for (const locale of ["ko", "ja", "en"] as const) {
                         footer: box(".nl-footer__content"),
                         headerSurface: box(".nl-header"),
                         footerSurface: box(".nl-footer"),
-                        content: document.querySelector(
-                            ".nl-main > .nl-container"
-                        )
-                            ? box(".nl-main > .nl-container")
-                            : null,
+                        content: box(".nl-main__content"),
+                        pageRoot: box(
+                            ".nl-main__content > :not(script):not(style)"
+                        ),
                     };
                 });
-                const expectedWidth = Math.min(
-                    layout.viewport >= 1056
-                        ? layout.viewport * 0.9
-                        : layout.viewport,
-                    1440
-                );
+                const expectedWidth = Math.min(layout.viewport, 1000);
                 const expectedX = (layout.viewport - expectedWidth) / 2;
                 for (const box of [layout.header, layout.main, layout.footer]) {
                     expect(box.width, `${route} at ${width}`).toBeCloseTo(
@@ -87,22 +83,46 @@ for (const locale of ["ko", "ja", "en"] as const) {
                     expect(surface.width).toBe(layout.viewport);
                     expect(surface.x).toBe(0);
                 }
-                const padding =
-                    expectedWidth < 672 ? 16 : expectedWidth < 1056 ? 24 : 32;
+                const padding = expectedWidth < 672 ? 16 : 24;
                 for (const box of [layout.header, layout.footer]) {
                     expect(box.paddingLeft).toBe(padding);
                     expect(box.paddingRight).toBe(padding);
                 }
-                if (layout.content) {
-                    expect(layout.content.paddingLeft).toBe(padding);
-                    expect(layout.content.paddingRight).toBe(padding);
-                }
+                expect(layout.content.paddingLeft).toBe(padding);
+                expect(layout.content.paddingRight).toBe(padding);
+                expect(layout.pageRoot.paddingLeft).toBe(0);
+                expect(layout.pageRoot.paddingRight).toBe(0);
+                expect(layout.pageRoot.x).toBeCloseTo(expectedX + padding, 1);
+                expect(layout.pageRoot.width).toBeCloseTo(
+                    expectedWidth - padding * 2,
+                    1
+                );
+                await expectNoHorizontalOverflow(page);
                 if (route === "") {
                     const content = await page
                         .locator(".nl-home")
                         .boundingBox();
-                    expect(content?.width).toBeCloseTo(expectedWidth, 1);
+                    expect(content?.width).toBeCloseTo(
+                        expectedWidth - padding * 2,
+                        1
+                    );
                     await expectNoHorizontalOverflow(page);
+                    const search = (await page
+                        .locator(".nl-home-search")
+                        .boundingBox())!;
+                    for (const selector of [
+                        ".nl-home-navigation",
+                        ".nl-home-updates",
+                        ".nl-home-update",
+                    ]) {
+                        for (const region of await page
+                            .locator(selector)
+                            .all()) {
+                            const box = (await region.boundingBox())!;
+                            expect(box.x).toBeCloseTo(search.x, 1);
+                            expect(box.width).toBeCloseTo(search.width, 1);
+                        }
+                    }
                     if ([390, 1440, 2560].includes(width)) {
                         await page.screenshot({
                             path: testInfo.outputPath(

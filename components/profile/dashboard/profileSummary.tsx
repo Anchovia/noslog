@@ -24,11 +24,11 @@ export default function ProfileSummary({
         <section className="grid grid-cols-2 gap-2">
             <article className="bg-surface rounded-card flex min-w-0 flex-col justify-center p-4">
                 <p className="text-caption">{t("profile.grade")}</p>
-                <p className="mt-1 flex items-baseline gap-1.5 tabular-nums">
-                    <strong className="text-score-display text-score">
+                <p className="mt-1 flex flex-wrap items-baseline gap-1.5 tabular-nums">
+                    <strong className="text-score-display text-score whitespace-nowrap">
                         {formatProfileGrade(grade)}
                     </strong>
-                    <span className="text-text-secondary text-xs font-semibold">
+                    <span className="text-text-secondary text-xs font-semibold whitespace-nowrap">
                         Grd
                     </span>
                 </p>

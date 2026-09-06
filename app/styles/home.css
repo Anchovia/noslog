@@ -3,12 +3,17 @@
     gap: var(--nl-spacing-32);
     padding-block: var(--nl-spacing-32);
 }
+.noslog-ui .nl-home-hero,
+.noslog-ui .nl-home-navigation,
+.noslog-ui .nl-home-updates {
+    width: 100%;
+    max-width: var(--nl-home-search-width);
+    margin-inline: auto;
+}
 .noslog-ui .nl-home-hero {
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-24);
-    width: 100%;
-    margin-inline: auto;
 }
 .noslog-ui .nl-home-identity {
     display: flex;
@@ -51,10 +56,6 @@
     padding: var(--nl-spacing-12);
     border-radius: var(--nl-radius-container);
     background: var(--nl-surface-surface);
-}
-.noslog-ui .nl-home-navigation {
-    width: 100%;
-    margin-inline: auto;
 }
 .noslog-ui .nl-home-tile__label {
     max-width: 100%;
@@ -150,10 +151,6 @@
     outline-offset: -1px;
 }
 @container page (min-width: 672px) {
-    .noslog-ui .nl-home-hero,
-    .noslog-ui .nl-home-navigation {
-        max-width: var(--nl-home-search-width);
-    }
     .noslog-ui .nl-home-destinations {
         grid-template-columns: repeat(4, minmax(0, 1fr));
         gap: var(--nl-grid-gutter-wide);
@@ -166,13 +163,6 @@
     .noslog-ui .nl-home-identity .nl-page-title {
         font-size: var(--nl-type-size-32);
         line-height: var(--nl-type-line-height-40);
-    }
-    .noslog-ui .nl-home-updates:has(.nl-home-announcements) {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: var(--nl-grid-gutter-wide);
-    }
-    .noslog-ui .nl-home-announcements {
-        grid-column: span 2;
     }
     .noslog-ui .nl-home-announcement {
         flex-direction: row;

@@ -406,7 +406,7 @@ export default async function PrivacyPolicyPage() {
     const copy = policyByLocale[locale];
 
     return (
-        <div className="flex flex-col gap-4 px-4 py-5">
+        <div className="flex flex-col gap-4 py-5">
             <header>
                 <h1 className="text-title">{copy.title}</h1>
                 <p className="text-caption mt-1">{copy.effectiveDate}</p>

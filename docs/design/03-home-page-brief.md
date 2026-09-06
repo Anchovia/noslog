@@ -935,6 +935,17 @@ design-system or content work. They do not reopen the approved Home product beha
 
 ## Ongoing Handoff
 
+### Approved content alignment correction — 2026-09-07
+
+The user explicitly requested that official NOSTALGIA news and NosLog
+announcements align with the Home search and destination collection. All three
+regions share one centered, fluid column capped at 640px. Each update section
+uses that entire column; announcements and official news remain vertically
+stacked. This supersedes earlier wide specimens that spread updates across the
+page or placed them in unequal columns. The shared site shell follows the
+separately approved compact layout correction in Foundation 24. Existing content,
+ordering, states, typography, spacing, and navigation behavior remain applicable.
+
 The approved Home contract remains an upstream constraint for Foundation, downstream
 design, implementation mapping, and localized production copy. Later approved page
 briefs supersede no Home behavior unless their decision logs say so explicitly.

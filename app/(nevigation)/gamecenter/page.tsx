@@ -22,7 +22,7 @@ export default async function GamecenterPage() {
     ]);
 
     return (
-        <div className="flex flex-col gap-4 px-4 py-5">
+        <div className="flex flex-col gap-4 py-5">
             <GamecenterExplorer
                 appKey={clientEnv.NEXT_PUBLIC_KAKAO_MAP_APP_KEY ?? ""}
                 arcades={arcades.map((arcade) => ({
