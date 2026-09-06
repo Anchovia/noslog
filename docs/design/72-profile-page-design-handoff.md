@@ -345,8 +345,10 @@ It is now C8 `ProfileShareDialog` (component set, `Layout` Compact 334 / Wide 76
 `State` Default · Preparing · Copied · ImageError · CardError) and twelve P6 frames:
 `Profile · 390 · Light/Dark · 공유 다이얼로그 · {열림 · 준비 중 · 클립보드 복사 완료 · 이미지 처리 실패 · 카드 생성 실패}`
 in the two 상태 sections, and `Profile · 1280 · Light/Dark · 공유 다이얼로그 · 열림` in the
-Wide section. Each is the owner Basic frame capped at 844 with a `surface/scrim` rectangle and
-the dialog instance centred (absolute), the P10 탈퇴 dialog precedent.
+Wide section. Each is the owner Basic frame at its full content height with a full-height `surface/scrim`
+rectangle and the dialog instance centred in the first 844 viewport (absolute), the P10 탈퇴
+dialog precedent. (A first pass capped the shells at 844, which the A16 pad audit read as
+1,865 px of squeezed content; full height removes the finding without a new convention.)
 
 - Actions: **이미지 저장** primary, **클립보드 복사**, **공유** (system share sheet). The user
   chose the current product's three-button composition over the document 09 ordering
