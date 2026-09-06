@@ -191,12 +191,24 @@ page-level horizontal scrolling.
 | Container   | Maximum / measure                                | Default task family                                                          |
 | ----------- | ------------------------------------------------ | ---------------------------------------------------------------------------- |
 | `reading`   | `768px` shell; continuous prose capped at `68ex` | Guidance, policy, onboarding, settings/help                                  |
-| `standard`  | `1280px`                                         | Home, discovery, Tiers, Bingo, Exams                                         |
+| `standard`  | `1440px`                                         | Home, discovery, Tiers, Bingo, Exams                                         |
 | `wide`      | `1440px`                                         | Music analysis, Rankings, Profile, Arcade                                    |
 | `workspace` | Fluid inside approved margins                    | Ordinary administrative or meaning-dependent professional visualization only |
 
 Container maximums are ceilings, never fixed canvases. Component recomposition uses
 its own measured failure point and a container query when nested.
+
+**Approved common-layout correction — 2026-09-06:** The user selected `1440px`
+as the ordinary layout maximum, including header and footer contents. Center these
+three regions; keep header/footer backgrounds and horizontal boundaries full width.
+Use the existing `16px / 24px / 32px` responsive inline margins for shell contents
+and the page grid. The `reading` measure is a narrower inner content constraint,
+not a narrower global header/footer. Viewer/editor and `/admin/*` are unchanged.
+This supersedes the former `standard = 1280px` ceiling and SHELL-34. Implementation
+reuses Figma's existing `container/wide = 1440px` through a shared layout alias;
+the raw exported `container/standard = 1280px` remains source evidence and must
+not be reapplied to ordinary pages. The existing Figma frames have not been edited
+by this implementation correction. See brief 15, SHELL-35.
 
 ## Neutral color — Adobe Spectrum S2
 

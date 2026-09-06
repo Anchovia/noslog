@@ -9,21 +9,23 @@ export default async function AppFooter() {
 
     return (
         <footer className="nl-footer">
-            <div className="nl-footer__links nl-control">
-                <Link href={getLocalizedHref("/privacy", locale)}>
-                    {t("footer.privacy")}
-                </Link>
-                <a
-                    href="https://github.com/Anchovia/noslog"
-                    aria-label={`GitHub · ${t("shell.externalLink")}`}
-                >
-                    <span lang="en">GitHub</span>
-                    <ExternalLink aria-hidden />
-                </a>
+            <div className="nl-footer__content">
+                <div className="nl-footer__links nl-control">
+                    <Link href={getLocalizedHref("/privacy", locale)}>
+                        {t("footer.privacy")}
+                    </Link>
+                    <a
+                        href="https://github.com/Anchovia/noslog"
+                        aria-label={`GitHub · ${t("shell.externalLink")}`}
+                    >
+                        <span lang="en">GitHub</span>
+                        <ExternalLink aria-hidden />
+                    </a>
+                </div>
+                <p className="nl-footer__notice nl-body-secondary nl-muted">
+                    {t("shell.serviceNotice")}
+                </p>
             </div>
-            <p className="nl-footer__notice nl-body-secondary nl-muted">
-                {t("shell.serviceNotice")}
-            </p>
         </footer>
     );
 }

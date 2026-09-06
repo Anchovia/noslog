@@ -397,3 +397,14 @@ HUG).
   (173×44 / 138×44 at 320), 4×2 at 768/1024 (inset 12) and 1280 (inset 24, 292×68). 53 zones,
   424 tiles; every label fits at `control` in all locales and widths; zone height 212 at 390.
 - Search-preview popover edge now uses `border/overlay` (Light invisible, Dark visible).
+
+## Amendment — 2026-09-06 · `HOME-23` grid restored
+
+All 57 Home frames: the destination zone is again an icon-over-label grid — 3 columns at
+compact (111×72 at 390, 88×72 at 320), 4 columns of 148×96 inside a 640 bounded column at
+768 / 1024 / 1280 / 1440. Tiles are FIXED-width columns with HUG height; the short last row is
+left-aligned. Labels re-ran the `HOME-21` cascade (control 453 · nav-fit 3 · wrap 0, overflow 0).
+Section containment 0 · overlap 0 · scoped audits (Compact 390, Wide 1280, 320/locale) clean.
+Knock-on to re-check in implementation: the keyboard-state dynamic-row worst case — the zone is
+now three rows (240) instead of four short rows (212) at 390, so the number of preview rows that
+fit above the handoff changes.
