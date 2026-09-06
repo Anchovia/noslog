@@ -2,7 +2,52 @@
 
 This is an implementation evidence log, not a new design authority or a release
 approval. The implementation and full page-suite verification are incomplete.
-No commit, push, branch operation, or pull request has been performed.
+No commit, push, branch operation, or pull request has been performed by the
+implementation agent.
+
+## Single-file font correction — 2026-09-06
+
+After the user committed and pushed the checkpoint, the user explicitly rejected
+split fonts and requested the code and briefs be corrected. The current delivery
+uses the unchanged `PretendardJPVariable.woff2` extracted from the supplied official
+1.3.9 archive. The 119 superseded split files have been removed, and one `@font-face`
+without `unicode-range` loads the full variable font. The license and source/hash
+manifest remain beside the single font file. The vendor script now accepts that
+release archive and does not fetch or recreate split files.
+
+Foundation 24, provenance 25, scope audit 57, handoff 63, and the README's authority
+pointer reflect the new decision. The older PDF's font-delivery description is
+superseded by the editable sources. No viewer/editor, administrator route, font
+weight, fallback order, or KO-only glyph feature was changed.
+
+Validation for this correction passed:
+
+- Full ESLint, standalone TypeScript, the production build, and all 750 Vitest
+  tests across 99 files. The revised Foundation test requires exactly one JP WOFF2
+  file and one font face, verifies the original font/license hashes, and rejects
+  `unicode-range` delivery.
+- All 122 existing P1–P5 browser cases passed with the complete font, including
+  multilingual reflow, accessibility, Figma geometry, and interaction coverage.
+  The 32 existing duplicate/project-specific skips remain unchanged.
+- All six new font-delivery cases passed across KO/JA/EN and mobile/desktop. Each
+  visits Home, Discovery, Music Detail, Tiers, and Rankings, verifies one JP font
+  URL, an initial successful response, loaded variable weights, the locale glyph
+  feature, and no horizontal document overflow.
+- The initial font-network assertions misclassified successful cache validation
+  (`304 Not Modified`) as failure. After correcting that assertion, all six cases
+  passed in `/tmp/noslog-font-verified.5VefXW`. The earlier 122-case pass and the
+  diagnostic failures remain in `/tmp/noslog-font-qa.mqAcbj`.
+- The in-app browser was inspected at compact and desktop sizes. The P5 compact
+  Figma screenshot (`1806:6`) was reopened through MCP and compared with Rankings;
+  the title remains 24px/32px and player rows remain 72px. The supplied-font
+  exception and real fixture content explain the existing differences from the
+  Figma specimen; this does not claim whole-suite pixel parity.
+- Re-running the archive importer reproduces the font, license, manifest, and CSS
+  byte-for-byte. No protected viewer/editor/admin source or existing standard
+  Pretendard loader changed.
+
+This verifies the bounded font correction. The previously recorded repository-wide
+E2E failures and paused P6–P16 implementation remain outside this correction.
 
 ## User-requested checkpoint — 2026-09-06
 
@@ -62,9 +107,9 @@ Font bytes, the JP license, and Figma token values are unchanged.
 
 - Visual source: NosLog v2.0.0 (`cVbWCxhkfxFfHmAKLCyKrD`), P1–P16 and C1–C8.
 - Z1 is excluded from implementation and has not been accessed in this task.
-- Typography follows the user's explicit exception: the official Pretendard JP
-  Variable 1.3.9 dynamic subsets, hosted on the application origin. The supplied JP
-  archive provides the unchanged JP license. Font-file and license hashes are recorded.
+- Typography follows the user's latest explicit exception: one complete official
+  Pretendard JP Variable 1.3.9 WOFF2, hosted on the application origin. The supplied JP
+  archive provides the unchanged font and license. Their hashes are recorded.
 - Ordinary styles are scoped to `.noslog-ui`; the existing chart viewer/editor and
   `/admin/*` retain the existing shell and theme.
 - The existing administrator page was opened before and after the shell change;

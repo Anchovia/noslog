@@ -4,7 +4,7 @@
 
 - Status: `Approved current scope authority`
 - Language: English
-- Last updated: 2026-08-13
+- Last updated: 2026-09-06
 - Mirrors: the six-block table in the root `README.md`
 - Foundation authority: [document 24](./24-foundation-v0.1.md)
 - Foundation provenance: [document 25](./25-foundation-v0.1-provenance.md)
@@ -69,8 +69,11 @@ precisely named item. Preference, an old unchecked box, or a deleted specimen ma
 Block 5 does not re-run old source comparisons. It packages and checks the already
 approved contracts in document `24`.
 
-`FPR-02` is approved: use the version-pinned official Pretendard JP `1.3.9`
-variable dynamic subsets, first-party self-hosted with the official fallback order.
+`FPR-02` was revised by the user's explicit 2026-09-06 decision: use one complete,
+version-pinned official Pretendard JP `1.3.9` WOFF2 file, first-party self-hosted with
+the official fallback order. Splitting the font is no longer approved. This bounded
+correction changes the delivery contract in documents `24`, `25`, and `63`; it does
+not add a design-guide block or reopen any other Foundation decision.
 `FPR-03` is approved: document `24` is the Foundation v0.1 normative authority for
 eligible ordinary UI.
 
@@ -118,17 +121,17 @@ only through Git history.
 
 ## Decision log
 
-| ID       | Decision                                                                                                                                     | Status                             |
-| -------- | -------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
-| `RWA-01` | Use exactly six top-level blocks and never convert internal steps into more blocks.                                                          | `Approved correction`              |
-| `RWA-02` | Treat Blocks 1–5 as complete and locked unless a precise failure or user decision reopens one.                                               | `Approved`                         |
-| `RWA-03` | Keep the complete viewer/editor outside all remaining work.                                                                                  | `Approved absolute boundary`       |
-| `RWA-04` | Report no completion percentage without an approved denominator and method.                                                                  | `Approved correction`              |
-| `RWA-05` | Consolidate active design authority to English-only current documents and rely on Git for superseded evidence.                               | `Approved — 2026-08-10`            |
-| `RWA-06` | Use official Pretendard JP `1.3.9` variable dynamic subsets as version-pinned, first-party self-hosted assets.                               | `Approved — 2026-08-11`            |
-| `RWA-07` | Promote the approved document `24` contracts together as the Foundation v0.1 normative authority.                                            | `Approved — 2026-08-11`            |
-| `RWA-08` | Approve the lean reusable ordinary-UI aliases and patterns in document `63` and complete Block 5.                                            | `Approved — 2026-08-11`            |
-| `RWA-09` | Approve document `64`, one English ED-03 milestone PDF, and complete Block 6 and the six-block guide.                                        | `Approved — 2026-08-11`            |
-| `RWA-10` | Supersede the Music-result personal-record hover/focus preview with stable cross-input identity; keep all six blocks complete.               | `Approved correction — 2026-08-12` |
-| `RWA-11` | Transfer the active high-fidelity Figma stage from Claude to Codex without reopening the six completed guide blocks or implementation stage. | `Approved correction — 2026-08-13` |
-| `RWA-12` | Integrate the approved focus, type, compact-difficulty, empty-image, and Music-detail precision corrections into current authority.          | `Approved correction — 2026-08-13` |
+| ID       | Decision                                                                                                                                            | Status                             |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
+| `RWA-01` | Use exactly six top-level blocks and never convert internal steps into more blocks.                                                                 | `Approved correction`              |
+| `RWA-02` | Treat Blocks 1–5 as complete and locked unless a precise failure or user decision reopens one.                                                      | `Approved`                         |
+| `RWA-03` | Keep the complete viewer/editor outside all remaining work.                                                                                         | `Approved absolute boundary`       |
+| `RWA-04` | Report no completion percentage without an approved denominator and method.                                                                         | `Approved correction`              |
+| `RWA-05` | Consolidate active design authority to English-only current documents and rely on Git for superseded evidence.                                      | `Approved — 2026-08-10`            |
+| `RWA-06` | Use one complete official Pretendard JP `1.3.9` WOFF2 as a version-pinned, first-party self-hosted asset; the former split-font rule is superseded. | `Approved correction — 2026-09-06` |
+| `RWA-07` | Promote the approved document `24` contracts together as the Foundation v0.1 normative authority.                                                   | `Approved — 2026-08-11`            |
+| `RWA-08` | Approve the lean reusable ordinary-UI aliases and patterns in document `63` and complete Block 5.                                                   | `Approved — 2026-08-11`            |
+| `RWA-09` | Approve document `64`, one English ED-03 milestone PDF, and complete Block 6 and the six-block guide.                                               | `Approved — 2026-08-11`            |
+| `RWA-10` | Supersede the Music-result personal-record hover/focus preview with stable cross-input identity; keep all six blocks complete.                      | `Approved correction — 2026-08-12` |
+| `RWA-11` | Transfer the active high-fidelity Figma stage from Claude to Codex without reopening the six completed guide blocks or implementation stage.        | `Approved correction — 2026-08-13` |
+| `RWA-12` | Integrate the approved focus, type, compact-difficulty, empty-image, and Music-detail precision corrections into current authority.                 | `Approved correction — 2026-08-13` |

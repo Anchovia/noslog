@@ -4,7 +4,7 @@
 
 - Status: `Approved — Foundation v0.1 normative authority`
 - Language: English
-- Last updated: 2026-08-14
+- Last updated: 2026-09-06
 - Scope: default Foundation for eligible ordinary NosLog 2.0 UI
 - Provenance and decision history:
   [document 25](./25-foundation-v0.1-provenance.md)
@@ -41,15 +41,17 @@ or Git history.
   letter-spacing.
 - Apply the approved Korean glyph feature `ss05` only inside `lang="ko"`; do not force
   it onto Japanese or English.
-- Delivery uses the official Pretendard JP `1.3.9` variable dynamic-subset CSS and
-  referenced WOFF2 slices, version-pinned and first-party self-hosted on the NosLog
-  origin. Preserve the upstream font data, license, `font-display: swap`, and official
-  fallback order; only asset URLs may be repackaged for the same origin.
-- Do not preload the complete `5.35 MB` variable file. A critical slice may be
-  preloaded only after later performance evidence justifies it.
-- The current bundled standard Pretendard file does not satisfy this family and stays
-  only until the future implementation migration passes multilingual and fallback
-  verification.
+- Delivery uses one complete, unmodified `PretendardJPVariable.woff2` from the official
+  Pretendard JP `1.3.9` release, version-pinned and self-hosted on the NosLog origin.
+  The user's explicit 2026-09-06 decision supersedes the former split-font delivery
+  rule. Do not split, subset, or regenerate the font. Use one `@font-face` source
+  without `unicode-range`; preserve the license, `font-display: swap`, variable
+  weights, and official fallback order.
+- Load the complete file when the ordinary UI uses this family. Do not add a global
+  preload; the preserved viewer/editor and administrator routes retain their existing
+  standard Pretendard font and loader.
+- The bundled standard Pretendard file does not satisfy the ordinary UI family.
+  Retain it for the preserved viewer/editor and administrator routes.
 
 ### Physical core
 

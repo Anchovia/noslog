@@ -1,76 +1,65 @@
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
-import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
-import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { mkdir, writeFile } from "node:fs/promises";
 import { format, resolveConfig } from "prettier";
 
 const version = "1.3.9";
-const cssUrl = `https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v${version}/dist/web/variable/pretendardvariable-jp-dynamic-subset.min.css`;
-const licenseArchiveUrl = `https://github.com/orioncactus/pretendard/releases/download/v${version}/PretendardJP-${version}.zip`;
+const filename = "PretendardJPVariable.woff2";
+const archiveEntry = "web/variable/woff2/" + filename;
+const releaseUrl =
+    "https://github.com/orioncactus/pretendard/releases/download/v" +
+    version +
+    "/PretendardJP-" +
+    version +
+    ".zip";
+const archive = process.argv
+    .find((argument) => argument.startsWith("--archive="))
+    ?.slice("--archive=".length);
+if (!archive) {
+    throw new Error(
+        "Usage: node scripts/vendor-pretendard-jp.mjs --archive=/path/to/PretendardJP-1.3.9.zip"
+    );
+}
+const font = execFileSync("unzip", ["-p", archive, archiveEntry], {
+    maxBuffer: 10 * 1024 * 1024,
+});
+const license = execFileSync("unzip", ["-p", archive, "LICENSE.txt"]);
+const sha256 = (bytes) => createHash("sha256").update(bytes).digest("hex");
+const fontHash = sha256(font);
+const licenseHash = sha256(license);
+if (
+    fontHash !==
+        "bc47e34e10121f5464c701a5bf463e4f5ab0981bdf2dfaf6459a23059f979ff1" ||
+    licenseHash !==
+        "6cb2adce04090e5e321168d5b47e12d1cb703da64929a4f34dba9162eb55eb98"
+) {
+    throw new Error(
+        "The archive does not match the pinned Pretendard JP 1.3.9 release."
+    );
+}
 const directory = new URL(
-    `../public/fonts/pretendard-jp/${version}/`,
+    "../public/fonts/pretendard-jp/" + version + "/",
     import.meta.url
 );
 const cssTarget = new URL("../app/styles/pretendardJp.css", import.meta.url);
-
-async function download(url) {
-    const response = await fetch(url);
-    if (!response.ok) throw new Error(`${response.status}: ${url}`);
-    return Buffer.from(await response.arrayBuffer());
-}
-
-async function readJpLicense() {
-    const suppliedArchive = process.argv
-        .find((argument) => argument.startsWith("--license-archive="))
-        ?.slice("--license-archive=".length);
-    if (suppliedArchive)
-        return execFileSync("unzip", ["-p", suppliedArchive, "LICENSE.txt"]);
-    const temporaryDirectory = await mkdtemp(
-        join(tmpdir(), "noslog-pretendard-jp-")
-    );
-    try {
-        const archive = join(temporaryDirectory, "PretendardJP.zip");
-        await writeFile(archive, await download(licenseArchiveUrl));
-        return execFileSync("unzip", ["-p", archive, "LICENSE.txt"]);
-    } finally {
-        await rm(temporaryDirectory, { recursive: true, force: true });
-    }
-}
-
+const css = [
+    "/* One complete, unmodified Pretendard JP 1.3.9 variable font. */",
+    "@font-face {",
+    '    font-family: "Pretendard JP Variable";',
+    "    font-style: normal;",
+    "    font-display: swap;",
+    "    font-weight: 45 920;",
+    '    src: url("/fonts/pretendard-jp/' +
+        version +
+        "/" +
+        filename +
+        '") format("woff2");',
+    "}",
+    "",
+].join("\n");
 await mkdir(directory, { recursive: true });
-await mkdir(new URL("../app/styles/", import.meta.url), { recursive: true });
-const sourceCss = (await download(cssUrl)).toString("utf8");
-const references = [
-    ...new Set(
-        [...sourceCss.matchAll(/url\(([^)]+)\)/g)].map((match) => match[1])
-    ),
-];
-const files = [];
-for (let offset = 0; offset < references.length; offset += 8) {
-    await Promise.all(
-        references.slice(offset, offset + 8).map(async (reference) => {
-            const url = new URL(reference, cssUrl);
-            const filename = url.pathname.split("/").at(-1);
-            const bytes = await download(url);
-            if (bytes.subarray(0, 4).toString() !== "wOF2")
-                throw new Error(`Invalid WOFF2: ${filename}`);
-            await writeFile(new URL(filename, directory), bytes);
-            files.push({
-                filename,
-                source: url.href,
-                bytes: bytes.length,
-                sha256: createHash("sha256").update(bytes).digest("hex"),
-            });
-        })
-    );
-}
-
-const css = sourceCss.replace(
-    /url\(([^)]+)\)/g,
-    (_, reference) =>
-        `url(/fonts/pretendard-jp/${version}/${reference.split("/").at(-1)})`
-);
+await writeFile(new URL(filename, directory), font);
+await writeFile(new URL("LICENSE", directory), license);
 await writeFile(
     cssTarget,
     await format(css, {
@@ -78,25 +67,25 @@ await writeFile(
         filepath: cssTarget.pathname,
     })
 );
-const license = await readJpLicense();
-await writeFile(new URL("LICENSE", directory), license);
 await writeFile(
     new URL("manifest.json", directory),
     JSON.stringify(
         {
             version,
-            cssSource: cssUrl,
-            sourceCssSha256: createHash("sha256")
-                .update(sourceCss)
-                .digest("hex"),
-            licenseSource: `${licenseArchiveUrl}#LICENSE.txt`,
-            licenseSha256: createHash("sha256").update(license).digest("hex"),
-            files: files.sort((a, b) => a.filename.localeCompare(b.filename)),
+            delivery: "single-file",
+            licenseSource: releaseUrl + "#LICENSE.txt",
+            licenseSha256: licenseHash,
+            files: [
+                {
+                    filename,
+                    source: releaseUrl + "#" + archiveEntry,
+                    bytes: font.length,
+                    sha256: fontHash,
+                },
+            ],
         },
         null,
         4
     ) + "\n"
 );
-console.log(
-    `Vendored Pretendard JP ${version}: ${files.length} original WOFF2 subsets.`
-);
+console.log("Vendored Pretendard JP " + version + ": one complete WOFF2 file.");

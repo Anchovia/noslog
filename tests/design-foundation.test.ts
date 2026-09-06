@@ -42,17 +42,42 @@ describe("NosLog design foundation", () => {
         expect(unscoped).toEqual([]);
     });
 
-    it("ships the original versioned Pretendard JP subsets with their license", () => {
+    it("ships one complete versioned Pretendard JP font with its license", () => {
         const fontDirectory = resolve("public/fonts/pretendard-jp/1.3.9");
         const manifest = JSON.parse(
             readFileSync(resolve(fontDirectory, "manifest.json"), "utf8")
         ) as {
             version: string;
+            delivery: string;
             licenseSha256: string;
             files: { filename: string; sha256: string }[];
         };
         expect(manifest.version).toBe("1.3.9");
-        expect(manifest.files.length).toBeGreaterThan(0);
+        expect(manifest.delivery).toBe("single-file");
+        expect(manifest.files.map((file) => file.filename)).toEqual([
+            "PretendardJPVariable.woff2",
+        ]);
+        expect(
+            readdirSync(fontDirectory).filter((name) => name.endsWith(".woff2"))
+        ).toEqual(["PretendardJPVariable.woff2"]);
+        const fontCss = postcss.parse(
+            readFileSync(resolve(directory, "pretendardJp.css"), "utf8")
+        );
+        const faces: postcss.AtRule[] = [];
+        fontCss.walkAtRules("font-face", (face) => {
+            faces.push(face);
+        });
+        expect(faces).toHaveLength(1);
+        const descriptors: Record<string, string> = {};
+        faces[0].walkDecls((declaration) => {
+            descriptors[declaration.prop] = declaration.value;
+        });
+        expect(descriptors.src).toContain(
+            "/fonts/pretendard-jp/1.3.9/PretendardJPVariable.woff2"
+        );
+        expect(descriptors["font-weight"]).toBe("45 920");
+        expect(descriptors["font-display"]).toBe("swap");
+        expect(descriptors).not.toHaveProperty("unicode-range");
         expect(
             readFileSync(resolve(fontDirectory, "LICENSE"), "utf8")
         ).toContain("SIL OPEN FONT LICENSE");

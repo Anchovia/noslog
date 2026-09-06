@@ -165,6 +165,12 @@ PDF에 추가하는 시각 자료는 외형만 보고 규범으로 승인하지 
 검토 대상으로 사용합니다. 대체 font, 손으로 근사한 icon, 추정 shadow 또는 역할 밖
 chroma는 검증 실패로 처리하며 milestone PDF에 통합하지 않습니다.
 
+2026-09-06 사용자 결정에 따른 폰트 전달 규칙 정정은
+[Foundation 24](./docs/design/24-foundation-v0.1.md#family-and-language-behavior)와
+[결정 기록 25](./docs/design/25-foundation-v0.1-provenance.md#approved-delivery-correction--2026-09-06)에
+반영했습니다. 기존 PDF의 해당 설명보다 이 정정이 우선하며, 여섯 디자인 가이드 블록의
+완료 상태와 채보 viewer/editor·관리자 보존 범위는 유지합니다.
+
 ## 로컬 개발
 
 ### 준비 사항

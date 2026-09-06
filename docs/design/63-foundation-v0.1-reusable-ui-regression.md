@@ -4,7 +4,7 @@
 
 - Status: `Approved — Block 5 complete`
 - Language: English
-- Last updated: 2026-08-13
+- Last updated: 2026-09-06
 - Normative Foundation: [document 24](./24-foundation-v0.1.md)
 - Provenance: [document 25](./25-foundation-v0.1-provenance.md)
 - Scope authority: [document 57](./57-design-guide-remaining-work-audit.md)
@@ -45,7 +45,7 @@ scope and token collisions rather than prescribing final composition.
 | Neutral hierarchy | Surfaces, text, ordinary interaction, boundaries, identity, and primary action retain their approved restrained roles        |
 | Narrow chroma     | Feedback, difficulty, local data, and judgement color remains inside its exact semantic marker/plot responsibility           |
 | Focus             | Keyboard-visible `FOCUS-1B`: one achromatic `1px` inside border on the control; no pointer outline                           |
-| Typography        | Approved composites, natural tracking, real multilingual pressure, and approved first-party dynamic-subset delivery          |
+| Typography        | Approved composites, natural tracking, real multilingual pressure, and approved first-party single-file font delivery        |
 | Responsive        | No page-level horizontal overflow at `320px`, `390px`, or eligible wide arrangements                                         |
 | Text growth       | Content and controls remain available at `200%` text size without hiding required meaning                                    |
 | Non-color         | State, difficulty, judgement, FAST/SLOW, and chart comparison retain names, values, order, shape/pattern, or explicit status |
@@ -118,38 +118,41 @@ compliance.
 
 - Pretendard JP publishes a variable family and an official KO/JA/system fallback
   sequence. The reviewed upstream release is `1.3.9`.
-- The complete `PretendardJPVariable.woff2` is approximately `5.35 MB`; unconditional
-  first-view preload would impose unnecessary transfer.
-- The official version-pinned variable dynamic-subset CSS loads only the Unicode ranges
-  required by a page.
+- The official release includes one complete `PretendardJPVariable.woff2` of
+  5,348,104 bytes. The user selected this unchanged file on 2026-09-06.
 - Next.js can self-host local font assets and use explicit fallbacks. Production need
   not depend on a runtime third-party CDN.
 
 Primary sources:
 [Pretendard JP official documentation](https://github.com/orioncactus/pretendard/tree/main/packages/pretendard-jp/docs/en),
-[version-pinned variable dynamic-subset CSS](https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-jp-dynamic-subset.min.css),
+[version-pinned release archive](https://github.com/orioncactus/pretendard/releases/download/v1.3.9/PretendardJP-1.3.9.zip),
 and [Next.js Font API](https://nextjs.org/docs/app/api-reference/components/font).
 
 ### Approved production contract — `FPR-02`
 
-1. Vendor the official Pretendard JP `1.3.9` variable dynamic-subset CSS and referenced
-   WOFF2 subsets on the NosLog origin.
-2. Preserve the upstream font data. Repackage only the asset URLs needed to serve the
-   CSS and WOFF2 slices from the same NosLog origin.
+Revised by explicit user instruction on 2026-09-06. The former dynamic-subset
+delivery requirement is superseded; do not restore it from older specimens or PDFs.
+
+1. Vendor one complete `PretendardJPVariable.woff2` from the official Pretendard JP
+   `1.3.9` release archive on the NosLog origin.
+2. Preserve the original font bytes. Use one `@font-face` source without
+   `unicode-range`; do not split, subset, or regenerate the font.
 3. Pin version and SIL OFL 1.1 license/provenance; do not use an unversioned runtime
    CDN URL.
 4. Use the official family order beginning with `Pretendard JP Variable`, then
    `Pretendard JP`, `Pretendard`, platform UI fonts, Japanese/Korean system fonts, and
    generic sans-serif.
 5. Apply `ss05` only in `lang="ko"`.
-6. Keep `font-display: swap`, validate fallback metrics in Korean/Japanese/English,
-   and remove the current standard Pretendard asset only after migration verification.
-7. Do not preload the complete `5.35 MB` variable file. Preload a critical subset only
-   if later performance evidence justifies it.
-8. Treat the official dynamic-subset stylesheet as the delivery mechanism rather than
-   replacing it with one complete `next/font/local` JP file.
-9. The future implementation session performs the font migration; this design-guide
-   session changes no production font asset.
+6. Keep `font-display: swap` and validate fallback metrics in Korean/Japanese/English.
+   Preserve the existing standard Pretendard asset and loader for the locked
+   viewer/editor and administrator routes.
+7. Load the complete font when the ordinary UI uses its family; do not add a global
+   preload or split-file requests.
+8. Confirm one JP font file loads for the current ordinary UI and that no obsolete
+   split files remain in the served assets.
+9. Record the single-file implementation verification separately from the historical
+   design-guide harness. Do not present either delivery strategy as faster without
+   a representative measurement.
 
 This resolves the only primitive-delivery decision in Block 5.
 
@@ -217,13 +220,13 @@ template in the 2.0 package.
 
 ## Block 5 decision log
 
-| ID       | Entry                                                                                                                                          | Status                                      |
-| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
-| `FPR-01` | Use one self-contained artifact only as a collision/regression harness for approved ordinary UI.                                               | `Accepted supporting evidence — 2026-08-11` |
-| `FPR-02` | Adopt version-pinned, first-party self-hosted Pretendard JP variable dynamic-subset delivery and official fallback order.                      | `Approved — 2026-08-11`                     |
-| `FPR-03` | Promote the approved document `24` contracts together as Foundation v0.1 without reopening source decisions.                                   | `Approved — 2026-08-11`                     |
-| `FPR-04` | Adopt the reusable aliases and patterns above, adding `FormField`, narrowing `MusicEntityHeader`, and treating `Overlay` as a family contract. | `Approved — 2026-08-11`                     |
-| `FPR-05` | Keep the complete viewer/editor outside regression, reusable UI, and downstream template work.                                                 | `Locked approved boundary`                  |
+| ID       | Entry                                                                                                                                                    | Status                                      |
+| -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
+| `FPR-01` | Use one self-contained artifact only as a collision/regression harness for approved ordinary UI.                                                         | `Accepted supporting evidence — 2026-08-11` |
+| `FPR-02` | Use one complete, version-pinned, first-party self-hosted Pretendard JP WOFF2 and the official fallback order; the former split-font rule is superseded. | `Approved correction — 2026-09-06`          |
+| `FPR-03` | Promote the approved document `24` contracts together as Foundation v0.1 without reopening source decisions.                                             | `Approved — 2026-08-11`                     |
+| `FPR-04` | Adopt the reusable aliases and patterns above, adding `FormField`, narrowing `MusicEntityHeader`, and treating `Overlay` as a family contract.           | `Approved — 2026-08-11`                     |
+| `FPR-05` | Keep the complete viewer/editor outside regression, reusable UI, and downstream template work.                                                           | `Locked approved boundary`                  |
 
 ## Block 5 completion
 
