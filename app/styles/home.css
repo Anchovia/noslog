@@ -1,0 +1,162 @@
+.noslog-ui .nl-home {
+    gap: var(--nl-spacing-32);
+    padding-block: var(--nl-spacing-32);
+}
+.noslog-ui .nl-home-hero {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-24);
+    width: 100%;
+    margin-inline: auto;
+}
+.noslog-ui .nl-home-identity {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--nl-spacing-12);
+    text-align: center;
+}
+.noslog-ui .nl-home-mark {
+    display: flex;
+    width: 40px;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--nl-radius-full);
+    color: var(--nl-identity-mark);
+    box-shadow: inset 0 0 0 1px var(--nl-identity-mark);
+}
+.noslog-ui .nl-home-identity__copy {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-4);
+}
+.noslog-ui .nl-home-search {
+    position: relative;
+    width: 100%;
+}
+.noslog-ui .nl-home-destinations {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--nl-grid-gutter-compact);
+}
+.noslog-ui .nl-home-tile {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-12);
+    min-height: 44px;
+    padding: var(--nl-spacing-12);
+    border-radius: var(--nl-radius-container);
+    background: var(--nl-surface-surface);
+}
+.noslog-ui .nl-home-tile:hover {
+    background: var(--nl-interaction-hover);
+}
+.noslog-ui .nl-home-updates {
+    display: grid;
+    gap: var(--nl-spacing-32);
+}
+.noslog-ui .nl-home-update {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: var(--nl-spacing-12);
+}
+.noslog-ui .nl-home-update__heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-home-update__heading > a {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-4);
+}
+.noslog-ui .nl-home-update__heading svg {
+    width: var(--nl-icon-small);
+    height: var(--nl-icon-small);
+}
+.noslog-ui .nl-home-announcement {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-4);
+    padding-block: var(--nl-spacing-12);
+}
+.noslog-ui .nl-home-announcements li + li {
+    box-shadow: inset 0 1px var(--nl-border-divider);
+}
+.noslog-ui .nl-home-announcement:hover {
+    background: var(--nl-interaction-hover);
+}
+.noslog-ui .nl-home-announcement time {
+    flex-shrink: 0;
+}
+.noslog-ui .nl-home-news-state {
+    padding: var(--nl-spacing-16);
+    border-radius: var(--nl-radius-container);
+    background: var(--nl-surface-surface);
+}
+.noslog-ui .nl-home-timeline {
+    overflow: hidden;
+}
+.noslog-ui .nl-search-preview {
+    position: absolute;
+    top: calc(100% + var(--nl-spacing-8));
+    inset-inline: 0;
+    z-index: 30;
+    padding: var(--nl-spacing-16);
+    border-radius: var(--nl-radius-overlay);
+    background: var(--nl-surface-overlay);
+    box-shadow:
+        inset 0 0 0 1px var(--nl-border-overlay),
+        var(--nl-overlay-shadow);
+}
+.noslog-ui .nl-search-preview__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-search-preview__all {
+    display: flex;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--nl-radius-control);
+}
+.noslog-ui .nl-search-preview [aria-selected="true"] {
+    outline: 1px solid var(--nl-focus-ring);
+    outline-offset: -1px;
+}
+@container page (min-width: 672px) {
+    .noslog-ui .nl-home-destinations {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: var(--nl-grid-gutter-wide);
+    }
+}
+@container page (min-width: 1056px) {
+    .noslog-ui .nl-home-hero {
+        max-width: 640px;
+    }
+    .noslog-ui .nl-home-identity .nl-page-title {
+        font-size: var(--nl-type-size-32);
+        line-height: var(--nl-type-line-height-40);
+    }
+    .noslog-ui .nl-home-tile {
+        min-height: 68px;
+        padding: var(--nl-spacing-24);
+    }
+    .noslog-ui .nl-home-updates:has(.nl-home-announcements) {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: var(--nl-grid-gutter-wide);
+    }
+    .noslog-ui .nl-home-announcements {
+        grid-column: span 2;
+    }
+    .noslog-ui .nl-home-announcement {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--nl-spacing-16);
+    }
+}

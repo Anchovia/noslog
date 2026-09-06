@@ -1,0 +1,226 @@
+.noslog-ui .nl-pagination {
+    width: 100%;
+    min-width: 0;
+    display: flex;
+    justify-content: center;
+}
+.noslog-ui .nl-pagination__controls {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-pagination__item {
+    display: flex;
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--nl-radius-control);
+    color: var(--nl-content-interactive);
+}
+.noslog-ui button.nl-pagination__item:hover {
+    background: var(--nl-interaction-hover);
+}
+.noslog-ui .nl-pagination__item[aria-current="page"] {
+    box-shadow: inset 0 0 0 1px var(--nl-border-strong);
+    color: var(--nl-content-default);
+    font-weight: var(--nl-type-weight-semibold);
+}
+.noslog-ui .nl-pagination__item:disabled {
+    background: transparent;
+    color: var(--nl-interaction-disabled-content);
+}
+.noslog-ui .nl-ranking-panel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-32);
+    min-width: 0;
+}
+.noslog-ui .nl-score-distribution {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-12);
+    min-width: 0;
+}
+.noslog-ui .nl-score-distribution__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-score-distribution__table,
+.noslog-ui .nl-score-distribution__table tbody {
+    display: block;
+    width: 100%;
+}
+.noslog-ui .nl-score-distribution__table tbody {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-score-distribution__table tr {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--nl-spacing-4);
+}
+.noslog-ui .nl-score-distribution__table th {
+    order: 2;
+    white-space: nowrap;
+}
+.noslog-ui .nl-score-distribution__slot {
+    order: 1;
+    height: 120px;
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+}
+.noslog-ui .nl-score-distribution__bar {
+    display: block;
+    width: 100%;
+    border-radius: var(--nl-radius-control);
+}
+.noslog-ui .nl-score-distribution__bar[data-bucket="1"] {
+    background: var(--nl-local-data-bucket-1);
+}
+.noslog-ui .nl-score-distribution__bar[data-bucket="2"] {
+    background: var(--nl-local-data-bucket-2);
+}
+.noslog-ui .nl-score-distribution__bar[data-bucket="3"] {
+    background: var(--nl-local-data-bucket-3);
+}
+.noslog-ui .nl-score-distribution__bar[data-bucket="4"] {
+    background: var(--nl-local-data-bucket-4);
+}
+.noslog-ui .nl-score-distribution__bar[data-bucket="5"] {
+    background: var(--nl-local-data-bucket-5);
+}
+.noslog-ui .nl-score-distribution__bar[data-bucket="6"] {
+    background: var(--nl-local-data-bucket-6);
+}
+.noslog-ui .nl-score-distribution__baseline {
+    height: 1px;
+    background: var(--nl-border-divider);
+}
+.noslog-ui .nl-chart-leaderboard {
+    min-width: 0;
+    padding: var(--nl-spacing-12);
+    border-radius: var(--nl-radius-container);
+    background: var(--nl-surface-surface);
+}
+.noslog-ui .nl-chart-leaderboard table,
+.noslog-ui .nl-chart-leaderboard thead,
+.noslog-ui .nl-chart-leaderboard tbody {
+    display: block;
+    width: 100%;
+}
+.noslog-ui .nl-chart-leaderboard__row {
+    display: grid;
+    grid-template-columns: 28px 24px minmax(0, 1fr) 18px 68px 26px;
+    gap: var(--nl-spacing-8);
+    align-items: center;
+    padding-block: var(--nl-spacing-12);
+    min-height: 48px;
+    box-shadow: inset 0 -1px var(--nl-border-divider);
+    position: relative;
+}
+.noslog-ui .nl-chart-leaderboard__row > :first-child,
+.noslog-ui .nl-chart-leaderboard__row > :nth-child(5) {
+    text-align: end;
+    white-space: nowrap;
+}
+.noslog-ui .nl-chart-leaderboard__row > * {
+    min-width: 0;
+}
+.noslog-ui .nl-chart-leaderboard__header {
+    min-height: 32px;
+    padding-block: var(--nl-spacing-8);
+    box-shadow: none;
+    text-align: start;
+}
+.noslog-ui .nl-chart-leaderboard__header th {
+    font-weight: var(--nl-type-weight-regular);
+}
+.noslog-ui .nl-chart-leaderboard__player {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--nl-spacing-8);
+    align-items: center;
+    text-align: start;
+}
+.noslog-ui .nl-chart-leaderboard__player > a {
+    min-width: 0;
+    color: var(--nl-content-default);
+    position: relative;
+}
+.noslog-ui .nl-chart-leaderboard__player > a::before {
+    content: "";
+    position: absolute;
+    inset: -12px 0;
+}
+.noslog-ui .nl-chart-leaderboard .nl-avatar > svg {
+    width: 16px;
+    height: 16px;
+}
+.noslog-ui .nl-chart-leaderboard .nl-avatar:has(svg) {
+    box-shadow: inset 0 0 0 1px var(--nl-border-empty-slot);
+}
+.noslog-ui .nl-score-grade {
+    display: block;
+    width: 18px;
+    height: 18px;
+}
+.noslog-ui .nl-full-combo-slot {
+    display: block;
+    width: 26px;
+    min-height: 20px;
+}
+.noslog-ui .nl-full-combo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px var(--nl-spacing-4);
+    box-shadow: inset 0 0 0 1px var(--nl-achievement-full-combo);
+    border-radius: var(--nl-radius-control);
+}
+.noslog-ui .nl-chart-leaderboard__row[data-current]::before {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    left: 0;
+    width: 2px;
+    background: var(--nl-border-strong);
+}
+.noslog-ui .nl-my-rank-badge {
+    box-shadow: inset 0 0 0 1px var(--nl-border-strong);
+    padding-inline: var(--nl-spacing-4);
+}
+.noslog-ui .nl-my-rank-summary {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--nl-spacing-8);
+    padding: var(--nl-spacing-12);
+    border-radius: var(--nl-radius-container);
+    background: var(--nl-surface-surface);
+}
+.noslog-ui .nl-my-rank-summary__result {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-my-rank-summary__result > .nl-metric-value {
+    width: 68px;
+    text-align: end;
+    white-space: nowrap;
+}
+.noslog-ui .nl-ranking-login {
+    padding-block: var(--nl-spacing-12);
+    align-self: flex-start;
+}
+.noslog-ui .nl-ranking-list {
+    scroll-margin-top: 76px;
+}

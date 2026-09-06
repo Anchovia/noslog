@@ -1,76 +1,59 @@
-import RankingBrowser from "@/components/rankings/rankingBrowser";
+import { redirect } from "next/navigation";
+import GlobalRankingPage from "@/features/rankings/components/globalRankingPage";
+import { getGlobalRankingPage } from "@/features/rankings/server/globalRankingData";
+import {
+    parseGlobalRankingQuery,
+    serializeGlobalRankingQuery,
+} from "@/features/rankings/schemas/globalRankingSchema";
 import { getServerI18n } from "@/lib/i18n/server";
 import { localizePath } from "@/lib/i18n/routing";
 import { createPageMetadata } from "@/lib/metadata/site";
+import { logServerError } from "@/lib/observability/server";
 import { getUser } from "@/lib/user";
-import {
-    getCachedUserRankingPage,
-    getCurrentUserRankingRow,
-    normalizeRankingMetric,
-    normalizeRankingMode,
-    normalizeRankingRegion,
-} from "@/lib/rankings";
-import { redirect } from "next/navigation";
 
 export async function generateMetadata() {
     const { locale, t } = await getServerI18n();
-
     return createPageMetadata({
         title: t("rankings.title"),
         path: localizePath("/rankings", locale),
     });
 }
 
-interface RankingsPageProps {
-    searchParams: Promise<{
-        mode?: string;
-        metric?: string;
-        region?: string;
-        page?: string;
-    }>;
-}
-
-const PAGE_SIZE = 7;
-export default async function Rankings({ searchParams }: RankingsPageProps) {
-    const { locale, t } = await getServerI18n();
-    const params = await searchParams;
-    const mode = normalizeRankingMode(params.mode);
-    const metric = normalizeRankingMetric(params.metric, mode);
-    const region = normalizeRankingRegion(params.region);
-    const requestedPage = Number.parseInt(params.page || "1", 10);
-    const page = Number.isFinite(requestedPage)
-        ? Math.max(1, requestedPage)
-        : 1;
-    const [{ totalCount, rows }, user] = await Promise.all([
-        getCachedUserRankingPage(mode, region, page, PAGE_SIZE, metric),
+export default async function Rankings({
+    searchParams,
+}: {
+    searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+    const [params, user, { locale }] = await Promise.all([
+        searchParams,
         getUser(),
+        getServerI18n(),
     ]);
-
-    const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
-    if (page > totalPages) {
-        const metricParam = metric === "rating" ? "&metric=rating" : "";
-        redirect(
-            `${localizePath("/rankings", locale)}?mode=${mode}${metricParam}&region=${region}&page=${totalPages}`
-        );
-    }
-
-    const currentUser = await getCurrentUserRankingRow(
-        user,
-        mode,
-        region,
-        metric
+    const supplied = new URLSearchParams();
+    for (const [key, value] of Object.entries(params))
+        if (value !== undefined)
+            supplied.set(key, Array.isArray(value) ? value[0] : value);
+    const query = parseGlobalRankingQuery(supplied);
+    const data = await getGlobalRankingPage(query, user?.id ?? null).catch(
+        (error) => {
+            logServerError(error, {
+                event: "rankings.page.failed",
+                routePath: "/rankings",
+                routeType: "page",
+            });
+            return null;
+        }
     );
-
+    const canonical = serializeGlobalRankingQuery(
+        data?.query ?? query
+    ).toString();
+    if (supplied.size && supplied.toString() !== canonical)
+        redirect(`${localizePath("/rankings", locale)}?${canonical}`);
     return (
-        <div className="flex flex-col gap-4 px-4 py-5">
-            <h1 className="text-title">{t("rankings.title")}</h1>
-
-            <RankingBrowser
-                initialMode={mode}
-                initialMetric={metric}
-                initialRegion={region}
-                initialData={{ page, totalCount, rows, currentUser }}
-            />
-        </div>
+        <GlobalRankingPage
+            initialQuery={data?.query ?? query}
+            initialData={data}
+            viewerId={user?.id ?? null}
+        />
     );
 }

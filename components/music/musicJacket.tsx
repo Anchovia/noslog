@@ -2,7 +2,7 @@
 
 /* eslint-disable @next/next/no-img-element */
 
-import { Music2 } from "lucide-react";
+import { Music, Music2 } from "lucide-react";
 import { type ReactNode, useState } from "react";
 
 import { getJacketCandidates } from "@/lib/musicJackets";
@@ -16,6 +16,7 @@ interface MusicJacketProps {
     className?: string;
     children?: ReactNode;
     fallback?: ReactNode;
+    appearance?: "legacy" | "foundation";
 }
 
 // 저장된 자켓이 없거나 로딩에 실패하면 공통 대체 이미지를 표시함
@@ -26,6 +27,7 @@ export default function MusicJacket({
     className,
     children,
     fallback,
+    appearance = "legacy",
 }: MusicJacketProps) {
     const t = useTranslations();
     const jacketCandidates = getJacketCandidates(index, background);
@@ -37,10 +39,13 @@ export default function MusicJacket({
     return (
         <span
             className={cn(
-                "bg-surface-muted relative flex overflow-hidden",
+                appearance === "foundation"
+                    ? "nl-jacket"
+                    : "bg-surface-muted relative flex overflow-hidden",
                 className
             )}
             aria-label={t("common.jacket", { title })}
+            data-empty={appearance === "foundation" ? !jacketUrl : undefined}
         >
             {jacketUrl ? (
                 <img
@@ -59,6 +64,8 @@ export default function MusicJacket({
                 />
             ) : fallback ? (
                 fallback
+            ) : appearance === "foundation" ? (
+                <Music className="nl-jacket__fallback" aria-hidden />
             ) : (
                 <Music2
                     className="text-text-disabled m-auto size-1/3"

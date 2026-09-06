@@ -51,7 +51,7 @@ describe("getUserRankingPosition", () => {
         ).resolves.toBe(5);
     });
 
-    it("동점이면 ID가 작은 사용자를 앞선 순위로 계산한다", async () => {
+    it("공개 Grd 정수가 같은 사용자는 앞선 순위로 세지 않는다", async () => {
         mocks.count.mockResolvedValue(0);
 
         await getUserRankingPosition({
@@ -67,15 +67,7 @@ describe("getUserRankingPosition", () => {
                     { country: "ko-KR" },
                     { grade_basic: { gt: 0 } },
                     {
-                        OR: [
-                            { grade_basic: { gt: 568300 } },
-                            {
-                                AND: [
-                                    { grade_basic: 568300 },
-                                    { id: { lt: 10 } },
-                                ],
-                            },
-                        ],
+                        grade_basic: { gte: 568350 },
                     },
                 ],
             },

@@ -32,7 +32,11 @@ export const getCachedMusicDetail = unstable_cache(
                         },
                     },
                     charts: {
-                        select: { difficulty: true, level: true },
+                        select: {
+                            difficulty: true,
+                            level: true,
+                            level_constant: true,
+                        },
                     },
                 },
             }),

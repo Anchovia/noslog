@@ -11,6 +11,8 @@ const NON_LOCALIZED_PATH_PREFIXES = [
     "/api",
     "/discord",
     "/_next",
+    "/fonts",
+    "/icons",
 ] as const;
 
 const NON_LOCALIZED_PATHS = new Set([

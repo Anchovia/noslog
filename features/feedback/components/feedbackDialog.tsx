@@ -1,11 +1,11 @@
 "use client";
 
-import * as Dialog from "@radix-ui/react-dialog";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { put } from "@vercel/blob/client";
-import { ImagePlus, MessageSquareWarning, X } from "lucide-react";
+import { ImagePlus, MessageSquare } from "lucide-react";
 import Link from "next/link";
-import { useMemo, useState, type ChangeEvent } from "react";
+import { useMemo, useState } from "react";
+import type { ChangeEvent, ReactNode } from "react";
 import { useForm, useWatch } from "react-hook-form";
 
 import {
@@ -25,11 +25,28 @@ import {
     type FeedbackReportValues,
 } from "@/features/feedback/schemas/feedbackReportSchema";
 import { applyFormFieldErrors } from "@/lib/forms/errors";
+import ActionButton from "@/components/ui/actionButton";
+import { foundationButtonClass } from "@/components/ui/Button";
+import {
+    FormField,
+    TextArea,
+    fieldDescription,
+} from "@/components/ui/formField";
+import ModalDialog from "@/components/ui/modalDialog";
+import { StatusMessage } from "@/components/ui/statusMessage";
 
 export default function FeedbackDialog({
     isAuthenticated,
+    open: controlledOpen,
+    onOpenChange,
+    onCloseAutoFocus,
+    trigger,
 }: {
     isAuthenticated: boolean;
+    open?: boolean;
+    onOpenChange?: (open: boolean) => void;
+    onCloseAutoFocus?: (event: Event) => void;
+    trigger?: ReactNode;
 }) {
     const localizedHref = useLocalizedHref();
     const locale = useLocale();
@@ -38,7 +55,8 @@ export default function FeedbackDialog({
         () => createFeedbackReportSchema(t),
         [t]
     );
-    const [open, setOpen] = useState(false);
+    const [internalOpen, setInternalOpen] = useState(false);
+    const open = controlledOpen ?? internalOpen;
     const [file, setFile] = useState<File | null>(null);
     const [submitted, setSubmitted] = useState(false);
     const [successMessage, setSuccessMessage] = useState("");
@@ -149,107 +167,114 @@ export default function FeedbackDialog({
 
     const submit = handleSubmit(handleFeedbackSubmit);
 
-    return (
-        <Dialog.Root
-            open={open}
-            onOpenChange={(nextOpen) => {
-                setOpen(nextOpen);
-                if (nextOpen) {
-                    clearErrors();
-                    setSubmitted(false);
-                    setSuccessMessage("");
-                }
-            }}
-        >
-            <Dialog.Trigger asChild>
-                <button className="border-border text-text-secondary hover:bg-surface-muted hover:text-text-primary focus-visible:ring-focus/40 rounded-card flex h-10 w-full cursor-pointer items-center justify-center gap-2 border text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none">
-                    <MessageSquareWarning className="size-4" aria-hidden />
-                    {t("feedback.title")}
-                </button>
-            </Dialog.Trigger>
-            <Dialog.Portal>
-                <Dialog.Overlay className="fixed inset-0 z-40 bg-black/75" />
-                <Dialog.Content className="border-border bg-bg fixed top-1/2 left-1/2 z-50 w-[calc(100vw-2rem)] max-w-90 -translate-x-1/2 -translate-y-1/2 rounded-lg border p-4 shadow-2xl focus:outline-none">
-                    <div className="flex items-center justify-between gap-3">
-                        <Dialog.Title className="text-section">
-                            {t("feedback.title")}
-                        </Dialog.Title>
-                        <Dialog.Close className="text-text-secondary hover:text-text-primary flex size-9 cursor-pointer items-center justify-center rounded-md">
-                            <X className="size-5" aria-hidden />
-                            <span className="sr-only">{t("common.close")}</span>
-                        </Dialog.Close>
-                    </div>
+    function changeOpen(nextOpen: boolean) {
+        setInternalOpen(nextOpen);
+        onOpenChange?.(nextOpen);
+        if (!nextOpen) {
+            clearErrors();
+            setSubmitted(false);
+            setSuccessMessage("");
+        }
+    }
 
-                    {!isAuthenticated ? (
-                        <div className="mt-5 flex flex-col gap-4 text-center">
-                            <p className="text-body-muted">
-                                {t("feedback.loginRequired")}
-                            </p>
-                            <Link
-                                href={localizedHref("/login")}
-                                className="bg-text-primary text-bg rounded-card flex h-11 items-center justify-center text-sm font-bold"
-                            >
-                                {t("common.login")}
-                            </Link>
-                        </div>
-                    ) : submitted ? (
-                        <div className="mt-5 flex flex-col gap-4 text-center">
-                            <p className="text-success text-sm font-semibold">
-                                {successMessage}
-                            </p>
-                            <Dialog.Close className="bg-text-primary text-bg rounded-card h-11 cursor-pointer text-sm font-bold">
-                                {t("common.confirm")}
-                            </Dialog.Close>
-                        </div>
-                    ) : (
-                        <form
-                            onSubmit={submit}
-                            noValidate
-                            className="mt-4 flex flex-col gap-3"
-                        >
-                            <p className="text-caption">
-                                {t("feedback.description")}
-                            </p>
-                            <textarea
-                                maxLength={1000}
-                                rows={6}
-                                placeholder={t("feedback.placeholder")}
-                                aria-invalid={Boolean(errors.content)}
-                                className="border-border bg-surface text-input placeholder:text-text-disabled focus:border-focus focus:ring-focus/20 rounded-card w-full resize-none border px-3 py-2 outline-none focus:ring-2"
-                                {...register("content")}
-                            />
-                            <input type="hidden" {...register("imageUrl")} />
-                            <label className="border-border hover:bg-surface-muted rounded-card flex h-10 cursor-pointer items-center justify-center gap-2 border text-sm font-semibold transition-colors">
-                                <ImagePlus className="size-4" aria-hidden />
-                                {file ? file.name : t("feedback.attachImage")}
-                                <input
-                                    type="file"
-                                    accept="image/jpeg,image/png,image/webp"
-                                    onChange={changeFile}
-                                    className="sr-only"
-                                />
-                            </label>
-                            {errorMessage ? (
-                                <p className="text-danger text-xs">
-                                    {errorMessage}
-                                </p>
-                            ) : null}
-                            <button
-                                type="submit"
-                                disabled={
-                                    isSubmitting ||
-                                    (content?.trim().length ?? 0) < 10
-                                }
-                                className="bg-text-primary text-bg rounded-card h-11 cursor-pointer text-sm font-bold disabled:cursor-not-allowed disabled:opacity-50"
-                            >
-                                {isSubmitting
-                                    ? t("feedback.submitting")
-                                    : t("feedback.submit")}
-                            </button>
-                        </form>
-                    )}
-                </Dialog.Content>
-            </Dialog.Portal>
-        </Dialog.Root>
+    return (
+        <ModalDialog
+            open={open}
+            onOpenChange={changeOpen}
+            title={t("feedback.title")}
+            onCloseAutoFocus={onCloseAutoFocus}
+            trigger={
+                trigger === null
+                    ? undefined
+                    : (trigger ?? (
+                          <button
+                              className={foundationButtonClass({
+                                  variant: "secondary",
+                              })}
+                          >
+                              <MessageSquare className="nl-icon" aria-hidden />
+                              {t("shell.feedback")}
+                          </button>
+                      ))
+            }
+        >
+            {!isAuthenticated ? (
+                <div className="nl-stack">
+                    <p className="nl-body-secondary nl-muted">
+                        {t("feedback.loginRequired")}
+                    </p>
+                    <Link
+                        href={localizedHref("/login")}
+                        className={foundationButtonClass()}
+                    >
+                        {t("common.login")}
+                    </Link>
+                </div>
+            ) : submitted ? (
+                <div className="nl-stack">
+                    <StatusMessage
+                        severity="success"
+                        title={successMessage}
+                        role="status"
+                    />
+                    <ActionButton onClick={() => changeOpen(false)}>
+                        {t("common.confirm")}
+                    </ActionButton>
+                </div>
+            ) : (
+                <form onSubmit={submit} noValidate className="nl-stack">
+                    <FormField
+                        id="feedback-content"
+                        label={t("feedback.title")}
+                        help={t("feedback.description")}
+                        error={errors.content?.message}
+                    >
+                        <TextArea
+                            id="feedback-content"
+                            maxLength={1000}
+                            rows={6}
+                            placeholder={t("feedback.placeholder")}
+                            aria-invalid={Boolean(errors.content)}
+                            aria-describedby={fieldDescription(
+                                "feedback-content",
+                                { help: true, error: Boolean(errors.content) }
+                            )}
+                            {...register("content")}
+                        />
+                        <span className="nl-metadata nl-muted">
+                            {content?.length ?? 0} / 1000
+                        </span>
+                    </FormField>
+                    <input type="hidden" {...register("imageUrl")} />
+                    <label
+                        className={foundationButtonClass({
+                            variant: "secondary",
+                        })}
+                    >
+                        <ImagePlus className="nl-icon" aria-hidden />
+                        {file ? file.name : t("feedback.attachImage")}
+                        <input
+                            type="file"
+                            accept="image/jpeg,image/png,image/webp"
+                            onChange={changeFile}
+                            className="sr-only"
+                        />
+                    </label>
+                    {errorMessage && !errors.content ? (
+                        <p className="nl-metadata nl-error-text" role="alert">
+                            {errorMessage}
+                        </p>
+                    ) : null}
+                    <ActionButton
+                        type="submit"
+                        busy={isSubmitting}
+                        busyLabel={t("feedback.submitting")}
+                        disabled={(content?.trim().length ?? 0) < 10}
+                    >
+                        {t("feedback.submit")}
+                    </ActionButton>
+                </form>
+            )}
+        </ModalDialog>
     );
 }

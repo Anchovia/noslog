@@ -1,22 +1,34 @@
 import Footer from "@/components/layout/footer";
 import Header from "@/components/layout/header";
 import SkipLink from "@/components/layout/skipLink";
+import AppShell from "@/components/layout/appShell";
+import AppFooter from "@/components/layout/appFooter";
+import { getUser } from "@/lib/user";
 
-export default function NeviationLayout({
+export default async function NeviationLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
+    const user = await getUser();
     return (
-        <div className="bg-bg min-h-screen">
-            <div className="bg-bg mx-auto flex min-h-screen w-full max-w-97.5 flex-col">
-                <SkipLink />
-                <Header />
-                <main id="main-content" className="flex-1" tabIndex={-1}>
-                    {children}
-                </main>
-                <Footer />
-            </div>
-        </div>
+        <AppShell
+            account={
+                user
+                    ? {
+                          id: user.id,
+                          username: user.username,
+                          avatar: user.avatar,
+                          role: user.role,
+                      }
+                    : null
+            }
+            footer={<AppFooter />}
+            legacyHeader={<Header />}
+            legacyFooter={<Footer />}
+            legacySkipLink={<SkipLink />}
+        >
+            {children}
+        </AppShell>
     );
 }

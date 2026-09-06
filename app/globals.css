@@ -1,4 +1,20 @@
+/* Shared UI foundations and feature layouts are isolated from preserved routes. */
 @import "tailwindcss";
+@import "./styles/pretendardJp.css";
+@import "./styles/tokens.css";
+@import "./styles/foundation.css";
+@import "./styles/layout.css";
+@import "./styles/search.css";
+@import "./styles/entity.css";
+@import "./styles/home.css";
+@import "./styles/discovery.css";
+@import "./styles/musicDetail.css";
+@import "./styles/dataCharts.css";
+@import "./styles/ranking.css";
+@import "./styles/community.css";
+@import "./styles/tiers.css";
+@import "./styles/playerIdentity.css";
+@import "./styles/globalRankings.css";
 
 @theme {
     /* 폰트 */

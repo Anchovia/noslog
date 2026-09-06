@@ -32,22 +32,49 @@ const buttonVariants = cva(
 interface ButtonProps
     extends
         ButtonHTMLAttributes<HTMLButtonElement>,
-        VariantProps<typeof buttonVariants> {}
+        VariantProps<typeof buttonVariants> {
+    appearance?: "legacy" | "foundation";
+    destructiveFilled?: boolean;
+}
 
 export default function Button({
     className,
     variant,
     size,
+    appearance = "legacy",
+    destructiveFilled = false,
     type = "button",
     ...props
 }: ButtonProps) {
     return (
         <button
             type={type}
-            className={cn(buttonVariants({ variant, size }), className)}
+            className={cn(
+                appearance === "foundation"
+                    ? foundationButtonClass({
+                          variant,
+                          size,
+                          destructiveFilled,
+                      })
+                    : buttonVariants({ variant, size }),
+                className
+            )}
             {...props}
         />
     );
 }
 
 export { buttonVariants };
+
+export function foundationButtonClass({
+    variant = "primary",
+    size,
+    destructiveFilled = false,
+}: Pick<ButtonProps, "variant" | "size" | "destructiveFilled"> = {}) {
+    return cn(
+        "nl-button",
+        variant && `nl-button--${variant}`,
+        size === "icon" && "nl-button--icon",
+        destructiveFilled && "nl-button--danger-filled"
+    );
+}

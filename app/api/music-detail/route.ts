@@ -23,9 +23,9 @@ export async function GET(request: Request) {
             params.get("difficulty") ?? ""
         );
         const tab = normalizeMusicDetailTab(params.get("tab") ?? undefined);
-        const requestedPage = Number.parseInt(params.get("page") ?? "1", 10);
+        const requestedPage = Number(params.get("page") ?? "1");
         const page =
-            Number.isFinite(requestedPage) && requestedPage > 0
+            Number.isSafeInteger(requestedPage) && requestedPage > 0
                 ? requestedPage
                 : 1;
 

@@ -370,9 +370,8 @@ export async function getCachedUserRankingPage(
     return getCachedGradeRankingPage(mode, region, page, pageSize);
 }
 
-// 현재 Grd와 동일한 동점 규칙으로 유저의 순위를 계산함
+// Published integer Grd defines competition rank, including the profile summaries.
 export async function getUserRankingPosition({
-    userId,
     grade,
     mode,
     scope = {},
@@ -386,15 +385,9 @@ export async function getUserRankingPosition({
                 scope,
                 { [gradeField]: { gt: 0 } },
                 {
-                    OR: [
-                        { [gradeField]: { gt: grade } },
-                        {
-                            AND: [
-                                { [gradeField]: grade },
-                                { id: { lt: userId } },
-                            ],
-                        },
-                    ],
+                    [gradeField]: {
+                        gte: (Math.round(grade / 100) + 0.5) * 100,
+                    },
                 },
             ],
         },

@@ -1,0 +1,723 @@
+{
+    "version": "1.3.9",
+    "cssSource": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-jp-dynamic-subset.min.css",
+    "sourceCssSha256": "bf7444cc2c07fc155f17c169331084409c4c6cc8993157c7c248413f6bf95661",
+    "licenseSource": "https://github.com/orioncactus/pretendard/releases/download/v1.3.9/PretendardJP-1.3.9.zip#LICENSE.txt",
+    "files": [
+        {
+            "filename": "PretendardJPVariable.subset.0.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.0.woff2",
+            "bytes": 3264,
+            "sha256": "98aa5213cf8a762a1d76f44c83816c1c85280344b8d5fe4c63cbb20b56cc63c4"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.1.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.1.woff2",
+            "bytes": 26376,
+            "sha256": "04ea70a7f0610833c30ffa9da07a08858ea111e7b72519d4fd89d9e217ba9304"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.10.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.10.woff2",
+            "bytes": 49928,
+            "sha256": "09fb9bbff0c00551122d9193011f7cc4d8e90c1e730d20c7bb73cd0869ee82ca"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.100.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.100.woff2",
+            "bytes": 25180,
+            "sha256": "e48314d2d375565351f37de61e84fcd832227897b3bcec492303538d12f21401"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.101.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.101.woff2",
+            "bytes": 30296,
+            "sha256": "2c254fba21ace36ee39deb3554cef9f0753444a5c1528d894e171e9bb2add106"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.102.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.102.woff2",
+            "bytes": 27344,
+            "sha256": "a7ad9468f31814c2a482a8d940f6407d7006bd36b6e53a0d5e088a9b7a39d793"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.103.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.103.woff2",
+            "bytes": 27432,
+            "sha256": "2debd5bd1360ac20a3cb449549a904e9e71662a4d428421afe003066cfb91a09"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.104.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.104.woff2",
+            "bytes": 27748,
+            "sha256": "2bb13651a0d97f9083de923ac7feb9801e7bc235ca6ab6618a01e92a36af44bf"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.105.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.105.woff2",
+            "bytes": 33912,
+            "sha256": "0e0ec35c1374dc2a6ee3e54fc7993e98d5e0f52a3023bdbcc59c5dbfdef3ce47"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.106.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.106.woff2",
+            "bytes": 26168,
+            "sha256": "f4f26027d229ded6ebbf4ebda58e73bbdfc31faca4f0f87c2d1c9be0e64cbfaa"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.107.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.107.woff2",
+            "bytes": 28748,
+            "sha256": "1454881a97830a9b26e39aae5b16731d3555aae08ce8f1e38b7c985e5c65a28f"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.108.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.108.woff2",
+            "bytes": 26336,
+            "sha256": "7937de0fc2cd2df2f8264fc8e962d3ad4b519287f15277597b7283586ce732cd"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.109.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.109.woff2",
+            "bytes": 25448,
+            "sha256": "30c631dd21a5598a1c0c631f72712f46844e07fc646288bf5b24ed5f11532b36"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.11.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.11.woff2",
+            "bytes": 55076,
+            "sha256": "9521bed9baa8a4b28adda5c0e60ac2b58224b78484a5e0cd1b5f089abad83b52"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.110.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.110.woff2",
+            "bytes": 28648,
+            "sha256": "42879109474791f3c6ff3820bed7cb47ca09b9a06089a37ee5a3d6b4dd1162ef"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.111.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.111.woff2",
+            "bytes": 24196,
+            "sha256": "a4e6d0cf009e15052540b0b0c9de67089e80a2aa38be748507368c72a7beb1d2"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.112.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.112.woff2",
+            "bytes": 24140,
+            "sha256": "dc03d3f5356faa0e6cfedeef1532d350fed7ac7519c1b9c1b9c45507cc473cde"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.113.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.113.woff2",
+            "bytes": 22956,
+            "sha256": "8f6122133f23c9bef6a89e21ddb1934319dc2152cbedb78093db5e1a864fe023"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.114.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.114.woff2",
+            "bytes": 24796,
+            "sha256": "d0bca7b3f465b1b99415d17aa627a308181f9db3273ce78c752ce53bf61aa494"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.115.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.115.woff2",
+            "bytes": 23364,
+            "sha256": "5ddbba77e831e338d36b69f76f956c6cfea8052b7b265653abaf14aebdf84dd2"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.116.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.116.woff2",
+            "bytes": 18892,
+            "sha256": "5d3e2ca56e92d64314b5adcf159b20fea216eea15171d096888fcfa95a663177"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.117.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.117.woff2",
+            "bytes": 42736,
+            "sha256": "8ccb7917a13b44a641e64e4db9a1e5f4629be9816a51d694074df88be6cfef04"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.118.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.118.woff2",
+            "bytes": 37568,
+            "sha256": "373a992f06d40b8c701cd6155819c5b0fd280d0149eb5cd9741198bf86521609"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.12.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.12.woff2",
+            "bytes": 53880,
+            "sha256": "a77d75aef82c1219a400081b47fc73827dc3575594e42c693529f133a6a0cecc"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.13.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.13.woff2",
+            "bytes": 51300,
+            "sha256": "0fcb9637af1d782a80f567dbba7ab6fdf6640e12c5a26213785f64f76e0ae5b0"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.14.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.14.woff2",
+            "bytes": 52916,
+            "sha256": "1da2f4f9e42c283982747e11c64da1a0edbca04f9f0ce82ebf91a24b304adfef"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.15.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.15.woff2",
+            "bytes": 50140,
+            "sha256": "a52ac16405582d631a735a10f33117acd342778853b7974c694d11b5e4be8ae2"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.16.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.16.woff2",
+            "bytes": 59188,
+            "sha256": "a4724602506697e49187b3f1dd3d7a6b3bd7ac5a21708b9bdfa8fec348485cef"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.17.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.17.woff2",
+            "bytes": 54904,
+            "sha256": "42608a104692ab728d2e232749efe9052c747631e5d545d5a269b180196ad03c"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.18.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.18.woff2",
+            "bytes": 59412,
+            "sha256": "4a89ccea9457f269a9487b3ced1fa3d9b91143f17b5a160ea7e65862eaa1501b"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.19.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.19.woff2",
+            "bytes": 47212,
+            "sha256": "1e8bfe4131b1f6a864cce15e23a5ea858e47d2fdcf6bce30a554e4491ae28bd3"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.2.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.2.woff2",
+            "bytes": 70732,
+            "sha256": "165f22afd39f2790f61930456cf5020942081f540419e2111c788b32fbeb743d"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.20.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.20.woff2",
+            "bytes": 56952,
+            "sha256": "48a3084e32069f93f7a0494bd0751d04dd9620644c2da8324677e31b823c231c"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.21.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.21.woff2",
+            "bytes": 58792,
+            "sha256": "66dd2ae15ca5df092a17faf14da8805a43dab5d65905a6610b3dcf5edd654982"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.22.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.22.woff2",
+            "bytes": 65888,
+            "sha256": "5727ae201cfa16cc1451eedf224e48cb1f1bf59face4e3b82aee0569d8454af0"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.23.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.23.woff2",
+            "bytes": 59056,
+            "sha256": "09467b85d144cf4132849344d58674004ad745af9c79c2a17d0c80795cad5ad5"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.24.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.24.woff2",
+            "bytes": 61484,
+            "sha256": "82474c7929e1c26b3cc9d7ea6e56eecf7fa667121311e49f038b700247863be0"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.25.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.25.woff2",
+            "bytes": 47356,
+            "sha256": "20be1b2161b8411ee24f681bdb2159ef4ea13f81461cbcbb1bca99f8754d972a"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.26.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.26.woff2",
+            "bytes": 41400,
+            "sha256": "a2bb157fc1df1383a5e179fa82226cb8804881766d20eaf77395ca5187c9051c"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.27.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.27.woff2",
+            "bytes": 56892,
+            "sha256": "952abbbe721b34bfe97f713a6c4433eca898b3504b93a9ea734456905bcd1120"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.28.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.28.woff2",
+            "bytes": 66200,
+            "sha256": "8ec48b762d83b6bdebce44db327585cddaf364ad8c3b47ce7f31f93cd18b3cbf"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.29.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.29.woff2",
+            "bytes": 59928,
+            "sha256": "05f64e9edfa133ab54b225dafd46b229a55426a727637d4af709ae8dd05f6eb7"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.3.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.3.woff2",
+            "bytes": 120632,
+            "sha256": "96a3f1c184d5fa96380ddb194f760ea81b31195704cec597afd9119e450766dc"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.30.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.30.woff2",
+            "bytes": 75108,
+            "sha256": "23d6ddafd35cd00182bfae984302f39715a2900c4248f2bbfefdbf29217c024f"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.31.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.31.woff2",
+            "bytes": 60676,
+            "sha256": "b70bdaa00f1a6fe0fea20cb4baeea0d7cbcec869555a9d33a79291ffbb90cb5b"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.32.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.32.woff2",
+            "bytes": 45012,
+            "sha256": "fd53fc48f95fb1da34f1ce9274a62f77598e45b4dbfce784ebef28efe1850e43"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.33.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.33.woff2",
+            "bytes": 60136,
+            "sha256": "64a1fd77f8adb5880dfae7e22778c27bbd54b74abd633e4b1b6394270d273c4e"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.34.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.34.woff2",
+            "bytes": 58324,
+            "sha256": "a248c8deb15cfd30185f74d11a3266941311be844218ef01aebb815b0ae23671"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.35.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.35.woff2",
+            "bytes": 48700,
+            "sha256": "608a9c52dbc1bdae6cfd68bc2d7a3e8df80ae0b4bc90e755e17da30765d636cf"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.36.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.36.woff2",
+            "bytes": 58996,
+            "sha256": "72f8200656b1f7864a786c82862e33c820eb424883bc4ed3887f30c2cc5340f1"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.37.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.37.woff2",
+            "bytes": 45708,
+            "sha256": "50c068e2aaa3e0af38664b5cdc86a1a448e2035412a0a07cf2d0d0254508af5f"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.38.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.38.woff2",
+            "bytes": 60328,
+            "sha256": "c4aa534e83329bb1c3eebdc6c7d9b50415a75d4a1fcd8c5bc7565819be62b890"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.39.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.39.woff2",
+            "bytes": 50424,
+            "sha256": "06c852914550021ae50c488edc92c719091f8ca79dc626b9594e57ff8cd3d77a"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.4.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.4.woff2",
+            "bytes": 77888,
+            "sha256": "2d43df740f12ef3a13f4076c1314a942a65b7f1b674844a7df12262f34cabf32"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.40.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.40.woff2",
+            "bytes": 61060,
+            "sha256": "09e02809eb5a6ef2ce12f266fd783f7cf635b886b1e613c1872533877a704b53"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.41.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.41.woff2",
+            "bytes": 47896,
+            "sha256": "c915c9bd4686c6a23ce1acace47bf01ad103444676fb169e9e42e5cd3b2aac66"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.42.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.42.woff2",
+            "bytes": 44580,
+            "sha256": "16558ddac0364d3dd38555653900215e1c51f6dc5499cbd0a76682268d5bd0fa"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.43.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.43.woff2",
+            "bytes": 54968,
+            "sha256": "3ce55afb4489c5e89acfd5b10bfe41cb2d444ec3a2dd27b798f808ed525f805e"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.44.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.44.woff2",
+            "bytes": 42376,
+            "sha256": "27b9507515eb9bb2848a0ef80b7750c59b884b5d746bb293d5a4cb933b12bd16"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.45.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.45.woff2",
+            "bytes": 38672,
+            "sha256": "81d515b45a9aa0142e2d583524c5df4522b8b6fca0d96c5caa8caa255b87aebb"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.46.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.46.woff2",
+            "bytes": 47828,
+            "sha256": "e9b6656eb493bcba7ad768cc791d896c3ce409e5641f6a2821ae533050c61648"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.47.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.47.woff2",
+            "bytes": 49508,
+            "sha256": "a5620a8b44a2630fb20a7124d887ff7d8b4226ed9cc66b67fde8511f9c638b9e"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.48.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.48.woff2",
+            "bytes": 43364,
+            "sha256": "b9953d4674a4eb987707d6b6a203c1f13fdcaa22e7b2b13968ed1119b23fe7b9"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.49.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.49.woff2",
+            "bytes": 19888,
+            "sha256": "00683de852c912e66399000fda8e476da44780c9bb017d4dbe537a049b045d01"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.5.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.5.woff2",
+            "bytes": 58012,
+            "sha256": "76f0afef63a3fce83decbbde651554c35806123b9d8e65fbff73f85fe52048fa"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.50.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.50.woff2",
+            "bytes": 11332,
+            "sha256": "467aa041c40951eaf5fb49eb583f4b516cb8126be695d7368d1ef8745c7280b5"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.51.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.51.woff2",
+            "bytes": 6040,
+            "sha256": "5585416dd1ed30043f0e23482a8c7122f967f9cf0a74cf5064df62e89fdf3eba"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.52.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.52.woff2",
+            "bytes": 3480,
+            "sha256": "60f0bb9a50fae913e114172768ddfef6e187c5528a5b9d27122eb74bd73890b2"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.53.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.53.woff2",
+            "bytes": 11176,
+            "sha256": "8738d8d5f7c12b28333e880f3c5fd9fd001c49ebef83b5b86b3212c2a088820a"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.54.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.54.woff2",
+            "bytes": 56940,
+            "sha256": "342c7c38b35773135e57d2d26be03955b5f1e874b5e84116d26154ac7ee05a1f"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.55.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.55.woff2",
+            "bytes": 25384,
+            "sha256": "24d192baa728441312f37597f8cb250d7b0a0dc56e625dc79f3b311abd504e4d"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.56.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.56.woff2",
+            "bytes": 17892,
+            "sha256": "2f5854d9c63d37698538f81bab84aa9d584ad68b2a2580e81b49c3db643d8dd8"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.57.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.57.woff2",
+            "bytes": 42440,
+            "sha256": "ef370714cfd40ad929c7082d0d2a2edd6e0e30dff18faf7c578b0dddfad200c5"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.58.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.58.woff2",
+            "bytes": 31208,
+            "sha256": "d968a14c7d6442a17473319c49c40a8f692ab00c1720083ae31512eb8f910fcf"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.59.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.59.woff2",
+            "bytes": 37236,
+            "sha256": "f1918e185b0ee800019f1f283072cc7a6b408c8df11c7b3cbefb06ec17a10296"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.6.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.6.woff2",
+            "bytes": 60704,
+            "sha256": "a7d4d4c5ab1c5c14b2da63ba265eed1e7b3dd2fa2d3463c1d5da48a15f47e082"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.60.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.60.woff2",
+            "bytes": 33288,
+            "sha256": "057faf8255aa2100672b48a1614a3ee7c684e2c57dd10d3ab2dd6bd6dc792fb1"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.61.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.61.woff2",
+            "bytes": 32268,
+            "sha256": "8018bdd11a9ba42471f885188bcc58babe8d5ba2912d98d43e664e5a88ec411f"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.62.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.62.woff2",
+            "bytes": 31632,
+            "sha256": "fa69d7201ba5d63f0c97ec60ae42260555247ca0c99f7e51306a7b896b672912"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.63.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.63.woff2",
+            "bytes": 39432,
+            "sha256": "a1572fd72e336b8507010bdd5533906e5a844b185e1adb06c224723145225b0b"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.64.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.64.woff2",
+            "bytes": 33188,
+            "sha256": "8d0a6c43a5a18d7bcae82f461c83166a709b22be5565f3192d9e2677ea2e54bf"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.65.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.65.woff2",
+            "bytes": 27240,
+            "sha256": "2e4d1125d9c502eae37d50f4cdb7e8c0500c06e88b6a76e262fb384faa109d57"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.66.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.66.woff2",
+            "bytes": 29452,
+            "sha256": "fcbdf13622eb70629091ec774b1e2ae2d0237166944dc73427478ec36be865e6"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.67.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.67.woff2",
+            "bytes": 34284,
+            "sha256": "48fc5822450dcf009d31a566bc659b8631934644529863a9562b6265b1d0a27f"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.68.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.68.woff2",
+            "bytes": 29480,
+            "sha256": "a5b8d09061def78526489c9cc2afea7829b63b1c84a48fe4049f12d8f708e5a7"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.69.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.69.woff2",
+            "bytes": 31808,
+            "sha256": "bcd0c714771e5422372fc5b6fc84a9a2c61792f98c2e79530f4fd67932e85922"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.7.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.7.woff2",
+            "bytes": 56172,
+            "sha256": "2990df71e17d757bd2e141b3f5ac3a1524ce76de5b4778b5dfb18d06242383de"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.70.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.70.woff2",
+            "bytes": 34140,
+            "sha256": "1f5431e40393e12360f6a42c880de5205af6ce0ee08ca52f16d012c9f0f573a8"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.71.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.71.woff2",
+            "bytes": 30476,
+            "sha256": "925183a70e4aef2a8da599ff56b5573432b5acbd7ac64e041c0d465d68e980c1"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.72.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.72.woff2",
+            "bytes": 31204,
+            "sha256": "6a121bf7ffde3b78b67ea664edf55f0bd08c4e3c71e400e49f89ac16178b6de7"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.73.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.73.woff2",
+            "bytes": 29676,
+            "sha256": "48f3855234675e7bdaf0cd3bcac50e94f7b378b6c80f62a52cc23e8ee6906877"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.74.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.74.woff2",
+            "bytes": 31352,
+            "sha256": "5fd305160530c9dde45a23d98bd4e1a7054fdbc0935e37904542a57c1050dcfe"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.75.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.75.woff2",
+            "bytes": 28908,
+            "sha256": "d3f60f8056dd992ea53ac31807b184f38ff742a8b7ad969ecf26acb157bb4574"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.76.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.76.woff2",
+            "bytes": 30236,
+            "sha256": "10de90509bb55e8971e21205b6af0cdfbb81fb7369ffd990bc20d4bbd36ecbc8"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.77.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.77.woff2",
+            "bytes": 29524,
+            "sha256": "27fdfbd969365adee75ff83c77e0b7a5d566fe94764b64d6b4a8a6fcf0921704"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.78.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.78.woff2",
+            "bytes": 32232,
+            "sha256": "838752530691367cad2f8d9bca7ab1ef4b678ad7470d6883b26a8dcacfcd078d"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.79.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.79.woff2",
+            "bytes": 29496,
+            "sha256": "8a21f8a9e27dab099611b82d347662401c2ebeb4f0fc38386466afe93ed21335"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.8.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.8.woff2",
+            "bytes": 56716,
+            "sha256": "e636a93014c41212cfee15efb98f8932f23b7f544bb9088d66d960921835a6f8"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.80.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.80.woff2",
+            "bytes": 30288,
+            "sha256": "a366df2ad5cee9deb46a61a0bda7d10d838ff1a0cd69e94fef09a62e3e097aef"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.81.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.81.woff2",
+            "bytes": 31492,
+            "sha256": "2cf37828d61aaff219d8d9fc9621f0435c3c3ac79986ef98726df97dc1ba1465"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.82.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.82.woff2",
+            "bytes": 28180,
+            "sha256": "5f47c49ebf57a59d8b2294eb6a301826a5f1b8b61feb6916c1e5e6d8ec535684"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.83.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.83.woff2",
+            "bytes": 29156,
+            "sha256": "fbd4364fde72306d65e41614f4b2ac099af8b6ee7d72d6b28d55a78cbf10015a"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.84.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.84.woff2",
+            "bytes": 27516,
+            "sha256": "e698fbc35b76445ca803093aab1c60624e16ddfe3d5f736a3adde403fb8f5f17"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.85.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.85.woff2",
+            "bytes": 27284,
+            "sha256": "e583d64282c475790ada3b8a66a72a2eedf2150b4917ae17b29f0843db9f58f9"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.86.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.86.woff2",
+            "bytes": 32436,
+            "sha256": "9114c9682f13c3df7ff879914a7a0b9a871e82de3ff19204e82b56d54d231839"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.87.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.87.woff2",
+            "bytes": 27240,
+            "sha256": "8cb12caaa028fe2cf0f91bb44ed15696dcb7ed456adfab39d8c2d503e5f6770c"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.88.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.88.woff2",
+            "bytes": 30192,
+            "sha256": "c69b8afebb8ff81c36091259f7dd72b8f996756e07f19ac72ae8aeb43e44d7a8"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.89.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.89.woff2",
+            "bytes": 29044,
+            "sha256": "a67f88b1235ae05e1de86a261a7c60e63c546b6fb67b5d2ea8216eb2e791b12d"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.9.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.9.woff2",
+            "bytes": 58340,
+            "sha256": "453668469fbeb0b6ecd625611d143c101021d73b3adbdba2860fc36c8b0fe348"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.90.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.90.woff2",
+            "bytes": 33200,
+            "sha256": "8d909a992acb60955334919f0a73d320658eda280b8c3e09418343dc932c8a38"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.91.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.91.woff2",
+            "bytes": 31208,
+            "sha256": "154e2df3eeb45a8618662755b06d6bf6d45e9ef68776cce1617096a1021b667e"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.92.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.92.woff2",
+            "bytes": 27528,
+            "sha256": "b3b4af18a160398c3977e608d032f3f28c4b3d736db867ec90ca9888ea0603eb"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.93.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.93.woff2",
+            "bytes": 30708,
+            "sha256": "0daadef6729d6ddc1528336ebb45b069e3555f38437403daee6f517c4c3d3a82"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.94.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.94.woff2",
+            "bytes": 30420,
+            "sha256": "583a116e08dcf93df6d87ce74e4ef4bef6b9a226c0f9316456b07e89ced0a90e"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.95.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.95.woff2",
+            "bytes": 29620,
+            "sha256": "a784a860742fe2c385dd8e81d56c832757dc21a090688d0fae20221142ce1b71"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.96.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.96.woff2",
+            "bytes": 29112,
+            "sha256": "2dbfc79746715930c1801c2faf76f403a648837ca94a51b5f59f759a732aa4f2"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.97.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.97.woff2",
+            "bytes": 29428,
+            "sha256": "792645eee777ba86b3f11f5f0b6923622988977d9f19eefd0e63c0bdfe23eaea"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.98.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.98.woff2",
+            "bytes": 31884,
+            "sha256": "93ca2d0e57d4937cd9b4683b7bd26b815ad673114d54702896b04d963861a0db"
+        },
+        {
+            "filename": "PretendardJPVariable.subset.99.woff2",
+            "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard-jp/dist/web/variable/woff2-dynamic-subset/PretendardJPVariable.subset.99.woff2",
+            "bytes": 31704,
+            "sha256": "e0d9911cf5bd49e98413d546442725d6cfb1eb967db4f74a1cc4adfe09874067"
+        }
+    ],
+    "licenseSha256": "6cb2adce04090e5e321168d5b47e12d1cb703da64929a4f34dba9162eb55eb98"
+}

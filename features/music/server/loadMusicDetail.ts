@@ -6,8 +6,6 @@ import type {
 import db from "@/lib/db";
 import {
     getCachedChartDetailStats,
-    getCachedChartRanking,
-    getCachedChartTier,
     getCachedMusicDetail,
     getRecentUserChartPlays,
     getUserChartRecord,
@@ -17,6 +15,9 @@ import {
 } from "./musicDetailData";
 import type { Locale } from "@/lib/i18n/routing";
 import { getLocalizedMusicTitle } from "@/lib/i18n/musicTitle";
+import { getChartRanking, MUSIC_RANKING_PAGE_SIZE } from "./chartRanking";
+import { getCommunityData } from "./communityData";
+import { logServerError } from "@/lib/observability/server";
 
 export const MUSIC_DIFFICULTIES: Difficulty[] = [
     "Normal",
@@ -30,7 +31,7 @@ export const MUSIC_DETAIL_TABS: DetailTab[] = [
     "ranking",
     "tier",
 ];
-export const MUSIC_RANKING_PAGE_SIZE = 7;
+export { MUSIC_RANKING_PAGE_SIZE } from "./chartRanking";
 
 const emptyDistribution = [
     { key: "950", label: "950k", count: 0 },
@@ -50,7 +51,7 @@ export function normalizeMusicDifficulty(value: string) {
 export function normalizeMusicDetailTab(value?: string): DetailTab {
     return MUSIC_DETAIL_TABS.includes(value as DetailTab)
         ? (value as DetailTab)
-        : "record";
+        : "detail";
 }
 
 export async function loadMusicDetail(
@@ -83,6 +84,12 @@ export async function loadMusicDetail(
         hard: chartLevels.get("Hard") ?? 0,
         expert: chartLevels.get("Expert") ?? 0,
         real: chartLevels.get("Real") ?? null,
+        constants: Object.fromEntries(
+            music.charts.map((chart) => [
+                chart.difficulty,
+                chart.level_constant ?? null,
+            ])
+        ),
     };
 
     const userPlayData = userId
@@ -119,7 +126,7 @@ export async function loadMusicDetail(
     let playerCount = 0;
     let userTopPercent: number | null = null;
 
-    if (activeTab === "detail") {
+    if (activeTab === "detail" || activeTab === "ranking") {
         const { evaluation, scores } = await getCachedChartDetailStats(
             chart.id
         );
@@ -164,25 +171,14 @@ export async function loadMusicDetail(
     };
 
     if (activeTab === "ranking") {
-        const rankingData = await getCachedChartRanking(
-            chart.id,
-            rankingPage,
-            MUSIC_RANKING_PAGE_SIZE
-        );
+        const rankingData = await getChartRanking(chart.id, rankingPage);
         Object.assign(ranking, rankingData);
         if (userPlayData) {
             ranking.userRank =
                 (await db.playData.count({
                     where: {
                         chart_id: chart.id,
-                        score: { gt: 0 },
-                        OR: [
-                            { score: { gt: userPlayData.score } },
-                            {
-                                score: userPlayData.score,
-                                user_id: { lt: userPlayData.user_id },
-                            },
-                        ],
+                        score: { gt: userPlayData.score },
                     },
                 })) + 1;
         }
@@ -197,77 +193,18 @@ export async function loadMusicDetail(
         opinions: [],
     };
 
-    if (activeTab === "tier") {
-        const [publicTier, currentEvaluation] = await Promise.all([
-            getCachedChartTier(chart.id),
-            userId
-                ? db.chartEvaluation.findUnique({
-                      where: {
-                          chart_id_user_id: {
-                              chart_id: chart.id,
-                              user_id: userId,
-                          },
-                      },
-                      select: {
-                          perceived_constant: true,
-                          stairs: true,
-                          chord: true,
-                          trill: true,
-                          glissando: true,
-                          repetition: true,
-                          comment: true,
-                      },
-                  })
-                : Promise.resolve(null),
-        ]);
-        const constantHistory = [...(publicTier.placement?.history ?? [])];
-        const currentConstant = publicTier.placement?.currentConstant ?? null;
-        if (
-            currentConstant !== null &&
-            constantHistory.at(-1)?.value !== currentConstant
-        ) {
-            constantHistory.push({
-                id: -1,
-                value: currentConstant,
-                effectiveAt: publicTier.placement!.updatedAt,
-            });
-        }
-
-        Object.assign(tier, {
-            currentConstant,
-            constantHistory,
-            community: {
-                average: publicTier.evaluation._avg.perceived_constant ?? null,
-                count: publicTier.evaluation._count._all,
-                distribution: publicTier.distribution.map((item) => ({
-                    value: item.perceived_constant,
-                    count: item._count._all,
-                })),
-            },
-            currentEvaluation,
-            opinionCount: publicTier.opinionCount,
-            opinions: publicTier.opinions.map((opinion) => ({
-                id: opinion.id,
-                perceivedConstant: opinion.perceived_constant,
-                comment: opinion.comment ?? "",
-                updatedAt: opinion.updated_at,
-                user: opinion.user,
-                positiveCount: opinion.reactions.filter(
-                    (reaction) => reaction.value === 1
-                ).length,
-                negativeCount: opinion.reactions.filter(
-                    (reaction) => reaction.value === -1
-                ).length,
-                viewerReaction:
-                    opinion.reactions.find(
-                        (reaction) => reaction.user_id === userId
-                    )?.value ?? null,
-                canDelete: opinion.user.id === userId,
-            })),
-        });
-    }
+    const community =
+        activeTab === "tier"
+            ? await getCommunityData(chart.id, userId).catch((error) => {
+                  logServerError(error, {
+                      event: "music-community.initial.failed",
+                  });
+                  return undefined;
+              })
+            : undefined;
 
     return {
+        accountId: userId,
         music: musicWithLevels,
         difficulty,
         activeTab,
@@ -287,5 +224,6 @@ export async function loadMusicDetail(
         },
         ranking,
         tier,
+        community,
     };
 }

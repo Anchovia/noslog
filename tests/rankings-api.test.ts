@@ -2,21 +2,13 @@ import { NextRequest } from "next/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
-    getCachedUserRankingPage: vi.fn(),
-    getCurrentUserRankingRow: vi.fn(),
+    getGlobalRankingPage: vi.fn(),
     getUser: vi.fn(),
     logServerError: vi.fn(),
 }));
 
-vi.mock("@/lib/rankings", () => ({
-    getCachedUserRankingPage: mocks.getCachedUserRankingPage,
-    getCurrentUserRankingRow: mocks.getCurrentUserRankingRow,
-    normalizeRankingMode: (value: string | null) =>
-        value === "recital" ? "recital" : "basic",
-    normalizeRankingMetric: (value: string | null, mode: string) =>
-        value === "rating" && mode === "basic" ? "rating" : "grade",
-    normalizeRankingRegion: (value: string | null) =>
-        value === "kr" || value === "jp" || value === "global" ? value : "all",
+vi.mock("@/features/rankings/server/globalRankingData", () => ({
+    getGlobalRankingPage: mocks.getGlobalRankingPage,
 }));
 
 vi.mock("@/lib/user", () => ({
@@ -33,7 +25,9 @@ describe("GET /api/rankings", () => {
     beforeEach(() => {
         vi.clearAllMocks();
         mocks.getUser.mockResolvedValue({ id: 1 });
-        mocks.getCachedUserRankingPage.mockResolvedValue({
+        mocks.getGlobalRankingPage.mockResolvedValue({
+            page: 1,
+            currentUser: null,
             totalCount: 1,
             rows: [
                 {
@@ -47,7 +41,6 @@ describe("GET /api/rankings", () => {
                 },
             ],
         });
-        mocks.getCurrentUserRankingRow.mockResolvedValue(null);
     });
 
     it("랭킹 데이터를 공통 API 응답으로 감싼다", async () => {
@@ -79,7 +72,7 @@ describe("GET /api/rankings", () => {
 
     it("내부 오류를 노출하지 않고 정규화한 실패 응답을 반환한다", async () => {
         const error = new Error("database secret");
-        mocks.getCachedUserRankingPage.mockRejectedValue(error);
+        mocks.getGlobalRankingPage.mockRejectedValue(error);
 
         const response = await GET(
             new NextRequest("https://noslog.app/api/rankings")

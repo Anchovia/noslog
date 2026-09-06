@@ -14,6 +14,7 @@ export type MusicDetailQuery = {
     tab: DetailTab;
     page: number;
     locale: Locale;
+    accountId?: number;
 };
 
 function normalizeMusicDetailPage(tab: DetailTab, page: number) {
@@ -31,6 +32,7 @@ export function musicDetailQueryKey(query: MusicDetailQuery) {
         query.tab,
         normalizeMusicDetailPage(query.tab, query.page),
         query.locale,
+        ...(query.accountId ? [query.accountId] : []),
     ] as const;
 }
 
@@ -56,6 +58,8 @@ export async function fetchMusicDetail(
 
 export function musicDetailQueryOptions(query: MusicDetailQuery) {
     return queryOptions({
+        staleTime: 60_000,
+        retry: false,
         queryKey: musicDetailQueryKey(query),
         queryFn: ({ signal }) => fetchMusicDetail(query, signal),
     });

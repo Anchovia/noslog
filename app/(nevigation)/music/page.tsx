@@ -1,11 +1,12 @@
-import MusicResults from "@/components/music/musicResults";
-import MusicSearch from "@/components/music/musicSearch";
+import DiscoveryPage from "@/features/music/components/discoveryPage";
+import {
+    getDiscoveryPage,
+    publicDiscoveryQuery,
+} from "@/features/music/server/discoveryService";
+import { parseDiscoverySearchParams } from "@/features/music/schemas/discoverySchema";
 import { createPageMetadata } from "@/lib/metadata/site";
-import { getMusicPage } from "./data";
-import type { MusicSearchParams } from "@/features/music/search/musicQuery";
 import getSession from "@/lib/session";
 import { getServerI18n } from "@/lib/i18n/server";
-import { getMusicTitleDisplayPreference } from "@/lib/i18n/musicTitle";
 import { localizePath } from "@/lib/i18n/routing";
 
 export async function generateMetadata() {
@@ -18,38 +19,24 @@ export async function generateMetadata() {
 }
 
 export default async function Music(props: {
-    searchParams: Promise<MusicSearchParams>;
+    searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-    const [searchParams, session, { locale, t }] = await Promise.all([
+    const [searchParams, session] = await Promise.all([
         props.searchParams,
         getSession(),
-        getServerI18n(),
     ]);
-    const showLocalizedTitle = await getMusicTitleDisplayPreference(session.id);
-    const initialPage = await getMusicPage(
-        searchParams,
-        null,
-        session.id ?? null,
-        locale,
-        showLocalizedTitle
+    const accountId = session.id ?? null;
+    const query = publicDiscoveryQuery(
+        parseDiscoverySearchParams(searchParams),
+        accountId
     );
-    const searchKey = JSON.stringify(searchParams);
+    const initialPage = await getDiscoveryPage(query, 0, accountId);
 
     return (
-        <div className="mx-auto flex h-full min-h-screen max-w-(--breakpoint-sm) flex-col gap-4 px-4 py-4">
-            <header className="flex items-center justify-between">
-                <h1 className="text-title">{t("music.title")}</h1>
-            </header>
-            <MusicSearch
-                searchParams={searchParams}
-                isLoggedIn={Boolean(session.id)}
-            />
-            <MusicResults
-                key={`results-${searchKey}`}
-                initialPage={initialPage}
-                searchParams={searchParams}
-                isLoggedIn={Boolean(session.id)}
-            />
-        </div>
+        <DiscoveryPage
+            initialPage={initialPage}
+            initialQuery={query}
+            accountId={accountId}
+        />
     );
 }

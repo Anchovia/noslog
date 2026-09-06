@@ -73,23 +73,23 @@ test("로그인 페이지에서 Discord 로그인과 비회원 이동을 제공�
 test("랭킹 페이지에서 Basic과 Recital을 전환한다", async ({ page }) => {
     await page.goto("/ko/rankings");
 
-    const recitalButton = page.getByRole("button", {
+    const recitalButton = page.getByRole("radio", {
         name: "Recital",
         exact: true,
     });
     await recitalButton.click();
 
     await expect(page).toHaveURL(/(?:\?|&)mode=recital(?:&|$)/);
-    await expect(recitalButton).toHaveAttribute("aria-pressed", "true");
+    await expect(recitalButton).toHaveAttribute("aria-checked", "true");
 
-    const basicButton = page.getByRole("button", {
+    const basicButton = page.getByRole("radio", {
         name: "Basic",
         exact: true,
     });
     await basicButton.click();
 
     await expect(page).toHaveURL(/(?:\?|&)mode=basic(?:&|$)/);
-    await expect(basicButton).toHaveAttribute("aria-pressed", "true");
+    await expect(basicButton).toHaveAttribute("aria-checked", "true");
 });
 
 test("핵심 공개 화면은 390px에서 가로로 넘치지 않는다", async ({ page }) => {

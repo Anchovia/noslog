@@ -56,6 +56,12 @@ model User {
   bingoProgress           BingoCellProgress[]
   chartEvaluations        ChartEvaluation[]
   chartReactions          ChartEvaluationReaction[]
+  communityEvaluations    CommunityChartEvaluation[]
+  communityHelpful        CommunityOpinionHelpful[]
+  communityReports        CommunityOpinionReport[] @relation("CommunityReportReporter")
+  communityReportsAuthored CommunityOpinionReport[] @relation("CommunityReportAuthor")
+  chartGoalVotes          ChartGoalVote[]
+  chartGoalVoteAudit       ChartGoalVoteAudit[]
   dataSyncs               DataSync[]
   chartPlayHistory        ChartPlayHistory[]
   chartRecordSnapshots    ChartRecordSnapshot[]
@@ -243,6 +249,10 @@ model MusicChart {
 
   levelConstantHistory ChartLevelConstantHistory[]
   evaluations          ChartEvaluation[]
+  communityEvaluations CommunityChartEvaluation[]
+  goalVotes            ChartGoalVote[]
+  goalVoteAudit        ChartGoalVoteAudit[]
+  goalVoteReviews      ChartGoalVoteReview[]
   PlayData             PlayData[]
   playHistory          ChartPlayHistory[]
   recordSnapshots      ChartRecordSnapshot[]
@@ -505,6 +515,121 @@ model ChartEvaluationReaction {
 
   @@unique([evaluation_id, user_id])
   @@index([evaluation_id, value])
+}
+
+// 2.0 패턴 평가는 기존 ChartEvaluation의 서로 다른 축 값을 재해석하지 않음.
+model CommunityChartEvaluation {
+  id            Int       @id @default(autoincrement())
+  chartId       Int
+  userId        Int
+  stairs        Int?
+  repetition    Int?
+  polyrhythm    Int?
+  offset        Int?
+  chords        Int?
+  opinion       String?
+  opinionHidden Boolean   @default(false)
+  excluded      Boolean   @default(false)
+  moderationReason String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  opinionUpdatedAt DateTime?
+  opinionCreatedAt DateTime?
+  chart         MusicChart @relation(fields: [chartId], references: [id], onDelete: Cascade)
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  helpful       CommunityOpinionHelpful[]
+  reports       CommunityOpinionReport[]
+
+  @@unique([chartId, userId])
+  @@index([chartId, excluded, opinionUpdatedAt])
+}
+
+model CommunityOpinionHelpful {
+  evaluationId Int
+  userId       Int
+  createdAt    DateTime @default(now())
+  evaluation   CommunityChartEvaluation @relation(fields: [evaluationId], references: [id], onDelete: Cascade)
+  user         User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([evaluationId, userId])
+  @@index([userId])
+}
+
+model CommunityOpinionReport {
+  id           Int @id @default(autoincrement())
+  evaluationId Int?
+  userId       Int
+  authorId     Int
+  opinionSnapshot String
+  reason       String
+  explanation  String?
+  status       String @default("pending")
+  reviewReason String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  evaluation   CommunityChartEvaluation? @relation(fields: [evaluationId], references: [id], onDelete: SetNull)
+  user         User @relation("CommunityReportReporter", fields: [userId], references: [id], onDelete: Cascade)
+  author       User @relation("CommunityReportAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@unique([evaluationId, userId])
+  @@index([status, createdAt])
+}
+
+// 목표 투표는 관리자 서열표 버전 및 일반 패턴 평가와 독립적으로 유지함.
+model ChartGoalVote {
+  id        Int @id @default(autoincrement())
+  chartId   Int
+  userId    Int
+  mode      String
+  goal      String
+  value     Float
+  excluded  Boolean @default(false)
+  auditReason String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  chart     MusicChart @relation(fields: [chartId], references: [id], onDelete: Cascade)
+  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([chartId, userId, mode, goal])
+  @@index([chartId, mode, goal, excluded, value])
+}
+
+model ChartGoalVoteAudit {
+  id        Int @id @default(autoincrement())
+  chartId   Int
+  userId    Int
+  mode      String
+  goal      String
+  action    String
+  previousValue Float?
+  value     Float?
+  evidence  Json
+  createdAt DateTime @default(now())
+  chart     MusicChart @relation(fields: [chartId], references: [id], onDelete: Cascade)
+  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([chartId, mode, goal, createdAt])
+  @@index([userId])
+}
+
+model ChartGoalVoteReview {
+  id        Int @id @default(autoincrement())
+  chartId   Int
+  mode      String
+  goal      String
+  status    String @default("in_review")
+  officialValue Float
+  count     Int
+  mean      Float?
+  median    Float?
+  distribution Json
+  reviewReason String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  chart     MusicChart @relation(fields: [chartId], references: [id], onDelete: Cascade)
+
+  @@unique([chartId, mode, goal])
+  @@index([status, updatedAt])
 }
 
 model UserBestGrade {
