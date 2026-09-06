@@ -5,6 +5,54 @@ approval. The implementation and full page-suite verification are incomplete.
 No commit, push, branch operation, or pull request has been performed by the
 implementation agent.
 
+## Common layout correction — 2026-09-06
+
+The user approved a common maximum including header and footer contents after
+reviewing production-site layout evidence. Foundation 24 records the normative
+maximum; brief 15 SHELL-35 supersedes SHELL-34. The implementation reuses the
+existing Figma wide-container token, centers the ordinary main region, and gives
+the footer a bounded inner wrapper. Standard pages use the same ceiling. Header
+and footer surfaces remain full width, and the menu follows its centered trigger.
+
+Shell and page padding now respond to available container width. Browser inspection
+found that a 672px viewport with a 15px scrollbar previously produced 24px shell
+padding but 16px page padding. The corrected 657px available-width case uses 16px
+in all three regions. This avoids a viewport/container breakpoint mismatch.
+
+Figma MCP design context was read for C8 header `247:14` and footer `535:430`.
+In-app browser checks covered compact and wide layouts, the open navigation panel,
+the scrollbar boundary, and a 2560px viewport. Measured header height remains 60px,
+menu target 44px, wordmark 20/28, and footer notice 14/20; the user-approved
+Pretendard JP family remains unchanged. New width and inline alignment intentionally
+supersede the old C8 geometry. The Figma file itself was not edited.
+
+Final verification passed: ESLint, TypeScript, production build, 745 unit tests
+across 99 files, formatting checks, and the layout detector (zero findings). The
+complete current `noslog-v2-*.spec.ts` browser selection finished with 135 passed
+and 39 conditionally skipped cases; skips include duplicate viewport matrices and
+project-specific variants, not ignored failures. The new shell suite's seven
+cases all passed in its explicit desktop-project run, including all mobile widths.
+Final browser results are in `/tmp/noslog-shell-1440-complete`, with the run log
+at `/tmp/noslog-shell-complete.log`; unit/build logs are
+`/tmp/noslog-shell-unit.log` and `/tmp/noslog-shell-build.log`.
+This does not supersede the older repository-wide E2E limitations below.
+
+During verification, the worktree's code changes became part of existing commit
+`fb355ae`. The implementation agent did not run a commit or push; only this evidence
+log remained uncommitted at the final check.
+
+The shell regression covers 11 ordinary routes in KO/JA/EN at 320, 390, 672, 768,
+1056, 1280, 1440, 1920, and 2560 CSS px. It checks centered bounds, full-width
+surfaces, padding agreement, menu anchoring, Escape/focus restoration, compact
+background inertness, shell accessibility, and the original 390px viewer shell.
+Auth uses its separate existing layout and is not assigned an ordinary footer.
+No viewer/editor or `/admin/*` source, font asset, database schema, or page-specific
+component was edited. Unimplemented page interiors, including Bingo's legacy card
+composition, still require their separate P-page implementation.
+
+This is a common-layout checkpoint, not completion of P1–P16. Subsequent page work
+must proceed P1, P2, and onward, one page per verified checkpoint and commit title.
+
 ## Legacy ranking cleanup — 2026-09-06
 
 The user explicitly authorized completing the previously blocked ranking cleanup.
