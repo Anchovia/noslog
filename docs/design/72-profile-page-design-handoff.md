@@ -401,3 +401,16 @@ badges) needed 68 inside the 64 avatar row — the stack gap went 12 → 8 (46 s
 64 avatar rule (`PROF-43` ②) holds. On 1280 the avatar follows the stack (`PROF-41`): the
 stack is now 40 + 12 + 24 + 12 + 44 (chips) + 12 + 20 = 164, so the eight Wide avatars are
 164 (was 136). Scoped audits after the change: Compact 390, Wide 1280, 상태 Light — clean.
+
+## Amendment — 2026-09-06 · identity block tidy-up (`PROF-57`–`59`)
+
+Applied to all 54 identity blocks: owner actions moved into 행 1 (top-aligned, stack FILL);
+a `meta line` text row inserted after 행 1 (`마지막 플레이 2026.08.01 · 동기화 3일 전`, JA/EN
+forms `最終プレー … · 同期 3日前` / `Last played … · Synced 3 days ago`); 행 3 and the
+last-played chip removed; the chip container became a vertical pair — NOSTALGIA ID chip FILL,
+then a row of two FILL chips for Discord and the arcade (stacked at 320 where 153 > 140). Owner
+actions are 32×32 (`PROF-57`), row gap 16; the exam-badge row wraps as a safety. On 1280 the identity block became the same two-row structure as compact: row 1 = avatar |
+name · badges · meta line | owner actions, with the avatar re-derived from the name stack
+(108, was 164 with the chips inside the stack); the chip pair sits below the row at full width. Checks: containment 0 · overlap 0 ·
+text overflow 0 · scoped audits (Compact 390, Wide 1280) clean. `sync.last` copy needs a
+catalogue change (`마지막 동기화 {rel}` → `동기화 {rel}`; ja/en likewise).
