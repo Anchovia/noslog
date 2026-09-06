@@ -387,3 +387,17 @@ and state, including the share-dialog shells):
 - Codex drew the original comparison (Z1 V05, 390 Dark); Light 390 and 1280 pairs were added
   before approval. The two user modifications (selector outside, chips) are not on the Codex
   board — the applied frames are the authority.
+
+## Amendment — 2026-09-06 · exam grade badges (`PROF-56`)
+
+The two `exam · Basic` / `exam · Recital` frames in every identity block are replaced by
+C3 `ExamBadge` instances (`Mode` × `Tier`, grade text overridden from the fixture:
+Basic 2급 → `Tier=top`, Recital 3급 → `Tier=high`). Plate 24 high (inset 4, gap 8), band 6, radius
+`radius/control`, face `surface/plate`. Frames without exam badges (signed-out, not-found)
+are untouched. A DARK VERIFICATION plate sits in the new C3 `ExamBadge` section.
+
+Knock-on fits: the badge is 24 high (was 20), so the compact identity stack (name 32 +
+badges) needed 68 inside the 64 avatar row — the stack gap went 12 → 8 (46 stacks) and the
+64 avatar rule (`PROF-43` ②) holds. On 1280 the avatar follows the stack (`PROF-41`): the
+stack is now 40 + 12 + 24 + 12 + 44 (chips) + 12 + 20 = 164, so the eight Wide avatars are
+164 (was 136). Scoped audits after the change: Compact 390, Wide 1280, 상태 Light — clean.

@@ -770,3 +770,18 @@ share card: 720×378 inside 768). The user chose 768 over 640 (the Home bounded 
 334 on a drawn comparison. This is a bounded reuse of the reading measure for an overlay
 box, not a new primitive; dialogs that carry only text and actions stay at 334 in every
 width.
+
+## Exam tier ramp and plate face — 2026-09-06 (Z1 ㉗, `PROF-56`)
+
+Six aliases, no new primitives:
+
+| Token            | Light                     | Dark                  | Role                                                                                                                                                       |
+| ---------------- | ------------------------- | --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `surface/plate`  | `#E9E9E9` (neutral)       | `#2C2C2C` (neutral)   | small badge/plate face on the canvas — 1.21 / 1.35 against canvas, visible in both modes (`surface/sunken` disappears in Dark, `surface/surface` in Light) |
+| `exam/tier-low`  | `#717171`                 | `#8A8A8A`             | 10–8급 band                                                                                                                                                |
+| `exam/tier-mid`  | `#0074E2`                 | `#3FA2FF`             | 7–5급 band                                                                                                                                                 |
+| `exam/tier-high` | `#9452CE` (= text-real)   | `#AD69E9`             | 4–3급 band                                                                                                                                                 |
+| `exam/tier-top`  | `#CD2E1D` (= text-expert) | `#D85C4F`             | 2급 band                                                                                                                                                   |
+| `exam/tier-peak` | `#BA5500` (= text-hard)   | `#F2A634` (= pianist) | 1급 band                                                                                                                                                   |
+
+Band vs plate face (non-text 3:1): Light 4.02 / 3.76 / 3.97 / 4.32 / 3.94 · Dark 4.05 / 5.20 / 3.97 / 3.70 / 6.84. The tier colours are **not** for text on the plate — as 12 px text they range 2.75–4.32 in Light — so the plate's text stays `content/default`. `surface/plate` is a resting face (not an interaction fill) and may be reused by other small badges that must read on the canvas in both modes.
