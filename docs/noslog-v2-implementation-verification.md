@@ -5,6 +5,66 @@ approval. The implementation and full page-suite verification are incomplete.
 No commit, push, branch operation, or pull request has been performed by the
 implementation agent.
 
+## P2 HOME-23 and fluid desktop layout — 2026-09-06
+
+Scope: the user's updated Home destination collection and requested proportional
+desktop space. No later P-page implementation is included. Home navigation now
+shares the search width: three compact columns (3/3/2), and four columns bounded
+to 640px from the intermediate tier. Tiles place the 20px icon above the label,
+with an 8px gap, 12px compact or 24px larger padding, and the existing surface,
+radius, and control text tokens. The measured 14/20 to 12/16 fitting cascade
+restores the larger style when space permits and wraps only as a final fallback.
+The component reuses shared destination definitions and localized routes.
+
+Figma MCP design context and screenshots were inspected for compact `1134:984`,
+wide `1161:15947`, and intermediate `1164:5819`. Read-only node inspection also
+covered 320px Japanese `1140:2144` and English `1142:2284`. Browser screenshots
+and geometry were compared with these targets: 390px tiles are approximately
+111.33px wide and 72px tall; wide tiles are 148px by 96px with 16px gutters.
+The fractional compact distribution is normal CSS grid rounding. Narrow fitted
+labels can produce 68px tiles, matching the Figma fit variants. The approved
+single-file Pretendard JP delivery remains unchanged; Figma's fallback glyph
+rasterization is not used as a reason to replace the required font.
+
+Foundation 24 and brief 15 record the fluid shell refinement. At desktop sizes,
+header/main/footer inner wrappers use 90% of the available shell width, capped
+at 1440px. Their padding follows the resulting bounded width. Production-site
+inspection reconfirmed Microsoft's proportional header/footer space and Shopify's
+bounded navigation. The 90% rule is a NosLog implementation choice for the user's
+fluid-width request, with the existing ceiling and spacing tokens retained.
+
+The shell matrix covers 11 routes in three locales at 13 widths, including both
+sides of the proportional-width and padding transitions. P2 checks cover three
+locales, both themes, ten widths from 320 to 2560px, all eight destination links,
+search-preview keyboard behavior, and accessibility at compact/intermediate/wide
+sizes. The existing Discovery and Tiers matrices were updated for their actual
+available results area: at 1280px, Discovery reflows to four columns and compact
+Tiers to six. Both now also check the larger 1600px viewport. Their application
+components and styles were not changed.
+
+The local Home has no published announcement rows, so its lower content differs
+from Figma's populated specimen. This checkpoint verifies the requested navigation
+changes, not completion of every P2 content/state variant or the complete P1–P16
+suite. No viewer/editor, administrator route, font asset, dependency, or database
+schema is changed.
+
+Final verification passed: full ESLint, TypeScript, production build, all 745
+unit tests across 99 files, changed-file formatting, whitespace checks, and the
+layout detector (zero findings). The complete current `noslog-v2-*.spec.ts`
+browser selection finished with 149 passed and 45 conditionally skipped cases.
+The skips avoid duplicate viewport matrices or run project-specific behavior in
+its appropriate project; no failing assertion was skipped. An initial run found
+nine failures from the former fixed column expectations in Discovery/Tiers;
+after updating those expectations and adding the wider checks, the entire
+selection passed. This does not claim that the older repository-wide E2E
+limitations recorded below have been resolved.
+
+Final browser artifacts: `/tmp/noslog-home-23-final`; browser log:
+`/tmp/noslog-home-23-final.log`; unit/build logs:
+`/tmp/noslog-home-23-unit.log` and `/tmp/noslog-home-23-build.log`.
+This is a verified P2 navigation/common-width checkpoint. Stop here for the
+user's commit; do not continue into the next page or commit/push on their behalf.
+
 ## Common layout correction — 2026-09-06
 
 The user approved a common maximum including header and footer contents after

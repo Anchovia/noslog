@@ -3,7 +3,9 @@ import { expect, test } from "@playwright/test";
 
 import { expectNoHorizontalOverflow, localeCopy } from "./helpers";
 
-const widths = [320, 390, 672, 768, 1056, 1280, 1440, 1920, 2560];
+const widths = [
+    320, 390, 672, 768, 1055, 1056, 1173, 1174, 1280, 1440, 1600, 1920, 2560,
+];
 const routes = [
     "",
     "/music",
@@ -61,7 +63,12 @@ for (const locale of ["ko", "ja", "en"] as const) {
                             : null,
                     };
                 });
-                const expectedWidth = Math.min(layout.viewport, 1440);
+                const expectedWidth = Math.min(
+                    layout.viewport >= 1056
+                        ? layout.viewport * 0.9
+                        : layout.viewport,
+                    1440
+                );
                 const expectedX = (layout.viewport - expectedWidth) / 2;
                 for (const box of [layout.header, layout.main, layout.footer]) {
                     expect(box.width, `${route} at ${width}`).toBeCloseTo(
@@ -81,11 +88,7 @@ for (const locale of ["ko", "ja", "en"] as const) {
                     expect(surface.x).toBe(0);
                 }
                 const padding =
-                    layout.viewport < 672
-                        ? 16
-                        : layout.viewport < 1056
-                          ? 24
-                          : 32;
+                    expectedWidth < 672 ? 16 : expectedWidth < 1056 ? 24 : 32;
                 for (const box of [layout.header, layout.footer]) {
                     expect(box.paddingLeft).toBe(padding);
                     expect(box.paddingRight).toBe(padding);
@@ -98,7 +101,7 @@ for (const locale of ["ko", "ja", "en"] as const) {
                     const content = await page
                         .locator(".nl-home")
                         .boundingBox();
-                    expect(content?.width).toBe(expectedWidth);
+                    expect(content?.width).toBeCloseTo(expectedWidth, 1);
                     await expectNoHorizontalOverflow(page);
                     if ([390, 1440, 2560].includes(width)) {
                         await page.screenshot({

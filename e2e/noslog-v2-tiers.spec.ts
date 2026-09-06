@@ -416,7 +416,7 @@ test("band failures stay local and retry without losing the selected scope", asy
 
 for (const locale of ["ko", "ja", "en"])
     for (const theme of ["dark", "light"] as const) {
-        test(`${locale} ${theme} reflows compact and detailed cards at five widths`, async ({
+        test(`${locale} ${theme} reflows compact and detailed cards at six widths`, async ({
             page,
         }, testInfo) => {
             test.skip(
@@ -438,7 +438,7 @@ for (const locale of ["ko", "ja", "en"])
                 await page
                     .locator(".nl-tier-toolbar input[type=checkbox]")
                     .setChecked(detailed);
-                for (const width of [320, 390, 768, 1024, 1280]) {
+                for (const width of [320, 390, 768, 1024, 1280, 1600]) {
                     await page.setViewportSize({ width, height: 900 });
                     if (width >= 1056)
                         await expect(
@@ -464,8 +464,8 @@ for (const locale of ["ko", "ja", "en"])
                     expect(size.scroll).toBeLessThanOrEqual(size.width);
                     expect(size.font).toContain("Pretendard JP Variable");
                     const expected = detailed
-                        ? { 320: 2, 390: 2, 768: 3, 1024: 5, 1280: 4 }
-                        : { 320: 3, 390: 3, 768: 5, 1024: 7, 1280: 7 };
+                        ? { 320: 2, 390: 2, 768: 3, 1024: 5, 1280: 4, 1600: 5 }
+                        : { 320: 3, 390: 3, 768: 5, 1024: 7, 1280: 6, 1600: 8 };
                     expect(size.columns).toBe(
                         expected[width as keyof typeof expected]
                     );

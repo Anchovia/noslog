@@ -210,6 +210,23 @@ the raw exported `container/standard = 1280px` remains source evidence and must
 not be reapplied to ordinary pages. The existing Figma frames have not been edited
 by this implementation correction. See brief 15, SHELL-35.
 
+**Fluid desktop implementation refinement — 2026-09-06:** The user's subsequent
+MacBook review requested proportional outer space below the ceiling. At an
+available shell width of `1056px` or more, the shared header/main/footer wrappers
+use `90%` of that width, capped at `1440px`. Below that transition they use the
+available width. The existing inner `16px / 24px / 32px` margins respond to the
+resulting bounded page width, so all three regions retain matching alignment.
+For example, a `1440px` available shell yields a `1296px` wrapper with `32px`
+inner margins; a `1920px` shell yields the `1440px` ceiling. Home search and
+destinations retain their separate HOME-23 bound inside this wrapper.
+
+This proportional-space implementation draws on the inspected
+[Microsoft production header and footer](https://www.microsoft.com/ko-kr),
+which used `5%` inline space at the reviewed desktop width. NosLog retains its
+own approved ceiling and inner spacing tokens; Microsoft's ceiling is not adopted.
+The user requested the fluid behavior; the `90%` mapping is the implementation
+choice stated during this task, rather than a new Figma variable value.
+
 ## Neutral color — Adobe Spectrum S2
 
 Adobe Spectrum S2 is the exclusive neutral primitive and semantic source. Use the

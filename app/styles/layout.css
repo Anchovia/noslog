@@ -239,6 +239,13 @@
     }
 }
 @container shell (min-width: 1056px) {
+    .noslog-ui .nl-main,
+    .noslog-ui .nl-header__interaction,
+    .noslog-ui .nl-footer__content {
+        width: 90%;
+    }
+}
+@container shell (min-width: calc(1056px / 0.9)) {
     .noslog-ui .nl-header__interaction,
     .noslog-ui .nl-footer__content {
         --nl-layout-margin: var(--nl-grid-margin-wide);

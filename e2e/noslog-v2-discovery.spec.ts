@@ -139,7 +139,7 @@ test("Discovery exposes settled empty, retry, and delayed replacement states wit
 });
 
 for (const locale of ["ko", "ja", "en"]) {
-    test(`${locale} Discovery reflows from 320 to 1280 and meets WCAG AA`, async ({
+    test(`${locale} Discovery reflows from 320 to 1600 and meets WCAG AA`, async ({
         page,
     }, testInfo) => {
         test.skip(
@@ -148,7 +148,14 @@ for (const locale of ["ko", "ja", "en"]) {
         );
         await page.goto(`/${locale}/music?view=grid`);
         await expect(page.locator("[data-result]")).toHaveCount(20);
-        for (const width of [320, 390, 768, 1024, 1280]) {
+        for (const [width, columns] of [
+            [320, 2],
+            [390, 2],
+            [768, 4],
+            [1024, 5],
+            [1280, 4],
+            [1600, 5],
+        ]) {
             await page.setViewportSize({ width, height: 900 });
             await expect
                 .poll(() =>
@@ -170,7 +177,7 @@ for (const locale of ["ko", "ja", "en"]) {
                                 ).gridTemplateColumns.split(" ").length
                         )
                 )
-                .toBe(width < 536 ? 2 : width === 768 ? 4 : 5);
+                .toBe(columns);
             await page.screenshot({
                 path: testInfo.outputPath(`${locale}-${width}.png`),
                 fullPage: true,

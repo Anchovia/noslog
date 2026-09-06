@@ -167,6 +167,9 @@ Feedback, Privacy, GitHub, and Admin are not persistent labeled header controls.
 - **Approved (2026-09-06, SHELL-35):** The user selected a common maximum including
   the header and footer. Header contents, the ordinary page layout, and footer
   contents share the centered maximum in Foundation 24, Page alignment.
+- The subsequent MacBook review requested proportional desktop space below that
+  maximum. Apply Foundation 24's fluid desktop refinement to all three wrappers;
+  choose their shared inner margins from the resulting bounded width.
 - Header/footer backgrounds and horizontal boundaries continue across the viewport.
   Their inner content uses the same responsive inline margins as the page grid;
   controls retain their existing target sizes. The destination panel stays anchored

@@ -1,25 +1,12 @@
-import Link from "next/link";
-
 import HomeAnnouncements from "@/components/home/homeAnnouncements";
 import OfficialXTimeline from "@/components/home/officialXTimeline";
-import { productDestinations } from "@/components/layout/destinations";
 import PageContainer from "@/components/layout/pageContainer";
 import HomeSearch from "@/features/home/components/homeSearch";
+import HomeDestinations from "@/features/home/components/homeDestinations";
 import { getPublishedAnnouncements } from "@/lib/announcements";
 import { getServerI18n } from "@/lib/i18n/server";
 import { getLocalizedHref } from "@/lib/i18n/routing";
 import { SITE_NAME, SITE_URL } from "@/lib/metadata/site";
-
-const destinationOrder = [
-    "/music",
-    "/music?scope=chart",
-    "/tiers",
-    "/rankings",
-    "/bingo",
-    "/exams",
-    "/gamecenter",
-    "/bookmarklet",
-];
 
 export default async function HomePage() {
     const [announcements, { locale, t }] = await Promise.all([
@@ -72,32 +59,7 @@ export default async function HomePage() {
                 </div>
                 <HomeSearch />
             </section>
-            <nav aria-label={t("home.destinations")}>
-                <ul className="nl-home-destinations">
-                    {destinationOrder.map((destination) => {
-                        const item = productDestinations.find(
-                            (entry) => entry.href === destination
-                        )!;
-                        const Icon = item.icon;
-                        const label = destination.includes("scope=chart")
-                            ? t("home.tileCharts")
-                            : destination === "/bookmarklet"
-                              ? t("home.tileSync")
-                              : t(item.labelKey);
-                        return (
-                            <li key={destination}>
-                                <Link
-                                    href={getLocalizedHref(destination, locale)}
-                                    className="nl-home-tile nl-control"
-                                >
-                                    <Icon className="nl-icon" aria-hidden />
-                                    <span>{label}</span>
-                                </Link>
-                            </li>
-                        );
-                    })}
-                </ul>
-            </nav>
+            <HomeDestinations />
             <div className="nl-home-updates">
                 <HomeAnnouncements announcements={announcements} />
                 <OfficialXTimeline />
