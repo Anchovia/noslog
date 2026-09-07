@@ -142,3 +142,8 @@ Found while auditing the new frames: the wide/768 catalog grid rows were FIXED a
 card body needed 85 (12 + title 24 + 8 + bottom group 29 + 12) and got 77 — an 8 px squeeze on
 every card (A15, 25 cards per frame) that predates this amendment. Rows are now re-derived
 from the tallest card (369 → 377) in every wide/768 frame and the sections reflowed.
+
+Correction — 2026-09-07 (same day): the popover's options were rebuilt to the list's real set
+— 상태 전체 · 진행 중 · 해금 완료 · 풀보드 완료 · 빙고 찬스, 정렬 수록순 · 최근 기록순 · 진행률
+높은 순 (`bingo.catalog.*`). The first build had taken the detail page's mission-filter keys.
+Filter semantics are not a design decision; do not change them.

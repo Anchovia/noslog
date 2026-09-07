@@ -256,6 +256,14 @@ async function filterKnownMusic(music: SyncMusicInput[]) {
 }
 
 function formatSkippedCharts(skippedCharts: SkippedChart[]) {
+    skippedCharts = [
+        ...new Map(
+            skippedCharts.map((chart) => [
+                `${chart.musicIndex}:${chart.difficulty}`,
+                chart,
+            ])
+        ).values(),
+    ];
     if (skippedCharts.length === 0) return null;
 
     const preview = skippedCharts
@@ -405,9 +413,10 @@ export async function POST(request: NextRequest) {
     try {
         await updatePlayerProfile(user.id, player);
 
-        const insertedPlays = await updateRecentPlay(user.id, history, syncId);
+        const { insertedPlays, skippedCharts: skippedRecentCharts } =
+            await updateRecentPlay(user.id, history, syncId);
         let changedRecords = 0;
-        let syncNotice: string | null = null;
+        let syncNotice = formatSkippedCharts(skippedRecentCharts);
         let catalogUpdates = { detected: 0, pending: 0, applied: 0 };
         if (music) {
             catalogUpdates = await processBemaniCatalogUpdates(
@@ -415,7 +424,10 @@ export async function POST(request: NextRequest) {
                 user.role === "admin"
             );
             const { knownMusic, skippedCharts } = await filterKnownMusic(music);
-            syncNotice = formatSkippedCharts(skippedCharts);
+            syncNotice = formatSkippedCharts([
+                ...skippedRecentCharts,
+                ...skippedCharts,
+            ]);
 
             if (knownMusic.length > 0) {
                 changedRecords = await updatePlayData(

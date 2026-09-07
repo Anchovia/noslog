@@ -46,21 +46,23 @@ export default function SyncStatusHeader({
                             ? t(`sync.status.${attempt.status}`)
                             : t("profile.noRecord")}
                     </span>
-                    <span className="nl-body-secondary nl-muted">
-                        {attempt
-                            ? t(
-                                  completed
-                                      ? "sync.latestAt"
-                                      : "sync.startedAt",
-                                  {
-                                      date: syncDateLabel(
-                                          attempt.completedAt ??
-                                              attempt.startedAt
-                                      ),
-                                  }
-                              )
-                            : t("sync.neverSynced")}
-                    </span>
+                    {attempt ? (
+                        <span className="nl-body-secondary nl-muted">
+                            {attempt
+                                ? t(
+                                      completed
+                                          ? "sync.latestAt"
+                                          : "sync.startedAt",
+                                      {
+                                          date: syncDateLabel(
+                                              attempt.completedAt ??
+                                                  attempt.startedAt
+                                          ),
+                                      }
+                                  )
+                                : t("sync.neverSynced")}
+                        </span>
+                    ) : null}
                 </div>
                 {reinstall ? (
                     <Button

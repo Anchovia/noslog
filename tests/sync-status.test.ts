@@ -6,6 +6,7 @@ const mocks = vi.hoisted(() => ({
     count: vi.fn(),
     timing: vi.fn(),
     records: vi.fn(),
+    recordCounts: vi.fn(),
     recent: vi.fn(),
     session: vi.fn(),
 }));
@@ -13,9 +14,12 @@ vi.mock("server-only", () => ({}));
 vi.mock("@/lib/db", () => ({
     default: {
         dataSync: { findMany: mocks.attempts, findFirst: mocks.previous },
-        playData: { count: mocks.count },
+        musicChart: { count: mocks.count },
         chartPlayHistory: { groupBy: mocks.timing, findMany: mocks.recent },
-        chartRecordSnapshot: { findMany: mocks.records },
+        chartRecordSnapshot: {
+            findMany: mocks.records,
+            groupBy: mocks.recordCounts,
+        },
     },
 }));
 vi.mock("@/lib/session", () => ({ default: mocks.session }));
@@ -47,11 +51,71 @@ beforeEach(() => {
     mocks.count.mockResolvedValue(12);
     mocks.timing.mockResolvedValue([{ chart_id: 1 }]);
     mocks.records.mockResolvedValue([]);
+    mocks.recordCounts.mockResolvedValue([
+        { sync_id: 40, _count: { _all: 1 } },
+    ]);
     mocks.recent.mockResolvedValue([]);
     mocks.session.mockResolvedValue({ id: 7 });
 });
 
 describe("P8 safe own-account sync status", () => {
+    it("excludes unplayed snapshots from historical best-record counts and previews", async () => {
+        mocks.attempts.mockResolvedValue([
+            { ...attempt, changed_records: 1715 },
+        ]);
+        mocks.recordCounts.mockResolvedValue([
+            { sync_id: 40, _count: { _all: 725 } },
+        ]);
+        const result = await getSyncStatus(7, now);
+        expect(result.attempts[0].changedRecords).toBe(725);
+        expect(mocks.recordCounts).toHaveBeenCalledWith({
+            by: ["sync_id"],
+            where: { user_id: 7, sync_id: { in: [40] }, play_count: { gt: 0 } },
+            _count: { _all: true },
+        });
+        expect(mocks.records).toHaveBeenCalledWith(
+            expect.objectContaining({
+                where: { user_id: 7, sync_id: 40, play_count: { gt: 0 } },
+            })
+        );
+    });
+    it("includes recent-only charts and their complete judgement details in owner coverage", async () => {
+        mocks.count.mockResolvedValueOnce(27).mockResolvedValueOnce(27);
+        const result = await getSyncStatus(7, now);
+        expect(result.coverage).toMatchObject({ played: 27, judgement: 27 });
+        expect(mocks.count).toHaveBeenNthCalledWith(1, {
+            where: {
+                OR: [
+                    {
+                        PlayData: {
+                            some: { user_id: 7, play_count: { gt: 0 } },
+                        },
+                    },
+                    { playHistory: { some: { user_id: 7 } } },
+                ],
+            },
+        });
+        const complete = {
+            user_id: 7,
+            judge_sjust: { not: null },
+            judge_just: { not: null },
+            judge_good: { not: null },
+            judge_miss: { not: null },
+            judge_near: { not: null },
+        };
+        expect(mocks.count).toHaveBeenNthCalledWith(2, {
+            where: {
+                OR: [
+                    {
+                        PlayData: {
+                            some: { ...complete, play_count: { gt: 0 } },
+                        },
+                    },
+                    { playHistory: { some: complete } },
+                ],
+            },
+        });
+    });
     it.each([
         [599999, "processing"],
         [600000, "delayed"],
@@ -143,6 +207,9 @@ describe("P8 safe own-account sync status", () => {
     });
     it("summarizes a first full import beyond the three-preview capacity", async () => {
         mocks.previous.mockResolvedValue(null);
+        mocks.recordCounts.mockResolvedValue([
+            { sync_id: 40, _count: { _all: 500 } },
+        ]);
         mocks.attempts.mockResolvedValue([
             { ...attempt, changed_records: 500 },
         ]);

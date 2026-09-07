@@ -29,7 +29,7 @@ import type {
     TierBrowserQuery,
 } from "@/features/tiers/schemas/tierBrowserSchema";
 import { TIER_GOALS, tierGoalLabels, formatTierValue } from "@/lib/tiers";
-import useElementWidth from "@/lib/hooks/useElementWidth";
+import useWideLayout from "@/lib/hooks/useWideLayout";
 import TierBrowserBands from "./tierBrowserBands";
 import TierFilterFields from "./tierFilterFields";
 import TierRatingGuide from "./tierRatingGuide";
@@ -49,8 +49,7 @@ export default function TierBrowserPage({
     const locale = useLocale();
     const href = useLocalizedHref();
     const goalId = useId();
-    const { ref, width } = useElementWidth<HTMLDivElement>();
-    const wide = width >= 1056;
+    const wide = useWideLayout();
     const searchParams = useSearchParams();
     const query = parseTierBrowserQuery(new URLSearchParams(searchParams));
     const [draft, setDraft] = useState(initialQuery);
@@ -152,7 +151,10 @@ export default function TierBrowserPage({
         </FormField>
     );
     return (
-        <PageContainer ref={ref} className="nl-tiers">
+        <PageContainer
+            className="nl-tiers"
+            data-layout={wide ? "wide" : "compact"}
+        >
             <h1 className="nl-page-title">{t("tiers.title")}</h1>
             {!wide ? (
                 <>
@@ -192,8 +194,8 @@ export default function TierBrowserPage({
                     </aside>
                 ) : null}
                 <div className="nl-tier-results">
-                    {!wide ? (
-                        <div className="nl-tier-toolbar">
+                    <div className="nl-tier-toolbar">
+                        {!wide ? (
                             <FullScreenDialog
                                 open={open}
                                 onOpenChange={(value) => {
@@ -264,18 +266,18 @@ export default function TierBrowserPage({
                                     ) : null}
                                 </div>
                             </FullScreenDialog>
-                            <Checkbox
-                                label={t("tiers.detailedView")}
-                                checked={query.detailed}
-                                onChange={(event) =>
-                                    commit({
-                                        ...query,
-                                        detailed: event.target.checked,
-                                    })
-                                }
-                            />
-                        </div>
-                    ) : null}
+                        ) : null}
+                        <Checkbox
+                            label={t("tiers.detailedView")}
+                            checked={query.detailed}
+                            onChange={(event) =>
+                                commit({
+                                    ...query,
+                                    detailed: event.target.checked,
+                                })
+                            }
+                        />
+                    </div>
                     {filterCount ? (
                         <div
                             className="nl-tier-criteria"

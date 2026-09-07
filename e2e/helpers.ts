@@ -39,14 +39,21 @@ export const localeCopy = {
 export type TestLocale = keyof typeof localeCopy;
 
 export async function expectNoHorizontalOverflow(page: Page) {
-    const dimensions = await page.evaluate(() => ({
-        clientWidth: document.documentElement.clientWidth,
-        scrollWidth: document.documentElement.scrollWidth,
-    }));
-
-    expect(dimensions.scrollWidth).toBeLessThanOrEqual(
-        dimensions.clientWidth + 1
-    );
+    // ResizeObserver-driven charts settle after viewport changes and font loading.
+    await expect
+        .poll(
+            () =>
+                page.evaluate(
+                    () =>
+                        document.documentElement.scrollWidth -
+                        document.documentElement.clientWidth
+                ),
+            {
+                message: `Horizontal overflow at ${page.url()}`,
+                timeout: 1000,
+            }
+        )
+        .toBeLessThanOrEqual(1);
 }
 
 export async function expectPageLoaded(page: Page) {

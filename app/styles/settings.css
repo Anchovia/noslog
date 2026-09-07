@@ -195,6 +195,38 @@
     font-size: var(--nl-type-size-14);
     line-height: var(--nl-type-line-height-20);
 }
+.noslog-ui .nl-account-deletion {
+    border-top: 1px solid var(--nl-border-divider);
+    padding-top: var(--nl-spacing-24);
+}
+.noslog-ui .nl-account-confirmation {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-16);
+}
+.noslog-ui .nl-account-confirmation .nl-input {
+    min-height: 44px;
+    font-size: var(--nl-type-size-14);
+    line-height: var(--nl-type-line-height-20);
+}
+.noslog-ui .nl-account-consequences {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
+    font-size: var(--nl-type-size-14);
+    line-height: var(--nl-type-line-height-20);
+}
+.noslog-ui .nl-account-consequences > div {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--nl-spacing-12);
+}
+.noslog-ui .nl-account-consequences dd {
+    flex-shrink: 0;
+}
+.noslog-ui .nl-account-reauth {
+    align-self: stretch;
+}
 .noslog-ui .nl-settings__layout,
 .noslog-ui .nl-settings__detail {
     display: flex;

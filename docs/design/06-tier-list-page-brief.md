@@ -657,3 +657,9 @@ the product to 390px, or conflicts with the approved responsive behavior.
 It must also preserve the official-versus-community boundary: no inline Tier-card
 voting, no community-driven automatic reordering, and exact mode-and-goal context when
 opening Tier & Evaluation.
+
+### Decision Log addendum — 2026-09-07
+
+| ID        | Decision                                                                                                                                                                                                                    |
+| --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `TIER-30` | **Filter vessel unchanged**: Wide rail, Intermediate/Compact full layer with staging. The popover alternative at 768 and 1280 (Z1 ㉞) was rejected with `DISC-47`; the band checklist's staging + `결과 보기` commit stays. |

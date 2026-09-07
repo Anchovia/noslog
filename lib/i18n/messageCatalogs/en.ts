@@ -437,6 +437,8 @@ export const enMessages = {
     "common.previousPage": "Previous page",
     "common.nextPage": "Next page",
     "feedback.title": "Feedback · Report an Issue",
+    "feedback.contentLabel": "Report details",
+    "feedback.contentLength": "10–1000 characters",
     "feedback.loginRequired": "Log in to leave feedback.",
     "feedback.description":
         "Describe the screen and situation where the issue occurred.",
@@ -1025,6 +1027,17 @@ export const enMessages = {
     "profile.judgementEmpty": "No synced judgement records.",
     "profile.modeAria": "Profile mode",
     "profile.logout": "Log Out",
+    "settings.loggedOut": "You have logged out.",
+    "settings.logoutError": "Could not log out. Please try again.",
+    "settings.deleted":
+        "Your NosLog account and related information have been deleted.",
+    "bingo.resetTitle": "Reset bingo progress",
+    "bingo.resetDescription":
+        "All {count} of your checked cells on '{title}' will be deleted.",
+    "bingo.resetAction": "Reset",
+    "bingo.resetError":
+        "Could not reset. Your progress is unchanged. Please try again.",
+    "bingo.resetSuccess": "Your checked cells on this bingo have been reset.",
     "profile.share": "Share profile card",
     "profile.shareTitle": "Export Profile Card",
     "profile.cardPreview": "{name} profile card preview",

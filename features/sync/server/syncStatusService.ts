@@ -41,18 +41,47 @@ export async function getSyncStatus(userId: number, now = new Date()) {
                 completed_at: true,
             },
         }),
-        db.playData.count({
-            where: { user_id: userId, play_count: { gt: 0 } },
-        }),
-        db.playData.count({
+        db.musicChart.count({
             where: {
-                user_id: userId,
-                play_count: { gt: 0 },
-                judge_sjust: { not: null },
-                judge_just: { not: null },
-                judge_good: { not: null },
-                judge_miss: { not: null },
-                judge_near: { not: null },
+                OR: [
+                    {
+                        PlayData: {
+                            some: { user_id: userId, play_count: { gt: 0 } },
+                        },
+                    },
+                    { playHistory: { some: { user_id: userId } } },
+                ],
+            },
+        }),
+        db.musicChart.count({
+            where: {
+                OR: [
+                    {
+                        PlayData: {
+                            some: {
+                                user_id: userId,
+                                play_count: { gt: 0 },
+                                judge_sjust: { not: null },
+                                judge_just: { not: null },
+                                judge_good: { not: null },
+                                judge_miss: { not: null },
+                                judge_near: { not: null },
+                            },
+                        },
+                    },
+                    {
+                        playHistory: {
+                            some: {
+                                user_id: userId,
+                                judge_sjust: { not: null },
+                                judge_just: { not: null },
+                                judge_good: { not: null },
+                                judge_miss: { not: null },
+                                judge_near: { not: null },
+                            },
+                        },
+                    },
+                ],
             },
         }),
         db.chartPlayHistory.groupBy({
@@ -64,12 +93,32 @@ export async function getSyncStatus(userId: number, now = new Date()) {
             },
         }),
     ]);
+    const recordCounts = await db.chartRecordSnapshot.groupBy({
+        by: ["sync_id"],
+        where: {
+            user_id: userId,
+            sync_id: {
+                in: attempts
+                    .filter(
+                        (attempt) =>
+                            attempt.sync_scope === "full" &&
+                            attempt.status === "completed"
+                    )
+                    .map((attempt) => attempt.id),
+            },
+            play_count: { gt: 0 },
+        },
+        _count: { _all: true },
+    });
+    const playedChanges = new Map(
+        recordCounts.map((row) => [row.sync_id, row._count._all])
+    );
     const latest = attempts[0];
     const full = latest?.sync_scope === "full";
     const firstFullImport = Boolean(
         latest?.status === "completed" &&
         full &&
-        latest.changed_records > 3 &&
+        (playedChanges.get(latest.id) ?? 0) > 3 &&
         !(await db.dataSync.findFirst({
             where: {
                 user_id: userId,
@@ -94,7 +143,11 @@ export async function getSyncStatus(userId: number, now = new Date()) {
             ? []
             : full
               ? await db.chartRecordSnapshot.findMany({
-                    where: { user_id: userId, sync_id: latest.id },
+                    where: {
+                        user_id: userId,
+                        sync_id: latest.id,
+                        play_count: { gt: 0 },
+                    },
                     orderBy: { id: "desc" },
                     take: 3,
                     select: { score: true, chart },
@@ -120,7 +173,10 @@ export async function getSyncStatus(userId: number, now = new Date()) {
                 completedAt: sync.completed_at?.toISOString() ?? null,
                 receivedPlays: sync.received_plays,
                 insertedPlays: sync.inserted_plays,
-                changedRecords: sync.changed_records,
+                changedRecords:
+                    sync.sync_scope === "full"
+                        ? (playedChanges.get(sync.id) ?? 0)
+                        : 0,
                 excludedCount: excluded ? Number(excluded[1]) : null,
             };
         }),

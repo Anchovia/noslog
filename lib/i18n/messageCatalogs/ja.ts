@@ -432,6 +432,8 @@ export const jaMessages = {
     "common.previousPage": "前のページ",
     "common.nextPage": "次のページ",
     "feedback.title": "フィードバック・不具合報告",
+    "feedback.contentLabel": "報告内容",
+    "feedback.contentLength": "10～1000文字",
     "feedback.loginRequired": "ログインするとフィードバックを送信できます。",
     "feedback.description":
         "問題が発生した画面と状況を具体的に入力してください。",
@@ -1019,6 +1021,17 @@ export const jaMessages = {
     "profile.judgementEmpty": "連携された判定記録がありません。",
     "profile.modeAria": "プロフィールモード",
     "profile.logout": "ログアウト",
+    "settings.loggedOut": "ログアウトしました。",
+    "settings.logoutError":
+        "ログアウトできませんでした。もう一度お試しください。",
+    "settings.deleted": "NosLogアカウントと関連情報を削除しました。",
+    "bingo.resetTitle": "ビンゴ記録をリセット",
+    "bingo.resetDescription":
+        "「{title}」に記録した自分のチェック{count}マスをすべて削除します。",
+    "bingo.resetAction": "リセット",
+    "bingo.resetError":
+        "リセットできませんでした。記録は保持されています。もう一度お試しください。",
+    "bingo.resetSuccess": "このビンゴの自分のチェックをリセットしました。",
     "profile.share": "プロフィールカードを共有",
     "profile.shareTitle": "プロフィールカードを書き出す",
     "profile.cardPreview": "{name}のプロフィールカードプレビュー",

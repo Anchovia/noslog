@@ -140,16 +140,6 @@ export const getCachedBingoDetail = unstable_cache(
     }
 );
 
-export function isBingoAvailable(
-    bingo: { startsAt: string | null; endsAt: string | null },
-    now = new Date()
-) {
-    return (
-        (!bingo.startsAt || new Date(bingo.startsAt) <= now) &&
-        (!bingo.endsAt || new Date(bingo.endsAt) >= now)
-    );
-}
-
 // 완료 상태는 로그인 사용자마다 다르므로 공유 캐시를 사용하지 않음
 export async function getUserBingoCellProgress(
     userId: number,

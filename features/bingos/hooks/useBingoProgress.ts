@@ -2,7 +2,10 @@
 
 import { useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { setBingoCellCompletion } from "@/app/(nevigation)/bingo/[id]/actions";
+import {
+    setBingoCellCompletion,
+    resetBingoProgress,
+} from "@/app/(nevigation)/bingo/[id]/actions";
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import type {
     BingoDetail,
@@ -12,7 +15,8 @@ import { getBingoProgress } from "@/lib/bingo";
 
 export function useBingoProgress(
     bingo: BingoDetail,
-    saveAction = setBingoCellCompletion
+    saveAction = setBingoCellCompletion,
+    resetAction = resetBingoProgress
 ) {
     const locale = useLocale();
     const t = useTranslations();
@@ -22,6 +26,12 @@ export function useBingoProgress(
     );
     const [pending, setPending] = useState<ReadonlySet<number>>(new Set());
     const pendingRef = useRef(new Set<number>());
+    const resettingRef = useRef(false);
+    const [resetting, setResetting] = useState(false);
+    const [resetError, setResetError] = useState("");
+    const [hasSavedProgress, setHasSavedProgress] = useState(
+        Boolean(bingo.hasSavedProgress || bingo.completedCellIds.length)
+    );
     const [failed, setFailed] = useState<{
         cellId: number;
         next: boolean;
@@ -64,7 +74,12 @@ export function useBingoProgress(
     }
 
     async function save(cellId: number, next: boolean) {
-        if (!bingo.isAuthenticated || pendingRef.current.has(cellId)) return;
+        if (
+            !bingo.isAuthenticated ||
+            resettingRef.current ||
+            pendingRef.current.has(cellId)
+        )
+            return;
         const before = completed.has(cellId);
         pendingRef.current.add(cellId);
         setPending(new Set(pendingRef.current));
@@ -93,10 +108,42 @@ export function useBingoProgress(
             setFailed({ cellId, next, message: result.message });
         } else {
             setMessage(t("bingo.saved"));
+            setHasSavedProgress(true);
             router.refresh();
         }
     }
+    async function reset() {
+        if (
+            !bingo.isAuthenticated ||
+            resettingRef.current ||
+            pendingRef.current.size
+        )
+            return false;
+        resettingRef.current = true;
+        setResetting(true);
+        setResetError("");
+        const response = await resetAction(bingo.id, locale).catch(() => ({
+            success: false as const,
+            message: t("bingo.resetError"),
+        }));
+        resettingRef.current = false;
+        setResetting(false);
+        if (!response.success) {
+            setResetError(response.message);
+            return false;
+        }
+        setCompleted(new Set());
+        setHasSavedProgress(false);
+        setFailed(null);
+        setMessage(t("bingo.resetSuccess"));
+        router.refresh();
+        return true;
+    }
     return {
+        reset,
+        resetting,
+        resetError,
+        hasSavedProgress,
         completed,
         pending,
         failed,

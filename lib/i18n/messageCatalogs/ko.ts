@@ -434,6 +434,8 @@ export const koMessages = {
     "common.previousPage": "이전 페이지",
     "common.nextPage": "다음 페이지",
     "feedback.title": "피드백 · 오류 제보",
+    "feedback.contentLabel": "제보 내용",
+    "feedback.contentLength": "10~1000자",
     "feedback.loginRequired": "로그인 후 피드백을 남길 수 있습니다.",
     "feedback.description":
         "문제가 발생한 화면과 상황을 구체적으로 적어주세요.",
@@ -1013,6 +1015,16 @@ export const koMessages = {
     "profile.judgementEmpty": "연동된 판정 기록이 없습니다.",
     "profile.modeAria": "프로필 모드",
     "profile.logout": "로그아웃",
+    "settings.loggedOut": "로그아웃했습니다.",
+    "settings.logoutError": "로그아웃하지 못했습니다. 다시 시도해주세요.",
+    "settings.deleted": "NosLog 계정과 관련 정보가 삭제되었습니다.",
+    "bingo.resetTitle": "빙고 기록 초기화",
+    "bingo.resetDescription":
+        "'{title}'에 기록한 내 체크 {count}칸이 모두 삭제됩니다.",
+    "bingo.resetAction": "초기화",
+    "bingo.resetError":
+        "초기화하지 못했습니다. 기록은 유지됩니다. 다시 시도해주세요.",
+    "bingo.resetSuccess": "이 빙고의 내 체크를 초기화했습니다.",
     "profile.share": "프로필 카드 공유",
     "profile.shareTitle": "프로필 카드 내보내기",
     "profile.cardPreview": "{name} 프로필 카드 미리보기",

@@ -90,6 +90,18 @@ export default function BingosFixture({ state }: { state?: string }) {
                         }
                         return { success: true, message: "", isCompleted };
                     }}
+                    resetAction={async () => {
+                        setCalls((value) => value + 1);
+                        await new Promise((resolve) =>
+                            setTimeout(resolve, 700)
+                        );
+                        return state === "detail-reset-failure"
+                            ? {
+                                  success: false,
+                                  message: "Fixture reset failure",
+                              }
+                            : { success: true, message: "" };
+                    }}
                 />
             </>
         );

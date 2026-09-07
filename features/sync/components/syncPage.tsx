@@ -13,10 +13,7 @@ import Disclosure from "@/components/ui/disclosure";
 import { StatusMessage } from "@/components/ui/statusMessage";
 import { syncStatusOptions } from "@/features/sync/api/syncStatus";
 import type { SyncStatus } from "@/features/sync/schemas/syncStatusSchema";
-import SyncAttemptSummary, {
-    SyncMetrics,
-    syncDateLabel,
-} from "./syncAttemptSummary";
+import SyncAttemptSummary, { syncDateLabel } from "./syncAttemptSummary";
 import SyncSetup from "./syncSetup";
 import SyncInvalidation from "./syncInvalidation";
 import SyncStatusHeader from "./syncStatusHeader";
@@ -84,6 +81,11 @@ export default function SyncPage({
     const help = (
         <section className="nl-sync-zone">
             <h2 className="nl-section-title">{t("sync.help")}</h2>
+            {firstUse ? (
+                <p className="nl-body-secondary nl-muted">
+                    {t("sync.setupSecurity")}
+                </p>
+            ) : null}
             <p className="nl-body-secondary nl-muted">
                 {t(firstUse ? "sync.regenerateWarning" : "sync.security")}
             </p>
@@ -175,32 +177,6 @@ export default function SyncPage({
                                 {t("sync.latestResult")}
                             </h2>
                             <SyncAttemptSummary attempt={attempt} />
-                        </section>
-                    ) : null}
-                    {!firstUse && data ? (
-                        <section className="nl-sync-zone">
-                            <h2 className="nl-section-title">
-                                {t("sync.coverage")}
-                            </h2>
-                            <p className="nl-body-secondary nl-muted">
-                                {t("sync.coverageHelp")}
-                            </p>
-                            <SyncMetrics
-                                items={[
-                                    {
-                                        label: t("sync.coveragePlayed"),
-                                        value: data.coverage.played,
-                                    },
-                                    {
-                                        label: t("sync.coverageJudgement"),
-                                        value: data.coverage.judgement,
-                                    },
-                                    {
-                                        label: t("sync.coverageTiming"),
-                                        value: data.coverage.timing,
-                                    },
-                                ]}
-                            />
                         </section>
                     ) : null}
                     {data?.firstFullImport ? (

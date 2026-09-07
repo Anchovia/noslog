@@ -29,6 +29,15 @@ const nextConfig = {
     async headers() {
         return [
             {
+                source: "/fonts/pretendard-jp/1.3.9/PretendardJPVariable.woff2",
+                headers: [
+                    {
+                        key: "Access-Control-Allow-Origin",
+                        value: "https://p.eagate.573.jp",
+                    },
+                ],
+            },
+            {
                 source: "/(.*)",
                 headers: [
                     {

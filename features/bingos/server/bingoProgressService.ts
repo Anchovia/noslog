@@ -1,7 +1,10 @@
 import "server-only";
 
 import { revalidatePath } from "next/cache";
-import { bingoProgressSchema } from "@/features/bingos/schemas/bingoProgressSchema";
+import {
+    bingoProgressSchema,
+    bingoResetSchema,
+} from "@/features/bingos/schemas/bingoProgressSchema";
 import type { ActionResult } from "@/lib/actions/result";
 import { logServerError } from "@/lib/observability/server";
 
@@ -43,8 +46,6 @@ export async function setBingoCellCompletion(
                 bingo: {
                     select: {
                         status: true,
-                        startsAt: true,
-                        endsAt: true,
                     },
                 },
             },
@@ -56,10 +57,7 @@ export async function setBingoCellCompletion(
         bingoId = cell.bingoId;
 
         const now = new Date();
-        const isUnavailable =
-            cell.bingo.status !== "published" ||
-            (cell.bingo.startsAt && cell.bingo.startsAt > now) ||
-            (cell.bingo.endsAt && cell.bingo.endsAt < now);
+        const isUnavailable = cell.bingo.status !== "published";
 
         if (isUnavailable) {
             return { success: false, message: t("bingo.unavailable") };
@@ -98,4 +96,42 @@ export async function setBingoCellCompletion(
     revalidatePath(`/bingo/${bingoId}`);
 
     return { success: true, message: "", isCompleted };
+}
+
+export async function resetBingoProgress(
+    bingoId: number,
+    requestedLocale = "ko"
+): Promise<ActionResult> {
+    const locale = isLocale(requestedLocale) ? requestedLocale : "ko";
+    const t = createTranslator(getMessages(locale));
+    const { session, user } = await getSessionUser();
+    if (!user) {
+        if (session.id) session.destroy();
+        return { success: false, message: t("bingo.loginToSave") };
+    }
+    if (!bingoResetSchema.safeParse({ bingoId }).success)
+        return { success: false, message: t("bingo.invalidCell") };
+    try {
+        const bingo = await db.bingo.findFirst({
+            where: { id: bingoId, status: "published" },
+            select: { id: true },
+        });
+        if (!bingo) return { success: false, message: t("bingo.unavailable") };
+        await db.bingoCellProgress.deleteMany({
+            where: {
+                userId: user.id,
+                cell: { bingoId, bingo: { status: "published" } },
+            },
+        });
+    } catch (error) {
+        logServerError(error, {
+            event: "bingo.progress.reset.failed",
+            routePath: "/bingo/[id]",
+            routeType: "action",
+        });
+        return { success: false, message: t("bingo.resetError") };
+    }
+    revalidatePath("/bingo");
+    revalidatePath(`/bingo/${bingoId}`);
+    return { success: true, message: t("bingo.resetSuccess") };
 }

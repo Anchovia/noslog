@@ -7,6 +7,506 @@ implementation agent.
 
 ## Resumed implementation — 2026-09-07
 
+### Latest Figma amendments — 2026-09-07
+
+The user authorized the amended P1–P6, P8, P10–P14, P16 and C3/C6/C7/C8 designs.
+The previous Figma access blocker is resolved: explicit page and frame IDs in
+`cVbWCxhkfxFfHmAKLCyKrD` are readable through MCP. A metadata response for the
+README page did not establish that the remaining pages were unavailable.
+
+Implemented in this checkpoint:
+
+- SHELL-36: shared footer links and copyright are centered in the stacked layout;
+  the existing wide row remains aligned to the shared shell.
+- SHELL-37: FeedbackDialog uses the 334/768 responsive widths, 24px body insets,
+  96px textarea, helper/counter, compact equal actions, wide trailing actions,
+  and shared status messages for attachment/submission errors and login state.
+- SET-47: compact dialog actions share available width and Discord reauthentication
+  stretches across its account section. Filled destructive controls have no visible
+  border in resting/pressed states; keyboard focus remains distinguishable.
+- BINGO-25 vessel: non-compact filtering uses an anchored 334px popover with immediate
+  selection. Compact retains its staged fullscreen flow. Collision avoidance may
+  position the popover above the trigger when there is insufficient space below.
+- SYNC-30/31: first-use installation card, dashed drag target, collapsed mobile guide,
+  and bounded bookmarklet status/progress/actions. The bookmarklet loads the same
+  unsplit Pretendard JP asset; CORS is limited to that public asset and the official
+  provider origin. Provider parsing, signed delivery and optional-subscription
+  handling are preserved. The generated JavaScript URL is URI-encoded.
+- Home title promotion now measures the actual 640px hero rather than an unreachable
+  1056px page-container threshold after the approved 1000px shell limit.
+
+MCP context and screenshots were checked for the changed footer, feedback states,
+delete actions, destructive button, bingo popover, sync first-use and bookmarklet
+overlay. Existing MDET-91 header composition, HOME-23 tiles, DISC-45 number colors,
+72px ranking rows/ExamBadge, PROF-52–59 identity/share layout, monthly announcement
+groups, 64px arcade thumbnails and P16 exam plates were inspected against their
+current source and browser coverage. Real jackets remain data-driven; Figma fixture
+content is not substituted for production records. Pretendard JP remains the explicit
+font override to the file's legacy IBM text-style family.
+
+Verification evidence for this checkpoint:
+
+- 921 unit/service tests in 118 files passed with local database suites enabled.
+- ESLint, independent TypeScript checking and production build passed.
+- `npm audit` reported zero vulnerabilities.
+- 21 sync/account fixture browser tests passed, including newly collapsed mobile
+  instructions, deletion expiry and failure retention.
+- 15 bingo fixture tests and 12 isolated bookmarklet tests passed. Bookmarklet tests
+  cover three locales, wrong-page/full/recent-only/failure responses and widths
+  320/390/768/1470 without contacting an actual provider account.
+- 9 new feedback/footer/popover tests passed in Korean, Japanese and English;
+  they cover widths from 320 through 1470, attachment errors, equal compact actions,
+  anchored placement, immediate filtering, Escape and focus restoration.
+- 55 existing page/browser tests passed; 13 project-specific duplicate matrices
+  were skipped in that desktop run. A separate mobile-project run passed 13 tests
+  including the discovery/ranking/music-info/tier width and accessibility matrices.
+- 34 announcement/arcade/exam presentation tests passed. All 12 home tests passed
+  after the title correction. Actual signed-in Home and Profile were also inspected
+  in the in-app browser. Feedback screenshots were compared at 390 and 1470.
+- The temporary `p7-verification` route was removed before production build.
+- The built production server passed another 28 shell/home/settings/sync tests.
+  The actual signed-in browser measured the corrected Home title at 32px within
+  a 640px hero, with zero horizontal overflow.
+
+Local logs are `/tmp/noslog-amendment-{tests,lint,types,build,states,overlays,pages,
+mobile,fixtures,popover-stable,final-ui}.log`. Earlier failed runs in those logs are
+not approvals: the collapsed-guide interaction, changed filter-button accessible
+name and hydrated responsive surface were corrected in the relevant tests and rerun.
+
+Resolved by the user's subsequent explicit decision: retain the existing five bingo
+statuses and three sort orders, including the distinction between unlock completion
+and all-25-cell completion. The Figma filter vocabulary is not authoritative for
+this scope. No new live provider execution has been claimed for the amended
+bookmarklet presentation.
+
+### Wide discovery and tier rails — 2026-09-08
+
+The user authorized restoring the visible Wide rail for music discovery, chart
+discovery and tiers. DISC-47 and TIER-30 retain staged fullscreen filters below
+1056 CSS viewport pixels and reject a popover for these pages. Bingo remains its
+separate bounded-popover exception.
+
+The previous discovery (1216px) and tier (1056px) checks measured a container capped
+at 1000px, so neither could activate. Both now use a shared viewport media-query
+hook. The approved centered shell limit, shared insets, proportional rail and 16px
+gutter remain; result grids respond to their available space. Tier's existing
+detailed-view control remains available in both modes. Crossing into Wide closes
+the staged layer without applying its draft, and a subsequent compact opening
+starts from the committed filters.
+
+MCP contexts for P3 `1215:21216` and P4 `1352:26271` were compared with browser
+screenshots. Their visible rail/result composition is retained within the user's
+later 1000px shell decision; this is not a claim of identical outer-frame geometry
+to the older 1280px Figma specimen. The existing Pretendard JP override remains.
+Actual signed-in music, chart discovery and tiers were inspected in the in-app
+browser at 1280px; category filtering and tier difficulty/detail changes were
+confirmed through visible controls and URL state.
+
+Local evidence: 921 unit/service tests in 118 files, ESLint, TypeScript and the
+production build passed. The existing discovery/tier browser suite passed 22 tests.
+The built production server passed all 34 discovery/tier/rail browser tests.
+The added rail matrix checks Korean, Japanese and English at 320, 390, 768, 1024,
+1055, 1056, 1280, 1470 and 1920 CSS pixels, including overflow, accessibility and
+staged-to-immediate transitions. Logs are `/tmp/noslog-rail-{tests,lint,types,build,
+regression,production}.log`; screenshots are under `/tmp/noslog-rail-production-results`.
+Viewer/editor and admin files were not changed by this correction.
+
+### Full-import metric and SYNC-32 correction — 2026-09-07
+
+The user authorized correcting the two full-import findings. `NosLog coverage` is
+removed from the rendered page in all states under SYNC-32; the existing internal
+API coverage fields remain compatible. The state-matrix expectation now asserts
+absence of that heading.
+
+New ingestion reports only changed snapshots with a positive play count as best
+record changes. The status reader separately derives counts for the latest five
+completed full attempts from their owned played snapshots, correcting historical
+display without rewriting stored attempts or deleting snapshots. Full-result previews
+also exclude unplayed rows, and the first-import summary uses the corrected count.
+
+The real account's full import now displays 725 best records updated rather than
+1,715. The seven-chart exclusion notice, recent-history counts and first-import
+summary remain visible. Korean, Japanese and English signed-in pages show the same
+corrected value and no coverage group; no horizontal overflow was observed at the
+current in-app viewport.
+
+Verification passed: 921 tests in 118 files with local database suites enabled,
+lint, independent typecheck, production build, and three Chromium locale tests
+covering 320/390/520/768/1024/1470px guest reflow, accessibility and account-data
+isolation. Logs: `/tmp/noslog-full-{tests,lint,types,build,browser}.log`.
+No further official sync or payment was required for the historical display check.
+
+At this checkpoint, the latest Figma comparison had not been completed. The later
+amendment checkpoint above resolves the access diagnosis using explicit page/frame
+IDs; the earlier README-only metadata response was not a file-access failure.
+
+### Observed real subscribed full import — 2026-09-07
+
+After the user reported running the bookmarklet following subscription, attempt 7
+was stored with `full` scope, 30 received recent plays, zero newly inserted plays
+and 1,715 changed-record snapshots. The 28 accumulated recent events remain intact.
+There are 725 played-chart records. The browser shows full-record scope, the first
+full-import summary and the explicit seven-chart exclusion notice. The subscription
+limitation paragraph from recent-only mode is absent. This confirms full-response
+ingestion, not subscription billing or receipt verification.
+
+An additional metric finding prevents declaring the full-import presentation
+finished: 990 of the 1,715 snapshots have `play_count = 0`; only 725 are played
+records. The displayed `Best records updated` count currently includes those
+unplayed catalogue rows. This needs correction or an explicit semantic decision.
+Seven unknown chart mappings remain excluded, including the previously observed
+Hard/Expert pair. No catalogue entry was manufactured for verification.
+
+Current brief 13 also marks the persistent coverage group removed under approved
+`SYNC-32`. The running screen still renders it. Earlier coverage implementation
+checkpoints describe their measured state, not compliance with that newer decision.
+The source has not been changed in this checkpoint; subscribed full-import metric
+and current-design reconciliation remain open before an all-checks-passed claim.
+
+### Verified real recent-only partial completion — 2026-09-07
+
+The user reran the bookmarklet while still unsubscribed. Attempt 6 received 30
+plays, excluded two unmapped rows, found 28 existing rows and inserted zero. The
+database still contains exactly 28 history rows. The two excluded chart identities
+are Hard and Expert for one music index absent from the local Music catalogue;
+they are not duplicate events or a consequence of subscription enforcement.
+
+The refreshed signed-in browser displayed `Completed with exclusions`, recent-only
+scope, the Basic Course limitation explanation, and an explicit two-chart exclusion
+notice. Played-chart, complete-judgement and FAST/SLOW coverage each remained 27.
+This closes the assisted recent-only coverage, partial-result and repeat-ingestion
+checks described below. It does not claim that the missing catalogue entry was
+imported or that all 30 plays were stored. No catalogue data was modified.
+
+The user plans to test a subscribed full-record run separately; that run remains
+unexecuted. This checkpoint changed only the evidence log; the previous 920-test,
+lint, typecheck, build and final three-locale browser results apply to the running
+source. Formatting and diff whitespace checks passed again.
+
+### Recent-only exclusion diagnosis and correction — 2026-09-07
+
+The assisted repeat run (sync 5) confirmed 30 received plays, two unmapped rows,
+zero duplicate identities, 28 existing rows and zero inserted rows. This resolves
+the earlier received/inserted ambiguity for the repeated official recent list:
+unknown local chart mappings, rather than duplication, account for the two rows.
+The existing catalogue was not expanded or rewritten from recent-play data.
+
+The ingestion service now returns skipped chart identities internally alongside
+the inserted count. The endpoint combines recent and full-record exclusions,
+deduplicates chart identities and stores the existing bounded exclusion diagnostic.
+The public status mapper can therefore display its existing partial-completion
+state and safe excluded-chart count for recent-only runs. The external bookmarklet
+JSON contract and existing best records are preserved. Historical attempts are not
+rewritten. Actual partial-state verification awaits another assisted run.
+
+Final source verification: 920 tests in 118 files, lint, independent typecheck and
+production build passed. The prior count of 919 is superseded by this added
+exclusion regression. Logs retain the `/tmp/noslog-recent-*` prefix.
+
+### Recent-only coverage correction — 2026-09-07
+
+After the user approved addressing the unsubscribed-case findings, played-chart and
+complete-judgement coverage were corrected to count distinct MusicChart rows with
+either qualifying full records or recent history for the same owner. The two sources
+are combined with relation predicates, so overlap cannot count a chart twice. No
+best record is invented from a recent event, and the ingestion response is unchanged.
+
+The rebuilt application shows 27 played charts, 27 charts with complete judgement
+details and 27 with FAST/SLOW for the real recent-only account. Screenshot review
+confirmed the existing result layout and subscription-limit explanation remain intact.
+This supersedes the zero-played coverage finding below.
+
+Recent ingestion now emits a bounded count diagnostic containing sync ID, received,
+unmapped, duplicate, existing and inserted counts, without tokens or raw payloads.
+A regression test distinguishes repeated payload identities from unknown mappings.
+The prior 30-to-28 difference remains unclassified until an assisted repeat run.
+
+Verification: 919 tests in 118 files passed with local database suites enabled;
+lint, independent typecheck, production build and diff whitespace checks passed.
+The initial full-test invocation used `127.0.0.1` where test setup mandates
+`localhost`; correcting that invocation resolved the five initialization failures.
+Three Chromium locale checks passed, each exercising 320/390/520/768/1024/1470px,
+accessibility and guest-data isolation. Logs: `/tmp/noslog-recent-{tests,lint,types,build,browser}.log`.
+The real signed-in browser was checked separately; no credentials were fabricated.
+
+### Observed real recent-only synchronization — 2026-09-07
+
+The user reported running the current bookmarklet while not subscribed to Basic
+Pass. Local account 2205 received a completed `recent` attempt: 30 received plays,
+28 inserted plays, zero changed best records and no stored diagnostic. The refreshed
+guide displayed recent-only scope and the Basic Course limitation message. The
+database contains 28 history rows across 27 charts. This is evidence of real
+recent-only ingestion, not a verified full-record import.
+
+The assisted check exposed a coverage inconsistency: `Played charts` displays zero
+while `Charts with FAST/SLOW` displays 27. The status service counts played and
+judgement coverage from PlayData only, but timing coverage from recent history.
+This remains an open verification finding. The received/inserted difference cannot
+be attributed conclusively from the stored attempt: recent ingestion both removes
+duplicate identities and omits unknown chart mappings. Do not label the two rows
+as duplicates without original-payload evidence. Paid full-import testing has not
+started; the user intends to test that separately after the unsubscribed case.
+
+### Assisted private feedback upload — 2026-09-07
+
+The user selected the harmless test PNG in the actual feedback dialog. Submitting
+the explicitly labelled local verification report displayed the receipt confirmation.
+The local database retained the report and a private-store image URL. Authenticated
+Blob metadata confirmed the uploaded PNG (12,531 bytes). An unauthenticated request
+to the exact Blob URL returned 403; an unauthenticated request to the corresponding
+application image endpoint returned 401. No administrative UI or source was changed.
+
+This closes the representative private feedback form upload/finalization and
+anonymous-access rejection checks. It does not establish the separate exam submission
+or administrator image-viewing flow. The test report remains labelled in the local
+database. Official record synchronization remains unexecuted; the signed-in guide
+currently reports no synchronization history.
+
+### Assisted onboarding and public avatar upload — 2026-09-07
+
+After real Discord authentication, the new local account reached onboarding.
+Submitting without a nickname or country displayed both required-field errors and
+focused the nickname input. Saving the existing nickname and Korean region returned
+to the originally requested Account settings page. Read-only database verification
+confirmed the new account's completion timestamp and saved profile values.
+
+The user selected `/tmp/noslog-upload-test.png` through the actual file picker.
+The in-app browser displayed the crop preview; increasing zoom enabled the decrease
+control. Confirming the crop and submitting Profile displayed the saved status and
+disabled Save. A fresh navigation rendered the uploaded image in both the header
+and Profile, with successful image decoding. The database marked the avatar as
+user-managed, and real Blob metadata confirmed a 1,718-byte WebP. This closes the
+public avatar selection/crop/upload/finalization path for this representative image.
+
+Private attachment form upload and official record synchronization still require
+their separate assisted checks. No application source was changed in this checkpoint.
+
+### Authorized real account deletion — 2026-09-07
+
+The user explicitly authorized deletion testing with local account 773 and
+completed Discord verification. The user excluded actual chart playback from the
+remaining verification scope; playback is not reported as tested.
+
+Two harmless 68-byte PNG fixtures were uploaded through the real Blob SDK, one
+public and one private. Their existence was confirmed with authenticated metadata
+requests. The avatar, one feedback record and one completed bingo cell were attached
+to the authorized account in the local PostgreSQL database. This fixture preparation
+does not verify the browser's image-selection, cropping or upload form flow.
+
+The actual Account dialog showed one community item, one bingo/exam item and two
+uploaded images. With a valid real Discord grant, the exact confirmation enabled
+the destructive button. Submitting through the in-app browser returned to guest
+Home. A subsequent Account visit required login, and the deleted public profile
+rendered the not-found page. The short-lived completion toast was not captured in
+this assisted run; its existing automated checks remain separate evidence.
+
+Read-only checks confirmed zero remaining account, feedback and bingo-progress rows
+for user 773. Both Blob metadata requests raised the SDK's `BlobNotFoundError`.
+Other-user count (13), other-user bingo progress (0) and board count (45) matched
+the pre-deletion baseline. Evidence: `/tmp/noslog-deletion-result.json`.
+
+This closes actual account/Blob deletion verification for the prepared fixtures.
+Fresh-user onboarding, browser upload/finalization and official record synchronization
+remain distinct unexecuted end-to-end checks; this result does not close them.
+
+### Approved xmldom security patch — 2026-09-07
+
+The user explicitly approved upgrading only the transitive `@xmldom/xmldom`
+dependency from 0.8.13 to 0.8.15 while preserving Pixi and renderer source. The
+lockfile diff changes only that package's version, registry tarball and integrity;
+an object-level comparison confirms every other package entry is unchanged.
+`package.json`, overrides and Pixi 8.19.0 are unchanged. Installation changed one
+package with lifecycle scripts disabled.
+
+- `npm audit` passed with **zero vulnerabilities**. This supersedes the moderate
+  advisory status in earlier checkpoints. Report: `/tmp/noslog-xmldom-audit.json`.
+- Full unit/integration suite passed **917 tests in 118 files**, with local database
+  suites enabled. Lint, independent typecheck and actual-source production build
+  passed. Logs: `/tmp/noslog-xmldom-{tests,lint,types,build}.log`.
+- Direct execution of Pixi's installed WebWorkerAdapter confirmed SVG/XML parsing,
+  namespaces, attributes, text and serialization remain compatible. Invalid entity
+  names are rejected on construction and after direct name mutation during strict
+  serialization. Log: `/tmp/noslog-xmldom-parser-check.log`.
+- Chromium shell/settings/notice checks passed **13 cases**, and Firefox/WebKit
+  preserved-viewer-shell checks passed **two cases**, without skips. Logs:
+  `/tmp/noslog-xmldom-browser.log` and `/tmp/noslog-xmldom-cross.log`.
+- The in-app browser retained the signed-in account after the rebuilt server restart.
+  The existing viewer test URL rendered the preserved shell with a not-found page;
+  these checks do not establish populated Canvas/WebGL playback or editor behavior.
+  No viewer/editor source or administrative page was edited.
+
+Actual destructive account/Blob deletion and other previously listed provider/source
+checks remain separate unexecuted evidence; this patch does not close those gaps.
+
+### Assisted Discord verification — 2026-09-07
+
+The user completed the real Discord authentication flow, including the provider's
+multi-factor step. The in-app browser returned to `/ko/settings?category=account`
+and displayed the signed-in profile entry. The initial deletion dialog required
+separate verification and disabled the destructive action.
+
+Following the dialog's deletion-specific Discord link returned to the same Account
+screen with `Discord authentication complete`, without another manual credential
+prompt. The provider reused its signed-in session; this does not demonstrate a new
+password or multi-factor challenge for each deletion verification.
+
+The destructive button remained disabled for a leading-space mismatch and became
+enabled only for the exact localized confirmation. No destructive submission was
+made. Cancelling and reopening cleared the confirmation, restored initial Cancel
+focus, and retained the still-valid grant. The authenticated state was observed at
+08:14:13 UTC and remained valid at 08:23:21 UTC. At 08:24:22 UTC, without a reload,
+the dialog required Discord verification again. The exact confirmation then still
+left deletion disabled. A fresh navigation to Account and reopening the dialog also
+required verification, while normal login remained valid. The dialog was cancelled
+and the account left signed in. This wall-clock observation confirms real expiry;
+the existing unit tests cover the exact 599,999/600,000ms boundary. No browser clock,
+cookie or authentication state was fabricated or modified for this check.
+
+The former real-login/deletion-reauthentication access gap is closed for this
+existing-account flow. Actual account/Blob deletion and fresh-user onboarding
+completion remain unexecuted. This task changed only this evidence log; the earlier
+implementation and unrelated user document changes were preserved.
+
+Read-only `npm audit` recheck still reports one moderate transitive
+`@xmldom/xmldom@0.8.13` advisory and no high/critical findings. No dependency was
+changed. Report: `/tmp/noslog-assisted-audit.json`.
+
+### Approved implementation gaps closed — 2026-09-07
+
+The user's latest request explicitly authorizes completing missing implementation.
+This checkpoint supersedes the earlier Account/reset/date-gate implementation-gap
+statements below; it does not declare unexecuted external checks complete.
+
+- P10 Account now renders inside Settings. Logout destroys the session, clears the
+  client query cache and performs a full-document return Home with a consumed-once
+  localized completion notice. The old profile-settings URL redirects to the new
+  category and preserves the Discord error recovery destination.
+- Account deletion now shows actual consequence counts, requires an exact localized
+  phrase and a deletion-specific Discord grant bound to the same user and Discord
+  identity. Its fixed ten-minute lifetime is checked server-side before mutation.
+  Cancellation, identity/state/session mismatch and expiry cannot grant deletion.
+  Blob cleanup precedes database deletion; related public caches expire immediately
+  after deletion. No real account deletion was executed.
+- P14 reset removes only the signed-in user's progress for the selected published
+  board. Cancellation/failure preserves checks; success removes the reset entry and
+  restores focus to the board heading. Legacy event-date read/write gates were
+  removed; published status and authentication remain enforced.
+- Full unit/integration run: **917 passed, 118 files, zero skips**, with both local
+  database options enabled. Security/reset scope separately passed 53 tests.
+- Isolated account/reset presentation checks: **12 Chromium + 24 Firefox/WebKit
+  passed**, covering Korean/Japanese/English, exact confirmation, grant expiry,
+  pending/error states, focus, reset cancel/failure/success, 320/390/768/1470px
+  Account reflow and accessibility. The initial failures were an ambiguous alert
+  locator and a nonserializable translation closure in the test fixture; both were
+  corrected. A final input-height/placeholder adjustment passed three additional
+  localized Chromium layout/accessibility cases.
+- Compared Figma P10 Dark Account `2734:1584`, deletion `2734:86949`, and P14 reset
+  `2914:5350` with browser output. Reused the approved dialog, typography and spacing
+  aliases; retained the user-approved complete Pretendard JP font and ordinary shell.
+- In-app browser, actual local test account 1 / board 45: A1 save persisted as 1/25;
+  confirmed reset followed by fresh navigation showed 0/25 and no reset entry.
+  Account showed actual stored consequence counts and disabled deletion before
+  verification. Logout returned to guest Home; revisiting Account required Login
+  with the exact Account return URL. This does not verify external Discord identity.
+- The temporary `/p7-verification` route was removed before the actual-source build.
+  Retained `e2e/fixtures/account.tsx` and `e2e/noslog-v2-account-reset.spec.ts` are
+  explicitly gated presentation tests, consistent with the existing fixture suites.
+  They require a temporary server-only harness rendering AccountFixture by `state`
+  and BingosFixture for the Bingo branch, with `NOSLOG_MISSING_FIXTURE=true`;
+  that harness must never be shipped or used to simulate authentication.
+
+Logs: `/tmp/noslog-missing-full-tests-final.log`,
+`/tmp/noslog-missing-security-tests.log`, `/tmp/noslog-missing-browser-final.log`,
+`/tmp/noslog-missing-browser-cross.log`, `/tmp/noslog-missing-visual-final.log`.
+Screenshots: `test-results/missing-final`, `test-results/missing-cross`, and
+`test-results/missing-visual-final` (generated local artifacts).
+
+Final actual-source verification passed: production build, independent typecheck,
+full lint, changed-file Prettier and `git diff --check`. Chromium settings,
+localization, public navigation and shell checks passed **26 cases**, with **four
+conditional/duplicate cases skipped**; skips are not passes. Firefox/WebKit Account
+return-path and consumed-once completion-notice checks passed **12 cases**.
+The first real-build notice tests caught publication before the shared toaster had
+subscribed. The notice now runs in its parent effect after the Toaster child is ready;
+the final three-browser results cover both logout and deletion notices plus reload.
+A temporary incorrect legacy-login URL expectation was reverted after observing the
+existing proxy redirect; private new Settings categories retain their exact return
+paths. P14's final Figma 16px dialog padding/border correction passed three additional
+localized reset cases and in-app visual comparison. The temporary route was removed
+again before the final actual-source build. No viewer/editor/admin source or renderer
+dependency was modified.
+
+Final logs: `/tmp/noslog-missing-production-build.log`,
+`/tmp/noslog-missing-{lint,types,format}-final.log`,
+`/tmp/noslog-missing-production-browser-final.log`,
+`/tmp/noslog-missing-production-cross-verified.log`,
+`/tmp/noslog-missing-reset-final.log`.
+
+Remaining limitations: real Discord onboarding/reauthentication, private-Blob
+upload/finalization and official-site synchronization need assisted provider checks;
+canonical Japanese Bingo mission content and P15 provider/retention release review
+need the corresponding source/facts. The previously reported moderate transitive
+Pixi dependency advisory remains outside the locked viewer/editor change scope.
+
+### Earlier post-commit local verification — superseded by gap closure above
+
+The user requested the remaining checks and explicitly selected local verification
+before assisted external login/synchronization. This pass does not approve a real
+account deletion or execute provider login, upload or official synchronization.
+
+- Full unit/integration tests passed: 901 tests, 117 files, zero skips, with both
+  optional suites using the explicit local database. Lint and independent
+  typecheck passed. Logs: `/tmp/noslog-resumed-verification-{unit,lint,types}.log`.
+- The actual-source Chromium suite passed 279 cases, with 243 conditional or
+  duplicate-matrix skips and zero failures. Skips are not passes and do not replace
+  the earlier dedicated fixture runs. Log:
+  `/tmp/noslog-resumed-verification-browser.log`.
+- The first Firefox/WebKit run passed 61 cases and failed one English 320px music
+  detail overflow assertion. A focused rerun reproduced the failure; diagnostic
+  DOM measurements identified `.nl-pattern-radar__label` extending to 328.77px
+  while the chart's observed width/font measurements were settling. Failure
+  screenshots showed the later fitted chart. The overflow helper now polls for
+  at most one second while preserving the exact one-pixel tolerance, instead of
+  asserting a single intermediate measurement. No application CSS or chart
+  rendering was changed. The unchanged English WebKit route/width matrix then
+  passed, as did all seven Chromium shell cases. Logs:
+  `/tmp/noslog-resumed-webkit-{diagnostic,settled}.log` and
+  `/tmp/noslog-resumed-verification-chromium-shell-final.log`.
+- The complete Firefox/WebKit rerun passed 61 cases, including every ordinary-UI
+  case, but timed out navigating to the preserved viewer in its last WebKit case.
+  Its failure screenshot was blank. That viewer-shell test passed unchanged in a
+  focused rerun (895ms); no timeout, assertion or viewer implementation was
+  altered. This is not an all-green combined run or a verified populated renderer.
+  Logs: `/tmp/noslog-resumed-verification-cross-final.log` and
+  `/tmp/noslog-resumed-webkit-viewer-recheck.log`. The updated helper passed ESLint,
+  independent typecheck, scoped Prettier and `git diff --check`.
+- The in-app browser confirmed Account still redirects to the legacy profile
+  settings screen. The approved ten-minute deletion reauthentication guard and
+  new Account UI are not implemented and cannot be declared verified.
+- Local account 1, board 45: A1 save persisted at 1/25 after navigation; undo
+  persisted at 0/25 after navigation. The first automation `check()` reported a
+  selector timeout after the successful save because the accessible label changed
+  from completion to undo. Fresh DOM and reload confirmed success; no repeated
+  save was attempted. The original completion state was restored through the UI.
+  Normal saves may retain progress rows/timestamps. Board reset is still absent.
+- The real profile share dialog generated the updated card. Image Save produced
+  `/Users/carol/Downloads/E2E_RANKER-basic-profile.png` at 1200×630; both preview
+  and downloaded PNG were inspected, confirming badge removal and brighter
+  metadata. No external share or clipboard mutation was performed.
+- `npm audit` is **not passing**: one moderate advisory for transitive
+  `@xmldom/xmldom@0.8.13`, brought in by `pixi.js@8.19.0`.
+  [GHSA-6gmq-8vp8-gcm6](https://github.com/advisories/GHSA-6gmq-8vp8-gcm6)
+  identifies 0.8.15 as a patched version. Pixi's WebWorker adapter imports
+  `DOMParser`; application sources contain no direct `createEntityReference`
+  usage. This limited source search is not proof of non-exploitability. No
+  renderer dependency was changed across the locked viewer/editor boundary.
+  Report: `/tmp/noslog-resumed-verification-audit.json`.
+
+This pass changes only the test measurement helper and this evidence log. The
+approved P10 deletion guard/Account UI, P14 personal-board reset and removal of
+legacy event-date gates remain implementation gaps, not merely unrun tests or
+unanswered user decisions. External provider checks remain deferred by the user.
+
 The user explicitly resumed implementation after reviewing the pause. P10 Profile,
 Privacy and Connections are now integrated alongside Experience; Account/deletion
 implementation remains open. The user approved the fixed ten-minute deletion
@@ -16,7 +516,7 @@ design-decision and final comparison caveats still open. Historical checkpoints
 later in this file do not supersede this current status. No incomplete page is
 declared finished.
 
-### Current integration checkpoint
+### Earlier integration checkpoint
 
 - P10 `/settings` now delegates to a feature-owned server composition. Categories
   are schema-validated; guest requests for private categories redirect to localized
@@ -195,13 +695,13 @@ not certify legally sufficient controller identification.
 These are precise outstanding gates, not new design-guide work blocks. Decision
 states are recorded per row; the already-approved ordinary Foundation is unchanged.
 
-| Item                   | Concrete decision or missing evidence                                                                                                                                                                                                   | Implementation boundary                                                                                                                     |
-| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| P10 deletion           | **Approved — 2026-09-07:** fixed ten minutes from completion of deletion-specific Discord verification, as clarified in brief 16. Exact localized confirmation, consequence counts and immediate irreversible deletion remain required. | Decision recorded; server guard, new Account deletion UI and their verification remain to be implemented. No account deletion was executed. |
-| P14 reset              | **Approved — 2026-09-07:** reset only the signed-in user's saved checks on the selected board. Personal progress remains owner-only; public board definitions and missions are unchanged. Other boards' progress remains intact.        | Decision recorded; reset implementation and verification remain pending. No records were reset while recording this decision.               |
-| P14 dates              | Decide whether manual completion edits are allowed before a board starts and after it ends.                                                                                                                                             | Existing date guards remain in force.                                                                                                       |
-| P16 contrast and badge | **Approved — 2026-09-07:** Z comparison B uses `#AFAFAF` for former `#666674` text; remove the nickname's `GRADE` badge.                                                                                                                | Applied to all three P16 Figma states and the generated-card component; scoped verification is recorded below.                              |
-| P15 release facts      | Confirm the actual operator/provider/contact and legal/translation copy represented by the review warnings in the policy.                                                                                                               | Rendered page and print checks are not legal or release approval.                                                                           |
+| Item                   | Concrete decision or missing evidence                                                                                                                                                                                                   | Implementation boundary                                                                                                          |
+| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| P10 deletion           | **Approved — 2026-09-07:** fixed ten minutes from completion of deletion-specific Discord verification, as clarified in brief 16. Exact localized confirmation, consequence counts and immediate irreversible deletion remain required. | Implemented and locally verified in the gap-closure checkpoint above. Real Discord reauthentication/deletion remains unexecuted. |
+| P14 reset              | **Approved — 2026-09-07:** reset only the signed-in user's saved checks on the selected board. Personal progress remains owner-only; public board definitions and missions are unchanged. Other boards' progress remains intact.        | Implemented; local test account reset and isolated cancel/failure/success checks passed. See the gap-closure checkpoint above.   |
+| P14 dates              | **Already approved in brief 10:** published boards remain permanently browsable and personal checks require login, without event-date windows.                                                                                          | Legacy catalog/detail/write date guards removed. Published status and authenticated personal writes remain enforced.             |
+| P16 contrast and badge | **Approved — 2026-09-07:** Z comparison B uses `#AFAFAF` for former `#666674` text; remove the nickname's `GRADE` badge.                                                                                                                | Applied to all three P16 Figma states and the generated-card component; scoped verification is recorded below.                   |
+| P15 release facts      | **Display/contact approved:** `계롤(Anchovia)` and `sodacandy77@naver.com`. Provider/retention facts and legal/translation release review remain open.                                                                                  | Rendered page and print checks are not legal or release approval.                                                                |
 
 Fresh Discord onboarding and provider callbacks, real private-Blob upload/finalization,
 official-site synchronization, the Japanese mission source, and a permitted populated

@@ -141,10 +141,10 @@ test("Compact filters stage changes, cancel with Escape and Back, and commit one
     await expect(page.locator(".nl-discovery__summary")).toBeFocused();
 });
 
-test("Desktop bounded filters stage changes and require a difficulty for level sorting", async ({
+test("Intermediate filters stage changes and require a difficulty for level sorting", async ({
     page,
 }) => {
-    await page.setViewportSize({ width: 1470, height: 900 });
+    await page.setViewportSize({ width: 1024, height: 900 });
     await page.goto("/ko/music");
     await expect(page.locator(".nl-discovery__rail")).toHaveCount(0);
     await page
@@ -244,8 +244,8 @@ for (const locale of ["ko", "ja", "en"]) {
             [390, 2],
             [768, 4],
             [1024, 5],
-            [1280, 5],
-            [1600, 5],
+            [1280, 3],
+            [1600, 3],
         ]) {
             await page.setViewportSize({ width, height: 900 });
             await expect

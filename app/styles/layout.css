@@ -196,12 +196,14 @@
 .noslog-ui .nl-footer__content {
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: var(--nl-spacing-16);
     padding: var(--nl-spacing-16) var(--nl-layout-margin);
 }
 .noslog-ui .nl-footer__links {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
     align-items: center;
     gap: var(--nl-spacing-16);
     flex-shrink: 0;
@@ -221,6 +223,7 @@
 }
 .noslog-ui .nl-footer__notice {
     min-width: 0;
+    text-align: center;
 }
 
 @container page (min-width: 1056px) {

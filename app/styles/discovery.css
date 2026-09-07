@@ -362,8 +362,6 @@
         grid-template-columns: repeat(5, minmax(0, 1fr));
     }
 }
-@container page (min-width: 1216px) {
-    .noslog-ui .nl-discovery__results {
-        gap: var(--nl-spacing-16);
-    }
+.noslog-ui .nl-discovery[data-layout="wide"] .nl-discovery__results {
+    gap: var(--nl-spacing-16);
 }

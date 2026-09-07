@@ -6,6 +6,8 @@ import ProfileSettings from "./profileSettings";
 import PrivacySettings from "./privacySettings";
 import ConnectionSettings from "./connectionSettings";
 import SettingsLoading from "./settingsLoading";
+import AccountSettings from "./accountSettings";
+import { getAccountSettingsData } from "../server/accountSettingsService";
 import { settingsCategorySchema } from "@/features/settings/schemas/settingsSchema";
 import { getSettingsPageData } from "@/features/settings/server/settingsPageService";
 import { getServerI18n } from "@/lib/i18n/server";
@@ -18,11 +20,16 @@ async function AccountSettingsContent({
     error,
     result,
 }: {
-    category: "profile" | "privacy" | "connections";
+    category: "profile" | "privacy" | "connections" | "account";
     loginHref: string;
     error?: string;
     result?: string;
 }) {
+    if (category === "account") {
+        const account = await getAccountSettingsData();
+        if (!account) redirect(loginHref);
+        return <AccountSettings {...account} error={error} result={result} />;
+    }
     const { user, arcades } = await getSettingsPageData();
     if (!user) redirect(loginHref);
     if (category === "profile")
@@ -60,15 +67,8 @@ export default async function SettingsPage({
     });
     const loginHref = `${localizePath("/login", locale)}?${query}`;
     if (category && category !== "experience" && !user) redirect(loginHref);
-    // Keep the existing account flow until the new recent-auth contract is settled.
-    const accountHref = localizePath("/profile/settings", locale);
-    if (category === "account") redirect(accountHref);
     return (
-        <SettingsLayout
-            category={category}
-            authenticated={Boolean(user)}
-            accountHref={accountHref}
-        >
+        <SettingsLayout category={category} authenticated={Boolean(user)}>
             {category && category !== "experience" ? (
                 <Suspense
                     key={category}

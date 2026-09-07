@@ -166,8 +166,22 @@ export async function GET(request: NextRequest) {
         }
 
         const discordName = discordUser.global_name ?? discordUser.username;
-        if (mode === "refresh" && currentUser?.discord_id !== discordUser.id)
+        if (
+            (mode === "refresh" || mode === "delete") &&
+            currentUser?.discord_id !== discordUser.id
+        )
             return errorResponse("identity_mismatch");
+        if (mode === "delete" && currentUser) {
+            session.deletionVerification = {
+                userId: currentUser.id,
+                discordId: discordUser.id,
+                verifiedAt: Date.now(),
+            };
+            await session.save();
+            const destination = new URL(returnTo, request.url);
+            destination.searchParams.set("discordResult", "delete");
+            return NextResponse.redirect(destination);
+        }
         const avatar = discordAvatar(discordUser);
         const linkedUser = await db.user.findUnique({
             where: { discord_id: discordUser.id },

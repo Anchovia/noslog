@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { put } from "@vercel/blob/client";
-import { ImagePlus, MessageSquare } from "lucide-react";
+import { MessageSquare } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { ChangeEvent, ReactNode } from "react";
@@ -168,6 +168,7 @@ export default function FeedbackDialog({
     const submit = handleSubmit(handleFeedbackSubmit);
 
     function changeOpen(nextOpen: boolean) {
+        if (isSubmitting) return;
         setInternalOpen(nextOpen);
         onOpenChange?.(nextOpen);
         if (!nextOpen) {
@@ -182,6 +183,8 @@ export default function FeedbackDialog({
             open={open}
             onOpenChange={changeOpen}
             title={t("feedback.title")}
+            width="wide"
+            className="nl-feedback-dialog"
             onCloseAutoFocus={onCloseAutoFocus}
             trigger={
                 trigger === null
@@ -199,40 +202,56 @@ export default function FeedbackDialog({
             }
         >
             {!isAuthenticated ? (
-                <div className="nl-stack">
-                    <p className="nl-body-secondary nl-muted">
-                        {t("feedback.loginRequired")}
-                    </p>
-                    <Link
-                        href={localizedHref("/login")}
-                        className={foundationButtonClass()}
-                    >
-                        {t("common.login")}
-                    </Link>
+                <div className="nl-stack nl-feedback-dialog__body">
+                    <StatusMessage title={t("feedback.loginRequired")} />
+                    <div className="nl-dialog__actions">
+                        <ActionButton
+                            variant="secondary"
+                            onClick={() => changeOpen(false)}
+                        >
+                            {t("common.close")}
+                        </ActionButton>
+                        <Link
+                            href={localizedHref("/login")}
+                            className={foundationButtonClass()}
+                        >
+                            {t("common.login")}
+                        </Link>
+                    </div>
                 </div>
             ) : submitted ? (
-                <div className="nl-stack">
+                <div className="nl-stack nl-feedback-dialog__body">
                     <StatusMessage
                         severity="success"
                         title={successMessage}
                         role="status"
                     />
-                    <ActionButton onClick={() => changeOpen(false)}>
-                        {t("common.confirm")}
-                    </ActionButton>
+                    <div className="nl-dialog__actions">
+                        <ActionButton onClick={() => changeOpen(false)}>
+                            {t("common.close")}
+                        </ActionButton>
+                    </div>
                 </div>
             ) : (
-                <form onSubmit={submit} noValidate className="nl-stack">
+                <form
+                    onSubmit={submit}
+                    noValidate
+                    className="nl-stack nl-feedback-dialog__body"
+                    aria-busy={isSubmitting}
+                >
+                    <p className="nl-body nl-muted">
+                        {t("feedback.description")}
+                    </p>
                     <FormField
                         id="feedback-content"
-                        label={t("feedback.title")}
-                        help={t("feedback.description")}
+                        label={t("feedback.contentLabel")}
                         error={errors.content?.message}
                     >
                         <TextArea
                             id="feedback-content"
                             maxLength={1000}
-                            rows={6}
+                            rows={3}
+                            disabled={isSubmitting}
                             placeholder={t("feedback.placeholder")}
                             aria-invalid={Boolean(errors.content)}
                             aria-describedby={fieldDescription(
@@ -241,38 +260,54 @@ export default function FeedbackDialog({
                             )}
                             {...register("content")}
                         />
-                        <span className="nl-metadata nl-muted">
-                            {content?.length ?? 0} / 1000
-                        </span>
+                        <div
+                            id="feedback-content-help"
+                            className="nl-feedback-dialog__counter nl-metadata nl-muted"
+                        >
+                            <span>{t("feedback.contentLength")}</span>
+                            <span>{content?.length ?? 0}/1000</span>
+                        </div>
                     </FormField>
                     <input type="hidden" {...register("imageUrl")} />
                     <label
+                        aria-disabled={isSubmitting}
                         className={foundationButtonClass({
                             variant: "secondary",
                         })}
                     >
-                        <ImagePlus className="nl-icon" aria-hidden />
                         {file ? file.name : t("feedback.attachImage")}
                         <input
                             type="file"
                             accept="image/jpeg,image/png,image/webp"
                             onChange={changeFile}
+                            disabled={isSubmitting}
                             className="sr-only"
                         />
                     </label>
                     {errorMessage && !errors.content ? (
-                        <p className="nl-metadata nl-error-text" role="alert">
-                            {errorMessage}
-                        </p>
+                        <StatusMessage
+                            severity="danger"
+                            title={errorMessage}
+                            role="alert"
+                        />
                     ) : null}
-                    <ActionButton
-                        type="submit"
-                        busy={isSubmitting}
-                        busyLabel={t("feedback.submitting")}
-                        disabled={(content?.trim().length ?? 0) < 10}
-                    >
-                        {t("feedback.submit")}
-                    </ActionButton>
+                    <div className="nl-dialog__actions">
+                        <ActionButton
+                            variant="secondary"
+                            disabled={isSubmitting}
+                            onClick={() => changeOpen(false)}
+                        >
+                            {t("common.close")}
+                        </ActionButton>
+                        <ActionButton
+                            type="submit"
+                            busy={isSubmitting}
+                            busyLabel={t("feedback.submitting")}
+                            disabled={(content?.trim().length ?? 0) < 10}
+                        >
+                            {t("feedback.submit")}
+                        </ActionButton>
+                    </div>
                 </form>
             )}
         </ModalDialog>

@@ -241,7 +241,10 @@ describe("POST /api/receivePlayerData", () => {
             { music_idx: "test-music", difficulty: "Hard" },
             { music_idx: "test-music", difficulty: "Expert" },
         ]);
-        mocks.updateRecentPlay.mockResolvedValue(1);
+        mocks.updateRecentPlay.mockResolvedValue({
+            insertedPlays: 1,
+            skippedCharts: [],
+        });
         mocks.updatePlayData.mockResolvedValue(3);
         mocks.processBemaniCatalogUpdates.mockResolvedValue({
             detected: 0,
@@ -375,6 +378,31 @@ describe("POST /api/receivePlayerData", () => {
             }),
         });
         expect(mocks.dataSyncCreate).toHaveBeenCalledOnce();
+    });
+
+    it("최근 기록의 미등록 채보를 제외 안내에 남기고 응답 호환성을 보존한다", async () => {
+        mocks.updateRecentPlay.mockResolvedValue({
+            insertedPlays: 0,
+            skippedCharts: [
+                { musicIndex: "unknown", difficulty: "Expert" },
+                { musicIndex: "unknown", difficulty: "Expert" },
+            ],
+        });
+        const response = await POST(createRequest(requestBody()));
+        expect(response.status).toBe(200);
+        expect(await response.json()).toMatchObject({
+            syncScope: "recent",
+            insertedPlays: 0,
+        });
+        expect(mocks.dataSyncUpdate).toHaveBeenCalledWith({
+            where: { id: 10 },
+            data: expect.objectContaining({
+                status: "completed",
+                error_message:
+                    "DB에 등록되지 않은 채보 1개를 건너뛰었습니다: unknown (Expert)",
+            }),
+        });
+        expect(mocks.updatePlayData).not.toHaveBeenCalled();
     });
 
     it("최근 기록만 동기화하고 사용자 프로필 캐시를 갱신한다", async () => {

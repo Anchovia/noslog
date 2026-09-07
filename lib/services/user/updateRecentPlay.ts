@@ -49,10 +49,17 @@ export async function updateRecentPlay(
         ])
     );
 
+    const skippedCharts: { musicIndex: string; difficulty: string }[] = [];
     const mappedRows = history.flatMap((data) => {
         const chart_id =
             chartIds.get(`${data.music}:${data.difficulty}`) ?? null;
 
+        if (!chart_id) {
+            skippedCharts.push({
+                musicIndex: data.music,
+                difficulty: data.difficulty,
+            });
+        }
         return chart_id
             ? [
                   {
@@ -90,8 +97,20 @@ export async function updateRecentPlay(
         ).values(),
     ];
 
+    const diagnostic = {
+        syncId: sync_id,
+        received: history.length,
+        unmapped: history.length - mappedRows.length,
+        duplicate: mappedRows.length - historyRows.length,
+    };
+
     if (historyRows.length === 0) {
-        return 0;
+        console.info("Recent play ingestion", {
+            ...diagnostic,
+            existing: 0,
+            inserted: 0,
+        });
+        return { insertedPlays: 0, skippedCharts };
     }
 
     const existingRows = await db.chartPlayHistory.findMany({
@@ -148,7 +167,14 @@ export async function updateRecentPlay(
     );
 
     const duration = Date.now() - startTime;
+    const inserted = historyRows.filter(
+        (row) => !existingKeys.has(identityKey(row))
+    ).length;
+    console.info("Recent play ingestion", {
+        ...diagnostic,
+        existing: historyRows.length - inserted,
+        inserted,
+    });
     console.info(`===[최근 플레이 히스토리 업데이트 성공(${duration}ms)]===`);
-    return historyRows.filter((row) => !existingKeys.has(identityKey(row)))
-        .length;
+    return { insertedPlays: inserted, skippedCharts };
 }

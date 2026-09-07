@@ -134,7 +134,6 @@ async function prepare(
         });
     });
     await page.goto(`/${locale}/tiers?goal=fc&level=1`);
-    await expect(page.locator(".nl-tier-rail")).toHaveCount(0);
     await page.locator(".nl-tier-applied").click();
     await page.locator(".nl-tiers select").selectOption("s");
     if (failSummary)
@@ -201,10 +200,10 @@ test("stages all three filter groups, cancels ranges, and commits once", async (
     await expect(page.locator(".nl-tier-band")).toHaveCount(3);
 });
 
-test("Desktop bounded filters commit explicitly and clearing a constraint restores results", async ({
+test("Intermediate filters commit explicitly and clearing a constraint restores results", async ({
     page,
 }) => {
-    await page.setViewportSize({ width: 1470, height: 900 });
+    await page.setViewportSize({ width: 1024, height: 900 });
     await prepare(page);
     await expect(page.locator(".nl-tier-rail")).toHaveCount(0);
     await expect(
@@ -444,7 +443,9 @@ for (const locale of ["ko", "ja", "en"])
                     .setChecked(detailed);
                 for (const width of [320, 390, 768, 1024, 1280, 1600]) {
                     await page.setViewportSize({ width, height: 900 });
-                    await expect(page.locator(".nl-tier-rail")).toHaveCount(0);
+                    await expect(page.locator(".nl-tier-rail")).toHaveCount(
+                        width >= 1056 ? 1 : 0
+                    );
                     await expect(
                         page.getByRole("checkbox", {
                             name:
@@ -472,8 +473,8 @@ for (const locale of ["ko", "ja", "en"])
                     expect(size.scroll).toBeLessThanOrEqual(size.width);
                     expect(size.font).toContain("Pretendard JP Variable");
                     const expected = detailed
-                        ? { 320: 2, 390: 2, 768: 3, 1024: 5, 1280: 5, 1600: 5 }
-                        : { 320: 3, 390: 3, 768: 5, 1024: 7, 1280: 7, 1600: 7 };
+                        ? { 320: 2, 390: 2, 768: 3, 1024: 5, 1280: 3, 1600: 3 }
+                        : { 320: 3, 390: 3, 768: 5, 1024: 7, 1280: 5, 1600: 5 };
                     expect(size.columns).toBe(
                         expected[width as keyof typeof expected]
                     );

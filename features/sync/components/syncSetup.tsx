@@ -5,6 +5,7 @@ import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { useTranslations } from "@/components/i18n/localeProvider";
 import Button, { foundationButtonClass } from "@/components/ui/Button";
 import ModalDialog from "@/components/ui/modalDialog";
+import Disclosure from "@/components/ui/disclosure";
 import { StatusMessage } from "@/components/ui/statusMessage";
 import { NOSTALGIA_PLAY_DATA_URL } from "@/features/sync/officialUrl";
 
@@ -106,88 +107,112 @@ export default function SyncSetup({
                 {showHeading ? (
                     <h2 className="nl-section-title">{t("sync.setup")}</h2>
                 ) : null}
-                <h3 className="nl-component-title">{t("sync.desktopGuide")}</h3>
-                <p className="nl-body">{t("sync.drag")}</p>
-                <a
-                    ref={anchor}
-                    onClick={(event) => event.preventDefault()}
-                    draggable
-                    className={foundationButtonClass({ variant: "secondary" })}
-                >
-                    {t("sync.bookmarklet")}
-                </a>
+                <div className="nl-sync-install-card">
+                    <div className="nl-sync-install-card__target">
+                        <a
+                            ref={anchor}
+                            onClick={(event) => event.preventDefault()}
+                            draggable
+                            className={foundationButtonClass({
+                                variant: "secondary",
+                            })}
+                        >
+                            {t("sync.bookmarklet")}
+                        </a>
+                    </div>
+                    <p className="nl-body-secondary nl-muted">
+                        {t("sync.drag")}
+                    </p>
+                </div>
                 <GuideMedia
                     src="/images/guides/bookmarklet-install.gif"
                     label={t("sync.installDesktopAlt")}
                     width={640}
                     height={360}
                 />
-                <h3 className="nl-component-title">{t("sync.mobileGuide")}</h3>
-                <p className="nl-body">{t("sync.mobileAdd")}</p>
-                <GuideMedia
-                    src="/images/guides/mobile-bookmark-add.gif"
-                    label={t("sync.mobileAddAlt")}
-                    width={332}
-                    height={430}
-                />
-                <p className="nl-body">{t("sync.mobileEdit")}</p>
-                <Button
-                    appearance="foundation"
-                    variant="secondary"
-                    onClick={() => void copy()}
+                <Disclosure
+                    title={t("sync.mobileGuide")}
+                    className="nl-sync-mobile-guide"
                 >
-                    {t(
-                        copyState === "copied"
-                            ? "sync.copied"
-                            : "sync.copyAddress"
-                    )}
-                </Button>
-                {copyState === "failed" ? (
-                    <StatusMessage
-                        severity="danger"
-                        role="alert"
-                        title={t("common.retryLater")}
-                    />
-                ) : null}
-                {copyState === "copied" ? (
-                    <span className="sr-only" role="status">
-                        {t("sync.copied")}
-                    </span>
-                ) : null}
-                <GuideMedia
-                    src="/images/guides/mobile-bookmark-edit.gif"
-                    label={t("sync.mobileEditAlt")}
-                    width={332}
-                    height={669}
-                />
+                    <div className="nl-stack">
+                        <p className="nl-body">{t("sync.mobileAdd")}</p>
+                        <GuideMedia
+                            src="/images/guides/mobile-bookmark-add.gif"
+                            label={t("sync.mobileAddAlt")}
+                            width={332}
+                            height={430}
+                        />
+                        <p className="nl-body">{t("sync.mobileEdit")}</p>
+                        <Button
+                            appearance="foundation"
+                            variant="secondary"
+                            onClick={() => void copy()}
+                        >
+                            {t(
+                                copyState === "copied"
+                                    ? "sync.copied"
+                                    : "sync.copyAddress"
+                            )}
+                        </Button>
+                        {copyState === "failed" ? (
+                            <StatusMessage
+                                severity="danger"
+                                role="alert"
+                                title={t("common.retryLater")}
+                            />
+                        ) : null}
+                        {copyState === "copied" ? (
+                            <span className="sr-only" role="status">
+                                {t("sync.copied")}
+                            </span>
+                        ) : null}
+                        <GuideMedia
+                            src="/images/guides/mobile-bookmark-edit.gif"
+                            label={t("sync.mobileEditAlt")}
+                            width={332}
+                            height={669}
+                        />
+                    </div>
+                </Disclosure>
             </section>
             <section className="nl-sync-setup">
                 <h2 className="nl-section-title">{t("sync.step.run")}</h2>
-                <p className="nl-body">
-                    1.{" "}
-                    <a
-                        className="nl-text-link"
-                        href={NOSTALGIA_PLAY_DATA_URL}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={onOfficial}
-                    >
-                        {t("sync.pegateLogin")}
-                    </a>
-                </p>
-                <GuideMedia
-                    src="/images/guides/nostalgia-login.gif"
-                    label={t("sync.pegateLoginAlt")}
-                    width={1280}
-                    height={720}
-                />
-                <p className="nl-body">2. {t("sync.runBookmarklet")}</p>
-                <GuideMedia
-                    src="/images/guides/noslog-sync.gif"
-                    label={t("sync.runBookmarkletAlt")}
-                    width={1280}
-                    height={720}
-                />
+                <div className="nl-sync-step">
+                    <p className="nl-body nl-sync-step__label">
+                        <span className="nl-sync-step__number nl-metadata">
+                            1
+                        </span>
+                        <a
+                            className="nl-text-link"
+                            href={NOSTALGIA_PLAY_DATA_URL}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={onOfficial}
+                        >
+                            {t("sync.pegateLogin")}
+                        </a>
+                    </p>
+                    <GuideMedia
+                        src="/images/guides/nostalgia-login.gif"
+                        label={t("sync.pegateLoginAlt")}
+                        width={1280}
+                        height={720}
+                    />
+                </div>
+                <div className="nl-sync-step">
+                    <p className="nl-body nl-sync-step__label">
+                        <span className="nl-sync-step__number nl-metadata">
+                            2
+                        </span>
+                        {t("sync.runBookmarklet")}
+                    </p>
+                    <GuideMedia
+                        src="/images/guides/noslog-sync.gif"
+                        label={t("sync.runBookmarkletAlt")}
+                        width={1280}
+                        height={720}
+                    />
+                </div>
             </section>
         </div>
     );

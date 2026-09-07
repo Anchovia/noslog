@@ -321,14 +321,12 @@
         grid-template-columns: repeat(auto-fill, minmax(173px, 1fr));
     }
 }
-@container page (min-width: 1056px) {
-    .noslog-ui .nl-tier-results {
-        gap: var(--nl-spacing-16);
-    }
-    .noslog-ui .nl-tier-rail .nl-tier-chip {
-        min-height: 40px;
-    }
-    .noslog-ui .nl-tier-rail .nl-field {
-        gap: var(--nl-spacing-12);
-    }
+.noslog-ui .nl-tiers[data-layout="wide"] .nl-tier-results {
+    gap: var(--nl-spacing-16);
+}
+.noslog-ui .nl-tiers[data-layout="wide"] .nl-tier-rail .nl-tier-chip {
+    min-height: 40px;
+}
+.noslog-ui .nl-tiers[data-layout="wide"] .nl-tier-rail .nl-field {
+    gap: var(--nl-spacing-12);
 }

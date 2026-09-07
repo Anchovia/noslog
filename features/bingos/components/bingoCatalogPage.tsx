@@ -8,7 +8,8 @@ import type { z } from "zod";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslations } from "@/components/i18n/localeProvider";
 import Button from "@/components/ui/Button";
-import FullScreenDialog from "@/components/ui/fullScreenDialog";
+import BingoFilterSurface from "@/features/bingos/components/bingoFilterSurface";
+import useMediaQuery from "@/lib/hooks/useMediaQuery";
 import RadioGroup from "@/components/ui/radioGroup";
 import BingoCatalogCard from "@/features/bingos/components/bingoCatalogCard";
 import {
@@ -39,6 +40,7 @@ export default function BingoCatalogPage({
         ? parsed
         : { ...parsed, status: "all" as const, sort: "release" as const };
     const [open, setOpen] = useState(false);
+    const wide = useMediaQuery("(min-width: 672px)");
     const form = useForm<
         z.input<typeof bingoCatalogQuerySchema>,
         unknown,
@@ -82,8 +84,12 @@ export default function BingoCatalogPage({
                 </section>
             ) : null}
             {isAuthenticated ? (
-                <div className="nl-bingo-catalog__controls">
-                    <FullScreenDialog
+                <div
+                    className="nl-bingo-catalog__controls"
+                    data-filter-layout={wide ? "popover" : "fullscreen"}
+                >
+                    <BingoFilterSurface
+                        wide={wide}
                         open={open}
                         onOpenChange={setFilterOpen}
                         title={t("discovery.filterSort")}
@@ -126,7 +132,15 @@ export default function BingoCatalogPage({
                                     <RadioGroup
                                         label={t("bingo.filter")}
                                         value={field.value ?? "all"}
-                                        onValueChange={field.onChange}
+                                        onValueChange={(value) => {
+                                            field.onChange(value);
+                                            if (wide)
+                                                commit({
+                                                    ...query,
+                                                    status: value,
+                                                    count: 12,
+                                                });
+                                        }}
                                         options={statuses}
                                     />
                                 )}
@@ -138,13 +152,21 @@ export default function BingoCatalogPage({
                                     <RadioGroup
                                         label={t("discovery.sortLabel")}
                                         value={field.value ?? "release"}
-                                        onValueChange={field.onChange}
+                                        onValueChange={(value) => {
+                                            field.onChange(value);
+                                            if (wide)
+                                                commit({
+                                                    ...query,
+                                                    sort: value,
+                                                    count: 12,
+                                                });
+                                        }}
                                         options={sorts}
                                     />
                                 )}
                             />
                         </form>
-                    </FullScreenDialog>
+                    </BingoFilterSurface>
                     <p className="nl-metadata nl-muted">
                         {
                             statuses.find(

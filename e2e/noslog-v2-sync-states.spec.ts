@@ -10,7 +10,7 @@ test.skip(
 
 for (const locale of ["ko", "ja", "en"] as const) {
     const t = getMessages(locale);
-    test(`P8 ${locale} state matrix preserves scope, coverage, reflow and disclosure`, async ({
+    test(`P8 ${locale} state matrix preserves scope, reflow and disclosure`, async ({
         page,
     }) => {
         let state = "full";
@@ -61,7 +61,7 @@ for (const locale of ["ko", "ja", "en"] as const) {
                     name: t["sync.coverage"],
                     exact: true,
                 })
-            ).toHaveCount(state === "none" ? 0 : 1);
+            ).toHaveCount(0);
             if (state === "recent")
                 await expect(main).toContainText(t["sync.recentHelp"]);
             if (state === "partial")
@@ -172,6 +172,7 @@ for (const locale of ["ko", "ja", "en"] as const) {
         await page.goto(`/${locale}/p7-verification?fixture=sync&state=none`);
         const main = page.getByRole("main");
         await expect(main.locator('img[src$=".gif"]')).toHaveCount(0);
+        await main.locator(".nl-sync-mobile-guide > summary").click();
         await main
             .getByRole("button", { name: t["sync.mobileAddAlt"], exact: true })
             .click();

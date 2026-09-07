@@ -101,6 +101,7 @@ for (const locale of ["ko", "ja", "en"] as const) {
         await expect(
             page.locator("ul.nl-bingo-catalog__grid > li")
         ).toHaveCount(24);
+        await page.setViewportSize({ width: 390, height: 900 });
         await page
             .getByRole("button", {
                 name: t["discovery.filterSort"],

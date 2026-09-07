@@ -1,10 +1,27 @@
 import "server-only";
+import { revalidateTag } from "next/cache";
+import { CACHE_TAGS, getUserProfileTag } from "@/lib/cacheTags";
 
 import { deleteBlobStrict } from "@/lib/blob";
 import db from "@/lib/db";
 import { createTranslator, getMessages } from "@/lib/i18n/messages";
 import { type Locale } from "@/lib/i18n/routing";
 import getSession from "@/lib/session";
+import { hasRecentDeletionVerification } from "@/features/settings/schemas/deletionVerification";
+
+function invalidateDeletedAccount(userId: number) {
+    for (const tag of [
+        getUserProfileTag(userId),
+        CACHE_TAGS.userProfiles,
+        CACHE_TAGS.userRankings,
+        CACHE_TAGS.chartRankings,
+        CACHE_TAGS.chartEvaluations,
+        CACHE_TAGS.tierLists,
+        CACHE_TAGS.musicDetails,
+    ]) {
+        revalidateTag(tag, { expire: 0 });
+    }
+}
 
 export async function deleteAccount(
     confirmationInput: string,
@@ -19,7 +36,7 @@ export async function deleteAccount(
             message: t("settings.loginRequired"),
         };
     }
-    if (confirmationInput.trim() !== deleteConfirmation) {
+    if (confirmationInput !== deleteConfirmation) {
         return {
             success: false as const,
             message: t("settings.deleteConfirmationError", {
@@ -31,14 +48,30 @@ export async function deleteAccount(
     const user = await db.user.findUnique({
         where: { id: session.id },
         select: {
+            discord_id: true,
             avatar: true,
             feedbackReports: { select: { imageUrl: true } },
             examSubmissions: { select: { proofImageUrl: true } },
         },
     });
     if (!user) {
+        invalidateDeletedAccount(session.id);
         await session.destroy();
         return { success: true as const };
+    }
+
+    if (
+        !hasRecentDeletionVerification(
+            session.deletionVerification,
+            session.id,
+            user.discord_id
+        )
+    ) {
+        return {
+            success: false as const,
+            message: t("settings.reauthenticate"),
+            reauthenticationRequired: true,
+        };
     }
 
     const uploadedUrls = new Set(
@@ -56,6 +89,7 @@ export async function deleteAccount(
             await deleteBlobStrict(url);
         }
         await db.user.delete({ where: { id: session.id } });
+        invalidateDeletedAccount(session.id);
         await session.destroy();
         return { success: true as const };
     } catch (error) {

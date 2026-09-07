@@ -2,7 +2,6 @@ import "server-only";
 import {
     getCachedPublishedBingos,
     getCachedBingoDetail,
-    isBingoAvailable,
     getUserBingoCellProgress,
 } from "@/features/bingos/server/bingoData";
 import {
@@ -33,35 +32,33 @@ export async function getPublicBingoCatalog() {
     );
     return {
         isAuthenticated: Boolean(user),
-        items: bingos
-            .filter((bingo) => isBingoAvailable(bingo))
-            .map((bingo) => {
-                const cells = bingo.cells.map((cell) => ({
-                    ...cell,
-                    isCompleted: completed.has(cell.id),
-                }));
-                const state = getBingoProgress(cells);
-                const times = cells
-                    .flatMap((cell) =>
-                        modified.get(cell.id) ? [modified.get(cell.id)!] : []
-                    )
-                    .sort();
-                return bingoCatalogItemSchema.parse({
-                    id: bingo.id,
-                    title: bingo.title || bingo.coverMusic.title,
-                    musicIndex: bingo.coverMusicIndex,
-                    background: bingo.coverMusic.background,
-                    sourceVersion: bingo.sourceVersion,
-                    rewardNos: bingo.rewardNos,
-                    requiredLines: bingo.requiredLines,
-                    completedPositions: cells
-                        .filter((cell) => cell.isCompleted)
-                        .map((cell) => cell.position),
-                    completedLines: state.completedLines,
-                    chanceLines: state.richLines,
-                    lastModifiedAt: times.at(-1) ?? null,
-                });
-            }),
+        items: bingos.map((bingo) => {
+            const cells = bingo.cells.map((cell) => ({
+                ...cell,
+                isCompleted: completed.has(cell.id),
+            }));
+            const state = getBingoProgress(cells);
+            const times = cells
+                .flatMap((cell) =>
+                    modified.get(cell.id) ? [modified.get(cell.id)!] : []
+                )
+                .sort();
+            return bingoCatalogItemSchema.parse({
+                id: bingo.id,
+                title: bingo.title || bingo.coverMusic.title,
+                musicIndex: bingo.coverMusicIndex,
+                background: bingo.coverMusic.background,
+                sourceVersion: bingo.sourceVersion,
+                rewardNos: bingo.rewardNos,
+                requiredLines: bingo.requiredLines,
+                completedPositions: cells
+                    .filter((cell) => cell.isCompleted)
+                    .map((cell) => cell.position),
+                completedLines: state.completedLines,
+                chanceLines: state.richLines,
+                lastModifiedAt: times.at(-1) ?? null,
+            });
+        }),
     };
 }
 
@@ -70,7 +67,7 @@ export async function getPublicBingoDetail(id: number) {
         getUser(),
         getCachedBingoDetail(id),
     ]);
-    if (!bingo || !isBingoAvailable(bingo)) return null;
+    if (!bingo) return null;
     const progress = user
         ? await getUserBingoCellProgress(
               user.id,
@@ -91,6 +88,7 @@ export async function getPublicBingoDetail(id: number) {
         completedCellIds: progress
             .filter((item) => item.isCompleted)
             .map((item) => item.bingoCellId),
+        hasSavedProgress: progress.length > 0,
         cells: bingo.cells.map((cell) => ({
             id: cell.id,
             position: cell.position,

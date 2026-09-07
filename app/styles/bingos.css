@@ -126,6 +126,35 @@
 .noslog-ui .nl-bingo-catalog__empty {
     padding-block: var(--nl-spacing-32);
 }
+.noslog-ui .nl-bingo-filter-popover {
+    z-index: 60;
+    width: min(334px, calc(100vw - 32px));
+    max-height: var(--radix-popover-content-available-height);
+    overflow-y: auto;
+    padding: var(--nl-spacing-8);
+    border: 1px solid var(--nl-border-overlay);
+    border-radius: var(--nl-radius-overlay);
+    background: var(--nl-surface-overlay);
+    box-shadow: var(--nl-overlay-shadow);
+}
+.noslog-ui .nl-bingo-filter-popover .nl-bingo-catalog__filter-form {
+    gap: var(--nl-spacing-4);
+}
+.noslog-ui .nl-bingo-filter-popover .nl-radio-group + .nl-radio-group {
+    border-top: 1px solid var(--nl-border-divider);
+    padding-top: var(--nl-spacing-8);
+    margin-top: var(--nl-spacing-8);
+}
+.noslog-ui .nl-bingo-filter-popover legend {
+    padding: var(--nl-spacing-8) var(--nl-spacing-8) var(--nl-spacing-4);
+    color: var(--nl-content-subdued);
+    font-size: var(--nl-type-size-12);
+    line-height: var(--nl-type-line-height-16);
+    font-weight: var(--nl-type-weight-regular);
+}
+.noslog-ui .nl-bingo-filter-popover .nl-radio-group__option {
+    padding-inline: var(--nl-spacing-8);
+}
 .noslog-ui .nl-bingo-detail {
     display: flex;
     flex-direction: column;
@@ -311,4 +340,11 @@
     .noslog-ui .nl-bingo-catalog__grid {
         grid-template-columns: repeat(4, minmax(0, 1fr));
     }
+}
+.noslog-ui .nl-bingo-reset-dialog {
+    padding: var(--nl-spacing-16);
+    box-shadow: inset 0 0 0 1px var(--nl-border-default);
+}
+.noslog-ui .nl-bingo-reset-dialog .nl-dialog__actions > .nl-button {
+    flex: 1;
 }

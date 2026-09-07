@@ -45,6 +45,7 @@ export const bingoDetailSchema = z.object({
     completionRewardNos: z.number(),
     cells: z.array(bingoMissionSchema),
     completedCellIds: z.array(z.number()),
+    hasSavedProgress: z.boolean().optional(),
     isAuthenticated: z.boolean(),
 });
 export type BingoDetail = z.infer<typeof bingoDetailSchema>;

@@ -25,6 +25,7 @@
 @import "./styles/exams.css";
 @import "./styles/bingos.css";
 @import "./styles/privacy.css";
+@import "./styles/feedback.css";
 
 @theme {
     /* 폰트 */

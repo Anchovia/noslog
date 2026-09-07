@@ -62,7 +62,7 @@ describe("최근 플레이 저장", () => {
     it("신규 최근 플레이를 상세 판정과 함께 저장한다", async () => {
         const inserted = await updateRecentPlay(1, history, 10);
 
-        expect(inserted).toBe(1);
+        expect(inserted).toEqual({ insertedPlays: 1, skippedCharts: [] });
         expect(mocks.historyUpsert).toHaveBeenCalledWith({
             where: {
                 user_id_chart_id_source_play_time_score_max_combo_rank: {
@@ -107,10 +107,41 @@ describe("최근 플레이 저장", () => {
 
         const inserted = await updateRecentPlay(1, history, 11);
 
-        expect(inserted).toBe(0);
+        expect(inserted).toEqual({ insertedPlays: 0, skippedCharts: [] });
         expect(mocks.historyUpsert).toHaveBeenCalledOnce();
         expect(mocks.historyUpsert.mock.calls[0][0].update).not.toHaveProperty(
             "first_sync_id"
         );
+    });
+
+    it("수신 중복과 미등록 채보를 구분하고 알려진 기록만 한 번 저장한다", async () => {
+        const info = vi.spyOn(console, "info").mockImplementation(() => {});
+        try {
+            expect(
+                await updateRecentPlay(
+                    1,
+                    [
+                        history[0],
+                        history[0],
+                        { ...history[0], music: "unknown" },
+                    ],
+                    12
+                )
+            ).toEqual({
+                insertedPlays: 1,
+                skippedCharts: [{ musicIndex: "unknown", difficulty: "Real" }],
+            });
+            expect(mocks.historyUpsert).toHaveBeenCalledOnce();
+            expect(info).toHaveBeenCalledWith("Recent play ingestion", {
+                syncId: 12,
+                received: 3,
+                unmapped: 1,
+                duplicate: 1,
+                existing: 0,
+                inserted: 1,
+            });
+        } finally {
+            info.mockRestore();
+        }
     });
 });

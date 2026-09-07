@@ -8,7 +8,11 @@ const mocks = vi.hoisted(() => ({
         locale: undefined as "ko" | "ja" | "en" | undefined,
         discordOAuthState: undefined as string | undefined,
         discordOAuthReturnTo: undefined as string | undefined,
-        discordOAuthMode: undefined as "refresh" | "change" | undefined,
+        discordOAuthMode: undefined as
+            "refresh" | "change" | "delete" | undefined,
+        deletionVerification: undefined as
+            | { userId: number; discordId: string; verifiedAt: number }
+            | undefined,
         discordOAuthUserId: undefined as number | undefined,
         onboardingReturnTo: undefined as string | undefined,
         save: vi.fn(),
@@ -84,13 +88,14 @@ function mockDiscordSuccess({
 
 describe("Discord OAuth", () => {
     beforeEach(() => {
-        vi.clearAllMocks();
+        vi.resetAllMocks();
         mocks.session.id = undefined;
         mocks.session.profileCompleted = undefined;
         mocks.session.locale = undefined;
         mocks.session.discordOAuthState = undefined;
         mocks.session.discordOAuthReturnTo = undefined;
         mocks.session.discordOAuthMode = undefined;
+        mocks.session.deletionVerification = undefined;
         mocks.session.discordOAuthUserId = undefined;
         mocks.session.onboardingReturnTo = undefined;
         mocks.getSession.mockResolvedValue(mocks.session);
@@ -109,6 +114,68 @@ describe("Discord OAuth", () => {
         vi.unstubAllEnvs();
         vi.unstubAllGlobals();
     });
+
+    it("탈퇴 재인증은 같은 로그인 사용자와 Discord 신원만 허용한다", async () => {
+        mocks.session.id = 7;
+        mocks.session.profileCompleted = true;
+        await startDiscordOAuth(
+            request(
+                "/discord/start?mode=delete&returnTo=%2Fko%2Fsettings%3Fcategory%3Daccount"
+            )
+        );
+        const state = mocks.session.discordOAuthState;
+        expect(mocks.session.discordOAuthUserId).toBe(7);
+        mocks.userFindUnique.mockResolvedValue({
+            id: 7,
+            discord_id: "discord-1",
+            avatar: null,
+        });
+        mockDiscordSuccess();
+        const response = await completeDiscordOAuth(
+            request(`/discord/complete?code=code&state=${state}`)
+        );
+        expect(mocks.session.deletionVerification).toEqual({
+            userId: 7,
+            discordId: "discord-1",
+            verifiedAt: expect.any(Number),
+        });
+        expect(
+            new URL(response.headers.get("location")!).searchParams.get(
+                "discordResult"
+            )
+        ).toBe("delete");
+        expect(mocks.userUpdate).not.toHaveBeenCalled();
+        expect(mocks.userCreate).not.toHaveBeenCalled();
+    });
+
+    it.each(["identity", "session", "state"])(
+        "탈퇴 재인증 %s 불일치는 인증 권한을 부여하지 않는다",
+        async (mismatch) => {
+            mocks.session.id = 7;
+            mocks.session.profileCompleted = true;
+            await startDiscordOAuth(
+                request(
+                    "/discord/start?mode=delete&returnTo=%2Fko%2Fsettings%3Fcategory%3Daccount"
+                )
+            );
+            const state = mocks.session.discordOAuthState;
+            mocks.userFindUnique.mockResolvedValue({
+                id: mismatch === "session" ? 8 : 7,
+                discord_id: "discord-1",
+                avatar: null,
+            });
+            mockDiscordSuccess({
+                id: mismatch === "identity" ? "other" : "discord-1",
+            });
+            await completeDiscordOAuth(
+                request(
+                    `/discord/complete?code=code&state=${mismatch === "state" ? "bad" : state}`
+                )
+            );
+            expect(mocks.session.deletionVerification).toBeUndefined();
+            expect(mocks.userUpdate).not.toHaveBeenCalled();
+        }
+    );
 
     it("로그인 시작 시 안전한 복귀 주소와 state를 세션에 저장한다", async () => {
         const response = await startDiscordOAuth(

@@ -12,6 +12,7 @@
     margin-inline: auto;
 }
 .noslog-ui .nl-home-hero {
+    container: home-hero / inline-size;
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-24);
@@ -149,7 +150,7 @@
         padding: var(--nl-spacing-24);
     }
 }
-@container page (min-width: 1056px) {
+@container home-hero (min-width: 640px) {
     .noslog-ui .nl-home-identity .nl-page-title {
         font-size: var(--nl-type-size-32);
         line-height: var(--nl-type-line-height-40);

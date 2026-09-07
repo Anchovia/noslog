@@ -1,10 +1,7 @@
 import { notFound } from "next/navigation";
 import BingoDetailPage from "@/features/bingos/components/bingoDetailPage";
 import { getPublicBingoDetail } from "@/features/bingos/server/publicBingoService";
-import {
-    getCachedBingoDetail,
-    isBingoAvailable,
-} from "@/features/bingos/server/bingoData";
+import { getCachedBingoDetail } from "@/features/bingos/server/bingoData";
 import { getServerI18n } from "@/lib/i18n/server";
 import { localizePath } from "@/lib/i18n/routing";
 import { createPageMetadata } from "@/lib/metadata/site";
@@ -18,7 +15,7 @@ export async function generateMetadata({
     const id = Number((await params).id);
     const bingo =
         Number.isInteger(id) && id > 0 ? await getCachedBingoDetail(id) : null;
-    if (!bingo || !isBingoAvailable(bingo))
+    if (!bingo)
         return createPageMetadata({
             title: t("bingo.title"),
             path: localizePath("/bingo", locale),

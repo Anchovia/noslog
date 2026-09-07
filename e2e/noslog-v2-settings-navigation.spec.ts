@@ -2,6 +2,28 @@ import { expect, test } from "@playwright/test";
 import { getMessages } from "@/lib/i18n/messages";
 
 for (const locale of ["ko", "ja", "en"] as const) {
+    test(`P10 ${locale} account completion notice is consumed once`, async ({
+        page,
+    }) => {
+        const t = getMessages(locale);
+        for (const status of ["logged-out", "deleted"] as const) {
+            const message =
+                t[
+                    status === "deleted"
+                        ? "settings.deleted"
+                        : "settings.loggedOut"
+                ];
+            await page.goto(`/${locale}?accountStatus=${status}`);
+            await expect(
+                page.getByText(message, { exact: true })
+            ).toBeVisible();
+            await expect(page).toHaveURL(new RegExp(`/${locale}$`));
+            await page.reload();
+            await expect(page.getByText(message, { exact: true })).toHaveCount(
+                0
+            );
+        }
+    });
     test(`P10 ${locale} guest overview and private category return paths`, async ({
         page,
     }) => {

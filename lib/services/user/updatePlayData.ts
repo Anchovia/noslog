@@ -200,6 +200,7 @@ export async function updatePlayData(
 
         const duration = Date.now() - startTime; // 종료 시간
         console.info(`===[플레이 데이터 업데이트 성공(${duration}ms)]===`);
-        return changedSnapshots.length;
+        return changedSnapshots.filter((record) => record.play_count > 0)
+            .length;
     }
 }

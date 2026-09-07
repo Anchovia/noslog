@@ -1,6 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { useRef, useState } from "react";
+import ModalDialog from "@/components/ui/modalDialog";
+import ActionButton from "@/components/ui/actionButton";
 import { ChevronLeft } from "lucide-react";
 import {
     useLocale,
@@ -19,19 +22,26 @@ import {
 import BingoCoordinateBoard from "@/features/bingos/components/bingoCoordinateBoard";
 import { useBingoProgress } from "@/features/bingos/hooks/useBingoProgress";
 import type { BingoDetail } from "@/features/bingos/schemas/publicBingoSchema";
-import type { setBingoCellCompletion } from "@/app/(nevigation)/bingo/[id]/actions";
+import type {
+    setBingoCellCompletion,
+    resetBingoProgress,
+} from "@/app/(nevigation)/bingo/[id]/actions";
 
 export default function BingoDetailPage({
     bingo,
     saveAction,
+    resetAction,
 }: {
     bingo: BingoDetail;
     saveAction?: typeof setBingoCellCompletion;
+    resetAction?: typeof resetBingoProgress;
 }) {
     const t = useTranslations();
     const locale = useLocale();
     const href = useLocalizedHref();
-    const state = useBingoProgress(bingo, saveAction);
+    const state = useBingoProgress(bingo, saveAction, resetAction);
+    const [resetOpen, setResetOpen] = useState(false);
+    const cancelReset = useRef<HTMLButtonElement>(null);
     const filters = [
         {
             value: "all",
@@ -75,7 +85,11 @@ export default function BingoDetailPage({
                             fallback={<span />}
                         />
                         <div>
-                            <h1 className="nl-entity-title" id="bingo-title">
+                            <h1
+                                className="nl-entity-title"
+                                id="bingo-title"
+                                tabIndex={-1}
+                            >
                                 {bingo.title}
                             </h1>
                             {bingo.sourceVersion ? (
@@ -228,7 +242,7 @@ export default function BingoDetailPage({
                                         <Checkbox
                                             className="nl-bingo-mission__checkbox"
                                             checked={checked}
-                                            disabled={busy}
+                                            disabled={busy || state.resetting}
                                             onChange={() =>
                                                 void state.save(
                                                     cell.id,
@@ -267,6 +281,81 @@ export default function BingoDetailPage({
                         >
                             {t("bingo.loginToSave")}
                         </Link>
+                    ) : null}
+                    {bingo.isAuthenticated ? (
+                        <ModalDialog
+                            open={resetOpen}
+                            onOpenChange={(next) => {
+                                if (!state.resetting) setResetOpen(next);
+                            }}
+                            title={t("bingo.resetTitle")}
+                            showClose={false}
+                            className="nl-bingo-reset-dialog"
+                            onOpenAutoFocus={(event) => {
+                                event.preventDefault();
+                                cancelReset.current?.focus();
+                            }}
+                            trigger={
+                                state.hasSavedProgress ? (
+                                    <Button
+                                        appearance="foundation"
+                                        variant="danger"
+                                        disabled={
+                                            state.pending.size > 0 ||
+                                            state.resetting
+                                        }
+                                    >
+                                        {t("bingo.resetTitle")}
+                                    </Button>
+                                ) : undefined
+                            }
+                            onCloseAutoFocus={(event) => {
+                                if (!state.hasSavedProgress) {
+                                    event.preventDefault();
+                                    document
+                                        .getElementById("bingo-title")
+                                        ?.focus();
+                                }
+                            }}
+                            footer={
+                                <>
+                                    <Button
+                                        ref={cancelReset}
+                                        appearance="foundation"
+                                        variant="secondary"
+                                        disabled={state.resetting}
+                                        onClick={() => setResetOpen(false)}
+                                    >
+                                        {t("settings.cancel")}
+                                    </Button>
+                                    <ActionButton
+                                        variant="danger"
+                                        busy={state.resetting}
+                                        onClick={async () => {
+                                            if (await state.reset())
+                                                setResetOpen(false);
+                                        }}
+                                    >
+                                        {t("bingo.resetAction")}
+                                    </ActionButton>
+                                </>
+                            }
+                        >
+                            <p className="nl-body">
+                                {t("bingo.resetDescription", {
+                                    title: bingo.title,
+                                    count: state.completed.size,
+                                })}
+                            </p>
+                            {state.resetError ? (
+                                <p
+                                    role="alert"
+                                    className="nl-body-secondary nl-field__error"
+                                >
+                                    {state.resetError}
+                                </p>
+                            ) : null}
+                        </ModalDialog>
                     ) : null}
                 </section>
             </div>

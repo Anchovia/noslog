@@ -194,10 +194,12 @@ html[data-theme="light"] .noslog-ui,
 .noslog-ui .nl-button--danger-filled {
     background: var(--nl-feedback-destructive-surface);
     color: var(--nl-feedback-on-destructive);
+    border-color: transparent;
 }
 .noslog-ui .nl-button--danger-filled:hover,
 .noslog-ui .nl-button--danger-filled:active {
     background: var(--nl-feedback-destructive-surface-hover);
+    border-color: transparent;
 }
 .noslog-ui .nl-button--danger-filled:focus-visible {
     border-color: var(--nl-feedback-on-destructive);
@@ -480,6 +482,10 @@ html[data-theme="light"] .noslog-ui,
     flex-wrap: wrap;
     gap: var(--nl-spacing-8);
     justify-content: flex-end;
+}
+.noslog-ui .nl-dialog--compact .nl-dialog__actions > .nl-button {
+    flex: 1 1 0;
+    min-width: 0;
 }
 .noslog-ui .nl-dialog--wide {
     width: min(var(--nl-container-reading), calc(100vw - 56px));

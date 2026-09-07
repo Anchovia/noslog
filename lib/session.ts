@@ -12,8 +12,13 @@ interface SessionContent {
     locale?: Locale;
     discordOAuthState?: string;
     discordOAuthReturnTo?: string;
-    discordOAuthMode?: "refresh" | "change";
+    discordOAuthMode?: "refresh" | "change" | "delete";
     discordOAuthUserId?: number;
+    deletionVerification?: {
+        userId: number;
+        discordId: string;
+        verifiedAt: number;
+    };
     onboardingReturnTo?: string;
 }
 

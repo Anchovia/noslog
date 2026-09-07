@@ -24,7 +24,7 @@ import { SegmentedControl } from "@/components/ui/segmentedControl";
 import ResultState from "@/components/ui/resultState";
 import DiscoverySortControl from "@/features/music/components/discoverySortControl";
 import useDebouncedValue from "@/lib/hooks/useDebouncedValue";
-import useElementWidth from "@/lib/hooks/useElementWidth";
+import useWideLayout from "@/lib/hooks/useWideLayout";
 import {
     discoveryOptions,
     discoveryPreviewOptions,
@@ -75,9 +75,9 @@ export default function DiscoveryPage({
                   sort: parsed.sort === "recent" ? undefined : parsed.sort,
               };
     }, [serialized, accountId]);
-    const { ref, width } = useElementWidth<HTMLDivElement>();
-    const wide = width >= 1216;
+    const wide = useWideLayout();
     const [open, setOpen] = useState(false);
+    if (wide && open) setOpen(false);
     const summaryRef = useRef<HTMLParagraphElement>(null);
     const focusCommittedSummary = useRef(false);
     const [draft, setDraft] = useState(query);
@@ -255,7 +255,10 @@ export default function DiscoveryPage({
     );
 
     return (
-        <PageContainer ref={ref} className="nl-discovery">
+        <PageContainer
+            className="nl-discovery"
+            data-layout={wide ? "wide" : "compact"}
+        >
             <header className="nl-discovery__heading">
                 <h1 className="nl-page-title">
                     {t(
