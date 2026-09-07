@@ -12,14 +12,10 @@ import type { ActionFailure } from "@/lib/actions/result";
 import { CACHE_TAGS, getUserProfileTag } from "@/lib/cacheTags";
 import db from "@/lib/db";
 import { createTranslator, getMessages } from "@/lib/i18n/messages";
-import {
-    DEFAULT_LOCALE,
-    isLocale,
-    localeFromCountry,
-    localizePath,
-} from "@/lib/i18n/routing";
+import { DEFAULT_LOCALE, isLocale } from "@/lib/i18n/routing";
 import { logServerError } from "@/lib/observability/server";
 import getSession from "@/lib/session";
+import { getAuthReturnPath } from "@/lib/authReturnPath";
 
 type OnboardingFieldName = Extract<keyof OnboardingFormValues, string>;
 type OnboardingActionResult = ActionFailure<OnboardingFieldName>;
@@ -51,11 +47,11 @@ export async function completeOnboarding(
         };
     }
 
-    const locale = localeFromCountry(result.data.country);
+    const locale = formLocale;
 
     try {
         await db.user.update({
-            where: { id: session.id },
+            where: { id: session.id, profile_completed_at: null },
             data: {
                 username: result.data.username,
                 country: result.data.country,
@@ -79,6 +75,13 @@ export async function completeOnboarding(
 
         return {
             success: false,
+            ...(code === "P2002"
+                ? {
+                      fieldErrors: {
+                          username: [t("onboarding.error.nicknameTaken")],
+                      },
+                  }
+                : {}),
             message:
                 code === "P2002"
                     ? t("onboarding.error.nicknameTaken")
@@ -88,8 +91,10 @@ export async function completeOnboarding(
 
     session.profileCompleted = true;
     session.locale = locale;
+    const returnTo = getAuthReturnPath(session.onboardingReturnTo, locale);
+    delete session.onboardingReturnTo;
     await session.save();
     updateTag(CACHE_TAGS.userRankings);
     updateTag(getUserProfileTag(session.id));
-    redirect(localizePath("/", locale));
+    redirect(returnTo);
 }

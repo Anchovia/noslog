@@ -2,7 +2,7 @@
 
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { ChevronDown, ListFilter, X } from "lucide-react";
-import { useEffect, useId, useState } from "react";
+import { useId, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import {
     useLocale,
@@ -29,7 +29,7 @@ import type {
     TierBrowserQuery,
 } from "@/features/tiers/schemas/tierBrowserSchema";
 import { TIER_GOALS, tierGoalLabels, formatTierValue } from "@/lib/tiers";
-import useMediaQuery from "@/lib/hooks/useMediaQuery";
+import useElementWidth from "@/lib/hooks/useElementWidth";
 import TierBrowserBands from "./tierBrowserBands";
 import TierFilterFields from "./tierFilterFields";
 import TierRatingGuide from "./tierRatingGuide";
@@ -49,7 +49,8 @@ export default function TierBrowserPage({
     const locale = useLocale();
     const href = useLocalizedHref();
     const goalId = useId();
-    const wide = useMediaQuery("(min-width: 1056px)");
+    const { ref, width } = useElementWidth<HTMLDivElement>();
+    const wide = width >= 1056;
     const searchParams = useSearchParams();
     const query = parseTierBrowserQuery(new URLSearchParams(searchParams));
     const [draft, setDraft] = useState(initialQuery);
@@ -88,14 +89,7 @@ export default function TierBrowserPage({
                     !draft.bands.length || draft.bands.includes(band.value)
             )
             .reduce((sum, band) => sum + band.totalCount, 0) ?? 0;
-    useEffect(() => {
-        const media = window.matchMedia("(min-width: 1056px)");
-        const closeOnWide = (event: MediaQueryListEvent) => {
-            if (event.matches) setOpen(false);
-        };
-        media.addEventListener("change", closeOnWide);
-        return () => media.removeEventListener("change", closeOnWide);
-    }, []);
+    if (wide && open) setOpen(false);
     function commit(next: TierBrowserQuery) {
         window.history[open ? "replaceState" : "pushState"](
             {},
@@ -158,7 +152,7 @@ export default function TierBrowserPage({
         </FormField>
     );
     return (
-        <PageContainer className="nl-tiers">
+        <PageContainer ref={ref} className="nl-tiers">
             <h1 className="nl-page-title">{t("tiers.title")}</h1>
             {!wide ? (
                 <>
@@ -182,6 +176,14 @@ export default function TierBrowserPage({
                     >
                         {modeControl}
                         {goalControl}
+                        {data?.list?.description ? (
+                            <p className="nl-body-secondary nl-muted">
+                                {data.list.description}
+                            </p>
+                        ) : null}
+                        {data ? (
+                            <TierRatingGuide query={query} overview={data} />
+                        ) : null}
                         <TierFilterFields
                             query={query}
                             onChange={commit}

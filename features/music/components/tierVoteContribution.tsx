@@ -126,7 +126,8 @@ export default function TierVoteContribution({
                     </p>
                     {scope.ownVote !== null ? deleteAction : null}
                 </>
-            ) : editing ? (
+            ) : editing ||
+              (scope.average === null && scope.ownVote === null) ? (
                 <form
                     className="nl-vote-form"
                     noValidate

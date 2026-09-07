@@ -2,6 +2,7 @@ import db from "@/lib/db";
 import { localizePath, SUPPORTED_LOCALES } from "@/lib/i18n/routing";
 import { SITE_URL } from "@/lib/metadata/site";
 import type { MetadataRoute } from "next";
+import { getPublicAnnouncements } from "@/features/announcements/server/publicAnnouncementService";
 
 export const revalidate = 3600;
 
@@ -19,6 +20,7 @@ const staticRoutes: Array<{
     { path: "/gamecenter", changeFrequency: "weekly", priority: 0.8 },
     { path: "/bookmarklet", changeFrequency: "monthly", priority: 0.6 },
     { path: "/privacy", changeFrequency: "monthly", priority: 0.3 },
+    { path: "/announcements", changeFrequency: "weekly", priority: 0.6 },
 ];
 
 function absoluteUrl(path: string) {
@@ -52,7 +54,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     try {
         const now = new Date();
-        const [musics, tierLists, bingos] = await Promise.all([
+        const [musics, tierLists, bingos, announcements] = await Promise.all([
             db.music.findMany({
                 select: {
                     index: true,
@@ -81,6 +83,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
                 },
                 select: { id: true, updatedAt: true },
             }),
+            getPublicAnnouncements(),
         ]);
 
         const musicEntries: MetadataRoute.Sitemap = musics.flatMap((music) =>
@@ -118,6 +121,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             ...musicEntries,
             ...tierEntries,
             ...bingoEntries,
+            ...announcements.flatMap((item) =>
+                localizedEntries(`/announcements/${item.publicSlug}`, {
+                    lastModified: new Date(
+                        Math.max(
+                            item.publishedAt.getTime(),
+                            ...item.translations.map(
+                                (translation) =>
+                                    translation.modifiedAt?.getTime() ?? 0
+                            )
+                        )
+                    ),
+                    changeFrequency: "monthly",
+                    priority: 0.5,
+                })
+            ),
         ];
     } catch (error) {
         console.error("동적 사이트맵 생성에 실패했습니다.", error);

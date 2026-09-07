@@ -1,25 +1,23 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useSyncExternalStore } from "react";
+import LegacyGlobalError from "@/features/recovery/components/legacyGlobalError";
+import RecoveryAction from "@/features/recovery/components/recoveryAction";
+import { foundationButtonClass } from "@/components/ui/Button";
+import { createTranslator, getMessages } from "@/lib/i18n/messages";
+import {
+    DEFAULT_LOCALE,
+    getPathLocale,
+    localeFromAcceptLanguage,
+    localizePath,
+    stripLocaleFromPath,
+} from "@/lib/i18n/routing";
 import { recordClientError } from "@/lib/observability/client";
+import "./globals.css";
 
-const errorCopy = {
-    ko: {
-        title: "NosLog를 불러오지 못했습니다.",
-        description: "잠시 후 다시 시도해주세요.",
-        retry: "다시 시도",
-    },
-    ja: {
-        title: "NosLogを読み込めませんでした。",
-        description: "しばらくしてからもう一度お試しください。",
-        retry: "再試行",
-    },
-    en: {
-        title: "Could Not Load NosLog",
-        description: "Please try again in a moment.",
-        retry: "Try Again",
-    },
-} as const;
+const subscribe = () => () => {};
+const serverPath = () => null;
+const browserPath = () => window.location.pathname;
 
 export default function GlobalError({
     error,
@@ -28,38 +26,68 @@ export default function GlobalError({
     error: Error & { digest?: string };
     reset: () => void;
 }) {
-    const [locale, setLocale] = useState<keyof typeof errorCopy>("en");
-
-    useEffect(() => {
-        recordClientError(error, "global-error-boundary");
-        const documentLocale = document.documentElement.lang;
-        // 전역 오류 경계는 LocaleProvider 밖에 있어 문서 언어를 마운트 후 반영함
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setLocale(
-            documentLocale === "ko" || documentLocale === "ja"
-                ? documentLocale
-                : "en"
-        );
-    }, [error]);
-    const copy = errorCopy[locale];
-
+    // A failed root cannot supply locale through providers. Until the browser
+    // route is known, render the language-neutral identity only, never English
+    // copy that is replaced after paint on Korean or Japanese routes.
+    const path = useSyncExternalStore(subscribe, browserPath, serverPath);
+    const locale =
+        path === null
+            ? DEFAULT_LOCALE
+            : (getPathLocale(path) ??
+              localeFromAcceptLanguage(navigator.languages.join(",")));
+    const t = createTranslator(getMessages(locale));
+    useEffect(() => recordClientError(error, "global-error-boundary"), [error]);
+    const bare = path ? stripLocaleFromPath(path) : "";
+    if (
+        /^\/admin(?:\/|$)/.test(bare) ||
+        /^\/music\/[^/]+\/[^/]+\/pattern(?:\/|$)/.test(bare)
+    ) {
+        return <LegacyGlobalError error={error} reset={reset} />;
+    }
     return (
-        <html lang={locale}>
-            <body className="bg-bg text-text-primary">
-                <main className="flex min-h-screen flex-col items-center justify-center gap-4 px-6 text-center">
-                    <div>
-                        <h1 className="text-title">{copy.title}</h1>
-                        <p className="text-text-secondary mt-2 text-sm">
-                            {copy.description}
-                        </p>
+        <html lang={locale} data-theme="dark">
+            <head>
+                <meta
+                    name="viewport"
+                    content="width=device-width, initial-scale=1"
+                />
+                <meta name="robots" content="noindex" />
+                <title>
+                    {path === null
+                        ? "NosLog"
+                        : `${t("recovery.fatalTitle")} | NosLog`}
+                </title>
+            </head>
+            <body className="noslog-ui nl-recovery-minimal">
+                <main id="main-content">
+                    <div className="nl-recovery-minimal__content">
+                        <p className="nl-page-title">NosLog</p>
+                        {path !== null ? (
+                            <>
+                                <h1 className="nl-page-title">
+                                    {t("recovery.fatalTitle")}
+                                </h1>
+                                <p className="nl-body nl-muted">
+                                    {t("common.retryLater")}
+                                </p>
+                                <div className="nl-recovery__actions">
+                                    <RecoveryAction
+                                        label={t("common.retry")}
+                                        busyLabel={t("recovery.retrying")}
+                                    />
+                                    {/* Full-document navigation remains independent of a failed router. */}
+                                    <a
+                                        href={localizePath("/", locale)}
+                                        className={foundationButtonClass({
+                                            variant: "secondary",
+                                        })}
+                                    >
+                                        {t("common.goHome")}
+                                    </a>
+                                </div>
+                            </>
+                        ) : null}
                     </div>
-                    <button
-                        type="button"
-                        onClick={reset}
-                        className="border-border bg-surface text-text-primary h-10 cursor-pointer rounded-md border px-4 text-sm font-semibold"
-                    >
-                        {copy.retry}
-                    </button>
                 </main>
             </body>
         </html>

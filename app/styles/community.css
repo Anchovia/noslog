@@ -248,6 +248,12 @@
     flex-direction: column;
     gap: var(--nl-spacing-12);
 }
+.noslog-ui .nl-vote-aggregation {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
+    min-width: 0;
+}
 .noslog-ui .nl-vote-contribution__value {
     display: flex;
     gap: var(--nl-spacing-8);

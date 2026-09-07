@@ -9,6 +9,7 @@ import { updateGrade } from "@/lib/services/user/updateGrade";
 import { updatePlayData } from "@/lib/services/user/updatePlayData";
 import { updatePlayerProfile } from "@/lib/services/user/updatePlayerProfile";
 import { updateRecentPlay } from "@/lib/services/user/updateRecentPlay";
+import { recordProfileRatings } from "@/features/profile/server/profileRatingHistoryService";
 import { NextRequest, NextResponse } from "next/server";
 import { revalidateTag } from "next/cache";
 import { z } from "zod";
@@ -423,6 +424,7 @@ export async function POST(request: NextRequest) {
                     syncId
                 );
                 await updateGrade(user.id);
+                await recordProfileRatings(user.id, syncId);
                 await updateDummy();
             }
         }

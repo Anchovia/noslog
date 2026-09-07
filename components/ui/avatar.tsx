@@ -12,12 +12,14 @@ export default function Avatar({
     size = 44,
     className,
     fallbackName,
+    fallbackInitial,
 }: {
     src?: string | null;
     alt?: string;
     size?: number;
     className?: string;
     fallbackName?: string | null;
+    fallbackInitial?: string;
 }) {
     const [failedSource, setFailedSource] = useState<string | null>(null);
 
@@ -39,9 +41,10 @@ export default function Avatar({
                     height={size}
                     onError={() => setFailedSource(src)}
                 />
-            ) : fallbackName?.trim() ? (
+            ) : fallbackInitial || fallbackName?.trim() ? (
                 <span className="nl-metadata" aria-hidden>
-                    {Array.from(fallbackName.trim())[0].toLocaleUpperCase()}
+                    {fallbackInitial ??
+                        Array.from(fallbackName!.trim())[0].toLocaleUpperCase()}
                 </span>
             ) : (
                 <User aria-hidden />

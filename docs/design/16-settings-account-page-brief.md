@@ -398,7 +398,13 @@ Counts make the consequence tangible; they must not become a dense database inve
 
 #### Verification and Confirmation
 
-1. Require recent Discord OAuth authentication before final deletion.
+1. Require recent Discord OAuth authentication before final deletion. **Approved
+   implementation clarification — 2026-09-07:** the user selected a fixed
+   ten-minute validity window measured from successful completion of the
+   deletion-specific Discord verification. Once ten minutes have elapsed, require
+   verification again before accepting the final deletion request. Ordinary page
+   activity does not extend this window; its expiry does not log the user out or
+   trigger deletion.
 2. If Discord authentication is unavailable, do not weaken verification; provide the
    approved Privacy contact/recovery route.
 3. Require typing one localized exact confirmation phrase supplied by the interface.

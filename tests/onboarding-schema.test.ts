@@ -28,16 +28,19 @@ describe("온보딩 스키마", () => {
         expect(result.error.flatten().fieldErrors.username).toEqual([message]);
     });
 
-    it("닉네임을 저장 형식으로 정규화한다", () => {
+    it("닉네임의 바깥 공백만 정리하고 입력한 대소문자를 보존한다", () => {
         expect(
             schemaFor("ko").parse({ username: " carol ", country: "ko-KR" })
-        ).toEqual({ username: "CAROL", country: "ko-KR" });
+        ).toEqual({ username: "carol", country: "ko-KR" });
     });
 
     it.each([
         ["", "ko-KR"],
         ["a".repeat(21), "ko-KR"],
         ["carol", "unknown"],
+        ["\tcarol", "ko-KR"],
+        ["carol\n", "ja-JP"],
+        ["ca\u0000rol", "global"],
     ])("경계 밖 입력을 거부한다", (username, country) => {
         expect(schemaFor("en").safeParse({ username, country }).success).toBe(
             false

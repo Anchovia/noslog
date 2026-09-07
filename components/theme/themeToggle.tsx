@@ -5,6 +5,7 @@ import { useSyncExternalStore } from "react";
 
 import { Switch } from "@/components/ui/Switch";
 import { useTranslations } from "@/components/i18n/localeProvider";
+import { themeSwitchingEnabled } from "@/lib/themePolicy";
 
 type Theme = "dark" | "light";
 
@@ -12,12 +13,14 @@ const THEME_STORAGE_KEY = "noslog-theme";
 const THEME_CHANGE_EVENT = "noslog-theme-change";
 
 function readTheme(): Theme {
+    if (!themeSwitchingEnabled) return "dark";
     return document.documentElement.dataset.theme === "light"
         ? "light"
         : "dark";
 }
 
 function applyTheme(theme: Theme) {
+    if (!themeSwitchingEnabled) return;
     document.documentElement.dataset.theme = theme;
     try {
         localStorage.setItem(THEME_STORAGE_KEY, theme);
@@ -30,6 +33,7 @@ function applyTheme(theme: Theme) {
 function subscribe(onStoreChange: () => void) {
     const handleThemeChange = () => onStoreChange();
     const handleStorage = (event: StorageEvent) => {
+        if (!themeSwitchingEnabled) return;
         if (event.key !== THEME_STORAGE_KEY) return;
 
         document.documentElement.dataset.theme =
@@ -82,6 +86,7 @@ export function ThemeSetting() {
                     </span>
                 </span>
                 <Switch
+                    disabled={!themeSwitchingEnabled}
                     checked={isLight}
                     onCheckedChange={(checked) =>
                         setTheme(checked ? "light" : "dark")

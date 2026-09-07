@@ -1,0 +1,279 @@
+.noslog-ui .nl-exams {
+    display: grid;
+    gap: var(--nl-spacing-24);
+    padding-block: var(--nl-spacing-24) var(--nl-spacing-48);
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+.noslog-ui .nl-exams__identity {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
+    min-width: 0;
+}
+.noslog-ui .nl-exams__content,
+.noslog-ui .nl-exam-navigation,
+.noslog-ui .nl-exams__personal {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-24);
+    min-width: 0;
+}
+.noslog-ui .nl-exam-head {
+    background: var(--nl-surface-surface);
+    border-radius: var(--nl-radius-container);
+    padding: var(--nl-spacing-16);
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-16);
+}
+.noslog-ui .nl-exam-facts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--nl-spacing-16);
+}
+.noslog-ui .nl-exam-facts > div {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-4);
+}
+.noslog-ui .nl-exam-select {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-exam-select__trigger {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+.noslog-ui.nl-exam-select__popup {
+    background: var(--nl-surface-overlay);
+    border: 1px solid var(--nl-border-default);
+    border-radius: var(--nl-radius-overlay);
+    box-shadow: var(--nl-elevation-overlay);
+    color: var(--nl-content-default);
+    z-index: 70;
+    width: var(--radix-select-trigger-width);
+    max-height: var(--radix-select-content-available-height);
+    overflow: auto;
+    padding: var(--nl-spacing-4);
+}
+.noslog-ui .nl-exam-select__option,
+.noslog-ui .nl-exam-rail button {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--nl-spacing-12);
+    min-height: 44px;
+    padding: var(--nl-spacing-8) var(--nl-spacing-12);
+    border-radius: var(--nl-radius-control);
+    text-align: start;
+}
+.noslog-ui .nl-exam-select__option[data-state="checked"],
+.noslog-ui .nl-exam-rail [aria-current="true"] {
+    background: var(--nl-interaction-menu-set);
+    font-weight: 600;
+}
+.noslog-ui .nl-exam-select__option[data-highlighted] {
+    box-shadow: inset 0 0 0 1px var(--nl-focus-ring);
+    outline: none;
+}
+.noslog-ui .nl-exam-rail {
+    display: none;
+}
+.noslog-ui .nl-exam-stages {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-12);
+}
+.noslog-ui .nl-exam-stage + .nl-exam-stage::before {
+    content: "";
+    display: block;
+    width: 2px;
+    height: var(--nl-spacing-16);
+    margin-inline-start: var(--nl-spacing-16);
+    background: var(--nl-border-strong);
+}
+.noslog-ui .nl-exam-stage__row {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-12);
+    padding-inline-end: var(--nl-spacing-16);
+    width: 100%;
+    min-height: 64px;
+    border-radius: var(--nl-radius-container);
+    background: var(--nl-surface-surface);
+    text-align: start;
+}
+.noslog-ui .nl-exam-stage__jacket {
+    width: 64px;
+    height: 64px;
+    flex-shrink: 0;
+    border-radius: var(--nl-radius-container) 0 0 var(--nl-radius-container);
+}
+.noslog-ui .nl-exam-stage__identity {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-4);
+    padding-block: var(--nl-spacing-8);
+}
+.noslog-ui .nl-exam-stage__head,
+.noslog-ui .nl-exam-stage__charts {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+    min-width: 0;
+}
+.noslog-ui .nl-exam-stage__head {
+    align-items: flex-start;
+}
+.noslog-ui .nl-exam-stage__charts {
+    flex-wrap: wrap;
+    row-gap: 0;
+}
+.noslog-ui .nl-exam-stage__charts > span {
+    white-space: nowrap;
+}
+.noslog-ui .nl-exam-stage__condition {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--nl-spacing-4);
+    flex-shrink: 0;
+    max-width: 35%;
+    text-align: end;
+}
+.noslog-ui .nl-exam-chart-options {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-exam-chart-options a {
+    width: 100%;
+}
+.noslog-ui .nl-exam-practice {
+    background: var(--nl-surface-surface);
+    border-radius: var(--nl-radius-container);
+    padding: 0;
+}
+.noslog-ui .nl-exam-practice > summary {
+    min-height: 48px;
+    padding: var(--nl-spacing-12) var(--nl-spacing-16);
+}
+.noslog-ui .nl-exam-practice > .nl-disclosure__body {
+    padding: 0 var(--nl-spacing-16) var(--nl-spacing-16);
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-12);
+}
+.noslog-ui .nl-exam-practice__rows {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-12);
+}
+.noslog-ui .nl-exam-practice__rows > div {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-exam-practice__rows dd:last-child:not(:nth-child(2)) {
+    margin-inline-start: auto;
+}
+.noslog-ui .nl-exam-practice__total {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--nl-spacing-8);
+    border-top: 1px solid var(--nl-border-divider);
+    padding-top: var(--nl-spacing-12);
+}
+@container page (min-width: 672px) {
+    .noslog-ui .nl-exam-navigation > .nl-segments,
+    .noslog-ui .nl-exam-select {
+        max-width: 358px;
+    }
+}
+@container page (min-width: 960px) {
+    .noslog-ui .nl-exams {
+        grid-template-columns: 292px minmax(0, 1fr);
+        grid-template-rows: auto 1fr;
+        column-gap: var(--nl-spacing-16);
+    }
+    .noslog-ui .nl-exams__identity {
+        grid-column: 2;
+        grid-row: 1;
+    }
+    .noslog-ui .nl-exam-navigation {
+        grid-column: 1;
+        grid-row: 1 / 3;
+        gap: var(--nl-spacing-16);
+    }
+    .noslog-ui .nl-exams__content {
+        grid-column: 2;
+        grid-row: 2;
+    }
+    .noslog-ui .nl-exam-select {
+        display: none;
+    }
+    .noslog-ui .nl-exam-rail {
+        display: flex;
+        flex-direction: column;
+        background: var(--nl-surface-surface);
+        border-radius: var(--nl-radius-container);
+        padding: var(--nl-spacing-12);
+    }
+    .noslog-ui .nl-exam-facts {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+    .noslog-ui .nl-exams__personal {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: var(--nl-spacing-16);
+        align-items: start;
+    }
+    .noslog-ui .nl-exams__personal > :only-child {
+        grid-column: 1 / -1;
+    }
+    .noslog-ui .nl-exam-proof__choose {
+        align-self: flex-start;
+    }
+}
+.noslog-ui .nl-exam-proof,
+.noslog-ui .nl-exam-proof form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-12);
+    min-width: 0;
+}
+.noslog-ui .nl-exam-proof {
+    background: var(--nl-surface-surface);
+    border-radius: var(--nl-radius-container);
+    padding: var(--nl-spacing-16);
+    overflow-wrap: anywhere;
+}
+.noslog-ui .nl-exam-proof__guidance {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-exam-proof__guidance ul {
+    list-style: disc;
+    padding-inline-start: var(--nl-spacing-16);
+}
+.noslog-ui .nl-exam-proof__preview {
+    display: block;
+    width: 100%;
+    max-height: 360px;
+    object-fit: contain;
+    border-radius: var(--nl-radius-control);
+}
+.noslog-ui .nl-exam-proof__secondary {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--nl-spacing-8);
+}

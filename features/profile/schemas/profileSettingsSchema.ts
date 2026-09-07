@@ -25,10 +25,14 @@ export function createOnboardingSchema(t: Translator) {
     return z.object({
         username: z
             .string()
+            .refine(
+                (value) => !/[\u0000-\u001f\u007f]/.test(value),
+                t("onboarding.nicknameHelp")
+            )
             .trim()
             .min(1, t("onboarding.error.nicknameRequired"))
             .max(20, t("onboarding.error.nicknameMax"))
-            .transform((value) => value.toUpperCase()),
+            .regex(/^[\p{L}\p{M}\p{N} ._-]*$/u, t("onboarding.nicknameHelp")),
         country: z.enum(profileCountrySchema.options, {
             error: t("onboarding.error.countryRequired"),
         }),

@@ -1,6 +1,8 @@
-.noslog-ui.nl-app {
+.noslog-ui {
     --nl-layout-max: 1000px;
     --nl-layout-margin: var(--nl-grid-margin-compact);
+}
+.noslog-ui.nl-app {
     display: flex;
     min-height: 100dvh;
     flex-direction: column;
@@ -244,6 +246,9 @@
     }
 }
 @media (min-width: 672px) {
+    .noslog-ui.nl-recovery-minimal {
+        --nl-layout-margin: var(--nl-grid-margin-intermediate);
+    }
     .noslog-ui .nl-destinations {
         top: 68px;
         right: var(--nl-layout-margin);

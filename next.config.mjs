@@ -16,7 +16,11 @@ const contentSecurityPolicyReportOnly = [
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    allowedDevOrigins: ["127.0.0.1"],
     agentRules: false,
+    outputFileTracingIncludes: {
+        "/profile/*/card": ["./assets/fonts/pretendard-jp/1.3.9/*.ttf"],
+    },
     experimental: {
         staleTimes: {
             dynamic: 3600,

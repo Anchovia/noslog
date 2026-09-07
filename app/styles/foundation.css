@@ -142,6 +142,9 @@ html[data-theme="light"] .noslog-ui,
 .noslog-ui .nl-button:hover {
     background: var(--nl-primary-hover);
 }
+.noslog-ui .nl-button--compact {
+    min-height: 40px;
+}
 .noslog-ui .nl-button:active {
     background: var(--nl-primary-pressed);
     transform: scale(var(--nl-motion-press-scale));
@@ -485,6 +488,11 @@ html[data-theme="light"] .noslog-ui,
     border-radius: var(--nl-radius-control);
     background: var(--nl-surface-sunken);
     animation: nl-pulse 2s ease-in-out infinite;
+}
+.noslog-ui .nl-record-list-skeleton {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
 }
 @keyframes nl-pulse {
     50% {

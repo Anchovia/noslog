@@ -37,11 +37,16 @@ export default function HomeSearch() {
     const [active, setActive] = useState(-1);
     const [capacity, setCapacity] = useState(5);
     const [slowRequest, setSlowRequest] = useState<string | null>(null);
-    const { register, control, setValue, handleSubmit } =
-        useForm<MusicSearchFormValues>({
-            resolver: zodResolver(musicSearchSchema),
-            defaultValues: { search: "" },
-        });
+    const {
+        register,
+        control,
+        setValue,
+        handleSubmit,
+        formState: { isReady },
+    } = useForm<MusicSearchFormValues>({
+        resolver: zodResolver(musicSearchSchema),
+        defaultValues: { search: "" },
+    });
     const value = useWatch({ control, name: "search" }) ?? "";
     const normalized = value.trim();
     const queryKey = `${scope}:${composing ? "" : normalized}`;
@@ -177,6 +182,7 @@ export default function HomeSearch() {
         >
             <SearchField
                 {...registration}
+                disabled={!isReady}
                 ref={(element) => {
                     registration.ref(element);
                     inputRef.current = element;
@@ -218,6 +224,7 @@ export default function HomeSearch() {
                 }}
                 leading={
                     <CompactSelect
+                        disabled={!isReady}
                         value={scope}
                         onValueChange={(next) => {
                             setScope(next);

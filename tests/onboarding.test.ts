@@ -6,7 +6,9 @@ const mocks = vi.hoisted(() => ({
         id: 9 as number | undefined,
         profileCompleted: false as boolean | undefined,
         locale: undefined as "ko" | "ja" | "en" | undefined,
+        onboardingReturnTo: undefined as string | undefined,
         save: vi.fn(),
+        destroy: vi.fn(),
     },
     getSession: vi.fn(),
     userFindUnique: vi.fn(),
@@ -53,6 +55,7 @@ describe("최초 프로필 설정", () => {
         mocks.session.id = 9;
         mocks.session.profileCompleted = false;
         mocks.session.locale = undefined;
+        mocks.session.onboardingReturnTo = undefined;
         mocks.getSession.mockResolvedValue(mocks.session);
         mocks.userFindUnique.mockResolvedValue({
             profile_completed_at: new Date("2026-07-19"),
@@ -64,9 +67,9 @@ describe("최초 프로필 설정", () => {
         await completeOnboarding(onboardingForm());
 
         expect(mocks.userUpdate).toHaveBeenCalledWith({
-            where: { id: 9 },
+            where: { id: 9, profile_completed_at: null },
             data: {
-                username: "CAROL",
+                username: "carol",
                 country: "ko-KR",
                 locale: "ko",
                 profile_completed_at: expect.any(Date),
@@ -81,15 +84,42 @@ describe("최초 프로필 설정", () => {
         await completeOnboarding(onboardingForm("n"));
 
         expect(mocks.userUpdate).toHaveBeenCalledWith({
-            where: { id: 9 },
+            where: { id: 9, profile_completed_at: null },
             data: {
-                username: "N",
+                username: "n",
                 country: "ko-KR",
                 locale: "ko",
                 profile_completed_at: expect.any(Date),
             },
         });
     });
+
+    it("일본 지역을 선택해도 영어 표시와 원래 목적지를 유지한다", async () => {
+        mocks.session.onboardingReturnTo = "/ko/bookmarklet";
+        await completeOnboarding(
+            onboardingForm("Ｎos 한글カナ", "ja-JP", "en")
+        );
+        expect(mocks.userUpdate).toHaveBeenCalledWith({
+            where: { id: 9, profile_completed_at: null },
+            data: expect.objectContaining({
+                username: "Ｎos 한글カナ",
+                country: "ja-JP",
+                locale: "en",
+            }),
+        });
+        expect(mocks.session.locale).toBe("en");
+        expect(mocks.session.onboardingReturnTo).toBeUndefined();
+        expect(mocks.redirect).toHaveBeenCalledWith("/en/bookmarklet");
+    });
+
+    it.each(["hello😀", "name\\nnext", "<script>"])(
+        "허용하지 않은 닉네임 %s을 저장하지 않는다",
+        async (name) => {
+            const result = await completeOnboarding(onboardingForm(name));
+            expect(result?.success).toBe(false);
+            expect(mocks.userUpdate).not.toHaveBeenCalled();
+        }
+    );
 
     it("지원하지 않는 국가는 저장하지 않는다", async () => {
         await expect(
@@ -122,6 +152,7 @@ describe("최초 프로필 설정", () => {
         await expect(completeOnboarding(onboardingForm())).resolves.toEqual({
             success: false,
             message: "이미 사용 중인 닉네임입니다.",
+            fieldErrors: { username: ["이미 사용 중인 닉네임입니다."] },
         });
         expect(mocks.logServerError).not.toHaveBeenCalled();
     });
@@ -170,6 +201,18 @@ describe("최초 프로필 설정", () => {
             "http://localhost:3000/onboarding"
         );
     });
+    it("삭제된 계정의 세션을 해제해 로그인과 온보딩 사이의 반복 이동을 막는다", async () => {
+        mocks.session.locale = "ja";
+        mocks.userFindUnique.mockResolvedValue(null);
+        const response = await completeOnboardingSession(
+            new NextRequest("http://localhost:3000/onboarding/complete")
+        );
+        expect(mocks.session.destroy).toHaveBeenCalledOnce();
+        expect(mocks.session.save).not.toHaveBeenCalled();
+        expect(response.headers.get("location")).toBe(
+            "http://localhost:3000/ja/login?error=session_expired"
+        );
+    });
 
     it("완료된 프로필 상태를 Route Handler에서 세션에 반영한다", async () => {
         const response = await completeOnboardingSession(
@@ -178,7 +221,9 @@ describe("최초 프로필 설정", () => {
 
         expect(mocks.session.profileCompleted).toBe(true);
         expect(mocks.session.save).toHaveBeenCalledOnce();
-        expect(response.headers.get("location")).toBe("http://localhost:3000/");
+        expect(response.headers.get("location")).toBe(
+            "http://localhost:3000/ko"
+        );
     });
 
     it("DB 프로필이 미완료라면 설정 화면으로 되돌린다", async () => {
@@ -190,7 +235,7 @@ describe("최초 프로필 설정", () => {
 
         expect(mocks.session.save).not.toHaveBeenCalled();
         expect(response.headers.get("location")).toBe(
-            "http://localhost:3000/onboarding"
+            "http://localhost:3000/ko/onboarding"
         );
     });
 });

@@ -24,7 +24,7 @@ const routes = [
 
 test.beforeEach(({}, testInfo) => {
     test.skip(
-        testInfo.project.name !== "desktop-chromium",
+        !testInfo.project.name.startsWith("desktop-"),
         "This matrix explicitly covers mobile through ultrawide viewports."
     );
 });
@@ -40,8 +40,11 @@ for (const locale of ["ko", "ja", "en"] as const) {
             for (const width of widths) {
                 await page.setViewportSize({ width, height: 900 });
                 const layout = await page.evaluate(() => {
-                    const box = (selector: string) => {
-                        const element = document.querySelector(selector)!;
+                    const box = (selector: string | Element) => {
+                        const element =
+                            typeof selector === "string"
+                                ? document.querySelector(selector)!
+                                : selector;
                         const rect = element.getBoundingClientRect();
                         const style = getComputedStyle(element);
                         return {
@@ -59,8 +62,14 @@ for (const locale of ["ko", "ja", "en"] as const) {
                         headerSurface: box(".nl-header"),
                         footerSurface: box(".nl-footer"),
                         content: box(".nl-main__content"),
+                        // React streaming inserts hidden containers before the visible page.
                         pageRoot: box(
-                            ".nl-main__content > :not(script):not(style)"
+                            Array.from(
+                                document.querySelector(".nl-main__content")!
+                                    .children
+                            ).find(
+                                (element) => element.getClientRects().length > 0
+                            )!
                         ),
                     };
                 });

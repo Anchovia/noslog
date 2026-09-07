@@ -27,9 +27,7 @@ export default function CommunityTierVotes({
         if (params.get("source") !== "tiers") return null;
         const requested = `${params.get("mode")}-${params.get("goal")}`;
         return data.scopes.some(
-            (scope) =>
-                `${scope.mode}-${scope.goal}` === requested &&
-                scope.average !== null
+            (scope) => `${scope.mode}-${scope.goal}` === requested
         )
             ? requested
             : null;
@@ -85,43 +83,69 @@ export default function CommunityTierVotes({
                                                 <span className="nl-metric-value">
                                                     {scope.average.toFixed(1)}
                                                 </span>
-                                                {expanded ? (
-                                                    <ChevronDown aria-hidden />
-                                                ) : (
-                                                    <ChevronRight aria-hidden />
-                                                )}
                                             </>
+                                        )}
+                                        {expanded ? (
+                                            <ChevronDown aria-hidden />
+                                        ) : (
+                                            <ChevronRight aria-hidden />
                                         )}
                                     </span>
                                 </>
                             );
                             return (
                                 <Fragment key={key}>
-                                    {scope.average === null ? (
-                                        <div className="nl-vote-row">
-                                            {contents}
-                                        </div>
-                                    ) : (
-                                        <button
-                                            type="button"
-                                            className="nl-vote-row"
-                                            aria-expanded={expanded}
-                                            aria-controls={`${id}-${key}-distribution`}
-                                            onClick={() =>
-                                                setSelected(
-                                                    expanded ? null : key
-                                                )
-                                            }
-                                        >
-                                            {contents}
-                                        </button>
-                                    )}
+                                    <button
+                                        type="button"
+                                        className="nl-vote-row"
+                                        aria-expanded={expanded}
+                                        aria-controls={`${id}-${key}-distribution`}
+                                        onClick={() =>
+                                            setSelected(expanded ? null : key)
+                                        }
+                                    >
+                                        {contents}
+                                    </button>
                                     {expanded ? (
                                         <div id={`${id}-${key}-distribution`}>
-                                            <TierVoteDistribution
-                                                key={key}
-                                                scope={scope}
-                                            />
+                                            {scope.average === null ? (
+                                                <div className="nl-vote-aggregation">
+                                                    <p className="nl-body-secondary nl-muted">
+                                                        {t(
+                                                            "community.aggregationHelp"
+                                                        )}
+                                                        {accountId &&
+                                                        data.canEvaluate &&
+                                                        scope.eligible &&
+                                                        scope.ownVote ===
+                                                            null ? (
+                                                            <>
+                                                                <br />
+                                                                {t(
+                                                                    "community.firstVoteHelp",
+                                                                    {
+                                                                        scope: `${mode === "basic" ? "Basic" : "Recital"} ${t(`community.goal.${scope.goal}`)}`,
+                                                                    }
+                                                                )}
+                                                            </>
+                                                        ) : null}
+                                                    </p>
+                                                    <TierVoteContribution
+                                                        chartId={chartId}
+                                                        scope={scope}
+                                                        accountId={accountId}
+                                                        hasRecord={
+                                                            data.canEvaluate
+                                                        }
+                                                        returnTo={returnTo}
+                                                    />
+                                                </div>
+                                            ) : (
+                                                <TierVoteDistribution
+                                                    key={key}
+                                                    scope={scope}
+                                                />
+                                            )}
                                         </div>
                                     ) : null}
                                 </Fragment>
@@ -129,7 +153,7 @@ export default function CommunityTierVotes({
                         })}
                 </section>
             ))}
-            {active ? (
+            {active && active.average !== null ? (
                 <TierVoteContribution
                     key={selected}
                     chartId={chartId}

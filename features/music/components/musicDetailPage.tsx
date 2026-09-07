@@ -19,6 +19,7 @@ import MusicCommunityPanel from "./musicCommunityPanel";
 import ActionButton from "@/components/ui/actionButton";
 import AdaptiveAreaSwitcher from "@/components/ui/adaptiveAreaSwitcher";
 import ResultState from "@/components/ui/resultState";
+import { StatusMessage } from "@/components/ui/statusMessage";
 import {
     musicDetailQueryOptions,
     musicDetailQueryRootKey,
@@ -168,6 +169,18 @@ export default function MusicDetailPage({
                         }
                     )}
                 </span>
+                {data && query.isError ? (
+                    <StatusMessage
+                        severity="danger"
+                        role="alert"
+                        title={t("detail.error")}
+                        action={
+                            <ActionButton onClick={() => void query.refetch()}>
+                                {t("common.retry")}
+                            </ActionButton>
+                        }
+                    />
+                ) : null}
                 {!data ? (
                     query.isError ? (
                         <ResultState

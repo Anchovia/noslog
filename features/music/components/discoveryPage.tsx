@@ -24,7 +24,7 @@ import { SegmentedControl } from "@/components/ui/segmentedControl";
 import ResultState from "@/components/ui/resultState";
 import DiscoverySortControl from "@/features/music/components/discoverySortControl";
 import useDebouncedValue from "@/lib/hooks/useDebouncedValue";
-import useMediaQuery from "@/lib/hooks/useMediaQuery";
+import useElementWidth from "@/lib/hooks/useElementWidth";
 import {
     discoveryOptions,
     discoveryPreviewOptions,
@@ -75,8 +75,11 @@ export default function DiscoveryPage({
                   sort: parsed.sort === "recent" ? undefined : parsed.sort,
               };
     }, [serialized, accountId]);
-    const wide = useMediaQuery("(min-width: 1216px)");
+    const { ref, width } = useElementWidth<HTMLDivElement>();
+    const wide = width >= 1216;
     const [open, setOpen] = useState(false);
+    const summaryRef = useRef<HTMLParagraphElement>(null);
+    const focusCommittedSummary = useRef(false);
     const [draft, setDraft] = useState(query);
     const [rangeDraft, setRangeDraft] = useState<DiscoveryQuery | null>(null);
     const [slowKey, setSlowKey] = useState<string | null>(null);
@@ -252,7 +255,7 @@ export default function DiscoveryPage({
     );
 
     return (
-        <PageContainer className="nl-discovery">
+        <PageContainer ref={ref} className="nl-discovery">
             <header className="nl-discovery__heading">
                 <h1 className="nl-page-title">
                     {t(
@@ -379,12 +382,20 @@ export default function DiscoveryPage({
                                 <FullScreenDialog
                                     open={open}
                                     onOpenChange={handleOpen}
+                                    onCloseAutoFocus={(event) => {
+                                        if (!focusCommittedSummary.current)
+                                            return;
+                                        event.preventDefault();
+                                        focusCommittedSummary.current = false;
+                                        summaryRef.current?.focus();
+                                    }}
                                     title={t("discovery.filterSort")}
                                     trigger={filterTrigger}
                                     footer={
                                         <ActionButton
                                             disabled={!validDraft}
                                             onClick={() => {
+                                                focusCommittedSummary.current = true;
                                                 commit(draft);
                                                 setOpen(false);
                                             }}
@@ -424,7 +435,11 @@ export default function DiscoveryPage({
                         )}
                     </div>
                     {!wide ? (
-                        <p className="nl-body-secondary nl-muted">
+                        <p
+                            ref={summaryRef}
+                            tabIndex={-1}
+                            className="nl-discovery__summary nl-body-secondary nl-muted"
+                        >
                             {summary} ·{" "}
                             {t(`discovery.sort.${getDiscoverySort(query)}`)}
                         </p>
@@ -482,9 +497,12 @@ export default function DiscoveryPage({
                                 action={
                                     <ActionButton
                                         variant="secondary"
-                                        onClick={() =>
-                                            void collection.refetch()
-                                        }
+                                        onClick={async () => {
+                                            const result =
+                                                await collection.refetch();
+                                            if (!result.isError)
+                                                summaryRef.current?.focus();
+                                        }}
                                     >
                                         {t("common.retry")}
                                     </ActionButton>

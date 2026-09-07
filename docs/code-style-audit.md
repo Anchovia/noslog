@@ -1,5 +1,34 @@
 # Code-style migration audit
 
+## NosLog 2.0 implementation follow-up — 2026-09-07
+
+This later implementation scope is separate from the historical maintenance audit
+below. The user's authorized redesign retains the same code-style conventions.
+P10 category orchestration now lives under `features/settings/`, with thin route
+and action entries, shared Zod/RHF forms and server-owned authorization. P14 public
+queries and views, P15 policy content/schema/rendering, and P16 model/PNG service
+are feature-owned. The binary profile-card response remains a binary protocol,
+not a JSON `ApiResponse`.
+
+P10 and P14 data-loading boundaries are feature-owned and reuse the existing
+layout, skeleton and grid primitives. Home's hydration guard uses React Hook
+Form's existing `isReady` state rather than a separate readiness store or timer.
+
+The existing Account/deletion route remains reachable pending the new recent-auth
+decision. This is a retained compatibility path, not completed P10 Account work.
+The share dialog was moved to its feature; other legacy profile candidates remain
+retained. No unused-file warning independently authorizes deletion. Chart viewer,
+editor and administrator source directories have no changes in the current diff.
+The legacy viewer shell check passes, but actual renderer/editor execution cannot
+be verified without a published local chart; the local account has no Admin access.
+These runtime limitations remain explicit in the evidence log.
+
+Current implementation verification and remaining caveats are maintained in
+[the implementation evidence log](./noslog-v2-implementation-verification.md).
+The dated results below describe their historical maintenance scopes only.
+
+## Historical maintenance baseline
+
 Audit date: 2026-09-05. Baseline: `be2ab52` on `dev`.
 
 ## Scope and meaning

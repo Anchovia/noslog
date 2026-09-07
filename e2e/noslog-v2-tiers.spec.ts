@@ -1,5 +1,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
+import { reviewThemes } from "./helpers";
 import type { Page } from "@playwright/test";
 import type {
     TierBrowserBand,
@@ -133,8 +134,7 @@ async function prepare(
         });
     });
     await page.goto(`/${locale}/tiers?goal=fc&level=1`);
-    if (page.viewportSize()!.width >= 1056)
-        await expect(page.locator(".nl-tier-rail")).toBeVisible();
+    await expect(page.locator(".nl-tier-rail")).toHaveCount(0);
     await page.locator(".nl-tier-applied").click();
     await page.locator(".nl-tiers select").selectOption("s");
     if (failSummary)
@@ -201,25 +201,29 @@ test("stages all three filter groups, cancels ranges, and commits once", async (
     await expect(page.locator(".nl-tier-band")).toHaveCount(3);
 });
 
-test("wide filters apply immediately and empty selection removes only its constraint", async ({
+test("Desktop bounded filters commit explicitly and clearing a constraint restores results", async ({
     page,
 }) => {
-    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.setViewportSize({ width: 1470, height: 900 });
     await prepare(page);
-    const rail = page.getByRole("complementary", { name: "서열표 조건" });
-    await rail.getByRole("button", { name: "Real", exact: true }).click();
-    await expect(page).toHaveURL(/difficulty=Real/);
-    await expect(page.locator(".nl-tier-results > [role=status]")).toHaveText(
-        "1곡"
-    );
-    await rail.getByRole("button", { name: "12", exact: true }).click();
+    await expect(page.locator(".nl-tier-rail")).toHaveCount(0);
     await expect(
-        page.getByText("이 조건에 해당하는 채보가 없습니다.", { exact: true })
+        page.getByRole("checkbox", { name: "상세 보기" })
     ).toBeVisible();
-    await rail.getByRole("button", { name: "12", exact: true }).click();
-    await expect(page).not.toHaveURL(/level=/);
+    await page.getByRole("button", { name: "필터", exact: true }).click();
+    const dialog = page.getByRole("dialog", { name: "서열표 조건" });
+    await dialog.getByRole("button", { name: "Real", exact: true }).click();
+    await expect(page).not.toHaveURL(/difficulty=Real/);
+    await dialog
+        .getByRole("button", { name: "결과 1개 보기", exact: true })
+        .click();
+    await expect(page).toHaveURL(/difficulty=Real/);
     await expect(page.locator(".nl-tier-card")).toHaveCount(1);
-    await expect(page.getByRole("dialog")).toHaveCount(0);
+    await page
+        .getByRole("button", { name: "Real 조건 해제", exact: true })
+        .click();
+    await expect(page).not.toHaveURL(/difficulty=/);
+    await expect(page.locator(".nl-tier-card")).toHaveCount(18);
 });
 
 test("detailed cards keep square jackets and separate score rank from combo", async ({
@@ -415,7 +419,7 @@ test("band failures stay local and retry without losing the selected scope", asy
 });
 
 for (const locale of ["ko", "ja", "en"])
-    for (const theme of ["dark", "light"] as const) {
+    for (const theme of reviewThemes) {
         test(`${locale} ${theme} reflows compact and detailed cards at six widths`, async ({
             page,
         }, testInfo) => {
@@ -440,14 +444,18 @@ for (const locale of ["ko", "ja", "en"])
                     .setChecked(detailed);
                 for (const width of [320, 390, 768, 1024, 1280, 1600]) {
                     await page.setViewportSize({ width, height: 900 });
-                    if (width >= 1056)
-                        await expect(
-                            page.locator(".nl-tier-rail")
-                        ).toBeVisible();
-                    else
-                        await expect(page.locator(".nl-tier-rail")).toHaveCount(
-                            0
-                        );
+                    await expect(page.locator(".nl-tier-rail")).toHaveCount(0);
+                    await expect(
+                        page.getByRole("checkbox", {
+                            name:
+                                locale === "ko"
+                                    ? "상세 보기"
+                                    : locale === "ja"
+                                      ? "詳細表示"
+                                      : "Detailed view",
+                            exact: true,
+                        })
+                    ).toBeVisible();
                     await expect(
                         page.locator(".nl-tier-card").first()
                     ).toBeVisible();
@@ -464,8 +472,8 @@ for (const locale of ["ko", "ja", "en"])
                     expect(size.scroll).toBeLessThanOrEqual(size.width);
                     expect(size.font).toContain("Pretendard JP Variable");
                     const expected = detailed
-                        ? { 320: 2, 390: 2, 768: 3, 1024: 5, 1280: 3, 1600: 3 }
-                        : { 320: 3, 390: 3, 768: 5, 1024: 7, 1280: 5, 1600: 5 };
+                        ? { 320: 2, 390: 2, 768: 3, 1024: 5, 1280: 5, 1600: 5 }
+                        : { 320: 3, 390: 3, 768: 5, 1024: 7, 1280: 7, 1600: 7 };
                     expect(size.columns).toBe(
                         expected[width as keyof typeof expected]
                     );

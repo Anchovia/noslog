@@ -14,6 +14,7 @@ export default function FullScreenDialog({
     children,
     footer,
     trigger,
+    onCloseAutoFocus,
 }: {
     open: boolean;
     onOpenChange: (open: boolean) => void;
@@ -21,6 +22,7 @@ export default function FullScreenDialog({
     children: ReactNode;
     footer: ReactNode;
     trigger: ReactNode;
+    onCloseAutoFocus?: (event: Event) => void;
 }) {
     const t = useTranslations();
     const historyId = useId();
@@ -51,6 +53,7 @@ export default function FullScreenDialog({
                     <Dialog.Content
                         className="nl-full-dialog"
                         aria-describedby={undefined}
+                        onCloseAutoFocus={onCloseAutoFocus}
                     >
                         <div className="nl-full-dialog__header">
                             <Dialog.Title className="nl-component-title">

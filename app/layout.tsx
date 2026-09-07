@@ -23,14 +23,17 @@ const pretendard = localFont({
     display: "swap",
 });
 
-const themeScript = `
+const themeScript =
+    process.env.NEXT_PUBLIC_ENABLE_THEME_SWITCHING === "true"
+        ? `
     try {
         var theme = localStorage.getItem("noslog-theme");
         document.documentElement.dataset.theme = theme === "light" ? "light" : "dark";
     } catch (_) {
         document.documentElement.dataset.theme = "dark";
     }
-`;
+`
+        : 'document.documentElement.dataset.theme = "dark";';
 
 export const metadata: Metadata = {
     metadataBase: new URL(SITE_URL),

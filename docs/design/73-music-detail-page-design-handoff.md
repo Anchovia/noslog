@@ -17,6 +17,12 @@ this document is wrong.
 
 ## 1. Figma node map
 
+Approval update — 2026-09-07: Aggregating community-vote rows can now expand.
+The exact first-vote and eligibility behavior is recorded in document 05, under
+“Scope and Public Aggregate,” and [Z1 approved decision 3326:24041](https://www.figma.com/design/cVbWCxhkfxFfHmAKLCyKrD?node-id=3326-24041).
+C7 `481:974` now includes its disclosure indicator. Earlier non-selectable
+Aggregating descriptions are superseded by this user approval.
+
 ### 1.1 Sections
 
 `16` sections, `111` frames, `9,555` text nodes, `32,558` nodes.

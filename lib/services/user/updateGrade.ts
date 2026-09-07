@@ -96,20 +96,8 @@ export async function updateGrade(user_id: number) {
             });
         }
 
-        const historyAfterUpdate = await tx.userBestGrade.findMany({
-            where: { user_id },
-            select: { id: true },
-            orderBy: [{ besttime: "asc" }, { id: "asc" }],
-        });
-        const expiredHistory = historyAfterUpdate.slice(
-            0,
-            Math.max(0, historyAfterUpdate.length - 30)
-        );
-        if (expiredHistory.length > 0) {
-            await tx.userBestGrade.deleteMany({
-                where: { id: { in: expiredHistory.map(({ id }) => id) } },
-            });
-        }
+        // P6 supports 90-day, yearly and full history. Only duplicate entries
+        // from the same day are removed above; older observations remain intact.
     });
 
     const duration = Date.now() - startTime;

@@ -1,10 +1,16 @@
 import { expect, type Page } from "@playwright/test";
 
+// Match the developer-controlled product flag; preserve Light cases for re-enabling it.
+export const reviewThemes: readonly ("dark" | "light")[] =
+    process.env.NEXT_PUBLIC_ENABLE_THEME_SWITCHING === "true"
+        ? ["dark", "light"]
+        : ["dark"];
+
 export const localeCopy = {
     ko: {
         lang: "ko",
         home: "NosLog",
-        music: "악곡 검색",
+        music: "악곡",
         rankings: "유저 랭킹",
         tiers: "서열표",
         login: "Discord로 계속하기",
@@ -13,7 +19,7 @@ export const localeCopy = {
     ja: {
         lang: "ja",
         home: "NosLog",
-        music: "楽曲検索",
+        music: "楽曲",
         rankings: "ユーザーランキング",
         tiers: "難易度表",
         login: "Discordで続ける",
@@ -22,7 +28,7 @@ export const localeCopy = {
     en: {
         lang: "en",
         home: "NosLog",
-        music: "Song Search",
+        music: "Music",
         rankings: "User Rankings",
         tiers: "Tier Lists",
         login: "Continue with Discord",

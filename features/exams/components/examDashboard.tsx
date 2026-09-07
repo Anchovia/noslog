@@ -1,217 +1,319 @@
 "use client";
 
 import { put } from "@vercel/blob/client";
-import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
-
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useRef, useState } from "react";
 import {
-    discardExamProofUpload,
     requestExamProofUpload,
     submitExamProof,
 } from "@/app/(nevigation)/exams/actions";
-import ExamModeTabs from "@/components/exams/dashboard/examModeTabs";
-import ExamOverview from "@/components/exams/dashboard/examOverview";
-import ExamSelector from "@/components/exams/dashboard/examSelector";
-import ExamSimulation from "@/components/exams/dashboard/examSimulation";
-import ExamStageTable from "@/components/exams/dashboard/examStageTable";
-import {
-    type ExamDashboardItem,
-    type ExamMode,
+import type {
+    ExamDashboardItem,
+    ExamMode,
 } from "@/components/exams/dashboard/examDashboardTypes";
 import {
-    calculateExamSimulation,
     canEnterExam,
     getDefaultExam,
 } from "@/components/exams/dashboard/examDashboardUtils";
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
-import { Switch } from "@/components/ui/Switch";
+import ExamNavigation from "@/features/exams/components/examNavigation";
+import ExamStages from "@/features/exams/components/examStages";
+import ExamPractice from "@/features/exams/components/examPractice";
 import ExamProofUpload from "@/features/exams/components/examProofUpload";
-import {
-    createExamProofSubmissionFormData,
-    createExamProofSubmissionSchema,
-} from "@/features/exams/schemas/examProofSchema";
+import { createExamProofSubmissionFormData } from "@/features/exams/schemas/examProofSchema";
+import { localizePath } from "@/lib/i18n/routing";
+import { getExamIdentity } from "@/features/exams/examIdentity";
 
 export type { ExamDashboardItem } from "@/components/exams/dashboard/examDashboardTypes";
 
-// Figma 기준 검정 선택 상태와 합격 인증 흐름을 하위 영역에 연결함
 export default function ExamDashboard({
     exams,
     isAuthenticated,
+    initialSlug,
 }: {
     exams: ExamDashboardItem[];
     isAuthenticated: boolean;
+    initialSlug?: string;
 }) {
     const locale = useLocale();
     const t = useTranslations();
     const router = useRouter();
-    const submissionSchema = useMemo(
-        () => createExamProofSubmissionSchema(t),
-        [t]
+    const pathname = usePathname();
+    const query = useSearchParams();
+    const slug = pathname.includes("/exams/")
+        ? pathname.split("/exams/")[1]
+        : initialSlug;
+    const explicit = exams.find((exam) => exam.slug === slug);
+    const requestedMode = query.get("mode");
+    const mode = (explicit?.mode ??
+        (requestedMode === "recital" || requestedMode === "event"
+            ? requestedMode
+            : "basic")) as ExamMode;
+    const modeExams = exams
+        .filter((exam) => exam.mode === mode)
+        .sort((a, b) => (b.grade ?? 0) - (a.grade ?? 0) || a.id - b.id);
+    const selected = explicit ?? getDefaultExam(modeExams);
+    const [uploadFeedback, setUploadFeedback] = useState<{
+        examId: number;
+        message: string;
+        requiresLogin?: boolean;
+    } | null>(null);
+    const uploaded = useRef<{ examId: number; file: File; url: string } | null>(
+        null
     );
-    const initialMode: ExamMode = "basic";
-    const [mode, setMode] = useState<ExamMode>(initialMode);
-    const [selectedExamId, setSelectedExamId] = useState<number | null>(
-        () =>
-            getDefaultExam(exams.filter((exam) => exam.mode === initialMode))
-                ?.id ?? null
-    );
-    const [showAdvice, setShowAdvice] = useState(false);
-    const [uploadMessage, setUploadMessage] = useState<string | null>(null);
+    const examLabel = (exam: ExamDashboardItem) =>
+        getExamIdentity(exam, t).label;
+    const examTitle = (exam: ExamDashboardItem) =>
+        getExamIdentity(exam, t).title;
+    const examState = (exam: ExamDashboardItem) =>
+        exam.mode === "event"
+            ? ""
+            : exam.isAchieved
+              ? t("exams.status.completed")
+              : exam.submissionStatus === "pending"
+                ? t("exams.status.pending")
+                : exam.playerGrade === null || !exam.hasSyncedIdentity
+                  ? t("sync.title")
+                  : !canEnterExam(exam)
+                    ? t("exams.insufficient")
+                    : exam.submissionStatus === "rejected"
+                      ? t("exams.status.rejected")
+                      : t("exams.status.available");
 
-    const modeExams = useMemo(
-        () =>
-            exams
-                .filter((exam) => exam.mode === mode)
-                .sort(
-                    (a, b) =>
-                        (b.grade ?? Number.NEGATIVE_INFINITY) -
-                            (a.grade ?? Number.NEGATIVE_INFINITY) || a.id - b.id
-                ),
-        [exams, mode]
-    );
-    const selectedExam =
-        selectedExamId === null
-            ? null
-            : (modeExams.find((exam) => exam.id === selectedExamId) ?? null);
-    const simulation = useMemo(
-        () => (selectedExam ? calculateExamSimulation(selectedExam) : null),
-        [selectedExam]
-    );
-    const uploadDisabled =
-        !isAuthenticated ||
-        !selectedExam ||
-        !canEnterExam(selectedExam) ||
-        selectedExam.isAchieved ||
-        selectedExam.submissionStatus === "pending";
-
-    function changeMode(nextMode: ExamMode) {
-        setMode(nextMode);
-        setSelectedExamId(
-            getDefaultExam(exams.filter((exam) => exam.mode === nextMode))
-                ?.id ?? null
+    function selectExam(exam: ExamDashboardItem) {
+        window.history.pushState(
+            {},
+            "",
+            localizePath(`/exams/${exam.slug}`, locale)
         );
-        setShowAdvice(false);
-        setUploadMessage(null);
     }
-
-    function selectExam(examId: number) {
-        setSelectedExamId(examId);
-        setUploadMessage(null);
+    function changeMode(nextMode: ExamMode) {
+        const next = getDefaultExam(
+            exams
+                .filter((exam) => exam.mode === nextMode)
+                .sort((a, b) => (b.grade ?? 0) - (a.grade ?? 0) || a.id - b.id)
+        );
+        if (next) selectExam(next);
+        else
+            window.history.pushState(
+                {},
+                "",
+                localizePath(`/exams?mode=${nextMode}`, locale)
+            );
     }
-
+    function setAnalysis(open: boolean) {
+        if ((query.get("analysis") === "1") === open) return;
+        const params = new URLSearchParams(window.location.search);
+        if (open) params.set("analysis", "1");
+        else params.delete("analysis");
+        window.history.replaceState(
+            {},
+            "",
+            window.location.pathname + (params.size ? `?${params}` : "")
+        );
+    }
     async function handleProofUpload(file: File) {
-        if (!selectedExam) return;
-
-        setUploadMessage(null);
-        let uploadedBlobUrl: string | null = null;
+        if (!selected) return false;
+        const examId = selected.id;
+        setUploadFeedback(null);
         try {
-            const upload = await requestExamProofUpload(
-                selectedExam.id,
-                file.type,
-                locale
-            );
-            if (!upload.success) {
-                setUploadMessage(upload.message);
-                return;
+            let url =
+                uploaded.current?.examId === examId &&
+                uploaded.current.file === file
+                    ? uploaded.current.url
+                    : null;
+            if (!url) {
+                const upload = await requestExamProofUpload(
+                    examId,
+                    file.type,
+                    locale
+                );
+                if (!upload.success) {
+                    setUploadFeedback({
+                        examId,
+                        message: upload.message,
+                        requiresLogin: upload.requiresLogin,
+                    });
+                    return false;
+                }
+                const blob = await put(upload.pathname, file, {
+                    access: "private",
+                    token: upload.token,
+                    contentType: file.type,
+                });
+                url = blob.url;
+                uploaded.current = { examId, file, url };
             }
-
-            const blob = await put(upload.pathname, file, {
-                access: "private",
-                token: upload.token,
-                contentType: file.type,
-            });
-            uploadedBlobUrl = blob.url;
-
-            const submission = submissionSchema.parse({
-                examId: selectedExam.id,
-                proofImageUrl: blob.url,
-            });
             const result = await submitExamProof(
-                createExamProofSubmissionFormData(submission, locale)
+                createExamProofSubmissionFormData(
+                    { examId, proofImageUrl: url },
+                    locale
+                )
             );
-            setUploadMessage(result.message);
-            if (result.success) router.refresh();
-        } catch {
-            if (uploadedBlobUrl) {
-                await discardExamProofUpload(
-                    selectedExam.id,
-                    uploadedBlobUrl
-                ).catch(() => null);
+            setUploadFeedback({
+                examId,
+                message: result.message,
+                requiresLogin: result.requiresLogin,
+            });
+            if (result.success) {
+                uploaded.current = null;
+                router.refresh();
             }
-            setUploadMessage(t("exams.proof.uploadError"));
+            return result.success;
+        } catch {
+            setUploadFeedback({
+                examId,
+                message: t("exams.proof.uploadError"),
+            });
+            return false;
         }
     }
 
     return (
-        <div className="flex flex-col gap-3">
-            <ExamModeTabs mode={mode} onChange={changeMode} />
-
-            {modeExams.length === 0 ? (
-                <section className="bg-surface rounded-card text-caption flex min-h-52 items-center justify-center px-6 text-center">
-                    {t("exams.empty")}
-                </section>
-            ) : (
-                <>
-                    {mode === "basic" ? (
-                        <section className="bg-surface rounded-card flex items-center justify-between gap-4 p-3">
-                            <div className="min-w-0">
-                                <label
-                                    htmlFor="exam-advice-switch"
-                                    className="text-label font-semibold"
-                                >
-                                    {t("exams.advice")}
-                                </label>
-                                <p className="text-caption mt-0.5">
-                                    {isAuthenticated
-                                        ? t("exams.advice.auth")
-                                        : t("exams.advice.guest")}
-                                </p>
-                            </div>
-                            <Switch
-                                id="exam-advice-switch"
-                                aria-label={t("exams.advice")}
-                                checked={showAdvice}
-                                onCheckedChange={setShowAdvice}
-                                disabled={!isAuthenticated}
-                            />
-                        </section>
-                    ) : null}
-                    <ExamSelector
-                        exams={modeExams}
-                        selectedExamId={selectedExam?.id ?? null}
-                        onChange={selectExam}
-                    >
-                        {selectedExam && simulation ? (
-                            <>
-                                <ExamOverview exam={selectedExam} />
-                                {selectedExam.mode === "basic" && showAdvice ? (
-                                    <ExamSimulation
-                                        exam={selectedExam}
-                                        simulation={simulation}
-                                    />
+        <div className="nl-exams">
+            <header className="nl-exams__identity">
+                <h1 className="nl-page-title">{t("exams.title")}</h1>
+                <p className="nl-body-secondary nl-muted">
+                    {t("exams.description")}
+                </p>
+            </header>
+            <ExamNavigation
+                mode={mode}
+                exams={modeExams}
+                selected={selected}
+                onModeChange={changeMode}
+                onSelect={selectExam}
+                getLabel={examLabel}
+                getState={examState}
+            />
+            <div className="nl-exams__content">
+                {selected ? (
+                    <>
+                        <section
+                            className="nl-exam-head"
+                            aria-labelledby="exam-title"
+                        >
+                            <h2 className="nl-section-title" id="exam-title">
+                                {examTitle(selected)}
+                            </h2>
+                            <dl className="nl-exam-facts">
+                                <div>
+                                    <dt className="nl-control">
+                                        {t("exams.requiredGrade")}
+                                    </dt>
+                                    <dd className="nl-body">
+                                        {selected.requiredGrade
+                                            ? selected.requiredGrade.toLocaleString(
+                                                  locale
+                                              )
+                                            : t("exams.none")}
+                                    </dd>
+                                    {selected.playerGrade !== null &&
+                                    isAuthenticated ? (
+                                        <dd className="nl-metadata nl-muted">
+                                            {t("exams.current", {
+                                                value: selected.playerGrade.toLocaleString(
+                                                    locale
+                                                ),
+                                            })}
+                                        </dd>
+                                    ) : null}
+                                </div>
+                                <div>
+                                    <dt className="nl-control">
+                                        {t("exams.fee")}
+                                    </dt>
+                                    <dd className="nl-body">
+                                        {selected.feeNos.toLocaleString(locale)}{" "}
+                                        nos
+                                    </dd>
+                                </div>
+                                <div>
+                                    <dt className="nl-control">
+                                        {t("exams.reward")}
+                                    </dt>
+                                    {selected.rewards.length ? (
+                                        selected.rewards.map((reward) => (
+                                            <dd
+                                                className="nl-body"
+                                                key={reward.id}
+                                            >
+                                                {(reward.type === "title" ||
+                                                    reward.type === "grade") &&
+                                                selected.grade !== null
+                                                    ? examTitle(selected)
+                                                    : reward.label}
+                                            </dd>
+                                        ))
+                                    ) : (
+                                        <dd className="nl-body">
+                                            {t("exams.none")}
+                                        </dd>
+                                    )}
+                                </div>
+                                {selected.mode !== "event" ? (
+                                    <div>
+                                        <dt className="nl-control">
+                                            {t("exams.certification")}
+                                        </dt>
+                                        <dd className="nl-body">
+                                            {examState(selected)}
+                                        </dd>
+                                    </div>
                                 ) : null}
-                                <ExamStageTable
-                                    stages={simulation.stages}
-                                    scoringType={selectedExam.scoringType}
-                                    showBest={
-                                        selectedExam.mode === "basic" &&
-                                        showAdvice
+                            </dl>
+                        </section>
+                        {selected.scoringType === "recital_point" ? (
+                            <p className="nl-body-secondary nl-muted">
+                                {t("exams.recital.explanation")}
+                            </p>
+                        ) : null}
+                        <ExamStages exam={selected} />
+                        <div className="nl-exams__personal">
+                            {isAuthenticated &&
+                            selected.scoringType === "score" &&
+                            selected.mode !== "recital" ? (
+                                <ExamPractice
+                                    key={`practice-${selected.id}`}
+                                    exam={selected}
+                                    open={query.get("analysis") === "1"}
+                                    onOpenChange={setAnalysis}
+                                />
+                            ) : null}
+                            {selected.mode !== "event" ? (
+                                <ExamProofUpload
+                                    key={`proof-${selected.id}`}
+                                    exam={selected}
+                                    isAuthenticated={isAuthenticated}
+                                    disabled={
+                                        !canEnterExam(selected) ||
+                                        selected.playerGrade === null ||
+                                        !selected.hasSyncedIdentity
+                                    }
+                                    message={
+                                        uploadFeedback?.examId === selected.id
+                                            ? uploadFeedback.message
+                                            : null
+                                    }
+                                    onUpload={handleProofUpload}
+                                    requiresLogin={
+                                        uploadFeedback?.examId ===
+                                            selected.id &&
+                                        uploadFeedback.requiresLogin
+                                    }
+                                    onClearMessage={() =>
+                                        setUploadFeedback(null)
                                     }
                                 />
-                                {selectedExam.mode !== "event" ? (
-                                    <ExamProofUpload
-                                        exam={selectedExam}
-                                        isAuthenticated={isAuthenticated}
-                                        disabled={uploadDisabled}
-                                        message={uploadMessage}
-                                        onUpload={handleProofUpload}
-                                    />
-                                ) : null}
-                            </>
-                        ) : null}
-                    </ExamSelector>
-                </>
-            )}
+                            ) : null}
+                        </div>
+                    </>
+                ) : (
+                    <p className="nl-body-secondary" role="status">
+                        {t("exams.empty")}
+                    </p>
+                )}
+            </div>
         </div>
     );
 }

@@ -1,15 +1,11 @@
-import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { getServerI18n } from "@/lib/i18n/server";
 import { getLocalizedHref } from "@/lib/i18n/routing";
+import AnnouncementRow from "@/features/announcements/components/announcementRow";
+import type { PublicAnnouncement } from "@/features/announcements/schemas/publicAnnouncementSchema";
 
 interface HomeAnnouncementsProps {
-    announcements: {
-        id: number;
-        title: string;
-        content: string;
-        publishedAt: string | null;
-    }[];
+    announcements: PublicAnnouncement[];
 }
 
 export default async function HomeAnnouncements({
@@ -17,11 +13,6 @@ export default async function HomeAnnouncements({
 }: HomeAnnouncementsProps) {
     if (!announcements.length) return null;
     const { locale, t } = await getServerI18n();
-    const formatter = new Intl.DateTimeFormat(locale, {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-    });
     return (
         <section className="nl-home-update nl-home-announcements">
             <div className="nl-home-update__heading">
@@ -33,33 +24,15 @@ export default async function HomeAnnouncements({
                     className="nl-control"
                 >
                     {t("home.allAnnouncements")}
-                    <ChevronRight aria-hidden />
                 </Link>
             </div>
             <ul>
                 {announcements.slice(0, 3).map((announcement) => (
                     <li key={announcement.id}>
-                        <Link
-                            href={getLocalizedHref(
-                                `/announcements/${announcement.id}`,
-                                locale
-                            )}
-                            className="nl-home-announcement"
-                        >
-                            <span className="nl-body">
-                                {announcement.title}
-                            </span>
-                            {announcement.publishedAt ? (
-                                <time
-                                    dateTime={announcement.publishedAt}
-                                    className="nl-metadata nl-muted"
-                                >
-                                    {formatter.format(
-                                        new Date(announcement.publishedAt)
-                                    )}
-                                </time>
-                            ) : null}
-                        </Link>
+                        <AnnouncementRow
+                            announcement={announcement}
+                            locale={locale}
+                        />
                     </li>
                 ))}
             </ul>

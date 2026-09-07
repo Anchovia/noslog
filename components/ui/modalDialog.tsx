@@ -19,6 +19,8 @@ export default function ModalDialog({
     showClose = true,
     width = "compact",
     onCloseAutoFocus,
+    onOpenAutoFocus,
+    className,
 }: {
     open: boolean;
     onOpenChange: (open: boolean) => void;
@@ -30,6 +32,8 @@ export default function ModalDialog({
     showClose?: boolean;
     width?: "compact" | "wide";
     onCloseAutoFocus?: (event: Event) => void;
+    onOpenAutoFocus?: (event: Event) => void;
+    className?: string;
 }) {
     const t = useTranslations();
     const descriptionId = useId();
@@ -42,8 +46,13 @@ export default function ModalDialog({
                 <div className="noslog-ui">
                     <Dialog.Overlay className="nl-dialog-overlay" />
                     <Dialog.Content
-                        className={cn("nl-dialog", `nl-dialog--${width}`)}
+                        className={cn(
+                            "nl-dialog",
+                            `nl-dialog--${width}`,
+                            className
+                        )}
                         onCloseAutoFocus={onCloseAutoFocus}
+                        onOpenAutoFocus={onOpenAutoFocus}
                         aria-describedby={
                             description ? descriptionId : undefined
                         }

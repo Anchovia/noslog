@@ -1,0 +1,198 @@
+.noslog-ui .nl-privacy {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--nl-spacing-24);
+    padding-block: var(--nl-spacing-24) var(--nl-spacing-48);
+    max-width: var(--nl-container-reading);
+    margin-inline: auto;
+    overflow-wrap: anywhere;
+}
+.noslog-ui .nl-privacy-identity {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-privacy-summary {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-12);
+}
+.noslog-ui .nl-privacy-summary__group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-4);
+    align-items: start;
+}
+.noslog-ui .nl-privacy-summary__group + .nl-privacy-summary__group::before {
+    content: "";
+    width: 100px;
+    height: 1px;
+    background: var(--nl-border-divider);
+    margin-bottom: var(--nl-spacing-8);
+}
+.noslog-ui .nl-privacy a {
+    color: var(--nl-content-interactive);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+.noslog-ui .nl-privacy-prose {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-24);
+    min-width: 0;
+}
+.noslog-ui .nl-privacy-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-12);
+}
+.noslog-ui .nl-privacy-section h2 {
+    scroll-margin-top: 84px;
+}
+.noslog-ui .nl-privacy-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-4);
+}
+.noslog-ui .nl-privacy-list {
+    list-style: disc;
+    padding-inline-start: var(--nl-spacing-24);
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-12);
+}
+.noslog-ui .nl-privacy-contact {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: var(--nl-spacing-4) var(--nl-spacing-8);
+}
+.noslog-ui .nl-privacy-contact dt {
+    color: var(--nl-content-subdued);
+    font-size: var(--nl-type-size-14);
+    line-height: var(--nl-type-line-height-20);
+}
+.noslog-ui .nl-privacy-contents__compact {
+    background: var(--nl-surface-surface);
+    border-radius: var(--nl-radius-container);
+}
+.noslog-ui .nl-privacy-contents summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--nl-spacing-12);
+    padding: var(--nl-spacing-12) var(--nl-spacing-16);
+    cursor: pointer;
+    list-style: none;
+}
+.noslog-ui .nl-privacy-contents summary::-webkit-details-marker {
+    display: none;
+}
+.noslog-ui .nl-privacy-contents details[open] summary svg {
+    transform: rotate(180deg);
+}
+.noslog-ui .nl-privacy-contents ol {
+    display: flex;
+    flex-direction: column;
+}
+.noslog-ui .nl-privacy-contents a {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    padding: var(--nl-spacing-12) var(--nl-spacing-16);
+    font-size: var(--nl-type-size-14);
+    line-height: var(--nl-type-line-height-20);
+    text-decoration: none;
+}
+.noslog-ui .nl-privacy-contents a[aria-current] {
+    background: var(--nl-interaction-menu-set);
+    font-weight: 600;
+}
+.noslog-ui .nl-privacy-contents__wide {
+    display: none;
+}
+.noslog-ui .nl-privacy-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--nl-spacing-16);
+}
+.noslog-ui .nl-privacy-history {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-16);
+    padding-block: var(--nl-spacing-16) var(--nl-spacing-48);
+}
+.noslog-ui .nl-privacy-history__back {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--nl-spacing-4);
+    min-height: 44px;
+    align-self: start;
+}
+@container page (min-width: 960px) {
+    .noslog-ui .nl-privacy {
+        max-width: none;
+        grid-template-columns: minmax(0, 1fr) 292px;
+        column-gap: var(--nl-spacing-16);
+    }
+    .noslog-ui .nl-privacy-identity,
+    .noslog-ui .nl-privacy-summary,
+    .noslog-ui .nl-privacy-prose {
+        grid-column: 1;
+    }
+    .noslog-ui .nl-privacy-contents {
+        grid-column: 2;
+        grid-row: 1 / span 3;
+    }
+    .noslog-ui .nl-privacy-contents__compact {
+        display: none;
+    }
+    .noslog-ui .nl-privacy-contents__wide {
+        display: block;
+        position: sticky;
+        top: 84px;
+        max-height: calc(100dvh - 100px);
+        overflow-y: auto;
+    }
+}
+@media print {
+    html:has(.noslog-ui .nl-privacy),
+    body:has(.noslog-ui .nl-privacy) {
+        background: white;
+        color: black;
+    }
+    .noslog-ui .nl-header,
+    .noslog-ui .nl-footer,
+    .noslog-ui .nl-privacy-contents,
+    .noslog-ui .nl-skip-link {
+        display: none !important;
+    }
+    .noslog-ui.nl-app:has(.nl-privacy) {
+        background: white;
+        color: black;
+    }
+    .noslog-ui .nl-privacy {
+        display: block;
+        max-width: none;
+        padding: 0;
+        color: black;
+    }
+    .noslog-ui .nl-privacy-identity,
+    .noslog-ui .nl-privacy-summary {
+        margin-bottom: 24px;
+    }
+    .noslog-ui .nl-privacy .nl-status {
+        border: 1px solid black;
+        background: white;
+        color: black;
+        break-inside: avoid;
+    }
+    .noslog-ui .nl-privacy a,
+    .noslog-ui .nl-privacy .nl-muted,
+    .noslog-ui .nl-privacy-contact dt {
+        color: black;
+    }
+    .noslog-ui .nl-privacy h2,
+    .noslog-ui .nl-privacy h3 {
+        break-after: avoid;
+    }
+}

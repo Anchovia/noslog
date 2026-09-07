@@ -35,9 +35,17 @@ for (const locale of ["ko", "ja", "en"] as const) {
         for (const route of [
             "",
             "/music",
-            "/music/e2e-music-001/expert",
+            "/music/bfdaadfb98501907925ecf41a076108d/expert",
             "/tiers",
             "/rankings",
+            "/profile/1",
+            "/bookmarklet",
+            "/settings?category=experience",
+            "/announcements",
+            "/gamecenter",
+            "/exams",
+            "/bingo",
+            "/privacy",
         ]) {
             await page.goto(`/${locale}${route}`);
             await expect(page.locator(".noslog-ui.nl-app")).toBeVisible();
@@ -71,7 +79,9 @@ for (const locale of ["ko", "ja", "en"] as const) {
                         scrollWidth: document.documentElement.scrollWidth,
                     };
                 }, samples[locale]);
-            expect(result.family).toMatch(/^"Pretendard JP Variable"/);
+            expect(result.family.split(",")[0].replaceAll('"', "").trim()).toBe(
+                "Pretendard JP Variable"
+            );
             expect(result.feature).toBe(locale === "ko" ? '"ss05"' : "normal");
             expect(result.faces).toEqual([
                 { status: "loaded", weight: "45 920" },

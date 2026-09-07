@@ -1,6 +1,7 @@
 import "server-only";
 
 import { revalidatePath } from "next/cache";
+import { getExamEligibility } from "@/features/exams/examEligibility";
 
 import {
     createExamProofSubmissionSchema,
@@ -24,17 +25,16 @@ import {
     getUploadLimitMessage,
     releaseUploadTokenQuota,
 } from "@/lib/uploadRateLimit";
-import { normalizeStoredGrade } from "@/lib/utils";
 
 type ExamProofFieldName = Extract<keyof ExamProofSubmissionFormValues, string>;
 type ExamProofActionResult = ActionResult<
     Record<never, never>,
     ExamProofFieldName
->;
+> & { requiresLogin?: boolean };
 type ExamProofUploadActionResult = ActionResult<{
     pathname: string;
     token: string;
-}>;
+}> & { requiresLogin?: boolean };
 
 async function getAvailableExam(examId: number, userId: number) {
     const exam = await db.exam.findFirst({
@@ -45,6 +45,7 @@ async function getAvailableExam(examId: number, userId: number) {
         select: {
             id: true,
             mode: true,
+            grade: true,
             requiredGrade: true,
             achievements: {
                 where: { userId },
@@ -59,20 +60,28 @@ async function getAvailableExam(examId: number, userId: number) {
         },
     });
 
-    if (!exam || exam.requiredGrade === 0) return exam;
+    if (!exam || (exam.mode !== "basic" && exam.mode !== "recital"))
+        return null;
 
     const user = await db.user.findUnique({
         where: { id: userId },
-        select: { grade_basic: true, grade_recital: true },
+        select: {
+            nostalgia_name: true,
+            grade_basic: true,
+            grade_recital: true,
+            exam_basic: true,
+            exam_recital: true,
+            examAchievements: {
+                select: { exam: { select: { mode: true, grade: true } } },
+            },
+        },
     });
-    const storedGrade =
-        exam.mode === "recital"
-            ? (user?.grade_recital ?? null)
-            : (user?.grade_basic ?? null);
-    const playerGrade = normalizeStoredGrade(storedGrade);
-
-    return playerGrade !== null && playerGrade >= exam.requiredGrade
-        ? exam
+    const eligibility = getExamEligibility(exam, user);
+    if (eligibility === "achieved") {
+        return { ...exam, alreadyAchieved: true };
+    }
+    return eligibility === "eligible"
+        ? { ...exam, alreadyAchieved: false }
         : null;
 }
 
@@ -89,6 +98,7 @@ export async function requestExamProofUpload(
         return {
             success: false as const,
             message: t("onboarding.error.loginRequired"),
+            requiresLogin: true,
         };
     }
 
@@ -118,7 +128,7 @@ export async function requestExamProofUpload(
                 message: t("exams.error.unavailable"),
             };
         }
-        if (exam.achievements.length > 0) {
+        if (exam.alreadyAchieved || exam.achievements.length > 0) {
             return {
                 success: false,
                 message: t("exams.error.alreadyPassed"),
@@ -181,6 +191,7 @@ export async function submitExamProof(
         return {
             success: false as const,
             message: t("onboarding.error.loginRequired"),
+            requiresLogin: true,
         };
     }
 
@@ -217,6 +228,16 @@ export async function submitExamProof(
 
     let exam: Awaited<ReturnType<typeof getAvailableExam>>;
     try {
+        const existing = await db.examSubmission.findFirst({
+            where: { userId, examId, proofImageUrl },
+            select: { status: true },
+        });
+        if (existing && existing.status !== "rejected") {
+            return { success: true, message: t("exams.proof.submitted") };
+        }
+        if (existing?.status === "rejected") {
+            return { success: false, message: t("exams.proof.resubmit") };
+        }
         exam = await getAvailableExam(examId, userId);
     } catch (error) {
         logServerError(error, {
@@ -224,26 +245,22 @@ export async function submitExamProof(
             routePath: "/exams",
             routeType: "action",
         });
-        await deleteBlobIfOwned(proofImageUrl);
         return { success: false, message: t("exams.error.submit") };
     }
 
     if (!exam) {
-        await deleteBlobIfOwned(proofImageUrl);
         return {
             success: false,
             message: t("exams.error.unavailable"),
         };
     }
-    if (exam.achievements.length > 0) {
-        await deleteBlobIfOwned(proofImageUrl);
+    if (exam.alreadyAchieved || exam.achievements.length > 0) {
         return {
             success: false,
             message: t("exams.error.alreadyPassed"),
         };
     }
     if (exam.submissions.length > 0) {
-        await deleteBlobIfOwned(proofImageUrl);
         return { success: false, message: t("exams.error.pending") };
     }
 
@@ -262,6 +279,16 @@ export async function submitExamProof(
         });
 
         await db.$transaction(async (tx) => {
+            // 같은 사용자의 동시 제출을 직렬화하고 잠금 안에서 중복을 다시 확인함
+            await tx.$queryRaw`SELECT id FROM "User" WHERE id = ${userId} FOR UPDATE`;
+            const pending = await tx.examSubmission.findFirst({
+                where: { userId, examId: exam.id, status: "pending" },
+                select: { proofImageUrl: true },
+            });
+            if (pending) {
+                if (pending.proofImageUrl === proofImageUrl) return;
+                throw new Error("Exam submission is already pending");
+            }
             if (rejectedSubmissions.length > 0) {
                 await tx.examSubmission.deleteMany({
                     where: {
@@ -285,7 +312,6 @@ export async function submitExamProof(
             routePath: "/exams",
             routeType: "action",
         });
-        await deleteBlobIfOwned(proofImageUrl);
         return {
             success: false,
             message: t("exams.error.submit"),

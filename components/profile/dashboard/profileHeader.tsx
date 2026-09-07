@@ -10,7 +10,7 @@ import Badge from "@/components/ui/Badge";
 import DiscordIcon from "@/components/ui/DiscordIcon";
 import ProfileAvatar from "@/components/profile/profileAvatar";
 
-import ProfileShareDialog from "./profileShareDialog";
+import ProfileShareDialog from "@/features/profile/components/profileShareDialog";
 import type { ProfileMode, ProfileUser } from "./profileTypes";
 import { formatProfileDate, getProfileCountryCode } from "./profileUtils";
 

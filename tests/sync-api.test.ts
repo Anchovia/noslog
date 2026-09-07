@@ -12,6 +12,7 @@ const mocks = vi.hoisted(() => ({
     musicChartFindMany: vi.fn(),
     processBemaniCatalogUpdates: vi.fn(),
     updateGrade: vi.fn(),
+    recordProfileRatings: vi.fn(),
     updatePlayerProfile: vi.fn(),
     updatePlayData: vi.fn(),
     updateRecentPlay: vi.fn(),
@@ -37,6 +38,9 @@ vi.mock("@/lib/db", () => ({
 }));
 vi.mock("@/lib/services/user/updateGrade", () => ({
     updateGrade: mocks.updateGrade,
+}));
+vi.mock("@/features/profile/server/profileRatingHistoryService", () => ({
+    recordProfileRatings: mocks.recordProfileRatings,
 }));
 vi.mock("@/lib/services/music/catalogSync", () => ({
     processBemaniCatalogUpdates: mocks.processBemaniCatalogUpdates,

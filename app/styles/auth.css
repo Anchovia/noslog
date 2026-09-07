@@ -1,0 +1,139 @@
+.noslog-ui.nl-auth {
+    --nl-auth-width: 358px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
+    color: var(--nl-content-default);
+    background: var(--nl-surface-canvas);
+}
+.noslog-ui .nl-auth-main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-inline: var(--nl-spacing-16);
+}
+.noslog-ui.nl-auth--onboarding .nl-auth-main {
+    padding-block: var(--nl-spacing-48) var(--nl-spacing-24);
+}
+.noslog-ui .nl-auth-column {
+    width: 100%;
+    max-width: var(--nl-auth-width);
+    min-width: 0;
+}
+.noslog-ui .nl-auth-head {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+    text-align: center;
+}
+.noslog-ui .nl-auth-actions {
+    margin-top: var(--nl-spacing-48);
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-12);
+    text-align: center;
+}
+.noslog-ui .nl-auth-discord {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--nl-spacing-8);
+    min-height: 40px;
+    padding: var(--nl-spacing-8) var(--nl-spacing-16);
+    background: var(--nl-brand-discord);
+    color: var(--nl-brand-on-discord);
+    border-radius: var(--nl-radius-control);
+}
+.noslog-ui .nl-auth-discord .nl-icon {
+    width: 20px;
+    height: 20px;
+}
+.noslog-ui .nl-auth-browse {
+    display: block;
+    text-align: center;
+    margin-top: var(--nl-spacing-24);
+}
+.noslog-ui .nl-auth-bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--nl-spacing-12);
+    padding: 0 var(--nl-spacing-16) var(--nl-spacing-24);
+    text-align: center;
+}
+.noslog-ui .nl-auth-language {
+    display: flex;
+    gap: var(--nl-spacing-8);
+    align-items: center;
+    padding: var(--nl-spacing-12);
+    min-height: 44px;
+}
+.noslog-ui .nl-auth-language .nl-icon {
+    width: 16px;
+    height: 16px;
+}
+.noslog-ui .nl-auth-language-menu {
+    min-width: var(--radix-select-trigger-width);
+    max-height: var(--radix-select-content-available-height);
+    overflow: auto;
+    padding: var(--nl-spacing-8);
+    background: var(--nl-surface-overlay);
+    border: 1px solid var(--nl-border-default);
+    border-radius: var(--nl-radius-overlay);
+    box-shadow: var(--nl-elevation-overlay);
+    z-index: 80;
+}
+.noslog-ui .nl-auth-language-option {
+    padding: var(--nl-spacing-12);
+    border-radius: var(--nl-radius-control);
+    cursor: pointer;
+}
+.noslog-ui .nl-auth-language-option + .nl-auth-language-option {
+    margin-top: var(--nl-spacing-4);
+}
+.noslog-ui .nl-auth-language-option[data-state="checked"] {
+    background: var(--nl-interaction-menu-set);
+    font-weight: 600;
+}
+.noslog-ui .nl-auth-language-option[data-highlighted] {
+    outline: 1px solid var(--nl-focus-ring);
+    outline-offset: -1px;
+}
+.noslog-ui .nl-auth-account {
+    margin-top: var(--nl-spacing-32);
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-auth-account-row {
+    min-height: 100px;
+    display: flex;
+    gap: var(--nl-spacing-12);
+    align-items: center;
+}
+.noslog-ui .nl-auth-account-row p {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+.noslog-ui .nl-auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-24);
+    margin-top: var(--nl-spacing-24);
+}
+.noslog-ui .nl-auth-field-description {
+    margin-top: var(--nl-spacing-8);
+}
+.noslog-ui .nl-auth-submit {
+    width: 100%;
+    margin-top: var(--nl-spacing-8);
+}
+.noslog-ui .nl-auth-logout {
+    margin-top: var(--nl-spacing-16);
+    text-align: center;
+}
+.noslog-ui .nl-auth-reason {
+    margin-top: var(--nl-spacing-32);
+}

@@ -26,13 +26,13 @@ async function openRanking(
         failSecond?: boolean;
     } = {}
 ) {
-    let failed = false;
+    let failures = 0;
     await page.route("**/api/music-detail?**", async (route) => {
         const requestedPage = Number(
             new URL(route.request().url()).searchParams.get("page")
         );
-        if (failSecond && requestedPage === 2 && !failed) {
-            failed = true;
+        if (failSecond && requestedPage === 2 && failures < 2) {
+            failures++;
             await route.fulfill({
                 status: 503,
                 json: {

@@ -17,6 +17,89 @@ test("Discovery appends explicit batches and preserves the result set when chang
     await expect(page.locator("[data-result]")).toHaveCount(40);
     await expect(page).toHaveURL(/view=grid/);
     await expect(page.locator(".nl-discovery__items--grid")).toBeVisible();
+    const destination = page.locator("[data-result]").nth(30).getByRole("link");
+    await destination.scrollIntoViewIfNeeded();
+    const destinationHref = await destination.getAttribute("href");
+    const scroll = await page.evaluate(() => window.scrollY);
+    await destination.click();
+    await expect(page).toHaveURL(new RegExp(`${destinationHref}$`));
+    await page.goBack();
+    await expect(page.locator("[data-result]")).toHaveCount(40);
+    await expect(page).toHaveURL(/view=grid/);
+    await expect
+        .poll(() => page.evaluate(() => window.scrollY))
+        .toBeGreaterThan(scroll - 100);
+});
+
+test("Discovery commits completed IME text and ignores an obsolete response", async ({
+    page,
+}) => {
+    const queries: string[] = [];
+    let releaseOld: () => void = () => {};
+    const oldResponse = new Promise<void>((resolve) => {
+        releaseOld = resolve;
+    });
+    await page.route("**/api/discovery?**", async (route) => {
+        const q = new URL(route.request().url()).searchParams.get("q") ?? "";
+        if (!q) return route.continue();
+        queries.push(q);
+        if (q === "서열") await oldResponse;
+        await route.fulfill({
+            json: {
+                isSuccess: true,
+                code: "SUCCESS",
+                message: "",
+                result: {
+                    items:
+                        q === "서열"
+                            ? [
+                                  {
+                                      index: "obsolete-result",
+                                      title: "Obsolete result",
+                                      localizedTitle: null,
+                                      artist: "Fixture",
+                                      category_short: "Org",
+                                      background: null,
+                                      normal: 1,
+                                      hard: 2,
+                                      expert: 3,
+                                      real: null,
+                                      targets: [],
+                                  },
+                              ]
+                            : [],
+                    total: q === "서열" ? 1 : 0,
+                    chartTotal: 0,
+                    nextOffset: null,
+                },
+            },
+        });
+    });
+    await page.goto("/ko/music");
+    const search = page.getByRole("searchbox", {
+        name: "악곡 제목·아티스트 검색",
+        exact: true,
+    });
+    await search.dispatchEvent("compositionstart");
+    await search.fill("서열");
+    await page.waitForTimeout(450);
+    expect(queries).toEqual([]);
+    await search.dispatchEvent("compositionend");
+    await expect.poll(() => queries).toContain("서열");
+    await search.fill("최신");
+    await expect.poll(() => queries).toContain("최신");
+    await expect(
+        page.getByText("일치하는 악곡이 없습니다.", { exact: true })
+    ).toBeVisible();
+    releaseOld();
+    await expect(
+        page.getByText("Obsolete result", { exact: true })
+    ).toHaveCount(0);
+    await expect(search).toHaveValue("최신");
+    await expect(page).toHaveURL(/q=%EC%B5%9C%EC%8B%A0/);
+    await expect(
+        page.getByRole("region", { name: "검색 결과", exact: true })
+    ).not.toHaveAttribute("aria-busy", "true");
 });
 
 test("Compact filters stage changes, cancel with Escape and Back, and commit one result set", async ({
@@ -55,27 +138,34 @@ test("Compact filters stage changes, cancel with Escape and Back, and commit one
         .click();
     await expect(page.locator("[data-result]")).toHaveCount(1);
     await expect(page).toHaveURL(/categories=pops/);
-    await expect(trigger).toBeFocused();
+    await expect(page.locator(".nl-discovery__summary")).toBeFocused();
 });
 
-test("Wide filters apply directly while sort retains an explicit difficulty requirement", async ({
+test("Desktop bounded filters stage changes and require a difficulty for level sorting", async ({
     page,
-}, testInfo) => {
-    test.skip(
-        testInfo.project.name !== "desktop-chromium",
-        "The visible filter rail is checked on the desktop project."
-    );
+}) => {
+    await page.setViewportSize({ width: 1470, height: 900 });
     await page.goto("/ko/music");
-    const rail = page.getByRole("complementary", { name: "필터", exact: true });
-    await rail.getByText("pops", { exact: true }).click();
-    await expect(page.locator("[data-result]")).toHaveCount(1);
-    await page.getByRole("button", { name: "정렬", exact: true }).click();
-    const sort = page.getByRole("dialog", { name: "정렬", exact: true });
-    await sort.getByText("레벨 순", { exact: true }).click();
+    await expect(page.locator(".nl-discovery__rail")).toHaveCount(0);
+    await page
+        .getByRole("button", { name: "필터 및 정렬", exact: true })
+        .click();
+    const dialog = page.getByRole("dialog", { name: "필터 및 정렬" });
+    await dialog.getByText("pops", { exact: true }).click();
+    await dialog.getByText("레벨 순", { exact: true }).click();
     await expect(page).not.toHaveURL(/sort=level/);
-    await sort.getByText("Hard", { exact: true }).click();
+    await expect(
+        dialog.getByRole("button", { name: "난이도 선택" })
+    ).toBeDisabled();
+    await dialog
+        .getByRole("group", { name: "정렬할 난이도", exact: true })
+        .getByText("Hard", { exact: true })
+        .click();
+    await dialog.getByRole("button", { name: /결과 .*개 보기/ }).click();
+    await expect(page).toHaveURL(/categories=pops/);
     await expect(page).toHaveURL(/sort=level/);
     await expect(page).toHaveURL(/sortDifficulty=Hard/);
+    await expect(page.locator("[data-result]")).toHaveCount(1);
 });
 
 test("Discovery exposes settled empty, retry, and delayed replacement states without activating stale results", async ({
@@ -136,6 +226,7 @@ test("Discovery exposes settled empty, retry, and delayed replacement states wit
         region.getByText("일치하는 악곡이 없습니다.", { exact: true })
     ).toBeVisible();
     await expect(search).toBeEnabled();
+    await expect(page.locator(".nl-discovery__summary")).toBeFocused();
 });
 
 for (const locale of ["ko", "ja", "en"]) {
@@ -153,8 +244,8 @@ for (const locale of ["ko", "ja", "en"]) {
             [390, 2],
             [768, 4],
             [1024, 5],
-            [1280, 3],
-            [1600, 3],
+            [1280, 5],
+            [1600, 5],
         ]) {
             await page.setViewportSize({ width, height: 900 });
             await expect

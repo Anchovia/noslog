@@ -44,6 +44,7 @@ export default function MusicJacket({
                     : "bg-surface-muted relative flex overflow-hidden",
                 className
             )}
+            role={appearance === "foundation" ? "img" : undefined}
             aria-label={t("common.jacket", { title })}
             data-empty={appearance === "foundation" ? !jacketUrl : undefined}
         >

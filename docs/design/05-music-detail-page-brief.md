@@ -1150,8 +1150,15 @@ results need a concise accessible update.
 - Keep one vote per user, selected chart, mode, and goal. The user may edit or delete
   each scope independently.
 - Always show the exact valid-vote count for the scope being read.
-- With one or two valid votes, show **Aggregating** and the count; do not expose a
+- With zero, one, or two valid votes, show **Aggregating** and the count; do not expose a
   representative result or distribution.
+- **Approved 2026-09-07:** Aggregating rows remain selectable. Opening one shows
+  aggregation guidance and the existing qualification-specific contribution UI
+  immediately below that row, instead of a distribution. An eligible user without
+  an existing vote receives the first-vote form with no preselected value. Existing
+  votes retain independent edit/delete actions. Enter/Space toggles the row and
+  its expanded state is exposed accessibly. This supersedes C7's former
+  non-selectable Aggregating rule; see [Z1 approved decision](https://www.figma.com/design/cVbWCxhkfxFfHmAKLCyKrD?node-id=3326-24041).
 - With three or more valid votes, publish the **arithmetic mean**, complete value
   distribution, and exact count. The mean is the public representative value by user
   decision on 2026-08-13, superseding the earlier median rule recorded here.

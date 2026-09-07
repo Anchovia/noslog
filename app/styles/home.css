@@ -5,6 +5,7 @@
 }
 .noslog-ui .nl-home-hero,
 .noslog-ui .nl-home-navigation,
+.noslog-ui .nl-home-critical,
 .noslog-ui .nl-home-updates {
     width: 100%;
     max-width: var(--nl-home-search-width);
@@ -99,20 +100,9 @@
     width: var(--nl-icon-small);
     height: var(--nl-icon-small);
 }
-.noslog-ui .nl-home-announcement {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-4);
-    padding-block: var(--nl-spacing-12);
-}
-.noslog-ui .nl-home-announcements li + li {
-    box-shadow: inset 0 1px var(--nl-border-divider);
-}
-.noslog-ui .nl-home-announcement:hover {
-    background: var(--nl-interaction-hover);
-}
-.noslog-ui .nl-home-announcement time {
-    flex-shrink: 0;
+.noslog-ui .nl-home-critical__link {
+    text-decoration: underline;
+    text-underline-position: under;
 }
 .noslog-ui .nl-home-news-state {
     padding: var(--nl-spacing-16);
@@ -163,11 +153,5 @@
     .noslog-ui .nl-home-identity .nl-page-title {
         font-size: var(--nl-type-size-32);
         line-height: var(--nl-type-line-height-40);
-    }
-    .noslog-ui .nl-home-announcement {
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
-        gap: var(--nl-spacing-16);
     }
 }

@@ -3,6 +3,13 @@
     "source": "Figma MCP — NosLog v2.0.0",
     "retrievedAt": "2026-09-06",
     "fontOverride": "Pretendard JP Variable 1.3.9 — Foundation 24 and explicit user decision",
+    "darkEffects": [
+        {
+            "name": "elevation/overlay",
+            "sourceNode": "3143:9388",
+            "css": "0 0 1px rgb(0 0 0 / 12%), 0 2px 3px rgb(0 0 0 / 4%), 0 4px 6px rgb(0 0 0 / 8%)"
+        }
+    ],
     "colors": [
         {
             "name": "surface/canvas",

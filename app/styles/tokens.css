@@ -48,6 +48,9 @@
     --nl-container-standard: 1280px;
     --nl-container-wide: 1440px;
     --nl-motion-press-scale: 0.98;
+    --nl-elevation-overlay:
+        0 0 1px rgb(0 0 0 / 12%), 0 2px 3px rgb(0 0 0 / 4%),
+        0 4px 6px rgb(0 0 0 / 8%);
     --nl-surface-canvas: #111111;
     --nl-surface-surface: #1b1b1b;
     --nl-surface-sunken: #111111;

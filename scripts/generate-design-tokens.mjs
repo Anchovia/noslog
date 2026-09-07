@@ -36,6 +36,7 @@ const sourceCss = [
     `/* Generated from Figma ${tokens.fileKey}. Run node scripts/generate-design-tokens.mjs. */`,
     ".noslog-ui {",
     ...scale,
+    ...tokens.darkEffects.map((token) => declaration(token.name, token.css)),
     ...tokens.colors.map((token) => declaration(token.name, token.dark)),
     "}",
     'html[data-theme="light"] .noslog-ui, .noslog-ui[data-theme="light"] {',

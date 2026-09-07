@@ -1,5 +1,15 @@
 # 83 · Profile Share Card — High-Fidelity Design Handoff
 
+## Approved correction — 2026-09-07
+
+The user approved comparison B in Z1 (`3346:24200`): replace P16 text using
+`#666674` with the existing Dark `content/subdued` value `#AFAFAF`, including
+the missing-Grd dash. Other text colours remain unchanged. The user also approved
+removing the `GRADE {n}` badge beside the nickname in every card state. Retain
+the main official Grd value and give the nickname the space previously reserved
+for the badge. These decisions supersede conflicting badge and metadata-colour
+instructions below. Production rendering continues to use Pretendard JP.
+
 **Asset family** P16 · Share Card (프로필 공유 카드 — 생성 이미지)
 **Governing authority** 사용자 지시(2026-09-02) — **문서 09 Share Card Contract 및 브리프는 이 작업에 적용하지 않는다**(사용자가 명시적으로 무시를 지시). 기준은 현행 제품 카드(`app/(nevigation)/profile/[id]/card/route.tsx`)의 개선.
 **Figma page** `P16 · Share Card 조립` (file `NosLog v2.0.0`, `cVbWCxhkfxFfHmAKLCyKrD`, page `2986:2`)

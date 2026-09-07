@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { cva, type VariantProps } from "class-variance-authority";
-import { type ButtonHTMLAttributes } from "react";
+import { type ComponentPropsWithRef } from "react";
 
 // 공통 버튼 스타일과 variant를 한곳에서 관리함
 const buttonVariants = cva(
@@ -31,7 +31,7 @@ const buttonVariants = cva(
 
 interface ButtonProps
     extends
-        ButtonHTMLAttributes<HTMLButtonElement>,
+        ComponentPropsWithRef<"button">,
         VariantProps<typeof buttonVariants> {
     appearance?: "legacy" | "foundation";
     destructiveFilled?: boolean;
@@ -75,6 +75,7 @@ export function foundationButtonClass({
         "nl-button",
         variant && `nl-button--${variant}`,
         size === "icon" && "nl-button--icon",
+        size === "sm" && "nl-button--compact",
         destructiveFilled && "nl-button--danger-filled"
     );
 }

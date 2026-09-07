@@ -1,5 +1,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
+import { reviewThemes } from "./helpers";
 import type { Page, Route } from "@playwright/test";
 import { parseGlobalRankingQuery } from "@/features/rankings/schemas/globalRankingSchema";
 import type {
@@ -300,7 +301,7 @@ test("unavailable Rating has a distinct recovery action and guests retain an exa
 });
 
 for (const locale of ["ko", "ja", "en"])
-    for (const theme of ["dark", "light"])
+    for (const theme of reviewThemes)
         test(`${locale} ${theme} respects Figma geometry, text styles, and accessible reflow`, async ({
             page,
         }, testInfo) => {

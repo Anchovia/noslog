@@ -225,6 +225,11 @@ Production Secret을 로컬 검증용으로 복사하지 않습니다.
 
 선택 환경변수:
 
+- `NEXT_PUBLIC_ENABLE_THEME_SWITCHING=false`: 임시 다크 전용 모드의 기본값입니다.
+  저장된 라이트 선호값과 OS 테마보다 다크를 우선하며 테마 변경 컨트롤은 비활성화합니다.
+  기존 라이트 스타일과 저장된 선호값은 보존합니다. 라이트 디자인 완료 후 `true`로
+  전환할 수 있으며, 공개 환경변수이므로 개발 서버 재시작 또는 배포 재빌드가 필요합니다.
+
 - `MAINTENANCE_MODE=true`: 일반 페이지와 API에 점검 안내 표시
 - `GOOGLE_SITE_VERIFICATION`: Google Search Console 인증값
 

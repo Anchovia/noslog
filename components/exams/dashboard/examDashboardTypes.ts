@@ -53,6 +53,7 @@ export interface ExamDashboardItem {
     submissionStatus: string | null;
     submissionReviewerNote: string | null;
     playerGrade: number | null;
+    hasSyncedIdentity?: boolean;
     stages: ExamStageItem[];
 }
 

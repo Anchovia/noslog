@@ -1,29 +1,26 @@
-"use client";
+import NavigationLayout from "@/app/(nevigation)/layout";
+import RecoveryBoundary from "@/features/recovery/components/recoveryBoundary";
+import RecoveryContent from "@/features/recovery/components/recoveryContent";
+import LegacyNotFound from "@/features/recovery/components/legacyNotFound";
+import { getServerI18n } from "@/lib/i18n/server";
 
-import {
-    useLocalizedHref,
-    useTranslations,
-} from "@/components/i18n/localeProvider";
-import Link from "next/link";
+export async function generateMetadata() {
+    const { t } = await getServerI18n();
+    return {
+        title: { absolute: `${t("common.notFoundTitle")} | NosLog` },
+        robots: { index: false, follow: false },
+    };
+}
 
 export default function NotFound() {
-    const href = useLocalizedHref();
-    const t = useTranslations();
-
     return (
-        <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 px-6 text-center">
-            <div>
-                <h1 className="text-title">{t("common.notFoundTitle")}</h1>
-                <p className="text-body-muted mt-2">
-                    {t("common.notFoundDescription")}
-                </p>
-            </div>
-            <Link
-                href={href("/")}
-                className="border-border bg-surface text-text-primary flex h-10 items-center rounded-md border px-4 text-sm font-semibold"
-            >
-                {t("common.goHome")}
-            </Link>
-        </div>
+        <RecoveryBoundary
+            ordinary={
+                <NavigationLayout>
+                    <RecoveryContent />
+                </NavigationLayout>
+            }
+            legacy={<LegacyNotFound />}
+        />
     );
 }

@@ -167,6 +167,78 @@ test("Pattern request failure preserves basic information and retries only its r
     await expect(page.locator(".nl-pattern-radar__series")).toHaveCount(1);
 });
 
+test("Exact-target refresh failure retains information and offers a working retry", async ({
+    page,
+}) => {
+    await page.goto(`/ko${musicPath}`);
+    await expect(
+        page.getByRole("heading", { name: "기본 정보", exact: true })
+    ).toBeVisible();
+    let requests = 0;
+    await page.route("**/api/music-detail?**", async (route) => {
+        requests++;
+        await route.fulfill({
+            status: 503,
+            json: {
+                isSuccess: false,
+                code: "UNAVAILABLE",
+                message: "Unavailable",
+                result: null,
+            },
+        });
+    });
+    await page.evaluate(() =>
+        window.dispatchEvent(new Event("music-detail:invalidate"))
+    );
+    const alert = page.locator(".nl-music-detail [role=alert]");
+    await expect(alert).toBeVisible();
+    expect(requests).toBe(2);
+    await expect(
+        page.getByRole("heading", { name: "기본 정보", exact: true })
+    ).toBeVisible();
+    await expect(page.getByRole("radio", { name: /^Expert/ })).toBeChecked();
+    await page.unroute("**/api/music-detail?**");
+    await alert.getByRole("button", { name: "다시 시도", exact: true }).click();
+    await expect(alert).toHaveCount(0);
+    await expect(
+        page.getByRole("heading", { name: "기본 정보", exact: true })
+    ).toBeVisible();
+});
+
+test("An uncached difficulty failure does not show another difficulty's information", async ({
+    page,
+}) => {
+    await page.goto(`/ko${musicPath}`);
+    let requests = 0;
+    await page.route("**/api/music-detail?*difficulty=hard*", async (route) => {
+        requests++;
+        await route.fulfill({
+            status: 404,
+            json: {
+                isSuccess: false,
+                code: "NOT_FOUND",
+                message: "Not found",
+                result: null,
+            },
+        });
+    });
+    await page.getByRole("radio", { name: /^Hard/ }).click();
+    await expect(
+        page
+            .locator(".nl-music-detail")
+            .getByRole("button", { name: "다시 시도", exact: true })
+    ).toBeVisible();
+    expect(requests).toBe(1);
+    await expect(
+        page.getByRole("heading", { name: "기본 정보", exact: true })
+    ).toHaveCount(0);
+    await page.getByRole("radio", { name: /^Expert/ }).click();
+    await expect(
+        page.getByRole("heading", { name: "기본 정보", exact: true })
+    ).toBeVisible();
+    await expect(page).toHaveURL(/\/expert$/);
+});
+
 for (const locale of ["ko", "ja", "en"]) {
     test(`${locale} Chart Info keeps readable labels at every width and passes accessibility checks`, async ({
         page,

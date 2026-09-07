@@ -305,6 +305,12 @@ verified complete in NOSTALGIA`.
 
 ## Reset Contract
 
+**Approved scope confirmation — 2026-09-07:** the user confirmed that reset clears
+only their own saved checks for the selected board. Board definitions and missions
+are public reference content; personal completion state is visible only to its
+owner in the ordinary Bingo experience. This decision does not introduce shared
+progress or change visibility. Other boards' personal progress remains intact.
+
 - Provide a secondary/destructive `Reset Bingo record` action only for a signed-in
   user when that board has saved progress.
 - It is available whether the checklist is in progress, music-unlock complete, or

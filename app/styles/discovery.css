@@ -362,7 +362,7 @@
         grid-template-columns: repeat(5, minmax(0, 1fr));
     }
 }
-@media (min-width: 1216px) {
+@container page (min-width: 1216px) {
     .noslog-ui .nl-discovery__results {
         gap: var(--nl-spacing-16);
     }

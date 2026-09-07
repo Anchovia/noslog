@@ -12,6 +12,9 @@ interface SessionContent {
     locale?: Locale;
     discordOAuthState?: string;
     discordOAuthReturnTo?: string;
+    discordOAuthMode?: "refresh" | "change";
+    discordOAuthUserId?: number;
+    onboardingReturnTo?: string;
 }
 
 const SESSION_TTL_SECONDS = 14 * 24 * 60 * 60;

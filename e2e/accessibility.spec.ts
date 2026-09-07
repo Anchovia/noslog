@@ -3,16 +3,10 @@ import { expect, test } from "@playwright/test";
 
 import { expectPageLoaded } from "./helpers";
 
-const representativeRoutes = [
-    { path: "/ko", existingRuleIds: ["document-title"] },
-    { path: "/ja/music", existingRuleIds: ["color-contrast"] },
-    { path: "/en/rankings", existingRuleIds: ["color-contrast"] },
-] as const;
+const representativeRoutes = ["/ko", "/ja/music", "/en/rankings"] as const;
 
-for (const { path, existingRuleIds } of representativeRoutes) {
-    test(`${path}에 기존 기준선 밖의 WCAG A·AA 위반이 없다`, async ({
-        page,
-    }, testInfo) => {
+for (const path of representativeRoutes) {
+    test(`${path}에 WCAG A·AA 위반이 없다`, async ({ page }) => {
         await page.goto(path);
         await expectPageLoaded(page);
 
@@ -23,11 +17,6 @@ for (const { path, existingRuleIds } of representativeRoutes) {
             ...new Set(results.violations.map(({ id }) => id)),
         ].sort();
 
-        testInfo.annotations.push({
-            type: "existing-accessibility-debt",
-            description: existingRuleIds.join(", "),
-        });
-
         expect(
             actualRuleIds,
             results.violations
@@ -36,6 +25,6 @@ for (const { path, existingRuleIds } of representativeRoutes) {
                         `${id} (${impact ?? "impact unknown"}): ${help} [${nodes.length}]`
                 )
                 .join("\n")
-        ).toEqual([...existingRuleIds].sort());
+        ).toEqual([]);
     });
 }

@@ -10,6 +10,7 @@ export interface LineChartPoint {
     shortDimension: string;
     value: number;
     secondaryValue?: number;
+    coordinate?: number;
 }
 
 export default function LineChart({
@@ -28,6 +29,9 @@ export default function LineChart({
     verticalInset = 0,
     showPoints = true,
     tableVisibility = "visible",
+    responsivePlot = false,
+    showValueAxis = true,
+    showGrid = true,
 }: {
     points: LineChartPoint[];
     label: string;
@@ -44,6 +48,9 @@ export default function LineChart({
     verticalInset?: number;
     showPoints?: boolean;
     tableVisibility?: "visible" | "screen-reader";
+    responsivePlot?: boolean;
+    showValueAxis?: boolean;
+    showGrid?: boolean;
 }) {
     const { ref, width } = useElementWidth<HTMLDivElement>();
     const { ref: tooltipRef, width: tooltipWidth } =
@@ -52,19 +59,29 @@ export default function LineChart({
     const buttons = useRef<(HTMLButtonElement | null)[]>([]);
     const tooltipId = useId();
     const range = domain[1] - domain[0] || 1;
+    const plotHeight = responsivePlot
+        ? Math.min(344, (Math.max(0, width - 32) * 9) / 16)
+        : 120;
+    const firstCoordinate = points[0]?.coordinate;
+    const coordinateRange =
+        (points.at(-1)?.coordinate ?? 0) - (firstCoordinate ?? 0);
+    const fraction = (index: number) =>
+        firstCoordinate !== undefined && coordinateRange > 0
+            ? ((points[index].coordinate ?? firstCoordinate) -
+                  firstCoordinate) /
+              coordinateRange
+            : index / Math.max(1, points.length - 1);
     const position = (index: number, secondary = false) => ({
-        x:
-            4 +
-            (index / Math.max(1, points.length - 1)) * Math.max(0, width - 8),
+        x: 4 + fraction(index) * Math.max(0, width - 8),
         y:
-            120 +
+            plotHeight +
             verticalInset -
             (((secondary
                 ? points[index].secondaryValue!
                 : points[index].value) -
                 domain[0]) /
                 range) *
-                120,
+                plotHeight,
     });
     const pointLabel = (point: LineChartPoint) =>
         `${point.dimension} · ${valueLabel} · ${formatValue(point.value)}${secondaryLabel && point.secondaryValue !== undefined ? ` · ${secondaryLabel} · ${formatValue(point.secondaryValue)}` : ""}`;
@@ -136,24 +153,42 @@ export default function LineChart({
                 </>
             ) : (
                 <div className="nl-line-chart__plot">
-                    <div
-                        className="nl-line-chart__y nl-metadata nl-muted"
-                        aria-hidden
-                    >
-                        {ticks.map((tick, index) => (
-                            <span key={index}>{formatAxis(tick)}</span>
-                        ))}
-                    </div>
+                    {showValueAxis ? (
+                        <div
+                            className="nl-line-chart__y nl-metadata nl-muted"
+                            aria-hidden
+                        >
+                            {ticks.map((tick, index) => (
+                                <span key={index}>{formatAxis(tick)}</span>
+                            ))}
+                        </div>
+                    ) : null}
                     <div className="nl-line-chart__area">
                         <div
                             ref={ref}
                             className="nl-line-chart__series"
-                            style={{ height: 120 + verticalInset * 2 }}
+                            style={{ height: plotHeight + verticalInset * 2 }}
                             onPointerMove={(event) => {
                                 const x =
                                     event.clientX -
                                     event.currentTarget.getBoundingClientRect()
                                         .left;
+                                if (firstCoordinate !== undefined) {
+                                    let closest = 0;
+                                    for (
+                                        let index = 1;
+                                        index < points.length;
+                                        index++
+                                    ) {
+                                        if (
+                                            Math.abs(position(index).x - x) <
+                                            Math.abs(position(closest).x - x)
+                                        )
+                                            closest = index;
+                                    }
+                                    setActive(closest);
+                                    return;
+                                }
                                 setActive(
                                     Math.max(
                                         0,
@@ -179,31 +214,36 @@ export default function LineChart({
                         >
                             <svg
                                 width="100%"
-                                height={120 + verticalInset * 2}
+                                height={plotHeight + verticalInset * 2}
                                 aria-hidden="true"
                             >
-                                {ticks
-                                    .map(
-                                        (_, index) =>
-                                            verticalInset +
-                                            (index /
-                                                Math.max(1, ticks.length - 1)) *
-                                                120 -
-                                            (!verticalInset &&
-                                            index === ticks.length - 1
-                                                ? 1
-                                                : 0)
-                                    )
-                                    .map((y) => (
-                                        <line
-                                            key={y}
-                                            x1="0"
-                                            x2={width}
-                                            y1={y}
-                                            y2={y}
-                                            className="nl-line-chart__grid"
-                                        />
-                                    ))}
+                                {showGrid
+                                    ? ticks
+                                          .map(
+                                              (_, index) =>
+                                                  verticalInset +
+                                                  (index /
+                                                      Math.max(
+                                                          1,
+                                                          ticks.length - 1
+                                                      )) *
+                                                      plotHeight -
+                                                  (!verticalInset &&
+                                                  index === ticks.length - 1
+                                                      ? 1
+                                                      : 0)
+                                          )
+                                          .map((y) => (
+                                              <line
+                                                  key={y}
+                                                  x1="0"
+                                                  x2={width}
+                                                  y1={y}
+                                                  y2={y}
+                                                  className="nl-line-chart__grid"
+                                              />
+                                          ))
+                                    : null}
                                 <polyline
                                     points={points
                                         .map((_, index) => {
@@ -351,7 +391,7 @@ export default function LineChart({
                                         dimensionTickIndices
                                             ? {
                                                   position: "absolute",
-                                                  left: `${(index / Math.max(1, points.length - 1)) * 100}%`,
+                                                  left: `${fraction(index) * 100}%`,
                                                   transform:
                                                       index === 0
                                                           ? undefined

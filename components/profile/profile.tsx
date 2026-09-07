@@ -6,7 +6,7 @@ import { logout } from "@/app/(nevigation)/profile/[id]/actions";
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import ProfileBestPlays from "@/components/profile/dashboard/profileBestPlays";
 import ProfileGradeTrend from "@/components/profile/dashboard/profileGradeTrend";
-import ProfileHeader from "@/components/profile/dashboard/profileHeader";
+import ProfileHeader from "@/features/profile/components/profileIdentity";
 import ProfileJudgementSummary from "@/components/profile/dashboard/profileJudgementSummary";
 import ProfileModeTabs from "@/components/profile/dashboard/profileModeTabs";
 import ProfileRankDistribution from "@/components/profile/dashboard/profileRankDistribution";

@@ -1,5 +1,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
+import { reviewThemes } from "./helpers";
 import type { Page } from "@playwright/test";
 import type {
     CommunityData,
@@ -98,11 +99,13 @@ async function openCommunity(
         locale = "ko",
         data = fixture(),
         guest = false,
+        fromTiers = false,
         failure,
     }: {
         locale?: string;
         data?: CommunityData;
         guest?: boolean;
+        fromTiers?: boolean;
         failure?: "initial" | "more";
     } = {}
 ) {
@@ -166,7 +169,9 @@ async function openCommunity(
             json: { isSuccess: true, code: "ok", message: "", result },
         });
     });
-    await page.goto(`/${locale}${musicPath}`);
+    await page.goto(
+        `/${locale}${musicPath}${fromTiers ? "?source=tiers&mode=basic&goal=s" : ""}`
+    );
     if ((page.viewportSize()?.width ?? 390) < 768) {
         await page
             .getByRole("combobox", {
@@ -348,12 +353,113 @@ test("Goal distributions preserve observed values and global bar scale while pag
     await expect(page.locator(".nl-vote-contribution")).toContainText(
         "내 투표13.2"
     );
-    await rows.nth(2).click();
+    await rows.nth(3).click();
     await expect(page.locator(".nl-vote-distribution")).toHaveCount(1);
     await expect(rows.nth(1)).toHaveAttribute("aria-expanded", "false");
     await expect(
         page.locator(".nl-vote-row").filter({ hasText: "집계 중" })
     ).toHaveCount(2);
+});
+
+test("Aggregating rows open with keyboard and offer the first vote without exposing a distribution", async ({
+    page,
+}) => {
+    const data = fixture();
+    for (const [index, scope] of data.scopes.entries()) {
+        scope.count = index % 3;
+        scope.average = null;
+        scope.distribution = [];
+        scope.ownVote = null;
+        scope.eligible = true;
+    }
+    await openCommunity(page, { data, fromTiers: true });
+    const rows = page.locator("button.nl-vote-row");
+    await expect(rows).toHaveCount(6);
+    await expect(rows.first()).toHaveAttribute("aria-expanded", "true");
+    await rows.first().click();
+    for (let index = 0; index < 6; index++) {
+        await rows.nth(index).focus();
+        await rows.nth(index).press("Enter");
+        await expect(rows.nth(index)).toHaveAttribute("aria-expanded", "true");
+        await expect(page.locator(".nl-vote-aggregation")).toContainText(
+            "아직 공개할 투표 분포가 없습니다."
+        );
+        await expect(page.locator(".nl-vote-distribution")).toHaveCount(0);
+        const input = page.locator(".nl-vote-form select");
+        await expect(input).toHaveValue("");
+        await page
+            .getByRole("button", { name: "투표 저장", exact: true })
+            .click();
+        await expect(page.locator(".nl-vote-form [role=alert]")).toBeVisible();
+        await input.selectOption("13.2");
+        await page
+            .getByRole("button", { name: "투표 저장", exact: true })
+            .click();
+        await expect(page.locator(".nl-vote-form [role=alert]")).toContainText(
+            "로그인 후"
+        );
+        await expect(input).toHaveValue("13.2");
+        await rows.nth(index).press("Space");
+        await expect(rows.nth(index)).toHaveAttribute("aria-expanded", "false");
+        await expect(page.locator(".nl-vote-aggregation")).toHaveCount(0);
+    }
+});
+
+test("Aggregating votes preserve login, record, eligibility, and existing-vote actions", async ({
+    page,
+}) => {
+    const data = fixture();
+    const scope = data.scopes[0];
+    scope.count = 0;
+    scope.average = null;
+    scope.distribution = [];
+    await openCommunity(page, { data, guest: true });
+    await page.locator("button.nl-vote-row").first().click();
+    await expect(page.locator(".nl-vote-aggregation")).toContainText(
+        "로그인하면"
+    );
+    await expect(page.locator(".nl-vote-form")).toHaveCount(0);
+    data.canEvaluate = false;
+    await page.unrouteAll({ behavior: "wait" });
+    await openCommunity(page, { data });
+    await page.locator("button.nl-vote-row").first().click();
+    await expect(page.locator(".nl-vote-aggregation")).toContainText(
+        "플레이 기록이 필요합니다."
+    );
+    data.canEvaluate = true;
+    scope.eligible = false;
+    await page.unrouteAll({ behavior: "wait" });
+    await openCommunity(page, { data });
+    await page.locator("button.nl-vote-row").first().click();
+    await expect(page.locator(".nl-vote-aggregation")).toContainText(
+        "Basic S 달성 기록이 있어야"
+    );
+    await expect(page.locator(".nl-vote-form")).toHaveCount(0);
+    scope.eligible = true;
+    scope.count = 1;
+    scope.ownVote = 13.2;
+    await page.unrouteAll({ behavior: "wait" });
+    await openCommunity(page, { data });
+    await page.locator("button.nl-vote-row").first().click();
+    const contribution = page.locator(".nl-vote-aggregation");
+    await expect(contribution).toContainText("내 투표13.2");
+    await contribution
+        .getByRole("button", { name: "수정", exact: true })
+        .click();
+    await expect(contribution.locator("select")).toHaveValue("13.2");
+    await contribution
+        .getByRole("button", { name: "투표 삭제", exact: true })
+        .click();
+    await expect(page.getByRole("dialog")).toContainText(
+        "Basic S 투표만 삭제됩니다."
+    );
+    await page
+        .getByRole("dialog")
+        .getByRole("button", { name: "취소" })
+        .click();
+    await expect(
+        contribution.getByRole("button", { name: "투표 삭제", exact: true })
+    ).toBeFocused();
 });
 
 test("Pattern ratings distinguish zero from missing and keep rejected input", async ({
@@ -458,7 +564,7 @@ test("Opinions append ten at a time and expose contextual author and report acti
 });
 
 for (const locale of ["ko", "ja", "en"])
-    for (const theme of ["dark", "light"]) {
+    for (const theme of reviewThemes) {
         test(`${locale} ${theme} community reflows and preserves accessible controls`, async ({
             page,
         }, testInfo) => {
@@ -470,7 +576,9 @@ for (const locale of ["ko", "ja", "en"])
                 (theme) => localStorage.setItem("noslog-theme", theme),
                 theme
             );
-            await openCommunity(page, { locale });
+            const data = fixture();
+            data.scopes[2].eligible = true;
+            await openCommunity(page, { locale, data });
             await page.locator("button.nl-vote-row").nth(1).click();
             for (const width of [320, 390, 768, 1024, 1280]) {
                 await page.setViewportSize({ width, height: 900 });
@@ -503,6 +611,35 @@ for (const locale of ["ko", "ja", "en"])
                         ),
                         fullPage: true,
                     });
+                await page.locator("button.nl-vote-row").nth(2).click();
+                await expect(
+                    page.locator(".nl-vote-aggregation select")
+                ).toBeVisible();
+                await expect(page.locator(".nl-vote-distribution")).toHaveCount(
+                    0
+                );
+                expect(
+                    await page.evaluate(
+                        () =>
+                            document.documentElement.scrollWidth <=
+                            window.innerWidth
+                    )
+                ).toBe(true);
+                if (width === 320 || width === 1280) {
+                    const scan = await new AxeBuilder({ page })
+                        .include(".nl-vote-aggregation")
+                        .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
+                        .analyze();
+                    expect(scan.violations).toEqual([]);
+                }
+                if (width === 390 || width === 1280)
+                    await page.screenshot({
+                        path: testInfo.outputPath(
+                            `${locale}-${theme}-aggregation-${width}.png`
+                        ),
+                        fullPage: true,
+                    });
+                await page.locator("button.nl-vote-row").nth(1).click();
             }
         });
     }

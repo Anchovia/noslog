@@ -3,14 +3,13 @@ import { expect, test } from "@playwright/test";
 import { expectNoHorizontalOverflow, expectPageLoaded } from "./helpers";
 
 const publicRoutes = [
-    { label: "악곡", path: "/ko/music", heading: "악곡 검색" },
+    { label: "악곡", path: "/ko/music", heading: "악곡" },
     { label: "랭킹", path: "/ko/rankings", heading: "유저 랭킹" },
     { label: "서열", path: "/ko/tiers", heading: "서열표" },
     {
         label: "빙고",
         path: "/ko/bingo",
         heading: "빙고",
-        requiresMenu: true,
     },
 ];
 
@@ -19,37 +18,25 @@ test("모바일 헤더에서 주요 공개 페이지로 이동한다", async ({ 
     await expectPageLoaded(page);
 
     const banner = page.getByRole("banner");
-    const primaryNavigation = banner.getByRole("navigation", {
-        name: "주요 메뉴",
-    });
-    await expect(primaryNavigation).toBeVisible();
     await expect(banner.getByRole("link", { name: "로그인" })).toBeVisible();
-
     for (const route of publicRoutes) {
-        const navigation = route.requiresMenu
-            ? banner.getByRole("navigation", { name: "전체 메뉴" })
-            : primaryNavigation;
-
-        if (route.requiresMenu) {
-            await banner
-                .getByRole("button", { name: "전체 메뉴 열기" })
-                .click();
-            await expect(navigation).toBeVisible();
-        }
-
-        await navigation.getByRole("link", { name: route.label }).click();
+        await banner.getByRole("button", { name: "전체 메뉴 열기" }).click();
+        const navigation = banner.getByRole("navigation", {
+            name: "전체 메뉴",
+        });
+        await expect(navigation).toBeVisible();
+        await navigation
+            .getByRole("link", { name: route.label, exact: true })
+            .click();
         await expect(page).toHaveURL(new RegExp(`${route.path}(?:\\?.*)?$`));
         await expect(
             page.getByRole("heading", { name: route.heading, exact: true })
         ).toBeVisible();
         await expectPageLoaded(page);
         await expectNoHorizontalOverflow(page);
-
-        if (route.requiresMenu) {
-            await expect(
-                banner.getByRole("button", { name: "전체 메뉴 열기" })
-            ).toBeVisible();
-        }
+        await expect(
+            banner.getByRole("button", { name: "전체 메뉴 열기" })
+        ).toBeVisible();
     }
 });
 
@@ -59,7 +46,7 @@ test("로그인 페이지에서 Discord 로그인과 비회원 이동을 제공�
     await page.goto("/ko/login");
 
     await expect(
-        page.getByRole("heading", { name: "NosLog", exact: true })
+        page.getByRole("heading", { name: "NosLog 홈", exact: true })
     ).toBeVisible();
     await expect(
         page.getByRole("link", { name: "Discord로 계속하기" })

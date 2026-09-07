@@ -5,7 +5,7 @@ import type {
     Difficulty,
     MusicDetailProps,
 } from "@/components/music/musicDetailTypes";
-import { readApiResponse } from "@/lib/api/response";
+import { ApiError, readApiResponse } from "@/lib/api/response";
 import type { Locale } from "@/lib/i18n/routing";
 
 export type MusicDetailQuery = {
@@ -59,7 +59,10 @@ export async function fetchMusicDetail(
 export function musicDetailQueryOptions(query: MusicDetailQuery) {
     return queryOptions({
         staleTime: 60_000,
-        retry: false,
+        retry: (failureCount, error) =>
+            failureCount < 1 &&
+            (error instanceof TypeError ||
+                (error instanceof ApiError && (error.status ?? 0) >= 500)),
         queryKey: musicDetailQueryKey(query),
         queryFn: ({ signal }) => fetchMusicDetail(query, signal),
     });

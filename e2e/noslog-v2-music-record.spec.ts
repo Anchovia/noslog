@@ -59,7 +59,7 @@ const recentChartPlays = scoreTrend.map((point, index) => ({
 async function openRecord(
     page: Page,
     locale = "ko",
-    variant: "data" | "empty" | "single" | "guest" | "partial" = "data"
+    variant: "data" | "empty" | "single" | "guest" | "partial" | "peer" = "data"
 ) {
     await page.route("**/api/music-detail?**", async (route) => {
         const response = await route.fetch();
@@ -81,7 +81,38 @@ async function openRecord(
                 variant === "single" ? scoreTrend.slice(-1) : scoreTrend,
             recentChartPlays,
             performanceTrend: recentChartPlays,
-            peerScoreComparison: null,
+            peerScoreComparison:
+                variant === "peer"
+                    ? {
+                          averageScore: 970000,
+                          sampleCount: 12,
+                          gradeRange: 200,
+                          judgement: {
+                              averages: {
+                                  judge_sjust: 85,
+                                  judge_just: 12,
+                                  judge_good: 1,
+                                  judge_miss: 1,
+                                  judge_near: 1,
+                              },
+                              sampleCount: 10,
+                          },
+                          noteRates: {
+                              averages: {
+                                  note_rate_standard: 9700,
+                                  note_rate_tenuto: 9800,
+                                  note_rate_glissando: 9600,
+                                  note_rate_trill: null,
+                              },
+                              sampleCounts: {
+                                  note_rate_standard: 12,
+                                  note_rate_tenuto: 11,
+                                  note_rate_glissando: 10,
+                                  note_rate_trill: 4,
+                              },
+                          },
+                      }
+                    : null,
         };
         await route.fulfill({ json: { ...body, result } });
     });
@@ -105,6 +136,32 @@ async function openRecord(
     }
     await expect(page).toHaveURL(/tab=record/);
 }
+
+test("Peer comparison exposes the sample basis and keeps unavailable note averages distinct", async ({
+    page,
+}) => {
+    await openRecord(page, "ko", "peer");
+    await page.locator(".nl-record-analysis > summary").click();
+    await page.getByRole("checkbox").check();
+    await expect(
+        page.getByText("Basic Grd ±200 범위의 플레이어 12명 기준", {
+            exact: true,
+        })
+    ).toBeVisible();
+    await expect(
+        page.getByText("유사 Grd 10명 기준", { exact: true })
+    ).toBeVisible();
+    const analysis = page.locator(".nl-record-analysis");
+    await expect(analysis).toContainText("85%");
+    await expect(analysis).toContainText("97%");
+    await expect(analysis).toContainText("—");
+    await page.getByRole("checkbox").uncheck();
+    await expect(
+        page.getByText("Basic Grd ±200 범위의 플레이어 12명 기준", {
+            exact: true,
+        })
+    ).toHaveCount(0);
+});
 
 test("Record preserves primary order and exposes exact values to keyboard and touch", async ({
     page,
