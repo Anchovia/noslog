@@ -256,7 +256,13 @@ plays saved`, and `Charts with updated best records`.
   policy. NosLog retains deduplicated accumulated events under the approved privacy
   contract.
 
-### Current NosLog Coverage
+### Current NosLog Coverage — **Superseded 2026-09-07 (`SYNC-32`)**
+
+> Removed from the page. The three measures are NosLog's internal completeness, give the
+> user nothing to act on, normally read as three identical numbers, and needed a helper
+> sentence to explain that they were not the attempt scope — which was the confusion. The
+> attempt result (received · saved · changed) already fixes the scope; accumulated totals
+> live on the Profile. Original text kept below as evidence.
 
 Coverage is the persistent state after all successful attempts, not a claim about the
 latest payload. Show:
@@ -1244,3 +1250,9 @@ New string: the StatusMessage title `일부 채보 제외됨` / `一部の譜面
 | ID        | Decision                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 | --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `SYNC-31` | **Bookmarklet overlay (the panel the bookmarklet injects on p.eagate) redrawn in the 2.0 language** — C8 `BookmarkletOverlay`, six states from `lib/bookmarklet.ts`: Preparing · WrongPage · Loading · Sending · Completed · Failed. It runs on a third-party page, so it carries **raw values that are the Dark token resolutions**, dark-only: panel `#222222` + 1 px `#444444`, radius 10, shadow, width 334, inset 24; text `#DBDBDB`, secondary `#AFAFAF`; status line in the StatusMessage grammar (success `#28311B` face / `#82B536` marker, failure `#42221F` / `#F15B50`, busy = spinner + 2 px progress bar `#DBDBDB` on `#444444`); primary button `#DBDBDB`/`#111111`, close button 1 px `#8A8A8A` outline, both 40 high, radius 4; actions follow the Compact fill rule (equal two-up, stacked when a label does not fit half). **No URL line** under the status (user edit) — the button already names the destination. |
+
+### Decision Log addendum — 2026-09-07 · `SYNC-32`
+
+| ID        | Decision                                                                                                                                                                                                                                                                                                                   |
+| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `SYNC-32` | **`NosLog 보유 현황` removed.** The persistent-coverage group (played charts · charts with judgement details · charts with FAST/SLOW) and its helper line leave the page in every state and locale. `sync.coverage*` keys become unused. The result page keeps `최근 동기화 결과` and `이번에 달라진 기록`. User decision. |

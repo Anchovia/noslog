@@ -151,3 +151,10 @@ C8 `BookmarkletOverlay` (6 states, raw palette). Implementation replaces the inl
 | Progress (busy) | 2 px track `#444444`, fill `#DBDBDB`, under the status line                                                                                                                            |
 | Buttons         | 40 high · radius 4 · 14/20 500 · primary bg `#DBDBDB` text `#111111` · close outline 1px `#8A8A8A` text `#DBDBDB` · equal FILL two-up, stacked full width when a label exceeds half    |
 | Removed         | the URL line (`https://p.eagate.573.jp/`, result URL) and per-state text colouring                                                                                                     |
+
+## Amendment — 2026-09-07 · coverage group removed (`SYNC-32`)
+
+`zone · NosLog 보유 현황` deleted from 36 frames (every result/state frame at 390 · 320 · 768 ·
+1280, Light + Dark, JA/EN). Frames re-hug and sections reflowed: containment 0 · overlap 0;
+no coverage string remains on P8. Implementation: drop the coverage block and the
+`sync.coverage*` strings from the sync page.
