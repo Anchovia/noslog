@@ -11,6 +11,8 @@ export default function CompactSelect<Value extends string>({
     options,
     disabled = false,
     outlined = false,
+    id,
+    className,
 }: {
     value: Value;
     onValueChange: (value: Value) => void;
@@ -23,6 +25,8 @@ export default function CompactSelect<Value extends string>({
     }[];
     disabled?: boolean;
     outlined?: boolean;
+    id?: string;
+    className?: string;
 }) {
     const selected = options.find((option) => option.value === value);
     return (
@@ -32,9 +36,11 @@ export default function CompactSelect<Value extends string>({
             disabled={disabled}
         >
             <Select.Trigger
+                id={id}
                 className={cn(
                     "nl-compact-select nl-control",
-                    outlined && "nl-compact-select--outlined"
+                    outlined && "nl-compact-select--outlined",
+                    className
                 )}
                 aria-label={label}
             >

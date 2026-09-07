@@ -84,6 +84,7 @@
     display: none;
 }
 .noslog-ui .nl-exam-stages {
+    --nl-exam-jacket-size: 64px;
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-12);
@@ -93,7 +94,7 @@
     display: block;
     width: 2px;
     height: var(--nl-spacing-16);
-    margin-inline-start: var(--nl-spacing-16);
+    margin-inline-start: calc(var(--nl-exam-jacket-size) / 2 - 1px);
     background: var(--nl-border-strong);
 }
 .noslog-ui .nl-exam-stage__row {
@@ -108,8 +109,8 @@
     text-align: start;
 }
 .noslog-ui .nl-exam-stage__jacket {
-    width: 64px;
-    height: 64px;
+    width: var(--nl-exam-jacket-size);
+    height: var(--nl-exam-jacket-size);
     flex-shrink: 0;
     border-radius: var(--nl-radius-container) 0 0 var(--nl-radius-container);
 }

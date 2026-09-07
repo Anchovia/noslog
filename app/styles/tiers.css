@@ -6,6 +6,10 @@
     gap: var(--nl-spacing-16);
     align-items: flex-start;
 }
+.noslog-ui .nl-tier-goal {
+    width: 100%;
+    justify-content: space-between;
+}
 .noslog-ui .nl-tier-browser-mode,
 .noslog-ui .nl-tier-filter-section {
     display: flex;

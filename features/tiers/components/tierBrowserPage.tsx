@@ -16,7 +16,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { FormField } from "@/components/ui/formField";
 import FullScreenDialog from "@/components/ui/fullScreenDialog";
 import ResultState from "@/components/ui/resultState";
-import { Select } from "@/components/ui/select";
+import CompactSelect from "@/components/ui/compactSelect";
 import { SegmentedControl } from "@/components/ui/segmentedControl";
 import { tierBrowserOverviewOptions } from "@/features/tiers/api/tierBrowser";
 import {
@@ -131,23 +131,24 @@ export default function TierBrowserPage({
     );
     const goalControl = (
         <FormField id={goalId} label={t("tiers.goal")}>
-            <Select
+            <CompactSelect
                 id={goalId}
+                label={t("tiers.goal")}
+                outlined
+                className="nl-tier-goal"
                 value={query.goal}
-                onChange={(event) =>
+                onValueChange={(goal) =>
                     commit({
                         ...query,
-                        goal: event.target.value as TierBrowserQuery["goal"],
+                        goal,
                         bands: [],
                     })
                 }
-            >
-                {TIER_GOALS.map((goal) => (
-                    <option value={goal} key={goal}>
-                        {tierGoalLabels[goal]}
-                    </option>
-                ))}
-            </Select>
+                options={TIER_GOALS.map((goal) => ({
+                    value: goal,
+                    label: tierGoalLabels[goal],
+                }))}
+            />
         </FormField>
     );
     return (

@@ -135,7 +135,8 @@ async function prepare(
     });
     await page.goto(`/${locale}/tiers?goal=fc&level=1`);
     await page.locator(".nl-tier-applied").click();
-    await page.locator(".nl-tiers select").selectOption("s");
+    await page.locator(".nl-tier-goal").click();
+    await page.getByRole("option", { name: "S", exact: true }).click();
     if (failSummary)
         await expect(
             page.locator(".nl-tiers").getByRole("alert")
@@ -275,7 +276,15 @@ test("all six scopes update the link context and guide without removing the filt
         for (const goal of ["s", "fc", "pianist"]) {
             await page
                 .getByRole("combobox", { name: "목표", exact: true })
-                .selectOption(goal);
+                .click();
+            await page
+                .getByRole("option", {
+                    name: { s: "S", fc: "Full Combo", pianist: "Pianist" }[
+                        goal
+                    ],
+                    exact: true,
+                })
+                .click();
             await expect(page.locator(".nl-tier-card").first()).toHaveAttribute(
                 "href",
                 new RegExp(`mode=${mode}&goal=${goal}`)
@@ -297,9 +306,8 @@ test("calculation guidance preserves chart geometry and keyboard access to exact
 }, testInfo) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await prepare(page);
-    await page
-        .getByRole("combobox", { name: "목표", exact: true })
-        .selectOption("pianist");
+    await page.getByRole("combobox", { name: "목표", exact: true }).click();
+    await page.getByRole("option", { name: "Pianist", exact: true }).click();
     await page.locator(".nl-tiers summary").click();
     const chart = page.locator(".nl-tier-weight");
     await expect(chart).toBeVisible();

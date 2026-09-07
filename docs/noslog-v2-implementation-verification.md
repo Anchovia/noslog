@@ -7,6 +7,36 @@ implementation agent.
 
 ## Resumed implementation — 2026-09-07
 
+### Exam stage connector alignment — 2026-09-08
+
+The user requested centering the stage connector on each jacket, consistent with
+the new amendment in handoff 80. The former 16px inset put the 2px line's center
+at 17px; it now derives its inset from the shared 64px jacket size, centering at
+32px. Color, thickness, vertical spacing and stage interactions remain unchanged.
+Production browser measurements passed in Chromium, Firefox and WebKit for KO/JA/EN
+at 320/390/768/1056/1470px: both connector centers match their jacket centers, with
+no horizontal overflow. Screenshots and the actual signed-in Basic 10 exam were
+inspected. Lint, TypeScript, build and all 921 unit/service tests passed.
+Logs: `/tmp/noslog-connector-{browser,lint,types,build,tests}.log`.
+
+### Tier goal menu positioning — 2026-09-08
+
+The user reported the macOS native goal select opening over its trigger and
+requested a menu below it. Tier now reuses the existing CompactSelect with its
+Radix popper placement, 8px offset and viewport collision handling. Optional
+trigger ID/class props preserve the visible field label and full-width tier
+control; other consumers retain their defaults. Goal values and URL semantics
+are unchanged. No native viewer/editor/admin control was modified.
+
+Production build, TypeScript, ESLint and 921 unit/service tests passed. The actual
+signed-in in-app browser showed the menu below the trigger and applied Full Combo.
+The new KO/JA/EN browser cases cover 320/390/768/1056/1470px placement, Escape and
+focus return, keyboard selection, mouse selection and accessibility. Chromium's
+initial automated End/Enter sequence outran Radix's scheduled focus movement;
+the test now asserts the focused option before Enter, without changing the widget.
+The final combined Chromium run passed 23 cases; Firefox/WebKit passed six locale
+matrices. Logs: `/tmp/noslog-goal-{build,types,lint,tests,browser,cross,keyboard}.log`.
+
 ### Latest Figma amendments — 2026-09-07
 
 The user authorized the amended P1–P6, P8, P10–P14, P16 and C3/C6/C7/C8 designs.

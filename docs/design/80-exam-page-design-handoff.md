@@ -149,3 +149,10 @@ C 색        하드코딩 0(증빙 미리보기 = media render 규약 제외) ·
 `Exams · 390 · Basic 8급 · 로그인 · 기본` and `Exams · 1280 · Basic 8급 · 로그인 (분석 접힘)`
 (Light + Dark) show real jacket art in the three tracklist rows. Other frames keep the
 empty-slot convention.
+
+## Amendment — 2026-09-07 · tracklist connector centred
+
+The 2 px connector between stage rows sat 17 px from the row's left edge (connector inset
+16); it now runs down the **jacket's centre line** (x = 32 for the 64 jacket, inset 31 —
+derived from the jacket, not a scale value). User observation on the built page. Applied to
+every `stage list` connector in P13.
