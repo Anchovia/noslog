@@ -802,6 +802,16 @@ confirmations (a sentence and its actions) at every width; **768** on Wide for a
 with a body — a form (Feedback / Error Report) or a media preview (share card). 640 was
 drawn again and rejected so that one Wide overlay width exists.
 
+**Compact dialog actions fill the width (2026-09-07, Z1 ㉛).** In a 334 dialog the action
+row is not the desktop "hug and right-align" row: one action fills the row; two actions are
+an equal two-up (cancel first); three are one full-width primary over an equal two-up
+(the share dialog's form). A single-step button inside the body (Discord re-authentication)
+also fills. The equal split was chosen over "cancel fills the remainder" because that
+made Cancel the largest control in a destructive dialog and its width vary with the
+primary label. Wide dialogs keep hugged, right-aligned actions. Applied to
+`DeleteConfirmDialog`, the account-deletion dialog and `FeedbackDialog` Compact; the share
+dialog already followed it.
+
 ## Exam tier ramp and plate face — 2026-09-06 (Z1 ㉗, `PROF-56`)
 
 Six aliases, no new primitives:

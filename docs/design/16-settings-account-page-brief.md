@@ -923,3 +923,9 @@ context boards. Japanese and English follow at the locale pass, like other pages
 as a settings-category label — a literal `경험` reads as nothing. The category holds
 language and theme, so `화면 설정` names what it does. The key `settings.appearance`
 already exists with that Korean value; only its description widens to cover language.
+
+### Decision Log addendum — 2026-09-07 · `SET-47`
+
+| ID       | Decision                                                                                                                                                                                                                                                                                                                            |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `SET-47` | **Account-deletion dialog actions fill the Compact width** (Z1 ㉛): `Discord로 다시 인증` spans the dialog; `취소` and `모든 정보 영구 삭제` are an equal two-up. The earlier hugged, right-aligned row was only the `DeleteConfirmDialog` precedent carried over; document 24 now records the Compact action rule. Wide unchanged. |

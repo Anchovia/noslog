@@ -132,3 +132,10 @@ C 색        하드코딩 0 · 신설 토큰 대비: 탈퇴 면 위 흰 글자 L
 6. **Legacy `/[locale]/profile/settings` redirect, URL-restorable category state, and
    the staged-save/discard mechanics** are behavior contracts in the brief, not drawn
    states — implementation must take them from document 16 directly.
+
+## Amendment — 2026-09-07 · `SET-47` dialog actions
+
+All `Dialog · 회원 탈퇴` frames (10 action rows/buttons across 초기 · 준비 완료 · 처리 중 · 실패,
+Light + Dark) now use the Compact action rule: single-step button FILL, two actions equal
+FILL. C8 `DeleteConfirmDialog` and `FeedbackDialog` Compact variants changed the same way.
+Label overflow 0.
