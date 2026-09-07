@@ -408,3 +408,9 @@ Section containment 0 · overlap 0 · scoped audits (Compact 390, Wide 1280, 320
 Knock-on to re-check in implementation: the keyboard-state dynamic-row worst case — the zone is
 now three rows (240) instead of four short rows (212) at 390, so the number of preview rows that
 fit above the handoff changes.
+
+## Amendment — 2026-09-07 · `SHELL-36` stacked footer centred
+
+`OrdinaryFooter · Layout=Compact` (used below 840 on every page) now centres its links row
+and its service notice (text centre-aligned). Wide is unchanged. 677 instances across P1–P15
+inherit it with no overrides; 601 of them show the two-line notice at 390/320.
