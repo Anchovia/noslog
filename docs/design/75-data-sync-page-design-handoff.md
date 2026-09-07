@@ -125,3 +125,15 @@ C 색        바인딩 100%(하드코딩 0)
    checked against the official Japanese site. Confirm before shipping.
 2. **Cooldown countdown** renders `12초` as representative data. The value comes from
    the server response; no fixed number is implied.
+
+## Amendment — 2026-09-07 · first-use install card (`SYNC-30`)
+
+The twelve `첫 사용 · 설치 펼침` frames (390 · 320 · 768 · 1280, Light + Dark, and 390 JA/EN) were
+rebuilt from their own strings: status row `기록 없음` alone; `북마클릿 등록` → install card
+(dashed drop target + centred caption) → framed GIF slot → `모바일에서 등록하는 방법`
+Disclosure (collapsed; the expanded state with the two mobile steps and `북마클릿 주소 복사` is
+not drawn); `기록 동기화` → two numbered step rows with GIF beside (768/1280) or below
+(390/320); `도움말 · 보안` now also carries the security sentence. 1280 keeps the 805/395 split.
+Heights: 390 1607 · 320 1538 · 768 1654 · 1280 1368. Checks: section containment 0 · overlap 0 ·
+text overflow 0 · scoped audits (Compact 390, 1280, 320, JA) clean. `Icon/bookmark` does not
+exist in C1, so the bookmarklet button is text-only; adding the Lucide glyph is an open item.
