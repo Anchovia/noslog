@@ -90,86 +90,29 @@ NosLog의 코드 작성·디렉터리·API 응답·Server Action·Zod·React Hoo
 - 외부 소비자가 있는 기존 API와 채보 viewer/editor 보존 범위는 코드 스타일 정리만으로
   변경하지 않습니다.
 
-### NosLog 2.0 디자인 권위
+### NosLog 2.0 구현 기준
 
-NosLog 2.0 디자인 가이드의 활성 소스는 `docs/design/` 아래 **영문 문서만** 사용합니다.
-더 이상 `.ko.md` companion을 만들거나 한영 문서 동기화를 요구하지 않습니다. 이 정책은
-디자인 문서에만 적용되며, 제품 UI의 한국어·일본어·영어 지원과 다국어 검증 요구는 그대로
-유지합니다.
+현재 단계는 NosLog 2.0 UI 구현과 검증입니다. 공통 레이아웃·반응형 기준은
+[현재 구현 계약](./docs/design/README.md) 한 곳에서 관리합니다.
+사용자의 최신 결정이 우선이고, 이 공통 계약 안에서 현재 Figma
+`NosLog v2.0.0`의 P1–P16·C1–C8을 시각적 기준으로 사용합니다.
+Z1은 결정 기록이며 구현 페이지가 아닙니다.
 
-현재 권위는 다음 순서로 판단합니다.
+폰트·토큰 사용과 보존 경계도 구현 계약에 포함합니다. 화면만으로 알 수 없는
+투표 자격·탈퇴·동기화·개인정보 규칙은 [기능 규칙](./docs/design/product-rules.md)에
+정리했습니다. [코드 스타일](./docs/code-style.md)은 그대로 따릅니다.
 
-1. 사용자의 가장 최근 명시적 결정
-2. `AGENTS.md`의 작업·보존 경계
-3. 이 `README.md`의 제품 기준선과 여섯 블록 진행 상태
-4. [현재 남은 작업 감사](./docs/design/57-design-guide-remaining-work-audit.md)
-5. [Downstream 디자인·구현 handoff](./docs/design/64-downstream-design-implementation-handoff.md)
-6. [Foundation v0.1 규범](./docs/design/24-foundation-v0.1.md)
-7. [Foundation v0.1 출처와 결정 이력](./docs/design/25-foundation-v0.1-provenance.md)
-8. 그 밖의 현재 영문 제품 감사·IA·Page Brief·교차 원칙 문서
+기존 번호형 브리프·핸드오프·감사·중복 Foundation 문서의 필요한 규칙은 위 두 문서로
+압축한 뒤, 승인된 이전 문서 50개를 삭제했습니다. 원본과 미커밋 문서는 검증된 로컬
+백업에 보존했습니다. 과거 기록을 현재 구현 기준으로 다시 복원하지 않습니다.
 
-이후 문서의 명시적 `Approved`·`Rejected`·`Superseded` 기록은 과거 제안, 체크리스트,
-specimen, 문서 번호보다 우선합니다. 삭제된 비교 문서는 Git 이력에만 보존하며 현재
-남은 작업을 복원하는 근거로 사용하지 않습니다. 정확한 token·alias·source 값은 문서
-`24`와 `25`에만 유지하고 이 README나 AGENTS.md에 중복 복사하지 않습니다.
+기존 디자인 가이드의 여섯 블록은 모두 완료 상태입니다: 색상, 아이콘, 모션,
+데이터 시각화, Foundation·공통 패턴, 핸드오프·내보내기. 이번 정리는 별도의
+디자인 가이드 단계를 다시 여는 작업이 아닙니다. 예전 PDF는 당시의 배포 기록이며
+현재 구현의 권위가 아닙니다.
 
-Tailwind CSS는 구현과 반응형 layout 도구일 뿐 palette·starter theme·sample component의
-시각적 권위가 아닙니다. 현재 승인된 Foundation은 저명한 design system의 공개 원본값과
-사용자 승인 기록을 따르며, 임의 혼합·보간·색조 이동을 허용하지 않습니다.
-
-기존 채보 viewer와 editor 전체는 NosLog 2.0 보존 예외입니다. Page, DOM shell, control,
-label, accessibility behavior, responsive composition·containment, PixiJS/WebGL Falling
-renderer, Canvas Full-sheet renderer, note·left/right-hand palette, geometry, animation,
-chart mathematics와 editor rendering model을 현재 구현 그대로 유지합니다. 일반 UI
-Foundation·component·template·handoff 규칙을 적용하거나 새 specimen을 만들지 않습니다.
-정확한 경계는 [보존 계약](./docs/design/07-chart-viewer-editor-preservation.md)을 따릅니다.
-
-### NosLog 2.0 디자인 가이드 남은 작업 기준선
-
-고정된 사용자 대면 작업 단위는 아래 여섯 블록뿐입니다. 완료된 블록을 오래된 문서의
-미완료 문구로 다시 열지 않으며, 조사·후보·specimen·검증·문서화 같은 내부 단계를 새
-top-level 작업으로 세지 않습니다. 사용자가 분모와 계산법을 따로 승인하기 전에는 완료
-퍼센트를 표시하지 않습니다.
-
-|   # | 작업 블록                             | 상태       | 현재 범위                                                                                               |
-| --: | ------------------------------------- | ---------- | ------------------------------------------------------------------------------------------------------- |
-|   1 | C5 color 마감                         | `Complete` | difficulty, local-data, judgement color 승인 완료; viewer/editor 제외                                   |
-|   2 | Iconography                           | `Complete` | Lucide 일반 UI source, size, stroke, label, target 계약 승인 완료                                       |
-|   3 | Motion / Reduced motion               | `Complete` | Atlassian duration/easing과 reduced-motion 대체 계약 승인 완료                                          |
-|   4 | Data-visualization anatomy            | `Complete` | GitHub Primer 기반 일반 UI anatomy·interaction 계약 승인 완료                                           |
-|   5 | Foundation 승격과 reusable UI 정리    | `Complete` | Foundation v0.1, Pretendard JP delivery, 문서 63의 lean reusable UI alias·pattern 승인 완료             |
-|   6 | Downstream handoff와 milestone export | `Complete` | 문서 64의 screen requirements·mapping·QA·downstream design 경계와 English ED-03 milestone PDF 승인 완료 |
-
-여섯 블록이 모두 완료되어 남은 top-level 디자인 가이드 작업은 없습니다. 완료된 Block 5 package는
-[문서 63](./docs/design/63-foundation-v0.1-reusable-ui-regression.md)에 기록되어 있으며,
-Block 6 downstream package는
-[문서 64](./docs/design/64-downstream-design-implementation-handoff.md)에 기록되어 있습니다.
-배포용 산출물은
-[NosLog 2.0 Design Guide v0.1 PDF](./output/pdf/noslog-2.0-design-guide-v0.1.pdf)입니다.
-과거 proposal·specimen·checklist로 완료된 블록을 다시 열지 않습니다.
-
-2026-08-12 사용자 결정에 따라 악곡 검색 결과의 개인 기록 hover/focus preview는
-`Superseded`되었습니다. 결과 카드는 입력 방식과 관계없이 악곡 정체성을 유지하고,
-개인 성과 상세는 적용 상태 요약 또는 악곡 상세에서 제공합니다. 이 정정은 완료된 여섯
-블록을 다시 열거나 chart viewer/editor 경계를 변경하지 않습니다.
-
-현재 downstream high-fidelity Figma 작업은 기존 `NosLog v2.0.0` 파일에서 이어집니다.
-특정 도구 이름은 권위가 아니며, 문서 `24`·`25`·`63`의 승인 후 정밀 보정과 문서 `05`의
-Music Detail 후속 결정도 현재 권위에 반영했습니다. 이는 완료된 여섯 디자인 가이드
-블록을 다시 열지 않으며, 구현은 이후의 별도 Codex 세션에 남습니다.
-
-PDF에 추가하는 시각 자료는 외형만 보고 규범으로 승인하지 않습니다. 현재 Foundation
-권위와 고정된 upstream 원본을 일대일로 대조하고,
-`scripts/design-guide-visual-core-manifest.json` 및
-`scripts/validate-design-guide-visual-core.py` 검증을 통과한 review artifact만 사용자
-검토 대상으로 사용합니다. 대체 font, 손으로 근사한 icon, 추정 shadow 또는 역할 밖
-chroma는 검증 실패로 처리하며 milestone PDF에 통합하지 않습니다.
-
-2026-09-06 사용자 결정에 따른 폰트 전달 규칙 정정은
-[Foundation 24](./docs/design/24-foundation-v0.1.md#family-and-language-behavior)와
-[결정 기록 25](./docs/design/25-foundation-v0.1-provenance.md#approved-delivery-correction--2026-09-06)에
-반영했습니다. 기존 PDF의 해당 설명보다 이 정정이 우선하며, 여섯 디자인 가이드 블록의
-완료 상태와 채보 viewer/editor·관리자 보존 범위는 유지합니다.
+검증 결과는 [구현 검증 기록](./docs/noslog-v2-implementation-verification.md)에
+범위와 날짜를 명시합니다. 테스트 통과와 전체 화면의 시각적 완성은 구분합니다.
 
 ## 로컬 개발
 

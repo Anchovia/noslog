@@ -580,8 +580,21 @@ for (const locale of ["ko", "ja", "en"])
             data.scopes[2].eligible = true;
             await openCommunity(page, { locale, data });
             await page.locator("button.nl-vote-row").nth(1).click();
-            for (const width of [320, 390, 768, 1024, 1280]) {
+            for (const width of [320, 390, 768, 1024, 1055, 1056, 1280, 1470]) {
                 await page.setViewportSize({ width, height: 900 });
+                await expect
+                    .poll(() =>
+                        page
+                            .locator(".nl-community-columns")
+                            .first()
+                            .evaluate(
+                                (element) =>
+                                    getComputedStyle(
+                                        element
+                                    ).gridTemplateColumns.split(" ").length
+                            )
+                    )
+                    .toBe(width >= 1056 ? 2 : 1);
                 await expect
                     .poll(() =>
                         page.evaluate(

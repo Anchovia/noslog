@@ -6,7 +6,7 @@ import { Check, ChevronDown } from "lucide-react";
 import { useId } from "react";
 import type { ReactNode } from "react";
 
-import useElementWidth from "@/lib/hooks/useElementWidth";
+import useMediaQuery from "@/lib/hooks/useMediaQuery";
 
 export default function AdaptiveAreaSwitcher<Value extends string>({
     value,
@@ -23,18 +23,16 @@ export default function AdaptiveAreaSwitcher<Value extends string>({
     children: ReactNode;
     busy?: boolean;
 }) {
-    const { ref, width } = useElementWidth<HTMLDivElement>();
-    const wide = width >= 424;
+    const showTabs = useMediaQuery("(min-width: 672px)");
     const id = useId();
     return (
         <Tabs.Root
-            ref={ref}
             value={value}
             activationMode="manual"
             onValueChange={(next) => onValueChange(next as Value)}
             className="nl-area"
         >
-            {wide ? (
+            {showTabs ? (
                 <Tabs.List className="nl-area__tabs" aria-label={label}>
                     {options.map((option) => (
                         <Tabs.Trigger
@@ -98,10 +96,10 @@ export default function AdaptiveAreaSwitcher<Value extends string>({
             <Tabs.Content
                 value={value}
                 id={id}
-                role={wide ? "tabpanel" : "region"}
-                aria-labelledby={wide ? `${id}-tab-${value}` : undefined}
+                role={showTabs ? "tabpanel" : "region"}
+                aria-labelledby={showTabs ? `${id}-tab-${value}` : undefined}
                 aria-label={
-                    wide
+                    showTabs
                         ? undefined
                         : options.find((option) => option.value === value)
                               ?.label

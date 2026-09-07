@@ -7,6 +7,103 @@ implementation agent.
 
 ## Resumed implementation — 2026-09-07
 
+### Legacy design-document cleanup completed — 2026-09-08
+
+After the user explicitly approved deletion of the named 50-file scope, including
+the original preservation/Foundation/provenance records, deletion succeeded.
+`docs/design/` now contains only `README.md` and `product-rules.md`. Root AGENTS
+preserves the entire viewer/editor and administrator boundary, code-style process
+and user-owned Git operations. The temporary deletion plan was also removed.
+
+Refreshed backup: `/Users/carol/Desktop/project/noslog-docs-backup-20260908-085032`.
+All 57 copied documentation/root files were hash-verified. The backup contains the
+exact deletion list, manifest, preceding working-tree status and hashes of existing
+application changes. Post-deletion checks passed: exactly 50 approved files absent,
+all deleted originals recoverable with matching hashes, exactly two current design
+documents, valid local Markdown file links, unchanged code-style documents and
+unchanged pre-existing application edits. `git diff --check` passed. There are 49
+tracked deletions because the removed temporary plan was untracked.
+
+This work changed documentation only; runtime tests were not rerun for file removal.
+Historical PDF scripts require their original source package and are not a current
+validation pipeline. The earlier Music Detail continuous-resize verification is
+still separate and unfinished; this cleanup does not certify that UI change.
+No commit, push, staging, branch or history operation was performed.
+
+### Two-document consolidation and deletion block — 2026-09-08
+
+The user approved condensing necessary rules into the implementation contract and
+product rules, then deleting legacy briefs/handoffs/audits/duplicate Foundation
+instead of moving 17 briefs intact. Both replacement documents are written, and
+root AGENTS/README now point to them. Exact viewport modes, single-file Pretendard
+JP, preservation boundaries, eligibility, deletion verification and retention rules
+are retained. Current document links, critical-rule checks and diff checks passed.
+
+Before deletion, 56 documentation/root files were copied and hash-verified at
+`/Users/carol/Desktop/project/noslog-docs-backup-20260908-083939`. A read-only follow-up
+verified byte-identical backups for all 50 deletion targets, including uncommitted
+edits. Automatic review nevertheless rejected deletion, including a retry with that
+evidence and the user's approval quoted: it requires authorization specifically
+covering the preservation, Foundation and provenance documents. No target was deleted
+or moved. `design/cleanup-plan.md` now lists the exact 50-file scope; its latest
+update must also be backed up before deletion. Physical cleanup and the preceding
+UI continuous-resize verification remain unfinished. No Git operations were performed.
+
+### Documentation authority consolidation — 2026-09-08
+
+At the user's request, the common layout is now defined in `docs/design/README.md`.
+Root AGENTS/README point to it and no longer require the retired design-only stage.
+Foundation's contradictory page-container tier table and bounded-shell amendment
+were replaced by a link to the common contract. Current entry-point file links,
+cleanup-plan inventory and `git diff --check` passed.
+
+Automatic approval review rejected bulk deletion/movement and automated rewriting
+of the legacy documents. No listed file was deleted or moved. The exact 29-delete,
+17-move scope and pre-deletion backup requirements are in `design/cleanup-plan.md`
+for explicit approval. This documentation cleanup is not yet complete.
+
+The preceding Music Detail change aligns header actions and area navigation to
+the same 672px viewport transition. Its build, lint, 921 unit tests and 39 existing
+browser tests passed, but the user redirected work before the continuous-resize
+regression/visual checks were completed. It remains uncommitted and must not be
+reported as fully verified. The earlier dated entries below describe their own
+versions and are not current layout authority.
+
+### Music Detail Wide composition correction — 2026-09-08
+
+The 1216px `page` container queries could never activate inside the approved
+1000px shell. Chart Info, My Record and Tier & Evaluation now activate their
+existing 2:1 composition at the ordinary 1056px viewport transition. Ranking
+remains full width. P1 Wide Figma section `2543:23376` was read again to compare
+panel order and column composition; its original absolute widths are superseded
+by the user's bounded-shell decision, as clarified in handoff 73.
+
+Validation passed: 39 existing Music Detail browser tests; nine strengthened
+KO/JA/EN responsive/accessibility tests explicitly asserting one column at 1055px
+and two at 1056px; 921 unit/service tests; ESLint, TypeScript and production build.
+Independent Chromium, Firefox and WebKit Chart Info checks passed in three locales
+at ten viewport widths from 320 to 1920, including 1470. The in-app browser and
+Wide screenshots of Chart Info, My Record and community columns were inspected.
+Logs: `/tmp/noslog-detail-wide-{e2e,boundary,engines,tests,lint,types,build}.log`.
+These checks cover this correction, not a new full P1–P16 visual certification.
+
+### Compact Music Detail area selector — 2026-09-08
+
+The user rejected showing the tab list within Compact merely because its labels fit.
+Handoff 73 now supersedes the 424px label-fit transition with 672px available inline
+size: below it, the existing full-width select-only combobox remains visible; from
+it, the existing manual-activation tabs remain. The briefly proposed stretched tabs
+were removed and are not part of this change.
+
+The built app passed nine existing Chart Info browser tests, 921 unit/service tests,
+ESLint, TypeScript and build. A separate production inspection passed Chromium,
+Firefox and WebKit in KO/JA/EN at eleven widths from 320 through 1280, including the
+reported 488px viewport and transition boundaries. It checked full-width selection,
+absence of concurrent tabs, all four options, selection/URL updates, Escape and
+horizontal reflow after the existing chart's resize settling. Representative selector
+screenshots were inspected. Logs: `/tmp/noslog-area-{browser,regression,tests,lint,
+types,build}.log`. No viewer/editor/admin source was changed.
+
 ### Exam stage connector alignment — 2026-09-08
 
 The user requested centering the stage connector on each jacket, consistent with

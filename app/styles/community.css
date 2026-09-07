@@ -378,8 +378,8 @@
 .noslog-ui .nl-action-menu__item:hover {
     background: var(--nl-interaction-hover);
 }
-@container page (min-width: 1216px) {
-    .noslog-ui .nl-community-columns {
+@media (min-width: 1056px) {
+    .noslog-ui .nl-music-detail .nl-community-columns {
         display: grid;
         grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
         gap: var(--nl-spacing-24);

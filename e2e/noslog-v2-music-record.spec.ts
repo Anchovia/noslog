@@ -275,8 +275,21 @@ for (const locale of ["ko", "ja", "en"]) {
             "Explicit width matrix is run once."
         );
         await openRecord(page, locale);
-        for (const width of [320, 390, 768, 1024, 1280]) {
+        for (const width of [320, 390, 768, 1024, 1055, 1056, 1280, 1470]) {
             await page.setViewportSize({ width, height: 900 });
+            await expect
+                .poll(() =>
+                    page
+                        .locator(".nl-record-panel > .nl-detail-columns")
+                        .first()
+                        .evaluate(
+                            (element) =>
+                                getComputedStyle(
+                                    element
+                                ).gridTemplateColumns.split(" ").length
+                        )
+                )
+                .toBe(width >= 1056 ? 2 : 1);
             await expect
                 .poll(() =>
                     page.evaluate(

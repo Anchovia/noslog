@@ -392,16 +392,16 @@
     background: var(--nl-surface-surface);
     border-radius: var(--nl-radius-container);
 }
-@container page (min-width: 1216px) {
-    .noslog-ui .nl-detail-columns {
+@media (min-width: 1056px) {
+    .noslog-ui .nl-music-detail .nl-detail-columns {
         grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
         gap: var(--nl-spacing-16);
     }
-    .noslog-ui .nl-record-panel > .nl-detail-columns {
+    .noslog-ui .nl-music-detail .nl-record-panel > .nl-detail-columns {
         gap: var(--nl-spacing-16);
     }
 }
-@container page (min-width: 768px) {
+@media (min-width: 672px) {
     .noslog-ui .nl-music-entity {
         flex-direction: row;
         align-items: center;
