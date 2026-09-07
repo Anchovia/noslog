@@ -182,6 +182,14 @@ declared finished.
   font and placeholder media differ from the production Pretendard JP and flags.
 - Logs: `/tmp/noslog-p16-badge-{tests,lint,types,build}.log`.
 
+### P15 operator display approval — 2026-09-07
+
+The user approved the exact operator display `계롤(Anchovia)` in all locales and
+confirmed `sodacandy77@naver.com`. Both are reflected in the policy copy. This
+settles the display/contact part of the P15 row below; provider, retention and
+legal/translation release checks remain open. The activity-name approval does
+not certify legally sufficient controller identification.
+
 ### Decisions and access needed before final completion
 
 These are precise outstanding gates, not new design-guide work blocks. Decision

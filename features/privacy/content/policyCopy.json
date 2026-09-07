@@ -40,12 +40,12 @@
                     {
                         "kind": "warning",
                         "title": "법률 검토 대기",
-                        "text": "운영자·책임자 명의는 릴리스 전 법률 검토와 별도 승인 후 확정됩니다. 현재 표기 「NosLog 운영자」는 임시입니다."
+                        "text": "운영자 활동명은 「계롤(Anchovia)」입니다. 법적으로 필요한 운영자·책임자 정보의 충족 여부는 릴리스 전 검토 예정입니다."
                     },
                     {
                         "kind": "contact",
                         "operatorLabel": "운영자",
-                        "operator": "NosLog 운영자",
+                        "operator": "계롤(Anchovia)",
                         "emailLabel": "이메일",
                         "email": "sodacandy77@naver.com"
                     },
@@ -308,12 +308,12 @@
                     {
                         "kind": "warning",
                         "title": "法的レビュー待ち",
-                        "text": "運営者・責任者の名義はリリース前の法的レビューと承認後に確定します。現在の「NosLog運営者」は暫定表記です。"
+                        "text": "運営者の活動名は「계롤(Anchovia)」です。法令上必要な運営者・責任者情報を満たしているかは、リリース前に確認予定です。"
                     },
                     {
                         "kind": "contact",
                         "operatorLabel": "運営者",
-                        "operator": "NosLog運営者",
+                        "operator": "계롤(Anchovia)",
                         "emailLabel": "メール",
                         "email": "sodacandy77@naver.com"
                     },
@@ -576,12 +576,12 @@
                     {
                         "kind": "warning",
                         "title": "Pending legal review",
-                        "text": "The operator/controller identity will be finalized after pre-release legal review and explicit approval. The current label \"NosLog operator\" is temporary."
+                        "text": "The operator uses the name \"계롤(Anchovia)\". Whether the legally required operator/controller information is complete remains subject to pre-release review."
                     },
                     {
                         "kind": "contact",
                         "operatorLabel": "Operator",
-                        "operator": "NosLog operator",
+                        "operator": "계롤(Anchovia)",
                         "emailLabel": "Email",
                         "email": "sodacandy77@naver.com"
                     },

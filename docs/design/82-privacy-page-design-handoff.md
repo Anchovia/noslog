@@ -1,5 +1,13 @@
 # 82 · Privacy and Data Practices — High-Fidelity Design Handoff
 
+## Approved operator display — 2026-09-07
+
+The user approved the exact public operator name `계롤(Anchovia)` in all three
+locales and confirmed `sodacandy77@naver.com` as the contact email. This supersedes
+the temporary `NosLog operator` label. It settles the display name and contact,
+not the legal sufficiency of an activity name or the remaining provider,
+retention, translation and release verification requirements.
+
 **Page family** P15 · Privacy
 **Governing brief** [18-privacy-data-practices-page-brief.md](18-privacy-data-practices-page-brief.md)
 **Figma page** `P15 · Privacy 조립` (file `NosLog v2.0.0`, `cVbWCxhkfxFfHmAKLCyKrD`, page `2923:2`)
