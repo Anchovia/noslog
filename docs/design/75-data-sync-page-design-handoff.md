@@ -137,3 +137,17 @@ not drawn); `기록 동기화` → two numbered step rows with GIF beside (768/1
 Heights: 390 1607 · 320 1538 · 768 1654 · 1280 1368. Checks: section containment 0 · overlap 0 ·
 text overflow 0 · scoped audits (Compact 390, 1280, 320, JA) clean. `Icon/bookmark` does not
 exist in C1, so the bookmarklet button is text-only; adding the Lucide glyph is an open item.
+
+## Amendment — 2026-09-07 · bookmarklet overlay (`SYNC-31`)
+
+C8 `BookmarkletOverlay` (6 states, raw palette). Implementation replaces the inline styles in
+`lib/bookmarklet.ts` with these values (dark-only, no tokens available on p.eagate):
+
+| Part            | Value                                                                                                                                                                                  |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Panel           | 334 wide · padding 24 · gap 16 · bg `#222222` · border 1px `#444444` · radius 10 · shadow 0 8 24 rgba(0,0,0,.4) · fixed top 16 / right 16                                              |
+| Title           | 16/24 · 600 · `#DBDBDB`                                                                                                                                                                |
+| Status line     | row padding 12 · radius 4 · 8 px marker in a 20 box + 14/20 `#DBDBDB`; success bg `#28311B` marker `#82B536`; failure bg `#42221F` marker `#F15B50`; busy: no bg, spinner 16 `#AFAFAF` |
+| Progress (busy) | 2 px track `#444444`, fill `#DBDBDB`, under the status line                                                                                                                            |
+| Buttons         | 40 high · radius 4 · 14/20 500 · primary bg `#DBDBDB` text `#111111` · close outline 1px `#8A8A8A` text `#DBDBDB` · equal FILL two-up, stacked full width when a label exceeds half    |
+| Removed         | the URL line (`https://p.eagate.573.jp/`, result URL) and per-state text colouring                                                                                                     |
