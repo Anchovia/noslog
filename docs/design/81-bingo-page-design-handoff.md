@@ -127,3 +127,18 @@ C 색        하드코딩 0(자켓 평면 위 scrim 칩·흰 트랙 = on-media �
 - Sweep exemptions confirmed as intended: `media render` covers (full-bleed, token-exempt),
   `mini board chip` / `edge progress` internals (2px optical), `Icon/circle-help` 14 (IC-06
   bounded exception). `audit.js` now whitelists these by name.
+
+## 7. Amendment — 2026-09-07 · wide filter popover (`BINGO-25`)
+
+Before this the filter-open state was not drawn at any width for Bingo. Added: C8
+`BingoFilterPopover` (component + DARK VERIFICATION) and eight P14 frames — `Bingo · 1280/768 ·
+리스트 · 로그인 · 필터 팝오버 · 열림` and `· 갱신 중` in the Wide 1280 and Intermediate 768 sections,
+Light and Dark. The popover is an absolute instance 8 px under the `FilterSortControl` trigger;
+the 갱신 중 frames select `진행 중`, switch the trigger to Applied and colour the catalog grid text
+`content/pending`. Checks: section containment 0 · overlap 0 · scoped audits (C8 section, P14
+Wide 1280, Intermediate 768 Dark) clean.
+
+Found while auditing the new frames: the wide/768 catalog grid rows were FIXED at 369 while the
+card body needed 85 (12 + title 24 + 8 + bottom group 29 + 12) and got 77 — an 8 px squeeze on
+every card (A15, 25 cards per frame) that predates this amendment. Rows are now re-derived
+from the tallest card (369 → 377) in every wide/768 frame and the sections reflowed.
