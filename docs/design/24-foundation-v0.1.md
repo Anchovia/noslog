@@ -795,8 +795,12 @@ width, `390 − 2×28`) and **Wide 768**, which reuses the `reading` container m
 dialog width when the dialog carries a media preview that must stay legible (the profile
 share card: 720×378 inside 768). The user chose 768 over 640 (the Home bounded width) and
 334 on a drawn comparison. This is a bounded reuse of the reading measure for an overlay
-box, not a new primitive; dialogs that carry only text and actions stay at 334 in every
-width.
+box, not a new primitive.
+
+**Amended 2026-09-07 (`SHELL-37`, Z1 ㉚).** The rule is two-step: **334** for short
+confirmations (a sentence and its actions) at every width; **768** on Wide for any dialog
+with a body — a form (Feedback / Error Report) or a media preview (share card). 640 was
+drawn again and rejected so that one Wide overlay width exists.
 
 ## Exam tier ramp and plate face — 2026-09-06 (Z1 ㉗, `PROF-56`)
 

@@ -414,3 +414,12 @@ fit above the handoff changes.
 `OrdinaryFooter · Layout=Compact` (used below 840 on every page) now centres its links row
 and its service notice (text centre-aligned). Wide is unchanged. 677 instances across P1–P15
 inherit it with no overrides; 601 of them show the two-line notice at 390/320.
+
+## Amendment — 2026-09-07 · Feedback dialog frames (`SHELL-37`)
+
+The Feedback / Error Report dialog (opened from the More panel on any page) is hosted on Home
+as its representative page: `Home · 390 · 피드백 다이얼로그 · {열림 · 내용 길이 오류 · 첨부 형식 오류 ·
+제출 실패 · 제출 중 · 접수 완료 · 로그인 필요}` (Light), `Home · 390 · 기본 · Dark · … · 열림`,
+`Home · 1280 · … · 열림` (Light + Dark) and `Home · 768 · … · 열림` — 11 frames, each the base
+frame with a `surface/scrim` and a centred C8 `FeedbackDialog` instance (Compact 334 at 390,
+Wide 768 at 768/1280).
