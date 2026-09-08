@@ -9,6 +9,21 @@ implementation agent.
 
 ### Page-suite visual audit checkpoint — 2026-09-08
 
+P16 metric text line boxes now match the measured Figma heights after user
+approval: grade label 23px, grade value 156px (70px when absent), rank labels
+29px and rank values 70px. Pretendard JP remains unchanged; its glyph widths
+are not forced to the IBM Plex reference widths. The basic, empty and partial
+Figma frames (`2986:5`, `2986:59`, `2986:113`) supplied the measurements.
+Five actual 1200x630 ImageResponse outputs were inspected: KO basic/empty/partial,
+JA long name and EN Recital. Card rendering/route tests passed 13 checks;
+the browser harness passed 45 checks across Chromium/Firefox/WebKit including
+share preparation, failure/retry, clipboard rejection and cancellation (six
+unrelated opt-in cases skipped). Lint, typecheck, 908 unit tests (13 opt-in
+skips) and restored production build passed. Logs:
+`/tmp/noslog-p16-fixed-render.log`, `/tmp/noslog-p16-fixed-browser.log`,
+`/tmp/noslog-p16-unit.log`. This is targeted card evidence, not a claim that
+the entire page suite or physical-device sharing has been certified.
+
 P15 policy checks passed 18 tests across Chromium/Firefox/WebKit in KO/JA/EN:
 12 sections, compact contents navigation and focus, reflow, history empty state,
 text-spacing overrides and print composition. The harness also passed its 27

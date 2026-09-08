@@ -288,6 +288,7 @@ export default function ProfileCardImage({
                         style={{
                             color: subdued,
                             fontSize: 18,
+                            lineHeight: "23px",
                             letterSpacing: 3,
                             textTransform: "uppercase",
                         }}
@@ -298,6 +299,7 @@ export default function ProfileCardImage({
                         style={{
                             color: data.grade ? "#facc15" : subdued,
                             fontSize: data.grade ? 120 : 54,
+                            lineHeight: data.grade ? "156px" : "70px",
                             fontWeight: 700,
                         }}
                     >
@@ -313,10 +315,22 @@ export default function ProfileCardImage({
                             gap: 8,
                         }}
                     >
-                        <span style={{ color: "#a0a0aa", fontSize: 19 }}>
+                        <span
+                            style={{
+                                color: "#a0a0aa",
+                                fontSize: 19,
+                                lineHeight: "29px",
+                            }}
+                        >
                             {t("profile.globalRank")}
                         </span>
-                        <span style={{ fontSize: 54, fontWeight: 700 }}>
+                        <span
+                            style={{
+                                fontSize: 54,
+                                fontWeight: 700,
+                                lineHeight: "70px",
+                            }}
+                        >
                             {data.globalRank
                                 ? `#${formatToComma(data.globalRank)}`
                                 : "-"}
@@ -336,12 +350,19 @@ export default function ProfileCardImage({
                                 gap: 8,
                                 color: "#a0a0aa",
                                 fontSize: 19,
+                                lineHeight: "29px",
                             }}
                         >
                             <CountryFlag source={flag} width={25} height={17} />
                             {t("profile.countryRank", { country })}
                         </span>
-                        <span style={{ fontSize: 54, fontWeight: 700 }}>
+                        <span
+                            style={{
+                                fontSize: 54,
+                                fontWeight: 700,
+                                lineHeight: "70px",
+                            }}
+                        >
                             {data.countryRank
                                 ? `#${formatToComma(data.countryRank)}`
                                 : "-"}
