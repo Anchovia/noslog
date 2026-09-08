@@ -7,6 +7,22 @@ implementation agent.
 
 ## Resumed implementation — 2026-09-07
 
+### Common-layout regression — 2026-09-09
+
+After the P16 commit, the unchanged application passed 66 browser checks:
+16 Chromium and 50 Firefox/WebKit. Fourteen duplicate mobile-project shell
+checks were skipped because the desktop-project matrix explicitly sweeps mobile
+through ultrawide widths. The KO/JA/EN checks cover 12 route shells at 16 widths
+from 320 to 2560px, menu positioning/focus, complete unsplit Pretendard JP delivery
+across 13 routes, and coherent page modes. Music Detail sweeps 640–800px in both
+directions at 1px increments and preserves selected area across representations.
+Column/rail checks cover both sides of 1056px. The viewer check only verifies its
+preserved shell; it does not play a chart. Compact Music Detail and Wide Home
+captures were visually inspected. No application code or design changed.
+Logs: `/tmp/noslog-final-layout-regression.log` and
+`/tmp/noslog-final-layout-cross.log`. This common-contract regression does not
+certify every page state against Figma or external-provider flows.
+
 ### Page-suite visual audit checkpoint — 2026-09-08
 
 P16 metric text line boxes now match the measured Figma heights after user
