@@ -168,8 +168,8 @@
     max-height: 70dvh;
     object-fit: contain;
 }
-@container page (min-width: 900px) {
-    .noslog-ui .nl-sync-columns {
+@media (min-width: 1056px) {
+    .noslog-ui .nl-sync-page:not(.nl-sync-page--guest) .nl-sync-columns {
         display: grid;
         grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
         gap: var(--nl-spacing-16);
@@ -179,7 +179,7 @@
         width: fit-content;
     }
 }
-@container page (min-width: 768px) {
+@media (min-width: 672px) {
     .noslog-ui .nl-sync-step {
         display: grid;
         grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);

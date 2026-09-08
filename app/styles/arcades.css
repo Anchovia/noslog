@@ -225,7 +225,7 @@
 .noslog-ui .nl-arcade-report__attach {
     align-self: flex-start;
 }
-@container page (min-width: 960px) {
+@media (min-width: 1056px) {
     .noslog-ui .nl-arcades__results {
         display: grid;
         grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
@@ -411,7 +411,7 @@
     justify-content: center;
     gap: var(--nl-spacing-8);
 }
-@container page (min-width: 960px) {
+@media (min-width: 1056px) {
     .noslog-ui .nl-arcade-detail__composition {
         display: grid;
         grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
@@ -479,7 +479,7 @@
 .noslog-ui .nl-arcade-detail__facts a {
     color: var(--nl-content-interactive);
 }
-@container page (min-width: 960px) {
+@media (min-width: 1056px) {
     .noslog-ui .nl-arcade-detail__wide-distance {
         display: block;
     }

@@ -316,7 +316,7 @@
 .noslog-ui .nl-tier-weight .nl-line-chart__point {
     display: none;
 }
-@container page (min-width: 672px) {
+@media (min-width: 672px) {
     .noslog-ui .nl-tier-grid {
         grid-template-columns: repeat(auto-fill, minmax(111.333px, 1fr));
         gap: var(--nl-spacing-16);

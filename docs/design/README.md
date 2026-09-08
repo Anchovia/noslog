@@ -61,8 +61,11 @@ Do not invent separate transitions from Figma's 390/768/1024/1280 review canvase
 - **Music/chart discovery and tiers:** Wide has the persistent left filter rail.
   Below Wide, preserve the staged full-screen filter flow. Do not replace it with
   a popover based on the earlier withdrawn proposal.
-- **Bingo:** preserve its separately approved Wide filter popover and existing
-  filter contents. It is not the discovery-rail contract.
+- **Bingo:** preserve the filter popover from Intermediate (672px), including Wide,
+  and the full-screen filter in Compact. Current P14 includes explicit 768px popover
+  frames (`3362:31976`, Dark); this control does not turn the page into Wide.
+  The catalogue changes to four columns and detail to two columns at Wide (1056px).
+  Preserve existing filter contents. It is not the discovery-rail contract.
 - **Footer exception:** the approved content-driven single-line threshold remains
   840px; below it, center the stacked text. This does not change the page mode.
 - Component-local charts, labels and text may measure their actual available width

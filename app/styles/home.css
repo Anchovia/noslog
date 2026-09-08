@@ -141,7 +141,7 @@
     outline: 1px solid var(--nl-focus-ring);
     outline-offset: -1px;
 }
-@container page (min-width: 672px) {
+@media (min-width: 672px) {
     .noslog-ui .nl-home-destinations {
         grid-template-columns: repeat(4, minmax(0, 1fr));
         gap: var(--nl-grid-gutter-wide);

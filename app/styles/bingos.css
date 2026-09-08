@@ -319,7 +319,7 @@
     box-shadow: var(--nl-elevation-overlay);
     padding: var(--nl-spacing-12);
 }
-@container page (min-width: 960px) {
+@media (min-width: 1056px) {
     .noslog-ui .nl-bingo-detail__columns {
         grid-template-columns: 358px minmax(0, 1fr);
         gap: var(--nl-spacing-24);
@@ -331,12 +331,12 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
-@container page (min-width: 672px) {
+@media (min-width: 672px) {
     .noslog-ui .nl-bingo-catalog__grid {
         grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 }
-@container page (min-width: 960px) {
+@media (min-width: 1056px) {
     .noslog-ui .nl-bingo-catalog__grid {
         grid-template-columns: repeat(4, minmax(0, 1fr));
     }

@@ -226,16 +226,7 @@
     text-align: center;
 }
 
-@container page (min-width: 1056px) {
-    .noslog-ui .nl-container {
-        padding-block: var(--nl-spacing-32) var(--nl-spacing-48);
-    }
-    .noslog-ui .nl-page-heading .nl-page-title {
-        font-size: var(--nl-type-size-32);
-        line-height: var(--nl-type-line-height-40);
-    }
-}
-@container shell (min-width: 672px) {
+@media (min-width: 672px) {
     .noslog-ui .nl-main,
     .noslog-ui .nl-header__interaction,
     .noslog-ui .nl-footer__content {

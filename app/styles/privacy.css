@@ -128,7 +128,7 @@
     min-height: 44px;
     align-self: start;
 }
-@container page (min-width: 960px) {
+@media (min-width: 1056px) {
     .noslog-ui .nl-privacy {
         max-width: none;
         grid-template-columns: minmax(0, 1fr) 292px;

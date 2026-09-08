@@ -92,7 +92,7 @@ for (const locale of ["ko", "ja", "en"] as const) {
                     expect(surface.width).toBe(layout.viewport);
                     expect(surface.x).toBe(0);
                 }
-                const padding = expectedWidth < 672 ? 16 : 24;
+                const padding = width < 672 ? 16 : 24;
                 for (const box of [layout.header, layout.footer]) {
                     expect(box.paddingLeft).toBe(padding);
                     expect(box.paddingRight).toBe(padding);
@@ -101,11 +101,15 @@ for (const locale of ["ko", "ja", "en"] as const) {
                 expect(layout.content.paddingRight).toBe(padding);
                 expect(layout.pageRoot.paddingLeft).toBe(0);
                 expect(layout.pageRoot.paddingRight).toBe(0);
-                expect(layout.pageRoot.x).toBeCloseTo(expectedX + padding, 1);
-                expect(layout.pageRoot.width).toBeCloseTo(
-                    expectedWidth - padding * 2,
+                const pageWidth =
+                    route === "/privacy" && width < 1056
+                        ? Math.min(expectedWidth - padding * 2, 768)
+                        : expectedWidth - padding * 2;
+                expect(layout.pageRoot.x, `${route} at ${width}`).toBeCloseTo(
+                    (layout.viewport - pageWidth) / 2,
                     1
                 );
+                expect(layout.pageRoot.width).toBeCloseTo(pageWidth, 1);
                 await expectNoHorizontalOverflow(page);
                 if (route === "") {
                     const content = await page

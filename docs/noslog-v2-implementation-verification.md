@@ -7,6 +7,60 @@ implementation agent.
 
 ## Resumed implementation — 2026-09-07
 
+### Responsive contract repair and resize verification — 2026-09-08
+
+The previously unfinished P1 continuous-resize verification is now complete for
+the current responsive repair. Added `e2e/noslog-v2-responsive-contract.spec.ts`:
+KO/JA/EN, every CSS pixel from 640 through 800 and back, plus 320/390/488,
+1024/1055/1056/1280/1470/1920 and reverse boundary crossings. Assertions measure
+header-action direction, exclusive select/tabs, shared padding, panel columns and
+overflow together. Ranking selection/URL survives resizing; the Compact select
+opens with four options and Escape restores focus. Screenshots cover 390/672/1470.
+
+Ordinary page composition queries formerly used capped page-container widths
+672/768/900/960. Home, tiers, exams, bingo, arcades, privacy and sync now use the
+approved viewport modes. Component-local fitting queries remain local. Removed
+the unreachable shared title/vertical-spacing override rather than activating an
+unrequested typography change. The shell padding query also uses the viewport.
+The existing public-policy reading measure is explicitly accounted for in the
+shell test; it is not duplicate page padding.
+
+Figma comparison used current P1 `2543:23377`, P8 `2601:83601`, P12 `2804:2245`,
+P13 `2862:2702`, P14 `2914:8940` and P15 `2927:1316` screenshots and frame structure.
+The approved 1000px shell overrides their raw 1280px-frame content widths.
+P8 guest guidance stays single-column even in Wide, matching its frame; signed-in
+sync retains two columns. P14 explicitly includes Intermediate popovers
+(`3362:31976`), so the existing 672px filter-control threshold is preserved and
+clarified in the contract; catalogue/detail Wide composition starts at 1056px.
+Figma was inspected, not edited.
+
+Verification passed:
+
+- Production build, ESLint, TypeScript, Prettier for changed code/tests and
+  `git diff --check`; Vitest: **118 files / 921 tests**.
+- Final Chromium run: responsive-contract, shell-layout, wide-rails, home and sync
+  suites: **40 passed**. The shell matrix covers 12 ordinary routes, three locales
+  and 16 widths from 320 through 2560, including shared header/footer alignment,
+  single padding, menu keyboard/accessibility checks and preserved viewer shell.
+- Firefox/WebKit shell, rail and responsive matrices: **50 passed**. After the
+  final P8 guest correction, the complete responsive-contract suite was repeated
+  in both engines: **12 passed**, including six page-family column/rail boundaries.
+- Music Info/Record/Ranking/Community, Privacy, Home and guest Sync regression run:
+  **57 passed / 3 skipped**. The skipped desktop-only Home matrix cases subsequently
+  ran and passed in the final Chromium desktop run; skips are not passes.
+- Signed-in in-app browser: P1 Wide actual columns 624px/312px at viewport 1280;
+  Bingo popover 334px wide, aligned to its trigger with an 8px gap, Escape dismissal;
+  signed-in Sync remains 624px/312px after the guest-only change.
+
+Evidence logs: `/tmp/noslog-responsive-{chromium,cross,cross-pages,regression,unit,
+lint,types,build}.log`; screenshots under `/tmp/noslog-responsive-final-chromium`
+and `/tmp/noslog-responsive-final-cross-pages`. These are local evidence artifacts.
+This verifies the responsive repair, not every P1–P16 state or identical live data.
+Arcades used the local empty catalogue/map-loading presentation for its split-view
+check; real map tiles, new OAuth/payment/sync writes and actual chart playback were
+not revalidated. No viewer/editor/admin implementation or Git ownership operation
+was changed.
+
 ### Legacy design-document cleanup completed — 2026-09-08
 
 After the user explicitly approved deletion of the named 50-file scope, including
