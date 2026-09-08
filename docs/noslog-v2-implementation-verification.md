@@ -7,6 +7,20 @@ implementation agent.
 
 ## Resumed implementation — 2026-09-07
 
+### P1 comparison continuation — 2026-09-09
+
+Compared Dark Compact My Record `613:516`, Ranking `622:1386` and Tier/Evaluation
+`622:1602` with the existing state-suite captures. Record composition aligns;
+ranking's 25 rows, long names and on-page personal row differ from the specimen
+data. The existing test explicitly verifies omission of the redundant personal
+summary when its row is present. Community section order was reviewed without
+claiming per-control pixel parity for different votes/opinions.
+The full-page community screenshot exposed a capture artifact: a scrolled sticky
+header appeared within the image. Capture now scrolls instantly to zero and waits
+for both scroll position and header position to settle. All 13 mobile Chromium
+community tests passed after this test-only repair; lint, formatting and typecheck
+passed. No application source changed. Log: `/tmp/noslog-community-capture.log`.
+
 ### Figma frame evidence index — 2026-09-09
 
 The [dark-frame inventory](./figma-dark-frame-inventory.json) records 498 unique

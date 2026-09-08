@@ -617,13 +617,29 @@ for (const locale of ["ko", "ja", "en"])
                         .analyze();
                     expect(scan.violations).toEqual([]);
                 }
-                if (width === 390 || width === 1280)
+                if (width === 390 || width === 1280) {
+                    await page.evaluate(() =>
+                        window.scrollTo({ top: 0, behavior: "instant" })
+                    );
+                    await expect
+                        .poll(() => page.evaluate(() => scrollY))
+                        .toBe(0);
+                    await expect
+                        .poll(async () =>
+                            Math.round(
+                                (await page
+                                    .locator(".nl-header")
+                                    .boundingBox())!.y
+                            )
+                        )
+                        .toBe(0);
                     await page.screenshot({
                         path: testInfo.outputPath(
                             `${locale}-${theme}-tier-${width}.png`
                         ),
                         fullPage: true,
                     });
+                }
                 await page.locator("button.nl-vote-row").nth(2).click();
                 await expect(
                     page.locator(".nl-vote-aggregation select")

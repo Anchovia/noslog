@@ -21,7 +21,7 @@
                     "width": 390,
                     "height": 1540,
                     "section": "Music Detail · Compact 390 · Dark",
-                    "visualEvidence": "not mapped by this inventory"
+                    "visualEvidence": "Compared 2026-09-09 with ko-record-390.png: section order and positions, score, summary, trend and recent-play layout align. Fixture dates/ranks, focus outline and approved font differ."
                 },
                 {
                     "id": "613:560",
@@ -37,7 +37,7 @@
                     "width": 390,
                     "height": 1315,
                     "section": "Music Detail · Compact 390 · Dark",
-                    "visualEvidence": "not mapped by this inventory"
+                    "visualEvidence": "Compared 2026-09-09 with ko-ranking-390.png: chart, leaderboard and pagination inspected. Fixture uses 25 rows and long names; current-user summary omission is covered by the existing on-page-row test. Not identical fixture parity."
                 },
                 {
                     "id": "622:1602",
@@ -45,7 +45,7 @@
                     "width": 390,
                     "height": 4112,
                     "section": "Music Detail · Compact 390 · Dark",
-                    "visualEvidence": "not mapped by this inventory"
+                    "visualEvidence": "Compared 2026-09-09 with ko-dark-tier-390.png: overall section order reviewed. Fixture votes/opinions differ. Full-page screenshot scroll/header settling repaired; detailed per-control pixel comparison remains unclaimed."
                 },
                 {
                     "id": "2543:23377",
