@@ -7,6 +7,47 @@ implementation agent.
 
 ## Resumed implementation — 2026-09-07
 
+### Closure evidence reconciliation — 2026-09-09
+
+The sync fixture previously enabled only the Chromium branch of the recovery
+harness. It now also includes the existing sync-state tests in Firefox/WebKit.
+The run passed 24 Chromium and 30 Firefox/WebKit checks, including 27 P8 checks
+across three locales and browsers (six unrelated opt-in onboarding skips).
+Ten sync result states, polling/focus, setup media, copy failure and invalidation
+cancellation passed. The temporary fixture was removed and the restored build
+passed. Script lint/format checks and 908 unit tests passed (13 opt-in skips).
+Log: `/tmp/noslog-p8-closure.log`. This closes the recent P8 cross-browser state
+coverage gap, not live subscribed ingestion.
+
+This reconciliation does not reopen older pending statements that later evidence
+resolved. The current page-level evidence is:
+
+| Pages | Recorded coverage                                                                               | Limit of that evidence                                                |
+| ----- | ----------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| P1    | Info/record/ranking/community tests, first-vote approval and real vote cycle, responsive repair | No exhaustive current Figma node-to-state coverage ledger             |
+| P2    | Search/IME/news/navigation; approved 640px composition; feedback fixture and real upload        | Live X availability is not certified                                  |
+| P3–P4 | Discovery/tiers filters, keyboard, retry and approved Wide rails/toggle                         | Representative comparisons are not every Figma state                  |
+| P5    | Ranking pagination/ties/recovery, responsive matrix and approved radius                         | Fixture ranking data differ from Figma                                |
+| P6    | Wide geometry, metrics, records, privacy and share recovery                                     | Physical native sharing is not certified                              |
+| P7    | 404, maintenance, recoverable and fatal production-boundary recovery                            | Isolated fault injection, removed after testing                       |
+| P8    | Guest/setup, result states, real unsubscribed repeat ingestion with exclusions                  | Subscribed full-record ingestion has not been executed                |
+| P9    | Login/onboarding fixtures and assisted real onboarding                                          | Existing-account provider reuse is not a fresh credential challenge   |
+| P10   | Settings, real reauthentication expiry/deletion, avatar and feedback upload                     | No need to repeat resolved destructive verification                   |
+| P11   | Archive/detail/empty/Markdown and Home separation                                               | Representative content and screenshots                                |
+| P12   | Catalogue/detail/filter and map-failure fallback                                                | Live map-success rendering is not covered                             |
+| P13   | Grade/mode/history, proof validation and mocked submission outcomes                             | Actual exam proof upload/submission is not covered by feedback upload |
+| P14   | Catalogue/detail/filter, save rollback, completion/reset and approved exceptions                | Local fixtures, not administrative publishing                         |
+| P15   | Contents selection/history/scroll, print/reflow, corrected Account link                         | UI verification is not legal review                                   |
+| P16   | Five actual PNG variants and share recovery                                                     | Pretendard is approved; physical native sharing is not certified      |
+
+Remaining evidence work is explicit: map the current Figma state inventory to
+retained visual comparisons, and verify the external success paths above when
+their services/accounts are available. Do not infer implementation defects from
+missing evidence alone. Dark-only scope, excluded actual chart playback and
+preserved viewer/editor/admin remain unchanged. Real Discord login, account
+deletion, onboarding, avatar upload, feedback upload and unsubscribed sync are
+resolved by the later assisted records below, despite older contrary sentences.
+
 ### Common-layout regression — 2026-09-09
 
 After the P16 commit, the unchanged application passed 66 browser checks:

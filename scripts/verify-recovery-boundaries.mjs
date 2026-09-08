@@ -35,6 +35,7 @@ const verifyArcades = process.env.NOSLOG_ARCADES_FIXTURE === "true";
 const verifyExams = process.env.NOSLOG_EXAMS_FIXTURE === "true";
 const verifyBingos = process.env.NOSLOG_BINGOS_FIXTURE === "true";
 const verifyShare = process.env.NOSLOG_PROFILE_CARD_FIXTURE === "true";
+const verifySync = process.env.NOSLOG_SYNC_FIXTURE === "true";
 const verifyPrivacy = process.env.NOSLOG_PRIVACY_VERIFICATION === "true";
 if (verifyAuth) {
     try {
@@ -184,7 +185,7 @@ try {
                                 "e2e/noslog-v2-auth.spec.ts",
                                 "e2e/noslog-v2-onboarding-states.spec.ts",
                             ]
-                          : process.env.NOSLOG_SYNC_FIXTURE === "true"
+                          : verifySync
                             ? [
                                   "e2e/noslog-v2-sync-states.spec.ts",
                                   "e2e/noslog-v2-recovery-boundaries.spec.ts",
@@ -221,7 +222,8 @@ try {
         verifyExams ||
         verifyBingos ||
         verifyShare ||
-        verifyPrivacy
+        verifyPrivacy ||
+        verifySync
     ) {
         await run(
             "npx",
@@ -251,6 +253,7 @@ try {
                     : []),
                 ...(verifyShare ? ["e2e/noslog-v2-profile-owner.spec.ts"] : []),
                 ...(verifyPrivacy ? ["e2e/noslog-v2-privacy.spec.ts"] : []),
+                ...(verifySync ? ["e2e/noslog-v2-sync-states.spec.ts"] : []),
                 "--project=desktop-firefox",
                 "--project=desktop-webkit",
                 verifyAnnouncements
