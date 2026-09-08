@@ -79,6 +79,9 @@ Do not invent separate transitions from Figma's 390/768/1024/1280 review canvase
   confirmation dialog.
   Completed mission rows retain a concise localized completion label without the
   repeated instruction to press again to undo. Checkbox behavior is unchanged.
+  Catalogue cards retain the divider across the full inner body width, and the
+  Load more button spans the catalogue width. These user-approved exceptions
+  replace the shorter divider and content-width button in P14 `2914:8419`.
 - **Footer exception:** the approved content-driven single-line threshold remains
   840px; below it, center the stacked text. This does not change the page mode.
 - **Profile:** Wide uses a 2:1 body grid within the same 1000px shell: Progress
