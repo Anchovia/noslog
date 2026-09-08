@@ -7,6 +7,26 @@ implementation agent.
 
 ## Resumed implementation — 2026-09-07
 
+### Figma frame evidence index — 2026-09-09
+
+The [dark-frame inventory](./figma-dark-frame-inventory.json) records 498 unique
+frame IDs retrieved directly from the current P1–P16 pages: frames explicitly
+labelled Dark, plus P16's three approved dark-only cards. This is a source index,
+not 498 new tasks or a completion denominator. Unlabelled frames outside P16
+are not silently classified as dark. Z1 and component internals are not included.
+Existing visual evidence remains valid; `not mapped by this inventory` means its
+link has not been reconciled, not that the state is unimplemented or untested.
+
+P1's four existing suites passed 27 desktop Chromium checks (12 mobile matrices
+skipped), then all 39 mobile-project checks including those width/accessibility
+matrices. Logs: `/tmp/noslog-p1-final-states.log` and
+`/tmp/noslog-p1-final-mobile.log`. The 390px information capture was directly
+compared with Figma `613:496`: section starts, radar and basic-data composition
+align. Pretendard and fixture-specific jackets, authentication, resource
+availability and difficulty values are distinguished from layout differences.
+No application code changed. This comparison is recorded on that exact frame;
+other frame comparisons are not inferred from the test totals.
+
 ### Live P12 map controls — 2026-09-09
 
 The signed-in app browser successfully loaded real Kakao tiles on `/ko/gamecenter`.
