@@ -9,6 +9,43 @@ implementation agent.
 
 ### Page-suite visual audit checkpoint — 2026-09-08
 
+After the user committed and pushed the test-initialization repair, the working
+tree was clean. The isolated P9 harness passed nine Chromium and eighteen
+Firefox/WebKit checks: login recovery plus onboarding validation, duplicate
+nickname handling, submitting state, retained inputs after save failure, and
+KO/JA/EN reflow at 320/390/520/768/1470px. Temporary routes/root injection were
+removed and the restored production build passed. No real account was submitted.
+Logs: `/tmp/noslog-p9-onboarding-audit.log`, `/tmp/noslog-p7-fixture-browser.log`
+and `/tmp/noslog-p9-fixture-cross-browser.log` (the latter two are reusable harness
+paths and may be overwritten by later runs).
+
+Visual review then paused at a shared input-height difference. P10 Wide profile
+field `2734:88338` contains a 44px input; the actual 1280px browser input measured
+40px. P9 Wide onboarding field `2689:1465` also specifies 44px. The implementation
+sets `--nl-control-height: 40px` for all ordinary controls from 1056px, and
+`.nl-input` inherits it. This is a shared input mapping issue, not authorization
+to enlarge every desktop button. Comparison: `/tmp/noslog-p10-input-comparison.png`.
+No application styles or Figma nodes were modified; user judgment is pending.
+The onboarding fixture includes destination/long-name content, so its screenshot
+is not a pixel-parity claim for Figma's default account. P10 and the remaining
+page-suite visual audit are not certified by this checkpoint.
+
+The user approved correcting this implementation error. Shared native inputs now
+use `--nl-input-height: 44px`, independently of the responsive control height.
+Select triggers, buttons and multiline field sizing retain their existing rules.
+P9 and P10 regression matrices assert actual 44px input height at 320/390/671/672/
+768/1055/1056/1470px and after returning below Wide. The isolated harness passed
+27 P9 and 45 P10 browser checks across Chromium, Firefox and WebKit in KO/JA/EN,
+including invalid/duplicate input, failed-save retention, profile dialogs and
+local avatar cropping. Native app-browser measurements confirmed 44px nickname
+and arcade-search inputs at a 1280px viewport with no document overflow. The
+same-scale Figma comparison is `/tmp/noslog-p10-input-fixed-comparison.png`.
+Full unit checks passed 908 tests with 13 existing opt-in skips; lint, typecheck,
+format checks and the restored production builds passed. The actual application
+was restarted on localhost:3000. Harness logs: `/tmp/noslog-input-p9-validation.log` and
+`/tmp/noslog-input-p10-validation.log`. This resolves the input-height mismatch;
+it does not certify the remaining P10–P16 visual audit.
+
 After the user committed the P6 fixes, the working tree was clean. P7 ordinary
 404/maintenance verification passed six Chromium and twelve Firefox/WebKit tests
 across KO/JA/EN and 320/390/768/1470px. The 404 heading, description and action

@@ -20,8 +20,12 @@ for (const locale of ["ko", "ja", "en"] as const) {
         await expect(
             page.getByRole("region", { name: t["onboarding.connectedAccount"] })
         ).toContainText("NosLog fixture");
-        for (const width of [320, 390, 520, 768, 1470]) {
+        for (const width of [320, 390, 671, 672, 768, 1055, 1056, 1470, 1055]) {
             await page.setViewportSize({ width, height: 600 });
+            await expect(page.locator("#onboarding-nickname")).toHaveCSS(
+                "height",
+                "44px"
+            );
             expect(
                 await page.evaluate(
                     () => document.documentElement.scrollWidth <= innerWidth

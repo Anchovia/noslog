@@ -90,6 +90,11 @@ The retired 90% layout, 1440px maximum, proposed 1200/1280px stepping, unreachab
 
 ## Styling and behavior boundaries
 
+Shared single-line text inputs retain a 44px minimum height in every page mode,
+including Wide (P9 `2689:1465`, P10 `2734:88338`). Keep their height independent
+of the responsive button/control height. Multiline fields retain their larger
+minimum height; this correction does not resize buttons or icon controls.
+
 The Rankings personal-position notice retains the existing 8px container radius.
 The user approved this rounded form over the square corners in the Figma Wide
 frame; do not flatten this notice when reconciling that frame.

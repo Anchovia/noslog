@@ -194,8 +194,12 @@ for (const locale of ["ko", "ja", "en"] as const) {
             exact: true,
         });
         await expect(save).toBeDisabled();
-        for (const width of [320, 390, 520, 768, 1470]) {
+        for (const width of [320, 390, 671, 672, 768, 1055, 1056, 1470, 1055]) {
             await page.setViewportSize({ width, height: 900 });
+            await expect(page.locator("#settings-nickname")).toHaveCSS(
+                "height",
+                "44px"
+            );
             await page.evaluate(async () => {
                 await document.fonts.ready;
                 await new Promise<void>((resolve) =>
