@@ -9,6 +9,56 @@ implementation agent.
 
 ### Page-suite visual audit checkpoint — 2026-09-08
 
+After the user committed the P6 fixes, the working tree was clean. P7 ordinary
+404/maintenance verification passed six Chromium and twelve Firefox/WebKit tests
+across KO/JA/EN and 320/390/768/1470px. The 404 heading, description and action
+measured y=108/164/212px at 1280px, matching Figma `2585:81373` within the approved
+bounded shell. The production recovery harness passed six page/fatal recovery
+checks plus nine profile-owner checks; temporary source changes were removed and
+the restored production build passed. An empty leftover fixture directory was
+inspected and removed before running the harness. No account data was changed.
+
+P8 guest checks passed three Chromium and six Firefox/WebKit tests. The isolated
+sync harness passed nine Chromium sync checks (three locales, ten result states,
+polling completion/focus, setup media, copy failure and invalidation cancellation)
+plus the same fifteen recovery/profile-owner checks, 24 total. Its source cleanup
+and restored build passed. The signed-in Wide result and expanded setup were
+compared with P8; partial-result notice was compared with `2601:83038`. Record
+counts, initial-import content, installed media replacing placeholder GIFs and the
+approved shell width are not newly proposed visual changes. This checkpoint does
+not certify all P8 visual variants, live upstream synchronization or cross-browser
+coverage of the isolated state matrix. Logs: `/tmp/noslog-p7-audit.log`,
+`/tmp/noslog-p7-cross.log`, `/tmp/noslog-p7-current-harness.log`,
+`/tmp/noslog-p8-audit.log`, `/tmp/noslog-p8-cross.log`,
+`/tmp/noslog-p8-current-harness.log`.
+
+P9 login checks passed six Chromium and twelve Firefox/WebKit tests, covering
+locale/width layout, error recovery, destination retention and keyboard language
+selection (`/tmp/noslog-p9-audit.log`, `/tmp/noslog-p9-cross.log`).
+Visual comparison paused at the privacy
+notice: Figma `2689:759` underlines only the privacy-link text range, while the
+implementation uses `.nl-text-link` without any CSS definition. The missing shared
+style also has consumers in sync setup and the settings arcade picker; their
+intended treatment must be checked before a shared repair. The user was shown
+`/tmp/noslog-p9-link-compare.png`; no application CSS was changed. Figma's IBM Plex
+font differs from the user's explicit Pretendard JP choice and is not a reason to
+change fonts. Onboarding and the rest of the visual suite remain unaudited in this
+resumed checkpoint. Prior evidence below must not be mistaken for a fresh pass.
+
+The user approved restoring the P9 privacy-link underline. Added the reusable
+ordinary-UI `.nl-text-link--underlined` modifier and applied it to that link only.
+P8 `3387:1730` was inspected and explicitly has no underline, so a blanket change
+to `.nl-text-link` would not preserve its design. Existing sync/settings consumers
+remain unchanged. No new color, typography, layout or preserved-route style was
+introduced. Production build, lint, typecheck, formatting and diff checks passed.
+Existing P9 tests passed six Chromium and twelve Firefox/WebKit checks across
+KO/JA/EN, 320–1470px, login errors, destination retention and keyboard language
+selection. Rendered login screenshots were compared with the Figma underline;
+the signed-in app browser correctly redirected to Home without logging the user
+out. Logs: `/tmp/noslog-p9-link-build.log`, `/tmp/noslog-p9-link-tests.log`,
+`/tmp/noslog-p9-link-cross.log`. This resolves the reported link difference, not
+the remaining onboarding/page-suite audit.
+
 After the user committed the P4 toolbar repair, the resumed P5 audit passed all
 13 Chromium global-ranking tests and six Firefox/WebKit locale/geometry matrices.
 This covers pagination/ties, metric/history behavior, pending/error recovery,

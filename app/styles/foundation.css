@@ -101,6 +101,9 @@ html[data-theme="light"] .noslog-ui,
 .noslog-ui .nl-link:hover {
     text-decoration: underline;
 }
+.noslog-ui .nl-text-link--underlined {
+    text-decoration: underline;
+}
 .noslog-ui .nl-avatar {
     display: inline-flex;
     align-items: center;
