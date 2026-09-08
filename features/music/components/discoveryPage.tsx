@@ -367,7 +367,11 @@ export default function DiscoveryPage({
                 <div className="nl-discovery__results">
                     <div className="nl-discovery__toolbar">
                         {wide ? (
-                            <p className="nl-body-secondary nl-muted">
+                            <p
+                                ref={summaryRef}
+                                tabIndex={-1}
+                                className="nl-discovery__summary nl-body-secondary nl-muted"
+                            >
                                 {summary}
                             </p>
                         ) : null}

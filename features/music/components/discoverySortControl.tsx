@@ -25,6 +25,7 @@ export default function DiscoverySortControl({
     const t = useTranslations();
     const [open, setOpen] = useState(false);
     const [draft, setDraft] = useState(query);
+    const sortLabel = t(`discovery.sort.${getDiscoverySort(query)}`);
     return (
         <Popover.Root
             open={open}
@@ -37,10 +38,10 @@ export default function DiscoverySortControl({
                 <ActionButton
                     variant="secondary"
                     className="nl-filter-trigger"
-                    aria-label={t("discovery.sortLabel")}
+                    aria-label={`${t("discovery.sortLabel")}: ${sortLabel}`}
                 >
                     <ArrowUpDown className="nl-icon-small" aria-hidden />
-                    {t(`discovery.sort.${getDiscoverySort(query)}`)}
+                    {sortLabel}
                     <ChevronDown className="nl-icon-small" aria-hidden />
                 </ActionButton>
             </Popover.Trigger>

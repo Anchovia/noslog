@@ -23,6 +23,30 @@ test("Music detail enters Chart Info and keeps the four difficulty choices on on
         await expect
             .poll(() =>
                 page
+                    .locator(".nl-music-entity__identity")
+                    .evaluate((element) => {
+                        const jacket = element
+                            .querySelector(".nl-jacket")!
+                            .getBoundingClientRect();
+                        const copy = element
+                            .querySelector(".nl-music-entity__copy")!
+                            .getBoundingClientRect();
+                        return Math.abs(
+                            jacket.y +
+                                jacket.height / 2 -
+                                copy.y -
+                                copy.height / 2
+                        );
+                    })
+            )
+            .toBeLessThan(0.5);
+        await expect(page.locator(".nl-music-entity__copy")).toHaveCSS(
+            "text-align",
+            "left"
+        );
+        await expect
+            .poll(() =>
+                page
                     .locator(".nl-difficulty-selector")
                     .evaluate(
                         (element) => element.getBoundingClientRect().height

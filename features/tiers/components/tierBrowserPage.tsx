@@ -113,6 +113,17 @@ export default function TierBrowserPage({
                   count: selected.length - 1,
               });
     }
+    const resultCount = (
+        <p className="nl-body-secondary nl-muted" role="status">
+            {pending
+                ? t("tiers.loading")
+                : data?.list
+                  ? t("tiers.songCount", {
+                        count: total.toLocaleString(locale),
+                    })
+                  : ""}
+        </p>
+    );
     const modeControl = (
         <div className="nl-tier-browser-mode">
             {wide ? (
@@ -196,6 +207,7 @@ export default function TierBrowserPage({
                 ) : null}
                 <div className="nl-tier-results">
                     <div className="nl-tier-toolbar">
+                        {wide ? resultCount : null}
                         {!wide ? (
                             <FullScreenDialog
                                 open={open}
@@ -347,15 +359,7 @@ export default function TierBrowserPage({
                             ))}
                         </div>
                     ) : null}
-                    <p className="nl-body-secondary nl-muted" role="status">
-                        {pending
-                            ? t("tiers.loading")
-                            : data?.list
-                              ? t("tiers.songCount", {
-                                    count: total.toLocaleString(locale),
-                                })
-                              : ""}
-                    </p>
+                    {!wide ? resultCount : null}
                     {result.isError ? (
                         <ResultState
                             error

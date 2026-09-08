@@ -2,6 +2,49 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 import { expectNoHorizontalOverflow } from "./helpers";
 
+for (const [locale, label, name, level] of [
+    ["ko", "정렬", "일본어 읽기 순", "레벨 순"],
+    ["ja", "並べ替え", "読み仮名順", "レベル順"],
+    ["en", "Sort", "Japanese reading order", "Level order"],
+]) {
+    test(`${locale} discovery sort announces its current criterion after keyboard selection`, async ({
+        page,
+    }) => {
+        await page.setViewportSize({ width: 1280, height: 900 });
+        for (const scope of ["music", "music?scope=chart&sort=name"]) {
+            await page.goto(`/${locale}/${scope}`);
+            const trigger = page.getByRole("button", {
+                name: `${label}: ${name}`,
+                exact: true,
+            });
+            await expect(trigger).toHaveText(name);
+            await trigger.press("Enter");
+            const group = page.getByRole("group", { name: label, exact: true });
+            await group.getByRole("radio", { name: name, exact: true }).focus();
+            await page.keyboard.press("ArrowDown");
+            await page
+                .locator(".nl-discovery-sort")
+                .getByRole("radio", { name: "Expert", exact: true })
+                .focus();
+            await page.keyboard.press("Space");
+            await expect(
+                page.getByRole("button", {
+                    name: `${label}: ${level}`,
+                    exact: true,
+                })
+            ).toHaveText(level);
+            await expect(page).toHaveURL(/sort=level/);
+            await page.keyboard.press("Escape");
+            await expect(
+                page.getByRole("button", {
+                    name: `${label}: ${level}`,
+                    exact: true,
+                })
+            ).toBeFocused();
+        }
+    });
+}
+
 for (const path of ["music", "music?scope=chart", "tiers"]) {
     test(`${path} discards staged filters on Wide transition and applies rail changes immediately`, async ({
         page,
@@ -79,6 +122,30 @@ for (const locale of ["ko", "ja", "en"]) {
                     (await page.locator(".nl-main").boundingBox())!.width
                 ).toBeLessThanOrEqual(1000);
                 await expectNoHorizontalOverflow(page);
+                if (tier) {
+                    const toolbar = page.locator(".nl-tier-toolbar");
+                    await expect(toolbar.getByRole("status")).toHaveCount(
+                        width >= 1056 ? 1 : 0
+                    );
+                    if (width >= 1056) {
+                        const count = (await toolbar
+                            .getByRole("status")
+                            .boundingBox())!;
+                        const toggle = (await toolbar
+                            .locator(".nl-check")
+                            .boundingBox())!;
+                        const row = (await toolbar.boundingBox())!;
+                        expect(count.x).toBeCloseTo(row.x, 1);
+                        expect(toggle.x + toggle.width).toBeCloseTo(
+                            row.x + row.width,
+                            1
+                        );
+                        expect(count.y + count.height / 2).toBeCloseTo(
+                            toggle.y + toggle.height / 2,
+                            1
+                        );
+                    }
+                }
                 if (width === 1056 || width === 1470) {
                     const box = (await rail.boundingBox())!;
                     expect(box.width).toBeGreaterThan(200);

@@ -7,6 +7,55 @@ implementation agent.
 
 ## Resumed implementation — 2026-09-07
 
+### Page-suite visual audit checkpoint — 2026-09-08
+
+The user approved vertically centering the Music Detail title/artist group against
+the jacket while keeping the text left-aligned. Updated the shared identity CSS
+and added center/alignment assertions to the existing Music Detail browser matrix.
+Production build, lint, typecheck and diff checks passed; Chromium music-info and
+responsive-contract suites passed 15 tests, and the focused Firefox/WebKit check
+passed two tests. A long real title at 320/390/672/1470px retained matching vertical
+centers and no horizontal overflow. No Figma nodes were changed.
+
+P2 Home Compact and Wide were compared with current Figma `1134:984` and
+`1161:15947`. Search/navigation dimensions and spacing match; the approved shared
+640px news/announcement width overrides the frame's wider update area. The current
+Home suite passed 12 Chromium tests including KO/JA/EN, width/reflow, keyboard,
+search/IME and official-news response states. This is not certification of every
+feedback/announcement variant or of the full P1–P16 suite.
+
+The audit paused at a new P3 difference for user review: Figma Wide sort trigger
+`1215:21266` visibly says `정렬: 일본어 읽기 순`; the implementation shows only
+`일본어 읽기 순` with `정렬` as its accessible label. The user approved keeping
+only the criterion visible and including both function and criterion in the
+accessible name. The shared music/chart discovery trigger now follows that rule;
+the current contract records the approved Figma exception. The remaining
+page-suite audit is incomplete.
+
+The approved P3 sort-label change passed the production build, lint, typecheck and
+diff checks. Final Chromium discovery/Wide-rail verification passed 21 desktop
+tests (four mobile-only cases skipped there) and all 10 discovery tests in the
+mobile project. Six focused Firefox/WebKit tests cover localized visible and
+accessible names, keyboard criterion/difficulty selection, URL updates and Escape
+focus return for both music and chart discovery. The initial run exposed an
+existing Wide retry-focus bug: its result summary lacked the ref/tabIndex used by
+the retry callback. The Wide summary now receives the same focus target as Compact;
+the previously failing retry check passes. The new keyboard test was corrected to
+select the required difficulty before expecting level-sort commitment.
+
+The visual audit next paused at P4: current Figma Wide `1352:26271` has no Detailed
+view toggle, whereas Compact `1352:536` includes it. The implementation exposes
+the toggle in Wide too. After reviewing the same-scale comparison, the user approved
+retaining it at the right end of the result-count row. The existing toolbar now
+contains the count on the left and checkbox on the right in Wide; below Wide the
+previous placement remains. No extra width, padding or breakpoint was introduced.
+At 1280px, both controls share center y=162, and the checkbox ends at the result
+area's right edge. Chromium tiers/Wide-rail suites passed 27 tests, including
+KO/JA/EN, narrow reflow, 1055/1056 transitions and detailed-card interactions.
+Six Firefox/WebKit tier layout matrices also passed. Production build, lint,
+typecheck, formatting and diff checks passed. Data fixture differences are excluded
+from the visual comparison. These results do not certify the remaining pages.
+
 ### Responsive contract repair and resize verification — 2026-09-08
 
 The previously unfinished P1 continuous-resize verification is now complete for

@@ -61,6 +61,13 @@ Do not invent separate transitions from Figma's 390/768/1024/1280 review canvase
 - **Music/chart discovery and tiers:** Wide has the persistent left filter rail.
   Below Wide, preserve the staged full-screen filter flow. Do not replace it with
   a popover based on the earlier withdrawn proposal.
+  Music/chart discovery's Wide sort trigger displays only the selected criterion
+  beside the sort icon; its localized accessible name includes both the sort
+  label and selected criterion. This user-approved exception replaces Figma's
+  visible `Sort:` prefix.
+  In Wide tiers, keep the Detailed view checkbox at the right end of the result
+  count row, with the count on the left. This approved addition to the Figma Wide
+  frame preserves the existing toggle and narrower-screen placement.
 - **Bingo:** preserve the filter popover from Intermediate (672px), including Wide,
   and the full-screen filter in Compact. Current P14 includes explicit 768px popover
   frames (`3362:31976`, Dark); this control does not turn the page into Wide.
