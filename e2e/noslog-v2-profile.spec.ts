@@ -68,6 +68,11 @@ test("P6 progress uses real dates, retains content on failure and supports keybo
     await expect(progress.getByRole("table")).toContainText("2,070 pt");
     await progress.getByRole("combobox").selectOption("30");
     await expect(progress.getByRole("combobox")).toHaveValue("30");
+    for (const width of [1055, 1056, 1470, 1055, 390]) {
+        await page.setViewportSize({ width, height: 900 });
+        await expect(progress.getByRole("combobox")).toHaveValue("30");
+        await expect(progress.getByRole("table")).toContainText("2,070 pt");
+    }
     fail = true;
     await progress.getByRole("combobox").selectOption("year");
     await expect(progress.getByRole("alert")).toBeVisible();
@@ -135,6 +140,10 @@ test("P6 Best expands by five, retries the failed batch and collapses to five", 
     failNext = false;
     await best.getByRole("button", { name: "다시 시도", exact: true }).click();
     await expect(best.getByRole("link")).toHaveCount(10);
+    for (const width of [1055, 1056, 1470, 1055, 390]) {
+        await page.setViewportSize({ width, height: 900 });
+        await expect(best.getByRole("link")).toHaveCount(10);
+    }
     await best.getByRole("button", { name: "접기", exact: true }).click();
     await expect(best.getByRole("link")).toHaveCount(5);
     await expect(best).toBeFocused();
@@ -154,7 +163,10 @@ for (const locale of ["ko", "ja", "en"]) {
         page.on("pageerror", (error) => errors.push(error.message));
         await page.goto(`/${locale}/profile/1`);
         await expect(page.locator(".nl-profile-progress")).toBeVisible();
-        for (const width of [320, 390, 768, 1000, 1470]) {
+        for (const width of [
+            320, 390, 671, 672, 768, 1000, 1055, 1056, 1280, 1470, 1056, 1055,
+            390,
+        ]) {
             await page.setViewportSize({ width, height: 900 });
             await expect
                 .poll(() =>
@@ -173,6 +185,91 @@ for (const locale of ["ko", "ja", "en"]) {
             );
             const profile = await page.locator(".nl-profile").boundingBox();
             expect(profile!.width).toBeLessThanOrEqual(1000);
+            const avatar = await page
+                .locator(".nl-profile-identity__avatar")
+                .boundingBox();
+            expect(avatar!.width).toBe(width >= 1056 ? 108 : 64);
+            expect(avatar!.height).toBe(avatar!.width);
+            const progress = (await page
+                .locator(".nl-profile-progress")
+                .boundingBox())!;
+            const overview = (await page
+                .locator(".nl-profile-overview")
+                .boundingBox())!;
+            const best = (await page
+                .locator('.nl-profile-plays[data-kind="best"]')
+                .boundingBox())!;
+            const recent = (await page
+                .locator('.nl-profile-plays[data-kind="recent"]')
+                .boundingBox())!;
+            if (width >= 1056) {
+                const heading = (await page
+                    .locator("#profile-progress-title")
+                    .boundingBox())!;
+                const controls = (await page
+                    .locator(".nl-profile-progress__controls")
+                    .boundingBox())!;
+                expect(heading.y + heading.height / 2).toBeCloseTo(
+                    controls.y + controls.height / 2,
+                    0
+                );
+                expect(heading.x + heading.width).toBeLessThanOrEqual(
+                    controls.x
+                );
+                expect(progress.y).toBeCloseTo(overview.y, 0);
+                expect(best.y).toBeCloseTo(recent.y, 0);
+                expect(progress.width / overview.width).toBeCloseTo(2, 2);
+                expect(overview.x - progress.x - progress.width).toBeCloseTo(
+                    16,
+                    0
+                );
+                expect(best.x).toBeCloseTo(progress.x, 0);
+                expect(recent.x).toBeCloseTo(overview.x, 0);
+                expect(best.y - progress.y - progress.height).toBeCloseTo(
+                    48,
+                    0
+                );
+            } else {
+                const heading = (await page
+                    .locator("#profile-progress-title")
+                    .boundingBox())!;
+                const controls = (await page
+                    .locator(".nl-profile-progress__controls")
+                    .boundingBox())!;
+                expect(controls.y).toBeGreaterThanOrEqual(
+                    heading.y + heading.height
+                );
+                expect(progress.x).toBeCloseTo(overview.x, 0);
+                expect(progress.width).toBeCloseTo(overview.width, 0);
+                expect(best.y).toBeGreaterThan(progress.y);
+                expect(overview.y).toBeGreaterThan(best.y);
+                expect(recent.y).toBeGreaterThan(overview.y);
+            }
+            const colors = {
+                sjust: "rgb(255, 141, 204)",
+                just: "rgb(255, 202, 22)",
+                good: "rgb(76, 204, 230)",
+                near: "rgb(112, 184, 255)",
+                miss: "rgb(180, 180, 180)",
+            };
+            for (const [judgement, color] of Object.entries(colors)) {
+                await expect(
+                    page.locator(
+                        `.nl-profile-judgement-stack > [data-judgement="${judgement}"]`
+                    )
+                ).toHaveCSS("background-color", color);
+                await expect(
+                    page.locator(
+                        `.nl-profile-judgements [data-judgement="${judgement}"] i`
+                    )
+                ).toHaveCSS("background-color", color);
+            }
+            if ([390, 1056, 1280].includes(width)) {
+                await page.screenshot({
+                    path: test.info().outputPath(`p6-${locale}-${width}.png`),
+                    fullPage: true,
+                });
+            }
         }
         const audit = await new AxeBuilder({ page }).include("main").analyze();
         expect(audit.violations).toEqual([]);

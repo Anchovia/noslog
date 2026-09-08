@@ -75,6 +75,13 @@ Do not invent separate transitions from Figma's 390/768/1024/1280 review canvase
   Preserve existing filter contents. It is not the discovery-rail contract.
 - **Footer exception:** the approved content-driven single-line threshold remains
   840px; below it, center the stacked text. This does not change the page mode.
+- **Profile:** Wide uses a 2:1 body grid within the same 1000px shell: Progress
+  beside Record overview, then Best performances beside Recent plays. Its identity
+  uses a 108px avatar and 32/40 name, with activity metadata below the name/badges.
+  Below Wide, retain the 64px avatar and one-column section order. Private recent
+  activity remains hidden; resizing must preserve selections and loaded records.
+  The Wide Progress heading and metric/range controls share one vertically
+  centered row. Narrower modes keep the controls below the heading.
 - Component-local charts, labels and text may measure their actual available width
   to fit content. That measurement must not independently switch the page mode.
 
@@ -82,6 +89,10 @@ The retired 90% layout, 1440px maximum, proposed 1200/1280px stepping, unreachab
 1216px inner query, 768px header query and 672px padded-area tab query are obsolete.
 
 ## Styling and behavior boundaries
+
+The Rankings personal-position notice retains the existing 8px container radius.
+The user approved this rounded form over the square corners in the Figma Wide
+frame; do not flatten this notice when reconciling that frame.
 
 Use the existing global styles, shared components and code-style conventions.
 Use Figma variables and Text Styles with the approved exact semantic values;

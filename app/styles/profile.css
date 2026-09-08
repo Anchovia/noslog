@@ -6,10 +6,17 @@
     container: profile-identity / inline-size;
 }
 .noslog-ui .nl-profile-identity__row {
-    display: flex;
+    --nl-profile-avatar-size: 64px;
+    display: grid;
+    grid-template-columns: var(--nl-profile-avatar-size) minmax(0, 1fr) auto;
     align-items: flex-start;
-    gap: var(--nl-spacing-16);
+    gap: var(--nl-spacing-12) var(--nl-spacing-16);
     min-width: 0;
+}
+.noslog-ui .nl-profile-identity__metadata {
+    grid-column: 1 / -1;
+    min-width: 0;
+    overflow-wrap: anywhere;
 }
 .noslog-ui .nl-profile-identity__recovery {
     display: flex;
@@ -131,6 +138,45 @@
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-48);
+}
+@media (min-width: 1056px) {
+    .noslog-ui .nl-profile-identity__row {
+        --nl-profile-avatar-size: 108px;
+        row-gap: var(--nl-spacing-12);
+        align-content: start;
+    }
+    .noslog-ui .nl-profile-identity__avatar {
+        grid-row: 1 / 3;
+    }
+    .noslog-ui .nl-profile-identity__name-stack {
+        gap: var(--nl-spacing-12);
+    }
+    .noslog-ui .nl-profile-identity__name h1 {
+        font-size: var(--nl-type-size-32);
+        line-height: var(--nl-type-line-height-40);
+    }
+    .noslog-ui .nl-profile-identity__metadata {
+        grid-column: 2;
+        grid-row: 2;
+    }
+    .noslog-ui .nl-profile-body {
+        display: grid;
+        grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+        grid-template-areas: "progress overview" "best recent";
+        column-gap: var(--nl-spacing-16);
+    }
+    .noslog-ui .nl-profile-progress {
+        grid-area: progress;
+    }
+    .noslog-ui .nl-profile-overview {
+        grid-area: overview;
+    }
+    .noslog-ui .nl-profile-plays[data-kind="best"] {
+        grid-area: best;
+    }
+    .noslog-ui .nl-profile-plays[data-kind="recent"] {
+        grid-area: recent;
+    }
 }
 .noslog-ui .nl-profile-section {
     display: flex;
@@ -267,6 +313,8 @@
 }
 .noslog-ui .nl-profile-distribution > div > .nl-metric-value {
     flex-shrink: 0;
+    min-width: max-content;
+    white-space: nowrap;
     text-align: right;
 }
 .noslog-ui .nl-profile-distribution__track {
@@ -339,7 +387,7 @@
     height: 10px;
     border-radius: var(--nl-radius-full);
 }
-.noslog-ui :is(.nl-profile-judgement-stack > span, .nl-judgement-marker) {
+.noslog-ui [data-judgement="miss"] {
     --judgement-color: var(--nl-judgement-miss);
 }
 .noslog-ui [data-judgement="sjust"] {
@@ -409,6 +457,16 @@
 .noslog-ui .nl-profile-progress__controls .nl-select {
     flex-shrink: 0;
     width: auto;
+}
+@media (min-width: 1056px) {
+    .noslog-ui .nl-profile-progress__header {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .noslog-ui .nl-profile-progress__controls {
+        flex-shrink: 0;
+    }
 }
 .noslog-ui .nl-profile-progress .nl-line-chart__area {
     padding-top: 0;

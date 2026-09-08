@@ -77,7 +77,11 @@ export default function ProfileIdentity({
                 <Avatar
                     src={user.avatar}
                     alt={t("common.profileImage", { name })}
-                    size={64}
+                    size={108}
+                    style={{
+                        width: "var(--nl-profile-avatar-size)",
+                        height: "var(--nl-profile-avatar-size)",
+                    }}
                     fallbackInitial={initialForName(user.username, locale)}
                     className="nl-profile-identity__avatar"
                 />
@@ -113,10 +117,12 @@ export default function ProfileIdentity({
                         </Link>
                     </div>
                 ) : null}
+                {metadata ? (
+                    <p className="nl-profile-identity__metadata nl-body-secondary nl-muted">
+                        {metadata}
+                    </p>
+                ) : null}
             </div>
-            {metadata ? (
-                <p className="nl-body-secondary nl-muted">{metadata}</p>
-            ) : null}
             {isOwner && privateLabels ? (
                 <p className="nl-body-secondary nl-muted">
                     {t("profile.private")} · {privateLabels}{" "}

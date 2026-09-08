@@ -9,6 +9,72 @@ implementation agent.
 
 ### Page-suite visual audit checkpoint — 2026-09-08
 
+After the user committed the P4 toolbar repair, the resumed P5 audit passed all
+13 Chromium global-ranking tests and six Firefox/WebKit locale/geometry matrices.
+This covers pagination/ties, metric/history behavior, pending/error recovery,
+keyboard activation and responsive accessibility; it does not certify pixel parity.
+The audit paused at a new visual difference: Figma Wide personal-position zone
+`1801:2990` has radius 0, while `.nl-ranking-personal` uses the existing 8px
+container radius. A same-scale corner comparison was shown for user judgment.
+The user approved retaining the existing 8px rounded corners; this exception is
+recorded in the current contract. No application code or Figma nodes were changed
+during this checkpoint.
+
+P6's five existing Chromium tests passed, but visual comparison then exposed a
+missing Wide composition: `.nl-profile-body` remains a vertical flex stack at a
+1280px viewport, whereas Figma `2268:13102` places Progress/Overview and Best/Recent
+in two 2:1 rows. The rendered avatar is 64px versus 108px in that Wide frame.
+The existing tests prove reflow and selected interactions, not this composition.
+The user approved the 2:1 Wide body and 108px avatar. The repair now uses the common
+1056px viewport boundary, preserves the 1000px shell and narrow section order, and
+places Wide activity metadata below the name/badges with the Figma 32/40 name style.
+Avatar supports an optional style override; other consumers retain their existing
+sizes. No viewer/editor/admin experience was modified.
+
+Production build, lint, typecheck and 23 focused profile unit tests passed.
+The updated Chromium suite passed five tests; Firefox/WebKit passed ten tests.
+Geometry matrices cover KO/JA/EN at 320, 390, 671, 672, 768, 1000, 1055, 1056,
+1280 and 1470px, then resize back across the boundary. They assert 108/64px avatars,
+2:1 columns, shared row starts, 16px column gap, 48px row gap and no overflow.
+Additional resize assertions preserve the selected metric/range and ten expanded
+Best records: the final Chromium suite passed five tests and the focused
+Firefox/WebKit rerun passed four. The actual signed-in profile was inspected in
+the in-app browser at 1280px: columns measured 624/312px and avatar 108px.
+
+Visual review then paused at two additional P6 differences, left unchanged pending
+user judgment: Figma Wide places the Progress heading and controls on one line,
+whereas implementation stacks them; the implemented judgement summary renders all
+categories gray despite distinct Figma colors. A same-scale crop comparison was
+prepared at `/tmp/noslog-p6-next-differences.png`. Record counts, missing history,
+privacy-dependent metadata and the approved narrower shell are content/approved
+differences, not defects. P6 visual parity and the full page-suite audit remain
+incomplete; these test results do not certify either.
+
+The user subsequently approved both P6 differences above for Figma alignment.
+Wide Progress now places its heading and controls on one centered row at the
+common 1056px boundary. The judgement default selector had greater specificity
+than every category selector; limiting that default to `data-judgement="miss"`
+restores the existing five exact tokens for both stacked segments and legends.
+Figma P6 `2268:13156`/`2268:13158` and `2268:13211`–`2268:13215` were inspected
+directly. No Figma edits or new palette values were introduced.
+The real signed-in profile also exposed a three-digit rank count wrapping inside
+its estimated `ch` width. A content minimum and no-wrap keep the count readable.
+
+Updated browser assertions check heading/control centers and non-overlap plus all
+five rendered segment/legend colors throughout the existing KO/JA/EN width matrix.
+The P6 Chromium suite passed five tests and Firefox/WebKit passed ten; focused
+unit tests passed 23. Build, lint and typecheck passed. The final count-containment
+repair is verified below separately. These scoped repairs do not finish the
+remaining full page-suite audit.
+
+After the count-containment fix, the final production rebuild passed and the
+complete P6 suites again passed five Chromium plus ten Firefox/WebKit tests.
+The signed-in browser showed `661` at one 20px line with no horizontal clipping,
+and all five judgement colors matched the inspected Figma values. Formatting and
+diff checks passed. Final evidence: `/tmp/noslog-p6-final-tests.log`,
+`/tmp/noslog-p6-final-cross.log`, `/tmp/noslog-p6-final-build.log`; representative
+locale screenshots are under `/tmp/noslog-p6-final-results`.
+
 The user approved vertically centering the Music Detail title/artist group against
 the jacket while keeping the text left-aligned. Updated the shared identity CSS
 and added center/alignment assertions to the existing Music Detail browser matrix.

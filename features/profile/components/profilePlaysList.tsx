@@ -83,6 +83,7 @@ export default function ProfilePlaysList({
             ref={region}
             tabIndex={-1}
             className="nl-profile-section nl-profile-plays"
+            data-kind={kind}
             aria-labelledby={`profile-${kind}-title`}
         >
             <div className="nl-profile-section__header">

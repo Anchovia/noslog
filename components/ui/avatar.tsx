@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { User } from "lucide-react";
 import { useState } from "react";
+import type { CSSProperties } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -13,6 +14,7 @@ export default function Avatar({
     className,
     fallbackName,
     fallbackInitial,
+    style,
 }: {
     src?: string | null;
     alt?: string;
@@ -20,13 +22,14 @@ export default function Avatar({
     className?: string;
     fallbackName?: string | null;
     fallbackInitial?: string;
+    style?: CSSProperties;
 }) {
     const [failedSource, setFailedSource] = useState<string | null>(null);
 
     return (
         <span
             className={cn("nl-avatar", className)}
-            style={{ width: size, height: size }}
+            style={{ width: size, height: size, ...style }}
             role={!src || failedSource === src ? "img" : undefined}
             aria-label={
                 !src || failedSource === src ? alt || undefined : undefined
