@@ -208,6 +208,11 @@ for (const locale of ["ko", "ja", "en"] as const) {
                     )
                 );
             });
+            const profileLink = page.locator(".nl-settings__view-profile");
+            await expect(profileLink).toHaveCSS("height", "20px");
+            const linkBox = (await profileLink.boundingBox())!;
+            const saveBox = (await save.boundingBox())!;
+            expect(saveBox.y - linkBox.y - linkBox.height).toBe(12);
             expect(
                 await page.evaluate(
                     () => document.documentElement.scrollWidth <= innerWidth

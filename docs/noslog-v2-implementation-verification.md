@@ -9,6 +9,34 @@ implementation agent.
 
 ### Page-suite visual audit checkpoint — 2026-09-08
 
+After the input-height fix was committed, P10 public settings/navigation passed
+13 Chromium checks. The HTTP Firefox/WebKit run passed 19 checks, skipped six
+Chromium-only width matrices, and failed WebKit guest language persistence. That
+failure repeated three times on HTTP; the production server emits a Secure
+preference cookie. A temporary loopback HTTPS proxy, with a local self-signed
+certificate accepted only by the isolated test contexts, passed all three repeats
+and the full Firefox/WebKit run (20 passed, the same six matrix skips). No cookie
+security setting or application code was weakened to pass a local HTTP test.
+Logs: `/tmp/noslog-p10-remaining.log`, `/tmp/noslog-p10-language-repeat.log`,
+`/tmp/noslog-p10-https/tests.log`, `/tmp/noslog-p10-https/full.log`.
+
+The actual account page matches the inspected destructive fill (#AE2E24), without
+a visible border. Opening and cancelling deletion restored focus to its trigger;
+no logout, reauthentication or deletion was submitted. Visual review paused at
+the profile save zone: Figma `2734:88357` has a 20px link row followed by a 12px
+gap and 40px Save button; `.nl-settings__view-profile` adds a 44px minimum target,
+placing Save 24px lower. Comparison: `/tmp/noslog-p10-save-comparison.png`.
+The user approved matching the Figma link row. Its minimum height now uses the
+existing 20px line-height token; the 44px text-input minimum remains unchanged.
+The P10 profile matrix checks the rendered 20px link and 12px Save gap across
+320/390/671/672/768/1055/1056/1470px and a return below Wide in KO/JA/EN.
+All 45 Chromium/Firefox/WebKit fixture checks passed, including keyboard controls,
+dialogs, failed-save retention and accessibility checks. In-app browser measurement
+also returned 20px / 12px / 44px for link / gap / input, with the affected area
+compared against the previously retrieved Figma image. Unit tests passed 908 with
+13 existing opt-in skips. P10–P16 visual completion is not claimed.
+Harness log: `/tmp/noslog-p10-link-validation.log`.
+
 After the user committed and pushed the test-initialization repair, the working
 tree was clean. The isolated P9 harness passed nine Chromium and eighteen
 Firefox/WebKit checks: login recovery plus onboarding validation, duplicate

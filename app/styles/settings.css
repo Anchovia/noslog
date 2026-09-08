@@ -143,7 +143,7 @@
     align-self: flex-end;
     display: inline-flex;
     align-items: center;
-    min-height: 44px;
+    min-height: var(--nl-type-line-height-20);
 }
 .noslog-ui .nl-settings__privacy-controls {
     display: flex;
