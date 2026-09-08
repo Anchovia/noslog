@@ -262,12 +262,26 @@ for (const locale of ["ko", "ja", "en"]) {
         page,
     }, testInfo) => {
         test.skip(
-            testInfo.project.name !== "mobile-chromium",
-            "Explicit width matrix is run once."
+            !testInfo.project.name.startsWith("mobile-"),
+            "Explicit width matrix is run once per browser."
         );
         await openRanking(page, { locale, signedIn: true, ownRank: 3 });
         for (const width of [320, 390, 768, 1024, 1280]) {
             await page.setViewportSize({ width, height: 900 });
+            const playerHeading = page.locator(
+                ".nl-chart-leaderboard__header th:nth-child(3)"
+            );
+            await expect(playerHeading).toHaveCSS("text-align", "start");
+            const headingBounds = await playerHeading.boundingBox();
+            const nicknameBounds = await page
+                .locator(".nl-chart-leaderboard__player > a")
+                .first()
+                .boundingBox();
+            expect(headingBounds).not.toBeNull();
+            expect(nicknameBounds).not.toBeNull();
+            expect(Math.abs(headingBounds!.x - nicknameBounds!.x)).toBeLessThan(
+                1
+            );
             await expect
                 .poll(() =>
                     page.evaluate(

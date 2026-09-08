@@ -142,6 +142,7 @@
 }
 .noslog-ui .nl-chart-leaderboard__header th {
     font-weight: var(--nl-type-weight-regular);
+    text-align: start;
 }
 .noslog-ui .nl-chart-leaderboard__player {
     display: flex;
