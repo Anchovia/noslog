@@ -93,6 +93,11 @@ Do not invent separate transitions from Figma's 390/768/1024/1280 review canvase
   centered row. Narrower modes keep the controls below the heading.
 - Component-local charts, labels and text may measure their actual available width
   to fit content. That measurement must not independently switch the page mode.
+- **Privacy contents:** select the first section on initial entry, or the valid
+  URL fragment target when present. Selecting a contents link immediately updates
+  the highlight and focuses its section; direct scrolling updates the reading
+  section. History navigation uses the fragment target. Compact contents share
+  the same selection and close after a link is selected.
 
 The retired 90% layout, 1440px maximum, proposed 1200/1280px stepping, unreachable
 1216px inner query, 768px header query and 672px padded-area tab query are obsolete.

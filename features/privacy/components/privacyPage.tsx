@@ -123,7 +123,7 @@ export default function PrivacyPage({
                                 {isAuthenticated ? (
                                     <Link
                                         href={localizePath(
-                                            "/profile/settings",
+                                            "/settings?category=account",
                                             locale
                                         )}
                                     >

@@ -6,6 +6,55 @@ import {
 } from "@/features/privacy/content/privacyContent";
 
 for (const locale of ["ko", "ja", "en"] as const) {
+    test(`P15 ${locale} contents selection follows navigation and reading`, async ({
+        page,
+    }) => {
+        await page.setViewportSize({ width: 1470, height: 900 });
+        await page.goto(`/${locale}/privacy`);
+        const wide = page.locator(".nl-privacy-contents__wide");
+        const selected = wide.locator('[aria-current="location"]');
+        await expect(selected).toHaveAttribute("href", "#privacy-operator");
+        await wide.locator('a[href="#privacy-storage"]').click();
+        await expect(selected).toHaveAttribute("href", "#privacy-storage");
+        await expect(page.locator("#privacy-storage")).toBeFocused();
+        await wide.locator('a[href="#privacy-history"]').click();
+        await expect(selected).toHaveAttribute("href", "#privacy-history");
+        await page.goBack();
+        await expect(selected).toHaveAttribute("href", "#privacy-storage");
+        await page.goForward();
+        await expect(selected).toHaveAttribute("href", "#privacy-history");
+        for (const id of ["data", "retention", "operator"]) {
+            await page.locator(`#privacy-${id}`).evaluate((target) => {
+                window.scrollTo({
+                    top:
+                        window.scrollY +
+                        target.getBoundingClientRect().top -
+                        84,
+                    behavior: "instant",
+                });
+            });
+            await expect(selected).toHaveAttribute("href", `#privacy-${id}`);
+        }
+        await page.goto(`/${locale}/privacy#privacy-storage`);
+        await expect(selected).toHaveAttribute("href", "#privacy-storage");
+        for (const width of [1056, 1055, 672, 671, 320, 390, 1470]) {
+            await page.setViewportSize({ width, height: 900 });
+            const visibleContents = page.locator(
+                width >= 1056
+                    ? ".nl-privacy-contents__wide"
+                    : ".nl-privacy-contents__compact"
+            );
+            if (width < 1056) await visibleContents.locator("summary").click();
+            await visibleContents.locator('a[href="#privacy-data"]').click();
+            await expect(
+                visibleContents.locator('[aria-current="location"]')
+            ).toHaveAttribute("href", "#privacy-data");
+            await expect(page.locator("#privacy-data")).toBeFocused();
+            if (width < 1056)
+                await expect(visibleContents).not.toHaveAttribute("open", "");
+        }
+    });
+
     test(`P15 ${locale} complete policy, reflow, contents and history`, async ({
         page,
     }, testInfo) => {

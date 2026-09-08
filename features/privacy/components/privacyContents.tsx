@@ -10,30 +10,77 @@ export default function PrivacyContents({
     title: string;
     sections: { id: string; title: string }[];
 }) {
-    const [active, setActive] = useState<string | null>(null);
+    const [active, setActive] = useState(`privacy-${sections[0]?.id ?? ""}`);
     const disclosure = useRef<HTMLDetailsElement>(null);
+    const anchor = useRef<{ id: string; scrollY: number } | null>(null);
+
+    function selectTarget(id: string) {
+        const target = document.getElementById(id);
+        if (!target) return;
+        if (disclosure.current) disclosure.current.open = false;
+        setActive(id);
+        target.focus({ preventScroll: true });
+        target.scrollIntoView({ block: "start", behavior: "instant" });
+        anchor.current = { id, scrollY: window.scrollY };
+    }
+
     useEffect(() => {
         const targets = sections
             .map(({ id }) => document.getElementById(`privacy-${id}`))
             .filter((node): node is HTMLElement => !!node);
-        const observer = new IntersectionObserver(
-            (entries) => {
-                for (const entry of entries)
-                    if (entry.isIntersecting) setActive(entry.target.id);
-            },
-            { rootMargin: "-80px 0px -65% 0px" }
-        );
-        targets.forEach((target) => observer.observe(target));
-        return () => observer.disconnect();
+        let frame = 0;
+        let navigationFrame = 0;
+        function update() {
+            if (anchor.current?.scrollY === window.scrollY) return;
+            anchor.current = null;
+            const readingTop = targets[0]
+                ? parseFloat(getComputedStyle(targets[0]).scrollMarginTop) + 1
+                : 0;
+            const current =
+                targets.findLast(
+                    (target) => target.getBoundingClientRect().top <= readingTop
+                ) ?? targets[0];
+            if (current) setActive(current.id);
+        }
+        function onScroll() {
+            if (navigationFrame) return;
+            cancelAnimationFrame(frame);
+            frame = requestAnimationFrame(update);
+        }
+        function onHistory() {
+            cancelAnimationFrame(frame);
+            cancelAnimationFrame(navigationFrame);
+            navigationFrame = requestAnimationFrame(() => {
+                navigationFrame = 0;
+                const id = window.location.hash.slice(1);
+                if (targets.some((target) => target.id === id))
+                    selectTarget(id);
+                else {
+                    anchor.current = null;
+                    update();
+                }
+            });
+        }
+        onHistory();
+        window.addEventListener("scroll", onScroll, { passive: true });
+        window.addEventListener("resize", onScroll);
+        window.addEventListener("hashchange", onHistory);
+        window.addEventListener("popstate", onHistory);
+        return () => {
+            cancelAnimationFrame(frame);
+            cancelAnimationFrame(navigationFrame);
+            window.removeEventListener("scroll", onScroll);
+            window.removeEventListener("resize", onScroll);
+            window.removeEventListener("hashchange", onHistory);
+            window.removeEventListener("popstate", onHistory);
+        };
     }, [sections]);
 
     function navigate(id: string) {
-        if (disclosure.current) disclosure.current.open = false;
-        requestAnimationFrame(() => {
-            const target = document.getElementById(`privacy-${id}`);
-            target?.focus({ preventScroll: true });
-            target?.scrollIntoView({ block: "start", behavior: "instant" });
-        });
+        const targetId = `privacy-${id}`;
+        if (window.location.hash !== `#${targetId}`)
+            window.history.pushState(null, "", `#${targetId}`);
+        selectTarget(targetId);
     }
     const links = sections.map((section) => (
         <li key={section.id}>
@@ -42,7 +89,17 @@ export default function PrivacyContents({
                 aria-current={
                     active === `privacy-${section.id}` ? "location" : undefined
                 }
-                onClick={() => navigate(section.id)}
+                onClick={(event) => {
+                    if (
+                        event.metaKey ||
+                        event.ctrlKey ||
+                        event.shiftKey ||
+                        event.altKey
+                    )
+                        return;
+                    event.preventDefault();
+                    navigate(section.id);
+                }}
             >
                 {section.title}
             </a>

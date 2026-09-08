@@ -9,6 +9,26 @@ implementation agent.
 
 ### Page-suite visual audit checkpoint — 2026-09-08
 
+P15 policy checks passed 18 tests across Chromium/Firefox/WebKit in KO/JA/EN:
+12 sections, compact contents navigation and focus, reflow, history empty state,
+text-spacing overrides and print composition. The harness also passed its 27
+recovery checks (six unrelated opt-in onboarding cases skipped). The authenticated
+policy's deletion link incorrectly reached the legacy profile-settings redirect;
+it now targets `/settings?category=account`. The actual signed-in browser confirmed
+the Account heading and deletion entry after following this link; no deletion was
+performed. Lint, typecheck, formatting, 908 unit tests (13 opt-in skips), and restored
+build passed. Log: `/tmp/noslog-p15-link-validation.log`.
+The user approved matching the initial first-section highlight in Figma
+`2927:1316`, with immediate click selection, fragment/history navigation and
+scroll-driven updates shared by Compact and Wide contents. This is implemented.
+New KO/JA/EN checks cover first selection, click/focus, last-section selection,
+Back/Forward, upward/downward reading, fragment entry and 320/390/671/672/1055/
+1056/1470px transitions. An initial fragment/scroll scheduling conflict was caught
+and repaired; the final run passed all 27 P15 checks across three browsers, plus
+27 harness checks (six unrelated opt-in skips). Lint, typecheck, unit tests,
+formatting and restored build passed. The initial highlight capture was compared
+with the retrieved Figma reference. Log: `/tmp/noslog-p15-toc-validation.log`.
+
 The user approved retaining P14's full inner-card divider and full-width catalogue
 Load more button after comparison with Figma `2914:8419`. Both match the existing
 implementation; only the current contract and this evidence log were updated.
