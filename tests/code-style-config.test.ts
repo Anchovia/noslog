@@ -1,10 +1,17 @@
 import { ESLint } from "eslint";
-import { describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 
 const eslint = new ESLint();
 const ruleId = "@typescript-eslint/consistent-type-imports";
 
 describe("feature code-style enforcement", () => {
+    beforeAll(async () => {
+        // Load the real config and plugins outside the individual rule checks.
+        await eslint.calculateConfigForFile(
+            "features/profile/types/styleCheck.ts"
+        );
+    }, 30_000);
+
     it("rejects value imports that are only used as types", async () => {
         const [result] = await eslint.lintText(
             'import { Locale } from "@/lib/i18n/routing"; export type ExampleLocale = Locale;',
