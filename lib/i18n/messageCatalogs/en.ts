@@ -653,7 +653,7 @@ export const enMessages = {
     "bingo.invalidCell": "This bingo cell is invalid.",
     "bingo.cellNotFound": "Could not find the bingo cell.",
     "bingo.unavailable": "This bingo is not currently available.",
-    "bingo.mission.completed": "Completed · press again to undo",
+    "bingo.mission.completed": "Completed",
     "bingo.mission.chance": "Complete this cell to finish a line",
     "bingo.mission.music": "Song mission",
     "bingo.mission.category": "Category mission",

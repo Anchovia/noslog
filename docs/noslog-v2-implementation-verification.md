@@ -9,6 +9,20 @@ implementation agent.
 
 ### Page-suite visual audit checkpoint — 2026-09-08
 
+P14 resumed fixture checks passed 45 Chromium/Firefox/WebKit tests in KO/JA/EN,
+covering catalog filters and batches, detail selection, mission help, save rollback,
+busy-save prevention and guest omissions. The restored-source build passed.
+Log: `/tmp/noslog-p14-current-audit.log`. The user approved retaining the full-width
+reset trigger over Figma's content-width `2914:9231`; the exception is recorded in
+the current contract and requires no application change. The user subsequently
+approved removing the repeated undo instruction: completed rows now show only
+the localized completion label in KO/JA/EN. Checkbox behavior is unchanged.
+After this copy change, all 45 browser checks, 908 unit tests (13 existing opt-in
+skips), lint and the restored-source build passed. Narrow and Wide captures were
+reviewed against the previously retrieved Figma reference and approved exceptions.
+Log: `/tmp/noslog-p14-copy-validation.log`. This is scoped evidence, not completion
+of the remaining page-suite visual audit.
+
 P13 resumed fixture checks passed 45 tests across Chromium/Firefox/WebKit in
 KO/JA/EN: mode/grade selection, history, Event chart choice, local proof selection,
 invalid/oversized files, busy controls, failed and expired submission retention,

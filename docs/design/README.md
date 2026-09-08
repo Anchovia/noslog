@@ -73,6 +73,12 @@ Do not invent separate transitions from Figma's 390/768/1024/1280 review canvase
   frames (`3362:31976`, Dark); this control does not turn the page into Wide.
   The catalogue changes to four columns and detail to two columns at Wide (1056px).
   Preserve existing filter contents. It is not the discovery-rail contract.
+  The detail-page reset trigger retains the full mission-column width in every
+  mode, including Wide. This user-approved exception replaces the content-width
+  reset trigger in P14 (`2914:9231`); preserve the outlined appearance and the
+  confirmation dialog.
+  Completed mission rows retain a concise localized completion label without the
+  repeated instruction to press again to undo. Checkbox behavior is unchanged.
 - **Footer exception:** the approved content-driven single-line threshold remains
   840px; below it, center the stacked text. This does not change the page mode.
 - **Profile:** Wide uses a 2:1 body grid within the same 1000px shell: Progress

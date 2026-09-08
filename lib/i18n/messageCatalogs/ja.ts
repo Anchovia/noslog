@@ -647,7 +647,7 @@ export const jaMessages = {
     "bingo.invalidCell": "無効なビンゴマスです。",
     "bingo.cellNotFound": "ビンゴマスが見つかりません。",
     "bingo.unavailable": "現在進行できないビンゴです。",
-    "bingo.mission.completed": "完了済み・もう一度押すと解除",
+    "bingo.mission.completed": "完了済み",
     "bingo.mission.chance": "このマスを埋めると1列完成",
     "bingo.mission.music": "楽曲ミッション",
     "bingo.mission.category": "カテゴリーミッション",

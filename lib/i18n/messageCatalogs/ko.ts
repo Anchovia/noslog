@@ -646,7 +646,7 @@ export const koMessages = {
     "bingo.invalidCell": "잘못된 빙고 칸입니다.",
     "bingo.cellNotFound": "빙고 칸을 찾을 수 없습니다.",
     "bingo.unavailable": "현재 진행할 수 없는 빙고입니다.",
-    "bingo.mission.completed": "완료됨 · 다시 누르면 해제",
+    "bingo.mission.completed": "완료됨",
     "bingo.mission.chance": "이 칸만 채우면 한 줄 완성",
     "bingo.mission.music": "악곡 미션",
     "bingo.mission.category": "카테고리 미션",
