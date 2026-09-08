@@ -25,8 +25,30 @@ for (const locale of ["ko", "ja", "en"] as const) {
         page.on("pageerror", (error) => errors.push(error.message));
         await page.goto(`/${locale}/p7-verification?fixture=exams`);
         await expect(page.locator("#exam-title")).toContainText("8");
-        for (const width of [320, 390, 520, 768, 1470]) {
+        for (const width of [
+            320, 390, 671, 672, 768, 1055, 1056, 1470, 1055, 1470,
+        ]) {
             await page.setViewportSize({ width, height: 900 });
+            const rail = page.locator(".nl-exam-rail");
+            if (width >= 1056) {
+                await expect(rail).toBeVisible();
+                await expect(rail).toHaveCSS("padding", "8px");
+                await expect(page.getByRole("combobox")).not.toBeVisible();
+                const first = (await rail
+                    .locator("button")
+                    .nth(0)
+                    .boundingBox())!;
+                const second = (await rail
+                    .locator("button")
+                    .nth(1)
+                    .boundingBox())!;
+                expect(first.height).toBe(44);
+                expect(second.y - first.y - first.height).toBe(4);
+            } else {
+                await expect(rail).not.toBeVisible();
+                await expect(page.getByRole("combobox")).toBeVisible();
+            }
+            await expect(page.locator("#exam-title")).toContainText("8");
             expect(
                 await page.evaluate(
                     () => document.documentElement.scrollWidth <= innerWidth

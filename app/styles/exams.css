@@ -224,9 +224,10 @@
     .noslog-ui .nl-exam-rail {
         display: flex;
         flex-direction: column;
+        gap: var(--nl-spacing-4);
         background: var(--nl-surface-surface);
         border-radius: var(--nl-radius-container);
-        padding: var(--nl-spacing-12);
+        padding: var(--nl-spacing-8);
     }
     .noslog-ui .nl-exam-facts {
         grid-template-columns: repeat(4, minmax(0, 1fr));

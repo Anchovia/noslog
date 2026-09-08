@@ -9,6 +9,23 @@ implementation agent.
 
 ### Page-suite visual audit checkpoint — 2026-09-08
 
+P13 resumed fixture checks passed 45 tests across Chromium/Firefox/WebKit in
+KO/JA/EN: mode/grade selection, history, Event chart choice, local proof selection,
+invalid/oversized files, busy controls, failed and expired submission retention,
+success/guest/empty states. Restored-source production build passed; no actual
+proof was submitted. Log: `/tmp/noslog-p13-current-audit.log`.
+Visual review paused at the Wide grade rail: current Figma `2862:2708` uses
+8px padding and 4px gaps between 44px rows, while the browser measures 12px
+padding and no row gap. Comparison: `/tmp/noslog-p13-rail-comparison.png`.
+The user approved matching Figma. The Wide rail now uses the existing 8px padding
+and 4px gap tokens, retaining 44px rows. The KO/JA/EN matrix checks 320/390/671/672/
+768/1055/1056/1470px, returns below Wide, then re-enters Wide while retaining the
+selected grade. All 45 Chromium/Firefox/WebKit checks passed after the correction.
+The rendered rail was compared with the retrieved Figma reference; lint, typecheck,
+formatting, 908 unit tests (13 existing opt-in skips) and the restored production
+build passed. Log: `/tmp/noslog-p13-rail-validation.log`. This does not certify
+all P13 states or the remaining P14–P16 audit complete.
+
 P11 resumed checks passed 27 Chromium/Firefox/WebKit tests in KO/JA/EN, covering
 archive month groups, pagination, empty content, long detail text, restricted
 Markdown, links and Home notice separation. Current Figma detail frames
