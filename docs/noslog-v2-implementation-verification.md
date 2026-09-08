@@ -9,6 +9,31 @@ implementation agent.
 
 ### Page-suite visual audit checkpoint — 2026-09-08
 
+P11 resumed checks passed 27 Chromium/Firefox/WebKit tests in KO/JA/EN, covering
+archive month groups, pagination, empty content, long detail text, restricted
+Markdown, links and Home notice separation. Current Figma detail frames
+`2756:805` and `2756:1115` were inspected against fixture captures; the approved
+font and shell overrides remain. Log: `/tmp/noslog-p11-current-audit.log`.
+
+P12 initially failed an obsolete test expectation that Wide starts at 960px.
+The test now follows the approved 1056px viewport boundary and includes both
+672px and 1056px edges plus resizing back to Intermediate. All 30 checks then
+passed across Chromium/Firefox/WebKit, with restored-source production builds.
+No application layout was changed. Log: `/tmp/noslog-p12-current-audit.log`.
+Visual review paused at the discovery result-count gap: Figma `2804:2255` ends
+at y=21552 and the first card `2804:2256` starts at y=21560 (8px); the current
+catalog flex gap is 24px. The comparison uses different fixture content and the
+approved bounded shell: `/tmp/noslog-p12-count-gap-comparison.png`. This visual
+repair was subsequently approved: the catalog now uses the existing 8px spacing
+token while the map/results composition and card-to-card spacing remain unchanged.
+The KO/JA/EN discovery matrix measures the actual summary-to-first-card distance
+at 320/390/671/672/768/1055/1056/1470px and after returning to 1055px.
+All 30 Chromium/Firefox/WebKit checks passed after this repair; current captures
+were compared with the retrieved Figma reference. Lint, typecheck, formatting,
+908 unit tests (13 existing opt-in skips), and the restored production build passed.
+Log: `/tmp/noslog-p12-gap-validation.log`. These checks do not certify P12 or
+P13–P16 complete; the map-success rendering remains outside this fixture run.
+
 After the input-height fix was committed, P10 public settings/navigation passed
 13 Chromium checks. The HTTP Firefox/WebKit run passed 19 checks, skipped six
 Chromium-only width matrices, and failed WebKit guest language persistence. That

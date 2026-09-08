@@ -23,9 +23,11 @@ test("P12 Figma detail composition uses pinned spacing and type at compact and w
         page.locator(".nl-arcade-detail__cabinets > li").last()
     ).toContainText("이용 불가 · 점검 중");
     await page.evaluate(() => document.fonts.ready);
-    for (const width of [320, 390, 960, 1280, 1470]) {
+    for (const width of [
+        320, 390, 671, 672, 960, 1055, 1056, 1280, 1470, 1055,
+    ]) {
         await page.setViewportSize({ width, height: 900 });
-        const wide = width >= 960;
+        const wide = width >= 1056;
         await expect(
             page
                 .locator(".nl-arcade-detail__cards > .nl-arcade-detail__card")
@@ -99,8 +101,16 @@ for (const locale of ["ko", "ja", "en"] as const) {
         await expect(
             page.getByText(t["arcades.mapListFallback"], { exact: true })
         ).toBeVisible();
-        for (const width of [320, 390, 520, 768, 1470]) {
+        for (const width of [320, 390, 671, 672, 768, 1055, 1056, 1470, 1055]) {
             await page.setViewportSize({ width, height: 900 });
+            const summary = (await page
+                .locator(".nl-arcades__summary")
+                .boundingBox())!;
+            const firstCard = (await page
+                .locator(".nl-arcades__list > li")
+                .first()
+                .boundingBox())!;
+            expect(firstCard.y - summary.y - summary.height).toBe(8);
             expect(
                 await page.evaluate(
                     () => document.documentElement.scrollWidth <= innerWidth
