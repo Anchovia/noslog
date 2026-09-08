@@ -92,6 +92,7 @@
     overflow: hidden;
 }
 .noslog-ui .nl-arcade-map__canvas {
+    isolation: isolate;
     width: 100%;
     height: 100%;
 }

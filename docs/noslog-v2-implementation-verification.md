@@ -7,6 +7,25 @@ implementation agent.
 
 ## Resumed implementation — 2026-09-07
 
+### Live P12 map controls — 2026-09-09
+
+The signed-in app browser successfully loaded real Kakao tiles on `/ko/gamecenter`.
+The local catalogue had zero venues, so this does not verify markers/clusters or
+selection-to-list integration. Real tiles exposed a missed functional defect:
+the SDK's SVG layer intercepted clicks at the application's zoom buttons.
+DOM hit testing returned the SDK SVG rather than a button, and clicking Zoom in
+left the 32km scale unchanged. Isolating the map canvas stacking context keeps
+SDK layers behind the existing sibling controls without changing their design.
+After rebuilding, real clicks changed 32km to 16km and back, displayed the area
+search action, applied its region filter and expanded the legend. This supersedes
+the blanket live-map-success gap below for the empty-catalogue state only.
+All 30 existing P12 Chromium/Firefox/WebKit fixture checks passed, including
+KO/JA/EN reflow, filtering, fallback and gallery keyboard/focus. Lint, typecheck,
+908 unit tests (13 opt-in skips) and the restored-source production build passed.
+Logs: `/tmp/noslog-map-layer-browser.log`, `/tmp/noslog-map-layer-build.log`,
+`/tmp/noslog-map-layer-unit.log`. The fixture suite does not use live map tiles;
+the real tile/control evidence above is from the app browser.
+
 ### Closure evidence reconciliation — 2026-09-09
 
 The sync fixture previously enabled only the Chromium branch of the recovery
