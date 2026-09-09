@@ -36,34 +36,26 @@ export default function SyncStatusHeader({
                 </p>
             ) : null}
             <section className="nl-sync-zone">
-                <div
-                    className="nl-sync-pair nl-sync-status"
-                    aria-live="polite"
-                    aria-atomic="true"
-                >
-                    <span className="nl-emphasis-label">
-                        {attempt
-                            ? t(`sync.status.${attempt.status}`)
-                            : t("profile.noRecord")}
-                    </span>
-                    {attempt ? (
-                        <span className="nl-body-secondary nl-muted">
+                {!completed ? (
+                    <div
+                        className="nl-sync-pair nl-sync-status"
+                        aria-live="polite"
+                        aria-atomic="true"
+                    >
+                        <span className="nl-emphasis-label">
                             {attempt
-                                ? t(
-                                      completed
-                                          ? "sync.latestAt"
-                                          : "sync.startedAt",
-                                      {
-                                          date: syncDateLabel(
-                                              attempt.completedAt ??
-                                                  attempt.startedAt
-                                          ),
-                                      }
-                                  )
-                                : t("sync.neverSynced")}
+                                ? t(`sync.status.${attempt.status}`)
+                                : t("profile.noRecord")}
                         </span>
-                    ) : null}
-                </div>
+                        {attempt ? (
+                            <span className="nl-body-secondary nl-muted">
+                                {t("sync.startedAt", {
+                                    date: syncDateLabel(attempt.startedAt),
+                                })}
+                            </span>
+                        ) : null}
+                    </div>
+                ) : null}
                 {reinstall ? (
                     <Button
                         appearance="foundation"

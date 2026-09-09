@@ -858,6 +858,19 @@ export const jaMessages = {
     "sync.coverageJudgement": "判定詳細がある譜面",
     "sync.coverageTiming": "FAST/SLOWがある譜面",
     "sync.history": "同期履歴",
+    "sync.guideTitle": "はじめての連携",
+    "sync.guideIntro":
+        "初回に登録すれば、次回からは公式サイトで実行するだけです。",
+    "sync.once": "初回のみ",
+    "sync.privateBookmark":
+        "自分のアカウント専用です。他の人と共有しないでください。",
+    "sync.loginStep": "公式サイトにログイン",
+    "sync.loginInstruction":
+        "NOSTALGIAのプレーデータを閲覧できるアカウントでログインしてください。",
+    "sync.runInstruction":
+        "公式サイトで、保存した「{bookmarklet}」ブックマークを実行してください。",
+    "sync.returnInstruction":
+        "完了の案内が表示されたら、このページに戻って結果を確認してください。",
     "sync.setup": "ブックマークレットの登録",
     "sync.firstFull": "初回の全記録取り込み",
     "sync.status.delayed": "遅延",
@@ -926,7 +939,7 @@ export const jaMessages = {
     "sync.copyAddress": "ブックマークレットのアドレスをコピー",
     "sync.mobileAdd": "1. このページをブラウザのブックマークに追加します。",
     "sync.mobileEdit":
-        "2. 追加したブックマークのアドレスを編集して保存します。",
+        "2. 下のアドレスをコピーし、追加したブックマークのURLに貼り付けて保存してください。",
     "sync.mobileAddAlt": "モバイルでブックマークを追加する方法",
     "sync.mobileEditAlt": "モバイルでブックマークのアドレスを編集する方法",
     "sync.latestResult": "直近の同期結果",

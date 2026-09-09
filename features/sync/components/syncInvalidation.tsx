@@ -50,7 +50,11 @@ export default function SyncInvalidation({
             description={t("sync.invalidateHelp")}
             showClose={false}
             trigger={
-                <Button appearance="foundation" variant="secondary">
+                <Button
+                    appearance="foundation"
+                    variant="danger"
+                    destructiveFilled
+                >
                     {t("sync.invalidate")}
                 </Button>
             }
@@ -81,6 +85,7 @@ export default function SyncInvalidation({
                     <Button
                         appearance="foundation"
                         variant="danger"
+                        destructiveFilled
                         disabled={pending}
                         onClick={invalidate}
                     >

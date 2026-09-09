@@ -30,7 +30,7 @@ export default function SyncPage({
 }) {
     const t = useTranslations();
     const href = useLocalizedHref();
-    const [setupOpen, setSetupOpen] = useState(!initialData?.attempts.length);
+    const [setupOpen, setSetupOpen] = useState(true);
     const [reinstall, setReinstall] = useState(false);
     const watchUntil = useRef(0);
     const watchedAttempt = useRef<number | null>(null);
@@ -79,23 +79,19 @@ export default function SyncPage({
         />
     ) : null;
     const help = (
-        <section className="nl-sync-zone">
-            <h2 className="nl-section-title">{t("sync.help")}</h2>
-            {firstUse ? (
+        <Disclosure title={t("sync.help")} heading="section">
+            <div className="nl-sync-zone">
                 <p className="nl-body-secondary nl-muted">
-                    {t("sync.setupSecurity")}
+                    {t("sync.security")}
                 </p>
-            ) : null}
-            <p className="nl-body-secondary nl-muted">
-                {t(firstUse ? "sync.regenerateWarning" : "sync.security")}
-            </p>
-            <SyncInvalidation
-                onInvalidated={() => {
-                    setReinstall(true);
-                    revealSetup();
-                }}
-            />
-        </section>
+                <SyncInvalidation
+                    onInvalidated={() => {
+                        setReinstall(true);
+                        revealSetup();
+                    }}
+                />
+            </div>
+        </Disclosure>
     );
     if (
         !bookmarklet ||
@@ -109,27 +105,49 @@ export default function SyncPage({
                     <div className="nl-sync-column">
                         <section className="nl-sync-zone">
                             <h2 className="nl-section-title">
+                                {t("sync.howWorks")}
+                            </h2>
+                            <ol className="nl-sync-overview">
+                                {(
+                                    [
+                                        "sync.step.install",
+                                        "sync.loginStep",
+                                        "sync.step.run",
+                                    ] as const
+                                ).map((key, index) => (
+                                    <li
+                                        key={key}
+                                        className="nl-sync-overview-step"
+                                    >
+                                        <span
+                                            className="nl-sync-step__number nl-emphasis-label"
+                                            aria-hidden
+                                        >
+                                            {index + 1}
+                                        </span>
+                                        <span className="nl-component-title">
+                                            {t(key)}
+                                        </span>
+                                    </li>
+                                ))}
+                            </ol>
+                            <p className="nl-body-secondary nl-muted">
+                                {t("sync.loginToCreate")}
+                            </p>
+                            <Link
+                                href={href("/login?returnTo=/bookmarklet")}
+                                className={`${foundationButtonClass()} nl-sync-primary`}
+                            >
+                                {t("common.login")}
+                            </Link>
+                        </section>
+                        <section className="nl-sync-zone">
+                            <h2 className="nl-section-title">
                                 {t("sync.whatSent")}
                             </h2>
                             <p className="nl-body-secondary nl-muted">
                                 {t("sync.sentDescription")}
                             </p>
-                        </section>
-                        <Link
-                            href={href("/login?returnTo=/bookmarklet")}
-                            className={`${foundationButtonClass()} nl-sync-primary`}
-                        >
-                            {t("common.login")}
-                        </Link>
-                        <section className="nl-sync-zone">
-                            <h2 className="nl-section-title">
-                                {t("sync.howWorks")}
-                            </h2>
-                            <ol className="nl-sync-process nl-body-secondary nl-muted">
-                                <li>{t("sync.step.install")}</li>
-                                <li>{t("sync.pegateLogin")}</li>
-                                <li>{t("sync.step.run")}</li>
-                            </ol>
                         </section>
                     </div>
                     <section className="nl-sync-zone">
@@ -144,7 +162,11 @@ export default function SyncPage({
             </PageContainer>
         );
     return (
-        <PageContainer className="nl-sync-page">
+        <PageContainer
+            className={
+                firstUse ? "nl-sync-page nl-sync-page--first" : "nl-sync-page"
+            }
+        >
             <h1 className="nl-page-title">{t("sync.title")}</h1>
             {result.isError ? (
                 <StatusMessage severity="danger" title={t("common.pageError")}>
@@ -159,25 +181,41 @@ export default function SyncPage({
             ) : null}
             <div className="nl-sync-columns">
                 <div className="nl-sync-column">
-                    <SyncStatusHeader
-                        attempt={attempt}
-                        retryAfter={data?.retryAfter ?? 0}
-                        reinstall={reinstall}
-                        onReinstall={revealSetup}
-                        onOfficial={official}
-                    />
+                    {!firstUse ? (
+                        <div ref={setupRef} tabIndex={-1}>
+                            <Disclosure
+                                title={t("sync.setup")}
+                                heading="section"
+                                open={setupOpen}
+                                onToggle={(event) =>
+                                    setSetupOpen(event.currentTarget.open)
+                                }
+                            >
+                                {setupOpen ? setup : null}
+                            </Disclosure>
+                        </div>
+                    ) : null}
+                    {(!completed && !firstUse) || reinstall ? (
+                        <SyncStatusHeader
+                            attempt={attempt}
+                            retryAfter={data?.retryAfter ?? 0}
+                            reinstall={reinstall}
+                            onReinstall={revealSetup}
+                            onOfficial={official}
+                        />
+                    ) : null}
                     {!firstUse && reinstall ? (
                         <p className="nl-body-secondary">
                             {t("sync.setupSecurity")}
                         </p>
                     ) : null}
                     {completed ? (
-                        <section className="nl-sync-zone">
-                            <h2 className="nl-section-title">
-                                {t("sync.latestResult")}
-                            </h2>
+                        <Disclosure
+                            title={t("sync.latestResult")}
+                            heading="section"
+                        >
                             <SyncAttemptSummary attempt={attempt} />
-                        </section>
+                        </Disclosure>
                     ) : null}
                     {data?.firstFullImport ? (
                         <section className="nl-sync-zone">
@@ -233,17 +271,7 @@ export default function SyncPage({
                 </div>
                 <div className="nl-sync-column">
                     {!firstUse ? (
-                        <div ref={setupRef} tabIndex={-1}>
-                            <Disclosure
-                                title={t("sync.setup")}
-                                heading="section"
-                                open={setupOpen}
-                                onToggle={(event) =>
-                                    setSetupOpen(event.currentTarget.open)
-                                }
-                            >
-                                {setupOpen ? setup : null}
-                            </Disclosure>
+                        <div>
                             <Disclosure
                                 title={t("sync.history")}
                                 heading="section"
@@ -275,6 +303,16 @@ export default function SyncPage({
                                 </ol>
                             </Disclosure>
                         </div>
+                    ) : null}
+                    {firstUse ? (
+                        <section className="nl-sync-zone">
+                            <h2 className="nl-section-title">
+                                {t("sync.limitations")}
+                            </h2>
+                            <p className="nl-body-secondary nl-muted">
+                                {t("sync.limitDescription")}
+                            </p>
+                        </section>
                     ) : null}
                     {help}
                 </div>

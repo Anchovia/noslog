@@ -856,6 +856,19 @@ export const koMessages = {
     "sync.coverageJudgement": "판정 상세가 있는 채보",
     "sync.coverageTiming": "FAST/SLOW가 있는 채보",
     "sync.history": "동기화 이력",
+    "sync.guideTitle": "처음 연동하기",
+    "sync.guideIntro":
+        "처음 한 번만 등록하면, 다음부터는 공식 사이트에서 실행하면 됩니다.",
+    "sync.once": "처음 한 번",
+    "sync.privateBookmark":
+        "내 계정 전용 북마크입니다. 다른 사람과 공유하지 마세요.",
+    "sync.loginStep": "공식 사이트에 로그인",
+    "sync.loginInstruction":
+        "NOSTALGIA 플레이 데이터를 볼 수 있는 계정으로 로그인하세요.",
+    "sync.runInstruction":
+        "공식 사이트에서 방금 저장한 ‘{bookmarklet}’ 북마크를 실행하세요.",
+    "sync.returnInstruction":
+        "완료 안내가 뜨면 이 페이지로 돌아와 연동 결과를 확인하세요.",
     "sync.setup": "북마클릿 등록",
     "sync.firstFull": "첫 전체 기록 가져오기",
     "sync.status.delayed": "지연",
@@ -921,7 +934,8 @@ export const koMessages = {
     "sync.copied": "복사됨",
     "sync.copyAddress": "북마클릿 주소 복사",
     "sync.mobileAdd": "1. 현재 페이지를 브라우저 북마크에 추가합니다.",
-    "sync.mobileEdit": "2. 추가한 북마크의 주소를 편집하고 저장합니다.",
+    "sync.mobileEdit":
+        "2. 아래 주소를 복사해, 추가한 북마크의 주소(URL)에 붙여넣고 저장하세요.",
     "sync.mobileAddAlt": "모바일에서 북마크를 추가하는 방법",
     "sync.mobileEditAlt": "모바일에서 북마크 주소를 편집하는 방법",
     "sync.latestResult": "최근 동기화 결과",

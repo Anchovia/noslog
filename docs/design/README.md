@@ -116,6 +116,19 @@ Do not invent separate transitions from Figma's 390/768/1024/1280 review canvase
   the highlight and focuses its section; direct scrolling updates the reading
   section. History navigation uses the fragment target. Compact contents share
   the same selection and close after a link is selected.
+- **Data sync:** the user approved a code-only guide redesign on 2026-09-10,
+  superseding the earlier brief/Figma page composition without modifying Figma.
+  Use the full ordinary common-shell content width for setup, results and help.
+  Present installation, official-site login and bookmarklet execution as three
+  numbered steps; keep example images in disclosures. On Compact,
+  reserve the number indent for the heading so instructions retain the full card
+  width. The bookmarklet and official-site action buttons span the step content;
+  their labels and the bookmarklet helper text are centered. Preserve returning-user
+  setup/history disclosures and all sync behavior. Latest result and Help/Security
+  use collapsed disclosures.
+  Returning users see the Bookmarklet setup disclosure first and expanded by
+  default. The separate completed status/date/official-site action block is omitted
+  because the setup disclosure and latest-result section already provide them.
 
 The retired 90% layout, 1440px maximum, proposed 1200/1280px stepping, unreachable
 1216px inner query, 768px header query and 672px padded-area tab query are obsolete.

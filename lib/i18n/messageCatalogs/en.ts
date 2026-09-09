@@ -865,6 +865,19 @@ export const enMessages = {
     "sync.coverageJudgement": "Charts with judgement details",
     "sync.coverageTiming": "Charts with FAST/SLOW",
     "sync.history": "Sync history",
+    "sync.guideTitle": "Set up your first sync",
+    "sync.guideIntro":
+        "Register once, then run the bookmarklet on the official site whenever you want to sync.",
+    "sync.once": "One-time setup",
+    "sync.privateBookmark":
+        "This bookmark is for your account only. Do not share it.",
+    "sync.loginStep": "Sign in to the official site",
+    "sync.loginInstruction":
+        "Use the account that can access your NOSTALGIA play data.",
+    "sync.runInstruction":
+        "On the official site, run the {bookmarklet} bookmark you just saved.",
+    "sync.returnInstruction":
+        "When the completion message appears, return here to check your sync result.",
     "sync.setup": "Bookmarklet setup",
     "sync.firstFull": "First full record import",
     "sync.status.delayed": "Delayed",
@@ -931,7 +944,7 @@ export const enMessages = {
     "sync.copyAddress": "Copy bookmarklet address",
     "sync.mobileAdd": "1. Add this page to your browser bookmarks.",
     "sync.mobileEdit":
-        "2. Edit the address of the bookmark you added and save it.",
+        "2. Copy the address below, paste it into the saved bookmark’s URL field, and save.",
     "sync.mobileAddAlt": "How to add a bookmark on mobile",
     "sync.mobileEditAlt": "How to edit a bookmark address on mobile",
     "sync.latestResult": "Latest Sync Result",
