@@ -80,8 +80,25 @@ test("Discovery commits completed IME text and ignores an obsolete response", as
         name: "악곡 제목·아티스트 검색",
         exact: true,
     });
+    await expect(search).toBeEnabled();
+    await search.focus();
     await search.dispatchEvent("compositionstart");
-    await search.fill("서열");
+    await search.evaluate((element) => {
+        const input = element as HTMLInputElement;
+        const setter = Object.getOwnPropertyDescriptor(
+            HTMLInputElement.prototype,
+            "value"
+        )!.set!;
+        setter.call(input, "서열");
+        input.dispatchEvent(
+            new InputEvent("input", {
+                bubbles: true,
+                data: "서열",
+                inputType: "insertCompositionText",
+                isComposing: true,
+            })
+        );
+    });
     await page.waitForTimeout(450);
     expect(queries).toEqual([]);
     await search.dispatchEvent("compositionend");
@@ -106,9 +123,12 @@ test("Compact filters stage changes, cancel with Escape and Back, and commit one
     page,
 }, testInfo) => {
     test.skip(
-        testInfo.project.name !== "mobile-chromium",
-        "The compact layer is checked on the compact project."
+        !["mobile-chromium", "desktop-firefox", "desktop-webkit"].includes(
+            testInfo.project.name
+        ),
+        "Checked once per browser."
     );
+    await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("/ko/music");
     const trigger = page.getByRole("button", {
         name: "필터 및 정렬",
@@ -234,7 +254,9 @@ for (const locale of ["ko", "ja", "en"]) {
         page,
     }, testInfo) => {
         test.skip(
-            testInfo.project.name !== "mobile-chromium",
+            !["mobile-chromium", "desktop-firefox", "desktop-webkit"].includes(
+                testInfo.project.name
+            ),
             "This matrix sets all target widths explicitly."
         );
         await page.goto(`/${locale}/music?view=grid`);

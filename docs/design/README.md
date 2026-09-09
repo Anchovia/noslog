@@ -59,6 +59,9 @@ Do not invent separate transitions from Figma's 390/768/1024/1280 review canvase
   Tier/Evaluation columns. Ranking stays full-width. Selection and URL state survive
   every resize; CSS resizing must not reload data or reset forms.
 - **Music/chart discovery and tiers:** Wide has the persistent left filter rail.
+  Chart discovery retains the short localized page title `채보` / `譜面` / `Chart`,
+  as approved by the user, rather than the longer viewer title in P3. This does
+  not rename or alter the preserved chart viewer itself.
   Below Wide, preserve the staged full-screen filter flow. Do not replace it with
   a popover based on the earlier withdrawn proposal.
   Music/chart discovery's Wide sort trigger displays only the selected criterion

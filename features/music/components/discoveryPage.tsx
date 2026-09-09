@@ -91,11 +91,16 @@ export default function DiscoveryPage({
     const appendedFocus = useRef<{ queryKey: string; index: number } | null>(
         null
     );
-    const { register, control, handleSubmit, reset } =
-        useForm<MusicSearchFormValues>({
-            resolver: zodResolver(musicSearchSchema),
-            defaultValues: { search: query.q },
-        });
+    const {
+        register,
+        control,
+        handleSubmit,
+        reset,
+        formState: { isReady },
+    } = useForm<MusicSearchFormValues>({
+        resolver: zodResolver(musicSearchSchema),
+        defaultValues: { search: query.q },
+    });
     const search = useWatch({ control, name: "search" }) ?? "";
     const input = register("search");
     const dataQuery = useMemo(
@@ -284,6 +289,7 @@ export default function DiscoveryPage({
                 >
                     <SearchField
                         {...input}
+                        disabled={!isReady}
                         value={search}
                         maxLength={100}
                         aria-label={t(
