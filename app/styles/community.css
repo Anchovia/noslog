@@ -317,6 +317,9 @@
     flex: 1;
     min-width: 0;
 }
+.noslog-ui .nl-opinion-row__author .nl-avatar:has(> svg) {
+    box-shadow: inset 0 0 0 1px var(--nl-border-empty-slot);
+}
 .noslog-ui .nl-opinion-row__identity {
     display: flex;
     flex-direction: column;
