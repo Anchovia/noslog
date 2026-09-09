@@ -148,43 +148,56 @@ const musicSchema = z.object({
     unlock_type: z.number().int().min(0).max(100),
     sheet: z.array(musicSheetSchema).min(3).max(4),
 });
+const unwrapSingleton = (value: unknown) =>
+    Array.isArray(value) && value.length === 1 ? value[0] : value;
+const normalizeCollection = (value: unknown) =>
+    value === undefined || Array.isArray(value) ? value : [value];
 const syncRequestSchema = z.object({
     token: z.string().min(1).max(512),
     playerData: z.object({
         status: z.number().int(),
         data: sourceStatusSchema.extend({
-            player: z.object({
-                name: z.string().min(1).max(64),
-                play_count: z.number().int().min(0).max(10_000_000),
-                travel_info: z.object({
-                    money: z.number().int().min(0).max(1_000_000_000),
-                }),
-                last: z.object({
-                    playtime: z.string().max(64),
-                    brooch: broochSchema,
-                }),
-                brooch_list: z.object({
-                    brooch: z.array(broochSchema).max(1_000),
-                }),
-            }),
+            player: z.preprocess(
+                unwrapSingleton,
+                z.object({
+                    name: z.string().min(1).max(64),
+                    play_count: z.number().int().min(0).max(10_000_000),
+                    travel_info: z.object({
+                        money: z.number().int().min(0).max(1_000_000_000),
+                    }),
+                    last: z.object({
+                        playtime: z.string().max(64),
+                        brooch: broochSchema,
+                    }),
+                    brooch_list: z.object({
+                        brooch: z.array(broochSchema).max(1_000),
+                    }),
+                })
+            ),
         }),
     }),
     recentData: z.object({
         status: z.number().int(),
         data: sourceStatusSchema.extend({
-            player: z.object({
-                name: z.string().max(64),
-                history_list: z.object({
-                    history: z.array(recentHistorySchema).max(100),
-                }),
-            }),
+            player: z.preprocess(
+                unwrapSingleton,
+                z.object({
+                    name: z.string().max(64),
+                    history_list: z.object({
+                        history: z.array(recentHistorySchema).max(100),
+                    }),
+                })
+            ),
         }),
     }),
     totalData: z
         .object({
             status: z.number().int(),
             data: sourceStatusSchema.extend({
-                music: z.array(musicSchema).max(2_000),
+                music: z.preprocess(
+                    normalizeCollection,
+                    z.array(musicSchema).max(2_000)
+                ),
             }),
         })
         .nullable(),

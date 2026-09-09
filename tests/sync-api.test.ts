@@ -462,6 +462,32 @@ describe("POST /api/receivePlayerData", () => {
         expect(mocks.updateRecentPlay).toHaveBeenCalledOnce();
     });
 
+    it("플레이어 배열과 단일 악곡 응답을 정규화한다", async () => {
+        const body = requestBody(true);
+        const playerData = body.playerData.data as unknown as Record<
+            string,
+            unknown
+        >;
+        const recentData = body.recentData.data as unknown as Record<
+            string,
+            unknown
+        >;
+        const totalData = body.totalData?.data as unknown as Record<
+            string,
+            unknown
+        >;
+        playerData.player = [playerData.player];
+        recentData.player = [recentData.player];
+        totalData.music = (totalData.music as unknown[])[0];
+
+        const response = await POST(createRequest(body));
+
+        expect(response.status).toBe(200);
+        expect(mocks.updatePlayerProfile).toHaveBeenCalledOnce();
+        expect(mocks.updateRecentPlay).toHaveBeenCalledOnce();
+        expect(mocks.updatePlayData).toHaveBeenCalledOnce();
+    });
+
     it("전체 기록 동기화 후 관련 공개 캐시를 모두 갱신한다", async () => {
         const response = await POST(createRequest(requestBody(true)));
         const data = await response.json();
