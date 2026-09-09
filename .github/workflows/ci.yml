@@ -45,6 +45,7 @@ jobs:
               run: npm run build
 
     e2e:
+        if: ${{ vars.RUN_E2E == 'true' }}
         needs: verify
         runs-on: ubuntu-latest
         timeout-minutes: 45
