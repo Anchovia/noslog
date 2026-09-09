@@ -74,8 +74,8 @@ const shortText = z.string().min(1).max(256);
 const nullableShortText = z.string().max(256).nullable();
 const difficultySchema = z.enum(["Normal", "Hard", "Expert", "Real"]);
 const sourceStatusSchema = z.object({
-    status: z.number().int(),
-    fail_code: z.number().int(),
+    status: z.number().int().optional(),
+    fail_code: z.number().int().optional(),
 });
 const broochSchema = z.object({
     "@index": z.string().max(128),
@@ -360,6 +360,12 @@ export async function POST(request: NextRequest) {
     const body = await request.json().catch(() => null);
     const parsed = syncRequestSchema.safeParse(body);
     if (!parsed.success) {
+        console.warn("BEMANI sync payload validation failed", {
+            issues: parsed.error.issues.slice(0, 10).map((issue) => ({
+                code: issue.code,
+                path: issue.path.join("."),
+            })),
+        });
         return json(copy.invalidPayload, 400);
     }
 
@@ -379,10 +385,15 @@ export async function POST(request: NextRequest) {
     const { playerData, recentData, totalData } = parsed.data;
     if (
         playerData.status !== 0 ||
-        playerData.data.status !== 0 ||
+        (playerData.data.status !== undefined &&
+            playerData.data.status !== 0) ||
         recentData.status !== 0 ||
-        recentData.data.status !== 0 ||
-        (totalData && (totalData.status !== 0 || totalData.data.status !== 0))
+        (recentData.data.status !== undefined &&
+            recentData.data.status !== 0) ||
+        (totalData &&
+            (totalData.status !== 0 ||
+                (totalData.data.status !== undefined &&
+                    totalData.data.status !== 0)))
     ) {
         return json(copy.loginRequired, 400);
     }

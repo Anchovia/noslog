@@ -440,6 +440,28 @@ describe("POST /api/receivePlayerData", () => {
         );
     });
 
+    it("응답 내부 상태 메타데이터가 없어도 바깥 성공 상태로 동기화한다", async () => {
+        const body = requestBody();
+        const playerData = body.playerData.data as unknown as Record<
+            string,
+            unknown
+        >;
+        const recentData = body.recentData.data as unknown as Record<
+            string,
+            unknown
+        >;
+        delete playerData.status;
+        delete playerData.fail_code;
+        delete recentData.status;
+        delete recentData.fail_code;
+
+        const response = await POST(createRequest(body));
+
+        expect(response.status).toBe(200);
+        expect(mocks.updatePlayerProfile).toHaveBeenCalledOnce();
+        expect(mocks.updateRecentPlay).toHaveBeenCalledOnce();
+    });
+
     it("전체 기록 동기화 후 관련 공개 캐시를 모두 갱신한다", async () => {
         const response = await POST(createRequest(requestBody(true)));
         const data = await response.json();
