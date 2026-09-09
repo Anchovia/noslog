@@ -1,4 +1,33 @@
+/* Shared UI foundations and feature layouts, including settings, profiles and data sync, are isolated from preserved routes. */
 @import "tailwindcss";
+@import "./styles/pretendardJp.css";
+@import "./styles/tokens.css";
+@import "./styles/foundation.css";
+@import "./styles/layout.css";
+@import "./styles/search.css";
+@import "./styles/entity.css";
+@import "./styles/home.css";
+@import "./styles/discovery.css";
+@import "./styles/musicDetail.css";
+@import "./styles/dataCharts.css";
+@import "./styles/ranking.css";
+@import "./styles/community.css";
+@import "./styles/tiers.css";
+@import "./styles/playerIdentity.css";
+@import "./styles/globalRankings.css";
+@import "./styles/settings.css";
+@import "./styles/profile.css";
+@import "./styles/recovery.css";
+@import "./styles/sync.css";
+@import "./styles/auth.css";
+@import "./styles/announcements.css";
+@import "./styles/arcades.css";
+@import "./styles/exams.css";
+@import "./styles/bingos.css";
+@import "./styles/privacy.css";
+@import "./styles/feedback.css";
+@import "./styles/chartViewer.css";
+@import "./styles/admin.css";
 
 @theme {
     /* 폰트 */

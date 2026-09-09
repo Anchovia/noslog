@@ -1,4 +1,4 @@
-import type { MusicSearchParams } from "@/app/(nevigation)/music/query";
+import type { MusicSearchParams } from "@/features/music/search/musicQuery";
 import { normalizeMusicCategories } from "@/lib/musicCategories";
 
 import {

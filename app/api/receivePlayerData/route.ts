@@ -9,6 +9,7 @@ import { updateGrade } from "@/lib/services/user/updateGrade";
 import { updatePlayData } from "@/lib/services/user/updatePlayData";
 import { updatePlayerProfile } from "@/lib/services/user/updatePlayerProfile";
 import { updateRecentPlay } from "@/lib/services/user/updateRecentPlay";
+import { recordProfileRatings } from "@/features/profile/server/profileRatingHistoryService";
 import { NextRequest, NextResponse } from "next/server";
 import { revalidateTag } from "next/cache";
 import { z } from "zod";
@@ -16,7 +17,7 @@ import { z } from "zod";
 const EAGATE_ORIGIN = "https://p.eagate.573.jp";
 const MAX_SYNC_BODY_BYTES = 8 * 1024 * 1024;
 const SYNC_COOLDOWN_MS = 30 * 1000;
-const SYNC_PROCESSING_TIMEOUT_MS = 15 * 60 * 1000;
+const SYNC_PROCESSING_TIMEOUT_MS = 5 * 60 * 1000;
 const responseCopy = {
     ko: {
         forbidden: "허용되지 않은 요청입니다.",
@@ -255,6 +256,14 @@ async function filterKnownMusic(music: SyncMusicInput[]) {
 }
 
 function formatSkippedCharts(skippedCharts: SkippedChart[]) {
+    skippedCharts = [
+        ...new Map(
+            skippedCharts.map((chart) => [
+                `${chart.musicIndex}:${chart.difficulty}`,
+                chart,
+            ])
+        ).values(),
+    ];
     if (skippedCharts.length === 0) return null;
 
     const preview = skippedCharts
@@ -404,9 +413,10 @@ export async function POST(request: NextRequest) {
     try {
         await updatePlayerProfile(user.id, player);
 
-        const insertedPlays = await updateRecentPlay(user.id, history, syncId);
+        const { insertedPlays, skippedCharts: skippedRecentCharts } =
+            await updateRecentPlay(user.id, history, syncId);
         let changedRecords = 0;
-        let syncNotice: string | null = null;
+        let syncNotice = formatSkippedCharts(skippedRecentCharts);
         let catalogUpdates = { detected: 0, pending: 0, applied: 0 };
         if (music) {
             catalogUpdates = await processBemaniCatalogUpdates(
@@ -414,7 +424,10 @@ export async function POST(request: NextRequest) {
                 user.role === "admin"
             );
             const { knownMusic, skippedCharts } = await filterKnownMusic(music);
-            syncNotice = formatSkippedCharts(skippedCharts);
+            syncNotice = formatSkippedCharts([
+                ...skippedRecentCharts,
+                ...skippedCharts,
+            ]);
 
             if (knownMusic.length > 0) {
                 changedRecords = await updatePlayData(
@@ -423,6 +436,7 @@ export async function POST(request: NextRequest) {
                     syncId
                 );
                 await updateGrade(user.id);
+                await recordProfileRatings(user.id, syncId);
                 await updateDummy();
             }
         }

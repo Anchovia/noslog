@@ -1,17 +1,18 @@
+import { cache } from "react";
+
 import db from "./db";
 import getSession from "./session";
 
-export async function getUser() {
+export const getSessionUser = cache(async () => {
     const session = await getSession();
-    if (session.id) {
-        const user = await db.user.findUnique({
-            where: {
-                id: session.id,
-            },
-        });
-        if (user) {
-            return user;
-        }
-    }
-    return null;
+    const user = session.id
+        ? await db.user.findUnique({ where: { id: session.id } })
+        : null;
+
+    return { session, user };
+});
+
+export async function getUser() {
+    const { user } = await getSessionUser();
+    return user;
 }

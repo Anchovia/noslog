@@ -2,9 +2,11 @@
 
 import { Toaster } from "sonner";
 import { useTranslations } from "@/components/i18n/localeProvider";
+import useAccountResultNotice from "@/features/settings/hooks/useAccountResultNotice";
 
 export default function AppToaster() {
     const t = useTranslations();
+    useAccountResultNotice();
 
     return (
         <Toaster

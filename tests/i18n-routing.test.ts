@@ -109,7 +109,7 @@ describe("언어 경로 프록시", () => {
         );
     });
 
-    it("언어 경로를 기존 내부 페이지로 연결하고 언어 쿠키를 저장한다", async () => {
+    it("언어 경로를 연결하되 방문만으로 선호 언어 쿠키를 덮어쓰지 않는다", async () => {
         const response = await proxy(
             new NextRequest("http://localhost:3000/ko/music")
         );
@@ -117,9 +117,7 @@ describe("언어 경로 프록시", () => {
         expect(response?.headers.get("x-middleware-rewrite")).toBe(
             "http://localhost:3000/music"
         );
-        expect(response?.headers.get("set-cookie")).toContain(
-            "noslog-locale=ko"
-        );
+        expect(response?.headers.get("set-cookie")).toBeNull();
     });
 
     it("관리자 경로는 언어 접두사 없이 유지한다", async () => {

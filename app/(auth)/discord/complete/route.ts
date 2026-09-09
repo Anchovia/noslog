@@ -1,6 +1,8 @@
 import db from "@/lib/db";
 import { CACHE_TAGS, getUserProfileTag } from "@/lib/cacheTags";
-import { isLocale } from "@/lib/i18n/routing";
+import { serverEnv } from "@/lib/env/server";
+import { isLocale, localizePath, type Locale } from "@/lib/i18n/routing";
+import { getSafeAuthReturnPath } from "@/lib/authReturnPath";
 import getSession from "@/lib/session";
 import { revalidateTag } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
@@ -19,13 +21,21 @@ interface DiscordUserResponse {
 function errorRedirect(
     request: NextRequest,
     error: string,
-    isLinking: boolean
+    isLinking: boolean,
+    returnTo: string = "/",
+    locale?: Locale
 ) {
     const url = new URL(
-        isLinking ? "/profile/settings" : "/login",
+        isLinking
+            ? "/profile/settings"
+            : locale
+              ? localizePath("/login", locale)
+              : "/login",
         request.url
     );
     url.searchParams.set(isLinking ? "discordError" : "error", error);
+    if (!isLinking && returnTo !== "/")
+        url.searchParams.set("returnTo", returnTo);
     return NextResponse.redirect(url);
 }
 
@@ -35,7 +45,11 @@ function discordAvatar(user: DiscordUserResponse) {
     return `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${extension}?size=256`;
 }
 
-function shouldUseDiscordAvatar(currentAvatar: string | null) {
+function shouldUseDiscordAvatar(
+    currentAvatar: string | null,
+    userManaged = false
+) {
+    if (userManaged) return false;
     if (!currentAvatar) return true;
 
     try {
@@ -50,23 +64,62 @@ export async function GET(request: NextRequest) {
     const code = request.nextUrl.searchParams.get("code");
     const state = request.nextUrl.searchParams.get("state");
     const session = await getSession();
-    const isLinking = Boolean(session.id);
+    const currentUser = session.id
+        ? await db.user.findUnique({
+              where: { id: session.id },
+              select: {
+                  id: true,
+                  discord_id: true,
+                  avatar: true,
+                  avatar_user_managed: true,
+              },
+          })
+        : null;
+    if (session.id && !currentUser) {
+        delete session.id;
+        delete session.profileCompleted;
+        delete session.locale;
+    }
+    const isLinking = Boolean(currentUser);
     const expectedState = session.discordOAuthState;
-    const returnTo = session.discordOAuthReturnTo ?? "/";
+    const mode = session.discordOAuthMode;
+    const initiatingUserId = session.discordOAuthUserId;
+    const returnTo = getSafeAuthReturnPath(session.discordOAuthReturnTo) ?? "/";
+    const errorResponse = (error: string) => {
+        if (mode) {
+            const url = new URL(returnTo, request.url);
+            url.searchParams.set("discordError", error);
+            return NextResponse.redirect(url);
+        }
+        return errorRedirect(
+            request,
+            error,
+            isLinking,
+            returnTo,
+            session.locale
+        );
+    };
 
     delete session.discordOAuthState;
     delete session.discordOAuthReturnTo;
+    delete session.discordOAuthMode;
+    delete session.discordOAuthUserId;
     await session.save();
 
-    if (!code || !state || !expectedState || state !== expectedState) {
-        return errorRedirect(request, "invalid_state", isLinking);
+    if (!state || !expectedState || state !== expectedState) {
+        return errorResponse("invalid_state");
     }
+    if (mode && (!currentUser || currentUser.id !== initiatingUserId))
+        return errorResponse("session_expired");
+    if (request.nextUrl.searchParams.get("error") === "access_denied")
+        return errorResponse("cancelled");
+    if (!code) return errorResponse("invalid_state");
 
-    const clientId = process.env.DISCORD_CLIENT_ID;
-    const clientSecret = process.env.DISCORD_CLIENT_SECRET;
-    const redirectUri = process.env.DISCORD_REDIRECT_URI;
+    const clientId = serverEnv.DISCORD_CLIENT_ID;
+    const clientSecret = serverEnv.DISCORD_CLIENT_SECRET;
+    const redirectUri = serverEnv.DISCORD_REDIRECT_URI;
     if (!clientId || !clientSecret || !redirectUri) {
-        return errorRedirect(request, "oauth_config", isLinking);
+        return errorResponse("oauth_config");
     }
 
     try {
@@ -88,12 +141,12 @@ export async function GET(request: NextRequest) {
             }
         );
         if (!tokenResponse.ok) {
-            return errorRedirect(request, "token_exchange", isLinking);
+            return errorResponse("token_exchange");
         }
 
         const token = (await tokenResponse.json()) as DiscordTokenResponse;
         if (!token.access_token) {
-            return errorRedirect(request, "token_exchange", isLinking);
+            return errorResponse("token_exchange");
         }
 
         const userResponse = await fetch(
@@ -104,21 +157,38 @@ export async function GET(request: NextRequest) {
             }
         );
         if (!userResponse.ok) {
-            return errorRedirect(request, "profile_fetch", isLinking);
+            return errorResponse("profile_fetch");
         }
 
         const discordUser = (await userResponse.json()) as DiscordUserResponse;
         if (!discordUser.id || !discordUser.username) {
-            return errorRedirect(request, "profile_fetch", isLinking);
+            return errorResponse("profile_fetch");
         }
 
         const discordName = discordUser.global_name ?? discordUser.username;
+        if (
+            (mode === "refresh" || mode === "delete") &&
+            currentUser?.discord_id !== discordUser.id
+        )
+            return errorResponse("identity_mismatch");
+        if (mode === "delete" && currentUser) {
+            session.deletionVerification = {
+                userId: currentUser.id,
+                discordId: discordUser.id,
+                verifiedAt: Date.now(),
+            };
+            await session.save();
+            const destination = new URL(returnTo, request.url);
+            destination.searchParams.set("discordResult", "delete");
+            return NextResponse.redirect(destination);
+        }
         const avatar = discordAvatar(discordUser);
         const linkedUser = await db.user.findUnique({
             where: { discord_id: discordUser.id },
             select: {
                 id: true,
                 avatar: true,
+                avatar_user_managed: true,
                 discord_name: true,
                 discord_username: true,
                 profile_completed_at: true,
@@ -126,34 +196,38 @@ export async function GET(request: NextRequest) {
             },
         });
 
-        if (session.id) {
-            if (linkedUser && linkedUser.id !== session.id) {
-                return errorRedirect(request, "already_linked", true);
-            }
-
-            const currentUser = await db.user.findUnique({
-                where: { id: session.id },
-                select: { id: true, avatar: true },
-            });
-            if (!currentUser) {
-                return errorRedirect(request, "user_missing", true);
+        if (currentUser) {
+            if (linkedUser && linkedUser.id !== currentUser.id) {
+                return errorResponse("already_linked");
             }
 
             await db.user.update({
                 where: { id: currentUser.id },
                 data: {
-                    discord_id: discordUser.id,
+                    ...(mode === "refresh"
+                        ? {}
+                        : { discord_id: discordUser.id }),
                     discord_name: discordName,
                     discord_username: discordUser.username,
-                    avatar:
-                        avatar && shouldUseDiscordAvatar(currentUser.avatar)
-                            ? avatar
-                            : currentUser.avatar,
+                    ...(mode === "refresh"
+                        ? {}
+                        : {
+                              avatar:
+                                  avatar &&
+                                  shouldUseDiscordAvatar(
+                                      currentUser.avatar,
+                                      currentUser.avatar_user_managed
+                                  )
+                                      ? avatar
+                                      : currentUser.avatar,
+                          }),
                 },
             });
             revalidateTag(getUserProfileTag(currentUser.id), "max");
             revalidateTag(CACHE_TAGS.userRankings, "max");
-            return NextResponse.redirect(new URL(returnTo, request.url));
+            const destination = new URL(returnTo, request.url);
+            if (mode) destination.searchParams.set("discordResult", mode);
+            return NextResponse.redirect(destination);
         }
 
         const user = linkedUser
@@ -164,7 +238,11 @@ export async function GET(request: NextRequest) {
                       discord_username:
                           linkedUser.discord_username ?? discordUser.username,
                       avatar:
-                          avatar && shouldUseDiscordAvatar(linkedUser.avatar)
+                          avatar &&
+                          shouldUseDiscordAvatar(
+                              linkedUser.avatar,
+                              linkedUser.avatar_user_managed
+                          )
                               ? avatar
                               : linkedUser.avatar,
                   },
@@ -185,14 +263,22 @@ export async function GET(request: NextRequest) {
         revalidateTag(CACHE_TAGS.userRankings, "max");
         session.id = user.id;
         session.profileCompleted = profileCompleted;
+        if (!profileCompleted) session.onboardingReturnTo = returnTo;
         if (profileCompleted && isLocale(user.locale)) {
             session.locale = user.locale;
         }
         await session.save();
         return NextResponse.redirect(
-            new URL(profileCompleted ? returnTo : "/onboarding", request.url)
+            new URL(
+                profileCompleted
+                    ? returnTo
+                    : session.locale
+                      ? localizePath("/onboarding", session.locale)
+                      : "/onboarding",
+                request.url
+            )
         );
     } catch {
-        return errorRedirect(request, "account_update", isLinking);
+        return errorResponse("account_update");
     }
 }

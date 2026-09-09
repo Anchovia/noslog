@@ -1,9 +1,8 @@
-import { createTierList } from "@/app/admin/tiers/actions";
-import TierListForm from "@/components/admin/tierListForm";
+import TierListForm from "@/features/tiers/components/tierListForm";
 
 export default function NewTierListPage() {
     return (
-        <div className="flex flex-col gap-4 px-4 py-5">
+        <div className="flex flex-col gap-4 py-5">
             <section>
                 <h1 className="text-title">서열표 추가</h1>
                 <p className="text-caption mt-1">
@@ -11,7 +10,6 @@ export default function NewTierListPage() {
                 </p>
             </section>
             <TierListForm
-                action={createTierList}
                 tierList={{
                     slug: "",
                     title: "",

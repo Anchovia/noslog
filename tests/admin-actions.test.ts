@@ -9,13 +9,12 @@ const mocks = vi.hoisted(() => ({
     musicChartUpdate: vi.fn(),
     constantHistoryCreate: vi.fn(),
     musicTranslationUpdateMany: vi.fn(),
-    evaluationDelete: vi.fn(),
     examFindUnique: vi.fn(),
     examDelete: vi.fn(),
     bingoProgressCount: vi.fn(),
     bingoDelete: vi.fn(),
-    userUpdate: vi.fn(),
     examSubmissionFindFirst: vi.fn(),
+    examSubmissionFindMany: vi.fn(),
     examSubmissionFindUnique: vi.fn(),
     examSubmissionDelete: vi.fn(),
     examSubmissionUpdate: vi.fn(),
@@ -55,16 +54,15 @@ vi.mock("@/lib/db", () => ({
         musicTranslation: {
             updateMany: mocks.musicTranslationUpdateMany,
         },
-        chartEvaluation: { delete: mocks.evaluationDelete },
         exam: {
             findUnique: mocks.examFindUnique,
             delete: mocks.examDelete,
         },
         bingoCellProgress: { count: mocks.bingoProgressCount },
         bingo: { delete: mocks.bingoDelete },
-        user: { update: mocks.userUpdate },
         examSubmission: {
             findFirst: mocks.examSubmissionFindFirst,
+            findMany: mocks.examSubmissionFindMany,
             findUnique: mocks.examSubmissionFindUnique,
             delete: mocks.examSubmissionDelete,
         },
@@ -84,7 +82,6 @@ vi.mock("next/navigation", () => ({
     redirect: mocks.redirect,
 }));
 
-import { deleteEvaluation } from "@/app/admin/community/actions";
 import { deleteExam } from "@/app/admin/exams/actions";
 import {
     approveMusicTranslation,
@@ -92,11 +89,11 @@ import {
     saveMusicMetadata,
 } from "@/app/admin/music/actions";
 import { deleteBingo } from "@/app/admin/bingos/actions";
-import { updateUserRole } from "@/app/admin/users/actions";
 import {
     deleteExamSubmission,
     reviewExamSubmission,
 } from "@/app/admin/submissions/actions";
+import { listExamSubmissions } from "@/features/exams/server/examSubmissionAdminService";
 
 describe("관리자 액션", () => {
     beforeEach(() => {
@@ -107,11 +104,10 @@ describe("관리자 액션", () => {
         mocks.musicChartUpdate.mockResolvedValue({ id: 10 });
         mocks.constantHistoryCreate.mockResolvedValue({ id: 1 });
         mocks.musicTranslationUpdateMany.mockResolvedValue({ count: 1 });
-        mocks.evaluationDelete.mockResolvedValue({ id: 20 });
         mocks.examDelete.mockResolvedValue({ id: 30 });
         mocks.bingoDelete.mockResolvedValue({ id: 40 });
-        mocks.userUpdate.mockResolvedValue({ id: 2 });
         mocks.examSubmissionUpdate.mockResolvedValue({ id: 50 });
+        mocks.examSubmissionFindMany.mockResolvedValue([]);
         mocks.examSubmissionDelete.mockResolvedValue({ id: 50 });
         mocks.examAchievementUpsert.mockResolvedValue({ id: 60 });
         mocks.examAchievementDeleteMany.mockResolvedValue({ count: 0 });
@@ -140,7 +136,10 @@ describe("관리자 액션", () => {
         formData.set("bpmMax", "180.6");
         formData.set("durationSeconds", "125.7");
 
-        await saveMusicMetadata(formData);
+        await expect(saveMusicMetadata(formData)).resolves.toEqual({
+            success: true,
+            message: "악곡 공통 정보를 저장했습니다.",
+        });
 
         expect(mocks.musicUpdate).toHaveBeenCalledWith({
             where: { index: "test-music" },
@@ -154,10 +153,26 @@ describe("관리자 액션", () => {
         expect(mocks.updateTag).toHaveBeenCalledWith("music-details");
     });
 
+    it("잘못된 악곡 공통 정보는 DB에 저장하지 않는다", async () => {
+        const formData = new FormData();
+        formData.set("musicIndex", "test-music");
+        formData.set("bpmMin", "0");
+
+        await expect(saveMusicMetadata(formData)).resolves.toMatchObject({
+            success: false,
+            fieldErrors: {
+                bpmMin: ["최소 BPM을 1 이상으로 입력해주세요."],
+            },
+        });
+        expect(mocks.musicUpdate).not.toHaveBeenCalled();
+        expect(mocks.musicChartUpdateMany).not.toHaveBeenCalled();
+    });
+
     it("채보 저장 시 레벨 상수 변경 이력을 생성한다", async () => {
         mocks.musicChartFindUnique.mockResolvedValue({
             level_constant: 11,
             difficulty: "Expert",
+            music_idx: "test-music",
         });
         const formData = new FormData();
         formData.set("chartId", "10");
@@ -166,7 +181,10 @@ describe("관리자 액션", () => {
         formData.set("noteCount", "1000");
         formData.set("releasedAt", "2026-07-17");
 
-        await saveChartMetadata(formData);
+        await expect(saveChartMetadata(formData)).resolves.toEqual({
+            success: true,
+            message: "채보 정보를 저장했습니다.",
+        });
 
         expect(mocks.musicChartUpdate).toHaveBeenCalledWith({
             where: { id: 10 },
@@ -181,15 +199,39 @@ describe("관리자 액션", () => {
         });
     });
 
+    it("다른 악곡의 채보는 수정하지 않는다", async () => {
+        mocks.musicChartFindUnique.mockResolvedValue({
+            level_constant: 11,
+            difficulty: "Expert",
+            music_idx: "other-music",
+        });
+        const formData = new FormData();
+        formData.set("chartId", "10");
+        formData.set("musicIndex", "test-music");
+
+        await expect(saveChartMetadata(formData)).resolves.toEqual({
+            success: false,
+            message: "저장할 채보를 찾을 수 없습니다.",
+        });
+        expect(mocks.musicChartUpdate).not.toHaveBeenCalled();
+    });
+
     it("초안 번역을 승인하고 번역 캐시를 갱신한다", async () => {
         const formData = new FormData();
         formData.set("musicIndex", "test-music");
         formData.set("locale", "en");
 
-        await approveMusicTranslation(formData);
+        await expect(approveMusicTranslation(formData)).resolves.toEqual({
+            success: true,
+            message: "악곡 번역을 승인했습니다.",
+        });
 
         expect(mocks.musicTranslationUpdateMany).toHaveBeenCalledWith({
-            where: { musicIndex: "test-music", locale: "en" },
+            where: {
+                musicIndex: "test-music",
+                locale: "en",
+                status: "draft",
+            },
             data: {
                 status: "approved",
                 reviewedAt: expect.any(Date),
@@ -197,18 +239,6 @@ describe("관리자 액션", () => {
         });
         expect(mocks.updateTag).toHaveBeenCalledWith("music-catalog");
         expect(mocks.updateTag).toHaveBeenCalledWith("music-details");
-    });
-
-    it("평가 전체 삭제 후 의견 캐시를 갱신한다", async () => {
-        const formData = new FormData();
-        formData.set("evaluationId", "20");
-
-        await deleteEvaluation(formData);
-
-        expect(mocks.evaluationDelete).toHaveBeenCalledWith({
-            where: { id: 20 },
-        });
-        expect(mocks.updateTag).toHaveBeenCalledWith("chart-evaluations");
     });
 
     it("인증 이력이 있는 검정은 삭제하지 않는다", async () => {
@@ -230,7 +260,10 @@ describe("관리자 액션", () => {
             _count: { submissions: 0, achievements: 0 },
         });
 
-        await expect(deleteExam(30)).resolves.toEqual({ success: true });
+        await expect(deleteExam(30)).resolves.toEqual({
+            success: true,
+            message: "검정을 삭제했습니다.",
+        });
         expect(mocks.examDelete).toHaveBeenCalledWith({ where: { id: 30 } });
         expect(mocks.updateTag).toHaveBeenCalledWith("exams");
     });
@@ -240,10 +273,13 @@ describe("관리자 액션", () => {
         const formData = new FormData();
         formData.set("id", "40");
 
-        await deleteBingo(formData);
+        const result = await deleteBingo(formData);
 
+        expect(result).toEqual({
+            success: false,
+            message: "진행 기록이 있는 빙고는 삭제할 수 없습니다.",
+        });
         expect(mocks.bingoDelete).not.toHaveBeenCalled();
-        expect(mocks.redirect).not.toHaveBeenCalled();
     });
 
     it("진행 기록이 없는 빙고를 삭제하고 캐시를 갱신한다", async () => {
@@ -251,34 +287,14 @@ describe("관리자 액션", () => {
         const formData = new FormData();
         formData.set("id", "40");
 
-        await deleteBingo(formData);
+        const result = await deleteBingo(formData);
 
+        expect(result).toEqual({
+            success: true,
+            message: "빙고를 삭제했습니다.",
+        });
         expect(mocks.bingoDelete).toHaveBeenCalledWith({ where: { id: 40 } });
         expect(mocks.updateTag).toHaveBeenCalledWith("bingos");
-        expect(mocks.redirect).toHaveBeenCalledWith("/admin/bingos");
-    });
-
-    it("관리자는 다른 사용자의 역할을 변경할 수 있다", async () => {
-        const formData = new FormData();
-        formData.set("userId", "2");
-        formData.set("role", "admin");
-
-        await updateUserRole(formData);
-
-        expect(mocks.userUpdate).toHaveBeenCalledWith({
-            where: { id: 2 },
-            data: { role: "admin" },
-        });
-    });
-
-    it("관리자는 자신의 관리자 권한을 해제할 수 없다", async () => {
-        const formData = new FormData();
-        formData.set("userId", "1");
-        formData.set("role", "user");
-
-        await updateUserRole(formData);
-
-        expect(mocks.userUpdate).not.toHaveBeenCalled();
     });
 
     it("대기 상태가 아닌 검정 제출은 다시 심사하지 않는다", async () => {
@@ -287,12 +303,59 @@ describe("관리자 액션", () => {
         formData.set("submissionId", "50");
         formData.set("status", "approved");
 
-        await reviewExamSubmission(formData);
+        await expect(reviewExamSubmission(formData)).resolves.toEqual({
+            success: false,
+            message: "대기 중인 검정 인증을 찾을 수 없습니다.",
+        });
 
         expect(mocks.examSubmissionFindFirst).toHaveBeenCalledWith({
             where: { id: 50, status: "pending" },
             select: { id: true, userId: true, examId: true },
         });
+        expect(mocks.transaction).not.toHaveBeenCalled();
+    });
+
+    it("관리자 심사 목록에 비공개 Blob URL 대신 이미지 존재 여부만 전달한다", async () => {
+        mocks.examSubmissionFindMany.mockResolvedValue([
+            {
+                id: 50,
+                status: "pending",
+                reviewerNote: null,
+                submittedAt: new Date("2026-09-03T00:00:00.000Z"),
+                proofImageUrl:
+                    "https://store.private.blob.vercel-storage.com/proof.jpg",
+                userId: 2,
+                user: { nostalgia_name: "NOSTALGIA", username: "user" },
+                exam: { title: "Basic 10급" },
+            },
+        ]);
+
+        await expect(listExamSubmissions("pending")).resolves.toEqual([
+            {
+                id: 50,
+                status: "pending",
+                reviewerNote: null,
+                submittedAt: "2026-09-03T00:00:00.000Z",
+                hasProofImage: true,
+                userName: "NOSTALGIA",
+                examTitle: "Basic 10급",
+            },
+        ]);
+    });
+
+    it("지원하지 않는 검정 심사 결과를 필드 오류로 반환한다", async () => {
+        const formData = new FormData();
+        formData.set("submissionId", "50");
+        formData.set("status", "pending");
+
+        await expect(reviewExamSubmission(formData)).resolves.toEqual({
+            success: false,
+            message: "심사 결과를 확인해주세요.",
+            fieldErrors: {
+                status: ["심사 결과를 확인해주세요."],
+            },
+        });
+        expect(mocks.examSubmissionFindFirst).not.toHaveBeenCalled();
         expect(mocks.transaction).not.toHaveBeenCalled();
     });
 
@@ -306,7 +369,11 @@ describe("관리자 액션", () => {
         formData.set("submissionId", "50");
         formData.set("status", "approved");
 
-        await reviewExamSubmission(formData);
+        await expect(reviewExamSubmission(formData)).resolves.toEqual({
+            success: true,
+            message: "검정 인증을 승인했습니다.",
+            status: "approved",
+        });
 
         expect(mocks.examSubmissionUpdate).toHaveBeenCalledWith({
             where: { id: 50 },
@@ -319,6 +386,34 @@ describe("관리자 액션", () => {
         );
     });
 
+    it("대기 중인 검정 제출을 반려하고 연결된 합격 이력을 제거한다", async () => {
+        mocks.examSubmissionFindFirst.mockResolvedValue({
+            id: 50,
+            userId: 2,
+            examId: 30,
+        });
+        const formData = new FormData();
+        formData.set("submissionId", "50");
+        formData.set("status", "rejected");
+        formData.set("reviewerNote", "증빙을 확인해주세요.");
+
+        await expect(reviewExamSubmission(formData)).resolves.toEqual({
+            success: true,
+            message: "검정 인증을 반려했습니다.",
+            status: "rejected",
+        });
+        expect(mocks.examSubmissionUpdate).toHaveBeenCalledWith({
+            where: { id: 50 },
+            data: expect.objectContaining({
+                status: "rejected",
+                reviewerNote: "증빙을 확인해주세요.",
+            }),
+        });
+        expect(mocks.examAchievementDeleteMany).toHaveBeenCalledWith({
+            where: { submissionId: 50 },
+        });
+    });
+
     it("검정 제출과 연결된 합격 이력을 함께 삭제한 뒤 Blob을 정리한다", async () => {
         mocks.examSubmissionFindUnique.mockResolvedValue({
             id: 50,
@@ -328,7 +423,10 @@ describe("관리자 액션", () => {
         const formData = new FormData();
         formData.set("submissionId", "50");
 
-        await deleteExamSubmission(formData);
+        await expect(deleteExamSubmission(formData)).resolves.toEqual({
+            success: true,
+            message: "검정 인증을 삭제했습니다.",
+        });
 
         expect(mocks.examAchievementDeleteMany).toHaveBeenCalledWith({
             where: { submissionId: 50 },

@@ -1,0 +1,167 @@
+.noslog-ui .nl-global-rankings {
+    --nl-control-height: 44px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-24);
+    padding-block: var(--nl-spacing-24) var(--nl-spacing-32);
+}
+.noslog-ui .nl-global-ranking-heading {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-4);
+}
+.noslog-ui .nl-global-ranking-count {
+    min-height: var(--nl-type-line-height-20);
+}
+.noslog-ui .nl-global-ranking-controls {
+    container: metric-controls / inline-size;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-global-ranking-controls .nl-compact-select {
+    height: var(--nl-control-height);
+    min-height: var(--nl-control-height);
+    font-size: var(--nl-type-size-16);
+    line-height: var(--nl-type-line-height-24);
+    font-weight: var(--nl-type-weight-regular);
+}
+.noslog-ui .nl-global-ranking-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-24);
+}
+.noslog-ui .nl-global-ranking-content[data-personal="off-page"] {
+    gap: var(--nl-spacing-16);
+}
+.noslog-ui .nl-global-ranking-list {
+    container: ranking-list / inline-size;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.noslog-ui .nl-player-row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+    min-width: 0;
+    height: 72px;
+    padding-block: var(--nl-spacing-12);
+    scroll-margin-block: 76px;
+}
+.noslog-ui .nl-player-row__rank {
+    font-variant-numeric: tabular-nums;
+    width: 28px;
+    flex-shrink: 0;
+    text-align: right;
+    white-space: nowrap;
+}
+.noslog-ui .nl-player-row .nl-avatar {
+    box-shadow: inset 0 0 0 1px var(--nl-border-empty-slot);
+}
+.noslog-ui .nl-player-row__identity {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--nl-spacing-4);
+}
+.noslog-ui .nl-player-row__name {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-4);
+    width: 100%;
+    min-width: 0;
+    height: var(--nl-type-line-height-20);
+}
+.noslog-ui .nl-player-row__link {
+    min-width: 0;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.noslog-ui .nl-player-row__value {
+    width: 88px;
+    flex-shrink: 0;
+    text-align: right;
+    white-space: nowrap;
+}
+.noslog-ui .nl-player-row[data-current="true"]::before {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    left: 0;
+    width: 2px;
+    background: var(--nl-border-strong);
+}
+.noslog-ui .nl-player-row[data-current="true"] .nl-player-row__link {
+    font-weight: var(--nl-type-weight-semibold);
+}
+.noslog-ui .nl-ranking-personal {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--nl-spacing-8);
+    min-height: 56px;
+    padding: var(--nl-spacing-8) var(--nl-spacing-16);
+    background: var(--nl-surface-surface);
+    border-radius: var(--nl-radius-container);
+}
+.noslog-ui .nl-ranking-personal--unavailable {
+    justify-content: center;
+}
+.noslog-ui .nl-ranking-personal__summary {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-4);
+    white-space: nowrap;
+}
+.noslog-ui .nl-ranking-personal .nl-button,
+.noslog-ui .nl-ranking-login .nl-button {
+    height: 40px;
+    min-height: 40px;
+    flex-shrink: 0;
+}
+.noslog-ui .nl-ranking-login {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-global-ranking-message {
+    text-align: center;
+}
+.noslog-ui .nl-global-ranking-content .nl-result-state {
+    align-items: center;
+    text-align: center;
+    padding: 0;
+}
+.noslog-ui .nl-global-ranking-content .nl-result-state .nl-button {
+    height: 40px;
+    min-height: 40px;
+}
+.noslog-ui .nl-global-ranking-initial {
+    min-height: 360px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.noslog-ui .nl-pagination__item[aria-disabled="true"] {
+    color: var(--nl-interaction-disabled-content);
+}
+@container ranking-list (min-width: 720px) {
+    .noslog-ui .nl-player-row + .nl-player-row {
+        margin-top: 1px;
+    }
+    .noslog-ui .nl-player-row + .nl-player-row::after {
+        content: "";
+        position: absolute;
+        top: -1px;
+        height: 1px;
+        width: 100%;
+        background: var(--nl-border-divider);
+    }
+}

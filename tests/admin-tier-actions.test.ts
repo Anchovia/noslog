@@ -2,6 +2,10 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
     requireAdmin: vi.fn(),
+    listFindFirst: vi.fn(),
+    listCreate: vi.fn(),
+    listUpdate: vi.fn(),
+    listDelete: vi.fn(),
     chartFindMany: vi.fn(),
     chartFindUnique: vi.fn(),
     bandFindFirst: vi.fn(),
@@ -37,6 +41,12 @@ vi.mock("@/lib/admin", () => ({ requireAdmin: mocks.requireAdmin }));
 vi.mock("@/lib/db", () => ({
     default: {
         $transaction: mocks.transaction,
+        tierList: {
+            findFirst: mocks.listFindFirst,
+            create: mocks.listCreate,
+            update: mocks.listUpdate,
+            delete: mocks.listDelete,
+        },
         musicChart: {
             findMany: mocks.chartFindMany,
             findUnique: mocks.chartFindUnique,
@@ -70,6 +80,7 @@ import {
     addTierBand,
     addTierEntry,
     applyTierBoardLayout,
+    createTierList,
     moveTierEntryToBand,
     searchTierCharts,
 } from "@/app/admin/tiers/actions";
@@ -78,6 +89,10 @@ describe("관리자 서열표 액션", () => {
     beforeEach(() => {
         vi.clearAllMocks();
         mocks.requireAdmin.mockResolvedValue({ id: 1, role: "admin" });
+        mocks.listFindFirst.mockResolvedValue(null);
+        mocks.listCreate.mockResolvedValue({ id: 5 });
+        mocks.listUpdate.mockResolvedValue({ id: 5 });
+        mocks.listDelete.mockResolvedValue({ id: 5 });
         mocks.chartFindMany.mockResolvedValue([]);
         mocks.chartFindUnique.mockResolvedValue({ id: 20 });
         mocks.bandFindFirst.mockResolvedValue({ value: 12 });
@@ -172,13 +187,81 @@ describe("관리자 서열표 액션", () => {
         );
     });
 
+    it("서열표 입력 오류를 필드 오류로 반환한다", async () => {
+        const formData = new FormData();
+        formData.set("slug", "---");
+        formData.set("title", " ");
+        formData.set("mode", "basic");
+        formData.set("goal", "s");
+        formData.set("description", "");
+        formData.set("status", "draft");
+
+        await expect(createTierList(formData)).resolves.toMatchObject({
+            success: false,
+            fieldErrors: {
+                slug: ["식별자에는 영문 소문자나 숫자가 필요합니다."],
+                title: ["서열표 이름을 입력해주세요."],
+            },
+        });
+        expect(mocks.listCreate).not.toHaveBeenCalled();
+    });
+
+    it("중복 식별자를 저장하지 않고 명시적인 오류를 반환한다", async () => {
+        mocks.listFindFirst.mockResolvedValue({ slug: "basic-s" });
+        const formData = new FormData();
+        formData.set("slug", "basic-s");
+        formData.set("title", "Basic S");
+        formData.set("mode", "basic");
+        formData.set("goal", "s");
+        formData.set("description", "");
+        formData.set("status", "draft");
+
+        await expect(createTierList(formData)).resolves.toEqual({
+            success: false,
+            message: "이미 사용 중인 식별자입니다.",
+            fieldErrors: {
+                slug: ["이미 사용 중인 식별자입니다."],
+            },
+        });
+        expect(mocks.listCreate).not.toHaveBeenCalled();
+    });
+
+    it("검증한 서열표를 생성하고 새 식별자를 반환한다", async () => {
+        const formData = new FormData();
+        formData.set("slug", " Basic-S ");
+        formData.set("title", " Basic S ");
+        formData.set("mode", "basic");
+        formData.set("goal", "s");
+        formData.set("description", " ");
+        formData.set("status", "draft");
+
+        await expect(createTierList(formData)).resolves.toEqual({
+            success: true,
+            message: "서열표를 생성했습니다.",
+            id: 5,
+        });
+        expect(mocks.listCreate).toHaveBeenCalledWith({
+            data: {
+                slug: "basic-s",
+                title: "Basic S",
+                mode: "basic",
+                goal: "s",
+                description: null,
+                status: "draft",
+            },
+        });
+    });
+
     it("같은 서열 상수 구간을 중복 추가하지 않는다", async () => {
         mocks.bandFindMany.mockResolvedValue([{ id: 10, value: 12.3 }]);
         const formData = new FormData();
         formData.set("tierListId", "5");
         formData.set("value", "12.3");
 
-        await addTierBand(formData);
+        await expect(addTierBand(formData)).resolves.toEqual({
+            success: false,
+            message: "같은 서열 상수 구간이 이미 있습니다.",
+        });
 
         expect(mocks.bandCreate).not.toHaveBeenCalled();
         expect(mocks.transaction).not.toHaveBeenCalled();
@@ -193,7 +276,10 @@ describe("관리자 서열표 액션", () => {
         formData.set("tierListId", "5");
         formData.set("value", "11.4");
 
-        await addTierBand(formData);
+        await expect(addTierBand(formData)).resolves.toEqual({
+            success: true,
+            message: "서열 상수 구간을 추가했습니다.",
+        });
 
         expect(mocks.bandCreate).toHaveBeenCalledWith({
             data: { tierListId: 5, value: 11.4, position: 2 },

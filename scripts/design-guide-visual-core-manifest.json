@@ -1,0 +1,86 @@
+{
+    "status": "Proposed review artifact - not normative authority",
+    "normativeAuthority": "docs/design/24-foundation-v0.1.md",
+    "sources": {
+        "pretendardJP": {
+            "version": "1.3.9",
+            "archive": "PretendardJP-1.3.9.zip",
+            "url": "https://github.com/orioncactus/pretendard/releases/download/v1.3.9/PretendardJP-1.3.9.zip",
+            "sha256": "8dab678c371a1530106ca643b76b2b80d47653d5ba670b01265b48e4c6615d63",
+            "license": "SIL Open Font License 1.1"
+        },
+        "spectrumTokens": {
+            "version": "14.15.0",
+            "archive": "adobe-spectrum-tokens-14.15.0.tgz",
+            "url": "https://registry.npmjs.org/@adobe/spectrum-tokens/-/spectrum-tokens-14.15.0.tgz",
+            "sha256": "00f82cfd19daf6399b07f04c0afc8161d47c5a7d9b88c933f7f934ced4b7d09d",
+            "license": "Apache-2.0"
+        },
+        "lucideReact": {
+            "version": "1.24.0",
+            "source": "node_modules/lucide-react",
+            "license": "ISC"
+        },
+        "atlassianMotion": {
+            "checkedOn": "2026-08-12",
+            "snapshot": "reference-pages/atlassian-motion.html",
+            "applyingSnapshot": "reference-pages/atlassian-applying-motion.html",
+            "url": "https://atlassian.design/foundations/motion",
+            "applyingUrl": "https://atlassian.design/foundations/motion/applying-motion",
+            "sha256": "accdf17502808a904279002047cbb67b9f395bce22ebe34db64db67a9ada5021",
+            "applyingSha256": "66ef8aa1ed89093829c4d1defff451fe61881d14f6b52310b3ed7035d6bae110"
+        },
+        "primerDataVisualization": {
+            "checkedOn": "2026-08-12",
+            "snapshot": "reference-pages/primer-data-visualization.html",
+            "url": "https://primer.style/product/ui-patterns/data-visualization/",
+            "sha256": "015183029d64cf2cb93999ba2085a460f93245a387a602e64d9ff764f58d1e7c"
+        }
+    },
+    "claimGates": [
+        {
+            "plate": "cover",
+            "contract": "Editorial notation only; neutral colors exclusively"
+        },
+        {
+            "plate": "typography",
+            "contract": "Official Pretendard JP 1.3.9 files and exact 400/500/600/700 weights"
+        },
+        {
+            "plate": "neutral-and-color",
+            "contract": "Exact document 24 values; chroma appears only with its approved role label"
+        },
+        {
+            "plate": "material",
+            "contract": "Exact Spectrum token layer anatomy; no simulated blur presented as normative appearance"
+        },
+        {
+            "plate": "iconography",
+            "contract": "Lucide 1.24.0 published SVG geometry, viewBox, stroke, linecap, and linejoin"
+        },
+        {
+            "plate": "guardrails",
+            "contract": "No rejected candidate reuse and no domain color outside an explicitly named domain role"
+        },
+        {
+            "plate": "motion-and-reduced-motion",
+            "contract": "Exact MO-02 Atlassian durations and cubic-bezier curves; reduced mode removes nonessential spatial motion and applies state immediately"
+        },
+        {
+            "plate": "data-visualization",
+            "contract": "DV-05 Primer anatomy with NosLog colors, exact-value interaction, non-color distinction, and same-data semantic table"
+        },
+        {
+            "plate": "responsive",
+            "contract": "Exact document 24 track, gutter, margin, and content-fit contracts; diagrams are explicitly scaled"
+        },
+        {
+            "plate": "reusable-ui",
+            "contract": "Only FPR-04 responsibility aliases and patterns; no new component appearance or universal overlay"
+        },
+        {
+            "plate": "representative-fragments",
+            "contract": "Approved ordinary-UI pressures only, visibly schematic, not final pages, and no chart viewer/editor content"
+        }
+    ]
+}

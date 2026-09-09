@@ -4,6 +4,13 @@ export interface KakaoLatLng {
 }
 
 export interface KakaoMapInstance {
+    getBounds(): KakaoLatLngBounds;
+    getProjection(): {
+        containerPointFromCoords(position: KakaoLatLng): {
+            x: number;
+            y: number;
+        };
+    };
     setBounds(bounds: KakaoLatLngBounds): void;
     panTo(position: KakaoLatLng): void;
     relayout(): void;
@@ -12,6 +19,8 @@ export interface KakaoMapInstance {
 }
 
 export interface KakaoLatLngBounds {
+    getSouthWest(): KakaoLatLng;
+    getNorthEast(): KakaoLatLng;
     extend(position: KakaoLatLng): void;
 }
 
@@ -33,6 +42,18 @@ interface KakaoGeocoder {
 
 export interface KakaoMapsApi {
     maps: {
+        event: {
+            addListener(
+                target: KakaoMapInstance,
+                type: string,
+                handler: () => void
+            ): void;
+            removeListener(
+                target: KakaoMapInstance,
+                type: string,
+                handler: () => void
+            ): void;
+        };
         load(callback: () => void): void;
         LatLng: new (latitude: number, longitude: number) => KakaoLatLng;
         LatLngBounds: new () => KakaoLatLngBounds;

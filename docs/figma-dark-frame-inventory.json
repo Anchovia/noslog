@@ -1,0 +1,4087 @@
+{
+    "fileKey": "cVbWCxhkfxFfHmAKLCyKrD",
+    "retrievedAt": "2026-09-09",
+    "purpose": "Current dark-labelled page frame index; retrieval is not visual verification. Unlabelled P16 is included as the approved dark-only image. Frame sizes are review canvases, not breakpoints.",
+    "pages": [
+        {
+            "id": "242:2",
+            "name": "P1 · Music Detail 조립",
+            "frames": [
+                {
+                    "id": "613:496",
+                    "name": "Music Detail · 390 · Information · Dark",
+                    "width": 390,
+                    "height": 1240,
+                    "section": "Music Detail · Compact 390 · Dark",
+                    "visualEvidence": "Compared 2026-09-09 with ko-info-390.png from noslog-v2-music-info.spec.ts: section positions, radar and basic information align. Font, jacket, authentication, resource availability and difficulty values are approved/content differences."
+                },
+                {
+                    "id": "613:516",
+                    "name": "Music Detail · 390 · 내 기록 · Dark",
+                    "width": 390,
+                    "height": 1540,
+                    "section": "Music Detail · Compact 390 · Dark",
+                    "visualEvidence": "Compared 2026-09-09 with ko-record-390.png: section order and positions, score, summary, trend and recent-play layout align. Fixture dates/ranks, focus outline and approved font differ."
+                },
+                {
+                    "id": "613:560",
+                    "name": "Music Detail · 390 · 목적지 패널 열림 · Dark",
+                    "width": 390,
+                    "height": 1540,
+                    "section": "Music Detail · Compact 390 · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "622:1386",
+                    "name": "Music Detail · 390 · 랭킹 · Dark",
+                    "width": 390,
+                    "height": 1315,
+                    "section": "Music Detail · Compact 390 · Dark",
+                    "visualEvidence": "Compared 2026-09-09 with ko-ranking-390.png: chart, leaderboard and pagination inspected. Fixture uses 25 rows and long names; current-user summary omission is covered by the existing on-page-row test. Not identical fixture parity."
+                },
+                {
+                    "id": "622:1602",
+                    "name": "Music Detail · 390 · 서열·평가 · Dark",
+                    "width": 390,
+                    "height": 4112,
+                    "section": "Music Detail · Compact 390 · Dark",
+                    "visualEvidence": "Compared 2026-09-09 with ko-dark-tier-390.png: overall section order reviewed. Fixture votes/opinions differ. Full-page screenshot scroll/header settling repaired; detailed per-control pixel comparison remains unclaimed."
+                },
+                {
+                    "id": "2543:23377",
+                    "name": "Music Detail · 1280 · 채보 정보 · Dark",
+                    "width": 1280,
+                    "height": 936,
+                    "section": "Music Detail · Wide 1280 · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2543:23404",
+                    "name": "Music Detail · 1280 · 내 기록 · Dark",
+                    "width": 1280,
+                    "height": 1084,
+                    "section": "Music Detail · Wide 1280 · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2543:23455",
+                    "name": "Music Detail · 1280 · 랭킹 · Dark",
+                    "width": 1280,
+                    "height": 1201,
+                    "section": "Music Detail · Wide 1280 · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2543:23481",
+                    "name": "Music Detail · 1280 · 서열·평가 · Dark",
+                    "width": 1280,
+                    "height": 2421,
+                    "section": "Music Detail · Wide 1280 · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2543:23683",
+                    "name": "Music Detail · 1024 · 채보 정보 · Dark",
+                    "width": 1024,
+                    "height": 1126,
+                    "section": "Music Detail · Intermediate 1024 · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2543:23707",
+                    "name": "Music Detail · 1024 · 내 기록 · Dark",
+                    "width": 1024,
+                    "height": 1366,
+                    "section": "Music Detail · Intermediate 1024 · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2543:23752",
+                    "name": "Music Detail · 1024 · 랭킹 · Dark",
+                    "width": 1024,
+                    "height": 1201,
+                    "section": "Music Detail · Intermediate 1024 · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2543:23778",
+                    "name": "Music Detail · 1024 · 서열·평가 · Dark",
+                    "width": 1024,
+                    "height": 3758,
+                    "section": "Music Detail · Intermediate 1024 · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2543:23977",
+                    "name": "Music Detail · 768 · 채보 정보 · Dark",
+                    "width": 768,
+                    "height": 1162,
+                    "section": "Music Detail · Intermediate 768 · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2543:24001",
+                    "name": "Music Detail · 768 · 내 기록 · Dark",
+                    "width": 768,
+                    "height": 1462,
+                    "section": "Music Detail · Intermediate 768 · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2543:24046",
+                    "name": "Music Detail · 768 · 랭킹 · Dark",
+                    "width": 768,
+                    "height": 1237,
+                    "section": "Music Detail · Intermediate 768 · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2543:24072",
+                    "name": "Music Detail · 768 · 서열·평가 · Dark",
+                    "width": 768,
+                    "height": 3794,
+                    "section": "Music Detail · Intermediate 768 · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2543:24271",
+                    "name": "Music Detail · 320 · 채보 정보 · Dark",
+                    "width": 320,
+                    "height": 1272,
+                    "section": "Music Detail · Compact 320 · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2543:24295",
+                    "name": "Music Detail · 320 · 내 기록 · Dark",
+                    "width": 320,
+                    "height": 1692,
+                    "section": "Music Detail · Compact 320 · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2543:24340",
+                    "name": "Music Detail · 320 · 랭킹 · Dark",
+                    "width": 320,
+                    "height": 1411,
+                    "section": "Music Detail · Compact 320 · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2543:24366",
+                    "name": "Music Detail · 320 · 서열·평가 · Dark",
+                    "width": 320,
+                    "height": 4384,
+                    "section": "Music Detail · Compact 320 · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2572:14715",
+                    "name": "Music Detail · 390 · 채보 정보 · 오류 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "section": "Music Detail · Compact 390 · 상태 스위트 · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2572:14725",
+                    "name": "Music Detail · 390 · 채보 정보 · 초기 로딩 · Dark",
+                    "width": 390,
+                    "height": 1280,
+                    "section": "Music Detail · Compact 390 · 상태 스위트 · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2572:14750",
+                    "name": "Music Detail · 390 · 공통 · 라우트 오류 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "section": "Music Detail · Compact 390 · 상태 스위트 · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2572:14758",
+                    "name": "Music Detail · 390 · 공통 · Not Found · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "section": "Music Detail · Compact 390 · 상태 스위트 · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2572:14766",
+                    "name": "Music Detail · 390 · 내 기록 · 미로그인 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "section": "Music Detail · Compact 390 · 상태 스위트 · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2572:14778",
+                    "name": "Music Detail · 390 · 내 기록 · 로딩 · Dark",
+                    "width": 390,
+                    "height": 1670,
+                    "section": "Music Detail · Compact 390 · 상태 스위트 · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2572:14826",
+                    "name": "Music Detail · 390 · 내 기록 · 기록 없음 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "section": "Music Detail · Compact 390 · 상태 스위트 · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2572:14836",
+                    "name": "Music Detail · 390 · 내 기록 · 오류 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "section": "Music Detail · Compact 390 · 상태 스위트 · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2572:14846",
+                    "name": "Music Detail · 390 · 랭킹 · 기록 없음 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "section": "Music Detail · Compact 390 · 상태 스위트 · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2572:14856",
+                    "name": "Music Detail · 390 · 랭킹 · 로딩 · Dark",
+                    "width": 390,
+                    "height": 1475,
+                    "section": "Music Detail · Compact 390 · 상태 스위트 · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2572:14907",
+                    "name": "Music Detail · 390 · 공통 · 갱신 중 · Dark",
+                    "width": 390,
+                    "height": 1315,
+                    "section": "Music Detail · Compact 390 · 상태 스위트 · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2572:14933",
+                    "name": "Music Detail · 390 · 랭킹 · 미로그인 · Dark",
+                    "width": 390,
+                    "height": 1311,
+                    "section": "Music Detail · Compact 390 · 상태 스위트 · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2572:14960",
+                    "name": "Music Detail · 390 · 서열·평가 · 이력 없음 · Dark",
+                    "width": 390,
+                    "height": 4096,
+                    "section": "Music Detail · Compact 390 · 상태 스위트 · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2572:15159",
+                    "name": "Music Detail · 390 · 서열·평가 · 서열 로딩 · Dark",
+                    "width": 390,
+                    "height": 4112,
+                    "section": "Music Detail · Compact 390 · 상태 스위트 · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2572:15358",
+                    "name": "Music Detail · 390 · 서열·평가 · 서열 오류 · Dark",
+                    "width": 390,
+                    "height": 4180,
+                    "section": "Music Detail · Compact 390 · 상태 스위트 · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2572:15557",
+                    "name": "Music Detail · 390 · 서열·평가 · 의견 없음 · Dark",
+                    "width": 390,
+                    "height": 2656,
+                    "section": "Music Detail · Compact 390 · 상태 스위트 · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2572:15606",
+                    "name": "Music Detail · 390 · 서열·평가 · 자격 · 미로그인 · Dark",
+                    "width": 390,
+                    "height": 4112,
+                    "section": "Music Detail · Compact 390 · 상태 스위트 · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2572:15805",
+                    "name": "Music Detail · 390 · 서열·평가 · 자격 · 기록 없음 · Dark",
+                    "width": 390,
+                    "height": 4060,
+                    "section": "Music Detail · Compact 390 · 상태 스위트 · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2572:16004",
+                    "name": "Music Detail · 390 · 서열·평가 · 자격 · 자격 없음 · Dark",
+                    "width": 390,
+                    "height": 4060,
+                    "section": "Music Detail · Compact 390 · 상태 스위트 · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2572:16203",
+                    "name": "Music Detail · 390 · 서열·평가 · 자격 · 투표 가능 · Dark",
+                    "width": 390,
+                    "height": 4080,
+                    "section": "Music Detail · Compact 390 · 상태 스위트 · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2572:16402",
+                    "name": "Music Detail · 390 · 서열·평가 · 투표 편집 · Default · Dark",
+                    "width": 390,
+                    "height": 4164,
+                    "section": "Music Detail · Compact 390 · 상태 스위트 · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2572:16601",
+                    "name": "Music Detail · 390 · 서열·평가 · 투표 편집 · Error · Dark",
+                    "width": 390,
+                    "height": 4256,
+                    "section": "Music Detail · Compact 390 · 상태 스위트 · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2572:16800",
+                    "name": "Music Detail · 390 · 랭킹 · 순위 없음 · Dark",
+                    "width": 390,
+                    "height": 1295,
+                    "section": "Music Detail · Compact 390 · 상태 스위트 · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2572:16827",
+                    "name": "Music Detail · 390 · 랭킹 · 오류 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "section": "Music Detail · Compact 390 · 상태 스위트 · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2579:21418",
+                    "name": "Music Detail · 390 · Information · JA · Dark",
+                    "width": 390,
+                    "height": 1240,
+                    "section": "Music Detail · Compact 390 · JA · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2579:21568",
+                    "name": "Music Detail · 390 · 내 기록 · JA · Dark",
+                    "width": 390,
+                    "height": 1542,
+                    "section": "Music Detail · Compact 390 · JA · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2579:21751",
+                    "name": "Music Detail · 390 · 랭킹 · JA · Dark",
+                    "width": 390,
+                    "height": 1315,
+                    "section": "Music Detail · Compact 390 · JA · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2579:21995",
+                    "name": "Music Detail · 390 · 서열·평가 · JA · Dark",
+                    "width": 390,
+                    "height": 4112,
+                    "section": "Music Detail · Compact 390 · JA · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2579:22575",
+                    "name": "Music Detail · 390 · 목적지 패널 열림 · JA · Dark",
+                    "width": 390,
+                    "height": 1542,
+                    "section": "Music Detail · Compact 390 · JA · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2579:24264",
+                    "name": "Music Detail · 390 · Information · EN · Dark",
+                    "width": 390,
+                    "height": 1240,
+                    "section": "Music Detail · Compact 390 · EN · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2579:24414",
+                    "name": "Music Detail · 390 · 내 기록 · EN · Dark",
+                    "width": 390,
+                    "height": 1540,
+                    "section": "Music Detail · Compact 390 · EN · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2579:24597",
+                    "name": "Music Detail · 390 · 랭킹 · EN · Dark",
+                    "width": 390,
+                    "height": 1315,
+                    "section": "Music Detail · Compact 390 · EN · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2579:24841",
+                    "name": "Music Detail · 390 · 서열·평가 · EN · Dark",
+                    "width": 390,
+                    "height": 4112,
+                    "section": "Music Detail · Compact 390 · EN · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2579:25421",
+                    "name": "Music Detail · 390 · 목적지 패널 열림 · EN · Dark",
+                    "width": 390,
+                    "height": 1540,
+                    "section": "Music Detail · Compact 390 · EN · Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                }
+            ]
+        },
+        {
+            "id": "1114:2",
+            "name": "P2 · Home 조립",
+            "frames": [
+                {
+                    "id": "1134:984",
+                    "name": "Home · 390 · 기본 · Dark",
+                    "section": "P2 · Home 조립 / Home · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 1076,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1134:1046",
+                    "name": "Home · 390 · 중대 공지 있음 · Dark",
+                    "section": "P2 · Home 조립 / Home · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 1204,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1134:1109",
+                    "name": "Home · 390 · 검색 프리뷰 · 5건 · Dark",
+                    "section": "P2 · Home 조립 / Home · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 1076,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1134:1177",
+                    "name": "Home · 390 · 검색 프리뷰 · 용량 초과 · Dark",
+                    "section": "P2 · Home 조립 / Home · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 1076,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1134:1247",
+                    "name": "Home · 390 · 검색 프리뷰 · 매치 없음 · Dark",
+                    "section": "P2 · Home 조립 / Home · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 1076,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1134:1312",
+                    "name": "Home · 390 · 검색 프리뷰 · 로딩 · Dark",
+                    "section": "P2 · Home 조립 / Home · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 1076,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1134:1377",
+                    "name": "Home · 390 · 검색 프리뷰 · 검색 실패 · Dark",
+                    "section": "P2 · Home 조립 / Home · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 1076,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1134:1443",
+                    "name": "Home · 390 · 공지 없음 · Dark",
+                    "section": "P2 · Home 조립 / Home · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1134:1491",
+                    "name": "Home · 390 · 공식 소식 없음 · Dark",
+                    "section": "P2 · Home 조립 / Home · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 1048,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1134:1551",
+                    "name": "Home · 390 · 공식 소식 로드 실패 · Dark",
+                    "section": "P2 · Home 조립 / Home · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 1048,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1134:1611",
+                    "name": "Home · 390×844 · 키보드 · 프리뷰 동적 행 수 (최악 2행) · Dark",
+                    "section": "P2 · Home 조립 / Home · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "3375:5629",
+                    "name": "Home · 390 · Dark · 피드백 다이얼로그 · 열림",
+                    "section": "P2 · Home 조립 / Home · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 1076,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1161:15947",
+                    "name": "Home · 1280 · 기본 · Dark",
+                    "section": "P2 · Home 조립 / Home · Wide 1280 · Dark",
+                    "width": 1280,
+                    "height": 820,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1161:16009",
+                    "name": "Home · 1280 · 중대 공지 있음 · Dark",
+                    "section": "P2 · Home 조립 / Home · Wide 1280 · Dark",
+                    "width": 1280,
+                    "height": 928,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1161:16072",
+                    "name": "Home · 1280 · 검색 프리뷰 · 5건 · Dark",
+                    "section": "P2 · Home 조립 / Home · Wide 1280 · Dark",
+                    "width": 1280,
+                    "height": 820,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1161:16140",
+                    "name": "Home · 1280 · 검색 프리뷰 · 용량 초과 · Dark",
+                    "section": "P2 · Home 조립 / Home · Wide 1280 · Dark",
+                    "width": 1280,
+                    "height": 820,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1161:16210",
+                    "name": "Home · 1280 · 검색 프리뷰 · 매치 없음 · Dark",
+                    "section": "P2 · Home 조립 / Home · Wide 1280 · Dark",
+                    "width": 1280,
+                    "height": 820,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1161:16275",
+                    "name": "Home · 1280 · 검색 프리뷰 · 로딩 · Dark",
+                    "section": "P2 · Home 조립 / Home · Wide 1280 · Dark",
+                    "width": 1280,
+                    "height": 820,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1161:16340",
+                    "name": "Home · 1280 · 검색 프리뷰 · 검색 실패 · Dark",
+                    "section": "P2 · Home 조립 / Home · Wide 1280 · Dark",
+                    "width": 1280,
+                    "height": 820,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1161:16406",
+                    "name": "Home · 1280 · 공지 없음 · Dark",
+                    "section": "P2 · Home 조립 / Home · Wide 1280 · Dark",
+                    "width": 1280,
+                    "height": 820,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1161:16454",
+                    "name": "Home · 1280 · 공식 소식 없음 · Dark",
+                    "section": "P2 · Home 조립 / Home · Wide 1280 · Dark",
+                    "width": 1280,
+                    "height": 820,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1161:16515",
+                    "name": "Home · 1280 · 공식 소식 로드 실패 · Dark",
+                    "section": "P2 · Home 조립 / Home · Wide 1280 · Dark",
+                    "width": 1280,
+                    "height": 820,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1161:16576",
+                    "name": "Home · 1280 · 목적지 패널 열림 · Dark",
+                    "section": "P2 · Home 조립 / Home · Wide 1280 · Dark",
+                    "width": 1280,
+                    "height": 820,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "3375:5813",
+                    "name": "Home · 1280 · Dark · 피드백 다이얼로그 · 열림",
+                    "section": "P2 · Home 조립 / Home · Wide 1280 · Dark",
+                    "width": 1280,
+                    "height": 820,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1164:5880",
+                    "name": "Home · 768 · 기본 · Dark",
+                    "section": "P2 · Home 조립 / Home · Intermediate 768 / 1024",
+                    "width": 768,
+                    "height": 964,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1164:6002",
+                    "name": "Home · 1024 · 기본 · Dark",
+                    "section": "P2 · Home 조립 / Home · Intermediate 768 / 1024",
+                    "width": 1024,
+                    "height": 928,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1167:6302",
+                    "name": "Home · 1440 · 기본 · Dark",
+                    "section": "P2 · Home 조립 / Home · 1440 (컨테이너 상한 초과)",
+                    "width": 1440,
+                    "height": 820,
+                    "visualEvidence": "not mapped by this inventory"
+                }
+            ]
+        },
+        {
+            "id": "1193:2",
+            "name": "P3 · Discovery 조립",
+            "frames": [
+                {
+                    "id": "1215:1199",
+                    "name": "Music · 390 · 기본 (빈 질의 browse)",
+                    "section": "P3 · Discovery 조립 / Discovery · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 1116,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1215:1223",
+                    "name": "Music · 390 · 필터·정렬 레이어 (스테이징)",
+                    "section": "P3 · Discovery 조립 / Discovery · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1215:1280",
+                    "name": "Music · 390 · 그리드 뷰",
+                    "section": "P3 · Discovery 조립 / Discovery · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 1660,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1215:1308",
+                    "name": "Chart · 390 · 기본 (빈 질의 browse · 대표 데이터)",
+                    "section": "P3 · Discovery 조립 / Discovery · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 1276,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1215:21216",
+                    "name": "Music · 1280 · 레일 노출 (빈 질의 browse)",
+                    "section": "P3 · Discovery 조립 / Discovery · Wide 1280 · Dark",
+                    "width": 1280,
+                    "height": 968,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1215:21280",
+                    "name": "Chart · 1280 · 레일 노출 (대표 데이터)",
+                    "section": "P3 · Discovery 조립 / Discovery · Wide 1280 · Dark",
+                    "width": 1280,
+                    "height": 1160,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1215:21341",
+                    "name": "결과 영역 상태 · Dark",
+                    "section": "P3 · Discovery 조립 / Discovery · 결과 영역 상태 · Dark",
+                    "width": 2400,
+                    "height": 688,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1262:3175",
+                    "name": "Music · 320 · 기본 (빈 질의 browse) · KO Dark",
+                    "section": "P3 · Discovery 조립 / Discovery · 320 검증",
+                    "width": 320,
+                    "height": 1116,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1262:3436",
+                    "name": "Music · 320 · 필터·정렬 레이어 (스테이징) · KO Dark",
+                    "section": "P3 · Discovery 조립 / Discovery · 320 검증",
+                    "width": 320,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1262:3493",
+                    "name": "Music · 320 · 그리드 뷰 · KO Dark",
+                    "section": "P3 · Discovery 조립 / Discovery · 320 검증",
+                    "width": 320,
+                    "height": 1520,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1262:3774",
+                    "name": "Chart · 320 · 기본 (빈 질의 browse · 대표 데이터) · KO Dark",
+                    "section": "P3 · Discovery 조립 / Discovery · 320 검증",
+                    "width": 320,
+                    "height": 1276,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1263:23064",
+                    "name": "결과 영역 상태 · 320 · KO Dark",
+                    "section": "P3 · Discovery 조립 / Discovery · 320 검증",
+                    "width": 1912,
+                    "height": 688,
+                    "visualEvidence": "not mapped by this inventory"
+                }
+            ]
+        },
+        {
+            "id": "1291:2",
+            "name": "P4 · Tier List 조립",
+            "frames": [
+                {
+                    "id": "1352:493",
+                    "name": "Tier · 390 · 기본 (서명 안 됨 · Compact 뷰) · Dark",
+                    "section": "P4 · Tier List 조립 / Tier · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 1210,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1352:536",
+                    "name": "Tier · 390 · 서명됨 · Compact · Dark",
+                    "section": "P4 · Tier List 조립 / Tier · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 1282,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1352:613",
+                    "name": "Tier · 390 · 서명됨 · 상세 뷰 2열 · Dark",
+                    "section": "P4 · Tier List 조립 / Tier · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 1743,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1352:696",
+                    "name": "Tier · 390 · 필터 레이어 (스테이징) · Dark",
+                    "section": "P4 · Tier List 조립 / Tier · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1398:27749",
+                    "name": "Tier · 390 · 계산 안내 펼침 (Basic · S) · Dark",
+                    "section": "P4 · Tier List 조립 / Tier · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 1402,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1398:27854",
+                    "name": "Tier · 390 · 서명됨 · Basic · Full Combo · Dark",
+                    "section": "P4 · Tier List 조립 / Tier · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 1282,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1398:27928",
+                    "name": "Tier · 390 · 서명됨 · Basic · Pianist · Dark",
+                    "section": "P4 · Tier List 조립 / Tier · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 1282,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1398:28247",
+                    "name": "Tier · 390 · 계산 안내 펼침 (Basic · Pianist) · Dark",
+                    "section": "P4 · Tier List 조립 / Tier · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 1787,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1398:28371",
+                    "name": "Tier · 390 · 서명됨 · Recital · S · Dark",
+                    "section": "P4 · Tier List 조립 / Tier · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 1282,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1398:28445",
+                    "name": "Tier · 390 · 계산 안내 펼침 (Recital · S) · Dark",
+                    "section": "P4 · Tier List 조립 / Tier · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 1402,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1474:31325",
+                    "name": "Tier · 390 · 필터 레이어 · 범위 지정 모드 · Dark",
+                    "section": "P4 · Tier List 조립 / Tier · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1474:31427",
+                    "name": "Tier · 390 · 구간 좁힘 (적용 조건 토큰) · Dark",
+                    "section": "P4 · Tier List 조립 / Tier · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 2078.666748046875,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1497:4852",
+                    "name": "Tier · 390 · 서명됨 · Recital · Full Combo · Dark",
+                    "section": "P4 · Tier List 조립 / Tier · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 1282,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1497:4978",
+                    "name": "Tier · 390 · 서명됨 · Recital · Pianist · Dark",
+                    "section": "P4 · Tier List 조립 / Tier · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 1282,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1352:26220",
+                    "name": "결과 영역 상태 · Dark",
+                    "section": "P4 · Tier List 조립 / Tier · 결과 영역 상태 · Dark",
+                    "width": 1950,
+                    "height": 395.3333435058594,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1352:26271",
+                    "name": "Tier · 1280 · 서명됨 · 레일 노출 · Dark",
+                    "section": "P4 · Tier List 조립 / Tier · Wide 1280 · Dark",
+                    "width": 1280,
+                    "height": 1344,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1429:3212",
+                    "name": "Tier · 768 · 서명됨 · Compact 계약 (레일 없음) · Dark · 구간 좁힘",
+                    "section": "P4 · Tier List 조립 / Tier · Intermediate 768 / 1024 · Dark",
+                    "width": 768,
+                    "height": 1724,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1429:3319",
+                    "name": "Tier · 1024 · 서명됨 · Compact 계약 (레일 없음) · Dark · 구간 좁힘",
+                    "section": "P4 · Tier List 조립 / Tier · Intermediate 768 / 1024 · Dark",
+                    "width": 1024,
+                    "height": 1494.857177734375,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1493:3884",
+                    "name": "Tier · 768 · 필터 레이어 (스테이징) · Dark",
+                    "section": "P4 · Tier List 조립 / Tier · Intermediate 768 / 1024 · Dark",
+                    "width": 768,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1493:4008",
+                    "name": "Tier · 1024 · 필터 레이어 (스테이징) · Dark",
+                    "section": "P4 · Tier List 조립 / Tier · Intermediate 768 / 1024 · Dark",
+                    "width": 1024,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1493:30915",
+                    "name": "Tier · 768 · 서명됨 · 상세 뷰 3열 · Dark · 구간 좁힘",
+                    "section": "P4 · Tier List 조립 / Tier · Intermediate 768 / 1024 · Dark",
+                    "width": 768,
+                    "height": 3758.66650390625,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1493:31086",
+                    "name": "Tier · 1024 · 서명됨 · 상세 뷰 5열 · Dark · 구간 좁힘",
+                    "section": "P4 · Tier List 조립 / Tier · Intermediate 768 / 1024 · Dark",
+                    "width": 1024,
+                    "height": 2404,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1429:29026",
+                    "name": "Tier · 320 · 기본 (서명 안 됨 · Compact 뷰) · KO Dark",
+                    "section": "P4 · Tier List 조립 / Tier · 320 검증 · Dark (KO)",
+                    "width": 320,
+                    "height": 1140,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1429:29069",
+                    "name": "Tier · 320 · 서명됨 · Compact · KO Dark",
+                    "section": "P4 · Tier List 조립 / Tier · 320 검증 · Dark (KO)",
+                    "width": 320,
+                    "height": 1212,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1429:29143",
+                    "name": "Tier · 320 · 서명됨 · 상세 뷰 2열 · KO Dark",
+                    "section": "P4 · Tier List 조립 / Tier · 320 검증 · Dark (KO)",
+                    "width": 320,
+                    "height": 1638,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1429:29228",
+                    "name": "Tier · 320 · 필터 레이어 (스테이징) · KO Dark",
+                    "section": "P4 · Tier List 조립 / Tier · 320 검증 · Dark (KO)",
+                    "width": 320,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1429:29396",
+                    "name": "결과 영역 상태 · 320 · KO Dark",
+                    "section": "P4 · Tier List 조립 / Tier · 320 검증 · Dark (KO)",
+                    "width": 1600,
+                    "height": 372,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1489:3359",
+                    "name": "Tier · 320 · 필터 레이어 · 범위 지정 모드 · KO Dark",
+                    "section": "P4 · Tier List 조립 / Tier · 320 검증 · Dark (KO)",
+                    "width": 320,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1490:3550",
+                    "name": "Tier · 320 · 구간 좁힘 (적용 조건 토큰) · KO Dark",
+                    "section": "P4 · Tier List 조립 / Tier · 320 검증 · Dark (KO)",
+                    "width": 320,
+                    "height": 1892,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1429:29882",
+                    "name": "결과 영역 상태 · Wide 908 · Dark",
+                    "section": "P4 · Tier List 조립 / Tier · 결과 영역 상태 · Wide 908",
+                    "width": 4700,
+                    "height": 400,
+                    "visualEvidence": "not mapped by this inventory"
+                }
+            ]
+        },
+        {
+            "id": "1602:2",
+            "name": "P5 · Global Rankings 조립",
+            "frames": [
+                {
+                    "id": "1798:2506",
+                    "name": "Rankings · 320 · Light · Approved A · Basic · Rating · off-page",
+                    "width": 320,
+                    "height": 1012,
+                    "section": "Rankings · Compact 320 · Approved A · Light + Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1798:2703",
+                    "name": "Rankings · 320 · Dark · Approved A · Basic · Rating · off-page",
+                    "width": 320,
+                    "height": 1012,
+                    "section": "Rankings · Compact 320 · Approved A · Light + Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1801:2792",
+                    "name": "Rankings · 1280 · Light · SignedIn · Basic · Rating · off-page · Wide B",
+                    "width": 1280,
+                    "height": 961,
+                    "section": "Rankings · Wide 1280 · Approved B · Light + Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1801:2978",
+                    "name": "Rankings · 1280 · Dark · SignedIn · Basic · Rating · off-page · Wide B",
+                    "width": 1280,
+                    "height": 961,
+                    "section": "Rankings · Wide 1280 · Approved B · Light + Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1806:6",
+                    "name": "Rankings · 390 · Dark · SignedIn · Basic · Official Grd · on-page",
+                    "width": 390,
+                    "height": 940,
+                    "section": "Rankings · Compact 390 · Dark state suite",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1806:26",
+                    "name": "Rankings · 390 · Dark · SignedIn · Basic · Rating · on-page",
+                    "width": 390,
+                    "height": 940,
+                    "section": "Rankings · Compact 390 · Dark state suite",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1806:46",
+                    "name": "Rankings · 390 · Dark · SignedIn · Recital · Official Grd · on-page",
+                    "width": 390,
+                    "height": 940,
+                    "section": "Rankings · Compact 390 · Dark state suite",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1806:66",
+                    "name": "Rankings · 390 · Dark · SignedIn · Recital · Rating · on-page",
+                    "width": 390,
+                    "height": 940,
+                    "section": "Rankings · Compact 390 · Dark state suite",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1806:86",
+                    "name": "Rankings · 390 · Dark · SignedIn · Basic · Rating · off-page",
+                    "width": 390,
+                    "height": 1012,
+                    "section": "Rankings · Compact 390 · Dark state suite",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1806:113",
+                    "name": "Rankings · 390 · Dark · SignedIn · Recital · Official Grd · ineligible",
+                    "width": 390,
+                    "height": 1020,
+                    "section": "Rankings · Compact 390 · Dark state suite",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1806:135",
+                    "name": "Rankings · 390 · Dark · SignedOut · public list",
+                    "width": 390,
+                    "height": 1004,
+                    "section": "Rankings · Compact 390 · Dark state suite",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1806:158",
+                    "name": "Rankings · 390 · Dark · Initial loading · no fabricated rows",
+                    "width": 390,
+                    "height": 844,
+                    "section": "Rankings · Compact 390 · Dark state suite",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1806:172",
+                    "name": "Rankings · 390 · Dark · Empty · Pagination hidden",
+                    "width": 390,
+                    "height": 844,
+                    "section": "Rankings · Compact 390 · Dark state suite",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1806:186",
+                    "name": "Rankings · 390 · Dark · Updating · existing rows retained · pending Rating · committed Grd",
+                    "width": 390,
+                    "height": 984,
+                    "section": "Rankings · Compact 390 · Dark state suite",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1806:207",
+                    "name": "Rankings · 390 · Dark · Basic · Rating unavailable · Official Grd recovery",
+                    "width": 390,
+                    "height": 844,
+                    "section": "Rankings · Compact 390 · Dark state suite",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1806:222",
+                    "name": "Rankings · 390 · Dark · Initial error · controls preserved",
+                    "width": 390,
+                    "height": 844,
+                    "section": "Rankings · Compact 390 · Dark state suite",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1806:237",
+                    "name": "Rankings · 390 · Dark · Error after data · rows retained · retry current context",
+                    "width": 390,
+                    "height": 1048,
+                    "section": "Rankings · Compact 390 · Dark state suite",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1806:261",
+                    "name": "Rankings · 390 · Dark · fixture · exactly 25 · Pagination hidden",
+                    "width": 390,
+                    "height": 2240,
+                    "section": "Rankings · Compact 390 · Dark · 25-row evidence",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1806:299",
+                    "name": "Rankings · 390 · Dark · fixture · 26 total · page 1 · Pagination visible",
+                    "width": 390,
+                    "height": 2308,
+                    "section": "Rankings · Compact 390 · Dark · 25-row evidence",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1956:5777",
+                    "name": "Rankings · Intermediate 768 · Light · Approved A",
+                    "width": 768,
+                    "height": 997,
+                    "section": "Rankings · Intermediate 768 / 1024 · Approved A · Light + Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1956:5828",
+                    "name": "Rankings · Intermediate 768 · Dark · Approved A",
+                    "width": 768,
+                    "height": 997,
+                    "section": "Rankings · Intermediate 768 / 1024 · Approved A · Light + Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1956:5879",
+                    "name": "Rankings · Intermediate 1024 · Light · Approved A",
+                    "width": 1024,
+                    "height": 961,
+                    "section": "Rankings · Intermediate 768 / 1024 · Approved A · Light + Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "1956:5930",
+                    "name": "Rankings · Intermediate 1024 · Dark · Approved A",
+                    "width": 1024,
+                    "height": 961,
+                    "section": "Rankings · Intermediate 768 / 1024 · Approved A · Light + Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2000:6354",
+                    "name": "Rankings · 320 · Light · Locale KO · Basic · Rating · off-page · longest labels",
+                    "width": 320,
+                    "height": 1012,
+                    "section": "Rankings · Locale QA · 320 · KO JA EN · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2000:6522",
+                    "name": "Rankings · 320 · Dark · Locale KO · Basic · Rating · off-page · longest labels",
+                    "width": 320,
+                    "height": 1012,
+                    "section": "Rankings · Locale QA · 320 · KO JA EN · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2000:6690",
+                    "name": "Rankings · 320 · Light · Locale JA · Basic · Rating · off-page · longest labels",
+                    "width": 320,
+                    "height": 1012,
+                    "section": "Rankings · Locale QA · 320 · KO JA EN · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2000:6858",
+                    "name": "Rankings · 320 · Dark · Locale JA · Basic · Rating · off-page · longest labels",
+                    "width": 320,
+                    "height": 1012,
+                    "section": "Rankings · Locale QA · 320 · KO JA EN · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2000:7026",
+                    "name": "Rankings · 320 · Light · Locale EN · Basic · Rating · off-page · longest labels",
+                    "width": 320,
+                    "height": 1012,
+                    "section": "Rankings · Locale QA · 320 · KO JA EN · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2000:7194",
+                    "name": "Rankings · 320 · Dark · Locale EN · Basic · Rating · off-page · longest labels",
+                    "width": 320,
+                    "height": 1012,
+                    "section": "Rankings · Locale QA · 320 · KO JA EN · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2000:7363",
+                    "name": "Rankings · 390 · Light · Locale KO · Basic · Rating · off-page · longest labels",
+                    "width": 390,
+                    "height": 1012,
+                    "section": "Rankings · Locale QA · 390 · KO JA EN · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2000:7535",
+                    "name": "Rankings · 390 · Dark · Locale KO · Basic · Rating · off-page · longest labels",
+                    "width": 390,
+                    "height": 1012,
+                    "section": "Rankings · Locale QA · 390 · KO JA EN · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2000:7707",
+                    "name": "Rankings · 390 · Light · Locale JA · Basic · Rating · off-page · longest labels",
+                    "width": 390,
+                    "height": 1012,
+                    "section": "Rankings · Locale QA · 390 · KO JA EN · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2000:7879",
+                    "name": "Rankings · 390 · Dark · Locale JA · Basic · Rating · off-page · longest labels",
+                    "width": 390,
+                    "height": 1012,
+                    "section": "Rankings · Locale QA · 390 · KO JA EN · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2000:8051",
+                    "name": "Rankings · 390 · Light · Locale EN · Basic · Rating · off-page · longest labels",
+                    "width": 390,
+                    "height": 1012,
+                    "section": "Rankings · Locale QA · 390 · KO JA EN · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2000:8223",
+                    "name": "Rankings · 390 · Dark · Locale EN · Basic · Rating · off-page · longest labels",
+                    "width": 390,
+                    "height": 1012,
+                    "section": "Rankings · Locale QA · 390 · KO JA EN · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2000:8396",
+                    "name": "Rankings · 768 · Light · Locale KO · Basic · Rating · off-page · longest labels",
+                    "width": 768,
+                    "height": 997,
+                    "section": "Rankings · Locale QA · 768 · KO JA EN · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2000:8568",
+                    "name": "Rankings · 768 · Dark · Locale KO · Basic · Rating · off-page · longest labels",
+                    "width": 768,
+                    "height": 997,
+                    "section": "Rankings · Locale QA · 768 · KO JA EN · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2000:8740",
+                    "name": "Rankings · 768 · Light · Locale JA · Basic · Rating · off-page · longest labels",
+                    "width": 768,
+                    "height": 997,
+                    "section": "Rankings · Locale QA · 768 · KO JA EN · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2000:8912",
+                    "name": "Rankings · 768 · Dark · Locale JA · Basic · Rating · off-page · longest labels",
+                    "width": 768,
+                    "height": 997,
+                    "section": "Rankings · Locale QA · 768 · KO JA EN · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2000:9084",
+                    "name": "Rankings · 768 · Light · Locale EN · Basic · Rating · off-page · longest labels",
+                    "width": 768,
+                    "height": 997,
+                    "section": "Rankings · Locale QA · 768 · KO JA EN · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2000:9256",
+                    "name": "Rankings · 768 · Dark · Locale EN · Basic · Rating · off-page · longest labels",
+                    "width": 768,
+                    "height": 997,
+                    "section": "Rankings · Locale QA · 768 · KO JA EN · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2000:9429",
+                    "name": "Rankings · 1024 · Light · Locale KO · Basic · Rating · off-page · longest labels",
+                    "width": 1024,
+                    "height": 961,
+                    "section": "Rankings · Locale QA · 1024 · KO JA EN · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2000:9601",
+                    "name": "Rankings · 1024 · Dark · Locale KO · Basic · Rating · off-page · longest labels",
+                    "width": 1024,
+                    "height": 961,
+                    "section": "Rankings · Locale QA · 1024 · KO JA EN · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2000:9773",
+                    "name": "Rankings · 1024 · Light · Locale JA · Basic · Rating · off-page · longest labels",
+                    "width": 1024,
+                    "height": 961,
+                    "section": "Rankings · Locale QA · 1024 · KO JA EN · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2000:9945",
+                    "name": "Rankings · 1024 · Dark · Locale JA · Basic · Rating · off-page · longest labels",
+                    "width": 1024,
+                    "height": 961,
+                    "section": "Rankings · Locale QA · 1024 · KO JA EN · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2000:10117",
+                    "name": "Rankings · 1024 · Light · Locale EN · Basic · Rating · off-page · longest labels",
+                    "width": 1024,
+                    "height": 961,
+                    "section": "Rankings · Locale QA · 1024 · KO JA EN · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2000:10289",
+                    "name": "Rankings · 1024 · Dark · Locale EN · Basic · Rating · off-page · longest labels",
+                    "width": 1024,
+                    "height": 961,
+                    "section": "Rankings · Locale QA · 1024 · KO JA EN · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2000:10462",
+                    "name": "Rankings · 1280 · Light · Locale KO · Basic · Rating · off-page · longest labels",
+                    "width": 1280,
+                    "height": 961,
+                    "section": "Rankings · Locale QA · 1280 · KO JA EN · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2000:10634",
+                    "name": "Rankings · 1280 · Dark · Locale KO · Basic · Rating · off-page · longest labels",
+                    "width": 1280,
+                    "height": 961,
+                    "section": "Rankings · Locale QA · 1280 · KO JA EN · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2000:10806",
+                    "name": "Rankings · 1280 · Light · Locale JA · Basic · Rating · off-page · longest labels",
+                    "width": 1280,
+                    "height": 961,
+                    "section": "Rankings · Locale QA · 1280 · KO JA EN · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2000:10978",
+                    "name": "Rankings · 1280 · Dark · Locale JA · Basic · Rating · off-page · longest labels",
+                    "width": 1280,
+                    "height": 961,
+                    "section": "Rankings · Locale QA · 1280 · KO JA EN · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2000:11150",
+                    "name": "Rankings · 1280 · Light · Locale EN · Basic · Rating · off-page · longest labels",
+                    "width": 1280,
+                    "height": 961,
+                    "section": "Rankings · Locale QA · 1280 · KO JA EN · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2000:11322",
+                    "name": "Rankings · 1280 · Dark · Locale EN · Basic · Rating · off-page · longest labels",
+                    "width": 1280,
+                    "height": 961,
+                    "section": "Rankings · Locale QA · 1280 · KO JA EN · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2014:10680",
+                    "name": "Rankings · 390 · Light · Locale JA · SignedIn · Recital · Official Grd · ineligible",
+                    "width": 390,
+                    "height": 1020,
+                    "section": "Rankings · Locale State QA · JA · 390 · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2014:10847",
+                    "name": "Rankings · 390 · Light · Locale JA · SignedOut · public list",
+                    "width": 390,
+                    "height": 1004,
+                    "section": "Rankings · Locale State QA · JA · 390 · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2014:11016",
+                    "name": "Rankings · 390 · Light · Locale JA · Initial loading · no fabricated rows",
+                    "width": 390,
+                    "height": 844,
+                    "section": "Rankings · Locale State QA · JA · 390 · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2014:11063",
+                    "name": "Rankings · 390 · Light · Locale JA · Empty · Pagination hidden",
+                    "width": 390,
+                    "height": 844,
+                    "section": "Rankings · Locale State QA · JA · 390 · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2014:11110",
+                    "name": "Rankings · 390 · Light · Locale JA · Updating · existing rows retained · pending Rating · committed Grd",
+                    "width": 390,
+                    "height": 984,
+                    "section": "Rankings · Locale State QA · JA · 390 · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2014:11278",
+                    "name": "Rankings · 390 · Light · Locale JA · Basic · Rating unavailable · Official Grd recovery",
+                    "width": 390,
+                    "height": 844,
+                    "section": "Rankings · Locale State QA · JA · 390 · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2014:11327",
+                    "name": "Rankings · 390 · Light · Locale JA · Initial error · controls preserved",
+                    "width": 390,
+                    "height": 844,
+                    "section": "Rankings · Locale State QA · JA · 390 · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2014:11376",
+                    "name": "Rankings · 390 · Light · Locale JA · Error after data · rows retained · retry current context",
+                    "width": 390,
+                    "height": 1048,
+                    "section": "Rankings · Locale State QA · JA · 390 · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2014:11547",
+                    "name": "Rankings · 390 · Dark · Locale JA · SignedIn · Recital · Official Grd · ineligible",
+                    "width": 390,
+                    "height": 1020,
+                    "section": "Rankings · Locale State QA · JA · 390 · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2014:11714",
+                    "name": "Rankings · 390 · Dark · Locale JA · SignedOut · public list",
+                    "width": 390,
+                    "height": 1004,
+                    "section": "Rankings · Locale State QA · JA · 390 · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2014:11883",
+                    "name": "Rankings · 390 · Dark · Locale JA · Initial loading · no fabricated rows",
+                    "width": 390,
+                    "height": 844,
+                    "section": "Rankings · Locale State QA · JA · 390 · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2014:11930",
+                    "name": "Rankings · 390 · Dark · Locale JA · Empty · Pagination hidden",
+                    "width": 390,
+                    "height": 844,
+                    "section": "Rankings · Locale State QA · JA · 390 · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2014:11977",
+                    "name": "Rankings · 390 · Dark · Locale JA · Updating · existing rows retained · pending Rating · committed Grd",
+                    "width": 390,
+                    "height": 984,
+                    "section": "Rankings · Locale State QA · JA · 390 · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2014:12145",
+                    "name": "Rankings · 390 · Dark · Locale JA · Basic · Rating unavailable · Official Grd recovery",
+                    "width": 390,
+                    "height": 844,
+                    "section": "Rankings · Locale State QA · JA · 390 · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2014:12194",
+                    "name": "Rankings · 390 · Dark · Locale JA · Initial error · controls preserved",
+                    "width": 390,
+                    "height": 844,
+                    "section": "Rankings · Locale State QA · JA · 390 · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2014:12243",
+                    "name": "Rankings · 390 · Dark · Locale JA · Error after data · rows retained · retry current context",
+                    "width": 390,
+                    "height": 1048,
+                    "section": "Rankings · Locale State QA · JA · 390 · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2014:12415",
+                    "name": "Rankings · 390 · Light · Locale EN · SignedIn · Recital · Official Grd · ineligible",
+                    "width": 390,
+                    "height": 1020,
+                    "section": "Rankings · Locale State QA · EN · 390 · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2014:12582",
+                    "name": "Rankings · 390 · Light · Locale EN · SignedOut · public list",
+                    "width": 390,
+                    "height": 1004,
+                    "section": "Rankings · Locale State QA · EN · 390 · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2014:12751",
+                    "name": "Rankings · 390 · Light · Locale EN · Initial loading · no fabricated rows",
+                    "width": 390,
+                    "height": 844,
+                    "section": "Rankings · Locale State QA · EN · 390 · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2014:12798",
+                    "name": "Rankings · 390 · Light · Locale EN · Empty · Pagination hidden",
+                    "width": 390,
+                    "height": 844,
+                    "section": "Rankings · Locale State QA · EN · 390 · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2014:12845",
+                    "name": "Rankings · 390 · Light · Locale EN · Updating · existing rows retained · pending Rating · committed Grd",
+                    "width": 390,
+                    "height": 984,
+                    "section": "Rankings · Locale State QA · EN · 390 · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2014:13013",
+                    "name": "Rankings · 390 · Light · Locale EN · Basic · Rating unavailable · Official Grd recovery",
+                    "width": 390,
+                    "height": 844,
+                    "section": "Rankings · Locale State QA · EN · 390 · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2014:13062",
+                    "name": "Rankings · 390 · Light · Locale EN · Initial error · controls preserved",
+                    "width": 390,
+                    "height": 844,
+                    "section": "Rankings · Locale State QA · EN · 390 · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2014:13111",
+                    "name": "Rankings · 390 · Light · Locale EN · Error after data · rows retained · retry current context",
+                    "width": 390,
+                    "height": 1048,
+                    "section": "Rankings · Locale State QA · EN · 390 · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2014:13282",
+                    "name": "Rankings · 390 · Dark · Locale EN · SignedIn · Recital · Official Grd · ineligible",
+                    "width": 390,
+                    "height": 1020,
+                    "section": "Rankings · Locale State QA · EN · 390 · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2014:13449",
+                    "name": "Rankings · 390 · Dark · Locale EN · SignedOut · public list",
+                    "width": 390,
+                    "height": 1004,
+                    "section": "Rankings · Locale State QA · EN · 390 · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2014:13618",
+                    "name": "Rankings · 390 · Dark · Locale EN · Initial loading · no fabricated rows",
+                    "width": 390,
+                    "height": 844,
+                    "section": "Rankings · Locale State QA · EN · 390 · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2014:13665",
+                    "name": "Rankings · 390 · Dark · Locale EN · Empty · Pagination hidden",
+                    "width": 390,
+                    "height": 844,
+                    "section": "Rankings · Locale State QA · EN · 390 · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2014:13712",
+                    "name": "Rankings · 390 · Dark · Locale EN · Updating · existing rows retained · pending Rating · committed Grd",
+                    "width": 390,
+                    "height": 984,
+                    "section": "Rankings · Locale State QA · EN · 390 · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2014:13880",
+                    "name": "Rankings · 390 · Dark · Locale EN · Basic · Rating unavailable · Official Grd recovery",
+                    "width": 390,
+                    "height": 844,
+                    "section": "Rankings · Locale State QA · EN · 390 · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2014:13929",
+                    "name": "Rankings · 390 · Dark · Locale EN · Initial error · controls preserved",
+                    "width": 390,
+                    "height": 844,
+                    "section": "Rankings · Locale State QA · EN · 390 · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2014:13978",
+                    "name": "Rankings · 390 · Dark · Locale EN · Error after data · rows retained · retry current context",
+                    "width": 390,
+                    "height": 1048,
+                    "section": "Rankings · Locale State QA · EN · 390 · Light Dark",
+                    "visualEvidence": "not mapped by this inventory"
+                }
+            ]
+        },
+        {
+            "id": "2267:2",
+            "name": "P6 · Profile 조립",
+            "frames": [
+                {
+                    "id": "2267:12974",
+                    "name": "Profile · 1280 · Light · SignedIn · Owner · Basic",
+                    "section": "P6 · Profile 조립 / Profile · Wide 1280 · Light + Dark",
+                    "width": 1280,
+                    "height": 1614,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2268:13102",
+                    "name": "Profile · 1280 · Dark · SignedIn · Owner · Basic",
+                    "section": "P6 · Profile 조립 / Profile · Wide 1280 · Light + Dark",
+                    "width": 1280,
+                    "height": 1614,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "3143:10640",
+                    "name": "Profile · 1280 · Light · 공유 다이얼로그 · 열림",
+                    "section": "P6 · Profile 조립 / Profile · Wide 1280 · Light + Dark",
+                    "width": 1280,
+                    "height": 1614,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "3143:10936",
+                    "name": "Profile · 1280 · Dark · 공유 다이얼로그 · 열림",
+                    "section": "P6 · Profile 조립 / Profile · Wide 1280 · Light + Dark",
+                    "width": 1280,
+                    "height": 1614,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2277:273",
+                    "name": "Profile · 390 · Light · SignedIn · Owner · Basic",
+                    "section": "P6 · Profile 조립 / Profile · Compact 390 · Light + Dark",
+                    "width": 390,
+                    "height": 2621,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2283:406",
+                    "name": "Profile · 390 · Dark · SignedIn · Owner · Basic",
+                    "section": "P6 · Profile 조립 / Profile · Compact 390 · Light + Dark",
+                    "width": 390,
+                    "height": 2621,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2296:537",
+                    "name": "Profile · 320 · Light · SignedIn · Owner · Basic",
+                    "section": "P6 · Profile 조립 / Profile · Compact 320 · Light + Dark",
+                    "width": 320,
+                    "height": 2794,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2296:822",
+                    "name": "Profile · 320 · Dark · SignedIn · Owner · Basic",
+                    "section": "P6 · Profile 조립 / Profile · Compact 320 · Light + Dark",
+                    "width": 320,
+                    "height": 2794,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2301:797",
+                    "name": "Profile · 768 · Light · SignedIn · Owner · Basic",
+                    "section": "P6 · Profile 조립 / Profile · Intermediate 768 / 1024 · Light + Dark",
+                    "width": 768,
+                    "height": 2658,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2301:1195",
+                    "name": "Profile · 768 · Dark · SignedIn · Owner · Basic",
+                    "section": "P6 · Profile 조립 / Profile · Intermediate 768 / 1024 · Light + Dark",
+                    "width": 768,
+                    "height": 2658,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2301:1593",
+                    "name": "Profile · 1024 · Light · SignedIn · Owner · Basic",
+                    "section": "P6 · Profile 조립 / Profile · Intermediate 768 / 1024 · Light + Dark",
+                    "width": 1024,
+                    "height": 2622,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2301:1991",
+                    "name": "Profile · 1024 · Dark · SignedIn · Owner · Basic",
+                    "section": "P6 · Profile 조립 / Profile · Intermediate 768 / 1024 · Light + Dark",
+                    "width": 1024,
+                    "height": 2622,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2354:1317",
+                    "name": "Profile · 1280 · Light · Locale JA · SignedIn · Owner · Basic",
+                    "section": "P6 · Profile 조립 / Profile · Locale JA · 1280 / 390 / 320 · Light + Dark",
+                    "width": 1280,
+                    "height": 1614,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2354:1596",
+                    "name": "Profile · 1280 · Dark · Locale JA · SignedIn · Owner · Basic",
+                    "section": "P6 · Profile 조립 / Profile · Locale JA · 1280 / 390 / 320 · Light + Dark",
+                    "width": 1280,
+                    "height": 1614,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2354:1875",
+                    "name": "Profile · 390 · Light · Locale JA · SignedIn · Owner · Basic",
+                    "section": "P6 · Profile 조립 / Profile · Locale JA · 1280 / 390 / 320 · Light + Dark",
+                    "width": 390,
+                    "height": 2661,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2354:2160",
+                    "name": "Profile · 390 · Dark · Locale JA · SignedIn · Owner · Basic",
+                    "section": "P6 · Profile 조립 / Profile · Locale JA · 1280 / 390 / 320 · Light + Dark",
+                    "width": 390,
+                    "height": 2661,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2354:2445",
+                    "name": "Profile · 320 · Light · Locale JA · SignedIn · Owner · Basic",
+                    "section": "P6 · Profile 조립 / Profile · Locale JA · 1280 / 390 / 320 · Light + Dark",
+                    "width": 320,
+                    "height": 2822,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2354:2731",
+                    "name": "Profile · 320 · Dark · Locale JA · SignedIn · Owner · Basic",
+                    "section": "P6 · Profile 조립 / Profile · Locale JA · 1280 / 390 / 320 · Light + Dark",
+                    "width": 320,
+                    "height": 2822,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2354:3798",
+                    "name": "Profile · 1280 · Light · Locale EN · SignedIn · Owner · Basic",
+                    "section": "P6 · Profile 조립 / Profile · Locale EN · 1280 / 390 / 320 · Light + Dark",
+                    "width": 1280,
+                    "height": 1642,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2354:4077",
+                    "name": "Profile · 1280 · Dark · Locale EN · SignedIn · Owner · Basic",
+                    "section": "P6 · Profile 조립 / Profile · Locale EN · 1280 / 390 / 320 · Light + Dark",
+                    "width": 1280,
+                    "height": 1642,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2354:4356",
+                    "name": "Profile · 390 · Light · Locale EN · SignedIn · Owner · Basic",
+                    "section": "P6 · Profile 조립 / Profile · Locale EN · 1280 / 390 / 320 · Light + Dark",
+                    "width": 390,
+                    "height": 2689,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2354:4641",
+                    "name": "Profile · 390 · Dark · Locale EN · SignedIn · Owner · Basic",
+                    "section": "P6 · Profile 조립 / Profile · Locale EN · 1280 / 390 / 320 · Light + Dark",
+                    "width": 390,
+                    "height": 2689,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2354:4926",
+                    "name": "Profile · 320 · Light · Locale EN · SignedIn · Owner · Basic",
+                    "section": "P6 · Profile 조립 / Profile · Locale EN · 1280 / 390 / 320 · Light + Dark",
+                    "width": 320,
+                    "height": 2878,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2354:5212",
+                    "name": "Profile · 320 · Dark · Locale EN · SignedIn · Owner · Basic",
+                    "section": "P6 · Profile 조립 / Profile · Locale EN · 1280 / 390 / 320 · Light + Dark",
+                    "width": 320,
+                    "height": 2878,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2407:4102",
+                    "name": "Profile · 390 · Dark · 초기 로딩 (목록 스켈레톤 · 지어낸 값 0)",
+                    "section": "P6 · Profile 조립 / Profile · 상태 · 390 · Dark",
+                    "width": 390,
+                    "height": 2673,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2407:4320",
+                    "name": "Profile · 390 · Dark · 초기 오류 (셸 유지 · 다시 시도)",
+                    "section": "P6 · Profile 조립 / Profile · 상태 · 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2407:4325",
+                    "name": "Profile · 390 · Dark · 기록 없음 (소유자 · 데이터 연동 안내)",
+                    "section": "P6 · Profile 조립 / Profile · 상태 · 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2407:4367",
+                    "name": "Profile · 390 · Dark · 없는 사용자 (not-found)",
+                    "section": "P6 · Profile 조립 / Profile · 상태 · 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2407:4373",
+                    "name": "Profile · 390 · Dark · 서명 안 됨 (소유자 액션·동기화 줄 없음)",
+                    "section": "P6 · Profile 조립 / Profile · 상태 · 390 · Dark",
+                    "width": 390,
+                    "height": 2621,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2407:4650",
+                    "name": "Profile · 390 · Dark · 플레이 활동 비공개 (마지막 플레이·최근 플레이·횟수 동시 제거)",
+                    "section": "P6 · Profile 조립 / Profile · 상태 · 390 · Dark",
+                    "width": 390,
+                    "height": 2085,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2407:4858",
+                    "name": "Profile · 390 · Dark · 동기화 · 동기화한 적 없음",
+                    "section": "P6 · Profile 조립 / Profile · 상태 · 390 · Dark",
+                    "width": 390,
+                    "height": 2621,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2407:5143",
+                    "name": "Profile · 390 · Dark · 동기화 · 동기화 중",
+                    "section": "P6 · Profile 조립 / Profile · 상태 · 390 · Dark",
+                    "width": 390,
+                    "height": 2621,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2407:5428",
+                    "name": "Profile · 390 · Dark · 동기화 · 일부만 (복구 액션 있음)",
+                    "section": "P6 · Profile 조립 / Profile · 상태 · 390 · Dark",
+                    "width": 390,
+                    "height": 2673,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2407:5715",
+                    "name": "Profile · 390 · Dark · 동기화 · 실패 (복구 액션 있음)",
+                    "section": "P6 · Profile 조립 / Profile · 상태 · 390 · Dark",
+                    "width": 390,
+                    "height": 2673,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2407:6002",
+                    "name": "Profile · 390 · Dark · 구역 오류 (마지막 커밋 유지 + 인라인 다시 시도)",
+                    "section": "P6 · Profile 조립 / Profile · 상태 · 390 · Dark",
+                    "width": 390,
+                    "height": 2705,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2407:6288",
+                    "name": "Profile · 390 · Dark · 구역 갱신 중 (content/pending · 보이는 문장 없음 · aria-busy)",
+                    "section": "P6 · Profile 조립 / Profile · 상태 · 390 · Dark",
+                    "width": 390,
+                    "height": 2621,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "3143:9103",
+                    "name": "Profile · 390 · Dark · 공유 다이얼로그 · 열림",
+                    "section": "P6 · Profile 조립 / Profile · 상태 · 390 · Dark",
+                    "width": 390,
+                    "height": 2621,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "3143:9406",
+                    "name": "Profile · 390 · Dark · 공유 다이얼로그 · 준비 중 (스켈레톤 · 버튼 비활성)",
+                    "section": "P6 · Profile 조립 / Profile · 상태 · 390 · Dark",
+                    "width": 390,
+                    "height": 2621,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "3143:9710",
+                    "name": "Profile · 390 · Dark · 공유 다이얼로그 · 클립보드 복사 완료",
+                    "section": "P6 · Profile 조립 / Profile · 상태 · 390 · Dark",
+                    "width": 390,
+                    "height": 2621,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "3143:10022",
+                    "name": "Profile · 390 · Dark · 공유 다이얼로그 · 이미지 처리 실패",
+                    "section": "P6 · Profile 조립 / Profile · 상태 · 390 · Dark",
+                    "width": 390,
+                    "height": 2621,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "3143:10335",
+                    "name": "Profile · 390 · Dark · 공유 다이얼로그 · 카드 생성 실패 (인라인 다시 시도)",
+                    "section": "P6 · Profile 조립 / Profile · 상태 · 390 · Dark",
+                    "width": 390,
+                    "height": 2621,
+                    "visualEvidence": "not mapped by this inventory"
+                }
+            ]
+        },
+        {
+            "id": "2583:7212",
+            "name": "P7 · System Recovery 조립",
+            "frames": [
+                {
+                    "id": "2585:81211",
+                    "name": "Recovery · 390 · Not found · Dark",
+                    "section": "P7 · System Recovery 조립 / Recovery · 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2585:81219",
+                    "name": "Recovery · 390 · 페이지 오류 · Dark",
+                    "section": "P7 · System Recovery 조립 / Recovery · 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2585:81228",
+                    "name": "Recovery · 390 · 페이지 오류 · 재시도 중 · Dark",
+                    "section": "P7 · System Recovery 조립 / Recovery · 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2585:81237",
+                    "name": "Recovery · 390 · 치명적 오류 · Dark",
+                    "section": "P7 · System Recovery 조립 / Recovery · 390 · Dark",
+                    "width": 390,
+                    "height": 352,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2585:81245",
+                    "name": "Recovery · 390 · 점검 · 종료 예정 있음 · Dark",
+                    "section": "P7 · System Recovery 조립 / Recovery · 390 · Dark",
+                    "width": 390,
+                    "height": 448,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2585:81255",
+                    "name": "Recovery · 390 · 점검 · 종료 예정 없음 · Dark",
+                    "section": "P7 · System Recovery 조립 / Recovery · 390 · Dark",
+                    "width": 390,
+                    "height": 376,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2588:2942",
+                    "name": "Recovery · 390 · Not found · Skip link 포커스 · Dark",
+                    "section": "P7 · System Recovery 조립 / Recovery · 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2585:81263",
+                    "name": "Recovery · 320 · Not found · Dark",
+                    "section": "P7 · System Recovery 조립 / Recovery · 320 · Dark",
+                    "width": 320,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2585:81271",
+                    "name": "Recovery · 320 · 페이지 오류 · Dark",
+                    "section": "P7 · System Recovery 조립 / Recovery · 320 · Dark",
+                    "width": 320,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2585:81280",
+                    "name": "Recovery · 320 · 페이지 오류 · 재시도 중 · Dark",
+                    "section": "P7 · System Recovery 조립 / Recovery · 320 · Dark",
+                    "width": 320,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2585:81289",
+                    "name": "Recovery · 320 · 치명적 오류 · Dark",
+                    "section": "P7 · System Recovery 조립 / Recovery · 320 · Dark",
+                    "width": 320,
+                    "height": 384,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2585:81297",
+                    "name": "Recovery · 320 · 점검 · 종료 예정 있음 · Dark",
+                    "section": "P7 · System Recovery 조립 / Recovery · 320 · Dark",
+                    "width": 320,
+                    "height": 448,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2585:81307",
+                    "name": "Recovery · 320 · 점검 · 종료 예정 없음 · Dark",
+                    "section": "P7 · System Recovery 조립 / Recovery · 320 · Dark",
+                    "width": 320,
+                    "height": 376,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2585:81315",
+                    "name": "Recovery · 768 · Not found · Dark",
+                    "section": "P7 · System Recovery 조립 / Recovery · 768 · Dark",
+                    "width": 768,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2585:81324",
+                    "name": "Recovery · 768 · 페이지 오류 · Dark",
+                    "section": "P7 · System Recovery 조립 / Recovery · 768 · Dark",
+                    "width": 768,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2585:81334",
+                    "name": "Recovery · 768 · 페이지 오류 · 재시도 중 · Dark",
+                    "section": "P7 · System Recovery 조립 / Recovery · 768 · Dark",
+                    "width": 768,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2585:81344",
+                    "name": "Recovery · 768 · 치명적 오류 · Dark",
+                    "section": "P7 · System Recovery 조립 / Recovery · 768 · Dark",
+                    "width": 768,
+                    "height": 352,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2585:81353",
+                    "name": "Recovery · 768 · 점검 · 종료 예정 있음 · Dark",
+                    "section": "P7 · System Recovery 조립 / Recovery · 768 · Dark",
+                    "width": 768,
+                    "height": 424,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2585:81364",
+                    "name": "Recovery · 768 · 점검 · 종료 예정 없음 · Dark",
+                    "section": "P7 · System Recovery 조립 / Recovery · 768 · Dark",
+                    "width": 768,
+                    "height": 352,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2585:81373",
+                    "name": "Recovery · 1280 · Not found · Dark",
+                    "section": "P7 · System Recovery 조립 / Recovery · 1280 · Dark",
+                    "width": 1280,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2585:81382",
+                    "name": "Recovery · 1280 · 페이지 오류 · Dark",
+                    "section": "P7 · System Recovery 조립 / Recovery · 1280 · Dark",
+                    "width": 1280,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2585:81392",
+                    "name": "Recovery · 1280 · 페이지 오류 · 재시도 중 · Dark",
+                    "section": "P7 · System Recovery 조립 / Recovery · 1280 · Dark",
+                    "width": 1280,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2585:81402",
+                    "name": "Recovery · 1280 · 치명적 오류 · Dark",
+                    "section": "P7 · System Recovery 조립 / Recovery · 1280 · Dark",
+                    "width": 1280,
+                    "height": 352,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2585:81411",
+                    "name": "Recovery · 1280 · 점검 · 종료 예정 있음 · Dark",
+                    "section": "P7 · System Recovery 조립 / Recovery · 1280 · Dark",
+                    "width": 1280,
+                    "height": 424,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2585:81422",
+                    "name": "Recovery · 1280 · 점검 · 종료 예정 없음 · Dark",
+                    "section": "P7 · System Recovery 조립 / Recovery · 1280 · Dark",
+                    "width": 1280,
+                    "height": 352,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2590:763",
+                    "name": "Recovery · 390 · JA · Not found · Dark",
+                    "section": "P7 · System Recovery 조립 / Recovery · 390 · JA · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2590:792",
+                    "name": "Recovery · 390 · JA · Not found · Skip link 포커스 · Dark",
+                    "section": "P7 · System Recovery 조립 / Recovery · 390 · JA · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2590:823",
+                    "name": "Recovery · 390 · JA · 페이지 오류 · Dark",
+                    "section": "P7 · System Recovery 조립 / Recovery · 390 · JA · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2590:854",
+                    "name": "Recovery · 390 · JA · 페이지 오류 · 재시도 중 · Dark",
+                    "section": "P7 · System Recovery 조립 / Recovery · 390 · JA · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2590:885",
+                    "name": "Recovery · 390 · JA · 치명적 오류 · Dark",
+                    "section": "P7 · System Recovery 조립 / Recovery · 390 · JA · Dark",
+                    "width": 390,
+                    "height": 384,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2590:895",
+                    "name": "Recovery · 390 · JA · 점검 · 종료 예정 있음 · Dark",
+                    "section": "P7 · System Recovery 조립 / Recovery · 390 · JA · Dark",
+                    "width": 390,
+                    "height": 472,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2590:906",
+                    "name": "Recovery · 390 · JA · 점검 · 종료 예정 없음 · Dark",
+                    "section": "P7 · System Recovery 조립 / Recovery · 390 · JA · Dark",
+                    "width": 390,
+                    "height": 400,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2590:1067",
+                    "name": "Recovery · 390 · EN · Not found · Dark",
+                    "section": "P7 · System Recovery 조립 / Recovery · 390 · EN · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2590:1096",
+                    "name": "Recovery · 390 · EN · Not found · Skip link 포커스 · Dark",
+                    "section": "P7 · System Recovery 조립 / Recovery · 390 · EN · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2590:1127",
+                    "name": "Recovery · 390 · EN · 페이지 오류 · Dark",
+                    "section": "P7 · System Recovery 조립 / Recovery · 390 · EN · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2590:1158",
+                    "name": "Recovery · 390 · EN · 페이지 오류 · 재시도 중 · Dark",
+                    "section": "P7 · System Recovery 조립 / Recovery · 390 · EN · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2590:1189",
+                    "name": "Recovery · 390 · EN · 치명적 오류 · Dark",
+                    "section": "P7 · System Recovery 조립 / Recovery · 390 · EN · Dark",
+                    "width": 390,
+                    "height": 352,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2590:1199",
+                    "name": "Recovery · 390 · EN · 점검 · 종료 예정 있음 · Dark",
+                    "section": "P7 · System Recovery 조립 / Recovery · 390 · EN · Dark",
+                    "width": 390,
+                    "height": 448,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2590:1210",
+                    "name": "Recovery · 390 · EN · 점검 · 종료 예정 없음 · Dark",
+                    "section": "P7 · System Recovery 조립 / Recovery · 390 · EN · Dark",
+                    "width": 390,
+                    "height": 376,
+                    "visualEvidence": "not mapped by this inventory"
+                }
+            ]
+        },
+        {
+            "id": "2591:2",
+            "name": "P8 · Data Sync 조립",
+            "frames": [
+                {
+                    "id": "2601:82627",
+                    "name": "Data Sync · 390 · 완료 · 전체 기록 · Dark",
+                    "section": "P8 · Data Sync 조립 / Data Sync · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 1055,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2601:82691",
+                    "name": "Data Sync · 390 · 첫 사용 · 설치 펼침 · Dark",
+                    "section": "P8 · Data Sync 조립 / Data Sync · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 1607,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2601:82732",
+                    "name": "Data Sync · 390 · 무효화 확인 모달 · Dark",
+                    "section": "P8 · Data Sync 조립 / Data Sync · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 1492,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2601:82780",
+                    "name": "Data Sync · 390 · 미로그인 · Dark",
+                    "section": "P8 · Data Sync 조립 / Data Sync · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2601:82802",
+                    "name": "Data Sync · 390 · 동기화 이력 펼침 · Dark",
+                    "section": "P8 · Data Sync 조립 / Data Sync · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 1010,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2601:82877",
+                    "name": "Data Sync · 390 · 처리 중 · Dark",
+                    "section": "P8 · Data Sync 조립 / Data Sync · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2601:82905",
+                    "name": "Data Sync · 390 · 지연 · Dark",
+                    "section": "P8 · Data Sync 조립 / Data Sync · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2601:82933",
+                    "name": "Data Sync · 390 · 시간 초과 · Dark",
+                    "section": "P8 · Data Sync 조립 / Data Sync · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2601:82961",
+                    "name": "Data Sync · 390 · 완료 · 최근 30플레이 · Dark",
+                    "section": "P8 · Data Sync 조립 / Data Sync · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 1289,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2601:83038",
+                    "name": "Data Sync · 390 · 완료 · 일부 제외 · Dark",
+                    "section": "P8 · Data Sync 조립 / Data Sync · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 1163,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2601:83103",
+                    "name": "Data Sync · 390 · 실패 · NOSTALGIA 로그아웃 · Dark",
+                    "section": "P8 · Data Sync 조립 / Data Sync · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2601:83132",
+                    "name": "Data Sync · 390 · 실패 · 토큰 만료 · Dark",
+                    "section": "P8 · Data Sync 조립 / Data Sync · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2601:83161",
+                    "name": "Data Sync · 390 · 실패 · 서버 · Dark",
+                    "section": "P8 · Data Sync 조립 / Data Sync · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2601:83189",
+                    "name": "Data Sync · 390 · 대기 중 · Dark",
+                    "section": "P8 · Data Sync 조립 / Data Sync · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 642,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2601:83234",
+                    "name": "Data Sync · 320 · 완료 · 전체 기록 · Dark",
+                    "section": "P8 · Data Sync 조립 / Data Sync · 320 · Dark",
+                    "width": 320,
+                    "height": 1075,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2601:83298",
+                    "name": "Data Sync · 320 · 첫 사용 · 설치 펼침 · Dark",
+                    "section": "P8 · Data Sync 조립 / Data Sync · 320 · Dark",
+                    "width": 320,
+                    "height": 1538,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2601:83339",
+                    "name": "Data Sync · 320 · 미로그인 · Dark",
+                    "section": "P8 · Data Sync 조립 / Data Sync · 320 · Dark",
+                    "width": 320,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2601:83362",
+                    "name": "Data Sync · 768 · 완료 · 전체 기록 · Dark",
+                    "section": "P8 · Data Sync 조립 / Data Sync · 768 · Dark",
+                    "width": 768,
+                    "height": 1015,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2601:83426",
+                    "name": "Data Sync · 768 · 첫 사용 · 설치 펼침 · Dark",
+                    "section": "P8 · Data Sync 조립 / Data Sync · 768 · Dark",
+                    "width": 768,
+                    "height": 1654,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2601:83467",
+                    "name": "Data Sync · 768 · 미로그인 · Dark",
+                    "section": "P8 · Data Sync 조립 / Data Sync · 768 · Dark",
+                    "width": 768,
+                    "height": 1024,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2601:83490",
+                    "name": "Data Sync · 1280 · 완료 · 전체 기록 · Dark",
+                    "section": "P8 · Data Sync 조립 / Data Sync · 1280 · Dark",
+                    "width": 1280,
+                    "height": 698,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2601:83557",
+                    "name": "Data Sync · 1280 · 첫 사용 · 설치 펼침 · Dark",
+                    "section": "P8 · Data Sync 조립 / Data Sync · 1280 · Dark",
+                    "width": 1280,
+                    "height": 1368,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2601:83601",
+                    "name": "Data Sync · 1280 · 미로그인 · Dark",
+                    "section": "P8 · Data Sync 조립 / Data Sync · 1280 · Dark",
+                    "width": 1280,
+                    "height": 900,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2602:1323",
+                    "name": "Data Sync · 390 · JA · 완료 · 전체 기록 · Dark",
+                    "section": "P8 · Data Sync 조립 / Data Sync · 390 · JA · Dark",
+                    "width": 390,
+                    "height": 1075,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2602:1412",
+                    "name": "Data Sync · 390 · JA · 첫 사용 · 설치 펼침 · Dark",
+                    "section": "P8 · Data Sync 조립 / Data Sync · 390 · JA · Dark",
+                    "width": 390,
+                    "height": 1651,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2602:1475",
+                    "name": "Data Sync · 390 · JA · 미로그인 · Dark",
+                    "section": "P8 · Data Sync 조립 / Data Sync · 390 · JA · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2602:1518",
+                    "name": "Data Sync · 390 · JA · 완료 · 최근 30플레이 · Dark",
+                    "section": "P8 · Data Sync 조립 / Data Sync · 390 · JA · Dark",
+                    "width": 390,
+                    "height": 1329,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2602:1919",
+                    "name": "Data Sync · 390 · EN · 완료 · 전체 기록 · Dark",
+                    "section": "P8 · Data Sync 조립 / Data Sync · 390 · EN · Dark",
+                    "width": 390,
+                    "height": 1075,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2602:2008",
+                    "name": "Data Sync · 390 · EN · 첫 사용 · 설치 펼침 · Dark",
+                    "section": "P8 · Data Sync 조립 / Data Sync · 390 · EN · Dark",
+                    "width": 390,
+                    "height": 1631,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2602:2071",
+                    "name": "Data Sync · 390 · EN · 미로그인 · Dark",
+                    "section": "P8 · Data Sync 조립 / Data Sync · 390 · EN · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2602:2114",
+                    "name": "Data Sync · 390 · EN · 완료 · 최근 30플레이 · Dark",
+                    "section": "P8 · Data Sync 조립 / Data Sync · 390 · EN · Dark",
+                    "width": 390,
+                    "height": 1329,
+                    "visualEvidence": "not mapped by this inventory"
+                }
+            ]
+        },
+        {
+            "id": "2654:2",
+            "name": "P9 · Auth & Onboarding 조립",
+            "frames": [
+                {
+                    "id": "2689:746",
+                    "name": "Login · 390 · 기본 · Dark",
+                    "section": "P9 · Auth & Onboarding 조립 / Auth · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2689:764",
+                    "name": "Login · 390 · 목적지 있음 · Dark",
+                    "section": "P9 · Auth & Onboarding 조립 / Auth · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2689:784",
+                    "name": "Login · 390 · Discord 진행 중 · Dark",
+                    "section": "P9 · Auth & Onboarding 조립 / Auth · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2689:802",
+                    "name": "Login · 390 · 오류 · 사용자 취소 · Dark",
+                    "section": "P9 · Auth & Onboarding 조립 / Auth · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2689:822",
+                    "name": "Login · 390 · 오류 · 요청 만료 · Dark",
+                    "section": "P9 · Auth & Onboarding 조립 / Auth · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2689:842",
+                    "name": "Login · 390 · 오류 · Discord 응답 실패 · Dark",
+                    "section": "P9 · Auth & Onboarding 조립 / Auth · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2689:862",
+                    "name": "Login · 390 · 오류 · 서비스 실패 · Dark",
+                    "section": "P9 · Auth & Onboarding 조립 / Auth · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2689:882",
+                    "name": "Login · 390 · 오류 · 세션 만료 · Dark",
+                    "section": "P9 · Auth & Onboarding 조립 / Auth · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2689:902",
+                    "name": "Login · 390 · 오류 · 목적지 거부 · Dark",
+                    "section": "P9 · Auth & Onboarding 조립 / Auth · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2689:922",
+                    "name": "Onboarding · 390 · 기본 · Dark",
+                    "section": "P9 · Auth & Onboarding 조립 / Auth · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2689:956",
+                    "name": "Onboarding · 390 · 목적지 사유 · Dark",
+                    "section": "P9 · Auth & Onboarding 조립 / Auth · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2689:991",
+                    "name": "Onboarding · 390 · 입력됨 · Dark",
+                    "section": "P9 · Auth & Onboarding 조립 / Auth · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2689:1025",
+                    "name": "Onboarding · 390 · 닉네임 중복 · Dark",
+                    "section": "P9 · Auth & Onboarding 조립 / Auth · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2689:1059",
+                    "name": "Onboarding · 390 · 지역 미선택 오류 · Dark",
+                    "section": "P9 · Auth & Onboarding 조립 / Auth · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2689:1094",
+                    "name": "Onboarding · 390 · 저장 실패 · Dark",
+                    "section": "P9 · Auth & Onboarding 조립 / Auth · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2689:1130",
+                    "name": "Onboarding · 390 · 제출 중 · Dark",
+                    "section": "P9 · Auth & Onboarding 조립 / Auth · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2689:1164",
+                    "name": "Onboarding · 390 · 긴 이름 · 아바타 없음 · Dark",
+                    "section": "P9 · Auth & Onboarding 조립 / Auth · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2739:1116",
+                    "name": "Login · 390 · 언어 메뉴 열림 · Dark",
+                    "section": "P9 · Auth & Onboarding 조립 / Auth · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2689:1199",
+                    "name": "Login · 320 · 기본 · Dark",
+                    "section": "P9 · Auth & Onboarding 조립 / Auth · 320 · Dark",
+                    "width": 320,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2689:1217",
+                    "name": "Login · 320 · 오류 · 요청 만료 · Dark",
+                    "section": "P9 · Auth & Onboarding 조립 / Auth · 320 · Dark",
+                    "width": 320,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2689:1237",
+                    "name": "Onboarding · 320 · 기본 · Dark",
+                    "section": "P9 · Auth & Onboarding 조립 / Auth · 320 · Dark",
+                    "width": 320,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2689:1271",
+                    "name": "Onboarding · 320 · 닉네임 중복 · Dark",
+                    "section": "P9 · Auth & Onboarding 조립 / Auth · 320 · Dark",
+                    "width": 320,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2689:1306",
+                    "name": "Login · 768 · 기본 · Dark",
+                    "section": "P9 · Auth & Onboarding 조립 / Auth · 768 · Dark",
+                    "width": 768,
+                    "height": 1024,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2689:1324",
+                    "name": "Login · 768 · 오류 · 요청 만료 · Dark",
+                    "section": "P9 · Auth & Onboarding 조립 / Auth · 768 · Dark",
+                    "width": 768,
+                    "height": 1024,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2689:1344",
+                    "name": "Onboarding · 768 · 기본 · Dark",
+                    "section": "P9 · Auth & Onboarding 조립 / Auth · 768 · Dark",
+                    "width": 768,
+                    "height": 1024,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2689:1378",
+                    "name": "Onboarding · 768 · 닉네임 중복 · Dark",
+                    "section": "P9 · Auth & Onboarding 조립 / Auth · 768 · Dark",
+                    "width": 768,
+                    "height": 1024,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2689:1413",
+                    "name": "Login · 1280 · 기본 · Dark",
+                    "section": "P9 · Auth & Onboarding 조립 / Auth · 1280 · Dark",
+                    "width": 1280,
+                    "height": 900,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2689:1431",
+                    "name": "Login · 1280 · 오류 · 요청 만료 · Dark",
+                    "section": "P9 · Auth & Onboarding 조립 / Auth · 1280 · Dark",
+                    "width": 1280,
+                    "height": 900,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2689:1451",
+                    "name": "Onboarding · 1280 · 기본 · Dark",
+                    "section": "P9 · Auth & Onboarding 조립 / Auth · 1280 · Dark",
+                    "width": 1280,
+                    "height": 900,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2689:1485",
+                    "name": "Onboarding · 1280 · 닉네임 중복 · Dark",
+                    "section": "P9 · Auth & Onboarding 조립 / Auth · 1280 · Dark",
+                    "width": 1280,
+                    "height": 900,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2690:954",
+                    "name": "Login · 390 · JA · 기본 · Dark",
+                    "section": "P9 · Auth & Onboarding 조립 / Auth · 390 · JA · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2690:972",
+                    "name": "Login · 390 · JA · 오류 · 요청 만료 · Dark",
+                    "section": "P9 · Auth & Onboarding 조립 / Auth · 390 · JA · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2690:992",
+                    "name": "Onboarding · 390 · JA · 기본 · Dark",
+                    "section": "P9 · Auth & Onboarding 조립 / Auth · 390 · JA · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2690:1026",
+                    "name": "Onboarding · 390 · JA · 닉네임 중복 · Dark",
+                    "section": "P9 · Auth & Onboarding 조립 / Auth · 390 · JA · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2690:1168",
+                    "name": "Login · 390 · EN · 기본 · Dark",
+                    "section": "P9 · Auth & Onboarding 조립 / Auth · 390 · EN · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2690:1186",
+                    "name": "Login · 390 · EN · 오류 · 요청 만료 · Dark",
+                    "section": "P9 · Auth & Onboarding 조립 / Auth · 390 · EN · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2690:1206",
+                    "name": "Onboarding · 390 · EN · 기본 · Dark",
+                    "section": "P9 · Auth & Onboarding 조립 / Auth · 390 · EN · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2690:1240",
+                    "name": "Onboarding · 390 · EN · 닉네임 중복 · Dark",
+                    "section": "P9 · Auth & Onboarding 조립 / Auth · 390 · EN · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                }
+            ]
+        },
+        {
+            "id": "2697:2",
+            "name": "P10 · Settings 조립",
+            "frames": [
+                {
+                    "id": "2734:1405",
+                    "name": "Settings · 390 · 개요 · 로그인",
+                    "section": "P10 · Settings 조립 / Settings · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2734:1436",
+                    "name": "Settings · 390 · 개요 · 게스트",
+                    "section": "P10 · Settings 조립 / Settings · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2734:1448",
+                    "name": "Settings · 390 · 화면 설정",
+                    "section": "P10 · Settings 조립 / Settings · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2734:1469",
+                    "name": "Settings · 390 · 프로필 · 변경 없음",
+                    "section": "P10 · Settings 조립 / Settings · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 1060,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2734:1507",
+                    "name": "Settings · 390 · 프로필 · 변경 있음",
+                    "section": "P10 · Settings 조립 / Settings · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 1092,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2734:1546",
+                    "name": "Settings · 390 · 공개 설정",
+                    "section": "P10 · Settings 조립 / Settings · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2734:1565",
+                    "name": "Settings · 390 · 연결",
+                    "section": "P10 · Settings 조립 / Settings · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2734:1584",
+                    "name": "Settings · 390 · 계정",
+                    "section": "P10 · Settings 조립 / Settings · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2734:86602",
+                    "name": "Settings · 390 · 상태 · 프로필 · 저장 중",
+                    "section": "P10 · Settings 조립 / Settings · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 1092,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2734:86641",
+                    "name": "Settings · 390 · 상태 · 프로필 · 저장 성공",
+                    "section": "P10 · Settings 조립 / Settings · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 1124,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2734:86680",
+                    "name": "Settings · 390 · 상태 · 프로필 · 닉네임 충돌",
+                    "section": "P10 · Settings 조립 / Settings · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 1092,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2734:86719",
+                    "name": "Settings · 390 · 상태 · 공개 설정 · 변경 있음",
+                    "section": "P10 · Settings 조립 / Settings · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2734:86739",
+                    "name": "Settings · 390 · 상태 · 프로필 · 오락실 없음",
+                    "section": "P10 · Settings 조립 / Settings · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 1060,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2734:86776",
+                    "name": "Settings · 390 · 상태 · 프로필 · 오락실 이용 불가",
+                    "section": "P10 · Settings 조립 / Settings · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 1064,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2734:86815",
+                    "name": "Settings · 390 · 상태 · 프로필 · 이탈 경고",
+                    "section": "P10 · Settings 조립 / Settings · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 1092,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2734:86861",
+                    "name": "Settings · 390 · 상태 · 프로필 · 국가 변경 확인",
+                    "section": "P10 · Settings 조립 / Settings · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 1060,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2734:86906",
+                    "name": "Settings · 390 · 상태 · 연결 · 로그인 계정 변경 확인",
+                    "section": "P10 · Settings 조립 / Settings · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2734:86932",
+                    "name": "Settings · 390 · 상태 · 탈퇴 확인 · 초기",
+                    "section": "P10 · Settings 조립 / Settings · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2734:86974",
+                    "name": "Settings · 390 · 상태 · 탈퇴 확인 · 준비 완료",
+                    "section": "P10 · Settings 조립 / Settings · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2734:87015",
+                    "name": "Settings · 390 · 상태 · 탈퇴 처리 중",
+                    "section": "P10 · Settings 조립 / Settings · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2734:87056",
+                    "name": "Settings · 390 · 상태 · 탈퇴 실패",
+                    "section": "P10 · Settings 조립 / Settings · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2734:87098",
+                    "name": "Settings · 390 · 상태 · 연결 · 새로고침 중",
+                    "section": "P10 · Settings 조립 / Settings · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2734:87117",
+                    "name": "Settings · 390 · 상태 · 프로필 · 세션 만료",
+                    "section": "P10 · Settings 조립 / Settings · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 1208,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2734:87158",
+                    "name": "Settings · 390 · 상태 · 프로필 · 저장 실패",
+                    "section": "P10 · Settings 조립 / Settings · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 1180,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2734:87198",
+                    "name": "Settings · 390 · 상태 · 프로필 · 오프라인",
+                    "section": "P10 · Settings 조립 / Settings · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 1180,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2734:87238",
+                    "name": "Settings · 390 · 상태 · 프로필 · 로딩",
+                    "section": "P10 · Settings 조립 / Settings · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2734:87271",
+                    "name": "Settings · 390 · 상태 · 선호 오락실 선택 레이어",
+                    "section": "P10 · Settings 조립 / Settings · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2734:87288",
+                    "name": "Settings · 390 · 상태 · 아바타 크롭",
+                    "section": "P10 · Settings 조립 / Settings · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 1060,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2734:88069",
+                    "name": "Settings · 320 · 개요 · 로그인",
+                    "section": "P10 · Settings 조립 / Settings · 검증 320 · Dark",
+                    "width": 320,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2734:88100",
+                    "name": "Settings · 320 · 화면 설정",
+                    "section": "P10 · Settings 조립 / Settings · 검증 320 · Dark",
+                    "width": 320,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2734:88121",
+                    "name": "Settings · 320 · 프로필 · 변경 없음",
+                    "section": "P10 · Settings 조립 / Settings · 검증 320 · Dark",
+                    "width": 320,
+                    "height": 1060,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2734:88159",
+                    "name": "Settings · 320 · 공개 설정",
+                    "section": "P10 · Settings 조립 / Settings · 검증 320 · Dark",
+                    "width": 320,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2734:88178",
+                    "name": "Settings · 320 · 연결",
+                    "section": "P10 · Settings 조립 / Settings · 검증 320 · Dark",
+                    "width": 320,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2734:88197",
+                    "name": "Settings · 320 · 계정",
+                    "section": "P10 · Settings 조립 / Settings · 검증 320 · Dark",
+                    "width": 320,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2734:88214",
+                    "name": "Settings · 768 · 개요 · 로그인",
+                    "section": "P10 · Settings 조립 / Settings · Intermediate 768 · Dark",
+                    "width": 768,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2734:88245",
+                    "name": "Settings · 768 · 프로필 · 변경 없음",
+                    "section": "P10 · Settings 조립 / Settings · Intermediate 768 · Dark",
+                    "width": 768,
+                    "height": 1040,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2734:88284",
+                    "name": "Settings · 1280 · 화면 설정",
+                    "section": "P10 · Settings 조립 / Settings · Wide 1280 · Dark",
+                    "width": 1280,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2734:88314",
+                    "name": "Settings · 1280 · 프로필 · 변경 없음",
+                    "section": "P10 · Settings 조립 / Settings · Wide 1280 · Dark",
+                    "width": 1280,
+                    "height": 936,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2734:88361",
+                    "name": "Settings · 1280 · 계정",
+                    "section": "P10 · Settings 조립 / Settings · Wide 1280 · Dark",
+                    "width": 1280,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2734:88386",
+                    "name": "Settings · 1280 · 게스트",
+                    "section": "P10 · Settings 조립 / Settings · Wide 1280 · Dark",
+                    "width": 1280,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                }
+            ]
+        },
+        {
+            "id": "2753:2",
+            "name": "P11 · Announcements 조립",
+            "frames": [
+                {
+                    "id": "2756:707",
+                    "name": "Announcements · 390 · Archive · 1페이지 (다수 레코드 · 대표)",
+                    "section": "P11 · Announcements 조립 / Announcements · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 2108,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2756:774",
+                    "name": "Announcements · 390 · Archive · 마지막 페이지",
+                    "section": "P11 · Announcements 조립 / Announcements · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2756:784",
+                    "name": "Announcements · 390 · Archive · 3건 (페이지네이션 없음)",
+                    "section": "P11 · Announcements 조립 / Announcements · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2756:799",
+                    "name": "Announcements · 390 · Archive · 빈 상태",
+                    "section": "P11 · Announcements 조립 / Announcements · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2756:805",
+                    "name": "Announcements · 390 · Detail · 기본",
+                    "section": "P11 · Announcements 조립 / Announcements · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 888,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2756:826",
+                    "name": "Announcements · 390 · Detail · 수정됨",
+                    "section": "P11 · Announcements 조립 / Announcements · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 908,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2756:848",
+                    "name": "Announcements · 390 · Detail · 80자 제목 (정확 80자)",
+                    "section": "P11 · Announcements 조립 / Announcements · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 952,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2756:870",
+                    "name": "Announcements · 320 · Archive · 1페이지",
+                    "section": "P11 · Announcements 조립 / Announcements · 검증 320 · Dark",
+                    "width": 320,
+                    "height": 2156,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2756:937",
+                    "name": "Announcements · 320 · Detail · 기본",
+                    "section": "P11 · Announcements 조립 / Announcements · 검증 320 · Dark",
+                    "width": 320,
+                    "height": 912,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2756:959",
+                    "name": "Announcements · 768 · Archive · 1페이지",
+                    "section": "P11 · Announcements 조립 / Announcements · Intermediate 768 · Dark",
+                    "width": 768,
+                    "height": 2064,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2756:1026",
+                    "name": "Announcements · 768 · Detail · 기본",
+                    "section": "P11 · Announcements 조립 / Announcements · Intermediate 768 · Dark",
+                    "width": 768,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2756:1048",
+                    "name": "Announcements · 1280 · Archive · 1페이지",
+                    "section": "P11 · Announcements 조립 / Announcements · Wide 1280 · Dark",
+                    "width": 1280,
+                    "height": 2028,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2756:1115",
+                    "name": "Announcements · 1280 · Detail · 기본",
+                    "section": "P11 · Announcements 조립 / Announcements · Wide 1280 · Dark",
+                    "width": 1280,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                }
+            ]
+        },
+        {
+            "id": "2767:18938",
+            "name": "P12 · Arcades 조립",
+            "frames": [
+                {
+                    "id": "2804:830",
+                    "name": "Arcades · 390 · Discovery · 기본",
+                    "section": "P12 · Arcades 조립 / Arcades · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 1236,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2804:888",
+                    "name": "Arcades · 390 · Discovery · 지도 뷰",
+                    "section": "P12 · Arcades 조립 / Arcades · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2804:941",
+                    "name": "Arcades · 390 · Discovery · 마커 선택 (프리뷰 시트)",
+                    "section": "P12 · Arcades 조립 / Arcades · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2804:1002",
+                    "name": "Arcades · 390 · Discovery · 결과 없음",
+                    "section": "P12 · Arcades 조립 / Arcades · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2804:1019",
+                    "name": "Arcades · 390 · 필터·정렬 레이어",
+                    "section": "P12 · Arcades 조립 / Arcades · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2804:1036",
+                    "name": "Arcades · 390 · Detail · 기본",
+                    "section": "P12 · Arcades 조립 / Arcades · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 1932,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2804:1118",
+                    "name": "Arcades · 390 · 상태 · 초기 로딩",
+                    "section": "P12 · Arcades 조립 / Arcades · Compact 390 · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 964,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2804:1161",
+                    "name": "Arcades · 390 · 상태 · 지도 로드 실패",
+                    "section": "P12 · Arcades 조립 / Arcades · Compact 390 · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 1108,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2804:1208",
+                    "name": "Arcades · 390 · 상태 · 위치 권한 거부",
+                    "section": "P12 · Arcades 조립 / Arcades · Compact 390 · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 1336,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2804:1267",
+                    "name": "Arcades · 390 · 상태 · 위치 확인 실패",
+                    "section": "P12 · Arcades 조립 / Arcades · Compact 390 · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 1336,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2804:1326",
+                    "name": "Arcades · 390 · 상태 · 지역 내 오락실 없음",
+                    "section": "P12 · Arcades 조립 / Arcades · Compact 390 · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2804:1369",
+                    "name": "Arcades · 390 · 정보 제보 레이어",
+                    "section": "P12 · Arcades 조립 / Arcades · Compact 390 · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 1180,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2804:1398",
+                    "name": "Arcades · 390 · 상태 · Detail · 가동 전부 미확인",
+                    "section": "P12 · Arcades 조립 / Arcades · Compact 390 · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 1912,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2804:1478",
+                    "name": "Arcades · 390 · 상태 · Detail · 영업시간 미확인",
+                    "section": "P12 · Arcades 조립 / Arcades · Compact 390 · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 1964,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2804:1560",
+                    "name": "Arcades · 390 · 상태 · Detail · 사진 없음 (히어로 생략)",
+                    "section": "P12 · Arcades 조립 / Arcades · Compact 390 · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 1688,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2804:1638",
+                    "name": "Arcades · 390 · 상태 · 선호 지정 중",
+                    "section": "P12 · Arcades 조립 / Arcades · Compact 390 · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 1932,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2804:1719",
+                    "name": "Arcades · 390 · 상태 · 선호 지정 완료",
+                    "section": "P12 · Arcades 조립 / Arcades · Compact 390 · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 1992,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2804:1801",
+                    "name": "Arcades · 390 · 상태 · 선호 지정 실패",
+                    "section": "P12 · Arcades 조립 / Arcades · Compact 390 · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 1992,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2804:1883",
+                    "name": "Arcades · 390 · 상태 · 미로그인",
+                    "section": "P12 · Arcades 조립 / Arcades · Compact 390 · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 1932,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2804:1965",
+                    "name": "Arcades · 320 · Discovery · 기본",
+                    "section": "P12 · Arcades 조립 / Arcades · 검증 320 · Dark",
+                    "width": 320,
+                    "height": 1236,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2804:2023",
+                    "name": "Arcades · 320 · Detail · 기본",
+                    "section": "P12 · Arcades 조립 / Arcades · 검증 320 · Dark",
+                    "width": 320,
+                    "height": 1932,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2804:2105",
+                    "name": "Arcades · 768 · Discovery · 기본",
+                    "section": "P12 · Arcades 조립 / Arcades · Intermediate 768 · Dark",
+                    "width": 768,
+                    "height": 1216,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2804:2163",
+                    "name": "Arcades · 768 · Detail · 기본 (1B 1열판)",
+                    "section": "P12 · Arcades 조립 / Arcades · Intermediate 768 · Dark",
+                    "width": 768,
+                    "height": 1892,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2804:2245",
+                    "name": "Arcades · 1280 · Discovery (목록/지도 분할)",
+                    "section": "P12 · Arcades 조립 / Arcades · Wide 1280 · Dark",
+                    "width": 1280,
+                    "height": 1020,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2804:2339",
+                    "name": "Arcades · 1280 · Detail (2A · 사진 그리드 + 액션 레일)",
+                    "section": "P12 · Arcades 조립 / Arcades · Wide 1280 · Dark",
+                    "width": 1280,
+                    "height": 1516,
+                    "visualEvidence": "not mapped by this inventory"
+                }
+            ]
+        },
+        {
+            "id": "2824:2",
+            "name": "P13 · Exams 조립",
+            "frames": [
+                {
+                    "id": "2862:960",
+                    "name": "Exams · 390 · Basic 8급 · 로그인 · 기본",
+                    "section": "P13 · Exams 조립 / Exams · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 1188,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2862:1036",
+                    "name": "Exams · 390 · Basic 8급 · 연습 분석 펼침",
+                    "section": "P13 · Exams 조립 / Exams · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 1421,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2862:1132",
+                    "name": "Exams · 390 · 검정 선택기 열림 (1B 팝오버)",
+                    "section": "P13 · Exams 조립 / Exams · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 1188,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2862:1239",
+                    "name": "Exams · 390 · Recital 10급 · 로그인 (분석 없음)",
+                    "section": "P13 · Exams 조립 / Exams · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 1176,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2862:1313",
+                    "name": "Exams · 390 · Event 7th KAC (score형 · 다중 채보)",
+                    "section": "P13 · Exams 조립 / Exams · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 1120,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2862:1388",
+                    "name": "Exams · 390 · Basic 8급 · 로그아웃",
+                    "section": "P13 · Exams 조립 / Exams · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 1132,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2862:1458",
+                    "name": "Exams · 390 · 상태 · 증빙 파일 선택 (준비)",
+                    "section": "P13 · Exams 조립 / Exams · Compact 390 · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 1719,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2862:1548",
+                    "name": "Exams · 390 · 상태 · 증빙 업로드 중",
+                    "section": "P13 · Exams 조립 / Exams · Compact 390 · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 1411,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2862:1626",
+                    "name": "Exams · 390 · 상태 · 증빙 심사 중",
+                    "section": "P13 · Exams 조립 / Exams · Compact 390 · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 1200,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2862:1703",
+                    "name": "Exams · 390 · 상태 · 인증 완료",
+                    "section": "P13 · Exams 조립 / Exams · Compact 390 · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 1172,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2862:1779",
+                    "name": "Exams · 390 · 상태 · 증빙 반려",
+                    "section": "P13 · Exams 조립 / Exams · Compact 390 · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 1296,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2862:1856",
+                    "name": "Exams · 390 · 상태 · 증빙 업로드 오류",
+                    "section": "P13 · Exams 조립 / Exams · Compact 390 · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 1475,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2862:1935",
+                    "name": "Exams · 390 · 상태 · 증빙 형식 오류",
+                    "section": "P13 · Exams 조립 / Exams · Compact 390 · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 1220,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2862:2012",
+                    "name": "Exams · 390 · 상태 · Grd. 부족 (Basic 7급)",
+                    "section": "P13 · Exams 조립 / Exams · Compact 390 · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 1200,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2862:2089",
+                    "name": "Exams · 390 · 상태 · 동기화 데이터 없음",
+                    "section": "P13 · Exams 조립 / Exams · Compact 390 · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 1156,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2862:2161",
+                    "name": "Exams · 390 · 상태 · 초기 로딩 (스켈레톤)",
+                    "section": "P13 · Exams 조립 / Exams · Compact 390 · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 980,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2862:2204",
+                    "name": "Exams · 390 · 상태 · 모드 빈 상태 (대표 데이터 상태)",
+                    "section": "P13 · Exams 조립 / Exams · Compact 390 · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2862:2213",
+                    "name": "Exams · 390 · 상태 · 연습 분석 갱신 중 (content/pending · aria-busy)",
+                    "section": "P13 · Exams 조립 / Exams · Compact 390 · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 1421,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2862:2309",
+                    "name": "Exams · 390 · 상태 · Event recital_point형 (분석 생략 · EXAM-10)",
+                    "section": "P13 · Exams 조립 / Exams · Compact 390 · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 1160,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2862:2385",
+                    "name": "Exams · 320 · 기본 (Basic 8급 로그인)",
+                    "section": "P13 · Exams 조립 / Exams · 검증 320 (KO) · Dark",
+                    "width": 320,
+                    "height": 1256,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2862:2461",
+                    "name": "Exams · 320 · 증빙 파일 선택 (준비)",
+                    "section": "P13 · Exams 조립 / Exams · 검증 320 (KO) · Dark",
+                    "width": 320,
+                    "height": 1786,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2862:2552",
+                    "name": "Exams · 768 · 기본 (Basic 8급 로그인)",
+                    "section": "P13 · Exams 조립 / Exams · Intermediate 768 (KO) · Dark",
+                    "width": 768,
+                    "height": 1104,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2862:2627",
+                    "name": "Exams · 768 · Event 7th KAC",
+                    "section": "P13 · Exams 조립 / Exams · Intermediate 768 (KO) · Dark",
+                    "width": 768,
+                    "height": 952,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2862:2702",
+                    "name": "Exams · 1280 · Basic 8급 · 로그인 (분석 접힘)",
+                    "section": "P13 · Exams 조립 / Exams · Wide 1280 (KO) · Dark",
+                    "width": 1280,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2862:2811",
+                    "name": "Exams · 1280 · Basic 8급 · 로그인 · 분석 펼침",
+                    "section": "P13 · Exams 조립 / Exams · Wide 1280 (KO) · Dark",
+                    "width": 1280,
+                    "height": 981,
+                    "visualEvidence": "not mapped by this inventory"
+                }
+            ]
+        },
+        {
+            "id": "2897:19406",
+            "name": "P14 · Bingo 조립",
+            "frames": [
+                {
+                    "id": "2914:2132",
+                    "name": "Bingo · 390 · 리스트 · 로그인",
+                    "section": "P14 · Bingo 조립 / Bingo · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 2466,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2914:2656",
+                    "name": "Bingo · 390 · 리스트 · 로그아웃",
+                    "section": "P14 · Bingo 조립 / Bingo · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 2124,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2914:2782",
+                    "name": "Bingo · 390 · 디테일 · 로그인 (진행 중)",
+                    "section": "P14 · Bingo 조립 / Bingo · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 2836,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2914:3072",
+                    "name": "Bingo · 390 · 디테일 · 로그아웃",
+                    "section": "P14 · Bingo 조립 / Bingo · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 2792,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2914:3465",
+                    "name": "Bingo · 390 · 상태 · 리스트 로딩 (스켈레톤)",
+                    "section": "P14 · Bingo 조립 / Bingo · Compact 390 · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 870,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2914:3497",
+                    "name": "Bingo · 390 · 상태 · 필터 무결과",
+                    "section": "P14 · Bingo 조립 / Bingo · Compact 390 · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 2108,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2914:3507",
+                    "name": "Bingo · 390 · 상태 · 다음 12 로딩 (버튼 busy)",
+                    "section": "P14 · Bingo 조립 / Bingo · Compact 390 · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 2466,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2914:4031",
+                    "name": "Bingo · 390 · 상태 · 커버 없음 폴백 (대표 1행)",
+                    "section": "P14 · Bingo 조립 / Bingo · Compact 390 · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 956,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2914:4170",
+                    "name": "Bingo · 390 · 상태 · 디테일 · 풀보드 완료",
+                    "section": "P14 · Bingo 조립 / Bingo · Compact 390 · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 2836,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2914:4477",
+                    "name": "Bingo · 390 · 상태 · 셀 저장 중 (content/pending · aria-busy)",
+                    "section": "P14 · Bingo 조립 / Bingo · Compact 390 · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 2836,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2914:4767",
+                    "name": "Bingo · 390 · 상태 · 셀 저장 실패 (롤백 + 재시도)",
+                    "section": "P14 · Bingo 조립 / Bingo · Compact 390 · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 2960,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2914:5059",
+                    "name": "Bingo · 390 · 상태 · 리셋 확인 대화",
+                    "section": "P14 · Bingo 조립 / Bingo · Compact 390 · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 2836,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2914:5356",
+                    "name": "Bingo · 390 · 상태 · 리셋 실패 (기록 보존)",
+                    "section": "P14 · Bingo 조립 / Bingo · Compact 390 · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 2928,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2914:5647",
+                    "name": "Bingo · 390 · 상태 · 미션 JA 폴백 (lang=ja)",
+                    "section": "P14 · Bingo 조립 / Bingo · Compact 390 · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 2836,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2914:5934",
+                    "name": "Bingo · 390 · 상태 · 용어 도움말 열림 (◆Just · bingo.term.sjust)",
+                    "section": "P14 · Bingo 조립 / Bingo · Compact 390 · 상태 스위트 · Dark",
+                    "width": 390,
+                    "height": 2836,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2914:6646",
+                    "name": "Bingo · 320 · 리스트 · 로그인 (1열 붕괴)",
+                    "section": "P14 · Bingo 조립 / Bingo · 검증 320 (KO) · Dark",
+                    "width": 320,
+                    "height": 5076,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2914:7175",
+                    "name": "Bingo · 320 · 디테일 · 로그인",
+                    "section": "P14 · Bingo 조립 / Bingo · 검증 320 (KO) · Dark",
+                    "width": 320,
+                    "height": 2910,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2914:7536",
+                    "name": "Bingo · 768 · 리스트 · 로그인 (3열)",
+                    "section": "P14 · Bingo 조립 / Bingo · Intermediate 768 (KO) · Dark",
+                    "width": 768,
+                    "height": 2046,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2914:8058",
+                    "name": "Bingo · 768 · 디테일 · 로그인 (1열판)",
+                    "section": "P14 · Bingo 조립 / Bingo · Intermediate 768 (KO) · Dark",
+                    "width": 768,
+                    "height": 2684,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "3362:31976",
+                    "name": "Bingo · 768 · 리스트 · 로그인 · 필터 팝오버 · 열림",
+                    "section": "P14 · Bingo 조립 / Bingo · Intermediate 768 (KO) · Dark",
+                    "width": 768,
+                    "height": 2046,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "3362:32555",
+                    "name": "Bingo · 768 · 리스트 · 로그인 · 필터 팝오버 · 갱신 중 (진행 중 선택 · 결과 content/pending)",
+                    "section": "P14 · Bingo 조립 / Bingo · Intermediate 768 (KO) · Dark",
+                    "width": 768,
+                    "height": 2046,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2914:8419",
+                    "name": "Bingo · 1280 · 리스트 · 로그인 (4열)",
+                    "section": "P14 · Bingo 조립 / Bingo · Wide 1280 (KO) · Dark",
+                    "width": 1280,
+                    "height": 1956,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2914:8940",
+                    "name": "Bingo · 1280 · 디테일 · 로그인 (보드 열 395 스티키 + 미션 805)",
+                    "section": "P14 · Bingo 조립 / Bingo · Wide 1280 (KO) · Dark",
+                    "width": 1280,
+                    "height": 2144,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "3362:29628",
+                    "name": "Bingo · 1280 · 리스트 · 로그인 · 필터 팝오버 · 열림",
+                    "section": "P14 · Bingo 조립 / Bingo · Wide 1280 (KO) · Dark",
+                    "width": 1280,
+                    "height": 1956,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "3362:30206",
+                    "name": "Bingo · 1280 · 리스트 · 로그인 · 필터 팝오버 · 갱신 중 (진행 중 선택 · 결과 content/pending)",
+                    "section": "P14 · Bingo 조립 / Bingo · Wide 1280 (KO) · Dark",
+                    "width": 1280,
+                    "height": 1956,
+                    "visualEvidence": "not mapped by this inventory"
+                }
+            ]
+        },
+        {
+            "id": "2923:2",
+            "name": "P15 · Privacy 조립",
+            "frames": [
+                {
+                    "id": "2927:458",
+                    "name": "Privacy · 390 · 기본 · 로그아웃 (정책 전문)",
+                    "section": "P15 · Privacy 조립 / Privacy · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 5163,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2927:592",
+                    "name": "Privacy · 390 · 목차 펼침",
+                    "section": "P15 · Privacy 조립 / Privacy · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 5739,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2927:751",
+                    "name": "Privacy · 390 · 로그인 (설정·탈퇴 링크)",
+                    "section": "P15 · Privacy 조립 / Privacy · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 5195,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2927:887",
+                    "name": "Privacy · 390 · 이전 버전 (대표 데이터)",
+                    "section": "P15 · Privacy 조립 / Privacy · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2927:900",
+                    "name": "Privacy · 390 · 아카이브 버전 (superseded)",
+                    "section": "P15 · Privacy 조립 / Privacy · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 5255,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2927:1037",
+                    "name": "Privacy · 390 · 이력 없음",
+                    "section": "P15 · Privacy 조립 / Privacy · Compact 390 · Dark",
+                    "width": 390,
+                    "height": 844,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2927:1046",
+                    "name": "Privacy · 320 · 기본",
+                    "section": "P15 · Privacy 조립 / Privacy · 검증 320 (KO) · Dark",
+                    "width": 320,
+                    "height": 5791,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2927:1181",
+                    "name": "Privacy · 768 · 기본 (본문 720 중앙)",
+                    "section": "P15 · Privacy 조립 / Privacy · Intermediate 768 (KO) · Dark",
+                    "width": 768,
+                    "height": 4071,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2927:1316",
+                    "name": "Privacy · 1280 · 기본 (본문 768 + 목차 292 스티키)",
+                    "section": "P15 · Privacy 조립 / Privacy · Wide 1280 (KO) · Dark",
+                    "width": 1280,
+                    "height": 3871,
+                    "visualEvidence": "not mapped by this inventory"
+                }
+            ]
+        },
+        {
+            "id": "2986:2",
+            "name": "P16 · Share Card 조립",
+            "frames": [
+                {
+                    "id": "2986:5",
+                    "name": "card · 기본",
+                    "section": "P16 · Share Card 조립 / Share Card · 기본 (Basic · 데이터 있음) — 다크 전용",
+                    "width": 1200,
+                    "height": 630,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2986:59",
+                    "name": "card · 기록 없음 (신규 유저)",
+                    "section": "P16 · Share Card 조립 / Share Card · 상태 (다크 전용)",
+                    "width": 1200,
+                    "height": 630,
+                    "visualEvidence": "not mapped by this inventory"
+                },
+                {
+                    "id": "2986:113",
+                    "name": "card · 부분 공개 (순위 없음 · 검정 없음 · 플레이 비공개)",
+                    "section": "P16 · Share Card 조립 / Share Card · 상태 (다크 전용)",
+                    "width": 1200,
+                    "height": 630,
+                    "visualEvidence": "not mapped by this inventory"
+                }
+            ]
+        }
+    ]
+}

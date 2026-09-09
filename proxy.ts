@@ -13,6 +13,9 @@ import {
 } from "./lib/i18n/routing";
 import db from "./lib/db";
 import getSession from "./lib/session";
+import { getMaintenanceConfig } from "./features/recovery/server/maintenanceConfig";
+import { createTranslator, getMessages } from "./lib/i18n/messages";
+import { getAuthReturnPath, getSafeAuthReturnPath } from "./lib/authReturnPath";
 
 interface Routes {
     [key: string]: boolean;
@@ -41,15 +44,16 @@ export async function proxy(request: NextRequest) {
     }
 
     if (process.env.MAINTENANCE_MODE?.toLowerCase() === "true") {
+        const maintenanceCookie =
+            request.cookies.get(LOCALE_COOKIE_NAME)?.value;
         const maintenanceLocale =
             pathLocale ??
-            (isLocale(request.cookies.get(LOCALE_COOKIE_NAME)?.value)
-                ? request.cookies.get(LOCALE_COOKIE_NAME)!.value
+            (isLocale(maintenanceCookie)
+                ? maintenanceCookie
                 : localeFromAcceptLanguage(
                       request.headers.get("accept-language")
                   ));
         const isMaintenanceBypass =
-            pathname === "/maintenance" ||
             pathname === "/login" ||
             pathname.startsWith("/admin") ||
             pathname.startsWith("/discord/") ||
@@ -65,15 +69,25 @@ export async function proxy(request: NextRequest) {
             return;
         }
 
+        const { retryAfter } = getMaintenanceConfig();
+        const responseHeaders: Record<string, string> = {
+            "Cache-Control": "no-store",
+        };
+        if (retryAfter) responseHeaders["Retry-After"] = retryAfter;
+
         if (pathname.startsWith("/api/")) {
             return NextResponse.json(
-                { message: "현재 서비스 점검 중입니다." },
+                {
+                    isSuccess: false,
+                    code: "MAINTENANCE",
+                    message: createTranslator(getMessages(maintenanceLocale))(
+                        "maintenance.description"
+                    ),
+                    result: null,
+                },
                 {
                     status: 503,
-                    headers: {
-                        "Cache-Control": "no-store",
-                        "Retry-After": "3600",
-                    },
+                    headers: responseHeaders,
                 }
             );
         }
@@ -86,10 +100,7 @@ export async function proxy(request: NextRequest) {
         return NextResponse.rewrite(maintenanceUrl, {
             status: 503,
             request: { headers: maintenanceHeaders },
-            headers: {
-                "Cache-Control": "no-store",
-                "Retry-After": "3600",
-            },
+            headers: responseHeaders,
         });
     }
 
@@ -118,13 +129,23 @@ export async function proxy(request: NextRequest) {
             !pathname.startsWith("/onboarding") &&
             !pathname.startsWith("/discord/")
         ) {
+            const destination = getSafeAuthReturnPath(
+                `${request.nextUrl.pathname}${request.nextUrl.search}`
+            );
+            if (destination && pathname !== "/") {
+                session.onboardingReturnTo = destination;
+                await session.save();
+            }
             return NextResponse.redirect(
                 new URL(localizePath("/onboarding", locale), request.url)
             );
         }
         if (pathname === "/onboarding" && session.profileCompleted === true) {
             return NextResponse.redirect(
-                new URL(localizePath("/", locale), request.url)
+                new URL(
+                    getAuthReturnPath(session.onboardingReturnTo, locale),
+                    request.url
+                )
             );
         }
         if (routes.publicOnly[pathname]) {
@@ -160,18 +181,11 @@ export async function proxy(request: NextRequest) {
     const response = NextResponse.rewrite(rewriteUrl, {
         request: { headers: requestHeaders },
     });
-    response.cookies.set(LOCALE_COOKIE_NAME, locale, {
-        httpOnly: false,
-        sameSite: "lax",
-        secure: process.env.NODE_ENV === "production",
-        path: "/",
-        maxAge: 365 * 24 * 60 * 60,
-    });
     return response;
 }
 
 export const config = {
     matcher: [
-        "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+        "/((?!_next/static|_next/image|fonts/|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
     ],
 };

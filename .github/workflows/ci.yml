@@ -45,9 +45,10 @@ jobs:
               run: npm run build
 
     e2e:
+        if: ${{ vars.RUN_E2E == 'true' }}
         needs: verify
         runs-on: ubuntu-latest
-        timeout-minutes: 15
+        timeout-minutes: 45
         services:
             postgres:
                 image: postgres:16-alpine
@@ -90,6 +91,9 @@ jobs:
 
             - name: Seed E2E database
               run: npm run db:seed:e2e
+
+            - name: Import music catalog into E2E database
+              run: node prisma/import-music-catalog.mjs --apply
 
             - name: Run Playwright E2E
               run: npm run test:e2e

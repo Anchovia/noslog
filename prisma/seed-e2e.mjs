@@ -112,27 +112,76 @@ async function seed() {
         },
     });
 
-    await prisma.bingo.deleteMany({ where: { title: "E2E 빙고" } });
-    await prisma.bingo.create({
-        data: {
-            title: "E2E 빙고",
-            description: "Playwright 공개 화면 검증용 빙고",
-            rewardNos: 3_000,
-            requiredLines: 1,
-            status: "published",
-            coverMusicIndex: music.index,
-            cells: {
-                create: Array.from({ length: 25 }, (_, index) => ({
-                    position: index + 1,
-                    title: `E2E 미션 ${index + 1}`,
-                    missionType: "record",
-                    ruleType: "manual",
-                })),
+    await prisma.bingo.deleteMany({
+        where: { title: { startsWith: "E2E 빙고" } },
+    });
+    for (const bingoIndex of Array.from(
+        { length: 24 },
+        (_, index) => index + 1
+    )) {
+        await prisma.bingo.create({
+            data: {
+                title: `E2E 빙고 ${String(bingoIndex).padStart(2, "0")}`,
+                description: "Playwright 공개 화면 검증용 빙고",
+                rewardNos: 3_000,
+                requiredLines: 1,
+                status: "published",
+                coverMusicIndex: music.index,
+                cells: {
+                    create: Array.from({ length: 25 }, (_, index) => ({
+                        position: index + 1,
+                        title: `E2E 미션 ${index + 1}`,
+                        missionType: "record",
+                        ruleType: "manual",
+                    })),
+                },
             },
+        });
+    }
+
+    await prisma.exam.deleteMany({
+        where: {
+            slug: { in: ["basic-10", "basic-9", "e2e-event-exam"] },
         },
     });
+    for (const grade of [10, 9]) {
+        await prisma.exam.create({
+            data: {
+                slug: `basic-${grade}`,
+                mode: "basic",
+                grade,
+                shortLabel: `${grade}급`,
+                scoringType: "score",
+                title: `Basic ${grade}급`,
+                description: "Playwright 공개 화면 검증용 검정",
+                feeNos: 1_000,
+                requiredGrade: 0,
+                status: "published",
+                stages: {
+                    create: Array.from({ length: 3 }, (_, index) => ({
+                        position: index + 1,
+                        label: `${index + 1}${index === 0 ? "st" : index === 1 ? "nd" : "rd"}`,
+                        requirementType: "single",
+                        requiredValue: 800_000,
+                        musicIndex: music.index,
+                        allowedCharts: {
+                            create: [{ chartId: charts.get("Expert").id }],
+                        },
+                    })),
+                },
+                rewards: {
+                    create: [
+                        {
+                            position: 1,
+                            type: "grade",
+                            label: `Basic ${grade}급`,
+                        },
+                    ],
+                },
+            },
+        });
+    }
 
-    await prisma.exam.deleteMany({ where: { slug: "e2e-event-exam" } });
     await prisma.exam.create({
         data: {
             slug: "e2e-event-exam",

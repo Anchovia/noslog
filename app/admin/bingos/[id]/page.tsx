@@ -2,7 +2,13 @@ import { notFound } from "next/navigation";
 
 import BingoEditor, {
     type BingoEditorData,
-} from "@/components/admin/bingoEditor";
+} from "@/features/bingos/components/bingoEditor";
+import {
+    normalizeBingoDifficulty,
+    normalizeBingoMissionType,
+    normalizeBingoRuleType,
+    normalizeBingoStatus,
+} from "@/features/bingos/schemas/bingoEditorSchema";
 import db from "@/lib/db";
 import { formatDateInput } from "@/lib/utils";
 
@@ -34,9 +40,9 @@ export default async function EditBingoPage({
         id: bingo.id,
         title: bingo.title ?? "",
         description: bingo.description ?? "",
-        rewardNos: bingo.rewardNos,
-        requiredLines: bingo.requiredLines,
-        status: bingo.status,
+        rewardNos: String(bingo.rewardNos),
+        requiredLines: String(bingo.requiredLines),
+        status: normalizeBingoStatus(bingo.status),
         startsAt: formatDateInput(bingo.startsAt),
         endsAt: formatDateInput(bingo.endsAt),
         coverMusicIndex: bingo.coverMusicIndex,
@@ -46,13 +52,17 @@ export default async function EditBingoPage({
             return {
                 position,
                 title: cell?.title ?? "",
-                missionType: cell?.missionType ?? "record",
-                ruleType: cell?.ruleType ?? "manual",
+                missionType: normalizeBingoMissionType(
+                    cell?.missionType ?? "record"
+                ),
+                ruleType: normalizeBingoRuleType(cell?.ruleType ?? "manual"),
                 ruleConfig: cell?.ruleConfig
                     ? JSON.stringify(cell.ruleConfig)
                     : "",
                 categoryShort: cell?.categoryShort ?? "",
-                targetDifficulty: cell?.targetDifficulty ?? "",
+                targetDifficulty: normalizeBingoDifficulty(
+                    cell?.targetDifficulty ?? ""
+                ),
                 targetLevel: cell?.targetLevel?.toString() ?? "",
                 musicIndex: cell?.musicIndex ?? "",
             };

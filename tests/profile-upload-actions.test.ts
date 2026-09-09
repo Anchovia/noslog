@@ -10,6 +10,7 @@ const mocks = vi.hoisted(() => ({
     userFindUnique: vi.fn(),
     userUpdate: vi.fn(),
     updateTag: vi.fn(),
+    logServerError: vi.fn(),
     redirect: vi.fn(),
     session: {
         id: 2,
@@ -48,6 +49,9 @@ vi.mock("@/lib/db", () => ({
 
 vi.mock("next/cache", () => ({ updateTag: mocks.updateTag }));
 vi.mock("next/navigation", () => ({ redirect: mocks.redirect }));
+vi.mock("@/lib/observability/server", () => ({
+    logServerError: mocks.logServerError,
+}));
 
 import {
     requestProfileAvatarUpload,
@@ -107,6 +111,7 @@ describe("프로필 이미지 업로드 토큰", () => {
     it("프로필 전용 할당량을 소비한 뒤 토큰을 발급한다", async () => {
         await expect(requestProfileAvatarUpload("image/png")).resolves.toEqual({
             success: true,
+            message: "",
             pathname: "avatars/2/profile.png",
             token: "upload-token",
         });
@@ -146,6 +151,20 @@ describe("프로필 이미지 업로드 토큰", () => {
         await expect(uploadUserSetting(profileForm())).resolves.toEqual({
             success: false,
             message: "허용되지 않은 프로필 이미지 주소입니다.",
+        });
+        expect(mocks.userUpdate).not.toHaveBeenCalled();
+    });
+
+    it("영문 설정 요청은 필드 오류도 영문으로 반환한다", async () => {
+        const formData = profileForm("");
+        formData.set("locale", "en");
+
+        await expect(uploadUserSetting(formData)).resolves.toEqual({
+            success: false,
+            message: "Please check the information you entered.",
+            fieldErrors: expect.objectContaining({
+                username: ["Enter a nickname."],
+            }),
         });
         expect(mocks.userUpdate).not.toHaveBeenCalled();
     });
@@ -196,5 +215,9 @@ describe("프로필 이미지 업로드 토큰", () => {
             message: "프로필 저장에 실패했습니다.",
         });
         expect(mocks.deleteBlobIfOwned).toHaveBeenCalledWith(newAvatar);
+        expect(mocks.logServerError).toHaveBeenCalledWith(
+            expect.any(Error),
+            expect.objectContaining({ event: "profile.settings.save.failed" })
+        );
     });
 });

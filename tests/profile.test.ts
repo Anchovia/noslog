@@ -31,6 +31,8 @@ function profileUser(): ProfileUser {
         hide_nostalgia_name: false,
         hide_discord_name: false,
         hide_play_count: false,
+        hide_preferred_arcade: false,
+        hide_play_activity: false,
         score_p: 1,
         score_f: 2,
         score_s: 3,

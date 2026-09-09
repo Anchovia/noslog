@@ -9,7 +9,7 @@ const mocks = vi.hoisted(() => ({
     cellUpsert: vi.fn(),
     updateTag: vi.fn(),
     revalidatePath: vi.fn(),
-    redirect: vi.fn(),
+    logServerError: vi.fn(),
 }));
 
 const transactionClient = {
@@ -31,9 +31,11 @@ vi.mock("next/cache", () => ({
     updateTag: mocks.updateTag,
     revalidatePath: mocks.revalidatePath,
 }));
-vi.mock("next/navigation", () => ({ redirect: mocks.redirect }));
-
+vi.mock("@/lib/observability/server", () => ({
+    logServerError: mocks.logServerError,
+}));
 import { saveBingo } from "@/app/admin/bingos/actions";
+import { getBingoEditorCellLabel } from "@/features/bingos/components/bingoEditorUtils";
 
 function createBingoFormData() {
     const formData = new FormData();
@@ -42,6 +44,14 @@ function createBingoFormData() {
     formData.set("rewardNos", "3000");
     formData.set("requiredLines", "5");
     formData.set("status", "published");
+    for (let position = 1; position <= 25; position += 1) {
+        formData.set(
+            `cell-${position}-title`,
+            getBingoEditorCellLabel(position)
+        );
+        formData.set(`cell-${position}-missionType`, "record");
+        formData.set(`cell-${position}-ruleType`, "manual");
+    }
     return formData;
 }
 
@@ -72,8 +82,12 @@ describe("관리자 빙고 저장 액션", () => {
         const formData = createBingoFormData();
         formData.set("title", "");
 
-        await saveBingo(formData);
+        const result = await saveBingo(formData);
 
+        expect(result).toMatchObject({
+            success: false,
+            fieldErrors: { title: ["빙고 제목을 입력해주세요."] },
+        });
         expect(mocks.musicCount).not.toHaveBeenCalled();
         expect(mocks.transaction).not.toHaveBeenCalled();
     });
@@ -81,12 +95,36 @@ describe("관리자 빙고 저장 액션", () => {
     it("존재하지 않는 표지 악곡을 거부한다", async () => {
         mocks.musicCount.mockResolvedValue(0);
 
-        await saveBingo(createBingoFormData());
+        const result = await saveBingo(createBingoFormData());
 
+        expect(result).toEqual({
+            success: false,
+            message: "선택한 표지 악곡을 찾을 수 없습니다.",
+            fieldErrors: {
+                coverMusicIndex: ["선택한 표지 악곡을 찾을 수 없습니다."],
+            },
+        });
         expect(mocks.musicCount).toHaveBeenCalledWith({
             where: { index: "cover-music" },
         });
         expect(mocks.transaction).not.toHaveBeenCalled();
+    });
+
+    it("저장 중 서버 오류를 기록하고 실패 결과를 반환한다", async () => {
+        const error = new Error("database unavailable");
+        mocks.musicCount.mockRejectedValue(error);
+
+        const result = await saveBingo(createBingoFormData());
+
+        expect(result).toEqual({
+            success: false,
+            message: "빙고를 저장하지 못했습니다.",
+        });
+        expect(mocks.logServerError).toHaveBeenCalledWith(error, {
+            event: "admin.bingo.save.failed",
+            routePath: "/admin/bingos",
+            routeType: "action",
+        });
     });
 
     it("새 빙고와 기본 25칸을 같은 트랜잭션으로 생성한다", async () => {
@@ -95,7 +133,7 @@ describe("관리자 빙고 저장 액션", () => {
         formData.set("cell-1-ruleType", "score");
         formData.set("cell-1-ruleConfig", '{"score":950000}');
 
-        await saveBingo(formData);
+        const result = await saveBingo(formData);
 
         expect(mocks.bingoCreate).toHaveBeenCalledWith({
             data: expect.objectContaining({
@@ -127,7 +165,11 @@ describe("관리자 빙고 저장 액션", () => {
             })
         );
         expect(mocks.updateTag).toHaveBeenCalledWith("bingos");
-        expect(mocks.redirect).toHaveBeenCalledWith("/admin/bingos/40");
+        expect(result).toEqual({
+            success: true,
+            message: "빙고를 추가했습니다.",
+            id: 40,
+        });
     });
 
     it("보상은 음수가 되지 않고 필요 줄 수는 1~12로 제한한다", async () => {
@@ -142,17 +184,21 @@ describe("관리자 빙고 저장 액션", () => {
         });
     });
 
-    it("기존 빙고는 수정하고 새 상세 페이지로 이동하지 않는다", async () => {
+    it("기존 빙고는 수정 결과를 반환한다", async () => {
         const formData = createBingoFormData();
         formData.set("id", "40");
 
-        await saveBingo(formData);
+        const result = await saveBingo(formData);
 
         expect(mocks.bingoUpdate).toHaveBeenCalledWith({
             where: { id: 40 },
             data: expect.objectContaining({ title: "테스트 빙고" }),
         });
         expect(mocks.bingoCreate).not.toHaveBeenCalled();
-        expect(mocks.redirect).not.toHaveBeenCalled();
+        expect(result).toEqual({
+            success: true,
+            message: "빙고를 저장했습니다.",
+            id: 40,
+        });
     });
 });

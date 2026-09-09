@@ -4,6 +4,8 @@ import { headers } from "next/headers";
 import Script from "next/script";
 import AppToaster from "@/components/ui/AppToaster";
 import { LocaleProvider } from "@/components/i18n/localeProvider";
+import { AppProviders } from "@/components/providers/appProviders";
+import { serverEnv } from "@/lib/env/server";
 import { getMessages } from "@/lib/i18n/messages";
 import {
     DEFAULT_LOCALE,
@@ -21,14 +23,17 @@ const pretendard = localFont({
     display: "swap",
 });
 
-const themeScript = `
+const themeScript =
+    process.env.NEXT_PUBLIC_ENABLE_THEME_SWITCHING === "true"
+        ? `
     try {
         var theme = localStorage.getItem("noslog-theme");
         document.documentElement.dataset.theme = theme === "light" ? "light" : "dark";
     } catch (_) {
         document.documentElement.dataset.theme = "dark";
     }
-`;
+`
+        : 'document.documentElement.dataset.theme = "dark";';
 
 export const metadata: Metadata = {
     metadataBase: new URL(SITE_URL),
@@ -78,8 +83,8 @@ export const metadata: Metadata = {
         title: SITE_NAME,
         description: SITE_DESCRIPTION,
     },
-    verification: process.env.GOOGLE_SITE_VERIFICATION
-        ? { google: process.env.GOOGLE_SITE_VERIFICATION }
+    verification: serverEnv.GOOGLE_SITE_VERIFICATION
+        ? { google: serverEnv.GOOGLE_SITE_VERIFICATION }
         : undefined,
     manifest: "/manifest.webmanifest",
 };
@@ -109,8 +114,10 @@ export default async function RootLayout({
             </head>
             <body className="font-sans">
                 <LocaleProvider locale={locale} messages={getMessages(locale)}>
-                    {children}
-                    <AppToaster />
+                    <AppProviders>
+                        {children}
+                        <AppToaster />
+                    </AppProviders>
                 </LocaleProvider>
             </body>
         </html>

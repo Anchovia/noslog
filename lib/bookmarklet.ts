@@ -1,5 +1,6 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 
+import { serverEnv } from "@/lib/env/server";
 import { localizePath, type Locale } from "@/lib/i18n/routing";
 
 interface SyncTokenPayload {
@@ -68,14 +69,7 @@ const bookmarkletCopy = {
 } as const satisfies Record<Locale, Record<string, string>>;
 
 function syncSecret() {
-    const secret =
-        process.env.BOOKMARKLET_SECRET ?? process.env.COOKIE_PASSWORD;
-
-    if (!secret) {
-        throw new Error("BOOKMARKLET_SECRET is not configured");
-    }
-
-    return secret;
+    return serverEnv.BOOKMARKLET_SECRET;
 }
 
 function sign(value: string) {
@@ -147,6 +141,10 @@ export function createBookmarkletHref(
         `${appOrigin}/`
     ).toString();
     const nostalgiaUrl = "https://p.eagate.573.jp/";
+    const fontUrl = new URL(
+        "/fonts/pretendard-jp/1.3.9/PretendardJPVariable.woff2",
+        appOrigin
+    ).toString();
     const code = `
         (async()=>{
             const copy=${JSON.stringify(copy)};
@@ -157,45 +155,63 @@ export function createBookmarkletHref(
             overlay.id=overlayId;
             Object.assign(overlay.style,{
                 position:"fixed",top:"16px",right:"16px",zIndex:"2147483647",
-                width:"280px",padding:"16px",boxSizing:"border-box",border:"1px solid #2a2a35",
-                borderRadius:"8px",background:"#121218",color:"#f2f2f5",
-                font:"14px system-ui,sans-serif",boxShadow:"0 8px 24px rgba(0,0,0,.35)"
+                width:"334px",maxWidth:"calc(100vw - 32px)",padding:"24px",boxSizing:"border-box",border:"1px solid #444444",
+                borderRadius:"10px",background:"#222222",color:"#DBDBDB",
+                font:'14px/20px "NosLog Pretendard JP","Pretendard JP Variable","Pretendard JP",Pretendard,system-ui,sans-serif',boxShadow:"0 8px 24px rgba(0,0,0,.4)",
+                display:"flex",flexDirection:"column",gap:"16px",maxHeight:"calc(100dvh - 32px)",overflowY:"auto"
             });
-            overlay.innerHTML='<strong id="noslog-sync-title" style="display:block;margin-bottom:8px"></strong><span id="noslog-sync-status" style="color:#a0a0aa"></span>';
+            overlay.innerHTML='<style>#noslog-sync-overlay *{box-sizing:border-box}#noslog-sync-overlay a:focus-visible,#noslog-sync-overlay button:focus-visible{outline:1px solid #FFFFFF;outline-offset:-1px}@keyframes noslog-sync-spin{to{transform:rotate(360deg)}}@media(prefers-reduced-motion:reduce){#noslog-sync-overlay #noslog-sync-marker{animation:none!important}}</style><strong id="noslog-sync-title" style="font-size:16px;line-height:24px;font-weight:600"></strong><div id="noslog-sync-status-row" role="status" aria-live="polite" style="display:flex;align-items:flex-start;gap:8px;padding:12px;border-radius:4px"><span aria-hidden="true" style="display:flex;align-items:center;justify-content:center;width:20px;height:20px;flex-shrink:0"><span id="noslog-sync-marker"></span></span><span id="noslog-sync-status" style="min-width:0;overflow-wrap:anywhere"></span></div><div id="noslog-sync-track" aria-hidden="true" style="height:2px;background:#444444"><div id="noslog-sync-progress" style="height:100%;width:0;background:#DBDBDB"></div></div><div id="noslog-sync-actions" style="display:none;gap:8px;width:100%"></div>';
             document.body.appendChild(overlay);
 
             overlay.querySelector("#noslog-sync-title").textContent=copy.title;
             const status=overlay.querySelector("#noslog-sync-status");
-            status.textContent=copy.preparing;
-            const setStatus=(message,color="#a0a0aa",nowrap=false)=>{
+            const statusRow=overlay.querySelector("#noslog-sync-status-row");
+            const marker=overlay.querySelector("#noslog-sync-marker");
+            const track=overlay.querySelector("#noslog-sync-track");
+            const progress=overlay.querySelector("#noslog-sync-progress");
+            const actions=overlay.querySelector("#noslog-sync-actions");
+            const setStatus=(message,state="busy")=>{
                 status.textContent=message;
-                status.style.color=color;
-                status.style.whiteSpace=nowrap?"nowrap":"normal";
+                overlay.dataset.state=state;
+                statusRow.style.background=state==="success"?"#28311B":state==="failure"?"#42221F":"transparent";
+                Object.assign(marker.style,{width:state==="busy"?"16px":"8px",height:state==="busy"?"16px":"8px",borderRadius:"50%",border:state==="busy"?"2px solid #444444":"none",borderTopColor:state==="busy"?"#AFAFAF":"transparent",background:state==="success"?"#82B536":state==="failure"?"#F15B50":"transparent",animation:state==="busy"?"noslog-sync-spin 1s linear infinite":"none"});
+                track.style.display=state==="busy"?"block":"none";
             };
+            setStatus(copy.preparing);
+            const buttonStyle={display:"flex",alignItems:"center",justifyContent:"center",minHeight:"40px",padding:"8px 16px",borderRadius:"4px",font:"inherit",fontWeight:"500",textDecoration:"none",flex:"1 1 0",minWidth:"0",textAlign:"center",cursor:"pointer"};
+            const fitActions=()=>{
+                if(!actions.children.length)return;
+                actions.style.display="flex";
+                actions.style.flexDirection="row";
+                for(const button of actions.children){
+                    if(button.scrollWidth>button.clientWidth||button.getBoundingClientRect().height>42){actions.style.flexDirection="column";break;}
+                }
+            };
+            const resizeObserver=new ResizeObserver(fitActions);
+            resizeObserver.observe(overlay);
+            const font=new FontFace("NosLog Pretendard JP",${JSON.stringify(`url("${fontUrl}")`)},{weight:"45 920"});
+            font.load().then(loaded=>{if(overlay.isConnected){document.fonts.add(loaded);fitActions();}}).catch(()=>{});
             const addLink=(label,url)=>{
-                const address=document.createElement("div");
-                address.textContent=url;
-                Object.assign(address.style,{marginTop:"8px",color:"#a0a0aa",fontSize:"12px",wordBreak:"break-all"});
-                overlay.appendChild(address);
-
                 const link=document.createElement("a");
                 link.textContent=label;
                 link.href=url;
                 link.target="_blank";
                 link.rel="noopener noreferrer";
-                Object.assign(link.style,{display:"inline-block",marginTop:"12px",padding:"7px 10px",borderRadius:"6px",background:"#f2f2f5",color:"#0b0b10",fontWeight:"700",textDecoration:"none"});
-                overlay.appendChild(link);
+                Object.assign(link.style,buttonStyle,{background:"#DBDBDB",color:"#111111",border:"1px solid transparent"});
+                actions.appendChild(link);
             };
             const addCloseButton=()=>{
                 const close=document.createElement("button");
                 close.textContent=copy.close;
-                Object.assign(close.style,{display:"block",marginTop:"12px",padding:"6px 10px",border:"1px solid #2a2a35",borderRadius:"6px",background:"#1a1a22",color:"#f2f2f5",cursor:"pointer"});
-                close.onclick=()=>overlay.remove();
-                overlay.appendChild(close);
+                close.type="button";
+                Object.assign(close.style,buttonStyle,{border:"1px solid #8A8A8A",background:"transparent",color:"#DBDBDB"});
+                close.onclick=()=>{resizeObserver.disconnect();overlay.remove();};
+                actions.appendChild(close);
+                fitActions();
             };
 
             if(location.hostname!=="p.eagate.573.jp"){
-                setStatus(copy.wrongPage,"#ef4444");
+                setStatus(copy.wrongPage,"failure");
                 addLink(copy.goToBemani,${JSON.stringify(nostalgiaUrl)});
                 addCloseButton();
                 return;
@@ -219,8 +235,11 @@ export function createBookmarkletHref(
                 };
 
                 const playerData=await load("player_info",copy.player);
+                progress.style.width="25%";
                 const recentData=await load("play_history",copy.recent);
+                progress.style.width="50%";
                 const totalData=await load("music_data",copy.total,true);
+                progress.style.width="75%";
                 setStatus(totalData?copy.sendingFull:copy.sendingRecent);
 
                 const response=await fetch(${JSON.stringify(receiveUrlString)}, {
@@ -231,11 +250,11 @@ export function createBookmarkletHref(
                 const result=await response.json().catch(()=>({}));
                 if(!response.ok)throw new Error(result.message||copy.processFailed);
 
-                setStatus(result.message||copy.completed,"#22c55e",true);
+                setStatus(result.message||copy.completed,"success");
                 addLink(copy.viewResult,${JSON.stringify(resultUrl)});
                 addCloseButton();
             }catch(error){
-                setStatus(error instanceof Error?error.message:copy.syncFailed,"#ef4444");
+                setStatus(error instanceof Error?error.message:copy.syncFailed,"failure");
                 addCloseButton();
             }
         })();
@@ -243,5 +262,5 @@ export function createBookmarkletHref(
         .replace(/\s+/g, " ")
         .trim();
 
-    return `javascript:${code}`;
+    return `javascript:${encodeURIComponent(code)}`;
 }

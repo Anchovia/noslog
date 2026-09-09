@@ -1,0 +1,95 @@
+.noslog-ui .nl-announcements {
+    padding-bottom: var(--nl-spacing-48);
+}
+.noslog-ui .nl-announcements__detail {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-24);
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+.noslog-ui .nl-announcements__back {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+    min-height: 44px;
+}
+.noslog-ui .nl-announcements__back svg {
+    width: var(--nl-icon-small);
+    height: var(--nl-icon-small);
+}
+.noslog-ui .nl-announcements__dates {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-4);
+}
+.noslog-ui .nl-announcement-row {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-4);
+    padding-block: var(--nl-spacing-12);
+    box-shadow: inset 0 -1px var(--nl-border-divider);
+    overflow-wrap: anywhere;
+}
+.noslog-ui .nl-announcement-row__title {
+    margin: 0;
+    min-width: 0;
+}
+.noslog-ui .nl-announcement-category {
+    display: inline-flex;
+    align-items: center;
+    height: 24px;
+    padding-inline: var(--nl-spacing-8);
+    margin-inline-end: var(--nl-spacing-8);
+    border: 1px solid var(--nl-border-default);
+    border-radius: var(--nl-radius-control);
+    vertical-align: middle;
+    white-space: nowrap;
+}
+.noslog-ui .nl-announcements__title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+    min-width: 0;
+}
+.noslog-ui .nl-announcements__title .nl-announcement-category {
+    margin-inline-end: 0;
+}
+.noslog-ui .nl-announcements__title h1 {
+    min-width: 0;
+}
+.noslog-ui .nl-announcements__month {
+    padding-block: var(--nl-spacing-24) var(--nl-spacing-8);
+}
+.noslog-ui .nl-announcements__list > li:first-child .nl-announcements__month {
+    padding-top: var(--nl-spacing-0);
+}
+.noslog-ui .nl-announcement-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-16);
+    overflow-wrap: anywhere;
+}
+.noslog-ui .nl-announcement-body ul {
+    padding-inline-start: calc(var(--nl-spacing-16) + var(--nl-spacing-4));
+    list-style: disc;
+}
+.noslog-ui .nl-announcement-body ol {
+    list-style: decimal inside;
+}
+.noslog-ui .nl-announcement-body strong {
+    font-weight: var(--nl-type-weight-semibold);
+}
+.noslog-ui .nl-announcement-body a {
+    color: var(--nl-content-interactive);
+    text-decoration: underline;
+    text-underline-position: under;
+}
+.noslog-ui .nl-announcement-body a svg {
+    display: inline-block;
+    width: var(--nl-icon-small);
+    height: var(--nl-icon-small);
+    margin-left: var(--nl-spacing-4);
+    vertical-align: text-bottom;
+}

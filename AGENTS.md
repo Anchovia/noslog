@@ -1,100 +1,91 @@
 # AGENTS.md
 
-## Product
+## Product and current stage
 
-This project implements NosLog, a NOSTALGIA records/ranking/archive app.
+NosLog is an unofficial NOSTALGIA records, ranking and archive application.
+The user has authorized production implementation and verification of NosLog 2.0.
+The previous design-guide stage is complete; do not restore its research gates,
+PDF milestones, old checklists or design-only implementation prohibition.
 
-NosLog is the service and project name. NOSTORY is the name of the design
-reference, and NOSTALGIA is the game covered by the service.
+## Authority
 
-## Design Source
+1. The user's latest explicit decision.
+2. This file for process, scope and preservation boundaries.
+3. `docs/design/README.md` for the common layout, responsive modes, visual-source
+   precedence, fonts, shared implementation and verification contract.
+4. Current Figma `NosLog v2.0.0` (`cVbWCxhkfxFfHmAKLCyKrD`), pages P1–P16 and
+   components C1–C8, for visuals within that common-layout contract.
+5. `docs/design/product-rules.md` for the retained behavioral/data baseline.
+6. `README.md` for setup, product, deployment and privacy; `docs/code-style.md`
+   for the existing Jeongbiseo/Fit-again-based code conventions.
 
-Primary design:
-https://www.figma.com/design/MigCZljcnwEdJF2JhnjKcj/Nostory?node-id=3-3
+Z1 is decision history, not a page to implement. Old numbered briefs, handoffs,
+Foundation/provenance records, audits, specimens and PDF are retired. Their old
+Approved labels, frame widths and pending items cannot override current rules.
+Do not recover pending work or visual authority from Git history/deleted documents
+unless the user explicitly asks for historical evidence. Legacy NOSTORY is not
+current authority. Keep the two current design documents in English; KO/JA/EN
+remain required product locales.
 
-Use frame `3:3`, named `NOSTORY 와이어프레임 정리`.
+## Preservation boundaries
 
-Sections:
+The existing chart viewer and chart editor in their entirety are locked exceptions:
 
-1. Home
-2. Music list
-3. Music detail
-4. Rankings
-5. Data sync guide
-6. Tiers
-7. Bingo
-8. Profile
-9. Login
-10. Exams
-11. Style guide
+- pages, DOM shells, controls, labels, accessibility, responsive containment;
+- PixiJS/WebGL Falling renderer and Canvas Full-sheet renderer;
+- notes, left/right-hand palettes, geometry, animation, audio synchronization;
+- chart mathematics, editor rendering model, histories, import/export and snapshots.
 
-## Implementation Rules
+Do not redesign, recolor, restyle, reorganize, replace, migrate or create a 2.0
+variant of any part of these experiences. Ordinary Foundation, layout, icon,
+motion and accessibility redesign rules do not apply inside them. Only an explicit
+user decision reopening the whole exception or a precisely named sub-scope permits
+changes. Preserve `/admin/*` as well. Ordinary music/chart discovery and Music
+Detail remain in scope; their presence does not reopen the actual viewer/editor.
 
-- Do not redesign the UI.
-- Preserve the dark NOSTORY visual direction.
-- Use the existing project stack, components, routing, and styling conventions.
-- Treat the Figma as a wireframe/source of layout intent, not pixel-perfect final artwork.
-- Implement mobile-first around the 390px layouts shown in Figma.
-- Reuse existing components before creating new ones.
-- Keep changes scoped and verifiable.
-- Run lint/typecheck/build after implementation if the project provides those commands.
+Keep MP3/audio files local to the user's browser, never uploaded to NosLog storage
+or database. Preserve existing records, rankings, archive and authoring functions.
 
-## Requirement Clarity and Planning
+## Working process
 
-This is the most important working rule for this project:
+- Before responding to a project task, reopen this root AGENTS.md completely.
+- Before planning/editing, read root README.md. Before UI work, read the current
+  implementation contract. Inspect repository status and existing changes before
+  editing; preserve user work and unrelated files.
+- Use the existing stack, routes, global styles and shared components. Establish
+  common behavior at its shared source before page-specific composition. Do not
+  create another competing layout system or copy raw per-page Figma export CSS.
+- Follow the latest dark-only and unsplit Pretendard JP decisions in the contract.
+  Do not infer light-theme work from old documentation.
+- Inspect current code, tests, Figma and the actual browser before deciding a
+  missing requirement. Do not ask the user for facts the repository can answer.
+  Existing authorization persists; routine repairs do not require repeated approval.
+- The user decides material product/design changes. Do not invent behavior or
+  silently resolve an unresolved material conflict. Complete the concrete reviewable
+  proposal before asking. Research/observations are not approval to change behavior.
+- Update the one current contract in place when an approved common rule changes,
+  then align code and regression expectations. Never append conflicting normative
+  rules to another document.
+- Prefer the already running localhost:3000 server. Ask the user to sign in when
+  needed; do not bypass authentication. Keep test data confined to the local test DB.
+- Implement small reviewable units and verify each meaningful UI unit in the browser.
+  Check 320 CSS px reflow, representative mobile/intermediate/desktop, affected
+  boundaries, resizing and KO/JA/EN. Use actual viewport/DOM measurements; do not
+  infer CSS pixels from Retina screenshots. Follow the full validation contract.
+- Run relevant lint, typecheck, tests and build. Static checks do not substitute for
+  browser interaction or visual comparison. Investigate failures, distinguish
+  pre-existing failures from regressions, and own debugging through verification.
+- Report actual scope, evidence and caveats. Do not call a page suite complete from
+  isolated checks or claim a percentage without an approved denominator. Historical
+  verification logs are dated evidence, not current work or layout authority.
 
-- Do not make ambiguous product, design, or behavior decisions based on assumptions.
-- Before implementation, inspect the relevant code and current UI and identify every
-  unresolved requirement that could materially change the result.
-- Ask the user all necessary questions and continue the discussion until there are no
-  meaningful uncertainties left.
-- Do not start implementation while important requirements or expected behavior remain
-  unclear.
-- Agree with the user on a concrete implementation plan before making code changes.
-- First investigate questions that can be answered from the repository, current UI,
-  existing tests, or project documentation. Do not make the user answer facts that can
-  be discovered directly.
-- Actively find relevant references, including existing project patterns, the Figma
-  source, official documentation, and suitable comparable examples.
-- Share useful reference findings, possible approaches, and meaningful tradeoffs with
-  the user so the direction can be decided together before implementation.
-- References should inform the implementation without overriding the existing NosLog
-  design direction or established project conventions.
-- Once the requirements and plan are clear, proceed with the implementation and handle
-  debugging autonomously through verification.
+## Git ownership
 
-## Working Process
+The user owns commits, pushes, branch creation/switching and pull requests. Do not
+perform them without explicit authorization for that exact operation. Inspect branch
+and upstream state read-only when needed; do not pull, merge, rebase or reset history.
 
-- Before editing, check the repository status and inspect existing changes.
-- Preserve the user's existing changes and do not modify or revert unrelated files.
-- When repository freshness matters, inspect the current branch and upstream state
-  without performing pull, merge, rebase, reset, or other history-changing operations.
-- Implement UI work in small, reviewable units.
-- After changing one meaningful UI unit, verify it in the test browser before moving to
-  the next unit.
-- Prefer the user's already running `http://localhost:3000` development server instead
-  of starting a duplicate server.
-- If authentication is required for testing, ask the user to sign in instead of trying
-  to bypass authentication.
-- For responsive UI, verify both narrow mobile layouts and appropriate desktop widths.
-- Do not treat lint or typechecking as a substitute for testing the actual UI and
-  interaction in the browser.
-- Investigate test failures and distinguish pre-existing failures from failures caused
-  by the current change.
-- Own debugging from root-cause investigation through the fix and final verification.
-
-## Git Ownership
-
-- The user owns commits, pushes, branch creation or switching, and pull requests.
-- Do not commit, push, create or switch branches, or create pull requests unless the
-  user explicitly changes this rule for a specific task.
-- At completion, report the changed scope, verification results, remaining caveats, and
-  a recommended commit title.
-
-## Product and Audio Boundaries
-
-- Keep audio files local to the user's browser; do not upload MP3 files to the NosLog
-  server or database.
-- Preserve NosLog's records, rankings, archive, chart editor, and chart viewer focus.
-- Keep responsive chart visualizations readable based on their actual display area
-  rather than relying only on fixed pixel sizes.
+After the relevant checks pass, report scope, verification, caveats and a Conventional
+Commit title with an English type and Korean description, e.g.
+`fix: 악곡 상세 반응형 전환 기준 통일`. Do not imply unrelated unverified changes are
+ready to commit. Preserve current uncommitted work during documentation cleanup.

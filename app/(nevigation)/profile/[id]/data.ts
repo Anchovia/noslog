@@ -1,7 +1,8 @@
 import { CACHE_TAGS, getUserProfileTag } from "@/lib/cacheTags";
+import { PUBLIC_DATA_REVALIDATE_SECONDS } from "@/lib/cachePolicy";
 import db from "@/lib/db";
 import { buildProfileSJustAnalytics } from "@/lib/profile/profileAnalytics";
-import { getUserRankingPosition } from "@/lib/rankings";
+import { getUserRankingPosition } from "@/features/rankings/server/rankingPosition";
 import { normalizeStoredGrade } from "@/lib/utils";
 import { unstable_cache } from "next/cache";
 
@@ -55,6 +56,8 @@ async function queryProfileData(id: number) {
                     hide_nostalgia_name: true,
                     hide_discord_name: true,
                     hide_play_count: true,
+                    hide_preferred_arcade: true,
+                    hide_play_activity: true,
                     score_p: true,
                     score_f: true,
                     score_s: true,
@@ -167,12 +170,17 @@ async function queryProfileData(id: number) {
                 ? null
                 : user.discord_username,
             play_count: user.hide_play_count ? null : user.play_count,
+            preferredArcade: user.hide_preferred_arcade
+                ? null
+                : user.preferredArcade,
             rank_basic: rankBasic,
             rank_basic_country: rankBasicCountry,
             rank_recital: rankRecital,
             rank_recital_country: rankRecitalCountry,
             created_at: user.created_at.toISOString(),
-            last_played_at: recentPlays[0]?.source_play_time ?? null,
+            last_played_at: user.hide_play_activity
+                ? null
+                : (recentPlays[0]?.source_play_time ?? null),
         },
         gradeHistory: gradeHistory.map((point) => ({
             ...point,
@@ -181,26 +189,32 @@ async function queryProfileData(id: number) {
         })),
         basicBestPlays,
         recitalBestPlays,
-        recentPlays: recentPlays.map((play) => ({
-            id: play.id,
-            play_time: play.source_play_time,
-            score: play.score,
-            rank: play.rank,
-            grade_basic: play.grade_basic,
-            difficulty: play.chart.difficulty,
-            level: play.chart.level,
-            music_idx: play.chart.music_idx,
-            music: play.chart.music,
-        })),
+        recentPlays: (user.hide_play_activity ? [] : recentPlays).map(
+            (play) => ({
+                id: play.id,
+                play_time: play.source_play_time,
+                score: play.score,
+                rank: play.rank,
+                grade_basic: play.grade_basic,
+                difficulty: play.chart.difficulty,
+                level: play.chart.level,
+                music_idx: play.chart.music_idx,
+                music: play.chart.music,
+            })
+        ),
     };
 }
 
 // 프로필 공개 데이터는 사용자 ID별로 캐시함
 export function getCachedProfileData(id: number) {
-    return unstable_cache(() => queryProfileData(id), ["profile", String(id)], {
-        revalidate: 300,
-        tags: [CACHE_TAGS.userProfiles, getUserProfileTag(id)],
-    })();
+    return unstable_cache(
+        () => queryProfileData(id),
+        ["profile-public-visibility-v2", String(id)],
+        {
+            revalidate: PUBLIC_DATA_REVALIDATE_SECONDS,
+            tags: [CACHE_TAGS.userProfiles, getUserProfileTag(id)],
+        }
+    )();
 }
 
 // 상세 판정은 공개 캐시에 넣지 않고 본인 프로필에서만 조회함

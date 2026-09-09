@@ -1,14 +1,14 @@
-import MusicDetailBrowser from "@/components/music/musicDetailBrowser";
+import MusicDetail from "@/features/music/components/musicDetailPage";
 import { createPageMetadata } from "@/lib/metadata/site";
 import getSession from "@/lib/session";
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
-import { getCachedMusicDetail } from "./data";
+import { getCachedMusicDetail } from "@/features/music/server/musicDetailData";
 import {
     loadMusicDetail,
     normalizeMusicDetailTab,
     normalizeMusicDifficulty,
-} from "./loadMusicDetail";
+} from "@/features/music/server/loadMusicDetail";
 import { getServerI18n } from "@/lib/i18n/server";
 import { getLocalizedHref, localizePath } from "@/lib/i18n/routing";
 import { getMusicTitleDisplayPreference } from "@/lib/i18n/musicTitle";
@@ -76,13 +76,15 @@ export default async function MusicDetailPage(props: {
     if (!selectedDifficulty) notFound();
 
     const activeTab = normalizeMusicDetailTab(searchParams.tab);
-    const requestedPage = Number.parseInt(searchParams.page ?? "1", 10);
+    const requestedPage = Number(searchParams.page ?? "1");
     const rankingPage =
-        Number.isFinite(requestedPage) && requestedPage > 0 ? requestedPage : 1;
+        Number.isSafeInteger(requestedPage) && requestedPage > 0
+            ? requestedPage
+            : 1;
 
     if (difficulty !== difficulty.toLowerCase()) {
         const query = new URLSearchParams();
-        if (activeTab !== "record") query.set("tab", activeTab);
+        if (activeTab !== "detail") query.set("tab", activeTab);
         if (activeTab === "ranking" && rankingPage > 1) {
             query.set("page", String(rankingPage));
         }
@@ -104,6 +106,21 @@ export default async function MusicDetailPage(props: {
         showLocalizedTitle
     );
     if (!data) notFound();
+    if (
+        activeTab === "ranking" &&
+        searchParams.page !== undefined &&
+        searchParams.page !==
+            (data.ranking.page > 1 ? String(data.ranking.page) : undefined)
+    ) {
+        const query = new URLSearchParams({ tab: "ranking" });
+        if (data.ranking.page > 1) query.set("page", String(data.ranking.page));
+        redirect(
+            getLocalizedHref(
+                `/music/${index}/${selectedDifficulty.toLowerCase()}?${query}`,
+                locale
+            )
+        );
+    }
 
-    return <MusicDetailBrowser initialData={data} />;
+    return <MusicDetail key={`${index}:${locale}`} initialData={data} />;
 }

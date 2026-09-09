@@ -1,5 +1,6 @@
+import type { CommunityData } from "@/features/music/schemas/communitySchema";
 import type { PeerScoreComparison } from "@/lib/music/peerScoreComparison";
-import type { RankingRow } from "./ranking/musicRankingTypes";
+import type { ChartRankingRow } from "@/features/music/schemas/chartRankingSchema";
 
 export type Difficulty = "Normal" | "Hard" | "Expert" | "Real";
 
@@ -16,6 +17,7 @@ export interface MusicInfo {
     hard: number;
     expert: number;
     real: number | null;
+    constants?: Partial<Record<Difficulty, number | null>>;
 }
 
 export interface UserPlayData {
@@ -119,6 +121,8 @@ export interface ChartDetail {
 }
 
 export interface MusicDetailProps {
+    community?: CommunityData;
+    accountId?: number;
     music: MusicInfo;
     difficulty: Difficulty;
     activeTab: DetailTab;
@@ -130,7 +134,7 @@ export interface MusicDetailProps {
     peerScoreComparison: PeerScoreComparison | null;
     chartDetail: ChartDetail;
     ranking: {
-        rows: RankingRow[];
+        rows: ChartRankingRow[];
         page: number;
         pageSize: number;
         totalCount: number;

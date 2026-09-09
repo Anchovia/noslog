@@ -1,0 +1,43 @@
+.noslog-ui .nl-recovery {
+    margin-inline: 0;
+    padding-block: var(--nl-spacing-48);
+    gap: var(--nl-spacing-24);
+    align-items: flex-start;
+}
+.noslog-ui .nl-recovery__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-recovery__actions .nl-button {
+    min-height: 40px;
+    height: 40px;
+}
+.noslog-ui.nl-recovery-minimal {
+    min-height: 100dvh;
+    background: var(--nl-surface-canvas);
+}
+.noslog-ui.nl-recovery-minimal main {
+    width: 100%;
+    max-width: var(--nl-layout-max);
+    margin-inline: auto;
+    padding: var(--nl-spacing-64) var(--nl-layout-margin);
+}
+.noslog-ui .nl-recovery-minimal__content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    max-width: var(--nl-container-reading);
+    gap: var(--nl-spacing-32);
+}
+.noslog-ui .nl-recovery__timing {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-4);
+}
+.noslog-ui .nl-recovery__timing > div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--nl-spacing-8);
+}

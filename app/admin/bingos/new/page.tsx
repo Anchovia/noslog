@@ -1,6 +1,6 @@
 import BingoEditor, {
     type BingoEditorData,
-} from "@/components/admin/bingoEditor";
+} from "@/features/bingos/components/bingoEditor";
 import db from "@/lib/db";
 
 export default async function NewBingoPage() {
@@ -11,8 +11,8 @@ export default async function NewBingoPage() {
     const bingo: BingoEditorData = {
         title: "",
         description: "",
-        rewardNos: 0,
-        requiredLines: 1,
+        rewardNos: "0",
+        requiredLines: "1",
         status: "draft",
         startsAt: "",
         endsAt: "",

@@ -1,0 +1,14 @@
+{
+    "version": "1.3.9",
+    "delivery": "single-file",
+    "licenseSource": "https://github.com/orioncactus/pretendard/releases/download/v1.3.9/PretendardJP-1.3.9.zip#LICENSE.txt",
+    "licenseSha256": "6cb2adce04090e5e321168d5b47e12d1cb703da64929a4f34dba9162eb55eb98",
+    "files": [
+        {
+            "filename": "PretendardJPVariable.woff2",
+            "source": "https://github.com/orioncactus/pretendard/releases/download/v1.3.9/PretendardJP-1.3.9.zip#web/variable/woff2/PretendardJPVariable.woff2",
+            "bytes": 5348104,
+            "sha256": "bc47e34e10121f5464c701a5bf463e4f5ab0981bdf2dfaf6459a23059f979ff1"
+        }
+    ]
+}

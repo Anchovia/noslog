@@ -2,7 +2,7 @@
 
 import * as Popover from "@radix-ui/react-popover";
 import { CircleHelp } from "lucide-react";
-import { Fragment, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslations } from "@/components/i18n/localeProvider";
 import type { MessageKey } from "@/lib/i18n/messages";
 
@@ -25,6 +25,12 @@ function BingoTerm({ term }: { term: keyof typeof BINGO_TERMS }) {
     const t = useTranslations();
     const [open, setOpen] = useState(false);
     const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+    useEffect(
+        () => () => {
+            if (closeTimer.current) clearTimeout(closeTimer.current);
+        },
+        []
+    );
 
     function cancelClose() {
         if (closeTimer.current) clearTimeout(closeTimer.current);
@@ -37,41 +43,45 @@ function BingoTerm({ term }: { term: keyof typeof BINGO_TERMS }) {
     return (
         <Popover.Root open={open} onOpenChange={setOpen}>
             <span
-                className="inline-flex items-baseline gap-0.5"
+                className="nl-bingo-term"
                 onMouseEnter={() => {
                     cancelClose();
                     setOpen(true);
                 }}
                 onMouseLeave={scheduleClose}
             >
-                <span className="decoration-text-disabled underline decoration-dotted underline-offset-2">
-                    {term}
-                </span>
                 <Popover.Trigger asChild>
                     <button
                         type="button"
                         aria-label={t("bingo.termAria", { term })}
-                        className="text-text-disabled hover:text-text-primary inline-flex cursor-help align-middle transition-colors"
+                        className="nl-bingo-term__trigger"
                         onFocus={() => setOpen(true)}
+                        onClick={(event) => {
+                            // Hover or focus may already have opened the help.
+                            // A tap must keep it open instead of toggling it shut.
+                            event.preventDefault();
+                            cancelClose();
+                            setOpen(true);
+                        }}
                     >
-                        <CircleHelp className="size-3" />
+                        <span>{term}</span>
+                        <CircleHelp size={14} aria-hidden />
                     </button>
                 </Popover.Trigger>
             </span>
             <Popover.Portal>
                 <Popover.Content
                     side="top"
-                    sideOffset={6}
-                    collisionPadding={12}
+                    sideOffset={8}
+                    collisionPadding={16}
+                    onOpenAutoFocus={(event) => event.preventDefault()}
+                    onCloseAutoFocus={(event) => event.preventDefault()}
                     onMouseEnter={cancelClose}
                     onMouseLeave={scheduleClose}
-                    className="border-border bg-surface-muted text-body-muted z-50 w-56 rounded-md border p-3 shadow-xl"
+                    className="noslog-ui nl-bingo-term__popover nl-body-secondary"
                 >
-                    <strong className="text-text-primary mb-1 block text-sm">
-                        {term}
-                    </strong>
-                    {t(BINGO_TERMS[term])}
-                    <Popover.Arrow className="fill-border" />
+                    <strong className="nl-control">{term}</strong>
+                    <p>{t(BINGO_TERMS[term])}</p>
                 </Popover.Content>
             </Popover.Portal>
         </Popover.Root>

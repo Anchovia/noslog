@@ -55,7 +55,12 @@ describe("관리자 악곡 업데이트 검토", () => {
     });
 
     it("검토 대기 후보를 반려 상태로 변경한다", async () => {
-        await reviewMusicCatalogCandidate(reviewForm("reject"));
+        await expect(
+            reviewMusicCatalogCandidate(reviewForm("reject"))
+        ).resolves.toEqual({
+            success: true,
+            message: "악곡 업데이트를 반려했습니다.",
+        });
 
         expect(mocks.applyMusicCatalogSnapshot).not.toHaveBeenCalled();
         expect(mocks.candidateUpdate).toHaveBeenCalledWith({
@@ -69,11 +74,30 @@ describe("관리자 악곡 업데이트 검토", () => {
         expect(mocks.revalidatePath).toHaveBeenCalledWith("/admin/catalog");
     });
 
+    it("잘못된 검토 요청은 후보를 조회하지 않는다", async () => {
+        const formData = new FormData();
+        formData.set("candidateId", "0");
+        formData.set("decision", "approve");
+
+        await expect(
+            reviewMusicCatalogCandidate(formData)
+        ).resolves.toMatchObject({
+            success: false,
+            message: "잘못된 악곡 업데이트입니다.",
+        });
+        expect(mocks.candidateFindUnique).not.toHaveBeenCalled();
+    });
+
     it("승인한 후보를 카탈로그에 반영하고 공개 캐시를 갱신한다", async () => {
         const snapshot = { musicIndex: "sasoribi" };
         mocks.parseMusicCatalogSnapshot.mockReturnValue(snapshot);
 
-        await reviewMusicCatalogCandidate(reviewForm("approve"));
+        await expect(
+            reviewMusicCatalogCandidate(reviewForm("approve"))
+        ).resolves.toEqual({
+            success: true,
+            message: "악곡 업데이트를 반영했습니다.",
+        });
 
         expect(mocks.applyMusicCatalogSnapshot).toHaveBeenCalledWith(snapshot);
         expect(mocks.candidateUpdate).toHaveBeenCalledWith({
@@ -101,7 +125,12 @@ describe("관리자 악곡 업데이트 검토", () => {
             status: "applied",
         });
 
-        await reviewMusicCatalogCandidate(reviewForm("approve"));
+        await expect(
+            reviewMusicCatalogCandidate(reviewForm("approve"))
+        ).resolves.toEqual({
+            success: false,
+            message: "이미 반영된 악곡 업데이트입니다.",
+        });
 
         expect(mocks.parseMusicCatalogSnapshot).not.toHaveBeenCalled();
         expect(mocks.applyMusicCatalogSnapshot).not.toHaveBeenCalled();
