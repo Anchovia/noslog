@@ -177,21 +177,19 @@ export default function PublicProfilePage({
                     </div>
                 </>
             ) : (
-                <StatusMessage
-                    title={t("profile.noSyncedRecords")}
-                    action={
-                        isOwner ? (
-                            <Link
-                                href={href("/bookmarklet")}
-                                className={foundationButtonClass({
-                                    variant: "primary",
-                                })}
-                            >
-                                {t("sync.title")}
-                            </Link>
-                        ) : undefined
-                    }
-                />
+                <div className="nl-profile-empty">
+                    <StatusMessage title={t("profile.noSyncedRecords")} />
+                    {isOwner ? (
+                        <Link
+                            href={href("/bookmarklet")}
+                            className={foundationButtonClass({
+                                variant: "primary",
+                            })}
+                        >
+                            {t("sync.title")}
+                        </Link>
+                    ) : null}
+                </div>
             )}
         </PageContainer>
     );

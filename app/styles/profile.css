@@ -517,8 +517,10 @@
 .noslog-ui .nl-profile-share {
     padding: var(--nl-spacing-16) 0 var(--nl-spacing-24);
     width: min(334px, calc(100vw - 32px));
-    border: 1px solid var(--nl-border-overlay);
-    box-shadow: var(--nl-elevation-overlay);
+    border: 0;
+    box-shadow:
+        inset 0 0 0 1px var(--nl-border-overlay),
+        var(--nl-elevation-overlay);
 }
 .noslog-ui .nl-profile-share .nl-dialog__header {
     padding-inline: var(--nl-spacing-24) var(--nl-spacing-16);
@@ -587,6 +589,15 @@
     .noslog-ui .nl-profile-share__secondary > * {
         flex-basis: 100%;
     }
+}
+.noslog-ui .nl-profile-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--nl-spacing-32);
+}
+.noslog-ui .nl-profile-empty > .nl-status {
+    width: 100%;
 }
 .noslog-ui .nl-profile-loading__identity {
     min-height: 204px;

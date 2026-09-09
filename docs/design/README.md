@@ -90,6 +90,9 @@ Do not invent separate transitions from Figma's 390/768/1024/1280 review canvase
 - **Profile:** Wide uses a 2:1 body grid within the same 1000px shell: Progress
   beside Record overview, then Best performances beside Recent plays. Its identity
   uses a 108px avatar and 32/40 name, with activity metadata below the name/badges.
+  The no-records state separates its information notice from the owner's sync
+  action below it, with a 32px gap. Center the content-width primary button with
+  its light fill and no border, replacing Figma's left-aligned outlined action.
   Below Wide, retain the 64px avatar and one-column section order. Private recent
   activity remains hidden; resizing must preserve selections and loaded records.
   The Wide Progress heading and metric/range controls share one vertically
