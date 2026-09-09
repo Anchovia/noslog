@@ -17,7 +17,7 @@ import { z } from "zod";
 const EAGATE_ORIGIN = "https://p.eagate.573.jp";
 const MAX_SYNC_BODY_BYTES = 8 * 1024 * 1024;
 const SYNC_COOLDOWN_MS = 30 * 1000;
-const SYNC_PROCESSING_TIMEOUT_MS = 15 * 60 * 1000;
+const SYNC_PROCESSING_TIMEOUT_MS = 5 * 60 * 1000;
 const responseCopy = {
     ko: {
         forbidden: "허용되지 않은 요청입니다.",

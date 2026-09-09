@@ -360,11 +360,11 @@ describe("POST /api/receivePlayerData", () => {
         expect(mocks.dataSyncCreate).not.toHaveBeenCalled();
     });
 
-    it("15분 넘게 멈춘 동기화를 실패 처리하고 새 요청을 시작한다", async () => {
+    it("5분 넘게 멈춘 동기화를 실패 처리하고 새 요청을 시작한다", async () => {
         mocks.dataSyncFindFirst.mockResolvedValue({
             id: 9,
             status: "processing",
-            started_at: new Date(Date.now() - 16 * 60 * 1000),
+            started_at: new Date(Date.now() - 6 * 60 * 1000),
         });
 
         const response = await POST(createRequest(requestBody()));
