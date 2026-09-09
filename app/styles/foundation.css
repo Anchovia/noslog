@@ -12,6 +12,7 @@
         0 0 2px rgb(0 0 0 / 36%), 0 2px 6px rgb(0 0 0 / 12%),
         0 4px 12px rgb(0 0 0 / 24%);
     --nl-control-height: 44px;
+    --nl-button-height: 40px;
     --nl-input-height: 44px;
     --nl-icon-small: 16px;
     --nl-icon-medium: 20px;
@@ -126,7 +127,7 @@ html[data-theme="light"] .noslog-ui,
 
 .noslog-ui .nl-button {
     display: inline-flex;
-    min-height: var(--nl-control-height);
+    min-height: var(--nl-button-height);
     align-items: center;
     justify-content: center;
     gap: var(--nl-spacing-8);
@@ -147,7 +148,7 @@ html[data-theme="light"] .noslog-ui,
     background: var(--nl-primary-hover);
 }
 .noslog-ui .nl-button--compact {
-    min-height: 40px;
+    min-height: var(--nl-button-height);
 }
 .noslog-ui .nl-button:active {
     background: var(--nl-primary-pressed);

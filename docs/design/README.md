@@ -104,6 +104,11 @@ The retired 90% layout, 1440px maximum, proposed 1200/1280px stepping, unreachab
 
 ## Styling and behavior boundaries
 
+Standard text buttons use a 40px minimum height in every page mode, matching all
+C1 Button variants (`88:46`). Button height is independent of the responsive
+control height; do not change input, checkbox-row or icon-control sizing when
+applying this rule. Allow multiline labels to grow without clipping.
+
 The feedback dialog's image attachment control spans the input width in Compact.
 This user-approved exception replaces the content-width attachment control in P2
 `3375:5629`. From Intermediate, keep it content-width and left-aligned. Compact
