@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useEffectEvent, useRef, useState } from "react";
-import { Minus, Plus } from "lucide-react";
+import { CircleAlert, Minus, Plus } from "lucide-react";
 import { useTranslations } from "@/components/i18n/localeProvider";
 import Button from "@/components/ui/Button";
 import { loadKakaoMaps } from "@/lib/kakaoMaps";
@@ -20,6 +20,7 @@ export default function ArcadeDiscoveryMap({
     onSelect,
     onSearchArea,
     onExpand,
+    inlineError = false,
 }: {
     appKey: string;
     arcades: PublicArcade[];
@@ -27,6 +28,7 @@ export default function ArcadeDiscoveryMap({
     onSelect: (id: number) => void;
     onSearchArea?: (bounds: ArcadeBounds) => void;
     onExpand?: () => void;
+    inlineError?: boolean;
 }) {
     const t = useTranslations();
     const container = useRef<HTMLDivElement>(null);
@@ -237,6 +239,7 @@ export default function ArcadeDiscoveryMap({
         <div
             className="nl-arcade-map"
             data-state={state}
+            data-inline-error={(inlineError && state === "error") || undefined}
             aria-label={t("arcades.distributionMap")}
         >
             <div className="nl-arcade-map__canvas" ref={container} />
@@ -245,11 +248,16 @@ export default function ArcadeDiscoveryMap({
                     className="nl-arcade-map__status nl-body-secondary"
                     role="status"
                 >
+                    {inlineError && state === "error" ? (
+                        <CircleAlert className="nl-icon" aria-hidden />
+                    ) : null}
                     <p>
                         {t(
                             state === "loading"
                                 ? "arcades.mapLoading"
-                                : "arcades.mapListFallback"
+                                : inlineError
+                                  ? "arcades.mapLoadError"
+                                  : "arcades.mapListFallback"
                         )}
                     </p>
                     {state === "error" ? (
@@ -314,7 +322,10 @@ export default function ArcadeDiscoveryMap({
                     {t("arcades.mapView")}
                 </button>
             ) : null}
-            <details className="nl-arcade-map__legend nl-metadata">
+            <details
+                hidden={inlineError && state === "error"}
+                className="nl-arcade-map__legend nl-metadata"
+            >
                 <summary>{t("arcades.legend")}</summary>
                 <ul>
                     {(

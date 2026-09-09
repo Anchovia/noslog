@@ -471,8 +471,8 @@
     display: flex;
 }
 .noslog-ui .nl-arcades[data-mode="map"] .nl-arcade-map[data-state="error"] {
-    height: 180px;
-    min-height: 180px;
+    height: auto;
+    min-height: 0;
 }
 .noslog-ui .nl-arcade-detail__compact-report > button {
     width: 100%;
@@ -558,4 +558,32 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
         height: 360px;
     }
+}
+
+.noslog-ui .nl-arcades .nl-arcade-map[data-inline-error] {
+    height: auto;
+    min-height: 0;
+}
+.noslog-ui .nl-arcade-map[data-inline-error] .nl-arcade-map__canvas {
+    display: none;
+}
+.noslog-ui .nl-arcade-map[data-inline-error] .nl-arcade-map__status {
+    position: static;
+    flex-direction: row;
+    justify-content: flex-start;
+    text-align: left;
+    gap: var(--nl-spacing-12);
+    background: var(--nl-feedback-danger-bg);
+    color: var(--nl-feedback-message-text);
+}
+.noslog-ui .nl-arcade-map[data-inline-error] .nl-arcade-map__status > svg {
+    flex-shrink: 0;
+    color: var(--nl-feedback-danger-marker);
+}
+.noslog-ui .nl-arcade-map[data-inline-error] .nl-arcade-map__status > p {
+    flex: 1;
+    min-width: 0;
+}
+.noslog-ui .nl-arcade-map[data-inline-error] .nl-arcade-map__status > button {
+    flex-shrink: 0;
 }

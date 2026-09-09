@@ -295,6 +295,7 @@ export default function ArcadeDiscoveryPage({
             <div className="nl-arcades__results">
                 <div className="nl-arcades__map-region">
                     <ArcadeDiscoveryMap
+                        inlineError
                         appKey={appKey}
                         arcades={result}
                         selectedId={selectedId}

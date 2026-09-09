@@ -99,10 +99,21 @@ for (const locale of ["ko", "ja", "en"] as const) {
         await page.goto(`/${locale}/p7-verification?fixture=arcades`);
         await expect(page.locator(".nl-arcades__list > li")).toHaveCount(2);
         await expect(
-            page.getByText(t["arcades.mapListFallback"], { exact: true })
+            page.getByText(t["arcades.mapLoadError"], { exact: true })
         ).toBeVisible();
+        await expect(page.locator(".nl-arcade-map__legend")).toBeHidden();
+        await page
+            .getByRole("button", { name: t["common.retry"], exact: true })
+            .click();
+        await expect(page.locator(".nl-arcade-map")).toHaveAttribute(
+            "data-state",
+            "error"
+        );
         for (const width of [320, 390, 671, 672, 768, 1055, 1056, 1470, 1055]) {
             await page.setViewportSize({ width, height: 900 });
+            expect(
+                (await page.locator(".nl-arcade-map").boundingBox())!.height
+            ).toBeLessThan(110);
             const summary = (await page
                 .locator(".nl-arcades__summary")
                 .boundingBox())!;
