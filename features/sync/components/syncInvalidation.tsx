@@ -84,7 +84,11 @@ export default function SyncInvalidation({
                         disabled={pending}
                         onClick={invalidate}
                     >
-                        {t(pending ? "sync.regenerating" : "sync.invalidate")}
+                        {t(
+                            pending
+                                ? "sync.regenerating"
+                                : "sync.invalidateConfirm"
+                        )}
                     </Button>
                 </>
             }

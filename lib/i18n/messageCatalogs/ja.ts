@@ -885,6 +885,7 @@ export const jaMessages = {
     "sync.latestAt": "最終同期 {date}",
     "sync.startedAt": "{date} 開始",
     "sync.invalidate": "既存のブックマークレットを無効化",
+    "sync.invalidateConfirm": "無効化",
     "sync.invalidateHelp":
         "このアカウントの既存のブックマークレットは直ちに無効になります。無効化後は登録し直す必要があります。",
     "sync.description":

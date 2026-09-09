@@ -892,6 +892,7 @@ export const enMessages = {
     "sync.latestAt": "Last synced {date}",
     "sync.startedAt": "Started {date}",
     "sync.invalidate": "Invalidate existing bookmarklets",
+    "sync.invalidateConfirm": "Invalidate",
     "sync.invalidateHelp":
         "Existing bookmarklets for this account expire immediately. You must reinstall the bookmarklet after invalidating them.",
     "sync.description":

@@ -883,6 +883,7 @@ export const koMessages = {
     "sync.latestAt": "마지막 동기화 {date}",
     "sync.startedAt": "{date} 시작",
     "sync.invalidate": "기존 북마클릿 무효화",
+    "sync.invalidateConfirm": "무효화",
     "sync.invalidateHelp":
         "이 계정의 기존 북마클릿이 즉시 만료됩니다. 무효화 후 북마클릿을 다시 등록해야 합니다.",
     "sync.description":
