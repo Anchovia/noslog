@@ -23,44 +23,38 @@
 .noslog-ui .nl-sync-install-card {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: var(--nl-spacing-16);
+    align-items: stretch;
+    gap: var(--nl-spacing-12);
     width: 100%;
-    padding: var(--nl-spacing-24);
-    background: var(--nl-surface-surface);
+    padding: var(--nl-spacing-16);
+    background: var(--nl-surface-sunken);
+    border: 1px dashed var(--nl-border-strong);
     border-radius: var(--nl-radius-container);
     text-align: center;
 }
 .noslog-ui .nl-sync-install-card__target {
-    padding: var(--nl-spacing-16);
-    border: 1px dashed var(--nl-border-strong);
-    border-radius: var(--nl-radius-container);
+    width: 100%;
+    max-width: 100%;
 }
 .noslog-ui .nl-sync-install-card .nl-button {
     min-height: 40px;
 }
-.noslog-ui .nl-sync-mobile-guide,
-.noslog-ui .nl-sync-step {
+.noslog-ui .nl-sync-step-action {
     width: 100%;
+    text-align: center;
 }
-.noslog-ui .nl-sync-step {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-8);
-}
-.noslog-ui .nl-sync-step__label {
-    display: flex;
-    align-items: center;
-    gap: var(--nl-spacing-8);
+.noslog-ui .nl-sync-mobile-guide {
+    width: 100%;
 }
 .noslog-ui .nl-sync-step__number {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 24px;
-    height: 24px;
+    width: 32px;
+    height: 32px;
     flex-shrink: 0;
-    background: var(--nl-surface-sunken);
+    background: var(--nl-primary-default);
+    color: var(--nl-primary-on-primary);
     border-radius: var(--nl-radius-full);
 }
 .noslog-ui .nl-sync-pair {
@@ -168,22 +162,104 @@
     max-height: 70dvh;
     object-fit: contain;
 }
-@media (min-width: 1056px) {
-    .noslog-ui .nl-sync-page:not(.nl-sync-page--guest) .nl-sync-columns {
-        display: grid;
-        grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
-        gap: var(--nl-spacing-16);
-        align-items: start;
+.noslog-ui .nl-sync-guide,
+.noslog-ui .nl-sync-guide-steps {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-16);
+    min-width: 0;
+}
+.noslog-ui .nl-sync-guide-intro {
+    display: grid;
+    gap: var(--nl-spacing-8);
+    margin-bottom: var(--nl-spacing-8);
+}
+.noslog-ui .nl-sync-guide-step {
+    display: grid;
+    grid-template-columns: 32px minmax(0, 1fr);
+    align-items: start;
+    gap: var(--nl-spacing-16);
+    padding: var(--nl-spacing-24);
+    background: var(--nl-surface-surface);
+    border: 1px solid var(--nl-border-divider);
+    border-radius: var(--nl-radius-container);
+}
+.noslog-ui .nl-sync-step-heading {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--nl-spacing-8);
+    min-height: 32px;
+}
+.noslog-ui .nl-sync-setup > :is(h2, h3) {
+    display: flex;
+    align-items: center;
+    min-height: 32px;
+}
+.noslog-ui .nl-sync-step-tag {
+    padding: var(--nl-spacing-2) var(--nl-spacing-8);
+    border: 1px solid var(--nl-border-default);
+    border-radius: var(--nl-radius-full);
+    color: var(--nl-content-subdued);
+}
+.noslog-ui .nl-sync-guide-detail {
+    width: 100%;
+}
+.noslog-ui .nl-sync-page .nl-sync-guide-detail > summary {
+    min-height: 40px;
+    padding-block: var(--nl-spacing-8);
+    color: var(--nl-content-subdued);
+}
+.noslog-ui .nl-sync-guide-detail .nl-disclosure__body {
+    padding-top: var(--nl-spacing-8);
+}
+.noslog-ui .nl-sync-page .nl-sync-columns {
+    width: 100%;
+}
+.noslog-ui .nl-sync-page--first .nl-sync-columns > .nl-sync-column:last-child {
+    border-top: 1px solid var(--nl-border-divider);
+    padding-top: var(--nl-spacing-24);
+}
+@media (max-width: 671px) {
+    .noslog-ui .nl-sync-guide-step {
+        display: block;
+        position: relative;
+        padding: var(--nl-spacing-16);
     }
-    .noslog-ui .nl-sync-primary {
-        width: fit-content;
+    .noslog-ui .nl-sync-guide-step > .nl-sync-step__number {
+        position: absolute;
+        top: var(--nl-spacing-16);
+        left: var(--nl-spacing-16);
+    }
+    .noslog-ui .nl-sync-step-heading,
+    .noslog-ui .nl-sync-setup > :is(h2, h3) {
+        padding-inline-start: calc(32px + var(--nl-spacing-12));
+    }
+    .noslog-ui .nl-sync-guide-step .nl-sync-setup {
+        gap: var(--nl-spacing-12);
     }
 }
+
+.noslog-ui .nl-sync-overview {
+    display: grid;
+    gap: var(--nl-spacing-12);
+    width: 100%;
+}
+.noslog-ui .nl-sync-overview-step {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-12);
+    padding: var(--nl-spacing-16);
+    border: 1px solid var(--nl-border-divider);
+    border-radius: var(--nl-radius-container);
+    background: var(--nl-surface-surface);
+}
 @media (min-width: 672px) {
-    .noslog-ui .nl-sync-step {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-        align-items: center;
-        gap: var(--nl-spacing-16);
+    .noslog-ui .nl-sync-overview {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .noslog-ui .nl-sync-overview-step {
+        flex-direction: column;
+        align-items: flex-start;
     }
 }

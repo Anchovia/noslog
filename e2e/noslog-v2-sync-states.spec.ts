@@ -40,6 +40,7 @@ for (const locale of ["ko", "ja", "en"] as const) {
                 `/${locale}/p7-verification?fixture=sync&state=${state}`
             );
             const main = page.getByRole("main");
+            await expect(main.locator(".nl-sync-page")).toBeVisible();
             await expect(main.getByRole("heading", { level: 1 })).toHaveText(
                 t["sync.title"]
             );
@@ -50,12 +51,21 @@ for (const locale of ["ko", "ja", "en"] as const) {
                 "cooldown",
                 "large",
             ].includes(state);
-            await expect(
-                main.getByRole("heading", {
-                    name: t["sync.latestResult"],
-                    exact: true,
-                })
-            ).toHaveCount(completed ? 1 : 0);
+            const latestResult = main.locator("details").filter({
+                has: page.locator("summary", {
+                    hasText: t["sync.latestResult"],
+                }),
+            });
+            await expect(latestResult).toHaveCount(completed ? 1 : 0);
+            if (completed) {
+                await expect(main.locator(".nl-sync-status")).toHaveCount(0);
+                await expect(main.locator(".nl-sync-primary")).toHaveCount(0);
+                await expect(latestResult).not.toHaveAttribute("open", "");
+                await latestResult.locator("summary").click();
+                await expect(
+                    latestResult.locator(".nl-sync-metrics")
+                ).toBeVisible();
+            }
             await expect(
                 main.getByRole("heading", {
                     name: t["sync.coverage"],
@@ -70,14 +80,14 @@ for (const locale of ["ko", "ja", "en"] as const) {
                 await expect(main).toContainText(t["sync.firstFull"]);
             if (["processing", "delayed"].includes(state))
                 await expect(main.locator(".nl-sync-primary")).toHaveCount(0);
-            if (state === "cooldown")
+            if (completed)
                 await expect(
-                    main.getByRole("button", {
+                    main.getByRole("link", {
                         name: t["sync.openOfficial"],
                         exact: true,
                     })
-                ).toBeDisabled();
-            for (const width of [320, 390, 768, 1470]) {
+                ).toHaveCount(1);
+            for (const width of [320, 390, 671, 672, 768, 1055, 1056, 1470]) {
                 await page.setViewportSize({ width, height: 844 });
                 await expect
                     .poll(() =>
@@ -90,6 +100,15 @@ for (const locale of ["ko", "ja", "en"] as const) {
                     .toBe(true);
             }
             if (state === "full") {
+                const setup = main.locator("details").filter({
+                    has: page.locator("summary", {
+                        hasText: t["sync.setup"],
+                    }),
+                });
+                await expect(setup).toHaveAttribute("open", "");
+                await expect(setup.locator(":scope > summary")).toContainText(
+                    t["sync.setup"]
+                );
                 const history = main.locator("details").filter({
                     has: page.locator("summary", {
                         hasText: t["sync.history"],
@@ -125,6 +144,10 @@ for (const locale of ["ko", "ja", "en"] as const) {
         await page.goto(
             `/${locale}/p7-verification?fixture=sync&state=processing`
         );
+        const helpDisclosure = page.locator("details").filter({
+            has: page.locator("summary", { hasText: t["sync.help"] }),
+        });
+        await helpDisclosure.locator("summary").click();
         const help = page.getByRole("button", {
             name: t["sync.invalidate"],
             exact: true,
@@ -132,10 +155,7 @@ for (const locale of ["ko", "ja", "en"] as const) {
         await help.focus();
         state = "full";
         await expect(
-            page.getByRole("heading", {
-                name: t["sync.latestResult"],
-                exact: true,
-            })
+            page.locator("summary", { hasText: t["sync.latestResult"] })
         ).toBeVisible();
         await expect(help).toBeFocused();
         const completedRequests = requests;
@@ -191,10 +211,23 @@ for (const locale of ["ko", "ja", "en"] as const) {
         await expect(main.getByRole("alert")).toContainText(
             t["common.retryLater"]
         );
-        await main
-            .getByRole("button", { name: t["sync.invalidate"], exact: true })
-            .click();
+        const helpDisclosure = main.locator("details").filter({
+            has: page.locator("summary", { hasText: t["sync.help"] }),
+        });
+        await helpDisclosure.locator("summary").click();
+        const invalidate = main.getByRole("button", {
+            name: t["sync.invalidate"],
+            exact: true,
+        });
+        await expect(invalidate).toHaveClass(/nl-button--danger-filled/);
+        await invalidate.click();
         const dialog = page.getByRole("dialog");
+        await expect(
+            dialog.getByRole("button", {
+                name: t["sync.invalidateConfirm"],
+                exact: true,
+            })
+        ).toHaveClass(/nl-button--danger-filled/);
         await expect(
             dialog.getByRole("button", { name: t["sync.cancel"], exact: true })
         ).toBeFocused();
