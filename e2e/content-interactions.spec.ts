@@ -60,15 +60,16 @@ test("비로그인 통합 서열표에서 모드와 목표 필터를 제공한�
         page.getByRole("radio", { name: "Basic", exact: true })
     ).toHaveAttribute("aria-checked", "true");
     const goalSelect = page.getByRole("combobox", { name: "목표" });
-    await expect(goalSelect).toHaveValue("s");
+    await expect(goalSelect).toHaveText("S");
     await expect(
         page.getByRole("button", { name: "필터", exact: true })
     ).toBeVisible();
     await expect(
         page.getByRole("checkbox", { name: "상세 보기", exact: true })
     ).toBeVisible();
-    await goalSelect.selectOption("fc");
+    await goalSelect.click();
+    await page.getByRole("option", { name: "Full Combo", exact: true }).click();
     await expect(page).toHaveURL(/(?:\?|&)goal=fc(?:&|$)/);
-    await expect(goalSelect).toHaveValue("fc");
+    await expect(goalSelect).toHaveText("Full Combo");
     await expectNoHorizontalOverflow(page);
 });

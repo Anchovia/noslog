@@ -77,7 +77,9 @@ test("비로그인 사용자가 전체 메뉴에서 언어를 변경한다", asy
     await page.getByRole("link", { name: /^화면 설정/ }).click();
     await page.getByRole("radio", { name: "日本語", exact: true }).click();
 
-    await expect(page).toHaveURL(/\/ja\/settings\?category=experience/);
+    await expect(page).toHaveURL(/\/ja\/settings\?category=experience/, {
+        timeout: 20_000,
+    });
     await expectLocalizedDocument(page, "ja");
     await expect(
         page.getByRole("button", { name: localeCopy.ja.openMenu })

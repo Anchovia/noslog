@@ -103,6 +103,7 @@ export default async function OfficialXPost({
                             href={post.post.url}
                             target="_blank"
                             rel="noreferrer"
+                            aria-label={t("home.officialPostLink")}
                             className="nl-official-post__media"
                             style={{
                                 aspectRatio: `${post.post.image.width} / ${post.post.image.height}`,

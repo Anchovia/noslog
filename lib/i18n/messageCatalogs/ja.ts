@@ -530,7 +530,7 @@ export const jaMessages = {
     "rankings.region.other": "その他地域",
     "rankings.myUnavailable": "自分の順位なし",
     "rankings.loginPrompt": "ログインして順位を確認",
-    "rankings.myPosition": "自分の順位へ",
+    "rankings.myPosition": "順位へ",
     "rankings.participants": "参加者 {count}人",
     "rankings.updating": "ランキングを更新しています。",
     "rankings.ratingUnavailable": "NosLogレーティングは現在利用できません。",
