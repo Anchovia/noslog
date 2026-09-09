@@ -95,6 +95,7 @@
     overflow-y: auto;
     overscroll-behavior: contain;
     background: var(--nl-surface-surface);
+    border-radius: var(--nl-radius-container);
 }
 .noslog-ui .nl-tier-band-option {
     width: 100%;

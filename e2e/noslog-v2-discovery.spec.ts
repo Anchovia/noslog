@@ -315,7 +315,7 @@ for (const locale of ["ko", "ja", "en"]) {
 test("Chart scope groups published difficulty destinations and hides the Music view switch", async ({
     page,
     request,
-}) => {
+}, testInfo) => {
     const response = await request.get("/api/discovery?q=STULTI");
     const body = await response.json();
     const music = body.result.items[0];
@@ -364,6 +364,12 @@ test("Chart scope groups published difficulty destinations and hides the Music v
         "href",
         `/ko/music/${music.index}/real/pattern`
     );
+    for (const width of [390, 1280]) {
+        await page.setViewportSize({ width, height: 900 });
+        await page.screenshot({
+            path: testInfo.outputPath(`chart-${width}.png`),
+        });
+    }
     const audit = await new AxeBuilder({ page })
         .include(".nl-app")
         .withTags(["wcag2a", "wcag2aa", "wcag21aa"])

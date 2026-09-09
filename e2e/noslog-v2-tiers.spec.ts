@@ -143,7 +143,7 @@ async function prepare(
         ).toContainText("서열 데이터를 불러오지 못했습니다.");
     else
         await expect(
-            page.locator(".nl-tier-results > [role=status]")
+            page.locator(".nl-tier-results [role=status]").first()
         ).toContainText(unpublished ? "" : "18");
     if (!failSummary && !unpublished && !errorBand)
         await expect(page.locator(".nl-tier-card").first()).toBeVisible();
