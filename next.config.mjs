@@ -4,12 +4,11 @@ const contentSecurityPolicyReportOnly = [
     "object-src 'none'",
     "frame-ancestors 'none'",
     "form-action 'self'",
-    "script-src 'self' https://dapi.kakao.com https://platform.twitter.com 'report-sample'",
-    "style-src 'self' 'unsafe-inline' https://platform.twitter.com",
+    "script-src 'self' https://dapi.kakao.com 'report-sample'",
+    "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: blob: https://cdn.discordapp.com https://p.eagate.573.jp https://*.public.blob.vercel-storage.com https://*.daumcdn.net https://*.kakaocdn.net https://pbs.twimg.com https://*.twimg.com",
     "font-src 'self' data:",
-    "connect-src 'self' https://dapi.kakao.com https://*.kakao.com https://*.daum.net https://platform.twitter.com https://syndication.twitter.com",
-    "frame-src https://platform.twitter.com https://syndication.twitter.com",
+    "connect-src 'self' https://dapi.kakao.com https://*.kakao.com https://*.daum.net",
     "worker-src 'self' blob:",
     "manifest-src 'self'",
 ].join("; ");
@@ -77,12 +76,12 @@ const nextConfig = {
             {
                 hostname: "*.public.blob.vercel-storage.com",
             },
+            {
+                hostname: "pbs.twimg.com",
+            },
             /*
             {
                 hostname: "cdn44.atwikiimg.com",
-            },
-            {
-                hostname: "pbs.twimg.com",
             },
             {
                 hostname: "remywiki.com",

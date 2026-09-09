@@ -241,9 +241,6 @@
     .noslog-ui .nl-exams__personal > :only-child {
         grid-column: 1 / -1;
     }
-    .noslog-ui .nl-exam-proof__choose {
-        align-self: flex-start;
-    }
 }
 .noslog-ui .nl-exam-proof,
 .noslog-ui .nl-exam-proof form {

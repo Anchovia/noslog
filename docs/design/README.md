@@ -19,8 +19,13 @@ width is not a CSS breakpoint. Raw exported container widths must not override
 this common-shell decision. If Figma lacks a state, inspect existing functionality
 and the product references; do not invent or remove product behavior.
 
-The chart viewer/editor in their entirety and `/admin/*` are preserved. The
+The chart editor (`/admin/music/*/pattern`) and `/admin/*` are preserved. The
 ordinary music/chart discovery catalogue and Music Detail remain in scope.
+Since 2026-09-10 the public chart viewer page (`/music/*/*/pattern`) uses the
+ordinary shell (AppHeader, standard container, footer) and Foundation
+typography, buttons, SegmentedControl, StatusMessage and Checkbox for its
+chrome; only the canvas rendering (falling stage, piano, sheet columns, hand
+colours) stays as built. The admin draft preview shares the same chrome.
 
 ## Common layout: the approved osu!-inspired approach
 
@@ -93,6 +98,10 @@ Do not invent separate transitions from Figma's 390/768/1024/1280 review canvase
 - **Profile:** Wide uses a 2:1 body grid within the same 1000px shell: Progress
   beside Record overview, then Best performances beside Recent plays. Its identity
   uses a 108px avatar and 32/40 name, with activity metadata below the name/badges.
+  When both exams are absent, the badge row shows one `ExamBadge · None`
+  placeholder (label `rankings.examNone`, band `border/default`, no mode initial)
+  so the identity stack keeps its 108px/64px height; a single missing exam shows
+  only the existing badge. Ranking rows do not use the placeholder.
   The no-records state separates its information notice from the owner's sync
   action below it, with a 32px gap. Center the content-width primary button with
   its light fill and no border, replacing Figma's left-aligned outlined action.

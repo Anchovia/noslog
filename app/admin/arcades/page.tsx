@@ -10,7 +10,7 @@ export default async function AdminArcadesPage() {
     });
 
     return (
-        <div className="flex flex-col gap-4 px-4 py-5">
+        <div className="flex flex-col gap-4 py-5">
             <section>
                 <h1 className="text-title">오락실 관리</h1>
                 <p className="text-caption mt-1">

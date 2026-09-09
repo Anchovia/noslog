@@ -15,7 +15,7 @@ export default async function AdminUsersPage({
     const result = await listAdminUsers(filters);
 
     return (
-        <div className="flex flex-col gap-4 px-4 py-5">
+        <div className="flex flex-col gap-4 py-5">
             <section>
                 <h1 className="text-title">유저 관리</h1>
                 <p className="text-caption mt-1">

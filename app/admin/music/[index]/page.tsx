@@ -19,7 +19,7 @@ export default async function AdminMusicDetailPage({
     if (!music) notFound();
 
     return (
-        <div className="flex flex-col gap-4 px-4 py-5">
+        <div className="flex flex-col gap-4 py-5">
             <section className="flex items-start gap-3">
                 <Link
                     href="/admin/music"

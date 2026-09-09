@@ -10,6 +10,13 @@ const boundedText = (maximum: number) =>
                 value.trim().length > 0 && Array.from(value).length <= maximum
         );
 const dateValue = z.union([z.date(), z.iso.datetime()]).pipe(z.coerce.date());
+export const ANNOUNCEMENT_CATEGORIES = [
+    "UPDATE",
+    "MAINTENANCE",
+    "DATA",
+    "NOTICE",
+] as const;
+export type AnnouncementCategory = (typeof ANNOUNCEMENT_CATEGORIES)[number];
 export const publicAnnouncementSchema = z
     .object({
         id: z.number().int().positive(),
@@ -17,6 +24,7 @@ export const publicAnnouncementSchema = z
         isPublished: z.literal(true),
         publishedAt: dateValue,
         placement: z.enum(["ROUTINE", "SERVICE_CRITICAL"]),
+        category: z.enum(ANNOUNCEMENT_CATEGORIES).default("NOTICE"),
         priority: z.number().int(),
         activeFrom: dateValue.nullable(),
         expiresAt: dateValue.nullable(),
@@ -57,6 +65,7 @@ export function localizeAnnouncement(
     return {
         id: record.id,
         slug: record.publicSlug,
+        category: record.category,
         title: translation.title,
         content: translation.content,
         publishedAt: record.publishedAt.toISOString(),

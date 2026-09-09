@@ -45,6 +45,9 @@ export default async function AnnouncementArchive({
                                     <AnnouncementRow
                                         announcement={announcement}
                                         locale={locale}
+                                        categoryLabel={t(
+                                            `announcements.category.${announcement.category}`
+                                        )}
                                     />
                                 </li>
                             </Fragment>

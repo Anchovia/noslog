@@ -194,6 +194,12 @@ old design-stage checklist. Changes to material behavior require a user decision
   usable. Keep map/list selection coordinated, canonical detail links, verified
   operating information and correction reporting. Do not infer unavailable cabinet
   conditions or turn a report into an automatically verified fact.
+- Every announcement carries one category (`UPDATE`, `MAINTENANCE`, `DATA`,
+  `NOTICE`; default `NOTICE`) separate from placement. The category renders as an
+  inline outline tag before the title (24px, 1px `border/default`, `radius/control`,
+  `metadata` text in `content/subdued`, no colour) on Home, the archive and the
+  detail page; long titles wrap under the tag. Maintenance in progress is still
+  signalled by `MAINTENANCE_MODE`, not by the tag.
 - Preserve original/source language and public publication state for announcements;
   optional translations are not fabricated. Official NOSTALGIA news links remain
   distinguishable from NosLog announcements.

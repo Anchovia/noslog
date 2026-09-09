@@ -1,0 +1,204 @@
+/* 관리자 셸 — 헤더 아래 가로 탭 */
+.noslog-ui .nl-admin-nav {
+    position: sticky;
+    top: 60px;
+    z-index: 40;
+    background: var(--nl-surface-canvas);
+    box-shadow: inset 0 -1px var(--nl-border-divider);
+}
+.noslog-ui .nl-admin-nav__content {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-12);
+    width: 100%;
+    max-width: var(--nl-layout-max);
+    margin-inline: auto;
+    padding-inline: var(--nl-layout-margin);
+}
+.noslog-ui .nl-admin-nav__badge {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: var(--nl-spacing-4);
+    color: var(--nl-content-subdued);
+}
+.noslog-ui .nl-admin-nav__tabs {
+    display: flex;
+    min-width: 0;
+    flex: 1;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+.noslog-ui .nl-admin-nav__tabs::-webkit-scrollbar {
+    display: none;
+}
+.noslog-ui .nl-admin-nav__tab {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    min-height: 44px;
+    padding-inline: var(--nl-spacing-12);
+    color: var(--nl-content-subdued);
+    box-shadow: inset 0 -2px transparent;
+    white-space: nowrap;
+}
+.noslog-ui .nl-admin-nav__tab:hover {
+    color: var(--nl-content-default);
+}
+.noslog-ui .nl-admin-nav__tab--current {
+    color: var(--nl-content-default);
+    font-weight: var(--nl-type-weight-semibold);
+    box-shadow: inset 0 -2px var(--nl-border-strong);
+}
+.noslog-ui .nl-admin-nav__tab:focus-visible {
+    outline: 1px solid var(--nl-focus-ring);
+    outline-offset: -1px;
+}
+
+/* 공지 관리 — 목록 */
+.noslog-ui .nl-admin-list {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+.noslog-ui .nl-admin-row {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-16);
+    min-height: 64px;
+    padding-block: var(--nl-spacing-12);
+    box-shadow: inset 0 -1px var(--nl-border-divider);
+    color: inherit;
+}
+.noslog-ui .nl-admin-row:hover .nl-admin-row__title {
+    text-decoration: underline;
+    text-underline-position: under;
+}
+.noslog-ui .nl-admin-row__body {
+    display: flex;
+    flex: 1;
+    min-width: 0;
+    flex-direction: column;
+    gap: var(--nl-spacing-4);
+}
+.noslog-ui .nl-admin-row__title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.noslog-ui .nl-admin-row__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--nl-spacing-4) var(--nl-spacing-8);
+    color: var(--nl-content-subdued);
+}
+.noslog-ui .nl-admin-row > svg {
+    flex-shrink: 0;
+    color: var(--nl-content-subdued);
+}
+.noslog-ui .nl-admin-empty {
+    padding-block: var(--nl-spacing-48);
+    text-align: center;
+}
+
+/* 상태 칩 — 형태(테두리)와 라벨로 구분하고 색은 보조 */
+.noslog-ui .nl-admin-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--nl-spacing-4);
+    min-height: 20px;
+    padding-inline: var(--nl-spacing-8);
+    border: 1px solid var(--nl-border-default);
+    border-radius: var(--nl-radius-control);
+    color: var(--nl-content-subdued);
+}
+.noslog-ui .nl-admin-chip--live {
+    border-color: var(--nl-border-strong);
+    color: var(--nl-content-default);
+}
+.noslog-ui .nl-admin-chip--warning {
+    border-color: var(--nl-feedback-warning-marker);
+    color: var(--nl-feedback-warning-marker);
+}
+.noslog-ui .nl-admin-chip--danger {
+    border-color: var(--nl-feedback-error-text);
+    color: var(--nl-feedback-error-text);
+}
+
+/* 공지 관리 — 편집 폼 */
+.noslog-ui .nl-admin-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-32);
+    min-width: 0;
+}
+.noslog-ui .nl-admin-form__section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-16);
+    min-width: 0;
+}
+.noslog-ui .nl-admin-form__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--nl-spacing-16);
+}
+.noslog-ui .nl-admin-form__locale-tabs {
+    display: flex;
+    gap: var(--nl-spacing-4);
+    box-shadow: inset 0 -1px var(--nl-border-divider);
+}
+.noslog-ui .nl-admin-form__locale-tab {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-4);
+    min-height: 44px;
+    padding-inline: var(--nl-spacing-12);
+    color: var(--nl-content-subdued);
+    box-shadow: inset 0 -2px transparent;
+}
+.noslog-ui .nl-admin-form__locale-tab[aria-selected="true"] {
+    color: var(--nl-content-default);
+    font-weight: var(--nl-type-weight-semibold);
+    box-shadow: inset 0 -2px var(--nl-border-strong);
+}
+.noslog-ui .nl-admin-form__locale-tab:focus-visible {
+    outline: 1px solid var(--nl-focus-ring);
+    outline-offset: -1px;
+}
+.noslog-ui .nl-admin-form__locale-tab .nl-admin-form__error-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: var(--nl-radius-full);
+    background: var(--nl-feedback-error-text);
+}
+.noslog-ui .nl-admin-form__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--nl-spacing-16);
+    padding-top: var(--nl-spacing-24);
+    box-shadow: inset 0 1px var(--nl-border-divider);
+}
+.noslog-ui .nl-admin-form__actions > div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-admin-form__counter {
+    text-align: right;
+}
+.noslog-ui .nl-admin-form textarea.nl-input {
+    min-height: 240px;
+}
+
+@media (min-width: 672px) {
+    .noslog-ui .nl-admin-form__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .noslog-ui .nl-admin-form__grid > .nl-admin-form__span {
+        grid-column: 1 / -1;
+    }
+}

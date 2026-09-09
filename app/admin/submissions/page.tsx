@@ -19,7 +19,7 @@ export default async function AdminSubmissionsPage({
     const submissions = await listExamSubmissions(status);
 
     return (
-        <div className="flex flex-col gap-4 px-4 py-5">
+        <div className="flex flex-col gap-4 py-5">
             <section>
                 <h1 className="text-title">인증 심사</h1>
                 <p className="text-caption mt-1">

@@ -26,6 +26,8 @@
 @import "./styles/bingos.css";
 @import "./styles/privacy.css";
 @import "./styles/feedback.css";
+@import "./styles/chartViewer.css";
+@import "./styles/admin.css";
 
 @theme {
     /* 폰트 */

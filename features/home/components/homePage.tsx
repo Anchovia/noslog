@@ -1,17 +1,21 @@
 import HomeAnnouncements from "@/components/home/homeAnnouncements";
-import OfficialXTimeline from "@/components/home/officialXTimeline";
+import OfficialXPost from "@/components/home/officialXPost";
 import PageContainer from "@/components/layout/pageContainer";
 import HomeSearch from "@/features/home/components/homeSearch";
 import HomeDestinations from "@/features/home/components/homeDestinations";
 import CriticalAnnouncement from "@/features/announcements/components/criticalAnnouncement";
 import { getHomeAnnouncements } from "@/features/announcements/server/publicAnnouncementService";
+import { getOfficialXLatestPost } from "@/features/home/server/officialXPostService";
 import { getServerI18n } from "@/lib/i18n/server";
 import { getLocalizedHref } from "@/lib/i18n/routing";
 import { SITE_NAME, SITE_URL } from "@/lib/metadata/site";
 
 export default async function HomePage() {
     const { locale, t } = await getServerI18n();
-    const announcements = await getHomeAnnouncements(locale);
+    const [announcements, officialPost] = await Promise.all([
+        getHomeAnnouncements(locale),
+        getOfficialXLatestPost(),
+    ]);
     const homeHref = getLocalizedHref("/", locale);
     const musicHref = getLocalizedHref("/music", locale);
     const structuredData = {
@@ -62,7 +66,7 @@ export default async function HomePage() {
             <HomeDestinations />
             <div className="nl-home-updates">
                 <HomeAnnouncements announcements={announcements.routine} />
-                <OfficialXTimeline />
+                <OfficialXPost post={officialPost} />
             </div>
         </PageContainer>
     );

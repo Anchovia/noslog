@@ -54,6 +54,9 @@ export default function ProfileIdentity({
           ]
               .filter(Boolean)
               .join(" ");
+    const hasExam = [user.exam_basic, user.exam_recital].some(
+        (exam) => exam !== null && exam >= 1 && exam <= 10
+    );
     const lastPlayed = user.last_played_at
         ? t("profile.lastPlayed", {
               date: formatProfileDate(user.last_played_at, locale),
@@ -97,8 +100,26 @@ export default function ProfileIdentity({
                         <CountryMarker country={user.country} />
                     </div>
                     <div className="nl-profile-identity__exams">
-                        <ExamBadge mode="basic" exam={user.exam_basic} />
-                        <ExamBadge mode="recital" exam={user.exam_recital} />
+                        {hasExam ? (
+                            <>
+                                <ExamBadge
+                                    mode="basic"
+                                    exam={user.exam_basic}
+                                />
+                                <ExamBadge
+                                    mode="recital"
+                                    exam={user.exam_recital}
+                                />
+                            </>
+                        ) : (
+                            <span className="nl-exam-badge" data-tier="none">
+                                <span
+                                    className="nl-exam-badge__band"
+                                    aria-hidden
+                                />
+                                {t("rankings.examNone")}
+                            </span>
+                        )}
                     </div>
                 </div>
                 {isOwner ? (

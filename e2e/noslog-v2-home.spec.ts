@@ -207,43 +207,65 @@ test("Home search preview overlays the bounded navigation and remains keyboard o
     await expect(page).toHaveURL(/\/ko\/music\?q=STULTI$/);
 });
 
-for (const state of ["ready", "empty", "error"] as const) {
-    test(`Official news ${state} retains the official link and bounded layout`, async ({
-        page,
-    }) => {
-        await page.route("https://platform.twitter.com/widgets.js", (route) =>
-            route.fulfill({
-                contentType: "application/javascript",
-                body: `window.twttr = { widgets: { load: async function(container) {
-                    ${state === "error" ? 'throw new Error("fixture");' : state === "ready" ? 'const frame = document.createElement("iframe"); frame.title = "Official news fixture"; frame.style.cssText = "width:100%;height:180px;border:0"; container.appendChild(frame);' : ""}
-                } } };`,
-            })
-        );
-        await page.goto("/ko");
-        const news = page.locator(".nl-home-update").filter({
-            has: page.getByRole("heading", { name: "NOSTALGIA 공식 소식" }),
-        });
-        await expect(
-            news.getByRole("link", { name: "공식 X", exact: true })
-        ).toHaveAttribute("href", "https://x.com/NOSTALGIA_573");
-        if (state === "ready") {
-            await expect(news.locator("iframe")).toBeVisible();
-            await expect(news.locator(".nl-home-news-state")).toHaveCount(0);
-        } else {
-            await expect(news.locator(".nl-home-news-state")).toContainText(
-                state === "empty"
-                    ? "아직 표시할 공식 소식이 없습니다."
-                    : "불러오지 못했습니다"
-            );
-            await expect(news.locator(".nl-home-timeline")).toBeHidden();
-        }
-        const search = await page.locator(".nl-home-search").boundingBox();
-        const box = await news.boundingBox();
-        expect(box!.x).toBeCloseTo(search!.x, 1);
-        expect(box!.width).toBeCloseTo(search!.width, 1);
-        await expectNoHorizontalOverflow(page);
+// "ready": the dev server has a working X_BEARER_TOKEN, so the card renders.
+// "error": the dev server has no X_BEARER_TOKEN.
+const officialNewsFixture = process.env.NOSLOG_OFFICIAL_NEWS_FIXTURE;
+const officialNewsHeading = "NOSTALGIA 공식 소식";
+
+async function expectOfficialNewsShell(page: import("@playwright/test").Page) {
+    const news = page.locator(".nl-home-update").filter({
+        has: page.getByRole("heading", { name: officialNewsHeading }),
     });
+    await expect(
+        news.getByRole("link", { name: "공식 X", exact: true })
+    ).toHaveAttribute("href", "https://x.com/NOSTALGIA_573");
+    const search = await page.locator(".nl-home-search").boundingBox();
+    const box = await news.boundingBox();
+    expect(box!.x).toBeCloseTo(search!.x, 1);
+    expect(box!.width).toBeCloseTo(search!.width, 1);
+    await expectNoHorizontalOverflow(page);
+    return news;
 }
+
+test("Official news card fills the bounded column with author, time, and source link", async ({
+    page,
+}) => {
+    test.skip(
+        officialNewsFixture !== "ready",
+        "Requires NOSLOG_OFFICIAL_NEWS_FIXTURE=ready with a working X_BEARER_TOKEN on the dev server."
+    );
+    await page.goto("/ko");
+    const news = await expectOfficialNewsShell(page);
+    const card = news.locator(".nl-official-post");
+    await expect(card).toBeVisible();
+    const column = await news.boundingBox();
+    const box = await card.boundingBox();
+    expect(box!.width).toBeCloseTo(column!.width, 1);
+    await expect(card.locator("time")).toHaveAttribute("datetime", /.+/);
+    await expect(card.getByText("@NOSTALGIA_573")).toBeVisible();
+    await expect(
+        card.getByRole("link", { name: "원문 보기", exact: true })
+    ).toHaveAttribute("href", /^https:\/\/x\.com\/NOSTALGIA_573\/status\/\d+$/);
+    // Every t.co shortener must have been replaced by its destination.
+    await expect(card.locator('a[href^="https://t.co/"]')).toHaveCount(0);
+    await expect(news.locator(".nl-home-news-state")).toHaveCount(0);
+    await expect(news.locator("iframe")).toHaveCount(0);
+});
+
+test("Official news without a configured token shows the load error and keeps the link", async ({
+    page,
+}) => {
+    test.skip(
+        officialNewsFixture !== "error",
+        "Requires NOSLOG_OFFICIAL_NEWS_FIXTURE=error with no X_BEARER_TOKEN on the dev server."
+    );
+    await page.goto("/ko");
+    const news = await expectOfficialNewsShell(page);
+    await expect(news.locator(".nl-home-news-state")).toContainText(
+        "불러오지 못했습니다"
+    );
+    await expect(news.locator(".nl-official-post")).toHaveCount(0);
+});
 
 test("Home search preserves input when hydration scripts arrive late", async ({
     page,

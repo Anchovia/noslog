@@ -27,6 +27,7 @@ export const serverEnv = createEnv({
         PRIVATE_BLOB_READ_WRITE_TOKEN: optionalSecret,
         CRON_SECRET: z.string().min(32).optional(),
         GOOGLE_SITE_VERIFICATION: optionalSecret,
+        X_BEARER_TOKEN: optionalSecret,
         VERCEL_ENV: z.enum(["development", "preview", "production"]).optional(),
         VERCEL_AUTOMATION_BYPASS_SECRET: optionalSecret,
     },
@@ -46,6 +47,7 @@ export const serverEnv = createEnv({
             process.env.PRIVATE_BLOB_READ_WRITE_TOKEN,
         CRON_SECRET: process.env.CRON_SECRET,
         GOOGLE_SITE_VERIFICATION: process.env.GOOGLE_SITE_VERIFICATION,
+        X_BEARER_TOKEN: process.env.X_BEARER_TOKEN,
         VERCEL_ENV: process.env.VERCEL_ENV,
         VERCEL_AUTOMATION_BYPASS_SECRET:
             process.env.VERCEL_AUTOMATION_BYPASS_SECRET,

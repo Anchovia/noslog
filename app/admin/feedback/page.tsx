@@ -19,7 +19,7 @@ export default async function AdminFeedbackPage({
     const reports = await listFeedbackReports(status);
 
     return (
-        <div className="flex flex-col gap-4 px-4 py-5">
+        <div className="flex flex-col gap-4 py-5">
             <section>
                 <h1 className="text-title">피드백 관리</h1>
                 <p className="text-caption mt-1">

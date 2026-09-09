@@ -2,13 +2,13 @@
 
 NOSTALGIA 플레이 기록을 모아 보고, 악곡별 성과·서열·랭킹과 채보를 확인하는 비공식 팬 프로젝트입니다.
 
-현재 버전: **v1.6.0**
+현재 버전: **v2.0.0**
 
 > NosLog는 KONAMI 및 공식 NOSTALGIA 서비스와 관련이 없습니다.
 
 ## 주요 기능
 
-- **홈**: 공지사항과 주요 메뉴를 간결하게 제공
+- **홈**: 악곡 검색, 목적지 타일, 분류 태그가 붙은 공지사항과 NOSTALGIA 공식 소식
 - **악곡**: 검색, 난이도 필터, 개인 기록 기반 정렬과 악곡별 상세 기록
 - **기록 분석**: 점수·콤보·판정·FAST/SLOW·음표별 성공률과 최근 기록 추이
 - **랭킹**: Basic·Recital 공식 Grd 및 Basic 서열 레이팅 순위
@@ -16,7 +16,9 @@ NOSTALGIA 플레이 기록을 모아 보고, 악곡별 성과·서열·랭킹과
 - **빙고**: 수동 판정 방식의 미션과 달성 현황
 - **검정**: 과제곡, 합격 조건, 응시 정보와 선택형 플레이 조언
 - **프로필**: 베스트 성과, 최근 플레이, 랭크 분포와 판정 상세
+- **오락실**: 지도와 목록으로 찾는 오락실 정보와 제보
 - **데이터 연동**: 북마클릿을 이용한 NOSTALGIA 기록 동기화와 결과 확인
+- **피드백**: 화면 어디서나 여는 오류 제보와 의견 창구
 - **다국어**: 한국어·일본어·영어 사용자 화면과 언어별 공유 경로
 - **번역 곡명**: 원문 제목을 유지하면서 검수된 한국어·영어 제목 또는 일본어 읽기 표시
 - **개인정보 관리**: 개인정보처리방침, 회원 탈퇴, 비공개 증빙 이미지와 보관 기간 관리
@@ -41,15 +43,12 @@ NOSTALGIA 플레이 기록을 모아 보고, 악곡별 성과·서열·랭킹과
 
 편집 화면은 데스크톱과 가로형 태블릿을 기준으로 하며, 공개 뷰어는 모바일에서도 이용할 수 있습니다.
 
-NosLog 2.0에서도 기존 채보 viewer와 editor 전체는 보존 예외입니다. Page, DOM shell,
-control, label, accessibility behavior, responsive composition·containment,
-PixiJS/WebGL 낙하형 renderer, Canvas 전체 악보 renderer, note·left/right-hand palette,
-renderer geometry·animation·chart mathematics 및 editor rendering model을 모두 현재
-구현 그대로 유지합니다. Foundation color·material·motion·icon·data visualization,
-component·template·responsive 규칙을 적용하거나 2.0 변형을 만들지 않습니다. 과거
-viewer/editor Page Brief와 `S4`/`S6` 계획은 기능을 기록한 역사적 근거일 뿐 변경 권한이
-아닙니다. 사용자가 전체 예외 또는 정확히 지목한 하위 범위를 명시적으로 다시 열기 전에는
-어떤 부분도 변경하지 않습니다.
+NosLog 2.0에서 공개 채보 뷰어 페이지는 공통 셸(AppHeader·표준 컨테이너·푸터)과
+Foundation 타이포·버튼·컴포넌트로 옮겼습니다. PixiJS/WebGL 낙하형 renderer, Canvas
+전체 악보 renderer, note·left/right-hand palette, renderer geometry·animation·chart
+mathematics는 그대로이며, 관리자 채보 editor 전체는 여전히 보존 예외입니다. 사용자가
+정확히 지목한 하위 범위를 명시적으로 다시 열기 전에는 editor의 어떤 부분도 변경하지
+않습니다.
 
 ## 기술 스택
 
@@ -92,7 +91,7 @@ NosLog의 코드 작성·디렉터리·API 응답·Server Action·Zod·React Hoo
 
 ### NosLog 2.0 구현 기준
 
-현재 단계는 NosLog 2.0 UI 구현과 검증입니다. 공통 레이아웃·반응형 기준은
+NosLog 2.0 UI 구현과 검증은 v2.0.0으로 마무리했습니다. 공통 레이아웃·반응형 기준은
 [현재 구현 계약](./docs/design/README.md) 한 곳에서 관리합니다.
 사용자의 최신 결정이 우선이고, 이 공통 계약 안에서 현재 Figma
 `NosLog v2.0.0`의 P1–P16·C1–C8을 시각적 기준으로 사용합니다.
@@ -284,7 +283,7 @@ NosLog는 `vMAJOR.MINOR.PATCH` 형식의 Semantic Versioning을 사용합니다.
 1. 기능 개발과 검증은 `dev` 브랜치에서 진행합니다.
 2. 배포할 변경에 맞춰 `package.json`과 `package-lock.json`의 버전을 올립니다.
 3. 타입 검사, 린트, 테스트, 빌드와 E2E를 통과시킵니다.
-4. `dev`에서 `main`으로 `release: NosLog v1.6.0` 형식의 PR을 생성합니다.
+4. `dev`에서 `main`으로 `release: NosLog v2.0.0` 형식의 PR을 생성합니다.
 5. PR 본문에 주요 변경, DB 마이그레이션과 환경변수 변경 여부를 기록합니다.
 6. `Create a merge commit`으로 병합하고 Production 배포를 확인합니다.
 7. 병합된 `main` 커밋에 같은 버전의 Git 태그와 GitHub Release를 생성합니다.

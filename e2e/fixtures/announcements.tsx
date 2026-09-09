@@ -32,6 +32,9 @@ export default async function AnnouncementsFixture({
     const notices = Array.from({ length: count }, (_, index) => ({
         id: index + 1,
         slug: `fixture-${index + 1}`,
+        category: (["UPDATE", "MAINTENANCE", "DATA", "NOTICE"] as const)[
+            index % 4
+        ],
         title: index === 1 ? copy.title.repeat(3).slice(0, 80) : copy.title,
         content: copy.body,
         publishedAt: new Date(

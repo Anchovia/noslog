@@ -1,6 +1,6 @@
 {
     "name": "noslog",
-    "version": "1.6.0",
+    "version": "2.0.0",
     "private": true,
     "scripts": {
         "predev": "npm run generate:jacket-manifest",
@@ -13,7 +13,7 @@
         "db:migrate:deploy": "prisma migrate deploy",
         "db:import:exams:op3": "node prisma/import-op3-exams.mjs --env-file=.env",
         "db:import:bingos:op3": "node prisma/import-op3-bingos.mjs --env-file=.env",
-        "db:import:musics:nosdata": "node prisma/import-nosdata-musics.mjs --env-file=.env",
+        "db:import:musics": "node prisma/import-music-catalog.mjs --env-file=.env",
         "db:import:tiers:official": "node prisma/import-official-tiers.mjs --env-file=.env",
         "simulate:rating:basic": "jiti scripts/simulate-basic-tier-rating.ts --env-file=.env",
         "generate:jacket-manifest": "node scripts/generate-music-jacket-manifest.mjs",

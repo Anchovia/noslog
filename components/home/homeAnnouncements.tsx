@@ -32,6 +32,9 @@ export default async function HomeAnnouncements({
                         <AnnouncementRow
                             announcement={announcement}
                             locale={locale}
+                            categoryLabel={t(
+                                `announcements.category.${announcement.category}`
+                            )}
                         />
                     </li>
                 ))}

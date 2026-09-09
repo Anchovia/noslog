@@ -35,7 +35,7 @@
 → ⑤ 문서 24(Foundation 정확값) → ⑥ 문서 25 → ⑦ 해당 Page Brief → ⑧ 문서 22 · 63
 
 - 시각 언어 기준: `output/pdf/noslog-2.0-visual-core-review.pdf` (승인된 편집 언어)
-- 실제 콘텐츠: `prisma/data/nosdata-musics.json` (578곡) — 콘텐츠를 지어내지 않는다
+- 실제 콘텐츠: `prisma/data/music-catalog.json` (578곡) — 콘텐츠를 지어내지 않는다
 
 ---
 
@@ -526,6 +526,9 @@ Text Style `emphasis-label/ko·ja·latin` 3개를 포함해 문서 24와 Figma�
 | Music Detail 헤더 액션 | **정체성 행 오른쪽 HUG · Intermediate 이상**(Z1 ㉕, `MDET-91`) — 1280 에서 버튼이 각 604 로 늘어난 건 Compact FILL 규칙이 유도 없이 넓어진 것. C6 `MusicEntityHeader` 에 `Layout` 속성 신설(Compact 4 + Wide 4), 인스턴스 24 교체, 768 은 아티스트 한 줄 말줄임(박스 408). 헤더 152 → 96. 사용자 지적으로 시작 | 2026-09-06 |
 | 검정 급수 배지 | **B 티어 플레이트**(Z1 ㉗, `PROF-56`, C3 `ExamBadge` 신설) — 24 플레이트(inset 4 · gap 8 · 좌 패딩 0 은 밴드 bleed 의도) · 좌 6px 밴드 = 급 색(10~~8 회색 · 7~~5 파랑 · 4~~3 보라 · 2 빨강 · 1 금) · 모드 이니셜 B/R(`nav-fit-current/latin`) + `N급`(`metadata`), 글자는 `content/default`. 토큰 6개 신설(원시값 0): `surface/plate`(L E9E9E9 / D 2C2C2C — 양 모드에서 보이는 배지 면) · `exam/tier-*` 5. 10안 비교(필·육각·띠·메달·리본·방패·인장·건반·링)에서 사용자 선택. **P5 랭킹 행(`RANK-34`, 행 60→72 · 검정 없는 행도 72 로 통일)과 P16 카드(44 플레이트 · raw 팔레트)에도 확장**(2026-09-06). ⚠️ 그림은 이니셜이 급 색이었지만 12px 텍스트로는 어느 면에서도 4.5 를 못 넘어 **밴드만 색**으로 적용 — 색 글자로 하려면 새 원시값이 필요 | 2026-09-06 |
 | 프로필 정체성 정리 | **1.0 배치로**(`PROF-57`~~`59`, 2026-09-06 사용자 지시) — 공유·설정은 아바타 행 우상단 **32×32**(닉네임 줄 높이 · 40 이면 320 에서 배지가 밀려 사용자 결정 · 타겟 규칙의 경계 있는 예외) · `마지막 플레이 {date} · 동기화 {rel}` 한 줄(body-secondary·subdued, 소유자만 동기화 부분, `마지막 동기화`→`동기화`) · NOSTALGIA ID 칩은 한 행 전체, Discord·오락실 칩은 다음 줄 **FILL 등폭 2열**(320 은 153 > 140 이라 세로). 「컨테이너 폭은 다 채운다」 — HUG 칩은 사용자 기각. ⚠️ wrap 컨테이너의 FILL 자식은 줄 전체를 차지하지 않고 남는 폭만 받는다 — 한 행 전체는 VERTICAL 부모 + FILL 로 | 2026-09-06 |
+| 검정 없음 배지 | **`ExamBadge · None` 플레이스홀더 · 밴드 `border/default`**(`PROF-60` · C3 `3483:50` · Z1 ㉟, 2026-09-10 사용자 제안) — 검정이 둘 다 null 이면 구현의 배지 행이 비어 이름↔메타 간격이 12→36 으로 벌어졌는데(빈 행 gap + 그리드 잔여 + row-gap), Figma P6 50 프레임은 전부 배지 픽스처라 이 상태가 없었다. 「검정 기록 없음」 배지 하나로 스택 108/64 를 유지. 밴드는 10~8급 회색(`tier-low`)보다 한 단계 연한 `border/default`, `border/subtle` 은 Dark 플레이트 위 비가시라 폐기. A(아바타 유도 72)·B(위 정렬) 폐기. 하나라도 있으면 있는 배지만 · 랭킹 행엔 쓰지 않음(RANK-34). 문구 `rankings.examNone` 신규(ko 확정 · ja/en 로케일 패스). P6 상태 프레임 390 Light/Dark 2장 추가 | 2026-09-10 |
+| 채보 뷰어 셸 | **A안 · 일반 셸 + Foundation 크롬**(2026-09-10 사용자 결정 · §4 「뷰어/에디터 전체 잠금」 중 **공개 뷰어 페이지의 셸은 해제**, 에디터 `/admin/*/pattern` 은 잠금 유지) — `AppShell` 의 pattern 특례 제거 → AppHeader·standard 컨테이너·푸터. 제목 `page-title` · 난이도 `control`+`difficulty/text-*` 색 글자 · 뒤로가기 `SET-42` 규격 · 탭 C5 `SegmentedControl` · 안내 C4 `StatusMessage` · 재생/되감기 아이콘 버튼 40/44 · 로컬 음원 secondary Button · 노트 속도 `CompactSelect` · 메트로놈/엄밀 연주 `Checkbox` · 시크바 = `nl-range` 언어(트랙 4 · 손잡이 24). **캔버스(낙하형 스테이지·피아노·악보 열·손 색) 불변.** 스타일은 `app/styles/chartViewer.css`. B안(전용 전체화면) 폐기. e2e `the chart viewer retains its original shell` → 일반 셸 기대값으로 교체 | 2026-09-10 |
+| 공지 분류 태그 | **(c) 아웃라인 칩 · c1 인라인**(Z1 ㊱ · `ANN-CAT`, 2026-09-10 사용자 결정) — `Announcement.category` enum 4종 `UPDATE·MAINTENANCE·DATA·NOTICE`(기본 NOTICE, placement 와 별개). 칩 = 높이 24 · 1px `border/default` · `radius/control` · `metadata`+`content/subdued` · 색 없음 · 제목 앞 인라인, 긴 제목은 칩 아래로 접힘(GitHub·Steam 관용). 홈·목록·상세 공통. ⚠️ 내 추천은 (a) 날짜 앞 텍스트였고 사용자가 「C가 제일 직관적이고 많이 쓰는 레이아웃」 이라 뒤집었는데 맞았다 — 분류를 담는 태그는 칩의 본래 역할이며 필터 적용 조건 토큰과 같은 승인 언어다. 「AI 티 나는 칩」 기각은 의미 없는 장식 칩에 한정. 색 칩은 12px 4.5:1 미달로 제외. 아이콘 안은 기각(정보 0 · 타일 아이콘과 위계 충돌). 문구 `announcements.category.*` 4키 ko 확정 · ja/en 제안. 관리자 폼 Select 는 다른 세션의 공지 폼 개편 커밋 후 | 2026-09-10 |
 
 > **폰트 교체 전제 복구됨** — 이전에는 텍스트가 Text Style 을 참조하지 않아
 > `font/family/ko·ja·latin` 3개를 바꿔도 전파되지 않았다. 소급 적용으로 이제 동작한다.

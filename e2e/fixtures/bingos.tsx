@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import seeds from "@/prisma/data/op3-bingos.json";
-import musics from "@/prisma/data/nosdata-musics.json";
+import musics from "@/prisma/data/music-catalog.json";
 import BingoCatalogPage from "@/features/bingos/components/bingoCatalogPage";
 import BingoDetailPage from "@/features/bingos/components/bingoDetailPage";
 import type {

@@ -1,10 +1,13 @@
 "use client";
 
-import { Gauge, Pause, Play, RotateCcw, Upload, Volume2 } from "lucide-react";
+import { Pause, Play, RotateCcw, Upload, Volume2 } from "lucide-react";
 import { type ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
 import type { Application, Graphics } from "pixi.js";
 
 import { useTranslations } from "@/components/i18n/localeProvider";
+import Button from "@/components/ui/Button";
+import { Checkbox } from "@/components/ui/checkbox";
+import CompactSelect from "@/components/ui/compactSelect";
 import { getMetronomePeakGain } from "@/lib/chart-pattern/metronome";
 import { chartPianoColors } from "@/lib/chart-pattern/piano";
 import {
@@ -900,62 +903,58 @@ export default function FallingChartViewer({
     }
 
     return (
-        <section className="border-border bg-surface overflow-hidden rounded-lg border">
-            <div className="relative h-[min(68dvh,680px)] min-h-[440px] w-full overflow-hidden sm:min-h-[520px]">
+        <section className="nl-chart-stage">
+            <div className="nl-chart-stage__canvas">
                 {jacketUrl ? (
                     <div
                         aria-hidden
-                        className="absolute -inset-5 scale-110 bg-cover bg-center opacity-25 blur-xl"
+                        className="nl-chart-stage__art"
                         style={{ backgroundImage: `url("${jacketUrl}")` }}
                     />
                 ) : null}
-                <div
-                    aria-hidden
-                    className="absolute inset-0 bg-[radial-gradient(circle_at_50%_18%,rgba(70,74,96,0.22),rgba(5,7,12,0.96)_72%)]"
-                />
+                <div aria-hidden className="nl-chart-stage__scrim" />
                 <div
                     ref={hostRef}
                     role="img"
                     aria-label={t("chart.fallingAria", {
                         time: formatEditorTime(currentTimeMs),
                     })}
-                    className="absolute inset-0"
+                    className="nl-chart-stage__host"
                 />
             </div>
 
-            <div className="border-divider bg-surface relative border-t p-3">
-                <div className="flex items-center gap-2">
-                    <button
-                        type="button"
+            <div className="nl-chart-stage__controls">
+                <div className="nl-chart-stage__transport">
+                    <Button
+                        appearance="foundation"
+                        variant="primary"
+                        size="icon"
                         onClick={() =>
                             isPlaying ? pausePlayback() : void startPlayback()
                         }
-                        className="bg-text-primary text-bg flex size-10 shrink-0 items-center justify-center rounded-full"
                         aria-label={
                             isPlaying ? t("chart.pause") : t("chart.play")
                         }
                     >
                         {isPlaying ? (
-                            <Pause className="size-4" fill="currentColor" />
+                            <Pause className="nl-icon" fill="currentColor" />
                         ) : (
-                            <Play
-                                className="ml-0.5 size-4"
-                                fill="currentColor"
-                            />
+                            <Play className="nl-icon" fill="currentColor" />
                         )}
-                    </button>
-                    <button
-                        type="button"
+                    </Button>
+                    <Button
+                        appearance="foundation"
+                        variant="secondary"
+                        size="icon"
                         onClick={() => {
                             pausePlayback();
                             seek(0);
                         }}
-                        className="border-border hover:bg-surface-muted flex size-9 shrink-0 items-center justify-center rounded-md border"
                         aria-label={t("chart.restart")}
                     >
-                        <RotateCcw className="size-3.5" />
-                    </button>
-                    <span className="text-caption w-14 shrink-0 text-right font-mono tabular-nums">
+                        <RotateCcw className="nl-icon" />
+                    </Button>
+                    <span className="nl-metric-value nl-chart-stage__time">
                         {formatEditorTime(currentTimeMs)}
                     </span>
                     <input
@@ -966,16 +965,16 @@ export default function FallingChartViewer({
                         value={Math.min(currentTimeMs, durationMs)}
                         onChange={(event) => seek(Number(event.target.value))}
                         aria-label={t("chart.position")}
-                        className="accent-primary min-w-0 flex-1"
+                        className="nl-chart-stage__seek"
                     />
-                    <span className="text-caption w-14 shrink-0 font-mono tabular-nums">
+                    <span className="nl-metric-value nl-chart-stage__time">
                         {formatEditorTime(durationMs)}
                     </span>
                 </div>
 
-                <div className="mt-3 flex flex-wrap items-center gap-2">
-                    <label className="border-border hover:bg-surface-muted flex h-9 cursor-pointer items-center gap-1.5 rounded-md border px-3 text-xs font-semibold">
-                        <Upload className="size-3.5" />
+                <div className="nl-chart-stage__options">
+                    <label className="nl-button nl-button--secondary">
+                        <Upload className="nl-icon" aria-hidden />
                         {t("chart.localAudio")}
                         <input
                             type="file"
@@ -984,51 +983,32 @@ export default function FallingChartViewer({
                             className="sr-only"
                         />
                     </label>
-                    <label className="border-border flex h-9 items-center gap-2 rounded-md border px-3 text-xs">
-                        <Gauge className="text-text-secondary size-3.5" />
-                        <span className="text-text-secondary">
+                    <div className="nl-chart-stage__option">
+                        <span className="nl-control nl-muted">
                             {t("chart.noteSpeed")}
                         </span>
-                        <select
-                            value={noteSpeed}
-                            onChange={(event) =>
-                                setNoteSpeed(Number(event.target.value))
+                        <CompactSelect
+                            label={t("chart.noteSpeed")}
+                            value={noteSpeed.toFixed(1)}
+                            onValueChange={(value) =>
+                                setNoteSpeed(Number(value))
                             }
-                            className="bg-transparent font-semibold outline-none"
-                            aria-label={t("chart.noteSpeed")}
-                        >
-                            {Array.from({ length: 31 }, (_, index) => {
-                                const value = 1 + index * 0.1;
-                                return (
-                                    <option
-                                        key={value.toFixed(1)}
-                                        value={value}
-                                        className="bg-surface"
-                                    >
-                                        {value.toFixed(1)}
-                                    </option>
-                                );
+                            outlined
+                            options={Array.from({ length: 31 }, (_, index) => {
+                                const value = (1 + index * 0.1).toFixed(1);
+                                return { value, label: value };
                             })}
-                        </select>
-                    </label>
-                    <label className="border-border hover:bg-surface-muted flex h-9 items-center gap-2 rounded-md border px-3 text-xs font-semibold">
-                        <input
-                            type="checkbox"
-                            checked={metronomeEnabled}
-                            onChange={(event) =>
-                                void updateMetronomeEnabled(
-                                    event.target.checked
-                                )
-                            }
-                            className="accent-text-primary size-3.5"
                         />
-                        {t("chart.metronome")}
-                    </label>
-                    <label className="border-border flex h-9 items-center gap-1.5 rounded-md border px-2">
-                        <Volume2
-                            className="text-text-secondary size-3.5"
-                            aria-hidden
-                        />
+                    </div>
+                    <Checkbox
+                        label={t("chart.metronome")}
+                        checked={metronomeEnabled}
+                        onChange={(event) =>
+                            void updateMetronomeEnabled(event.target.checked)
+                        }
+                    />
+                    <label className="nl-chart-stage__option nl-chart-stage__volume">
+                        <Volume2 className="nl-icon nl-muted" aria-hidden />
                         <input
                             type="range"
                             min="0"
@@ -1039,29 +1019,27 @@ export default function FallingChartViewer({
                                 setMetronomeVolume(Number(event.target.value))
                             }
                             aria-label={t("chart.metronomeVolume")}
-                            className="accent-text-primary w-20"
+                            className="nl-chart-stage__seek"
                         />
-                        <span className="text-micro w-8 text-right tabular-nums">
+                        <span className="nl-metric-value nl-chart-stage__percent">
                             {metronomeVolume}%
                         </span>
                     </label>
-                    <label className="border-border hover:bg-surface-muted flex h-9 items-center gap-2 rounded-md border px-3 text-xs font-semibold">
-                        <input
-                            type="checkbox"
-                            checked={strictPerformance}
-                            onChange={(event) =>
-                                setStrictPerformance(event.target.checked)
-                            }
-                            className="accent-text-primary size-3.5"
-                        />
-                        {t("chart.strictPerformance")}
-                    </label>
-                    <p className="text-micro min-w-0 flex-1 truncate sm:text-right">
-                        {fileName ?? t("chart.audioHelp")}
-                    </p>
+                    <Checkbox
+                        label={t("chart.strictPerformance")}
+                        checked={strictPerformance}
+                        onChange={(event) =>
+                            setStrictPerformance(event.target.checked)
+                        }
+                    />
                 </div>
+                <p className="nl-metadata nl-muted nl-chart-stage__file">
+                    {fileName ?? t("chart.audioHelp")}
+                </p>
                 {audioError ? (
-                    <p className="text-danger mt-2 text-xs">{audioError}</p>
+                    <p className="nl-body-secondary nl-chart-stage__error">
+                        {audioError}
+                    </p>
                 ) : null}
                 <audio
                     ref={audioRef}

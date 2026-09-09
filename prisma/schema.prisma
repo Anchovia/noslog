@@ -144,6 +144,7 @@ model Announcement {
   updatedAt    DateTime                  @updatedAt @map("updated_at")
   publicSlug   String?                   @unique @map("public_slug")
   placement    AnnouncementPlacement     @default(ROUTINE)
+  category     AnnouncementCategory      @default(NOTICE)
   priority     Int                       @default(0)
   activeFrom   DateTime?                 @map("active_from")
   expiresAt    DateTime?                 @map("expires_at")
@@ -155,6 +156,14 @@ model Announcement {
 enum AnnouncementPlacement {
   ROUTINE
   SERVICE_CRITICAL
+}
+
+// 일상 공지의 분류 태그. 중대 공지 여부는 placement 가 따로 가짐
+enum AnnouncementCategory {
+  UPDATE
+  MAINTENANCE
+  DATA
+  NOTICE
 }
 
 model AnnouncementTranslation {

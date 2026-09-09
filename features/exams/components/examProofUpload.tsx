@@ -250,7 +250,6 @@ export default function ExamProofUpload({
                         </>
                     ) : (
                         <Button
-                            className="nl-exam-proof__choose"
                             appearance="foundation"
                             type="button"
                             variant="primary"

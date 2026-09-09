@@ -6,6 +6,7 @@ import { localizePath } from "@/lib/i18n/routing";
 import { SITE_URL } from "@/lib/metadata/site";
 import type { PublicAnnouncement } from "@/features/announcements/schemas/publicAnnouncementSchema";
 import AnnouncementBody from "./announcementBody";
+import AnnouncementCategoryTag from "./announcementCategoryTag";
 import { announcementDate } from "./announcementRow";
 
 export default async function AnnouncementDetail({
@@ -24,7 +25,15 @@ export default async function AnnouncementDetail({
                     <ChevronLeft aria-hidden />
                     {t("home.announcements")}
                 </Link>
-                <h1 className="nl-page-title">{announcement.title}</h1>
+                <div className="nl-announcements__title">
+                    <AnnouncementCategoryTag
+                        category={announcement.category}
+                        label={t(
+                            `announcements.category.${announcement.category}`
+                        )}
+                    />
+                    <h1 className="nl-page-title">{announcement.title}</h1>
+                </div>
                 <div className="nl-announcements__dates nl-metadata nl-muted">
                     <p>
                         {t("announcements.published")}{" "}

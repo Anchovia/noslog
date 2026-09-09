@@ -1,9 +1,11 @@
-import AdminTabs from "@/components/admin/adminTabs";
+import type { Metadata } from "next";
+
+import AdminShell from "@/components/admin/adminShell";
+import AppFooter from "@/components/layout/appFooter";
 import Footer from "@/components/layout/footer";
 import Header from "@/components/layout/header";
 import SkipLink from "@/components/layout/skipLink";
 import { requireAdmin } from "@/lib/admin";
-import type { Metadata } from "next";
 
 export const metadata: Metadata = {
     title: "관리자",
@@ -13,19 +15,22 @@ export const metadata: Metadata = {
 export default async function AdminLayout({
     children,
 }: Readonly<{ children: React.ReactNode }>) {
-    await requireAdmin();
+    const admin = await requireAdmin();
 
     return (
-        <div className="bg-bg min-h-screen">
-            <div className="bg-bg mx-auto flex min-h-screen w-full max-w-97.5 flex-col">
-                <SkipLink />
-                <Header />
-                <AdminTabs />
-                <main id="main-content" className="flex-1" tabIndex={-1}>
-                    {children}
-                </main>
-                <Footer />
-            </div>
-        </div>
+        <AdminShell
+            account={{
+                id: admin.id,
+                username: admin.username,
+                avatar: admin.avatar,
+                role: admin.role,
+            }}
+            footer={<AppFooter />}
+            legacyHeader={<Header />}
+            legacyFooter={<Footer />}
+            legacySkipLink={<SkipLink />}
+        >
+            {children}
+        </AdminShell>
     );
 }

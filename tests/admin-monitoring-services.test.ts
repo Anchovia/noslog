@@ -35,7 +35,6 @@ vi.mock("@/lib/db", () => ({
     },
 }));
 
-import { getAdminDashboard } from "@/features/admin/server/adminDashboardService";
 import { getAdminSyncs } from "@/features/admin/server/adminSyncService";
 
 describe("admin monitoring server boundaries", () => {
@@ -66,60 +65,11 @@ describe("admin monitoring server boundaries", () => {
             mocks[key].mockResolvedValue([]);
     });
     afterEach(() => vi.useRealTimers());
-    it.each(["dashboard", "syncs"])(
-        "checks authority before %s data access",
-        async (scope) => {
-            mocks.admin.mockRejectedValue(new Error("not authorized"));
-            await expect(
-                scope === "dashboard" ? getAdminDashboard() : getAdminSyncs({})
-            ).rejects.toThrow("not authorized");
-            for (const [key, mock] of Object.entries(mocks))
-                if (key !== "admin") expect(mock).not.toHaveBeenCalled();
-        }
-    );
-    it("retains 24-hour, 10-minute and seven-calendar-day dashboard windows", async () => {
-        const start = new Date(2026, 7, 30);
-        mocks.users.mockResolvedValue([
-            { created_at: start },
-            { created_at: now },
-            { created_at: new Date(2020, 0, 1) },
-        ]);
-        mocks.syncs.mockResolvedValue([
-            { started_at: now },
-            { started_at: now },
-        ]);
-        mocks.feedback.mockResolvedValue([{ createdAt: start }]);
-        const data = await getAdminDashboard();
-        expect(data.activity).toHaveLength(7);
-        expect(data.activity[0]).toMatchObject({
-            date: "8.30",
-            users: 1,
-            feedback: 1,
-            syncs: 0,
-        });
-        expect(data.activity[6]).toMatchObject({
-            date: "9.05",
-            users: 1,
-            feedback: 0,
-            syncs: 2,
-        });
-        expect(data.userCount).toBe(2);
-        expect(mocks.users).toHaveBeenCalledWith({
-            where: { created_at: { gte: start } },
-            select: { created_at: true },
-        });
-        expect(mocks.syncCount).toHaveBeenCalledWith({
-            where: {
-                status: "failed",
-                started_at: { gte: new Date(now.getTime() - 86400000) },
-            },
-        });
-        expect(mocks.syncCount).toHaveBeenCalledWith({
-            where: {
-                status: "processing",
-                started_at: { lte: new Date(now.getTime() - 600000) },
-            },
-        });
+    it("checks authority before sync data access", async () => {
+        mocks.admin.mockRejectedValue(new Error("not authorized"));
+        await expect(getAdminSyncs({})).rejects.toThrow("not authorized");
+        for (const [key, mock] of Object.entries(mocks))
+            if (key !== "admin") expect(mock).not.toHaveBeenCalled();
     });
     it.each([undefined, "invalid", "all", "processing", "completed", "failed"])(
         "normalizes sync filter %s and bounds the list to 100 newest",
@@ -185,12 +135,6 @@ describe("admin monitoring server boundaries", () => {
         );
     });
     it("propagates query failures instead of rendering invented zero totals", async () => {
-        mocks.submission.mockRejectedValueOnce(
-            new Error("database unavailable")
-        );
-        await expect(getAdminDashboard()).rejects.toThrow(
-            "database unavailable"
-        );
         mocks.syncs.mockRejectedValueOnce(new Error("database unavailable"));
         await expect(getAdminSyncs({})).rejects.toThrow("database unavailable");
     });

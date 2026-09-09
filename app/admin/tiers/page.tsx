@@ -26,7 +26,7 @@ export default async function AdminTiersPage() {
     const legacyTierLists = tierLists.filter((tierList) => !tierList.goal);
 
     return (
-        <div className="flex flex-col gap-4 px-4 py-5">
+        <div className="flex flex-col gap-4 py-5">
             <section>
                 <div>
                     <h1 className="text-title">서열표 관리</h1>

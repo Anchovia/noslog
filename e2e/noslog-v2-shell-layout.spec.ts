@@ -202,13 +202,14 @@ for (const locale of ["ko", "ja", "en"] as const) {
     });
 }
 
-test("the chart viewer retains its original shell", async ({ page }) => {
+test("the chart viewer uses the ordinary shell", async ({ page }) => {
     await page.setViewportSize({ width: 2560, height: 900 });
     await page.goto(
         "/ko/music/bfdaadfb98501907925ecf41a076108d/expert/pattern"
     );
     await expect(page.locator("main")).toHaveCount(1);
-    await expect(page.locator(".nl-app")).toHaveCount(0);
-    const box = await page.locator("main").boundingBox();
-    expect(box?.width).toBe(390);
+    await expect(page.locator(".nl-app")).toHaveCount(1);
+    await expect(page.locator(".nl-header")).toBeVisible();
+    const box = await page.locator(".nl-chart-viewer").boundingBox();
+    expect(box?.width).toBe(1216);
 });

@@ -21,6 +21,9 @@
     align-self: stretch;
     background: var(--nl-exam-tier-low);
 }
+.noslog-ui .nl-exam-badge[data-tier="none"] .nl-exam-badge__band {
+    background: var(--nl-border-default);
+}
 .noslog-ui .nl-exam-badge[data-tier="mid"] .nl-exam-badge__band {
     background: var(--nl-exam-tier-mid);
 }

@@ -3,7 +3,7 @@ import path from "node:path";
 
 import { describe, expect, it } from "vitest";
 
-interface NosdataMusic {
+interface CatalogMusic {
     index: string;
     title: string;
     artist: string | null;
@@ -15,12 +15,12 @@ interface NosdataMusic {
 
 const musics = JSON.parse(
     fs.readFileSync(
-        path.join(process.cwd(), "prisma/data/nosdata-musics.json"),
+        path.join(process.cwd(), "prisma/data/music-catalog.json"),
         "utf8"
     )
-) as NosdataMusic[];
+) as CatalogMusic[];
 
-describe("Nosdata ζ 악곡 가져오기 데이터", () => {
+describe("악곡 카탈로그 가져오기 데이터", () => {
     it("정식 악곡 578곡과 고유 ID를 포함한다", () => {
         expect(musics).toHaveLength(578);
         expect(new Set(musics.map((music) => music.index)).size).toBe(578);

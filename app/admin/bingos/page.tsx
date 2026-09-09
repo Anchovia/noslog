@@ -13,7 +13,7 @@ export default async function AdminBingosPage() {
     });
 
     return (
-        <div className="flex flex-col gap-4 px-4 py-5">
+        <div className="flex flex-col gap-4 py-5">
             <section className="flex items-start justify-between gap-3">
                 <div>
                     <h1 className="text-title">빙고 관리</h1>

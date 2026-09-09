@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, Info } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import {
     useEffect,
@@ -11,6 +11,9 @@ import {
 } from "react";
 
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
+import PageContainer from "@/components/layout/pageContainer";
+import { SegmentedControl } from "@/components/ui/segmentedControl";
+import { StatusMessage } from "@/components/ui/statusMessage";
 import {
     getBrowserSupportSnapshot,
     getServerBrowserSupportSnapshot,
@@ -129,103 +132,81 @@ export default function ChartSheetViewer({
         [contentEndMs, document.ticksPerQuarter, document.timingPoints, panels]
     );
 
+    const helpText =
+        browserSupport === "safari"
+            ? t("chart.safariHelp")
+            : effectiveViewMode === "falling"
+              ? t("chart.fallingHelp")
+              : t("chart.sheetHelp");
+    const difficultyClass = `nl-level--${difficulty.toLowerCase()}`;
+
     return (
-        <main className="bg-bg fixed inset-0 z-[100] w-full overflow-y-auto px-3 pt-4 pb-24 sm:px-5">
-            <header className="mx-auto flex w-full max-w-7xl items-start gap-3">
-                <Link
-                    href={backHref}
-                    aria-label={t("chart.back")}
-                    className="border-border bg-surface hover:bg-surface-muted flex size-10 shrink-0 items-center justify-center rounded-md border"
-                >
-                    <ArrowLeft className="size-4" />
-                </Link>
-                <div className="min-w-0">
-                    <div className="flex flex-wrap items-center gap-2">
-                        <h1 className="text-title truncate">{title}</h1>
-                        <span className="bg-surface-muted text-caption rounded px-2 py-1 font-semibold">
-                            {difficulty} · Lv {level}
+        <PageContainer className="noslog-ui nl-chart-viewer">
+            <Link
+                href={backHref}
+                className="nl-chart-viewer__back nl-control nl-muted"
+            >
+                <ChevronLeft className="nl-icon" aria-hidden />
+                {t("chart.back")}
+            </Link>
+            <header className="nl-chart-viewer__head">
+                <div className="nl-chart-viewer__title-row">
+                    <h1 className="nl-page-title">{title}</h1>
+                    <span className={`nl-control ${difficultyClass}`}>
+                        {difficulty} · Lv {level}
+                    </span>
+                    {preview ? (
+                        <span className="nl-metadata nl-muted">
+                            {t("chart.preview")}
                         </span>
-                        {preview ? (
-                            <span className="border-chart/40 text-chart rounded border px-2 py-1 text-[11px] font-semibold">
-                                {t("chart.preview")}
-                            </span>
-                        ) : null}
-                    </div>
-                    {localizedTitle ? (
-                        <p className="text-caption mt-1 truncate">
-                            {localizedTitle}
-                        </p>
                     ) : null}
-                    <p className="text-body-muted mt-1 truncate">
-                        {artist ?? t("chart.unknownArtist")}
-                    </p>
-                    <p className="text-caption mt-2">
-                        {t("chart.noteCount", {
-                            count: document.notes.length.toLocaleString(
-                                numberLocale
-                            ),
-                        })}
-                        {revision === null
-                            ? ""
-                            : ` · ${t(
-                                  preview
-                                      ? "chart.savedRevision"
-                                      : "chart.publishedRevision",
-                                  { revision }
-                              )}`}
-                        {" · "}
-                        {formatEditorTime(playbackDurationMs)}
-                    </p>
                 </div>
+                {localizedTitle ? (
+                    <p className="nl-body-secondary nl-muted">
+                        {localizedTitle}
+                    </p>
+                ) : null}
+                <p className="nl-body-secondary">
+                    {artist ?? t("chart.unknownArtist")}
+                </p>
+                <p className="nl-metadata nl-muted">
+                    {t("chart.noteCount", {
+                        count: document.notes.length.toLocaleString(
+                            numberLocale
+                        ),
+                    })}
+                    {revision === null
+                        ? ""
+                        : ` · ${t(
+                              preview
+                                  ? "chart.savedRevision"
+                                  : "chart.publishedRevision",
+                              { revision }
+                          )}`}
+                    {" · "}
+                    {formatEditorTime(playbackDurationMs)}
+                </p>
             </header>
 
-            <section className="mx-auto mt-4 w-full max-w-7xl">
-                <div
-                    role="tablist"
-                    aria-label={t("chart.viewMode")}
-                    className="border-border bg-surface inline-flex rounded-md border p-1"
-                >
-                    <button
-                        type="button"
-                        role="tab"
-                        aria-selected={effectiveViewMode === "falling"}
-                        disabled={browserSupport !== "supported"}
-                        onClick={() => setViewMode("falling")}
-                        className={`h-8 rounded px-3 text-xs font-semibold disabled:cursor-not-allowed disabled:opacity-40 ${
-                            effectiveViewMode === "falling"
-                                ? "bg-text-primary text-bg"
-                                : "text-text-secondary hover:bg-surface-muted"
-                        }`}
-                    >
-                        {t("chart.falling")}
-                    </button>
-                    <button
-                        type="button"
-                        role="tab"
-                        aria-selected={effectiveViewMode === "sheet"}
-                        onClick={() => setViewMode("sheet")}
-                        className={`h-8 rounded px-3 text-xs font-semibold ${
-                            effectiveViewMode === "sheet"
-                                ? "bg-text-primary text-bg"
-                                : "text-text-secondary hover:bg-surface-muted"
-                        }`}
-                    >
-                        {t("chart.sheet")}
-                    </button>
-                </div>
-
-                <div className="border-border bg-surface text-caption flex items-start gap-2 rounded-md border px-3 py-2.5">
-                    <Info className="mt-0.5 size-3.5 shrink-0" />
-                    {browserSupport === "safari" ? (
-                        <p>{t("chart.safariHelp")}</p>
-                    ) : effectiveViewMode === "falling" ? (
-                        <p>{t("chart.fallingHelp")}</p>
-                    ) : (
-                        <p>{t("chart.sheetHelp")}</p>
-                    )}
-                </div>
-
-                <div className="mt-3 flex items-center gap-4 px-1 text-xs">
+            <div className="nl-chart-viewer__controls">
+                <SegmentedControl
+                    label={t("chart.viewMode")}
+                    value={effectiveViewMode}
+                    onValueChange={setViewMode}
+                    options={[
+                        {
+                            value: "falling",
+                            label: t("chart.falling"),
+                            disabled: browserSupport !== "supported",
+                        },
+                        { value: "sheet", label: t("chart.sheet") },
+                    ]}
+                />
+                <StatusMessage
+                    severity={browserSupport === "safari" ? "warning" : "info"}
+                    title={helpText}
+                />
+                <div className="nl-chart-viewer__legend">
                     <Legend
                         color={handColors.left}
                         label={t("chart.leftHand")}
@@ -234,34 +215,32 @@ export default function ChartSheetViewer({
                         color={handColors.right}
                         label={t("chart.rightHand")}
                     />
-                    <span className="text-text-disabled ml-auto">
+                    <span className="nl-metadata nl-muted nl-chart-viewer__layout">
                         {t("chart.layout")}
                     </span>
                 </div>
-            </section>
+            </div>
 
             {browserSupport === "checking" ? (
-                <div className="border-border bg-surface mx-auto mt-4 min-h-64 w-full max-w-7xl rounded-md border" />
+                <div className="nl-chart-viewer__placeholder" aria-busy />
             ) : effectiveViewMode === "falling" ? (
                 document.notes.length === 0 ? (
-                    <div className="border-border bg-surface text-text-secondary mx-auto mt-4 flex min-h-64 w-full max-w-7xl items-center justify-center rounded-md border text-sm">
+                    <p className="nl-chart-viewer__placeholder nl-body-secondary nl-muted">
                         {t("chart.empty")}
-                    </div>
+                    </p>
                 ) : (
-                    <section className="mx-auto mt-4 w-full max-w-5xl">
-                        <FallingChartViewer
-                            document={document}
-                            jacketUrl={jacketUrl}
-                        />
-                    </section>
+                    <FallingChartViewer
+                        document={document}
+                        jacketUrl={jacketUrl}
+                    />
                 )
             ) : (
                 <section
                     tabIndex={0}
                     aria-label={t("chart.sheetScroll")}
-                    className="border-border bg-surface focus:border-text-secondary mt-4 overflow-x-auto rounded-lg border p-3 outline-none"
+                    className="nl-chart-sheet"
                 >
-                    <div className="flex w-max gap-3">
+                    <div className="nl-chart-sheet__panels">
                         {panels.map((panel) => (
                             <ChartSheetPanel
                                 key={panel.index}
@@ -275,15 +254,16 @@ export default function ChartSheetViewer({
                     </div>
                 </section>
             )}
-        </main>
+        </PageContainer>
     );
 }
 
 function Legend({ color, label }: { color: string; label: string }) {
     return (
-        <span className="text-text-secondary flex items-center gap-1.5">
+        <span className="nl-chart-viewer__legend-item nl-body-secondary">
             <span
-                className="size-2.5 rounded-sm"
+                className="nl-chart-viewer__legend-dot"
+                aria-hidden
                 style={{ backgroundColor: color }}
             />
             {label}
@@ -320,10 +300,10 @@ function ChartSheetPanel({
     }, [document, endMs, measureMarkers, startMs]);
 
     return (
-        <figure className="shrink-0">
-            <figcaption className="text-micro mb-1.5 flex items-center justify-between px-1">
+        <figure className="nl-chart-sheet__panel">
+            <figcaption className="nl-chart-sheet__caption nl-metadata nl-muted">
                 <span>{t("chart.column", { count: index + 1 })}</span>
-                <span className="font-mono tabular-nums">
+                <span className="nl-metric-value">
                     {formatEditorTime(startMs)}–{formatEditorTime(endMs)}
                 </span>
             </figcaption>
@@ -335,7 +315,8 @@ function ChartSheetPanel({
                     start: formatEditorTime(startMs),
                     end: formatEditorTime(endMs),
                 })}
-                className="border-border h-[720px] w-[276px] rounded-sm border"
+                className="nl-chart-sheet__canvas"
+                style={{ width: PANEL_WIDTH, height: PANEL_HEIGHT }}
             />
         </figure>
     );

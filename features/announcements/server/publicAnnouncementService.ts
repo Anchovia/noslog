@@ -21,6 +21,7 @@ const queryCandidates = unstable_cache(
                 isPublished: true,
                 publishedAt: true,
                 placement: true,
+                category: true,
                 priority: true,
                 activeFrom: true,
                 expiresAt: true,
@@ -34,7 +35,7 @@ const queryCandidates = unstable_cache(
                 },
             },
         }),
-    ["public-announcements-v2"],
+    ["public-announcements-v3"],
     {
         tags: [CACHE_TAGS.announcements],
         revalidate: PUBLIC_DATA_REVALIDATE_SECONDS,

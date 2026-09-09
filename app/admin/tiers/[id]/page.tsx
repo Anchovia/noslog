@@ -158,7 +158,7 @@ export default async function EditTierListPage({
     const pageCount = Math.max(1, Math.ceil(goalEntryCount / pageSize));
 
     return (
-        <div className="flex flex-col gap-5 px-4 py-5">
+        <div className="flex flex-col gap-5 py-5">
             <section>
                 <h1 className="text-title">{tierList.title}</h1>
                 <p className="text-caption mt-1">

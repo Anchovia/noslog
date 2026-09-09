@@ -19,7 +19,7 @@ const shouldApply = process.argv.includes("--apply");
 const db = new PrismaClient();
 const sourceMusics = JSON.parse(
     fs.readFileSync(
-        new URL("./data/nosdata-musics.json", import.meta.url),
+        new URL("./data/music-catalog.json", import.meta.url),
         "utf8"
     )
 );
@@ -280,7 +280,7 @@ try {
     const plan = await buildPlan();
     const summary = summarize(plan);
     console.log(
-        `검증 완료: Nosdata ${sourceMusics.length}곡, 추가 ${summary.create?.length ?? 0}곡, 정식 ID 교체 ${summary.migrate?.length ?? 0}곡, 갱신 ${summary.update?.length ?? 0}곡, DB 전용 유지 ${plan.preserved.length}곡`
+        `검증 완료: 카탈로그 ${sourceMusics.length}곡, 추가 ${summary.create?.length ?? 0}곡, 정식 ID 교체 ${summary.migrate?.length ?? 0}곡, 갱신 ${summary.update?.length ?? 0}곡, DB 전용 유지 ${plan.preserved.length}곡`
     );
 
     if (!shouldApply) {

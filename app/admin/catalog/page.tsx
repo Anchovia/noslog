@@ -24,7 +24,7 @@ export default async function AdminCatalogPage({
     const candidates = await listMusicCatalogCandidates(status);
 
     return (
-        <div className="flex flex-col gap-4 px-4 py-5">
+        <div className="flex flex-col gap-4 py-5">
             <section>
                 <h1 className="text-title">악곡 업데이트</h1>
                 <p className="text-caption mt-1">

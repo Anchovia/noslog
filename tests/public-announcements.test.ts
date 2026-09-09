@@ -18,6 +18,7 @@ const record = () => ({
     isPublished: true as const,
     publishedAt: new Date("2026-09-01T00:00:00Z"),
     placement: "ROUTINE" as const,
+    category: "UPDATE" as const,
     priority: 0,
     activeFrom: null,
     expiresAt: null,
@@ -95,6 +96,13 @@ describe("P11 public announcement eligibility", () => {
         expect(localizeAnnouncement(a, "ko").modifiedAt).toBe(
             now.toISOString()
         );
+        expect(localizeAnnouncement(a, "ko").category).toBe("UPDATE");
+        expect(
+            eligibleAnnouncements(
+                [{ ...record(), category: undefined }],
+                now
+            )[0]?.category
+        ).toBe("NOTICE");
         expect(localizeAnnouncement(a, "ja")).toMatchObject({
             slug: "notice-1",
             title: "ja title",
