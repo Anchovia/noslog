@@ -1,8 +1,10 @@
 .noslog-ui .nl-feedback-dialog {
     width: min(334px, calc(100vw - 32px));
     padding: var(--nl-spacing-16) 0 var(--nl-spacing-24);
-    border: 1px solid var(--nl-border-overlay);
-    box-shadow: var(--nl-overlay-shadow);
+    border: 0;
+    box-shadow:
+        inset 0 0 0 1px var(--nl-border-overlay),
+        var(--nl-overlay-shadow);
 }
 .noslog-ui .nl-feedback-dialog .nl-dialog__header {
     padding-inline: var(--nl-spacing-24) var(--nl-spacing-16);

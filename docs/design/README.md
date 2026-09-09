@@ -104,6 +104,11 @@ The retired 90% layout, 1440px maximum, proposed 1200/1280px stepping, unreachab
 
 ## Styling and behavior boundaries
 
+The feedback dialog's image attachment control spans the input width in Compact.
+This user-approved exception replaces the content-width attachment control in P2
+`3375:5629`. From Intermediate, keep it content-width and left-aligned. Compact
+Close and Submit actions retain equal widths; wider modes retain trailing actions.
+
 Shared single-line text inputs retain a 44px minimum height in every page mode,
 including Wide (P9 `2689:1465`, P10 `2734:88338`). Keep their height independent
 of the responsive button/control height. Multiline fields retain their larger
