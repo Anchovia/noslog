@@ -166,7 +166,7 @@ export default function SyncPage({
                         onReinstall={revealSetup}
                         onOfficial={official}
                     />
-                    {firstUse || reinstall ? (
+                    {!firstUse && reinstall ? (
                         <p className="nl-body-secondary">
                             {t("sync.setupSecurity")}
                         </p>
