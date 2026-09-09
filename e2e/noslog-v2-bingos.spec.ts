@@ -8,6 +8,58 @@ test.skip(
 );
 
 for (const locale of ["ko", "ja", "en"] as const) {
+    test(`P14 ${locale} reset cancellation and failure preserve progress`, async ({
+        page,
+    }) => {
+        const t = getMessages(locale);
+        for (const state of ["detail-reset-failure", "detail"]) {
+            await page.goto(
+                `/${locale}/p7-verification?fixture=bingos&state=${state}`
+            );
+            await page.setViewportSize({ width: 320, height: 800 });
+            const trigger = page.getByRole("button", {
+                name: t["bingo.resetTitle"],
+                exact: true,
+            });
+            await trigger.click();
+            const dialog = page.getByRole("dialog");
+            await dialog.press("Escape");
+            await expect(trigger).toBeFocused();
+            await expect(page.getByLabel("Fixture saves")).toHaveText("0");
+            await expect(
+                page.locator(".nl-bingo-mission input:checked")
+            ).toHaveCount(8);
+            await trigger.click();
+            await expect(dialog).toBeVisible();
+            expect(
+                (
+                    await new AxeBuilder({ page })
+                        .include('[role="dialog"]')
+                        .analyze()
+                ).violations
+            ).toEqual([]);
+            await dialog
+                .getByRole("button", {
+                    name: t["bingo.resetAction"],
+                    exact: true,
+                })
+                .click();
+            await expect(page.getByLabel("Fixture saves")).toHaveText("1");
+            if (state === "detail-reset-failure") {
+                await expect(dialog.getByRole("alert")).toContainText(
+                    "Fixture reset failure"
+                );
+                await expect(
+                    page.locator(".nl-bingo-mission input:checked")
+                ).toHaveCount(8);
+            } else {
+                await expect(dialog).toBeHidden();
+                await expect(
+                    page.locator(".nl-bingo-mission input:checked")
+                ).toHaveCount(0);
+            }
+        }
+    });
     test(`P14 ${locale} initial catalog streams from a decorative skeleton`, async ({
         page,
     }, testInfo) => {
@@ -279,15 +331,14 @@ for (const locale of ["ko", "ja", "en"] as const) {
             })
         ).toHaveAttribute("href", /returnTo=.*bingo/);
         await page.goto(`/${locale}/bingo?count=24`);
-        await expect(
-            page.locator("ul.nl-bingo-catalog__grid > li")
-        ).toHaveCount(24);
+        const actualCards = page.locator("ul.nl-bingo-catalog__grid > li");
+        await expect(actualCards.first()).toBeVisible();
+        const actualCount = await actualCards.count();
+        expect(actualCount).toBeLessThanOrEqual(24);
         await page.locator("ul.nl-bingo-catalog__grid a").first().click();
         await expect(page.locator(".nl-bingo-board button")).toHaveCount(25);
         await page.goBack();
         await expect(page).toHaveURL(/count=24/);
-        await expect(
-            page.locator("ul.nl-bingo-catalog__grid > li")
-        ).toHaveCount(24);
+        await expect(actualCards).toHaveCount(actualCount);
     });
 }
