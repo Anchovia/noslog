@@ -28,6 +28,7 @@ const fixtureDirectory = "app/(nevigation)/p7-verification";
 const fixtureFile = `${fixtureDirectory}/page.tsx`;
 const authFixtureDirectory = "app/(auth)/p9-verification";
 const authFixtureFile = `${authFixtureDirectory}/page.tsx`;
+const verifyDesign = process.env.NOSLOG_LOCAL_DESIGN_FIXTURE === "true";
 const verifyAuth = process.env.NOSLOG_AUTH_FIXTURE === "true";
 const verifySettings = process.env.NOSLOG_SETTINGS_FIXTURE === "true";
 const verifyAnnouncements = process.env.NOSLOG_ANNOUNCEMENTS_FIXTURE === "true";
@@ -62,7 +63,8 @@ const injected = original.replace(
         throw new Error("P7_PRIVATE_ROOT_FIXTURE");
     }`
 );
-const fixture = `import { headers } from "next/headers";
+const fixture = `import FeedbackDialog from "@/features/feedback/components/feedbackDialog";
+import { headers } from "next/headers";
 import ProfileOwnerFixture from "@/e2e/fixtures/profileOwner";
 import SyncFixture from "@/e2e/fixtures/sync";
 import SettingsFixture from "@/e2e/fixtures/settings";
@@ -74,6 +76,7 @@ import BingoLoadingFixture from "@/e2e/fixtures/bingoLoading";
 export default async function RecoveryVerification({searchParams}: {searchParams:Promise<Record<string,string|undefined>>}) {
     if ((await headers()).get("x-noslog-page-fixture-error") === "true") throw new Error("P7_PRIVATE_RENDER_FIXTURE");
     const query = await searchParams;
+    if (query.fixture === "feedback") return <FeedbackDialog isAuthenticated />;
     if (query.fixture === "bingos" && query.state === "loading") return <BingoLoadingFixture />;
     if (query.fixture === "bingos") return <BingosFixture state={query.state} />;
     if (query.fixture === "exams") return <ExamsFixture state={query.state} />;
@@ -170,31 +173,33 @@ try {
         [
             "playwright",
             "test",
-            ...(verifyBingos
-                ? ["e2e/noslog-v2-bingos.spec.ts"]
-                : verifyExams
-                  ? ["e2e/noslog-v2-exams.spec.ts"]
-                  : verifyArcades
-                    ? ["e2e/noslog-v2-arcades.spec.ts"]
-                    : verifyAnnouncements
-                      ? ["e2e/noslog-v2-announcements.spec.ts"]
-                      : verifySettings
-                        ? ["e2e/noslog-v2-settings-profile.spec.ts"]
-                        : verifyAuth
-                          ? [
-                                "e2e/noslog-v2-auth.spec.ts",
-                                "e2e/noslog-v2-onboarding-states.spec.ts",
-                            ]
-                          : verifySync
+            ...(verifyDesign
+                ? ["e2e/noslog-v2-design-amendments.spec.ts", "--grep=feedback"]
+                : verifyBingos
+                  ? ["e2e/noslog-v2-bingos.spec.ts"]
+                  : verifyExams
+                    ? ["e2e/noslog-v2-exams.spec.ts"]
+                    : verifyArcades
+                      ? ["e2e/noslog-v2-arcades.spec.ts"]
+                      : verifyAnnouncements
+                        ? ["e2e/noslog-v2-announcements.spec.ts"]
+                        : verifySettings
+                          ? ["e2e/noslog-v2-settings-profile.spec.ts"]
+                          : verifyAuth
                             ? [
-                                  "e2e/noslog-v2-sync-states.spec.ts",
-                                  "e2e/noslog-v2-recovery-boundaries.spec.ts",
-                                  "e2e/noslog-v2-profile-owner.spec.ts",
+                                  "e2e/noslog-v2-auth.spec.ts",
+                                  "e2e/noslog-v2-onboarding-states.spec.ts",
                               ]
-                            : [
-                                  "e2e/noslog-v2-recovery-boundaries.spec.ts",
-                                  "e2e/noslog-v2-profile-owner.spec.ts",
-                              ]),
+                            : verifySync
+                              ? [
+                                    "e2e/noslog-v2-sync-states.spec.ts",
+                                    "e2e/noslog-v2-recovery-boundaries.spec.ts",
+                                    "e2e/noslog-v2-profile-owner.spec.ts",
+                                ]
+                              : [
+                                    "e2e/noslog-v2-recovery-boundaries.spec.ts",
+                                    "e2e/noslog-v2-profile-owner.spec.ts",
+                                ]),
             "--project=desktop-chromium",
             ...(verifyExams && verifyArcades
                 ? ["e2e/noslog-v2-arcades.spec.ts"]
@@ -215,6 +220,7 @@ try {
         "/tmp/noslog-p7-fixture-browser.log"
     );
     if (
+        verifyDesign ||
         verifyAuth ||
         verifySettings ||
         verifyAnnouncements ||
@@ -230,20 +236,25 @@ try {
             [
                 "playwright",
                 "test",
-                ...(verifyBingos
-                    ? ["e2e/noslog-v2-bingos.spec.ts"]
-                    : verifyExams
-                      ? ["e2e/noslog-v2-exams.spec.ts"]
-                      : verifyArcades
-                        ? ["e2e/noslog-v2-arcades.spec.ts"]
-                        : verifyAnnouncements
-                          ? ["e2e/noslog-v2-announcements.spec.ts"]
-                          : verifySettings
-                            ? ["e2e/noslog-v2-settings-profile.spec.ts"]
-                            : [
-                                  "e2e/noslog-v2-auth.spec.ts",
-                                  "e2e/noslog-v2-onboarding-states.spec.ts",
-                              ]),
+                ...(verifyDesign
+                    ? [
+                          "e2e/noslog-v2-design-amendments.spec.ts",
+                          "--grep=feedback",
+                      ]
+                    : verifyBingos
+                      ? ["e2e/noslog-v2-bingos.spec.ts"]
+                      : verifyExams
+                        ? ["e2e/noslog-v2-exams.spec.ts"]
+                        : verifyArcades
+                          ? ["e2e/noslog-v2-arcades.spec.ts"]
+                          : verifyAnnouncements
+                            ? ["e2e/noslog-v2-announcements.spec.ts"]
+                            : verifySettings
+                              ? ["e2e/noslog-v2-settings-profile.spec.ts"]
+                              : [
+                                    "e2e/noslog-v2-auth.spec.ts",
+                                    "e2e/noslog-v2-onboarding-states.spec.ts",
+                                ]),
                 "--config=playwright.cross-browser.config.ts",
                 ...(verifyExams && verifyArcades
                     ? ["e2e/noslog-v2-arcades.spec.ts"]
