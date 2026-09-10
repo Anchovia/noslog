@@ -29,7 +29,11 @@ export default function ChartResultGroup({
                     background={music.background}
                     appearance="foundation"
                 >
-                    <span className="nl-jacket__category nl-metadata" lang="en">
+                    <span
+                        className="nl-jacket__category nl-metadata"
+                        lang="en"
+                        data-category={music.category_short}
+                    >
                         {music.category_short}
                     </span>
                 </MusicJacket>

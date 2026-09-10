@@ -163,6 +163,7 @@ export const koMessages = {
     "discovery.descending": "내림차순",
     "discovery.list": "목록",
     "discovery.grid": "격자",
+    "discovery.denseGrid": "촘촘한 격자",
     "discovery.view": "보기 방식",
     "discovery.levelRange": "레벨 범위",
     "discovery.levelLabel": "{difficulty} 레벨",

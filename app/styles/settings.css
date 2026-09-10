@@ -243,7 +243,9 @@
     }
     .noslog-ui .nl-settings__layout {
         display: grid;
-        grid-template-columns: 292px minmax(0, 640px);
+        grid-template-columns:
+            calc((100% - 3 * var(--nl-spacing-16)) / 4)
+            minmax(0, 640px);
         gap: var(--nl-spacing-16);
         align-items: start;
     }

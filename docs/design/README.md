@@ -58,6 +58,33 @@ these thresholds against the padded content width or the 1000px-capped container
 CSS and JavaScript controlling the same composition must use the same query.
 Do not invent separate transitions from Figma's 390/768/1024/1280 review canvases.
 
+### Widths derived from the 1000px shell — 2026-09-11
+
+The shell change of 2026-09-07 moved every ordinary page from a 1216px content
+width to 952px, so any number that was derived from the old width must be
+re-derived, not kept. The 2026-09-11 audit found and corrected these leftovers:
+
+- **Wide rails** (Discovery, Tiers, Exams, Privacy contents, Settings) are one
+  quarter of the content width: `calc((100% - 3 * 16px) / 4)` = 226px at 952.
+  Exams, Privacy and Settings still carried the old hard-coded 292px.
+- **Music grid capacity** is a container query on the results area: 2 columns
+  from 288px, 3 from 536px, 4 from 672px; there is no 5-column step. Card minimum
+  width is 156px (was 168px with 4 columns from 720px, which the fixed 710px Wide
+  results area could never reach — desktop stayed at 3 columns). The 5-column
+  step was removed because Intermediate 1000–1055 (952px) would show 5 columns
+  and then drop to 4 when the Wide rail appears. Tier detailed cards use the
+  same 156px minimum.
+- **Dense grid** (`view=dense`) adds one column at every step (3 / 4 / 5) and
+  shares the grid card. The view control is an icon-only three-segment
+  SegmentedControl (`list`, `layout-grid`, `grid-3x3`) whose labels remain as
+  accessible names and tooltips.
+- **Jacket category label** keeps its `surface/overlay` plate, sits bottom-right
+  (visual-flow position 4, covering less artwork) and colours only the text with
+  `--nl-category-*`, inherited from the 1.0 genre palette; Dark pops/anime/BM were
+  lightened to reach 4.5:1 on the #222 plate.
+- Dead tokens `--nl-container-standard`, `--nl-container-wide`,
+  `--nl-grid-margin-wide` and the `nl-container--wide` class were removed.
+
 - **Music Detail:** Compact has a full-width area select and a separate equal-width
   action row. From Intermediate, the manual-activation tab list and identity-side
   actions switch together. Wide adds the existing 2:1 Chart Info, My Record and

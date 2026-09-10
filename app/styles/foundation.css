@@ -405,6 +405,19 @@ html[data-theme="light"] .noslog-ui,
 .noslog-ui .nl-segments__item:disabled {
     color: var(--nl-interaction-disabled-content);
 }
+/* 아이콘 전용 세그먼트 — 항목 40×36(트랙 포함 44) · 아이콘 20 · 폭은 내용만큼 */
+.noslog-ui .nl-segments--icons {
+    width: fit-content;
+}
+.noslog-ui .nl-segments--icons .nl-segments__item {
+    flex: none;
+    width: 40px;
+    padding-inline: 0;
+}
+.noslog-ui .nl-segments--icons .nl-segments__item > svg {
+    width: var(--nl-icon-medium);
+    height: var(--nl-icon-medium);
+}
 
 .noslog-ui .nl-status {
     display: flex;

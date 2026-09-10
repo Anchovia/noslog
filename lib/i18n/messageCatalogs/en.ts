@@ -166,6 +166,7 @@ export const enMessages = {
     "discovery.descending": "Descending",
     "discovery.list": "List",
     "discovery.grid": "Grid",
+    "discovery.denseGrid": "Dense grid",
     "discovery.view": "View mode",
     "discovery.levelRange": "Level range",
     "discovery.levelLabel": "{difficulty} level",

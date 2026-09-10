@@ -5,7 +5,14 @@ import {
     useInfiniteQuery,
     useQuery,
 } from "@tanstack/react-query";
-import { ChevronDown, ListFilter, X } from "lucide-react";
+import {
+    ChevronDown,
+    Grid3x3,
+    LayoutGrid,
+    List,
+    ListFilter,
+    X,
+} from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
@@ -25,6 +32,7 @@ import ResultState from "@/components/ui/resultState";
 import DiscoverySortControl from "@/features/music/components/discoverySortControl";
 import useDebouncedValue from "@/lib/hooks/useDebouncedValue";
 import useWideLayout from "@/lib/hooks/useWideLayout";
+import { cn } from "@/lib/utils";
 import {
     discoveryOptions,
     discoveryPreviewOptions,
@@ -236,9 +244,23 @@ export default function DiscoveryPage({
                 label={t("discovery.view")}
                 value={query.view}
                 onValueChange={(view) => commit({ ...query, view }, true)}
+                iconOnly
                 options={[
-                    { value: "list", label: t("discovery.list") },
-                    { value: "grid", label: t("discovery.grid") },
+                    {
+                        value: "list",
+                        label: t("discovery.list"),
+                        icon: <List aria-hidden />,
+                    },
+                    {
+                        value: "grid",
+                        label: t("discovery.grid"),
+                        icon: <LayoutGrid aria-hidden />,
+                    },
+                    {
+                        value: "dense",
+                        label: t("discovery.denseGrid"),
+                        icon: <Grid3x3 aria-hidden />,
+                    },
                 ]}
             />
         ) : null;
@@ -551,7 +573,17 @@ export default function DiscoveryPage({
                         ) : null}
                         <div
                             ref={results}
-                            className={`nl-discovery__items nl-discovery__items--${query.scope === "chart" ? "chart" : query.view}`}
+                            className={cn(
+                                "nl-discovery__items",
+                                query.scope === "chart" &&
+                                    "nl-discovery__items--chart",
+                                query.scope !== "chart" &&
+                                    query.view !== "list" &&
+                                    "nl-discovery__items--grid",
+                                query.scope !== "chart" &&
+                                    query.view === "dense" &&
+                                    "nl-discovery__items--dense"
+                            )}
                         >
                             {items.map((music) => (
                                 <div key={music.index} data-result>

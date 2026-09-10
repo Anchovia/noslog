@@ -124,7 +124,9 @@
 @media (min-width: 1056px) {
     .noslog-ui .nl-privacy {
         max-width: none;
-        grid-template-columns: minmax(0, 1fr) 292px;
+        grid-template-columns: minmax(0, 1fr) calc(
+                (100% - 3 * var(--nl-spacing-16)) / 4
+            );
         column-gap: var(--nl-spacing-16);
     }
     .noslog-ui .nl-privacy-identity,

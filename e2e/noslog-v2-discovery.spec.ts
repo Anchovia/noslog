@@ -262,12 +262,13 @@ for (const locale of ["ko", "ja", "en"]) {
         await page.goto(`/${locale}/music?view=grid`);
         await expect(page.locator("[data-result]")).toHaveCount(20);
         for (const [width, columns] of [
+            // 1000 셸 기준: 4열은 결과 영역 672 부터, 5열 단계 없음 (Wide 결과 영역 710 고정)
             [320, 2],
             [390, 2],
             [768, 4],
-            [1024, 5],
-            [1280, 3],
-            [1600, 3],
+            [1024, 4],
+            [1280, 4],
+            [1600, 4],
         ]) {
             await page.setViewportSize({ width, height: 900 });
             await expect

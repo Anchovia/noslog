@@ -163,6 +163,7 @@ export const jaMessages = {
     "discovery.descending": "降順",
     "discovery.list": "リスト",
     "discovery.grid": "グリッド",
+    "discovery.denseGrid": "密なグリッド",
     "discovery.view": "表示形式",
     "discovery.levelRange": "レベル範囲",
     "discovery.levelLabel": "{difficulty} レベル",

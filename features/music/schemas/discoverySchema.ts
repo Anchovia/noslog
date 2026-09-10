@@ -49,7 +49,7 @@ export const discoveryQuerySchema = z
         sort: z.enum(discoverySorts).optional(),
         order: z.enum(["asc", "desc"]).optional(),
         sortDifficulty: z.enum(discoveryDifficulties).optional(),
-        view: z.enum(["list", "grid"]),
+        view: z.enum(["list", "grid", "dense"]),
         records: z.array(z.enum(discoveryRecordFilters)).max(4),
         missMin: z.number().int().nonnegative().max(99999).optional(),
         missMax: z.number().int().nonnegative().max(99999).optional(),
@@ -178,7 +178,10 @@ export function parseDiscoverySearchParams(
             value("order") === "asc" || value("order") === "desc"
                 ? value("order")
                 : undefined,
-        view: value("view") === "grid" ? "grid" : "list",
+        view:
+            value("view") === "grid" || value("view") === "dense"
+                ? value("view")
+                : "list",
         records: unplayed ? ["unplayed"] : [...new Set(records)],
         missMin:
             firstMiss !== undefined && lastMiss !== undefined
@@ -212,7 +215,7 @@ export function discoverySearchParams(query: DiscoveryQuery) {
     ] as const) {
         if (query[key] !== undefined) params.set(key, String(query[key]));
     }
-    if (query.view === "grid") params.set("view", "grid");
+    if (query.view !== "list") params.set("view", query.view);
     if (query.records.length) params.set("records", query.records.join(","));
     return params;
 }
