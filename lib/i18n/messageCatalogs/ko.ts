@@ -267,6 +267,8 @@ export const koMessages = {
     "home.allAnnouncements": "전체 공지",
     "home.officialLink": "공식 X",
     "home.officialPostLink": "원문 보기",
+    "home.officialShowTranslation": "번역 보기",
+    "home.officialOriginalText": "일본어 원문",
     "home.newsEmpty": "아직 표시할 공식 소식이 없습니다.",
     "home.newsError": "공식 소식을 불러오지 못했습니다.",
     "skip.main": "본문 바로가기",

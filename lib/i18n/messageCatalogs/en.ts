@@ -270,6 +270,8 @@ export const enMessages = {
     "home.allAnnouncements": "All announcements",
     "home.officialLink": "Official X",
     "home.officialPostLink": "View original",
+    "home.officialShowTranslation": "Show translation",
+    "home.officialOriginalText": "Japanese original",
     "home.newsEmpty": "No official news to display yet.",
     "home.newsError": "Could not load official news.",
     "skip.main": "Skip to main content",

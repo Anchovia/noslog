@@ -7,6 +7,12 @@ const { env } = vi.hoisted(() => ({
 }));
 vi.mock("server-only", () => ({}));
 vi.mock("@/lib/env/server", () => ({ serverEnv: env }));
+const { translateMock } = vi.hoisted(() => ({
+    translateMock: vi.fn(async () => null as { ko: string; en: string } | null),
+}));
+vi.mock("@/features/home/server/officialXPostTranslation", () => ({
+    getOfficialXPostTranslations: translateMock,
+}));
 // The six-hour data cache is Next's concern; here every call reaches the fetcher.
 vi.mock("next/cache", () => ({
     unstable_cache: (fn: (...args: unknown[]) => unknown) => fn,
@@ -161,6 +167,24 @@ describe("official X latest post", () => {
         );
         expect((init?.headers as Record<string, string>).Authorization).toBe(
             "Bearer token"
+        );
+    });
+
+    it("attaches the translation produced for the post text and links", async () => {
+        translateMock.mockResolvedValueOnce({ ko: "한국어", en: "English" });
+        fetchMock.mockResolvedValueOnce(jsonResponse(200, realTimeline));
+        const { getOfficialXLatestPost } = await loadService();
+        const result = await getOfficialXLatestPost();
+        expect(result.status).toBe("ready");
+        if (result.status !== "ready") return;
+        expect(result.post.translations).toEqual({
+            ko: "한국어",
+            en: "English",
+        });
+        expect(translateMock).toHaveBeenCalledWith(
+            realTimeline.data[0].id,
+            realTimeline.data[0].text,
+            result.post.links
         );
     });
 

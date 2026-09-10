@@ -111,6 +111,7 @@
     background: var(--nl-surface-surface);
 }
 .noslog-ui .nl-official-post {
+    container: official-post / inline-size;
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-12);
@@ -135,15 +136,38 @@
 .noslog-ui .nl-official-post__identity {
     display: flex;
     flex-direction: column;
+    flex: 1 1 auto;
     min-width: 0;
 }
-.noslog-ui .nl-official-post__identity > a {
+/* 이름·핸들은 부가 정보라 좁은 폭에서 한 줄 말줄임으로 줄이고 토글은 행에 남긴다.
+   핸들을 먼저 줄이고 시각은 끝까지 남긴다 (2026-09-10 사용자 결정) */
+.noslog-ui .nl-official-post__identity > a,
+.noslog-ui .nl-official-post__handle {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
 }
-.noslog-ui .nl-official-post__identity > p {
-    overflow-wrap: anywhere;
+.noslog-ui .nl-official-post__meta {
+    display: flex;
+    min-width: 0;
+    white-space: pre;
+}
+.noslog-ui .nl-official-post__handle {
+    flex: 0 1 auto;
+    min-width: 0;
+}
+.noslog-ui .nl-official-post__meta > time {
+    flex: none;
+}
+/* 핸들이 남을 자리가 없는 폭(카드 안폭 < 320)에서는 핸들·구분점과 토글 아이콘을 빼고 시각을 온전히 남긴다 */
+@container official-post (width < 320px) {
+    .noslog-ui .nl-official-post__handle,
+    .noslog-ui .nl-official-post__handle + span {
+        display: none;
+    }
+    .noslog-ui .nl-official-post__toggle > svg {
+        display: none;
+    }
 }
 .noslog-ui .nl-official-post__text {
     white-space: pre-wrap;
@@ -153,6 +177,11 @@
 .noslog-ui .nl-official-post__identity > a {
     text-decoration: underline;
     text-underline-position: under;
+}
+.noslog-ui .nl-official-post__toggle {
+    flex: none;
+    margin-inline-start: auto;
+    padding-inline: calc(var(--nl-spacing-8) - 1px);
 }
 .noslog-ui .nl-official-post__media {
     display: block;

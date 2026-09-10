@@ -266,6 +266,8 @@ export const jaMessages = {
     "home.allAnnouncements": "すべてのお知らせ",
     "home.officialLink": "公式X",
     "home.officialPostLink": "原文を見る",
+    "home.officialShowTranslation": "翻訳を見る",
+    "home.officialOriginalText": "日本語の原文",
     "home.newsEmpty": "表示できる公式ニュースはまだありません。",
     "home.newsError": "公式ニュースを読み込めませんでした。",
     "skip.main": "本文へ移動",
