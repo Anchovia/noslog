@@ -64,6 +64,7 @@ export default async function EditAnnouncementPage({
         id: announcement.id,
         publicSlug: announcement.publicSlug ?? "",
         placement: announcement.placement,
+        category: announcement.category,
         priority: announcement.priority,
         activeFrom: toDateTimeLocalValue(announcement.activeFrom),
         expiresAt: toDateTimeLocalValue(announcement.expiresAt),

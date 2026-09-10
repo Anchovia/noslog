@@ -49,6 +49,7 @@ function announcementFormData({
     id,
     publicSlug = "service-notice",
     placement = "ROUTINE",
+    category = "",
     priority = "0",
     activeFrom = "",
     expiresAt = "",
@@ -59,6 +60,7 @@ function announcementFormData({
     id?: number | string;
     publicSlug?: string;
     placement?: string;
+    category?: string;
     priority?: string;
     activeFrom?: string;
     expiresAt?: string;
@@ -70,6 +72,7 @@ function announcementFormData({
     if (id !== undefined) formData.set("id", String(id));
     formData.set("publicSlug", publicSlug);
     formData.set("placement", placement);
+    formData.set("category", category);
     formData.set("priority", priority);
     formData.set("activeFrom", activeFrom);
     formData.set("expiresAt", expiresAt);
@@ -151,6 +154,7 @@ describe("관리자 공지사항 액션", () => {
                 content: "공지 내용입니다. ko",
                 publicSlug: "service-notice",
                 placement: "ROUTINE",
+                category: "NOTICE",
                 priority: 0,
                 activeFrom: null,
                 expiresAt: null,
@@ -161,6 +165,24 @@ describe("관리자 공지사항 액션", () => {
             select: { id: true },
         });
         expectAnnouncementCacheRefresh();
+    });
+
+    it("선택한 분류를 저장하고 잘못된 분류는 필드 오류로 돌려준다", async () => {
+        await createAnnouncement(
+            announcementFormData({ category: "MAINTENANCE" })
+        );
+        expect(mocks.announcementCreate.mock.calls[0][0].data.category).toBe(
+            "MAINTENANCE"
+        );
+
+        const result = await createAnnouncement(
+            announcementFormData({ category: "URGENT" })
+        );
+        expect(result.success).toBe(false);
+        if (!result.success)
+            expect(result.fieldErrors?.category).toEqual([
+                "공지 분류를 선택해주세요.",
+            ]);
     });
 
     it("중대 공지의 노출 시작이 공개 시각보다 이르면 공개 시각으로 맞춘다", async () => {

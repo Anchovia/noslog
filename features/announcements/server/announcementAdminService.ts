@@ -24,6 +24,7 @@ export type AnnouncementFieldName =
     | "id"
     | "publicSlug"
     | "placement"
+    | "category"
     | "priority"
     | "activeFrom"
     | "expiresAt"
@@ -119,6 +120,7 @@ export async function createAnnouncement(
                 content: input.translations.ko.content,
                 publicSlug: input.publicSlug,
                 placement: input.placement,
+                category: input.category,
                 isPublished: input.isPublished,
                 publishedAt,
                 ...resolveSchedule(input, publishedAt),
@@ -185,6 +187,7 @@ export async function updateAnnouncement(
                 content: input.translations.ko.content,
                 publicSlug: input.publicSlug,
                 placement: input.placement,
+                category: input.category,
                 isPublished: input.isPublished,
                 publishedAt,
                 ...resolveSchedule(input, publishedAt),

@@ -154,7 +154,7 @@ for (const locale of ["ko", "ja", "en"] as const) {
         );
         expect(missing?.status()).toBe(404);
     });
-    test(`P11 ${locale} Home keeps critical and routine notices separate`, async ({
+    test(`P11 ${locale} Home pins the critical notice above routine ones`, async ({
         page,
     }) => {
         const t = getMessages(locale);
@@ -169,11 +169,18 @@ for (const locale of ["ko", "ja", "en"] as const) {
         await expect(
             page.locator(".nl-home-announcements .nl-announcement-row")
         ).toHaveCount(3);
+        const rows = page.locator(
+            ".nl-home-announcements .nl-announcement-row"
+        );
+        await expect(rows.first()).toHaveAttribute("data-pinned", "");
+        await expect(rows.first().locator('a[href$="/fixture-1"]')).toHaveCount(
+            1
+        );
+        await expect(rows.nth(1)).not.toHaveAttribute("data-pinned");
         await expect(
-            page.locator('.nl-home-announcements a[href$="/fixture-1"]')
-        ).toHaveCount(0);
-        await expect(
-            page.getByText(t["announcements.critical"], { exact: true })
+            page
+                .locator(".nl-home-critical")
+                .getByText(t["announcements.critical"], { exact: true })
         ).toBeVisible();
         for (const width of [320, 390, 768, 1470]) {
             await page.setViewportSize({ width, height: 900 });

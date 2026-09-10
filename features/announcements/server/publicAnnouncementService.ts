@@ -76,9 +76,10 @@ export async function getHomeAnnouncements(locale: Locale) {
         new Date()
     );
     return {
-        routine: selected.routine.map((item) =>
-            localizeAnnouncement(item, locale)
-        ),
+        list: selected.list.map(({ record, pinned }) => ({
+            announcement: localizeAnnouncement(record, locale),
+            pinned,
+        })),
         critical: selected.critical
             ? localizeAnnouncement(selected.critical, locale)
             : null,

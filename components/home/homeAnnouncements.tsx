@@ -5,13 +5,13 @@ import AnnouncementRow from "@/features/announcements/components/announcementRow
 import type { PublicAnnouncement } from "@/features/announcements/schemas/publicAnnouncementSchema";
 
 interface HomeAnnouncementsProps {
-    announcements: PublicAnnouncement[];
+    items: { announcement: PublicAnnouncement; pinned: boolean }[];
 }
 
 export default async function HomeAnnouncements({
-    announcements,
+    items,
 }: HomeAnnouncementsProps) {
-    if (!announcements.length) return null;
+    if (!items.length) return null;
     const { locale, t } = await getServerI18n();
     return (
         <section className="nl-home-update nl-home-announcements">
@@ -27,7 +27,7 @@ export default async function HomeAnnouncements({
                 </Link>
             </div>
             <ul>
-                {announcements.slice(0, 3).map((announcement) => (
+                {items.map(({ announcement, pinned }) => (
                     <li key={announcement.id}>
                         <AnnouncementRow
                             announcement={announcement}
@@ -35,6 +35,7 @@ export default async function HomeAnnouncements({
                             categoryLabel={t(
                                 `announcements.category.${announcement.category}`
                             )}
+                            pinned={pinned}
                         />
                     </li>
                 ))}

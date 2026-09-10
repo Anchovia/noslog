@@ -51,8 +51,15 @@ export default async function AnnouncementsFixture({
                 />
                 <div className="nl-home-updates">
                     <HomeAnnouncements
-                        announcements={
-                            state === "home" ? notices.slice(1, 4) : []
+                        items={
+                            state === "home"
+                                ? notices
+                                      .slice(0, 3)
+                                      .map((announcement, index) => ({
+                                          announcement,
+                                          pinned: index === 0,
+                                      }))
+                                : []
                         }
                     />
                 </div>

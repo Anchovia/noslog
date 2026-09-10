@@ -5,6 +5,7 @@ import PageContainer, { PageHeading } from "@/components/layout/pageContainer";
 import { foundationButtonClass } from "@/components/ui/Button";
 import {
     ANNOUNCEMENT_LOCALES,
+    ANNOUNCEMENT_CATEGORY_LABELS,
     ANNOUNCEMENT_PLACEMENT_LABELS,
 } from "@/features/announcements/schemas/announcementSchema";
 import {
@@ -63,7 +64,7 @@ export default async function AdminAnnouncementsPage() {
     const home = selectHomeAnnouncements(visible, now);
     const visibleIds = new Set(visible.map((item) => item.id));
     const homeIds = new Set(
-        [...home.routine, home.critical]
+        [...home.list.map((item) => item.record), home.critical]
             .filter((item) => item !== null)
             .map((item) => item.id)
     );
@@ -124,6 +125,13 @@ export default async function AdminAnnouncementsPage() {
                                             {onHome ? (
                                                 <Chip tone="live">홈 노출</Chip>
                                             ) : null}
+                                            <Chip>
+                                                {
+                                                    ANNOUNCEMENT_CATEGORY_LABELS[
+                                                        announcement.category
+                                                    ]
+                                                }
+                                            </Chip>
                                             {announcement.placement ===
                                             "SERVICE_CRITICAL" ? (
                                                 <Chip tone="warning">
