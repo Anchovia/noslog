@@ -155,6 +155,12 @@ html[data-theme="light"] .noslog-ui,
     transform: scale(var(--nl-motion-press-scale));
     transition-timing-function: var(--nl-ease-out);
 }
+/* 팝오버·다이얼로그·메뉴를 여는 트리거(악곡 정렬·필터, 빙고·오락실 필터, 상세 액션 등)는 눌림 축소를 끈다 —
+   앵커가 0.98 로 줄었다 돌아오는 동안 열린 패널이 미세하게 따라 움직인다. Radix Popover/Dialog 트리거가 붙이는 aria-haspopup 으로만 잡는다 — Disclosure(aria-expanded)·일반 버튼은 눌림 유지 */
+.noslog-ui .nl-button[aria-haspopup]:active,
+.noslog-ui .nl-icon-button[aria-haspopup]:active {
+    transform: none;
+}
 .noslog-ui .nl-button:focus-visible {
     border-color: var(--nl-primary-on-primary);
     outline: none;
