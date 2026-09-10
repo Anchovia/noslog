@@ -10,7 +10,7 @@ test("비로그인 빙고는 개인 필터 없이 공개 보드를 더 불러온
     const cards = page.locator(".nl-bingo-catalog__grid > li");
     await expect(cards).toHaveCount(12);
     await expect(
-        page.getByRole("button", { name: "필터 및 정렬", exact: true })
+        page.getByRole("button", { name: "필터", exact: true })
     ).toHaveCount(0);
     await page.getByRole("button", { name: "더 보기", exact: true }).click();
     await expect(cards).toHaveCount(24);

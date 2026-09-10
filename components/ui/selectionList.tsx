@@ -10,6 +10,7 @@ export default function SelectionList<Value extends string>({
     value,
     onValueChange,
     multiple = false,
+    hideLabel = false,
 }: {
     label: string;
     options: readonly {
@@ -21,11 +22,15 @@ export default function SelectionList<Value extends string>({
     value: readonly Value[];
     onValueChange: (values: Value[]) => void;
     multiple?: boolean;
+    /** 바깥(FilterGroup)이 제목을 이미 그렸을 때 — legend 는 접근성 트리에만 남긴다 */
+    hideLabel?: boolean;
 }) {
     const id = useId();
     return (
         <fieldset className="nl-selection-list">
-            <legend className="nl-component-title">{label}</legend>
+            <legend className={hideLabel ? "sr-only" : "nl-component-title"}>
+                {label}
+            </legend>
             {options.map((option) => (
                 <label
                     key={option.value}
@@ -61,7 +66,12 @@ export default function SelectionList<Value extends string>({
                                 onValueChange([option.value]);
                         }}
                     />
-                    <span>
+                    {multiple ? (
+                        <span className="nl-check__box" aria-hidden="true">
+                            <Check />
+                        </span>
+                    ) : null}
+                    <span className="nl-selection-list__label">
                         {option.label}
                         {option.description ? (
                             <span
@@ -72,7 +82,7 @@ export default function SelectionList<Value extends string>({
                             </span>
                         ) : null}
                     </span>
-                    {value.includes(option.value) ? (
+                    {!multiple && value.includes(option.value) ? (
                         <Check className="nl-icon" aria-hidden />
                     ) : null}
                 </label>

@@ -1,7 +1,7 @@
 "use client";
 
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { ChevronDown, ListFilter, X } from "lucide-react";
+import { ChevronDown, ListFilter } from "lucide-react";
 import { useId, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import {
@@ -12,6 +12,7 @@ import {
 import PageContainer from "@/components/layout/pageContainer";
 import Button from "@/components/ui/Button";
 import ActionButton from "@/components/ui/actionButton";
+import AppliedTokens from "@/components/ui/appliedTokens";
 import { Checkbox } from "@/components/ui/checkbox";
 import { FormField } from "@/components/ui/formField";
 import FullScreenDialog from "@/components/ui/fullScreenDialog";
@@ -216,6 +217,22 @@ export default function TierBrowserPage({
                                     setOpen(value);
                                 }}
                                 title={t("tiers.conditions")}
+                                headerAction={
+                                    <ActionButton
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={() =>
+                                            setDraft({
+                                                ...draft,
+                                                bands: [],
+                                                difficulties: [],
+                                                levels: [],
+                                            })
+                                        }
+                                    >
+                                        {t("common.reset")}
+                                    </ActionButton>
+                                }
                                 trigger={
                                     <Button
                                         appearance="foundation"
@@ -291,74 +308,69 @@ export default function TierBrowserPage({
                             }
                         />
                     </div>
-                    {filterCount ? (
-                        <div
-                            className="nl-tier-criteria"
-                            aria-label={t("tiers.conditions")}
-                        >
-                            {query.bands.length ? (
-                                <button
-                                    className="nl-tier-applied nl-control"
-                                    type="button"
-                                    onClick={() =>
-                                        commit({ ...query, bands: [] })
-                                    }
-                                    aria-label={t("tiers.removeCondition", {
-                                        condition: `${t("tiers.bands")} ${bandToken()}`,
-                                    })}
-                                >
-                                    {bandToken()}
-                                    <X className="nl-icon" aria-hidden />
-                                </button>
-                            ) : null}
-                            {query.difficulties.map((value) => (
-                                <button
-                                    className="nl-tier-applied nl-control"
-                                    type="button"
-                                    key={value}
-                                    aria-label={t("tiers.removeCondition", {
+                    <AppliedTokens
+                        label={t("tiers.conditions")}
+                        clearLabel={t("discovery.clearFilters")}
+                        onClear={() =>
+                            commit({
+                                ...query,
+                                bands: [],
+                                difficulties: [],
+                                levels: [],
+                            })
+                        }
+                        tokens={[
+                            ...(query.bands.length
+                                ? [
+                                      {
+                                          key: "bands",
+                                          label: bandToken(),
+                                          removeLabel: t(
+                                              "tiers.removeCondition",
+                                              {
+                                                  condition: `${t("tiers.bands")} ${bandToken()}`,
+                                              }
+                                          ),
+                                          onRemove: () =>
+                                              commit({ ...query, bands: [] }),
+                                      },
+                                  ]
+                                : []),
+                            ...query.difficulties.map((value) => ({
+                                key: `difficulty-${value}`,
+                                label: value,
+                                removeLabel: t("tiers.removeCondition", {
+                                    condition: value,
+                                }),
+                                onRemove: () =>
+                                    commit({
+                                        ...query,
+                                        difficulties: query.difficulties.filter(
+                                            (current) => current !== value
+                                        ),
+                                    }),
+                            })),
+                            ...query.levels.map((value) => {
+                                const label = value.startsWith("real-")
+                                    ? `Real ${value.slice(5)}`
+                                    : `Lv.${value}`;
+                                return {
+                                    key: `level-${value}`,
+                                    label,
+                                    removeLabel: t("tiers.removeCondition", {
                                         condition: value,
-                                    })}
-                                    onClick={() =>
-                                        commit({
-                                            ...query,
-                                            difficulties:
-                                                query.difficulties.filter(
-                                                    (current) =>
-                                                        current !== value
-                                                ),
-                                        })
-                                    }
-                                >
-                                    {value}
-                                    <X className="nl-icon" aria-hidden />
-                                </button>
-                            ))}
-                            {query.levels.map((value) => (
-                                <button
-                                    className="nl-tier-applied nl-control"
-                                    type="button"
-                                    key={value}
-                                    aria-label={t("tiers.removeCondition", {
-                                        condition: value,
-                                    })}
-                                    onClick={() =>
+                                    }),
+                                    onRemove: () =>
                                         commit({
                                             ...query,
                                             levels: query.levels.filter(
                                                 (current) => current !== value
                                             ),
-                                        })
-                                    }
-                                >
-                                    {value.startsWith("real-")
-                                        ? `Real ${value.slice(5)}`
-                                        : `Lv.${value}`}
-                                    <X className="nl-icon" aria-hidden />
-                                </button>
-                            ))}
-                        </div>
-                    ) : null}
+                                        }),
+                                };
+                            }),
+                        ]}
+                    />
                     {!wide ? resultCount : null}
                     {result.isError ? (
                         <ResultState

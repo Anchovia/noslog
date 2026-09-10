@@ -208,8 +208,10 @@
     border-radius: var(--nl-radius-full);
     background: var(--nl-surface-raised);
 }
-.noslog-ui .nl-discovery__wide-sort,
-.noslog-ui .nl-discovery__criteria {
+.noslog-ui .nl-discovery__toolbar > .nl-segments--icons {
+    margin-left: auto;
+}
+.noslog-ui .nl-discovery__controls {
     display: flex;
     align-items: center;
     flex-wrap: wrap;

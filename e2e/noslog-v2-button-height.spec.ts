@@ -17,7 +17,7 @@ for (const locale of ["ko", "ja", "en"] as const) {
             if (width < 1056) {
                 await page
                     .getByRole("button", {
-                        name: t["discovery.filterSort"],
+                        name: t["music.filter"],
                         exact: true,
                     })
                     .click();

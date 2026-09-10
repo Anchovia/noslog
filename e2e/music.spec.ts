@@ -12,15 +12,16 @@ test("악곡 목록의 정렬과 보기 방식을 URL에 반영한다", async ({
     await expect(page).toHaveURL(/(?:\?|&)view=grid(?:&|$)/);
     await expect(gridView).toHaveAttribute("aria-checked", "true");
     await page
-        .getByRole("button", { name: "필터 및 정렬", exact: true })
+        .getByRole("button", { name: "정렬: 일본어 읽기 순", exact: true })
         .click();
-    const dialog = page.getByRole("dialog", { name: "필터 및 정렬" });
-    await dialog.getByText("레벨 순", { exact: true }).click();
-    await dialog
+    await page
+        .getByRole("menuitemradio", { name: "레벨 순", exact: true })
+        .click();
+    await page
         .getByRole("group", { name: "정렬할 난이도", exact: true })
-        .getByText("Hard", { exact: true })
+        .getByRole("button", { name: "Hard", exact: true })
         .click();
-    await dialog.getByRole("button", { name: /결과 .*개 보기/ }).click();
+    await page.keyboard.press("Escape");
     await expect(page).toHaveURL(/(?:\?|&)sort=level(?:&|$)/);
     await expect(page).toHaveURL(/sortDifficulty=Hard/);
     await expectNoHorizontalOverflow(page);

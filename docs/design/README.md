@@ -85,6 +85,33 @@ re-derived, not kept. The 2026-09-11 audit found and corrected these leftovers:
 - Dead tokens `--nl-container-standard`, `--nl-container-wide`,
   `--nl-grid-margin-wide` and the `nl-container--wide` class were removed.
 
+### Filter and sort grammar — 2026-09-11
+
+One grammar for every surface that opens to filter or sort (Music, Tiers,
+Arcades, Bingo), built from shared primitives in `components/ui`:
+
+- **Sort is separate from filters** at every width: `SortMenu` is a popover of
+  mutually exclusive options (row 40, selected = `interaction/menu-set` + weight +
+  check) opened from a toolbar trigger showing the current criterion. Dependent
+  choices (sort difficulty, direction) sit below a divider inside the menu.
+- **Filter trigger** is labelled `필터` with the applied-group count badge; the
+  container stays as decided on 2026-09-07 — full-screen layer below 672px,
+  rail (Music/Tiers) or anchored popover (Bingo/Arcades) above. No bottom sheet.
+- **Groups** use `FilterGroup`: `component-title` heading, right-hand slot
+  (selected count in the batch layer, `지우기` in instant containers, login link
+  when signed out), 24px gap and a 1px `border/divider` between groups.
+- **Short enumerations render as `FilterChips`** (36px, selected = `surface/raised`
+    - `border/strong` + 16px check + semibold; difficulty chips use the DU-01 text
+      ramp) inside layers and popovers. **Wide rails keep vertical checkbox lists**
+      (`SelectionList`, checkbox always visible, row 40) — the desktop sidebar
+      convention. Long lists (tier bands) and range sliders are unchanged.
+- **Applied conditions** always render as `AppliedTokens` (32px tokens with ×,
+  plus clear-all) on all four pages.
+- The full-screen layer has a `초기화` header action and the `결과 N개 보기`
+  footer; popovers apply instantly and carry only the reset action.
+- `RadioGroup` legends now use `component-title`, which also fixes the settings
+  pages where heading and options were typographically identical.
+
 - **Music Detail:** Compact has a full-width area select and a separate equal-width
   action row. From Intermediate, the manual-activation tab list and identity-side
   actions switch together. Wide adds the existing 2:1 Chart Info, My Record and

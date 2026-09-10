@@ -21,7 +21,7 @@ export default function RadioGroup<Value extends string>({
     const id = useId();
     return (
         <fieldset className="nl-radio-group" disabled={disabled}>
-            <legend className="nl-control">{label}</legend>
+            <legend className="nl-component-title">{label}</legend>
             {description ? (
                 <p id={`${id}-help`} className="nl-body-secondary nl-muted">
                     {description}

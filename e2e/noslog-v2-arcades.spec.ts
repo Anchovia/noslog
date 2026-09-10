@@ -135,31 +135,23 @@ for (const locale of ["ko", "ja", "en"] as const) {
         }
         await page.setViewportSize({ width: 390, height: 900 });
         await page
-            .getByRole("button", {
-                name: t["discovery.filterSort"],
-                exact: true,
-            })
+            .getByRole("button", { name: t["arcades.filters"], exact: true })
             .click();
         const dialog = page.getByRole("dialog");
-        await dialog
-            .getByRole("checkbox", { name: t["arcades.availableFilter"] })
-            .check();
+        const available = dialog.getByRole("button", {
+            name: t["arcades.availableFilter"],
+            exact: true,
+        });
+        await available.click();
         await dialog
             .getByRole("button", { name: t["common.close"], exact: true })
             .click();
         await expect(page.locator(".nl-arcades__list > li")).toHaveCount(2);
         await page
-            .getByRole("button", {
-                name: t["discovery.filterSort"],
-                exact: true,
-            })
+            .getByRole("button", { name: t["arcades.filters"], exact: true })
             .click();
-        await expect(
-            dialog.getByRole("checkbox", { name: t["arcades.availableFilter"] })
-        ).not.toBeChecked();
-        await dialog
-            .getByRole("checkbox", { name: t["arcades.availableFilter"] })
-            .check();
+        await expect(available).toHaveAttribute("aria-pressed", "false");
+        await available.click();
         await dialog.locator(".nl-arcades__apply").click();
         await expect(page.locator(".nl-arcades__list > li")).toHaveCount(1);
         expect(new URL(page.url()).searchParams.get("available")).toBe("1");

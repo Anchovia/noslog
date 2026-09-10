@@ -131,11 +131,11 @@ test("Compact filters stage changes, cancel with Escape and Back, and commit one
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("/ko/music");
     const trigger = page.getByRole("button", {
-        name: "필터 및 정렬",
+        name: "필터",
         exact: true,
     });
     await trigger.click();
-    const dialog = page.getByRole("dialog", { name: "필터 및 정렬" });
+    const dialog = page.getByRole("dialog", { name: "필터" });
     await dialog.getByText("pops", { exact: true }).click();
     await expect(
         dialog.getByRole("button", { name: "결과 1개 보기", exact: true })
@@ -167,22 +167,24 @@ test("Intermediate filters stage changes and require a difficulty for level sort
     await page.setViewportSize({ width: 1024, height: 900 });
     await page.goto("/ko/music");
     await expect(page.locator(".nl-discovery__rail")).toHaveCount(0);
-    await page
-        .getByRole("button", { name: "필터 및 정렬", exact: true })
-        .click();
-    const dialog = page.getByRole("dialog", { name: "필터 및 정렬" });
+    await page.getByRole("button", { name: "필터", exact: true }).click();
+    const dialog = page.getByRole("dialog", { name: "필터" });
     await dialog.getByText("pops", { exact: true }).click();
-    await dialog.getByText("레벨 순", { exact: true }).click();
-    await expect(page).not.toHaveURL(/sort=level/);
-    await expect(
-        dialog.getByRole("button", { name: "난이도 선택" })
-    ).toBeDisabled();
-    await dialog
-        .getByRole("group", { name: "정렬할 난이도", exact: true })
-        .getByText("Hard", { exact: true })
-        .click();
+    await expect(page).not.toHaveURL(/categories=pops/);
     await dialog.getByRole("button", { name: /결과 .*개 보기/ }).click();
     await expect(page).toHaveURL(/categories=pops/);
+    await page
+        .getByRole("button", { name: "정렬: 일본어 읽기 순", exact: true })
+        .click();
+    await page
+        .getByRole("menuitemradio", { name: "레벨 순", exact: true })
+        .click();
+    await expect(page).toHaveURL(/sort=level/);
+    await page
+        .getByRole("group", { name: "정렬할 난이도", exact: true })
+        .getByRole("button", { name: "Hard", exact: true })
+        .click();
+    await page.keyboard.press("Escape");
     await expect(page).toHaveURL(/sort=level/);
     await expect(page).toHaveURL(/sortDifficulty=Hard/);
     await expect(page.locator("[data-result]")).toHaveCount(1);

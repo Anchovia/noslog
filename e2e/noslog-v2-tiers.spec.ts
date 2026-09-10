@@ -134,7 +134,7 @@ async function prepare(
         });
     });
     await page.goto(`/${locale}/tiers?goal=fc&level=1`);
-    await page.locator(".nl-tier-applied").click();
+    await page.locator(".nl-applied__token").first().click();
     await page.locator(".nl-tier-goal").click();
     await page.getByRole("option", { name: "S", exact: true }).click();
     if (failSummary)

@@ -22,7 +22,7 @@ export default function BingoCatalogLoading({
                         disabled
                     >
                         <ListFilter className="nl-icon" aria-hidden />
-                        {t("discovery.filterSort")}
+                        {t("bingo.filter")}
                         <ChevronDown className="nl-icon" aria-hidden />
                     </Button>
                 </div>
