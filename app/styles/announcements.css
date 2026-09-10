@@ -8,16 +8,6 @@
     min-width: 0;
     overflow-wrap: anywhere;
 }
-.noslog-ui .nl-announcements__back {
-    display: flex;
-    align-items: center;
-    gap: var(--nl-spacing-8);
-    min-height: 44px;
-}
-.noslog-ui .nl-announcements__back svg {
-    width: var(--nl-icon-small);
-    height: var(--nl-icon-small);
-}
 .noslog-ui .nl-announcements__dates {
     display: flex;
     flex-direction: column;

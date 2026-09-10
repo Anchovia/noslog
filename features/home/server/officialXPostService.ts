@@ -5,6 +5,7 @@ import type {
     OfficialXPostContent,
     OfficialXPostLink,
 } from "@/features/home/officialXPostContent";
+import { getOfficialXPostTranslations } from "@/features/home/server/officialXPostTranslation";
 
 export const OFFICIAL_X_USERNAME = "NOSTALGIA_573";
 export const OFFICIAL_X_URL = `https://x.com/${OFFICIAL_X_USERNAME}`;
@@ -141,13 +142,28 @@ async function fetchLatestPost(): Promise<
             },
             image,
             links,
+            translations: null,
+        },
+    };
+}
+
+// Translation is resolved outside the post cache so a failed attempt is
+// retried on later renders instead of sticking for six hours.
+async function withTranslations(value: OfficialXPost): Promise<OfficialXPost> {
+    if (value.status !== "ready") return value;
+    const { id, text, links } = value.post;
+    return {
+        status: "ready",
+        post: {
+            ...value.post,
+            translations: await getOfficialXPostTranslations(id, text, links),
         },
     };
 }
 
 const getCachedLatestPost = unstable_cache(
     fetchLatestPost,
-    ["official-x-latest-post-v2"],
+    ["official-x-latest-post-v3"],
     { revalidate: OFFICIAL_X_REVALIDATE_SECONDS }
 );
 
@@ -155,7 +171,7 @@ export async function getOfficialXLatestPost(): Promise<OfficialXPost> {
     if (!serverEnv.X_BEARER_TOKEN) return { status: "error" };
     const now = Date.now();
     if (memo && now - memo.at < OFFICIAL_X_REVALIDATE_SECONDS * 1000) {
-        return memo.value;
+        return withTranslations(memo.value);
     }
     if (now - lastFailureAt < FAILURE_BACKOFF_MS) {
         return { status: "error" };
@@ -163,7 +179,7 @@ export async function getOfficialXLatestPost(): Promise<OfficialXPost> {
     try {
         const value = await getCachedLatestPost();
         memo = { value, at: Date.now() };
-        return value;
+        return withTranslations(value);
     } catch (error) {
         lastFailureAt = Date.now();
         console.error("[official-x] failed to load the latest post", error);

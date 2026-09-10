@@ -109,7 +109,7 @@ describe("P11 public announcement eligibility", () => {
             modifiedAt: null,
         });
     });
-    it("keeps expired critical history but removes its Home prominence", () => {
+    it("keeps expired critical history as a plain row and removes its Home prominence", () => {
         const a = {
             ...record(),
             placement: "SERVICE_CRITICAL",
@@ -118,12 +118,13 @@ describe("P11 public announcement eligibility", () => {
         };
         const eligible = eligibleAnnouncements([a], now);
         expect(eligible).toHaveLength(1);
-        expect(selectHomeAnnouncements(eligible, now)).toEqual({
-            routine: [],
-            critical: null,
-        });
+        const result = selectHomeAnnouncements(eligible, now);
+        expect(result.critical).toBeNull();
+        expect(
+            result.list.map((item) => [item.record.id, item.pinned])
+        ).toEqual([[1, false]]);
     });
-    it("selects one critical item deterministically and three separate routine items", () => {
+    it("selects one critical item deterministically and pins active critical rows above routine ones", () => {
         const records = Array.from({ length: 6 }, (_, id) => ({
             ...record(),
             id: id + 1,
@@ -140,7 +141,13 @@ describe("P11 public announcement eligibility", () => {
             now
         );
         expect(result.critical?.id).toBe(12);
-        expect(result.routine.map((item) => item.id)).toEqual([6, 5, 4]);
+        expect(
+            result.list.map((item) => [item.record.id, item.pinned])
+        ).toEqual([
+            [12, true],
+            [11, true],
+            [6, false],
+        ]);
     });
 });
 describe("P11 restricted Markdown", () => {

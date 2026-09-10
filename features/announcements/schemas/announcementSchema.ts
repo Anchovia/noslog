@@ -1,6 +1,10 @@
 import { z } from "zod";
 
 import { SUPPORTED_LOCALES, type Locale } from "@/lib/i18n/routing";
+import {
+    ANNOUNCEMENT_CATEGORIES,
+    type AnnouncementCategory,
+} from "@/features/announcements/schemas/publicAnnouncementSchema";
 
 export const ANNOUNCEMENT_TITLE_MAX_LENGTH = 80;
 export const ANNOUNCEMENT_CONTENT_MAX_LENGTH = 5000;
@@ -12,6 +16,16 @@ export const ANNOUNCEMENT_LOCALE_LABELS: Record<Locale, string> = {
     ko: "한국어",
     ja: "日本語",
     en: "English",
+};
+// 분류 태그(ANN-CAT). 공개 화면 라벨은 announcements.category.* 메시지를 쓰고, 여기는 관리자 화면용 한국어
+export const ANNOUNCEMENT_CATEGORY_LABELS: Record<
+    AnnouncementCategory,
+    string
+> = {
+    UPDATE: "업데이트",
+    MAINTENANCE: "점검",
+    DATA: "데이터",
+    NOTICE: "안내",
 };
 export const ANNOUNCEMENT_PLACEMENT_LABELS: Record<
     (typeof ANNOUNCEMENT_PLACEMENTS)[number],
@@ -82,6 +96,16 @@ export const announcementFormSchema = z
         placement: z.enum(ANNOUNCEMENT_PLACEMENTS, {
             error: "공지 종류를 선택해주세요.",
         }),
+        // 분류는 placement 와 별개. 값이 없으면 기본 NOTICE
+        category: z
+            .string()
+            .optional()
+            .transform((value) => value?.trim() || "NOTICE")
+            .pipe(
+                z.enum(ANNOUNCEMENT_CATEGORIES, {
+                    error: "공지 분류를 선택해주세요.",
+                })
+            ),
         priority: z.coerce
             .number({ error: "우선순위는 정수로 입력해주세요." })
             .int("우선순위는 정수로 입력해주세요.")
@@ -147,6 +171,7 @@ export function announcementFormInputFromFormData(formData: FormData) {
     return {
         publicSlug: readString(formData, "publicSlug"),
         placement: readString(formData, "placement"),
+        category: readString(formData, "category"),
         priority: readString(formData, "priority") || "0",
         activeFrom: readString(formData, "activeFrom"),
         expiresAt: readString(formData, "expiresAt"),
@@ -182,6 +207,7 @@ export function createAnnouncementFormData(
     const formData = new FormData();
     formData.set("publicSlug", values.publicSlug);
     formData.set("placement", values.placement);
+    formData.set("category", values.category);
     formData.set("priority", String(values.priority));
     formData.set("activeFrom", values.activeFrom?.toISOString() ?? "");
     formData.set("expiresAt", values.expiresAt?.toISOString() ?? "");

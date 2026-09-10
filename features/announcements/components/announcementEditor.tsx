@@ -14,6 +14,7 @@ import {
 } from "@/app/admin/announcements/actions";
 import AnnouncementDeleteButton from "@/features/announcements/components/announcementDeleteButton";
 import {
+    ANNOUNCEMENT_CATEGORY_LABELS,
     ANNOUNCEMENT_CONTENT_MAX_LENGTH,
     ANNOUNCEMENT_LOCALES,
     ANNOUNCEMENT_LOCALE_LABELS,
@@ -27,6 +28,10 @@ import {
     type AnnouncementFormValues,
     type AnnouncementValues,
 } from "@/features/announcements/schemas/announcementSchema";
+import {
+    ANNOUNCEMENT_CATEGORIES,
+    type AnnouncementCategory,
+} from "@/features/announcements/schemas/publicAnnouncementSchema";
 import ActionButton from "@/components/ui/actionButton";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -36,6 +41,7 @@ import {
     fieldDescription,
 } from "@/components/ui/formField";
 import { SegmentedControl } from "@/components/ui/segmentedControl";
+import { Select } from "@/components/ui/select";
 import { foundationButtonClass } from "@/components/ui/Button";
 import { applyFormFieldErrors } from "@/lib/forms/errors";
 import type { Locale } from "@/lib/i18n/routing";
@@ -45,6 +51,7 @@ export interface AnnouncementEditorData {
     id?: number;
     publicSlug: string;
     placement: AnnouncementFormValues["placement"];
+    category: AnnouncementCategory;
     priority: number;
     activeFrom: string;
     expiresAt: string;
@@ -55,6 +62,7 @@ export interface AnnouncementEditorData {
 export const emptyAnnouncementEditorData: AnnouncementEditorData = {
     publicSlug: "",
     placement: "ROUTINE",
+    category: "NOTICE",
     priority: 0,
     activeFrom: "",
     expiresAt: "",
@@ -89,6 +97,7 @@ export default function AnnouncementEditor({
         defaultValues: {
             publicSlug: announcement.publicSlug,
             placement: announcement.placement,
+            category: announcement.category,
             priority: announcement.priority,
             activeFrom: announcement.activeFrom,
             expiresAt: announcement.expiresAt,
@@ -330,6 +339,33 @@ export default function AnnouncementEditor({
                                 />
                             )}
                         />
+                    </FormField>
+
+                    <FormField
+                        id="announcement-category"
+                        label="분류"
+                        help="제목 앞에 붙는 분류 태그. 홈·목록·상세에 함께 표시됩니다."
+                        error={errors.category?.message}
+                        className="nl-admin-form__span"
+                    >
+                        <Select
+                            id="announcement-category"
+                            aria-invalid={Boolean(errors.category)}
+                            aria-describedby={fieldDescription(
+                                "announcement-category",
+                                {
+                                    help: true,
+                                    error: Boolean(errors.category),
+                                }
+                            )}
+                            {...register("category")}
+                        >
+                            {ANNOUNCEMENT_CATEGORIES.map((value) => (
+                                <option key={value} value={value}>
+                                    {ANNOUNCEMENT_CATEGORY_LABELS[value]}
+                                </option>
+                            ))}
+                        </Select>
                     </FormField>
 
                     {placement === "SERVICE_CRITICAL" ? (

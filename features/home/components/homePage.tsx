@@ -65,7 +65,7 @@ export default async function HomePage() {
             </section>
             <HomeDestinations />
             <div className="nl-home-updates">
-                <HomeAnnouncements announcements={announcements.routine} />
+                <HomeAnnouncements items={announcements.list} />
                 <OfficialXPost post={officialPost} />
             </div>
         </PageContainer>

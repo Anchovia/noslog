@@ -1,7 +1,6 @@
 "use client";
 
-import { ChevronLeft } from "lucide-react";
-import Link from "next/link";
+import BackLink from "@/components/ui/backLink";
 import {
     useEffect,
     useMemo,
@@ -142,13 +141,7 @@ export default function ChartSheetViewer({
 
     return (
         <PageContainer className="noslog-ui nl-chart-viewer">
-            <Link
-                href={backHref}
-                className="nl-chart-viewer__back nl-control nl-muted"
-            >
-                <ChevronLeft className="nl-icon" aria-hidden />
-                {t("chart.back")}
-            </Link>
+            <BackLink href={backHref}>{t("chart.back")}</BackLink>
             <header className="nl-chart-viewer__head">
                 <div className="nl-chart-viewer__title-row">
                     <h1 className="nl-page-title">{title}</h1>

@@ -16,6 +16,8 @@ export type OfficialXPostImage = {
     alt: string | null;
 };
 
+export type OfficialXPostTranslations = { ko: string; en: string };
+
 export type OfficialXPostContent = {
     id: string;
     url: string;
@@ -24,7 +26,33 @@ export type OfficialXPostContent = {
     author: { name: string; username: string; avatarUrl: string | null };
     image: OfficialXPostImage | null;
     links: OfficialXPostLink[];
+    /** Machine translations of `text`; null when unavailable. Links keep their t.co form. */
+    translations: OfficialXPostTranslations | null;
 };
+
+/**
+ * Swaps every t.co URL for an opaque placeholder so a translator cannot
+ * rewrite it, and returns the inverse mapping to put the URLs back.
+ */
+export function maskOfficialXPostLinks(
+    text: string,
+    links: OfficialXPostLink[]
+) {
+    let masked = text;
+    const placeholders: [string, string][] = [];
+    links.forEach((link, index) => {
+        if (!masked.includes(link.url)) return;
+        const placeholder = `[[LINK_${index + 1}]]`;
+        placeholders.push([placeholder, link.url]);
+        masked = masked.split(link.url).join(placeholder);
+    });
+    const restore = (value: string) =>
+        placeholders.reduce(
+            (result, [placeholder, url]) => result.split(placeholder).join(url),
+            value
+        );
+    return { masked, restore };
+}
 
 export type OfficialXPostSegment =
     | { type: "text"; value: string }

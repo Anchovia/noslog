@@ -1,5 +1,5 @@
 import { CircleAlert, CircleCheck, Info, TriangleAlert } from "lucide-react";
-import type { HTMLAttributes, ReactNode } from "react";
+import type { ComponentType, HTMLAttributes, ReactNode, SVGProps } from "react";
 import { cn } from "@/lib/utils";
 
 const statusIcons = {
@@ -14,6 +14,8 @@ interface StatusMessageProps extends Omit<
     "title"
 > {
     severity?: keyof typeof statusIcons;
+    // severity 기본 아이콘 대신 쓸 아이콘 (예: 공지 배너의 확성기)
+    icon?: ComponentType<SVGProps<SVGSVGElement>>;
     title: ReactNode;
     children?: ReactNode;
     description?: ReactNode;
@@ -22,6 +24,7 @@ interface StatusMessageProps extends Omit<
 
 export function StatusMessage({
     severity = "info",
+    icon,
     title,
     children,
     description,
@@ -29,7 +32,7 @@ export function StatusMessage({
     className,
     ...props
 }: StatusMessageProps) {
-    const Icon = statusIcons[severity];
+    const Icon = icon ?? statusIcons[severity];
     return (
         <div
             className={cn("nl-status", `nl-status--${severity}`, className)}

@@ -121,53 +121,48 @@ export default function ProfileProgress({
                 className="nl-profile-progress__content"
                 aria-busy={result.isFetching}
             >
-                {current === null ? (
-                    <p className="nl-body-secondary nl-muted">
-                        {t(
-                            result.isPending
-                                ? "profile.loading"
-                                : data?.query.metric === "rating"
-                                  ? "rankings.ratingUnavailable"
-                                  : "profile.noRecord"
-                        )}
-                    </p>
-                ) : points.length < 2 ? (
-                    <div className="nl-profile-progress__single">
-                        <p className="nl-metric-value">
-                            {format(current)} {unit}
-                        </p>
-                        <p className="nl-body-secondary nl-muted">
-                            {t("profile.progressInsufficient")}
-                        </p>
-                    </div>
-                ) : (
+                {/* 플롯 기하 유지 (2026-09-10 사용자 결정): 기록이 없거나 부족해도 플롯 틀을 그대로 두고 그 안에 상태를 적는다 */}
+                {
                     <LineChart
                         label={`${data?.query.mode === "recital" ? "Recital" : "Basic"} · ${metricLabel} · ${t("profile.progress")}`}
                         dimensionLabel={t("record.date")}
                         valueLabel={metricLabel}
-                        points={points.map((point) => ({
-                            id: point.date,
-                            dimension: dateFormat.format(new Date(point.date)),
-                            shortDimension: dateFormat.format(
-                                new Date(point.date)
-                            ),
-                            value: point.value,
-                            coordinate: Date.parse(point.date),
-                        }))}
+                        keepPlotGeometry
+                        plotSurface
+                        points={(current === null ? [] : points).map(
+                            (point) => ({
+                                id: point.date,
+                                dimension: dateFormat.format(
+                                    new Date(point.date)
+                                ),
+                                shortDimension: dateFormat.format(
+                                    new Date(point.date)
+                                ),
+                                value: point.value,
+                                coordinate: Date.parse(point.date),
+                            })
+                        )}
                         domain={[Math.max(0, minimum - inset), maximum + inset]}
                         formatValue={(value) => `${format(value)} ${unit}`}
                         formatAxis={format}
-                        emptyMessage={t("profile.noRecord")}
-                        singleMessage={t("record.single")}
+                        emptyMessage={t(
+                            current !== null
+                                ? "profile.noRecord"
+                                : result.isPending
+                                  ? "profile.loading"
+                                  : data?.query.metric === "rating"
+                                    ? "rankings.ratingUnavailable"
+                                    : "profile.noRecord"
+                        )}
+                        singleMessage={t("profile.progressInsufficient")}
                         responsivePlot
                         showValueAxis={false}
-                        showGrid={false}
                         showPoints={false}
                         dimensionTickIndices={[0, points.length - 1]}
                         tableVisibility="screen-reader"
                     />
-                )}
-                {current !== null ? (
+                }
+                {
                     <dl
                         className="nl-profile-progress__summary nl-body-secondary"
                         aria-label={metricLabel}
@@ -181,7 +176,7 @@ export default function ProfileProgress({
                         <div>
                             <dt className="nl-muted">{t("profile.current")}</dt>
                             <dd className="nl-metric-value">
-                                {format(current)}
+                                {current === null ? "—" : format(current)}
                             </dd>
                         </div>
                         <div>
@@ -193,7 +188,7 @@ export default function ProfileProgress({
                             </dd>
                         </div>
                     </dl>
-                ) : null}
+                }
             </div>
             {result.isError ? (
                 <StatusMessage

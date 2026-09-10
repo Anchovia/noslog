@@ -262,16 +262,6 @@
     padding-bottom: var(--nl-spacing-48);
     overflow-wrap: anywhere;
 }
-.noslog-ui .nl-arcade-detail__back {
-    display: flex;
-    align-items: center;
-    gap: var(--nl-spacing-8);
-    min-height: 44px;
-}
-.noslog-ui .nl-arcade-detail__back svg {
-    width: var(--nl-icon-small);
-    height: var(--nl-icon-small);
-}
 .noslog-ui .nl-arcade-detail__composition,
 .noslog-ui .nl-arcade-detail__cards,
 .noslog-ui .nl-arcade-detail__action-rail {

@@ -96,24 +96,29 @@ export function selectHomeAnnouncements(
     records: PublicAnnouncementRecord[],
     now: Date
 ) {
+    // 활성 중대 공지: 배너 후보이자 목록 최상단에 고정되는 항목
+    const active = records
+        .filter(
+            (record) =>
+                record.placement === "SERVICE_CRITICAL" &&
+                record.activeFrom &&
+                record.activeFrom <= now &&
+                (!record.expiresAt || now < record.expiresAt)
+        )
+        .sort(
+            (a, b) =>
+                b.priority - a.priority ||
+                b.publishedAt.getTime() - a.publishedAt.getTime() ||
+                b.id - a.id
+        );
+    const activeIds = new Set(active.map((record) => record.id));
     return {
-        routine: records
-            .filter((record) => record.placement === "ROUTINE")
-            .slice(0, 3),
-        critical:
-            records
-                .filter(
-                    (record) =>
-                        record.placement === "SERVICE_CRITICAL" &&
-                        record.activeFrom &&
-                        record.activeFrom <= now &&
-                        (!record.expiresAt || now < record.expiresAt)
-                )
-                .sort(
-                    (a, b) =>
-                        b.priority - a.priority ||
-                        b.publishedAt.getTime() - a.publishedAt.getTime() ||
-                        b.id - a.id
-                )[0] ?? null,
+        list: [
+            ...active.map((record) => ({ record, pinned: true })),
+            ...records
+                .filter((record) => !activeIds.has(record.id))
+                .map((record) => ({ record, pinned: false })),
+        ].slice(0, 3),
+        critical: active[0] ?? null,
     };
 }

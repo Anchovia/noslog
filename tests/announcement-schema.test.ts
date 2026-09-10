@@ -41,6 +41,7 @@ describe("관리자 공지사항 스키마", () => {
         ).toEqual({
             publicSlug: "service-notice",
             placement: "ROUTINE",
+            category: "NOTICE",
             priority: 0,
             activeFrom: null,
             expiresAt: null,
@@ -194,6 +195,24 @@ describe("관리자 공지사항 스키마", () => {
         expect(announcementFormInputFromFormData(formData).isPublished).toBe(
             false
         );
+    });
+
+    it("분류를 지정하면 그대로 두고 비우면 NOTICE, 집합 밖 값은 거부한다", () => {
+        expect(
+            announcementFormSchema.parse({ ...validInput, category: "DATA" })
+                .category
+        ).toBe("DATA");
+        expect(
+            announcementFormSchema.parse({ ...validInput, category: " " })
+                .category
+        ).toBe("NOTICE");
+        const invalid = announcementFormSchema.safeParse({
+            ...validInput,
+            category: "URGENT",
+        });
+        expect(invalid.success).toBe(false);
+        if (!invalid.success)
+            expect(invalid.error.issues[0]?.path).toEqual(["category"]);
     });
 
     it("생성·수정·삭제 FormData 변환을 한곳에서 검증한다", () => {

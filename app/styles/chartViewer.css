@@ -5,17 +5,6 @@
     padding-block: var(--nl-spacing-32) var(--nl-spacing-48);
     min-width: 0;
 }
-.noslog-ui .nl-chart-viewer__back {
-    display: flex;
-    align-items: center;
-    gap: var(--nl-spacing-8);
-    min-height: 44px;
-    align-self: flex-start;
-}
-.noslog-ui .nl-chart-viewer__back svg {
-    width: var(--nl-icon-small);
-    height: var(--nl-icon-small);
-}
 .noslog-ui .nl-chart-viewer__head {
     display: flex;
     flex-direction: column;

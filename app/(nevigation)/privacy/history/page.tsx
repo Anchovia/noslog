@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { ChevronLeft } from "lucide-react";
+import BackLink from "@/components/ui/backLink";
 import {
     getPrivacyCopy,
     privacyHistoryCopy,
@@ -21,13 +20,9 @@ export default async function PrivacyHistoryPage() {
     const copy = privacyHistoryCopy[locale];
     return (
         <div className="nl-privacy-history">
-            <Link
-                href={localizePath("/privacy", locale)}
-                className="nl-privacy-history__back nl-control"
-            >
-                <ChevronLeft className="nl-icon" aria-hidden />
+            <BackLink href={localizePath("/privacy", locale)}>
                 {getPrivacyCopy(locale).title}
-            </Link>
+            </BackLink>
             <h1 className="nl-page-title">{copy.title}</h1>
             <p className="nl-body nl-muted">{copy.empty}</p>
         </div>

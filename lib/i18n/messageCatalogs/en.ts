@@ -207,6 +207,7 @@ export const enMessages = {
     "common.notFoundDescription":
         "The address may have changed or the page does not exist.",
     "common.goHome": "Go Home",
+    "common.home": "Home",
     "common.pageError": "Could Not Load the Page",
     "common.retryLater": "Please try again in a moment.",
     "common.retry": "Try Again",
@@ -270,6 +271,8 @@ export const enMessages = {
     "home.allAnnouncements": "All announcements",
     "home.officialLink": "Official X",
     "home.officialPostLink": "View original",
+    "home.officialShowTranslation": "Show translation",
+    "home.officialOriginalText": "Japanese original",
     "home.newsEmpty": "No official news to display yet.",
     "home.newsError": "Could not load official news.",
     "skip.main": "Skip to main content",

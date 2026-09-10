@@ -43,6 +43,18 @@
 .noslog-ui .nl-container--wide {
     max-width: var(--nl-container-wide);
 }
+/* 상위 페이지로 돌아가는 링크 — SET-42: chevron 16 · gap 8 · 타겟 44. 폭은 내용만큼 (빈 공간 클릭이 이동으로 이어지지 않게) */
+.noslog-ui .nl-back-link {
+    display: flex;
+    width: fit-content;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+    min-height: 44px;
+}
+.noslog-ui .nl-back-link svg {
+    width: var(--nl-icon-small);
+    height: var(--nl-icon-small);
+}
 .noslog-ui .nl-page-heading {
     display: flex;
     align-items: flex-start;
