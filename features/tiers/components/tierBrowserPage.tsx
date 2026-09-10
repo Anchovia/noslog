@@ -207,106 +207,110 @@ export default function TierBrowserPage({
                     </aside>
                 ) : null}
                 <div className="nl-tier-results">
-                    <div className="nl-tier-toolbar">
-                        {wide ? resultCount : null}
-                        {!wide ? (
-                            <FullScreenDialog
-                                open={open}
-                                onOpenChange={(value) => {
-                                    if (value) setDraft(query);
-                                    setOpen(value);
-                                }}
-                                title={t("tiers.conditions")}
-                                headerAction={
-                                    <ActionButton
-                                        variant="ghost"
-                                        size="sm"
-                                        onClick={() =>
-                                            setDraft({
-                                                ...draft,
-                                                bands: [],
-                                                difficulties: [],
-                                                levels: [],
-                                            })
-                                        }
-                                    >
-                                        {t("common.reset")}
-                                    </ActionButton>
-                                }
-                                trigger={
-                                    <Button
-                                        appearance="foundation"
-                                        variant="secondary"
-                                        className="nl-filter-trigger"
-                                    >
-                                        <ListFilter
-                                            className="nl-icon"
-                                            aria-hidden
-                                        />
-                                        {t("music.filter")}
-                                        {filterCount ? (
-                                            <span className="nl-filter-count">
-                                                {filterCount}
-                                            </span>
-                                        ) : null}
-                                        <ChevronDown
-                                            className="nl-icon"
-                                            aria-hidden
-                                        />
-                                    </Button>
-                                }
-                                footer={
-                                    <ActionButton
-                                        busy={preview.isFetching}
-                                        disabled={
-                                            !preview.data || preview.isError
-                                        }
-                                        onClick={() => commit(draft)}
-                                    >
-                                        {t("discovery.apply", {
-                                            count: previewTotal.toLocaleString(
-                                                locale
-                                            ),
-                                        })}
-                                    </ActionButton>
-                                }
-                            >
-                                <div className="nl-tier-filter-body">
-                                    <TierFilterFields
-                                        query={draft}
-                                        onChange={setDraft}
-                                        bands={
-                                            preview.data?.list?.bands ?? bands
-                                        }
-                                    />
-                                    {preview.isError ? (
-                                        <ResultState
-                                            message={t("tiers.loadError")}
-                                            action={
-                                                <ActionButton
-                                                    variant="secondary"
-                                                    onClick={() =>
-                                                        void preview.refetch()
-                                                    }
-                                                >
-                                                    {t("tiers.retry")}
-                                                </ActionButton>
+                    <div className="nl-filter-control-block">
+                        <div className="nl-tier-toolbar">
+                            {wide ? resultCount : null}
+                            {!wide ? (
+                                <FullScreenDialog
+                                    open={open}
+                                    onOpenChange={(value) => {
+                                        if (value) setDraft(query);
+                                        setOpen(value);
+                                    }}
+                                    title={t("tiers.conditions")}
+                                    headerAction={
+                                        <ActionButton
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={() =>
+                                                setDraft({
+                                                    ...draft,
+                                                    bands: [],
+                                                    difficulties: [],
+                                                    levels: [],
+                                                })
+                                            }
+                                        >
+                                            {t("common.reset")}
+                                        </ActionButton>
+                                    }
+                                    trigger={
+                                        <Button
+                                            appearance="foundation"
+                                            variant="secondary"
+                                            className="nl-filter-trigger"
+                                        >
+                                            <ListFilter
+                                                className="nl-icon"
+                                                aria-hidden
+                                            />
+                                            {t("music.filter")}
+                                            {filterCount ? (
+                                                <span className="nl-filter-count">
+                                                    {filterCount}
+                                                </span>
+                                            ) : null}
+                                            <ChevronDown
+                                                className="nl-icon"
+                                                aria-hidden
+                                            />
+                                        </Button>
+                                    }
+                                    footer={
+                                        <ActionButton
+                                            busy={preview.isFetching}
+                                            disabled={
+                                                !preview.data || preview.isError
+                                            }
+                                            onClick={() => commit(draft)}
+                                        >
+                                            {t("discovery.apply", {
+                                                count: previewTotal.toLocaleString(
+                                                    locale
+                                                ),
+                                            })}
+                                        </ActionButton>
+                                    }
+                                >
+                                    <div className="nl-tier-filter-body">
+                                        <TierFilterFields
+                                            query={draft}
+                                            onChange={setDraft}
+                                            bands={
+                                                preview.data?.list?.bands ??
+                                                bands
                                             }
                                         />
-                                    ) : null}
-                                </div>
-                            </FullScreenDialog>
-                        ) : null}
-                        <Checkbox
-                            label={t("tiers.detailedView")}
-                            checked={query.detailed}
-                            onChange={(event) =>
-                                commit({
-                                    ...query,
-                                    detailed: event.target.checked,
-                                })
-                            }
-                        />
+                                        {preview.isError ? (
+                                            <ResultState
+                                                message={t("tiers.loadError")}
+                                                action={
+                                                    <ActionButton
+                                                        variant="secondary"
+                                                        onClick={() =>
+                                                            void preview.refetch()
+                                                        }
+                                                    >
+                                                        {t("tiers.retry")}
+                                                    </ActionButton>
+                                                }
+                                            />
+                                        ) : null}
+                                    </div>
+                                </FullScreenDialog>
+                            ) : null}
+                            <Checkbox
+                                label={t("tiers.detailedView")}
+                                checked={query.detailed}
+                                onChange={(event) =>
+                                    commit({
+                                        ...query,
+                                        detailed: event.target.checked,
+                                    })
+                                }
+                            />
+                        </div>
+                        {!wide ? resultCount : null}
                     </div>
                     <AppliedTokens
                         label={t("tiers.conditions")}
@@ -371,7 +375,6 @@ export default function TierBrowserPage({
                             }),
                         ]}
                     />
-                    {!wide ? resultCount : null}
                     {result.isError ? (
                         <ResultState
                             error

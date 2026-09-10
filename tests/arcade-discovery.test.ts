@@ -285,7 +285,7 @@ describe("public arcade truth and discovery", () => {
         expect(
             selectArcades(
                 [missing, distant, base],
-                { ...values, sort: "distance" },
+                { ...values, near: true },
                 "ja",
                 origin,
                 null,

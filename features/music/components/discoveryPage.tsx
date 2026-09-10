@@ -393,85 +393,99 @@ export default function DiscoveryPage({
                     </aside>
                 ) : null}
                 <div className="nl-discovery__results">
-                    <div className="nl-discovery__toolbar">
-                        <div className="nl-discovery__controls">
-                            <DiscoverySortMenu
-                                query={query}
-                                signedIn={Boolean(accountId)}
-                                onChange={(next) => commit(next)}
-                            />
-                            {!wide ? (
-                                <FullScreenDialog
-                                    open={open}
-                                    onOpenChange={handleOpen}
-                                    onCloseAutoFocus={(event) => {
-                                        if (!focusCommittedSummary.current)
-                                            return;
-                                        event.preventDefault();
-                                        focusCommittedSummary.current = false;
-                                        summaryRef.current?.focus();
-                                    }}
-                                    title={t("music.filter")}
-                                    trigger={filterTrigger}
-                                    headerAction={
-                                        <ActionButton
-                                            variant="ghost"
-                                            size="sm"
-                                            onClick={() =>
-                                                setDraft({
-                                                    ...draft,
-                                                    categories: [],
-                                                    difficulties: [],
-                                                    records: [],
-                                                    missMin: undefined,
-                                                    missMax: undefined,
-                                                })
-                                            }
-                                        >
-                                            {t("common.reset")}
-                                        </ActionButton>
-                                    }
-                                    footer={
-                                        <ActionButton
-                                            disabled={!validDraft}
-                                            onClick={() => {
-                                                focusCommittedSummary.current = true;
-                                                commit(draft);
-                                                setOpen(false);
-                                            }}
-                                        >
-                                            {validDraft
-                                                ? count.data &&
-                                                  delayedDraft === draft
-                                                    ? t("discovery.apply", {
-                                                          count: count.data
-                                                              .total,
-                                                      })
+                    {/* 컨트롤 묶음: 정렬·필터 행 + 결과 수·보기 행 = 한 subsection, 안쪽 12 / 목록까지 24 */}
+                    <div className="nl-filter-control-block">
+                        <div className="nl-discovery__toolbar">
+                            <div
+                                className={cn(
+                                    "nl-discovery__controls",
+                                    !wide && "nl-filter-toolbar--split"
+                                )}
+                            >
+                                <DiscoverySortMenu
+                                    query={query}
+                                    signedIn={Boolean(accountId)}
+                                    onChange={(next) => commit(next)}
+                                />
+                                {!wide ? (
+                                    <FullScreenDialog
+                                        open={open}
+                                        onOpenChange={handleOpen}
+                                        onCloseAutoFocus={(event) => {
+                                            if (!focusCommittedSummary.current)
+                                                return;
+                                            event.preventDefault();
+                                            focusCommittedSummary.current = false;
+                                            summaryRef.current?.focus();
+                                        }}
+                                        title={t("music.filter")}
+                                        trigger={filterTrigger}
+                                        headerAction={
+                                            <ActionButton
+                                                variant="ghost"
+                                                size="sm"
+                                                onClick={() =>
+                                                    setDraft({
+                                                        ...draft,
+                                                        categories: [],
+                                                        difficulties: [],
+                                                        records: [],
+                                                        missMin: undefined,
+                                                        missMax: undefined,
+                                                    })
+                                                }
+                                            >
+                                                {t("common.reset")}
+                                            </ActionButton>
+                                        }
+                                        footer={
+                                            <ActionButton
+                                                disabled={!validDraft}
+                                                onClick={() => {
+                                                    focusCommittedSummary.current = true;
+                                                    commit(draft);
+                                                    setOpen(false);
+                                                }}
+                                            >
+                                                {validDraft
+                                                    ? count.data &&
+                                                      delayedDraft === draft
+                                                        ? t("discovery.apply", {
+                                                              count: count.data
+                                                                  .total,
+                                                          })
+                                                        : t(
+                                                              "discovery.applyWithoutCount"
+                                                          )
                                                     : t(
-                                                          "discovery.applyWithoutCount"
-                                                      )
-                                                : t("discovery.invalidRange")}
-                                        </ActionButton>
-                                    }
-                                >
-                                    <DiscoveryFilters
-                                        query={draft}
-                                        onChange={setDraft}
-                                        signedIn={Boolean(accountId)}
-                                        variant="layer"
-                                    />
-                                </FullScreenDialog>
-                            ) : null}
+                                                          "discovery.invalidRange"
+                                                      )}
+                                            </ActionButton>
+                                        }
+                                    >
+                                        <DiscoveryFilters
+                                            query={draft}
+                                            onChange={setDraft}
+                                            signedIn={Boolean(accountId)}
+                                            variant="layer"
+                                        />
+                                    </FullScreenDialog>
+                                ) : null}
+                            </div>
+                            {wide ? viewSwitch : null}
                         </div>
-                        {viewSwitch}
+                        {/* Compact: 결과 수 왼쪽 + 보기 전환 오른쪽 (목록 헤더 관례) · 정렬|필터는 위 행에서 1:1 */}
+                        <div className="nl-discovery__summary-row">
+                            <p
+                                ref={summaryRef}
+                                tabIndex={-1}
+                                className="nl-discovery__summary nl-body-secondary nl-muted"
+                            >
+                                {summary}
+                            </p>
+                            {!wide ? viewSwitch : null}
+                        </div>
                     </div>
-                    <p
-                        ref={summaryRef}
-                        tabIndex={-1}
-                        className="nl-discovery__summary nl-body-secondary nl-muted"
-                    >
-                        {summary}
-                    </p>
                     <AppliedTokens
                         label={t("music.filter")}
                         clearLabel={t("discovery.clearFilters")}

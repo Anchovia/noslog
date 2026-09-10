@@ -93,7 +93,11 @@ export default function BingoCatalogPage({
             {isAuthenticated ? (
                 <>
                     <div
-                        className="nl-bingo-catalog__controls"
+                        className={
+                            wide
+                                ? "nl-bingo-catalog__controls"
+                                : "nl-bingo-catalog__controls nl-filter-toolbar--split"
+                        }
                         data-filter-layout={wide ? "popover" : "fullscreen"}
                     >
                         <SortMenu
