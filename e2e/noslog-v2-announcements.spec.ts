@@ -177,11 +177,15 @@ for (const locale of ["ko", "ja", "en"] as const) {
             1
         );
         await expect(rows.nth(1)).not.toHaveAttribute("data-pinned");
+        await expect(page.locator(".nl-home-critical")).toHaveAttribute(
+            "aria-label",
+            t["announcements.critical"]
+        );
         await expect(
             page
                 .locator(".nl-home-critical")
                 .getByText(t["announcements.critical"], { exact: true })
-        ).toBeVisible();
+        ).toHaveCount(0);
         for (const width of [320, 390, 768, 1470]) {
             await page.setViewportSize({ width, height: 900 });
             const critical = (await page
