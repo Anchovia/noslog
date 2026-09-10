@@ -177,6 +177,19 @@
     .noslog-ui .nl-profile-plays[data-kind="recent"] {
         grid-area: recent;
     }
+    /* 나란한 두 구역의 헤더 높이를 맞춘다. 기준은 MetricSwitch 높이(패딩 12 + 라벨 20 + 간격 8 + 지시선 2 = 42):
+       컨트롤이 없는 「기록 개요」·「최근 플레이」 헤더도 같은 높이를 가져 목록 첫 행이 옆 구역과 같은 y 에서 시작한다 */
+    .noslog-ui .nl-profile-plays .nl-profile-section__header,
+    .noslog-ui .nl-profile-overview > .nl-section-title {
+        min-height: calc(
+            var(--nl-spacing-12) + var(--nl-type-line-height-20) +
+                var(--nl-spacing-8) + 2px
+        );
+    }
+    .noslog-ui .nl-profile-overview > .nl-section-title {
+        display: flex;
+        align-items: center;
+    }
 }
 .noslog-ui .nl-profile-section {
     display: flex;
@@ -297,6 +310,8 @@
 .noslog-ui .nl-profile-list-actions {
     display: flex;
     gap: var(--nl-spacing-8);
+    /* 그리드 행이 늘려 준 남는 높이를 위로 흡수해 「더 보기」 가 옆 구역과 같은 바닥선에 놓인다 */
+    margin-top: auto;
 }
 .noslog-ui .nl-profile-list-actions > * {
     flex: 1;
@@ -472,6 +487,13 @@
     padding-top: 0;
     gap: var(--nl-spacing-16);
 }
+/* 플롯이 옆 「기록 개요」 행 높이까지 채운다 (16:9 는 최소). 폭이 좁아 한 열일 때는 최소 높이만 */
+.noslog-ui .nl-profile-progress__content,
+.noslog-ui .nl-profile-progress .nl-line-chart,
+.noslog-ui .nl-profile-progress .nl-line-chart__plot,
+.noslog-ui .nl-profile-progress .nl-line-chart__series {
+    flex: 1 1 auto;
+}
 .noslog-ui .nl-profile-progress__summary,
 .noslog-ui .nl-profile-progress__summary > div {
     display: flex;
@@ -481,11 +503,6 @@
 }
 .noslog-ui .nl-profile-progress__summary {
     gap: var(--nl-spacing-16);
-}
-.noslog-ui .nl-profile-progress__single {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-8);
 }
 .noslog-ui .nl-profile-progress__content[aria-busy="true"] {
     color: var(--nl-content-pending);

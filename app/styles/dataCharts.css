@@ -43,9 +43,34 @@
     width: 100%;
     position: relative;
 }
+/* 차트 패널: 패턴 레이더·서열 가중치 차트와 같은 면·radius·inset */
+.noslog-ui .nl-line-chart__plot--panel {
+    padding: var(--nl-spacing-16);
+    border-radius: var(--nl-radius-container);
+    background: var(--nl-surface-surface);
+}
 .noslog-ui .nl-line-chart__series svg {
     display: block;
     overflow: visible;
+}
+/* 기하 유지 상태: 플롯 틀은 그대로, 문구는 플롯 안 가운데 */
+.noslog-ui .nl-line-chart__series--placeholder {
+    position: relative;
+}
+.noslog-ui .nl-line-chart__state {
+    position: absolute;
+    inset-inline: 0;
+    top: 50%;
+    margin: 0;
+    padding-inline: var(--nl-spacing-16);
+    text-align: center;
+}
+.noslog-ui .nl-line-chart__state[data-placement="center"] {
+    transform: translateY(-50%);
+}
+/* 평평한 선 아래에 문구: 선(중앙)과 점 마커를 가리지 않는다 */
+.noslog-ui .nl-line-chart__state[data-placement="below"] {
+    top: calc(50% + var(--nl-spacing-16));
 }
 .noslog-ui .nl-line-chart__grid {
     stroke: var(--nl-border-divider);

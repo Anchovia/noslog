@@ -2,6 +2,7 @@
 
 import { useId, useRef, useState } from "react";
 import type { KeyboardEvent } from "react";
+import { cn } from "@/lib/utils";
 import useElementWidth from "@/lib/hooks/useElementWidth";
 
 export interface LineChartPoint {
@@ -32,6 +33,8 @@ export default function LineChart({
     responsivePlot = false,
     showValueAxis = true,
     showGrid = true,
+    keepPlotGeometry = false,
+    plotSurface = false,
 }: {
     points: LineChartPoint[];
     label: string;
@@ -51,17 +54,29 @@ export default function LineChart({
     responsivePlot?: boolean;
     showValueAxis?: boolean;
     showGrid?: boolean;
+    /** 점이 2개 미만이어도 플롯 틀(높이·격자)을 그대로 두고 그 안에 상태 문구를 둔다 */
+    keepPlotGeometry?: boolean;
+    /** 플롯을 surface/surface 패널(radius 8 · inset 16) 위에 그린다 — 패턴 레이더·서열 가중치 차트와 같은 언어 */
+    plotSurface?: boolean;
 }) {
-    const { ref, width } = useElementWidth<HTMLDivElement>();
+    const { ref, width, height } = useElementWidth<HTMLDivElement>();
     const { ref: tooltipRef, width: tooltipWidth } =
         useElementWidth<HTMLDivElement>();
     const [active, setActive] = useState<number | null>(null);
     const buttons = useRef<(HTMLButtonElement | null)[]>([]);
     const tooltipId = useId();
     const range = domain[1] - domain[0] || 1;
-    const plotHeight = responsivePlot
-        ? Math.min(344, (Math.max(0, width - 32) * 9) / 16)
-        : 120;
+    // responsivePlot: 폭의 16:9(상한 344)를 최소 높이로 두고, 부모가 더 주는 높이(옆 구역과의 행 파리티)는 채운다
+    const frameMin =
+        (responsivePlot
+            ? Math.min(344, (Math.max(0, width - 32) * 9) / 16)
+            : 120) +
+        verticalInset * 2;
+    const frameHeight = responsivePlot && height > frameMin ? height : frameMin;
+    const plotHeight = frameHeight - verticalInset * 2;
+    const frameStyle = responsivePlot
+        ? { minHeight: frameMin }
+        : { height: frameMin };
     const firstCoordinate = points[0]?.coordinate;
     const coordinateRange =
         (points.at(-1)?.coordinate ?? 0) - (firstCoordinate ?? 0);
@@ -138,7 +153,80 @@ export default function LineChart({
                     </span>
                 </div>
             ) : null}
-            {points.length === 0 ? (
+            {points.length < 2 && keepPlotGeometry ? (
+                <div
+                    className={cn(
+                        "nl-line-chart__plot",
+                        plotSurface && "nl-line-chart__plot--panel"
+                    )}
+                >
+                    <div className="nl-line-chart__area">
+                        <div
+                            ref={ref}
+                            className="nl-line-chart__series nl-line-chart__series--placeholder"
+                            style={frameStyle}
+                        >
+                            <svg
+                                width="100%"
+                                height={frameHeight}
+                                aria-hidden="true"
+                            >
+                                {showGrid
+                                    ? ticks.map((_, index) => {
+                                          const y =
+                                              verticalInset +
+                                              (index /
+                                                  Math.max(
+                                                      1,
+                                                      ticks.length - 1
+                                                  )) *
+                                                  plotHeight;
+                                          return (
+                                              <line
+                                                  key={index}
+                                                  x1="0"
+                                                  x2={width}
+                                                  y1={y}
+                                                  y2={y}
+                                                  className="nl-line-chart__grid"
+                                              />
+                                          );
+                                      })
+                                    : null}
+                                {points.length === 1 ? (
+                                    // 값이 하나면 그 값의 평평한 선: 추이가 없다는 뜻을 선 자체가 말한다
+                                    <>
+                                        <line
+                                            x1="0"
+                                            x2="100%"
+                                            y1={verticalInset + plotHeight / 2}
+                                            y2={verticalInset + plotHeight / 2}
+                                            className="nl-line-chart__line"
+                                            data-series="personal"
+                                        />
+                                        <circle
+                                            cx="50%"
+                                            cy={verticalInset + plotHeight / 2}
+                                            r="4"
+                                            className="nl-line-chart__point"
+                                        />
+                                    </>
+                                ) : null}
+                            </svg>
+                            <p
+                                className="nl-line-chart__state nl-body-secondary nl-muted"
+                                data-placement={
+                                    points.length === 1 ? "below" : "center"
+                                }
+                            >
+                                {points.length === 1
+                                    ? singleMessage
+                                    : emptyMessage}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            ) : points.length === 0 ? (
                 <p className="nl-body-secondary nl-muted">{emptyMessage}</p>
             ) : points.length === 1 ? (
                 <>
@@ -152,7 +240,12 @@ export default function LineChart({
                     </p>
                 </>
             ) : (
-                <div className="nl-line-chart__plot">
+                <div
+                    className={cn(
+                        "nl-line-chart__plot",
+                        plotSurface && "nl-line-chart__plot--panel"
+                    )}
+                >
                     {showValueAxis ? (
                         <div
                             className="nl-line-chart__y nl-metadata nl-muted"
@@ -167,7 +260,7 @@ export default function LineChart({
                         <div
                             ref={ref}
                             className="nl-line-chart__series"
-                            style={{ height: plotHeight + verticalInset * 2 }}
+                            style={frameStyle}
                             onPointerMove={(event) => {
                                 const x =
                                     event.clientX -
@@ -214,7 +307,7 @@ export default function LineChart({
                         >
                             <svg
                                 width="100%"
-                                height={plotHeight + verticalInset * 2}
+                                height={frameHeight}
                                 aria-hidden="true"
                             >
                                 {showGrid
