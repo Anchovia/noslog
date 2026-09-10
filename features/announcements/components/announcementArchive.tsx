@@ -1,6 +1,8 @@
 import { Fragment } from "react";
 import PageContainer, { PageHeading } from "@/components/layout/pageContainer";
+import BackLink from "@/components/ui/backLink";
 import { getServerI18n } from "@/lib/i18n/server";
+import { localizePath } from "@/lib/i18n/routing";
 import type { PublicAnnouncement } from "@/features/announcements/schemas/publicAnnouncementSchema";
 import AnnouncementRow from "./announcementRow";
 import AnnouncementPagination from "./announcementPagination";
@@ -22,6 +24,9 @@ export default async function AnnouncementArchive({
     });
     return (
         <PageContainer width="reading" className="nl-announcements">
+            <BackLink href={localizePath("/", locale)}>
+                {t("common.home")}
+            </BackLink>
             <PageHeading title={t("home.announcements")} />
             {announcements.length ? (
                 <ul className="nl-announcements__list">

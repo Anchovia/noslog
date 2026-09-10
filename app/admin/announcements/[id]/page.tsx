@@ -1,7 +1,6 @@
-import { ChevronLeft } from "lucide-react";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import BackLink from "@/components/ui/backLink";
 import PageContainer, { PageHeading } from "@/components/layout/pageContainer";
 import AnnouncementEditor, {
     type AnnouncementEditorData,
@@ -78,13 +77,7 @@ export default async function EditAnnouncementPage({
 
     return (
         <PageContainer width="reading">
-            <Link
-                href="/admin/announcements"
-                className="nl-announcements__back nl-control"
-            >
-                <ChevronLeft aria-hidden />
-                공지사항
-            </Link>
+            <BackLink href="/admin/announcements">공지사항</BackLink>
             <PageHeading
                 title={translations.ko.title || "제목 없음"}
                 description={[

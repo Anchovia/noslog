@@ -2,7 +2,8 @@
 import Link from "next/link";
 import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { ChevronLeft, Copy } from "lucide-react";
+import { Copy } from "lucide-react";
+import BackLink from "@/components/ui/backLink";
 import {
     useLocale,
     useLocalizedHref,
@@ -155,15 +156,13 @@ export default function ArcadeDetailPage({
     );
     return (
         <PageContainer className="nl-arcade-detail">
-            <Link
+            <BackLink
                 href={href(
                     `/gamecenter${discoveryQuery ? `?${discoveryQuery}` : ""}`
                 )}
-                className="nl-arcade-detail__back nl-control nl-muted"
             >
-                <ChevronLeft className="nl-icon" aria-hidden />
                 {t("arcades.title")}
-            </Link>
+            </BackLink>
             <div>
                 <h1
                     className="nl-page-title"

@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
+
+import BackLink from "@/components/ui/backLink";
 import PageContainer, { PageHeading } from "@/components/layout/pageContainer";
 import { getServerI18n } from "@/lib/i18n/server";
 import { localizePath } from "@/lib/i18n/routing";
@@ -89,13 +91,9 @@ export default async function SettingsLayout({
                     ) : null}
                 </div>
                 <div className="nl-settings__detail">
-                    <a
-                        href={root}
-                        className="nl-settings__back nl-control nl-muted"
-                    >
-                        <ChevronLeft aria-hidden />
+                    <BackLink href={root} plain className="nl-settings__back">
                         {t("settings.overview")}
-                    </a>
+                    </BackLink>
                     <PageHeading title={t(titles[current])} />
                     {children}
                 </div>

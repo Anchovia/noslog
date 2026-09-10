@@ -207,6 +207,7 @@ export const enMessages = {
     "common.notFoundDescription":
         "The address may have changed or the page does not exist.",
     "common.goHome": "Go Home",
+    "common.home": "Home",
     "common.pageError": "Could Not Load the Page",
     "common.retryLater": "Please try again in a moment.",
     "common.retry": "Try Again",

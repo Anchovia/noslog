@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { ChevronLeft } from "lucide-react";
+import BackLink from "@/components/ui/backLink";
 import PageContainer from "@/components/layout/pageContainer";
 import { getServerI18n } from "@/lib/i18n/server";
 import { localizePath } from "@/lib/i18n/routing";
@@ -18,13 +17,9 @@ export default async function AnnouncementDetail({
     return (
         <PageContainer width="reading" className="nl-announcements">
             <article className="nl-announcements__detail">
-                <Link
-                    className="nl-announcements__back nl-control nl-muted"
-                    href={localizePath("/announcements", locale)}
-                >
-                    <ChevronLeft aria-hidden />
+                <BackLink href={localizePath("/announcements", locale)}>
                     {t("home.announcements")}
-                </Link>
+                </BackLink>
                 <div className="nl-announcements__title">
                     <AnnouncementCategoryTag
                         category={announcement.category}

@@ -203,6 +203,7 @@ export const jaMessages = {
     "common.notFoundTitle": "ページが見つかりません。",
     "common.notFoundDescription": "URLが変更されたか、存在しないページです。",
     "common.goHome": "ホームへ移動",
+    "common.home": "ホーム",
     "common.pageError": "ページを読み込めませんでした。",
     "common.retryLater": "しばらくしてからもう一度お試しください。",
     "common.retry": "再試行",

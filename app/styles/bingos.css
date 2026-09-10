@@ -162,13 +162,6 @@
     padding-block: var(--nl-spacing-16) var(--nl-spacing-48);
     min-width: 0;
 }
-.noslog-ui .nl-bingo-back {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--nl-spacing-4);
-    min-height: 44px;
-    align-self: flex-start;
-}
 .noslog-ui .nl-bingo-detail__columns {
     display: grid;
     gap: var(--nl-spacing-16);

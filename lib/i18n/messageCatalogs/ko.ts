@@ -204,6 +204,7 @@ export const koMessages = {
     "common.notFoundDescription":
         "주소가 변경되었거나 존재하지 않는 페이지입니다.",
     "common.goHome": "홈으로 이동",
+    "common.home": "홈",
     "common.pageError": "페이지를 불러오지 못했습니다.",
     "common.retryLater": "잠시 후 다시 시도해주세요.",
     "common.retry": "다시 시도",

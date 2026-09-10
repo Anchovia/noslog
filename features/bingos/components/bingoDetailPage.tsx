@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import BackLink from "@/components/ui/backLink";
 import { useRef, useState } from "react";
 import ModalDialog from "@/components/ui/modalDialog";
 import ActionButton from "@/components/ui/actionButton";
-import { ChevronLeft } from "lucide-react";
 import {
     useLocale,
     useLocalizedHref,
@@ -66,10 +66,7 @@ export default function BingoDetailPage({
     ] as const;
     return (
         <div className="nl-bingo-detail">
-            <Link className="nl-bingo-back nl-control" href={href("/bingo")}>
-                <ChevronLeft className="nl-icon" aria-hidden />
-                {t("bingo.title")}
-            </Link>
+            <BackLink href={href("/bingo")}>{t("bingo.title")}</BackLink>
             <div className="nl-bingo-detail__columns">
                 <section
                     className="nl-bingo-context"

@@ -121,13 +121,6 @@
     gap: var(--nl-spacing-16);
     padding-block: var(--nl-spacing-16) var(--nl-spacing-48);
 }
-.noslog-ui .nl-privacy-history__back {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--nl-spacing-4);
-    min-height: 44px;
-    align-self: start;
-}
 @media (min-width: 1056px) {
     .noslog-ui .nl-privacy {
         max-width: none;
