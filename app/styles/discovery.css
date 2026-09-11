@@ -29,7 +29,8 @@
         var(--nl-overlay-shadow);
     z-index: 86;
 }
-.noslog-ui .nl-selection-list legend {
+/* 보이는 제목만 줄을 채운다 — sr-only 제목에 폭 100% 가 걸리면 절대배치 기준(뷰포트) 폭으로 늘어나 가로 스크롤이 생긴다 */
+.noslog-ui .nl-selection-list legend:not(.sr-only) {
     float: left;
     width: 100%;
     padding: 0;
