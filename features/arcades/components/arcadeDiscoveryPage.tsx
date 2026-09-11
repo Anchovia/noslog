@@ -169,7 +169,11 @@ export default function ArcadeDiscoveryPage({
             />
             <div className="nl-arcades__controls">
                 <div
-                    className={popover ? undefined : "nl-filter-toolbar--split"}
+                    className={
+                        popover
+                            ? "nl-filter-toolbar"
+                            : "nl-filter-toolbar nl-filter-toolbar--split"
+                    }
                 >
                     <SortMenu
                         label={t("discovery.sortLabel")}

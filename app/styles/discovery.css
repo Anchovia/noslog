@@ -196,9 +196,9 @@
 .noslog-ui .nl-filter-trigger {
     padding-left: var(--nl-spacing-12);
     padding-right: var(--nl-spacing-8);
-    /* 팝오버를 여는 버튼이라 버튼 규격(40). 36 은 토큰 밖 값이었다 */
-    height: var(--nl-button-height);
-    min-height: var(--nl-button-height);
+    /* 같은 행에 서는 세그먼트·체크박스·셀렉트와 항상 같은 높이 — control-height (모바일 44 / 데스크톱 40) */
+    height: var(--nl-control-height);
+    min-height: var(--nl-control-height);
 }
 .noslog-ui .nl-filter-count {
     display: flex;

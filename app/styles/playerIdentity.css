@@ -80,7 +80,7 @@
     gap: var(--nl-spacing-8);
     /* 옆 셀렉트·세그먼트와 같은 행 높이(control-height 44). 이전 42 는 패딩 합산 값 */
     min-height: var(--nl-control-height);
-    padding: var(--nl-spacing-12) var(--nl-spacing-12) 0;
+    padding: 0 var(--nl-spacing-12);
     white-space: nowrap;
 }
 .noslog-ui .nl-metric-switch__indicator {

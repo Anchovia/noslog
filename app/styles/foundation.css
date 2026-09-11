@@ -378,7 +378,7 @@ html[data-theme="light"] .noslog-ui,
     display: flex;
     gap: var(--nl-spacing-4);
     min-width: 0;
-    min-height: 44px;
+    min-height: var(--nl-control-height);
     padding: calc(var(--nl-spacing-4) - 1px);
     border: 1px solid var(--nl-border-subtle);
     border-radius: var(--nl-radius-container);

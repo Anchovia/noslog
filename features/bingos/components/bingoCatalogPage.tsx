@@ -95,8 +95,8 @@ export default function BingoCatalogPage({
                     <div
                         className={
                             wide
-                                ? "nl-bingo-catalog__controls"
-                                : "nl-bingo-catalog__controls nl-filter-toolbar--split"
+                                ? "nl-bingo-catalog__controls nl-filter-toolbar"
+                                : "nl-bingo-catalog__controls nl-filter-toolbar nl-filter-toolbar--split"
                         }
                         data-filter-layout={wide ? "popover" : "fullscreen"}
                     >
