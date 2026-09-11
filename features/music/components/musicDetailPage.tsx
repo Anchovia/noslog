@@ -8,6 +8,7 @@ import {
     useTranslations,
 } from "@/components/i18n/localeProvider";
 import PageContainer from "@/components/layout/pageContainer";
+import BackLink from "@/components/ui/backLink";
 import type {
     DetailTab,
     Difficulty,
@@ -45,6 +46,15 @@ export default function MusicDetailPage({
     const locale = useLocale();
     const href = useLocalizedHref();
     const t = useTranslations();
+    // 목록이 남긴 마지막 검색 조건 — 뒤로가기가 그 조건으로 돌아간다 (오락실 discoveryQuery 선례). SSR 에는 없으므로 hydration 뒤 한 번 읽는다
+    const [listQuery, setListQuery] = useState("");
+    useEffect(() => {
+        let stored = "";
+        try {
+            stored = sessionStorage.getItem("noslog:music-discovery") ?? "";
+        } catch {}
+        if (stored) queueMicrotask(() => setListQuery(stored));
+    }, []);
     const client = useQueryClient();
     const [selection, setSelection] = useState({
         difficulty: initialData.difficulty,
@@ -133,6 +143,10 @@ export default function MusicDetailPage({
     }, [client, initialData.music.index]);
     return (
         <PageContainer className="nl-music-detail">
+            {/* SET-42 뒤로가기 — 라벨은 목적지 제목(악곡). 공지·오락실·빙고 상세와 같은 자리 */}
+            <BackLink href={href(`/music${listQuery}`)}>
+                {t("discovery.music")}
+            </BackLink>
             <MusicEntityHeader
                 music={initialData.music}
                 difficulty={selection.difficulty}

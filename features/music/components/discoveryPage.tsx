@@ -147,6 +147,15 @@ export default function DiscoveryPage({
     useEffect(() => {
         reset({ search: query.q });
     }, [query.q, reset]);
+    // 상세 페이지의 뒤로가기가 이 조건으로 돌아오도록 남긴다 (오락실 discoveryQuery 선례)
+    useEffect(() => {
+        try {
+            sessionStorage.setItem(
+                "noslog:music-discovery",
+                window.location.search
+            );
+        } catch {}
+    }, [queryKey]);
     useEffect(() => {
         const intent = appendedFocus.current;
         if (!intent) return;
