@@ -215,6 +215,17 @@ The Rankings personal-position notice retains the existing 8px container radius.
 The user approved this rounded form over the square corners in the Figma Wide
 frame; do not flatten this notice when reconciling that frame.
 
+Range slider thumbs are a filled 20px `primary/default` dot inside a 24px target,
+on a 4px track whose unselected part is `border/default`. Radio buttons are a
+20px circle with a 2px `border/strong` ring that turns `primary/default` with an
+8px dot when selected. Both show `--nl-state-halo` (`primary/default` at 16%, a
+user-approved value added on 2026-09-12) on hover; the slider also on drag and
+keyboard focus. Focus keeps FOCUS-1B: the radio swaps its ring to `focus/ring`,
+and the light thumb uses a 1px inside `primary/on-primary` ring. No motion.
+The filter slider's track is inset by half the target (12px) at each end so its
+ends sit under the thumb centres. The chart viewer's native seek and volume bars
+use the same dot with a 20px thumb box, so their track ends meet the dot edge.
+
 Use the existing global styles, shared components and code-style conventions.
 Use Figma variables and Text Styles with the approved exact semantic values;
 do not hand-copy per-page colors, spacing or font stacks. The shared
