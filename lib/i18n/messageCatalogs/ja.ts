@@ -653,7 +653,6 @@ export const jaMessages = {
     "bingo.catalogMissing":
         "ビンゴを読み込めませんでした。しばらくしてから再度お試しください。",
     "bingo.apply": "適用",
-    "bingo.more": "もっと見る",
     "bingo.filter": "フィルター",
     "bingo.completedCount": "解禁完了 {count}",
     "bingo.empty": "この状態のビンゴはありません。",

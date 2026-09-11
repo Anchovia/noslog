@@ -1,30 +1,42 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
-test("Discovery appends explicit batches and preserves the result set when changing view", async ({
+test("Discovery appends three batches on scroll, then only from the explicit button", async ({
     page,
 }) => {
     await page.goto("/ko/music");
-    await expect(page.locator("[data-result]")).toHaveCount(20);
+    const results = page.locator("[data-result]");
+    const progress = page.locator(".nl-discovery__progress");
+    await expect(results).toHaveCount(20);
+    // 목록 끝에 닿으면 첫 묶음 뒤 세 번까지 자동으로 붙는다
+    for (const count of [40, 60, 80]) {
+        await progress.scrollIntoViewIfNeeded();
+        await expect(results).toHaveCount(count);
+    }
+    // 그다음은 끝에 머물러도 더 붙지 않아 푸터에 닿는다
+    await page.evaluate(() =>
+        window.scrollTo(0, document.documentElement.scrollHeight)
+    );
+    await page.waitForLoadState("networkidle");
+    await expect(results).toHaveCount(80);
+    await expect(page.locator(".nl-footer__notice")).toBeInViewport();
     await page
         .getByRole("button", { name: "결과 20개 더 보기", exact: true })
         .click();
-    await expect(page.locator("[data-result]")).toHaveCount(40);
-    await expect(
-        page.locator("[data-result]").nth(20).getByRole("link")
-    ).toBeFocused();
+    await expect(results).toHaveCount(100);
+    await expect(results.nth(80).getByRole("link")).toBeFocused();
     await page.getByRole("radio", { name: "격자", exact: true }).click();
-    await expect(page.locator("[data-result]")).toHaveCount(40);
+    await expect(results).toHaveCount(100);
     await expect(page).toHaveURL(/view=grid/);
     await expect(page.locator(".nl-discovery__items--grid")).toBeVisible();
-    const destination = page.locator("[data-result]").nth(30).getByRole("link");
+    const destination = results.nth(90).getByRole("link");
     await destination.scrollIntoViewIfNeeded();
     const destinationHref = await destination.getAttribute("href");
     const scroll = await page.evaluate(() => window.scrollY);
     await destination.click();
     await expect(page).toHaveURL(new RegExp(`${destinationHref}$`));
     await page.goBack();
-    await expect(page.locator("[data-result]")).toHaveCount(40);
+    await expect(results).toHaveCount(100);
     await expect(page).toHaveURL(/view=grid/);
     await expect
         .poll(() => page.evaluate(() => window.scrollY))
@@ -402,9 +414,8 @@ test("Incremental errors preserve loaded results and retry appends without dupli
         return route.continue();
     });
     await page.goto("/ko/music");
-    await page
-        .getByRole("button", { name: "결과 20개 더 보기", exact: true })
-        .click();
+    // 목록 끝에서 자동으로 붙이던 묶음이 실패하면 자동을 멈추고 재시도를 보여 준다
+    await page.locator(".nl-discovery__progress").scrollIntoViewIfNeeded();
     await expect(
         page.getByText("다음 결과를 불러오지 못했습니다.", { exact: true })
     ).toBeVisible();

@@ -658,7 +658,6 @@ export const enMessages = {
     "bingo.catalogMissing":
         "Bingo could not be loaded. Please try again shortly.",
     "bingo.apply": "Apply",
-    "bingo.more": "Load more",
     "bingo.filter": "Filter",
     "bingo.completedCount": "{count} unlocked",
     "bingo.empty": "No bingo boards have this status.",

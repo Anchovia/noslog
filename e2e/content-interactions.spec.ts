@@ -2,19 +2,20 @@ import { expect, test } from "@playwright/test";
 
 import { expectNoHorizontalOverflow, expectPageLoaded } from "./helpers";
 
-test("비로그인 빙고는 개인 필터 없이 공개 보드를 더 불러온다", async ({
+test("비로그인 빙고는 개인 필터 없이 공개 보드를 전부 보여 준다", async ({
     page,
 }) => {
     await page.goto("/ko/bingo");
     await expectPageLoaded(page);
     const cards = page.locator(".nl-bingo-catalog__grid > li");
-    await expect(cards).toHaveCount(12);
+    await expect(cards.first()).toBeVisible();
+    expect(await cards.count()).toBeGreaterThan(12);
     await expect(
         page.getByRole("button", { name: "필터", exact: true })
     ).toHaveCount(0);
-    await page.getByRole("button", { name: "더 보기", exact: true }).click();
-    await expect(cards).toHaveCount(24);
-    await expect(page).toHaveURL(/count=24/);
+    await expect(
+        page.getByRole("button", { name: "더 보기", exact: true })
+    ).toHaveCount(0);
     await expectNoHorizontalOverflow(page);
 });
 

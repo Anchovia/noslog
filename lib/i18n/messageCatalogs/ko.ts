@@ -652,7 +652,6 @@ export const koMessages = {
     "bingo.catalogMissing":
         "빙고를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.",
     "bingo.apply": "적용",
-    "bingo.more": "더 보기",
     "bingo.filter": "필터",
     "bingo.completedCount": "해금 완료 {count}",
     "bingo.empty": "해당 상태의 빙고가 없습니다.",

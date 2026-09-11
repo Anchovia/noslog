@@ -123,6 +123,12 @@ Arcades, Bingo), built from shared primitives in `components/ui`:
   not rename or alter the preserved chart viewer itself.
   Below Wide, preserve the staged full-screen filter flow. Do not replace it with
   a popover based on the earlier withdrawn proposal.
+  Result batches append automatically when the end of the list comes within
+  240px of the viewport, for up to three batches after the first page (80
+  results). Later batches load only from the existing Load more button, so the
+  footer stays reachable. The button stays visible throughout. Automatic batches
+  announce the added count without moving focus. This user decision (2026-09-12)
+  replaces P3's button-only loading.
   Music/chart discovery's Wide sort trigger displays only the selected criterion
   beside the sort icon; its localized accessible name includes both the sort
   label and selected criterion. This user-approved exception replaces Figma's
@@ -141,9 +147,10 @@ Arcades, Bingo), built from shared primitives in `components/ui`:
   confirmation dialog.
   Completed mission rows retain a concise localized completion label without the
   repeated instruction to press again to undo. Checkbox behavior is unchanged.
-  Catalogue cards retain the divider across the full inner body width, and the
-  Load more button spans the catalogue width. These user-approved exceptions
-  replace the shorter divider and content-width button in P14 `2914:8419`.
+  Catalogue cards retain the divider across the full inner body width. This
+  user-approved exception replaces the shorter divider in P14 `2914:8419`.
+  The catalogue renders every board at once, with no Load more button and no
+  `count` URL parameter. This user decision (2026-09-12) replaces P14's batches.
 - **Arcade discovery map failure:** replace the map with a compact danger notice and
   an adjacent Retry button, preserving the result list. Hide the map legend until
   the map is available. The Retry action is the approved addition to P12.

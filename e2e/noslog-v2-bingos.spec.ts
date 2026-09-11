@@ -101,20 +101,20 @@ for (const locale of ["ko", "ja", "en"] as const) {
         });
         await expect(
             page.locator("ul.nl-bingo-catalog__grid > li")
-        ).toHaveCount(12);
+        ).toHaveCount(44);
         await expect(cards).toHaveCount(0);
         await expect(
             page.getByRole("heading", { name: t["bingo.title"], exact: true })
         ).toBeVisible();
     });
-    test(`P14 ${locale} catalog reflow, batches and staged filters`, async ({
+    test(`P14 ${locale} catalog reflow, full list and staged filters`, async ({
         page,
     }, testInfo) => {
         const t = getMessages(locale);
         await page.goto(`/${locale}/p7-verification?fixture=bingos`);
         await expect(
             page.locator("ul.nl-bingo-catalog__grid > li")
-        ).toHaveCount(12);
+        ).toHaveCount(44);
         for (const [width, columns] of [
             [320, 1],
             [390, 2],
@@ -144,12 +144,6 @@ for (const locale of ["ko", "ja", "en"] as const) {
                     fullPage: true,
                 });
         }
-        await page
-            .getByRole("button", { name: t["bingo.more"], exact: true })
-            .click();
-        await expect(
-            page.locator("ul.nl-bingo-catalog__grid > li")
-        ).toHaveCount(24);
         await page.setViewportSize({ width: 390, height: 900 });
         await page
             .getByRole("button", { name: t["bingo.filter"], exact: true })
@@ -162,7 +156,7 @@ for (const locale of ["ko", "ja", "en"] as const) {
             .click();
         await expect(
             page.locator("ul.nl-bingo-catalog__grid > li")
-        ).toHaveCount(24);
+        ).toHaveCount(44);
         await page
             .getByRole("button", { name: t["bingo.filter"], exact: true })
             .click();
@@ -187,7 +181,7 @@ for (const locale of ["ko", "ja", "en"] as const) {
         await page.goBack();
         await expect(
             page.locator("ul.nl-bingo-catalog__grid > li")
-        ).toHaveCount(24);
+        ).toHaveCount(44);
         expect(
             (
                 await new AxeBuilder({ page })
@@ -329,15 +323,14 @@ for (const locale of ["ko", "ja", "en"] as const) {
                 exact: true,
             })
         ).toHaveAttribute("href", /returnTo=.*bingo/);
-        await page.goto(`/${locale}/bingo?count=24`);
+        await page.goto(`/${locale}/bingo`);
         const actualCards = page.locator("ul.nl-bingo-catalog__grid > li");
         await expect(actualCards.first()).toBeVisible();
         const actualCount = await actualCards.count();
-        expect(actualCount).toBeLessThanOrEqual(24);
         await page.locator("ul.nl-bingo-catalog__grid a").first().click();
         await expect(page.locator(".nl-bingo-board button")).toHaveCount(25);
         await page.goBack();
-        await expect(page).toHaveURL(/count=24/);
+        await expect(page).toHaveURL(new RegExp(`/${locale}/bingo$`));
         await expect(actualCards).toHaveCount(actualCount);
     });
 }

@@ -20,7 +20,6 @@ export const bingoCatalogQuerySchema = z.object({
         .enum(["all", "progress", "unlocked", "full", "chance"])
         .catch("all"),
     sort: z.enum(["release", "recent", "progress"]).catch("release"),
-    count: z.number().int().min(12).max(120).catch(12),
 });
 export type BingoCatalogQuery = z.infer<typeof bingoCatalogQuerySchema>;
 
