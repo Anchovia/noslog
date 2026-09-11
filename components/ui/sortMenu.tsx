@@ -13,6 +13,8 @@ export interface SortMenuOption<Value extends string> {
     label: string;
     description?: string;
     disabled?: boolean;
+    /** 고르면 종속 섹션이 붙는 항목 — 고른 뒤에도 메뉴를 닫지 않는다 */
+    hasDependent?: boolean;
 }
 
 /**
@@ -24,6 +26,7 @@ export default function SortMenu<Value extends string>({
     value,
     options,
     onValueChange,
+    onOpenChange,
     children,
     className,
 }: {
@@ -31,6 +34,7 @@ export default function SortMenu<Value extends string>({
     value: Value;
     options: readonly SortMenuOption<Value>[];
     onValueChange: (value: Value) => void;
+    onOpenChange?: (open: boolean) => void;
     children?: ReactNode;
     className?: string;
 }) {
@@ -39,6 +43,10 @@ export default function SortMenu<Value extends string>({
     const current = options.find((option) => option.value === value);
     // 종속 섹션이 실제로 있을 때만 구분선·영역을 그리고, 없으면 고르는 즉시 닫는다
     const dependent = Children.toArray(children).filter(Boolean);
+    function changeOpen(next: boolean) {
+        setOpen(next);
+        onOpenChange?.(next);
+    }
     // 위·아래 화살표로 항목 사이를 옮긴다 (라디오 그룹 관례) — 선택은 Enter/Space
     function moveFocus(event: KeyboardEvent<HTMLDivElement>) {
         const direction =
@@ -57,7 +65,7 @@ export default function SortMenu<Value extends string>({
         items[(index + direction + items.length) % items.length]?.focus();
     }
     return (
-        <Popover.Root open={open} onOpenChange={setOpen}>
+        <Popover.Root open={open} onOpenChange={changeOpen}>
             <Popover.Trigger asChild>
                 <ActionButton
                     variant="secondary"
@@ -101,7 +109,11 @@ export default function SortMenu<Value extends string>({
                                     className="nl-sort-menu__item nl-body-secondary"
                                     onClick={() => {
                                         onValueChange(option.value);
-                                        if (!dependent.length) setOpen(false);
+                                        if (
+                                            !dependent.length &&
+                                            !option.hasDependent
+                                        )
+                                            changeOpen(false);
                                     }}
                                 >
                                     <span>

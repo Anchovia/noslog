@@ -70,7 +70,7 @@ export async function submitArcadeReport(
             t(`arcades.reportType.${reportType}`),
             cabinet
                 ? (cabinet.label ??
-                  t("arcades.cabinetLabel", { count: cabinet.position + 1 }))
+                  t("arcades.cabinetNumber", { count: cabinet.position + 1 }))
                 : null,
         ]
             .filter(Boolean)

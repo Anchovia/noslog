@@ -256,9 +256,12 @@
     box-shadow: var(--nl-overlay-shadow);
     z-index: 60;
 }
+/* 머리 줄 — 왼쪽 제목 · 오른쪽 초기화(전체 레이어 머리 줄과 같은 구성) */
 .noslog-ui .nl-filter-popover__head {
     display: flex;
-    justify-content: flex-end;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--nl-spacing-8);
 }
 .noslog-ui .nl-filter-popover .nl-filter-group + .nl-filter-group {
     padding-top: var(--nl-spacing-16);

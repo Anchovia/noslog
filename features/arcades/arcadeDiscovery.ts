@@ -98,6 +98,77 @@ export function arcadeTodayHours(arcade: PublicArcade, now: Date) {
     return arcade.hours.weekly[String(day) as keyof typeof arcade.hours.weekly];
 }
 
+/** 가장 최근 확인 시각 — 이용자 가동 확인과 관리자 검증 중 늦은 쪽 */
+export function arcadeLastVerifiedAt(arcade: PublicArcade) {
+    const candidates = [
+        arcade.lastCheckedAt,
+        arcade.cabinetVerifiedAt,
+        ...arcade.cabinets.map((cabinet) => cabinet.verifiedAt),
+    ].filter((value): value is string => Boolean(value));
+    if (!candidates.length) return null;
+    return candidates.reduce((latest, value) =>
+        value > latest ? value : latest
+    );
+}
+
+/** 며칠 전인지 — 0 은 오늘. 미래 시각은 0 으로 본다 */
+export function daysAgo(iso: string | null, now: Date) {
+    if (!iso) return null;
+    const at = new Date(iso).getTime();
+    if (!Number.isFinite(at)) return null;
+    return Math.max(0, Math.floor((now.getTime() - at) / 86_400_000));
+}
+
+export function arcadeCabinetSummary(arcade: PublicArcade) {
+    const known = arcade.cabinets.filter(
+        (cabinet) => cabinet.availability !== "unknown" && !cabinet.stale
+    );
+    return {
+        total: arcade.cabinets.length,
+        known: known.length,
+        available: known.filter(
+            (cabinet) => cabinet.availability === "available"
+        ).length,
+        caution: known.filter((cabinet) => cabinet.condition === "caution")
+            .length,
+        reported: arcade.cabinets.filter((cabinet) => cabinet.openReports > 0)
+            .length,
+    };
+}
+
+/** 오늘 영업의 끝(영업 중이면 마감, 아니면 다음 개점) — 「23:00까지」·「10:00 개점」 */
+export function arcadeScheduleHint(
+    arcade: PublicArcade,
+    now: Date
+): { kind: "closes" | "opens"; time: string } | null {
+    const today = arcadeTodayHours(arcade, now);
+    const state = arcadeOpenState(arcade, now);
+    if (state === "unknown" || !today) return null;
+    if (state === "open")
+        return { kind: "closes", time: formatArcadeTime(today.close % 1440) };
+    return { kind: "opens", time: formatArcadeTime(today.open) };
+}
+
+/** 플레이 요금 — 「₩500 / 1코인」. 요금 정보가 없으면 null */
+export function formatArcadePrice(
+    arcade: Pick<
+        PublicArcade,
+        "playPrice" | "currencyCode" | "creditLabel" | "coinCount"
+    >,
+    locale: string,
+    coins: (count: number) => string
+) {
+    if (arcade.playPrice === null) return null;
+    const amount = new Intl.NumberFormat(locale, {
+        style: "currency",
+        currency: arcade.currencyCode,
+    }).format(arcade.playPrice);
+    const unit =
+        arcade.creditLabel ||
+        (arcade.coinCount ? coins(arcade.coinCount) : null);
+    return unit ? `${amount} / ${unit}` : amount;
+}
+
 export function formatArcadeTime(minutes: number) {
     return `${String(Math.floor(minutes / 60)).padStart(2, "0")}:${String(minutes % 60).padStart(2, "0")}`;
 }
@@ -166,11 +237,27 @@ export function selectArcades(
         })
         .sort((a, b) => {
             const byName = a.name.localeCompare(b.name, locale) || a.id - b.id;
+            const byDistance = () => {
+                const da = arcadeDistance(a, origin);
+                const db = arcadeDistance(b, origin);
+                if (da === null && db === null) return 0;
+                if (da === null) return 1;
+                if (db === null) return -1;
+                return da - db;
+            };
+            const byVerified = () =>
+                (arcadeLastVerifiedAt(b) ?? "").localeCompare(
+                    arcadeLastVerifiedAt(a) ?? ""
+                );
             const chosen =
                 values.sort === "preferred"
                     ? (b.preferredCount ?? 0) - (a.preferredCount ?? 0) ||
                       byName
-                    : byName;
+                    : values.sort === "distance"
+                      ? byDistance() || byName
+                      : values.sort === "verified"
+                        ? byVerified() || byName
+                        : byName;
             // 검색어가 있으면 일치도가 먼저
             const byRelevance = relevance(b) - relevance(a);
             if (byRelevance) return byRelevance;

@@ -1,3 +1,7 @@
+import {
+    examAchievementGradeSelect,
+    getBestExamGrade,
+} from "@/features/exams/examGrades";
 import "server-only";
 
 import { unstable_cache } from "next/cache";
@@ -28,8 +32,7 @@ const playerFields = {
     country: true,
     grade_basic: true,
     grade_recital: true,
-    exam_basic: true,
-    exam_recital: true,
+    examAchievements: examAchievementGradeSelect,
 } as const;
 type PopulationRow = Omit<GlobalRankingRow, "rank"> & { rawValue: number };
 
@@ -42,7 +45,6 @@ const getPublicRankingPopulation = unstable_cache(
         rows: PopulationRow[];
     }> => {
         const gradeField = mode === "basic" ? "grade_basic" : "grade_recital";
-        const examField = mode === "basic" ? "exam_basic" : "exam_recital";
         if (metric === "grade") {
             const users = await db.user.findMany({
                 where: { [gradeField]: { gt: 0 } },
@@ -56,7 +58,7 @@ const getPublicRankingPopulation = unstable_cache(
                     username: user.username,
                     avatar: user.avatar,
                     country: user.country,
-                    exam: user[examField],
+                    exam: getBestExamGrade(user.examAchievements, mode),
                     grade: user[gradeField] ?? 0,
                     value: Math.round((user[gradeField] ?? 0) / 100),
                     rawValue: user[gradeField] ?? 0,
@@ -122,7 +124,7 @@ const getPublicRankingPopulation = unstable_cache(
                         username: user.username,
                         avatar: user.avatar,
                         country: user.country,
-                        exam: user[examField],
+                        exam: getBestExamGrade(user.examAchievements, mode),
                         grade: user[gradeField] ?? 0,
                         value,
                         rating: value,
@@ -133,7 +135,7 @@ const getPublicRankingPopulation = unstable_cache(
             }),
         };
     },
-    ["global-ranking-population-v2"],
+    ["global-ranking-population-v3"],
     {
         revalidate: PUBLIC_DATA_REVALIDATE_SECONDS,
         tags: [CACHE_TAGS.userRankings, CACHE_TAGS.tierLists],

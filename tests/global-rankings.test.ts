@@ -45,8 +45,12 @@ const users = Array.from({ length: 29 }, (_, index) => ({
                 ? 400_000
                 : 500_049 - index,
     grade_recital: 450_000,
-    exam_basic: 2,
-    exam_recital: 3,
+    examAchievements: [
+        { exam: { mode: "basic", grade: 4 } },
+        { exam: { mode: "basic", grade: 2 } },
+        { exam: { mode: "recital", grade: 3 } },
+        { exam: { mode: "event", grade: null } },
+    ],
 }));
 
 beforeEach(() => {

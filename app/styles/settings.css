@@ -44,29 +44,39 @@
     min-height: 44px;
     cursor: pointer;
 }
+/* 링 + 점 — 2px 링 안에 8px 점. 마우스를 올려도 모양은 그대로(Carbon·Primer·shadcn) */
 .noslog-ui .nl-radio-group__option input {
     appearance: none;
     width: 20px;
     height: 20px;
     flex-shrink: 0;
-    border: 1px solid var(--nl-border-strong);
+    border: 2px solid var(--nl-border-strong);
     border-radius: 50%;
 }
 .noslog-ui .nl-radio-group__option input:checked {
     border-color: var(--nl-primary-default);
-    background: var(--nl-primary-default);
 }
 .noslog-ui .nl-radio-group__option input:checked::after {
     content: "";
     display: block;
     width: 8px;
     height: 8px;
-    margin: 5px;
+    margin: 4px;
     border-radius: 50%;
-    background: var(--nl-primary-on-primary);
+    background: var(--nl-primary-default);
+}
+.noslog-ui .nl-radio-group__option input:focus-visible {
+    outline: none;
+    border-color: var(--nl-focus-ring);
 }
 .noslog-ui .nl-radio-group:disabled {
     color: var(--nl-interaction-disabled-content);
+}
+.noslog-ui .nl-radio-group:disabled input {
+    border-color: var(--nl-interaction-disabled-border);
+}
+.noslog-ui .nl-radio-group:disabled input:checked::after {
+    background: var(--nl-interaction-disabled-content);
 }
 
 .noslog-ui .nl-settings__form {

@@ -69,8 +69,6 @@ async function getAvailableExam(examId: number, userId: number) {
             nostalgia_name: true,
             grade_basic: true,
             grade_recital: true,
-            exam_basic: true,
-            exam_recital: true,
             examAchievements: {
                 select: { exam: { select: { mode: true, grade: true } } },
             },

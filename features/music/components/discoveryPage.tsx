@@ -13,7 +13,7 @@ import {
     ListFilter,
 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useEffectEvent, useMemo, useRef, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -55,6 +55,9 @@ import DiscoveryFilters, {
 } from "@/features/music/components/discoveryFilters";
 import AppliedTokens from "@/components/ui/appliedTokens";
 
+// 스크롤 자동 로딩은 첫 묶음 뒤 세 번까지 — 그다음은 버튼이라 푸터에 닿을 수 있다
+const AUTO_LOAD_BATCHES = 3;
+
 export default function DiscoveryPage({
     initialPage,
     initialQuery,
@@ -95,6 +98,7 @@ export default function DiscoveryPage({
     const rangeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
     const composing = useRef(false);
     const results = useRef<HTMLDivElement>(null);
+    const progress = useRef<HTMLDivElement>(null);
     const appendedFocus = useRef<{ queryKey: string; index: number } | null>(
         null
     );
@@ -137,6 +141,14 @@ export default function DiscoveryPage({
     const pending = replacing && slowKey === queryKey;
     const appliedCount = discoveryFilterCount(query);
     const nextAmount = Math.min(20, total - items.length);
+    // 불러온 묶음 수로 센다 — 뒤로가기로 캐시된 목록이 돌아와도 다시 세지 않는다
+    const loadedBatches = collection.data?.pages.length ?? 0;
+    const autoLoad =
+        loadedBatches > 0 &&
+        loadedBatches <= AUTO_LOAD_BATCHES &&
+        collection.hasNextPage &&
+        !collection.isFetching &&
+        !collection.isFetchNextPageError;
     const summary = t(
         query.scope === "music"
             ? "discovery.musicCount"
@@ -223,10 +235,11 @@ export default function DiscoveryPage({
         if (next) setDraft(query);
         setOpen(next);
     }
-    async function loadMore() {
+    async function loadMore(moveFocus = true) {
         if (collection.isFetching) return;
         const previous = items.length;
-        appendedFocus.current = { queryKey, index: previous };
+        // 자동 로딩은 읽던 자리를 지키도록 포커스를 옮기지 않는다
+        if (moveFocus) appendedFocus.current = { queryKey, index: previous };
         const response = await collection.fetchNextPage();
         if (response.isError) {
             appendedFocus.current = null;
@@ -237,6 +250,23 @@ export default function DiscoveryPage({
             previous;
         setAnnouncement(t("discovery.added", { count: loaded - previous }));
     }
+    const appendNext = useEffectEvent(() => void loadMore(false));
+    // 목록 끝이 가까워지면 다음 묶음을 붙인다. 묶음마다 관찰자를 새로 붙여서
+    // 붙인 뒤에도 끝이 화면 안에 남아 있으면(키 큰 화면) 이어서 불러온다
+    useEffect(() => {
+        const target = progress.current;
+        if (!autoLoad || !target) return;
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (!entry.isIntersecting) return;
+                observer.disconnect();
+                appendNext();
+            },
+            { rootMargin: "240px 0px" }
+        );
+        observer.observe(target);
+        return () => observer.disconnect();
+    }, [autoLoad]);
     const clearFilters = () =>
         commit({
             ...query,
@@ -666,7 +696,7 @@ export default function DiscoveryPage({
                         </div>
                     </section>
                     {items.length ? (
-                        <div className="nl-discovery__progress">
+                        <div className="nl-discovery__progress" ref={progress}>
                             {collection.isFetchNextPageError ? (
                                 <p role="alert" className="nl-body-secondary">
                                     {t("discovery.moreError")}

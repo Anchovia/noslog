@@ -4,7 +4,6 @@ import { ListFilter, ChevronDown } from "lucide-react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useTranslations } from "@/components/i18n/localeProvider";
-import Button from "@/components/ui/Button";
 import ActionButton from "@/components/ui/actionButton";
 import AppliedTokens from "@/components/ui/appliedTokens";
 import FilterChips from "@/components/ui/filterChips";
@@ -33,10 +32,7 @@ export default function BingoCatalogPage({
     const t = useTranslations();
     const pathname = usePathname();
     const params = useSearchParams();
-    const parsed = bingoCatalogQuerySchema.parse({
-        ...Object.fromEntries(params),
-        count: Number(params.get("count") ?? 12),
-    });
+    const parsed = bingoCatalogQuerySchema.parse(Object.fromEntries(params));
     const query = isAuthenticated
         ? parsed
         : { ...parsed, status: "all" as const, sort: "release" as const };
@@ -56,7 +52,6 @@ export default function BingoCatalogPage({
         const search = new URLSearchParams({
             status: next.status,
             sort: next.sort,
-            count: String(next.count),
         });
         window.history.pushState({}, "", `${pathname}?${search}`);
     }
@@ -66,9 +61,9 @@ export default function BingoCatalogPage({
     }
     // 팝오버(672+)는 즉시 적용, 전체 레이어는 배치 적용
     function changeStatus(status: BingoCatalogQuery["status"]) {
-        const next = { ...draft, status, count: 12 };
+        const next = { ...draft, status };
         setDraft(next);
-        if (wide) commit({ ...query, status, count: 12 });
+        if (wide) commit({ ...query, status });
     }
     const draftTotal = getBingoCatalog(items, draft).length;
     const statusLabel = statuses.find(
@@ -104,9 +99,7 @@ export default function BingoCatalogPage({
                             label={t("discovery.sortLabel")}
                             value={query.sort}
                             options={sorts}
-                            onValueChange={(sort) =>
-                                commit({ ...query, sort, count: 12 })
-                            }
+                            onValueChange={(sort) => commit({ ...query, sort })}
                         />
                         <FilterSurface
                             popover={wide}
@@ -147,7 +140,7 @@ export default function BingoCatalogPage({
                             footer={
                                 <ActionButton
                                     onClick={() => {
-                                        commit({ ...draft, count: 12 });
+                                        commit(draft);
                                         setOpen(false);
                                     }}
                                 >
@@ -173,9 +166,7 @@ export default function BingoCatalogPage({
                     <AppliedTokens
                         label={t("bingo.filter")}
                         clearLabel={t("discovery.clearFilters")}
-                        onClear={() =>
-                            commit({ ...query, status: "all", count: 12 })
-                        }
+                        onClear={() => commit({ ...query, status: "all" })}
                         tokens={
                             query.status !== "all" && statusLabel
                                 ? [
@@ -190,7 +181,6 @@ export default function BingoCatalogPage({
                                               commit({
                                                   ...query,
                                                   status: "all",
-                                                  count: 12,
                                               }),
                                       },
                                   ]
@@ -201,7 +191,7 @@ export default function BingoCatalogPage({
             ) : null}
             {visible.length ? (
                 <ul className="nl-bingo-catalog__grid">
-                    {visible.slice(0, query.count).map((item) => (
+                    {visible.map((item) => (
                         <li key={item.id}>
                             <BingoCatalogCard
                                 item={item}
@@ -218,17 +208,6 @@ export default function BingoCatalogPage({
                     {t(items.length ? "bingo.empty" : "bingo.catalogMissing")}
                 </p>
             )}
-            {visible.length > query.count ? (
-                <Button
-                    appearance="foundation"
-                    variant="secondary"
-                    onClick={() =>
-                        commit({ ...query, count: query.count + 12 })
-                    }
-                >
-                    {t("bingo.more")}
-                </Button>
-            ) : null}
         </div>
     );
 }

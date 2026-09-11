@@ -8,18 +8,51 @@ import {
     publicArcadeSchema,
 } from "@/features/arcades/schemas/publicArcadeSchema";
 
-const publicInclude = {
-    publicDetails: true,
-    cabinets: {
-        where: { isActive: true },
-        orderBy: { position: "asc" as const },
-    },
-    publicPhotos: { orderBy: { slot: "asc" as const } },
-    identities: true,
-    _count: { select: { users: true } },
-} satisfies Prisma.ArcadeInclude;
+// 이용자 확인은 30일, 미처리 신고는 60일 창으로 본다
+export const CABINET_CHECK_WINDOW_MS = 30 * 24 * 60 * 60 * 1000;
+const CABINET_REPORT_WINDOW_MS = 60 * 24 * 60 * 60 * 1000;
 
-type ArcadeRecord = Prisma.ArcadeGetPayload<{ include: typeof publicInclude }>;
+function publicInclude(now: Date) {
+    return {
+        publicDetails: true,
+        cabinets: {
+            where: { isActive: true },
+            orderBy: { position: "asc" as const },
+            include: {
+                checks: {
+                    where: {
+                        checkedAt: {
+                            gte: new Date(
+                                now.getTime() - CABINET_CHECK_WINDOW_MS
+                            ),
+                            lte: now,
+                        },
+                    },
+                    select: { userId: true, checkedAt: true },
+                },
+                reports: {
+                    where: {
+                        status: "open",
+                        arcadeReportType: { in: ["unavailable", "condition"] },
+                        createdAt: {
+                            gte: new Date(
+                                now.getTime() - CABINET_REPORT_WINDOW_MS
+                            ),
+                        },
+                    },
+                    select: { createdAt: true },
+                },
+            },
+        },
+        publicPhotos: { orderBy: { slot: "asc" as const } },
+        identities: true,
+        _count: { select: { users: true } },
+    } satisfies Prisma.ArcadeInclude;
+}
+
+type ArcadeRecord = Prisma.ArcadeGetPayload<{
+    include: ReturnType<typeof publicInclude>;
+}>;
 
 function publicWebsite(value: string | null | undefined) {
     if (!value) return null;
@@ -63,25 +96,59 @@ export function toPublicArcade(record: ArcadeRecord, now: Date) {
         notes: record.notes,
         preferredCount: record._count.users >= 3 ? record._count.users : null,
         cabinets: record.cabinets.map((cabinet) => {
-            const stale = Boolean(
+            const adminStale = Boolean(
                 cabinet.validUntil && cabinet.validUntil <= now
             );
-            const verified = Boolean(
+            const adminVerified = Boolean(
                 cabinet.verifiedAt && cabinet.verifiedAt <= now
             );
-            const availability = verified ? cabinet.availability : "unknown";
+            const lastCheck = cabinet.checks.reduce<Date | null>(
+                (latest, check) =>
+                    !latest || check.checkedAt > latest
+                        ? check.checkedAt
+                        : latest,
+                null
+            );
+            // 이용자 확인이 관리자 검증보다 새로우면 「가동」 으로 본다. 상태(양호·주의)는 관리자 검증만 말한다
+            const userConfirmed =
+                lastCheck !== null &&
+                (!adminVerified || lastCheck > cabinet.verifiedAt!);
+            const availability = userConfirmed
+                ? "available"
+                : adminVerified
+                  ? cabinet.availability
+                  : "unknown";
+            const stale = userConfirmed ? false : adminStale;
             const normalized = {
                 id: cabinet.id,
                 label: cabinet.label,
                 position: cabinet.position,
                 availability,
                 condition:
-                    availability === "available"
+                    availability === "available" && adminVerified && !adminStale
                         ? cabinet.condition
                         : "unknown",
                 note: cabinet.note,
-                verifiedAt: verified ? cabinet.verifiedAt!.toISOString() : null,
+                verifiedAt: userConfirmed
+                    ? lastCheck!.toISOString()
+                    : adminVerified
+                      ? cabinet.verifiedAt!.toISOString()
+                      : null,
                 stale,
+                lastCheckedAt: lastCheck?.toISOString() ?? null,
+                checkCount: new Set(cabinet.checks.map((check) => check.userId))
+                    .size,
+                openReports: cabinet.reports.length,
+                latestReportAt:
+                    cabinet.reports
+                        .reduce<Date | null>(
+                            (latest, report) =>
+                                !latest || report.createdAt > latest
+                                    ? report.createdAt
+                                    : latest,
+                            null
+                        )
+                        ?.toISOString() ?? null,
             };
             const parsed = arcadeCabinetSchema.safeParse(normalized);
             return parsed.success
@@ -96,6 +163,19 @@ export function toPublicArcade(record: ArcadeRecord, now: Date) {
             details?.cabinetVerifiedAt && details.cabinetVerifiedAt <= now
                 ? details.cabinetVerifiedAt.toISOString()
                 : null,
+        lastCheckedAt:
+            record.cabinets
+                .flatMap((cabinet) => cabinet.checks.map((c) => c.checkedAt))
+                .reduce<Date | null>(
+                    (latest, at) => (!latest || at > latest ? at : latest),
+                    null
+                )
+                ?.toISOString() ?? null,
+        checkCount: new Set(
+            record.cabinets.flatMap((cabinet) =>
+                cabinet.checks.map((c) => c.userId)
+            )
+        ).size,
         hours: hours.success ? hours.data : null,
         hoursVerifiedAt: details?.hoursVerifiedAt?.toISOString() ?? null,
         hoursValidUntil: details?.hoursValidUntil?.toISOString() ?? null,
@@ -130,11 +210,11 @@ export function toPublicArcade(record: ArcadeRecord, now: Date) {
 }
 
 export const getPublicArcades = cache(async () => {
+    const now = new Date();
     const records = await db.arcade.findMany({
         where: { is_active: true },
-        include: publicInclude,
+        include: publicInclude(now),
     });
-    const now = new Date();
     return records.map((record) => toPublicArcade(record, now));
 });
 
@@ -143,19 +223,21 @@ export const getPublicArcade = cache(async (slug: string) => {
         /^[1-9]\d*$/.test(slug) && Number.isSafeInteger(Number(slug))
             ? Number(slug)
             : null;
+    const now = new Date();
+    const include = publicInclude(now);
     // Canonical URLs win over historical aliases and legacy numeric URLs.
     let record = await db.arcade.findFirst({
         where: { is_active: true, publicDetails: { is: { slug } } },
-        include: publicInclude,
+        include,
     });
     record ??= await db.arcade.findFirst({
         where: { is_active: true, slugAliases: { some: { slug } } },
-        include: publicInclude,
+        include,
     });
     if (!record && numericId !== null)
         record = await db.arcade.findFirst({
             where: { is_active: true, id: numericId },
-            include: publicInclude,
+            include,
         });
-    return record ? toPublicArcade(record, new Date()) : null;
+    return record ? toPublicArcade(record, now) : null;
 });

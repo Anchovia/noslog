@@ -20,34 +20,38 @@ export default async function AnnouncementDetail({
                 <BackLink href={localizePath("/announcements", locale)}>
                     {t("home.announcements")}
                 </BackLink>
-                <div className="nl-announcements__title">
-                    <AnnouncementCategoryTag
-                        category={announcement.category}
-                        label={t(
-                            `announcements.category.${announcement.category}`
-                        )}
-                    />
-                    <h1 className="nl-page-title">{announcement.title}</h1>
-                </div>
-                <div className="nl-announcements__dates nl-metadata nl-muted">
-                    <p>
-                        {t("announcements.published")}{" "}
-                        <time dateTime={announcement.publishedAt}>
-                            {announcementDate(announcement.publishedAt, locale)}
-                        </time>
-                    </p>
-                    {announcement.modifiedAt ? (
+                {/* 목록 행과 같은 문법 — 분류·날짜 한 줄이 제목 위 */}
+                <header className="nl-announcements__heading">
+                    <div className="nl-announcement-meta nl-metadata nl-muted">
+                        <AnnouncementCategoryTag
+                            category={announcement.category}
+                            label={t(
+                                `announcements.category.${announcement.category}`
+                            )}
+                        />
                         <p>
-                            {t("announcements.updated")}{" "}
-                            <time dateTime={announcement.modifiedAt}>
+                            {t("announcements.published")}{" "}
+                            <time dateTime={announcement.publishedAt}>
                                 {announcementDate(
-                                    announcement.modifiedAt,
+                                    announcement.publishedAt,
                                     locale
                                 )}
                             </time>
                         </p>
-                    ) : null}
-                </div>
+                        {announcement.modifiedAt ? (
+                            <p>
+                                {t("announcements.updated")}{" "}
+                                <time dateTime={announcement.modifiedAt}>
+                                    {announcementDate(
+                                        announcement.modifiedAt,
+                                        locale
+                                    )}
+                                </time>
+                            </p>
+                        ) : null}
+                    </div>
+                    <h1 className="nl-page-title">{announcement.title}</h1>
+                </header>
                 <AnnouncementBody
                     content={announcement.content}
                     locale={locale}

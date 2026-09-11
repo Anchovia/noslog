@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 
 import {
     useLocalizedHref,
@@ -43,6 +44,8 @@ export function DiscoverySortMenu({
     signedIn: boolean;
 }) {
     const t = useTranslations();
+    // 레벨 순은 정렬할 난이도가 있어야 성립한다 — 난이도를 고를 때까지 메뉴 안에서만 보류하고, 닫으면 버린다
+    const [pendingLevel, setPendingLevel] = useState(false);
     const sorts: DiscoverySort[] = [
         ...(query.q ? ["relevance" as const] : []),
         ...(query.scope === "chart" ? ["published" as const] : []),
@@ -50,7 +53,7 @@ export function DiscoverySortMenu({
         "level",
         ...(signedIn ? ["recent" as const] : []),
     ];
-    const sort = getDiscoverySort(query);
+    const sort = pendingLevel ? "level" : getDiscoverySort(query);
     const unplayed = query.records.includes("unplayed");
     const change = (next: DiscoveryQuery) => {
         if (discoveryQuerySchema.safeParse(next).success) onChange(next);
@@ -67,10 +70,17 @@ export function DiscoverySortMenu({
                     value === "recent" && unplayed
                         ? t("discovery.unplayedReason")
                         : undefined,
+                hasDependent: value === "level",
             }))}
-            onValueChange={(sort) =>
-                change({ ...query, sort, order: undefined })
-            }
+            onOpenChange={(open) => {
+                if (!open) setPendingLevel(false);
+            }}
+            onValueChange={(next) => {
+                const pending = next === "level" && !query.sortDifficulty;
+                setPendingLevel(pending);
+                if (!pending)
+                    change({ ...query, sort: next, order: undefined });
+            }}
         >
             {sort === "level" ? (
                 <SortMenuSection label={t("discovery.sortDifficulty")}>
@@ -78,11 +88,20 @@ export function DiscoverySortMenu({
                         label={t("discovery.sortDifficulty")}
                         multiple={false}
                         value={
-                            query.sortDifficulty ? [query.sortDifficulty] : []
+                            query.sortDifficulty && !pendingLevel
+                                ? [query.sortDifficulty]
+                                : []
                         }
-                        onValueChange={([sortDifficulty]) =>
-                            change({ ...query, sortDifficulty })
-                        }
+                        onValueChange={([sortDifficulty]) => {
+                            if (!sortDifficulty) return;
+                            setPendingLevel(false);
+                            change({
+                                ...query,
+                                sort: "level",
+                                sortDifficulty,
+                                order: pendingLevel ? undefined : query.order,
+                            });
+                        }}
                         options={discoveryDifficulties.map((difficulty) => ({
                             value: difficulty,
                             label: difficulty,
@@ -91,7 +110,7 @@ export function DiscoverySortMenu({
                     />
                 </SortMenuSection>
             ) : null}
-            {query.sort ? (
+            {query.sort && !pendingLevel ? (
                 <SortMenuSection label={t("discovery.direction")}>
                     <FilterChips
                         label={t("discovery.direction")}

@@ -29,7 +29,12 @@ import type {
     TierBrowserOverview,
     TierBrowserQuery,
 } from "@/features/tiers/schemas/tierBrowserSchema";
-import { TIER_GOALS, tierGoalLabels, formatTierValue } from "@/lib/tiers";
+import {
+    TIER_MODE_GOALS,
+    tierGoalLabels,
+    formatTierValue,
+    normalizeTierModeGoal,
+} from "@/lib/tiers";
 import useWideLayout from "@/lib/hooks/useWideLayout";
 import TierBrowserBands from "./tierBrowserBands";
 import TierFilterFields from "./tierFilterFields";
@@ -133,7 +138,14 @@ export default function TierBrowserPage({
             <SegmentedControl
                 label={t("tiers.modeNav")}
                 value={query.mode}
-                onValueChange={(mode) => commit({ ...query, mode, bands: [] })}
+                onValueChange={(mode) =>
+                    commit({
+                        ...query,
+                        mode,
+                        goal: normalizeTierModeGoal(mode, query.goal),
+                        bands: [],
+                    })
+                }
                 options={[
                     { value: "basic", label: "Basic" },
                     { value: "recital", label: "Recital" },
@@ -141,28 +153,30 @@ export default function TierBrowserPage({
             />
         </div>
     );
-    const goalControl = (
-        <FormField id={goalId} label={t("tiers.goal")}>
-            <CompactSelect
-                id={goalId}
-                label={t("tiers.goal")}
-                outlined
-                className="nl-tier-goal"
-                value={query.goal}
-                onValueChange={(goal) =>
-                    commit({
-                        ...query,
-                        goal,
-                        bands: [],
-                    })
-                }
-                options={TIER_GOALS.map((goal) => ({
-                    value: goal,
-                    label: tierGoalLabels[goal],
-                }))}
-            />
-        </FormField>
-    );
+    // Recital 은 서열표가 하나라 목표 선택기를 두지 않는다
+    const goalControl =
+        TIER_MODE_GOALS[query.mode].length > 1 ? (
+            <FormField id={goalId} label={t("tiers.goal")}>
+                <CompactSelect
+                    id={goalId}
+                    label={t("tiers.goal")}
+                    outlined
+                    className="nl-tier-goal"
+                    value={query.goal}
+                    onValueChange={(goal) =>
+                        commit({
+                            ...query,
+                            goal,
+                            bands: [],
+                        })
+                    }
+                    options={TIER_MODE_GOALS[query.mode].map((goal) => ({
+                        value: goal,
+                        label: tierGoalLabels[goal],
+                    }))}
+                />
+            </FormField>
+        ) : null;
     return (
         <PageContainer
             className="nl-tiers"

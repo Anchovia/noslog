@@ -10,6 +10,12 @@ export const arcadeCabinetSchema = z
         note: z.string().nullable(),
         verifiedAt: z.iso.datetime().nullable(),
         stale: z.boolean(),
+        // 이용자 가동 확인 — 최근 30일 안 마지막 확인 시각과 확인한 사람 수
+        lastCheckedAt: z.iso.datetime().nullable(),
+        checkCount: z.number().int().nonnegative(),
+        // 처리되지 않은 고장·상태 신고 수(최근 60일)와 마지막 신고 시각 — 내용은 공개하지 않는다
+        openReports: z.number().int().nonnegative(),
+        latestReportAt: z.iso.datetime().nullable(),
     })
     .superRefine((cabinet, ctx) => {
         if (
@@ -86,6 +92,9 @@ export const publicArcadeSchema = z.object({
     preferredCount: z.number().int().min(3).nullable(),
     cabinets: z.array(arcadeCabinetSchema),
     cabinetVerifiedAt: z.iso.datetime().nullable(),
+    // 오락실 단위 신선도 — 기체 확인 중 가장 최근 시각과 최근 30일 확인 인원(중복 제거)
+    lastCheckedAt: z.iso.datetime().nullable(),
+    checkCount: z.number().int().nonnegative(),
     hours: arcadeHoursSchema.nullable(),
     hoursVerifiedAt: z.iso.datetime().nullable(),
     hoursValidUntil: z.iso.datetime().nullable(),
@@ -112,7 +121,7 @@ export const arcadeDiscoverySchema = z.object({
     region: z.string().max(100).default(""),
     open: z.boolean().default(false),
     available: z.boolean().default(false),
-    sort: z.enum(["name", "preferred"]).default("name"),
+    sort: z.enum(["distance", "verified", "name", "preferred"]).default("name"),
     /** 내 주변만 보기 — 켜지면 현재 위치에서 가까운 순이 먼저, 그 안에서 sort */
     near: z.boolean().default(false),
     mode: z.enum(["list", "map"]).default("list"),

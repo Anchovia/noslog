@@ -53,26 +53,19 @@ describe("Bingo catalog truth and restoration", () => {
         ];
         expect(getRecentBingo(items)?.id).toBe(1);
     });
-    it("restores supported filters, stable ordering and bounded batches", () => {
+    it("restores supported filters and stable ordering", () => {
+        // 옛 공유 주소의 count 는 버린다 — 목록은 항상 전부 보인다
         expect(
             bingoCatalogQuerySchema.parse({
                 status: "ended",
                 sort: "unknown",
-                count: -1,
-            })
-        ).toEqual({ status: "all", sort: "release", count: 12 });
-        expect(
-            bingoCatalogQuerySchema.parse({
-                status: "chance",
-                sort: "progress",
                 count: 24,
-            }).count
-        ).toBe(24);
+            })
+        ).toEqual({ status: "all", sort: "release" });
         expect(
             getBingoCatalog([board(1, 1, 0), board(2, 1, 0)], {
                 status: "all",
                 sort: "progress",
-                count: 12,
             }).map((item) => item.id)
         ).toEqual([1, 2]);
     });

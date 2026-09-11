@@ -134,7 +134,7 @@ export default function TierListForm({
                     목표
                     <select {...register("goal")} className={inputClass}>
                         <option value="s">S</option>
-                        <option value="fc">Full Combo</option>
+                        <option value="990k">990k</option>
                         <option value="pianist">Pianist</option>
                     </select>
                     <FieldError message={errors.goal?.message} />

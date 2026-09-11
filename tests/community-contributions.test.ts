@@ -63,22 +63,36 @@ describe("2.0 chart community contract", () => {
     });
     it("checks mode and goal independently against the exact chart record", () => {
         const record = {
-            score: 940_000,
-            rank: "A+",
-            fc_type: 2,
+            score: 990_000,
+            rank: "S",
+            fc_type: 0,
             grade_recital: 0,
         };
-        expect(canContributeGoalVote(record, "basic", "s")).toBe(false);
-        expect(canContributeGoalVote(record, "basic", "fc")).toBe(true);
+        expect(canContributeGoalVote(record, "basic", "s")).toBe(true);
+        expect(canContributeGoalVote(record, "basic", "990k")).toBe(true);
         expect(canContributeGoalVote(record, "basic", "pianist")).toBe(false);
-        expect(canContributeGoalVote(record, "recital", "fc")).toBe(false);
+        expect(
+            canContributeGoalVote(
+                { ...record, score: 1_000_000 },
+                "recital",
+                "pianist"
+            )
+        ).toBe(false);
+        expect(
+            canContributeGoalVote(
+                { ...record, score: 1_000_000, grade_recital: 123 },
+                "recital",
+                "pianist"
+            )
+        ).toBe(true);
+        // Recital 은 서열표가 하나라 S·990k 투표는 받지 않는다
         expect(
             canContributeGoalVote(
                 { ...record, grade_recital: 123 },
                 "recital",
-                "fc"
+                "s"
             )
-        ).toBe(true);
+        ).toBe(false);
         expect(canContributeGoalVote(null, "basic", "s")).toBe(false);
     });
     it("publishes the arithmetic mean and retains every observed tier value", () => {

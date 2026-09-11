@@ -2,6 +2,7 @@
 
 import { setPreferredArcade as setPreferredArcadeService } from "@/features/arcades/server/preferredArcadeService";
 import { submitArcadeReport as submitArcadeReportService } from "@/features/arcades/server/arcadeReportService";
+import { confirmCabinetRunning as confirmCabinetRunningService } from "@/features/arcades/server/cabinetCheckService";
 
 export type { PreferredArcadeActionResult } from "@/features/arcades/server/preferredArcadeService";
 
@@ -14,4 +15,11 @@ export async function setPreferredArcade(
 
 export async function submitArcadeReport(formData: FormData) {
     return submitArcadeReportService(formData);
+}
+
+export async function confirmCabinetRunning(
+    cabinetId: number,
+    requestedLocale = "ko"
+) {
+    return confirmCabinetRunningService(cabinetId, requestedLocale);
 }

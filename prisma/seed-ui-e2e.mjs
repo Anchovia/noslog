@@ -176,7 +176,7 @@ try {
             },
             update: {},
         });
-        for (const goal of ["s", "fc"])
+        for (const goal of ["s", "990k"])
             await db.chartGoalVote.upsert({
                 where: {
                     chartId_userId_mode_goal: {

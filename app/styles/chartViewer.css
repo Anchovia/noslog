@@ -128,34 +128,48 @@
 .noslog-ui .nl-chart-stage__seek::-webkit-slider-runnable-track {
     height: 4px;
     border-radius: var(--nl-radius-full);
-    background: var(--nl-surface-sunken);
+    background: var(--nl-border-default);
 }
 .noslog-ui .nl-chart-stage__seek::-moz-range-track {
     height: 4px;
     border-radius: var(--nl-radius-full);
-    background: var(--nl-surface-sunken);
+    background: var(--nl-border-default);
 }
+/* 필터 슬라이더와 같은 채운 점 20 — 네이티브 range 는 손잡이 가장자리를 트랙 끝에 맞추므로
+   상자 = 보이는 크기여야 끝에서 점과 트랙이 붙는다 (바 어디를 눌러도 이동하므로 조작 영역은 바 전체) */
 .noslog-ui .nl-chart-stage__seek::-webkit-slider-thumb {
     appearance: none;
-    width: 24px;
-    height: 24px;
-    margin-top: -10px;
-    border: 2px solid var(--nl-primary-default);
+    width: 20px;
+    height: 20px;
+    margin-top: -8px;
+    border: 0;
     border-radius: var(--nl-radius-full);
-    background: var(--nl-surface-canvas);
+    background: var(--nl-primary-default);
 }
 .noslog-ui .nl-chart-stage__seek::-moz-range-thumb {
     width: 20px;
     height: 20px;
-    border: 2px solid var(--nl-primary-default);
+    border: 0;
     border-radius: var(--nl-radius-full);
-    background: var(--nl-surface-canvas);
+    background: var(--nl-primary-default);
+}
+.noslog-ui .nl-chart-stage__seek::-webkit-slider-thumb:hover,
+.noslog-ui .nl-chart-stage__seek:active::-webkit-slider-thumb {
+    box-shadow: 0 0 0 8px var(--nl-state-halo);
+}
+.noslog-ui .nl-chart-stage__seek::-moz-range-thumb:hover,
+.noslog-ui .nl-chart-stage__seek:active::-moz-range-thumb {
+    box-shadow: 0 0 0 8px var(--nl-state-halo);
 }
 .noslog-ui .nl-chart-stage__seek:focus-visible::-webkit-slider-thumb {
-    border-color: var(--nl-focus-ring);
+    box-shadow:
+        inset 0 0 0 1px var(--nl-primary-on-primary),
+        0 0 0 8px var(--nl-state-halo);
 }
 .noslog-ui .nl-chart-stage__seek:focus-visible::-moz-range-thumb {
-    border-color: var(--nl-focus-ring);
+    box-shadow:
+        inset 0 0 0 1px var(--nl-primary-on-primary),
+        0 0 0 8px var(--nl-state-halo);
 }
 .noslog-ui .nl-chart-stage__options {
     display: flex;

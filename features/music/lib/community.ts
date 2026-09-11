@@ -1,4 +1,4 @@
-import { isTierGoalAchieved } from "@/lib/tiers";
+import { isTierGoalAchieved, isTierModeGoal } from "@/lib/tiers";
 import type { TierGoal, TierMode, TierRecord } from "@/lib/tiers";
 import { PATTERN_AXES } from "@/features/music/schemas/communitySchema";
 import type {
@@ -12,6 +12,7 @@ export function canContributeGoalVote(
     goal: TierGoal
 ) {
     return (
+        isTierModeGoal(mode, goal) &&
         isTierGoalAchieved(record, goal) &&
         (mode === "basic" || (record?.grade_recital ?? 0) > 0)
     );

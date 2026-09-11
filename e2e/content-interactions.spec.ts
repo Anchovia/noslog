@@ -2,19 +2,20 @@ import { expect, test } from "@playwright/test";
 
 import { expectNoHorizontalOverflow, expectPageLoaded } from "./helpers";
 
-test("비로그인 빙고는 개인 필터 없이 공개 보드를 더 불러온다", async ({
+test("비로그인 빙고는 개인 필터 없이 공개 보드를 전부 보여 준다", async ({
     page,
 }) => {
     await page.goto("/ko/bingo");
     await expectPageLoaded(page);
     const cards = page.locator(".nl-bingo-catalog__grid > li");
-    await expect(cards).toHaveCount(12);
+    await expect(cards.first()).toBeVisible();
+    expect(await cards.count()).toBeGreaterThan(12);
     await expect(
         page.getByRole("button", { name: "필터", exact: true })
     ).toHaveCount(0);
-    await page.getByRole("button", { name: "더 보기", exact: true }).click();
-    await expect(cards).toHaveCount(24);
-    await expect(page).toHaveURL(/count=24/);
+    await expect(
+        page.getByRole("button", { name: "더 보기", exact: true })
+    ).toHaveCount(0);
     await expectNoHorizontalOverflow(page);
 });
 
@@ -68,8 +69,8 @@ test("비로그인 통합 서열표에서 모드와 목표 필터를 제공한�
         page.getByRole("checkbox", { name: "상세 보기", exact: true })
     ).toBeVisible();
     await goalSelect.click();
-    await page.getByRole("option", { name: "Full Combo", exact: true }).click();
-    await expect(page).toHaveURL(/(?:\?|&)goal=fc(?:&|$)/);
-    await expect(goalSelect).toHaveText("Full Combo");
+    await page.getByRole("option", { name: "990k", exact: true }).click();
+    await expect(page).toHaveURL(/(?:\?|&)goal=990k(?:&|$)/);
+    await expect(goalSelect).toHaveText("990k");
     await expectNoHorizontalOverflow(page);
 });

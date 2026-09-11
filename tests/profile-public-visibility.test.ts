@@ -38,6 +38,10 @@ const sourceUser = {
     hide_play_count: false,
     hide_preferred_arcade: false,
     hide_play_activity: false,
+    examAchievements: [
+        { exam: { mode: "basic", grade: 5 } },
+        { exam: { mode: "basic", grade: 2 } },
+    ],
 };
 const sourcePlay = {
     id: 5,
@@ -86,6 +90,10 @@ describe("public profile visibility boundary", () => {
         expect(profile?.recentPlays).toEqual([]);
         expect(profile?.user.last_played_at).toBeNull();
         expect(profile?.user.username).toBe("Public player");
+        // 검정 급수는 합격 기록에서 유도한 모드별 최고 급수만 싣고, 원본 기록 배열은 싣지 않는다
+        expect(profile?.user.exam_basic).toBe(2);
+        expect(profile?.user.exam_recital).toBeNull();
+        expect(payload).not.toContain("examAchievements");
     });
     it("keeps arcade, play count and activity independent", async () => {
         mocks.user.mockResolvedValue({

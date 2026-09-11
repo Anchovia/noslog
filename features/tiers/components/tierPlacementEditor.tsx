@@ -10,6 +10,14 @@ import MusicJacket from "@/components/music/musicJacket";
 import { createTierEntryMoveFormData } from "@/features/tiers/schemas/tierAdminSchema";
 import { formatOfficialChartLevel, formatTierValue } from "@/lib/tiers";
 
+// 관리자 악곡 관리(musicMetadataForms)와 같은 난이도 색
+const difficultyColor: Record<string, string> = {
+    normal: "text-normal",
+    hard: "text-hard",
+    expert: "text-expert",
+    real: "text-real",
+};
+
 interface TierPlacementEditorProps {
     tierListId: number;
     bands: { id: number; value: number }[];
@@ -88,11 +96,19 @@ export default function TierPlacementEditor({
                                 {entry.chart.music.title}
                             </strong>
                             <span className="text-caption block truncate">
-                                {entry.chart.difficulty} ·{" "}
-                                {formatOfficialChartLevel(
-                                    entry.chart.difficulty,
-                                    entry.chart.level
-                                )}
+                                <span
+                                    className={
+                                        difficultyColor[
+                                            entry.chart.difficulty.toLowerCase()
+                                        ]
+                                    }
+                                >
+                                    {entry.chart.difficulty} ·{" "}
+                                    {formatOfficialChartLevel(
+                                        entry.chart.difficulty,
+                                        entry.chart.level
+                                    )}
+                                </span>
                             </span>
                         </span>
                         <select

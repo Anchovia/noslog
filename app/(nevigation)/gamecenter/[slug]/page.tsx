@@ -1,6 +1,10 @@
 import { notFound, permanentRedirect } from "next/navigation";
 import ArcadeDetailPage from "@/features/arcades/components/arcadeDetailPage";
 import { getPublicArcade } from "@/features/arcades/server/publicArcadeService";
+import {
+    getRecentCabinetChecks,
+    getUserCheckedCabinetIds,
+} from "@/features/arcades/server/cabinetCheckService";
 import { clientEnv } from "@/lib/env/client";
 import { getServerI18n } from "@/lib/i18n/server";
 import { getLocalizedHref } from "@/lib/i18n/routing";
@@ -31,6 +35,11 @@ export default async function ArcadeDetailRoute({ params }: Props) {
         permanentRedirect(
             getLocalizedHref(`/gamecenter/${arcade.slug}`, locale)
         );
+    const cabinetIds = arcade.cabinets.map((cabinet) => cabinet.id);
+    const [checkedCabinetIds, recentChecks] = await Promise.all([
+        user ? getUserCheckedCabinetIds(user.id, cabinetIds) : [],
+        getRecentCabinetChecks(arcade.id),
+    ]);
     return (
         <ArcadeDetailPage
             key={arcade.id}
@@ -38,6 +47,8 @@ export default async function ArcadeDetailRoute({ params }: Props) {
             appKey={clientEnv.NEXT_PUBLIC_KAKAO_MAP_APP_KEY ?? ""}
             isAuthenticated={Boolean(user)}
             preferredArcadeId={user?.preferred_arcade_id ?? null}
+            checkedCabinetIds={checkedCabinetIds}
+            recentChecks={recentChecks}
         />
     );
 }

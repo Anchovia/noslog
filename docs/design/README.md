@@ -123,6 +123,12 @@ Arcades, Bingo), built from shared primitives in `components/ui`:
   not rename or alter the preserved chart viewer itself.
   Below Wide, preserve the staged full-screen filter flow. Do not replace it with
   a popover based on the earlier withdrawn proposal.
+  Result batches append automatically when the end of the list comes within
+  240px of the viewport, for up to three batches after the first page (80
+  results). Later batches load only from the existing Load more button, so the
+  footer stays reachable. The button stays visible throughout. Automatic batches
+  announce the added count without moving focus. This user decision (2026-09-12)
+  replaces P3's button-only loading.
   Music/chart discovery's Wide sort trigger displays only the selected criterion
   beside the sort icon; its localized accessible name includes both the sort
   label and selected criterion. This user-approved exception replaces Figma's
@@ -141,9 +147,10 @@ Arcades, Bingo), built from shared primitives in `components/ui`:
   confirmation dialog.
   Completed mission rows retain a concise localized completion label without the
   repeated instruction to press again to undo. Checkbox behavior is unchanged.
-  Catalogue cards retain the divider across the full inner body width, and the
-  Load more button spans the catalogue width. These user-approved exceptions
-  replace the shorter divider and content-width button in P14 `2914:8419`.
+  Catalogue cards retain the divider across the full inner body width. This
+  user-approved exception replaces the shorter divider in P14 `2914:8419`.
+  The catalogue renders every board at once, with no Load more button and no
+  `count` URL parameter. This user decision (2026-09-12) replaces P14's batches.
 - **Arcade discovery map failure:** replace the map with a compact danger notice and
   an adjacent Retry button, preserving the result list. Hide the map legend until
   the map is available. The Retry action is the approved addition to P12.
@@ -207,6 +214,21 @@ minimum height; this correction does not resize buttons or icon controls.
 The Rankings personal-position notice retains the existing 8px container radius.
 The user approved this rounded form over the square corners in the Figma Wide
 frame; do not flatten this notice when reconciling that frame.
+
+Range slider thumbs are a filled 20px `primary/default` dot inside a 24px target,
+on a 4px track whose unselected part is `border/default`. Radio buttons are a
+20px circle with a 2px `border/strong` ring that turns `primary/default` with an
+8px dot when selected. Only the slider thumb shows `--nl-state-halo`
+(`primary/default` at 16%, a user-approved value added on 2026-09-12), on hover,
+drag and keyboard focus; radio buttons do not change on hover. Focus keeps FOCUS-1B: the radio swaps its ring to `focus/ring`,
+and the light thumb uses a 1px inside `primary/on-primary` ring. No motion.
+The filter slider's track is inset by half the target (12px) at each end so its
+ends sit under the thumb centres. The chart viewer's native seek and volume bars
+use the same dot with a 20px thumb box, so their track ends meet the dot edge.
+Checkboxes keep the 20px box, 4px radius and `primary/default` fill, with a 2px
+`border/strong` border matching the radio ring. The Lucide check keeps its shape
+with `stroke-width: 3` (2px at 16px, about 10% of the box), in line with the
+surveyed systems. Checkboxes do not change on hover.
 
 Use the existing global styles, shared components and code-style conventions.
 Use Figma variables and Text Styles with the approved exact semantic values;

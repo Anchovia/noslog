@@ -4,6 +4,10 @@ import db from "@/lib/db";
 import { buildProfileSJustAnalytics } from "@/lib/profile/profileAnalytics";
 import { getUserRankingPosition } from "@/features/rankings/server/rankingPosition";
 import { normalizeStoredGrade } from "@/lib/utils";
+import {
+    examAchievementGradeSelect,
+    getBestExamGrades,
+} from "@/features/exams/examGrades";
 import { unstable_cache } from "next/cache";
 
 const bestPlaySelect = {
@@ -50,8 +54,7 @@ async function queryProfileData(id: number) {
                     country: true,
                     grade_basic: true,
                     grade_recital: true,
-                    exam_basic: true,
-                    exam_recital: true,
+                    examAchievements: examAchievementGradeSelect,
                     play_count: true,
                     hide_nostalgia_name: true,
                     hide_discord_name: true,
@@ -159,9 +162,12 @@ async function queryProfileData(id: number) {
             }),
         ]);
 
+    // 검정 급수는 승인된 합격 기록이 유일한 출처 — 공개 데이터에는 모드별 최고 급수만 싣는다
+    const { examAchievements, ...publicUser } = user;
     return {
         user: {
-            ...user,
+            ...publicUser,
+            ...getBestExamGrades(examAchievements),
             nostalgia_name: user.hide_nostalgia_name
                 ? null
                 : user.nostalgia_name,
@@ -209,7 +215,7 @@ async function queryProfileData(id: number) {
 export function getCachedProfileData(id: number) {
     return unstable_cache(
         () => queryProfileData(id),
-        ["profile-public-visibility-v2", String(id)],
+        ["profile-public-visibility-v3", String(id)],
         {
             revalidate: PUBLIC_DATA_REVALIDATE_SECONDS,
             tags: [CACHE_TAGS.userProfiles, getUserProfileTag(id)],

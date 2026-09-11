@@ -29,11 +29,20 @@ export default function AnnouncementRow({
             className="nl-announcement-row"
             data-pinned={pinned ? "" : undefined}
         >
-            <p className="nl-announcement-row__title nl-body">
+            {/* 분류·날짜는 제목 위 한 줄 — 칩 폭이 달라도 제목이 같은 선에서 시작한다 (GitHub·Apple 방식) */}
+            <div className="nl-announcement-meta">
                 <AnnouncementCategoryTag
                     category={announcement.category}
                     label={categoryLabel}
                 />
+                <time
+                    className="nl-metadata nl-muted"
+                    dateTime={announcement.publishedAt}
+                >
+                    {announcementDate(announcement.publishedAt, locale)}
+                </time>
+            </div>
+            <p className="nl-announcement-row__title nl-body">
                 <Link
                     prefetch={false}
                     href={localizePath(
@@ -44,12 +53,6 @@ export default function AnnouncementRow({
                     {announcement.title}
                 </Link>
             </p>
-            <time
-                className="nl-metadata nl-muted"
-                dateTime={announcement.publishedAt}
-            >
-                {announcementDate(announcement.publishedAt, locale)}
-            </time>
         </div>
     );
 }

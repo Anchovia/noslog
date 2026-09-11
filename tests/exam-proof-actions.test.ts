@@ -98,8 +98,6 @@ describe("검정 증빙 업로드 액션", () => {
             nostalgia_name: "PLAYER",
             grade_basic: 235000,
             grade_recital: 100000,
-            exam_basic: null,
-            exam_recital: null,
             examAchievements: [],
         });
         mocks.submissionFindMany.mockResolvedValue([]);
@@ -427,8 +425,6 @@ describe("검정 증빙 업로드 액션", () => {
             nostalgia_name: null,
             grade_basic: 0,
             grade_recital: null,
-            exam_basic: null,
-            exam_recital: null,
             examAchievements: [],
         });
         expect((await requestExamProofUpload(30, "image/jpeg")).success).toBe(

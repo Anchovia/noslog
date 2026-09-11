@@ -5,7 +5,7 @@ import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import ActionButton from "@/components/ui/actionButton";
 import Disclosure from "@/components/ui/disclosure";
 import type { CommunityData } from "@/features/music/schemas/communitySchema";
-import { TIER_GOALS, TIER_MODES } from "@/lib/tiers";
+import { TIER_MODE_GOALS, TIER_MODES } from "@/lib/tiers";
 
 export default function TierPlacementGrid({
     data,
@@ -47,7 +47,7 @@ export default function TierPlacementGrid({
                         {mode === "basic" ? "Basic" : "Recital"}
                     </h2>
                     <dl className="nl-tier-placements__cells">
-                        {TIER_GOALS.map((goal) => {
+                        {TIER_MODE_GOALS[mode].map((goal) => {
                             const scope = data?.scopes.find(
                                 (item) =>
                                     item.mode === mode && item.goal === goal
@@ -55,7 +55,10 @@ export default function TierPlacementGrid({
                             return (
                                 <div key={goal} className="nl-tier-placement">
                                     <dt className="nl-control nl-muted">
-                                        {t(`community.goal.${goal}`)}
+                                        {/* Recital 은 서열표가 하나라 목표 없이 모드 이름 */}
+                                        {mode === "recital"
+                                            ? "Recital"
+                                            : t(`community.goal.${goal}`)}
                                     </dt>
                                     <dd
                                         className={
@@ -105,11 +108,8 @@ export default function TierPlacementGrid({
                                                 >
                                                     <span>
                                                         {event.mode === "basic"
-                                                            ? "Basic"
-                                                            : "Recital"}{" "}
-                                                        {t(
-                                                            `community.goal.${event.goal}`
-                                                        )}
+                                                            ? `Basic ${t(`community.goal.${event.goal}`)}`
+                                                            : "Recital"}
                                                     </span>
                                                     <span>
                                                         {event.previousValue?.toFixed(

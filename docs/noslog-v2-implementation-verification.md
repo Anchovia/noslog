@@ -158,6 +158,9 @@ The user approved retaining P14's full inner-card divider and full-width catalog
 Load more button after comparison with Figma `2914:8419`. Both match the existing
 implementation; only the current contract and this evidence log were updated.
 No application code or behavior changed for this approval.
+Superseded on 2026-09-12 by user decision: the catalogue now renders every board
+at once, with no Load more button and no `count` URL parameter. The full inner-card
+divider is unchanged.
 
 P14 resumed fixture checks passed 45 Chromium/Firefox/WebKit tests in KO/JA/EN,
 covering catalog filters and batches, detail selection, mission help, save rollback,

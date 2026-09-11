@@ -13,8 +13,7 @@ const scale = tokens.scale
         const value = Object.values(token.values)[0];
         const unit = token.name.startsWith("motion/duration/")
             ? "ms"
-            : token.name.startsWith("type/weight/") ||
-                token.name === "motion/press-scale"
+            : token.name.startsWith("type/weight/")
               ? ""
               : "px";
         return declaration(token.name, `${Number(value.toFixed(4))}${unit}`);

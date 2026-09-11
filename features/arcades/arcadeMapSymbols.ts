@@ -1,7 +1,10 @@
-export function preferenceDiameter(count: number | null) {
-    if (count === null || count < 3) return 6;
-    // The Figma 12-user specimen fixes the national reference area at 28px.
-    return Math.max(20, Math.min(38, Math.sqrt((count * 28 ** 2) / 12)));
+/**
+ * 지역 버블 지름 — 범위 안 오락실 수로 결정한다(코로나 맵의 시도별 원 언어).
+ * 1곳은 버블이 아니라 핀이므로 2곳부터 시작하고, 상한은 터치 타겟 두 배(88).
+ */
+export function clusterDiameter(count: number) {
+    if (count < 2) return 44;
+    return Math.round(Math.max(44, Math.min(88, 32 + Math.sqrt(count) * 12)));
 }
 
 export function groupMapPoints<T extends { x: number; y: number }>(

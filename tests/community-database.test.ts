@@ -52,7 +52,7 @@ describe.skipIf(!process.env.COMMUNITY_TEST_DATABASE_URL)(
                         chart_id: chartId,
                         difficulty: "Expert",
                         level: 12,
-                        score: number === 5 ? 0 : 980_000,
+                        score: number === 5 ? 0 : 990_000,
                         rank: "S",
                         fc_type: 2,
                         play_count: 1,
@@ -90,7 +90,7 @@ describe.skipIf(!process.env.COMMUNITY_TEST_DATABASE_URL)(
             await db.$disconnect();
         });
 
-        it("checks eligibility on save and keeps the six scopes independent", async () => {
+        it("checks eligibility on save and keeps the four scopes independent", async () => {
             const input = { chartId, mode: "basic", goal: "s", value: 13.1 };
             await expect(
                 mutateChartCommunity({ action: "save-vote", input }, userIds[5])
@@ -111,7 +111,7 @@ describe.skipIf(!process.env.COMMUNITY_TEST_DATABASE_URL)(
             await mutateChartCommunity(
                 {
                     action: "save-vote",
-                    input: { ...input, goal: "fc", value: 13.4 },
+                    input: { ...input, goal: "990k", value: 13.4 },
                 },
                 userIds[0]
             );
@@ -124,7 +124,7 @@ describe.skipIf(!process.env.COMMUNITY_TEST_DATABASE_URL)(
                 orderBy: { goal: "asc" },
             });
             expect(votes.map(({ goal, value }) => ({ goal, value }))).toEqual([
-                { goal: "fc", value: 13.4 },
+                { goal: "990k", value: 13.4 },
                 { goal: "s", value: 13.2 },
             ]);
             expect(
@@ -272,7 +272,7 @@ describe.skipIf(!process.env.COMMUNITY_TEST_DATABASE_URL)(
                     userId
                 );
             const summary = await getCommunityData(chartId, userIds[0]);
-            expect(summary.scopes).toHaveLength(6);
+            expect(summary.scopes).toHaveLength(4);
             expect(summary.scopes[0]).toMatchObject({
                 placement: "published",
                 officialValue: 10.2,
@@ -321,7 +321,7 @@ describe.skipIf(!process.env.COMMUNITY_TEST_DATABASE_URL)(
             await mutateChartCommunity(
                 {
                     action: "delete-vote",
-                    input: { chartId, mode: "basic", goal: "fc" },
+                    input: { chartId, mode: "basic", goal: "990k" },
                 },
                 userIds[0]
             );
