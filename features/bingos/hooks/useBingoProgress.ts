@@ -62,16 +62,22 @@ export function useBingoProgress(
                   : progress.richPositions.has(cell.position))
     );
 
-    function select(cell: BingoMission, moveFocus = false) {
+    // 칸·행 선택은 제자리 상세 카드의 내용만 바꾼다 — 스크롤하지 않는다
+    function select(cell: BingoMission) {
         setSelected(cell.id);
-        if (!moveFocus) return;
-        if (!filtered.some((item) => item.id === cell.id)) setFilter("all");
-        requestAnimationFrame(() => {
-            const row = document.getElementById(`bingo-mission-${cell.id}`);
-            row?.focus({ preventScroll: true });
-            row?.scrollIntoView({ block: "nearest", behavior: "instant" });
-        });
     }
+    function selectRelative(delta: 1 | -1) {
+        const index = bingo.cells.findIndex((cell) => cell.id === selected);
+        const next =
+            bingo.cells[
+                (index + delta + bingo.cells.length) % bingo.cells.length
+            ];
+        if (next) setSelected(next.id);
+    }
+    const linePositions = useMemo(
+        () => new Set(progress.completedLinePositions.flat()),
+        [progress.completedLinePositions]
+    );
 
     async function save(cellId: number, next: boolean) {
         if (
@@ -149,10 +155,13 @@ export function useBingoProgress(
         failed,
         message,
         selected,
+        selectedCell: bingo.cells.find((cell) => cell.id === selected) ?? null,
         filter,
         filtered,
         progress,
+        linePositions,
         select,
+        selectRelative,
         save,
         setFilter,
     };

@@ -225,7 +225,16 @@ for (const locale of ["ko", "ja", "en"] as const) {
                 });
         }
         await page.locator(".nl-bingo-board button").nth(8).click();
-        await expect(page.locator("#bingo-mission-900009")).toBeFocused();
+        // 칸 선택은 스크롤 대신 제자리 상세 카드의 내용만 바꾼다
+        await expect(
+            page.locator(".nl-bingo-cell-popover .nl-bingo-cell-detail__pos")
+        ).toHaveText("B4");
+        await page.keyboard.press("Escape");
+        await expect(page.locator(".nl-bingo-cell-popover")).toHaveCount(0);
+        await expect(page.locator("#bingo-mission-900009")).toHaveAttribute(
+            "data-selected",
+            "true"
+        );
         await expect(
             page.locator(".nl-bingo-board button").nth(8)
         ).toHaveAttribute("aria-pressed", "true");
