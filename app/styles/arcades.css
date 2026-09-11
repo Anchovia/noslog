@@ -1,5 +1,16 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   오락실 찾기 — 지도와 목록이 한 집합
+   Compact: 지도가 위에 붙고(sticky) 목록이 시트처럼 그 위로 올라온다.
+   1056+: 목록 | 지도 1:1, 지도는 sticky.
+   ───────────────────────────────────────────────────────────────────────────── */
 .noslog-ui .nl-arcades {
     padding-bottom: var(--nl-spacing-48);
+}
+.noslog-ui .nl-arcades__head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-16);
+    min-width: 0;
 }
 .noslog-ui .nl-arcades__controls {
     display: flex;
@@ -11,41 +22,138 @@
     width: var(--nl-icon-small);
     height: var(--nl-icon-small);
 }
-.noslog-ui .nl-arcades__results,
-.noslog-ui .nl-arcades__catalog {
+.noslog-ui .nl-arcades__results {
     display: flex;
     flex-direction: column;
     min-width: 0;
-    gap: var(--nl-spacing-24);
+}
+/* Compact 시트 — 지도 위로 10 겹쳐 올라오고, 위 모서리 overlay 10, 손잡이 4×40 */
+.noslog-ui .nl-arcades__map-region {
+    min-width: 0;
+    position: sticky;
+    top: 60px;
+    z-index: 0;
 }
 .noslog-ui .nl-arcades__catalog {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
     gap: var(--nl-spacing-8);
+    margin-top: calc(-1 * var(--nl-radius-overlay));
+    padding: var(--nl-spacing-8) 0 0;
+    border-radius: var(--nl-radius-overlay) var(--nl-radius-overlay) 0 0;
+    background: var(--nl-surface-canvas);
+}
+.noslog-ui .nl-arcades__handle {
+    display: block;
+    width: 40px;
+    height: 4px;
+    margin: 0 auto var(--nl-spacing-4);
+    border-radius: var(--nl-radius-full);
+    background: var(--nl-border-strong);
 }
 .noslog-ui .nl-arcades__list {
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-8);
 }
+/* 요약 줄 — 시트 안쪽 inset 12(카드 안 텍스트와 같은 값) */
 .noslog-ui .nl-arcades__summary {
-    display: flex;
-    gap: var(--nl-spacing-8);
-    flex-wrap: wrap;
+    padding-inline: var(--nl-spacing-12);
 }
-.noslog-ui .nl-arcades__map-region {
-    min-width: 0;
-    position: relative;
-}
+
+/* 결과 카드 — 요약 줄(사진 64 · 이름/거리 · 기체 한 줄 · 영업 상태) 이 펼침 버튼, 아래로 펼침 칸 */
 .noslog-ui .nl-arcade-result {
     display: flex;
-    align-items: center;
-    gap: var(--nl-spacing-12);
-    padding: var(--nl-spacing-12) var(--nl-spacing-16);
+    flex-direction: column;
     border-radius: var(--nl-radius-container);
     background: var(--nl-surface-surface);
     overflow-wrap: anywhere;
 }
-.noslog-ui .nl-arcade-result:hover {
+.noslog-ui .nl-arcade-result:has(> button.nl-arcade-result__summary:hover),
+.noslog-ui .nl-arcade-result[data-selected] {
     background: var(--nl-interaction-hover);
+}
+.noslog-ui .nl-arcade-result[data-selected] {
+    box-shadow: inset 0 0 0 1px var(--nl-border-strong);
+}
+/* FOCUS-1B — 카드 자신의 1px INSIDE 경계 색만 바꾼다 */
+.noslog-ui .nl-arcade-result:has(> .nl-arcade-result__summary:focus-visible) {
+    box-shadow: inset 0 0 0 1px var(--nl-focus-ring);
+}
+.noslog-ui .nl-arcade-result__summary {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-12);
+    width: 100%;
+    padding: var(--nl-spacing-12) var(--nl-spacing-16);
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-align: start;
+}
+.noslog-ui button.nl-arcade-result__summary {
+    cursor: pointer;
+}
+.noslog-ui .nl-arcade-result__summary:focus-visible {
+    outline: none;
+}
+.noslog-ui .nl-arcade-result__chevron {
+    flex-shrink: 0;
+    color: var(--nl-content-subdued);
+}
+.noslog-ui .nl-arcade-result[data-expanded] .nl-arcade-result__chevron {
+    transform: rotate(180deg);
+}
+/* 펼침 칸 — 카드 안쪽 16 에 맞춘 구분선 아래 12 · 칸 끝 16 */
+.noslog-ui .nl-arcade-result__more {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-12);
+    margin-inline: var(--nl-spacing-16);
+    padding: var(--nl-spacing-12) 0 var(--nl-spacing-16);
+    border-top: 1px solid var(--nl-border-divider);
+}
+.noslog-ui .nl-arcade-result__facts {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    gap: var(--nl-spacing-4) var(--nl-spacing-12);
+}
+.noslog-ui .nl-arcade-result__facts > div {
+    display: contents;
+}
+.noslog-ui .nl-arcade-result__machines {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-4);
+}
+.noslog-ui .nl-arcade-result__machines > li {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--nl-spacing-12);
+}
+.noslog-ui .nl-arcade-result__machine-state {
+    flex-shrink: 0;
+}
+.noslog-ui .nl-arcade-result__actions {
+    display: grid;
+    grid-template-columns: repeat(var(--count, 2), minmax(0, 1fr));
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-arcade-result__actions[data-count="1"] {
+    --count: 1;
+}
+/* 셋이면 주 액션 한 줄 + 보조 2열(SET-47) — 3등폭은 320 영어에서 칸이 80 이라 라벨이 두 줄로 접힌다 */
+.noslog-ui .nl-arcade-result__actions[data-count="3"] > :first-child {
+    grid-column: 1 / -1;
+}
+/* 버튼은 공용 규격 그대로(높이 40 · 패딩 7/15 · control) — 칸 폭만 채운다 */
+.noslog-ui .nl-arcade-result__actions > * {
+    min-width: 0;
 }
 .noslog-ui .nl-arcade-result__photo {
     display: flex;
@@ -73,19 +181,47 @@
 }
 .noslog-ui .nl-arcade-result__heading {
     display: flex;
-    flex-wrap: wrap;
     justify-content: space-between;
     align-items: baseline;
-    column-gap: var(--nl-spacing-8);
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-arcade-result__heading > .nl-entity-title {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.noslog-ui .nl-arcade-result__heading > .nl-metric-value {
+    flex-shrink: 0;
+}
+.noslog-ui .nl-arcade-result__status {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+}
+/* 영업 상태 점 — 영업 중 success · 종료 subdued 채움 · 미확인 빈 원 (색 단독 아님: 글자가 먼저 온다) */
+.noslog-ui .nl-arcade-result__dot {
+    flex-shrink: 0;
+    box-sizing: border-box;
+    width: 8px;
+    height: 8px;
+    border-radius: var(--nl-radius-full);
+    border: 1px solid var(--nl-content-subdued);
+}
+.noslog-ui .nl-arcade-result__dot[data-open="closed"] {
+    background: var(--nl-content-subdued);
+}
+.noslog-ui .nl-arcade-result__dot[data-open="open"] {
+    background: var(--nl-feedback-success-marker);
+    border-color: var(--nl-feedback-success-marker);
 }
 .noslog-ui .nl-arcades__preview {
     margin-top: var(--nl-spacing-8);
 }
-.noslog-ui .nl-arcades__preview .nl-arcade-result {
-    box-shadow: inset 0 0 0 1px var(--nl-border-strong);
-}
+
+/* 지도 */
 .noslog-ui .nl-arcade-map {
-    height: 180px;
+    height: 300px;
     position: relative;
     border-radius: var(--nl-radius-container);
     background: var(--nl-surface-surface);
@@ -130,19 +266,22 @@
 }
 .noslog-ui .nl-arcade-map__area {
     top: var(--nl-spacing-8);
-    left: var(--nl-spacing-8);
+    left: 50%;
+    transform: translateX(-50%);
     min-height: 40px;
     padding-inline: var(--nl-spacing-12);
-    max-width: calc(100% - 72px);
+    max-width: calc(100% - 120px);
+    white-space: nowrap;
 }
 .noslog-ui .nl-arcade-map__expand {
-    bottom: var(--nl-spacing-8);
+    /* Compact 시트가 지도 아래 10 을 덮으므로 바닥 컨트롤은 24 위에 둔다 */
+    bottom: var(--nl-spacing-24);
     right: var(--nl-spacing-8);
     min-height: 40px;
     padding-inline: var(--nl-spacing-12);
 }
 .noslog-ui .nl-arcade-map__legend {
-    bottom: var(--nl-spacing-8);
+    bottom: var(--nl-spacing-24);
     left: var(--nl-spacing-8);
     max-width: calc(100% - 16px);
 }
@@ -157,42 +296,62 @@
 .noslog-ui .nl-arcade-map__legend ul {
     padding: 0 var(--nl-spacing-12) var(--nl-spacing-12);
 }
+/* 마커 — 핀(오락실 하나) · 버블(범위 안 개수, 코로나 맵 언어). 타겟 44 */
 .noslog-ui .nl-arcade-marker {
     display: flex;
     min-width: 44px;
     min-height: 44px;
     align-items: center;
     justify-content: center;
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
 }
-.noslog-ui .nl-arcade-marker__cluster,
+.noslog-ui .nl-arcade-marker--pin {
+    align-items: flex-end;
+}
+.noslog-ui .nl-arcade-marker__pin {
+    width: 32px;
+    height: 32px;
+    fill: var(--nl-feedback-warning-marker);
+    stroke: var(--nl-surface-canvas);
+    stroke-width: 1;
+    filter: drop-shadow(0 1px 2px rgb(0 0 0 / 40%));
+}
+.noslog-ui .nl-arcade-marker--pin[aria-pressed="true"] .nl-arcade-marker__pin {
+    width: 40px;
+    height: 40px;
+    fill: var(--nl-content-on-media);
+}
 .noslog-ui .nl-arcade-marker__bubble {
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: var(--nl-radius-full);
     background: var(--nl-surface-media-scrim);
     color: var(--nl-content-on-media);
+    box-shadow: inset 0 0 0 2px var(--nl-feedback-warning-marker);
 }
-.noslog-ui .nl-arcade-marker__cluster {
-    min-height: 32px;
-    padding: var(--nl-spacing-4) var(--nl-spacing-8);
-    border-radius: var(--nl-radius-control);
+.noslog-ui .nl-arcade-marker:focus-visible {
+    outline: none;
 }
-.noslog-ui .nl-arcade-marker__bubble {
-    border-radius: var(--nl-radius-full);
-}
-.noslog-ui .nl-arcade-marker__bubble--small {
-    background: var(--nl-content-subdued);
-}
-.noslog-ui .nl-arcade-marker[aria-pressed="true"] > span {
+.noslog-ui .nl-arcade-marker:focus-visible > * {
     outline: 2px solid var(--nl-content-on-media);
     outline-offset: 2px;
 }
+/* 전체 지도 모드(Compact) */
 .noslog-ui .nl-arcades[data-mode="map"] .nl-arcade-map {
     height: max(320px, calc(100dvh - 300px));
 }
 .noslog-ui .nl-arcades[data-mode="map"] .nl-arcades__catalog {
     display: none;
 }
+.noslog-ui .nl-arcades[data-mode="map"] .nl-arcades__map-region {
+    position: static;
+}
+
+/* 필터 레이어 */
 .noslog-ui .nl-arcades__filters {
     display: flex;
     flex-direction: column;
@@ -204,37 +363,83 @@
     flex-direction: column;
     gap: var(--nl-spacing-8);
 }
-.noslog-ui .nl-arcades__region select {
-    min-height: 44px;
-    background: var(--nl-surface-canvas);
-    color: var(--nl-content-default);
-    box-shadow: inset 0 0 0 1px var(--nl-border-strong);
-    border-radius: var(--nl-radius-control);
-    padding-inline: var(--nl-spacing-12);
-}
 .noslog-ui .nl-arcades__apply {
     width: 100%;
 }
-.noslog-ui .nl-arcade-report textarea.nl-input {
-    min-height: 44px;
-    height: 44px;
-    resize: vertical;
+.noslog-ui .nl-arcades .nl-arcade-map[data-inline-error] {
+    height: auto;
+    min-height: 0;
 }
-.noslog-ui .nl-arcade-report__attach {
-    align-self: flex-start;
+.noslog-ui .nl-arcade-map[data-inline-error] .nl-arcade-map__canvas {
+    display: none;
+}
+.noslog-ui .nl-arcade-map[data-inline-error] .nl-arcade-map__status {
+    position: static;
+    flex-direction: row;
+    justify-content: flex-start;
+    text-align: left;
+    gap: var(--nl-spacing-12);
+    background: var(--nl-feedback-danger-bg);
+    color: var(--nl-feedback-message-text);
+}
+.noslog-ui .nl-arcade-map[data-inline-error] .nl-arcade-map__status > svg {
+    flex-shrink: 0;
+    color: var(--nl-feedback-danger-marker);
+}
+.noslog-ui .nl-arcade-map[data-inline-error] .nl-arcade-map__status > p {
+    flex: 1;
+    min-width: 0;
+}
+.noslog-ui .nl-arcade-map[data-inline-error] .nl-arcade-map__status > button {
+    flex-shrink: 0;
+}
+/* 지도가 못 뜨면 시트도 sticky 를 풀고 보통 흐름으로 */
+.noslog-ui
+    .nl-arcades:has(.nl-arcade-map[data-state="error"])
+    .nl-arcades__map-region {
+    position: static;
+}
+.noslog-ui
+    .nl-arcades:has(.nl-arcade-map[data-state="error"])
+    .nl-arcades__catalog {
+    margin-top: 0;
+    padding-top: var(--nl-spacing-16);
+    border-radius: 0;
+}
+.noslog-ui
+    .nl-arcades:has(.nl-arcade-map[data-state="error"])
+    .nl-arcades__handle {
+    display: none;
+}
+.noslog-ui
+    .nl-arcades[data-mode="map"]:has(.nl-arcade-map[data-state="error"])
+    .nl-arcades__catalog {
+    display: flex;
+}
+.noslog-ui .nl-arcades[data-mode="map"] .nl-arcade-map[data-state="error"] {
+    height: auto;
+    min-height: 0;
 }
 @media (min-width: 1056px) {
     .noslog-ui .nl-arcades__results {
         display: grid;
-        grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: var(--nl-spacing-16);
         align-items: start;
     }
     .noslog-ui .nl-arcades__catalog {
         grid-column: 1;
         grid-row: 1;
+        margin-top: 0;
+        padding-top: 0;
+        border-radius: 0;
+        background: none;
     }
-    .noslog-ui .nl-arcades__map-region {
+    .noslog-ui .nl-arcades__handle {
+        display: none;
+    }
+    .noslog-ui .nl-arcades__map-region,
+    .noslog-ui .nl-arcades[data-mode="map"] .nl-arcades__map-region {
         grid-column: 2;
         grid-row: 1;
         position: sticky;
@@ -248,35 +453,118 @@
     .noslog-ui .nl-arcades[data-mode="map"] .nl-arcades__catalog {
         display: flex;
     }
-    .noslog-ui .nl-arcade-map__expand {
+    .noslog-ui .nl-arcade-map__expand,
+    .noslog-ui .nl-arcades__preview {
         display: none;
     }
+    .noslog-ui .nl-arcade-map__legend {
+        bottom: var(--nl-spacing-8);
+    }
 }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   오락실 상세 — 사진 → 이름·상태 → 액션 행 → 기체 → 위치 → 영업시간 → 선호 플레이어
+   카드 3장 대신 구분선 섹션. 1056+ 는 본문 | 레일(액션·선호·최근 확인) 2:1.
+   ───────────────────────────────────────────────────────────────────────────── */
 .noslog-ui .nl-arcade-detail {
     padding-bottom: var(--nl-spacing-48);
     overflow-wrap: anywhere;
 }
-.noslog-ui .nl-arcade-detail__composition,
-.noslog-ui .nl-arcade-detail__cards,
-.noslog-ui .nl-arcade-detail__action-rail {
+.noslog-ui .nl-arcade-detail__layout,
+.noslog-ui .nl-arcade-detail__main,
+.noslog-ui .nl-arcade-detail__rail {
     display: flex;
     flex-direction: column;
     min-width: 0;
-    gap: var(--nl-spacing-24);
+    gap: var(--nl-spacing-16);
 }
-.noslog-ui .nl-arcade-detail__card {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-12);
-    min-width: 0;
-    padding: var(--nl-spacing-16);
-    border-radius: var(--nl-radius-container);
-    background: var(--nl-surface-surface);
-}
-.noslog-ui .nl-arcade-detail__card-heading {
+.noslog-ui .nl-arcade-detail__head {
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-4);
+    min-width: 0;
+}
+.noslog-ui .nl-arcade-detail__status {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--nl-spacing-8);
+}
+/* 액션 행 — 2열 등폭(SET-47 「컨테이너 폭을 채운다」) · 버튼은 공용 규격 그대로. 4열은 390 에서 칸이 84 라 공용 패딩으로 라벨이 안 들어간다 */
+.noslog-ui .nl-arcade-detail__actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-arcade-detail__actions > * {
+    min-width: 0;
+}
+.noslog-ui .nl-arcade-detail__section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-12);
+    padding-block: var(--nl-spacing-16);
+    box-shadow: inset 0 -1px var(--nl-border-divider);
+}
+.noslog-ui .nl-arcade-detail__section:last-child {
+    box-shadow: none;
+}
+.noslog-ui .nl-arcade-detail__section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-arcade-detail__section-head > h2 {
+    min-width: 0;
+}
+/* 기체 행 — 번호·위치 | 상태·신선도 | 액션. 경계는 상태를 한 번 더 말한다 */
+.noslog-ui .nl-arcade-cabinets {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-arcade-cabinet {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
+    padding: var(--nl-spacing-12);
+    border: 1px solid var(--nl-border-default);
+    border-radius: var(--nl-radius-control);
+}
+.noslog-ui .nl-arcade-cabinet[data-tone="caution"] {
+    border-color: var(--nl-feedback-warning-marker);
+}
+.noslog-ui .nl-arcade-cabinet[data-tone="unavailable"] {
+    border-color: var(--nl-feedback-danger-marker);
+}
+.noslog-ui .nl-arcade-cabinet__row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--nl-spacing-4) var(--nl-spacing-12);
+}
+.noslog-ui .nl-arcade-cabinet__name {
+    display: flex;
+    align-items: baseline;
+    gap: var(--nl-spacing-8);
+    min-width: 0;
+}
+/* 상태 라벨은 중립 글자 — marker 색은 Light 에서 3.1:1 이라 12·14px 텍스트에 못 쓴다(FC 라벨 선례). 색은 행 경계·점만 */
+.noslog-ui .nl-arcade-cabinet__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--nl-spacing-4) var(--nl-spacing-8);
+}
+.noslog-ui .nl-arcade-cabinet__actions {
+    display: flex;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-arcade-cabinet__actions > * {
+    flex: 1 1 0;
+    min-width: 0;
 }
 .noslog-ui .nl-arcade-detail__map .nl-arcade-map {
     height: 160px;
@@ -312,29 +600,14 @@
     justify-content: space-between;
     gap: var(--nl-spacing-16);
 }
-.noslog-ui .nl-arcade-detail__cabinets {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-12);
-}
-.noslog-ui .nl-arcade-detail__cabinets li {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-4);
-}
-.noslog-ui .nl-arcade-detail__cabinet-heading {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: var(--nl-spacing-8);
-}
 .noslog-ui .nl-arcade-detail__facts,
 .noslog-ui .nl-arcade-detail__facts > div {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-12);
+    gap: var(--nl-spacing-8);
 }
 .noslog-ui .nl-arcade-detail__facts a {
+    color: var(--nl-content-interactive);
     text-decoration: underline;
     text-underline-position: under;
 }
@@ -344,11 +617,29 @@
     height: var(--nl-icon-small);
     margin-left: var(--nl-spacing-4);
 }
-.noslog-ui .nl-arcade-detail__preference {
+/* Compact·Intermediate 본문 위 액션 묶음 — 버튼 행 아래 알림(선호 지정·공유 복사)과 12, 레일 상자와 같은 값 */
+.noslog-ui .nl-arcade-detail__main-only {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-8);
+    gap: var(--nl-spacing-12);
 }
+.noslog-ui .nl-arcade-detail__rail-box {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-12);
+    padding: var(--nl-spacing-16);
+    border-radius: var(--nl-radius-container);
+    background: var(--nl-surface-surface);
+}
+.noslog-ui .nl-arcade-detail__rail-only {
+    display: none;
+}
+.noslog-ui .nl-arcade-detail__checks {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-4);
+}
+/* 사진 */
 .noslog-ui .nl-arcade-photos {
     position: relative;
     min-width: 0;
@@ -400,26 +691,36 @@
     gap: var(--nl-spacing-8);
 }
 @media (min-width: 1056px) {
-    .noslog-ui .nl-arcade-detail__composition {
+    .noslog-ui .nl-arcade-detail__layout {
         display: grid;
         grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
-        gap: var(--nl-spacing-16);
+        gap: var(--nl-spacing-24);
         align-items: start;
     }
-    .noslog-ui .nl-arcade-detail__cards {
+    .noslog-ui .nl-arcade-detail__main {
         grid-column: 1;
         grid-row: 1;
     }
-    .noslog-ui .nl-arcade-detail__action-rail {
+    .noslog-ui .nl-arcade-detail__rail {
         grid-column: 2;
         grid-row: 1;
         position: sticky;
         top: 84px;
     }
+    .noslog-ui .nl-arcade-detail__rail-only {
+        display: flex;
+    }
+    .noslog-ui .nl-arcade-detail__main-only {
+        display: none;
+    }
+    .noslog-ui .nl-arcade-detail__map .nl-arcade-map {
+        height: 240px;
+        min-height: 240px;
+    }
     .noslog-ui .nl-arcade-photos:has(.nl-arcade-photos__thumbnails > button) {
         display: grid;
-        grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
-        height: 320px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        height: 360px;
         gap: var(--nl-spacing-8);
     }
     .noslog-ui .nl-arcade-photos__thumbnails {
@@ -431,143 +732,4 @@
         position: relative;
         flex: 1;
     }
-}
-.noslog-ui .nl-arcade-detail__wide-preference {
-    display: none;
-}
-.noslog-ui .nl-arcade-detail__wide-contact,
-.noslog-ui .nl-arcade-detail__wide-report,
-.noslog-ui .nl-arcade-detail__wide-distance {
-    display: none;
-}
-.noslog-ui .nl-arcade-detail__visit,
-.noslog-ui .nl-arcade-detail__location-grid,
-.noslog-ui .nl-arcade-detail__location-map,
-.noslog-ui .nl-arcade-detail__location-hours {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-    gap: var(--nl-spacing-12);
-}
-.noslog-ui
-    .nl-arcades[data-mode="map"]:has(.nl-arcade-map[data-state="error"])
-    .nl-arcades__catalog {
-    display: flex;
-}
-.noslog-ui .nl-arcades[data-mode="map"] .nl-arcade-map[data-state="error"] {
-    height: auto;
-    min-height: 0;
-}
-.noslog-ui .nl-arcade-detail__compact-report > button {
-    width: 100%;
-}
-.noslog-ui .nl-arcade-detail__compact-report {
-    margin-top: var(--nl-spacing-16);
-}
-.noslog-ui .nl-arcade-detail__facts a {
-    color: var(--nl-content-interactive);
-}
-@media (min-width: 1056px) {
-    .noslog-ui .nl-arcade-detail__wide-distance {
-        display: block;
-    }
-    .noslog-ui .nl-arcade-detail__compact-distance {
-        display: none;
-    }
-    .noslog-ui .nl-arcade-detail__open-state {
-        font-size: var(--nl-type-size-16);
-        line-height: var(--nl-type-line-height-24);
-    }
-    .noslog-ui
-        .nl-arcade-detail__wide-preference
-        .nl-arcade-detail__preferred-count {
-        order: 1;
-        font-size: var(--nl-type-size-12);
-        line-height: var(--nl-type-line-height-16);
-        color: var(--nl-content-subdued);
-    }
-    .noslog-ui
-        .nl-arcade-detail__wide-preference
-        .nl-arcade-detail__preference {
-        gap: var(--nl-spacing-12);
-    }
-    .noslog-ui .nl-arcade-detail__wide-contact .nl-arcade-detail__facts,
-    .noslog-ui .nl-arcade-detail__wide-contact .nl-arcade-detail__facts > div {
-        gap: var(--nl-spacing-8);
-    }
-    .noslog-ui .nl-arcade-detail__wide-preference {
-        display: block;
-    }
-    .noslog-ui .nl-arcade-detail__compact-preference {
-        display: none;
-    }
-    .noslog-ui .nl-arcade-detail__compact-report,
-    .noslog-ui .nl-arcade-detail__facts > .nl-arcade-detail__compact-contact,
-    .noslog-ui .nl-arcades__preview {
-        display: none;
-    }
-    .noslog-ui .nl-arcade-detail__wide-contact {
-        display: block;
-    }
-    .noslog-ui .nl-arcade-detail__wide-report {
-        display: block;
-        grid-column: 1;
-    }
-    .noslog-ui .nl-arcade-detail__card,
-    .noslog-ui .nl-arcade-detail__visit {
-        padding: var(--nl-spacing-24);
-    }
-    .noslog-ui .nl-arcade-detail__visit {
-        background: var(--nl-surface-surface);
-        border-radius: var(--nl-radius-container);
-    }
-    .noslog-ui .nl-arcade-detail__cards,
-    .noslog-ui .nl-arcade-detail__action-rail {
-        gap: var(--nl-spacing-16);
-    }
-    .noslog-ui .nl-arcade-detail__cabinet-summary {
-        font-size: var(--nl-type-size-14);
-        line-height: var(--nl-type-line-height-20);
-    }
-    .noslog-ui .nl-arcade-detail__location-grid {
-        display: grid;
-        grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-        gap: var(--nl-spacing-24);
-    }
-    .noslog-ui .nl-arcade-detail__map .nl-arcade-map {
-        height: 200px;
-        min-height: 200px;
-    }
-    .noslog-ui .nl-arcade-photos:has(.nl-arcade-photos__thumbnails > button) {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        height: 360px;
-    }
-}
-
-.noslog-ui .nl-arcades .nl-arcade-map[data-inline-error] {
-    height: auto;
-    min-height: 0;
-}
-.noslog-ui .nl-arcade-map[data-inline-error] .nl-arcade-map__canvas {
-    display: none;
-}
-.noslog-ui .nl-arcade-map[data-inline-error] .nl-arcade-map__status {
-    position: static;
-    flex-direction: row;
-    justify-content: flex-start;
-    text-align: left;
-    gap: var(--nl-spacing-12);
-    background: var(--nl-feedback-danger-bg);
-    color: var(--nl-feedback-message-text);
-}
-.noslog-ui .nl-arcade-map[data-inline-error] .nl-arcade-map__status > svg {
-    flex-shrink: 0;
-    color: var(--nl-feedback-danger-marker);
-}
-.noslog-ui .nl-arcade-map[data-inline-error] .nl-arcade-map__status > p {
-    flex: 1;
-    min-width: 0;
-}
-.noslog-ui .nl-arcade-map[data-inline-error] .nl-arcade-map__status > button {
-    flex-shrink: 0;
 }

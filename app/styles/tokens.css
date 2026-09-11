@@ -44,7 +44,6 @@
     --nl-grid-margin-compact: 16px;
     --nl-grid-margin-intermediate: 24px;
     --nl-container-reading: 768px;
-    --nl-motion-press-scale: 0.98;
     --nl-elevation-overlay:
         0 0 1px rgb(0 0 0 / 12%), 0 2px 3px rgb(0 0 0 / 4%),
         0 4px 6px rgb(0 0 0 / 8%);

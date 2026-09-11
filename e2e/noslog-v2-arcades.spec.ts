@@ -6,7 +6,7 @@ test.skip(
     process.env.NOSLOG_ARCADES_FIXTURE !== "true",
     "Requires the isolated local arcade presentation harness."
 );
-test("P12 Figma detail composition uses pinned spacing and type at compact and wide widths", async ({
+test("P12 detail composition keeps the section stack, action row and rail across widths", async ({
     page,
 }, testInfo) => {
     await page.goto("/ko/p7-verification?fixture=arcades&state=figma-detail");
@@ -19,63 +19,52 @@ test("P12 Figma detail composition uses pinned spacing and type at compact and w
     await expect(page.locator(".nl-arcade-hours > div").last()).toHaveText(
         "일휴무"
     );
+    const lastCabinet = page.locator(".nl-arcade-cabinets > li").last();
+    await expect(lastCabinet).toHaveAttribute("data-tone", "unavailable");
+    await expect(lastCabinet).toContainText("3번기");
+    await expect(lastCabinet).toContainText("점검 중");
+    await expect(lastCabinet).toContainText("이용 불가");
     await expect(
-        page.locator(".nl-arcade-detail__cabinets > li").last()
-    ).toContainText("이용 불가 · 점검 중");
+        page.locator(".nl-arcade-cabinets > li").nth(1)
+    ).toHaveAttribute("data-tone", "caution");
     await page.evaluate(() => document.fonts.ready);
     for (const width of [
         320, 390, 671, 672, 960, 1055, 1056, 1280, 1470, 1055,
     ]) {
         await page.setViewportSize({ width, height: 900 });
         const wide = width >= 1056;
-        await expect(
-            page
-                .locator(".nl-arcade-detail__cards > .nl-arcade-detail__card")
-                .first()
-        ).toHaveCSS("padding", wide ? "24px" : "16px");
-        await expect(page.locator(".nl-arcade-detail__cards")).toHaveCSS(
+        await expect(page.locator(".nl-arcade-detail__layout")).toHaveCSS(
             "gap",
-            wide ? "16px" : "24px"
+            wide ? "24px" : "16px"
         );
         await expect(
-            page.locator(".nl-arcade-detail__cabinet-summary")
-        ).toHaveCSS("font-size", wide ? "14px" : "16px");
-        await expect(
-            page.locator(".nl-arcade-detail__cabinet-summary")
-        ).toHaveCSS("line-height", wide ? "20px" : "24px");
+            page.locator(".nl-arcade-detail__section").first()
+        ).toHaveCSS("padding-top", "16px");
         await expect(page.locator(".nl-arcade-photos")).toHaveCSS(
             "height",
             wide ? "360px" : "220px"
         );
         await expect(
             page.locator(".nl-arcade-detail__map .nl-arcade-map")
-        ).toHaveCSS("height", wide ? "200px" : "160px");
-        if (wide) {
-            await expect(
-                page.locator(".nl-arcade-detail__open-state")
-            ).toHaveCSS("font-size", "16px");
-            await expect(
-                page.locator(
-                    ".nl-arcade-detail__wide-preference .nl-arcade-detail__preferred-count"
-                )
-            ).toHaveCSS("order", "1");
-            await expect(
-                page.locator(
-                    ".nl-arcade-detail__wide-preference .nl-arcade-detail__preferred-count"
-                )
-            ).toHaveCSS("font-size", "12px");
-            await expect(
-                page.locator(
-                    ".nl-arcade-detail__wide-contact .nl-arcade-detail__facts"
-                )
-            ).toHaveCSS("gap", "8px");
-        } else {
-            await expect(
-                page.locator(
-                    ".nl-arcade-detail__compact-preference .nl-arcade-detail__compact-report"
-                )
-            ).toHaveCSS("margin-top", "16px");
-        }
+        ).toHaveCSS("height", wide ? "240px" : "160px");
+        // 액션 행은 한 곳에만 보인다 — 1056 미만 본문 위, 1056+ 레일. 어느 쪽이든 2×2 · 공용 버튼 높이 40
+        const railActions = page.locator(
+            ".nl-arcade-detail__rail .nl-arcade-detail__actions > *"
+        );
+        const mainActions = page.locator(
+            ".nl-arcade-detail__main-only .nl-arcade-detail__actions > *"
+        );
+        await expect(wide ? railActions : mainActions).toHaveCount(4);
+        await expect((wide ? mainActions : railActions).first()).toBeHidden();
+        const boxes = await (wide ? railActions : mainActions).evaluateAll(
+            (nodes) =>
+                nodes.map((node) => {
+                    const box = node.getBoundingClientRect();
+                    return { top: Math.round(box.top), height: box.height };
+                })
+        );
+        expect(boxes.map((box) => box.height)).toEqual([40, 40, 40, 40]);
+        expect(new Set(boxes.map((box) => box.top)).size).toBe(2);
         expect(
             await page.evaluate(
                 () => document.documentElement.scrollWidth <= innerWidth
@@ -160,6 +149,19 @@ for (const locale of ["ko", "ja", "en"] as const) {
                 .violations
         ).toEqual([]);
         expect(errors).toEqual([]);
+        // 카드를 누르면 상세로 가지 않고 펼쳐지며, 상세는 「자세히 보기」 링크로만 간다
+        const firstCard = page.locator(".nl-arcades__list > li").first();
+        const summary = firstCard.locator(".nl-arcade-result__summary");
+        await summary.click();
+        await expect(summary).toHaveAttribute("aria-expanded", "true");
+        await expect(
+            firstCard.getByRole("link", {
+                name: t["arcades.viewDetails"],
+                exact: true,
+            })
+        ).toHaveAttribute("href", new RegExp(`/${locale}/gamecenter/`));
+        await summary.click();
+        await expect(summary).toHaveAttribute("aria-expanded", "false");
         await page.goto(`/${locale}/p7-verification?fixture=arcades&mode=map`);
         await expect(page.locator(".nl-arcades__catalog")).toBeVisible();
         await expect(page.locator(".nl-arcades__list > li")).toHaveCount(2);
@@ -174,9 +176,27 @@ for (const locale of ["ko", "ja", "en"] as const) {
         await expect(page.locator(".nl-arcade-detail h1")).toHaveText(
             "노스로그 검증 오락실"
         );
+        await expect(page.locator(".nl-arcade-cabinets > li")).toHaveCount(2);
+        // 로그아웃 상태의 기체 행 — 잠긴 「가동 확인」(hover title · 탭하면 안내) + 고장 신고
+        const lockedConfirm = page
+            .locator(".nl-arcade-cabinets > li")
+            .first()
+            .getByRole("button", {
+                name: t["arcades.confirmRunning"],
+                exact: true,
+            });
+        await expect(lockedConfirm).toHaveAttribute("aria-disabled", "true");
+        await expect(lockedConfirm).toHaveAttribute(
+            "title",
+            t["arcades.loginToUse"]
+        );
+        await lockedConfirm.click();
         await expect(
-            page.locator(".nl-arcade-detail__cabinets > li")
-        ).toHaveCount(2);
+            page
+                .locator(".nl-arcade-cabinets > li")
+                .first()
+                .getByText(t["arcades.loginToUse"], { exact: true })
+        ).toBeVisible();
         await expect(page.locator(".nl-arcade-photos")).toHaveCount(0);
         for (const width of [320, 390, 520, 768, 1470]) {
             await page.setViewportSize({ width, height: 900 });
@@ -185,16 +205,16 @@ for (const locale of ["ko", "ja", "en"] as const) {
                     () => document.documentElement.scrollWidth <= innerWidth
                 )
             ).toBe(true);
-            const compact = page.locator(
-                ".nl-arcade-detail__compact-preference"
-            );
-            const wide = page.locator(".nl-arcade-detail__wide-preference");
+            const compact = page
+                .locator(".nl-arcade-detail__main-only")
+                .first();
+            const rail = page.locator(".nl-arcade-detail__rail");
             if (width === 1470) {
-                await expect(wide).toBeVisible();
+                await expect(rail).toBeVisible();
                 await expect(compact).toBeHidden();
             } else {
                 await expect(compact).toBeVisible();
-                await expect(wide).toBeHidden();
+                await expect(rail).toBeHidden();
             }
             if (width === 390 || width === 1470)
                 await page.screenshot({
@@ -204,7 +224,8 @@ for (const locale of ["ko", "ja", "en"] as const) {
         }
         await page.setViewportSize({ width: 320, height: 700 });
         const trigger = page
-            .locator(".nl-arcade-detail__compact-preference")
+            .locator(".nl-arcade-detail__main-only")
+            .first()
             .getByRole("button", { name: t["arcades.report"], exact: true });
         await trigger.click();
         await expect(
@@ -214,6 +235,15 @@ for (const locale of ["ko", "ja", "en"] as const) {
         ).toHaveAttribute("href", new RegExp(`/${locale}/login\\?returnTo=`));
         await page.getByRole("dialog").press("Escape");
         await expect(trigger).toBeFocused();
+        // 기체별 고장 신고는 같은 레이어를 그 기체로 미리 채워 연다
+        const brokenTrigger = page
+            .locator(".nl-arcade-cabinets > li")
+            .first()
+            .getByRole("button", { name: t["arcades.reportBroken"] });
+        await brokenTrigger.click();
+        await expect(page.getByRole("dialog")).toBeVisible();
+        await page.getByRole("dialog").press("Escape");
+        await expect(brokenTrigger).toBeFocused();
         expect(
             (
                 await new AxeBuilder({ page })
@@ -224,15 +254,16 @@ for (const locale of ["ko", "ja", "en"] as const) {
         await page.goto(
             `/${locale}/p7-verification?fixture=arcades&state=unknown`
         );
+        await expect(page.locator(".nl-arcade-cabinets")).toHaveCount(0);
         await expect(
-            page.locator(".nl-arcade-detail__cabinets > li")
-        ).toHaveCount(0);
+            page.getByText(t["arcades.noCabinetInfo"], { exact: false })
+        ).toBeVisible();
         await expect(
             page.getByText(t["arcades.addressPending"], { exact: true })
         ).toBeVisible();
         await expect(
             page
-                .locator(".nl-arcade-detail__compact-preference")
+                .locator(".nl-arcade-detail__main-only")
                 .getByText(t["arcades.collectingPreference"], { exact: true })
         ).toBeVisible();
     });

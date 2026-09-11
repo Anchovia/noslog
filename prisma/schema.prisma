@@ -71,6 +71,7 @@ model User {
   examAchievements           ExamAchievement[]
   uploadTokenGrants          UploadTokenGrant[]
   feedbackReports            FeedbackReport[]
+  cabinetChecks              ArcadeCabinetCheck[]
   brooches                   UserBrooch[]
   chartPatternsCreated       ChartPattern[]             @relation("ChartPatternCreatedBy")
   chartPatternsUpdated       ChartPattern[]             @relation("ChartPatternUpdatedBy")
@@ -231,22 +232,36 @@ model ArcadePublicDetails {
 }
 
 model ArcadeCabinet {
-  id                 Int              @id @default(autoincrement())
+  id                 Int                  @id @default(autoincrement())
   arcadeId           Int
-  arcade             Arcade           @relation(fields: [arcadeId], references: [id], onDelete: Cascade)
+  arcade             Arcade               @relation(fields: [arcadeId], references: [id], onDelete: Cascade)
   label              String?
   position           Int
-  isActive           Boolean          @default(true)
-  availability       String           @default("unknown")
-  condition          String           @default("unknown")
+  isActive           Boolean              @default(true)
+  availability       String               @default("unknown")
+  condition          String               @default("unknown")
   note               String?
   verifiedAt         DateTime?
   validUntil         DateTime?
   verificationSource String?
   reports            FeedbackReport[]
+  checks             ArcadeCabinetCheck[]
 
   @@unique([arcadeId, position])
   @@index([arcadeId, isActive])
+}
+
+// 이용자가 「지금 가동 중」 을 한 번 눌러 남기는 기체 확인 기록. 관리자 검증과 별개의 신선도 출처
+model ArcadeCabinetCheck {
+  id        Int           @id @default(autoincrement())
+  cabinetId Int           @map("cabinet_id")
+  cabinet   ArcadeCabinet @relation(fields: [cabinetId], references: [id], onDelete: Cascade)
+  userId    Int           @map("user_id")
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  checkedAt DateTime      @default(now()) @map("checked_at")
+
+  @@index([cabinetId, checkedAt])
+  @@index([userId, checkedAt])
 }
 
 model ArcadePublicPhoto {

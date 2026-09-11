@@ -772,12 +772,6 @@
             "values": {
                 "70:4": "IBM Plex Sans"
             }
-        },
-        {
-            "name": "motion/press-scale",
-            "values": {
-                "70:3": 0.9800000190734863
-            }
         }
     ],
     "typography": [

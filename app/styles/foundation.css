@@ -140,9 +140,7 @@ html[data-theme="light"] .noslog-ui,
     line-height: var(--nl-type-line-height-20);
     font-weight: var(--nl-type-weight-medium);
     text-decoration: none;
-    transition:
-        background-color var(--nl-motion-duration-50) var(--nl-ease-out),
-        transform var(--nl-motion-duration-100) var(--nl-ease-in);
+    transition: background-color var(--nl-motion-duration-50) var(--nl-ease-out);
 }
 .noslog-ui .nl-button:hover {
     background: var(--nl-primary-hover);
@@ -150,16 +148,9 @@ html[data-theme="light"] .noslog-ui,
 .noslog-ui .nl-button--compact {
     min-height: var(--nl-button-height);
 }
+/* 눌림은 색 단계만 — 크기 축소(scale) 없음(2026-09-12 사용자 결정) */
 .noslog-ui .nl-button:active {
     background: var(--nl-primary-pressed);
-    transform: scale(var(--nl-motion-press-scale));
-    transition-timing-function: var(--nl-ease-out);
-}
-/* 팝오버·다이얼로그·메뉴를 여는 트리거(악곡 정렬·필터, 빙고·오락실 필터, 상세 액션 등)는 눌림 축소를 끈다 —
-   앵커가 0.98 로 줄었다 돌아오는 동안 열린 패널이 미세하게 따라 움직인다. Radix Popover/Dialog 트리거가 붙이는 aria-haspopup 으로만 잡는다 — Disclosure(aria-expanded)·일반 버튼은 눌림 유지 */
-.noslog-ui .nl-button[aria-haspopup]:active,
-.noslog-ui .nl-icon-button[aria-haspopup]:active {
-    transform: none;
 }
 .noslog-ui .nl-button:focus-visible {
     border-color: var(--nl-primary-on-primary);
@@ -220,6 +211,14 @@ html[data-theme="light"] .noslog-ui,
     height: var(--nl-control-height);
     padding: 0;
     flex-shrink: 0;
+}
+/* 로그인이 필요해 지금은 쓸 수 없는 액션 — 비활성과 같은 모습이지만 hover·탭을 받아 이유(title·안내)를 보여 준다.
+   공용 aria-disabled 에 걸지 않는다: busy 버튼도 aria-disabled 를 쓰는데 busy 는 비활성처럼 보이면 안 된다 */
+.noslog-ui .nl-button[data-locked] {
+    background: var(--nl-interaction-disabled-bg);
+    color: var(--nl-interaction-disabled-content);
+    border-color: var(--nl-interaction-disabled-border);
+    cursor: not-allowed;
 }
 .noslog-ui .nl-button:disabled {
     background: var(--nl-interaction-disabled-bg);
@@ -541,9 +540,6 @@ html[data-theme="light"] .noslog-ui,
 @media (prefers-reduced-motion: reduce) {
     .noslog-ui .nl-button {
         transition: none;
-    }
-    .noslog-ui .nl-button:active {
-        transform: none;
     }
     .noslog-ui .nl-skeleton {
         animation: none;

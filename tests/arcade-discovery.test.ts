@@ -41,6 +41,8 @@ const base: PublicArcade = {
     preferredCount: null,
     cabinets: [],
     cabinetVerifiedAt: null,
+    lastCheckedAt: null,
+    checkCount: 0,
     hours: {
         weekly: {
             "0": { open: 600, close: 1560 },
@@ -143,6 +145,10 @@ describe("public arcade truth and discovery", () => {
             note: "Key input misses",
             verifiedAt: now.toISOString(),
             stale: false,
+            lastCheckedAt: null,
+            checkCount: 0,
+            openReports: 0,
+            latestReportAt: null,
         };
         expect(arcadeCabinetSchema.safeParse(cabinet).success).toBe(true);
         expect(
@@ -222,6 +228,10 @@ describe("public arcade truth and discovery", () => {
                     note: null,
                     verifiedAt: now.toISOString(),
                     stale: false,
+                    lastCheckedAt: null,
+                    checkCount: 0,
+                    openReports: 0,
+                    latestReportAt: null,
                 }),
             ],
         };
