@@ -6,7 +6,7 @@ export const koMessages = {
     "recovery.fatalTitle": "NosLog을 불러오지 못했습니다.",
     "community.placements": "현재 서열 배치",
     "community.goal.s": "S",
-    "community.goal.fc": "풀콤보",
+    "community.goal.990k": "990k",
     "community.goal.pianist": "Pianist",
     "community.not-listed": "미등재",
     "community.not-published": "미공개",
@@ -604,7 +604,8 @@ export const koMessages = {
     "tiers.weight.formula": "서열 상수² ÷ 상위 {count}곡 이론값 × {score}",
     "tiers.weight.scoreRatio": "점수별 반영 비율",
     "tiers.weight.sRequirement": "S 달성 기준은 950,000점 이상입니다.",
-    "tiers.weight.fcRequirement": "Full Combo 달성 여부를 기준으로 합니다.",
+    "tiers.weight.score990kRequirement":
+        "990k 달성 기준은 990,000점 이상입니다.",
     "bingo.title": "빙고",
     "bingo.requiredLinesLabel": "필요 줄 {count}",
     "bingo.lineComplete": "완성된 줄",

@@ -69,8 +69,8 @@ test("비로그인 통합 서열표에서 모드와 목표 필터를 제공한�
         page.getByRole("checkbox", { name: "상세 보기", exact: true })
     ).toBeVisible();
     await goalSelect.click();
-    await page.getByRole("option", { name: "Full Combo", exact: true }).click();
-    await expect(page).toHaveURL(/(?:\?|&)goal=fc(?:&|$)/);
-    await expect(goalSelect).toHaveText("Full Combo");
+    await page.getByRole("option", { name: "990k", exact: true }).click();
+    await expect(page).toHaveURL(/(?:\?|&)goal=990k(?:&|$)/);
+    await expect(goalSelect).toHaveText("990k");
     await expectNoHorizontalOverflow(page);
 });

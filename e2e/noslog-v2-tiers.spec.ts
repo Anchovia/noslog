@@ -133,7 +133,7 @@ async function prepare(
             json: { isSuccess: true, code: "SUCCESS", message: "", result },
         });
     });
-    await page.goto(`/${locale}/tiers?goal=fc&level=1`);
+    await page.goto(`/${locale}/tiers?goal=990k&level=1`);
     await page.locator(".nl-applied__token").first().click();
     await page.locator(".nl-tier-goal").click();
     await page.getByRole("option", { name: "S", exact: true }).click();
@@ -261,39 +261,39 @@ test("detailed cards keep square jackets and separate score rank from combo", as
     expect(link.searchParams.get("returnTo")).toContain("view=detailed");
 });
 
-test("all six scopes update the link context and guide without removing the filters", async ({
+test("all four tier lists update the link context and guide without removing the filters", async ({
     page,
 }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await prepare(page);
-    for (const mode of ["basic", "recital"]) {
+    for (const goal of ["s", "990k", "pianist"]) {
+        await page.getByRole("combobox", { name: "목표", exact: true }).click();
         await page
-            .getByRole("radio", {
-                name: mode === "basic" ? "Basic" : "Recital",
+            .getByRole("option", {
+                name: { s: "S", "990k": "990k", pianist: "Pianist" }[goal],
                 exact: true,
             })
             .click();
-        for (const goal of ["s", "fc", "pianist"]) {
-            await page
-                .getByRole("combobox", { name: "목표", exact: true })
-                .click();
-            await page
-                .getByRole("option", {
-                    name: { s: "S", fc: "Full Combo", pianist: "Pianist" }[
-                        goal
-                    ],
-                    exact: true,
-                })
-                .click();
-            await expect(page.locator(".nl-tier-card").first()).toHaveAttribute(
-                "href",
-                new RegExp(`mode=${mode}&goal=${goal}`)
-            );
-            await expect(
-                page.getByRole("button", { name: "필터", exact: true })
-            ).toBeVisible();
-        }
+        await expect(page.locator(".nl-tier-card").first()).toHaveAttribute(
+            "href",
+            new RegExp(`mode=basic&goal=${goal}`)
+        );
+        await expect(
+            page.getByRole("button", { name: "필터", exact: true })
+        ).toBeVisible();
     }
+    // Recital 은 서열표가 하나라 목표 선택기가 없다
+    await page.getByRole("radio", { name: "Recital", exact: true }).click();
+    await expect(
+        page.getByRole("combobox", { name: "목표", exact: true })
+    ).toHaveCount(0);
+    await expect(page.locator(".nl-tier-card").first()).toHaveAttribute(
+        "href",
+        /mode=recital&goal=pianist/
+    );
+    await expect(
+        page.getByRole("button", { name: "필터", exact: true })
+    ).toBeVisible();
     await page.locator(".nl-tiers summary").click();
     await expect(
         page.getByText("Recital Pianist · 1곡 기준", { exact: true })

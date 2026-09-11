@@ -39,7 +39,10 @@ export default function TierVoteContribution({
     const region = useRef<HTMLElement>(null);
     const [editing, setEditing] = useState(false);
     const mutation = useCommunityMutation(chartId);
-    const name = `${scope.mode === "basic" ? "Basic" : "Recital"} ${t(`community.goal.${scope.goal}`)}`;
+    const name =
+        scope.mode === "basic"
+            ? `Basic ${t(`community.goal.${scope.goal}`)}`
+            : "Recital";
     const form = useForm<GoalVoteInput>({
         resolver: zodResolver(goalVoteInputSchema),
         defaultValues: {

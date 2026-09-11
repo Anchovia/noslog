@@ -6,6 +6,7 @@ import {
     TIER_MODES,
     TIER_BAND_VALUES,
     isTierLevelFilter,
+    normalizeTierModeGoal,
 } from "@/lib/tiers";
 
 export const tierBrowserQuerySchema = z.object({
@@ -26,7 +27,7 @@ export function parseTierBrowserQuery(
     const split = (name: string) => [
         ...new Set((params.get(name) ?? "").split(",").filter(Boolean)),
     ];
-    return tierBrowserQuerySchema.parse({
+    const query = tierBrowserQuerySchema.parse({
         mode: params.get("mode"),
         goal: params.get("goal"),
         difficulties: TIER_DIFFICULTIES.filter((value) =>
@@ -38,6 +39,8 @@ export function parseTierBrowserQuery(
             .filter((value) => TIER_BAND_VALUES.includes(value)),
         detailed: params.get("view") === "detailed",
     });
+    // Recital 은 서열표가 하나라 어떤 goal 이 와도 그 표로 맞춤
+    return { ...query, goal: normalizeTierModeGoal(query.mode, query.goal) };
 }
 
 export function serializeTierBrowserQuery(query: TierBrowserQuery) {

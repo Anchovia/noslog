@@ -62,7 +62,12 @@ export default function CommunityTierVotes({
                                 <>
                                     <span>
                                         <span className="nl-control">
-                                            {t(`community.goal.${scope.goal}`)}
+                                            {/* Recital 은 서열표가 하나라 목표 없이 모드 이름 */}
+                                            {mode === "recital"
+                                                ? "Recital"
+                                                : t(
+                                                      `community.goal.${scope.goal}`
+                                                  )}
                                         </span>
                                         <span className="nl-metadata nl-muted">
                                             {t("community.voteCount", {
@@ -124,7 +129,11 @@ export default function CommunityTierVotes({
                                                                 {t(
                                                                     "community.firstVoteHelp",
                                                                     {
-                                                                        scope: `${mode === "basic" ? "Basic" : "Recital"} ${t(`community.goal.${scope.goal}`)}`,
+                                                                        scope:
+                                                                            mode ===
+                                                                            "basic"
+                                                                                ? `Basic ${t(`community.goal.${scope.goal}`)}`
+                                                                                : "Recital",
                                                                     }
                                                                 )}
                                                             </>

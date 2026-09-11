@@ -108,6 +108,15 @@ describe("Tier browser request and data contract", () => {
         ).toEqual(parsed);
         expect(serializeTierBrowserQuery(query()).has("bands")).toBe(false);
     });
+    it("keeps Basic goals and maps every Recital goal to its single table", () => {
+        const parse = (value: string) =>
+            parseTierBrowserQuery(new URLSearchParams(value));
+        expect(parse("mode=basic&goal=990k").goal).toBe("990k");
+        expect(parse("mode=basic&goal=fc").goal).toBe("s");
+        expect(parse("mode=recital&goal=s").goal).toBe("pianist");
+        expect(parse("mode=recital&goal=990k").goal).toBe("pianist");
+        expect(parse("mode=recital").goal).toBe("pianist");
+    });
     it("uses the current mode's Pianist constants while viewing S or FC", async () => {
         const band = await getTierBrowserBand(query(), 11, 9, "ko");
         expect(band?.entries[0].record?.grade).toBe(0.42);
@@ -155,7 +164,7 @@ describe("Tier browser request and data contract", () => {
         expect(
             (
                 await getTierBrowserBand(
-                    { ...query(), mode: "recital", goal: "fc" },
+                    { ...query(), mode: "recital", goal: "pianist" },
                     11,
                     9,
                     "ja"

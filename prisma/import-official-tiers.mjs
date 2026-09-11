@@ -64,7 +64,7 @@ function validateDefinitions() {
         if (!["basic", "recital"].includes(definition.mode)) {
             throw new Error(`지원하지 않는 모드: ${definition.mode}`);
         }
-        if (!["s", "fc", "pianist"].includes(definition.goal)) {
+        if (!["s", "990k", "pianist"].includes(definition.goal)) {
             throw new Error(`지원하지 않는 목표: ${definition.goal}`);
         }
         slugs.add(definition.slug);

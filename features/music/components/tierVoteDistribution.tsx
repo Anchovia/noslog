@@ -35,7 +35,10 @@ export default function TierVoteDistribution({
     );
     const start = Math.max(0, Math.min(end, initial + shift));
     const visible = values.slice(start, start + capacity);
-    const name = `${scope.mode === "basic" ? "Basic" : "Recital"} ${t(`community.goal.${scope.goal}`)}`;
+    const name =
+        scope.mode === "basic"
+            ? `Basic ${t(`community.goal.${scope.goal}`)}`
+            : "Recital";
     return (
         <section
             className="nl-vote-distribution"

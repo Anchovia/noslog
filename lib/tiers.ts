@@ -27,7 +27,7 @@ export type TierRecord = {
 };
 
 export const TIER_MODES = ["basic", "recital"] as const;
-export const TIER_GOALS = ["s", "fc", "pianist"] as const;
+export const TIER_GOALS = ["s", "990k", "pianist"] as const;
 export const TIER_DIFFICULTIES = ["Normal", "Hard", "Expert", "Real"] as const;
 export const TIER_REGULAR_LEVELS = Array.from({ length: 12 }, (_, index) =>
     String(index + 1)
@@ -38,9 +38,15 @@ export type TierMode = (typeof TIER_MODES)[number];
 export type TierGoal = (typeof TIER_GOALS)[number];
 export type TierDifficulty = (typeof TIER_DIFFICULTIES)[number];
 
+// 모드별 서열표 — Basic 은 S·990k·Pianist 세 개, Recital 은 하나(내부 목표는 Pianist 기준)
+export const TIER_MODE_GOALS: Record<TierMode, readonly TierGoal[]> = {
+    basic: ["s", "990k", "pianist"],
+    recital: ["pianist"],
+};
+
 export const tierGoalLabels: Record<TierGoal, string> = {
     s: "S",
-    fc: "Full Combo",
+    "990k": "990k",
     pianist: "Pianist",
 };
 
@@ -50,6 +56,20 @@ export function isTierMode(value: string): value is TierMode {
 
 export function isTierGoal(value: string): value is TierGoal {
     return TIER_GOALS.includes(value as TierGoal);
+}
+
+export function isTierModeGoal(mode: TierMode, goal: TierGoal) {
+    return TIER_MODE_GOALS[mode].includes(goal);
+}
+
+// 그 모드에 없는 목표면 그 모드의 첫 서열표로 맞춤
+export function normalizeTierModeGoal(mode: TierMode, goal: TierGoal) {
+    return isTierModeGoal(mode, goal) ? goal : TIER_MODE_GOALS[mode][0];
+}
+
+// 서열표 이름 — Recital 은 표가 하나라 목표 없이 모드 이름만
+export function tierListLabel(mode: TierMode, goal: TierGoal) {
+    return mode === "recital" ? "Recital" : tierGoalLabels[goal];
 }
 
 export function isTierDifficulty(value: string): value is TierDifficulty {
@@ -69,7 +89,7 @@ export function isTierGoalAchieved(
 ) {
     if (!record || record.score <= 0) return false;
     if (goal === "s") return record.score >= 950_000;
-    if (goal === "fc") return record.fc_type >= 2 || record.score >= 1_000_000;
+    if (goal === "990k") return record.score >= 990_000;
     return record.fc_type === 3 || record.score >= 1_000_000;
 }
 

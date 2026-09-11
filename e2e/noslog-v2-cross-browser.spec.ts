@@ -41,10 +41,8 @@ for (const locale of ["ko", "ja", "en"]) {
         await expect(page).toHaveURL(/goal=pianist/);
         await expect(trigger).toBeFocused();
         await trigger.click();
-        await page
-            .getByRole("option", { name: "Full Combo", exact: true })
-            .click();
-        await expect(page).toHaveURL(/goal=fc/);
+        await page.getByRole("option", { name: "990k", exact: true }).click();
+        await expect(page).toHaveURL(/goal=990k/);
         const scan = await new AxeBuilder({ page })
             .include(".nl-tiers")
             .withTags(["wcag2a", "wcag2aa", "wcag21aa"])

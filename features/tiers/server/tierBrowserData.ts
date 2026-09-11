@@ -51,7 +51,7 @@ const getPublishedTierInventory = unstable_cache(
             },
         });
     },
-    ["tier-browser-inventory-v2"],
+    ["tier-browser-inventory-v3"],
     { revalidate: 3600, tags: [CACHE_TAGS.tierLists] }
 );
 

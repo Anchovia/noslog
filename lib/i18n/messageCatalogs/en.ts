@@ -8,7 +8,7 @@ export const enMessages = {
     "recovery.fatalTitle": "Could Not Load NosLog",
     "community.placements": "Current tier placements",
     "community.goal.s": "S",
-    "community.goal.fc": "Full Combo",
+    "community.goal.990k": "990k",
     "community.goal.pianist": "Pianist",
     "community.not-listed": "Not listed",
     "community.not-published": "Not published",
@@ -609,8 +609,8 @@ export const enMessages = {
         "Tier constant² ÷ theoretical top {count} songs × {score}",
     "tiers.weight.scoreRatio": "Score weighting",
     "tiers.weight.sRequirement": "S requires a score of at least 950,000.",
-    "tiers.weight.fcRequirement":
-        "This is based on whether Full Combo was achieved.",
+    "tiers.weight.score990kRequirement":
+        "990k requires a score of at least 990,000.",
     "bingo.title": "Bingo",
     "bingo.requiredLinesLabel": "Lines needed {count}",
     "bingo.lineComplete": "Completed line",

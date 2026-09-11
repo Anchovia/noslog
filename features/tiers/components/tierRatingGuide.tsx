@@ -3,7 +3,7 @@
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import Disclosure from "@/components/ui/disclosure";
 import LineChart from "@/components/ui/lineChart";
-import { tierGoalLabels, TIER_BAND_VALUES } from "@/lib/tiers";
+import { tierListLabel, TIER_BAND_VALUES } from "@/lib/tiers";
 import {
     BASIC_RATING_ACTIVE_CURVE,
     BASIC_RATING_CURVES,
@@ -38,7 +38,9 @@ export default function TierRatingGuide({
         <Disclosure
             compact
             className="nl-tier-guide-disclosure"
-            title={t("tiers.guide", { goal: tierGoalLabels[query.goal] })}
+            title={t("tiers.guide", {
+                goal: tierListLabel(query.mode, query.goal),
+            })}
         >
             <div className="nl-tier-guide nl-body-secondary nl-muted">
                 <p>{t("tiers.filterHelp")}</p>
@@ -140,7 +142,7 @@ export default function TierRatingGuide({
                         {t(
                             query.goal === "s"
                                 ? "tiers.weight.sRequirement"
-                                : "tiers.weight.fcRequirement"
+                                : "tiers.weight.score990kRequirement"
                         )}
                     </p>
                 ) : null}

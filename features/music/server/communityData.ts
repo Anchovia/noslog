@@ -2,7 +2,14 @@ import "server-only";
 
 import type { Prisma } from "@prisma/client";
 import db from "@/lib/db";
-import { TIER_GOALS, TIER_MODES, isTierGoal, isTierMode } from "@/lib/tiers";
+import {
+    TIER_GOALS,
+    TIER_MODE_GOALS,
+    TIER_MODES,
+    isTierGoal,
+    isTierMode,
+    isTierModeGoal,
+} from "@/lib/tiers";
 import {
     canContributeGoalVote,
     summarizeGoalVotes,
@@ -197,7 +204,13 @@ export async function getCommunityData(
     const events = history
         .flatMap((event) => {
             const { mode, goal } = event.tierList;
-            if (!isTierMode(mode) || !goal || !isTierGoal(goal)) return [];
+            if (
+                !isTierMode(mode) ||
+                !goal ||
+                !isTierGoal(goal) ||
+                !isTierModeGoal(mode, goal)
+            )
+                return [];
             const key = `${mode}:${goal}`;
             const previousValue = previous.get(key) ?? null;
             previous.set(key, event.bandValue);
@@ -220,7 +233,7 @@ export async function getCommunityData(
             ? { ...evaluation, opinion: evaluation.opinion ?? "" }
             : null,
         scopes: TIER_MODES.flatMap((mode) =>
-            TIER_GOALS.map((goal) => {
+            TIER_MODE_GOALS[mode].map((goal) => {
                 const list = lists.find(
                     (item) => item.mode === mode && item.goal === goal
                 );

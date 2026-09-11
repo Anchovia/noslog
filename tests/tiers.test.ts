@@ -125,13 +125,17 @@ describe("getTierRecordStatus", () => {
 describe("목표별 서열표", () => {
     const sRecord = { score: 970_000, rank: "S", fc_type: 0 };
     const fcRecord = { score: 980_000, rank: "S", fc_type: 2 };
+    const score990kRecord = { score: 990_000, rank: "S", fc_type: 0 };
     const pianistRecord = { score: 1_000_000, rank: "S", fc_type: 3 };
 
     it("각 목표의 달성 조건을 독립적으로 판정한다", () => {
         expect(isTierGoalAchieved(sRecord, "s")).toBe(true);
-        expect(isTierGoalAchieved(sRecord, "fc")).toBe(false);
-        expect(isTierGoalAchieved(fcRecord, "fc")).toBe(true);
-        expect(isTierGoalAchieved(fcRecord, "pianist")).toBe(false);
+        expect(isTierGoalAchieved(sRecord, "990k")).toBe(false);
+        // 990k 는 점수만 본다 — Full Combo 여부는 상관없다
+        expect(isTierGoalAchieved(fcRecord, "990k")).toBe(false);
+        expect(isTierGoalAchieved(score990kRecord, "990k")).toBe(true);
+        expect(isTierGoalAchieved(score990kRecord, "pianist")).toBe(false);
+        expect(isTierGoalAchieved(pianistRecord, "990k")).toBe(true);
         expect(isTierGoalAchieved(pianistRecord, "pianist")).toBe(true);
     });
 

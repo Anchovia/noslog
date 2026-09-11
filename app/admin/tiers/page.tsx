@@ -53,7 +53,9 @@ export default async function AdminTiersPage() {
                                 {tierList.mode === "recital"
                                     ? "Recital"
                                     : "Basic"}{" "}
-                                · {tierGoalLabels[tierList.goal as TierGoal]}
+                                ·{" "}
+                                {tierGoalLabels[tierList.goal as TierGoal] ??
+                                    tierList.goal}
                             </strong>
                             <span className="text-caption block truncate">
                                 상수 구간 {tierList._count.bands}개 · 채보{" "}

@@ -1,4 +1,11 @@
 import { z } from "zod";
+import { TIER_GOALS, TIER_MODE_GOALS, TIER_MODES } from "@/lib/tiers";
+
+// 모드별 서열표 수의 합 — Basic 3 + Recital 1
+const TIER_SCOPE_COUNT = TIER_MODES.reduce(
+    (sum, mode) => sum + TIER_MODE_GOALS[mode].length,
+    0
+);
 
 export const PATTERN_AXES = [
     "stairs",
@@ -30,8 +37,8 @@ export const communityEvaluationInputSchema = patternRatingsSchema
 
 export const goalVoteScopeSchema = z.object({
     chartId: z.number().int().positive(),
-    mode: z.enum(["basic", "recital"]),
-    goal: z.enum(["s", "fc", "pianist"]),
+    mode: z.enum(TIER_MODES),
+    goal: z.enum(TIER_GOALS),
 });
 export const goalVoteInputSchema = goalVoteScopeSchema.extend({
     value: z
@@ -132,7 +139,7 @@ export const communityDataSchema = z.object({
                 ownVote: z.number().nullable(),
             })
         )
-        .length(6),
+        .length(TIER_SCOPE_COUNT),
     history: z.array(
         z.object({
             id: z.number().int(),

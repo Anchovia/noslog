@@ -54,13 +54,16 @@ function fixture(): CommunityData {
             excluded: false,
         },
         scopes: (["basic", "recital"] as const).flatMap((mode) =>
-            (["s", "fc", "pianist"] as const).map((goal) => ({
+            (mode === "basic"
+                ? (["s", "990k", "pianist"] as const)
+                : (["pianist"] as const)
+            ).map((goal) => ({
                 mode,
                 goal,
                 placement:
                     goal === "s"
                         ? "published"
-                        : goal === "fc"
+                        : goal === "990k"
                           ? "not-listed"
                           : "not-published",
                 officialValue: goal === "s" ? 13.5 : null,
@@ -74,7 +77,7 @@ function fixture(): CommunityData {
                 average: goal === "pianist" ? null : 13.0,
                 distribution: goal === "pianist" ? [] : distribution,
                 eligible: goal !== "pianist",
-                ownVote: goal === "fc" ? 13.2 : null,
+                ownVote: goal === "990k" ? 13.2 : null,
             }))
         ),
         history: Array.from({ length: 18 }, (_, index) => ({
@@ -195,13 +198,11 @@ async function openCommunity(
     else await expect(page.locator(".nl-pattern-form")).toBeVisible();
 }
 
-test("Community failure keeps six unknown placements and retries without fabricated empty states", async ({
+test("Community failure keeps four unknown placements and retries without fabricated empty states", async ({
     page,
 }) => {
     await openCommunity(page, { failure: "initial" });
     await expect(page.locator(".nl-tier-placement dd")).toHaveText([
-        "—",
-        "—",
         "—",
         "—",
         "—",
@@ -280,17 +281,15 @@ test("Guest, missing-record, and unachieved-goal states keep the public evidence
     );
 });
 
-test("Tier retains all six placement semantics and reveals one chronological history", async ({
+test("Tier retains all four placement semantics and reveals one chronological history", async ({
     page,
 }) => {
     await openCommunity(page);
-    await expect(page.locator(".nl-tier-placement")).toHaveCount(6);
+    await expect(page.locator(".nl-tier-placement")).toHaveCount(4);
     await expect(page.locator(".nl-tier-placement dd")).toHaveText([
         "13.5",
         "미등재",
         "미공개",
-        "13.5",
-        "미등재",
         "미공개",
     ]);
     const history = page.locator(".nl-tier-placements details");
@@ -353,7 +352,7 @@ test("Goal distributions preserve observed values and global bar scale while pag
     await expect(page.locator(".nl-vote-contribution")).toContainText(
         "내 투표13.2"
     );
-    await rows.nth(3).click();
+    await rows.nth(0).click();
     await expect(page.locator(".nl-vote-distribution")).toHaveCount(1);
     await expect(rows.nth(1)).toHaveAttribute("aria-expanded", "false");
     await expect(
@@ -374,10 +373,10 @@ test("Aggregating rows open with keyboard and offer the first vote without expos
     }
     await openCommunity(page, { data, fromTiers: true });
     const rows = page.locator("button.nl-vote-row");
-    await expect(rows).toHaveCount(6);
+    await expect(rows).toHaveCount(4);
     await expect(rows.first()).toHaveAttribute("aria-expanded", "true");
     await rows.first().click();
-    for (let index = 0; index < 6; index++) {
+    for (let index = 0; index < 4; index++) {
         await rows.nth(index).focus();
         await rows.nth(index).press("Enter");
         await expect(rows.nth(index)).toHaveAttribute("aria-expanded", "true");
@@ -524,7 +523,7 @@ test("Deletion confirms exact scope and cancellation restores focus", async ({
     await expect(trigger).toBeFocused();
     await page.locator("button.nl-vote-row").nth(1).click();
     await page.getByRole("button", { name: "투표 삭제", exact: true }).click();
-    await expect(dialog).toContainText("Basic 풀콤보 투표만 삭제됩니다.");
+    await expect(dialog).toContainText("Basic 990k 투표만 삭제됩니다.");
     await dialog.getByRole("button", { name: "취소" }).click();
 });
 
