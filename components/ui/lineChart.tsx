@@ -326,9 +326,9 @@ export default function LineChart({
                                                       ? 1
                                                       : 0)
                                           )
-                                          .map((y) => (
+                                          .map((y, index) => (
                                               <line
-                                                  key={y}
+                                                  key={index}
                                                   x1="0"
                                                   x2={width}
                                                   y1={y}
@@ -482,17 +482,20 @@ export default function LineChart({
                                     key={points[index].id}
                                     style={
                                         dimensionTickIndices
-                                            ? {
-                                                  position: "absolute",
-                                                  left: `${fraction(index) * 100}%`,
-                                                  transform:
-                                                      index === 0
-                                                          ? undefined
-                                                          : index ===
-                                                              points.length - 1
-                                                            ? "translateX(-100%)"
-                                                            : "translateX(-50%)",
-                                              }
+                                            ? index === points.length - 1
+                                                ? // 끝 라벨은 right:0 — left:100% 는 가용 폭이 0 이라 글자가 세로로 접힌다
+                                                  {
+                                                      position: "absolute",
+                                                      right: 0,
+                                                  }
+                                                : {
+                                                      position: "absolute",
+                                                      left: `${fraction(index) * 100}%`,
+                                                      transform:
+                                                          index === 0
+                                                              ? undefined
+                                                              : "translateX(-50%)",
+                                                  }
                                             : undefined
                                     }
                                 >

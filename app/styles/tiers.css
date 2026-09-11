@@ -230,10 +230,6 @@
 .noslog-ui .nl-tier-weight .nl-line-chart__area {
     padding-top: 0;
 }
-.noslog-ui .nl-tier-weight .nl-line-chart__x > span {
-    white-space: nowrap;
-    width: max-content;
-}
 .noslog-ui .nl-tier-weight .nl-line-chart__y {
     width: 34px;
 }

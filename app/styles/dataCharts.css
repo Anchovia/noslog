@@ -126,6 +126,10 @@
     gap: var(--nl-spacing-8);
     font-variant-numeric: tabular-nums;
 }
+.noslog-ui .nl-line-chart__x > span {
+    white-space: nowrap;
+    width: max-content;
+}
 .noslog-ui .nl-line-chart__target {
     position: absolute;
     width: 24px;
