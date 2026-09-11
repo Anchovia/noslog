@@ -49,8 +49,6 @@ model User {
   role                       String                     @default("user")
   grade_basic                Int?
   grade_recital              Int?
-  exam_basic                 Int?
-  exam_recital               Int?
   sync_token_version         Int                        @default(0)
   created_at                 DateTime                   @default(now())
   updated_at                 DateTime                   @updatedAt

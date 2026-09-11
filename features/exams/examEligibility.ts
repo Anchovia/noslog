@@ -1,3 +1,7 @@
+import {
+    getBestExamGrade,
+    type ExamAchievementGrade,
+} from "@/features/exams/examGrades";
 import { normalizeStoredGrade } from "@/lib/utils";
 
 interface ExamEligibilityInput {
@@ -10,9 +14,7 @@ interface ExamPlayerInput {
     nostalgia_name: string | null;
     grade_basic: number | null;
     grade_recital: number | null;
-    exam_basic: number | null;
-    exam_recital: number | null;
-    examAchievements: { exam: { mode: string; grade: number | null } }[];
+    examAchievements: ExamAchievementGrade[];
 }
 
 export function getExamEligibility(
@@ -22,18 +24,9 @@ export function getExamEligibility(
     if (exam.mode !== "basic" && exam.mode !== "recital") return "reference";
     if (!player) return "signed-out";
 
-    const legacyGrade =
-        exam.mode === "basic" ? player.exam_basic : player.exam_recital;
-    const achievedGrades = player.examAchievements
-        .filter(({ exam: achieved }) => achieved.mode === exam.mode)
-        .map(({ exam: achieved }) => achieved.grade);
-    const targetGrade = exam.grade;
-    if (
-        targetGrade !== null &&
-        [legacyGrade, ...achievedGrades].some(
-            (grade) => grade !== null && grade >= 1 && grade <= targetGrade
-        )
-    )
+    // 같은 모드에서 이 급수 이상(숫자가 같거나 작음)에 합격했으면 이미 달성
+    const bestGrade = getBestExamGrade(player.examAchievements, exam.mode);
+    if (exam.grade !== null && bestGrade !== null && bestGrade <= exam.grade)
         return "achieved";
 
     const grade = normalizeStoredGrade(

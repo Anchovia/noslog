@@ -6,9 +6,7 @@ const player = {
     nostalgia_name: "PLAYER",
     grade_basic: 235000,
     grade_recital: null,
-    exam_basic: null,
-    exam_recital: null,
-    examAchievements: [],
+    examAchievements: [] as { exam: { mode: string; grade: number | null } }[],
 };
 
 describe("public exam certification eligibility", () => {
@@ -43,16 +41,16 @@ describe("public exam certification eligibility", () => {
             "sync-required"
         );
     });
-    it("inherits higher legacy or normalized grades only within the same mode", () => {
-        expect(getExamEligibility(exam, { ...player, exam_basic: 7 })).toBe(
-            "achieved"
-        );
-        expect(getExamEligibility(exam, { ...player, exam_basic: 9 })).toBe(
-            "eligible"
-        );
-        expect(getExamEligibility(exam, { ...player, exam_basic: 0 })).toBe(
-            "eligible"
-        );
+    it("inherits a higher passed grade only within the same mode", () => {
+        const passed = (grade: number | null) => ({
+            ...player,
+            examAchievements: [{ exam: { mode: "basic", grade } }],
+        });
+        expect(getExamEligibility(exam, passed(7))).toBe("achieved");
+        expect(getExamEligibility(exam, passed(8))).toBe("achieved");
+        expect(getExamEligibility(exam, passed(9))).toBe("eligible");
+        expect(getExamEligibility(exam, passed(0))).toBe("eligible");
+        expect(getExamEligibility(exam, passed(null))).toBe("eligible");
         expect(
             getExamEligibility(exam, {
                 ...player,

@@ -1,4 +1,5 @@
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
+import { CACHE_TAGS, getUserProfileTag } from "@/lib/cacheTags";
 
 import {
     examSubmissionDeleteInputFromFormData,
@@ -108,6 +109,7 @@ export async function reviewExamSubmission(
         };
     }
     const input = result.data;
+    let reviewedUserId: number;
 
     try {
         const submission = await db.examSubmission.findFirst({
@@ -120,6 +122,7 @@ export async function reviewExamSubmission(
                 message: "대기 중인 검정 인증을 찾을 수 없습니다.",
             };
         }
+        reviewedUserId = submission.userId;
 
         await db.$transaction(async (transaction) => {
             await transaction.examSubmission.update({
@@ -164,6 +167,9 @@ export async function reviewExamSubmission(
     }
 
     refreshExamSubmissions();
+    // 검정 배지는 합격 기록에서 유도되므로 그 사용자의 프로필과 랭킹 행도 새로 그린다
+    updateTag(getUserProfileTag(reviewedUserId));
+    updateTag(CACHE_TAGS.userRankings);
     return {
         success: true,
         message:

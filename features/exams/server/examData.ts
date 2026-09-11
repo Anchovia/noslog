@@ -111,8 +111,6 @@ export async function getUserExamState(
                 examAchievements: {
                     select: { exam: { select: { mode: true, grade: true } } },
                 },
-                exam_basic: true,
-                exam_recital: true,
             },
         }),
         chartIds.length > 0

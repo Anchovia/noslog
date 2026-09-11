@@ -31,8 +31,6 @@ describe.skipIf(!process.env.COMMUNITY_TEST_DATABASE_URL)(
                                   ? 700_000
                                   : 800_049 - i,
                         grade_recital: i === 0 ? 700_000 : 600_000,
-                        exam_basic: 2,
-                        exam_recital: 3,
                     },
                 });
                 ids.push(user.id);
@@ -59,7 +57,7 @@ describe.skipIf(!process.env.COMMUNITY_TEST_DATABASE_URL)(
                 id: ids[0],
                 rank: 1,
                 value: 9000,
-                exam: 2,
+                exam: null,
             });
             expect(first.rows[24]).toMatchObject({ rank: 2, value: 8000 });
             expect(second.rows.slice(0, 3).map((row) => row.rank)).toEqual([
