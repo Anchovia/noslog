@@ -1,3 +1,4 @@
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -9,6 +10,7 @@ import db from "@/lib/db";
 import {
     TIER_REAL_LEVELS,
     TIER_REGULAR_LEVELS,
+    isCurrentTierScope,
     isTierDifficulty,
     isTierLevelFilter,
 } from "@/lib/tiers";
@@ -42,6 +44,8 @@ export default async function EditTierListPage({
         },
     });
     if (!tierList) notFound();
+    // 지금 쓰는 서열표만 편집. 모드별 목록에서 빠진 목표 표(Recital S·FC 등)는 보관 서열표로 다룬다
+    const current = isCurrentTierScope(tierList.mode, tierList.goal);
 
     const keyword = (query.q ?? "").trim().slice(0, 100);
     const difficulty = isTierDifficulty(query.difficulty ?? "")
@@ -79,7 +83,7 @@ export default async function EditTierListPage({
             : {}),
     };
 
-    const [goalEntries, goalEntryCount, legacyTierList] = tierList.goal
+    const [goalEntries, goalEntryCount, legacyTierList] = current
         ? await Promise.all([
               db.tierEntry.findMany({
                   where: { tierListId, chart: chartWhere },
@@ -116,33 +120,35 @@ export default async function EditTierListPage({
         : await Promise.all([
               Promise.resolve([]),
               Promise.resolve(0),
-              db.tierList.findUnique({
-                  where: { id: tierListId },
-                  include: {
-                      bands: {
-                          include: {
-                              entries: {
-                                  include: {
-                                      chart: {
-                                          include: {
-                                              music: {
-                                                  select: {
-                                                      index: true,
-                                                      title: true,
-                                                      artist: true,
-                                                      background: true,
-                                                  },
-                                              },
-                                          },
-                                      },
-                                  },
-                                  orderBy: { position: "asc" },
-                              },
-                          },
-                          orderBy: { position: "asc" },
-                      },
-                  },
-              }),
+              tierList.goal
+                  ? Promise.resolve(null)
+                  : db.tierList.findUnique({
+                        where: { id: tierListId },
+                        include: {
+                            bands: {
+                                include: {
+                                    entries: {
+                                        include: {
+                                            chart: {
+                                                include: {
+                                                    music: {
+                                                        select: {
+                                                            index: true,
+                                                            title: true,
+                                                            artist: true,
+                                                            background: true,
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                        orderBy: { position: "asc" },
+                                    },
+                                },
+                                orderBy: { position: "asc" },
+                            },
+                        },
+                    }),
           ]);
 
     const filterParams = new URLSearchParams({
@@ -159,16 +165,28 @@ export default async function EditTierListPage({
 
     return (
         <div className="flex flex-col gap-5 py-5">
-            <section>
-                <h1 className="text-title">{tierList.title}</h1>
-                <p className="text-caption mt-1">
-                    {tierList.goal
-                        ? "채보를 검색하고 목표별 서열 상수를 변경합니다."
-                        : "보관된 기존 서열표의 배치를 확인합니다."}
-                </p>
+            <section className="flex items-start gap-3">
+                {/* 관리자 악곡 상세와 같은 뒤로가기 */}
+                <Link
+                    href="/admin/tiers"
+                    aria-label="서열표 목록으로 이동"
+                    className="border-border flex size-9 shrink-0 items-center justify-center rounded-md border"
+                >
+                    <ArrowLeft className="size-4" />
+                </Link>
+                <div className="min-w-0">
+                    <h1 className="text-title">{tierList.title}</h1>
+                    <p className="text-caption mt-1">
+                        {current
+                            ? "채보를 검색하고 목표별 서열 상수를 변경합니다."
+                            : tierList.goal
+                              ? "지금 서열표 화면에서 쓰지 않는 보관 서열표입니다."
+                              : "보관된 기존 서열표의 배치를 확인합니다."}
+                    </p>
+                </div>
             </section>
 
-            {tierList.goal ? (
+            {current ? (
                 <details className="bg-surface rounded-card group p-3">
                     <summary className="text-body cursor-pointer list-none font-bold">
                         서열표 정보
@@ -180,7 +198,7 @@ export default async function EditTierListPage({
                                 slug: tierList.slug,
                                 title: tierList.title,
                                 mode: tierList.mode,
-                                goal: tierList.goal,
+                                goal: tierList.goal ?? "",
                                 description: tierList.description ?? "",
                                 status: tierList.status,
                             }}
@@ -189,7 +207,7 @@ export default async function EditTierListPage({
                 </details>
             ) : null}
 
-            {tierList.goal ? (
+            {current ? (
                 <>
                     <form
                         method="get"
@@ -306,7 +324,7 @@ export default async function EditTierListPage({
                 />
             ) : null}
 
-            {!tierList.goal ? (
+            {!current ? (
                 <div className="border-divider border-t pt-5">
                     <TierListDeleteButton tierListId={tierList.id} />
                 </div>

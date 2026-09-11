@@ -67,6 +67,19 @@ export function normalizeTierModeGoal(mode: TierMode, goal: TierGoal) {
     return isTierModeGoal(mode, goal) ? goal : TIER_MODE_GOALS[mode][0];
 }
 
+// 지금 쓰는 서열표인지 — 모드별 목록(TIER_MODE_GOALS)에 있는 목표만. 나머지는 보관 서열표
+export function isCurrentTierScope(
+    mode: string,
+    goal: string | null | undefined
+) {
+    return (
+        !!goal &&
+        isTierMode(mode) &&
+        isTierGoal(goal) &&
+        isTierModeGoal(mode, goal)
+    );
+}
+
 // 서열표 이름 — Recital 은 표가 하나라 목표 없이 모드 이름만
 export function tierListLabel(mode: TierMode, goal: TierGoal) {
     return mode === "recital" ? "Recital" : tierGoalLabels[goal];

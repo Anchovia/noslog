@@ -2,7 +2,14 @@ import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 
 import db from "@/lib/db";
-import { tierGoalLabels, type TierGoal } from "@/lib/tiers";
+import {
+    TIER_MODE_GOALS,
+    TIER_MODES,
+    isCurrentTierScope,
+    tierListLabel,
+    type TierGoal,
+    type TierMode,
+} from "@/lib/tiers";
 
 const modeColor: Record<string, string> = {
     basic: "bg-basic/10 text-basic",
@@ -15,6 +22,11 @@ const statusLabel: Record<string, string> = {
     archived: "보관",
 };
 
+// 서열표 화면과 같은 순서 — Basic S · 990k · Pianist → Recital
+function scopeOrder(mode: TierMode, goal: TierGoal) {
+    return TIER_MODES.indexOf(mode) * 10 + TIER_MODE_GOALS[mode].indexOf(goal);
+}
+
 export default async function AdminTiersPage() {
     const tierLists = await db.tierList.findMany({
         include: {
@@ -22,8 +34,22 @@ export default async function AdminTiersPage() {
         },
         orderBy: [{ mode: "asc" }, { goal: "asc" }, { updatedAt: "desc" }],
     });
-    const activeTierLists = tierLists.filter((tierList) => tierList.goal);
-    const legacyTierLists = tierLists.filter((tierList) => !tierList.goal);
+    // 지금 쓰는 서열표만 위에, 목표가 없거나 모드별 목록에서 빠진 표(Recital S·FC 등)는 보관으로
+    const activeTierLists = tierLists
+        .filter((tierList) => isCurrentTierScope(tierList.mode, tierList.goal))
+        .map((tierList) => ({
+            ...tierList,
+            mode: tierList.mode as TierMode,
+            goal: tierList.goal as TierGoal,
+        }))
+        .sort(
+            (left, right) =>
+                scopeOrder(left.mode, left.goal) -
+                scopeOrder(right.mode, right.goal)
+        );
+    const legacyTierLists = tierLists.filter(
+        (tierList) => !isCurrentTierScope(tierList.mode, tierList.goal)
+    );
 
     return (
         <div className="flex flex-col gap-4 py-5">
@@ -51,11 +77,11 @@ export default async function AdminTiersPage() {
                         <span className="min-w-0 flex-1">
                             <strong className="text-body block truncate font-bold">
                                 {tierList.mode === "recital"
-                                    ? "Recital"
-                                    : "Basic"}{" "}
-                                ·{" "}
-                                {tierGoalLabels[tierList.goal as TierGoal] ??
-                                    tierList.goal}
+                                    ? tierListLabel(
+                                          tierList.mode,
+                                          tierList.goal
+                                      )
+                                    : `Basic · ${tierListLabel(tierList.mode, tierList.goal)}`}
                             </strong>
                             <span className="text-caption block truncate">
                                 상수 구간 {tierList._count.bands}개 · 채보{" "}
