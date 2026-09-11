@@ -1294,13 +1294,12 @@ export const jaMessages = {
     "chart.fallingHelp":
         "ノートが判定ラインへ到達する流れを再生します。ローカル音源はブラウザ内だけで使用され、サーバーへ送信されません。",
     "chart.sheetHelp":
-        "各列は下から上へ進みます。横にスクロールすると曲全体の譜面を順番に確認できます。",
+        "下から上へ続きます。右のミニマップで好きな区間へ移動できます。",
     "chart.leftHand": "左手ガイド",
     "chart.rightHand": "右手ガイド",
     "chart.layout": "28レーン・1列4小節",
     "chart.empty": "表示するノートがありません。",
-    "chart.sheetScroll": "全譜面の横スクロール",
-    "chart.column": "{count}列",
+    "chart.sheetScroll": "全譜面",
     "chart.columnAria": "{count}列、{start}から{end}まで",
     "chart.fallingAria": "28レーンの落下譜面。現在{time}",
     "chart.pause": "一時停止",

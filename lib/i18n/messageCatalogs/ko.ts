@@ -1279,13 +1279,12 @@ export const koMessages = {
     "chart.fallingHelp":
         "노트가 판정선에 도착하는 흐름을 재생합니다. 로컬 음원을 불러오면 브라우저에서만 사용되며 서버에는 전송되지 않습니다.",
     "chart.sheetHelp":
-        "각 열은 아래에서 위로 진행합니다. 화면을 가로로 스크롤하면 곡 전체 채보를 순서대로 확인할 수 있습니다.",
+        "아래에서 위로 이어집니다. 오른쪽 미니맵으로 원하는 구간으로 이동할 수 있습니다.",
     "chart.leftHand": "왼손 안내",
     "chart.rightHand": "오른손 안내",
     "chart.layout": "28칸 · 열당 4마디",
     "chart.empty": "표시할 노트가 없습니다.",
-    "chart.sheetScroll": "전체 채보 가로 스크롤",
-    "chart.column": "{count}열",
+    "chart.sheetScroll": "전체 악보",
     "chart.columnAria": "{count}열 {start}부터 {end}까지",
     "chart.fallingAria": "28칸 낙하형 채보. 현재 {time}",
     "chart.pause": "일시정지",

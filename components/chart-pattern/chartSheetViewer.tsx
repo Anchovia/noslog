@@ -1,13 +1,7 @@
 "use client";
 
 import BackLink from "@/components/ui/backLink";
-import {
-    useEffect,
-    useMemo,
-    useRef,
-    useState,
-    useSyncExternalStore,
-} from "react";
+import { useMemo, useState, useSyncExternalStore } from "react";
 
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import PageContainer from "@/components/layout/pageContainer";
@@ -40,6 +34,7 @@ import {
     type MeasureMarker,
 } from "@/lib/chart-pattern/timing";
 
+import ChartSheetStrip from "./chartSheetStrip";
 import FallingChartViewer from "./fallingChartViewer";
 
 interface ChartSheetViewerProps {
@@ -57,12 +52,13 @@ interface ChartSheetViewerProps {
 
 const CHART_WIDTH = 220;
 const MEASURE_GUTTER_WIDTH = 56;
-const PANEL_WIDTH = CHART_WIDTH + MEASURE_GUTTER_WIDTH;
-const PANEL_HEIGHT = 720;
-const PADDING_TOP = 30;
-const PADDING_BOTTOM = 34;
+export const PANEL_WIDTH = CHART_WIDTH + MEASURE_GUTTER_WIDTH;
+export const PANEL_HEIGHT = 720;
+export type SheetPanel = { index: number; startMs: number; endMs: number };
+export const PADDING_TOP = 30;
+export const PADDING_BOTTOM = 34;
 const PANEL_NOTE_EDGE_INSET = 4;
-const PANEL_MEASURE_EDGE_INSET = 5;
+export const PANEL_MEASURE_EDGE_INSET = 5;
 const PANEL_BOUNDARY_EPSILON_MS = 0.001;
 
 const handColors: Record<ChartHand, string> = {
@@ -228,24 +224,12 @@ export default function ChartSheetViewer({
                     />
                 )
             ) : (
-                <section
-                    tabIndex={0}
-                    aria-label={t("chart.sheetScroll")}
-                    className="nl-chart-sheet"
-                >
-                    <div className="nl-chart-sheet__panels">
-                        {panels.map((panel) => (
-                            <ChartSheetPanel
-                                key={panel.index}
-                                index={panel.index}
-                                startMs={panel.startMs}
-                                endMs={panel.endMs}
-                                document={document}
-                                measureMarkers={measureMarkers}
-                            />
-                        ))}
-                    </div>
-                </section>
+                <ChartSheetStrip
+                    panels={panels}
+                    document={document}
+                    measureMarkers={measureMarkers}
+                    durationMs={playbackDurationMs}
+                />
             )}
         </PageContainer>
     );
@@ -264,58 +248,7 @@ function Legend({ color, label }: { color: string; label: string }) {
     );
 }
 
-function ChartSheetPanel({
-    index,
-    startMs,
-    endMs,
-    document,
-    measureMarkers,
-}: {
-    index: number;
-    startMs: number;
-    endMs: number;
-    document: ChartDocument;
-    measureMarkers: MeasureMarker[];
-}) {
-    const t = useTranslations();
-    const canvasRef = useRef<HTMLCanvasElement | null>(null);
-
-    useEffect(() => {
-        const canvas = canvasRef.current;
-        if (!canvas) return;
-        const ratio = window.devicePixelRatio || 1;
-        canvas.width = Math.round(PANEL_WIDTH * ratio);
-        canvas.height = Math.round(PANEL_HEIGHT * ratio);
-        const context = canvas.getContext("2d");
-        if (!context) return;
-        context.setTransform(ratio, 0, 0, ratio, 0, 0);
-        drawPanel(context, { startMs, endMs, document, measureMarkers });
-    }, [document, endMs, measureMarkers, startMs]);
-
-    return (
-        <figure className="nl-chart-sheet__panel">
-            <figcaption className="nl-chart-sheet__caption nl-metadata nl-muted">
-                <span>{t("chart.column", { count: index + 1 })}</span>
-                <span className="nl-metric-value">
-                    {formatEditorTime(startMs)}–{formatEditorTime(endMs)}
-                </span>
-            </figcaption>
-            <canvas
-                ref={canvasRef}
-                role="img"
-                aria-label={t("chart.columnAria", {
-                    count: index + 1,
-                    start: formatEditorTime(startMs),
-                    end: formatEditorTime(endMs),
-                })}
-                className="nl-chart-sheet__canvas"
-                style={{ width: PANEL_WIDTH, height: PANEL_HEIGHT }}
-            />
-        </figure>
-    );
-}
-
-function drawPanel(
+export function drawPanel(
     context: CanvasRenderingContext2D,
     {
         startMs,

@@ -1293,13 +1293,12 @@ export const enMessages = {
     "chart.fallingHelp":
         "Plays the flow of notes reaching the judgement line. Local audio stays in your browser and is never sent to the server.",
     "chart.sheetHelp":
-        "Each column runs from bottom to top. Scroll horizontally to view the full chart in order.",
+        "Reads from bottom to top. Use the minimap on the right to jump to any part.",
     "chart.leftHand": "Left-hand guide",
     "chart.rightHand": "Right-hand guide",
     "chart.layout": "28 lanes · 4 measures per column",
     "chart.empty": "No notes to display.",
-    "chart.sheetScroll": "Full chart horizontal scroll",
-    "chart.column": "Column {count}",
+    "chart.sheetScroll": "Full chart",
     "chart.columnAria": "Column {count}, {start} to {end}",
     "chart.fallingAria": "28-lane falling chart. Current time {time}",
     "chart.pause": "Pause",

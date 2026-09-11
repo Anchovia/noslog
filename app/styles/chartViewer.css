@@ -192,36 +192,141 @@
     color: var(--nl-feedback-error-text);
 }
 
-.noslog-ui .nl-chart-sheet {
-    padding: var(--nl-spacing-16);
-    overflow-x: auto;
-    border-radius: var(--nl-radius-container);
-    background: var(--nl-surface-surface);
-    outline: none;
-}
-.noslog-ui .nl-chart-sheet:focus-visible {
-    box-shadow: inset 0 0 0 1px var(--nl-focus-ring);
-}
-.noslog-ui .nl-chart-sheet__panels {
+/* 전체 악보 — 세로 띠 본문 + 미니맵 (가로 스크롤 없음) */
+.noslog-ui .nl-chart-strip {
     display: flex;
-    width: max-content;
+    flex-direction: column;
     gap: var(--nl-spacing-12);
+    min-width: 0;
 }
-.noslog-ui .nl-chart-sheet__panel {
-    flex-shrink: 0;
+/* 읽기 한 줄 — 현재 시각(보이는 영역 아래 끝) / 전체 길이 */
+.noslog-ui .nl-chart-strip__position {
     margin: 0;
 }
-.noslog-ui .nl-chart-sheet__caption {
+/* 프레임 높이 — Compact 560, 672+ 는 뷰포트에서 유도(헤더 60 + 위아래 여백 48) */
+.noslog-ui .nl-chart-strip__frame {
+    position: relative;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--nl-spacing-8);
-    margin-bottom: var(--nl-spacing-8);
+    height: 560px;
+    gap: var(--nl-spacing-12);
+    padding: var(--nl-spacing-8);
+    border-radius: var(--nl-radius-container);
+    background: var(--nl-surface-surface);
 }
-.noslog-ui .nl-chart-sheet__canvas {
-    display: block;
+.noslog-ui .nl-chart-strip__main {
+    flex: 1;
+    min-width: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
     border-radius: var(--nl-radius-control);
     border: 1px solid var(--nl-border-default);
+    background: #0b0b10;
+    outline: none;
+}
+.noslog-ui .nl-chart-strip__main:focus-visible {
+    box-shadow: inset 0 0 0 1px var(--nl-focus-ring);
+}
+.noslog-ui .nl-chart-strip__columns {
+    position: relative;
+    margin-inline: auto;
+    /* 첫 마디선 아래 시작 BPM·박자 라벨 자리(16 + 여백 8) — 면은 본문과 같은 색이라 띠로 보이지 않는다 */
+    padding-bottom: var(--nl-spacing-24);
+}
+.noslog-ui .nl-chart-strip__column {
+    position: relative;
+    overflow: hidden;
+}
+/* 이음새 경계 시각 — 열 그림의 마디 번호(#c2c2cc)와 같은 계열, 캔버스 면은 테마와 무관하게 어둡다 */
+.noslog-ui .nl-chart-strip__seam {
+    position: absolute;
+    top: var(--nl-spacing-4);
+    left: var(--nl-spacing-4);
+    color: #90909d;
+    font-variant-numeric: tabular-nums;
+    pointer-events: none;
+}
+/* 시작 BPM·박자 라벨 — 열 상자는 overflow hidden 이라 컨테이너 하단 여백 24 안에 둔다 */
+.noslog-ui .nl-chart-strip__seam--start {
+    top: auto;
+    bottom: var(--nl-spacing-4);
+}
+.noslog-ui .nl-chart-strip__canvas {
+    display: block;
+}
+/* 미니맵 — 상자(면·경계·그림자) 없이 축소본만(VS Code·Sublime 관례). Compact 는 오버레이(평상시 높이 40%,
+   썸네일 30% · 누르는 동안·hover 전체 높이 · 100%), 672+ 는 옆 레일. 뷰포트 사각형은 위치 단서라 항상 100% */
+.noslog-ui .nl-chart-strip__mini {
+    position: absolute;
+    top: var(--nl-spacing-16);
+    right: var(--nl-spacing-16);
+    height: 40%;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: none;
+    touch-action: none;
+    cursor: pointer;
+    transition: height var(--nl-motion-duration-100) var(--nl-ease-in);
+}
+.noslog-ui .nl-chart-strip__mini-column {
+    opacity: 0.3;
+    transition: opacity var(--nl-motion-duration-100) var(--nl-ease-in);
+}
+.noslog-ui .nl-chart-strip__mini::-webkit-scrollbar {
+    display: none;
+}
+.noslog-ui .nl-chart-strip__mini--active {
+    height: calc(100% - var(--nl-spacing-32));
+}
+.noslog-ui .nl-chart-strip__mini--active .nl-chart-strip__mini-column {
+    opacity: 1;
+}
+/* 터치 기기는 탭 뒤 hover 가 남는다 — 포인터 hover 가 되는 기기만 */
+@media (hover: hover) {
+    .noslog-ui .nl-chart-strip__mini:hover {
+        height: calc(100% - var(--nl-spacing-32));
+    }
+    .noslog-ui .nl-chart-strip__mini:hover .nl-chart-strip__mini-column {
+        opacity: 1;
+    }
+}
+.noslog-ui .nl-chart-strip__mini-columns {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.noslog-ui .nl-chart-strip__mini-column {
+    display: flex;
+    justify-content: center;
+}
+.noslog-ui .nl-chart-strip__viewport {
+    position: absolute;
+    left: 0;
+    right: 0;
+    border: 2px solid #e3b341;
+    background: rgb(227 179 65 / 14%);
+    border-radius: 2px;
+    pointer-events: none;
+}
+.noslog-ui .nl-chart-strip[data-layout="wide"] .nl-chart-strip__frame {
+    height: max(560px, calc(100dvh - 60px - var(--nl-spacing-48)));
+    padding: var(--nl-spacing-16);
+}
+.noslog-ui .nl-chart-strip[data-layout="wide"] .nl-chart-strip__mini {
+    position: static;
+    height: auto;
+    transition: none;
+}
+.noslog-ui .nl-chart-strip[data-layout="wide"] .nl-chart-strip__mini-column {
+    opacity: 1;
+    transition: none;
+}
+@media (prefers-reduced-motion: reduce) {
+    .noslog-ui .nl-chart-strip__mini,
+    .noslog-ui .nl-chart-strip__mini-column {
+        transition: none;
+    }
 }
 
 @media (max-width: 671px) {
