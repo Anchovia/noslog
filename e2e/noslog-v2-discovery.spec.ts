@@ -191,7 +191,8 @@ test("Intermediate filters stage changes and require a difficulty for level sort
     await page
         .getByRole("menuitemradio", { name: "레벨 순", exact: true })
         .click();
-    await expect(page).toHaveURL(/sort=level/);
+    // 레벨 순은 난이도를 고를 때까지 적용하지 않고 메뉴 안에서 보류한다
+    await expect(page).not.toHaveURL(/sort=level/);
     await page
         .getByRole("group", { name: "정렬할 난이도", exact: true })
         .getByRole("button", { name: "Hard", exact: true })
