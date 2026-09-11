@@ -348,12 +348,14 @@ html[data-theme="light"] .noslog-ui,
     width: 20px;
     height: 20px;
     flex-shrink: 0;
-    border: 1px solid var(--nl-border-strong);
+    border: 2px solid var(--nl-border-strong);
     border-radius: var(--nl-radius-control);
 }
+/* 테두리 2 는 라디오 링과 같은 굵기. 체크는 Lucide 모양 그대로 선만 3(16 에서 2px, 상자의 10%) */
 .noslog-ui .nl-check__box > svg {
     width: var(--nl-icon-small);
     height: var(--nl-icon-small);
+    stroke-width: 3;
     visibility: hidden;
 }
 .noslog-ui .nl-check input:checked + .nl-check__box {

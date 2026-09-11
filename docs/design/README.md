@@ -225,6 +225,10 @@ and the light thumb uses a 1px inside `primary/on-primary` ring. No motion.
 The filter slider's track is inset by half the target (12px) at each end so its
 ends sit under the thumb centres. The chart viewer's native seek and volume bars
 use the same dot with a 20px thumb box, so their track ends meet the dot edge.
+Checkboxes keep the 20px box, 4px radius and `primary/default` fill, with a 2px
+`border/strong` border matching the radio ring. The Lucide check keeps its shape
+with `stroke-width: 3` (2px at 16px, about 10% of the box), in line with the
+surveyed systems. Checkboxes do not change on hover.
 
 Use the existing global styles, shared components and code-style conventions.
 Use Figma variables and Text Styles with the approved exact semantic values;
