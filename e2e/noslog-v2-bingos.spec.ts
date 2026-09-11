@@ -75,10 +75,7 @@ for (const locale of ["ko", "ja", "en"] as const) {
             "rgb(175, 175, 175)"
         );
         await expect(
-            page.getByRole("button", {
-                name: t["discovery.filterSort"],
-                exact: true,
-            })
+            page.getByRole("button", { name: t["bingo.filter"], exact: true })
         ).toBeDisabled();
         const cards = page.locator(".nl-bingo-card--loading");
         await expect(cards).toHaveCount(4);
@@ -155,14 +152,11 @@ for (const locale of ["ko", "ja", "en"] as const) {
         ).toHaveCount(24);
         await page.setViewportSize({ width: 390, height: 900 });
         await page
-            .getByRole("button", {
-                name: t["discovery.filterSort"],
-                exact: true,
-            })
+            .getByRole("button", { name: t["bingo.filter"], exact: true })
             .click();
         await page
-            .getByRole("radio", { name: t["bingo.catalog.full"], exact: true })
-            .check();
+            .getByRole("button", { name: t["bingo.catalog.full"], exact: true })
+            .click();
         await page
             .getByRole("button", { name: t["common.close"], exact: true })
             .click();
@@ -170,22 +164,21 @@ for (const locale of ["ko", "ja", "en"] as const) {
             page.locator("ul.nl-bingo-catalog__grid > li")
         ).toHaveCount(24);
         await page
-            .getByRole("button", {
-                name: t["discovery.filterSort"],
-                exact: true,
-            })
+            .getByRole("button", { name: t["bingo.filter"], exact: true })
             .click();
         await expect(
-            page.getByRole("radio", {
+            page.getByRole("button", {
                 name: t["bingo.catalog.all"],
                 exact: true,
             })
-        ).toBeChecked();
+        ).toHaveAttribute("aria-pressed", "true");
         await page
-            .getByRole("radio", { name: t["bingo.catalog.full"], exact: true })
-            .check();
+            .getByRole("button", { name: t["bingo.catalog.full"], exact: true })
+            .click();
         await page
-            .getByRole("button", { name: t["bingo.apply"], exact: true })
+            .getByRole("dialog")
+            .getByRole("button", { name: /결果|結果|results|개 보기/ })
+            .last()
             .click();
         await expect(page).toHaveURL(/status=full/);
         await expect(
@@ -232,7 +225,16 @@ for (const locale of ["ko", "ja", "en"] as const) {
                 });
         }
         await page.locator(".nl-bingo-board button").nth(8).click();
-        await expect(page.locator("#bingo-mission-900009")).toBeFocused();
+        // 칸 선택은 스크롤 대신 제자리 상세 카드의 내용만 바꾼다
+        await expect(
+            page.locator(".nl-bingo-cell-popover .nl-bingo-cell-detail__pos")
+        ).toHaveText("B4");
+        await page.keyboard.press("Escape");
+        await expect(page.locator(".nl-bingo-cell-popover")).toHaveCount(0);
+        await expect(page.locator("#bingo-mission-900009")).toHaveAttribute(
+            "data-selected",
+            "true"
+        );
         await expect(
             page.locator(".nl-bingo-board button").nth(8)
         ).toHaveAttribute("aria-pressed", "true");
@@ -314,10 +316,7 @@ for (const locale of ["ko", "ja", "en"] as const) {
             )
         ).toHaveCount(0);
         await expect(
-            page.getByRole("button", {
-                name: t["discovery.filterSort"],
-                exact: true,
-            })
+            page.getByRole("button", { name: t["bingo.filter"], exact: true })
         ).toHaveCount(0);
         await page.goto(
             `/${locale}/p7-verification?fixture=bingos&state=detail-guest`

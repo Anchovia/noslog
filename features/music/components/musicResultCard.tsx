@@ -39,7 +39,7 @@ export default function MusicResultCard({
     ...props
 }: Omit<ComponentProps<typeof Link>, "href"> & {
     music: MusicResult;
-    view?: "list" | "grid";
+    view?: "list" | "grid" | "dense";
     showLevels?: boolean;
     destination?: string;
     pending?: boolean;
@@ -54,7 +54,11 @@ export default function MusicResultCard({
             href={href(
                 destination ?? `/music/${music.index}/${firstDifficulty}`
             )}
-            className={cn("nl-music-card", `nl-music-card--${view}`, className)}
+            className={cn(
+                "nl-music-card",
+                `nl-music-card--${view === "list" ? "list" : "grid"}`,
+                className
+            )}
             aria-disabled={pending || undefined}
             onClick={(event) => {
                 if (pending) {
@@ -70,7 +74,11 @@ export default function MusicResultCard({
                 title={music.title}
                 appearance="foundation"
             >
-                <span className="nl-jacket__category nl-metadata" lang="en">
+                <span
+                    className="nl-jacket__category nl-metadata"
+                    lang="en"
+                    data-category={music.category_short}
+                >
                     {music.category_short}
                 </span>
             </MusicJacket>

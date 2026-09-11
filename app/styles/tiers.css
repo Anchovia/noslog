@@ -10,8 +10,7 @@
     width: 100%;
     justify-content: space-between;
 }
-.noslog-ui .nl-tier-browser-mode,
-.noslog-ui .nl-tier-filter-section {
+.noslog-ui .nl-tier-browser-mode {
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-12);
@@ -43,53 +42,6 @@
     flex-direction: column;
     gap: var(--nl-spacing-24);
 }
-.noslog-ui .nl-tier-filter-heading {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--nl-spacing-8);
-    flex-wrap: wrap;
-}
-.noslog-ui .nl-tier-filter-heading button {
-    position: relative;
-    color: var(--nl-content-subdued);
-}
-.noslog-ui .nl-tier-filter-heading button::before {
-    content: "";
-    position: absolute;
-    inset: -12px 0;
-}
-.noslog-ui .nl-tier-filter-heading button:hover {
-    text-decoration: underline;
-    text-underline-offset: 3px;
-}
-.noslog-ui .nl-tier-filter-actions {
-    display: flex;
-    gap: var(--nl-spacing-16);
-}
-.noslog-ui .nl-tier-chips {
-    display: grid;
-    gap: var(--nl-spacing-8);
-}
-.noslog-ui .nl-tier-chip {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 44px;
-    padding-inline: var(--nl-spacing-8);
-    gap: var(--nl-spacing-4);
-    border-radius: var(--nl-radius-control);
-    box-shadow: inset 0 0 0 1px var(--nl-border-strong);
-    background: var(--nl-surface-canvas);
-}
-.noslog-ui .nl-tier-chip:hover {
-    background: var(--nl-interaction-hover);
-}
-.noslog-ui .nl-tier-chip[aria-pressed="true"] {
-    color: var(--nl-primary-on-primary);
-    background: var(--nl-primary-default);
-    box-shadow: none;
-}
 .noslog-ui .nl-tier-band-options {
     height: 352px;
     overflow-y: auto;
@@ -113,20 +65,6 @@
 }
 .noslog-ui .nl-tier-band-option[data-range-start="true"] {
     background: var(--nl-interaction-menu-set);
-}
-.noslog-ui .nl-tier-criteria {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--nl-spacing-8);
-}
-.noslog-ui .nl-tier-applied {
-    display: flex;
-    align-items: center;
-    gap: var(--nl-spacing-4);
-    padding: var(--nl-spacing-4) var(--nl-spacing-8);
-    border-radius: var(--nl-radius-control);
-    background: var(--nl-surface-raised);
-    min-height: 32px;
 }
 .noslog-ui .nl-tier-bands {
     container: tier-results / inline-size;
@@ -292,10 +230,6 @@
 .noslog-ui .nl-tier-weight .nl-line-chart__area {
     padding-top: 0;
 }
-.noslog-ui .nl-tier-weight .nl-line-chart__x > span {
-    white-space: nowrap;
-    width: max-content;
-}
 .noslog-ui .nl-tier-weight .nl-line-chart__y {
     width: 34px;
 }
@@ -323,14 +257,11 @@
         gap: var(--nl-spacing-16);
     }
     .noslog-ui .nl-tier-grid[data-detailed="true"] {
-        grid-template-columns: repeat(auto-fill, minmax(173px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(156px, 1fr));
     }
 }
 .noslog-ui .nl-tiers[data-layout="wide"] .nl-tier-results {
     gap: var(--nl-spacing-16);
-}
-.noslog-ui .nl-tiers[data-layout="wide"] .nl-tier-rail .nl-tier-chip {
-    min-height: 40px;
 }
 .noslog-ui .nl-tiers[data-layout="wide"] .nl-tier-rail .nl-field {
     gap: var(--nl-spacing-12);

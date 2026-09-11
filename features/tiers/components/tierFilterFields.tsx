@@ -1,10 +1,11 @@
 "use client";
 
-import { Check } from "lucide-react";
 import { useState } from "react";
 
 import { useTranslations } from "@/components/i18n/localeProvider";
 import { Checkbox } from "@/components/ui/checkbox";
+import FilterChips from "@/components/ui/filterChips";
+import FilterGroup from "@/components/ui/filterGroup";
 import {
     TIER_DIFFICULTIES,
     TIER_REAL_LEVELS,
@@ -16,53 +17,8 @@ import type {
     TierBrowserQuery,
 } from "@/features/tiers/schemas/tierBrowserSchema";
 
-function ToggleChips({
-    label,
-    options,
-    selected,
-    onChange,
-    columns,
-}: {
-    label: string;
-    options: readonly { value: string; label: string }[];
-    selected: string[];
-    onChange: (values: string[]) => void;
-    columns: number;
-}) {
-    return (
-        <div
-            role="group"
-            aria-label={label}
-            className="nl-tier-chips"
-            style={{
-                gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
-            }}
-        >
-            {options.map((option) => (
-                <button
-                    type="button"
-                    className="nl-tier-chip nl-control"
-                    aria-pressed={selected.includes(option.value)}
-                    key={option.value}
-                    onClick={() =>
-                        onChange(
-                            selected.includes(option.value)
-                                ? selected.filter(
-                                      (value) => value !== option.value
-                                  )
-                                : [...selected, option.value]
-                        )
-                    }
-                >
-                    {selected.includes(option.value) ? (
-                        <Check className="nl-icon" aria-hidden />
-                    ) : null}
-                    {option.label}
-                </button>
-            ))}
-        </div>
-    );
-}
+const difficultyTone = (value: string) =>
+    value.toLowerCase() as "normal" | "hard" | "expert" | "real";
 
 export default function TierFilterFields({
     query,
@@ -103,12 +59,19 @@ export default function TierFilterFields({
     }
     const reset = (field: "difficulties" | "levels" | "bands") =>
         onChange({ ...query, [field]: [] });
+    // 그룹 오른쪽: 선택이 있을 때만 「전체 선택」(= 조건 해제) — 값이 비면 제약 없음이 기본 상태
+    const clearAction = (field: "difficulties" | "levels") =>
+        query[field].length ? (
+            <button type="button" onClick={() => reset(field)}>
+                {t("tiers.selectAll")}
+            </button>
+        ) : null;
     return (
         <>
-            <section className="nl-tier-filter-section">
-                <div className="nl-tier-filter-heading nl-control">
-                    <h3>{t("tiers.bands")}</h3>
-                    <div className="nl-tier-filter-actions">
+            <FilterGroup
+                label={t("tiers.bands")}
+                aside={
+                    <>
                         <button
                             type="button"
                             aria-pressed={range}
@@ -123,18 +86,21 @@ export default function TierFilterFields({
                                     : "tiers.selectRange"
                             )}
                         </button>
-                        <button
-                            type="button"
-                            onClick={() => {
-                                reset("bands");
-                                setRange(false);
-                                setRangeStart(null);
-                            }}
-                        >
-                            {t("tiers.selectAll")}
-                        </button>
-                    </div>
-                </div>
+                        {query.bands.length ? (
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    reset("bands");
+                                    setRange(false);
+                                    setRangeStart(null);
+                                }}
+                            >
+                                {t("tiers.selectAll")}
+                            </button>
+                        ) : null}
+                    </>
+                }
+            >
                 <div
                     className="nl-tier-band-options"
                     role="group"
@@ -176,23 +142,20 @@ export default function TierFilterFields({
                         )}
                     </p>
                 ) : null}
-            </section>
-            <section className="nl-tier-filter-section">
-                <div className="nl-tier-filter-heading nl-control">
-                    <h3>{t("tiers.difficulty")}</h3>
-                    <button type="button" onClick={() => reset("difficulties")}>
-                        {t("tiers.selectAll")}
-                    </button>
-                </div>
-                <ToggleChips
+            </FilterGroup>
+            <FilterGroup
+                label={t("tiers.difficulty")}
+                aside={clearAction("difficulties")}
+            >
+                <FilterChips
                     label={t("tiers.difficulty")}
-                    columns={2}
                     options={TIER_DIFFICULTIES.map((value) => ({
                         value,
                         label: value,
+                        tone: difficultyTone(value),
                     }))}
-                    selected={query.difficulties}
-                    onChange={(values) =>
+                    value={query.difficulties}
+                    onValueChange={(values) =>
                         onChange({
                             ...query,
                             difficulties: TIER_DIFFICULTIES.filter((value) =>
@@ -201,40 +164,36 @@ export default function TierFilterFields({
                         })
                     }
                 />
-            </section>
-            <section className="nl-tier-filter-section">
-                <div className="nl-tier-filter-heading nl-control">
-                    <h3>{t("tiers.officialLevel")}</h3>
-                    <button type="button" onClick={() => reset("levels")}>
-                        {t("tiers.selectAll")}
-                    </button>
-                </div>
+            </FilterGroup>
+            <FilterGroup
+                label={t("tiers.officialLevel")}
+                aside={clearAction("levels")}
+            >
                 <p className="nl-metadata nl-muted">Normal / Hard / Expert</p>
-                <ToggleChips
+                <FilterChips
                     label="Normal / Hard / Expert"
-                    columns={4}
                     options={TIER_REGULAR_LEVELS.map((value) => ({
                         value,
                         label: value,
                     }))}
-                    selected={query.levels}
-                    onChange={(values) =>
+                    value={query.levels}
+                    onValueChange={(values) =>
                         onChange({ ...query, levels: values })
                     }
                 />
-                <ToggleChips
+                <p className="nl-metadata nl-muted">Real</p>
+                <FilterChips
                     label="Real"
-                    columns={3}
                     options={TIER_REAL_LEVELS.map((value) => ({
                         value,
                         label: `Real ${value.slice(5)}`,
                     }))}
-                    selected={query.levels}
-                    onChange={(values) =>
+                    value={query.levels}
+                    onValueChange={(values) =>
                         onChange({ ...query, levels: values })
                     }
                 />
-            </section>
+            </FilterGroup>
         </>
     );
 }

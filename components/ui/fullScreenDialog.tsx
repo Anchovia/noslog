@@ -14,6 +14,7 @@ export default function FullScreenDialog({
     children,
     footer,
     trigger,
+    headerAction,
     onCloseAutoFocus,
 }: {
     open: boolean;
@@ -22,6 +23,8 @@ export default function FullScreenDialog({
     children: ReactNode;
     footer: ReactNode;
     trigger: ReactNode;
+    /** 제목 오른쪽, 닫기 앞 — 초기화 같은 레이어 전체 액션 */
+    headerAction?: ReactNode;
     onCloseAutoFocus?: (event: Event) => void;
 }) {
     const t = useTranslations();
@@ -59,12 +62,15 @@ export default function FullScreenDialog({
                             <Dialog.Title className="nl-component-title">
                                 {title}
                             </Dialog.Title>
-                            <Dialog.Close
-                                className="nl-icon-button"
-                                aria-label={t("common.close")}
-                            >
-                                <X className="nl-icon" aria-hidden />
-                            </Dialog.Close>
+                            <div className="nl-full-dialog__actions">
+                                {headerAction}
+                                <Dialog.Close
+                                    className="nl-icon-button"
+                                    aria-label={t("common.close")}
+                                >
+                                    <X className="nl-icon" aria-hidden />
+                                </Dialog.Close>
+                            </div>
                         </div>
                         <div className="nl-full-dialog__body">{children}</div>
                         <div className="nl-full-dialog__footer">{footer}</div>

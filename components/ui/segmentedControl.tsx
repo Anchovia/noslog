@@ -6,6 +6,8 @@ import { cn } from "@/lib/utils";
 interface SegmentOption<Value extends string> {
     value: Value;
     label: ReactNode;
+    /** 아이콘 전용일 때 보이는 내용. label 은 접근 이름·툴팁으로 남는다 */
+    icon?: ReactNode;
     disabled?: boolean;
 }
 
@@ -14,6 +16,8 @@ interface SegmentedControlProps<Value extends string> {
     value: Value;
     onValueChange: (value: Value) => void;
     options: readonly SegmentOption<Value>[];
+    /** 세그먼트를 아이콘만으로 그린다 — 라벨은 aria-label·title 로 유지 (Material 3·HIG: 한 컨트롤 안에서 아이콘·텍스트 혼용 금지) */
+    iconOnly?: boolean;
     className?: string;
 }
 
@@ -22,6 +26,7 @@ export function SegmentedControl<Value extends string>({
     value,
     onValueChange,
     options,
+    iconOnly = false,
     className,
 }: SegmentedControlProps<Value>) {
     function handleKeyDown(event: KeyboardEvent<HTMLDivElement>) {
@@ -59,7 +64,11 @@ export function SegmentedControl<Value extends string>({
         <div
             role="radiogroup"
             aria-label={label}
-            className={cn("nl-segments", className)}
+            className={cn(
+                "nl-segments",
+                iconOnly && "nl-segments--icons",
+                className
+            )}
             onKeyDown={handleKeyDown}
         >
             {options.map((option) => (
@@ -71,9 +80,19 @@ export function SegmentedControl<Value extends string>({
                     disabled={option.disabled}
                     tabIndex={option.value === value ? 0 : -1}
                     className="nl-segments__item"
+                    aria-label={
+                        iconOnly && typeof option.label === "string"
+                            ? option.label
+                            : undefined
+                    }
+                    title={
+                        iconOnly && typeof option.label === "string"
+                            ? option.label
+                            : undefined
+                    }
                     onClick={() => onValueChange(option.value)}
                 >
-                    {option.label}
+                    {iconOnly && option.icon ? option.icon : option.label}
                 </button>
             ))}
         </div>

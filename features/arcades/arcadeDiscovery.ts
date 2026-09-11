@@ -166,12 +166,15 @@ export function selectArcades(
         })
         .sort((a, b) => {
             const byName = a.name.localeCompare(b.name, locale) || a.id - b.id;
-            if (values.sort === "name") return byName;
-            if (values.sort === "preferred")
-                return (
-                    (b.preferredCount ?? 0) - (a.preferredCount ?? 0) || byName
-                );
-            if (values.sort === "distance" && origin) {
+            const chosen =
+                values.sort === "preferred"
+                    ? (b.preferredCount ?? 0) - (a.preferredCount ?? 0) ||
+                      byName
+                    : byName;
+            // 검색어가 있으면 일치도가 먼저
+            const byRelevance = relevance(b) - relevance(a);
+            if (byRelevance) return byRelevance;
+            if (values.near && origin) {
                 const distance =
                     (arcadeDistance(a, origin) ?? Infinity) -
                     (arcadeDistance(b, origin) ?? Infinity);
@@ -188,11 +191,7 @@ export function selectArcades(
                 )
                     return -1;
             }
-            return (
-                relevance(b) - relevance(a) ||
-                (a.region ?? "").localeCompare(b.region ?? "", locale) ||
-                byName
-            );
+            return chosen;
         });
 }
 

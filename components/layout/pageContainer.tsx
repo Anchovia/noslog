@@ -6,7 +6,7 @@ export default function PageContainer({
     width = "standard",
     className,
     ...props
-}: ComponentProps<"div"> & { width?: "reading" | "standard" | "wide" }) {
+}: ComponentProps<"div"> & { width?: "reading" | "standard" }) {
     return (
         <div
             className={cn("nl-container", `nl-container--${width}`, className)}

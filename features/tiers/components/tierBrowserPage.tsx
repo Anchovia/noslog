@@ -1,7 +1,7 @@
 "use client";
 
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { ChevronDown, ListFilter, X } from "lucide-react";
+import { ChevronDown, ListFilter } from "lucide-react";
 import { useId, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import {
@@ -12,6 +12,7 @@ import {
 import PageContainer from "@/components/layout/pageContainer";
 import Button from "@/components/ui/Button";
 import ActionButton from "@/components/ui/actionButton";
+import AppliedTokens from "@/components/ui/appliedTokens";
 import { Checkbox } from "@/components/ui/checkbox";
 import { FormField } from "@/components/ui/formField";
 import FullScreenDialog from "@/components/ui/fullScreenDialog";
@@ -206,160 +207,174 @@ export default function TierBrowserPage({
                     </aside>
                 ) : null}
                 <div className="nl-tier-results">
-                    <div className="nl-tier-toolbar">
-                        {wide ? resultCount : null}
-                        {!wide ? (
-                            <FullScreenDialog
-                                open={open}
-                                onOpenChange={(value) => {
-                                    if (value) setDraft(query);
-                                    setOpen(value);
-                                }}
-                                title={t("tiers.conditions")}
-                                trigger={
-                                    <Button
-                                        appearance="foundation"
-                                        variant="secondary"
-                                        className="nl-filter-trigger"
-                                    >
-                                        <ListFilter
-                                            className="nl-icon"
-                                            aria-hidden
-                                        />
-                                        {t("music.filter")}
-                                        {filterCount ? (
-                                            <span className="nl-filter-count">
-                                                {filterCount}
-                                            </span>
-                                        ) : null}
-                                        <ChevronDown
-                                            className="nl-icon"
-                                            aria-hidden
-                                        />
-                                    </Button>
-                                }
-                                footer={
-                                    <ActionButton
-                                        busy={preview.isFetching}
-                                        disabled={
-                                            !preview.data || preview.isError
-                                        }
-                                        onClick={() => commit(draft)}
-                                    >
-                                        {t("discovery.apply", {
-                                            count: previewTotal.toLocaleString(
-                                                locale
-                                            ),
-                                        })}
-                                    </ActionButton>
-                                }
-                            >
-                                <div className="nl-tier-filter-body">
-                                    <TierFilterFields
-                                        query={draft}
-                                        onChange={setDraft}
-                                        bands={
-                                            preview.data?.list?.bands ?? bands
-                                        }
-                                    />
-                                    {preview.isError ? (
-                                        <ResultState
-                                            message={t("tiers.loadError")}
-                                            action={
-                                                <ActionButton
-                                                    variant="secondary"
-                                                    onClick={() =>
-                                                        void preview.refetch()
-                                                    }
-                                                >
-                                                    {t("tiers.retry")}
-                                                </ActionButton>
+                    <div className="nl-filter-control-block">
+                        <div className="nl-tier-toolbar">
+                            {wide ? resultCount : null}
+                            {!wide ? (
+                                <FullScreenDialog
+                                    open={open}
+                                    onOpenChange={(value) => {
+                                        if (value) setDraft(query);
+                                        setOpen(value);
+                                    }}
+                                    title={t("tiers.conditions")}
+                                    headerAction={
+                                        <ActionButton
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={() =>
+                                                setDraft({
+                                                    ...draft,
+                                                    bands: [],
+                                                    difficulties: [],
+                                                    levels: [],
+                                                })
+                                            }
+                                        >
+                                            {t("common.reset")}
+                                        </ActionButton>
+                                    }
+                                    trigger={
+                                        <Button
+                                            appearance="foundation"
+                                            variant="secondary"
+                                            className="nl-filter-trigger"
+                                        >
+                                            <ListFilter
+                                                className="nl-icon"
+                                                aria-hidden
+                                            />
+                                            {t("music.filter")}
+                                            {filterCount ? (
+                                                <span className="nl-filter-count">
+                                                    {filterCount}
+                                                </span>
+                                            ) : null}
+                                            <ChevronDown
+                                                className="nl-icon"
+                                                aria-hidden
+                                            />
+                                        </Button>
+                                    }
+                                    footer={
+                                        <ActionButton
+                                            busy={preview.isFetching}
+                                            disabled={
+                                                !preview.data || preview.isError
+                                            }
+                                            onClick={() => commit(draft)}
+                                        >
+                                            {t("discovery.apply", {
+                                                count: previewTotal.toLocaleString(
+                                                    locale
+                                                ),
+                                            })}
+                                        </ActionButton>
+                                    }
+                                >
+                                    <div className="nl-tier-filter-body">
+                                        <TierFilterFields
+                                            query={draft}
+                                            onChange={setDraft}
+                                            bands={
+                                                preview.data?.list?.bands ??
+                                                bands
                                             }
                                         />
-                                    ) : null}
-                                </div>
-                            </FullScreenDialog>
-                        ) : null}
-                        <Checkbox
-                            label={t("tiers.detailedView")}
-                            checked={query.detailed}
-                            onChange={(event) =>
-                                commit({
-                                    ...query,
-                                    detailed: event.target.checked,
-                                })
-                            }
-                        />
-                    </div>
-                    {filterCount ? (
-                        <div
-                            className="nl-tier-criteria"
-                            aria-label={t("tiers.conditions")}
-                        >
-                            {query.bands.length ? (
-                                <button
-                                    className="nl-tier-applied nl-control"
-                                    type="button"
-                                    onClick={() =>
-                                        commit({ ...query, bands: [] })
-                                    }
-                                    aria-label={t("tiers.removeCondition", {
-                                        condition: `${t("tiers.bands")} ${bandToken()}`,
-                                    })}
-                                >
-                                    {bandToken()}
-                                    <X className="nl-icon" aria-hidden />
-                                </button>
+                                        {preview.isError ? (
+                                            <ResultState
+                                                message={t("tiers.loadError")}
+                                                action={
+                                                    <ActionButton
+                                                        variant="secondary"
+                                                        onClick={() =>
+                                                            void preview.refetch()
+                                                        }
+                                                    >
+                                                        {t("tiers.retry")}
+                                                    </ActionButton>
+                                                }
+                                            />
+                                        ) : null}
+                                    </div>
+                                </FullScreenDialog>
                             ) : null}
-                            {query.difficulties.map((value) => (
-                                <button
-                                    className="nl-tier-applied nl-control"
-                                    type="button"
-                                    key={value}
-                                    aria-label={t("tiers.removeCondition", {
+                            <Checkbox
+                                label={t("tiers.detailedView")}
+                                checked={query.detailed}
+                                onChange={(event) =>
+                                    commit({
+                                        ...query,
+                                        detailed: event.target.checked,
+                                    })
+                                }
+                            />
+                        </div>
+                        {!wide ? resultCount : null}
+                    </div>
+                    <AppliedTokens
+                        label={t("tiers.conditions")}
+                        clearLabel={t("discovery.clearFilters")}
+                        onClear={() =>
+                            commit({
+                                ...query,
+                                bands: [],
+                                difficulties: [],
+                                levels: [],
+                            })
+                        }
+                        tokens={[
+                            ...(query.bands.length
+                                ? [
+                                      {
+                                          key: "bands",
+                                          label: bandToken(),
+                                          removeLabel: t(
+                                              "tiers.removeCondition",
+                                              {
+                                                  condition: `${t("tiers.bands")} ${bandToken()}`,
+                                              }
+                                          ),
+                                          onRemove: () =>
+                                              commit({ ...query, bands: [] }),
+                                      },
+                                  ]
+                                : []),
+                            ...query.difficulties.map((value) => ({
+                                key: `difficulty-${value}`,
+                                label: value,
+                                removeLabel: t("tiers.removeCondition", {
+                                    condition: value,
+                                }),
+                                onRemove: () =>
+                                    commit({
+                                        ...query,
+                                        difficulties: query.difficulties.filter(
+                                            (current) => current !== value
+                                        ),
+                                    }),
+                            })),
+                            ...query.levels.map((value) => {
+                                const label = value.startsWith("real-")
+                                    ? `Real ${value.slice(5)}`
+                                    : `Lv.${value}`;
+                                return {
+                                    key: `level-${value}`,
+                                    label,
+                                    removeLabel: t("tiers.removeCondition", {
                                         condition: value,
-                                    })}
-                                    onClick={() =>
-                                        commit({
-                                            ...query,
-                                            difficulties:
-                                                query.difficulties.filter(
-                                                    (current) =>
-                                                        current !== value
-                                                ),
-                                        })
-                                    }
-                                >
-                                    {value}
-                                    <X className="nl-icon" aria-hidden />
-                                </button>
-                            ))}
-                            {query.levels.map((value) => (
-                                <button
-                                    className="nl-tier-applied nl-control"
-                                    type="button"
-                                    key={value}
-                                    aria-label={t("tiers.removeCondition", {
-                                        condition: value,
-                                    })}
-                                    onClick={() =>
+                                    }),
+                                    onRemove: () =>
                                         commit({
                                             ...query,
                                             levels: query.levels.filter(
                                                 (current) => current !== value
                                             ),
-                                        })
-                                    }
-                                >
-                                    {value.startsWith("real-")
-                                        ? `Real ${value.slice(5)}`
-                                        : `Lv.${value}`}
-                                    <X className="nl-icon" aria-hidden />
-                                </button>
-                            ))}
-                        </div>
-                    ) : null}
-                    {!wide ? resultCount : null}
+                                        }),
+                                };
+                            }),
+                        ]}
+                    />
                     {result.isError ? (
                         <ResultState
                             error

@@ -100,7 +100,7 @@ for (const locale of ["ko", "ja", "en"]) {
             },
             {
                 route: "/bingo/1",
-                selector: ".nl-bingo-detail__columns",
+                selector: ".nl-bingo-detail__layout",
                 compact: 1,
                 wide: 2,
             },

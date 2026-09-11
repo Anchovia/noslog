@@ -201,7 +201,9 @@
 }
 @media (min-width: 1056px) {
     .noslog-ui .nl-exams {
-        grid-template-columns: 292px minmax(0, 1fr);
+        grid-template-columns:
+            calc((100% - 3 * var(--nl-spacing-16)) / 4)
+            minmax(0, 1fr);
         grid-template-rows: auto 1fr;
         column-gap: var(--nl-spacing-16);
     }
@@ -213,6 +215,10 @@
         grid-column: 1;
         grid-row: 1 / 3;
         gap: var(--nl-spacing-16);
+    }
+    /* 레일 226 안 3세그먼트(Basic·Recital·Event) — 항목 인셋 16 이면 Recital 이 줄바꿈되어 8 로 */
+    .noslog-ui .nl-exam-navigation > .nl-segments .nl-segments__item {
+        padding-inline: var(--nl-spacing-8);
     }
     .noslog-ui .nl-exams__content {
         grid-column: 2;

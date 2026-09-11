@@ -5,7 +5,13 @@ import {
     useInfiniteQuery,
     useQuery,
 } from "@tanstack/react-query";
-import { ChevronDown, ListFilter, X } from "lucide-react";
+import {
+    ChevronDown,
+    Grid3x3,
+    LayoutGrid,
+    List,
+    ListFilter,
+} from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
@@ -22,18 +28,18 @@ import FullScreenDialog from "@/components/ui/fullScreenDialog";
 import SearchField from "@/components/ui/searchField";
 import { SegmentedControl } from "@/components/ui/segmentedControl";
 import ResultState from "@/components/ui/resultState";
-import DiscoverySortControl from "@/features/music/components/discoverySortControl";
 import useDebouncedValue from "@/lib/hooks/useDebouncedValue";
 import useWideLayout from "@/lib/hooks/useWideLayout";
+import { cn } from "@/lib/utils";
 import {
     discoveryOptions,
     discoveryPreviewOptions,
 } from "@/features/music/api/discovery";
 import {
     discoveryFilterCount,
+    discoveryLevelBounds,
     discoveryQuerySchema,
     discoverySearchParams,
-    getDiscoverySort,
     parseDiscoverySearchParams,
 } from "@/features/music/schemas/discoverySchema";
 import type {
@@ -45,8 +51,9 @@ import type { MusicSearchFormValues } from "@/features/music/schemas/musicSearch
 import MusicResultCard from "@/features/music/components/musicResultCard";
 import ChartResultGroup from "@/features/music/components/chartResultGroup";
 import DiscoveryFilters, {
-    DiscoverySortFields,
+    DiscoverySortMenu,
 } from "@/features/music/components/discoveryFilters";
+import AppliedTokens from "@/components/ui/appliedTokens";
 
 export default function DiscoveryPage({
     initialPage,
@@ -140,6 +147,15 @@ export default function DiscoveryPage({
     useEffect(() => {
         reset({ search: query.q });
     }, [query.q, reset]);
+    // 상세 페이지의 뒤로가기가 이 조건으로 돌아오도록 남긴다 (오락실 discoveryQuery 선례)
+    useEffect(() => {
+        try {
+            sessionStorage.setItem(
+                "noslog:music-discovery",
+                window.location.search
+            );
+        } catch {}
+    }, [queryKey]);
     useEffect(() => {
         const intent = appendedFocus.current;
         if (!intent) return;
@@ -236,9 +252,23 @@ export default function DiscoveryPage({
                 label={t("discovery.view")}
                 value={query.view}
                 onValueChange={(view) => commit({ ...query, view }, true)}
+                iconOnly
                 options={[
-                    { value: "list", label: t("discovery.list") },
-                    { value: "grid", label: t("discovery.grid") },
+                    {
+                        value: "list",
+                        label: t("discovery.list"),
+                        icon: <List aria-hidden />,
+                    },
+                    {
+                        value: "grid",
+                        label: t("discovery.grid"),
+                        icon: <LayoutGrid aria-hidden />,
+                    },
+                    {
+                        value: "dense",
+                        label: t("discovery.denseGrid"),
+                        icon: <Grid3x3 aria-hidden />,
+                    },
                 ]}
             />
         ) : null;
@@ -246,10 +276,10 @@ export default function DiscoveryPage({
         <ActionButton
             variant="secondary"
             className="nl-filter-trigger"
-            aria-label={t("discovery.filterSort")}
+            aria-label={t("music.filter")}
         >
             <ListFilter className="nl-icon-small" aria-hidden />
-            {t("discovery.filterSort")}
+            {t("music.filter")}
             {appliedCount ? (
                 <span className="nl-filter-count nl-metadata">
                     {appliedCount}
@@ -367,12 +397,94 @@ export default function DiscoveryPage({
                             onChange={(next) => commit(next)}
                             onRangeChange={(next) => changeRange(next)}
                             onRangeCommit={(next) => changeRange(next, true)}
+                            variant="rail"
                         />
                     </aside>
                 ) : null}
                 <div className="nl-discovery__results">
-                    <div className="nl-discovery__toolbar">
-                        {wide ? (
+                    {/* 컨트롤 묶음: 정렬·필터 행 + 결과 수·보기 행 = 한 subsection, 안쪽 12 / 목록까지 24 */}
+                    <div className="nl-filter-control-block">
+                        <div className="nl-discovery__toolbar">
+                            <div
+                                className={cn(
+                                    "nl-discovery__controls",
+                                    !wide && "nl-filter-toolbar--split"
+                                )}
+                            >
+                                <DiscoverySortMenu
+                                    query={query}
+                                    signedIn={Boolean(accountId)}
+                                    onChange={(next) => commit(next)}
+                                />
+                                {!wide ? (
+                                    <FullScreenDialog
+                                        open={open}
+                                        onOpenChange={handleOpen}
+                                        onCloseAutoFocus={(event) => {
+                                            if (!focusCommittedSummary.current)
+                                                return;
+                                            event.preventDefault();
+                                            focusCommittedSummary.current = false;
+                                            summaryRef.current?.focus();
+                                        }}
+                                        title={t("music.filter")}
+                                        trigger={filterTrigger}
+                                        headerAction={
+                                            <ActionButton
+                                                variant="ghost"
+                                                size="sm"
+                                                onClick={() =>
+                                                    setDraft({
+                                                        ...draft,
+                                                        categories: [],
+                                                        difficulties: [],
+                                                        records: [],
+                                                        missMin: undefined,
+                                                        missMax: undefined,
+                                                    })
+                                                }
+                                            >
+                                                {t("common.reset")}
+                                            </ActionButton>
+                                        }
+                                        footer={
+                                            <ActionButton
+                                                disabled={!validDraft}
+                                                onClick={() => {
+                                                    focusCommittedSummary.current = true;
+                                                    commit(draft);
+                                                    setOpen(false);
+                                                }}
+                                            >
+                                                {validDraft
+                                                    ? count.data &&
+                                                      delayedDraft === draft
+                                                        ? t("discovery.apply", {
+                                                              count: count.data
+                                                                  .total,
+                                                          })
+                                                        : t(
+                                                              "discovery.applyWithoutCount"
+                                                          )
+                                                    : t(
+                                                          "discovery.invalidRange"
+                                                      )}
+                                            </ActionButton>
+                                        }
+                                    >
+                                        <DiscoveryFilters
+                                            query={draft}
+                                            onChange={setDraft}
+                                            signedIn={Boolean(accountId)}
+                                            variant="layer"
+                                        />
+                                    </FullScreenDialog>
+                                ) : null}
+                            </div>
+                            {wide ? viewSwitch : null}
+                        </div>
+                        {/* Compact: 결과 수 왼쪽 + 보기 전환 오른쪽 (목록 헤더 관례) · 정렬|필터는 위 행에서 1:1 */}
+                        <div className="nl-discovery__summary-row">
                             <p
                                 ref={summaryRef}
                                 tabIndex={-1}
@@ -380,110 +492,82 @@ export default function DiscoveryPage({
                             >
                                 {summary}
                             </p>
-                        ) : null}
-                        {wide ? (
-                            <div className="nl-discovery__wide-sort">
-                                <DiscoverySortControl
-                                    query={query}
-                                    signedIn={Boolean(accountId)}
-                                    onChange={(next) => commit(next)}
-                                />
-                                {viewSwitch}
-                            </div>
-                        ) : (
-                            <>
-                                <FullScreenDialog
-                                    open={open}
-                                    onOpenChange={handleOpen}
-                                    onCloseAutoFocus={(event) => {
-                                        if (!focusCommittedSummary.current)
-                                            return;
-                                        event.preventDefault();
-                                        focusCommittedSummary.current = false;
-                                        summaryRef.current?.focus();
-                                    }}
-                                    title={t("discovery.filterSort")}
-                                    trigger={filterTrigger}
-                                    footer={
-                                        <ActionButton
-                                            disabled={!validDraft}
-                                            onClick={() => {
-                                                focusCommittedSummary.current = true;
-                                                commit(draft);
-                                                setOpen(false);
-                                            }}
-                                        >
-                                            {validDraft
-                                                ? count.data &&
-                                                  delayedDraft === draft
-                                                    ? t("discovery.apply", {
-                                                          count: count.data
-                                                              .total,
-                                                      })
-                                                    : t(
-                                                          "discovery.applyWithoutCount"
-                                                      )
-                                                : draft.sort === "level" &&
-                                                    !draft.sortDifficulty
-                                                  ? t(
-                                                        "discovery.selectDifficulty"
-                                                    )
-                                                  : t("discovery.invalidRange")}
-                                        </ActionButton>
-                                    }
-                                >
-                                    <DiscoverySortFields
-                                        query={draft}
-                                        onChange={setDraft}
-                                        signedIn={Boolean(accountId)}
-                                    />
-                                    <DiscoveryFilters
-                                        query={draft}
-                                        onChange={setDraft}
-                                        signedIn={Boolean(accountId)}
-                                    />
-                                </FullScreenDialog>
-                                {viewSwitch}
-                            </>
-                        )}
+                            {!wide ? viewSwitch : null}
+                        </div>
                     </div>
-                    {!wide ? (
-                        <p
-                            ref={summaryRef}
-                            tabIndex={-1}
-                            className="nl-discovery__summary nl-body-secondary nl-muted"
-                        >
-                            {summary} ·{" "}
-                            {t(`discovery.sort.${getDiscoverySort(query)}`)}
-                        </p>
-                    ) : null}
-                    {appliedCount ? (
-                        <div className="nl-discovery__criteria">
-                            {query.categories.map((category) => (
-                                <ActionButton
-                                    key={category}
-                                    variant="secondary"
-                                    onClick={() =>
+                    <AppliedTokens
+                        label={t("music.filter")}
+                        clearLabel={t("discovery.clearFilters")}
+                        onClear={clearFilters}
+                        tokens={[
+                            ...query.categories.map((category) => ({
+                                key: `category-${category}`,
+                                label: category,
+                                removeLabel: t("discovery.removeCondition", {
+                                    condition: category,
+                                }),
+                                onRemove: () =>
+                                    commit({
+                                        ...query,
+                                        categories: query.categories.filter(
+                                            (item) => item !== category
+                                        ),
+                                    }),
+                            })),
+                            ...query.difficulties.map((range) => {
+                                const full =
+                                    range.min === 1 &&
+                                    range.max ===
+                                        discoveryLevelBounds[range.difficulty];
+                                const label = full
+                                    ? range.difficulty
+                                    : `${range.difficulty} · Lv.${range.min}–${range.max}`;
+                                return {
+                                    key: `difficulty-${range.difficulty}`,
+                                    label,
+                                    removeLabel: t(
+                                        "discovery.removeCondition",
+                                        { condition: label }
+                                    ),
+                                    onRemove: () =>
                                         commit({
                                             ...query,
-                                            categories: query.categories.filter(
-                                                (item) => item !== category
+                                            difficulties:
+                                                query.difficulties.filter(
+                                                    (item) =>
+                                                        item.difficulty !==
+                                                        range.difficulty
+                                                ),
+                                        }),
+                                };
+                            }),
+                            ...query.records.map((record) => {
+                                const label =
+                                    record === "unplayed"
+                                        ? t("music.filter.unplayed")
+                                        : record === "s"
+                                          ? "S"
+                                          : record === "fc"
+                                            ? "FC"
+                                            : "Pianist";
+                                return {
+                                    key: `record-${record}`,
+                                    label,
+                                    removeLabel: t(
+                                        "discovery.removeCondition",
+                                        { condition: label }
+                                    ),
+                                    onRemove: () =>
+                                        commit({
+                                            ...query,
+                                            records: query.records.filter(
+                                                (item) => item !== record
                                             ),
-                                        })
-                                    }
-                                >
-                                    {category}
-                                    <X className="nl-icon-small" aria-hidden />
-                                </ActionButton>
-                            ))}
-                            <ActionButton
-                                variant="ghost"
-                                onClick={clearFilters}
-                            >
-                                {t("discovery.clearFilters")}
-                            </ActionButton>
-                        </div>
-                    ) : null}
+                                        }),
+                                };
+                            }),
+                        ]}
+                    />
                     <section
                         aria-label={t("discovery.results")}
                         aria-busy={
@@ -551,7 +635,17 @@ export default function DiscoveryPage({
                         ) : null}
                         <div
                             ref={results}
-                            className={`nl-discovery__items nl-discovery__items--${query.scope === "chart" ? "chart" : query.view}`}
+                            className={cn(
+                                "nl-discovery__items",
+                                query.scope === "chart" &&
+                                    "nl-discovery__items--chart",
+                                query.scope !== "chart" &&
+                                    query.view !== "list" &&
+                                    "nl-discovery__items--grid",
+                                query.scope !== "chart" &&
+                                    query.view === "dense" &&
+                                    "nl-discovery__items--dense"
+                            )}
                         >
                             {items.map((music) => (
                                 <div key={music.index} data-result>

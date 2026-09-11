@@ -1,17 +1,21 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { Controller, useForm, useWatch } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ChevronDown, ListFilter } from "lucide-react";
 import PageContainer, { PageHeading } from "@/components/layout/pageContainer";
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import SearchField from "@/components/ui/searchField";
 import Button from "@/components/ui/Button";
-import FullScreenDialog from "@/components/ui/fullScreenDialog";
-import RadioGroup from "@/components/ui/radioGroup";
-import { Checkbox } from "@/components/ui/checkbox";
+import ActionButton from "@/components/ui/actionButton";
+import AppliedTokens from "@/components/ui/appliedTokens";
+import FilterChips from "@/components/ui/filterChips";
+import FilterGroup from "@/components/ui/filterGroup";
+import FilterSurface from "@/components/ui/filterSurface";
+import SortMenu from "@/components/ui/sortMenu";
+import useMediaQuery from "@/lib/hooks/useMediaQuery";
 import { StatusMessage } from "@/components/ui/statusMessage";
 import { arcadeDiscoverySchema } from "@/features/arcades/schemas/publicArcadeSchema";
 import type {
@@ -41,7 +45,8 @@ export default function ArcadeDiscoveryPage({
         region: params.get("region") ?? "",
         open: params.get("open") === "1",
         available: params.get("available") === "1",
-        sort: params.get("sort") ?? "default",
+        sort: params.get("sort") ?? "name",
+        near: params.get("near") === "1",
         mode: params.get("mode") ?? "list",
     });
     const values = parsed.success
@@ -50,6 +55,7 @@ export default function ArcadeDiscoveryPage({
     const { origin, bounds, selectedId, setOrigin, setBounds, select } =
         useArcadeSession();
     const [filterOpen, setFilterOpen] = useState(false);
+    const popover = useMediaQuery("(min-width: 672px)");
     const [locationState, setLocationState] = useState<
         "idle" | "requesting" | "denied" | "error"
     >("idle");
@@ -84,15 +90,15 @@ export default function ArcadeDiscoveryPage({
         [arcades, locale]
     );
     const selected = result.find((arcade) => arcade.id === selectedId);
-    const filterCount = Number(values.open) + Number(values.available);
-    const sorts = (
-        [
-            "default",
-            "name",
-            "preferred",
-            ...(origin ? (["distance"] as const) : []),
-        ] as const
-    ).map((value) => ({ value, label: t(`arcades.sort.${value}`) }));
+    const filterCount =
+        Number(values.open) +
+        Number(values.available) +
+        Number(!!values.region) +
+        Number(values.near);
+    const sorts = (["name", "preferred"] as const).map((value) => ({
+        value,
+        label: t(`arcades.sort.${value}`),
+    }));
 
     function commit(next: ArcadeDiscoveryValues) {
         const query = new URLSearchParams();
@@ -100,7 +106,8 @@ export default function ArcadeDiscoveryPage({
         if (next.region) query.set("region", next.region);
         if (next.open) query.set("open", "1");
         if (next.available) query.set("available", "1");
-        if (next.sort !== "default") query.set("sort", next.sort);
+        if (next.sort !== "name") query.set("sort", next.sort);
+        if (next.near) query.set("near", "1");
         if (next.mode !== "list") query.set("mode", next.mode);
         // Next's History integration adds its own route state. Copying that
         // internal state here bypasses its search-param update notification.
@@ -111,17 +118,19 @@ export default function ArcadeDiscoveryPage({
         );
     }
     function setFilterLayer(open: boolean) {
-        if (open)
-            form.reset({
-                ...values,
-                sort:
-                    values.sort === "distance" && !origin
-                        ? "default"
-                        : values.sort,
-            });
+        if (open) form.reset(values);
         setFilterOpen(open);
     }
-    function nearby() {
+    // 내 주변만 보기 — 위치 권한을 받아 origin 을 잡고, 성공했을 때만 켠다
+    // URL 로 near=1 을 들고 들어왔는데 위치가 없으면 한 번 요청한다 (실패하면 켜진 상태만 남고 거리 정렬은 빠진다)
+    const requestedFromUrl = useRef(false);
+    useEffect(() => {
+        if (!values.near || origin || requestedFromUrl.current) return;
+        requestedFromUrl.current = true;
+        nearby(() => undefined);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [values.near, origin]);
+    function nearby(onSuccess: () => void) {
         if (!navigator.geolocation || !window.isSecureContext) {
             setLocationState("error");
             return;
@@ -135,13 +144,7 @@ export default function ArcadeDiscoveryPage({
                 });
                 setBounds(null);
                 setLocationState("idle");
-                const query = new URLSearchParams(window.location.search);
-                query.set("sort", "distance");
-                window.history.replaceState(
-                    {},
-                    "",
-                    `${window.location.pathname}?${query}`
-                );
+                onSuccess();
             },
             (error) =>
                 setLocationState(
@@ -165,112 +168,187 @@ export default function ArcadeDiscoveryPage({
                 }
             />
             <div className="nl-arcades__controls">
-                <Button
-                    appearance="foundation"
-                    variant="secondary"
-                    size="sm"
-                    disabled={locationState === "requesting"}
-                    onClick={nearby}
-                >
-                    {t(
-                        locationState === "requesting"
-                            ? "arcades.nearMeBusy"
-                            : "arcades.nearMe"
-                    )}
-                </Button>
-                <FullScreenDialog
-                    open={filterOpen}
-                    onOpenChange={setFilterLayer}
-                    title={t("discovery.filterSort")}
-                    trigger={
-                        <Button
-                            appearance="foundation"
-                            size="sm"
-                            variant="secondary"
-                        >
-                            <ListFilter className="nl-icon" aria-hidden />
-                            {t("discovery.filterSort")}
-                            {filterCount ? ` (${filterCount})` : ""}
-                            <ChevronDown className="nl-icon" aria-hidden />
-                        </Button>
+                <div
+                    className={
+                        popover
+                            ? "nl-filter-toolbar"
+                            : "nl-filter-toolbar nl-filter-toolbar--split"
                     }
-                    footer={
-                        <Button
-                            appearance="foundation"
-                            size="sm"
-                            className="nl-arcades__apply"
-                            onClick={form.handleSubmit((next) => {
+                >
+                    <SortMenu
+                        label={t("discovery.sortLabel")}
+                        value={values.sort}
+                        options={sorts}
+                        onValueChange={(sort) => commit({ ...values, sort })}
+                    />
+                    <FilterSurface
+                        popover={popover}
+                        open={filterOpen}
+                        onOpenChange={setFilterLayer}
+                        title={t("arcades.filters")}
+                        trigger={
+                            <ActionButton
+                                variant="secondary"
+                                className="nl-filter-trigger"
+                                aria-label={t("arcades.filters")}
+                            >
+                                <ListFilter
+                                    className="nl-icon-small"
+                                    aria-hidden
+                                />
+                                {t("arcades.filters")}
+                                {filterCount ? (
+                                    <span className="nl-filter-count nl-metadata">
+                                        {filterCount}
+                                    </span>
+                                ) : null}
+                                <ChevronDown
+                                    className="nl-icon-small"
+                                    aria-hidden
+                                />
+                            </ActionButton>
+                        }
+                        headerAction={
+                            <ActionButton
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => {
+                                    form.reset({
+                                        ...values,
+                                        region: "",
+                                        open: false,
+                                        available: false,
+                                        near: false,
+                                    });
+                                    if (popover)
+                                        commit({
+                                            ...values,
+                                            region: "",
+                                            open: false,
+                                            available: false,
+                                            near: false,
+                                        });
+                                }}
+                            >
+                                {t("common.reset")}
+                            </ActionButton>
+                        }
+                        footer={
+                            <ActionButton
+                                className="nl-arcades__apply"
+                                onClick={form.handleSubmit((next) => {
+                                    commit(next);
+                                    setFilterOpen(false);
+                                })}
+                            >
+                                {t("arcades.viewResults", {
+                                    count: draftResult.length,
+                                })}
+                            </ActionButton>
+                        }
+                    >
+                        <form
+                            noValidate
+                            className="nl-arcades__filters"
+                            onSubmit={form.handleSubmit((next) => {
                                 commit(next);
                                 setFilterOpen(false);
                             })}
                         >
-                            {t("arcades.viewResults", {
-                                count: draftResult.length,
-                            })}
-                        </Button>
-                    }
-                >
-                    <form
-                        noValidate
-                        className="nl-arcades__filters"
-                        onSubmit={form.handleSubmit((next) => {
-                            commit(next);
-                            setFilterOpen(false);
-                        })}
-                    >
-                        <Controller
-                            control={form.control}
-                            name="sort"
-                            render={({ field }) => (
-                                <RadioGroup
-                                    label={t("discovery.sortLabel")}
-                                    value={field.value ?? "default"}
-                                    onValueChange={field.onChange}
-                                    options={sorts}
+                            <FilterGroup label={t("arcades.status")}>
+                                <FilterChips
+                                    label={t("arcades.status")}
+                                    value={[
+                                        ...(draft.open
+                                            ? ["open" as const]
+                                            : []),
+                                        ...(draft.available
+                                            ? ["available" as const]
+                                            : []),
+                                    ]}
+                                    onValueChange={(selected) => {
+                                        const next = {
+                                            open: selected.includes("open"),
+                                            available:
+                                                selected.includes("available"),
+                                        };
+                                        form.setValue("open", next.open);
+                                        form.setValue(
+                                            "available",
+                                            next.available
+                                        );
+                                        if (popover)
+                                            commit({ ...values, ...next });
+                                    }}
+                                    options={[
+                                        {
+                                            value: "open",
+                                            label: t("arcades.openFilter"),
+                                        },
+                                        {
+                                            value: "available",
+                                            label: t("arcades.availableFilter"),
+                                        },
+                                    ]}
                                 />
-                            )}
-                        />
-                        <div className="nl-arcades__filter-options">
-                            <Checkbox
-                                label={t("arcades.openFilter")}
-                                {...form.register("open")}
-                            />
-                            <Checkbox
-                                label={t("arcades.availableFilter")}
-                                {...form.register("available")}
-                            />
-                        </div>
-                        <label className="nl-control nl-arcades__region">
-                            {t("arcades.region")}
-                            <select {...form.register("region")}>
-                                <option value="">
-                                    {t("arcades.scope.nationwide")}
-                                </option>
-                                {regions.map((region) => (
-                                    <option value={region} key={region}>
-                                        {region}
-                                    </option>
-                                ))}
-                            </select>
-                        </label>
-                        <Button
-                            appearance="foundation"
-                            size="sm"
-                            variant="ghost"
-                            onClick={() =>
-                                form.reset({
-                                    ...values,
-                                    region: "",
-                                    open: false,
-                                    available: false,
-                                    sort: "default",
-                                })
-                            }
-                        >
-                            {t("arcades.reset")}
-                        </Button>
-                    </form>
-                </FullScreenDialog>
+                            </FilterGroup>
+                            <FilterGroup label={t("arcades.region")}>
+                                <FilterChips
+                                    label={t("arcades.nearMe")}
+                                    value={draft.near ? ["near" as const] : []}
+                                    onValueChange={(selected) => {
+                                        const near = selected.includes("near");
+                                        const apply = () => {
+                                            form.setValue("near", near);
+                                            if (popover)
+                                                commit({ ...values, near });
+                                        };
+                                        if (near && !origin) nearby(apply);
+                                        else apply();
+                                    }}
+                                    options={[
+                                        {
+                                            value: "near",
+                                            label: t(
+                                                locationState === "requesting"
+                                                    ? "arcades.nearMeBusy"
+                                                    : "arcades.nearMe"
+                                            ),
+                                            disabled:
+                                                locationState === "requesting",
+                                        },
+                                    ]}
+                                />
+                                <label className="nl-control nl-arcades__region">
+                                    <span className="sr-only">
+                                        {t("arcades.region")}
+                                    </span>
+                                    <select
+                                        {...form.register("region", {
+                                            onChange: (event) => {
+                                                if (popover)
+                                                    commit({
+                                                        ...values,
+                                                        region: event.target
+                                                            .value,
+                                                    });
+                                            },
+                                        })}
+                                    >
+                                        <option value="">
+                                            {t("arcades.scope.nationwide")}
+                                        </option>
+                                        {regions.map((region) => (
+                                            <option value={region} key={region}>
+                                                {region}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </label>
+                            </FilterGroup>
+                        </form>
+                    </FilterSurface>
+                </div>
                 {values.mode === "map" ? (
                     <Button
                         appearance="foundation"
@@ -319,32 +397,99 @@ export default function ArcadeDiscoveryPage({
                     ) : null}
                 </div>
                 <div className="nl-arcades__catalog">
-                    <div
+                    <p
                         className="nl-arcades__summary nl-body-secondary nl-muted"
                         role="status"
                     >
-                        <p>{t("arcades.results", { count: result.length })}</p>
-                        {values.region ? <p>{values.region}</p> : null}
-                        {filterCount ? (
-                            <p>
-                                {[
-                                    values.open
-                                        ? t("arcades.openFilter")
-                                        : null,
-                                    values.available
-                                        ? t("arcades.availableFilter")
-                                        : null,
-                                ]
-                                    .filter(Boolean)
-                                    .join(" · ")}
-                            </p>
-                        ) : null}
-                        <p>
-                            {t(
-                                `arcades.sort.${values.sort === "distance" && !origin ? "default" : values.sort}`
-                            )}
-                        </p>
-                    </div>
+                        {t("arcades.results", { count: result.length })}
+                    </p>
+                    <AppliedTokens
+                        label={t("arcades.filters")}
+                        clearLabel={t("discovery.clearFilters")}
+                        onClear={() =>
+                            commit({
+                                ...values,
+                                region: "",
+                                open: false,
+                                available: false,
+                                near: false,
+                            })
+                        }
+                        tokens={[
+                            ...(values.near
+                                ? [
+                                      {
+                                          key: "near",
+                                          label: t("arcades.nearMe"),
+                                          removeLabel: t(
+                                              "discovery.removeCondition",
+                                              { condition: t("arcades.nearMe") }
+                                          ),
+                                          onRemove: () =>
+                                              commit({
+                                                  ...values,
+                                                  near: false,
+                                              }),
+                                      },
+                                  ]
+                                : []),
+                            ...(values.region
+                                ? [
+                                      {
+                                          key: "region",
+                                          label: values.region,
+                                          removeLabel: t(
+                                              "discovery.removeCondition",
+                                              { condition: values.region }
+                                          ),
+                                          onRemove: () =>
+                                              commit({ ...values, region: "" }),
+                                      },
+                                  ]
+                                : []),
+                            ...(values.open
+                                ? [
+                                      {
+                                          key: "open",
+                                          label: t("arcades.openFilter"),
+                                          removeLabel: t(
+                                              "discovery.removeCondition",
+                                              {
+                                                  condition:
+                                                      t("arcades.openFilter"),
+                                              }
+                                          ),
+                                          onRemove: () =>
+                                              commit({
+                                                  ...values,
+                                                  open: false,
+                                              }),
+                                      },
+                                  ]
+                                : []),
+                            ...(values.available
+                                ? [
+                                      {
+                                          key: "available",
+                                          label: t("arcades.availableFilter"),
+                                          removeLabel: t(
+                                              "discovery.removeCondition",
+                                              {
+                                                  condition: t(
+                                                      "arcades.availableFilter"
+                                                  ),
+                                              }
+                                          ),
+                                          onRemove: () =>
+                                              commit({
+                                                  ...values,
+                                                  available: false,
+                                              }),
+                                      },
+                                  ]
+                                : []),
+                        ]}
+                    />
                     {bounds ? (
                         <Button
                             appearance="foundation"

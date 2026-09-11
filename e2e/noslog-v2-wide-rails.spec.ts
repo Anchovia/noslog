@@ -20,11 +20,14 @@ for (const [locale, label, name, level] of [
             await expect(trigger).toHaveText(name);
             await trigger.press("Enter");
             const group = page.getByRole("group", { name: label, exact: true });
-            await group.getByRole("radio", { name: name, exact: true }).focus();
+            await group
+                .getByRole("menuitemradio", { name: name, exact: true })
+                .focus();
             await page.keyboard.press("ArrowDown");
+            await page.keyboard.press("Enter");
             await page
-                .locator(".nl-discovery-sort")
-                .getByRole("radio", { name: "Expert", exact: true })
+                .locator(".nl-sort-menu")
+                .getByRole("button", { name: "Expert", exact: true })
                 .focus();
             await page.keyboard.press("Space");
             await expect(
@@ -56,7 +59,7 @@ for (const path of ["music", "music?scope=chart", "tiers"]) {
         await page.setViewportSize({ width: 1055, height: 900 });
         await page.goto(`/ko/${path}`);
         const trigger = page.getByRole("button", {
-            name: tier ? /^필터(?: \d+)?$/ : /^필터 및 정렬(?: \d+)?$/,
+            name: /^필터(?: \d+)?$/,
         });
         await trigger.click();
         const dialog = page.getByRole("dialog");

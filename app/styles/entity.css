@@ -18,14 +18,33 @@
     transform: translate(-50%, -50%);
     color: var(--nl-content-subdued);
 }
+/* 카테고리 레이블 — 오른쪽 아래(시선 흐름 4번 자리라 자켓 아트를 덜 가림) · 플레이트 유지 · 글자만 카테고리 색 */
 .noslog-ui .nl-jacket__category {
     position: absolute;
-    left: var(--nl-spacing-4);
+    right: var(--nl-spacing-4);
     bottom: var(--nl-spacing-4);
     padding: var(--nl-spacing-2) var(--nl-spacing-4);
     border-radius: var(--nl-radius-control);
     background: var(--nl-surface-overlay);
     color: var(--nl-content-subdued);
+}
+.noslog-ui .nl-jacket__category[data-category="pops"] {
+    color: var(--nl-category-pops);
+}
+.noslog-ui .nl-jacket__category[data-category="anime"] {
+    color: var(--nl-category-anime);
+}
+.noslog-ui .nl-jacket__category[data-category="BM"] {
+    color: var(--nl-category-bm);
+}
+.noslog-ui .nl-jacket__category[data-category="Org"] {
+    color: var(--nl-category-org);
+}
+.noslog-ui .nl-jacket__category[data-category="Var"] {
+    color: var(--nl-category-var);
+}
+.noslog-ui .nl-jacket__category[data-category="Cl/Jz"] {
+    color: var(--nl-category-cljz);
 }
 .noslog-ui .nl-music-card {
     display: flex;
@@ -101,7 +120,7 @@
     background: var(--nl-border-subtle);
 }
 .noslog-ui .nl-music-card--grid .nl-jacket__category {
-    left: var(--nl-spacing-8);
+    right: var(--nl-spacing-8);
     bottom: var(--nl-spacing-8);
 }
 .noslog-ui .nl-music-card--grid .nl-music-card__body {

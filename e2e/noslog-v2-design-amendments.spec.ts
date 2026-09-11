@@ -82,12 +82,12 @@ for (const locale of ["ko", "ja", "en"] as const) {
             page.locator(".nl-bingo-catalog__controls")
         ).toHaveAttribute("data-filter-layout", "popover");
         const trigger = page.getByRole("button", {
-            name: t["discovery.filterSort"],
-            exact: false,
+            name: t["bingo.filter"],
+            exact: true,
         });
         await trigger.click();
         const popover = page.getByRole("dialog");
-        await expect(popover).toHaveClass(/nl-bingo-filter-popover/);
+        await expect(popover).toHaveClass(/nl-filter-popover/);
         const anchor = (await trigger.boundingBox())!;
         const bounds = (await popover.boundingBox())!;
         expect(bounds.width).toBe(334);
@@ -95,8 +95,8 @@ for (const locale of ["ko", "ja", "en"] as const) {
             1
         );
         await popover
-            .getByRole("radio", { name: t["bingo.catalog.full"], exact: true })
-            .check();
+            .getByRole("button", { name: t["bingo.catalog.full"], exact: true })
+            .click();
         await expect(page).toHaveURL(/status=full/);
         await expect(
             page.locator("ul.nl-bingo-catalog__grid > li")

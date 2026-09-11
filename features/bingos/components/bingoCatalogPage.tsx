@@ -1,16 +1,17 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import { ListFilter, ChevronDown } from "lucide-react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useState } from "react";
-import type { z } from "zod";
-import { Controller, useForm } from "react-hook-form";
 import { useTranslations } from "@/components/i18n/localeProvider";
 import Button from "@/components/ui/Button";
-import BingoFilterSurface from "@/features/bingos/components/bingoFilterSurface";
+import ActionButton from "@/components/ui/actionButton";
+import AppliedTokens from "@/components/ui/appliedTokens";
+import FilterChips from "@/components/ui/filterChips";
+import FilterGroup from "@/components/ui/filterGroup";
+import FilterSurface from "@/components/ui/filterSurface";
+import SortMenu from "@/components/ui/sortMenu";
 import useMediaQuery from "@/lib/hooks/useMediaQuery";
-import RadioGroup from "@/components/ui/radioGroup";
 import BingoCatalogCard from "@/features/bingos/components/bingoCatalogCard";
 import {
     getBingoCatalog,
@@ -40,12 +41,8 @@ export default function BingoCatalogPage({
         ? parsed
         : { ...parsed, status: "all" as const, sort: "release" as const };
     const [open, setOpen] = useState(false);
+    const [draft, setDraft] = useState<BingoCatalogQuery>(query);
     const wide = useMediaQuery("(min-width: 672px)");
-    const form = useForm<
-        z.input<typeof bingoCatalogQuerySchema>,
-        unknown,
-        BingoCatalogQuery
-    >({ resolver: zodResolver(bingoCatalogQuerySchema), defaultValues: query });
     const visible = getBingoCatalog(items, query);
     const recent = isAuthenticated ? getRecentBingo(items) : undefined;
     const statuses = (
@@ -64,9 +61,19 @@ export default function BingoCatalogPage({
         window.history.pushState({}, "", `${pathname}?${search}`);
     }
     function setFilterOpen(value: boolean) {
-        if (value) form.reset(query);
+        if (value) setDraft(query);
         setOpen(value);
     }
+    // 팝오버(672+)는 즉시 적용, 전체 레이어는 배치 적용
+    function changeStatus(status: BingoCatalogQuery["status"]) {
+        const next = { ...draft, status, count: 12 };
+        setDraft(next);
+        if (wide) commit({ ...query, status, count: 12 });
+    }
+    const draftTotal = getBingoCatalog(items, draft).length;
+    const statusLabel = statuses.find(
+        (option) => option.value === query.status
+    )?.label;
     return (
         <div className="nl-bingo-catalog">
             <h1 className="nl-page-title">{t("bingo.title")}</h1>
@@ -84,102 +91,113 @@ export default function BingoCatalogPage({
                 </section>
             ) : null}
             {isAuthenticated ? (
-                <div
-                    className="nl-bingo-catalog__controls"
-                    data-filter-layout={wide ? "popover" : "fullscreen"}
-                >
-                    <BingoFilterSurface
-                        wide={wide}
-                        open={open}
-                        onOpenChange={setFilterOpen}
-                        title={t("discovery.filterSort")}
-                        trigger={
-                            <Button
-                                appearance="foundation"
-                                variant="secondary"
-                                size="sm"
-                            >
-                                <ListFilter className="nl-icon" aria-hidden />
-                                {t("discovery.filterSort")}
-                                {query.status !== "all" ? " (1)" : ""}
-                                <ChevronDown className="nl-icon" aria-hidden />
-                            </Button>
+                <>
+                    <div
+                        className={
+                            wide
+                                ? "nl-bingo-catalog__controls nl-filter-toolbar"
+                                : "nl-bingo-catalog__controls nl-filter-toolbar nl-filter-toolbar--split"
                         }
-                        footer={
-                            <Button
-                                appearance="foundation"
-                                onClick={form.handleSubmit((next) => {
-                                    commit({ ...next, count: 12 });
-                                    setOpen(false);
-                                })}
-                            >
-                                {t("bingo.apply")}
-                            </Button>
-                        }
+                        data-filter-layout={wide ? "popover" : "fullscreen"}
                     >
-                        <form
-                            className="nl-bingo-catalog__filter-form"
-                            noValidate
-                            onSubmit={form.handleSubmit((next) => {
-                                commit({ ...next, count: 12 });
-                                setOpen(false);
-                            })}
+                        <SortMenu
+                            label={t("discovery.sortLabel")}
+                            value={query.sort}
+                            options={sorts}
+                            onValueChange={(sort) =>
+                                commit({ ...query, sort, count: 12 })
+                            }
+                        />
+                        <FilterSurface
+                            popover={wide}
+                            open={open}
+                            onOpenChange={setFilterOpen}
+                            title={t("bingo.filter")}
+                            trigger={
+                                <ActionButton
+                                    variant="secondary"
+                                    className="nl-filter-trigger"
+                                    aria-label={t("bingo.filter")}
+                                >
+                                    <ListFilter
+                                        className="nl-icon-small"
+                                        aria-hidden
+                                    />
+                                    {t("bingo.filter")}
+                                    {query.status !== "all" ? (
+                                        <span className="nl-filter-count nl-metadata">
+                                            1
+                                        </span>
+                                    ) : null}
+                                    <ChevronDown
+                                        className="nl-icon-small"
+                                        aria-hidden
+                                    />
+                                </ActionButton>
+                            }
+                            headerAction={
+                                <ActionButton
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => changeStatus("all")}
+                                >
+                                    {t("common.reset")}
+                                </ActionButton>
+                            }
+                            footer={
+                                <ActionButton
+                                    onClick={() => {
+                                        commit({ ...draft, count: 12 });
+                                        setOpen(false);
+                                    }}
+                                >
+                                    {t("discovery.apply", {
+                                        count: draftTotal,
+                                    })}
+                                </ActionButton>
+                            }
                         >
-                            <Controller
-                                control={form.control}
-                                name="status"
-                                render={({ field }) => (
-                                    <RadioGroup
-                                        label={t("bingo.filter")}
-                                        value={field.value ?? "all"}
-                                        onValueChange={(value) => {
-                                            field.onChange(value);
-                                            if (wide)
-                                                commit({
-                                                    ...query,
-                                                    status: value,
-                                                    count: 12,
-                                                });
-                                        }}
-                                        options={statuses}
-                                    />
-                                )}
-                            />
-                            <Controller
-                                control={form.control}
-                                name="sort"
-                                render={({ field }) => (
-                                    <RadioGroup
-                                        label={t("discovery.sortLabel")}
-                                        value={field.value ?? "release"}
-                                        onValueChange={(value) => {
-                                            field.onChange(value);
-                                            if (wide)
-                                                commit({
-                                                    ...query,
-                                                    sort: value,
-                                                    count: 12,
-                                                });
-                                        }}
-                                        options={sorts}
-                                    />
-                                )}
-                            />
-                        </form>
-                    </BingoFilterSurface>
-                    <p className="nl-metadata nl-muted">
-                        {
-                            statuses.find(
-                                (option) => option.value === query.status
-                            )?.label
-                        }{" "}
-                        ·{" "}
-                        {
-                            sorts.find((option) => option.value === query.sort)
-                                ?.label
+                            <FilterGroup label={t("bingo.catalog.status")}>
+                                <FilterChips
+                                    label={t("bingo.catalog.status")}
+                                    multiple={false}
+                                    value={[draft.status]}
+                                    onValueChange={([status]) =>
+                                        changeStatus(status)
+                                    }
+                                    options={statuses}
+                                />
+                            </FilterGroup>
+                        </FilterSurface>
+                    </div>
+                    <AppliedTokens
+                        label={t("bingo.filter")}
+                        clearLabel={t("discovery.clearFilters")}
+                        onClear={() =>
+                            commit({ ...query, status: "all", count: 12 })
                         }
-                    </p>
-                </div>
+                        tokens={
+                            query.status !== "all" && statusLabel
+                                ? [
+                                      {
+                                          key: "status",
+                                          label: statusLabel,
+                                          removeLabel: t(
+                                              "discovery.removeCondition",
+                                              { condition: statusLabel }
+                                          ),
+                                          onRemove: () =>
+                                              commit({
+                                                  ...query,
+                                                  status: "all",
+                                                  count: 12,
+                                              }),
+                                      },
+                                  ]
+                                : []
+                        }
+                    />
+                </>
             ) : null}
             {visible.length ? (
                 <ul className="nl-bingo-catalog__grid">
