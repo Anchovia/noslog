@@ -44,7 +44,7 @@
     min-height: 44px;
     cursor: pointer;
 }
-/* 링 + 점 — 2px 링 안에 8px 점. 마우스를 올리면 슬라이더 손잡이와 같은 후광(40) */
+/* 링 + 점 — 2px 링 안에 8px 점. 마우스를 올려도 모양은 그대로(Carbon·Primer·shadcn) */
 .noslog-ui .nl-radio-group__option input {
     appearance: none;
     width: 20px;
@@ -64,9 +64,6 @@
     margin: 4px;
     border-radius: 50%;
     background: var(--nl-primary-default);
-}
-.noslog-ui .nl-radio-group__option:hover input:enabled {
-    box-shadow: 0 0 0 10px var(--nl-state-halo);
 }
 .noslog-ui .nl-radio-group__option input:focus-visible {
     outline: none;

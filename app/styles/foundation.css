@@ -11,7 +11,7 @@
     --nl-overlay-shadow:
         0 0 2px rgb(0 0 0 / 36%), 0 2px 6px rgb(0 0 0 / 12%),
         0 4px 12px rgb(0 0 0 / 24%);
-    /* 슬라이더 손잡이·라디오의 마우스·포커스 후광 — primary 16% (2026-09-12 사용자 승인) */
+    /* 슬라이더 손잡이의 마우스·끄는 중·포커스 후광 — primary 16% (2026-09-12 사용자 승인) */
     --nl-state-halo: color-mix(
         in srgb,
         var(--nl-primary-default) 16%,
