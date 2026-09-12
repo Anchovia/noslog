@@ -27,11 +27,3 @@ export function getProfileCardInitial(name: string, locale: string) {
     }
     return "N";
 }
-
-export function getCardExamColor(exam: number) {
-    if (exam === 1) return "#F2A634";
-    if (exam === 2) return "#D85C4F";
-    if (exam <= 4) return "#AD69E9";
-    if (exam <= 7) return "#3FA2FF";
-    return "#8A8A8A";
-}

@@ -14,6 +14,7 @@ export default function Pagination({
     nextLabel,
     busy = false,
     pageHref,
+    showSingle = false,
 }: {
     page: number;
     totalPages: number;
@@ -24,9 +25,11 @@ export default function Pagination({
     nextLabel: string;
     busy?: boolean;
     pageHref?: (page: number) => string;
+    /** 한 페이지뿐이어도 ‹ 1 › 을 그린다 (기본은 숨김) */
+    showSingle?: boolean;
 }) {
     const { ref, width } = useElementWidth<HTMLElement>();
-    if (totalPages <= 1) return null;
+    if (totalPages <= 1 && !showSingle) return null;
     const compact = width < 356;
     const capacity = compact ? 3 : 5;
     const pages: (number | "gap")[] =

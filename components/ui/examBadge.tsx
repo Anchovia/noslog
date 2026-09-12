@@ -1,4 +1,7 @@
 import { useTranslations } from "@/components/i18n/localeProvider";
+import { getExamTier, isExamGrade } from "@/features/exams/examGrades";
+
+export { isExamGrade };
 
 export default function ExamBadge({
     mode,
@@ -8,32 +11,38 @@ export default function ExamBadge({
     exam: number | null;
 }) {
     const t = useTranslations();
-    if (!exam || exam < 1 || exam > 10) return null;
-    const tier =
-        exam === 1
-            ? "peak"
-            : exam === 2
-              ? "top"
-              : exam <= 4
-                ? "high"
-                : exam <= 7
-                  ? "mid"
-                  : "low";
+    if (!isExamGrade(exam)) return null;
+    const name = mode === "basic" ? "Basic" : "Recital";
     return (
         <span
             className="nl-exam-badge"
             role="img"
-            data-tier={tier}
-            aria-label={t("rankings.examBadge", {
-                mode: mode === "basic" ? "Basic" : "Recital",
-                exam,
-            })}
+            data-mode={mode}
+            data-tier={getExamTier(exam)}
+            aria-label={t("rankings.examBadge", { mode: name, exam })}
         >
-            <span className="nl-exam-badge__band" aria-hidden />
+            {mode === "recital" ? (
+                <>
+                    <span
+                        className="nl-exam-badge__arc nl-exam-badge__arc--inner"
+                        aria-hidden
+                    />
+                    <span
+                        className="nl-exam-badge__arc nl-exam-badge__arc--outer"
+                        aria-hidden
+                    />
+                </>
+            ) : null}
             <span className="nl-exam-badge__mode" aria-hidden>
-                {mode === "basic" ? "B" : "R"}
+                <span className="nl-exam-badge__full">
+                    {name.toUpperCase()}
+                </span>
+                <span className="nl-exam-badge__short">{name[0]}</span>
             </span>
-            <span aria-hidden>{t("rankings.examGrade", { exam })}</span>
+            <span className="nl-exam-badge__divider" aria-hidden />
+            <span className="nl-exam-badge__grade" aria-hidden>
+                {t("rankings.examGrade", { exam })}
+            </span>
         </span>
     );
 }

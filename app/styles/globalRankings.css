@@ -1,16 +1,20 @@
+/* 랭킹 페이지 — 2026-09-13 재설계. 정보가 적은 목록이라 폭을 채우지 않고 640 가운데에 둔다.
+   상단(제목 · 모드 세그먼트 · 지표 탭과 지역)은 이전 그대로, 표는 모든 폭에서 한 규격이다. */
 .noslog-ui .nl-global-rankings {
+    /* 1~3위 순위 숫자는 검정 명판의 금속색(골드·실버·브론즈) */
+    --nl-rank-1: var(--nl-exam-tier-top);
+    --nl-rank-2: var(--nl-exam-tier-high);
+    --nl-rank-3: var(--nl-exam-tier-mid);
+    --nl-ranking-inset: var(--nl-spacing-12);
+    padding-block: var(--nl-spacing-24) var(--nl-spacing-32);
+}
+.noslog-ui .nl-global-rankings__measure {
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-24);
-    padding-block: var(--nl-spacing-24) var(--nl-spacing-32);
-}
-.noslog-ui .nl-global-ranking-heading {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-4);
-}
-.noslog-ui .nl-global-ranking-count {
-    min-height: var(--nl-type-line-height-20);
+    width: 100%;
+    max-width: 640px;
+    margin-inline: auto;
 }
 .noslog-ui .nl-global-ranking-controls {
     container: metric-controls / inline-size;
@@ -29,106 +33,140 @@
 .noslog-ui .nl-global-ranking-content {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-24);
-}
-.noslog-ui .nl-global-ranking-content[data-personal="off-page"] {
     gap: var(--nl-spacing-16);
 }
+/* 표 — 모든 폭 같은 규격: 행 48 · 아바타 32 · 글자 14/20.
+   묶음 사이 12(순위 → 아바타 → 이름 묶음), 묶음 안 8(국기 → 이름 → 명판) */
+.noslog-ui .nl-ranking-head,
+.noslog-ui .nl-player-row {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-12);
+    padding-inline: var(--nl-ranking-inset);
+}
+.noslog-ui .nl-ranking-head {
+    padding-bottom: var(--nl-spacing-8);
+    border-bottom: 1px solid var(--nl-border-default);
+}
+.noslog-ui .nl-ranking-head__rank,
+.noslog-ui .nl-player-row__rank {
+    width: var(--nl-spacing-32);
+    flex-shrink: 0;
+    text-align: center;
+}
+.noslog-ui .nl-ranking-head__value {
+    margin-left: auto;
+}
 .noslog-ui .nl-global-ranking-list {
-    container: ranking-list / inline-size;
     list-style: none;
     padding: 0;
     margin: 0;
 }
 .noslog-ui .nl-player-row {
-    position: relative;
+    height: 48px;
+    border-bottom: 1px solid var(--nl-border-divider);
+    scroll-margin-block: 76px;
+}
+.noslog-ui .nl-player-row__rank {
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+    color: var(--nl-content-subdued);
+}
+.noslog-ui .nl-player-row__rank[data-podium="1"] {
+    color: var(--nl-rank-1);
+}
+.noslog-ui .nl-player-row__rank[data-podium="2"] {
+    color: var(--nl-rank-2);
+}
+.noslog-ui .nl-player-row__rank[data-podium="3"] {
+    color: var(--nl-rank-3);
+}
+.noslog-ui .nl-player-row .nl-avatar {
+    width: var(--nl-spacing-32);
+    height: var(--nl-spacing-32);
+    flex-shrink: 0;
+    box-shadow: inset 0 0 0 1px var(--nl-border-empty-slot);
+}
+.noslog-ui .nl-player-row__identity,
+.noslog-ui .nl-player-row__name {
     display: flex;
     align-items: center;
     gap: var(--nl-spacing-8);
     min-width: 0;
-    height: 72px;
-    padding-block: var(--nl-spacing-12);
-    scroll-margin-block: 76px;
 }
-.noslog-ui .nl-player-row__rank {
-    font-variant-numeric: tabular-nums;
-    width: 28px;
-    flex-shrink: 0;
-    text-align: right;
-    white-space: nowrap;
-}
-.noslog-ui .nl-player-row .nl-avatar {
-    box-shadow: inset 0 0 0 1px var(--nl-border-empty-slot);
-}
+/* 이름 칸이 남는 폭을 모두 가져야 그 폭이 곧 명판·닉네임이 쓸 수 있는 폭이 된다 */
 .noslog-ui .nl-player-row__identity {
-    flex: 1;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--nl-spacing-4);
+    flex: 1 1 auto;
 }
-.noslog-ui .nl-player-row__name {
-    display: flex;
-    align-items: center;
-    gap: var(--nl-spacing-4);
-    width: 100%;
-    min-width: 0;
-    height: var(--nl-type-line-height-20);
+.noslog-ui .nl-player-row__name .nl-country-marker,
+.noslog-ui .nl-player-row__identity > .nl-exam-badge {
+    flex-shrink: 0;
+}
+/* 랭킹 행의 명판은 이름 글줄(20)과 같은 높이 — 글자 12 그대로, 상자 여백만 2/6 */
+.noslog-ui .nl-player-row .nl-exam-badge {
+    padding: 2px 6px;
+}
+.noslog-ui .nl-player-row .nl-exam-badge__divider {
+    height: 10px;
+}
+.noslog-ui
+    .nl-player-row
+    .nl-exam-badge[data-tier="peak"]
+    .nl-exam-badge__divider::before {
+    top: 2px;
 }
 .noslog-ui .nl-player-row__link {
     min-width: 0;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+    font-size: var(--nl-type-size-14);
+    line-height: var(--nl-type-line-height-20);
+    font-weight: var(--nl-type-weight-semibold);
 }
 .noslog-ui .nl-player-row__value {
-    width: 88px;
+    margin-left: auto;
     flex-shrink: 0;
     text-align: right;
     white-space: nowrap;
 }
-.noslog-ui .nl-player-row[data-current="true"]::before {
-    content: "";
-    position: absolute;
-    inset-block: 0;
-    left: 0;
-    width: 2px;
-    background: var(--nl-border-strong);
-}
-.noslog-ui .nl-player-row[data-current="true"] .nl-player-row__link {
+/* 값은 이 페이지의 핵심 수치라 이름과 같은 굵기 — metric-value(500)보다 우선 */
+.noslog-ui .nl-player-row .nl-player-row__value {
     font-weight: var(--nl-type-weight-semibold);
 }
+.noslog-ui .nl-player-row[data-current="true"] {
+    background: var(--nl-surface-surface);
+}
+/* 내 행은 면이 한 단계 밝아 Recital 명판의 파인 모서리도 같은 면으로 칠한다 */
+.noslog-ui .nl-player-row[data-current="true"] .nl-exam-badge {
+    --nl-exam-badge-ground: var(--nl-surface-surface);
+}
+/* 내 행이 이 페이지에 없을 때만 나오는 한 줄 — 「내 순위 127 / 1,284」, 순위 숫자가 내 행으로 가는 링크 */
 .noslog-ui .nl-ranking-personal {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: var(--nl-spacing-8);
-    min-height: 56px;
-    padding: var(--nl-spacing-8) var(--nl-spacing-16);
+    gap: var(--nl-spacing-12);
+    padding: var(--nl-spacing-12) var(--nl-spacing-16);
     background: var(--nl-surface-surface);
     border-radius: var(--nl-radius-container);
 }
-.noslog-ui .nl-ranking-personal--unavailable {
-    justify-content: center;
+.noslog-ui .nl-ranking-personal__rank {
+    font-size: var(--nl-type-size-20);
+    line-height: var(--nl-type-line-height-28);
+    font-weight: var(--nl-type-weight-semibold);
+    font-variant-numeric: tabular-nums;
 }
-.noslog-ui .nl-ranking-personal__summary {
-    display: flex;
-    align-items: center;
-    gap: var(--nl-spacing-4);
-    white-space: nowrap;
-}
-.noslog-ui .nl-ranking-personal .nl-button,
-.noslog-ui .nl-ranking-login .nl-button {
-    height: 40px;
-    min-height: 40px;
-    flex-shrink: 0;
-}
+/* 곡 상세 채보 랭킹(ranking.css)의 로그인 줄 — 이 페이지와 무관하지만 이 규칙에 기대고 있어 이전 그대로 둔다 */
 .noslog-ui .nl-ranking-login {
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-ranking-login .nl-button {
+    height: 40px;
+    min-height: 40px;
+    flex-shrink: 0;
 }
 .noslog-ui .nl-global-ranking-message {
     text-align: center;
@@ -150,17 +188,4 @@
 }
 .noslog-ui .nl-pagination__item[aria-disabled="true"] {
     color: var(--nl-interaction-disabled-content);
-}
-@container ranking-list (min-width: 720px) {
-    .noslog-ui .nl-player-row + .nl-player-row {
-        margin-top: 1px;
-    }
-    .noslog-ui .nl-player-row + .nl-player-row::after {
-        content: "";
-        position: absolute;
-        top: -1px;
-        height: 1px;
-        width: 100%;
-        background: var(--nl-border-divider);
-    }
 }

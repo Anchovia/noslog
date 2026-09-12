@@ -12,6 +12,7 @@ import { foundationButtonClass } from "@/components/ui/Button";
 import CountryMarker from "@/components/ui/countryMarker";
 import DiscordIcon from "@/components/ui/DiscordIcon";
 import ExamBadge from "@/components/ui/examBadge";
+import ExamBadgeGroup from "@/components/ui/examBadgeGroup";
 import ProfileShareDialog from "@/features/profile/components/profileShareDialog";
 import { formatProfileDate } from "@/components/profile/dashboard/profileUtils";
 import type {
@@ -99,7 +100,7 @@ export default function ProfileIdentity({
                         </h1>
                         <CountryMarker country={user.country} />
                     </div>
-                    <div className="nl-profile-identity__exams">
+                    <ExamBadgeGroup className="nl-profile-identity__exams">
                         {hasExam ? (
                             <>
                                 <ExamBadge
@@ -113,14 +114,10 @@ export default function ProfileIdentity({
                             </>
                         ) : (
                             <span className="nl-exam-badge" data-tier="none">
-                                <span
-                                    className="nl-exam-badge__band"
-                                    aria-hidden
-                                />
                                 {t("rankings.examNone")}
                             </span>
                         )}
-                    </div>
+                    </ExamBadgeGroup>
                 </div>
                 {isOwner ? (
                     <div className="nl-profile-identity__actions">

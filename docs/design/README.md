@@ -159,10 +159,18 @@ Arcades, Bingo), built from shared primitives in `components/ui`:
 - **Profile:** Wide uses a 2:1 body grid within the same 1000px shell: Progress
   beside Record overview, then Best performances beside Recent plays. Its identity
   uses a 108px avatar and 32/40 name, with activity metadata below the name/badges.
-  When both exams are absent, the badge row shows one `ExamBadge · None`
-  placeholder (label `rankings.examNone`, band `border/default`, no mode initial)
-  so the identity stack keeps its 108px/64px height; a single missing exam shows
-  only the existing badge. Ranking rows do not use the placeholder.
+  Exam badges are 24px nameplates (user decision 2026-09-13): a metal ladder by
+  grade (10–8 graphite, 7–5 bronze, 4–3 silver with an inner rule, 2 gold on
+  `exam/tint-top`, 1 `exam/plate-peak` ebony with gold leaf), square corners for
+  Basic and corners notched inward by `radius/control` for Recital. The mode
+  reads `BASIC`/`RECITAL` only when every plate in the row fits on one line at
+  its measured width, otherwise `B`/`R` (`ExamBadgeGroup`); if even initials do
+  not fit, the row wraps as before. When both exams are absent, the badge row
+  shows one `ExamBadge · None` placeholder (label `rankings.examNone`, 1px
+  `border/default` outline plate) so the identity stack keeps its 108px/64px
+  height; a single missing exam shows only the existing badge. Ranking rows do
+  not use the placeholder. The P16 share card draws the same plate at twice the
+  scale in its raw palette.
   The no-records state separates its information notice from the owner's sync
   action below it, with a 32px gap. Center the content-width primary button with
   its light fill and no border, replacing Figma's left-aligned outlined action.

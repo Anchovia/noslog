@@ -543,7 +543,6 @@ export const enMessages = {
     "rankings.myUnavailable": "My rank unavailable",
     "rankings.loginPrompt": "Log in to view your ranking.",
     "rankings.myPosition": "My position",
-    "rankings.participants": "{count} players",
     "rankings.updating": "Updating rankings.",
     "rankings.ratingUnavailable": "NosLog Rating is currently unavailable.",
     "rankings.noRecords": "No ranking records.",
@@ -561,6 +560,8 @@ export const enMessages = {
     "rankings.noMine":
         "You have no ranking record for the selected conditions.",
     "rankings.myRank": "My rank",
+    "rankings.column.rank": "Rank",
+    "rankings.column.player": "Player",
     "rankings.empty": "No ranking records match the selected conditions.",
     "rankings.pagination": "User ranking pages",
     "rankings.examBadge": "{mode} Class {exam}",
