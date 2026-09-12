@@ -1353,8 +1353,6 @@ export const jaMessages = {
     "arcades.sort.name": "名前順",
     "arcades.sort.preferred": "お気に入り人数順",
     "arcades.results": "全{count}店舗",
-    "arcades.mapView": "地図を見る",
-    "arcades.listView": "一覧を見る",
     "arcades.searchArea": "このエリアで検索",
     "arcades.resetArea": "エリア指定を解除",
     "arcades.filtersApplied": "適用中のフィルター {count}件",

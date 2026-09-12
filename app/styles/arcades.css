@@ -1,9 +1,11 @@
 /* ─────────────────────────────────────────────────────────────────────────────
    오락실 찾기 — 지도와 목록이 한 집합
-   Compact: 지도가 위에 붙고(sticky) 목록이 시트처럼 그 위로 올라온다.
+   1056 미만: 페이지는 화면 높이에 고정, 지도 위로 목록 시트(내림/올림). 지도가 못 뜨면 보통 흐름.
    1056+: 목록 | 지도 1:1, 지도는 sticky.
    ───────────────────────────────────────────────────────────────────────────── */
 .noslog-ui .nl-arcades {
+    /* 1056 미만 시트의 내린 높이 — 페이지가 첫 카드까지 재서 덮어쓴다. 재기 전 첫 그림에만 쓰인다 */
+    --nl-sheet-peek: 40%;
     padding-bottom: var(--nl-spacing-48);
 }
 .noslog-ui .nl-arcades__head {
@@ -62,6 +64,44 @@
 /* 요약 줄 — 시트 안쪽 inset 12(카드 안 텍스트와 같은 값) */
 .noslog-ui .nl-arcades__summary {
     padding-inline: var(--nl-spacing-12);
+}
+/* 시트 머리(손잡이 · 요약 줄)와 몸(적용 조건 · 목록 · 푸터) — 1056+ 와 지도 실패 시에는 보통 흐름 */
+.noslog-ui .nl-arcades__sheet-head {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
+}
+/* 손잡이 줄을 덮는 투명 버튼 — 시트 위 여백 8 까지 포함해 머리 전체(44)가 누르는 자리 */
+.noslog-ui .nl-arcades__sheet-toggle {
+    display: none;
+    position: absolute;
+    inset: calc(-1 * var(--nl-spacing-8)) 0 0;
+    z-index: 1;
+    border: 0;
+    border-radius: var(--nl-radius-overlay) var(--nl-radius-overlay) 0 0;
+    background: none;
+    cursor: pointer;
+    touch-action: none;
+}
+.noslog-ui .nl-arcades__sheet-toggle:focus-visible {
+    outline: none;
+    box-shadow: inset 0 0 0 1px var(--nl-focus-ring);
+}
+.noslog-ui .nl-arcades__sheet-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
+}
+/* 시트 끝 푸터 — 셸 푸터와 같은 내용·같은 줄 규칙(가운데 · 16) */
+.noslog-ui .nl-arcades__footer {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--nl-spacing-16);
+    margin-top: var(--nl-spacing-8);
+    padding-block: var(--nl-spacing-16);
+    border-top: 1px solid var(--nl-border-divider);
 }
 
 /* 결과 카드 — 요약 줄(사진 64 · 이름/거리 · 기체 한 줄 · 영업 상태) 이 펼침 버튼, 아래로 펼침 칸 */
@@ -215,9 +255,6 @@
     background: var(--nl-feedback-success-marker);
     border-color: var(--nl-feedback-success-marker);
 }
-.noslog-ui .nl-arcades__preview {
-    margin-top: var(--nl-spacing-8);
-}
 
 /* 지도 */
 .noslog-ui .nl-arcade-map {
@@ -255,7 +292,6 @@
     box-shadow: inset 0 0 0 1px var(--nl-border-overlay);
 }
 .noslog-ui .nl-arcade-map__area,
-.noslog-ui .nl-arcade-map__expand,
 .noslog-ui .nl-arcade-map__legend {
     position: absolute;
     background: var(--nl-surface-overlay);
@@ -273,28 +309,43 @@
     max-width: calc(100% - 120px);
     white-space: nowrap;
 }
-.noslog-ui .nl-arcade-map__expand {
-    /* Compact 시트가 지도 아래 10 을 덮으므로 바닥 컨트롤은 24 위에 둔다 */
-    bottom: var(--nl-spacing-24);
-    right: var(--nl-spacing-8);
-    min-height: 40px;
-    padding-inline: var(--nl-spacing-12);
-}
+/* 범례 — 오른쪽 아래 둥근 물음표 버튼(44). Compact 시트가 지도 아래 10 을 덮으므로 바닥 컨트롤은 24 위에 둔다 */
 .noslog-ui .nl-arcade-map__legend {
     bottom: var(--nl-spacing-24);
-    left: var(--nl-spacing-8);
-    max-width: calc(100% - 16px);
+    right: var(--nl-spacing-8);
 }
-.noslog-ui .nl-arcade-map__legend summary {
+.noslog-ui .nl-arcade-map .nl-arcade-map__legend {
+    border: 0;
+    border-radius: var(--nl-radius-full);
+    color: var(--nl-content-default);
     cursor: pointer;
-    min-height: 40px;
+}
+/* FOCUS-1B — 자신의 1px INSIDE 경계 색만 바꾼다 */
+.noslog-ui .nl-arcade-map .nl-arcade-map__legend:focus-visible {
+    outline: none;
+    box-shadow:
+        inset 0 0 0 1px var(--nl-focus-ring),
+        var(--nl-overlay-shadow);
+}
+/* 범례 팝오버 — 버튼 위 오른쪽 맞춤 · 오버레이 계약(면 · 경계 · radius 10 · 그림자) */
+.noslog-ui.nl-arcade-map__legend-popover {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-4);
+    z-index: 70;
+    max-width: min(280px, calc(100vw - 32px));
     padding: var(--nl-spacing-12);
+    border-radius: var(--nl-radius-overlay);
+    background: var(--nl-surface-overlay);
+    color: var(--nl-content-default);
+    box-shadow:
+        inset 0 0 0 1px var(--nl-border-overlay),
+        var(--nl-overlay-shadow);
 }
-.noslog-ui .nl-arcade-map__legend[open] {
-    z-index: 4;
-}
-.noslog-ui .nl-arcade-map__legend ul {
-    padding: 0 var(--nl-spacing-12) var(--nl-spacing-12);
+.noslog-ui.nl-arcade-map__legend-popover ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-4);
 }
 /* 마커 — 핀(오락실 하나) · 버블(범위 안 개수, 코로나 맵 언어). 타겟 44 */
 .noslog-ui .nl-arcade-marker {
@@ -340,17 +391,6 @@
     outline: 2px solid var(--nl-content-on-media);
     outline-offset: 2px;
 }
-/* 전체 지도 모드(Compact) */
-.noslog-ui .nl-arcades[data-mode="map"] .nl-arcade-map {
-    height: max(320px, calc(100dvh - 300px));
-}
-.noslog-ui .nl-arcades[data-mode="map"] .nl-arcades__catalog {
-    display: none;
-}
-.noslog-ui .nl-arcades[data-mode="map"] .nl-arcades__map-region {
-    position: static;
-}
-
 /* 필터 레이어 */
 .noslog-ui .nl-arcades__filters {
     display: flex;
@@ -411,14 +451,92 @@
     .nl-arcades__handle {
     display: none;
 }
-.noslog-ui
-    .nl-arcades[data-mode="map"]:has(.nl-arcade-map[data-state="error"])
-    .nl-arcades__catalog {
-    display: flex;
+/* 1056 미만 · 지도가 떠 있을 때 — 페이지는 화면 높이(헤더 60 을 뺀)에 고정되어 스크롤되지 않는다.
+   지도는 내린 시트가 시작하는 곳까지 채우고 시트가 지금처럼 10(overlay radius) 겹쳐 올라온다.
+   내림 높이(--nl-sheet-peek)는 페이지가 첫 카드까지 재서 넣는다.
+   올림은 지도 위쪽 끝까지 — 검색·정렬·필터는 그대로 보인다. 목록은 시트 안에서만 스크롤하고,
+   셸 푸터는 숨겨 시트 목록 끝에 같은 푸터를 둔다 */
+@media (max-width: 1055px) {
+    .noslog-ui:has(.nl-arcades[data-sheet-layout]) .nl-footer {
+        display: none;
+    }
+    .noslog-ui .nl-arcades[data-sheet-layout] {
+        height: calc(100dvh - 60px);
+        padding-bottom: 0;
+        overflow: hidden;
+    }
+    .noslog-ui .nl-arcades[data-sheet-layout] .nl-arcades__results {
+        position: relative;
+        flex: 1 1 auto;
+        min-height: 0;
+    }
+    .noslog-ui .nl-arcades[data-sheet-layout] .nl-arcades__map-region {
+        position: absolute;
+        inset: 0 0 auto;
+        height: calc(100% - var(--nl-sheet-peek) + var(--nl-radius-overlay));
+    }
+    .noslog-ui .nl-arcades[data-sheet-layout] .nl-arcade-map {
+        height: 100%;
+    }
+    /* 시트는 늘 올린 높이로 두고 내림은 아래로 밀어 둔다 — 두 단계 사이를 transform 으로 움직인다
+       (헤더 숨김과 같은 200 · ease-out). 끄는 동안은 페이지가 손가락 위치를 인라인으로 넣는다 */
+    .noslog-ui .nl-arcades[data-sheet-layout] .nl-arcades__catalog {
+        position: absolute;
+        inset: 0;
+        margin-top: 0;
+        overflow: hidden;
+        transform: translateY(calc(100% - var(--nl-sheet-peek)));
+        transition: transform var(--nl-motion-duration-200) var(--nl-ease-out);
+    }
+    .noslog-ui
+        .nl-arcades[data-sheet-layout]
+        .nl-arcades__results[data-dragging]
+        .nl-arcades__catalog {
+        transition: none;
+    }
+    .noslog-ui .nl-arcades[data-sheet-layout] .nl-arcades__sheet-toggle {
+        display: block;
+    }
+    .noslog-ui .nl-arcades[data-sheet-layout] .nl-arcades__sheet-body {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow: hidden;
+        touch-action: none;
+    }
+    .noslog-ui .nl-arcades[data-sheet-layout] .nl-arcades__footer {
+        display: flex;
+    }
+    /* 올림 — 시트가 다 올라온 뒤(움직임 200 이 끝나면) 지도를 숨긴다: 둥근 모서리가 시트 옆으로 비치지 않고
+       지도 컨트롤도 초점 순서에서 빠진다. 내릴 때와 끄는 동안은 곧바로 보인다 */
+    .noslog-ui
+        .nl-arcades[data-sheet-layout][data-sheet="expanded"]
+        .nl-arcades__catalog {
+        transform: none;
+    }
+    .noslog-ui
+        .nl-arcades[data-sheet-layout][data-sheet="expanded"]
+        .nl-arcades__results:not([data-dragging])
+        .nl-arcades__map-region {
+        visibility: hidden;
+        transition: visibility 0s linear var(--nl-motion-duration-200);
+    }
+    .noslog-ui
+        .nl-arcades[data-sheet-layout][data-sheet="expanded"]
+        .nl-arcades__sheet-body {
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        touch-action: pan-y;
+    }
 }
-.noslog-ui .nl-arcades[data-mode="map"] .nl-arcade-map[data-state="error"] {
-    height: auto;
-    min-height: 0;
+/* 동작 줄이기 — 시트는 움직이지 않고 곧바로 그 단계로 바뀐다(헤더·버튼과 같은 규칙) */
+@media (max-width: 1055px) and (prefers-reduced-motion: reduce) {
+    .noslog-ui .nl-arcades[data-sheet-layout] .nl-arcades__catalog,
+    .noslog-ui
+        .nl-arcades[data-sheet-layout][data-sheet="expanded"]
+        .nl-arcades__results:not([data-dragging])
+        .nl-arcades__map-region {
+        transition: none;
+    }
 }
 @media (min-width: 1056px) {
     .noslog-ui .nl-arcades__results {
@@ -438,24 +556,15 @@
     .noslog-ui .nl-arcades__handle {
         display: none;
     }
-    .noslog-ui .nl-arcades__map-region,
-    .noslog-ui .nl-arcades[data-mode="map"] .nl-arcades__map-region {
+    .noslog-ui .nl-arcades__map-region {
         grid-column: 2;
         grid-row: 1;
         position: sticky;
         top: 84px;
     }
-    .noslog-ui .nl-arcade-map,
-    .noslog-ui .nl-arcades[data-mode="map"] .nl-arcade-map {
+    .noslog-ui .nl-arcade-map {
         height: min(680px, calc(100dvh - 120px));
         min-height: 320px;
-    }
-    .noslog-ui .nl-arcades[data-mode="map"] .nl-arcades__catalog {
-        display: flex;
-    }
-    .noslog-ui .nl-arcade-map__expand,
-    .noslog-ui .nl-arcades__preview {
-        display: none;
     }
     .noslog-ui .nl-arcade-map__legend {
         bottom: var(--nl-spacing-8);

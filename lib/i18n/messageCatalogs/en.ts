@@ -1351,8 +1351,6 @@ export const enMessages = {
     "arcades.sort.name": "Name",
     "arcades.sort.preferred": "Preferred users",
     "arcades.results": "{count} arcades",
-    "arcades.mapView": "Map view",
-    "arcades.listView": "List view",
     "arcades.searchArea": "Search this area",
     "arcades.resetArea": "Clear area bounds",
     "arcades.filtersApplied": "{count} filters applied",

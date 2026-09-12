@@ -1339,8 +1339,6 @@ export const koMessages = {
     "arcades.sort.name": "이름순",
     "arcades.sort.preferred": "선호 인원순",
     "arcades.results": "전체 {count}곳",
-    "arcades.mapView": "지도 보기",
-    "arcades.listView": "목록 보기",
     "arcades.searchArea": "이 지역에서 검색",
     "arcades.resetArea": "지역 범위 해제",
     "arcades.filtersApplied": "적용된 필터 {count}개",

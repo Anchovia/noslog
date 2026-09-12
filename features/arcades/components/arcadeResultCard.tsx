@@ -32,7 +32,6 @@ const DISCOVERY_KEYS = [
     "available",
     "sort",
     "near",
-    "mode",
 ] as const;
 
 /** 기체 한 줄 — 「기체 2대 · 가동 2대 · 주의 1대」. 정보가 없으면 「기체 정보 없음 · 제보하기」 */
@@ -117,7 +116,6 @@ export function ArcadeFreshnessLine({
  * 결과 카드 — 누르면 상세로 가지 않고 아래로 펼쳐진다(지도는 페이지가 그 핀으로 옮긴다).
  * 펼친 칸에는 카드에 없는 것만: 주소 · 오늘 영업시간 · 요금 · 기체별 한 줄 + 자세히 보기·지도에서 보기·길찾기.
  * 상세로 가는 길은 「자세히 보기」 링크 하나 — 카카오맵 목록의 「상세보기」 와 같은 역할.
- * `preview` 는 전체 지도 모드(Compact)에서 지도 아래 띄우는 카드라 늘 펼친 채이고 접히지 않는다.
  */
 export default function ArcadeResultCard({
     arcade,
@@ -128,7 +126,6 @@ export default function ArcadeResultCard({
     onSelect,
     onToggle,
     onShowOnMap,
-    preview = false,
 }: {
     arcade: PublicArcade;
     distance: number | null;
@@ -136,10 +133,9 @@ export default function ArcadeResultCard({
     selected: boolean;
     expanded: boolean;
     onSelect: (id: number) => void;
-    onToggle?: (id: number) => void;
+    onToggle: (id: number) => void;
     /** 지도가 시트에 가려질 수 있는 폭에서만 넘긴다 — 없으면 버튼을 그리지 않는다 */
     onShowOnMap?: (id: number) => void;
-    preview?: boolean;
 }) {
     const t = useTranslations();
     const locale = useLocale();
@@ -148,7 +144,6 @@ export default function ArcadeResultCard({
     const photo = arcade.photos[0];
     const [failedPhoto, setFailedPhoto] = useState<string | null>(null);
     const saveQuery = useArcadeSession((state) => state.setDiscoveryQuery);
-    const open = expanded || preview;
     const summary = (
         <>
             <span className="nl-arcade-result__photo" aria-hidden>
@@ -208,36 +203,32 @@ export default function ArcadeResultCard({
         <div
             className="nl-arcade-result"
             data-selected={selected || undefined}
-            data-expanded={open || undefined}
+            data-expanded={expanded || undefined}
             data-arcade-id={arcade.id}
             onPointerEnter={() => onSelect(arcade.id)}
         >
-            {preview ? (
-                <div className="nl-arcade-result__summary">{summary}</div>
-            ) : (
-                <button
-                    type="button"
-                    className="nl-arcade-result__summary"
-                    aria-expanded={open}
-                    aria-controls={panelId}
-                    onFocus={() => onSelect(arcade.id)}
-                    onClick={() => onToggle?.(arcade.id)}
-                >
-                    {summary}
-                    <ChevronDown
-                        className="nl-icon nl-arcade-result__chevron"
-                        aria-hidden
-                    />
-                </button>
-            )}
-            {open ? (
+            <button
+                type="button"
+                className="nl-arcade-result__summary"
+                aria-expanded={expanded}
+                aria-controls={panelId}
+                onFocus={() => onSelect(arcade.id)}
+                onClick={() => onToggle(arcade.id)}
+            >
+                {summary}
+                <ChevronDown
+                    className="nl-icon nl-arcade-result__chevron"
+                    aria-hidden
+                />
+            </button>
+            {expanded ? (
                 <ArcadeResultMore
                     id={panelId}
                     arcade={arcade}
                     now={now}
                     locale={locale}
                     detailHref={href(`/gamecenter/${arcade.slug}`)}
-                    onShowOnMap={preview ? undefined : onShowOnMap}
+                    onShowOnMap={onShowOnMap}
                     onOpenDetail={() => {
                         const current = new URLSearchParams(
                             window.location.search

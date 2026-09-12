@@ -124,6 +124,5 @@ export const arcadeDiscoverySchema = z.object({
     sort: z.enum(["distance", "verified", "name", "preferred"]).default("name"),
     /** 내 주변만 보기 — 켜지면 현재 위치에서 가까운 순이 먼저, 그 안에서 sort */
     near: z.boolean().default(false),
-    mode: z.enum(["list", "map"]).default("list"),
 });
 export type ArcadeDiscoveryValues = z.infer<typeof arcadeDiscoverySchema>;

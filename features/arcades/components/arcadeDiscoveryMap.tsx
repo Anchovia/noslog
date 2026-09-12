@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useEffectEvent, useRef, useState } from "react";
-import { CircleAlert, Minus, Plus } from "lucide-react";
+import * as Popover from "@radix-ui/react-popover";
+import { CircleAlert, Minus, Plus, createLucideIcon } from "lucide-react";
 import { useTranslations } from "@/components/i18n/localeProvider";
 import Button from "@/components/ui/Button";
 import { loadKakaoMaps } from "@/lib/kakaoMaps";
@@ -21,6 +22,11 @@ import {
 // 핀 하나의 SVG — lucide map-pin 기하(24 상자). 채움 핀이라 아이콘 스트로크 규칙 밖
 const PIN_PATH =
     "M12 2C8.1 2 5 5.1 5 9c0 5.3 7 13 7 13s7-7.7 7-13c0-3.9-3.1-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z";
+// lucide circle-question-mark 에서 원을 뺀 물음표 — 둥근 버튼 배경이 원 역할을 한다
+const QuestionMark = createLucideIcon("question-mark", [
+    ["path", { d: "M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3", key: "1u773s" }],
+    ["path", { d: "M12 17h.01", key: "p32p05" }],
+]);
 
 /**
  * 오락실 지도 — 축소하면 범위 안 개수를 든 원(버블), 확대하면 오락실마다 핀.
@@ -33,18 +39,20 @@ export default function ArcadeDiscoveryMap({
     selectedId,
     onSelect,
     onSearchArea,
-    onExpand,
+    onStateChange,
     inlineError = false,
     focusLevel = 5,
     focusRequest = null,
     wheelZoom = false,
+    zoomControls = true,
 }: {
     appKey: string;
     arcades: PublicArcade[];
     selectedId: number | null;
     onSelect: (id: number) => void;
     onSearchArea?: (bounds: ArcadeBounds) => void;
-    onExpand?: () => void;
+    /** 불러오는 중 · 준비 · 실패 — 목록 페이지가 지도가 떴을 때만 시트 배치를 쓴다 */
+    onStateChange?: (state: "loading" | "ready" | "error") => void;
     inlineError?: boolean;
     /** 오락실이 하나일 때 쓰는 확대 단계(상세 위치 지도는 더 가깝게) */
     focusLevel?: number;
@@ -52,6 +60,8 @@ export default function ArcadeDiscoveryMap({
     focusRequest?: { id: number; seq: number } | null;
     /** 마우스 휠 확대·축소 — 지도 전용 영역(목록 페이지)에서만. 페이지 흐름에 끼인 지도는 스크롤이 걸려 끈다 */
     wheelZoom?: boolean;
+    /** 확대·축소 버튼 — 목록 페이지 지도는 휠·두 손가락 확대로 충분해 뺀다 */
+    zoomControls?: boolean;
 }) {
     const t = useTranslations();
     const container = useRef<HTMLDivElement>(null);
@@ -74,6 +84,12 @@ export default function ArcadeDiscoveryMap({
     const select = useEffectEvent(onSelect);
     const currentArcades = useEffectEvent(() => arcades);
     const currentSelected = useEffectEvent(() => selectedId);
+    const reportState = useEffectEvent((next: "loading" | "ready" | "error") =>
+        onStateChange?.(next)
+    );
+    useEffect(() => {
+        reportState(state);
+    }, [state]);
 
     useEffect(() => {
         if (!container.current) return;
@@ -355,32 +371,40 @@ export default function ArcadeDiscoveryMap({
                 </div>
             ) : (
                 <>
-                    <div className="nl-arcade-map__zoom">
-                        <button
-                            type="button"
-                            className="nl-icon-button"
-                            aria-label={t("arcades.zoomIn")}
-                            onClick={() =>
-                                mapRef.current?.setLevel(
-                                    Math.max(1, mapRef.current.getLevel() - 1)
-                                )
-                            }
-                        >
-                            <Plus className="nl-icon" aria-hidden />
-                        </button>
-                        <button
-                            type="button"
-                            className="nl-icon-button"
-                            aria-label={t("arcades.zoomOut")}
-                            onClick={() =>
-                                mapRef.current?.setLevel(
-                                    Math.min(14, mapRef.current.getLevel() + 1)
-                                )
-                            }
-                        >
-                            <Minus className="nl-icon" aria-hidden />
-                        </button>
-                    </div>
+                    {zoomControls ? (
+                        <div className="nl-arcade-map__zoom">
+                            <button
+                                type="button"
+                                className="nl-icon-button"
+                                aria-label={t("arcades.zoomIn")}
+                                onClick={() =>
+                                    mapRef.current?.setLevel(
+                                        Math.max(
+                                            1,
+                                            mapRef.current.getLevel() - 1
+                                        )
+                                    )
+                                }
+                            >
+                                <Plus className="nl-icon" aria-hidden />
+                            </button>
+                            <button
+                                type="button"
+                                className="nl-icon-button"
+                                aria-label={t("arcades.zoomOut")}
+                                onClick={() =>
+                                    mapRef.current?.setLevel(
+                                        Math.min(
+                                            14,
+                                            mapRef.current.getLevel() + 1
+                                        )
+                                    )
+                                }
+                            >
+                                <Minus className="nl-icon" aria-hidden />
+                            </button>
+                        </div>
+                    ) : null}
                     {pendingBounds && onSearchArea ? (
                         <button
                             className="nl-arcade-map__area nl-control"
@@ -395,33 +419,43 @@ export default function ArcadeDiscoveryMap({
                     ) : null}
                 </>
             )}
-            {onExpand && state === "ready" ? (
-                <button
-                    type="button"
-                    className="nl-arcade-map__expand nl-control"
-                    onClick={onExpand}
-                >
-                    {t("arcades.mapView")}
-                </button>
-            ) : null}
-            {onSearchArea ? (
-                <details
-                    hidden={inlineError && state === "error"}
-                    className="nl-arcade-map__legend nl-metadata"
-                >
-                    <summary>{t("arcades.legend")}</summary>
-                    <ul>
-                        {(
-                            [
-                                "arcades.legendPin",
-                                "arcades.legendBubble",
-                                "arcades.legendSelected",
-                            ] as const
-                        ).map((key) => (
-                            <li key={key}>{t(key)}</li>
-                        ))}
-                    </ul>
-                </details>
+            {/* 범례 — 오른쪽 아래 둥근 물음표 버튼, 누르면 버튼 위로 팝오버(바깥을 누르거나 Esc 로 닫힌다) */}
+            {onSearchArea && !(inlineError && state === "error") ? (
+                <Popover.Root>
+                    <Popover.Trigger asChild>
+                        <button
+                            type="button"
+                            className="nl-arcade-map__legend nl-icon-button"
+                            aria-label={t("arcades.legend")}
+                        >
+                            <QuestionMark className="nl-icon" aria-hidden />
+                        </button>
+                    </Popover.Trigger>
+                    <Popover.Portal>
+                        <Popover.Content
+                            side="top"
+                            align="end"
+                            sideOffset={8}
+                            collisionPadding={16}
+                            className="noslog-ui nl-arcade-map__legend-popover nl-body-secondary"
+                        >
+                            <strong className="nl-control">
+                                {t("arcades.legend")}
+                            </strong>
+                            <ul>
+                                {(
+                                    [
+                                        "arcades.legendPin",
+                                        "arcades.legendBubble",
+                                        "arcades.legendSelected",
+                                    ] as const
+                                ).map((key) => (
+                                    <li key={key}>{t(key)}</li>
+                                ))}
+                            </ul>
+                        </Popover.Content>
+                    </Popover.Portal>
+                </Popover.Root>
             ) : null}
         </div>
     );

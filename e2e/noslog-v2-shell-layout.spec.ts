@@ -39,6 +39,13 @@ for (const locale of ["ko", "ja", "en"] as const) {
             await expect(page.locator(".nl-footer__content")).toHaveCount(1);
             for (const width of widths) {
                 await page.setViewportSize({ width, height: 900 });
+                // 오락실은 1056 미만에서 지도가 뜨면 화면 높이에 고정되고, 셸 푸터 대신 시트 목록 끝에 같은 푸터를 둔다
+                const sheetFooter =
+                    route === "/gamecenter" &&
+                    width < 1056 &&
+                    (await page
+                        .locator(".nl-arcades[data-sheet-layout]")
+                        .count()) > 0;
                 const layout = await page.evaluate(() => {
                     const box = (selector: string | Element) => {
                         const element =
@@ -75,7 +82,15 @@ for (const locale of ["ko", "ja", "en"] as const) {
                 });
                 const expectedWidth = Math.min(layout.viewport, 1000);
                 const expectedX = (layout.viewport - expectedWidth) / 2;
-                for (const box of [layout.header, layout.main, layout.footer]) {
+                if (sheetFooter) {
+                    await expect(page.locator(".nl-footer")).toBeHidden();
+                    await expect(
+                        page.locator(".nl-arcades__footer")
+                    ).toBeVisible();
+                }
+                for (const box of sheetFooter
+                    ? [layout.header, layout.main]
+                    : [layout.header, layout.main, layout.footer]) {
                     expect(box.width, `${route} at ${width}`).toBeCloseTo(
                         expectedWidth,
                         1
@@ -85,10 +100,9 @@ for (const locale of ["ko", "ja", "en"] as const) {
                         1
                     );
                 }
-                for (const surface of [
-                    layout.headerSurface,
-                    layout.footerSurface,
-                ]) {
+                for (const surface of sheetFooter
+                    ? [layout.headerSurface]
+                    : [layout.headerSurface, layout.footerSurface]) {
                     expect(surface.width).toBe(layout.viewport);
                     expect(surface.x).toBe(0);
                 }
