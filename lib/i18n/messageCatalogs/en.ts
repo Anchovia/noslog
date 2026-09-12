@@ -1145,7 +1145,7 @@ export const enMessages = {
     "settings.removePhoto": "Remove",
     "settings.nostalgiaName": "NOSTALGIA player name",
     "settings.showNostalgiaName": "Show NOSTALGIA player name",
-    "settings.showDiscordIdentity": "Show Discord identity",
+    "settings.showDiscordIdentity": "Show Discord nickname",
     "settings.showPreferredArcade": "Show preferred arcade",
     "settings.showPlayCount": "Show total play count",
     "settings.showPlayActivity": "Show play activity",

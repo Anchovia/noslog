@@ -1135,7 +1135,7 @@ export const koMessages = {
     "settings.removePhoto": "제거",
     "settings.nostalgiaName": "NOSTALGIA 플레이어명",
     "settings.showNostalgiaName": "NOSTALGIA 플레이어명 공개",
-    "settings.showDiscordIdentity": "Discord 정체성 공개",
+    "settings.showDiscordIdentity": "Discord 닉네임 공개",
     "settings.showPreferredArcade": "선호 오락실 공개",
     "settings.showPlayCount": "총 플레이 횟수 공개",
     "settings.showPlayActivity": "플레이 활동 공개",

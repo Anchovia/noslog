@@ -1142,7 +1142,7 @@ export const jaMessages = {
     "settings.removePhoto": "削除",
     "settings.nostalgiaName": "NOSTALGIA プレイヤー名",
     "settings.showNostalgiaName": "NOSTALGIA プレイヤー名を公開",
-    "settings.showDiscordIdentity": "Discord のアカウント情報を公開",
+    "settings.showDiscordIdentity": "Discord のニックネームを公開",
     "settings.showPreferredArcade": "お気に入りゲームセンターを公開",
     "settings.showPlayCount": "総プレー回数を公開",
     "settings.showPlayActivity": "プレー活動を公開",
