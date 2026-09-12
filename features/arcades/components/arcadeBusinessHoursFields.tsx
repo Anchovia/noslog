@@ -11,6 +11,8 @@ interface ArcadeBusinessHoursFieldsProps {
     register: UseFormRegister<ArcadeFormValues>;
     errors: FieldErrors<ArcadeFormValues>;
     legacyNote?: string;
+    // 공개 영업시간을 마지막으로 확인한 날짜 — 추가 폼에는 없다
+    verifiedLabel?: string;
 }
 
 function businessHoursErrorMessage(errors: FieldErrors<ArcadeFormValues>) {
@@ -27,9 +29,7 @@ function businessHoursErrorMessage(errors: FieldErrors<ArcadeFormValues>) {
         if (typeof day?.close?.message === "string") return day.close.message;
     }
 
-    return typeof hours.openEveryDay?.message === "string"
-        ? hours.openEveryDay.message
-        : undefined;
+    return undefined;
 }
 
 export default function ArcadeBusinessHoursFields({
@@ -37,6 +37,7 @@ export default function ArcadeBusinessHoursFields({
     register,
     errors,
     legacyNote,
+    verifiedLabel,
 }: ArcadeBusinessHoursFieldsProps) {
     const errorMessage = businessHoursErrorMessage(errors);
 
@@ -44,7 +45,8 @@ export default function ArcadeBusinessHoursFields({
         <fieldset className="border-border rounded-card grid gap-2 border p-3">
             <legend className="text-label px-1">영업시간</legend>
             <p className="text-caption">
-                자정을 넘겨 영업하면 종료 시간을 다음 날 시간으로 입력합니다.
+                체크를 해제한 요일은 휴무로 표시됩니다. 자정을 넘겨 영업하면
+                종료 시간을 다음 날 시간으로 입력합니다.
             </p>
             {ARCADE_WEEKDAYS.map(({ key, label }) => (
                 <div
@@ -80,13 +82,15 @@ export default function ArcadeBusinessHoursFields({
                     />
                 </div>
             ))}
-            <label className="text-body-muted mt-1 flex items-center gap-2">
-                <input
-                    type="checkbox"
-                    {...register("businessHours.openEveryDay")}
-                />
-                연중무휴
-            </label>
+            <div className="mt-1 flex flex-wrap items-center justify-between gap-2">
+                <label className="text-body-muted flex items-center gap-2">
+                    <input type="checkbox" {...register("hoursConfirmed")} />
+                    영업시간 오늘 확인
+                </label>
+                {verifiedLabel ? (
+                    <span className="text-caption">{verifiedLabel}</span>
+                ) : null}
+            </div>
             {legacyNote ? (
                 <p className="text-caption whitespace-pre-wrap">
                     기존 입력: {legacyNote}
