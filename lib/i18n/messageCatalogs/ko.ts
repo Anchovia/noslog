@@ -538,7 +538,6 @@ export const koMessages = {
     "rankings.myUnavailable": "내 순위 없음",
     "rankings.loginPrompt": "로그인 후 내 랭킹을 확인할 수 있습니다.",
     "rankings.myPosition": "내 위치",
-    "rankings.participants": "참가자 {count}명",
     "rankings.updating": "랭킹을 갱신하고 있습니다.",
     "rankings.ratingUnavailable":
         "NosLog 레이팅을 일시적으로 이용할 수 없습니다.",
@@ -557,6 +556,8 @@ export const koMessages = {
     "rankings.loadError": "랭킹을 불러오지 못했습니다. 다시 시도해주세요.",
     "rankings.noMine": "선택한 조건의 내 랭킹 기록이 없습니다.",
     "rankings.myRank": "내 순위",
+    "rankings.column.rank": "순위",
+    "rankings.column.player": "플레이어",
     "rankings.empty": "선택한 조건의 랭킹 기록이 없습니다.",
     "rankings.pagination": "유저 랭킹 페이지",
     "rankings.examBadge": "{mode} {exam}급",

@@ -34,7 +34,7 @@ function fixture(
                     : index % 3 === 1
                       ? "ja-JP"
                       : "global",
-            exam: index % 5 === 2 ? null : (index % 10) + 1,
+            exam: index % 5 === 4 ? null : (index % 10) + 1,
             grade: 500_000,
             value:
                 query.metric === "rating"
@@ -81,6 +81,9 @@ async function prepare(
 ) {
     await page.route("**/api/rankings?*", (route) => respond(route, options));
     await page.goto(`/${locale}/rankings?mode=basic&region=kr&page=1`);
+    const loaded = page.waitForResponse((response) =>
+        /\/api\/rankings\?.*region=all/.test(response.url())
+    );
     await page.locator(".nl-global-ranking-controls [role=combobox]").click();
     await page
         .getByRole("option", {
@@ -88,9 +91,7 @@ async function prepare(
             exact: true,
         })
         .click();
-    await expect(page.locator(".nl-global-ranking-count")).toContainText(
-        (options.count ?? 28).toLocaleString(locale)
-    );
+    await loaded;
     await expect(page.locator("#global-ranking-results")).toHaveAttribute(
         "aria-busy",
         "false"
@@ -102,10 +103,10 @@ test("shows 25 tied rows, reaches the containing page, and returns with Back", a
 }) => {
     await prepare(page);
     await expect(page.locator(".nl-player-row")).toHaveCount(25);
-    await expect(page.locator(".nl-ranking-personal__summary")).toHaveText(
-        "내 순위2 / 28"
-    );
-    const mine = page.getByRole("link", { name: "내 위치", exact: true });
+    await expect(page.getByText(/^참가자 \d+명$/)).toHaveCount(0);
+    await expect(page.locator(".nl-ranking-personal__rank")).toHaveText("2");
+    await expect(page.locator(".nl-ranking-personal")).toContainText("/ 28");
+    const mine = page.getByRole("link", { name: "내 위치 2", exact: true });
     await expect(mine).toHaveAttribute("href", /page=2#ranking-player-926$/);
     await mine.click();
     await expect(page.locator(".nl-player-row")).toHaveCount(3);
@@ -263,26 +264,28 @@ for (const count of [0, 1, 25, 26])
         await expect(page.locator(".nl-player-row")).toHaveCount(
             Math.min(count, 25)
         );
-        await expect(page.locator(".nl-pagination")).toHaveCount(
-            count > 25 ? 1 : 0
+        await expect(page.locator(".nl-pagination")).toHaveCount(count ? 1 : 0);
+        await expect(page.locator(".nl-pagination__item")).toHaveCount(
+            count > 25 ? 4 : count ? 3 : 0
         );
-        await expect(
-            page.locator(".nl-ranking-personal--unavailable")
-        ).toHaveCount(count ? 1 : 0);
+        await expect(page.locator(".nl-ranking-personal")).toHaveCount(
+            count ? 1 : 0
+        );
+        if (count)
+            await expect(page.locator(".nl-ranking-personal")).toHaveText(
+                "내 순위 없음"
+            );
         if (!count)
             await expect(
                 page.locator(".nl-global-rankings [role=status]")
             ).toHaveText("선택한 조건의 랭킹 기록이 없습니다.");
     });
 
-test("unavailable Rating has a distinct recovery action and guests retain an exact login return", async ({
+test("unavailable Rating has a distinct recovery action and guests see no personal line", async ({
     page,
 }) => {
     await prepare(page, { guest: true });
-    await expect(page.locator(".nl-ranking-login a")).toHaveAttribute(
-        "href",
-        "/ko/login?returnTo=%2Fko%2Frankings%3Fmode%3Dbasic%26region%3Dall%26page%3D1"
-    );
+    await expect(page.locator(".nl-ranking-personal")).toHaveCount(0);
     await page.route("**/api/rankings?*metric=rating*", (route) =>
         respond(route, { unavailable: true, guest: true })
     );
@@ -302,7 +305,7 @@ test("unavailable Rating has a distinct recovery action and guests retain an exa
 
 for (const locale of ["ko", "ja", "en"])
     for (const theme of reviewThemes)
-        test(`${locale} ${theme} respects Figma geometry, text styles, and accessible reflow`, async ({
+        test(`${locale} ${theme} keeps the ranking table geometry, text styles, and accessible reflow`, async ({
             page,
         }, testInfo) => {
             test.skip(
@@ -329,79 +332,156 @@ for (const locale of ["ko", "ja", "en"])
                 await expect(
                     page.locator(".nl-pagination__controls")
                 ).toHaveCSS("width", paginationWidth < 356 ? "252px" : "356px");
+                // 폭이 바뀌면 명판 라벨을 다시 재므로 한 프레임 넘긴 뒤 읽는다
+                await page.evaluate(
+                    () =>
+                        new Promise((resolve) =>
+                            requestAnimationFrame(() =>
+                                requestAnimationFrame(resolve)
+                            )
+                        )
+                );
                 const geometry = await page.evaluate(() => {
-                    const list = document.querySelector<HTMLElement>(
-                        ".nl-global-ranking-list"
-                    )!;
+                    const box = (element: Element) =>
+                        element.getBoundingClientRect();
+                    const middle = (rect: DOMRect) =>
+                        rect.top + rect.height / 2;
+                    const center = (rect: DOMRect) =>
+                        rect.left + rect.width / 2;
                     const rows = [
-                        ...list.querySelectorAll<HTMLElement>(".nl-player-row"),
+                        ...document.querySelectorAll<HTMLElement>(
+                            ".nl-global-ranking-list .nl-player-row"
+                        ),
                     ];
-                    const badge =
-                        document.querySelector<HTMLElement>(".nl-exam-badge")!;
-                    const region =
-                        document.querySelector<HTMLElement>(
-                            ".nl-compact-select"
-                        )!;
+                    const region = document.querySelector<HTMLElement>(
+                        ".nl-global-ranking-controls .nl-compact-select"
+                    )!;
                     const personal = document.querySelector<HTMLElement>(
                         ".nl-ranking-personal"
                     )!;
-                    const summary = personal
-                        .querySelector<HTMLElement>(
-                            ".nl-ranking-personal__summary"
-                        )!
-                        .getBoundingClientRect();
-                    const action = personal
-                        .querySelector<HTMLElement>("a")!
-                        .getBoundingClientRect();
+                    const headRank = box(
+                        document.querySelector(".nl-ranking-head__rank")!
+                    );
                     return {
                         overflow:
                             document.documentElement.scrollWidth -
                             document.documentElement.clientWidth,
-                        rows: rows.map(
-                            (row) => row.getBoundingClientRect().height
-                        ),
-                        step:
-                            rows[1].getBoundingClientRect().top -
-                            rows[0].getBoundingClientRect().top,
-                        listWidth: list.getBoundingClientRect().width,
-                        badge: badge.getBoundingClientRect().height,
-                        regionHeight: region.getBoundingClientRect().height,
+                        measure: box(
+                            document.querySelector(
+                                ".nl-global-rankings__measure"
+                            )!
+                        ).width,
+                        step: box(rows[1]).top - box(rows[0]).top,
+                        rows: rows.map((row) => {
+                            const rank = box(
+                                row.querySelector(".nl-player-row__rank")!
+                            );
+                            const avatar = box(
+                                row.querySelector(".nl-avatar")!
+                            );
+                            const link = row.querySelector<HTMLElement>(
+                                ".nl-player-row__link"
+                            )!;
+                            const identity = row.querySelector<HTMLElement>(
+                                ".nl-player-row__identity"
+                            )!;
+                            const badge = row.querySelector(".nl-exam-badge");
+                            const name = getComputedStyle(link);
+                            const value = getComputedStyle(
+                                row.querySelector(".nl-player-row__value")!
+                            );
+                            return {
+                                id: row.id,
+                                height: box(row).height,
+                                avatar: [avatar.width, avatar.height],
+                                rankWidth: rank.width,
+                                rankOffset: Math.abs(
+                                    center(rank) - center(headRank)
+                                ),
+                                name: [
+                                    name.fontSize,
+                                    name.lineHeight,
+                                    name.fontWeight,
+                                ],
+                                value: [
+                                    value.fontSize,
+                                    value.lineHeight,
+                                    value.fontWeight,
+                                ],
+                                truncated: link.scrollWidth > link.clientWidth,
+                                label: identity.dataset.examLabel,
+                                badge: badge
+                                    ? {
+                                          height: box(badge).height,
+                                          offset: Math.abs(
+                                              middle(box(badge)) -
+                                                  middle(box(link))
+                                          ),
+                                          overhang:
+                                              box(badge).right -
+                                              box(identity).right,
+                                      }
+                                    : null,
+                            };
+                        }),
+                        regionHeight: box(region).height,
                         regionShadow: getComputedStyle(region).boxShadow,
                         firstWeight: getComputedStyle(
                             rows[0].querySelector(".nl-player-row__rank")!
                         ).fontWeight,
-                        otherWeight: getComputedStyle(
-                            rows.at(-1)!.querySelector(".nl-player-row__rank")!
-                        ).fontWeight,
-                        font: getComputedStyle(list).fontFamily,
-                        summaryGeometry: {
-                            right: personal.getBoundingClientRect().right,
-                            summaryRight: summary.right,
-                            actionLeft: action.left,
-                            actionRight: action.right,
+                        font: getComputedStyle(rows[0]).fontFamily,
+                        personal: {
+                            height: box(personal).height,
+                            overflow:
+                                personal.scrollWidth - personal.clientWidth,
+                            rankTag: personal.querySelector(
+                                ".nl-ranking-personal__rank"
+                            )!.tagName,
+                            buttons:
+                                personal.querySelectorAll(".nl-button").length,
                         },
-                        summary: document
-                            .querySelector(".nl-ranking-personal")!
-                            .getBoundingClientRect().height,
                     };
                 });
                 expect(geometry.overflow).toBeLessThanOrEqual(1);
-                expect(geometry.rows.every((height) => height === 72)).toBe(
-                    true
-                );
-                expect(geometry.step).toBe(geometry.listWidth >= 720 ? 73 : 72);
-                expect(geometry.badge).toBe(24);
-                expect(geometry.regionHeight).toBe(44);
+                expect(geometry.measure).toBeLessThanOrEqual(640);
+                if (width >= 768) expect(geometry.measure).toBe(640);
+                expect(geometry.step).toBe(48);
+                for (const row of geometry.rows) {
+                    expect(row.height).toBe(48);
+                    expect(row.avatar).toEqual([32, 32]);
+                    expect(row.rankWidth).toBe(32);
+                    expect(row.rankOffset).toBeLessThanOrEqual(0.5);
+                    expect(row.name).toEqual(["14px", "20px", "600"]);
+                    expect(row.value).toEqual(["14px", "20px", "600"]);
+                    if (!row.badge) continue;
+                    expect(row.badge.height).toBe(20);
+                    expect(row.badge.offset).toBeLessThanOrEqual(0.5);
+                    expect(row.badge.overhang).toBeLessThanOrEqual(0.5);
+                    if (width >= 768) expect(row.label).toBe("full");
+                }
+                expect(
+                    geometry.rows.find((row) => row.id === "ranking-player-904")
+                        ?.badge
+                ).toBeNull();
+                const long = geometry.rows.find(
+                    (row) => row.id === "ranking-player-902"
+                )!;
+                if (width <= 390)
+                    expect(long).toMatchObject({
+                        label: "short",
+                        truncated: true,
+                    });
+                else expect(long.truncated).toBe(false);
+                expect(geometry.regionHeight).toBe(width >= 1056 ? 40 : 44);
                 expect(geometry.regionShadow).toContain("1px");
                 expect(geometry.firstWeight).toBe("600");
                 expect(geometry.font).toContain("Pretendard JP Variable");
-                expect(geometry.summary).toBe(56);
-                expect(
-                    geometry.summaryGeometry.summaryRight
-                ).toBeLessThanOrEqual(geometry.summaryGeometry.actionLeft);
-                expect(
-                    geometry.summaryGeometry.actionRight
-                ).toBeLessThanOrEqual(geometry.summaryGeometry.right - 15);
+                expect(geometry.personal).toEqual({
+                    height: 52,
+                    overflow: 0,
+                    rankTag: "A",
+                    buttons: 0,
+                });
                 if (width === 320 || width === 1280) {
                     const audit = await new AxeBuilder({ page })
                         .include(".nl-global-rankings")
