@@ -107,11 +107,11 @@
     display: inline-flex;
 }
 .noslog-ui .nl-exam-badge__full,
-[data-exam-label="full"] .nl-exam-badge__short {
+.noslog-ui [data-exam-label="full"] .nl-exam-badge__short {
     position: absolute;
     visibility: hidden;
 }
-[data-exam-label="full"] .nl-exam-badge__full {
+.noslog-ui [data-exam-label="full"] .nl-exam-badge__full {
     position: static;
     visibility: visible;
 }
