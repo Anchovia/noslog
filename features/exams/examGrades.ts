@@ -1,4 +1,22 @@
 export type ExamGradeMode = "basic" | "recital";
+export type ExamTier = "low" | "mid" | "high" | "top" | "peak";
+
+export function isExamGrade(exam: number | null | undefined): exam is number {
+    return typeof exam === "number" && exam >= 1 && exam <= 10;
+}
+
+// 검정 명판의 금속 사다리: 10~8 흑연 · 7~5 브론즈 · 4~3 실버 · 2 골드 · 1 흑단+금박
+export function getExamTier(exam: number): ExamTier {
+    return exam === 1
+        ? "peak"
+        : exam === 2
+          ? "top"
+          : exam <= 4
+            ? "high"
+            : exam <= 7
+              ? "mid"
+              : "low";
+}
 
 export interface ExamAchievementGrade {
     exam: { mode: string; grade: number | null };

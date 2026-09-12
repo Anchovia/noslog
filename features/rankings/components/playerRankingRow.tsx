@@ -2,7 +2,8 @@ import Link from "next/link";
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import Avatar from "@/components/ui/avatar";
 import CountryMarker from "@/components/ui/countryMarker";
-import ExamBadge from "@/components/ui/examBadge";
+import ExamBadge, { isExamGrade } from "@/components/ui/examBadge";
+import ExamBadgeGroup from "@/components/ui/examBadgeGroup";
 import { localizePath } from "@/lib/i18n/routing";
 import type {
     GlobalRankingQuery,
@@ -47,7 +48,11 @@ export default function PlayerRankingRow({
                     </Link>
                     <CountryMarker country={row.country} />
                 </div>
-                <ExamBadge mode={query.mode} exam={row.exam} />
+                {isExamGrade(row.exam) ? (
+                    <ExamBadgeGroup className="nl-exam-badges">
+                        <ExamBadge mode={query.mode} exam={row.exam} />
+                    </ExamBadgeGroup>
+                ) : null}
             </div>
             <span className="nl-player-row__value nl-metric-value">
                 {row.value.toLocaleString(locale)}{" "}

@@ -1,40 +1,160 @@
+.noslog-ui .nl-exam-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--nl-spacing-8);
+    align-self: stretch;
+    min-width: 0;
+}
+/* 검정 명판 — 금속 사다리 · 급이 오를수록 안쪽 선·면·장식이 붙는다(2026-09-13).
+   Basic 은 직각, Recital 은 모서리가 radius/control 만큼 안으로 파인다. */
 .noslog-ui .nl-exam-badge {
+    --nl-exam-badge-ground: var(--nl-surface-canvas);
+    --nl-exam-badge-metal: var(--nl-exam-tier-low);
+    --nl-exam-badge-fill: var(--nl-exam-badge-ground);
+    position: relative;
+    isolation: isolate;
     display: inline-flex;
     align-items: center;
     flex-shrink: 0;
-    gap: var(--nl-spacing-8);
-    padding: var(--nl-spacing-4) var(--nl-spacing-8) var(--nl-spacing-4) 0;
+    gap: var(--nl-spacing-4);
+    padding: var(--nl-spacing-4) var(--nl-spacing-8);
     overflow: hidden;
-    border-radius: var(--nl-radius-control);
-    background: var(--nl-surface-plate);
-    color: var(--nl-content-default);
+    background: var(--nl-exam-badge-fill);
+    color: var(--nl-content-subdued);
     font-size: var(--nl-type-size-12);
     line-height: var(--nl-type-line-height-16);
     font-weight: var(--nl-type-weight-regular);
     white-space: nowrap;
 }
+.noslog-ui .nl-exam-badge::before,
+.noslog-ui .nl-exam-badge::after {
+    content: "";
+    position: absolute;
+    pointer-events: none;
+    border: 1px solid var(--nl-exam-badge-metal);
+}
+.noslog-ui .nl-exam-badge::before {
+    inset: 0;
+    z-index: 3;
+}
+.noslog-ui .nl-exam-badge::after {
+    display: none;
+    inset: 2px;
+    z-index: 1;
+}
+.noslog-ui .nl-exam-badge__arc {
+    --nl-exam-arc: var(--nl-radius-control);
+    --nl-exam-arc-fill: var(--nl-exam-badge-ground);
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    pointer-events: none;
+    background:
+        radial-gradient(
+                circle at 0 0,
+                var(--nl-exam-arc-fill) calc(var(--nl-exam-arc) - 1px),
+                var(--nl-exam-badge-metal) calc(var(--nl-exam-arc) - 1px)
+                    var(--nl-exam-arc),
+                transparent var(--nl-exam-arc)
+            )
+            top left / var(--nl-exam-arc) var(--nl-exam-arc) no-repeat,
+        radial-gradient(
+                circle at 100% 0,
+                var(--nl-exam-arc-fill) calc(var(--nl-exam-arc) - 1px),
+                var(--nl-exam-badge-metal) calc(var(--nl-exam-arc) - 1px)
+                    var(--nl-exam-arc),
+                transparent var(--nl-exam-arc)
+            )
+            top right / var(--nl-exam-arc) var(--nl-exam-arc) no-repeat,
+        radial-gradient(
+                circle at 0 100%,
+                var(--nl-exam-arc-fill) calc(var(--nl-exam-arc) - 1px),
+                var(--nl-exam-badge-metal) calc(var(--nl-exam-arc) - 1px)
+                    var(--nl-exam-arc),
+                transparent var(--nl-exam-arc)
+            )
+            bottom left / var(--nl-exam-arc) var(--nl-exam-arc) no-repeat,
+        radial-gradient(
+                circle at 100% 100%,
+                var(--nl-exam-arc-fill) calc(var(--nl-exam-arc) - 1px),
+                var(--nl-exam-badge-metal) calc(var(--nl-exam-arc) - 1px)
+                    var(--nl-exam-arc),
+                transparent var(--nl-exam-arc)
+            )
+            bottom right / var(--nl-exam-arc) var(--nl-exam-arc) no-repeat;
+}
+.noslog-ui .nl-exam-badge__arc--inner {
+    display: none;
+    z-index: 2;
+    --nl-exam-arc: calc(var(--nl-radius-control) + 2px);
+    --nl-exam-arc-fill: var(--nl-exam-badge-fill);
+}
+.noslog-ui .nl-exam-badge[data-tier="high"]::after,
+.noslog-ui .nl-exam-badge[data-tier="top"]::after,
+.noslog-ui .nl-exam-badge[data-tier="peak"]::after,
+.noslog-ui .nl-exam-badge[data-tier="high"] .nl-exam-badge__arc--inner,
+.noslog-ui .nl-exam-badge[data-tier="top"] .nl-exam-badge__arc--inner,
+.noslog-ui .nl-exam-badge[data-tier="peak"] .nl-exam-badge__arc--inner {
+    display: block;
+}
+.noslog-ui .nl-exam-badge__mode,
+.noslog-ui .nl-exam-badge__divider,
+.noslog-ui .nl-exam-badge__grade {
+    position: relative;
+    z-index: 5;
+}
 .noslog-ui .nl-exam-badge__mode {
-    font-weight: var(--nl-type-weight-semibold);
+    display: inline-flex;
 }
-.noslog-ui .nl-exam-badge__band {
+.noslog-ui .nl-exam-badge__full,
+[data-exam-label="full"] .nl-exam-badge__short {
+    position: absolute;
+    visibility: hidden;
+}
+[data-exam-label="full"] .nl-exam-badge__full {
+    position: static;
+    visibility: visible;
+}
+.noslog-ui .nl-exam-badge__divider {
+    width: 1px;
+    height: var(--nl-spacing-12);
+    background: var(--nl-exam-badge-metal);
+}
+.noslog-ui .nl-exam-badge__grade {
+    color: var(--nl-exam-badge-metal);
+}
+.noslog-ui .nl-exam-badge[data-tier="low"] .nl-exam-badge__grade {
+    color: var(--nl-content-default);
+}
+.noslog-ui .nl-exam-badge[data-tier="mid"] {
+    --nl-exam-badge-metal: var(--nl-exam-tier-mid);
+}
+.noslog-ui .nl-exam-badge[data-tier="high"] {
+    --nl-exam-badge-metal: var(--nl-exam-tier-high);
+}
+.noslog-ui .nl-exam-badge[data-tier="top"] {
+    --nl-exam-badge-metal: var(--nl-exam-tier-top);
+    --nl-exam-badge-fill: var(--nl-exam-tint-top);
+}
+.noslog-ui .nl-exam-badge[data-tier="peak"] {
+    --nl-exam-badge-metal: var(--nl-exam-tier-peak);
+    --nl-exam-badge-fill: var(--nl-exam-plate-peak);
+}
+.noslog-ui .nl-exam-badge[data-tier="peak"] .nl-exam-badge__mode {
+    color: var(--nl-exam-badge-metal);
+}
+.noslog-ui .nl-exam-badge[data-tier="peak"] .nl-exam-badge__divider::before {
+    content: "";
+    position: absolute;
+    left: -2.5px;
+    top: 3px;
     width: 6px;
-    align-self: stretch;
-    background: var(--nl-exam-tier-low);
+    height: 6px;
+    background: var(--nl-exam-badge-metal);
+    clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
 }
-.noslog-ui .nl-exam-badge[data-tier="none"] .nl-exam-badge__band {
-    background: var(--nl-border-default);
-}
-.noslog-ui .nl-exam-badge[data-tier="mid"] .nl-exam-badge__band {
-    background: var(--nl-exam-tier-mid);
-}
-.noslog-ui .nl-exam-badge[data-tier="high"] .nl-exam-badge__band {
-    background: var(--nl-exam-tier-high);
-}
-.noslog-ui .nl-exam-badge[data-tier="top"] .nl-exam-badge__band {
-    background: var(--nl-exam-tier-top);
-}
-.noslog-ui .nl-exam-badge[data-tier="peak"] .nl-exam-badge__band {
-    background: var(--nl-exam-tier-peak);
+.noslog-ui .nl-exam-badge[data-tier="none"] {
+    --nl-exam-badge-metal: var(--nl-border-default);
 }
 .noslog-ui .nl-country-marker {
     display: inline-flex;

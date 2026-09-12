@@ -453,23 +453,33 @@
         },
         {
             "name": "exam/tier-mid",
-            "light": "#0074e2",
-            "dark": "#3fa2ff"
+            "light": "#8c5b38",
+            "dark": "#b98b67"
         },
         {
             "name": "exam/tier-high",
-            "light": "#9452ce",
-            "dark": "#ad69e9"
+            "light": "#6d737b",
+            "dark": "#c4c8ce"
         },
         {
             "name": "exam/tier-top",
-            "light": "#cd2e1d",
-            "dark": "#d85c4f"
+            "light": "#80601d",
+            "dark": "#d6b56d"
         },
         {
             "name": "exam/tier-peak",
-            "light": "#ba5500",
-            "dark": "#f2a634"
+            "light": "#d6b56d",
+            "dark": "#d6b56d"
+        },
+        {
+            "name": "exam/plate-peak",
+            "light": "#111111",
+            "dark": "#000000"
+        },
+        {
+            "name": "exam/tint-top",
+            "light": "#f2efe8",
+            "dark": "#25211a"
         }
     ],
     "scale": [

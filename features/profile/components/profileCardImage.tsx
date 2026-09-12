@@ -9,7 +9,12 @@ import {
     getProfileCountryCode,
 } from "@/components/profile/dashboard/profileUtils";
 import {
-    getCardExamColor,
+    getExamTier,
+    isExamGrade,
+    type ExamGradeMode,
+    type ExamTier,
+} from "@/features/exams/examGrades";
+import {
     getProfileCardInitial,
     getProfileCardMode,
 } from "@/features/profile/profileCardModel";
@@ -58,6 +63,250 @@ function Divider() {
     );
 }
 
+// 검정 명판 — UI ExamBadge 의 카드 배율(×2) 원시값 판. 카드 면이 그라디언트라
+// Recital 의 파인 모서리는 원판으로 덮지 않고 면을 조각으로 나눠 모서리를 비워 둔다.
+const examPlates: Record<ExamTier, { metal: string; fill: string | null }> = {
+    low: { metal: "#8a8a8a", fill: null },
+    mid: { metal: "#b98b67", fill: null },
+    high: { metal: "#c4c8ce", fill: null },
+    top: { metal: "#d6b56d", fill: "#25211a" },
+    peak: { metal: "#d6b56d", fill: "#000000" },
+};
+const plateLine = 2;
+const plateInset = 4;
+const plateArc = 8;
+type Corner = "tl" | "tr" | "bl" | "br";
+const corners: Corner[] = ["tl", "tr", "bl", "br"];
+// 왼쪽 위 기준 좌표를 모서리마다 뒤집는다. 한 축만 뒤집으면 호의 방향도 바뀐다.
+function cornerSvg(
+    key: string,
+    corner: Corner,
+    size: number,
+    draw: (
+        point: (x: number, y: number) => string,
+        sweep: (base: 0 | 1) => number
+    ) => string,
+    paint: { fill?: string; stroke?: string }
+) {
+    const flipX = corner.endsWith("r");
+    const flipY = corner.startsWith("b");
+    const point = (x: number, y: number) =>
+        `${flipX ? size - x : x} ${flipY ? size - y : y}`;
+    const sweep = (base: 0 | 1) => (flipX !== flipY ? 1 - base : base);
+    return (
+        <svg
+            key={key}
+            width={size}
+            height={size}
+            viewBox={`0 0 ${size} ${size}`}
+            style={{
+                position: "absolute",
+                [flipX ? "right" : "left"]: 0,
+                [flipY ? "bottom" : "top"]: 0,
+            }}
+        >
+            <path
+                d={draw(point, sweep)}
+                fill={paint.fill ?? "none"}
+                stroke={paint.stroke ?? "none"}
+                strokeWidth={plateLine}
+            />
+        </svg>
+    );
+}
+function CardExamPlate({
+    mode,
+    grade,
+    label,
+}: {
+    mode: ExamGradeMode;
+    grade: number;
+    label: string;
+}) {
+    const tier = getExamTier(grade);
+    const { metal, fill } = examPlates[tier];
+    const rule = tier === "high" || tier === "top" || tier === "peak";
+    const concave = mode === "recital";
+    const outerArc = plateArc - plateLine / 2;
+    const outerEnd = Math.sqrt(outerArc ** 2 - 1);
+    const innerArc = plateArc + plateInset - plateLine / 2;
+    const innerEnd = Math.sqrt(innerArc ** 2 - (plateInset + 1) ** 2);
+    const innerStart = plateArc + plateInset - plateLine;
+    // 조각은 key 가 붙은 배열로 넘긴다 — ImageResponse 는 Fragment 를 크기 없는
+    // 상자로 감싸서, 그 안의 절대 배치 조각이 명판이 아니라 그 상자를 기준으로 놓였다
+    const layers: ReturnType<typeof cornerSvg>[] = [];
+    const bar = (key: string, style: Record<string, number | string>) =>
+        layers.push(
+            <div key={key} style={{ position: "absolute", ...style }} />
+        );
+    const arcs = (
+        key: string,
+        size: number,
+        draw: Parameters<typeof cornerSvg>[3],
+        paint: Parameters<typeof cornerSvg>[4]
+    ) => {
+        for (const corner of corners)
+            layers.push(
+                cornerSvg(`${key}-${corner}`, corner, size, draw, paint)
+            );
+    };
+    if (concave && fill) {
+        bar("fill-x", {
+            left: plateArc,
+            right: plateArc,
+            top: 0,
+            bottom: 0,
+            background: fill,
+        });
+        bar("fill-y", {
+            left: 0,
+            right: 0,
+            top: plateArc,
+            bottom: plateArc,
+            background: fill,
+        });
+        arcs(
+            "fill",
+            plateArc,
+            (p, s) =>
+                `M ${p(0, outerArc)} A ${outerArc} ${outerArc} 0 0 ${s(0)} ${p(outerArc, 0)} L ${p(plateArc, 0)} L ${p(plateArc, plateArc)} L ${p(0, plateArc)} Z`,
+            { fill }
+        );
+    }
+    if (rule && !concave)
+        bar("inner", {
+            top: plateInset - plateLine,
+            left: plateInset - plateLine,
+            right: plateInset - plateLine,
+            bottom: plateInset - plateLine,
+            border: `${plateLine}px solid ${metal}`,
+        });
+    if (rule && concave) {
+        bar("inner-top", {
+            top: plateInset,
+            left: innerStart,
+            right: innerStart,
+            height: plateLine,
+            background: metal,
+        });
+        bar("inner-bottom", {
+            bottom: plateInset,
+            left: innerStart,
+            right: innerStart,
+            height: plateLine,
+            background: metal,
+        });
+        bar("inner-left", {
+            left: plateInset,
+            top: innerStart,
+            bottom: innerStart,
+            width: plateLine,
+            background: metal,
+        });
+        bar("inner-right", {
+            right: plateInset,
+            top: innerStart,
+            bottom: innerStart,
+            width: plateLine,
+            background: metal,
+        });
+        arcs(
+            "inner",
+            plateArc + plateInset,
+            (p, s) =>
+                `M ${p(innerEnd, plateInset + 1)} A ${innerArc} ${innerArc} 0 0 ${s(1)} ${p(plateInset + 1, innerEnd)}`,
+            { stroke: metal }
+        );
+    }
+    if (concave) {
+        const edge = plateArc - plateLine;
+        bar("outer-top", {
+            top: 0,
+            left: edge,
+            right: edge,
+            height: plateLine,
+            background: metal,
+        });
+        bar("outer-bottom", {
+            bottom: 0,
+            left: edge,
+            right: edge,
+            height: plateLine,
+            background: metal,
+        });
+        bar("outer-left", {
+            left: 0,
+            top: edge,
+            bottom: edge,
+            width: plateLine,
+            background: metal,
+        });
+        bar("outer-right", {
+            right: 0,
+            top: edge,
+            bottom: edge,
+            width: plateLine,
+            background: metal,
+        });
+        arcs(
+            "outer",
+            plateArc,
+            (p, s) =>
+                `M ${p(outerEnd, 1)} A ${outerArc} ${outerArc} 0 0 ${s(1)} ${p(1, outerEnd)}`,
+            { stroke: metal }
+        );
+    }
+    return (
+        <div
+            style={{
+                position: "relative",
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                height: 44,
+                padding: "0 16px",
+                fontSize: 24,
+                // ImageResponse 는 undefined 스타일 값을 문자열로 바꾸다 던진다
+                ...(!concave && fill ? { background: fill } : {}),
+                ...(concave ? {} : { border: `${plateLine}px solid ${metal}` }),
+            }}
+        >
+            {layers}
+            <span style={{ color: tier === "peak" ? metal : subdued }}>
+                {mode === "basic" ? "BASIC" : "RECITAL"}
+            </span>
+            <div
+                style={{
+                    position: "relative",
+                    display: "flex",
+                    width: plateLine,
+                    height: 22,
+                    background: metal,
+                }}
+            >
+                {tier === "peak" ? (
+                    <svg
+                        width={12}
+                        height={12}
+                        viewBox="0 0 12 12"
+                        style={{ position: "absolute", left: -5, top: 5 }}
+                    >
+                        <path d="M 6 0 L 12 6 L 6 12 L 0 6 Z" fill={metal} />
+                    </svg>
+                ) : null}
+            </div>
+            <span
+                style={{
+                    color: tier === "low" ? ink : metal,
+                    fontWeight: 700,
+                }}
+            >
+                {label}
+            </span>
+        </div>
+    );
+}
+
 export default function ProfileCardImage({
     user,
     mode,
@@ -79,10 +328,12 @@ export default function ProfileCardImage({
     const country = getProfileCountryCode(user.country);
     const exams = (
         [
-            { mode: "B", grade: user.exam_basic },
-            { mode: "R", grade: user.exam_recital },
+            { mode: "basic", grade: user.exam_basic },
+            { mode: "recital", grade: user.exam_recital },
         ] as const
-    ).filter((exam) => exam.grade && exam.grade >= 1 && exam.grade <= 10);
+    ).flatMap(({ mode, grade }) =>
+        isExamGrade(grade) ? [{ mode, grade }] : []
+    );
     return (
         <div
             style={{
@@ -423,36 +674,13 @@ export default function ProfileCardImage({
                             }}
                         >
                             <Divider />
-                            <div
-                                style={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    gap: 12,
-                                    height: 44,
-                                    paddingRight: 16,
-                                    background: "#24242c",
-                                    borderRadius: 8,
-                                    overflow: "hidden",
-                                    fontWeight: 700,
-                                    fontSize: 24,
-                                }}
-                            >
-                                <span
-                                    style={{
-                                        width: 10,
-                                        height: 44,
-                                        background: getCardExamColor(
-                                            exam.grade!
-                                        ),
-                                    }}
-                                />
-                                <span>{exam.mode}</span>
-                                <span>
-                                    {t("rankings.examGrade", {
-                                        exam: exam.grade!,
-                                    })}
-                                </span>
-                            </div>
+                            <CardExamPlate
+                                mode={exam.mode}
+                                grade={exam.grade}
+                                label={t("rankings.examGrade", {
+                                    exam: exam.grade,
+                                })}
+                            />
                         </div>
                     ))}
                 </div>

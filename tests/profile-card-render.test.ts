@@ -66,6 +66,8 @@ describe("P16 share card", () => {
         "ko-partial",
         "ja-long",
         "en-recital",
+        "ko-top-peak",
+        "ko-mid-high",
     ] as const) {
         it(`renders ${scenario} with the complete original Pretendard JP fonts`, async () => {
             const locale = scenario.startsWith("ja")
@@ -97,6 +99,11 @@ describe("P16 share card", () => {
                     hide_play_count: true,
                     hide_play_activity: true,
                 });
+            // 명판의 금빛 면·안쪽 선·흑단·파인 모서리 조각을 모두 그리게 한다
+            if (scenario === "ko-top-peak")
+                Object.assign(user, { exam_basic: 2, exam_recital: 1 });
+            if (scenario === "ko-mid-high")
+                Object.assign(user, { exam_basic: 5, exam_recital: 3 });
             if (scenario === "ja-long")
                 Object.assign(user, {
                     username: "長いユーザー名とノスタルジアの演奏記録",
