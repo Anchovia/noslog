@@ -27,6 +27,8 @@ const bookmarkletCopy = {
         completed: "동기화가 완료됐습니다.",
         viewResult: "동기화 결과 보기",
         syncFailed: "동기화 중 오류가 발생했습니다.",
+        loadFailed:
+            "NosLog 동기화 코드를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.",
     },
     ja: {
         title: "NosLog データ同期",
@@ -46,6 +48,8 @@ const bookmarkletCopy = {
         completed: "同期が完了しました。",
         viewResult: "同期結果を見る",
         syncFailed: "同期中にエラーが発生しました。",
+        loadFailed:
+            "NosLogの同期コードを読み込めませんでした。しばらくしてから再度お試しください。",
     },
     en: {
         title: "NosLog data sync",
@@ -65,6 +69,8 @@ const bookmarkletCopy = {
         completed: "Sync completed.",
         viewResult: "View sync results",
         syncFailed: "An error occurred during sync.",
+        loadFailed:
+            "The NosLog sync code could not be loaded. Please try again shortly.",
     },
 } as const satisfies Record<Locale, Record<string, string>>;
 
@@ -119,11 +125,33 @@ export function verifySyncToken(token: string): SyncTokenPayload | null {
     }
 }
 
+// 북마크에는 짧은 로더만 담는다 — 모바일 Chrome 은 붙여 넣은 북마크 주소를 5,000자에서 잘라
+// 본체를 통째로 담던 1만 자짜리 북마클릿이 실행조차 되지 않았다. 본체는 /api/bookmarklet 이 내려주고,
+// 토큰은 주소가 아니라 스크립트 태그의 data-token 으로 넘겨 요청 주소·서버 로그에 남지 않게 한다
 export function createBookmarkletHref(
     appOrigin: string,
     token: string,
     protectionBypassSecret?: string,
     locale: Locale = "ko"
+) {
+    const scriptUrl = new URL("/api/bookmarklet", `${appOrigin}/`);
+    scriptUrl.searchParams.set("locale", locale);
+    if (protectionBypassSecret) {
+        scriptUrl.searchParams.set(
+            "x-vercel-protection-bypass",
+            protectionBypassSecret
+        );
+    }
+    const code = `(()=>{const s=document.createElement("script");s.src=${JSON.stringify(scriptUrl.toString())};s.dataset.token=${JSON.stringify(token)};s.onerror=()=>{s.remove();alert(${JSON.stringify(bookmarkletCopy[locale].loadFailed)})};document.body.appendChild(s)})()`;
+
+    return `javascript:${encodeURIComponent(code)}`;
+}
+
+// 로더가 불러오는 동기화 본체 — 토큰은 담지 않고, 자기를 불러온 스크립트 태그에서 읽는다
+export function createBookmarkletScript(
+    appOrigin: string,
+    locale: Locale = "ko",
+    protectionBypassSecret?: string
 ) {
     const receiveUrl = new URL("/api/receivePlayerData", `${appOrigin}/`);
     receiveUrl.searchParams.set("locale", locale);
@@ -145,8 +173,11 @@ export function createBookmarkletHref(
         "/fonts/pretendard-jp/1.3.9/PretendardJPVariable.woff2",
         appOrigin
     ).toString();
-    const code = `
+    return `
         (async()=>{
+            const loader=document.currentScript;
+            const token=loader?loader.dataset.token:"";
+            if(loader)loader.remove();
             const copy=${JSON.stringify(copy)};
             const overlayId="noslog-sync-overlay";
             if(document.getElementById(overlayId))return;
@@ -245,7 +276,7 @@ export function createBookmarkletHref(
                 const response=await fetch(${JSON.stringify(receiveUrlString)}, {
                     method:"POST",
                     headers:{"Content-Type":"application/json"},
-                    body:JSON.stringify({token:${JSON.stringify(token)},playerData,recentData,totalData})
+                    body:JSON.stringify({token,playerData,recentData,totalData})
                 });
                 const result=await response.json().catch(()=>({}));
                 if(!response.ok)throw new Error(result.message||copy.processFailed);
@@ -261,6 +292,4 @@ export function createBookmarkletHref(
     `
         .replace(/\s+/g, " ")
         .trim();
-
-    return `javascript:${encodeURIComponent(code)}`;
 }
