@@ -904,6 +904,8 @@ export const enMessages = {
         "Use the account that can access your NOSTALGIA play data.",
     "sync.runInstruction":
         "On the official site, run the {bookmarklet} bookmark you just saved.",
+    "sync.mobileRun":
+        "In Chrome on mobile, type the bookmark’s name in the address bar and tap it in the suggestions. Opening it from the bookmarks menu does not run it.",
     "sync.returnInstruction":
         "When the completion message appears, return here to check your sync result.",
     "sync.setup": "Bookmarklet setup",

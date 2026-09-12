@@ -897,6 +897,8 @@ export const jaMessages = {
         "NOSTALGIAのプレーデータを閲覧できるアカウントでログインしてください。",
     "sync.runInstruction":
         "公式サイトで、保存した「{bookmarklet}」ブックマークを実行してください。",
+    "sync.mobileRun":
+        "モバイル版Chromeでは、アドレスバーにブックマーク名を入力し、候補に表示されたブックマークをタップして実行してください。ブックマークメニューから開くと実行されません。",
     "sync.returnInstruction":
         "完了の案内が表示されたら、このページに戻って結果を確認してください。",
     "sync.setup": "ブックマークレットの登録",

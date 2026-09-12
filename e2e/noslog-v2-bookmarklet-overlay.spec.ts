@@ -1,16 +1,41 @@
 import { expect, test } from "@playwright/test";
 import { readFile } from "node:fs/promises";
-import type { createBookmarkletHref } from "@/lib/bookmarklet";
+import type {
+    createBookmarkletHref,
+    createBookmarkletScript,
+} from "@/lib/bookmarklet";
 
 let createHref: typeof createBookmarkletHref;
+let createScript: typeof createBookmarkletScript;
 test.beforeAll(async () => {
     process.env.DATABASE_URL ??=
         "postgresql://fixture:fixture@localhost:5432/fixture";
     process.env.COOKIE_PASSWORD ??= "render-only-cookie-password-32-characters";
     process.env.BOOKMARKLET_SECRET ??=
         "render-only-bookmarklet-secret-32-characters";
-    createHref = (await import("@/lib/bookmarklet")).createBookmarkletHref;
+    const bookmarklet = await import("@/lib/bookmarklet");
+    createHref = bookmarklet.createBookmarkletHref;
+    createScript = bookmarklet.createBookmarkletScript;
 });
+
+// 북마크에 저장되는 로더 그대로 실행한다 — 로더가 /api/bookmarklet 에서 본체를 불러온다
+const runLoader = (
+    page: import("@playwright/test").Page,
+    locale: "ko" | "ja" | "en"
+) =>
+    page.evaluate(
+        (source) => {
+            void (0, eval)(source);
+        },
+        decodeURIComponent(
+            createHref(
+                "https://noslog.example",
+                "render-only-fixture",
+                undefined,
+                locale
+            ).slice("javascript:".length)
+        )
+    );
 
 for (const locale of ["ko", "ja", "en"] as const) {
     for (const state of ["wrong", "full", "recent", "failed"] as const) {
@@ -29,6 +54,14 @@ for (const locale of ["ko", "ja", "en"] as const) {
                         ),
                         contentType: "font/woff2",
                         headers: { "Access-Control-Allow-Origin": "*" },
+                    });
+                if (url.pathname === "/api/bookmarklet")
+                    return route.fulfill({
+                        contentType: "text/javascript",
+                        body: createScript(
+                            "https://noslog.example",
+                            url.searchParams.get("locale") as typeof locale
+                        ),
                     });
                 if (url.pathname.includes("pdata_getdata")) {
                     if (state === "failed")
@@ -68,18 +101,8 @@ for (const locale of ["ko", "ja", "en"] as const) {
                     ? "https://noslog.example/fixture"
                     : "https://p.eagate.573.jp/fixture"
             );
-            const source = decodeURIComponent(
-                createHref(
-                    "https://noslog.example",
-                    "render-only-fixture",
-                    undefined,
-                    locale
-                ).slice("javascript:".length)
-            );
-            // Execute the generated application in a fully routed, isolated browser.
-            await page.evaluate((source) => {
-                void (0, eval)(source);
-            }, source);
+            // Execute the stored loader in a fully routed, isolated browser.
+            await runLoader(page, locale);
             const overlay = page.locator("#noslog-sync-overlay");
             await expect(overlay).toHaveAttribute(
                 "data-state",
@@ -87,6 +110,10 @@ for (const locale of ["ko", "ja", "en"] as const) {
             );
             await expect(overlay).not.toContainText("https://");
             await expect(page.locator("#noslog-sync-track")).toBeHidden();
+            // 로더 스크립트 태그는 본체가 토큰을 읽은 뒤 스스로 지운다
+            await expect(
+                page.locator('script[src*="/api/bookmarklet"]')
+            ).toHaveCount(0);
             for (const width of [320, 390, 768, 1470]) {
                 await page.setViewportSize({ width, height: 844 });
                 await expect
@@ -107,6 +134,8 @@ for (const locale of ["ko", "ja", "en"] as const) {
             expect(posts.length).toBe(
                 ["full", "recent"].includes(state) ? 1 : 0
             );
+            if (posts.length)
+                expect(posts[0].token).toBe("render-only-fixture");
             if (state === "recent") expect(posts[0].totalData).toBeNull();
             if (state === "full")
                 expect(posts[0].totalData).toEqual({
@@ -119,3 +148,28 @@ for (const locale of ["ko", "ja", "en"] as const) {
         });
     }
 }
+
+test("bookmarklet loader reports a script that cannot be loaded", async ({
+    page,
+}) => {
+    await page.route("**/*", (route) =>
+        new URL(route.request().url()).pathname === "/api/bookmarklet"
+            ? route.fulfill({ status: 503, json: {} })
+            : route.fulfill({
+                  contentType: "text/html",
+                  body: "<!doctype html><title>Isolated bookmarklet fixture</title><body></body>",
+              })
+    );
+    await page.goto("https://p.eagate.573.jp/fixture");
+    const dialog = page.waitForEvent("dialog");
+    await runLoader(page, "ko");
+    const alert = await dialog;
+    expect(alert.message()).toBe(
+        "NosLog 동기화 코드를 불러오지 못했습니다. 잠시 후 다시 시도해주세요."
+    );
+    await alert.dismiss();
+    await expect(page.locator("#noslog-sync-overlay")).toHaveCount(0);
+    await expect(page.locator('script[src*="/api/bookmarklet"]')).toHaveCount(
+        0
+    );
+});

@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { toast } from "sonner";
 import { useTranslations } from "@/components/i18n/localeProvider";
 import Button, { foundationButtonClass } from "@/components/ui/Button";
 import ModalDialog from "@/components/ui/modalDialog";
@@ -94,12 +95,15 @@ export default function SyncSetup({
     useEffect(() => {
         anchor.current?.setAttribute("href", bookmarklet);
     }, [bookmarklet]);
-    async function copy() {
+    // 메인 버튼은 드래그 대상이라 라벨을 바꾸지 않고(드래그하면 북마크 이름이 된다) 토스트로 알린다
+    async function copy(announce = false) {
         try {
             await navigator.clipboard.writeText(bookmarklet);
             setCopyState("copied");
+            if (announce) toast.success(t("sync.copied"));
         } catch {
             setCopyState("failed");
+            if (announce) toast.error(t("common.retryLater"));
         }
     }
     return (
@@ -131,7 +135,10 @@ export default function SyncSetup({
                             <div className="nl-sync-install-card__target">
                                 <a
                                     ref={anchor}
-                                    onClick={(event) => event.preventDefault()}
+                                    onClick={(event) => {
+                                        event.preventDefault();
+                                        void copy(true);
+                                    }}
                                     draggable
                                     className={`${foundationButtonClass({
                                         variant: "secondary",
@@ -263,6 +270,7 @@ export default function SyncSetup({
                                 bookmarklet: t("sync.bookmarklet"),
                             })}
                         </p>
+                        <p className="nl-body">{t("sync.mobileRun")}</p>
                         <p className="nl-body-secondary nl-muted">
                             {t("sync.returnInstruction")}
                         </p>

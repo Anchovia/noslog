@@ -896,6 +896,8 @@ export const koMessages = {
         "NOSTALGIA 플레이 데이터를 볼 수 있는 계정으로 로그인하세요.",
     "sync.runInstruction":
         "공식 사이트에서 방금 저장한 ‘{bookmarklet}’ 북마크를 실행하세요.",
+    "sync.mobileRun":
+        "모바일 Chrome에서는 주소창에 북마크 이름을 입력한 뒤, 추천 목록에 뜬 북마크를 눌러 실행하세요. 북마크 메뉴에서 누르면 실행되지 않습니다.",
     "sync.returnInstruction":
         "완료 안내가 뜨면 이 페이지로 돌아와 연동 결과를 확인하세요.",
     "sync.setup": "북마클릿 등록",
