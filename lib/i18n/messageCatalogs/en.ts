@@ -507,6 +507,8 @@ export const enMessages = {
     "onboarding.connectedAccount": "Connected login account",
     "onboarding.nicknameHelp":
         "1–20 characters · Letters, numbers, spaces and . _ -",
+    "onboarding.privacyDescription":
+        "Items you turn on are visible to other users. You can change this later in Settings.",
     "onboarding.nicknameDescription":
         "This is the name shown on NosLog. It is separate from your Discord and NOSTALGIA names.",
     "onboarding.regionDescription":

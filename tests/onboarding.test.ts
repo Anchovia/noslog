@@ -72,12 +72,35 @@ describe("최초 프로필 설정", () => {
                 username: "carol",
                 country: "ko-KR",
                 locale: "ko",
+                hide_nostalgia_name: true,
+                hide_discord_name: true,
+                hide_preferred_arcade: true,
+                hide_play_count: true,
+                hide_play_activity: true,
                 profile_completed_at: expect.any(Date),
             },
         });
         expect(mocks.session.profileCompleted).toBe(true);
         expect(mocks.session.save).toHaveBeenCalledOnce();
         expect(mocks.redirect).toHaveBeenCalledWith("/ko");
+    });
+
+    it("가입 화면에서 켠 공개 설정만 공개로 저장하고 나머지는 숨긴다", async () => {
+        const formData = onboardingForm();
+        formData.set("showPlayCount", "true");
+        formData.set("showDiscordIdentity", "true");
+        await completeOnboarding(formData);
+
+        expect(mocks.userUpdate).toHaveBeenCalledWith({
+            where: { id: 9, profile_completed_at: null },
+            data: expect.objectContaining({
+                hide_nostalgia_name: true,
+                hide_discord_name: false,
+                hide_preferred_arcade: true,
+                hide_play_count: false,
+                hide_play_activity: true,
+            }),
+        });
     });
 
     it("한 글자 닉네임을 허용한다", async () => {
@@ -89,6 +112,11 @@ describe("최초 프로필 설정", () => {
                 username: "n",
                 country: "ko-KR",
                 locale: "ko",
+                hide_nostalgia_name: true,
+                hide_discord_name: true,
+                hide_preferred_arcade: true,
+                hide_play_count: true,
+                hide_play_activity: true,
                 profile_completed_at: expect.any(Date),
             },
         });

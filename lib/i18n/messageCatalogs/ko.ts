@@ -504,6 +504,8 @@ export const koMessages = {
     "onboarding.title": "프로필 설정",
     "onboarding.connectedAccount": "연결된 로그인 계정",
     "onboarding.nicknameHelp": "1–20자 · 문자·숫자·공백과 . _ - 사용",
+    "onboarding.privacyDescription":
+        "켜면 다른 사용자에게 보입니다. 나중에 설정에서 바꿀 수 있습니다.",
     "onboarding.nicknameDescription":
         "NosLog에서 표시되는 이름입니다. Discord·NOSTALGIA 이름과 별개입니다.",
     "onboarding.regionDescription":

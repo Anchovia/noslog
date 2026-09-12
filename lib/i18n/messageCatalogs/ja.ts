@@ -504,6 +504,8 @@ export const jaMessages = {
     "onboarding.connectedAccount": "連携中のログインアカウント",
     "onboarding.nicknameHelp":
         "1〜20文字 · 文字・数字・空白と . _ - が使えます",
+    "onboarding.privacyDescription":
+        "オンにすると他のユーザーに公開されます。あとから設定で変更できます。",
     "onboarding.nicknameDescription":
         "NosLogで表示される名前です。Discord・NOSTALGIAの名前とは別です。",
     "onboarding.regionDescription":

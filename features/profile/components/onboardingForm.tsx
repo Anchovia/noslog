@@ -6,10 +6,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { completeOnboarding } from "@/app/(auth)/onboarding/actions";
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import Button from "@/components/ui/Button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { FormField, Input, fieldDescription } from "@/components/ui/formField";
 import {
     createOnboardingFormData,
     createOnboardingSchema,
+    ONBOARDING_PRIVACY_KEYS,
     PROFILE_COUNTRIES,
 } from "@/features/profile/schemas/profileSettingsSchema";
 import type {
@@ -36,7 +38,13 @@ export default function OnboardingForm({
         formState: { errors, isSubmitting },
     } = useForm<OnboardingFormValues, unknown, OnboardingValues>({
         resolver: zodResolver(schema),
-        defaultValues: { username: "", country: undefined },
+        defaultValues: {
+            username: "",
+            country: undefined,
+            ...Object.fromEntries(
+                ONBOARDING_PRIVACY_KEYS.map((key) => [key, false])
+            ),
+        },
     });
     const labels: Record<
         (typeof PROFILE_COUNTRIES)[number]["value"],
@@ -139,6 +147,39 @@ export default function OnboardingForm({
                         {errors.country.message}
                     </p>
                 ) : null}
+            </fieldset>
+            <fieldset className="nl-radio-group" disabled={isSubmitting}>
+                <legend className="nl-control">{t("settings.privacy")}</legend>
+                <p
+                    id="onboarding-privacy-help"
+                    className="nl-body-secondary nl-muted"
+                >
+                    {t("onboarding.privacyDescription")}
+                </p>
+                {/* 줄 간격은 바로 위 지역 라디오와 같게(간격 0 · 행 높이만) — 2026-09-12 사용자 결정 */}
+                <div className="nl-auth-privacy">
+                    {ONBOARDING_PRIVACY_KEYS.map((key) => (
+                        <div key={key}>
+                            <Checkbox
+                                label={t(`settings.${key}`)}
+                                aria-describedby={
+                                    key === "showPlayActivity"
+                                        ? "onboarding-privacy-help onboarding-activity-help"
+                                        : "onboarding-privacy-help"
+                                }
+                                {...register(key)}
+                            />
+                            {key === "showPlayActivity" ? (
+                                <p
+                                    id="onboarding-activity-help"
+                                    className="nl-metadata nl-muted nl-settings__control-help"
+                                >
+                                    {t("settings.activityCoupling")}
+                                </p>
+                            ) : null}
+                        </div>
+                    ))}
+                </div>
             </fieldset>
             {errors.root?.server ? (
                 <p className="nl-body-secondary nl-field__error" role="alert">
