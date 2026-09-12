@@ -1,19 +1,21 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { MapPin, Plus, Save } from "lucide-react";
+import { MapPin, Plus, Save, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useEffect, useMemo, useState } from "react";
+import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 
 import { createArcade, updateArcade } from "@/app/admin/arcades/actions";
 import { geocodeArcadeAddress } from "@/features/arcades/api/geocodeArcadeAddress";
 import {
     ARCADE_ADDRESS_MAX_LENGTH,
+    ARCADE_CABINET_LABEL_MAX_LENGTH,
+    ARCADE_CABINET_MAX,
+    ARCADE_CABINET_NOTE_MAX_LENGTH,
     ARCADE_NAME_MAX_LENGTH,
     ARCADE_NOTES_MAX_LENGTH,
-    ARCADE_STATUS_NOTE_MAX_LENGTH,
     arcadeFormSchema,
     createArcadeFormData,
     createArcadeFormDefaultValues,
@@ -22,7 +24,8 @@ import {
 } from "@/features/arcades/schemas/arcadeSchema";
 import { applyFormFieldErrors } from "@/lib/forms/errors";
 import {
-    ARCADE_MACHINE_STATUSES,
+    ARCADE_CABINET_AVAILABILITIES,
+    ARCADE_CABINET_CONDITIONS,
     normalizeArcadeBusinessHours,
 } from "@/lib/arcadeDetails";
 import { ARCADE_REGIONS } from "@/lib/arcadeRegions";
@@ -33,6 +36,32 @@ const inputClass =
     "border-border bg-bg text-input h-10 min-w-0 rounded-md border px-3 outline-none focus:border-focus";
 const textareaClass =
     "border-border bg-bg text-body min-h-20 min-w-0 resize-y rounded-md border px-3 py-2 outline-none focus:border-focus";
+const secondaryButtonClass =
+    "border-border hover:bg-surface-muted focus-visible:ring-focus/40 flex h-9 items-center justify-center gap-1.5 rounded-md border px-3 text-sm font-bold transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:opacity-50";
+
+// 관리자 화면은 서버·브라우저 시간대가 달라도 같은 날짜가 나오도록 서울 기준으로 적는다
+const verifiedDateFormat = new Intl.DateTimeFormat("ko-KR", {
+    timeZone: "Asia/Seoul",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+});
+
+function verifiedLabel(value: string | null) {
+    return value
+        ? `확인 ${verifiedDateFormat.format(new Date(value))}`
+        : "확인 기록 없음";
+}
+
+export interface ArcadeFormCabinet {
+    id: number;
+    label: string | null;
+    note: string | null;
+    availability: string;
+    condition: string;
+    position: number;
+    verifiedAt: string | null;
+}
 
 interface ArcadeFormRecord {
     id: number;
@@ -41,12 +70,12 @@ interface ArcadeFormRecord {
     address: string | null;
     latitude: number | null;
     longitude: number | null;
-    machineCount: number | null;
     playPrice: number | null;
     coinCount: number | null;
     businessHours: unknown;
-    machineStatus: string;
-    statusNote: string | null;
+    hours: unknown;
+    hoursVerifiedAt: string | null;
+    cabinets: ArcadeFormCabinet[];
     notes: string | null;
     isActive: boolean;
     userCount: number;
@@ -77,16 +106,25 @@ export default function ArcadeForm(props: ArcadeFormProps) {
                           address: arcade.address,
                           latitude: arcade.latitude,
                           longitude: arcade.longitude,
-                          machineCount: arcade.machineCount,
                           playPrice: arcade.playPrice,
                           coinCount: arcade.coinCount,
                           businessHours: arcade.businessHours,
-                          machineStatus: arcade.machineStatus,
-                          statusNote: arcade.statusNote,
+                          hours: arcade.hours,
+                          cabinets: arcade.cabinets,
                           notes: arcade.notes,
                           isActive: arcade.isActive,
                       }
                     : undefined
+            ),
+        [arcade]
+    );
+    const savedCabinets = useMemo(
+        () =>
+            new Map(
+                (arcade?.cabinets ?? []).map((cabinet) => [
+                    String(cabinet.id),
+                    cabinet,
+                ])
             ),
         [arcade]
     );
@@ -96,6 +134,7 @@ export default function ArcadeForm(props: ArcadeFormProps) {
     const [statusMessage, setStatusMessage] = useState("");
     const {
         register,
+        control,
         handleSubmit,
         reset,
         setValue,
@@ -106,6 +145,17 @@ export default function ArcadeForm(props: ArcadeFormProps) {
         resolver: zodResolver(arcadeFormSchema),
         defaultValues,
     });
+    const { fields, append, remove } = useFieldArray({
+        control,
+        name: "cabinets",
+        keyName: "key",
+    });
+    const cabinetValues = useWatch({ control, name: "cabinets" });
+
+    // 저장 뒤 새로고침으로 받은 기체 ID·확인 날짜로 폼을 다시 맞춘다 — 방금 추가한 기체가 다음 저장에서 또 생기지 않게
+    useEffect(() => {
+        reset(defaultValues);
+    }, [defaultValues, reset]);
 
     async function handleArcadeSubmit(values: ArcadeValues) {
         clearErrors();
@@ -258,19 +308,6 @@ export default function ArcadeForm(props: ArcadeFormProps) {
             />
             <div className="grid grid-cols-2 gap-2">
                 <label className="text-caption flex min-w-0 flex-col gap-1">
-                    기체 수
-                    <input
-                        type="number"
-                        min={1}
-                        max={20}
-                        placeholder="예: 2"
-                        aria-invalid={Boolean(errors.machineCount)}
-                        className={inputClass}
-                        {...register("machineCount")}
-                    />
-                    <FieldError message={errors.machineCount?.message} />
-                </label>
-                <label className="text-caption flex min-w-0 flex-col gap-1">
                     플레이 요금 (원)
                     <input
                         type="number"
@@ -283,53 +320,177 @@ export default function ArcadeForm(props: ArcadeFormProps) {
                     />
                     <FieldError message={errors.playPrice?.message} />
                 </label>
+                <label className="text-caption flex min-w-0 flex-col gap-1">
+                    1회 플레이 코인 수
+                    <input
+                        type="number"
+                        min={1}
+                        max={100}
+                        placeholder="예: 1"
+                        aria-invalid={Boolean(errors.coinCount)}
+                        className={inputClass}
+                        {...register("coinCount")}
+                    />
+                    <FieldError message={errors.coinCount?.message} />
+                </label>
             </div>
-            <label className="text-caption flex flex-col gap-1">
-                1회 플레이 코인 수
-                <input
-                    type="number"
-                    min={1}
-                    max={100}
-                    placeholder="예: 1"
-                    aria-invalid={Boolean(errors.coinCount)}
-                    className={inputClass}
-                    {...register("coinCount")}
-                />
-                <FieldError message={errors.coinCount?.message} />
-            </label>
             <ArcadeBusinessHoursFields
                 formKey={formKey}
                 register={register}
                 errors={errors}
                 legacyNote={legacyNote}
+                verifiedLabel={
+                    arcade ? verifiedLabel(arcade.hoursVerifiedAt) : undefined
+                }
             />
-            <label className="text-caption flex flex-col gap-1">
-                기체 상태
-                <select
-                    aria-invalid={Boolean(errors.machineStatus)}
-                    className={inputClass}
-                    {...register("machineStatus")}
+            <fieldset className="border-border rounded-card grid gap-2 border p-3">
+                <legend className="text-label px-1">기체</legend>
+                <p className="text-caption">
+                    가동·상태·메모를 바꾸거나 「오늘 확인」 을 체크하고 저장하면
+                    그 기체의 확인 날짜가 오늘로 기록됩니다.
+                </p>
+                {fields.map((field, index) => {
+                    const saved = savedCabinets.get(field.cabinetId);
+                    const name = saved
+                        ? `${saved.position + 1}번기`
+                        : "새 기체";
+                    const available =
+                        cabinetValues?.[index]?.availability === "available";
+                    const rowErrors = errors.cabinets?.[index];
+                    return (
+                        <div
+                            key={field.key}
+                            className="border-border grid gap-2 rounded-md border p-2"
+                        >
+                            <div className="flex items-center gap-2">
+                                <span className="text-label">{name}</span>
+                                <span className="text-caption ml-auto">
+                                    {saved
+                                        ? verifiedLabel(saved.verifiedAt)
+                                        : "저장하면 추가됩니다"}
+                                </span>
+                                <button
+                                    type="button"
+                                    aria-label={`${name} 삭제`}
+                                    onClick={() => remove(index)}
+                                    className="text-body-muted hover:text-danger focus-visible:ring-focus/40 flex size-9 items-center justify-center rounded-md focus-visible:ring-2 focus-visible:outline-none"
+                                >
+                                    <Trash2 className="size-4" aria-hidden />
+                                </button>
+                            </div>
+                            <input
+                                maxLength={ARCADE_CABINET_LABEL_MAX_LENGTH}
+                                placeholder={
+                                    saved
+                                        ? `이름 · 비우면 ${name}`
+                                        : "이름 · 비우면 번호로 표시"
+                                }
+                                aria-label={`${name} 이름`}
+                                aria-invalid={Boolean(rowErrors?.label)}
+                                className={inputClass}
+                                {...register(`cabinets.${index}.label`)}
+                            />
+                            <div
+                                className={
+                                    available
+                                        ? "grid grid-cols-2 gap-2"
+                                        : "grid gap-2"
+                                }
+                            >
+                                <select
+                                    aria-label={`${name} 가동`}
+                                    className={inputClass}
+                                    {...register(
+                                        `cabinets.${index}.availability`
+                                    )}
+                                >
+                                    {ARCADE_CABINET_AVAILABILITIES.map(
+                                        (option) => (
+                                            <option
+                                                key={option.value}
+                                                value={option.value}
+                                            >
+                                                {option.label}
+                                            </option>
+                                        )
+                                    )}
+                                </select>
+                                {available ? (
+                                    <select
+                                        aria-label={`${name} 상태`}
+                                        className={inputClass}
+                                        {...register(
+                                            `cabinets.${index}.condition`
+                                        )}
+                                    >
+                                        {ARCADE_CABINET_CONDITIONS.map(
+                                            (option) => (
+                                                <option
+                                                    key={option.value}
+                                                    value={option.value}
+                                                >
+                                                    {option.label}
+                                                </option>
+                                            )
+                                        )}
+                                    </select>
+                                ) : null}
+                            </div>
+                            <input
+                                maxLength={ARCADE_CABINET_NOTE_MAX_LENGTH}
+                                placeholder="메모 · 위치나 상태 이유"
+                                aria-label={`${name} 메모`}
+                                aria-invalid={Boolean(rowErrors?.note)}
+                                className={inputClass}
+                                {...register(`cabinets.${index}.note`)}
+                            />
+                            <FieldError
+                                message={
+                                    rowErrors?.note?.message ??
+                                    rowErrors?.label?.message
+                                }
+                            />
+                            {saved ? (
+                                <label className="text-body-muted flex items-center gap-2">
+                                    <input
+                                        type="checkbox"
+                                        {...register(
+                                            `cabinets.${index}.confirm`
+                                        )}
+                                    />
+                                    오늘 확인
+                                </label>
+                            ) : null}
+                        </div>
+                    );
+                })}
+                {fields.length === 0 ? (
+                    <p className="text-caption">등록된 기체가 없습니다.</p>
+                ) : null}
+                <button
+                    type="button"
+                    disabled={fields.length >= ARCADE_CABINET_MAX}
+                    onClick={() =>
+                        append({
+                            cabinetId: "",
+                            label: "",
+                            note: "",
+                            availability: "unknown",
+                            condition: "unknown",
+                            confirm: false,
+                        })
+                    }
+                    className={secondaryButtonClass}
                 >
-                    {ARCADE_MACHINE_STATUSES.map((status) => (
-                        <option key={status.value} value={status.value}>
-                            {status.label}
-                        </option>
-                    ))}
-                </select>
-                <FieldError message={errors.machineStatus?.message} />
-            </label>
-            <label className="sr-only" htmlFor={`${formKey}-status-note`}>
-                상태 사유
-            </label>
-            <input
-                id={`${formKey}-status-note`}
-                maxLength={ARCADE_STATUS_NOTE_MAX_LENGTH}
-                placeholder="상태 사유 · 예: 일부 건반 반응이 약함"
-                aria-invalid={Boolean(errors.statusNote)}
-                className={inputClass}
-                {...register("statusNote")}
-            />
-            <FieldError message={errors.statusNote?.message} />
+                    <Plus className="size-4" aria-hidden /> 기체 추가
+                </button>
+                <FieldError
+                    message={
+                        errors.cabinets?.message ??
+                        errors.cabinets?.root?.message
+                    }
+                />
+            </fieldset>
             <label className="text-caption flex flex-col gap-1">
                 비고
                 <textarea
@@ -364,7 +525,7 @@ export default function ArcadeForm(props: ArcadeFormProps) {
                     className={
                         isCreate
                             ? "bg-text-primary text-bg focus-visible:ring-focus/40 flex h-10 items-center justify-center gap-1.5 rounded-md text-sm font-bold focus-visible:ring-2 focus-visible:outline-none disabled:opacity-50"
-                            : "border-border hover:bg-surface-muted focus-visible:ring-focus/40 flex h-9 items-center justify-center gap-1.5 rounded-md border px-3 text-sm font-bold transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:opacity-50"
+                            : secondaryButtonClass
                     }
                 >
                     {isCreate ? (

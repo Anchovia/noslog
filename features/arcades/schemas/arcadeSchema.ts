@@ -1,10 +1,12 @@
 import { z } from "zod";
 
 import {
-    ARCADE_MACHINE_STATUSES,
+    ARCADE_CABINET_AVAILABILITIES,
+    ARCADE_CABINET_CONDITIONS,
     ARCADE_WEEKDAYS,
-    isArcadeMachineStatus,
+    fromPublicArcadeWeekly,
     normalizeArcadeBusinessHours,
+    readPublicArcadeWeekly,
     type ArcadeBusinessHours,
 } from "@/lib/arcadeDetails";
 import {
@@ -15,16 +17,22 @@ import {
 
 export const ARCADE_NAME_MAX_LENGTH = 80;
 export const ARCADE_ADDRESS_MAX_LENGTH = 160;
-export const ARCADE_STATUS_NOTE_MAX_LENGTH = 200;
 export const ARCADE_NOTES_MAX_LENGTH = 500;
+export const ARCADE_CABINET_MAX = 20;
+export const ARCADE_CABINET_LABEL_MAX_LENGTH = 40;
+export const ARCADE_CABINET_NOTE_MAX_LENGTH = 200;
 
 const timePattern = /^(?:[01]\d|2[0-3]):[0-5]\d$/;
 const integerPattern = /^\d+$/;
-const machineStatusValues = ARCADE_MACHINE_STATUSES.map(
+const availabilityValues = ARCADE_CABINET_AVAILABILITIES.map(
     ({ value }) => value
 ) as [
-    (typeof ARCADE_MACHINE_STATUSES)[number]["value"],
-    ...(typeof ARCADE_MACHINE_STATUSES)[number]["value"][],
+    (typeof ARCADE_CABINET_AVAILABILITIES)[number]["value"],
+    ...(typeof ARCADE_CABINET_AVAILABILITIES)[number]["value"][],
+];
+const conditionValues = ARCADE_CABINET_CONDITIONS.map(({ value }) => value) as [
+    (typeof ARCADE_CABINET_CONDITIONS)[number]["value"],
+    ...(typeof ARCADE_CABINET_CONDITIONS)[number]["value"][],
 ];
 
 const optionalIntegerTextSchema = (
@@ -59,8 +67,64 @@ const businessHoursSchema = z.object({
     friday: dayHoursSchema,
     saturday: dayHoursSchema,
     sunday: dayHoursSchema,
-    openEveryDay: z.boolean(),
 });
+
+// 기체 한 줄 — 공개 기체 행과 같은 규칙: 상태(양호·보통·주의)는 가동일 때만 남기고, 보통·주의는 메모 필수
+const cabinetSchema = z
+    .object({
+        cabinetId: z
+            .string()
+            .trim()
+            .refine(
+                (value) => value === "" || integerPattern.test(value),
+                "잘못된 기체입니다."
+            )
+            .transform((value) => (value === "" ? null : Number(value))),
+        label: z
+            .string()
+            .trim()
+            .max(
+                ARCADE_CABINET_LABEL_MAX_LENGTH,
+                `기체 이름은 ${ARCADE_CABINET_LABEL_MAX_LENGTH}자 이하로 입력해주세요.`
+            )
+            .transform((value) => value || null),
+        note: z
+            .string()
+            .trim()
+            .max(
+                ARCADE_CABINET_NOTE_MAX_LENGTH,
+                `기체 메모는 ${ARCADE_CABINET_NOTE_MAX_LENGTH}자 이하로 입력해주세요.`
+            )
+            .transform((value) => value || null),
+        availability: z.enum(availabilityValues, {
+            error: "가동 여부를 선택해주세요.",
+        }),
+        condition: z.enum(conditionValues, {
+            error: "기체 상태를 선택해주세요.",
+        }),
+        confirm: z.boolean(),
+    })
+    .superRefine((cabinet, context) => {
+        if (
+            cabinet.availability === "available" &&
+            (cabinet.condition === "normal" ||
+                cabinet.condition === "caution") &&
+            !cabinet.note
+        ) {
+            context.addIssue({
+                code: "custom",
+                path: ["note"],
+                message: "보통·주의 상태는 메모에 이유를 적어주세요.",
+            });
+        }
+    })
+    .transform((cabinet) => ({
+        ...cabinet,
+        condition:
+            cabinet.availability === "available"
+                ? cabinet.condition
+                : ("unknown" as const),
+    }));
 
 const arcadeBaseSchema = z.object({
     name: z
@@ -87,21 +151,16 @@ const arcadeBaseSchema = z.object({
         ),
     latitude: z.string().trim(),
     longitude: z.string().trim(),
-    machineCount: optionalIntegerTextSchema("기체 수는", 1, 20),
     playPrice: optionalIntegerTextSchema("플레이 요금은", 1, 100000),
     coinCount: optionalIntegerTextSchema("코인 수는", 1, 100),
     businessHours: businessHoursSchema,
-    machineStatus: z.enum(machineStatusValues, {
-        error: "기체 상태를 선택해주세요.",
-    }),
-    statusNote: z
-        .string()
-        .trim()
+    hoursConfirmed: z.boolean(),
+    cabinets: z
+        .array(cabinetSchema, { error: "기체 정보를 확인해주세요." })
         .max(
-            ARCADE_STATUS_NOTE_MAX_LENGTH,
-            `상태 사유는 ${ARCADE_STATUS_NOTE_MAX_LENGTH}자 이하로 입력해주세요.`
-        )
-        .transform((value) => value || null),
+            ARCADE_CABINET_MAX,
+            `기체는 ${ARCADE_CABINET_MAX}대까지 등록할 수 있습니다.`
+        ),
     notes: z
         .string()
         .trim()
@@ -167,11 +226,9 @@ function validateArcadeInput(data: ArcadeBaseInput, context: z.RefinementCtx) {
         });
     }
 
-    let enabledDayCount = 0;
     for (const { key, label } of ARCADE_WEEKDAYS) {
         const day = data.businessHours[key];
         if (!day.enabled) continue;
-        enabledDayCount += 1;
         if (!timePattern.test(day.open)) {
             context.addIssue({
                 code: "custom",
@@ -187,17 +244,6 @@ function validateArcadeInput(data: ArcadeBaseInput, context: z.RefinementCtx) {
             });
         }
     }
-
-    if (
-        data.businessHours.openEveryDay &&
-        enabledDayCount !== ARCADE_WEEKDAYS.length
-    ) {
-        context.addIssue({
-            code: "custom",
-            path: ["businessHours", "openEveryDay"],
-            message: "연중무휴는 모든 요일의 영업시간을 입력해주세요.",
-        });
-    }
 }
 
 function normalizeArcadeInput(data: ArcadeBaseInput) {
@@ -207,17 +253,19 @@ function normalizeArcadeInput(data: ArcadeBaseInput) {
         if (day.enabled) weekly[key] = { open: day.open, close: day.close };
     }
 
-    const hasBusinessHours = Object.keys(weekly).length > 0;
+    const enabledDays = Object.keys(weekly).length;
     return {
         ...data,
         latitude: data.latitude === "" ? null : Number(data.latitude),
         longitude: data.longitude === "" ? null : Number(data.longitude),
-        businessHours: hasBusinessHours
-            ? {
-                  weekly,
-                  openEveryDay: data.businessHours.openEveryDay,
-              }
-            : null,
+        // 옛 영업시간 칸도 같은 입력으로 계속 채운다(연중무휴 = 일곱 요일 모두 영업)
+        businessHours:
+            enabledDays > 0
+                ? {
+                      weekly,
+                      openEveryDay: enabledDays === ARCADE_WEEKDAYS.length,
+                  }
+                : null,
     };
 }
 
@@ -239,18 +287,26 @@ export type ArcadeFormValues = z.input<typeof arcadeFormSchema>;
 export type ArcadeValues = z.output<typeof arcadeFormSchema>;
 export type ArcadeUpdateValues = z.output<typeof arcadeUpdateSchema>;
 
+interface ArcadeFormCabinetSource {
+    id: number;
+    label: string | null;
+    note: string | null;
+    availability: string;
+    condition: string;
+}
+
 interface ArcadeFormSource {
     name: string;
     region: string | null;
     address: string | null;
     latitude: number | null;
     longitude: number | null;
-    machineCount: number | null;
     playPrice: number | null;
     coinCount: number | null;
     businessHours?: unknown;
-    machineStatus: string;
-    statusNote: string | null;
+    // 공개 영업시간(ArcadePublicDetails.hours) — 있으면 옛 영업시간보다 먼저 쓴다
+    hours?: unknown;
+    cabinets?: ArcadeFormCabinetSource[];
     notes: string | null;
     isActive: boolean;
 }
@@ -267,10 +323,23 @@ function dayDefaultValues(
     };
 }
 
+function isAvailability(
+    value: string
+): value is (typeof availabilityValues)[number] {
+    return (availabilityValues as readonly string[]).includes(value);
+}
+
+function isCondition(value: string): value is (typeof conditionValues)[number] {
+    return (conditionValues as readonly string[]).includes(value);
+}
+
 export function createArcadeFormDefaultValues(
     source?: ArcadeFormSource
 ): ArcadeFormValues {
-    const businessHours = normalizeArcadeBusinessHours(source?.businessHours);
+    const publicWeekly = readPublicArcadeWeekly(source?.hours);
+    const businessHours: ArcadeBusinessHours | null = publicWeekly
+        ? { weekly: fromPublicArcadeWeekly(publicWeekly), openEveryDay: false }
+        : normalizeArcadeBusinessHours(source?.businessHours);
     const hasValidCoordinates =
         source?.latitude !== null &&
         source?.latitude !== undefined &&
@@ -291,7 +360,6 @@ export function createArcadeFormDefaultValues(
         address: source?.address ?? "",
         latitude: hasValidCoordinates ? String(source.latitude) : "",
         longitude: hasValidCoordinates ? String(source.longitude) : "",
-        machineCount: source?.machineCount?.toString() ?? "",
         playPrice: source?.playPrice?.toString() ?? "",
         coinCount: source?.coinCount?.toString() ?? "",
         businessHours: {
@@ -302,13 +370,20 @@ export function createArcadeFormDefaultValues(
             friday: dayDefaultValues(businessHours, "friday"),
             saturday: dayDefaultValues(businessHours, "saturday"),
             sunday: dayDefaultValues(businessHours, "sunday"),
-            openEveryDay: businessHours?.openEveryDay ?? false,
         },
-        machineStatus:
-            source && isArcadeMachineStatus(source.machineStatus)
-                ? source.machineStatus
+        hoursConfirmed: false,
+        cabinets: (source?.cabinets ?? []).map((cabinet) => ({
+            cabinetId: String(cabinet.id),
+            label: cabinet.label ?? "",
+            note: cabinet.note ?? "",
+            availability: isAvailability(cabinet.availability)
+                ? cabinet.availability
                 : "unknown",
-        statusNote: source?.statusNote ?? "",
+            condition: isCondition(cabinet.condition)
+                ? cabinet.condition
+                : "unknown",
+            confirm: false,
+        })),
         notes: source?.notes ?? "",
         isActive: source?.isActive ?? true,
     };
@@ -316,6 +391,15 @@ export function createArcadeFormDefaultValues(
 
 function booleanFromFormData(value: FormDataEntryValue | null) {
     return value === "true" || value === "on";
+}
+
+function cabinetsFromFormData(value: FormDataEntryValue | null): unknown {
+    if (typeof value !== "string" || value === "") return [];
+    try {
+        return JSON.parse(value);
+    } catch {
+        return null;
+    }
 }
 
 export function arcadeFormInputFromFormData(formData: FormData) {
@@ -338,15 +422,11 @@ export function arcadeFormInputFromFormData(formData: FormData) {
         address: String(formData.get("address") ?? ""),
         latitude: String(formData.get("latitude") ?? ""),
         longitude: String(formData.get("longitude") ?? ""),
-        machineCount: String(formData.get("machineCount") ?? ""),
         playPrice: String(formData.get("playPrice") ?? ""),
         coinCount: String(formData.get("coinCount") ?? ""),
-        businessHours: {
-            ...businessHours,
-            openEveryDay: booleanFromFormData(formData.get("openEveryDay")),
-        },
-        machineStatus: String(formData.get("machineStatus") ?? "unknown"),
-        statusNote: String(formData.get("statusNote") ?? ""),
+        businessHours,
+        hoursConfirmed: booleanFromFormData(formData.get("hoursConfirmed")),
+        cabinets: cabinetsFromFormData(formData.get("cabinets")),
         notes: String(formData.get("notes") ?? ""),
         isActive: booleanFromFormData(formData.get("isActive")),
     };
@@ -366,7 +446,6 @@ export function createArcadeFormData(values: ArcadeValues, id?: number) {
     formData.set("address", values.address);
     formData.set("latitude", values.latitude?.toString() ?? "");
     formData.set("longitude", values.longitude?.toString() ?? "");
-    formData.set("machineCount", values.machineCount?.toString() ?? "");
     formData.set("playPrice", values.playPrice?.toString() ?? "");
     formData.set("coinCount", values.coinCount?.toString() ?? "");
     for (const { key } of ARCADE_WEEKDAYS) {
@@ -375,12 +454,21 @@ export function createArcadeFormData(values: ArcadeValues, id?: number) {
         formData.set(`hours_${key}_open`, schedule?.open ?? "");
         formData.set(`hours_${key}_close`, schedule?.close ?? "");
     }
+    formData.set("hoursConfirmed", String(values.hoursConfirmed));
     formData.set(
-        "openEveryDay",
-        String(values.businessHours?.openEveryDay ?? false)
+        "cabinets",
+        JSON.stringify(
+            values.cabinets.map((cabinet) => ({
+                cabinetId:
+                    cabinet.cabinetId === null ? "" : String(cabinet.cabinetId),
+                label: cabinet.label ?? "",
+                note: cabinet.note ?? "",
+                availability: cabinet.availability,
+                condition: cabinet.condition,
+                confirm: cabinet.confirm,
+            }))
+        )
     );
-    formData.set("machineStatus", values.machineStatus);
-    formData.set("statusNote", values.statusNote ?? "");
     formData.set("notes", values.notes ?? "");
     formData.set("isActive", String(values.isActive));
     if (id !== undefined) formData.set("id", String(id));

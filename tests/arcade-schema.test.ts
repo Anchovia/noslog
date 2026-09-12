@@ -10,6 +10,12 @@ import {
     createArcadeFormDefaultValues,
     type ArcadeFormValues,
 } from "@/features/arcades/schemas/arcadeSchema";
+import {
+    fromPublicArcadeWeekly,
+    toPublicArcadeWeekly,
+} from "@/lib/arcadeDetails";
+
+const offDay = { enabled: false, open: "", close: "" };
 
 function validArcadeInput(): ArcadeFormValues {
     return {
@@ -18,55 +24,69 @@ function validArcadeInput(): ArcadeFormValues {
         address: "  서울특별시 중구 세종대로 110  ",
         latitude: "37.5665",
         longitude: "126.978",
-        machineCount: "2",
         playPrice: "500",
         coinCount: "1",
         businessHours: {
             monday: { enabled: true, open: "10:00", close: "00:00" },
-            tuesday: { enabled: false, open: "", close: "" },
-            wednesday: { enabled: false, open: "", close: "" },
-            thursday: { enabled: false, open: "", close: "" },
-            friday: { enabled: false, open: "", close: "" },
-            saturday: { enabled: false, open: "", close: "" },
-            sunday: { enabled: false, open: "", close: "" },
-            openEveryDay: false,
+            tuesday: offDay,
+            wednesday: offDay,
+            thursday: offDay,
+            friday: offDay,
+            saturday: offDay,
+            sunday: offDay,
         },
-        machineStatus: "good",
-        statusNote: "  상태 양호  ",
+        hoursConfirmed: false,
+        cabinets: [
+            {
+                cabinetId: "",
+                label: "  ",
+                note: "  창가 쪽  ",
+                availability: "available",
+                condition: "good",
+                confirm: false,
+            },
+        ],
         notes: "  이어폰 단자 지원  ",
         isActive: true,
     };
 }
 
 describe("관리자 오락실 스키마", () => {
-    it("텍스트와 숫자, 좌표, 영업시간을 저장 형식으로 정규화한다", () => {
+    it("텍스트와 숫자, 좌표, 영업시간, 기체를 저장 형식으로 정규화한다", () => {
         expect(arcadeFormSchema.parse(validArcadeInput())).toEqual({
             name: "테스트 오락실",
             region: "서울",
             address: "서울특별시 중구 세종대로 110",
             latitude: 37.5665,
             longitude: 126.978,
-            machineCount: 2,
             playPrice: 500,
             coinCount: 1,
             businessHours: {
                 weekly: { monday: { open: "10:00", close: "00:00" } },
                 openEveryDay: false,
             },
-            machineStatus: "good",
-            statusNote: "상태 양호",
+            hoursConfirmed: false,
+            cabinets: [
+                {
+                    cabinetId: null,
+                    label: null,
+                    note: "창가 쪽",
+                    availability: "available",
+                    condition: "good",
+                    confirm: false,
+                },
+            ],
             notes: "이어폰 단자 지원",
             isActive: true,
         });
     });
 
-    it("필수 입력과 숫자 범위를 검증한다", () => {
+    it("필수 입력을 검증한다", () => {
         const result = arcadeFormSchema.safeParse({
             ...validArcadeInput(),
             name: " ",
             region: "",
             address: " ",
-            machineCount: "21",
         });
 
         expect(result.success).toBe(false);
@@ -75,7 +95,6 @@ describe("관리자 오락실 스키마", () => {
                 name: ["오락실 이름을 입력해주세요."],
                 region: ["지역을 선택해주세요."],
                 address: ["주소를 입력해주세요."],
-                machineCount: ["기체 수는 1~20 사이의 정수로 입력해주세요."],
             });
         }
     });
@@ -116,23 +135,48 @@ describe("관리자 오락실 스키마", () => {
         }
     });
 
-    it("연중무휴는 모든 요일 영업시간이 있을 때만 허용한다", () => {
-        const input = validArcadeInput();
-        input.businessHours.openEveryDay = true;
-        const result = arcadeFormSchema.safeParse(input);
+    it("기체 상태는 가동일 때만 남기고 보통·주의에는 메모를 요구한다", () => {
+        const [cabinet] = validArcadeInput().cabinets;
+        const unavailable = arcadeFormSchema.parse({
+            ...validArcadeInput(),
+            cabinets: [{ ...cabinet, availability: "unavailable" }],
+        });
+        expect(unavailable.cabinets[0].condition).toBe("unknown");
 
-        expect(result.success).toBe(false);
-        if (!result.success) {
-            expect(result.error.flatten().fieldErrors).toMatchObject({
-                businessHours: [
-                    "연중무휴는 모든 요일의 영업시간을 입력해주세요.",
-                ],
+        const caution = arcadeFormSchema.safeParse({
+            ...validArcadeInput(),
+            cabinets: [{ ...cabinet, condition: "caution", note: " " }],
+        });
+        expect(caution.success).toBe(false);
+        if (!caution.success) {
+            expect(caution.error.flatten().fieldErrors).toMatchObject({
+                cabinets: ["보통·주의 상태는 메모에 이유를 적어주세요."],
+            });
+        }
+
+        const tooMany = arcadeFormSchema.safeParse({
+            ...validArcadeInput(),
+            cabinets: Array.from({ length: 21 }, () => cabinet),
+        });
+        expect(tooMany.success).toBe(false);
+        if (!tooMany.success) {
+            expect(tooMany.error.flatten().fieldErrors).toMatchObject({
+                cabinets: ["기체는 20대까지 등록할 수 있습니다."],
             });
         }
     });
 
     it("생성·수정 FormData 변환을 같은 스키마로 다시 검증한다", () => {
-        const values = arcadeFormSchema.parse(validArcadeInput());
+        const input = validArcadeInput();
+        input.cabinets.push({
+            cabinetId: "7",
+            label: "입구 쪽",
+            note: "",
+            availability: "unknown",
+            condition: "unknown",
+            confirm: true,
+        });
+        const values = arcadeFormSchema.parse(input);
         const formData = createArcadeFormData(values, 12);
 
         expect(
@@ -143,7 +187,7 @@ describe("관리자 오락실 스키마", () => {
         ).toEqual(values);
     });
 
-    it("신규 폼은 지역을 미선택으로 두고 기존 자유 지역과 좌표를 안전하게 보정한다", () => {
+    it("기존 값으로 폼을 채울 때 공개 영업시간과 기체를 먼저 쓴다", () => {
         expect(createArcadeFormDefaultValues().region).toBe("");
 
         const defaults = createArcadeFormDefaultValues({
@@ -152,12 +196,24 @@ describe("관리자 오락실 스키마", () => {
             address: "서울 중구",
             latitude: 91,
             longitude: 127,
-            machineCount: null,
             playPrice: null,
             coinCount: null,
-            businessHours: null,
-            machineStatus: "legacy",
-            statusNote: null,
+            businessHours: {
+                weekly: { tuesday: { open: "12:00", close: "22:00" } },
+            },
+            hours: {
+                weekly: { "0": { open: 600, close: 1440 }, "1": null },
+                exceptions: {},
+            },
+            cabinets: [
+                {
+                    id: 3,
+                    label: null,
+                    note: "입구",
+                    availability: "legacy",
+                    condition: "good",
+                },
+            ],
             notes: null,
             isActive: true,
         });
@@ -165,7 +221,42 @@ describe("관리자 오락실 스키마", () => {
         expect(defaults.region).toBe("서울");
         expect(defaults.latitude).toBe("");
         expect(defaults.longitude).toBe("");
-        expect(defaults.machineStatus).toBe("unknown");
+        expect(defaults.businessHours.monday).toEqual({
+            enabled: true,
+            open: "10:00",
+            close: "00:00",
+        });
+        expect(defaults.businessHours.tuesday.enabled).toBe(false);
+        expect(defaults.cabinets).toEqual([
+            {
+                cabinetId: "3",
+                label: "",
+                note: "입구",
+                availability: "unknown",
+                condition: "good",
+                confirm: false,
+            },
+        ]);
+    });
+
+    it("요일 입력과 공개 영업시간을 서로 바꾼다 — 자정 넘김은 다음 날, 해제한 요일은 휴무", () => {
+        const weekly = {
+            monday: { open: "10:00", close: "01:50" },
+            friday: { open: "10:00", close: "23:00" },
+        };
+        expect(toPublicArcadeWeekly(weekly)).toEqual({
+            "0": { open: 600, close: 1550 },
+            "1": null,
+            "2": null,
+            "3": null,
+            "4": { open: 600, close: 1380 },
+            "5": null,
+            "6": null,
+        });
+        expect(toPublicArcadeWeekly({})).toBeNull();
+        expect(fromPublicArcadeWeekly(toPublicArcadeWeekly(weekly)!)).toEqual(
+            weekly
+        );
     });
 
     it("카카오 주소 검색 후보에서 상세 주소를 단계적으로 제거한다", () => {

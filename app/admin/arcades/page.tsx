@@ -5,7 +5,26 @@ import { clientEnv } from "@/lib/env/client";
 export default async function AdminArcadesPage() {
     const kakaoMapAppKey = clientEnv.NEXT_PUBLIC_KAKAO_MAP_APP_KEY ?? "";
     const arcades = await db.arcade.findMany({
-        include: { _count: { select: { users: true } } },
+        include: {
+            _count: { select: { users: true } },
+            // 공개 페이지가 읽는 기체·영업시간을 그대로 편집한다
+            cabinets: {
+                where: { isActive: true },
+                orderBy: { position: "asc" },
+                select: {
+                    id: true,
+                    label: true,
+                    note: true,
+                    availability: true,
+                    condition: true,
+                    position: true,
+                    verifiedAt: true,
+                },
+            },
+            publicDetails: {
+                select: { hours: true, hoursVerifiedAt: true },
+            },
+        },
         orderBy: [{ is_active: "desc" }, { name: "asc" }],
     });
 
@@ -33,12 +52,18 @@ export default async function AdminArcadesPage() {
                             address: arcade.address,
                             latitude: arcade.latitude,
                             longitude: arcade.longitude,
-                            machineCount: arcade.machine_count,
                             playPrice: arcade.play_price,
                             coinCount: arcade.coin_count,
                             businessHours: arcade.business_hours,
-                            machineStatus: arcade.machine_status,
-                            statusNote: arcade.status_note,
+                            hours: arcade.publicDetails?.hours ?? null,
+                            hoursVerifiedAt:
+                                arcade.publicDetails?.hoursVerifiedAt?.toISOString() ??
+                                null,
+                            cabinets: arcade.cabinets.map((cabinet) => ({
+                                ...cabinet,
+                                verifiedAt:
+                                    cabinet.verifiedAt?.toISOString() ?? null,
+                            })),
                             notes: arcade.notes,
                             isActive: arcade.is_active,
                             userCount: arcade._count.users,
