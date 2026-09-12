@@ -31,7 +31,15 @@ describe("온보딩 스키마", () => {
     it("닉네임의 바깥 공백만 정리하고 입력한 대소문자를 보존한다", () => {
         expect(
             schemaFor("ko").parse({ username: " carol ", country: "ko-KR" })
-        ).toEqual({ username: "carol", country: "ko-KR" });
+        ).toEqual({
+            username: "carol",
+            country: "ko-KR",
+            showNostalgiaName: false,
+            showDiscordIdentity: false,
+            showPreferredArcade: false,
+            showPlayCount: false,
+            showPlayActivity: false,
+        });
     });
 
     it.each([

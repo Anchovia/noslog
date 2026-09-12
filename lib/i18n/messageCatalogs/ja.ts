@@ -504,6 +504,8 @@ export const jaMessages = {
     "onboarding.connectedAccount": "連携中のログインアカウント",
     "onboarding.nicknameHelp":
         "1〜20文字 · 文字・数字・空白と . _ - が使えます",
+    "onboarding.privacyDescription":
+        "オンにすると他のユーザーに公開されます。あとから設定で変更できます。",
     "onboarding.nicknameDescription":
         "NosLogで表示される名前です。Discord・NOSTALGIAの名前とは別です。",
     "onboarding.regionDescription":
@@ -1142,7 +1144,7 @@ export const jaMessages = {
     "settings.removePhoto": "削除",
     "settings.nostalgiaName": "NOSTALGIA プレイヤー名",
     "settings.showNostalgiaName": "NOSTALGIA プレイヤー名を公開",
-    "settings.showDiscordIdentity": "Discord のアカウント情報を公開",
+    "settings.showDiscordIdentity": "Discord のニックネームを公開",
     "settings.showPreferredArcade": "お気に入りゲームセンターを公開",
     "settings.showPlayCount": "総プレー回数を公開",
     "settings.showPlayActivity": "プレー活動を公開",

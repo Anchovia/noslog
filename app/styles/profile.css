@@ -255,10 +255,11 @@
     height: 64px;
     border-radius: var(--nl-radius-container) 0 0 var(--nl-radius-container);
 }
+/* 자켓 위 표시는 우하단으로 통일 — 카테고리 레이블과 같은 모서리·같은 inset 4 (2026-09-12 사용자 결정) */
 .noslog-ui .nl-profile-play-row__fc {
     position: absolute;
-    top: var(--nl-spacing-4);
     right: var(--nl-spacing-4);
+    bottom: var(--nl-spacing-4);
 }
 .noslog-ui .nl-profile-play-row__identity {
     display: contents;

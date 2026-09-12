@@ -138,14 +138,26 @@
 .noslog-ui .nl-tier-card__outline[data-achievement="pianist"] {
     box-shadow: inset 0 0 0 2px var(--nl-achievement-pianist);
 }
+/* 자켓 위 표시는 우하단으로 통일(2026-09-12 사용자 결정 A안). 여백 8 은 Pianist·FC 2px 테두리와 떨어지게 */
 .noslog-ui .nl-tier-card__rank {
     position: absolute;
-    top: var(--nl-spacing-8);
     right: var(--nl-spacing-8);
+    bottom: var(--nl-spacing-8);
+    z-index: 1;
     width: 24px;
     height: 24px;
     object-fit: contain;
     border-radius: var(--nl-radius-control);
+}
+/* 상세 보기: 점수 띠(높이 36) 안 오른쪽 끝, 띠 세로 가운데 */
+.noslog-ui .nl-tier-card[data-detailed="true"] .nl-tier-card__rank {
+    bottom: calc((36px - 24px) / 2);
+}
+/* 메달이 있을 때만 점수가 메달 폭(24) + 간격 4 만큼 왼쪽으로 비켜난다 */
+.noslog-ui
+    .nl-tier-card__jacket:has(.nl-tier-card__rank)
+    .nl-tier-card__score-band {
+    padding-right: calc(var(--nl-spacing-8) + 24px + var(--nl-spacing-4));
 }
 .noslog-ui .nl-tier-card__score {
     display: flex;

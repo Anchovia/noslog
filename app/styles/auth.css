@@ -126,6 +126,12 @@
 .noslog-ui .nl-auth-field-description {
     margin-top: var(--nl-spacing-8);
 }
+/* 가입 공개 설정 — 지역 라디오처럼 줄 사이 간격 없이 행 높이로만 쌓는다 */
+.noslog-ui .nl-auth-privacy {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-0);
+}
 .noslog-ui .nl-auth-submit {
     width: 100%;
     margin-top: var(--nl-spacing-8);

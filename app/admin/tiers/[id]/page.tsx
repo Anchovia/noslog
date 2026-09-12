@@ -8,6 +8,10 @@ import TierListForm from "@/features/tiers/components/tierListForm";
 import TierPlacementEditor from "@/features/tiers/components/tierPlacementEditor";
 import db from "@/lib/db";
 import {
+    MUSIC_CATEGORY_VALUES,
+    normalizeMusicCategory,
+} from "@/lib/musicCategories";
+import {
     TIER_REAL_LEVELS,
     TIER_REGULAR_LEVELS,
     isCurrentTierScope,
@@ -22,6 +26,7 @@ interface EditTierListPageProps {
         q?: string;
         difficulty?: string;
         level?: string;
+        category?: string;
         page?: string;
     }>;
 }
@@ -52,6 +57,8 @@ export default async function EditTierListPage({
         ? query.difficulty
         : "";
     const level = isTierLevelFilter(query.level ?? "") ? query.level! : "";
+    // 공개 악곡 필터와 같은 6개 카테고리(pops·anime·BM·Org·Var·Cl/Jz). DB 값과 표기가 같다
+    const category = normalizeMusicCategory(query.category ?? "") ?? "";
     const requestedPage = Number(query.page);
     const page =
         Number.isInteger(requestedPage) && requestedPage > 0
@@ -65,19 +72,34 @@ export default async function EditTierListPage({
             : level
               ? { difficulty: { not: "Real" }, level: Number(level) }
               : {}),
-        ...(keyword
+        ...(keyword || category
             ? {
                   music: {
-                      OR: [
-                          { title: { contains: keyword, mode: "insensitive" } },
-                          {
-                              artist: {
-                                  contains: keyword,
-                                  mode: "insensitive",
-                              },
-                          },
-                          { index: { contains: keyword, mode: "insensitive" } },
-                      ],
+                      ...(category ? { category_short: category } : {}),
+                      ...(keyword
+                          ? {
+                                OR: [
+                                    {
+                                        title: {
+                                            contains: keyword,
+                                            mode: "insensitive",
+                                        },
+                                    },
+                                    {
+                                        artist: {
+                                            contains: keyword,
+                                            mode: "insensitive",
+                                        },
+                                    },
+                                    {
+                                        index: {
+                                            contains: keyword,
+                                            mode: "insensitive",
+                                        },
+                                    },
+                                ],
+                            }
+                          : {}),
                   },
               }
             : {}),
@@ -155,6 +177,7 @@ export default async function EditTierListPage({
         ...(keyword ? { q: keyword } : {}),
         ...(difficulty ? { difficulty } : {}),
         ...(level ? { level } : {}),
+        ...(category ? { category } : {}),
     });
     const pageHref = (nextPage: number) => {
         const next = new URLSearchParams(filterParams);
@@ -219,39 +242,59 @@ export default async function EditTierListPage({
                             placeholder="곡 제목 · 아티스트 · 식별자"
                             className="border-border bg-bg text-input col-span-2 h-11 rounded-md border px-3"
                         />
-                        <select
-                            name="difficulty"
-                            defaultValue={difficulty}
-                            aria-label="난이도 필터"
-                            className="border-border bg-bg text-input h-11 rounded-md border px-3"
-                        >
-                            <option value="">전체 난이도</option>
-                            {(
-                                ["Normal", "Hard", "Expert", "Real"] as const
-                            ).map((item) => (
-                                <option key={item} value={item}>
-                                    {item}
-                                </option>
-                            ))}
-                        </select>
-                        <select
-                            name="level"
-                            defaultValue={level}
-                            aria-label="공식 레벨 필터"
-                            className="border-border bg-bg text-input h-11 rounded-md border px-3"
-                        >
-                            <option value="">전체 공식 레벨</option>
-                            {TIER_REGULAR_LEVELS.map((item) => (
-                                <option key={item} value={item}>
-                                    Lv.{item}
-                                </option>
-                            ))}
-                            {TIER_REAL_LEVELS.map((item) => (
-                                <option key={item} value={item}>
-                                    Real {item.slice(5)}
-                                </option>
-                            ))}
-                        </select>
+                        <div className="col-span-2 grid grid-cols-1 gap-2 md:grid-cols-3">
+                            <select
+                                name="difficulty"
+                                defaultValue={difficulty}
+                                aria-label="난이도 필터"
+                                className="border-border bg-bg text-input h-11 rounded-md border px-3"
+                            >
+                                <option value="">전체 난이도</option>
+                                {(
+                                    [
+                                        "Normal",
+                                        "Hard",
+                                        "Expert",
+                                        "Real",
+                                    ] as const
+                                ).map((item) => (
+                                    <option key={item} value={item}>
+                                        {item}
+                                    </option>
+                                ))}
+                            </select>
+                            <select
+                                name="level"
+                                defaultValue={level}
+                                aria-label="공식 레벨 필터"
+                                className="border-border bg-bg text-input h-11 rounded-md border px-3"
+                            >
+                                <option value="">전체 공식 레벨</option>
+                                {TIER_REGULAR_LEVELS.map((item) => (
+                                    <option key={item} value={item}>
+                                        Lv.{item}
+                                    </option>
+                                ))}
+                                {TIER_REAL_LEVELS.map((item) => (
+                                    <option key={item} value={item}>
+                                        Real {item.slice(5)}
+                                    </option>
+                                ))}
+                            </select>
+                            <select
+                                name="category"
+                                defaultValue={category}
+                                aria-label="카테고리 필터"
+                                className="border-border bg-bg text-input h-11 rounded-md border px-3"
+                            >
+                                <option value="">전체 카테고리</option>
+                                {MUSIC_CATEGORY_VALUES.map((item) => (
+                                    <option key={item} value={item}>
+                                        {item}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
                         <button className="bg-text-primary text-bg h-10 rounded-md text-sm font-bold">
                             검색
                         </button>

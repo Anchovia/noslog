@@ -504,6 +504,8 @@ export const koMessages = {
     "onboarding.title": "프로필 설정",
     "onboarding.connectedAccount": "연결된 로그인 계정",
     "onboarding.nicknameHelp": "1–20자 · 문자·숫자·공백과 . _ - 사용",
+    "onboarding.privacyDescription":
+        "켜면 다른 사용자에게 보입니다. 나중에 설정에서 바꿀 수 있습니다.",
     "onboarding.nicknameDescription":
         "NosLog에서 표시되는 이름입니다. Discord·NOSTALGIA 이름과 별개입니다.",
     "onboarding.regionDescription":
@@ -1135,7 +1137,7 @@ export const koMessages = {
     "settings.removePhoto": "제거",
     "settings.nostalgiaName": "NOSTALGIA 플레이어명",
     "settings.showNostalgiaName": "NOSTALGIA 플레이어명 공개",
-    "settings.showDiscordIdentity": "Discord 정체성 공개",
+    "settings.showDiscordIdentity": "Discord 닉네임 공개",
     "settings.showPreferredArcade": "선호 오락실 공개",
     "settings.showPlayCount": "총 플레이 횟수 공개",
     "settings.showPlayActivity": "플레이 활동 공개",

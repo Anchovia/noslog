@@ -115,7 +115,10 @@ export default function TierBrowserCard({
                             {chart.music.localizedTitle}
                         </span>
                     ) : null}
-                    <span className="nl-body-secondary nl-muted">
+                    {/* 난이도명·레벨 모두 난이도 색 글자(DISC-45, 다른 결과 화면과 같은 nl-level-- 클래스) */}
+                    <span
+                        className={`nl-body-secondary nl-level--${chart.difficulty.toLowerCase()}`}
+                    >
                         {chart.difficulty} {chart.level}
                     </span>
                     {signedIn &&

@@ -56,6 +56,11 @@ export async function completeOnboarding(
                 username: result.data.username,
                 country: result.data.country,
                 locale,
+                hide_nostalgia_name: !result.data.showNostalgiaName,
+                hide_discord_name: !result.data.showDiscordIdentity,
+                hide_preferred_arcade: !result.data.showPreferredArcade,
+                hide_play_count: !result.data.showPlayCount,
+                hide_play_activity: !result.data.showPlayActivity,
                 profile_completed_at: new Date(),
             },
         });
