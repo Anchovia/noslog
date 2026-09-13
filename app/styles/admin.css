@@ -6,6 +6,223 @@
     background: var(--nl-surface-canvas);
     box-shadow: inset 0 -1px var(--nl-border-divider);
 }
+/* 스크롤로 사이트 헤더가 숨으면 맨 위에 붙는다 — 60 에 남으면 헤더가 빠진 자리가 빈다(서열표 구간 헤더와 같은 규칙) */
+.noslog-ui:has(.nl-header[data-scroll-state="hidden"]) .nl-admin-nav {
+    top: 0;
+}
+
+/* 관리자 대시보드(C안 · 2026-09-13) — 넓은 화면은 본문 8 : 레일 4, 좁은 화면은 처리할 일 → 지표 → API */
+.noslog-ui .nl-dashboard {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-24);
+    padding-block: var(--nl-spacing-24) var(--nl-spacing-48);
+}
+.noslog-ui .nl-dashboard__head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-12);
+}
+.noslog-ui .nl-dashboard__head > div {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-4);
+}
+.noslog-ui .nl-dashboard__ranges .nl-segments__item {
+    color: var(--nl-content-subdued);
+    text-decoration: none;
+}
+/* 링크로 만든 세그먼트 — 선택 표시는 공용 [aria-checked] 규칙과 같다 */
+.noslog-ui .nl-dashboard__ranges .nl-segments__item[aria-current="true"] {
+    border-color: var(--nl-border-strong);
+    background: var(--nl-surface-raised);
+    color: var(--nl-content-default);
+    font-weight: var(--nl-type-weight-semibold);
+}
+.noslog-ui .nl-dashboard__grid {
+    display: grid;
+    grid-template-areas: "todo" "main" "api";
+    gap: var(--nl-spacing-16);
+}
+.noslog-ui .nl-dashboard__todo {
+    grid-area: todo;
+}
+.noslog-ui .nl-dashboard__main {
+    grid-area: main;
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: var(--nl-spacing-16);
+}
+.noslog-ui .nl-dashboard__api {
+    grid-area: api;
+}
+.noslog-ui .nl-dashboard__panel {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: var(--nl-spacing-12);
+    padding: var(--nl-spacing-16);
+    border-radius: var(--nl-radius-container);
+    background: var(--nl-surface-surface);
+}
+.noslog-ui .nl-dashboard__panel-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-dashboard__kpi-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-dashboard__kpis {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--nl-spacing-12);
+}
+.noslog-ui .nl-dashboard__kpi {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: var(--nl-spacing-4);
+    padding: var(--nl-spacing-12);
+    border: 1px solid transparent;
+    border-radius: var(--nl-radius-container);
+    background: var(--nl-surface-surface);
+    color: inherit;
+    text-decoration: none;
+}
+.noslog-ui .nl-dashboard__kpi:hover {
+    background: var(--nl-interaction-hover);
+}
+.noslog-ui .nl-dashboard__kpi[aria-current="true"] {
+    border-color: var(--nl-border-strong);
+    background: var(--nl-surface-raised);
+}
+.noslog-ui .nl-dashboard__kpi:focus-visible {
+    border-color: var(--nl-focus-ring);
+    outline: none;
+}
+.noslog-ui .nl-dashboard__delta {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-4);
+}
+.noslog-ui .nl-dashboard__delta [data-trend="up"] {
+    color: var(--nl-feedback-success-marker);
+}
+.noslog-ui .nl-dashboard__delta [data-trend="down"] {
+    color: var(--nl-feedback-danger-marker);
+}
+.noslog-ui .nl-dashboard__chart {
+    height: 160px;
+}
+.noslog-ui .nl-dashboard__list {
+    display: flex;
+    flex-direction: column;
+}
+.noslog-ui .nl-dashboard__list > li {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--nl-spacing-12);
+    min-height: 44px;
+    padding: var(--nl-spacing-4) var(--nl-spacing-8);
+}
+/* 합계 비율 막대 — 글자 뒤에 깔린다 */
+.noslog-ui .nl-dashboard__bar {
+    position: absolute;
+    inset: 2px auto 2px 0;
+    border-radius: var(--nl-radius-control);
+    background: var(--nl-local-data-bucket-1);
+}
+.noslog-ui .nl-dashboard__list > li > :not(.nl-dashboard__bar) {
+    position: relative;
+}
+.noslog-ui .nl-dashboard__name {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+}
+.noslog-ui .nl-dashboard__name > * {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.noslog-ui .nl-dashboard__group {
+    padding: var(--nl-spacing-12) var(--nl-spacing-8) var(--nl-spacing-4);
+}
+.noslog-ui .nl-dashboard__todo-list > li + li {
+    box-shadow: inset 0 1px var(--nl-border-divider);
+}
+.noslog-ui .nl-dashboard__todo-item {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-12);
+    min-height: 44px;
+    padding-inline: var(--nl-spacing-4);
+    border-radius: var(--nl-radius-control);
+    color: inherit;
+    text-decoration: none;
+}
+.noslog-ui .nl-dashboard__todo-item:hover {
+    background: var(--nl-interaction-hover);
+}
+.noslog-ui .nl-dashboard__todo-item .nl-metric-value {
+    margin-left: auto;
+}
+.noslog-ui .nl-dashboard__todo-dot {
+    width: 8px;
+    height: 8px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--nl-feedback-warning-marker);
+}
+.noslog-ui .nl-dashboard__clear {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--nl-spacing-8);
+}
+/* 16 아이콘을 20 줄 첫 줄 가운데에 — 아이콘 광학 보정 2 */
+.noslog-ui .nl-dashboard__clear > svg {
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+@media (min-width: 672px) {
+    .noslog-ui .nl-dashboard__head {
+        flex-direction: row;
+        align-items: flex-end;
+        justify-content: space-between;
+    }
+    .noslog-ui .nl-dashboard__ranges {
+        width: 320px;
+    }
+    .noslog-ui .nl-dashboard__kpis {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: var(--nl-spacing-16);
+    }
+    .noslog-ui .nl-dashboard__kpi {
+        padding: var(--nl-spacing-16);
+    }
+    .noslog-ui .nl-dashboard__chart {
+        height: 200px;
+    }
+}
+@media (min-width: 1056px) {
+    .noslog-ui .nl-dashboard__grid {
+        grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
+        grid-template-rows: auto 1fr;
+        grid-template-areas: "main todo" "main api";
+        align-items: start;
+    }
+    .noslog-ui .nl-dashboard__panel {
+        gap: var(--nl-spacing-16);
+        padding: var(--nl-spacing-24);
+    }
+}
 .noslog-ui .nl-admin-nav__content {
     display: flex;
     align-items: center;

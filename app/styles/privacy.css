@@ -30,7 +30,8 @@
     background: var(--nl-border-divider);
     margin-bottom: var(--nl-spacing-8);
 }
-.noslog-ui .nl-privacy a {
+/* 이전 버전 화면의 돌아가기 링크는 공용 BackLink 모양 그대로 둔다 */
+.noslog-ui .nl-privacy a:not(.nl-back-link) {
     color: var(--nl-content-interactive);
     text-decoration: underline;
     text-underline-offset: 3px;
@@ -121,7 +122,28 @@
     gap: var(--nl-spacing-16);
     padding-block: var(--nl-spacing-16) var(--nl-spacing-48);
 }
+.noslog-ui .nl-privacy-history__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-12);
+}
+.noslog-ui .nl-privacy-history__list a {
+    color: var(--nl-content-interactive);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+.noslog-ui .nl-privacy-back {
+    display: flex;
+    align-items: flex-start;
+}
 @media (min-width: 1056px) {
+    .noslog-ui .nl-privacy-back {
+        grid-column: 1;
+    }
+    /* 이전 버전 화면 — 돌아가기 줄이 하나 더 있어 목차는 제목 줄부터(현재 방침과 같은 높이) */
+    .noslog-ui .nl-privacy:has(> .nl-privacy-back) .nl-privacy-contents {
+        grid-row: 2 / span 3;
+    }
     .noslog-ui .nl-privacy {
         max-width: none;
         grid-template-columns: minmax(0, 1fr) calc(

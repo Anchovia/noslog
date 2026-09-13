@@ -36,6 +36,10 @@ function validArcadeInput(): ArcadeFormValues {
             sunday: offDay,
         },
         hoursConfirmed: false,
+        hoursExceptions: [],
+        creditLabel: "",
+        phone: "",
+        website: "",
         cabinets: [
             {
                 cabinetId: "",
@@ -53,6 +57,81 @@ function validArcadeInput(): ArcadeFormValues {
 }
 
 describe("관리자 오락실 스키마", () => {
+    it("연락처·요금 단위와 날짜별 예외를 공개 형식으로 바꾼다", () => {
+        const parsed = arcadeFormSchema.parse({
+            ...validArcadeInput(),
+            phone: " 02-123-4567 ",
+            website: " https://example.com/arcade ",
+            creditLabel: " 1크레딧 ",
+            hoursExceptions: [
+                // 자정을 넘기면 다음 날로(26:00 = 1560분)
+                {
+                    date: "2026-12-31",
+                    closed: false,
+                    open: "10:00",
+                    close: "02:00",
+                },
+                { date: "2026-12-25", closed: true, open: "", close: "" },
+            ],
+        });
+        expect(parsed).toMatchObject({
+            phone: "02-123-4567",
+            website: "https://example.com/arcade",
+            creditLabel: "1크레딧",
+            hoursExceptions: {
+                "2026-12-25": null,
+                "2026-12-31": { open: 600, close: 1560 },
+            },
+        });
+        // 예외 칸 없이 온 저장은 null — 서버가 저장된 예외를 그대로 둔다
+        const withoutExceptions = validArcadeInput();
+        delete withoutExceptions.hoursExceptions;
+        expect(
+            arcadeFormSchema.parse(withoutExceptions).hoursExceptions
+        ).toBeNull();
+    });
+
+    it("잘못된 전화번호·웹사이트·예외 날짜를 거부한다", () => {
+        const contact = arcadeFormSchema.safeParse({
+            ...validArcadeInput(),
+            phone: "전화 주세요",
+            website: "example.com",
+        });
+        expect(contact.success).toBe(false);
+        if (!contact.success) {
+            expect(contact.error.flatten().fieldErrors).toMatchObject({
+                phone: ["전화번호는 숫자와 + - ( ) 공백으로 입력해주세요."],
+                website: [
+                    "웹사이트는 http:// 또는 https:// 로 시작하는 주소로 입력해주세요.",
+                ],
+            });
+        }
+
+        const exceptions = arcadeFormSchema.safeParse({
+            ...validArcadeInput(),
+            hoursExceptions: [
+                { date: "2026-02-30", closed: true, open: "", close: "" },
+                {
+                    date: "2026-12-25",
+                    closed: false,
+                    open: "25:00",
+                    close: "02:00",
+                },
+                { date: "2026-12-25", closed: true, open: "", close: "" },
+            ],
+        });
+        expect(exceptions.success).toBe(false);
+        if (!exceptions.success) {
+            expect(
+                exceptions.error.issues.map((issue) => issue.message)
+            ).toEqual([
+                "예외 날짜를 확인해주세요.",
+                "예외 날짜의 영업 시작 시간을 확인해주세요.",
+                "2026-12-25 예외가 두 번 있습니다.",
+            ]);
+        }
+    });
+
     it("텍스트와 숫자, 좌표, 영업시간, 기체를 저장 형식으로 정규화한다", () => {
         expect(arcadeFormSchema.parse(validArcadeInput())).toEqual({
             name: "테스트 오락실",
@@ -62,11 +141,15 @@ describe("관리자 오락실 스키마", () => {
             longitude: 126.978,
             playPrice: 500,
             coinCount: 1,
+            creditLabel: null,
+            phone: null,
+            website: null,
             businessHours: {
                 weekly: { monday: { open: "10:00", close: "00:00" } },
                 openEveryDay: false,
             },
             hoursConfirmed: false,
+            hoursExceptions: {},
             cabinets: [
                 {
                     cabinetId: null,

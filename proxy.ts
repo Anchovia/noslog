@@ -1,5 +1,5 @@
 // 라이브러리 선언
-import { NextRequest, NextResponse } from "next/server";
+import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
 // 함수 선언
 import {
     getPathLocale,
@@ -13,6 +13,7 @@ import {
 } from "./lib/i18n/routing";
 import db from "./lib/db";
 import getSession from "./lib/session";
+import { recordApiCall } from "./lib/analytics";
 import { getMaintenanceConfig } from "./features/recovery/server/maintenanceConfig";
 import { createTranslator, getMessages } from "./lib/i18n/messages";
 import { getAuthReturnPath, getSafeAuthReturnPath } from "./lib/authReturnPath";
@@ -33,10 +34,23 @@ const routes: {
     },
 } as const;
 
-export async function proxy(request: NextRequest) {
+// event 는 Next 가 늘 넘기지만, 기존 테스트처럼 요청만 넘겨 부르는 경우도 있어 선택으로 둔다
+export async function proxy(request: NextRequest, event?: NextFetchEvent) {
     const requestedPathname = request.nextUrl.pathname;
     const pathLocale = getPathLocale(requestedPathname);
     const pathname = stripLocaleFromPath(requestedPathname);
+
+    // API 호출 통계(자체 집계) — 응답을 붙잡지 않도록 응답 뒤에 1을 더한다.
+    // 예약 작업(cron)과 통계 수집 자체는 세지 않고, 목록에 없는 경로는 recordApiCall 이 버린다
+    if (
+        requestedPathname.startsWith("/api/") &&
+        !requestedPathname.startsWith("/api/cron/") &&
+        !requestedPathname.startsWith("/api/analytics") &&
+        request.method !== "OPTIONS" &&
+        request.method !== "HEAD"
+    ) {
+        event?.waitUntil(recordApiCall(requestedPathname).catch(() => null));
+    }
 
     // Vercel Cron은 자체 Bearer 토큰으로 인증하고 사용자 세션을 사용하지 않음
     if (pathname.startsWith("/api/cron/")) {

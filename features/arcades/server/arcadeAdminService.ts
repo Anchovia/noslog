@@ -68,6 +68,15 @@ function weeklyKey(weekly: PublicArcadeWeekly | null) {
     );
 }
 
+// 날짜별 예외를 날짜순으로 비교한다 — 입력 순서만 달라도 바뀐 것으로 치지 않는다
+function exceptionsKey(
+    exceptions: Record<string, { open: number; close: number } | null>
+) {
+    return JSON.stringify(
+        Object.entries(exceptions).sort(([a], [b]) => a.localeCompare(b))
+    );
+}
+
 // 기체·영업시간을 공개 페이지가 읽는 표에 쓴다. 바꿨거나 「오늘 확인」 한 항목만 확인 시각을 지금으로 남긴다
 async function syncPublicFacts(
     tx: Prisma.TransactionClient,
@@ -148,35 +157,59 @@ async function syncPublicFacts(
 
     const details = await tx.arcadePublicDetails.findUnique({
         where: { arcadeId },
-        select: { slug: true, hours: true },
+        select: {
+            slug: true,
+            hours: true,
+            phone: true,
+            website: true,
+            creditLabel: true,
+        },
     });
     const weekly = input.businessHours
         ? toPublicArcadeWeekly(input.businessHours.weekly)
         : null;
     const hoursChanged =
         weeklyKey(weekly) !== weeklyKey(readPublicArcadeWeekly(details?.hours));
-    const writeHours =
+    const writeWeekly =
         hoursChanged || (weekly !== null && input.hoursConfirmed);
+    // 날짜별 예외가 바뀌면 영업시간 JSON 을 다시 쓴다. 요일 영업시간을 확인한 것은 아니므로 확인 시각은 그대로 둔다
+    const currentHours = arcadeHoursSchema.safeParse(details?.hours);
+    const currentExceptions = currentHours.success
+        ? currentHours.data.exceptions
+        : {};
+    // 예외 칸 없이 온 저장(옛 화면)은 저장된 예외를 그대로 둔다
+    const exceptions = input.hoursExceptions ?? currentExceptions;
+    const exceptionsChanged =
+        exceptionsKey(exceptions) !== exceptionsKey(currentExceptions);
+    const contact = {
+        phone: input.phone,
+        website: input.website,
+        creditLabel: input.creditLabel,
+    };
+    const contactChanged =
+        (details?.phone ?? null) !== contact.phone ||
+        (details?.website ?? null) !== contact.website ||
+        (details?.creditLabel ?? null) !== contact.creditLabel;
 
-    if (writeHours || cabinetVerified) {
-        const currentHours = arcadeHoursSchema.safeParse(details?.hours);
+    if (writeWeekly || exceptionsChanged || cabinetVerified || contactChanged) {
+        const hasExceptions = Object.keys(exceptions).length > 0;
         const data = {
-            ...(writeHours
+            ...(writeWeekly || exceptionsChanged
                 ? {
                       hours:
-                          weekly === null
+                          weekly === null && !hasExceptions
                               ? Prisma.DbNull
                               : ({
-                                    weekly,
-                                    // 날짜별 예외는 이 화면에서 편집하지 않으므로 그대로 둔다
-                                    exceptions: currentHours.success
-                                        ? currentHours.data.exceptions
-                                        : {},
+                                    weekly: weekly ?? {},
+                                    exceptions,
                                 } as Prisma.InputJsonValue),
-                      hoursVerifiedAt: weekly === null ? null : now,
                   }
                 : {}),
+            ...(writeWeekly
+                ? { hoursVerifiedAt: weekly === null ? null : now }
+                : {}),
             ...(cabinetVerified ? { cabinetVerifiedAt: now } : {}),
+            ...(contactChanged ? contact : {}),
         };
         await tx.arcadePublicDetails.upsert({
             where: { arcadeId },
@@ -207,7 +240,11 @@ function validationFailure(
             fieldErrors.longitude?.[0] ??
             fieldErrors.playPrice?.[0] ??
             fieldErrors.coinCount?.[0] ??
+            fieldErrors.creditLabel?.[0] ??
+            fieldErrors.phone?.[0] ??
+            fieldErrors.website?.[0] ??
             fieldErrors.businessHours?.[0] ??
+            fieldErrors.hoursExceptions?.[0] ??
             fieldErrors.cabinets?.[0] ??
             fieldErrors.notes?.[0] ??
             "입력 내용을 확인해주세요.",
@@ -223,7 +260,8 @@ function cabinetMismatch(): ArcadeActionResult {
     };
 }
 
-function refreshArcades(includeProfiles: boolean, slug: string) {
+// 사진 관리(arcadePhotoAdminService)도 같은 캐시·경로를 새로 고친다
+export function refreshArcades(includeProfiles: boolean, slug: string) {
     updateTag(CACHE_TAGS.arcades);
     if (includeProfiles) updateTag(CACHE_TAGS.userProfiles);
     revalidatePath("/admin/arcades");

@@ -1,7 +1,7 @@
 {
     "ko": {
         "title": "개인정보처리방침",
-        "dates": "최종 수정 2026년 9월 13일 · 시행 2026년 9월 20일",
+        "dates": "최종 수정 2026년 9월 2일 · 시행 2026년 7월 27일",
         "contents": "이 페이지에서",
         "detailLabel": "자세히 보기",
         "settingsLogin": "로그인 후 설정에서 관리",
@@ -78,11 +78,6 @@
                         "kind": "item",
                         "title": "자동 생성 정보",
                         "text": "접속 IP, 브라우저·기기 정보, 접속 시각, 요청 및 오류 로그가 서비스 보안, 장애 대응과 운영 과정에서 생성될 수 있습니다."
-                    },
-                    {
-                        "kind": "item",
-                        "title": "방문 통계",
-                        "text": "페이지를 열면 접속 IP와 브라우저 정보로 그날만 쓰는 식별값을 만들어 하루 방문자 수를 셉니다. IP와 브라우저 정보 자체는 저장하지 않으며, 식별값은 다음 날 삭제합니다. 남는 것은 하루 방문자 수, 페이지별 조회 수, API 호출 수 같은 합계뿐이고, 이 기능에는 쿠키를 쓰지 않습니다."
                     }
                 ]
             },
@@ -126,7 +121,7 @@
                             "BEMANI 비밀번호와 공식 사이트 세션 쿠키를 받지 않습니다.",
                             "채보 뷰어·에디터에서 선택한 로컬 오디오는 브라우저에만 남고 서버로 업로드되지 않습니다.",
                             "정밀 위치 정보를 요청하지 않습니다.",
-                            "외부 분석 도구와 광고·마케팅 추적 도구를 사용하지 않습니다. 방문 통계는 개인을 알아볼 수 없는 하루 합계로만 직접 집계합니다.",
+                            "광고·행동 분석·마케팅 추적 도구를 사용하지 않습니다.",
                             "개인정보를 판매하거나 광고 목적으로 제공하지 않습니다.",
                             "결제 카드 정보를 수집하지 않습니다."
                         ]
@@ -144,8 +139,7 @@
                             "아바타: 교체·삭제하거나 회원 탈퇴할 때까지",
                             "처리 완료된 피드백: 완료일로부터 6개월 후 내용과 첨부 이미지 전체 삭제",
                             "승인된 검정 제출: 심사 완료 6개월 후 증빙 이미지와 심사 메모 삭제, 합격 이력은 회원 탈퇴 시까지 보관",
-                            "반려된 검정 제출: 심사 완료 6개월 후 제출 기록과 증빙 이미지 전체 삭제",
-                            "방문 통계: 하루 식별값은 다음 날 삭제, 하루 합계(방문자 수·페이지 조회 수·API 호출 수)는 90일 후 삭제"
+                            "반려된 검정 제출: 심사 완료 6개월 후 제출 기록과 증빙 이미지 전체 삭제"
                         ]
                     },
                     {
@@ -275,7 +269,7 @@
     },
     "ja": {
         "title": "プライバシーポリシー",
-        "dates": "最終更新 2026年9月13日 · 施行 2026年9月20日",
+        "dates": "最終更新 2026年9月2日 · 施行 2026年7月27日",
         "contents": "このページの内容",
         "detailLabel": "詳しく見る",
         "settingsLogin": "ログインして設定で管理",
@@ -352,11 +346,6 @@
                         "kind": "item",
                         "title": "自動的に生成される情報",
                         "text": "接続IP、ブラウザー・端末情報、接続時刻、リクエストおよびエラーログが、サービスのセキュリティ、障害対応、運営の過程で生成される場合があります。"
-                    },
-                    {
-                        "kind": "item",
-                        "title": "訪問統計",
-                        "text": "ページを開くと、接続IPとブラウザー情報からその日だけ使う識別値を作り、1日の訪問者数を数えます。IPとブラウザー情報そのものは保存せず、識別値は翌日に削除します。残るのは1日の訪問者数、ページごとの閲覧数、APIの呼び出し回数といった合計のみで、この機能ではCookieを使用しません。"
                     }
                 ]
             },
@@ -400,7 +389,7 @@
                             "BEMANIのパスワードと公式サイトのセッションCookieを受け取りません。",
                             "譜面ビューア・エディタで選択したローカル音源はブラウザーに残り、サーバーへアップロードされません。",
                             "正確な位置情報を要求しません。",
-                            "外部の分析ツールや広告・マーケティング追跡ツールを使用しません。訪問統計は、個人を識別できない1日単位の合計としてのみ独自に集計します。",
+                            "広告・行動分析・マーケティング追跡ツールを使用しません。",
                             "個人情報を販売したり、広告目的で提供したりしません。",
                             "決済カード情報を収集しません。"
                         ]
@@ -418,8 +407,7 @@
                             "アバター：変更・削除または退会まで",
                             "対応済みのフィードバック：対応完了日から6か月後に内容と添付画像をすべて削除",
                             "承認された検定提出：審査完了から6か月後に証明画像と審査メモを削除し、合格履歴は退会まで保管",
-                            "却下された検定提出：審査完了から6か月後に提出記録と証明画像をすべて削除",
-                            "訪問統計：1日の識別値は翌日に削除し、1日の合計（訪問者数・ページ閲覧数・API呼び出し回数）は90日後に削除"
+                            "却下された検定提出：審査完了から6か月後に提出記録と証明画像をすべて削除"
                         ]
                     },
                     {
@@ -549,7 +537,7 @@
     },
     "en": {
         "title": "Privacy Policy",
-        "dates": "Last updated September 13, 2026 · Effective September 20, 2026",
+        "dates": "Last updated September 2, 2026 · Effective July 27, 2026",
         "contents": "On this page",
         "detailLabel": "See details",
         "settingsLogin": "Manage in Settings after logging in",
@@ -626,11 +614,6 @@
                         "kind": "item",
                         "title": "Automatically generated information",
                         "text": "Connection IP addresses, browser and device information, access times, requests, and error logs may be generated for service security, incident response, and operations."
-                    },
-                    {
-                        "kind": "item",
-                        "title": "Visit statistics",
-                        "text": "When you open a page, we create an identifier used only for that day from your connection IP and browser information to count daily visitors. We do not store the IP or browser information itself, and the identifier is deleted the next day. Only totals remain, such as daily visitors, views per page, and API call counts. This feature does not use cookies."
                     }
                 ]
             },
@@ -674,7 +657,7 @@
                             "We do not receive your BEMANI password or official-site session cookie.",
                             "Local audio selected in the chart viewer/editor stays in your browser and is never uploaded.",
                             "We do not request precise device location.",
-                            "We do not use third-party analytics tools or advertising or marketing tracking tools. Visit statistics are counted in-house only as daily totals that cannot identify individuals.",
+                            "We do not use advertising, behavioral analytics, or marketing tracking tools.",
                             "We do not sell personal information or share it for advertising.",
                             "We do not collect payment-card information."
                         ]
@@ -692,8 +675,7 @@
                             "Avatar: until it is replaced or deleted, or until account deletion",
                             "Resolved feedback: all content and attached images are deleted six months after resolution",
                             "Approved exam submissions: evidence images and review notes are deleted six months after review; passing history is retained until account deletion",
-                            "Rejected exam submissions: submission records and evidence images are deleted six months after review",
-                            "Visit statistics: daily identifiers are deleted the next day; daily totals (visitors, page views, API calls) are deleted after 90 days"
+                            "Rejected exam submissions: submission records and evidence images are deleted six months after review"
                         ]
                     },
                     {

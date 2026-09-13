@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import BackLink from "@/components/ui/backLink";
 import {
     getPrivacyCopy,
+    PRIVACY_PREVIOUS_VERSIONS,
     privacyHistoryCopy,
+    privacyVersionPeriod,
 } from "@/features/privacy/content/privacyContent";
 import { getServerI18n } from "@/lib/i18n/server";
 import { localizePath } from "@/lib/i18n/routing";
@@ -24,7 +27,24 @@ export default async function PrivacyHistoryPage() {
                 {getPrivacyCopy(locale).title}
             </BackLink>
             <h1 className="nl-page-title">{copy.title}</h1>
-            <p className="nl-body nl-muted">{copy.empty}</p>
+            {PRIVACY_PREVIOUS_VERSIONS.length > 0 ? (
+                <ul className="nl-privacy-history__list nl-body">
+                    {PRIVACY_PREVIOUS_VERSIONS.map((version) => (
+                        <li key={version.id}>
+                            <Link
+                                href={localizePath(
+                                    `/privacy/history/${version.id}`,
+                                    locale
+                                )}
+                            >
+                                {privacyVersionPeriod(version, locale)}
+                            </Link>
+                        </li>
+                    ))}
+                </ul>
+            ) : (
+                <p className="nl-body nl-muted">{copy.empty}</p>
+            )}
         </div>
     );
 }

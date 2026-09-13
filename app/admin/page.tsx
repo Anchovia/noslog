@@ -1,6 +1,17 @@
-import { redirect } from "next/navigation";
+import AdminDashboard from "@/features/admin/components/adminDashboard";
+import {
+    getAdminDashboard,
+    parseDashboardParams,
+} from "@/features/admin/server/adminDashboardService";
 
-// 관리자 대시보드는 제거됨 — 첫 관리 화면으로 바로 이동함
-export default function AdminPage() {
-    redirect("/admin/announcements");
+// 관리자 첫 화면 = 대시보드(2026-09-13). 기간·그래프 지표는 주소로 바꾼다(기본 7일 · 방문자)
+export default async function AdminPage({
+    searchParams,
+}: {
+    searchParams: Promise<{ range?: string; metric?: string }>;
+}) {
+    const data = await getAdminDashboard(
+        parseDashboardParams(await searchParams)
+    );
+    return <AdminDashboard data={data} />;
 }

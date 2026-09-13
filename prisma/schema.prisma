@@ -299,6 +299,35 @@ model ArcadeSlugAlias {
   arcade   Arcade @relation(fields: [arcadeId], references: [id], onDelete: Cascade)
 }
 
+// 방문·API 통계 — 날짜(서울)·종류·열쇠별 합계만 둔다. 90일 뒤 지운다(privacyRetention)
+model AnalyticsDailyCount {
+  date  DateTime @db.Date
+  kind  String
+  key   String   @default("")
+  count Int      @default(0)
+
+  @@id([date, kind, key])
+  @@index([kind, date])
+  @@map("analytics_daily_counts")
+}
+
+// 그날 처음 온 방문자인지만 가리는 해시(그날의 무작위 값 + IP + 브라우저 정보). 다음 날 지운다
+model AnalyticsVisitor {
+  date DateTime @db.Date
+  hash String
+
+  @@id([date, hash])
+  @@map("analytics_visitors")
+}
+
+// 방문자 해시에 섞는 그날의 무작위 값. 다음 날 지운다
+model AnalyticsSalt {
+  date DateTime @id @db.Date
+  salt String
+
+  @@map("analytics_salts")
+}
+
 // 사용자별 이미지 업로드 토큰 발급 횟수를 제한함
 model UploadTokenGrant {
   id        Int      @id @default(autoincrement())

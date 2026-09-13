@@ -384,6 +384,69 @@ describe("관리자 오락실 액션", () => {
         );
     });
 
+    it("연락처·요금 단위와 날짜별 예외를 공개 정보에 쓰고, 요일 영업시간 확인 시각은 건드리지 않는다", async () => {
+        mocks.cabinetFindMany.mockResolvedValue([
+            { ...savedCabinet, id: 1, position: 0 },
+        ]);
+        const weekly = {
+            "0": { open: 600, close: 1440 },
+            "1": null,
+            "2": null,
+            "3": null,
+            "4": null,
+            "5": null,
+            "6": null,
+        };
+        mocks.detailsFindUnique.mockResolvedValue({
+            slug: "10",
+            hours: { weekly, exceptions: {} },
+            phone: null,
+            website: null,
+            creditLabel: null,
+        });
+        const formData = arcadeFormData({
+            id: 10,
+            cabinets: [cabinet({ cabinetId: "1" })],
+            monday: { open: "10:00", close: "00:00" },
+        });
+        formData.set("phone", " 02-123-4567 ");
+        formData.set("website", "https://example.com/arcade");
+        formData.set("creditLabel", "1크레딧");
+        formData.set(
+            "hoursExceptions",
+            JSON.stringify([
+                {
+                    date: "2026-12-31",
+                    closed: false,
+                    open: "10:00",
+                    close: "02:00",
+                },
+                { date: "2026-12-25", closed: true, open: "", close: "" },
+            ])
+        );
+
+        await expect(updateArcade(formData)).resolves.toMatchObject({
+            success: true,
+        });
+        // 요일 영업시간도 기체도 바뀌지 않았으니 확인 시각 없이 예외·연락처만 쓴다
+        expect(mocks.detailsUpsert).toHaveBeenCalledWith(
+            expect.objectContaining({
+                update: {
+                    hours: {
+                        weekly,
+                        exceptions: {
+                            "2026-12-25": null,
+                            "2026-12-31": { open: 600, close: 1560 },
+                        },
+                    },
+                    phone: "02-123-4567",
+                    website: "https://example.com/arcade",
+                    creditLabel: "1크레딧",
+                },
+            })
+        );
+    });
+
     it("다른 오락실의 기체 ID는 저장하지 않는다", async () => {
         const result = await updateArcade(
             arcadeFormData({ id: 10, cabinets: [cabinet({ cabinetId: "99" })] })

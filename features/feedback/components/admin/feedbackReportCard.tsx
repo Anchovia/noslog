@@ -47,6 +47,31 @@ export default function FeedbackReportCard({
                         {new Date(report.createdAt).toLocaleDateString("ko-KR")}
                     </time>
                 </div>
+                {report.arcade ? (
+                    <p className="text-caption flex flex-wrap items-center gap-x-1.5">
+                        <span>오락실 제보</span>
+                        <span aria-hidden>·</span>
+                        <Link
+                            href={report.arcade.href}
+                            target="_blank"
+                            className="text-body font-bold hover:underline"
+                        >
+                            {report.arcade.name}
+                        </Link>
+                        {report.arcade.cabinet ? (
+                            <>
+                                <span aria-hidden>·</span>
+                                <span>{report.arcade.cabinet}</span>
+                            </>
+                        ) : null}
+                        {report.arcade.type ? (
+                            <>
+                                <span aria-hidden>·</span>
+                                <span>{report.arcade.type}</span>
+                            </>
+                        ) : null}
+                    </p>
+                ) : null}
                 <p className="text-body break-words whitespace-pre-wrap">
                     {report.content}
                 </p>

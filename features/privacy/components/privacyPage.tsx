@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { StatusMessage } from "@/components/ui/statusMessage";
 import PrivacyContents from "@/features/privacy/components/privacyContents";
 import { getPrivacyCopy } from "@/features/privacy/content/privacyContent";
@@ -55,18 +56,29 @@ function PolicyBlock({
 export default function PrivacyPage({
     locale,
     isAuthenticated,
+    copy: archivedCopy,
+    period,
+    back,
 }: {
     locale: Locale;
     isAuthenticated: boolean;
+    // 이전 버전 보기 — 보관한 방침과 그 적용 기간, 목록으로 돌아가는 링크. 없으면 현재 방침
+    copy?: PrivacyCopy;
+    period?: string;
+    back?: ReactNode;
 }) {
-    const copy = getPrivacyCopy(locale);
+    const copy = archivedCopy ?? getPrivacyCopy(locale);
     const t = createTranslator(getMessages(locale));
     const settingsPath = localizePath("/settings", locale);
     return (
         <div className="nl-privacy">
+            {back ? <div className="nl-privacy-back">{back}</div> : null}
             <header className="nl-privacy-identity">
                 <h1 className="nl-page-title">{copy.title}</h1>
                 <p className="nl-metadata nl-muted">{copy.dates}</p>
+                {period ? (
+                    <p className="nl-metadata nl-muted">{period}</p>
+                ) : null}
             </header>
             <div className="nl-privacy-summary">
                 {copy.summary.map((group) => (

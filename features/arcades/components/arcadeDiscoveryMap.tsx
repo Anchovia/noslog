@@ -5,6 +5,7 @@ import * as Popover from "@radix-ui/react-popover";
 import { CircleAlert, createLucideIcon } from "lucide-react";
 import { useTranslations } from "@/components/i18n/localeProvider";
 import Button from "@/components/ui/Button";
+import { sendAnalytics } from "@/lib/analyticsClient";
 import { loadKakaoMaps } from "@/lib/kakaoMaps";
 import type { KakaoMapInstance, KakaoOverlay } from "@/lib/kakaoMaps";
 
@@ -98,6 +99,8 @@ export default function ArcadeDiscoveryMap({
         loadKakaoMaps(appKey)
             .then((api) => {
                 if (disposed || !container.current) return;
+                // 외부 API 통계 — 지도를 실제로 연 횟수(카카오 쪽 호출량의 근사치)
+                sendAnalytics({ type: "event", name: "kakao-map" });
                 apiRef.current = api;
                 const map = new api.maps.Map(container.current, {
                     center: new api.maps.LatLng(36.2, 127.5),

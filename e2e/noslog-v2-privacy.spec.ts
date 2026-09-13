@@ -2,7 +2,9 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 import {
     getPrivacyCopy,
+    PRIVACY_PREVIOUS_VERSIONS,
     privacyHistoryCopy,
+    privacyVersionPeriod,
 } from "@/features/privacy/content/privacyContent";
 
 for (const locale of ["ko", "ja", "en"] as const) {
@@ -114,9 +116,21 @@ for (const locale of ["ko", "ja", "en"] as const) {
         await page
             .getByRole("link", { name: copy.historyLink, exact: true })
             .click();
+        const [previous] = PRIVACY_PREVIOUS_VERSIONS;
+        const period = privacyVersionPeriod(previous, locale);
+        await page.getByRole("link", { name: period, exact: true }).click();
+        await expect(page.locator(".nl-privacy-section")).toHaveCount(12);
         await expect(
-            page.getByText(privacyHistoryCopy[locale].empty, { exact: true })
+            page.getByText(privacyHistoryCopy[locale].period(period), {
+                exact: true,
+            })
         ).toBeVisible();
+        await page
+            .getByRole("link", {
+                name: privacyHistoryCopy[locale].title,
+                exact: true,
+            })
+            .click();
         await page
             .getByRole("link", { name: copy.title, exact: true })
             .first()
