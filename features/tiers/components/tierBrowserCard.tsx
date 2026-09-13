@@ -10,6 +10,7 @@ import {
 import MusicJacket from "@/components/music/musicJacket";
 import { FullComboMark } from "@/features/music/components/chartLeaderboard";
 import { serializeTierBrowserQuery } from "@/features/tiers/schemas/tierBrowserSchema";
+import { isTierGoalAchieved } from "@/lib/tiers";
 import type {
     TierBrowserEntry,
     TierBrowserQuery,
@@ -45,6 +46,16 @@ export default function TierBrowserCard({
         record && (record.fc_type === 3 || record.score >= 1_000_000)
     );
     const fc = Boolean(record && record.fc_type >= 2 && !pianist);
+    // 테두리 = 점수 단계 S < 990k < Pianist. FC 는 왼쪽 아래 마크가 말하고, S 미만 FC 만 초록 테두리
+    const achievement = pianist
+        ? "pianist"
+        : isTierGoalAchieved(record, "990k")
+          ? "990k"
+          : isTierGoalAchieved(record, "s")
+            ? "s"
+            : fc
+              ? "fc"
+              : undefined;
     const rank = record
         ? pianist
             ? "p"
@@ -53,6 +64,8 @@ export default function TierBrowserCard({
     const score = record
         ? record.score.toLocaleString(locale)
         : t("tiers.unplayed");
+    // 이 표 기준(S · 990k · Pianist)을 달성하면 점수를 그 표의 기준 색으로 — 테두리(단계)와 역할을 나눈다
+    const goalAchieved = signedIn && isTierGoalAchieved(record, query.goal);
     const params = new URLSearchParams({
         tab: "tier",
         source: "tiers",
@@ -69,7 +82,7 @@ export default function TierBrowserCard({
             href={href(
                 `/music/${encodeURIComponent(chart.music.index)}/${chart.difficulty.toLowerCase()}?${params}`
             )}
-            aria-label={`${chart.music.title} · ${chart.difficulty} ${chart.level} · ${t("detail.tier")}${signedIn ? ` · ${score}${pianist ? " · Pianist" : fc ? " · Full Combo" : ""}` : ""}`}
+            aria-label={`${chart.music.title} · ${chart.difficulty} ${chart.level} · ${t("detail.tier")}${signedIn ? ` · ${score}${pianist ? " · Pianist" : fc ? " · Full Combo" : ""}${goalAchieved ? ` · ${t("tiers.goalAchieved")}` : ""}` : ""}`}
             onClick={(event) => {
                 if (pending) event.preventDefault();
             }}
@@ -81,9 +94,7 @@ export default function TierBrowserCard({
             >
                 <span
                     className="nl-tier-card__outline"
-                    data-achievement={
-                        pianist ? "pianist" : fc ? "fc" : undefined
-                    }
+                    data-achievement={achievement}
                     aria-hidden
                 />
                 {signedIn && rank ? (
@@ -109,7 +120,10 @@ export default function TierBrowserCard({
                 ) : null}
             </MusicJacket>
             {signedIn && !query.detailed ? (
-                <span className="nl-tier-card__score nl-metric-value">
+                <span
+                    className="nl-tier-card__score nl-metric-value"
+                    data-goal={goalAchieved ? query.goal : undefined}
+                >
                     {score}
                 </span>
             ) : null}
