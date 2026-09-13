@@ -9,6 +9,7 @@ import {
 describe("오락실 지역", () => {
     it("관리자가 선택할 수 있는 고정 지역만 허용한다", () => {
         expect(isArcadeRegion("서울")).toBe(true);
+        expect(isArcadeRegion("충남")).toBe(true);
         expect(isArcadeRegion("기타")).toBe(true);
         expect(isArcadeRegion("은평구")).toBe(false);
     });
@@ -24,5 +25,12 @@ describe("오락실 지역", () => {
             inferLegacyArcadeRegion("은평구", "서울 은평구 연서로29길 8-8")
         ).toBe("서울");
         expect(inferLegacyArcadeRegion("경기", "서울 강남구")).toBe("경기");
+        // 충남은 주소에 줄임말(충남)이나 정식 이름(충청남도) 어느 쪽으로 적혀 있어도 찾는다
+        expect(inferLegacyArcadeRegion("", "충남 천안시 동남구 대흥로 1")).toBe(
+            "충남"
+        );
+        expect(
+            inferLegacyArcadeRegion("천안", "충청남도 천안시 서북구 불당동")
+        ).toBe("충남");
     });
 });
