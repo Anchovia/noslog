@@ -584,6 +584,7 @@ export const koMessages = {
     "tiers.noPublished": "선택한 목표의 공개 서열표가 없습니다.",
     "tiers.bands": "서열표 구간",
     "tiers.achieved": "달성 {count}/{total}",
+    "tiers.goalAchieved": "달성",
     "tiers.songCount": "{count}곡",
     "tiers.retry": "다시 불러오기",
     "tiers.loading": "서열 데이터를 불러오는 중입니다.",

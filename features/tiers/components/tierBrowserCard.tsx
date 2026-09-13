@@ -10,6 +10,7 @@ import {
 import MusicJacket from "@/components/music/musicJacket";
 import { FullComboMark } from "@/features/music/components/chartLeaderboard";
 import { serializeTierBrowserQuery } from "@/features/tiers/schemas/tierBrowserSchema";
+import { isTierGoalAchieved } from "@/lib/tiers";
 import type {
     TierBrowserEntry,
     TierBrowserQuery,
@@ -53,6 +54,16 @@ export default function TierBrowserCard({
     const score = record
         ? record.score.toLocaleString(locale)
         : t("tiers.unplayed");
+    // 이 표 기준(S · 990k · Pianist)을 달성했는가 — 테두리와 점수가 그 표의 기준 색을 쓴다
+    const goalAchieved = signedIn && isTierGoalAchieved(record, query.goal);
+    // 테두리: 달성 + FC = 초록 → 기준 색 그라데이션 · 달성 = 기준 색(Pianist 는 퍼펙트라 FC 여도 기준 색 하나) · 달성 못 한 FC = 초록
+    const achievement = goalAchieved
+        ? fc
+            ? "goal-fc"
+            : "goal"
+        : fc
+          ? "fc"
+          : undefined;
     const params = new URLSearchParams({
         tab: "tier",
         source: "tiers",
@@ -64,12 +75,13 @@ export default function TierBrowserCard({
         <Link
             className="nl-tier-card"
             data-detailed={query.detailed}
+            data-goal={query.goal}
             aria-disabled={pending || undefined}
             tabIndex={pending ? -1 : undefined}
             href={href(
                 `/music/${encodeURIComponent(chart.music.index)}/${chart.difficulty.toLowerCase()}?${params}`
             )}
-            aria-label={`${chart.music.title} · ${chart.difficulty} ${chart.level} · ${t("detail.tier")}${signedIn ? ` · ${score}${pianist ? " · Pianist" : fc ? " · Full Combo" : ""}` : ""}`}
+            aria-label={`${chart.music.title} · ${chart.difficulty} ${chart.level} · ${t("detail.tier")}${signedIn ? ` · ${score}${pianist ? " · Pianist" : fc ? " · Full Combo" : ""}${goalAchieved ? ` · ${t("tiers.goalAchieved")}` : ""}` : ""}`}
             onClick={(event) => {
                 if (pending) event.preventDefault();
             }}
@@ -81,22 +93,25 @@ export default function TierBrowserCard({
             >
                 <span
                     className="nl-tier-card__outline"
-                    data-achievement={
-                        pianist ? "pianist" : fc ? "fc" : undefined
-                    }
+                    data-achievement={achievement}
                     aria-hidden
                 />
-                {signedIn && rank ? (
+                {/* 기본 보기 자켓 위에는 오른쪽 아래 난이도 판만 — 같은 구간에 한 곡의 여러 난이도가 있어도 구분되게.
+                    등급 메달·FC 마크는 테두리와 점수 색이 대신한다. 상세 보기는 점수 띠에 메달·FC 그대로 */}
+                {signedIn && rank && query.detailed ? (
                     <img
                         className="nl-tier-card__rank"
                         src={`/grade/grade_${rank}.png`}
                         alt=""
                     />
                 ) : null}
-                {/* FC 마크는 자켓 왼쪽 아래 — 오른쪽 아래 등급 메달과 짝. 상세 보기는 점수 띠 왼쪽 끝 */}
-                {signedIn && fc && record && !query.detailed ? (
-                    <span className="nl-tier-card__fc">
-                        <FullComboMark fcType={record.fc_type} />
+                {!query.detailed ? (
+                    <span
+                        className="nl-tier-card__difficulty nl-metadata"
+                        data-difficulty={chart.difficulty.toLowerCase()}
+                        aria-hidden
+                    >
+                        {chart.difficulty} {chart.level}
                     </span>
                 ) : null}
                 {signedIn && query.detailed ? (
@@ -109,7 +124,10 @@ export default function TierBrowserCard({
                 ) : null}
             </MusicJacket>
             {signedIn && !query.detailed ? (
-                <span className="nl-tier-card__score nl-metric-value">
+                <span
+                    className="nl-tier-card__score nl-metric-value"
+                    data-achieved={goalAchieved || undefined}
+                >
                     {score}
                 </span>
             ) : null}

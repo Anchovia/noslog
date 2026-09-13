@@ -585,6 +585,7 @@ export const jaMessages = {
     "tiers.noPublished": "選択した目標の公開難易度表がありません。",
     "tiers.bands": "難易度表の区分",
     "tiers.achieved": "達成 {count}/{total}",
+    "tiers.goalAchieved": "達成",
     "tiers.songCount": "{count}曲",
     "tiers.retry": "再読み込み",
     "tiers.loading": "難易度データを読み込んでいます。",

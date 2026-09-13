@@ -588,6 +588,7 @@ export const enMessages = {
     "tiers.noPublished": "No public tier list is available for this goal.",
     "tiers.bands": "Tier list bands",
     "tiers.achieved": "Achieved {count}/{total}",
+    "tiers.goalAchieved": "Achieved",
     "tiers.songCount": "{count} songs",
     "tiers.retry": "Try again",
     "tiers.loading": "Loading tier data.",
