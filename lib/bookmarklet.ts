@@ -8,6 +8,9 @@ interface SyncTokenPayload {
     version: number;
 }
 
+// /api/receiveJacket 의 상한(MAX_COLLECTED_JACKET_BYTES)과 같은 값 — 넘는 파일은 보내지 않는다
+const MAX_JACKET_BYTES = 1024 * 1024;
+
 const bookmarkletCopy = {
     ko: {
         title: "NosLog 데이터 동기화",
@@ -162,6 +165,14 @@ export function createBookmarkletScript(
         );
     }
 
+    const jacketUrl = new URL("/api/receiveJacket", `${appOrigin}/`);
+    if (protectionBypassSecret) {
+        jacketUrl.searchParams.set(
+            "x-vercel-protection-bypass",
+            protectionBypassSecret
+        );
+    }
+
     const copy = bookmarkletCopy[locale];
     const receiveUrlString = receiveUrl.toString();
     const resultUrl = new URL(
@@ -284,6 +295,33 @@ export function createBookmarkletScript(
                 setStatus(result.message||copy.completed,"success");
                 addLink(copy.viewResult,${JSON.stringify(resultUrl)});
                 addCloseButton();
+
+                const missingJackets=Array.isArray(result.missingJackets)?result.missingJackets.filter(index=>typeof index==="string"):[];
+                if(missingJackets.length){
+                    const toBase64=async blob=>{
+                        const bytes=new Uint8Array(await blob.arrayBuffer());
+                        let binary="";
+                        for(let i=0;i<bytes.length;i+=32768)binary+=String.fromCharCode.apply(null,bytes.subarray(i,i+32768));
+                        return btoa(binary);
+                    };
+                    const collect=async()=>{
+                        while(missingJackets.length){
+                            const index=missingJackets.shift();
+                            try{
+                                const image=await fetch("https://p.eagate.573.jp/game/nostalgia/op3/img/jacket.html?c="+encodeURIComponent(index),{credentials:"include"});
+                                const blob=image.ok?await image.blob():null;
+                                if(blob&&blob.size>0&&blob.size<=${MAX_JACKET_BYTES}){
+                                    await fetch(${JSON.stringify(jacketUrl.toString())},{
+                                        method:"POST",
+                                        headers:{"Content-Type":"application/json"},
+                                        body:JSON.stringify({token,index,data:await toBase64(blob)})
+                                    });
+                                }
+                            }catch{}
+                        }
+                    };
+                    await Promise.all([collect(),collect(),collect()]);
+                }
             }catch(error){
                 setStatus(error instanceof Error?error.message:copy.syncFailed,"failure");
                 addCloseButton();

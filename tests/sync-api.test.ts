@@ -18,6 +18,7 @@ const mocks = vi.hoisted(() => ({
     updateRecentPlay: vi.fn(),
     updateDummy: vi.fn(),
     revalidateTag: vi.fn(),
+    getMissingJacketIndexes: vi.fn(),
 }));
 
 vi.mock("@/lib/bookmarklet", () => ({
@@ -59,6 +60,9 @@ vi.mock("@/lib/dummy/bingo", () => ({
 }));
 vi.mock("next/cache", () => ({
     revalidateTag: mocks.revalidateTag,
+}));
+vi.mock("@/features/music/server/jacketCollectionService", () => ({
+    getMissingJacketIndexes: mocks.getMissingJacketIndexes,
 }));
 
 import { POST } from "@/app/api/receivePlayerData/route";
@@ -251,6 +255,7 @@ describe("POST /api/receivePlayerData", () => {
             pending: 0,
             applied: 0,
         });
+        mocks.getMissingJacketIndexes.mockResolvedValue(["missing-a"]);
     });
 
     it("허용되지 않은 Origin 요청을 거부한다", async () => {
@@ -526,6 +531,8 @@ describe("POST /api/receivePlayerData", () => {
             "music-details",
             "max"
         );
+        expect(data).not.toHaveProperty("missingJackets");
+        expect(mocks.getMissingJacketIndexes).not.toHaveBeenCalled();
     });
 
     it("미등록 채보는 개인 기록에서 제외하고 동기화 내역에 남긴다", async () => {
@@ -613,6 +620,23 @@ describe("POST /api/receivePlayerData", () => {
             "music-details",
             "max"
         );
+        expect(data.missingJackets).toEqual(["missing-a"]);
+    });
+
+    it("자켓 목록 조회가 실패해도 관리자 동기화는 성공으로 끝난다", async () => {
+        vi.spyOn(console, "error").mockImplementation(() => undefined);
+        mocks.userFindUnique.mockResolvedValue({
+            id: 1,
+            sync_token_version: 0,
+            role: "admin",
+        });
+        mocks.getMissingJacketIndexes.mockRejectedValue(new Error("db down"));
+
+        const response = await POST(createRequest(requestBody(true)));
+        const data = await response.json();
+
+        expect(response.status).toBe(200);
+        expect(data.missingJackets).toEqual([]);
     });
 
     it("처리 실패 시 동기화 실행을 실패 상태로 기록한다", async () => {

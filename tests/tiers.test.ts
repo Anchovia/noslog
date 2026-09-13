@@ -50,10 +50,8 @@ describe("getJacketUrl", () => {
         ).toBe("/bg/818b48940c2d17325904fbab68689046.png");
     });
 
-    it("저장된 자켓이 없으면 공식 동적 자켓 URL을 반환한다", () => {
-        expect(getJacketUrl("unknown-music", null)).toBe(
-            "https://p.eagate.573.jp/game/nostalgia/op3/img/jacket.html?c=unknown-music"
-        );
+    it("저장된 자켓이 없으면 null을 반환한다 — 공식 jacket.html은 로그인이 필요해 후보가 아니다", () => {
+        expect(getJacketUrl("unknown-music", null)).toBeNull();
     });
 });
 

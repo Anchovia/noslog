@@ -28,6 +28,20 @@ describe("bookmarklet sync overlay", () => {
         expect(script).not.toContain("NosLog 데이터 동기화");
     });
 
+    it("collects only the jackets the admin sync response lists", () => {
+        const script = createBookmarkletScript("https://noslog.example");
+
+        expect(script).toContain("result.missingJackets");
+        expect(script).toContain(
+            '"https://p.eagate.573.jp/game/nostalgia/op3/img/jacket.html?c="+encodeURIComponent(index),{credentials:"include"}'
+        );
+        expect(script).toContain('"https://noslog.example/api/receiveJacket"');
+        expect(script).toContain("body:JSON.stringify({token,index,data:");
+        // 동기화 결과만 보여 주고 자켓 수집은 알리지 않는다
+        expect(script).not.toContain("자켓");
+        expect(() => new Function(script)).not.toThrow();
+    });
+
     it("reads the sync token from its loader instead of embedding it", () => {
         const script = createBookmarkletScript("https://noslog.example");
 

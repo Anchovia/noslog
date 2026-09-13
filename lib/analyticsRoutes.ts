@@ -46,6 +46,7 @@ export const API_ROUTES: readonly AnalyticsRoute[] = [
     { pattern: "/api/profiles/[id]/progress", label: "프로필 성장 추이" },
     { pattern: "/api/bookmarklet", label: "북마클릿 불러오기" },
     { pattern: "/api/receivePlayerData", label: "동기화 수신" },
+    { pattern: "/api/receiveJacket", label: "자켓 수집" },
     { pattern: "/api/sync/status", label: "동기화 상태" },
     { pattern: "/api/health", label: "상태 확인" },
     {

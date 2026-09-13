@@ -149,6 +149,71 @@ for (const locale of ["ko", "ja", "en"] as const) {
     }
 }
 
+// 관리자 동기화 응답의 자켓 없는 곡만 공식 사이트(로그인 쿠키)에서 받아 NosLog 로 보낸다
+test("bookmarklet collects the jackets an admin sync lists", async ({
+    page,
+}) => {
+    const png = Buffer.from([
+        0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0, 0, 0, 13,
+    ]);
+    const jacketPosts: { token: string; index: string; data: string }[] = [];
+    const errors: string[] = [];
+    page.on("pageerror", (error) => errors.push(error.message));
+    await page.route("**/*", async (route) => {
+        const url = new URL(route.request().url());
+        const cors = {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "content-type",
+            "Access-Control-Allow-Methods": "POST",
+        };
+        if (url.pathname === "/api/bookmarklet")
+            return route.fulfill({
+                contentType: "text/javascript; charset=utf-8",
+                body: createScript("https://noslog.example", "ko"),
+            });
+        if (url.pathname.includes("pdata_getdata"))
+            return route.fulfill({ json: { status: 0, fixture: true } });
+        if (url.pathname.endsWith("/img/jacket.html"))
+            return url.searchParams.get("c") === "gone"
+                ? route.fulfill({ status: 404, body: "" })
+                : route.fulfill({ contentType: "image/png", body: png });
+        if (route.request().method() === "OPTIONS")
+            return route.fulfill({ status: 204, headers: cors });
+        if (url.pathname === "/api/receivePlayerData")
+            return route.fulfill({
+                json: {
+                    message: "전체 기록 동기화가 완료되었습니다.",
+                    missingJackets: ["a", "b", "gone", "c"],
+                },
+                headers: cors,
+            });
+        if (url.pathname === "/api/receiveJacket") {
+            jacketPosts.push(route.request().postDataJSON());
+            return route.fulfill({ json: { saved: true }, headers: cors });
+        }
+        return route.fulfill({
+            contentType: "text/html",
+            body: "<!doctype html><title>Isolated bookmarklet fixture</title><body></body>",
+        });
+    });
+    await page.goto("https://p.eagate.573.jp/fixture");
+    await runLoader(page, "ko");
+    const overlay = page.locator("#noslog-sync-overlay");
+    await expect(overlay).toHaveAttribute("data-state", "success");
+    // 창에는 동기화 결과만 — 자켓 수집은 뒤에서 조용히 진행된다
+    await expect(page.locator("#noslog-sync-status")).toHaveText(
+        "전체 기록 동기화가 완료되었습니다."
+    );
+    await expect
+        .poll(() => jacketPosts.map((post) => post.index).sort())
+        .toEqual(["a", "b", "c"]);
+    for (const post of jacketPosts) {
+        expect(post.token).toBe("render-only-fixture");
+        expect(Buffer.from(post.data, "base64").equals(png)).toBe(true);
+    }
+    expect(errors).toEqual([]);
+});
+
 test("bookmarklet loader reports a script that cannot be loaded", async ({
     page,
 }) => {
