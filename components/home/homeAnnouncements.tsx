@@ -1,3 +1,4 @@
+import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { getServerI18n } from "@/lib/i18n/server";
 import { getLocalizedHref } from "@/lib/i18n/routing";
@@ -24,6 +25,8 @@ export default async function HomeAnnouncements({
                     className="nl-control"
                 >
                     {t("home.allAnnouncements")}
+                    {/* 사이트 안 이동 — 옆 「공식 X ↗」(사이트 밖)와 같은 16 · 간격 4 */}
+                    <ChevronRight aria-hidden />
                 </Link>
             </div>
             <ul>

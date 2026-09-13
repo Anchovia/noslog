@@ -103,6 +103,11 @@
     width: var(--nl-icon-small);
     height: var(--nl-icon-small);
 }
+/* 꺾쇠 광학 보정 — 선이 16 상자 안 좌우 5.25 를 비워(↗ 는 1.25) 글자와 멀고 오른쪽 끝이 안으로 들어가 보인다.
+   좌우 -4 로 잉크 간격(5.25)과 오른쪽 잉크 끝(1.25)을 옆 「공식 X ↗」 에 맞춘다 */
+.noslog-ui .nl-home-update__heading svg.lucide-chevron-right {
+    margin-inline: -4px;
+}
 .noslog-ui .nl-home-critical__link {
     text-decoration: underline;
     text-underline-position: under;
