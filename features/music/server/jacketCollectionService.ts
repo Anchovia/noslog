@@ -34,10 +34,12 @@ export function detectJacketFormat(bytes: Uint8Array): JacketFormat | null {
     return null;
 }
 
-// 로컬 파일·DB 자켓·기존 매핑이 모두 없는 곡 — 관리자 동기화 때 북마클릿이 이 곡들만 공식 사이트에서 받아 온다
+// 로컬 파일·DB 자켓·기존 매핑이 모두 없는 곡 — 관리자 동기화 때 북마클릿이 이 곡들만 공식 사이트에서 받아 온다.
+// 공식 악곡 목록에 한 번도 나온 적 없는 곡(unlock_type 이 비어 있음)은 공식 사이트에도 자켓이 없어(404) 매번 헛요청이 되므로 뺀다.
+// 그런 곡이 목록에 나타나면 동기화가 unlock_type 을 채워 자동으로 대상이 된다
 export async function getMissingJacketIndexes() {
     const music = await db.music.findMany({
-        where: { background: null },
+        where: { background: null, unlock_type: { not: null } },
         select: { index: true },
         orderBy: { index: "asc" },
     });

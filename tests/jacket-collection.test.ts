@@ -57,7 +57,7 @@ function jacketBody(bytes: Buffer = png, index = "missing-a") {
 }
 
 describe("getMissingJacketIndexes", () => {
-    it("DB 자켓이 없는 곡 중 로컬 파일이 없는 곡만 돌려준다", async () => {
+    it("공식 목록에 있는 곡 중 DB 자켓·로컬 파일이 없는 곡만 돌려준다", async () => {
         mocks.musicFindMany.mockResolvedValue([
             { index: "missing-a" },
             { index: localIndex },
@@ -65,8 +65,11 @@ describe("getMissingJacketIndexes", () => {
         ]);
 
         await expect(getMissingJacketIndexes()).resolves.toEqual(["missing-a"]);
+        // unlock_type 이 빈 곡은 공식 사이트에도 자켓이 없어(404) 묻지 않는다
         expect(mocks.musicFindMany).toHaveBeenCalledWith(
-            expect.objectContaining({ where: { background: null } })
+            expect.objectContaining({
+                where: { background: null, unlock_type: { not: null } },
+            })
         );
     });
 });

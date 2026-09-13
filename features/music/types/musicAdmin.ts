@@ -63,6 +63,7 @@ export interface AdminMusicChart {
 
 export interface AdminMusicDetail {
     artist: string | null;
+    background: string | null;
     bpmMax: string;
     bpmMin: string;
     categoryShort: string;

@@ -1,6 +1,6 @@
 import { musicBG } from "../../constants";
 import db from "../../db";
-import { getLocalJacketUrl } from "../../musicJackets";
+import { getLocalJacketUrl, isManualJacketUrl } from "../../musicJackets";
 import type { Prisma } from "@prisma/client";
 
 interface SyncMusicSheet {
@@ -85,11 +85,14 @@ export async function updateMusic(music: BemaniMusicCatalogInput[]) {
         const existing = existingByIndex.get(index);
         const metadata = {
             ...bemaniMetadata(data),
+            // 관리자가 직접 올린 자켓은 동기화가 로컬 주소로 덮어쓰지 않는다
             background:
-                getLocalJacketUrl(index) ||
-                existing?.background ||
-                musicBG[index] ||
-                null,
+                existing && isManualJacketUrl(existing.background)
+                    ? existing.background
+                    : getLocalJacketUrl(index) ||
+                      existing?.background ||
+                      musicBG[index] ||
+                      null,
         };
 
         if (!existing) {

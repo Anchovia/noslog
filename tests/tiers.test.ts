@@ -50,6 +50,23 @@ describe("getJacketUrl", () => {
         ).toBe("/bg/818b48940c2d17325904fbab68689046.png");
     });
 
+    it("관리자가 직접 올린 자켓은 로컬 파일보다 먼저 사용한다", () => {
+        const manual =
+            "https://store.public.blob.vercel-storage.com/jackets/manual/818b48940c2d17325904fbab68689046/jacket-abc.png";
+        expect(getJacketUrl("818b48940c2d17325904fbab68689046", manual)).toBe(
+            manual
+        );
+    });
+
+    it("수집한 자켓은 로컬 파일보다 뒤에 둔다", () => {
+        expect(
+            getJacketUrl(
+                "818b48940c2d17325904fbab68689046",
+                "https://store.public.blob.vercel-storage.com/jackets/818b48940c2d17325904fbab68689046-abc.png"
+            )
+        ).toBe("/bg/818b48940c2d17325904fbab68689046.png");
+    });
+
     it("저장된 자켓이 없으면 null을 반환한다 — 공식 jacket.html은 로그인이 필요해 후보가 아니다", () => {
         expect(getJacketUrl("unknown-music", null)).toBeNull();
     });

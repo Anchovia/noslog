@@ -5,6 +5,11 @@ import {
     saveMusicMetadata as saveMusicMetadataService,
 } from "@/features/music/server/musicAdminService";
 import {
+    requestMusicJacketUpload as requestMusicJacketUploadService,
+    resetMusicJacket as resetMusicJacketService,
+    saveMusicJacket as saveMusicJacketService,
+} from "@/features/music/server/musicJacketAdminService";
+import {
     approveMusicTranslation as approveMusicTranslationService,
     importMusicTranslationsCsv as importMusicTranslationsCsvService,
     saveMusicTranslation as saveMusicTranslationService,
@@ -33,4 +38,19 @@ export async function validateMusicTranslationsCsv(csv: string) {
 
 export async function importMusicTranslationsCsv(csv: string) {
     return importMusicTranslationsCsvService(csv);
+}
+
+export async function requestMusicJacketUpload(
+    musicIndex: string,
+    contentType: string
+) {
+    return requestMusicJacketUploadService(musicIndex, contentType);
+}
+
+export async function saveMusicJacket(formData: FormData) {
+    return saveMusicJacketService(formData);
+}
+
+export async function resetMusicJacket(formData: FormData) {
+    return resetMusicJacketService(formData);
 }
