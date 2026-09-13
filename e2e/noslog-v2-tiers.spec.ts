@@ -235,13 +235,13 @@ test("detailed cards keep square jackets and separate score rank from combo", as
         .getByRole("checkbox", { name: "상세 보기", exact: true })
         .check();
     await expect(page).toHaveURL(/view=detailed/);
-    // S 이상 FC 는 테두리가 점수 단계 색이라, FC 는 점수 띠의 FC 마크로 찾는다
+    // 상세 보기는 점수 띠에 FC 마크가 남는다 — 이 표(S)를 달성한 FC 라 테두리는 초록 → 기준 색 그라데이션
     const fc = page
         .locator(".nl-tier-card:has(.nl-tier-card__score-band .nl-full-combo)")
         .first();
     await expect(fc.locator(".nl-tier-card__outline")).toHaveAttribute(
         "data-achievement",
-        "s"
+        "goal-fc"
     );
     await expect(fc.locator(".nl-tier-card__rank")).toHaveAttribute(
         "src",

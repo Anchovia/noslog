@@ -46,16 +46,6 @@ export default function TierBrowserCard({
         record && (record.fc_type === 3 || record.score >= 1_000_000)
     );
     const fc = Boolean(record && record.fc_type >= 2 && !pianist);
-    // 테두리 = 점수 단계 S < 990k < Pianist. FC 는 왼쪽 아래 마크가 말하고, S 미만 FC 만 초록 테두리
-    const achievement = pianist
-        ? "pianist"
-        : isTierGoalAchieved(record, "990k")
-          ? "990k"
-          : isTierGoalAchieved(record, "s")
-            ? "s"
-            : fc
-              ? "fc"
-              : undefined;
     const rank = record
         ? pianist
             ? "p"
@@ -64,8 +54,16 @@ export default function TierBrowserCard({
     const score = record
         ? record.score.toLocaleString(locale)
         : t("tiers.unplayed");
-    // 이 표 기준(S · 990k · Pianist)을 달성하면 점수를 그 표의 기준 색으로 — 테두리(단계)와 역할을 나눈다
+    // 이 표 기준(S · 990k · Pianist)을 달성했는가 — 테두리와 점수가 그 표의 기준 색을 쓴다
     const goalAchieved = signedIn && isTierGoalAchieved(record, query.goal);
+    // 테두리: 달성 + FC = 초록 → 기준 색 그라데이션 · 달성 = 기준 색(Pianist 는 퍼펙트라 FC 여도 기준 색 하나) · 달성 못 한 FC = 초록
+    const achievement = goalAchieved
+        ? fc
+            ? "goal-fc"
+            : "goal"
+        : fc
+          ? "fc"
+          : undefined;
     const params = new URLSearchParams({
         tab: "tier",
         source: "tiers",
@@ -77,6 +75,7 @@ export default function TierBrowserCard({
         <Link
             className="nl-tier-card"
             data-detailed={query.detailed}
+            data-goal={query.goal}
             aria-disabled={pending || undefined}
             tabIndex={pending ? -1 : undefined}
             href={href(
@@ -97,17 +96,22 @@ export default function TierBrowserCard({
                     data-achievement={achievement}
                     aria-hidden
                 />
-                {signedIn && rank ? (
+                {/* 기본 보기 자켓 위에는 오른쪽 아래 난이도 판만 — 같은 구간에 한 곡의 여러 난이도가 있어도 구분되게.
+                    등급 메달·FC 마크는 테두리와 점수 색이 대신한다. 상세 보기는 점수 띠에 메달·FC 그대로 */}
+                {signedIn && rank && query.detailed ? (
                     <img
                         className="nl-tier-card__rank"
                         src={`/grade/grade_${rank}.png`}
                         alt=""
                     />
                 ) : null}
-                {/* FC 마크는 자켓 왼쪽 아래 — 오른쪽 아래 등급 메달과 짝. 상세 보기는 점수 띠 왼쪽 끝 */}
-                {signedIn && fc && record && !query.detailed ? (
-                    <span className="nl-tier-card__fc">
-                        <FullComboMark fcType={record.fc_type} />
+                {!query.detailed ? (
+                    <span
+                        className="nl-tier-card__difficulty nl-metadata"
+                        data-difficulty={chart.difficulty.toLowerCase()}
+                        aria-hidden
+                    >
+                        {chart.difficulty} {chart.level}
                     </span>
                 ) : null}
                 {signedIn && query.detailed ? (
@@ -122,7 +126,7 @@ export default function TierBrowserCard({
             {signedIn && !query.detailed ? (
                 <span
                     className="nl-tier-card__score nl-metric-value"
-                    data-goal={goalAchieved ? query.goal : undefined}
+                    data-achieved={goalAchieved || undefined}
                 >
                     {score}
                 </span>
