@@ -50,6 +50,8 @@ export default function ArcadeReportDialog({
     triggerAriaLabel,
     triggerVariant = "secondary",
     triggerIcon,
+    triggerSuffix,
+    iconOnly = false,
 }: {
     arcade: PublicArcade;
     isAuthenticated: boolean;
@@ -60,8 +62,12 @@ export default function ArcadeReportDialog({
     triggerAriaLabel?: string;
     /** 기체 행 「고장 신고」 는 빨간 테두리(중요 액션 강조) */
     triggerVariant?: "secondary" | "danger";
-    /** 없으면 상세 액션 행 기본 트리거의 말풍선 아이콘 */
+    /** 없으면 기본 트리거의 말풍선 아이콘 */
     triggerIcon?: ReactNode;
+    /** 글자 오른쪽에 붙는 것 — 기체 행 「고장 신고」 의 흐린 신고 건수 */
+    triggerSuffix?: ReactNode;
+    /** 상세 하단 바·레일 — 선호 하트처럼 말풍선 아이콘만. 이름·툴팁은 「오락실 제보」 */
+    iconOnly?: boolean;
 }) {
     const locale = useLocale();
     const href = useLocalizedHref();
@@ -145,19 +151,30 @@ export default function ArcadeReportDialog({
         void form.handleSubmit(submit)(event);
     const title = triggerLabel ?? t("arcades.report");
     const loginHref = `${href("/login")}?returnTo=${encodeURIComponent(href(`/gamecenter/${arcade.slug}`))}`;
-    const trigger = (
+    const trigger = iconOnly ? (
+        <Button
+            appearance="foundation"
+            variant="secondary"
+            size="icon"
+            aria-label={triggerAriaLabel ?? title}
+            title={title}
+        >
+            <MessageSquare className="nl-icon" aria-hidden />
+        </Button>
+    ) : (
         <Button
             appearance="foundation"
             variant={triggerVariant}
             size="sm"
             aria-label={triggerAriaLabel}
         >
-            {/* 상세 액션 행의 기본 트리거만 아이콘 — 형제(길찾기·선호·공유)와 같은 16. 기체 행 「고장 신고」 는 형제 「가동 확인」 처럼 글자만 */}
+            {/* 기본 트리거는 말풍선 16 + 글자 · 기체 줄 「고장 신고」 는 triggerIcon(경고 삼각형) */}
             {triggerIcon ??
                 (triggerLabel ? null : (
                     <MessageSquare className="nl-icon-small" aria-hidden />
                 ))}
             {title}
+            {triggerSuffix}
         </Button>
     );
     const loginRequired = <StatusMessage title={t("feedback.loginRequired")} />;

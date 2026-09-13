@@ -57,6 +57,7 @@ export interface ArcadeFormCabinet {
     id: number;
     label: string | null;
     note: string | null;
+    conditionNote: string | null;
     availability: string;
     condition: string;
     position: number;
@@ -436,16 +437,32 @@ export default function ArcadeForm(props: ArcadeFormProps) {
                                     </select>
                                 ) : null}
                             </div>
+                            {/* 위치 메모는 공개 기체 이름 옆, 상태 이유는 상태 라벨 팝오버에 보인다 */}
                             <input
                                 maxLength={ARCADE_CABINET_NOTE_MAX_LENGTH}
-                                placeholder="메모 · 위치나 상태 이유"
-                                aria-label={`${name} 메모`}
+                                placeholder="위치 메모 · 예: 안쪽 벽"
+                                aria-label={`${name} 위치 메모`}
                                 aria-invalid={Boolean(rowErrors?.note)}
                                 className={inputClass}
                                 {...register(`cabinets.${index}.note`)}
                             />
+                            {available ? (
+                                <input
+                                    maxLength={ARCADE_CABINET_NOTE_MAX_LENGTH}
+                                    placeholder="상태 이유 · 보통·주의일 때 필수"
+                                    aria-label={`${name} 상태 이유`}
+                                    aria-invalid={Boolean(
+                                        rowErrors?.conditionNote
+                                    )}
+                                    className={inputClass}
+                                    {...register(
+                                        `cabinets.${index}.conditionNote`
+                                    )}
+                                />
+                            ) : null}
                             <FieldError
                                 message={
+                                    rowErrors?.conditionNote?.message ??
                                     rowErrors?.note?.message ??
                                     rowErrors?.label?.message
                                 }
@@ -475,6 +492,7 @@ export default function ArcadeForm(props: ArcadeFormProps) {
                             cabinetId: "",
                             label: "",
                             note: "",
+                            conditionNote: "",
                             availability: "unknown",
                             condition: "unknown",
                             confirm: false,

@@ -41,6 +41,7 @@ function validArcadeInput(): ArcadeFormValues {
                 cabinetId: "",
                 label: "  ",
                 note: "  창가 쪽  ",
+                conditionNote: "  ",
                 availability: "available",
                 condition: "good",
                 confirm: false,
@@ -71,6 +72,7 @@ describe("관리자 오락실 스키마", () => {
                     cabinetId: null,
                     label: null,
                     note: "창가 쪽",
+                    conditionNote: null,
                     availability: "available",
                     condition: "good",
                     confirm: false,
@@ -135,7 +137,7 @@ describe("관리자 오락실 스키마", () => {
         }
     });
 
-    it("기체 상태는 가동일 때만 남기고 보통·주의에는 메모를 요구한다", () => {
+    it("기체 상태는 가동일 때만 남기고 보통·주의에는 상태 이유를 요구한다", () => {
         const [cabinet] = validArcadeInput().cabinets;
         const unavailable = arcadeFormSchema.parse({
             ...validArcadeInput(),
@@ -145,14 +147,31 @@ describe("관리자 오락실 스키마", () => {
 
         const caution = arcadeFormSchema.safeParse({
             ...validArcadeInput(),
-            cabinets: [{ ...cabinet, condition: "caution", note: " " }],
+            // 위치 메모가 있어도 상태 이유는 따로 적어야 한다
+            cabinets: [
+                { ...cabinet, condition: "caution", conditionNote: " " },
+            ],
         });
         expect(caution.success).toBe(false);
         if (!caution.success) {
             expect(caution.error.flatten().fieldErrors).toMatchObject({
-                cabinets: ["보통·주의 상태는 메모에 이유를 적어주세요."],
+                cabinets: ["보통·주의 상태는 상태 이유를 적어주세요."],
             });
         }
+        const reasoned = arcadeFormSchema.parse({
+            ...validArcadeInput(),
+            cabinets: [
+                {
+                    ...cabinet,
+                    condition: "caution",
+                    conditionNote: " 우측 건반 씹힘 ",
+                },
+            ],
+        });
+        expect(reasoned.cabinets[0]).toMatchObject({
+            note: "창가 쪽",
+            conditionNote: "우측 건반 씹힘",
+        });
 
         const tooMany = arcadeFormSchema.safeParse({
             ...validArcadeInput(),
@@ -172,6 +191,7 @@ describe("관리자 오락실 스키마", () => {
             cabinetId: "7",
             label: "입구 쪽",
             note: "",
+            conditionNote: "",
             availability: "unknown",
             condition: "unknown",
             confirm: true,
@@ -210,6 +230,7 @@ describe("관리자 오락실 스키마", () => {
                     id: 3,
                     label: null,
                     note: "입구",
+                    conditionNote: null,
                     availability: "legacy",
                     condition: "good",
                 },
@@ -232,6 +253,7 @@ describe("관리자 오락실 스키마", () => {
                 cabinetId: "3",
                 label: "",
                 note: "입구",
+                conditionNote: "",
                 availability: "unknown",
                 condition: "good",
                 confirm: false,

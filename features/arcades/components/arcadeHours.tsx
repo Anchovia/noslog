@@ -1,18 +1,32 @@
 "use client";
 import { useTranslations } from "@/components/i18n/localeProvider";
-import {
-    ARCADE_WEEKDAYS,
-    normalizeArcadeBusinessHours,
-} from "@/lib/arcadeDetails";
+import { normalizeArcadeBusinessHours } from "@/lib/arcadeDetails";
 import type { PublicArcade } from "@/features/arcades/schemas/publicArcadeSchema";
-import { formatArcadeTime } from "@/features/arcades/arcadeDiscovery";
+import {
+    arcadeWeekHours,
+    formatArcadeClose,
+    formatArcadeTime,
+} from "@/features/arcades/arcadeDiscovery";
 
 const dayKeys = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"] as const;
 
-export default function ArcadeHours({ arcade }: { arcade: PublicArcade }) {
+/**
+ * 오늘부터 7일 — 요일·날짜와 함께, 오늘 줄은 굵게. 날짜별 예외(임시 휴무 등)가 그 날짜 줄에 그대로 보인다.
+ * 마감은 요약 줄과 같은 표기(자정 24:00, 넘기면 다음 날 시각)
+ */
+export default function ArcadeHours({
+    arcade,
+    now,
+}: {
+    arcade: PublicArcade;
+    now: Date;
+}) {
     const t = useTranslations();
-    const legacy = normalizeArcadeBusinessHours(arcade.legacyHours);
-    if (!arcade.hours && !legacy)
+    const days = arcadeWeekHours(arcade, now);
+    const legacyNote = normalizeArcadeBusinessHours(
+        arcade.legacyHours
+    )?.legacyNote;
+    if (!days)
         return (
             <p className="nl-body-secondary nl-muted">
                 {t("arcades.hoursUnknown")}
@@ -20,30 +34,32 @@ export default function ArcadeHours({ arcade }: { arcade: PublicArcade }) {
         );
     return (
         <>
-            <dl className="nl-arcade-hours nl-control">
-                {dayKeys.map((day, index) => {
-                    const hours =
-                        arcade.hours?.weekly[
-                            String(index) as keyof typeof arcade.hours.weekly
-                        ];
-                    const old = legacy?.weekly[ARCADE_WEEKDAYS[index].key];
-                    const label = hours
-                        ? `${formatArcadeTime(hours.open)}–${formatArcadeTime(hours.close)}`
-                        : hours === null
-                          ? t("arcades.dayOff")
-                          : old
-                            ? `${old.open}–${old.close}`
-                            : t("arcades.unknown");
-                    return (
-                        <div key={day}>
-                            <dt>{t(`arcades.weekday.${day}`)}</dt>
-                            <dd>{label}</dd>
-                        </div>
-                    );
-                })}
+            <dl className="nl-arcade-hours nl-body-secondary">
+                {days.map((day) => (
+                    <div
+                        key={day.date}
+                        className={day.today ? "nl-emphasis-label" : undefined}
+                        data-today={day.today || undefined}
+                        data-muted={day.hours ? undefined : true}
+                    >
+                        <dt>
+                            {t(`arcades.weekday.${dayKeys[day.weekday]}`)}{" "}
+                            {day.month}/{day.day}
+                        </dt>
+                        <dd>
+                            {day.hours
+                                ? `${formatArcadeTime(day.hours.open)}–${formatArcadeClose(day.hours.close)}`
+                                : t(
+                                      day.hours === null
+                                          ? "arcades.dayOff"
+                                          : "arcades.unknown"
+                                  )}
+                        </dd>
+                    </div>
+                ))}
             </dl>
-            {legacy?.legacyNote ? (
-                <p className="nl-body-secondary">{legacy.legacyNote}</p>
+            {legacyNote ? (
+                <p className="nl-body-secondary">{legacyNote}</p>
             ) : null}
         </>
     );

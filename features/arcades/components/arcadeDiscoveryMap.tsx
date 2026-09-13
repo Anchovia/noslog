@@ -2,7 +2,7 @@
 
 import { useEffect, useEffectEvent, useRef, useState } from "react";
 import * as Popover from "@radix-ui/react-popover";
-import { CircleAlert, Minus, Plus, createLucideIcon } from "lucide-react";
+import { CircleAlert, createLucideIcon } from "lucide-react";
 import { useTranslations } from "@/components/i18n/localeProvider";
 import Button from "@/components/ui/Button";
 import { loadKakaoMaps } from "@/lib/kakaoMaps";
@@ -44,7 +44,6 @@ export default function ArcadeDiscoveryMap({
     focusLevel = 5,
     focusRequest = null,
     wheelZoom = false,
-    zoomControls = true,
 }: {
     appKey: string;
     arcades: PublicArcade[];
@@ -60,8 +59,6 @@ export default function ArcadeDiscoveryMap({
     focusRequest?: { id: number; seq: number } | null;
     /** 마우스 휠 확대·축소 — 지도 전용 영역(목록 페이지)에서만. 페이지 흐름에 끼인 지도는 스크롤이 걸려 끈다 */
     wheelZoom?: boolean;
-    /** 확대·축소 버튼 — 목록 페이지 지도는 휠·두 손가락 확대로 충분해 뺀다 */
-    zoomControls?: boolean;
 }) {
     const t = useTranslations();
     const container = useRef<HTMLDivElement>(null);
@@ -371,40 +368,7 @@ export default function ArcadeDiscoveryMap({
                 </div>
             ) : (
                 <>
-                    {zoomControls ? (
-                        <div className="nl-arcade-map__zoom">
-                            <button
-                                type="button"
-                                className="nl-icon-button"
-                                aria-label={t("arcades.zoomIn")}
-                                onClick={() =>
-                                    mapRef.current?.setLevel(
-                                        Math.max(
-                                            1,
-                                            mapRef.current.getLevel() - 1
-                                        )
-                                    )
-                                }
-                            >
-                                <Plus className="nl-icon" aria-hidden />
-                            </button>
-                            <button
-                                type="button"
-                                className="nl-icon-button"
-                                aria-label={t("arcades.zoomOut")}
-                                onClick={() =>
-                                    mapRef.current?.setLevel(
-                                        Math.min(
-                                            14,
-                                            mapRef.current.getLevel() + 1
-                                        )
-                                    )
-                                }
-                            >
-                                <Minus className="nl-icon" aria-hidden />
-                            </button>
-                        </div>
-                    ) : null}
+                    {/* 확대·축소 버튼 없음 — 목록·상세 지도 모두 두 손가락(목록은 휠도)로 확대한다 */}
                     {pendingBounds && onSearchArea ? (
                         <button
                             className="nl-arcade-map__area nl-control"

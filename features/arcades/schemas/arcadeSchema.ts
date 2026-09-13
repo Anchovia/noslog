@@ -69,7 +69,7 @@ const businessHoursSchema = z.object({
     sunday: dayHoursSchema,
 });
 
-// 기체 한 줄 — 공개 기체 행과 같은 규칙: 상태(양호·보통·주의)는 가동일 때만 남기고, 보통·주의는 메모 필수
+// 기체 한 줄 — 공개 기체 행과 같은 규칙: 상태(양호·보통·주의)는 가동일 때만 남기고, 보통·주의는 상태 이유 필수
 const cabinetSchema = z
     .object({
         cabinetId: z
@@ -93,7 +93,15 @@ const cabinetSchema = z
             .trim()
             .max(
                 ARCADE_CABINET_NOTE_MAX_LENGTH,
-                `기체 메모는 ${ARCADE_CABINET_NOTE_MAX_LENGTH}자 이하로 입력해주세요.`
+                `위치 메모는 ${ARCADE_CABINET_NOTE_MAX_LENGTH}자 이하로 입력해주세요.`
+            )
+            .transform((value) => value || null),
+        conditionNote: z
+            .string()
+            .trim()
+            .max(
+                ARCADE_CABINET_NOTE_MAX_LENGTH,
+                `상태 이유는 ${ARCADE_CABINET_NOTE_MAX_LENGTH}자 이하로 입력해주세요.`
             )
             .transform((value) => value || null),
         availability: z.enum(availabilityValues, {
@@ -109,12 +117,12 @@ const cabinetSchema = z
             cabinet.availability === "available" &&
             (cabinet.condition === "normal" ||
                 cabinet.condition === "caution") &&
-            !cabinet.note
+            !cabinet.conditionNote
         ) {
             context.addIssue({
                 code: "custom",
-                path: ["note"],
-                message: "보통·주의 상태는 메모에 이유를 적어주세요.",
+                path: ["conditionNote"],
+                message: "보통·주의 상태는 상태 이유를 적어주세요.",
             });
         }
     })
@@ -291,6 +299,7 @@ interface ArcadeFormCabinetSource {
     id: number;
     label: string | null;
     note: string | null;
+    conditionNote: string | null;
     availability: string;
     condition: string;
 }
@@ -376,6 +385,7 @@ export function createArcadeFormDefaultValues(
             cabinetId: String(cabinet.id),
             label: cabinet.label ?? "",
             note: cabinet.note ?? "",
+            conditionNote: cabinet.conditionNote ?? "",
             availability: isAvailability(cabinet.availability)
                 ? cabinet.availability
                 : "unknown",
@@ -463,6 +473,7 @@ export function createArcadeFormData(values: ArcadeValues, id?: number) {
                     cabinet.cabinetId === null ? "" : String(cabinet.cabinetId),
                 label: cabinet.label ?? "",
                 note: cabinet.note ?? "",
+                conditionNote: cabinet.conditionNote ?? "",
                 availability: cabinet.availability,
                 condition: cabinet.condition,
                 confirm: cabinet.confirm,

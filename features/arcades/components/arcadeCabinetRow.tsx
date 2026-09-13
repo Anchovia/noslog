@@ -5,6 +5,7 @@ import { Check, CircleCheck, TriangleAlert } from "lucide-react";
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import ActionButton from "@/components/ui/actionButton";
 import Button from "@/components/ui/Button";
+import TermHelp from "@/components/ui/termHelp";
 import { confirmCabinetRunning } from "@/app/(nevigation)/gamecenter/actions";
 import type {
     ArcadeCabinet,
@@ -45,8 +46,34 @@ export function cabinetStateLabel(
 }
 
 /**
- * 기체 한 대 = 한 줄. 실제 오락실 표기(1번기·2번기)를 따르고, 위치 메모·상태·신선도를 같이 둔다.
+ * 상태 글자. 관리자가 적은 상태 이유가 있으면 점선 밑줄 → 팝오버로 이유를 보여 준다.
+ * 물음표 아이콘은 끈다 — 라벨이 행 오른쪽 끝에 붙어 있어 아이콘만큼 밀리면 줄끼리 끝이 어긋난다.
+ * 상태가 미확인·이용 불가로 내려가면(condition unknown) 옛 이유는 보이지 않는다.
+ */
+export function CabinetStateText({ cabinet }: { cabinet: ArcadeCabinet }) {
+    const t = useTranslations();
+    const stateLabel = cabinetStateLabel(cabinet, t);
+    if (!cabinet.conditionNote || cabinet.condition === "unknown")
+        return stateLabel;
+    return (
+        <TermHelp
+            icon={false}
+            title={stateLabel}
+            description={cabinet.conditionNote}
+            ariaLabel={t("arcades.conditionReasonAria", {
+                label: cabinetLabel(cabinet, t),
+                state: stateLabel,
+            })}
+        >
+            {stateLabel}
+        </TermHelp>
+    );
+}
+
+/**
+ * 기체 한 대 = 구분선으로 나눈 한 줄. 실제 오락실 표기(1번기·2번기)를 따르고, 위치 메모·상태(색 점 + 글자)·신선도를 같이 둔다.
  * 「가동 확인」 은 로그인 이용자의 한 번 누르기, 「고장 신고」 는 이 기체를 대상으로 신고 레이어를 연다.
+ * 확인한 사람 수·신고 건수는 각 버튼 글자 오른쪽의 흐린 숫자 — 시각 줄에는 시각만 남긴다.
  */
 export default function ArcadeCabinetRow({
     arcade,
@@ -76,7 +103,32 @@ export default function ArcadeCabinetRow({
     const checkedDays = daysAgo(cabinet.lastCheckedAt, now);
     const verifiedDays = daysAgo(cabinet.verifiedAt, now);
     const reportedDays = daysAgo(cabinet.latestReportAt, now);
-    const stateLabel = cabinetStateLabel(cabinet, t);
+    const meta = [
+        checkedDays !== null
+            ? checkedDays === 0
+                ? t("arcades.checkedToday")
+                : t("arcades.checkedAgo", { count: checkedDays })
+            : verifiedDays !== null && !cabinet.stale
+              ? verifiedDays === 0
+                  ? t("arcades.checkedToday")
+                  : t("arcades.checkedAgo", { count: verifiedDays })
+              : t("arcades.neverChecked"),
+        cabinet.openReports && reportedDays !== null
+            ? reportedDays === 0
+                ? t("arcades.reportedToday")
+                : t("arcades.reportedAgo", { count: reportedDays })
+            : null,
+    ].filter(Boolean);
+    const checkCount = cabinet.checkCount ? (
+        <span className="nl-metric-value nl-arcade-cabinet__count">
+            {cabinet.checkCount}
+        </span>
+    ) : null;
+    const confirmAria = `${t("arcades.confirmRunningAria", { label })}${
+        cabinet.checkCount
+            ? ` · ${t("arcades.checkedBy", { count: cabinet.checkCount })}`
+            : ""
+    }`;
     function confirm() {
         setError(null);
         startTransition(async () => {
@@ -106,45 +158,14 @@ export default function ArcadeCabinetRow({
                     className="nl-control nl-arcade-cabinet__state"
                     data-state={state}
                 >
-                    {stateLabel}
+                    <span className="nl-arcade-cabinet__dot" aria-hidden />
+                    <CabinetStateText cabinet={cabinet} />
                 </span>
             </div>
-            <div className="nl-arcade-cabinet__meta nl-metadata nl-muted">
-                <span>
-                    {checkedDays !== null
-                        ? checkedDays === 0
-                            ? t("arcades.checkedToday")
-                            : t("arcades.checkedAgo", { count: checkedDays })
-                        : verifiedDays !== null && !cabinet.stale
-                          ? verifiedDays === 0
-                              ? t("arcades.checkedToday")
-                              : t("arcades.checkedAgo", { count: verifiedDays })
-                          : t("arcades.neverChecked")}
-                </span>
-                {cabinet.checkCount ? (
-                    <span>
-                        ·{" "}
-                        {t("arcades.checkedBy", { count: cabinet.checkCount })}
-                    </span>
-                ) : null}
-                {cabinet.openReports ? (
-                    <span>
-                        ·{" "}
-                        {t("arcades.openReports", {
-                            count: cabinet.openReports,
-                        })}
-                        {reportedDays !== null
-                            ? ` (${
-                                  reportedDays === 0
-                                      ? t("arcades.reportedToday")
-                                      : t("arcades.reportedAgo", {
-                                            count: reportedDays,
-                                        })
-                              })`
-                            : ""}
-                    </span>
-                ) : null}
-            </div>
+            {/* 한 줄 글로 이어 쓴다 — 조각마다 간격을 주고 「· 」 까지 붙이면 점 앞이 더 벌어진다 */}
+            <p className="nl-arcade-cabinet__meta nl-metadata nl-muted">
+                {meta.join(" · ")}
+            </p>
             <div className="nl-arcade-cabinet__actions">
                 {isAuthenticated ? (
                     <ActionButton
@@ -153,7 +174,7 @@ export default function ArcadeCabinetRow({
                         busy={busy}
                         busyLabel={t("arcades.confirmRunning")}
                         disabled={checkedByMe}
-                        aria-label={t("arcades.confirmRunningAria", { label })}
+                        aria-label={confirmAria}
                         aria-pressed={checkedByMe}
                         onClick={confirm}
                     >
@@ -171,6 +192,7 @@ export default function ArcadeCabinetRow({
                                 {t("arcades.confirmRunning")}
                             </>
                         )}
+                        {checkCount}
                     </ActionButton>
                 ) : (
                     // 로그아웃 — 비활성처럼 어둡게(data-locked) · hover 에 이유(title). 진짜 disabled 는 hover 를 막아 title 이 안 뜬다
@@ -180,11 +202,13 @@ export default function ArcadeCabinetRow({
                         size="sm"
                         data-locked=""
                         aria-disabled="true"
+                        aria-label={confirmAria}
                         title={t("arcades.loginToUse")}
                         onClick={() => setLoginHint(true)}
                     >
                         <CircleCheck className="nl-icon-small" aria-hidden />
                         {t("arcades.confirmRunning")}
+                        {checkCount}
                     </Button>
                 )}
                 <ArcadeReportDialog
@@ -197,7 +221,18 @@ export default function ArcadeCabinetRow({
                     triggerIcon={
                         <TriangleAlert className="nl-icon-small" aria-hidden />
                     }
-                    triggerAriaLabel={t("arcades.reportBrokenAria", { label })}
+                    triggerSuffix={
+                        cabinet.openReports ? (
+                            <span className="nl-metric-value nl-arcade-cabinet__count">
+                                {cabinet.openReports}
+                            </span>
+                        ) : null
+                    }
+                    triggerAriaLabel={`${t("arcades.reportBrokenAria", { label })}${
+                        cabinet.openReports
+                            ? ` · ${t("arcades.openReports", { count: cabinet.openReports })}`
+                            : ""
+                    }`}
                 />
             </div>
             {error ? (

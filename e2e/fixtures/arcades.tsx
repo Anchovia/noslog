@@ -39,6 +39,7 @@ export const arcadeFixture: PublicArcade = {
             availability: "available",
             condition: "good",
             note: null,
+            conditionNote: null,
             verifiedAt: "2026-09-01T00:00:00.000Z",
             stale: false,
             lastCheckedAt: null,
@@ -52,7 +53,9 @@ export const arcadeFixture: PublicArcade = {
             position: 1,
             availability: "available",
             condition: "caution",
-            note: "왼쪽 건반 입력 확인 필요 · Check left keys · 左側の鍵盤を確認",
+            note: null,
+            conditionNote:
+                "왼쪽 건반 입력 확인 필요 · Check left keys · 左側の鍵盤を確認",
             verifiedAt: "2026-09-01T00:00:00.000Z",
             stale: false,
             lastCheckedAt: null,
@@ -101,7 +104,8 @@ export default function ArcadesFixture({ state }: { state?: string }) {
                 arcadeFixture.cabinets[0],
                 {
                     ...arcadeFixture.cabinets[1],
-                    note: "왼쪽 건반 일부 입력이 씹히는 증상",
+                    note: "안쪽 벽",
+                    conditionNote: "왼쪽 건반 일부 입력이 씹히는 증상",
                 },
                 {
                     ...arcadeFixture.cabinets[0],

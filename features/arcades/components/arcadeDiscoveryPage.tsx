@@ -45,7 +45,7 @@ import { useArcadeSession } from "@/features/arcades/hooks/useArcadeSession";
 import ArcadeResultCard from "./arcadeResultCard";
 import ArcadeDiscoveryMap from "./arcadeDiscoveryMap";
 
-const SORTS = ["distance", "verified", "name", "preferred"] as const;
+const SORTS = ["distance", "name", "preferred"] as const;
 // 시트 끌기 — 이만큼 움직여야 끌기로 본다(그 전엔 탭) · 이만큼 끌고 놓으면 그 방향 단계로 ·
 // 올린 목록을 맨 위에서 당길 때는 스크롤과 헷갈리지 않게 더 길게
 const SHEET_SLOP = 8;
@@ -84,6 +84,15 @@ export default function ArcadeDiscoveryPage({
     const values = parsed.success
         ? parsed.data
         : arcadeDiscoverySchema.parse({});
+    // 검색어는 입력 칸이 직접 든다 — URL 을 거쳐 되받으면 한 박자 늦은 값이 덮여 한글 조합이 끊긴다(「ㅉ짜짱ㄱ구」).
+    // URL 반영은 조합이 끝났을 때만. 뒤로가기처럼 밖에서 바뀐 검색어만 입력 칸으로 받아 온다
+    const [search, setSearch] = useState(values.q);
+    const [committedQuery, setCommittedQuery] = useState(values.q);
+    const composing = useRef(false);
+    if (values.q !== committedQuery) {
+        setCommittedQuery(values.q);
+        setSearch(values.q);
+    }
     const {
         origin,
         bounds,
@@ -184,6 +193,11 @@ export default function ArcadeDiscoveryPage({
             "",
             `${window.location.pathname}${query.size ? `?${query}` : ""}`
         );
+    }
+    function commitSearch(q: string) {
+        setSearch(q);
+        setCommittedQuery(q);
+        commit({ ...values, q });
     }
     function setFilterLayer(open: boolean) {
         if (open) form.reset(values);
@@ -393,15 +407,24 @@ export default function ArcadeDiscoveryPage({
             <div className="nl-arcades__head">
                 <PageHeading title={t("arcades.title")} />
                 <SearchField
-                    value={values.q}
+                    value={search}
                     maxLength={200}
                     aria-label={t("arcades.search")}
                     placeholder={t("arcades.searchPlaceholder")}
                     clearLabel={t("discovery.clearQuery")}
-                    onClear={() => commit({ ...values, q: "" })}
-                    onChange={(event) =>
-                        commit({ ...values, q: event.target.value })
-                    }
+                    onClear={() => commitSearch("")}
+                    onChange={(event) => {
+                        setSearch(event.target.value);
+                        if (!composing.current)
+                            commitSearch(event.target.value);
+                    }}
+                    onCompositionStart={() => {
+                        composing.current = true;
+                    }}
+                    onCompositionEnd={(event) => {
+                        composing.current = false;
+                        commitSearch(event.currentTarget.value);
+                    }}
                 />
                 <div className="nl-arcades__controls">
                     <div
@@ -611,7 +634,6 @@ export default function ArcadeDiscoveryPage({
                         focusRequest={focusRequest}
                         // 지도 전용 영역 — 휠·두 손가락으로 확대·축소(버튼 없음). 상세 위치 지도는 페이지 스크롤이 걸려 휠을 끔
                         wheelZoom
-                        zoomControls={false}
                         onSelect={selectFromMap}
                         onSearchArea={setBounds}
                         onStateChange={setMapState}

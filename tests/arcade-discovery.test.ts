@@ -4,7 +4,10 @@ import {
     arcadeDistance,
     arcadeOpenState,
     selectArcades,
+    arcadeScheduleHint,
     arcadeTodayHours,
+    arcadeWeekHours,
+    formatArcadeClose,
     formatArcadeTime,
 } from "@/features/arcades/arcadeDiscovery";
 import {
@@ -77,6 +80,62 @@ describe("public arcade truth and discovery", () => {
         ).toBeNull();
         expect(formatArcadeTime(1560)).toBe("26:00");
     });
+    it("writes midnight as 24:00 and past-midnight closing as the next-day clock", () => {
+        expect(formatArcadeClose(1440)).toBe("24:00");
+        expect(formatArcadeClose(1560)).toBe("02:00");
+        expect(formatArcadeClose(1320)).toBe("22:00");
+        // Tuesday 12:00 in Tokyo — open until midnight
+        expect(
+            arcadeScheduleHint(base, new Date("2026-09-08T03:00:00Z"))
+        ).toEqual({ kind: "closes", time: "24:00" });
+    });
+    it("lists seven venue-local days from today with exceptions first", () => {
+        const days = arcadeWeekHours(
+            {
+                ...base,
+                hours: { ...base.hours!, exceptions: { "2026-09-09": null } },
+            },
+            now
+        );
+        expect(days?.map((day) => day.date)).toEqual([
+            "2026-09-08",
+            "2026-09-09",
+            "2026-09-10",
+            "2026-09-11",
+            "2026-09-12",
+            "2026-09-13",
+            "2026-09-14",
+        ]);
+        expect(days?.[0]).toMatchObject({
+            weekday: 1,
+            month: 9,
+            day: 8,
+            today: true,
+            exception: false,
+            hours: { open: 600, close: 1440 },
+        });
+        expect(days?.[1]).toMatchObject({ exception: true, hours: null });
+        expect(days?.[2].hours).toBeUndefined();
+        expect(days?.[6]).toMatchObject({
+            weekday: 0,
+            hours: { open: 600, close: 1560 },
+        });
+    });
+    it("falls back to legacy weekday hours and is null without any hours", () => {
+        const legacy = arcadeWeekHours(
+            {
+                ...base,
+                hours: null,
+                legacyHours: {
+                    weekly: { tuesday: { open: "10:00", close: "00:00" } },
+                },
+            },
+            now
+        );
+        expect(legacy?.[0].hours).toEqual({ open: 600, close: 1440 });
+        expect(legacy?.[1].hours).toBeUndefined();
+        expect(arcadeWeekHours({ ...base, hours: null }, now)).toBeNull();
+    });
     it("evaluates overnight hours in the venue time zone", () => {
         expect(arcadeOpenState(base, now)).toBe("open");
         expect(arcadeOpenState(base, new Date("2026-09-07T17:00:00Z"))).toBe(
@@ -142,7 +201,8 @@ describe("public arcade truth and discovery", () => {
             position: 0,
             availability: "available",
             condition: "caution",
-            note: "Key input misses",
+            note: null,
+            conditionNote: "Key input misses",
             verifiedAt: now.toISOString(),
             stale: false,
             lastCheckedAt: null,
@@ -158,8 +218,17 @@ describe("public arcade truth and discovery", () => {
             }).success
         ).toBe(false);
         expect(
-            arcadeCabinetSchema.safeParse({ ...cabinet, note: " " }).success
+            arcadeCabinetSchema.safeParse({ ...cabinet, conditionNote: " " })
+                .success
         ).toBe(false);
+        // 메모를 나누기 전 기체 — 이유가 위치 메모에만 있어도 공개 목록에서 빠지지 않는다
+        expect(
+            arcadeCabinetSchema.safeParse({
+                ...cabinet,
+                note: "Key input misses",
+                conditionNote: null,
+            }).success
+        ).toBe(true);
     });
     it("forbids disclosure of one- and two-person preference counts", () => {
         expect(publicArcadeSchema.safeParse(base).success).toBe(true);
@@ -172,6 +241,14 @@ describe("public arcade truth and discovery", () => {
         expect(
             publicArcadeSchema.safeParse({ ...base, preferredCount: 3 }).success
         ).toBe(true);
+    });
+    it("falls back to name sort for a removed or unknown sort without dropping other conditions", () => {
+        expect(
+            arcadeDiscoverySchema.parse({ q: "짱구", sort: "verified" })
+        ).toMatchObject({ q: "짱구", sort: "name" });
+        expect(arcadeDiscoverySchema.parse({ sort: "distance" }).sort).toBe(
+            "distance"
+        );
     });
     it("searches reviewed aliases with Unicode normalization", () => {
         expect(
@@ -226,6 +303,7 @@ describe("public arcade truth and discovery", () => {
                     availability: "available",
                     condition: "good",
                     note: null,
+                    conditionNote: null,
                     verifiedAt: now.toISOString(),
                     stale: false,
                     lastCheckedAt: null,

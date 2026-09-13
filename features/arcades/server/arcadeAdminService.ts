@@ -94,6 +94,7 @@ async function syncPublicFacts(
         const values = {
             label: cabinet.label,
             note: cabinet.note,
+            conditionNote: cabinet.conditionNote,
             availability: cabinet.availability,
             condition: cabinet.condition,
         };
@@ -102,6 +103,7 @@ async function syncPublicFacts(
             !current.isActive ||
             current.label !== cabinet.label ||
             current.note !== cabinet.note ||
+            current.conditionNote !== cabinet.conditionNote ||
             current.availability !== cabinet.availability ||
             current.condition !== cabinet.condition;
         // 미확인은 확인한 사실이 없으므로 확인 시각을 비운다

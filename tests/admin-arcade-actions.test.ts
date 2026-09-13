@@ -56,6 +56,7 @@ interface CabinetInput {
     cabinetId?: string;
     label?: string;
     note?: string;
+    conditionNote?: string;
     availability?: string;
     condition?: string;
     confirm?: boolean;
@@ -66,6 +67,7 @@ function cabinet(input: CabinetInput = {}) {
         cabinetId: "",
         label: "",
         note: "",
+        conditionNote: "",
         availability: "available",
         condition: "good",
         confirm: false,
@@ -117,6 +119,7 @@ const savedCabinet = {
     arcadeId: 10,
     label: null,
     note: null,
+    conditionNote: null,
     availability: "available",
     condition: "good",
     isActive: true,
@@ -193,6 +196,7 @@ describe("관리자 오락실 액션", () => {
                 position: 0,
                 label: null,
                 note: "창가 쪽",
+                conditionNote: null,
                 availability: "available",
                 condition: "good",
                 verifiedAt: expect.any(Date),
@@ -216,6 +220,40 @@ describe("관리자 오락실 액션", () => {
         expect(mocks.revalidatePath).toHaveBeenCalledWith("/admin/arcades");
         expect(mocks.revalidatePath).toHaveBeenCalledWith("/gamecenter");
         expect(mocks.revalidatePath).toHaveBeenCalledWith("/gamecenter/10");
+    });
+
+    it("상태 이유만 바꿔도 기체를 새로 확인한 것으로 남긴다", async () => {
+        mocks.cabinetFindMany.mockResolvedValue([
+            { ...savedCabinet, id: 1, position: 0, note: "안쪽 벽" },
+        ]);
+
+        await updateArcade(
+            arcadeFormData({
+                id: 10,
+                cabinets: [
+                    cabinet({
+                        cabinetId: "1",
+                        note: "안쪽 벽",
+                        condition: "caution",
+                        conditionNote: "우측 건반 씹힘",
+                    }),
+                ],
+            })
+        );
+
+        expect(mocks.cabinetUpdate).toHaveBeenCalledWith({
+            where: { id: 1 },
+            data: {
+                label: null,
+                note: "안쪽 벽",
+                conditionNote: "우측 건반 씹힘",
+                availability: "available",
+                condition: "caution",
+                isActive: true,
+                verifiedAt: expect.any(Date),
+                verificationSource: "admin",
+            },
+        });
     });
 
     it("기체를 고치고 뺀 기체는 숨기며 영업시간을 공개 형식으로 저장한다", async () => {
@@ -259,6 +297,7 @@ describe("관리자 오락실 액션", () => {
             data: {
                 label: null,
                 note: null,
+                conditionNote: null,
                 availability: "available",
                 condition: "good",
                 isActive: true,

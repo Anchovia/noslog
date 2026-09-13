@@ -1,8 +1,22 @@
 "use client";
 import Link from "next/link";
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useId, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Copy, Heart, Navigation, Share2 } from "lucide-react";
+import {
+    ChevronDown,
+    ChevronUp,
+    Clock,
+    Coins,
+    Copy,
+    ExternalLink,
+    Globe,
+    Heart,
+    Info,
+    MapPin,
+    Navigation,
+    Phone,
+} from "lucide-react";
+import { toast } from "sonner";
 import BackLink from "@/components/ui/backLink";
 import {
     useLocale,
@@ -13,14 +27,17 @@ import PageContainer from "@/components/layout/pageContainer";
 import ActionButton from "@/components/ui/actionButton";
 import { foundationButtonClass } from "@/components/ui/Button";
 import { StatusMessage } from "@/components/ui/statusMessage";
-import { setPreferredArcade } from "@/app/(nevigation)/gamecenter/actions";
+import {
+    clearPreferredArcade,
+    setPreferredArcade,
+} from "@/app/(nevigation)/gamecenter/actions";
+import { normalizeArcadeBusinessHours } from "@/lib/arcadeDetails";
 import type { PublicArcade } from "@/features/arcades/schemas/publicArcadeSchema";
 import type { RecentCabinetCheck } from "@/features/arcades/server/cabinetCheckService";
 import {
     arcadeCabinetSummary,
     arcadeDirections,
     arcadeDistance,
-    arcadeLastVerifiedAt,
     arcadeOpenState,
     arcadeScheduleHint,
     daysAgo,
@@ -32,12 +49,10 @@ import ArcadeDiscoveryMap from "./arcadeDiscoveryMap";
 import ArcadeHours from "./arcadeHours";
 import ArcadePhotos from "./arcadePhotos";
 import ArcadeReportDialog from "./arcadeReportDialog";
-import ArcadeContactDetails from "./arcadeContactDetails";
 
 /**
- * 오락실 상세 — Google 지도·카카오맵 장소 시트 순서.
- * 사진 → 이름·상태 한 줄 → 액션 행(길찾기·선호·공유·제보) → 기체(대마다 한 줄) → 위치 → 영업시간 → 정보 → 선호 플레이어.
- * 1056+ 는 본문 | 레일(액션·선호·최근 확인). 빈 정보는 카드가 아니라 한 줄로 접힌다.
+ * 오락실 상세 — 사진(없으면 자리표시자) → 이름·상태 → 정보 행(주소·영업시간·요금·연락처) → 위치 → 기체.
+ * 액션(길찾기 · 선호 · 제보)은 1056 미만 화면 아래 고정 바, 1056+ 는 레일 첫 상자. 선호 인원은 하트 옆 숫자.
  */
 export default function ArcadeDetailPage({
     arcade,
@@ -58,21 +73,17 @@ export default function ArcadeDetailPage({
     const href = useLocalizedHref();
     const t = useTranslations();
     const router = useRouter();
+    const hoursId = useId();
     const origin = useArcadeSession((state) => state.origin);
     const discoveryQuery = useArcadeSession((state) => state.discoveryQuery);
     const [now, setNow] = useState(() => new Date());
     const [preferred, setPreferred] = useState(preferredArcadeId === arcade.id);
     const [checked, setChecked] = useState<number[]>(checkedCabinetIds);
+    const [hoursOpen, setHoursOpen] = useState(false);
     const [notice, setNotice] = useState<{
         success: boolean;
         message: string;
     } | null>(null);
-    const [copyState, setCopyState] = useState<"idle" | "copied" | "error">(
-        "idle"
-    );
-    const [shareState, setShareState] = useState<"idle" | "copied" | "error">(
-        "idle"
-    );
     const [busy, startTransition] = useTransition();
     useEffect(() => {
         const timer = window.setInterval(() => setNow(new Date()), 60_000);
@@ -86,57 +97,69 @@ export default function ArcadeDetailPage({
         (item) => item.locale === locale
     )?.name;
     const summary = arcadeCabinetSummary(arcade);
-    const verifiedDays = daysAgo(arcadeLastVerifiedAt(arcade), now);
     const loginHref = `${href("/login")}?returnTo=${encodeURIComponent(href(`/gamecenter/${arcade.slug}`))}`;
     const price = formatArcadePrice(arcade, locale, (count) =>
         t("arcades.coins", { count })
     );
-
-    function choosePreferred() {
+    const hasHours = Boolean(
+        arcade.hours || normalizeArcadeBusinessHours(arcade.legacyHours)
+    );
+    const hasLocation = arcade.latitude !== null && arcade.longitude !== null;
+    const telephone = arcade.phone?.replace(/[^+\d]/g, "");
+    const openLabel = t(
+        open === "unknown"
+            ? "arcades.hoursUnverified"
+            : open === "open"
+              ? "arcades.open"
+              : "arcades.closed"
+    );
+    const hintLabel = hint
+        ? hint.kind === "closes"
+            ? t("arcades.closesAt", { time: hint.time })
+            : t("arcades.opensAt", { time: hint.time })
+        : null;
+    const statusRest = [
+        hintLabel,
+        arcade.region
+            ? [arcade.region, arcade.locality].filter(Boolean).join(" ")
+            : null,
+        distance !== null
+            ? t("arcades.distance", { distance: distance.toFixed(1) })
+            : null,
+    ].filter(Boolean);
+    // 누르면 지정, 채운 하트를 다시 누르면 해제.
+    // 결과 알림은 1056+ 레일 안 상자, 그 아래 폭은 하단 바 위 공용 토스트(바 위에 상자를 쌓지 않는다)
+    function togglePreferred() {
+        const clearing = preferred;
+        const inRail = window.matchMedia("(min-width: 1056px)").matches;
         setNotice(null);
         startTransition(async () => {
-            const result = await setPreferredArcade(arcade.id, locale).catch(
-                () => ({
-                    success: false as const,
-                    message: t("arcades.preferredFailed"),
-                })
-            );
-            setNotice(result);
-            if (result.success) {
-                setPreferred(true);
-                router.refresh();
-            }
+            const result = await (
+                clearing ? clearPreferredArcade : setPreferredArcade
+            )(arcade.id, locale).catch(() => ({
+                success: false as const,
+                message: t(
+                    clearing
+                        ? "arcades.unsetPreferredFailed"
+                        : "arcades.preferredFailed"
+                ),
+            }));
+            if (inRail) setNotice(result);
+            else if (result.success) toast.success(result.message);
+            else toast.error(result.message);
+            if (!result.success) return;
+            setPreferred(!clearing);
+            router.refresh();
         });
     }
+    // 주소 복사 결과는 공용 토스트 — 정보 행 사이에 글줄을 끼워 배치를 흔들지 않는다
     async function copyAddress() {
         if (!arcade.address) return;
         try {
             await navigator.clipboard.writeText(arcade.address);
-            setCopyState("copied");
+            toast.success(t("arcades.addressCopied"));
         } catch {
-            setCopyState("error");
-        }
-    }
-    async function share() {
-        const url = window.location.href;
-        const payload = { title: arcade.name, url };
-        try {
-            if (
-                typeof navigator.share === "function" &&
-                (navigator.canShare?.(payload) ?? true)
-            ) {
-                await navigator.share(payload);
-                setShareState("idle");
-                return;
-            }
-            await navigator.clipboard.writeText(url);
-            setShareState("copied");
-        } catch (error) {
-            setShareState(
-                error instanceof Error && error.name === "AbortError"
-                    ? "idle"
-                    : "error"
-            );
+            toast.error(t("arcades.copyFailed"));
         }
     }
     function onChecked(cabinetId: number) {
@@ -146,12 +169,28 @@ export default function ArcadeDetailPage({
         router.refresh();
     }
 
-    // 액션 행 — 길찾기(주 액션) · 선호 · 공유 · 제보. Compact 는 본문 위, 1056+ 는 레일
+    // 선호 인원 — 3명 이상일 때만 하트 옆 숫자(개인이 드러나지 않게 서버가 3명 미만은 null)
+    const preferredCount = arcade.preferredCount;
+    const withPreferredCount = (label: string) =>
+        preferredCount === null
+            ? label
+            : `${label} · ${t("arcades.preferredPeople", { count: preferredCount })}`;
+    const heartContent = (
+        <>
+            {busy ? null : <Heart className="nl-icon" aria-hidden />}
+            {preferredCount === null ? null : (
+                <span className="nl-metric-value">{preferredCount}</span>
+            )}
+        </>
+    );
+
+    // 액션 한 줄 — 길찾기(주 액션, 남는 폭) · 선호(하트, 인원이 있으면 숫자) · 제보(말풍선).
+    // 1056 미만 하단 바, 1056+ 레일 — 같은 줄은 컨트롤 높이 하나
     const actions = (
         <div className="nl-arcade-detail__actions">
             {directions ? (
                 <a
-                    className={foundationButtonClass({ size: "sm" })}
+                    className={`${foundationButtonClass({ size: "sm" })} nl-arcade-detail__directions`}
                     href={directions}
                     aria-label={`${t("arcades.directions")} · ${t("shell.externalLink")}`}
                 >
@@ -159,86 +198,54 @@ export default function ArcadeDetailPage({
                     {t("arcades.directions")}
                 </a>
             ) : (
-                <ActionButton size="sm" disabled>
+                <ActionButton
+                    size="sm"
+                    disabled
+                    className="nl-arcade-detail__directions"
+                >
                     <Navigation className="nl-icon-small" aria-hidden />
                     {t("arcades.directions")}
                 </ActionButton>
             )}
             {isAuthenticated ? (
+                // 토글 — 눌림 상태(aria-pressed)와 채운 하트로 지정 여부를 알린다
                 <ActionButton
                     variant="secondary"
-                    size="sm"
+                    size={preferredCount === null ? "icon" : undefined}
+                    className="nl-arcade-detail__prefer"
                     busy={busy}
-                    busyLabel={t("arcades.settingPreferred")}
-                    disabled={preferred}
                     aria-pressed={preferred}
-                    aria-label={t(
+                    aria-label={withPreferredCount(t("arcades.setPreferred"))}
+                    title={t(
                         preferred
-                            ? "arcades.currentPreferred"
+                            ? "arcades.unsetPreferred"
                             : "arcades.setPreferred"
                     )}
-                    onClick={choosePreferred}
+                    data-active={preferred || undefined}
+                    onClick={togglePreferred}
                 >
-                    <Heart className="nl-icon-small" aria-hidden />
-                    {t(
-                        preferred
-                            ? "arcades.preferredShort"
-                            : "arcades.preferShort"
-                    )}
+                    {heartContent}
                 </ActionButton>
             ) : (
                 <Link
-                    className={foundationButtonClass({
+                    className={`${foundationButtonClass({
                         variant: "secondary",
-                        size: "sm",
-                    })}
+                        size: preferredCount === null ? "icon" : undefined,
+                    })} nl-arcade-detail__prefer`}
                     href={loginHref}
-                    aria-label={t("arcades.loginToSetPreferred")}
+                    aria-label={withPreferredCount(
+                        t("arcades.loginToSetPreferred")
+                    )}
+                    title={t("arcades.loginToSetPreferred")}
                 >
-                    <Heart className="nl-icon-small" aria-hidden />
-                    {t("arcades.preferShort")}
+                    {heartContent}
                 </Link>
             )}
-            <ActionButton variant="secondary" size="sm" onClick={share}>
-                <Share2 className="nl-icon-small" aria-hidden />
-                {t("arcades.share")}
-            </ActionButton>
             <ArcadeReportDialog
                 arcade={arcade}
                 isAuthenticated={isAuthenticated}
+                iconOnly
             />
-        </div>
-    );
-    const actionNotices = (
-        <>
-            {notice ? (
-                <StatusMessage
-                    severity={notice.success ? "success" : "danger"}
-                    title={notice.message}
-                    role="status"
-                />
-            ) : null}
-            {shareState !== "idle" ? (
-                <p className="nl-metadata nl-muted" role="status">
-                    {t(
-                        shareState === "copied"
-                            ? "arcades.shareCopied"
-                            : "arcades.shareFailed"
-                    )}
-                </p>
-            ) : null}
-        </>
-    );
-    const preferredBlock = (
-        <div className="nl-arcade-detail__section-head">
-            <h2 className="nl-component-title">
-                {t("arcades.preferredPlayers")}
-            </h2>
-            <span className="nl-body-secondary nl-muted nl-arcade-detail__preferred-count">
-                {arcade.preferredCount === null
-                    ? t("arcades.collectingPreference")
-                    : t("arcades.people", { count: arcade.preferredCount })}
-            </span>
         </div>
     );
 
@@ -271,76 +278,210 @@ export default function ArcadeDetailPage({
                             data-open={open === "open" || undefined}
                         >
                             <span className="nl-arcade-detail__open">
-                                {t(
-                                    open === "unknown"
-                                        ? "arcades.hoursUnverified"
-                                        : open === "open"
-                                          ? "arcades.open"
-                                          : "arcades.closed"
-                                )}
+                                {openLabel}
                             </span>
-                            {hint ? (
+                            {/* 한 줄 글로 이어 쓴다 — 조각 간격에 「· 」 까지 붙이면 점 앞이 더 벌어진다 */}
+                            {statusRest.length ? (
                                 <span className="nl-muted">
-                                    ·{" "}
-                                    {hint.kind === "closes"
-                                        ? t("arcades.closesAt", {
-                                              time: hint.time,
-                                          })
-                                        : t("arcades.opensAt", {
-                                              time: hint.time,
-                                          })}
-                                </span>
-                            ) : null}
-                            {arcade.region ? (
-                                <span className="nl-muted">
-                                    ·{" "}
-                                    {[arcade.region, arcade.locality]
-                                        .filter(Boolean)
-                                        .join(" ")}
-                                </span>
-                            ) : null}
-                            {distance !== null ? (
-                                <span className="nl-muted">
-                                    ·{" "}
-                                    {t("arcades.distance", {
-                                        distance: distance.toFixed(1),
-                                    })}
+                                    {` · ${statusRest.join(" · ")}`}
                                 </span>
                             ) : null}
                         </p>
                     </div>
-                    <div className="nl-arcade-detail__main-only">
-                        {actions}
-                        {actionNotices}
-                    </div>
+
+                    {/* 정보 행 — 아이콘 + 값 한 줄씩. 제보는 이 목록의 끝 */}
+                    <section
+                        className="nl-arcade-detail__section"
+                        aria-label={t("arcades.info")}
+                    >
+                        <ul className="nl-arcade-facts">
+                            <li className="nl-arcade-fact">
+                                <MapPin className="nl-icon" aria-hidden />
+                                {arcade.address ? (
+                                    <button
+                                        type="button"
+                                        className="nl-arcade-fact__action nl-body"
+                                        onClick={copyAddress}
+                                        aria-label={`${arcade.address} · ${t("arcades.copyAddress")}`}
+                                    >
+                                        <span className="nl-arcade-fact__value">
+                                            {arcade.address}
+                                        </span>
+                                        <span className="nl-arcade-fact__tail">
+                                            <Copy
+                                                className="nl-icon"
+                                                aria-hidden
+                                            />
+                                        </span>
+                                    </button>
+                                ) : (
+                                    <span className="nl-arcade-fact__value nl-body nl-muted">
+                                        {t("arcades.addressPending")}
+                                    </span>
+                                )}
+                            </li>
+                            <li className="nl-arcade-fact">
+                                <Clock className="nl-icon" aria-hidden />
+                                {hasHours ? (
+                                    <button
+                                        type="button"
+                                        className="nl-arcade-fact__action nl-body"
+                                        aria-expanded={hoursOpen}
+                                        aria-controls={hoursId}
+                                        onClick={() =>
+                                            setHoursOpen((value) => !value)
+                                        }
+                                    >
+                                        <span className="nl-arcade-fact__value">
+                                            <span className="sr-only">
+                                                {t("arcades.hours")} ·{" "}
+                                            </span>
+                                            <span
+                                                className="nl-arcade-detail__open"
+                                                data-open={
+                                                    open === "open" || undefined
+                                                }
+                                            >
+                                                {openLabel}
+                                            </span>
+                                            {hintLabel ? (
+                                                <span className="nl-muted">
+                                                    {" "}
+                                                    · {hintLabel}
+                                                </span>
+                                            ) : null}
+                                        </span>
+                                        <span className="nl-arcade-fact__tail">
+                                            {hoursOpen ? (
+                                                <ChevronUp
+                                                    className="nl-icon"
+                                                    aria-hidden
+                                                />
+                                            ) : (
+                                                <ChevronDown
+                                                    className="nl-icon"
+                                                    aria-hidden
+                                                />
+                                            )}
+                                        </span>
+                                    </button>
+                                ) : (
+                                    <span className="nl-arcade-fact__value nl-body nl-muted">
+                                        {t("arcades.hoursUnknown")}
+                                    </span>
+                                )}
+                            </li>
+                            {hasHours ? (
+                                <li
+                                    id={hoursId}
+                                    className="nl-arcade-fact__detail"
+                                    hidden={!hoursOpen}
+                                >
+                                    <ArcadeHours arcade={arcade} now={now} />
+                                </li>
+                            ) : null}
+                            {price ? (
+                                <li className="nl-arcade-fact">
+                                    <Coins className="nl-icon" aria-hidden />
+                                    <span className="nl-arcade-fact__value nl-body">
+                                        <span className="sr-only">
+                                            {t("arcades.price")} ·{" "}
+                                        </span>
+                                        {price}
+                                    </span>
+                                </li>
+                            ) : null}
+                            {arcade.phone ? (
+                                <li className="nl-arcade-fact">
+                                    <Phone className="nl-icon" aria-hidden />
+                                    <span className="nl-arcade-fact__value nl-body">
+                                        <span className="sr-only">
+                                            {t("arcades.phone")} ·{" "}
+                                        </span>
+                                        {telephone && /\d/.test(telephone) ? (
+                                            <a
+                                                className="nl-link"
+                                                href={`tel:${telephone}`}
+                                            >
+                                                {arcade.phone}
+                                            </a>
+                                        ) : (
+                                            arcade.phone
+                                        )}
+                                    </span>
+                                </li>
+                            ) : null}
+                            {arcade.website ? (
+                                <li className="nl-arcade-fact">
+                                    <Globe className="nl-icon" aria-hidden />
+                                    <span className="nl-arcade-fact__value nl-body">
+                                        <span className="sr-only">
+                                            {t("arcades.website")} ·{" "}
+                                        </span>
+                                        <a
+                                            className="nl-link nl-arcade-fact__link"
+                                            href={arcade.website}
+                                        >
+                                            {arcade.website.replace(
+                                                /^https?:\/\//,
+                                                ""
+                                            )}
+                                            <ExternalLink
+                                                className="nl-icon-small"
+                                                aria-hidden
+                                            />
+                                            <span className="sr-only">
+                                                {" "}
+                                                · {t("shell.externalLink")}
+                                            </span>
+                                        </a>
+                                    </span>
+                                </li>
+                            ) : null}
+                            {arcade.notes ? (
+                                <li className="nl-arcade-fact">
+                                    <Info className="nl-icon" aria-hidden />
+                                    <span className="nl-arcade-fact__value nl-body">
+                                        <span className="sr-only">
+                                            {t("arcades.notes")} ·{" "}
+                                        </span>
+                                        {arcade.notes}
+                                    </span>
+                                </li>
+                            ) : null}
+                        </ul>
+                    </section>
+
+                    {/* 위치 — 정보 행과 기체 사이 */}
+                    {hasLocation ? (
+                        <section className="nl-arcade-detail__section">
+                            <div className="nl-arcade-detail__section-head">
+                                <h2 className="nl-component-title">
+                                    {t("arcades.location")}
+                                </h2>
+                            </div>
+                            <div className="nl-arcade-detail__map">
+                                <ArcadeDiscoveryMap
+                                    appKey={appKey}
+                                    arcades={[arcade]}
+                                    selectedId={null}
+                                    onSelect={() => {}}
+                                    focusLevel={4}
+                                />
+                            </div>
+                        </section>
+                    ) : null}
 
                     <section className="nl-arcade-detail__section">
                         <div className="nl-arcade-detail__section-head">
                             <h2 className="nl-component-title">
-                                {summary.total
-                                    ? t("arcades.machineCountValue", {
-                                          count: summary.total,
-                                      })
-                                    : t("arcades.cabinets")}
-                                {price ? (
-                                    <span className="nl-body-secondary nl-muted">
-                                        {" "}
-                                        · {price}
-                                    </span>
-                                ) : null}
+                                {t("arcades.cabinets")}
                             </h2>
                             {summary.total ? (
-                                <span className="nl-metadata nl-muted">
-                                    {verifiedDays === null
-                                        ? t("arcades.neverChecked")
-                                        : verifiedDays === 0
-                                          ? t("arcades.checkedToday")
-                                          : t("arcades.checkedAgo", {
-                                                count: verifiedDays,
-                                            })}
-                                    {arcade.checkCount
-                                        ? ` · ${t("arcades.checkedBy", { count: arcade.checkCount })}`
-                                        : ""}
+                                <span className="nl-body-secondary nl-muted">
+                                    {t("arcades.machineCountValue", {
+                                        count: summary.total,
+                                    })}
                                 </span>
                             ) : null}
                         </div>
@@ -367,102 +508,18 @@ export default function ArcadeDetailPage({
                             </p>
                         )}
                     </section>
-
-                    <section className="nl-arcade-detail__section">
-                        <div className="nl-arcade-detail__section-head">
-                            <h2 className="nl-component-title">
-                                {t("arcades.location")}
-                            </h2>
-                        </div>
-                        {arcade.latitude !== null &&
-                        arcade.longitude !== null ? (
-                            <div className="nl-arcade-detail__map">
-                                <ArcadeDiscoveryMap
-                                    appKey={appKey}
-                                    arcades={[arcade]}
-                                    selectedId={null}
-                                    onSelect={() => {}}
-                                    focusLevel={4}
-                                />
-                            </div>
-                        ) : null}
-                        {arcade.address ? (
-                            <button
-                                type="button"
-                                className="nl-arcade-detail__address nl-body"
-                                onClick={copyAddress}
-                                aria-label={`${arcade.address} · ${t("arcades.copyAddress")}`}
-                            >
-                                <span>{arcade.address}</span>
-                                <span className="nl-arcade-detail__copy">
-                                    <Copy className="nl-icon" aria-hidden />
-                                </span>
-                            </button>
-                        ) : (
-                            <p className="nl-body-secondary nl-muted">
-                                {t("arcades.addressPending")}
-                            </p>
-                        )}
-                        {copyState !== "idle" ? (
-                            <p className="nl-metadata" role="status">
-                                {t(
-                                    copyState === "copied"
-                                        ? "arcades.copied"
-                                        : "arcades.copyFailed"
-                                )}
-                            </p>
-                        ) : null}
-                    </section>
-
-                    <section className="nl-arcade-detail__section">
-                        <div className="nl-arcade-detail__section-head">
-                            <h2 className="nl-component-title">
-                                {t("arcades.hours")}
-                            </h2>
-                            {open === "unknown" && arcade.hours ? (
-                                <span className="nl-metadata nl-muted">
-                                    {t("arcades.hoursUnverified")}
-                                </span>
-                            ) : null}
-                        </div>
-                        <ArcadeHours arcade={arcade} />
-                    </section>
-
-                    {arcade.phone || arcade.website || arcade.notes ? (
-                        <section className="nl-arcade-detail__section">
-                            <div className="nl-arcade-detail__section-head">
-                                <h2 className="nl-component-title">
-                                    {t("arcades.info")}
-                                </h2>
-                            </div>
-                            <dl className="nl-arcade-detail__facts">
-                                <ArcadeContactDetails arcade={arcade} />
-                                {arcade.notes ? (
-                                    <div>
-                                        <dt className="nl-control">
-                                            {t("arcades.notes")}
-                                        </dt>
-                                        <dd className="nl-body-secondary">
-                                            {arcade.notes}
-                                        </dd>
-                                    </div>
-                                ) : null}
-                            </dl>
-                        </section>
-                    ) : null}
-
-                    <section className="nl-arcade-detail__section nl-arcade-detail__main-only">
-                        {preferredBlock}
-                    </section>
                 </div>
 
                 <aside className="nl-arcade-detail__rail nl-arcade-detail__rail-only">
                     <div className="nl-arcade-detail__rail-box">
                         {actions}
-                        {actionNotices}
-                    </div>
-                    <div className="nl-arcade-detail__rail-box">
-                        {preferredBlock}
+                        {notice ? (
+                            <StatusMessage
+                                severity={notice.success ? "success" : "danger"}
+                                title={notice.message}
+                                role="status"
+                            />
+                        ) : null}
                     </div>
                     {recentChecks.length ? (
                         <div className="nl-arcade-detail__rail-box">
@@ -508,6 +565,8 @@ export default function ArcadeDetailPage({
                     ) : null}
                 </aside>
             </div>
+            {/* 1056 미만 — 화면 아래 고정 바 */}
+            <div className="nl-arcade-detail__bar">{actions}</div>
         </PageContainer>
     );
 }

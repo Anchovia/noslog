@@ -15,6 +15,7 @@ export default async function AdminArcadesPage() {
                     id: true,
                     label: true,
                     note: true,
+                    conditionNote: true,
                     availability: true,
                     condition: true,
                     position: true,

@@ -240,7 +240,10 @@ model ArcadeCabinet {
   isActive           Boolean              @default(true)
   availability       String               @default("unknown")
   condition          String               @default("unknown")
+  // 위치 메모(「안쪽 벽」) — 이름 옆에 보인다
   note               String?
+  // 상태 이유(「우측 건반 씹힘」) — 보통·주의일 때 상태 라벨 팝오버로 보인다
+  conditionNote      String?              @map("condition_note")
   verifiedAt         DateTime?
   validUntil         DateTime?
   verificationSource String?
