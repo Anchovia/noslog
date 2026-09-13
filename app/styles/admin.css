@@ -152,8 +152,9 @@
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+/* 묶음 제목은 패널 제목·빈 상태·주석과 같은 선에서 시작한다(행 글자는 막대 안쪽 8 — 자주 보는 페이지와 같은 짜임) */
 .noslog-ui .nl-dashboard__group {
-    padding: var(--nl-spacing-12) var(--nl-spacing-8) var(--nl-spacing-4);
+    padding-block: var(--nl-spacing-12) var(--nl-spacing-4);
 }
 .noslog-ui .nl-dashboard__todo-list > li + li {
     box-shadow: inset 0 1px var(--nl-border-divider);
