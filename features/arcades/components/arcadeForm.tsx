@@ -80,7 +80,6 @@ interface ArcadeFormRecord {
     coinCount: number | null;
     businessHours: unknown;
     hours: unknown;
-    hoursVerifiedAt: string | null;
     phone: string | null;
     website: string | null;
     creditLabel: string | null;
@@ -392,9 +391,6 @@ export default function ArcadeForm(props: ArcadeFormProps) {
                 register={register}
                 errors={errors}
                 legacyNote={legacyNote}
-                verifiedLabel={
-                    arcade ? verifiedLabel(arcade.hoursVerifiedAt) : undefined
-                }
             />
             <ArcadeHoursExceptionsFields
                 control={control}

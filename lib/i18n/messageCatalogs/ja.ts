@@ -1364,7 +1364,6 @@ export const jaMessages = {
     "arcades.cabinetAvailable": "稼働中",
     "arcades.cabinetUnverified": "筐体情報は最近未確認",
     "arcades.verifiedOn": "確認日 {date}",
-    "arcades.hoursUnverified": "営業時間は最近未確認",
     "arcades.phone": "電話",
     "arcades.website": "ウェブサイト",
     "arcades.report": "店舗を報告",

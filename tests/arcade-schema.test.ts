@@ -35,7 +35,6 @@ function validArcadeInput(): ArcadeFormValues {
             saturday: offDay,
             sunday: offDay,
         },
-        hoursConfirmed: false,
         hoursExceptions: [],
         creditLabel: "",
         phone: "",
@@ -148,7 +147,6 @@ describe("관리자 오락실 스키마", () => {
                 weekly: { monday: { open: "10:00", close: "00:00" } },
                 openEveryDay: false,
             },
-            hoursConfirmed: false,
             hoursExceptions: {},
             cabinets: [
                 {

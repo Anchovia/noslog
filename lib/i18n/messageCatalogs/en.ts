@@ -1362,7 +1362,6 @@ export const enMessages = {
     "arcades.cabinetAvailable": "Available",
     "arcades.cabinetUnverified": "Cabinet information not recently verified",
     "arcades.verifiedOn": "Verified {date}",
-    "arcades.hoursUnverified": "Hours not recently verified",
     "arcades.phone": "Phone",
     "arcades.website": "Website",
     "arcades.report": "Report",

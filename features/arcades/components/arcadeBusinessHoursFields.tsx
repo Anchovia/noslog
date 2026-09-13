@@ -11,8 +11,6 @@ interface ArcadeBusinessHoursFieldsProps {
     register: UseFormRegister<ArcadeFormValues>;
     errors: FieldErrors<ArcadeFormValues>;
     legacyNote?: string;
-    // 공개 영업시간을 마지막으로 확인한 날짜 — 추가 폼에는 없다
-    verifiedLabel?: string;
 }
 
 function businessHoursErrorMessage(errors: FieldErrors<ArcadeFormValues>) {
@@ -32,12 +30,12 @@ function businessHoursErrorMessage(errors: FieldErrors<ArcadeFormValues>) {
     return undefined;
 }
 
+// 영업시간은 확인 단계 없이 입력값 그대로 공개된다 — 틀리면 이용자 제보를 받아 고친다
 export default function ArcadeBusinessHoursFields({
     formKey,
     register,
     errors,
     legacyNote,
-    verifiedLabel,
 }: ArcadeBusinessHoursFieldsProps) {
     const errorMessage = businessHoursErrorMessage(errors);
 
@@ -82,15 +80,6 @@ export default function ArcadeBusinessHoursFields({
                     />
                 </div>
             ))}
-            <div className="mt-1 flex flex-wrap items-center justify-between gap-2">
-                <label className="text-body-muted flex items-center gap-2">
-                    <input type="checkbox" {...register("hoursConfirmed")} />
-                    영업시간 오늘 확인
-                </label>
-                {verifiedLabel ? (
-                    <span className="text-caption">{verifiedLabel}</span>
-                ) : null}
-            </div>
             {legacyNote ? (
                 <p className="text-caption whitespace-pre-wrap">
                     기존 입력: {legacyNote}

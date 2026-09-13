@@ -77,7 +77,8 @@ function exceptionsKey(
     );
 }
 
-// 기체·영업시간을 공개 페이지가 읽는 표에 쓴다. 바꿨거나 「오늘 확인」 한 항목만 확인 시각을 지금으로 남긴다
+// 기체·영업시간을 공개 페이지가 읽는 표에 쓴다. 기체는 바꿨거나 「오늘 확인」 한 것만 확인 시각을 지금으로 남긴다.
+// 영업시간은 확인 단계 없이 입력값 그대로 — 틀리면 이용자 제보로 고친다
 async function syncPublicFacts(
     tx: Prisma.TransactionClient,
     arcadeId: number,
@@ -170,9 +171,7 @@ async function syncPublicFacts(
         : null;
     const hoursChanged =
         weeklyKey(weekly) !== weeklyKey(readPublicArcadeWeekly(details?.hours));
-    const writeWeekly =
-        hoursChanged || (weekly !== null && input.hoursConfirmed);
-    // 날짜별 예외가 바뀌면 영업시간 JSON 을 다시 쓴다. 요일 영업시간을 확인한 것은 아니므로 확인 시각은 그대로 둔다
+    // 요일 영업시간이나 날짜별 예외가 바뀌면 영업시간 JSON 을 다시 쓴다
     const currentHours = arcadeHoursSchema.safeParse(details?.hours);
     const currentExceptions = currentHours.success
         ? currentHours.data.exceptions
@@ -191,10 +190,15 @@ async function syncPublicFacts(
         (details?.website ?? null) !== contact.website ||
         (details?.creditLabel ?? null) !== contact.creditLabel;
 
-    if (writeWeekly || exceptionsChanged || cabinetVerified || contactChanged) {
+    if (
+        hoursChanged ||
+        exceptionsChanged ||
+        cabinetVerified ||
+        contactChanged
+    ) {
         const hasExceptions = Object.keys(exceptions).length > 0;
         const data = {
-            ...(writeWeekly || exceptionsChanged
+            ...(hoursChanged || exceptionsChanged
                 ? {
                       hours:
                           weekly === null && !hasExceptions
@@ -204,9 +208,6 @@ async function syncPublicFacts(
                                     exceptions,
                                 } as Prisma.InputJsonValue),
                   }
-                : {}),
-            ...(writeWeekly
-                ? { hoursVerifiedAt: weekly === null ? null : now }
                 : {}),
             ...(cabinetVerified ? { cabinetVerifiedAt: now } : {}),
             ...(contactChanged ? contact : {}),

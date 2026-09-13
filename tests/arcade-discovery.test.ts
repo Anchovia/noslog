@@ -17,6 +17,7 @@ import {
     publicArcadeSchema,
 } from "@/features/arcades/schemas/publicArcadeSchema";
 import type { PublicArcade } from "@/features/arcades/schemas/publicArcadeSchema";
+import { legacyToPublicArcadeHours } from "@/lib/arcadeDetails";
 
 const now = new Date("2026-09-07T15:30:00Z"); // Tuesday 00:30 in Tokyo/Seoul.
 const base: PublicArcade = {
@@ -63,9 +64,7 @@ const values = arcadeDiscoverySchema.parse({});
 describe("public arcade truth and discovery", () => {
     it("shows today's verified venue-local schedule and preserves overnight notation", () => {
         expect(arcadeTodayHours(base, now)).toEqual({ open: 600, close: 1440 });
-        expect(
-            arcadeTodayHours({ ...base, hoursValidUntil: null }, now)
-        ).toBeUndefined();
+        expect(arcadeTodayHours({ ...base, hours: null }, now)).toBeUndefined();
         expect(
             arcadeTodayHours(
                 {
@@ -156,11 +155,15 @@ describe("public arcade truth and discovery", () => {
             )
         ).toBe("closed");
     });
-    it("never infers open state from unverified or expired facts", () => {
+    it("reads entered hours without a verification date or expiry", () => {
         for (const override of [
             { hoursVerifiedAt: null },
             { hoursValidUntil: null },
             { hoursValidUntil: now.toISOString() },
+        ]) {
+            expect(arcadeOpenState({ ...base, ...override }, now)).toBe("open");
+        }
+        for (const override of [
             { timeZone: "invalid-zone" },
             { hours: null },
         ]) {
@@ -168,6 +171,32 @@ describe("public arcade truth and discovery", () => {
                 "unknown"
             );
         }
+    });
+    it("carries legacy weekday hours into the public shape", () => {
+        const hours = arcadeHoursSchema.parse(
+            legacyToPublicArcadeHours({
+                weekly: { tuesday: { open: "10:30", close: "05:00" } },
+            })
+        );
+        expect(hours).toEqual({
+            weekly: { "1": { open: 630, close: 1740 } },
+            exceptions: {},
+        });
+        // Tuesday 12:00 and Wednesday 02:00 in Tokyo — both inside 10:30–05:00
+        expect(
+            arcadeOpenState(
+                { ...base, hours },
+                new Date("2026-09-08T03:00:00Z")
+            )
+        ).toBe("open");
+        expect(
+            arcadeOpenState(
+                { ...base, hours },
+                new Date("2026-09-08T17:00:00Z")
+            )
+        ).toBe("open");
+        expect(legacyToPublicArcadeHours(null)).toBeNull();
+        expect(legacyToPublicArcadeHours({ weekly: {} })).toBeNull();
     });
     it("missing hours are unknown rather than a closed day", () => {
         expect(

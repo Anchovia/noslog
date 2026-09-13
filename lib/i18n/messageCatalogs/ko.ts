@@ -1350,7 +1350,6 @@ export const koMessages = {
     "arcades.cabinetAvailable": "가동",
     "arcades.cabinetUnverified": "기체 정보 최근 미확인",
     "arcades.verifiedOn": "확인일 {date}",
-    "arcades.hoursUnverified": "영업시간 최근 미확인",
     "arcades.phone": "전화",
     "arcades.website": "웹사이트",
     "arcades.report": "오락실 제보",

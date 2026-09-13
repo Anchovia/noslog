@@ -108,7 +108,7 @@ export default function ArcadeDetailPage({
     const telephone = arcade.phone?.replace(/[^+\d]/g, "");
     const openLabel = t(
         open === "unknown"
-            ? "arcades.hoursUnverified"
+            ? "arcades.hoursUnknown"
             : open === "open"
               ? "arcades.open"
               : "arcades.closed"

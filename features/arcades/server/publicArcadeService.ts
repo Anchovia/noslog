@@ -2,6 +2,7 @@ import "server-only";
 import { cache } from "react";
 import type { Prisma } from "@prisma/client";
 import db from "@/lib/db";
+import { legacyToPublicArcadeHours } from "@/lib/arcadeDetails";
 import {
     arcadeCabinetSchema,
     arcadeHoursSchema,
@@ -177,7 +178,10 @@ export function toPublicArcade(record: ArcadeRecord, now: Date) {
                 cabinet.checks.map((c) => c.userId)
             )
         ).size,
-        hours: hours.success ? hours.data : null,
+        // 공개 영업시간이 없으면 옛 영업시간을 옮겨 쓴다 — 영업 중·종료와 7일 표가 같은 값을 본다
+        hours: hours.success
+            ? hours.data
+            : legacyToPublicArcadeHours(record.business_hours),
         hoursVerifiedAt: details?.hoursVerifiedAt?.toISOString() ?? null,
         hoursValidUntil: details?.hoursValidUntil?.toISOString() ?? null,
         legacyHours: record.business_hours,
