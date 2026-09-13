@@ -269,6 +269,7 @@ export const koMessages = {
     "home.allResults": "전체 결과 {count}개 보기",
     "home.tileCharts": "채보 뷰어",
     "home.tileSync": "동기화",
+    "home.tileFeedback": "피드백",
     "home.destinations": "주요 서비스",
     "home.allAnnouncements": "전체 공지",
     "home.officialLink": "공식 X",

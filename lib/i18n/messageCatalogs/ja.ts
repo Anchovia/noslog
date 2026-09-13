@@ -268,6 +268,7 @@ export const jaMessages = {
     "home.allResults": "全{count}件の結果を見る",
     "home.tileCharts": "譜面",
     "home.tileSync": "データ連携",
+    "home.tileFeedback": "ご意見",
     "home.destinations": "主なサービス",
     "home.allAnnouncements": "すべてのお知らせ",
     "home.officialLink": "公式X",

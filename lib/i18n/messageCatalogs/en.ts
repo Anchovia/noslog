@@ -272,6 +272,7 @@ export const enMessages = {
     "home.allResults": "View all {count} results",
     "home.tileCharts": "Charts",
     "home.tileSync": "Data Sync",
+    "home.tileFeedback": "Feedback",
     "home.destinations": "Services",
     "home.allAnnouncements": "All announcements",
     "home.officialLink": "Official X",

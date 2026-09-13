@@ -30,7 +30,8 @@ for (const locale of ["ko", "ja", "en"]) {
             await page.goto(`/${locale}`);
             await expect(page).toHaveTitle("NosLog");
             await page.evaluate(() => document.fonts.ready);
-            const links = page.locator(".nl-home-tile");
+            // 이동 칸 8개는 링크 · 3열에서만 보이는 9번째 피드백 칸은 창을 여는 버튼
+            const links = page.locator("a.nl-home-tile");
             await expect(links).toHaveCount(8);
             for (let index = 0; index < destinations.length; index++) {
                 await expect(links.nth(index)).toHaveAttribute(
@@ -70,32 +71,37 @@ for (const locale of ["ko", "ja", "en"]) {
                         main: box(".nl-main"),
                         search: box(".nl-home-search"),
                         navigation: box(".nl-home-navigation"),
+                        // 보이는 칸만 — 피드백 칸은 4열(672+)에서 display:none
                         tiles: Array.from(
-                            document.querySelectorAll(".nl-home-tile")
-                        ).map((tile) => {
-                            const r = tile.getBoundingClientRect();
-                            const icon = tile
-                                .querySelector("svg")!
-                                .getBoundingClientRect();
-                            const label = tile.querySelector("span")!;
-                            const text = label.getBoundingClientRect();
-                            const css = getComputedStyle(label);
-                            const surface = getComputedStyle(tile);
-                            return {
-                                x: r.x,
-                                y: r.y,
-                                width: r.width,
-                                height: r.height,
-                                iconWidth: icon.width,
-                                gap: text.y - icon.bottom,
-                                textSize: parseFloat(css.fontSize),
-                                textWeight: css.fontWeight,
-                                radius: surface.borderRadius,
-                                background: surface.backgroundColor,
-                                line: parseFloat(css.lineHeight),
-                                label: label.textContent,
-                            };
-                        }),
+                            document.querySelectorAll<HTMLElement>(
+                                ".nl-home-tile"
+                            )
+                        )
+                            .filter((tile) => tile.getClientRects().length > 0)
+                            .map((tile) => {
+                                const r = tile.getBoundingClientRect();
+                                const icon = tile
+                                    .querySelector("svg")!
+                                    .getBoundingClientRect();
+                                const label = tile.querySelector("span")!;
+                                const text = label.getBoundingClientRect();
+                                const css = getComputedStyle(label);
+                                const surface = getComputedStyle(tile);
+                                return {
+                                    x: r.x,
+                                    y: r.y,
+                                    width: r.width,
+                                    height: r.height,
+                                    iconWidth: icon.width,
+                                    gap: text.y - icon.bottom,
+                                    textSize: parseFloat(css.fontSize),
+                                    textWeight: css.fontWeight,
+                                    radius: surface.borderRadius,
+                                    background: surface.backgroundColor,
+                                    line: parseFloat(css.lineHeight),
+                                    label: label.textContent,
+                                };
+                            }),
                     };
                 });
                 const columns = measured.main.width < 672 ? 3 : 4;
@@ -137,6 +143,11 @@ for (const locale of ["ko", "ja", "en"]) {
                 }
                 if (columns === 3)
                     expect(measured.tiles[6].x).toBeCloseTo(firstRow[0].x, 1);
+                // 3열은 피드백 칸이 9번째로 3×3 을 채우고, 4열은 8칸 두 줄 그대로
+                expect(measured.tiles).toHaveLength(columns === 3 ? 9 : 8);
+                const feedbackTile = page.locator("button.nl-home-tile");
+                if (columns === 3) await expect(feedbackTile).toBeVisible();
+                else await expect(feedbackTile).toBeHidden();
                 if ([320, 390, 768, 1440].includes(width)) {
                     await page.screenshot({
                         path: testInfo.outputPath(

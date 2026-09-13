@@ -54,6 +54,8 @@
     align-items: center;
     justify-content: center;
     gap: var(--nl-spacing-8);
+    /* 피드백 칸은 버튼이라 링크처럼 칸 폭을 저절로 채우지 않는다 */
+    width: 100%;
     min-height: 44px;
     padding: var(--nl-spacing-12);
     border-radius: var(--nl-radius-container);
@@ -241,6 +243,10 @@
     .noslog-ui .nl-home-destinations {
         grid-template-columns: repeat(4, minmax(0, 1fr));
         gap: var(--nl-grid-gutter-wide);
+    }
+    /* 4열은 8칸이 두 줄로 꽉 찬다 — 피드백 칸은 3열에서만 */
+    .noslog-ui .nl-home-destinations__compact-only {
+        display: none;
     }
     .noslog-ui .nl-home-tile {
         padding: var(--nl-spacing-24);
