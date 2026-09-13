@@ -139,12 +139,12 @@ describe("방문·API 기록", () => {
         vi.stubEnv("ANALYTICS_FORCE", "");
         vi.stubEnv("VERCEL_ENV", "production");
 
-        expect(isAnalyticsEnabled(new Date("2026-09-19T14:59:59Z"))).toBe(
+        expect(isAnalyticsEnabled(new Date("2026-09-12T14:59:59Z"))).toBe(
             false
         );
-        expect(isAnalyticsEnabled(new Date("2026-09-19T15:00:00Z"))).toBe(true);
+        expect(isAnalyticsEnabled(new Date("2026-09-12T15:00:00Z"))).toBe(true);
         await expect(
-            recordApiCall("/api/rankings", new Date("2026-09-19T03:00:00Z"))
+            recordApiCall("/api/rankings", new Date("2026-09-12T03:00:00Z"))
         ).resolves.toBe(false);
         expect(mocks.executeRaw).not.toHaveBeenCalled();
     });

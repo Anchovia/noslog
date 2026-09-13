@@ -9,6 +9,7 @@ import { updateGrade } from "@/lib/services/user/updateGrade";
 import { updatePlayData } from "@/lib/services/user/updatePlayData";
 import { updatePlayerProfile } from "@/lib/services/user/updatePlayerProfile";
 import { updateRecentPlay } from "@/lib/services/user/updateRecentPlay";
+import { getMissingJacketIndexes } from "@/features/music/server/jacketCollectionService";
 import { recordProfileRatings } from "@/features/profile/server/profileRatingHistoryService";
 import { NextRequest, NextResponse } from "next/server";
 import { revalidateTag } from "next/cache";
@@ -489,12 +490,22 @@ export async function POST(request: NextRequest) {
             }
         }
 
+        // 관리자 동기화만 자켓 없는 곡 목록을 받아 북마클릿이 공식 사이트에서 채운다 — 목록 실패가 동기화 결과를 뒤집지 않게
+        const missingJackets =
+            user.role === "admin"
+                ? await getMissingJacketIndexes().catch((error) => {
+                      console.error("Missing jacket lookup failed", error);
+                      return [];
+                  })
+                : undefined;
+
         return json(music ? copy.fullComplete : copy.recentComplete, 200, {
             syncScope: music ? "full" : "recent",
             receivedPlays: history.length,
             insertedPlays,
             changedRecords,
             catalogUpdates,
+            ...(missingJackets ? { missingJackets } : {}),
         });
     } catch (error) {
         console.error("BEMANI data synchronization failed", error);

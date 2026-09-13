@@ -234,7 +234,6 @@ const arcadeBaseSchema = z.object({
         )
         .transform((value) => value || null),
     businessHours: businessHoursSchema,
-    hoursConfirmed: z.boolean(),
     // 없으면(이 칸을 모르는 옛 화면에서 보낸 저장) 저장된 예외를 그대로 둔다
     hoursExceptions: z
         .array(hoursExceptionSchema, { error: "날짜별 예외를 확인해주세요." })
@@ -515,7 +514,6 @@ export function createArcadeFormDefaultValues(
             saturday: dayDefaultValues(businessHours, "saturday"),
             sunday: dayDefaultValues(businessHours, "sunday"),
         },
-        hoursConfirmed: false,
         hoursExceptions: readPublicArcadeExceptions(source?.hours),
         cabinets: (source?.cabinets ?? []).map((cabinet) => ({
             cabinetId: String(cabinet.id),
@@ -576,7 +574,6 @@ export function arcadeFormInputFromFormData(formData: FormData) {
         phone: String(formData.get("phone") ?? ""),
         website: String(formData.get("website") ?? ""),
         businessHours,
-        hoursConfirmed: booleanFromFormData(formData.get("hoursConfirmed")),
         hoursExceptions:
             exceptions === null ? undefined : listFromFormData(exceptions),
         cabinets: listFromFormData(formData.get("cabinets")),
@@ -610,7 +607,6 @@ export function createArcadeFormData(values: ArcadeValues, id?: number) {
         formData.set(`hours_${key}_open`, schedule?.open ?? "");
         formData.set(`hours_${key}_close`, schedule?.close ?? "");
     }
-    formData.set("hoursConfirmed", String(values.hoursConfirmed));
     // 정규화된 예외(분 단위)를 입력 줄 형식으로 되돌려 보낸다 — 서버가 같은 스키마로 다시 검증한다
     if (values.hoursExceptions !== null)
         formData.set(

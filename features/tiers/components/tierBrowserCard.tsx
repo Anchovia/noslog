@@ -8,6 +8,7 @@ import {
     useTranslations,
 } from "@/components/i18n/localeProvider";
 import MusicJacket from "@/components/music/musicJacket";
+import { FullComboMark } from "@/features/music/components/chartLeaderboard";
 import { serializeTierBrowserQuery } from "@/features/tiers/schemas/tierBrowserSchema";
 import type {
     TierBrowserEntry,
@@ -92,17 +93,24 @@ export default function TierBrowserCard({
                         alt=""
                     />
                 ) : null}
+                {/* FC 마크는 자켓 왼쪽 아래 — 오른쪽 아래 등급 메달과 짝. 상세 보기는 점수 띠 왼쪽 끝 */}
+                {signedIn && fc && record && !query.detailed ? (
+                    <span className="nl-tier-card__fc">
+                        <FullComboMark fcType={record.fc_type} />
+                    </span>
+                ) : null}
                 {signedIn && query.detailed ? (
                     <span className="nl-tier-card__score-band nl-metric-value">
-                        {fc ? <span>FC</span> : null}
+                        {fc && record ? (
+                            <FullComboMark fcType={record.fc_type} />
+                        ) : null}
                         <span>{score}</span>
                     </span>
                 ) : null}
             </MusicJacket>
             {signedIn && !query.detailed ? (
                 <span className="nl-tier-card__score nl-metric-value">
-                    {fc ? <span>FC</span> : null}
-                    <span>{score}</span>
+                    {score}
                 </span>
             ) : null}
             {query.detailed ? (

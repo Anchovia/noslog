@@ -15,14 +15,8 @@ export function arcadeOpenState(
     arcade: PublicArcade,
     now: Date
 ): "open" | "closed" | "unknown" {
-    if (
-        !arcade.hours ||
-        !arcade.hoursVerifiedAt ||
-        !arcade.hoursValidUntil ||
-        new Date(arcade.hoursVerifiedAt) > now ||
-        new Date(arcade.hoursValidUntil) <= now
-    )
-        return "unknown";
+    // 입력된 영업시간을 그대로 믿는다 — 확인 날짜·유효 기한은 보지 않는다(틀리면 이용자 제보로 고친다)
+    if (!arcade.hours) return "unknown";
     try {
         const parts = new Intl.DateTimeFormat("en-CA", {
             timeZone: arcade.timeZone,

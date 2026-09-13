@@ -141,6 +141,20 @@ export function toPublicArcadeWeekly(
     );
 }
 
+// 옛 영업시간(요일 이름 · HH:MM) → 공개 영업시간. 적힌 요일만 옮기고 없는 요일은 미확인으로 둔다.
+// 옮길 요일이 하나도 없으면 null
+export function legacyToPublicArcadeHours(value: unknown) {
+    const legacy = normalizeArcadeBusinessHours(value);
+    if (!legacy) return null;
+    const weekly: Record<string, PublicHoursInterval> = {};
+    ARCADE_WEEKDAYS.forEach(({ key }, index) => {
+        const day = legacy.weekly[key];
+        if (day)
+            weekly[String(index)] = toPublicArcadeInterval(day.open, day.close);
+    });
+    return Object.keys(weekly).length > 0 ? { weekly, exceptions: {} } : null;
+}
+
 // 날짜별 예외 한 줄 — 관리자 입력 형식. closed 면 그날 휴무, 아니면 open–close 영업
 export interface ArcadeHoursExceptionInput {
     date: string;

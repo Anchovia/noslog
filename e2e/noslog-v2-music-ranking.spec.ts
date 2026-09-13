@@ -299,7 +299,7 @@ for (const locale of ["ko", "ja", "en"]) {
                             (element) => element.getBoundingClientRect().height
                         )
                 )
-                .toBe(213);
+                .toBe(189);
             await expect
                 .poll(() =>
                     page

@@ -54,7 +54,8 @@ export default function ScoreDistribution({
                             <th scope="row" className="nl-metadata nl-muted">
                                 {band.label}
                             </th>
-                            <td className="nl-score-distribution__count nl-metric-value">
+                            {/* 인원 수는 막대 높이가 말하므로 화면에서는 뺀다(2026-09-13 사용자 결정) — 표를 읽는 스크린 리더에는 남긴다 */}
+                            <td className="nl-score-distribution__count sr-only">
                                 {band.count.toLocaleString(locale)}
                             </td>
                             <td

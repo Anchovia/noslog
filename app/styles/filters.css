@@ -79,21 +79,58 @@
     box-shadow: inset 0 0 0 1px var(--nl-interaction-disabled-border);
     background: transparent;
 }
+/* 항목 글자 색(tone) — 난이도 DU-01 텍스트 램프 · 카테고리 자켓 레이블 색 · 성취(S = 판정 JUST 노랑, FC·Pianist = achievement).
+   칩은 선택되면 중립으로 돌아가고(면·경계·체크가 선택을 말한다), 레일 목록은 체크 상자가 선택을 말해 글자 색을 유지한다 */
+.noslog-ui :is(.nl-chip, .nl-selection-list__option)[data-tone="normal"] {
+    --nl-tone: var(--nl-difficulty-text-normal);
+}
+.noslog-ui :is(.nl-chip, .nl-selection-list__option)[data-tone="hard"] {
+    --nl-tone: var(--nl-difficulty-text-hard);
+}
+.noslog-ui :is(.nl-chip, .nl-selection-list__option)[data-tone="expert"] {
+    --nl-tone: var(--nl-difficulty-text-expert);
+}
+.noslog-ui :is(.nl-chip, .nl-selection-list__option)[data-tone="real"] {
+    --nl-tone: var(--nl-difficulty-text-real);
+}
+.noslog-ui :is(.nl-chip, .nl-selection-list__option)[data-tone="pops"] {
+    --nl-tone: var(--nl-category-pops);
+}
+.noslog-ui :is(.nl-chip, .nl-selection-list__option)[data-tone="anime"] {
+    --nl-tone: var(--nl-category-anime);
+}
+.noslog-ui :is(.nl-chip, .nl-selection-list__option)[data-tone="bm"] {
+    --nl-tone: var(--nl-category-bm);
+}
+.noslog-ui :is(.nl-chip, .nl-selection-list__option)[data-tone="org"] {
+    --nl-tone: var(--nl-category-org);
+}
+.noslog-ui :is(.nl-chip, .nl-selection-list__option)[data-tone="var"] {
+    --nl-tone: var(--nl-category-var);
+}
+.noslog-ui :is(.nl-chip, .nl-selection-list__option)[data-tone="cljz"] {
+    --nl-tone: var(--nl-category-cljz);
+}
+.noslog-ui :is(.nl-chip, .nl-selection-list__option)[data-tone="s"] {
+    --nl-tone: var(--nl-judgement-just);
+}
+.noslog-ui :is(.nl-chip, .nl-selection-list__option)[data-tone="fc"] {
+    --nl-tone: var(--nl-achievement-full-combo);
+}
+.noslog-ui :is(.nl-chip, .nl-selection-list__option)[data-tone="pianist"] {
+    --nl-tone: var(--nl-achievement-pianist);
+}
+/* 마우스를 올리면 기본 글자색 — hover 면(#2c2c2c) 위에서는 카테고리·난이도 색의 대비가 4.5 아래로 내려간다(2026-09-14 사용자 결정) */
 .noslog-ui
-    .nl-chip[data-tone="normal"]:not([aria-pressed="true"]):not(:disabled) {
-    color: var(--nl-difficulty-text-normal);
+    .nl-chip[data-tone]:not([aria-pressed="true"]):not(:disabled):not(:hover) {
+    color: var(--nl-tone);
 }
 .noslog-ui
-    .nl-chip[data-tone="hard"]:not([aria-pressed="true"]):not(:disabled) {
-    color: var(--nl-difficulty-text-hard);
-}
-.noslog-ui
-    .nl-chip[data-tone="expert"]:not([aria-pressed="true"]):not(:disabled) {
-    color: var(--nl-difficulty-text-expert);
-}
-.noslog-ui
-    .nl-chip[data-tone="real"]:not([aria-pressed="true"]):not(:disabled) {
-    color: var(--nl-difficulty-text-real);
+    .nl-selection-list__option[data-tone]:not([data-disabled="true"]):not(
+        :hover
+    )
+    .nl-selection-list__label {
+    color: var(--nl-tone);
 }
 .noslog-ui .nl-chip__count {
     color: var(--nl-content-subdued);

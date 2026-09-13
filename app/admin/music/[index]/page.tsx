@@ -6,6 +6,7 @@ import {
     ChartMetadataForm,
     MusicMetadataForm,
 } from "@/features/music/components/admin/musicMetadataForms";
+import MusicJacketForm from "@/features/music/components/admin/musicJacketForm";
 import MusicTranslationForm from "@/features/music/components/admin/musicTranslationForm";
 import { getAdminMusicDetail } from "@/features/music/server/musicAdminService";
 
@@ -36,6 +37,11 @@ export default async function AdminMusicDetailPage({
                     </p>
                 </div>
             </section>
+
+            <MusicJacketForm
+                musicIndex={music.index}
+                background={music.background}
+            />
 
             <MusicMetadataForm
                 defaultValues={{

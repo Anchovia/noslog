@@ -14,9 +14,9 @@ import db from "@/lib/db";
 export type AnalyticsKind =
     "visitors" | "pageviews" | "page" | "api" | "external";
 
-// 방문 통계는 개인정보처리방침 2026-09-20 시행 버전이 알린 것이라 그날(서울 기준)부터 센다.
+// 방문 통계는 개인정보처리방침 2026-09-13 시행 버전이 알린 것이라 그날(서울 기준)부터 센다.
 // 바꾸면 policyCopy.json 의 시행일과 PRIVACY_PREVIOUS_VERSIONS 의 until 도 같이 바꾼다(테스트가 맞춰 본다)
-export const ANALYTICS_START_DATE = "2026-09-20";
+export const ANALYTICS_START_DATE = "2026-09-13";
 
 // 운영 배포에서만 센다 — 로컬 개발·미리보기 배포도 같은 DB 를 쓰므로 그 방문이 운영 통계에 섞이지 않게.
 // 테스트는 ANALYTICS_FORCE=true 로 켠다(시행일과 무관)

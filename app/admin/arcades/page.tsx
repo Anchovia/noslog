@@ -25,7 +25,6 @@ export default async function AdminArcadesPage() {
             publicDetails: {
                 select: {
                     hours: true,
-                    hoursVerifiedAt: true,
                     phone: true,
                     website: true,
                     creditLabel: true,
@@ -68,9 +67,6 @@ export default async function AdminArcadesPage() {
                             coinCount: arcade.coin_count,
                             businessHours: arcade.business_hours,
                             hours: arcade.publicDetails?.hours ?? null,
-                            hoursVerifiedAt:
-                                arcade.publicDetails?.hoursVerifiedAt?.toISOString() ??
-                                null,
                             phone: arcade.publicDetails?.phone ?? null,
                             website: arcade.publicDetails?.website ?? null,
                             creditLabel:

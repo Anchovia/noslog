@@ -153,7 +153,7 @@ describe("관리자 서열표 액션", () => {
             expect.objectContaining({
                 id: 20,
                 title: "Altale",
-                jacket: "https://p.eagate.573.jp/game/nostalgia/op3/img/jacket.html?c=altale-index",
+                jacket: null,
             }),
         ]);
         expect(mocks.chartFindMany).toHaveBeenCalledWith(

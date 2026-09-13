@@ -98,6 +98,7 @@ export async function getAdminMusicDetail(
             title: music.title,
             artist: music.artist,
             categoryShort: music.category_short,
+            background: music.background,
             description: music.description ?? "",
             bpmMin:
                 charts

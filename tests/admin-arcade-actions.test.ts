@@ -83,7 +83,6 @@ function arcadeFormData({
     isActive = true,
     cabinets = [cabinet({ note: "창가 쪽" })],
     monday,
-    hoursConfirmed = false,
 }: {
     id?: number | string;
     name?: string;
@@ -92,7 +91,6 @@ function arcadeFormData({
     isActive?: boolean;
     cabinets?: ReturnType<typeof cabinet>[];
     monday?: { open: string; close: string };
-    hoursConfirmed?: boolean;
 } = {}) {
     const formData = new FormData();
     if (id !== undefined) formData.set("id", String(id));
@@ -106,7 +104,6 @@ function arcadeFormData({
     formData.set("notes", "  이어폰 단자 지원  ");
     formData.set("isActive", String(isActive));
     formData.set("cabinets", JSON.stringify(cabinets));
-    formData.set("hoursConfirmed", String(hoursConfirmed));
     if (monday) {
         formData.set("hours_monday_enabled", "true");
         formData.set("hours_monday_open", monday.open);
@@ -325,7 +322,6 @@ describe("관리자 오락실 액션", () => {
                         },
                         exceptions: {},
                     },
-                    hoursVerifiedAt: expect.any(Date),
                     cabinetVerifiedAt: expect.any(Date),
                 },
             })
@@ -336,7 +332,7 @@ describe("관리자 오락실 액션", () => {
         );
     });
 
-    it("바뀌지 않은 기체·영업시간도 「오늘 확인」 이면 확인 시각을 갱신한다", async () => {
+    it("바뀌지 않은 기체도 「오늘 확인」 이면 확인 시각을 갱신하고, 영업시간은 다시 쓰지 않는다", async () => {
         mocks.cabinetFindMany.mockResolvedValue([
             { ...savedCabinet, id: 1, position: 0 },
         ]);
@@ -361,7 +357,6 @@ describe("관리자 오락실 액션", () => {
                 id: 10,
                 cabinets: [cabinet({ cabinetId: "1", confirm: true })],
                 monday: { open: "10:00", close: "00:00" },
-                hoursConfirmed: true,
             })
         );
 
@@ -372,19 +367,15 @@ describe("관리자 오락실 액션", () => {
                 verificationSource: "admin",
             }),
         });
+        // 영업시간을 확인하는 단계는 없다 — 기체 확인 시각만 쓴다
         expect(mocks.detailsUpsert).toHaveBeenCalledWith(
             expect.objectContaining({
-                update: expect.objectContaining({
-                    hours: expect.objectContaining({
-                        exceptions: { "2026-12-25": null },
-                    }),
-                    hoursVerifiedAt: expect.any(Date),
-                }),
+                update: { cabinetVerifiedAt: expect.any(Date) },
             })
         );
     });
 
-    it("연락처·요금 단위와 날짜별 예외를 공개 정보에 쓰고, 요일 영업시간 확인 시각은 건드리지 않는다", async () => {
+    it("연락처·요금 단위와 날짜별 예외를 공개 정보에 쓴다", async () => {
         mocks.cabinetFindMany.mockResolvedValue([
             { ...savedCabinet, id: 1, position: 0 },
         ]);

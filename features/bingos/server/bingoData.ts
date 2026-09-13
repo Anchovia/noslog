@@ -23,6 +23,7 @@ export const getCachedPublishedBingos = unstable_cache(
                     select: {
                         title: true,
                         title_kana: true,
+                        artist: true,
                         background: true,
                         translations: {
                             where: {
@@ -51,7 +52,8 @@ export const getCachedPublishedBingos = unstable_cache(
             endsAt: bingo.endsAt?.toISOString() ?? null,
         }));
     },
-    ["published-bingos", "public-v2"],
+    // 검색에 쓰는 과제곡 아티스트를 더하며 v3 — 캐시된 옛 모양을 읽지 않게
+    ["published-bingos", "public-v3"],
     {
         revalidate: 3600,
         tags: [CACHE_TAGS.bingos],
