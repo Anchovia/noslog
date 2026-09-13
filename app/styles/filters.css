@@ -120,11 +120,15 @@
 .noslog-ui :is(.nl-chip, .nl-selection-list__option)[data-tone="pianist"] {
     --nl-tone: var(--nl-achievement-pianist);
 }
-.noslog-ui .nl-chip[data-tone]:not([aria-pressed="true"]):not(:disabled) {
+/* 마우스를 올리면 기본 글자색 — hover 면(#2c2c2c) 위에서는 카테고리·난이도 색의 대비가 4.5 아래로 내려간다(2026-09-14 사용자 결정) */
+.noslog-ui
+    .nl-chip[data-tone]:not([aria-pressed="true"]):not(:disabled):not(:hover) {
     color: var(--nl-tone);
 }
 .noslog-ui
-    .nl-selection-list__option[data-tone]:not([data-disabled="true"])
+    .nl-selection-list__option[data-tone]:not([data-disabled="true"]):not(
+        :hover
+    )
     .nl-selection-list__label {
     color: var(--nl-tone);
 }
