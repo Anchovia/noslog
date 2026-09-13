@@ -12,6 +12,8 @@ export const bingoCatalogItemSchema = z.object({
     completedLines: z.number(),
     chanceLines: z.number(),
     lastModifiedAt: z.string().nullable(),
+    // 검색에만 쓰는 다른 이름 — 과제곡 원제·가나·아티스트·승인된 번역 제목(한국어로 「월광」 을 쳐도 찾히게)
+    searchNames: z.array(z.string()).optional(),
 });
 export type BingoCatalogItem = z.infer<typeof bingoCatalogItemSchema>;
 
@@ -20,6 +22,7 @@ export const bingoCatalogQuerySchema = z.object({
         .enum(["all", "progress", "unlocked", "full", "chance"])
         .catch("all"),
     sort: z.enum(["release", "recent", "progress"]).catch("release"),
+    q: z.string().max(200).catch(""),
 });
 export type BingoCatalogQuery = z.infer<typeof bingoCatalogQuerySchema>;
 

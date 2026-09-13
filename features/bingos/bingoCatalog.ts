@@ -3,12 +3,24 @@ import type {
     BingoCatalogQuery,
 } from "@/features/bingos/schemas/publicBingoSchema";
 
+// 오락실 검색과 같은 맞춤 — 전각·반각과 대소문자를 가리지 않는다
+const normalized = (value: string) =>
+    value.normalize("NFKC").trim().toLocaleLowerCase();
+
 export function getBingoCatalog(
     items: BingoCatalogItem[],
     query: BingoCatalogQuery
 ) {
+    const search = normalized(query.q);
     return items
         .filter((item) => {
+            if (
+                search &&
+                ![item.title, ...(item.searchNames ?? [])].some((name) =>
+                    normalized(name).includes(search)
+                )
+            )
+                return false;
             const cells = item.completedPositions.length;
             if (query.status === "progress")
                 return cells > 0 && item.completedLines < item.requiredLines;

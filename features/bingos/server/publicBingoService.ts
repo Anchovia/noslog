@@ -51,6 +51,14 @@ export async function getPublicBingoCatalog() {
                 sourceVersion: bingo.sourceVersion,
                 rewardNos: bingo.rewardNos,
                 requiredLines: bingo.requiredLines,
+                searchNames: [
+                    bingo.coverMusic.title,
+                    bingo.coverMusic.title_kana,
+                    bingo.coverMusic.artist,
+                    ...bingo.coverMusic.translations.map(
+                        (translation) => translation.title
+                    ),
+                ].filter((name): name is string => Boolean(name)),
                 completedPositions: cells
                     .filter((cell) => cell.isCompleted)
                     .map((cell) => cell.position),

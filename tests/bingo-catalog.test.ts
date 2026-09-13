@@ -61,12 +61,43 @@ describe("Bingo catalog truth and restoration", () => {
                 sort: "unknown",
                 count: 24,
             })
-        ).toEqual({ status: "all", sort: "release" });
+        ).toEqual({ status: "all", sort: "release", q: "" });
         expect(
             getBingoCatalog([board(1, 1, 0), board(2, 1, 0)], {
                 status: "all",
                 sort: "progress",
+                q: "",
             }).map((item) => item.id)
         ).toEqual([1, 2]);
+    });
+    it("finds boards by title, song reading, artist, or approved translation", () => {
+        const items: BingoCatalogItem[] = [
+            {
+                ...board(1, 0, 0),
+                title: "ピアノソナタ「月光」第１楽章",
+                searchNames: [
+                    "ピアノソナタゲッコウダイイチガクショウ",
+                    "ベートーヴェン",
+                    "피아노 소나타 「월광」 제1악장",
+                ],
+            },
+            { ...board(2, 4, 0), title: "Moonstone", searchNames: [] },
+            board(3, 0, 0),
+        ];
+        const query = bingoCatalogQuerySchema.parse({});
+        const ids = (q: string, status = query.status) =>
+            getBingoCatalog(items, { ...query, q, status }).map(
+                (item) => item.id
+            );
+        expect(ids("월광")).toEqual([1]);
+        expect(ids("ベートーヴェン")).toEqual([1]);
+        // 전각·대소문자·앞뒤 공백을 가리지 않는다
+        expect(ids("ｍｏｏｎ")).toEqual([2]);
+        expect(ids("  moonSTONE ")).toEqual([2]);
+        expect(ids("없는 곡")).toEqual([]);
+        expect(ids("")).toEqual([3, 2, 1]);
+        // 검색과 상태 필터는 함께 걸린다
+        expect(ids("moon", "progress")).toEqual([2]);
+        expect(ids("월광", "progress")).toEqual([]);
     });
 });
