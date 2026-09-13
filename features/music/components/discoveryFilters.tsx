@@ -8,7 +8,7 @@ import {
     useTranslations,
 } from "@/components/i18n/localeProvider";
 import FilterChips from "@/components/ui/filterChips";
-import type { FilterChipOption } from "@/components/ui/filterChips";
+import type { ChoiceTone, FilterChipOption } from "@/components/ui/filterChips";
 import FilterGroup from "@/components/ui/filterGroup";
 import { FormField, Input } from "@/components/ui/formField";
 import RangeSlider from "@/components/ui/rangeSlider";
@@ -32,6 +32,15 @@ const difficultyTone = (
     difficulty: Difficulty
 ): FilterChipOption<Difficulty>["tone"] =>
     difficulty.toLowerCase() as FilterChipOption<Difficulty>["tone"];
+// 카테고리 → 글자 색(자켓 카테고리 레이블과 같은 색)
+const categoryTone = {
+    pops: "pops",
+    anime: "anime",
+    BM: "bm",
+    Org: "org",
+    Var: "var",
+    "Cl/Jz": "cljz",
+} as const satisfies Record<(typeof MUSIC_CATEGORY_VALUES)[number], ChoiceTone>;
 
 /** 정렬 메뉴 — 전 폭 공통 · 즉시 적용. 레벨 순이면 난이도, 정렬을 고르면 방향이 종속 섹션으로 붙는다 */
 export function DiscoverySortMenu({
@@ -218,9 +227,11 @@ export default function DiscoveryFilters({
                 {t("discovery.selectedCount", { count })}
             </span>
         );
+    // 항목 글자 색 — 카테고리는 자켓 레이블 색, 성취는 S = 판정 JUST 노랑 · FC·Pianist = achievement 색(2026-09-14 사용자 결정)
     const categoryOptions = MUSIC_CATEGORY_VALUES.map((category) => ({
         value: category,
         label: category,
+        tone: categoryTone[category],
     }));
     const difficultyOptions = discoveryDifficulties.map((difficulty) => ({
         value: difficulty,
@@ -229,9 +240,13 @@ export default function DiscoveryFilters({
     }));
     const recordOptions = [
         { value: "unplayed" as const, label: t("music.filter.unplayed") },
-        { value: "s" as const, label: "S" },
-        { value: "fc" as const, label: "FC" },
-        { value: "pianist" as const, label: "Pianist" },
+        { value: "s" as const, label: "S", tone: "s" as const },
+        { value: "fc" as const, label: "FC", tone: "fc" as const },
+        {
+            value: "pianist" as const,
+            label: "Pianist",
+            tone: "pianist" as const,
+        },
     ].map((option) => ({ ...option, disabled: !signedIn }));
     const selectedDifficulties = query.difficulties.map(
         (range) => range.difficulty

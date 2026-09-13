@@ -3,6 +3,7 @@
 import { Check } from "lucide-react";
 import { useId } from "react";
 import type { ReactNode } from "react";
+import type { ChoiceTone } from "@/components/ui/filterChips";
 
 export default function SelectionList<Value extends string>({
     label,
@@ -18,6 +19,8 @@ export default function SelectionList<Value extends string>({
         label: ReactNode;
         disabled?: boolean;
         description?: string;
+        /** 글자 색 — 칩(FilterChips)과 같은 값. 체크 상자가 선택을 말하므로 선택돼도 색을 유지한다 */
+        tone?: ChoiceTone;
     }[];
     value: readonly Value[];
     onValueChange: (values: Value[]) => void;
@@ -37,6 +40,7 @@ export default function SelectionList<Value extends string>({
                     className="nl-selection-list__option nl-control"
                     data-selected={value.includes(option.value)}
                     data-disabled={option.disabled || undefined}
+                    data-tone={option.tone}
                 >
                     <input
                         className="sr-only"

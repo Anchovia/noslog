@@ -4,14 +4,30 @@ import { Check } from "lucide-react";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
+/** 항목 글자 색 — 난이도(DU-01 텍스트 램프) · 카테고리(자켓 레이블 색) · 성취(S·FC·Pianist) */
+export type ChoiceTone =
+    | "normal"
+    | "hard"
+    | "expert"
+    | "real"
+    | "pops"
+    | "anime"
+    | "bm"
+    | "org"
+    | "var"
+    | "cljz"
+    | "s"
+    | "fc"
+    | "pianist";
+
 export interface FilterChipOption<Value extends string> {
     value: Value;
     label: ReactNode;
     /** 항목 옆 보조 수치(개수 등) — metadata 로 그린다 */
     count?: ReactNode;
     disabled?: boolean;
-    /** 난이도 색 글자(DU-01 텍스트 램프). 선택되면 중립으로 돌아간다 */
-    tone?: "normal" | "hard" | "expert" | "real";
+    /** 글자 색. 선택되면 중립으로 돌아간다 */
+    tone?: ChoiceTone;
 }
 
 /**
