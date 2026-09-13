@@ -7,7 +7,10 @@ export const arcadeCabinetSchema = z
         position: z.number().int().nonnegative(),
         availability: z.enum(["unknown", "available", "unavailable"]),
         condition: z.enum(["unknown", "good", "normal", "caution"]),
+        // 위치 메모 — 이름 옆
         note: z.string().nullable(),
+        // 상태 이유 — 보통·주의 상태 라벨의 팝오버. 나누기 전 기체는 이유가 위치 메모에 남아 있다
+        conditionNote: z.string().nullable(),
         verifiedAt: z.iso.datetime().nullable(),
         stale: z.boolean(),
         // 이용자 가동 확인 — 최근 30일 안 마지막 확인 시각과 확인한 사람 수
@@ -28,13 +31,15 @@ export const arcadeCabinetSchema = z
                 message: "condition_requires_available",
             });
         }
+        // 나누기 전 기체는 이유가 위치 메모에 있으므로 둘 중 하나면 된다
         if (
             ["normal", "caution"].includes(cabinet.condition) &&
+            !cabinet.conditionNote?.trim() &&
             !cabinet.note?.trim()
         ) {
             ctx.addIssue({
                 code: "custom",
-                path: ["note"],
+                path: ["conditionNote"],
                 message: "condition_note_required",
             });
         }
@@ -121,9 +126,12 @@ export const arcadeDiscoverySchema = z.object({
     region: z.string().max(100).default(""),
     open: z.boolean().default(false),
     available: z.boolean().default(false),
-    sort: z.enum(["distance", "verified", "name", "preferred"]).default("name"),
+    // 모르는 값(예전 「최근 확인 순」 ?sort=verified 링크 등)은 이름순으로 — 다른 조건까지 초기화하지 않는다
+    sort: z
+        .enum(["distance", "name", "preferred"])
+        .default("name")
+        .catch("name"),
     /** 내 주변만 보기 — 켜지면 현재 위치에서 가까운 순이 먼저, 그 안에서 sort */
     near: z.boolean().default(false),
-    mode: z.enum(["list", "map"]).default("list"),
 });
 export type ArcadeDiscoveryValues = z.infer<typeof arcadeDiscoverySchema>;

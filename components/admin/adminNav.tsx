@@ -8,6 +8,7 @@ import { useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 
 export const adminSections = [
+    { href: "/admin", label: "대시보드" },
     { href: "/admin/announcements", label: "공지" },
     { href: "/admin/feedback", label: "피드백" },
     { href: "/admin/users", label: "유저" },
@@ -22,13 +23,20 @@ export const adminSections = [
     { href: "/admin/community", label: "의견" },
 ] as const;
 
+// 대시보드(/admin)는 모든 관리 주소의 앞부분이라 정확히 같을 때만 현재 구역이다
+export function currentAdminSection(pathname: string) {
+    return adminSections.find((section) =>
+        section.href === "/admin"
+            ? pathname === "/admin" || pathname === "/admin/"
+            : pathname.startsWith(section.href)
+    );
+}
+
 // 헤더 아래 가로 스크롤 탭으로 관리 구역을 오가며, 현재 구역을 화면 안으로 끌어옴
 export default function AdminNav() {
     const pathname = usePathname();
     const currentRef = useRef<HTMLAnchorElement>(null);
-    const current = adminSections.find((section) =>
-        pathname.startsWith(section.href)
-    );
+    const current = currentAdminSection(pathname);
 
     useEffect(() => {
         currentRef.current?.scrollIntoView({

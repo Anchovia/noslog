@@ -236,12 +236,12 @@ for (const locale of ["ko", "ja", "en"] as const) {
             page.locator(".nl-bingo-mission input:checked")
         ).toHaveCount(8);
         await expect(page.getByLabel("Fixture saves")).toHaveText("0");
-        await page.locator(".nl-bingo-term__trigger").first().click();
+        await page.locator(".nl-term__trigger").first().click();
         await expect(
             page.getByText(t["bingo.term.sjust"], { exact: true })
         ).toBeVisible();
         await page.keyboard.press("Escape");
-        await expect(page.locator(".nl-bingo-term__popover")).toHaveCount(0);
+        await expect(page.locator(".nl-term__popover")).toHaveCount(0);
         expect(
             (
                 await new AxeBuilder({ page })

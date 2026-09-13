@@ -14,8 +14,11 @@ import {
     ARCADE_CABINET_LABEL_MAX_LENGTH,
     ARCADE_CABINET_MAX,
     ARCADE_CABINET_NOTE_MAX_LENGTH,
+    ARCADE_CREDIT_LABEL_MAX_LENGTH,
     ARCADE_NAME_MAX_LENGTH,
     ARCADE_NOTES_MAX_LENGTH,
+    ARCADE_PHONE_MAX_LENGTH,
+    ARCADE_WEBSITE_MAX_LENGTH,
     arcadeFormSchema,
     createArcadeFormData,
     createArcadeFormDefaultValues,
@@ -31,6 +34,8 @@ import {
 import { ARCADE_REGIONS } from "@/lib/arcadeRegions";
 
 import ArcadeBusinessHoursFields from "./arcadeBusinessHoursFields";
+import ArcadeHoursExceptionsFields from "./arcadeHoursExceptionsFields";
+import ArcadePhotoManager, { type ArcadeFormPhoto } from "./arcadePhotoManager";
 
 const inputClass =
     "border-border bg-bg text-input h-10 min-w-0 rounded-md border px-3 outline-none focus:border-focus";
@@ -57,6 +62,7 @@ export interface ArcadeFormCabinet {
     id: number;
     label: string | null;
     note: string | null;
+    conditionNote: string | null;
     availability: string;
     condition: string;
     position: number;
@@ -75,6 +81,10 @@ interface ArcadeFormRecord {
     businessHours: unknown;
     hours: unknown;
     hoursVerifiedAt: string | null;
+    phone: string | null;
+    website: string | null;
+    creditLabel: string | null;
+    photos: ArcadeFormPhoto[];
     cabinets: ArcadeFormCabinet[];
     notes: string | null;
     isActive: boolean;
@@ -110,6 +120,9 @@ export default function ArcadeForm(props: ArcadeFormProps) {
                           coinCount: arcade.coinCount,
                           businessHours: arcade.businessHours,
                           hours: arcade.hours,
+                          phone: arcade.phone,
+                          website: arcade.website,
+                          creditLabel: arcade.creditLabel,
                           cabinets: arcade.cabinets,
                           notes: arcade.notes,
                           isActive: arcade.isActive,
@@ -334,6 +347,46 @@ export default function ArcadeForm(props: ArcadeFormProps) {
                     <FieldError message={errors.coinCount?.message} />
                 </label>
             </div>
+            {/* 공개 요금 줄 「₩500 / 1크레딧」 의 단위 자리 — 비우면 코인 수로 적는다 */}
+            <label className="text-caption flex min-w-0 flex-col gap-1">
+                요금 단위 표기 (선택)
+                <input
+                    maxLength={ARCADE_CREDIT_LABEL_MAX_LENGTH}
+                    placeholder="예: 1크레딧 · 비우면 「1코인」"
+                    aria-invalid={Boolean(errors.creditLabel)}
+                    className={inputClass}
+                    {...register("creditLabel")}
+                />
+                <FieldError message={errors.creditLabel?.message} />
+            </label>
+            <div className="grid grid-cols-2 gap-2">
+                <label className="text-caption flex min-w-0 flex-col gap-1">
+                    전화번호 (선택)
+                    <input
+                        type="tel"
+                        inputMode="tel"
+                        maxLength={ARCADE_PHONE_MAX_LENGTH}
+                        placeholder="예: 02-123-4567"
+                        aria-invalid={Boolean(errors.phone)}
+                        className={inputClass}
+                        {...register("phone")}
+                    />
+                    <FieldError message={errors.phone?.message} />
+                </label>
+                <label className="text-caption flex min-w-0 flex-col gap-1">
+                    웹사이트 (선택)
+                    <input
+                        type="url"
+                        inputMode="url"
+                        maxLength={ARCADE_WEBSITE_MAX_LENGTH}
+                        placeholder="https://"
+                        aria-invalid={Boolean(errors.website)}
+                        className={inputClass}
+                        {...register("website")}
+                    />
+                    <FieldError message={errors.website?.message} />
+                </label>
+            </div>
             <ArcadeBusinessHoursFields
                 formKey={formKey}
                 register={register}
@@ -342,6 +395,11 @@ export default function ArcadeForm(props: ArcadeFormProps) {
                 verifiedLabel={
                     arcade ? verifiedLabel(arcade.hoursVerifiedAt) : undefined
                 }
+            />
+            <ArcadeHoursExceptionsFields
+                control={control}
+                register={register}
+                errors={errors}
             />
             <fieldset className="border-border rounded-card grid gap-2 border p-3">
                 <legend className="text-label px-1">기체</legend>
@@ -436,16 +494,32 @@ export default function ArcadeForm(props: ArcadeFormProps) {
                                     </select>
                                 ) : null}
                             </div>
+                            {/* 위치 메모는 공개 기체 이름 옆, 상태 이유는 상태 라벨 팝오버에 보인다 */}
                             <input
                                 maxLength={ARCADE_CABINET_NOTE_MAX_LENGTH}
-                                placeholder="메모 · 위치나 상태 이유"
-                                aria-label={`${name} 메모`}
+                                placeholder="위치 메모 · 예: 안쪽 벽"
+                                aria-label={`${name} 위치 메모`}
                                 aria-invalid={Boolean(rowErrors?.note)}
                                 className={inputClass}
                                 {...register(`cabinets.${index}.note`)}
                             />
+                            {available ? (
+                                <input
+                                    maxLength={ARCADE_CABINET_NOTE_MAX_LENGTH}
+                                    placeholder="상태 이유 · 보통·주의일 때 필수"
+                                    aria-label={`${name} 상태 이유`}
+                                    aria-invalid={Boolean(
+                                        rowErrors?.conditionNote
+                                    )}
+                                    className={inputClass}
+                                    {...register(
+                                        `cabinets.${index}.conditionNote`
+                                    )}
+                                />
+                            ) : null}
                             <FieldError
                                 message={
+                                    rowErrors?.conditionNote?.message ??
                                     rowErrors?.note?.message ??
                                     rowErrors?.label?.message
                                 }
@@ -475,6 +549,7 @@ export default function ArcadeForm(props: ArcadeFormProps) {
                             cabinetId: "",
                             label: "",
                             note: "",
+                            conditionNote: "",
                             availability: "unknown",
                             condition: "unknown",
                             confirm: false,
@@ -491,6 +566,14 @@ export default function ArcadeForm(props: ArcadeFormProps) {
                     }
                 />
             </fieldset>
+            {/* 사진은 오락실 id 가 있어야 올릴 수 있어 수정 폼에만 — 추가·삭제는 저장 버튼과 따로 바로 반영 */}
+            {props.mode === "update" ? (
+                <ArcadePhotoManager
+                    arcadeId={props.arcade.id}
+                    arcadeName={props.arcade.name}
+                    photos={props.arcade.photos}
+                />
+            ) : null}
             <label className="text-caption flex flex-col gap-1">
                 비고
                 <textarea

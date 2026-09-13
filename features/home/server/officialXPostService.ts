@@ -6,6 +6,7 @@ import type {
     OfficialXPostLink,
 } from "@/features/home/officialXPostContent";
 import { getOfficialXPostTranslations } from "@/features/home/server/officialXPostTranslation";
+import { recordExternalCall } from "@/lib/analytics";
 
 export const OFFICIAL_X_USERNAME = "NOSTALGIA_573";
 export const OFFICIAL_X_URL = `https://x.com/${OFFICIAL_X_USERNAME}`;
@@ -88,6 +89,8 @@ async function fetchLatestPost(): Promise<
         "type,url,preview_image_url,width,height,alt_text"
     );
     url.searchParams.set("user.fields", "name,username,profile_image_url");
+    // 외부 API 통계 — 실제로 부른 횟수만 센다(캐시에서 꺼낼 때는 이 함수가 돌지 않는다)
+    void recordExternalCall("x-api").catch(() => null);
     const response = await fetch(url, {
         headers: { Authorization: `Bearer ${token}` },
         cache: "no-store",

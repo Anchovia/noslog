@@ -15,6 +15,7 @@ export default async function AdminArcadesPage() {
                     id: true,
                     label: true,
                     note: true,
+                    conditionNote: true,
                     availability: true,
                     condition: true,
                     position: true,
@@ -22,7 +23,18 @@ export default async function AdminArcadesPage() {
                 },
             },
             publicDetails: {
-                select: { hours: true, hoursVerifiedAt: true },
+                select: {
+                    hours: true,
+                    hoursVerifiedAt: true,
+                    phone: true,
+                    website: true,
+                    creditLabel: true,
+                },
+            },
+            // 공개 상세 맨 위 사진 — 자리(slot) 순서가 공개 순서
+            publicPhotos: {
+                orderBy: { slot: "asc" },
+                select: { id: true, url: true, alt: true },
             },
         },
         orderBy: [{ is_active: "desc" }, { name: "asc" }],
@@ -59,6 +71,11 @@ export default async function AdminArcadesPage() {
                             hoursVerifiedAt:
                                 arcade.publicDetails?.hoursVerifiedAt?.toISOString() ??
                                 null,
+                            phone: arcade.publicDetails?.phone ?? null,
+                            website: arcade.publicDetails?.website ?? null,
+                            creditLabel:
+                                arcade.publicDetails?.creditLabel ?? null,
+                            photos: arcade.publicPhotos,
                             cabinets: arcade.cabinets.map((cabinet) => ({
                                 ...cabinet,
                                 verifiedAt:

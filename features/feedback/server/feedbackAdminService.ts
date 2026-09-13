@@ -13,6 +13,17 @@ import { logServerError } from "@/lib/observability/server";
 
 type FeedbackStatusUpdateResult = ActionResult<{ status: FeedbackStatus }>;
 
+// 오락실 제보 종류 — 관리자 화면은 한국어라 공개 카탈로그(arcades.reportType.*)의 ko 문구를 옮겨 쓴다
+const ARCADE_REPORT_TYPE_LABELS: Record<string, string> = {
+    unavailable: "기체 고장·이용 불가",
+    condition: "기체 상태·입력 문제",
+    count: "기체 수 변경",
+    price: "요금 변경",
+    hours: "영업시간 변경",
+    address: "위치·주소 변경",
+    other: "기타 정보",
+};
+
 function refreshFeedbackAdmin() {
     revalidatePath("/admin");
     revalidatePath("/admin/feedback");
@@ -46,6 +57,14 @@ export async function listFeedbackReports(
                         nostalgia_name: true,
                     },
                 },
+                arcade: {
+                    select: {
+                        id: true,
+                        name: true,
+                        publicDetails: { select: { slug: true } },
+                    },
+                },
+                cabinet: { select: { label: true, position: true } },
             },
             orderBy: { createdAt: "desc" },
             take: 100,
@@ -64,6 +83,22 @@ export async function listFeedbackReports(
                     report.user.nostalgia_name ??
                     `유저 ${report.user.id}`,
             },
+            // 어느 오락실·기체의 무슨 제보인지 — 처리 완료로 바꾸면 공개 기체 줄의 「고장 신고 N」 이 줄어든다
+            arcade: report.arcade
+                ? {
+                      name: report.arcade.name,
+                      href: `/gamecenter/${report.arcade.publicDetails?.slug ?? report.arcade.id}`,
+                      cabinet: report.cabinet
+                          ? (report.cabinet.label ??
+                            `${report.cabinet.position + 1}번기`)
+                          : null,
+                      type: report.arcadeReportType
+                          ? (ARCADE_REPORT_TYPE_LABELS[
+                                report.arcadeReportType
+                            ] ?? report.arcadeReportType)
+                          : null,
+                  }
+                : null,
         }));
     } catch (error) {
         logFeedbackAdminError(error, "admin.feedback.list.failed", "page");

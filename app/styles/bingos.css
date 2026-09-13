@@ -419,38 +419,6 @@
     flex-direction: column;
     gap: var(--nl-spacing-12);
 }
-.noslog-ui .nl-bingo-term {
-    display: inline;
-}
-.noslog-ui .nl-bingo-term__trigger {
-    display: inline-flex;
-    align-items: center;
-    gap: 2px;
-    vertical-align: baseline;
-    cursor: help;
-}
-.noslog-ui .nl-bingo-term__trigger > span {
-    text-decoration: underline dotted;
-    text-underline-offset: 3px;
-}
-.noslog-ui .nl-bingo-term__trigger svg {
-    width: 14px;
-    height: 14px;
-    flex-shrink: 0;
-}
-.noslog-ui.nl-bingo-term__popover {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-4);
-    z-index: 70;
-    max-width: min(280px, calc(100vw - 32px));
-    background: var(--nl-surface-overlay);
-    color: var(--nl-content-default);
-    border: 1px solid var(--nl-border-default);
-    border-radius: var(--nl-radius-overlay);
-    box-shadow: var(--nl-elevation-overlay);
-    padding: var(--nl-spacing-12);
-}
 @media (min-width: 1056px) {
     .noslog-ui .nl-bingo-detail__layout {
         display: grid;

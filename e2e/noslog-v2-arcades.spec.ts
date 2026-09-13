@@ -13,12 +13,11 @@ test("P12 detail composition keeps the section stack, action row and rail across
     await expect(page.locator(".nl-arcade-detail h1")).toHaveText(
         "라운드원 강남"
     );
-    await expect(page.locator(".nl-arcade-hours > div").first()).toHaveText(
-        "월10:00–24:00"
-    );
-    await expect(page.locator(".nl-arcade-hours > div").last()).toHaveText(
-        "일휴무"
-    );
+    // 오늘부터 7일, 첫 줄이 오늘
+    await expect(page.locator(".nl-arcade-hours > div")).toHaveCount(7);
+    await expect(
+        page.locator(".nl-arcade-hours > div").first()
+    ).toHaveAttribute("data-today", "true");
     const lastCabinet = page.locator(".nl-arcade-cabinets > li").last();
     await expect(lastCabinet).toHaveAttribute("data-tone", "unavailable");
     await expect(lastCabinet).toContainText("3번기");
@@ -37,8 +36,12 @@ test("P12 detail composition keeps the section stack, action row and rail across
             "gap",
             wide ? "24px" : "16px"
         );
+        // 첫 구역(제목 없는 정보 구역)은 위 여백 없이 아래 구분선 하나, 제목 있는 구역은 위 여백 16 · 구분선 없음
         await expect(
             page.locator(".nl-arcade-detail__section").first()
+        ).toHaveCSS("padding-top", "0px");
+        await expect(
+            page.locator(".nl-arcade-detail__section").nth(1)
         ).toHaveCSS("padding-top", "16px");
         await expect(page.locator(".nl-arcade-photos")).toHaveCSS(
             "height",
@@ -47,24 +50,26 @@ test("P12 detail composition keeps the section stack, action row and rail across
         await expect(
             page.locator(".nl-arcade-detail__map .nl-arcade-map")
         ).toHaveCSS("height", wide ? "240px" : "160px");
-        // 액션 행은 한 곳에만 보인다 — 1056 미만 본문 위, 1056+ 레일. 어느 쪽이든 2×2 · 공용 버튼 높이 40
+        // 액션 한 줄은 한 곳에만 보인다 — 1056 미만 하단 고정 바, 1056+ 레일. 길찾기 + 선호 + 제보 · 컨트롤 높이(44 / 40)
         const railActions = page.locator(
             ".nl-arcade-detail__rail .nl-arcade-detail__actions > *"
         );
-        const mainActions = page.locator(
-            ".nl-arcade-detail__main-only .nl-arcade-detail__actions > *"
+        const barActions = page.locator(
+            ".nl-arcade-detail__bar .nl-arcade-detail__actions > *"
         );
-        await expect(wide ? railActions : mainActions).toHaveCount(4);
-        await expect((wide ? mainActions : railActions).first()).toBeHidden();
-        const boxes = await (wide ? railActions : mainActions).evaluateAll(
+        await expect(wide ? railActions : barActions).toHaveCount(3);
+        await expect((wide ? barActions : railActions).first()).toBeHidden();
+        const boxes = await (wide ? railActions : barActions).evaluateAll(
             (nodes) =>
                 nodes.map((node) => {
                     const box = node.getBoundingClientRect();
                     return { top: Math.round(box.top), height: box.height };
                 })
         );
-        expect(boxes.map((box) => box.height)).toEqual([40, 40, 40, 40]);
-        expect(new Set(boxes.map((box) => box.top)).size).toBe(2);
+        expect(boxes.map((box) => box.height)).toEqual(
+            wide ? [40, 40, 40] : [44, 44, 44]
+        );
+        expect(new Set(boxes.map((box) => box.top)).size).toBe(1);
         expect(
             await page.evaluate(
                 () => document.documentElement.scrollWidth <= innerWidth
@@ -197,7 +202,10 @@ for (const locale of ["ko", "ja", "en"] as const) {
                 .first()
                 .getByText(t["arcades.loginToUse"], { exact: true })
         ).toBeVisible();
-        await expect(page.locator(".nl-arcade-photos")).toHaveCount(0);
+        // 사진이 없으면 같은 자리에 자리표시자
+        await expect(page.locator(".nl-arcade-photos--empty")).toHaveText(
+            t["arcades.photoPending"]
+        );
         for (const width of [320, 390, 520, 768, 1470]) {
             await page.setViewportSize({ width, height: 900 });
             expect(
@@ -205,16 +213,14 @@ for (const locale of ["ko", "ja", "en"] as const) {
                     () => document.documentElement.scrollWidth <= innerWidth
                 )
             ).toBe(true);
-            const compact = page
-                .locator(".nl-arcade-detail__main-only")
-                .first();
             const rail = page.locator(".nl-arcade-detail__rail");
+            const bar = page.locator(".nl-arcade-detail__bar");
             if (width === 1470) {
                 await expect(rail).toBeVisible();
-                await expect(compact).toBeHidden();
+                await expect(bar).toBeHidden();
             } else {
-                await expect(compact).toBeVisible();
                 await expect(rail).toBeHidden();
+                await expect(bar).toBeVisible();
             }
             if (width === 390 || width === 1470)
                 await page.screenshot({
@@ -223,9 +229,9 @@ for (const locale of ["ko", "ja", "en"] as const) {
                 });
         }
         await page.setViewportSize({ width: 320, height: 700 });
+        // 제보는 하단 바의 말풍선 아이콘 버튼 — 이름은 「오락실 제보」
         const trigger = page
-            .locator(".nl-arcade-detail__main-only")
-            .first()
+            .locator(".nl-arcade-detail__bar")
             .getByRole("button", { name: t["arcades.report"], exact: true });
         await trigger.click();
         await expect(
@@ -260,11 +266,6 @@ for (const locale of ["ko", "ja", "en"] as const) {
         ).toBeVisible();
         await expect(
             page.getByText(t["arcades.addressPending"], { exact: true })
-        ).toBeVisible();
-        await expect(
-            page
-                .locator(".nl-arcade-detail__main-only")
-                .getByText(t["arcades.collectingPreference"], { exact: true })
         ).toBeVisible();
     });
     test(`P12 ${locale} photo gallery supports keyboard controls and restores focus`, async ({

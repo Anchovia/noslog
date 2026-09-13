@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 import { useTranslations } from "@/components/i18n/localeProvider";
 import AppHeader from "@/components/layout/appHeader";
 import type { ShellAccount } from "@/components/layout/appHeader";
+import PageViewBeacon from "@/components/layout/pageViewBeacon";
 
 export default function AppShell({
     children,
@@ -27,6 +28,8 @@ export default function AppShell({
                 <div className="nl-main__content">{children}</div>
             </main>
             {footer}
+            {/* 방문 통계(자체 집계) — 관리자 셸(AdminShell)에는 없다 */}
+            <PageViewBeacon />
         </div>
     );
 }

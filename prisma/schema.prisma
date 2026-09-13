@@ -240,7 +240,10 @@ model ArcadeCabinet {
   isActive           Boolean              @default(true)
   availability       String               @default("unknown")
   condition          String               @default("unknown")
+  // 위치 메모(「안쪽 벽」) — 이름 옆에 보인다
   note               String?
+  // 상태 이유(「우측 건반 씹힘」) — 보통·주의일 때 상태 라벨 팝오버로 보인다
+  conditionNote      String?              @map("condition_note")
   verifiedAt         DateTime?
   validUntil         DateTime?
   verificationSource String?
@@ -294,6 +297,35 @@ model ArcadeSlugAlias {
   slug     String @id
   arcadeId Int
   arcade   Arcade @relation(fields: [arcadeId], references: [id], onDelete: Cascade)
+}
+
+// 방문·API 통계 — 날짜(서울)·종류·열쇠별 합계만 둔다. 90일 뒤 지운다(privacyRetention)
+model AnalyticsDailyCount {
+  date  DateTime @db.Date
+  kind  String
+  key   String   @default("")
+  count Int      @default(0)
+
+  @@id([date, kind, key])
+  @@index([kind, date])
+  @@map("analytics_daily_counts")
+}
+
+// 그날 처음 온 방문자인지만 가리는 해시(그날의 무작위 값 + IP + 브라우저 정보). 다음 날 지운다
+model AnalyticsVisitor {
+  date DateTime @db.Date
+  hash String
+
+  @@id([date, hash])
+  @@map("analytics_visitors")
+}
+
+// 방문자 해시에 섞는 그날의 무작위 값. 다음 날 지운다
+model AnalyticsSalt {
+  date DateTime @id @db.Date
+  salt String
+
+  @@map("analytics_salts")
 }
 
 // 사용자별 이미지 업로드 토큰 발급 횟수를 제한함

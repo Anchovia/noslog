@@ -129,6 +129,7 @@ export function toPublicArcade(record: ArcadeRecord, now: Date) {
                         ? cabinet.condition
                         : "unknown",
                 note: cabinet.note,
+                conditionNote: cabinet.conditionNote,
                 verifiedAt: userConfirmed
                     ? lastCheck!.toISOString()
                     : adminVerified

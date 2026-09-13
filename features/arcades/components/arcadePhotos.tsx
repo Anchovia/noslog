@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useRef, useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Image as ImageIcon } from "lucide-react";
 import { useTranslations } from "@/components/i18n/localeProvider";
 import ModalDialog from "@/components/ui/modalDialog";
 import type { PublicArcade } from "@/features/arcades/schemas/publicArcadeSchema";
@@ -20,7 +20,14 @@ export default function ArcadePhotos({
     const swiped = useRef(false);
     const visible = photos.filter((photo) => !failed.includes(photo.id));
     const active = Math.min(index, visible.length - 1);
-    if (!visible.length) return null;
+    // 사진이 없거나 전부 못 불러오면 같은 자리에 자리표시자 — 모든 오락실이 같은 틀
+    if (!visible.length)
+        return (
+            <div className="nl-arcade-photos nl-arcade-photos--empty nl-body-secondary">
+                <ImageIcon className="nl-icon nl-icon--large" aria-hidden />
+                <p>{t("arcades.photoPending")}</p>
+            </div>
+        );
     const photo = visible[active];
     const advance = (direction: number) =>
         setIndex((active + direction + visible.length) % visible.length);

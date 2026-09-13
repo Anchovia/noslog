@@ -6,7 +6,9 @@ import {
     ARCADE_WEEKDAYS,
     fromPublicArcadeWeekly,
     normalizeArcadeBusinessHours,
+    readPublicArcadeExceptions,
     readPublicArcadeWeekly,
+    toPublicArcadeInterval,
     type ArcadeBusinessHours,
 } from "@/lib/arcadeDetails";
 import {
@@ -21,9 +23,18 @@ export const ARCADE_NOTES_MAX_LENGTH = 500;
 export const ARCADE_CABINET_MAX = 20;
 export const ARCADE_CABINET_LABEL_MAX_LENGTH = 40;
 export const ARCADE_CABINET_NOTE_MAX_LENGTH = 200;
+export const ARCADE_CREDIT_LABEL_MAX_LENGTH = 20;
+export const ARCADE_PHONE_MAX_LENGTH = 30;
+export const ARCADE_WEBSITE_MAX_LENGTH = 300;
+export const ARCADE_HOURS_EXCEPTION_MAX = 30;
+// 공개 상세 사진 자리 0·1·2(ArcadePublicPhoto.slot) — 첫 사진이 대표
+export const ARCADE_PHOTO_MAX = 3;
+export const ARCADE_PHOTO_ALT_MAX_LENGTH = 120;
 
 const timePattern = /^(?:[01]\d|2[0-3]):[0-5]\d$/;
 const integerPattern = /^\d+$/;
+const datePattern = /^\d{4}-\d{2}-\d{2}$/;
+const phonePattern = /^\+?[\d\s()-]+$/;
 const availabilityValues = ARCADE_CABINET_AVAILABILITIES.map(
     ({ value }) => value
 ) as [
@@ -34,6 +45,25 @@ const conditionValues = ARCADE_CABINET_CONDITIONS.map(({ value }) => value) as [
     (typeof ARCADE_CABINET_CONDITIONS)[number]["value"],
     ...(typeof ARCADE_CABINET_CONDITIONS)[number]["value"][],
 ];
+
+// 공개 상세가 http·https 주소만 링크로 보여 준다(publicWebsite) — 같은 규칙으로 받는다
+function isHttpUrl(value: string) {
+    try {
+        return ["https:", "http:"].includes(new URL(value).protocol);
+    } catch {
+        return false;
+    }
+}
+
+// 2026-02-30 같은 없는 날짜를 거른다
+function isCalendarDate(value: string) {
+    if (!datePattern.test(value)) return false;
+    const date = new Date(`${value}T00:00:00Z`);
+    return (
+        !Number.isNaN(date.getTime()) &&
+        date.toISOString().slice(0, 10) === value
+    );
+}
 
 const optionalIntegerTextSchema = (
     errorLabel: string,
@@ -69,7 +99,15 @@ const businessHoursSchema = z.object({
     sunday: dayHoursSchema,
 });
 
-// 기체 한 줄 — 공개 기체 행과 같은 규칙: 상태(양호·보통·주의)는 가동일 때만 남기고, 보통·주의는 메모 필수
+// 날짜별 예외 한 줄 — 휴무면 시간은 쓰지 않는다
+const hoursExceptionSchema = z.object({
+    date: z.string().trim(),
+    closed: z.boolean(),
+    open: z.string(),
+    close: z.string(),
+});
+
+// 기체 한 줄 — 공개 기체 행과 같은 규칙: 상태(양호·보통·주의)는 가동일 때만 남기고, 보통·주의는 상태 이유 필수
 const cabinetSchema = z
     .object({
         cabinetId: z
@@ -93,7 +131,15 @@ const cabinetSchema = z
             .trim()
             .max(
                 ARCADE_CABINET_NOTE_MAX_LENGTH,
-                `기체 메모는 ${ARCADE_CABINET_NOTE_MAX_LENGTH}자 이하로 입력해주세요.`
+                `위치 메모는 ${ARCADE_CABINET_NOTE_MAX_LENGTH}자 이하로 입력해주세요.`
+            )
+            .transform((value) => value || null),
+        conditionNote: z
+            .string()
+            .trim()
+            .max(
+                ARCADE_CABINET_NOTE_MAX_LENGTH,
+                `상태 이유는 ${ARCADE_CABINET_NOTE_MAX_LENGTH}자 이하로 입력해주세요.`
             )
             .transform((value) => value || null),
         availability: z.enum(availabilityValues, {
@@ -109,12 +155,12 @@ const cabinetSchema = z
             cabinet.availability === "available" &&
             (cabinet.condition === "normal" ||
                 cabinet.condition === "caution") &&
-            !cabinet.note
+            !cabinet.conditionNote
         ) {
             context.addIssue({
                 code: "custom",
-                path: ["note"],
-                message: "보통·주의 상태는 메모에 이유를 적어주세요.",
+                path: ["conditionNote"],
+                message: "보통·주의 상태는 상태 이유를 적어주세요.",
             });
         }
     })
@@ -153,8 +199,50 @@ const arcadeBaseSchema = z.object({
     longitude: z.string().trim(),
     playPrice: optionalIntegerTextSchema("플레이 요금은", 1, 100000),
     coinCount: optionalIntegerTextSchema("코인 수는", 1, 100),
+    // 공개 요금 줄 「₩500 / 1크레딧」 의 단위 자리 — 비우면 코인 수로 적는다
+    creditLabel: z
+        .string()
+        .trim()
+        .max(
+            ARCADE_CREDIT_LABEL_MAX_LENGTH,
+            `요금 단위 표기는 ${ARCADE_CREDIT_LABEL_MAX_LENGTH}자 이하로 입력해주세요.`
+        )
+        .transform((value) => value || null),
+    phone: z
+        .string()
+        .trim()
+        .max(
+            ARCADE_PHONE_MAX_LENGTH,
+            `전화번호는 ${ARCADE_PHONE_MAX_LENGTH}자 이하로 입력해주세요.`
+        )
+        .refine(
+            (value) =>
+                value === "" || (phonePattern.test(value) && /\d/.test(value)),
+            "전화번호는 숫자와 + - ( ) 공백으로 입력해주세요."
+        )
+        .transform((value) => value || null),
+    website: z
+        .string()
+        .trim()
+        .max(
+            ARCADE_WEBSITE_MAX_LENGTH,
+            `웹사이트 주소는 ${ARCADE_WEBSITE_MAX_LENGTH}자 이하로 입력해주세요.`
+        )
+        .refine(
+            (value) => value === "" || isHttpUrl(value),
+            "웹사이트는 http:// 또는 https:// 로 시작하는 주소로 입력해주세요."
+        )
+        .transform((value) => value || null),
     businessHours: businessHoursSchema,
     hoursConfirmed: z.boolean(),
+    // 없으면(이 칸을 모르는 옛 화면에서 보낸 저장) 저장된 예외를 그대로 둔다
+    hoursExceptions: z
+        .array(hoursExceptionSchema, { error: "날짜별 예외를 확인해주세요." })
+        .max(
+            ARCADE_HOURS_EXCEPTION_MAX,
+            `날짜별 예외는 ${ARCADE_HOURS_EXCEPTION_MAX}개까지 등록할 수 있습니다.`
+        )
+        .optional(),
     cabinets: z
         .array(cabinetSchema, { error: "기체 정보를 확인해주세요." })
         .max(
@@ -244,6 +332,39 @@ function validateArcadeInput(data: ArcadeBaseInput, context: z.RefinementCtx) {
             });
         }
     }
+
+    const dates = new Set<string>();
+    (data.hoursExceptions ?? []).forEach((exception, index) => {
+        if (!isCalendarDate(exception.date)) {
+            context.addIssue({
+                code: "custom",
+                path: ["hoursExceptions", index, "date"],
+                message: "예외 날짜를 확인해주세요.",
+            });
+        } else if (dates.has(exception.date)) {
+            context.addIssue({
+                code: "custom",
+                path: ["hoursExceptions", index, "date"],
+                message: `${exception.date} 예외가 두 번 있습니다.`,
+            });
+        }
+        dates.add(exception.date);
+        if (exception.closed) return;
+        if (!timePattern.test(exception.open)) {
+            context.addIssue({
+                code: "custom",
+                path: ["hoursExceptions", index, "open"],
+                message: "예외 날짜의 영업 시작 시간을 확인해주세요.",
+            });
+        }
+        if (!timePattern.test(exception.close)) {
+            context.addIssue({
+                code: "custom",
+                path: ["hoursExceptions", index, "close"],
+                message: "예외 날짜의 영업 종료 시간을 확인해주세요.",
+            });
+        }
+    });
 }
 
 function normalizeArcadeInput(data: ArcadeBaseInput) {
@@ -266,6 +387,22 @@ function normalizeArcadeInput(data: ArcadeBaseInput) {
                       openEveryDay: enabledDays === ARCADE_WEEKDAYS.length,
                   }
                 : null,
+        // 공개 영업시간 JSON 의 exceptions 형식(날짜 → 분 단위 영업 · 휴무 null), 날짜순. null 이면 저장된 예외 유지
+        hoursExceptions: data.hoursExceptions
+            ? Object.fromEntries(
+                  [...data.hoursExceptions]
+                      .sort((a, b) => a.date.localeCompare(b.date))
+                      .map((exception) => [
+                          exception.date,
+                          exception.closed
+                              ? null
+                              : toPublicArcadeInterval(
+                                    exception.open,
+                                    exception.close
+                                ),
+                      ])
+              )
+            : null,
     };
 }
 
@@ -291,6 +428,7 @@ interface ArcadeFormCabinetSource {
     id: number;
     label: string | null;
     note: string | null;
+    conditionNote: string | null;
     availability: string;
     condition: string;
 }
@@ -304,8 +442,11 @@ interface ArcadeFormSource {
     playPrice: number | null;
     coinCount: number | null;
     businessHours?: unknown;
-    // 공개 영업시간(ArcadePublicDetails.hours) — 있으면 옛 영업시간보다 먼저 쓴다
+    // 공개 영업시간(ArcadePublicDetails.hours) — 있으면 옛 영업시간보다 먼저 쓴다. 날짜별 예외도 여기서 읽는다
     hours?: unknown;
+    phone?: string | null;
+    website?: string | null;
+    creditLabel?: string | null;
     cabinets?: ArcadeFormCabinetSource[];
     notes: string | null;
     isActive: boolean;
@@ -362,6 +503,9 @@ export function createArcadeFormDefaultValues(
         longitude: hasValidCoordinates ? String(source.longitude) : "",
         playPrice: source?.playPrice?.toString() ?? "",
         coinCount: source?.coinCount?.toString() ?? "",
+        creditLabel: source?.creditLabel ?? "",
+        phone: source?.phone ?? "",
+        website: source?.website ?? "",
         businessHours: {
             monday: dayDefaultValues(businessHours, "monday"),
             tuesday: dayDefaultValues(businessHours, "tuesday"),
@@ -372,10 +516,12 @@ export function createArcadeFormDefaultValues(
             sunday: dayDefaultValues(businessHours, "sunday"),
         },
         hoursConfirmed: false,
+        hoursExceptions: readPublicArcadeExceptions(source?.hours),
         cabinets: (source?.cabinets ?? []).map((cabinet) => ({
             cabinetId: String(cabinet.id),
             label: cabinet.label ?? "",
             note: cabinet.note ?? "",
+            conditionNote: cabinet.conditionNote ?? "",
             availability: isAvailability(cabinet.availability)
                 ? cabinet.availability
                 : "unknown",
@@ -393,7 +539,8 @@ function booleanFromFormData(value: FormDataEntryValue | null) {
     return value === "true" || value === "on";
 }
 
-function cabinetsFromFormData(value: FormDataEntryValue | null): unknown {
+// 기체·날짜별 예외처럼 여러 줄인 칸은 JSON 한 칸으로 주고받는다
+function listFromFormData(value: FormDataEntryValue | null): unknown {
     if (typeof value !== "string" || value === "") return [];
     try {
         return JSON.parse(value);
@@ -415,6 +562,7 @@ export function arcadeFormInputFromFormData(formData: FormData) {
             },
         ])
     );
+    const exceptions = formData.get("hoursExceptions");
 
     return {
         name: String(formData.get("name") ?? ""),
@@ -424,9 +572,14 @@ export function arcadeFormInputFromFormData(formData: FormData) {
         longitude: String(formData.get("longitude") ?? ""),
         playPrice: String(formData.get("playPrice") ?? ""),
         coinCount: String(formData.get("coinCount") ?? ""),
+        creditLabel: String(formData.get("creditLabel") ?? ""),
+        phone: String(formData.get("phone") ?? ""),
+        website: String(formData.get("website") ?? ""),
         businessHours,
         hoursConfirmed: booleanFromFormData(formData.get("hoursConfirmed")),
-        cabinets: cabinetsFromFormData(formData.get("cabinets")),
+        hoursExceptions:
+            exceptions === null ? undefined : listFromFormData(exceptions),
+        cabinets: listFromFormData(formData.get("cabinets")),
         notes: String(formData.get("notes") ?? ""),
         isActive: booleanFromFormData(formData.get("isActive")),
     };
@@ -448,6 +601,9 @@ export function createArcadeFormData(values: ArcadeValues, id?: number) {
     formData.set("longitude", values.longitude?.toString() ?? "");
     formData.set("playPrice", values.playPrice?.toString() ?? "");
     formData.set("coinCount", values.coinCount?.toString() ?? "");
+    formData.set("creditLabel", values.creditLabel ?? "");
+    formData.set("phone", values.phone ?? "");
+    formData.set("website", values.website ?? "");
     for (const { key } of ARCADE_WEEKDAYS) {
         const schedule = values.businessHours?.weekly[key];
         formData.set(`hours_${key}_enabled`, String(Boolean(schedule)));
@@ -455,6 +611,16 @@ export function createArcadeFormData(values: ArcadeValues, id?: number) {
         formData.set(`hours_${key}_close`, schedule?.close ?? "");
     }
     formData.set("hoursConfirmed", String(values.hoursConfirmed));
+    // 정규화된 예외(분 단위)를 입력 줄 형식으로 되돌려 보낸다 — 서버가 같은 스키마로 다시 검증한다
+    if (values.hoursExceptions !== null)
+        formData.set(
+            "hoursExceptions",
+            JSON.stringify(
+                readPublicArcadeExceptions({
+                    exceptions: values.hoursExceptions,
+                })
+            )
+        );
     formData.set(
         "cabinets",
         JSON.stringify(
@@ -463,6 +629,7 @@ export function createArcadeFormData(values: ArcadeValues, id?: number) {
                     cabinet.cabinetId === null ? "" : String(cabinet.cabinetId),
                 label: cabinet.label ?? "",
                 note: cabinet.note ?? "",
+                conditionNote: cabinet.conditionNote ?? "",
                 availability: cabinet.availability,
                 condition: cabinet.condition,
                 confirm: cabinet.confirm,

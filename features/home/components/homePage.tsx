@@ -9,12 +9,15 @@ import { getOfficialXLatestPost } from "@/features/home/server/officialXPostServ
 import { getServerI18n } from "@/lib/i18n/server";
 import { getLocalizedHref } from "@/lib/i18n/routing";
 import { SITE_NAME, SITE_URL } from "@/lib/metadata/site";
+import { getUser } from "@/lib/user";
 
 export default async function HomePage() {
     const { locale, t } = await getServerI18n();
-    const [announcements, officialPost] = await Promise.all([
+    // 셸이 이미 같은 요청에서 세션을 읽는다(getSessionUser 는 요청 단위 cache) — 조회가 늘지 않는다
+    const [announcements, officialPost, user] = await Promise.all([
         getHomeAnnouncements(locale),
         getOfficialXLatestPost(),
+        getUser(),
     ]);
     const homeHref = getLocalizedHref("/", locale);
     const musicHref = getLocalizedHref("/music", locale);
@@ -63,7 +66,7 @@ export default async function HomePage() {
                 </div>
                 <HomeSearch />
             </section>
-            <HomeDestinations />
+            <HomeDestinations isAuthenticated={Boolean(user)} />
             <div className="nl-home-updates">
                 <HomeAnnouncements items={announcements.list} />
                 <OfficialXPost post={officialPost} />

@@ -1,9 +1,12 @@
-import { subMonths } from "date-fns";
+import { subDays, subMonths } from "date-fns";
 
+import { analyticsDateKey } from "@/lib/analytics";
 import { deleteBlobStrict } from "@/lib/blob";
 import db from "@/lib/db";
 
 const RETENTION_MONTHS = 6;
+// 방문·API 통계의 날짜별 합계 보관 기간(2026-09-13 사용자 결정)
+const ANALYTICS_RETENTION_DAYS = 90;
 const BATCH_SIZE = 500;
 
 export interface PrivacyRetentionResult {
@@ -11,7 +14,29 @@ export interface PrivacyRetentionResult {
     feedbackDeleted: number;
     approvedExamRedacted: number;
     rejectedExamDeleted: number;
+    analyticsVisitorsDeleted: number;
+    analyticsSaltsDeleted: number;
+    analyticsCountsDeleted: number;
     failed: number;
+}
+
+// 방문 통계 — 방문자 해시와 그날의 무작위 값은 오늘(서울) 이전 것을 전부, 날짜별 합계는 90일이 지난 것을 지운다
+async function cleanAnalytics(now: Date, result: PrivacyRetentionResult) {
+    const today = analyticsDateKey(now);
+    const countsCutoff = analyticsDateKey(
+        subDays(now, ANALYTICS_RETENTION_DAYS)
+    );
+    try {
+        result.analyticsVisitorsDeleted = await db.$executeRaw`
+            DELETE FROM "analytics_visitors" WHERE "date" < ${today}::date`;
+        result.analyticsSaltsDeleted = await db.$executeRaw`
+            DELETE FROM "analytics_salts" WHERE "date" < ${today}::date`;
+        result.analyticsCountsDeleted = await db.$executeRaw`
+            DELETE FROM "analytics_daily_counts" WHERE "date" < ${countsCutoff}::date`;
+    } catch (error) {
+        result.failed += 1;
+        console.error("방문 통계 보관 만료 정리 실패", error);
+    }
 }
 
 export async function runPrivacyRetention(
@@ -55,6 +80,9 @@ export async function runPrivacyRetention(
         feedbackDeleted: 0,
         approvedExamRedacted: 0,
         rejectedExamDeleted: 0,
+        analyticsVisitorsDeleted: 0,
+        analyticsSaltsDeleted: 0,
+        analyticsCountsDeleted: 0,
         failed: 0,
     };
 
@@ -118,6 +146,8 @@ export async function runPrivacyRetention(
             );
         }
     }
+
+    await cleanAnalytics(now, result);
 
     return result;
 }

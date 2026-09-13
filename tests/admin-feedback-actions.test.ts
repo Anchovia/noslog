@@ -67,6 +67,7 @@ describe("관리자 피드백 처리", () => {
                 hasImage: true,
                 status: "open",
                 user: { id: 2, name: "noslog-user" },
+                arcade: null,
             },
         ]);
         expect(mocks.feedbackFindMany).toHaveBeenCalledWith({
@@ -79,10 +80,66 @@ describe("관리자 피드백 처리", () => {
                         nostalgia_name: true,
                     },
                 },
+                arcade: {
+                    select: {
+                        id: true,
+                        name: true,
+                        publicDetails: { select: { slug: true } },
+                    },
+                },
+                cabinet: { select: { label: true, position: true } },
             },
             orderBy: { createdAt: "desc" },
             take: 100,
         });
+    });
+
+    it("오락실 제보는 오락실·기체·제보 종류를 함께 넘긴다", async () => {
+        const createdAt = new Date("2026-09-12T00:00:00.000Z");
+        const user = { id: 2, username: "noslog-user", nostalgia_name: null };
+        mocks.feedbackFindMany.mockResolvedValue([
+            {
+                id: 8,
+                content: "우측 건반이 씹혀서 입력이 안 됩니다.",
+                imageUrl: null,
+                createdAt,
+                user,
+                arcade: {
+                    id: 1,
+                    name: "짱구게임장",
+                    publicDetails: { slug: "jjanggu" },
+                },
+                cabinet: { label: null, position: 1 },
+                arcadeReportType: "unavailable",
+            },
+            {
+                id: 9,
+                content: "월요일 영업시간이 바뀌었습니다.",
+                imageUrl: null,
+                createdAt,
+                user,
+                // 공개 정보가 아직 없는 오락실 — 주소는 id 로
+                arcade: { id: 3, name: "불광 오락타운", publicDetails: null },
+                cabinet: null,
+                arcadeReportType: "hours",
+            },
+        ]);
+
+        const reports = await listFeedbackReports("open");
+        expect(reports.map((report) => report.arcade)).toEqual([
+            {
+                name: "짱구게임장",
+                href: "/gamecenter/jjanggu",
+                cabinet: "2번기",
+                type: "기체 고장·이용 불가",
+            },
+            {
+                name: "불광 오락타운",
+                href: "/gamecenter/3",
+                cabinet: null,
+                type: "영업시간 변경",
+            },
+        ]);
     });
 
     it("접수된 피드백을 처리 완료로 변경한다", async () => {

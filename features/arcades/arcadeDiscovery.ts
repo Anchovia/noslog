@@ -6,6 +6,10 @@ import type {
     ArcadeBounds,
     ArcadeOrigin,
 } from "@/features/arcades/types/arcadeGeography";
+import {
+    ARCADE_WEEKDAYS,
+    normalizeArcadeBusinessHours,
+} from "@/lib/arcadeDetails";
 
 export function arcadeOpenState(
     arcade: PublicArcade,
@@ -98,19 +102,6 @@ export function arcadeTodayHours(arcade: PublicArcade, now: Date) {
     return arcade.hours.weekly[String(day) as keyof typeof arcade.hours.weekly];
 }
 
-/** 가장 최근 확인 시각 — 이용자 가동 확인과 관리자 검증 중 늦은 쪽 */
-export function arcadeLastVerifiedAt(arcade: PublicArcade) {
-    const candidates = [
-        arcade.lastCheckedAt,
-        arcade.cabinetVerifiedAt,
-        ...arcade.cabinets.map((cabinet) => cabinet.verifiedAt),
-    ].filter((value): value is string => Boolean(value));
-    if (!candidates.length) return null;
-    return candidates.reduce((latest, value) =>
-        value > latest ? value : latest
-    );
-}
-
 /** 며칠 전인지 — 0 은 오늘. 미래 시각은 0 으로 본다 */
 export function daysAgo(iso: string | null, now: Date) {
     if (!iso) return null;
@@ -145,7 +136,7 @@ export function arcadeScheduleHint(
     const state = arcadeOpenState(arcade, now);
     if (state === "unknown" || !today) return null;
     if (state === "open")
-        return { kind: "closes", time: formatArcadeTime(today.close % 1440) };
+        return { kind: "closes", time: formatArcadeClose(today.close) };
     return { kind: "opens", time: formatArcadeTime(today.open) };
 }
 
@@ -171,6 +162,87 @@ export function formatArcadePrice(
 
 export function formatArcadeTime(minutes: number) {
     return `${String(Math.floor(minutes / 60)).padStart(2, "0")}:${String(minutes % 60).padStart(2, "0")}`;
+}
+
+/** 마감 시각 — 자정은 24:00, 자정을 넘기면 다음 날 실제 시각(26:00 → 02:00) */
+export function formatArcadeClose(minutes: number) {
+    return formatArcadeTime(minutes === 1440 ? 1440 : minutes % 1440);
+}
+
+export type ArcadeDayHours = {
+    /** 오락실 현지 날짜 YYYY-MM-DD */
+    date: string;
+    /** 월요일 = 0 */
+    weekday: number;
+    month: number;
+    day: number;
+    today: boolean;
+    exception: boolean;
+    /** null = 휴무, undefined = 미확인 */
+    hours: { open: number; close: number } | null | undefined;
+};
+
+/**
+ * 오늘부터 7일 — 날짜별 예외가 먼저, 없으면 요일 기본값, 그것도 없으면 옛 영업시간 형식.
+ * 영업시간 정보가 전혀 없으면 null
+ */
+export function arcadeWeekHours(
+    arcade: PublicArcade,
+    now: Date
+): ArcadeDayHours[] | null {
+    const legacy = normalizeArcadeBusinessHours(arcade.legacyHours);
+    if (!arcade.hours && !legacy) return null;
+    let start: string;
+    try {
+        const parts = new Intl.DateTimeFormat("en-CA", {
+            timeZone: arcade.timeZone,
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+        }).formatToParts(now);
+        const values = Object.fromEntries(
+            parts.map(({ type, value }) => [type, value])
+        );
+        start = `${values.year}-${values.month}-${values.day}`;
+    } catch {
+        start = now.toISOString().slice(0, 10);
+    }
+    const minutes = (value: string) => {
+        const [hour, minute] = value.split(":").map(Number);
+        return hour * 60 + minute;
+    };
+    // 옛 형식은 「HH:MM」 이고 자정 넘김을 마감 < 개점으로 적는다
+    const legacyHours = (weekday: number) => {
+        const old = legacy?.weekly[ARCADE_WEEKDAYS[weekday].key];
+        if (!old) return undefined;
+        const open = minutes(old.open);
+        const close = minutes(old.close);
+        return { open, close: close <= open ? close + 1440 : close };
+    };
+    return Array.from({ length: 7 }, (_, offset) => {
+        const calendar = new Date(`${start}T12:00:00Z`);
+        calendar.setUTCDate(calendar.getUTCDate() + offset);
+        const date = calendar.toISOString().slice(0, 10);
+        const weekday = (calendar.getUTCDay() + 6) % 7;
+        const exception = Boolean(
+            arcade.hours && Object.hasOwn(arcade.hours.exceptions, date)
+        );
+        let hours: ArcadeDayHours["hours"] = exception
+            ? arcade.hours!.exceptions[date]
+            : arcade.hours?.weekly[
+                  String(weekday) as keyof typeof arcade.hours.weekly
+              ];
+        if (hours === undefined && !exception) hours = legacyHours(weekday);
+        return {
+            date,
+            weekday,
+            month: calendar.getUTCMonth() + 1,
+            day: calendar.getUTCDate(),
+            today: offset === 0,
+            exception,
+            hours,
+        };
+    });
 }
 
 const normalized = (value: string) =>
@@ -245,19 +317,13 @@ export function selectArcades(
                 if (db === null) return -1;
                 return da - db;
             };
-            const byVerified = () =>
-                (arcadeLastVerifiedAt(b) ?? "").localeCompare(
-                    arcadeLastVerifiedAt(a) ?? ""
-                );
             const chosen =
                 values.sort === "preferred"
                     ? (b.preferredCount ?? 0) - (a.preferredCount ?? 0) ||
                       byName
                     : values.sort === "distance"
                       ? byDistance() || byName
-                      : values.sort === "verified"
-                        ? byVerified() || byName
-                        : byName;
+                      : byName;
             // 검색어가 있으면 일치도가 먼저
             const byRelevance = relevance(b) - relevance(a);
             if (byRelevance) return byRelevance;

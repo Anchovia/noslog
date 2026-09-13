@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useEffectEvent, useRef, useState } from "react";
-import { CircleAlert, Minus, Plus } from "lucide-react";
+import * as Popover from "@radix-ui/react-popover";
+import { CircleAlert, createLucideIcon } from "lucide-react";
 import { useTranslations } from "@/components/i18n/localeProvider";
 import Button from "@/components/ui/Button";
+import { sendAnalytics } from "@/lib/analyticsClient";
 import { loadKakaoMaps } from "@/lib/kakaoMaps";
 import type { KakaoMapInstance, KakaoOverlay } from "@/lib/kakaoMaps";
 
@@ -21,6 +23,11 @@ import {
 // 핀 하나의 SVG — lucide map-pin 기하(24 상자). 채움 핀이라 아이콘 스트로크 규칙 밖
 const PIN_PATH =
     "M12 2C8.1 2 5 5.1 5 9c0 5.3 7 13 7 13s7-7.7 7-13c0-3.9-3.1-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z";
+// lucide circle-question-mark 에서 원을 뺀 물음표 — 둥근 버튼 배경이 원 역할을 한다
+const QuestionMark = createLucideIcon("question-mark", [
+    ["path", { d: "M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3", key: "1u773s" }],
+    ["path", { d: "M12 17h.01", key: "p32p05" }],
+]);
 
 /**
  * 오락실 지도 — 축소하면 범위 안 개수를 든 원(버블), 확대하면 오락실마다 핀.
@@ -33,7 +40,7 @@ export default function ArcadeDiscoveryMap({
     selectedId,
     onSelect,
     onSearchArea,
-    onExpand,
+    onStateChange,
     inlineError = false,
     focusLevel = 5,
     focusRequest = null,
@@ -44,7 +51,8 @@ export default function ArcadeDiscoveryMap({
     selectedId: number | null;
     onSelect: (id: number) => void;
     onSearchArea?: (bounds: ArcadeBounds) => void;
-    onExpand?: () => void;
+    /** 불러오는 중 · 준비 · 실패 — 목록 페이지가 지도가 떴을 때만 시트 배치를 쓴다 */
+    onStateChange?: (state: "loading" | "ready" | "error") => void;
     inlineError?: boolean;
     /** 오락실이 하나일 때 쓰는 확대 단계(상세 위치 지도는 더 가깝게) */
     focusLevel?: number;
@@ -74,6 +82,12 @@ export default function ArcadeDiscoveryMap({
     const select = useEffectEvent(onSelect);
     const currentArcades = useEffectEvent(() => arcades);
     const currentSelected = useEffectEvent(() => selectedId);
+    const reportState = useEffectEvent((next: "loading" | "ready" | "error") =>
+        onStateChange?.(next)
+    );
+    useEffect(() => {
+        reportState(state);
+    }, [state]);
 
     useEffect(() => {
         if (!container.current) return;
@@ -85,6 +99,8 @@ export default function ArcadeDiscoveryMap({
         loadKakaoMaps(appKey)
             .then((api) => {
                 if (disposed || !container.current) return;
+                // 외부 API 통계 — 지도를 실제로 연 횟수(카카오 쪽 호출량의 근사치)
+                sendAnalytics({ type: "event", name: "kakao-map" });
                 apiRef.current = api;
                 const map = new api.maps.Map(container.current, {
                     center: new api.maps.LatLng(36.2, 127.5),
@@ -355,32 +371,7 @@ export default function ArcadeDiscoveryMap({
                 </div>
             ) : (
                 <>
-                    <div className="nl-arcade-map__zoom">
-                        <button
-                            type="button"
-                            className="nl-icon-button"
-                            aria-label={t("arcades.zoomIn")}
-                            onClick={() =>
-                                mapRef.current?.setLevel(
-                                    Math.max(1, mapRef.current.getLevel() - 1)
-                                )
-                            }
-                        >
-                            <Plus className="nl-icon" aria-hidden />
-                        </button>
-                        <button
-                            type="button"
-                            className="nl-icon-button"
-                            aria-label={t("arcades.zoomOut")}
-                            onClick={() =>
-                                mapRef.current?.setLevel(
-                                    Math.min(14, mapRef.current.getLevel() + 1)
-                                )
-                            }
-                        >
-                            <Minus className="nl-icon" aria-hidden />
-                        </button>
-                    </div>
+                    {/* 확대·축소 버튼 없음 — 목록·상세 지도 모두 두 손가락(목록은 휠도)로 확대한다 */}
                     {pendingBounds && onSearchArea ? (
                         <button
                             className="nl-arcade-map__area nl-control"
@@ -395,33 +386,43 @@ export default function ArcadeDiscoveryMap({
                     ) : null}
                 </>
             )}
-            {onExpand && state === "ready" ? (
-                <button
-                    type="button"
-                    className="nl-arcade-map__expand nl-control"
-                    onClick={onExpand}
-                >
-                    {t("arcades.mapView")}
-                </button>
-            ) : null}
-            {onSearchArea ? (
-                <details
-                    hidden={inlineError && state === "error"}
-                    className="nl-arcade-map__legend nl-metadata"
-                >
-                    <summary>{t("arcades.legend")}</summary>
-                    <ul>
-                        {(
-                            [
-                                "arcades.legendPin",
-                                "arcades.legendBubble",
-                                "arcades.legendSelected",
-                            ] as const
-                        ).map((key) => (
-                            <li key={key}>{t(key)}</li>
-                        ))}
-                    </ul>
-                </details>
+            {/* 범례 — 오른쪽 아래 둥근 물음표 버튼, 누르면 버튼 위로 팝오버(바깥을 누르거나 Esc 로 닫힌다) */}
+            {onSearchArea && !(inlineError && state === "error") ? (
+                <Popover.Root>
+                    <Popover.Trigger asChild>
+                        <button
+                            type="button"
+                            className="nl-arcade-map__legend nl-icon-button"
+                            aria-label={t("arcades.legend")}
+                        >
+                            <QuestionMark className="nl-icon" aria-hidden />
+                        </button>
+                    </Popover.Trigger>
+                    <Popover.Portal>
+                        <Popover.Content
+                            side="top"
+                            align="end"
+                            sideOffset={8}
+                            collisionPadding={16}
+                            className="noslog-ui nl-arcade-map__legend-popover nl-body-secondary"
+                        >
+                            <strong className="nl-control">
+                                {t("arcades.legend")}
+                            </strong>
+                            <ul>
+                                {(
+                                    [
+                                        "arcades.legendPin",
+                                        "arcades.legendBubble",
+                                        "arcades.legendSelected",
+                                    ] as const
+                                ).map((key) => (
+                                    <li key={key}>{t(key)}</li>
+                                ))}
+                            </ul>
+                        </Popover.Content>
+                    </Popover.Portal>
+                </Popover.Root>
             ) : null}
         </div>
     );

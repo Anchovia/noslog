@@ -15,15 +15,18 @@ import type { PublicArcade } from "@/features/arcades/schemas/publicArcadeSchema
 import {
     arcadeCabinetSummary,
     arcadeDirections,
-    arcadeLastVerifiedAt,
     arcadeOpenState,
     arcadeScheduleHint,
     arcadeTodayHours,
-    daysAgo,
     formatArcadePrice,
+    formatArcadeClose,
     formatArcadeTime,
 } from "@/features/arcades/arcadeDiscovery";
-import { cabinetLabel, cabinetStateLabel } from "./arcadeCabinetRow";
+import {
+    cabinetLabel,
+    cabinetState,
+    CabinetStateText,
+} from "./arcadeCabinetRow";
 
 const DISCOVERY_KEYS = [
     "q",
@@ -32,10 +35,12 @@ const DISCOVERY_KEYS = [
     "available",
     "sort",
     "near",
-    "mode",
 ] as const;
 
-/** 기체 한 줄 — 「기체 2대 · 가동 2대 · 주의 1대」. 정보가 없으면 「기체 정보 없음 · 제보하기」 */
+/**
+ * 기체 한 줄 — 「기체 2대 · 주의 1대」. 가동 대수는 전체와 다를 때만(「기체 2대 · 가동 1대」) — 같으면 같은 말의 반복이다.
+ * 정보가 없으면 「기체 정보 없음 · 제보하기」
+ */
 export function ArcadeCabinetLine({ arcade }: { arcade: PublicArcade }) {
     const t = useTranslations();
     const summary = arcadeCabinetSummary(arcade);
@@ -46,37 +51,23 @@ export function ArcadeCabinetLine({ arcade }: { arcade: PublicArcade }) {
                 <span className="nl-muted"> · {t("arcades.reportInfo")}</span>
             </>
         );
-    if (!summary.known)
-        return <>{t("arcades.cabinetLineUnknown", { count: summary.total })}</>;
-    return (
-        <>
-            {t("arcades.cabinetLine", {
-                count: summary.total,
-                available: summary.available,
-            })}
-            {summary.caution
-                ? ` · ${t("arcades.cabinetLineCaution", { count: summary.caution })}`
-                : ""}
-        </>
-    );
+    // 대수만 — 가동·주의·미확인은 카드를 펼치면 기체마다 색 점과 상태로 보인다
+    return <>{t("arcades.cabinetTotal", { count: summary.total })}</>;
 }
 
 /**
- * 영업 상태 + 확인 신선도 한 줄 — 「영업 중 · 23:00까지 · 오늘 확인」.
- * 지금 시각(오락실 시간대) 기준 영업 상태가 먼저, 점도 영업 상태를 뜻한다. 시간 정보가 없으면 「영업시간 미확인」
+ * 영업 상태 한 줄 — 「영업 중 · 23:00까지」. 점도 영업 상태를 뜻한다.
+ * 영업시간을 모르면 「미확인」 한 단어 — 옆 정보가 오락실이라 무엇이 미확인인지는 읽힌다(스크린 리더에는 「영업시간」 을 붙인다).
+ * 확인 신선도(「N일 전 확인」)는 목록에서 뺐다 — 기체 줄마다 상세에 있다
  */
-export function ArcadeFreshnessLine({
+export function ArcadeOpenLine({
     arcade,
     now,
-    tail = null,
 }: {
     arcade: PublicArcade;
     now: Date;
-    /** 줄 끝에 붙는 보조 항목(선호 인원 등) — 점 뒤 한 덩어리로 흘러야 gap 이 안 생긴다 */
-    tail?: string | null;
 }) {
     const t = useTranslations();
-    const days = daysAgo(arcadeLastVerifiedAt(arcade), now);
     const open = arcadeOpenState(arcade, now);
     const hint = arcadeScheduleHint(arcade, now);
     const rest = [
@@ -85,12 +76,6 @@ export function ArcadeFreshnessLine({
                 ? t("arcades.closesAt", { time: hint.time })
                 : t("arcades.opensAt", { time: hint.time })
             : null,
-        days === null
-            ? t("arcades.neverChecked")
-            : days === 0
-              ? t("arcades.checkedToday")
-              : t("arcades.checkedAgo", { count: days }),
-        tail,
     ].filter(Boolean);
     return (
         <>
@@ -100,14 +85,17 @@ export function ArcadeFreshnessLine({
                 aria-hidden
             />
             <span>
+                {open === "unknown" ? (
+                    <span className="sr-only">{t("arcades.hours")} </span>
+                ) : null}
                 {t(
                     open === "open"
                         ? "arcades.open"
                         : open === "closed"
                           ? "arcades.closed"
-                          : "arcades.hoursUnverified"
+                          : "arcades.unknown"
                 )}
-                {` · ${rest.join(" · ")}`}
+                {rest.length ? ` · ${rest.join(" · ")}` : ""}
             </span>
         </>
     );
@@ -117,7 +105,6 @@ export function ArcadeFreshnessLine({
  * 결과 카드 — 누르면 상세로 가지 않고 아래로 펼쳐진다(지도는 페이지가 그 핀으로 옮긴다).
  * 펼친 칸에는 카드에 없는 것만: 주소 · 오늘 영업시간 · 요금 · 기체별 한 줄 + 자세히 보기·지도에서 보기·길찾기.
  * 상세로 가는 길은 「자세히 보기」 링크 하나 — 카카오맵 목록의 「상세보기」 와 같은 역할.
- * `preview` 는 전체 지도 모드(Compact)에서 지도 아래 띄우는 카드라 늘 펼친 채이고 접히지 않는다.
  */
 export default function ArcadeResultCard({
     arcade,
@@ -128,7 +115,6 @@ export default function ArcadeResultCard({
     onSelect,
     onToggle,
     onShowOnMap,
-    preview = false,
 }: {
     arcade: PublicArcade;
     distance: number | null;
@@ -136,10 +122,9 @@ export default function ArcadeResultCard({
     selected: boolean;
     expanded: boolean;
     onSelect: (id: number) => void;
-    onToggle?: (id: number) => void;
+    onToggle: (id: number) => void;
     /** 지도가 시트에 가려질 수 있는 폭에서만 넘긴다 — 없으면 버튼을 그리지 않는다 */
     onShowOnMap?: (id: number) => void;
-    preview?: boolean;
 }) {
     const t = useTranslations();
     const locale = useLocale();
@@ -148,7 +133,6 @@ export default function ArcadeResultCard({
     const photo = arcade.photos[0];
     const [failedPhoto, setFailedPhoto] = useState<string | null>(null);
     const saveQuery = useArcadeSession((state) => state.setDiscoveryQuery);
-    const open = expanded || preview;
     const summary = (
         <>
             <span className="nl-arcade-result__photo" aria-hidden>
@@ -189,17 +173,7 @@ export default function ArcadeResultCard({
                     ) : null}
                 </span>
                 <span className="nl-metadata nl-muted nl-arcade-result__status">
-                    <ArcadeFreshnessLine
-                        arcade={arcade}
-                        now={now}
-                        tail={
-                            arcade.preferredCount !== null
-                                ? t("arcades.preferredPeople", {
-                                      count: arcade.preferredCount,
-                                  })
-                                : null
-                        }
-                    />
+                    <ArcadeOpenLine arcade={arcade} now={now} />
                 </span>
             </span>
         </>
@@ -208,36 +182,32 @@ export default function ArcadeResultCard({
         <div
             className="nl-arcade-result"
             data-selected={selected || undefined}
-            data-expanded={open || undefined}
+            data-expanded={expanded || undefined}
             data-arcade-id={arcade.id}
             onPointerEnter={() => onSelect(arcade.id)}
         >
-            {preview ? (
-                <div className="nl-arcade-result__summary">{summary}</div>
-            ) : (
-                <button
-                    type="button"
-                    className="nl-arcade-result__summary"
-                    aria-expanded={open}
-                    aria-controls={panelId}
-                    onFocus={() => onSelect(arcade.id)}
-                    onClick={() => onToggle?.(arcade.id)}
-                >
-                    {summary}
-                    <ChevronDown
-                        className="nl-icon nl-arcade-result__chevron"
-                        aria-hidden
-                    />
-                </button>
-            )}
-            {open ? (
+            <button
+                type="button"
+                className="nl-arcade-result__summary"
+                aria-expanded={expanded}
+                aria-controls={panelId}
+                onFocus={() => onSelect(arcade.id)}
+                onClick={() => onToggle(arcade.id)}
+            >
+                {summary}
+                <ChevronDown
+                    className="nl-icon nl-arcade-result__chevron"
+                    aria-hidden
+                />
+            </button>
+            {expanded ? (
                 <ArcadeResultMore
                     id={panelId}
                     arcade={arcade}
                     now={now}
                     locale={locale}
                     detailHref={href(`/gamecenter/${arcade.slug}`)}
-                    onShowOnMap={preview ? undefined : onShowOnMap}
+                    onShowOnMap={onShowOnMap}
                     onOpenDetail={() => {
                         const current = new URLSearchParams(
                             window.location.search
@@ -292,7 +262,7 @@ function ArcadeResultMore({
                         <dt className="nl-muted">{t("arcades.today")}</dt>
                         <dd>
                             {today
-                                ? `${formatArcadeTime(today.open)}–${formatArcadeTime(today.close)}`
+                                ? `${formatArcadeTime(today.open)}–${formatArcadeClose(today.close)}`
                                 : t("arcades.dayOff")}
                         </dd>
                     </div>
@@ -316,8 +286,16 @@ function ArcadeResultMore({
                                     </span>
                                 ) : null}
                             </span>
-                            <span className="nl-arcade-result__machine-state">
-                                {cabinetStateLabel(cabinet, t)}
+                            {/* 상세 기체 줄과 같은 상태 표시 — 색 점 + 글자 */}
+                            <span
+                                className="nl-arcade-result__machine-state nl-arcade-cabinet__state"
+                                data-state={cabinetState(cabinet)}
+                            >
+                                <span
+                                    className="nl-arcade-cabinet__dot"
+                                    aria-hidden
+                                />
+                                <CabinetStateText cabinet={cabinet} />
                             </span>
                         </li>
                     ))}

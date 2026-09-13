@@ -4,6 +4,7 @@ const mocks = vi.hoisted(() => ({
     session: vi.fn(),
     arcade: vi.fn(),
     update: vi.fn(),
+    updateMany: vi.fn(),
     revalidate: vi.fn(),
     tag: vi.fn(),
     log: vi.fn(),
@@ -12,7 +13,7 @@ vi.mock("@/lib/session", () => ({ default: mocks.session }));
 vi.mock("@/lib/db", () => ({
     default: {
         arcade: { findFirst: mocks.arcade },
-        user: { update: mocks.update },
+        user: { update: mocks.update, updateMany: mocks.updateMany },
     },
 }));
 vi.mock("next/cache", () => ({
@@ -21,7 +22,10 @@ vi.mock("next/cache", () => ({
 }));
 vi.mock("@/lib/observability/server", () => ({ logServerError: mocks.log }));
 
-import { setPreferredArcade } from "@/app/(nevigation)/gamecenter/actions";
+import {
+    clearPreferredArcade,
+    setPreferredArcade,
+} from "@/app/(nevigation)/gamecenter/actions";
 import { regenerateSyncToken } from "@/app/(nevigation)/bookmarklet/action";
 import { createTranslator, getMessages } from "@/lib/i18n/messages";
 import { CACHE_TAGS, getUserProfileTag } from "@/lib/cacheTags";
@@ -118,6 +122,67 @@ describe("profile preference action boundaries", () => {
             expect(mocks.revalidate).toHaveBeenCalledWith(
                 `/${locale}/bookmarklet`
             );
+        }
+    );
+    it.each(["ko", "ja", "en"] as const)(
+        "requires login to clear the preference with %s copy",
+        async (locale) => {
+            mocks.session.mockResolvedValue({});
+            const t = createTranslator(getMessages(locale));
+            expect(await clearPreferredArcade(4, locale)).toEqual({
+                success: false,
+                message: t("onboarding.error.loginRequired"),
+            });
+            expect(mocks.updateMany).not.toHaveBeenCalled();
+        }
+    );
+    it.each([NaN, Infinity, 1.5, "4", null])(
+        "rejects malformed arcade %s before clearing",
+        async (input) => {
+            expect((await clearPreferredArcade(input as number)).success).toBe(
+                false
+            );
+            expect(mocks.updateMany).not.toHaveBeenCalled();
+        }
+    );
+    it("clears only when that arcade is still the session user's preference", async () => {
+        mocks.updateMany.mockResolvedValue({ count: 1 });
+        const t = createTranslator(getMessages("ja"));
+        expect(await clearPreferredArcade(4, "ja")).toEqual({
+            success: true,
+            message: t("arcades.preferredCleared"),
+        });
+        expect(mocks.updateMany).toHaveBeenCalledExactlyOnceWith({
+            where: { id: 7, preferred_arcade_id: 4 },
+            data: { preferred_arcade_id: null },
+        });
+        expect(mocks.update).not.toHaveBeenCalled();
+        expect(mocks.tag.mock.calls).toEqual([
+            [CACHE_TAGS.arcades],
+            [CACHE_TAGS.userProfiles],
+            [getUserProfileTag(7)],
+        ]);
+        expect(mocks.revalidate.mock.calls).toEqual([
+            ["/gamecenter"],
+            ["/ja/gamecenter"],
+            ["/profile/7"],
+            ["/profile/settings"],
+        ]);
+    });
+    it.each(["ko", "ja", "en"] as const)(
+        "normalizes clear errors in %s without invalidation",
+        async (locale) => {
+            mocks.updateMany.mockRejectedValue(
+                new Error("database unavailable")
+            );
+            const t = createTranslator(getMessages(locale));
+            expect(await clearPreferredArcade(4, locale)).toEqual({
+                success: false,
+                message: t("arcades.unsetPreferredFailed"),
+            });
+            expect(mocks.revalidate).not.toHaveBeenCalled();
+            expect(mocks.tag).not.toHaveBeenCalled();
+            expect(mocks.log).toHaveBeenCalledOnce();
         }
     );
     it("retains Korean fallback for an invalid token locale", async () => {

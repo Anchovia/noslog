@@ -115,8 +115,17 @@ function timeFromMinutes(value: number) {
     return `${String(Math.floor(minutes / 60)).padStart(2, "0")}:${String(minutes % 60).padStart(2, "0")}`;
 }
 
-// 관리자 요일 입력 → 공개 영업시간. 종료가 시작보다 이르거나 같으면 다음 날로 넘기고,
-// 체크하지 않은 요일은 휴무로 적는다. 체크한 요일이 하나도 없으면 미확인(null)
+// 관리자 시각 입력(HH:MM) → 공개 영업시간 한 칸(분). 종료가 시작보다 이르거나 같으면 다음 날로 넘긴다
+export function toPublicArcadeInterval(
+    open: string,
+    close: string
+): PublicHoursInterval {
+    const start = minutesFromTime(open);
+    const end = minutesFromTime(close);
+    return { open: start, close: end <= start ? end + MINUTES_PER_DAY : end };
+}
+
+// 관리자 요일 입력 → 공개 영업시간. 체크하지 않은 요일은 휴무로 적는다. 체크한 요일이 하나도 없으면 미확인(null)
 export function toPublicArcadeWeekly(
     weekly: ArcadeBusinessHours["weekly"]
 ): Record<string, PublicHoursInterval | null> | null {
@@ -124,18 +133,54 @@ export function toPublicArcadeWeekly(
     return Object.fromEntries(
         ARCADE_WEEKDAYS.map(({ key }, index) => {
             const day = weekly[key];
-            if (!day) return [String(index), null];
-            const open = minutesFromTime(day.open);
-            const close = minutesFromTime(day.close);
             return [
                 String(index),
-                {
-                    open,
-                    close: close <= open ? close + MINUTES_PER_DAY : close,
-                },
+                day ? toPublicArcadeInterval(day.open, day.close) : null,
             ];
         })
     );
+}
+
+// 날짜별 예외 한 줄 — 관리자 입력 형식. closed 면 그날 휴무, 아니면 open–close 영업
+export interface ArcadeHoursExceptionInput {
+    date: string;
+    closed: boolean;
+    open: string;
+    close: string;
+}
+
+// DB 에 저장된 공개 영업시간 JSON 의 날짜별 예외 → 관리자 입력 줄(날짜순)
+export function readPublicArcadeExceptions(
+    value: unknown
+): ArcadeHoursExceptionInput[] {
+    if (!value || typeof value !== "object" || Array.isArray(value)) return [];
+    const exceptions = (value as { exceptions?: unknown }).exceptions;
+    if (
+        !exceptions ||
+        typeof exceptions !== "object" ||
+        Array.isArray(exceptions)
+    )
+        return [];
+    const rows: ArcadeHoursExceptionInput[] = [];
+    for (const [date, day] of Object.entries(exceptions)) {
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) continue;
+        if (day === null) {
+            rows.push({ date, closed: true, open: "10:00", close: "00:00" });
+            continue;
+        }
+        const interval = day as Partial<PublicHoursInterval> | undefined;
+        if (
+            typeof interval?.open === "number" &&
+            typeof interval.close === "number"
+        )
+            rows.push({
+                date,
+                closed: false,
+                open: timeFromMinutes(interval.open),
+                close: timeFromMinutes(interval.close),
+            });
+    }
+    return rows.sort((a, b) => a.date.localeCompare(b.date));
 }
 
 // 공개 영업시간 → 관리자 요일 입력. 휴무·미확인 요일은 체크 해제로 돌아온다

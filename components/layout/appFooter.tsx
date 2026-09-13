@@ -1,8 +1,6 @@
-import { ExternalLink } from "lucide-react";
-import Link from "next/link";
-
 import { getLocalizedHref } from "@/lib/i18n/routing";
 import { getServerI18n } from "@/lib/i18n/server";
+import FooterLinks from "./footerLinks";
 
 export default async function AppFooter() {
     const { locale, t } = await getServerI18n();
@@ -10,21 +8,12 @@ export default async function AppFooter() {
     return (
         <footer className="nl-footer">
             <div className="nl-footer__content">
-                <div className="nl-footer__links nl-control">
-                    <Link href={getLocalizedHref("/privacy", locale)}>
-                        {t("footer.privacy")}
-                    </Link>
-                    <a
-                        href="https://github.com/Anchovia/noslog"
-                        aria-label={`GitHub · ${t("shell.externalLink")}`}
-                    >
-                        <span lang="en">GitHub</span>
-                        <ExternalLink aria-hidden />
-                    </a>
-                </div>
-                <p className="nl-footer__notice nl-body-secondary nl-muted">
-                    {t("shell.serviceNotice")}
-                </p>
+                <FooterLinks
+                    privacyHref={getLocalizedHref("/privacy", locale)}
+                    privacyLabel={t("footer.privacy")}
+                    externalLabel={t("shell.externalLink")}
+                    notice={t("shell.serviceNotice")}
+                />
             </div>
         </footer>
     );

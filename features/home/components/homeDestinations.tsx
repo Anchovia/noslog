@@ -1,5 +1,6 @@
 "use client";
 
+import { MessageSquare } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
 
@@ -8,6 +9,7 @@ import {
     useTranslations,
 } from "@/components/i18n/localeProvider";
 import { productDestinations } from "@/components/layout/destinations";
+import FeedbackDialog from "@/features/feedback/components/feedbackDialog";
 
 const destinationOrder = [
     "/music",
@@ -20,7 +22,11 @@ const destinationOrder = [
     "/bookmarklet",
 ];
 
-export default function HomeDestinations() {
+export default function HomeDestinations({
+    isAuthenticated,
+}: {
+    isAuthenticated: boolean;
+}) {
     const t = useTranslations();
     const href = useLocalizedHref();
     const navigation = useRef<HTMLElement>(null);
@@ -81,6 +87,27 @@ export default function HomeDestinations() {
                         </li>
                     );
                 })}
+                {/* 3열(672 미만)에서만 — 8칸이면 마지막 줄 셋째 칸이 비어 3×3 을 채운다.
+                    4열에서는 8칸이 두 줄로 꽉 차므로 넣지 않는다. 헤더 메뉴의 「피드백 · 신고」 와 같은 창을 연다 */}
+                <li className="nl-home-destinations__compact-only">
+                    <FeedbackDialog
+                        isAuthenticated={isAuthenticated}
+                        trigger={
+                            <button
+                                type="button"
+                                className="nl-home-tile nl-control"
+                            >
+                                <MessageSquare
+                                    className="nl-icon"
+                                    aria-hidden
+                                />
+                                <span className="nl-home-tile__label">
+                                    {t("home.tileFeedback")}
+                                </span>
+                            </button>
+                        }
+                    />
+                </li>
             </ul>
         </nav>
     );
