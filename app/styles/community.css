@@ -180,7 +180,8 @@
     justify-content: center;
     height: 48px;
     padding-inline: var(--nl-spacing-12);
-    border-radius: var(--nl-radius-control);
+    /* 사이가 떨어진 누르는 상자 다섯 개 — 누르는 칸 모서리 8 (2026-09-14) */
+    border-radius: var(--nl-radius-field);
     color: var(--nl-content-subdued);
     background: var(--nl-surface-sunken);
 }
@@ -289,10 +290,6 @@
     gap: var(--nl-spacing-8);
     padding-bottom: var(--nl-spacing-12);
     border-bottom: 1px solid var(--nl-border-divider);
-}
-.noslog-ui .nl-opinions__sort {
-    display: flex;
-    gap: var(--nl-spacing-8);
 }
 .noslog-ui .nl-opinions__list {
     display: flex;

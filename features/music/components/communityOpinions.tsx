@@ -4,6 +4,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { useEffect, useId, useRef, useState } from "react";
 import { useTranslations } from "@/components/i18n/localeProvider";
 import ActionButton from "@/components/ui/actionButton";
+import SortMenu from "@/components/ui/sortMenu";
 import { StatusMessage } from "@/components/ui/statusMessage";
 import { communityOpinionOptions } from "@/features/music/api/community";
 import type { OpinionPage } from "@/features/music/schemas/communitySchema";
@@ -74,25 +75,25 @@ export default function CommunityOpinions({
                                 query.data?.pages[0].total ?? initialData.total,
                         })}
                     </h2>
-                    <div className="nl-opinions__sort">
-                        {(["helpful", "newest"] as const).map((value) => (
-                            <ActionButton
-                                key={value}
-                                variant={sort === value ? "secondary" : "ghost"}
-                                aria-pressed={sort === value}
-                                onClick={() => {
-                                    setSort(value);
-                                    if (value === sort) void query.refetch();
-                                }}
-                            >
-                                {t(
-                                    value === "helpful"
-                                        ? "community.sortHelpful"
-                                        : "community.sortNewest"
-                                )}
-                            </ActionButton>
-                        ))}
-                    </div>
+                    {/* 목록 정렬 = 정렬 메뉴 하나 (필터·정렬 공통 문법 · 2026-09-14) */}
+                    <SortMenu
+                        label={t("discovery.sortLabel")}
+                        value={sort}
+                        options={[
+                            {
+                                value: "helpful",
+                                label: t("community.sortHelpful"),
+                            },
+                            {
+                                value: "newest",
+                                label: t("community.sortNewest"),
+                            },
+                        ]}
+                        onValueChange={(value) => {
+                            setSort(value);
+                            if (value === sort) void query.refetch();
+                        }}
+                    />
                 </div>
             </div>
             <div className="nl-opinions__list" ref={list}>
