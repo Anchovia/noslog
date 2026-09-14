@@ -6,6 +6,7 @@ import { useEffect, useEffectEvent, useId } from "react";
 import type { ReactNode } from "react";
 
 import { useTranslations } from "@/components/i18n/localeProvider";
+import IconButton from "@/components/ui/iconButton";
 
 export default function FullScreenDialog({
     open,
@@ -64,11 +65,14 @@ export default function FullScreenDialog({
                             </Dialog.Title>
                             <div className="nl-full-dialog__actions">
                                 {headerAction}
-                                <Dialog.Close
-                                    className="nl-icon-button"
-                                    aria-label={t("common.close")}
-                                >
-                                    <X className="nl-icon" aria-hidden />
+                                {/* 가장자리 닫기 — 아이콘 24 · 머리 오른쪽 패딩 8 (레이어 머리 광학 여백 결정) */}
+                                <Dialog.Close asChild>
+                                    <IconButton label={t("common.close")}>
+                                        <X
+                                            className="nl-icon nl-icon--large"
+                                            aria-hidden
+                                        />
+                                    </IconButton>
                                 </Dialog.Close>
                             </div>
                         </div>

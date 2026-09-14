@@ -18,6 +18,7 @@ import type {
 } from "@/components/music/musicDetailTypes";
 import ActionButton from "@/components/ui/actionButton";
 import { foundationButtonClass } from "@/components/ui/Button";
+import IconButton from "@/components/ui/iconButton";
 
 export default function MusicEntityHeader({
     music,
@@ -91,10 +92,8 @@ export default function MusicEntityHeader({
                         {music.localizedTitle ? (
                             <Popover.Root open={open} onOpenChange={setOpen}>
                                 <Popover.Trigger asChild>
-                                    <button
-                                        type="button"
-                                        className="nl-icon-button"
-                                        aria-label={t("detail.translation")}
+                                    <IconButton
+                                        label={t("detail.translation")}
                                         onMouseEnter={() => setOpen(true)}
                                         onFocus={(event) => {
                                             if (
@@ -110,7 +109,7 @@ export default function MusicEntityHeader({
                                             className="nl-icon"
                                             aria-hidden
                                         />
-                                    </button>
+                                    </IconButton>
                                 </Popover.Trigger>
                                 <Popover.Portal>
                                     <div className="noslog-ui">

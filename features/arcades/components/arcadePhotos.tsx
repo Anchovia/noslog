@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, Image as ImageIcon } from "lucide-react";
 import { useTranslations } from "@/components/i18n/localeProvider";
+import IconButton from "@/components/ui/iconButton";
 import ModalDialog from "@/components/ui/modalDialog";
 import type { PublicArcade } from "@/features/arcades/schemas/publicArcadeSchema";
 
@@ -89,7 +90,7 @@ export default function ArcadePhotos({
                     <div className="nl-arcade-photos__controls">
                         <button
                             type="button"
-                            className="nl-icon-button"
+                            className="nl-arcade-photos__nav"
                             aria-label={t("arcades.photoPrevious")}
                             onClick={() => advance(-1)}
                         >
@@ -97,7 +98,7 @@ export default function ArcadePhotos({
                         </button>
                         <button
                             type="button"
-                            className="nl-icon-button"
+                            className="nl-arcade-photos__nav"
                             aria-label={t("arcades.photoNext")}
                             onClick={() => advance(1)}
                         >
@@ -162,22 +163,18 @@ export default function ArcadePhotos({
                 </div>
                 {visible.length > 1 ? (
                     <div className="nl-arcade-photos__full-controls">
-                        <button
-                            type="button"
-                            className="nl-icon-button"
-                            aria-label={t("arcades.photoPrevious")}
+                        <IconButton
+                            label={t("arcades.photoPrevious")}
                             onClick={() => advance(-1)}
                         >
                             <ChevronLeft className="nl-icon" aria-hidden />
-                        </button>
-                        <button
-                            type="button"
-                            className="nl-icon-button"
-                            aria-label={t("arcades.photoNext")}
+                        </IconButton>
+                        <IconButton
+                            label={t("arcades.photoNext")}
                             onClick={() => advance(1)}
                         >
                             <ChevronRight className="nl-icon" aria-hidden />
-                        </button>
+                        </IconButton>
                     </div>
                 ) : null}
             </ModalDialog>

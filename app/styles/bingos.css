@@ -257,6 +257,8 @@
 .noslog-ui .nl-bingo-cell-detail__nav {
     display: inline-flex;
     margin-left: auto;
+    /* 오른쪽 끝 닫기는 면 없는 아이콘 버튼 — 버튼 안 여백((컨트롤 − 아이콘 20) / 2)만큼 당겨 잉크를 패딩 16 에 맞춘다(A17) */
+    margin-right: calc((var(--nl-icon-medium) - var(--nl-control-height)) / 2);
 }
 .noslog-ui .nl-bingo-cell-detail__actions {
     display: flex;

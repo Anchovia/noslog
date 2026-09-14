@@ -262,9 +262,6 @@
 .noslog-ui .nl-vote-contribution > .nl-community-actions {
     justify-content: flex-start;
 }
-.noslog-ui .nl-vote-distribution .nl-icon-button:disabled {
-    color: var(--nl-interaction-disabled-content);
-}
 .noslog-ui .nl-vote-form {
     display: flex;
     flex-direction: column;

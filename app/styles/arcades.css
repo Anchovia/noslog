@@ -308,6 +308,11 @@
 }
 /* 범례 — 오른쪽 아래 둥근 물음표 버튼(44). Compact 시트가 지도 아래 10 을 덮으므로 바닥 컨트롤은 24 위에 둔다 */
 .noslog-ui .nl-arcade-map__legend {
+    display: inline-flex;
+    width: 44px;
+    height: 44px;
+    align-items: center;
+    justify-content: center;
     bottom: var(--nl-spacing-24);
     right: var(--nl-spacing-8);
 }
@@ -837,6 +842,16 @@
     display: flex;
     color: var(--nl-content-on-media);
     background: var(--nl-surface-media-scrim);
+    border-radius: var(--nl-radius-control);
+}
+/* 사진 위 넘김 — 미디어 위 버튼이라 공용 아이콘 버튼과 따로 둔다(어두운 판 안 44 · 2026-09-14 부품 결정 ①) */
+.noslog-ui .nl-arcade-photos__nav {
+    display: inline-flex;
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
     border-radius: var(--nl-radius-control);
 }
 .noslog-ui .nl-arcade-photos__thumbnails {

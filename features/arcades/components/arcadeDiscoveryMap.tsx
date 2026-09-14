@@ -392,7 +392,7 @@ export default function ArcadeDiscoveryMap({
                     <Popover.Trigger asChild>
                         <button
                             type="button"
-                            className="nl-arcade-map__legend nl-icon-button"
+                            className="nl-arcade-map__legend"
                             aria-label={t("arcades.legend")}
                         >
                             <QuestionMark className="nl-icon" aria-hidden />

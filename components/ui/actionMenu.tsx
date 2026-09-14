@@ -4,6 +4,8 @@ import * as Popover from "@radix-ui/react-popover";
 import { Ellipsis } from "lucide-react";
 import { useRef, useState } from "react";
 
+import IconButton from "@/components/ui/iconButton";
+
 export default function ActionMenu({
     label,
     items,
@@ -15,12 +17,10 @@ export default function ActionMenu({
     const content = useRef<HTMLDivElement>(null);
     return (
         <Popover.Root open={open} onOpenChange={setOpen}>
-            <Popover.Trigger
-                className="nl-icon-button"
-                aria-label={label}
-                aria-haspopup="menu"
-            >
-                <Ellipsis className="nl-icon nl-icon--large" aria-hidden />
+            <Popover.Trigger asChild>
+                <IconButton label={label} aria-haspopup="menu">
+                    <Ellipsis className="nl-icon" aria-hidden />
+                </IconButton>
             </Popover.Trigger>
             <Popover.Portal>
                 <div className="noslog-ui">
