@@ -165,17 +165,7 @@
 .noslog-ui .nl-exam-chart-options a {
     width: 100%;
 }
-.noslog-ui .nl-exam-practice {
-    background: var(--nl-surface-surface);
-    border-radius: var(--nl-radius-container);
-    padding: 0;
-}
-.noslog-ui .nl-exam-practice > summary {
-    min-height: 48px;
-    padding: var(--nl-spacing-12) var(--nl-spacing-16);
-}
 .noslog-ui .nl-exam-practice > .nl-disclosure__body {
-    padding: 0 var(--nl-spacing-16) var(--nl-spacing-16);
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-12);

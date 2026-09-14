@@ -4,7 +4,6 @@ import { useEffect, useId, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import {
     ChevronDown,
-    ChevronUp,
     Clock,
     Coins,
     Copy,
@@ -352,17 +351,10 @@ export default function ArcadeDetailPage({
                                             ) : null}
                                         </span>
                                         <span className="nl-arcade-fact__tail">
-                                            {hoursOpen ? (
-                                                <ChevronUp
-                                                    className="nl-icon"
-                                                    aria-hidden
-                                                />
-                                            ) : (
-                                                <ChevronDown
-                                                    className="nl-icon"
-                                                    aria-hidden
-                                                />
-                                            )}
+                                            <ChevronDown
+                                                className="nl-icon nl-disclosure__chevron"
+                                                aria-hidden
+                                            />
                                         </span>
                                     </button>
                                 ) : (

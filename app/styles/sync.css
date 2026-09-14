@@ -74,13 +74,6 @@
     flex-direction: column;
     gap: var(--nl-spacing-4);
 }
-.noslog-ui .nl-sync-page .nl-disclosure > summary {
-    min-height: 52px;
-    padding-block: var(--nl-spacing-12);
-}
-.noslog-ui .nl-sync-page .nl-disclosure + .nl-disclosure {
-    border-top: 1px solid var(--nl-border-divider);
-}
 .noslog-ui .nl-sync-page .nl-disclosure__body {
     padding-bottom: var(--nl-spacing-16);
 }
@@ -202,12 +195,7 @@
     width: 100%;
 }
 .noslog-ui .nl-sync-page .nl-sync-guide-detail > summary {
-    min-height: 40px;
-    padding-block: var(--nl-spacing-8);
     color: var(--nl-content-subdued);
-}
-.noslog-ui .nl-sync-guide-detail .nl-disclosure__body {
-    padding-top: var(--nl-spacing-8);
 }
 .noslog-ui .nl-sync-page .nl-sync-columns {
     width: 100%;

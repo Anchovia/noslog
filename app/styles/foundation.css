@@ -490,6 +490,72 @@ html[data-theme="light"] .noslog-ui,
     box-shadow: inset 0 0 0 1px var(--nl-focus-ring);
 }
 
+/* 펼침 — 부품 결정 ③(2026-09-14). 화살표는 줄 끝 ∨ · 열리면 ∧(180°) · 20 · 들여쓰기 0.
+   구역 = 요약 줄 48 · 내용까지 16 / 보조(--compact) = 컨트롤 높이 · control 14/500 · 내용까지 8.
+   면: 흐름 속 펼침은 면 없이, 연달아 쌓이면 사이 1px 구분선 / 혼자 떠 있는 상자는 --card.
+   올림 = 줄 전체에 interaction/hover — 면 없는 줄은 좌우 12 를 넓혀 칠하고 글자 선은 그대로 둔다. */
+.noslog-ui .nl-disclosure {
+    min-width: 0;
+}
+.noslog-ui .nl-disclosure > summary {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+    min-height: 48px;
+    margin-inline: calc(var(--nl-spacing-12) * -1);
+    padding-inline: var(--nl-spacing-12);
+    border-radius: var(--nl-radius-container);
+    list-style: none;
+    cursor: pointer;
+}
+.noslog-ui .nl-disclosure > summary::-webkit-details-marker {
+    display: none;
+}
+.noslog-ui .nl-disclosure > summary > span:first-child {
+    flex: 1;
+    min-width: 0;
+}
+.noslog-ui .nl-disclosure > summary:hover {
+    background: var(--nl-interaction-hover);
+}
+.noslog-ui .nl-disclosure__body {
+    padding-top: var(--nl-spacing-16);
+}
+.noslog-ui .nl-disclosure--compact > summary {
+    min-height: var(--nl-control-height);
+}
+.noslog-ui .nl-disclosure--compact > .nl-disclosure__body {
+    padding-top: var(--nl-spacing-8);
+}
+.noslog-ui
+    .nl-disclosure:not(.nl-disclosure--card)
+    + .nl-disclosure:not(.nl-disclosure--card) {
+    border-top: 1px solid var(--nl-border-divider);
+}
+.noslog-ui .nl-disclosure--card {
+    border-radius: var(--nl-radius-container);
+    background: var(--nl-surface-surface);
+}
+.noslog-ui .nl-disclosure--card > summary {
+    margin-inline: 0;
+    padding-inline: var(--nl-spacing-16);
+}
+.noslog-ui .nl-disclosure--card > summary:hover {
+    background: none;
+}
+.noslog-ui .nl-disclosure--card:has(> summary:hover) {
+    background: var(--nl-interaction-hover);
+}
+.noslog-ui .nl-disclosure--card > .nl-disclosure__body {
+    padding-inline: var(--nl-spacing-16);
+    padding-bottom: var(--nl-spacing-16);
+}
+/* 화살표 회전 — 펼침 부품과 목록 줄(raw details · aria-expanded 버튼) 공통 */
+.noslog-ui details[open] > summary .nl-disclosure__chevron,
+.noslog-ui [aria-expanded="true"] .nl-disclosure__chevron {
+    transform: rotate(180deg);
+}
+
 .noslog-ui .nl-status {
     display: flex;
     align-items: center;

@@ -76,20 +76,9 @@
     background: var(--nl-surface-surface);
     border-radius: var(--nl-radius-container);
 }
-.noslog-ui .nl-privacy-contents summary {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--nl-spacing-12);
-    padding: var(--nl-spacing-12) var(--nl-spacing-16);
-    cursor: pointer;
-    list-style: none;
-}
-.noslog-ui .nl-privacy-contents summary::-webkit-details-marker {
-    display: none;
-}
-.noslog-ui .nl-privacy-contents details[open] summary svg {
-    transform: rotate(180deg);
+/* 목차 행이 자기 안쪽 여백(12/16)과 현재 위치 면을 카드 폭 전체로 가져서 본문 여백을 두지 않는다 */
+.noslog-ui .nl-privacy-contents__compact > .nl-disclosure__body {
+    padding: 0;
 }
 .noslog-ui .nl-privacy-contents ol {
     display: flex;

@@ -1,7 +1,8 @@
 "use client";
 
-import { ChevronDown } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+
+import Disclosure from "@/components/ui/disclosure";
 
 export default function PrivacyContents({
     title,
@@ -107,15 +108,16 @@ export default function PrivacyContents({
     ));
     return (
         <div className="nl-privacy-contents">
-            <details ref={disclosure} className="nl-privacy-contents__compact">
-                <summary className="nl-component-title">
-                    {title}
-                    <ChevronDown className="nl-icon" aria-hidden />
-                </summary>
+            <Disclosure
+                ref={disclosure}
+                className="nl-privacy-contents__compact"
+                card
+                title={title}
+            >
                 <nav aria-label={title}>
                     <ol>{links}</ol>
                 </nav>
-            </details>
+            </Disclosure>
             <nav className="nl-privacy-contents__wide" aria-label={title}>
                 <p className="nl-component-title">{title}</p>
                 <ol>{links}</ol>

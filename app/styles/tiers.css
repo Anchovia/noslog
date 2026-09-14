@@ -304,16 +304,6 @@
 .noslog-ui .nl-tier-weight__heading > span {
     white-space: nowrap;
 }
-.noslog-ui .nl-tier-guide-disclosure > .nl-disclosure__body {
-    padding-top: var(--nl-spacing-8);
-}
-.noslog-ui .nl-tier-guide-disclosure[open] > summary {
-    min-height: 40px;
-}
-.noslog-ui .nl-tier-guide-disclosure[open] > summary > svg {
-    width: 24px;
-    height: 24px;
-}
 .noslog-ui .nl-tier-weight__heading > div {
     display: flex;
     flex-direction: column;

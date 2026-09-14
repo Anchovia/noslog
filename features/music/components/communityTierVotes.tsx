@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown, ChevronRight } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { Fragment, useId, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "@/components/i18n/localeProvider";
@@ -90,11 +90,10 @@ export default function CommunityTierVotes({
                                                 </span>
                                             </>
                                         )}
-                                        {expanded ? (
-                                            <ChevronDown aria-hidden />
-                                        ) : (
-                                            <ChevronRight aria-hidden />
-                                        )}
+                                        <ChevronDown
+                                            className="nl-icon nl-disclosure__chevron"
+                                            aria-hidden
+                                        />
                                     </span>
                                 </>
                             );

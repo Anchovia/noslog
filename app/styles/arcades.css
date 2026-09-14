@@ -145,9 +145,6 @@
     flex-shrink: 0;
     color: var(--nl-content-subdued);
 }
-.noslog-ui .nl-arcade-result[data-expanded] .nl-arcade-result__chevron {
-    transform: rotate(180deg);
-}
 /* 펼침 칸 — 카드 안쪽 16 에 맞춘 구분선 아래 12 · 칸 끝 16 */
 .noslog-ui .nl-arcade-result__more {
     display: flex;
@@ -769,6 +766,15 @@
     height: 44px;
     margin-inline-end: calc(var(--nl-spacing-12) * -1);
     flex-shrink: 0;
+}
+/* 영업시간 펼침 줄 — 펼침 올림 규칙(줄 전체 면, 좌우 12 를 넓혀 칠하고 글자 선은 그대로) */
+.noslog-ui .nl-arcade-fact:has(> .nl-arcade-fact__action[aria-expanded]) {
+    margin-inline: calc(var(--nl-spacing-12) * -1);
+    padding-inline: var(--nl-spacing-12);
+    border-radius: var(--nl-radius-container);
+}
+.noslog-ui .nl-arcade-fact:has(> .nl-arcade-fact__action[aria-expanded]:hover) {
+    background: var(--nl-interaction-hover);
 }
 .noslog-ui .nl-arcade-fact__link {
     display: inline-flex;

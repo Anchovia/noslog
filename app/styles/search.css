@@ -155,24 +155,3 @@
 .noslog-ui .nl-select-option[data-disabled] {
     color: var(--nl-interaction-disabled-content);
 }
-.noslog-ui .nl-disclosure {
-    min-width: 0;
-}
-.noslog-ui .nl-disclosure > summary {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--nl-spacing-8);
-    min-height: 44px;
-    list-style: none;
-    cursor: pointer;
-}
-.noslog-ui .nl-disclosure > summary::-webkit-details-marker {
-    display: none;
-}
-.noslog-ui .nl-disclosure[open] > summary > svg {
-    transform: rotate(180deg);
-}
-.noslog-ui .nl-disclosure__body {
-    padding-top: var(--nl-spacing-16);
-}

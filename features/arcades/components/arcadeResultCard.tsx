@@ -196,7 +196,7 @@ export default function ArcadeResultCard({
             >
                 {summary}
                 <ChevronDown
-                    className="nl-icon nl-arcade-result__chevron"
+                    className="nl-icon nl-arcade-result__chevron nl-disclosure__chevron"
                     aria-hidden
                 />
             </button>

@@ -251,13 +251,6 @@
 .noslog-ui .nl-record-panel > .nl-detail-columns {
     gap: var(--nl-spacing-32);
 }
-.noslog-ui .nl-record-analysis > summary {
-    padding: var(--nl-spacing-12) 0;
-    min-height: 52px;
-}
-.noslog-ui .nl-record-analysis .nl-disclosure__body {
-    padding: var(--nl-spacing-12) 0 0;
-}
 .noslog-ui .nl-analysis-content {
     display: flex;
     flex-direction: column;
@@ -323,9 +316,15 @@
     align-items: center;
     justify-content: space-between;
     gap: var(--nl-spacing-8);
-    padding-block: var(--nl-spacing-12);
+    padding: var(--nl-spacing-12);
+    /* 펼침 올림 규칙 — 줄 전체 면, 좌우 12 를 넓혀 칠하고 글자 선은 그대로 */
+    margin-inline: calc(var(--nl-spacing-12) * -1);
+    border-radius: var(--nl-radius-container);
     list-style: none;
     cursor: pointer;
+}
+.noslog-ui .nl-recent-play:hover {
+    background: var(--nl-interaction-hover);
 }
 .noslog-ui .nl-recent-play::-webkit-details-marker {
     display: none;
