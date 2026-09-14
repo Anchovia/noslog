@@ -110,56 +110,7 @@
     gap: var(--nl-spacing-24);
     min-width: 0;
 }
-.noslog-ui .nl-area__tabs {
-    display: flex;
-    align-items: center;
-    box-shadow: inset 0 -1px var(--nl-border-divider);
-    align-self: flex-start;
-}
-.noslog-ui .nl-area__tab {
-    position: relative;
-    padding: var(--nl-spacing-12) var(--nl-spacing-16) 10px;
-    min-height: 42px;
-    white-space: nowrap;
-    color: var(--nl-content-subdued);
-}
-.noslog-ui .nl-area__tab[data-state="active"] {
-    color: var(--nl-content-default);
-    font-weight: var(--nl-type-weight-semibold);
-}
-.noslog-ui .nl-area__tab[data-state="active"]::after {
-    content: "";
-    position: absolute;
-    height: 2px;
-    background: var(--nl-content-default);
-    bottom: 0;
-    inset-inline: 0;
-}
-/* 상세 영역 셀렉트 = 입력칸과 같은 모양 (2026-09-14 B′) */
-.noslog-ui .nl-area__select {
-    width: 100%;
-    display: flex;
-    min-height: var(--nl-control-height);
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--nl-spacing-8);
-    padding-inline: var(--nl-spacing-12);
-    background: var(--nl-surface-surface);
-    box-shadow: inset 0 0 0 1px var(--nl-border-input);
-    border-radius: var(--nl-radius-field);
-}
-.noslog-ui .nl-area__select:hover {
-    box-shadow: inset 0 0 0 1px var(--nl-border-strong);
-}
-.noslog-ui .nl-area__select:focus-visible {
-    outline: none;
-    box-shadow:
-        inset 0 0 0 1px var(--nl-focus-ring),
-        0 0 0 var(--nl-spacing-4) var(--nl-state-halo);
-}
-.noslog-ui .nl-area__menu {
-    width: var(--radix-select-trigger-width);
-}
+/* 영역 탭 줄 = 공용 1단 밑줄 탭(`nl-tabs--primary`, foundation.css) */
 .noslog-ui .nl-area__panel {
     display: flex;
     flex-direction: column;

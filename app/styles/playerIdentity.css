@@ -198,42 +198,15 @@
     width: var(--nl-icon-medium);
     height: var(--nl-icon-medium);
 }
-.noslog-ui .nl-metric-switch {
-    display: flex;
-    flex-shrink: 0;
-    align-items: center;
-}
-.noslog-ui .nl-metric-switch__item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-end;
-    gap: var(--nl-spacing-8);
-    /* 옆 셀렉트·세그먼트와 같은 행 높이(control-height 44). 이전 42 는 패딩 합산 값 */
-    min-height: var(--nl-control-height);
-    padding: 0 var(--nl-spacing-12);
-    white-space: nowrap;
-}
-.noslog-ui .nl-metric-switch__indicator {
-    width: 100%;
-    height: 2px;
-}
-.noslog-ui .nl-metric-switch__item[aria-pressed="true"] {
-    font-weight: var(--nl-type-weight-semibold);
-}
-.noslog-ui
-    .nl-metric-switch__item[aria-pressed="true"]
-    .nl-metric-switch__indicator {
-    background: var(--nl-border-strong);
-}
-.noslog-ui .nl-metric-switch__item:hover {
-    background: var(--nl-interaction-hover);
+/* 메트릭 탭 = 공용 2단 밑줄 탭(`nl-tabs`, foundation.css). 여기엔 좁은 칸의 여백 · 짧은 라벨 전환만 둔다 */
+.noslog-ui .nl-tabs .nl-metric-switch__item {
+    padding-inline: var(--nl-spacing-12);
 }
 .noslog-ui .nl-metric-switch__full {
     display: none;
 }
 @container metric-controls (min-width: 396px) {
-    .noslog-ui .nl-metric-switch__item {
+    .noslog-ui .nl-tabs .nl-metric-switch__item {
         padding-inline: var(--nl-spacing-16);
     }
     .noslog-ui .nl-metric-switch__full {

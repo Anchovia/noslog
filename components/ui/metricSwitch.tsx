@@ -35,8 +35,9 @@ export default function MetricSwitch<Value extends string>({
         buttons[next]?.focus();
     }
     return (
+        // 2단 밑줄 탭 — 모양은 공용 `nl-tabs`, 의미는 전환 버튼 묶음(aria-pressed) · 부품 결정 ②
         <div
-            className="nl-metric-switch"
+            className="nl-tabs nl-metric-switch"
             role="group"
             aria-label={label}
             onKeyDown={moveFocus}
@@ -45,7 +46,7 @@ export default function MetricSwitch<Value extends string>({
                 <button
                     key={option.value}
                     type="button"
-                    className="nl-metric-switch__item nl-control"
+                    className="nl-tabs__item nl-metric-switch__item nl-control"
                     aria-label={option.label}
                     aria-pressed={value === option.value}
                     onClick={() => onValueChange(option.value)}
@@ -56,7 +57,6 @@ export default function MetricSwitch<Value extends string>({
                     <span className="nl-metric-switch__short" aria-hidden>
                         {option.shortLabel}
                     </span>
-                    <span className="nl-metric-switch__indicator" aria-hidden />
                 </button>
             ))}
         </div>

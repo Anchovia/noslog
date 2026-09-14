@@ -18,7 +18,7 @@ import MusicRecordPanel from "./musicRecordPanel";
 import MusicRankingPanel from "./musicRankingPanel";
 import MusicCommunityPanel from "./musicCommunityPanel";
 import ActionButton from "@/components/ui/actionButton";
-import AdaptiveAreaSwitcher from "@/components/ui/adaptiveAreaSwitcher";
+import AreaTabs from "@/components/ui/areaTabs";
 import ResultState from "@/components/ui/resultState";
 import { StatusMessage } from "@/components/ui/statusMessage";
 import {
@@ -160,7 +160,7 @@ export default function MusicDetailPage({
                     change(difficulty, selection.tab)
                 }
             />
-            <AdaptiveAreaSwitcher
+            <AreaTabs
                 value={selection.tab}
                 onValueChange={(tab) => change(selection.difficulty, tab)}
                 label={t("detail.area")}
@@ -237,7 +237,7 @@ export default function MusicDetailPage({
                         music={data}
                     />
                 ) : null}
-            </AdaptiveAreaSwitcher>
+            </AreaTabs>
         </PageContainer>
     );
 }

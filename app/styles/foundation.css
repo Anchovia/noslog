@@ -437,6 +437,59 @@ html[data-theme="light"] .noslog-ui,
     height: var(--nl-icon-medium);
 }
 
+/* 밑줄 탭 — 한 모양 두 단계(부품 결정 ② · 2026-09-14). 선택 = 글자 진하게 + 2px 밑줄, 안 선택 = 흐린 글자, 올림 = 글자만 밝게.
+   1단 `--primary`(페이지 안 큰 구역 · 악곡 상세): 높이 48 · 콘텐츠 폭 전체 1px 구분선 · 넘치면 가로 스크롤.
+   2단(같은 목록의 기준 전환 · 랭킹/프로필 메트릭): 구분선 없음 · 컨트롤 높이 — 같은 줄 셀렉트와 맞춘다 */
+.noslog-ui .nl-tabs {
+    position: relative;
+    display: flex;
+    min-width: 0;
+    flex-shrink: 0;
+}
+.noslog-ui .nl-tabs--primary {
+    box-shadow: inset 0 -1px var(--nl-border-divider);
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+.noslog-ui .nl-tabs--primary::-webkit-scrollbar {
+    display: none;
+}
+.noslog-ui .nl-tabs__item {
+    position: relative;
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--nl-control-height);
+    padding-inline: var(--nl-spacing-16);
+    white-space: nowrap;
+    color: var(--nl-content-subdued);
+}
+.noslog-ui .nl-tabs--primary .nl-tabs__item {
+    min-height: 48px;
+}
+.noslog-ui .nl-tabs__item:hover {
+    color: var(--nl-content-default);
+}
+.noslog-ui .nl-tabs__item:is([data-state="active"], [aria-pressed="true"]) {
+    color: var(--nl-content-default);
+    font-weight: var(--nl-type-weight-semibold);
+}
+.noslog-ui
+    .nl-tabs__item:is([data-state="active"], [aria-pressed="true"])::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 2px;
+    background: var(--nl-content-default);
+}
+/* FOCUS-1B — 탭 자신의 1px 안쪽 경계 */
+.noslog-ui .nl-tabs__item:focus-visible {
+    outline: none;
+    box-shadow: inset 0 0 0 1px var(--nl-focus-ring);
+}
+
 .noslog-ui .nl-status {
     display: flex;
     align-items: center;
