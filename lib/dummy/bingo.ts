@@ -90,7 +90,7 @@ export const bingoCell = [
         id: 6,
         position: 6,
         bingo_id: 1,
-        challenge: "글리산도 · ◆Just · 누적200회↑",
+        challenge: "글리산도 · ◆JUST · 누적200회↑",
     },
     {
         id: 7,

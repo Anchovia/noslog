@@ -9,15 +9,20 @@ const BINGO_TERMS: Record<string, MessageKey> = {
     테누토: "bingo.term.tenuto",
     글리산도: "bingo.term.glissando",
     트릴: "bingo.term.trill",
-    "◆Just": "bingo.term.sjust",
+    "◆JUST": "bingo.term.sjust",
 } as const;
+
+// DB 미션 문구에는 「◆Just」 가 남아 있다 — 대소문자를 가리지 않고 찾고, 보여 줄 때는 정해 둔 표기 「◆JUST」 로 쓴다(2026-09-14)
+const canonicalTerms = new Map(
+    Object.keys(BINGO_TERMS).map((term) => [term.toLowerCase(), term])
+);
 
 const termPattern = new RegExp(
     `(${Object.keys(BINGO_TERMS)
         .sort((a, b) => b.length - a.length)
         .map((term) => term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
         .join("|")})`,
-    "g"
+    "gi"
 );
 
 function BingoTerm({ term }: { term: keyof typeof BINGO_TERMS }) {
@@ -34,16 +39,12 @@ function BingoTerm({ term }: { term: keyof typeof BINGO_TERMS }) {
 }
 
 export default function BingoTermHelp({ text }: { text: string }) {
-    return text
-        .split(termPattern)
-        .map((part, index) =>
-            part in BINGO_TERMS ? (
-                <BingoTerm
-                    key={`${part}-${index}`}
-                    term={part as keyof typeof BINGO_TERMS}
-                />
-            ) : (
-                <Fragment key={`${part}-${index}`}>{part}</Fragment>
-            )
+    return text.split(termPattern).map((part, index) => {
+        const term = canonicalTerms.get(part.toLowerCase());
+        return term ? (
+            <BingoTerm key={`${part}-${index}`} term={term} />
+        ) : (
+            <Fragment key={`${part}-${index}`}>{part}</Fragment>
         );
+    });
 }

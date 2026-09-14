@@ -319,8 +319,8 @@ export const enMessages = {
     "music.filter.pianist": "Pianist",
     "music.filter.judgement": "Judgement",
     "music.filter.recent30": "Last 30 days",
-    "music.filter.missNear": "Miss/Near 5%+",
-    "music.filter.sjustLow": "S-Just below 85%",
+    "music.filter.missNear": "MISS/NEAR 5%+",
+    "music.filter.sjustLow": "◆JUST below 85%",
     "music.filter.recentFast": "Recent FAST",
     "music.filter.recentSlow": "Recent SLOW",
     "music.filter.weakNotes": "Weak Note Types",
@@ -707,7 +707,7 @@ export const enMessages = {
     "bingo.term.trill":
         "A note played by rapidly alternating between adjacent notes.",
     "bingo.term.sjust":
-        "The highest Just judgement, awarded for extremely accurate timing.",
+        "The highest JUST judgement, awarded for extremely accurate timing.",
     "exams.title": "Exams",
     "exams.event.kac": "The {edition} KAC Special Exam",
     "exams.event.virtuosity": "Virtuosity Special Exam {year}{mode}",

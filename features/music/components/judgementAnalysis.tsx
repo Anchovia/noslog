@@ -6,13 +6,20 @@ import type { MessageKey } from "@/components/i18n/localeProvider";
 import type { MusicDetailProps } from "@/components/music/musicDetailTypes";
 import { Checkbox } from "@/components/ui/checkbox";
 import Disclosure from "@/components/ui/disclosure";
+import { judgementLabels as marks } from "@/components/ui/judgementMarker";
 import {
     peerJudgementKeys,
     peerNoteRateKeys,
 } from "@/lib/music/peerScoreComparison";
 import PerformanceChart from "./performanceChart";
 
-const judgementLabels = ["S-Just", "Just", "Good", "Miss", "Near"];
+const judgementLabels = [
+    marks.sjust,
+    marks.just,
+    marks.good,
+    marks.miss,
+    marks.near,
+];
 const noteLabels: MessageKey[] = [
     "music.filter.standard",
     "music.filter.tenuto",
