@@ -144,6 +144,10 @@
 .noslog-ui .nl-select-option[data-highlighted] {
     background: var(--nl-interaction-hover);
 }
+/* 마우스로 연 목록은 선택 항목에 흰 1px 을 그리지 않는다 — 키보드 위치 표시는 키보드일 때만(M2 · lib/inputModality) */
+:root[data-input="pointer"] .noslog-ui .nl-select-option:focus-visible {
+    outline: none;
+}
 .noslog-ui .nl-select-option[data-state="checked"] {
     background: var(--nl-interaction-menu-set);
     font-weight: var(--nl-type-weight-semibold);

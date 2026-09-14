@@ -7,6 +7,7 @@ import type { KeyboardEvent, ReactNode } from "react";
 
 import { useTranslations } from "@/components/i18n/localeProvider";
 import ActionButton from "@/components/ui/actionButton";
+import "@/lib/inputModality";
 
 export interface SortMenuOption<Value extends string> {
     value: Value;

@@ -8,6 +8,7 @@ import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import { changeLocale } from "@/app/(nevigation)/settings/actions";
 import { PROFILE_LANGUAGES } from "@/features/profile/schemas/profileSettingsSchema";
 import { getLocalizedHref, isLocale } from "@/lib/i18n/routing";
+import "@/lib/inputModality";
 
 export default function AuthLanguage() {
     const locale = useLocale();

@@ -187,6 +187,10 @@
     outline: none;
     box-shadow: inset 0 0 0 1px var(--nl-focus-ring);
 }
+/* 마우스로 연 메뉴는 첫 항목에 흰 1px 을 그리지 않는다 — 셀렉트 목록과 같은 규칙(lib/inputModality) */
+:root[data-input="pointer"] .noslog-ui .nl-sort-menu__item:focus-visible {
+    box-shadow: none;
+}
 .noslog-ui .nl-sort-menu__item:disabled {
     color: var(--nl-interaction-disabled-content);
 }

@@ -7,6 +7,7 @@ import { useId } from "react";
 import type { ReactNode } from "react";
 
 import useMediaQuery from "@/lib/hooks/useMediaQuery";
+import "@/lib/inputModality";
 
 export default function AdaptiveAreaSwitcher<Value extends string>({
     value,
