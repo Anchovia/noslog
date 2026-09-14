@@ -21,10 +21,10 @@ retained. No unused-file warning independently authorizes deletion. Chart viewer
 editor and administrator source directories have no changes in the current diff.
 The legacy viewer shell check passes, but actual renderer/editor execution cannot
 be verified without a published local chart; the local account has no Admin access.
-These runtime limitations remain explicit in the evidence log.
+These runtime limitations were recorded in the former evidence log, removed on
+2026-09-14 with the other Figma-era documents (see Git history).
 
-Current implementation verification and remaining caveats are maintained in
-[the implementation evidence log](./noslog-v2-implementation-verification.md).
+Verification now follows the 「확인」 section of the [design guide](./design/README.md).
 The dated results below describe their historical maintenance scopes only.
 
 ## Historical maintenance baseline

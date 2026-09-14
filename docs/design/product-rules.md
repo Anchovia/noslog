@@ -1,10 +1,9 @@
 # NosLog product rules
 
 Current behavioral baseline, consolidated on 2026-09-08. This preserves important
-rules that cannot be inferred from Figma pictures. It does not define layouts,
+rules that cannot be inferred from the screen. It does not define layouts,
 create new features or certify implementation completeness. Presentation belongs
-to the [implementation contract](./README.md) and current Figma. The latest explicit
-user decision wins. For detailed predicates, payloads and edge cases, inspect the
+to the [design guide](./README.md). The latest explicit user decision wins. For detailed predicates, payloads and edge cases, inspect the
 linked domain implementation and its tests; do not reconstruct behavior from an
 old design-stage checklist. Changes to material behavior require a user decision.
 
@@ -159,7 +158,7 @@ old design-stage checklist. Changes to material behavior require a user decision
   NOS reward conditions are not proof that an in-game reward was received.
 - Preserve current five catalogue filters (`all`, `progress`, `unlocked`, `full`,
   `chance`) and three sorts (`recent`, `progress`, release order). Their contents
-  follow the user's explicit override, not a conflicting Figma filter illustration.
+  follow the user's explicit override.
 - Confirm reset for the selected board, clearing only that user's checks on that
   board. Preserve other boards and shared definitions. Do not add attempt history,
   official verification or shared-progress claims.

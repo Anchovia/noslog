@@ -1,91 +1,48 @@
 # AGENTS.md
 
-## Product and current stage
+NosLog — NOSTALGIA 비공식 기록 · 랭킹 · 아카이브 서비스. 이 파일이 모든 에이전트의 작업 규칙 원본이다.
+짧게 유지한다. 디자인 규칙은 여기 쓰지 않고 가이드에만 쓴다.
 
-NosLog is an unofficial NOSTALGIA records, ranking and archive application.
-The user has authorized production implementation and verification of NosLog 2.0.
-The previous design-guide stage is complete; do not restore its research gates,
-PDF milestones, old checklists or design-only implementation prohibition.
+## 무엇을 기준으로 하나
 
-## Authority
+1. 사용자의 최신 결정
+2. [디자인 가이드](docs/design/README.md) — 토큰 · 레이아웃 · 부품 · 페이지 규칙 · 확인 방법. 이유는 [결정 기록](docs/design/decisions.md)
+3. [기능 규칙](docs/design/product-rules.md) — 화면만으로 알 수 없는 동작 · 데이터 의미
+4. 지금 코드와 테스트 · [README](README.md)(설치 · 배포) · [코드 스타일](docs/code-style.md)
 
-1. The user's latest explicit decision.
-2. This file for process, scope and preservation boundaries.
-3. `docs/design/README.md` for the common layout, responsive modes, visual-source
-   precedence, fonts, shared implementation and verification contract.
-4. Current Figma `NosLog v2.0.0` (`cVbWCxhkfxFfHmAKLCyKrD`), pages P1–P16 and
-   components C1–C8, for visuals within that common-layout contract.
-5. `docs/design/product-rules.md` for the retained behavioral/data baseline.
-6. `README.md` for setup, product, deployment and privacy; `docs/code-style.md`
-   for the existing Jeongbiseo/Fit-again-based code conventions.
+**Figma, Z1, 옛 브리프 · 핸드오프 · 감사 문서 · PDF, 레거시 NOSTORY 는 폐기됐다.** 읽지도 쓰지도 인용하지도 않는다.
+git 기록에서 옛 문서나 「남은 일」 을 되살리지 않는다(사용자가 명시적으로 요청할 때만).
 
-Z1 is decision history, not a page to implement. Old numbered briefs, handoffs,
-Foundation/provenance records, audits, specimens and PDF are retired. Their old
-Approved labels, frame widths and pending items cannot override current rules.
-Do not recover pending work or visual authority from Git history/deleted documents
-unless the user explicitly asks for historical evidence. Legacy NOSTORY is not
-current authority. Keep the two current design documents in English; KO/JA/EN
-remain required product locales.
+## 사용자 규칙
 
-## Preservation boundaries
+- 답은 한국어.
+- **git 은 사용자가 한다** — 커밋 · 푸시 · 스테이징 · 브랜치 · PR 모두. 상태 조회만 한다.
+  작업이 끝나면 커밋 제목(영어 type + 한국어 설명, 예 `fix: 악곡 상세 반응형 전환 기준 통일`)과 묶음별 `git add` 명령을 준다.
+- **운영 DB 에 쓰지 않는다.** 사용자가 켜 둔 localhost:3000 도 운영 DB 를 쓴다. 읽기 조회는 괜찮다.
+  DB 를 고쳐야 하면 확인용 `SELECT` · 수정 `UPDATE` · 확인 쿼리를 사용자에게 준다(사용자가 Neon 에서 실행).
+  e2e 는 로컬 테스트 DB 에서만 돌린다.
+- 로그인은 사용자가 한다. 인증을 우회하지 않는다. 로그인 상태로 검수할 때 저장 · 제출 · 삭제를 누르지 않는다.
+- 개발 서버는 사용자가 켜 둔 localhost:3000 을 쓴다.
+- 커밋되지 않은 사용자 작업과 관계없는 파일을 건드리지 않는다.
 
-The existing chart viewer and chart editor in their entirety are locked exceptions:
+## 손대지 않는 곳
 
-- pages, DOM shells, controls, labels, accessibility, responsive containment;
-- PixiJS/WebGL Falling renderer and Canvas Full-sheet renderer;
-- notes, left/right-hand palettes, geometry, animation, audio synchronization;
-- chart mathematics, editor rendering model, histories, import/export and snapshots.
+- 채보 에디터(`/admin/music/*/pattern`)와 관리자 화면(`/admin/*`)은 재설계하지 않는다. 기능에 필요한 칸만 기존 모양으로 더한다.
+- 공개 채보 뷰어(`/music/*/*/pattern`)는 셸과 조작부만 일반 규칙을 따른다(2026-09-10).
+  캔버스 — 낙하형 스테이지 · 피아노 · 악보 열 · 손 색 · 채보 계산 · 오디오 동기화 — 는 그대로 둔다.
+- 음원(MP3)은 사용자 브라우저 안에서만. 올리거나 저장하지 않는다.
+- 기존 기록 · 랭킹 · 아카이브 · 작성 기능과 데이터 의미를 바꾸지 않는다.
 
-Do not redesign, recolor, restyle, reorganize, replace, migrate or create a 2.0
-variant of any part of these experiences. Ordinary Foundation, layout, icon,
-motion and accessibility redesign rules do not apply inside them. Only an explicit
-user decision reopening the whole exception or a precisely named sub-scope permits
-changes. Preserve `/admin/*` as well. Ordinary music/chart discovery and Music
-Detail remain in scope; their presence does not reopen the actual viewer/editor.
+## 일하는 방식
 
-Keep MP3/audio files local to the user's browser, never uploaded to NosLog storage
-or database. Preserve existing records, rankings, archive and authoring functions.
-
-## Working process
-
-- Before responding to a project task, reopen this root AGENTS.md completely.
-- Before planning/editing, read root README.md. Before UI work, read the current
-  implementation contract. Inspect repository status and existing changes before
-  editing; preserve user work and unrelated files.
-- Use the existing stack, routes, global styles and shared components. Establish
-  common behavior at its shared source before page-specific composition. Do not
-  create another competing layout system or copy raw per-page Figma export CSS.
-- Follow the latest dark-only and unsplit Pretendard JP decisions in the contract.
-  Do not infer light-theme work from old documentation.
-- Inspect current code, tests, Figma and the actual browser before deciding a
-  missing requirement. Do not ask the user for facts the repository can answer.
-  Existing authorization persists; routine repairs do not require repeated approval.
-- The user decides material product/design changes. Do not invent behavior or
-  silently resolve an unresolved material conflict. Complete the concrete reviewable
-  proposal before asking. Research/observations are not approval to change behavior.
-- Update the one current contract in place when an approved common rule changes,
-  then align code and regression expectations. Never append conflicting normative
-  rules to another document.
-- Prefer the already running localhost:3000 server. Ask the user to sign in when
-  needed; do not bypass authentication. Keep test data confined to the local test DB.
-- Implement small reviewable units and verify each meaningful UI unit in the browser.
-  Check 320 CSS px reflow, representative mobile/intermediate/desktop, affected
-  boundaries, resizing and KO/JA/EN. Use actual viewport/DOM measurements; do not
-  infer CSS pixels from Retina screenshots. Follow the full validation contract.
-- Run relevant lint, typecheck, tests and build. Static checks do not substitute for
-  browser interaction or visual comparison. Investigate failures, distinguish
-  pre-existing failures from regressions, and own debugging through verification.
-- Report actual scope, evidence and caveats. Do not call a page suite complete from
-  isolated checks or claim a percentage without an approved denominator. Historical
-  verification logs are dated evidence, not current work or layout authority.
-
-## Git ownership
-
-The user owns commits, pushes, branch creation/switching and pull requests. Do not
-perform them without explicit authorization for that exact operation. Inspect branch
-and upstream state read-only when needed; do not pull, merge, rebase or reset history.
-
-After the relevant checks pass, report scope, verification, caveats and a Conventional
-Commit title with an English type and Korean description, e.g.
-`fix: 악곡 상세 반응형 전환 기준 통일`. Do not imply unrelated unverified changes are
-ready to commit. Preserve current uncommitted work during documentation cleanup.
+- 시작할 때 이 파일과 디자인 가이드를 읽고, `git status` 로 현재 변경을 확인한다.
+- 리포지토리로 알 수 있는 사실은 묻지 않고 코드 · 테스트 · 실제 브라우저로 확인한다.
+- **가이드에 없는 시각 · 동작 결정은 만들지 않는다.** 비교 시안을 그려 보여 주고, 추천 하나를 표시하고, 사용자가 고른다.
+  근거는 실측과 공식 문서로 대고, 확인하지 못한 것은 「미확인」 이라고 쓴다. 인용을 결론에 끼워 맞추지 않는다.
+- 사용자가 고른 안을 임의로 절충하지 않는다. 사용자가 지적한 범위만 고치고, 넓힐 때는 먼저 묻는다.
+- 가이드의 값 밖 숫자 · 새 색 · 새 움직임이 필요해 보이면 멈추고 묻는다.
+- 공통 규칙은 공용 소스(`app/styles/tokens.css` · `foundation.css` · `components/ui`)에서 고친다. 페이지에서 공용 부품 규격을 덮어쓰지 않는다.
+- 결정이 나면 같은 작업에서 코드 → 가이드 해당 절 → `decisions.md` 한 줄 → 테스트 기대값을 맞춘다.
+- 작게 나눠 구현하고, 바꾼 화면은 [가이드 「확인」 절](docs/design/README.md)대로 잰다.
+  실패는 원래 있던 것과 이번에 생긴 것을 구분한다.
+- 보고에는 실제로 한 것만 쓴다. 안 한 검사는 「안 함」, 남은 한계는 그대로 적는다.
