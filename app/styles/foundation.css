@@ -677,25 +677,22 @@ html[data-theme="light"] .noslog-ui,
         animation: none;
     }
 }
-/* 점선 밑줄 글자 + 위쪽 팝오버 설명(TermHelp) — 빙고 용어 · 오락실 기체 상태 이유 */
+/* 도움말 — 부품 결정 ④(2026-09-15). 두 모양, 둘 다 마우스 올림 · 포커스 · 탭으로 연다.
+   용어 뜻 = 점선 밑줄 글자 + ? 16(TermHelp) / 기준 설명 = 라벨 뒤 ⓘ 16(.nl-info-trigger).
+   작은 창은 떠 있는 창 규격 · 최대 280 · 여백 12 · 제목 control + 설명 body-secondary */
 .noslog-ui .nl-term {
     display: inline;
 }
 .noslog-ui .nl-term__trigger {
     display: inline-flex;
     align-items: center;
-    gap: 2px;
+    gap: var(--nl-spacing-4);
     vertical-align: baseline;
     cursor: help;
 }
 .noslog-ui .nl-term__trigger > span {
     text-decoration: underline dotted;
     text-underline-offset: 3px;
-}
-.noslog-ui .nl-term__trigger svg {
-    width: 14px;
-    height: 14px;
-    flex-shrink: 0;
 }
 .noslog-ui.nl-term__popover {
     display: flex;
@@ -705,10 +702,27 @@ html[data-theme="light"] .noslog-ui,
     max-width: min(280px, calc(100vw - 32px));
     background: var(--nl-surface-overlay);
     color: var(--nl-content-default);
-    border: 1px solid var(--nl-border-default);
+    border: 1px solid var(--nl-border-overlay);
     border-radius: var(--nl-radius-overlay);
-    box-shadow: var(--nl-elevation-overlay);
+    box-shadow: var(--nl-overlay-shadow);
     padding: var(--nl-spacing-12);
+}
+/* 기준 설명 ⓘ — 보이는 아이콘 16, 누르는 영역만 컨트롤 높이 정사각(보이지 않고 자리도 차지하지 않는다) */
+.noslog-ui .nl-info-trigger {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--nl-icon-small);
+    height: var(--nl-icon-small);
+    flex-shrink: 0;
+    border-radius: var(--nl-radius-full);
+    cursor: pointer;
+}
+.noslog-ui .nl-info-trigger::before {
+    content: "";
+    position: absolute;
+    inset: calc((var(--nl-icon-small) - var(--nl-control-height)) / 2);
 }
 @media (forced-colors: active) {
     .noslog-ui :focus-visible {

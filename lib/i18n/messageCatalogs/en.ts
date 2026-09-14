@@ -1042,7 +1042,6 @@ export const enMessages = {
     "profile.progressInsufficient": "More history is needed to show a trend.",
     "profile.recordOverview": "Record overview",
     "profile.judgementSummary": "Judgement summary",
-    "profile.judgementChartCount": "Based on {count} charts",
     "profile.showAllRanks": "Show all ranks",
     "profile.playCountLabel": "Play count",
     "profile.countryPosition": "Country Rank",

@@ -5,8 +5,8 @@ import { CircleHelp } from "lucide-react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 
 /**
- * 점선 밑줄 글자 + 위쪽 팝오버 설명. 마우스 올림·포커스·탭으로 열린다.
- * 빙고 용어(테누토 등)에서 시작해 오락실 기체 상태 이유에도 쓴다.
+ * 용어 뜻 도움말 — 점선 밑줄 글자 + ? 16, 마우스 올림·포커스·탭으로 위쪽 작은 창(부품 결정 ④ 2026-09-15).
+ * 빙고 용어(테누토 등) · 오락실 기체 상태 이유에 쓴다.
  * 행 끝에 붙어 줄끼리 끝이 맞아야 하는 자리(기체 상태)는 물음표 아이콘을 끈다.
  */
 export default function TermHelp({
@@ -64,7 +64,9 @@ export default function TermHelp({
                         }}
                     >
                         <span>{children}</span>
-                        {icon ? <CircleHelp size={14} aria-hidden /> : null}
+                        {icon ? (
+                            <CircleHelp className="nl-icon-small" aria-hidden />
+                        ) : null}
                     </button>
                 </Popover.Trigger>
             </span>
@@ -77,10 +79,10 @@ export default function TermHelp({
                     onCloseAutoFocus={(event) => event.preventDefault()}
                     onMouseEnter={cancelClose}
                     onMouseLeave={scheduleClose}
-                    className="noslog-ui nl-term__popover nl-body-secondary"
+                    className="noslog-ui nl-term__popover"
                 >
                     <strong className="nl-control">{title}</strong>
-                    <p>{description}</p>
+                    <p className="nl-body-secondary">{description}</p>
                 </Popover.Content>
             </Popover.Portal>
         </Popover.Root>

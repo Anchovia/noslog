@@ -1033,7 +1033,6 @@ export const koMessages = {
         "추이를 표시하려면 더 많은 이력이 필요합니다.",
     "profile.recordOverview": "기록 개요",
     "profile.judgementSummary": "판정 요약",
-    "profile.judgementChartCount": "{count}개 채보 기준",
     "profile.showAllRanks": "전체 랭크 보기",
     "profile.playCountLabel": "플레이 횟수",
     "profile.countryPosition": "국가 순위",

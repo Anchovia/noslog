@@ -165,20 +165,7 @@
 .noslog-ui .nl-pattern-radar__header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: var(--nl-spacing-8);
-    flex-wrap: wrap;
-}
-.noslog-ui .nl-pattern-radar__help {
-    display: flex;
-    align-items: center;
     gap: var(--nl-spacing-4);
-    position: relative;
-}
-.noslog-ui .nl-pattern-radar__help::before {
-    content: "";
-    position: absolute;
-    inset: -2px 0;
 }
 .noslog-ui .nl-pattern-radar__plot {
     height: 224px;

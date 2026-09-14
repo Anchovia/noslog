@@ -1037,7 +1037,6 @@ export const jaMessages = {
         "推移を表示するには、さらに履歴が必要です。",
     "profile.recordOverview": "記録概要",
     "profile.judgementSummary": "判定サマリー",
-    "profile.judgementChartCount": "{count}譜面に基づく",
     "profile.showAllRanks": "すべてのランクを表示",
     "profile.playCountLabel": "プレー回数",
     "profile.countryPosition": "国内順位",

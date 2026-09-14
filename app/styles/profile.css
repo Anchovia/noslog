@@ -364,16 +364,6 @@
     gap: var(--nl-spacing-8);
     flex-wrap: wrap;
 }
-.noslog-ui .nl-profile-judgement-basis {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--nl-spacing-4);
-    min-height: 24px;
-}
-.noslog-ui .nl-profile-judgement-basis svg {
-    width: var(--nl-icon-small);
-    height: var(--nl-icon-small);
-}
 .noslog-ui .nl-profile-judgement-stack {
     display: flex;
     height: 16px;
