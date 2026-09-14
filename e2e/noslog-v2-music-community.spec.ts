@@ -175,22 +175,9 @@ async function openCommunity(
     await page.goto(
         `/${locale}${musicPath}${fromTiers ? "?source=tiers&mode=basic&goal=s" : ""}`
     );
-    if ((page.viewportSize()?.width ?? 390) < 768) {
-        await page
-            .getByRole("combobox", {
-                name:
-                    locale === "ko"
-                        ? "상세 영역"
-                        : locale === "ja"
-                          ? "詳細項目"
-                          : "Detail area",
-            })
-            .click();
-        await page.getByRole("option").last().click();
-    } else {
-        await expect(page.getByRole("tab")).toHaveCount(4);
-        await page.getByRole("tab").last().click();
-    }
+    // 영역 탭은 모든 폭에서 탭(좁으면 가로 스크롤) — 부품 결정 ② 2026-09-14
+    await expect(page.getByRole("tab")).toHaveCount(4);
+    await page.getByRole("tab").last().click();
     if (failure === "initial")
         await expect(
             page.getByRole("alert").filter({ hasText: "불러오지 못했습니다." })

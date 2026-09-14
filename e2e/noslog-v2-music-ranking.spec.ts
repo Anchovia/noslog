@@ -111,20 +111,7 @@ async function openRanking(
         });
     });
     await page.goto(`/${locale}${musicPath}`);
-    if ((page.viewportSize()?.width ?? 390) < 768) {
-        await page.getByRole("combobox").click();
-        await page
-            .getByRole("option", {
-                name:
-                    locale === "ko"
-                        ? "랭킹"
-                        : locale === "ja"
-                          ? "ランキング"
-                          : "Ranking",
-                exact: true,
-            })
-            .click();
-    } else await page.getByRole("tab").nth(2).click();
+    await page.getByRole("tab").nth(2).click();
     await expect(page).toHaveURL(/tab=ranking/);
     await expect(
         page.locator(total ? ".nl-chart-leaderboard" : ".nl-area__panel")

@@ -42,14 +42,7 @@ test("첫 악곡 상세로 이동하고 비로그인 내 기록 안내를 표시
     await expect(
         page.getByRole("heading", { name: "채보 정보", exact: true })
     ).toBeVisible();
-    if ((page.viewportSize()?.width ?? 390) < 768) {
-        await page.getByRole("combobox", { name: "상세 영역" }).click();
-        await page
-            .getByRole("option", { name: "내 기록", exact: true })
-            .click();
-    } else {
-        await page.getByRole("tab", { name: "내 기록", exact: true }).click();
-    }
+    await page.getByRole("tab", { name: "내 기록", exact: true }).click();
     await expect(
         page.getByText("로그인 후 내 기록을 확인할 수 있습니다.")
     ).toBeVisible();
