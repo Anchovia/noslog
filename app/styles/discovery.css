@@ -206,15 +206,6 @@
     height: var(--nl-control-height);
     min-height: var(--nl-control-height);
 }
-.noslog-ui .nl-filter-count {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 20px;
-    min-height: 20px;
-    border-radius: var(--nl-radius-full);
-    background: var(--nl-surface-raised);
-}
 .noslog-ui .nl-discovery__toolbar > .nl-segments--icons {
     margin-left: auto;
 }

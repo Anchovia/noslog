@@ -693,6 +693,16 @@ html[data-theme="light"] .noslog-ui,
     color: var(--nl-content-default);
     border-color: var(--nl-border-strong);
 }
+/* 필터 개수 배지 — 「필터」 버튼 안 적용 조건 묶음 수. 개수 전용이라 태그와 다른 모양: 원 20 · 면 raised · 글자 metadata */
+.noslog-ui .nl-filter-count {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    min-height: 20px;
+    border-radius: var(--nl-radius-full);
+    background: var(--nl-surface-raised);
+}
 /* 도움말 — 부품 결정 ④(2026-09-15). 두 모양, 둘 다 마우스 올림 · 포커스 · 탭으로 연다.
    용어 뜻 = 점선 밑줄 글자 + ? 16(TermHelp) / 기준 설명 = 라벨 뒤 ⓘ 16(.nl-info-trigger).
    작은 창은 떠 있는 창 규격 · 최대 280 · 여백 12 · 제목 control + 설명 body-secondary */
