@@ -74,6 +74,21 @@
     flex-direction: column;
     gap: var(--nl-spacing-4);
 }
+/* 구역 펼침은 붙여 쌓고 사이 1px 선(2026-09-15) — 칸·감싸는 div 가 달라도 바로 이어지면 간격 32 를 없앤다.
+   사이에 안내 문장 같은 다른 내용이 끼면 그 위아래는 32 그대로 */
+.noslog-ui
+    .nl-sync-column
+    > :is(.nl-disclosure, div:has(> .nl-disclosure:only-child))
+    + :is(.nl-disclosure, div:has(> .nl-disclosure:only-child)),
+.noslog-ui
+    .nl-sync-column:has(
+        > :is(.nl-disclosure, div:has(> .nl-disclosure:only-child)):last-child
+    )
+    + .nl-sync-column
+    > :is(.nl-disclosure, div:has(> .nl-disclosure:only-child)):first-child {
+    margin-top: calc(var(--nl-spacing-32) * -1);
+    border-top: 1px solid var(--nl-border-divider);
+}
 .noslog-ui .nl-sync-page .nl-disclosure__body {
     padding-bottom: var(--nl-spacing-16);
 }
