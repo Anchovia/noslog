@@ -51,6 +51,8 @@ NosLog's approved choices, not a claim about osu!'s current CSS.
 - Home section headings (announcements, official news) use `section-title` 20/28
   like every other page's section heading (user decision 2026-09-14); they were
   one step smaller than the rest of the site and equal to the item titles below them.
+  Arcade detail's `위치` and `기체` headings follow the same rule; the `최근 확인`
+  heading inside the Wide rail box stays `component-title` as a box title.
 
 ## Page modes
 
@@ -229,7 +231,8 @@ input rules and is implemented in code only — Figma C1–C8 do not show it.
   outlined CompactSelect use the same field.
 - **Corner radius:** `radius/field` 8 for pressable boxes — inputs, selects, search
   fields, buttons (icon buttons included), triggers, CompactSelect, the sign-in
-  language trigger, `FilterChips` and `AppliedTokens`. Items inside a box (menu rows,
+  language trigger, `FilterChips`, `AppliedTokens`, pagination page buttons and the
+  pattern-vote 0–4 choices (separate boxes, not a segment track). Items inside a box (menu rows,
   segment items, the search clear button), checkboxes and non-interactive tags
   (`nl-tag`, announcement category) keep `radius/control` 4.
 - **Focus:** the existing 1px border swap (FOCUS-1B) plus an outer 4px
@@ -244,7 +247,13 @@ input rules and is implemented in code only — Figma C1–C8 do not show it.
   1px `border/overlay`, `--nl-overlay-shadow`, radius 10, 40px rows 4px apart,
   selected = `interaction/menu-set` + semibold + trailing 16px check, pointer
   position = `interaction/hover`, keyboard position = 1px focus ring. The exam select
-  omits the check because its trailing slot shows the exam state.
+  omits the check because its trailing slot shows the exam state. Lists move focus
+  into themselves when they open, which Chrome treats as `:focus-visible` even after a
+  mouse click, so `lib/inputModality.ts` records the last input on `<html data-input>`
+  and the ring is hidden while it is `pointer` (select lists and SortMenu).
+- **List sort switches:** a list's sort order is always one `SortMenu`, including
+  the two-option community opinions sort (recommended / newest) — not paired
+  secondary and ghost buttons.
 - **Buttons:** the secondary button takes the field face and border
   (`surface/surface` + `border/input`); hover and pressed keep `interaction/hover`
   and `interaction/selected-pressed`. Primary buttons are unchanged.
