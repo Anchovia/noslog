@@ -891,7 +891,6 @@ export const koMessages = {
     "sync.guideTitle": "처음 연동하기",
     "sync.guideIntro":
         "처음 한 번만 등록하면, 다음부터는 공식 사이트에서 실행하면 됩니다.",
-    "sync.once": "처음 한 번",
     "sync.privateBookmark":
         "내 계정 전용 북마크입니다. 다른 사람과 공유하지 마세요.",
     "sync.loginStep": "공식 사이트에 로그인",

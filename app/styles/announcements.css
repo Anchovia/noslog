@@ -41,15 +41,6 @@
 .noslog-ui .nl-announcement-meta > p {
     margin: 0;
 }
-.noslog-ui .nl-announcement-category {
-    display: inline-flex;
-    align-items: center;
-    height: 24px;
-    padding-inline: var(--nl-spacing-8);
-    border: 1px solid var(--nl-border-default);
-    border-radius: var(--nl-radius-control);
-    white-space: nowrap;
-}
 .noslog-ui .nl-announcements__month {
     padding-block: var(--nl-spacing-24) var(--nl-spacing-8);
 }

@@ -185,12 +185,6 @@
     align-items: center;
     min-height: 32px;
 }
-.noslog-ui .nl-sync-step-tag {
-    padding: var(--nl-spacing-2) var(--nl-spacing-8);
-    border: 1px solid var(--nl-border-default);
-    border-radius: var(--nl-radius-full);
-    color: var(--nl-content-subdued);
-}
 .noslog-ui .nl-sync-guide-detail {
     width: 100%;
 }

@@ -892,7 +892,6 @@ export const jaMessages = {
     "sync.guideTitle": "はじめての連携",
     "sync.guideIntro":
         "初回に登録すれば、次回からは公式サイトで実行するだけです。",
-    "sync.once": "初回のみ",
     "sync.privateBookmark":
         "自分のアカウント専用です。他の人と共有しないでください。",
     "sync.loginStep": "公式サイトにログイン",

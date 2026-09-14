@@ -677,6 +677,22 @@ html[data-theme="light"] .noslog-ui,
         animation: none;
     }
 }
+/* 태그 — 누르지 않는 라벨(공지 분류 · 빙고 미션 종류 · 상태). 부품 결정 ⑤(2026-09-15).
+   높이 24 · 모서리 4 · 1px 아웃라인 · 글자 metadata 흐림 / --strong = 글자 기본 · 경계 진하게 */
+.noslog-ui .nl-tag {
+    display: inline-flex;
+    align-items: center;
+    height: 24px;
+    padding-inline: var(--nl-spacing-8);
+    border: 1px solid var(--nl-border-default);
+    border-radius: var(--nl-radius-control);
+    color: var(--nl-content-subdued);
+    white-space: nowrap;
+}
+.noslog-ui .nl-tag--strong {
+    color: var(--nl-content-default);
+    border-color: var(--nl-border-strong);
+}
 /* 도움말 — 부품 결정 ④(2026-09-15). 두 모양, 둘 다 마우스 올림 · 포커스 · 탭으로 연다.
    용어 뜻 = 점선 밑줄 글자 + ? 16(TermHelp) / 기준 설명 = 라벨 뒤 ⓘ 16(.nl-info-trigger).
    작은 창은 떠 있는 창 규격 · 최대 280 · 여백 12 · 제목 control + 설명 body-secondary */

@@ -268,21 +268,6 @@
 .noslog-ui .nl-bingo-cell-detail__actions > .nl-button {
     flex: 1 1 auto;
 }
-/* 분류·상태 태그 — 공지 카테고리 칩(ANN-CAT)과 같은 규격 24 */
-.noslog-ui .nl-tag {
-    display: inline-flex;
-    align-items: center;
-    height: 24px;
-    padding-inline: var(--nl-spacing-8);
-    border: 1px solid var(--nl-border-default);
-    border-radius: var(--nl-radius-control);
-    color: var(--nl-content-subdued);
-    white-space: nowrap;
-}
-.noslog-ui .nl-tag--strong {
-    color: var(--nl-content-default);
-    border-color: var(--nl-border-strong);
-}
 /* 줄(A~E) 묶음 */
 .noslog-ui .nl-bingo-row {
     display: flex;

@@ -899,7 +899,6 @@ export const enMessages = {
     "sync.guideTitle": "Set up your first sync",
     "sync.guideIntro":
         "Register once, then run the bookmarklet on the official site whenever you want to sync.",
-    "sync.once": "One-time setup",
     "sync.privateBookmark":
         "This bookmark is for your account only. Do not share it.",
     "sync.loginStep": "Sign in to the official site",

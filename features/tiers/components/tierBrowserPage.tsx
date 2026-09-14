@@ -260,7 +260,7 @@ export default function TierBrowserPage({
                                             />
                                             {t("music.filter")}
                                             {filterCount ? (
-                                                <span className="nl-filter-count">
+                                                <span className="nl-filter-count nl-metadata">
                                                     {filterCount}
                                                 </span>
                                             ) : null}
