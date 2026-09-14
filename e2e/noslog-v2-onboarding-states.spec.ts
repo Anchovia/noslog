@@ -24,7 +24,7 @@ for (const locale of ["ko", "ja", "en"] as const) {
             await page.setViewportSize({ width, height: 600 });
             await expect(page.locator("#onboarding-nickname")).toHaveCSS(
                 "height",
-                "44px"
+                width >= 1056 ? "40px" : "44px"
             );
             expect(
                 await page.evaluate(
@@ -55,7 +55,7 @@ for (const locale of ["ko", "ja", "en"] as const) {
             name: t["onboarding.start"],
             exact: true,
         });
-        await expect(submit).toHaveCSS("min-height", "40px");
+        await expect(submit).toHaveCSS("min-height", "44px");
         await submit.click();
         await expect(input).toBeFocused();
         await expect(input).toHaveAttribute("aria-invalid", "true");

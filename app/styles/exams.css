@@ -48,17 +48,24 @@
     align-items: center;
     width: 100%;
 }
+/* 검정 선택 목록 = 셀렉트 목록과 같은 패널·행 (2026-09-14 M2).
+   오른쪽 칸은 검정 상태가 쓰므로 체크는 두지 않고 선택은 면 + 굵기로 표시한다 */
 .noslog-ui.nl-exam-select__popup {
     background: var(--nl-surface-overlay);
-    border: 1px solid var(--nl-border-default);
+    border: 1px solid var(--nl-border-overlay);
     border-radius: var(--nl-radius-overlay);
-    box-shadow: var(--nl-elevation-overlay);
+    box-shadow: var(--nl-overlay-shadow);
     color: var(--nl-content-default);
     z-index: 70;
     width: var(--radix-select-trigger-width);
     max-height: var(--radix-select-content-available-height);
     overflow: auto;
-    padding: var(--nl-spacing-4);
+    padding: var(--nl-spacing-8);
+}
+.noslog-ui.nl-exam-select__popup [data-radix-select-viewport] {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-4);
 }
 .noslog-ui .nl-exam-select__option,
 .noslog-ui .nl-exam-rail button {
@@ -71,14 +78,16 @@
     border-radius: var(--nl-radius-control);
     text-align: start;
 }
+.noslog-ui .nl-exam-select__option {
+    min-height: 40px;
+}
+.noslog-ui .nl-exam-select__option[data-highlighted] {
+    background: var(--nl-interaction-hover);
+}
 .noslog-ui .nl-exam-select__option[data-state="checked"],
 .noslog-ui .nl-exam-rail [aria-current="true"] {
     background: var(--nl-interaction-menu-set);
     font-weight: 600;
-}
-.noslog-ui .nl-exam-select__option[data-highlighted] {
-    box-shadow: inset 0 0 0 1px var(--nl-focus-ring);
-    outline: none;
 }
 .noslog-ui .nl-exam-rail {
     display: none;

@@ -2,15 +2,20 @@
     display: flex;
     align-items: center;
     gap: var(--nl-spacing-8);
-    height: 52px;
+    height: var(--nl-control-height);
     min-width: 0;
     padding-inline: var(--nl-spacing-8);
-    border-radius: var(--nl-radius-container);
-    background: var(--nl-surface-canvas);
+    border-radius: var(--nl-radius-field);
+    background: var(--nl-surface-surface);
+    box-shadow: inset 0 0 0 1px var(--nl-border-input);
+}
+.noslog-ui .nl-search:hover {
     box-shadow: inset 0 0 0 1px var(--nl-border-strong);
 }
 .noslog-ui .nl-search:has(input:focus-visible) {
-    box-shadow: inset 0 0 0 1px var(--nl-focus-ring);
+    box-shadow:
+        inset 0 0 0 1px var(--nl-focus-ring),
+        0 0 0 var(--nl-spacing-4) var(--nl-state-halo);
 }
 .noslog-ui .nl-search__divider {
     width: 1px;
@@ -34,15 +39,42 @@
 }
 .noslog-ui .nl-search__clear {
     display: flex;
-    width: 44px;
-    height: 44px;
+    width: var(--nl-control-height);
+    height: var(--nl-control-height);
     flex-shrink: 0;
     justify-content: center;
     align-items: center;
+}
+/* 검색창 안 컨트롤(앞 셀렉트 · 지우기) — 누르는 영역은 검색창 높이 그대로, 면·포커스는 안쪽 4 에 그린다.
+   검색창과 높이가 같아서(2026-09-14 H2) 면을 그대로 칠하면 검색창 경계를 덮는다. 모서리 = 8 − 4 = 4 */
+.noslog-ui .nl-search > .nl-compact-select,
+.noslog-ui .nl-search__clear {
+    position: relative;
+    isolation: isolate;
+}
+.noslog-ui .nl-search > .nl-compact-select::before,
+.noslog-ui .nl-search__clear::before {
+    content: "";
+    position: absolute;
+    inset: var(--nl-spacing-4) calc(var(--nl-spacing-4) * -1);
+    z-index: -1;
     border-radius: var(--nl-radius-control);
 }
-.noslog-ui .nl-search__clear:hover {
+.noslog-ui .nl-search > .nl-compact-select:hover {
+    background: transparent;
+}
+.noslog-ui .nl-search > .nl-compact-select:hover::before,
+.noslog-ui .nl-search__clear:hover::before {
     background: var(--nl-interaction-hover);
+}
+.noslog-ui .nl-search > .nl-compact-select:focus-visible,
+.noslog-ui .nl-search__clear:focus-visible {
+    outline: none;
+    box-shadow: none;
+}
+.noslog-ui .nl-search > .nl-compact-select:focus-visible::before,
+.noslog-ui .nl-search__clear:focus-visible::before {
+    box-shadow: inset 0 0 0 1px var(--nl-focus-ring);
 }
 .noslog-ui .nl-search__busy {
     flex-shrink: 0;
@@ -50,11 +82,11 @@
 }
 .noslog-ui .nl-compact-select {
     display: inline-flex;
-    min-height: 44px;
+    min-height: var(--nl-control-height);
     align-items: center;
     gap: var(--nl-spacing-4);
     padding: var(--nl-spacing-4) var(--nl-spacing-8);
-    border-radius: var(--nl-radius-control);
+    border-radius: var(--nl-radius-field);
     flex-shrink: 0;
     white-space: nowrap;
 }
@@ -68,17 +100,26 @@
 .noslog-ui .nl-compact-select:disabled {
     color: var(--nl-interaction-disabled-content);
 }
+.noslog-ui .nl-compact-select:focus-visible {
+    box-shadow: 0 0 0 var(--nl-spacing-4) var(--nl-state-halo);
+}
+/* 셀렉트 목록 = 정렬 메뉴와 같은 한 모양 — 패널 overlay · 경계 border/overlay · 행 40 · 행 사이 4
+   선택 = menu-set 면 + 600 + 오른쪽 체크 16 · 마우스 위치 = hover 면 · 키보드 위치 = 흰 1px (2026-09-14 M2) */
 .noslog-ui .nl-select-menu {
     z-index: 90;
     width: 240px;
     max-height: var(--radix-select-content-available-height);
     max-width: calc(100vw - 32px);
     padding: var(--nl-spacing-8);
+    border: 1px solid var(--nl-border-overlay);
     border-radius: var(--nl-radius-overlay);
     background: var(--nl-surface-overlay);
-    box-shadow:
-        inset 0 0 0 1px var(--nl-border-subtle),
-        var(--nl-overlay-shadow);
+    box-shadow: var(--nl-overlay-shadow);
+}
+/* 폼 셀렉트 목록은 트리거 폭이 최소 폭 */
+.noslog-ui .nl-select-menu--field {
+    width: auto;
+    min-width: var(--radix-select-trigger-width);
 }
 .noslog-ui .nl-select-menu [data-radix-select-viewport] {
     display: flex;
@@ -89,19 +130,23 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: var(--nl-spacing-8);
-    min-height: 36px;
+    gap: var(--nl-spacing-12);
+    min-height: 40px;
     padding: var(--nl-spacing-8) var(--nl-spacing-12);
     border-radius: var(--nl-radius-control);
     cursor: default;
 }
+.noslog-ui .nl-select-option svg {
+    width: var(--nl-icon-small);
+    height: var(--nl-icon-small);
+    flex-shrink: 0;
+}
+.noslog-ui .nl-select-option[data-highlighted] {
+    background: var(--nl-interaction-hover);
+}
 .noslog-ui .nl-select-option[data-state="checked"] {
     background: var(--nl-interaction-menu-set);
     font-weight: var(--nl-type-weight-semibold);
-}
-.noslog-ui .nl-select-option[data-highlighted] {
-    outline: 1px solid var(--nl-focus-ring);
-    outline-offset: -1px;
 }
 .noslog-ui .nl-select-option[data-disabled] {
     color: var(--nl-interaction-disabled-content);

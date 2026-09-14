@@ -10,7 +10,7 @@ import {
 } from "react";
 import type { CSSProperties } from "react";
 import { useSearchParams } from "next/navigation";
-import { useForm, useWatch } from "react-hook-form";
+import { Controller, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ChevronDown, ListFilter } from "lucide-react";
 import PageContainer, { PageHeading } from "@/components/layout/pageContainer";
@@ -579,35 +579,44 @@ export default function ArcadeDiscoveryPage({
                                             },
                                         ]}
                                     />
-                                    <label className="nl-control nl-arcades__region">
-                                        <span className="sr-only">
-                                            {t("arcades.region")}
-                                        </span>
-                                        <Select
-                                            {...form.register("region", {
-                                                onChange: (event) => {
-                                                    if (popover)
-                                                        commit({
-                                                            ...values,
-                                                            region: event.target
-                                                                .value,
-                                                        });
-                                                },
-                                            })}
-                                        >
-                                            <option value="">
-                                                {t("arcades.scope.nationwide")}
-                                            </option>
-                                            {regions.map((region) => (
-                                                <option
-                                                    value={region}
-                                                    key={region}
-                                                >
-                                                    {region}
-                                                </option>
-                                            ))}
-                                        </Select>
-                                    </label>
+                                    <div className="nl-control nl-arcades__region">
+                                        <Controller
+                                            control={form.control}
+                                            name="region"
+                                            render={({ field }) => (
+                                                <Select
+                                                    aria-label={t(
+                                                        "arcades.region"
+                                                    )}
+                                                    value={field.value ?? ""}
+                                                    onValueChange={(region) => {
+                                                        field.onChange(region);
+                                                        if (popover)
+                                                            commit({
+                                                                ...values,
+                                                                region,
+                                                            });
+                                                    }}
+                                                    onBlur={field.onBlur}
+                                                    triggerRef={field.ref}
+                                                    options={[
+                                                        {
+                                                            value: "",
+                                                            label: t(
+                                                                "arcades.scope.nationwide"
+                                                            ),
+                                                        },
+                                                        ...regions.map(
+                                                            (region) => ({
+                                                                value: region,
+                                                                label: region,
+                                                            })
+                                                        ),
+                                                    ]}
+                                                />
+                                            )}
+                                        />
+                                    </div>
                                 </FilterGroup>
                             </form>
                         </FilterSurface>

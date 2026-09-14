@@ -17,9 +17,8 @@
         var(--nl-primary-default) 16%,
         transparent
     );
+    /* 입력·셀렉트·검색·버튼·트리거 높이는 이 값 하나 — 1056px 이상 40 (2026-09-14 H2) */
     --nl-control-height: 44px;
-    --nl-button-height: 40px;
-    --nl-input-height: 44px;
     --nl-icon-small: 16px;
     --nl-icon-medium: 20px;
     --nl-icon-large: 24px;
@@ -133,13 +132,13 @@ html[data-theme="light"] .noslog-ui,
 
 .noslog-ui .nl-button {
     display: inline-flex;
-    min-height: var(--nl-button-height);
+    min-height: var(--nl-control-height);
     align-items: center;
     justify-content: center;
     gap: var(--nl-spacing-8);
     padding: calc(var(--nl-spacing-8) - 1px) calc(var(--nl-spacing-16) - 1px);
     border: 1px solid transparent;
-    border-radius: var(--nl-radius-control);
+    border-radius: var(--nl-radius-field);
     background: var(--nl-primary-default);
     color: var(--nl-primary-on-primary);
     font-size: var(--nl-type-size-14);
@@ -152,21 +151,23 @@ html[data-theme="light"] .noslog-ui,
     background: var(--nl-primary-hover);
 }
 .noslog-ui .nl-button--compact {
-    min-height: var(--nl-button-height);
+    min-height: var(--nl-control-height);
 }
 /* 눌림은 색 단계만 — 크기 축소(scale) 없음(2026-09-12 사용자 결정) */
 .noslog-ui .nl-button:active {
     background: var(--nl-primary-pressed);
 }
+/* 포커스 = 1px 경계 색 교체 + 바깥 후광 4(--nl-state-halo) — 2026-09-14 F2 */
 .noslog-ui .nl-button:focus-visible {
     border-color: var(--nl-primary-on-primary);
     outline: none;
-    box-shadow: none;
+    box-shadow: 0 0 0 var(--nl-spacing-4) var(--nl-state-halo);
 }
+/* 보조 = 입력칸과 같은 면·경계 (2026-09-14 B2) */
 .noslog-ui .nl-button--secondary {
-    background: transparent;
+    background: var(--nl-surface-surface);
     color: var(--nl-content-default);
-    border-color: var(--nl-border-strong);
+    border-color: var(--nl-border-input);
 }
 .noslog-ui .nl-button--ghost {
     background: transparent;
@@ -275,25 +276,27 @@ html[data-theme="light"] .noslog-ui,
 .noslog-ui .nl-field__error {
     color: var(--nl-feedback-error-text);
 }
+/* 입력칸 = 면 surface/surface + 경계 border/input(3:1) · 마우스 올림은 경계만 border/strong (2026-09-14 B′) */
 .noslog-ui .nl-input {
     width: 100%;
     min-width: 0;
     min-height: var(--nl-control-height);
     padding: calc(var(--nl-spacing-8) - 1px) calc(var(--nl-spacing-12) - 1px);
-    border: 1px solid var(--nl-border-strong);
-    border-radius: var(--nl-radius-control);
-    background: var(--nl-surface-canvas);
+    border: 1px solid var(--nl-border-input);
+    border-radius: var(--nl-radius-field);
+    background: var(--nl-surface-surface);
     color: var(--nl-content-default);
     font-size: var(--nl-type-size-16);
     line-height: var(--nl-type-line-height-24);
     font-weight: var(--nl-type-weight-regular);
 }
-.noslog-ui input.nl-input {
-    min-height: var(--nl-input-height);
+.noslog-ui .nl-input:hover {
+    border-color: var(--nl-border-strong);
 }
 .noslog-ui .nl-input:focus-visible {
     border-color: var(--nl-focus-ring);
     outline: none;
+    box-shadow: 0 0 0 var(--nl-spacing-4) var(--nl-state-halo);
 }
 .noslog-ui .nl-input[aria-invalid="true"] {
     border-color: var(--nl-feedback-destructive-border);
@@ -312,21 +315,23 @@ html[data-theme="light"] .noslog-ui,
     padding: calc(var(--nl-spacing-12) - 1px);
     resize: vertical;
 }
+/* 셀렉트 트리거 = 입력칸과 같은 모양 + 오른쪽 꺾쇠 · 목록은 .nl-select-menu (2026-09-14 M2) */
 .noslog-ui .nl-select {
-    position: relative;
-    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--nl-spacing-8);
+    text-align: left;
+    cursor: pointer;
+}
+.noslog-ui .nl-select > span {
     min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
-.noslog-ui .nl-select select {
-    appearance: none;
-    padding-right: var(--nl-spacing-48);
-}
-.noslog-ui .nl-select > svg {
-    position: absolute;
-    right: var(--nl-spacing-12);
-    top: 50%;
-    transform: translateY(-50%);
-    pointer-events: none;
+.noslog-ui .nl-select[data-placeholder] {
+    color: var(--nl-content-subdued);
 }
 .noslog-ui .nl-check {
     display: flex;

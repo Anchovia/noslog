@@ -11,6 +11,7 @@
     --nl-spacing-48: 48px;
     --nl-spacing-64: 64px;
     --nl-radius-control: 4px;
+    --nl-radius-field: 8px;
     --nl-radius-container: 8px;
     --nl-radius-overlay: 10px;
     --nl-radius-full: 9999px;
@@ -62,6 +63,7 @@
     --nl-border-subtle: #393939;
     --nl-border-default: #444444;
     --nl-border-strong: #8a8a8a;
+    --nl-border-input: #717171;
     --nl-interaction-hover: #2c2c2c;
     --nl-interaction-selected-hover: #323232;
     --nl-interaction-selected-pressed: #393939;
@@ -165,6 +167,7 @@ html[data-theme="light"] .noslog-ui,
     --nl-border-subtle: #dadada;
     --nl-border-default: #c6c6c6;
     --nl-border-strong: #717171;
+    --nl-border-input: #717171;
     --nl-interaction-hover: #e9e9e9;
     --nl-interaction-selected-hover: #e1e1e1;
     --nl-interaction-selected-pressed: #dadada;

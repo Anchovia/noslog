@@ -54,8 +54,6 @@
 .noslog-ui .nl-music-entity__actions > .nl-button {
     flex: 1;
     min-width: 0;
-    height: 40px;
-    min-height: 40px;
 }
 .noslog-ui .nl-translation-popover {
     max-width: min(320px, calc(100vw - var(--nl-spacing-32)));
@@ -137,17 +135,27 @@
     bottom: 0;
     inset-inline: 0;
 }
+/* 상세 영역 셀렉트 = 입력칸과 같은 모양 (2026-09-14 B′) */
 .noslog-ui .nl-area__select {
     width: 100%;
     display: flex;
-    min-height: 44px;
+    min-height: var(--nl-control-height);
     align-items: center;
     justify-content: space-between;
     gap: var(--nl-spacing-8);
-    padding-inline: var(--nl-spacing-16);
-    background: var(--nl-surface-canvas);
-    box-shadow: inset 0 0 0 1px var(--nl-border-default);
-    border-radius: var(--nl-radius-control);
+    padding-inline: var(--nl-spacing-12);
+    background: var(--nl-surface-surface);
+    box-shadow: inset 0 0 0 1px var(--nl-border-input);
+    border-radius: var(--nl-radius-field);
+}
+.noslog-ui .nl-area__select:hover {
+    box-shadow: inset 0 0 0 1px var(--nl-border-strong);
+}
+.noslog-ui .nl-area__select:focus-visible {
+    outline: none;
+    box-shadow:
+        inset 0 0 0 1px var(--nl-focus-ring),
+        0 0 0 var(--nl-spacing-4) var(--nl-state-halo);
 }
 .noslog-ui .nl-area__menu {
     width: var(--radix-select-trigger-width);
@@ -346,10 +354,6 @@
     flex-direction: column;
     align-items: flex-start;
     gap: var(--nl-spacing-24);
-}
-.noslog-ui .nl-record-state .nl-button {
-    min-height: 40px;
-    height: 40px;
 }
 .noslog-ui .nl-record-metrics {
     display: grid;

@@ -164,8 +164,6 @@
     gap: var(--nl-spacing-8);
 }
 .noslog-ui .nl-ranking-login .nl-button {
-    height: 40px;
-    min-height: 40px;
     flex-shrink: 0;
 }
 .noslog-ui .nl-global-ranking-message {
@@ -175,10 +173,6 @@
     align-items: center;
     text-align: center;
     padding: 0;
-}
-.noslog-ui .nl-global-ranking-content .nl-result-state .nl-button {
-    height: 40px;
-    min-height: 40px;
 }
 .noslog-ui .nl-global-ranking-initial {
     min-height: 360px;

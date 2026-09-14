@@ -36,9 +36,6 @@
     width: 100%;
     max-width: 100%;
 }
-.noslog-ui .nl-sync-install-card .nl-button {
-    min-height: 40px;
-}
 .noslog-ui .nl-sync-step-action {
     width: 100%;
     text-align: center;

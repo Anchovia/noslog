@@ -22,10 +22,6 @@
     display: flex;
     align-items: center;
 }
-.noslog-ui .nl-profile-identity__recovery .nl-button {
-    min-height: 40px;
-    height: 40px;
-}
 .noslog-ui .nl-profile-identity__name-stack {
     flex: 1;
     min-width: 0;
@@ -580,7 +576,6 @@
     min-width: 0;
 }
 .noslog-ui .nl-profile-share .nl-button {
-    min-height: 40px;
     height: auto;
     padding-block: var(--nl-spacing-8);
 }

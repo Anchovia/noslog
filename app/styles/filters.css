@@ -45,7 +45,8 @@
     text-underline-offset: 3px;
 }
 
-/* 칩: 높이 36 · 선택 = raised + border/strong + 체크 + 굵기 (세그먼트 선택 언어) */
+/* 칩: 높이 36 · 선택 = raised + border/strong + 체크 + 굵기 (세그먼트 선택 언어)
+   모서리 = 누르는 칸의 radius/field 8 — 누르지 않는 태그(.nl-tag)는 4 그대로 (2026-09-14 B안) */
 .noslog-ui .nl-chips {
     display: flex;
     flex-wrap: wrap;
@@ -57,7 +58,7 @@
     gap: var(--nl-spacing-4);
     min-height: 36px;
     padding-inline: var(--nl-spacing-12);
-    border-radius: var(--nl-radius-control);
+    border-radius: var(--nl-radius-field);
     box-shadow: inset 0 0 0 1px var(--nl-border-strong);
     background: transparent;
     color: var(--nl-content-default);
@@ -156,7 +157,7 @@
 .noslog-ui .nl-sort-menu__section {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: var(--nl-spacing-4);
 }
 .noslog-ui .nl-sort-menu__heading {
     margin: 0;
@@ -260,7 +261,7 @@
     gap: var(--nl-spacing-4);
     min-height: 32px;
     padding: 0 var(--nl-spacing-8) 0 var(--nl-spacing-12);
-    border-radius: var(--nl-radius-control);
+    border-radius: var(--nl-radius-field);
     box-shadow: inset 0 0 0 1px var(--nl-border-default);
     color: var(--nl-content-default);
 }

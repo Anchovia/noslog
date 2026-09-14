@@ -28,9 +28,6 @@
     justify-content: space-between;
     gap: var(--nl-spacing-8);
 }
-.noslog-ui .nl-feedback-dialog .nl-button {
-    min-height: 40px;
-}
 .noslog-ui .nl-feedback-dialog .nl-dialog__actions > .nl-button {
     flex: 1 1 0;
     min-width: 0;

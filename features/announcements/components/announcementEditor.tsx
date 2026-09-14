@@ -348,24 +348,35 @@ export default function AnnouncementEditor({
                         error={errors.category?.message}
                         className="nl-admin-form__span"
                     >
-                        <Select
-                            id="announcement-category"
-                            aria-invalid={Boolean(errors.category)}
-                            aria-describedby={fieldDescription(
-                                "announcement-category",
-                                {
-                                    help: true,
-                                    error: Boolean(errors.category),
-                                }
+                        <Controller
+                            control={control}
+                            name="category"
+                            render={({ field }) => (
+                                <Select
+                                    id="announcement-category"
+                                    invalid={Boolean(errors.category)}
+                                    aria-describedby={fieldDescription(
+                                        "announcement-category",
+                                        {
+                                            help: true,
+                                            error: Boolean(errors.category),
+                                        }
+                                    )}
+                                    value={field.value ?? ""}
+                                    onValueChange={field.onChange}
+                                    onBlur={field.onBlur}
+                                    triggerRef={field.ref}
+                                    options={ANNOUNCEMENT_CATEGORIES.map(
+                                        (value) => ({
+                                            value,
+                                            label: ANNOUNCEMENT_CATEGORY_LABELS[
+                                                value
+                                            ],
+                                        })
+                                    )}
+                                />
                             )}
-                            {...register("category")}
-                        >
-                            {ANNOUNCEMENT_CATEGORIES.map((value) => (
-                                <option key={value} value={value}>
-                                    {ANNOUNCEMENT_CATEGORY_LABELS[value]}
-                                </option>
-                            ))}
-                        </Select>
+                        />
                     </FormField>
 
                     {placement === "SERVICE_CRITICAL" ? (

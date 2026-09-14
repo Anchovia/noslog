@@ -103,18 +103,16 @@ export default function ProfileProgress({
                         value={
                             result.isError && data ? data.query.range : range
                         }
-                        onChange={(event) =>
-                            setRange(
-                                event.target
-                                    .value as ProfileProgressQuery["range"]
-                            )
+                        onValueChange={(next) =>
+                            setRange(next as ProfileProgressQuery["range"])
                         }
-                    >
-                        <option value="30">{t("profile.range.30")}</option>
-                        <option value="90">{t("profile.range.90")}</option>
-                        <option value="year">{t("profile.range.year")}</option>
-                        <option value="all">{t("profile.all")}</option>
-                    </Select>
+                        options={[
+                            { value: "30", label: t("profile.range.30") },
+                            { value: "90", label: t("profile.range.90") },
+                            { value: "year", label: t("profile.range.year") },
+                            { value: "all", label: t("profile.all") },
+                        ]}
+                    />
                 </div>
             </div>
             <div

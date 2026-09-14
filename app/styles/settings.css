@@ -205,7 +205,6 @@
     gap: var(--nl-spacing-16);
 }
 .noslog-ui .nl-account-confirmation .nl-input {
-    min-height: 44px;
     font-size: var(--nl-type-size-14);
     line-height: var(--nl-type-line-height-20);
 }

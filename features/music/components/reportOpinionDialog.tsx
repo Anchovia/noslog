@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useId } from "react";
-import { useForm, useWatch } from "react-hook-form";
+import { Controller, useForm, useWatch } from "react-hook-form";
 import type { z } from "zod";
 import {
     useLocalizedHref,
@@ -111,21 +111,34 @@ export default function ReportOpinionDialog({
                                 : undefined
                         }
                     >
-                        <Select
-                            id={`${id}-reason`}
-                            {...form.register("reason")}
-                            aria-invalid={Boolean(form.formState.errors.reason)}
-                            disabled={mutation.isPending}
-                        >
-                            <option value="">—</option>
-                            {opinionReportSchema.shape.reason.options.map(
-                                (reason) => (
-                                    <option key={reason} value={reason}>
-                                        {t(`community.report.${reason}`)}
-                                    </option>
-                                )
+                        <Controller
+                            control={form.control}
+                            name="reason"
+                            render={({ field }) => (
+                                <Select
+                                    id={`${id}-reason`}
+                                    value={field.value ?? ""}
+                                    onValueChange={field.onChange}
+                                    onBlur={field.onBlur}
+                                    triggerRef={field.ref}
+                                    invalid={Boolean(
+                                        form.formState.errors.reason
+                                    )}
+                                    disabled={mutation.isPending}
+                                    options={[
+                                        { value: "", label: "—" },
+                                        ...opinionReportSchema.shape.reason.options.map(
+                                            (reason) => ({
+                                                value: reason,
+                                                label: t(
+                                                    `community.report.${reason}`
+                                                ),
+                                            })
+                                        ),
+                                    ]}
+                                />
                             )}
-                        </Select>
+                        />
                     </FormField>
                     {reason === "other" ? (
                         <FormField
