@@ -227,8 +227,8 @@ input rules and is implemented in code only — Figma C1–C8 do not show it.
   and the applied-conditions clear-all action. Allow multiline labels to grow.
 - **Field:** face `surface/surface`, 1px `border/input` (`#717171`, an alias of an
   existing neutral; 4.02:1 on the page, 3.53:1 on the field); hover changes only
-  the border to `border/strong`. Select triggers, the Music Detail area select and
-  outlined CompactSelect use the same field.
+  the border to `border/strong`. Select triggers and outlined CompactSelect use the
+  same field.
 - **Corner radius:** `radius/field` 8 for pressable boxes — inputs, selects, search
   fields, buttons (icon buttons included), triggers, CompactSelect, the sign-in
   language trigger, `FilterChips`, `AppliedTokens`, pagination page buttons and the
@@ -273,6 +273,17 @@ input rules and is implemented in code only — Figma C1–C8 do not show it.
   `Just`, `Good`, `Near` or `Miss`. Bingo mission text in the database may still
   hold old spellings; `BingoTermHelp` matches terms case-insensitively and shows
   the canonical spelling.
+- **Underline tabs:** one look, two levels (`nl-tabs` in `foundation.css`).
+  Unselected `content/subdued` 500, selected `content/default` 600 with a 2px
+  `content/default` underline across the tab, hover brightens the text only
+  (no face), focus is the 1px inside border. **Level 1** (`nl-tabs--primary`,
+  `AreaTabs` — page areas such as Music Detail): 48 high, a 1px `border/divider`
+  across the full content width, tabs at every width and the row scrolls
+  horizontally when it overflows (the selected tab is scrolled into view; no
+  select fallback). **Level 2** (`MetricSwitch` — switching the basis of the same
+  list, Rankings/Profile): no divider, control height so it lines up with the
+  select in the same row. Level 1 is a `tablist`; level 2 stays a group of
+  `aria-pressed` buttons.
 - **Search field:** same height, face, border and radius as an input (the former
   52px height and container radius were removed). Input text stays 16/24 at every
   width — below 16px iOS Safari zooms on focus, and a desktop-only 14px was not adopted.
