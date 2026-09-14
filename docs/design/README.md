@@ -19,6 +19,10 @@ width is not a CSS breakpoint. Raw exported container widths must not override
 this common-shell decision. If Figma lacks a state, inspect existing functionality
 and the product references; do not invent or remove product behavior.
 
+Figma is now read-only and receives no new frames. Code-only user decisions
+recorded in this contract (for example the 2026-09-14 control language below)
+override the corresponding Figma components and pages where they differ.
+
 The chart editor (`/admin/music/*/pattern`) and `/admin/*` are preserved. The
 ordinary music/chart discovery catalogue and Music Detail remain in scope.
 Since 2026-09-10 the public chart viewer page (`/music/*/*/pattern`) uses the
@@ -44,6 +48,9 @@ NosLog's approved choices, not a claim about osu!'s current CSS.
 - Home search, destination grid, official news and NosLog announcements share a
   centered inner maximum of 640px. An inner reading measure can be narrower while
   retaining the common outer shell; it must not establish another page tier.
+- Home section headings (announcements, official news) use `section-title` 20/28
+  like every other page's section heading (user decision 2026-09-14); they were
+  one step smaller than the rest of the site and equal to the item titles below them.
 
 ## Page modes
 
@@ -91,8 +98,8 @@ One grammar for every surface that opens to filter or sort (Music, Tiers,
 Arcades, Bingo), built from shared primitives in `components/ui`:
 
 - **Sort is separate from filters** at every width: `SortMenu` is a popover of
-  mutually exclusive options (row 40, selected = `interaction/menu-set` + weight +
-  check) opened from a toolbar trigger showing the current criterion. Dependent
+  mutually exclusive options (rows 40, 4px apart, selected = `interaction/menu-set` +
+  weight + check) opened from a toolbar trigger showing the current criterion. Dependent
   choices (sort difficulty, direction) sit below a divider inside the menu.
 - **Filter trigger** is labelled `필터` with the applied-group count badge; the
   container stays as decided on 2026-09-07 — full-screen layer below 672px,
@@ -100,13 +107,13 @@ Arcades, Bingo), built from shared primitives in `components/ui`:
 - **Groups** use `FilterGroup`: `component-title` heading, right-hand slot
   (selected count in the batch layer, `지우기` in instant containers, login link
   when signed out), 24px gap and a 1px `border/divider` between groups.
-- **Short enumerations render as `FilterChips`** (36px, selected = `surface/raised`
+- **Short enumerations render as `FilterChips`** (36px, radius `radius/field` 8, selected = `surface/raised`
     - `border/strong` + 16px check + semibold; difficulty chips use the DU-01 text
       ramp) inside layers and popovers. **Wide rails keep vertical checkbox lists**
       (`SelectionList`, checkbox always visible, row 40) — the desktop sidebar
       convention. Long lists (tier bands) and range sliders are unchanged.
 - **Applied conditions** always render as `AppliedTokens` (32px tokens with ×,
-  plus clear-all) on all four pages.
+  radius `radius/field` 8, plus clear-all) on all four pages.
 - The full-screen layer has a `초기화` header action and the `결과 N개 보기`
   footer; popovers apply instantly and carry only the reset action.
 - `RadioGroup` legends now use `component-title`, which also fixes the settings
@@ -204,20 +211,53 @@ The retired 90% layout, 1440px maximum, proposed 1200/1280px stepping, unreachab
 
 ## Styling and behavior boundaries
 
-Standard text buttons use a 40px minimum height in every page mode, matching all
-C1 Button variants (`88:46`). Button height is independent of the responsive
-control height; do not change input, checkbox-row or icon-control sizing when
-applying this rule. Allow multiline labels to grow without clipping.
+### Inputs, selects, search fields and buttons — 2026-09-14
+
+One control language (user decision 2026-09-14, recorded in `CLAUDE.md`; research
+in `docs/research/`). It replaces the earlier fixed 40px button and fixed 44px
+input rules and is implemented in code only — Figma C1–C8 do not show it.
+
+- **Height:** single-line inputs, selects, search fields, standard buttons,
+  filter/sort triggers and CompactSelect all use `--nl-control-height` — 44px
+  below 1056px, 40px from 1056px. `--nl-button-height` and `--nl-input-height`
+  were removed; do not pin a page's buttons back to 40px. Multiline fields keep
+  their larger minimum. The approved 32px exceptions remain: arcade cabinet actions
+  and the applied-conditions clear-all action. Allow multiline labels to grow.
+- **Field:** face `surface/surface`, 1px `border/input` (`#717171`, an alias of an
+  existing neutral; 4.02:1 on the page, 3.53:1 on the field); hover changes only
+  the border to `border/strong`. Select triggers, the Music Detail area select and
+  outlined CompactSelect use the same field.
+- **Corner radius:** `radius/field` 8 for pressable boxes — inputs, selects, search
+  fields, buttons (icon buttons included), triggers, CompactSelect, the sign-in
+  language trigger, `FilterChips` and `AppliedTokens`. Items inside a box (menu rows,
+  segment items, the search clear button), checkboxes and non-interactive tags
+  (`nl-tag`, announcement category) keep `radius/control` 4.
+- **Focus:** the existing 1px border swap (FOCUS-1B) plus an outer 4px
+  `--nl-state-halo` on inputs, selects, search fields, buttons and CompactSelect
+  only. Controls nested in the search field (scope select, clear button) paint their
+  hover face and focus ring on a layer inset 4px (radius 4) so they never cover the
+  field border. Checkbox, radio, segment and chip focus is unchanged.
+- **Select menus:** the form `Select` is Radix-based (`value`, `onValueChange`,
+  `options`; an empty-string option is handled internally); use react-hook-form
+  `Controller`. Every select list — form Select, CompactSelect, Music Detail area,
+  sign-in language, exam select — shares the SortMenu look: `surface/overlay` panel,
+  1px `border/overlay`, `--nl-overlay-shadow`, radius 10, 40px rows 4px apart,
+  selected = `interaction/menu-set` + semibold + trailing 16px check, pointer
+  position = `interaction/hover`, keyboard position = 1px focus ring. The exam select
+  omits the check because its trailing slot shows the exam state.
+- **Buttons:** the secondary button takes the field face and border
+  (`surface/surface` + `border/input`); hover and pressed keep `interaction/hover`
+  and `interaction/selected-pressed`. Primary buttons are unchanged.
+- **Search field:** same height, face, border and radius as an input (the former
+  52px height and container radius were removed). Input text stays 16/24 at every
+  width — below 16px iOS Safari zooms on focus, and a desktop-only 14px was not adopted.
+
+### Other component rules
 
 The feedback dialog's image attachment control spans the input width in Compact.
 This user-approved exception replaces the content-width attachment control in P2
 `3375:5629`. From Intermediate, keep it content-width and left-aligned. Compact
 Close and Submit actions retain equal widths; wider modes retain trailing actions.
-
-Shared single-line text inputs retain a 44px minimum height in every page mode,
-including Wide (P9 `2689:1465`, P10 `2734:88338`). Keep their height independent
-of the responsive button/control height. Multiline fields retain their larger
-minimum height; this correction does not resize buttons or icon controls.
 
 The Rankings personal-position notice retains the existing 8px container radius.
 The user approved this rounded form over the square corners in the Figma Wide
