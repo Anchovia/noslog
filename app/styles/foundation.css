@@ -614,7 +614,9 @@ html[data-theme="light"] .noslog-ui,
     padding: var(--nl-spacing-24);
     border-radius: var(--nl-radius-overlay);
     background: var(--nl-surface-overlay);
-    box-shadow: inset 0 0 0 1px var(--nl-border-subtle);
+    box-shadow:
+        inset 0 0 0 1px var(--nl-border-overlay),
+        var(--nl-overlay-shadow);
 }
 .noslog-ui .nl-dialog__header {
     display: flex;

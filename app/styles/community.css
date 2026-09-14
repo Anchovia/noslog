@@ -344,7 +344,7 @@
     border-radius: var(--nl-radius-overlay);
     background: var(--nl-surface-overlay);
     box-shadow: var(--nl-overlay-shadow);
-    border: 1px solid var(--nl-border-subtle);
+    border: 1px solid var(--nl-border-overlay);
     z-index: 70;
 }
 .noslog-ui .nl-action-menu__item {

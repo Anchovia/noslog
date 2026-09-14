@@ -64,7 +64,7 @@
     border-radius: var(--nl-radius-overlay);
     background: var(--nl-surface-overlay);
     box-shadow:
-        inset 0 0 0 1px var(--nl-border-subtle),
+        inset 0 0 0 1px var(--nl-border-overlay),
         var(--nl-overlay-shadow);
     z-index: 86;
 }
