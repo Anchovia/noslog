@@ -16,7 +16,8 @@
     height: 44px;
     align-items: center;
     justify-content: center;
-    border-radius: var(--nl-radius-control);
+    /* 따로 누르는 상자 — 누르는 칸 모서리 8 (2026-09-14) */
+    border-radius: var(--nl-radius-field);
     color: var(--nl-content-interactive);
 }
 .noslog-ui button.nl-pagination__item:hover {

@@ -456,7 +456,7 @@ export default function ArcadeDetailPage({
                     {hasLocation ? (
                         <section className="nl-arcade-detail__section">
                             <div className="nl-arcade-detail__section-head">
-                                <h2 className="nl-component-title">
+                                <h2 className="nl-section-title">
                                     {t("arcades.location")}
                                 </h2>
                             </div>
@@ -474,7 +474,7 @@ export default function ArcadeDetailPage({
 
                     <section className="nl-arcade-detail__section">
                         <div className="nl-arcade-detail__section-head">
-                            <h2 className="nl-component-title">
+                            <h2 className="nl-section-title">
                                 {t("arcades.cabinets")}
                             </h2>
                             {summary.total ? (

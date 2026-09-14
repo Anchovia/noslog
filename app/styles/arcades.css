@@ -457,10 +457,12 @@
     .noslog-ui:has(.nl-arcades[data-sheet-layout]) .nl-footer {
         display: none;
     }
+    /* 세로만 자른다 — 가로까지 자르면 가장자리에 붙은 검색창·버튼의 포커스 후광(바깥 4)이 잘린다 */
     .noslog-ui .nl-arcades[data-sheet-layout] {
         height: calc(100dvh - 60px);
         padding-bottom: 0;
-        overflow: hidden;
+        overflow-x: visible;
+        overflow-y: clip;
     }
     .noslog-ui .nl-arcades[data-sheet-layout] .nl-arcades__results {
         position: relative;
