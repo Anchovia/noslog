@@ -350,7 +350,7 @@
 .noslog-ui .nl-action-menu__item {
     display: flex;
     align-items: center;
-    min-height: 44px;
+    min-height: var(--nl-control-height);
     padding: var(--nl-spacing-8) var(--nl-spacing-12);
     width: 100%;
     text-align: start;

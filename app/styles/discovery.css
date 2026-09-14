@@ -37,7 +37,7 @@
 }
 .noslog-ui .nl-selection-list__option {
     display: flex;
-    min-height: 48px;
+    min-height: var(--nl-control-height);
     align-items: center;
     justify-content: space-between;
     gap: var(--nl-spacing-12);
@@ -181,9 +181,6 @@
 }
 .noslog-ui .nl-discovery__rail .nl-selection-list {
     gap: var(--nl-spacing-8);
-}
-.noslog-ui .nl-discovery__rail .nl-selection-list__option {
-    min-height: 40px;
 }
 .noslog-ui .nl-discovery__results {
     display: flex;

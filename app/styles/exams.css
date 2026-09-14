@@ -79,7 +79,7 @@
     text-align: start;
 }
 .noslog-ui .nl-exam-select__option {
-    min-height: 40px;
+    min-height: var(--nl-control-height);
 }
 .noslog-ui .nl-exam-select__option[data-highlighted] {
     background: var(--nl-interaction-hover);

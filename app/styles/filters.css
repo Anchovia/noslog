@@ -170,7 +170,7 @@
     align-items: center;
     justify-content: space-between;
     gap: var(--nl-spacing-12);
-    min-height: 40px;
+    min-height: var(--nl-control-height);
     padding: var(--nl-spacing-8) var(--nl-spacing-12);
     border-radius: var(--nl-radius-control);
     text-align: left;

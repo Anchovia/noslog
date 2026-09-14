@@ -248,6 +248,12 @@
         line-height: var(--nl-type-line-height-16);
     }
 }
+/* 헤더 메뉴 이동 줄 — 폰 48 · 데스크톱 컨트롤 높이(40). 부품 결정 ⑥ */
+@media (min-width: 1056px) {
+    .noslog-ui .nl-destination {
+        min-height: var(--nl-control-height);
+    }
+}
 @media (min-width: 672px) {
     .noslog-ui.nl-recovery-minimal {
         --nl-layout-margin: var(--nl-grid-margin-intermediate);

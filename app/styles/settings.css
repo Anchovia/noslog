@@ -158,8 +158,8 @@
     max-height: min(320px, 40dvh);
 }
 .noslog-ui .nl-settings__arcade-option {
-    min-height: 44px;
-    padding: var(--nl-spacing-12);
+    min-height: var(--nl-control-height);
+    padding: var(--nl-spacing-8) var(--nl-spacing-12);
     cursor: pointer;
     overflow-wrap: anywhere;
 }
