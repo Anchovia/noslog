@@ -257,6 +257,22 @@ input rules and is implemented in code only — Figma C1–C8 do not show it.
 - **Buttons:** the secondary button takes the field face and border
   (`surface/surface` + `border/input`); hover and pressed keep `interaction/hover`
   and `interaction/selected-pressed`. Primary buttons are unchanged.
+- **Icon buttons:** every icon-only button is `IconButton`
+  (`components/ui/iconButton.tsx`) — the shared button at `size="icon"`, so it is
+  the control height square (40 desktop / 44 mobile), radius 8, with the button
+  hover, pressed and focus states. It requires `label` (the accessible name) and
+  defaults to `ghost`; `secondary` and `primary` give it a face. Icons are 20
+  (`nl-icon`); only an edge close in a layer header uses 24 (the layer-header
+  optical rule). When a ghost icon button is the first or last child of a padded
+  container, pull it out by `(control − 20) / 2` so its ink meets the padding (A17,
+  e.g. the bingo cell popover). Buttons that sit on media keep their own on-media
+  style: the arcade photo arrows (`nl-arcade-photos__nav`) and the map legend.
+  The old `nl-icon-button` class is gone.
+- **Judgement names:** always `◆JUST · JUST · GOOD · NEAR · MISS`, taken from
+  `judgementLabels` in `components/ui/judgementMarker.tsx` — never `S-Just`,
+  `Just`, `Good`, `Near` or `Miss`. Bingo mission text in the database may still
+  hold old spellings; `BingoTermHelp` matches terms case-insensitively and shows
+  the canonical spelling.
 - **Search field:** same height, face, border and radius as an input (the former
   52px height and container radius were removed). Input text stays 16/24 at every
   width — below 16px iOS Safari zooms on focus, and a desktop-only 14px was not adopted.
