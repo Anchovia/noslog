@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ChevronDown, MapPin, Navigation } from "lucide-react";
+import { ChevronDown, MapPin } from "lucide-react";
 import { useId, useState } from "react";
 import { useArcadeSession } from "@/features/arcades/hooks/useArcadeSession";
 import {
@@ -312,7 +312,7 @@ function ArcadeResultMore({
                 <Link
                     href={detailHref}
                     prefetch={false}
-                    className={foundationButtonClass({ size: "sm" })}
+                    className={foundationButtonClass()}
                     onClick={onOpenDetail}
                 >
                     {t("arcades.viewDetails")}
@@ -322,7 +322,6 @@ function ArcadeResultMore({
                         type="button"
                         className={foundationButtonClass({
                             variant: "secondary",
-                            size: "sm",
                         })}
                         onClick={() => onShowOnMap(arcade.id)}
                     >
@@ -333,12 +332,10 @@ function ArcadeResultMore({
                     <a
                         className={foundationButtonClass({
                             variant: "secondary",
-                            size: "sm",
                         })}
                         href={directions}
                         aria-label={`${t("arcades.directions")} · ${t("shell.externalLink")}`}
                     >
-                        <Navigation className="nl-icon-small" aria-hidden />
                         {t("arcades.directions")}
                     </a>
                 ) : null}

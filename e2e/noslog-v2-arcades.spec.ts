@@ -289,14 +289,19 @@ for (const locale of ["ko", "ja", "en"] as const) {
             "alt",
             "Synthetic gallery test image 1"
         );
-        await page
-            .getByRole("button", { name: t["arcades.photoNext"], exact: true })
-            .click();
+        // 672 미만은 넘김 버튼이 없다 — 밀어 넘김 · 키보드 → 로 넘긴다
+        await expect(
+            page.getByRole("button", {
+                name: t["arcades.photoNext"],
+                exact: true,
+            })
+        ).toBeHidden();
+        await main.focus();
+        await main.press("ArrowRight");
         await expect(main.locator("img")).toHaveAttribute(
             "alt",
             "Synthetic gallery test image 2"
         );
-        await main.focus();
         await main.press("Enter");
         const dialog = page.getByRole("dialog");
         await expect(dialog.locator("img")).toHaveAttribute(
