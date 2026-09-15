@@ -162,7 +162,7 @@
     width: calc((100% - 3 * var(--nl-spacing-16)) / 4);
     flex-shrink: 0;
     flex-direction: column;
-    gap: var(--nl-spacing-32);
+    gap: var(--nl-spacing-16);
 }
 .noslog-ui .nl-discovery__rail .nl-selection-list {
     gap: var(--nl-spacing-8);

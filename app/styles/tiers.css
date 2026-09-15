@@ -23,6 +23,10 @@
     flex-direction: column;
     gap: var(--nl-spacing-32);
 }
+/* 레일 안 필터 그룹끼리는 구역 사이(32)가 아니라 선 위아래 16 — 그룹 padding 16 과 합쳐 위아래가 같다 */
+.noslog-ui .nl-tier-rail > .nl-filter-group + .nl-filter-group {
+    margin-top: calc(var(--nl-spacing-16) - var(--nl-spacing-32));
+}
 .noslog-ui .nl-tier-results {
     flex: 1;
     min-width: 0;

@@ -28,7 +28,8 @@
     width: 100px;
     height: 1px;
     background: var(--nl-border-divider);
-    margin-bottom: var(--nl-spacing-8);
+    /* 선 위(묶음 간격 12)와 아래를 같게 — 선으로 나눈 묶음 규칙 2026-09-15 */
+    margin-bottom: var(--nl-spacing-12);
 }
 /* 이전 버전 화면의 돌아가기 링크는 공용 BackLink 모양 그대로 둔다 */
 .noslog-ui .nl-privacy a:not(.nl-back-link) {
