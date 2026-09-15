@@ -20,8 +20,10 @@
     border-radius: var(--nl-radius-field);
     color: var(--nl-content-interactive);
 }
-.noslog-ui button.nl-pagination__item:hover {
-    background: var(--nl-interaction-hover);
+@media (hover: hover) {
+    .noslog-ui button.nl-pagination__item:hover {
+        background: var(--nl-interaction-hover);
+    }
 }
 .noslog-ui .nl-pagination__item[aria-current="page"] {
     box-shadow: inset 0 0 0 1px var(--nl-border-strong);

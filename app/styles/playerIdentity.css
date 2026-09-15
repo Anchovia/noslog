@@ -177,9 +177,11 @@
     line-height: var(--nl-type-line-height-24);
     font-weight: var(--nl-type-weight-regular);
 }
-.noslog-ui .nl-compact-select.nl-compact-select--outlined:hover {
-    background: var(--nl-surface-surface);
-    box-shadow: inset 0 0 0 1px var(--nl-border-strong);
+@media (hover: hover) {
+    .noslog-ui .nl-compact-select.nl-compact-select--outlined:hover {
+        background: var(--nl-surface-surface);
+        box-shadow: inset 0 0 0 1px var(--nl-border-strong);
+    }
 }
 .noslog-ui .nl-compact-select.nl-compact-select--outlined:focus-visible {
     outline: none;

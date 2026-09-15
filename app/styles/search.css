@@ -9,8 +9,10 @@
     background: var(--nl-surface-surface);
     box-shadow: inset 0 0 0 1px var(--nl-border-input);
 }
-.noslog-ui .nl-search:hover {
-    box-shadow: inset 0 0 0 1px var(--nl-border-strong);
+@media (hover: hover) {
+    .noslog-ui .nl-search:hover {
+        box-shadow: inset 0 0 0 1px var(--nl-border-strong);
+    }
 }
 .noslog-ui .nl-search:has(input:focus-visible) {
     box-shadow:
@@ -60,12 +62,16 @@
     z-index: -1;
     border-radius: var(--nl-radius-control);
 }
-.noslog-ui .nl-search > .nl-compact-select:hover {
-    background: transparent;
+@media (hover: hover) {
+    .noslog-ui .nl-search > .nl-compact-select:hover {
+        background: transparent;
+    }
 }
-.noslog-ui .nl-search > .nl-compact-select:hover::before,
-.noslog-ui .nl-search__clear:hover::before {
-    background: var(--nl-interaction-hover);
+@media (hover: hover) {
+    .noslog-ui .nl-search > .nl-compact-select:hover::before,
+    .noslog-ui .nl-search__clear:hover::before {
+        background: var(--nl-interaction-hover);
+    }
 }
 .noslog-ui .nl-search > .nl-compact-select:focus-visible,
 .noslog-ui .nl-search__clear:focus-visible {
@@ -94,8 +100,10 @@
     width: var(--nl-icon-small);
     height: var(--nl-icon-small);
 }
-.noslog-ui .nl-compact-select:hover {
-    background: var(--nl-interaction-hover);
+@media (hover: hover) {
+    .noslog-ui .nl-compact-select:hover {
+        background: var(--nl-interaction-hover);
+    }
 }
 .noslog-ui .nl-compact-select:disabled {
     color: var(--nl-interaction-disabled-content);

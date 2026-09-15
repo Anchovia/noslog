@@ -64,8 +64,10 @@
     justify-content: space-between;
     gap: var(--nl-spacing-8);
 }
-.noslog-ui .nl-tier-band-option:hover {
-    background: var(--nl-interaction-hover);
+@media (hover: hover) {
+    .noslog-ui .nl-tier-band-option:hover {
+        background: var(--nl-interaction-hover);
+    }
 }
 .noslog-ui .nl-tier-band-option[data-range-start="true"] {
     background: var(--nl-interaction-menu-set);
@@ -267,8 +269,12 @@
 .noslog-ui .nl-tier-card__score-band > span:first-child:not(:last-child) {
     margin-right: auto;
 }
-.noslog-ui .nl-tier-card:hover .nl-tier-card__outline:not([data-achievement]) {
-    box-shadow: inset 0 0 0 1px var(--nl-border-strong);
+@media (hover: hover) {
+    .noslog-ui
+        .nl-tier-card:hover
+        .nl-tier-card__outline:not([data-achievement]) {
+        box-shadow: inset 0 0 0 1px var(--nl-border-strong);
+    }
 }
 .noslog-ui [data-pending="true"] .nl-tier-card {
     color: var(--nl-content-pending);

@@ -310,8 +310,10 @@
     list-style: none;
     cursor: pointer;
 }
-.noslog-ui .nl-recent-play:hover {
-    background: var(--nl-interaction-hover);
+@media (hover: hover) {
+    .noslog-ui .nl-recent-play:hover {
+        background: var(--nl-interaction-hover);
+    }
 }
 .noslog-ui .nl-recent-play::-webkit-details-marker {
     display: none;

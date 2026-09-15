@@ -82,8 +82,10 @@
     width: var(--nl-icon-medium);
     height: var(--nl-icon-medium);
 }
-.noslog-ui .nl-profile-owner-action:hover {
-    background: var(--nl-interaction-hover);
+@media (hover: hover) {
+    .noslog-ui .nl-profile-owner-action:hover {
+        background: var(--nl-interaction-hover);
+    }
 }
 .noslog-ui .nl-profile-identity__chips,
 .noslog-ui .nl-profile-identity__chip-pair {
@@ -238,8 +240,10 @@
     border-radius: var(--nl-radius-container);
     background: var(--nl-surface-sunken);
 }
-.noslog-ui .nl-profile-play-row:hover {
-    background: var(--nl-interaction-hover);
+@media (hover: hover) {
+    .noslog-ui .nl-profile-play-row:hover {
+        background: var(--nl-interaction-hover);
+    }
 }
 .noslog-ui .nl-profile-play-row__jacket {
     grid-column: 1;

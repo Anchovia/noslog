@@ -153,13 +153,21 @@
     border-radius: var(--nl-radius-full);
     background: var(--nl-primary-default);
 }
-.noslog-ui .nl-chart-stage__seek::-webkit-slider-thumb:hover,
 .noslog-ui .nl-chart-stage__seek:active::-webkit-slider-thumb {
     box-shadow: 0 0 0 8px var(--nl-state-halo);
 }
-.noslog-ui .nl-chart-stage__seek::-moz-range-thumb:hover,
+@media (hover: hover) {
+    .noslog-ui .nl-chart-stage__seek::-webkit-slider-thumb:hover {
+        box-shadow: 0 0 0 8px var(--nl-state-halo);
+    }
+}
 .noslog-ui .nl-chart-stage__seek:active::-moz-range-thumb {
     box-shadow: 0 0 0 8px var(--nl-state-halo);
+}
+@media (hover: hover) {
+    .noslog-ui .nl-chart-stage__seek::-moz-range-thumb:hover {
+        box-shadow: 0 0 0 8px var(--nl-state-halo);
+    }
 }
 .noslog-ui .nl-chart-stage__seek:focus-visible::-webkit-slider-thumb {
     box-shadow:

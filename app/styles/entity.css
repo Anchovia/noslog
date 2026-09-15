@@ -52,8 +52,10 @@
     border-radius: var(--nl-radius-container);
     background: var(--nl-surface-surface);
 }
-.noslog-ui .nl-music-card:hover {
-    background: var(--nl-interaction-hover);
+@media (hover: hover) {
+    .noslog-ui .nl-music-card:hover {
+        background: var(--nl-interaction-hover);
+    }
 }
 .noslog-ui .nl-music-card:focus-visible {
     position: relative;
