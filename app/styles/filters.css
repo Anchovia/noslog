@@ -1,11 +1,11 @@
 /* 필터·정렬 공통 문법 (2026-09-11) — FilterGroup · FilterChips · SortMenu · AppliedTokens · FilterSurface
    그릇(전체 레이어 · 레일 · 팝오버)은 페이지별 결정을 유지하고 안쪽 문법만 여기서 통일한다 */
 
-/* 그룹: 제목 component-title + 오른쪽 슬롯, 형제 사이 24 + 1px divider */
+/* 그룹: 제목 component-title + 오른쪽 슬롯(제목 → 내용 8), 형제 사이 24 + 1px divider */
 .noslog-ui .nl-filter-group {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-12);
+    gap: var(--nl-spacing-8);
     min-width: 0;
 }
 .noslog-ui .nl-filter-group + .nl-filter-group {

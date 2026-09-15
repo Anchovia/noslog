@@ -130,10 +130,11 @@
     gap: var(--nl-spacing-32);
     padding-block: var(--nl-spacing-32);
 }
+/* 구역 사이 32 (간격 결정 2026-09-15) */
 .noslog-ui .nl-profile-body {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-48);
+    gap: var(--nl-spacing-32);
 }
 @media (min-width: 1056px) {
     .noslog-ui .nl-profile-identity__row {
@@ -187,7 +188,7 @@
     display: flex;
     flex-direction: column;
     min-width: 0;
-    gap: var(--nl-spacing-16);
+    gap: var(--nl-spacing-12);
     scroll-margin-top: 76px;
     container: profile-section / inline-size;
 }

@@ -20,6 +20,10 @@
 .noslog-ui .nl-sync-setup {
     gap: var(--nl-spacing-16);
 }
+/* 단계 제목(상자 제목) → 첫 내용은 8 — 내용끼리 간격(16)에서 당겨 맞춘다 (간격 결정 2026-09-15) */
+.noslog-ui .nl-sync-setup > :is(.nl-sync-step-heading, .nl-component-title) {
+    margin-bottom: calc(var(--nl-spacing-8) - var(--nl-spacing-16));
+}
 .noslog-ui .nl-sync-install-card {
     display: flex;
     flex-direction: column;
@@ -216,11 +220,17 @@
     .noslog-ui .nl-sync-guide-step .nl-sync-setup {
         gap: var(--nl-spacing-12);
     }
+    .noslog-ui
+        .nl-sync-guide-step
+        .nl-sync-setup
+        > :is(.nl-sync-step-heading, .nl-component-title) {
+        margin-bottom: calc(var(--nl-spacing-8) - var(--nl-spacing-12));
+    }
 }
 
 .noslog-ui .nl-sync-overview {
     display: grid;
-    gap: var(--nl-spacing-12);
+    gap: var(--nl-spacing-8);
     width: 100%;
 }
 .noslog-ui .nl-sync-overview-step {
