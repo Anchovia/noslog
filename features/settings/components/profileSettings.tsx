@@ -169,7 +169,6 @@ export default function ProfileSettings({
                             <Button
                                 ref={photoButton}
                                 appearance="foundation"
-                                size="sm"
                                 variant="secondary"
                                 disabled={isSubmitting}
                                 onClick={() => fileInput.current?.click()}
@@ -179,7 +178,6 @@ export default function ProfileSettings({
                             {avatar ? (
                                 <Button
                                     appearance="foundation"
-                                    size="sm"
                                     variant="ghost"
                                     disabled={isSubmitting}
                                     onClick={() => {
@@ -288,7 +286,6 @@ export default function ProfileSettings({
                             <Button
                                 ref={arcadeButton}
                                 appearance="foundation"
-                                size="sm"
                                 variant="secondary"
                                 disabled={isSubmitting}
                                 onClick={() => setArcadeOpen(true)}
@@ -298,7 +295,6 @@ export default function ProfileSettings({
                             {arcadeId ? (
                                 <Button
                                     appearance="foundation"
-                                    size="sm"
                                     variant="ghost"
                                     disabled={isSubmitting}
                                     onClick={() =>
@@ -354,7 +350,6 @@ export default function ProfileSettings({
                     </p>
                     <Button
                         appearance="foundation"
-                        size="sm"
                         type="submit"
                         disabled={!isDirty || !isValid || isSubmitting}
                     >
@@ -420,7 +415,6 @@ export default function ProfileSettings({
                         <Button
                             ref={countryCancel}
                             appearance="foundation"
-                            size="sm"
                             variant="secondary"
                             onClick={() => setCountry(null)}
                         >
@@ -428,7 +422,6 @@ export default function ProfileSettings({
                         </Button>
                         <Button
                             appearance="foundation"
-                            size="sm"
                             onClick={() => {
                                 if (country)
                                     setValue("country", country, {

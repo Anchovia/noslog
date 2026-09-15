@@ -17,8 +17,10 @@
         var(--nl-primary-default) 16%,
         transparent
     );
-    /* 입력·셀렉트·검색·버튼·트리거 높이는 이 값 하나 — 1056px 이상 40 (2026-09-14 H2) */
+    /* 컨트롤 높이 두 단계(2026-09-15) — 큰 L: 입력·셀렉트·검색·필터 트리거·페이지 주 액션 = 44 (1056 이상 40)
+       중간 M: 카드 안 버튼·상자 없는 인라인 보조(초기화·전체 지우기)·칩 = 36 (1056 이상 32). 한 줄은 한 단계 */
     --nl-control-height: 44px;
+    --nl-control-height-compact: 36px;
     --nl-icon-small: 16px;
     --nl-icon-medium: 20px;
     --nl-icon-large: 24px;
@@ -105,8 +107,10 @@ html[data-theme="light"] .noslog-ui,
     color: var(--nl-content-interactive);
     text-underline-offset: 3px;
 }
-.noslog-ui .nl-link:hover {
-    text-decoration: underline;
+@media (hover: hover) {
+    .noslog-ui .nl-link:hover {
+        text-decoration: underline;
+    }
 }
 .noslog-ui .nl-text-link--underlined {
     text-decoration: underline;
@@ -147,11 +151,15 @@ html[data-theme="light"] .noslog-ui,
     text-decoration: none;
     transition: background-color var(--nl-motion-duration-50) var(--nl-ease-out);
 }
-.noslog-ui .nl-button:hover {
-    background: var(--nl-primary-hover);
+@media (hover: hover) {
+    .noslog-ui .nl-button:hover {
+        background: var(--nl-primary-hover);
+    }
 }
+/* size="sm" = 중간 단계 M — 세로 패딩 없이 높이로만 맞춘다(글자 20 이 가운데) */
 .noslog-ui .nl-button--compact {
-    min-height: var(--nl-control-height);
+    min-height: var(--nl-control-height-compact);
+    padding-block: 0;
 }
 /* 눌림은 색 단계만 — 크기 축소(scale) 없음(2026-09-12 사용자 결정) */
 .noslog-ui .nl-button:active {
@@ -173,9 +181,11 @@ html[data-theme="light"] .noslog-ui,
     background: transparent;
     color: var(--nl-content-interactive);
 }
-.noslog-ui .nl-button--secondary:hover,
-.noslog-ui .nl-button--ghost:hover {
-    background: var(--nl-interaction-hover);
+@media (hover: hover) {
+    .noslog-ui .nl-button--secondary:hover,
+    .noslog-ui .nl-button--ghost:hover {
+        background: var(--nl-interaction-hover);
+    }
 }
 .noslog-ui .nl-button--secondary:active,
 .noslog-ui .nl-button--ghost:active {
@@ -190,8 +200,10 @@ html[data-theme="light"] .noslog-ui,
     color: var(--nl-feedback-error-text);
     border-color: var(--nl-feedback-destructive-border);
 }
-.noslog-ui .nl-button--danger:hover {
-    background: var(--nl-feedback-danger-bg);
+@media (hover: hover) {
+    .noslog-ui .nl-button--danger:hover {
+        background: var(--nl-feedback-danger-bg);
+    }
 }
 .noslog-ui .nl-button--danger:active {
     background: var(--nl-feedback-danger-bg);
@@ -205,10 +217,15 @@ html[data-theme="light"] .noslog-ui,
     color: var(--nl-feedback-on-destructive);
     border-color: transparent;
 }
-.noslog-ui .nl-button--danger-filled:hover,
 .noslog-ui .nl-button--danger-filled:active {
     background: var(--nl-feedback-destructive-surface-hover);
     border-color: transparent;
+}
+@media (hover: hover) {
+    .noslog-ui .nl-button--danger-filled:hover {
+        background: var(--nl-feedback-destructive-surface-hover);
+        border-color: transparent;
+    }
 }
 .noslog-ui .nl-button--danger-filled:focus-visible {
     border-color: var(--nl-feedback-on-destructive);
@@ -290,8 +307,10 @@ html[data-theme="light"] .noslog-ui,
     line-height: var(--nl-type-line-height-24);
     font-weight: var(--nl-type-weight-regular);
 }
-.noslog-ui .nl-input:hover {
-    border-color: var(--nl-border-strong);
+@media (hover: hover) {
+    .noslog-ui .nl-input:hover {
+        border-color: var(--nl-border-strong);
+    }
 }
 .noslog-ui .nl-input:focus-visible {
     border-color: var(--nl-focus-ring);
@@ -468,8 +487,10 @@ html[data-theme="light"] .noslog-ui,
 .noslog-ui .nl-tabs--primary .nl-tabs__item {
     min-height: 48px;
 }
-.noslog-ui .nl-tabs__item:hover {
-    color: var(--nl-content-default);
+@media (hover: hover) {
+    .noslog-ui .nl-tabs__item:hover {
+        color: var(--nl-content-default);
+    }
 }
 .noslog-ui .nl-tabs__item:is([data-state="active"], [aria-pressed="true"]) {
     color: var(--nl-content-default);
@@ -515,8 +536,10 @@ html[data-theme="light"] .noslog-ui,
     flex: 1;
     min-width: 0;
 }
-.noslog-ui .nl-disclosure > summary:hover {
-    background: var(--nl-interaction-hover);
+@media (hover: hover) {
+    .noslog-ui .nl-disclosure > summary:hover {
+        background: var(--nl-interaction-hover);
+    }
 }
 .noslog-ui .nl-disclosure__body {
     padding-top: var(--nl-spacing-16);
@@ -540,11 +563,15 @@ html[data-theme="light"] .noslog-ui,
     margin-inline: 0;
     padding-inline: var(--nl-spacing-16);
 }
-.noslog-ui .nl-disclosure--card > summary:hover {
-    background: none;
+@media (hover: hover) {
+    .noslog-ui .nl-disclosure--card > summary:hover {
+        background: none;
+    }
 }
-.noslog-ui .nl-disclosure--card:has(> summary:hover) {
-    background: var(--nl-interaction-hover);
+@media (hover: hover) {
+    .noslog-ui .nl-disclosure--card:has(> summary:hover) {
+        background: var(--nl-interaction-hover);
+    }
 }
 .noslog-ui .nl-disclosure--card > .nl-disclosure__body {
     padding-inline: var(--nl-spacing-16);
@@ -634,8 +661,10 @@ html[data-theme="light"] .noslog-ui,
     margin: -10px -10px -10px 0;
     border-radius: var(--nl-radius-control);
 }
-.noslog-ui .nl-dialog__close:hover {
-    background: var(--nl-interaction-hover);
+@media (hover: hover) {
+    .noslog-ui .nl-dialog__close:hover {
+        background: var(--nl-interaction-hover);
+    }
 }
 .noslog-ui .nl-dialog__actions {
     display: flex;
@@ -669,6 +698,7 @@ html[data-theme="light"] .noslog-ui,
 @media (min-width: 1056px) {
     .noslog-ui {
         --nl-control-height: 40px;
+        --nl-control-height-compact: 32px;
     }
 }
 @media (prefers-reduced-motion: reduce) {

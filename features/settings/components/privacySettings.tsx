@@ -115,7 +115,6 @@ export default function PrivacySettings({
                 </p>
                 <Button
                     appearance="foundation"
-                    size="sm"
                     type="submit"
                     disabled={!isDirty || isSubmitting}
                 >

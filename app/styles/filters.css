@@ -40,10 +40,12 @@
     position: absolute;
     inset: -12px 0;
 }
-.noslog-ui .nl-filter-group__aside button:hover,
-.noslog-ui .nl-filter-group__aside a:hover {
-    text-decoration: underline;
-    text-underline-offset: 3px;
+@media (hover: hover) {
+    .noslog-ui .nl-filter-group__aside button:hover,
+    .noslog-ui .nl-filter-group__aside a:hover {
+        text-decoration: underline;
+        text-underline-offset: 3px;
+    }
 }
 
 /* 칩: 높이 36 · 선택 = raised + border/strong + 체크 + 굵기 (세그먼트 선택 언어)
@@ -57,15 +59,17 @@
     display: inline-flex;
     align-items: center;
     gap: var(--nl-spacing-4);
-    min-height: 36px;
+    min-height: var(--nl-control-height-compact);
     padding-inline: var(--nl-spacing-12);
     border-radius: var(--nl-radius-field);
     box-shadow: inset 0 0 0 1px var(--nl-border-strong);
     background: transparent;
     color: var(--nl-content-default);
 }
-.noslog-ui .nl-chip:hover {
-    background: var(--nl-interaction-hover);
+@media (hover: hover) {
+    .noslog-ui .nl-chip:hover {
+        background: var(--nl-interaction-hover);
+    }
 }
 .noslog-ui .nl-chip[aria-pressed="true"] {
     background: var(--nl-surface-raised);
@@ -177,8 +181,15 @@
     text-align: left;
     color: var(--nl-content-default);
 }
-.noslog-ui .nl-sort-menu__item:hover {
-    background: var(--nl-interaction-hover);
+/* 시트 요약 줄처럼 M 단계에 놓인 정렬 트리거(size="sm") — 트리거 기본 높이(L · discovery.css 의 고정 height)보다 우선 */
+.noslog-ui .nl-button--compact.nl-filter-trigger {
+    height: var(--nl-control-height-compact);
+    min-height: var(--nl-control-height-compact);
+}
+@media (hover: hover) {
+    .noslog-ui .nl-sort-menu__item:hover {
+        background: var(--nl-interaction-hover);
+    }
 }
 .noslog-ui .nl-sort-menu__item[aria-checked="true"] {
     background: var(--nl-interaction-menu-set);
@@ -211,7 +222,6 @@
     padding: 0 var(--nl-spacing-12) var(--nl-spacing-8);
 }
 .noslog-ui .nl-sort-menu__section .nl-chip {
-    min-height: 32px;
     padding-inline: var(--nl-spacing-8);
 }
 .noslog-ui .nl-filter-trigger__label {
@@ -264,19 +274,16 @@
     display: inline-flex;
     align-items: center;
     gap: var(--nl-spacing-4);
-    min-height: 32px;
+    min-height: var(--nl-control-height-compact);
     padding: 0 var(--nl-spacing-8) 0 var(--nl-spacing-12);
     border-radius: var(--nl-radius-field);
     box-shadow: inset 0 0 0 1px var(--nl-border-default);
     color: var(--nl-content-default);
 }
-.noslog-ui .nl-applied > .nl-button {
-    /* 토큰(32)과 한 줄 — 상자 없는 인라인 액션이라 버튼 높이 40 을 쓰지 않는다 */
-    min-height: 32px;
-    height: 32px;
-}
-.noslog-ui .nl-applied__token:hover {
-    background: var(--nl-interaction-hover);
+@media (hover: hover) {
+    .noslog-ui .nl-applied__token:hover {
+        background: var(--nl-interaction-hover);
+    }
 }
 .noslog-ui .nl-applied__token:focus-visible {
     outline: none;

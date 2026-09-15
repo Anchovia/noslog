@@ -89,7 +89,6 @@ export default function UnsavedChangesGuard({
                     <Button
                         ref={cancel}
                         appearance="foundation"
-                        size="sm"
                         variant="secondary"
                         onClick={() => setDestination(null)}
                     >
@@ -97,7 +96,6 @@ export default function UnsavedChangesGuard({
                     </Button>
                     <Button
                         appearance="foundation"
-                        size="sm"
                         onClick={() => {
                             if (destination) {
                                 leaving.current = true;

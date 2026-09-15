@@ -188,7 +188,6 @@ export default function OnboardingForm({
             ) : null}
             <Button
                 appearance="foundation"
-                size="sm"
                 type="submit"
                 disabled={isSubmitting}
                 className="nl-auth-submit"

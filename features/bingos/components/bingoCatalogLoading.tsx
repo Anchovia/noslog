@@ -18,7 +18,6 @@ export default function BingoCatalogLoading({
                     <Button
                         appearance="foundation"
                         variant="secondary"
-                        size="sm"
                         disabled
                     >
                         <ListFilter className="nl-icon" aria-hidden />

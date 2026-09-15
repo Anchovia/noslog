@@ -152,7 +152,6 @@ export default function AvatarCropDialog({
                     <Button
                         ref={cancel}
                         appearance="foundation"
-                        size="sm"
                         variant="secondary"
                         disabled={busy}
                         onClick={onCancel}
@@ -161,7 +160,6 @@ export default function AvatarCropDialog({
                     </Button>
                     <Button
                         appearance="foundation"
-                        size="sm"
                         disabled={!ready || busy}
                         onClick={confirm}
                     >
@@ -224,7 +222,6 @@ export default function AvatarCropDialog({
             >
                 <Button
                     appearance="foundation"
-                    size="sm"
                     variant="secondary"
                     disabled={!ready || busy || zoom <= 1}
                     onClick={() =>
@@ -235,7 +232,6 @@ export default function AvatarCropDialog({
                 </Button>
                 <Button
                     appearance="foundation"
-                    size="sm"
                     variant="secondary"
                     disabled={!ready || busy || zoom >= 4}
                     onClick={() =>

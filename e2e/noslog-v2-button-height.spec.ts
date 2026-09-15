@@ -29,6 +29,12 @@ for (const locale of ["ko", "ja", "en"] as const) {
                 await expect
                     .poll(async () => (await apply.boundingBox())?.height)
                     .toBe(height);
+                // 머리 줄 「초기화」 는 상자 없는 인라인 보조 = 중간 단계 M(1056 미만 36 · 이상 32)
+                const reset = dialog.getByRole("button", {
+                    name: t["common.reset"],
+                    exact: true,
+                });
+                await expect(reset).toHaveCSS("min-height", "36px");
                 await page.keyboard.press("Escape");
                 await expect(dialog).toHaveCount(0);
             }
