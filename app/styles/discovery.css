@@ -340,7 +340,7 @@
         gap: var(--nl-spacing-16);
     }
 }
-/* 4열은 672(Intermediate 경계)부터 — 1000 셸에서 Wide 결과 영역이 710 고정이라 옛 720 임계값은 닿지 않는다. 카드 최소 156. 5열 단계는 Intermediate 상단(952)→Wide(710) 역전 때문에 두지 않는다 */
+/* 4열은 672(Intermediate 경계)부터 — 카드 최소 156. 5열 단계는 Intermediate 상단 → Wide(레일 등장) 역전 때문에 두지 않는다 (1200 셸에서 Wide 결과 영역 890) */
 @container results (min-width: 672px) {
     .noslog-ui .nl-discovery__items--grid {
         grid-template-columns: repeat(4, minmax(0, 1fr));

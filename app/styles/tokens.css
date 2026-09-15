@@ -44,6 +44,7 @@
     --nl-grid-gutter-wide: 16px;
     --nl-grid-margin-compact: 16px;
     --nl-grid-margin-intermediate: 24px;
+    --nl-grid-margin-wide: 32px;
     --nl-container-reading: 768px;
     --nl-elevation-overlay:
         0 0 1px rgb(0 0 0 / 12%), 0 2px 3px rgb(0 0 0 / 4%),

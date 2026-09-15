@@ -1,5 +1,6 @@
 .noslog-ui {
-    --nl-layout-max: 1000px;
+    /* 본문 최대 폭 1200 — 레이아웃 결정 2026-09-15 (사이트 16곳 중 9곳이 1200–1280) */
+    --nl-layout-max: 1200px;
     --nl-layout-margin: var(--nl-grid-margin-compact);
 }
 .noslog-ui.nl-app {
@@ -240,6 +241,15 @@
     .noslog-ui .nl-header__interaction,
     .noslog-ui .nl-footer__content {
         --nl-layout-margin: var(--nl-grid-margin-intermediate);
+    }
+}
+/* 1056 이상 좌우 여백 32 — 컨테이너(1200)에 못 미치는 1056–1263 에서만 보인다 */
+@media (min-width: 1056px) {
+    .noslog-ui .nl-main,
+    .noslog-ui .nl-header__interaction,
+    .noslog-ui .nl-footer__content,
+    .noslog-ui.nl-recovery-minimal {
+        --nl-layout-margin: var(--nl-grid-margin-wide);
     }
 }
 @media (max-width: 359px) {
