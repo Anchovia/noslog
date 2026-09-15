@@ -1,10 +1,3 @@
-.noslog-ui .nl-exam-badges {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--nl-spacing-8);
-    align-self: stretch;
-    min-width: 0;
-}
 /* 검정 명판 — 금속 사다리 · 급이 오를수록 안쪽 선·면·장식이 붙는다(2026-09-13).
    Basic 은 직각, Recital 은 모서리가 radius/control 만큼 안으로 파인다. */
 .noslog-ui .nl-exam-badge {

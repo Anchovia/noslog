@@ -139,11 +139,6 @@ export interface PublicTierBandPayload {
 export type TierRecordStatus =
     "pianist" | "fc" | "s" | "a_plus" | "played" | "unplayed";
 
-export const tierModeStyles: Record<string, string> = {
-    basic: "bg-chart/15 text-chart",
-    recital: "bg-recital/15 text-recital",
-};
-
 export const MIN_TIER_VALUE = 1;
 export const MAX_TIER_VALUE = 14.5;
 export const TIER_BAND_VALUES = Array.from(
@@ -184,18 +179,4 @@ export function getTierRecordStatus(
     if (record.score >= 950_000) return "s";
     if (record.score >= 900_000) return "a_plus";
     return "played";
-}
-
-export function formatTierDate(date: Date | string, locale = "ko") {
-    const localeTag =
-        locale === "ja" ? "ja-JP" : locale === "en" ? "en-US" : "ko-KR";
-
-    return new Intl.DateTimeFormat(localeTag, {
-        month: "2-digit",
-        day: "2-digit",
-        timeZone: "Asia/Seoul",
-    })
-        .format(typeof date === "string" ? new Date(date) : date)
-        .replaceAll(". ", ".")
-        .replace(/\.$/, "");
 }

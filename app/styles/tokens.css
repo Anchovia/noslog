@@ -33,13 +33,9 @@
     --nl-type-weight-medium: 500;
     --nl-type-weight-semibold: 600;
     --nl-type-weight-bold: 700;
-    --nl-motion-duration-0: 0ms;
     --nl-motion-duration-50: 50ms;
     --nl-motion-duration-100: 100ms;
-    --nl-motion-duration-150: 150ms;
     --nl-motion-duration-200: 200ms;
-    --nl-motion-duration-250: 250ms;
-    --nl-motion-duration-400: 400ms;
     --nl-grid-gutter-compact: 12px;
     --nl-grid-gutter-wide: 16px;
     --nl-grid-margin-compact: 16px;
@@ -290,13 +286,6 @@ html[data-theme="light"] .noslog-ui,
     letter-spacing: 0;
     font-variant-numeric: normal;
 }
-.noslog-ui .nl-entity-companion {
-    font-size: var(--nl-type-size-14);
-    line-height: var(--nl-type-line-height-20);
-    font-weight: var(--nl-type-weight-regular);
-    letter-spacing: 0;
-    font-variant-numeric: normal;
-}
 .noslog-ui .nl-body {
     font-size: var(--nl-type-size-16);
     line-height: var(--nl-type-line-height-24);
@@ -342,20 +331,6 @@ html[data-theme="light"] .noslog-ui,
 .noslog-ui .nl-emphasis-label {
     font-size: var(--nl-type-size-14);
     line-height: var(--nl-type-line-height-20);
-    font-weight: var(--nl-type-weight-semibold);
-    letter-spacing: 0;
-    font-variant-numeric: normal;
-}
-.noslog-ui .nl-nav-fit {
-    font-size: var(--nl-type-size-12);
-    line-height: var(--nl-type-line-height-16);
-    font-weight: var(--nl-type-weight-medium);
-    letter-spacing: 0;
-    font-variant-numeric: normal;
-}
-.noslog-ui .nl-nav-fit-current {
-    font-size: var(--nl-type-size-12);
-    line-height: var(--nl-type-line-height-16);
     font-weight: var(--nl-type-weight-semibold);
     letter-spacing: 0;
     font-variant-numeric: normal;

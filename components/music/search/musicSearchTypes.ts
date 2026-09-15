@@ -6,42 +6,6 @@ import type { MusicCategory } from "@/lib/musicCategories";
 
 export type { MusicCategory } from "@/lib/musicCategories";
 
-export const MUSIC_CATEGORIES = [
-    {
-        label: "pops",
-        value: "pops",
-        className: "border-genre-pops bg-genre-pops/15 text-genre-pops",
-    },
-    {
-        label: "anime",
-        value: "anime",
-        className: "border-genre-anime bg-genre-anime/15 text-genre-anime",
-    },
-    {
-        label: "BM",
-        value: "BM",
-        className: "border-genre-bm bg-genre-bm/15 text-genre-bm",
-    },
-    {
-        label: "Org",
-        value: "Org",
-        className:
-            "border-genre-original bg-genre-original/15 text-genre-original",
-    },
-    {
-        label: "Var",
-        value: "Var",
-        className:
-            "border-genre-variety bg-genre-variety/15 text-genre-variety",
-    },
-    {
-        label: "Cl/Jz",
-        value: "Cl/Jz",
-        className:
-            "border-genre-classic-jazz bg-genre-classic-jazz/15 text-genre-classic-jazz",
-    },
-] as const;
-
 export const MUSIC_DIFFICULTIES = [
     {
         label: "Normal",

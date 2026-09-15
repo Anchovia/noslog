@@ -15,11 +15,3 @@ export const patternItems = [
     label: string;
     labelKey: MessageKey;
 }[];
-
-export const patternLevelKeys = [
-    "music.tier.level.none",
-    "music.tier.level.low",
-    "music.tier.level.medium",
-    "music.tier.level.high",
-    "music.tier.level.veryHigh",
-] as const;

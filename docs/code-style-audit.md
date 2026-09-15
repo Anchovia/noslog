@@ -238,7 +238,9 @@ The external bookmarklet, OAuth, health, binary and CSV protocols are untouched.
   `app/api/getPlayerData.js`, `components/bookmarklet/guideMediaPlaceholder.tsx`,
   `components/music/musicTitle.tsx`, and `components/ui/Card.tsx`.
   The first is an executable legacy external-data script; import-graph absence
-  cannot establish whether it is used manually. These files were not removed.
+  cannot establish whether it is used manually. These files were not removed
+  at the time; `app/api/getPlayerData.js` was later removed in the 2026-09-15
+  cleanup after confirming nothing calls it.
 - The initial Prettier findings included four GitHub issue templates and the
   Foundation regression HTML. The issue-template formatting is now corrected;
   the design specimen remains untouched. See the current handoff for the latest

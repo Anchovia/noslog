@@ -137,7 +137,6 @@
 .noslog-ui .nl-full-dialog__footer > button {
     width: 100%;
 }
-.noslog-ui .nl-filter-ranges,
 .noslog-ui .nl-filter-miss {
     display: flex;
     flex-direction: column;

@@ -1,7 +1,10 @@
-import type { GradeHistoryPoint } from "../chart";
-import type { ProfileSJustAnalytics } from "@/lib/profile/profileAnalytics";
-
 export type ProfileMode = "basic" | "recital";
+
+export interface GradeHistoryPoint {
+    besttime: string;
+    grade_basic: number;
+    grade_recital: number;
+}
 
 export interface ProfileUser {
     id: number;
@@ -80,14 +83,9 @@ export interface ProfileDashboardProps {
     recitalBestPlays: BestPlayItem[];
     recentPlays: RecentPlayItem[];
     isOwner: boolean;
-    ownerAnalytics: ProfileOwnerAnalytics | null;
 }
 
 export interface ProfileRankRow {
     label: string;
     value: number;
-}
-
-export interface ProfileOwnerAnalytics {
-    judgement: ProfileSJustAnalytics;
 }

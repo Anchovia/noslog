@@ -124,13 +124,6 @@
     flex-wrap: wrap;
     gap: var(--nl-spacing-4);
 }
-.noslog-ui .nl-sync-process {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-12);
-    list-style: decimal;
-    padding-inline-start: var(--nl-spacing-16);
-}
 .noslog-ui .nl-sync-media {
     width: 100%;
     min-height: 64px;

@@ -5,16 +5,6 @@ import type {
     BingoStatusFilter,
 } from "./bingoListTypes";
 
-export const BINGO_STATUS_FILTERS: {
-    value: BingoStatusFilter;
-    label: string;
-}[] = [
-    { value: "all", label: "전체" },
-    { value: "progress", label: "진행 중" },
-    { value: "rich", label: "빙고 찬스" },
-    { value: "completed", label: "완료" },
-];
-
 export function getBingoStatusCounts(
     bingos: BingoListItem[]
 ): BingoStatusCounts {

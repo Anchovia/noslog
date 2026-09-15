@@ -24,7 +24,6 @@ export default defineConfig([
     },
     {
         files: [
-            "app/api/getPlayerData.js",
             "lib/services/**/*.{js,ts}",
             "prisma/**/*.{js,mjs,ts}",
             "scripts/**/*.{js,mjs,ts}",
