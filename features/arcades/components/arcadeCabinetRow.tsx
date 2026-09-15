@@ -24,12 +24,15 @@ export function cabinetLabel(
     );
 }
 
-export type CabinetState = "unknown" | "unavailable" | "caution" | "available";
+/** 색 점의 단계 — 가동 중이면 상태(양호 · 보통 · 주의)를 따르고, 보통은 노랑 · 주의는 이용 불가와 같은 빨강(2026-09-15) */
+export type CabinetState =
+    "unknown" | "unavailable" | "caution" | "normal" | "available";
 
 export function cabinetState(cabinet: ArcadeCabinet): CabinetState {
     if (cabinet.stale || cabinet.availability === "unknown") return "unknown";
     if (cabinet.availability === "unavailable") return "unavailable";
-    return cabinet.condition === "caution" ? "caution" : "available";
+    if (cabinet.condition === "caution") return "caution";
+    return cabinet.condition === "normal" ? "normal" : "available";
 }
 
 /** 「가동 · 양호」·「가동 · 주의」·「이용 불가」·「미확인」 */

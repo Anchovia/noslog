@@ -659,7 +659,8 @@
 .noslog-ui .nl-arcade-cabinet:last-child {
     padding-bottom: 0;
 }
-/* 상태 색 점 — 늘 상태 글자와 함께(색 단독 아님). 가동 초록 · 주의 노랑 · 이용 불가 빨강 · 미확인 빈 원 */
+/* 상태 색 점 — 늘 상태 글자와 함께(색 단독 아님).
+   가동 · 양호 초록 · 보통 노랑 · 주의 빨강 · 이용 불가 빨강 · 미확인 빈 원 (2026-09-15) */
 .noslog-ui .nl-arcade-cabinet__dot {
     flex-shrink: 0;
     width: 8px;
@@ -668,12 +669,15 @@
     background: var(--nl-feedback-success-marker);
 }
 .noslog-ui
-    .nl-arcade-cabinet__state[data-state="caution"]
+    .nl-arcade-cabinet__state[data-state="normal"]
     .nl-arcade-cabinet__dot {
     background: var(--nl-feedback-warning-marker);
 }
 .noslog-ui
-    .nl-arcade-cabinet__state[data-state="unavailable"]
+    .nl-arcade-cabinet__state:is(
+        [data-state="caution"],
+        [data-state="unavailable"]
+    )
     .nl-arcade-cabinet__dot {
     background: var(--nl-feedback-danger-marker);
 }
