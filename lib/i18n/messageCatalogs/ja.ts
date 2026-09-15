@@ -684,7 +684,7 @@ export const jaMessages = {
     "bingo.uncompleteAria": "{challenge}の完了を解除",
     "bingo.completeAria": "{challenge}を完了にする",
     "bingo.noMissions": "この状態のミッションはありません。",
-    "bingo.loginToSave": "ログインするとビンゴの進行状況を保存できます。",
+    "bingo.loginToSave": "ログインして進行を保存",
     "bingo.saveError": "完了状態を保存できませんでした。",
     "bingo.invalidCell": "無効なビンゴマスです。",
     "bingo.cellNotFound": "ビンゴマスが見つかりません。",
