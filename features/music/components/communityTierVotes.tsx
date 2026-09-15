@@ -36,23 +36,24 @@ export default function CommunityTierVotes({
         (scope) => `${scope.mode}-${scope.goal}` === selected
     );
     return (
-        <section
-            className="nl-community-votes"
-            aria-label={t("community.votes")}
-        >
+        <section className="nl-community-votes" aria-labelledby={`${id}-title`}>
+            {/* 탭 안 구역(서열 투표 · 패턴 투표 · 의견)은 모두 section-title, 모드는 그 아래 component-title — 글자 결정 ② */}
+            <h2 id={`${id}-title`} className="nl-section-title">
+                {t("community.votes")}
+            </h2>
             {TIER_MODES.map((mode) => (
                 <section
                     className="nl-tier-mode"
                     key={mode}
                     aria-labelledby={`${id}-${mode}`}
                 >
-                    <h2
+                    <h3
                         id={`${id}-${mode}`}
                         className="nl-component-title"
                         lang="en"
                     >
                         {mode === "basic" ? "Basic" : "Recital"}
-                    </h2>
+                    </h3>
                     {data.scopes
                         .filter((scope) => scope.mode === mode)
                         .map((scope) => {

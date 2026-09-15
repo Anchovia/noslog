@@ -147,10 +147,6 @@
     .noslog-ui .nl-profile-identity__name-stack {
         gap: var(--nl-spacing-12);
     }
-    .noslog-ui .nl-profile-identity__name h1 {
-        font-size: var(--nl-type-size-32);
-        line-height: var(--nl-type-line-height-40);
-    }
     .noslog-ui .nl-profile-identity__metadata {
         grid-column: 2;
         grid-row: 2;

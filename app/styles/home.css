@@ -257,9 +257,3 @@
         padding: var(--nl-spacing-24);
     }
 }
-@container home-hero (min-width: 640px) {
-    .noslog-ui .nl-home-identity .nl-page-title {
-        font-size: var(--nl-type-size-32);
-        line-height: var(--nl-type-line-height-40);
-    }
-}

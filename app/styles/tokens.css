@@ -359,10 +359,10 @@ html[data-theme="light"] .noslog-ui,
     letter-spacing: 0;
     font-variant-numeric: normal;
 }
-.noslog-ui .nl-page-title-promoted {
-    font-size: var(--nl-type-size-32);
-    line-height: var(--nl-type-line-height-40);
-    font-weight: var(--nl-type-weight-bold);
-    letter-spacing: 0;
-    font-variant-numeric: normal;
+/* 페이지 제목은 데스크톱(1056 이상)에서 32/40 — 모든 페이지 같은 규칙(글자 결정 ① 2026-09-15) */
+@media (min-width: 1056px) {
+    .noslog-ui .nl-page-title {
+        font-size: var(--nl-type-size-32);
+        line-height: var(--nl-type-line-height-40);
+    }
 }
