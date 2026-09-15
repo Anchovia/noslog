@@ -5,11 +5,13 @@
     min-width: 0;
     overflow-wrap: anywhere;
 }
+/* 제목 → 설명 글줄 8 · 설명 끝 → 첫 내용 16 (격자 간격 32 라 여기서 맞춘다 · 2026-09-15 역할값) */
 .noslog-ui .nl-exams__identity {
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-8);
     min-width: 0;
+    margin-bottom: calc(var(--nl-spacing-16) - var(--nl-spacing-32));
 }
 /* 구역 사이 32 · 구역 제목 → 내용 12 (간격 결정 2026-09-15) */
 .noslog-ui .nl-exams__content,

@@ -2,6 +2,11 @@
     gap: var(--nl-spacing-32);
     padding-bottom: var(--nl-spacing-48);
 }
+/* 페이지 제목 → 첫 내용 16 · 제목 바로 아래 설명 글줄이 있으면 그 끝 → 내용도 16 (컨테이너 간격이 32 라 여기서 맞춘다) */
+.noslog-ui .nl-sync-page > .nl-page-title,
+.noslog-ui .nl-sync-page > .nl-page-title + p {
+    margin-bottom: calc(var(--nl-spacing-16) - var(--nl-spacing-32));
+}
 .noslog-ui .nl-sync-columns,
 .noslog-ui .nl-sync-column {
     display: flex;

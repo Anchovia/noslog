@@ -29,8 +29,10 @@
     cursor: pointer;
     border-radius: var(--nl-radius-control);
 }
-.noslog-ui .nl-selection-list__option:hover {
-    background: var(--nl-interaction-hover);
+@media (hover: hover) {
+    .noslog-ui .nl-selection-list__option:hover {
+        background: var(--nl-interaction-hover);
+    }
 }
 .noslog-ui .nl-selection-list__option:has(:focus-visible) {
     box-shadow: inset 0 0 0 1px var(--nl-focus-ring);
@@ -91,9 +93,13 @@
     background: var(--nl-primary-default);
     background-clip: padding-box;
 }
-.noslog-ui .nl-range__thumb:hover,
 .noslog-ui .nl-range__thumb:active {
     box-shadow: 0 0 0 6px var(--nl-state-halo);
+}
+@media (hover: hover) {
+    .noslog-ui .nl-range__thumb:hover {
+        box-shadow: 0 0 0 6px var(--nl-state-halo);
+    }
 }
 .noslog-ui .nl-range__thumb:focus-visible {
     outline: none;
@@ -142,10 +148,11 @@
     flex-direction: column;
     gap: var(--nl-spacing-12);
 }
+/* 페이지 제목 → 첫 내용(검색) 16 (2026-09-15 역할값) */
 .noslog-ui .nl-discovery__heading {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-12);
+    gap: var(--nl-spacing-16);
 }
 .noslog-ui .nl-discovery {
     padding-top: var(--nl-spacing-24);
@@ -309,8 +316,10 @@
 .noslog-ui .nl-chart-target > span:nth-child(2) {
     flex: 1;
 }
-.noslog-ui .nl-chart-target:hover {
-    background: var(--nl-interaction-hover);
+@media (hover: hover) {
+    .noslog-ui .nl-chart-target:hover {
+        background: var(--nl-interaction-hover);
+    }
 }
 .noslog-ui .nl-difficulty-marker {
     width: 2px;
