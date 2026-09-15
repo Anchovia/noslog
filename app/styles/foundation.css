@@ -455,6 +455,14 @@ html[data-theme="light"] .noslog-ui,
     width: var(--nl-icon-medium);
     height: var(--nl-icon-medium);
 }
+/* M 단계 세그먼트(size="sm") — 트랙 36/32 · 아이콘 항목 36/32 정사각 · 결과 줄 같은 인라인 자리 */
+.noslog-ui .nl-segments--compact {
+    min-height: var(--nl-control-height-compact);
+}
+.noslog-ui .nl-segments--compact.nl-segments--icons .nl-segments__item {
+    width: calc(var(--nl-control-height-compact) - var(--nl-spacing-8));
+    padding-block: 0;
+}
 
 /* 밑줄 탭 — 한 모양 두 단계(부품 결정 ② · 2026-09-14). 선택 = 글자 진하게 + 2px 밑줄, 안 선택 = 흐린 글자, 올림 = 글자만 밝게.
    1단 `--primary`(페이지 안 큰 구역 · 악곡 상세): 높이 48 · 콘텐츠 폭 전체 1px 구분선 · 넘치면 가로 스크롤.

@@ -178,6 +178,8 @@ export const jaMessages = {
     "discovery.applyWithoutCount": "結果を表示",
     "discovery.musicCount": "楽曲 {count}件",
     "discovery.chartCount": "公開譜面 {count}件",
+    "discovery.musicCountShort": "{count}曲",
+    "discovery.chartCountShort": "{count}件",
     "discovery.loadMore": "さらに{count}件を表示",
     "discovery.progress": "{total}件中{count}件を表示",
     "discovery.complete": "すべての結果を表示しました。",

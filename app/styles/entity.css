@@ -130,18 +130,36 @@
     gap: var(--nl-spacing-4);
     padding: var(--nl-spacing-12);
 }
+/* 격자 카드 이름은 14(emphasis-label) · 이름 묶음 → 판 8 (상자 안 묶음). 촘촘은 안쪽 8 (역할값 2026-09-16) */
+.noslog-ui .nl-music-card--grid .nl-difficulty-levels {
+    margin-top: var(--nl-spacing-4);
+}
+.noslog-ui .nl-music-card--dense .nl-music-card__body {
+    padding: var(--nl-spacing-8);
+}
+/* 난이도 판 4칸 — 고정 순서, 판 24(목록 · 격자) / 20(촘촘), 모서리 control 4, raised 면, 사이 4.
+   숫자는 metric-value(14 tabular) + 난이도 글자색(「난이도 = 색 글자」 09-02 유지). 없는 난이도는 1px divider 빈 판 (2026-09-16 L2) */
 .noslog-ui .nl-difficulty-levels {
+    --nl-level-size: 24px;
     display: inline-flex;
-    width: 92px;
-    height: 20px;
     flex-shrink: 0;
     gap: var(--nl-spacing-4);
 }
-.noslog-ui .nl-difficulty-levels > span {
+.noslog-ui .nl-music-card--grid .nl-difficulty-levels {
+    --nl-level-size: 20px;
+}
+.noslog-ui .nl-level {
     display: flex;
-    width: 20px;
+    width: var(--nl-level-size);
+    height: var(--nl-level-size);
     align-items: center;
     justify-content: center;
+    border-radius: var(--nl-radius-control);
+    background: var(--nl-surface-raised);
+}
+/* 없는 난이도 — 자리만 비운다(표의 빈 셀). 테두리 판은 다크에서 「구멍」 처럼 시선을 끈다(사용자 지적 2026-09-16) */
+.noslog-ui .nl-level--empty {
+    background: transparent;
 }
 .noslog-ui .nl-level--normal {
     color: var(--nl-difficulty-text-normal);
@@ -158,6 +176,6 @@
 .noslog-ui
     [aria-busy="true"]
     .nl-music-card[aria-disabled="true"]
-    :is(.nl-entity-title, .nl-body-secondary, .nl-difficulty-levels > span) {
+    :is(.nl-entity-title, .nl-emphasis-label, .nl-body-secondary, .nl-level) {
     color: var(--nl-content-pending);
 }

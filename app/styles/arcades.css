@@ -38,17 +38,6 @@
     > :not(.nl-search, .nl-arcades__controls) {
     grid-column: 1 / -1;
 }
-.noslog-ui .nl-arcades__filter-button {
-    position: relative;
-}
-/* 적용 개수 — 아이콘 버튼이라 라벨 옆 대신 오른쪽 위 모서리 */
-.noslog-ui .nl-arcades__filter-button .nl-filter-count {
-    position: absolute;
-    top: var(--nl-spacing-4);
-    right: var(--nl-spacing-4);
-    min-width: 16px;
-    min-height: 16px;
-}
 @media (max-width: 671px) {
     .noslog-ui .nl-arcades[data-sheet-layout] .nl-arcades__results {
         margin-inline: calc(-1 * var(--nl-grid-margin-compact));

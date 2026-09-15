@@ -181,6 +181,8 @@ export const enMessages = {
     "discovery.applyWithoutCount": "Show results",
     "discovery.musicCount": "{count} songs",
     "discovery.chartCount": "{count} published charts",
+    "discovery.musicCountShort": "{count} songs",
+    "discovery.chartCountShort": "{count} charts",
     "discovery.loadMore": "Load {count} more results",
     "discovery.progress": "Showing {count} of {total}",
     "discovery.complete": "You have viewed all results.",

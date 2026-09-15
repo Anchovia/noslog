@@ -256,6 +256,17 @@
 .noslog-ui .nl-filter-toolbar--split .nl-filter-trigger > svg:last-child {
     margin-left: auto;
 }
+/* 검색줄 옆 아이콘 필터 트리거(폰) — 44 정사각, 적용 개수는 오른쪽 위 16 배지 (오락실 · 악곡 공용, 2026-09-16) */
+.noslog-ui .nl-filter-icon-trigger {
+    position: relative;
+}
+.noslog-ui .nl-filter-icon-trigger .nl-filter-count {
+    position: absolute;
+    top: var(--nl-spacing-4);
+    right: var(--nl-spacing-4);
+    min-width: 16px;
+    min-height: 16px;
+}
 /* 컨트롤 묶음(툴바 + 결과 수 행) 안쪽 12 · 목록까지는 컨테이너 24 */
 .noslog-ui .nl-filter-control-block {
     display: flex;

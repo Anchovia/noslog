@@ -47,10 +47,14 @@ export function DiscoverySortMenu({
     query,
     onChange,
     signedIn,
+    variant,
+    size,
 }: {
     query: DiscoveryQuery;
     onChange: (query: DiscoveryQuery) => void;
     signedIn: boolean;
+    variant?: "secondary" | "ghost";
+    size?: "sm";
 }) {
     const t = useTranslations();
     // 레벨 순은 정렬할 난이도가 있어야 성립한다 — 난이도를 고를 때까지 메뉴 안에서만 보류하고, 닫으면 버린다
@@ -69,6 +73,8 @@ export function DiscoverySortMenu({
     };
     return (
         <SortMenu
+            variant={variant}
+            size={size}
             label={t("discovery.sortLabel")}
             value={sort}
             options={sorts.map((value) => ({

@@ -478,7 +478,7 @@ export default function ArcadeDiscoveryPage({
                                     <ActionButton
                                         variant="secondary"
                                         size="icon"
-                                        className="nl-arcades__filter-button"
+                                        className="nl-filter-icon-trigger"
                                         aria-label={t("arcades.filters")}
                                     >
                                         <ListFilter

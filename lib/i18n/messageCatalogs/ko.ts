@@ -178,6 +178,8 @@ export const koMessages = {
     "discovery.applyWithoutCount": "결과 보기",
     "discovery.musicCount": "악곡 {count}개",
     "discovery.chartCount": "공개 채보 {count}개",
+    "discovery.musicCountShort": "{count}곡",
+    "discovery.chartCountShort": "{count}개",
     "discovery.loadMore": "결과 {count}개 더 보기",
     "discovery.progress": "{total}개 중 {count}개 표시",
     "discovery.complete": "모든 결과를 확인했습니다.",
