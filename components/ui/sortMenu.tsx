@@ -30,6 +30,8 @@ export default function SortMenu<Value extends string>({
     onOpenChange,
     children,
     className,
+    variant = "secondary",
+    size,
 }: {
     label: string;
     value: Value;
@@ -38,6 +40,9 @@ export default function SortMenu<Value extends string>({
     onOpenChange?: (open: boolean) => void;
     children?: ReactNode;
     className?: string;
+    /** 결과 수 줄 안에 넣을 때는 ghost · sm — 트리거 모양만 다르고 메뉴는 같다 */
+    variant?: "secondary" | "ghost";
+    size?: "sm";
 }) {
     const t = useTranslations();
     const [open, setOpen] = useState(false);
@@ -69,7 +74,8 @@ export default function SortMenu<Value extends string>({
         <Popover.Root open={open} onOpenChange={changeOpen}>
             <Popover.Trigger asChild>
                 <ActionButton
-                    variant="secondary"
+                    variant={variant}
+                    size={size}
                     className={["nl-filter-trigger", className]
                         .filter(Boolean)
                         .join(" ")}

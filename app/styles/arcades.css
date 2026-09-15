@@ -24,6 +24,43 @@
     width: var(--nl-icon-small);
     height: var(--nl-icon-small);
 }
+/* 672 미만 — 필터는 검색줄 오른쪽 아이콘 버튼(44), 정렬은 시트 요약 줄 오른쪽 ghost.
+   지도 · 시트는 좌우 끝까지(실제 지도 서비스 4/4). 다른 목록 페이지의 정렬 | 필터 툴바는 그대로(2026-09-15) */
+.noslog-ui .nl-arcades__head[data-compact] {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: var(--nl-spacing-8);
+    row-gap: var(--nl-spacing-16);
+    align-items: center;
+}
+.noslog-ui
+    .nl-arcades__head[data-compact]
+    > :not(.nl-search, .nl-arcades__controls) {
+    grid-column: 1 / -1;
+}
+.noslog-ui .nl-arcades__filter-button {
+    position: relative;
+}
+/* 적용 개수 — 아이콘 버튼이라 라벨 옆 대신 오른쪽 위 모서리 */
+.noslog-ui .nl-arcades__filter-button .nl-filter-count {
+    position: absolute;
+    top: var(--nl-spacing-4);
+    right: var(--nl-spacing-4);
+    min-width: 16px;
+    min-height: 16px;
+}
+@media (max-width: 671px) {
+    .noslog-ui .nl-arcades[data-sheet-layout] .nl-arcades__results {
+        margin-inline: calc(-1 * var(--nl-grid-margin-compact));
+    }
+    .noslog-ui .nl-arcades[data-sheet-layout] .nl-arcade-map {
+        border-radius: 0;
+    }
+    .noslog-ui .nl-arcades[data-sheet-layout] .nl-arcades__sheet-head,
+    .noslog-ui .nl-arcades[data-sheet-layout] .nl-arcades__sheet-body {
+        padding-inline: var(--nl-grid-margin-compact);
+    }
+}
 .noslog-ui .nl-arcades__results {
     display: flex;
     flex-direction: column;
@@ -62,8 +99,21 @@
     gap: var(--nl-spacing-8);
 }
 /* 요약 줄 — 시트 안쪽 inset 12(카드 안 텍스트와 같은 값) */
-.noslog-ui .nl-arcades__summary {
+.noslog-ui .nl-arcades__summary-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--nl-spacing-8);
     padding-inline: var(--nl-spacing-12);
+}
+.noslog-ui .nl-arcades__summary {
+    min-width: 0;
+}
+/* 요약 줄의 정렬 — 손잡이 줄을 덮는 투명 버튼 위에 있어야 눌린다 */
+.noslog-ui .nl-arcades__sort {
+    position: relative;
+    z-index: 2;
+    flex-shrink: 0;
 }
 /* 시트 머리(손잡이 · 요약 줄)와 몸(적용 조건 · 목록 · 푸터) — 1056+ 와 지도 실패 시에는 보통 흐름 */
 .noslog-ui .nl-arcades__sheet-head {

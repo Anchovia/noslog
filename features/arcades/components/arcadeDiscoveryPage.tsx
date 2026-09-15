@@ -241,6 +241,11 @@ export default function ArcadeDiscoveryPage({
         );
     }
     // 지도 핀에서 고르면 시트를 올리고 목록의 그 카드를 펼쳐 보이게 — 카드 hover 로 고를 때는 스크롤하지 않는다
+    function changeSort(sort: ArcadeDiscoveryValues["sort"]) {
+        const apply = () => commit({ ...values, sort });
+        if (sort === "distance" && !origin) nearby(apply);
+        apply();
+    }
     function selectFromMap(id: number) {
         select(id);
         expand(id);
@@ -404,7 +409,11 @@ export default function ArcadeDiscoveryPage({
                     : ({ "--nl-sheet-peek": `${peek}px` } as CSSProperties)
             }
         >
-            <div className="nl-arcades__head">
+            {/* 검색줄 옆 필터 자리는 CSS 미디어 쿼리가 아니라 같은 판정(popover)으로 — 둘이 엇갈리면 세 개가 한 줄에 낀다 */}
+            <div
+                className="nl-arcades__head"
+                data-compact={popover ? undefined : ""}
+            >
                 <PageHeading title={t("arcades.title")} />
                 <SearchField
                     value={search}
@@ -426,51 +435,63 @@ export default function ArcadeDiscoveryPage({
                         commitSearch(event.currentTarget.value);
                     }}
                 />
+                {/* 672 미만: 필터는 검색줄 오른쪽 아이콘 버튼, 정렬은 시트 요약 줄 — 지도가 한 줄 더 보인다(2026-09-15).
+                    672 이상은 다른 목록과 같은 정렬 · 필터 툴바 */}
                 <div className="nl-arcades__controls">
-                    <div
-                        className={
-                            popover
-                                ? "nl-filter-toolbar"
-                                : "nl-filter-toolbar nl-filter-toolbar--split"
-                        }
-                    >
-                        <SortMenu
-                            label={t("discovery.sortLabel")}
-                            value={values.sort}
-                            options={sorts}
-                            onValueChange={(sort) => {
-                                const apply = () => commit({ ...values, sort });
-                                if (sort === "distance" && !origin)
-                                    nearby(apply);
-                                apply();
-                            }}
-                        />
+                    <div className="nl-filter-toolbar">
+                        {popover ? (
+                            <SortMenu
+                                label={t("discovery.sortLabel")}
+                                value={values.sort}
+                                options={sorts}
+                                onValueChange={changeSort}
+                            />
+                        ) : null}
                         <FilterSurface
                             popover={popover}
                             open={filterOpen}
                             onOpenChange={setFilterLayer}
                             title={t("arcades.filters")}
                             trigger={
-                                <ActionButton
-                                    variant="secondary"
-                                    className="nl-filter-trigger"
-                                    aria-label={t("arcades.filters")}
-                                >
-                                    <ListFilter
-                                        className="nl-icon-small"
-                                        aria-hidden
-                                    />
-                                    {t("arcades.filters")}
-                                    {filterCount ? (
-                                        <span className="nl-filter-count nl-metadata">
-                                            {filterCount}
-                                        </span>
-                                    ) : null}
-                                    <ChevronDown
-                                        className="nl-icon-small"
-                                        aria-hidden
-                                    />
-                                </ActionButton>
+                                popover ? (
+                                    <ActionButton
+                                        variant="secondary"
+                                        className="nl-filter-trigger"
+                                        aria-label={t("arcades.filters")}
+                                    >
+                                        <ListFilter
+                                            className="nl-icon-small"
+                                            aria-hidden
+                                        />
+                                        {t("arcades.filters")}
+                                        {filterCount ? (
+                                            <span className="nl-filter-count nl-metadata">
+                                                {filterCount}
+                                            </span>
+                                        ) : null}
+                                        <ChevronDown
+                                            className="nl-icon-small"
+                                            aria-hidden
+                                        />
+                                    </ActionButton>
+                                ) : (
+                                    <ActionButton
+                                        variant="secondary"
+                                        size="icon"
+                                        className="nl-arcades__filter-button"
+                                        aria-label={t("arcades.filters")}
+                                    >
+                                        <ListFilter
+                                            className="nl-icon-small"
+                                            aria-hidden
+                                        />
+                                        {filterCount ? (
+                                            <span className="nl-filter-count nl-metadata">
+                                                {filterCount}
+                                            </span>
+                                        ) : null}
+                                    </ActionButton>
+                                )
                             }
                             headerAction={
                                 <ActionButton
@@ -681,15 +702,28 @@ export default function ArcadeDiscoveryPage({
                             }}
                         />
                         <span className="nl-arcades__handle" aria-hidden />
-                        <p
-                            className="nl-arcades__summary nl-body-secondary nl-muted"
-                            role="status"
-                        >
-                            {t("arcades.resultsSummary", {
-                                count: result.length,
-                                verified: runningCount,
-                            })}
-                        </p>
+                        <div className="nl-arcades__summary-row">
+                            <p
+                                className="nl-arcades__summary nl-body-secondary nl-muted"
+                                role="status"
+                            >
+                                {t("arcades.resultsSummary", {
+                                    count: result.length,
+                                    verified: runningCount,
+                                })}
+                            </p>
+                            {popover ? null : (
+                                <SortMenu
+                                    variant="ghost"
+                                    size="sm"
+                                    className="nl-arcades__sort"
+                                    label={t("discovery.sortLabel")}
+                                    value={values.sort}
+                                    options={sorts}
+                                    onValueChange={changeSort}
+                                />
+                            )}
+                        </div>
                     </div>
                     <div
                         ref={bodyRef}
