@@ -669,6 +669,7 @@ export const enMessages = {
     "bingo.completedCount": "{count} unlocked",
     "bingo.empty": "No bingo boards have this status.",
     "bingo.search": "Search bingo boards",
+    "bingo.countShort": "{count} boards",
     "bingo.searchPlaceholder": "Search bingo name or artist",
     "bingo.searchEmpty": "No bingo boards match.",
     "bingo.filter.all": "All",

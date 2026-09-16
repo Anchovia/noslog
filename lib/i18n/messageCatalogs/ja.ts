@@ -664,6 +664,7 @@ export const jaMessages = {
     "bingo.completedCount": "解禁完了 {count}",
     "bingo.empty": "この状態のビンゴはありません。",
     "bingo.search": "ビンゴを検索",
+    "bingo.countShort": "{count}件",
     "bingo.searchPlaceholder": "ビンゴ名・アーティストを検索",
     "bingo.searchEmpty": "一致するビンゴはありません。",
     "bingo.filter.all": "すべて",

@@ -664,6 +664,7 @@ export const koMessages = {
     "bingo.completedCount": "해금 완료 {count}",
     "bingo.empty": "해당 상태의 빙고가 없습니다.",
     "bingo.search": "빙고 검색",
+    "bingo.countShort": "{count}개",
     "bingo.searchPlaceholder": "빙고 이름 · 아티스트 검색",
     "bingo.searchEmpty": "일치하는 빙고가 없습니다.",
     "bingo.filter.all": "전체",
