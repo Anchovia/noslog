@@ -127,9 +127,6 @@ export default function SyncSetup({
                             <StepHeading className="nl-component-title">
                                 {t("sync.step.install")}
                             </StepHeading>
-                            <span className="nl-metadata nl-sync-step-tag">
-                                {t("sync.once")}
-                            </span>
                         </div>
                         <div className="nl-sync-install-card">
                             <div className="nl-sync-install-card__target">

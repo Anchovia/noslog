@@ -22,6 +22,7 @@ export default function ExamPractice({
     return (
         <Disclosure
             className="nl-exam-practice"
+            card
             title={t("exams.practice.title")}
             open={open}
             onToggle={(event) => onOpenChange(event.currentTarget.open)}

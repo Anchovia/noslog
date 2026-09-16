@@ -5,13 +5,7 @@ import {
     useInfiniteQuery,
     useQuery,
 } from "@tanstack/react-query";
-import {
-    ChevronDown,
-    Grid3x3,
-    LayoutGrid,
-    List,
-    ListFilter,
-} from "lucide-react";
+import { Grid3x3, LayoutGrid, List, ListFilter } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useEffectEvent, useMemo, useRef, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
@@ -302,23 +296,105 @@ export default function DiscoveryPage({
                 ]}
             />
         ) : null;
+    // 폰 필터 트리거 — 검색줄 오른쪽 아이콘 버튼 44, 적용 개수는 오른쪽 위 배지(오락실과 같은 부품)
+    const viewSwitchCompact =
+        query.scope === "music" ? (
+            <SegmentedControl
+                label={t("discovery.view")}
+                value={query.view}
+                onValueChange={(view) => commit({ ...query, view }, true)}
+                iconOnly
+                size="sm"
+                options={[
+                    {
+                        value: "list",
+                        label: t("discovery.list"),
+                        icon: <List aria-hidden />,
+                    },
+                    {
+                        value: "grid",
+                        label: t("discovery.grid"),
+                        icon: <LayoutGrid aria-hidden />,
+                    },
+                    {
+                        value: "dense",
+                        label: t("discovery.denseGrid"),
+                        icon: <Grid3x3 aria-hidden />,
+                    },
+                ]}
+            />
+        ) : null;
+    const summaryShort = t(
+        query.scope === "music"
+            ? "discovery.musicCountShort"
+            : "discovery.chartCountShort",
+        { count: query.scope === "music" ? total : chartTotal }
+    );
     const filterTrigger = (
         <ActionButton
             variant="secondary"
-            className="nl-filter-trigger"
+            size="icon"
+            className="nl-filter-icon-trigger"
             aria-label={t("music.filter")}
         >
             <ListFilter className="nl-icon-small" aria-hidden />
-            {t("music.filter")}
             {appliedCount ? (
                 <span className="nl-filter-count nl-metadata">
                     {appliedCount}
                 </span>
             ) : null}
-            <ChevronDown className="nl-icon-small" aria-hidden />
         </ActionButton>
     );
 
+    const filterDialog = (
+        <FullScreenDialog
+            open={open}
+            onOpenChange={handleOpen}
+            onCloseAutoFocus={(event) => {
+                if (!focusCommittedSummary.current) return;
+                event.preventDefault();
+                focusCommittedSummary.current = false;
+                summaryRef.current?.focus();
+            }}
+            title={t("music.filter")}
+            trigger={filterTrigger}
+            onReset={() =>
+                setDraft({
+                    ...draft,
+                    categories: [],
+                    difficulties: [],
+                    records: [],
+                    missMin: undefined,
+                    missMax: undefined,
+                })
+            }
+            footer={
+                <ActionButton
+                    disabled={!validDraft}
+                    onClick={() => {
+                        focusCommittedSummary.current = true;
+                        commit(draft);
+                        setOpen(false);
+                    }}
+                >
+                    {validDraft
+                        ? count.data && delayedDraft === draft
+                            ? t("discovery.apply", {
+                                  count: count.data.total,
+                              })
+                            : t("discovery.applyWithoutCount")
+                        : t("discovery.invalidRange")}
+                </ActionButton>
+            }
+        >
+            <DiscoveryFilters
+                query={draft}
+                onChange={setDraft}
+                signedIn={Boolean(accountId)}
+                variant="layer"
+            />
+        </FullScreenDialog>
+    );
     return (
         <PageContainer
             className="nl-discovery"
@@ -332,88 +408,101 @@ export default function DiscoveryPage({
                             : "discovery.chart"
                     )}
                 </h1>
-                <form
-                    role="search"
-                    noValidate
-                    onSubmit={(event) => {
-                        if (composing.current) {
-                            event.preventDefault();
-                            return;
-                        }
-                        if (searchTimer.current)
-                            clearTimeout(searchTimer.current);
-                        void handleSubmit(({ search }) =>
-                            commit({ ...query, q: search?.trim() ?? "" })
-                        )(event);
-                    }}
-                >
-                    <SearchField
-                        {...input}
-                        disabled={!isReady}
-                        value={search}
-                        maxLength={100}
-                        aria-label={t(
-                            query.scope === "music"
-                                ? "discovery.musicPlaceholder"
-                                : "discovery.chartPlaceholder"
-                        )}
-                        placeholder={t(
-                            query.scope === "music"
-                                ? "discovery.musicPlaceholder"
-                                : "discovery.chartPlaceholder"
-                        )}
-                        clearLabel={t("discovery.clearQuery")}
-                        onClear={() => {
+                {!wide ? (
+                    // 결과 수는 제목 아래 보조 글줄(제목 → 메타 8) — 필터를 적용한 뒤 포커스가 오는 자리
+                    <p
+                        ref={summaryRef}
+                        tabIndex={-1}
+                        className="nl-discovery__summary nl-metadata nl-muted"
+                    >
+                        {summaryShort}
+                    </p>
+                ) : null}
+                <div className="nl-discovery__search-row">
+                    <form
+                        role="search"
+                        noValidate
+                        onSubmit={(event) => {
+                            if (composing.current) {
+                                event.preventDefault();
+                                return;
+                            }
                             if (searchTimer.current)
                                 clearTimeout(searchTimer.current);
-                            reset({ search: "" });
-                            commit({ ...query, q: "" });
+                            void handleSubmit(({ search }) =>
+                                commit({ ...query, q: search?.trim() ?? "" })
+                            )(event);
                         }}
-                        onChange={(event) => {
-                            void input.onChange(event);
-                            if (!composing.current)
-                                scheduleSearch(event.target.value);
-                        }}
-                        onCompositionStart={() => {
-                            composing.current = true;
-                            if (searchTimer.current)
-                                clearTimeout(searchTimer.current);
-                        }}
-                        onCompositionEnd={(event) => {
-                            composing.current = false;
-                            scheduleSearch(event.currentTarget.value);
-                        }}
-                        leading={
-                            <CompactSelect
-                                label={t("discovery.scope")}
-                                value={query.scope}
-                                onValueChange={(scope) => {
-                                    if (searchTimer.current)
-                                        clearTimeout(searchTimer.current);
-                                    commit({
-                                        ...query,
-                                        q: search.trim(),
-                                        scope,
-                                        sort: undefined,
-                                        order: undefined,
-                                    });
-                                }}
-                                options={[
-                                    {
-                                        value: "music",
-                                        label: t("discovery.musicSearch"),
-                                        shortLabel: t("discovery.music"),
-                                    },
-                                    {
-                                        value: "chart",
-                                        label: t("discovery.chartSearch"),
-                                        shortLabel: t("discovery.chart"),
-                                    },
-                                ]}
-                            />
-                        }
-                    />
-                </form>
+                    >
+                        <SearchField
+                            {...input}
+                            disabled={!isReady}
+                            value={search}
+                            maxLength={100}
+                            aria-label={t(
+                                query.scope === "music"
+                                    ? "discovery.musicPlaceholder"
+                                    : "discovery.chartPlaceholder"
+                            )}
+                            placeholder={t(
+                                query.scope === "music"
+                                    ? "discovery.musicPlaceholder"
+                                    : "discovery.chartPlaceholder"
+                            )}
+                            clearLabel={t("discovery.clearQuery")}
+                            onClear={() => {
+                                if (searchTimer.current)
+                                    clearTimeout(searchTimer.current);
+                                reset({ search: "" });
+                                commit({ ...query, q: "" });
+                            }}
+                            onChange={(event) => {
+                                void input.onChange(event);
+                                if (!composing.current)
+                                    scheduleSearch(event.target.value);
+                            }}
+                            onCompositionStart={() => {
+                                composing.current = true;
+                                if (searchTimer.current)
+                                    clearTimeout(searchTimer.current);
+                            }}
+                            onCompositionEnd={(event) => {
+                                composing.current = false;
+                                scheduleSearch(event.currentTarget.value);
+                            }}
+                            leading={
+                                <CompactSelect
+                                    label={t("discovery.scope")}
+                                    value={query.scope}
+                                    onValueChange={(scope) => {
+                                        if (searchTimer.current)
+                                            clearTimeout(searchTimer.current);
+                                        commit({
+                                            ...query,
+                                            q: search.trim(),
+                                            scope,
+                                            sort: undefined,
+                                            order: undefined,
+                                        });
+                                    }}
+                                    options={[
+                                        {
+                                            value: "music",
+                                            label: t("discovery.musicSearch"),
+                                            shortLabel: t("discovery.music"),
+                                        },
+                                        {
+                                            value: "chart",
+                                            label: t("discovery.chartSearch"),
+                                            shortLabel: t("discovery.chart"),
+                                        },
+                                    ]}
+                                />
+                            }
+                        />
+                    </form>
+                    {!wide ? filterDialog : null}
+                </div>
             </header>
             <div className="nl-discovery__layout">
                 {wide ? (
@@ -432,99 +521,44 @@ export default function DiscoveryPage({
                     </aside>
                 ) : null}
                 <div className="nl-discovery__results">
-                    {/* 컨트롤 묶음: 정렬·필터 행 + 결과 수·보기 행 = 한 subsection, 안쪽 12 / 목록까지 24 */}
-                    <div className="nl-filter-control-block">
-                        <div className="nl-discovery__toolbar">
-                            <div
-                                className={cn(
-                                    "nl-discovery__controls",
-                                    !wide && "nl-filter-toolbar--split"
-                                )}
-                            >
-                                <DiscoverySortMenu
-                                    query={query}
-                                    signedIn={Boolean(accountId)}
-                                    onChange={(next) => commit(next)}
-                                />
-                                {!wide ? (
-                                    <FullScreenDialog
-                                        open={open}
-                                        onOpenChange={handleOpen}
-                                        onCloseAutoFocus={(event) => {
-                                            if (!focusCommittedSummary.current)
-                                                return;
-                                            event.preventDefault();
-                                            focusCommittedSummary.current = false;
-                                            summaryRef.current?.focus();
-                                        }}
-                                        title={t("music.filter")}
-                                        trigger={filterTrigger}
-                                        headerAction={
-                                            <ActionButton
-                                                variant="ghost"
-                                                size="sm"
-                                                onClick={() =>
-                                                    setDraft({
-                                                        ...draft,
-                                                        categories: [],
-                                                        difficulties: [],
-                                                        records: [],
-                                                        missMin: undefined,
-                                                        missMax: undefined,
-                                                    })
-                                                }
-                                            >
-                                                {t("common.reset")}
-                                            </ActionButton>
-                                        }
-                                        footer={
-                                            <ActionButton
-                                                disabled={!validDraft}
-                                                onClick={() => {
-                                                    focusCommittedSummary.current = true;
-                                                    commit(draft);
-                                                    setOpen(false);
-                                                }}
-                                            >
-                                                {validDraft
-                                                    ? count.data &&
-                                                      delayedDraft === draft
-                                                        ? t("discovery.apply", {
-                                                              count: count.data
-                                                                  .total,
-                                                          })
-                                                        : t(
-                                                              "discovery.applyWithoutCount"
-                                                          )
-                                                    : t(
-                                                          "discovery.invalidRange"
-                                                      )}
-                                            </ActionButton>
-                                        }
-                                    >
-                                        <DiscoveryFilters
-                                            query={draft}
-                                            onChange={setDraft}
+                    {wide ? (
+                        <>
+                            {/* Wide: 정렬(L) 왼쪽 · 보기 전환 오른쪽 → 결과 수 → 목록 (컨트롤 묶음 안 12) */}
+                            <div className="nl-filter-control-block">
+                                <div className="nl-discovery__toolbar">
+                                    <div className="nl-discovery__controls">
+                                        <DiscoverySortMenu
+                                            query={query}
                                             signedIn={Boolean(accountId)}
-                                            variant="layer"
+                                            onChange={(next) => commit(next)}
                                         />
-                                    </FullScreenDialog>
-                                ) : null}
+                                    </div>
+                                    {viewSwitch}
+                                </div>
+                                <div className="nl-discovery__summary-row">
+                                    <p
+                                        ref={summaryRef}
+                                        tabIndex={-1}
+                                        className="nl-discovery__summary nl-body-secondary nl-muted"
+                                    >
+                                        {summary}
+                                    </p>
+                                </div>
                             </div>
-                            {wide ? viewSwitch : null}
+                        </>
+                    ) : (
+                        /* Compact: 결과 줄 하나 — 정렬(고스트 M) 왼쪽 · 보기 전환(M) 오른쪽. 개수는 제목 아래, 필터는 검색줄 옆 (2026-09-16 E′ · R2) */
+                        <div className="nl-discovery__summary-row nl-discovery__summary-row--compact">
+                            <DiscoverySortMenu
+                                query={query}
+                                signedIn={Boolean(accountId)}
+                                onChange={(next) => commit(next)}
+                                variant="ghost"
+                                size="sm"
+                            />
+                            {viewSwitchCompact}
                         </div>
-                        {/* Compact: 결과 수 왼쪽 + 보기 전환 오른쪽 (목록 헤더 관례) · 정렬|필터는 위 행에서 1:1 */}
-                        <div className="nl-discovery__summary-row">
-                            <p
-                                ref={summaryRef}
-                                tabIndex={-1}
-                                className="nl-discovery__summary nl-body-secondary nl-muted"
-                            >
-                                {summary}
-                            </p>
-                            {!wide ? viewSwitch : null}
-                        </div>
-                    </div>
+                    )}
                     <AppliedTokens
                         label={t("music.filter")}
                         clearLabel={t("discovery.clearFilters")}

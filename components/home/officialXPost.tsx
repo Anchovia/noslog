@@ -28,7 +28,7 @@ export default async function OfficialXPost({
     return (
         <section className="nl-home-update">
             <div className="nl-home-update__heading">
-                <h2 className="nl-component-title">{t("home.officialNews")}</h2>
+                <h2 className="nl-section-title">{t("home.officialNews")}</h2>
                 <a
                     href={OFFICIAL_X_URL}
                     target="_blank"

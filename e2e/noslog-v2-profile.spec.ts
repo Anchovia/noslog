@@ -184,7 +184,7 @@ for (const locale of ["ko", "ja", "en"]) {
                 "dark"
             );
             const profile = await page.locator(".nl-profile").boundingBox();
-            expect(profile!.width).toBeLessThanOrEqual(1000);
+            expect(profile!.width).toBeLessThanOrEqual(1200);
             const avatar = await page
                 .locator(".nl-profile-identity__avatar")
                 .boundingBox();

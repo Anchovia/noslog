@@ -1,32 +1,5 @@
 import type { ProfileRankRow, ProfileUser } from "./profileTypes";
 
-export const PROFILE_RANK_COLORS = [
-    "bg-rank-p-start",
-    "bg-rank-fc",
-    "bg-rank-s",
-    "bg-rank-a-plus",
-    "bg-rank-a",
-    "bg-text-disabled",
-    "bg-text-disabled",
-    "bg-text-disabled",
-    "bg-text-disabled",
-];
-
-export const PROFILE_RANK_ICON_NAMES = [
-    "p",
-    "fc_bg",
-    "s",
-    "a2",
-    "a",
-    "b2",
-    "b",
-    "c",
-    "d",
-];
-
-export const PROFILE_RANK_ICON_BASE_URL =
-    "https://p.eagate.573.jp/game/nostalgia/op3/img/pdata/music_data/grade";
-
 const DIFFICULTY_COLORS: Record<string, string> = {
     normal: "text-normal",
     hard: "text-hard",
@@ -65,16 +38,6 @@ export function formatProfileDate(
         .format(date)
         .replaceAll(". ", ".")
         .replace(/\.$/, "");
-}
-
-export function formatProfileDateTime(value: string | null) {
-    if (!value) return "기록 없음";
-
-    const normalized = value.replace("T", " ");
-    const [date, time] = normalized.split(" ");
-    const formattedDate = date.replaceAll("-", ".").replaceAll("/", ".");
-
-    return time ? `${formattedDate} ${time.slice(0, 5)}` : formattedDate;
 }
 
 export function getProfileCountryCode(country: string) {

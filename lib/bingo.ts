@@ -1,5 +1,3 @@
-import { getJacketUrl } from "@/lib/musicJackets";
-
 export interface BingoProgressCell {
     id: number;
     position: number;
@@ -102,11 +100,4 @@ export function getBingoProgress(cells: BingoProgressCell[]) {
         richPositions,
         progressPercent: Math.round((completedPositions.size / 25) * 100),
     };
-}
-
-export function getBingoJacketUrl(
-    musicIndex: string,
-    background: string | null
-) {
-    return getJacketUrl(musicIndex, background);
 }

@@ -198,7 +198,7 @@ for (const locale of ["ko", "ja", "en"] as const) {
             await page.setViewportSize({ width, height: 900 });
             await expect(page.locator("#settings-nickname")).toHaveCSS(
                 "height",
-                "44px"
+                width >= 1056 ? "40px" : "44px"
             );
             await page.evaluate(async () => {
                 await document.fonts.ready;

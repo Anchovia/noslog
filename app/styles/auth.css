@@ -40,11 +40,12 @@
     align-items: center;
     justify-content: center;
     gap: var(--nl-spacing-8);
-    min-height: 40px;
+    /* 버튼과 같은 높이·모서리 (2026-09-14) */
+    min-height: var(--nl-control-height);
     padding: var(--nl-spacing-8) var(--nl-spacing-16);
     background: var(--nl-brand-discord);
     color: var(--nl-brand-on-discord);
-    border-radius: var(--nl-radius-control);
+    border-radius: var(--nl-radius-field);
 }
 .noslog-ui .nl-auth-discord .nl-icon {
     width: 20px;
@@ -67,39 +68,16 @@
     display: flex;
     gap: var(--nl-spacing-8);
     align-items: center;
-    padding: var(--nl-spacing-12);
-    min-height: 44px;
+    padding-inline: var(--nl-spacing-12);
+    min-height: var(--nl-control-height);
+    border-radius: var(--nl-radius-field);
 }
 .noslog-ui .nl-auth-language .nl-icon {
     width: 16px;
     height: 16px;
 }
-.noslog-ui .nl-auth-language-menu {
-    min-width: var(--radix-select-trigger-width);
-    max-height: var(--radix-select-content-available-height);
-    overflow: auto;
-    padding: var(--nl-spacing-8);
-    background: var(--nl-surface-overlay);
-    border: 1px solid var(--nl-border-default);
-    border-radius: var(--nl-radius-overlay);
-    box-shadow: var(--nl-elevation-overlay);
-    z-index: 80;
-}
-.noslog-ui .nl-auth-language-option {
-    padding: var(--nl-spacing-12);
-    border-radius: var(--nl-radius-control);
-    cursor: pointer;
-}
-.noslog-ui .nl-auth-language-option + .nl-auth-language-option {
-    margin-top: var(--nl-spacing-4);
-}
-.noslog-ui .nl-auth-language-option[data-state="checked"] {
-    background: var(--nl-interaction-menu-set);
-    font-weight: 600;
-}
-.noslog-ui .nl-auth-language-option[data-highlighted] {
-    outline: 1px solid var(--nl-focus-ring);
-    outline-offset: -1px;
+.noslog-ui .nl-auth-language:focus-visible {
+    box-shadow: 0 0 0 var(--nl-spacing-4) var(--nl-state-halo);
 }
 .noslog-ui .nl-auth-account {
     margin-top: var(--nl-spacing-32);

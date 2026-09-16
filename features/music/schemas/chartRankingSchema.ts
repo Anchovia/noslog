@@ -10,6 +10,8 @@ export const chartRankingRowSchema = z.object({
         id: z.number().int().positive(),
         username: z.string().nullable(),
         avatar: z.string().nullable(),
+        // 유저 랭킹 페이지와 같은 행 — 이름 앞 국기
+        country: z.string().nullable().default(null),
     }),
 });
 

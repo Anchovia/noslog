@@ -2,6 +2,7 @@
 
 import * as Select from "@radix-ui/react-select";
 import { Check, ChevronDown } from "lucide-react";
+import "@/lib/inputModality";
 import { cn } from "@/lib/utils";
 
 export default function CompactSelect<Value extends string>({

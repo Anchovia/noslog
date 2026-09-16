@@ -1,8 +1,10 @@
 "use client";
 
+import { ChevronDown } from "lucide-react";
 import Image from "next/image";
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import { rankAssetNames } from "@/components/music/musicDetailConfig";
+import { judgementLabels } from "@/components/ui/judgementMarker";
 import type { RecentChartPlay } from "@/components/music/musicDetailTypes";
 import { getBestScoreDifference } from "@/lib/music/recentPlayStats";
 
@@ -45,11 +47,11 @@ export default function RecentRecordPlay({ play }: { play: RecentChartPlay }) {
                       ? t("record.balanced")
                       : `${timing > 0 ? "FAST" : "SLOW"} +${count(Math.abs(timing))}`,
         },
-        { label: "S-Just", value: count(play.judge_sjust) },
-        { label: "Just", value: count(play.judge_just) },
-        { label: "Good", value: count(play.judge_good) },
-        { label: "Miss", value: count(play.judge_miss) },
-        { label: "Near", value: count(play.judge_near) },
+        { label: judgementLabels.sjust, value: count(play.judge_sjust) },
+        { label: judgementLabels.just, value: count(play.judge_just) },
+        { label: judgementLabels.good, value: count(play.judge_good) },
+        { label: judgementLabels.miss, value: count(play.judge_miss) },
+        { label: judgementLabels.near, value: count(play.judge_near) },
     ];
     return (
         <li>
@@ -80,6 +82,10 @@ export default function RecentRecordPlay({ play }: { play: RecentChartPlay }) {
                         <span className="nl-metric-value">
                             {count(play.score)}
                         </span>
+                        <ChevronDown
+                            className="nl-icon nl-disclosure__chevron"
+                            aria-hidden
+                        />
                     </span>
                 </summary>
                 <dl className="nl-recent-play__details nl-facts nl-body-secondary">

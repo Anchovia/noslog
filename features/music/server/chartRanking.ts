@@ -36,7 +36,7 @@ export const getChartRanking = unstable_cache(
                 FROM "PlayData" p WHERE p.chart_id = ${chartId} AND p.score > 0
             )
             SELECT r.position, r.rank, r.score, r.fc_type, r.user_id,
-                JSON_BUILD_OBJECT('id', u.id, 'username', u.username, 'avatar', u.avatar) AS "user"
+                JSON_BUILD_OBJECT('id', u.id, 'username', u.username, 'avatar', u.avatar, 'country', u.country) AS "user"
             FROM ranked r JOIN "User" u ON u.id = r.user_id
             ORDER BY r.row_number
             OFFSET ${(page - 1) * MUSIC_RANKING_PAGE_SIZE} LIMIT ${MUSIC_RANKING_PAGE_SIZE}
@@ -50,7 +50,7 @@ export const getChartRanking = unstable_cache(
             },
             { isolationLevel: Prisma.TransactionIsolationLevel.RepeatableRead }
         ),
-    ["music-detail-ranking-v2"],
+    ["music-detail-ranking-v3"],
     {
         revalidate: PUBLIC_DATA_REVALIDATE_SECONDS,
         tags: [CACHE_TAGS.chartRankings],

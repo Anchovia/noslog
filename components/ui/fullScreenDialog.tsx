@@ -6,6 +6,8 @@ import { useEffect, useEffectEvent, useId } from "react";
 import type { ReactNode } from "react";
 
 import { useTranslations } from "@/components/i18n/localeProvider";
+import ActionButton from "@/components/ui/actionButton";
+import IconButton from "@/components/ui/iconButton";
 
 export default function FullScreenDialog({
     open,
@@ -14,7 +16,7 @@ export default function FullScreenDialog({
     children,
     footer,
     trigger,
-    headerAction,
+    onReset,
     onCloseAutoFocus,
 }: {
     open: boolean;
@@ -23,8 +25,8 @@ export default function FullScreenDialog({
     children: ReactNode;
     footer: ReactNode;
     trigger: ReactNode;
-    /** 제목 오른쪽, 닫기 앞 — 초기화 같은 레이어 전체 액션 */
-    headerAction?: ReactNode;
+    /** 「초기화」 — 발 왼쪽 고스트 L, 오른쪽 주 액션과 한 줄 (2026-09-16: 폰 필터 22곳 중 발 왼쪽 9 · 머리 오른쪽 1) */
+    onReset?: () => void;
     onCloseAutoFocus?: (event: Event) => void;
 }) {
     const t = useTranslations();
@@ -62,18 +64,29 @@ export default function FullScreenDialog({
                             <Dialog.Title className="nl-component-title">
                                 {title}
                             </Dialog.Title>
-                            <div className="nl-full-dialog__actions">
-                                {headerAction}
-                                <Dialog.Close
-                                    className="nl-icon-button"
-                                    aria-label={t("common.close")}
-                                >
-                                    <X className="nl-icon" aria-hidden />
-                                </Dialog.Close>
-                            </div>
+                            {/* 가장자리 닫기 — 아이콘 24 · 머리 오른쪽 패딩 8 (레이어 머리 광학 여백 결정) */}
+                            <Dialog.Close asChild>
+                                <IconButton label={t("common.close")}>
+                                    <X
+                                        className="nl-icon nl-icon--large"
+                                        aria-hidden
+                                    />
+                                </IconButton>
+                            </Dialog.Close>
                         </div>
                         <div className="nl-full-dialog__body">{children}</div>
-                        <div className="nl-full-dialog__footer">{footer}</div>
+                        <div className="nl-full-dialog__footer">
+                            {onReset ? (
+                                <ActionButton
+                                    variant="ghost"
+                                    className="nl-full-dialog__reset"
+                                    onClick={onReset}
+                                >
+                                    {t("common.reset")}
+                                </ActionButton>
+                            ) : null}
+                            {footer}
+                        </div>
                     </Dialog.Content>
                 </div>
             </Dialog.Portal>

@@ -1,5 +1,3 @@
-import { formatToComma } from "@/lib/utils";
-
 import type {
     ExamDashboardItem,
     ExamSimulationResult,
@@ -22,28 +20,6 @@ export function getDefaultExam(exams: ExamDashboardItem[]) {
     );
 }
 
-export function getModeText(mode: string) {
-    if (mode === "recital") return "text-recital";
-    if (mode === "basic") return "text-basic";
-    return "text-text-primary";
-}
-
-export function getModeBadge(mode: string) {
-    if (mode === "recital")
-        return "border-recital/35 bg-recital/10 text-recital";
-    if (mode === "basic") return "border-basic/35 bg-basic/10 text-basic";
-    return "border-text-secondary/40 bg-surface text-text-primary";
-}
-
-export function getDifficultyBadge(difficulty: string) {
-    const normalizedDifficulty = difficulty.toLowerCase();
-
-    if (normalizedDifficulty === "normal") return "bg-normal/15 text-normal";
-    if (normalizedDifficulty === "hard") return "bg-hard/15 text-hard";
-    if (normalizedDifficulty === "expert") return "bg-expert/15 text-expert";
-    return "bg-real/15 text-real";
-}
-
 export function getStageLabel(
     stage: ExamStageItem,
     index: number,
@@ -52,17 +28,6 @@ export function getStageLabel(
     if (stage.label) return stage.label;
     if (index === length - 1) return "Fin";
     return index === 0 ? "1st" : index === 1 ? "2nd" : "3rd";
-}
-
-export function formatExamValue(
-    value: number,
-    scoringType: string,
-    locale = "ko"
-) {
-    const pointSuffix = locale === "en" ? " pts" : "점";
-    return scoringType === "recital_point"
-        ? `${Number.isInteger(value) ? value : value.toFixed(1)}${pointSuffix}`
-        : formatToComma(value);
 }
 
 export function calculateExamSimulation(

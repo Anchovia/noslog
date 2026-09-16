@@ -3,6 +3,7 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 import { useTranslations } from "@/components/i18n/localeProvider";
+import IconButton from "@/components/ui/iconButton";
 import useElementWidth from "@/lib/hooks/useElementWidth";
 import type { CommunityData } from "@/features/music/schemas/communitySchema";
 
@@ -61,15 +62,13 @@ export default function TierVoteDistribution({
                 </p>
             </div>
             <div className="nl-vote-distribution__window">
-                <button
-                    className="nl-icon-button"
-                    type="button"
-                    aria-label={t("community.previousValue")}
+                <IconButton
+                    label={t("community.previousValue")}
                     disabled={start === 0}
                     onClick={() => setShift(start - initial - 1)}
                 >
                     <ChevronLeft className="nl-icon" aria-hidden />
-                </button>
+                </IconButton>
                 <div
                     ref={ref}
                     className="nl-vote-distribution__values"
@@ -100,15 +99,13 @@ export default function TierVoteDistribution({
                         </div>
                     ))}
                 </div>
-                <button
-                    className="nl-icon-button"
-                    type="button"
-                    aria-label={t("community.nextValue")}
+                <IconButton
+                    label={t("community.nextValue")}
                     disabled={start === end}
                     onClick={() => setShift(start - initial + 1)}
                 >
                     <ChevronRight className="nl-icon" aria-hidden />
-                </button>
+                </IconButton>
             </div>
             <p className="sr-only" role="status">
                 {visible.length

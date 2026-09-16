@@ -10,10 +10,6 @@
     align-items: flex-start;
     gap: var(--nl-spacing-8);
 }
-.noslog-ui .nl-recovery__actions .nl-button {
-    min-height: 40px;
-    height: 40px;
-}
 .noslog-ui.nl-recovery-minimal {
     min-height: 100dvh;
     background: var(--nl-surface-canvas);

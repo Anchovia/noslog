@@ -74,13 +74,14 @@ export default function PatternRadar({ data }: { data: PatternSummary }) {
                     open={helpOpen}
                     onOpenChange={setHelpOpen}
                     title={t("pattern.criteria")}
+                    // 기준 설명 = 라벨 뒤 ⓘ. 다섯 항목 정의로 길어 작은 창 대신 대화상자(누를 때만) — 부품 결정 ④
                     trigger={
                         <button
                             type="button"
-                            className="nl-pattern-radar__help nl-control"
+                            className="nl-info-trigger"
+                            aria-label={t("pattern.criteria")}
                         >
                             <Info className="nl-icon-small" aria-hidden />
-                            {t("pattern.criteria")}
                         </button>
                     }
                 >

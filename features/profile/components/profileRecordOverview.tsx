@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, Info } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import { ScoreGrade } from "@/features/music/components/chartLeaderboard";
 import JudgementMarker, {
@@ -20,7 +20,6 @@ export default function ProfileRecordOverview({
     const locale = useLocale();
     const t = useTranslations();
     const [expanded, setExpanded] = useState(false);
-    const [basisOpen, setBasisOpen] = useState(false);
     const rows = [
         { rank: "P", value: user.score_p },
         { rank: "S", value: user.score_s },
@@ -93,29 +92,13 @@ export default function ProfileRecordOverview({
                 <h3 className="nl-control nl-muted">
                     {t("profile.judgementSummary")}
                 </h3>
-                <button
-                    type="button"
-                    className="nl-profile-judgement-basis nl-metadata nl-muted"
-                    aria-expanded={basisOpen}
-                    aria-controls="profile-judgement-basis"
-                    onClick={() => setBasisOpen((value) => !value)}
-                >
-                    {t("profile.judgementChartCount", {
-                        count: judgement.chartCount.toLocaleString(locale),
-                    })}
-                    <Info aria-hidden />
-                </button>
-            </div>
-            {basisOpen ? (
-                <p
-                    id="profile-judgement-basis"
-                    className="nl-body-secondary nl-muted"
-                >
+                {/* 기준은 도움말로 숨기지 않고 늘 보이는 한 줄 — 부품 결정 ④ */}
+                <p className="nl-metadata nl-muted">
                     {t("profile.judgementBasis", {
                         count: judgement.chartCount.toLocaleString(locale),
                     })}
                 </p>
-            ) : null}
+            </div>
             {total > 0 ? (
                 <>
                     <div className="nl-profile-judgement-stack" aria-hidden>

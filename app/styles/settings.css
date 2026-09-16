@@ -158,8 +158,8 @@
     max-height: min(320px, 40dvh);
 }
 .noslog-ui .nl-settings__arcade-option {
-    min-height: 44px;
-    padding: var(--nl-spacing-12);
+    min-height: var(--nl-control-height);
+    padding: var(--nl-spacing-8) var(--nl-spacing-12);
     cursor: pointer;
     overflow-wrap: anywhere;
 }
@@ -205,7 +205,6 @@
     gap: var(--nl-spacing-16);
 }
 .noslog-ui .nl-account-confirmation .nl-input {
-    min-height: 44px;
     font-size: var(--nl-type-size-14);
     line-height: var(--nl-type-line-height-20);
 }
@@ -234,6 +233,11 @@
     gap: var(--nl-spacing-24);
     min-width: 0;
 }
+/* 페이지 제목 → 첫 내용(설정 목록) 16 — 컨테이너 간격 24 에서 당긴다 */
+.noslog-ui .nl-settings__overview-heading {
+    margin-bottom: calc(var(--nl-spacing-16) - var(--nl-spacing-24));
+}
+/* 1056 미만: 개요는 목록만, 상세는 상세만 */
 .noslog-ui .nl-settings--overview .nl-settings__detail,
 .noslog-ui .nl-settings--detail .nl-settings__overview-heading,
 .noslog-ui .nl-settings--detail .nl-settings__navigation {

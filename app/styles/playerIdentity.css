@@ -1,10 +1,3 @@
-.noslog-ui .nl-exam-badges {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--nl-spacing-8);
-    align-self: stretch;
-    min-width: 0;
-}
 /* 검정 명판 — 금속 사다리 · 급이 오를수록 안쪽 선·면·장식이 붙는다(2026-09-13).
    Basic 은 직각, Recital 은 모서리가 radius/control 만큼 안으로 파인다. */
 .noslog-ui .nl-exam-badge {
@@ -174,55 +167,41 @@
     width: 100%;
     height: 100%;
 }
+/* 경계 있는 CompactSelect = 입력칸과 같은 모양 (2026-09-14 B′) */
 .noslog-ui .nl-compact-select--outlined {
     gap: var(--nl-spacing-8);
     padding-inline: var(--nl-spacing-12);
-    background: var(--nl-surface-canvas);
-    box-shadow: inset 0 0 0 1px var(--nl-border-strong);
+    background: var(--nl-surface-surface);
+    box-shadow: inset 0 0 0 1px var(--nl-border-input);
     font-size: var(--nl-type-size-16);
     line-height: var(--nl-type-line-height-24);
     font-weight: var(--nl-type-weight-regular);
+}
+@media (hover: hover) {
+    .noslog-ui .nl-compact-select.nl-compact-select--outlined:hover {
+        background: var(--nl-surface-surface);
+        box-shadow: inset 0 0 0 1px var(--nl-border-strong);
+    }
+}
+.noslog-ui .nl-compact-select.nl-compact-select--outlined:focus-visible {
+    outline: none;
+    box-shadow:
+        inset 0 0 0 1px var(--nl-focus-ring),
+        0 0 0 var(--nl-spacing-4) var(--nl-state-halo);
 }
 .noslog-ui .nl-compact-select--outlined svg {
     width: var(--nl-icon-medium);
     height: var(--nl-icon-medium);
 }
-.noslog-ui .nl-metric-switch {
-    display: flex;
-    flex-shrink: 0;
-    align-items: center;
-}
-.noslog-ui .nl-metric-switch__item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-end;
-    gap: var(--nl-spacing-8);
-    /* 옆 셀렉트·세그먼트와 같은 행 높이(control-height 44). 이전 42 는 패딩 합산 값 */
-    min-height: var(--nl-control-height);
-    padding: 0 var(--nl-spacing-12);
-    white-space: nowrap;
-}
-.noslog-ui .nl-metric-switch__indicator {
-    width: 100%;
-    height: 2px;
-}
-.noslog-ui .nl-metric-switch__item[aria-pressed="true"] {
-    font-weight: var(--nl-type-weight-semibold);
-}
-.noslog-ui
-    .nl-metric-switch__item[aria-pressed="true"]
-    .nl-metric-switch__indicator {
-    background: var(--nl-border-strong);
-}
-.noslog-ui .nl-metric-switch__item:hover {
-    background: var(--nl-interaction-hover);
+/* 메트릭 탭 = 공용 2단 밑줄 탭(`nl-tabs`, foundation.css). 여기엔 좁은 칸의 여백 · 짧은 라벨 전환만 둔다 */
+.noslog-ui .nl-tabs .nl-metric-switch__item {
+    padding-inline: var(--nl-spacing-12);
 }
 .noslog-ui .nl-metric-switch__full {
     display: none;
 }
 @container metric-controls (min-width: 396px) {
-    .noslog-ui .nl-metric-switch__item {
+    .noslog-ui .nl-tabs .nl-metric-switch__item {
         padding-inline: var(--nl-spacing-16);
     }
     .noslog-ui .nl-metric-switch__full {

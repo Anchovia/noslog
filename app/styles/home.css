@@ -75,8 +75,10 @@
     white-space: normal;
     overflow-wrap: anywhere;
 }
-.noslog-ui .nl-home-tile:hover {
-    background: var(--nl-interaction-hover);
+@media (hover: hover) {
+    .noslog-ui .nl-home-tile:hover {
+        background: var(--nl-interaction-hover);
+    }
 }
 .noslog-ui .nl-home-updates {
     display: grid;
@@ -255,11 +257,5 @@
     }
     .noslog-ui .nl-home-tile {
         padding: var(--nl-spacing-24);
-    }
-}
-@container home-hero (min-width: 640px) {
-    .noslog-ui .nl-home-identity .nl-page-title {
-        font-size: var(--nl-type-size-32);
-        line-height: var(--nl-type-line-height-40);
     }
 }

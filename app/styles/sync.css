@@ -2,6 +2,11 @@
     gap: var(--nl-spacing-32);
     padding-bottom: var(--nl-spacing-48);
 }
+/* 페이지 제목 → 첫 내용 16 · 제목 바로 아래 설명 글줄이 있으면 그 끝 → 내용도 16 (컨테이너 간격이 32 라 여기서 맞춘다) */
+.noslog-ui .nl-sync-page > .nl-page-title,
+.noslog-ui .nl-sync-page > .nl-page-title + p {
+    margin-bottom: calc(var(--nl-spacing-16) - var(--nl-spacing-32));
+}
 .noslog-ui .nl-sync-columns,
 .noslog-ui .nl-sync-column {
     display: flex;
@@ -20,6 +25,10 @@
 .noslog-ui .nl-sync-setup {
     gap: var(--nl-spacing-16);
 }
+/* 단계 제목(상자 제목) → 첫 내용은 8 — 내용끼리 간격(16)에서 당겨 맞춘다 (간격 결정 2026-09-15) */
+.noslog-ui .nl-sync-setup > :is(.nl-sync-step-heading, .nl-component-title) {
+    margin-bottom: calc(var(--nl-spacing-8) - var(--nl-spacing-16));
+}
 .noslog-ui .nl-sync-install-card {
     display: flex;
     flex-direction: column;
@@ -35,9 +44,6 @@
 .noslog-ui .nl-sync-install-card__target {
     width: 100%;
     max-width: 100%;
-}
-.noslog-ui .nl-sync-install-card .nl-button {
-    min-height: 40px;
 }
 .noslog-ui .nl-sync-step-action {
     width: 100%;
@@ -77,19 +83,11 @@
     flex-direction: column;
     gap: var(--nl-spacing-4);
 }
-.noslog-ui .nl-sync-page .nl-disclosure > summary {
-    min-height: 52px;
-    padding-block: var(--nl-spacing-12);
-}
-.noslog-ui .nl-sync-page .nl-disclosure + .nl-disclosure {
-    border-top: 1px solid var(--nl-border-divider);
-}
 .noslog-ui .nl-sync-page .nl-disclosure__body {
     padding-bottom: var(--nl-spacing-16);
 }
 .noslog-ui .nl-sync-primary {
     width: 100%;
-    min-height: 40px;
 }
 .noslog-ui .nl-sync-metrics {
     width: 100%;
@@ -130,13 +128,6 @@
     display: flex;
     flex-wrap: wrap;
     gap: var(--nl-spacing-4);
-}
-.noslog-ui .nl-sync-process {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-12);
-    list-style: decimal;
-    padding-inline-start: var(--nl-spacing-16);
 }
 .noslog-ui .nl-sync-media {
     width: 100%;
@@ -196,22 +187,11 @@
     align-items: center;
     min-height: 32px;
 }
-.noslog-ui .nl-sync-step-tag {
-    padding: var(--nl-spacing-2) var(--nl-spacing-8);
-    border: 1px solid var(--nl-border-default);
-    border-radius: var(--nl-radius-full);
-    color: var(--nl-content-subdued);
-}
 .noslog-ui .nl-sync-guide-detail {
     width: 100%;
 }
 .noslog-ui .nl-sync-page .nl-sync-guide-detail > summary {
-    min-height: 40px;
-    padding-block: var(--nl-spacing-8);
     color: var(--nl-content-subdued);
-}
-.noslog-ui .nl-sync-guide-detail .nl-disclosure__body {
-    padding-top: var(--nl-spacing-8);
 }
 .noslog-ui .nl-sync-page .nl-sync-columns {
     width: 100%;
@@ -238,11 +218,17 @@
     .noslog-ui .nl-sync-guide-step .nl-sync-setup {
         gap: var(--nl-spacing-12);
     }
+    .noslog-ui
+        .nl-sync-guide-step
+        .nl-sync-setup
+        > :is(.nl-sync-step-heading, .nl-component-title) {
+        margin-bottom: calc(var(--nl-spacing-8) - var(--nl-spacing-12));
+    }
 }
 
 .noslog-ui .nl-sync-overview {
     display: grid;
-    gap: var(--nl-spacing-12);
+    gap: var(--nl-spacing-8);
     width: 100%;
 }
 .noslog-ui .nl-sync-overview-step {

@@ -11,6 +11,7 @@
     --nl-spacing-48: 48px;
     --nl-spacing-64: 64px;
     --nl-radius-control: 4px;
+    --nl-radius-field: 8px;
     --nl-radius-container: 8px;
     --nl-radius-overlay: 10px;
     --nl-radius-full: 9999px;
@@ -32,17 +33,14 @@
     --nl-type-weight-medium: 500;
     --nl-type-weight-semibold: 600;
     --nl-type-weight-bold: 700;
-    --nl-motion-duration-0: 0ms;
     --nl-motion-duration-50: 50ms;
     --nl-motion-duration-100: 100ms;
-    --nl-motion-duration-150: 150ms;
     --nl-motion-duration-200: 200ms;
-    --nl-motion-duration-250: 250ms;
-    --nl-motion-duration-400: 400ms;
     --nl-grid-gutter-compact: 12px;
     --nl-grid-gutter-wide: 16px;
     --nl-grid-margin-compact: 16px;
     --nl-grid-margin-intermediate: 24px;
+    --nl-grid-margin-wide: 32px;
     --nl-container-reading: 768px;
     --nl-elevation-overlay:
         0 0 1px rgb(0 0 0 / 12%), 0 2px 3px rgb(0 0 0 / 4%),
@@ -62,6 +60,7 @@
     --nl-border-subtle: #393939;
     --nl-border-default: #444444;
     --nl-border-strong: #8a8a8a;
+    --nl-border-input: #717171;
     --nl-interaction-hover: #2c2c2c;
     --nl-interaction-selected-hover: #323232;
     --nl-interaction-selected-pressed: #393939;
@@ -165,6 +164,7 @@ html[data-theme="light"] .noslog-ui,
     --nl-border-subtle: #dadada;
     --nl-border-default: #c6c6c6;
     --nl-border-strong: #717171;
+    --nl-border-input: #717171;
     --nl-interaction-hover: #e9e9e9;
     --nl-interaction-selected-hover: #e1e1e1;
     --nl-interaction-selected-pressed: #dadada;
@@ -286,13 +286,6 @@ html[data-theme="light"] .noslog-ui,
     letter-spacing: 0;
     font-variant-numeric: normal;
 }
-.noslog-ui .nl-entity-companion {
-    font-size: var(--nl-type-size-14);
-    line-height: var(--nl-type-line-height-20);
-    font-weight: var(--nl-type-weight-regular);
-    letter-spacing: 0;
-    font-variant-numeric: normal;
-}
 .noslog-ui .nl-body {
     font-size: var(--nl-type-size-16);
     line-height: var(--nl-type-line-height-24);
@@ -342,24 +335,10 @@ html[data-theme="light"] .noslog-ui,
     letter-spacing: 0;
     font-variant-numeric: normal;
 }
-.noslog-ui .nl-nav-fit {
-    font-size: var(--nl-type-size-12);
-    line-height: var(--nl-type-line-height-16);
-    font-weight: var(--nl-type-weight-medium);
-    letter-spacing: 0;
-    font-variant-numeric: normal;
-}
-.noslog-ui .nl-nav-fit-current {
-    font-size: var(--nl-type-size-12);
-    line-height: var(--nl-type-line-height-16);
-    font-weight: var(--nl-type-weight-semibold);
-    letter-spacing: 0;
-    font-variant-numeric: normal;
-}
-.noslog-ui .nl-page-title-promoted {
-    font-size: var(--nl-type-size-32);
-    line-height: var(--nl-type-line-height-40);
-    font-weight: var(--nl-type-weight-bold);
-    letter-spacing: 0;
-    font-variant-numeric: normal;
+/* 페이지 제목은 데스크톱(1056 이상)에서 32/40 — 모든 페이지 같은 규칙(글자 결정 ① 2026-09-15) */
+@media (min-width: 1056px) {
+    .noslog-ui .nl-page-title {
+        font-size: var(--nl-type-size-32);
+        line-height: var(--nl-type-line-height-40);
+    }
 }

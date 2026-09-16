@@ -4,7 +4,6 @@ import { useEffect, useId, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import {
     ChevronDown,
-    ChevronUp,
     Clock,
     Coins,
     Copy,
@@ -13,7 +12,6 @@ import {
     Heart,
     Info,
     MapPin,
-    Navigation,
     Phone,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -37,7 +35,6 @@ import type { RecentCabinetCheck } from "@/features/arcades/server/cabinetCheckS
 import {
     arcadeCabinetSummary,
     arcadeDirections,
-    arcadeDistance,
     arcadeOpenState,
     arcadeScheduleHint,
     daysAgo,
@@ -74,7 +71,6 @@ export default function ArcadeDetailPage({
     const t = useTranslations();
     const router = useRouter();
     const hoursId = useId();
-    const origin = useArcadeSession((state) => state.origin);
     const discoveryQuery = useArcadeSession((state) => state.discoveryQuery);
     const [now, setNow] = useState(() => new Date());
     const [preferred, setPreferred] = useState(preferredArcadeId === arcade.id);
@@ -90,7 +86,6 @@ export default function ArcadeDetailPage({
         return () => window.clearInterval(timer);
     }, []);
     const directions = arcadeDirections(arcade);
-    const distance = arcadeDistance(arcade, origin);
     const open = arcadeOpenState(arcade, now);
     const hint = arcadeScheduleHint(arcade, now);
     const alias = arcade.identities.find(
@@ -118,15 +113,6 @@ export default function ArcadeDetailPage({
             ? t("arcades.closesAt", { time: hint.time })
             : t("arcades.opensAt", { time: hint.time })
         : null;
-    const statusRest = [
-        hintLabel,
-        arcade.region
-            ? [arcade.region, arcade.locality].filter(Boolean).join(" ")
-            : null,
-        distance !== null
-            ? t("arcades.distance", { distance: distance.toFixed(1) })
-            : null,
-    ].filter(Boolean);
     // 누르면 지정, 채운 하트를 다시 누르면 해제.
     // 결과 알림은 1056+ 레일 안 상자, 그 아래 폭은 하단 바 위 공용 토스트(바 위에 상자를 쌓지 않는다)
     function togglePreferred() {
@@ -190,20 +176,14 @@ export default function ArcadeDetailPage({
         <div className="nl-arcade-detail__actions">
             {directions ? (
                 <a
-                    className={`${foundationButtonClass({ size: "sm" })} nl-arcade-detail__directions`}
+                    className={`${foundationButtonClass()} nl-arcade-detail__directions`}
                     href={directions}
                     aria-label={`${t("arcades.directions")} · ${t("shell.externalLink")}`}
                 >
-                    <Navigation className="nl-icon-small" aria-hidden />
                     {t("arcades.directions")}
                 </a>
             ) : (
-                <ActionButton
-                    size="sm"
-                    disabled
-                    className="nl-arcade-detail__directions"
-                >
-                    <Navigation className="nl-icon-small" aria-hidden />
+                <ActionButton disabled className="nl-arcade-detail__directions">
                     {t("arcades.directions")}
                 </ActionButton>
             )}
@@ -273,20 +253,7 @@ export default function ArcadeDetailPage({
                                 {alias}
                             </p>
                         ) : null}
-                        <p
-                            className="nl-body-secondary nl-arcade-detail__status"
-                            data-open={open === "open" || undefined}
-                        >
-                            <span className="nl-arcade-detail__open">
-                                {openLabel}
-                            </span>
-                            {/* 한 줄 글로 이어 쓴다 — 조각 간격에 「· 」 까지 붙이면 점 앞이 더 벌어진다 */}
-                            {statusRest.length ? (
-                                <span className="nl-muted">
-                                    {` · ${statusRest.join(" · ")}`}
-                                </span>
-                            ) : null}
-                        </p>
+                        {/* 영업 상태 · 지역 줄은 두지 않는다 — 바로 아래 정보 행(주소 · 영업시간)과 같은 글이 겹친다(2026-09-15) */}
                     </div>
 
                     {/* 정보 행 — 아이콘 + 값 한 줄씩. 제보는 이 목록의 끝 */}
@@ -352,17 +319,10 @@ export default function ArcadeDetailPage({
                                             ) : null}
                                         </span>
                                         <span className="nl-arcade-fact__tail">
-                                            {hoursOpen ? (
-                                                <ChevronUp
-                                                    className="nl-icon"
-                                                    aria-hidden
-                                                />
-                                            ) : (
-                                                <ChevronDown
-                                                    className="nl-icon"
-                                                    aria-hidden
-                                                />
-                                            )}
+                                            <ChevronDown
+                                                className="nl-icon nl-disclosure__chevron"
+                                                aria-hidden
+                                            />
                                         </span>
                                     </button>
                                 ) : (
@@ -456,7 +416,7 @@ export default function ArcadeDetailPage({
                     {hasLocation ? (
                         <section className="nl-arcade-detail__section">
                             <div className="nl-arcade-detail__section-head">
-                                <h2 className="nl-component-title">
+                                <h2 className="nl-section-title">
                                     {t("arcades.location")}
                                 </h2>
                             </div>
@@ -474,7 +434,7 @@ export default function ArcadeDetailPage({
 
                     <section className="nl-arcade-detail__section">
                         <div className="nl-arcade-detail__section-head">
-                            <h2 className="nl-component-title">
+                            <h2 className="nl-section-title">
                                 {t("arcades.cabinets")}
                             </h2>
                             {summary.total ? (

@@ -111,20 +111,7 @@ async function openRanking(
         });
     });
     await page.goto(`/${locale}${musicPath}`);
-    if ((page.viewportSize()?.width ?? 390) < 768) {
-        await page.getByRole("combobox").click();
-        await page
-            .getByRole("option", {
-                name:
-                    locale === "ko"
-                        ? "랭킹"
-                        : locale === "ja"
-                          ? "ランキング"
-                          : "Ranking",
-                exact: true,
-            })
-            .click();
-    } else await page.getByRole("tab").nth(2).click();
+    await page.getByRole("tab").nth(2).click();
     await expect(page).toHaveURL(/tab=ranking/);
     await expect(
         page.locator(total ? ".nl-chart-leaderboard" : ".nl-area__panel")
@@ -136,7 +123,7 @@ test("Public ranking keeps 25 rows, fixed columns, Pianist/FC meaning and explic
 }) => {
     await openRanking(page);
     const table = page.locator(".nl-chart-leaderboard");
-    await expect(table.locator("tbody tr")).toHaveCount(25);
+    await expect(table.locator(".nl-player-row")).toHaveCount(25);
     await expect(page.locator(".nl-score-distribution__count")).toHaveText([
         "9",
         "7",
@@ -150,16 +137,19 @@ test("Public ranking keeps 25 rows, fixed columns, Pianist/FC meaning and explic
     ).toHaveCount(1);
     await expect(page.getByText("참가자 53명")).toBeVisible();
     await expect(
-        table.locator("tbody tr").first().getByRole("img", { name: "P 랭크" })
+        table
+            .locator(".nl-player-row")
+            .first()
+            .getByRole("img", { name: "P 랭크" })
     ).toBeVisible();
     await expect(
-        table.locator("tbody tr").first().locator(".nl-full-combo")
+        table.locator(".nl-player-row").first().locator(".nl-full-combo")
     ).toHaveText("FC");
     await expect(
-        table.locator("tbody tr").first().locator("td:nth-child(5)")
+        table.locator(".nl-player-row").first().locator(".nl-player-row__value")
     ).toHaveCSS("height", "20px");
     await expect(
-        table.locator("tbody tr").nth(1).locator(".nl-full-combo")
+        table.locator(".nl-player-row").nth(1).locator(".nl-full-combo")
     ).toHaveText("FC");
     await expect(page.locator(".nl-ranking-login")).toBeVisible();
     await page
@@ -167,7 +157,7 @@ test("Public ranking keeps 25 rows, fixed columns, Pianist/FC meaning and explic
         .click();
     await expect(page).toHaveURL(/tab=ranking&page=2/);
     await expect(
-        table.locator("tbody tr").first().locator("td").first()
+        table.locator(".nl-player-row").first().locator(".nl-player-row__rank")
     ).toHaveText("26");
     await expect(page.locator(".nl-ranking-list")).toBeFocused();
     await expect(page.locator(".nl-ranking-list [role=status]")).toHaveText(
@@ -176,12 +166,12 @@ test("Public ranking keeps 25 rows, fixed columns, Pianist/FC meaning and explic
     await page
         .getByRole("button", { name: "다음 페이지", exact: true })
         .click();
-    await expect(table.locator("tbody tr")).toHaveCount(3);
+    await expect(table.locator(".nl-player-row")).toHaveCount(3);
     await expect(
         page.getByRole("button", { name: "다음 페이지", exact: true })
     ).toBeDisabled();
     await page.goBack();
-    await expect(table.locator("tbody tr")).toHaveCount(25);
+    await expect(table.locator(".nl-player-row")).toHaveCount(25);
     await expect(
         page.getByRole("button", { name: "2페이지", exact: true })
     ).toHaveAttribute("aria-current", "page");
@@ -196,14 +186,13 @@ test("My rank summary disappears when the current user's row is on the page", as
         .getByRole("button", { name: "다음 페이지", exact: true })
         .click();
     await expect(page.locator(".nl-my-rank-summary")).toHaveCount(0);
-    await expect(page.locator('tr[data-current="true"]')).toHaveCount(1);
-    await expect(
-        page.locator('tr[data-current="true"] .nl-my-rank-badge')
-    ).toHaveText("내 순위");
-    await expect(page.locator('tr[data-current="true"] a')).toHaveAttribute(
-        "href",
-        "/ko/profile/1037"
+    const mine = page.locator(
+        '.nl-chart-leaderboard .nl-player-row[data-current="true"]'
     );
+    await expect(mine).toHaveCount(1);
+    // 유저 랭킹 페이지처럼 면으로 내 행을 표시하고, 「내 순위」 는 낭독용 글자로 남는다
+    await expect(mine).toContainText("내 순위");
+    await expect(mine.locator("a")).toHaveAttribute("href", "/ko/profile/1037");
 });
 
 test("A failed page request offers retry and never presents stale rows as current", async ({
@@ -222,10 +211,9 @@ test("A failed page request offers retry and never presents stale rows as curren
     await page.getByRole("button", { name: "다시 시도", exact: true }).click();
     await expect(
         page
-            .locator(".nl-chart-leaderboard tbody tr")
+            .locator(".nl-chart-leaderboard .nl-player-row")
             .first()
-            .locator("td")
-            .first()
+            .locator(".nl-player-row__rank")
     ).toHaveText("26");
     await expect(page.locator(".nl-ranking-list")).toBeFocused();
 });
@@ -242,9 +230,9 @@ test("Public empty and no-rank states avoid duplicate messaging and unneeded pag
     await openRanking(page, { total: 25, signedIn: true, ownRank: null });
     await expect(page.getByText("순위 없음", { exact: true })).toBeVisible();
     await expect(page.locator(".nl-pagination")).toHaveCount(0);
-    await expect(page.locator(".nl-chart-leaderboard tbody tr")).toHaveCount(
-        25
-    );
+    await expect(
+        page.locator(".nl-chart-leaderboard .nl-player-row")
+    ).toHaveCount(25);
 });
 
 test("Invalid direct ranking pages normalize to the first page", async ({
@@ -268,18 +256,17 @@ for (const locale of ["ko", "ja", "en"]) {
         await openRanking(page, { locale, signedIn: true, ownRank: 3 });
         for (const width of [320, 390, 768, 1024, 1280]) {
             await page.setViewportSize({ width, height: 900 });
-            const playerHeading = page.locator(
-                ".nl-chart-leaderboard__header th:nth-child(3)"
-            );
-            await expect(playerHeading).toHaveCSS("text-align", "start");
-            const headingBounds = await playerHeading.boundingBox();
-            const nicknameBounds = await page
-                .locator(".nl-chart-leaderboard__player > a")
+            // 유저 랭킹 페이지와 같은 머리글 — 「플레이어」 는 아바타 시작선에 맞는다
+            const headingBounds = await page
+                .locator(".nl-chart-leaderboard .nl-ranking-head__player")
+                .boundingBox();
+            const avatarBounds = await page
+                .locator(".nl-chart-leaderboard .nl-player-row .nl-avatar")
                 .first()
                 .boundingBox();
             expect(headingBounds).not.toBeNull();
-            expect(nicknameBounds).not.toBeNull();
-            expect(Math.abs(headingBounds!.x - nicknameBounds!.x)).toBeLessThan(
+            expect(avatarBounds).not.toBeNull();
+            expect(Math.abs(headingBounds!.x - avatarBounds!.x)).toBeLessThan(
                 1
             );
             await expect
@@ -300,23 +287,22 @@ for (const locale of ["ko", "ja", "en"]) {
                         )
                 )
                 .toBe(189);
+            // 점수는 행마다 오른쪽 끝이 같은 선(FC 칸 앞)에 맞는다
             await expect
                 .poll(() =>
                     page
-                        .locator(".nl-chart-leaderboard tbody tr")
-                        .evaluateAll((rows) =>
-                            rows.every((row) => {
-                                const first = row
-                                    .parentElement!.querySelector("tr")!
-                                    .children[4].getBoundingClientRect();
-                                const score =
-                                    row.children[4].getBoundingClientRect();
-                                return (
-                                    Math.abs(first.right - score.right) < 1 &&
-                                    Math.abs(score.width - 68) < 1
-                                );
-                            })
-                        )
+                        .locator(".nl-chart-leaderboard .nl-player-row__value")
+                        .evaluateAll((scores) => {
+                            const right =
+                                scores[0].getBoundingClientRect().right;
+                            return scores.every(
+                                (score) =>
+                                    Math.abs(
+                                        score.getBoundingClientRect().right -
+                                            right
+                                    ) < 1
+                            );
+                        })
                 )
                 .toBe(true);
             await page.screenshot({

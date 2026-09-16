@@ -1,5 +1,4 @@
 import { normalizeMusicCategory } from "@/lib/musicCategories";
-import type { MessageKey } from "@/lib/i18n/messages";
 
 import type { BingoCellItem, MissionFilter } from "./bingoPlateTypes";
 
@@ -59,17 +58,4 @@ export function filterBingoMissions(
 
         return !isCompleted;
     });
-}
-
-export function getBingoMissionDescriptionKey(
-    cell: BingoCellItem,
-    isCompleted: boolean,
-    isRich: boolean
-): MessageKey {
-    if (isCompleted) return "bingo.mission.completed";
-    if (isRich) return "bingo.mission.chance";
-    if (cell.missionType === "music") return "bingo.mission.music";
-    if (cell.missionType === "category") return "bingo.mission.category";
-    if (cell.missionType === "exam") return "bingo.mission.exam";
-    return "bingo.mission.record";
 }

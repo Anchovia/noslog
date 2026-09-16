@@ -14,21 +14,6 @@
     padding-block: var(--nl-spacing-24);
     gap: var(--nl-spacing-24);
 }
-.noslog-ui .nl-discovery-sort {
-    display: flex;
-    width: min(320px, calc(100vw - var(--nl-spacing-32)));
-    max-height: calc(100dvh - 96px);
-    overflow-y: auto;
-    flex-direction: column;
-    gap: var(--nl-spacing-24);
-    padding: var(--nl-spacing-16);
-    border-radius: var(--nl-radius-overlay);
-    background: var(--nl-surface-overlay);
-    box-shadow:
-        inset 0 0 0 1px var(--nl-border-subtle),
-        var(--nl-overlay-shadow);
-    z-index: 86;
-}
 /* 보이는 제목만 줄을 채운다 — sr-only 제목에 폭 100% 가 걸리면 절대배치 기준(뷰포트) 폭으로 늘어나 가로 스크롤이 생긴다 */
 .noslog-ui .nl-selection-list legend:not(.sr-only) {
     float: left;
@@ -37,15 +22,17 @@
 }
 .noslog-ui .nl-selection-list__option {
     display: flex;
-    min-height: 48px;
+    min-height: var(--nl-control-height);
     align-items: center;
     justify-content: space-between;
     gap: var(--nl-spacing-12);
     cursor: pointer;
     border-radius: var(--nl-radius-control);
 }
-.noslog-ui .nl-selection-list__option:hover {
-    background: var(--nl-interaction-hover);
+@media (hover: hover) {
+    .noslog-ui .nl-selection-list__option:hover {
+        background: var(--nl-interaction-hover);
+    }
 }
 .noslog-ui .nl-selection-list__option:has(:focus-visible) {
     box-shadow: inset 0 0 0 1px var(--nl-focus-ring);
@@ -106,9 +93,13 @@
     background: var(--nl-primary-default);
     background-clip: padding-box;
 }
-.noslog-ui .nl-range__thumb:hover,
 .noslog-ui .nl-range__thumb:active {
     box-shadow: 0 0 0 6px var(--nl-state-halo);
+}
+@media (hover: hover) {
+    .noslog-ui .nl-range__thumb:hover {
+        box-shadow: 0 0 0 6px var(--nl-state-halo);
+    }
 }
 .noslog-ui .nl-range__thumb:focus-visible {
     outline: none;
@@ -134,15 +125,6 @@
         var(--nl-spacing-16);
     box-shadow: inset 0 -1px var(--nl-border-divider);
 }
-.noslog-ui .nl-icon-button {
-    display: inline-flex;
-    width: 44px;
-    height: 44px;
-    flex-shrink: 0;
-    align-items: center;
-    justify-content: center;
-    border-radius: var(--nl-radius-control);
-}
 .noslog-ui .nl-full-dialog__body {
     display: flex;
     flex: 1;
@@ -158,23 +140,66 @@
     padding-bottom: max(var(--nl-spacing-16), env(safe-area-inset-bottom));
     box-shadow: inset 0 1px var(--nl-border-divider);
 }
-.noslog-ui .nl-full-dialog__footer > button {
-    width: 100%;
+.noslog-ui .nl-full-dialog__footer {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-8);
 }
-.noslog-ui .nl-filter-ranges,
+/* 발 = 왼쪽 「초기화」 고스트 L(잉크를 16 선에 맞추려 패딩 15+경계 1 만큼 당김) + 남는 폭의 주 액션 (2026-09-16) */
+.noslog-ui .nl-full-dialog__footer > .nl-button {
+    flex: 1 1 0;
+    min-width: 0;
+}
+.noslog-ui .nl-full-dialog__footer > .nl-full-dialog__reset {
+    flex: none;
+    margin-left: calc(-1 * var(--nl-spacing-16));
+}
 .noslog-ui .nl-filter-miss {
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-12);
 }
+/* 제목 → 개수(메타 글줄) 8 → 검색 16 (역할값). 검색줄 = 검색(남는 폭) + 폰에서는 ☰ 필터 44 (2026-09-16 E′ · R2) */
 .noslog-ui .nl-discovery__heading {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-12);
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-discovery__heading > .nl-discovery__search-row {
+    margin-top: var(--nl-spacing-8);
+}
+.noslog-ui .nl-discovery__search-row {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-discovery__search-row > form {
+    flex: 1;
+    min-width: 0;
 }
 .noslog-ui .nl-discovery {
     padding-top: var(--nl-spacing-24);
     padding-bottom: var(--nl-spacing-32);
+}
+/* 폰: 검색 → 결과 줄 12 · 결과 줄 → 목록 12 (컨트롤 묶음 안 12). 컨테이너 24 에서 당긴다 */
+.noslog-ui .nl-discovery[data-layout="compact"] > .nl-discovery__heading {
+    margin-bottom: calc(var(--nl-spacing-12) - var(--nl-spacing-24));
+}
+.noslog-ui .nl-discovery[data-layout="compact"] .nl-discovery__results {
+    gap: var(--nl-spacing-12);
+}
+.noslog-ui .nl-discovery__summary-row--compact {
+    min-height: var(--nl-control-height-compact);
+}
+/* 좁은 폭(320 · en)에서는 정렬 라벨이 말줄임되고 보기 전환은 줄지 않는다 */
+/* 고스트 정렬은 줄 첫 자식 — 올림 면 안쪽 12 만큼 왼쪽으로 당겨 아이콘 잉크를 목록 왼쪽 선에 맞춘다(아이콘 버튼과 같은 규칙) */
+.noslog-ui .nl-discovery__summary-row--compact > .nl-filter-trigger {
+    flex: 0 1 auto;
+    min-width: 0;
+    margin-left: calc(-1 * var(--nl-spacing-12));
+}
+.noslog-ui .nl-discovery__summary-row--compact > .nl-segments {
+    flex: none;
 }
 .noslog-ui .nl-discovery__layout {
     display: flex;
@@ -186,13 +211,10 @@
     width: calc((100% - 3 * var(--nl-spacing-16)) / 4);
     flex-shrink: 0;
     flex-direction: column;
-    gap: var(--nl-spacing-32);
+    gap: var(--nl-spacing-16);
 }
 .noslog-ui .nl-discovery__rail .nl-selection-list {
     gap: var(--nl-spacing-8);
-}
-.noslog-ui .nl-discovery__rail .nl-selection-list__option {
-    min-height: 40px;
 }
 .noslog-ui .nl-discovery__results {
     display: flex;
@@ -214,15 +236,6 @@
     /* 같은 행에 서는 세그먼트·체크박스·셀렉트와 항상 같은 높이 — control-height (모바일 44 / 데스크톱 40) */
     height: var(--nl-control-height);
     min-height: var(--nl-control-height);
-}
-.noslog-ui .nl-filter-count {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 20px;
-    min-height: 20px;
-    border-radius: var(--nl-radius-full);
-    background: var(--nl-surface-raised);
 }
 .noslog-ui .nl-discovery__toolbar > .nl-segments--icons {
     margin-left: auto;
@@ -346,8 +359,10 @@
 .noslog-ui .nl-chart-target > span:nth-child(2) {
     flex: 1;
 }
-.noslog-ui .nl-chart-target:hover {
-    background: var(--nl-interaction-hover);
+@media (hover: hover) {
+    .noslog-ui .nl-chart-target:hover {
+        background: var(--nl-interaction-hover);
+    }
 }
 .noslog-ui .nl-difficulty-marker {
     width: 2px;
@@ -376,7 +391,7 @@
         gap: var(--nl-spacing-16);
     }
 }
-/* 4열은 672(Intermediate 경계)부터 — 1000 셸에서 Wide 결과 영역이 710 고정이라 옛 720 임계값은 닿지 않는다. 카드 최소 156. 5열 단계는 Intermediate 상단(952)→Wide(710) 역전 때문에 두지 않는다 */
+/* 4열은 672(Intermediate 경계)부터 — 카드 최소 156. 5열 단계는 Intermediate 상단 → Wide(레일 등장) 역전 때문에 두지 않는다 (1200 셸에서 Wide 결과 영역 890) */
 @container results (min-width: 672px) {
     .noslog-ui .nl-discovery__items--grid {
         grid-template-columns: repeat(4, minmax(0, 1fr));

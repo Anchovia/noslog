@@ -89,7 +89,6 @@ export default function ConnectionSettings({
             <div className="nl-settings__zone">
                 <Button
                     appearance="foundation"
-                    size="sm"
                     variant="secondary"
                     disabled={pending !== null}
                     onClick={() => authenticate("refresh")}
@@ -103,7 +102,6 @@ export default function ConnectionSettings({
                 <Button
                     ref={changeButton}
                     appearance="foundation"
-                    size="sm"
                     variant="secondary"
                     disabled={pending !== null}
                     onClick={() => setConfirmChange(true)}
@@ -133,7 +131,6 @@ export default function ConnectionSettings({
                         <Button
                             ref={cancelButton}
                             appearance="foundation"
-                            size="sm"
                             variant="secondary"
                             disabled={pending !== null}
                             onClick={() => setConfirmChange(false)}
@@ -142,7 +139,6 @@ export default function ConnectionSettings({
                         </Button>
                         <Button
                             appearance="foundation"
-                            size="sm"
                             disabled={pending !== null}
                             onClick={() => authenticate("change")}
                         >

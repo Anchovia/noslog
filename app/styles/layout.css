@@ -1,5 +1,6 @@
 .noslog-ui {
-    --nl-layout-max: 1000px;
+    /* 본문 최대 폭 1200 — 레이아웃 결정 2026-09-15 (사이트 16곳 중 9곳이 1200–1280) */
+    --nl-layout-max: 1200px;
     --nl-layout-margin: var(--nl-grid-margin-compact);
 }
 .noslog-ui.nl-app {
@@ -51,6 +52,11 @@
 .noslog-ui .nl-back-link svg {
     width: var(--nl-icon-small);
     height: var(--nl-icon-small);
+}
+/* 페이지 제목(또는 제목 + 설명) → 첫 내용 16 — 컨테이너 기본 간격 24 를 제목 아래에서만 16 으로 (2026-09-15 역할값).
+   페이지가 컨테이너 간격을 32 로 바꾼 곳(동기화 · 검정 · 개인정보)은 그 파일에서 같은 식으로 맞춘다 */
+.noslog-ui .nl-container > :is(.nl-page-title, .nl-page-heading) {
+    margin-bottom: calc(var(--nl-spacing-16) - var(--nl-spacing-24));
 }
 .noslog-ui .nl-page-heading {
     display: flex;
@@ -141,9 +147,11 @@
     width: var(--nl-icon-large);
     height: var(--nl-icon-large);
 }
-.noslog-ui .nl-login:hover,
-.noslog-ui .nl-nav-trigger:hover {
-    background: var(--nl-interaction-hover);
+@media (hover: hover) {
+    .noslog-ui .nl-login:hover,
+    .noslog-ui .nl-nav-trigger:hover {
+        background: var(--nl-interaction-hover);
+    }
 }
 .noslog-ui .nl-nav-scrim {
     position: fixed;
@@ -180,8 +188,10 @@
     border-radius: var(--nl-radius-control);
     text-align: start;
 }
-.noslog-ui .nl-destination:hover {
-    background: var(--nl-interaction-hover);
+@media (hover: hover) {
+    .noslog-ui .nl-destination:hover {
+        background: var(--nl-interaction-hover);
+    }
 }
 .noslog-ui .nl-destination[aria-current="page"] {
     background: var(--nl-interaction-menu-set);
@@ -223,8 +233,10 @@
     gap: var(--nl-spacing-4);
     text-underline-offset: 3px;
 }
-.noslog-ui .nl-footer__links a:hover {
-    text-decoration: underline;
+@media (hover: hover) {
+    .noslog-ui .nl-footer__links a:hover {
+        text-decoration: underline;
+    }
 }
 .noslog-ui .nl-footer__links svg {
     width: var(--nl-icon-small);
@@ -242,10 +254,25 @@
         --nl-layout-margin: var(--nl-grid-margin-intermediate);
     }
 }
+/* 1056 이상 좌우 여백 32 — 컨테이너(1200)에 못 미치는 1056–1263 에서만 보인다 */
+@media (min-width: 1056px) {
+    .noslog-ui .nl-main,
+    .noslog-ui .nl-header__interaction,
+    .noslog-ui .nl-footer__content,
+    .noslog-ui.nl-recovery-minimal {
+        --nl-layout-margin: var(--nl-grid-margin-wide);
+    }
+}
 @media (max-width: 359px) {
     .noslog-ui .nl-destination {
         font-size: var(--nl-type-size-12);
         line-height: var(--nl-type-line-height-16);
+    }
+}
+/* 헤더 메뉴 이동 줄 — 폰 48 · 데스크톱 컨트롤 높이(40). 부품 결정 ⑥ */
+@media (min-width: 1056px) {
+    .noslog-ui .nl-destination {
+        min-height: var(--nl-control-height);
     }
 }
 @media (min-width: 672px) {

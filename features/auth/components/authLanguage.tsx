@@ -1,13 +1,14 @@
 "use client";
 
 import * as Select from "@radix-ui/react-select";
-import { ChevronDown, Globe } from "lucide-react";
+import { Check, ChevronDown, Globe } from "lucide-react";
 import { useState, useTransition } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import { changeLocale } from "@/app/(nevigation)/settings/actions";
 import { PROFILE_LANGUAGES } from "@/features/profile/schemas/profileSettingsSchema";
 import { getLocalizedHref, isLocale } from "@/lib/i18n/routing";
+import "@/lib/inputModality";
 
 export default function AuthLanguage() {
     const locale = useLocale();
@@ -68,10 +69,11 @@ export default function AuthLanguage() {
                 <Select.Portal>
                     <div className="noslog-ui">
                         <Select.Content
-                            className="nl-auth-language-menu"
+                            className="nl-select-menu"
                             position="popper"
                             side="top"
-                            sideOffset={4}
+                            sideOffset={8}
+                            collisionPadding={16}
                         >
                             <Select.Viewport>
                                 {PROFILE_LANGUAGES.map((option) => (
@@ -79,11 +81,17 @@ export default function AuthLanguage() {
                                         key={option.value}
                                         value={option.value}
                                         lang={option.value}
-                                        className="nl-auth-language-option nl-control"
+                                        className="nl-select-option nl-body-secondary"
                                     >
                                         <Select.ItemText>
                                             {option.label}
                                         </Select.ItemText>
+                                        <Select.ItemIndicator>
+                                            <Check
+                                                className="nl-icon-small"
+                                                aria-hidden
+                                            />
+                                        </Select.ItemIndicator>
                                     </Select.Item>
                                 ))}
                             </Select.Viewport>

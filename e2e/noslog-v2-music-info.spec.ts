@@ -69,14 +69,9 @@ test("Music detail enters Chart Info and keeps the four difficulty choices on on
                 )
             )
             .toBe(true);
-        if (width < 768)
-            await expect(
-                page.getByRole("combobox", { name: "상세 영역" })
-            ).toBeVisible();
-        else
-            await expect(
-                page.getByRole("tablist", { name: "상세 영역" })
-            ).toBeVisible();
+        await expect(
+            page.getByRole("tablist", { name: "상세 영역" })
+        ).toBeVisible();
     }
     await page.getByRole("radio", { name: /^Hard/ }).click();
     await expect(page).toHaveURL(/\/hard$/);

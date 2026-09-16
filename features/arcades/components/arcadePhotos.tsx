@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, Image as ImageIcon } from "lucide-react";
 import { useTranslations } from "@/components/i18n/localeProvider";
+import IconButton from "@/components/ui/iconButton";
 import ModalDialog from "@/components/ui/modalDialog";
 import type { PublicArcade } from "@/features/arcades/schemas/publicArcadeSchema";
 
@@ -35,6 +36,17 @@ export default function ArcadePhotos({
         <>
             <div
                 className="nl-arcade-photos"
+                // 672 미만은 넘김 버튼이 없다 — 밀어 넘김에 더해 키보드 ← → 로도 넘긴다
+                onKeyDown={(event) => {
+                    if (visible.length < 2) return;
+                    if (event.key === "ArrowRight") {
+                        event.preventDefault();
+                        advance(1);
+                    } else if (event.key === "ArrowLeft") {
+                        event.preventDefault();
+                        advance(-1);
+                    }
+                }}
                 onTouchStart={(event) => {
                     swiped.current = false;
                     setStartX(event.touches[0].clientX);
@@ -52,59 +64,61 @@ export default function ArcadePhotos({
                     setStartX(null);
                 }}
             >
-                <button
-                    type="button"
-                    className="nl-arcade-photos__main"
-                    aria-label={t("arcades.photoOpen")}
-                    onClick={(event) => {
-                        if (swiped.current) {
-                            swiped.current = false;
-                            return;
-                        }
-                        opener.current = event.currentTarget;
-                        setOpen(true);
-                    }}
-                >
-                    <Image
-                        src={photo.url}
-                        alt={photo.alt}
-                        fill
-                        sizes="(max-width: 959px) 100vw, 952px"
-                        onError={() =>
-                            setFailed((current) => [...current, photo.id])
-                        }
-                    />
-                </button>
-                <span
-                    className="nl-arcade-photos__counter nl-metadata"
-                    role="status"
-                    aria-label={t("arcades.photo", {
-                        index: active + 1,
-                        total: visible.length,
-                    })}
-                >
-                    {active + 1} / {visible.length}
-                </span>
-                {visible.length > 1 ? (
-                    <div className="nl-arcade-photos__controls">
-                        <button
-                            type="button"
-                            className="nl-icon-button"
-                            aria-label={t("arcades.photoPrevious")}
-                            onClick={() => advance(-1)}
-                        >
-                            <ChevronLeft className="nl-icon" aria-hidden />
-                        </button>
-                        <button
-                            type="button"
-                            className="nl-icon-button"
-                            aria-label={t("arcades.photoNext")}
-                            onClick={() => advance(1)}
-                        >
-                            <ChevronRight className="nl-icon" aria-hidden />
-                        </button>
-                    </div>
-                ) : null}
+                <div className="nl-arcade-photos__stage">
+                    <button
+                        type="button"
+                        className="nl-arcade-photos__main"
+                        aria-label={t("arcades.photoOpen")}
+                        onClick={(event) => {
+                            if (swiped.current) {
+                                swiped.current = false;
+                                return;
+                            }
+                            opener.current = event.currentTarget;
+                            setOpen(true);
+                        }}
+                    >
+                        <Image
+                            src={photo.url}
+                            alt={photo.alt}
+                            fill
+                            sizes="(max-width: 959px) 100vw, 952px"
+                            onError={() =>
+                                setFailed((current) => [...current, photo.id])
+                            }
+                        />
+                    </button>
+                    <span
+                        className="nl-arcade-photos__counter nl-metadata"
+                        role="status"
+                        aria-label={t("arcades.photo", {
+                            index: active + 1,
+                            total: visible.length,
+                        })}
+                    >
+                        {active + 1} / {visible.length}
+                    </span>
+                    {visible.length > 1 ? (
+                        <>
+                            <button
+                                type="button"
+                                className="nl-arcade-photos__nav nl-arcade-photos__nav--previous"
+                                aria-label={t("arcades.photoPrevious")}
+                                onClick={() => advance(-1)}
+                            >
+                                <ChevronLeft className="nl-icon" aria-hidden />
+                            </button>
+                            <button
+                                type="button"
+                                className="nl-arcade-photos__nav nl-arcade-photos__nav--next"
+                                aria-label={t("arcades.photoNext")}
+                                onClick={() => advance(1)}
+                            >
+                                <ChevronRight className="nl-icon" aria-hidden />
+                            </button>
+                        </>
+                    ) : null}
+                </div>
                 <div className="nl-arcade-photos__thumbnails">
                     {visible.slice(1).map((item, itemIndex) => (
                         <button
@@ -162,22 +176,18 @@ export default function ArcadePhotos({
                 </div>
                 {visible.length > 1 ? (
                     <div className="nl-arcade-photos__full-controls">
-                        <button
-                            type="button"
-                            className="nl-icon-button"
-                            aria-label={t("arcades.photoPrevious")}
+                        <IconButton
+                            label={t("arcades.photoPrevious")}
                             onClick={() => advance(-1)}
                         >
                             <ChevronLeft className="nl-icon" aria-hidden />
-                        </button>
-                        <button
-                            type="button"
-                            className="nl-icon-button"
-                            aria-label={t("arcades.photoNext")}
+                        </IconButton>
+                        <IconButton
+                            label={t("arcades.photoNext")}
                             onClick={() => advance(1)}
                         >
                             <ChevronRight className="nl-icon" aria-hidden />
-                        </button>
+                        </IconButton>
                     </div>
                 ) : null}
             </ModalDialog>

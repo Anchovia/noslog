@@ -7,6 +7,7 @@ import type { KeyboardEvent, ReactNode } from "react";
 
 import { useTranslations } from "@/components/i18n/localeProvider";
 import ActionButton from "@/components/ui/actionButton";
+import "@/lib/inputModality";
 
 export interface SortMenuOption<Value extends string> {
     value: Value;
@@ -29,6 +30,8 @@ export default function SortMenu<Value extends string>({
     onOpenChange,
     children,
     className,
+    variant = "secondary",
+    size,
 }: {
     label: string;
     value: Value;
@@ -37,6 +40,9 @@ export default function SortMenu<Value extends string>({
     onOpenChange?: (open: boolean) => void;
     children?: ReactNode;
     className?: string;
+    /** 결과 수 줄 안에 넣을 때는 ghost · sm — 트리거 모양만 다르고 메뉴는 같다 */
+    variant?: "secondary" | "ghost";
+    size?: "sm";
 }) {
     const t = useTranslations();
     const [open, setOpen] = useState(false);
@@ -68,7 +74,8 @@ export default function SortMenu<Value extends string>({
         <Popover.Root open={open} onOpenChange={changeOpen}>
             <Popover.Trigger asChild>
                 <ActionButton
-                    variant="secondary"
+                    variant={variant}
+                    size={size}
                     className={["nl-filter-trigger", className]
                         .filter(Boolean)
                         .join(" ")}
@@ -96,9 +103,12 @@ export default function SortMenu<Value extends string>({
                             className="nl-sort-menu__group"
                             onKeyDown={moveFocus}
                         >
-                            <p className="nl-sort-menu__heading nl-metadata">
-                                {label}
-                            </p>
+                            {/* 소제목은 종속 구역이 붙어 그룹이 둘 이상일 때만 — 하나면 트리거 라벨이 이미 이름 (2026-09-16) */}
+                            {dependent.length ? (
+                                <p className="nl-sort-menu__heading nl-metadata">
+                                    {label}
+                                </p>
+                            ) : null}
                             {options.map((option) => (
                                 <button
                                     key={option.value}

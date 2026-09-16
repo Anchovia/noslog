@@ -23,6 +23,10 @@
     flex-direction: column;
     gap: var(--nl-spacing-32);
 }
+/* 레일 안 필터 그룹끼리는 구역 사이(32)가 아니라 선 위아래 16 — 그룹 padding 16 과 합쳐 위아래가 같다 */
+.noslog-ui .nl-tier-rail > .nl-filter-group + .nl-filter-group {
+    margin-top: calc(var(--nl-spacing-16) - var(--nl-spacing-32));
+}
 .noslog-ui .nl-tier-results {
     flex: 1;
     min-width: 0;
@@ -60,8 +64,10 @@
     justify-content: space-between;
     gap: var(--nl-spacing-8);
 }
-.noslog-ui .nl-tier-band-option:hover {
-    background: var(--nl-interaction-hover);
+@media (hover: hover) {
+    .noslog-ui .nl-tier-band-option:hover {
+        background: var(--nl-interaction-hover);
+    }
 }
 .noslog-ui .nl-tier-band-option[data-range-start="true"] {
     background: var(--nl-interaction-menu-set);
@@ -263,8 +269,12 @@
 .noslog-ui .nl-tier-card__score-band > span:first-child:not(:last-child) {
     margin-right: auto;
 }
-.noslog-ui .nl-tier-card:hover .nl-tier-card__outline:not([data-achievement]) {
-    box-shadow: inset 0 0 0 1px var(--nl-border-strong);
+@media (hover: hover) {
+    .noslog-ui
+        .nl-tier-card:hover
+        .nl-tier-card__outline:not([data-achievement]) {
+        box-shadow: inset 0 0 0 1px var(--nl-border-strong);
+    }
 }
 .noslog-ui [data-pending="true"] .nl-tier-card {
     color: var(--nl-content-pending);
@@ -303,16 +313,6 @@
 }
 .noslog-ui .nl-tier-weight__heading > span {
     white-space: nowrap;
-}
-.noslog-ui .nl-tier-guide-disclosure > .nl-disclosure__body {
-    padding-top: var(--nl-spacing-8);
-}
-.noslog-ui .nl-tier-guide-disclosure[open] > summary {
-    min-height: 40px;
-}
-.noslog-ui .nl-tier-guide-disclosure[open] > summary > svg {
-    width: 24px;
-    height: 24px;
 }
 .noslog-ui .nl-tier-weight__heading > div {
     display: flex;

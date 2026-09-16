@@ -12,6 +12,10 @@
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-24);
+}
+/* 페이지 제목 → 첫 내용(세그먼트) 16 */
+.noslog-ui .nl-global-rankings__measure > .nl-page-title {
+    margin-bottom: calc(var(--nl-spacing-16) - var(--nl-spacing-24));
     width: 100%;
     max-width: 640px;
     margin-inline: auto;
@@ -164,8 +168,6 @@
     gap: var(--nl-spacing-8);
 }
 .noslog-ui .nl-ranking-login .nl-button {
-    height: 40px;
-    min-height: 40px;
     flex-shrink: 0;
 }
 .noslog-ui .nl-global-ranking-message {
@@ -175,10 +177,6 @@
     align-items: center;
     text-align: center;
     padding: 0;
-}
-.noslog-ui .nl-global-ranking-content .nl-result-state .nl-button {
-    height: 40px;
-    min-height: 40px;
 }
 .noslog-ui .nl-global-ranking-initial {
     min-height: 360px;

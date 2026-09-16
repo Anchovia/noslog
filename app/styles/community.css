@@ -7,10 +7,11 @@
     min-width: 0;
 }
 .noslog-ui .nl-tier-placements,
+/* 구역 제목 → 내용 12, 모드 묶음 사이 24 (간격 결정 2026-09-15) */
 .noslog-ui .nl-community-votes {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-24);
+    gap: var(--nl-spacing-12);
     min-width: 0;
 }
 .noslog-ui .nl-tier-mode {
@@ -18,6 +19,9 @@
     flex-direction: column;
     gap: var(--nl-spacing-8);
     min-width: 0;
+}
+.noslog-ui .nl-tier-mode + .nl-tier-mode {
+    margin-top: var(--nl-spacing-12);
 }
 .noslog-ui .nl-tier-placements__cells {
     display: grid;
@@ -51,17 +55,6 @@
 .noslog-ui .nl-tier-history-placeholder {
     height: 36px;
 }
-.noslog-ui .nl-disclosure--compact > summary {
-    min-height: 36px;
-    justify-content: flex-start;
-    padding-block: var(--nl-spacing-8);
-}
-.noslog-ui .nl-disclosure--compact > summary > span:first-of-type {
-    flex: 1;
-}
-.noslog-ui .nl-disclosure--compact[open] > summary > svg {
-    transform: rotate(90deg);
-}
 .noslog-ui .nl-vote-row {
     background: var(--nl-surface-surface);
     display: flex;
@@ -86,16 +79,13 @@
 .noslog-ui .nl-vote-row > span:last-child > span {
     white-space: nowrap;
 }
-.noslog-ui button.nl-vote-row:hover {
-    background: var(--nl-interaction-hover);
+@media (hover: hover) {
+    .noslog-ui button.nl-vote-row:hover {
+        background: var(--nl-interaction-hover);
+    }
 }
 .noslog-ui .nl-vote-row[aria-expanded="true"] {
     box-shadow: inset 0 0 0 1px var(--nl-border-strong);
-}
-.noslog-ui .nl-vote-row svg {
-    width: 16px;
-    height: 16px;
-    flex-shrink: 0;
 }
 .noslog-ui .nl-vote-distribution {
     display: flex;
@@ -180,7 +170,8 @@
     justify-content: center;
     height: 48px;
     padding-inline: var(--nl-spacing-12);
-    border-radius: var(--nl-radius-control);
+    /* 사이가 떨어진 누르는 상자 다섯 개 — 누르는 칸 모서리 8 (2026-09-14) */
+    border-radius: var(--nl-radius-field);
     color: var(--nl-content-subdued);
     background: var(--nl-surface-sunken);
 }
@@ -189,8 +180,10 @@
     background: var(--nl-surface-surface);
     box-shadow: inset 0 0 0 1px var(--nl-border-default);
 }
-.noslog-ui .nl-rating-scale label:hover > input:not(:disabled) + span {
-    background: var(--nl-interaction-hover);
+@media (hover: hover) {
+    .noslog-ui .nl-rating-scale label:hover > input:not(:disabled) + span {
+        background: var(--nl-interaction-hover);
+    }
 }
 .noslog-ui .nl-rating-scale input:focus-visible + span {
     outline: 1px solid var(--nl-focus-ring);
@@ -261,9 +254,6 @@
 .noslog-ui .nl-vote-contribution > .nl-community-actions {
     justify-content: flex-start;
 }
-.noslog-ui .nl-vote-distribution .nl-icon-button:disabled {
-    color: var(--nl-interaction-disabled-content);
-}
 .noslog-ui .nl-vote-form {
     display: flex;
     flex-direction: column;
@@ -289,10 +279,6 @@
     gap: var(--nl-spacing-8);
     padding-bottom: var(--nl-spacing-12);
     border-bottom: 1px solid var(--nl-border-divider);
-}
-.noslog-ui .nl-opinions__sort {
-    display: flex;
-    gap: var(--nl-spacing-8);
 }
 .noslog-ui .nl-opinions__list {
     display: flex;
@@ -349,8 +335,10 @@
     background: var(--nl-surface-surface);
     box-shadow: inset 0 0 0 1px var(--nl-border-default);
 }
-.noslog-ui .nl-opinion-helpful:not(:disabled):hover {
-    background: var(--nl-interaction-hover);
+@media (hover: hover) {
+    .noslog-ui .nl-opinion-helpful:not(:disabled):hover {
+        background: var(--nl-interaction-hover);
+    }
 }
 .noslog-ui .nl-opinion-helpful:disabled {
     color: var(--nl-content-subdued);
@@ -366,20 +354,22 @@
     border-radius: var(--nl-radius-overlay);
     background: var(--nl-surface-overlay);
     box-shadow: var(--nl-overlay-shadow);
-    border: 1px solid var(--nl-border-subtle);
+    border: 1px solid var(--nl-border-overlay);
     z-index: 70;
 }
 .noslog-ui .nl-action-menu__item {
     display: flex;
     align-items: center;
-    min-height: 44px;
+    min-height: var(--nl-control-height);
     padding: var(--nl-spacing-8) var(--nl-spacing-12);
     width: 100%;
     text-align: start;
     border-radius: var(--nl-radius-control);
 }
-.noslog-ui .nl-action-menu__item:hover {
-    background: var(--nl-interaction-hover);
+@media (hover: hover) {
+    .noslog-ui .nl-action-menu__item:hover {
+        background: var(--nl-interaction-hover);
+    }
 }
 @media (min-width: 1056px) {
     .noslog-ui .nl-music-detail .nl-community-columns {

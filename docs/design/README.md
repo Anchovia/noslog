@@ -1,294 +1,208 @@
-# NosLog 2.0 implementation contract
+# NosLog 디자인 가이드
 
-Status: current implementation authority, consolidated on 2026-09-08 at the
-user's request. This replaces the retired design-stage briefs and handoffs as
-layout authority. Update rules here in place; do not append a competing rule.
+2026-09-14 새로 씀. **짧게 유지한다** — 규칙이 바뀌면 해당 절을 고치고, 이유는
+[결정 기록](./decisions.md)에 한 줄 남긴다. 다른 문서에 겹치는 규칙을 쓰지 않는다.
 
-## Authority and scope
+## 0. 이 문서의 자리
 
-1. The user's latest explicit decision.
-2. Root `AGENTS.md` for process and preservation boundaries.
-3. This contract for the common shell and responsive page composition.
-4. Current Figma `NosLog v2.0.0` (`cVbWCxhkfxFfHmAKLCyKrD`), pages P1–P16 and
-   components C1–C8, for page/component visuals, variables and Text Styles.
-5. [Product rules](./product-rules.md) for behavior and data meaning that cannot
-   be inferred from a picture. Existing domain code/tests supply implementation detail.
+- 우선순위: ① 사용자의 최신 결정 ② 이 가이드 ③ 코드 —
+  [토큰](../../app/styles/tokens.css) · [공용 스타일](../../app/styles/foundation.css) · `components/ui`.
+- **Figma(NosLog v2.0.0), 옛 브리프 · 핸드오프 · PDF, 레거시 NOSTORY 는 참고하지 않는다.**
+- 동작과 데이터 의미는 [기능 규칙](./product-rules.md), 과정과 보존 경계는 루트 `AGENTS.md`.
+- 규칙을 바꾸면 같은 작업에서 **가이드 → 코드 → 테스트 기대값** 순서로 맞춘다.
 
-Z1 is decision history, not an implementation page. A representative Figma frame
-width is not a CSS breakpoint. Raw exported container widths must not override
-this common-shell decision. If Figma lacks a state, inspect existing functionality
-and the product references; do not invent or remove product behavior.
+## 1. 기초값
 
-The chart editor (`/admin/music/*/pattern`) and `/admin/*` are preserved. The
-ordinary music/chart discovery catalogue and Music Detail remain in scope.
-Since 2026-09-10 the public chart viewer page (`/music/*/*/pattern`) uses the
-ordinary shell (AppHeader, standard container, footer) and Foundation
-typography, buttons, SegmentedControl, StatusMessage and Checkbox for its
-chrome; only the canvas rendering (falling stage, piano, sheet columns, hand
-colours) stays as built. The admin draft preview shares the same chrome.
+### 테마 · 글꼴
 
-## Common layout: the approved osu!-inspired approach
+- **다크만.** `NEXT_PUBLIC_ENABLE_THEME_SWITCHING=false` 동안 라이트 스타일은 남겨 두되 새로 만들지 않는다.
+- Pretendard JP Variable 1.3.9 한 파일을 자체 호스팅(분할 · 서브셋 · 전역 preload 없음). 한국어에만 `ss05`.
 
-The adopted principle is a bounded, centered content area. The numbers below are
-NosLog's approved choices, not a claim about osu!'s current CSS.
+### 색 — 역할 이름으로만 쓴다 (다크 값)
 
-- Header contents, ordinary main shell and footer contents share `width: 100%`,
-  `max-width: 1000px` and automatic inline margins.
-- Header/footer backgrounds and separators span the viewport.
-- One global wrapper owns inline padding: 16px below 672px, 24px from 672px.
-  Page roots must not add another copy of that padding.
-- Widths are CSS pixels. Retina screenshot pixels and physical display dimensions
-  are not layout inputs. Test the actual viewport, including scrollbar behavior.
-- At a 1440px layout viewport the outer shell starts at 220px and its content at
-  244px; usable content width is 952px. The ceiling does not expand on larger screens.
-- Home search, destination grid, official news and NosLog announcements share a
-  centered inner maximum of 640px. An inner reading measure can be narrower while
-  retaining the common outer shell; it must not establish another page tier.
+| 역할                                                  | 값                          | 쓰는 곳                                               |
+| ----------------------------------------------------- | --------------------------- | ----------------------------------------------------- |
+| `surface/canvas` · `sunken`                           | #111                        | 페이지 바탕, 트랙 · 자켓 빈자리                       |
+| `surface/surface`                                     | #1b1b1b                     | 카드, 입력칸, 보조 버튼 면                            |
+| `surface/raised` · `overlay`                          | #222                        | 선택된 세그먼트 · 칩, 떠 있는 창                      |
+| `content/default` · `subdued`                         | #dbdbdb · #afafaf           | 본문 · 보조 글자                                      |
+| `content/pending`                                     | #8a8a8a                     | 요청 중이라 잠시 보류된 값 (흐리게 하는 opacity 대신) |
+| `border/divider` · `subtle` · `default`               | #323232 · #393939 · #444    | 구분선 · 세그먼트 트랙 · 카드 · 태그 경계             |
+| `border/input` · `strong`                             | #717171 · #8a8a8a           | 입력 · 보조 버튼 경계 · 올림 · 선택 경계              |
+| `border/overlay`                                      | #444                        | 떠 있는 창 경계                                       |
+| `interaction/hover` · `selected-pressed` · `menu-set` | #2c2c2c · #393939 · #323232 | 올림 · 누름 · 목록에서 선택된 행                      |
+| `primary/default` · `on-primary`                      | #dbdbdb · #111              | 주 버튼 면 · 그 위 글자                               |
+| `focus/ring`                                          | #fff                        | 포커스 선                                             |
 
-## Page modes
+- 도메인 색은 이미 있는 것만 쓴다: 난이도 글자 `difficulty/text-*`, 판정 `judgement/*`, 카테고리
+  `category/*`, 달성 `achievement/*`, 검정 `exam/*`, 상태 `feedback/*`, 차트 `local-data/*`.
+  **새 색이 필요해 보이면 만들지 말고 묻는다.**
+- 상호작용 면(올림 · 누름 · 선택 · 비활성)은 그 상태에만 칠한다. 평소 요소에 칠하지 않는다.
+- 글자 대비 4.5:1, 글자 아닌 단서 3:1. 색만으로 상태를 전달하지 않는다.
 
-| Mode         | Viewport width       | Page behavior                                  |
-| ------------ | -------------------- | ---------------------------------------------- |
-| Compact      | below 672px          | Mobile composition; 16px global inline padding |
-| Intermediate | 672px through 1055px | 24px global padding; intermediate composition  |
-| Wide         | 1056px and above     | Wide composition within the same bounded shell |
+### 글자 — 13종 (`tokens.css` 의 클래스). 이 밖의 조합 금지
 
-Use viewport media queries for page modes, in both CSS and JavaScript. Never test
-these thresholds against the padded content width or the 1000px-capped container.
-CSS and JavaScript controlling the same composition must use the same query.
-Do not invent separate transitions from Figma's 390/768/1024/1280 review canvases.
+| 클래스                                   | 크기/줄 · 굵기            | 쓰는 곳                                            |
+| ---------------------------------------- | ------------------------- | -------------------------------------------------- |
+| `nl-display`                             | 40/48 · 700               | 따로 승인된 곳만                                   |
+| `nl-page-title`                          | 24/32 · 700               | 페이지 제목 — 1056 이상에서는 모든 페이지 32/40    |
+| `nl-section-title`                       | 20/28 · 600               | 페이지의 구역 제목                                 |
+| `nl-component-title` · `nl-entity-title` | 16/24 · 600               | 상자 · 창 · 필터 그룹 제목 / 목록 · 카드 항목 이름 |
+| `nl-body` · `nl-body-secondary`          | 16/24 · 400 · 14/20 · 400 | 본문 · 입력된 값 / 보조 설명                       |
+| `nl-control`                             | 14/20 · 500               | 버튼 · 탭 · 라벨                                   |
+| `nl-emphasis-label`                      | 14/20 · 600               | 상태 메시지 제목, 선택된 항목, 격자 카드 항목 이름 |
+| `nl-metadata`                            | 12/16 · 400               | 3차 정보 (12 미만 금지)                            |
+| `nl-metric-display` · `nl-metric-value`  | 32/40 · 700 · 14/20 · 500 | 비교하는 숫자 — **이 둘만 tabular**                |
 
-### Widths derived from the 1000px shell — 2026-09-11
+- 굵기는 400 · 500 · 600 · 700 만. 입력칸 글자는 모든 폭에서 16 (그보다 작으면 iOS 가 확대한다).
 
-The shell change of 2026-09-07 moved every ordinary page from a 1216px content
-width to 952px, so any number that was derived from the old width must be
-re-derived, not kept. The 2026-09-11 audit found and corrected these leftovers:
+### 간격 · 모서리 · 높이 · 아이콘
 
-- **Wide rails** (Discovery, Tiers, Exams, Privacy contents, Settings) are one
-  quarter of the content width: `calc((100% - 3 * 16px) / 4)` = 226px at 952.
-  Exams, Privacy and Settings still carried the old hard-coded 292px.
-- **Music grid capacity** is a container query on the results area: 2 columns
-  from 288px, 3 from 536px, 4 from 672px; there is no 5-column step. Card minimum
-  width is 156px (was 168px with 4 columns from 720px, which the fixed 710px Wide
-  results area could never reach — desktop stayed at 3 columns). The 5-column
-  step was removed because Intermediate 1000–1055 (952px) would show 5 columns
-  and then drop to 4 when the Wide rail appears. Tier detailed cards use the
-  same 156px minimum.
-- **Dense grid** (`view=dense`) adds one column at every step (3 / 4 / 5) and
-  shares the grid card. The view control is an icon-only three-segment
-  SegmentedControl (`list`, `layout-grid`, `grid-3x3`) whose labels remain as
-  accessible names and tooltips.
-- **Jacket category label** keeps its `surface/overlay` plate, sits bottom-right
-  (visual-flow position 4, covering less artwork) and colours only the text with
-  `--nl-category-*`, inherited from the 1.0 genre palette; Dark pops/anime/BM were
-  lightened to reach 4.5:1 on the #222 plate.
-- Dead tokens `--nl-container-standard`, `--nl-container-wide`,
-  `--nl-grid-margin-wide` and the `nl-container--wide` class were removed.
+- **간격:** 0 · 4 · 8 · 12 · 16 · 24 · 32 · 48 · 64. `2` 는 아이콘 · 배지 · 차트 안 광학 보정에만.
+  **역할별 값(2026-09-15):** 구역 사이 32 (모든 폭) · **페이지 제목(24/32) → 설명 · 메타 글줄 8, 제목(또는 설명 끝) → 첫 내용 16** ·
+  구역 제목(20) → 첫 내용 12 · 상자 제목(16) → 내용 8 ·
+  카드 안쪽 16 (목록 항목 카드 12 · 촘촘 격자 카드 8 · 1056 이상 큰 카드 24) · 떨어진 목록 줄 사이 8 (구분선 목록 0) · 문단 사이 16 ·
+  선으로 나눈 묶음(필터 그룹 · 개인정보 요약)은 선 위아래가 같다 — 레일 · 팝오버 16, 전체 화면 창 24, 개인정보 요약 12.
+- **모서리:** 누르는 상자 `radius/field` 8 (입력 · 셀렉트 · 검색 · 버튼 · 트리거 · 칩 · 적용 조건 · 페이지 번호 ·
+  패턴 투표 버튼) / 상자 안 항목 · 체크박스 · 태그 `radius/control` 4 / 카드 `container` 8 / 떠 있는 창 `overlay` 10 / 원 `full`.
+- **높이 — 두 단계(2026-09-15):**
+  **큰 L** `--nl-control-height` 44 (1056 이상 40) — 입력 · 셀렉트 · 검색 · 필터 트리거 · 2단 탭 · 페이지 주 액션
+  (하단 바 · 레일 · 목록 카드 액션 · 폼 제출 · 대화상자 버튼 · 설정 폼 행의 버튼).
+  **중간 M** `--nl-control-height-compact` 36 (1056 이상 32) — 카드 안 버튼(오락실 기체) · 상자 없는 인라인 보조
+  (팝오버 머리 줄 「초기화」 · 적용 조건 「전체 지우기」 · 「영역 초기화」 · 알림 안 「다시 시도」 · 시트 요약 줄 정렬) · 필터 칩 · 적용 조건 토큰.
+  전체 화면 창 발의 「초기화」 는 주 액션과 같은 줄이라 L.
+  버튼은 `size="sm"` 이 M. 아이콘 버튼은 자기 줄의 단계. **같은 줄은 한 단계.** 예외 없음.
+  1단 탭 48. 펼쳐지는 메뉴 · 목록 행(셀렉트 · 정렬 · 검정 목록 · 「⋯」 메뉴 · 레일 체크 목록 · 설정 오락실 목록)은 L,
+  헤더 메뉴(≡) 이동 줄만 48(1056 이상 40).
+- **아이콘:** Lucide 실제 모양. 20 기본 · 16 글자 옆 보조 · 24 강조와 창 머리 가장자리 닫기.
 
-### Filter and sort grammar — 2026-09-11
+### 포커스 · 상태 · 움직임
 
-One grammar for every surface that opens to filter or sort (Music, Tiers,
-Arcades, Bingo), built from shared primitives in `components/ui`:
+- **포커스:** 컨트롤 자신의 1px 흰 선 — 평소 경계가 있으면 색만 바꾸고, 없으면 포커스에서만 그린다.
+  입력 · 셀렉트 · 검색 · 버튼은 여기에 바깥 4px 후광(`--nl-state-halo`)을 더한다.
+- 목록(셀렉트 목록 · 정렬 메뉴) 항목의 흰 선은 **키보드로 움직일 때만** — 마지막 입력을
+  `lib/inputModality.ts` 가 `<html data-input>` 에 적는다.
+- **올림(hover) 면은 포인터 장치에서만** — 모든 `:hover` 규칙은 `@media (hover: hover)` 안에(터치는 탭한 뒤 hover 가 남아
+  선택된 것처럼 보인다). `:not(:hover)` 로 평소 색을 정하는 규칙은 밖에 둔다.
+- **누름**은 색 단계만. 크기 줄이기(scale) 없음. **문서에 없는 움직임을 넣지 않는다** — 상태는 즉시 바뀐다.
+- **바쁨(busy)은 비활성이 아니다:** 버튼은 스피너 16 + 진행형 라벨. 스켈레톤은 펄스, 페이지 이동은 위 2px 막대.
+- **떠 있는 창**(목록 · 메뉴 · 팝오버 · 대화상자 · 차트 툴팁): 면 #222 · 1px `border/overlay` · 모서리 10 · `--nl-overlay-shadow`.
+  예외 없음 — 헤더 메뉴 패널만 헤더에 붙는 위쪽 경계를 긋지 않는다. 미디어 위 판(자켓 카테고리 · 서열 카드 난이도)은 떠 있는 창이 아니다.
 
-- **Sort is separate from filters** at every width: `SortMenu` is a popover of
-  mutually exclusive options (row 40, selected = `interaction/menu-set` + weight +
-  check) opened from a toolbar trigger showing the current criterion. Dependent
-  choices (sort difficulty, direction) sit below a divider inside the menu.
-- **Filter trigger** is labelled `필터` with the applied-group count badge; the
-  container stays as decided on 2026-09-07 — full-screen layer below 672px,
-  rail (Music/Tiers) or anchored popover (Bingo/Arcades) above. No bottom sheet.
-- **Groups** use `FilterGroup`: `component-title` heading, right-hand slot
-  (selected count in the batch layer, `지우기` in instant containers, login link
-  when signed out), 24px gap and a 1px `border/divider` between groups.
-- **Short enumerations render as `FilterChips`** (36px, selected = `surface/raised`
-    - `border/strong` + 16px check + semibold; difficulty chips use the DU-01 text
-      ramp) inside layers and popovers. **Wide rails keep vertical checkbox lists**
-      (`SelectionList`, checkbox always visible, row 40) — the desktop sidebar
-      convention. Long lists (tier bands) and range sliders are unchanged.
-- **Applied conditions** always render as `AppliedTokens` (32px tokens with ×,
-  plus clear-all) on all four pages.
-- The full-screen layer has a `초기화` header action and the `결과 N개 보기`
-  footer; popovers apply instantly and carry only the reset action.
-- `RadioGroup` legends now use `component-title`, which also fixes the settings
-  pages where heading and options were typographically identical.
+## 2. 셸과 레이아웃
 
-- **Music Detail:** Compact has a full-width area select and a separate equal-width
-  action row. From Intermediate, the manual-activation tab list and identity-side
-  actions switch together. Wide adds the existing 2:1 Chart Info, My Record and
-  Tier/Evaluation columns. Ranking stays full-width. Selection and URL state survive
-  every resize; CSS resizing must not reload data or reset forms.
-- **Music/chart discovery and tiers:** Wide has the persistent left filter rail.
-  Chart discovery retains the short localized page title `채보` / `譜面` / `Chart`,
-  as approved by the user, rather than the longer viewer title in P3. This does
-  not rename or alter the preserved chart viewer itself.
-  Below Wide, preserve the staged full-screen filter flow. Do not replace it with
-  a popover based on the earlier withdrawn proposal.
-  Result batches append automatically when the end of the list comes within
-  240px of the viewport, for up to three batches after the first page (80
-  results). Later batches load only from the existing Load more button, so the
-  footer stays reachable. The button stays visible throughout. Automatic batches
-  announce the added count without moving focus. This user decision (2026-09-12)
-  replaces P3's button-only loading.
-  Music/chart discovery's Wide sort trigger displays only the selected criterion
-  beside the sort icon; its localized accessible name includes both the sort
-  label and selected criterion. This user-approved exception replaces Figma's
-  visible `Sort:` prefix.
-  In Wide tiers, keep the Detailed view checkbox at the right end of the result
-  count row, with the count on the left. This approved addition to the Figma Wide
-  frame preserves the existing toggle and narrower-screen placement.
-- **Bingo:** preserve the filter popover from Intermediate (672px), including Wide,
-  and the full-screen filter in Compact. Current P14 includes explicit 768px popover
-  frames (`3362:31976`, Dark); this control does not turn the page into Wide.
-  The catalogue changes to four columns and detail to two columns at Wide (1056px).
-  Preserve existing filter contents. It is not the discovery-rail contract.
-  The detail-page reset trigger retains the full mission-column width in every
-  mode, including Wide. This user-approved exception replaces the content-width
-  reset trigger in P14 (`2914:9231`); preserve the outlined appearance and the
-  confirmation dialog.
-  Completed mission rows retain a concise localized completion label without the
-  repeated instruction to press again to undo. Checkbox behavior is unchanged.
-  Catalogue cards retain the divider across the full inner body width. This
-  user-approved exception replaces the shorter divider in P14 `2914:8419`.
-  The catalogue renders every board at once, with no Load more button and no
-  `count` URL parameter. This user decision (2026-09-12) replaces P14's batches.
-- **Arcade discovery map failure:** replace the map with a compact danger notice and
-  an adjacent Retry button, preserving the result list. Hide the map legend until
-  the map is available. The Retry action is the approved addition to P12.
-- **Footer exception:** the approved content-driven single-line threshold remains
-  840px; below it, center the stacked text. This does not change the page mode.
-- **Profile:** Wide uses a 2:1 body grid within the same 1000px shell: Progress
-  beside Record overview, then Best performances beside Recent plays. Its identity
-  uses a 108px avatar and 32/40 name, with activity metadata below the name/badges.
-  Exam badges are 24px nameplates (user decision 2026-09-13): a metal ladder by
-  grade (10–8 graphite, 7–5 bronze, 4–3 silver with an inner rule, 2 gold on
-  `exam/tint-top`, 1 `exam/plate-peak` ebony with gold leaf), square corners for
-  Basic and corners notched inward by `radius/control` for Recital. The mode
-  reads `BASIC`/`RECITAL` only when every plate in the row fits on one line at
-  its measured width, otherwise `B`/`R` (`ExamBadgeGroup`); if even initials do
-  not fit, the row wraps as before. When both exams are absent, the badge row
-  shows one `ExamBadge · None` placeholder (label `rankings.examNone`, 1px
-  `border/default` outline plate) so the identity stack keeps its 108px/64px
-  height; a single missing exam shows only the existing badge. Ranking rows do
-  not use the placeholder. The P16 share card draws the same plate at twice the
-  scale in its raw palette.
-  The no-records state separates its information notice from the owner's sync
-  action below it, with a 32px gap. Center the content-width primary button with
-  its light fill and no border, replacing Figma's left-aligned outlined action.
-  Below Wide, retain the 64px avatar and one-column section order. Private recent
-  activity remains hidden; resizing must preserve selections and loaded records.
-  The Wide Progress heading and metric/range controls share one vertically
-  centered row. Narrower modes keep the controls below the heading.
-- Component-local charts, labels and text may measure their actual available width
-  to fit content. That measurement must not independently switch the page mode.
-- **Privacy contents:** select the first section on initial entry, or the valid
-  URL fragment target when present. Selecting a contents link immediately updates
-  the highlight and focuses its section; direct scrolling updates the reading
-  section. History navigation uses the fragment target. Compact contents share
-  the same selection and close after a link is selected.
-- **Data sync:** the user approved a code-only guide redesign on 2026-09-10,
-  superseding the earlier brief/Figma page composition without modifying Figma.
-  Use the full ordinary common-shell content width for setup, results and help.
-  Present installation, official-site login and bookmarklet execution as three
-  numbered steps; keep example images in disclosures. On Compact,
-  reserve the number indent for the heading so instructions retain the full card
-  width. The bookmarklet and official-site action buttons span the step content;
-  their labels and the bookmarklet helper text are centered. Preserve returning-user
-  setup/history disclosures and all sync behavior. Latest result and Help/Security
-  use collapsed disclosures.
-  Returning users see the Bookmarklet setup disclosure first and expanded by
-  default. The separate completed status/date/official-site action block is omitted
-  because the setup disclosure and latest-result section already provide them.
+- 헤더 · 본문 · 푸터 내용은 `max-width: 1200px` 가운데. 바탕과 구분선은 화면 전체.
+- 전역 좌우 여백 16 (672 미만) / 24 / 32 (1056 이상). 페이지가 여백을 한 번 더 넣지 않는다.
+  1200 이상에서 셸 1200 = 안쪽 내용 1136, 1440 에서 양옆 120 씩 빈다.
+- **페이지 모드** — viewport media query 로만, CSS 와 JS 가 같은 기준:
 
-The retired 90% layout, 1440px maximum, proposed 1200/1280px stepping, unreachable
-1216px inner query, 768px header query and 672px padded-area tab query are obsolete.
+    | 모드         | 폭        |                          |
+    | ------------ | --------- | ------------------------ |
+    | Compact      | 672 미만  | 모바일 구성              |
+    | Intermediate | 672–1055  | 중간 구성                |
+    | Wide         | 1056 이상 | 넓은 구성 (셸 폭은 같음) |
 
-## Styling and behavior boundaries
+- Wide 레일(악곡 · 서열표 · 검정 · 개인정보 목차 · 설정) = 내용 폭의 1/4, `calc((100% - 3 * 16px) / 4)` (셸 1200 에서 272).
+  헤더 60. 동기화 페이지 구역 펼침은 다른 구역처럼 사이 32 (붙여 쌓지 않는다).
+- 악곡 격자는 결과 영역 container query — 2열 288 · 3열 536 · 4열 672 이상(상한 4열, 셸 1200 에서 카드 200), 카드 최소 156.
+  촘촘한 격자(`view=dense`)는 단계마다 한 열 더. 5열 단계는 두지 않는다(Intermediate 끝 → Wide 레일 등장에서 열 수가 뒤집힘).
+- 홈의 검색 · 목적지 · 공지 · 공식 소식은 안쪽 최대 640. 푸터는 840 이상 한 줄, 그 아래는 가운데로 쌓는다.
+- 부품이 자기 폭을 재서 글자를 맞추는 것은 되지만, 그걸로 페이지 모드를 따로 바꾸지 않는다.
+- 페이지 구역 제목은 `section-title`, 상자 안 제목은 `component-title`.
 
-Standard text buttons use a 40px minimum height in every page mode, matching all
-C1 Button variants (`88:46`). Button height is independent of the responsive
-control height; do not change input, checkbox-row or icon-control sizing when
-applying this rule. Allow multiline labels to grow without clipping.
+## 3. 부품
 
-The feedback dialog's image attachment control spans the input width in Compact.
-This user-approved exception replaces the content-width attachment control in P2
-`3375:5629`. From Intermediate, keep it content-width and left-aligned. Compact
-Close and Submit actions retain equal widths; wider modes retain trailing actions.
+- **버튼** (`ActionButton`, `Button appearance="foundation"`): 주 = #dbdbdb 면, 보조 = 입력칸과 같은 면 · 경계,
+  고스트, 위험 = 빨간 테두리, 채운 위험 = 탈퇴 같은 되돌릴 수 없는 동작. 높이는 L(기본) 또는 M(`size="sm"`), 패딩 7/15(M 은 세로 0).
+  **페이지에서 크기를 덮어쓰지 않는다** — 칸이 좁으면 열 수를 줄인다(주 액션 한 줄 + 보조 2열).
+  로그인이 필요한 동작은 `data-locked`(비활성처럼 보이되 이유를 보여 줌).
+- **아이콘 버튼** `IconButton`: 공용 버튼 `size="icon"` — 컨트롤 높이 정사각 · 모서리 8 · `label` 필수 · 기본 고스트.
+  아이콘 20, 창 머리 가장자리 닫기만 24. 패딩 있는 칸의 첫 · 마지막 자식이면 `(컨트롤 − 20) / 2` 만큼 밖으로
+  당겨 잉크를 패딩에 맞춘다. 사진 위 넘김 · 지도 범례처럼 **미디어 위 버튼**만 자기 모양을 쓴다.
+- **입력 · 셀렉트 · 검색:** 면 `surface` + 1px `border/input`, 올림은 경계만 `strong`. 폼 `Select` 는 Radix
+  (`value` · `onValueChange` · `options`, react-hook-form 은 `Controller`).
+  **필드 안 잉크(2026-09-16): 첫 · 마지막 잉크는 안쪽 12, 잉크 사이 8** — 입력칸 글자 12(11+경계 1) · 셀렉트 글자 12 · 꺾쇠 20 은 오른쪽 12 ·
+  검색 돋보기 20 은 왼쪽 12 → 글자 40 · 범위 셀렉트 라벨 12(바깥 4 + 버튼 8) · 지우기 × 20 은 오른쪽 12(중심 22 = 셀렉트 꺾쇠).
+  글자는 모든 폭 16/400, 플레이스홀더 `content/subdued`, 아이콘 20(범위 셀렉트 꺾쇠 16).
+  검색창 안 범위 셀렉트 · 지우기는 **4px 안쪽 층** — 면만 M 정사각(모서리 4)이고 잉크는 위 12 규칙을 따른다. 누르는 높이는 검색창 그대로.
+- **목록**(셀렉트 목록 · `SortMenu` · 좁은 셀렉트): 떠 있는 창 규격, 판 안쪽 8 · 트리거에서 8, 행 = 컨트롤 높이(폰 44 · 데스크톱 40) · 안쪽 8/12 · 4 간격 ·
+  `body-secondary` 14/400, 선택 = `menu-set` 면 + 600 + 오른쪽 체크 16. **소제목(`metadata` 600 subdued)은 그룹이 둘 이상일 때만** —
+  정렬 하나뿐이면 트리거 라벨이 이미 이름이라 소제목 없이 행부터(2026-09-16). **목록 정렬은 항상 `SortMenu` 하나** (두 가지뿐이어도).
+- **필터:** 트리거 「필터」 + 적용 그룹 수 배지(`nl-filter-count` — 원 20 · 면 `raised` · `metadata`, 개수 전용이라 태그와 다른 모양). 그릇 = Compact 전체 화면 창 / 악곡 · 서열표 Wide 레일 /
+  빙고 · 오락실 672 이상 팝오버 (바텀시트 없음). 그룹은 `FilterGroup`(제목 + 오른쪽 슬롯 + 사이 1px 구분선).
+  짧은 열거는 창 · 팝오버에서 `FilterChips`, 레일에서는 체크박스 목록 `SelectionList`. 적용 조건은 `AppliedTokens`.
+  **전체 화면 창(`FullScreenDialog`)**: 머리 60(8+44+8) = 왼쪽 16 제목 `component-title` + 오른쪽 닫기 24(패딩 8) · 아래 1px 선. 본문 안쪽 24/16, 그룹 제목 → 내용 8,
+  그룹 사이 선 위아래 24. **발 = 왼쪽 「초기화」 고스트 L(`onReset`, 잉크를 16 선에 맞춰 당김) + 남는 폭의 「결과 N개 보기」** · 위 1px 선 · 안쪽 16 (2026-09-16).
+  팝오버는 즉시 적용 + 머리 줄 제목 | 「초기화」 M (발이 없어 자리가 다르다).
+- **밑줄 탭** `nl-tabs`: 안 선택 subdued 500 · 선택 default 600 + 2px 밑줄 · 올림은 글자만.
+  **1단** `AreaTabs`(페이지 구역) = 높이 48 · 내용 폭 전체 1px 구분선 · 모든 폭 탭, 넘치면 가로 스크롤.
+  **2단** `MetricSwitch`(같은 목록의 기준) = 구분선 없음 · 컨트롤 높이. 1단은 tablist, 2단은 `aria-pressed` 버튼 묶음.
+- **세그먼트** `SegmentedControl`: 트랙 `sunken` + 1px `subtle`, 선택 = `raised` + 1px `strong` + 600.
+  보기 방식 · 모드 전환에만. 아이콘만 있는 세그먼트는 항목 40×36.
+- **체크박스 · 라디오 · 슬라이더:** 체크박스 20 · 모서리 4 · 테두리 2 `strong` · 체크 선 2. 라디오 원 20 · 테두리 2 →
+  선택 시 `primary` 링 + 점 8. 슬라이더 = 트랙 4 · 채운 점 20(타겟 24) · 올림 · 끌기 · 포커스에 후광. 올림 변화는 슬라이더에만.
+- **태그** `nl-tag`(foundation.css): 높이 24 · 1px `default` · 모서리 4 · `metadata` 흐림, 강조형 `--strong` = 글자 기본 · 경계 `strong`.
+  누르지 않는 라벨은 이 하나 — 공지 분류(제목 위 「분류 · 날짜」 줄) · 빙고 미션 종류 · 상태. 알약 모양 라벨은 쓰지 않는다.
+- **대화상자** `ModalDialog`: Compact 334 / 본문 있는 창 Wide 768 (둘 다 `100vw − 56` 상한) · 가운데 · 안쪽 24 · 세로 간격 16 ·
+  제목 `component-title` 왼쪽 · 닫기 = `IconButton` 아이콘 24 를 `(컨트롤 − 24) / 2` 만큼 당겨 잉크가 안쪽 24 선 · 스크림 `surface/scrim`.
+  액션은 오른쪽 정렬, **Compact 창과 672 미만의 모든 창은 폭을 채운다(둘이면 취소 먼저 등폭)**. 페이지에서 창 규격을 덮어쓰지 않는다(2026-09-16 피드백 창 예외 제거).
+  필터 · 제보처럼 긴 창은 672 미만에서 전체 화면.
+- **상태 메시지** `StatusMessage`, 결과 상태 `ResultState`. 느린 교체는 기존 값을 `content/pending` 으로.
+- **판정 이름:** 항상 `◆JUST · JUST · GOOD · NEAR · MISS` — `components/ui/judgementMarker.tsx` 의 `judgementLabels`.
+  빙고 문구 용어는 `BingoTermHelp` 가 대소문자 무관으로 찾아 이 표기로 보여 준다.
+- **펼침** `Disclosure`: 화살표는 줄 끝 ∨ · 열리면 ∧(180°) · 20 · 들여쓰기 0. 두 단계 —
+  **구역** = 요약 줄 48 · 제목은 자리대로(페이지 구역 `section-title`, 상자 안 `component-title`) · 내용까지 16 /
+  **보조** `compact` = 컨트롤 높이 · `control` · 내용까지 8.
+  흐름 속 펼침은 면 없이 연달아 쌓이면 사이 1px 구분선, 혼자 떠 있는 상자는 `card`.
+  올림 = 줄 전체에 `interaction/hover` — 면 없는 줄은 좌우 12 를 넓혀 칠하고(글자 선은 그대로), 카드는 카드 면.
+  목록 한 줄을 여는 줄(서열 투표 · 최근 플레이 · 영업시간 · 오락실 카드)은 줄 크기는 그대로 두고
+  화살표 `nl-disclosure__chevron` 과 올림만 따른다. 열린 내용은 보조 펼침처럼 위 8 · 아래 8, 들여쓰기는 그 줄의
+  값 열에 맞춘다(정보 행 = 아이콘 20 + 12). 프로필 「전체 랭크 보기」 는 24 글자 버튼 그대로.
+- **도움말:** 두 모양, 둘 다 마우스 올림 · 포커스 · 탭으로 연다.
+  **용어 뜻** `TermHelp` = 점선 밑줄 글자 + ? 16(간격 4) → 위쪽 작은 창(떠 있는 창 규격 · 최대 280 · 여백 12 ·
+  제목 `control` + 설명 `body-secondary`). 오락실 기체 상태 이유만 줄 끝을 맞추려고 ? 없이 점선.
+  **기준 설명** = 라벨 뒤 ⓘ 16(`nl-info-trigger`, 누르는 영역은 컨트롤 높이 · 자리 차지 없음) → 같은 작은 창.
+  설명이 긴 곳(「패턴 경향 기준」)만 ⓘ 를 누르면 대화상자. 모두가 알아야 할 기준은 도움말로 숨기지 않고 늘 보이는 글로 둔다.
 
-Shared single-line text inputs retain a 44px minimum height in every page mode,
-including Wide (P9 `2689:1465`, P10 `2734:88338`). Keep their height independent
-of the responsive button/control height. Multiline fields retain their larger
-minimum height; this correction does not resize buttons or icon controls.
+### 아직 결정 전 — 부품 인벤토리에서 갈라진 곳 (결정하면 위로 올린다)
 
-The Rankings personal-position notice retains the existing 8px container radius.
-The user approved this rounded form over the square corners in the Figma Wide
-frame; do not flatten this notice when reconciling that frame.
+## 4. 페이지별 규칙 (코드가 틀어지지 않게 최소한만)
 
-Range slider thumbs are a filled 20px `primary/default` dot inside a 24px target,
-on a 4px track whose unselected part is `border/default`. Radio buttons are a
-20px circle with a 2px `border/strong` ring that turns `primary/default` with an
-8px dot when selected. Only the slider thumb shows `--nl-state-halo`
-(`primary/default` at 16%, a user-approved value added on 2026-09-12), on hover,
-drag and keyboard focus; radio buttons do not change on hover. Focus keeps FOCUS-1B: the radio swaps its ring to `focus/ring`,
-and the light thumb uses a 1px inside `primary/on-primary` ring. No motion.
-The filter slider's track is inset by half the target (12px) at each end so its
-ends sit under the thumb centres. The chart viewer's native seek and volume bars
-use the same dot with a 20px thumb box, so their track ends meet the dot edge.
-Checkboxes keep the 20px box, 4px radius and `primary/default` fill, with a 2px
-`border/strong` border matching the radio ring. The Lucide check keeps its shape
-with `stroke-width: 3` (2px at 16px, about 10% of the box), in line with the
-surveyed systems. Checkboxes do not change on hover.
+- **악곡 상세:** 영역 탭(1단) · Compact 는 액션 등폭 한 줄, Intermediate 부터 제목 옆. Wide 는 채보 정보 ·
+  내 기록 · 서열·평가를 2:1 열로, 랭킹은 전체 폭. 폭을 바꿔도 선택 · 주소 · 입력이 유지된다.
+- **악곡 · 채보 발견 · 서열표:** Wide 는 왼쪽 필터 레일, 그 아래는 전체 화면 필터. 결과는 끝이 240px 안에
+  들어오면 자동으로 20개씩 3번(80개)까지, 그 뒤는 「더 보기」 버튼. Wide 정렬 트리거는 기준만 보인다(접근 이름엔
+  「정렬:」 포함). 서열표 Wide 는 「상세 보기」 체크박스를 결과 수 줄 오른쪽 끝에.
+  **악곡 목록(2026-09-16):** 672 미만은 목록 위 두 줄 — 검색줄(검색 + 오른쪽 ☰ 필터 44 아이콘, 적용 개수 배지) →12→
+  결과 줄(왼쪽 정렬 `SortMenu` 고스트 M · 오른쪽 보기 전환 세그먼트 M) →12→ 목록. 결과 수는 제목 아래 메타 글줄(「579곡」).
+  Wide 는 검색 전체 폭 → 레일 | 정렬(L) · 보기 → 결과 수 → 목록 그대로.
+  카드: 상자(surface) · 자켓 64(목록) / 정사각(격자) · 이름 목록 16 `entity-title` / 격자 14 `emphasis-label` ·
+  아티스트 목록 14 / 격자 12 · 촘촘은 이름 한 줄만. **난이도 판** `DifficultyLevels` = 고정 순서 4칸(Normal · Hard · Expert · Real),
+  판 24(목록) / 20(격자 · 촘촘) · 모서리 4 · 면 `raised` · 사이 4 · 숫자 `metric-value` + 난이도 글자색 · 없는 난이도는 자리만 비움(테두리 없음).
+  격자 카드 안쪽 12, 촘촘 8.
+- **빙고:** 672 이상 필터 팝오버 · 그 아래 전체 화면. 672 미만 머리는 악곡 목록과 같은 배치 — 제목 → 개수 메타 글줄(「44개」) 8 → 검색 + ☰ 필터 아이콘 44 → 정렬 고스트 M 줄 →12→ 목록(2026-09-16). 목록은 한 번에 전부(더 보기 없음). 상세 초기화 버튼은
+  미션 열 전체 폭 + 확인창.
+- **오락실:** 지도 실패는 짧은 위험 알림 + 「다시 시도」, 목록은 유지. 마우스 휠 확대는 목록 지도에만.
+  672 미만은 필터가 검색줄 오른쪽 아이콘 버튼(44, 적용 개수는 오른쪽 위), 정렬은 시트 요약 줄 오른쪽 ghost `SortMenu`,
+  지도 · 시트는 좌우 끝까지(시트 안쪽 16). 672 이상은 다른 목록과 같은 정렬 | 필터 툴바 — 이 예외는 오락실만.
+  상세는 이름 아래 상태 줄 없이 바로 정보 행(주소 · 영업시간 · 요금). 사진은 672 미만 밀어 넘김 + 카운터만,
+  672 이상 좌우 가장자리 세로 가운데 ‹ › 44 · 키보드 ← →. 기체는 한 대 = 카드(surface · 안쪽 12/16 · 사이 8),
+  「가동 확인」 흰 주 버튼 · 「고장 신고」 빨간 테두리, 둘 다 글자만(카드 안 버튼 = M). 「길찾기」 도 글자만 — 아이콘은 글자 없는 버튼(하트 · 제보)에만.
+  기체 카드는 두 열 — 왼쪽 이름(14/20) / 위치 메모(12/16), 오른쪽 상태(14/20) / 확인 시각(12/16), 열 안 4.
+  기체 색 점(늘 글자와 함께)은 가동 · 양호 초록 · 보통 노랑 · 주의 빨강 · 이용 불가 빨강 · 미확인 빈 원.
+  세부 모양은 결정 기록 2026-09-12 · 13 을 따른다.
+- **프로필:** Wide 는 2:1 (성장 추이 | 기록 개요, 베스트 | 최근 플레이). 아바타 108(좁으면 64), 이름 32/40.
+  검정 명판 24 · 금속 사다리 · Recital 은 파인 모서리 · 들어갈 때만 `BASIC`/`RECITAL`, 둘 다 없으면 「검정 기록 없음」.
+- **개인정보:** 처음엔 첫 절(또는 주소의 절) 선택. 목차를 누르면 강조 · 포커스 이동, 스크롤하면 읽는 절이 따라간다.
+- **데이터 동기화:** 설치 · 공식 사이트 로그인 · 북마클릿 실행 3단계, 예시 이미지와 결과 · 도움말은 펼침.
 
-Use the existing global styles, shared components and code-style conventions.
-Use Figma variables and Text Styles with the approved exact semantic values;
-do not hand-copy per-page colors, spacing or font stacks. The shared
-[token file](../../app/styles/tokens.css) and
-[foundation styles](../../app/styles/foundation.css) are the implementation mapping,
-not an independent visual authority. Fix a verified mapping mismatch at its shared
-source instead of overriding each page. Preserve exact Adobe Spectrum S2 neutrals;
-Tailwind's default palette and legacy NOSTORY are not design sources.
+## 5. 손대지 않는 곳
 
-Self-host the single unmodified `PretendardJPVariable.woff2` from Pretendard JP 1.3.9.
-Keep its license, variable weights, official fallback stack and `font-display: swap`.
-Use no `unicode-range`, split/subset generation or global font preload. Apply `ss05`
-only in Korean. Keep natural tracking and existing semantic text roles; do not invent
-per-page font weights. The standard Pretendard loader for preserved viewer/editor
-and administrator routes remains unchanged. Do not replace licensed Lucide geometry
-with approximate custom icons. Shared control/focus/disabled styles and ordinary
-data-chart semantics remain in their existing components and mapped tokens.
+[AGENTS.md 「손대지 않는 곳」](../../AGENTS.md)을 따른다 — 채보 에디터 · 관리자 · 채보 뷰어 캔버스 · 음원.
 
-Implement dark only while `NEXT_PUBLIC_ENABLE_THEME_SWITCHING=false`. Preserve
-existing light styles and disabled theme controls; add no new light design.
-Preserve KO/JA/EN, keyboard interaction, focus order, authentication, data meaning,
-privacy boundaries and existing functionality while adjusting presentation.
+## 6. 확인
 
-## Verification and documentation discipline
-
-- Measure compositions together: shell padding, header actions, select/tabs,
-  filter rails and panel columns. A no-overflow check alone cannot certify layout.
-- Test 320px, representative mobile, intermediate and desktop widths, plus both
-  sides of every affected threshold. For reported resize instability, sweep the
-  affected interval in both directions and record actual state transitions.
-- Exercise the affected controls and preserve state through resizing in KO/JA/EN.
-  Check Chromium, Firefox and WebKit where supported. Browser emulation is not a
-  claim of testing physical devices.
-- Compare the affected Figma nodes and rendered browser composition. Distinguish
-  fixture/content differences from layout differences and from approved overrides.
-- Run relevant automated tests, lint, typecheck and build. Report exact coverage
-  and remaining failures; never call a page-suite audit complete from isolated checks.
-- [Implementation evidence](../noslog-v2-implementation-verification.md) is a dated
-  test log, not a layout authority or a source of new pending work.
-- [Product rules](./product-rules.md) preserve the necessary behavioral baseline.
-  Old briefs, audits, handoffs, Foundation/provenance documents and specimens are
-  retired and removed after explicit approval of the 50-file deletion scope.
-  Do not restore them as active rules. Committed history and the verified local
-  backup preserve their original contents, including uncommitted documentation.
-- The design-guide's six historical blocks are complete. This is implementation,
-  not a new design-guide/PDF phase. The old PDF is historical, not current authority.
-
-Historical design-guide PDF generators require the historical source package; they
-are not part of current application validation and must not regenerate a supposed
-current design authority from these two implementation documents.
-
-Change this contract when the user changes the common layout, then update the code
-and its regression expectations in the same work unit. Do not leave contradictory
-normative text in another brief or handoff. The user owns all Git operations.
+- 바꾼 화면은 실제 브라우저에서 CSS px 로 잰다: 320 · 390 · 768 · 1280, 바뀐 경계의 양쪽, 한 · 일 · 영.
+  가로 넘침이 없다는 것만으로 레이아웃을 통과시키지 않는다 — 같은 줄 높이 · 여백 · 정렬을 함께 본다.
+- typecheck · lint · 관련 테스트. **e2e 는 로컬 테스트 DB 에서만** — 사용자의 localhost:3000 은 운영 DB 를 쓴다.
+- 보고는 실제로 돌린 것만. 안 돌린 검사는 「안 함」 이라고 쓴다.

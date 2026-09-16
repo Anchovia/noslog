@@ -108,14 +108,22 @@ for (const locale of ["ko", "ja", "en"] as const) {
             expect(
                 (await page.locator(".nl-arcade-map").boundingBox())!.height
             ).toBeLessThan(110);
-            const summary = (await page
-                .locator(".nl-arcades__summary")
+            // 시트 머리(손잡이 · 요약 줄 · 672 미만 정렬) 아래 8 에 첫 카드
+            const head = (await page
+                .locator(".nl-arcades__sheet-head")
                 .boundingBox())!;
             const firstCard = (await page
                 .locator(".nl-arcades__list > li")
                 .first()
                 .boundingBox())!;
-            expect(firstCard.y - summary.y - summary.height).toBe(8);
+            expect(firstCard.y - head.y - head.height).toBe(8);
+            // 672 미만은 지도가 화면 끝까지, 그 위는 컨테이너 여백 안
+            if (width < 1056) {
+                const map = (await page
+                    .locator(".nl-arcade-map")
+                    .boundingBox())!;
+                expect(map.x).toBe(width < 672 ? 0 : 24);
+            }
             expect(
                 await page.evaluate(
                     () => document.documentElement.scrollWidth <= innerWidth
@@ -281,14 +289,19 @@ for (const locale of ["ko", "ja", "en"] as const) {
             "alt",
             "Synthetic gallery test image 1"
         );
-        await page
-            .getByRole("button", { name: t["arcades.photoNext"], exact: true })
-            .click();
+        // 672 미만은 넘김 버튼이 없다 — 밀어 넘김 · 키보드 → 로 넘긴다
+        await expect(
+            page.getByRole("button", {
+                name: t["arcades.photoNext"],
+                exact: true,
+            })
+        ).toBeHidden();
+        await main.focus();
+        await main.press("ArrowRight");
         await expect(main.locator("img")).toHaveAttribute(
             "alt",
             "Synthetic gallery test image 2"
         );
-        await main.focus();
         await main.press("Enter");
         const dialog = page.getByRole("dialog");
         await expect(dialog.locator("img")).toHaveAttribute(

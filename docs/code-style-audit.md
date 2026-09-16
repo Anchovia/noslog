@@ -21,10 +21,10 @@ retained. No unused-file warning independently authorizes deletion. Chart viewer
 editor and administrator source directories have no changes in the current diff.
 The legacy viewer shell check passes, but actual renderer/editor execution cannot
 be verified without a published local chart; the local account has no Admin access.
-These runtime limitations remain explicit in the evidence log.
+These runtime limitations were recorded in the former evidence log, removed on
+2026-09-14 with the other Figma-era documents (see Git history).
 
-Current implementation verification and remaining caveats are maintained in
-[the implementation evidence log](./noslog-v2-implementation-verification.md).
+Verification now follows the 「확인」 section of the [design guide](./design/README.md).
 The dated results below describe their historical maintenance scopes only.
 
 ## Historical maintenance baseline
@@ -238,7 +238,9 @@ The external bookmarklet, OAuth, health, binary and CSV protocols are untouched.
   `app/api/getPlayerData.js`, `components/bookmarklet/guideMediaPlaceholder.tsx`,
   `components/music/musicTitle.tsx`, and `components/ui/Card.tsx`.
   The first is an executable legacy external-data script; import-graph absence
-  cannot establish whether it is used manually. These files were not removed.
+  cannot establish whether it is used manually. These files were not removed
+  at the time; `app/api/getPlayerData.js` was later removed in the 2026-09-15
+  cleanup after confirming nothing calls it.
 - The initial Prettier findings included four GitHub issue templates and the
   Foundation regression HTML. The issue-template formatting is now corrected;
   the design specimen remains untouched. See the current handoff for the latest

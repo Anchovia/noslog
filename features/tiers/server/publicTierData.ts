@@ -2,16 +2,7 @@ import { CACHE_TAGS } from "@/lib/cacheTags";
 import db from "@/lib/db";
 import { getLocalizedMusicTitle } from "@/lib/i18n/musicTitle";
 import type { Locale } from "@/lib/i18n/routing";
-import {
-    BASIC_RATING_TOP_COUNT,
-    calculateBasicRatingTheoreticalMax,
-} from "@/lib/tiers/basicRating";
-import type {
-    PublicTierBandPayload,
-    TierDifficulty,
-    TierGoal,
-    TierMode,
-} from "@/lib/tiers";
+import type { PublicTierBandPayload, TierDifficulty } from "@/lib/tiers";
 import { Prisma } from "@prisma/client";
 import { unstable_cache } from "next/cache";
 
@@ -44,103 +35,6 @@ function getTierChartWhere(
         ...(levels.length > 0 ? { OR: levelFilters } : {}),
     };
 }
-
-// 현재 선택한 모드·목표·필터에 해당하는 공개 구간 요약만 캐시함
-export const getCachedGoalTierOverview = unstable_cache(
-    async (
-        mode: TierMode,
-        goal: TierGoal,
-        difficulties: TierDifficulty[],
-        levels: string[]
-    ) => {
-        const chartWhere = getTierChartWhere(difficulties, levels);
-        const tierList = await db.tierList.findFirst({
-            where: { mode, goal, status: "published" },
-            select: {
-                id: true,
-                slug: true,
-                title: true,
-                mode: true,
-                goal: true,
-                description: true,
-                updatedAt: true,
-                bands: {
-                    orderBy: { position: "asc" },
-                    select: {
-                        id: true,
-                        value: true,
-                        position: true,
-                        _count: {
-                            select: {
-                                entries: { where: { chart: chartWhere } },
-                            },
-                        },
-                    },
-                },
-            },
-        });
-
-        if (!tierList) return null;
-
-        return {
-            ...tierList,
-            goal,
-            bands: tierList.bands
-                .map((band) => ({
-                    id: band.id,
-                    value: band.value,
-                    position: band.position,
-                    totalCount: band._count.entries,
-                }))
-                .filter((band) => band.totalCount > 0),
-            updatedAt: tierList.updatedAt.toISOString(),
-        };
-    },
-    ["public-goal-tier-overview", "v1"],
-    {
-        revalidate: 3600,
-        tags: [CACHE_TAGS.tierLists],
-    }
-);
-
-// 현재 공개 서열표를 기준으로 10,000점 정규화에 사용할 상위 70곡 이론값을 계산함
-export const getCachedBasicTierWeightTheoreticalMax = unstable_cache(
-    async (tierListId: number) => {
-        const tierList = await db.tierList.findUnique({
-            where: { id: tierListId },
-            select: {
-                mode: true,
-                goal: true,
-                status: true,
-                entries: {
-                    select: {
-                        tierBand: { select: { value: true } },
-                    },
-                },
-            },
-        });
-
-        if (
-            !tierList ||
-            tierList.mode !== "basic" ||
-            tierList.status !== "published" ||
-            tierList.entries.length < BASIC_RATING_TOP_COUNT
-        ) {
-            return null;
-        }
-
-        const theoreticalMax = calculateBasicRatingTheoreticalMax(
-            tierList.entries.map((entry) => entry.tierBand.value)
-        );
-
-        return theoreticalMax > 0 ? theoreticalMax : null;
-    },
-    ["basic-tier-weight-theoretical-max", "v2"],
-    {
-        revalidate: 3600,
-        tags: [CACHE_TAGS.tierLists],
-    }
-);
 
 // 구간별 정적 채보 데이터는 필터 조합별로 공유 캐시함
 export const getCachedTierBand = unstable_cache(
@@ -256,7 +150,7 @@ export async function getUserTierListProgress(
     }));
 }
 
-export function getUserTierRecords(userId: number, chartIds: number[]) {
+function getUserTierRecords(userId: number, chartIds: number[]) {
     if (chartIds.length === 0) return Promise.resolve([]);
 
     return db.playData.findMany({
@@ -292,7 +186,7 @@ interface LatestTierPlayRow {
     source_play_time: string;
 }
 
-export function getLatestUserTierPlays(userId: number, chartIds: number[]) {
+function getLatestUserTierPlays(userId: number, chartIds: number[]) {
     if (chartIds.length === 0) return Promise.resolve([]);
 
     return db.$queryRaw<LatestTierPlayRow[]>(Prisma.sql`

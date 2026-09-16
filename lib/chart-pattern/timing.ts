@@ -11,10 +11,6 @@ export function sortTimingPoints(points: ChartTimingPoint[]) {
     return [...points].sort((a, b) => a.tick - b.tick || a.timeMs - b.timeMs);
 }
 
-export function millisecondsPerTick(bpm: number, ticksPerQuarter: number) {
-    return MINUTES_TO_MILLISECONDS / bpm / ticksPerQuarter;
-}
-
 export function tickToMilliseconds(
     tick: number,
     points: ChartTimingPoint[],

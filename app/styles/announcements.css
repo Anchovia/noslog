@@ -41,17 +41,9 @@
 .noslog-ui .nl-announcement-meta > p {
     margin: 0;
 }
-.noslog-ui .nl-announcement-category {
-    display: inline-flex;
-    align-items: center;
-    height: 24px;
-    padding-inline: var(--nl-spacing-8);
-    border: 1px solid var(--nl-border-default);
-    border-radius: var(--nl-radius-control);
-    white-space: nowrap;
-}
+/* 월 제목 = 구역 제목: 앞 구역과 32 · 아래 목록과 12 (간격 결정 2026-09-15) */
 .noslog-ui .nl-announcements__month {
-    padding-block: var(--nl-spacing-24) var(--nl-spacing-8);
+    padding-block: var(--nl-spacing-32) var(--nl-spacing-12);
 }
 .noslog-ui .nl-announcements__list > li:first-child .nl-announcements__month {
     padding-top: var(--nl-spacing-0);

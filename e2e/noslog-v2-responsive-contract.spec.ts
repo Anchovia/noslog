@@ -37,9 +37,6 @@ for (const locale of ["ko", "ja", "en"]) {
                             tabs: Boolean(
                                 area.querySelector('[role="tablist"]')
                             ),
-                            select: Boolean(
-                                area.querySelector(".nl-area__select")
-                            ),
                             columns:
                                 style(
                                     ".nl-detail-columns"
@@ -53,8 +50,8 @@ for (const locale of ["ko", "ja", "en"]) {
                 )
                 .toEqual({
                     actions: width >= 672 ? "row" : "column",
-                    tabs: width >= 672,
-                    select: width < 672,
+                    // 영역 탭은 모든 폭에서 탭 — 좁으면 탭 줄만 가로 스크롤(부품 결정 ② 2026-09-14)
+                    tabs: true,
                     columns: width >= 1056 ? 2 : 1,
                     padding: width >= 672 ? "24px" : "16px",
                     overflow: false,
@@ -66,16 +63,19 @@ for (const locale of ["ko", "ja", "en"]) {
                 });
             }
         }
-        // A real area selection must survive changing representations, not only geometry.
+        // A real area selection must survive resizing, and the selected tab stays in view when the row scrolls.
+        await page.locator('[role="tab"]').nth(3).click();
+        await expect(page).toHaveURL(/tab=tier/);
+        await page.setViewportSize({ width: 320, height: 900 });
+        await expect(page.locator('[role="tab"]').nth(3)).toHaveAttribute(
+            "aria-selected",
+            "true"
+        );
+        await expect(page.locator('[role="tab"]').nth(3)).toBeInViewport({
+            ratio: 1,
+        });
         await page.locator('[role="tab"]').nth(2).click();
         await expect(page).toHaveURL(/tab=ranking/);
-        await page.setViewportSize({ width: 390, height: 900 });
-        await expect(page.locator(".nl-area__select")).toBeVisible();
-        await expect(page).toHaveURL(/tab=ranking/);
-        await page.locator(".nl-area__select").click();
-        await expect(page.getByRole("option")).toHaveCount(4);
-        await page.keyboard.press("Escape");
-        await expect(page.locator(".nl-area__select")).toBeFocused();
         await page.setViewportSize({ width: 1470, height: 900 });
         await expect(page.locator('[role="tab"]').nth(2)).toHaveAttribute(
             "aria-selected",

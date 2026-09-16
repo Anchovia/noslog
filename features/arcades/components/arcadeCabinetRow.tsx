@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { Check, CircleCheck, TriangleAlert } from "lucide-react";
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import ActionButton from "@/components/ui/actionButton";
 import Button from "@/components/ui/Button";
@@ -24,12 +23,15 @@ export function cabinetLabel(
     );
 }
 
-export type CabinetState = "unknown" | "unavailable" | "caution" | "available";
+/** 색 점의 단계 — 가동 중이면 상태(양호 · 보통 · 주의)를 따르고, 보통은 노랑 · 주의는 이용 불가와 같은 빨강(2026-09-15) */
+export type CabinetState =
+    "unknown" | "unavailable" | "caution" | "normal" | "available";
 
 export function cabinetState(cabinet: ArcadeCabinet): CabinetState {
     if (cabinet.stale || cabinet.availability === "unknown") return "unknown";
     if (cabinet.availability === "unavailable") return "unavailable";
-    return cabinet.condition === "caution" ? "caution" : "available";
+    if (cabinet.condition === "caution") return "caution";
+    return cabinet.condition === "normal" ? "normal" : "available";
 }
 
 /** 「가동 · 양호」·「가동 · 주의」·「이용 불가」·「미확인」 */
@@ -72,7 +74,9 @@ export function CabinetStateText({ cabinet }: { cabinet: ArcadeCabinet }) {
 
 /**
  * 기체 한 대 = 구분선으로 나눈 한 줄. 실제 오락실 표기(1번기·2번기)를 따르고, 위치 메모·상태(색 점 + 글자)·신선도를 같이 둔다.
- * 「가동 확인」 은 로그인 이용자의 한 번 누르기, 「고장 신고」 는 이 기체를 대상으로 신고 레이어를 연다.
+ * 「가동 확인」 은 로그인 이용자의 한 번 누르기 — 카드의 주 액션이라 흰 버튼(목록 카드 「자세히 보기」 와 같은 서열),
+ * 「고장 신고」 는 이 기체를 대상으로 신고 레이어를 여는 빨간 테두리 버튼(사용자 결정). 둘 다 글자만 —
+ * 폰 상세 22곳 중 주 버튼 글자만 15 (2026-09-15).
  * 확인한 사람 수·신고 건수는 각 버튼 글자 오른쪽의 흐린 숫자 — 시각 줄에는 시각만 남긴다.
  */
 export default function ArcadeCabinetRow({
@@ -145,31 +149,33 @@ export default function ArcadeCabinetRow({
     }
     return (
         <li className="nl-arcade-cabinet" data-tone={tone}>
+            {/* 두 열 — 왼쪽 이름 / 위치 메모, 오른쪽 상태 / 확인 시각(상태의 근거라 상태 밑) · 2026-09-16 */}
             <div className="nl-arcade-cabinet__row">
                 <span className="nl-arcade-cabinet__name">
                     <span className="nl-control">{label}</span>
                     {cabinet.note ? (
-                        <span className="nl-body-secondary nl-muted">
+                        <span className="nl-metadata nl-muted">
                             {cabinet.note}
                         </span>
                     ) : null}
                 </span>
-                <span
-                    className="nl-control nl-arcade-cabinet__state"
-                    data-state={state}
-                >
-                    <span className="nl-arcade-cabinet__dot" aria-hidden />
-                    <CabinetStateText cabinet={cabinet} />
+                <span className="nl-arcade-cabinet__status">
+                    <span
+                        className="nl-control nl-arcade-cabinet__state"
+                        data-state={state}
+                    >
+                        <span className="nl-arcade-cabinet__dot" aria-hidden />
+                        <CabinetStateText cabinet={cabinet} />
+                    </span>
+                    {/* 한 줄 글로 이어 쓴다 — 조각마다 간격을 주고 「· 」 까지 붙이면 점 앞이 더 벌어진다 */}
+                    <span className="nl-arcade-cabinet__meta nl-metadata nl-muted">
+                        {meta.join(" · ")}
+                    </span>
                 </span>
             </div>
-            {/* 한 줄 글로 이어 쓴다 — 조각마다 간격을 주고 「· 」 까지 붙이면 점 앞이 더 벌어진다 */}
-            <p className="nl-arcade-cabinet__meta nl-metadata nl-muted">
-                {meta.join(" · ")}
-            </p>
             <div className="nl-arcade-cabinet__actions">
                 {isAuthenticated ? (
                     <ActionButton
-                        variant="secondary"
                         size="sm"
                         busy={busy}
                         busyLabel={t("arcades.confirmRunning")}
@@ -178,19 +184,10 @@ export default function ArcadeCabinetRow({
                         aria-pressed={checkedByMe}
                         onClick={confirm}
                     >
-                        {checkedByMe ? (
-                            <>
-                                <Check className="nl-icon-small" aria-hidden />
-                                {t("arcades.confirmedRunning")}
-                            </>
-                        ) : (
-                            <>
-                                <CircleCheck
-                                    className="nl-icon-small"
-                                    aria-hidden
-                                />
-                                {t("arcades.confirmRunning")}
-                            </>
+                        {t(
+                            checkedByMe
+                                ? "arcades.confirmedRunning"
+                                : "arcades.confirmRunning"
                         )}
                         {checkCount}
                     </ActionButton>
@@ -198,7 +195,6 @@ export default function ArcadeCabinetRow({
                     // 로그아웃 — 비활성처럼 어둡게(data-locked) · hover 에 이유(title). 진짜 disabled 는 hover 를 막아 title 이 안 뜬다
                     <Button
                         appearance="foundation"
-                        variant="secondary"
                         size="sm"
                         data-locked=""
                         aria-disabled="true"
@@ -206,7 +202,6 @@ export default function ArcadeCabinetRow({
                         title={t("arcades.loginToUse")}
                         onClick={() => setLoginHint(true)}
                     >
-                        <CircleCheck className="nl-icon-small" aria-hidden />
                         {t("arcades.confirmRunning")}
                         {checkCount}
                     </Button>
@@ -218,9 +213,6 @@ export default function ArcadeCabinetRow({
                     initialReportType="unavailable"
                     triggerLabel={t("arcades.reportBroken")}
                     triggerVariant="danger"
-                    triggerIcon={
-                        <TriangleAlert className="nl-icon-small" aria-hidden />
-                    }
                     triggerSuffix={
                         cabinet.openReports ? (
                             <span className="nl-metric-value nl-arcade-cabinet__count">

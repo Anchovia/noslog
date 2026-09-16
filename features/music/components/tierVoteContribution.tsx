@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useId, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
     useLocalizedHref,
@@ -136,24 +136,44 @@ export default function TierVoteContribution({
                     noValidate
                     onSubmit={form.handleSubmit(handleSubmit)}
                 >
-                    <Select
-                        id={id}
-                        aria-label={t("community.voteValue")}
-                        aria-describedby={`${id}-help`}
-                        aria-invalid={Boolean(form.formState.errors.value)}
-                        disabled={mutation.isPending}
-                        {...form.register("value", { valueAsNumber: true })}
-                    >
-                        <option value="">{t("community.selectValue")}</option>
-                        {Array.from(
-                            { length: 136 },
-                            (_, index) => (index + 10) / 10
-                        ).map((value) => (
-                            <option key={value} value={value}>
-                                {value.toFixed(1)}
-                            </option>
-                        ))}
-                    </Select>
+                    <Controller
+                        control={form.control}
+                        name="value"
+                        render={({ field }) => (
+                            <Select
+                                id={id}
+                                aria-label={t("community.voteValue")}
+                                aria-describedby={`${id}-help`}
+                                invalid={Boolean(form.formState.errors.value)}
+                                disabled={mutation.isPending}
+                                value={
+                                    Number.isFinite(field.value)
+                                        ? String(field.value)
+                                        : ""
+                                }
+                                onValueChange={(next) =>
+                                    field.onChange(
+                                        next === "" ? Number.NaN : Number(next)
+                                    )
+                                }
+                                onBlur={field.onBlur}
+                                triggerRef={field.ref}
+                                options={[
+                                    {
+                                        value: "",
+                                        label: t("community.selectValue"),
+                                    },
+                                    ...Array.from(
+                                        { length: 136 },
+                                        (_, index) => (index + 10) / 10
+                                    ).map((value) => ({
+                                        value: String(value),
+                                        label: value.toFixed(1),
+                                    })),
+                                ]}
+                            />
+                        )}
+                    />
                     <p id={`${id}-help`} className="nl-metadata nl-muted">
                         {t("community.valueHelp")}
                     </p>

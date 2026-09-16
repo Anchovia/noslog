@@ -1,11 +1,3 @@
-export const ARCADE_MACHINE_STATUSES = [
-    { value: "unknown", label: "미확인" },
-    { value: "good", label: "양호" },
-    { value: "normal", label: "보통" },
-    { value: "caution", label: "주의" },
-    { value: "unavailable", label: "이용 불가" },
-] as const;
-
 export const ARCADE_WEEKDAYS = [
     { key: "monday", label: "월" },
     { key: "tuesday", label: "화" },
@@ -238,29 +230,3 @@ export function readPublicArcadeWeekly(
     }
     return Object.keys(result).length > 0 ? result : null;
 }
-
-export type ArcadeMachineStatus =
-    (typeof ARCADE_MACHINE_STATUSES)[number]["value"];
-
-export function isArcadeMachineStatus(
-    value: string
-): value is ArcadeMachineStatus {
-    return ARCADE_MACHINE_STATUSES.some((status) => status.value === value);
-}
-
-export const ARCADE_MACHINE_STATUS_META: Record<
-    ArcadeMachineStatus,
-    { label: string; className: string }
-> = {
-    unknown: {
-        label: "미확인",
-        className: "bg-divider text-text-secondary",
-    },
-    good: { label: "양호", className: "bg-success/15 text-success" },
-    normal: { label: "보통", className: "bg-chart/15 text-chart" },
-    caution: { label: "주의", className: "bg-score/15 text-score" },
-    unavailable: {
-        label: "이용 불가",
-        className: "bg-danger/15 text-danger",
-    },
-};

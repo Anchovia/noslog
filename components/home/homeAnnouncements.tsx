@@ -17,9 +17,7 @@ export default async function HomeAnnouncements({
     return (
         <section className="nl-home-update nl-home-announcements">
             <div className="nl-home-update__heading">
-                <h2 className="nl-component-title">
-                    {t("home.announcements")}
-                </h2>
+                <h2 className="nl-section-title">{t("home.announcements")}</h2>
                 <Link
                     href={getLocalizedHref("/announcements", locale)}
                     className="nl-control"

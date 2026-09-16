@@ -1,22 +1,25 @@
 .noslog-ui .nl-exams {
     display: grid;
-    gap: var(--nl-spacing-24);
+    gap: var(--nl-spacing-32);
     padding-block: var(--nl-spacing-24) var(--nl-spacing-48);
     min-width: 0;
     overflow-wrap: anywhere;
 }
+/* 제목 → 설명 글줄 8 · 설명 끝 → 첫 내용 16 (격자 간격 32 라 여기서 맞춘다 · 2026-09-15 역할값) */
 .noslog-ui .nl-exams__identity {
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-8);
     min-width: 0;
+    margin-bottom: calc(var(--nl-spacing-16) - var(--nl-spacing-32));
 }
+/* 구역 사이 32 · 구역 제목 → 내용 12 (간격 결정 2026-09-15) */
 .noslog-ui .nl-exams__content,
 .noslog-ui .nl-exam-navigation,
 .noslog-ui .nl-exams__personal {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-24);
+    gap: var(--nl-spacing-32);
     min-width: 0;
 }
 .noslog-ui .nl-exam-head {
@@ -25,7 +28,7 @@
     padding: var(--nl-spacing-16);
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-16);
+    gap: var(--nl-spacing-12);
 }
 .noslog-ui .nl-exam-facts {
     display: grid;
@@ -48,17 +51,24 @@
     align-items: center;
     width: 100%;
 }
+/* 검정 선택 목록 = 셀렉트 목록과 같은 패널·행 (2026-09-14 M2).
+   오른쪽 칸은 검정 상태가 쓰므로 체크는 두지 않고 선택은 면 + 굵기로 표시한다 */
 .noslog-ui.nl-exam-select__popup {
     background: var(--nl-surface-overlay);
-    border: 1px solid var(--nl-border-default);
+    border: 1px solid var(--nl-border-overlay);
     border-radius: var(--nl-radius-overlay);
-    box-shadow: var(--nl-elevation-overlay);
+    box-shadow: var(--nl-overlay-shadow);
     color: var(--nl-content-default);
     z-index: 70;
     width: var(--radix-select-trigger-width);
     max-height: var(--radix-select-content-available-height);
     overflow: auto;
-    padding: var(--nl-spacing-4);
+    padding: var(--nl-spacing-8);
+}
+.noslog-ui.nl-exam-select__popup [data-radix-select-viewport] {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-4);
 }
 .noslog-ui .nl-exam-select__option,
 .noslog-ui .nl-exam-rail button {
@@ -71,14 +81,16 @@
     border-radius: var(--nl-radius-control);
     text-align: start;
 }
+.noslog-ui .nl-exam-select__option {
+    min-height: var(--nl-control-height);
+}
+.noslog-ui .nl-exam-select__option[data-highlighted] {
+    background: var(--nl-interaction-hover);
+}
 .noslog-ui .nl-exam-select__option[data-state="checked"],
 .noslog-ui .nl-exam-rail [aria-current="true"] {
     background: var(--nl-interaction-menu-set);
     font-weight: 600;
-}
-.noslog-ui .nl-exam-select__option[data-highlighted] {
-    box-shadow: inset 0 0 0 1px var(--nl-focus-ring);
-    outline: none;
 }
 .noslog-ui .nl-exam-rail {
     display: none;
@@ -156,17 +168,7 @@
 .noslog-ui .nl-exam-chart-options a {
     width: 100%;
 }
-.noslog-ui .nl-exam-practice {
-    background: var(--nl-surface-surface);
-    border-radius: var(--nl-radius-container);
-    padding: 0;
-}
-.noslog-ui .nl-exam-practice > summary {
-    min-height: 48px;
-    padding: var(--nl-spacing-12) var(--nl-spacing-16);
-}
 .noslog-ui .nl-exam-practice > .nl-disclosure__body {
-    padding: 0 var(--nl-spacing-16) var(--nl-spacing-16);
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-12);
@@ -255,7 +257,9 @@
     gap: var(--nl-spacing-12);
     min-width: 0;
 }
+/* 상자 제목 → 내용 8 */
 .noslog-ui .nl-exam-proof {
+    gap: var(--nl-spacing-8);
     background: var(--nl-surface-surface);
     border-radius: var(--nl-radius-container);
     padding: var(--nl-spacing-16);

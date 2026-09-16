@@ -5,6 +5,7 @@ import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import type { PerformanceTrendPoint } from "@/components/music/musicDetailTypes";
 import LineChart from "@/components/ui/lineChart";
 import type { LineChartPoint } from "@/components/ui/lineChart";
+import { judgementLabels } from "@/components/ui/judgementMarker";
 import { SegmentedControl } from "@/components/ui/segmentedControl";
 import { getMissNearCount, getSJustRate } from "@/lib/music/scoreTrend";
 
@@ -20,9 +21,9 @@ export default function PerformanceChart({
     const [metric, setMetric] = useState<Metric>("sjust");
     const label =
         metric === "sjust"
-            ? "S-Just"
+            ? judgementLabels.sjust
             : metric === "missNear"
-              ? "Miss+Near"
+              ? `${judgementLabels.miss}+${judgementLabels.near}`
               : "FAST/SLOW";
     const chartPoints = points.flatMap((point): LineChartPoint[] => {
         const value =
@@ -69,8 +70,11 @@ export default function PerformanceChart({
                 value={metric}
                 onValueChange={setMetric}
                 options={[
-                    { value: "sjust", label: "S-Just" },
-                    { value: "missNear", label: "Miss/Near" },
+                    { value: "sjust", label: judgementLabels.sjust },
+                    {
+                        value: "missNear",
+                        label: `${judgementLabels.miss}/${judgementLabels.near}`,
+                    },
                     { value: "timing", label: "FAST/SLOW" },
                 ]}
             />

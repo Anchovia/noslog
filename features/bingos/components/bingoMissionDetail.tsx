@@ -9,6 +9,7 @@ import {
     useTranslations,
 } from "@/components/i18n/localeProvider";
 import ActionButton from "@/components/ui/actionButton";
+import IconButton from "@/components/ui/iconButton";
 import BingoTermHelp from "@/components/bingo/bingoTermHelp";
 import {
     getBingoCellLabel,
@@ -92,30 +93,15 @@ export default function BingoMissionDetail({
                     </span>
                 ) : null}
                 <span className="nl-bingo-cell-detail__nav">
-                    <button
-                        type="button"
-                        className="nl-icon-button"
-                        aria-label={t("bingo.prevCell")}
-                        onClick={onPrev}
-                    >
-                        <ChevronLeft className="nl-icon-small" aria-hidden />
-                    </button>
-                    <button
-                        type="button"
-                        className="nl-icon-button"
-                        aria-label={t("bingo.nextCell")}
-                        onClick={onNext}
-                    >
-                        <ChevronRight className="nl-icon-small" aria-hidden />
-                    </button>
-                    <button
-                        type="button"
-                        className="nl-icon-button"
-                        aria-label={t("common.close")}
-                        onClick={onClose}
-                    >
+                    <IconButton label={t("bingo.prevCell")} onClick={onPrev}>
+                        <ChevronLeft className="nl-icon" aria-hidden />
+                    </IconButton>
+                    <IconButton label={t("bingo.nextCell")} onClick={onNext}>
+                        <ChevronRight className="nl-icon" aria-hidden />
+                    </IconButton>
+                    <IconButton label={t("common.close")} onClick={onClose}>
                         <X className="nl-icon" aria-hidden />
-                    </button>
+                    </IconButton>
                 </span>
             </div>
             <p className="nl-body" lang={cell.language}>
