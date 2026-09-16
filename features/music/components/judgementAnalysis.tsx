@@ -1,11 +1,10 @@
 "use client";
 
-import { useState } from "react";
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import type { MessageKey } from "@/components/i18n/localeProvider";
 import type { MusicDetailProps } from "@/components/music/musicDetailTypes";
-import { Checkbox } from "@/components/ui/checkbox";
 import Disclosure from "@/components/ui/disclosure";
+import StackedBar from "@/components/ui/stackedBar";
 import { judgementLabels as marks } from "@/components/ui/judgementMarker";
 import {
     peerJudgementKeys,
@@ -19,6 +18,17 @@ const judgementLabels = [
     marks.good,
     marks.miss,
     marks.near,
+];
+const judgementColors = {
+    judge_sjust: "var(--nl-judgement-s-just)",
+    judge_just: "var(--nl-judgement-just)",
+    judge_good: "var(--nl-judgement-good)",
+    judge_miss: "var(--nl-judgement-miss)",
+    judge_near: "var(--nl-judgement-near)",
+} as const;
+// 값이 없는 줄 — 비어 보이지 않게 비활성 회색 한 조각
+const emptySegments = [
+    { key: "empty", value: 1, color: "var(--nl-content-disabled)" },
 ];
 const noteLabels: MessageKey[] = [
     "music.filter.standard",
@@ -34,14 +44,15 @@ export default function JudgementAnalysis({
 }) {
     const t = useTranslations();
     const locale = useLocale();
-    const [compare, setCompare] = useState(false);
     const record = data.userPlayData;
     if (!record) return null;
-    const peer = compare ? data.peerScoreComparison : null;
+    // 유사 Grd 평균은 켜기 없이 늘 보여 주고, 비교할 기록이 없으면 평균 줄 자체를 그리지 않는다 (2026-09-16 A)
+    const peer = data.peerScoreComparison;
     const complete = peerJudgementKeys.every((key) => record[key] !== null);
     const total = complete
         ? peerJudgementKeys.reduce((sum, key) => sum + record[key]!, 0)
         : null;
+    const count = (value: number) => value.toLocaleString(locale);
     const percentage = (value: number | null) =>
         value === null
             ? "—"
@@ -55,27 +66,51 @@ export default function JudgementAnalysis({
             title={t("record.analysis")}
             heading="section"
             className="nl-record-analysis"
+            // 기록 탭에서 가장 먼저 보는 구역이라 기본으로 펼친다 (2026-09-17)
+            open
         >
             <div className="nl-analysis-content">
-                <div className="nl-stack">
-                    <Checkbox
-                        label={t("record.compare")}
-                        checked={compare}
-                        onChange={(event) => setCompare(event.target.checked)}
+                {/* 요약 = 나 · 평균 누적 막대 두 줄. 값이 없는 줄은 비활성 회색으로 채운 한 줄 (2026-09-16) */}
+                <section className="nl-detail-panel">
+                    <div className="nl-heading-row">
+                        <h3 className="nl-component-title">
+                            {t("music.judgement.summary")}
+                        </h3>
+                        {peer?.judgement ? (
+                            <span className="nl-metadata nl-muted nl-heading-row__end">
+                                {t("music.judgement.peerBasis", {
+                                    count: count(peer.judgement.sampleCount),
+                                })}
+                            </span>
+                        ) : null}
+                    </div>
+                    <StackedBar
+                        rows={[
+                            {
+                                key: "me",
+                                label: t("music.judgement.meLabel"),
+                                segments: complete
+                                    ? peerJudgementKeys.map((key) => ({
+                                          key,
+                                          value: record[key]!,
+                                          color: judgementColors[key],
+                                      }))
+                                    : emptySegments,
+                            },
+                            {
+                                key: "average",
+                                label: t("community.mean"),
+                                segments: peer?.judgement
+                                    ? peerJudgementKeys.map((key) => ({
+                                          key,
+                                          value: peer.judgement!.averages[key],
+                                          color: judgementColors[key],
+                                      }))
+                                    : emptySegments,
+                            },
+                        ]}
                     />
-                    {compare ? (
-                        <p className="nl-body-secondary nl-muted">
-                            {peer
-                                ? t("record.peerBasis", {
-                                      range: peer.gradeRange,
-                                      count: peer.sampleCount.toLocaleString(
-                                          locale
-                                      ),
-                                  })
-                                : t("record.peerUnavailable")}
-                        </p>
-                    ) : null}
-                </div>
+                </section>
                 <div className="nl-detail-columns">
                     <section className="nl-detail-panel">
                         <h3 className="nl-component-title">
@@ -115,13 +150,13 @@ export default function JudgementAnalysis({
                                                 )}
                                             </span>
                                         </span>
-                                        {compare ? (
+                                        {peer?.judgement ? (
                                             <span className="nl-metadata nl-muted">
                                                 {t("music.judgement.average", {
                                                     value: percentage(
-                                                        peer?.judgement
-                                                            ?.averages[key] ??
-                                                            null
+                                                        peer.judgement.averages[
+                                                            key
+                                                        ]
                                                     ),
                                                 })}
                                             </span>
@@ -130,45 +165,39 @@ export default function JudgementAnalysis({
                                 </div>
                             ))}
                         </dl>
-                        {peer?.judgement ? (
-                            <p className="nl-metadata nl-muted">
-                                {t("music.judgement.peerBasis", {
-                                    count: peer.judgement.sampleCount.toLocaleString(
-                                        locale
-                                    ),
-                                })}
-                            </p>
-                        ) : null}
                     </section>
                     <section className="nl-detail-panel">
                         <h3 className="nl-component-title">
                             {t("music.judgement.noteSuccess")}
                         </h3>
                         <dl className="nl-facts nl-analysis-values nl-body-secondary">
-                            {peerNoteRateKeys.map((key, index) => (
-                                <div key={key}>
-                                    <dt>{t(noteLabels[index])}</dt>
-                                    <dd>
-                                        <span className="nl-metric-value">
-                                            {noteRate(record[key])}
-                                        </span>
-                                        {compare ? (
-                                            <span className="nl-metadata nl-muted">
-                                                {t("music.judgement.average", {
-                                                    value: noteRate(
-                                                        peer?.noteRates
-                                                            .averages[key] ??
-                                                            null
-                                                    ),
-                                                })}
-                                                {peer
-                                                    ? ` · ${t("music.info.players", { count: peer.noteRates.sampleCounts[key].toLocaleString(locale) })}`
-                                                    : ""}
+                            {peerNoteRateKeys.map((key, index) => {
+                                const average =
+                                    peer?.noteRates.averages[key] ?? null;
+                                return (
+                                    <div key={key}>
+                                        <dt>{t(noteLabels[index])}</dt>
+                                        <dd>
+                                            <span className="nl-metric-value">
+                                                {noteRate(record[key])}
                                             </span>
-                                        ) : null}
-                                    </dd>
-                                </div>
-                            ))}
+                                            {peer && average !== null ? (
+                                                <span className="nl-metadata nl-muted">
+                                                    {t(
+                                                        "music.judgement.average",
+                                                        {
+                                                            value: noteRate(
+                                                                average
+                                                            ),
+                                                        }
+                                                    )}
+                                                    {` · ${t("music.info.players", { count: count(peer.noteRates.sampleCounts[key]) })}`}
+                                                </span>
+                                            ) : null}
+                                        </dd>
+                                    </div>
+                                );
+                            })}
                         </dl>
                     </section>
                 </div>

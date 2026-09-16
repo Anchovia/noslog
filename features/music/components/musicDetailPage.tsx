@@ -25,7 +25,7 @@ import {
     musicDetailQueryOptions,
     musicDetailQueryRootKey,
 } from "../api/musicDetail";
-import ChartInfoPanel from "./chartInfoPanel";
+import OverviewPanel from "./overviewPanel";
 import DifficultySelector from "./difficultySelector";
 import MusicEntityHeader from "./musicEntityHeader";
 
@@ -147,59 +147,51 @@ export default function MusicDetailPage({
             <BackLink href={href(`/music${listQuery}`)}>
                 {t("discovery.music")}
             </BackLink>
-            <MusicEntityHeader
-                music={initialData.music}
-                difficulty={selection.difficulty}
-                chart={data?.chartDetail ?? null}
-                pending={!data}
-            />
-            <DifficultySelector
-                music={initialData.music}
-                value={selection.difficulty}
-                onValueChange={(difficulty) =>
-                    change(difficulty, selection.tab)
-                }
-            />
-            <AreaTabs
-                value={selection.tab}
-                onValueChange={(tab) => change(selection.difficulty, tab)}
-                label={t("detail.area")}
-                options={areas.map((value) => ({
-                    value,
-                    label: t(labels[value]),
-                }))}
-                busy={query.isFetching}
-            >
-                <span className="sr-only" role="status">
-                    {t(
-                        query.isError
-                            ? "detail.error"
-                            : query.isFetching
-                              ? "detail.loading"
-                              : "detail.ready",
-                        {
-                            difficulty: selection.difficulty,
-                            area: t(labels[selection.tab]),
-                        }
-                    )}
-                </span>
-                {data && query.isError ? (
-                    <StatusMessage
-                        severity="danger"
-                        role="alert"
-                        title={t("detail.error")}
-                        action={
-                            <ActionButton onClick={() => void query.refetch()}>
-                                {t("common.retry")}
-                            </ActionButton>
+            {/* 1056 미만: 머리 → 탭 세로. 1056+: 왼쪽 열(머리 카드, 레일 폭) + 오른쪽 탭 내용 (2026-09-16 데스크톱 B) */}
+            <div className="nl-music-detail__layout">
+                <MusicEntityHeader
+                    music={initialData.music}
+                    difficulty={selection.difficulty}
+                    chart={data?.chartDetail ?? null}
+                    pending={!data}
+                    rank={data?.userPlayData?.rank ?? null}
+                >
+                    <DifficultySelector
+                        music={initialData.music}
+                        value={selection.difficulty}
+                        onValueChange={(difficulty) =>
+                            change(difficulty, selection.tab)
                         }
                     />
-                ) : null}
-                {!data ? (
-                    query.isError ? (
-                        <ResultState
-                            error
-                            message={t("detail.error")}
+                </MusicEntityHeader>
+                <AreaTabs
+                    value={selection.tab}
+                    onValueChange={(tab) => change(selection.difficulty, tab)}
+                    label={t("detail.area")}
+                    options={areas.map((value) => ({
+                        value,
+                        label: t(labels[value]),
+                    }))}
+                    busy={query.isFetching}
+                >
+                    <span className="sr-only" role="status">
+                        {t(
+                            query.isError
+                                ? "detail.error"
+                                : query.isFetching
+                                  ? "detail.loading"
+                                  : "detail.ready",
+                            {
+                                difficulty: selection.difficulty,
+                                area: t(labels[selection.tab]),
+                            }
+                        )}
+                    </span>
+                    {data && query.isError ? (
+                        <StatusMessage
+                            severity="danger"
+                            role="alert"
+                            title={t("detail.error")}
                             action={
                                 <ActionButton
                                     onClick={() => void query.refetch()}
@@ -208,36 +200,56 @@ export default function MusicDetailPage({
                                 </ActionButton>
                             }
                         />
-                    ) : (
-                        <div className="nl-detail-loading" aria-hidden />
-                    )
-                ) : null}
-                {data && selection.tab === "detail" ? (
-                    <ChartInfoPanel chart={data.chartDetail} />
-                ) : null}
-                {data && selection.tab === "record" ? (
-                    <MusicRecordPanel data={data} />
-                ) : null}
-                {data && selection.tab === "ranking" ? (
-                    <MusicRankingPanel
-                        data={data}
-                        focusRequested={() => focusRanking.current}
-                        onFocused={() => {
-                            focusRanking.current = false;
-                        }}
-                        onPageChange={(page) =>
-                            change(selection.difficulty, "ranking", page)
-                        }
-                        busy={query.isFetching}
-                    />
-                ) : null}
-                {data && selection.tab === "tier" ? (
-                    <MusicCommunityPanel
-                        key={data.chartDetail.id}
-                        music={data}
-                    />
-                ) : null}
-            </AreaTabs>
+                    ) : null}
+                    {!data ? (
+                        query.isError ? (
+                            <ResultState
+                                error
+                                message={t("detail.error")}
+                                action={
+                                    <ActionButton
+                                        onClick={() => void query.refetch()}
+                                    >
+                                        {t("common.retry")}
+                                    </ActionButton>
+                                }
+                            />
+                        ) : (
+                            <div className="nl-detail-loading" aria-hidden />
+                        )
+                    ) : null}
+                    {data && selection.tab === "detail" ? (
+                        <OverviewPanel
+                            data={data}
+                            onEvaluate={() =>
+                                change(selection.difficulty, "tier")
+                            }
+                        />
+                    ) : null}
+                    {data && selection.tab === "record" ? (
+                        <MusicRecordPanel data={data} />
+                    ) : null}
+                    {data && selection.tab === "ranking" ? (
+                        <MusicRankingPanel
+                            data={data}
+                            focusRequested={() => focusRanking.current}
+                            onFocused={() => {
+                                focusRanking.current = false;
+                            }}
+                            onPageChange={(page) =>
+                                change(selection.difficulty, "ranking", page)
+                            }
+                            busy={query.isFetching}
+                        />
+                    ) : null}
+                    {data && selection.tab === "tier" ? (
+                        <MusicCommunityPanel
+                            key={data.chartDetail.id}
+                            music={data}
+                        />
+                    ) : null}
+                </AreaTabs>
+            </div>
         </PageContainer>
     );
 }

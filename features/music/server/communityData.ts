@@ -11,6 +11,7 @@ import {
     isTierModeGoal,
 } from "@/lib/tiers";
 import {
+    MIN_PATTERN_RATINGS,
     canContributeGoalVote,
     summarizeGoalVotes,
 } from "@/features/music/lib/community";
@@ -50,7 +51,9 @@ export async function getCommunityPattern(chartId: number) {
                 {
                     count: result._count[axis],
                     average:
-                        result._count[axis] >= 3 ? result._avg[axis] : null,
+                        result._count[axis] >= MIN_PATTERN_RATINGS
+                            ? result._avg[axis]
+                            : null,
                 },
             ])
         )
@@ -196,7 +199,7 @@ export async function getCommunityData(
                 },
             }),
             getCommunityOpinions(
-                { chartId, sort: "helpful", offset: 0 },
+                { chartId, sort: "newest", offset: 0 },
                 userId
             ),
         ]);

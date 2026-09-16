@@ -394,7 +394,7 @@ test("guest compact cards contain only jackets and preserve direct navigation", 
     await expect(page.locator(".nl-tier-card__rank")).toHaveCount(0);
     await expect(page.locator(".nl-tier-band__header > span")).toHaveCount(0);
     await expect(page.locator(".nl-tier-card").first()).toHaveAccessibleName(
-        /STULTI.*Expert 12.*서열·평가/
+        /STULTI.*Expert 12.*평가/
     );
 });
 

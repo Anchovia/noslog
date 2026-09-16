@@ -7,7 +7,11 @@ import LineChart from "@/components/ui/lineChart";
 import type { LineChartPoint } from "@/components/ui/lineChart";
 import { judgementLabels } from "@/components/ui/judgementMarker";
 import { SegmentedControl } from "@/components/ui/segmentedControl";
-import { getMissNearCount, getSJustRate } from "@/lib/music/scoreTrend";
+import {
+    formatDaysAgo,
+    getMissNearCount,
+    getSJustRate,
+} from "@/lib/music/scoreTrend";
 
 type Metric = "sjust" | "missNear" | "timing";
 
@@ -49,6 +53,8 @@ export default function PerformanceChart({
                 value,
                 secondaryValue:
                     metric === "timing" ? point.slow_count! : undefined,
+                // 툴팁 아래 「N일 전」 — 위 날짜 줄 대신 (2026-09-17)
+                detail: formatDaysAgo(dimension, locale),
             },
         ];
     });
@@ -63,7 +69,8 @@ export default function PerformanceChart({
             ? `${value.toLocaleString(locale, { maximumFractionDigits: 1 })}%`
             : value.toLocaleString(locale);
     return (
-        <div className="nl-stack">
+        // 선 색 = 판정 색(◆JUST 분홍 · MISS/NEAR 빨강 · FAST 판정 NEAR 파랑 · SLOW 주황) (2026-09-17 B)
+        <div className="nl-stack nl-performance-chart" data-metric={metric}>
             <SegmentedControl<Metric>
                 className="nl-performance-selector"
                 label={t("music.trend.selector")}
@@ -78,9 +85,13 @@ export default function PerformanceChart({
                     { value: "timing", label: "FAST/SLOW" },
                 ]}
             />
-            <p className="nl-body-secondary nl-muted">
-                {t("music.judgement.playBasis", { count: chartPoints.length })}
-            </p>
+            {chartPoints.length ? (
+                <p className="nl-body-secondary nl-muted">
+                    {t("music.judgement.playBasis", {
+                        count: chartPoints.length,
+                    })}
+                </p>
+            ) : null}
             <LineChart
                 key={metric}
                 points={chartPoints}
@@ -96,8 +107,11 @@ export default function PerformanceChart({
                         ? 100
                         : Math.max(2, Math.ceil(maximum / 2) * 2),
                 ]}
-                emptyMessage={t("music.trend.noData", { metric: label })}
-                singleMessage={t("record.single")}
+                // 기록이 없으면 빈 틀 + 가운데 「기록 없음」 (2026-09-16 E2)
+                emptyMessage={t("music.record.noRecord")}
+                keepPlotGeometry
+                // 점 값은 툴팁 · 최근 플레이가 말하므로 표는 화면 읽기용으로만 (2026-09-16)
+                tableVisibility="screen-reader"
             />
         </div>
     );

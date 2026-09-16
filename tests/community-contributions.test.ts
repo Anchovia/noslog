@@ -18,7 +18,8 @@ describe("2.0 chart community contract", () => {
             { ...EMPTY_PATTERN_RATINGS, stairs: 3 },
         ]);
         expect(result.stairs).toEqual({ count: 3, average: 1 });
-        expect(result.chords).toEqual({ count: 1, average: null });
+        // 평가 1명부터 평균을 보여 준다(2026-09-17)
+        expect(result.chords).toEqual({ count: 1, average: 4 });
         expect(result.polyrhythm).toEqual({ count: 0, average: null });
     });
     it("accepts pattern-only and opinion-only evaluations without a perceived constant", () => {

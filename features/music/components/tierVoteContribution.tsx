@@ -1,15 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import { useId, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-    useLocalizedHref,
-    useTranslations,
-} from "@/components/i18n/localeProvider";
+import { useTranslations } from "@/components/i18n/localeProvider";
 import ActionButton from "@/components/ui/actionButton";
-import { foundationButtonClass } from "@/components/ui/Button";
 import { Select } from "@/components/ui/select";
 import { StatusMessage } from "@/components/ui/statusMessage";
 import { goalVoteInputSchema } from "@/features/music/schemas/communitySchema";
@@ -25,16 +20,13 @@ export default function TierVoteContribution({
     scope,
     accountId,
     hasRecord,
-    returnTo,
 }: {
     chartId: number;
     scope: CommunityData["scopes"][number];
     accountId?: number;
     hasRecord: boolean;
-    returnTo: string;
 }) {
     const t = useTranslations();
-    const href = useLocalizedHref();
     const id = useId();
     const region = useRef<HTMLElement>(null);
     const [editing, setEditing] = useState(false);
@@ -100,35 +92,21 @@ export default function TierVoteContribution({
             className="nl-vote-contribution"
             aria-label={t("community.contributeScope", { scope: name })}
         >
-            {!accountId ? (
-                <>
-                    <p className="nl-body-secondary nl-muted">
-                        {t("community.voteLogin")}
-                    </p>
-                    <div className="nl-community-actions">
-                        <Link
-                            href={href(
-                                `/login?returnTo=${encodeURIComponent(returnTo)}`
-                            )}
-                            className={foundationButtonClass({
-                                variant: "secondary",
-                            })}
-                        >
-                            {t("common.login")}
-                        </Link>
+            {/* 로그아웃 · 기록 없음 · 목표 미달성은 입력을 두지 않는다(이유 문장도 없음 — 2026-09-16 A). 이미 한 투표만 보여 주고 지울 수 있게 */}
+            {!accountId ? null : !hasRecord || !scope.eligible ? (
+                scope.ownVote !== null ? (
+                    <div className="nl-vote-form__row">
+                        <p className="nl-vote-contribution__value">
+                            <span className="nl-control">
+                                {t("community.myVote")}
+                            </span>
+                            <span className="nl-metric-value">
+                                {scope.ownVote.toFixed(1)}
+                            </span>
+                        </p>
+                        {deleteAction}
                     </div>
-                </>
-            ) : !hasRecord ? (
-                <p className="nl-body-secondary nl-muted">
-                    {t("community.voteRecord")}
-                </p>
-            ) : !scope.eligible ? (
-                <>
-                    <p className="nl-body-secondary nl-muted">
-                        {t("community.voteIneligible", { scope: name })}
-                    </p>
-                    {scope.ownVote !== null ? deleteAction : null}
-                </>
+                ) : null
             ) : editing ||
               (scope.average === null && scope.ownVote === null) ? (
                 <form
@@ -136,47 +114,59 @@ export default function TierVoteContribution({
                     noValidate
                     onSubmit={form.handleSubmit(handleSubmit)}
                 >
-                    <Controller
-                        control={form.control}
-                        name="value"
-                        render={({ field }) => (
-                            <Select
-                                id={id}
-                                aria-label={t("community.voteValue")}
-                                aria-describedby={`${id}-help`}
-                                invalid={Boolean(form.formState.errors.value)}
-                                disabled={mutation.isPending}
-                                value={
-                                    Number.isFinite(field.value)
-                                        ? String(field.value)
-                                        : ""
-                                }
-                                onValueChange={(next) =>
-                                    field.onChange(
-                                        next === "" ? Number.NaN : Number(next)
-                                    )
-                                }
-                                onBlur={field.onBlur}
-                                triggerRef={field.ref}
-                                options={[
-                                    {
-                                        value: "",
-                                        label: t("community.selectValue"),
-                                    },
-                                    ...Array.from(
-                                        { length: 136 },
-                                        (_, index) => (index + 10) / 10
-                                    ).map((value) => ({
-                                        value: String(value),
-                                        label: value.toFixed(1),
-                                    })),
-                                ]}
-                            />
-                        )}
-                    />
-                    <p id={`${id}-help`} className="nl-metadata nl-muted">
-                        {t("community.valueHelp")}
-                    </p>
+                    <div className="nl-vote-form__row">
+                        <Controller
+                            control={form.control}
+                            name="value"
+                            render={({ field }) => (
+                                <Select
+                                    id={id}
+                                    aria-label={t("community.voteValue")}
+                                    invalid={Boolean(
+                                        form.formState.errors.value
+                                    )}
+                                    disabled={mutation.isPending}
+                                    value={
+                                        Number.isFinite(field.value)
+                                            ? String(field.value)
+                                            : ""
+                                    }
+                                    onValueChange={(next) =>
+                                        field.onChange(
+                                            next === ""
+                                                ? Number.NaN
+                                                : Number(next)
+                                        )
+                                    }
+                                    onBlur={field.onBlur}
+                                    triggerRef={field.ref}
+                                    options={[
+                                        {
+                                            value: "",
+                                            label: t(
+                                                "community.valuePlaceholder"
+                                            ),
+                                        },
+                                        ...Array.from(
+                                            { length: 136 },
+                                            (_, index) => (index + 10) / 10
+                                        ).map((value) => ({
+                                            value: String(value),
+                                            label: value.toFixed(1),
+                                        })),
+                                    ]}
+                                />
+                            )}
+                        />
+                        {scope.ownVote !== null ? deleteAction : null}
+                        <ActionButton
+                            variant="primary"
+                            type="submit"
+                            busy={mutation.isPending}
+                        >
+                            {t("community.saveVote")}
+                        </ActionButton>
+                    </div>
                     {form.formState.errors.root ||
                     form.formState.errors.value ? (
                         <StatusMessage
@@ -188,16 +178,6 @@ export default function TierVoteContribution({
                             }
                         />
                     ) : null}
-                    <div className="nl-community-actions">
-                        {scope.ownVote !== null ? deleteAction : null}
-                        <ActionButton
-                            variant="primary"
-                            type="submit"
-                            busy={mutation.isPending}
-                        >
-                            {t("community.saveVote")}
-                        </ActionButton>
-                    </div>
                 </form>
             ) : (
                 <>

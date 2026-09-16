@@ -56,14 +56,9 @@ export default function TierBrowserCard({
         : t("tiers.unplayed");
     // 이 표 기준(S · 990k · Pianist)을 달성했는가 — 테두리와 점수가 그 표의 기준 색을 쓴다
     const goalAchieved = signedIn && isTierGoalAchieved(record, query.goal);
-    // 테두리: 달성 + FC = 초록 → 기준 색 그라데이션 · 달성 = 기준 색(Pianist 는 퍼펙트라 FC 여도 기준 색 하나) · 달성 못 한 FC = 초록
-    const achievement = goalAchieved
-        ? fc
-            ? "goal-fc"
-            : "goal"
-        : fc
-          ? "fc"
-          : undefined;
+    // 테두리: 달성 + FC = 초록 → 기준 색 그라데이션 · 달성 = 기준 색(Pianist 는 퍼펙트라 FC 여도 기준 색 하나).
+    // 달성 못 한 FC 는 테두리 없음(2026-09-17 사용자 결정)
+    const achievement = goalAchieved ? (fc ? "goal-fc" : "goal") : undefined;
     const params = new URLSearchParams({
         tab: "tier",
         source: "tiers",

@@ -52,7 +52,7 @@ export const goalVoteInputSchema = goalVoteScopeSchema.extend({
 });
 export const opinionQuerySchema = z.object({
     chartId: z.coerce.number().int().positive(),
-    sort: z.enum(["helpful", "newest"]).default("helpful"),
+    sort: z.enum(["helpful", "newest"]).default("newest"),
     offset: z.coerce.number().int().min(0).default(0),
 });
 export const opinionReportSchema = z.object({

@@ -137,54 +137,89 @@ async function openRecord(
     await expect(page).toHaveURL(/tab=record/);
 }
 
-test("Peer comparison exposes the sample basis and keeps unavailable note averages distinct", async ({
+test("Peer comparison is always visible and omits unavailable averages", async ({
     page,
 }) => {
     await openRecord(page, "ko", "peer");
-    await page.locator(".nl-record-analysis > summary").click();
-    await page.getByRole("checkbox").check();
+    // 켜기 없이 늘 보인다(2026-09-16 A) — 기준 인원은 판정 소제목 줄 오른쪽
     await expect(
-        page.getByText("Basic Grd ±200 범위의 플레이어 12명 기준", {
-            exact: true,
-        })
-    ).toBeVisible();
+        page.locator(".nl-record-analysis").getByRole("checkbox")
+    ).toHaveCount(0);
     await expect(
-        page.getByText("유사 Grd 10명 기준", { exact: true })
+        page
+            .locator(".nl-record-analysis .nl-heading-row")
+            .getByText("유사 Grd 10명 기준", { exact: true })
     ).toBeVisible();
     const analysis = page.locator(".nl-record-analysis");
-    await expect(analysis).toContainText("85%");
-    await expect(analysis).toContainText("97%");
-    await expect(analysis).toContainText("—");
-    await page.getByRole("checkbox").uncheck();
-    await expect(
-        page.getByText("Basic Grd ±200 범위의 플레이어 12명 기준", {
-            exact: true,
-        })
-    ).toHaveCount(0);
+    // 나 · 평균 누적 막대 두 줄 (2026-09-16 A)
+    await expect(analysis.locator(".nl-stacked-bar__row")).toHaveCount(2);
+    await expect(analysis).toContainText("평균 85%");
+    await expect(analysis).toContainText("평균 97%");
+    // 평균이 없는 항목(트릴)은 평균 줄 자체가 없다
+    await expect(analysis.getByText("평균 —")).toHaveCount(0);
 });
 
 test("Record preserves primary order and exposes exact values to keyboard and touch", async ({
     page,
 }) => {
     await openRecord(page);
+    // 제목 한 줄(넘치면 끝 페이드) · 글자 끝 8 뒤 내 등급 아이콘 = 제목 줄 높이(32 · 1056 이상 40) (2026-09-17)
+    const grade = page.locator(".nl-music-entity__grade");
+    await expect(grade).toHaveAttribute("alt", "S 랭크");
+    await expect(grade).toHaveCSS(
+        "width",
+        (page.viewportSize()?.width ?? 390) >= 1056 ? "40px" : "32px"
+    );
+    await expect(page.locator(".nl-music-entity__title")).toHaveCSS(
+        "white-space",
+        "nowrap"
+    );
+    await expect
+        .poll(() =>
+            grade.evaluate((element) => {
+                const title = element.parentElement!.querySelector("h1")!;
+                const box = element.getBoundingClientRect();
+                const titleBox = title.getBoundingClientRect();
+                return {
+                    gap: Math.round(box.x - titleBox.right),
+                    centered:
+                        Math.abs(
+                            box.y +
+                                box.height / 2 -
+                                (titleBox.y + titleBox.height / 2)
+                        ) < 1,
+                };
+            })
+        )
+        .toEqual({ gap: 8, centered: true });
     await expect(page.locator(".nl-record-panel h2")).toHaveText([
-        "베스트 기록",
+        "최고 기록",
         "누적 요약",
-        "성장 추이",
-        "최근 플레이",
     ]);
-    await expect(page.locator(".nl-record-panel")).toHaveCSS("gap", "32px");
-    await expect(page.locator(".nl-record-analysis")).not.toHaveAttribute(
+    // 판정 분석이 맨 위 · 기본 펼침, 성장 추이 · 최근 플레이는 기본 접힘 (2026-09-17)
+    await expect(
+        page.locator(".nl-record-disclosures > details").first()
+    ).toHaveClass(/nl-record-analysis/);
+    await expect(page.locator(".nl-record-progress")).not.toHaveAttribute(
         "open"
     );
-    await expect(page.locator(".nl-record-metrics")).toHaveText(
-        "플레이 횟수128회최대 콤보1,204풀콤보12회Pianist3회"
-    );
+    await expect(page.locator(".nl-record-recent")).not.toHaveAttribute("open");
+    await expect(page.locator(".nl-record-panel")).toHaveCSS("gap", "32px");
+    await expect(page.locator(".nl-record-analysis")).toHaveAttribute("open");
+    // 최고 기록 띠 — 최대 콤보는 「1,204x」 (2026-09-17)
+    await expect(
+        page.locator(".nl-record-panel .nl-stat-strip").first()
+    ).toContainText("1,204x");
+    await page.locator(".nl-record-progress > summary").click();
     const chart = page.getByRole("figure", {
-        name: "베스트 스코어",
+        name: "최고 점수",
         exact: true,
     });
     await expect(chart.getByRole("row")).toHaveCount(4);
+    // 날짜 · 최고 점수 표는 그래프와 중복이라 화면에서 숨김(화면 읽기용)
+    await expect(
+        chart.locator(".nl-chart-table").locator("xpath=..")
+    ).toHaveClass(/sr-only/);
     const latest = chart.getByRole("button").last();
     await latest.focus();
     await expect(chart.getByRole("tooltip")).toContainText("976,654점");
@@ -199,18 +234,27 @@ test("Record preserves primary order and exposes exact values to keyboard and to
     await expect(chart.getByRole("tooltip")).toHaveCount(0);
     await chart.getByRole("button").first().click();
     await expect(chart.getByRole("tooltip")).toContainText("962,880점");
+    await page.locator(".nl-record-recent > summary").click();
     await page.locator(".nl-recent-play").first().click();
     await expect(
         page.locator(".nl-recent-play__details").first()
     ).toContainText("타이밍 편향FAST +6");
-    await page.locator(".nl-record-analysis > summary").click();
-    await expect(page.getByRole("checkbox")).not.toBeChecked();
-    await page.getByRole("checkbox").check();
+    // 비교할 기록이 없으면 기준 인원 · 평균 줄 없음, 평균 막대는 회색 한 줄 (2026-09-16)
+    const bars = page.locator(".nl-record-analysis .nl-stacked-bar__row");
+    await expect(bars).toHaveCount(2);
+    await expect(bars.nth(1).locator(".nl-stacked-bar__segment")).toHaveCount(
+        1
+    );
+    await expect(page.getByText(/유사 Grd .*기준/)).toHaveCount(0);
     await expect(
-        page.getByText("비교할 수 있는 유사 Grd 기록이 5명 미만입니다.")
-    ).toBeVisible();
+        page.locator(".nl-record-analysis").getByText(/^평균 /)
+    ).toHaveCount(0);
     await page.getByRole("radio", { name: "FAST/SLOW", exact: true }).click();
     const timing = page.getByRole("figure", { name: "FAST/SLOW", exact: true });
+    // 최근 판정 추이 표도 화면 읽기용으로만 (2026-09-16)
+    await expect(
+        timing.locator(".nl-chart-table").locator("xpath=..")
+    ).toHaveClass(/sr-only/);
     await expect(timing.getByRole("columnheader")).toHaveText([
         "날짜",
         "FAST",
@@ -232,15 +276,24 @@ for (const variant of ["empty", "single", "guest", "partial"] as const) {
                 page.getByText("등록된 기록이 없습니다.", { exact: true })
             ).toBeVisible();
             await expect(page.locator(".nl-record-metrics")).toHaveCount(0);
+            await expect(page.locator(".nl-music-entity__grade")).toHaveCount(
+                0
+            );
         } else if (variant === "single") {
+            await page.locator(".nl-record-progress > summary").click();
             const chart = page.getByRole("figure", {
-                name: "베스트 스코어",
+                name: "최고 점수",
                 exact: true,
             });
-            await expect(
-                chart.getByText("기록이 1건이라 추이를 그리지 않습니다.")
-            ).toBeVisible();
-            await expect(chart.locator("polyline")).toHaveCount(0);
+            // 한 건이어도 틀 · 축 · 표는 그대로, 점 하나만 가운데 — 설명 문장 없음 (2026-09-16)
+            await expect(chart.locator(".nl-line-chart__series")).toBeVisible();
+            await expect(chart.locator("circle")).toHaveCount(1);
+            await expect(chart.locator(".nl-line-chart__target")).toHaveCount(
+                1
+            );
+            await expect(chart.getByText(/추이를 그리지 않습니다/)).toHaveCount(
+                0
+            );
             await expect(chart.getByRole("row")).toHaveCount(2);
         } else if (variant === "guest") {
             await expect(
@@ -250,7 +303,6 @@ for (const variant of ["empty", "single", "guest", "partial"] as const) {
                 page.locator(".nl-record-state").getByRole("link")
             ).toHaveAttribute("href", /returnTo=.*tab%3Drecord/);
         } else {
-            await page.locator(".nl-record-analysis > summary").click();
             await expect(
                 page.getByText(
                     "전체 기록을 다시 연동하면 상세 판정을 확인할 수 있습니다."
@@ -307,7 +359,6 @@ for (const locale of ["ko", "ja", "en"]) {
                 fullPage: true,
             });
         }
-        await page.locator(".nl-record-analysis > summary").click();
         for (const width of [320, 1280]) {
             await page.setViewportSize({ width, height: 900 });
             await page

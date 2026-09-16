@@ -10,36 +10,38 @@ const pattern = {
     chords: { count: 41, average: 3.7 },
 };
 
-test("Music detail enters Chart Info and keeps the four difficulty choices on one row", async ({
+test("Music detail enters Overview and keeps the four difficulty choices on one row", async ({
     page,
 }) => {
     await page.goto(`/ko${musicPath}`);
     await expect(
-        page.getByRole("heading", { name: "채보 정보", exact: true })
+        page.getByRole("heading", { name: "패턴 경향", exact: true })
     ).toBeVisible();
     await expect(page.getByRole("radio")).toHaveCount(4);
     for (const width of [320, 360, 390, 430, 768, 1024, 1280]) {
         await page.setViewportSize({ width, height: 900 });
-        await expect
-            .poll(() =>
-                page
-                    .locator(".nl-music-entity__identity")
-                    .evaluate((element) => {
-                        const jacket = element
-                            .querySelector(".nl-jacket")!
-                            .getBoundingClientRect();
-                        const copy = element
-                            .querySelector(".nl-music-entity__copy")!
-                            .getBoundingClientRect();
-                        return Math.abs(
-                            jacket.y +
-                                jacket.height / 2 -
-                                copy.y -
-                                copy.height / 2
-                        );
-                    })
-            )
-            .toBeLessThan(0.5);
+        // 1056 미만은 자켓 80 옆에 제목(가운데 맞춤), 1056+ 는 왼쪽 열에 세로로 쌓는다 (2026-09-16)
+        if (width < 1056)
+            await expect
+                .poll(() =>
+                    page
+                        .locator(".nl-music-entity__identity")
+                        .evaluate((element) => {
+                            const jacket = element
+                                .querySelector(".nl-jacket")!
+                                .getBoundingClientRect();
+                            const copy = element
+                                .querySelector(".nl-music-entity__copy")!
+                                .getBoundingClientRect();
+                            return Math.abs(
+                                jacket.y +
+                                    jacket.height / 2 -
+                                    copy.y -
+                                    copy.height / 2
+                            );
+                        })
+                )
+                .toBeLessThan(0.5);
         await expect(page.locator(".nl-music-entity__copy")).toHaveCSS(
             "text-align",
             "left"
@@ -52,7 +54,8 @@ test("Music detail enters Chart Info and keeps the four difficulty choices on on
                         (element) => element.getBoundingClientRect().height
                     )
             )
-            .toBe(82);
+            // 난이도 = 공용 세그먼트 L 한 줄(1056+ 는 세로 4행 = 행 40×4 + 사이 4×3 + 트랙 8)
+            .toBe(width >= 1056 ? 180 : 44);
         await expect
             .poll(() =>
                 page
@@ -77,13 +80,13 @@ test("Music detail enters Chart Info and keeps the four difficulty choices on on
     await expect(page).toHaveURL(/\/hard$/);
     await expect(page.getByRole("radio", { name: /^Hard/ })).toBeChecked();
     await expect(
-        page.getByRole("heading", { name: "채보 정보", exact: true })
+        page.getByRole("heading", { name: "패턴 경향", exact: true })
     ).toBeVisible();
     await page.goBack();
     await expect(page.getByRole("radio", { name: /^Expert/ })).toBeChecked();
 });
 
-test("Pattern data has five exact values and a keyboard dismissible help dialog", async ({
+test("Pattern trend lists five exact values as bars with a keyboard dismissible help dialog", async ({
     page,
 }) => {
     await page.route("**/api/music-community?**", (route) =>
@@ -97,18 +100,26 @@ test("Pattern data has five exact values and a keyboard dismissible help dialog"
         })
     );
     await page.goto(`/ko${musicPath}`);
-    await expect(page.locator(".nl-pattern-radar__series")).toHaveCount(1);
-    await expect(page.locator(".nl-pattern-radar__point")).toHaveCount(5);
-    await expect(page.locator(".nl-pattern-radar__values dt")).toHaveText([
+    const bars = page.locator(".nl-overview .nl-bar-list");
+    await expect(bars.locator("dt")).toHaveText([
         "계단",
         "연타",
         "폴리리듬",
         "즈레",
         "동시치기",
     ]);
-    await expect(
-        page.locator(".nl-pattern-radar__values dd").first()
-    ).toHaveText("2.8평가 41명");
+    await expect(bars.locator(".nl-bar-list__value")).toHaveText([
+        "2.8",
+        "3.4",
+        "1.6",
+        "2.1",
+        "3.7",
+    ]);
+    await expect(bars.locator(".nl-bar-list__fill")).toHaveCount(5);
+    // 평가 인원은 제목 줄에, 「평가하기 ›」 는 같은 줄 오른쪽 끝 — 누르면 평가 탭
+    await expect(page.locator(".nl-overview .nl-heading-row")).toContainText(
+        "평가 41명"
+    );
     const help = page.getByRole("button", {
         name: "패턴 경향 기준",
         exact: true,
@@ -120,9 +131,11 @@ test("Pattern data has five exact values and a keyboard dismissible help dialog"
     await page.keyboard.press("Escape");
     await expect(page.getByRole("dialog")).toHaveCount(0);
     await expect(help).toBeFocused();
+    await page.getByRole("button", { name: "평가하기", exact: true }).click();
+    await expect(page).toHaveURL(/tab=tier/);
 });
 
-test("An incomplete pattern aggregate keeps all counts and omits the entire polygon", async ({
+test("An incomplete pattern aggregate keeps the other bars and marks only the missing axis", async ({
     page,
 }) => {
     await page.route("**/api/music-community?**", (route) =>
@@ -141,15 +154,37 @@ test("An incomplete pattern aggregate keeps all counts and omits the entire poly
         })
     );
     await page.goto(`/ko${musicPath}`);
-    await expect(
-        page.locator(".nl-pattern-radar__values dd").nth(2)
-    ).toHaveText("집계 중평가 2명");
-    await expect(page.locator(".nl-pattern-radar__series")).toHaveCount(0);
-    await expect(page.locator(".nl-pattern-radar__point")).toHaveCount(0);
-    await expect(page.locator(".nl-pattern-radar__grid")).toHaveCount(9);
+    const bars = page.locator(".nl-overview .nl-bar-list");
+    await expect(bars.locator(".nl-bar-list__value").nth(2)).toHaveText("—");
+    await expect(bars.locator(".nl-bar-list__fill")).toHaveCount(4);
 });
 
-test("Pattern request failure preserves basic information and retries only its region", async ({
+test("Axes without an average still draw the empty bar graph without a sentence", async ({
+    page,
+}) => {
+    const empty = Object.fromEntries(
+        Object.keys(pattern).map((axis) => [axis, { count: 1, average: null }])
+    );
+    await page.route("**/api/music-community?**", (route) =>
+        route.fulfill({
+            json: {
+                isSuccess: true,
+                code: "SUCCESS",
+                message: "",
+                result: { pattern: empty },
+            },
+        })
+    );
+    await page.goto(`/ko${musicPath}`);
+    // 집계가 없어도 빈 막대 5줄 + 값 「—」, 문장 없음 (2026-09-16)
+    const bars = page.locator(".nl-overview .nl-bar-list");
+    await expect(bars.locator(".nl-bar-list__row")).toHaveCount(5);
+    await expect(bars.locator(".nl-bar-list__fill")).toHaveCount(0);
+    await expect(bars.locator(".nl-bar-list__value").first()).toHaveText("—");
+    await expect(page.locator(".nl-overview")).not.toContainText("집계");
+});
+
+test("Pattern request failure keeps the page and retries only its region", async ({
     page,
 }) => {
     let failed = true;
@@ -179,11 +214,13 @@ test("Pattern request failure preserves basic information and retries only its r
         .filter({ hasText: "악곡 정보를 불러오지 못했습니다." });
     await expect(error).toBeVisible();
     await expect(
-        page.getByRole("heading", { name: "기본 정보" })
+        page.getByRole("heading", { name: "내 기록", exact: true })
     ).toBeVisible();
     failed = false;
     await error.getByRole("button", { name: "다시 시도", exact: true }).click();
-    await expect(page.locator(".nl-pattern-radar__series")).toHaveCount(1);
+    await expect(page.locator(".nl-overview .nl-bar-list__fill")).toHaveCount(
+        5
+    );
 });
 
 test("Exact-target refresh failure retains information and offers a working retry", async ({
@@ -191,7 +228,7 @@ test("Exact-target refresh failure retains information and offers a working retr
 }) => {
     await page.goto(`/ko${musicPath}`);
     await expect(
-        page.getByRole("heading", { name: "기본 정보", exact: true })
+        page.getByRole("heading", { name: "패턴 경향", exact: true })
     ).toBeVisible();
     let requests = 0;
     await page.route("**/api/music-detail?**", async (route) => {
@@ -213,14 +250,14 @@ test("Exact-target refresh failure retains information and offers a working retr
     await expect(alert).toBeVisible();
     expect(requests).toBe(2);
     await expect(
-        page.getByRole("heading", { name: "기본 정보", exact: true })
+        page.getByRole("heading", { name: "패턴 경향", exact: true })
     ).toBeVisible();
     await expect(page.getByRole("radio", { name: /^Expert/ })).toBeChecked();
     await page.unroute("**/api/music-detail?**");
     await alert.getByRole("button", { name: "다시 시도", exact: true }).click();
     await expect(alert).toHaveCount(0);
     await expect(
-        page.getByRole("heading", { name: "기본 정보", exact: true })
+        page.getByRole("heading", { name: "패턴 경향", exact: true })
     ).toBeVisible();
 });
 
@@ -249,17 +286,17 @@ test("An uncached difficulty failure does not show another difficulty's informat
     ).toBeVisible();
     expect(requests).toBe(1);
     await expect(
-        page.getByRole("heading", { name: "기본 정보", exact: true })
+        page.getByRole("heading", { name: "패턴 경향", exact: true })
     ).toHaveCount(0);
     await page.getByRole("radio", { name: /^Expert/ }).click();
     await expect(
-        page.getByRole("heading", { name: "기본 정보", exact: true })
+        page.getByRole("heading", { name: "패턴 경향", exact: true })
     ).toBeVisible();
     await expect(page).toHaveURL(/\/expert$/);
 });
 
 for (const locale of ["ko", "ja", "en"]) {
-    test(`${locale} Chart Info keeps readable labels at every width and passes accessibility checks`, async ({
+    test(`${locale} Overview keeps readable labels at every width and passes accessibility checks`, async ({
         page,
     }, testInfo) => {
         test.skip(
@@ -277,22 +314,19 @@ for (const locale of ["ko", "ja", "en"]) {
             })
         );
         await page.goto(`/${locale}${musicPath}`);
-        await expect(page.locator(".nl-pattern-radar__point")).toHaveCount(5);
+        await expect(page.locator(".nl-bar-list__fill")).toHaveCount(5);
         for (const width of [320, 390, 768, 1024, 1055, 1056, 1280, 1470]) {
             await page.setViewportSize({ width, height: 900 });
+            // 1056+ 는 왼쪽 머리 열 + 오른쪽 탭 내용 두 열 (2026-09-16 데스크톱 B)
             await expect
                 .poll(() =>
                     page
-                        .locator(".nl-detail-columns")
-                        .first()
+                        .locator(".nl-music-detail__layout")
                         .evaluate(
-                            (element) =>
-                                getComputedStyle(
-                                    element
-                                ).gridTemplateColumns.split(" ").length
+                            (element) => getComputedStyle(element).display
                         )
                 )
-                .toBe(width >= 1056 ? 2 : 1);
+                .toBe(width >= 1056 ? "grid" : "flex");
             await expect
                 .poll(() =>
                     page.evaluate(
@@ -302,21 +336,21 @@ for (const locale of ["ko", "ja", "en"]) {
                     )
                 )
                 .toBe(true);
+            // 막대 목록 라벨 · 값은 줄 안에 있고 잘리지 않는다
             await expect
                 .poll(() =>
                     page
-                        .locator(".nl-pattern-radar__label")
-                        .evaluateAll((elements) =>
-                            elements.every((element) => {
-                                const rect = element.getBoundingClientRect();
-                                const panel = element
-                                    .closest("figure")!
-                                    .getBoundingClientRect();
-                                return (
-                                    rect.left >= panel.left &&
-                                    rect.right <= panel.right
-                                );
-                            })
+                        .locator(".nl-bar-list__row")
+                        .evaluateAll((rows) =>
+                            rows.every(
+                                (row) =>
+                                    row.scrollWidth <= row.clientWidth &&
+                                    [...row.children].every(
+                                        (cell) =>
+                                            cell.scrollWidth <=
+                                            cell.clientWidth + 1
+                                    )
+                            )
                         )
                 )
                 .toBe(true);

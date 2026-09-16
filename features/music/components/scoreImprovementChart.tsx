@@ -3,6 +3,7 @@
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import type { ScoreTrendPoint } from "@/components/music/musicDetailTypes";
 import LineChart from "@/components/ui/lineChart";
+import { formatDaysAgo } from "@/lib/music/scoreTrend";
 
 export default function ScoreImprovementChart({
     points,
@@ -26,6 +27,7 @@ export default function ScoreImprovementChart({
                     dimension,
                     shortDimension: dimension.slice(5),
                     value: point.score,
+                    detail: formatDaysAgo(dimension, locale),
                 };
             })}
             label={t("music.record.bestScore")}
@@ -43,7 +45,10 @@ export default function ScoreImprovementChart({
                     : [0, 1]
             }
             emptyMessage={t("record.empty")}
-            singleMessage={t("record.single")}
+            // 툴팁 = 「956,666점」 위 · 「N일 전」 아래 — osu! 방식 (2026-09-17)
+            tooltipValueLabel={false}
+            // 점마다 날짜 · 점수는 툴팁이 말하므로 표는 화면 읽기용으로만 (2026-09-16)
+            tableVisibility="screen-reader"
         />
     );
 }

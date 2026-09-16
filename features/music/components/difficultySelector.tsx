@@ -7,6 +7,17 @@ import type {
 } from "@/components/music/musicDetailTypes";
 import { useTranslations } from "@/components/i18n/localeProvider";
 
+const short: Record<Difficulty, string> = {
+    Normal: "N",
+    Hard: "H",
+    Expert: "EX",
+    Real: "R",
+};
+
+/**
+ * 난이도 선택 — 공용 세그먼트 한 줄(L 44/40). 항목 = 이름 + 난이도 색 레벨 숫자(목록 난이도 판과 같은 언어).
+ * 내부 레벨은 여기 두지 않고 머리 수치 띠에(선택한 난이도 것만). 320 폭에서는 약칭 N · H · EX · R (2026-09-16)
+ */
 export default function DifficultySelector({
     music,
     value,
@@ -34,23 +45,21 @@ export default function DifficultySelector({
                 label: (
                     <>
                         <span
-                            className={`nl-difficulty-selector__marker nl-difficulty-marker--${difficulty.toLowerCase()}`}
-                            aria-hidden
-                        />
-                        <span lang="en">{difficulty}</span>
-                        <span className="nl-difficulty-selector__level nl-metric-value">
+                            lang="en"
+                            className="nl-difficulty-selector__name"
+                            data-short={short[difficulty]}
+                        >
+                            {difficulty}
+                        </span>
+                        <span
+                            className={`nl-metric-value nl-level--${difficulty.toLowerCase()}`}
+                        >
                             {
                                 music[
                                     difficulty.toLowerCase() as
                                         "normal" | "hard" | "expert" | "real"
                                 ]
                             }
-                            {music.constants?.[difficulty] !== null &&
-                            music.constants?.[difficulty] !== undefined ? (
-                                <span>
-                                    ({music.constants[difficulty].toFixed(1)})
-                                </span>
-                            ) : null}
                         </span>
                     </>
                 ),

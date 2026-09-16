@@ -10,7 +10,9 @@ import type { MusicDetailProps } from "@/components/music/musicDetailTypes";
 import JudgementAnalysis from "./judgementAnalysis";
 import RecentRecordPlay from "./recentRecordPlay";
 import { foundationButtonClass } from "@/components/ui/Button";
-import MetricSummary from "@/components/ui/metricSummary";
+import Disclosure from "@/components/ui/disclosure";
+import StatStrip from "@/components/ui/statStrip";
+import { gradeTone, scoreTone } from "@/lib/music/scoreTone";
 import ScoreImprovementChart from "./scoreImprovementChart";
 
 export default function MusicRecordPanel({ data }: { data: MusicDetailProps }) {
@@ -39,64 +41,83 @@ export default function MusicRecordPanel({ data }: { data: MusicDetailProps }) {
             </div>
         );
     const count = (value: number) => value.toLocaleString(locale);
-    const cumulative = [
-        {
-            label: t("record.playCount"),
-            value: record.play_count,
-            unit: t("record.times"),
-        },
-        { label: t("music.record.maxCombo"), value: record.max_combo },
-        {
-            label: t("music.record.fullCombo"),
-            value: record.fullcombo_count,
-            unit: t("record.times"),
-        },
-        {
-            label: "Pianist",
-            value: record.pianistic_count,
-            unit: t("record.times"),
-        },
-    ];
+    const pianist = record.fc_type === 3 || record.score >= 1_000_000;
+    const grade = pianist ? "P" : record.rank;
+    // 순위표 FC 표시와 같은 기준(fc_type 2 이상 · Pianist)
+    const fullCombo = pianist || record.fc_type >= 2;
+    // 큰 숫자(32px) 대신 수치 띠 16/600 — 새 글자 단계를 만들지 않는다(2026-09-16 사용자 결정)
     return (
         <div className="nl-record-panel">
             <div className="nl-detail-columns">
                 <section className="nl-detail-panel">
                     <h2 className="nl-section-title">{t("record.best")}</h2>
-                    <dl>
-                        <MetricSummary
-                            prominent
-                            label={t("music.record.bestScore")}
-                            value={count(record.score)}
-                            unit={t("record.pointsUnit")}
-                            description={record.besttime}
-                        />
-                    </dl>
+                    <StatStrip
+                        label={t("record.best")}
+                        items={[
+                            {
+                                key: "score",
+                                label: t("music.record.bestScore"),
+                                value: count(record.score),
+                                // 값 색 = 점수 목표 색(S · 990k · Pianist), FC 는 보지 않는다 (2026-09-17)
+                                tone: scoreTone(record.score),
+                            },
+                            {
+                                key: "grade",
+                                label: t("ranking.grade"),
+                                value: grade,
+                                tone: gradeTone(grade),
+                            },
+                            {
+                                key: "combo",
+                                label: t("music.record.maxCombo"),
+                                // 콤보는 게임 표기처럼 「367x」 (2026-09-17)
+                                value: `${count(record.max_combo)}x`,
+                                tone: fullCombo ? "fc" : undefined,
+                            },
+                        ]}
+                    />
                 </section>
                 <section className="nl-detail-panel">
                     <h2 className="nl-section-title">
                         {t("record.cumulative")}
                     </h2>
-                    <dl className="nl-record-metrics">
-                        {cumulative.map((metric) => (
-                            <MetricSummary
-                                key={metric.label}
-                                label={metric.label}
-                                value={count(metric.value)}
-                                unit={metric.unit}
-                            />
-                        ))}
-                    </dl>
+                    <StatStrip
+                        label={t("record.cumulative")}
+                        items={[
+                            {
+                                key: "plays",
+                                label: t("record.playCount"),
+                                value: count(record.play_count),
+                            },
+                            {
+                                key: "fc",
+                                label: t("music.record.fullCombo"),
+                                value: count(record.fullcombo_count),
+                            },
+                            {
+                                key: "pianist",
+                                label: "Pianist",
+                                value: count(record.pianistic_count),
+                            },
+                        ]}
+                    />
                 </section>
             </div>
-            <div className="nl-detail-columns">
-                <section className="nl-detail-panel">
-                    <h2 className="nl-section-title">{t("record.progress")}</h2>
+            {/* 판정 분석(기본 펼침) · 성장 추이 · 최근 플레이(기본 접힘) = 구역 펼침 세 줄(사이 구분선) (2026-09-16 · 09-17 판정 분석을 맨 위로) */}
+            <div className="nl-record-disclosures">
+                <JudgementAnalysis data={data} />
+                <Disclosure
+                    title={t("record.progress")}
+                    heading="section"
+                    className="nl-record-progress"
+                >
                     <ScoreImprovementChart points={data.scoreTrend} />
-                </section>
-                <section className="nl-detail-panel">
-                    <h2 className="nl-section-title">
-                        {t("music.record.recentPlays")}
-                    </h2>
+                </Disclosure>
+                <Disclosure
+                    title={t("music.record.recentPlays")}
+                    heading="section"
+                    className="nl-record-recent"
+                >
                     {data.recentChartPlays.length ? (
                         <ul className="nl-recent-plays">
                             {[...data.recentChartPlays]
@@ -113,9 +134,8 @@ export default function MusicRecordPanel({ data }: { data: MusicDetailProps }) {
                             {t("music.record.noRecentPlays")}
                         </p>
                     )}
-                </section>
+                </Disclosure>
             </div>
-            <JudgementAnalysis data={data} />
         </div>
     );
 }

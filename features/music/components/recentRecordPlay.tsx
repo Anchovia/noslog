@@ -24,7 +24,10 @@ export default function RecentRecordPlay({ play }: { play: RecentChartPlay }) {
             ? play.fast_count - play.slow_count
             : null;
     const metrics = [
-        { label: t("music.record.maxCombo"), value: count(play.max_combo) },
+        {
+            label: t("music.record.maxCombo"),
+            value: play.max_combo === null ? "—" : `${count(play.max_combo)}x`,
+        },
         { label: "Grd", value: count(play.grade_basic / 100) },
         ...(play.class_basic
             ? [{ label: "Basic", value: play.class_basic }]

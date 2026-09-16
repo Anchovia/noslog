@@ -1,10 +1,10 @@
 "use client";
 
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useRef } from "react";
+import type { ReactNode } from "react";
 import { useTranslations } from "@/components/i18n/localeProvider";
 import ActionButton from "@/components/ui/actionButton";
-import SortMenu from "@/components/ui/sortMenu";
 import { StatusMessage } from "@/components/ui/statusMessage";
 import { communityOpinionOptions } from "@/features/music/api/community";
 import type { OpinionPage } from "@/features/music/schemas/communitySchema";
@@ -16,25 +16,29 @@ export default function CommunityOpinions({
     accountId,
     returnTo,
     onEdit,
+    composer,
+    editor,
 }: {
     chartId: number;
     initialData: OpinionPage;
     accountId?: number;
     returnTo: string;
     onEdit: () => void;
+    /** 구역 제목 아래 새 의견 작성 칸 */
+    composer?: ReactNode;
+    /** 내 의견을 고치는 중이면 그 줄에 넣을 작성 칸 */
+    editor?: ReactNode;
 }) {
     const t = useTranslations();
     const id = useId();
-    const [sort, setSort] = useState<"helpful" | "newest">("helpful");
+    // 의견은 최신순 하나 — 추천 기능을 없애 「추천순」 도 뺐다(2026-09-16)
+    const sort = "newest" as const;
     const list = useRef<HTMLDivElement>(null);
     const heading = useRef<HTMLHeadingElement>(null);
     const appendFocus = useRef<number | null>(null);
     const query = useInfiniteQuery({
         ...communityOpinionOptions({ chartId, sort }, accountId),
-        initialData:
-            sort === "helpful"
-                ? { pageParams: [0], pages: [initialData] }
-                : undefined,
+        initialData: { pageParams: [0], pages: [initialData] },
     });
     const items =
         query.data?.pages
@@ -75,27 +79,9 @@ export default function CommunityOpinions({
                                 query.data?.pages[0].total ?? initialData.total,
                         })}
                     </h2>
-                    {/* 목록 정렬 = 정렬 메뉴 하나 (필터·정렬 공통 문법 · 2026-09-14) */}
-                    <SortMenu
-                        label={t("discovery.sortLabel")}
-                        value={sort}
-                        options={[
-                            {
-                                value: "helpful",
-                                label: t("community.sortHelpful"),
-                            },
-                            {
-                                value: "newest",
-                                label: t("community.sortNewest"),
-                            },
-                        ]}
-                        onValueChange={(value) => {
-                            setSort(value);
-                            if (value === sort) void query.refetch();
-                        }}
-                    />
                 </div>
             </div>
+            {composer}
             <div className="nl-opinions__list" ref={list}>
                 {items.map((item) => (
                     <CommunityOpinionRow
@@ -106,6 +92,7 @@ export default function CommunityOpinions({
                         returnTo={returnTo}
                         onEdit={onEdit}
                         onDeleted={() => heading.current?.focus()}
+                        editor={item.own ? editor : undefined}
                     />
                 ))}
             </div>

@@ -18,6 +18,9 @@ export function canContributeGoalVote(
     );
 }
 
+/** 패턴 경향은 평가 1명부터 평균을 보여 준다 (2026-09-17 · 이전 3명) */
+export const MIN_PATTERN_RATINGS = 1;
+
 export function aggregatePatternRatings(
     evaluations: PatternRatings[]
 ): PatternSummary {
@@ -31,7 +34,7 @@ export function aggregatePatternRatings(
                 {
                     count: values.length,
                     average:
-                        values.length >= 3
+                        values.length >= MIN_PATTERN_RATINGS
                             ? values.reduce((sum, value) => sum + value, 0) /
                               values.length
                             : null,

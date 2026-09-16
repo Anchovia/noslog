@@ -70,3 +70,24 @@ export function getSJustRate(record: JudgementRecord) {
 
     return Number((((record.judge_sjust ?? 0) / total) * 100).toFixed(1));
 }
+
+/**
+ * 플레이 시각(「YYYY-MM-DD…」, 기기 현지 날짜 기준)을 「오늘 · 어제 · N일 전」으로.
+ * 그래프 툴팁 아래 줄 — osu! 처럼 날짜 대신 경과 일수만 (2026-09-17)
+ */
+export function formatDaysAgo(
+    playTime: string,
+    locale: string,
+    now = new Date()
+) {
+    const [year, month, day] = playTime.slice(0, 10).split(/[-/.]/).map(Number);
+    const days = Math.round(
+        (Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) -
+            Date.UTC(year, month - 1, day)) /
+            86_400_000
+    );
+    return new Intl.RelativeTimeFormat(locale, { numeric: "auto" }).format(
+        -Math.max(0, days),
+        "day"
+    );
+}

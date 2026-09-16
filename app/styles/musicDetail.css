@@ -2,107 +2,178 @@
     padding-top: var(--nl-spacing-24);
     padding-bottom: var(--nl-spacing-48);
 }
-.noslog-ui .nl-music-entity {
+/* 1056 미만: 머리(자켓 80 · 제목 · 난이도 세그먼트 · 수치 띠 · 액션) → 16 → 탭 세로 한 열.
+   1056+: 왼쪽 열 = 악곡 레일 폭 (100% − 3·16) / 4 에 머리 카드(세로), 오른쪽 = 탭 + 내용 (2026-09-16 데스크톱 B) */
+.noslog-ui .nl-music-detail__layout {
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-16);
+    min-width: 0;
 }
+.noslog-ui .nl-music-entity {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-12);
+    min-width: 0;
+}
+/* 자켓 · 제목 묶음 → 난이도 세그먼트 16 (제목 → 첫 내용) */
+/* 자켓 위 고정 · 글자 묶음은 자켓 높이(80) 안이면 세로 가운데, 길면 아래로 늘어남 (2026-09-17) */
 .noslog-ui .nl-music-entity__identity {
     display: flex;
-    gap: var(--nl-spacing-12);
-    align-items: center;
+    gap: var(--nl-spacing-16);
+    align-items: flex-start;
     min-width: 0;
-    flex: 1;
+    margin-bottom: var(--nl-spacing-4);
 }
 .noslog-ui .nl-music-entity__identity > .nl-jacket {
-    width: 96px;
-    height: 96px;
-    border-radius: var(--nl-radius-control);
+    flex: none;
+    width: 80px;
+    height: 80px;
+    border-radius: var(--nl-radius-container);
 }
 .noslog-ui .nl-music-entity__copy {
+    position: relative;
     flex: 1;
     min-width: 0;
+    min-height: 80px;
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-4);
+    justify-content: center;
+    gap: var(--nl-spacing-8);
     text-align: left;
 }
-.noslog-ui .nl-music-entity__title-group {
+/* 제목(페이지 제목 고정) · 번역 · 아티스트는 접힌 상태에서 모두 한 줄, 넘치면 끝 페이드.
+   등급 24는 제목 글자 끝 8 뒤(제목이 넘치면 제목이 그 앞에서 흐려짐). 번역은 등급 자리(24 + 8) 앞에서 끝 (2026-09-17) */
+.noslog-ui .nl-music-entity__heading {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+.noslog-ui .nl-music-entity__title-row {
     display: flex;
     align-items: center;
-    gap: var(--nl-spacing-4);
-    min-width: 0;
-}
-.noslog-ui .nl-music-entity__title-group h1 {
-    min-width: 0;
-    flex-shrink: 1;
-}
-.noslog-ui .nl-music-entity__title-group h1[data-fit="section"] {
-    font-size: var(--nl-type-size-20);
-    line-height: var(--nl-type-line-height-28);
-    font-weight: var(--nl-type-weight-semibold);
-}
-.noslog-ui .nl-music-entity__title-group h1[data-fit="component"] {
-    font-size: var(--nl-type-size-16);
-    line-height: var(--nl-type-line-height-24);
-    font-weight: var(--nl-type-weight-semibold);
-}
-.noslog-ui .nl-music-entity__actions {
-    display: flex;
     gap: var(--nl-spacing-8);
-}
-.noslog-ui .nl-music-entity__actions > .nl-button {
-    flex: 1;
     min-width: 0;
 }
-.noslog-ui .nl-translation-popover {
-    max-width: min(320px, calc(100vw - var(--nl-spacing-32)));
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-8);
-    padding: var(--nl-spacing-16);
-    border-radius: var(--nl-radius-overlay);
-    background: var(--nl-surface-overlay);
-    box-shadow:
-        inset 0 0 0 1px var(--nl-border-overlay),
-        var(--nl-overlay-shadow);
-    z-index: 86;
+.noslog-ui .nl-music-entity__title {
+    flex: 0 1 auto;
+    min-width: 0;
 }
-.noslog-ui .nl-difficulty-selector {
-    padding: var(--nl-spacing-4);
-    border: 0;
-    box-shadow: none;
+.noslog-ui .nl-music-entity__copy:not([data-expanded]) .nl-music-entity__title,
+.noslog-ui
+    .nl-music-entity__copy:not([data-expanded])
+    .nl-music-entity__translation,
+.noslog-ui
+    .nl-music-entity__copy:not([data-expanded])
+    .nl-music-entity__artist {
+    overflow: hidden;
+    white-space: nowrap;
 }
-.noslog-ui .nl-difficulty-selector .nl-segments__item {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-4);
-    padding: var(--nl-spacing-12);
-    border: 0;
+/* 펼치면 제목이 여러 줄 — 등급은 첫 줄 높이 가운데(줄 높이 32 · 1056 이상 40) */
+.noslog-ui .nl-music-entity__copy[data-expanded] .nl-music-entity__title-row {
+    align-items: flex-start;
+}
+.noslog-ui .nl-music-entity__copy[data-expanded] .nl-music-entity__grade {
+    margin-top: 0;
+}
+@media (min-width: 1056px) {
+    .noslog-ui .nl-music-entity__copy[data-expanded] .nl-music-entity__grade {
+        margin-top: 0;
+    }
+}
+.noslog-ui .nl-music-entity__translation {
+    margin: 0;
     color: var(--nl-content-default);
 }
-.noslog-ui .nl-difficulty-selector .nl-segments__item[aria-checked="true"] {
-    box-shadow: inset 0 0 0 1px var(--nl-border-strong);
+.noslog-ui
+    .nl-music-entity__heading[data-grade]
+    > .nl-music-entity__translation {
+    margin-inline-end: calc(
+        var(--nl-type-line-height-32) + var(--nl-spacing-8)
+    );
 }
-.noslog-ui .nl-difficulty-selector .nl-segments__item:focus-visible {
-    box-shadow: inset 0 0 0 1px var(--nl-focus-ring);
+.noslog-ui .nl-music-entity__grade {
+    flex: none;
+    width: var(--nl-type-line-height-32);
+    height: var(--nl-type-line-height-32);
 }
-.noslog-ui .nl-difficulty-selector__marker {
-    width: 100%;
-    height: 2px;
-    flex-shrink: 0;
-    border-radius: var(--nl-radius-full);
+/* 등급 = 제목 한 줄 높이(폰 32 · 1056 이상 40) (2026-09-17) */
+@media (min-width: 1056px) {
+    .noslog-ui
+        .nl-music-entity__heading[data-grade]
+        > .nl-music-entity__translation {
+        margin-inline-end: calc(
+            var(--nl-type-line-height-40) + var(--nl-spacing-8)
+        );
+    }
+    .noslog-ui .nl-music-entity__grade {
+        width: var(--nl-type-line-height-40);
+        height: var(--nl-type-line-height-40);
+    }
 }
-.noslog-ui .nl-difficulty-selector__level {
+/* 카테고리 배지 — 자켓 위가 아니라 제목 바로 위 왼쪽(플레이트 · 글자색 규칙은 공용 그대로, 위치만). 배지 → 제목 4 */
+.noslog-ui .nl-music-entity__category {
+    position: static;
+    align-self: flex-start;
+    margin-bottom: calc(var(--nl-spacing-4) - var(--nl-spacing-8));
+}
+/* 접은 글자가 있을 때만 — 글자 묶음 전체를 누르면 펼침 · 접힘 */
+.noslog-ui .nl-music-entity__expand {
+    position: absolute;
+    inset: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    border-radius: var(--nl-radius-control);
+    cursor: pointer;
+}
+/* 액션은 있는 것만 M 보조 버튼 한 줄 — 비활성 자리 채우기 없음 */
+.noslog-ui .nl-music-entity__actions {
     display: flex;
-    justify-content: center;
-    white-space: nowrap;
-    min-width: max-content;
-    gap: var(--nl-spacing-4);
+    flex-wrap: wrap;
+    gap: var(--nl-spacing-8);
 }
-.noslog-ui .nl-difficulty-selector .nl-segments__item > [lang="en"] {
+/* 난이도 세그먼트 — 공용 세그먼트 규격(L) 그대로, 항목 = 이름 + 색 레벨 숫자(사이 8). 320 폭은 약칭 */
+.noslog-ui .nl-difficulty-selector .nl-segments__item {
+    gap: var(--nl-spacing-8);
+    padding-inline: var(--nl-spacing-4);
     white-space: nowrap;
-    min-width: max-content;
+}
+/* 375 미만(4칸이 「Expert 11」 을 못 담는 폭)은 약칭 N · H · EX · R */
+@media (max-width: 374px) {
+    .noslog-ui .nl-difficulty-selector__name {
+        font-size: 0;
+    }
+    .noslog-ui .nl-difficulty-selector__name::before {
+        content: attr(data-short);
+        font-size: var(--nl-type-size-14);
+    }
+}
+/* 개요 탭 — 구역 사이 32 · 구역 제목 → 내용 12 · 제목 줄 오른쪽 끝 「평가하기 ›」(고스트 M, 잉크를 오른쪽 선에) */
+.noslog-ui .nl-overview {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-32);
+    min-width: 0;
+}
+.noslog-ui .nl-overview__section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-12);
+    min-width: 0;
+}
+.noslog-ui .nl-overview__card {
+    padding: var(--nl-spacing-16);
+    border-radius: var(--nl-radius-container);
+    background: var(--nl-surface-surface);
+}
+.noslog-ui .nl-overview__card--list {
+    padding-block: 0;
+}
+.noslog-ui .nl-overview__skeleton {
+    height: 152px;
+    border-radius: var(--nl-radius-container);
+    background: var(--nl-surface-surface);
 }
 .noslog-ui .nl-area {
     display: flex;
@@ -152,67 +223,6 @@
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: var(--nl-spacing-16);
-}
-.noslog-ui .nl-pattern-radar {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-8);
-    padding: var(--nl-spacing-12);
-    border-radius: var(--nl-radius-container);
-    background: var(--nl-surface-surface);
-    min-width: 0;
-}
-.noslog-ui .nl-pattern-radar__header {
-    display: flex;
-    align-items: center;
-    gap: var(--nl-spacing-4);
-}
-.noslog-ui .nl-pattern-radar__plot {
-    height: 224px;
-    position: relative;
-}
-.noslog-ui .nl-pattern-radar__svg {
-    display: block;
-    overflow: visible;
-}
-.noslog-ui .nl-pattern-radar__grid {
-    fill: none;
-    stroke: var(--nl-border-default);
-    stroke-width: 1;
-}
-.noslog-ui .nl-pattern-radar__series {
-    fill: none;
-    stroke: var(--nl-local-data-single);
-    stroke-width: 2;
-    stroke-linejoin: round;
-}
-.noslog-ui .nl-pattern-radar__point {
-    fill: var(--nl-local-data-single);
-}
-.noslog-ui .nl-pattern-radar__label {
-    position: absolute;
-    white-space: nowrap;
-}
-.noslog-ui .nl-pattern-radar__values {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-8);
-}
-.noslog-ui .nl-pattern-radar__values > div {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--nl-spacing-8);
-}
-.noslog-ui .nl-pattern-radar__values dd {
-    display: flex;
-    align-items: center;
-    gap: var(--nl-spacing-8);
-}
-.noslog-ui .nl-pattern-skeleton {
-    height: 416px;
-    border-radius: var(--nl-radius-container);
-    background: var(--nl-surface-raised);
 }
 .noslog-ui .nl-detail-loading {
     height: 416px;
@@ -286,14 +296,18 @@
     align-items: flex-start;
     gap: var(--nl-spacing-24);
 }
-.noslog-ui .nl-record-metrics {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--nl-spacing-16);
+/* 최근 플레이 · 판정 분석 펼침 묶음 — 사이 간격 없이 쌓고 구분선은 공용 펼침 규칙 */
+.noslog-ui .nl-record-disclosures {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
 }
+/* 최근 플레이 = 카드 안 선 목록(카드 안쪽 16, 줄 올림 면은 안쪽 4 까지) */
 .noslog-ui .nl-recent-plays {
     list-style: none;
-    padding: 0;
+    padding: 0 var(--nl-spacing-16);
+    border-radius: var(--nl-radius-container);
+    background: var(--nl-surface-surface);
 }
 .noslog-ui .nl-recent-plays > li + li {
     border-top: 1px solid var(--nl-border-divider);
@@ -337,28 +351,84 @@
     border-radius: var(--nl-radius-container);
 }
 @media (min-width: 1056px) {
-    .noslog-ui .nl-music-detail .nl-detail-columns {
-        grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    .noslog-ui .nl-music-detail__layout {
+        display: grid;
+        grid-template-columns:
+            calc((100% - 3 * var(--nl-spacing-16)) / 4)
+            minmax(0, 1fr);
         gap: var(--nl-spacing-16);
+        align-items: start;
     }
-    .noslog-ui .nl-music-detail .nl-record-panel > .nl-detail-columns {
-        gap: var(--nl-spacing-16);
+    /* 왼쪽 열 머리 카드 — 자켓은 열 폭 정사각, 제목 아래, 난이도는 세로 세그먼트, 띠는 세로 목록. 위 24 에 고정(움직임 아님) */
+    .noslog-ui .nl-music-entity {
+        position: sticky;
+        top: var(--nl-spacing-24);
+        gap: var(--nl-spacing-12);
+    }
+    .noslog-ui .nl-music-entity__identity {
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--nl-spacing-12);
+    }
+    .noslog-ui .nl-music-entity__identity > .nl-jacket {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1;
+    }
+    .noslog-ui .nl-music-entity__copy {
+        min-height: 0;
+    }
+    .noslog-ui .nl-difficulty-selector {
+        flex-direction: column;
+        min-height: 0;
+    }
+    .noslog-ui .nl-difficulty-selector .nl-segments__item {
+        flex: none;
+        min-height: var(--nl-control-height);
+        justify-content: space-between;
+        padding-inline: var(--nl-spacing-12);
+    }
+    .noslog-ui .nl-music-entity__stats {
+        flex-direction: column;
+    }
+    .noslog-ui .nl-music-entity__stats .nl-stat-strip__cell {
+        flex: none;
+        flex-direction: row-reverse;
+        align-items: center;
+        justify-content: space-between;
+        min-height: var(--nl-control-height);
+        padding-inline: var(--nl-spacing-12);
+        text-align: start;
+    }
+    /* 개요 = 두 열(왼쪽 패턴 경향 · 오른쪽 내 기록 → 채보 정보 → 이력), 열 사이 16 · 구역 사이 32. 내 기록 탭은 한 열 */
+    .noslog-ui .nl-overview {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        align-items: start;
+        gap: var(--nl-spacing-32) var(--nl-spacing-16);
+    }
+    .noslog-ui .nl-overview > :first-child {
+        grid-row: span 3;
     }
 }
-@media (min-width: 672px) {
-    .noslog-ui .nl-music-entity {
-        flex-direction: row;
-        align-items: center;
-    }
-    .noslog-ui .nl-music-entity__actions {
-        flex-shrink: 0;
-    }
-    .noslog-ui .nl-music-entity__actions > .nl-button {
-        flex: initial;
-    }
-    .noslog-ui .nl-music-entity__copy > p {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
+
+/* 최근 판정 추이 선 색 — 판정 목록의 색 점과 같은 색 (2026-09-17 B).
+   MISS/NEAR 빨강은 판정 색에 빨강이 없어 feedback/danger-marker 를 빌려 쓴다(결정 기록 예외) */
+.noslog-ui .nl-performance-chart[data-metric="sjust"] {
+    --nl-local-data-personal: var(--nl-judgement-s-just);
+}
+.noslog-ui .nl-performance-chart[data-metric="missNear"] {
+    --nl-local-data-personal: var(--nl-feedback-danger-marker);
+}
+.noslog-ui .nl-performance-chart[data-metric="timing"] {
+    --nl-local-data-fast: var(--nl-judgement-near);
+}
+
+/* 패턴 경향 단계 색 = 기존 토큰 별칭(새 색 없음 · 2026-09-17 E2). 테마마다 가리키는 값이 따라 바뀌게 개요 안에서 정의 */
+.noslog-ui .nl-overview {
+    --nl-pattern-level-0: var(--nl-local-data-bucket-3);
+    --nl-pattern-level-1: var(--nl-judgement-near);
+    --nl-pattern-level-2: var(--nl-judgement-just);
+    --nl-pattern-level-3: var(--nl-difficulty-hard);
+    --nl-pattern-level-4: var(--nl-difficulty-expert);
 }
