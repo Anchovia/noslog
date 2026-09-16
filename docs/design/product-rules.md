@@ -82,12 +82,25 @@ old design-stage checklist. Changes to material behavior require a user decision
 - Filters retain draft/apply/cancel behavior where they obscure results and the
   existing immediate behavior in a visible rail. Layout changes do not alter
   filter contents, URL restoration or server query meaning.
-- Music Detail keeps one music identity and one selected difficulty across Chart
-  Info, My Record, Ranking and Tier/Evaluation. View-chart/video actions reflect
-  availability for that exact chart. The actual viewer/editor remain preserved.
+- Music Detail keeps one music identity and one selected difficulty across
+  Overview, My Record, Ranking and Ratings (URL `tab` values stay `detail`,
+  `record`, `ranking`, `tier`). The header shows the selected chart's constant and
+  its published tier values; unlisted/unpublished scopes show no value rather
+  than a guessed one. View-chart/video actions appear only when that exact chart
+  has them. When signed in with a record on the selected chart, the official
+  grade icon for that record appears beside the title; otherwise nothing.
+  A localized title (when the viewer's setting allows it) appears as a line
+  under the title; long title, localized title and artist lines are clipped
+  with an end fade and the whole block expands on tap without losing text. The actual viewer/editor remain preserved.
 - Personal record, judgement analysis and Recital values keep their source units
   and limitations. Missing mode-specific values are not substituted with Basic
   values. Retry the failed region without losing the current chart context.
+- The similar-Grd comparison in judgement analysis uses other players within
+  ±200 Grd, excluding the viewer, and is available from one such record
+  (2026-09-16, previously five). It is always shown (no toggle). Each
+  judgement/note-rate average uses only the records that have that value; an
+  item without an average shows no average line, and with no comparable records
+  neither the basis count nor any average appears.
 - Basic/Recital modes and S/Full Combo/Pianist goals remain independent. Preserve
   published tier placements/history and existing top-70 rating calculation. A
   community vote never directly changes an official placement.
@@ -109,17 +122,33 @@ old design-stage checklist. Changes to material behavior require a user decision
   or 1,000,000. Recital additionally requires `grade_recital > 0`. This does not
   prove the goal and Recital participation occurred in the same historical play.
   Use [the shared predicates](../../features/music/lib/community.ts).
-- Below three valid votes, display Aggregating and the exact count. **Aggregating
-  rows can expand:** show aggregation guidance and the eligibility-appropriate
-  contribution form instead of a distribution. A first vote has no preset value.
+- Below three valid votes, display Aggregating and the exact count. A row
+  expands only when it has something to show: a distribution (three or more
+  votes), a vote the viewer may cast, or the viewer's existing vote. No
+  explanatory sentences (aggregation guidance, eligibility reasons, value range)
+  are shown; ineligible viewers simply get no input, and guests get one
+  "sign in to vote" link under the list (2026-09-16). A first vote has no preset
+  value; an existing vote stays editable/deletable.
 - From three votes, publish arithmetic mean, exact count and actual distribution.
   Keep the median diagnostic-only. Do not merge distinct voted tier values or
   discard an outlier merely because it differs from the majority.
 - Goal-neutral pattern evaluation is separate from goal votes. Preserve the five
   axes and exact per-axis counts; missing/insufficient values are not zero. An
-  incomplete published pattern does not produce a fabricated closed polygon.
-- Preserve ownership, participation checks, edit/delete, opinion ordering and
-  helpful-vote rules in [community mutations](../../features/music/server/communityMutation.ts).
+  axis average is shown from one rating (2026-09-17, previously three); an
+  axis without ratings shows an empty bar and "—"; a rating input
+  left untouched stays "not rated", distinct from 0.
+- Preserve ownership, participation checks and edit/delete in
+  [community mutations](../../features/music/server/communityMutation.ts).
+  Opinions are listed newest first. The helpful-vote control and helpful sort
+  are removed from the UI (2026-09-16); stored helpful data and the API remain.
+  Pattern ratings save as soon as a value is chosen (changes within a short
+  moment are batched); tapping the chosen value again clears that axis, and
+  clearing every axis asks for confirmation. When no ratings and no opinion
+  remain, the evaluation row is deleted.
+  The pattern form saves ratings only and the opinion composer saves the
+  opinion only — both write the same evaluation row, so saving one keeps the
+  other's stored value. Deleting the pattern evaluation keeps an existing
+  opinion.
   No contribution rewards or automatic tier changes are introduced.
 
 ## Data synchronization

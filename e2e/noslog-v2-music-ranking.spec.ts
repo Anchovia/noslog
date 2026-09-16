@@ -105,6 +105,11 @@ async function openRanking(
                             label,
                             count: [9, 7, 6, 4, 3, 1][index],
                         })),
+                        // 분포 곡선용 참가자 점수(내림차순) — 1,000,000 에서 500 씩
+                        scoreSeries: Array.from(
+                            { length: total },
+                            (_, index) => 1_000_000 - index * 500
+                        ),
                     },
                 },
             },
@@ -281,12 +286,19 @@ for (const locale of ["ko", "ja", "en"]) {
             await expect
                 .poll(() =>
                     page
-                        .locator(".nl-score-distribution")
+                        .locator(".nl-score-scatter__plot")
                         .evaluate(
                             (element) => element.getBoundingClientRect().height
                         )
                 )
-                .toBe(189);
+                // 분포 곡선 카드 = svg 190 + 안쪽 16×2 (2026-09-17 D1)
+                .toBe(222);
+            // 그래프 안 글자는 아래 기준선 라벨 3개(S 950k · 990k · Pianist) + (있으면) 「나 · 상위 N%」 (2026-09-17 D1)
+            await expect(
+                page.locator(
+                    ".nl-score-scatter__label:not(.nl-score-scatter__label--me)"
+                )
+            ).toHaveCount(3);
             // 점수는 행마다 오른쪽 끝이 같은 선(FC 칸 앞)에 맞는다
             await expect
                 .poll(() =>

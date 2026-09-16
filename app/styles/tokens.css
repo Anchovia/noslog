@@ -146,6 +146,13 @@
     --nl-exam-tier-peak: #d6b56d;
     --nl-exam-plate-peak: #000000;
     --nl-exam-tint-top: #25211a;
+    /* 서열 값 그라데이션 양끝(2026-09-17 G1) — 1.0 = Normal 을 밝게 · 14.5 = 분홍 */
+    --nl-tier-value-start: color-mix(
+        in oklch,
+        var(--nl-difficulty-text-normal) 55%,
+        white
+    );
+    --nl-tier-value-end: #ff5fd2;
 }
 html[data-theme="light"] .noslog-ui,
 .noslog-ui[data-theme="light"] {
@@ -250,6 +257,13 @@ html[data-theme="light"] .noslog-ui,
     --nl-exam-tier-peak: #d6b56d;
     --nl-exam-plate-peak: #111111;
     --nl-exam-tint-top: #f2efe8;
+    /* 흰 바탕에서는 흰 섞음 · 밝은 분홍이 흐려서 기본 글자색 섞음 · ◆JUST 분홍 */
+    --nl-tier-value-start: color-mix(
+        in oklch,
+        var(--nl-difficulty-text-normal) 55%,
+        var(--nl-content-default)
+    );
+    --nl-tier-value-end: var(--nl-judgement-s-just);
 }
 .noslog-ui .nl-display {
     font-size: var(--nl-type-size-40);

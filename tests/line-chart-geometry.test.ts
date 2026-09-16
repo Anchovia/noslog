@@ -42,15 +42,34 @@ describe("LineChart plot geometry for sparse data", () => {
             })
         ).toContain("nl-line-chart__plot--panel");
 
+        // 1건 문구가 없으면 틀 유지 옵션이어도 점 하나는 일반 그래프로 그린다
+        const plain = render({
+            points: [point],
+            keepPlotGeometry: true,
+            singleMessage: undefined,
+        });
+        expect(plain).not.toContain("nl-line-chart__series--placeholder");
+        expect(plain).toContain("nl-line-chart__target");
+
         const empty = render({ points: [], keepPlotGeometry: true });
         expect(empty).toContain("nl-line-chart__series--placeholder");
         expect(empty).not.toContain("<circle");
         expect(empty).toContain(base.emptyMessage);
     });
-    it("keeps the compact text fallback for other consumers by default", () => {
+    it("draws a single point inside the normal plot without a message", () => {
         const single = render({ points: [point] });
-        expect(single).not.toContain("nl-line-chart__series");
-        expect(single).toContain(base.singleMessage);
+        expect(single).toContain("nl-line-chart__series");
+        expect(single).not.toContain("nl-line-chart__series--placeholder");
+        expect(single).toMatch(/<circle[^>]*cx="4"/);
+        expect(single).toContain("nl-line-chart__target");
+        expect(single).toContain("nl-line-chart__x");
+        expect(single).toContain("justify-content:center");
+        expect(single).not.toContain(base.singleMessage);
+        expect(single).toContain("<table");
+        // 점 표시를 끈 차트도 점 하나는 찍는다
+        expect(render({ points: [point], showPoints: false })).toContain(
+            "<circle"
+        );
         const empty = render({ points: [] });
         expect(empty).not.toContain("nl-line-chart__series");
         expect(empty).toContain(base.emptyMessage);

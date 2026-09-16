@@ -7,21 +7,18 @@ import {
 import { describe, expect, it } from "vitest";
 
 describe("유사 그레이드 점수 비교", () => {
-    const records = Array.from(
-        { length: MIN_PEER_SCORE_SAMPLE },
-        (_, index) => ({
-            score: 943212 + index,
-            judge_sjust: 900 + index * 10,
-            judge_just: 70 - index * 5,
-            judge_good: 20,
-            judge_miss: 10,
-            judge_near: 0,
-            note_rate_standard: 9400 + index * 100,
-            note_rate_tenuto: 9500 + index * 100,
-            note_rate_glissando: 9000 + index * 200,
-            note_rate_trill: 8200 + index * 300,
-        })
-    );
+    const records = Array.from({ length: 5 }, (_, index) => ({
+        score: 943212 + index,
+        judge_sjust: 900 + index * 10,
+        judge_just: 70 - index * 5,
+        judge_good: 20,
+        judge_miss: 10,
+        judge_near: 0,
+        note_rate_standard: 9400 + index * 100,
+        note_rate_tenuto: 9500 + index * 100,
+        note_rate_glissando: 9000 + index * 200,
+        note_rate_trill: 8200 + index * 300,
+    }));
 
     it("화면 Grd 범위를 DB 저장 단위로 변환한다", () => {
         expect(PEER_STORED_GRADE_RANGE).toBe(20_000);
@@ -48,15 +45,20 @@ describe("유사 그레이드 점수 비교", () => {
         });
     });
 
-    it("최소 표본보다 적으면 비교 결과를 숨긴다", () => {
-        expect(buildPeerScoreComparison(records.slice(0, -1))).toBeNull();
+    it("나를 뺀 유사 기록이 한 명이라도 있으면 비교한다", () => {
+        expect(MIN_PEER_SCORE_SAMPLE).toBe(1);
+        const single = buildPeerScoreComparison(records.slice(0, 1));
+        expect(single).toMatchObject({ averageScore: 943212, sampleCount: 1 });
+        expect(single?.judgement?.sampleCount).toBe(1);
+        expect(single?.noteRates.averages.note_rate_standard).toBe(9400);
+        expect(buildPeerScoreComparison([])).toBeNull();
     });
 
     it("판정 데이터가 부족하면 점수 비교만 제공한다", () => {
         const comparison = buildPeerScoreComparison(
-            records.map((record, index) => ({
+            records.map((record) => ({
                 ...record,
-                judge_sjust: index === 0 ? record.judge_sjust : null,
+                judge_sjust: null,
             }))
         );
 
@@ -85,19 +87,22 @@ describe("유사 그레이드 점수 비교", () => {
         expect(comparison?.judgement?.sampleCount).toBe(5);
     });
 
-    it("음표별 성공률은 항목별 최소 표본을 충족할 때만 평균을 제공한다", () => {
+    it("음표별 성공률은 값이 있는 기록만으로 평균을 내고, 없으면 비운다", () => {
         const comparison = buildPeerScoreComparison(
             records.map((record, index) => ({
                 ...record,
-                note_rate_trill:
+                note_rate_glissando:
                     index === records.length - 1
                         ? null
-                        : record.note_rate_trill,
+                        : record.note_rate_glissando,
+                note_rate_trill: null,
             }))
         );
 
         expect(comparison?.noteRates.averages.note_rate_standard).toBe(9600);
+        expect(comparison?.noteRates.averages.note_rate_glissando).toBe(9300);
+        expect(comparison?.noteRates.sampleCounts.note_rate_glissando).toBe(4);
         expect(comparison?.noteRates.averages.note_rate_trill).toBeNull();
-        expect(comparison?.noteRates.sampleCounts.note_rate_trill).toBe(4);
+        expect(comparison?.noteRates.sampleCounts.note_rate_trill).toBe(0);
     });
 });

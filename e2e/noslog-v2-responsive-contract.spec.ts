@@ -33,14 +33,10 @@ for (const locale of ["ko", "ja", "en"]) {
                             getComputedStyle(document.querySelector(selector)!);
                         const area = document.querySelector(".nl-area")!;
                         return {
-                            actions: style(".nl-music-entity").flexDirection,
+                            layout: style(".nl-music-detail__layout").display,
                             tabs: Boolean(
                                 area.querySelector('[role="tablist"]')
                             ),
-                            columns:
-                                style(
-                                    ".nl-detail-columns"
-                                ).gridTemplateColumns.split(" ").length,
                             padding: style(".nl-main__content").paddingLeft,
                             overflow:
                                 document.documentElement.scrollWidth >
@@ -49,10 +45,10 @@ for (const locale of ["ko", "ja", "en"]) {
                     })
                 )
                 .toEqual({
-                    actions: width >= 672 ? "row" : "column",
+                    // 1056+ 는 왼쪽 머리 열 + 오른쪽 탭 내용(2026-09-16 데스크톱 B)
+                    layout: width >= 1056 ? "grid" : "flex",
                     // 영역 탭은 모든 폭에서 탭 — 좁으면 탭 줄만 가로 스크롤(부품 결정 ② 2026-09-14)
                     tabs: true,
-                    columns: width >= 1056 ? 2 : 1,
                     padding: width >= 672 ? "24px" : "16px",
                     overflow: false,
                 });

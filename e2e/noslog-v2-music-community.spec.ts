@@ -155,10 +155,8 @@ async function openCommunity(
                 },
             });
         }
-        const rows =
-            url.searchParams.get("sort") === "newest"
-                ? [...opinions].reverse()
-                : opinions;
+        // 의견은 최신순 하나(2026-09-16) — 고정 데이터 순서가 최신순
+        const rows = opinions;
         const result =
             url.searchParams.get("area") === "opinions"
                 ? {
@@ -185,22 +183,15 @@ async function openCommunity(
     else await expect(page.locator(".nl-pattern-form")).toBeVisible();
 }
 
-test("Community failure keeps four unknown placements and retries without fabricated empty states", async ({
+// 서열 배치 값은 머리 수치 띠(서버 데이터)로 옮겼다 — 평가 탭 실패는 투표 · 의견만 다시 불러온다 (2026-09-16)
+test("Community failure retries without fabricated empty states", async ({
     page,
 }) => {
     await openCommunity(page, { failure: "initial" });
-    await expect(page.locator(".nl-tier-placement dd")).toHaveText([
-        "—",
-        "—",
-        "—",
-        "—",
-    ]);
-    await expect(page.locator(".nl-tier-placements .nl-skeleton")).toHaveCount(
-        0
-    );
     await expect(page.locator(".nl-community-panel")).not.toContainText(
         "미등재"
     );
+    await expect(page.locator(".nl-pattern-form")).toHaveCount(0);
     await page.route("**/api/music-community?**", (route) =>
         route.fulfill({
             json: {
@@ -213,9 +204,6 @@ test("Community failure keeps four unknown placements and retries without fabric
     );
     await page.getByRole("button", { name: "다시 시도", exact: true }).click();
     await expect(page.locator(".nl-pattern-form")).toBeVisible();
-    await expect(page.locator(".nl-tier-placement dd").first()).toHaveText(
-        "13.5"
-    );
 });
 
 test("An incremental opinion failure retains the ten existing rows and retries the same window", async ({
@@ -239,61 +227,48 @@ test("Guest, missing-record, and unachieved-goal states keep the public evidence
     data.history = [];
     data.canEvaluate = false;
     await openCommunity(page, { data, guest: true });
-    await expect(page.locator(".nl-tier-placements details")).toHaveCount(0);
-    await expect(page.locator(".nl-tier-placements")).toContainText(
-        "변경 이력 없음"
-    );
     await page.locator("button.nl-vote-row").first().click();
     await expect(
         page.locator(".nl-vote-distribution table tbody tr")
     ).toHaveCount(9);
-    await expect(page.locator(".nl-vote-contribution").first()).toContainText(
-        "로그인하면 이 목표에 투표할 수 있습니다."
+    // 자격이 없으면 입력도 이유 문장도 없다(2026-09-16 A) — 로그아웃은 제목 줄 오른쪽 끝 제목 링크(D)
+    await expect(page.locator(".nl-vote-form")).toHaveCount(0);
+    await expect(
+        page
+            .locator(".nl-community-votes .nl-heading-row")
+            .getByRole("link", { name: "로그인하고 투표하기", exact: true })
+    ).toBeVisible();
+    await expect(
+        page.locator(".nl-scale-picker__option").first()
+    ).toBeDisabled();
+    // 평가할 수 없으면 목록을 흐리고 가운데 카드로 이유 · 로그인 (2026-09-17 L2)
+    const lock = page.locator(".nl-pattern-lock");
+    await expect(lock).toHaveAttribute("data-locked", "");
+    await expect(lock.locator(".nl-pattern-axes")).toHaveCSS(
+        "filter",
+        "blur(5px)"
     );
-    await expect(page.locator(".nl-pattern-form input").first()).toBeDisabled();
-    await expect(page.locator(".nl-pattern-form textarea")).toBeDisabled();
+    await expect(lock.locator(".nl-pattern-lock__card")).toContainText(
+        "로그인하고 패턴을 평가해 보세요"
+    );
+    await expect(
+        lock.getByRole("link", { name: "로그인", exact: true })
+    ).toBeVisible();
+    await expect(page.locator(".nl-opinions")).toContainText(
+        "로그인하면 의견을 남길 수 있습니다."
+    );
     await page.unrouteAll({ behavior: "wait" });
     await openCommunity(page, { data });
     await page.locator("button.nl-vote-row").first().click();
-    await expect(page.locator(".nl-vote-contribution").first()).toContainText(
-        "투표하려면 이 채보의 플레이 기록이 필요합니다."
-    );
+    await expect(page.locator(".nl-vote-distribution")).toHaveCount(1);
+    await expect(page.locator(".nl-vote-form")).toHaveCount(0);
     data.canEvaluate = true;
     data.scopes[0].eligible = false;
     await page.unrouteAll({ behavior: "wait" });
     await openCommunity(page, { data });
     await page.locator("button.nl-vote-row").first().click();
-    await expect(page.locator(".nl-vote-contribution").first()).toContainText(
-        "Basic S 달성 기록이 있어야"
-    );
-});
-
-test("Tier retains all four placement semantics and reveals one chronological history", async ({
-    page,
-}) => {
-    await openCommunity(page);
-    await expect(page.locator(".nl-tier-placement")).toHaveCount(4);
-    await expect(page.locator(".nl-tier-placement dd")).toHaveText([
-        "13.5",
-        "미등재",
-        "미공개",
-        "미공개",
-    ]);
-    const history = page.locator(".nl-tier-placements details");
-    await expect(history).not.toHaveAttribute("open");
-    await history.locator("summary").press("Enter");
-    await expect(history.locator("li")).toHaveCount(5);
-    await expect(history.locator("li").first()).toContainText(
-        "13.0 → 등재 제외"
-    );
-    const more = history.getByRole("button", { name: "이전 변경 더 보기" });
-    await more.click();
-    await expect(history.locator("li")).toHaveCount(15);
-    await expect(more).toBeFocused();
-    await more.click();
-    await expect(history.locator("li")).toHaveCount(18);
-    await expect(more).toHaveCount(0);
-    await expect(history.locator("li").last()).toContainText("미등재 → 13.5");
+    await expect(page.locator(".nl-vote-distribution")).toHaveCount(1);
+    await expect(page.locator(".nl-vote-form")).toHaveCount(0);
 });
 
 test("Goal distributions preserve observed values and global bar scale while paging", async ({
@@ -367,9 +342,7 @@ test("Aggregating rows open with keyboard and offer the first vote without expos
         await rows.nth(index).focus();
         await rows.nth(index).press("Enter");
         await expect(rows.nth(index)).toHaveAttribute("aria-expanded", "true");
-        await expect(page.locator(".nl-vote-aggregation")).toContainText(
-            "아직 공개할 투표 분포가 없습니다."
-        );
+        await expect(page.locator(".nl-vote-form")).toBeVisible();
         await expect(page.locator(".nl-vote-distribution")).toHaveCount(0);
         const input = page.locator(".nl-vote-form select");
         await expect(input).toHaveValue("");
@@ -387,7 +360,7 @@ test("Aggregating rows open with keyboard and offer the first vote without expos
         await expect(input).toHaveValue("13.2");
         await rows.nth(index).press("Space");
         await expect(rows.nth(index)).toHaveAttribute("aria-expanded", "false");
-        await expect(page.locator(".nl-vote-aggregation")).toHaveCount(0);
+        await expect(page.locator(".nl-vote-form")).toHaveCount(0);
     }
 });
 
@@ -399,26 +372,26 @@ test("Aggregating votes preserve login, record, eligibility, and existing-vote a
     scope.count = 0;
     scope.average = null;
     scope.distribution = [];
+    // 집계 중이고 할 수 있는 투표가 없으면 누르지 않는 줄(⌄ 없음)
     await openCommunity(page, { data, guest: true });
-    await page.locator("button.nl-vote-row").first().click();
-    await expect(page.locator(".nl-vote-aggregation")).toContainText(
-        "로그인하면"
+    await expect(page.locator(".nl-vote-row").first()).not.toHaveAttribute(
+        "aria-expanded"
     );
-    await expect(page.locator(".nl-vote-form")).toHaveCount(0);
+    await expect(
+        page.getByRole("link", { name: "로그인하고 투표하기", exact: true })
+    ).toBeVisible();
     data.canEvaluate = false;
     await page.unrouteAll({ behavior: "wait" });
     await openCommunity(page, { data });
-    await page.locator("button.nl-vote-row").first().click();
-    await expect(page.locator(".nl-vote-aggregation")).toContainText(
-        "플레이 기록이 필요합니다."
+    await expect(page.locator(".nl-vote-row").first()).not.toHaveAttribute(
+        "aria-expanded"
     );
     data.canEvaluate = true;
     scope.eligible = false;
     await page.unrouteAll({ behavior: "wait" });
     await openCommunity(page, { data });
-    await page.locator("button.nl-vote-row").first().click();
-    await expect(page.locator(".nl-vote-aggregation")).toContainText(
-        "Basic S 달성 기록이 있어야"
+    await expect(page.locator(".nl-vote-row").first()).not.toHaveAttribute(
+        "aria-expanded"
     );
     await expect(page.locator(".nl-vote-form")).toHaveCount(0);
     scope.eligible = true;
@@ -427,7 +400,7 @@ test("Aggregating votes preserve login, record, eligibility, and existing-vote a
     await page.unrouteAll({ behavior: "wait" });
     await openCommunity(page, { data });
     await page.locator("button.nl-vote-row").first().click();
-    const contribution = page.locator(".nl-vote-aggregation");
+    const contribution = page.locator(".nl-vote-list__body");
     await expect(contribution).toContainText("내 투표13.2");
     await contribution
         .getByRole("button", { name: "수정", exact: true })
@@ -452,62 +425,55 @@ test("Pattern ratings distinguish zero from missing and keep rejected input", as
     page,
 }) => {
     await openCommunity(page);
+    // 축마다 숫자 버튼 0~4(라디오 묶음) — 값 없음은 아무것도 고르지 않은 상태로 0 과 다르다 (2026-09-17)
+    const form = page.locator(".nl-pattern-form");
     const stairs = page.getByRole("radiogroup", { name: "계단", exact: true });
+    const checked = stairs.locator('[aria-checked="true"]');
+    await expect(checked).toHaveText("0");
+    // 저장 버튼 · 양끝 말 라벨은 없다 — 누르면 바로 저장
+    await expect(form.getByRole("button", { name: "평가 저장" })).toHaveCount(
+        0
+    );
+    await expect(form).not.toContainText("매우 많음");
+    // 같은 값을 다시 누르면 그 축만 해제
+    const zero = stairs.getByRole("radio", { name: "0", exact: true });
+    await zero.click();
+    await expect(checked).toHaveCount(0);
+    await expect(form.getByRole("status")).toContainText("저장 중");
+    // 고른 값이 없으면 첫 값만 탭 순서, 방향키로 고르며 이동
+    await zero.focus();
+    await zero.press("ArrowRight");
+    await expect(checked).toHaveText("1");
+    // 서버가 거절하면(테스트는 로그인 세션 없음) 값은 그대로 두고 실패 + 다시 시도
+    await expect(form.getByRole("status")).toContainText("저장하지 못했습니다");
     await expect(
-        stairs.getByRole("radio", { name: "0", exact: true })
-    ).toBeChecked();
-    await page
-        .locator(".nl-pattern-axis")
-        .first()
-        .getByRole("button", { name: "선택 해제" })
-        .click();
-    await expect(stairs.locator("input:checked")).toHaveCount(0);
-    await expect(stairs.getByRole("radio").first()).toBeFocused();
-    await stairs.getByRole("radio").first().press("ArrowRight");
-    await expect(
-        stairs.getByRole("radio", { name: "1", exact: true })
-    ).toBeChecked();
-    await page
-        .locator(".nl-pattern-axis")
-        .first()
-        .getByRole("button", { name: "선택 해제" })
-        .click();
-    const text = page.getByRole("textbox", { name: "의견 (선택)" });
-    await text.fill("");
-    await page.getByRole("button", { name: "평가 저장" }).click();
-    await expect(
-        page.getByRole("alert").filter({ hasText: "패턴을 하나 이상" })
+        form.getByRole("button", { name: "다시 시도", exact: true })
     ).toBeVisible();
-    await text.fill("a".repeat(121));
-    await page.getByRole("button", { name: "평가 저장" }).click();
-    await expect(
-        page.getByRole("alert").filter({ hasText: "최대 120자" })
-    ).toBeVisible();
-    await text.fill("서버 거절 시에도 입력을 유지합니다.");
-    await page.getByRole("button", { name: "평가 저장" }).click();
-    await expect(
-        page.getByRole("alert").filter({ hasText: "로그인 후" })
-    ).toBeVisible();
-    await expect(text).toHaveValue("서버 거절 시에도 입력을 유지합니다.");
+    await expect(checked).toHaveText("1");
+    await expect(form.getByRole("textbox")).toHaveCount(0);
 });
 
-test("Deletion confirms exact scope and cancellation restores focus", async ({
+test("Clearing all pattern ratings asks for confirmation first", async ({
     page,
 }) => {
     await openCommunity(page);
-    const trigger = page.getByRole("button", {
-        name: "평가 삭제",
-        exact: true,
-    });
+    // 「선택 해제」(제목 줄 오른쪽 끝) = 모든 축 지우기 → 확인창
+    const trigger = page
+        .locator(".nl-pattern-form .nl-heading-row")
+        .getByRole("button", { name: "선택 해제", exact: true });
     await trigger.click();
     const dialog = page.getByRole("dialog");
     await expect(dialog).toContainText(
-        "Basic·Recital의 목표별 투표는 유지됩니다."
+        "작성한 의견과 Basic·Recital의 목표별 투표는 유지됩니다."
     );
     await expect(dialog.getByRole("button", { name: "취소" })).toBeFocused();
     await page.keyboard.press("Escape");
     await expect(dialog).toHaveCount(0);
-    await expect(trigger).toBeFocused();
+    await expect(
+        page
+            .getByRole("radiogroup", { name: "계단", exact: true })
+            .locator('[aria-checked="true"]')
+    ).toHaveText("0");
     await page.locator("button.nl-vote-row").nth(1).click();
     await page.getByRole("button", { name: "투표 삭제", exact: true }).click();
     await expect(dialog).toContainText("Basic 990k 투표만 삭제됩니다.");
@@ -527,13 +493,20 @@ test("Opinions append ten at a time and expose contextual author and report acti
     await expect(
         page.getByRole("button", { name: "의견 더 보기" })
     ).toHaveCount(0);
+    // 추천은 없앴다(2026-09-16) — 내 의견은 목록 안에서 그 자리에서 고친다
     const own = page.locator(".nl-opinion-row").first();
-    await expect(own.getByRole("button", { name: /^추천 / })).toBeDisabled();
+    await expect(own.getByRole("button", { name: /^추천/ })).toHaveCount(0);
+    // 내 의견이 있으면 맨 위 새 작성 칸은 없다
+    await expect(
+        page.locator(".nl-opinions > .nl-opinion-composer")
+    ).toHaveCount(0);
     await own.getByRole("button", { name: /의견 더보기/ }).click();
     await page.getByRole("menuitem", { name: "수정", exact: true }).click();
-    await expect(
-        page.getByRole("textbox", { name: "의견 (선택)" })
-    ).toBeFocused();
+    const editor = own.getByRole("textbox", { name: "의견", exact: true });
+    await expect(editor).toBeFocused();
+    await expect(editor).toHaveValue(opinions[0].opinion);
+    await editor.press("Escape");
+    await expect(own.getByRole("textbox")).toHaveCount(0);
     await page
         .locator(".nl-opinion-row")
         .nth(1)
@@ -590,12 +563,11 @@ for (const locale of ["ko", "ja", "en"])
                         )
                     )
                     .toBe(true);
-                await expect(
-                    page.locator(".nl-pattern-axis").first()
-                ).toHaveCSS("height", "133px");
-                await expect(
-                    page.locator(".nl-rating-scale input").first()
-                ).toHaveCSS("height", "48px");
+                // 숫자 버튼 = 컨트롤 M 정사각(36 · 1056 이상 32)
+                const option = page.locator(".nl-scale-picker__option").first();
+                const size = width >= 1056 ? "32px" : "36px";
+                await expect(option).toHaveCSS("height", size);
+                await expect(option).toHaveCSS("width", size);
                 if (width === 320 || width === 1280) {
                     const scan = await new AxeBuilder({ page })
                         .include(".nl-community-panel")
@@ -626,12 +598,12 @@ for (const locale of ["ko", "ja", "en"])
                         fullPage: true,
                     });
                 }
-                await page.locator("button.nl-vote-row").nth(2).click();
-                await expect(
-                    page.locator(".nl-vote-aggregation select")
-                ).toBeVisible();
+                // Pianist 두 줄은 집계 중 · 자격 없음이라 누르지 않는 줄 — 펼칠 수 있는 줄은 둘
+                await expect(page.locator("button.nl-vote-row")).toHaveCount(2);
+                await page.locator("button.nl-vote-row").first().click();
+                await expect(page.locator(".nl-vote-form__row")).toBeVisible();
                 await expect(page.locator(".nl-vote-distribution")).toHaveCount(
-                    0
+                    1
                 );
                 expect(
                     await page.evaluate(
@@ -642,7 +614,7 @@ for (const locale of ["ko", "ja", "en"])
                 ).toBe(true);
                 if (width === 320 || width === 1280) {
                     const scan = await new AxeBuilder({ page })
-                        .include(".nl-vote-aggregation")
+                        .include(".nl-vote-list")
                         .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
                         .analyze();
                     expect(scan.violations).toEqual([]);
@@ -658,3 +630,34 @@ for (const locale of ["ko", "ja", "en"])
             }
         });
     }
+
+test("A new opinion starts as one line, expands on focus, and cancels back", async ({
+    page,
+}) => {
+    const data = fixture();
+    data.currentEvaluation = { ...data.currentEvaluation!, opinion: "" };
+    await openCommunity(page, { data });
+    const input = page
+        .locator(".nl-opinions > .nl-opinion-composer")
+        .getByRole("textbox", { name: "의견", exact: true });
+    // 쉬는 상태 = 한 줄 입력(컨트롤 높이)
+    await expect
+        .poll(() =>
+            input.evaluate((element) => element.getBoundingClientRect().height)
+        )
+        .toBeLessThan(50);
+    await input.focus();
+    await expect(
+        page.getByRole("button", { name: "의견 저장" })
+    ).toBeDisabled();
+    await input.fill("a".repeat(121));
+    await page.getByRole("button", { name: "의견 저장" }).click();
+    await expect(
+        page.getByRole("alert").filter({ hasText: "최대 120자" })
+    ).toBeVisible();
+    await page.getByRole("button", { name: "취소", exact: true }).click();
+    await expect(input).toHaveValue("");
+    await expect(page.getByRole("button", { name: "의견 저장" })).toHaveCount(
+        0
+    );
+});

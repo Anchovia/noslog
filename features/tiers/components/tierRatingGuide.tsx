@@ -109,7 +109,6 @@ export default function TierRatingGuide({
                                 Math.ceil(points.at(-1)!.value / 50) * 50,
                             ]}
                             emptyMessage=""
-                            singleMessage=""
                         />
                         <p className="nl-metadata">
                             {t("tiers.weight.formula", {

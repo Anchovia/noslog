@@ -124,7 +124,7 @@ export default function ChartLeaderboard({
                     {t("rankings.column.player")}
                 </span>
                 <span className="nl-ranking-head__value">
-                    {t("music.trend.score")}
+                    <span>{t("music.trend.score")}</span>
                 </span>
             </div>
             <ol

@@ -75,8 +75,10 @@ export default function DeleteContributionDialog({
                     >
                         {t("community.cancel")}
                     </ActionButton>
+                    {/* 패턴 평가 삭제는 되돌릴 수 없는 기록 삭제 — 채운 위험 버튼 (2026-09-17 사용자 결정) */}
                     <ActionButton
                         variant="danger"
+                        destructiveFilled={kind === "evaluation"}
                         busy={busy}
                         onClick={() => void handleDelete()}
                     >

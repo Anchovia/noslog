@@ -1,68 +1,149 @@
 "use client";
 
-import * as Popover from "@radix-ui/react-popover";
-import { Languages } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
+import type { ReactNode } from "react";
 
 import {
     useLocale,
     useLocalizedHref,
     useTranslations,
 } from "@/components/i18n/localeProvider";
+import { rankAssetNames } from "@/components/music/musicDetailConfig";
 import MusicJacket from "@/components/music/musicJacket";
 import type {
     ChartDetail,
     Difficulty,
     MusicInfo,
 } from "@/components/music/musicDetailTypes";
-import ActionButton from "@/components/ui/actionButton";
 import { foundationButtonClass } from "@/components/ui/Button";
-import IconButton from "@/components/ui/iconButton";
+import StatStrip from "@/components/ui/statStrip";
+import { tierValueColor } from "@/lib/music/tierValueColor";
+import { tierGoalLabels } from "@/lib/tiers";
+import { cn } from "@/lib/utils";
 
+interface TitleFit {
+    titleCut: boolean;
+    translationCut: boolean;
+    artistCut: boolean;
+}
+const initialFit: TitleFit = {
+    titleCut: false,
+    translationCut: false,
+    artistCut: false,
+};
+const sameFit = (a: TitleFit, b: TitleFit) =>
+    a.titleCut === b.titleCut &&
+    a.translationCut === b.translationCut &&
+    a.artistCut === b.artistCut;
+
+/** 접힌 머리의 한 줄 글자(제목 · 번역 · 아티스트)가 넘치는지 — 넘치면 끝 페이드 + 펼치기 */
+function measureCopy(copy: HTMLElement): TitleFit {
+    const overflows = (selector: string) => {
+        const element = copy.querySelector<HTMLElement>(selector);
+        if (!element) return false;
+        const previous = element.style.whiteSpace;
+        element.style.whiteSpace = "nowrap";
+        const result = element.scrollWidth > element.clientWidth + 1;
+        element.style.whiteSpace = previous;
+        return result;
+    };
+    return {
+        titleCut: overflows(".nl-music-entity__title"),
+        translationCut: overflows(".nl-music-entity__translation"),
+        artistCut: overflows(".nl-music-entity__artist"),
+    };
+}
+
+/**
+ * 악곡 상세 머리 — 자켓 80 · 제목 · 아티스트(폰 · 1056 미만은 가로, 1056+ 는 왼쪽 열에 세로).
+ * 액션은 있는 것만 M 보조 버튼, 없으면 줄 자체가 없다. 수치 띠는 선택한 난이도의 내부 레벨 + 공개 서열 값 (2026-09-16)
+ */
 export default function MusicEntityHeader({
     music,
     difficulty,
     chart,
     pending = false,
+    rank = null,
+    children,
 }: {
     music: MusicInfo;
     difficulty: Difficulty;
     chart: ChartDetail | null;
     pending?: boolean;
+    /** 선택한 채보의 내 스코어 등급 — 기록이 있을 때만 제목 옆 공식 아이콘 */
+    rank?: string | null;
+    /** 난이도 세그먼트 — 자켓 · 제목 아래, 수치 띠 위 */
+    children?: ReactNode;
 }) {
     const t = useTranslations();
     const locale = useLocale();
     const href = useLocalizedHref();
-    const [open, setOpen] = useState(false);
+    const [expanded, setExpanded] = useState(false);
+    const [fit, setFit] = useState<TitleFit>(initialFit);
     const identity = useRef<HTMLDivElement>(null);
-    useEffect(() => {
+    const gradeAsset = rank ? rankAssetNames[rank.toUpperCase()] : undefined;
+    // 곡이 바뀌면 접힌 상태로
+    const [shown, setShown] = useState(music.index);
+    if (shown !== music.index) {
+        setShown(music.index);
+        setExpanded(false);
+    }
+    useLayoutEffect(() => {
         const element = identity.current;
         if (!element) return;
-        const title = element.querySelector("h1");
-        if (!title) return;
-        const fit = () => {
-            for (const size of ["page", "section", "component"]) {
-                title.dataset.fit = size;
-                const lineHeight = Number.parseFloat(
-                    getComputedStyle(title).lineHeight
-                );
-                if (
-                    element.scrollHeight <= 96 ||
-                    title.scrollHeight <= lineHeight
-                )
-                    break;
-            }
+        const measure = () => {
+            const next = measureCopy(element);
+            setFit((current) => (sameFit(current, next) ? current : next));
         };
-        const observer = new ResizeObserver(fit);
+        measure();
+        const observer = new ResizeObserver(measure);
         observer.observe(element);
-        void document.fonts.ready.then(fit);
+        void document.fonts.ready.then(measure);
         return () => observer.disconnect();
-    }, [music.title, music.artist, music.localizedTitle]);
+    }, [music.title, music.artist, music.localizedTitle, gradeAsset]);
     const video =
         chart?.play_video_url && /^https?:\/\//i.test(chart.play_video_url)
             ? chart.play_video_url
             : null;
+    const actions = pending
+        ? []
+        : [
+              ...(chart?.has_published_pattern
+                  ? [
+                        <Link
+                            key="chart"
+                            href={href(
+                                `/music/${music.index}/${difficulty.toLowerCase()}/pattern`
+                            )}
+                            className={foundationButtonClass({
+                                variant: "secondary",
+                                size: "sm",
+                            })}
+                        >
+                            {t("detail.viewChart")}
+                        </Link>,
+                    ]
+                  : []),
+              ...(video
+                  ? [
+                        <a
+                            key="video"
+                            href={video}
+                            className={foundationButtonClass({
+                                variant: "secondary",
+                                size: "sm",
+                            })}
+                        >
+                            {t("detail.playVideo")}
+                        </a>,
+                    ]
+                  : []),
+          ];
+    const constant = music.constants?.[difficulty];
+    const collapsed = !expanded;
+    const truncated = fit.titleCut || fit.translationCut || fit.artistCut;
     return (
         <div className="nl-music-entity">
             <div className="nl-music-entity__identity">
@@ -71,112 +152,116 @@ export default function MusicEntityHeader({
                     title={music.title}
                     background={music.background}
                     appearance="foundation"
+                />
+                {/* 제목 · 번역 · 아티스트 모두 한 줄, 넘치면 끝 페이드 — 누르면 모두 펼침. 등급은 제목 한 줄 높이(32 · 40)로 제목 글자 끝 8 뒤 (2026-09-17) */}
+                <div
+                    ref={identity}
+                    className="nl-music-entity__copy"
+                    data-expanded={expanded || undefined}
                 >
+                    {/* 카테고리 = 제목 바로 위 왼쪽 (자켓 위 겹침에서 이동 · 2026-09-17) */}
                     <span
-                        className="nl-jacket__category nl-metadata"
+                        className="nl-jacket__category nl-metadata nl-music-entity__category"
                         lang="en"
                         data-category={music.category_short}
                     >
                         {music.category_short}
                     </span>
-                </MusicJacket>
-                <div ref={identity} className="nl-music-entity__copy">
-                    <div className="nl-music-entity__title-group">
-                        <h1
-                            className="nl-page-title"
-                            data-fit="page"
-                            tabIndex={-1}
-                        >
-                            {music.title}
-                        </h1>
+                    <div
+                        className="nl-music-entity__heading"
+                        data-grade={gradeAsset ? "" : undefined}
+                    >
+                        <div className="nl-music-entity__title-row">
+                            <h1
+                                className={cn(
+                                    "nl-page-title nl-music-entity__title",
+                                    collapsed && fit.titleCut && "nl-fade-end"
+                                )}
+                                tabIndex={-1}
+                            >
+                                {music.title}
+                            </h1>
+                            {gradeAsset ? (
+                                <Image
+                                    src={`/grade/grade_${gradeAsset}.png`}
+                                    alt={t("music.record.rankLabel", {
+                                        rank: rank!,
+                                    })}
+                                    width={40}
+                                    height={40}
+                                    className="nl-music-entity__grade"
+                                />
+                            ) : null}
+                        </div>
                         {music.localizedTitle ? (
-                            <Popover.Root open={open} onOpenChange={setOpen}>
-                                <Popover.Trigger asChild>
-                                    <IconButton
-                                        label={t("detail.translation")}
-                                        onMouseEnter={() => setOpen(true)}
-                                        onFocus={(event) => {
-                                            if (
-                                                event.currentTarget.matches(
-                                                    ":focus-visible"
-                                                )
-                                            )
-                                                setOpen(true);
-                                        }}
-                                        onBlur={() => setOpen(false)}
-                                    >
-                                        <Languages
-                                            className="nl-icon"
-                                            aria-hidden
-                                        />
-                                    </IconButton>
-                                </Popover.Trigger>
-                                <Popover.Portal>
-                                    <div className="noslog-ui">
-                                        <Popover.Content
-                                            className="nl-translation-popover"
-                                            sideOffset={8}
-                                            collisionPadding={16}
-                                            onOpenAutoFocus={(event) =>
-                                                event.preventDefault()
-                                            }
-                                            onCloseAutoFocus={(event) =>
-                                                event.preventDefault()
-                                            }
-                                            onMouseLeave={() => setOpen(false)}
-                                            aria-label={t("detail.translation")}
-                                        >
-                                            <p className="nl-metadata nl-muted">
-                                                {locale === "ja"
-                                                    ? t("detail.reading")
-                                                    : t("detail.translation")}
-                                            </p>
-                                            <p className="nl-body">
-                                                {music.localizedTitle}
-                                            </p>
-                                        </Popover.Content>
-                                    </div>
-                                </Popover.Portal>
-                            </Popover.Root>
+                            <p
+                                className={cn(
+                                    "nl-body-secondary nl-music-entity__translation",
+                                    collapsed &&
+                                        fit.translationCut &&
+                                        "nl-fade-end"
+                                )}
+                                lang={locale}
+                            >
+                                {music.localizedTitle}
+                            </p>
                         ) : null}
                     </div>
-                    <p className="nl-body-secondary nl-muted">
+                    <p
+                        className={cn(
+                            "nl-body-secondary nl-muted nl-music-entity__artist",
+                            collapsed && fit.artistCut && "nl-fade-end"
+                        )}
+                    >
                         {music.artist || t("music.unknownArtist")}
                     </p>
+                    {truncated ? (
+                        <button
+                            type="button"
+                            className="nl-music-entity__expand"
+                            aria-expanded={expanded}
+                            aria-label={t(
+                                expanded
+                                    ? "detail.collapseTitle"
+                                    : "detail.expandTitle"
+                            )}
+                            onClick={() => setExpanded((value) => !value)}
+                        />
+                    ) : null}
                 </div>
             </div>
-            <div className="nl-music-entity__actions">
-                {chart?.has_published_pattern && !pending ? (
-                    <Link
-                        href={href(
-                            `/music/${music.index}/${difficulty.toLowerCase()}/pattern`
-                        )}
-                        className={foundationButtonClass({
-                            variant: "secondary",
-                        })}
-                    >
-                        {t("detail.viewChart")}
-                    </Link>
-                ) : (
-                    <ActionButton variant="secondary" disabled>
-                        {t("detail.viewChart")}
-                    </ActionButton>
-                )}
-                {video && !pending ? (
-                    <a
-                        href={video}
-                        className={foundationButtonClass({
-                            variant: "secondary",
-                        })}
-                    >
-                        {t("detail.playVideo")}
-                    </a>
-                ) : (
-                    <ActionButton variant="secondary" disabled>
-                        {t("detail.playVideo")}
-                    </ActionButton>
-                )}
-            </div>
+            {children}
+            <StatStrip
+                className="nl-music-entity__stats"
+                label={t("music.difficulty")}
+                items={[
+                    constant !== null && constant !== undefined
+                        ? {
+                              key: "constant",
+                              label: t("music.info.levelConstant"),
+                              value: constant.toFixed(1),
+                              color: tierValueColor(constant),
+                          }
+                        : null,
+                    ...(chart?.tierValues ?? []).map((entry) =>
+                        entry.value === null
+                            ? null
+                            : {
+                                  key: `${entry.mode}:${entry.goal}`,
+                                  label:
+                                      entry.mode === "recital"
+                                          ? "Recital"
+                                          : tierGoalLabels[entry.goal],
+                                  value: entry.value.toFixed(1),
+                                  // 서열 값 = 구간 색 그라데이션 (2026-09-17 G1)
+                                  color: tierValueColor(entry.value),
+                              }
+                    ),
+                ]}
+            />
+            {actions.length ? (
+                <div className="nl-music-entity__actions">{actions}</div>
+            ) : null}
         </div>
     );
 }

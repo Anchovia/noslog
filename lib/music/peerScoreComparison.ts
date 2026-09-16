@@ -1,6 +1,7 @@
 export const PEER_GRADE_RANGE = 200;
 export const PEER_STORED_GRADE_RANGE = PEER_GRADE_RANGE * 100;
-export const MIN_PEER_SCORE_SAMPLE = 5;
+// 나를 뺀 유사 Grd 기록이 한 명이라도 있으면 비교한다 (2026-09-16 · 이전 5)
+export const MIN_PEER_SCORE_SAMPLE = 1;
 
 export const peerJudgementKeys = [
     "judge_sjust",

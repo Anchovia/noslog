@@ -18,6 +18,14 @@ import { getLocalizedMusicTitle } from "@/lib/i18n/musicTitle";
 import { getChartRanking, MUSIC_RANKING_PAGE_SIZE } from "./chartRanking";
 import { getCommunityData } from "./communityData";
 import { logServerError } from "@/lib/observability/server";
+import {
+    TIER_GOALS,
+    TIER_MODE_GOALS,
+    TIER_MODES,
+    isTierGoal,
+    isTierMode,
+    isTierModeGoal,
+} from "@/lib/tiers";
 
 export const MUSIC_DIFFICULTIES: Difficulty[] = [
     "Normal",
@@ -125,6 +133,36 @@ export async function loadMusicDetail(
     const scoreDistribution = emptyDistribution.map((item) => ({ ...item }));
     let playerCount = 0;
     let userTopPercent: number | null = null;
+    let scoreSeries: number[] = [];
+
+    // 머리 수치 띠 — 공개 서열표의 이 채보 값(모든 탭). 등재 안 된 표는 null 로 두고 화면에서 칸을 뺀다
+    const tierLists = await db.tierList.findMany({
+        where: {
+            mode: { in: [...TIER_MODES] },
+            goal: { in: [...TIER_GOALS] },
+            status: "published",
+        },
+        orderBy: [{ updatedAt: "desc" }, { id: "desc" }],
+        select: {
+            mode: true,
+            goal: true,
+            entries: {
+                where: { chartId: chart.id },
+                select: { tierBand: { select: { value: true } } },
+            },
+        },
+    });
+    // 같은 모드 · 목표의 공개 표가 여럿이면 최신 하나(communityData 와 같은 규칙), 순서는 Basic S · 990k · Pianist · Recital
+    const tierValues = TIER_MODES.flatMap((mode) =>
+        TIER_MODE_GOALS[mode].map((goal) => ({
+            mode,
+            goal,
+            value:
+                tierLists.find(
+                    (list) => list.mode === mode && list.goal === goal
+                )?.entries[0]?.tierBand.value ?? null,
+        }))
+    );
 
     if (activeTab === "detail" || activeTab === "ranking") {
         const { evaluation, scores } = await getCachedChartDetailStats(
@@ -151,6 +189,10 @@ export async function loadMusicDetail(
         }
 
         playerCount = scores.length;
+        if (activeTab === "ranking")
+            scoreSeries = scores
+                .map((record) => record.score)
+                .sort((a, b) => b - a);
         if (userPlayData && playerCount > 0) {
             const higherScores = scores.filter(
                 (record) => record.score > userPlayData.score
@@ -173,16 +215,29 @@ export async function loadMusicDetail(
     if (activeTab === "ranking") {
         const rankingData = await getChartRanking(chart.id, rankingPage);
         Object.assign(ranking, rankingData);
-        if (userPlayData) {
-            ranking.userRank =
-                (await db.playData.count({
-                    where: {
-                        chart_id: chart.id,
-                        score: { gt: userPlayData.score },
-                    },
-                })) + 1;
-        }
     }
+    // 내 순위 — 랭킹 탭과 개요 탭(내 기록 요약 띠)에서 (2026-09-16)
+    if (userPlayData && (activeTab === "ranking" || activeTab === "detail")) {
+        ranking.userRank =
+            (await db.playData.count({
+                where: {
+                    chart_id: chart.id,
+                    score: { gt: userPlayData.score },
+                },
+            })) + 1;
+        if (activeTab === "detail") ranking.totalCount = playerCount;
+    }
+
+    // 서열 변경 이력 — 개요 탭 접힘 줄
+    const tierHistory =
+        activeTab === "detail"
+            ? await loadTierHistory(chart.id).catch((error) => {
+                  logServerError(error, {
+                      event: "music-detail.tier-history.failed",
+                  });
+                  return [];
+              })
+            : [];
 
     const tier: MusicDetailProps["tier"] = {
         currentConstant: null,
@@ -221,9 +276,52 @@ export async function loadMusicDetail(
             scoreDistribution,
             playerCount,
             userTopPercent,
+            tierValues,
+            tierHistory,
+            scoreSeries,
         },
         ranking,
         tier,
         community,
     };
+}
+
+// 공개 서열표의 배치 변경 이력 — communityData 와 같은 계산(이전 값 → 새 값)
+async function loadTierHistory(chartId: number) {
+    const history = await db.tierPlacementHistory.findMany({
+        where: { chartId, tierList: { status: "published" } },
+        orderBy: [{ effectiveAt: "asc" }, { id: "asc" }],
+        select: {
+            id: true,
+            bandValue: true,
+            effectiveAt: true,
+            tierList: { select: { mode: true, goal: true } },
+        },
+    });
+    const previous = new Map<string, number | null>();
+    return history
+        .flatMap((event) => {
+            const { mode, goal } = event.tierList;
+            if (
+                !isTierMode(mode) ||
+                !goal ||
+                !isTierGoal(goal) ||
+                !isTierModeGoal(mode, goal)
+            )
+                return [];
+            const key = `${mode}:${goal}`;
+            const previousValue = previous.get(key) ?? null;
+            previous.set(key, event.bandValue);
+            return [
+                {
+                    id: event.id,
+                    mode,
+                    goal,
+                    previousValue,
+                    value: event.bandValue,
+                    effectiveAt: event.effectiveAt.toISOString(),
+                },
+            ];
+        })
+        .reverse();
 }

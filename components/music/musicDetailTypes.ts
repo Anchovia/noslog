@@ -118,6 +118,23 @@ export interface ChartDetail {
     }[];
     playerCount: number;
     userTopPercent: number | null;
+    /** 공개된 서열표의 이 채보 값 — 머리 수치 띠(2026-09-16). 미등재는 value null */
+    tierValues: {
+        mode: "basic" | "recital";
+        goal: "s" | "990k" | "pianist";
+        value: number | null;
+    }[];
+    /** 서열 변경 이력 — 개요 탭(detail)에서만 채움 */
+    tierHistory: {
+        id: number;
+        mode: "basic" | "recital";
+        goal: "s" | "990k" | "pianist";
+        previousValue: number | null;
+        value: number | null;
+        effectiveAt: string;
+    }[];
+    /** 참가자 점수(내림차순) — 랭킹 탭 산점도(2026-09-16) */
+    scoreSeries: number[];
 }
 
 export interface MusicDetailProps {

@@ -5,7 +5,7 @@ import { useEffect, useId, useRef } from "react";
 import type { ReactNode } from "react";
 
 /**
- * 페이지 안 큰 구역을 바꾸는 1단 밑줄 탭(악곡 상세). 모든 폭에서 탭이고 넘치면 가로로 스크롤한다 —
+ * 페이지 안 큰 구역을 바꾸는 1단 밑줄 탭(악곡 상세). 항목이 줄 폭을 나눠 채우고(2026-09-16), 모든 폭에서 탭이며 넘치면 가로로 스크롤한다 —
  * 높이 48 · 콘텐츠 폭 전체 구분선 · 글자와 밑줄은 2단 메트릭 탭과 같은 공용 `nl-tabs`. 부품 결정 ② (2026-09-14)
  */
 export default function AreaTabs<Value extends string>({

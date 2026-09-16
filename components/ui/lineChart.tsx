@@ -12,6 +12,8 @@ export interface LineChartPoint {
     value: number;
     secondaryValue?: number;
     coordinate?: number;
+    /** 툴팁 아래 줄(예: 「3일 전」). 주면 툴팁 위 날짜 줄 대신 쓴다 (2026-09-17) */
+    detail?: string;
 }
 
 export default function LineChart({
@@ -35,6 +37,7 @@ export default function LineChart({
     showGrid = true,
     keepPlotGeometry = false,
     plotSurface = false,
+    tooltipValueLabel = true,
 }: {
     points: LineChartPoint[];
     label: string;
@@ -44,7 +47,8 @@ export default function LineChart({
     formatAxis: (value: number) => string;
     domain: [number, number];
     emptyMessage: string;
-    singleMessage: string;
+    /** 틀 유지(keepPlotGeometry) 때만 쓴다 — 기본 경로는 점 하나도 그래프로 그린다 */
+    singleMessage?: string;
     secondaryLabel?: string;
     dimensionTickIndices?: number[];
     valueTickCount?: number;
@@ -58,10 +62,13 @@ export default function LineChart({
     keepPlotGeometry?: boolean;
     /** 플롯을 surface/surface 패널(radius 8 · inset 16) 위에 그린다 — 패턴 레이더·서열 가중치 차트와 같은 언어 */
     plotSurface?: boolean;
+    /** false 면 툴팁 값 앞 「라벨 ·」 을 뺀다 — 값 하나뿐인 그래프(성장 추이) */
+    tooltipValueLabel?: boolean;
 }) {
     const { ref, width, height } = useElementWidth<HTMLDivElement>();
+    // 툴팁은 안쪽 여백까지 재야 오른쪽 끝에서 플롯 밖으로 삐져나가지 않는다 (2026-09-17)
     const { ref: tooltipRef, width: tooltipWidth } =
-        useElementWidth<HTMLDivElement>();
+        useElementWidth<HTMLDivElement>("border-box");
     const [active, setActive] = useState<number | null>(null);
     const buttons = useRef<(HTMLButtonElement | null)[]>([]);
     const tooltipId = useId();
@@ -80,12 +87,15 @@ export default function LineChart({
     const firstCoordinate = points[0]?.coordinate;
     const coordinateRange =
         (points.at(-1)?.coordinate ?? 0) - (firstCoordinate ?? 0);
+    // 점이 하나면 가운데 — AtCoder · Codeforces 처럼 틀 · 축 · 표는 그대로 두고 점만 찍는다 (2026-09-16)
     const fraction = (index: number) =>
-        firstCoordinate !== undefined && coordinateRange > 0
-            ? ((points[index].coordinate ?? firstCoordinate) -
-                  firstCoordinate) /
-              coordinateRange
-            : index / Math.max(1, points.length - 1);
+        points.length === 1
+            ? 0.5
+            : firstCoordinate !== undefined && coordinateRange > 0
+              ? ((points[index].coordinate ?? firstCoordinate) -
+                    firstCoordinate) /
+                coordinateRange
+              : index / Math.max(1, points.length - 1);
     const position = (index: number, secondary = false) => ({
         x: 4 + fraction(index) * Math.max(0, width - 8),
         y:
@@ -153,7 +163,8 @@ export default function LineChart({
                     </span>
                 </div>
             ) : null}
-            {points.length < 2 && keepPlotGeometry ? (
+            {keepPlotGeometry &&
+            (points.length === 0 || (points.length === 1 && singleMessage)) ? (
                 <div
                     className={cn(
                         "nl-line-chart__plot",
@@ -173,6 +184,13 @@ export default function LineChart({
                             >
                                 {showGrid
                                     ? ticks.map((_, index) => {
+                                          // 비어 있으면 위 · 아래 선만 — 가운데 「기록 없음」 과 겹치지 않게
+                                          if (
+                                              points.length === 0 &&
+                                              index !== 0 &&
+                                              index !== ticks.length - 1
+                                          )
+                                              return null;
                                           const y =
                                               verticalInset +
                                               (index /
@@ -228,17 +246,6 @@ export default function LineChart({
                 </div>
             ) : points.length === 0 ? (
                 <p className="nl-body-secondary nl-muted">{emptyMessage}</p>
-            ) : points.length === 1 ? (
-                <>
-                    <p className="nl-metric-value">
-                        {secondaryLabel
-                            ? pointLabel(points[0])
-                            : formatValue(points[0].value)}
-                    </p>
-                    <p className="nl-body-secondary nl-muted">
-                        {singleMessage}
-                    </p>
-                </>
             ) : (
                 <div
                     className={cn(
@@ -361,7 +368,7 @@ export default function LineChart({
                                         data-series="slow"
                                     />
                                 ) : null}
-                                {showPoints
+                                {showPoints || points.length === 1
                                     ? points.map((point, index) => {
                                           const p = position(index);
                                           return (
@@ -450,11 +457,15 @@ export default function LineChart({
                                                 : position(active).y - 64,
                                     }}
                                 >
-                                    <span className="nl-metadata nl-muted">
-                                        {points[active].dimension}
-                                    </span>
+                                    {points[active].detail ? null : (
+                                        <span className="nl-metadata nl-muted">
+                                            {points[active].dimension}
+                                        </span>
+                                    )}
                                     <span className="nl-control">
-                                        {valueLabel} ·{" "}
+                                        {tooltipValueLabel
+                                            ? `${valueLabel} · `
+                                            : null}
                                         {formatValue(points[active].value)}
                                     </span>
                                     {secondaryLabel ? (
@@ -465,6 +476,11 @@ export default function LineChart({
                                             )}
                                         </span>
                                     ) : null}
+                                    {points[active].detail ? (
+                                        <span className="nl-metadata nl-muted">
+                                            {points[active].detail}
+                                        </span>
+                                    ) : null}
                                 </div>
                             ) : null}
                         </div>
@@ -473,7 +489,9 @@ export default function LineChart({
                             style={
                                 dimensionTickIndices
                                     ? { position: "relative", height: 16 }
-                                    : undefined
+                                    : points.length === 1
+                                      ? { justifyContent: "center" }
+                                      : undefined
                             }
                             aria-hidden
                         >
@@ -482,7 +500,8 @@ export default function LineChart({
                                     key={points[index].id}
                                     style={
                                         dimensionTickIndices
-                                            ? index === points.length - 1
+                                            ? index === points.length - 1 &&
+                                              points.length > 1
                                                 ? // 끝 라벨은 right:0 — left:100% 는 가용 폭이 0 이라 글자가 세로로 접힌다
                                                   {
                                                       position: "absolute",
