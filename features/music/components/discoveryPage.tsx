@@ -358,23 +358,15 @@ export default function DiscoveryPage({
             }}
             title={t("music.filter")}
             trigger={filterTrigger}
-            headerAction={
-                <ActionButton
-                    variant="ghost"
-                    size="sm"
-                    onClick={() =>
-                        setDraft({
-                            ...draft,
-                            categories: [],
-                            difficulties: [],
-                            records: [],
-                            missMin: undefined,
-                            missMax: undefined,
-                        })
-                    }
-                >
-                    {t("common.reset")}
-                </ActionButton>
+            onReset={() =>
+                setDraft({
+                    ...draft,
+                    categories: [],
+                    difficulties: [],
+                    records: [],
+                    missMin: undefined,
+                    missMax: undefined,
+                })
             }
             footer={
                 <ActionButton

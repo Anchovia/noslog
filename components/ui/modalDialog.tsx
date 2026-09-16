@@ -6,6 +6,7 @@ import { useId } from "react";
 import type { ReactNode } from "react";
 
 import { useTranslations } from "@/components/i18n/localeProvider";
+import IconButton from "@/components/ui/iconButton";
 import { cn } from "@/lib/utils";
 
 export default function ModalDialog({
@@ -62,11 +63,17 @@ export default function ModalDialog({
                                 {title}
                             </Dialog.Title>
                             {showClose ? (
-                                <Dialog.Close
-                                    className="nl-dialog__close"
-                                    aria-label={t("common.close")}
-                                >
-                                    <X className="nl-icon" aria-hidden />
+                                /* 창 머리 가장자리 닫기 — 전체 화면 창과 같은 IconButton · 아이콘 24, 잉크를 안쪽 24 선에 맞춰 당김 */
+                                <Dialog.Close asChild>
+                                    <IconButton
+                                        className="nl-dialog__close"
+                                        label={t("common.close")}
+                                    >
+                                        <X
+                                            className="nl-icon nl-icon--large"
+                                            aria-hidden
+                                        />
+                                    </IconButton>
                                 </Dialog.Close>
                             ) : null}
                         </div>

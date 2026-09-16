@@ -1,24 +1,4 @@
-.noslog-ui .nl-feedback-dialog {
-    width: min(334px, calc(100vw - 32px));
-    padding: var(--nl-spacing-16) 0 var(--nl-spacing-24);
-    border: 0;
-    box-shadow:
-        inset 0 0 0 1px var(--nl-border-overlay),
-        var(--nl-overlay-shadow);
-}
-.noslog-ui .nl-feedback-dialog .nl-dialog__header {
-    padding-inline: var(--nl-spacing-24) var(--nl-spacing-16);
-}
-.noslog-ui .nl-feedback-dialog .nl-dialog__close {
-    margin: 0;
-}
-.noslog-ui .nl-feedback-dialog .nl-dialog__close svg {
-    width: var(--nl-icon-large);
-    height: var(--nl-icon-large);
-}
-.noslog-ui .nl-feedback-dialog__body {
-    padding-inline: var(--nl-spacing-24);
-}
+/* 피드백 · 제보 창 — 공용 nl-dialog(Wide 768 · 안쪽 24) 그대로. 여기엔 본문 전용 규칙만 (2026-09-16 예외 7개 제거) */
 .noslog-ui .nl-feedback-dialog textarea {
     height: 96px;
     min-height: 96px;
@@ -28,18 +8,8 @@
     justify-content: space-between;
     gap: var(--nl-spacing-8);
 }
-.noslog-ui .nl-feedback-dialog .nl-dialog__actions > .nl-button {
-    flex: 1 1 0;
-    min-width: 0;
-}
 @media (min-width: 672px) {
-    .noslog-ui .nl-feedback-dialog {
-        width: min(var(--nl-container-reading), calc(100vw - 48px));
-    }
     .noslog-ui .nl-feedback-dialog__body > .nl-button {
         align-self: flex-start;
-    }
-    .noslog-ui .nl-feedback-dialog .nl-dialog__actions > .nl-button {
-        flex: 0 0 auto;
     }
 }

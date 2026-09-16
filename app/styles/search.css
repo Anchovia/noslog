@@ -1,10 +1,12 @@
+/* 필드 안 잉크 규칙(2026-09-16): 첫 · 마지막 잉크 12 · 잉크 사이 8 — 입력칸 · 셀렉트와 같은 선.
+   4px 안쪽 층(앞 범위 셀렉트 · 지우기)은 면만 M 정사각으로 그리고 잉크는 같은 12 선에 둔다 */
 .noslog-ui .nl-search {
     display: flex;
     align-items: center;
     gap: var(--nl-spacing-8);
     height: var(--nl-control-height);
     min-width: 0;
-    padding-inline: var(--nl-spacing-8);
+    padding-inline: var(--nl-spacing-12);
     border-radius: var(--nl-radius-field);
     background: var(--nl-surface-surface);
     box-shadow: inset 0 0 0 1px var(--nl-border-input);
@@ -39,9 +41,21 @@
 .noslog-ui .nl-search__input::-webkit-search-cancel-button {
     display: none;
 }
+/* 앞 범위 셀렉트: 바깥 4 + 버튼 안쪽 8 = 라벨 12. 면은 4 에서 시작 */
+.noslog-ui .nl-search:has(> .nl-compact-select:first-child) {
+    padding-left: var(--nl-spacing-4);
+}
+/* 지우기: 면 M 정사각(폰 36 · 데스크톱 32) · 누르는 높이는 검색창 그대로.
+   오른쪽 바깥 여백 = 12 − (면 − 아이콘 20) / 2 → 아이콘 오른쪽 끝이 12, 중심 22 = 셀렉트 꺾쇠와 같은 자리 */
+.noslog-ui .nl-search:has(> .nl-search__clear) {
+    padding-right: calc(
+        var(--nl-spacing-12) -
+            (var(--nl-control-height-compact) - var(--nl-icon-medium)) / 2
+    );
+}
 .noslog-ui .nl-search__clear {
     display: flex;
-    width: var(--nl-control-height);
+    width: var(--nl-control-height-compact);
     height: var(--nl-control-height);
     flex-shrink: 0;
     justify-content: center;
@@ -58,7 +72,7 @@
 .noslog-ui .nl-search__clear::before {
     content: "";
     position: absolute;
-    inset: var(--nl-spacing-4) calc(var(--nl-spacing-4) * -1);
+    inset: var(--nl-spacing-4) 0;
     z-index: -1;
     border-radius: var(--nl-radius-control);
 }
@@ -84,7 +98,6 @@
 }
 .noslog-ui .nl-search__busy {
     flex-shrink: 0;
-    padding-right: var(--nl-spacing-12);
 }
 .noslog-ui .nl-compact-select {
     display: inline-flex;

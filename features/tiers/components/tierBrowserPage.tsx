@@ -232,21 +232,13 @@ export default function TierBrowserPage({
                                         setOpen(value);
                                     }}
                                     title={t("tiers.conditions")}
-                                    headerAction={
-                                        <ActionButton
-                                            variant="ghost"
-                                            size="sm"
-                                            onClick={() =>
-                                                setDraft({
-                                                    ...draft,
-                                                    bands: [],
-                                                    difficulties: [],
-                                                    levels: [],
-                                                })
-                                            }
-                                        >
-                                            {t("common.reset")}
-                                        </ActionButton>
+                                    onReset={() =>
+                                        setDraft({
+                                            ...draft,
+                                            bands: [],
+                                            difficulties: [],
+                                            levels: [],
+                                        })
                                     }
                                     trigger={
                                         <Button

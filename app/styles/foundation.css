@@ -659,20 +659,13 @@ html[data-theme="light"] .noslog-ui,
     justify-content: space-between;
     gap: var(--nl-spacing-8);
 }
+/* 닫기 아이콘 버튼(컨트롤 정사각 · 아이콘 24)을 (컨트롤 − 24) / 2 만큼 위 · 오른쪽 · 아래로 당겨 잉크가 안쪽 24 선에 선다 */
 .noslog-ui .nl-dialog__close {
-    display: flex;
-    width: 44px;
-    height: 44px;
-    flex-shrink: 0;
-    align-items: center;
-    justify-content: center;
-    margin: -10px -10px -10px 0;
-    border-radius: var(--nl-radius-control);
-}
-@media (hover: hover) {
-    .noslog-ui .nl-dialog__close:hover {
-        background: var(--nl-interaction-hover);
-    }
+    --nl-dialog-close-pull: calc(
+        (var(--nl-control-height) - var(--nl-icon-large)) / -2
+    );
+    margin: var(--nl-dialog-close-pull) var(--nl-dialog-close-pull)
+        var(--nl-dialog-close-pull) 0;
 }
 .noslog-ui .nl-dialog__actions {
     display: flex;
@@ -680,9 +673,16 @@ html[data-theme="light"] .noslog-ui,
     gap: var(--nl-spacing-8);
     justify-content: flex-end;
 }
+/* Compact 창과 672 미만의 모든 창: 액션이 폭을 채운다(둘이면 취소 먼저 등폭). Wide 는 672 이상에서 오른쪽 정렬 */
 .noslog-ui .nl-dialog--compact .nl-dialog__actions > .nl-button {
     flex: 1 1 0;
     min-width: 0;
+}
+@media (max-width: 671px) {
+    .noslog-ui .nl-dialog__actions > .nl-button {
+        flex: 1 1 0;
+        min-width: 0;
+    }
 }
 .noslog-ui .nl-dialog--wide {
     width: min(var(--nl-container-reading), calc(100vw - 56px));

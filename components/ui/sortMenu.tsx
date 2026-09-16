@@ -103,9 +103,12 @@ export default function SortMenu<Value extends string>({
                             className="nl-sort-menu__group"
                             onKeyDown={moveFocus}
                         >
-                            <p className="nl-sort-menu__heading nl-metadata">
-                                {label}
-                            </p>
+                            {/* 소제목은 종속 구역이 붙어 그룹이 둘 이상일 때만 — 하나면 트리거 라벨이 이미 이름 (2026-09-16) */}
+                            {dependent.length ? (
+                                <p className="nl-sort-menu__heading nl-metadata">
+                                    {label}
+                                </p>
+                            ) : null}
                             {options.map((option) => (
                                 <button
                                     key={option.value}

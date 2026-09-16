@@ -493,18 +493,10 @@ export default function ArcadeDiscoveryPage({
                                     </ActionButton>
                                 )
                             }
-                            headerAction={
-                                <ActionButton
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => {
-                                        form.reset(clearFilters());
-                                        if (popover) commit(clearFilters());
-                                    }}
-                                >
-                                    {t("common.reset")}
-                                </ActionButton>
-                            }
+                            onReset={() => {
+                                form.reset(clearFilters());
+                                if (popover) commit(clearFilters());
+                            }}
                             footer={
                                 <ActionButton
                                     className="nl-arcades__apply"

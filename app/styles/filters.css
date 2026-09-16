@@ -324,12 +324,6 @@
     justify-content: space-between;
     gap: var(--nl-spacing-8);
 }
-/* 전체 레이어 헤더 오른쪽: 초기화 + 닫기 */
-.noslog-ui .nl-full-dialog__actions {
-    display: flex;
-    align-items: center;
-    gap: var(--nl-spacing-4);
-}
 /* 전체 화면 창은 선 위아래 24, 팝오버는 16 — 그룹을 감싸는 form · div(오락실 · 빙고 필터 폼)까지 같은 값 */
 .noslog-ui .nl-full-dialog__body .nl-filter-group + .nl-filter-group {
     padding-top: var(--nl-spacing-24);

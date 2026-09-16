@@ -140,8 +140,19 @@
     padding-bottom: max(var(--nl-spacing-16), env(safe-area-inset-bottom));
     box-shadow: inset 0 1px var(--nl-border-divider);
 }
-.noslog-ui .nl-full-dialog__footer > button {
-    width: 100%;
+.noslog-ui .nl-full-dialog__footer {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+}
+/* 발 = 왼쪽 「초기화」 고스트 L(잉크를 16 선에 맞추려 패딩 15+경계 1 만큼 당김) + 남는 폭의 주 액션 (2026-09-16) */
+.noslog-ui .nl-full-dialog__footer > .nl-button {
+    flex: 1 1 0;
+    min-width: 0;
+}
+.noslog-ui .nl-full-dialog__footer > .nl-full-dialog__reset {
+    flex: none;
+    margin-left: calc(-1 * var(--nl-spacing-16));
 }
 .noslog-ui .nl-filter-miss {
     display: flex;
@@ -181,9 +192,11 @@
     min-height: var(--nl-control-height-compact);
 }
 /* 좁은 폭(320 · en)에서는 정렬 라벨이 말줄임되고 보기 전환은 줄지 않는다 */
+/* 고스트 정렬은 줄 첫 자식 — 올림 면 안쪽 12 만큼 왼쪽으로 당겨 아이콘 잉크를 목록 왼쪽 선에 맞춘다(아이콘 버튼과 같은 규칙) */
 .noslog-ui .nl-discovery__summary-row--compact > .nl-filter-trigger {
     flex: 0 1 auto;
     min-width: 0;
+    margin-left: calc(-1 * var(--nl-spacing-12));
 }
 .noslog-ui .nl-discovery__summary-row--compact > .nl-segments {
     flex: none;

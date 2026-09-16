@@ -172,15 +172,7 @@ export default function BingoCatalogPage({
                                     />
                                 </ActionButton>
                             }
-                            headerAction={
-                                <ActionButton
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => changeStatus("all")}
-                                >
-                                    {t("common.reset")}
-                                </ActionButton>
-                            }
+                            onReset={() => changeStatus("all")}
                             footer={
                                 <ActionButton
                                     onClick={() => {

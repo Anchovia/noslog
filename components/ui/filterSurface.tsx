@@ -3,13 +3,15 @@
 import * as Popover from "@radix-ui/react-popover";
 import { useId, type ReactNode } from "react";
 
+import ActionButton from "@/components/ui/actionButton";
 import FullScreenDialog from "@/components/ui/fullScreenDialog";
+import { useTranslations } from "@/components/i18n/localeProvider";
 
 /**
  * 필터 그릇 — Compact 는 전체 레이어(배치 적용 · 하단 "결과 N개 보기"),
  * 672 이상은 트리거 아래 팝오버(즉시 적용 · footer 없음). 빙고 BINGO-25 그릇을 공용으로 승격.
- * 두 그릇 모두 머리 줄 = 왼쪽 제목(component-title) + 오른쪽 초기화 — 폭이 바뀌어도 초기화 자리가 같다.
- * (MoJ Filter 의 heading-action 과 같은 구조. 즉시 적용이라 「적용」 짝이 없어 바닥 줄에는 두지 않는다)
+ * 「초기화」 자리는 그릇에 따른다(2026-09-16): 전체 레이어는 발 왼쪽(「결과 N개 보기」 와 한 줄 — Airbnb · Nike · KREAM · 교보 등 9/22),
+ * 팝오버는 즉시 적용이라 「적용」 짝이 없어 머리 줄 제목 | 초기화 (M).
  */
 export default function FilterSurface({
     popover,
@@ -17,7 +19,7 @@ export default function FilterSurface({
     onOpenChange,
     title,
     trigger,
-    headerAction,
+    onReset,
     footer,
     children,
     onCloseAutoFocus,
@@ -27,12 +29,13 @@ export default function FilterSurface({
     onOpenChange: (open: boolean) => void;
     title: string;
     trigger: ReactNode;
-    headerAction?: ReactNode;
+    onReset?: () => void;
     footer: ReactNode;
     children: ReactNode;
     onCloseAutoFocus?: (event: Event) => void;
 }) {
     const titleId = useId();
+    const t = useTranslations();
     if (!popover) {
         return (
             <FullScreenDialog
@@ -41,7 +44,7 @@ export default function FilterSurface({
                     onOpenChange,
                     title,
                     trigger,
-                    headerAction,
+                    onReset,
                     footer,
                     onCloseAutoFocus,
                 }}
@@ -66,7 +69,15 @@ export default function FilterSurface({
                             <h2 id={titleId} className="nl-component-title">
                                 {title}
                             </h2>
-                            {headerAction}
+                            {onReset ? (
+                                <ActionButton
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={onReset}
+                                >
+                                    {t("common.reset")}
+                                </ActionButton>
+                            ) : null}
                         </div>
                         {children}
                     </Popover.Content>
