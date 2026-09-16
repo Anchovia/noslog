@@ -200,7 +200,7 @@ describe("관리자 공지사항 액션", () => {
         expect(data.placement).toBe("SERVICE_CRITICAL");
         expect(data.priority).toBe(3);
         expect(data.activeFrom).toEqual(data.publishedAt);
-        expect(data.expiresAt).toEqual(new Date("2099-01-01T00:00"));
+        expect(data.expiresAt).toEqual(new Date("2099-01-01T00:00+09:00"));
     });
 
     it("중복된 공개 주소는 필드 오류로 돌려준다", async () => {

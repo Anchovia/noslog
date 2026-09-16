@@ -383,7 +383,7 @@ export default function AnnouncementEditor({
                         <>
                             <FormField
                                 id="announcement-active-from"
-                                label="노출 시작"
+                                label="노출 시작 (한국 시간)"
                                 help="공개 시각보다 이르면 공개 시각으로 맞춥니다."
                                 error={errors.activeFrom?.message}
                             >
@@ -403,7 +403,7 @@ export default function AnnouncementEditor({
                             </FormField>
                             <FormField
                                 id="announcement-expires-at"
-                                label="노출 종료"
+                                label="노출 종료 (한국 시간)"
                                 help="비워 두면 비공개로 바꿀 때까지 유지됩니다."
                                 error={errors.expiresAt?.message}
                             >

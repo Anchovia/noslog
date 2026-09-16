@@ -179,8 +179,13 @@ describe("관리자 공지사항 스키마", () => {
             expiresAt: "2026-09-11T10:00",
         });
         expect(scheduled.priority).toBe(5);
-        expect(scheduled.activeFrom).toEqual(new Date("2026-09-10T10:00"));
-        expect(scheduled.expiresAt).toEqual(new Date("2026-09-11T10:00"));
+        // 서버 시간대와 무관하게 한국 시간으로 읽는다
+        expect(scheduled.activeFrom).toEqual(
+            new Date("2026-09-10T01:00:00.000Z")
+        );
+        expect(scheduled.expiresAt).toEqual(
+            new Date("2026-09-11T01:00:00.000Z")
+        );
     });
 
     it("HTML 체크박스와 명시적 boolean 문자열을 모두 해석한다", () => {
@@ -250,8 +255,12 @@ describe("관리자 공지사항 스키마", () => {
             suggestAnnouncementSlug("The NosLog website is in testing!")
         ).toBe("the-noslog-website-is-in-testing");
         expect(suggestAnnouncementSlug("홈페이지 테스트")).toBe("");
-        expect(toDateTimeLocalValue(new Date(2026, 8, 10, 9, 5))).toBe(
+        // 한국 시간으로 쓴다 — UTC 00:05 = KST 09:05
+        expect(toDateTimeLocalValue(new Date("2026-09-10T00:05:00.000Z"))).toBe(
             "2026-09-10T09:05"
+        );
+        expect(toDateTimeLocalValue(new Date("2026-09-09T15:00:00.000Z"))).toBe(
+            "2026-09-10T00:00"
         );
         expect(toDateTimeLocalValue(null)).toBe("");
     });
