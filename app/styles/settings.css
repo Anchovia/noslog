@@ -233,11 +233,12 @@
     gap: var(--nl-spacing-24);
     min-width: 0;
 }
-.noslog-ui .nl-settings--overview .nl-settings__detail,
 /* 페이지 제목 → 첫 내용(설정 목록) 16 — 컨테이너 간격 24 에서 당긴다 */
 .noslog-ui .nl-settings__overview-heading {
     margin-bottom: calc(var(--nl-spacing-16) - var(--nl-spacing-24));
 }
+/* 1056 미만: 개요는 목록만, 상세는 상세만 */
+.noslog-ui .nl-settings--overview .nl-settings__detail,
 .noslog-ui .nl-settings--detail .nl-settings__overview-heading,
 .noslog-ui .nl-settings--detail .nl-settings__navigation {
     display: none;
