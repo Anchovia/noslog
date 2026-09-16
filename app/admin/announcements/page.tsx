@@ -15,9 +15,11 @@ import {
 import db from "@/lib/db";
 import { cn } from "@/lib/utils";
 
+// 관리자 화면의 시각은 서버 시간대와 무관하게 한국 시간으로 (2026-09-16)
 const dateFormat = new Intl.DateTimeFormat("ko-KR", {
     dateStyle: "medium",
     timeStyle: "short",
+    timeZone: "Asia/Seoul",
 });
 
 function Chip({

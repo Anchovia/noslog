@@ -61,13 +61,24 @@ const translationSchema = z.object({
     title: titleSchema,
     content: contentSchema,
 });
+// 관리자 화면은 한국어 전용 — datetime-local 값(시간대 없는 `YYYY-MM-DDTHH:mm`)은 서버 시간대와 무관하게
+// 한국 시간(UTC+9)으로 읽고 쓴다. 운영 서버(UTC)에서 `new Date("…T10:00")` 이 9시간 뒤로 밀려
+// 중대 공지가 예정보다 늦게 활성화되던 문제 (2026-09-16)
+export const ADMIN_TIME_ZONE = "Asia/Seoul";
+const ADMIN_UTC_OFFSET = "+09:00";
+const LOCAL_DATE_TIME = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(\.\d+)?)?$/;
+export function parseAdminDateTime(value: string) {
+    return new Date(
+        LOCAL_DATE_TIME.test(value) ? `${value}${ADMIN_UTC_OFFSET}` : value
+    );
+}
 // datetime-local 입력값(빈 문자열 = 미지정)을 Date | null 로 정규화함
 const optionalDateTimeSchema = z
     .string()
     .trim()
     .transform((value, ctx) => {
         if (value === "") return null;
-        const date = new Date(value);
+        const date = parseAdminDateTime(value);
         if (Number.isNaN(date.getTime())) {
             ctx.addIssue({
                 code: "custom",
@@ -227,11 +238,19 @@ export function createAnnouncementDeleteFormData(id: number) {
     return formData;
 }
 
-// datetime-local 입력은 로컬 시간대 기준 `YYYY-MM-DDTHH:mm` 문자열을 쓴다
+// datetime-local 입력값 `YYYY-MM-DDTHH:mm` — 한국 시간으로 쓴다(parseAdminDateTime 의 역방향)
+const adminDateTimeFormat = new Intl.DateTimeFormat("sv-SE", {
+    timeZone: ADMIN_TIME_ZONE,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+});
 export function toDateTimeLocalValue(date: Date | null | undefined) {
     if (!date) return "";
-    const pad = (value: number) => String(value).padStart(2, "0");
-    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+    return adminDateTimeFormat.format(date).replace(" ", "T");
 }
 
 // 제목에서 공개 주소 초안을 만든다 — 라틴 문자가 없으면 빈 문자열
