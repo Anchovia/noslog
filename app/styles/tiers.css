@@ -150,10 +150,7 @@
     --nl-tier-goal: var(--nl-score-goal-pianist);
 }
 /* 테두리 = 이 표 달성(2026-09-14): 달성 = 기준 색 · 달성 + FC = 좌상단 FC 초록 → 우하단 기준 색 그라데이션
-   (가운데 절반 25–75% 에서 전환) · Pianist 는 퍼펙트라 FC 여도 기준 색 하나 · 달성 못 한 FC = 초록 */
-.noslog-ui .nl-tier-card__outline[data-achievement="fc"] {
-    box-shadow: inset 0 0 0 2px var(--nl-achievement-full-combo);
-}
+   (가운데 절반 25–75% 에서 전환) · Pianist 는 퍼펙트라 FC 여도 기준 색 하나 · 달성 못 한 FC 는 테두리 없음(2026-09-17) */
 .noslog-ui .nl-tier-card__outline[data-achievement="goal"] {
     box-shadow: inset 0 0 0 2px var(--nl-tier-goal);
 }

@@ -14,6 +14,7 @@ import type {
 } from "@/features/tiers/schemas/tierBrowserSchema";
 import { formatTierValue } from "@/lib/tiers";
 import TierBrowserCard from "./tierBrowserCard";
+import { tierValueColor } from "@/lib/music/tierValueColor";
 
 function TierBrowserBandSection({
     summary,
@@ -65,7 +66,11 @@ function TierBrowserBandSection({
             aria-busy={pending || (visible && band.isPending)}
         >
             <header className="nl-tier-band__header">
-                <h2 className="nl-section-title">
+                {/* 서열 값 = 악곡 상세 머리와 같은 구간 색 그라데이션 (2026-09-17 G1) */}
+                <h2
+                    className="nl-section-title"
+                    style={{ color: tierValueColor(summary.value) }}
+                >
                     {formatTierValue(summary.value)}
                 </h2>
                 {overview.viewerId !== null ? (
