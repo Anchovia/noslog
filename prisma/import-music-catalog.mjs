@@ -206,7 +206,7 @@ function getChartCreateData(chart) {
         level: chart.level,
         level_constant:
             chart.constant ??
-            (chart.difficulty === "Real" ? chart.level + 10 : chart.level),
+            (chart.difficulty === "Real" ? null : chart.level),
     };
 }
 

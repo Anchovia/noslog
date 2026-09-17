@@ -114,7 +114,7 @@ describe("BEMANI 악곡 카탈로그 반영", () => {
                 music_idx: "sasoribi",
                 difficulty: "Real",
                 level: 3,
-                level_constant: 13,
+                level_constant: null,
             },
             update: { level: 3 },
         });
