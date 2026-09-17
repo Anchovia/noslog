@@ -135,7 +135,7 @@ export const jaMessages = {
     "detail.expandTitle": "タイトルをすべて表示",
     "detail.collapseTitle": "タイトルを折りたたむ",
     "detail.viewChart": "譜面を見る",
-    "detail.myBest": "自分のベスト",
+    "detail.grade": "グレード",
     "detail.myBestLogin": "ログインして表示",
     "detail.playVideo": "プレー動画",
     "detail.area": "詳細項目",

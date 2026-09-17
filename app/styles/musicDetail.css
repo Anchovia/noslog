@@ -43,7 +43,8 @@
     text-align: left;
 }
 /* 제목(페이지 제목 고정) · 번역 · 아티스트는 접힌 상태에서 모두 한 줄, 넘치면 끝 페이드.
-   내 등급은 제목 옆이 아니라 수치 상자 「내 최고 기록」 줄에 (2026-09-17 B3) */
+   등급 아이콘은 제목 줄 높이(폰 32 · 1056 이상 40)로 제목 글자 끝 8 뒤(제목이 넘치면 제목이 그 앞에서 흐려짐).
+   번역은 등급 자리(아이콘 + 8) 앞에서 끝. 펼치면 등급 아이콘은 숨김 (2026-09-18) */
 .noslog-ui .nl-music-entity__heading {
     display: flex;
     flex-direction: column;
@@ -76,45 +77,85 @@
     margin: 0;
     color: var(--nl-content-default);
 }
-/* 내 최고 기록 — 수치 상자 맨 위 칸(surface · 최소 56 · 안쪽 8/12). 왼쪽 등급 메달 28 + 「내 최고 기록」 metadata / 점수 control 600(목표 색),
-   오른쪽 Grd = 정수 24 · 소수 16 굵게 tabular + 단위 metadata. 로그아웃이면 오른쪽에 「로그인하고 보기 ›」 (2026-09-17 B3) */
+.noslog-ui
+    .nl-music-entity__heading[data-grade]
+    > .nl-music-entity__translation {
+    margin-inline-end: calc(
+        var(--nl-type-line-height-32) + var(--nl-spacing-8)
+    );
+}
+.noslog-ui .nl-music-entity__grade {
+    flex: none;
+    width: var(--nl-type-line-height-32);
+    height: var(--nl-type-line-height-32);
+}
+@media (min-width: 1056px) {
+    .noslog-ui
+        .nl-music-entity__heading[data-grade]
+        > .nl-music-entity__translation {
+        margin-inline-end: calc(
+            var(--nl-type-line-height-40) + var(--nl-spacing-8)
+        );
+    }
+    .noslog-ui .nl-music-entity__grade {
+        width: var(--nl-type-line-height-40);
+        height: var(--nl-type-line-height-40);
+    }
+}
+/* 그레이드 — 수치 상자 맨 위 칸(surface · 안쪽 8/12 · 줄과 막대 사이 8). 위 줄 = 왼쪽 「그레이드」 control,
+   오른쪽 내 Grd = 정수 24 · 소수 16 굵게 tabular + 「/ 최대 Grd」 body-secondary 흐림(모르면 「/ —」).
+   기록 없음 「—」 · 로그아웃이면 오른쪽에 「로그인하고 보기 ›」 (2026-09-18) */
 .noslog-ui .nl-my-best {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
+    padding: var(--nl-spacing-8) var(--nl-spacing-12) var(--nl-spacing-12);
+    background: var(--nl-surface-surface);
+}
+.noslog-ui .nl-my-best__row {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: var(--nl-spacing-12);
-    min-height: 56px;
-    padding: var(--nl-spacing-8) var(--nl-spacing-12);
-    background: var(--nl-surface-surface);
+    min-height: var(--nl-type-line-height-32);
 }
-.noslog-ui .nl-my-best__record {
-    display: flex;
-    align-items: center;
-    gap: var(--nl-spacing-8);
-    min-width: 0;
-}
-.noslog-ui .nl-my-best__medal {
-    flex: none;
-    width: 28px;
-    height: 28px;
-}
-.noslog-ui .nl-my-best__score {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-}
-.noslog-ui .nl-my-best__score-value {
-    font-weight: var(--nl-type-weight-semibold);
+.noslog-ui .nl-my-best__grd-max {
     font-variant-numeric: tabular-nums;
 }
-.noslog-ui .nl-my-best__score-value[data-tone="s"] {
-    color: var(--nl-score-goal-s);
+/* 그레이드 진행 막대 — 트랙은 막대 목록 규격(8 · 모서리 4 · raised), 0 → 최대 Grd.
+   채움 색 = 막대 전체 기준 등급 그라데이션(채운 만큼만 보임). 경계 = 운영 기록 「내 Grd ÷ 최대」 등급별 하위 5%,
+   Pianist 시작 87.9% = S 계수 8.7 ÷ P 9.9. 색 = 공식 등급 아이콘 순서 — B · B+ 판정 NEAR 파랑, A · A+ danger-marker 빨강,
+   S · 990k · Pianist 점수 목표 색. oklch 로 섞음(지원 안 되면 sRGB) (2026-09-18 Q3) */
+.noslog-ui .nl-grade-progress {
+    height: 8px;
+    border-radius: var(--nl-radius-control);
+    background: var(--nl-surface-raised);
+    overflow: hidden;
 }
-.noslog-ui .nl-my-best__score-value[data-tone="990k"] {
-    color: var(--nl-score-goal-990k);
+.noslog-ui .nl-grade-progress__fill {
+    /* 채움 비율(0–1) — 컴포넌트가 인라인으로 덮어씀 */
+    --nl-grade-progress: 1;
+    --nl-grade-progress-stops:
+        var(--nl-judgement-near) 0%, var(--nl-judgement-near) 40.3%,
+        var(--nl-feedback-danger-marker) 49.5%,
+        var(--nl-feedback-danger-marker) 59.6%, var(--nl-score-goal-s) 73.7%,
+        var(--nl-score-goal-990k) 81.9%, var(--nl-score-goal-pianist) 87.9%,
+        var(--nl-score-goal-pianist) 100%;
+    display: block;
+    width: calc(var(--nl-grade-progress) * 100%);
+    height: 100%;
+    border-radius: inherit;
+    background-image: linear-gradient(90deg, var(--nl-grade-progress-stops));
+    background-repeat: no-repeat;
+    background-size: calc(100% / var(--nl-grade-progress)) 100%;
 }
-.noslog-ui .nl-my-best__score-value[data-tone="pianist"] {
-    color: var(--nl-score-goal-pianist);
+@supports (background-image: linear-gradient(in oklch 90deg, red, blue)) {
+    .noslog-ui .nl-grade-progress__fill {
+        background-image: linear-gradient(
+            in oklch 90deg,
+            var(--nl-grade-progress-stops)
+        );
+    }
 }
 .noslog-ui .nl-my-best__grd {
     display: inline-flex;

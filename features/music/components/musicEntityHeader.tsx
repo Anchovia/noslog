@@ -4,7 +4,7 @@ import { ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useLayoutEffect, useRef, useState } from "react";
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 
 import {
     useLocale,
@@ -20,7 +20,7 @@ import type {
     UserPlayData,
 } from "@/components/music/musicDetailTypes";
 import StatStrip from "@/components/ui/statStrip";
-import { scoreTone } from "@/lib/music/scoreTone";
+import { getGradeProgress, getMaxBasicGrade } from "@/lib/music/maxGrade";
 import { tierValueColor } from "@/lib/music/tierValueColor";
 import { tierGoalLabels } from "@/lib/tiers";
 import { cn } from "@/lib/utils";
@@ -76,7 +76,7 @@ export default function MusicEntityHeader({
     difficulty: Difficulty;
     chart: ChartDetail | null;
     pending?: boolean;
-    /** 선택한 채보의 내 최고 기록 — 수치 상자 맨 위 「내 최고 기록」 줄 */
+    /** 선택한 채보의 내 최고 기록 — 제목 옆 등급 아이콘 · 수치 상자 맨 위 「그레이드」 줄 */
     record?: Pick<
         UserPlayData,
         "score" | "rank" | "fc_type" | "grade_basic"
@@ -110,7 +110,7 @@ export default function MusicEntityHeader({
         observer.observe(element);
         void document.fonts.ready.then(measure);
         return () => observer.disconnect();
-    }, [music.title, music.artist, music.localizedTitle]);
+    }, [music.title, music.artist, music.localizedTitle, record, pending]);
     const video =
         chart?.play_video_url && /^https?:\/\//i.test(chart.play_video_url)
             ? chart.play_video_url
@@ -150,70 +150,64 @@ export default function MusicEntityHeader({
         ),
     ];
     const constant = music.constants?.[difficulty];
-    // 내 최고 기록 한 줄 — 왼쪽 등급 메달 + 최고 점수(목표 색), 오른쪽 Grd 크게(정수 24 · 소수 16) (2026-09-17 B3)
+    // 내 스코어 등급 = 제목 글자 끝 8 뒤 공식 아이콘(기록 있을 때만, 펼치면 숨김) (2026-09-18)
     const shownRecord = pending ? null : record;
     const medal = shownRecord
         ? shownRecord.fc_type === 3 || shownRecord.score >= 1_000_000
             ? "p"
             : rankAssetNames[shownRecord.rank.toUpperCase()]
         : undefined;
+    // 그레이드 줄 — 위 「그레이드」(control) · 내 Grd(정수 24 · 소수 16) / 최대 Grd(모르면 —),
+    // 아래 진행 막대(0 → 최대, 등급 색 그라데이션 · 최대값을 모르면 빈 트랙) (2026-09-18 Q3)
+    const formatGrade = (grade: number) => (grade / 100).toFixed(2).split(".");
     const [grdWhole, grdFraction] = shownRecord
-        ? (shownRecord.grade_basic / 100).toFixed(2).split(".")
+        ? formatGrade(shownRecord.grade_basic)
         : [];
+    const maxGrade = getMaxBasicGrade(constant, chart?.note_count, difficulty);
+    const progress = getGradeProgress(shownRecord?.grade_basic, maxGrade);
     const myBest = (
-        <div
-            className="nl-my-best"
-            role="group"
-            aria-label={t("detail.myBest")}
-        >
-            <div className="nl-my-best__record">
-                {medal ? (
-                    <Image
-                        src={`/grade/grade_${medal}.png`}
-                        alt={t("music.record.rankLabel", {
-                            rank: medal === "p" ? "P" : shownRecord!.rank,
-                        })}
-                        width={28}
-                        height={28}
-                        className="nl-my-best__medal"
-                    />
-                ) : null}
-                <div className="nl-my-best__score">
-                    <span className="nl-metadata nl-muted">
-                        {t("detail.myBest")}
-                    </span>
-                    <span
-                        className="nl-control nl-my-best__score-value"
-                        data-tone={
-                            shownRecord
-                                ? scoreTone(shownRecord.score)
-                                : undefined
-                        }
-                    >
-                        {shownRecord
-                            ? shownRecord.score.toLocaleString(locale)
-                            : "—"}
-                    </span>
-                </div>
-            </div>
-            {shownRecord ? (
-                <span className="nl-my-best__grd">
-                    <span className="nl-my-best__grd-value">
-                        {grdWhole}
-                        <span className="nl-my-best__grd-fraction">
-                            .{grdFraction}
+        <div className="nl-my-best" role="group" aria-label={t("detail.grade")}>
+            <div className="nl-my-best__row">
+                <span className="nl-control">{t("detail.grade")}</span>
+                {shownRecord ? (
+                    <span className="nl-my-best__grd">
+                        <span className="nl-my-best__grd-value">
+                            {grdWhole}
+                            <span className="nl-my-best__grd-fraction">
+                                .{grdFraction}
+                            </span>
+                        </span>
+                        <span className="nl-body-secondary nl-muted nl-my-best__grd-max">
+                            /{" "}
+                            {maxGrade === null
+                                ? "—"
+                                : formatGrade(maxGrade).join(".")}
                         </span>
                     </span>
-                    <span className="nl-metadata nl-muted">Grd</span>
-                </span>
-            ) : !signedIn && !pending ? (
-                <Link className="nl-heading-link nl-control" href={loginHref}>
-                    {t("detail.myBestLogin")}
-                    <ChevronRight aria-hidden />
-                </Link>
-            ) : (
-                <span className="nl-my-best__grd nl-muted">—</span>
-            )}
+                ) : !signedIn && !pending ? (
+                    <Link
+                        className="nl-heading-link nl-control"
+                        href={loginHref}
+                    >
+                        {t("detail.myBestLogin")}
+                        <ChevronRight aria-hidden />
+                    </Link>
+                ) : (
+                    <span className="nl-my-best__grd nl-muted">—</span>
+                )}
+            </div>
+            <div className="nl-grade-progress" aria-hidden="true">
+                {progress > 0 ? (
+                    <span
+                        className="nl-grade-progress__fill"
+                        style={
+                            {
+                                "--nl-grade-progress": progress,
+                            } as CSSProperties
+                        }
+                    />
+                ) : null}
+            </div>
         </div>
     );
     const collapsed = !expanded;
@@ -227,7 +221,7 @@ export default function MusicEntityHeader({
                     background={music.background}
                     appearance="foundation"
                 />
-                {/* 제목 · 번역 · 아티스트 모두 한 줄, 넘치면 끝 페이드 — 누르면 모두 펼침. 내 등급은 수치 상자 「내 최고 기록」 줄로 옮김 (2026-09-17 B3) */}
+                {/* 제목 · 번역 · 아티스트 모두 한 줄, 넘치면 끝 페이드 — 누르면 모두 펼침. 등급은 제목 한 줄 높이(32 · 40)로 제목 글자 끝 8 뒤, 펼치면 숨김 (2026-09-18) */}
                 <div
                     ref={identity}
                     className="nl-music-entity__copy"
@@ -241,7 +235,10 @@ export default function MusicEntityHeader({
                     >
                         {music.category_short}
                     </span>
-                    <div className="nl-music-entity__heading">
+                    <div
+                        className="nl-music-entity__heading"
+                        data-grade={collapsed && medal ? "" : undefined}
+                    >
                         <div className="nl-music-entity__title-row">
                             <h1
                                 className={cn(
@@ -252,6 +249,20 @@ export default function MusicEntityHeader({
                             >
                                 {music.title}
                             </h1>
+                            {collapsed && medal ? (
+                                <Image
+                                    src={`/grade/grade_${medal}.png`}
+                                    alt={t("music.record.rankLabel", {
+                                        rank:
+                                            medal === "p"
+                                                ? "P"
+                                                : shownRecord!.rank,
+                                    })}
+                                    width={40}
+                                    height={40}
+                                    className="nl-music-entity__grade"
+                                />
+                            ) : null}
                         </div>
                         {music.localizedTitle ? (
                             <p

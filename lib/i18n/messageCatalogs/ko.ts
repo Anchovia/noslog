@@ -134,7 +134,7 @@ export const koMessages = {
     "detail.expandTitle": "제목 전체 보기",
     "detail.collapseTitle": "제목 접기",
     "detail.viewChart": "채보 보기",
-    "detail.myBest": "내 최고 기록",
+    "detail.grade": "그레이드",
     "detail.myBestLogin": "로그인하고 보기",
     "detail.playVideo": "플레이 영상",
     "detail.area": "상세 영역",
