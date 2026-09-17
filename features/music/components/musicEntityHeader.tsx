@@ -295,6 +295,7 @@ export default function MusicEntityHeader({
                 className="nl-music-entity__stats"
                 label={t("music.difficulty")}
                 items={[
+                    // 공식 레벨이 없으면(새 Real 채보 등) 칸은 두고 흐린 「—」 (2026-09-18)
                     constant !== null && constant !== undefined
                         ? {
                               key: "constant",
@@ -302,7 +303,11 @@ export default function MusicEntityHeader({
                               value: constant.toFixed(1),
                               color: tierValueColor(constant),
                           }
-                        : null,
+                        : {
+                              key: "constant",
+                              label: t("music.info.levelConstant"),
+                              value: <span className="nl-muted">—</span>,
+                          },
                     ...(chart?.tierValues ?? []).map((entry) =>
                         entry.value === null
                             ? null

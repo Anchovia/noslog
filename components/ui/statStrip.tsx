@@ -15,7 +15,7 @@ export interface StatStripItem {
     tone?: StatTone;
     /** 값 글자 색을 직접 줄 때(서열 값 그라데이션처럼 단계가 연속인 값) */
     color?: string;
-    /** 값이 없으면 칸 자체를 두지 않는다(빈 「—」 칸 없음). value 를 null 로 주면 건너뛴다 */
+    /** 값이 없으면 칸 자체를 두지 않는다. value 를 null 로 주면 건너뛴다 — 칸을 남겨야 하는 값(악곡 머리 공식 레벨)은 흐린 「—」 를 value 로 준다 */
 }
 
 /**

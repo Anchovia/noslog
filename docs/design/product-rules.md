@@ -85,8 +85,9 @@ old design-stage checklist. Changes to material behavior require a user decision
 - Music Detail keeps one music identity and one selected difficulty across
   Overview, My Record, Ranking and Ratings (URL `tab` values stay `detail`,
   `record`, `ranking`, `tier`). The header shows the selected chart's constant and
-  its published tier values; unlisted/unpublished scopes show no value rather
-  than a guessed one. View-chart/video actions are always present and are
+  its published tier values; a chart without a constant shows a muted "—" in the
+  constant cell, and unlisted/unpublished tier scopes show no value rather than a
+  guessed one. View-chart/video actions are always present and are
   disabled unless that exact chart has them. The stats card starts with the
   viewer's best record on the selected chart (grade icon, best score, Basic Grd);
   with no record it shows dashes, and when signed out it links to sign-in.
@@ -177,6 +178,9 @@ old design-stage checklist. Changes to material behavior require a user decision
   import is not hundreds of invented individual achievements.
 - Token invalidation expires existing bookmarklets and requires reinstallation.
   Never expose/log the raw token separately; it is embedded only where required.
+- A newly registered chart gets its official level as the constant, except Real:
+  a new Real chart stores no constant (the ◆ level does not determine it) until an
+  operator fills it. Syncing never overwrites an existing constant.
 - See [sync services](../../features/sync/server),
   [bookmarklet](../../lib/bookmarklet.ts) and
   [token service](../../features/profile/server/syncTokenService.ts).
