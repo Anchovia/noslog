@@ -26,18 +26,21 @@ export default function StatStrip({
     items,
     label,
     className,
+    header,
     footer,
 }: {
     items: (StatStripItem | null | false | undefined)[];
     label?: string;
     className?: string;
+    /** 같은 상자 위 칸(아래 선 1px) — 이 수치를 보는 사람의 값 한 줄(예: 내 최고 기록) (2026-09-17 B3) */
+    header?: ReactNode;
     /** 같은 상자 아래 칸(구분선 1px 위) — 이 수치에 딸린 이동 링크 줄(`nl-action-group`) (2026-09-17 I1C) */
     footer?: ReactNode;
 }) {
     const visible = items.filter((item): item is StatStripItem =>
         Boolean(item && item.value !== null && item.value !== undefined)
     );
-    if (!visible.length && !footer) return null;
+    if (!visible.length && !footer && !header) return null;
     const strip = visible.length ? (
         <dl className={cn("nl-stat-strip", className)} aria-label={label}>
             {visible.map((item) => (
@@ -59,9 +62,10 @@ export default function StatStrip({
             ))}
         </dl>
     ) : null;
-    if (!footer) return strip;
+    if (!footer && !header) return strip;
     return (
         <div className="nl-stat-card">
+            {header}
             {strip}
             {footer}
         </div>

@@ -154,7 +154,15 @@ export default function MusicDetailPage({
                     difficulty={selection.difficulty}
                     chart={data?.chartDetail ?? null}
                     pending={!data}
-                    rank={data?.userPlayData?.rank ?? null}
+                    record={data?.userPlayData ?? null}
+                    signedIn={data?.isLoggedIn ?? initialData.isLoggedIn}
+                    loginHref={href(
+                        `/login?returnTo=${encodeURIComponent(
+                            href(
+                                `/music/${initialData.music.index}/${selection.difficulty.toLowerCase()}`
+                            )
+                        )}`
+                    )}
                 >
                     <DifficultySelector
                         music={initialData.music}

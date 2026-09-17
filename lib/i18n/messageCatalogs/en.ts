@@ -132,6 +132,8 @@ export const enMessages = {
     "detail.expandTitle": "Show full title",
     "detail.collapseTitle": "Collapse title",
     "detail.viewChart": "View Chart",
+    "detail.myBest": "Your best",
+    "detail.myBestLogin": "Sign in to see",
     "detail.playVideo": "Play video",
     "detail.area": "Detail area",
     "detail.info": "Overview",

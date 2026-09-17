@@ -163,35 +163,16 @@ test("Record preserves primary order and exposes exact values to keyboard and to
     page,
 }) => {
     await openRecord(page);
-    // 제목 한 줄(넘치면 끝 페이드) · 글자 끝 8 뒤 내 등급 아이콘 = 제목 줄 높이(32 · 1056 이상 40) (2026-09-17)
-    const grade = page.locator(".nl-music-entity__grade");
-    await expect(grade).toHaveAttribute("alt", "S 랭크");
-    await expect(grade).toHaveCSS(
-        "width",
-        (page.viewportSize()?.width ?? 390) >= 1056 ? "40px" : "32px"
-    );
+    // 제목 한 줄(넘치면 끝 페이드) · 내 등급은 제목 옆이 아니라 수치 상자 맨 위 「내 최고 기록」 줄 (2026-09-17 B3)
+    await expect(page.locator(".nl-music-entity__grade")).toHaveCount(0);
     await expect(page.locator(".nl-music-entity__title")).toHaveCSS(
         "white-space",
         "nowrap"
     );
-    await expect
-        .poll(() =>
-            grade.evaluate((element) => {
-                const title = element.parentElement!.querySelector("h1")!;
-                const box = element.getBoundingClientRect();
-                const titleBox = title.getBoundingClientRect();
-                return {
-                    gap: Math.round(box.x - titleBox.right),
-                    centered:
-                        Math.abs(
-                            box.y +
-                                box.height / 2 -
-                                (titleBox.y + titleBox.height / 2)
-                        ) < 1,
-                };
-            })
-        )
-        .toEqual({ gap: 8, centered: true });
+    const myBest = page.getByRole("group", { name: "내 최고 기록" });
+    await expect(myBest.getByRole("img", { name: "S 랭크" })).toBeVisible();
+    await expect(myBest).toContainText("976,654");
+    await expect(myBest.locator(".nl-my-best__grd")).toHaveText("132.34Grd");
     await expect(page.locator(".nl-record-panel h2")).toHaveText([
         "최고 기록",
         "누적 요약",
@@ -276,9 +257,10 @@ for (const variant of ["empty", "single", "guest", "partial"] as const) {
                 page.getByText("등록된 기록이 없습니다.", { exact: true })
             ).toBeVisible();
             await expect(page.locator(".nl-record-metrics")).toHaveCount(0);
-            await expect(page.locator(".nl-music-entity__grade")).toHaveCount(
-                0
-            );
+            // 기록이 없으면 내 최고 기록 줄은 「—」
+            await expect(
+                page.getByRole("group", { name: "내 최고 기록" })
+            ).toContainText("—");
         } else if (variant === "single") {
             await page.locator(".nl-record-progress > summary").click();
             const chart = page.getByRole("figure", {
