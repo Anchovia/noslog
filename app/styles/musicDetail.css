@@ -128,11 +128,6 @@
     cursor: pointer;
 }
 /* 액션은 있는 것만 M 보조 버튼 한 줄 — 비활성 자리 채우기 없음 */
-.noslog-ui .nl-music-entity__actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--nl-spacing-8);
-}
 /* 난이도 세그먼트 — 공용 세그먼트 규격(L) 그대로, 항목 = 이름 + 색 레벨 숫자(사이 8). 320 폭은 약칭 */
 .noslog-ui .nl-difficulty-selector .nl-segments__item {
     gap: var(--nl-spacing-8);

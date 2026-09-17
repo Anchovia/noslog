@@ -1,5 +1,6 @@
 "use client";
 
+import { ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useLayoutEffect, useRef, useState } from "react";
@@ -17,7 +18,6 @@ import type {
     Difficulty,
     MusicInfo,
 } from "@/components/music/musicDetailTypes";
-import { foundationButtonClass } from "@/components/ui/Button";
 import StatStrip from "@/components/ui/statStrip";
 import { tierValueColor } from "@/lib/music/tierValueColor";
 import { tierGoalLabels } from "@/lib/tiers";
@@ -107,40 +107,40 @@ export default function MusicEntityHeader({
         chart?.play_video_url && /^https?:\/\//i.test(chart.play_video_url)
             ? chart.play_video_url
             : null;
-    const actions = pending
-        ? []
-        : [
-              ...(chart?.has_published_pattern
-                  ? [
-                        <Link
-                            key="chart"
-                            href={href(
-                                `/music/${music.index}/${difficulty.toLowerCase()}/pattern`
-                            )}
-                            className={foundationButtonClass({
-                                variant: "secondary",
-                                size: "sm",
-                            })}
-                        >
-                            {t("detail.viewChart")}
-                        </Link>,
-                    ]
-                  : []),
-              ...(video
-                  ? [
-                        <a
-                            key="video"
-                            href={video}
-                            className={foundationButtonClass({
-                                variant: "secondary",
-                                size: "sm",
-                            })}
-                        >
-                            {t("detail.playVideo")}
-                        </a>,
-                    ]
-                  : []),
-          ];
+    const chevron = (
+        <ChevronRight className="nl-action-group__chevron" aria-hidden />
+    );
+    // 없는 동작도 자리는 두고 흐리게(누를 수 없음) — 난이도를 바꿔도 줄이 흔들리지 않게 (2026-09-17)
+    const unavailable = (key: string, label: string) => (
+        <span key={key} className="nl-action-group__item" aria-disabled="true">
+            {label}
+            {chevron}
+        </span>
+    );
+    const actions = [
+        !pending && chart?.has_published_pattern ? (
+            <Link
+                key="chart"
+                href={href(
+                    `/music/${music.index}/${difficulty.toLowerCase()}/pattern`
+                )}
+                className="nl-action-group__item"
+            >
+                {t("detail.viewChart")}
+                {chevron}
+            </Link>
+        ) : (
+            unavailable("chart", t("detail.viewChart"))
+        ),
+        !pending && video ? (
+            <a key="video" href={video} className="nl-action-group__item">
+                {t("detail.playVideo")}
+                {chevron}
+            </a>
+        ) : (
+            unavailable("video", t("detail.playVideo"))
+        ),
+    ];
     const constant = music.constants?.[difficulty];
     const collapsed = !expanded;
     const truncated = fit.titleCut || fit.translationCut || fit.artistCut;
@@ -258,10 +258,13 @@ export default function MusicEntityHeader({
                               }
                     ),
                 ]}
+                // 채보 보기 · 플레이 영상 = 같은 상자 아래 칸, 반반 · 글자 + › · 없는 쪽은 흐리게 (2026-09-17 I1C)
+                footer={
+                    <div className="nl-action-group nl-music-entity__actions">
+                        {actions}
+                    </div>
+                }
             />
-            {actions.length ? (
-                <div className="nl-music-entity__actions">{actions}</div>
-            ) : null}
         </div>
     );
 }

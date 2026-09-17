@@ -803,6 +803,66 @@ html[data-theme="light"] .noslog-ui,
         gap: var(--nl-spacing-4);
     }
 }
+/* 수치 상자 + 아래 칸 — 수치 띠와 동작 묶음을 한 상자(모서리 8)로. 사이 선은 gap 1 + divider 바탕(수치 띠와 같은 방식) */
+.noslog-ui .nl-stat-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    overflow: hidden;
+    border-radius: var(--nl-radius-container);
+    background: var(--nl-border-divider);
+}
+.noslog-ui .nl-stat-card > .nl-stat-strip {
+    border-radius: 0;
+}
+/* 동작 묶음 — 수치 상자 아래 칸의 이동 링크 줄. 같은 폭 칸 · 칸 사이 1px 세로선 · 칸 = 컨트롤 L 높이 · surface 면,
+   글자(control 600 · interactive) + 끝 › 16(subdued, 사이 4) — 누를 곳 표시. 없는 동작도 칸은 두고 비활성 글자색 (2026-09-17 I1C) */
+.noslog-ui .nl-action-group {
+    display: flex;
+    gap: 1px;
+}
+.noslog-ui .nl-action-group__item {
+    display: inline-flex;
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: var(--nl-control-height);
+    align-items: center;
+    justify-content: center;
+    gap: var(--nl-spacing-4);
+    padding-inline: var(--nl-spacing-12);
+    background: var(--nl-surface-surface);
+    color: var(--nl-content-interactive);
+    font-size: var(--nl-type-size-14);
+    line-height: var(--nl-type-line-height-20);
+    font-weight: var(--nl-type-weight-semibold);
+    text-align: center;
+    text-decoration: none;
+    transition: background-color var(--nl-motion-duration-50) var(--nl-ease-out);
+}
+.noslog-ui .nl-action-group__chevron {
+    width: var(--nl-spacing-16);
+    height: var(--nl-spacing-16);
+    flex: none;
+    color: var(--nl-content-subdued);
+}
+@media (hover: hover) {
+    .noslog-ui .nl-action-group__item:hover {
+        background: var(--nl-interaction-hover);
+    }
+}
+.noslog-ui .nl-action-group__item:active {
+    background: var(--nl-interaction-selected-pressed);
+}
+.noslog-ui .nl-action-group__item[aria-disabled="true"],
+.noslog-ui
+    .nl-action-group__item[aria-disabled="true"]
+    .nl-action-group__chevron {
+    color: var(--nl-interaction-disabled-content);
+    cursor: default;
+}
+.noslog-ui .nl-action-group__item[aria-disabled="true"] {
+    background: var(--nl-surface-surface);
+}
 /* 끝 페이드 — 한 줄로 자른 글자의 오른쪽 32 를 흐리게(말줄임표 대신). 누르면 펼치는 곳에서만 쓴다 (2026-09-17) */
 .noslog-ui .nl-fade-end {
     -webkit-mask-image: linear-gradient(
