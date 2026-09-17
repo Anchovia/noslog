@@ -78,12 +78,6 @@
     fill: var(--nl-content-default);
     font-weight: var(--nl-type-weight-semibold);
 }
-.noslog-ui .nl-score-scatter__point {
-    fill: var(--nl-local-data-single);
-}
-.noslog-ui .nl-score-scatter__me-point {
-    fill: var(--nl-content-default);
-}
 /* 분포 곡선(2026-09-17 D1) — 선 = 데이터 파랑 밝은 단계, 면 = 데이터 파랑 위 90% → 아래 15%.
    내 점수 왼쪽 면은 35% 로 옅게, 오른쪽(나보다 높은 사람)은 그대로 */
 .noslog-ui .nl-score-scatter__stop-top {

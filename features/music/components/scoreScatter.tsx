@@ -10,21 +10,30 @@ const HEIGHT = 190;
 // 위 = 「나 · 상위 N%」 라벨 줄, 아래 = 기준선 라벨 줄 (2026-09-17 D1)
 const PAD = { top: 28, bottom: 28 };
 const MAX = 1_000_000;
-/** 이보다 적으면 곡선이 울퉁불퉁해 점으로 그린다 */
-const MIN_CURVE_PLAYERS = 10;
 const SAMPLES = 120;
-const DOT_RADIUS = 4;
 /** 「990k」 라벨(끝 정렬, 4 띄움)과 「Pianist」 라벨(끝 정렬)이 겹치지 않는 최소 간격 */
 const LABEL_GAP = 36;
 
-/** 가우스 커널 밀도 — 점수마다 종 모양을 더한다 */
+/**
+ * 가우스 커널 밀도 — 점수마다 종 모양을 더한다. 폭 = 0.4 · σ · n^-1/5(Silverman 기준의 약 0.4배)와 축 폭 4% 중 큰 값 —
+ * 인원이 적어도 점 대신 곡선이되, 몰린 곳 모양은 보이게 (2026-09-17 사용자 결정: 0.4배)
+ */
 export function scoreDensity(
     scores: number[],
     min: number,
     max: number,
     samples = SAMPLES
 ) {
-    const bandwidth = (max - min) * 0.06;
+    const mean =
+        scores.reduce((sum, score) => sum + score, 0) / (scores.length || 1);
+    const spread = Math.sqrt(
+        scores.reduce((sum, score) => sum + (score - mean) ** 2, 0) /
+            (scores.length || 1)
+    );
+    const bandwidth = Math.max(
+        0.4 * spread * Math.max(1, scores.length) ** -0.2,
+        (max - min) * 0.04
+    );
     return Array.from({ length: samples }, (_, index) => {
         const at = min + (index / (samples - 1)) * (max - min);
         return {
@@ -53,7 +62,7 @@ export function scoreDomainMin(scores: number[], plotWidth: number) {
 /**
  * 점수 분포 곡선(D1) — 가로 점수(왼쪽 낮음 → 오른쪽 Pianist) · 높이 = 그 점수대 인원.
  * 세로 기준선 S 950k · 990k · Pianist(라벨은 아래). 내 점수 = 세로선 + 「나 · 상위 N%」, 내 점수 오른쪽(나보다 높은 사람) 면을 진하게.
- * 참가자 10명 미만은 곡선 대신 점수 구간마다 점을 쌓는다. 스크린 리더에는 구간별 인원 표 (2026-09-17 사용자 결정: 산점도 → 분포 곡선)
+ * 인원이 적어도 점 대신 완만한 곡선 하나(2026-09-17 사용자 결정). 스크린 리더에는 구간별 인원 표
  */
 export default function ScoreScatter({
     scores,
@@ -85,8 +94,7 @@ export default function ScoreScatter({
         userScore !== null && userTopPercent !== null
             ? { x: x(userScore), percent: userTopPercent }
             : null;
-    const curve = scores.length >= MIN_CURVE_PLAYERS;
-    const density = curve ? scoreDensity(scores, min, MAX) : [];
+    const density = scores.length ? scoreDensity(scores, min, MAX) : [];
     const peak = Math.max(1e-9, ...density.map((sample) => sample.density));
     const points = density.map(
         (sample) =>
@@ -99,34 +107,6 @@ export default function ScoreScatter({
     const area = points.length
         ? `M0,${baseline} L${points.join(" L")} L${width},${baseline} Z`
         : "";
-    // 점 = 실제 점수 자리. 가로로 겹치면 위로 한 칸씩 쌓는다 (2026-09-17)
-    const placed: { cx: number; level: number }[] = [];
-    const dots = curve
-        ? []
-        : [...scores]
-              .sort((a, b) => a - b)
-              .map((score, index) => {
-                  const cx = Math.min(
-                      width - DOT_RADIUS,
-                      Math.max(DOT_RADIUS, x(score))
-                  );
-                  let level = 0;
-                  while (
-                      placed.some(
-                          (dot) =>
-                              dot.level === level &&
-                              Math.abs(dot.cx - cx) < DOT_RADIUS * 2 + 1
-                      )
-                  )
-                      level++;
-                  placed.push({ cx, level });
-                  return {
-                      key: index,
-                      cx,
-                      cy: baseline - DOT_RADIUS - level * (DOT_RADIUS * 2 + 1),
-                      mine: score === userScore,
-                  };
-              });
     const tight = x(MAX) - x(990_000) < LABEL_GAP;
     const guides = [
         { value: 950_000, label: "S 950k", anchor: "middle", dx: 0 },
@@ -240,19 +220,6 @@ export default function ScoreScatter({
                                 />
                             </g>
                         ) : null}
-                        {dots.map((dot) => (
-                            <circle
-                                key={dot.key}
-                                cx={dot.cx}
-                                cy={dot.cy}
-                                r={DOT_RADIUS}
-                                className={
-                                    dot.mine
-                                        ? "nl-score-scatter__me-point"
-                                        : "nl-score-scatter__point"
-                                }
-                            />
-                        ))}
                         {me ? (
                             <g className="nl-score-scatter__me">
                                 <line
