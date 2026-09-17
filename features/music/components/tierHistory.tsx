@@ -7,7 +7,8 @@ import ActionButton from "@/components/ui/actionButton";
 import Disclosure from "@/components/ui/disclosure";
 import type { ChartDetail } from "@/components/music/musicDetailTypes";
 
-/** 서열 변경 이력 — 개요 탭 맨 아래 구역 펼침(요약 줄 48 · 구역 제목). 날짜별 보조 펼침(기본 접힘), 5개씩 더 보기 (2026-09-16 개요로 이동) */
+/** 서열 변경 이력 — 개요 탭 맨 아래 구역 펼침(요약 줄 48 · 구역 제목).
+ * 날짜 묶음 하나 = 카드 하나(기본 접힘) — 구역 · 날짜 · 항목 세 단계를 상자로 가른다 (2026-09-16 개요로 이동 · 09-18 C1) */
 export default function TierHistory({
     history,
 }: {
@@ -39,6 +40,7 @@ export default function TierHistory({
                         <Disclosure
                             key={day}
                             compact
+                            card
                             title={day}
                             className="nl-tier-history__day"
                         >

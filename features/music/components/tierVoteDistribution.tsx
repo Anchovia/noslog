@@ -45,22 +45,6 @@ export default function TierVoteDistribution({
             className="nl-vote-distribution"
             aria-label={t("community.distribution", { scope: name })}
         >
-            <div className="nl-vote-distribution__header">
-                <h3 className="nl-control">
-                    {t("community.distribution", { scope: name })}
-                </h3>
-                <p>
-                    <span className="nl-metadata nl-muted">
-                        {t("community.voteCount", { count: scope.count })}
-                    </span>
-                    <span className="nl-metadata nl-muted">
-                        {t("community.mean")}
-                    </span>
-                    <span className="nl-metric-value">
-                        {scope.average?.toFixed(1)}
-                    </span>
-                </p>
-            </div>
             <div className="nl-vote-distribution__window">
                 <IconButton
                     label={t("community.previousValue")}

@@ -1,5 +1,5 @@
 import { ChevronDown } from "lucide-react";
-import type { ComponentProps, ReactNode } from "react";
+import type { ComponentProps, ReactNode, Ref } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -12,6 +12,8 @@ export default function Disclosure({
     compact = false,
     card = false,
     meta,
+    titleId,
+    titleRef,
     ...props
 }: Omit<ComponentProps<"details">, "title"> & {
     title: ReactNode;
@@ -20,6 +22,9 @@ export default function Disclosure({
     /** 혼자 떠 있는 상자 — 카드 면 위에 둔다 */
     card?: boolean;
     meta?: ReactNode;
+    /** 구역 이름표(aria-labelledby) · 저장 뒤 포커스를 돌려줄 제목 */
+    titleId?: string;
+    titleRef?: Ref<HTMLSpanElement>;
 }) {
     return (
         <details
@@ -40,7 +45,13 @@ export default function Disclosure({
                           : "nl-component-title"
                 }
             >
-                <span>{title}</span>
+                <span
+                    id={titleId}
+                    ref={titleRef}
+                    tabIndex={titleRef ? -1 : undefined}
+                >
+                    {title}
+                </span>
                 {meta ? (
                     <span className="nl-metadata nl-muted">{meta}</span>
                 ) : null}

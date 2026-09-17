@@ -75,11 +75,13 @@ export default function DeleteContributionDialog({
                     >
                         {t("community.cancel")}
                     </ActionButton>
-                    {/* 패턴 평가 삭제는 되돌릴 수 없는 기록 삭제 — 채운 위험 버튼 (2026-09-17 사용자 결정) */}
+                    {/* 되돌릴 수 없는 기록 삭제는 모두 채운 위험 버튼 — 계정 · 공지 삭제와 같은 말투
+                        (2026-09-17 · 09-18 사용자 지적: 의견 · 투표만 테두리 버튼이라 어긋났다) */}
                     <ActionButton
                         variant="danger"
-                        destructiveFilled={kind === "evaluation"}
+                        destructiveFilled
                         busy={busy}
+                        busyLabel={t("community.deleting")}
                         onClick={() => void handleDelete()}
                     >
                         {t(`community.delete.${kind}.action`)}

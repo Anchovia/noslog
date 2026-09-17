@@ -75,6 +75,7 @@ export default function ActionMenu({
                                 role="menuitem"
                                 type="button"
                                 key={item.label}
+                                data-destructive={item.destructive || undefined}
                                 onClick={() => {
                                     setOpen(false);
                                     item.onSelect();

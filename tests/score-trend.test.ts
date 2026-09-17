@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
     formatScoreRecordDate,
     formatTrendTooltipDate,
-    getMissNearCount,
+    getMissCount,
     getSJustRate,
     selectScoreImprovements,
 } from "@/lib/music/scoreTrend";
@@ -50,11 +50,9 @@ describe("베스트 스코어 추이", () => {
         );
     });
 
-    it("Miss와 Near 합계를 계산한다", () => {
-        expect(getMissNearCount({ judge_miss: 15, judge_near: 2 })).toBe(17);
-        expect(
-            getMissNearCount({ judge_miss: null, judge_near: 2 })
-        ).toBeNull();
+    it("최근 판정 추이 MISS 는 NEAR 를 빼고 MISS 만 센다", () => {
+        expect(getMissCount({ judge_miss: 15 })).toBe(15);
+        expect(getMissCount({ judge_miss: null })).toBeNull();
     });
 
     it("전체 판정 중 S-Just 비율을 소수점 한 자리로 계산한다", () => {

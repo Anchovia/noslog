@@ -134,10 +134,9 @@ export async function updateMusic(music: BemaniMusicCatalogInput[]) {
                     music_idx: data["@index"],
                     difficulty: sheet.difficulty,
                     level: sheet.level,
+                    // Real 상수는 ◆ 레벨로 알 수 없어 비워 두고 나중에 채움
                     level_constant:
-                        sheet.difficulty === "Real"
-                            ? sheet.level + 10
-                            : sheet.level,
+                        sheet.difficulty === "Real" ? null : sheet.level,
                 },
                 update: {
                     level: sheet.level,

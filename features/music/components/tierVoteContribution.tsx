@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useRef, useState } from "react";
+import { useId, useRef } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "@/components/i18n/localeProvider";
@@ -29,7 +29,6 @@ export default function TierVoteContribution({
     const t = useTranslations();
     const id = useId();
     const region = useRef<HTMLElement>(null);
-    const [editing, setEditing] = useState(false);
     const mutation = useCommunityMutation(chartId);
     const name =
         scope.mode === "basic"
@@ -48,7 +47,6 @@ export default function TierVoteContribution({
         try {
             await mutation.mutateAsync({ action: "save-vote", input });
             form.reset(input);
-            setEditing(false);
         } catch (error) {
             form.setError("root", {
                 message:
@@ -63,7 +61,7 @@ export default function TierVoteContribution({
             kind="vote"
             scope={name}
             trigger={
-                <ActionButton variant="ghost" disabled={mutation.isPending}>
+                <ActionButton variant="ghost">
                     {t("community.delete.vote.action")}
                 </ActionButton>
             }
@@ -74,7 +72,6 @@ export default function TierVoteContribution({
                 })
             }
             onDeleted={() => {
-                setEditing(false);
                 form.reset({
                     chartId,
                     mode: scope.mode,
@@ -107,8 +104,8 @@ export default function TierVoteContribution({
                         {deleteAction}
                     </div>
                 ) : null
-            ) : editing ||
-              (scope.average === null && scope.ownVote === null) ? (
+            ) : (
+                // 펼치면 바로 「값 선택 + 투표 저장」 한 줄 — 내 투표가 있으면 그 값이 기본 (가이드 4절 · 2026-09-18)
                 <form
                     className="nl-vote-form"
                     noValidate
@@ -125,7 +122,6 @@ export default function TierVoteContribution({
                                     invalid={Boolean(
                                         form.formState.errors.value
                                     )}
-                                    disabled={mutation.isPending}
                                     value={
                                         Number.isFinite(field.value)
                                             ? String(field.value)
@@ -161,8 +157,10 @@ export default function TierVoteContribution({
                         {scope.ownVote !== null ? deleteAction : null}
                         <ActionButton
                             variant="primary"
+                            size="sm"
                             type="submit"
                             busy={mutation.isPending}
+                            busyLabel={t("community.saving")}
                         >
                             {t("community.saveVote")}
                         </ActionButton>
@@ -179,40 +177,6 @@ export default function TierVoteContribution({
                         />
                     ) : null}
                 </form>
-            ) : (
-                <>
-                    {scope.ownVote !== null ? (
-                        <p className="nl-vote-contribution__value">
-                            <span className="nl-control">
-                                {t("community.myVote")}
-                            </span>
-                            <span className="nl-metric-value">
-                                {scope.ownVote.toFixed(1)}
-                            </span>
-                        </p>
-                    ) : null}
-                    <div className="nl-community-actions">
-                        <ActionButton
-                            variant="secondary"
-                            onClick={() => {
-                                form.reset({
-                                    chartId,
-                                    mode: scope.mode,
-                                    goal: scope.goal,
-                                    value: scope.ownVote ?? Number.NaN,
-                                });
-                                setEditing(true);
-                            }}
-                        >
-                            {t(
-                                scope.ownVote !== null
-                                    ? "community.edit"
-                                    : "community.vote"
-                            )}
-                        </ActionButton>
-                        {scope.ownVote !== null ? deleteAction : null}
-                    </div>
-                </>
             )}
         </section>
     );

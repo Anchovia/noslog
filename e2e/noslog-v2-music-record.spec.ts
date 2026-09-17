@@ -163,16 +163,46 @@ test("Record preserves primary order and exposes exact values to keyboard and to
     page,
 }) => {
     await openRecord(page);
-    // 제목 한 줄(넘치면 끝 페이드) · 내 등급은 제목 옆이 아니라 수치 상자 맨 위 「내 최고 기록」 줄 (2026-09-17 B3)
-    await expect(page.locator(".nl-music-entity__grade")).toHaveCount(0);
+    // 제목 한 줄(넘치면 끝 페이드) · 글자 끝 8 뒤 내 등급 아이콘 = 제목 줄 높이(32 · 1056 이상 40) (2026-09-18)
+    const grade = page.locator(".nl-music-entity__grade");
+    await expect(grade).toHaveAttribute("alt", "S 랭크");
+    await expect(grade).toHaveCSS(
+        "width",
+        (page.viewportSize()?.width ?? 390) >= 1056 ? "40px" : "32px"
+    );
     await expect(page.locator(".nl-music-entity__title")).toHaveCSS(
         "white-space",
         "nowrap"
     );
-    const myBest = page.getByRole("group", { name: "내 최고 기록" });
-    await expect(myBest.getByRole("img", { name: "S 랭크" })).toBeVisible();
-    await expect(myBest).toContainText("976,654");
-    await expect(myBest.locator(".nl-my-best__grd")).toHaveText("132.34Grd");
+    await expect
+        .poll(() =>
+            grade.evaluate((element) => {
+                const title = element.parentElement!.querySelector("h1")!;
+                const box = element.getBoundingClientRect();
+                const titleBox = title.getBoundingClientRect();
+                return {
+                    gap: Math.round(box.x - titleBox.right),
+                    centered:
+                        Math.abs(
+                            box.y +
+                                box.height / 2 -
+                                (titleBox.y + titleBox.height / 2)
+                        ) < 1,
+                };
+            })
+        )
+        .toEqual({ gap: 8, centered: true });
+    // 수치 상자 맨 위 「그레이드」 줄 — 내 Grd / 최대 Grd(모르면 —) + 진행 막대, 점수 · 메달 없음 (2026-09-18 Q3)
+    const gradeRow = page.getByRole("group", { name: "그레이드" });
+    await expect(gradeRow.getByRole("img")).toHaveCount(0);
+    await expect(gradeRow).not.toContainText("976,654");
+    await expect(gradeRow.locator(".nl-my-best__grd")).toHaveText(
+        /^132\.34\/ (\d+\.\d{2}|—)$/
+    );
+    await expect(gradeRow.locator(".nl-grade-progress")).toHaveCSS(
+        "height",
+        "8px"
+    );
     await expect(page.locator(".nl-record-panel h2")).toHaveText([
         "최고 기록",
         "누적 요약",
@@ -257,10 +287,13 @@ for (const variant of ["empty", "single", "guest", "partial"] as const) {
                 page.getByText("등록된 기록이 없습니다.", { exact: true })
             ).toBeVisible();
             await expect(page.locator(".nl-record-metrics")).toHaveCount(0);
-            // 기록이 없으면 내 최고 기록 줄은 「—」
+            // 기록이 없으면 그레이드 줄은 「—」, 제목 옆 등급 아이콘 없음
             await expect(
-                page.getByRole("group", { name: "내 최고 기록" })
+                page.getByRole("group", { name: "그레이드" })
             ).toContainText("—");
+            await expect(page.locator(".nl-music-entity__grade")).toHaveCount(
+                0
+            );
         } else if (variant === "single") {
             await page.locator(".nl-record-progress > summary").click();
             const chart = page.getByRole("figure", {

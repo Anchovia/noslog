@@ -1,6 +1,6 @@
 {
     "name": "noslog",
-    "version": "2.9.1",
+    "version": "2.9.2",
     "private": true,
     "scripts": {
         "predev": "npm run generate:jacket-manifest",

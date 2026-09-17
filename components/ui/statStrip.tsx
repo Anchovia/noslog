@@ -15,7 +15,7 @@ export interface StatStripItem {
     tone?: StatTone;
     /** 값 글자 색을 직접 줄 때(서열 값 그라데이션처럼 단계가 연속인 값) */
     color?: string;
-    /** 값이 없으면 칸 자체를 두지 않는다(빈 「—」 칸 없음). value 를 null 로 주면 건너뛴다 */
+    /** 값이 없으면 칸 자체를 두지 않는다. value 를 null 로 주면 건너뛴다 — 칸을 남겨야 하는 값(악곡 머리 공식 레벨)은 흐린 「—」 를 value 로 준다 */
 }
 
 /**
@@ -28,6 +28,7 @@ export default function StatStrip({
     className,
     header,
     footer,
+    pending = false,
 }: {
     items: (StatStripItem | null | false | undefined)[];
     label?: string;
@@ -36,13 +37,20 @@ export default function StatStrip({
     header?: ReactNode;
     /** 같은 상자 아래 칸(구분선 1px 위) — 이 수치에 딸린 이동 링크 줄(`nl-action-group`) (2026-09-17 I1C) */
     footer?: ReactNode;
+    /** 새 값을 받는 중 — 이전 값을 그대로 두고 content/pending 색으로(느린 교체 규칙, 2026-09-18) */
+    pending?: boolean;
 }) {
     const visible = items.filter((item): item is StatStripItem =>
         Boolean(item && item.value !== null && item.value !== undefined)
     );
     if (!visible.length && !footer && !header) return null;
     const strip = visible.length ? (
-        <dl className={cn("nl-stat-strip", className)} aria-label={label}>
+        <dl
+            className={cn("nl-stat-strip", className)}
+            aria-label={label}
+            aria-busy={pending || undefined}
+            data-pending={pending || undefined}
+        >
             {visible.map((item) => (
                 <div key={item.key} className="nl-stat-strip__cell">
                     <dd
@@ -64,7 +72,11 @@ export default function StatStrip({
     ) : null;
     if (!footer && !header) return strip;
     return (
-        <div className="nl-stat-card">
+        <div
+            className="nl-stat-card"
+            aria-busy={pending || undefined}
+            data-pending={pending || undefined}
+        >
             {header}
             {strip}
             {footer}

@@ -44,7 +44,9 @@ export default function ScoreImprovementChart({
                     ? [minimum, maximum > minimum ? maximum : minimum + 10_000]
                     : [0, 1]
             }
-            emptyMessage={t("record.empty")}
+            // 점이 없으면 빈 틀(위 · 아래 선) + 가운데 「기록 없음」 (선 그래프 규칙)
+            emptyMessage={t("music.record.noRecord")}
+            keepPlotGeometry
             // 툴팁 = 「956,666점」 위 · 「N일 전」 아래 — osu! 방식 (2026-09-17)
             tooltipValueLabel={false}
             // 점마다 날짜 · 점수는 툴팁이 말하므로 표는 화면 읽기용으로만 (2026-09-16)

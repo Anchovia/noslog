@@ -9,11 +9,11 @@ import { judgementLabels } from "@/components/ui/judgementMarker";
 import { SegmentedControl } from "@/components/ui/segmentedControl";
 import {
     formatDaysAgo,
-    getMissNearCount,
+    getMissCount,
     getSJustRate,
 } from "@/lib/music/scoreTrend";
 
-type Metric = "sjust" | "missNear" | "timing";
+type Metric = "sjust" | "miss" | "timing";
 
 export default function PerformanceChart({
     points,
@@ -26,15 +26,15 @@ export default function PerformanceChart({
     const label =
         metric === "sjust"
             ? judgementLabels.sjust
-            : metric === "missNear"
-              ? `${judgementLabels.miss}+${judgementLabels.near}`
+            : metric === "miss"
+              ? judgementLabels.miss
               : "FAST/SLOW";
     const chartPoints = points.flatMap((point): LineChartPoint[] => {
         const value =
             metric === "sjust"
                 ? getSJustRate(point)
-                : metric === "missNear"
-                  ? getMissNearCount(point)
+                : metric === "miss"
+                  ? getMissCount(point)
                   : point.fast_count;
         if (
             value === null ||
@@ -69,7 +69,7 @@ export default function PerformanceChart({
             ? `${value.toLocaleString(locale, { maximumFractionDigits: 1 })}%`
             : value.toLocaleString(locale);
     return (
-        // 선 색 = 판정 색(◆JUST 분홍 · MISS/NEAR 빨강 · FAST 판정 NEAR 파랑 · SLOW 주황) (2026-09-17 B)
+        // 선 색 = 판정 색(◆JUST 분홍 · MISS 빨강 · FAST 판정 NEAR 파랑 · SLOW 주황) (2026-09-17 B)
         <div className="nl-stack nl-performance-chart" data-metric={metric}>
             <SegmentedControl<Metric>
                 className="nl-performance-selector"
@@ -78,10 +78,7 @@ export default function PerformanceChart({
                 onValueChange={setMetric}
                 options={[
                     { value: "sjust", label: judgementLabels.sjust },
-                    {
-                        value: "missNear",
-                        label: `${judgementLabels.miss}/${judgementLabels.near}`,
-                    },
+                    { value: "miss", label: judgementLabels.miss },
                     { value: "timing", label: "FAST/SLOW" },
                 ]}
             />

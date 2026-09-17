@@ -140,7 +140,11 @@ test("Public ranking keeps 25 rows, fixed columns, Pianist/FC meaning and explic
     await expect(
         page.getByRole("table", { name: "S 이상 · 30명", exact: true })
     ).toHaveCount(1);
-    await expect(page.getByText("참가자 53명")).toBeVisible();
+    // 카드 제목 하나만 — 「참가자 N명」 · 「순위」 · 「내 순위 N / M」 글자는 두지 않는다 (2026-09-18)
+    await expect(
+        page.getByRole("heading", { name: "악곡 랭킹", exact: true })
+    ).toBeVisible();
+    await expect(page.getByText("참가자 53명")).toHaveCount(0);
     await expect(
         table
             .locator(".nl-player-row")
@@ -156,7 +160,12 @@ test("Public ranking keeps 25 rows, fixed columns, Pianist/FC meaning and explic
     await expect(
         table.locator(".nl-player-row").nth(1).locator(".nl-full-combo")
     ).toHaveText("FC");
-    await expect(page.locator(".nl-ranking-login")).toBeVisible();
+    // 로그아웃 = 순위 제목 줄 오른쪽 끝 제목 링크 (2026-09-18)
+    await expect(
+        page
+            .locator(".nl-ranking-section .nl-heading-row")
+            .getByRole("link", { name: "로그인하고 내 순위 확인", exact: true })
+    ).toBeVisible();
     await page
         .getByRole("button", { name: "다음 페이지", exact: true })
         .click();
@@ -182,15 +191,19 @@ test("Public ranking keeps 25 rows, fixed columns, Pianist/FC meaning and explic
     ).toHaveAttribute("aria-current", "page");
 });
 
-test("My rank summary disappears when the current user's row is on the page", async ({
+test("My row is marked in the table itself, with no rank text around it", async ({
     page,
 }) => {
     await openRanking(page, { signedIn: true });
-    await expect(page.locator(".nl-my-rank-summary")).toContainText("37 / 53");
+    // 제목 줄도 요약 상자도 없다 — 순위표가 스스로 말한다 (2026-09-18)
+    await expect(page.locator(".nl-my-rank-summary")).toHaveCount(0);
+    await expect(
+        page.locator(".nl-ranking-section .nl-heading-row")
+    ).toHaveCount(0);
+    await expect(page.getByText("37 / 53")).toHaveCount(0);
     await page
         .getByRole("button", { name: "다음 페이지", exact: true })
         .click();
-    await expect(page.locator(".nl-my-rank-summary")).toHaveCount(0);
     const mine = page.locator(
         '.nl-chart-leaderboard .nl-player-row[data-current="true"]'
     );
@@ -261,19 +274,17 @@ for (const locale of ["ko", "ja", "en"]) {
         await openRanking(page, { locale, signedIn: true, ownRank: 3 });
         for (const width of [320, 390, 768, 1024, 1280]) {
             await page.setViewportSize({ width, height: 900 });
-            // 유저 랭킹 페이지와 같은 머리글 — 「플레이어」 는 아바타 시작선에 맞는다
+            // 머리글 「플레이어」 는 이름 첫 글자에 맞는다 (2026-09-18)
             const headingBounds = await page
                 .locator(".nl-chart-leaderboard .nl-ranking-head__player")
                 .boundingBox();
-            const avatarBounds = await page
-                .locator(".nl-chart-leaderboard .nl-player-row .nl-avatar")
+            const nameBounds = await page
+                .locator(".nl-chart-leaderboard .nl-player-row__link")
                 .first()
                 .boundingBox();
             expect(headingBounds).not.toBeNull();
-            expect(avatarBounds).not.toBeNull();
-            expect(Math.abs(headingBounds!.x - avatarBounds!.x)).toBeLessThan(
-                1
-            );
+            expect(nameBounds).not.toBeNull();
+            expect(Math.abs(headingBounds!.x - nameBounds!.x)).toBeLessThan(1);
             await expect
                 .poll(() =>
                     page.evaluate(
@@ -291,14 +302,66 @@ for (const locale of ["ko", "ja", "en"]) {
                             (element) => element.getBoundingClientRect().height
                         )
                 )
-                // 분포 곡선 카드 = svg 190 + 안쪽 16×2 (2026-09-17 D1)
-                .toBe(222);
-            // 그래프 안 글자는 아래 기준선 라벨 3개(S 950k · 990k · Pianist) + (있으면) 「나 · 상위 N%」 (2026-09-17 D1)
-            await expect(
-                page.locator(
-                    ".nl-score-scatter__label:not(.nl-score-scatter__label--me)"
+                // 점수 자 카드 = svg 80(핀 줄 · 자 · 라벨 줄) + 안쪽 16×2 (2026-09-18 V1+V4)
+                .toBe(112);
+            // 자 아래 글자는 기준 점수 3개(S 950k · 990k · Pianist)뿐 — 세로축도, 내 위치 글자도 없다
+            await expect(page.locator(".nl-score-scatter__label")).toHaveCount(
+                3
+            );
+            // 참가자는 한 명도 빠짐없이 자 위의 점으로 남는다(핀으로 묶여도)
+            // 기본 openRanking 은 참가자 53명
+            await expect(page.locator(".nl-score-scatter__dot")).toHaveCount(
+                53
+            );
+            // 사진끼리 겹치지 않는다 — 내 핀도 같은 거리 규칙을 따른다 (2026-09-18)
+            await expect
+                .poll(() =>
+                    page.locator(".nl-score-pin").evaluateAll((pins) => {
+                        const boxes = pins
+                            .map((pin) => pin.getBoundingClientRect())
+                            .sort((a, b) => a.left - b.left);
+                        return boxes
+                            .slice(1)
+                            .every(
+                                (box, index) => box.left >= boxes[index].right
+                            );
+                    })
                 )
-            ).toHaveCount(3);
+                .toBe(true);
+            // 사진 핀은 한 줄 — 높이에는 뜻이 없다
+            await expect
+                .poll(() =>
+                    page
+                        .locator(".nl-score-pin")
+                        .evaluateAll((pins) =>
+                            pins.every(
+                                (pin) =>
+                                    Math.abs(
+                                        pin.getBoundingClientRect().bottom -
+                                            pins[0].getBoundingClientRect()
+                                                .bottom
+                                    ) < 5
+                            )
+                        )
+                )
+                .toBe(true);
+            // 등급 아이콘도 행마다 같은 선 — 점수 칸을 만점 폭으로 고정했다 (2026-09-18)
+            await expect
+                .poll(() =>
+                    page
+                        .locator(".nl-chart-leaderboard .nl-score-grade")
+                        .evaluateAll((grades) => {
+                            const left = grades[0].getBoundingClientRect().left;
+                            return grades.every(
+                                (grade) =>
+                                    Math.abs(
+                                        grade.getBoundingClientRect().left -
+                                            left
+                                    ) < 1
+                            );
+                        })
+                )
+                .toBe(true);
             // 점수는 행마다 오른쪽 끝이 같은 선(FC 칸 앞)에 맞는다
             await expect
                 .poll(() =>

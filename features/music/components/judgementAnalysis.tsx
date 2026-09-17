@@ -12,19 +12,19 @@ import {
 } from "@/lib/music/peerScoreComparison";
 import PerformanceChart from "./performanceChart";
 
-const judgementLabels = [
-    marks.sjust,
-    marks.just,
-    marks.good,
-    marks.miss,
-    marks.near,
-];
+// 악곡 상세 판정 표시는 NEAR 를 뺀다 — 게임에서 거의 켜지 않는 옵션(2026-09-18 사용자 결정). 합계에는 그대로 넣는다
+const shownKeys = peerJudgementKeys.filter((key) => key !== "judge_near");
+const judgementLabels: Record<(typeof shownKeys)[number], string> = {
+    judge_sjust: marks.sjust,
+    judge_just: marks.just,
+    judge_good: marks.good,
+    judge_miss: marks.miss,
+};
 const judgementColors = {
     judge_sjust: "var(--nl-judgement-s-just)",
     judge_just: "var(--nl-judgement-just)",
     judge_good: "var(--nl-judgement-good)",
     judge_miss: "var(--nl-judgement-miss)",
-    judge_near: "var(--nl-judgement-near)",
 } as const;
 // 값이 없는 줄 — 비어 보이지 않게 비활성 회색 한 조각
 const emptySegments = [
@@ -48,9 +48,9 @@ export default function JudgementAnalysis({
     if (!record) return null;
     // 유사 Grd 평균은 켜기 없이 늘 보여 주고, 비교할 기록이 없으면 평균 줄 자체를 그리지 않는다 (2026-09-16 A)
     const peer = data.peerScoreComparison;
-    const complete = peerJudgementKeys.every((key) => record[key] !== null);
+    const complete = shownKeys.every((key) => record[key] !== null);
     const total = complete
-        ? peerJudgementKeys.reduce((sum, key) => sum + record[key]!, 0)
+        ? peerJudgementKeys.reduce((sum, key) => sum + (record[key] ?? 0), 0)
         : null;
     const count = (value: number) => value.toLocaleString(locale);
     const percentage = (value: number | null) =>
@@ -90,7 +90,7 @@ export default function JudgementAnalysis({
                                 key: "me",
                                 label: t("music.judgement.meLabel"),
                                 segments: complete
-                                    ? peerJudgementKeys.map((key) => ({
+                                    ? shownKeys.map((key) => ({
                                           key,
                                           value: record[key]!,
                                           color: judgementColors[key],
@@ -101,7 +101,7 @@ export default function JudgementAnalysis({
                                 key: "average",
                                 label: t("community.mean"),
                                 segments: peer?.judgement
-                                    ? peerJudgementKeys.map((key) => ({
+                                    ? shownKeys.map((key) => ({
                                           key,
                                           value: peer.judgement!.averages[key],
                                           color: judgementColors[key],
@@ -122,14 +122,14 @@ export default function JudgementAnalysis({
                             </p>
                         )}
                         <dl className="nl-facts nl-analysis-values nl-body-secondary">
-                            {peerJudgementKeys.map((key, index) => (
+                            {shownKeys.map((key) => (
                                 <div key={key}>
                                     <dt>
                                         <span
                                             className="nl-judgement-label"
                                             data-judgement={key}
                                         >
-                                            {judgementLabels[index]}
+                                            {judgementLabels[key]}
                                         </span>
                                     </dt>
                                     <dd>
@@ -139,7 +139,7 @@ export default function JudgementAnalysis({
                                                     locale
                                                 ) ?? "—"}
                                             </span>
-                                            <span className="nl-muted">
+                                            <span className="nl-metric-value nl-muted">
                                                 {percentage(
                                                     total &&
                                                         record[key] !== null

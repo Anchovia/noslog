@@ -120,7 +120,6 @@ export interface ChartDetail {
         count: number;
     }[];
     playerCount: number;
-    userTopPercent: number | null;
     /** 공개된 서열표의 이 채보 값 — 머리 수치 띠(2026-09-16). 미등재는 value null */
     tierValues: {
         mode: "basic" | "recital";

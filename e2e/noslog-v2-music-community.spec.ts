@@ -231,7 +231,7 @@ test("Guest, missing-record, and unachieved-goal states keep the public evidence
     await expect(
         page.locator(".nl-vote-distribution table tbody tr")
     ).toHaveCount(9);
-    // 자격이 없으면 입력도 이유 문장도 없다(2026-09-16 A) — 로그아웃은 제목 줄 오른쪽 끝 제목 링크(D)
+    // 자격이 없으면 입력도 이유 문장도 없다(2026-09-16 A) — 로그아웃은 펼친 내용 첫 줄의 제목 링크(D · 09-18 아코디언)
     await expect(page.locator(".nl-vote-form")).toHaveCount(0);
     await expect(
         page
@@ -254,9 +254,13 @@ test("Guest, missing-record, and unachieved-goal states keep the public evidence
     await expect(
         lock.getByRole("link", { name: "로그인", exact: true })
     ).toBeVisible();
-    await expect(page.locator(".nl-opinions")).toContainText(
-        "로그인하면 의견을 남길 수 있습니다."
-    );
+    // 로그아웃 의견 = 제목 줄 오른쪽 끝 제목 링크, 작성 칸 없음 (2026-09-18)
+    await expect(
+        page
+            .locator(".nl-opinions")
+            .getByRole("link", { name: "로그인하고 의견 남기기", exact: true })
+    ).toBeVisible();
+    await expect(page.locator(".nl-opinion-composer")).toHaveCount(0);
     await page.unrouteAll({ behavior: "wait" });
     await openCommunity(page, { data });
     await page.locator("button.nl-vote-row").first().click();
@@ -311,14 +315,16 @@ test("Goal distributions preserve observed values and global bar scale while pag
         const previous = before.find((item) => item.value === entry.value);
         if (previous) expect(entry.height).toBe(previous.height);
     });
-    await expect(page.locator(".nl-vote-contribution")).toContainText(
-        "내 투표13.2"
+    // 펼치면 바로 셀렉트 줄 — 내 투표가 기본값 (2026-09-18)
+    await expect(page.locator(".nl-vote-contribution select")).toHaveValue(
+        "13.2"
     );
     await rows.nth(0).click();
     await expect(page.locator(".nl-vote-distribution")).toHaveCount(1);
     await expect(rows.nth(1)).toHaveAttribute("aria-expanded", "false");
+    // 평균 없는 줄 = 「—」 + 인원(가운뎃점 없음) (2026-09-18)
     await expect(
-        page.locator(".nl-vote-row").filter({ hasText: "집계 중" })
+        page.locator(".nl-vote-row").filter({ hasText: /^.+—투표/ })
     ).toHaveCount(2);
 });
 
@@ -401,10 +407,7 @@ test("Aggregating votes preserve login, record, eligibility, and existing-vote a
     await openCommunity(page, { data });
     await page.locator("button.nl-vote-row").first().click();
     const contribution = page.locator(".nl-vote-list__body");
-    await expect(contribution).toContainText("내 투표13.2");
-    await contribution
-        .getByRole("button", { name: "수정", exact: true })
-        .click();
+    // 펼치면 바로 「값 선택 + 투표 저장」 한 줄 — 내 투표가 기본값 (2026-09-18)
     await expect(contribution.locator("select")).toHaveValue("13.2");
     await contribution
         .getByRole("button", { name: "투표 삭제", exact: true })
@@ -457,9 +460,9 @@ test("Clearing all pattern ratings asks for confirmation first", async ({
     page,
 }) => {
     await openCommunity(page);
-    // 「선택 해제」(제목 줄 오른쪽 끝) = 모든 축 지우기 → 확인창
+    // 「선택 해제」(펼친 내용 첫 줄) = 모든 축 지우기 → 확인창
     const trigger = page
-        .locator(".nl-pattern-form .nl-heading-row")
+        .locator(".nl-pattern-form .nl-pattern-form__status")
         .getByRole("button", { name: "선택 해제", exact: true });
     await trigger.click();
     const dialog = page.getByRole("dialog");
@@ -648,16 +651,16 @@ test("A new opinion starts as one line, expands on focus, and cancels back", asy
         .toBeLessThan(50);
     await input.focus();
     await expect(
-        page.getByRole("button", { name: "의견 저장" })
+        page.getByRole("button", { name: "의견 작성" })
     ).toBeDisabled();
     await input.fill("a".repeat(121));
-    await page.getByRole("button", { name: "의견 저장" }).click();
+    await page.getByRole("button", { name: "의견 작성" }).click();
     await expect(
         page.getByRole("alert").filter({ hasText: "최대 120자" })
     ).toBeVisible();
     await page.getByRole("button", { name: "취소", exact: true }).click();
     await expect(input).toHaveValue("");
-    await expect(page.getByRole("button", { name: "의견 저장" })).toHaveCount(
+    await expect(page.getByRole("button", { name: "의견 작성" })).toHaveCount(
         0
     );
 });

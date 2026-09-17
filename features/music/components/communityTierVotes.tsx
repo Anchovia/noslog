@@ -8,6 +8,8 @@ import {
     useLocalizedHref,
     useTranslations,
 } from "@/components/i18n/localeProvider";
+import Disclosure from "@/components/ui/disclosure";
+import { foundationButtonClass } from "@/components/ui/Button";
 import type { CommunityData } from "@/features/music/schemas/communitySchema";
 import TierVoteDistribution from "./tierVoteDistribution";
 import TierVoteContribution from "./tierVoteContribution";
@@ -41,14 +43,16 @@ export default function CommunityTierVotes({
             ? "Recital"
             : `Basic · ${t(`community.goal.${scope.goal}`)}`;
     return (
-        <section className="nl-community-votes" aria-labelledby={`${id}-title`}>
-            {/* 탭 안 구역(패턴 투표 · 서열 투표 · 의견)은 모두 section-title */}
-            {/* 로그아웃이면 제목 줄 오른쪽 끝에 「로그인하고 투표하기 ›」 — 개요 「평가하기 ›」 와 같은 제목 링크 (2026-09-16 D) */}
-            <div className="nl-heading-row">
-                <h2 id={`${id}-title`} className="nl-section-title">
-                    {t("community.votes")}
-                </h2>
-                {!accountId ? (
+        <Disclosure
+            className="nl-community-votes"
+            heading="section"
+            open
+            title={t("community.votes")}
+            titleId={`${id}-title`}
+        >
+            {/* 제목 줄이 펼침 줄이 되면서 로그인 링크는 내용 첫 줄로 (2026-09-18 아코디언) */}
+            {!accountId ? (
+                <div className="nl-heading-row">
                     <Link
                         className="nl-heading-link nl-control"
                         href={href(
@@ -58,8 +62,8 @@ export default function CommunityTierVotes({
                         {t("community.voteLoginLink")}
                         <ChevronRight aria-hidden />
                     </Link>
-                ) : null}
-            </div>
+                </div>
+            ) : null}
             {/* 여섯이 아닌 네 범위(Basic S · 990k · Pianist · Recital)를 카드 하나 안 선 목록으로 — 줄 = 컨트롤 높이 (2026-09-16) */}
             <div className="nl-vote-list">
                 {data.scopes.map((scope) => {
@@ -68,10 +72,20 @@ export default function CommunityTierVotes({
                     const canVote = Boolean(
                         accountId && data.canEvaluate && scope.eligible
                     );
-                    const expandable =
-                        scope.average !== null ||
-                        canVote ||
-                        (Boolean(accountId) && scope.ownVote !== null);
+                    // 모든 줄을 펼칠 수 있게 — 줄마다 ⌄ 자리가 같아야 값이 밀리지 않는다.
+                    // 투표할 수 없는 줄은 펼치면 패턴 투표처럼 흐린 폼 + 이유 카드 (2026-09-18 사용자 결정)
+                    const expandable = true;
+                    const lockReason = !canVote
+                        ? scope.mode === "recital"
+                            ? "community.voteLock.recital"
+                            : scope.goal === "990k"
+                              ? "community.voteLock.990k"
+                              : scope.goal === "pianist"
+                                ? "community.voteLock.pianist"
+                                : !accountId
+                                  ? "community.evaluationLogin"
+                                  : "community.evaluationRecord"
+                        : null;
                     const expanded = expandable && key === selected;
                     const Row = expandable ? "button" : "div";
                     return (
@@ -98,12 +112,20 @@ export default function CommunityTierVotes({
                                 </span>
                                 <span>
                                     {scope.average === null ? (
-                                        <span className="nl-metadata nl-muted">
-                                            {t("pattern.aggregating")} ·{" "}
-                                            {t("community.voteCount", {
-                                                count: scope.count,
-                                            })}
-                                        </span>
+                                        // 평균 없음 = 값 자리 「—」 + 인원, 사이는 가운뎃점 대신 간격 8 (2026-09-18 사용자 결정)
+                                        <>
+                                            <span className="sr-only">
+                                                {t("community.mean")}
+                                            </span>
+                                            <span className="nl-metric-value nl-muted">
+                                                —
+                                            </span>
+                                            <span className="nl-metadata nl-muted">
+                                                {t("community.voteCount", {
+                                                    count: scope.count,
+                                                })}
+                                            </span>
+                                        </>
                                     ) : (
                                         <>
                                             <span className="sr-only">
@@ -138,19 +160,58 @@ export default function CommunityTierVotes({
                                             scope={scope}
                                         />
                                     ) : null}
-                                    <TierVoteContribution
-                                        key={`${key}-contribution`}
-                                        chartId={chartId}
-                                        scope={scope}
-                                        accountId={accountId}
-                                        hasRecord={data.canEvaluate}
-                                    />
+                                    {lockReason && scope.ownVote === null ? (
+                                        // 투표할 수 없으면 값 · 저장을 비활성으로 두고 이유를 한 줄로 (2026-09-18 사용자 결정)
+                                        <div className="nl-vote-form">
+                                            <div className="nl-vote-form__row">
+                                                <button
+                                                    type="button"
+                                                    className="nl-input nl-select"
+                                                    data-placeholder
+                                                    disabled
+                                                >
+                                                    <span>
+                                                        {t(
+                                                            "community.valuePlaceholder"
+                                                        )}
+                                                    </span>
+                                                    <ChevronDown
+                                                        className="nl-icon"
+                                                        aria-hidden
+                                                    />
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    className={foundationButtonClass(
+                                                        {
+                                                            variant: "primary",
+                                                            size: "sm",
+                                                        }
+                                                    )}
+                                                    disabled
+                                                >
+                                                    {t("community.saveVote")}
+                                                </button>
+                                            </div>
+                                            <p className="nl-body-secondary nl-muted">
+                                                {t(lockReason)}
+                                            </p>
+                                        </div>
+                                    ) : (
+                                        <TierVoteContribution
+                                            key={`${key}-contribution`}
+                                            chartId={chartId}
+                                            scope={scope}
+                                            accountId={accountId}
+                                            hasRecord={data.canEvaluate}
+                                        />
+                                    )}
                                 </div>
                             ) : null}
                         </Fragment>
                     );
                 })}
             </div>
-        </section>
+        </Disclosure>
     );
 }

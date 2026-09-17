@@ -48,6 +48,7 @@ export default function OverviewPanel({
         chart.bpm_min !== null
             ? {
                   label: "BPM",
+                  numeric: true,
                   value:
                       chart.bpm_max !== null && chart.bpm_max !== chart.bpm_min
                           ? `${chart.bpm_min}–${chart.bpm_max}`
@@ -57,25 +58,35 @@ export default function OverviewPanel({
         chart.note_count !== null
             ? {
                   label: t("music.info.noteCount"),
+                  numeric: true,
                   value: chart.note_count.toLocaleString(locale),
               }
             : null,
         chart.duration_seconds !== null
             ? {
                   label: t("detail.duration"),
+                  numeric: true,
                   value: `${Math.floor(chart.duration_seconds / 60)}:${String(chart.duration_seconds % 60).padStart(2, "0")}`,
               }
             : null,
         chart.released_at
             ? {
                   label: t("music.info.releaseDate"),
+                  numeric: false,
                   value: chart.released_at.slice(0, 10),
               }
             : null,
         chart.unlock_condition
-            ? { label: t("music.info.unlock"), value: chart.unlock_condition }
+            ? {
+                  label: t("music.info.unlock"),
+                  numeric: false,
+                  value: chart.unlock_condition,
+              }
             : null,
-    ].filter((fact): fact is { label: string; value: string } => Boolean(fact));
+    ].filter(
+        (fact): fact is { label: string; value: string; numeric: boolean } =>
+            Boolean(fact)
+    );
     return (
         <div className="nl-overview">
             <section
@@ -155,6 +166,7 @@ export default function OverviewPanel({
                         message={t("detail.error")}
                         action={
                             <ActionButton
+                                size="sm"
                                 onClick={() => void pattern.refetch()}
                             >
                                 {t("common.retry")}
@@ -163,7 +175,7 @@ export default function OverviewPanel({
                     />
                 ) : (
                     <div
-                        className="nl-overview__skeleton"
+                        className="nl-skeleton nl-overview__skeleton"
                         role="status"
                         aria-label={t("pattern.loading")}
                     />
@@ -174,22 +186,25 @@ export default function OverviewPanel({
                 className="nl-overview__section"
                 aria-labelledby={`${id}-record`}
             >
-                <h2 id={`${id}-record`} className="nl-section-title">
-                    {t("detail.record")}
-                </h2>
-                {!data.isLoggedIn ? (
-                    <p className="nl-body-secondary nl-muted">
-                        {t("record.summaryGuest")}{" "}
+                {/* 로그아웃이면 구역 행동을 제목 줄 오른쪽 끝 제목 링크로 권한다(가이드 2절 · 2026-09-18) */}
+                <div className="nl-heading-row">
+                    <h2 id={`${id}-record`} className="nl-section-title">
+                        {t("detail.record")}
+                    </h2>
+                    {!data.isLoggedIn ? (
                         <Link
-                            className="nl-link"
+                            className="nl-heading-link nl-control"
                             href={href(
                                 `/login?returnTo=${encodeURIComponent(href(`/music/${data.music.index}/${data.difficulty.toLowerCase()}`))}`
                             )}
+                            aria-label={t("record.summaryGuest")}
                         >
-                            {t("common.login")}
+                            {t("detail.myBestLogin")}
+                            <ChevronRight aria-hidden />
                         </Link>
-                    </p>
-                ) : !record || record.score <= 0 ? (
+                    ) : null}
+                </div>
+                {!data.isLoggedIn ? null : !record || record.score <= 0 ? (
                     <p className="nl-body-secondary nl-muted">
                         {t("record.empty")}
                     </p>
@@ -203,18 +218,20 @@ export default function OverviewPanel({
                                 value: record.score.toLocaleString(locale),
                                 tone: scoreTone(record.score),
                             },
-                            {
-                                key: "rank",
-                                label: t("rankings.myRank"),
-                                value:
-                                    data.ranking.userRank?.toLocaleString(
-                                        locale
-                                    ) ?? "—",
-                                tone: rankTone(data.ranking.userRank),
-                                unit: data.ranking.totalCount
-                                    ? `/ ${data.ranking.totalCount.toLocaleString(locale)}`
-                                    : undefined,
-                            },
+                            // 순위가 없으면 칸을 만들지 않는다(수치 띠 규칙)
+                            data.ranking.userRank
+                                ? {
+                                      key: "rank",
+                                      label: t("rankings.myRank"),
+                                      value: data.ranking.userRank.toLocaleString(
+                                          locale
+                                      ),
+                                      tone: rankTone(data.ranking.userRank),
+                                      unit: data.ranking.totalCount
+                                          ? `/ ${data.ranking.totalCount.toLocaleString(locale)}`
+                                          : undefined,
+                                  }
+                                : null,
                             {
                                 key: "plays",
                                 label: t("record.playCount"),
@@ -237,7 +254,13 @@ export default function OverviewPanel({
                         {facts.map((fact) => (
                             <div key={fact.label}>
                                 <dt>{fact.label}</dt>
-                                <dd className="nl-metric-value">
+                                <dd
+                                    className={
+                                        fact.numeric
+                                            ? "nl-metric-value"
+                                            : undefined
+                                    }
+                                >
                                     {fact.value}
                                 </dd>
                             </div>
