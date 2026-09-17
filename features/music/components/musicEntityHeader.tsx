@@ -20,6 +20,10 @@ import type {
     UserPlayData,
 } from "@/components/music/musicDetailTypes";
 import StatStrip from "@/components/ui/statStrip";
+import {
+    GRADE_PROGRESS_STOPS,
+    gradeProgressColor,
+} from "@/lib/music/gradeProgressColor";
 import { getGradeProgress, getMaxBasicGrade } from "@/lib/music/maxGrade";
 import { tierValueColor } from "@/lib/music/tierValueColor";
 import { tierGoalLabels } from "@/lib/tiers";
@@ -157,7 +161,7 @@ export default function MusicEntityHeader({
             ? "p"
             : rankAssetNames[shownRecord.rank.toUpperCase()]
         : undefined;
-    // 그레이드 줄 — 위 「그레이드」(control) · 내 Grd(정수 24 · 소수 16) / 최대 Grd(모르면 —),
+    // 그레이드 줄 — 위 「그레이드」(control) · 내 Grd(정수 24 · 소수 16, 막대 위치 색) / 최대 Grd(Pianist 색, 모르면 흐린 —),
     // 아래 진행 막대(0 → 최대, 등급 색 그라데이션 · 최대값을 모르면 빈 트랙) (2026-09-18 Q3)
     const formatGrade = (grade: number) => (grade / 100).toFixed(2).split(".");
     const [grdWhole, grdFraction] = shownRecord
@@ -171,7 +175,14 @@ export default function MusicEntityHeader({
                 <span className="nl-control">{t("detail.grade")}</span>
                 {shownRecord ? (
                     <span className="nl-my-best__grd">
-                        <span className="nl-my-best__grd-value">
+                        <span
+                            className="nl-my-best__grd-value"
+                            style={
+                                maxGrade === null
+                                    ? undefined
+                                    : { color: gradeProgressColor(progress) }
+                            }
+                        >
                             {grdWhole}
                             <span className="nl-my-best__grd-fraction">
                                 .{grdFraction}
@@ -179,9 +190,13 @@ export default function MusicEntityHeader({
                         </span>
                         <span className="nl-body-secondary nl-muted nl-my-best__grd-max">
                             /{" "}
-                            {maxGrade === null
-                                ? "—"
-                                : formatGrade(maxGrade).join(".")}
+                            {maxGrade === null ? (
+                                "—"
+                            ) : (
+                                <span className="nl-my-best__grd-max-value">
+                                    {formatGrade(maxGrade).join(".")}
+                                </span>
+                            )}
                         </span>
                     </span>
                 ) : !signedIn && !pending ? (
@@ -203,6 +218,8 @@ export default function MusicEntityHeader({
                         style={
                             {
                                 "--nl-grade-progress": progress,
+                                "--nl-grade-progress-stops":
+                                    GRADE_PROGRESS_STOPS,
                             } as CSSProperties
                         }
                     />
