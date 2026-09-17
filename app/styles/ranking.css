@@ -56,6 +56,7 @@
     gap: var(--nl-spacing-8);
 }
 .noslog-ui .nl-score-scatter__plot {
+    position: relative;
     padding: var(--nl-spacing-16);
     border-radius: var(--nl-radius-container);
     background: var(--nl-surface-surface);
@@ -77,12 +78,6 @@
 .noslog-ui .nl-score-scatter__label--me {
     fill: var(--nl-content-default);
     font-weight: var(--nl-type-weight-semibold);
-}
-.noslog-ui .nl-score-scatter__point {
-    fill: var(--nl-local-data-single);
-}
-.noslog-ui .nl-score-scatter__me-point {
-    fill: var(--nl-content-default);
 }
 /* 분포 곡선(2026-09-17 D1) — 선 = 데이터 파랑 밝은 단계, 면 = 데이터 파랑 위 90% → 아래 15%.
    내 점수 왼쪽 면은 35% 로 옅게, 오른쪽(나보다 높은 사람)은 그대로 */
@@ -106,6 +101,190 @@
 .noslog-ui .nl-score-scatter__me-line {
     stroke: var(--nl-content-default);
     stroke-width: 1.5;
+}
+/* 곡선 위 사진 핀(2026-09-17 E) — 핀 끝이 곡선 위 점을 가리킴. 원 24(나 28) + 2 테두리(strong · 나는 기본 글자색),
+   곡선 위 점 6(나 = 기본 글자색). 묶음은 대표 한 명 + 오른쪽 위 「+N」(기본 글자색 면). 겹칠 때 나를 맨 위 */
+.noslog-ui .nl-score-pins {
+    position: absolute;
+    inset: var(--nl-spacing-16);
+    pointer-events: none;
+}
+.noslog-ui .nl-score-pins__dot {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    margin: -3px 0 0 -3px;
+    border-radius: 50%;
+    background: var(--nl-local-data-bucket-5);
+    box-shadow: 0 0 0 1.5px var(--nl-surface-surface);
+}
+.noslog-ui .nl-score-pins__dot[data-me] {
+    background: var(--nl-content-default);
+}
+.noslog-ui .nl-score-pin {
+    --nl-pin-size: 28px;
+    position: absolute;
+    width: var(--nl-pin-size);
+    height: var(--nl-pin-size);
+    padding: 0;
+    border: 0;
+    background: none;
+    pointer-events: auto;
+    cursor: pointer;
+    /* 45° 돌린 정사각의 뾰족 끝(약 0.2 × 크기)이 점 4 위에 오도록 */
+    transform: translate(-50%, calc(-100% - 0.21 * var(--nl-pin-size) - 4px));
+}
+.noslog-ui .nl-score-pin[data-me] {
+    --nl-pin-size: 32px;
+    z-index: 1;
+}
+.noslog-ui .nl-score-pin__shape {
+    position: absolute;
+    inset: 0;
+    border-radius: 50% 50% 50% 0;
+    background: var(--nl-border-strong);
+    transform: rotate(-45deg);
+}
+.noslog-ui .nl-score-pin[data-me] .nl-score-pin__shape {
+    background: var(--nl-content-default);
+}
+.noslog-ui .nl-score-pin .nl-score-pin__photo {
+    position: absolute;
+    inset: 2px;
+}
+.noslog-ui .nl-score-pin__count {
+    position: absolute;
+    top: -6px;
+    right: -10px;
+    min-width: 18px;
+    height: 16px;
+    padding: 0 var(--nl-spacing-4);
+    border-radius: 8px;
+    background: var(--nl-content-default);
+    color: var(--nl-surface-canvas);
+    font-size: 11px;
+    line-height: 16px;
+    font-weight: var(--nl-type-weight-semibold);
+    text-align: center;
+}
+.noslog-ui .nl-score-pin[data-edge="end"] .nl-score-pin__count {
+    right: auto;
+    left: -10px;
+}
+.noslog-ui .nl-score-pin:focus-visible {
+    outline-offset: 2px;
+    border-radius: 50%;
+}
+/* 핀을 누르면 뜨는 창 — 떠 있는 창 규격. 한 사람 = 가로 카드(사진 44 · 국기 · 이름 / #순위 · 메달 · 점수 · ›, 카드 전체가 링크),
+   묶음 = 목록(줄 = 순위 · 사진 28 · 국기 · 이름 · 메달 · 점수 · ›, 줄 높이 44) */
+.noslog-ui.nl-score-popover {
+    z-index: 70;
+    width: min(320px, calc(100vw - 32px));
+    padding: var(--nl-spacing-4) 0;
+    overflow: hidden;
+    background: var(--nl-surface-overlay);
+    color: var(--nl-content-default);
+    border: 1px solid var(--nl-border-overlay);
+    border-radius: var(--nl-radius-overlay);
+    box-shadow: var(--nl-overlay-shadow);
+}
+.noslog-ui.nl-score-popover[data-kind="player"] {
+    width: min(280px, calc(100vw - 32px));
+    padding: 0;
+}
+.noslog-ui .nl-score-card,
+.noslog-ui .nl-score-list__row {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-align: start;
+    cursor: pointer;
+}
+.noslog-ui .nl-score-card {
+    gap: var(--nl-spacing-12);
+    padding: var(--nl-spacing-12);
+}
+.noslog-ui .nl-score-card__body {
+    display: flex;
+    flex: 1;
+    min-width: 0;
+    flex-direction: column;
+    gap: 2px;
+}
+.noslog-ui .nl-score-card__meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.noslog-ui .nl-score-popover__name {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--nl-type-size-14);
+    line-height: var(--nl-type-line-height-20);
+    font-weight: var(--nl-type-weight-semibold);
+}
+.noslog-ui .nl-score-popover__name-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.noslog-ui .nl-score-popover__score {
+    font-weight: var(--nl-type-weight-semibold);
+    font-variant-numeric: tabular-nums;
+}
+.noslog-ui .nl-score-popover__score[data-tone="s"] {
+    color: var(--nl-score-goal-s);
+}
+.noslog-ui .nl-score-popover__score[data-tone="990k"] {
+    color: var(--nl-score-goal-990k);
+}
+.noslog-ui .nl-score-popover__score[data-tone="pianist"] {
+    color: var(--nl-score-goal-pianist);
+}
+.noslog-ui .nl-score-popover__chevron {
+    width: 16px;
+    height: 16px;
+    flex: none;
+    color: var(--nl-content-subdued);
+}
+.noslog-ui .nl-score-list__title {
+    margin: 0;
+    padding: 6px var(--nl-spacing-12) 2px;
+}
+.noslog-ui .nl-score-list ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.noslog-ui .nl-score-list__row {
+    gap: var(--nl-spacing-8);
+    min-height: var(--nl-control-height);
+    padding: 0 var(--nl-spacing-12);
+}
+.noslog-ui .nl-score-list__row .nl-score-popover__name {
+    flex: 1;
+}
+.noslog-ui .nl-score-list__rank {
+    width: 24px;
+    flex: none;
+    text-align: end;
+    font-variant-numeric: tabular-nums;
+}
+@media (hover: hover) {
+    .noslog-ui .nl-score-card:hover,
+    .noslog-ui .nl-score-list__row:hover {
+        background: var(--nl-interaction-hover);
+    }
+}
+.noslog-ui .nl-score-card:active,
+.noslog-ui .nl-score-list__row:active {
+    background: var(--nl-interaction-selected-pressed);
 }
 /* 곡 상세 랭킹 탭 순위표 — 유저 랭킹 페이지와 같은 목록 규격(nl-ranking-head · nl-player-row, globalRankings.css) · 2026-09-14.
    순위 · 아바타 · 국기 · 이름 · 명판, 오른쪽 끝은 등급 메달 · 점수 · FC */

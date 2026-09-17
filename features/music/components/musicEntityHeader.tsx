@@ -1,5 +1,6 @@
 "use client";
 
+import { ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useLayoutEffect, useRef, useState } from "react";
@@ -16,9 +17,10 @@ import type {
     ChartDetail,
     Difficulty,
     MusicInfo,
+    UserPlayData,
 } from "@/components/music/musicDetailTypes";
-import { foundationButtonClass } from "@/components/ui/Button";
 import StatStrip from "@/components/ui/statStrip";
+import { scoreTone } from "@/lib/music/scoreTone";
 import { tierValueColor } from "@/lib/music/tierValueColor";
 import { tierGoalLabels } from "@/lib/tiers";
 import { cn } from "@/lib/utils";
@@ -65,15 +67,22 @@ export default function MusicEntityHeader({
     difficulty,
     chart,
     pending = false,
-    rank = null,
+    record = null,
+    signedIn = false,
+    loginHref,
     children,
 }: {
     music: MusicInfo;
     difficulty: Difficulty;
     chart: ChartDetail | null;
     pending?: boolean;
-    /** 선택한 채보의 내 스코어 등급 — 기록이 있을 때만 제목 옆 공식 아이콘 */
-    rank?: string | null;
+    /** 선택한 채보의 내 최고 기록 — 수치 상자 맨 위 「내 최고 기록」 줄 */
+    record?: Pick<
+        UserPlayData,
+        "score" | "rank" | "fc_type" | "grade_basic"
+    > | null;
+    signedIn?: boolean;
+    loginHref: string;
     /** 난이도 세그먼트 — 자켓 · 제목 아래, 수치 띠 위 */
     children?: ReactNode;
 }) {
@@ -83,7 +92,6 @@ export default function MusicEntityHeader({
     const [expanded, setExpanded] = useState(false);
     const [fit, setFit] = useState<TitleFit>(initialFit);
     const identity = useRef<HTMLDivElement>(null);
-    const gradeAsset = rank ? rankAssetNames[rank.toUpperCase()] : undefined;
     // 곡이 바뀌면 접힌 상태로
     const [shown, setShown] = useState(music.index);
     if (shown !== music.index) {
@@ -102,46 +110,112 @@ export default function MusicEntityHeader({
         observer.observe(element);
         void document.fonts.ready.then(measure);
         return () => observer.disconnect();
-    }, [music.title, music.artist, music.localizedTitle, gradeAsset]);
+    }, [music.title, music.artist, music.localizedTitle]);
     const video =
         chart?.play_video_url && /^https?:\/\//i.test(chart.play_video_url)
             ? chart.play_video_url
             : null;
-    const actions = pending
-        ? []
-        : [
-              ...(chart?.has_published_pattern
-                  ? [
-                        <Link
-                            key="chart"
-                            href={href(
-                                `/music/${music.index}/${difficulty.toLowerCase()}/pattern`
-                            )}
-                            className={foundationButtonClass({
-                                variant: "secondary",
-                                size: "sm",
-                            })}
-                        >
-                            {t("detail.viewChart")}
-                        </Link>,
-                    ]
-                  : []),
-              ...(video
-                  ? [
-                        <a
-                            key="video"
-                            href={video}
-                            className={foundationButtonClass({
-                                variant: "secondary",
-                                size: "sm",
-                            })}
-                        >
-                            {t("detail.playVideo")}
-                        </a>,
-                    ]
-                  : []),
-          ];
+    const chevron = (
+        <ChevronRight className="nl-action-group__chevron" aria-hidden />
+    );
+    // 없는 동작도 자리는 두고 흐리게(누를 수 없음) — 난이도를 바꿔도 줄이 흔들리지 않게 (2026-09-17)
+    const unavailable = (key: string, label: string) => (
+        <span key={key} className="nl-action-group__item" aria-disabled="true">
+            {label}
+            {chevron}
+        </span>
+    );
+    const actions = [
+        !pending && chart?.has_published_pattern ? (
+            <Link
+                key="chart"
+                href={href(
+                    `/music/${music.index}/${difficulty.toLowerCase()}/pattern`
+                )}
+                className="nl-action-group__item"
+            >
+                {t("detail.viewChart")}
+                {chevron}
+            </Link>
+        ) : (
+            unavailable("chart", t("detail.viewChart"))
+        ),
+        !pending && video ? (
+            <a key="video" href={video} className="nl-action-group__item">
+                {t("detail.playVideo")}
+                {chevron}
+            </a>
+        ) : (
+            unavailable("video", t("detail.playVideo"))
+        ),
+    ];
     const constant = music.constants?.[difficulty];
+    // 내 최고 기록 한 줄 — 왼쪽 등급 메달 + 최고 점수(목표 색), 오른쪽 Grd 크게(정수 24 · 소수 16) (2026-09-17 B3)
+    const shownRecord = pending ? null : record;
+    const medal = shownRecord
+        ? shownRecord.fc_type === 3 || shownRecord.score >= 1_000_000
+            ? "p"
+            : rankAssetNames[shownRecord.rank.toUpperCase()]
+        : undefined;
+    const [grdWhole, grdFraction] = shownRecord
+        ? (shownRecord.grade_basic / 100).toFixed(2).split(".")
+        : [];
+    const myBest = (
+        <div
+            className="nl-my-best"
+            role="group"
+            aria-label={t("detail.myBest")}
+        >
+            <div className="nl-my-best__record">
+                {medal ? (
+                    <Image
+                        src={`/grade/grade_${medal}.png`}
+                        alt={t("music.record.rankLabel", {
+                            rank: medal === "p" ? "P" : shownRecord!.rank,
+                        })}
+                        width={28}
+                        height={28}
+                        className="nl-my-best__medal"
+                    />
+                ) : null}
+                <div className="nl-my-best__score">
+                    <span className="nl-metadata nl-muted">
+                        {t("detail.myBest")}
+                    </span>
+                    <span
+                        className="nl-control nl-my-best__score-value"
+                        data-tone={
+                            shownRecord
+                                ? scoreTone(shownRecord.score)
+                                : undefined
+                        }
+                    >
+                        {shownRecord
+                            ? shownRecord.score.toLocaleString(locale)
+                            : "—"}
+                    </span>
+                </div>
+            </div>
+            {shownRecord ? (
+                <span className="nl-my-best__grd">
+                    <span className="nl-my-best__grd-value">
+                        {grdWhole}
+                        <span className="nl-my-best__grd-fraction">
+                            .{grdFraction}
+                        </span>
+                    </span>
+                    <span className="nl-metadata nl-muted">Grd</span>
+                </span>
+            ) : !signedIn && !pending ? (
+                <Link className="nl-heading-link nl-control" href={loginHref}>
+                    {t("detail.myBestLogin")}
+                    <ChevronRight aria-hidden />
+                </Link>
+            ) : (
+                <span className="nl-my-best__grd nl-muted">—</span>
+            )}
+        </div>
+    );
     const collapsed = !expanded;
     const truncated = fit.titleCut || fit.translationCut || fit.artistCut;
     return (
@@ -153,7 +227,7 @@ export default function MusicEntityHeader({
                     background={music.background}
                     appearance="foundation"
                 />
-                {/* 제목 · 번역 · 아티스트 모두 한 줄, 넘치면 끝 페이드 — 누르면 모두 펼침. 등급은 제목 한 줄 높이(32 · 40)로 제목 글자 끝 8 뒤 (2026-09-17) */}
+                {/* 제목 · 번역 · 아티스트 모두 한 줄, 넘치면 끝 페이드 — 누르면 모두 펼침. 내 등급은 수치 상자 「내 최고 기록」 줄로 옮김 (2026-09-17 B3) */}
                 <div
                     ref={identity}
                     className="nl-music-entity__copy"
@@ -167,10 +241,7 @@ export default function MusicEntityHeader({
                     >
                         {music.category_short}
                     </span>
-                    <div
-                        className="nl-music-entity__heading"
-                        data-grade={gradeAsset ? "" : undefined}
-                    >
+                    <div className="nl-music-entity__heading">
                         <div className="nl-music-entity__title-row">
                             <h1
                                 className={cn(
@@ -181,17 +252,6 @@ export default function MusicEntityHeader({
                             >
                                 {music.title}
                             </h1>
-                            {gradeAsset ? (
-                                <Image
-                                    src={`/grade/grade_${gradeAsset}.png`}
-                                    alt={t("music.record.rankLabel", {
-                                        rank: rank!,
-                                    })}
-                                    width={40}
-                                    height={40}
-                                    className="nl-music-entity__grade"
-                                />
-                            ) : null}
                         </div>
                         {music.localizedTitle ? (
                             <p
@@ -258,10 +318,14 @@ export default function MusicEntityHeader({
                               }
                     ),
                 ]}
+                header={myBest}
+                // 채보 보기 · 플레이 영상 = 같은 상자 아래 칸, 반반 · 글자 + › · 없는 쪽은 흐리게 (2026-09-17 I1C)
+                footer={
+                    <div className="nl-action-group nl-music-entity__actions">
+                        {actions}
+                    </div>
+                }
             />
-            {actions.length ? (
-                <div className="nl-music-entity__actions">{actions}</div>
-            ) : null}
         </div>
     );
 }

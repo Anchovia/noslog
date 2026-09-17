@@ -15,7 +15,12 @@ import {
 } from "./musicDetailData";
 import type { Locale } from "@/lib/i18n/routing";
 import { getLocalizedMusicTitle } from "@/lib/i18n/musicTitle";
-import { getChartRanking, MUSIC_RANKING_PAGE_SIZE } from "./chartRanking";
+import {
+    getChartRanking,
+    getChartScorePlayer,
+    getChartScorePlayers,
+    MUSIC_RANKING_PAGE_SIZE,
+} from "./chartRanking";
 import { getCommunityData } from "./communityData";
 import { logServerError } from "@/lib/observability/server";
 import {
@@ -210,11 +215,24 @@ export async function loadMusicDetail(
         pageSize: MUSIC_RANKING_PAGE_SIZE,
         totalCount: 0,
         userRank: null,
+        players: [],
     };
 
     if (activeTab === "ranking") {
         const rankingData = await getChartRanking(chart.id, rankingPage);
         Object.assign(ranking, rankingData);
+        // 곡선 위 사진 — 상위 목록에 내가 없으면 내 줄을 더한다 (2026-09-17)
+        const players = await getChartScorePlayers(
+            chart.id,
+            rankingData.totalCount
+        );
+        const me =
+            userId &&
+            userPlayData &&
+            !players.some((player) => player.user_id === userId)
+                ? await getChartScorePlayer(chart.id, userId)
+                : null;
+        ranking.players = me ? [...players, me] : players;
     }
     // 내 순위 — 랭킹 탭과 개요 탭(내 기록 요약 띠)에서 (2026-09-16)
     if (userPlayData && (activeTab === "ranking" || activeTab === "detail")) {

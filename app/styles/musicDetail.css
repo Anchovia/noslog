@@ -43,7 +43,7 @@
     text-align: left;
 }
 /* 제목(페이지 제목 고정) · 번역 · 아티스트는 접힌 상태에서 모두 한 줄, 넘치면 끝 페이드.
-   등급 24는 제목 글자 끝 8 뒤(제목이 넘치면 제목이 그 앞에서 흐려짐). 번역은 등급 자리(24 + 8) 앞에서 끝 (2026-09-17) */
+   내 등급은 제목 옆이 아니라 수치 상자 「내 최고 기록」 줄에 (2026-09-17 B3) */
 .noslog-ui .nl-music-entity__heading {
     display: flex;
     flex-direction: column;
@@ -69,47 +69,67 @@
     overflow: hidden;
     white-space: nowrap;
 }
-/* 펼치면 제목이 여러 줄 — 등급은 첫 줄 높이 가운데(줄 높이 32 · 1056 이상 40) */
 .noslog-ui .nl-music-entity__copy[data-expanded] .nl-music-entity__title-row {
     align-items: flex-start;
-}
-.noslog-ui .nl-music-entity__copy[data-expanded] .nl-music-entity__grade {
-    margin-top: 0;
-}
-@media (min-width: 1056px) {
-    .noslog-ui .nl-music-entity__copy[data-expanded] .nl-music-entity__grade {
-        margin-top: 0;
-    }
 }
 .noslog-ui .nl-music-entity__translation {
     margin: 0;
     color: var(--nl-content-default);
 }
-.noslog-ui
-    .nl-music-entity__heading[data-grade]
-    > .nl-music-entity__translation {
-    margin-inline-end: calc(
-        var(--nl-type-line-height-32) + var(--nl-spacing-8)
-    );
+/* 내 최고 기록 — 수치 상자 맨 위 칸(surface · 최소 56 · 안쪽 8/12). 왼쪽 등급 메달 28 + 「내 최고 기록」 metadata / 점수 control 600(목표 색),
+   오른쪽 Grd = 정수 24 · 소수 16 굵게 tabular + 단위 metadata. 로그아웃이면 오른쪽에 「로그인하고 보기 ›」 (2026-09-17 B3) */
+.noslog-ui .nl-my-best {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--nl-spacing-12);
+    min-height: 56px;
+    padding: var(--nl-spacing-8) var(--nl-spacing-12);
+    background: var(--nl-surface-surface);
 }
-.noslog-ui .nl-music-entity__grade {
+.noslog-ui .nl-my-best__record {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+    min-width: 0;
+}
+.noslog-ui .nl-my-best__medal {
     flex: none;
-    width: var(--nl-type-line-height-32);
-    height: var(--nl-type-line-height-32);
+    width: 28px;
+    height: 28px;
 }
-/* 등급 = 제목 한 줄 높이(폰 32 · 1056 이상 40) (2026-09-17) */
-@media (min-width: 1056px) {
-    .noslog-ui
-        .nl-music-entity__heading[data-grade]
-        > .nl-music-entity__translation {
-        margin-inline-end: calc(
-            var(--nl-type-line-height-40) + var(--nl-spacing-8)
-        );
-    }
-    .noslog-ui .nl-music-entity__grade {
-        width: var(--nl-type-line-height-40);
-        height: var(--nl-type-line-height-40);
-    }
+.noslog-ui .nl-my-best__score {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+.noslog-ui .nl-my-best__score-value {
+    font-weight: var(--nl-type-weight-semibold);
+    font-variant-numeric: tabular-nums;
+}
+.noslog-ui .nl-my-best__score-value[data-tone="s"] {
+    color: var(--nl-score-goal-s);
+}
+.noslog-ui .nl-my-best__score-value[data-tone="990k"] {
+    color: var(--nl-score-goal-990k);
+}
+.noslog-ui .nl-my-best__score-value[data-tone="pianist"] {
+    color: var(--nl-score-goal-pianist);
+}
+.noslog-ui .nl-my-best__grd {
+    display: inline-flex;
+    flex: none;
+    align-items: baseline;
+    gap: var(--nl-spacing-4);
+}
+.noslog-ui .nl-my-best__grd-value {
+    font-size: var(--nl-type-size-24);
+    line-height: var(--nl-type-line-height-32);
+    font-weight: var(--nl-type-weight-bold);
+    font-variant-numeric: tabular-nums;
+}
+.noslog-ui .nl-my-best__grd-fraction {
+    font-size: var(--nl-type-size-16);
 }
 /* 카테고리 배지 — 자켓 위가 아니라 제목 바로 위 왼쪽(플레이트 · 글자색 규칙은 공용 그대로, 위치만). 배지 → 제목 4 */
 .noslog-ui .nl-music-entity__category {
@@ -128,11 +148,6 @@
     cursor: pointer;
 }
 /* 액션은 있는 것만 M 보조 버튼 한 줄 — 비활성 자리 채우기 없음 */
-.noslog-ui .nl-music-entity__actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--nl-spacing-8);
-}
 /* 난이도 세그먼트 — 공용 세그먼트 규격(L) 그대로, 항목 = 이름 + 색 레벨 숫자(사이 8). 320 폭은 약칭 */
 .noslog-ui .nl-difficulty-selector .nl-segments__item {
     gap: var(--nl-spacing-8);
