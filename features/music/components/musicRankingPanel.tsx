@@ -1,5 +1,6 @@
 "use client";
 
+import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useId, useRef } from "react";
 import type { ChartScorePlayer } from "@/features/music/schemas/chartRankingSchema";
@@ -11,10 +12,7 @@ import {
 import type { MusicDetailProps } from "@/components/music/musicDetailTypes";
 import Pagination from "@/components/ui/pagination";
 import ScoreScatter from "./scoreScatter";
-import ChartLeaderboard, {
-    FullComboMark,
-    ScoreGrade,
-} from "./chartLeaderboard";
+import ChartLeaderboard from "./chartLeaderboard";
 
 export default function MusicRankingPanel({
     data,
@@ -35,9 +33,8 @@ export default function MusicRankingPanel({
     const list = useRef<HTMLDivElement>(null);
     const sectionId = useId();
     const previousPage = useRef(data.ranking.page);
-    const { rows, page, pageSize, totalCount, userRank } = data.ranking;
+    const { rows, page, pageSize, totalCount } = data.ranking;
     const user = data.userPlayData;
-    const userOnPage = rows.some((row) => row.user_id === user?.user_id);
     useEffect(() => {
         if (!focusRequested?.() && previousPage.current === page) return;
         previousPage.current = page;
@@ -73,9 +70,6 @@ export default function MusicRankingPanel({
             <ScoreScatter
                 scores={data.chartDetail.scoreSeries}
                 distribution={data.chartDetail.scoreDistribution}
-                participants={totalCount}
-                userScore={user?.score ?? null}
-                userTopPercent={data.chartDetail.userTopPercent}
                 players={data.ranking.players ?? []}
                 meId={user?.user_id ?? null}
                 onShowPlayer={showPlayer}
@@ -84,62 +78,28 @@ export default function MusicRankingPanel({
                 className="nl-ranking-section"
                 aria-labelledby={`${sectionId}-title`}
             >
-                {/* 순위 구역 제목 줄 — 오른쪽 내 순위 / 참가자 (2026-09-16) */}
-                <div className="nl-ranking-section__heading">
-                    <h2 id={`${sectionId}-title`} className="nl-section-title">
-                        {t("rankings.column.rank")}
-                    </h2>
-                    {user && userRank ? (
-                        <span className="nl-metadata nl-muted">
-                            {t("rankings.myRank")}{" "}
-                            {userRank.toLocaleString(locale)} /{" "}
-                            {totalCount.toLocaleString(locale)}
-                        </span>
-                    ) : null}
-                </div>
+                {/* 제목 · 내 순위 글자는 두지 않는다 — 순위표가 스스로 말한다 (2026-09-18 사용자 결정).
+                    구역 이름은 낭독용으로만 남기고, 로그아웃 때만 로그인 링크 한 줄 */}
+                <h2 id={`${sectionId}-title`} className="sr-only">
+                    {t("rankings.column.rank")}
+                </h2>
                 {!data.isLoggedIn ? (
-                    <Link
-                        className="nl-ranking-login nl-link nl-control"
-                        href={href(
-                            `/login?returnTo=${encodeURIComponent(returnPath)}`
-                        )}
-                    >
-                        {t("ranking.signIn")}
-                    </Link>
-                ) : !user ? (
+                    <div className="nl-heading-row">
+                        <Link
+                            className="nl-heading-link nl-control"
+                            href={href(
+                                `/login?returnTo=${encodeURIComponent(returnPath)}`
+                            )}
+                        >
+                            {t("ranking.signIn")}
+                            <ChevronRight aria-hidden />
+                        </Link>
+                    </div>
+                ) : null}
+                {!data.isLoggedIn ? null : !user ? (
                     <p className="nl-body-secondary nl-muted">
                         {t("ranking.noRank")}
                     </p>
-                ) : !userOnPage ? (
-                    <div className="nl-my-rank-summary">
-                        <span className="nl-inline">
-                            <span className="nl-body-secondary nl-muted">
-                                {t("rankings.myRank")}
-                            </span>
-                            <span className="nl-metric-value">
-                                {userRank?.toLocaleString(locale) ?? "—"} /{" "}
-                                {totalCount.toLocaleString(locale)}
-                            </span>
-                        </span>
-                        <span className="nl-my-rank-summary__result">
-                            <ScoreGrade
-                                rank={
-                                    user.fc_type === 3 ||
-                                    user.score >= 1_000_000
-                                        ? "P"
-                                        : user.rank
-                                }
-                            />
-                            <span className="nl-metric-value">
-                                {user.score.toLocaleString(locale)}
-                            </span>
-                            <FullComboMark
-                                fcType={
-                                    user.score >= 1_000_000 ? 3 : user.fc_type
-                                }
-                            />
-                        </span>
-                    </div>
                 ) : null}
                 <div
                     className="nl-ranking-list nl-stack"

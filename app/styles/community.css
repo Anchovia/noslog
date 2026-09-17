@@ -8,10 +8,10 @@
 }
 /* 구역 제목 → 내용 12 (간격 결정 2026-09-15) */
 .noslog-ui .nl-community-votes {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-12);
     min-width: 0;
+}
+.noslog-ui .nl-community-votes > .nl-disclosure__body > .nl-heading-row {
+    margin-bottom: var(--nl-spacing-8);
 }
 /* 서열 투표 안 모드 묶음(Basic · Recital) — 제목 → 줄 8, 묶음 사이 24(구역 gap 12 + 12) */
 .noslog-ui .nl-tier-mode {
@@ -28,11 +28,16 @@
     flex-direction: column;
     gap: var(--nl-spacing-16);
 }
-/* 날짜 펼침 줄은 간격 없이 쌓고 사이 구분선은 공용 펼침 규칙 */
+/* 날짜 묶음 하나 = 카드 하나(공용 펼침 card · 요약 줄 컨트롤 높이 · 안쪽 16), 카드 사이 8.
+   구역 제목 → 날짜 → 항목이 상자로 갈린다 — 들여쓰기 대신 컨테이너 (2026-09-18 사용자 결정 C1) */
 .noslog-ui .nl-tier-history__days {
     display: flex;
     flex-direction: column;
+    gap: var(--nl-spacing-8);
     min-width: 0;
+}
+.noslog-ui .nl-tier-history__day > .nl-disclosure__body {
+    padding: var(--nl-spacing-8) var(--nl-spacing-16) var(--nl-spacing-16);
 }
 .noslog-ui .nl-tier-history li {
     display: flex;
@@ -45,7 +50,7 @@
     border-top: 1px solid var(--nl-border-divider);
 }
 /* 서열 투표 목록 — 카드(surface · 모서리 8 · 안쪽 좌우 16) 안 선 목록. 줄 = 컨트롤 높이 · 줄 사이 1px divider.
-   펼친 내용은 줄 아래 같은 카드 안(아래 16) */
+   여는 줄 올림 · 누름 = 줄 전체 면(좌우 12 넓혀 칠함, 글자 선 그대로). 펼친 내용은 같은 카드 안 위 8 · 아래 8 (2026-09-18) */
 .noslog-ui .nl-vote-list {
     display: flex;
     flex-direction: column;
@@ -72,37 +77,44 @@
     gap: var(--nl-spacing-8);
     white-space: nowrap;
 }
+.noslog-ui button.nl-vote-row {
+    margin-inline: calc(var(--nl-spacing-12) * -1);
+    padding-inline: var(--nl-spacing-12);
+    width: calc(100% + var(--nl-spacing-24));
+    border-radius: var(--nl-radius-container);
+}
+/* 넓힌 줄의 구분선은 글자 선 안쪽에만(면만 넓힌다) */
+.noslog-ui .nl-vote-list > button.nl-vote-row + button.nl-vote-row,
+.noslog-ui .nl-vote-list > .nl-vote-row + button.nl-vote-row,
+.noslog-ui .nl-vote-list__body + button.nl-vote-row {
+    border-top: 0;
+    background-image: linear-gradient(
+        var(--nl-border-divider),
+        var(--nl-border-divider)
+    );
+    background-repeat: no-repeat;
+    background-position: var(--nl-spacing-12) 0;
+    background-size: calc(100% - var(--nl-spacing-24)) 1px;
+}
 @media (hover: hover) {
-    .noslog-ui button.nl-vote-row:hover > span:first-child {
-        color: var(--nl-content-default);
+    .noslog-ui button.nl-vote-row:hover {
+        background-color: var(--nl-interaction-hover);
     }
+}
+.noslog-ui button.nl-vote-row:active {
+    background-color: var(--nl-interaction-selected-pressed);
 }
 .noslog-ui .nl-vote-list__body {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-12);
-    padding-bottom: var(--nl-spacing-16);
+    gap: var(--nl-spacing-8);
+    padding-block: var(--nl-spacing-8);
 }
 .noslog-ui .nl-vote-distribution {
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-8);
     min-width: 0;
-    padding: var(--nl-spacing-12);
-    border-radius: var(--nl-radius-container);
-    background: var(--nl-surface-sunken);
-}
-.noslog-ui .nl-vote-distribution__header {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    gap: var(--nl-spacing-8);
-}
-.noslog-ui .nl-vote-distribution__header > p {
-    display: flex;
-    align-items: center;
-    gap: var(--nl-spacing-8);
 }
 .noslog-ui .nl-vote-distribution__window {
     display: flex;
@@ -141,24 +153,22 @@
 .noslog-ui .nl-vote-distribution__slot > span[data-rank="1"] {
     background: var(--nl-local-data-bucket-3);
 }
-.noslog-ui .nl-pattern-form {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-12);
-    min-width: 0;
-}
-/* 제목 줄 오른쪽 끝 한 곳 = 저장 상태(메타) · 실패 문구 + 다시 시도 · 선택 해제 (2026-09-17 바로 저장) */
+/* 펼친 내용 첫 줄 오른쪽 끝 한 곳 = 저장 상태(메타) · 실패 문구 + 다시 시도 · 선택 해제
+   (2026-09-17 바로 저장 · 09-18 구역이 아코디언이 되며 제목 줄 → 내용 첫 줄) */
 .noslog-ui .nl-pattern-form__status {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
     gap: var(--nl-spacing-8);
-    margin-left: auto;
+    min-height: var(--nl-control-height-compact);
+    margin-bottom: var(--nl-spacing-8);
 }
-.noslog-ui .nl-pattern-form__status > .nl-heading-link {
-    margin-left: 0;
+/* 저장 상태 · 동작이 없을 때는 자리를 차지하지 않는다 — 제목 → 내용 간격이 벌어지지 않게 */
+.noslog-ui .nl-pattern-form__status:empty {
+    display: none;
 }
 .noslog-ui .nl-pattern-form__error {
-    color: var(--nl-feedback-danger-marker);
+    color: var(--nl-feedback-error-text);
 }
 /* 평가할 수 없을 때 — 목록 흐림 5px(투명도는 그대로) + 가운데 떠 있는 카드(떠 있는 창 규격: overlay 면 · 경계 · 모서리 10 · 그림자).
    입력 영역 잠금에만 쓴다 (2026-09-17 L2) */
@@ -237,7 +247,8 @@
     flex-direction: column;
     gap: var(--nl-spacing-12);
 }
-/* 투표 입력 한 줄 = 셀렉트(남는 폭) + (내 투표 있으면 「투표 삭제」 고스트) + 「투표 저장」 — 모두 L, 사이 8 */
+/* 투표 입력 한 줄 = 카드 안 인라인 칸이라 **M 한 단계**(의견 작성 칸 · 평가 잠금 카드와 같음, 2026-09-18 사용자 지적).
+   셀렉트도 같은 줄이라 M — 높이 36(1056 이상 32) · 글자 14/20 · 안쪽은 입력 규격(좌우 12−1) */
 .noslog-ui .nl-vote-form__row {
     display: flex;
     align-items: center;
@@ -251,24 +262,31 @@
 .noslog-ui .nl-vote-form__row > .nl-button {
     flex-shrink: 0;
 }
+.noslog-ui .nl-vote-form .nl-select {
+    min-height: var(--nl-control-height-compact);
+    padding-block: calc(var(--nl-spacing-8) - 1px);
+    font-size: var(--nl-type-size-14);
+    line-height: var(--nl-type-line-height-20);
+}
 .noslog-ui .nl-opinions {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-12);
     min-width: 0;
 }
-/* 의견 제목 줄(구역 제목) → 12 → 작성 칸 → 8 → 목록 (2026-09-16 · 정렬은 최신순 하나라 메뉴 없음) */
-.noslog-ui .nl-opinions__toolbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: var(--nl-spacing-8);
+.noslog-ui .nl-opinions > .nl-disclosure__body > .nl-heading-row {
+    margin-bottom: var(--nl-spacing-8);
 }
-/* 의견 목록 — 상자 없는 줄(2026-09-16 L2). 줄 = 아바타 32 열 + 내용 열(사이 12) · 위아래 16 · 줄 위 1px divider */
+/* 의견 제목 줄(공용 제목 줄) → 12 → 작성 칸 → 8 → 목록 · 빈 안내 (2026-09-16 · 09-18 · 정렬은 최신순 하나라 메뉴 없음) */
+.noslog-ui .nl-opinions__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
+    min-width: 0;
+}
+/* 의견 목록 — 상자도 구분선도 없이 간격 16 으로만 가른다(2026-09-16 L2 · 09-18 O1).
+   형식이 반복되는 목록에는 구분선을 쓰지 않는다(Material 3) · 실측한 YouTube 댓글도 배경 · 테두리 없이 간격 16 */
 .noslog-ui .nl-opinions__list {
     display: flex;
     flex-direction: column;
+    gap: var(--nl-spacing-16);
 }
 .noslog-ui .nl-opinion-row {
     display: grid;
@@ -276,8 +294,6 @@
     align-items: start;
     column-gap: var(--nl-spacing-12);
     min-width: 0;
-    padding-block: var(--nl-spacing-16);
-    border-top: 1px solid var(--nl-border-divider);
     scroll-margin-top: 76px;
 }
 .noslog-ui .nl-opinion-row > .nl-avatar:has(> svg) {
@@ -290,11 +306,12 @@
     min-width: 0;
 }
 /* 첫 줄 = 이름 · 날짜 · ⋯ — ⋯(아이콘 버튼)은 줄 높이 20 에 맞춰 위아래 · 오른쪽으로 (컨트롤 − 20) / 2 당긴다 */
+/* 이름 줄은 글자 높이 그대로(20) — 이름과 본문이 한 덩어리로 붙는다 (2026-09-18 O1) */
 .noslog-ui .nl-opinion-row__header {
     display: flex;
     align-items: center;
     gap: var(--nl-spacing-8);
-    min-height: 32px;
+    min-height: var(--nl-type-line-height-20);
     min-width: 0;
 }
 .noslog-ui .nl-opinion-row__name {
@@ -309,9 +326,12 @@
     white-space: nowrap;
 }
 .noslog-ui .nl-opinion-row__header > .nl-button--icon {
-    margin: calc((var(--nl-control-height) - 32px) / -2)
+    margin: calc(
+            (var(--nl-control-height) - var(--nl-type-line-height-20)) / -2
+        )
         calc((var(--nl-control-height) - var(--nl-icon-medium)) / -2)
-        calc((var(--nl-control-height) - 32px) / -2) auto;
+        calc((var(--nl-control-height) - var(--nl-type-line-height-20)) / -2)
+        auto;
 }
 .noslog-ui .nl-opinion-row__body {
     white-space: pre-wrap;
@@ -325,7 +345,6 @@
     align-items: start;
     column-gap: var(--nl-spacing-12);
     min-width: 0;
-    padding-bottom: var(--nl-spacing-8);
 }
 .noslog-ui .nl-opinion-composer[data-inline] {
     grid-template-columns: minmax(0, 1fr);
@@ -375,6 +394,10 @@
     border: 1px solid var(--nl-border-overlay);
     z-index: 70;
 }
+/* 되돌릴 수 없는 항목은 위험 버튼과 같은 글자색 (2026-09-18 사용자 지적) */
+.noslog-ui .nl-action-menu__item[data-destructive] {
+    color: var(--nl-feedback-error-text);
+}
 .noslog-ui .nl-action-menu__item {
     display: flex;
     align-items: center;
@@ -393,7 +416,8 @@
     .noslog-ui .nl-music-detail .nl-community-columns {
         display: grid;
         grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
-        gap: var(--nl-spacing-24);
+        /* 열 사이 16 = 개요 두 열과 같음 (2026-09-18 사용자 결정) */
+        gap: var(--nl-spacing-32) var(--nl-spacing-16);
         align-items: start;
     }
 }

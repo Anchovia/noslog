@@ -6,6 +6,7 @@ import {
     useLocalizedHref,
     useTranslations,
 } from "@/components/i18n/localeProvider";
+import { rankDisplayName } from "@/components/music/musicDetailConfig";
 import type { MusicDetailProps } from "@/components/music/musicDetailTypes";
 import JudgementAnalysis from "./judgementAnalysis";
 import RecentRecordPlay from "./recentRecordPlay";
@@ -23,7 +24,9 @@ export default function MusicRecordPanel({ data }: { data: MusicDetailProps }) {
     if (!data.isLoggedIn)
         return (
             <div className="nl-record-state">
-                <p className="nl-body">{t("record.guest")}</p>
+                <p className="nl-body-secondary nl-muted">
+                    {t("record.guest")}
+                </p>
                 <Link
                     className={foundationButtonClass({ variant: "primary" })}
                     href={href(
@@ -37,20 +40,24 @@ export default function MusicRecordPanel({ data }: { data: MusicDetailProps }) {
     if (!record || record.score <= 0)
         return (
             <div className="nl-record-state">
-                <p className="nl-body">{t("record.empty")}</p>
+                <p className="nl-body-secondary nl-muted">
+                    {t("record.empty")}
+                </p>
             </div>
         );
     const count = (value: number) => value.toLocaleString(locale);
     const pianist = record.fc_type === 3 || record.score >= 1_000_000;
-    const grade = pianist ? "P" : record.rank;
+    // 등급 코드(A2 · B2)는 화면 표기(A+ · B+)로
+    const grade = pianist ? "P" : rankDisplayName(record.rank);
     // 순위표 FC 표시와 같은 기준(fc_type 2 이상 · Pianist)
     const fullCombo = pianist || record.fc_type >= 2;
     // 큰 숫자(32px) 대신 수치 띠 16/600 — 새 글자 단계를 만들지 않는다(2026-09-16 사용자 결정)
     return (
         <div className="nl-record-panel">
-            <div className="nl-detail-columns">
-                <section className="nl-detail-panel">
-                    <h2 className="nl-section-title">{t("record.best")}</h2>
+            {/* 다섯 구역이 한 목록 — 공용 펼침 규칙(구분선 · 내용 위아래 16)을 그대로 받는다 (2026-09-18 R1) */}
+            <div className="nl-record-disclosures">
+                {/* 핵심 수치 두 칸도 접을 수 있게 — 기본은 펼침 (2026-09-18 사용자 결정) */}
+                <Disclosure heading="section" title={t("record.best")} open>
                     <StatStrip
                         label={t("record.best")}
                         items={[
@@ -70,17 +77,18 @@ export default function MusicRecordPanel({ data }: { data: MusicDetailProps }) {
                             {
                                 key: "combo",
                                 label: t("music.record.maxCombo"),
-                                // 콤보는 게임 표기처럼 「367x」 (2026-09-17)
-                                value: `${count(record.max_combo)}x`,
+                                // 콤보는 숫자만 — 「x」 를 붙이지 않는다 (2026-09-18 사용자 결정)
+                                value: count(record.max_combo),
                                 tone: fullCombo ? "fc" : undefined,
                             },
                         ]}
                     />
-                </section>
-                <section className="nl-detail-panel">
-                    <h2 className="nl-section-title">
-                        {t("record.cumulative")}
-                    </h2>
+                </Disclosure>
+                <Disclosure
+                    heading="section"
+                    title={t("record.cumulative")}
+                    open
+                >
                     <StatStrip
                         label={t("record.cumulative")}
                         items={[
@@ -101,22 +109,14 @@ export default function MusicRecordPanel({ data }: { data: MusicDetailProps }) {
                             },
                         ]}
                     />
-                </section>
-            </div>
-            {/* 판정 분석(기본 펼침) · 성장 추이 · 최근 플레이(기본 접힘) = 구역 펼침 세 줄(사이 구분선) (2026-09-16 · 09-17 판정 분석을 맨 위로) */}
-            <div className="nl-record-disclosures">
+                </Disclosure>
                 <JudgementAnalysis data={data} />
-                <Disclosure
-                    title={t("record.progress")}
-                    heading="section"
-                    className="nl-record-progress"
-                >
+                <Disclosure title={t("record.progress")} heading="section">
                     <ScoreImprovementChart points={data.scoreTrend} />
                 </Disclosure>
                 <Disclosure
                     title={t("music.record.recentPlays")}
                     heading="section"
-                    className="nl-record-recent"
                 >
                     {data.recentChartPlays.length ? (
                         <ul className="nl-recent-plays">

@@ -1,7 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+    keepPreviousData,
+    useQuery,
+    useQueryClient,
+} from "@tanstack/react-query";
 import {
     useLocale,
     useLocalizedHref,
@@ -73,8 +77,11 @@ export default function MusicDetailPage({
             accountId: initialData.accountId,
         }),
         initialData: initialTarget ? initialData : undefined,
+        // 바꾸는 동안 머리는 이전 값을 pending 색으로 유지(느린 교체 규칙) — 탭 내용은 새 값이 올 때까지 스켈레톤
+        placeholderData: keepPreviousData,
     });
-    const data = query.data;
+    const data = query.isPlaceholderData ? undefined : query.data;
+    const headerData = query.data;
     const focusRanking = useRef(false);
     const change = (difficulty: Difficulty, tab: DetailTab, page = 1) => {
         focusRanking.current =
@@ -152,10 +159,10 @@ export default function MusicDetailPage({
                 <MusicEntityHeader
                     music={initialData.music}
                     difficulty={selection.difficulty}
-                    chart={data?.chartDetail ?? null}
+                    chart={headerData?.chartDetail ?? null}
                     pending={!data}
-                    record={data?.userPlayData ?? null}
-                    signedIn={data?.isLoggedIn ?? initialData.isLoggedIn}
+                    record={headerData?.userPlayData ?? null}
+                    signedIn={headerData?.isLoggedIn ?? initialData.isLoggedIn}
                     loginHref={href(
                         `/login?returnTo=${encodeURIComponent(
                             href(
@@ -202,6 +209,7 @@ export default function MusicDetailPage({
                             title={t("detail.error")}
                             action={
                                 <ActionButton
+                                    size="sm"
                                     onClick={() => void query.refetch()}
                                 >
                                     {t("common.retry")}
@@ -223,7 +231,10 @@ export default function MusicDetailPage({
                                 }
                             />
                         ) : (
-                            <div className="nl-detail-loading" aria-hidden />
+                            <div
+                                className="nl-skeleton nl-detail-loading"
+                                aria-hidden
+                            />
                         )
                     ) : null}
                     {data && selection.tab === "detail" ? (

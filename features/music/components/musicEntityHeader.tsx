@@ -63,8 +63,8 @@ function measureCopy(copy: HTMLElement): TitleFit {
 }
 
 /**
- * 악곡 상세 머리 — 자켓 80 · 제목 · 아티스트(폰 · 1056 미만은 가로, 1056+ 는 왼쪽 열에 세로).
- * 액션은 있는 것만 M 보조 버튼, 없으면 줄 자체가 없다. 수치 띠는 선택한 난이도의 내부 레벨 + 공개 서열 값 (2026-09-16)
+ * 악곡 상세 머리 — 자켓 80 · 제목 · 아티스트(1056 미만은 가로, 1056+ 는 왼쪽 열에 세로).
+ * 수치 상자 = 위 그레이드 줄 · 공식 레벨 + 공개 서열 값 · 아래 채보 보기 / 플레이 영상 칸(없으면 흐리게) (2026-09-16 · 09-18)
  */
 export default function MusicEntityHeader({
     music,
@@ -155,7 +155,8 @@ export default function MusicEntityHeader({
     ];
     const constant = music.constants?.[difficulty];
     // 내 스코어 등급 = 제목 글자 끝 8 뒤 공식 아이콘(기록 있을 때만, 펼치면 숨김) (2026-09-18)
-    const shownRecord = pending ? null : record;
+    // 바꾸는 동안에도 이전 기록을 둔다 — 값은 수치 상자 data-pending 으로 흐린 색 (2026-09-18)
+    const shownRecord = record;
     const medal = shownRecord
         ? shownRecord.fc_type === 3 || shownRecord.score >= 1_000_000
             ? "p"
@@ -199,7 +200,7 @@ export default function MusicEntityHeader({
                             )}
                         </span>
                     </span>
-                ) : !signedIn && !pending ? (
+                ) : !signedIn ? (
                     <Link
                         className="nl-heading-link nl-control"
                         href={loginHref}
@@ -208,10 +209,13 @@ export default function MusicEntityHeader({
                         <ChevronRight aria-hidden />
                     </Link>
                 ) : (
-                    <span className="nl-my-best__grd nl-muted">—</span>
+                    <span className="nl-body nl-muted">—</span>
                 )}
             </div>
-            <div className="nl-grade-progress" aria-hidden="true">
+            <div
+                className="nl-bar-list__track nl-grade-progress"
+                aria-hidden="true"
+            >
                 {progress > 0 ? (
                     <span
                         className="nl-grade-progress__fill"
@@ -320,8 +324,9 @@ export default function MusicEntityHeader({
             </div>
             {children}
             <StatStrip
-                className="nl-music-entity__stats"
+                className="nl-music-entity__stats nl-stat-strip--wide-list"
                 label={t("music.difficulty")}
+                pending={pending}
                 items={[
                     // 공식 레벨이 없으면(새 Real 채보 등) 칸은 두고 흐린 「—」 (2026-09-18)
                     constant !== null && constant !== undefined

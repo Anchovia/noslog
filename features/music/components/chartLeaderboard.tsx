@@ -7,22 +7,37 @@ import {
     useLocalizedHref,
     useTranslations,
 } from "@/components/i18n/localeProvider";
-import { rankAssetNames } from "@/components/music/musicDetailConfig";
+import {
+    rankAssetNames,
+    rankDisplayName,
+} from "@/components/music/musicDetailConfig";
 import Avatar from "@/components/ui/avatar";
 import CountryMarker from "@/components/ui/countryMarker";
 import type { ChartRankingRow } from "@/features/music/schemas/chartRankingSchema";
 
-export function ScoreGrade({ rank }: { rank: string }) {
+/** 등급 메달 — 순위표는 18(공용 순위표 규격 그대로), 악곡 상세 핀 창은 아이콘 규격 16 */
+export function ScoreGrade({
+    rank,
+    size = 18,
+}: {
+    rank: string;
+    size?: 16 | 18;
+}) {
     const t = useTranslations();
     const asset = rankAssetNames[rank.toUpperCase()];
     return (
-        <span className="nl-score-grade">
+        <span
+            className="nl-score-grade"
+            data-size={size === 16 ? "small" : undefined}
+        >
             {asset ? (
                 <Image
                     src={`/grade/grade_${asset}.png`}
-                    alt={t("music.record.rankLabel", { rank })}
-                    width={18}
-                    height={18}
+                    alt={t("music.record.rankLabel", {
+                        rank: rankDisplayName(rank),
+                    })}
+                    width={size}
+                    height={size}
                 />
             ) : (
                 <span className="sr-only">{rank || "—"}</span>

@@ -31,6 +31,7 @@ export default function OpinionComposer({
     avatar,
     returnTo,
     inline = false,
+    first = false,
     onDone,
 }: {
     chartId: number;
@@ -40,6 +41,8 @@ export default function OpinionComposer({
     returnTo: string;
     /** 내 의견 줄 안에서 고칠 때 — 아바타 없이 처음부터 펼친다 */
     inline?: boolean;
+    /** 아직 의견이 하나도 없을 때 — 빈 안내 문장 대신 자리표시자가 할 일을 말한다 (2026-09-18 E2) */
+    first?: boolean;
     onDone?: () => void;
 }) {
     const t = useTranslations();
@@ -138,12 +141,17 @@ export default function OpinionComposer({
                     data-expanded={expanded || undefined}
                     rows={expanded ? 3 : 1}
                     value={value}
-                    placeholder={t("community.opinionCompose")}
+                    placeholder={t(
+                        first
+                            ? "community.opinionFirst"
+                            : "community.opinionCompose"
+                    )}
                     aria-label={t("community.opinionLabel")}
                     aria-describedby={expanded ? `${id}-help` : undefined}
                     aria-invalid={Boolean(error) || undefined}
                     autoFocus={inline}
-                    disabled={mutation.isPending}
+                    // 저장 중에도 비활성 면으로 바꾸지 않는다 — 고칠 수만 없게(바쁨은 비활성이 아니다)
+                    readOnly={mutation.isPending}
                     onFocus={() => setFocused(true)}
                     onChange={(event) => setValue(event.target.value)}
                     onKeyDown={(event) => {
@@ -190,6 +198,7 @@ export default function OpinionComposer({
                                 size="sm"
                                 disabled={!trimmed && !saved}
                                 busy={mutation.isPending}
+                                busyLabel={t("community.saving")}
                                 onClick={() => void save()}
                             >
                                 {t("community.saveOpinion")}

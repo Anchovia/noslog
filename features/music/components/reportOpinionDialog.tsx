@@ -79,23 +79,32 @@ export default function ReportOpinionDialog({
                             type="submit"
                             form={id}
                             busy={mutation.isPending}
+                            busyLabel={t("community.reporting")}
                         >
                             {t("community.report")}
                         </ActionButton>
                     </>
-                ) : undefined
+                ) : (
+                    // 로그아웃 — 로그인도 창 액션 줄에(창 규격: 오른쪽 정렬 · 좁으면 폭 채움)
+                    <>
+                        <ActionButton variant="secondary" onClick={onClose}>
+                            {t("community.cancel")}
+                        </ActionButton>
+                        <Link
+                            href={href(
+                                `/login?returnTo=${encodeURIComponent(returnTo)}`
+                            )}
+                            className={foundationButtonClass({
+                                variant: "primary",
+                            })}
+                        >
+                            {t("common.login")}
+                        </Link>
+                    </>
+                )
             }
         >
-            {!accountId ? (
-                <Link
-                    href={href(
-                        `/login?returnTo=${encodeURIComponent(returnTo)}`
-                    )}
-                    className={foundationButtonClass({ variant: "secondary" })}
-                >
-                    {t("common.login")}
-                </Link>
-            ) : (
+            {!accountId ? null : (
                 <form
                     id={id}
                     className="nl-stack"

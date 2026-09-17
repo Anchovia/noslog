@@ -1,6 +1,8 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { ChevronRight } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import {
@@ -43,6 +45,7 @@ export default function MusicCommunityPanel({
                     action={
                         <ActionButton
                             variant="secondary"
+                            size="sm"
                             onClick={() => void query.refetch()}
                         >
                             {t("common.retry")}
@@ -74,7 +77,22 @@ export default function MusicCommunityPanel({
                         accountId={music.accountId}
                         returnTo={returnTo}
                         onEdit={() => setEditing(true)}
+                        // 로그아웃이면 작성 칸 대신 제목 줄 오른쪽 끝 제목 링크(가이드 2절)
+                        headerAction={
+                            music.accountId ? null : (
+                                <Link
+                                    className="nl-heading-link nl-control"
+                                    href={href(
+                                        `/login?returnTo=${encodeURIComponent(returnTo)}`
+                                    )}
+                                >
+                                    {t("community.opinionLoginAction")}
+                                    <ChevronRight aria-hidden />
+                                </Link>
+                            )
+                        }
                         composer={
+                            !music.accountId ||
                             data.currentEvaluation?.opinion ? null : (
                                 <OpinionComposer
                                     chartId={music.chartDetail.id}
@@ -82,6 +100,7 @@ export default function MusicCommunityPanel({
                                     accountId={music.accountId}
                                     avatar={music.userPlayData?.user.avatar}
                                     returnTo={returnTo}
+                                    first={!data.opinions.total}
                                 />
                             )
                         }

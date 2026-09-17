@@ -40,86 +40,54 @@
     gap: var(--nl-spacing-32);
     min-width: 0;
 }
-/* 점수 산점도 — 카드 surface 16 안에 svg 160. 점 = 차트 단일 색, 내 점 = 기본 글자색 + 링 + 라벨, 기준선 = divider, 축 글자 = metadata subdued (2026-09-16) */
+/* 점수 자 — 제목도 면도 없이 svg 80(핀 줄 · 자 · 라벨 줄)만. 자 = divider 선, 축 글자 = metadata subdued (2026-09-18 V1+V4) */
 .noslog-ui .nl-score-scatter {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-12);
     min-width: 0;
     margin: 0;
 }
-.noslog-ui .nl-score-scatter__header {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--nl-spacing-8);
-}
+/* 자 · 핀은 순위표 줄 안쪽(좌우 12)과 같은 선에서 시작한다 — 위 48(핀 줄) · 자 → 라벨 8 · 라벨 줄 16 = 높이 72 */
 .noslog-ui .nl-score-scatter__plot {
     position: relative;
-    padding: var(--nl-spacing-16);
-    border-radius: var(--nl-radius-container);
-    background: var(--nl-surface-surface);
+    padding-inline: var(--nl-spacing-12);
     min-width: 0;
 }
 .noslog-ui .nl-score-scatter__svg {
     display: block;
     overflow: visible;
 }
-.noslog-ui .nl-score-scatter__guide {
+.noslog-ui .nl-score-scatter__axis {
     stroke: var(--nl-border-divider);
     stroke-width: 1;
 }
+/* 기준 점수 글자는 각 목표 색(S 노랑 · 990k 살구 · Pianist 분홍) — 수치 띠 · 서열표와 같은 색 (2026-09-18 사용자 결정) */
 .noslog-ui .nl-score-scatter__label {
     fill: var(--nl-content-subdued);
     font-size: var(--nl-type-size-12);
-    font-variant-numeric: tabular-nums;
 }
-.noslog-ui .nl-score-scatter__label--me {
-    fill: var(--nl-content-default);
-    font-weight: var(--nl-type-weight-semibold);
+.noslog-ui .nl-score-scatter__label[data-goal="s"] {
+    fill: var(--nl-score-goal-s);
 }
-/* 분포 곡선(2026-09-17 D1) — 선 = 데이터 파랑 밝은 단계, 면 = 데이터 파랑 위 90% → 아래 15%.
-   내 점수 왼쪽 면은 35% 로 옅게, 오른쪽(나보다 높은 사람)은 그대로 */
-.noslog-ui .nl-score-scatter__stop-top {
-    stop-color: var(--nl-local-data-single);
-    stop-opacity: 0.9;
+.noslog-ui .nl-score-scatter__label[data-goal="990k"] {
+    fill: var(--nl-score-goal-990k);
 }
-.noslog-ui .nl-score-scatter__stop-bottom {
-    stop-color: var(--nl-local-data-single);
-    stop-opacity: 0.15;
+.noslog-ui .nl-score-scatter__label[data-goal="pianist"] {
+    fill: var(--nl-score-goal-pianist);
 }
-.noslog-ui .nl-score-scatter__area--below {
-    opacity: 0.35;
+/* 참가자 한 명 = 자 위의 점 6(나는 8 · 판정 JUST 노랑) — 핀으로 묶인 사람도 점으로는 남는다 (2026-09-18) */
+.noslog-ui .nl-score-scatter__dot {
+    fill: var(--nl-local-data-bucket-5);
 }
-.noslog-ui .nl-score-scatter__line {
-    fill: none;
-    stroke: var(--nl-local-data-bucket-4);
-    stroke-width: 2;
-    stroke-linejoin: round;
+.noslog-ui .nl-score-scatter__dot[data-me] {
+    fill: var(--nl-judgement-just);
 }
-.noslog-ui .nl-score-scatter__me-line {
-    stroke: var(--nl-content-default);
-    stroke-width: 1.5;
-}
-/* 곡선 위 사진 핀(2026-09-17 E) — 핀 끝이 곡선 위 점을 가리킴. 원 24(나 28) + 2 테두리(strong · 나는 기본 글자색),
-   곡선 위 점 6(나 = 기본 글자색). 묶음은 대표 한 명 + 오른쪽 위 「+N」(기본 글자색 면). 겹칠 때 나를 맨 위 */
+/* 자 위 사진 핀(2026-09-17 E · 09-18) — 핀 끝이 자 위 점수 자리를 가리킴. 원 24(나 28) + 2 테두리(strong · 나는 판정 JUST 노랑).
+   핀 줄은 한 줄 고정 — 높이에는 뜻이 없다. 묶음은 대표 한 명 + 오른쪽 위 「+N」. 겹칠 때 나를 맨 위 */
 .noslog-ui .nl-score-pins {
     position: absolute;
-    inset: var(--nl-spacing-16);
+    inset: 0 var(--nl-spacing-12);
     pointer-events: none;
-}
-.noslog-ui .nl-score-pins__dot {
-    position: absolute;
-    width: 6px;
-    height: 6px;
-    margin: -3px 0 0 -3px;
-    border-radius: 50%;
-    background: var(--nl-local-data-bucket-5);
-    box-shadow: 0 0 0 1.5px var(--nl-surface-surface);
-}
-.noslog-ui .nl-score-pins__dot[data-me] {
-    background: var(--nl-content-default);
 }
 .noslog-ui .nl-score-pin {
     --nl-pin-size: 28px;
@@ -145,146 +113,26 @@
     background: var(--nl-border-strong);
     transform: rotate(-45deg);
 }
+/* 내 핀 = 판정 JUST 노랑 — 세로선 · 「상위 N%」 대신 색으로만 내 위치를 가리킨다 (2026-09-18 사용자 결정) */
 .noslog-ui .nl-score-pin[data-me] .nl-score-pin__shape {
-    background: var(--nl-content-default);
+    background: var(--nl-judgement-just);
 }
 .noslog-ui .nl-score-pin .nl-score-pin__photo {
     position: absolute;
     inset: 2px;
 }
+/* 「+N」 = 필터 개수 배지 모양(원 20 · raised · metadata) + 사진과 떼는 1px 경계. 늘 핀 오른쪽 위 — 끝에서도 자리를 바꾸지 않는다 (2026-09-18 K1 · 사용자 지적) */
 .noslog-ui .nl-score-pin__count {
     position: absolute;
-    top: -6px;
-    right: -10px;
-    min-width: 18px;
-    height: 16px;
-    padding: 0 var(--nl-spacing-4);
-    border-radius: 8px;
-    background: var(--nl-content-default);
-    color: var(--nl-surface-canvas);
-    font-size: 11px;
-    line-height: 16px;
-    font-weight: var(--nl-type-weight-semibold);
-    text-align: center;
-}
-.noslog-ui .nl-score-pin[data-edge="end"] .nl-score-pin__count {
-    right: auto;
-    left: -10px;
+    top: calc(var(--nl-spacing-8) * -1);
+    right: calc(var(--nl-spacing-12) * -1);
+    padding-inline: var(--nl-spacing-4);
+    border: 1px solid var(--nl-border-default);
+    color: var(--nl-content-default);
 }
 .noslog-ui .nl-score-pin:focus-visible {
     outline-offset: 2px;
     border-radius: 50%;
-}
-/* 핀을 누르면 뜨는 창 — 떠 있는 창 규격. 한 사람 = 가로 카드(사진 44 · 국기 · 이름 / #순위 · 메달 · 점수 · ›, 카드 전체가 링크),
-   묶음 = 목록(줄 = 순위 · 사진 28 · 국기 · 이름 · 메달 · 점수 · ›, 줄 높이 44) */
-.noslog-ui.nl-score-popover {
-    z-index: 70;
-    width: min(320px, calc(100vw - 32px));
-    padding: var(--nl-spacing-4) 0;
-    overflow: hidden;
-    background: var(--nl-surface-overlay);
-    color: var(--nl-content-default);
-    border: 1px solid var(--nl-border-overlay);
-    border-radius: var(--nl-radius-overlay);
-    box-shadow: var(--nl-overlay-shadow);
-}
-.noslog-ui.nl-score-popover[data-kind="player"] {
-    width: min(280px, calc(100vw - 32px));
-    padding: 0;
-}
-.noslog-ui .nl-score-card,
-.noslog-ui .nl-score-list__row {
-    display: flex;
-    width: 100%;
-    align-items: center;
-    border: 0;
-    background: none;
-    color: inherit;
-    font: inherit;
-    text-align: start;
-    cursor: pointer;
-}
-.noslog-ui .nl-score-card {
-    gap: var(--nl-spacing-12);
-    padding: var(--nl-spacing-12);
-}
-.noslog-ui .nl-score-card__body {
-    display: flex;
-    flex: 1;
-    min-width: 0;
-    flex-direction: column;
-    gap: 2px;
-}
-.noslog-ui .nl-score-card__meta {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-.noslog-ui .nl-score-popover__name {
-    display: flex;
-    min-width: 0;
-    align-items: center;
-    gap: 6px;
-    font-size: var(--nl-type-size-14);
-    line-height: var(--nl-type-line-height-20);
-    font-weight: var(--nl-type-weight-semibold);
-}
-.noslog-ui .nl-score-popover__name-text {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-.noslog-ui .nl-score-popover__score {
-    font-weight: var(--nl-type-weight-semibold);
-    font-variant-numeric: tabular-nums;
-}
-.noslog-ui .nl-score-popover__score[data-tone="s"] {
-    color: var(--nl-score-goal-s);
-}
-.noslog-ui .nl-score-popover__score[data-tone="990k"] {
-    color: var(--nl-score-goal-990k);
-}
-.noslog-ui .nl-score-popover__score[data-tone="pianist"] {
-    color: var(--nl-score-goal-pianist);
-}
-.noslog-ui .nl-score-popover__chevron {
-    width: 16px;
-    height: 16px;
-    flex: none;
-    color: var(--nl-content-subdued);
-}
-.noslog-ui .nl-score-list__title {
-    margin: 0;
-    padding: 6px var(--nl-spacing-12) 2px;
-}
-.noslog-ui .nl-score-list ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-}
-.noslog-ui .nl-score-list__row {
-    gap: var(--nl-spacing-8);
-    min-height: var(--nl-control-height);
-    padding: 0 var(--nl-spacing-12);
-}
-.noslog-ui .nl-score-list__row .nl-score-popover__name {
-    flex: 1;
-}
-.noslog-ui .nl-score-list__rank {
-    width: 24px;
-    flex: none;
-    text-align: end;
-    font-variant-numeric: tabular-nums;
-}
-@media (hover: hover) {
-    .noslog-ui .nl-score-card:hover,
-    .noslog-ui .nl-score-list__row:hover {
-        background: var(--nl-interaction-hover);
-    }
-}
-.noslog-ui .nl-score-card:active,
-.noslog-ui .nl-score-list__row:active {
-    background: var(--nl-interaction-selected-pressed);
 }
 /* 곡 상세 랭킹 탭 순위표 — 유저 랭킹 페이지와 같은 목록 규격(nl-ranking-head · nl-player-row, globalRankings.css) · 2026-09-14.
    순위 · 아바타 · 국기 · 이름 · 명판, 오른쪽 끝은 등급 메달 · 점수 · FC */
@@ -303,13 +151,25 @@
     flex-shrink: 0;
 }
 /* 머리글 「점수」는 FC 칸(26) + 간격 8 만큼 안쪽 — 점수 숫자 오른쪽 끝과 맞춘다 */
-/* 등급 · 점수 · FC 는 사이 8 로 붙어 있고(등급은 점수 바로 왼쪽), 머리 「점수」 는 점수 숫자 칸(보통 7자리 「000,000」) 가운데.
-   머리 칸은 점수와 같은 글자(14 · 600 · tabular)로 7ch 폭을 잡고 안의 머리 글자만 metadata 크기 (2026-09-17) */
+/* 등급 · 점수 · FC 는 사이 8 로 붙어 있고(등급은 점수 바로 왼쪽), 머리 「점수」 는 점수 숫자 칸 가운데.
+   점수 칸은 만점 「1,000,000」 폭으로 고정한다 — 그래야 등급 아이콘이 행마다 한 줄에 선다
+   (2026-09-18 사용자 지적: 만점 행만 13 어긋났다. 여섯 자리 점수는 등급과 한 글자만큼 벌어지지만 그쪽이 덜 눈에 띈다) */
+.noslog-ui .nl-chart-leaderboard .nl-player-row__value {
+    /* 숫자 7자(tabular 7ch) + 쉼표 2자(약 0.33em씩) */
+    width: calc(7ch + 0.66em);
+    text-align: right;
+}
+/* 머리글 「플레이어」 는 아바타가 아니라 이름 첫 글자에 맞춘다 — 아바타 32 + 12 + 국기 16 + 8 (2026-09-18 사용자 결정, 곡 상세만) */
+.noslog-ui .nl-chart-leaderboard .nl-ranking-head__player {
+    margin-inline-start: calc(
+        var(--nl-spacing-32) + var(--nl-spacing-12) + var(--nl-icon-small) +
+            var(--nl-spacing-8)
+    );
+}
 .noslog-ui .nl-chart-leaderboard .nl-ranking-head__value {
     display: flex;
     justify-content: center;
-    /* 숫자 6자(tabular 6ch) + 쉼표 1자(약 0.33em) */
-    width: calc(6ch + 0.33em);
+    width: calc(7ch + 0.66em);
     margin-left: auto;
     margin-right: calc(26px + var(--nl-spacing-8));
     font-size: var(--nl-type-size-14);
@@ -326,6 +186,11 @@
     width: 18px;
     height: 18px;
 }
+/* 핀 창 메달 = 아이콘 16 — 칸도 16 이라 양옆 간격이 8 로 같다 */
+.noslog-ui .nl-score-grade[data-size="small"] {
+    width: var(--nl-icon-small);
+    height: var(--nl-icon-small);
+}
 .noslog-ui .nl-full-combo-slot {
     display: block;
     width: 26px;
@@ -339,43 +204,12 @@
     box-shadow: inset 0 0 0 1px var(--nl-achievement-full-combo);
     border-radius: var(--nl-radius-control);
 }
-.noslog-ui .nl-my-rank-summary {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--nl-spacing-8);
-    padding: var(--nl-spacing-12);
-    border-radius: var(--nl-radius-container);
-    background: var(--nl-surface-surface);
-}
-.noslog-ui .nl-my-rank-summary__result {
-    display: flex;
-    align-items: center;
-    gap: var(--nl-spacing-8);
-}
-.noslog-ui .nl-my-rank-summary__result > .nl-metric-value {
-    width: 68px;
-    text-align: end;
-    white-space: nowrap;
-}
-/* 순위 구역 — 제목 줄(구역 제목 + 오른쪽 메타) → 12 → 요약 · 목록 */
+/* 순위 구역 — 제목 줄(구역 제목 + 오른쪽 내 순위) → 12 → 목록 */
 .noslog-ui .nl-ranking-section {
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-12);
     min-width: 0;
-}
-.noslog-ui .nl-ranking-section__heading {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--nl-spacing-8);
-}
-.noslog-ui .nl-ranking-login {
-    padding-block: var(--nl-spacing-12);
-    align-self: flex-start;
 }
 .noslog-ui .nl-ranking-list {
     scroll-margin-top: 76px;

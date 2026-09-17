@@ -39,14 +39,9 @@ export function formatTrendTooltipDate(value: string) {
     return time ? `${formattedDate} ${time.slice(0, 5)}` : formattedDate;
 }
 
-export function getMissNearCount(
-    record: Pick<JudgementRecord, "judge_miss" | "judge_near">
-) {
-    if (record.judge_miss === null || record.judge_near === null) {
-        return null;
-    }
-
-    return record.judge_miss + record.judge_near;
+// 최근 판정 추이 MISS — NEAR 는 거의 켜지 않는 옵션이라 뺀다(2026-09-18)
+export function getMissCount(record: Pick<JudgementRecord, "judge_miss">) {
+    return record.judge_miss;
 }
 
 export function getSJustRate(record: JudgementRecord) {

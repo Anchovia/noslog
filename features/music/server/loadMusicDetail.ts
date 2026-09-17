@@ -137,7 +137,6 @@ export async function loadMusicDetail(
     };
     const scoreDistribution = emptyDistribution.map((item) => ({ ...item }));
     let playerCount = 0;
-    let userTopPercent: number | null = null;
     let scoreSeries: number[] = [];
 
     // 머리 수치 띠 — 공개 서열표의 이 채보 값(모든 탭). 등재 안 된 표는 null 로 두고 화면에서 칸을 뺀다
@@ -198,15 +197,6 @@ export async function loadMusicDetail(
             scoreSeries = scores
                 .map((record) => record.score)
                 .sort((a, b) => b - a);
-        if (userPlayData && playerCount > 0) {
-            const higherScores = scores.filter(
-                (record) => record.score > userPlayData.score
-            ).length;
-            userTopPercent = Math.max(
-                1,
-                Math.ceil(((higherScores + 1) / playerCount) * 100)
-            );
-        }
     }
 
     const ranking: MusicDetailProps["ranking"] = {
@@ -293,7 +283,6 @@ export async function loadMusicDetail(
             patternAverages,
             scoreDistribution,
             playerCount,
-            userTopPercent,
             tierValues,
             tierHistory,
             scoreSeries,

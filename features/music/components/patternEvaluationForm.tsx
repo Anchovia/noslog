@@ -6,6 +6,8 @@ import {
     useLocalizedHref,
     useTranslations,
 } from "@/components/i18n/localeProvider";
+import ActionButton from "@/components/ui/actionButton";
+import Disclosure from "@/components/ui/disclosure";
 import { foundationButtonClass } from "@/components/ui/Button";
 import ScalePicker from "@/components/ui/scalePicker";
 import useCommunityMutation from "@/features/music/hooks/useCommunityMutation";
@@ -130,55 +132,53 @@ export default function PatternEvaluationForm({
     const hasAny = PATTERN_AXES.some((axis) => ratings[axis] !== null);
 
     return (
-        <section className="nl-pattern-form" aria-labelledby={`${id}-title`}>
-            <div className="nl-heading-row">
-                <h2
-                    id={`${id}-title`}
-                    ref={heading}
-                    tabIndex={-1}
-                    className="nl-section-title"
+        <Disclosure
+            className="nl-pattern-form"
+            heading="section"
+            open
+            title={t("community.patternVote")}
+            titleId={`${id}-title`}
+            titleRef={heading}
+        >
+            {/* 제목 줄이 펼침 줄이 되면서 저장 상태 · 동작은 내용 첫 줄로 (2026-09-18 아코디언) */}
+            {!disabled ? (
+                <div
+                    className="nl-pattern-form__status"
+                    role="status"
+                    aria-live="polite"
                 >
-                    {t("community.patternVote")}
-                </h2>
-                {!disabled ? (
-                    <div
-                        className="nl-pattern-form__status"
-                        role="status"
-                        aria-live="polite"
-                    >
-                        {status === "saving" ? (
-                            <span className="nl-metadata nl-muted">
-                                {t("community.saving")}
+                    {status === "saving" ? (
+                        <span className="nl-metadata nl-muted">
+                            {t("community.saving")}
+                        </span>
+                    ) : status === "saved" ? (
+                        <span className="nl-metadata nl-muted">
+                            {t("community.savedShort")}
+                        </span>
+                    ) : status === "failed" ? (
+                        <>
+                            <span className="nl-metadata nl-pattern-form__error">
+                                {t("community.saveFailed")}
                             </span>
-                        ) : status === "saved" ? (
-                            <span className="nl-metadata nl-muted">
-                                {t("community.savedShort")}
-                            </span>
-                        ) : status === "failed" ? (
-                            <>
-                                <span className="nl-metadata nl-pattern-form__error">
-                                    {t("community.saveFailed")}
-                                </span>
-                                <button
-                                    type="button"
-                                    className="nl-heading-link nl-control"
-                                    onClick={() => void persist(ratings)}
-                                >
-                                    {t("common.retry")}
-                                </button>
-                            </>
-                        ) : hasAny ? (
-                            <button
-                                type="button"
-                                className="nl-heading-link nl-control"
-                                onClick={() => setClearing(true)}
+                            <ActionButton
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => void persist(ratings)}
                             >
-                                {t("community.clearRating")}
-                            </button>
-                        ) : null}
-                    </div>
-                ) : null}
-            </div>
+                                {t("common.retry")}
+                            </ActionButton>
+                        </>
+                    ) : hasAny ? (
+                        <ActionButton
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setClearing(true)}
+                        >
+                            {t("community.clearRating")}
+                        </ActionButton>
+                    ) : null}
+                </div>
+            ) : null}
             {/* 평가할 수 없으면 목록을 흐리고(5px) 가운데 떠 있는 카드로 이유 · 로그인 (2026-09-17 L2).
                 흐린 목록은 누를 수도 읽을 수도 없고, 카드만 읽힌다 */}
             <div
@@ -259,6 +259,6 @@ export default function PatternEvaluationForm({
                 }}
                 onDeleted={() => heading.current?.focus()}
             />
-        </section>
+        </Disclosure>
     );
 }
