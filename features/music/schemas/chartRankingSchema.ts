@@ -16,3 +16,10 @@ export const chartRankingRowSchema = z.object({
 });
 
 export type ChartRankingRow = z.infer<typeof chartRankingRowSchema>;
+
+// 점수 분포 곡선 위 사진 — 순위표 행 + 순위표 페이지를 찾을 줄 번호 (2026-09-17)
+export const chartScorePlayerSchema = chartRankingRowSchema.extend({
+    row_number: z.number().int().positive(),
+});
+
+export type ChartScorePlayer = z.infer<typeof chartScorePlayerSchema>;

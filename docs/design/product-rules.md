@@ -86,15 +86,21 @@ old design-stage checklist. Changes to material behavior require a user decision
   Overview, My Record, Ranking and Ratings (URL `tab` values stay `detail`,
   `record`, `ranking`, `tier`). The header shows the selected chart's constant and
   its published tier values; unlisted/unpublished scopes show no value rather
-  than a guessed one. View-chart/video actions appear only when that exact chart
-  has them. When signed in with a record on the selected chart, the official
-  grade icon for that record appears beside the title; otherwise nothing.
+  than a guessed one. View-chart/video actions are always present and are
+  disabled unless that exact chart has them. The stats card starts with the
+  viewer's best record on the selected chart (grade icon, best score, Basic Grd);
+  with no record it shows dashes, and when signed out it links to sign-in.
   A localized title (when the viewer's setting allows it) appears as a line
   under the title; long title, localized title and artist lines are clipped
   with an end fade and the whole block expands on tap without losing text. The actual viewer/editor remain preserved.
 - Personal record, judgement analysis and Recital values keep their source units
   and limitations. Missing mode-specific values are not substituted with Basic
   values. Retry the failed region without losing the current chart context.
+- The ranking tab's score-distribution curve shows player pins at each best
+  score: every participant when there are 30 or fewer, otherwise the top 3 plus
+  the signed-in viewer. Nearby pins collapse into the highest-scoring player with
+  a "+N" count; the viewer is never collapsed. Choosing a player scrolls to that
+  player's leaderboard row, opening the page that contains it (2026-09-17).
 - The similar-Grd comparison in judgement analysis uses other players within
   ±200 Grd, excluding the viewer, and is available from one such record
   (2026-09-16, previously five). It is always shown (no toggle). Each

@@ -4,7 +4,9 @@ import { useId } from "react";
 
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import type { ChartDetail } from "@/components/music/musicDetailTypes";
+import type { ChartScorePlayer } from "@/features/music/schemas/chartRankingSchema";
 import useElementWidth from "@/lib/hooks/useElementWidth";
+import ScorePins from "./scorePins";
 
 const HEIGHT = 190;
 // 위 = 「나 · 상위 N%」 라벨 줄, 아래 = 기준선 라벨 줄 (2026-09-17 D1)
@@ -18,12 +20,7 @@ const LABEL_GAP = 36;
  * 가우스 커널 밀도 — 점수마다 종 모양을 더한다. 폭 = 0.4 · σ · n^-1/5(Silverman 기준의 약 0.4배)와 축 폭 4% 중 큰 값 —
  * 인원이 적어도 점 대신 곡선이되, 몰린 곳 모양은 보이게 (2026-09-17 사용자 결정: 0.4배)
  */
-export function scoreDensity(
-    scores: number[],
-    min: number,
-    max: number,
-    samples = SAMPLES
-) {
+export function densityAt(scores: number[], min: number, max: number) {
     const mean =
         scores.reduce((sum, score) => sum + score, 0) / (scores.length || 1);
     const spread = Math.sqrt(
@@ -34,16 +31,24 @@ export function scoreDensity(
         0.4 * spread * Math.max(1, scores.length) ** -0.2,
         (max - min) * 0.04
     );
+    return (at: number) =>
+        scores.reduce(
+            (sum, score) =>
+                sum + Math.exp(-0.5 * ((at - score) / bandwidth) ** 2),
+            0
+        );
+}
+
+export function scoreDensity(
+    scores: number[],
+    min: number,
+    max: number,
+    samples = SAMPLES
+) {
+    const at = densityAt(scores, min, max);
     return Array.from({ length: samples }, (_, index) => {
-        const at = min + (index / (samples - 1)) * (max - min);
-        return {
-            at,
-            density: scores.reduce(
-                (sum, score) =>
-                    sum + Math.exp(-0.5 * ((at - score) / bandwidth) ** 2),
-                0
-            ),
-        };
+        const value = min + (index / (samples - 1)) * (max - min);
+        return { at: value, density: at(value) };
     });
 }
 
@@ -70,12 +75,19 @@ export default function ScoreScatter({
     participants,
     userScore,
     userTopPercent,
+    players = [],
+    meId = null,
+    onShowPlayer,
 }: {
     scores: number[];
     distribution: ChartDetail["scoreDistribution"];
     participants: number;
     userScore: number | null;
     userTopPercent: number | null;
+    /** 곡선 위 사진 핀(참가자 30명 이하면 모두, 넘으면 상위 3명 + 나) */
+    players?: ChartScorePlayer[];
+    meId?: number | null;
+    onShowPlayer?: (player: ChartScorePlayer) => void;
 }) {
     const t = useTranslations();
     const locale = useLocale();
@@ -96,12 +108,11 @@ export default function ScoreScatter({
             : null;
     const density = scores.length ? scoreDensity(scores, min, MAX) : [];
     const peak = Math.max(1e-9, ...density.map((sample) => sample.density));
+    const y = (value: number) =>
+        baseline - (value / peak) * (baseline - PAD.top - 8);
+    const densityOf = scores.length ? densityAt(scores, min, MAX) : () => 0;
     const points = density.map(
-        (sample) =>
-            `${x(sample.at).toFixed(1)},${(
-                baseline -
-                (sample.density / peak) * (baseline - PAD.top - 8)
-            ).toFixed(1)}`
+        (sample) => `${x(sample.at).toFixed(1)},${y(sample.density).toFixed(1)}`
     );
     const line = points.length ? `M${points.join(" L")}` : "";
     const area = points.length
@@ -137,12 +148,13 @@ export default function ScoreScatter({
                     })}
                 </span>
             </figcaption>
-            <div ref={ref} className="nl-score-scatter__plot" aria-hidden>
+            <div ref={ref} className="nl-score-scatter__plot">
                 {width ? (
                     <svg
                         width="100%"
                         height={HEIGHT}
                         className="nl-score-scatter__svg"
+                        aria-hidden
                     >
                         <defs>
                             <linearGradient
@@ -242,6 +254,16 @@ export default function ScoreScatter({
                             </g>
                         ) : null}
                     </svg>
+                ) : null}
+                {width && players.length && onShowPlayer ? (
+                    <ScorePins
+                        players={players}
+                        meId={meId}
+                        width={width}
+                        x={x}
+                        y={(score) => y(densityOf(score))}
+                        onShowPlayer={onShowPlayer}
+                    />
                 ) : null}
             </div>
             <p className="sr-only" id={id}>

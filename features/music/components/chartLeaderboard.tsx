@@ -62,6 +62,7 @@ function ChartLeaderboardRow({
     const pianist = row.fc_type === 3 || row.score >= 1_000_000;
     return (
         <li
+            id={`chart-rank-${row.user_id}`}
             className="nl-player-row"
             value={row.position}
             data-current={current || undefined}

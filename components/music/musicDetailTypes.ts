@@ -1,6 +1,9 @@
 import type { CommunityData } from "@/features/music/schemas/communitySchema";
 import type { PeerScoreComparison } from "@/lib/music/peerScoreComparison";
-import type { ChartRankingRow } from "@/features/music/schemas/chartRankingSchema";
+import type {
+    ChartRankingRow,
+    ChartScorePlayer,
+} from "@/features/music/schemas/chartRankingSchema";
 
 export type Difficulty = "Normal" | "Hard" | "Expert" | "Real";
 
@@ -156,6 +159,8 @@ export interface MusicDetailProps {
         pageSize: number;
         totalCount: number;
         userRank: number | null;
+        /** 점수 분포 곡선 위 사진 — 참가자 30명 이하면 모두, 넘으면 상위 3명 + 나 */
+        players: ChartScorePlayer[];
     };
     tier: {
         currentConstant: number | null;
