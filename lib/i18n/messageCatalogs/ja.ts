@@ -454,6 +454,8 @@ export const jaMessages = {
     "music.info.duration": "楽曲の長さ",
     "music.info.releaseDate": "収録日",
     "music.info.unlock": "解禁条件",
+    "music.info.unlockRequires": "「{title}」[{difficulty}]解禁で出現",
+    "music.info.stardust": "星屑 {count}",
     "music.info.patternTrend": "譜面傾向",
     "music.info.votes": "投票 {count}",
     "music.info.noPatternVotes": "譜面傾向の投票はまだありません。",

@@ -456,6 +456,8 @@ export const koMessages = {
     "music.info.duration": "곡 길이",
     "music.info.releaseDate": "수록일",
     "music.info.unlock": "언락 조건",
+    "music.info.unlockRequires": "{title} {difficulty} 해금 후 등장",
+    "music.info.stardust": "별가루 {count}",
     "music.info.patternTrend": "패턴 경향",
     "music.info.votes": "투표 {count}",
     "music.info.noPatternVotes": "아직 등록된 패턴 투표가 없습니다.",

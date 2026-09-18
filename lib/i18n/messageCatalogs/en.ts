@@ -458,6 +458,9 @@ export const enMessages = {
     "music.info.duration": "Duration",
     "music.info.releaseDate": "Release Date",
     "music.info.unlock": "Unlock Condition",
+    "music.info.unlockRequires":
+        "Appears after unlocking {title} ({difficulty})",
+    "music.info.stardust": "{count} Stardust",
     "music.info.patternTrend": "Pattern Profile",
     "music.info.votes": "{count} votes",
     "music.info.noPatternVotes": "No pattern votes have been submitted.",

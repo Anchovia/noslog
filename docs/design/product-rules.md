@@ -102,6 +102,14 @@ old design-stage checklist. Changes to material behavior require a user decision
   (play-record inference, BEMANIWiki, RemyWiki, official level or manual). Values
   inferred from players' own records win over wiki values when they disagree;
   wiki-sourced values may be replaced once records exist (2026-09-18).
+- The unlock condition is stored as the BEMANIWiki original (Japanese, per song,
+  same text on every chart). The detail page parses it per difficulty: one line
+  per event, a leading 「→」 marks where the event moved after it ended, and the
+  stardust count is this difficulty's number (4 numbers = N/H/E/R, 3 = N/H/E,
+  1 = every difficulty; with both 3- and 1-number lines the 1-number line is
+  Real's). Event names are translated through `unlock_condition_translations`
+  (ko · en; ja shows the original; unknown names fall back to the original)
+  (2026-09-18).
 - The ranking tab's score-distribution curve shows player pins at each best
   score: every participant when there are 30 or fewer, otherwise the top 3 plus
   the signed-in viewer. Nearby pins collapse into the highest-scoring player with

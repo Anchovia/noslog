@@ -3,7 +3,7 @@
 import { ChevronRight, Info } from "lucide-react";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import { useId, useState } from "react";
+import { Fragment, useId, useState, type ReactNode } from "react";
 
 import {
     useLocale,
@@ -44,7 +44,11 @@ export default function OverviewPanel({
         ? Math.max(...PATTERN_AXES.map((axis) => summary[axis].count))
         : null;
     const record = data.userPlayData;
-    const facts = [
+    const facts: ({
+        label: string;
+        value: ReactNode;
+        numeric: boolean;
+    } | null)[] = [
         chart.bpm_min !== null
             ? {
                   label: "BPM",
@@ -76,17 +80,34 @@ export default function OverviewPanel({
                   value: chart.released_at.slice(0, 10),
               }
             : null,
-        chart.unlock_condition
+        chart.unlockSteps.length
             ? {
                   label: t("music.info.unlock"),
                   numeric: false,
-                  value: chart.unlock_condition,
+                  // 한 단계 = 한 줄: 「→」 옮겨 간 이벤트 · 이 난이도의 별가루 수 (2026-09-18)
+                  value: chart.unlockSteps.map((step, index) => (
+                      <Fragment key={index}>
+                          {index ? <br /> : null}
+                          {step.requires
+                              ? t("music.info.unlockRequires", {
+                                    title: step.requires.title,
+                                    difficulty: step.requires.difficulty,
+                                })
+                              : `${step.moved ? "→ " : ""}${step.name}${
+                                    step.stardust !== null
+                                        ? ` · ${t("music.info.stardust", {
+                                              count: step.stardust.toLocaleString(
+                                                  locale
+                                              ),
+                                          })}`
+                                        : ""
+                                }`}
+                      </Fragment>
+                  )),
               }
             : null,
-    ].filter(
-        (fact): fact is { label: string; value: string; numeric: boolean } =>
-            Boolean(fact)
-    );
+    ];
+    const shownFacts = facts.filter((fact) => fact !== null);
     return (
         <div className="nl-overview">
             <section
@@ -242,7 +263,7 @@ export default function OverviewPanel({
                 )}
             </section>
 
-            {facts.length ? (
+            {shownFacts.length ? (
                 <section
                     className="nl-overview__section"
                     aria-labelledby={`${id}-facts`}
@@ -251,7 +272,7 @@ export default function OverviewPanel({
                         {t("detail.chartInfo")}
                     </h2>
                     <dl className="nl-facts nl-body-secondary nl-overview__card nl-overview__card--list">
-                        {facts.map((fact) => (
+                        {shownFacts.map((fact) => (
                             <div key={fact.label}>
                                 <dt>{fact.label}</dt>
                                 <dd

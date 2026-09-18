@@ -1,3 +1,4 @@
+import type { UnlockStep } from "@/lib/music/unlockCondition";
 import type { CommunityData } from "@/features/music/schemas/communitySchema";
 import type { PeerScoreComparison } from "@/lib/music/peerScoreComparison";
 import type {
@@ -103,6 +104,8 @@ export interface ChartDetail {
     duration_seconds: number | null;
     released_at: string | null;
     unlock_condition: string | null;
+    /** 이 난이도의 해금 단계 — 이름은 보는 언어로 번역됨 (2026-09-18) */
+    unlockSteps: UnlockStep[];
     play_video_url: string | null;
     chart_preview_url: string | null;
     has_published_pattern: boolean;
