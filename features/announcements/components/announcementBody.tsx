@@ -44,6 +44,9 @@ export default function AnnouncementBody({
         <div className="nl-announcement-body nl-body">
             <Markdown
                 skipHtml
+                // 허용 목록 밖 요소(`code` · `em` · 제목 h1 등)는 태그만 벗기고 글자는 남긴다 —
+                // 백틱으로 감싼 글자가 통째로 사라지던 문제(v2.9.2 공지, 2026-09-18)
+                unwrapDisallowed
                 allowedElements={[
                     "p",
                     "h2",

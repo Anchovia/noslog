@@ -193,6 +193,15 @@ describe("P11 restricted Markdown", () => {
         ])
             expect(html).not.toContain(unsafe);
     });
+    it("keeps the text of disallowed inline elements instead of dropping it", () => {
+        const html = render(
+            "줄이 `내 Grd / 최대 Grd` 로 바뀌고 *기울임* 도 남는다"
+        );
+        expect(html).toContain("내 Grd / 최대 Grd");
+        expect(html).toContain("기울임");
+        expect(html).not.toContain("<code");
+        expect(html).not.toContain("<em");
+    });
     it.each([
         "javascript:alert(1)",
         "data:text/html,x",
