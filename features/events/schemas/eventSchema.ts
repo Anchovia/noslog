@@ -6,21 +6,11 @@ import type { createTranslator } from "@/lib/i18n/messages";
 export const EVENT_TITLE_MAX_LENGTH = 80;
 export const EVENT_CONTENT_MAX_LENGTH = 5000;
 export const EVENT_REVIEW_NOTE_MAX_LENGTH = 500;
-export const EVENT_STATUSES = [
-    "DRAFT",
-    "PENDING",
-    "CHANGES_REQUESTED",
-    "PUBLISHED",
-    "REJECTED",
-] as const;
-export type EventStatus = (typeof EVENT_STATUSES)[number];
+export type EventStatus =
+    "DRAFT" | "PENDING" | "CHANGES_REQUESTED" | "PUBLISHED" | "REJECTED";
 export const EVENT_PHASES = ["live", "upcoming", "ended"] as const;
 export type EventPhase = (typeof EVENT_PHASES)[number];
-export const EVENT_REVIEW_DECISIONS = [
-    "approve",
-    "requestChanges",
-    "reject",
-] as const;
+const EVENT_REVIEW_DECISIONS = ["approve", "requestChanges", "reject"] as const;
 export type EventReviewDecision = (typeof EVENT_REVIEW_DECISIONS)[number];
 
 type Translate = ReturnType<typeof createTranslator>;
