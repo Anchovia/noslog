@@ -28,7 +28,7 @@ describe("chartEvaluationSchema", () => {
             "계단",
             "연타",
             "폴리리듬",
-            "즈레",
+            "변속",
             "글리산도",
         ]);
     });

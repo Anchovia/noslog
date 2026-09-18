@@ -322,3 +322,21 @@ export async function getUserChartScoreTrend(
 
     return improvements;
 }
+
+// 해금 조건 이벤트 이름 번역(원문 일본어 → 언어별) — 90개 남짓이라 언어마다 통째로 캐시 (2026-09-18)
+export const getCachedUnlockTranslations = unstable_cache(
+    async (locale: string) => {
+        const rows = await db.unlockConditionTranslation.findMany({
+            where: { locale },
+            select: { sourceText: true, text: true },
+        });
+        return Object.fromEntries(
+            rows.map((row) => [row.sourceText, row.text])
+        );
+    },
+    ["unlock-condition-translations-v1"],
+    {
+        revalidate: 3600,
+        tags: [CACHE_TAGS.musicCatalog, CACHE_TAGS.musicDetails],
+    }
+);

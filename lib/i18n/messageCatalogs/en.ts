@@ -120,7 +120,7 @@ export const enMessages = {
     "pattern.axis.stairs": "Stairs",
     "pattern.axis.repetition": "Repetition",
     "pattern.axis.polyrhythm": "Polyrhythm",
-    "pattern.axis.offset": "Offset",
+    "pattern.axis.offset": "BPM changes",
     "pattern.axis.chords": "Chords",
     "pattern.scale":
         "Rate each axis from 0–4. An average is published after at least three ratings for that axis. An omitted rating is distinct from zero.",
@@ -458,6 +458,9 @@ export const enMessages = {
     "music.info.duration": "Duration",
     "music.info.releaseDate": "Release Date",
     "music.info.unlock": "Unlock Condition",
+    "music.info.unlockRequires":
+        "Appears after unlocking {title} ({difficulty})",
+    "music.info.stardust": "{count} Stardust",
     "music.info.patternTrend": "Pattern Profile",
     "music.info.votes": "{count} votes",
     "music.info.noPatternVotes": "No pattern votes have been submitted.",
@@ -474,7 +477,7 @@ export const enMessages = {
     "music.pattern.stairs": "Stairs",
     "music.pattern.repetition": "Repetition",
     "music.pattern.chord": "Polyrhythm",
-    "music.pattern.trill": "Offset",
+    "music.pattern.trill": "BPM changes",
     "music.pattern.glissando": "Glissando",
     "music.judgement.details": "Judgement Details",
     "music.judgement.collapse": "Collapse",

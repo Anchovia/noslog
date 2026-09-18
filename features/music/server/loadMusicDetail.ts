@@ -7,6 +7,7 @@ import db from "@/lib/db";
 import {
     getCachedChartDetailStats,
     getCachedMusicDetail,
+    getCachedUnlockTranslations,
     getRecentUserChartPlays,
     getUserChartRecord,
     getUserChartPeerScoreComparison,
@@ -15,6 +16,7 @@ import {
 } from "./musicDetailData";
 import type { Locale } from "@/lib/i18n/routing";
 import { getLocalizedMusicTitle } from "@/lib/i18n/musicTitle";
+import { unlockStepsFor } from "@/lib/music/unlockCondition";
 import {
     getChartRanking,
     getChartScorePlayer,
@@ -104,6 +106,17 @@ export async function loadMusicDetail(
             ])
         ),
     };
+
+    // 해금 조건 — 이 난이도 몫만, 이름은 사전으로 번역(일본어는 원문 · 사전에 없으면 원문)
+    const unlockSources = unlockStepsFor(chart.unlock_condition, difficulty);
+    const unlockNames =
+        unlockSources.length && locale !== "ja"
+            ? await getCachedUnlockTranslations(locale)
+            : {};
+    const unlockSteps = unlockSources.map((step) => ({
+        ...step,
+        name: unlockNames[step.name] ?? step.name,
+    }));
 
     const userPlayData = userId
         ? await getUserChartRecord(userId, chart.id)
@@ -286,6 +299,7 @@ export async function loadMusicDetail(
             tierValues,
             tierHistory,
             scoreSeries,
+            unlockSteps,
         },
         ranking,
         tier,
