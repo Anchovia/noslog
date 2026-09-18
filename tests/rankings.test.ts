@@ -41,6 +41,7 @@ describe("getUserRankingPosition", () => {
             where: {
                 AND: [
                     { country: "ko-KR" },
+                    { hide_play_scores: false },
                     { grade_basic: { gt: 0 } },
                     {
                         grade_basic: { gte: 568350 },

@@ -1,5 +1,7 @@
 "use client";
 
+import { Lock } from "lucide-react";
+
 import { usePathname, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import PageContainer from "@/components/layout/pageContainer";
@@ -32,10 +34,13 @@ export default function PublicProfilePage({
     initialRecent,
     initialProgress,
     syncLabel,
+    scoresHidden = false,
 }: {
     user: ProfileUser;
     isOwner: boolean;
-    overview: ProfileOverviewContext;
+    /** 점수 비공개 플레이어를 남이 볼 때 — 점수 · 기록 없이 잠금 한 줄(2026-09-18 S3) */
+    scoresHidden?: boolean;
+    overview: ProfileOverviewContext | null;
     initialBest: ProfileListPayload | null;
     initialRecent: ProfileListPayload | null;
     initialProgress: ProfileProgressPayload | null;
@@ -46,6 +51,19 @@ export default function PublicProfilePage({
     const href = useLocalizedHref();
     const params = useSearchParams();
     const pathname = usePathname();
+    if (scoresHidden || !overview)
+        return (
+            <PageContainer className="nl-profile">
+                <ProfileIdentity user={user} isOwner={false} mode="basic" />
+                <div className="nl-profile-empty">
+                    <StatusMessage
+                        icon={Lock}
+                        title={t("profile.scoresPrivate")}
+                        description={t("profile.scoresPrivateBody")}
+                    />
+                </div>
+            </PageContainer>
+        );
     const mode: ProfileMode =
         params.get("mode") === "recital" ? "recital" : "basic";
     const grade = mode === "basic" ? user.grade_basic : user.grade_recital;

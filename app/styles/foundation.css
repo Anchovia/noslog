@@ -546,6 +546,20 @@ html[data-theme="light"] .noslog-ui,
     outline: none;
     box-shadow: inset 0 0 0 1px var(--nl-focus-ring);
 }
+/* 1단 탭 구역(AreaTabs) — 탭 →24→ 내용. 악곡 상세 · 피드백 창(2026-09-19) */
+.noslog-ui .nl-area {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-24);
+    min-width: 0;
+}
+.noslog-ui .nl-area__panel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-12);
+    min-width: 0;
+    outline: none;
+}
 
 /* 펼침 — 부품 결정 ③(2026-09-14). 화살표는 줄 끝 ∨ · 열리면 ∧(180°) · 20 · 들여쓰기 0.
    구역 = 요약 줄 48 · 내용까지 16 / 보조(--compact) = 컨트롤 높이 · control 14/500 · 내용까지 8.
@@ -1245,4 +1259,16 @@ html[data-theme="light"] .noslog-ui,
         var(--nl-type-line-height-24) * 16 + var(--nl-spacing-8) * 2
     );
     padding: var(--nl-spacing-12);
+}
+
+/* 새 소식 점(2026-09-18 F1 — 피드백 새 답변) — 원 8 · 위험 표시색(그래픽 3:1), 글자 뒤 8. 색만으로 알리지 않게 접근 이름을 함께 */
+.noslog-ui .nl-unread-dot {
+    display: inline-block;
+    flex-shrink: 0;
+    width: 8px;
+    height: 8px;
+    margin-inline-start: var(--nl-spacing-8);
+    border-radius: var(--nl-radius-full);
+    background: var(--nl-feedback-danger-marker);
+    vertical-align: middle;
 }

@@ -1,3 +1,4 @@
+import type { MessageKey } from "@/lib/i18n/messages";
 import { z } from "zod";
 import { createOnboardingSchema } from "@/features/profile/schemas/profileSettingsSchema";
 import type { createTranslator } from "@/lib/i18n/messages";
@@ -43,7 +44,15 @@ export const settingsPrivacySchema = z.object({
     showPreferredArcade: z.boolean(),
     showPlayCount: z.boolean(),
     showPlayActivity: z.boolean(),
+    showPlayScores: z.boolean(),
 });
+// 칸 아래 설명 한 줄이 붙는 공개 설정 — 설정 화면 · 가입 화면 공용
+export const PRIVACY_HELP: Partial<
+    Record<keyof z.infer<typeof settingsPrivacySchema>, MessageKey>
+> = {
+    showPlayActivity: "settings.activityCoupling",
+    showPlayScores: "settings.scoresCoupling",
+};
 export type SettingsPrivacyValues = z.infer<typeof settingsPrivacySchema>;
 
 export function settingsProfileInput(formData: FormData) {

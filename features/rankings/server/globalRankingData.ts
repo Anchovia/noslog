@@ -32,9 +32,14 @@ const playerFields = {
     country: true,
     grade_basic: true,
     grade_recital: true,
+    hide_play_scores: true,
     examAchievements: examAchievementGradeSelect,
 } as const;
-type PopulationRow = Omit<GlobalRankingRow, "rank"> & { rawValue: number };
+// hidden = 점수 비공개 — 캐시에는 담아 두되 응답 전에 뺀다(본인이 볼 때만 남김, 2026-09-18 S3)
+type PopulationRow = Omit<GlobalRankingRow, "rank"> & {
+    rawValue: number;
+    hidden: boolean;
+};
 
 const getPublicRankingPopulation = unstable_cache(
     async (
@@ -62,6 +67,7 @@ const getPublicRankingPopulation = unstable_cache(
                     grade: user[gradeField] ?? 0,
                     value: Math.round((user[gradeField] ?? 0) / 100),
                     rawValue: user[gradeField] ?? 0,
+                    hidden: user.hide_play_scores,
                 })),
             };
         }
@@ -130,12 +136,13 @@ const getPublicRankingPopulation = unstable_cache(
                         rating: value,
                         filledSlots: result.filledSlots,
                         rawValue: result.rating,
+                        hidden: user.hide_play_scores,
                     },
                 ];
             }),
         };
     },
-    ["global-ranking-population-v3"],
+    ["global-ranking-population-v4"],
     {
         revalidate: PUBLIC_DATA_REVALIDATE_SECONDS,
         tags: [CACHE_TAGS.userRankings, CACHE_TAGS.tierLists],
@@ -151,6 +158,7 @@ export async function getGlobalRankingPage(
         query.metric
     );
     const rows = population.rows
+        .filter((row) => !row.hidden || row.id === viewerId)
         .filter(
             (row) =>
                 query.region === "all" ||

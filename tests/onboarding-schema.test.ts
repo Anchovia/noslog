@@ -39,6 +39,7 @@ describe("온보딩 스키마", () => {
             showPreferredArcade: false,
             showPlayCount: false,
             showPlayActivity: false,
+            showPlayScores: true,
         });
     });
 

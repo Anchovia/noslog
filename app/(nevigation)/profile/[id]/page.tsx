@@ -61,6 +61,36 @@ export default async function ProfilePage({
 
     const isOwner = session.id === profileData.user.id;
     const mode = query.mode === "recital" ? "recital" : "basic";
+    // 점수 비공개(2026-09-18 S3) — 본인이 아니면 점수 · 기록을 아예 불러오지 않고, 넘기는 값에서도 지운다
+    if (!isOwner && profileData.user.hide_play_scores)
+        return (
+            <PublicProfilePage
+                user={{
+                    ...profileData.user,
+                    grade_basic: null,
+                    grade_recital: null,
+                    rank_basic: null,
+                    rank_basic_country: null,
+                    rank_recital: null,
+                    rank_recital_country: null,
+                    score_p: null,
+                    score_f: null,
+                    score_s: null,
+                    score_a2: null,
+                    score_a: null,
+                    score_b2: null,
+                    score_b: null,
+                    score_c: null,
+                    score_d: null,
+                }}
+                isOwner={false}
+                scoresHidden
+                overview={null}
+                initialBest={null}
+                initialRecent={null}
+                initialProgress={null}
+            />
+        );
     const [overview, initialBest, initialRecent, initialProgress] =
         await Promise.all([
             getProfileOverviewContext(id, isOwner),

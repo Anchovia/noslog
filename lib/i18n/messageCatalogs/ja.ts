@@ -542,6 +542,16 @@ export const jaMessages = {
     "common.previousPage": "前のページ",
     "common.nextPage": "次のページ",
     "feedback.title": "フィードバック・不具合報告",
+    "feedback.tab.write": "新規作成",
+    "feedback.tab.mine": "自分の報告",
+    "feedback.newReply": "新しい返信",
+    "feedback.status.open": "受付",
+    "feedback.status.resolved": "対応済み",
+    "feedback.mine.loading": "読み込み中…",
+    "feedback.mine.failed": "報告を読み込めませんでした。",
+    "feedback.mine.empty": "まだ報告を送っていません。",
+    "feedback.mine.arcade": "ゲームセンターの報告",
+    "feedback.mine.replyLabel": "NosLogからの返信",
     "feedback.cancel": "キャンセル",
     "feedback.doneBody":
         "確認して反映します。お知らせいただきありがとうございます。",
@@ -1177,6 +1187,10 @@ export const jaMessages = {
     "profile.bestTopFive": "Grd貢献 上位5曲",
     "profile.bestEmpty": "ベスト実績の記録がありません。",
     "profile.recentPlays": "最近のプレー",
+    "profile.playScores": "プレースコア",
+    "profile.scoresPrivate": "このプレイヤーはスコアを公開していません。",
+    "profile.scoresPrivateBody":
+        "Grd・レーティング・順位・ベストプレー・成長推移は非表示です。",
     "profile.recentCollapse": "最近のプレーを閉じる",
     "profile.recentExpand": "最近のプレーをすべて表示",
     "profile.recentEmpty": "最近のプレー記録がありません。",
@@ -1245,7 +1259,7 @@ export const jaMessages = {
     "settings.account": "アカウント",
     "settings.profileSummary":
         "ニックネーム・国・地域・お気に入りゲームセンター",
-    "settings.privacySummary": "公開する5つの情報",
+    "settings.privacySummary": "公開する6つの情報",
     "settings.connectionsSummary": "Discord ログインアカウント",
     "settings.accountSummary": "ログアウト・退会",
     "settings.saved": "保存しました。",
@@ -1261,6 +1275,9 @@ export const jaMessages = {
     "settings.showPreferredArcade": "お気に入りゲームセンターを公開",
     "settings.showPlayCount": "総プレー回数を公開",
     "settings.showPlayActivity": "プレー活動を公開",
+    "settings.showPlayScores": "プレースコアを公開",
+    "settings.scoresCoupling":
+        "オフにするとランキングから外れ、プロフィールのスコア・記録がほかの人に表示されません。自分の順位は自分だけに表示されます。",
     "settings.publicWhenOn": "オンにすると他のユーザーに公開されます。",
     "settings.activityCoupling":
         "最終プレーと最近のプレーが一緒に公開されます。",

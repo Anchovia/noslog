@@ -28,6 +28,7 @@ export interface ProfileUser {
     hide_play_count: boolean;
     hide_preferred_arcade: boolean;
     hide_play_activity: boolean;
+    hide_play_scores: boolean;
     score_p: number | null;
     score_f: number | null;
     score_s: number | null;

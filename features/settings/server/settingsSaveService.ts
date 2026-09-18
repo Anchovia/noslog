@@ -22,6 +22,8 @@ function refreshPublicIdentity(userId: number) {
     updateTag(getUserProfileTag(userId));
     updateTag(CACHE_TAGS.userRankings);
     updateTag(CACHE_TAGS.arcades);
+    // 점수 비공개를 바꾸면 악곡 랭킹 · 점수 분포 캐시도 다시(2026-09-18)
+    updateTag(CACHE_TAGS.chartRankings);
 }
 
 export async function saveSettingsProfile(
@@ -145,6 +147,7 @@ export async function saveSettingsPrivacy(
                 hide_preferred_arcade: !values.showPreferredArcade,
                 hide_play_count: !values.showPlayCount,
                 hide_play_activity: !values.showPlayActivity,
+                hide_play_scores: !values.showPlayScores,
             },
         });
     } catch (error) {

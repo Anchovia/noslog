@@ -27,7 +27,20 @@ export const ONBOARDING_PRIVACY_KEYS = [
     "showPreferredArcade",
     "showPlayCount",
     "showPlayActivity",
+    "showPlayScores",
 ] as const;
+// 가입 때 처음 상태 — 다른 공개 설정은 꺼진 채, 플레이 점수만 켜진 채 시작(2026-09-18 사용자 결정: 기본 공개 · 가입 때 고를 수 있게)
+export const ONBOARDING_PRIVACY_DEFAULTS: Record<
+    (typeof ONBOARDING_PRIVACY_KEYS)[number],
+    boolean
+> = {
+    showNostalgiaName: false,
+    showDiscordIdentity: false,
+    showPreferredArcade: false,
+    showPlayCount: false,
+    showPlayActivity: false,
+    showPlayScores: true,
+};
 
 export function createOnboardingSchema(t: Translator) {
     return z.object({
@@ -44,11 +57,11 @@ export function createOnboardingSchema(t: Translator) {
         country: z.enum(profileCountrySchema.options, {
             error: t("onboarding.error.countryRequired"),
         }),
-        // 가입 직후 공개 설정. 설정 화면과 같은 5개이고 모두 꺼진 채 시작한다(2026-09-12 사용자 결정)
+        // 가입 직후 공개 설정. 설정 화면과 같은 6개 — 처음 상태는 ONBOARDING_PRIVACY_DEFAULTS
         ...(Object.fromEntries(
             ONBOARDING_PRIVACY_KEYS.map((key) => [
                 key,
-                z.boolean().default(false),
+                z.boolean().default(ONBOARDING_PRIVACY_DEFAULTS[key]),
             ])
         ) as Record<
             (typeof ONBOARDING_PRIVACY_KEYS)[number],
@@ -65,11 +78,17 @@ export function onboardingInputFromFormData(formData: FormData) {
     return {
         username: String(formData.get("username") ?? ""),
         country: String(formData.get("country") ?? ""),
+        // 보내지 않은 칸은 처음 상태로(예전 화면 · 새 칸이 없는 요청)
         ...Object.fromEntries(
-            ONBOARDING_PRIVACY_KEYS.map((key) => [
-                key,
-                formData.get(key) === "true",
-            ])
+            ONBOARDING_PRIVACY_KEYS.map((key) => {
+                const value = formData.get(key);
+                return [
+                    key,
+                    value === null
+                        ? ONBOARDING_PRIVACY_DEFAULTS[key]
+                        : value === "true",
+                ];
+            })
         ),
     };
 }

@@ -33,6 +33,7 @@ function profileUser(): ProfileUser {
         hide_play_count: false,
         hide_preferred_arcade: false,
         hide_play_activity: false,
+        hide_play_scores: false,
         score_p: 1,
         score_f: 2,
         score_s: 3,

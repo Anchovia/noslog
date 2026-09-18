@@ -17,7 +17,7 @@ export default function AreaTabs<Value extends string>({
     busy = false,
 }: {
     value: Value;
-    options: readonly { value: Value; label: string }[];
+    options: readonly { value: Value; label: ReactNode }[];
     onValueChange: (value: Value) => void;
     label: string;
     children: ReactNode;

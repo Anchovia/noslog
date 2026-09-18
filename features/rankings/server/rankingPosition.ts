@@ -24,6 +24,8 @@ export async function getUserRankingPosition({
         where: {
             AND: [
                 scope,
+                // 점수 비공개 플레이어는 순위에서 빠진다 — 남은 사람 가운데 몇 등인지(2026-09-18 S3)
+                { hide_play_scores: false },
                 { [gradeField]: { gt: 0 } },
                 {
                     [gradeField]: {

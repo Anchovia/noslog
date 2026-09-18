@@ -24,6 +24,8 @@ export interface ShellAccount {
     username: string | null;
     avatar: string | null;
     role: string;
+    /** 읽지 않은 피드백 답변 수 — 메뉴 「피드백 · 오류 제보」 줄의 점(2026-09-18 F1) */
+    feedbackUnread?: number;
 }
 
 export default function AppHeader({
@@ -45,6 +47,10 @@ function HeaderContent({ account }: { account: ShellAccount | null }) {
     const desktop = useMediaQuery("(min-width: 1056px)");
     const [open, setOpen] = useState(false);
     const [feedbackOpen, setFeedbackOpen] = useState(false);
+    // 새 답변 수 — 「내 제보」 를 열어 읽으면 0 으로(서버에서도 읽음 처리됨)
+    const [feedbackUnread, setFeedbackUnread] = useState(
+        account?.feedbackUnread ?? 0
+    );
     const [visible, setVisible] = useState(true);
     const headerRef = useRef<HTMLElement>(null);
     const triggerRef = useRef<HTMLButtonElement>(null);
@@ -279,6 +285,13 @@ function HeaderContent({ account }: { account: ShellAccount | null }) {
                                         aria-hidden
                                     />
                                     <span>{t("shell.feedback")}</span>
+                                    {feedbackUnread ? (
+                                        <span
+                                            className="nl-unread-dot"
+                                            role="img"
+                                            aria-label={t("feedback.newReply")}
+                                        />
+                                    ) : null}
                                 </button>
                                 {account?.role === "admin" ? (
                                     <Link
@@ -302,6 +315,8 @@ function HeaderContent({ account }: { account: ShellAccount | null }) {
                 isAuthenticated={Boolean(account)}
                 open={feedbackOpen}
                 onOpenChange={setFeedbackOpen}
+                unread={feedbackUnread}
+                onRepliesSeen={() => setFeedbackUnread(0)}
                 trigger={null}
                 onCloseAutoFocus={(event) => {
                     event.preventDefault();

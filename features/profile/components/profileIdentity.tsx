@@ -72,6 +72,7 @@ export default function ProfileIdentity({
         user.hide_preferred_arcade ? t("settings.preferredArcade") : null,
         user.hide_play_count ? t("profile.playCountLabel") : null,
         user.hide_play_activity ? t("profile.recentPlays") : null,
+        user.hide_play_scores ? t("profile.playScores") : null,
     ]
         .filter(Boolean)
         .join(" · ");

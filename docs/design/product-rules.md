@@ -58,10 +58,19 @@ old design-stage checklist. Changes to material behavior require a user decision
 
 ## Public profile, privacy and sharing
 
-- Keep five positive visibility settings: official player name, Discord identity,
-  preferred arcade, total play count, and play activity. Play activity owns both
-  last-played and recent-play disclosure. Off withholds public output; it does not
-  delete stored values. There is no whole-profile-private switch.
+- Keep six positive visibility settings: official player name, Discord identity,
+  preferred arcade, total play count, play activity and play scores. Play activity
+  owns both last-played and recent-play disclosure. Off withholds public output; it
+  does not delete stored values. There is no whole-profile-private switch.
+- Play scores (2026-09-18, default on for existing and new users; onboarding shows it
+  checked): when off, the player is left out of chart rankings, score-ruler pins and
+  dots, the score distribution, global Grd / rating rankings, other players' rank
+  positions and "similar Grd" averages — ranks are recomputed among the remaining
+  players. Only the player still sees their own position among the public players.
+  Others see the profile identity with a lock message instead of Grd, rating, ranks,
+  rank distribution, judgement totals, best plays, progress and recent plays; the
+  profile plays/progress APIs return 403 for them. Values are withheld on the server,
+  not hidden with CSS.
 - Apply visibility consistently to public profiles, incremental results, ranking
   identity, share cards and server-generated metadata. CSS hiding is insufficient.
   Do not leak private values through response payloads or generated images.
@@ -289,6 +298,10 @@ old design-stage checklist. Changes to material behavior require a user decision
 - Feedback/error reports preserve target/context and optional private proof. Report
   submission is not public publication of the image. Prevent duplicate submission
   and provide actionable upload/save errors without exposing internal diagnostics.
+- Feedback replies (2026-09-18): an admin may add a reply when resolving a report.
+  The reporter sees their reports (status received / resolved, reply) under "My
+  reports" in the feedback dialog; unread replies show a dot on the menu's feedback
+  entry and on the tab, cleared when the list is opened. Reopening keeps the reply.
 - The general feedback form records a type — `bug` (problem report) or `idea`
   (suggestion) — and accepts any non-empty text up to 1,000 characters (no minimum
   length, 2026-09-18). Arcade reports keep their own 10–1,000 character rule and have

@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createApiFailure, createApiSuccess } from "@/lib/api/response";
 import { logServerError } from "@/lib/observability/server";
+import getSession from "@/lib/session";
+import { scoresHiddenFrom } from "@/features/profile/server/scoreVisibility";
 import {
     profileIdSchema,
     profileListQuerySchema,
@@ -25,6 +27,15 @@ export async function GET(
             { status: 400, headers }
         );
     try {
+        const session = await getSession();
+        if (await scoresHiddenFrom(id.data, session.id))
+            return NextResponse.json(
+                createApiFailure({
+                    code: "PROFILE_SCORES_PRIVATE",
+                    message: "This player keeps their scores private.",
+                }),
+                { status: 403, headers }
+            );
         const result = await getPublicProfilePlays(id.data, query.data);
         return result
             ? NextResponse.json(createApiSuccess(result), { headers })

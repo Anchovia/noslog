@@ -24,7 +24,28 @@ describe("관리자 피드백 스키마", () => {
         ).toEqual({
             feedbackId: 15,
             status: "resolved",
+            reply: "",
         });
+    });
+
+    it("처리 완료 답변은 앞뒤 공백을 지우고 1,000자까지 받는다", () => {
+        const formData = createFeedbackStatusUpdateFormData(
+            15,
+            "resolved",
+            "  고쳤습니다!  "
+        );
+        expect(
+            feedbackStatusUpdateSchema.parse(
+                feedbackStatusUpdateInputFromFormData(formData)
+            ).reply
+        ).toBe("고쳤습니다!");
+        expect(
+            feedbackStatusUpdateSchema.safeParse({
+                feedbackId: 15,
+                status: "resolved",
+                reply: "가".repeat(1001),
+            }).success
+        ).toBe(false);
     });
 
     it("지원하지 않는 상태를 거부한다", () => {
