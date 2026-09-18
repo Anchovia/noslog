@@ -196,7 +196,8 @@
         color: black;
         break-inside: avoid;
     }
-    .noslog-ui .nl-privacy a,
+    /* 화면용 링크 규칙(a:not(.nl-back-link))과 같은 무게로 — 낮으면 인쇄에서 흰 종이 위 흰 글자가 된다 */
+    .noslog-ui .nl-privacy a:not(.nl-back-link),
     .noslog-ui .nl-privacy .nl-muted,
     .noslog-ui .nl-privacy-contact dt {
         color: black;

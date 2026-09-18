@@ -37,7 +37,7 @@
 | `surface/scrim`                                       | #000 60%                    | 대화상자 뒤 가림막                                    |
 | `focus/ring`                                          | #fff                        | 포커스 선                                             |
 
-- 도메인 색은 이미 있는 것만 쓴다: 난이도 글자 `difficulty/text-*`, 판정 `judgement/*`, 카테고리
+- 도메인 색은 이미 있는 것만 쓴다: 난이도 글자 `difficulty/text-*`(다크 값은 난이도 판 면 `raised` 위에서도 4.5 를 넘게 한 칸 밝힘 — 2026-09-18), 판정 `judgement/*`, 카테고리
   `category/*`, 달성 `achievement/*`, 검정 `exam/*`, 상태 `feedback/*`, 차트 `local-data/*`.
   **새 색이 필요해 보이면 만들지 말고 묻는다.**
 - 상호작용 면(올림 · 누름 · 선택 · 비활성)은 그 상태에만 칠한다. 평소 요소에 칠하지 않는다.

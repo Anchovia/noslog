@@ -424,22 +424,22 @@
         {
             "name": "difficulty/text-normal",
             "light": "#09834a",
-            "dark": "#219563"
+            "dark": "#239d68"
         },
         {
             "name": "difficulty/text-hard",
             "light": "#ba5500",
-            "dark": "#e06400"
+            "dark": "#e26500"
         },
         {
             "name": "difficulty/text-expert",
             "light": "#cd2e1d",
-            "dark": "#d85c4f"
+            "dark": "#db675b"
         },
         {
             "name": "difficulty/text-real",
             "light": "#9452ce",
-            "dark": "#ad69e9"
+            "dark": "#ae6be9"
         },
         {
             "name": "border/overlay",
