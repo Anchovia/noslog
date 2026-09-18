@@ -97,6 +97,11 @@ old design-stage checklist. Changes to material behavior require a user decision
 - Personal record, judgement analysis and Recital values keep their source units
   and limitations. Missing mode-specific values are not substituted with Basic
   values. Retry the failed region without losing the current chart context.
+- Chart and music data fields (note count, constant, BPM, length, release date,
+  unlock condition) record where each value came from in `chart_field_sources`
+  (play-record inference, BEMANIWiki, RemyWiki, official level or manual). Values
+  inferred from players' own records win over wiki values when they disagree;
+  wiki-sourced values may be replaced once records exist (2026-09-18).
 - The ranking tab's score-distribution curve shows player pins at each best
   score: every participant when there are 30 or fewer, otherwise the top 3 plus
   the signed-in viewer. Nearby pins collapse into the highest-scoring player with
