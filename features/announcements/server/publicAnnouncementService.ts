@@ -4,11 +4,13 @@ import db from "@/lib/db";
 import { CACHE_TAGS } from "@/lib/cacheTags";
 import { PUBLIC_DATA_REVALIDATE_SECONDS } from "@/lib/cachePolicy";
 import {
+    adjacentAnnouncements,
     eligibleAnnouncements,
     localizeAnnouncement,
+    selectArchivePage,
     selectHomeAnnouncements,
-    ANNOUNCEMENTS_PAGE_SIZE,
 } from "@/features/announcements/schemas/publicAnnouncementSchema";
+import type { AnnouncementCategory } from "@/features/announcements/schemas/publicAnnouncementSchema";
 import type { Locale } from "@/lib/i18n/routing";
 
 const queryCandidates = unstable_cache(
@@ -46,29 +48,40 @@ export async function getPublicAnnouncements() {
     // Scheduling is evaluated on each read, not frozen inside the cached query.
     return eligibleAnnouncements(await queryCandidates(), new Date());
 }
-export async function getAnnouncementArchive(locale: Locale, page: number) {
-    const records = await getPublicAnnouncements();
-    const totalPages = Math.max(
-        1,
-        Math.ceil(records.length / ANNOUNCEMENTS_PAGE_SIZE)
+export async function getAnnouncementArchive(
+    locale: Locale,
+    category: AnnouncementCategory | null,
+    page: number
+) {
+    const selected = selectArchivePage(
+        await getPublicAnnouncements(),
+        new Date(),
+        category,
+        page
     );
-    if (page > totalPages) return null;
+    if (!selected) return null;
     return {
-        page,
-        totalPages,
-        announcements: records
-            .slice(
-                (page - 1) * ANNOUNCEMENTS_PAGE_SIZE,
-                page * ANNOUNCEMENTS_PAGE_SIZE
-            )
-            .map((item) => localizeAnnouncement(item, locale)),
+        category,
+        page: selected.page,
+        totalPages: selected.totalPages,
+        pinned: selected.pinned.map((item) =>
+            localizeAnnouncement(item, locale)
+        ),
+        announcements: selected.list.map((item) =>
+            localizeAnnouncement(item, locale)
+        ),
     };
 }
 export async function getAnnouncement(locale: Locale, slug: string) {
-    const record = (await getPublicAnnouncements()).find(
-        (item) => item.publicSlug === slug
-    );
-    return record ? localizeAnnouncement(record, locale) : null;
+    const records = await getPublicAnnouncements();
+    const record = records.find((item) => item.publicSlug === slug);
+    if (!record) return null;
+    const { older, newer } = adjacentAnnouncements(records, record.id);
+    return {
+        ...localizeAnnouncement(record, locale),
+        older: older ? localizeAnnouncement(older, locale) : null,
+        newer: newer ? localizeAnnouncement(newer, locale) : null,
+    };
 }
 export async function getHomeAnnouncements(locale: Locale) {
     const selected = selectHomeAnnouncements(

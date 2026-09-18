@@ -4,6 +4,7 @@ import {
     createAnnouncement as createAnnouncementService,
     updateAnnouncement as updateAnnouncementService,
     deleteAnnouncement as deleteAnnouncementService,
+    requestAnnouncementImageUpload as requestAnnouncementImageUploadService,
 } from "@/features/announcements/server/announcementAdminService";
 
 export async function createAnnouncement(formData: FormData) {
@@ -16,4 +17,8 @@ export async function updateAnnouncement(formData: FormData) {
 
 export async function deleteAnnouncement(formData: FormData) {
     return deleteAnnouncementService(formData);
+}
+
+export async function requestAnnouncementImageUpload(contentType: string) {
+    return requestAnnouncementImageUploadService(contentType);
 }

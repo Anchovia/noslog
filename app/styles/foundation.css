@@ -1076,6 +1076,33 @@ html[data-theme="light"] .noslog-ui,
     color: var(--nl-content-default);
     border-color: var(--nl-border-strong);
 }
+/* 상태 태그(이벤트 진행 · 글 승인, 2026-09-18 T3) = 기본 테두리 태그 + 앞에 색 점 8(사이 8 — 오락실 기체 「색 점 + 글자」 와 같은 문법).
+   점 색 = 알림 표시색(marker) — 그래픽 대비 3 : 1 을 두 테마 모두 넘는다. 중립(임시저장 · 종료)은 점 없음. 색 단독이 아니라 늘 글자와 함께 */
+.noslog-ui .nl-tag--status {
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-tag--status::before {
+    content: "";
+    flex-shrink: 0;
+    width: 8px;
+    height: 8px;
+    border-radius: var(--nl-radius-full);
+}
+.noslog-ui .nl-tag--status[data-tone="neutral"]::before {
+    content: none;
+}
+.noslog-ui .nl-tag--status[data-tone="success"]::before {
+    background: var(--nl-feedback-success-marker);
+}
+.noslog-ui .nl-tag--status[data-tone="info"]::before {
+    background: var(--nl-feedback-info-marker);
+}
+.noslog-ui .nl-tag--status[data-tone="warning"]::before {
+    background: var(--nl-feedback-warning-marker);
+}
+.noslog-ui .nl-tag--status[data-tone="danger"]::before {
+    background: var(--nl-feedback-danger-marker);
+}
 /* 필터 개수 배지 — 「필터」 버튼 안 적용 조건 묶음 수. 개수 전용이라 태그와 다른 모양: 원 20 · 면 raised · 글자 metadata */
 .noslog-ui .nl-filter-count {
     display: flex;
@@ -1151,4 +1178,71 @@ html[data-theme="light"] .noslog-ui,
     .noslog-ui .nl-segments__item:focus-visible {
         border-color: Highlight;
     }
+}
+
+/* 마크다운 입력(MarkdownEditor) — 「쓰기 / 미리보기」 탭 + 서식 버튼, GitHub 구조를 우리 규격으로 (2026-09-18 E2).
+   상자 = 입력칸 경계 · 모서리 8 · 면 surface. 머리 줄 = 가라앉은 면 + 아래 divider, 탭 · 서식 버튼 모두 컨트롤 L(한 줄 한 단계).
+   입력 = 본문 16/24 · 안쪽 8/12(입력칸 글자 자리) · 처음 16줄 · 글 따라 늘어남. 포커스는 입력칸처럼 상자 경계 + 후광 */
+.noslog-ui .nl-markdown-editor {
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid var(--nl-border-input);
+    border-radius: var(--nl-radius-field);
+    background: var(--nl-surface-surface);
+}
+@media (hover: hover) {
+    .noslog-ui .nl-markdown-editor:hover {
+        border-color: var(--nl-border-strong);
+    }
+}
+.noslog-ui .nl-markdown-editor:has(.nl-markdown-editor__input:focus-visible) {
+    border-color: var(--nl-focus-ring);
+    box-shadow: 0 0 0 var(--nl-spacing-4) var(--nl-state-halo);
+}
+.noslog-ui .nl-markdown-editor[data-invalid] {
+    border-color: var(--nl-feedback-destructive-border);
+}
+.noslog-ui .nl-markdown-editor__head {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    min-width: 0;
+    background: var(--nl-surface-sunken);
+    box-shadow: inset 0 -1px var(--nl-border-divider);
+}
+.noslog-ui .nl-markdown-editor__tools {
+    display: flex;
+    min-width: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+.noslog-ui .nl-markdown-editor__tools::-webkit-scrollbar {
+    display: none;
+}
+.noslog-ui .nl-markdown-editor__input {
+    display: block;
+    width: 100%;
+    min-height: calc(
+        var(--nl-type-line-height-24) * 16 + var(--nl-spacing-8) * 2
+    );
+    padding: var(--nl-spacing-8) var(--nl-spacing-12);
+    border: 0;
+    background: transparent;
+    color: var(--nl-content-default);
+    font-size: var(--nl-type-size-16);
+    line-height: var(--nl-type-line-height-24);
+    field-sizing: content;
+    resize: vertical;
+}
+.noslog-ui .nl-markdown-editor__input:focus-visible {
+    outline: none;
+}
+.noslog-ui .nl-markdown-editor__input[hidden] {
+    display: none;
+}
+.noslog-ui .nl-markdown-editor__preview {
+    min-height: calc(
+        var(--nl-type-line-height-24) * 16 + var(--nl-spacing-8) * 2
+    );
+    padding: var(--nl-spacing-12);
 }

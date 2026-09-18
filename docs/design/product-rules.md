@@ -97,6 +97,11 @@ old design-stage checklist. Changes to material behavior require a user decision
 - Personal record, judgement analysis and Recital values keep their source units
   and limitations. Missing mode-specific values are not substituted with Basic
   values. Retry the failed region without losing the current chart context.
+- Chart and music data fields (note count, constant, BPM, length, release date,
+  unlock condition) record where each value came from in `chart_field_sources`
+  (play-record inference, BEMANIWiki, RemyWiki, official level or manual). Values
+  inferred from players' own records win over wiki values when they disagree;
+  wiki-sourced values may be replaced once records exist (2026-09-18).
 - The ranking tab's score-distribution curve shows player pins at each best
   score: every participant when there are 30 or fewer, otherwise the top 3 plus
   the signed-in viewer. Nearby pins collapse into the highest-scoring player with
@@ -238,12 +243,44 @@ old design-stage checklist. Changes to material behavior require a user decision
   `metadata` text in `content/subdued`, no colour) on Home, the archive and the
   detail page; long titles wrap under the tag. Maintenance in progress is still
   signalled by `MAINTENANCE_MODE`, not by the tag.
+- The public archive filters by one category through `?category=<lowercase>` (unknown
+  values fall back to all). Active critical announcements are pinned above the dated
+  list on page 1 of the matching filter and are left out of the dated list; page count
+  ignores them. The detail page links the previous (older) and next (newer)
+  announcement in publication order across all categories (2026-09-18).
+- Admin announcement saving keeps the existing rules (slug and all three
+  translations are required even for a draft). The editor fills an empty slug
+  from the English (else Korean) title on save; "임시저장" / "비공개로 전환" saves
+  unpublished, "게시" / "업데이트" saves published (2026-09-18).
+- Community events (2026-09-18): signed-in users with at least one completed
+  data sync may write. A post has a working copy and an approved public copy.
+  Save = draft (a change request stays a change request until resubmitted);
+  "게시 요청" = pending review. Admins approve (working copy becomes public; first
+  approval date kept), request changes (public copy stays) or reject (the whole
+  post is taken down and can no longer be edited or resubmitted). Change request
+  and rejection need a reason, shown at the top of the author's edit screen.
+  The period is Korean dates; an event is live from the start date 00:00 KST
+  until the end of the end date. Tabs: live (ending soonest first), upcoming
+  (starting soonest first), ended (most recent first). Authors can delete their
+  own post in any state, including a public one (it leaves the list and Home at
+  once); the cover image file is removed only when it is in the author's upload
+  folder and no other post uses it. Public events are listed in the sitemap.
+- Announcement and event bodies may include images uploaded through the editor
+  (JPG/PNG/WebP, 4 MB, shared hourly upload limit) to the public store under
+  `announcements/{admin}/image` or `events/{author}/image`. The renderer shows only
+  images from those folders on our public store; other image URLs are dropped.
+  Uploaded body images are not deleted when a post is edited or removed (unused
+  files may remain).
 - Preserve original/source language and public publication state for announcements;
   optional translations are not fabricated. Official NOSTALGIA news links remain
   distinguishable from NosLog announcements.
 - Feedback/error reports preserve target/context and optional private proof. Report
   submission is not public publication of the image. Prevent duplicate submission
   and provide actionable upload/save errors without exposing internal diagnostics.
+- The general feedback form records a type — `bug` (problem report) or `idea`
+  (suggestion) — and accepts any non-empty text up to 1,000 characters (no minimum
+  length, 2026-09-18). Arcade reports keep their own 10–1,000 character rule and have
+  no type. Reports made before this change keep an empty type.
 - Keep not-found, recoverable error, maintenance and fatal recovery distinct. Retry
   must preserve safe context. Missing/unauthorized resources must not leak existence
   or private details. These states do not authorize changes to preserved viewers.

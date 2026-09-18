@@ -26,9 +26,24 @@
     box-shadow: inset 0 -1px var(--nl-border-divider);
     overflow-wrap: anywhere;
 }
+/* 공지 줄 제목 = 16/600 — 전체 목록(B1) · 홈 카드(N2) · 내 이벤트 글 모두. 홈 고정 줄엔 면을 두지 않는다(맨 위 중대 공지 배너와 겹침) */
 .noslog-ui .nl-announcement-row__title {
     margin: 0;
     min-width: 0;
+    font-weight: var(--nl-type-weight-semibold);
+}
+/* 활성 중대 공지 고정 줄 = 목록 항목 카드(면 surface · 모서리 8 · 안쪽 12), 날짜 목록 위. 여러 개면 사이 8 */
+.noslog-ui .nl-announcements__pinned {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
+}
+/* 면 가장자리 = 페이지 내용 선(제목 · 칩과 같은 선), 글자는 면 안쪽 12 (목록 항목 카드) */
+.noslog-ui .nl-announcements__pinned .nl-announcement-row {
+    padding: var(--nl-spacing-12);
+    border-radius: var(--nl-radius-container);
+    background: var(--nl-surface-surface);
+    box-shadow: none;
 }
 /* 분류·날짜 줄 — 제목 위. 칩 폭이 제각각이어도 제목 시작선이 흔들리지 않는다 */
 .noslog-ui .nl-announcement-meta {
@@ -48,14 +63,56 @@
 .noslog-ui .nl-announcements__list > li:first-child .nl-announcements__month {
     padding-top: var(--nl-spacing-0);
 }
+/* 상세 끝 — 이전 · 다음 글 두 칸(목록 항목 카드 · 사이 8) → 16 → 「목록으로」 */
+.noslog-ui .nl-announcements__pager {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--nl-spacing-16);
+}
+.noslog-ui .nl-announcements__adjacent {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--nl-spacing-8);
+    align-self: stretch;
+}
+.noslog-ui .nl-announcements__adjacent-link {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-4);
+    min-width: 0;
+    padding: var(--nl-spacing-12);
+    border-radius: var(--nl-radius-container);
+    background: var(--nl-surface-surface);
+}
+.noslog-ui .nl-announcements__adjacent-link[data-side="newer"] {
+    text-align: end;
+}
+@media (hover: hover) {
+    .noslog-ui .nl-announcements__adjacent-link:hover {
+        background: var(--nl-interaction-hover);
+    }
+}
+.noslog-ui .nl-announcements__adjacent-link:focus-visible {
+    outline: none;
+    box-shadow: inset 0 0 0 1px var(--nl-focus-ring);
+}
 .noslog-ui .nl-announcement-body {
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-16);
     overflow-wrap: anywhere;
 }
+/* 본문 이미지(2026-09-18 I1) — 본문 폭 · 모서리 8 · 원래 비율 */
+.noslog-ui .nl-announcement-body__image {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--nl-radius-container);
+}
+/* 목록 들여쓰기 24 — 간격 단계 값(16 + 4 = 20 은 단계 밖이라 2026-09-18 감사에서 맞춤) */
 .noslog-ui .nl-announcement-body ul {
-    padding-inline-start: calc(var(--nl-spacing-16) + var(--nl-spacing-4));
+    padding-inline-start: var(--nl-spacing-24);
     list-style: disc;
 }
 .noslog-ui .nl-announcement-body ol {

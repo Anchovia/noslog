@@ -63,7 +63,7 @@ async function seed() {
         charts.set(chart.difficulty, savedChart);
     }
 
-    await prisma.user.upsert({
+    const ranker = await prisma.user.upsert({
         where: { username: "E2E_RANKER" },
         update: {
             country: "ko-KR",
@@ -218,6 +218,81 @@ async function seed() {
                 ],
             },
         },
+    });
+    // 이벤트 게시판(2026-09-18) — 실행 시각 기준 상대 날짜로 탭(진행 중 · 예정 · 종료)이 늘 같게 나뉜다
+    const day = 24 * 60 * 60 * 1000;
+    const at = (offset) => new Date(Date.now() + offset * day);
+    const published = (title, content, startsAt, endsAt, bannerUrl = null) => ({
+        publishedTitle: title,
+        publishedContent: content,
+        publishedStartsAt: startsAt,
+        publishedEndsAt: endsAt,
+        publishedBannerUrl: bannerUrl,
+        publishedAt: at(-20),
+        reviewedAt: at(-20),
+    });
+    const eventBody =
+        "E2E 이벤트 본문입니다.\n\n## 규칙\n\n- **대상**: Real 13 이상\n- 기간 안 최고 점수";
+    const eventFixtures = [
+        [
+            "E2E 진행 중 이벤트 — 오래 열림",
+            "PUBLISHED",
+            -3,
+            5,
+            "/bg/0ff2ac56c4fd26219090d5b5cfcad29c.png",
+        ],
+        ["E2E 진행 중 이벤트 — 곧 끝남", "PUBLISHED", -1, 2, null],
+        ["E2E 예정 이벤트", "PUBLISHED", 10, 14, null],
+        ["E2E 종료 이벤트", "PUBLISHED", -10, -3, null],
+    ];
+    await prisma.communityEvent.deleteMany({ where: { authorId: ranker.id } });
+    for (const [title, status, start, end, bannerUrl] of eventFixtures) {
+        await prisma.communityEvent.create({
+            data: {
+                authorId: ranker.id,
+                status,
+                title,
+                content: eventBody,
+                startsAt: at(start),
+                endsAt: at(end),
+                bannerUrl,
+                ...published(title, eventBody, at(start), at(end), bannerUrl),
+            },
+        });
+    }
+    // 공개판을 유지한 채 고친 판을 검토 중 · 반려 · 임시저장 — 공개 화면엔 공개판만(또는 안 보임)
+    await prisma.communityEvent.create({
+        data: {
+            authorId: ranker.id,
+            status: "PENDING",
+            title: "E2E 고친 판(검토 중)",
+            content: "고친 본문",
+            startsAt: at(-2),
+            endsAt: at(20),
+            submittedAt: at(0),
+            ...published("E2E 공개판 유지 이벤트", eventBody, at(-2), at(20)),
+        },
+    });
+    await prisma.communityEvent.createMany({
+        data: [
+            {
+                authorId: ranker.id,
+                status: "REJECTED",
+                title: "E2E 반려 이벤트",
+                content: "x",
+                startsAt: at(-1),
+                endsAt: at(3),
+                reviewNote: "반려 사유",
+            },
+            {
+                authorId: ranker.id,
+                status: "DRAFT",
+                title: "E2E 임시저장 이벤트",
+                content: "x",
+                startsAt: at(-1),
+                endsAt: at(3),
+            },
+        ],
     });
 }
 

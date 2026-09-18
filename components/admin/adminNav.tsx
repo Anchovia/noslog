@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 export const adminSections = [
     { href: "/admin", label: "대시보드" },
     { href: "/admin/announcements", label: "공지" },
+    { href: "/admin/events", label: "이벤트" },
     { href: "/admin/feedback", label: "피드백" },
     { href: "/admin/users", label: "유저" },
     { href: "/admin/syncs", label: "동기화" },

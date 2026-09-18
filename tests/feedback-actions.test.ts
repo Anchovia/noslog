@@ -48,9 +48,11 @@ const feedbackImage =
 function feedbackForm(
     content = "충분한 길이의 제보 내용입니다.",
     imageUrl = "",
-    locale = "ko"
+    locale = "ko",
+    category = "bug"
 ) {
     const formData = new FormData();
+    formData.set("category", category);
     formData.set("content", content);
     formData.set("imageUrl", imageUrl);
     formData.set("locale", locale);
@@ -136,19 +138,19 @@ describe("피드백 제보 액션", () => {
 
     it("서버 검증 오류를 현재 언어의 필드 오류로 반환한다", async () => {
         await expect(
-            submitFeedbackReport(feedbackForm("short", "", "en"))
+            submitFeedbackReport(feedbackForm("   ", "", "en"))
         ).resolves.toEqual({
             success: false,
-            message: "Enter between 10 and 1,000 characters.",
+            message: "Enter some details",
             fieldErrors: {
-                content: ["Enter between 10 and 1,000 characters."],
+                content: ["Enter some details"],
             },
         });
         expect(mocks.feedbackCreate).not.toHaveBeenCalled();
     });
 
     it("검증 실패한 제보가 소유한 첨부 이미지를 정리한다", async () => {
-        await submitFeedbackReport(feedbackForm("short", feedbackImage));
+        await submitFeedbackReport(feedbackForm("   ", feedbackImage));
 
         expect(mocks.isValidPrivateImageBlob).toHaveBeenCalledWith(
             feedbackImage,
@@ -199,6 +201,7 @@ describe("피드백 제보 액션", () => {
         });
         expect(mocks.feedbackCreate).toHaveBeenCalledWith({
             data: {
+                category: "bug",
                 content: "충분한 길이의 제보 내용입니다.",
                 imageUrl: feedbackImage,
                 userId: 2,

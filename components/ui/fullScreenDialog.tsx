@@ -24,7 +24,8 @@ export default function FullScreenDialog({
     title: string;
     children: ReactNode;
     footer: ReactNode;
-    trigger: ReactNode;
+    /** 바깥에서 open 을 다룰 때(메뉴 항목에서 여는 창 등)는 비운다 */
+    trigger?: ReactNode;
     /** 「초기화」 — 발 왼쪽 고스트 L, 오른쪽 주 액션과 한 줄 (2026-09-16: 폰 필터 22곳 중 발 왼쪽 9 · 머리 오른쪽 1) */
     onReset?: () => void;
     onCloseAutoFocus?: (event: Event) => void;
@@ -51,7 +52,9 @@ export default function FullScreenDialog({
     }, [open, historyId]);
     return (
         <Dialog.Root open={open} onOpenChange={onOpenChange}>
-            <Dialog.Trigger asChild>{trigger}</Dialog.Trigger>
+            {trigger ? (
+                <Dialog.Trigger asChild>{trigger}</Dialog.Trigger>
+            ) : null}
             <Dialog.Portal>
                 <div className="noslog-ui">
                     <Dialog.Overlay className="nl-dialog-overlay" />

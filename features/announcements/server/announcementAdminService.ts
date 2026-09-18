@@ -15,6 +15,12 @@ import {
 } from "@/features/announcements/schemas/announcementSchema";
 import type { ActionResult } from "@/lib/actions/result";
 import { requireAdmin } from "@/lib/admin";
+import { createImageUploadToken, isImageContentType } from "@/lib/blob";
+import {
+    claimUploadTokenQuota,
+    getUploadLimitMessage,
+    releaseUploadTokenQuota,
+} from "@/lib/uploadRateLimit";
 import { CACHE_TAGS } from "@/lib/cacheTags";
 import db from "@/lib/db";
 import { logServerError } from "@/lib/observability/server";
@@ -264,4 +270,41 @@ export async function deleteAnnouncement(
     }
     refreshAnnouncements();
     return { success: true, message: "공지사항을 삭제했습니다.", id };
+}
+
+// 본문 이미지 올리기(2026-09-18) — 관리자만. 공개 저장소 announcements/{관리자}/image 아래 한 장 전용 토큰
+export async function requestAnnouncementImageUpload(
+    contentType: string
+): Promise<ActionResult<{ pathname: string; token: string }>> {
+    const admin = await requireAdmin();
+    if (!isImageContentType(contentType))
+        return {
+            success: false,
+            message: "JPG · PNG · WebP 이미지만 올릴 수 있습니다.",
+        };
+    let grantId: number | null = null;
+    try {
+        const quota = await claimUploadTokenQuota(
+            admin.id,
+            "announcement-image"
+        );
+        if (!quota.allowed)
+            return { success: false, message: getUploadLimitMessage() };
+        grantId = quota.grantId;
+        const upload = await createImageUploadToken(
+            `announcements/${admin.id}/image`,
+            contentType
+        );
+        if (!upload) throw new Error("invalid image type");
+        return { success: true, message: "", ...upload };
+    } catch (error) {
+        logServerError(error, {
+            event: "announcements.image-upload.request.failed",
+            routePath: "/admin/announcements",
+            routeType: "action",
+        });
+        if (grantId !== null)
+            await releaseUploadTokenQuota(admin.id, grantId).catch(() => null);
+        return { success: false, message: "이미지를 올리지 못했습니다." };
+    }
 }

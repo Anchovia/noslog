@@ -7,7 +7,10 @@ export type UploadPurpose =
     | "exam-proof"
     | "feedback-image"
     | "arcade-photo"
-    | "music-jacket";
+    | "music-jacket"
+    | "event-banner"
+    | "event-image"
+    | "announcement-image";
 
 const UPLOAD_LIMIT = 10;
 const UPLOAD_WINDOW_MS = 60 * 60 * 1000;

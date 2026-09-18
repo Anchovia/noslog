@@ -259,3 +259,88 @@
         padding: var(--nl-spacing-24);
     }
 }
+/* 진행 중인 이벤트(2026-09-18 H1) — 큰 배너 카드(2.4 : 1 · 모서리 8) 위에 제목 · 기간. 카드 사이 8.
+   글자 자리 = 어두운 층 media-scrim(60%) — 흰 사진 위에서도 흰 글자 5.7 : 1. 층 위 32 는 투명 → 층으로 번지게 하고,
+   같은 자리에 흐림(뒤를 흐리게)을 위로 갈수록 옅게 깔아 경계가 딱딱하게 서지 않는다 */
+.noslog-ui .nl-home-events__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
+}
+/* 진행 중인 이벤트가 없을 때(E1) — 배너와 같은 2.4 : 1 빈 카드(면 surface · 경계 divider · 모서리 8), 가운데 안내 →12→ 「이벤트 글쓰기」 M */
+.noslog-ui .nl-home-events__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--nl-spacing-12);
+    width: 100%;
+    max-width: 100%;
+    aspect-ratio: 2.4 / 1;
+    padding: var(--nl-spacing-16);
+    border-radius: var(--nl-radius-container);
+    background: var(--nl-surface-surface);
+    box-shadow: inset 0 0 0 1px var(--nl-border-divider);
+    text-align: center;
+}
+.noslog-ui .nl-home-events__empty p {
+    margin: 0;
+}
+.noslog-ui .nl-home-event {
+    position: relative;
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    aspect-ratio: 2.4 / 1;
+    overflow: hidden;
+    border-radius: var(--nl-radius-container);
+    background: var(--nl-surface-sunken);
+    box-shadow: inset 0 0 0 1px var(--nl-border-divider);
+}
+.noslog-ui .nl-home-event img {
+    object-fit: cover;
+}
+.noslog-ui .nl-home-event__caption {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-4);
+    padding: var(--nl-spacing-32) var(--nl-spacing-12) var(--nl-spacing-12);
+    color: var(--nl-content-on-media);
+    background: linear-gradient(
+        to bottom,
+        transparent,
+        var(--nl-surface-media-scrim) var(--nl-spacing-32)
+    );
+}
+.noslog-ui .nl-home-event__caption::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    mask-image: linear-gradient(
+        to bottom,
+        transparent,
+        #000 var(--nl-spacing-32)
+    );
+}
+.noslog-ui .nl-home-event__caption > * {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+@media (hover: hover) {
+    .noslog-ui .nl-home-event:hover .nl-entity-title {
+        text-decoration: underline;
+        text-underline-position: under;
+    }
+}
+.noslog-ui .nl-home-event:focus-visible {
+    outline: 1px solid var(--nl-focus-ring);
+    outline-offset: var(--nl-spacing-4);
+}

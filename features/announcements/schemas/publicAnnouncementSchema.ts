@@ -17,6 +17,26 @@ export const ANNOUNCEMENT_CATEGORIES = [
     "NOTICE",
 ] as const;
 export type AnnouncementCategory = (typeof ANNOUNCEMENT_CATEGORIES)[number];
+
+// 목록 분류 필터 주소 — ?category=update (소문자). 없으면 전체(null), 모르는 값이면 undefined
+export function announcementCategoryFromQuery(
+    value: string | undefined
+): AnnouncementCategory | null | undefined {
+    if (value === undefined) return null;
+    return ANNOUNCEMENT_CATEGORIES.find(
+        (category) => category.toLowerCase() === value
+    );
+}
+export function announcementsQuery(
+    category: AnnouncementCategory | null,
+    page: number
+) {
+    const params = new URLSearchParams();
+    if (category) params.set("category", category.toLowerCase());
+    if (page > 1) params.set("page", String(page));
+    const query = params.toString();
+    return query ? `?${query}` : "";
+}
 export const publicAnnouncementSchema = z
     .object({
         id: z.number().int().positive(),
@@ -92,12 +112,12 @@ export function eligibleAnnouncements(records: unknown[], now: Date) {
         );
 }
 
-export function selectHomeAnnouncements(
+// 활성 중대 공지 — 홈 배너 후보이자 목록 맨 위에 고정되는 항목
+function activeCriticalAnnouncements(
     records: PublicAnnouncementRecord[],
     now: Date
 ) {
-    // 활성 중대 공지: 배너 후보이자 목록 최상단에 고정되는 항목
-    const active = records
+    return records
         .filter(
             (record) =>
                 record.placement === "SERVICE_CRITICAL" &&
@@ -111,6 +131,13 @@ export function selectHomeAnnouncements(
                 b.publishedAt.getTime() - a.publishedAt.getTime() ||
                 b.id - a.id
         );
+}
+
+export function selectHomeAnnouncements(
+    records: PublicAnnouncementRecord[],
+    now: Date
+) {
+    const active = activeCriticalAnnouncements(records, now);
     const activeIds = new Set(active.map((record) => record.id));
     return {
         list: [
@@ -120,5 +147,48 @@ export function selectHomeAnnouncements(
                 .map((record) => ({ record, pinned: false })),
         ].slice(0, 3),
         critical: active[0] ?? null,
+    };
+}
+
+// 전체 공지 한 페이지 (2026-09-18 B1) — 고른 분류 안에서, 활성 중대 공지는 1페이지 맨 위에 고정하고
+// 날짜 목록에서는 빼서 두 번 보이지 않게 한다. 쪽수는 고정을 뺀 목록으로 센다.
+export function selectArchivePage(
+    records: PublicAnnouncementRecord[],
+    now: Date,
+    category: AnnouncementCategory | null,
+    page: number
+) {
+    const matching = category
+        ? records.filter((record) => record.category === category)
+        : records;
+    const pinned = activeCriticalAnnouncements(matching, now);
+    const pinnedIds = new Set(pinned.map((record) => record.id));
+    const rest = matching.filter((record) => !pinnedIds.has(record.id));
+    const totalPages = Math.max(
+        1,
+        Math.ceil(rest.length / ANNOUNCEMENTS_PAGE_SIZE)
+    );
+    if (page > totalPages) return null;
+    return {
+        page,
+        totalPages,
+        pinned: page === 1 ? pinned : [],
+        list: rest.slice(
+            (page - 1) * ANNOUNCEMENTS_PAGE_SIZE,
+            page * ANNOUNCEMENTS_PAGE_SIZE
+        ),
+    };
+}
+
+// 상세 끝 이전 · 다음 글 (2026-09-18) — 분류와 관계없이 게시 순서. 이전 = 더 오래된 글, 다음 = 더 새 글
+export function adjacentAnnouncements(
+    records: PublicAnnouncementRecord[],
+    id: number
+) {
+    const index = records.findIndex((record) => record.id === id);
+    if (index < 0) return { older: null, newer: null };
+    return {
+        older: records[index + 1] ?? null,
+        newer: index > 0 ? records[index - 1] : null,
     };
 }

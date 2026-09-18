@@ -3,6 +3,7 @@ import { localizePath, SUPPORTED_LOCALES } from "@/lib/i18n/routing";
 import { SITE_URL } from "@/lib/metadata/site";
 import type { MetadataRoute } from "next";
 import { getPublicAnnouncements } from "@/features/announcements/server/publicAnnouncementService";
+import { getSitemapEvents } from "@/features/events/server/eventService";
 
 export const revalidate = 3600;
 
@@ -21,6 +22,7 @@ const staticRoutes: Array<{
     { path: "/bookmarklet", changeFrequency: "monthly", priority: 0.6 },
     { path: "/privacy", changeFrequency: "monthly", priority: 0.3 },
     { path: "/announcements", changeFrequency: "weekly", priority: 0.6 },
+    { path: "/events", changeFrequency: "weekly", priority: 0.6 },
 ];
 
 function absoluteUrl(path: string) {
@@ -133,6 +135,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
                         )
                     ),
                     changeFrequency: "monthly",
+                    priority: 0.5,
+                })
+            ),
+            // 이벤트 조회가 실패해도 나머지 사이트맵은 살린다
+            ...(await getSitemapEvents().catch(() => [])).flatMap((item) =>
+                localizedEntries(`/events/${item.id}`, {
+                    lastModified: item.lastModified,
+                    changeFrequency: "weekly",
                     priority: 0.5,
                 })
             ),

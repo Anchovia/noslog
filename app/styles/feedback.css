@@ -1,15 +1,76 @@
-/* 피드백 · 제보 창 — 공용 nl-dialog(Wide 768 · 안쪽 24) 그대로. 여기엔 본문 전용 규칙만 (2026-09-16 예외 7개 제거) */
-.noslog-ui .nl-feedback-dialog textarea {
-    height: 96px;
-    min-height: 96px;
+/* 피드백 · 제보 창 — 672 이상 공용 nl-dialog(Wide 768 · 안쪽 24), 672 미만 공용 전체 화면 창(nl-full-dialog).
+   여기엔 본문 전용 규칙만 (2026-09-16 예외 7개 제거 · 2026-09-18 F2 다시 그림) */
+.noslog-ui .nl-feedback-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-16);
+    min-width: 0;
 }
-.noslog-ui .nl-feedback-dialog__counter {
+/* 도움말 줄 = 왼쪽 안내 · 오른쪽 「쓴 수 / 1,000」 하나 (한도를 두 번 말하지 않는다) */
+.noslog-ui .nl-feedback-form .nl-field__help:not(.nl-field__error) {
     display: flex;
     justify-content: space-between;
     gap: var(--nl-spacing-8);
 }
-@media (min-width: 672px) {
-    .noslog-ui .nl-feedback-dialog__body > .nl-button {
-        align-self: flex-start;
-    }
+.noslog-ui .nl-feedback-form .nl-field__help > :first-child {
+    flex: 1;
+    min-width: 0;
+}
+.noslog-ui .nl-feedback-form__count {
+    flex: none;
+}
+.noslog-ui .nl-feedback-form label.nl-button {
+    align-self: flex-start;
+}
+/* 붙인 파일 한 줄 — 썸네일 · 이름(말줄임) · 크기 · 지우기. 입력칸과 같은 면 · 경계, 지우기는 잉크가 오른쪽 12 선에 서게 당김 */
+.noslog-ui .nl-feedback-file {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+    min-height: var(--nl-control-height);
+    padding-inline: calc(var(--nl-spacing-12) - 1px);
+    border: 1px solid var(--nl-border-input);
+    border-radius: var(--nl-radius-field);
+    background: var(--nl-surface-surface);
+}
+/* 썸네일 = 줄 높이(컨트롤 L) − 8 → 위아래 4 (폰 36 · 1056 이상 32) · 모서리 4(상자 안 항목) · 비율 유지 채움 */
+.noslog-ui .nl-feedback-file__thumb {
+    flex: none;
+    width: calc(var(--nl-control-height) - var(--nl-spacing-8));
+    height: calc(var(--nl-control-height) - var(--nl-spacing-8));
+    border-radius: var(--nl-radius-control);
+    object-fit: cover;
+    background: var(--nl-surface-sunken);
+}
+.noslog-ui .nl-feedback-file__name {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+/* 지우기(아이콘 버튼 = 컨트롤 정사각)를 (컨트롤 − 20) / 2 만큼 당겨 잉크가 안쪽 12 선에, 위아래 1 은 경계만큼 */
+.noslog-ui .nl-feedback-file > .nl-button--icon {
+    margin-right: calc((var(--nl-control-height) - var(--nl-icon-medium)) / -2);
+    margin-block: -1px;
+}
+/* 보낸 뒤 — 창 안에 체크 · 한 줄 · 설명 (2026-09-18 결정 3) */
+.noslog-ui .nl-feedback-done {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-feedback-done__mark {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    margin-bottom: var(--nl-spacing-4);
+    border-radius: var(--nl-radius-full);
+    background: var(--nl-feedback-success-bg);
+    color: var(--nl-feedback-success-marker);
+}
+.noslog-ui .nl-feedback-done p {
+    margin: 0;
 }
