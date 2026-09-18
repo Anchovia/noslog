@@ -42,6 +42,7 @@ import AreaTabs from "@/components/ui/areaTabs";
 import { Select } from "@/components/ui/select";
 import { StatusMessage } from "@/components/ui/statusMessage";
 import useMediaQuery from "@/lib/hooks/useMediaQuery";
+import { useFeedbackUnread } from "./feedbackUnread";
 import MyFeedbackList from "./myFeedbackList";
 
 export default function FeedbackDialog({
@@ -50,13 +51,8 @@ export default function FeedbackDialog({
     onOpenChange,
     onCloseAutoFocus,
     trigger,
-    unread = 0,
-    onRepliesSeen,
 }: {
     isAuthenticated: boolean;
-    /** 읽지 않은 답변 수 — 「내 제보」 탭의 점(2026-09-18 F1) */
-    unread?: number;
-    onRepliesSeen?: () => void;
     open?: boolean;
     onOpenChange?: (open: boolean) => void;
     onCloseAutoFocus?: (event: Event) => void;
@@ -65,6 +61,8 @@ export default function FeedbackDialog({
     const localizedHref = useLocalizedHref();
     const locale = useLocale();
     const t = useTranslations();
+    // 읽지 않은 답변 수 — 「내 제보」 탭의 점(2026-09-18 F1). 헤더 · 홈 칸이 같은 값을 쓴다
+    const { count: unread, markSeen: onRepliesSeen } = useFeedbackUnread();
     const feedbackReportSchema = useMemo(
         () => createFeedbackReportSchema(t),
         [t]

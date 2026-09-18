@@ -16,6 +16,7 @@ import {
 } from "@/components/layout/destinations";
 import Avatar from "@/components/ui/avatar";
 import FeedbackDialog from "@/features/feedback/components/feedbackDialog";
+import { useFeedbackUnread } from "@/features/feedback/components/feedbackUnread";
 import useMediaQuery from "@/lib/hooks/useMediaQuery";
 import { stripLocaleFromPath } from "@/lib/i18n/routing";
 
@@ -47,10 +48,7 @@ function HeaderContent({ account }: { account: ShellAccount | null }) {
     const desktop = useMediaQuery("(min-width: 1056px)");
     const [open, setOpen] = useState(false);
     const [feedbackOpen, setFeedbackOpen] = useState(false);
-    // 새 답변 수 — 「내 제보」 를 열어 읽으면 0 으로(서버에서도 읽음 처리됨)
-    const [feedbackUnread, setFeedbackUnread] = useState(
-        account?.feedbackUnread ?? 0
-    );
+    const { count: feedbackUnread } = useFeedbackUnread();
     const [visible, setVisible] = useState(true);
     const headerRef = useRef<HTMLElement>(null);
     const triggerRef = useRef<HTMLButtonElement>(null);
@@ -315,8 +313,6 @@ function HeaderContent({ account }: { account: ShellAccount | null }) {
                 isAuthenticated={Boolean(account)}
                 open={feedbackOpen}
                 onOpenChange={setFeedbackOpen}
-                unread={feedbackUnread}
-                onRepliesSeen={() => setFeedbackUnread(0)}
                 trigger={null}
                 onCloseAutoFocus={(event) => {
                     event.preventDefault();
