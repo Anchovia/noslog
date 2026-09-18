@@ -77,6 +77,8 @@ model User {
   chartPatternsUpdated       ChartPattern[]             @relation("ChartPatternUpdatedBy")
   chartPatternsPublished     ChartPattern[]             @relation("ChartPatternPublishedBy")
   chartPatternRevisions      ChartPatternRevision[]     @relation("ChartPatternRevisionCreatedBy")
+  communityEvents            CommunityEvent[]           @relation("CommunityEventAuthor")
+  communityEventsReviewed    CommunityEvent[]           @relation("CommunityEventReviewer")
 
   @@index([grade_basic, id])
   @@index([grade_recital, id])
@@ -177,6 +179,47 @@ model AnnouncementTranslation {
   announcement   Announcement @relation(fields: [announcementId], references: [id], onDelete: Cascade)
 
   @@unique([announcementId, locale])
+}
+
+// 유저가 쓰고 관리자가 승인해 공개하는 이벤트 글 (2026-09-18).
+// 작성 중인 판(title · content · 기간 · 배너)과 승인된 공개판(published*)을 따로 둔다 —
+// 공개된 글을 고치는 동안에도 승인 전까지 이전 공개판이 보인다. 기간은 한국 날짜, endsAt 은 끝 날 다음 날 0시(미포함)
+model CommunityEvent {
+  id                 Int                  @id @default(autoincrement())
+  authorId           Int                  @map("author_id")
+  author             User                 @relation("CommunityEventAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  status             CommunityEventStatus @default(DRAFT)
+  title              String
+  content            String
+  startsAt           DateTime             @map("starts_at")
+  endsAt             DateTime             @map("ends_at")
+  bannerUrl          String?              @map("banner_url")
+  publishedTitle     String?              @map("published_title")
+  publishedContent   String?              @map("published_content")
+  publishedStartsAt  DateTime?            @map("published_starts_at")
+  publishedEndsAt    DateTime?            @map("published_ends_at")
+  publishedBannerUrl String?              @map("published_banner_url")
+  publishedAt        DateTime?            @map("published_at")
+  submittedAt        DateTime?            @map("submitted_at")
+  reviewNote         String?              @map("review_note")
+  reviewedAt         DateTime?            @map("reviewed_at")
+  reviewerId         Int?                 @map("reviewer_id")
+  reviewer           User?                @relation("CommunityEventReviewer", fields: [reviewerId], references: [id], onDelete: SetNull)
+  createdAt          DateTime             @default(now()) @map("created_at")
+  updatedAt          DateTime             @updatedAt @map("updated_at")
+
+  @@index([status, submittedAt])
+  @@index([authorId, updatedAt])
+  @@index([publishedStartsAt])
+}
+
+// 이벤트 글 상태 — 작성 중인 판의 상태. 공개 여부는 공개판(publishedAt)이 따로 말한다
+enum CommunityEventStatus {
+  DRAFT
+  PENDING
+  CHANGES_REQUESTED
+  PUBLISHED
+  REJECTED
 }
 
 // 유저가 선택할 수 있는 오락실 목록을 관리자 데이터로 관리함

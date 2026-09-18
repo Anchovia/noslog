@@ -1,0 +1,106 @@
+/* 이벤트 게시판(2026-09-18 L1) · 글쓰기(E2). 목록 = 1단 탭 → 배너 카드, 상세 = 공지 상세 문법 */
+.noslog-ui .nl-events {
+    padding-bottom: var(--nl-spacing-48);
+}
+.noslog-ui .nl-events__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--nl-spacing-8);
+}
+/* 탭 글자 뒤 개수 */
+.noslog-ui .nl-events__count {
+    margin-inline-start: var(--nl-spacing-4);
+    font-weight: var(--nl-type-weight-regular);
+}
+/* 배너 카드 — 폰 한 열, 672 이상 두 열(한 장 376). 카드 사이 세로 24 · 가로 16 */
+.noslog-ui .nl-events__cards {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--nl-spacing-24) var(--nl-spacing-16);
+}
+@media (min-width: 672px) {
+    .noslog-ui .nl-events__cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+/* 카드 = 면 없음 · 배너 →12→ 제목 →4→ 기간 */
+.noslog-ui .nl-event-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-4);
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+.noslog-ui .nl-event-card > .nl-event-banner {
+    margin-bottom: var(--nl-spacing-8);
+}
+@media (hover: hover) {
+    .noslog-ui .nl-event-card:hover .nl-entity-title {
+        text-decoration: underline;
+        text-underline-position: under;
+    }
+}
+.noslog-ui .nl-event-card:focus-visible {
+    outline: 1px solid var(--nl-focus-ring);
+    outline-offset: var(--nl-spacing-4);
+    border-radius: var(--nl-radius-container);
+}
+/* 대표 이미지 2.4 : 1 · 모서리 8. 없으면 같은 비율의 가라앉은 면 */
+.noslog-ui .nl-event-banner {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    aspect-ratio: 2.4 / 1;
+    overflow: hidden;
+    border-radius: var(--nl-radius-container);
+    background: var(--nl-surface-sunken);
+    box-shadow: inset 0 0 0 1px var(--nl-border-divider);
+}
+.noslog-ui .nl-event-banner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+/* 상세 — 공지 상세와 같은 간격(24) · 머리 8 */
+.noslog-ui .nl-events__detail {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--nl-spacing-24);
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+.noslog-ui .nl-events__detail > a.nl-button {
+    align-self: flex-start;
+}
+.noslog-ui .nl-events__heading {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
+}
+/* 글쓰기 — 칸 사이 16, 아래 버튼 줄은 24 떨어져 오른쪽 */
+.noslog-ui .nl-events__form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-16);
+    min-width: 0;
+}
+.noslog-ui .nl-events__form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--nl-spacing-8);
+    margin-top: var(--nl-spacing-8);
+}
+.noslog-ui .nl-events__form label.nl-button {
+    align-self: flex-start;
+}
+.noslog-ui .nl-events__help-row {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-events__banner-field {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--nl-spacing-8);
+}

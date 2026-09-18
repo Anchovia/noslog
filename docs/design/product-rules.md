@@ -247,6 +247,16 @@ old design-stage checklist. Changes to material behavior require a user decision
   translations are required even for a draft). The editor fills an empty slug
   from the English (else Korean) title on save; "임시저장" / "비공개로 전환" saves
   unpublished, "게시" / "업데이트" saves published (2026-09-18).
+- Community events (2026-09-18): signed-in users with at least one completed
+  data sync may write. A post has a working copy and an approved public copy.
+  Save = draft (a change request stays a change request until resubmitted);
+  "게시 요청" = pending review. Admins approve (working copy becomes public; first
+  approval date kept), request changes (public copy stays) or reject (the whole
+  post is taken down and can no longer be edited or resubmitted). Change request
+  and rejection need a reason, shown at the top of the author's edit screen.
+  The period is Korean dates; an event is live from the start date 00:00 KST
+  until the end of the end date. Tabs: live (ending soonest first), upcoming
+  (starting soonest first), ended (most recent first).
 - Preserve original/source language and public publication state for announcements;
   optional translations are not fabricated. Official NOSTALGIA news links remain
   distinguishable from NosLog announcements.
