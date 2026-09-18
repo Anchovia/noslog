@@ -243,6 +243,10 @@ old design-stage checklist. Changes to material behavior require a user decision
   list on page 1 of the matching filter and are left out of the dated list; page count
   ignores them. The detail page links the previous (older) and next (newer)
   announcement in publication order across all categories (2026-09-18).
+- Admin announcement saving keeps the existing rules (slug and all three
+  translations are required even for a draft). The editor fills an empty slug
+  from the English (else Korean) title on save; "임시저장" / "비공개로 전환" saves
+  unpublished, "게시" / "업데이트" saves published (2026-09-18).
 - Preserve original/source language and public publication state for announcements;
   optional translations are not fabricated. Official NOSTALGIA news links remain
   distinguishable from NosLog announcements.

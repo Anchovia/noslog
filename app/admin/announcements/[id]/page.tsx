@@ -11,6 +11,7 @@ import {
     toDateTimeLocalValue,
 } from "@/features/announcements/schemas/announcementSchema";
 import db from "@/lib/db";
+import { SITE_URL } from "@/lib/metadata/site";
 
 // 관리자 화면의 시각은 서버 시간대와 무관하게 한국 시간으로 (2026-09-16)
 const dateFormat = new Intl.DateTimeFormat("ko-KR", {
@@ -91,7 +92,7 @@ export default async function EditAnnouncementPage({
                     .filter(Boolean)
                     .join(" · ")}
             />
-            <AnnouncementEditor announcement={data} />
+            <AnnouncementEditor announcement={data} siteUrl={SITE_URL} />
         </PageContainer>
     );
 }

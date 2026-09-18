@@ -1152,3 +1152,70 @@ html[data-theme="light"] .noslog-ui,
         border-color: Highlight;
     }
 }
+
+/* 마크다운 입력(MarkdownEditor) — 「쓰기 / 미리보기」 탭 + 서식 버튼, GitHub 구조를 우리 규격으로 (2026-09-18 E2).
+   상자 = 입력칸 경계 · 모서리 8 · 면 surface. 머리 줄 = 가라앉은 면 + 아래 divider, 탭 · 서식 버튼 모두 컨트롤 L(한 줄 한 단계).
+   입력 = 본문 16/24 · 안쪽 8/12(입력칸 글자 자리) · 처음 16줄 · 글 따라 늘어남. 포커스는 입력칸처럼 상자 경계 + 후광 */
+.noslog-ui .nl-markdown-editor {
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid var(--nl-border-input);
+    border-radius: var(--nl-radius-field);
+    background: var(--nl-surface-surface);
+}
+@media (hover: hover) {
+    .noslog-ui .nl-markdown-editor:hover {
+        border-color: var(--nl-border-strong);
+    }
+}
+.noslog-ui .nl-markdown-editor:has(.nl-markdown-editor__input:focus-visible) {
+    border-color: var(--nl-focus-ring);
+    box-shadow: 0 0 0 var(--nl-spacing-4) var(--nl-state-halo);
+}
+.noslog-ui .nl-markdown-editor[data-invalid] {
+    border-color: var(--nl-feedback-destructive-border);
+}
+.noslog-ui .nl-markdown-editor__head {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    min-width: 0;
+    background: var(--nl-surface-sunken);
+    box-shadow: inset 0 -1px var(--nl-border-divider);
+}
+.noslog-ui .nl-markdown-editor__tools {
+    display: flex;
+    min-width: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+.noslog-ui .nl-markdown-editor__tools::-webkit-scrollbar {
+    display: none;
+}
+.noslog-ui .nl-markdown-editor__input {
+    display: block;
+    width: 100%;
+    min-height: calc(
+        var(--nl-type-line-height-24) * 16 + var(--nl-spacing-8) * 2
+    );
+    padding: var(--nl-spacing-8) var(--nl-spacing-12);
+    border: 0;
+    background: transparent;
+    color: var(--nl-content-default);
+    font-size: var(--nl-type-size-16);
+    line-height: var(--nl-type-line-height-24);
+    field-sizing: content;
+    resize: vertical;
+}
+.noslog-ui .nl-markdown-editor__input:focus-visible {
+    outline: none;
+}
+.noslog-ui .nl-markdown-editor__input[hidden] {
+    display: none;
+}
+.noslog-ui .nl-markdown-editor__preview {
+    min-height: calc(
+        var(--nl-type-line-height-24) * 16 + var(--nl-spacing-8) * 2
+    );
+    padding: var(--nl-spacing-12);
+}
