@@ -160,7 +160,9 @@ export default function ProfileProgress({
                         responsivePlot
                         showValueAxis={false}
                         showPoints={false}
-                        dimensionTickIndices={[0, points.length - 1]}
+                        dimensionTickIndices={[
+                            ...new Set([0, points.length - 1]),
+                        ]}
                         // 툴팁 = 「5,723.05 Grd」 위 · 「N일 전」 아래 — 악곡 상세 성장 추이와 같음(osu!, 2026-09-17)
                         tooltipValueLabel={false}
                         tableVisibility="screen-reader"

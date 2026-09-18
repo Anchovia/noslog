@@ -370,7 +370,7 @@ export default function LineChart({
                                         data-series="slow"
                                     />
                                 ) : null}
-                                {showPoints || points.length === 1
+                                {showPoints
                                     ? points.map((point, index) => {
                                           const p = position(index);
                                           return (
@@ -390,13 +390,25 @@ export default function LineChart({
                                       })
                                     : null}
                                 {/* 점을 끈 그래프도 가리킨 자리에는 선 색으로 채운 점 4 를 찍는다 — osu! 처럼 (2026-09-19 P1) */}
+                                {/* 점이 하나뿐이면 늘 그 점을 같은 모양으로 */}
                                 {!showPoints &&
-                                points.length > 1 &&
-                                active !== null &&
-                                points[active] ? (
+                                (points.length === 1 ||
+                                    (active !== null && points[active])) ? (
                                     <circle
-                                        cx={position(active).x}
-                                        cy={position(active).y}
+                                        cx={
+                                            position(
+                                                points.length === 1
+                                                    ? 0
+                                                    : active!
+                                            ).x
+                                        }
+                                        cy={
+                                            position(
+                                                points.length === 1
+                                                    ? 0
+                                                    : active!
+                                            ).y
+                                        }
                                         r="4"
                                         className="nl-line-chart__point"
                                         data-series="personal"

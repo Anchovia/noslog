@@ -134,12 +134,15 @@
     white-space: nowrap;
     width: max-content;
 }
+/* 점마다 놓인 보이지 않는 버튼 — 키보드 · 화면 읽기로 점을 옮기는 용도. 마우스는 올리기만 해도 툴팁이 뜨고
+   누를 동작이 없으므로 손가락 커서를 쓰지 않는다(전역 button 규칙을 끈다, 2026-09-19) */
 .noslog-ui .nl-line-chart__target {
     position: absolute;
     width: 24px;
     height: 24px;
     transform: translate(-50%, -50%);
     border-radius: var(--nl-radius-control);
+    cursor: default;
 }
 .noslog-ui .nl-line-chart__tooltip {
     display: flex;

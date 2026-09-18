@@ -15,6 +15,13 @@ export default function ScoreImprovementChart({
     const values = points.map((point) => point.score);
     const minimum = Math.floor(Math.min(...values) / 10_000) * 10_000;
     const maximum = Math.ceil(Math.max(...values) / 10_000) * 10_000;
+    // 날짜 글자는 프로필 성장 추이와 같은 「2026. 09. 10.」 (플레이 날짜 그대로 — 시간대 이동 없이)
+    const dateFormat = new Intl.DateTimeFormat(locale, {
+        timeZone: "UTC",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+    });
     return (
         <LineChart
             points={points.map((point) => {
@@ -22,10 +29,13 @@ export default function ScoreImprovementChart({
                     .split(/[T ]/)[0]
                     .replaceAll("/", "-")
                     .replaceAll(".", "-");
+                const date = dateFormat.format(
+                    new Date(`${dimension}T00:00:00Z`)
+                );
                 return {
                     id: point.id,
-                    dimension,
-                    shortDimension: dimension.slice(5),
+                    dimension: date,
+                    shortDimension: date,
                     value: point.score,
                     detail: formatDaysAgo(dimension, locale),
                 };
@@ -50,6 +60,10 @@ export default function ScoreImprovementChart({
             // 바닥선만 · 주황 선 — 프로필 성장 추이와 같은 모양 (2026-09-19 G1 · C1)
             baselineOnly
             tone="growth"
+            // 프로필 성장 추이와 같은 모양 — 세로축 숫자 없음 · 점은 가리킨 자리만 · 날짜는 처음과 끝 (2026-09-19)
+            showValueAxis={false}
+            showPoints={false}
+            dimensionTickIndices={[...new Set([0, points.length - 1])]}
             // 툴팁 = 「956,666점」 위 · 「N일 전」 아래 — osu! 방식 (2026-09-17)
             tooltipValueLabel={false}
             // 점마다 날짜 · 점수는 툴팁이 말하므로 표는 화면 읽기용으로만 (2026-09-16)
