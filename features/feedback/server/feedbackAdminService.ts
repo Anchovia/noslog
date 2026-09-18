@@ -72,6 +72,7 @@ export async function listFeedbackReports(
 
         return reports.map((report) => ({
             id: report.id,
+            category: report.category,
             content: report.content,
             createdAt: report.createdAt.toISOString(),
             hasImage: Boolean(report.imageUrl),

@@ -2,9 +2,10 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { put } from "@vercel/blob/client";
-import { MessageSquare } from "lucide-react";
+import { Check, MessageSquare, X } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useId, useMemo, useState } from "react";
 import type { ChangeEvent, ReactNode } from "react";
 import { useForm, useWatch } from "react-hook-form";
 
@@ -19,8 +20,10 @@ import {
     useTranslations,
 } from "@/components/i18n/localeProvider";
 import {
+    FEEDBACK_CATEGORIES,
     createFeedbackReportFormData,
     createFeedbackReportSchema,
+    type FeedbackCategory,
     type FeedbackReportFormValues,
     type FeedbackReportValues,
 } from "@/features/feedback/schemas/feedbackReportSchema";
@@ -32,8 +35,12 @@ import {
     TextArea,
     fieldDescription,
 } from "@/components/ui/formField";
+import FullScreenDialog from "@/components/ui/fullScreenDialog";
+import IconButton from "@/components/ui/iconButton";
 import ModalDialog from "@/components/ui/modalDialog";
+import { SegmentedControl } from "@/components/ui/segmentedControl";
 import { StatusMessage } from "@/components/ui/statusMessage";
+import useMediaQuery from "@/lib/hooks/useMediaQuery";
 
 export default function FeedbackDialog({
     isAuthenticated,
@@ -59,11 +66,24 @@ export default function FeedbackDialog({
     const open = controlledOpen ?? internalOpen;
     const [file, setFile] = useState<File | null>(null);
     const [submitted, setSubmitted] = useState(false);
-    const [successMessage, setSuccessMessage] = useState("");
+    const wide = useMediaQuery("(min-width: 672px)");
+    // 붙인 이미지 미리보기 — 브라우저 안에서만 쓰는 임시 주소, 파일이 바뀌거나 창이 닫히면 풀어 준다
+    const preview = useMemo(
+        () => (file ? URL.createObjectURL(file) : null),
+        [file]
+    );
+    useEffect(
+        () => () => {
+            if (preview) URL.revokeObjectURL(preview);
+        },
+        [preview]
+    );
+    const formId = useId();
     const {
         register,
         handleSubmit,
         setError,
+        setValue,
         clearErrors,
         reset,
         control,
@@ -71,13 +91,16 @@ export default function FeedbackDialog({
     } = useForm<FeedbackReportFormValues, unknown, FeedbackReportValues>({
         resolver: zodResolver(feedbackReportSchema),
         defaultValues: {
+            category: "bug",
             content: "",
             imageUrl: "",
         },
     });
     const content = useWatch({ control, name: "content" });
-    const errorMessage =
-        errors.content?.message ??
+    const category =
+        (useWatch({ control, name: "category" }) as FeedbackCategory) ?? "bug";
+    // 내용 오류는 칸 아래에, 그 밖(첨부 · 서버)은 폼 끝 상태 메시지로
+    const serverError =
         errors.imageUrl?.message ??
         errors.root?.file?.message ??
         errors.root?.server?.message;
@@ -150,9 +173,8 @@ export default function FeedbackDialog({
                 return;
             }
 
-            setSuccessMessage(result.message);
             setSubmitted(true);
-            reset({ content: "", imageUrl: "" });
+            reset({ category, content: "", imageUrl: "" });
             setFile(null);
         } catch {
             if (uploadedUrl) {
@@ -174,108 +196,135 @@ export default function FeedbackDialog({
         if (!nextOpen) {
             clearErrors();
             setSubmitted(false);
-            setSuccessMessage("");
         }
     }
 
-    return (
-        <ModalDialog
-            open={open}
-            onOpenChange={changeOpen}
-            title={t("feedback.title")}
-            width="wide"
-            className="nl-feedback-dialog"
-            onCloseAutoFocus={onCloseAutoFocus}
-            trigger={
-                trigger === null
-                    ? undefined
-                    : (trigger ?? (
-                          <button
-                              className={foundationButtonClass({
-                                  variant: "secondary",
-                              })}
-                          >
-                              <MessageSquare className="nl-icon" aria-hidden />
-                              {t("shell.feedback")}
-                          </button>
-                      ))
-            }
+    const triggerNode =
+        trigger === null
+            ? undefined
+            : (trigger ?? (
+                  <button
+                      className={foundationButtonClass({
+                          variant: "secondary",
+                      })}
+                  >
+                      <MessageSquare className="nl-icon" aria-hidden />
+                      {t("shell.feedback")}
+                  </button>
+              ));
+
+    // 창 안 세 상태: 로그인 필요 · 보낸 뒤 · 작성 (2026-09-18 — 보낸 뒤는 창 안에 남긴다)
+    const body = !isAuthenticated ? (
+        <StatusMessage title={t("feedback.loginRequired")} />
+    ) : submitted ? (
+        <div className="nl-feedback-done" role="status">
+            <span className="nl-feedback-done__mark" aria-hidden>
+                <Check className="nl-icon" />
+            </span>
+            <p className="nl-emphasis-label">{t("feedback.doneTitle")}</p>
+            <p className="nl-body-secondary nl-muted">
+                {t("feedback.doneBody")}
+            </p>
+        </div>
+    ) : (
+        <form
+            id={formId}
+            onSubmit={submit}
+            noValidate
+            className="nl-feedback-form"
+            aria-busy={isSubmitting}
         >
-            {!isAuthenticated ? (
-                <div className="nl-stack nl-feedback-dialog__body">
-                    <StatusMessage title={t("feedback.loginRequired")} />
-                    <div className="nl-dialog__actions">
-                        <ActionButton
-                            variant="secondary"
-                            onClick={() => changeOpen(false)}
-                        >
-                            {t("common.close")}
-                        </ActionButton>
-                        <Link
-                            href={localizedHref("/login")}
-                            className={foundationButtonClass()}
-                        >
-                            {t("common.login")}
-                        </Link>
-                    </div>
-                </div>
-            ) : submitted ? (
-                <div className="nl-stack nl-feedback-dialog__body">
-                    <StatusMessage
-                        severity="success"
-                        title={successMessage}
-                        role="status"
-                    />
-                    <div className="nl-dialog__actions">
-                        <ActionButton onClick={() => changeOpen(false)}>
-                            {t("common.close")}
-                        </ActionButton>
-                    </div>
-                </div>
-            ) : (
-                <form
-                    onSubmit={submit}
-                    noValidate
-                    className="nl-stack nl-feedback-dialog__body"
-                    aria-busy={isSubmitting}
-                >
-                    <p className="nl-body nl-muted">
-                        {t("feedback.description")}
-                    </p>
-                    <FormField
-                        id="feedback-content"
-                        label={t("feedback.contentLabel")}
-                        error={errors.content?.message}
-                    >
-                        <TextArea
-                            id="feedback-content"
-                            maxLength={1000}
-                            rows={3}
+            <div className="nl-field">
+                <span id={`${formId}-category`} className="nl-field__label">
+                    {t("feedback.categoryLabel")}
+                </span>
+                <SegmentedControl<FeedbackCategory>
+                    label={t("feedback.categoryLabel")}
+                    value={category}
+                    onValueChange={(next) =>
+                        setValue("category", next, { shouldValidate: false })
+                    }
+                    options={FEEDBACK_CATEGORIES.map((value) => ({
+                        value,
+                        label: t(`feedback.category.${value}`),
+                    }))}
+                />
+            </div>
+            {/* 오류는 안내 문구 자리를 대신하고 글자 수는 그대로 — 작은 글자가 두 줄로 쌓이지 않게 (시안 D2 · M3 · Carbon · Primer) */}
+            <FormField
+                id="feedback-content"
+                label={t("feedback.contentLabel")}
+                help={
+                    <>
+                        {errors.content?.message ? (
+                            <span className="nl-field__error" role="alert">
+                                {errors.content.message}
+                            </span>
+                        ) : (
+                            <span>{t(`feedback.help.${category}`)}</span>
+                        )}
+                        <span className="nl-feedback-form__count">
+                            {(content?.length ?? 0).toLocaleString(locale)} /
+                            1,000
+                        </span>
+                    </>
+                }
+            >
+                <TextArea
+                    id="feedback-content"
+                    maxLength={1000}
+                    // 5줄 = 글자 24 × 5 + 공용 여러 줄 입력칸 안쪽 11 × 2 + 경계 2 = 144 — 높이는 줄 수로만 정한다(부품 규격을 덮어쓰지 않는다)
+                    rows={5}
+                    readOnly={isSubmitting}
+                    aria-invalid={Boolean(errors.content)}
+                    aria-describedby={fieldDescription("feedback-content", {
+                        help: true,
+                    })}
+                    {...register("content")}
+                />
+            </FormField>
+            <input type="hidden" {...register("imageUrl")} />
+            <div className="nl-field">
+                <span className="nl-field__label">
+                    {t("feedback.imageLabel")}{" "}
+                    <span className="nl-muted">{t("feedback.optional")}</span>
+                </span>
+                {file ? (
+                    // 붙인 파일 = 이름 · 크기 · 지우기 한 줄 (2026-09-18 A2 · Carbon 파일 목록 모양)
+                    <div className="nl-feedback-file">
+                        {preview ? (
+                            <Image
+                                src={preview}
+                                alt=""
+                                width={36}
+                                height={36}
+                                unoptimized
+                                className="nl-feedback-file__thumb"
+                            />
+                        ) : null}
+                        <span className="nl-feedback-file__name nl-body-secondary">
+                            {file.name}
+                        </span>
+                        <span className="nl-metadata nl-muted">
+                            {formatBytes(file.size, locale)}
+                        </span>
+                        <IconButton
+                            label={t("feedback.removeImage")}
                             disabled={isSubmitting}
-                            placeholder={t("feedback.placeholder")}
-                            aria-invalid={Boolean(errors.content)}
-                            aria-describedby={fieldDescription(
-                                "feedback-content",
-                                { help: true, error: Boolean(errors.content) }
-                            )}
-                            {...register("content")}
-                        />
-                        <div
-                            id="feedback-content-help"
-                            className="nl-feedback-dialog__counter nl-metadata nl-muted"
+                            onClick={() => setFile(null)}
                         >
-                            <span>{t("feedback.contentLength")}</span>
-                            <span>{content?.length ?? 0}/1000</span>
-                        </div>
-                    </FormField>
-                    <input type="hidden" {...register("imageUrl")} />
+                            <X className="nl-icon" aria-hidden />
+                        </IconButton>
+                    </div>
+                ) : (
                     <label
                         aria-disabled={isSubmitting}
+                        // 첨부 = 입력 칸 역할이라 L — 붙인 뒤 파일 줄(L)과 높이가 같아 자리가 튀지 않는다 (2026-09-18 사용자 결정)
                         className={foundationButtonClass({
                             variant: "secondary",
                         })}
                     >
-                        {file ? file.name : t("feedback.attachImage")}
+                        {t("feedback.addImage")}
                         <input
                             type="file"
                             accept="image/jpeg,image/png,image/webp"
@@ -284,32 +333,95 @@ export default function FeedbackDialog({
                             className="sr-only"
                         />
                     </label>
-                    {errorMessage && !errors.content ? (
-                        <StatusMessage
-                            severity="danger"
-                            title={errorMessage}
-                            role="alert"
-                        />
-                    ) : null}
-                    <div className="nl-dialog__actions">
-                        <ActionButton
-                            variant="secondary"
-                            disabled={isSubmitting}
-                            onClick={() => changeOpen(false)}
-                        >
-                            {t("common.close")}
-                        </ActionButton>
-                        <ActionButton
-                            type="submit"
-                            busy={isSubmitting}
-                            busyLabel={t("feedback.submitting")}
-                            disabled={(content?.trim().length ?? 0) < 10}
-                        >
-                            {t("feedback.submit")}
-                        </ActionButton>
-                    </div>
-                </form>
-            )}
-        </ModalDialog>
+                )}
+                <p className="nl-field__help">{t("feedback.imageHelp")}</p>
+            </div>
+            {serverError ? (
+                <StatusMessage
+                    severity="danger"
+                    title={serverError}
+                    role="alert"
+                />
+            ) : null}
+        </form>
     );
+
+    // 버튼 — 폰(전체 화면)은 닫기가 머리 ×라 주 액션 하나, 창은 취소 · 주 액션. 보내기는 늘 켜 둔다(비면 칸 아래 오류, D2)
+    const actions = !isAuthenticated ? (
+        <>
+            {wide ? (
+                <ActionButton
+                    variant="secondary"
+                    onClick={() => changeOpen(false)}
+                >
+                    {t("common.close")}
+                </ActionButton>
+            ) : null}
+            <Link
+                href={localizedHref("/login")}
+                className={foundationButtonClass()}
+            >
+                {t("common.login")}
+            </Link>
+        </>
+    ) : submitted ? (
+        <ActionButton onClick={() => changeOpen(false)}>
+            {t("common.close")}
+        </ActionButton>
+    ) : (
+        <>
+            {wide ? (
+                <ActionButton
+                    variant="secondary"
+                    disabled={isSubmitting}
+                    onClick={() => changeOpen(false)}
+                >
+                    {t("feedback.cancel")}
+                </ActionButton>
+            ) : null}
+            <ActionButton
+                type="submit"
+                form={formId}
+                busy={isSubmitting}
+                busyLabel={t("feedback.sending")}
+            >
+                {t("feedback.send")}
+            </ActionButton>
+        </>
+    );
+
+    // 긴 창은 672 미만에서 전체 화면(가이드 대화상자 절 · 2026-09-18 구현)
+    return wide ? (
+        <ModalDialog
+            open={open}
+            onOpenChange={changeOpen}
+            title={t("feedback.title")}
+            width="wide"
+            className="nl-feedback-dialog"
+            onCloseAutoFocus={onCloseAutoFocus}
+            trigger={triggerNode}
+            footer={actions}
+        >
+            {body}
+        </ModalDialog>
+    ) : (
+        <FullScreenDialog
+            open={open}
+            onOpenChange={changeOpen}
+            title={t("feedback.title")}
+            onCloseAutoFocus={onCloseAutoFocus}
+            trigger={triggerNode}
+            footer={actions}
+        >
+            {body}
+        </FullScreenDialog>
+    );
+}
+
+function formatBytes(bytes: number, locale: string) {
+    const format = (value: number) =>
+        value.toLocaleString(locale, { maximumFractionDigits: 1 });
+    return bytes >= 1024 * 1024
+        ? `${format(bytes / 1024 / 1024)}MB`
+        : `${format(Math.max(1, Math.round(bytes / 1024)))}KB`;
 }

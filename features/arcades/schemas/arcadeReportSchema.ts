@@ -14,8 +14,15 @@ export const ARCADE_REPORT_TYPES = [
 export function createArcadeReportSchema(
     t: ReturnType<typeof createTranslator>
 ) {
+    // 오락실 제보는 피드백의 종류 · 새 글자 규칙을 따르지 않는다 — 원래 규칙(10~1000자) 그대로 (2026-09-18)
     return createFeedbackReportSchema(t)
+        .omit({ category: true })
         .extend({
+            content: z
+                .string()
+                .trim()
+                .min(10, t("feedback.contentError"))
+                .max(1000, t("feedback.contentError")),
             arcadeId: z.number().int().positive(),
             cabinetId: z.number().int().positive().nullable(),
             reportType: z.enum(ARCADE_REPORT_TYPES),

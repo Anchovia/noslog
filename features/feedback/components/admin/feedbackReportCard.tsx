@@ -47,6 +47,13 @@ export default function FeedbackReportCard({
                         {new Date(report.createdAt).toLocaleDateString("ko-KR")}
                     </time>
                 </div>
+                {report.category ? (
+                    <p className="text-caption">
+                        {report.category === "idea"
+                            ? "제안 · 의견"
+                            : "오류 제보"}
+                    </p>
+                ) : null}
                 {report.arcade ? (
                     <p className="text-caption flex flex-wrap items-center gap-x-1.5">
                         <span>오락실 제보</span>

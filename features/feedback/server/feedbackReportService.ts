@@ -114,14 +114,15 @@ export async function submitFeedbackReport(
         const fieldErrors = result.error.flatten().fieldErrors;
         return {
             success: false,
-            message: fieldErrors.content?.length
-                ? t("feedback.contentError")
-                : t("feedback.attachmentError"),
+            message:
+                fieldErrors.content?.[0] ??
+                fieldErrors.category?.[0] ??
+                t("feedback.attachmentError"),
             fieldErrors,
         };
     }
 
-    const { content, imageUrl } = result.data;
+    const { category, content, imageUrl } = result.data;
     if (
         imageUrl &&
         !(await isValidPrivateImageBlob(
@@ -137,7 +138,7 @@ export async function submitFeedbackReport(
 
     try {
         await db.feedbackReport.create({
-            data: { content, imageUrl, userId: session.id },
+            data: { category, content, imageUrl, userId: session.id },
         });
         revalidatePath("/admin");
         revalidatePath("/admin/feedback");

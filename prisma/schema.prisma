@@ -112,6 +112,8 @@ model UserBrooch {
 // 사용자가 제출한 오류 제보와 처리 상태를 관리함
 model FeedbackReport {
   id               Int            @id @default(autoincrement())
+  // 제보 종류 「bug」 · 「idea」 — 오락실 제보 · 2026-09-18 이전 제보는 비어 있음
+  category         String?
   content          String
   imageUrl         String?        @map("image_url")
   status           String         @default("open")

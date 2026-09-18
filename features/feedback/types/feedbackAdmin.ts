@@ -1,6 +1,8 @@
 import type { FeedbackStatus } from "@/features/feedback/schemas/feedbackAdminSchema";
 
 export interface AdminFeedbackReport {
+    // 「bug」 · 「idea」 — 오락실 제보 · 2026-09-18 이전 제보는 null
+    category: string | null;
     content: string;
     createdAt: string;
     hasImage: boolean;

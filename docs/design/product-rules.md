@@ -244,6 +244,10 @@ old design-stage checklist. Changes to material behavior require a user decision
 - Feedback/error reports preserve target/context and optional private proof. Report
   submission is not public publication of the image. Prevent duplicate submission
   and provide actionable upload/save errors without exposing internal diagnostics.
+- The general feedback form records a type — `bug` (problem report) or `idea`
+  (suggestion) — and accepts any non-empty text up to 1,000 characters (no minimum
+  length, 2026-09-18). Arcade reports keep their own 10–1,000 character rule and have
+  no type. Reports made before this change keep an empty type.
 - Keep not-found, recoverable error, maintenance and fatal recovery distinct. Retry
   must preserve safe context. Missing/unauthorized resources must not leak existence
   or private details. These states do not authorize changes to preserved viewers.
