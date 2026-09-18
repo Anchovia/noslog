@@ -119,7 +119,7 @@ export const jaMessages = {
     "pattern.axis.stairs": "階段",
     "pattern.axis.repetition": "連打",
     "pattern.axis.polyrhythm": "ポリリズム",
-    "pattern.axis.offset": "ズレ",
+    "pattern.axis.offset": "ソフラン",
     "pattern.axis.chords": "同時押し",
     "pattern.scale":
         "各項目を0–4で評価します。項目ごとに3人以上の評価で平均を公開します。未選択の項目と0は区別されます。",
@@ -472,7 +472,7 @@ export const jaMessages = {
     "music.pattern.stairs": "階段",
     "music.pattern.repetition": "連打",
     "music.pattern.chord": "ポリリズム",
-    "music.pattern.trill": "ズレ",
+    "music.pattern.trill": "ソフラン",
     "music.pattern.glissando": "グリッサンド",
     "music.judgement.details": "判定詳細",
     "music.judgement.collapse": "閉じる",

@@ -30,7 +30,7 @@ export default function ChartEvaluationAdminCard({
                 {evaluation.patterns.stairs} / 연타{" "}
                 {evaluation.patterns.repetition}
                 {" / 폴리리듬 "}
-                {evaluation.patterns.chord} / 즈레 {evaluation.patterns.trill} /
+                {evaluation.patterns.chord} / 변속 {evaluation.patterns.trill} /
                 글리산도 {evaluation.patterns.glissando}
             </p>
             <DeleteChartEvaluationButton evaluationId={evaluation.id} />

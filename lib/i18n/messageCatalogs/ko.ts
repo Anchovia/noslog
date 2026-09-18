@@ -118,7 +118,7 @@ export const koMessages = {
     "pattern.axis.stairs": "계단",
     "pattern.axis.repetition": "연타",
     "pattern.axis.polyrhythm": "폴리리듬",
-    "pattern.axis.offset": "즈레",
+    "pattern.axis.offset": "변속",
     "pattern.axis.chords": "동시치기",
     "pattern.scale":
         "각 항목은 0–4로 평가합니다. 항목별로 3명 이상 평가하면 평균을 공개합니다. 선택하지 않은 항목은 0과 구분합니다.",
@@ -474,7 +474,7 @@ export const koMessages = {
     "music.pattern.stairs": "계단",
     "music.pattern.repetition": "연타",
     "music.pattern.chord": "폴리리듬",
-    "music.pattern.trill": "즈레",
+    "music.pattern.trill": "변속",
     "music.pattern.glissando": "글리산도",
     "music.judgement.details": "판정 상세",
     "music.judgement.collapse": "접기",
