@@ -158,7 +158,6 @@ html[data-theme="light"] .noslog-ui,
     line-height: var(--nl-type-line-height-20);
     font-weight: var(--nl-type-weight-medium);
     text-decoration: none;
-    transition: background-color var(--nl-motion-duration-50) var(--nl-ease-out);
 }
 @media (hover: hover) {
     .noslog-ui .nl-button:hover {
@@ -275,12 +274,6 @@ html[data-theme="light"] .noslog-ui,
     height: var(--nl-icon-small);
     background: currentColor;
     mask: url("/icons/noslog/spinner.svg") center / contain no-repeat;
-    animation: nl-spin 1s linear infinite;
-}
-@keyframes nl-spin {
-    to {
-        transform: rotate(360deg);
-    }
 }
 
 .noslog-ui .nl-field {
@@ -862,7 +855,6 @@ html[data-theme="light"] .noslog-ui,
     font-weight: var(--nl-type-weight-semibold);
     text-align: center;
     text-decoration: none;
-    transition: background-color var(--nl-motion-duration-50) var(--nl-ease-out);
 }
 .noslog-ui .nl-action-group__chevron {
     width: var(--nl-spacing-16);
@@ -1047,31 +1039,17 @@ html[data-theme="light"] .noslog-ui,
 .noslog-ui .nl-skeleton {
     border-radius: var(--nl-radius-control);
     background: var(--nl-surface-sunken);
-    animation: nl-pulse 2s ease-in-out infinite;
 }
 .noslog-ui .nl-record-list-skeleton {
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-8);
 }
-@keyframes nl-pulse {
-    50% {
-        opacity: 0.5;
-    }
-}
 
 @media (min-width: 1056px) {
     .noslog-ui {
         --nl-control-height: 40px;
         --nl-control-height-compact: 32px;
-    }
-}
-@media (prefers-reduced-motion: reduce) {
-    .noslog-ui .nl-button {
-        transition: none;
-    }
-    .noslog-ui .nl-skeleton {
-        animation: none;
     }
 }
 /* 태그 — 누르지 않는 라벨(공지 분류 · 빙고 미션 종류 · 상태). 부품 결정 ⑤(2026-09-15).
@@ -1271,4 +1249,12 @@ html[data-theme="light"] .noslog-ui,
     border-radius: var(--nl-radius-full);
     background: var(--nl-feedback-danger-marker);
     vertical-align: middle;
+}
+
+/* 움직임 없음(2026-09-19) — 틀을 정할 때까지 사이트 안 움직임을 모두 뺐다. 토스트(sonner)는 라이브러리가
+   나타남 · 사라짐 · 쌓임을 400ms 로 움직이므로 여기서 끈다. 토스터는 .noslog-ui 밖이라 셸(공개 · 관리자)이 있는
+   문서로만 좁힌다 */
+html:has(.noslog-ui) [data-sonner-toaster] [data-sonner-toast] {
+    transition: none !important;
+    animation: none !important;
 }

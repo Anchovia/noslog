@@ -253,7 +253,7 @@ export default function ArcadeDiscoveryPage({
         requestAnimationFrame(() =>
             listRef.current
                 ?.querySelector<HTMLElement>(`[data-arcade-id="${id}"]`)
-                ?.scrollIntoView({ block: "nearest", behavior: "smooth" })
+                ?.scrollIntoView({ block: "nearest" })
         );
     }
     // 카드를 누르면 펼치고 지도를 그 핀으로(내린 시트면 올려서 펼친 칸이 보이게). 펼친 카드를 다시 누르면 접기만 한다
@@ -283,8 +283,7 @@ export default function ArcadeDiscoveryPage({
                     body.getBoundingClientRect().top;
         });
     }
-    // 시트 끌기 — 끄는 동안은 transition 을 끄고 손가락 위치로 옮긴다. 놓으면 인라인 위치를 지워
-    // CSS transition 이 그 자리에서 가까운 단계(끈 방향)로 이어서 움직인다
+    // 시트 끌기 — 끄는 동안은 손가락 위치로 옮긴다. 놓으면 인라인 위치를 지워 가까운 단계(끈 방향)로 곧바로 바뀐다
     function beginDrag(y: number, threshold: number) {
         const catalog = catalogRef.current;
         if (!sheetLayout || !catalog || peek === null) return;
