@@ -107,6 +107,8 @@ export default function PerformanceChart({
                 // 기록이 없으면 빈 틀 + 가운데 「기록 없음」 (2026-09-16 E2)
                 emptyMessage={t("music.record.noRecord")}
                 keepPlotGeometry
+                // 바닥선만 — 성장 추이와 같은 격자 (2026-09-19 G1). 선 색은 판정 색 그대로
+                baselineOnly
                 // 점 값은 툴팁 · 최근 플레이가 말하므로 표는 화면 읽기용으로만 (2026-09-16)
                 tableVisibility="screen-reader"
             />

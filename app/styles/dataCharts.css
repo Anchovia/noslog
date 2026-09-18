@@ -44,11 +44,6 @@
     position: relative;
 }
 /* 차트 패널: 패턴 레이더·서열 가중치 차트와 같은 면·radius·inset */
-.noslog-ui .nl-line-chart__plot--panel {
-    padding: var(--nl-spacing-16);
-    border-radius: var(--nl-radius-container);
-    background: var(--nl-surface-surface);
-}
 .noslog-ui .nl-line-chart__series svg {
     display: block;
     overflow: visible;
@@ -72,6 +67,10 @@
 .noslog-ui .nl-line-chart__state[data-placement="below"] {
     top: calc(50% + var(--nl-spacing-16));
 }
+/* 성장 추이 선 = 주황(osu! 계열, 2026-09-19 C1). 선이 하나라 「평균 · SLOW」 뜻과 부딪히지 않는다 */
+.noslog-ui .nl-line-chart[data-tone="growth"] {
+    --nl-local-data-personal: var(--nl-local-data-categorical-2);
+}
 .noslog-ui .nl-line-chart__grid {
     stroke: var(--nl-border-divider);
     stroke-width: 1;
@@ -86,6 +85,11 @@
     fill: var(--nl-surface-canvas);
     stroke: var(--nl-local-data-personal);
     stroke-width: 2;
+}
+/* 가리킨 점(점을 끈 그래프) = 선 색으로 채운 반지름 4 (2026-09-19 P1) */
+.noslog-ui .nl-line-chart__point[data-active] {
+    fill: var(--nl-local-data-personal);
+    stroke-width: 0;
 }
 .noslog-ui .nl-line-chart [data-series="fast"] {
     stroke: var(--nl-local-data-fast);
