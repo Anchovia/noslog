@@ -9,6 +9,7 @@ import type { getOwnEvent } from "@/features/events/server/eventService";
 import { getServerI18n } from "@/lib/i18n/server";
 import { localizePath } from "@/lib/i18n/routing";
 import { SITE_URL } from "@/lib/metadata/site";
+import EventDeleteButton from "./eventDeleteButton";
 import EventEditor from "./eventEditor";
 
 type OwnEvent = NonNullable<Awaited<ReturnType<typeof getOwnEvent>>>;
@@ -62,8 +63,18 @@ export default async function EventEditorPage({
                     description={event.reviewNote}
                 />
             ) : null}
-            {status === "REJECTED" ? (
-                <p className="nl-body nl-muted">{t("events.rejected.body")}</p>
+            {status === "REJECTED" && event ? (
+                <div className="nl-events__rejected">
+                    <p className="nl-body nl-muted">
+                        {t("events.rejected.body")}
+                    </p>
+                    {/* 반려된 글은 고칠 수 없으니 남는 동작은 삭제 하나 */}
+                    <EventDeleteButton
+                        id={event.id}
+                        title={event.title}
+                        isPublic={false}
+                    />
+                </div>
             ) : !eligible ? (
                 <p className="nl-body nl-muted">{t("events.lock.record")}</p>
             ) : (
@@ -72,6 +83,7 @@ export default async function EventEditorPage({
                         id: event?.id,
                         values,
                         submittedBefore: Boolean(event?.submittedAt),
+                        isPublic: Boolean(event?.publishedAt),
                     }}
                     siteUrl={SITE_URL}
                 />

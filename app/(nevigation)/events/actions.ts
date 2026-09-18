@@ -1,6 +1,7 @@
 "use server";
 
 import {
+    deleteOwnEvent as deleteOwnEventService,
     discardEventBanner as discardEventBannerService,
     requestEventBannerUpload as requestEventBannerUploadService,
     saveEvent as saveEventService,
@@ -19,4 +20,8 @@ export async function requestEventBannerUpload(
 
 export async function discardEventBanner(url: string) {
     return discardEventBannerService(url);
+}
+
+export async function deleteOwnEvent(id: number, locale?: string) {
+    return deleteOwnEventService(id, locale);
 }

@@ -91,6 +91,17 @@
     gap: var(--nl-spacing-8);
     margin-top: var(--nl-spacing-8);
 }
+/* 저장된 글 — 왼쪽 끝 「삭제」(빨간 테두리) · 오른쪽 임시저장 · 게시 요청 (관리자 공지 작성과 같은 자리) */
+.noslog-ui .nl-events__form-actions > .nl-button--danger {
+    margin-inline-end: auto;
+}
+/* 반려된 글 — 안내 →16→ 「삭제」 */
+.noslog-ui .nl-events__rejected {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--nl-spacing-16);
+}
 .noslog-ui .nl-events__form label.nl-button {
     align-self: flex-start;
 }

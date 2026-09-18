@@ -326,3 +326,48 @@ export async function discardEventBanner(url: string) {
     });
     if (!inUse) await deleteBlobIfOwned(url);
 }
+
+// 작성자 삭제(2026-09-18 D1 · P1) — 상태와 관계없이 자기 글은 지운다. 공개 중이면 목록 · 홈에서도 바로 사라진다.
+// 배너 파일은 작성자 폴더의 파일이고 다른 글이 쓰지 않을 때만 함께 지운다
+export async function deleteOwnEvent(
+    id: number,
+    requestedLocale?: string
+): Promise<ActionResult> {
+    const locale = isLocale(requestedLocale) ? requestedLocale : "ko";
+    const t = createTranslator(getMessages(locale));
+    const session = await getSession();
+    if (!session.id)
+        return { success: false, message: t("events.loginRequired") };
+    if (!Number.isSafeInteger(id) || id < 1)
+        return { success: false, message: t("events.notFound") };
+    const event = await db.communityEvent.findFirst({
+        where: { id, authorId: session.id },
+        select: { bannerUrl: true, publishedBannerUrl: true },
+    });
+    if (!event) return { success: false, message: t("events.notFound") };
+    try {
+        await db.communityEvent.delete({ where: { id } });
+        const files = [
+            ...new Set([event.bannerUrl, event.publishedBannerUrl]),
+        ].filter((url): url is string => Boolean(url));
+        for (const url of files) {
+            if (!(await isValidImageBlob(url, bannerPrefix(session.id))))
+                continue;
+            const inUse = await db.communityEvent.count({
+                where: {
+                    OR: [{ bannerUrl: url }, { publishedBannerUrl: url }],
+                },
+            });
+            if (!inUse) await deleteBlobIfOwned(url);
+        }
+        invalidateEvents();
+        return { success: true, message: t("events.delete.done") };
+    } catch (error) {
+        logServerError(error, {
+            event: "events.delete.failed",
+            routePath: "/events",
+            routeType: "action",
+        });
+        return { success: false, message: t("events.delete.failed") };
+    }
+}

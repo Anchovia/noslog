@@ -256,7 +256,10 @@ old design-stage checklist. Changes to material behavior require a user decision
   and rejection need a reason, shown at the top of the author's edit screen.
   The period is Korean dates; an event is live from the start date 00:00 KST
   until the end of the end date. Tabs: live (ending soonest first), upcoming
-  (starting soonest first), ended (most recent first).
+  (starting soonest first), ended (most recent first). Authors can delete their
+  own post in any state, including a public one (it leaves the list and Home at
+  once); the cover image file is removed only when it is in the author's upload
+  folder and no other post uses it. Public events are listed in the sitemap.
 - Preserve original/source language and public publication state for announcements;
   optional translations are not fabricated. Official NOSTALGIA news links remain
   distinguishable from NosLog announcements.

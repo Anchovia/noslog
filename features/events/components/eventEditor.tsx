@@ -36,6 +36,7 @@ import {
     type EventFormValues,
 } from "@/features/events/schemas/eventSchema";
 import { applyFormFieldErrors } from "@/lib/forms/errors";
+import EventDeleteButton from "./eventDeleteButton";
 import useMediaQuery from "@/lib/hooks/useMediaQuery";
 
 type SaveMode = "draft" | "submit";
@@ -52,6 +53,8 @@ export default function EventEditor({
         id?: number;
         values: EventFormValues;
         submittedBefore: boolean;
+        /** 저장된 글이면 아래 줄 왼쪽에 「삭제」(2026-09-18 D1) */
+        isPublic?: boolean;
     };
     siteUrl: string;
 }) {
@@ -383,6 +386,13 @@ export default function EventEditor({
                 </p>
             ) : null}
             <div className="nl-events__form-actions">
+                {event.id !== undefined ? (
+                    <EventDeleteButton
+                        id={event.id}
+                        title={event.values.title}
+                        isPublic={Boolean(event.isPublic)}
+                    />
+                ) : null}
                 <ActionButton
                     variant="secondary"
                     busy={pending === "draft" && dialog === null}
