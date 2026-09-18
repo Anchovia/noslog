@@ -108,6 +108,7 @@ export const getCachedBingoDetail = unstable_cache(
                             select: {
                                 title: true,
                                 title_kana: true,
+                                charts: { select: { difficulty: true } },
                                 translations: {
                                     where: {
                                         status: "approved",
@@ -135,7 +136,7 @@ export const getCachedBingoDetail = unstable_cache(
               }
             : null;
     },
-    ["bingo-detail", "public-v2"],
+    ["bingo-detail", "public-v3"],
     {
         revalidate: 3600,
         tags: [CACHE_TAGS.bingos],

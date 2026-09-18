@@ -120,8 +120,8 @@ export const enMessages = {
     "pattern.axis.stairs": "Stairs",
     "pattern.axis.repetition": "Repetition",
     "pattern.axis.polyrhythm": "Polyrhythm",
-    "pattern.axis.offset": "BPM changes",
-    "pattern.axis.chords": "Chords",
+    "pattern.axis.offset": "Offset",
+    "pattern.axis.chords": "Meter changes",
     "pattern.scale":
         "Rate each axis from 0–4. An average is published after at least three ratings for that axis. An omitted rating is distinct from zero.",
     "pattern.definition.stairs":
@@ -133,7 +133,7 @@ export const enMessages = {
     "pattern.definition.offset":
         "The burden of distinguishing and playing closely displaced timings.",
     "pattern.definition.chords":
-        "Simultaneous-input burden from note count, span, changing shapes, repeated chords, and tenuto combinations.",
+        "The burden of following sections where the meter (bar length) changes.",
     "detail.expandTitle": "Show full title",
     "detail.collapseTitle": "Collapse title",
     "detail.viewChart": "View Chart",
@@ -547,6 +547,16 @@ export const enMessages = {
     "common.previousPage": "Previous page",
     "common.nextPage": "Next page",
     "feedback.title": "Feedback · Report an Issue",
+    "feedback.tab.write": "Write",
+    "feedback.tab.mine": "My reports",
+    "feedback.newReply": "New reply",
+    "feedback.status.open": "Received",
+    "feedback.status.resolved": "Resolved",
+    "feedback.mine.loading": "Loading…",
+    "feedback.mine.failed": "Could not load your reports.",
+    "feedback.mine.empty": "You have not sent any reports yet.",
+    "feedback.mine.arcade": "Arcade report",
+    "feedback.mine.replyLabel": "Reply from NosLog",
     "feedback.cancel": "Cancel",
     "feedback.doneBody":
         "We'll review it and reflect it. Thanks for letting us know.",
@@ -1185,6 +1195,10 @@ export const enMessages = {
     "profile.bestTopFive": "Top 5 Grd contributors",
     "profile.bestEmpty": "No best-play records.",
     "profile.recentPlays": "Recent Plays",
+    "profile.playScores": "Play scores",
+    "profile.scoresPrivate": "This player keeps their scores private.",
+    "profile.scoresPrivateBody":
+        "Grd, rating, rank, best plays and progress are hidden.",
     "profile.recentCollapse": "Collapse recent plays",
     "profile.recentExpand": "Show all recent plays",
     "profile.recentEmpty": "No recent play records.",
@@ -1251,7 +1265,7 @@ export const enMessages = {
     "settings.account": "Account",
     "settings.profileSummary":
         "Nickname · Country or region · Preferred arcade",
-    "settings.privacySummary": "Five public visibility settings",
+    "settings.privacySummary": "Six public visibility settings",
     "settings.connectionsSummary": "Discord login account",
     "settings.accountSummary": "Log out · Delete account",
     "settings.saved": "Saved.",
@@ -1267,6 +1281,9 @@ export const enMessages = {
     "settings.showPreferredArcade": "Show preferred arcade",
     "settings.showPlayCount": "Show total play count",
     "settings.showPlayActivity": "Show play activity",
+    "settings.showPlayScores": "Show play scores",
+    "settings.scoresCoupling":
+        "When off, you are left out of rankings and your scores and records are hidden from others on your profile. Only you can see your own rank.",
     "settings.publicWhenOn":
         "When enabled, this information is visible to others.",
     "settings.activityCoupling":

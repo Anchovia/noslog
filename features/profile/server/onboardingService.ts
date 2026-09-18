@@ -61,6 +61,7 @@ export async function completeOnboarding(
                 hide_preferred_arcade: !result.data.showPreferredArcade,
                 hide_play_count: !result.data.showPlayCount,
                 hide_play_activity: !result.data.showPlayActivity,
+                hide_play_scores: !result.data.showPlayScores,
                 profile_completed_at: new Date(),
             },
         });

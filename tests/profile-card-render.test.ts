@@ -40,6 +40,7 @@ const base: ProfileUser = {
     hide_play_count: false,
     hide_preferred_arcade: false,
     hide_play_activity: false,
+    hide_play_scores: false,
     preferredArcade: null,
     created_at: "2026-08-27",
     last_played_at: "2026-08-27",
@@ -98,6 +99,7 @@ describe("P16 share card", () => {
                     exam_recital: null,
                     hide_play_count: true,
                     hide_play_activity: true,
+                    hide_play_scores: false,
                 });
             // 명판의 금빛 면·안쪽 선·흑단·파인 모서리 조각을 모두 그리게 한다
             if (scenario === "ko-top-peak")

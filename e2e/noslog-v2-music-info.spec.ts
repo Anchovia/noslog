@@ -105,8 +105,8 @@ test("Pattern trend lists five exact values as bars with a keyboard dismissible 
         "계단",
         "연타",
         "폴리리듬",
-        "변속",
-        "동시치기",
+        "즈레",
+        "변박",
     ]);
     await expect(bars.locator(".nl-bar-list__value")).toHaveText([
         "2.8",

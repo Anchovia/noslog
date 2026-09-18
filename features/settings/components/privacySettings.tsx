@@ -8,6 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import Button from "@/components/ui/Button";
 import { savePrivacy } from "@/app/(nevigation)/settings/actions";
 import {
+    PRIVACY_HELP,
     settingsPrivacySchema,
     settingsFormData,
 } from "@/features/settings/schemas/settingsSchema";
@@ -76,18 +77,18 @@ export default function PrivacySettings({
                             label={t(`settings.${key}`)}
                             disabled={isSubmitting}
                             aria-describedby={
-                                key === "showPlayActivity"
-                                    ? "settings-activity-help"
+                                PRIVACY_HELP[key]
+                                    ? `settings-${key}-help`
                                     : undefined
                             }
                             {...register(key)}
                         />
-                        {key === "showPlayActivity" ? (
+                        {PRIVACY_HELP[key] ? (
                             <p
-                                id="settings-activity-help"
+                                id={`settings-${key}-help`}
                                 className="nl-metadata nl-muted nl-settings__control-help"
                             >
-                                {t("settings.activityCoupling")}
+                                {t(PRIVACY_HELP[key])}
                             </p>
                         ) : null}
                     </div>

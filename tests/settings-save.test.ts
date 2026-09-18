@@ -45,6 +45,7 @@ const privacy = {
     showPreferredArcade: true,
     showPlayCount: false,
     showPlayActivity: false,
+    showPlayScores: false,
 };
 
 describe("P10 settings save boundaries", () => {
@@ -201,7 +202,7 @@ describe("P10 settings save boundaries", () => {
         expect((await saveSettingsPrivacy(data)).success).toBe(false);
         expect(mocks.updateUser).not.toHaveBeenCalled();
     });
-    it("updates only the five privacy fields on the authenticated account", async () => {
+    it("updates only the six privacy fields on the authenticated account", async () => {
         expect(
             (
                 await saveSettingsPrivacy(
@@ -221,6 +222,7 @@ describe("P10 settings save boundaries", () => {
                 hide_preferred_arcade: false,
                 hide_play_count: true,
                 hide_play_activity: true,
+                hide_play_scores: true,
             },
         });
         expect(mocks.deleteBlob).not.toHaveBeenCalled();

@@ -16,6 +16,7 @@ import {
 } from "@/components/layout/destinations";
 import Avatar from "@/components/ui/avatar";
 import FeedbackDialog from "@/features/feedback/components/feedbackDialog";
+import { useFeedbackUnread } from "@/features/feedback/components/feedbackUnread";
 import useMediaQuery from "@/lib/hooks/useMediaQuery";
 import { stripLocaleFromPath } from "@/lib/i18n/routing";
 
@@ -24,6 +25,8 @@ export interface ShellAccount {
     username: string | null;
     avatar: string | null;
     role: string;
+    /** 읽지 않은 피드백 답변 수 — 메뉴 「피드백 · 오류 제보」 줄의 점(2026-09-18 F1) */
+    feedbackUnread?: number;
 }
 
 export default function AppHeader({
@@ -45,6 +48,7 @@ function HeaderContent({ account }: { account: ShellAccount | null }) {
     const desktop = useMediaQuery("(min-width: 1056px)");
     const [open, setOpen] = useState(false);
     const [feedbackOpen, setFeedbackOpen] = useState(false);
+    const { count: feedbackUnread } = useFeedbackUnread();
     const [visible, setVisible] = useState(true);
     const headerRef = useRef<HTMLElement>(null);
     const triggerRef = useRef<HTMLButtonElement>(null);
@@ -279,6 +283,13 @@ function HeaderContent({ account }: { account: ShellAccount | null }) {
                                         aria-hidden
                                     />
                                     <span>{t("shell.feedback")}</span>
+                                    {feedbackUnread ? (
+                                        <span
+                                            className="nl-unread-dot"
+                                            role="img"
+                                            aria-label={t("feedback.newReply")}
+                                        />
+                                    ) : null}
                                 </button>
                                 {account?.role === "admin" ? (
                                     <Link

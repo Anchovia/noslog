@@ -521,15 +521,16 @@
     .noslog-ui .nl-arcades[data-sheet-layout] .nl-arcade-map {
         height: 100%;
     }
-    /* 시트는 늘 올린 높이로 두고 내림은 아래로 밀어 둔다 — 두 단계 사이를 transform 으로 움직인다
-       (헤더 숨김과 같은 200 · ease-out). 끄는 동안은 페이지가 손가락 위치를 인라인으로 넣는다 */
+    /* 시트는 늘 올린 높이로 두고 내림은 아래로 밀어 둔다 — 두 단계 사이를 ⑫ 위치 이동으로 움직인다(화면 안 이동 = 감속).
+       끄는 동안은 손가락을 따라가야 하므로 움직임 없이 페이지가 위치를 인라인으로 넣는다 */
     .noslog-ui .nl-arcades[data-sheet-layout] .nl-arcades__catalog {
         position: absolute;
         inset: 0;
         margin-top: 0;
         overflow: hidden;
         transform: translateY(calc(100% - var(--nl-sheet-peek)));
-        transition: transform var(--nl-motion-duration-200) var(--nl-ease-out);
+        transition: transform var(--nl-motion-duration-move)
+            var(--nl-ease-enter);
     }
     .noslog-ui
         .nl-arcades[data-sheet-layout]
@@ -549,7 +550,7 @@
     .noslog-ui .nl-arcades[data-sheet-layout] .nl-arcades__footer {
         display: flex;
     }
-    /* 올림 — 시트가 다 올라온 뒤(움직임 200 이 끝나면) 지도를 숨긴다: 둥근 모서리가 시트 옆으로 비치지 않고
+    /* 올림 — 시트가 다 올라온 뒤(이동 시간이 지나면) 지도를 숨긴다: 둥근 모서리가 시트 옆으로 비치지 않고
        지도 컨트롤도 초점 순서에서 빠진다. 내릴 때와 끄는 동안은 곧바로 보인다 */
     .noslog-ui
         .nl-arcades[data-sheet-layout][data-sheet="expanded"]
@@ -561,7 +562,7 @@
         .nl-arcades__results:not([data-dragging])
         .nl-arcades__map-region {
         visibility: hidden;
-        transition: visibility 0s linear var(--nl-motion-duration-200);
+        transition: visibility 0s var(--nl-motion-duration-move);
     }
     .noslog-ui
         .nl-arcades[data-sheet-layout][data-sheet="expanded"]
@@ -569,16 +570,6 @@
         overflow-y: auto;
         overscroll-behavior: contain;
         touch-action: pan-y;
-    }
-}
-/* 동작 줄이기 — 시트는 움직이지 않고 곧바로 그 단계로 바뀐다(헤더·버튼과 같은 규칙) */
-@media (max-width: 1055px) and (prefers-reduced-motion: reduce) {
-    .noslog-ui .nl-arcades[data-sheet-layout] .nl-arcades__catalog,
-    .noslog-ui
-        .nl-arcades[data-sheet-layout][data-sheet="expanded"]
-        .nl-arcades__results:not([data-dragging])
-        .nl-arcades__map-region {
-        transition: none;
     }
 }
 @media (min-width: 1056px) {

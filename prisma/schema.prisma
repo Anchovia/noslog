@@ -26,6 +26,8 @@ model User {
   hide_play_count            Boolean                    @default(true)
   hide_preferred_arcade      Boolean                    @default(true)
   hide_play_activity         Boolean                    @default(true)
+  // 플레이 점수 공개(2026-09-18) — 켜면 랭킹에서 빠지고 프로필의 점수 · 기록이 남에게 가려진다. 기본 공개
+  hide_play_scores           Boolean                    @default(false)
   preferredArcade            Arcade?                    @relation(fields: [preferred_arcade_id], references: [id], onDelete: SetNull)
   rank_basic                 Int?
   rank_recital               Int?
@@ -124,6 +126,10 @@ model FeedbackReport {
   createdAt        DateTime       @default(now()) @map("created_at")
   updatedAt        DateTime       @updatedAt @map("updated_at")
   resolvedAt       DateTime?      @map("resolved_at")
+  // 관리자 답변(2026-09-18) — 처리 완료 때 쓰면 제보한 사람의 「내 제보」 에 보인다. replySeenAt = 제보한 사람이 읽은 때(새 답변 점)
+  reply            String?
+  repliedAt        DateTime?      @map("replied_at")
+  replySeenAt      DateTime?      @map("reply_seen_at")
   arcadeId         Int?
   arcade           Arcade?        @relation(fields: [arcadeId], references: [id], onDelete: SetNull)
   cabinetId        Int?

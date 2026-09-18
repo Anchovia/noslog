@@ -36,7 +36,8 @@ export default function LineChart({
     showValueAxis = true,
     showGrid = true,
     keepPlotGeometry = false,
-    plotSurface = false,
+    baselineOnly = false,
+    tone,
     tooltipValueLabel = true,
 }: {
     points: LineChartPoint[];
@@ -60,8 +61,10 @@ export default function LineChart({
     showGrid?: boolean;
     /** 점이 2개 미만이어도 플롯 틀(높이·격자)을 그대로 두고 그 안에 상태 문구를 둔다 */
     keepPlotGeometry?: boolean;
-    /** 플롯을 surface/surface 패널(radius 8 · inset 16) 위에 그린다 — 패턴 레이더·서열 가중치 차트와 같은 언어 */
-    plotSurface?: boolean;
+    /** 가로선을 맨 밑 바닥선 하나만 — 기록 추이 그래프(성장 추이 · 최근 판정 추이, 2026-09-19 G1) */
+    baselineOnly?: boolean;
+    /** 선 색 — growth = 주황 local-data/categorical-2 (성장 추이, 2026-09-19 C1) */
+    tone?: "growth";
     /** false 면 툴팁 값 앞 「라벨 ·」 을 뺀다 — 값 하나뿐인 그래프(성장 추이) */
     tooltipValueLabel?: boolean;
 }) {
@@ -150,7 +153,7 @@ export default function LineChart({
         buttons.current[next]?.focus();
     }
     return (
-        <figure className="nl-line-chart" aria-label={label}>
+        <figure className="nl-line-chart" data-tone={tone} aria-label={label}>
             {secondaryLabel ? (
                 <div className="nl-line-chart__legend nl-control">
                     <span>
@@ -165,12 +168,7 @@ export default function LineChart({
             ) : null}
             {keepPlotGeometry &&
             (points.length === 0 || (points.length === 1 && singleMessage)) ? (
-                <div
-                    className={cn(
-                        "nl-line-chart__plot",
-                        plotSurface && "nl-line-chart__plot--panel"
-                    )}
-                >
+                <div className={cn("nl-line-chart__plot")}>
                     <div className="nl-line-chart__area">
                         <div
                             ref={ref}
@@ -184,6 +182,11 @@ export default function LineChart({
                             >
                                 {showGrid
                                     ? ticks.map((_, index) => {
+                                          if (
+                                              baselineOnly &&
+                                              index !== ticks.length - 1
+                                          )
+                                              return null;
                                           // 비어 있으면 위 · 아래 선만 — 가운데 「기록 없음」 과 겹치지 않게
                                           if (
                                               points.length === 0 &&
@@ -247,12 +250,7 @@ export default function LineChart({
             ) : points.length === 0 ? (
                 <p className="nl-body-secondary nl-muted">{emptyMessage}</p>
             ) : (
-                <div
-                    className={cn(
-                        "nl-line-chart__plot",
-                        plotSurface && "nl-line-chart__plot--panel"
-                    )}
-                >
+                <div className={cn("nl-line-chart__plot")}>
                     {showValueAxis ? (
                         <div
                             className="nl-line-chart__y nl-metadata nl-muted"
@@ -333,16 +331,20 @@ export default function LineChart({
                                                       ? 1
                                                       : 0)
                                           )
-                                          .map((y, index) => (
-                                              <line
-                                                  key={index}
-                                                  x1="0"
-                                                  x2={width}
-                                                  y1={y}
-                                                  y2={y}
-                                                  className="nl-line-chart__grid"
-                                              />
-                                          ))
+                                          .map((y, index) =>
+                                              baselineOnly &&
+                                              index !==
+                                                  ticks.length - 1 ? null : (
+                                                  <line
+                                                      key={index}
+                                                      x1="0"
+                                                      x2={width}
+                                                      y1={y}
+                                                      y2={y}
+                                                      className="nl-line-chart__grid"
+                                                  />
+                                              )
+                                          )
                                     : null}
                                 <polyline
                                     points={points
@@ -368,7 +370,7 @@ export default function LineChart({
                                         data-series="slow"
                                     />
                                 ) : null}
-                                {showPoints || points.length === 1
+                                {showPoints
                                     ? points.map((point, index) => {
                                           const p = position(index);
                                           return (
@@ -387,6 +389,32 @@ export default function LineChart({
                                           );
                                       })
                                     : null}
+                                {/* 점을 끈 그래프도 가리킨 자리에는 선 색으로 채운 점 4 를 찍는다 — osu! 처럼 (2026-09-19 P1) */}
+                                {/* 점이 하나뿐이면 늘 그 점을 같은 모양으로 */}
+                                {!showPoints &&
+                                (points.length === 1 ||
+                                    (active !== null && points[active])) ? (
+                                    <circle
+                                        cx={
+                                            position(
+                                                points.length === 1
+                                                    ? 0
+                                                    : active!
+                                            ).x
+                                        }
+                                        cy={
+                                            position(
+                                                points.length === 1
+                                                    ? 0
+                                                    : active!
+                                            ).y
+                                        }
+                                        r="4"
+                                        className="nl-line-chart__point"
+                                        data-series="personal"
+                                        data-active=""
+                                    />
+                                ) : null}
                                 {secondaryLabel
                                     ? points.map((point, index) => {
                                           const p = position(index, true);

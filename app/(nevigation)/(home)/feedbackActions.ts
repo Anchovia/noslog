@@ -5,6 +5,7 @@ import {
     submitFeedbackReport as submitFeedbackReportService,
     discardFeedbackImage as discardFeedbackImageService,
 } from "@/features/feedback/server/feedbackReportService";
+import { listMyFeedback as listMyFeedbackService } from "@/features/feedback/server/myFeedbackService";
 import type { Locale } from "@/lib/i18n/routing";
 
 export async function requestFeedbackImageUpload(
@@ -20,4 +21,8 @@ export async function submitFeedbackReport(formData: FormData) {
 
 export async function discardFeedbackImage(imageUrl: string) {
     return discardFeedbackImageService(imageUrl);
+}
+
+export async function listMyFeedback() {
+    return listMyFeedbackService();
 }

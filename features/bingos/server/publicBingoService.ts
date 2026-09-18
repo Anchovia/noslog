@@ -1,4 +1,5 @@
 import "server-only";
+import { entryDifficulty } from "@/features/music/lib/entryDifficulty";
 import {
     getCachedPublishedBingos,
     getCachedBingoDetail,
@@ -105,6 +106,15 @@ export async function getPublicBingoDetail(id: number) {
             language: "ko",
             missionType: cell.missionType,
             musicIndex: cell.musicIndex,
+            // 악곡 칸 링크 = 그 곡의 가장 높은 난이도(악곡 목록과 같음, 2026-09-19)
+            musicDifficulty: cell.music
+                ? entryDifficulty((difficulty) =>
+                      cell.music!.charts.some(
+                          (chart) =>
+                              chart.difficulty.toLowerCase() === difficulty
+                      )
+                  )
+                : null,
             categoryShort: cell.categoryShort,
         })),
     });

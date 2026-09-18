@@ -15,8 +15,6 @@
         "Hiragino Sans", "Apple SD Gothic Neo", Meiryo, "Noto Sans JP",
         "Noto Sans KR", "Malgun Gothic", Osaka, "Apple Color Emoji",
         "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
-    --nl-ease-out: cubic-bezier(0.4, 1, 0.6, 1);
-    --nl-ease-in: cubic-bezier(0.6, 0, 0.8, 0.6);
     --nl-overlay-shadow:
         0 0 2px rgb(0 0 0 / 36%), 0 2px 6px rgb(0 0 0 / 12%),
         0 4px 12px rgb(0 0 0 / 24%);
@@ -158,7 +156,6 @@ html[data-theme="light"] .noslog-ui,
     line-height: var(--nl-type-line-height-20);
     font-weight: var(--nl-type-weight-medium);
     text-decoration: none;
-    transition: background-color var(--nl-motion-duration-50) var(--nl-ease-out);
 }
 @media (hover: hover) {
     .noslog-ui .nl-button:hover {
@@ -275,7 +272,8 @@ html[data-theme="light"] .noslog-ui,
     height: var(--nl-icon-small);
     background: currentColor;
     mask: url("/icons/noslog/spinner.svg") center / contain no-repeat;
-    animation: nl-spin 1s linear infinite;
+    /* ⑩ 로딩 — 회전(동작 줄이기에서도 유지) */
+    animation: nl-spin var(--nl-motion-loop-spin) var(--nl-ease-spin) infinite;
 }
 @keyframes nl-spin {
     to {
@@ -545,6 +543,20 @@ html[data-theme="light"] .noslog-ui,
 .noslog-ui .nl-tabs__item:focus-visible {
     outline: none;
     box-shadow: inset 0 0 0 1px var(--nl-focus-ring);
+}
+/* 1단 탭 구역(AreaTabs) — 탭 →24→ 내용. 악곡 상세 · 피드백 창(2026-09-19) */
+.noslog-ui .nl-area {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-24);
+    min-width: 0;
+}
+.noslog-ui .nl-area__panel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-12);
+    min-width: 0;
+    outline: none;
 }
 
 /* 펼침 — 부품 결정 ③(2026-09-14). 화살표는 줄 끝 ∨ · 열리면 ∧(180°) · 20 · 들여쓰기 0.
@@ -848,7 +860,6 @@ html[data-theme="light"] .noslog-ui,
     font-weight: var(--nl-type-weight-semibold);
     text-align: center;
     text-decoration: none;
-    transition: background-color var(--nl-motion-duration-50) var(--nl-ease-out);
 }
 .noslog-ui .nl-action-group__chevron {
     width: var(--nl-spacing-16);
@@ -1033,31 +1044,25 @@ html[data-theme="light"] .noslog-ui,
 .noslog-ui .nl-skeleton {
     border-radius: var(--nl-radius-control);
     background: var(--nl-surface-sunken);
-    animation: nl-pulse 2s ease-in-out infinite;
-}
-.noslog-ui .nl-record-list-skeleton {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-8);
+    /* ⑪ 로딩 — 은은한 깜빡임(동작 줄이기에서 멈춤) */
+    animation: nl-pulse var(--nl-motion-loop-pulse) var(--nl-ease-pulse)
+        infinite;
 }
 @keyframes nl-pulse {
     50% {
         opacity: 0.5;
     }
 }
+.noslog-ui .nl-record-list-skeleton {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
+}
 
 @media (min-width: 1056px) {
     .noslog-ui {
         --nl-control-height: 40px;
         --nl-control-height-compact: 32px;
-    }
-}
-@media (prefers-reduced-motion: reduce) {
-    .noslog-ui .nl-button {
-        transition: none;
-    }
-    .noslog-ui .nl-skeleton {
-        animation: none;
     }
 }
 /* 태그 — 누르지 않는 라벨(공지 분류 · 빙고 미션 종류 · 상태). 부품 결정 ⑤(2026-09-15).
@@ -1245,4 +1250,113 @@ html[data-theme="light"] .noslog-ui,
         var(--nl-type-line-height-24) * 16 + var(--nl-spacing-8) * 2
     );
     padding: var(--nl-spacing-12);
+}
+
+/* 새 소식 점(2026-09-18 F1 — 피드백 새 답변) — 원 8 · 위험 표시색(그래픽 3:1), 글자 뒤 8. 색만으로 알리지 않게 접근 이름을 함께 */
+.noslog-ui .nl-unread-dot {
+    display: inline-block;
+    flex-shrink: 0;
+    width: 8px;
+    height: 8px;
+    margin-inline-start: var(--nl-spacing-8);
+    border-radius: var(--nl-radius-full);
+    background: var(--nl-feedback-danger-marker);
+    vertical-align: middle;
+}
+
+/* 움직임(2026-09-19) — 가이드 「움직임」 절의 목록만 움직인다. 시간 · 곡선은 tokens.css 의 움직임 토큰만 쓴다.
+   목록 밖(탭 밑줄 · 펼침 · 툴팁 · 체크박스 · 누름 크기 · 스크롤 연출 · 페이지 이동)은 즉시 바뀐다 */
+
+/* ① 올림 · 누름 색 — 누를 수 있는 모든 것에 같은 값. 배경 · 글자색만(포커스 선 · 경계는 즉시) */
+.noslog-ui
+    :is(a, button, summary, [role="option"], [role="menuitem"], [role="tab"]) {
+    transition:
+        background-color var(--nl-motion-duration-state) var(--nl-ease-enter),
+        color var(--nl-motion-duration-state) var(--nl-ease-enter);
+}
+
+/* ③ 떠 있는 메뉴(셀렉트 · 정렬 · ⋯ · 필터 팝오버 · 빙고 칸 · 지도 범례 · ≡ 메뉴) — 열 때 페이드만, 닫을 때 즉시.
+   용어 도움말은 툴팁이라 즉시(⑧) */
+.noslog-ui
+    [data-radix-popper-content-wrapper]
+    > [data-state="open"]:not(.nl-term__popover),
+[data-radix-popper-content-wrapper]
+    > .noslog-ui[data-state="open"]:not(.nl-term__popover),
+.noslog-ui .nl-destinations,
+.noslog-ui .nl-nav-scrim {
+    animation: nl-fade-in var(--nl-motion-duration-popup) var(--nl-ease-enter);
+}
+
+/* ④ 대화상자 · 전체 화면 창 — 나타날 때 페이드 + 떠오름, 사라질 때 페이드만.
+   떠오름은 translate 속성으로(가운데 맞춤 transform 과 따로) */
+.noslog-ui .nl-dialog-overlay[data-state="open"] {
+    animation: nl-fade-in var(--nl-motion-duration-overlay-in)
+        var(--nl-ease-enter);
+}
+.noslog-ui :is(.nl-dialog, .nl-full-dialog)[data-state="open"] {
+    animation: nl-rise-in var(--nl-motion-duration-overlay-in)
+        var(--nl-ease-enter);
+}
+.noslog-ui
+    :is(.nl-dialog-overlay, .nl-dialog, .nl-full-dialog)[data-state="closed"] {
+    animation: nl-fade-out var(--nl-motion-duration-overlay-out)
+        var(--nl-ease-exit) forwards;
+}
+
+/* 창 부품은 포털 안에 셸 겹(div.noslog-ui)을 두므로 Radix 포털이 그 겹의 움직임만 보고 떼어 낸다.
+   창이 닫히는 동안 셸 겹도 같은 시간 버티게 해 페이드가 끝난 뒤 사라지게 한다(보이는 변화 없음) */
+.noslog-ui:has(> :is(.nl-dialog, .nl-full-dialog)[data-state="closed"]) {
+    animation: nl-hold var(--nl-motion-duration-overlay-out);
+}
+
+/* ⑤ 토스트(sonner) — 나타날 때 페이드 + 조금 올라옴, 사라질 때 페이드만. 라이브러리 기본(400 · 전체 높이만큼 이동)을 토큰으로 덮는다 */
+html:has(.noslog-ui) [data-sonner-toaster] [data-sonner-toast] {
+    transition:
+        transform var(--nl-motion-duration-overlay-in) var(--nl-ease-enter),
+        opacity var(--nl-motion-duration-overlay-in) var(--nl-ease-enter),
+        height var(--nl-motion-duration-overlay-in) var(--nl-ease-enter);
+}
+html:has(.noslog-ui)
+    [data-sonner-toaster]
+    [data-sonner-toast][data-mounted="false"] {
+    --y: translateY(var(--nl-motion-distance));
+}
+html:has(.noslog-ui)
+    [data-sonner-toaster]
+    [data-sonner-toast][data-removed="true"][data-swipe-out="false"] {
+    --y: translateY(0);
+    transition: opacity var(--nl-motion-duration-overlay-out)
+        var(--nl-ease-exit);
+}
+html:has(.noslog-ui)
+    [data-sonner-toaster]
+    [data-sonner-toast][data-swipe-out="true"] {
+    animation-duration: var(--nl-motion-duration-overlay-out);
+    animation-timing-function: var(--nl-ease-exit);
+}
+html:has(.noslog-ui) [data-sonner-toaster] [data-sonner-toast] > * {
+    transition: opacity var(--nl-motion-duration-overlay-in)
+        var(--nl-ease-enter);
+}
+
+@keyframes nl-fade-in {
+    from {
+        opacity: 0;
+    }
+}
+@keyframes nl-fade-out {
+    to {
+        opacity: 0;
+    }
+}
+@keyframes nl-hold {
+    to {
+        visibility: visible;
+    }
+}
+@keyframes nl-rise-in {
+    from {
+        opacity: 0;
+        translate: 0 var(--nl-motion-distance);
+    }
 }

@@ -121,6 +121,9 @@ export async function loadMusicDetail(
     const userPlayData = userId
         ? await getUserChartRecord(userId, chart.id)
         : null;
+    // 점수 비공개인 본인이 볼 때만 랭킹 · 분포에 자기 줄을 넣는다(남에게는 빠져 있다, 2026-09-18 S3)
+    const includeSelf =
+        userId && userPlayData?.user.hide_play_scores ? userId : 0;
     const [
         recentChartPlays,
         scoreTrend,
@@ -183,7 +186,8 @@ export async function loadMusicDetail(
 
     if (activeTab === "detail" || activeTab === "ranking") {
         const { evaluation, scores } = await getCachedChartDetailStats(
-            chart.id
+            chart.id,
+            includeSelf
         );
         evaluationCount = evaluation._count._all;
         patternAverages = {
@@ -222,12 +226,17 @@ export async function loadMusicDetail(
     };
 
     if (activeTab === "ranking") {
-        const rankingData = await getChartRanking(chart.id, rankingPage);
+        const rankingData = await getChartRanking(
+            chart.id,
+            rankingPage,
+            includeSelf
+        );
         Object.assign(ranking, rankingData);
         // 곡선 위 사진 — 상위 목록에 내가 없으면 내 줄을 더한다 (2026-09-17)
         const players = await getChartScorePlayers(
             chart.id,
-            rankingData.totalCount
+            rankingData.totalCount,
+            includeSelf
         );
         const me =
             userId &&
@@ -244,6 +253,7 @@ export async function loadMusicDetail(
                 where: {
                     chart_id: chart.id,
                     score: { gt: userPlayData.score },
+                    user: { hide_play_scores: false },
                 },
             })) + 1;
         if (activeTab === "detail") ranking.totalCount = playerCount;

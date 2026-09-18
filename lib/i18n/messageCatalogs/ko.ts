@@ -118,8 +118,8 @@ export const koMessages = {
     "pattern.axis.stairs": "계단",
     "pattern.axis.repetition": "연타",
     "pattern.axis.polyrhythm": "폴리리듬",
-    "pattern.axis.offset": "변속",
-    "pattern.axis.chords": "동시치기",
+    "pattern.axis.offset": "즈레",
+    "pattern.axis.chords": "변박",
     "pattern.scale":
         "각 항목은 0–4로 평가합니다. 항목별로 3명 이상 평가하면 평균을 공개합니다. 선택하지 않은 항목은 0과 구분합니다.",
     "pattern.definition.stairs":
@@ -131,7 +131,7 @@ export const koMessages = {
     "pattern.definition.offset":
         "서로 가까우면서 어긋난 타이밍을 구분하여 연주하는 부담입니다.",
     "pattern.definition.chords":
-        "동시에 누르는 음의 수·간격·모양 변화와 반복, 테누토 조합의 부담입니다.",
+        "박자(마디 길이)가 바뀌는 구간을 따라가는 부담입니다.",
     "detail.expandTitle": "제목 전체 보기",
     "detail.collapseTitle": "제목 접기",
     "detail.viewChart": "채보 보기",
@@ -545,6 +545,16 @@ export const koMessages = {
     "common.previousPage": "이전 페이지",
     "common.nextPage": "다음 페이지",
     "feedback.title": "피드백 · 오류 제보",
+    "feedback.tab.write": "새로 쓰기",
+    "feedback.tab.mine": "내 제보",
+    "feedback.newReply": "새 답변",
+    "feedback.status.open": "접수",
+    "feedback.status.resolved": "처리 완료",
+    "feedback.mine.loading": "불러오는 중…",
+    "feedback.mine.failed": "내 제보를 불러오지 못했습니다.",
+    "feedback.mine.empty": "아직 보낸 제보가 없습니다.",
+    "feedback.mine.arcade": "오락실 제보",
+    "feedback.mine.replyLabel": "NosLog 답변",
     "feedback.cancel": "취소",
     "feedback.doneBody": "확인 후 반영하겠습니다. 알려 주셔서 고맙습니다.",
     "feedback.doneTitle": "제보를 받았습니다",
@@ -1174,6 +1184,10 @@ export const koMessages = {
     "profile.bestTopFive": "Grd 기여 상위 5곡",
     "profile.bestEmpty": "베스트 성과 기록이 없습니다.",
     "profile.recentPlays": "최근 플레이",
+    "profile.playScores": "플레이 점수",
+    "profile.scoresPrivate": "이 플레이어는 점수를 공개하지 않습니다.",
+    "profile.scoresPrivateBody":
+        "Grd · 레이팅 · 순위 · 베스트 플레이 · 성장 추이가 가려져 있습니다.",
     "profile.recentCollapse": "최근 플레이 접기",
     "profile.recentExpand": "최근 플레이 전체 보기",
     "profile.recentEmpty": "최근 플레이 기록이 없습니다.",
@@ -1239,7 +1253,7 @@ export const koMessages = {
     "settings.discordChangeComplete": "로그인 계정을 변경했습니다.",
     "settings.account": "계정",
     "settings.profileSummary": "닉네임 · 국가/지역 · 선호 오락실",
-    "settings.privacySummary": "공개할 정보 5가지",
+    "settings.privacySummary": "공개할 정보 6가지",
     "settings.connectionsSummary": "Discord 로그인 계정",
     "settings.accountSummary": "로그아웃 · 탈퇴",
     "settings.saved": "저장했습니다.",
@@ -1255,6 +1269,9 @@ export const koMessages = {
     "settings.showPreferredArcade": "선호 오락실 공개",
     "settings.showPlayCount": "총 플레이 횟수 공개",
     "settings.showPlayActivity": "플레이 활동 공개",
+    "settings.showPlayScores": "플레이 점수 공개",
+    "settings.scoresCoupling":
+        "끄면 랭킹에서 빠지고 프로필의 점수 · 기록이 다른 사람에게 보이지 않습니다. 내 순위는 나에게만 보입니다.",
     "settings.publicWhenOn": "켜면 다른 사용자에게 보입니다.",
     "settings.activityCoupling":
         "마지막 플레이와 최근 플레이가 함께 공개됩니다.",

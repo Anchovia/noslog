@@ -33,14 +33,6 @@ describe("LineChart plot geometry for sparse data", () => {
         expect(single).toContain(base.singleMessage);
         expect(single).toMatch(/nl-line-chart__state[^>]*>추이를/);
         expect(single).not.toContain("nl-line-chart__x");
-        expect(single).not.toContain("nl-line-chart__plot--panel");
-        expect(
-            render({
-                points: [point],
-                keepPlotGeometry: true,
-                plotSurface: true,
-            })
-        ).toContain("nl-line-chart__plot--panel");
 
         // 1건 문구가 없으면 틀 유지 옵션이어도 점 하나는 일반 그래프로 그린다
         const plain = render({
@@ -55,6 +47,21 @@ describe("LineChart plot geometry for sparse data", () => {
         expect(empty).toContain("nl-line-chart__series--placeholder");
         expect(empty).not.toContain("<circle");
         expect(empty).toContain(base.emptyMessage);
+    });
+    it("keeps only the baseline and colors growth lines when asked (2026-09-19)", () => {
+        const grid = (markup: string) =>
+            markup.match(/nl-line-chart__grid/g)?.length ?? 0;
+        const points = [point, { ...point, id: "b", value: 7 }];
+        expect(grid(render({ points }))).toBe(3);
+        expect(grid(render({ points, baselineOnly: true }))).toBe(1);
+        expect(grid(render({ keepPlotGeometry: true }))).toBe(2);
+        expect(
+            grid(render({ keepPlotGeometry: true, baselineOnly: true }))
+        ).toBe(1);
+        expect(render({ points, tone: "growth" })).toContain(
+            'data-tone="growth"'
+        );
+        expect(render({ points })).not.toContain("data-tone");
     });
     it("draws a single point inside the normal plot without a message", () => {
         const single = render({ points: [point] });

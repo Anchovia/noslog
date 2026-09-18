@@ -105,7 +105,10 @@ describe("빙고판 UI 계산", () => {
     });
 
     it("악곡과 카테고리 미션 링크를 현재 검색 규격으로 만든다", () => {
-        expect(getBingoMissionLink(cells[0])).toBe("/music/music-index/normal");
+        expect(getBingoMissionLink(cells[0])).toBe("/music/music-index/expert");
+        expect(
+            getBingoMissionLink({ ...cells[0], musicDifficulty: "real" })
+        ).toBe("/music/music-index/real");
         expect(getBingoMissionLink(cells[1])).toBe("/music?categories=Var");
     });
 

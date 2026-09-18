@@ -90,8 +90,9 @@ export const getCachedMusicDetail = unstable_cache(
 );
 
 // 상세 탭에서 사용하는 공개 투표 집계와 점수 분포를 캐시함
+// 점수 분포(점수 자 위 점)도 점수 비공개 플레이어를 뺀다 — 비공개인 본인이 볼 때만 자기 점수를 넣는다
 export const getCachedChartDetailStats = unstable_cache(
-    async (chartId: number) => {
+    async (chartId: number, includeUserId = 0) => {
         const [evaluation, scores] = await Promise.all([
             db.chartEvaluation.aggregate({
                 where: { chart_id: chartId },
@@ -106,7 +107,16 @@ export const getCachedChartDetailStats = unstable_cache(
                 },
             }),
             db.playData.findMany({
-                where: { chart_id: chartId, score: { gt: 0 } },
+                where: {
+                    chart_id: chartId,
+                    score: { gt: 0 },
+                    user: {
+                        OR: [
+                            { hide_play_scores: false },
+                            { id: includeUserId },
+                        ],
+                    },
+                },
                 select: { score: true, fc_type: true },
             }),
         ]);
@@ -131,6 +141,7 @@ export function getUserChartRecord(userId: number, chartId: number) {
                     username: true,
                     avatar: true,
                     grade_basic: true,
+                    hide_play_scores: true,
                 },
             },
             rank: true,
@@ -171,7 +182,9 @@ export async function getUserChartPeerScoreComparison(
             user_id: { not: userId },
             play_count: { gt: 0 },
             score: { gt: 0 },
+            // 점수 비공개 플레이어는 비교 평균에도 넣지 않는다(비교 대상 1명이면 그 사람 점수가 그대로 보인다)
             user: {
+                hide_play_scores: false,
                 grade_basic: {
                     gte: Math.max(0, gradeBasic - PEER_STORED_GRADE_RANGE),
                     lte: gradeBasic + PEER_STORED_GRADE_RANGE,

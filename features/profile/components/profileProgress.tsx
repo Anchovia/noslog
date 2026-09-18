@@ -9,6 +9,7 @@ import MetricSwitch from "@/components/ui/metricSwitch";
 import { Select } from "@/components/ui/select";
 import { StatusMessage } from "@/components/ui/statusMessage";
 import { profileProgressOptions } from "@/features/profile/api/profileProgress";
+import { formatDaysAgo } from "@/lib/music/scoreTrend";
 import type {
     ProfileMetric,
     ProfileMode,
@@ -126,7 +127,9 @@ export default function ProfileProgress({
                         dimensionLabel={t("record.date")}
                         valueLabel={metricLabel}
                         keepPlotGeometry
-                        plotSurface
+                        // 면 없음 · 바닥선만 · 주황 선 (2026-09-19 B1 · G1 · C1)
+                        baselineOnly
+                        tone="growth"
                         points={(current === null ? [] : points).map(
                             (point) => ({
                                 id: point.date,
@@ -138,6 +141,7 @@ export default function ProfileProgress({
                                 ),
                                 value: point.value,
                                 coordinate: Date.parse(point.date),
+                                detail: formatDaysAgo(point.date, locale),
                             })
                         )}
                         domain={[Math.max(0, minimum - inset), maximum + inset]}
@@ -156,7 +160,11 @@ export default function ProfileProgress({
                         responsivePlot
                         showValueAxis={false}
                         showPoints={false}
-                        dimensionTickIndices={[0, points.length - 1]}
+                        dimensionTickIndices={[
+                            ...new Set([0, points.length - 1]),
+                        ]}
+                        // 툴팁 = 「5,723.05 Grd」 위 · 「N일 전」 아래 — 악곡 상세 성장 추이와 같음(osu!, 2026-09-17)
+                        tooltipValueLabel={false}
                         tableVisibility="screen-reader"
                     />
                 }

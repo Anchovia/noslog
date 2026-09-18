@@ -38,9 +38,12 @@ import {
 import FullScreenDialog from "@/components/ui/fullScreenDialog";
 import IconButton from "@/components/ui/iconButton";
 import ModalDialog from "@/components/ui/modalDialog";
-import { SegmentedControl } from "@/components/ui/segmentedControl";
+import AreaTabs from "@/components/ui/areaTabs";
+import { Select } from "@/components/ui/select";
 import { StatusMessage } from "@/components/ui/statusMessage";
 import useMediaQuery from "@/lib/hooks/useMediaQuery";
+import { useFeedbackUnread } from "./feedbackUnread";
+import MyFeedbackList from "./myFeedbackList";
 
 export default function FeedbackDialog({
     isAuthenticated,
@@ -58,6 +61,8 @@ export default function FeedbackDialog({
     const localizedHref = useLocalizedHref();
     const locale = useLocale();
     const t = useTranslations();
+    // 읽지 않은 답변 수 — 「내 제보」 탭의 점(2026-09-18 F1). 헤더 · 홈 칸이 같은 값을 쓴다
+    const { count: unread, markSeen: onRepliesSeen } = useFeedbackUnread();
     const feedbackReportSchema = useMemo(
         () => createFeedbackReportSchema(t),
         [t]
@@ -66,6 +71,8 @@ export default function FeedbackDialog({
     const open = controlledOpen ?? internalOpen;
     const [file, setFile] = useState<File | null>(null);
     const [submitted, setSubmitted] = useState(false);
+    // 창 안 두 탭 — 새로 쓰기 · 내 제보(2026-09-18 F1)
+    const [view, setView] = useState<"write" | "mine">("write");
     const wide = useMediaQuery("(min-width: 672px)");
     // 붙인 이미지 미리보기 — 브라우저 안에서만 쓰는 임시 주소, 파일이 바뀌거나 창이 닫히면 풀어 준다
     const preview = useMemo(
@@ -196,6 +203,7 @@ export default function FeedbackDialog({
         if (!nextOpen) {
             clearErrors();
             setSubmitted(false);
+            setView("write");
         }
     }
 
@@ -214,6 +222,34 @@ export default function FeedbackDialog({
               ));
 
     // 창 안 세 상태: 로그인 필요 · 보낸 뒤 · 작성 (2026-09-18 — 보낸 뒤는 창 안에 남긴다)
+    // 창 안 두 탭(2026-09-19 C) — 창의 구역이라 1단 밑줄 탭. 종류는 입력이라 셀렉트
+    const viewTabs = (panel: ReactNode) => (
+        <AreaTabs<"write" | "mine">
+            label={t("feedback.title")}
+            value={view}
+            onValueChange={setView}
+            options={[
+                { value: "write", label: t("feedback.tab.write") },
+                {
+                    value: "mine",
+                    label: (
+                        <>
+                            {t("feedback.tab.mine")}
+                            {unread ? (
+                                <span
+                                    className="nl-unread-dot"
+                                    role="img"
+                                    aria-label={t("feedback.newReply")}
+                                />
+                            ) : null}
+                        </>
+                    ),
+                },
+            ]}
+        >
+            {panel}
+        </AreaTabs>
+    );
     const body = !isAuthenticated ? (
         <StatusMessage title={t("feedback.loginRequired")} />
     ) : submitted ? (
@@ -226,124 +262,136 @@ export default function FeedbackDialog({
                 {t("feedback.doneBody")}
             </p>
         </div>
+    ) : view === "mine" ? (
+        viewTabs(<MyFeedbackList onLoaded={onRepliesSeen} />)
     ) : (
-        <form
-            id={formId}
-            onSubmit={submit}
-            noValidate
-            className="nl-feedback-form"
-            aria-busy={isSubmitting}
-        >
-            <div className="nl-field">
-                <span id={`${formId}-category`} className="nl-field__label">
-                    {t("feedback.categoryLabel")}
-                </span>
-                <SegmentedControl<FeedbackCategory>
-                    label={t("feedback.categoryLabel")}
-                    value={category}
-                    onValueChange={(next) =>
-                        setValue("category", next, { shouldValidate: false })
-                    }
-                    options={FEEDBACK_CATEGORIES.map((value) => ({
-                        value,
-                        label: t(`feedback.category.${value}`),
-                    }))}
-                />
-            </div>
-            {/* 오류는 안내 문구 자리를 대신하고 글자 수는 그대로 — 작은 글자가 두 줄로 쌓이지 않게 (시안 D2 · M3 · Carbon · Primer) */}
-            <FormField
-                id="feedback-content"
-                label={t("feedback.contentLabel")}
-                help={
-                    <>
-                        {errors.content?.message ? (
-                            <span className="nl-field__error" role="alert">
-                                {errors.content.message}
-                            </span>
-                        ) : (
-                            <span>{t(`feedback.help.${category}`)}</span>
-                        )}
-                        <span className="nl-feedback-form__count">
-                            {(content?.length ?? 0).toLocaleString(locale)} /
-                            1,000
-                        </span>
-                    </>
-                }
+        viewTabs(
+            <form
+                id={formId}
+                onSubmit={submit}
+                noValidate
+                className="nl-feedback-form"
+                aria-busy={isSubmitting}
             >
-                <TextArea
-                    id="feedback-content"
-                    maxLength={1000}
-                    // 5줄 = 글자 24 × 5 + 공용 여러 줄 입력칸 안쪽 11 × 2 + 경계 2 = 144 — 높이는 줄 수로만 정한다(부품 규격을 덮어쓰지 않는다)
-                    rows={5}
-                    readOnly={isSubmitting}
-                    aria-invalid={Boolean(errors.content)}
-                    aria-describedby={fieldDescription("feedback-content", {
-                        help: true,
-                    })}
-                    {...register("content")}
-                />
-            </FormField>
-            <input type="hidden" {...register("imageUrl")} />
-            <div className="nl-field">
-                <span className="nl-field__label">
-                    {t("feedback.imageLabel")}{" "}
-                    <span className="nl-muted">{t("feedback.optional")}</span>
-                </span>
-                {file ? (
-                    // 붙인 파일 = 이름 · 크기 · 지우기 한 줄 (2026-09-18 A2 · Carbon 파일 목록 모양)
-                    <div className="nl-feedback-file">
-                        {preview ? (
-                            <Image
-                                src={preview}
-                                alt=""
-                                width={36}
-                                height={36}
-                                unoptimized
-                                className="nl-feedback-file__thumb"
-                            />
-                        ) : null}
-                        <span className="nl-feedback-file__name nl-body-secondary">
-                            {file.name}
-                        </span>
-                        <span className="nl-metadata nl-muted">
-                            {formatBytes(file.size, locale)}
-                        </span>
-                        <IconButton
-                            label={t("feedback.removeImage")}
-                            disabled={isSubmitting}
-                            onClick={() => setFile(null)}
-                        >
-                            <X className="nl-icon" aria-hidden />
-                        </IconButton>
-                    </div>
-                ) : (
+                <div className="nl-field">
                     <label
-                        aria-disabled={isSubmitting}
-                        // 첨부 = 입력 칸 역할이라 L — 붙인 뒤 파일 줄(L)과 높이가 같아 자리가 튀지 않는다 (2026-09-18 사용자 결정)
-                        className={foundationButtonClass({
-                            variant: "secondary",
-                        })}
+                        htmlFor={`${formId}-category`}
+                        className="nl-field__label"
                     >
-                        {t("feedback.addImage")}
-                        <input
-                            type="file"
-                            accept="image/jpeg,image/png,image/webp"
-                            onChange={changeFile}
-                            disabled={isSubmitting}
-                            className="sr-only"
-                        />
+                        {t("feedback.categoryLabel")}
                     </label>
-                )}
-                <p className="nl-field__help">{t("feedback.imageHelp")}</p>
-            </div>
-            {serverError ? (
-                <StatusMessage
-                    severity="danger"
-                    title={serverError}
-                    role="alert"
-                />
-            ) : null}
-        </form>
+                    <Select
+                        id={`${formId}-category`}
+                        value={category}
+                        disabled={isSubmitting}
+                        onValueChange={(next) =>
+                            setValue("category", next as FeedbackCategory, {
+                                shouldValidate: false,
+                            })
+                        }
+                        options={FEEDBACK_CATEGORIES.map((value) => ({
+                            value,
+                            label: t(`feedback.category.${value}`),
+                        }))}
+                    />
+                </div>
+                {/* 오류는 안내 문구 자리를 대신하고 글자 수는 그대로 — 작은 글자가 두 줄로 쌓이지 않게 (시안 D2 · M3 · Carbon · Primer) */}
+                <FormField
+                    id="feedback-content"
+                    label={t("feedback.contentLabel")}
+                    help={
+                        <>
+                            {errors.content?.message ? (
+                                <span className="nl-field__error" role="alert">
+                                    {errors.content.message}
+                                </span>
+                            ) : (
+                                <span>{t(`feedback.help.${category}`)}</span>
+                            )}
+                            <span className="nl-feedback-form__count">
+                                {(content?.length ?? 0).toLocaleString(locale)}{" "}
+                                / 1,000
+                            </span>
+                        </>
+                    }
+                >
+                    <TextArea
+                        id="feedback-content"
+                        maxLength={1000}
+                        // 5줄 = 글자 24 × 5 + 공용 여러 줄 입력칸 안쪽 11 × 2 + 경계 2 = 144 — 높이는 줄 수로만 정한다(부품 규격을 덮어쓰지 않는다)
+                        rows={5}
+                        readOnly={isSubmitting}
+                        aria-invalid={Boolean(errors.content)}
+                        aria-describedby={fieldDescription("feedback-content", {
+                            help: true,
+                        })}
+                        {...register("content")}
+                    />
+                </FormField>
+                <input type="hidden" {...register("imageUrl")} />
+                <div className="nl-field">
+                    <span className="nl-field__label">
+                        {t("feedback.imageLabel")}{" "}
+                        <span className="nl-muted">
+                            {t("feedback.optional")}
+                        </span>
+                    </span>
+                    {file ? (
+                        // 붙인 파일 = 이름 · 크기 · 지우기 한 줄 (2026-09-18 A2 · Carbon 파일 목록 모양)
+                        <div className="nl-feedback-file">
+                            {preview ? (
+                                <Image
+                                    src={preview}
+                                    alt=""
+                                    width={36}
+                                    height={36}
+                                    unoptimized
+                                    className="nl-feedback-file__thumb"
+                                />
+                            ) : null}
+                            <span className="nl-feedback-file__name nl-body-secondary">
+                                {file.name}
+                            </span>
+                            <span className="nl-metadata nl-muted">
+                                {formatBytes(file.size, locale)}
+                            </span>
+                            <IconButton
+                                label={t("feedback.removeImage")}
+                                disabled={isSubmitting}
+                                onClick={() => setFile(null)}
+                            >
+                                <X className="nl-icon" aria-hidden />
+                            </IconButton>
+                        </div>
+                    ) : (
+                        <label
+                            aria-disabled={isSubmitting}
+                            // 첨부 = 입력 칸 역할이라 L — 붙인 뒤 파일 줄(L)과 높이가 같아 자리가 튀지 않는다 (2026-09-18 사용자 결정)
+                            className={foundationButtonClass({
+                                variant: "secondary",
+                            })}
+                        >
+                            {t("feedback.addImage")}
+                            <input
+                                type="file"
+                                accept="image/jpeg,image/png,image/webp"
+                                onChange={changeFile}
+                                disabled={isSubmitting}
+                                className="sr-only"
+                            />
+                        </label>
+                    )}
+                    <p className="nl-field__help">{t("feedback.imageHelp")}</p>
+                </div>
+                {serverError ? (
+                    <StatusMessage
+                        severity="danger"
+                        title={serverError}
+                        role="alert"
+                    />
+                ) : null}
+            </form>
+        )
     );
 
     // 버튼 — 폰(전체 화면)은 닫기가 머리 ×라 주 액션 하나, 창은 취소 · 주 액션. 보내기는 늘 켜 둔다(비면 칸 아래 오류, D2)
@@ -364,8 +412,11 @@ export default function FeedbackDialog({
                 {t("common.login")}
             </Link>
         </>
-    ) : submitted ? (
-        <ActionButton onClick={() => changeOpen(false)}>
+    ) : submitted || view === "mine" ? (
+        <ActionButton
+            variant={view === "mine" ? "secondary" : "primary"}
+            onClick={() => changeOpen(false)}
+        >
             {t("common.close")}
         </ActionButton>
     ) : (

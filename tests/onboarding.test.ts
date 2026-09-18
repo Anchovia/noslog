@@ -77,6 +77,7 @@ describe("최초 프로필 설정", () => {
                 hide_preferred_arcade: true,
                 hide_play_count: true,
                 hide_play_activity: true,
+                hide_play_scores: false,
                 profile_completed_at: expect.any(Date),
             },
         });
@@ -99,6 +100,7 @@ describe("최초 프로필 설정", () => {
                 hide_preferred_arcade: true,
                 hide_play_count: false,
                 hide_play_activity: true,
+                hide_play_scores: false,
             }),
         });
     });
@@ -117,6 +119,7 @@ describe("최초 프로필 설정", () => {
                 hide_preferred_arcade: true,
                 hide_play_count: true,
                 hide_play_activity: true,
+                hide_play_scores: false,
                 profile_completed_at: expect.any(Date),
             },
         });

@@ -60,6 +60,7 @@ async function queryProfileData(id: number) {
                     hide_play_count: true,
                     hide_preferred_arcade: true,
                     hide_play_activity: true,
+                    hide_play_scores: true,
                     score_p: true,
                     score_f: true,
                     score_s: true,

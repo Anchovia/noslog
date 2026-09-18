@@ -75,6 +75,7 @@ export async function listFeedbackReports(
             category: report.category,
             content: report.content,
             createdAt: report.createdAt.toISOString(),
+            reply: report.reply,
             hasImage: Boolean(report.imageUrl),
             status,
             user: {
@@ -147,9 +148,17 @@ export async function updateFeedbackStatus(
 
         await db.feedbackReport.update({
             where: { id: feedback.id },
+            // 처리 완료 + 답변 = 제보한 사람에게 새 답변(읽음 초기화). 다시 열면 답변은 남겨 둔다
             data: {
                 status: input.status,
                 resolvedAt: input.status === "resolved" ? new Date() : null,
+                ...(input.status === "resolved" && input.reply
+                    ? {
+                          reply: input.reply,
+                          repliedAt: new Date(),
+                          replySeenAt: null,
+                      }
+                    : {}),
             },
         });
     } catch (error) {

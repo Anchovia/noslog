@@ -82,6 +82,14 @@ export default function FeedbackReportCard({
                 <p className="text-body break-words whitespace-pre-wrap">
                     {report.content}
                 </p>
+                {report.reply ? (
+                    <div className="bg-surface-muted rounded-md p-3">
+                        <p className="text-caption">NosLog 답변</p>
+                        <p className="text-body break-words whitespace-pre-wrap">
+                            {report.reply}
+                        </p>
+                    </div>
+                ) : null}
                 <FeedbackStatusButton
                     feedbackId={report.id}
                     status={report.status}

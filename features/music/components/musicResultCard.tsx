@@ -8,6 +8,7 @@ import {
     useTranslations,
 } from "@/components/i18n/localeProvider";
 import MusicJacket from "@/components/music/musicJacket";
+import { entryDifficulty } from "@/features/music/lib/entryDifficulty";
 import type { MusicResult } from "@/features/music/schemas/musicResultSchema";
 import { cn } from "@/lib/utils";
 
@@ -55,14 +56,12 @@ export default function MusicResultCard({
 }) {
     const href = useLocalizedHref();
     const t = useTranslations();
-    const firstDifficulty =
-        difficulties.find((difficulty) => music[difficulty]) ?? "normal";
+    // 목록에서 들어가는 난이도 = 그 곡의 가장 높은 난이도(2026-09-19 사용자)
+    const entry = entryDifficulty((difficulty) => Boolean(music[difficulty]));
     return (
         <Link
             {...props}
-            href={href(
-                destination ?? `/music/${music.index}/${firstDifficulty}`
-            )}
+            href={href(destination ?? `/music/${music.index}/${entry}`)}
             className={cn(
                 "nl-music-card",
                 `nl-music-card--${view === "list" ? "list" : "grid"}`,

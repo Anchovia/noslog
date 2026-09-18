@@ -1,5 +1,6 @@
 "use client";
 
+import { PRIVACY_HELP } from "@/features/settings/schemas/settingsSchema";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,6 +12,7 @@ import { FormField, Input, fieldDescription } from "@/components/ui/formField";
 import {
     createOnboardingFormData,
     createOnboardingSchema,
+    ONBOARDING_PRIVACY_DEFAULTS,
     ONBOARDING_PRIVACY_KEYS,
     PROFILE_COUNTRIES,
 } from "@/features/profile/schemas/profileSettingsSchema";
@@ -41,9 +43,7 @@ export default function OnboardingForm({
         defaultValues: {
             username: "",
             country: undefined,
-            ...Object.fromEntries(
-                ONBOARDING_PRIVACY_KEYS.map((key) => [key, false])
-            ),
+            ...ONBOARDING_PRIVACY_DEFAULTS,
         },
     });
     const labels: Record<
@@ -163,18 +163,18 @@ export default function OnboardingForm({
                             <Checkbox
                                 label={t(`settings.${key}`)}
                                 aria-describedby={
-                                    key === "showPlayActivity"
-                                        ? "onboarding-privacy-help onboarding-activity-help"
+                                    PRIVACY_HELP[key]
+                                        ? `onboarding-privacy-help onboarding-${key}-help`
                                         : "onboarding-privacy-help"
                                 }
                                 {...register(key)}
                             />
-                            {key === "showPlayActivity" ? (
+                            {PRIVACY_HELP[key] ? (
                                 <p
-                                    id="onboarding-activity-help"
+                                    id={`onboarding-${key}-help`}
                                     className="nl-metadata nl-muted nl-settings__control-help"
                                 >
-                                    {t("settings.activityCoupling")}
+                                    {t(PRIVACY_HELP[key])}
                                 </p>
                             ) : null}
                         </div>

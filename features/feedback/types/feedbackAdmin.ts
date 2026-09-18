@@ -5,6 +5,8 @@ export interface AdminFeedbackReport {
     category: string | null;
     content: string;
     createdAt: string;
+    // 관리자 답변 — 없으면 null
+    reply: string | null;
     hasImage: boolean;
     id: number;
     status: FeedbackStatus;
