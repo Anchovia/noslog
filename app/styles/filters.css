@@ -71,7 +71,8 @@
         background: var(--nl-interaction-hover);
     }
 }
-.noslog-ui .nl-chip[aria-pressed="true"] {
+/* 선택 = 버튼 칩은 aria-pressed, 링크 칩(FilterChipLinks)은 aria-current */
+.noslog-ui .nl-chip:is([aria-pressed="true"], [aria-current="page"]) {
     background: var(--nl-surface-raised);
     box-shadow: inset 0 0 0 1px var(--nl-border-strong);
     font-weight: var(--nl-type-weight-semibold);

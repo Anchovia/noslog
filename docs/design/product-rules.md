@@ -238,6 +238,11 @@ old design-stage checklist. Changes to material behavior require a user decision
   `metadata` text in `content/subdued`, no colour) on Home, the archive and the
   detail page; long titles wrap under the tag. Maintenance in progress is still
   signalled by `MAINTENANCE_MODE`, not by the tag.
+- The public archive filters by one category through `?category=<lowercase>` (unknown
+  values fall back to all). Active critical announcements are pinned above the dated
+  list on page 1 of the matching filter and are left out of the dated list; page count
+  ignores them. The detail page links the previous (older) and next (newer)
+  announcement in publication order across all categories (2026-09-18).
 - Preserve original/source language and public publication state for announcements;
   optional translations are not fabricated. Official NOSTALGIA news links remain
   distinguishable from NosLog announcements.

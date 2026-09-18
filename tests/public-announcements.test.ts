@@ -6,6 +6,11 @@ import {
     localizeAnnouncement,
     publicAnnouncementSchema,
     selectHomeAnnouncements,
+    selectArchivePage,
+    adjacentAnnouncements,
+    announcementCategoryFromQuery,
+    announcementsQuery,
+    ANNOUNCEMENTS_PAGE_SIZE,
 } from "@/features/announcements/schemas/publicAnnouncementSchema";
 import AnnouncementBody, {
     announcementLink,
@@ -150,6 +155,84 @@ describe("P11 public announcement eligibility", () => {
         ]);
     });
 });
+describe("공지 목록 B1 · 상세 이전/다음 (2026-09-18)", () => {
+    const day = (n: number) => new Date(Date.UTC(2026, 8, n));
+    const make = (
+        id: number,
+        category: "UPDATE" | "NOTICE",
+        critical = false
+    ) => ({
+        ...record(),
+        id,
+        publicSlug: `notice-${id}`,
+        publishedAt: day(id),
+        category,
+        ...(critical
+            ? { placement: "SERVICE_CRITICAL" as const, activeFrom: day(id) }
+            : {}),
+    });
+    it("pins active critical notices on page 1 only and keeps them out of the dated list", () => {
+        const records = eligibleAnnouncements(
+            [make(1, "UPDATE"), make(2, "NOTICE", true), make(3, "UPDATE")],
+            now
+        );
+        const first = selectArchivePage(records, now, null, 1)!;
+        expect(first.pinned.map((item) => item.id)).toEqual([2]);
+        expect(first.list.map((item) => item.id)).toEqual([3, 1]);
+    });
+    it("filters by category, including the pinned rows", () => {
+        const records = eligibleAnnouncements(
+            [make(1, "UPDATE"), make(2, "NOTICE", true), make(3, "UPDATE")],
+            now
+        );
+        const updates = selectArchivePage(records, now, "UPDATE", 1)!;
+        expect(updates.pinned).toEqual([]);
+        expect(updates.list.map((item) => item.id)).toEqual([3, 1]);
+        const notices = selectArchivePage(records, now, "NOTICE", 1)!;
+        expect(notices.pinned.map((item) => item.id)).toEqual([2]);
+        expect(notices.list).toEqual([]);
+    });
+    it("counts pages without the pinned rows and rejects pages past the end", () => {
+        const records = eligibleAnnouncements(
+            Array.from({ length: ANNOUNCEMENTS_PAGE_SIZE + 1 }, (_, index) =>
+                make(index + 1, "UPDATE", index === 0)
+            ),
+            new Date(Date.UTC(2026, 11, 1))
+        );
+        const result = selectArchivePage(
+            records,
+            new Date(Date.UTC(2026, 11, 1)),
+            null,
+            1
+        )!;
+        expect(result.totalPages).toBe(1);
+        expect(result.list).toHaveLength(ANNOUNCEMENTS_PAGE_SIZE);
+        expect(
+            selectArchivePage(records, new Date(Date.UTC(2026, 11, 1)), null, 2)
+        ).toBeNull();
+    });
+    it("links older and newer notices in publication order across categories", () => {
+        const records = eligibleAnnouncements(
+            [make(1, "UPDATE"), make(2, "NOTICE"), make(3, "UPDATE")],
+            now
+        );
+        expect(adjacentAnnouncements(records, 2)).toMatchObject({
+            older: { id: 1 },
+            newer: { id: 3 },
+        });
+        expect(adjacentAnnouncements(records, 3).newer).toBeNull();
+        expect(adjacentAnnouncements(records, 1).older).toBeNull();
+    });
+    it("reads the category filter from lowercase query values only", () => {
+        expect(announcementCategoryFromQuery(undefined)).toBeNull();
+        expect(announcementCategoryFromQuery("update")).toBe("UPDATE");
+        expect(announcementCategoryFromQuery("UPDATE")).toBeUndefined();
+        expect(announcementCategoryFromQuery("event")).toBeUndefined();
+        expect(announcementsQuery(null, 1)).toBe("");
+        expect(announcementsQuery("DATA", 3)).toBe("?category=data&page=3");
+    });
+});
+
 describe("P11 restricted Markdown", () => {
     const render = (content: string) =>
         renderToStaticMarkup(

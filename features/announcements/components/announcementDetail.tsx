@@ -1,4 +1,6 @@
+import Link from "next/link";
 import BackLink from "@/components/ui/backLink";
+import { foundationButtonClass } from "@/components/ui/Button";
 import PageContainer from "@/components/layout/pageContainer";
 import { getServerI18n } from "@/lib/i18n/server";
 import { localizePath } from "@/lib/i18n/routing";
@@ -11,7 +13,10 @@ import { announcementDate } from "./announcementRow";
 export default async function AnnouncementDetail({
     announcement,
 }: {
-    announcement: PublicAnnouncement;
+    announcement: PublicAnnouncement & {
+        older: PublicAnnouncement | null;
+        newer: PublicAnnouncement | null;
+    };
 }) {
     const { locale, t } = await getServerI18n();
     return (
@@ -58,6 +63,48 @@ export default async function AnnouncementDetail({
                     siteUrl={SITE_URL}
                     externalLabel={t("shell.externalLink")}
                 />
+                {/* 끝 — 이전(더 오래된) · 다음(더 새) 글 두 칸 + 목록으로. 없는 쪽은 빈 칸 (2026-09-18 결정 3). 공지가 하나뿐이면 목록으로만 */}
+                <nav
+                    className="nl-announcements__pager"
+                    aria-label={t("announcements.pager")}
+                >
+                    {announcement.older || announcement.newer ? (
+                        <div className="nl-announcements__adjacent">
+                            {(["older", "newer"] as const).map((side) => {
+                                const item = announcement[side];
+                                return item ? (
+                                    <Link
+                                        key={side}
+                                        prefetch={false}
+                                        href={localizePath(
+                                            `/announcements/${item.slug}`,
+                                            locale
+                                        )}
+                                        className="nl-announcements__adjacent-link"
+                                        data-side={side}
+                                    >
+                                        <span className="nl-metadata nl-muted">
+                                            {t(`announcements.${side}`)}
+                                        </span>
+                                        <span className="nl-body-secondary">
+                                            {item.title}
+                                        </span>
+                                    </Link>
+                                ) : (
+                                    <span key={side} aria-hidden />
+                                );
+                            })}
+                        </div>
+                    ) : null}
+                    <Link
+                        href={localizePath("/announcements", locale)}
+                        className={foundationButtonClass({
+                            variant: "secondary",
+                        })}
+                    >
+                        {t("announcements.backToList")}
+                    </Link>
+                </nav>
             </article>
         </PageContainer>
     );

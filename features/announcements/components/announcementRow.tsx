@@ -17,12 +17,15 @@ export default function AnnouncementRow({
     locale,
     categoryLabel,
     pinned = false,
+    pinnedLabel,
 }: {
     announcement: PublicAnnouncement;
     locale: Locale;
     categoryLabel: string;
     // 활성 중대 공지로 목록 최상단에 고정된 행. 시각 강조 없음 (2026-09-10 사용자 결정)
     pinned?: boolean;
+    // 전체 공지 목록의 고정 줄에만 — 분류 태그 뒤 「고정」 (2026-09-18 B1)
+    pinnedLabel?: string;
 }) {
     return (
         <div
@@ -35,6 +38,9 @@ export default function AnnouncementRow({
                     category={announcement.category}
                     label={categoryLabel}
                 />
+                {pinnedLabel ? (
+                    <span className="nl-metadata nl-muted">{pinnedLabel}</span>
+                ) : null}
                 <time
                     className="nl-metadata nl-muted"
                     dateTime={announcement.publishedAt}

@@ -30,6 +30,22 @@
     margin: 0;
     min-width: 0;
 }
+/* 전체 공지 목록 제목 = 16/600 — 월 제목 20/600 과 한 단계 차이 (2026-09-18 B1). 홈 공지 카드는 그대로 */
+.noslog-ui .nl-announcements .nl-announcement-row__title {
+    font-weight: var(--nl-type-weight-semibold);
+}
+/* 활성 중대 공지 고정 줄 = 목록 항목 카드(면 surface · 모서리 8 · 안쪽 12), 날짜 목록 위. 여러 개면 사이 8 */
+.noslog-ui .nl-announcements__pinned {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-announcements__pinned .nl-announcement-row {
+    padding: var(--nl-spacing-12);
+    border-radius: var(--nl-radius-container);
+    background: var(--nl-surface-surface);
+    box-shadow: none;
+}
 /* 분류·날짜 줄 — 제목 위. 칩 폭이 제각각이어도 제목 시작선이 흔들리지 않는다 */
 .noslog-ui .nl-announcement-meta {
     display: flex;
@@ -47,6 +63,40 @@
 }
 .noslog-ui .nl-announcements__list > li:first-child .nl-announcements__month {
     padding-top: var(--nl-spacing-0);
+}
+/* 상세 끝 — 이전 · 다음 글 두 칸(목록 항목 카드 · 사이 8) → 16 → 「목록으로」 */
+.noslog-ui .nl-announcements__pager {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--nl-spacing-16);
+}
+.noslog-ui .nl-announcements__adjacent {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--nl-spacing-8);
+    align-self: stretch;
+}
+.noslog-ui .nl-announcements__adjacent-link {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-4);
+    min-width: 0;
+    padding: var(--nl-spacing-12);
+    border-radius: var(--nl-radius-container);
+    background: var(--nl-surface-surface);
+}
+.noslog-ui .nl-announcements__adjacent-link[data-side="newer"] {
+    text-align: end;
+}
+@media (hover: hover) {
+    .noslog-ui .nl-announcements__adjacent-link:hover {
+        background: var(--nl-interaction-hover);
+    }
+}
+.noslog-ui .nl-announcements__adjacent-link:focus-visible {
+    outline: none;
+    box-shadow: inset 0 0 0 1px var(--nl-focus-ring);
 }
 .noslog-ui .nl-announcement-body {
     display: flex;
