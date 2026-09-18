@@ -93,6 +93,22 @@ export async function getEventBoard() {
         PublicEventItem[]
     >;
 }
+// 사이트맵 — 공개판이 있는 글 전부(진행 중 · 예정 · 종료). 마지막 수정 = 공개판이 마지막으로 바뀐 때
+// (승인 상태면 마지막 검토 시각, 고친 판을 검토 중이면 그 전 공개 시각을 알 수 없어 처음 공개 시각)
+export async function getSitemapEvents() {
+    const rows = await db.communityEvent.findMany({
+        where: { publishedAt: { not: null }, status: { not: "REJECTED" } },
+        select: { id: true, status: true, publishedAt: true, reviewedAt: true },
+    });
+    return rows.map((row) => ({
+        id: row.id,
+        lastModified:
+            row.status === "PUBLISHED" && row.reviewedAt
+                ? row.reviewedAt
+                : row.publishedAt!,
+    }));
+}
+
 // 홈 — 진행 중 가운데 끝나는 순 2개. 이벤트 조회가 실패해도 홈은 그대로 뜬다
 export async function getHomeLiveEvents() {
     try {
