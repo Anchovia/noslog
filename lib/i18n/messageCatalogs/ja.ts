@@ -119,8 +119,8 @@ export const jaMessages = {
     "pattern.axis.stairs": "階段",
     "pattern.axis.repetition": "連打",
     "pattern.axis.polyrhythm": "ポリリズム",
-    "pattern.axis.offset": "ソフラン",
-    "pattern.axis.chords": "同時押し",
+    "pattern.axis.offset": "ズレ",
+    "pattern.axis.chords": "変拍子",
     "pattern.scale":
         "各項目を0–4で評価します。項目ごとに3人以上の評価で平均を公開します。未選択の項目と0は区別されます。",
     "pattern.definition.stairs":
@@ -132,7 +132,7 @@ export const jaMessages = {
     "pattern.definition.offset":
         "近接してずれたタイミングを区別して演奏する負担です。",
     "pattern.definition.chords":
-        "同時に押す音の数・間隔・形の変化や反復、テヌートとの組み合わせの負担です。",
+        "拍子(小節の長さ)が変わる区間についていく負担です。",
     "detail.expandTitle": "タイトルをすべて表示",
     "detail.collapseTitle": "タイトルを折りたたむ",
     "detail.viewChart": "譜面を見る",

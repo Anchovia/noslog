@@ -120,8 +120,8 @@ export const enMessages = {
     "pattern.axis.stairs": "Stairs",
     "pattern.axis.repetition": "Repetition",
     "pattern.axis.polyrhythm": "Polyrhythm",
-    "pattern.axis.offset": "BPM changes",
-    "pattern.axis.chords": "Chords",
+    "pattern.axis.offset": "Offset",
+    "pattern.axis.chords": "Meter changes",
     "pattern.scale":
         "Rate each axis from 0–4. An average is published after at least three ratings for that axis. An omitted rating is distinct from zero.",
     "pattern.definition.stairs":
@@ -133,7 +133,7 @@ export const enMessages = {
     "pattern.definition.offset":
         "The burden of distinguishing and playing closely displaced timings.",
     "pattern.definition.chords":
-        "Simultaneous-input burden from note count, span, changing shapes, repeated chords, and tenuto combinations.",
+        "The burden of following sections where the meter (bar length) changes.",
     "detail.expandTitle": "Show full title",
     "detail.collapseTitle": "Collapse title",
     "detail.viewChart": "View Chart",

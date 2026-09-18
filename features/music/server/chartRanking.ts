@@ -22,7 +22,7 @@ export function normalizeRankingPage(page: number, total: number) {
 
 // 점수 비공개 플레이어(hide_play_scores)는 랭킹에서 빠진다 — 순위도 나머지 사람끼리 다시 매긴다(2026-09-18 S3).
 // 비공개인 본인이 볼 때만 includeUserId 로 자기 줄을 넣어 「공개된 사람들 사이 내 자리」 를 보여 준다. 0 = 아무도 넣지 않음
-export function visiblePlayers(includeUserId: number) {
+function visiblePlayers(includeUserId: number) {
     return Prisma.sql`(u.hide_play_scores = false OR u.id = ${includeUserId})`;
 }
 
