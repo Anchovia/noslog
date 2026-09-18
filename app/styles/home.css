@@ -267,6 +267,25 @@
     flex-direction: column;
     gap: var(--nl-spacing-8);
 }
+/* 진행 중인 이벤트가 없을 때(E1) — 배너와 같은 2.4 : 1 빈 카드(면 surface · 경계 divider · 모서리 8), 가운데 안내 →12→ 「이벤트 글쓰기」 M */
+.noslog-ui .nl-home-events__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--nl-spacing-12);
+    width: 100%;
+    max-width: 100%;
+    aspect-ratio: 2.4 / 1;
+    padding: var(--nl-spacing-16);
+    border-radius: var(--nl-radius-container);
+    background: var(--nl-surface-surface);
+    box-shadow: inset 0 0 0 1px var(--nl-border-divider);
+    text-align: center;
+}
+.noslog-ui .nl-home-events__empty p {
+    margin: 0;
+}
 .noslog-ui .nl-home-event {
     position: relative;
     display: block;

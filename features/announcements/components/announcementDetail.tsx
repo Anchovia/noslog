@@ -100,6 +100,7 @@ export default async function AnnouncementDetail({
                         href={localizePath("/announcements", locale)}
                         className={foundationButtonClass({
                             variant: "secondary",
+                            size: "sm",
                         })}
                     >
                         {t("announcements.backToList")}

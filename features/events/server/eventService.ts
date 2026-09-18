@@ -274,7 +274,8 @@ export async function saveEvent(
     }
 }
 
-export async function requestEventBannerUpload(
+async function requestEventUpload(
+    kind: "banner" | "image",
     contentType: string,
     requestedLocale?: string
 ): Promise<ActionResult<{ pathname: string; token: string }>> {
@@ -291,20 +292,22 @@ export async function requestEventBannerUpload(
     try {
         const quota = await claimUploadTokenQuota(
             writer.userId,
-            "event-banner"
+            kind === "banner" ? "event-banner" : "event-image"
         );
         if (!quota.allowed)
             return { success: false, message: getUploadLimitMessage() };
         grantId = quota.grantId;
         const upload = await createImageUploadToken(
-            bannerPrefix(writer.userId),
+            kind === "banner"
+                ? bannerPrefix(writer.userId)
+                : `events/${writer.userId}/image`,
             contentType
         );
         if (!upload) throw new Error("invalid image type");
         return { success: true, message: "", ...upload };
     } catch (error) {
         logServerError(error, {
-            event: "events.banner-upload.request.failed",
+            event: `events.${kind}-upload.request.failed`,
             routePath: "/events",
             routeType: "action",
         });
@@ -314,6 +317,20 @@ export async function requestEventBannerUpload(
             );
         return { success: false, message: t("events.uploadFailed") };
     }
+}
+
+export async function requestEventBannerUpload(
+    contentType: string,
+    requestedLocale?: string
+) {
+    return requestEventUpload("banner", contentType, requestedLocale);
+}
+// 본문 이미지(2026-09-18) — 대표 이미지와 같은 규칙 · 한도, 폴더만 events/{작성자}/image
+export async function requestEventImageUpload(
+    contentType: string,
+    requestedLocale?: string
+) {
+    return requestEventUpload("image", contentType, requestedLocale);
 }
 
 // 저장하지 않고 버린 새 배너 — 내 폴더의 파일이고 어떤 글도 쓰지 않을 때만 지운다

@@ -265,6 +265,12 @@ old design-stage checklist. Changes to material behavior require a user decision
   own post in any state, including a public one (it leaves the list and Home at
   once); the cover image file is removed only when it is in the author's upload
   folder and no other post uses it. Public events are listed in the sitemap.
+- Announcement and event bodies may include images uploaded through the editor
+  (JPG/PNG/WebP, 4 MB, shared hourly upload limit) to the public store under
+  `announcements/{admin}/image` or `events/{author}/image`. The renderer shows only
+  images from those folders on our public store; other image URLs are dropped.
+  Uploaded body images are not deleted when a post is edited or removed (unused
+  files may remain).
 - Preserve original/source language and public publication state for announcements;
   optional translations are not fabricated. Official NOSTALGIA news links remain
   distinguishable from NosLog announcements.

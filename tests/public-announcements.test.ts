@@ -262,7 +262,18 @@ describe("P11 restricted Markdown", () => {
         expect(html).toContain("外部サイト");
         expect(html).not.toContain('target="_blank"');
     });
-    it("never renders executable HTML, images, code, H1 or unsafe URLs", () => {
+    it("renders only images uploaded to our public store for announcements or events", () => {
+        const ours =
+            "https://abc.public.blob.vercel-storage.com/events/2/image-x.png";
+        const html = render(
+            `![지도](${ours})\n\n![밖](https://example.com/a.png)\n\n![쿼리](${ours}?t=1)\n\n![다른 폴더](https://abc.public.blob.vercel-storage.com/avatars/2/a.png)`
+        );
+        expect(html.match(/<img /g)).toHaveLength(1);
+        expect(html).toContain(`src="${ours}"`);
+        expect(html).toContain('alt="지도"');
+        expect(html).not.toContain("example.com");
+    });
+    it("never renders executable HTML, outside images, code, H1 or unsafe URLs", () => {
         const html = render(
             '# Hidden\n\n<script>alert(1)</script>\n\n<img src=x onerror="alert(1)">\n\n![image](https://example.com/a.png)\n\n[attack](javascript:alert%281%29)\n\n`code`'
         );

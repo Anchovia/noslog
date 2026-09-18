@@ -8,8 +8,10 @@ import { Controller, useForm, useWatch } from "react-hook-form";
 import type { FieldErrors } from "react-hook-form";
 import { toast } from "sonner";
 
+import { put } from "@vercel/blob/client";
 import {
     createAnnouncement,
+    requestAnnouncementImageUpload,
     updateAnnouncement,
 } from "@/app/admin/announcements/actions";
 import AnnouncementBody from "@/features/announcements/components/announcementBody";
@@ -94,7 +96,23 @@ const EDITOR_LABELS: MarkdownEditorLabels = {
     list: "목록",
     ordered: "번호 목록",
     link: "링크",
+    image: "이미지",
+    uploading: "이미지 올리는 중…",
+    invalidImage: "JPG · PNG · WebP · 4MB 까지 올릴 수 있습니다.",
+    uploadFailed: "이미지를 올리지 못했습니다.",
 };
+
+// 본문 이미지 한 장 — 한 장 전용 토큰으로 공개 저장소에 바로 올리고 주소를 돌려준다
+async function uploadAnnouncementImage(file: File) {
+    const upload = await requestAnnouncementImageUpload(file.type);
+    if (!upload.success) throw new Error(upload.message);
+    const blob = await put(upload.pathname, file, {
+        access: "public",
+        token: upload.token,
+        contentType: file.type,
+    });
+    return blob.url;
+}
 
 type SaveMode = "draft" | "publish";
 
@@ -489,7 +507,10 @@ export default function AnnouncementEditor({
                                             {contentError}
                                         </span>
                                     ) : (
-                                        <span>마크다운으로 씁니다.</span>
+                                        <span>
+                                            마크다운으로 씁니다 · 이미지는 버튼
+                                            · 붙여 넣기 · 끌어다 놓기
+                                        </span>
                                     )}
                                     <span>
                                         {length.toLocaleString("ko-KR")} /{" "}
@@ -521,6 +542,7 @@ export default function AnnouncementEditor({
                                             { help: true }
                                         )}
                                         labels={EDITOR_LABELS}
+                                        onUploadImage={uploadAnnouncementImage}
                                         renderPreview={(value) => (
                                             <AnnouncementBody
                                                 content={value}

@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import {
     discardEventBanner,
     requestEventBannerUpload,
+    requestEventImageUpload,
     saveEvent,
 } from "@/app/(nevigation)/events/actions";
 import {
@@ -367,6 +368,25 @@ export default function EventEditor({
                                 list: t("events.editor.list"),
                                 ordered: t("events.editor.ordered"),
                                 link: t("events.editor.link"),
+                                image: t("events.editor.image"),
+                                uploading: t("events.editor.uploading"),
+                                invalidImage: t("events.invalidImage"),
+                                uploadFailed: t("events.uploadFailed"),
+                            }}
+                            onUploadImage={async (file) => {
+                                const upload = await requestEventImageUpload(
+                                    file.type,
+                                    locale
+                                );
+                                if (!upload.success)
+                                    throw new Error(upload.message);
+                                return (
+                                    await put(upload.pathname, file, {
+                                        access: "public",
+                                        token: upload.token,
+                                        contentType: file.type,
+                                    })
+                                ).url;
                             }}
                             renderPreview={(value) => (
                                 <AnnouncementBody

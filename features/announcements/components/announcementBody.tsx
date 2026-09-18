@@ -29,6 +29,24 @@ export function announcementLink(
     }
 }
 
+// 본문 이미지(2026-09-18) — 우리 공개 이미지 저장소에 공지 · 이벤트 글쓰기로 올린 것만 그린다.
+// 다른 사이트 주소 · 쿼리 붙은 주소는 그리지 않는다(추적 픽셀 · 외부 요청 차단)
+const BODY_IMAGE_PATHS = ["/announcements/", "/events/"];
+export function announcementImage(src: string) {
+    try {
+        const url = new URL(src);
+        return url.protocol === "https:" &&
+            url.hostname.endsWith(".public.blob.vercel-storage.com") &&
+            !url.search &&
+            !url.hash &&
+            BODY_IMAGE_PATHS.some((path) => url.pathname.startsWith(path))
+            ? url.href
+            : null;
+    } catch {
+        return null;
+    }
+}
+
 export default function AnnouncementBody({
     content,
     locale,
@@ -56,9 +74,12 @@ export default function AnnouncementBody({
                     "li",
                     "strong",
                     "a",
+                    "img",
                 ]}
-                urlTransform={(url) =>
-                    announcementLink(url, locale, siteUrl)?.href ?? ""
+                urlTransform={(url, key) =>
+                    key === "src"
+                        ? (announcementImage(url) ?? "")
+                        : (announcementLink(url, locale, siteUrl)?.href ?? "")
                 }
                 components={{
                     h2: ({ children }) => (
@@ -67,6 +88,23 @@ export default function AnnouncementBody({
                     h3: ({ children }) => (
                         <h3 className="nl-component-title">{children}</h3>
                     ),
+                    // 본문 폭 · 모서리 8 · 원래 비율. 설명([ ] 글)은 화면 읽기용으로만 (시안 I1)
+                    img: ({ src, alt }) => {
+                        const image =
+                            typeof src === "string"
+                                ? announcementImage(src)
+                                : null;
+                        return image ? (
+                            // eslint-disable-next-line @next/next/no-img-element -- 글쓴이가 올린 크기 모르는 이미지 · 저장소 주소 그대로
+                            <img
+                                src={image}
+                                alt={alt ?? ""}
+                                loading="lazy"
+                                decoding="async"
+                                className="nl-announcement-body__image"
+                            />
+                        ) : null;
+                    },
                     a: ({ href, children }) => {
                         const link = announcementLink(
                             href ?? "",

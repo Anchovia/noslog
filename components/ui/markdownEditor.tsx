@@ -1,9 +1,20 @@
 "use client";
 
-import { Bold, Heading2, Link2, List, ListOrdered } from "lucide-react";
-import { useId, useRef, useState } from "react";
-import type { ReactNode } from "react";
+import {
+    Bold,
+    Heading2,
+    ImagePlus,
+    Link2,
+    List,
+    ListOrdered,
+} from "lucide-react";
+import { useEffect, useId, useRef, useState } from "react";
+import type { ClipboardEvent, DragEvent, ReactNode } from "react";
+import { toast } from "sonner";
 import IconButton from "@/components/ui/iconButton";
+
+const IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
+const IMAGE_MAX_BYTES = 4 * 1024 * 1024;
 
 type Tool = "heading" | "bold" | "list" | "ordered" | "link";
 
@@ -18,6 +29,11 @@ export interface MarkdownEditorLabels {
     list: string;
     ordered: string;
     link: string;
+    /** 본문 이미지(2026-09-18) — 올리기를 받을 때만 쓴다 */
+    image?: string;
+    uploading?: string;
+    invalidImage?: string;
+    uploadFailed?: string;
 }
 
 const TOOL_ICONS: Record<Tool, ReactNode> = {
@@ -77,7 +93,7 @@ export function applyMarkdownTool(
 /**
  * 마크다운 입력 — 「쓰기 / 미리보기」 탭 + 서식 버튼(GitHub 구조, 2026-09-18 E2).
  * 상자 = 입력칸 경계 · 모서리 8, 머리 줄 = 컨트롤 높이(탭 · 서식 버튼 모두 L), 입력 = 16/24 · 안쪽 8/12 · 처음 16줄 · 글 따라 늘어남.
- * 서식 버튼은 렌더러가 그리는 요소(제목 · 굵게 · 목록 · 번호 · 링크)만. 미리보기는 공개 화면 렌더러를 받아 그린다.
+ * 서식 버튼은 렌더러가 그리는 요소(제목 · 굵게 · 목록 · 번호 · 링크 · 이미지)만. 미리보기는 공개 화면 렌더러를 받아 그린다.
  */
 export default function MarkdownEditor({
     id,
@@ -93,6 +109,7 @@ export default function MarkdownEditor({
     readOnly,
     labels,
     renderPreview,
+    onUploadImage,
 }: {
     id: string;
     value: string;
@@ -108,10 +125,69 @@ export default function MarkdownEditor({
     readOnly?: boolean;
     labels: MarkdownEditorLabels;
     renderPreview: (value: string) => ReactNode;
+    /** 이미지 한 장을 올리고 공개 주소를 돌려준다. 있으면 「이미지」 버튼 · 붙여 넣기 · 끌어다 놓기가 켜진다 */
+    onUploadImage?: (file: File) => Promise<string>;
 }) {
     const tabsId = useId();
     const [mode, setMode] = useState<"write" | "preview">("write");
     const textarea = useRef<HTMLTextAreaElement | null>(null);
+    const fileInput = useRef<HTMLInputElement | null>(null);
+    const uploads = useRef(0);
+    // 올리는 동안 사용자가 계속 쓰므로 자리 표시를 바꿀 때는 가장 최근 값에서 바꾼다
+    const latest = useRef(value);
+    useEffect(() => {
+        latest.current = value;
+    }, [value]);
+    const change = (next: string) => {
+        latest.current = next;
+        onChange(next);
+    };
+
+    // 커서 자리에 「![올리는 중… n]()」 → 끝나면 「![](주소)」, 실패하면 자리 표시를 지운다
+    function insertImages(files: File[]) {
+        if (!onUploadImage) return;
+        const node = textarea.current;
+        const images = files.filter((file) => {
+            const ok =
+                IMAGE_TYPES.includes(file.type) && file.size <= IMAGE_MAX_BYTES;
+            if (!ok && labels.invalidImage) toast.error(labels.invalidImage);
+            return ok;
+        });
+        let cursor = node?.selectionStart ?? latest.current.length;
+        for (const file of images) {
+            const marker = `![${labels.uploading ?? "…"} ${(uploads.current += 1)}]()`;
+            const current = latest.current;
+            const before = current.slice(0, cursor);
+            const pad = before && !before.endsWith("\n") ? "\n\n" : "";
+            change(`${before}${pad}${marker}\n\n${current.slice(cursor)}`);
+            cursor = before.length + pad.length + marker.length + 2;
+            onUploadImage(file)
+                .then((url) =>
+                    change(latest.current.replace(marker, `![](${url})`))
+                )
+                .catch((error: unknown) => {
+                    change(latest.current.replace(`${marker}\n\n`, ""));
+                    toast.error(
+                        error instanceof Error && error.message
+                            ? error.message
+                            : (labels.uploadFailed ?? "")
+                    );
+                });
+        }
+    }
+
+    function pastedFiles(event: ClipboardEvent<HTMLTextAreaElement>) {
+        const files = [...event.clipboardData.files];
+        if (!onUploadImage || !files.length) return;
+        event.preventDefault();
+        insertImages(files);
+    }
+    function droppedFiles(event: DragEvent<HTMLTextAreaElement>) {
+        const files = [...event.dataTransfer.files];
+        if (!onUploadImage || !files.length) return;
+        event.preventDefault();
+        insertImages(files);
+    }
 
     function setRefs(node: HTMLTextAreaElement | null) {
         textarea.current = node;
@@ -128,7 +204,7 @@ export default function MarkdownEditor({
             tool
         );
         if (maxLength && result.value.length > maxLength) return;
-        onChange(result.value);
+        change(result.value);
         requestAnimationFrame(() => {
             node.focus();
             node.setSelectionRange(result.start, result.end);
@@ -176,6 +252,33 @@ export default function MarkdownEditor({
                                 {TOOL_ICONS[tool]}
                             </IconButton>
                         ))}
+                        {onUploadImage && labels.image ? (
+                            <>
+                                <IconButton
+                                    label={labels.image}
+                                    disabled={readOnly}
+                                    onClick={() => fileInput.current?.click()}
+                                >
+                                    <ImagePlus
+                                        className="nl-icon"
+                                        aria-hidden
+                                    />
+                                </IconButton>
+                                <input
+                                    ref={fileInput}
+                                    type="file"
+                                    accept={IMAGE_TYPES.join(",")}
+                                    multiple
+                                    hidden
+                                    onChange={(event) => {
+                                        insertImages([
+                                            ...(event.target.files ?? []),
+                                        ]);
+                                        event.target.value = "";
+                                    }}
+                                />
+                            </>
+                        ) : null}
                     </div>
                 ) : null}
             </div>
@@ -197,8 +300,17 @@ export default function MarkdownEditor({
                     aria-invalid={invalid || undefined}
                     aria-describedby={describedBy}
                     className="nl-markdown-editor__input"
-                    onChange={(event) => onChange(event.target.value)}
+                    onChange={(event) => change(event.target.value)}
                     onBlur={onBlur}
+                    onPaste={pastedFiles}
+                    onDragOver={(event) => {
+                        if (
+                            onUploadImage &&
+                            event.dataTransfer.types.includes("Files")
+                        )
+                            event.preventDefault();
+                    }}
+                    onDrop={droppedFiles}
                 />
                 {mode === "preview" ? (
                     <div className="nl-markdown-editor__preview" lang={lang}>

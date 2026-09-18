@@ -38,6 +38,7 @@
     flex-direction: column;
     gap: var(--nl-spacing-8);
 }
+/* 면 가장자리 = 페이지 내용 선(제목 · 칩과 같은 선), 글자는 면 안쪽 12 (목록 항목 카드) */
 .noslog-ui .nl-announcements__pinned .nl-announcement-row {
     padding: var(--nl-spacing-12);
     border-radius: var(--nl-radius-container);
@@ -102,8 +103,16 @@
     gap: var(--nl-spacing-16);
     overflow-wrap: anywhere;
 }
+/* 본문 이미지(2026-09-18 I1) — 본문 폭 · 모서리 8 · 원래 비율 */
+.noslog-ui .nl-announcement-body__image {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--nl-radius-container);
+}
+/* 목록 들여쓰기 24 — 간격 단계 값(16 + 4 = 20 은 단계 밖이라 2026-09-18 감사에서 맞춤) */
 .noslog-ui .nl-announcement-body ul {
-    padding-inline-start: calc(var(--nl-spacing-16) + var(--nl-spacing-4));
+    padding-inline-start: var(--nl-spacing-24);
     list-style: disc;
 }
 .noslog-ui .nl-announcement-body ol {

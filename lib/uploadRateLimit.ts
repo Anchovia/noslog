@@ -8,7 +8,9 @@ export type UploadPurpose =
     | "feedback-image"
     | "arcade-photo"
     | "music-jacket"
-    | "event-banner";
+    | "event-banner"
+    | "event-image"
+    | "announcement-image";
 
 const UPLOAD_LIMIT = 10;
 const UPLOAD_WINDOW_MS = 60 * 60 * 1000;
