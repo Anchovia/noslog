@@ -1,10 +1,12 @@
 import HomeAnnouncements from "@/components/home/homeAnnouncements";
+import HomeEvents from "@/components/home/homeEvents";
 import OfficialXPost from "@/components/home/officialXPost";
 import PageContainer from "@/components/layout/pageContainer";
 import HomeSearch from "@/features/home/components/homeSearch";
 import HomeDestinations from "@/features/home/components/homeDestinations";
 import CriticalAnnouncement from "@/features/announcements/components/criticalAnnouncement";
 import { getHomeAnnouncements } from "@/features/announcements/server/publicAnnouncementService";
+import { getHomeLiveEvents } from "@/features/events/server/eventService";
 import { getOfficialXLatestPost } from "@/features/home/server/officialXPostService";
 import { getServerI18n } from "@/lib/i18n/server";
 import { getLocalizedHref } from "@/lib/i18n/routing";
@@ -14,8 +16,9 @@ import { getUser } from "@/lib/user";
 export default async function HomePage() {
     const { locale, t } = await getServerI18n();
     // 셸이 이미 같은 요청에서 세션을 읽는다(getSessionUser 는 요청 단위 cache) — 조회가 늘지 않는다
-    const [announcements, officialPost, user] = await Promise.all([
+    const [announcements, liveEvents, officialPost, user] = await Promise.all([
         getHomeAnnouncements(locale),
+        getHomeLiveEvents(),
         getOfficialXLatestPost(),
         getUser(),
     ]);
@@ -69,6 +72,7 @@ export default async function HomePage() {
             <HomeDestinations isAuthenticated={Boolean(user)} />
             <div className="nl-home-updates">
                 <HomeAnnouncements items={announcements.list} />
+                <HomeEvents events={liveEvents} />
                 <OfficialXPost post={officialPost} />
             </div>
         </PageContainer>

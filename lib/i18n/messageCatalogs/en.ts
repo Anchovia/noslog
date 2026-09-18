@@ -355,6 +355,8 @@ export const enMessages = {
     "home.tileFeedback": "Feedback",
     "home.destinations": "Services",
     "home.allAnnouncements": "All announcements",
+    "home.liveEvents": "Live events",
+    "home.allEvents": "All events",
     "home.officialLink": "Official X",
     "home.officialPostLink": "View original",
     "home.officialShowTranslation": "Show translation",

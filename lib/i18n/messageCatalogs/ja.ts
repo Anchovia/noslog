@@ -351,6 +351,8 @@ export const jaMessages = {
     "home.tileFeedback": "ご意見",
     "home.destinations": "主なサービス",
     "home.allAnnouncements": "すべてのお知らせ",
+    "home.liveEvents": "開催中のイベント",
+    "home.allEvents": "すべてのイベント",
     "home.officialLink": "公式X",
     "home.officialPostLink": "原文を見る",
     "home.officialShowTranslation": "翻訳を見る",

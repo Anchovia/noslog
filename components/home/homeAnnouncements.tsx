@@ -37,6 +37,9 @@ export default async function HomeAnnouncements({
                                 `announcements.category.${announcement.category}`
                             )}
                             pinned={pinned}
+                            pinnedLabel={
+                                pinned ? t("announcements.pinned") : undefined
+                            }
                         />
                     </li>
                 ))}

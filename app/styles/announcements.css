@@ -26,12 +26,10 @@
     box-shadow: inset 0 -1px var(--nl-border-divider);
     overflow-wrap: anywhere;
 }
+/* 공지 줄 제목 = 16/600 — 전체 목록(B1) · 홈 카드(N2) · 내 이벤트 글 모두. 홈 고정 줄엔 면을 두지 않는다(맨 위 중대 공지 배너와 겹침) */
 .noslog-ui .nl-announcement-row__title {
     margin: 0;
     min-width: 0;
-}
-/* 전체 공지 목록 제목 = 16/600 — 월 제목 20/600 과 한 단계 차이 (2026-09-18 B1). 홈 공지 카드는 그대로 */
-.noslog-ui .nl-announcements .nl-announcement-row__title {
     font-weight: var(--nl-type-weight-semibold);
 }
 /* 활성 중대 공지 고정 줄 = 목록 항목 카드(면 surface · 모서리 8 · 안쪽 12), 날짜 목록 위. 여러 개면 사이 8 */

@@ -353,6 +353,8 @@ export const koMessages = {
     "home.tileFeedback": "피드백",
     "home.destinations": "주요 서비스",
     "home.allAnnouncements": "전체 공지",
+    "home.liveEvents": "진행 중인 이벤트",
+    "home.allEvents": "전체 이벤트",
     "home.officialLink": "공식 X",
     "home.officialPostLink": "원문 보기",
     "home.officialShowTranslation": "번역 보기",

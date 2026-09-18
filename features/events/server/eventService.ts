@@ -65,8 +65,19 @@ const queryPublished = unstable_cache(
 
 async function publishedEvents() {
     const now = new Date();
+    // unstable_cache 를 거치면 Date 가 ISO 문자열로 돌아온다 — 다시 Date 로
+    const date = (value: Date | string | null) =>
+        value === null ? null : new Date(value);
     return (await queryPublished()).flatMap((record) => {
-        const event = publicEvent(record, now);
+        const event = publicEvent(
+            {
+                ...record,
+                publishedStartsAt: date(record.publishedStartsAt),
+                publishedEndsAt: date(record.publishedEndsAt),
+                publishedAt: date(record.publishedAt),
+            },
+            now
+        );
         return event
             ? [{ ...event, authorName: record.author.username ?? null }]
             : [];
@@ -81,6 +92,19 @@ export async function getEventBoard() {
         "live" | "upcoming" | "ended",
         PublicEventItem[]
     >;
+}
+// 홈 — 진행 중 가운데 끝나는 순 2개. 이벤트 조회가 실패해도 홈은 그대로 뜬다
+export async function getHomeLiveEvents() {
+    try {
+        return (await getEventBoard()).live.slice(0, 2);
+    } catch (error) {
+        logServerError(error, {
+            event: "events.home.failed",
+            routePath: "/",
+            routeType: "page",
+        });
+        return [];
+    }
 }
 export async function getPublicEventDetail(id: number) {
     return (await publishedEvents()).find((event) => event.id === id) ?? null;
@@ -201,8 +225,16 @@ export async function saveEvent(
                   data: { ...data, authorId: writer.userId },
                   select: { id: true },
               });
-        // 바꾼 배너의 옛 파일은 공개판이 쓰고 있지 않을 때만 지운다
-        if (existing?.bannerUrl && existing.bannerUrl !== bannerUrl) {
+        // 바꾼 배너의 옛 파일은 작성자 폴더의 파일이고 공개판이 쓰고 있지 않을 때만 지운다
+        // (deleteBlobIfOwned 는 저장소 안 파일이면 무엇이든 지우므로 폴더를 먼저 확인)
+        if (
+            existing?.bannerUrl &&
+            existing.bannerUrl !== bannerUrl &&
+            (await isValidImageBlob(
+                existing.bannerUrl,
+                bannerPrefix(writer.userId)
+            ))
+        ) {
             const inUse = await db.communityEvent.count({
                 where: { publishedBannerUrl: existing.bannerUrl },
             });
