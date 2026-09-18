@@ -118,8 +118,8 @@ export const koMessages = {
     "pattern.axis.stairs": "계단",
     "pattern.axis.repetition": "연타",
     "pattern.axis.polyrhythm": "폴리리듬",
-    "pattern.axis.offset": "변속",
-    "pattern.axis.chords": "동시치기",
+    "pattern.axis.offset": "즈레",
+    "pattern.axis.chords": "변박",
     "pattern.scale":
         "각 항목은 0–4로 평가합니다. 항목별로 3명 이상 평가하면 평균을 공개합니다. 선택하지 않은 항목은 0과 구분합니다.",
     "pattern.definition.stairs":
@@ -131,7 +131,7 @@ export const koMessages = {
     "pattern.definition.offset":
         "서로 가까우면서 어긋난 타이밍을 구분하여 연주하는 부담입니다.",
     "pattern.definition.chords":
-        "동시에 누르는 음의 수·간격·모양 변화와 반복, 테누토 조합의 부담입니다.",
+        "박자(마디 길이)가 바뀌는 구간을 따라가는 부담입니다.",
     "detail.expandTitle": "제목 전체 보기",
     "detail.collapseTitle": "제목 접기",
     "detail.viewChart": "채보 보기",
