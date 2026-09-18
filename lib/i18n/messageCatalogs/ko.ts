@@ -455,7 +455,7 @@ export const koMessages = {
     "music.info.noteCount": "노트 수",
     "music.info.duration": "곡 길이",
     "music.info.releaseDate": "수록일",
-    "music.info.unlock": "언락 조건",
+    "music.info.unlock": "해금 조건",
     "music.info.unlockRequires": "{title} {difficulty} 해금 후 등장",
     "music.info.stardust": "별가루 {count}",
     "music.info.patternTrend": "패턴 경향",
