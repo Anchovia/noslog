@@ -110,6 +110,10 @@ old design-stage checklist. Changes to material behavior require a user decision
   Real's). Event names are translated through `unlock_condition_translations`
   (ko · en; ja shows the original; unknown names fall back to the original)
   (2026-09-18).
+- Release date (`released_at`, shown as 「수록일」) is per chart: Normal, Hard
+  and Expert take the song's release date (BEMANIWiki 配信日), Real takes the
+  date that Real chart was added (新規追加日). Charts the wiki does not date stay
+  empty rather than borrowing the song date (2026-09-18).
 - The ranking tab's score-distribution curve shows player pins at each best
   score: every participant when there are 30 or fewer, otherwise the top 3 plus
   the signed-in viewer. Nearby pins collapse into the highest-scoring player with
