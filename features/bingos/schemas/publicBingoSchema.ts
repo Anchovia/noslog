@@ -33,6 +33,7 @@ export const bingoMissionSchema = z.object({
     language: z.enum(["ko", "ja", "en"]),
     missionType: z.string(),
     musicIndex: z.string().nullable(),
+    musicDifficulty: z.string().nullable(),
     categoryShort: z.string().nullable(),
 });
 export const bingoDetailSchema = z.object({

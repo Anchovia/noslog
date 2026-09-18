@@ -91,6 +91,11 @@ old design-stage checklist. Changes to material behavior require a user decision
 - Filters retain draft/apply/cancel behavior where they obscure results and the
   existing immediate behavior in a visible rail. Layout changes do not alter
   filter contents, URL restoration or server query meaning.
+- Opening a music result from the catalogue (music list, grid, dense view)
+  or a bingo music mission lands on that music's highest difficulty — Real
+  when it has one, otherwise Expert (then Hard, Normal). Players care least
+  about the lowest difficulty (2026-09-19). Links that already name a
+  difficulty (search preview, chart results, records) keep theirs.
 - Music Detail keeps one music identity and one selected difficulty across
   Overview, My Record, Ranking and Ratings (URL `tab` values stay `detail`,
   `record`, `ranking`, `tier`). The header shows the selected chart's constant and

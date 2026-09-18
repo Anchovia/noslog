@@ -4,7 +4,8 @@ import type { BingoCellItem, MissionFilter } from "./bingoPlateTypes";
 
 export function getBingoMissionLink(cell: BingoCellItem) {
     if (cell.missionType === "music" && cell.musicIndex) {
-        return `/music/${cell.musicIndex}/normal`;
+        // 악곡 목록과 같은 들어가는 난이도 = 그 곡의 가장 높은 난이도 (2026-09-19)
+        return `/music/${cell.musicIndex}/${cell.musicDifficulty ?? "expert"}`;
     }
 
     if (cell.missionType === "category" && cell.categoryShort) {
