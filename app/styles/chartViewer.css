@@ -288,11 +288,11 @@
     scrollbar-width: none;
     touch-action: none;
     cursor: pointer;
-    transition: height var(--nl-motion-duration-100) var(--nl-ease-in);
+    transition: height var(--nl-motion-duration-state) var(--nl-ease-exit);
 }
 .noslog-ui .nl-chart-strip__mini-column {
     opacity: 0.3;
-    transition: opacity var(--nl-motion-duration-100) var(--nl-ease-in);
+    transition: opacity var(--nl-motion-duration-state) var(--nl-ease-exit);
 }
 .noslog-ui .nl-chart-strip__mini::-webkit-scrollbar {
     display: none;
@@ -343,12 +343,6 @@
 .noslog-ui .nl-chart-strip[data-layout="wide"] .nl-chart-strip__mini-column {
     opacity: 1;
     transition: none;
-}
-@media (prefers-reduced-motion: reduce) {
-    .noslog-ui .nl-chart-strip__mini,
-    .noslog-ui .nl-chart-strip__mini-column {
-        transition: none;
-    }
 }
 
 @media (max-width: 671px) {

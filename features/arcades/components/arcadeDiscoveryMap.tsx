@@ -327,8 +327,11 @@ export default function ArcadeDiscoveryMap({
         // 모드 전환으로 크기가 막 바뀐 경우를 위해 먼저 크기를 다시 읽는다(ResizeObserver 보다 먼저 올 수 있다)
         map.relayout();
         if (map.getLevel() > FOCUS_CARD_LEVEL) map.setLevel(FOCUS_CARD_LEVEL);
-        // 미끄러지는 panTo 대신 곧바로 옮긴다 — 움직임 없음(2026-09-19)
-        map.setCenter(new api.maps.LatLng(arcade.latitude, arcade.longitude));
+        // ⑮ 지도는 핀으로 미끄러진다(카카오맵 panTo) — 위치 감각. 동작 줄이기면 곧바로 옮긴다
+        const target = new api.maps.LatLng(arcade.latitude, arcade.longitude);
+        if (matchMedia("(prefers-reduced-motion: reduce)").matches)
+            map.setCenter(target);
+        else map.panTo(target);
     });
     useEffect(() => {
         if (focusRequest && state === "ready") focusArcade(focusRequest.id);

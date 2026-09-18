@@ -97,8 +97,13 @@
 .noslog-ui .nl-header__interaction {
     position: relative;
 }
+/* ⑫ 헤더 숨김 — 나타날 때 감속 · 숨을 때 가속 */
+.noslog-ui .nl-header {
+    transition: transform var(--nl-motion-duration-move) var(--nl-ease-enter);
+}
 .noslog-ui .nl-header[data-scroll-state="hidden"] {
     transform: translateY(-100%);
+    transition-timing-function: var(--nl-ease-exit);
 }
 .noslog-ui .nl-header__bar {
     position: relative;

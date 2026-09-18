@@ -42,6 +42,27 @@ describe("NosLog design foundation", () => {
         expect(unscoped).toEqual([]);
     });
 
+    // 움직임은 tokens.css 의 움직임 토큰만 쓴다 — 시간 · 곡선을 직접 쓰지 않는다(2026-09-19, 가이드 「움직임」 절)
+    it("takes every transition and animation timing from the motion tokens", () => {
+        const raw: string[] = [];
+        files.forEach((name, index) => {
+            if (name === "tokens.css") return;
+            postcss.parse(styles[index]).walkDecls((decl) => {
+                if (!/^(transition|animation)/.test(decl.prop)) return;
+                const value = decl.value
+                    .replace(/var\(--nl-[\w-]+\)/g, "")
+                    .replace(/\b0s\b/g, "");
+                if (
+                    /\d(ms|s)\b|cubic-bezier|\b(ease|ease-in|ease-out|ease-in-out|linear|steps)\b/.test(
+                        value
+                    )
+                )
+                    raw.push(`${name}: ${decl.prop}: ${decl.value}`);
+            });
+        });
+        expect(raw).toEqual([]);
+    });
+
     it("ships one complete versioned Pretendard JP font with its license", () => {
         const fontDirectory = resolve("public/fonts/pretendard-jp/1.3.9");
         const manifest = JSON.parse(
