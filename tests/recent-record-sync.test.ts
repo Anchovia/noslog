@@ -33,6 +33,7 @@ const chart = {
     difficulty: "Expert",
     level: 12,
     note_count: 1000,
+    level_constant: 12,
 };
 type StoredRecord = RecordValues & {
     user_id: number;
@@ -174,7 +175,9 @@ beforeEach(() => {
     mocks.db.chartPlayHistory.findMany.mockImplementation(
         async ({ where }: { where: { user_id: number } }) =>
             state.history.filter(
-                (h) => h.user_id === where.user_id && !h.record_applied
+                (h) =>
+                    h.user_id === where.user_id &&
+                    (!h.record_applied || h.grade_basic === 0)
             )
     );
     mocks.db.chartPlayHistory.updateMany.mockImplementation(
@@ -330,4 +333,22 @@ describe("recent/full record persistence with an isolated transaction double", (
             })
         );
     });
+});
+
+it("repairs already applied zero Grd transactionally without incrementing attempts", async () => {
+    const play = {
+        ...history(900, "2026/09/20 10:00"),
+        grade_basic: 0,
+        is_onehand: false,
+    };
+    state.history.push(play);
+    await updateRecentBestRecords(1, 1);
+    const record = state.records.find((r) => r.chart_id === 10)!;
+    record.grade_basic = 0;
+    const counts = record.play_count;
+    expect(await updateRecentBestRecords(1, 2)).toBe(1);
+    expect(record.grade_basic).toBeGreaterThan(0);
+    expect(record.play_count).toBe(counts);
+    expect(state.history.find((h) => h.id === 900)?.grade_basic).toBe(0);
+    expect(await updateRecentBestRecords(1, 3)).toBe(0);
 });

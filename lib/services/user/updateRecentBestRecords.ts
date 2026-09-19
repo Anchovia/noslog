@@ -17,7 +17,10 @@ export async function updateRecentBestRecords(userId: number, syncId: number) {
                 select: { last_full_record_at: true },
             });
             const history = await tx.chartPlayHistory.findMany({
-                where: { user_id: userId, record_applied: false },
+                where: {
+                    user_id: userId,
+                    OR: [{ record_applied: false }, { grade_basic: 0 }],
+                },
                 include: {
                     chart: {
                         select: {
@@ -25,6 +28,7 @@ export async function updateRecentBestRecords(userId: number, syncId: number) {
                             music_idx: true,
                             difficulty: true,
                             level: true,
+                            level_constant: true,
                             note_count: true,
                         },
                     },
