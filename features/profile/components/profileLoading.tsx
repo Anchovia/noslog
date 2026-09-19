@@ -13,6 +13,7 @@ import MetricSwitch from "@/components/ui/metricSwitch";
 import { SegmentedControl } from "@/components/ui/segmentedControl";
 import { LoadingStatus, SkeletonText } from "@/components/ui/skeleton";
 import { ProfilePlayListSkeleton } from "./profilePlayRow";
+import { ProfileProgressSkeleton } from "./profileProgress";
 
 const noop = () => {};
 
@@ -140,41 +141,7 @@ export default function ProfileLoading() {
                         </div>
                     </div>
                     <div className="nl-profile-progress__content">
-                        {/* 선 그래프 틀과 같은 구조 — 플롯(폭의 16:9, 상한 344) →16→ 날짜 줄 */}
-                        <figure className="nl-line-chart">
-                            <div className="nl-line-chart__plot">
-                                <div className="nl-line-chart__area">
-                                    <div className="nl-line-chart__series nl-profile-loading__plot nl-skeleton" />
-                                    <div className="nl-line-chart__x nl-metadata">
-                                        <SkeletonText
-                                            className="nl-metadata"
-                                            sample="2026. 09. 10."
-                                        />
-                                        <SkeletonText
-                                            className="nl-metadata"
-                                            sample="2026. 09. 10."
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </figure>
-                        <dl className="nl-profile-progress__summary nl-body-secondary">
-                            {(["start", "current", "change"] as const).map(
-                                (key) => (
-                                    <div key={key}>
-                                        <dt className="nl-muted">
-                                            {t(`profile.${key}`)}
-                                        </dt>
-                                        <dd className="nl-metric-value">
-                                            <SkeletonText
-                                                className="nl-metric-value"
-                                                sample="0,000.00"
-                                            />
-                                        </dd>
-                                    </div>
-                                )
-                            )}
-                        </dl>
+                        <ProfileProgressSkeleton />
                     </div>
                 </section>
                 {plays("best", t("profile.bestPlays"))}

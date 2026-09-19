@@ -11,6 +11,8 @@ import { StatusMessage } from "@/components/ui/statusMessage";
 import { profileProgressOptions } from "@/features/profile/api/profileProgress";
 import { formatDaysAgo } from "@/lib/music/scoreTrend";
 import { gradeBandTone } from "@/lib/music/scoreTone";
+import { LoadingStatus, SkeletonText } from "@/components/ui/skeleton";
+import useDelayedFlag from "@/lib/hooks/useDelayedFlag";
 import type {
     ProfileMetric,
     ProfileMode,
@@ -47,6 +49,11 @@ export default function ProfileProgress({
     if (result.data && !result.isPlaceholderData && result.data !== committed)
         setCommitted(result.data);
     const data = result.data ?? committed;
+    // 지표 · 기간 · 모드 전환은 값의 뜻이 바뀐다 — 새 값을 받는 동안 이전 선을 두지 않고 같은 틀의 스켈레톤(2026-09-19 S1).
+    // 짧게 끝나면(--nl-motion-delay-skeleton 안) 스켈레톤 없이 바로 새 선
+    const switching = useDelayedFlag(
+        result.isPlaceholderData && result.isFetching
+    );
     const unit = data?.query.metric === "rating" ? "pt" : "Grd";
     const metricLabel = t(
         data?.query.metric === "rating"
@@ -121,87 +128,114 @@ export default function ProfileProgress({
                 className="nl-profile-progress__content"
                 aria-busy={result.isFetching}
             >
-                {/* 플롯 기하 유지 (2026-09-10 사용자 결정): 기록이 없거나 부족해도 플롯 틀을 그대로 두고 그 안에 상태를 적는다 */}
-                {
-                    <LineChart
-                        label={`${data?.query.mode === "recital" ? "Recital" : "Basic"} · ${metricLabel} · ${t("profile.progress")}`}
-                        dimensionLabel={t("record.date")}
-                        valueLabel={metricLabel}
-                        keepPlotGeometry
-                        // 면 없음 · 바닥선만 · 주황 선 (2026-09-19 B1 · G1 · C1)
-                        baselineOnly
-                        tone="growth"
-                        points={(current === null ? [] : points).map(
-                            (point) => ({
-                                id: point.date,
-                                dimension: dateFormat.format(
-                                    new Date(point.date)
-                                ),
-                                shortDimension: dateFormat.format(
-                                    new Date(point.date)
-                                ),
-                                value: point.value,
-                                coordinate: Date.parse(point.date),
-                                detail: formatDaysAgo(point.date, locale),
-                            })
-                        )}
-                        domain={[Math.max(0, minimum - inset), maximum + inset]}
-                        formatValue={(value) => `${format(value)} ${unit}`}
-                        formatAxis={format}
-                        emptyMessage={t(
-                            current !== null
-                                ? "profile.noRecord"
-                                : result.isPending
-                                  ? "profile.loading"
-                                  : data?.query.metric === "rating"
-                                    ? "rankings.ratingUnavailable"
-                                    : "profile.noRecord"
-                        )}
-                        singleMessage={t("profile.progressInsufficient")}
-                        responsivePlot
-                        showValueAxis={false}
-                        showPoints={false}
-                        dimensionTickIndices={[
-                            ...new Set([0, points.length - 1]),
-                        ]}
-                        // 툴팁 = 「5,723.05 Grd」 위 · 「N일 전」 아래 — 악곡 상세 성장 추이와 같음(osu!, 2026-09-17)
-                        tooltipValueLabel={false}
-                        tableVisibility="screen-reader"
-                    />
-                }
-                {
-                    <dl
-                        className="nl-profile-progress__summary nl-body-secondary"
-                        aria-label={metricLabel}
-                    >
-                        <div>
-                            <dt className="nl-muted">{t("profile.start")}</dt>
-                            <dd
-                                className="nl-metric-value nl-toned"
-                                data-tone={gradeBandTone(first)}
+                {switching ? (
+                    <>
+                        <LoadingStatus label={t("profile.loading")} />
+                        <ProfileProgressSkeleton />
+                    </>
+                ) : (
+                    <>
+                        {/* 플롯 기하 유지 (2026-09-10 사용자 결정): 기록이 없거나 부족해도 플롯 틀을 그대로 두고 그 안에 상태를 적는다 */}
+                        {
+                            <LineChart
+                                label={`${data?.query.mode === "recital" ? "Recital" : "Basic"} · ${metricLabel} · ${t("profile.progress")}`}
+                                dimensionLabel={t("record.date")}
+                                valueLabel={metricLabel}
+                                keepPlotGeometry
+                                // 면 없음 · 바닥선만 · 주황 선 (2026-09-19 B1 · G1 · C1)
+                                baselineOnly
+                                tone="growth"
+                                points={(current === null ? [] : points).map(
+                                    (point) => ({
+                                        id: point.date,
+                                        dimension: dateFormat.format(
+                                            new Date(point.date)
+                                        ),
+                                        shortDimension: dateFormat.format(
+                                            new Date(point.date)
+                                        ),
+                                        value: point.value,
+                                        coordinate: Date.parse(point.date),
+                                        detail: formatDaysAgo(
+                                            point.date,
+                                            locale
+                                        ),
+                                    })
+                                )}
+                                domain={[
+                                    Math.max(0, minimum - inset),
+                                    maximum + inset,
+                                ]}
+                                formatValue={(value) =>
+                                    `${format(value)} ${unit}`
+                                }
+                                formatAxis={format}
+                                emptyMessage={t(
+                                    current !== null
+                                        ? "profile.noRecord"
+                                        : result.isPending
+                                          ? "profile.loading"
+                                          : data?.query.metric === "rating"
+                                            ? "rankings.ratingUnavailable"
+                                            : "profile.noRecord"
+                                )}
+                                singleMessage={t(
+                                    "profile.progressInsufficient"
+                                )}
+                                responsivePlot
+                                showValueAxis={false}
+                                showPoints={false}
+                                dimensionTickIndices={[
+                                    ...new Set([0, points.length - 1]),
+                                ]}
+                                // 툴팁 = 「5,723.05 Grd」 위 · 「N일 전」 아래 — 악곡 상세 성장 추이와 같음(osu!, 2026-09-17)
+                                tooltipValueLabel={false}
+                                tableVisibility="screen-reader"
+                            />
+                        }
+                        {
+                            <dl
+                                className="nl-profile-progress__summary nl-body-secondary"
+                                aria-label={metricLabel}
                             >
-                                {first === null ? "—" : format(first)}
-                            </dd>
-                        </div>
-                        <div>
-                            <dt className="nl-muted">{t("profile.current")}</dt>
-                            <dd
-                                className="nl-metric-value nl-toned"
-                                data-tone={gradeBandTone(current)}
-                            >
-                                {current === null ? "—" : format(current)}
-                            </dd>
-                        </div>
-                        <div>
-                            <dt className="nl-muted">{t("profile.change")}</dt>
-                            <dd className="nl-metric-value">
-                                {change === null
-                                    ? "—"
-                                    : `${change > 0 ? "+" : ""}${format(change)}`}
-                            </dd>
-                        </div>
-                    </dl>
-                }
+                                <div>
+                                    <dt className="nl-muted">
+                                        {t("profile.start")}
+                                    </dt>
+                                    <dd
+                                        className="nl-metric-value nl-toned"
+                                        data-tone={gradeBandTone(first)}
+                                    >
+                                        {first === null ? "—" : format(first)}
+                                    </dd>
+                                </div>
+                                <div>
+                                    <dt className="nl-muted">
+                                        {t("profile.current")}
+                                    </dt>
+                                    <dd
+                                        className="nl-metric-value nl-toned"
+                                        data-tone={gradeBandTone(current)}
+                                    >
+                                        {current === null
+                                            ? "—"
+                                            : format(current)}
+                                    </dd>
+                                </div>
+                                <div>
+                                    <dt className="nl-muted">
+                                        {t("profile.change")}
+                                    </dt>
+                                    <dd className="nl-metric-value">
+                                        {change === null
+                                            ? "—"
+                                            : `${change > 0 ? "+" : ""}${format(change)}`}
+                                    </dd>
+                                </div>
+                            </dl>
+                        }
+                    </>
+                )}
             </div>
             {result.isError ? (
                 <StatusMessage
@@ -220,5 +254,50 @@ export default function ProfileProgress({
                 />
             ) : null}
         </section>
+    );
+}
+
+/**
+ * 성장 추이 스켈레톤(2026-09-19 로딩 시안 S1) — 선 그래프 틀과 같은 구조(플롯 = 폭의 16:9 · 상한 344 →16→ 날짜 줄)와
+ * 요약 줄(시작 · 현재 · 변화 라벨은 실제 글자). 프로필 로딩 화면과 지표 · 기간 · 모드 전환이 함께 쓴다
+ */
+export function ProfileProgressSkeleton() {
+    const t = useTranslations();
+    return (
+        <>
+            <figure className="nl-line-chart" aria-hidden="true">
+                <div className="nl-line-chart__plot">
+                    <div className="nl-line-chart__area">
+                        <div className="nl-line-chart__series nl-profile-loading__plot nl-skeleton" />
+                        <div className="nl-line-chart__x nl-metadata">
+                            <SkeletonText
+                                className="nl-metadata"
+                                sample="2026. 09. 10."
+                            />
+                            <SkeletonText
+                                className="nl-metadata"
+                                sample="2026. 09. 10."
+                            />
+                        </div>
+                    </div>
+                </div>
+            </figure>
+            <dl
+                className="nl-profile-progress__summary nl-body-secondary"
+                aria-hidden="true"
+            >
+                {(["start", "current", "change"] as const).map((key) => (
+                    <div key={key}>
+                        <dt className="nl-muted">{t(`profile.${key}`)}</dt>
+                        <dd className="nl-metric-value">
+                            <SkeletonText
+                                className="nl-metric-value"
+                                sample="0,000.00"
+                            />
+                        </dd>
+                    </div>
+                ))}
+            </dl>
+        </>
     );
 }
