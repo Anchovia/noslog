@@ -9,6 +9,12 @@
         var(--nl-judgement-s-just)
     );
     --nl-score-goal-pianist: var(--nl-judgement-s-just);
+    /* Grd · 레이팅 구간 색(2026-09-19 R1) — 아래 두 칸은 판정 색(NEAR · GOOD)을 빌리고, 위 세 칸은 점수 목표 색 */
+    --nl-grade-band-1: var(--nl-judgement-near);
+    --nl-grade-band-2: var(--nl-judgement-good);
+    --nl-grade-band-3: var(--nl-score-goal-s);
+    --nl-grade-band-4: var(--nl-score-goal-990k);
+    --nl-grade-band-5: var(--nl-score-goal-pianist);
     --nl-font-family:
         "Pretendard JP Variable", "Pretendard JP", Pretendard, -apple-system,
         BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI",
@@ -985,29 +991,45 @@ html[data-theme="light"] .noslog-ui,
     }
 }
 /* 값 색(2026-09-17) — 순위 1·2·3 = 순위표 시상 색, 그 밖 = 순위표 순위 색(subdued) · 점수 · 등급 = 점수 목표 색 · 최대 콤보 FC = FC 초록 */
-.noslog-ui .nl-stat-strip__value[data-tone="rank-1"] {
+.noslog-ui :is(.nl-stat-strip__value, .nl-toned)[data-tone="rank-1"] {
     color: var(--nl-exam-tier-top);
 }
-.noslog-ui .nl-stat-strip__value[data-tone="rank-2"] {
+.noslog-ui :is(.nl-stat-strip__value, .nl-toned)[data-tone="rank-2"] {
     color: var(--nl-exam-tier-high);
 }
-.noslog-ui .nl-stat-strip__value[data-tone="rank-3"] {
+.noslog-ui :is(.nl-stat-strip__value, .nl-toned)[data-tone="rank-3"] {
     color: var(--nl-exam-tier-mid);
 }
-.noslog-ui .nl-stat-strip__value[data-tone="rank"] {
+.noslog-ui :is(.nl-stat-strip__value, .nl-toned)[data-tone="rank"] {
     color: var(--nl-content-subdued);
 }
-.noslog-ui .nl-stat-strip__value[data-tone="s"] {
+.noslog-ui :is(.nl-stat-strip__value, .nl-toned)[data-tone="s"] {
     color: var(--nl-score-goal-s);
 }
-.noslog-ui .nl-stat-strip__value[data-tone="990k"] {
+.noslog-ui :is(.nl-stat-strip__value, .nl-toned)[data-tone="990k"] {
     color: var(--nl-score-goal-990k);
 }
-.noslog-ui .nl-stat-strip__value[data-tone="pianist"] {
+.noslog-ui :is(.nl-stat-strip__value, .nl-toned)[data-tone="pianist"] {
     color: var(--nl-score-goal-pianist);
 }
-.noslog-ui .nl-stat-strip__value[data-tone="fc"] {
+.noslog-ui :is(.nl-stat-strip__value, .nl-toned)[data-tone="fc"] {
     color: var(--nl-achievement-full-combo);
+}
+/* Grd · 레이팅 구간 색(2026-09-19 R1) — 판정 색에서 점수 목표 색으로. 기준값은 lib/music/scoreTone GRADE_BAND_CUTS */
+.noslog-ui :is(.nl-stat-strip__value, .nl-toned)[data-tone="grade-1"] {
+    color: var(--nl-grade-band-1);
+}
+.noslog-ui :is(.nl-stat-strip__value, .nl-toned)[data-tone="grade-2"] {
+    color: var(--nl-grade-band-2);
+}
+.noslog-ui :is(.nl-stat-strip__value, .nl-toned)[data-tone="grade-3"] {
+    color: var(--nl-grade-band-3);
+}
+.noslog-ui :is(.nl-stat-strip__value, .nl-toned)[data-tone="grade-4"] {
+    color: var(--nl-grade-band-4);
+}
+.noslog-ui :is(.nl-stat-strip__value, .nl-toned)[data-tone="grade-5"] {
+    color: var(--nl-grade-band-5);
 }
 /* 가로 막대 목록 BarList — 줄 = 라벨 control · 트랙 8(모서리 4 · raised 면) · 값 metric-value 오른쪽 정렬, 줄 사이 8, 열 사이 12.
    채움은 차트 단일 색(선 차트와 같은 색) (2026-09-16) */

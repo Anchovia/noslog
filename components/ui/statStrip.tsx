@@ -3,7 +3,19 @@ import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 export type StatTone =
-    "rank-1" | "rank-2" | "rank-3" | "rank" | "s" | "990k" | "pianist" | "fc";
+    | "rank-1"
+    | "rank-2"
+    | "rank-3"
+    | "rank"
+    | "s"
+    | "990k"
+    | "pianist"
+    | "fc"
+    | "grade-1"
+    | "grade-2"
+    | "grade-3"
+    | "grade-4"
+    | "grade-5";
 
 export interface StatStripItem {
     key: string;

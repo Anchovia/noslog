@@ -30,3 +30,32 @@ export function rankTone(
             ? "rank-3"
             : "rank";
 }
+
+/**
+ * Grd · 레이팅 구간 색(2026-09-19 B2 · R1) — 두 모드 · 두 값 같은 기준. 6,000 아래는 기본 글자색.
+ * 6,000 파랑 · 6,500 하늘 · 7,000 S 노랑 · 7,500 990k 살구 · 8,000 Pianist 분홍
+ */
+export const GRADE_BAND_CUTS = [6000, 6500, 7000, 7500, 8000] as const;
+export function gradeBandTone(
+    value: number | null | undefined
+): StatTone | undefined {
+    if (value === null || value === undefined) return undefined;
+    const band = GRADE_BAND_CUTS.filter((cut) => value >= cut).length;
+    return band ? (`grade-${band}` as StatTone) : undefined;
+}
+
+/**
+ * 이미지(공유 카드)용 다크 값 — 카드는 CSS 변수를 못 읽어 tokens.css 다크 값을 그대로 옮겨 둔다.
+ * 값이 토큰과 같은지는 tests/grade-band-tone.test.ts 가 tokens.css 를 읽어 확인한다
+ */
+export const STAT_TONE_DARK_HEX: Partial<Record<StatTone, string>> = {
+    "rank-1": "#d6b56d", // exam-tier-top
+    "rank-2": "#c4c8ce", // exam-tier-high
+    "rank-3": "#b98b67", // exam-tier-mid
+    rank: "#afafaf", // content-subdued
+    "grade-1": "#70b8ff", // judgement-near
+    "grade-2": "#4ccce6", // judgement-good
+    "grade-3": "#ffca16", // judgement-just(S)
+    "grade-4": "#ffac71", // judgement-just 50% + judgement-s-just(990k)
+    "grade-5": "#ff8dcc", // judgement-s-just(Pianist)
+};

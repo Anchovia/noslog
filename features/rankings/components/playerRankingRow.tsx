@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { gradeBandTone } from "@/lib/music/scoreTone";
 import { useLayoutEffect, useRef, useState } from "react";
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import Avatar from "@/components/ui/avatar";
@@ -111,7 +112,10 @@ export default function PlayerRankingRow({
                 ) : null}
             </div>
             {/* 단위는 머리글(공식 Grd · NosLog 레이팅)이 말한다 — 화면에서는 빼고 낭독용으로만 둔다 */}
-            <span className="nl-player-row__value nl-metric-value">
+            <span
+                className="nl-player-row__value nl-metric-value nl-toned"
+                data-tone={gradeBandTone(row.value)}
+            >
                 {row.value.toLocaleString(locale)}
                 <span className="sr-only">
                     {" "}

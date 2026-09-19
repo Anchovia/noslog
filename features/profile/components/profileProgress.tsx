@@ -10,6 +10,7 @@ import { Select } from "@/components/ui/select";
 import { StatusMessage } from "@/components/ui/statusMessage";
 import { profileProgressOptions } from "@/features/profile/api/profileProgress";
 import { formatDaysAgo } from "@/lib/music/scoreTrend";
+import { gradeBandTone } from "@/lib/music/scoreTone";
 import type {
     ProfileMetric,
     ProfileMode,
@@ -175,13 +176,19 @@ export default function ProfileProgress({
                     >
                         <div>
                             <dt className="nl-muted">{t("profile.start")}</dt>
-                            <dd className="nl-metric-value">
+                            <dd
+                                className="nl-metric-value nl-toned"
+                                data-tone={gradeBandTone(first)}
+                            >
                                 {first === null ? "—" : format(first)}
                             </dd>
                         </div>
                         <div>
                             <dt className="nl-muted">{t("profile.current")}</dt>
-                            <dd className="nl-metric-value">
+                            <dd
+                                className="nl-metric-value nl-toned"
+                                data-tone={gradeBandTone(current)}
+                            >
                                 {current === null ? "—" : format(current)}
                             </dd>
                         </div>

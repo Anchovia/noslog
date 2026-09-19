@@ -20,6 +20,12 @@ import {
 } from "@/features/profile/profileCardModel";
 import { createTranslator, getMessages } from "@/lib/i18n/messages";
 import type { Locale } from "@/lib/i18n/routing";
+import type { StatTone } from "@/components/ui/statStrip";
+import {
+    gradeBandTone,
+    rankTone,
+    STAT_TONE_DARK_HEX,
+} from "@/lib/music/scoreTone";
 import { formatToComma } from "@/lib/utils";
 
 // P16 is a fixed-size generated image with its own approved raw palette, not
@@ -28,6 +34,9 @@ const ink = "#f2f2f5";
 const gold = "#d8b54f";
 const divider = "#34343f";
 const subdued = "#afafaf";
+// 값 색(Grd 구간 · 순위) — 화면과 같은 규칙, 카드는 이미지라 다크 값으로(2026-09-19)
+const toneHex = (tone: StatTone | undefined) =>
+    (tone && STAT_TONE_DARK_HEX[tone]) ?? ink;
 function CountryFlag({
     source,
     width,
@@ -548,7 +557,9 @@ export default function ProfileCardImage({
                     </span>
                     <span
                         style={{
-                            color: data.grade ? "#facc15" : subdued,
+                            color: data.grade
+                                ? toneHex(gradeBandTone(data.grade))
+                                : subdued,
                             fontSize: data.grade ? 120 : 54,
                             lineHeight: data.grade ? "156px" : "70px",
                             fontWeight: 700,
@@ -580,6 +591,7 @@ export default function ProfileCardImage({
                                 fontSize: 54,
                                 fontWeight: 700,
                                 lineHeight: "70px",
+                                color: toneHex(rankTone(data.globalRank)),
                             }}
                         >
                             {data.globalRank
@@ -612,6 +624,7 @@ export default function ProfileCardImage({
                                 fontSize: 54,
                                 fontWeight: 700,
                                 lineHeight: "70px",
+                                color: toneHex(rankTone(data.countryRank)),
                             }}
                         >
                             {data.countryRank
