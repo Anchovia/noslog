@@ -297,3 +297,54 @@ describe("recent-only record merge (no database writes)", () => {
         expect(previous.play_count).toBe(100);
     });
 });
+
+describe("zero Grd repair", () => {
+    const zero = () =>
+        attempt({
+            grade_basic: 0,
+            is_onehand: false,
+            chart: { ...chart, difficulty: "Expert", level_constant: 12 },
+        });
+    it("fills a new zero record but retains an official positive value", () => {
+        const play = zero();
+        expect(
+            mergeRecentRecord(null, play, play.chart).grade_basic
+        ).toBeGreaterThan(0);
+        expect(
+            mergeRecentRecord(null, { ...play, grade_basic: 12345 }, play.chart)
+                .grade_basic
+        ).toBe(12345);
+    });
+    it("repairs an applied record once without changing counts or other bests", () => {
+        const play = { ...zero(), record_applied: true };
+        const record = { ...fullRecord(), grade_basic: 0 };
+        const plan = planRecentRecordMerge(
+            new Map([[10, record]]),
+            [play],
+            null
+        );
+        const fixed = plan.changes.get(10)!;
+        expect(fixed.grade_basic).toBeGreaterThan(0);
+        expect({ ...fixed, grade_basic: 0 }).toEqual(record);
+        expect(plan.appliedIds).toEqual([]);
+        expect(
+            planRecentRecordMerge(new Map([[10, fixed]]), [play], null).changes
+                .size
+        ).toBe(0);
+    });
+    it("does not supersede full-import coverage or a better official Grd", () => {
+        const play = { ...zero(), record_applied: true };
+        const records = new Map([[10, { ...fullRecord(), grade_basic: 0 }]]);
+        expect(
+            planRecentRecordMerge(
+                records,
+                [play],
+                new Date("2026-09-20T02:00:00Z")
+            ).changes.size
+        ).toBe(0);
+        expect(
+            planRecentRecordMerge(new Map([[10, fullRecord()]]), [play], null)
+                .changes.size
+        ).toBe(0);
+    });
+});

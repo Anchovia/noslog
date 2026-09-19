@@ -1,3 +1,7 @@
+import {
+    calculateBasicGrade,
+    type BasicGradeChart,
+} from "@/lib/music/basicGrade";
 import type { ChartPlayHistory, PlayData } from "@prisma/client";
 
 export type RecordValues = Omit<
@@ -24,7 +28,7 @@ export type RecentRecordPlay = Pick<
     | "judge_good"
     | "judge_miss"
     | "judge_near"
->;
+> & { is_onehand?: boolean | null };
 
 // BEMANI timestamps have minute precision and use the Korean/Japanese calendar.
 export function recentPlayTimestamp(value: string): number | null {
@@ -56,7 +60,7 @@ export function isAfterFullRecord(playTime: string, fullAt: Date | null) {
 export function mergeRecentRecord(
     previous: RecordValues | null,
     play: RecentRecordPlay,
-    chart: { level: number; note_count: number | null }
+    chart: { level: number } & BasicGradeChart
 ): RecordValues {
     const pianist = play.score === 1_000_000 || play.rank === "P";
     const fullCombo =
@@ -79,7 +83,12 @@ export function mergeRecentRecord(
         fullcombo_count: (previous?.fullcombo_count ?? 0) + Number(fullCombo),
         pianistic_count: (previous?.pianistic_count ?? 0) + Number(pianist),
         max_combo: Math.max(previous?.max_combo ?? 0, play.max_combo),
-        grade_basic: Math.max(previous?.grade_basic ?? 0, play.grade_basic),
+        grade_basic: Math.max(
+            previous?.grade_basic ?? 0,
+            play.grade_basic > 0
+                ? play.grade_basic
+                : (calculateBasicGrade(play, chart) ?? 0)
+        ),
         grade_recital: previous?.grade_recital ?? null,
         judge_sjust: improved ? play.judge_sjust : previous!.judge_sjust,
         judge_just: improved ? play.judge_just : previous!.judge_just,
@@ -98,7 +107,7 @@ export interface PendingRecordPlay extends RecentRecordPlay {
     id: number;
     chart_id: number;
     record_applied: boolean;
-    chart: { level: number; note_count: number | null };
+    chart: { level: number } & BasicGradeChart;
 }
 
 /** Pure projection plan. The caller must commit the values and receipts together. */
@@ -130,6 +139,23 @@ export function planRecentRecordMerge(
         const record =
             changes.get(play.chart_id) ?? previous.get(play.chart_id) ?? null;
         changes.set(play.chart_id, mergeRecentRecord(record, play, play.chart));
+    }
+    // Repair already counted zero-Grd attempts without replaying their count/score updates.
+    // Full-import baselines remain authoritative, including after a Pass renewal.
+    for (const play of history) {
+        if (
+            !play.record_applied ||
+            play.grade_basic !== 0 ||
+            !isAfterFullRecord(play.source_play_time, fullAt)
+        )
+            continue;
+        const record =
+            changes.get(play.chart_id) ?? previous.get(play.chart_id);
+        if (!record) continue;
+        const grade = calculateBasicGrade(play, play.chart);
+        if (grade !== null && grade > record.grade_basic) {
+            changes.set(play.chart_id, { ...record, grade_basic: grade });
+        }
     }
     return { changes, appliedIds: pending.map((play) => play.id) };
 }

@@ -201,6 +201,12 @@ old design-stage checklist. Changes to material behavior require a user decision
   and absent Recital/note-rate fields. Never replace unknown Recital with zero.
   Total player play count still comes from player_info. Full sync reconciles chart
   values/counts to the official response without deleting play or growth history.
+- When recent Basic Grd is zero, retain the raw history value and supplement personal
+  bests with the validated judgment/combo formula (2026-09-20). Only two-hand
+  A/A2/S/P records with a known official constant and matching note/judgment totals
+  are calculated; unsupported or incomplete inputs remain unchanged. Revisit
+  already-applied zero records without incrementing counts; full-import coverage
+  remains authoritative. Positive source Grd takes precedence over calculation.
 - Record projection and history receipts commit together. Full-import coverage and
   receipts prevent overlap and retries from increasing counts twice. Official play
   timestamps have minute precision: an overlap in the full-import minute is treated
