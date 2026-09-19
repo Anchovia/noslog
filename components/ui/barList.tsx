@@ -36,7 +36,7 @@ export default function BarList({
                     <dd className="nl-bar-list__track" aria-hidden>
                         {row.value !== null ? (
                             <span
-                                className="nl-bar-list__fill"
+                                className="nl-bar-list__fill nl-chart-reveal nl-chart-bar"
                                 style={{
                                     width: `${Math.min(100, Math.max(0, (row.value / max) * 100))}%`,
                                     background: row.color,

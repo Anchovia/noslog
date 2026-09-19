@@ -1358,19 +1358,18 @@ html:has(.noslog-ui) [data-sonner-toaster] [data-sonner-toast] > * {
         var(--nl-ease-enter);
 }
 
-/* ⑯ 그래프(막대 목록 · 누적 막대 · 선 그래프) — 나타날 때 왼쪽부터 드러나고, 값이 바뀌면 새 값으로 옮겨 간다.
-   선 그래프의 값 바뀜은 SVG 라 LineChart 가 같은 토큰을 읽어 움직인다(lib/motion) */
-.noslog-ui
-    :is(.nl-line-chart__marks, .nl-bar-list__fill, .nl-stacked-bar__fill) {
+/* ⑯ 그래프 — 막대 · 선이 나타날 때 왼쪽부터 드러나고(nl-chart-reveal), 막대 길이가 바뀌면 새 값으로 옮겨 간다(nl-chart-bar).
+   그래프를 그리는 곳은 공용 부품이든 페이지든 이 두 클래스만 붙인다. 선 그래프의 값 바뀜은 SVG 라
+   LineChart 가 같은 토큰을 읽어 움직인다(lib/motion) */
+.noslog-ui .nl-chart-reveal {
     animation: nl-reveal-x var(--nl-motion-duration-chart-in)
         var(--nl-ease-enter);
 }
-.noslog-ui :is(.nl-bar-list__fill, .nl-stacked-bar__segment) {
+.noslog-ui .nl-chart-bar {
     transition: width var(--nl-motion-duration-chart-change)
         var(--nl-ease-enter);
 }
 
-/* 양끝을 모두 inset() 으로 둬야 사이 값이 계산된다(none 과는 섞이지 않아 한 번에 바뀐다) */
 @keyframes nl-reveal-x {
     from {
         clip-path: inset(0 100% 0 0);

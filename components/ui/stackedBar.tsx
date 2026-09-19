@@ -40,13 +40,13 @@ export default function StackedBar({
                         </span>
                         <span className="nl-stacked-bar__track">
                             {total > 0 ? (
-                                <span className="nl-stacked-bar__fill">
+                                <span className="nl-stacked-bar__fill nl-chart-reveal">
                                     {row.segments
                                         .filter((segment) => segment.value > 0)
                                         .map((segment) => (
                                             <span
                                                 key={segment.key}
-                                                className="nl-stacked-bar__segment"
+                                                className="nl-stacked-bar__segment nl-chart-bar"
                                                 style={{
                                                     width: `${(segment.value / total) * 100}%`,
                                                     background: segment.color,

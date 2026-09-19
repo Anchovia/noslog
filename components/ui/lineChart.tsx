@@ -234,7 +234,7 @@ export default function LineChart({
                                     : null}
                                 {points.length === 1 ? (
                                     // 값이 하나면 그 값의 평평한 선: 추이가 없다는 뜻을 선 자체가 말한다
-                                    <g className="nl-line-chart__marks">
+                                    <g className="nl-line-chart__marks nl-chart-reveal">
                                         <line
                                             x1="0"
                                             x2="100%"
@@ -367,7 +367,7 @@ export default function LineChart({
                                 {/* 선 · 점 — 나타날 때 왼쪽부터 드러난다(점 구성이 바뀌면 다시) */}
                                 <g
                                     key={signature}
-                                    className="nl-line-chart__marks"
+                                    className="nl-line-chart__marks nl-chart-reveal"
                                 >
                                     <polyline
                                         points={points
