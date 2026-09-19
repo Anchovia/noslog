@@ -20,7 +20,7 @@ export async function updateGrade(user_id: number) {
             take: 50,
         }),
         db.playData.findMany({
-            where: { user_id },
+            where: { user_id, grade_recital: { not: null } },
             select: { grade_recital: true },
             orderBy: [{ grade_recital: "desc" }],
             take: 50,
@@ -36,10 +36,12 @@ export async function updateGrade(user_id: number) {
     console.info("(2)베이직 그레이드 합산 완료");
 
     // 리사이틀 그레이드 합산
-    const recitalGrade = recitalBestData.reduce(
-        (acc, cur) => acc + cur.grade_recital,
-        0
-    );
+    const recitalGrade = recitalBestData.length
+        ? recitalBestData.reduce(
+              (acc, cur) => acc + (cur.grade_recital ?? 0),
+              0
+          )
+        : null;
     console.info("(4)리사이틀 그레이드 합산 완료");
 
     // 트랜잭션으로 모든 DB 작업을 원자적으로 처리

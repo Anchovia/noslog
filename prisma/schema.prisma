@@ -51,6 +51,7 @@ model User {
   role                       String                     @default("user")
   grade_basic                Int?
   grade_recital              Int?
+  last_full_record_at         DateTime?
   sync_token_version         Int                        @default(0)
   created_at                 DateTime                   @default(now())
   updated_at                 DateTime                   @updatedAt
@@ -611,15 +612,17 @@ model ChartPlayHistory {
   chart            MusicChart @relation(fields: [chart_id], references: [id], onDelete: Cascade)
   user_id          Int
   user             User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  record_applied   Boolean    @default(false)
   first_sync_id    Int?
   firstSync        DataSync?  @relation(fields: [first_sync_id], references: [id], onDelete: SetNull)
   created_at       DateTime   @default(now())
 
   @@unique([user_id, chart_id, source_play_time, score, max_combo, rank])
   @@index([user_id, chart_id, source_play_time])
+  @@index([user_id, record_applied])
 }
 
-// 전체 플레이 데이터에서 실제 최고 기록이 변경된 시점만 저장함
+// 전체·최근 연동에서 개인 기록이 변경된 시점의 상태를 저장함
 model ChartRecordSnapshot {
   id                  Int        @id @default(autoincrement())
   level               Int
@@ -633,7 +636,7 @@ model ChartRecordSnapshot {
   pianistic_count     Int
   max_combo           Int
   grade_basic         Int
-  grade_recital       Int
+  grade_recital       Int?
   judge_sjust         Int?
   judge_just          Int?
   judge_good          Int?
@@ -892,7 +895,7 @@ model ChartGoalVoteReview {
 model UserBestGrade {
   id            Int      @id @default(autoincrement())
   grade_basic   Int
-  grade_recital Int
+  grade_recital Int?
   besttime      String
   created_at    DateTime @default(now())
   updated_at    DateTime @updatedAt
@@ -931,7 +934,7 @@ model PlayData {
   pianistic_count     Int
   max_combo           Int
   grade_basic         Int
-  grade_recital       Int
+  grade_recital       Int?
   judge_sjust         Int?
   judge_just          Int?
   judge_good          Int?

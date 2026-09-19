@@ -3,7 +3,7 @@ export type ProfileMode = "basic" | "recital";
 export interface GradeHistoryPoint {
     besttime: string;
     grade_basic: number;
-    grade_recital: number;
+    grade_recital: number | null;
 }
 
 export interface ProfileUser {
@@ -53,7 +53,7 @@ export interface BestPlayItem {
     music_idx: string;
     fc_type: number;
     grade_basic?: number;
-    grade_recital?: number;
+    grade_recital?: number | null;
     music: {
         title: string;
         localizedTitle?: string | null;

@@ -8,6 +8,7 @@ import { type SyncMusicInput } from "@/lib/services/music/updateMusic";
 import { updateGrade } from "@/lib/services/user/updateGrade";
 import { updatePlayData } from "@/lib/services/user/updatePlayData";
 import { updatePlayerProfile } from "@/lib/services/user/updatePlayerProfile";
+import { updateRecentBestRecords } from "@/lib/services/user/updateRecentBestRecords";
 import { updateRecentPlay } from "@/lib/services/user/updateRecentPlay";
 import { getMissingJacketIndexes } from "@/features/music/server/jacketCollectionService";
 import { recordProfileRatings } from "@/features/profile/server/profileRatingHistoryService";
@@ -464,6 +465,12 @@ export async function POST(request: NextRequest) {
                 await recordProfileRatings(user.id, syncId);
                 await updateDummy();
             }
+        } else {
+            changedRecords = await updateRecentBestRecords(user.id, syncId);
+            // Repair derived stats even when a previous attempt committed the
+            // projection but failed before computing Grd or rating history.
+            await updateGrade(user.id);
+            await recordProfileRatings(user.id, syncId);
         }
 
         await db.dataSync.update({
@@ -479,11 +486,11 @@ export async function POST(request: NextRequest) {
 
         revalidateTag(getUserProfileTag(user.id), "max");
 
+        revalidateTag(CACHE_TAGS.chartRankings, "max");
+        revalidateTag(CACHE_TAGS.userRankings, "max");
+        revalidateTag(CACHE_TAGS.userProfiles, "max");
         if (music) {
-            revalidateTag(CACHE_TAGS.chartRankings, "max");
-            revalidateTag(CACHE_TAGS.userRankings, "max");
             revalidateTag(CACHE_TAGS.bingos, "max");
-            revalidateTag(CACHE_TAGS.userProfiles, "max");
             if (catalogUpdates.applied > 0) {
                 revalidateTag(CACHE_TAGS.musicCatalog, "max");
                 revalidateTag(CACHE_TAGS.musicDetails, "max");

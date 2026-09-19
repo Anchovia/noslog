@@ -33,6 +33,13 @@ const playFields = {
 } as const;
 
 export async function getProfileRating(userId: number, mode: ProfileMode) {
+    if (mode === "recital") {
+        const user = await db.user.findUnique({
+            where: { id: userId },
+            select: { grade_recital: true },
+        });
+        if (user?.grade_recital == null) return null;
+    }
     const basis = await getModePianistRatingBasis(mode);
     if (
         !basis.theoreticalMax ||
@@ -174,7 +181,7 @@ export async function getPublicProfilePlays(
                 score: play.score,
                 rank: play.rank,
                 fullCombo: play.fc_type >= 2,
-                contribution: play[field] / 100,
+                contribution: (play[field] ?? 0) / 100,
                 playedAt: null,
             })),
         });

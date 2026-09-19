@@ -1041,9 +1041,9 @@ export const jaMessages = {
     "sync.sentDescription":
         "NosLogはプレイヤー情報と最近のプレー履歴を受け取ります。p.eagateのパスワードとログインCookieは受け取りません。",
     "sync.limitDescription":
-        "e-amusement ベーシックコース（Basic Pass）がない場合は公式の詳細記録を受け取れないため、最近の30プレーのみ同期されます。",
+        "Basic Passがなくても、最近の30プレーを同期するたびに記録を蓄積し、ベスト記録・Grd・Ratingを更新します。全記録を受信すると公式の値に補正します。",
     "sync.recentHelp":
-        "公式の詳細記録を受け取れなかったため、最近のプレーのみ同期しました。これまでの全記録はそのまま残っています。e-amusement ベーシックコース（Basic Pass）があれば全記録を受け取れます。",
+        "最近のプレーを蓄積して個人記録を更新しました。これまでのベスト記録と今回取得できなかった値は保持されます。Basic Passで全記録を受信すると公式の値に補正します。",
     "sync.security":
         "このブックマークレットは現在のNosLogアカウント専用です。p.eagateのパスワードとログインCookieはNosLogへ送信されません。",
     "sync.setupSecurity":

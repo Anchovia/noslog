@@ -50,7 +50,7 @@ describe("profile Grd history retention", () => {
                 user_id: 7,
                 besttime: "2026-09-07",
                 grade_basic: 0,
-                grade_recital: 0,
+                grade_recital: null,
             },
         });
         expect(mocks.remove).not.toHaveBeenCalled();

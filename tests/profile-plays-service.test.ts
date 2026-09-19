@@ -18,7 +18,10 @@ vi.mock("@/features/tiers/server/tierBrowserData", () => ({
     getModePianistRatingBasis: mocks.basis,
 }));
 
-import { getPublicProfilePlays } from "@/features/profile/server/profilePlaysService";
+import {
+    getProfileRating,
+    getPublicProfilePlays,
+} from "@/features/profile/server/profilePlaysService";
 import { profileListQuerySchema } from "@/features/profile/schemas/publicProfileSchema";
 
 function play(id: number) {
@@ -39,7 +42,10 @@ function play(id: number) {
 describe("profile incremental public plays", () => {
     beforeEach(() => {
         vi.clearAllMocks();
-        mocks.user.mockResolvedValue({ hide_play_activity: false });
+        mocks.user.mockResolvedValue({
+            hide_play_activity: false,
+            grade_recital: 20000,
+        });
         mocks.plays.mockResolvedValue([]);
         mocks.recent.mockResolvedValue([]);
         mocks.basis.mockResolvedValue({ theoreticalMax: null, entries: [] });
@@ -165,6 +171,12 @@ describe("profile incremental public plays", () => {
             result!.items[1].contribution!
         );
     });
+    it("최근 기록만 있는 사용자의 Recital Rating은 0으로 만들지 않는다", async () => {
+        mocks.user.mockResolvedValue({ grade_recital: null });
+        expect(await getProfileRating(7, "recital")).toBeNull();
+        expect(mocks.plays).not.toHaveBeenCalled();
+    });
+
     it("rejects malformed offsets and returns missing users distinctly", async () => {
         for (const offset of [-1, 0.5, "bad", 100001])
             expect(profileListQuerySchema.safeParse({ offset }).success).toBe(

@@ -216,7 +216,7 @@ export async function getTierBrowserBand(
             const played =
                 record &&
                 record.score > 0 &&
-                (query.mode === "basic" || record.grade_recital > 0);
+                (query.mode === "basic" || (record.grade_recital ?? 0) > 0);
             const constant = constants.get(entry.chartId);
             return {
                 id: entry.id,
@@ -244,7 +244,7 @@ export async function getTierBrowserBand(
                           grade:
                               (query.mode === "basic"
                                   ? record.grade_basic
-                                  : record.grade_recital) / 100,
+                                  : (record.grade_recital ?? 0)) / 100,
                           rating:
                               constant !== undefined && basis.theoreticalMax
                                   ? getBasicRatingMaxContribution(

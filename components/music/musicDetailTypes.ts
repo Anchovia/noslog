@@ -35,7 +35,7 @@ export interface UserPlayData {
     rank: string;
     fc_type: number;
     grade_basic: number;
-    grade_recital: number;
+    grade_recital: number | null;
     level: number;
     score: number;
     max_combo: number;
