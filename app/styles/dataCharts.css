@@ -144,6 +144,16 @@
     border-radius: var(--nl-radius-control);
     cursor: default;
 }
+/* 툴팁 속 선 이름 = 그 선의 색(값은 기본 글자색, 2026-09-19 T1). 선과 같은 변수라 판정 추이의 지표별 색도 따라간다 */
+.noslog-ui .nl-line-chart__series-name[data-series="personal"] {
+    color: var(--nl-local-data-personal);
+}
+.noslog-ui .nl-line-chart__series-name[data-series="fast"] {
+    color: var(--nl-local-data-fast);
+}
+.noslog-ui .nl-line-chart__series-name[data-series="slow"] {
+    color: var(--nl-local-data-slow);
+}
 .noslog-ui .nl-line-chart__tooltip {
     display: flex;
     flex-direction: column;

@@ -218,7 +218,7 @@ export default function MusicEntityHeader({
             >
                 {progress > 0 ? (
                     <span
-                        className="nl-grade-progress__fill"
+                        className="nl-grade-progress__fill nl-chart-reveal nl-chart-bar"
                         style={
                             {
                                 "--nl-grade-progress": progress,

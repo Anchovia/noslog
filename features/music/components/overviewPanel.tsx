@@ -12,7 +12,8 @@ import {
 } from "@/components/i18n/localeProvider";
 import type { MusicDetailProps } from "@/components/music/musicDetailTypes";
 import ActionButton from "@/components/ui/actionButton";
-import BarList from "@/components/ui/barList";
+import BarList, { BarListSkeleton } from "@/components/ui/barList";
+import { LoadingStatus } from "@/components/ui/skeleton";
 import ModalDialog from "@/components/ui/modalDialog";
 import ResultState from "@/components/ui/resultState";
 import StatStrip from "@/components/ui/statStrip";
@@ -195,11 +196,15 @@ export default function OverviewPanel({
                         }
                     />
                 ) : (
-                    <div
-                        className="nl-skeleton nl-overview__skeleton"
-                        role="status"
-                        aria-label={t("pattern.loading")}
-                    />
+                    // 불러오는 동안 — 같은 막대 목록 틀에 항목 이름은 실제 글자, 값 자리만 스켈레톤
+                    <div className="nl-overview__card" aria-busy="true">
+                        <LoadingStatus label={t("pattern.loading")} />
+                        <BarListSkeleton
+                            labels={PATTERN_AXES.map((axis) =>
+                                t(`pattern.axis.${axis}`)
+                            )}
+                        />
+                    </div>
                 )}
             </section>
 

@@ -76,28 +76,6 @@
     border-radius: 0;
     flex-shrink: 0;
 }
-.noslog-ui .nl-bingo-card--loading {
-    gap: var(--nl-spacing-8);
-}
-.noslog-ui .nl-bingo-card--loading .nl-bingo-card__cover,
-.noslog-ui .nl-bingo-card--loading span {
-    background: var(--nl-surface-sunken);
-}
-.noslog-ui .nl-bingo-card--loading span {
-    display: block;
-    border-radius: var(--nl-radius-control);
-}
-.noslog-ui .nl-bingo-card--loading > span {
-    width: min(120px, 100%);
-    height: var(--nl-spacing-16);
-}
-.noslog-ui .nl-bingo-card--loading > div:last-child {
-    padding: 0 var(--nl-spacing-12) var(--nl-spacing-12);
-}
-.noslog-ui .nl-bingo-card--loading > div:last-child > span {
-    width: min(90px, 100%);
-    height: var(--nl-spacing-12);
-}
 .noslog-ui .nl-bingo-card__cover[data-empty="true"] {
     border: 1px solid var(--nl-border-empty-slot);
 }

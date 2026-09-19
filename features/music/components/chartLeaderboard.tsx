@@ -14,6 +14,7 @@ import {
 import Avatar from "@/components/ui/avatar";
 import CountryMarker from "@/components/ui/countryMarker";
 import type { ChartRankingRow } from "@/features/music/schemas/chartRankingSchema";
+import { SkeletonText } from "@/components/ui/skeleton";
 
 /** 등급 메달 — 순위표는 18(공용 순위표 규격 그대로), 악곡 상세 핀 창은 아이콘 규격 16 */
 export function ScoreGrade({
@@ -122,12 +123,45 @@ function ChartLeaderboardRow({
     );
 }
 
+/**
+ * 곡 순위 줄 스켈레톤(2026-09-19 로딩 시안 S1) — 같은 줄 틀(48 · 순위 32 · 사진 32 · 이름 · 등급 · 점수 · FC 칸)
+ */
+function ChartLeaderboardRowSkeleton() {
+    return (
+        <li className="nl-player-row" aria-hidden="true">
+            <span className="nl-player-row__rank nl-metric-value">
+                <SkeletonText className="nl-metric-value" sample="00" />
+            </span>
+            <span className="nl-avatar nl-skeleton" />
+            <div className="nl-player-row__identity">
+                <SkeletonText className="nl-player-row__link" width="m" />
+            </div>
+            <span className="nl-chart-leaderboard__result">
+                <span className="nl-score-grade nl-skeleton" />
+                <span className="nl-player-row__value nl-metric-value">
+                    <SkeletonText
+                        className="nl-metric-value"
+                        sample="1,000,000"
+                    />
+                </span>
+                <FullComboMark fcType={0} />
+            </span>
+        </li>
+    );
+}
+
 export default function ChartLeaderboard({
     rows,
     currentUserId,
+    emptyMessage,
+    skeletonRows,
 }: {
     rows: ChartRankingRow[];
     currentUserId?: number;
+    /** 기록이 0명일 때 머리 줄 아래 줄 한 칸(48) 가운데 안내 (2026-09-19 사용자) */
+    emptyMessage?: string;
+    /** 불러오는 동안 같은 줄 틀의 스켈레톤 N줄 */
+    skeletonRows?: number;
 }) {
     const t = useTranslations();
     return (
@@ -143,18 +177,30 @@ export default function ChartLeaderboard({
                     <span>{t("music.trend.score")}</span>
                 </span>
             </div>
-            <ol
-                className="nl-global-ranking-list"
-                aria-label={t("detail.ranking")}
-            >
-                {rows.map((row) => (
-                    <ChartLeaderboardRow
-                        key={row.user_id}
-                        row={row}
-                        current={row.user_id === currentUserId}
-                    />
-                ))}
-            </ol>
+            {skeletonRows ? (
+                <ol className="nl-global-ranking-list" aria-hidden="true">
+                    {Array.from({ length: skeletonRows }, (_, index) => (
+                        <ChartLeaderboardRowSkeleton key={index} />
+                    ))}
+                </ol>
+            ) : !rows.length && emptyMessage ? (
+                <p className="nl-chart-leaderboard__empty nl-body-secondary nl-muted">
+                    {emptyMessage}
+                </p>
+            ) : (
+                <ol
+                    className="nl-global-ranking-list"
+                    aria-label={t("detail.ranking")}
+                >
+                    {rows.map((row) => (
+                        <ChartLeaderboardRow
+                            key={row.user_id}
+                            row={row}
+                            current={row.user_id === currentUserId}
+                        />
+                    ))}
+                </ol>
+            )}
         </div>
     );
 }

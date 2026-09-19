@@ -17,7 +17,9 @@ import type {
     ProfileMetric,
     ProfileMode,
 } from "@/features/profile/schemas/publicProfileSchema";
-import ProfilePlayRow from "./profilePlayRow";
+import { LoadingStatus } from "@/components/ui/skeleton";
+import useDelayedFlag from "@/lib/hooks/useDelayedFlag";
+import ProfilePlayRow, { ProfilePlayListSkeleton } from "./profilePlayRow";
 
 export default function ProfilePlaysList({
     userId,
@@ -65,6 +67,9 @@ export default function ProfilePlaysList({
     const hidden = data?.pages.some((page) => page.status === "hidden");
     const plays = data?.pages.flatMap((page) => page.items) ?? [];
     const busy = result.isFetching;
+    // 지표 · 모드 전환은 순서와 값의 뜻이 바뀐다 — 이전 목록을 두지 않고 같은 줄 틀의 스켈레톤(2026-09-19 S1).
+    // 「더 보기」 는 같은 지표에 줄만 이어 붙으므로 해당 없음(isPlaceholderData 는 키가 바뀔 때만 true)
+    const switching = useDelayedFlag(result.isPlaceholderData && busy);
     if (hidden) return null;
     const title = t(
         kind === "best" ? "profile.bestPlays" : "profile.recentPlays"
@@ -119,6 +124,11 @@ export default function ProfilePlaysList({
                     <p className="nl-body-secondary nl-muted">
                         {t("rankings.ratingUnavailable")}
                     </p>
+                ) : switching ? (
+                    <>
+                        <LoadingStatus label={t("profile.loading")} />
+                        <ProfilePlayListSkeleton />
+                    </>
                 ) : plays.length ? (
                     <ol
                         className="nl-profile-play-list"
@@ -132,14 +142,18 @@ export default function ProfilePlaysList({
                             />
                         ))}
                     </ol>
+                ) : busy ? (
+                    // 첫 불러오기 — 글자 대신 같은 줄 틀의 스켈레톤(안내는 화면 읽기에만)
+                    <>
+                        <LoadingStatus label={t("profile.loading")} />
+                        <ProfilePlayListSkeleton />
+                    </>
                 ) : (
                     <p className="nl-body-secondary nl-muted">
                         {t(
-                            busy
-                                ? "profile.loading"
-                                : kind === "recent"
-                                  ? "profile.recentEmpty"
-                                  : "profile.bestEmpty"
+                            kind === "recent"
+                                ? "profile.recentEmpty"
+                                : "profile.bestEmpty"
                         )}
                     </p>
                 )}
@@ -165,7 +179,9 @@ export default function ProfilePlaysList({
                     }
                 />
             ) : null}
-            {plays.length > 0 && (result.hasNextPage || plays.length > 5) ? (
+            {!switching &&
+            plays.length > 0 &&
+            (result.hasNextPage || plays.length > 5) ? (
                 <div className="nl-profile-list-actions">
                     {result.hasNextPage ? (
                         <Button

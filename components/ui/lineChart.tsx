@@ -1,9 +1,10 @@
 "use client";
 
-import { useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import type { KeyboardEvent } from "react";
 import { cn } from "@/lib/utils";
 import useElementWidth from "@/lib/hooks/useElementWidth";
+import { readMotion } from "@/lib/motion";
 
 export interface LineChartPoint {
     id: string | number;
@@ -99,18 +100,30 @@ export default function LineChart({
                     firstCoordinate) /
                 coordinateRange
               : index / Math.max(1, points.length - 1);
-    const position = (index: number, secondary = false) => ({
-        x: 4 + fraction(index) * Math.max(0, width - 8),
-        y:
-            plotHeight +
-            verticalInset -
-            (((secondary
-                ? points[index].secondaryValue!
-                : points[index].value) -
-                domain[0]) /
-                range) *
-                plotHeight,
-    });
+    // 값의 높이 비율(0 = 바닥 · 1 = 위). 움직임 중이면 이전 비율에서 이 비율로 옮겨 간다
+    const heights = (secondary: boolean) =>
+        points.map(
+            (point) =>
+                ((secondary ? (point.secondaryValue ?? 0) : point.value) -
+                    domain[0]) /
+                range
+        );
+    const signature = points.map((point) => point.id).join("|");
+    const heightKey = [...heights(false), ...heights(true)].join(",");
+    const figure = useRef<HTMLElement>(null);
+    const morph = useMorph(figure, signature, heightKey);
+    const position = (index: number, secondary = false) => {
+        const target = heights(secondary)[index];
+        const from = morph.from?.[secondary ? 1 : 0][index];
+        const height =
+            from === undefined
+                ? target
+                : from + (target - from) * morph.progress;
+        return {
+            x: 4 + fraction(index) * Math.max(0, width - 8),
+            y: plotHeight + verticalInset - height * plotHeight,
+        };
+    };
     const pointLabel = (point: LineChartPoint) =>
         `${point.dimension} · ${valueLabel} · ${formatValue(point.value)}${secondaryLabel && point.secondaryValue !== undefined ? ` · ${secondaryLabel} · ${formatValue(point.secondaryValue)}` : ""}`;
     const ticks = Array.from(
@@ -153,7 +166,12 @@ export default function LineChart({
         buttons.current[next]?.focus();
     }
     return (
-        <figure className="nl-line-chart" data-tone={tone} aria-label={label}>
+        <figure
+            ref={figure}
+            className="nl-line-chart"
+            data-tone={tone}
+            aria-label={label}
+        >
             {secondaryLabel ? (
                 <div className="nl-line-chart__legend nl-control">
                     <span>
@@ -216,7 +234,7 @@ export default function LineChart({
                                     : null}
                                 {points.length === 1 ? (
                                     // 값이 하나면 그 값의 평평한 선: 추이가 없다는 뜻을 선 자체가 말한다
-                                    <>
+                                    <g className="nl-line-chart__marks nl-chart-reveal">
                                         <line
                                             x1="0"
                                             x2="100%"
@@ -231,7 +249,7 @@ export default function LineChart({
                                             r="4"
                                             className="nl-line-chart__point"
                                         />
-                                    </>
+                                    </g>
                                 ) : null}
                             </svg>
                             <p
@@ -346,91 +364,100 @@ export default function LineChart({
                                               )
                                           )
                                     : null}
-                                <polyline
-                                    points={points
-                                        .map((_, index) => {
-                                            const p = position(index);
-                                            return `${p.x},${p.y}`;
-                                        })
-                                        .join(" ")}
-                                    className="nl-line-chart__line"
-                                    data-series={
-                                        secondaryLabel ? "fast" : "personal"
-                                    }
-                                />
-                                {secondaryLabel ? (
+                                {/* 선 · 점 — 나타날 때 왼쪽부터 드러난다(점 구성이 바뀌면 다시) */}
+                                <g
+                                    key={signature}
+                                    className="nl-line-chart__marks nl-chart-reveal"
+                                >
                                     <polyline
                                         points={points
                                             .map((_, index) => {
-                                                const p = position(index, true);
+                                                const p = position(index);
                                                 return `${p.x},${p.y}`;
                                             })
                                             .join(" ")}
                                         className="nl-line-chart__line"
-                                        data-series="slow"
-                                    />
-                                ) : null}
-                                {showPoints
-                                    ? points.map((point, index) => {
-                                          const p = position(index);
-                                          return (
-                                              <circle
-                                                  key={point.id}
-                                                  cx={p.x}
-                                                  cy={p.y}
-                                                  r="3"
-                                                  className="nl-line-chart__point"
-                                                  data-series={
-                                                      secondaryLabel
-                                                          ? "fast"
-                                                          : "personal"
-                                                  }
-                                              />
-                                          );
-                                      })
-                                    : null}
-                                {/* 점을 끈 그래프도 가리킨 자리에는 선 색으로 채운 점 4 를 찍는다 — osu! 처럼 (2026-09-19 P1) */}
-                                {/* 점이 하나뿐이면 늘 그 점을 같은 모양으로 */}
-                                {!showPoints &&
-                                (points.length === 1 ||
-                                    (active !== null && points[active])) ? (
-                                    <circle
-                                        cx={
-                                            position(
-                                                points.length === 1
-                                                    ? 0
-                                                    : active!
-                                            ).x
+                                        data-series={
+                                            secondaryLabel ? "fast" : "personal"
                                         }
-                                        cy={
-                                            position(
-                                                points.length === 1
-                                                    ? 0
-                                                    : active!
-                                            ).y
-                                        }
-                                        r="4"
-                                        className="nl-line-chart__point"
-                                        data-series="personal"
-                                        data-active=""
                                     />
-                                ) : null}
-                                {secondaryLabel
-                                    ? points.map((point, index) => {
-                                          const p = position(index, true);
-                                          return (
-                                              <rect
-                                                  key={point.id}
-                                                  x={p.x - 4}
-                                                  y={p.y - 4}
-                                                  width="8"
-                                                  height="8"
-                                                  className="nl-line-chart__point"
-                                                  data-series="slow"
-                                              />
-                                          );
-                                      })
-                                    : null}
+                                    {secondaryLabel ? (
+                                        <polyline
+                                            points={points
+                                                .map((_, index) => {
+                                                    const p = position(
+                                                        index,
+                                                        true
+                                                    );
+                                                    return `${p.x},${p.y}`;
+                                                })
+                                                .join(" ")}
+                                            className="nl-line-chart__line"
+                                            data-series="slow"
+                                        />
+                                    ) : null}
+                                    {showPoints
+                                        ? points.map((point, index) => {
+                                              const p = position(index);
+                                              return (
+                                                  <circle
+                                                      key={point.id}
+                                                      cx={p.x}
+                                                      cy={p.y}
+                                                      r="3"
+                                                      className="nl-line-chart__point"
+                                                      data-series={
+                                                          secondaryLabel
+                                                              ? "fast"
+                                                              : "personal"
+                                                      }
+                                                  />
+                                              );
+                                          })
+                                        : null}
+                                    {/* 점을 끈 그래프도 가리킨 자리에는 선 색으로 채운 점 4 를 찍는다 — osu! 처럼 (2026-09-19 P1) */}
+                                    {/* 점이 하나뿐이면 늘 그 점을 같은 모양으로 */}
+                                    {!showPoints &&
+                                    (points.length === 1 ||
+                                        (active !== null && points[active])) ? (
+                                        <circle
+                                            cx={
+                                                position(
+                                                    points.length === 1
+                                                        ? 0
+                                                        : active!
+                                                ).x
+                                            }
+                                            cy={
+                                                position(
+                                                    points.length === 1
+                                                        ? 0
+                                                        : active!
+                                                ).y
+                                            }
+                                            r="4"
+                                            className="nl-line-chart__point"
+                                            data-series="personal"
+                                            data-active=""
+                                        />
+                                    ) : null}
+                                    {secondaryLabel
+                                        ? points.map((point, index) => {
+                                              const p = position(index, true);
+                                              return (
+                                                  <rect
+                                                      key={point.id}
+                                                      x={p.x - 4}
+                                                      y={p.y - 4}
+                                                      width="8"
+                                                      height="8"
+                                                      className="nl-line-chart__point"
+                                                      data-series="slow"
+                                                  />
+                                              );
+                                          })
+                                        : null}
+                                </g>
                             </svg>
                             {points.map((point, index) => {
                                 const p = position(index);
@@ -491,14 +518,33 @@ export default function LineChart({
                                         </span>
                                     )}
                                     <span className="nl-control">
-                                        {tooltipValueLabel
-                                            ? `${valueLabel} · `
-                                            : null}
+                                        {/* 이름은 선 색, 값은 기본 글자색(2026-09-19 T1) */}
+                                        {tooltipValueLabel ? (
+                                            <>
+                                                <span
+                                                    className="nl-line-chart__series-name"
+                                                    data-series={
+                                                        secondaryLabel
+                                                            ? "fast"
+                                                            : "personal"
+                                                    }
+                                                >
+                                                    {valueLabel}
+                                                </span>
+                                                {" · "}
+                                            </>
+                                        ) : null}
                                         {formatValue(points[active].value)}
                                     </span>
                                     {secondaryLabel ? (
                                         <span className="nl-control">
-                                            {secondaryLabel} ·{" "}
+                                            <span
+                                                className="nl-line-chart__series-name"
+                                                data-series="slow"
+                                            >
+                                                {secondaryLabel}
+                                            </span>
+                                            {" · "}
                                             {formatValue(
                                                 points[active].secondaryValue!
                                             )}
@@ -600,4 +646,55 @@ export default function LineChart({
             ) : null}
         </figure>
     );
+}
+
+/**
+ * 그래프 움직임(2026-09-19 A) — 점 구성(id)이 바뀌면 선을 다시 드러내고(선 묶음의 key = 점 구성),
+ * 같은 점의 값만 바뀌면 이전 높이에서 새 높이로 옮겨 간다. 바뀐 그 렌더에서 곧바로 시작해야
+ * 새 선이 한 프레임 먼저 보였다 가려지는 잔상이 없다. 시간 · 곡선은 움직임 토큰에서 읽는다(동작 줄이기면 0 → 곧바로)
+ */
+function useMorph(
+    figure: { current: HTMLElement | null },
+    signature: string,
+    heightKey: string
+) {
+    const [seen, setSeen] = useState({ signature, heightKey });
+    const [from, setFrom] = useState<[number[], number[]] | null>(null);
+    const [progress, setProgress] = useState(1);
+    // 렌더 중에 바뀜을 알아채 같은 렌더에서 출발점을 정한다(React 의 「이전 값으로 상태 맞추기」 방식)
+    if (seen.signature !== signature || seen.heightKey !== heightKey) {
+        const sameSet = seen.signature === signature;
+        setSeen({ signature, heightKey });
+        if (sameSet) {
+            const values = seen.heightKey.split(",").map(Number);
+            const half = values.length / 2;
+            setFrom([values.slice(0, half), values.slice(half)]);
+            setProgress(0);
+        } else {
+            setFrom(null);
+            setProgress(1);
+        }
+    }
+    useEffect(() => {
+        if (!from) return;
+        const { duration, ease } = figure.current
+            ? readMotion(
+                  figure.current,
+                  "--nl-motion-duration-chart-change",
+                  "--nl-ease-enter"
+              )
+            : { duration: 0, ease: (value: number) => value };
+        let frame = 0;
+        const start = performance.now();
+        const step = (now: number) => {
+            const elapsed = duration ? (now - start) / duration : 1;
+            const done = elapsed >= 1;
+            setProgress(done ? 1 : ease(elapsed));
+            if (done) setFrom(null);
+            else frame = requestAnimationFrame(step);
+        };
+        frame = requestAnimationFrame(step);
+        return () => cancelAnimationFrame(frame);
+    }, [figure, from]);
+    return { from, progress };
 }

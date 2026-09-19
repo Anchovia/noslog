@@ -170,19 +170,10 @@
 .noslog-ui .nl-ranking-login .nl-button {
     flex-shrink: 0;
 }
-.noslog-ui .nl-global-ranking-message {
-    text-align: center;
-}
 .noslog-ui .nl-global-ranking-content .nl-result-state {
     align-items: center;
     text-align: center;
     padding: 0;
-}
-.noslog-ui .nl-global-ranking-initial {
-    min-height: 360px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 .noslog-ui .nl-pagination__item[aria-disabled="true"] {
     color: var(--nl-interaction-disabled-content);

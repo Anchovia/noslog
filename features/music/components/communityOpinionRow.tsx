@@ -1,5 +1,6 @@
 "use client";
 
+import { SkeletonText } from "@/components/ui/skeleton";
 import Link from "next/link";
 import { useId, useState } from "react";
 import type { ReactNode } from "react";
@@ -139,5 +140,23 @@ export default function CommunityOpinionRow({
                 />
             ) : null}
         </article>
+    );
+}
+
+/** 의견 줄 스켈레톤(2026-09-19 로딩 시안 S1) — 같은 줄 틀(사진 32 열 + 내용 열 사이 12 · 이름 줄 →4→ 본문) */
+export function CommunityOpinionRowSkeleton() {
+    return (
+        <div className="nl-opinion-row" aria-hidden="true">
+            <span
+                className="nl-avatar nl-skeleton"
+                style={{ width: 32, height: 32 }}
+            />
+            <div className="nl-opinion-row__content">
+                <div className="nl-opinion-row__header">
+                    <SkeletonText className="nl-emphasis-label" width="s" />
+                </div>
+                <SkeletonText className="nl-body-secondary" width="l" />
+            </div>
+        </div>
     );
 }

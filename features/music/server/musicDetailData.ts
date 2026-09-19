@@ -172,8 +172,17 @@ export function getUserChartRecord(userId: number, chartId: number) {
 export async function getUserChartPeerScoreComparison(
     userId: number,
     chartId: number,
-    gradeBasic: number | null
+    /** undefined = 이 곡 기록이 없어 모름 — 유저 Grd 를 따로 읽는다 */
+    gradeBasic: number | null | undefined
 ) {
+    if (gradeBasic === undefined)
+        gradeBasic =
+            (
+                await db.user.findUnique({
+                    where: { id: userId },
+                    select: { grade_basic: true },
+                })
+            )?.grade_basic ?? null;
     if (gradeBasic === null) return null;
 
     const records = await db.playData.findMany({

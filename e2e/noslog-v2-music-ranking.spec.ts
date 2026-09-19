@@ -240,9 +240,13 @@ test("Public empty and no-rank states avoid duplicate messaging and unneeded pag
     page,
 }) => {
     await openRanking(page, { total: 0, signedIn: true, ownRank: null });
+    // 0명 = 점수 자 없이 순위표 머리 줄 + 안내 한 줄 (2026-09-19)
     await expect(
-        page.getByText("등록된 기록이 없습니다.", { exact: true })
+        page.getByText("아직 플레이된 기록이 없습니다.", { exact: true })
     ).toBeVisible();
+    await expect(page.locator(".nl-ranking-head")).toBeVisible();
+    await expect(page.locator(".nl-score-scatter")).toHaveCount(0);
+    await expect(page.locator(".nl-pagination")).toHaveCount(0);
     await expect(page.getByText("순위 없음", { exact: true })).toHaveCount(0);
     await page.unrouteAll({ behavior: "wait" });
     await openRanking(page, { total: 25, signedIn: true, ownRank: null });

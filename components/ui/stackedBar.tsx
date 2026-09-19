@@ -39,20 +39,22 @@ export default function StackedBar({
                             {row.label}
                         </span>
                         <span className="nl-stacked-bar__track">
-                            {total > 0
-                                ? row.segments
-                                      .filter((segment) => segment.value > 0)
-                                      .map((segment) => (
-                                          <span
-                                              key={segment.key}
-                                              className="nl-stacked-bar__segment"
-                                              style={{
-                                                  width: `${(segment.value / total) * 100}%`,
-                                                  background: segment.color,
-                                              }}
-                                          />
-                                      ))
-                                : null}
+                            {total > 0 ? (
+                                <span className="nl-stacked-bar__fill nl-chart-reveal">
+                                    {row.segments
+                                        .filter((segment) => segment.value > 0)
+                                        .map((segment) => (
+                                            <span
+                                                key={segment.key}
+                                                className="nl-stacked-bar__segment nl-chart-bar"
+                                                style={{
+                                                    width: `${(segment.value / total) * 100}%`,
+                                                    background: segment.color,
+                                                }}
+                                            />
+                                        ))}
+                                </span>
+                            ) : null}
                         </span>
                     </div>
                 );

@@ -64,6 +64,7 @@ export default function ProfileRecordOverview({
                             aria-hidden
                         >
                             <span
+                                className="nl-chart-reveal nl-chart-bar"
                                 style={{
                                     width: `${((row.value ?? 0) / maximum) * 100}%`,
                                 }}
@@ -101,11 +102,15 @@ export default function ProfileRecordOverview({
             </div>
             {total > 0 ? (
                 <>
-                    <div className="nl-profile-judgement-stack" aria-hidden>
+                    <div
+                        className="nl-profile-judgement-stack nl-chart-reveal"
+                        aria-hidden
+                    >
                         {keys.map((key) => (
                             <span
                                 key={key}
                                 data-judgement={key}
+                                className="nl-chart-bar"
                                 style={{
                                     width: `${(judgement.counts[key] / total) * 100}%`,
                                 }}

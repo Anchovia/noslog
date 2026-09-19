@@ -315,6 +315,13 @@ old design-stage checklist. Changes to material behavior require a user decision
   must preserve safe context. Missing/unauthorized resources must not leak existence
   or private details. These states do not authorize changes to preserved viewers.
 
+## Official X news (2026-09-19)
+
+- Home reads the persisted latest post and successful ko/en translations through the data cache; it never calls X or Gemini. New posts are checked every 12 hours outside page rendering using `since_id`. Successful translations have no time-based expiry.
+- Unchanged content is not rewritten or retranslated. A DB execution claim still changes once per UTC half-day to prevent concurrent/duplicate paid calls. Failed translations retry on the next scheduled run; existing raw content remains available.
+- The latest post only is retained, not a historical archive. Incremental polling does not automatically reconcile deletion, privacy changes, or edits that are not returned by X.
+- Hobby deployments use GitHub Actions; see [setup, verification SQL and limitations](../operations/official-x-sync.md).
+
 ## Data retention and operator facts
 
 - Operator display: **계롤(Anchovia)**. Keep the confirmed contact and provider facts

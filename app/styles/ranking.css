@@ -214,3 +214,14 @@
 .noslog-ui .nl-ranking-list {
     scroll-margin-top: 76px;
 }
+/* 기록 0명 — 머리 줄 아래 줄 한 칸(48) 자리 가운데 안내 (2026-09-19 사용자) */
+.noslog-ui .nl-chart-leaderboard__empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    margin: 0;
+    padding-inline: var(--nl-ranking-inset);
+    border-bottom: 1px solid var(--nl-border-divider);
+    text-align: center;
+}

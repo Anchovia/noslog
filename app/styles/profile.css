@@ -603,15 +603,6 @@
 .noslog-ui .nl-profile-empty > .nl-status {
     width: 100%;
 }
-.noslog-ui .nl-profile-loading__identity {
-    min-height: 204px;
-}
-.noslog-ui .nl-profile-loading__summary {
-    min-height: 236px;
-}
 .noslog-ui .nl-profile-loading__plot {
     height: min(344px, calc((100cqw - 32px) * 0.5625));
-}
-.noslog-ui .nl-profile-loading__overview {
-    min-height: 360px;
 }

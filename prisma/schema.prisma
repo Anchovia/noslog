@@ -1122,3 +1122,11 @@ model ExamAchievement {
   @@unique([userId, examId])
   @@index([examId, achievedAt])
 }
+
+// 공식 X 최신 원문·번역과 12시간 실행 중복 방지 상태. 홈에서는 읽기만 한다.
+model OfficialXFeed {
+  id            String    @id
+  content       Json?
+  lastAttemptAt DateTime? @map("last_attempt_at")
+  lastSuccessAt DateTime? @map("last_success_at")
+}

@@ -283,10 +283,16 @@ for (const variant of ["empty", "single", "guest", "partial"] as const) {
     test(`Record ${variant} state retains its meaning`, async ({ page }) => {
         await openRecord(page, "ko", variant);
         if (variant === "empty") {
+            // 기록이 없어도 다섯 구역 틀 그대로, 내 값 자리만 「—」 (E1, 2026-09-19)
             await expect(
                 page.getByText("등록된 기록이 없습니다.", { exact: true })
-            ).toBeVisible();
-            await expect(page.locator(".nl-record-metrics")).toHaveCount(0);
+            ).toHaveCount(0);
+            await expect(
+                page
+                    .locator(".nl-record-panel .nl-stat-strip__value")
+                    .filter({ hasText: /^—$/ })
+            ).toHaveCount(6);
+            await expect(page.locator(".nl-record-analysis")).toBeVisible();
             // 기록이 없으면 그레이드 줄은 「—」, 제목 옆 등급 아이콘 없음
             await expect(
                 page.getByRole("group", { name: "그레이드" })

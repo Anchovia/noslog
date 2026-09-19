@@ -9,6 +9,12 @@
         var(--nl-judgement-s-just)
     );
     --nl-score-goal-pianist: var(--nl-judgement-s-just);
+    /* Grd · 레이팅 구간 색(2026-09-19 R1) — 아래 두 칸은 판정 색(NEAR · GOOD)을 빌리고, 위 세 칸은 점수 목표 색 */
+    --nl-grade-band-1: var(--nl-judgement-near);
+    --nl-grade-band-2: var(--nl-judgement-good);
+    --nl-grade-band-3: var(--nl-score-goal-s);
+    --nl-grade-band-4: var(--nl-score-goal-990k);
+    --nl-grade-band-5: var(--nl-score-goal-pianist);
     --nl-font-family:
         "Pretendard JP Variable", "Pretendard JP", Pretendard, -apple-system,
         BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI",
@@ -274,6 +280,11 @@ html[data-theme="light"] .noslog-ui,
     mask: url("/icons/noslog/spinner.svg") center / contain no-repeat;
     /* ⑩ 로딩 — 회전(동작 줄이기에서도 유지) */
     animation: nl-spin var(--nl-motion-loop-spin) var(--nl-ease-spin) infinite;
+}
+/* 한 덩어리 영역 가운데(지도 등) — 아이콘 기본 20 */
+.noslog-ui .nl-spinner[data-size="medium"] {
+    width: var(--nl-icon-medium);
+    height: var(--nl-icon-medium);
 }
 @keyframes nl-spin {
     to {
@@ -917,6 +928,11 @@ html[data-theme="light"] .noslog-ui,
     background: var(--nl-surface-raised);
     overflow: hidden;
 }
+.noslog-ui .nl-stacked-bar__fill {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
 .noslog-ui .nl-stacked-bar__segment {
     display: block;
     height: 100%;
@@ -980,29 +996,45 @@ html[data-theme="light"] .noslog-ui,
     }
 }
 /* 값 색(2026-09-17) — 순위 1·2·3 = 순위표 시상 색, 그 밖 = 순위표 순위 색(subdued) · 점수 · 등급 = 점수 목표 색 · 최대 콤보 FC = FC 초록 */
-.noslog-ui .nl-stat-strip__value[data-tone="rank-1"] {
+.noslog-ui :is(.nl-stat-strip__value, .nl-toned)[data-tone="rank-1"] {
     color: var(--nl-exam-tier-top);
 }
-.noslog-ui .nl-stat-strip__value[data-tone="rank-2"] {
+.noslog-ui :is(.nl-stat-strip__value, .nl-toned)[data-tone="rank-2"] {
     color: var(--nl-exam-tier-high);
 }
-.noslog-ui .nl-stat-strip__value[data-tone="rank-3"] {
+.noslog-ui :is(.nl-stat-strip__value, .nl-toned)[data-tone="rank-3"] {
     color: var(--nl-exam-tier-mid);
 }
-.noslog-ui .nl-stat-strip__value[data-tone="rank"] {
+.noslog-ui :is(.nl-stat-strip__value, .nl-toned)[data-tone="rank"] {
     color: var(--nl-content-subdued);
 }
-.noslog-ui .nl-stat-strip__value[data-tone="s"] {
+.noslog-ui :is(.nl-stat-strip__value, .nl-toned)[data-tone="s"] {
     color: var(--nl-score-goal-s);
 }
-.noslog-ui .nl-stat-strip__value[data-tone="990k"] {
+.noslog-ui :is(.nl-stat-strip__value, .nl-toned)[data-tone="990k"] {
     color: var(--nl-score-goal-990k);
 }
-.noslog-ui .nl-stat-strip__value[data-tone="pianist"] {
+.noslog-ui :is(.nl-stat-strip__value, .nl-toned)[data-tone="pianist"] {
     color: var(--nl-score-goal-pianist);
 }
-.noslog-ui .nl-stat-strip__value[data-tone="fc"] {
+.noslog-ui :is(.nl-stat-strip__value, .nl-toned)[data-tone="fc"] {
     color: var(--nl-achievement-full-combo);
+}
+/* Grd · 레이팅 구간 색(2026-09-19 R1) — 판정 색에서 점수 목표 색으로. 기준값은 lib/music/scoreTone GRADE_BAND_CUTS */
+.noslog-ui :is(.nl-stat-strip__value, .nl-toned)[data-tone="grade-1"] {
+    color: var(--nl-grade-band-1);
+}
+.noslog-ui :is(.nl-stat-strip__value, .nl-toned)[data-tone="grade-2"] {
+    color: var(--nl-grade-band-2);
+}
+.noslog-ui :is(.nl-stat-strip__value, .nl-toned)[data-tone="grade-3"] {
+    color: var(--nl-grade-band-3);
+}
+.noslog-ui :is(.nl-stat-strip__value, .nl-toned)[data-tone="grade-4"] {
+    color: var(--nl-grade-band-4);
+}
+.noslog-ui :is(.nl-stat-strip__value, .nl-toned)[data-tone="grade-5"] {
+    color: var(--nl-grade-band-5);
 }
 /* 가로 막대 목록 BarList — 줄 = 라벨 control · 트랙 8(모서리 4 · raised 면) · 값 metric-value 오른쪽 정렬, 줄 사이 8, 열 사이 12.
    채움은 차트 단일 색(선 차트와 같은 색) (2026-09-16) */
@@ -1041,9 +1073,16 @@ html[data-theme="light"] .noslog-ui,
     text-align: end;
     white-space: nowrap;
 }
-.noslog-ui .nl-skeleton {
+/* 모서리는 가장 낮은 우선순위(:where) — 실제 부품 클래스(자켓 · 사진 · 난이도 판)와 함께 붙이면 그 부품 모서리가 이긴다.
+   채움은 어느 바탕(canvas · surface · sunken · raised) 위에서도 보이는 border/subtle 하나로 — 실제 부품의 면보다 앞서도록
+   같은 클래스를 두 번 적어 우선순위를 올린다(2026-09-19) */
+.noslog-ui :where(.nl-skeleton) {
     border-radius: var(--nl-radius-control);
-    background: var(--nl-surface-sunken);
+}
+.noslog-ui .nl-skeleton.nl-skeleton {
+    background: var(--nl-border-subtle);
+}
+.noslog-ui .nl-skeleton {
     /* ⑪ 로딩 — 은은한 깜빡임(동작 줄이기에서 멈춤) */
     animation: nl-pulse var(--nl-motion-loop-pulse) var(--nl-ease-pulse)
         infinite;
@@ -1053,10 +1092,95 @@ html[data-theme="light"] .noslog-ui,
         opacity: 0.5;
     }
 }
-.noslog-ui .nl-record-list-skeleton {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-8);
+/* 스켈레톤(2026-09-19 로딩 시안 S1 · M1) — 실제 부품의 틀 · 클래스를 그대로 쓰고 글자 · 사진 자리만 채운다.
+   글자 자리 = 그 글자 스타일 클래스를 함께 붙여 줄 높이(1lh)를 차지하고, 막대는 글자 크기(1em) 높이로 가운데.
+   폭은 네 단계(짧게 · 보통 · 길게 · 끝까지)만 — 글자 길이를 흉내 낼 뿐이라 따로 숫자를 만들지 않는다 */
+/* 막대를 줄 높이 가운데에 — 위 여백 대신 안쪽 채움으로(여백은 바깥으로 빠져 줄이 늘어날 수 있다) */
+.noslog-ui .nl-skeleton-text {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    height: 1lh;
+    min-width: 0;
+    padding-top: calc((1lh - 1em) / 2);
+}
+.noslog-ui .nl-skeleton-text > .nl-skeleton {
+    display: block;
+    width: 100%;
+    height: 1em;
+}
+/* 폭은 글자 자리 자체에 — 가로 줄(flex) 안에서도 줄 폭 기준으로 잡힌다 */
+.noslog-ui .nl-skeleton-text[data-width="s"] {
+    width: 25%;
+}
+.noslog-ui .nl-skeleton-text[data-width="m"] {
+    width: 50%;
+}
+.noslog-ui .nl-skeleton-text[data-width="l"] {
+    width: 75%;
+}
+/* 짧은 값 자리 — 보이지 않는 표본 글자 폭만큼 */
+.noslog-ui .nl-skeleton-text[data-sample] {
+    display: inline-block;
+    width: auto;
+    /* 글자 기준선에 맞추면 아래 여백이 생겨 줄이 늘어난다 */
+    vertical-align: top;
+}
+.noslog-ui .nl-skeleton-text[data-sample] > .nl-skeleton {
+    width: auto;
+    /* 기준선(baseline) 정렬 줄에서도 실제 글자와 같은 선에 — hidden 은 기준선을 상자 밑변으로 옮기고,
+       줄 높이를 글자 크기로 두어야 표본 글자의 기준선이 위 여백(padding-top)만큼만 내려간다 */
+    overflow: clip;
+    line-height: 1;
+    color: transparent;
+}
+/* 입력칸 · 셀렉트 · 버튼 자리 — 컨트롤 L 높이 · 모서리 8(field) */
+.noslog-ui .nl-skeleton-control {
+    display: block;
+    width: 100%;
+    height: var(--nl-control-height);
+    border-radius: var(--nl-radius-field);
+}
+/* 사이트 안 이동 — 위쪽 진행 막대(2026-09-19 로딩 시안 N1). 맨 위 2px · primary/default · 이전 화면은 그대로.
+   80% 까지 차오르다(--nl-motion-duration-progress) 새 화면이 오면 끝까지 채우고 사라진다.
+   동작 줄이기에서도 막대는 남는다(차오름 시간은 줄이지 않음 — 멈추면 멈춘 것처럼 보인다) */
+.noslog-ui .nl-progress {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 60;
+    height: 2px;
+    pointer-events: none;
+}
+.noslog-ui .nl-progress__bar {
+    width: 0;
+    height: 100%;
+    background: var(--nl-primary-default);
+    opacity: 0;
+}
+.noslog-ui .nl-progress[data-phase="running"] .nl-progress__bar {
+    opacity: 1;
+    animation: nl-progress-run var(--nl-motion-duration-progress)
+        var(--nl-ease-enter) forwards;
+}
+.noslog-ui .nl-progress[data-phase="done"] .nl-progress__bar {
+    width: 100%;
+    animation: nl-fade-out var(--nl-motion-duration-overlay-out)
+        var(--nl-ease-exit) forwards;
+}
+@keyframes nl-progress-run {
+    to {
+        width: 80%;
+    }
+}
+/* 화면 안 다시 불러오기 — 짧게 끝나면 스켈레톤이 번쩍이지 않게 잠깐 숨겨 둔다(자리는 차지) */
+.noslog-ui .nl-loading-delay {
+    animation: nl-hold-hidden var(--nl-motion-delay-skeleton);
+}
+@keyframes nl-hold-hidden {
+    from,
+    to {
+        visibility: hidden;
+    }
 }
 
 @media (min-width: 1056px) {
@@ -1267,9 +1391,23 @@ html[data-theme="light"] .noslog-ui,
 /* 움직임(2026-09-19) — 가이드 「움직임」 절의 목록만 움직인다. 시간 · 곡선은 tokens.css 의 움직임 토큰만 쓴다.
    목록 밖(탭 밑줄 · 펼침 · 툴팁 · 체크박스 · 누름 크기 · 스크롤 연출 · 페이지 이동)은 즉시 바뀐다 */
 
-/* ① 올림 · 누름 색 — 누를 수 있는 모든 것에 같은 값. 배경 · 글자색만(포커스 선 · 경계는 즉시) */
+/* ① 올림 · 누름 색 — 누를 수 있는 모든 것에 같은 값. 배경 · 글자색만(포커스 선 · 경계는 즉시).
+   label 로 만든 줄(체크 목록 · 밴드 선택 · 첨부 버튼), 누를 줄을 품고 올림 면을 칠하는 카드(펼침 카드 · 오락실 결과),
+   올림 면을 ::before 로 그리는 버튼(검색 안 셀렉트 · 지우기)도 같은 값 */
 .noslog-ui
-    :is(a, button, summary, [role="option"], [role="menuitem"], [role="tab"]) {
+    :is(
+        a,
+        button,
+        summary,
+        label,
+        details,
+        [role="button"],
+        [role="option"],
+        [role="menuitem"],
+        [role="tab"],
+        .nl-arcade-result
+    ),
+.noslog-ui :is(a, button)::before {
     transition:
         background-color var(--nl-motion-duration-state) var(--nl-ease-enter),
         color var(--nl-motion-duration-state) var(--nl-ease-enter);
@@ -1339,6 +1477,26 @@ html:has(.noslog-ui) [data-sonner-toaster] [data-sonner-toast] > * {
         var(--nl-ease-enter);
 }
 
+/* ⑯ 그래프 — 막대 · 선이 나타날 때 왼쪽부터 드러나고(nl-chart-reveal), 막대 길이가 바뀌면 새 값으로 옮겨 간다(nl-chart-bar).
+   그래프를 그리는 곳은 공용 부품이든 페이지든 이 두 클래스만 붙인다. 선 그래프의 값 바뀜은 SVG 라
+   LineChart 가 같은 토큰을 읽어 움직인다(lib/motion) */
+.noslog-ui .nl-chart-reveal {
+    animation: nl-reveal-x var(--nl-motion-duration-chart-in)
+        var(--nl-ease-enter);
+}
+.noslog-ui .nl-chart-bar {
+    transition: width var(--nl-motion-duration-chart-change)
+        var(--nl-ease-enter);
+}
+
+@keyframes nl-reveal-x {
+    from {
+        clip-path: inset(0 100% 0 0);
+    }
+    to {
+        clip-path: inset(0 0 0 0);
+    }
+}
 @keyframes nl-fade-in {
     from {
         opacity: 0;

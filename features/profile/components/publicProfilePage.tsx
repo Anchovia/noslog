@@ -10,6 +10,7 @@ import {
     useLocalizedHref,
     useTranslations,
 } from "@/components/i18n/localeProvider";
+import { gradeBandTone, rankTone } from "@/lib/music/scoreTone";
 import MetricSummary from "@/components/ui/metricSummary";
 import { SegmentedControl } from "@/components/ui/segmentedControl";
 import { StatusMessage } from "@/components/ui/statusMessage";
@@ -124,6 +125,11 @@ export default function PublicProfilePage({
                             <MetricSummary
                                 label={t("rankings.metric.grade")}
                                 prominent
+                                tone={
+                                    grade && grade > 0
+                                        ? gradeBandTone(Math.round(grade / 100))
+                                        : undefined
+                                }
                                 value={
                                     grade && grade > 0
                                         ? Math.round(
@@ -136,6 +142,7 @@ export default function PublicProfilePage({
                             <MetricSummary
                                 label={t("rankings.metric.rating")}
                                 prominent
+                                tone={gradeBandTone(rating)}
                                 value={
                                     rating === null
                                         ? "—"
@@ -151,6 +158,7 @@ export default function PublicProfilePage({
                             <MetricSummary
                                 label={t("profile.globalRank")}
                                 prominent
+                                tone={rankTone(rank)}
                                 value={
                                     rank
                                         ? `#${rank.toLocaleString(locale)}`
@@ -160,6 +168,7 @@ export default function PublicProfilePage({
                             <MetricSummary
                                 label={t("profile.countryPosition")}
                                 prominent
+                                tone={rankTone(countryRank)}
                                 value={
                                     countryRank
                                         ? `#${countryRank.toLocaleString(locale)}`

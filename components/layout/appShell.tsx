@@ -1,10 +1,12 @@
 "use client";
 
+import { Suspense } from "react";
 import type { ReactNode } from "react";
 
 import { useTranslations } from "@/components/i18n/localeProvider";
 import AppHeader from "@/components/layout/appHeader";
 import type { ShellAccount } from "@/components/layout/appHeader";
+import NavigationProgress from "@/components/layout/navigationProgress";
 import PageViewBeacon from "@/components/layout/pageViewBeacon";
 import { FeedbackUnreadProvider } from "@/features/feedback/components/feedbackUnread";
 
@@ -25,6 +27,9 @@ export default function AppShell({
                 <a className="nl-skip-link nl-control" href="#main-content">
                     {t("skip.main")}
                 </a>
+                <Suspense fallback={null}>
+                    <NavigationProgress />
+                </Suspense>
                 <AppHeader account={account} />
                 <main id="main-content" className="nl-main" tabIndex={-1}>
                     <div className="nl-main__content">{children}</div>

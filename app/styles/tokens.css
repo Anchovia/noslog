@@ -1,4 +1,4 @@
-/* Generated from Figma cVbWCxhkfxFfHmAKLCyKrD. Run node scripts/generate-design-tokens.mjs. */
+/* NosLog 디자인 토큰 원본 — 이 파일을 직접 고친다(생성 스크립트 없음). 쓰임과 규칙은 docs/design/README.md 1절 */
 .noslog-ui {
     --nl-spacing-0: 0px;
     --nl-spacing-2: 2px;
@@ -364,8 +364,14 @@ html:has(.noslog-ui) [data-sonner-toaster] {
     --nl-motion-duration-overlay-in: 200ms; /* 대화상자 · 토스트 나타남 */
     --nl-motion-duration-overlay-out: 150ms; /* 대화상자 · 토스트 사라짐 */
     --nl-motion-duration-move: 200ms; /* 헤더 숨김 · 오락실 시트 */
+    --nl-motion-duration-chart-in: 800ms; /* 그래프 나타남(막대 · 선이 왼쪽부터) */
+    --nl-motion-duration-chart-change: 300ms; /* 그래프 값 바뀜(새 값으로 옮겨 감) */
     --nl-motion-loop-spin: 800ms; /* 스피너 한 바퀴 */
     --nl-motion-loop-pulse: 1600ms; /* 스켈레톤 한 번 깜빡임 */
+    /* 로딩(2026-09-19 로딩 시안 결정 4) — 이 시간 안에 끝나면 로딩 표시를 띄우지 않는다 */
+    --nl-motion-delay-progress: 100ms; /* 사이트 안 이동 — 위쪽 진행 막대 */
+    --nl-motion-delay-skeleton: 300ms; /* 화면 안 다시 불러오기 — 스켈레톤 */
+    --nl-motion-duration-progress: 1500ms; /* 위쪽 진행 막대가 80% 까지 차오르는 시간(끝나면 채우고 사라짐) */
     /* 곡선 — 들어올 때 감속 · 나갈 때 가속(Atlassian practical 과 같은 값) */
     --nl-ease-enter: cubic-bezier(0.4, 1, 0.6, 1);
     --nl-ease-exit: cubic-bezier(0.6, 0, 0.8, 0.6);
@@ -383,6 +389,8 @@ html:has(.noslog-ui) [data-sonner-toaster] {
         --nl-motion-duration-overlay-in: 0ms;
         --nl-motion-duration-overlay-out: 0ms;
         --nl-motion-duration-move: 0ms;
+        --nl-motion-duration-chart-in: 0ms;
+        --nl-motion-duration-chart-change: 0ms;
         --nl-motion-loop-pulse: 0ms;
         --nl-motion-distance: 0px;
     }
