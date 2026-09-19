@@ -9,7 +9,9 @@ import Disclosure from "@/components/ui/disclosure";
 import { StatusMessage } from "@/components/ui/statusMessage";
 import { communityOpinionOptions } from "@/features/music/api/community";
 import type { OpinionPage } from "@/features/music/schemas/communitySchema";
-import CommunityOpinionRow from "./communityOpinionRow";
+import CommunityOpinionRow, {
+    CommunityOpinionRowSkeleton,
+} from "./communityOpinionRow";
 
 export default function CommunityOpinions({
     chartId,
@@ -99,10 +101,12 @@ export default function CommunityOpinions({
                     </div>
                 ) : null}
                 {query.isPending ? (
-                    <div
-                        className="nl-skeleton nl-opinion-placeholder"
-                        aria-hidden
-                    />
+                    // 불러오는 동안 — 의견 목록과 같은 줄 틀의 스켈레톤
+                    <div className="nl-opinions__list" aria-hidden="true">
+                        {[0, 1].map((index) => (
+                            <CommunityOpinionRowSkeleton key={index} />
+                        ))}
+                    </div>
                 ) : !items.length && !composer && !query.isError ? (
                     // 작성 칸이 없는 로그아웃 화면에서는 구역이 통째로 비므로 한 줄을 남긴다 (2026-09-18 E2)
                     <p className="nl-body-secondary nl-muted">

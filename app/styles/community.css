@@ -381,9 +381,6 @@
     gap: var(--nl-spacing-8);
     margin-top: var(--nl-spacing-12);
 }
-.noslog-ui .nl-opinion-placeholder {
-    height: 136px;
-}
 .noslog-ui .nl-action-menu {
     min-width: 160px;
     max-width: calc(100vw - 32px);

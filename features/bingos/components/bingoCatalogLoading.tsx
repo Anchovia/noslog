@@ -1,48 +1,34 @@
 "use client";
 
 import { useTranslations } from "@/components/i18n/localeProvider";
-import Button from "@/components/ui/Button";
-import { ChevronDown, ListFilter } from "lucide-react";
+import { LoadingStatus } from "@/components/ui/skeleton";
+import { BingoCatalogCardSkeleton } from "./bingoCatalogCard";
 
-export default function BingoCatalogLoading({
-    authenticated = false,
-}: {
-    authenticated?: boolean;
-}) {
+/**
+ * 빙고 목록 불러오기(2026-09-19 로딩 시안 S1) — 실제 목록과 같은 틀: 제목(실제 글자) →24→ 검색칸 자리(컨트롤 L) →24→ 카드 격자.
+ * 안내 문장은 화면 읽기에만
+ */
+export default function BingoCatalogLoading() {
     const t = useTranslations();
     return (
-        <div className="nl-bingo-catalog">
-            <h1 className="nl-page-title">{t("bingo.title")}</h1>
-            {authenticated ? (
-                <div className="nl-bingo-catalog__controls">
-                    <Button
-                        appearance="foundation"
-                        variant="secondary"
-                        disabled
-                    >
-                        <ListFilter className="nl-icon" aria-hidden />
-                        {t("bingo.filter")}
-                        <ChevronDown className="nl-icon" aria-hidden />
-                    </Button>
+        <div className="nl-bingo-catalog" aria-busy="true">
+            <LoadingStatus label={t("bingo.loading")} />
+            <div className="nl-bingo-catalog__head">
+                <h1 className="nl-page-title">{t("bingo.title")}</h1>
+                <div
+                    className="nl-bingo-catalog__search-row"
+                    aria-hidden="true"
+                >
+                    <span className="nl-skeleton nl-skeleton-control" />
                 </div>
-            ) : null}
-            <div className="nl-bingo-catalog__grid" aria-hidden="true">
-                {Array.from({ length: 4 }, (_, index) => (
-                    <div
-                        className="nl-bingo-card nl-bingo-card--loading"
-                        key={index}
-                    >
-                        <div className="nl-bingo-card__cover" />
-                        <span />
-                        <div>
-                            <span />
-                        </div>
-                    </div>
-                ))}
             </div>
-            <p className="nl-body-secondary nl-muted" role="status">
-                {t("bingo.loading")}
-            </p>
+            <ul className="nl-bingo-catalog__grid" aria-hidden="true">
+                {Array.from({ length: 6 }, (_, index) => (
+                    <li key={index}>
+                        <BingoCatalogCardSkeleton />
+                    </li>
+                ))}
+            </ul>
         </div>
     );
 }

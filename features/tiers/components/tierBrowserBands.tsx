@@ -13,7 +13,7 @@ import type {
     TierBrowserQuery,
 } from "@/features/tiers/schemas/tierBrowserSchema";
 import { formatTierValue } from "@/lib/tiers";
-import TierBrowserCard from "./tierBrowserCard";
+import TierBrowserCard, { TierBrowserCardSkeleton } from "./tierBrowserCard";
 import { tierValueColor } from "@/lib/music/tierValueColor";
 
 function TierBrowserBandSection({
@@ -111,25 +111,11 @@ function TierBrowserBandSection({
                       ? Array.from(
                             { length: summary.totalCount },
                             (_, index) => (
-                                <div
+                                <TierBrowserCardSkeleton
                                     key={index}
-                                    className="nl-tier-card nl-tier-card--skeleton"
-                                    data-detailed={query.detailed}
-                                    aria-hidden
-                                >
-                                    <span className="nl-tier-card__jacket" />
-                                    {overview.viewerId !== null ||
-                                    query.detailed ? (
-                                        <span className="nl-tier-skeleton-line" />
-                                    ) : null}
-                                    {query.detailed ? (
-                                        <>
-                                            <span className="nl-tier-skeleton-line" />
-                                            <span className="nl-tier-skeleton-line" />
-                                            <span className="nl-tier-skeleton-line" />
-                                        </>
-                                    ) : null}
-                                </div>
+                                    detailed={query.detailed}
+                                    signedIn={overview.viewerId !== null}
+                                />
                             )
                         )
                       : null}

@@ -17,7 +17,10 @@ import ActionButton from "@/components/ui/actionButton";
 import CompactSelect from "@/components/ui/compactSelect";
 import SearchField from "@/components/ui/searchField";
 import { searchPreviewOptions } from "@/features/music/api/searchPreview";
-import MusicResultCard from "@/features/music/components/musicResultCard";
+import MusicResultCard, {
+    MusicResultCardSkeleton,
+} from "@/features/music/components/musicResultCard";
+import { LoadingStatus } from "@/components/ui/skeleton";
 import { musicSearchSchema } from "@/features/music/schemas/musicSearchSchema";
 import type { MusicSearchFormValues } from "@/features/music/schemas/musicSearchSchema";
 import type { SearchScope } from "@/features/music/schemas/searchPreviewSchema";
@@ -286,9 +289,21 @@ export default function HomeSearch() {
                     ) : null}
                 </div>
                 {pending && !data ? (
-                    <p className="nl-body-secondary nl-muted" role="status">
-                        {t("home.previewLoading")}
-                    </p>
+                    // 미리보기와 같은 카드 틀의 스켈레톤 — 짧게 끝나면 보이지 않는다(nl-loading-delay)
+                    <div aria-busy="true">
+                        <LoadingStatus label={t("home.previewLoading")} />
+                        <div
+                            className="nl-search-preview__list nl-loading-delay"
+                            aria-hidden="true"
+                        >
+                            {[0, 1, 2].map((index) => (
+                                <MusicResultCardSkeleton
+                                    key={index}
+                                    showLevels={false}
+                                />
+                            ))}
+                        </div>
+                    </div>
                 ) : query.isError ? (
                     <div className="nl-inline">
                         <p className="nl-body-secondary nl-muted">

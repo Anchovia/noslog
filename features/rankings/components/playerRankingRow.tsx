@@ -1,3 +1,4 @@
+import { SkeletonText } from "@/components/ui/skeleton";
 import Link from "next/link";
 import { gradeBandTone } from "@/lib/music/scoreTone";
 import { useLayoutEffect, useRef, useState } from "react";
@@ -121,6 +122,27 @@ export default function PlayerRankingRow({
                     {" "}
                     {query.metric === "rating" ? "pt" : "Grd"}
                 </span>
+            </span>
+        </li>
+    );
+}
+
+/**
+ * 순위 줄 스켈레톤(2026-09-19 로딩 시안 S1) — 같은 줄 틀(48 높이 · 순위 32 · 사진 32 · 이름 · 값)에
+ * 순위 · 사진 · 이름 · 값 자리. 값 · 순위는 흔한 자리 수의 폭만큼
+ */
+export function PlayerRankingRowSkeleton() {
+    return (
+        <li className="nl-player-row" aria-hidden="true">
+            <span className="nl-player-row__rank">
+                <SkeletonText className="nl-metric-value" sample="00" />
+            </span>
+            <span className="nl-avatar nl-skeleton" />
+            <div className="nl-player-row__identity">
+                <SkeletonText className="nl-player-row__link" width="m" />
+            </div>
+            <span className="nl-player-row__value">
+                <SkeletonText className="nl-metric-value" sample="0,000" />
             </span>
         </li>
     );

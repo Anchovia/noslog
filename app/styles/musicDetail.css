@@ -233,10 +233,6 @@
 .noslog-ui .nl-overview__card--list {
     padding-block: 0;
 }
-/* 로딩 자리 = 공용 펄스 스켈레톤(nl-skeleton), 여기서는 높이만 */
-.noslog-ui .nl-overview__skeleton {
-    height: 152px;
-}
 .noslog-ui .nl-detail-panel {
     display: flex;
     flex-direction: column;

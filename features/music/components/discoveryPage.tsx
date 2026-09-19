@@ -42,8 +42,13 @@ import type {
 } from "@/features/music/schemas/discoverySchema";
 import { musicSearchSchema } from "@/features/music/schemas/musicSearchSchema";
 import type { MusicSearchFormValues } from "@/features/music/schemas/musicSearchSchema";
-import MusicResultCard from "@/features/music/components/musicResultCard";
-import ChartResultGroup from "@/features/music/components/chartResultGroup";
+import MusicResultCard, {
+    MusicResultCardSkeleton,
+} from "@/features/music/components/musicResultCard";
+import ChartResultGroup, {
+    ChartResultGroupSkeleton,
+} from "@/features/music/components/chartResultGroup";
+import { LoadingStatus } from "@/components/ui/skeleton";
 import DiscoveryFilters, {
     DiscoverySortMenu,
 } from "@/features/music/components/discoveryFilters";
@@ -642,13 +647,9 @@ export default function DiscoveryPage({
                         className="nl-discovery__collection"
                         data-pending={pending || undefined}
                     >
+                        {/* 로딩 안내는 화면 읽기에만 — 보이는 쪽은 이전 결과(흐린 색) 또는 스켈레톤이 말한다 */}
                         {pending ? (
-                            <p
-                                role="status"
-                                className="nl-body-secondary nl-muted"
-                            >
-                                {t("discovery.loading")}
-                            </p>
+                            <LoadingStatus label={t("discovery.loading")} />
                         ) : null}
                         {collection.isError &&
                         !collection.isFetchNextPageError ? (
@@ -670,23 +671,32 @@ export default function DiscoveryPage({
                                 }
                             />
                         ) : collection.isPending && pending ? (
+                            // 결과가 아직 하나도 없을 때 — 결과 목록과 같은 틀 · 같은 보기(목록 · 격자 · 촘촘)의 스켈레톤.
+                            // 화면 안 다시 불러오기라 짧게 끝나면 보이지 않는다(nl-loading-delay)
                             <div
-                                className="nl-discovery__skeleton"
-                                aria-label={t("discovery.loading")}
+                                className={cn(
+                                    "nl-discovery__items nl-loading-delay",
+                                    query.scope === "chart" &&
+                                        "nl-discovery__items--chart",
+                                    query.scope !== "chart" &&
+                                        query.view !== "list" &&
+                                        "nl-discovery__items--grid",
+                                    query.scope !== "chart" &&
+                                        query.view === "dense" &&
+                                        "nl-discovery__items--dense"
+                                )}
+                                aria-hidden="true"
                             >
-                                {Array.from({ length: 8 }, (_, index) => (
-                                    <div
-                                        key={index}
-                                        className="nl-result-skeleton"
-                                    >
-                                        <span />
-                                        <div>
-                                            <span />
-                                            <span />
-                                        </div>
-                                        <span />
-                                    </div>
-                                ))}
+                                {Array.from({ length: 8 }, (_, index) =>
+                                    query.scope === "chart" ? (
+                                        <ChartResultGroupSkeleton key={index} />
+                                    ) : (
+                                        <MusicResultCardSkeleton
+                                            key={index}
+                                            view={query.view}
+                                        />
+                                    )
+                                )}
                             </div>
                         ) : !collection.isPending && !items.length ? (
                             <ResultState

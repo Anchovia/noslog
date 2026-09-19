@@ -353,15 +353,27 @@ export default function ArcadeDiscoveryMap({
                     {inlineError && state === "error" ? (
                         <CircleAlert className="nl-icon" aria-hidden />
                     ) : null}
-                    <p>
-                        {t(
-                            state === "loading"
-                                ? "arcades.mapLoading"
-                                : inlineError
-                                  ? "arcades.mapLoadError"
-                                  : "arcades.mapListFallback"
-                        )}
-                    </p>
+                    {state === "loading" ? (
+                        // 모양을 모르는 한 덩어리 — 가운데 스피너 하나(2026-09-19 로딩 시안 결정 5), 문장은 화면 읽기에만
+                        <>
+                            <span
+                                className="nl-spinner"
+                                data-size="medium"
+                                aria-hidden
+                            />
+                            <span className="sr-only">
+                                {t("arcades.mapLoading")}
+                            </span>
+                        </>
+                    ) : (
+                        <p>
+                            {t(
+                                inlineError
+                                    ? "arcades.mapLoadError"
+                                    : "arcades.mapListFallback"
+                            )}
+                        </p>
+                    )}
                     {state === "error" ? (
                         <Button
                             variant="secondary"

@@ -8,7 +8,8 @@ import CompactSelect from "@/components/ui/compactSelect";
 import Pagination from "@/components/ui/pagination";
 import ResultState from "@/components/ui/resultState";
 import Button from "@/components/ui/Button";
-import PlayerRankingRow from "./playerRankingRow";
+import { LoadingStatus } from "@/components/ui/skeleton";
+import PlayerRankingRow, { PlayerRankingRowSkeleton } from "./playerRankingRow";
 import RankingPersonalPosition from "./rankingPersonalPosition";
 import useGlobalRankings from "@/features/rankings/hooks/useGlobalRankings";
 import { GLOBAL_RANKING_PAGE_SIZE } from "@/features/rankings/schemas/globalRankingSchema";
@@ -121,23 +122,41 @@ export default function GlobalRankingPage({
                             action={retry}
                         />
                     ) : busy && data ? (
-                        <p
-                            className="nl-global-ranking-message nl-body-secondary nl-muted"
-                            role="status"
-                        >
-                            {t("rankings.updating")}
-                        </p>
+                        // 갱신 중에는 이전 순위표를 흐린 색으로 두고 안내는 화면 읽기에만 — 글자 한 줄이 끼어 순위표가 밀리지 않게
+                        <LoadingStatus label={t("rankings.updating")} />
                     ) : null}
                     {!data && result.isError ? null : !data ? (
-                        <div className="nl-global-ranking-initial">
-                            {!result.isError ? (
-                                <p
-                                    className="nl-body-secondary nl-muted"
-                                    role="status"
-                                >
-                                    {t("rankings.loadingInitial")}
-                                </p>
-                            ) : null}
+                        // 첫 불러오기 — 순위표와 같은 틀(머리글은 실제 글자, 줄만 스켈레톤), 안내는 화면 읽기에만
+                        <div aria-busy="true">
+                            <LoadingStatus
+                                label={t("rankings.loadingInitial")}
+                            />
+                            <div
+                                className="nl-ranking-head nl-metadata nl-muted"
+                                aria-hidden
+                            >
+                                <span className="nl-ranking-head__rank">
+                                    {t("rankings.column.rank")}
+                                </span>
+                                <span className="nl-ranking-head__player">
+                                    {t("rankings.column.player")}
+                                </span>
+                                <span className="nl-ranking-head__value">
+                                    {t(
+                                        controls.metric === "rating"
+                                            ? "rankings.metric.rating"
+                                            : "rankings.metric.grade"
+                                    )}
+                                </span>
+                            </div>
+                            <ol
+                                className="nl-global-ranking-list"
+                                aria-hidden="true"
+                            >
+                                {Array.from({ length: 10 }, (_, index) => (
+                                    <PlayerRankingRowSkeleton key={index} />
+                                ))}
+                            </ol>
                         </div>
                     ) : data.status === "unavailable" ? (
                         <ResultState

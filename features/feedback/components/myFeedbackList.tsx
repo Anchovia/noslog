@@ -1,5 +1,6 @@
 "use client";
 
+import { LoadingStatus, SkeletonText } from "@/components/ui/skeleton";
 import { useEffect, useState } from "react";
 
 import { listMyFeedback } from "@/app/(nevigation)/(home)/feedbackActions";
@@ -51,10 +52,22 @@ export default function MyFeedbackList({
             />
         );
     if (!items)
+        // 불러오는 동안 — 같은 목록 줄 틀(상태 · 날짜 줄 →4→ 내용)의 스켈레톤, 안내는 화면 읽기에만
         return (
-            <p className="nl-body-secondary nl-muted" aria-busy>
-                {t("feedback.mine.loading")}
-            </p>
+            <div aria-busy="true">
+                <LoadingStatus label={t("feedback.mine.loading")} />
+                <ul className="nl-feedback-mine" aria-hidden="true">
+                    {[0, 1, 2].map((index) => (
+                        <li key={index} className="nl-feedback-mine__row">
+                            <SkeletonText className="nl-metadata" width="m" />
+                            <SkeletonText
+                                className="nl-body-secondary"
+                                width="l"
+                            />
+                        </li>
+                    ))}
+                </ul>
+            </div>
         );
     if (!items.length)
         return (

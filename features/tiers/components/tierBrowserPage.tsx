@@ -36,6 +36,8 @@ import {
     normalizeTierModeGoal,
 } from "@/lib/tiers";
 import useWideLayout from "@/lib/hooks/useWideLayout";
+import { SkeletonText } from "@/components/ui/skeleton";
+import { TierBrowserCardSkeleton } from "./tierBrowserCard";
 import TierBrowserBands from "./tierBrowserBands";
 import TierFilterFields from "./tierFilterFields";
 import TierRatingGuide from "./tierRatingGuide";
@@ -121,13 +123,19 @@ export default function TierBrowserPage({
     }
     const resultCount = (
         <p className="nl-body-secondary nl-muted" role="status">
-            {pending
-                ? t("tiers.loading")
-                : data?.list
-                  ? t("tiers.songCount", {
-                        count: total.toLocaleString(locale),
-                    })
-                  : ""}
+            {pending ? (
+                // 글자 대신 결과 수 자리 스켈레톤(안내는 화면 읽기에만)
+                <>
+                    <span className="sr-only">{t("tiers.loading")}</span>
+                    <SkeletonText className="nl-body-secondary" width="s" />
+                </>
+            ) : data?.list ? (
+                t("tiers.songCount", {
+                    count: total.toLocaleString(locale),
+                })
+            ) : (
+                ""
+            )}
         </p>
     );
     const modeControl = (
@@ -397,18 +405,25 @@ export default function TierBrowserPage({
                         />
                     ) : null}
                     {!data && pending ? (
+                        // 첫 불러오기 — 서열 구역 하나와 같은 틀(구역 머리 · 카드 격자)의 스켈레톤
                         <div className="nl-tier-bands" aria-hidden="true">
-                            <div className="nl-tier-initial-header" />
-                            <div className="nl-tier-grid">
-                                {[0, 1, 2].map((index) => (
-                                    <div
-                                        className="nl-tier-card nl-tier-card--skeleton"
-                                        key={index}
-                                    >
-                                        <span className="nl-tier-card__jacket" />
-                                    </div>
-                                ))}
-                            </div>
+                            <section className="nl-tier-band">
+                                <header className="nl-tier-band__header">
+                                    <SkeletonText
+                                        className="nl-section-title"
+                                        width="s"
+                                    />
+                                </header>
+                                <div className="nl-tier-grid">
+                                    {[0, 1, 2, 3, 4, 5].map((index) => (
+                                        <TierBrowserCardSkeleton
+                                            key={index}
+                                            detailed={query.detailed}
+                                            signedIn={viewerId !== null}
+                                        />
+                                    ))}
+                                </div>
+                            </section>
                         </div>
                     ) : null}
                     {data ? (

@@ -258,8 +258,7 @@
     flex-direction: column;
     gap: var(--nl-spacing-12);
 }
-.noslog-ui .nl-discovery__items,
-.noslog-ui .nl-discovery__skeleton {
+.noslog-ui .nl-discovery__items {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: var(--nl-spacing-8);
@@ -280,42 +279,6 @@
     gap: var(--nl-spacing-8);
     align-items: center;
     text-align: center;
-}
-.noslog-ui .nl-result-skeleton {
-    display: flex;
-    gap: var(--nl-spacing-12);
-    height: 64px;
-    align-items: center;
-    padding-right: var(--nl-spacing-12);
-    background: var(--nl-surface-surface);
-    border-radius: var(--nl-radius-container);
-}
-.noslog-ui .nl-result-skeleton > span:first-child {
-    width: 64px;
-    height: 64px;
-    background: var(--nl-surface-sunken);
-}
-.noslog-ui .nl-result-skeleton > div {
-    flex: 1;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-8);
-}
-.noslog-ui .nl-result-skeleton > div span {
-    height: 12px;
-    width: 100%;
-    background: var(--nl-border-subtle);
-    border-radius: var(--nl-radius-control);
-}
-.noslog-ui .nl-result-skeleton > div span:last-child {
-    width: calc(75 / 166 * 100%);
-}
-.noslog-ui .nl-result-skeleton > span:last-child {
-    width: 92px;
-    height: 12px;
-    background: var(--nl-border-subtle);
-    border-radius: var(--nl-radius-control);
 }
 .noslog-ui .nl-chart-group {
     display: flex;

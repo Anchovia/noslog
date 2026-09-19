@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 
+import { SkeletonText } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 
 export interface BarListRow {
@@ -51,6 +52,32 @@ export default function BarList({
                         )}
                     >
                         {row.display ?? (row.value === null ? "—" : row.value)}
+                    </dd>
+                </div>
+            ))}
+        </dl>
+    );
+}
+
+/**
+ * 막대 목록 스켈레톤(2026-09-19 로딩 시안 S1) — 항목 이름은 고정 글자라 실제 글자 그대로, 막대 트랙은 빈 채로,
+ * 값 자리만 스켈레톤
+ */
+export function BarListSkeleton({
+    labels,
+    className,
+}: {
+    labels: ReactNode[];
+    className?: string;
+}) {
+    return (
+        <dl className={cn("nl-bar-list", className)} aria-hidden="true">
+            {labels.map((label, index) => (
+                <div key={index} className="nl-bar-list__row">
+                    <dt className="nl-control">{label}</dt>
+                    <dd className="nl-bar-list__track" />
+                    <dd className="nl-bar-list__value">
+                        <SkeletonText className="nl-metric-value" />
                     </dd>
                 </div>
             ))}

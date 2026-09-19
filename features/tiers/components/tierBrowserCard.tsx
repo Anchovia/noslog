@@ -1,6 +1,7 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element */
+import { SkeletonText } from "@/components/ui/skeleton";
 import Link from "next/link";
 import {
     useLocale,
@@ -167,5 +168,39 @@ export default function TierBrowserCard({
                 </>
             ) : null}
         </Link>
+    );
+}
+
+/**
+ * 서열 카드 스켈레톤(2026-09-19 로딩 시안 S1) — 같은 카드 틀(자켓 1:1 · 사이 4, 자세히 보기면 8)에
+ * 자켓 · 점수 · (자세히 보기면) 이름 · 난이도 글자 자리
+ */
+export function TierBrowserCardSkeleton({
+    detailed,
+    signedIn,
+}: {
+    detailed: boolean;
+    signedIn: boolean;
+}) {
+    return (
+        <div
+            className="nl-tier-card"
+            data-detailed={detailed}
+            aria-hidden="true"
+        >
+            <span className="nl-tier-card__jacket nl-skeleton" />
+            {signedIn && !detailed ? (
+                <SkeletonText className="nl-metric-value" width="m" />
+            ) : null}
+            {detailed ? (
+                <>
+                    <SkeletonText className="nl-component-title" width="l" />
+                    <SkeletonText className="nl-body-secondary" width="m" />
+                    {signedIn ? (
+                        <SkeletonText className="nl-metric-value" width="m" />
+                    ) : null}
+                </>
+            ) : null}
+        </div>
     );
 }

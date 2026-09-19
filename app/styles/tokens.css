@@ -368,6 +368,10 @@ html:has(.noslog-ui) [data-sonner-toaster] {
     --nl-motion-duration-chart-change: 300ms; /* 그래프 값 바뀜(새 값으로 옮겨 감) */
     --nl-motion-loop-spin: 800ms; /* 스피너 한 바퀴 */
     --nl-motion-loop-pulse: 1600ms; /* 스켈레톤 한 번 깜빡임 */
+    /* 로딩(2026-09-19 로딩 시안 결정 4) — 이 시간 안에 끝나면 로딩 표시를 띄우지 않는다 */
+    --nl-motion-delay-progress: 100ms; /* 사이트 안 이동 — 위쪽 진행 막대 */
+    --nl-motion-delay-skeleton: 300ms; /* 화면 안 다시 불러오기 — 스켈레톤 */
+    --nl-motion-duration-progress: 1500ms; /* 위쪽 진행 막대가 80% 까지 차오르는 시간(끝나면 채우고 사라짐) */
     /* 곡선 — 들어올 때 감속 · 나갈 때 가속(Atlassian practical 과 같은 값) */
     --nl-ease-enter: cubic-bezier(0.4, 1, 0.6, 1);
     --nl-ease-exit: cubic-bezier(0.6, 0, 0.8, 0.6);

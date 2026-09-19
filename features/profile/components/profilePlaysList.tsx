@@ -17,7 +17,8 @@ import type {
     ProfileMetric,
     ProfileMode,
 } from "@/features/profile/schemas/publicProfileSchema";
-import ProfilePlayRow from "./profilePlayRow";
+import { LoadingStatus } from "@/components/ui/skeleton";
+import ProfilePlayRow, { ProfilePlayListSkeleton } from "./profilePlayRow";
 
 export default function ProfilePlaysList({
     userId,
@@ -132,14 +133,18 @@ export default function ProfilePlaysList({
                             />
                         ))}
                     </ol>
+                ) : busy ? (
+                    // 첫 불러오기 — 글자 대신 같은 줄 틀의 스켈레톤(안내는 화면 읽기에만)
+                    <>
+                        <LoadingStatus label={t("profile.loading")} />
+                        <ProfilePlayListSkeleton />
+                    </>
                 ) : (
                     <p className="nl-body-secondary nl-muted">
                         {t(
-                            busy
-                                ? "profile.loading"
-                                : kind === "recent"
-                                  ? "profile.recentEmpty"
-                                  : "profile.bestEmpty"
+                            kind === "recent"
+                                ? "profile.recentEmpty"
+                                : "profile.bestEmpty"
                         )}
                     </p>
                 )}

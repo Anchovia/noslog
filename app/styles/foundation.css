@@ -281,6 +281,11 @@ html[data-theme="light"] .noslog-ui,
     /* ⑩ 로딩 — 회전(동작 줄이기에서도 유지) */
     animation: nl-spin var(--nl-motion-loop-spin) var(--nl-ease-spin) infinite;
 }
+/* 한 덩어리 영역 가운데(지도 등) — 아이콘 기본 20 */
+.noslog-ui .nl-spinner[data-size="medium"] {
+    width: var(--nl-icon-medium);
+    height: var(--nl-icon-medium);
+}
 @keyframes nl-spin {
     to {
         transform: rotate(360deg);
@@ -1068,9 +1073,16 @@ html[data-theme="light"] .noslog-ui,
     text-align: end;
     white-space: nowrap;
 }
-.noslog-ui .nl-skeleton {
+/* 모서리는 가장 낮은 우선순위(:where) — 실제 부품 클래스(자켓 · 사진 · 난이도 판)와 함께 붙이면 그 부품 모서리가 이긴다.
+   채움은 어느 바탕(canvas · surface · sunken · raised) 위에서도 보이는 border/subtle 하나로 — 실제 부품의 면보다 앞서도록
+   같은 클래스를 두 번 적어 우선순위를 올린다(2026-09-19) */
+.noslog-ui :where(.nl-skeleton) {
     border-radius: var(--nl-radius-control);
-    background: var(--nl-surface-sunken);
+}
+.noslog-ui .nl-skeleton.nl-skeleton {
+    background: var(--nl-border-subtle);
+}
+.noslog-ui .nl-skeleton {
     /* ⑪ 로딩 — 은은한 깜빡임(동작 줄이기에서 멈춤) */
     animation: nl-pulse var(--nl-motion-loop-pulse) var(--nl-ease-pulse)
         infinite;
@@ -1080,10 +1092,92 @@ html[data-theme="light"] .noslog-ui,
         opacity: 0.5;
     }
 }
-.noslog-ui .nl-record-list-skeleton {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-8);
+/* 스켈레톤(2026-09-19 로딩 시안 S1 · M1) — 실제 부품의 틀 · 클래스를 그대로 쓰고 글자 · 사진 자리만 채운다.
+   글자 자리 = 그 글자 스타일 클래스를 함께 붙여 줄 높이(1lh)를 차지하고, 막대는 글자 크기(1em) 높이로 가운데.
+   폭은 네 단계(짧게 · 보통 · 길게 · 끝까지)만 — 글자 길이를 흉내 낼 뿐이라 따로 숫자를 만들지 않는다 */
+/* 막대를 줄 높이 가운데에 — 위 여백 대신 안쪽 채움으로(여백은 바깥으로 빠져 줄이 늘어날 수 있다) */
+.noslog-ui .nl-skeleton-text {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    height: 1lh;
+    min-width: 0;
+    padding-top: calc((1lh - 1em) / 2);
+}
+.noslog-ui .nl-skeleton-text > .nl-skeleton {
+    display: block;
+    width: 100%;
+    height: 1em;
+}
+/* 폭은 글자 자리 자체에 — 가로 줄(flex) 안에서도 줄 폭 기준으로 잡힌다 */
+.noslog-ui .nl-skeleton-text[data-width="s"] {
+    width: 25%;
+}
+.noslog-ui .nl-skeleton-text[data-width="m"] {
+    width: 50%;
+}
+.noslog-ui .nl-skeleton-text[data-width="l"] {
+    width: 75%;
+}
+/* 짧은 값 자리 — 보이지 않는 표본 글자 폭만큼 */
+.noslog-ui .nl-skeleton-text[data-sample] {
+    display: inline-block;
+    width: auto;
+    /* 글자 기준선에 맞추면 아래 여백이 생겨 줄이 늘어난다 */
+    vertical-align: top;
+}
+.noslog-ui .nl-skeleton-text[data-sample] > .nl-skeleton {
+    width: auto;
+    overflow: hidden;
+    color: transparent;
+}
+/* 입력칸 · 셀렉트 · 버튼 자리 — 컨트롤 L 높이 · 모서리 8(field) */
+.noslog-ui .nl-skeleton-control {
+    display: block;
+    width: 100%;
+    height: var(--nl-control-height);
+    border-radius: var(--nl-radius-field);
+}
+/* 사이트 안 이동 — 위쪽 진행 막대(2026-09-19 로딩 시안 N1). 맨 위 2px · primary/default · 이전 화면은 그대로.
+   80% 까지 차오르다(--nl-motion-duration-progress) 새 화면이 오면 끝까지 채우고 사라진다.
+   동작 줄이기에서도 막대는 남는다(차오름 시간은 줄이지 않음 — 멈추면 멈춘 것처럼 보인다) */
+.noslog-ui .nl-progress {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 60;
+    height: 2px;
+    pointer-events: none;
+}
+.noslog-ui .nl-progress__bar {
+    width: 0;
+    height: 100%;
+    background: var(--nl-primary-default);
+    opacity: 0;
+}
+.noslog-ui .nl-progress[data-phase="running"] .nl-progress__bar {
+    opacity: 1;
+    animation: nl-progress-run var(--nl-motion-duration-progress)
+        var(--nl-ease-enter) forwards;
+}
+.noslog-ui .nl-progress[data-phase="done"] .nl-progress__bar {
+    width: 100%;
+    animation: nl-fade-out var(--nl-motion-duration-overlay-out)
+        var(--nl-ease-exit) forwards;
+}
+@keyframes nl-progress-run {
+    to {
+        width: 80%;
+    }
+}
+/* 화면 안 다시 불러오기 — 짧게 끝나면 스켈레톤이 번쩍이지 않게 잠깐 숨겨 둔다(자리는 차지) */
+.noslog-ui .nl-loading-delay {
+    animation: nl-hold-hidden var(--nl-motion-delay-skeleton);
+}
+@keyframes nl-hold-hidden {
+    from,
+    to {
+        visibility: hidden;
+    }
 }
 
 @media (min-width: 1056px) {

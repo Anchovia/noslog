@@ -272,18 +272,6 @@
 .noslog-ui [data-pending="true"] .nl-tier-card {
     color: var(--nl-content-pending);
 }
-.noslog-ui .nl-tier-card--skeleton .nl-tier-card__jacket {
-    background: var(--nl-surface-surface);
-}
-.noslog-ui .nl-tier-skeleton-line {
-    min-height: 20px;
-    background: var(--nl-surface-surface);
-    border-radius: var(--nl-radius-control);
-}
-.noslog-ui .nl-tier-initial-header {
-    height: 44px;
-    background: var(--nl-surface-surface);
-}
 .noslog-ui .nl-tier-guide {
     display: flex;
     flex-direction: column;

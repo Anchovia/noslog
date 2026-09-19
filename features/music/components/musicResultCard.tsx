@@ -8,6 +8,7 @@ import {
     useTranslations,
 } from "@/components/i18n/localeProvider";
 import MusicJacket from "@/components/music/musicJacket";
+import { SkeletonText } from "@/components/ui/skeleton";
 import { entryDifficulty } from "@/features/music/lib/entryDifficulty";
 import type { MusicResult } from "@/features/music/schemas/musicResultSchema";
 import { cn } from "@/lib/utils";
@@ -129,5 +130,62 @@ export default function MusicResultCard({
                 {showLevels ? <DifficultyLevels music={music} /> : null}
             </span>
         </Link>
+    );
+}
+
+/**
+ * 결과 카드 스켈레톤(2026-09-19 로딩 시안 S1) — 같은 카드 틀 · 클래스(목록 · 격자 · 촘촘)에 자켓 자리 · 글자 자리 · 난이도 판만 채운다.
+ * 이름 · 아티스트 글자 단계도 실제 카드와 같다(목록 = entity-title · body-secondary, 격자 = emphasis-label · metadata)
+ */
+export function MusicResultCardSkeleton({
+    view = "list",
+    showLevels = true,
+}: {
+    view?: "list" | "grid" | "dense";
+    showLevels?: boolean;
+}) {
+    return (
+        <div
+            className={cn(
+                "nl-music-card",
+                `nl-music-card--${view === "list" ? "list" : "grid"}`,
+                view === "dense" && "nl-music-card--dense"
+            )}
+            aria-hidden="true"
+        >
+            <span className="nl-jacket nl-skeleton" />
+            <span className="nl-music-card__body">
+                <span className="nl-music-card__identity">
+                    <SkeletonText
+                        className={
+                            view === "list"
+                                ? "nl-entity-title"
+                                : "nl-emphasis-label"
+                        }
+                        width="l"
+                    />
+                    {view === "dense" ? null : (
+                        <SkeletonText
+                            className={
+                                view === "list"
+                                    ? "nl-body-secondary"
+                                    : "nl-metadata"
+                            }
+                            width="m"
+                        />
+                    )}
+                </span>
+                {showLevels ? (
+                    <span className="nl-difficulty-levels">
+                        {difficulties.map((difficulty) => (
+                            <span
+                                key={difficulty}
+                                className="nl-level nl-skeleton"
+                            />
+                        ))}
+                    </span>
+                ) : null}
+            </span>
+        </div>
     );
 }
