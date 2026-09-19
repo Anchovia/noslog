@@ -494,7 +494,7 @@ export const koMessages = {
     "music.ranking.loginRequired": "로그인 후 내 랭킹을 확인할 수 있습니다.",
     "music.ranking.noMyRank": "이 채보의 플레이 기록이 없어 순위가 없습니다.",
     "music.ranking.summary": "상위 {percent}% · 전체 {count}명",
-    "music.ranking.empty": "등록된 랭킹 기록이 없습니다.",
+    "music.ranking.empty": "아직 플레이된 기록이 없습니다.",
     "music.ranking.pagination": "랭킹 페이지",
     "music.tier.history": "서열 상수 변동",
     "music.tier.constant": "서열 상수",

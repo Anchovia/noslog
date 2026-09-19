@@ -138,7 +138,8 @@ export async function loadMusicDetail(
                   getUserChartPeerScoreComparison(
                       userId,
                       chart.id,
-                      userPlayData?.user.grade_basic ?? null
+                      // 이 곡 기록이 없어도 내 Grd 로 비슷한 사람 평균을 보여 준다(기록 없음 틀 E1, 2026-09-19)
+                      userPlayData ? userPlayData.user.grade_basic : undefined
                   ),
               ])
             : [[], [], [], null];

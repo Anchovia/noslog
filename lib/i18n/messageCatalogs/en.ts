@@ -497,7 +497,7 @@ export const enMessages = {
     "music.ranking.noMyRank":
         "You do not have a play record for this chart, so there is no rank.",
     "music.ranking.summary": "Top {percent}% · {count} players",
-    "music.ranking.empty": "No ranking records have been registered.",
+    "music.ranking.empty": "No plays recorded yet.",
     "music.ranking.pagination": "Ranking pages",
     "music.tier.history": "Tier Constant History",
     "music.tier.constant": "Tier Constant",

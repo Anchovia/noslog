@@ -44,13 +44,15 @@ export default function JudgementAnalysis({
 }) {
     const t = useTranslations();
     const locale = useLocale();
+    // 기록이 없어도 같은 틀 — 내 값 자리는 「—」, 평균은 그대로 (기록 없음 틀 E1, 2026-09-19)
     const record = data.userPlayData;
-    if (!record) return null;
+    const value = <K extends keyof NonNullable<typeof record>>(key: K) =>
+        record ? record[key] : null;
     // 유사 Grd 평균은 켜기 없이 늘 보여 주고, 비교할 기록이 없으면 평균 줄 자체를 그리지 않는다 (2026-09-16 A)
     const peer = data.peerScoreComparison;
-    const complete = shownKeys.every((key) => record[key] !== null);
+    const complete = shownKeys.every((key) => value(key) !== null);
     const total = complete
-        ? peerJudgementKeys.reduce((sum, key) => sum + (record[key] ?? 0), 0)
+        ? peerJudgementKeys.reduce((sum, key) => sum + (value(key) ?? 0), 0)
         : null;
     const count = (value: number) => value.toLocaleString(locale);
     const percentage = (value: number | null) =>
@@ -92,7 +94,7 @@ export default function JudgementAnalysis({
                                 segments: complete
                                     ? shownKeys.map((key) => ({
                                           key,
-                                          value: record[key]!,
+                                          value: value(key)!,
                                           color: judgementColors[key],
                                       }))
                                     : emptySegments,
@@ -116,7 +118,7 @@ export default function JudgementAnalysis({
                         <h3 className="nl-component-title">
                             {t("music.recent.judgement")}
                         </h3>
-                        {complete ? null : (
+                        {complete || !record ? null : (
                             <p className="nl-body-secondary nl-muted">
                                 {t("music.judgement.syncRequired")}
                             </p>
@@ -135,20 +137,23 @@ export default function JudgementAnalysis({
                                     <dd>
                                         <span className="nl-inline">
                                             <span className="nl-metric-value">
-                                                {record[key]?.toLocaleString(
+                                                {value(key)?.toLocaleString(
                                                     locale
                                                 ) ?? "—"}
                                             </span>
-                                            <span className="nl-metric-value nl-muted">
-                                                {percentage(
-                                                    total &&
-                                                        record[key] !== null
-                                                        ? (record[key] /
-                                                              total) *
-                                                              100
-                                                        : null
-                                                )}
-                                            </span>
+                                            {/* 기록이 없으면 「—」 하나 — 비율 자리까지 겹쳐 쓰지 않는다 */}
+                                            {record ? (
+                                                <span className="nl-metric-value nl-muted">
+                                                    {percentage(
+                                                        total &&
+                                                            value(key) !== null
+                                                            ? (value(key)! /
+                                                                  total) *
+                                                                  100
+                                                            : null
+                                                    )}
+                                                </span>
+                                            ) : null}
                                         </span>
                                         {peer?.judgement ? (
                                             <span className="nl-metadata nl-muted">
@@ -179,7 +184,7 @@ export default function JudgementAnalysis({
                                         <dt>{t(noteLabels[index])}</dt>
                                         <dd>
                                             <span className="nl-metric-value">
-                                                {noteRate(record[key])}
+                                                {noteRate(value(key))}
                                             </span>
                                             {peer && average !== null ? (
                                                 <span className="nl-metadata nl-muted">

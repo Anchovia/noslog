@@ -61,19 +61,22 @@ export default function MusicRankingPanel({
         pendingPlayer.current = player.user_id;
         onPageChange(target);
     };
-    if (!totalCount) return <p className="nl-body">{t("record.empty")}</p>;
+    // 0명이면 점수 자 · 페이지 넘김 없이 순위표 머리 줄 + 안내 한 줄. 점수 자는 1명 이상일 때부터 (2026-09-19 사용자)
+    const empty = !totalCount;
     const returnPath = href(
         `/music/${data.music.index}/${data.difficulty.toLowerCase()}?tab=ranking${page > 1 ? `&page=${page}` : ""}`
     );
     return (
         <div className="nl-ranking-panel">
-            <ScoreScatter
-                scores={data.chartDetail.scoreSeries}
-                distribution={data.chartDetail.scoreDistribution}
-                players={data.ranking.players ?? []}
-                meId={user?.user_id ?? null}
-                onShowPlayer={showPlayer}
-            />
+            {empty ? null : (
+                <ScoreScatter
+                    scores={data.chartDetail.scoreSeries}
+                    distribution={data.chartDetail.scoreDistribution}
+                    players={data.ranking.players ?? []}
+                    meId={user?.user_id ?? null}
+                    onShowPlayer={showPlayer}
+                />
+            )}
             <section
                 className="nl-ranking-section"
                 aria-labelledby={`${sectionId}-title`}
@@ -96,7 +99,7 @@ export default function MusicRankingPanel({
                         </Link>
                     </div>
                 ) : null}
-                {!data.isLoggedIn ? null : !user ? (
+                {!data.isLoggedIn || empty ? null : !user ? (
                     <p className="nl-body-secondary nl-muted">
                         {t("ranking.noRank")}
                     </p>
@@ -107,36 +110,42 @@ export default function MusicRankingPanel({
                     tabIndex={-1}
                     aria-label={t("detail.ranking")}
                 >
-                    <span className="sr-only" role="status">
-                        {t("ranking.range", {
-                            first: ((page - 1) * pageSize + 1).toLocaleString(
-                                locale
-                            ),
-                            last: Math.min(
-                                page * pageSize,
-                                totalCount
-                            ).toLocaleString(locale),
-                            total: totalCount.toLocaleString(locale),
-                        })}
-                    </span>
+                    {empty ? null : (
+                        <span className="sr-only" role="status">
+                            {t("ranking.range", {
+                                first: (
+                                    (page - 1) * pageSize +
+                                    1
+                                ).toLocaleString(locale),
+                                last: Math.min(
+                                    page * pageSize,
+                                    totalCount
+                                ).toLocaleString(locale),
+                                total: totalCount.toLocaleString(locale),
+                            })}
+                        </span>
+                    )}
                     <ChartLeaderboard
                         rows={rows}
                         currentUserId={user?.user_id}
+                        emptyMessage={t("music.ranking.empty")}
                     />
-                    <Pagination
-                        page={page}
-                        totalPages={Math.ceil(totalCount / pageSize)}
-                        onPageChange={onPageChange}
-                        label={t("music.ranking.pagination")}
-                        pageLabel={(value) =>
-                            t("ranking.page", {
-                                page: value.toLocaleString(locale),
-                            })
-                        }
-                        previousLabel={t("common.previousPage")}
-                        nextLabel={t("common.nextPage")}
-                        busy={busy}
-                    />
+                    {empty ? null : (
+                        <Pagination
+                            page={page}
+                            totalPages={Math.ceil(totalCount / pageSize)}
+                            onPageChange={onPageChange}
+                            label={t("music.ranking.pagination")}
+                            pageLabel={(value) =>
+                                t("ranking.page", {
+                                    page: value.toLocaleString(locale),
+                                })
+                            }
+                            previousLabel={t("common.previousPage")}
+                            nextLabel={t("common.nextPage")}
+                            busy={busy}
+                        />
+                    )}
                 </div>
             </section>
         </div>

@@ -492,7 +492,7 @@ export const jaMessages = {
     "music.ranking.noMyRank":
         "この譜面のプレー記録がないため順位がありません。",
     "music.ranking.summary": "上位 {percent}%・全体 {count}人",
-    "music.ranking.empty": "ランキング記録がありません。",
+    "music.ranking.empty": "まだプレイ記録がありません。",
     "music.ranking.pagination": "ランキングページ",
     "music.tier.history": "難易度定数の推移",
     "music.tier.constant": "難易度定数",

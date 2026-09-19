@@ -125,9 +125,12 @@ function ChartLeaderboardRow({
 export default function ChartLeaderboard({
     rows,
     currentUserId,
+    emptyMessage,
 }: {
     rows: ChartRankingRow[];
     currentUserId?: number;
+    /** 기록이 0명일 때 머리 줄 아래 줄 한 칸(48) 가운데 안내 (2026-09-19 사용자) */
+    emptyMessage?: string;
 }) {
     const t = useTranslations();
     return (
@@ -143,18 +146,24 @@ export default function ChartLeaderboard({
                     <span>{t("music.trend.score")}</span>
                 </span>
             </div>
-            <ol
-                className="nl-global-ranking-list"
-                aria-label={t("detail.ranking")}
-            >
-                {rows.map((row) => (
-                    <ChartLeaderboardRow
-                        key={row.user_id}
-                        row={row}
-                        current={row.user_id === currentUserId}
-                    />
-                ))}
-            </ol>
+            {!rows.length && emptyMessage ? (
+                <p className="nl-chart-leaderboard__empty nl-body-secondary nl-muted">
+                    {emptyMessage}
+                </p>
+            ) : (
+                <ol
+                    className="nl-global-ranking-list"
+                    aria-label={t("detail.ranking")}
+                >
+                    {rows.map((row) => (
+                        <ChartLeaderboardRow
+                            key={row.user_id}
+                            row={row}
+                            current={row.user_id === currentUserId}
+                        />
+                    ))}
+                </ol>
+            )}
         </div>
     );
 }
