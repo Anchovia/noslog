@@ -917,6 +917,11 @@ html[data-theme="light"] .noslog-ui,
     background: var(--nl-surface-raised);
     overflow: hidden;
 }
+.noslog-ui .nl-stacked-bar__fill {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
 .noslog-ui .nl-stacked-bar__segment {
     display: block;
     height: 100%;
@@ -1267,9 +1272,23 @@ html[data-theme="light"] .noslog-ui,
 /* 움직임(2026-09-19) — 가이드 「움직임」 절의 목록만 움직인다. 시간 · 곡선은 tokens.css 의 움직임 토큰만 쓴다.
    목록 밖(탭 밑줄 · 펼침 · 툴팁 · 체크박스 · 누름 크기 · 스크롤 연출 · 페이지 이동)은 즉시 바뀐다 */
 
-/* ① 올림 · 누름 색 — 누를 수 있는 모든 것에 같은 값. 배경 · 글자색만(포커스 선 · 경계는 즉시) */
+/* ① 올림 · 누름 색 — 누를 수 있는 모든 것에 같은 값. 배경 · 글자색만(포커스 선 · 경계는 즉시).
+   label 로 만든 줄(체크 목록 · 밴드 선택 · 첨부 버튼), 누를 줄을 품고 올림 면을 칠하는 카드(펼침 카드 · 오락실 결과),
+   올림 면을 ::before 로 그리는 버튼(검색 안 셀렉트 · 지우기)도 같은 값 */
 .noslog-ui
-    :is(a, button, summary, [role="option"], [role="menuitem"], [role="tab"]) {
+    :is(
+        a,
+        button,
+        summary,
+        label,
+        details,
+        [role="button"],
+        [role="option"],
+        [role="menuitem"],
+        [role="tab"],
+        .nl-arcade-result
+    ),
+.noslog-ui :is(a, button)::before {
     transition:
         background-color var(--nl-motion-duration-state) var(--nl-ease-enter),
         color var(--nl-motion-duration-state) var(--nl-ease-enter);
@@ -1339,6 +1358,27 @@ html:has(.noslog-ui) [data-sonner-toaster] [data-sonner-toast] > * {
         var(--nl-ease-enter);
 }
 
+/* ⑯ 그래프(막대 목록 · 누적 막대 · 선 그래프) — 나타날 때 왼쪽부터 드러나고, 값이 바뀌면 새 값으로 옮겨 간다.
+   선 그래프의 값 바뀜은 SVG 라 LineChart 가 같은 토큰을 읽어 움직인다(lib/motion) */
+.noslog-ui
+    :is(.nl-line-chart__marks, .nl-bar-list__fill, .nl-stacked-bar__fill) {
+    animation: nl-reveal-x var(--nl-motion-duration-chart-in)
+        var(--nl-ease-enter);
+}
+.noslog-ui :is(.nl-bar-list__fill, .nl-stacked-bar__segment) {
+    transition: width var(--nl-motion-duration-chart-change)
+        var(--nl-ease-enter);
+}
+
+/* 양끝을 모두 inset() 으로 둬야 사이 값이 계산된다(none 과는 섞이지 않아 한 번에 바뀐다) */
+@keyframes nl-reveal-x {
+    from {
+        clip-path: inset(0 100% 0 0);
+    }
+    to {
+        clip-path: inset(0 0 0 0);
+    }
+}
 @keyframes nl-fade-in {
     from {
         opacity: 0;

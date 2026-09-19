@@ -364,6 +364,8 @@ html:has(.noslog-ui) [data-sonner-toaster] {
     --nl-motion-duration-overlay-in: 200ms; /* 대화상자 · 토스트 나타남 */
     --nl-motion-duration-overlay-out: 150ms; /* 대화상자 · 토스트 사라짐 */
     --nl-motion-duration-move: 200ms; /* 헤더 숨김 · 오락실 시트 */
+    --nl-motion-duration-chart-in: 800ms; /* 그래프 나타남(막대 · 선이 왼쪽부터) */
+    --nl-motion-duration-chart-change: 300ms; /* 그래프 값 바뀜(새 값으로 옮겨 감) */
     --nl-motion-loop-spin: 800ms; /* 스피너 한 바퀴 */
     --nl-motion-loop-pulse: 1600ms; /* 스켈레톤 한 번 깜빡임 */
     /* 곡선 — 들어올 때 감속 · 나갈 때 가속(Atlassian practical 과 같은 값) */
@@ -383,6 +385,8 @@ html:has(.noslog-ui) [data-sonner-toaster] {
         --nl-motion-duration-overlay-in: 0ms;
         --nl-motion-duration-overlay-out: 0ms;
         --nl-motion-duration-move: 0ms;
+        --nl-motion-duration-chart-in: 0ms;
+        --nl-motion-duration-chart-change: 0ms;
         --nl-motion-loop-pulse: 0ms;
         --nl-motion-distance: 0px;
     }
