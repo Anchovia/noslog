@@ -518,14 +518,33 @@ export default function LineChart({
                                         </span>
                                     )}
                                     <span className="nl-control">
-                                        {tooltipValueLabel
-                                            ? `${valueLabel} · `
-                                            : null}
+                                        {/* 이름은 선 색, 값은 기본 글자색(2026-09-19 T1) */}
+                                        {tooltipValueLabel ? (
+                                            <>
+                                                <span
+                                                    className="nl-line-chart__series-name"
+                                                    data-series={
+                                                        secondaryLabel
+                                                            ? "fast"
+                                                            : "personal"
+                                                    }
+                                                >
+                                                    {valueLabel}
+                                                </span>
+                                                {" · "}
+                                            </>
+                                        ) : null}
                                         {formatValue(points[active].value)}
                                     </span>
                                     {secondaryLabel ? (
                                         <span className="nl-control">
-                                            {secondaryLabel} ·{" "}
+                                            <span
+                                                className="nl-line-chart__series-name"
+                                                data-series="slow"
+                                            >
+                                                {secondaryLabel}
+                                            </span>
+                                            {" · "}
                                             {formatValue(
                                                 points[active].secondaryValue!
                                             )}
