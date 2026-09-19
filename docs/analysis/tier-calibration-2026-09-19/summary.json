@@ -1,0 +1,62 @@
+{
+    "catalogue_charts": 2171,
+    "target_charts": 1591,
+    "users": 7,
+    "records": 8123,
+    "input_sha256": {
+        "placements": "b96e1c177df51696005ce1685db9a3d4a55b4032820bd6e3b195178eb9c7999a",
+        "records": "31a2cd64ab86aa18573a0bbdd9cb4ab646d3412048a358b53401679fd3e3f3f7",
+        "catalogue": "07d9710ff45fbd47dfc7f6612c8cda39bf58555a1824991643c6697903198308"
+    },
+    "summary": {
+        "basic-s": {
+            "total": 1591,
+            "changed": 1184,
+            "new": 10,
+            "sources": {
+                "관측 보정": 1462,
+                "소표본 보정": 37,
+                "수동 배치 유지": 92
+            },
+            "no_record": 0,
+            "ceiling": 1
+        },
+        "basic-990k": {
+            "total": 1591,
+            "changed": 1449,
+            "new": 10,
+            "sources": {
+                "관측 보정": 1552,
+                "소표본 보정": 37,
+                "수동 배치 유지": 2
+            },
+            "no_record": 0,
+            "ceiling": 1
+        },
+        "basic-pianist": {
+            "total": 1591,
+            "changed": 1352,
+            "new": 10,
+            "sources": {
+                "관측 보정": 1552,
+                "소표본 보정": 37,
+                "수동 배치 유지": 2
+            },
+            "no_record": 0,
+            "ceiling": 1
+        },
+        "recital-pianist": {
+            "total": 1591,
+            "changed": 695,
+            "new": 10,
+            "sources": {
+                "유사 채보·공식 상수 보정": 205,
+                "소표본 보정": 1033,
+                "관측 보정": 351,
+                "수동 배치 유지": 2
+            },
+            "no_record": 205,
+            "ceiling": 1
+        }
+    }
+}

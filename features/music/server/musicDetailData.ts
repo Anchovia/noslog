@@ -8,6 +8,7 @@ import {
     PEER_STORED_GRADE_RANGE,
 } from "@/lib/music/peerScoreComparison";
 import { selectScoreImprovements } from "@/lib/music/scoreTrend";
+import { recentPlayTimestamp } from "@/lib/services/user/recentRecordMerge";
 import { unstable_cache } from "next/cache";
 
 // 모든 탭에서 공통으로 사용하는 악곡과 채보 정보만 캐시함
@@ -303,46 +304,69 @@ export async function getUserChartScoreTrend(
     chartId: number,
     currentRecord: { score: number; rank: string; besttime: string } | null
 ) {
-    const snapshots = await db.chartRecordSnapshot.findMany({
-        where: { user_id: userId, chart_id: chartId, score: { gt: 0 } },
-        select: {
-            id: true,
-            score: true,
-            rank: true,
-            created_at: true,
-        },
-        orderBy: [{ created_at: "asc" }, { id: "asc" }],
-    });
-
-    const records = snapshots.map((snapshot) => ({
-        id: snapshot.id,
-        score: snapshot.score,
-        rank: snapshot.rank,
-        play_time: snapshot.created_at.toISOString(),
-    }));
-
-    const improvements = selectScoreImprovements(records);
-
-    // 현재 최고점은 동기화 시각 대신 BEMANI의 실제 달성 시각으로 표시함
-    if (currentRecord?.score) {
-        const currentBestIndex = improvements.findIndex(
-            (record) => record.score === currentRecord.score
+    const [snapshots, history] = await Promise.all([
+        db.chartRecordSnapshot.findMany({
+            where: { user_id: userId, chart_id: chartId, score: { gt: 0 } },
+            select: {
+                id: true,
+                score: true,
+                rank: true,
+                besttime: true,
+                created_at: true,
+            },
+            orderBy: [{ created_at: "asc" }, { id: "asc" }],
+        }),
+        db.chartPlayHistory.findMany({
+            where: { user_id: userId, chart_id: chartId, score: { gt: 0 } },
+            select: {
+                id: true,
+                score: true,
+                rank: true,
+                source_play_time: true,
+            },
+        }),
+    ]);
+    const records = [
+        ...snapshots.map((snapshot) => ({
+            id: snapshot.id,
+            score: snapshot.score,
+            rank: snapshot.rank,
+            play_time:
+                recentPlayTimestamp(snapshot.besttime) !== null
+                    ? snapshot.besttime
+                    : snapshot.created_at.toISOString(),
+        })),
+        ...history.map((play) => ({
+            // Distinct IDs across the two tables and the current best record.
+            id: -play.id - 1,
+            score: play.score,
+            rank: play.rank,
+            play_time: play.source_play_time,
+        })),
+        ...(currentRecord?.score
+            ? [
+                  {
+                      id: -1,
+                      score: currentRecord.score,
+                      rank: currentRecord.rank,
+                      play_time: currentRecord.besttime,
+                  },
+              ]
+            : []),
+    ];
+    const timestamp = (value: string) =>
+        recentPlayTimestamp(value) ??
+        (/Z$|[+-]\d{2}:\d{2}$/.test(value) ? Date.parse(value) : NaN);
+    // Include intermediate improvements from the same recent-30 import, not
+    // just its final snapshot. Never give an invalid date to the chart renderer.
+    const ordered = records
+        .filter((record) => Number.isFinite(timestamp(record.play_time)))
+        .sort(
+            (a, b) =>
+                timestamp(a.play_time) - timestamp(b.play_time) ||
+                a.score - b.score
         );
-        const currentBest = {
-            id: -1,
-            score: currentRecord.score,
-            rank: currentRecord.rank,
-            play_time: currentRecord.besttime,
-        };
-
-        if (currentBestIndex >= 0) {
-            improvements[currentBestIndex] = currentBest;
-        } else {
-            improvements.push(currentBest);
-        }
-    }
-
-    return improvements;
+    return selectScoreImprovements(ordered);
 }
 
 // 해금 조건 이벤트 이름 번역(원문 일본어 → 언어별) — 90개 남짓이라 언어마다 통째로 캐시 (2026-09-18)

@@ -1,0 +1,100 @@
+[
+    {
+        "mode": "basic",
+        "analysis_user_no": 1,
+        "before": 5165.46,
+        "after": 4705.41,
+        "delta": -460.05
+    },
+    {
+        "mode": "basic",
+        "analysis_user_no": 2,
+        "before": 7438.38,
+        "after": 6778.66,
+        "delta": -659.72
+    },
+    {
+        "mode": "basic",
+        "analysis_user_no": 3,
+        "before": 7507.66,
+        "after": 6674.84,
+        "delta": -832.81
+    },
+    {
+        "mode": "basic",
+        "analysis_user_no": 4,
+        "before": 8590.57,
+        "after": 8068.76,
+        "delta": -521.81
+    },
+    {
+        "mode": "basic",
+        "analysis_user_no": 5,
+        "before": 8568.59,
+        "after": 8124.43,
+        "delta": -444.16
+    },
+    {
+        "mode": "basic",
+        "analysis_user_no": 6,
+        "before": 8540.57,
+        "after": 8053.01,
+        "delta": -487.56
+    },
+    {
+        "mode": "basic",
+        "analysis_user_no": 7,
+        "before": 6476.78,
+        "after": 5630.64,
+        "delta": -846.15
+    },
+    {
+        "mode": "recital",
+        "analysis_user_no": 1,
+        "before": 4650.7,
+        "after": 4515.35,
+        "delta": -135.35
+    },
+    {
+        "mode": "recital",
+        "analysis_user_no": 2,
+        "before": 3393.97,
+        "after": 3315.44,
+        "delta": -78.53
+    },
+    {
+        "mode": "recital",
+        "analysis_user_no": 3,
+        "before": 2366.15,
+        "after": 2298.3,
+        "delta": -67.85
+    },
+    {
+        "mode": "recital",
+        "analysis_user_no": 4,
+        "before": 8309.88,
+        "after": 8137.11,
+        "delta": -172.77
+    },
+    {
+        "mode": "recital",
+        "analysis_user_no": 5,
+        "before": 8568.44,
+        "after": 8383.43,
+        "delta": -185.01
+    },
+    {
+        "mode": "recital",
+        "analysis_user_no": 6,
+        "before": 2803.96,
+        "after": 2724.01,
+        "delta": -79.96
+    },
+    {
+        "mode": "recital",
+        "analysis_user_no": 7,
+        "before": 6478.21,
+        "after": 6163.2,
+        "delta": -315.01
+    }
+]

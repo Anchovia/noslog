@@ -194,9 +194,19 @@ old design-stage checklist. Changes to material behavior require a user decision
 - The account-specific bookmarklet executes on the official NOSTALGIA site. The
   NosLog page installs/guides it and observes status; it does not possess the user's
   official-site credentials. Never send p.eagate passwords or login cookies to NosLog.
-- Basic Pass availability determines the returned data scope. A recent-only sync
-  processes the available recent 30 plays and preserves previously imported full
-  records. Do not infer zero or erase records because detailed data was unavailable.
+- Basic Pass availability determines the returned data scope, not access to personal
+  features (2026-09-20). Recent-only sync accumulates unique plays into chart best
+  records, observed play/FC/P counts, Basic Grd (top 50), Rating, rankings and history.
+  After Pass expiry, continue from existing full values; preserve independent bests
+  and absent Recital/note-rate fields. Never replace unknown Recital with zero.
+  Total player play count still comes from player_info. Full sync reconciles chart
+  values/counts to the official response without deleting play or growth history.
+- Record projection and history receipts commit together. Full-import coverage and
+  receipts prevent overlap and retries from increasing counts twice. Official play
+  timestamps have minute precision: an overlap in the full-import minute is treated
+  conservatively as covered. Use chart play dates for score improvements, actual
+  sync observations for Grd/Rating history. Preserve privacy and existing layouts;
+  do not add per-score source badges. See [deployment and checks](../operations/recent-record-projection/README.md).
 - Distinguish plays checked, new plays stored and charts with changed best records.
   Repeated sync must not duplicate history. Unknown chart exclusions are counted
   safely; user-facing messages omit raw IDs, stack traces and credentials.

@@ -61,8 +61,8 @@ export async function getPublicProfileProgress(
             return Number.isFinite(date.getTime()) &&
                 date.getTime() >= cutoff &&
                 date <= now &&
-                row[field] > 0
-                ? [{ date: date.toISOString(), value: row[field] / 100 }]
+                (row[field] ?? 0) > 0
+                ? [{ date: date.toISOString(), value: row[field]! / 100 }]
                 : [];
         });
     }

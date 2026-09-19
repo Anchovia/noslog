@@ -16,6 +16,7 @@ const mocks = vi.hoisted(() => ({
     updatePlayerProfile: vi.fn(),
     updatePlayData: vi.fn(),
     updateRecentPlay: vi.fn(),
+    updateRecentBestRecords: vi.fn(),
     updateDummy: vi.fn(),
     revalidateTag: vi.fn(),
     getMissingJacketIndexes: vi.fn(),
@@ -51,6 +52,9 @@ vi.mock("@/lib/services/user/updatePlayerProfile", () => ({
 }));
 vi.mock("@/lib/services/user/updatePlayData", () => ({
     updatePlayData: mocks.updatePlayData,
+}));
+vi.mock("@/lib/services/user/updateRecentBestRecords", () => ({
+    updateRecentBestRecords: mocks.updateRecentBestRecords,
 }));
 vi.mock("@/lib/services/user/updateRecentPlay", () => ({
     updateRecentPlay: mocks.updateRecentPlay,
@@ -250,6 +254,7 @@ describe("POST /api/receivePlayerData", () => {
             skippedCharts: [],
         });
         mocks.updatePlayData.mockResolvedValue(3);
+        mocks.updateRecentBestRecords.mockResolvedValue(0);
         mocks.processBemaniCatalogUpdates.mockResolvedValue({
             detected: 0,
             pending: 0,
@@ -410,7 +415,8 @@ describe("POST /api/receivePlayerData", () => {
         expect(mocks.updatePlayData).not.toHaveBeenCalled();
     });
 
-    it("최근 기록만 동기화하고 사용자 프로필 캐시를 갱신한다", async () => {
+    it("최근 기록만 동기화하고 개인 기록·Grd·Rating과 캐시를 갱신한다", async () => {
+        mocks.updateRecentBestRecords.mockResolvedValue(1);
         const response = await POST(createRequest(requestBody()));
         const data = await response.json();
 
@@ -419,7 +425,7 @@ describe("POST /api/receivePlayerData", () => {
         expect(data).toMatchObject({
             receivedPlays: 1,
             insertedPlays: 1,
-            changedRecords: 0,
+            changedRecords: 1,
         });
         expect(mocks.updatePlayerProfile).toHaveBeenCalledWith(
             1,
@@ -431,17 +437,46 @@ describe("POST /api/receivePlayerData", () => {
             10
         );
         expect(mocks.updatePlayData).not.toHaveBeenCalled();
+        expect(mocks.updateRecentBestRecords).toHaveBeenCalledWith(1, 10);
+        expect(mocks.updateGrade).toHaveBeenCalledWith(1);
+        expect(mocks.recordProfileRatings).toHaveBeenCalledWith(1, 10);
+        expect(mocks.revalidateTag).toHaveBeenCalledWith(
+            "chart-rankings",
+            "max"
+        );
         expect(mocks.dataSyncUpdate).toHaveBeenCalledWith({
             where: { id: 10 },
             data: expect.objectContaining({
                 status: "completed",
                 inserted_plays: 1,
-                changed_records: 0,
+                changed_records: 1,
             }),
         });
         expect(mocks.revalidateTag).toHaveBeenCalledWith(
             "user-profile-1",
             "max"
+        );
+    });
+
+    it("중복 연동이어도 이전 실패로 빠진 Grd·Rating 계산을 복구한다", async () => {
+        mocks.updateRecentBestRecords.mockResolvedValue(0);
+        const response = await POST(createRequest(requestBody()));
+        expect(response.status).toBe(200);
+        expect(mocks.updateGrade).toHaveBeenCalledWith(1);
+        expect(mocks.recordProfileRatings).toHaveBeenCalledWith(1, 10);
+    });
+
+    it("최근 기록 병합 실패를 성공으로 표시하지 않는다", async () => {
+        mocks.updateRecentBestRecords.mockRejectedValueOnce(
+            new Error("projection failed")
+        );
+        const response = await POST(createRequest(requestBody()));
+        expect(response.status).toBe(500);
+        expect(mocks.updateGrade).not.toHaveBeenCalled();
+        expect(mocks.dataSyncUpdate).toHaveBeenCalledWith(
+            expect.objectContaining({
+                data: expect.objectContaining({ status: "failed" }),
+            })
         );
     });
 

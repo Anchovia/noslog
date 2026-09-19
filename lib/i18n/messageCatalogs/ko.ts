@@ -1041,9 +1041,9 @@ export const koMessages = {
     "sync.sentDescription":
         "NosLog는 플레이어 정보와 최근 플레이 기록을 받습니다. p.eagate 비밀번호와 로그인 쿠키는 받지 않습니다.",
     "sync.limitDescription":
-        "e-amusement Basic Course(Basic Pass)가 없으면 공식 상세 기록을 받을 수 없어 최근 30플레이만 동기화됩니다.",
+        "Basic Pass가 없어도 최근 30플레이를 연동할 때마다 기록을 누적해 최고 기록·Grd·Rating을 갱신합니다. 전체 기록을 받으면 공식 값으로 보정합니다.",
     "sync.recentHelp":
-        "공식 상세 기록을 받지 못해 최근 플레이만 동기화했습니다. 기존 전체 기록은 그대로 남아 있습니다. e-amusement Basic Course(Basic Pass)가 있으면 전체 기록을 받을 수 있습니다.",
+        "최근 플레이를 누적해 개인 기록을 갱신했습니다. 기존 최고 기록과 최근 응답에 없는 값은 보존됩니다. Basic Pass로 전체 기록을 받으면 공식 값으로 보정합니다.",
     "sync.security":
         "이 북마클릿은 현재 NosLog 계정 전용입니다. p.eagate 비밀번호와 로그인 쿠키는 NosLog로 전송되지 않습니다.",
     "sync.setupSecurity":

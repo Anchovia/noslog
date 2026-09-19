@@ -7,7 +7,7 @@ import type {
 } from "@/features/music/schemas/communitySchema";
 
 export function canContributeGoalVote(
-    record: (TierRecord & { grade_recital: number }) | null,
+    record: (TierRecord & { grade_recital: number | null }) | null,
     mode: TierMode,
     goal: TierGoal
 ) {

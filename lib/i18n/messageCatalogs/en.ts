@@ -1050,9 +1050,9 @@ export const enMessages = {
     "sync.sentDescription":
         "NosLog receives your player information and recent play history. It does not receive your p.eagate password or login cookie.",
     "sync.limitDescription":
-        "Without e-amusement Basic Course (Basic Pass), official detailed records are unavailable, so only your recent 30 plays are synced.",
+        "Without Basic Pass, each sync adds your recent 30 plays to your records and updates your best records, Grd and Rating. A full sync reconciles them with official values.",
     "sync.recentHelp":
-        "Detailed official records were unavailable, so only recent plays were synced. Your existing full records remain untouched. With e-amusement Basic Course (Basic Pass) you can receive full records.",
+        "Your recent plays have been added to update your personal records. Existing bests and values absent from this response are preserved. A full sync with Basic Pass reconciles them with official values.",
     "sync.security":
         "This bookmarklet belongs to your NosLog account. Your p.eagate password and login cookie are never sent to NosLog.",
     "sync.setupSecurity":

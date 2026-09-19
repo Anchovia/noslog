@@ -90,7 +90,7 @@ async function queryProfileData(id: number) {
                 take: 10,
             }),
             db.playData.findMany({
-                where: { user_id: id },
+                where: { user_id: id, grade_recital: { not: null } },
                 select: { ...bestPlaySelect, grade_recital: true },
                 orderBy: [{ grade_recital: "desc" }, { score: "desc" }],
                 take: 10,
@@ -191,7 +191,7 @@ async function queryProfileData(id: number) {
         gradeHistory: gradeHistory.map((point) => ({
             ...point,
             grade_basic: normalizeStoredGrade(point.grade_basic) ?? 0,
-            grade_recital: normalizeStoredGrade(point.grade_recital) ?? 0,
+            grade_recital: normalizeStoredGrade(point.grade_recital),
         })),
         basicBestPlays,
         recitalBestPlays,

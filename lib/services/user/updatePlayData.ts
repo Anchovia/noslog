@@ -170,33 +170,42 @@ export async function updatePlayData(
             }
         }
 
-        await db.$transaction([
-            db.playData.deleteMany({ where: { user_id } }),
-            db.playData.createMany({ data: newPlayData }),
-            ...(changedSnapshots.length > 0
-                ? [
-                      db.chartRecordSnapshot.createMany({
-                          data: changedSnapshots,
-                      }),
-                  ]
-                : []),
-        ]);
-        console.info(`(2)새 플레이 데이터 생성 완료(${newPlayData.length}개)`);
-        // 클리어 랭크 유저 데이터 업데이트
-        await db.user.update({
-            where: { id: user_id },
-            data: {
-                score_p: score.P,
-                score_f: score.F,
-                score_s: score.S,
-                score_a2: score.A2,
-                score_a: score.A,
-                score_b2: score.B2,
-                score_b: score.B,
-                score_c: score.C,
-                score_d: score.D,
+        await db.$transaction(
+            async (tx) => {
+                await tx.$queryRaw`SELECT id FROM "User" WHERE id = ${user_id} FOR UPDATE`;
+                const sync = await tx.dataSync.findUniqueOrThrow({
+                    where: { id: sync_id, user_id, status: "processing" },
+                    select: { started_at: true },
+                });
+                await tx.playData.deleteMany({ where: { user_id } });
+                await tx.playData.createMany({ data: newPlayData });
+                if (changedSnapshots.length) {
+                    await tx.chartRecordSnapshot.createMany({
+                        data: changedSnapshots,
+                    });
+                }
+                await tx.chartPlayHistory.updateMany({
+                    where: { user_id, record_applied: false },
+                    data: { record_applied: true },
+                });
+                await tx.user.update({
+                    where: { id: user_id },
+                    data: {
+                        last_full_record_at: sync.started_at,
+                        score_p: score.P,
+                        score_f: score.F,
+                        score_s: score.S,
+                        score_a2: score.A2,
+                        score_a: score.A,
+                        score_b2: score.B2,
+                        score_b: score.B,
+                        score_c: score.C,
+                        score_d: score.D,
+                    },
+                });
             },
-        });
+            { timeout: 30000 }
+        );
 
         const duration = Date.now() - startTime; // 종료 시간
         console.info(`===[플레이 데이터 업데이트 성공(${duration}ms)]===`);
