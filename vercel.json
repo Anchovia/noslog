@@ -2,6 +2,11 @@
     "$schema": "https://openapi.vercel.sh/vercel.json",
     "buildCommand": "npm run vercel-build",
     "regions": ["sin1"],
+    "git": {
+        "deploymentEnabled": {
+            "dev": false
+        }
+    },
     "crons": [
         {
             "path": "/api/cron/privacy-retention",
