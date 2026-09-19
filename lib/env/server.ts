@@ -28,6 +28,7 @@ export const serverEnv = createEnv({
         CRON_SECRET: z.string().min(32).optional(),
         GOOGLE_SITE_VERIFICATION: optionalSecret,
         X_BEARER_TOKEN: optionalSecret,
+        OFFICIAL_X_SYNC_SECRET: z.string().min(32).optional(),
         GEMINI_API_KEY: optionalSecret,
         VERCEL_ENV: z.enum(["development", "preview", "production"]).optional(),
         VERCEL_AUTOMATION_BYPASS_SECRET: optionalSecret,
@@ -49,6 +50,7 @@ export const serverEnv = createEnv({
         CRON_SECRET: process.env.CRON_SECRET,
         GOOGLE_SITE_VERIFICATION: process.env.GOOGLE_SITE_VERIFICATION,
         X_BEARER_TOKEN: process.env.X_BEARER_TOKEN,
+        OFFICIAL_X_SYNC_SECRET: process.env.OFFICIAL_X_SYNC_SECRET,
         GEMINI_API_KEY: process.env.GEMINI_API_KEY,
         VERCEL_ENV: process.env.VERCEL_ENV,
         VERCEL_AUTOMATION_BYPASS_SECRET:

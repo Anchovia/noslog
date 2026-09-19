@@ -20,10 +20,6 @@ vi.mock("@google/genai", () => ({
         models = { generateContent };
     },
 }));
-// Every call reaches the translator here; the data cache is Next's concern.
-vi.mock("next/cache", () => ({
-    unstable_cache: (fn: (...args: unknown[]) => unknown) => fn,
-}));
 
 const links = [
     {
@@ -146,29 +142,5 @@ describe("official X post translation", () => {
         generateContent.mockRejectedValue(new Error("network"));
         const { translateOfficialXPost } = await load();
         await expect(translateOfficialXPost(text, links)).resolves.toBeNull();
-    });
-
-    it("backs off after a failed translation, then retries once the window passes", async () => {
-        vi.useFakeTimers();
-        vi.setSystemTime(new Date("2026-09-10T00:00:00Z"));
-        generateContent.mockRejectedValue(new Error("network"));
-        const { getOfficialXPostTranslations } = await load();
-        await expect(
-            getOfficialXPostTranslations("1", text, links)
-        ).resolves.toBeNull();
-        const calls = generateContent.mock.calls.length;
-        await expect(
-            getOfficialXPostTranslations("1", text, links)
-        ).resolves.toBeNull();
-        expect(generateContent).toHaveBeenCalledTimes(calls);
-        vi.setSystemTime(new Date("2026-09-10T00:06:00Z"));
-        generateContent.mockReset();
-        generateContent.mockResolvedValueOnce({
-            text: JSON.stringify({ ko: "한", en: "en" }),
-        });
-        await expect(
-            getOfficialXPostTranslations("1", text, links)
-        ).resolves.toEqual({ ko: "한", en: "en" });
-        vi.useRealTimers();
     });
 });

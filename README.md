@@ -278,3 +278,7 @@ NosLog는 `vMAJOR.MINOR.PATCH` 형식의 Semantic Versioning을 사용합니다.
 5. PR 본문에 주요 변경, DB 마이그레이션과 환경변수 변경 여부를 기록합니다.
 6. `Create a merge commit`으로 병합하고 Production 배포를 확인합니다.
 7. 병합된 `main` 커밋에 같은 버전의 Git 태그와 GitHub Release를 생성합니다.
+
+### 공식 X 소식 예약 수집
+
+홈에서는 저장된 원문·번역만 읽습니다. 12시간 간격의 새 글 수집은 GitHub Actions가 담당합니다(Vercel Hobby). 최초 배포에는 DB 마이그레이션, `OFFICIAL_X_SYNC_SECRET`, GitHub Actions 변수·Secret 설정과 최초 수집이 필요합니다. [설정 및 확인 SQL](docs/operations/official-x-sync.md)을 따릅니다.

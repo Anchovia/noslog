@@ -1,6 +1,5 @@
 import "server-only";
 import { ApiError, GoogleGenAI } from "@google/genai";
-import { unstable_cache } from "next/cache";
 import { z } from "zod";
 import { serverEnv } from "@/lib/env/server";
 import {
@@ -18,13 +17,6 @@ export const OFFICIAL_X_TRANSLATION_MODELS = [
 ] as const;
 export const OFFICIAL_X_TRANSLATION_MODEL = OFFICIAL_X_TRANSLATION_MODELS[0];
 const TRANSLATION_TIMEOUT_MS = 20_000;
-// A successful translation is immutable for a given post id, so it can live in
-// the data cache far longer than the six-hour post refresh.
-const TRANSLATION_CACHE_SECONDS = 30 * 24 * 60 * 60;
-// After a failure, skip the API for a while so a shed-load window does not
-// turn every home render into a request.
-const FAILURE_BACKOFF_MS = 5 * 60 * 1000;
-
 // 리듬게임 공지 특유의 용어를 고정하고 링크·해시태그·고유명사는 손대지 않게 한다.
 export const OFFICIAL_X_TRANSLATION_INSTRUCTION = `You translate short Japanese posts from the official X account of NOSTALGIA, a Konami arcade rhythm game played on a piano-style keyboard, into Korean and English for a fan site.
 
@@ -82,7 +74,10 @@ export async function translateOfficialXPost(
     const { masked, restore } = maskOfficialXPostLinks(text, links);
     const ai = new GoogleGenAI({
         apiKey,
-        httpOptions: { timeout: TRANSLATION_TIMEOUT_MS },
+        httpOptions: {
+            timeout: TRANSLATION_TIMEOUT_MS,
+            retryOptions: { attempts: 1 },
+        },
     });
     for (const model of OFFICIAL_X_TRANSLATION_MODELS) {
         try {
@@ -90,6 +85,7 @@ export async function translateOfficialXPost(
                 model,
                 contents: masked,
                 config: {
+                    abortSignal: AbortSignal.timeout(TRANSLATION_TIMEOUT_MS),
                     systemInstruction: OFFICIAL_X_TRANSLATION_INSTRUCTION,
                     responseMimeType: "application/json",
                     responseJsonSchema,
@@ -112,37 +108,4 @@ export async function translateOfficialXPost(
         }
     }
     return null;
-}
-
-const getCachedTranslations = unstable_cache(
-    // `_id` is only part of the cache key: one entry per post.
-    async (_id: string, text: string, links: OfficialXPostLink[]) => {
-        const translations = await translateOfficialXPost(text, links);
-        // Throwing keeps a failed attempt out of the data cache.
-        if (!translations) throw new Error("translation unavailable");
-        return translations;
-    },
-    ["official-x-translation-v1"],
-    { revalidate: TRANSLATION_CACHE_SECONDS }
-);
-
-let lastFailureAt = 0;
-
-/**
- * Translation for a specific post, cached by post id once it succeeds.
- * Failures are not cached; instead the API is skipped for a short backoff.
- */
-export async function getOfficialXPostTranslations(
-    id: string,
-    text: string,
-    links: OfficialXPostLink[]
-): Promise<OfficialXPostTranslations | null> {
-    if (!serverEnv.GEMINI_API_KEY) return null;
-    if (Date.now() - lastFailureAt < FAILURE_BACKOFF_MS) return null;
-    try {
-        return await getCachedTranslations(id, text, links);
-    } catch {
-        lastFailureAt = Date.now();
-        return null;
-    }
 }

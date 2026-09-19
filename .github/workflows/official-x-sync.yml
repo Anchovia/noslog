@@ -1,0 +1,42 @@
+name: Sync official X news
+
+on:
+    schedule:
+        # UTC 00:17 / 12:17 = KST 09:17 / 21:17. Avoid the busy top of the hour.
+        - cron: "17 0,12 * * *"
+    workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+    group: official-x-sync
+    cancel-in-progress: false
+
+jobs:
+    sync:
+        # Register the URL only after the production migration and deployment are ready.
+        if: ${{ vars.OFFICIAL_X_SYNC_URL != '' }}
+        runs-on: ubuntu-latest
+        timeout-minutes: 4
+        steps:
+            - name: Refresh stored official news
+              env:
+                  SYNC_URL: ${{ vars.OFFICIAL_X_SYNC_URL }}
+                  SYNC_SECRET: ${{ secrets.OFFICIAL_X_SYNC_SECRET }}
+              run: |
+                  set -euo pipefail
+                  test -n "$SYNC_SECRET"
+                  case "$SYNC_URL" in
+                      https://*) ;;
+                      *) echo "OFFICIAL_X_SYNC_URL must use HTTPS" >&2; exit 1 ;;
+                  esac
+                  # No redirects or automatic retries: keep credentials and paid calls bounded.
+                  response_file=$(mktemp)
+                  trap 'rm -f "$response_file"' EXIT
+                  status=$(curl --silent --show-error --proto '=https' \
+                      --connect-timeout 10 --max-time 135 \
+                      --header "Authorization: Bearer $SYNC_SECRET" \
+                      --output "$response_file" --write-out '%{http_code}' "$SYNC_URL")
+                  test "$status" = 200
+                  jq -e '.isSuccess == true' "$response_file" >/dev/null
+                  jq -r '.result.status' "$response_file"
