@@ -54,3 +54,10 @@ pnpm-debug.log*
 
 # Claude Code local tooling
 .claude/
+
+# Local analysis outputs (keep generated datasets out of Git)
+/.local/analysis/
+/docs/analysis/**/proposals.json
+/docs/analysis/**/review.html
+/docs/analysis/**/01-preview.sql
+/docs/analysis/**/02-apply.sql

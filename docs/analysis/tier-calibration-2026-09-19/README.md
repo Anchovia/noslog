@@ -2,6 +2,10 @@
 
 사용자 요청에 따라 표본이 부족한 구간도 채운 **임시 휴리스틱 초안**이다. 통계적으로 검증된 절대 난도나 확정 서열이 아니다. 운영 DB에는 실행하지 않았다.
 
+## 산출물 보관
+
+대용량 생성물 `proposals.json`, `review.html`, `01-preview.sql`, `02-apply.sql`은 Git에서 제외한다. 기존 분석 묶음 전체는 로컬 `.local/analysis/tier-calibration-2026-09-19/`에 보관했다. 아래 검토·반영 절차는 이 로컬 폴더를 기준으로 한다. 다른 체크아웃에서는 원본 입력으로 다시 생성해야 한다. 저장소에는 요약, 검증·복구 SQL과 생성 스크립트를 유지한다.
+
 ## 산출물
 
 - `review.html`: 악곡 검색·목표 필터·변경분 필터가 있는 전체 제안표. 브라우저로 연다.
@@ -128,5 +132,7 @@ Neon 직접 수정은 Next.js 캐시 태그를 무효화하지 않는다. 서열
 모형의 난도 예측 정확도는 검증하지 못했다. UI 제품 코드 변경이 없으므로 앱 lint/typecheck/e2e는 실행하지 않았다.
 
 ## 재현
+
+출력 경로 `--output`은 `.local/analysis/tier-calibration-2026-09-19`로 지정한다. 생성 스크립트와 SQL 검사 스크립트에 모두 같은 출력 경로를 사용한다.
 
 Python 3 + NumPy로 `scripts/analysis/calibrate-tier-draft.py`에 `--placements`, `--records`, `--catalogue`, `--output`을 지정한다. 앞의 세 파일은 각각 사용자가 제공한 JSON 내보내기다. 원본 유저별 기록은 저장소에 복사하지 않았다. 이어 `scripts/analysis/build-tier-draft-sql.py`에 `--placements`, `--catalogue`, `--output`을 지정한다. 로컬 PostgreSQL 설치가 있으면 `check-tier-draft-sql.py`에 같은 세 인자를 주어 SQL을 재검증한다. 현재 검사 스크립트는 Homebrew PostgreSQL 경로를 사용한다.
