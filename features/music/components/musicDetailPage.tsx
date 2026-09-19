@@ -18,6 +18,7 @@ import type {
     Difficulty,
     MusicDetailProps,
 } from "@/components/music/musicDetailTypes";
+import MusicDetailLoading from "./musicDetailLoading";
 import MusicRecordPanel from "./musicRecordPanel";
 import MusicRankingPanel from "./musicRankingPanel";
 import MusicCommunityPanel from "./musicCommunityPanel";
@@ -231,9 +232,14 @@ export default function MusicDetailPage({
                                 }
                             />
                         ) : (
-                            <div
-                                className="nl-skeleton nl-detail-loading"
-                                aria-hidden
+                            <MusicDetailLoading
+                                tab={selection.tab}
+                                signedIn={
+                                    headerData?.isLoggedIn ??
+                                    initialData.isLoggedIn
+                                }
+                                musicIndex={initialData.music.index}
+                                difficulty={selection.difficulty}
                             />
                         )
                     ) : null}

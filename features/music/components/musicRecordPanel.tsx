@@ -19,23 +19,13 @@ import ScoreImprovementChart from "./scoreImprovementChart";
 export default function MusicRecordPanel({ data }: { data: MusicDetailProps }) {
     const t = useTranslations();
     const locale = useLocale();
-    const href = useLocalizedHref();
     const record = data.userPlayData;
     if (!data.isLoggedIn)
         return (
-            <div className="nl-record-state">
-                <p className="nl-body-secondary nl-muted">
-                    {t("record.guest")}
-                </p>
-                <Link
-                    className={foundationButtonClass({ variant: "primary" })}
-                    href={href(
-                        `/login?returnTo=${encodeURIComponent(href(`/music/${data.music.index}/${data.difficulty.toLowerCase()}?tab=record`))}`
-                    )}
-                >
-                    {t("common.login")}
-                </Link>
-            </div>
+            <MusicRecordGuest
+                musicIndex={data.music.index}
+                difficulty={data.difficulty}
+            />
         );
     // 기록이 없어도 다섯 구역 틀은 그대로 두고 내 값 자리만 흐린 「—」(E1, 2026-09-19 사용자).
     // 누적 수치도 「0」 이 아니라 「—」 — 기록을 아직 못 가져온 경우와 구분할 수 없다
@@ -140,6 +130,31 @@ export default function MusicRecordPanel({ data }: { data: MusicDetailProps }) {
                     )}
                 </Disclosure>
             </div>
+        </div>
+    );
+}
+
+/** 로그아웃 내 기록 — 데이터가 필요 없어 불러오는 동안에도 그대로 보인다 */
+export function MusicRecordGuest({
+    musicIndex,
+    difficulty,
+}: {
+    musicIndex: string;
+    difficulty: string;
+}) {
+    const t = useTranslations();
+    const href = useLocalizedHref();
+    return (
+        <div className="nl-record-state">
+            <p className="nl-body-secondary nl-muted">{t("record.guest")}</p>
+            <Link
+                className={foundationButtonClass({ variant: "primary" })}
+                href={href(
+                    `/login?returnTo=${encodeURIComponent(href(`/music/${musicIndex}/${difficulty.toLowerCase()}?tab=record`))}`
+                )}
+            >
+                {t("common.login")}
+            </Link>
         </div>
     );
 }

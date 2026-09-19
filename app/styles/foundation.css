@@ -1128,7 +1128,10 @@ html[data-theme="light"] .noslog-ui,
 }
 .noslog-ui .nl-skeleton-text[data-sample] > .nl-skeleton {
     width: auto;
-    overflow: hidden;
+    /* 기준선(baseline) 정렬 줄에서도 실제 글자와 같은 선에 — hidden 은 기준선을 상자 밑변으로 옮기고,
+       줄 높이를 글자 크기로 두어야 표본 글자의 기준선이 위 여백(padding-top)만큼만 내려간다 */
+    overflow: clip;
+    line-height: 1;
     color: transparent;
 }
 /* 입력칸 · 셀렉트 · 버튼 자리 — 컨트롤 L 높이 · 모서리 8(field) */

@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 
+import { SkeletonText } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 
 export type StatTone =
@@ -93,5 +94,32 @@ export default function StatStrip({
             {strip}
             {footer}
         </div>
+    );
+}
+
+/**
+ * 수치 띠 스켈레톤(2026-09-19 로딩 시안 S1) — 같은 칸 틀에 라벨은 실제 글자, 값 자리만 스켈레톤
+ */
+export function StatStripSkeleton({
+    labels,
+    className,
+}: {
+    labels: ReactNode[];
+    className?: string;
+}) {
+    return (
+        <dl className={cn("nl-stat-strip", className)} aria-hidden="true">
+            {labels.map((label, index) => (
+                <div key={index} className="nl-stat-strip__cell">
+                    <dd className="nl-stat-strip__value">
+                        <SkeletonText
+                            className="nl-stat-strip__value"
+                            sample="000,000"
+                        />
+                    </dd>
+                    <dt className="nl-metadata nl-muted">{label}</dt>
+                </div>
+            ))}
+        </dl>
     );
 }

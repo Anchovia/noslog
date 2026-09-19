@@ -268,8 +268,12 @@
     grid-template-columns: minmax(0, 1fr);
     gap: var(--nl-spacing-16);
 }
-.noslog-ui .nl-detail-loading {
-    height: 416px;
+/* 탭 불러오기 스켈레톤(2026-09-19 S1) — 최근 판정 추이 플롯(선 그래프 기본 높이 120) · 점수 자(72) 자리 */
+.noslog-ui .nl-detail-loading__trend {
+    height: 120px;
+}
+.noslog-ui .nl-detail-loading__ruler {
+    height: 72px;
 }
 .noslog-ui .nl-pattern-help {
     display: flex;
