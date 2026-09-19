@@ -138,7 +138,11 @@
     border-radius: inherit;
     background-image: linear-gradient(90deg, var(--nl-grade-progress-stops));
     background-repeat: no-repeat;
-    background-size: calc(100% / var(--nl-grade-progress)) 100%;
+    /* 그라데이션은 트랙 전체 폭 기준 — 막대 길이가 옮겨 가는 동안에도 색 위치가 흔들리지 않게 트랙 폭(cqw)으로 */
+    background-size: 100cqw 100%;
+}
+.noslog-ui .nl-grade-progress {
+    container-type: inline-size;
 }
 @supports (background-image: linear-gradient(in oklch 90deg, red, blue)) {
     .noslog-ui .nl-grade-progress__fill {

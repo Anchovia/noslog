@@ -132,6 +132,7 @@ export default function BingoDetailPage({
                             </span>
                             <span className="nl-bingo-summary__bar" aria-hidden>
                                 <i
+                                    className="nl-chart-reveal nl-chart-bar"
                                     style={{
                                         width: `${state.progress.progressPercent}%`,
                                     }}
