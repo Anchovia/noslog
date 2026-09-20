@@ -10,6 +10,9 @@ const mocks = vi.hoisted(() => ({
     feedbackCount: vi.fn(),
     catalogCount: vi.fn(),
     opinionCount: vi.fn(),
+    communityEvaluationCount: vi.fn(),
+    goalVoteCount: vi.fn(),
+    communityEventCount: vi.fn(),
 }));
 
 vi.mock("@/lib/admin", () => ({ requireAdmin: mocks.requireAdmin }));
@@ -17,6 +20,9 @@ vi.mock("@/lib/db", () => ({
     default: {
         $queryRaw: mocks.queryRaw,
         user: { findMany: mocks.userFindMany },
+        communityChartEvaluation: { count: mocks.communityEvaluationCount },
+        chartGoalVote: { count: mocks.goalVoteCount },
+        communityEvent: { count: mocks.communityEventCount },
         dataSync: { findMany: mocks.syncFindMany, count: mocks.syncCount },
         examSubmission: { count: mocks.submissionCount },
         feedbackReport: { count: mocks.feedbackCount },
@@ -54,9 +60,15 @@ describe("관리자 대시보드", () => {
             },
             { date: "2026-09-13", kind: "external", key: "x-api", count: 4 },
         ]);
-        mocks.userFindMany.mockResolvedValue([
-            { created_at: new Date("2026-09-12T01:00:00Z") },
-        ]);
+        mocks.userFindMany
+            .mockResolvedValueOnce([
+                { created_at: new Date("2026-09-12T01:00:00Z") },
+            ])
+            // 전환 흐름 — 기간에 가입한 사람의 연동 · 기록 유무
+            .mockResolvedValueOnce([
+                { id: 1, dataSyncs: [{ id: 1 }], PlayData: [{ id: 1 }] },
+                { id: 2, dataSyncs: [], PlayData: [] },
+            ]);
         mocks.syncFindMany.mockResolvedValue([
             {
                 started_at: new Date("2026-09-13T02:00:00Z"),
@@ -68,9 +80,19 @@ describe("관리자 대시보드", () => {
         mocks.syncCount.mockResolvedValueOnce(0).mockResolvedValueOnce(2);
         mocks.submissionCount.mockResolvedValue(0);
         // 일반 피드백 → 오락실 제보 순서
-        mocks.feedbackCount.mockResolvedValueOnce(0).mockResolvedValueOnce(1);
+        mocks.feedbackCount
+            .mockResolvedValueOnce(0)
+            .mockResolvedValueOnce(1)
+            // 기여 활동의 오락실 제보 수
+            .mockResolvedValueOnce(3);
         mocks.catalogCount.mockResolvedValue(0);
         mocks.opinionCount.mockResolvedValue(0);
+        // 패턴 평가 → 의견 순서로 불린다
+        mocks.communityEvaluationCount
+            .mockResolvedValueOnce(6)
+            .mockResolvedValueOnce(2);
+        mocks.goalVoteCount.mockResolvedValue(9);
+        mocks.communityEventCount.mockResolvedValue(1);
     });
 
     it("기간·지표는 모르는 값이면 기본값(7일·방문자)으로", () => {

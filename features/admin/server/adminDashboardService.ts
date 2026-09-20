@@ -2,7 +2,7 @@ import "server-only";
 
 import { requireAdmin } from "@/lib/admin";
 import { STALE_SYNC_THRESHOLD_MS } from "@/lib/admin/syncHealth";
-import { analyticsDateKey } from "@/lib/analytics";
+import { analyticsDateKey, analyticsHourKey } from "@/lib/analytics";
 import {
     API_ROUTES,
     EXTERNAL_EVENTS,
@@ -111,6 +111,12 @@ export async function getAdminDashboard(
         staleSyncs,
         pendingCatalog,
         pendingOpinions,
+        cohort,
+        patternVotes,
+        opinions,
+        goalVotes,
+        eventPosts,
+        arcadeReports,
     ] = await Promise.all([
         db.$queryRaw<
             { date: string; kind: string; key: string; count: number }[]
@@ -147,6 +153,46 @@ export async function getAdminDashboard(
         }),
         db.musicCatalogCandidate.count({ where: { status: "pending" } }),
         db.communityOpinionReport.count({ where: { status: "pending" } }),
+        // 전환 흐름 — 기간에 가입한 사람이 연동 · 기록까지 갔는지(이미 있는 데이터만 센다, 2026-09-20)
+        db.user.findMany({
+            where: {
+                created_at: { gte: new Date(`${current[0]}T00:00:00+09:00`) },
+            },
+            select: {
+                id: true,
+                dataSyncs: { select: { id: true }, take: 1 },
+                PlayData: { select: { id: true }, take: 1 },
+            },
+        }),
+        // 기여 활동 — 기간에 새로 쓰거나 고친 것
+        db.communityChartEvaluation.count({
+            where: {
+                updatedAt: { gte: new Date(`${current[0]}T00:00:00+09:00`) },
+            },
+        }),
+        db.communityChartEvaluation.count({
+            where: {
+                opinionUpdatedAt: {
+                    gte: new Date(`${current[0]}T00:00:00+09:00`),
+                },
+            },
+        }),
+        db.chartGoalVote.count({
+            where: {
+                updatedAt: { gte: new Date(`${current[0]}T00:00:00+09:00`) },
+            },
+        }),
+        db.communityEvent.count({
+            where: {
+                submittedAt: { gte: new Date(`${current[0]}T00:00:00+09:00`) },
+            },
+        }),
+        db.feedbackReport.count({
+            where: {
+                arcadeId: { not: null },
+                createdAt: { gte: new Date(`${current[0]}T00:00:00+09:00`) },
+            },
+        }),
     ]);
 
     const totals = new Map<string, DayTotals>();
@@ -165,6 +211,11 @@ export async function getAdminDashboard(
         return entry;
     };
     const inRange = new Set(current);
+    const hours = new Map<string, number>();
+    const audience = {
+        member: { visitors: 0, pageviews: 0 },
+        guest: { visitors: 0, pageviews: 0 },
+    };
     const pages = new Map<string, number>();
     const apis = new Map<string, number>();
     const externals = new Map<string, number>();
@@ -172,7 +223,16 @@ export async function getAdminDashboard(
         const count = Number(row.count);
         if (row.kind === "visitors") day(row.date).visitors += count;
         else if (row.kind === "pageviews") day(row.date).pageviews += count;
-        else if (inRange.has(row.date)) {
+        else if (!inRange.has(row.date)) continue;
+        else if (row.kind === "hour") {
+            if (days === 1)
+                hours.set(row.key, (hours.get(row.key) ?? 0) + count);
+        } else if (row.kind === "audience" || row.kind === "audienceVisitor") {
+            const side =
+                row.key === "member" ? audience.member : audience.guest;
+            if (row.kind === "audience") side.pageviews += count;
+            else side.visitors += count;
+        } else {
             const target =
                 row.kind === "page"
                     ? pages
@@ -204,10 +264,44 @@ export async function getAdminDashboard(
         })
     );
 
+    const syncedUsers = cohort.filter((user) => user.dataSyncs.length).length;
     return {
         range,
         metric,
         days,
+        // 오늘은 날짜 하나뿐이라 시각별로 — 아직 오지 않은 시각은 빈 칸으로 둔다 (2026-09-20)
+        hourly:
+            days === 1
+                ? Array.from({ length: 24 }, (_, hour) => {
+                      const key = String(hour).padStart(2, "0");
+                      return {
+                          hour: key,
+                          label: `${hour}시`,
+                          value: hours.get(key) ?? 0,
+                          future: key > analyticsHourKey(now),
+                      };
+                  })
+                : null,
+        audience,
+        funnel: [
+            { label: "가입", count: cohort.length },
+            { label: "기록 연동", count: syncedUsers },
+            {
+                label: "기록 등록",
+                count: cohort.filter((user) => user.PlayData.length).length,
+            },
+        ],
+        contributions: [
+            { key: "goalVotes", label: "서열 투표", count: goalVotes },
+            { key: "patternVotes", label: "패턴 평가", count: patternVotes },
+            { key: "opinions", label: "의견", count: opinions },
+            { key: "eventPosts", label: "이벤트 글", count: eventPosts },
+            {
+                key: "arcadeReports",
+                label: "오락실 제보",
+                count: arcadeReports,
+            },
+        ],
         from: current[0],
         to: current[current.length - 1],
         kpis,

@@ -6,7 +6,9 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-import AdminDashboardChart from "@/features/admin/components/adminDashboardChart";
+import AdminDashboardChart, {
+    AdminDashboardHours,
+} from "@/features/admin/components/adminDashboardChart";
 import {
     DASHBOARD_METRICS,
     DASHBOARD_RANGES,
@@ -17,6 +19,14 @@ import {
 } from "@/features/admin/server/adminDashboardService";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
+
+// 수치마다 제 색(2026-09-20 C2) — 데이터 색 토큰 안에서. 그래프 선 · 막대와 수치 칸의 색 줄이 같은 색이다
+const METRIC_COLORS: Record<DashboardMetric, string> = {
+    visitors: "var(--nl-local-data-categorical-1)",
+    pageviews: "var(--nl-local-data-categorical-2)",
+    signups: "var(--nl-local-data-categorical-3)",
+    syncs: "var(--nl-local-data-categorical-5)",
+};
 
 function dashboardHref(range: DashboardRange, metric: DashboardMetric) {
     return `/admin?range=${range}&metric=${metric}`;
@@ -82,6 +92,72 @@ function CountList({ rows, empty }: { rows: DashboardRow[]; empty: string }) {
                 </li>
             ))}
         </ul>
+    );
+}
+
+// 가입자 · 손님 — 페이지뷰 비율 막대 한 줄과 방문자 · 페이지뷰 수. 누가 왔는지는 세지 않는다 (2026-09-20)
+function AudienceSplit({
+    audience,
+}: {
+    audience: AdminDashboardData["audience"];
+}) {
+    const total = audience.member.pageviews + audience.guest.pageviews;
+    if (!total)
+        return (
+            <p className="nl-body-secondary nl-muted">
+                아직 방문 기록이 없습니다.
+            </p>
+        );
+    const sides = [
+        {
+            key: "member" as const,
+            label: "가입자",
+            color: "var(--nl-local-data-categorical-1)",
+        },
+        {
+            key: "guest" as const,
+            label: "손님",
+            color: "var(--nl-local-data-bucket-5)",
+        },
+    ];
+    return (
+        <>
+            <div className="nl-dashboard__split" aria-hidden>
+                {sides.map((side) => (
+                    <span
+                        key={side.key}
+                        style={{
+                            width: `${(audience[side.key].pageviews / total) * 100}%`,
+                            background: side.color,
+                        }}
+                    />
+                ))}
+            </div>
+            <ul className="nl-dashboard__legend">
+                {sides.map((side) => (
+                    <li key={side.key}>
+                        <span
+                            className="nl-dashboard__legend-dot"
+                            style={{ background: side.color }}
+                            aria-hidden
+                        />
+                        <span className="nl-body-secondary">{side.label}</span>
+                        <span className="nl-metric-value">
+                            방문자{" "}
+                            {audience[side.key].visitors.toLocaleString(
+                                "ko-KR"
+                            )}
+                        </span>
+                        <span className="nl-metric-value nl-muted">
+                            페이지뷰{" "}
+                            {audience[side.key].pageviews.toLocaleString(
+                                "ko-KR"
+                            )}
+                        </span>
+                    </li>
+                ))}
+            </ul>
+        </>
     );
 }
 
@@ -215,6 +291,14 @@ export default function AdminDashboard({ data }: { data: AdminDashboardData }) {
                                         value={kpi.value}
                                         previous={kpi.previous}
                                     />
+                                    <span
+                                        className="nl-dashboard__kpi-tone"
+                                        style={{
+                                            background:
+                                                METRIC_COLORS[kpi.metric],
+                                        }}
+                                        aria-hidden
+                                    />
                                     {kpi.failed ? (
                                         <span className="nl-metadata nl-muted">
                                             실패 {kpi.failed}
@@ -238,16 +322,92 @@ export default function AdminDashboard({ data }: { data: AdminDashboardData }) {
                                 {metricLabel}
                             </h2>
                         </div>
-                        {data.days === 1 ? (
-                            <p className="nl-body-secondary nl-muted">
-                                날짜별 그래프는 7일 이상에서 보입니다.
-                            </p>
+                        {data.hourly ? (
+                            <>
+                                <AdminDashboardHours
+                                    data={data.hourly}
+                                    color={METRIC_COLORS.pageviews}
+                                />
+                                <p className="nl-metadata nl-muted">
+                                    시간대별 페이지뷰 · 서울 기준. 날짜별
+                                    그래프는 7일 이상에서 보입니다.
+                                </p>
+                            </>
                         ) : (
                             <AdminDashboardChart
                                 data={data.series}
                                 label={metricLabel}
+                                color={METRIC_COLORS[data.metric]}
                             />
                         )}
+                    </section>
+
+                    <section
+                        className="nl-dashboard__panel"
+                        aria-labelledby="dashboard-audience"
+                    >
+                        <div className="nl-dashboard__panel-head">
+                            <h2
+                                id="dashboard-audience"
+                                className="nl-component-title"
+                            >
+                                가입자 · 손님
+                            </h2>
+                        </div>
+                        <AudienceSplit audience={data.audience} />
+                        <p className="nl-metadata nl-muted">
+                            로그인 여부만 셉니다 · {rangeLabel}
+                        </p>
+                    </section>
+
+                    <section
+                        className="nl-dashboard__panel"
+                        aria-labelledby="dashboard-funnel"
+                    >
+                        <div className="nl-dashboard__panel-head">
+                            <h2
+                                id="dashboard-funnel"
+                                className="nl-component-title"
+                            >
+                                전환 흐름
+                            </h2>
+                        </div>
+                        <CountList
+                            rows={data.funnel.map((step) => ({
+                                key: step.label,
+                                label: step.label,
+                                detail: "",
+                                count: step.count,
+                            }))}
+                            empty="기간에 가입한 사람이 없습니다."
+                        />
+                        <p className="nl-metadata nl-muted">
+                            {rangeLabel}에 가입한 사람이 어디까지 갔는지
+                        </p>
+                    </section>
+
+                    <section
+                        className="nl-dashboard__panel"
+                        aria-labelledby="dashboard-contributions"
+                    >
+                        <div className="nl-dashboard__panel-head">
+                            <h2
+                                id="dashboard-contributions"
+                                className="nl-component-title"
+                            >
+                                기여 활동
+                            </h2>
+                        </div>
+                        <CountList
+                            rows={data.contributions.map((row) => ({
+                                ...row,
+                                detail: "",
+                            }))}
+                            empty="기록 없음"
+                        />
+                        <p className="nl-metadata nl-muted">
+                            새로 쓰거나 고친 수 · {rangeLabel}
+                        </p>
                     </section>
 
                     <section
