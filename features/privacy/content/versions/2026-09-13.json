@@ -1,7 +1,7 @@
 {
     "ko": {
         "title": "개인정보처리방침",
-        "dates": "최종 수정 2026년 9월 20일 · 시행 2026년 9월 20일",
+        "dates": "최종 수정 2026년 9월 13일 · 시행 2026년 9월 13일",
         "contents": "이 페이지에서",
         "detailLabel": "자세히 보기",
         "settingsLogin": "로그인 후 설정에서 관리",
@@ -82,7 +82,7 @@
                     {
                         "kind": "item",
                         "title": "방문 통계",
-                        "text": "페이지를 열면 접속 IP와 브라우저 정보로 그날만 쓰는 식별값을 만들어 하루 방문자 수를 셉니다. IP와 브라우저 정보 자체는 저장하지 않으며, 식별값은 다음 날 삭제합니다. 남는 것은 하루 방문자 수, 페이지별 조회 수, 시간대별 조회 수, 로그인 여부별 합계, API 호출 수 같은 합계뿐이고, 이 기능에는 쿠키를 쓰지 않습니다."
+                        "text": "페이지를 열면 접속 IP와 브라우저 정보로 그날만 쓰는 식별값을 만들어 하루 방문자 수를 셉니다. IP와 브라우저 정보 자체는 저장하지 않으며, 식별값은 다음 날 삭제합니다. 남는 것은 하루 방문자 수, 페이지별 조회 수, API 호출 수 같은 합계뿐이고, 이 기능에는 쿠키를 쓰지 않습니다."
                     }
                 ]
             },
@@ -145,7 +145,7 @@
                             "처리 완료된 피드백: 완료일로부터 6개월 후 내용과 첨부 이미지 전체 삭제",
                             "승인된 검정 제출: 심사 완료 6개월 후 증빙 이미지와 심사 메모 삭제, 합격 이력은 회원 탈퇴 시까지 보관",
                             "반려된 검정 제출: 심사 완료 6개월 후 제출 기록과 증빙 이미지 전체 삭제",
-                            "방문 통계: 하루 식별값은 다음 날 삭제, 합계(하루 방문자 수·페이지 조회 수·시간대별 조회 수·로그인 여부별 합계·API 호출 수)는 90일 후 삭제"
+                            "방문 통계: 하루 식별값은 다음 날 삭제, 하루 합계(방문자 수·페이지 조회 수·API 호출 수)는 90일 후 삭제"
                         ]
                     },
                     {
@@ -275,7 +275,7 @@
     },
     "ja": {
         "title": "プライバシーポリシー",
-        "dates": "最終更新 2026年9月20日 · 施行 2026年9月20日",
+        "dates": "最終更新 2026年9月13日 · 施行 2026年9月13日",
         "contents": "このページの内容",
         "detailLabel": "詳しく見る",
         "settingsLogin": "ログインして設定で管理",
@@ -356,7 +356,7 @@
                     {
                         "kind": "item",
                         "title": "訪問統計",
-                        "text": "ページを開くと、接続IPとブラウザー情報からその日だけ使う識別値を作り、1日の訪問者数を数えます。IPとブラウザー情報そのものは保存せず、識別値は翌日に削除します。残るのは1日の訪問者数、ページごとの閲覧数、時間帯ごとの閲覧数、ログイン状態別の合計、APIの呼び出し回数といった合計のみで、この機能ではCookieを使用しません。"
+                        "text": "ページを開くと、接続IPとブラウザー情報からその日だけ使う識別値を作り、1日の訪問者数を数えます。IPとブラウザー情報そのものは保存せず、識別値は翌日に削除します。残るのは1日の訪問者数、ページごとの閲覧数、APIの呼び出し回数といった合計のみで、この機能ではCookieを使用しません。"
                     }
                 ]
             },
@@ -419,7 +419,7 @@
                             "対応済みのフィードバック：対応完了日から6か月後に内容と添付画像をすべて削除",
                             "承認された検定提出：審査完了から6か月後に証明画像と審査メモを削除し、合格履歴は退会まで保管",
                             "却下された検定提出：審査完了から6か月後に提出記録と証明画像をすべて削除",
-                            "訪問統計：1日の識別値は翌日に削除し、合計（1日の訪問者数・ページ閲覧数・時間帯ごとの閲覧数・ログイン状態別の合計・API呼び出し回数）は90日後に削除"
+                            "訪問統計：1日の識別値は翌日に削除し、1日の合計（訪問者数・ページ閲覧数・API呼び出し回数）は90日後に削除"
                         ]
                     },
                     {
@@ -549,7 +549,7 @@
     },
     "en": {
         "title": "Privacy Policy",
-        "dates": "Last updated September 20, 2026 · Effective September 20, 2026",
+        "dates": "Last updated September 13, 2026 · Effective September 13, 2026",
         "contents": "On this page",
         "detailLabel": "See details",
         "settingsLogin": "Manage in Settings after logging in",
@@ -630,7 +630,7 @@
                     {
                         "kind": "item",
                         "title": "Visit statistics",
-                        "text": "When you open a page, we create an identifier used only for that day from your connection IP and browser information to count daily visitors. We do not store the IP or browser information itself, and the identifier is deleted the next day. Only totals remain, such as daily visitors, views per page, views per hour, totals split by whether the visitor was signed in, and API call counts. This feature does not use cookies."
+                        "text": "When you open a page, we create an identifier used only for that day from your connection IP and browser information to count daily visitors. We do not store the IP or browser information itself, and the identifier is deleted the next day. Only totals remain, such as daily visitors, views per page, and API call counts. This feature does not use cookies."
                     }
                 ]
             },
@@ -693,7 +693,7 @@
                             "Resolved feedback: all content and attached images are deleted six months after resolution",
                             "Approved exam submissions: evidence images and review notes are deleted six months after review; passing history is retained until account deletion",
                             "Rejected exam submissions: submission records and evidence images are deleted six months after review",
-                            "Visit statistics: daily identifiers are deleted the next day; totals (daily visitors, page views, views per hour, totals split by signed-in status, API calls) are deleted after 90 days"
+                            "Visit statistics: daily identifiers are deleted the next day; daily totals (visitors, page views, API calls) are deleted after 90 days"
                         ]
                     },
                     {

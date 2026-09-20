@@ -10,9 +10,20 @@ import {
 } from "@/lib/analyticsRoutes";
 import db from "@/lib/db";
 
-// 날짜별 합계의 종류 — visitors·pageviews 는 열쇠 없이 하루 합계, page·api·external 은 경로·이름별
+// 날짜별 합계의 종류 — visitors·pageviews 는 열쇠 없이 하루 합계, page·api·external 은 경로·이름별,
+// hour 는 시각(00~23)별 페이지뷰, audience·audienceVisitor 는 로그인 여부(member·guest)별 합계(2026-09-20).
+// 누가 왔는지는 남기지 않는다 — 합계만 는다
 export type AnalyticsKind =
-    "visitors" | "pageviews" | "page" | "api" | "external";
+    | "visitors"
+    | "pageviews"
+    | "page"
+    | "api"
+    | "external"
+    | "hour"
+    | "audience"
+    | "audienceVisitor";
+
+export type AnalyticsAudience = "member" | "guest";
 
 // 방문 통계는 개인정보처리방침 2026-09-13 시행 버전이 알린 것이라 그날(서울 기준)부터 센다.
 // 바꾸면 policyCopy.json 의 시행일과 PRIVACY_PREVIOUS_VERSIONS 의 until 도 같이 바꾼다(테스트가 맞춰 본다)
@@ -33,6 +44,13 @@ export function analyticsDateKey(now = new Date()) {
     return new Date(now.getTime() + 9 * 60 * 60 * 1000)
         .toISOString()
         .slice(0, 10);
+}
+
+// 시각도 서울 기준 「00」~「23」 (2026-09-20)
+export function analyticsHourKey(now = new Date()) {
+    return new Date(now.getTime() + 9 * 60 * 60 * 1000)
+        .toISOString()
+        .slice(11, 13);
 }
 
 // 동시에 들어와도 빠지지 않게 한 문장으로 더한다(없으면 1로 만들고 있으면 +1)
@@ -74,11 +92,14 @@ export async function recordPageView({
     path,
     ip,
     userAgent,
+    signedIn = false,
     now = new Date(),
 }: {
     path: string;
     ip: string | null;
     userAgent: string | null;
+    /** 그때 로그인 상태였는지 — 가입자·손님 합계에만 쓰고 누구인지는 남기지 않는다 (2026-09-20) */
+    signedIn?: boolean;
     now?: Date;
 }) {
     if (!isAnalyticsEnabled(now) || isBotUserAgent(userAgent)) return false;
@@ -93,10 +114,16 @@ export async function recordPageView({
         INSERT INTO "analytics_visitors" ("date", "hash")
         VALUES (${date}::date, ${hash})
         ON CONFLICT DO NOTHING`;
+    const audience: AnalyticsAudience = signedIn ? "member" : "guest";
     await Promise.all([
         incrementAnalytics("pageviews", "", now),
         incrementAnalytics("page", route, now),
+        incrementAnalytics("hour", analyticsHourKey(now), now),
+        incrementAnalytics("audience", audience, now),
         firstVisit > 0 ? incrementAnalytics("visitors", "", now) : null,
+        firstVisit > 0
+            ? incrementAnalytics("audienceVisitor", audience, now)
+            : null,
     ]);
     return true;
 }

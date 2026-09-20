@@ -402,3 +402,40 @@
         grid-column: 1 / -1;
     }
 }
+/* 수치마다 제 색(2026-09-20 C2) — 수치 칸 아래 색 줄. 그래프 선 · 막대와 같은 색 */
+.noslog-ui .nl-dashboard__kpi-tone {
+    display: block;
+    height: 3px;
+    border-radius: var(--nl-radius-control);
+    margin-top: var(--nl-spacing-4);
+}
+/* 가입자 · 손님 비율 한 줄 */
+.noslog-ui .nl-dashboard__split {
+    display: flex;
+    height: 10px;
+    border-radius: var(--nl-radius-control);
+    overflow: hidden;
+}
+.noslog-ui .nl-dashboard__split > span {
+    display: block;
+}
+.noslog-ui .nl-dashboard__legend {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-dashboard__legend > li {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-dashboard__legend-dot {
+    display: block;
+    width: var(--nl-spacing-8);
+    height: var(--nl-spacing-8);
+    border-radius: var(--nl-radius-full);
+    flex-shrink: 0;
+}
+.noslog-ui .nl-dashboard__legend .nl-metric-value:last-child {
+    margin-left: auto;
+}

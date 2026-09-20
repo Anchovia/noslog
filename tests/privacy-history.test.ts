@@ -20,9 +20,9 @@ describe("개인정보처리방침 이전 버전", () => {
     it("세 언어 모두 새 시행일로 바뀌었고 직전 버전과 다르다", () => {
         const [previous] = PRIVACY_PREVIOUS_VERSIONS;
         const effective = {
-            ko: "시행 2026년 9월 13일",
-            ja: "施行 2026年9月13日",
-            en: "Effective September 13, 2026",
+            ko: "시행 2026년 9월 20일",
+            ja: "施行 2026年9月20日",
+            en: "Effective September 20, 2026",
         } as const;
         for (const locale of ["ko", "ja", "en"] as const) {
             expect(getPrivacyCopy(locale).dates).toContain(effective[locale]);
@@ -33,21 +33,25 @@ describe("개인정보처리방침 이전 버전", () => {
     });
 
     it("적용 기간을 방침 머리와 같은 날짜 표기로 적는다", () => {
-        const [previous] = PRIVACY_PREVIOUS_VERSIONS;
-        expect(getPrivacyVersion("2026-07-27")).toBe(previous);
-        expect(privacyVersionPeriod(previous, "ko")).toBe(
+        const first = getPrivacyVersion("2026-07-27")!;
+        expect(privacyVersionPeriod(first, "ko")).toBe(
             "2026년 7월 27일 – 2026년 9월 12일"
         );
-        expect(privacyVersionPeriod(previous, "ja")).toBe(
+        expect(privacyVersionPeriod(first, "ja")).toBe(
             "2026年7月27日〜2026年9月12日"
         );
-        expect(privacyVersionPeriod(previous, "en")).toBe(
+        expect(privacyVersionPeriod(first, "en")).toBe(
             "July 27, 2026 – September 12, 2026"
+        );
+        // 방문 통계를 알린 버전 — 지금 방침 시행 전날까지
+        const second = getPrivacyVersion("2026-09-13")!;
+        expect(privacyVersionPeriod(second, "ko")).toBe(
+            "2026년 9월 13일 – 2026년 9월 19일"
         );
     });
 
     it("없는 버전 주소는 찾지 않는다", () => {
-        expect(getPrivacyVersion("2026-09-13")).toBeNull();
+        expect(getPrivacyVersion("2026-09-20")).toBeNull();
         expect(getPrivacyVersion("toString")).toBeNull();
     });
 });

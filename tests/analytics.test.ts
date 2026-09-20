@@ -149,15 +149,32 @@ describe("방문·API 기록", () => {
         expect(mocks.executeRaw).not.toHaveBeenCalled();
     });
 
-    it("수집 시작일은 방침의 시행일이고 직전 버전은 그 전날까지다", () => {
-        const [year, month, day] = ANALYTICS_START_DATE.split("-").map(Number);
-        expect(getPrivacyCopy("ko").dates).toContain(
-            `시행 ${year}년 ${month}월 ${day}일`
+    it("수집 시작일은 그것을 알린 방침 버전의 시행일이다", () => {
+        // 2026-09-13 시행 버전이 방문 통계를 알렸다. 뒤에 방침을 고쳐도 시작일은 그 버전에 남는다
+        const announced = PRIVACY_PREVIOUS_VERSIONS.find(
+            (version) => version.effective === ANALYTICS_START_DATE
         );
-        const dayBefore = new Date(Date.UTC(year, month - 1, day - 1))
-            .toISOString()
-            .slice(0, 10);
-        expect(PRIVACY_PREVIOUS_VERSIONS[0].until).toBe(dayBefore);
+        expect(announced).toBeDefined();
+    });
+
+    it("방침 버전은 날짜가 끊기지 않고 이어진다", () => {
+        const dayBefore = (key: string) => {
+            const [year, month, day] = key.split("-").map(Number);
+            return new Date(Date.UTC(year, month - 1, day - 1))
+                .toISOString()
+                .slice(0, 10);
+        };
+        // 새것부터 — 각 버전의 until 은 바로 앞 시행일(맨 앞은 지금 방침 시행일)의 전날
+        const current = getPrivacyCopy("ko").dates.match(
+            /시행 (\d+)년 (\d+)월 (\d+)일/
+        );
+        expect(current).not.toBeNull();
+        const [, year, month, day] = current!;
+        let next = `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+        for (const version of PRIVACY_PREVIOUS_VERSIONS) {
+            expect(version.until).toBe(dayBefore(next));
+            next = version.effective;
+        }
     });
 
     it("그날 처음 온 사람은 방문자·페이지뷰·페이지를 함께 센다", async () => {
@@ -191,8 +208,37 @@ describe("방문·API 기록", () => {
                 ["pageviews", ""],
                 ["page", "/music"],
                 ["visitors", ""],
+                // 시각(서울 12시)과 로그인 여부 — 누가 왔는지는 남기지 않는다 (2026-09-20)
+                ["hour", "12"],
+                ["audience", "guest"],
+                ["audienceVisitor", "guest"],
             ])
         );
+    });
+
+    it("로그인한 방문은 가입자 쪽으로 센다", async () => {
+        await recordPageView({
+            path: "/ko/music",
+            ip: "203.0.113.7",
+            userAgent: CHROME,
+            signedIn: true,
+            now: new Date("2026-09-13T20:30:00Z"),
+        });
+
+        const counts = inserts()
+            .filter((row) => row.sql.includes('"analytics_daily_counts"'))
+            .map((row) => row.values.slice(1, 3));
+        expect(counts).toEqual(
+            expect.arrayContaining([
+                ["audience", "member"],
+                ["audienceVisitor", "member"],
+                // 서울 기준 다음 날 05시
+                ["hour", "05"],
+            ])
+        );
+        // 계정 번호 같은 것은 어디에도 넣지 않는다
+        for (const row of inserts())
+            expect(row.values.some((value) => value === true)).toBe(false);
     });
 
     it("같은 날 다시 온 사람은 방문자로 두 번 세지 않는다", async () => {
