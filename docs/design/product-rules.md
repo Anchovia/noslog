@@ -338,6 +338,20 @@ old design-stage checklist. Changes to material behavior require a user decision
 - The latest post only is retained, not a historical archive. Incremental polling does not automatically reconcile deletion, privacy changes, or edits that are not returned by X.
 - Hobby deployments use GitHub Actions; see [setup, verification SQL and limitations](../operations/official-x-sync.md).
 
+## Visit analytics (2026-09-20)
+
+- Counted totals only, never who visited. A page view increments the day total, the
+  route total, the Seoul hour bucket (`hour`, `00`–`23`) and the signed-in split
+  (`audience` / `audienceVisitor`, `member` | `guest`). The signed-in flag comes from
+  the session cookie; no account id is stored. Daily visitor hashes still expire the
+  next day and totals after 90 days.
+- The privacy policy lists the retained totals, so adding a new breakdown requires a
+  new effective version (archive the current copy under
+  `features/privacy/content/versions/{effective}.json`). Hourly buckets and the
+  signed-in split were announced in the 2026-09-20 version.
+- Dashboard panels that use existing tables only (conversion, contributions) collect
+  nothing new. Real-time presence and error trends need extra storage; they are out.
+
 ## Data retention and operator facts
 
 - Operator display: **계롤(Anchovia)**. Keep the confirmed contact and provider facts

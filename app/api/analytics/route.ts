@@ -1,4 +1,5 @@
 import { recordExternalCall, recordPageView } from "@/lib/analytics";
+import getSession from "@/lib/session";
 import { isBotUserAgent, isExternalEvent } from "@/lib/analyticsRoutes";
 import { logServerError } from "@/lib/observability/server";
 
@@ -40,7 +41,14 @@ export async function POST(request: Request) {
             const ip =
                 forwarded?.split(",")[0]?.trim() ||
                 request.headers.get("x-real-ip");
-            await recordPageView({ path, ip, userAgent });
+            // 로그인 여부만 확인한다(쿠키 해독, DB 조회 없음) — 계정 번호는 저장하지 않는다
+            const session = await getSession();
+            await recordPageView({
+                path,
+                ip,
+                userAgent,
+                signedIn: Boolean(session.id),
+            });
         } else if (type === "event" && isExternalEvent(name)) {
             await recordExternalCall(name);
         }
