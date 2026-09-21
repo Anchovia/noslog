@@ -4,19 +4,13 @@ import { del, get, head } from "@vercel/blob";
 import { generateClientTokenFromReadWriteToken } from "@vercel/blob/client";
 
 import { serverEnv } from "@/lib/env/server";
+import {
+    MAX_IMAGE_SIZE,
+    isImageContentType,
+    type ImageContentType,
+} from "@/lib/imageUploadRules";
 
-export const MAX_IMAGE_SIZE = 4 * 1024 * 1024;
-export const IMAGE_CONTENT_TYPES = [
-    "image/jpeg",
-    "image/png",
-    "image/webp",
-] as const;
-
-type ImageContentType = (typeof IMAGE_CONTENT_TYPES)[number];
-
-export function isImageContentType(value: string): value is ImageContentType {
-    return IMAGE_CONTENT_TYPES.some((contentType) => contentType === value);
-}
+export { isImageContentType } from "@/lib/imageUploadRules";
 
 function imageExtension(contentType: ImageContentType) {
     return contentType === "image/jpeg" ? "jpg" : contentType.split("/")[1];

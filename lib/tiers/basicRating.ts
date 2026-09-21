@@ -4,8 +4,8 @@ export const BASIC_RATING_TIER_MODE = "basic";
 export const BASIC_RATING_TIER_GOAL = "pianist";
 export const BASIC_RATING_TOP_COUNT = 70;
 export const BASIC_RATING_SCORE_FLOOR = 950_000;
-export const BASIC_RATING_SCORE_MAX = 1_000_000;
-export const BASIC_RATING_TIER_EXPONENT = 2;
+const BASIC_RATING_SCORE_MAX = 1_000_000;
+const BASIC_RATING_TIER_EXPONENT = 2;
 
 interface BasicRatingCurve {
     label: string;
@@ -62,7 +62,7 @@ export interface BasicRatingRecord {
     tierConstant: number;
 }
 
-export interface BasicRatingContribution extends BasicRatingRecord {
+interface BasicRatingContribution extends BasicRatingRecord {
     coefficient: number;
     basePower: number;
     points: number;

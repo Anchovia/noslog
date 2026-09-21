@@ -36,10 +36,7 @@ export function musicDetailQueryKey(query: MusicDetailQuery) {
     ] as const;
 }
 
-export async function fetchMusicDetail(
-    query: MusicDetailQuery,
-    signal?: AbortSignal
-) {
+async function fetchMusicDetail(query: MusicDetailQuery, signal?: AbortSignal) {
     const params = new URLSearchParams({
         index: query.index,
         difficulty: query.difficulty.toLowerCase(),

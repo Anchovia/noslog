@@ -12,9 +12,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import type { ClipboardEvent, DragEvent, ReactNode } from "react";
 import { toast } from "sonner";
 import IconButton from "@/components/ui/iconButton";
-
-const IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
-const IMAGE_MAX_BYTES = 4 * 1024 * 1024;
+import { IMAGE_ACCEPT, imageFileValidationError } from "@/lib/imageUploadRules";
 
 type Tool = "heading" | "bold" | "list" | "ordered" | "link";
 
@@ -148,8 +146,7 @@ export default function MarkdownEditor({
         if (!onUploadImage) return;
         const node = textarea.current;
         const images = files.filter((file) => {
-            const ok =
-                IMAGE_TYPES.includes(file.type) && file.size <= IMAGE_MAX_BYTES;
+            const ok = imageFileValidationError(file) === null;
             if (!ok && labels.invalidImage) toast.error(labels.invalidImage);
             return ok;
         });
@@ -267,7 +264,7 @@ export default function MarkdownEditor({
                                 <input
                                     ref={fileInput}
                                     type="file"
-                                    accept={IMAGE_TYPES.join(",")}
+                                    accept={IMAGE_ACCEPT}
                                     multiple
                                     hidden
                                     onChange={(event) => {

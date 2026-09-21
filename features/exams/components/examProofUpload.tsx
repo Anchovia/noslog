@@ -216,7 +216,6 @@ export default function ExamProofUpload({
                                 {t("exams.proof.nameSync")}
                             </p>
                             <Button
-                                appearance="foundation"
                                 type="submit"
                                 variant="primary"
                                 disabled={isSubmitting}
@@ -229,7 +228,6 @@ export default function ExamProofUpload({
                             </Button>
                             <div className="nl-exam-proof__secondary">
                                 <Button
-                                    appearance="foundation"
                                     variant="secondary"
                                     type="button"
                                     disabled={isSubmitting}
@@ -238,7 +236,6 @@ export default function ExamProofUpload({
                                     {t("exams.proof.replace")}
                                 </Button>
                                 <Button
-                                    appearance="foundation"
                                     variant="secondary"
                                     type="button"
                                     disabled={isSubmitting}
@@ -250,7 +247,6 @@ export default function ExamProofUpload({
                         </>
                     ) : (
                         <Button
-                            appearance="foundation"
                             type="button"
                             variant="primary"
                             onClick={() => inputRef.current?.click()}

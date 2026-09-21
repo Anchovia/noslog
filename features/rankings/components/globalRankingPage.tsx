@@ -45,11 +45,7 @@ export default function GlobalRankingPage({
         Math.ceil((data?.totalCount ?? 0) / GLOBAL_RANKING_PAGE_SIZE)
     );
     const retry = (
-        <Button
-            appearance="foundation"
-            variant="secondary"
-            onClick={() => retryRequest()}
-        >
+        <Button variant="secondary" onClick={() => retryRequest()}>
             {t("common.retry")}
         </Button>
     );
@@ -163,7 +159,6 @@ export default function GlobalRankingPage({
                             message={t("rankings.ratingUnavailable")}
                             action={
                                 <Button
-                                    appearance="foundation"
                                     variant="secondary"
                                     onClick={() =>
                                         navigate({

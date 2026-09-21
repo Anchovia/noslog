@@ -34,20 +34,9 @@ import {
     isTierModeGoal,
 } from "@/lib/tiers";
 
-export const MUSIC_DIFFICULTIES: Difficulty[] = [
-    "Normal",
-    "Hard",
-    "Expert",
-    "Real",
-];
-export const MUSIC_DETAIL_TABS: DetailTab[] = [
-    "record",
-    "detail",
-    "ranking",
-    "tier",
-];
-export { MUSIC_RANKING_PAGE_SIZE } from "./chartRanking";
-
+const MUSIC_DIFFICULTIES: Difficulty[] = ["Normal", "Hard", "Expert", "Real"];
+const MUSIC_DETAIL_TABS: DetailTab[] = ["record", "detail", "ranking", "tier"];
+const EMPTY_UNLOCK_NAMES: Record<string, string> = {};
 const emptyDistribution = [
     { key: "950", label: "950k", count: 0 },
     { key: "960", label: "960k", count: 0 },
@@ -88,7 +77,7 @@ export async function loadMusicDetail(
         index: music.index,
         background: music.background,
         title: music.title,
-        localizedTitle: await getLocalizedMusicTitle(
+        localizedTitle: getLocalizedMusicTitle(
             music,
             locale,
             showLocalizedTitle
@@ -109,70 +98,142 @@ export async function loadMusicDetail(
 
     // 해금 조건 — 이 난이도 몫만, 이름은 사전으로 번역(일본어는 원문 · 사전에 없으면 원문)
     const unlockSources = unlockStepsFor(chart.unlock_condition, difficulty);
-    const unlockNames =
-        unlockSources.length && locale !== "ja"
-            ? await getCachedUnlockTranslations(locale)
-            : {};
-    const unlockSteps = unlockSources.map((step) => ({
-        ...step,
-        name: unlockNames[step.name] ?? step.name,
-    }));
-
-    const userPlayData = userId
-        ? await getUserChartRecord(userId, chart.id)
-        : null;
-    // 점수 비공개인 본인이 볼 때만 랭킹 · 분포에 자기 줄을 넣는다(남에게는 빠져 있다, 2026-09-18 S3)
-    const includeSelf =
-        userId && userPlayData?.user.hide_play_scores ? userId : 0;
-    const [
+    // 본인 공개 설정을 읽은 뒤 필요한 조회만 이어 붙인다. 서로 독립인 조회는 함께 시작한다.
+    const userRecord = userId
+        ? getUserChartRecord(userId, chart.id)
+        : Promise.resolve(null);
+    const [unlockNames, tierLists, tierHistory, community, personal] =
+        await Promise.all([
+            unlockSources.length && locale !== "ja"
+                ? getCachedUnlockTranslations(locale)
+                : EMPTY_UNLOCK_NAMES,
+            db.tierList.findMany({
+                where: {
+                    mode: { in: [...TIER_MODES] },
+                    goal: { in: [...TIER_GOALS] },
+                    status: "published",
+                },
+                orderBy: [{ updatedAt: "desc" }, { id: "desc" }],
+                select: {
+                    mode: true,
+                    goal: true,
+                    entries: {
+                        where: { chartId: chart.id },
+                        select: { tierBand: { select: { value: true } } },
+                    },
+                },
+            }),
+            activeTab === "detail"
+                ? loadTierHistory(chart.id).catch((error) => {
+                      logServerError(error, {
+                          event: "music-detail.tier-history.failed",
+                      });
+                      return [];
+                  })
+                : [],
+            activeTab === "tier"
+                ? getCommunityData(chart.id, userId).catch((error) => {
+                      logServerError(error, {
+                          event: "music-community.initial.failed",
+                      });
+                      return undefined;
+                  })
+                : undefined,
+            userRecord.then(async (userPlayData) => {
+                // 비공개인 본인이 볼 때만 자기 점수를 포함한다.
+                const includeSelf =
+                    userId && userPlayData?.user.hide_play_scores ? userId : 0;
+                const [
+                    recentChartPlays,
+                    scoreTrend,
+                    performanceTrend,
+                    peerScoreComparison,
+                    stats,
+                    ranking,
+                    higherCount,
+                ] = await Promise.all([
+                    userId && activeTab === "record"
+                        ? getRecentUserChartPlays(userId, chart.id)
+                        : [],
+                    userId && activeTab === "record"
+                        ? getUserChartScoreTrend(userId, chart.id, userPlayData)
+                        : [],
+                    userId && activeTab === "record"
+                        ? getUserChartPerformanceTrend(userId, chart.id)
+                        : [],
+                    userId && activeTab === "record"
+                        ? getUserChartPeerScoreComparison(
+                              userId,
+                              chart.id,
+                              userPlayData
+                                  ? userPlayData.user.grade_basic
+                                  : undefined
+                          )
+                        : null,
+                    activeTab === "detail" || activeTab === "ranking"
+                        ? getCachedChartDetailStats(chart.id, includeSelf)
+                        : { scores: [] },
+                    activeTab === "ranking"
+                        ? loadRanking(
+                              chart.id,
+                              rankingPage,
+                              includeSelf,
+                              userPlayData ? userId : undefined
+                          )
+                        : {
+                              rows: [],
+                              page: rankingPage,
+                              pageSize: MUSIC_RANKING_PAGE_SIZE,
+                              totalCount: 0,
+                              userRank: null,
+                              players: [],
+                          },
+                    userPlayData &&
+                    (activeTab === "ranking" || activeTab === "detail")
+                        ? db.playData.count({
+                              where: {
+                                  chart_id: chart.id,
+                                  score: { gt: userPlayData.score },
+                                  user: { hide_play_scores: false },
+                              },
+                          })
+                        : null,
+                ]);
+                if (higherCount !== null) {
+                    ranking.userRank = higherCount + 1;
+                    if (activeTab === "detail")
+                        ranking.totalCount = stats.scores.length;
+                }
+                return {
+                    userPlayData,
+                    recentChartPlays,
+                    scoreTrend,
+                    performanceTrend,
+                    peerScoreComparison,
+                    stats,
+                    ranking,
+                };
+            }),
+        ]);
+    const {
+        userPlayData,
         recentChartPlays,
         scoreTrend,
         performanceTrend,
         peerScoreComparison,
-    ] =
-        userId && activeTab === "record"
-            ? await Promise.all([
-                  getRecentUserChartPlays(userId, chart.id),
-                  getUserChartScoreTrend(userId, chart.id, userPlayData),
-                  getUserChartPerformanceTrend(userId, chart.id),
-                  getUserChartPeerScoreComparison(
-                      userId,
-                      chart.id,
-                      // 이 곡 기록이 없어도 내 Grd 로 비슷한 사람 평균을 보여 준다(기록 없음 틀 E1, 2026-09-19)
-                      userPlayData ? userPlayData.user.grade_basic : undefined
-                  ),
-              ])
-            : [[], [], [], null];
-
-    let evaluationCount = 0;
-    let patternAverages = {
-        stairs: 0,
-        chord: 0,
-        trill: 0,
-        glissando: 0,
-        repetition: 0,
-    };
+        stats,
+        ranking,
+    } = personal;
+    const unlockSteps = unlockSources.map((step) => ({
+        ...step,
+        name: unlockNames[step.name] ?? step.name,
+    }));
     const scoreDistribution = emptyDistribution.map((item) => ({ ...item }));
-    let playerCount = 0;
-    let scoreSeries: number[] = [];
-
-    // 머리 수치 띠 — 공개 서열표의 이 채보 값(모든 탭). 등재 안 된 표는 null 로 두고 화면에서 칸을 뺀다
-    const tierLists = await db.tierList.findMany({
-        where: {
-            mode: { in: [...TIER_MODES] },
-            goal: { in: [...TIER_GOALS] },
-            status: "published",
-        },
-        orderBy: [{ updatedAt: "desc" }, { id: "desc" }],
-        select: {
-            mode: true,
-            goal: true,
-            entries: {
-                where: { chartId: chart.id },
-                select: { tierBand: { select: { value: true } } },
-            },
-        },
-    });
+    const playerCount = stats.scores.length;
+    const scoreSeries =
+        activeTab === "ranking"
+            ? stats.scores.map((record) => record.score).sort((a, b) => b - a)
+            : [];
     // 같은 모드 · 목표의 공개 표가 여럿이면 최신 하나(communityData 와 같은 규칙), 순서는 Basic S · 990k · Pianist · Recital
     const tierValues = TIER_MODES.flatMap((mode) =>
         TIER_MODE_GOALS[mode].map((goal) => ({
@@ -185,91 +246,16 @@ export async function loadMusicDetail(
         }))
     );
 
-    if (activeTab === "detail" || activeTab === "ranking") {
-        const { evaluation, scores } = await getCachedChartDetailStats(
-            chart.id,
-            includeSelf
-        );
-        evaluationCount = evaluation._count._all;
-        patternAverages = {
-            stairs: evaluation._avg.stairs ?? 0,
-            chord: evaluation._avg.chord ?? 0,
-            trill: evaluation._avg.trill ?? 0,
-            glissando: evaluation._avg.glissando ?? 0,
-            repetition: evaluation._avg.repetition ?? 0,
-        };
-
-        for (const record of scores) {
-            let bucket: number | null = null;
-            if (record.fc_type === 3 || record.score >= 1000000) bucket = 5;
-            else if (record.score >= 990000) bucket = 4;
-            else if (record.score >= 980000) bucket = 3;
-            else if (record.score >= 970000) bucket = 2;
-            else if (record.score >= 960000) bucket = 1;
-            else if (record.score >= 950000) bucket = 0;
-            if (bucket !== null) scoreDistribution[bucket].count++;
-        }
-
-        playerCount = scores.length;
-        if (activeTab === "ranking")
-            scoreSeries = scores
-                .map((record) => record.score)
-                .sort((a, b) => b - a);
+    for (const record of stats.scores) {
+        let bucket: number | null = null;
+        if (record.fc_type === 3 || record.score >= 1000000) bucket = 5;
+        else if (record.score >= 990000) bucket = 4;
+        else if (record.score >= 980000) bucket = 3;
+        else if (record.score >= 970000) bucket = 2;
+        else if (record.score >= 960000) bucket = 1;
+        else if (record.score >= 950000) bucket = 0;
+        if (bucket !== null) scoreDistribution[bucket].count++;
     }
-
-    const ranking: MusicDetailProps["ranking"] = {
-        rows: [],
-        page: rankingPage,
-        pageSize: MUSIC_RANKING_PAGE_SIZE,
-        totalCount: 0,
-        userRank: null,
-        players: [],
-    };
-
-    if (activeTab === "ranking") {
-        const rankingData = await getChartRanking(
-            chart.id,
-            rankingPage,
-            includeSelf
-        );
-        Object.assign(ranking, rankingData);
-        // 곡선 위 사진 — 상위 목록에 내가 없으면 내 줄을 더한다 (2026-09-17)
-        const players = await getChartScorePlayers(
-            chart.id,
-            rankingData.totalCount,
-            includeSelf
-        );
-        const me =
-            userId &&
-            userPlayData &&
-            !players.some((player) => player.user_id === userId)
-                ? await getChartScorePlayer(chart.id, userId)
-                : null;
-        ranking.players = me ? [...players, me] : players;
-    }
-    // 내 순위 — 랭킹 탭과 개요 탭(내 기록 요약 띠)에서 (2026-09-16)
-    if (userPlayData && (activeTab === "ranking" || activeTab === "detail")) {
-        ranking.userRank =
-            (await db.playData.count({
-                where: {
-                    chart_id: chart.id,
-                    score: { gt: userPlayData.score },
-                    user: { hide_play_scores: false },
-                },
-            })) + 1;
-        if (activeTab === "detail") ranking.totalCount = playerCount;
-    }
-
-    // 서열 변경 이력 — 개요 탭 접힘 줄
-    const tierHistory =
-        activeTab === "detail"
-            ? await loadTierHistory(chart.id).catch((error) => {
-                  logServerError(error, {
-                      event: "music-detail.tier-history.failed",
-                  });
-                  return [];
-              })
-            : [];
 
     const tier: MusicDetailProps["tier"] = {
         currentConstant: null,
@@ -279,16 +265,6 @@ export async function loadMusicDetail(
         opinionCount: 0,
         opinions: [],
     };
-
-    const community =
-        activeTab === "tier"
-            ? await getCommunityData(chart.id, userId).catch((error) => {
-                  logServerError(error, {
-                      event: "music-community.initial.failed",
-                  });
-                  return undefined;
-              })
-            : undefined;
 
     return {
         accountId: userId,
@@ -303,8 +279,6 @@ export async function loadMusicDetail(
         peerScoreComparison,
         chartDetail: {
             ...chart,
-            evaluationCount,
-            patternAverages,
             scoreDistribution,
             playerCount,
             tierValues,
@@ -315,6 +289,30 @@ export async function loadMusicDetail(
         ranking,
         tier,
         community,
+    };
+}
+
+// 사진 후보는 랭킹 인원 수에 따라 달라져 이 순서를 유지한다.
+async function loadRanking(
+    chartId: number,
+    page: number,
+    includeSelf: number,
+    userId: number | undefined
+): Promise<MusicDetailProps["ranking"]> {
+    const ranking = await getChartRanking(chartId, page, includeSelf);
+    const players = await getChartScorePlayers(
+        chartId,
+        ranking.totalCount,
+        includeSelf
+    );
+    const me =
+        userId && !players.some((player) => player.user_id === userId)
+            ? await getChartScorePlayer(chartId, userId)
+            : null;
+    return {
+        ...ranking,
+        userRank: null,
+        players: me ? [...players, me] : players,
     };
 }
 

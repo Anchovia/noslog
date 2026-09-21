@@ -11,7 +11,7 @@ export const peerJudgementKeys = [
     "judge_near",
 ] as const;
 
-export type PeerJudgementKey = (typeof peerJudgementKeys)[number];
+type PeerJudgementKey = (typeof peerJudgementKeys)[number];
 
 export const peerNoteRateKeys = [
     "note_rate_standard",
@@ -20,7 +20,7 @@ export const peerNoteRateKeys = [
     "note_rate_trill",
 ] as const;
 
-export type PeerNoteRateKey = (typeof peerNoteRateKeys)[number];
+type PeerNoteRateKey = (typeof peerNoteRateKeys)[number];
 
 export interface PeerScoreRecord {
     score: number;
@@ -35,12 +35,12 @@ export interface PeerScoreRecord {
     note_rate_trill: number | null;
 }
 
-export interface PeerJudgementComparison {
+interface PeerJudgementComparison {
     averages: Record<PeerJudgementKey, number>;
     sampleCount: number;
 }
 
-export interface PeerNoteRateComparison {
+interface PeerNoteRateComparison {
     averages: Record<PeerNoteRateKey, number | null>;
     sampleCounts: Record<PeerNoteRateKey, number>;
 }

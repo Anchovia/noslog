@@ -8,6 +8,10 @@ import { toast } from "sonner";
 
 import { createTierList, updateTierList } from "@/app/admin/tiers/actions";
 import {
+    AdminFieldError,
+    adminInputClass as inputClass,
+} from "@/components/admin/adminForm";
+import {
     createTierListFormData,
     normalizeTierGoal,
     normalizeTierMode,
@@ -16,7 +20,7 @@ import {
     type TierListFormValues,
     type TierListValues,
 } from "@/features/tiers/schemas/tierAdminSchema";
-import { applyFormFieldErrors } from "@/lib/forms/errors";
+import { applyFormActionFailure, applyFormRootError } from "@/lib/forms/errors";
 
 export interface TierListFormData {
     id?: number;
@@ -28,15 +32,14 @@ export interface TierListFormData {
     status: string;
 }
 
-const inputClass =
-    "border-border bg-bg text-input h-11 w-full rounded-md border px-3";
-
 function FieldError({ message }: { message?: string }) {
-    return message ? (
-        <span className="text-danger text-xs" role="alert">
-            {message}
-        </span>
-    ) : null;
+    return (
+        <AdminFieldError
+            message={message}
+            as="span"
+            className="text-danger text-xs"
+        />
+    );
 }
 
 export default function TierListForm({
@@ -73,12 +76,7 @@ export default function TierListForm({
                 : await createTierList(formData);
 
             if (!result.success) {
-                applyFormFieldErrors(setError, result.fieldErrors);
-                setError("root.server", {
-                    type: "server",
-                    message: result.message,
-                });
-                toast.error(result.message);
+                applyFormActionFailure(setError, result, toast.error);
                 return;
             }
 
@@ -90,8 +88,7 @@ export default function TierListForm({
             }
         } catch {
             const message = "서열표 정보를 저장하지 못했습니다.";
-            setError("root.server", { type: "server", message });
-            toast.error(message);
+            applyFormRootError(setError, message, toast.error);
         }
     }
 
@@ -158,11 +155,10 @@ export default function TierListForm({
                     <FieldError message={errors.status?.message} />
                 </label>
             </section>
-            {errors.root?.server?.message ? (
-                <p className="text-danger text-xs" role="alert">
-                    {errors.root.server.message}
-                </p>
-            ) : null}
+            <AdminFieldError
+                message={errors.root?.server?.message}
+                className="text-danger text-xs"
+            />
             <button
                 type="submit"
                 disabled={isSubmitting}

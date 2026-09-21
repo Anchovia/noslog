@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const GLOBAL_RANKING_PAGE_SIZE = 25;
-export const globalRankingQuerySchema = z.object({
+const globalRankingQuerySchema = z.object({
     mode: z.enum(["basic", "recital"]).catch("basic"),
     metric: z.enum(["grade", "rating"]).catch("grade"),
     region: z.enum(["all", "kr", "jp", "global"]).catch("all"),
@@ -33,7 +33,7 @@ export function serializeGlobalRankingQuery(query: GlobalRankingQuery) {
     return params;
 }
 
-export const globalRankingRowSchema = z.object({
+const globalRankingRowSchema = z.object({
     id: z.number().int().positive(),
     rank: z.number().int().positive(),
     username: z.string().nullable(),

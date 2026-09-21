@@ -87,7 +87,7 @@ const optionalTargetLevelSchema = z
     )
     .transform((value) => (value === "" ? null : Number(value)));
 
-export const bingoCellFormSchema = z.object({
+const bingoCellFormSchema = z.object({
     position: z.number().int().min(1).max(BINGO_CELL_COUNT),
     title: z.string().trim().min(1, "미션 내용을 입력해주세요."),
     missionType: bingoMissionTypeSchema,
@@ -128,7 +128,7 @@ export const bingoFormSchema = z
         }
     });
 
-export const bingoIdSchema = z.coerce
+const bingoIdSchema = z.coerce
     .number({ error: "잘못된 빙고입니다." })
     .int("잘못된 빙고입니다.")
     .positive("잘못된 빙고입니다.");
@@ -139,13 +139,12 @@ export const bingoSaveSchema = bingoFormSchema.and(
 
 export const bingoDeleteSchema = z.object({ id: bingoIdSchema });
 
-export type BingoCellFormValues = z.input<typeof bingoCellFormSchema>;
-export type BingoCellValues = z.output<typeof bingoCellFormSchema>;
+type BingoCellFormValues = z.input<typeof bingoCellFormSchema>;
 export type BingoFormValues = z.input<typeof bingoFormSchema>;
 export type BingoValues = z.output<typeof bingoFormSchema>;
 export type BingoSaveValues = z.output<typeof bingoSaveSchema>;
 
-export type BingoCellFieldName = Extract<keyof BingoCellFormValues, string>;
+type BingoCellFieldName = Extract<keyof BingoCellFormValues, string>;
 export type BingoFormFieldName =
     | Extract<keyof BingoFormValues, string>
     | `cells.${number}.${BingoCellFieldName}`;

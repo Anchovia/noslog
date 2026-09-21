@@ -1,4 +1,4 @@
-export interface KakaoLatLng {
+interface KakaoLatLng {
     getLat(): number;
     getLng(): number;
 }
@@ -19,7 +19,7 @@ export interface KakaoMapInstance {
     setLevel(level: number): void;
 }
 
-export interface KakaoLatLngBounds {
+interface KakaoLatLngBounds {
     getSouthWest(): KakaoLatLng;
     getNorthEast(): KakaoLatLng;
     extend(position: KakaoLatLng): void;
@@ -27,6 +27,10 @@ export interface KakaoLatLngBounds {
 
 export interface KakaoOverlay {
     setMap(map: KakaoMapInstance | null): void;
+}
+
+export interface KakaoCustomOverlay extends KakaoOverlay {
+    setZIndex(zIndex: number): void;
 }
 
 interface GeocoderResult {
@@ -77,7 +81,7 @@ export interface KakaoMapsApi {
             xAnchor?: number;
             yAnchor?: number;
             zIndex?: number;
-        }) => KakaoOverlay;
+        }) => KakaoCustomOverlay;
         services: {
             Geocoder: new () => KakaoGeocoder;
             Status: { OK: string };

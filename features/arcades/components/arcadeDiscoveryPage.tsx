@@ -73,17 +73,17 @@ export default function ArcadeDiscoveryPage({
     const t = useTranslations();
     const href = useLocalizedHref();
     const params = useSearchParams();
-    const parsed = arcadeDiscoverySchema.safeParse({
-        q: params.get("q") ?? "",
-        region: params.get("region") ?? "",
-        open: params.get("open") === "1",
-        available: params.get("available") === "1",
-        sort: params.get("sort") ?? "name",
-        near: params.get("near") === "1",
-    });
-    const values = parsed.success
-        ? parsed.data
-        : arcadeDiscoverySchema.parse({});
+    const values = useMemo(() => {
+        const parsed = arcadeDiscoverySchema.safeParse({
+            q: params.get("q") ?? "",
+            region: params.get("region") ?? "",
+            open: params.get("open") === "1",
+            available: params.get("available") === "1",
+            sort: params.get("sort") ?? "name",
+            near: params.get("near") === "1",
+        });
+        return parsed.success ? parsed.data : arcadeDiscoverySchema.parse({});
+    }, [params]);
     // 검색어는 입력 칸이 직접 든다 — URL 을 거쳐 되받으면 한 박자 늦은 값이 덮여 한글 조합이 끊긴다(「ㅉ짜짱ㄱ구」).
     // URL 반영은 조합이 끝났을 때만. 뒤로가기처럼 밖에서 바뀐 검색어만 입력 칸으로 받아 온다
     const [search, setSearch] = useState(values.q);
@@ -145,18 +145,31 @@ export default function ArcadeDiscoveryPage({
         defaultValues: values,
     });
     const draft = useWatch({ control: form.control });
-    const result = selectArcades(arcades, values, locale, origin, bounds, now);
-    const draftResult = selectArcades(
-        arcades,
-        arcadeDiscoverySchema.parse(draft),
-        locale,
-        origin,
-        bounds,
-        now
+    const result = useMemo(
+        () => selectArcades(arcades, values, locale, origin, bounds, now),
+        [arcades, values, locale, origin, bounds, now]
     );
-    const runningCount = result.filter(
-        (arcade) => arcadeCabinetSummary(arcade).available > 0
-    ).length;
+    const draftResult = useMemo(
+        () =>
+            filterOpen
+                ? selectArcades(
+                      arcades,
+                      arcadeDiscoverySchema.parse(draft),
+                      locale,
+                      origin,
+                      bounds,
+                      now
+                  )
+                : result,
+        [filterOpen, arcades, draft, locale, origin, bounds, now, result]
+    );
+    const runningCount = useMemo(
+        () =>
+            result.filter(
+                (arcade) => arcadeCabinetSummary(arcade).available > 0
+            ).length,
+        [result]
+    );
     const regions = useMemo(
         () =>
             Array.from(
@@ -792,7 +805,6 @@ export default function ArcadeDiscoveryPage({
                         />
                         {bounds ? (
                             <Button
-                                appearance="foundation"
                                 size="sm"
                                 variant="ghost"
                                 onClick={() => setBounds(null)}
@@ -806,10 +818,11 @@ export default function ArcadeDiscoveryPage({
                                 className="nl-arcades__list"
                                 aria-label={t("arcades.list")}
                             >
-                                {result.map((arcade) => (
+                                {result.map((arcade, index) => (
                                     <li key={arcade.id}>
                                         <ArcadeResultCard
                                             arcade={arcade}
+                                            eagerPhoto={index === 0}
                                             distance={arcadeDistance(
                                                 arcade,
                                                 origin

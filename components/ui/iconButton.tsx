@@ -24,13 +24,7 @@ export default function IconButton({
     ...props
 }: IconButtonProps) {
     return (
-        <Button
-            {...props}
-            appearance="foundation"
-            variant={variant}
-            size="icon"
-            aria-label={label}
-        >
+        <Button {...props} variant={variant} size="icon" aria-label={label}>
             {children}
         </Button>
     );

@@ -63,6 +63,21 @@ describe("NosLog design foundation", () => {
         expect(raw).toEqual([]);
     });
 
+    it("mounts the shared navigation progress in both application shells", () => {
+        const appShell = readFileSync(
+            resolve("components/layout/appShell.tsx"),
+            "utf8"
+        );
+        const adminShell = readFileSync(
+            resolve("components/admin/adminShell.tsx"),
+            "utf8"
+        );
+
+        expect(appShell).toContain("<NavigationProgress />");
+        expect(adminShell).toContain("<NavigationProgress />");
+        expect(adminShell).toContain("<Suspense fallback={null}>");
+    });
+
     it("ships one complete versioned Pretendard JP font with its license", () => {
         const fontDirectory = resolve("public/fonts/pretendard-jp/1.3.9");
         const manifest = JSON.parse(

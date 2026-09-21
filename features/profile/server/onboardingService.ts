@@ -9,6 +9,7 @@ import {
     type OnboardingFormValues,
 } from "@/features/profile/schemas/profileSettingsSchema";
 import type { ActionFailure } from "@/lib/actions/result";
+import { actionValidationFailure } from "@/lib/actions/validation";
 import { CACHE_TAGS, getUserProfileTag } from "@/lib/cacheTags";
 import db from "@/lib/db";
 import { createTranslator, getMessages } from "@/lib/i18n/messages";
@@ -39,13 +40,11 @@ export async function completeOnboarding(
     const result = createOnboardingSchema(t).safeParse(
         onboardingInputFromFormData(formData)
     );
-    if (!result.success) {
-        return {
-            success: false,
+    if (!result.success)
+        return actionValidationFailure(result.error, {
             message: t("onboarding.error.invalid"),
-            fieldErrors: result.error.flatten().fieldErrors,
-        };
-    }
+            alwaysIncludeFieldErrors: true,
+        });
 
     const locale = formLocale;
 

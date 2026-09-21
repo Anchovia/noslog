@@ -1,39 +1,12 @@
 import { cn } from "@/lib/utils";
-import { cva, type VariantProps } from "class-variance-authority";
 import { type ComponentPropsWithRef } from "react";
 
-// 공통 버튼 스타일과 variant를 한곳에서 관리함
-const buttonVariants = cva(
-    "focus-visible:ring-focus/40 inline-flex items-center justify-center rounded-card font-semibold transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50",
-    {
-        variants: {
-            variant: {
-                primary:
-                    "bg-interactive text-on-interactive hover:bg-interactive/90",
-                secondary:
-                    "border border-border bg-surface-muted text-text-primary hover:bg-divider",
-                ghost: "text-text-secondary hover:bg-surface-muted hover:text-text-primary",
-                danger: "bg-danger text-on-interactive hover:bg-danger/90",
-            },
-            size: {
-                sm: "h-8 px-3 text-xs font-semibold",
-                md: "h-10 px-4 text-sm",
-                lg: "h-12 px-5 text-sm font-bold",
-                icon: "size-10 px-0",
-            },
-        },
-        defaultVariants: {
-            variant: "primary",
-            size: "md",
-        },
-    }
-);
+type ButtonVariant = "primary" | "secondary" | "ghost" | "danger";
+type ButtonSize = "sm" | "md" | "lg" | "icon";
 
-interface ButtonProps
-    extends
-        ComponentPropsWithRef<"button">,
-        VariantProps<typeof buttonVariants> {
-    appearance?: "legacy" | "foundation";
+interface ButtonProps extends ComponentPropsWithRef<"button"> {
+    variant?: ButtonVariant | null;
+    size?: ButtonSize | null;
     destructiveFilled?: boolean;
 }
 
@@ -41,7 +14,6 @@ export default function Button({
     className,
     variant,
     size,
-    appearance = "legacy",
     destructiveFilled = false,
     type = "button",
     ...props
@@ -50,21 +22,17 @@ export default function Button({
         <button
             type={type}
             className={cn(
-                appearance === "foundation"
-                    ? foundationButtonClass({
-                          variant,
-                          size,
-                          destructiveFilled,
-                      })
-                    : buttonVariants({ variant, size }),
+                foundationButtonClass({
+                    variant,
+                    size,
+                    destructiveFilled,
+                }),
                 className
             )}
             {...props}
         />
     );
 }
-
-export { buttonVariants };
 
 export function foundationButtonClass({
     variant = "primary",

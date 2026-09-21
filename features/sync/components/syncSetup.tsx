@@ -177,7 +177,6 @@ export default function SyncSetup({
                                     {t("sync.mobileEdit")}
                                 </p>
                                 <Button
-                                    appearance="foundation"
                                     variant="secondary"
                                     onClick={() => void copy()}
                                 >

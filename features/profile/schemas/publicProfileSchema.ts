@@ -6,8 +6,8 @@ export const profileIdSchema = z.coerce
     .positive()
     .max(2147483647);
 
-export const profileModeSchema = z.enum(["basic", "recital"]);
-export const profileMetricSchema = z.enum(["grade", "rating"]);
+const profileModeSchema = z.enum(["basic", "recital"]);
+const profileMetricSchema = z.enum(["grade", "rating"]);
 export const PROFILE_BATCH_SIZE = 5;
 export const profileListQuerySchema = z.object({
     kind: z.enum(["best", "recent"]).default("best"),
@@ -15,7 +15,7 @@ export const profileListQuerySchema = z.object({
     metric: profileMetricSchema.default("grade"),
     offset: z.coerce.number().int().min(0).max(100000).default(0),
 });
-export const profilePlaySchema = z.object({
+const profilePlaySchema = z.object({
     id: z.number().int(),
     musicIndex: z.string(),
     title: z.string(),

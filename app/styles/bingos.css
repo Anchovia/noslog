@@ -94,16 +94,16 @@
     width: 6px;
     height: 6px;
     border-radius: 1px;
-    background: rgb(255 255 255 / 30%);
+    background: color-mix(in srgb, var(--nl-content-on-media) 30%, transparent);
 }
 .noslog-ui .nl-bingo-mini > [data-completed="true"] {
-    background: white;
+    background: var(--nl-content-on-media);
 }
 .noslog-ui .nl-bingo-card__track {
     position: absolute;
     inset: auto 0 0;
     height: 4px;
-    background: rgb(255 255 255 / 30%);
+    background: color-mix(in srgb, var(--nl-content-on-media) 30%, transparent);
 }
 .noslog-ui .nl-bingo-card__track > span {
     display: block;

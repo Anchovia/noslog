@@ -6,6 +6,7 @@ import { isValidPrivateImageBlob } from "@/lib/blob";
 import { createTranslator, getMessages } from "@/lib/i18n/messages";
 import { isLocale } from "@/lib/i18n/routing";
 import type { ActionResult } from "@/lib/actions/result";
+import { actionValidationFailure } from "@/lib/actions/validation";
 import {
     arcadeReportInputFromFormData,
     createArcadeReportSchema,
@@ -29,11 +30,10 @@ export async function submitArcadeReport(
         arcadeReportInputFromFormData(formData)
     );
     if (!parsed.success)
-        return {
-            success: false,
+        return actionValidationFailure(parsed.error, {
             message: t("feedback.contentError"),
-            fieldErrors: parsed.error.flatten().fieldErrors,
-        };
+            alwaysIncludeFieldErrors: true,
+        });
     const { arcadeId, cabinetId, reportType, content, imageUrl, submissionId } =
         parsed.data;
     try {

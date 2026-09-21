@@ -10,7 +10,8 @@ import {
     type ExamSubmissionStatus,
 } from "@/features/exams/schemas/examSubmissionAdminSchema";
 import type { AdminExamSubmission } from "@/features/exams/types/examSubmissionAdmin";
-import type { ActionFieldErrors, ActionResult } from "@/lib/actions/result";
+import type { ActionResult } from "@/lib/actions/result";
+import { actionValidationFailure } from "@/lib/actions/validation";
 import { requireAdmin } from "@/lib/admin";
 import { deleteBlobIfOwned } from "@/lib/blob";
 import db from "@/lib/db";
@@ -34,22 +35,6 @@ function logExamSubmissionError(error: unknown, event: string) {
         routePath: "/admin/submissions",
         routeType: "action",
     });
-}
-
-function reviewFieldErrors(
-    issues: ReadonlyArray<{ path: PropertyKey[]; message: string }>
-) {
-    const fieldErrors: ActionFieldErrors<ExamSubmissionReviewFieldName> = {};
-
-    for (const issue of issues) {
-        const field = issue.path[0];
-        if (typeof field !== "string") continue;
-        const fieldName = field as ExamSubmissionReviewFieldName;
-        fieldErrors[fieldName] ??= [];
-        fieldErrors[fieldName]?.push(issue.message);
-    }
-
-    return fieldErrors;
 }
 
 export async function listExamSubmissions(
@@ -98,16 +83,14 @@ export async function reviewExamSubmission(
     const result = examSubmissionReviewSchema.safeParse(
         examSubmissionReviewInputFromFormData(formData)
     );
-    if (!result.success) {
-        const fieldErrors = reviewFieldErrors(result.error.issues);
-        return {
-            success: false,
-            message:
-                result.error.issues[0]?.message ??
-                "검정 인증 심사 입력을 확인해주세요.",
-            ...(Object.keys(fieldErrors).length > 0 ? { fieldErrors } : {}),
-        };
-    }
+    if (!result.success)
+        return actionValidationFailure<ExamSubmissionReviewFieldName>(
+            result.error,
+            {
+                message: "검정 인증 심사 입력을 확인해주세요.",
+                preferFirstIssue: true,
+            }
+        );
     const input = result.data;
     let reviewedUserId: number;
 
@@ -188,11 +171,11 @@ export async function deleteExamSubmission(
         examSubmissionDeleteInputFromFormData(formData)
     );
     if (!result.success) {
-        return {
-            success: false,
-            message:
-                result.error.issues[0]?.message ?? "잘못된 검정 인증입니다.",
-        };
+        return actionValidationFailure(result.error, {
+            message: "잘못된 검정 인증입니다.",
+            preferFirstIssue: true,
+            fieldPath: false,
+        });
     }
 
     try {

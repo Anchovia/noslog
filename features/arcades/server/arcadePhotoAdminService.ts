@@ -8,6 +8,7 @@ import {
 } from "@/features/arcades/schemas/arcadeSchema";
 import { refreshArcades } from "@/features/arcades/server/arcadeAdminService";
 import type { ActionResult } from "@/lib/actions/result";
+import { actionValidationFailure } from "@/lib/actions/validation";
 import { requireAdmin } from "@/lib/admin";
 import {
     createImageUploadToken,
@@ -144,11 +145,11 @@ export async function saveArcadePhoto(
         consent: formData.get("consent") === "true",
     });
     if (!parsed.success)
-        return {
-            success: false,
-            message:
-                parsed.error.issues[0]?.message ?? "사진 정보를 확인해주세요.",
-        };
+        return actionValidationFailure(parsed.error, {
+            message: "사진 정보를 확인해주세요.",
+            preferFirstIssue: true,
+            fieldPath: false,
+        });
     const { arcadeId, url, alt, capturedAt } = parsed.data;
 
     // 이 오락실 경로로 올린 공개 이미지인지 저장소에서 다시 확인한다 — 아니면 아무것도 지우지 않는다

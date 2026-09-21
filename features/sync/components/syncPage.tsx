@@ -171,7 +171,6 @@ export default function SyncPage({
             {result.isError ? (
                 <StatusMessage severity="danger" title={t("common.pageError")}>
                     <Button
-                        appearance="foundation"
                         variant="secondary"
                         onClick={() => void result.refetch()}
                     >

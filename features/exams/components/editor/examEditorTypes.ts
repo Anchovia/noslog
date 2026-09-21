@@ -3,21 +3,9 @@ import {
     type ChartOption,
     type ExamEditorFormValues,
     type ExamMode,
-    type ExamRewardEditor,
-    type ExamStageEditor,
-    type ExamStatus,
-    type ScoringType,
 } from "@/features/exams/schemas/examEditorSchema";
 
-export type {
-    ChartOption,
-    ExamEditorFormValues,
-    ExamMode,
-    ExamRewardEditor,
-    ExamStageEditor,
-    ExamStatus,
-    ScoringType,
-};
+export type { ExamEditorFormValues, ExamMode };
 export { EMPTY_EXAM };
 
 export type SearchPurpose = "stage" | "reward";

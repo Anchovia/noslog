@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const FEEDBACK_STATUSES = ["open", "resolved"] as const;
+const FEEDBACK_STATUSES = ["open", "resolved"] as const;
 
 export const feedbackStatusSchema = z.enum(FEEDBACK_STATUSES, {
     error: "피드백 상태를 확인해주세요.",

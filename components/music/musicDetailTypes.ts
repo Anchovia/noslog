@@ -109,14 +109,6 @@ export interface ChartDetail {
     play_video_url: string | null;
     chart_preview_url: string | null;
     has_published_pattern: boolean;
-    evaluationCount: number;
-    patternAverages: {
-        stairs: number;
-        chord: number;
-        trill: number;
-        glissando: number;
-        repetition: number;
-    };
     scoreDistribution: {
         key: string;
         label: string;

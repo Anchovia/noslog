@@ -8,6 +8,11 @@ import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 
 import { createArcade, updateArcade } from "@/app/admin/arcades/actions";
+import {
+    AdminFieldError,
+    adminCompactInputClass as inputClass,
+    adminSecondaryButtonClass as secondaryButtonClass,
+} from "@/components/admin/adminForm";
 import { geocodeArcadeAddress } from "@/features/arcades/api/geocodeArcadeAddress";
 import {
     ARCADE_ADDRESS_MAX_LENGTH,
@@ -25,7 +30,7 @@ import {
     type ArcadeFormValues,
     type ArcadeValues,
 } from "@/features/arcades/schemas/arcadeSchema";
-import { applyFormFieldErrors } from "@/lib/forms/errors";
+import { applyFormActionFailure, applyFormRootError } from "@/lib/forms/errors";
 import {
     ARCADE_CABINET_AVAILABILITIES,
     ARCADE_CABINET_CONDITIONS,
@@ -37,12 +42,8 @@ import ArcadeBusinessHoursFields from "./arcadeBusinessHoursFields";
 import ArcadeHoursExceptionsFields from "./arcadeHoursExceptionsFields";
 import ArcadePhotoManager, { type ArcadeFormPhoto } from "./arcadePhotoManager";
 
-const inputClass =
-    "border-border bg-bg text-input h-10 min-w-0 rounded-md border px-3 outline-none focus:border-focus";
 const textareaClass =
     "border-border bg-bg text-body min-h-20 min-w-0 resize-y rounded-md border px-3 py-2 outline-none focus:border-focus";
-const secondaryButtonClass =
-    "border-border hover:bg-surface-muted focus-visible:ring-focus/40 flex h-9 items-center justify-center gap-1.5 rounded-md border px-3 text-sm font-bold transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:opacity-50";
 
 // 관리자 화면은 서버·브라우저 시간대가 달라도 같은 날짜가 나오도록 서울 기준으로 적는다
 const verifiedDateFormat = new Intl.DateTimeFormat("ko-KR", {
@@ -58,7 +59,7 @@ function verifiedLabel(value: string | null) {
         : "확인 기록 없음";
 }
 
-export interface ArcadeFormCabinet {
+interface ArcadeFormCabinet {
     id: number;
     label: string | null;
     note: string | null;
@@ -95,9 +96,7 @@ type ArcadeFormProps =
     | { mode: "update"; appKey: string; arcade: ArcadeFormRecord };
 
 function FieldError({ message }: { message?: string }) {
-    return message ? (
-        <p className="text-danger mt-1 text-xs">{message}</p>
-    ) : null;
+    return <AdminFieldError message={message} role={null} />;
 }
 
 export default function ArcadeForm(props: ArcadeFormProps) {
@@ -210,11 +209,7 @@ export default function ArcadeForm(props: ArcadeFormProps) {
                 : await updateArcade(formData);
 
             if (!result.success) {
-                applyFormFieldErrors(setError, result.fieldErrors);
-                setError("root.server", {
-                    type: "server",
-                    message: result.message,
-                });
+                applyFormActionFailure(setError, result);
                 setStatusMessage(result.message);
                 toast.error(result.message);
                 return;
@@ -229,7 +224,7 @@ export default function ArcadeForm(props: ArcadeFormProps) {
                 error instanceof Error && error.message === "GEOCODING_TIMEOUT"
                     ? "주소 검색 응답이 지연되고 있습니다. 다시 시도해주세요."
                     : "저장하지 못했습니다. 카카오맵 설정과 입력 내용을 확인해주세요.";
-            setError("root.server", { type: "server", message });
+            applyFormRootError(setError, message);
             setStatusMessage(message);
             toast.error(message);
         }
@@ -262,7 +257,11 @@ export default function ArcadeForm(props: ArcadeFormProps) {
             <label className="sr-only" htmlFor={`${formKey}-name`}>
                 오락실 이름
             </label>
-            <div className={isCreate ? undefined : "flex items-center gap-2"}>
+            <div
+                className={
+                    isCreate ? undefined : "flex min-w-0 items-center gap-2"
+                }
+            >
                 {!isCreate ? (
                     <MapPin
                         className="text-chart size-4 shrink-0"
@@ -397,7 +396,7 @@ export default function ArcadeForm(props: ArcadeFormProps) {
                 register={register}
                 errors={errors}
             />
-            <fieldset className="border-border rounded-card grid gap-2 border p-3">
+            <fieldset className="border-border rounded-card grid min-w-0 grid-cols-1 gap-2 border p-3">
                 <legend className="text-label px-1">기체</legend>
                 <p className="text-caption">
                     가동·상태·메모를 바꾸거나 「오늘 확인」 을 체크하고 저장하면
@@ -592,11 +591,10 @@ export default function ArcadeForm(props: ArcadeFormProps) {
                     </span>
                 </div>
             ) : null}
-            {errors.root?.server?.message ? (
-                <p className="text-danger text-xs" role="alert">
-                    {errors.root.server.message}
-                </p>
-            ) : null}
+            <AdminFieldError
+                message={errors.root?.server?.message}
+                className="text-danger text-xs"
+            />
             <div className="flex min-w-0 flex-col items-stretch gap-1">
                 <button
                     type="submit"

@@ -290,6 +290,10 @@ old design-stage checklist. Changes to material behavior require a user decision
   list on page 1 of the matching filter and are left out of the dated list; page count
   ignores them. The detail page links the previous (older) and next (newer)
   announcement in publication order across all categories (2026-09-18).
+- Home/archive announcement reads carry metadata
+  and body-validity checks only; bodies are cached per announcement for detail.
+  Both caches share announcement invalidation. Publication and critical-period
+  checks run at read time, preserving scheduled visibility and expired history.
 - Admin announcement saving keeps the existing rules (slug and all three
   translations are required even for a draft). The editor fills an empty slug
   from the English (else Korean) title on save; "임시저장" / "비공개로 전환" saves
@@ -340,6 +344,17 @@ old design-stage checklist. Changes to material behavior require a user decision
 
 ## Visit analytics (2026-09-20)
 
+- Within the loaded dashboard period, metric changes reuse the same snapshot and
+  update `metric` in browser history without another server request. Period changes
+  and page reloads fetch a new snapshot. Direct links, back/forward navigation,
+  admin authorization and the existing hourly page-view chart remain supported.
+
+- Accounts whose current role is `admin` are excluded at collection time from
+  page views, daily visitors, hour/audience buckets, browser external events and
+  API-call totals. Dashboard signup, sync, funnel and contribution totals also
+  exclude current admins; operational queues and failure monitoring do not.
+  Existing aggregate visit rows cannot be retroactively separated because they
+  intentionally contain no account identifier (2026-09-21).
 - Counted totals only, never who visited. A page view increments the day total, the
   route total, the Seoul hour bucket (`hour`, `00`–`23`) and the signed-in split
   (`audience` / `audienceVisitor`, `member` | `guest`). The signed-in flag comes from

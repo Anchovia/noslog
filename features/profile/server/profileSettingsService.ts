@@ -3,6 +3,7 @@ import "server-only";
 import { redirect } from "next/navigation";
 
 import type { ActionFailure, ActionResult } from "@/lib/actions/result";
+import { actionValidationFailure } from "@/lib/actions/validation";
 import {
     createImageUploadToken,
     deleteBlobIfOwned,
@@ -54,13 +55,11 @@ export async function uploadUserSetting(
         profileSettingsInputFromFormData(formData)
     );
 
-    if (!result.success) {
-        return {
-            success: false,
+    if (!result.success)
+        return actionValidationFailure(result.error, {
             message: t("settings.checkInput"),
-            fieldErrors: result.error.flatten().fieldErrors,
-        };
-    }
+            alwaysIncludeFieldErrors: true,
+        });
 
     const currentUser = await db.user.findUnique({
         where: { id: session.id },

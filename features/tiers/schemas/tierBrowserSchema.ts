@@ -9,7 +9,7 @@ import {
     normalizeTierModeGoal,
 } from "@/lib/tiers";
 
-export const tierBrowserQuerySchema = z.object({
+const tierBrowserQuerySchema = z.object({
     mode: z.enum(TIER_MODES).catch("basic"),
     goal: z.enum(TIER_GOALS).catch("s"),
     difficulties: z.array(z.enum(TIER_DIFFICULTIES)).default([]),
@@ -57,7 +57,7 @@ export function serializeTierBrowserQuery(query: TierBrowserQuery) {
     return params;
 }
 
-export const tierBrowserBandSummarySchema = z.object({
+const tierBrowserBandSummarySchema = z.object({
     id: z.number().int(),
     value: z.number(),
     position: z.number().int(),
@@ -78,7 +78,7 @@ export const tierBrowserOverviewSchema = z.object({
     viewerId: z.number().int().nullable(),
     showLocalizedTitle: z.boolean(),
 });
-export const tierBrowserEntrySchema = z.object({
+const tierBrowserEntrySchema = z.object({
     id: z.number().int(),
     chartId: z.number().int(),
     position: z.number().int(),

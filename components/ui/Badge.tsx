@@ -50,5 +50,3 @@ export default function Badge({ className, variant, ...props }: BadgeProps) {
         />
     );
 }
-
-export { badgeVariants };

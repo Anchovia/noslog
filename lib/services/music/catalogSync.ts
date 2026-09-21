@@ -58,7 +58,7 @@ function sortCharts<T extends { difficulty: string }>(charts: T[]) {
     );
 }
 
-export function createMusicCatalogSnapshot(
+function createMusicCatalogSnapshot(
     input: BemaniMusicCatalogInput
 ): MusicCatalogSnapshot {
     return {

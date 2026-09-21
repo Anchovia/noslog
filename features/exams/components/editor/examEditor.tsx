@@ -20,7 +20,7 @@ import {
     type ExamMode,
     type ExamStatus,
 } from "@/features/exams/schemas/examEditorSchema";
-import { applyFormFieldErrors } from "@/lib/forms/errors";
+import { applyFormActionFailure, applyFormRootError } from "@/lib/forms/errors";
 
 import ExamBasicFields from "./examBasicFields";
 import {
@@ -34,8 +34,6 @@ import ExamMusicSearchDialog from "./examMusicSearchDialog";
 import ExamPublicationSection from "./examPublicationSection";
 import ExamRewardSection from "./examRewardSection";
 import ExamStageSection from "./examStageSection";
-
-export type { ExamEditorFormValues as ExamEditorData } from "@/features/exams/schemas/examEditorSchema";
 
 function getErrorMessage(error: unknown): string | undefined {
     if (!error || typeof error !== "object") {
@@ -274,12 +272,7 @@ export default function ExamEditor({
         try {
             const result = await saveExam(values);
             if (!result.success) {
-                applyFormFieldErrors(setError, result.fieldErrors);
-                setError("root.server", {
-                    type: "server",
-                    message: result.message,
-                });
-                toast.error(result.message);
+                applyFormActionFailure(setError, result, toast.error);
                 return;
             }
 
@@ -291,8 +284,7 @@ export default function ExamEditor({
             }
         } catch {
             const message = "검정을 저장하지 못했습니다.";
-            setError("root.server", { type: "server", message });
-            toast.error(message);
+            applyFormRootError(setError, message, toast.error);
         }
     }
 
@@ -302,11 +294,7 @@ export default function ExamEditor({
         startDeleteTransition(async () => {
             const result = await deleteExam(examId);
             if (!result.success) {
-                setError("root.server", {
-                    type: "server",
-                    message: result.message,
-                });
-                toast.error(result.message);
+                applyFormRootError(setError, result.message, toast.error);
                 return;
             }
 

@@ -165,7 +165,6 @@ export default function ProfilePlaysList({
                     title={t("profile.sectionFailed")}
                     action={
                         <Button
-                            appearance="foundation"
                             variant="secondary"
                             onClick={async () => {
                                 if (result.isFetchNextPageError)
@@ -185,7 +184,6 @@ export default function ProfilePlaysList({
                 <div className="nl-profile-list-actions">
                     {result.hasNextPage ? (
                         <Button
-                            appearance="foundation"
                             variant="secondary"
                             disabled={busy}
                             onClick={() => void result.fetchNextPage()}
@@ -195,7 +193,6 @@ export default function ProfilePlaysList({
                     ) : null}
                     {plays.length > 5 ? (
                         <Button
-                            appearance="foundation"
                             variant="secondary"
                             disabled={busy}
                             onClick={collapse}

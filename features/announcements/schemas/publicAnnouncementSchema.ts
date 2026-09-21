@@ -37,46 +37,68 @@ export function announcementsQuery(
     const query = params.toString();
     return query ? `?${query}` : "";
 }
-export const publicAnnouncementSchema = z
-    .object({
-        id: z.number().int().positive(),
-        publicSlug: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
-        isPublished: z.literal(true),
-        publishedAt: dateValue,
-        placement: z.enum(["ROUTINE", "SERVICE_CRITICAL"]),
-        category: z.enum(ANNOUNCEMENT_CATEGORIES).default("NOTICE"),
-        priority: z.number().int(),
-        activeFrom: dateValue.nullable(),
-        expiresAt: dateValue.nullable(),
+const translationMetadataSchema = z.object({
+    locale: z.enum(SUPPORTED_LOCALES),
+    title: boundedText(80),
+    modifiedAt: dateValue.nullable(),
+});
+const completeLocales = (items: { locale: Locale }[]) =>
+    items.length === 3 &&
+    SUPPORTED_LOCALES.every((locale) =>
+        items.some((item) => item.locale === locale)
+    );
+const announcementMetadataSchema = z.object({
+    id: z.number().int().positive(),
+    publicSlug: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
+    isPublished: z.literal(true),
+    publishedAt: dateValue,
+    placement: z.enum(["ROUTINE", "SERVICE_CRITICAL"]),
+    category: z.enum(ANNOUNCEMENT_CATEGORIES).default("NOTICE"),
+    priority: z.number().int(),
+    activeFrom: dateValue.nullable(),
+    expiresAt: dateValue.nullable(),
+});
+const validSchedule = (item: z.infer<typeof announcementMetadataSchema>) =>
+    item.placement !== "SERVICE_CRITICAL" ||
+    (item.activeFrom !== null &&
+        item.activeFrom >= item.publishedAt &&
+        (!item.expiresAt || item.expiresAt > item.activeFrom));
+export const publicAnnouncementSchema = announcementMetadataSchema
+    .extend({
         translations: z
             .array(
-                z.object({
-                    locale: z.enum(SUPPORTED_LOCALES),
-                    title: boundedText(80),
-                    content: boundedText(5000),
-                    modifiedAt: dateValue.nullable(),
-                })
+                translationMetadataSchema.extend({ content: boundedText(5000) })
             )
-            .refine(
-                (items) =>
-                    items.length === 3 &&
-                    SUPPORTED_LOCALES.every((locale) =>
-                        items.some((item) => item.locale === locale)
-                    )
-            ),
+            .refine(completeLocales),
     })
-    .refine(
-        (item) =>
-            item.placement !== "SERVICE_CRITICAL" ||
-            (item.activeFrom !== null &&
-                item.activeFrom >= item.publishedAt &&
-                (!item.expiresAt || item.expiresAt > item.activeFrom))
-    );
+    .refine(validSchedule);
+// 목록은 본문 대신 DB에서 계산한 검증 결과만 받는다. 공개 조건은 상세와 동일하다.
+export const publicAnnouncementSummarySchema = announcementMetadataSchema
+    .extend({
+        translations: z
+            .array(
+                translationMetadataSchema
+                    .extend({
+                        contentLength: z.number().int().min(1).max(5000),
+                        hasContent: z.literal(true),
+                    })
+                    .transform(({ locale, title, modifiedAt }) => ({
+                        locale,
+                        title,
+                        modifiedAt,
+                    }))
+            )
+            .refine(completeLocales),
+    })
+    .refine(validSchedule);
 export type PublicAnnouncementRecord = z.infer<typeof publicAnnouncementSchema>;
+export type PublicAnnouncementSummaryRecord = z.infer<
+    typeof publicAnnouncementSummarySchema
+>;
 export const ANNOUNCEMENTS_PAGE_SIZE = 20;
 
-export function localizeAnnouncement(
-    record: PublicAnnouncementRecord,
+export function localizeAnnouncementSummary(
+    record: PublicAnnouncementSummaryRecord,
     locale: Locale
 ) {
     const translation = record.translations.find(
@@ -87,7 +109,6 @@ export function localizeAnnouncement(
         slug: record.publicSlug,
         category: record.category,
         title: translation.title,
-        content: translation.content,
         publishedAt: record.publishedAt.toISOString(),
         modifiedAt:
             translation.modifiedAt &&
@@ -96,12 +117,36 @@ export function localizeAnnouncement(
                 : null,
     };
 }
+export type PublicAnnouncementSummary = ReturnType<
+    typeof localizeAnnouncementSummary
+>;
+export function localizeAnnouncement(
+    record: PublicAnnouncementRecord,
+    locale: Locale
+) {
+    return {
+        ...localizeAnnouncementSummary(record, locale),
+        content: record.translations.find((item) => item.locale === locale)!
+            .content,
+    };
+}
+
 export type PublicAnnouncement = ReturnType<typeof localizeAnnouncement>;
 
 export function eligibleAnnouncements(records: unknown[], now: Date) {
+    return eligibleRecords(records, now, publicAnnouncementSchema);
+}
+export function eligibleAnnouncementSummaries(records: unknown[], now: Date) {
+    return eligibleRecords(records, now, publicAnnouncementSummarySchema);
+}
+function eligibleRecords<T extends PublicAnnouncementSummaryRecord>(
+    records: unknown[],
+    now: Date,
+    schema: z.ZodType<T>
+) {
     return records
         .flatMap((record) => {
-            const parsed = publicAnnouncementSchema.safeParse(record);
+            const parsed = schema.safeParse(record);
             return parsed.success && parsed.data.publishedAt <= now
                 ? [parsed.data]
                 : [];
@@ -113,8 +158,8 @@ export function eligibleAnnouncements(records: unknown[], now: Date) {
 }
 
 // 활성 중대 공지 — 홈 배너 후보이자 목록 맨 위에 고정되는 항목
-function activeCriticalAnnouncements(
-    records: PublicAnnouncementRecord[],
+function activeCriticalAnnouncements<T extends PublicAnnouncementSummaryRecord>(
+    records: T[],
     now: Date
 ) {
     return records
@@ -133,10 +178,9 @@ function activeCriticalAnnouncements(
         );
 }
 
-export function selectHomeAnnouncements(
-    records: PublicAnnouncementRecord[],
-    now: Date
-) {
+export function selectHomeAnnouncements<
+    T extends PublicAnnouncementSummaryRecord,
+>(records: T[], now: Date) {
     const active = activeCriticalAnnouncements(records, now);
     const activeIds = new Set(active.map((record) => record.id));
     return {
@@ -152,8 +196,8 @@ export function selectHomeAnnouncements(
 
 // 전체 공지 한 페이지 (2026-09-18 B1) — 고른 분류 안에서, 활성 중대 공지는 1페이지 맨 위에 고정하고
 // 날짜 목록에서는 빼서 두 번 보이지 않게 한다. 쪽수는 고정을 뺀 목록으로 센다.
-export function selectArchivePage(
-    records: PublicAnnouncementRecord[],
+export function selectArchivePage<T extends PublicAnnouncementSummaryRecord>(
+    records: T[],
     now: Date,
     category: AnnouncementCategory | null,
     page: number
@@ -181,10 +225,9 @@ export function selectArchivePage(
 }
 
 // 상세 끝 이전 · 다음 글 (2026-09-18) — 분류와 관계없이 게시 순서. 이전 = 더 오래된 글, 다음 = 더 새 글
-export function adjacentAnnouncements(
-    records: PublicAnnouncementRecord[],
-    id: number
-) {
+export function adjacentAnnouncements<
+    T extends PublicAnnouncementSummaryRecord,
+>(records: T[], id: number) {
     const index = records.findIndex((record) => record.id === id);
     if (index < 0) return { older: null, newer: null };
     return {

@@ -2,10 +2,9 @@
 
 /* eslint-disable @next/next/no-img-element */
 
-import { put } from "@vercel/blob/client";
 import { ImageOff, ImagePlus, RotateCcw } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
 
 import {
@@ -14,15 +13,18 @@ import {
     saveMusicJacket,
 } from "@/app/admin/music/actions";
 import {
+    AdminFieldError,
+    adminCompactPrimaryButtonClass as primaryButtonClass,
+    adminSecondaryButtonClass as secondaryButtonClass,
+} from "@/components/admin/adminForm";
+import {
     getJacketUrl,
     getLocalJacketUrl,
     isManualJacketUrl,
 } from "@/lib/musicJackets";
-
-const secondaryButtonClass =
-    "border-border hover:bg-surface-muted focus-visible:ring-focus/40 flex h-9 items-center justify-center gap-1.5 rounded-md border px-3 text-sm font-bold transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:opacity-50";
-const IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
-const MAX_IMAGE_SIZE = 4 * 1024 * 1024;
+import { IMAGE_ACCEPT, imageFileValidationError } from "@/lib/imageUploadRules";
+import useObjectUrl from "@/lib/hooks/useObjectUrl";
+import { uploadGrantedImage } from "@/lib/uploads/clientImageUpload";
 
 // 지금 화면에 보이는 자켓이 어디서 왔는지 — 잘못된 자켓을 고칠 때 원인을 알 수 있게
 function jacketSource(index: string, background: string | null) {
@@ -57,39 +59,31 @@ export default function MusicJacketForm({
     const router = useRouter();
     const fileInput = useRef<HTMLInputElement>(null);
     const [file, setFile] = useState<File | null>(null);
-    const [preview, setPreview] = useState<string | null>(null);
+    const preview = useObjectUrl(file);
     const [error, setError] = useState("");
     const [uploading, setUploading] = useState(false);
     const [pending, startTransition] = useTransition();
     const busy = uploading || pending;
     const manual = isManualJacketUrl(background);
 
-    useEffect(
-        () => () => {
-            if (preview) URL.revokeObjectURL(preview);
-        },
-        [preview]
-    );
-
     function clearDraft() {
         setFile(null);
-        setPreview(null);
         if (fileInput.current) fileInput.current.value = "";
     }
 
     function choose(next: File | undefined) {
         setError("");
         if (!next) return;
-        if (!IMAGE_TYPES.includes(next.type)) {
+        const validationError = imageFileValidationError(next);
+        if (validationError === "type") {
             setError("JPG·PNG·WebP 이미지만 올릴 수 있습니다.");
             return;
         }
-        if (next.size > MAX_IMAGE_SIZE) {
+        if (validationError === "size") {
             setError("이미지는 4MB 이하로 올려주세요.");
             return;
         }
         setFile(next);
-        setPreview(URL.createObjectURL(next));
     }
 
     async function upload() {
@@ -102,14 +96,10 @@ export default function MusicJacketForm({
                 setError(grant.message);
                 return;
             }
-            const blob = await put(grant.pathname, file, {
-                access: "public",
-                token: grant.token,
-                contentType: file.type,
-            });
+            const imageUrl = await uploadGrantedImage(file, grant, "public");
             const formData = new FormData();
             formData.set("musicIndex", musicIndex);
-            formData.set("url", blob.url);
+            formData.set("url", imageUrl);
             const result = await saveMusicJacket(formData);
             if (!result.success) {
                 setError(result.message);
@@ -168,7 +158,7 @@ export default function MusicJacketForm({
                 ref={fileInput}
                 type="file"
                 hidden
-                accept={IMAGE_TYPES.join(",")}
+                accept={IMAGE_ACCEPT}
                 aria-label="자켓 이미지 파일"
                 onChange={(event) => choose(event.target.files?.[0])}
             />
@@ -193,7 +183,7 @@ export default function MusicJacketForm({
                             type="button"
                             disabled={busy}
                             onClick={() => void upload()}
-                            className="bg-text-primary text-bg focus-visible:ring-focus/40 flex h-9 items-center justify-center gap-1.5 rounded-md text-sm font-bold focus-visible:ring-2 focus-visible:outline-none disabled:opacity-50"
+                            className={primaryButtonClass}
                         >
                             {uploading ? "올리는 중" : "올리기"}
                         </button>
@@ -222,11 +212,7 @@ export default function MusicJacketForm({
                     ) : null}
                 </div>
             )}
-            {error ? (
-                <p className="text-danger text-xs" role="alert">
-                    {error}
-                </p>
-            ) : null}
+            <AdminFieldError message={error} className="text-danger text-xs" />
         </section>
     );
 }

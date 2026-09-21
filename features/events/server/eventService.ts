@@ -14,6 +14,7 @@ import {
     type EventStatus,
 } from "@/features/events/schemas/eventSchema";
 import type { ActionResult } from "@/lib/actions/result";
+import { actionValidationFailure } from "@/lib/actions/validation";
 import {
     createImageUploadToken,
     deleteBlobIfOwned,
@@ -189,11 +190,10 @@ export async function saveEvent(
         eventInputFromFormData(formData)
     );
     if (!parsed.success)
-        return {
-            success: false,
+        return actionValidationFailure(parsed.error, {
             message: t("events.checkInput"),
-            fieldErrors: parsed.error.flatten().fieldErrors,
-        };
+            alwaysIncludeFieldErrors: true,
+        });
     const idValue = Number(formData.get("id"));
     const id = Number.isSafeInteger(idValue) && idValue > 0 ? idValue : null;
     const submit = formData.get("submit") === "true";

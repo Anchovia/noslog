@@ -6,6 +6,7 @@ import {
 } from "@/features/music/schemas/chartEvaluationAdminSchema";
 import type { AdminChartEvaluation } from "@/features/music/types/chartEvaluationAdmin";
 import type { ActionResult } from "@/lib/actions/result";
+import { actionValidationFailure } from "@/lib/actions/validation";
 import { requireAdmin } from "@/lib/admin";
 import { CACHE_TAGS } from "@/lib/cacheTags";
 import db from "@/lib/db";
@@ -90,12 +91,11 @@ export async function deleteAdminChartEvaluation(
         chartEvaluationAdminDeleteInputFromFormData(formData)
     );
     if (!result.success) {
-        return {
-            success: false,
-            message:
-                result.error.issues[0]?.message ??
-                "평가 삭제 요청을 확인해주세요.",
-        };
+        return actionValidationFailure(result.error, {
+            message: "평가 삭제 요청을 확인해주세요.",
+            preferFirstIssue: true,
+            fieldPath: false,
+        });
     }
 
     try {

@@ -405,7 +405,7 @@ function normalizeArcadeInput(data: ArcadeBaseInput) {
     };
 }
 
-export const arcadeIdSchema = z.coerce
+const arcadeIdSchema = z.coerce
     .number({ error: "잘못된 오락실입니다." })
     .int("잘못된 오락실입니다.")
     .positive("잘못된 오락실입니다.");
@@ -421,7 +421,6 @@ export const arcadeUpdateSchema = arcadeBaseSchema
 
 export type ArcadeFormValues = z.input<typeof arcadeFormSchema>;
 export type ArcadeValues = z.output<typeof arcadeFormSchema>;
-export type ArcadeUpdateValues = z.output<typeof arcadeUpdateSchema>;
 
 interface ArcadeFormCabinetSource {
     id: number;

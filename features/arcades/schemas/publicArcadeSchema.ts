@@ -119,7 +119,6 @@ export const publicArcadeSchema = z.object({
 
 export type PublicArcade = z.infer<typeof publicArcadeSchema>;
 export type ArcadeCabinet = z.infer<typeof arcadeCabinetSchema>;
-export type ArcadeHours = z.infer<typeof arcadeHoursSchema>;
 
 export const arcadeDiscoverySchema = z.object({
     q: z.string().max(200).default(""),

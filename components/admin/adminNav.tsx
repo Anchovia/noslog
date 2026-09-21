@@ -7,7 +7,7 @@ import { useEffect, useRef } from "react";
 
 import { cn } from "@/lib/utils";
 
-export const adminSections = [
+const adminSections = [
     { href: "/admin", label: "대시보드" },
     { href: "/admin/announcements", label: "공지" },
     { href: "/admin/events", label: "이벤트" },

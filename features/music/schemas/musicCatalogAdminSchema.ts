@@ -6,7 +6,7 @@ export const MUSIC_CATALOG_STATUSES = [
     "rejected",
 ] as const;
 
-export const musicCatalogStatusSchema = z.enum(MUSIC_CATALOG_STATUSES, {
+const musicCatalogStatusSchema = z.enum(MUSIC_CATALOG_STATUSES, {
     error: "악곡 업데이트 상태를 확인해주세요.",
 });
 

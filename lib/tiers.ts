@@ -112,7 +112,7 @@ export function formatOfficialChartLevel(difficulty: string, level: number) {
         : `Lv.${level}`;
 }
 
-export interface PublicTierBandEntry {
+interface PublicTierBandEntry {
     id: number;
     chartId: number;
     position: number;

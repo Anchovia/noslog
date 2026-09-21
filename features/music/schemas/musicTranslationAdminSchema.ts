@@ -4,10 +4,10 @@ export const MUSIC_TRANSLATION_LOCALES = ["ko", "en"] as const;
 export const MUSIC_TRANSLATION_STATUSES = ["draft", "approved"] as const;
 export const MUSIC_TRANSLATION_TITLE_MAX_LENGTH = 300;
 
-export const musicTranslationLocaleSchema = z.enum(MUSIC_TRANSLATION_LOCALES, {
+const musicTranslationLocaleSchema = z.enum(MUSIC_TRANSLATION_LOCALES, {
     error: "번역 언어를 확인해주세요.",
 });
-export const musicTranslationStatusSchema = z.enum(MUSIC_TRANSLATION_STATUSES, {
+const musicTranslationStatusSchema = z.enum(MUSIC_TRANSLATION_STATUSES, {
     error: "검수 상태를 확인해주세요.",
 });
 

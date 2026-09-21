@@ -7,6 +7,7 @@ import {
     type EventStatus,
 } from "@/features/events/schemas/eventSchema";
 import type { ActionResult } from "@/lib/actions/result";
+import { actionValidationFailure } from "@/lib/actions/validation";
 import { requireAdmin } from "@/lib/admin";
 import db from "@/lib/db";
 import { logServerError } from "@/lib/observability/server";
@@ -67,20 +68,13 @@ export async function reviewEvent(
         decision: formData.get("decision"),
         note: String(formData.get("note") ?? ""),
     });
-    if (!parsed.success) {
-        const fieldErrors = parsed.error.flatten().fieldErrors;
-        return {
-            success: false,
-            message:
-                fieldErrors.note?.[0] ??
-                fieldErrors.decision?.[0] ??
-                "입력을 확인해 주세요.",
-            fieldErrors: {
-                decision: fieldErrors.decision,
-                note: fieldErrors.note,
-            },
-        };
-    }
+    if (!parsed.success)
+        return actionValidationFailure<"decision" | "note">(parsed.error, {
+            message: "입력을 확인해 주세요.",
+            pickFields: ["decision", "note"],
+            messageFields: ["note", "decision"],
+            alwaysIncludeFieldErrors: true,
+        });
     const event = await db.communityEvent.findUnique({
         where: { id: parsed.data.id },
         select: {

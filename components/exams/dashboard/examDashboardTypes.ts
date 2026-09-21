@@ -1,6 +1,6 @@
 export type ExamMode = "basic" | "recital" | "event";
 
-export interface ExamStageRecord {
+interface ExamStageRecord {
     score: number;
     rank: string;
     fcType: number;
@@ -57,7 +57,7 @@ export interface ExamDashboardItem {
     stages: ExamStageItem[];
 }
 
-export interface ExamStageResult extends ExamStageItem {
+interface ExamStageResult extends ExamStageItem {
     comparisonValue: number;
     isPassed: boolean | null;
     individualTargetValue: number;

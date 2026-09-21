@@ -35,7 +35,7 @@ export function rankTone(
  * Grd · 레이팅 구간 색(2026-09-19 B2 · R1) — 두 모드 · 두 값 같은 기준. 6,000 아래는 기본 글자색.
  * 6,000 파랑 · 6,500 하늘 · 7,000 S 노랑 · 7,500 990k 살구 · 8,000 Pianist 분홍
  */
-export const GRADE_BAND_CUTS = [6000, 6500, 7000, 7500, 8000] as const;
+const GRADE_BAND_CUTS = [6000, 6500, 7000, 7500, 8000] as const;
 export function gradeBandTone(
     value: number | null | undefined
 ): StatTone | undefined {

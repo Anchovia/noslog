@@ -1,10 +1,11 @@
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
 
+import {
+    AdminFieldError,
+    adminCompactInputClass as inputClass,
+} from "@/components/admin/adminForm";
 import type { ArcadeFormValues } from "@/features/arcades/schemas/arcadeSchema";
 import { ARCADE_WEEKDAYS } from "@/lib/arcadeDetails";
-
-const inputClass =
-    "border-border bg-bg text-input h-10 min-w-0 rounded-md border px-3 outline-none focus:border-focus";
 
 interface ArcadeBusinessHoursFieldsProps {
     formKey: string;
@@ -40,7 +41,7 @@ export default function ArcadeBusinessHoursFields({
     const errorMessage = businessHoursErrorMessage(errors);
 
     return (
-        <fieldset className="border-border rounded-card grid gap-2 border p-3">
+        <fieldset className="border-border rounded-card grid min-w-0 grid-cols-1 gap-2 border p-3">
             <legend className="text-label px-1">영업시간</legend>
             <p className="text-caption">
                 체크를 해제한 요일은 휴무로 표시됩니다. 자정을 넘겨 영업하면
@@ -85,11 +86,10 @@ export default function ArcadeBusinessHoursFields({
                     기존 입력: {legacyNote}
                 </p>
             ) : null}
-            {errorMessage ? (
-                <p className="text-danger text-xs" role="alert">
-                    {errorMessage}
-                </p>
-            ) : null}
+            <AdminFieldError
+                message={errorMessage}
+                className="text-danger text-xs"
+            />
         </fieldset>
     );
 }

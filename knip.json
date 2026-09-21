@@ -1,4 +1,10 @@
 {
     "$schema": "https://unpkg.com/knip@6/schema.json",
-    "ignoreDependencies": ["@radix-ui/react-select", "@radix-ui/react-tabs"]
+    "ignoreIssues": {
+        "components/admin/chart-pattern/chartEditorStore.tsx": ["types"],
+        "components/admin/chart-pattern/chartTimingEditor.tsx": ["types"],
+        "lib/chart-pattern/editor.ts": ["exports"],
+        "lib/chart-pattern/schema.ts": ["exports"],
+        "lib/chart-pattern/timing.ts": ["types"]
+    }
 }

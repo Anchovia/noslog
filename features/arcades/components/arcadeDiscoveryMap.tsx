@@ -7,7 +7,11 @@ import { useTranslations } from "@/components/i18n/localeProvider";
 import Button from "@/components/ui/Button";
 import { sendAnalytics } from "@/lib/analyticsClient";
 import { loadKakaoMaps } from "@/lib/kakaoMaps";
-import type { KakaoMapInstance, KakaoOverlay } from "@/lib/kakaoMaps";
+import type {
+    KakaoMapInstance,
+    KakaoOverlay,
+    KakaoCustomOverlay,
+} from "@/lib/kakaoMaps";
 
 type KakaoApi = Awaited<ReturnType<typeof loadKakaoMaps>>;
 
@@ -72,6 +76,7 @@ export default function ArcadeDiscoveryMap({
         null
     );
     const renderRef = useRef<(() => void) | null>(null);
+    const selectionRef = useRef<(() => void) | null>(null);
     const [state, setState] = useState<"loading" | "ready" | "error">(
         "loading"
     );
@@ -94,6 +99,11 @@ export default function ArcadeDiscoveryMap({
         const canvas = container.current;
         let disposed = false;
         let overlays: KakaoOverlay[] = [];
+        const pins = new Map<
+            number,
+            { button: HTMLButtonElement; overlay: KakaoCustomOverlay }
+        >();
+        let previousSelected: number | null = null;
         let cleanup = () => {};
         setState("loading");
         loadKakaoMaps(appKey)
@@ -129,6 +139,8 @@ export default function ArcadeDiscoveryMap({
                             : undefined;
                     overlays.forEach((overlay) => overlay.setMap(null));
                     overlays = [];
+                    pins.clear();
+                    previousSelected = currentSelected();
                     const projection = map.getProjection();
                     const points = currentArcades()
                         .filter(
@@ -222,25 +234,37 @@ export default function ArcadeDiscoveryMap({
                                 (sum, point) => sum + point.arcade.longitude!,
                                 0
                             ) / group.points.length;
-                        overlays.push(
-                            new api.maps.CustomOverlay({
-                                map,
-                                position: new api.maps.LatLng(
-                                    latitude,
-                                    longitude
-                                ),
-                                content: button,
-                                xAnchor: 0.5,
-                                // 핀은 끝이 좌표를 가리키고, 버블은 중심이 좌표
-                                yAnchor: cluster ? 0.5 : 1,
-                                zIndex: selected ? 3 : cluster ? 1 : 2,
-                            })
-                        );
+                        const overlay = new api.maps.CustomOverlay({
+                            map,
+                            position: new api.maps.LatLng(latitude, longitude),
+                            content: button,
+                            xAnchor: 0.5,
+                            // 핀은 끝이 좌표를 가리키고, 버블은 중심이 좌표
+                            yAnchor: cluster ? 0.5 : 1,
+                            zIndex: selected ? 3 : cluster ? 1 : 2,
+                        });
+                        overlays.push(overlay);
+                        if (!cluster) pins.set(arcade.id, { button, overlay });
                         if (focused === button.dataset.markerKey)
                             button.focus({ preventScroll: true });
                     }
                 };
                 renderRef.current = render;
+                // 선택만 바뀌면 기존 핀의 상태와 겹침 순서만 갱신한다. 포커스와 DOM은 유지한다.
+                selectionRef.current = () => {
+                    const selected = currentSelected();
+                    if (selected === previousSelected) return;
+                    for (const id of [previousSelected, selected]) {
+                        const pin = id === null ? undefined : pins.get(id);
+                        if (!pin) continue;
+                        pin.button.setAttribute(
+                            "aria-pressed",
+                            String(id === selected)
+                        );
+                        pin.overlay.setZIndex(id === selected ? 3 : 2);
+                    }
+                    previousSelected = selected;
+                };
                 const markBounds = () => {
                     if (programmaticMove.current) return;
                     focusedPoint.current = null;
@@ -296,6 +320,8 @@ export default function ArcadeDiscoveryMap({
             cleanup();
             overlays.forEach((overlay) => overlay.setMap(null));
             renderRef.current = null;
+            selectionRef.current = null;
+            pins.clear();
             mapRef.current = null;
             apiRef.current = null;
             canvas.replaceChildren();
@@ -304,7 +330,11 @@ export default function ArcadeDiscoveryMap({
 
     useEffect(() => {
         renderRef.current?.();
-    }, [arcades, selectedId]);
+    }, [arcades]);
+
+    useEffect(() => {
+        selectionRef.current?.();
+    }, [selectedId]);
 
     // 카드를 누르면 그 핀으로 — 이미 더 가까이 보고 있으면 확대 단계는 그대로 두고 옮기기만 한다
     const focusArcade = useEffectEvent((id: number) => {
@@ -377,7 +407,6 @@ export default function ArcadeDiscoveryMap({
                     {state === "error" ? (
                         <Button
                             variant="secondary"
-                            appearance="foundation"
                             size="sm"
                             onClick={() => setAttempt((value) => value + 1)}
                         >

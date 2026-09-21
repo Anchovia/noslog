@@ -40,17 +40,16 @@ export async function proxy(request: NextRequest, event?: NextFetchEvent) {
     const pathLocale = getPathLocale(requestedPathname);
     const pathname = stripLocaleFromPath(requestedPathname);
 
-    // API 호출 통계(자체 집계) — 응답을 붙잡지 않도록 응답 뒤에 1을 더한다.
-    // 예약 작업(cron)과 통계 수집 자체는 세지 않고, 목록에 없는 경로는 recordApiCall 이 버린다
-    if (
+    // 예약 작업(cron)과 통계 수집 자체는 세지 않고, 목록에 없는 경로는 recordApiCall 이 버린다.
+    // 관리자 제외를 위해 세션을 확인한 뒤 응답 뒤에서 기록한다.
+    const shouldRecordApiCall = Boolean(
+        event &&
         requestedPathname.startsWith("/api/") &&
         !requestedPathname.startsWith("/api/cron/") &&
         !requestedPathname.startsWith("/api/analytics") &&
         request.method !== "OPTIONS" &&
         request.method !== "HEAD"
-    ) {
-        event?.waitUntil(recordApiCall(requestedPathname).catch(() => null));
-    }
+    );
 
     // Vercel Cron은 자체 Bearer 토큰으로 인증하고 사용자 세션을 사용하지 않음
     if (pathname.startsWith("/api/cron/")) {
@@ -119,15 +118,21 @@ export async function proxy(request: NextRequest, event?: NextFetchEvent) {
     }
 
     const session = await getSession();
+    const sessionUser =
+        session.id && (!isLocale(session.locale) || shouldRecordApiCall)
+            ? await db.user.findUnique({
+                  where: { id: session.id },
+                  select: { locale: true, role: true },
+              })
+            : null;
     if (session.id && !isLocale(session.locale)) {
-        const userPreference = await db.user.findUnique({
-            where: { id: session.id },
-            select: { locale: true },
-        });
-        if (isLocale(userPreference?.locale)) {
-            session.locale = userPreference.locale;
+        if (isLocale(sessionUser?.locale)) {
+            session.locale = sessionUser.locale;
             await session.save();
         }
+    }
+    if (shouldRecordApiCall && sessionUser?.role !== "admin") {
+        event!.waitUntil(recordApiCall(requestedPathname).catch(() => null));
     }
     const localeCookie = request.cookies.get(LOCALE_COOKIE_NAME)?.value;
     const locale =

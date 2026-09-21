@@ -8,12 +8,16 @@ import { toast } from "sonner";
 
 import { reviewExamSubmission } from "@/app/admin/submissions/actions";
 import {
+    AdminFieldError,
+    adminTextareaClass,
+} from "@/components/admin/adminForm";
+import {
     createExamSubmissionReviewFormData,
     examSubmissionReviewSchema,
     type ExamSubmissionReviewFormValues,
     type ExamSubmissionReviewValues,
 } from "@/features/exams/schemas/examSubmissionAdminSchema";
-import { applyFormFieldErrors } from "@/lib/forms/errors";
+import { applyFormActionFailure, applyFormRootError } from "@/lib/forms/errors";
 
 interface ExamSubmissionReviewFormProps {
     reviewerNote: string;
@@ -54,12 +58,7 @@ export default function ExamSubmissionReviewForm({
                 createExamSubmissionReviewFormData(values)
             );
             if (!result.success) {
-                applyFormFieldErrors(setError, result.fieldErrors);
-                setError("root.server", {
-                    type: "server",
-                    message: result.message,
-                });
-                toast.error(result.message);
+                applyFormActionFailure(setError, result, toast.error);
                 return;
             }
 
@@ -67,8 +66,7 @@ export default function ExamSubmissionReviewForm({
             router.refresh();
         } catch {
             const message = "검정 인증을 심사하지 못했습니다.";
-            setError("root.server", { type: "server", message });
-            toast.error(message);
+            applyFormRootError(setError, message, toast.error);
         }
     }
 
@@ -88,19 +86,17 @@ export default function ExamSubmissionReviewForm({
                 placeholder="심사 메모 또는 반려 사유"
                 aria-label="심사 메모 또는 반려 사유"
                 aria-invalid={Boolean(errors.reviewerNote)}
-                className="border-border bg-bg text-input w-full resize-none rounded-md border px-3 py-2"
+                className={adminTextareaClass}
                 {...register("reviewerNote")}
             />
-            {errors.reviewerNote?.message ? (
-                <p className="text-danger text-xs" role="alert">
-                    {errors.reviewerNote.message}
-                </p>
-            ) : null}
-            {errors.root?.server?.message ? (
-                <p className="text-danger text-xs" role="alert">
-                    {errors.root.server.message}
-                </p>
-            ) : null}
+            <AdminFieldError
+                message={errors.reviewerNote?.message}
+                className="text-danger text-xs"
+            />
+            <AdminFieldError
+                message={errors.root?.server?.message}
+                className="text-danger text-xs"
+            />
             <div className="grid grid-cols-2 gap-2">
                 <button
                     type="button"

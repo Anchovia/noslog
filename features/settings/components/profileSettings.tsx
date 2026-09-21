@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { put } from "@vercel/blob/client";
 import {
     useLocale,
     useLocalizedHref,
@@ -28,7 +27,9 @@ import type {
     SettingsPageData,
     SettingsUser,
 } from "@/features/settings/server/settingsPageService";
-import { applyFormFieldErrors } from "@/lib/forms/errors";
+import { applyFormFieldErrors, applyFormRootError } from "@/lib/forms/errors";
+import { IMAGE_ACCEPT, imageFileValidationError } from "@/lib/imageUploadRules";
+import { uploadGrantedImage } from "@/lib/uploads/clientImageUpload";
 import ArcadePicker from "./arcadePicker";
 import AvatarCropDialog from "./avatarCropDialog";
 import UnsavedChangesGuard from "./unsavedChangesGuard";
@@ -92,11 +93,12 @@ export default function ProfileSettings({
     function chooseFile(file?: File) {
         clearErrors("avatar");
         if (!file) return;
-        if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+        const validationError = imageFileValidationError(file);
+        if (validationError === "type") {
             setError("avatar", { message: t("settings.invalidImage") });
             return;
         }
-        if (file.size > 4 * 1024 * 1024) {
+        if (validationError === "size") {
             setError("avatar", { message: t("settings.imageTooLarge") });
             return;
         }
@@ -106,9 +108,10 @@ export default function ProfileSettings({
         setSaved("");
         clearErrors("root");
         if (!navigator.onLine) {
-            setError("root.server", {
-                message: `${t("settings.offline")} ${t("settings.offlineRetained")}`,
-            });
+            applyFormRootError(
+                setError,
+                `${t("settings.offline")} ${t("settings.offlineRetained")}`
+            );
             return;
         }
         try {
@@ -123,12 +126,12 @@ export default function ProfileSettings({
                         setError("avatar", { message: grant.message });
                         return;
                     }
-                    const blob = await put(grant.pathname, staged.file, {
-                        access: "public",
-                        token: grant.token,
-                        contentType: staged.file.type,
-                    });
-                    uploaded.current = { file: staged.file, url: blob.url };
+                    const url = await uploadGrantedImage(
+                        staged.file,
+                        grant,
+                        "public"
+                    );
+                    uploaded.current = { file: staged.file, url };
                 }
                 nextAvatar = uploaded.current.url;
             }
@@ -138,7 +141,7 @@ export default function ProfileSettings({
             if (!result.success) {
                 applyFormFieldErrors(setError, result.fieldErrors);
                 if (result.fieldErrors?.username) setFocus("username");
-                setError("root.server", { message: result.message });
+                applyFormRootError(setError, result.message);
                 return;
             }
             reset(result.values);
@@ -146,7 +149,7 @@ export default function ProfileSettings({
             uploaded.current = null;
             setSaved(result.message);
         } catch {
-            setError("root.server", { message: t("settings.saveError") });
+            applyFormRootError(setError, t("settings.saveError"));
         }
     }
     return (
@@ -168,7 +171,6 @@ export default function ProfileSettings({
                         <div className="nl-settings__actions">
                             <Button
                                 ref={photoButton}
-                                appearance="foundation"
                                 variant="secondary"
                                 disabled={isSubmitting}
                                 onClick={() => fileInput.current?.click()}
@@ -177,7 +179,6 @@ export default function ProfileSettings({
                             </Button>
                             {avatar ? (
                                 <Button
-                                    appearance="foundation"
                                     variant="ghost"
                                     disabled={isSubmitting}
                                     onClick={() => {
@@ -197,7 +198,7 @@ export default function ProfileSettings({
                             ref={fileInput}
                             type="file"
                             hidden
-                            accept="image/jpeg,image/png,image/webp"
+                            accept={IMAGE_ACCEPT}
                             onChange={(event) => {
                                 chooseFile(event.target.files?.[0]);
                                 event.target.value = "";
@@ -285,7 +286,6 @@ export default function ProfileSettings({
                         <div className="nl-settings__actions">
                             <Button
                                 ref={arcadeButton}
-                                appearance="foundation"
                                 variant="secondary"
                                 disabled={isSubmitting}
                                 onClick={() => setArcadeOpen(true)}
@@ -294,7 +294,6 @@ export default function ProfileSettings({
                             </Button>
                             {arcadeId ? (
                                 <Button
-                                    appearance="foundation"
                                     variant="ghost"
                                     disabled={isSubmitting}
                                     onClick={() =>
@@ -349,7 +348,6 @@ export default function ProfileSettings({
                         {saved}
                     </p>
                     <Button
-                        appearance="foundation"
                         type="submit"
                         disabled={!isDirty || !isValid || isSubmitting}
                     >
@@ -414,14 +412,12 @@ export default function ProfileSettings({
                     <>
                         <Button
                             ref={countryCancel}
-                            appearance="foundation"
                             variant="secondary"
                             onClick={() => setCountry(null)}
                         >
                             {t("settings.cancel")}
                         </Button>
                         <Button
-                            appearance="foundation"
                             onClick={() => {
                                 if (country)
                                     setValue("country", country, {

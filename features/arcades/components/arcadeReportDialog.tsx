@@ -9,15 +9,12 @@ import {
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MessageSquare } from "lucide-react";
-import { put } from "@vercel/blob/client";
 import Link from "next/link";
 import {
     useLocale,
     useLocalizedHref,
     useTranslations,
 } from "@/components/i18n/localeProvider";
-import FullScreenDialog from "@/components/ui/fullScreenDialog";
-import ModalDialog from "@/components/ui/modalDialog";
 import ActionButton from "@/components/ui/actionButton";
 import Button, { foundationButtonClass } from "@/components/ui/Button";
 import RadioGroup from "@/components/ui/radioGroup";
@@ -27,7 +24,7 @@ import {
     TextArea,
 } from "@/components/ui/formField";
 import { StatusMessage } from "@/components/ui/statusMessage";
-import useMediaQuery from "@/lib/hooks/useMediaQuery";
+import ResponsiveDialog from "@/components/ui/responsiveDialog";
 import { requestFeedbackImageUpload } from "@/app/(nevigation)/(home)/feedbackActions";
 import { submitArcadeReport } from "@/app/(nevigation)/gamecenter/actions";
 import {
@@ -40,6 +37,8 @@ import type {
 } from "@/features/arcades/schemas/arcadeReportSchema";
 import type { PublicArcade } from "@/features/arcades/schemas/publicArcadeSchema";
 import { applyFormFieldErrors } from "@/lib/forms/errors";
+import { IMAGE_ACCEPT, imageFileValidationError } from "@/lib/imageUploadRules";
+import { uploadGrantedImage } from "@/lib/uploads/clientImageUpload";
 
 export default function ArcadeReportDialog({
     arcade,
@@ -70,8 +69,6 @@ export default function ArcadeReportDialog({
     const locale = useLocale();
     const href = useLocalizedHref();
     const t = useTranslations();
-    // 필터와 같은 그릇 규칙 — 672 미만 전체 레이어, 672 이상 모달
-    const wide = useMediaQuery("(min-width: 672px)");
     const [open, setOpen] = useState(false);
     const [success, setSuccess] = useState(false);
     const [file, setFile] = useState<File | null>(null);
@@ -115,13 +112,8 @@ export default function ArcadeReportDialog({
                     form.setError("root", { message: upload.message });
                     return;
                 }
-                const blob = await put(upload.pathname, file, {
-                    access: "private",
-                    token: upload.token,
-                    contentType: file.type,
-                });
-                imageUrl = blob.url;
-                uploadRef.current = { file, url: blob.url };
+                imageUrl = await uploadGrantedImage(file, upload, "private");
+                uploadRef.current = { file, url: imageUrl };
             }
             const data = new FormData();
             for (const [key, value] of Object.entries({
@@ -151,7 +143,6 @@ export default function ArcadeReportDialog({
     const loginHref = `${href("/login")}?returnTo=${encodeURIComponent(href(`/gamecenter/${arcade.slug}`))}`;
     const trigger = iconOnly ? (
         <Button
-            appearance="foundation"
             variant="secondary"
             size="icon"
             aria-label={triggerAriaLabel ?? title}
@@ -161,7 +152,6 @@ export default function ArcadeReportDialog({
         </Button>
     ) : (
         <Button
-            appearance="foundation"
             variant={triggerVariant}
             size="sm"
             aria-label={triggerAriaLabel}
@@ -276,21 +266,17 @@ export default function ArcadeReportDialog({
                 ref={fileInput}
                 hidden
                 type="file"
-                accept="image/jpeg,image/png,image/webp"
+                accept={IMAGE_ACCEPT}
                 disabled={busy}
                 aria-label={t("feedback.attachImage")}
                 onChange={(event) => {
                     const next = event.target.files?.[0];
                     if (!next) return;
-                    if (
-                        !["image/jpeg", "image/png", "image/webp"].includes(
-                            next.type
-                        ) ||
-                        next.size > 4 * 1024 * 1024
-                    ) {
+                    const validationError = imageFileValidationError(next);
+                    if (validationError) {
                         form.setError("root", {
                             message: t(
-                                next.size > 4 * 1024 * 1024
+                                validationError === "size"
                                     ? "feedback.imageTooLarge"
                                     : "feedback.invalidImage"
                             ),
@@ -322,28 +308,28 @@ export default function ArcadeReportDialog({
         </>
     );
 
-    // Compact — 필터 레이어와 같은 전체 레이어: 머리 줄 제목·닫기, 하단 고정 줄에 제출
-    if (!wide)
-        return (
-            <FullScreenDialog
-                open={open}
-                onOpenChange={changeOpen}
-                title={title}
-                trigger={trigger}
-                footer={
-                    isAuthenticated && !success ? (
-                        <ActionButton
-                            className="nl-arcades__apply"
-                            busy={busy}
-                            busyLabel={t("feedback.submitting")}
-                            onClick={submitForm}
-                        >
-                            {t("feedback.submit")}
-                        </ActionButton>
-                    ) : null
-                }
-            >
-                {!isAuthenticated ? (
+    return (
+        <ResponsiveDialog
+            open={open}
+            onOpenChange={changeOpen}
+            title={title}
+            width="wide"
+            className="nl-feedback-dialog"
+            trigger={trigger}
+            fullScreenFooter={
+                isAuthenticated && !success ? (
+                    <ActionButton
+                        className="nl-arcades__apply"
+                        busy={busy}
+                        busyLabel={t("feedback.submitting")}
+                        onClick={submitForm}
+                    >
+                        {t("feedback.submit")}
+                    </ActionButton>
+                ) : null
+            }
+            fullScreenChildren={
+                !isAuthenticated ? (
                     <div className="nl-stack">
                         {loginRequired}
                         {loginLink}
@@ -359,65 +345,55 @@ export default function ArcadeReportDialog({
                     >
                         {fields}
                     </form>
-                )}
-            </FullScreenDialog>
-        );
-
-    // 672+ — 피드백 다이얼로그와 같은 768 모달(SHELL-37): 제보 대상 화면이 뒤에 남고 [닫기][제출] 이 오른쪽
-    return (
-        <ModalDialog
-            open={open}
-            onOpenChange={changeOpen}
-            title={title}
-            width="wide"
-            className="nl-feedback-dialog"
-            trigger={trigger}
-        >
-            {!isAuthenticated ? (
-                <div className="nl-stack nl-feedback-dialog__body">
-                    {loginRequired}
-                    <div className="nl-dialog__actions">
-                        <ActionButton variant="secondary" onClick={close}>
-                            {t("common.close")}
-                        </ActionButton>
-                        {loginLink}
+                )
+            }
+            modalChildren={
+                !isAuthenticated ? (
+                    <div className="nl-stack nl-feedback-dialog__body">
+                        {loginRequired}
+                        <div className="nl-dialog__actions">
+                            <ActionButton variant="secondary" onClick={close}>
+                                {t("common.close")}
+                            </ActionButton>
+                            {loginLink}
+                        </div>
                     </div>
-                </div>
-            ) : success ? (
-                <div className="nl-stack nl-feedback-dialog__body">
-                    {successMessage}
-                    <div className="nl-dialog__actions">
-                        <ActionButton onClick={close}>
-                            {t("common.close")}
-                        </ActionButton>
+                ) : success ? (
+                    <div className="nl-stack nl-feedback-dialog__body">
+                        {successMessage}
+                        <div className="nl-dialog__actions">
+                            <ActionButton onClick={close}>
+                                {t("common.close")}
+                            </ActionButton>
+                        </div>
                     </div>
-                </div>
-            ) : (
-                <form
-                    className="nl-stack nl-feedback-dialog__body"
-                    noValidate
-                    aria-busy={busy}
-                    onSubmit={submitForm}
-                >
-                    {fields}
-                    <div className="nl-dialog__actions">
-                        <ActionButton
-                            variant="secondary"
-                            disabled={busy}
-                            onClick={close}
-                        >
-                            {t("common.close")}
-                        </ActionButton>
-                        <ActionButton
-                            type="submit"
-                            busy={busy}
-                            busyLabel={t("feedback.submitting")}
-                        >
-                            {t("feedback.submit")}
-                        </ActionButton>
-                    </div>
-                </form>
-            )}
-        </ModalDialog>
+                ) : (
+                    <form
+                        className="nl-stack nl-feedback-dialog__body"
+                        noValidate
+                        aria-busy={busy}
+                        onSubmit={submitForm}
+                    >
+                        {fields}
+                        <div className="nl-dialog__actions">
+                            <ActionButton
+                                variant="secondary"
+                                disabled={busy}
+                                onClick={close}
+                            >
+                                {t("common.close")}
+                            </ActionButton>
+                            <ActionButton
+                                type="submit"
+                                busy={busy}
+                                busyLabel={t("feedback.submitting")}
+                            >
+                                {t("feedback.submit")}
+                            </ActionButton>
+                        </div>
+                    </form>
+                )
+            }
+        />
     );
 }

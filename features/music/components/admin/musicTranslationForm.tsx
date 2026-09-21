@@ -1,12 +1,16 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Save } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 import { saveMusicTranslation } from "@/app/admin/music/actions";
+import {
+    AdminFieldError,
+    AdminSubmitButton,
+    adminInputClass as inputClass,
+} from "@/components/admin/adminForm";
 import {
     createMusicTranslationFormData,
     MUSIC_TRANSLATION_TITLE_MAX_LENGTH,
@@ -16,10 +20,7 @@ import {
     type MusicTranslationStatus,
     type MusicTranslationValues,
 } from "@/features/music/schemas/musicTranslationAdminSchema";
-import { applyFormFieldErrors } from "@/lib/forms/errors";
-
-const inputClass =
-    "border-border bg-bg text-input h-11 w-full rounded-md border px-3";
+import { applyFormActionFailure, applyFormRootError } from "@/lib/forms/errors";
 
 interface MusicTranslationFormProps {
     label: string;
@@ -65,12 +66,7 @@ export default function MusicTranslationForm({
                 createMusicTranslationFormData(values)
             );
             if (!result.success) {
-                applyFormFieldErrors(setError, result.fieldErrors);
-                setError("root.server", {
-                    type: "server",
-                    message: result.message,
-                });
-                toast.error(result.message);
+                applyFormActionFailure(setError, result, toast.error);
                 return;
             }
 
@@ -79,8 +75,7 @@ export default function MusicTranslationForm({
             router.refresh();
         } catch {
             const message = "악곡 번역을 저장하지 못했습니다.";
-            setError("root.server", { type: "server", message });
-            toast.error(message);
+            applyFormRootError(setError, message, toast.error);
         }
     }
 
@@ -103,11 +98,10 @@ export default function MusicTranslationForm({
                     {...register("title")}
                 />
             </label>
-            {errors.title?.message ? (
-                <p className="text-danger text-xs" role="alert">
-                    {errors.title.message}
-                </p>
-            ) : null}
+            <AdminFieldError
+                message={errors.title?.message}
+                className="text-danger text-xs"
+            />
             <label className="text-caption flex flex-col gap-1">
                 검수 상태
                 <select
@@ -119,24 +113,18 @@ export default function MusicTranslationForm({
                     <option value="approved">승인</option>
                 </select>
             </label>
-            {errors.status?.message ? (
-                <p className="text-danger text-xs" role="alert">
-                    {errors.status.message}
-                </p>
-            ) : null}
-            {errors.root?.server?.message ? (
-                <p className="text-danger text-xs" role="alert">
-                    {errors.root.server.message}
-                </p>
-            ) : null}
-            <button
-                type="submit"
-                disabled={isSubmitting}
-                className="bg-text-primary text-bg ml-auto flex h-10 cursor-pointer items-center gap-1 rounded-md px-3 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-60"
-            >
-                <Save className="size-4" aria-hidden />
-                {isSubmitting ? "저장 중..." : label + " 번역 저장"}
-            </button>
+            <AdminFieldError
+                message={errors.status?.message}
+                className="text-danger text-xs"
+            />
+            <AdminFieldError
+                message={errors.root?.server?.message}
+                className="text-danger text-xs"
+            />
+            <AdminSubmitButton
+                idleLabel={label + " 번역 저장"}
+                isSubmitting={isSubmitting}
+            />
         </form>
     );
 }

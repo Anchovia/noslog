@@ -18,13 +18,8 @@ export const discoveryLevelBounds = {
     Expert: 12,
     Real: 3,
 } as const;
-export const discoveryRecordFilters = [
-    "unplayed",
-    "s",
-    "fc",
-    "pianist",
-] as const;
-export const discoverySorts = [
+const discoveryRecordFilters = ["unplayed", "s", "fc", "pianist"] as const;
+const discoverySorts = [
     "relevance",
     "published",
     "name",
@@ -229,7 +224,7 @@ export function discoveryFilterCount(query: DiscoveryQuery) {
     );
 }
 
-export const discoveryResultSchema = musicResultSchema.extend({
+const discoveryResultSchema = musicResultSchema.extend({
     targets: z.array(
         z.object({
             difficulty: z.enum(discoveryDifficulties),
@@ -237,11 +232,14 @@ export const discoveryResultSchema = musicResultSchema.extend({
         })
     ),
 });
-export const discoveryPageSchema = z.object({
-    items: z.array(discoveryResultSchema),
+export const discoveryCountsSchema = z.object({
     total: z.number().int().nonnegative(),
     chartTotal: z.number().int().nonnegative(),
+});
+export const discoveryPageSchema = discoveryCountsSchema.extend({
+    items: z.array(discoveryResultSchema),
     nextOffset: z.number().int().nullable(),
 });
+export type DiscoveryCounts = z.infer<typeof discoveryCountsSchema>;
 export type DiscoveryResult = z.infer<typeof discoveryResultSchema>;
 export type DiscoveryPage = z.infer<typeof discoveryPageSchema>;

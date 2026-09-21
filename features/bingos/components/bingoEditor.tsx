@@ -6,13 +6,14 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 import { saveBingo } from "@/app/admin/bingos/actions";
+import { AdminFieldError } from "@/components/admin/adminForm";
 import {
     bingoFormSchema,
     createBingoFormData,
     type BingoFormValues,
     type BingoValues,
 } from "@/features/bingos/schemas/bingoEditorSchema";
-import { applyFormFieldErrors } from "@/lib/forms/errors";
+import { applyFormActionFailure, applyFormRootError } from "@/lib/forms/errors";
 
 import BingoBasicFields from "./bingoBasicFields";
 import { DeleteBingoButton, SaveBingoButton } from "./bingoEditorActions";
@@ -49,12 +50,7 @@ export default function BingoEditor({ bingo, musics }: BingoEditorProps) {
                 createBingoFormData(values, bingo.id)
             );
             if (!result.success) {
-                applyFormFieldErrors(setError, result.fieldErrors);
-                setError("root.server", {
-                    type: "server",
-                    message: result.message,
-                });
-                toast.error(result.message);
+                applyFormActionFailure(setError, result, toast.error);
                 return;
             }
 
@@ -66,8 +62,7 @@ export default function BingoEditor({ bingo, musics }: BingoEditorProps) {
             }
         } catch {
             const message = "빙고를 저장하지 못했습니다.";
-            setError("root.server", { type: "server", message });
-            toast.error(message);
+            applyFormRootError(setError, message, toast.error);
         }
     }
 
@@ -100,11 +95,10 @@ export default function BingoEditor({ bingo, musics }: BingoEditorProps) {
                     musics={musics}
                     register={register}
                 />
-                {errors.root?.server?.message ? (
-                    <p className="text-danger text-xs" role="alert">
-                        {errors.root.server.message}
-                    </p>
-                ) : null}
+                <AdminFieldError
+                    message={errors.root?.server?.message}
+                    className="text-danger text-xs"
+                />
                 <SaveBingoButton isSubmitting={isSubmitting} />
             </form>
             {bingo.id ? <DeleteBingoButton bingoId={bingo.id} /> : null}

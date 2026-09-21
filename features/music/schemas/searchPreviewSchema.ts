@@ -2,7 +2,7 @@ import z from "zod";
 
 import { musicResultSchema } from "@/features/music/schemas/musicResultSchema";
 
-export const searchScopeSchema = z.enum(["music", "chart"]);
+const searchScopeSchema = z.enum(["music", "chart"]);
 export type SearchScope = z.infer<typeof searchScopeSchema>;
 
 export const searchPreviewQuerySchema = z.object({

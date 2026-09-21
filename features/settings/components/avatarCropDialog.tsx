@@ -151,18 +151,13 @@ export default function AvatarCropDialog({
                 <>
                     <Button
                         ref={cancel}
-                        appearance="foundation"
                         variant="secondary"
                         disabled={busy}
                         onClick={onCancel}
                     >
                         {t("settings.cancel")}
                     </Button>
-                    <Button
-                        appearance="foundation"
-                        disabled={!ready || busy}
-                        onClick={confirm}
-                    >
+                    <Button disabled={!ready || busy} onClick={confirm}>
                         {t("common.confirm")}
                     </Button>
                 </>
@@ -221,7 +216,6 @@ export default function AvatarCropDialog({
                 role="group"
             >
                 <Button
-                    appearance="foundation"
                     variant="secondary"
                     disabled={!ready || busy || zoom <= 1}
                     onClick={() =>
@@ -231,7 +225,6 @@ export default function AvatarCropDialog({
                     {t("settings.zoomOut")}
                 </Button>
                 <Button
-                    appearance="foundation"
                     variant="secondary"
                     disabled={!ready || busy || zoom >= 4}
                     onClick={() =>

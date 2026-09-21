@@ -1,10 +1,9 @@
 "use client";
 
-import { put } from "@vercel/blob/client";
 import { ImagePlus, Trash2 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
 
 import {
@@ -14,16 +13,18 @@ import {
     setArcadeMainPhoto,
 } from "@/app/admin/arcades/actions";
 import {
+    AdminFieldError,
+    adminCompactInputClass as inputClass,
+    adminCompactPrimaryButtonClass as primaryButtonClass,
+    adminSecondaryButtonClass as secondaryButtonClass,
+} from "@/components/admin/adminForm";
+import {
     ARCADE_PHOTO_ALT_MAX_LENGTH,
     ARCADE_PHOTO_MAX,
 } from "@/features/arcades/schemas/arcadeSchema";
-
-const inputClass =
-    "border-border bg-bg text-input h-10 min-w-0 rounded-md border px-3 outline-none focus:border-focus";
-const secondaryButtonClass =
-    "border-border hover:bg-surface-muted focus-visible:ring-focus/40 flex h-9 items-center justify-center gap-1.5 rounded-md border px-3 text-sm font-bold transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:opacity-50";
-const IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
-const MAX_IMAGE_SIZE = 4 * 1024 * 1024;
+import { IMAGE_ACCEPT, imageFileValidationError } from "@/lib/imageUploadRules";
+import useObjectUrl from "@/lib/hooks/useObjectUrl";
+import { uploadGrantedImage } from "@/lib/uploads/clientImageUpload";
 
 export interface ArcadeFormPhoto {
     id: number;
@@ -47,7 +48,7 @@ export default function ArcadePhotoManager({
     const router = useRouter();
     const fileInput = useRef<HTMLInputElement>(null);
     const [file, setFile] = useState<File | null>(null);
-    const [preview, setPreview] = useState<string | null>(null);
+    const preview = useObjectUrl(file);
     const [alt, setAlt] = useState("");
     const [capturedAt, setCapturedAt] = useState("");
     const [consent, setConsent] = useState(false);
@@ -56,16 +57,8 @@ export default function ArcadePhotoManager({
     const [pending, startTransition] = useTransition();
     const busy = uploading || pending;
 
-    useEffect(
-        () => () => {
-            if (preview) URL.revokeObjectURL(preview);
-        },
-        [preview]
-    );
-
     function clearDraft() {
         setFile(null);
-        setPreview(null);
         setAlt("");
         setCapturedAt("");
         setConsent(false);
@@ -75,16 +68,16 @@ export default function ArcadePhotoManager({
     function choose(next: File | undefined) {
         setError("");
         if (!next) return;
-        if (!IMAGE_TYPES.includes(next.type)) {
+        const validationError = imageFileValidationError(next);
+        if (validationError === "type") {
             setError("JPG·PNG·WebP 이미지만 올릴 수 있습니다.");
             return;
         }
-        if (next.size > MAX_IMAGE_SIZE) {
+        if (validationError === "size") {
             setError("이미지는 4MB 이하로 올려주세요.");
             return;
         }
         setFile(next);
-        setPreview(URL.createObjectURL(next));
         setAlt(`${arcadeName} 매장 사진`);
     }
 
@@ -106,14 +99,10 @@ export default function ArcadePhotoManager({
                 setError(grant.message);
                 return;
             }
-            const blob = await put(grant.pathname, file, {
-                access: "public",
-                token: grant.token,
-                contentType: file.type,
-            });
+            const imageUrl = await uploadGrantedImage(file, grant, "public");
             const formData = new FormData();
             formData.set("arcadeId", String(arcadeId));
-            formData.set("url", blob.url);
+            formData.set("url", imageUrl);
             formData.set("alt", alt);
             formData.set("capturedAt", capturedAt);
             formData.set("consent", String(consent));
@@ -151,7 +140,7 @@ export default function ArcadePhotoManager({
     }
 
     return (
-        <fieldset className="border-border rounded-card grid gap-2 border p-3">
+        <fieldset className="border-border rounded-card grid min-w-0 grid-cols-1 gap-2 border p-3">
             <legend className="text-label px-1">사진</legend>
             <p className="text-caption">
                 공개 상세 맨 위에 보입니다. 첫 번째 사진이 대표 사진이며{" "}
@@ -210,7 +199,7 @@ export default function ArcadePhotoManager({
                 ref={fileInput}
                 type="file"
                 hidden
-                accept={IMAGE_TYPES.join(",")}
+                accept={IMAGE_ACCEPT}
                 aria-label="오락실 사진 파일"
                 onChange={(event) => choose(event.target.files?.[0])}
             />
@@ -275,7 +264,7 @@ export default function ArcadePhotoManager({
                             type="button"
                             disabled={busy}
                             onClick={() => void upload()}
-                            className="bg-text-primary text-bg focus-visible:ring-focus/40 flex h-9 items-center justify-center gap-1.5 rounded-md text-sm font-bold focus-visible:ring-2 focus-visible:outline-none disabled:opacity-50"
+                            className={primaryButtonClass}
                         >
                             {uploading ? "올리는 중" : "올리기"}
                         </button>
@@ -291,11 +280,7 @@ export default function ArcadePhotoManager({
                     <ImagePlus className="size-4" aria-hidden /> 사진 추가
                 </button>
             ) : null}
-            {error ? (
-                <p className="text-danger text-xs" role="alert">
-                    {error}
-                </p>
-            ) : null}
+            <AdminFieldError message={error} className="text-danger text-xs" />
         </fieldset>
     );
 }

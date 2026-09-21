@@ -25,7 +25,7 @@ export type BingoLineKind =
     | { kind: "column"; index: number }
     | { kind: "diagonal" };
 
-export function describeBingoLine(line: readonly number[]): BingoLineKind {
+function describeBingoLine(line: readonly number[]): BingoLineKind {
     const first = line[0];
     if (line[1] === first + 1)
         return {

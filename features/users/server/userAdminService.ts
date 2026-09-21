@@ -13,6 +13,7 @@ import type {
     AdminUserRow,
 } from "@/features/users/types/userAdmin";
 import type { ActionResult } from "@/lib/actions/result";
+import { actionValidationFailure } from "@/lib/actions/validation";
 import { requireAdmin } from "@/lib/admin";
 import { getUserSyncHealth } from "@/lib/admin/syncHealth";
 import db from "@/lib/db";
@@ -218,12 +219,11 @@ export async function updateAdminUserRole(
         userRoleUpdateInputFromFormData(formData)
     );
     if (!result.success) {
-        return {
-            success: false,
-            message:
-                result.error.issues[0]?.message ??
-                "사용자 권한 변경 요청을 확인해주세요.",
-        };
+        return actionValidationFailure(result.error, {
+            message: "사용자 권한 변경 요청을 확인해주세요.",
+            preferFirstIssue: true,
+            fieldPath: false,
+        });
     }
     const input = result.data;
     if (admin.id === input.userId && input.role !== "admin") {
@@ -273,12 +273,11 @@ export async function resetAdminUserSyncToken(
         userSyncTokenResetInputFromFormData(formData)
     );
     if (!result.success) {
-        return {
-            success: false,
-            message:
-                result.error.issues[0]?.message ??
-                "연동 토큰 초기화 요청을 확인해주세요.",
-        };
+        return actionValidationFailure(result.error, {
+            message: "연동 토큰 초기화 요청을 확인해주세요.",
+            preferFirstIssue: true,
+            fieldPath: false,
+        });
     }
 
     let syncTokenVersion: number;

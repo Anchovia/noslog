@@ -1,17 +1,17 @@
 import { z } from "zod";
 
-export const USER_ROLES = ["user", "admin"] as const;
-export const USER_ADMIN_STATES = ["all", "attention"] as const;
+const USER_ROLES = ["user", "admin"] as const;
+const USER_ADMIN_STATES = ["all", "attention"] as const;
 
-export const userRoleSchema = z.enum(USER_ROLES, {
+const userRoleSchema = z.enum(USER_ROLES, {
     error: "사용자 권한을 확인해주세요.",
 });
 
-export const userAdminStateSchema = z.enum(USER_ADMIN_STATES, {
+const userAdminStateSchema = z.enum(USER_ADMIN_STATES, {
     error: "사용자 조회 상태를 확인해주세요.",
 });
 
-export const userAdminFilterSchema = z.object({
+const userAdminFilterSchema = z.object({
     q: z.string().trim(),
     state: userAdminStateSchema,
 });
@@ -31,7 +31,6 @@ export const userSyncTokenResetSchema = z.object({
 });
 
 export type UserRole = z.infer<typeof userRoleSchema>;
-export type UserAdminState = z.infer<typeof userAdminStateSchema>;
 export type UserAdminFilters = z.output<typeof userAdminFilterSchema>;
 
 export function normalizeUserAdminFilters(

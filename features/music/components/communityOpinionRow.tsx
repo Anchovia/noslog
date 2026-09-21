@@ -147,10 +147,7 @@ export default function CommunityOpinionRow({
 export function CommunityOpinionRowSkeleton() {
     return (
         <div className="nl-opinion-row" aria-hidden="true">
-            <span
-                className="nl-avatar nl-skeleton"
-                style={{ width: 32, height: 32 }}
-            />
+            <span className="nl-avatar nl-avatar--compact nl-skeleton" />
             <div className="nl-opinion-row__content">
                 <div className="nl-opinion-row__header">
                     <SkeletonText className="nl-emphasis-label" width="s" />

@@ -158,7 +158,6 @@ export default function AccountSettings({
                     }}
                     trigger={
                         <Button
-                            appearance="foundation"
                             variant="danger"
                             destructiveFilled
                             disabled={loggingOut}
@@ -249,7 +248,6 @@ export default function AccountSettings({
                         <div className="nl-dialog__actions">
                             <Button
                                 ref={cancelRef}
-                                appearance="foundation"
                                 variant="secondary"
                                 type="button"
                                 disabled={busy}

@@ -19,7 +19,7 @@ const difficulties = ["normal", "hard", "expert", "real"] as const;
  * 난이도 판 4칸 — 고정 순서(Normal · Hard · Expert · Real), 없는 난이도는 자리만 비워 열을 지킨다.
  * 판 24(목록 · 격자) / 20(촘촘) · raised 면 · 숫자는 metric-value 14 tabular 에 난이도 글자색 (2026-09-16 L2).
  */
-export function DifficultyLevels({ music }: { music: MusicResult }) {
+function DifficultyLevels({ music }: { music: MusicResult }) {
     return (
         <span className="nl-difficulty-levels nl-metric-value" lang="en">
             {difficulties.map((difficulty) => (

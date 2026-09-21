@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PencilRuler, Save } from "lucide-react";
+import { PencilRuler } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -11,6 +11,12 @@ import {
     saveChartMetadata,
     saveMusicMetadata,
 } from "@/app/admin/music/actions";
+import {
+    AdminFieldError,
+    AdminSubmitButton,
+    adminInputClass as inputClass,
+    adminTextareaClass,
+} from "@/components/admin/adminForm";
 import {
     chartMetadataSchema,
     createChartMetadataFormData,
@@ -22,10 +28,7 @@ import {
     type MusicMetadataValues,
 } from "@/features/music/schemas/musicAdminSchema";
 import type { AdminMusicChart } from "@/features/music/types/musicAdmin";
-import { applyFormFieldErrors } from "@/lib/forms/errors";
-
-const inputClass =
-    "border-border bg-bg text-input h-11 w-full rounded-md border px-3";
+import { applyFormActionFailure, applyFormRootError } from "@/lib/forms/errors";
 
 const difficultyColor: Record<string, string> = {
     normal: "text-normal",
@@ -35,29 +38,8 @@ const difficultyColor: Record<string, string> = {
 };
 
 function FieldError({ message }: { message?: string }) {
-    return message ? (
-        <p className="text-danger text-xs" role="alert">
-            {message}
-        </p>
-    ) : null;
-}
-
-function SubmitButton({
-    idleLabel,
-    isSubmitting,
-}: {
-    idleLabel: string;
-    isSubmitting: boolean;
-}) {
     return (
-        <button
-            type="submit"
-            disabled={isSubmitting}
-            className="bg-text-primary text-bg ml-auto flex h-10 cursor-pointer items-center gap-1 rounded-md px-3 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-60"
-        >
-            <Save className="size-4" aria-hidden />
-            {isSubmitting ? "저장 중..." : idleLabel}
-        </button>
+        <AdminFieldError message={message} className="text-danger text-xs" />
     );
 }
 
@@ -100,12 +82,7 @@ export function MusicMetadataForm({ defaultValues }: MusicMetadataFormProps) {
                 createMusicMetadataFormData(values)
             );
             if (!result.success) {
-                applyFormFieldErrors(setError, result.fieldErrors);
-                setError("root.server", {
-                    type: "server",
-                    message: result.message,
-                });
-                toast.error(result.message);
+                applyFormActionFailure(setError, result, toast.error);
                 return;
             }
 
@@ -114,8 +91,7 @@ export function MusicMetadataForm({ defaultValues }: MusicMetadataFormProps) {
             router.refresh();
         } catch {
             const message = "악곡 공통 정보를 저장하지 못했습니다.";
-            setError("root.server", { type: "server", message });
-            toast.error(message);
+            applyFormRootError(setError, message, toast.error);
         }
     }
 
@@ -135,7 +111,7 @@ export function MusicMetadataForm({ defaultValues }: MusicMetadataFormProps) {
             <textarea
                 id="description"
                 rows={3}
-                className="border-border bg-bg text-input w-full resize-none rounded-md border px-3 py-2"
+                className={adminTextareaClass}
                 {...register("description")}
             />
             <FieldError message={errors.description?.message} />
@@ -177,12 +153,11 @@ export function MusicMetadataForm({ defaultValues }: MusicMetadataFormProps) {
                     <FieldError message={errors.durationSeconds?.message} />
                 </label>
             </div>
-            {errors.root?.server?.message ? (
-                <p className="text-danger text-xs" role="alert">
-                    {errors.root.server.message}
-                </p>
-            ) : null}
-            <SubmitButton
+            <AdminFieldError
+                message={errors.root?.server?.message}
+                className="text-danger text-xs"
+            />
+            <AdminSubmitButton
                 idleLabel="공통 정보 저장"
                 isSubmitting={isSubmitting}
             />
@@ -252,12 +227,7 @@ export function ChartMetadataForm({
                 createChartMetadataFormData(values)
             );
             if (!result.success) {
-                applyFormFieldErrors(setError, result.fieldErrors);
-                setError("root.server", {
-                    type: "server",
-                    message: result.message,
-                });
-                toast.error(result.message);
+                applyFormActionFailure(setError, result, toast.error);
                 return;
             }
 
@@ -266,8 +236,7 @@ export function ChartMetadataForm({
             router.refresh();
         } catch {
             const message = "채보 정보를 저장하지 못했습니다.";
-            setError("root.server", { type: "server", message });
-            toast.error(message);
+            applyFormRootError(setError, message, toast.error);
         }
     }
 
@@ -383,12 +352,14 @@ export function ChartMetadataForm({
                         .join(" · ")}
                 </p>
             ) : null}
-            {errors.root?.server?.message ? (
-                <p className="text-danger text-xs" role="alert">
-                    {errors.root.server.message}
-                </p>
-            ) : null}
-            <SubmitButton idleLabel="채보 저장" isSubmitting={isSubmitting} />
+            <AdminFieldError
+                message={errors.root?.server?.message}
+                className="text-danger text-xs"
+            />
+            <AdminSubmitButton
+                idleLabel="채보 저장"
+                isSubmitting={isSubmitting}
+            />
         </form>
     );
 }

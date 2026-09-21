@@ -2,6 +2,7 @@ import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
 
 import { readApiResponse } from "@/lib/api/response";
 import {
+    discoveryCountsSchema,
     discoveryPageSchema,
     discoverySearchParams,
 } from "@/features/music/schemas/discoverySchema";
@@ -39,7 +40,14 @@ export function discoveryPreviewOptions(
 ) {
     return queryOptions({
         queryKey: ["discovery-count", accountId, query],
-        queryFn: ({ signal }) => fetchDiscovery(query, 0, signal),
+        queryFn: async ({ signal }) => {
+            const params = discoverySearchParams(query);
+            params.set("counts", "1");
+            const response = await fetch(`/api/discovery?${params}`, {
+                signal,
+            });
+            return discoveryCountsSchema.parse(await readApiResponse(response));
+        },
         staleTime: 60_000,
         retry: false,
     });

@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 
 import { parseDiscoverySearchParams } from "@/features/music/schemas/discoverySchema";
-import { getDiscoveryPage } from "@/features/music/server/discoveryService";
+import {
+    getDiscoveryCounts,
+    getDiscoveryPage,
+} from "@/features/music/server/discoveryService";
 import { createApiFailure, createApiSuccess } from "@/lib/api/response";
 import { logServerError } from "@/lib/observability/server";
 import getSession from "@/lib/session";
@@ -22,7 +25,9 @@ export async function GET(request: Request) {
         const session = await getSession();
         return NextResponse.json(
             createApiSuccess(
-                await getDiscoveryPage(query, offset, session.id ?? null)
+                params.get("counts") === "1"
+                    ? await getDiscoveryCounts(query, session.id ?? null)
+                    : await getDiscoveryPage(query, offset, session.id ?? null)
             ),
             { headers: { "Cache-Control": "private, no-store" } }
         );

@@ -11,41 +11,14 @@ import {
     routeLabel,
 } from "@/lib/analyticsRoutes";
 import db from "@/lib/db";
-
-// 기간 — 기본 7일(2026-09-13 사용자 결정). 통계 날짜는 서울 기준
-export const DASHBOARD_RANGES = {
-    today: { days: 1, label: "오늘" },
-    "7d": { days: 7, label: "7일" },
-    "28d": { days: 28, label: "28일" },
-    "90d": { days: 90, label: "90일" },
-} as const;
-export type DashboardRange = keyof typeof DASHBOARD_RANGES;
-
-export const DASHBOARD_METRICS = {
-    visitors: "방문자",
-    pageviews: "페이지뷰",
-    signups: "가입",
-    syncs: "동기화",
-} as const;
-export type DashboardMetric = keyof typeof DASHBOARD_METRICS;
-
-export function parseDashboardParams(params: {
-    range?: string | string[];
-    metric?: string | string[];
-}) {
-    // in 은 toString 같은 기본 속성까지 참으로 봐서 자기 열쇠만 받는다
-    const range: DashboardRange =
-        typeof params.range === "string" &&
-        Object.hasOwn(DASHBOARD_RANGES, params.range)
-            ? (params.range as DashboardRange)
-            : "7d";
-    const metric: DashboardMetric =
-        typeof params.metric === "string" &&
-        Object.hasOwn(DASHBOARD_METRICS, params.metric)
-            ? (params.metric as DashboardMetric)
-            : "visitors";
-    return { range, metric };
-}
+import {
+    DASHBOARD_METRICS,
+    DASHBOARD_RANGES,
+} from "@/features/admin/dashboardParams";
+import type {
+    DashboardMetric,
+    DashboardRange,
+} from "@/features/admin/dashboardParams";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -125,11 +98,17 @@ export async function getAdminDashboard(
             FROM "analytics_daily_counts"
             WHERE "date" >= ${previous[0]}::date`,
         db.user.findMany({
-            where: { created_at: { gte: since } },
+            where: {
+                role: { not: "admin" },
+                created_at: { gte: since },
+            },
             select: { created_at: true },
         }),
         db.dataSync.findMany({
-            where: { started_at: { gte: since } },
+            where: {
+                user: { role: { not: "admin" } },
+                started_at: { gte: since },
+            },
             select: { started_at: true, status: true },
         }),
         db.examSubmission.count({ where: { status: "pending" } }),
@@ -156,6 +135,7 @@ export async function getAdminDashboard(
         // 전환 흐름 — 기간에 가입한 사람이 연동 · 기록까지 갔는지(이미 있는 데이터만 센다, 2026-09-20)
         db.user.findMany({
             where: {
+                role: { not: "admin" },
                 created_at: { gte: new Date(`${current[0]}T00:00:00+09:00`) },
             },
             select: {
@@ -167,11 +147,13 @@ export async function getAdminDashboard(
         // 기여 활동 — 기간에 새로 쓰거나 고친 것
         db.communityChartEvaluation.count({
             where: {
+                user: { role: { not: "admin" } },
                 updatedAt: { gte: new Date(`${current[0]}T00:00:00+09:00`) },
             },
         }),
         db.communityChartEvaluation.count({
             where: {
+                user: { role: { not: "admin" } },
                 opinionUpdatedAt: {
                     gte: new Date(`${current[0]}T00:00:00+09:00`),
                 },
@@ -179,16 +161,19 @@ export async function getAdminDashboard(
         }),
         db.chartGoalVote.count({
             where: {
+                user: { role: { not: "admin" } },
                 updatedAt: { gte: new Date(`${current[0]}T00:00:00+09:00`) },
             },
         }),
         db.communityEvent.count({
             where: {
+                author: { role: { not: "admin" } },
                 submittedAt: { gte: new Date(`${current[0]}T00:00:00+09:00`) },
             },
         }),
         db.feedbackReport.count({
             where: {
+                user: { role: { not: "admin" } },
                 arcadeId: { not: null },
                 createdAt: { gte: new Date(`${current[0]}T00:00:00+09:00`) },
             },
@@ -305,11 +290,14 @@ export async function getAdminDashboard(
         from: current[0],
         to: current[current.length - 1],
         kpis,
-        series: current.map((key) => ({
-            date: key,
-            label: `${Number(key.slice(5, 7))}/${Number(key.slice(8, 10))}`,
-            value: totals.get(key)?.[metric] ?? 0,
-        })),
+        series: current.map((key) => {
+            const { visitors, pageviews, signups, syncs } = day(key);
+            return {
+                date: key,
+                label: `${Number(key.slice(5, 7))}/${Number(key.slice(8, 10))}`,
+                values: { visitors, pageviews, signups, syncs },
+            };
+        }),
         topPages: sortedRows(pages, (key) => ({
             label: routeLabel(PAGE_ROUTES, key),
             detail: key,

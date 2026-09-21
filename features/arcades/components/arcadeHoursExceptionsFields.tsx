@@ -10,15 +10,15 @@ import {
 } from "react-hook-form";
 
 import {
+    AdminFieldError,
+    adminCompactInputClass as inputClass,
+    adminSecondaryButtonClass as secondaryButtonClass,
+} from "@/components/admin/adminForm";
+import {
     ARCADE_HOURS_EXCEPTION_MAX,
     type ArcadeFormValues,
     type ArcadeValues,
 } from "@/features/arcades/schemas/arcadeSchema";
-
-const inputClass =
-    "border-border bg-bg text-input h-10 min-w-0 rounded-md border px-3 outline-none focus:border-focus";
-const secondaryButtonClass =
-    "border-border hover:bg-surface-muted focus-visible:ring-focus/40 flex h-9 items-center justify-center gap-1.5 rounded-md border px-3 text-sm font-bold transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:opacity-50";
 
 // 새 예외 줄의 기본 날짜 — 서버·브라우저 시간대가 달라도 서울 기준 오늘(en-CA 는 YYYY-MM-DD)
 function todayInSeoul() {
@@ -52,7 +52,7 @@ export default function ArcadeHoursExceptionsFields({
         errors.hoursExceptions?.root?.message;
 
     return (
-        <fieldset className="border-border rounded-card grid gap-2 border p-3">
+        <fieldset className="border-border rounded-card grid min-w-0 grid-cols-1 gap-2 border p-3">
             <legend className="text-label px-1">날짜별 예외</legend>
             <p className="text-caption">
                 임시 휴무나 특별 영업시간처럼 그날만 다른 날을 적습니다. 공개
@@ -117,9 +117,11 @@ export default function ArcadeHoursExceptionsFields({
                                 />
                             </div>
                         ) : null}
-                        {message ? (
-                            <p className="text-danger text-xs">{message}</p>
-                        ) : null}
+                        <AdminFieldError
+                            message={message}
+                            className="text-danger text-xs"
+                            role={null}
+                        />
                     </div>
                 );
             })}
@@ -141,11 +143,10 @@ export default function ArcadeHoursExceptionsFields({
             >
                 <Plus className="size-4" aria-hidden /> 날짜 추가
             </button>
-            {listError ? (
-                <p className="text-danger text-xs" role="alert">
-                    {listError}
-                </p>
-            ) : null}
+            <AdminFieldError
+                message={listError}
+                className="text-danger text-xs"
+            />
         </fieldset>
     );
 }

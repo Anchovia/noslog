@@ -18,7 +18,6 @@ export default function RecoveryAction({
     const busy = pending || reloading;
     return (
         <Button
-            appearance="foundation"
             variant="primary"
             aria-busy={busy}
             aria-disabled={busy}

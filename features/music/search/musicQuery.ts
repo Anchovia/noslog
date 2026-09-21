@@ -22,7 +22,7 @@ export interface MusicSearchParams {
     records?: string;
 }
 
-export const MUSIC_RECORD_FILTERS = [
+const MUSIC_RECORD_FILTERS = [
     "clear",
     "s",
     "fc",
@@ -39,12 +39,12 @@ export const MUSIC_RECORD_FILTERS = [
     "slow",
 ] as const;
 export type MusicRecordFilter = (typeof MUSIC_RECORD_FILTERS)[number];
-export const MUSIC_SORTS = ["name", "level", "recent", "weakness"] as const;
-export type MusicSort = (typeof MUSIC_SORTS)[number];
+const MUSIC_SORTS = ["name", "level", "recent", "weakness"] as const;
+type MusicSort = (typeof MUSIC_SORTS)[number];
 
-export type DifficultyKey = "normal" | "hard" | "expert" | "real";
+type DifficultyKey = "normal" | "hard" | "expert" | "real";
 
-export interface MusicDifficultyFilter {
+interface MusicDifficultyFilter {
     difficulty: "Normal" | "Hard" | "Expert" | "Real";
     min: number;
     max: number;

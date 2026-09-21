@@ -20,7 +20,7 @@ import type {
     OnboardingFormValues,
     OnboardingValues,
 } from "@/features/profile/schemas/profileSettingsSchema";
-import { applyFormFieldErrors } from "@/lib/forms/errors";
+import { applyFormFieldErrors, applyFormRootError } from "@/lib/forms/errors";
 import type { MessageKey } from "@/lib/i18n/messages";
 
 export default function OnboardingForm({
@@ -69,15 +69,9 @@ export default function OnboardingForm({
                 setFocus("country");
                 return;
             }
-            setError("root.server", {
-                type: "server",
-                message: result.message,
-            });
+            applyFormRootError(setError, result.message);
         } catch {
-            setError("root.server", {
-                type: "server",
-                message: t("onboarding.error.generic"),
-            });
+            applyFormRootError(setError, t("onboarding.error.generic"));
         }
     }
     return (
@@ -187,7 +181,6 @@ export default function OnboardingForm({
                 </p>
             ) : null}
             <Button
-                appearance="foundation"
                 type="submit"
                 disabled={isSubmitting}
                 className="nl-auth-submit"

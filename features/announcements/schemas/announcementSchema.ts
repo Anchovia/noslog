@@ -64,10 +64,10 @@ const translationSchema = z.object({
 // 관리자 화면은 한국어 전용 — datetime-local 값(시간대 없는 `YYYY-MM-DDTHH:mm`)은 서버 시간대와 무관하게
 // 한국 시간(UTC+9)으로 읽고 쓴다. 운영 서버(UTC)에서 `new Date("…T10:00")` 이 9시간 뒤로 밀려
 // 중대 공지가 예정보다 늦게 활성화되던 문제 (2026-09-16)
-export const ADMIN_TIME_ZONE = "Asia/Seoul";
+const ADMIN_TIME_ZONE = "Asia/Seoul";
 const ADMIN_UTC_OFFSET = "+09:00";
 const LOCAL_DATE_TIME = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(\.\d+)?)?$/;
-export function parseAdminDateTime(value: string) {
+function parseAdminDateTime(value: string) {
     return new Date(
         LOCAL_DATE_TIME.test(value) ? `${value}${ADMIN_UTC_OFFSET}` : value
     );
@@ -167,10 +167,6 @@ export const announcementDeleteSchema = z.object({
 
 export type AnnouncementFormValues = z.input<typeof announcementFormSchema>;
 export type AnnouncementValues = z.output<typeof announcementFormSchema>;
-export type AnnouncementUpdateValues = z.output<
-    typeof announcementUpdateSchema
->;
-export type AnnouncementPlacement = AnnouncementValues["placement"];
 
 function readString(formData: FormData, key: string) {
     return String(formData.get(key) ?? "");

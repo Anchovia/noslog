@@ -87,7 +87,7 @@ describe("public profile visibility boundary", () => {
             "Private recent title",
         ])
             expect(payload).not.toContain(protectedValue);
-        expect(profile?.recentPlays).toEqual([]);
+        expect(profile).not.toHaveProperty("recentPlays");
         expect(profile?.user.last_played_at).toBeNull();
         expect(profile?.user.username).toBe("Public player");
         // 검정 급수는 합격 기록에서 유도한 모드별 최고 급수만 싣고, 원본 기록 배열은 싣지 않는다
@@ -104,21 +104,30 @@ describe("public profile visibility boundary", () => {
         expect(profile?.user.preferredArcade).toBeNull();
         expect(profile?.user.play_count).toBe(sourceUser.play_count);
         expect(profile?.user.last_played_at).toBe(sourcePlay.source_play_time);
-        expect(profile?.recentPlays).toHaveLength(1);
+        expect(mocks.recent).toHaveBeenCalledWith({
+            where: { user_id: 7 },
+            select: { source_play_time: true },
+            orderBy: [{ source_play_time: "desc" }, { id: "desc" }],
+            take: 1,
+        });
     });
-    it("preserves best performances when activity is hidden", async () => {
+    it("does not fetch unused best performances or growth history", async () => {
         mocks.user.mockResolvedValue({
             ...sourceUser,
             hide_play_activity: true,
         });
-        mocks.best.mockResolvedValue([
-            { score: 990000, music_idx: "public-best" },
-        ]);
         const profile = await getCachedProfileData(7);
-        expect(profile?.basicBestPlays).toEqual([
-            { score: 990000, music_idx: "public-best" },
-        ]);
-        expect(profile?.recitalBestPlays).toHaveLength(1);
-        expect(profile?.recentPlays).toEqual([]);
+        expect(mocks.best).not.toHaveBeenCalled();
+        expect(mocks.grades).not.toHaveBeenCalled();
+        expect(profile?.user.grade_basic).toBe(sourceUser.grade_basic);
+        expect(profile?.user.grade_recital).toBe(sourceUser.grade_recital);
+        expect(profile?.user.last_played_at).toBeNull();
+        expect(Object.keys(profile!)).toEqual(["user"]);
+    });
+    it("retains empty activity and missing-user behavior", async () => {
+        mocks.recent.mockResolvedValue([]);
+        expect((await getCachedProfileData(7))?.user.last_played_at).toBeNull();
+        mocks.user.mockResolvedValue(null);
+        expect(await getCachedProfileData(7)).toBeNull();
     });
 });
