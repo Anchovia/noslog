@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
@@ -41,6 +43,7 @@ import AdminDashboardChart, {
     AdminDashboardHours,
 } from "@/features/admin/components/adminDashboardChart";
 import AdminDashboard from "@/features/admin/components/adminDashboard";
+import AdminDashboardLoading from "@/features/admin/components/adminDashboardLoading";
 import type { AdminDashboardData } from "@/features/admin/server/adminDashboardService";
 
 describe("관리자 대시보드 그래프 움직임", () => {
@@ -115,6 +118,59 @@ describe("관리자 대시보드 그래프 움직임", () => {
         expect(html).toContain('class="nl-chart-bar"');
         expect(html).toContain(
             'class="nl-dashboard__bar nl-chart-reveal nl-chart-bar"'
+        );
+    });
+
+    it("기간·지표 로딩은 실제 대시보드 틀과 공용 스켈레톤만 쓴다", () => {
+        const data: AdminDashboardData = {
+            range: "7d",
+            metric: "visitors",
+            days: 7,
+            hourly: null,
+            audience: {
+                member: { visitors: 2, pageviews: 4 },
+                guest: { visitors: 3, pageviews: 6 },
+            },
+            funnel: [{ label: "가입", count: 5 }],
+            contributions: [{ key: "goalVotes", label: "서열 투표", count: 3 }],
+            from: "2026-09-15",
+            to: "2026-09-21",
+            kpis: [
+                {
+                    metric: "visitors",
+                    label: "방문자",
+                    value: 5,
+                    previous: 4,
+                    failed: null,
+                },
+            ],
+            series: [{ date: "2026-09-21", label: "9/21", value: 5 }],
+            topPages: [{ key: "/", label: "홈", detail: "/", count: 5 }],
+            apiCalls: [],
+            externalCalls: [],
+            todo: [],
+        };
+
+        const html = renderToStaticMarkup(
+            createElement(AdminDashboardLoading, { data })
+        );
+
+        expect(html).toContain('class="nl-dashboard__grid"');
+        expect(html).toContain('class="nl-dashboard__chart nl-skeleton"');
+        expect(html).toContain('class="nl-dashboard__kpi-tone nl-skeleton"');
+        expect(html).toContain("가입자 · 손님");
+        expect(html).toMatch(
+            /로그인 여부만 셉니다 · <span class="nl-skeleton-text nl-metadata"[^>]*data-sample=""/
+        );
+        expect(html).not.toContain("로그인 여부만 셉니다 · 7일");
+        expect(html).toContain("자주 보는 페이지");
+        expect(html).toContain("API 호출");
+        expect(html).toContain("nl-skeleton-text");
+        expect(html).not.toContain("style=");
+
+        const css = readFileSync(resolve("app/styles/admin.css"), "utf8");
+        expect(css).toMatch(
+            /\.nl-dashboard__pending-loading\s*\{[\s\S]*?background:\s*var\(--nl-surface-canvas\)/
         );
     });
 });

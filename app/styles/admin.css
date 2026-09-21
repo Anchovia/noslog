@@ -28,6 +28,32 @@
     flex-direction: column;
     gap: var(--nl-spacing-4);
 }
+/* 기간·지표 전환 — 현재 값은 잠깐 pending 색으로 두고, 공용 지연 뒤 같은 대시보드 틀의 스켈레톤을 위에 놓는다 */
+.noslog-ui .nl-dashboard__pending-region {
+    display: grid;
+    min-width: 0;
+}
+.noslog-ui .nl-dashboard__pending-region > * {
+    grid-area: 1 / 1;
+    min-width: 0;
+}
+.noslog-ui .nl-dashboard__pending-current[data-pending] {
+    color: var(--nl-content-pending);
+}
+.noslog-ui
+    .nl-dashboard__pending-current[data-pending]
+    :is(
+        .nl-metric-display,
+        .nl-metric-value,
+        .nl-body-secondary,
+        .nl-metadata
+    ) {
+    color: var(--nl-content-pending) !important;
+}
+.noslog-ui .nl-dashboard__pending-loading {
+    position: relative;
+    background: var(--nl-surface-canvas);
+}
 .noslog-ui .nl-dashboard__ranges .nl-segments__item {
     color: var(--nl-content-subdued);
     text-decoration: none;

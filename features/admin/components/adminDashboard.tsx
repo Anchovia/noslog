@@ -9,6 +9,12 @@ import Link from "next/link";
 import AdminDashboardChart, {
     AdminDashboardHours,
 } from "@/features/admin/components/adminDashboardChart";
+import AdminDashboardLoading from "@/features/admin/components/adminDashboardLoading";
+import {
+    AdminDashboardLinkStatus,
+    AdminDashboardPending,
+    AdminDashboardPendingRegion,
+} from "@/features/admin/components/adminDashboardPending";
 import {
     DASHBOARD_METRICS,
     DASHBOARD_RANGES,
@@ -184,20 +190,22 @@ export default function AdminDashboard({ data }: { data: AdminDashboardData }) {
     const metricLabel = DASHBOARD_METRICS[data.metric];
 
     return (
-        <div className="nl-dashboard">
-            <header className="nl-dashboard__head">
-                <div>
-                    <h1 className="nl-page-title">대시보드</h1>
-                    <p className="nl-body-secondary nl-muted">
-                        {period} · 서울 기준
-                    </p>
-                </div>
-                <nav
-                    className="nl-segments nl-dashboard__ranges"
-                    aria-label="기간"
-                >
-                    {(Object.keys(DASHBOARD_RANGES) as DashboardRange[]).map(
-                        (key) => (
+        <AdminDashboardPending>
+            <div className="nl-dashboard">
+                <header className="nl-dashboard__head">
+                    <div>
+                        <h1 className="nl-page-title">대시보드</h1>
+                        <p className="nl-body-secondary nl-muted">
+                            {period} · 서울 기준
+                        </p>
+                    </div>
+                    <nav
+                        className="nl-segments nl-dashboard__ranges"
+                        aria-label="기간"
+                    >
+                        {(
+                            Object.keys(DASHBOARD_RANGES) as DashboardRange[]
+                        ).map((key) => (
                             <Link
                                 key={key}
                                 href={dashboardHref(key, data.metric)}
@@ -207,262 +215,291 @@ export default function AdminDashboard({ data }: { data: AdminDashboardData }) {
                                 }
                             >
                                 {DASHBOARD_RANGES[key].label}
+                                <AdminDashboardLinkStatus
+                                    statusKey={`range-${key}`}
+                                />
                             </Link>
-                        )
-                    )}
-                </nav>
-            </header>
+                        ))}
+                    </nav>
+                </header>
 
-            <div className="nl-dashboard__grid">
-                <section
-                    className="nl-dashboard__panel nl-dashboard__todo"
-                    aria-labelledby="dashboard-todo"
+                <AdminDashboardPendingRegion
+                    loading={<AdminDashboardLoading data={data} />}
                 >
-                    <div className="nl-dashboard__panel-head">
-                        <h2 id="dashboard-todo" className="nl-component-title">
-                            처리할 일
-                        </h2>
-                        <span className="nl-metric-value nl-muted">
-                            {todoTotal}
-                        </span>
-                    </div>
-                    {active.length ? (
-                        <ul className="nl-dashboard__todo-list">
-                            {active.map((item) => (
-                                <li key={item.label}>
-                                    <Link
-                                        href={item.href}
-                                        className="nl-dashboard__todo-item"
-                                    >
-                                        <span
-                                            className="nl-dashboard__todo-dot"
-                                            aria-hidden
-                                        />
-                                        <span className="nl-control">
-                                            {item.label}
-                                        </span>
-                                        <span className="nl-metric-value">
-                                            {item.count}
-                                        </span>
-                                        <ChevronRight
-                                            className="nl-icon-small"
-                                            aria-hidden
-                                        />
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                    ) : null}
-                    {clear.length ? (
-                        <p className="nl-dashboard__clear nl-body-secondary nl-muted">
-                            <CircleCheck
-                                className="nl-icon-small"
-                                aria-hidden
-                            />
-                            <span>
-                                {active.length
-                                    ? `나머지 없음 — ${clear.map((item) => item.label).join(" · ")}`
-                                    : "처리할 일이 없습니다."}
-                            </span>
-                        </p>
-                    ) : null}
-                </section>
-
-                <div className="nl-dashboard__main">
-                    <div className="nl-dashboard__kpi-group">
-                        <div className="nl-dashboard__kpis">
-                            {data.kpis.map((kpi) => (
-                                <Link
-                                    key={kpi.metric}
-                                    href={dashboardHref(data.range, kpi.metric)}
-                                    className="nl-dashboard__kpi"
-                                    aria-current={
-                                        kpi.metric === data.metric
-                                            ? "true"
-                                            : undefined
-                                    }
+                    <div className="nl-dashboard__grid">
+                        <section
+                            className="nl-dashboard__panel nl-dashboard__todo"
+                            aria-labelledby="dashboard-todo"
+                        >
+                            <div className="nl-dashboard__panel-head">
+                                <h2
+                                    id="dashboard-todo"
+                                    className="nl-component-title"
                                 >
-                                    <span className="nl-control nl-muted">
-                                        {kpi.label}
-                                    </span>
-                                    <span className="nl-metric-display">
-                                        {kpi.value.toLocaleString("ko-KR")}
-                                    </span>
-                                    <Delta
-                                        value={kpi.value}
-                                        previous={kpi.previous}
-                                    />
-                                    <span
-                                        className="nl-dashboard__kpi-tone"
-                                        style={{
-                                            background:
-                                                METRIC_COLORS[kpi.metric],
-                                        }}
+                                    처리할 일
+                                </h2>
+                                <span className="nl-metric-value nl-muted">
+                                    {todoTotal}
+                                </span>
+                            </div>
+                            {active.length ? (
+                                <ul className="nl-dashboard__todo-list">
+                                    {active.map((item) => (
+                                        <li key={item.label}>
+                                            <Link
+                                                href={item.href}
+                                                className="nl-dashboard__todo-item"
+                                            >
+                                                <span
+                                                    className="nl-dashboard__todo-dot"
+                                                    aria-hidden
+                                                />
+                                                <span className="nl-control">
+                                                    {item.label}
+                                                </span>
+                                                <span className="nl-metric-value">
+                                                    {item.count}
+                                                </span>
+                                                <ChevronRight
+                                                    className="nl-icon-small"
+                                                    aria-hidden
+                                                />
+                                            </Link>
+                                        </li>
+                                    ))}
+                                </ul>
+                            ) : null}
+                            {clear.length ? (
+                                <p className="nl-dashboard__clear nl-body-secondary nl-muted">
+                                    <CircleCheck
+                                        className="nl-icon-small"
                                         aria-hidden
                                     />
-                                    {kpi.failed ? (
-                                        <span className="nl-metadata nl-muted">
-                                            실패 {kpi.failed}
-                                        </span>
-                                    ) : null}
-                                </Link>
-                            ))}
-                        </div>
-                        <p className="nl-metadata nl-muted">{comparison}</p>
-                    </div>
+                                    <span>
+                                        {active.length
+                                            ? `나머지 없음 — ${clear.map((item) => item.label).join(" · ")}`
+                                            : "처리할 일이 없습니다."}
+                                    </span>
+                                </p>
+                            ) : null}
+                        </section>
 
-                    <section
-                        className="nl-dashboard__panel"
-                        aria-labelledby="dashboard-trend"
-                    >
-                        <div className="nl-dashboard__panel-head">
-                            <h2
-                                id="dashboard-trend"
-                                className="nl-component-title"
+                        <div className="nl-dashboard__main">
+                            <div className="nl-dashboard__kpi-group">
+                                <div className="nl-dashboard__kpis">
+                                    {data.kpis.map((kpi) => (
+                                        <Link
+                                            key={kpi.metric}
+                                            href={dashboardHref(
+                                                data.range,
+                                                kpi.metric
+                                            )}
+                                            className="nl-dashboard__kpi"
+                                            aria-current={
+                                                kpi.metric === data.metric
+                                                    ? "true"
+                                                    : undefined
+                                            }
+                                        >
+                                            <span className="nl-control nl-muted">
+                                                {kpi.label}
+                                            </span>
+                                            <span className="nl-metric-display">
+                                                {kpi.value.toLocaleString(
+                                                    "ko-KR"
+                                                )}
+                                            </span>
+                                            <Delta
+                                                value={kpi.value}
+                                                previous={kpi.previous}
+                                            />
+                                            <span
+                                                className="nl-dashboard__kpi-tone"
+                                                style={{
+                                                    background:
+                                                        METRIC_COLORS[
+                                                            kpi.metric
+                                                        ],
+                                                }}
+                                                aria-hidden
+                                            />
+                                            {kpi.failed ? (
+                                                <span className="nl-metadata nl-muted">
+                                                    실패 {kpi.failed}
+                                                </span>
+                                            ) : null}
+                                            <AdminDashboardLinkStatus
+                                                statusKey={`metric-${kpi.metric}`}
+                                            />
+                                        </Link>
+                                    ))}
+                                </div>
+                                <p className="nl-metadata nl-muted">
+                                    {comparison}
+                                </p>
+                            </div>
+
+                            <section
+                                className="nl-dashboard__panel"
+                                aria-labelledby="dashboard-trend"
                             >
-                                {metricLabel}
-                            </h2>
-                        </div>
-                        {data.hourly ? (
-                            <>
-                                <AdminDashboardHours
-                                    data={data.hourly}
-                                    color={METRIC_COLORS.pageviews}
+                                <div className="nl-dashboard__panel-head">
+                                    <h2
+                                        id="dashboard-trend"
+                                        className="nl-component-title"
+                                    >
+                                        {metricLabel}
+                                    </h2>
+                                </div>
+                                {data.hourly ? (
+                                    <>
+                                        <AdminDashboardHours
+                                            data={data.hourly}
+                                            color={METRIC_COLORS.pageviews}
+                                        />
+                                        <p className="nl-metadata nl-muted">
+                                            시간대별 페이지뷰 · 서울 기준.
+                                            날짜별 그래프는 7일 이상에서
+                                            보입니다.
+                                        </p>
+                                    </>
+                                ) : (
+                                    <AdminDashboardChart
+                                        key={`${data.range}-${data.metric}`}
+                                        data={data.series}
+                                        label={metricLabel}
+                                        color={METRIC_COLORS[data.metric]}
+                                    />
+                                )}
+                            </section>
+
+                            <section
+                                className="nl-dashboard__panel"
+                                aria-labelledby="dashboard-audience"
+                            >
+                                <div className="nl-dashboard__panel-head">
+                                    <h2
+                                        id="dashboard-audience"
+                                        className="nl-component-title"
+                                    >
+                                        가입자 · 손님
+                                    </h2>
+                                </div>
+                                <AudienceSplit audience={data.audience} />
+                                <p className="nl-metadata nl-muted">
+                                    로그인 여부만 셉니다 · {rangeLabel}
+                                </p>
+                            </section>
+
+                            <section
+                                className="nl-dashboard__panel"
+                                aria-labelledby="dashboard-funnel"
+                            >
+                                <div className="nl-dashboard__panel-head">
+                                    <h2
+                                        id="dashboard-funnel"
+                                        className="nl-component-title"
+                                    >
+                                        전환 흐름
+                                    </h2>
+                                </div>
+                                <CountList
+                                    rows={data.funnel.map((step) => ({
+                                        key: step.label,
+                                        label: step.label,
+                                        detail: "",
+                                        count: step.count,
+                                    }))}
+                                    empty="기간에 가입한 사람이 없습니다."
                                 />
                                 <p className="nl-metadata nl-muted">
-                                    시간대별 페이지뷰 · 서울 기준. 날짜별
-                                    그래프는 7일 이상에서 보입니다.
+                                    {rangeLabel}에 가입한 사람이 어디까지 갔는지
                                 </p>
-                            </>
-                        ) : (
-                            <AdminDashboardChart
-                                key={`${data.range}-${data.metric}`}
-                                data={data.series}
-                                label={metricLabel}
-                                color={METRIC_COLORS[data.metric]}
-                            />
-                        )}
-                    </section>
+                            </section>
 
-                    <section
-                        className="nl-dashboard__panel"
-                        aria-labelledby="dashboard-audience"
-                    >
-                        <div className="nl-dashboard__panel-head">
-                            <h2
-                                id="dashboard-audience"
-                                className="nl-component-title"
+                            <section
+                                className="nl-dashboard__panel"
+                                aria-labelledby="dashboard-contributions"
                             >
-                                가입자 · 손님
-                            </h2>
-                        </div>
-                        <AudienceSplit audience={data.audience} />
-                        <p className="nl-metadata nl-muted">
-                            로그인 여부만 셉니다 · {rangeLabel}
-                        </p>
-                    </section>
+                                <div className="nl-dashboard__panel-head">
+                                    <h2
+                                        id="dashboard-contributions"
+                                        className="nl-component-title"
+                                    >
+                                        기여 활동
+                                    </h2>
+                                </div>
+                                <CountList
+                                    rows={data.contributions.map((row) => ({
+                                        ...row,
+                                        detail: "",
+                                    }))}
+                                    empty="기록 없음"
+                                />
+                                <p className="nl-metadata nl-muted">
+                                    새로 쓰거나 고친 수 · {rangeLabel}
+                                </p>
+                            </section>
 
-                    <section
-                        className="nl-dashboard__panel"
-                        aria-labelledby="dashboard-funnel"
-                    >
-                        <div className="nl-dashboard__panel-head">
-                            <h2
-                                id="dashboard-funnel"
-                                className="nl-component-title"
+                            <section
+                                className="nl-dashboard__panel"
+                                aria-labelledby="dashboard-pages"
                             >
-                                전환 흐름
-                            </h2>
+                                <div className="nl-dashboard__panel-head">
+                                    <h2
+                                        id="dashboard-pages"
+                                        className="nl-component-title"
+                                    >
+                                        자주 보는 페이지
+                                    </h2>
+                                </div>
+                                <CountList
+                                    rows={data.topPages}
+                                    empty="아직 방문 기록이 없습니다."
+                                />
+                                <p className="nl-metadata nl-muted">
+                                    페이지뷰 · {rangeLabel}
+                                </p>
+                            </section>
                         </div>
-                        <CountList
-                            rows={data.funnel.map((step) => ({
-                                key: step.label,
-                                label: step.label,
-                                detail: "",
-                                count: step.count,
-                            }))}
-                            empty="기간에 가입한 사람이 없습니다."
-                        />
-                        <p className="nl-metadata nl-muted">
-                            {rangeLabel}에 가입한 사람이 어디까지 갔는지
-                        </p>
-                    </section>
 
-                    <section
-                        className="nl-dashboard__panel"
-                        aria-labelledby="dashboard-contributions"
-                    >
-                        <div className="nl-dashboard__panel-head">
-                            <h2
-                                id="dashboard-contributions"
-                                className="nl-component-title"
-                            >
-                                기여 활동
-                            </h2>
-                        </div>
-                        <CountList
-                            rows={data.contributions.map((row) => ({
-                                ...row,
-                                detail: "",
-                            }))}
-                            empty="기록 없음"
-                        />
-                        <p className="nl-metadata nl-muted">
-                            새로 쓰거나 고친 수 · {rangeLabel}
-                        </p>
-                    </section>
-
-                    <section
-                        className="nl-dashboard__panel"
-                        aria-labelledby="dashboard-pages"
-                    >
-                        <div className="nl-dashboard__panel-head">
-                            <h2
-                                id="dashboard-pages"
-                                className="nl-component-title"
-                            >
-                                자주 보는 페이지
-                            </h2>
-                        </div>
-                        <CountList
-                            rows={data.topPages}
-                            empty="아직 방문 기록이 없습니다."
-                        />
-                        <p className="nl-metadata nl-muted">
-                            페이지뷰 · {rangeLabel}
-                        </p>
-                    </section>
-                </div>
-
-                <section
-                    className="nl-dashboard__panel nl-dashboard__api"
-                    aria-labelledby="dashboard-api"
-                >
-                    <div className="nl-dashboard__panel-head">
-                        <h2 id="dashboard-api" className="nl-component-title">
-                            API 호출
-                        </h2>
+                        <section
+                            className="nl-dashboard__panel nl-dashboard__api"
+                            aria-labelledby="dashboard-api"
+                        >
+                            <div className="nl-dashboard__panel-head">
+                                <h2
+                                    id="dashboard-api"
+                                    className="nl-component-title"
+                                >
+                                    API 호출
+                                </h2>
+                            </div>
+                            <div>
+                                <h3 className="nl-dashboard__group nl-control nl-muted">
+                                    우리 API
+                                </h3>
+                                <CountList
+                                    rows={data.apiCalls}
+                                    empty="기록 없음"
+                                />
+                            </div>
+                            <div>
+                                <h3 className="nl-dashboard__group nl-control nl-muted">
+                                    외부 API
+                                </h3>
+                                <CountList
+                                    rows={data.externalCalls}
+                                    empty="기록 없음"
+                                />
+                            </div>
+                            <p className="nl-metadata nl-muted">
+                                요청 수 · {rangeLabel}
+                            </p>
+                        </section>
                     </div>
-                    <div>
-                        <h3 className="nl-dashboard__group nl-control nl-muted">
-                            우리 API
-                        </h3>
-                        <CountList rows={data.apiCalls} empty="기록 없음" />
-                    </div>
-                    <div>
-                        <h3 className="nl-dashboard__group nl-control nl-muted">
-                            외부 API
-                        </h3>
-                        <CountList
-                            rows={data.externalCalls}
-                            empty="기록 없음"
-                        />
-                    </div>
-                    <p className="nl-metadata nl-muted">
-                        요청 수 · {rangeLabel}
-                    </p>
-                </section>
+                </AdminDashboardPendingRegion>
             </div>
-        </div>
+        </AdminDashboardPending>
     );
 }

@@ -1,11 +1,13 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import { Suspense } from "react";
 import type { ReactNode } from "react";
 
 import AdminNav from "@/components/admin/adminNav";
 import AppHeader from "@/components/layout/appHeader";
 import type { ShellAccount } from "@/components/layout/appHeader";
+import NavigationProgress from "@/components/layout/navigationProgress";
 import { useTranslations } from "@/components/i18n/localeProvider";
 
 // 관리자 화면을 2.0 셸에 올림. 채보 편집기는 보존 대상이라 1.0 셸을 그대로 유지함
@@ -47,6 +49,9 @@ export default function AdminShell({
             <a className="nl-skip-link nl-control" href="#main-content">
                 {t("skip.main")}
             </a>
+            <Suspense fallback={null}>
+                <NavigationProgress />
+            </Suspense>
             <AppHeader account={account} />
             <AdminNav />
             <main id="main-content" className="nl-main" tabIndex={-1}>
