@@ -1,284 +1,187 @@
 # NosLog
 
-NOSTALGIA 플레이 기록을 모아 보고, 악곡별 성과·서열·랭킹과 채보를 확인하는 비공식 팬 프로젝트입니다.
+[![CI](https://github.com/Anchovia/noslog/actions/workflows/ci.yml/badge.svg)](https://github.com/Anchovia/noslog/actions/workflows/ci.yml)
+[![Latest release](https://img.shields.io/github/v/release/Anchovia/noslog?label=release)](https://github.com/Anchovia/noslog/releases)
 
-현재 버전: **v2.10.5**
+> NOSTALGIA 플레이 기록을 모아 악곡별 성과, 서열, 랭킹과 채보를 확인하는 비공식 팬 프로젝트입니다.
+
+[서비스 바로가기](https://noslog.app/ko) · [이슈 제보](https://github.com/Anchovia/noslog/issues) · [최신 Release](https://github.com/Anchovia/noslog/releases/latest)
+
+NosLog는 NOSTALGIA 플레이 데이터를 한곳에서 확인하고 기록을 돌아볼 수 있도록 만든 웹 서비스입니다. 한국어·일본어·영어 화면을 제공하며, 현재 서비스 버전은 **v2.10.5**입니다.
 
 > NosLog는 KONAMI 및 공식 NOSTALGIA 서비스와 관련이 없습니다.
 
 ## 주요 기능
 
-- **홈**: 악곡 검색, 목적지 타일, 분류 태그가 붙은 공지사항, 진행 중인 이벤트와 NOSTALGIA 공식 소식
-- **공지사항**: 분류 필터, 중대 공지 고정, 이전 · 다음 글과 이미지를 넣을 수 있는 본문
-- **이벤트**: 기록을 동기화한 유저가 쓰고 관리자가 승인해 공개하는 이벤트 게시판(진행 중 · 예정 · 종료)
-- **악곡**: 검색, 난이도 필터, 개인 기록 기반 정렬과 악곡별 상세 기록
-- **기록 분석**: 점수·콤보·판정·FAST/SLOW·음표별 성공률과 최근 기록 추이
-- **랭킹**: Basic·Recital 공식 Grd 및 Basic 서열 레이팅 순위
-- **서열표**: S·Full Combo·Pianist 목표별 서열과 상위 70곡 기준 가중치 안내
-- **빙고**: 수동 판정 방식의 미션과 달성 현황
-- **검정**: 과제곡, 합격 조건, 응시 정보와 선택형 플레이 조언
-- **프로필**: 베스트 성과, 최근 플레이, 랭크 분포와 판정 상세
-- **오락실**: 지도와 목록으로 찾는 오락실 정보와 제보
-- **데이터 연동**: 북마클릿을 이용한 NOSTALGIA 기록 동기화와 결과 확인
-- **피드백**: 화면 어디서나 여는 오류 제보와 의견 창구
-- **다국어**: 한국어·일본어·영어 사용자 화면과 언어별 공유 경로
-- **번역 곡명**: 원문 제목을 유지하면서 검수된 한국어·영어 제목 또는 일본어 읽기 표시
-- **개인정보 관리**: 개인정보처리방침, 회원 탈퇴, 비공개 증빙 이미지와 보관 기간 관리
-- **관리자**: 운영 현황, 사용자, 공지 작성(마크다운 쓰기 · 미리보기), 이벤트 검토, 악곡 번역, 변경 후보, 서열표, 빙고, 검정과 동기화 데이터 관리
+### 플레이 기록과 분석
 
-사용자 페이지는 `/ko`, `/ja`, `/en` 경로를 사용합니다. 비로그인 사용자는 브라우저 언어에 따라 첫 언어가 결정되며, 로그인 사용자는 설정에서 언어와 번역 곡명 표시 여부를 변경할 수 있습니다. 관리자 페이지는 한국어로만 운영합니다.
+- 북마클릿으로 NOSTALGIA 플레이 기록 동기화
+- 악곡 검색, 난이도 필터, 개인 기록 기반 정렬
+- 점수, 콤보, 판정, FAST/SLOW, 음표별 성공률과 최근 기록 추이
+- Basic·Recital 공식 Grd 및 Basic 서열 레이팅 랭킹
+- S·Full Combo·Pianist 목표별 서열표
+- 프로필의 베스트 성과, 최근 플레이, 랭크 분포와 판정 상세
 
-관리자는 악곡 번역의 승인·초안·미번역 현황을 확인하고 CSV로 내보내거나 일괄 등록할 수 있습니다. 사용자 화면에는 승인된 번역만 노출됩니다.
+### 커뮤니티와 아카이브
 
-### 채보 편집기와 뷰어
+- 공지사항, 이벤트, 빙고, 검정 정보
+- 지역별 오락실 목록과 지도, 오락실 정보 제보
+- 악곡 번역 제안과 승인된 번역 제목
+- 화면에서 바로 보내는 오류 제보와 의견
+- NOSTALGIA 공식 소식 아카이브
+
+### 채보 도구
 
 - 관리자용 28칸 채보 편집기
-- 일반·테누토·글리산도·트릴 4종 노트
-- BPM, 박자표, 오프셋과 다중 타이밍 포인트
-- 노트 위치·폭·연주 안내 손·경로 제어점 편집
-- 실행 취소·다시 실행, 수정 이력과 공개 스냅샷
-- 음원을 포함하지 않는 `.noslog-chart.json` 가져오기·내보내기
-- 전체 악보형 뷰어와 PixiJS 기반 낙하형 재생 뷰어
-- BPM·박자표 기준 4마디 단위 전체 악보와 마디·타이밍 변경 표시
-- 메트로놈과 볼륨 조절, 노트 폭을 건반 연주로 해석하는 엄밀한 연주 옵션
-- 서버에 전송하지 않는 브라우저 로컬 음원 불러오기
+- 일반·테누토·글리산도·트릴 노트와 BPM·박자표·오프셋 편집
+- `.noslog-chart.json` 채보 가져오기·내보내기
+- 전체 악보 뷰어와 PixiJS 기반 낙하형 뷰어
+- 메트로놈, 볼륨 조절, 브라우저에서만 사용하는 로컬 음원
 
-편집 화면은 데스크톱과 가로형 태블릿을 기준으로 하며, 공개 뷰어는 모바일에서도 이용할 수 있습니다.
-
-NosLog 2.0에서 공개 채보 뷰어 페이지는 공통 셸(AppHeader·표준 컨테이너·푸터)과
-Foundation 타이포·버튼·컴포넌트로 옮겼습니다. PixiJS/WebGL 낙하형 renderer, Canvas
-전체 악보 renderer, note·left/right-hand palette, renderer geometry·animation·chart
-mathematics는 그대로이며, 관리자 채보 editor 전체는 여전히 보존 예외입니다. 사용자가
-정확히 지목한 하위 범위를 명시적으로 다시 열기 전에는 editor의 어떤 부분도 변경하지
-않습니다.
-
-## 기술 스택
-
-- Next.js 16, React 19, TypeScript
-- Tailwind CSS 4, Radix UI
-- React Hook Form, Zod
-- TanStack Query, Zustand
-- PixiJS 8
-- Prisma 6, Neon PostgreSQL
-- Discord OAuth, iron-session
-- Vercel, Vercel Blob, Vercel Cron
-- Vitest, Playwright, ESLint, Prettier, Husky
-
-### 코드 구조 및 스타일
-
-NosLog의 코드 작성·디렉터리·API 응답·Server Action·Zod·React Hook Form 규칙은
-[코드 스타일 문서](./docs/code-style.md)를 따릅니다. 기존 Jeongbiseo와 Fit-again
-프런트엔드에서 검증된 공통 규칙을 Next.js App Router에 맞게 적용한 기준입니다.
-
-[코드 스타일 전수 점검 기록](./docs/code-style-audit.md)에 실제 미정리 범위와 유지할
-예외를 구분합니다. 정적 검사 통과와 전체 리팩터링 완료는 다릅니다. `features/`의
-타입 전용 import는 ESLint가 검사하며, 채보 viewer/editor에는 이 이관 규칙을 확대하지
-않습니다.
-
-- `app/`은 route, layout, Route Handler와 Server Action 진입점을 담당합니다.
-  이번에 확인한 잔여 액션·서열표 요청·관리자 집계의 코드 경계 정리는 반영했으며,
-  실제 저장 동작 등 남은 브라우저 검증과 유지한 미사용 후보는 전수 점검 기록에서
-  별도로 관리합니다.
-- 재사용되는 도메인 코드는 `features/<domain>/` 아래 `api`, `components`, `hooks`,
-  `schemas`, `server`, `types` 책임으로 점진적으로 이동합니다.
-- 공통 UI는 `components/ui/`, 교차 도메인 기반 기능은 `lib/`에 둡니다.
-- 새 내부 Route Handler는 `isSuccess`, `code`, `message`, `result`가 있는 공통
-  `ApiResponse<T>`를 사용하고, 컴포넌트에는 정규화한 도메인 데이터만 전달합니다.
-- Axios는 추가하지 않으며 native `fetch`와 TanStack Query를 사용합니다.
-- 폼은 React Hook Form과 Zod를 사용하고 같은 스키마를 서버 경계에서 다시 검증합니다.
-- 한국어·일본어·영어 사용자 오류 문구를 지원하며 공용 스키마에 한국어 문구만
-  하드코딩하지 않습니다.
-- 외부 소비자가 있는 기존 API와 채보 viewer/editor 보존 범위는 코드 스타일 정리만으로
-  변경하지 않습니다.
-
-### NosLog 2.0 디자인 기준
-
-디자인 규칙은 [디자인 가이드](./docs/design/README.md) 한 곳에서 관리합니다(2026-09-14 새로 씀).
-사용자의 최신 결정이 우선이고, 값은 현재 코드(`app/styles/tokens.css` · `foundation.css` ·
-`components/ui`)를 기준으로 합니다. 결정 이력은 [결정 기록](./docs/design/decisions.md),
-화면만으로 알 수 없는 투표 자격·탈퇴·동기화·개인정보 규칙은 [기능 규칙](./docs/design/product-rules.md)에
-있습니다. [코드 스타일](./docs/code-style.md)은 그대로 따릅니다.
-
-Figma(`NosLog v2.0.0`)와 예전 브리프·핸드오프·PDF는 더 이상 기준이 아니며 참고하지 않습니다.
-
-검증은 [디자인 가이드](./docs/design/README.md)의 「확인」 절을 따릅니다.
-테스트 통과와 전체 화면의 시각적 완성은 구분합니다.
+채보 편집 화면은 데스크톱과 가로형 태블릿을 기준으로 하며, 공개 뷰어는 모바일에서도 사용할 수 있습니다. 로컬 음원은 서버로 전송하거나 저장하지 않습니다.
 
 ## 로컬 개발
 
 ### 준비 사항
 
-- Node.js 24 권장
+- Node.js 24
 - npm
-- PostgreSQL 또는 Neon 데이터베이스
+- PostgreSQL 또는 Neon PostgreSQL
 
-### 1. 저장소와 의존성 준비
+### 설치
 
 ```bash
 git clone https://github.com/Anchovia/noslog.git
 cd noslog
 npm install
+cp .env.example .env
 ```
 
-`npm install` 과정에서 Prisma Client가 자동으로 생성됩니다.
+`npm install`이 Prisma Client를 생성합니다. `.env`에는 개발용 값만 입력하세요. 운영 DB 주소와 운영 Secret을 로컬 검증에 복사하지 않습니다.
 
-### 2. 환경변수 설정
+### 환경변수
 
-`.env.example`을 복사해 `.env`를 만들고 개발 환경의 실제 값을 입력합니다.
+`.env.example`이 현재 설정의 기준입니다. 최소 실행에는 다음 값이 필요합니다.
 
-```powershell
-Copy-Item .env.example .env
-```
-
-주요 환경변수는 다음과 같습니다.
-
-| 구분               | 환경변수                                                             |
+| 용도               | 환경변수                                                             |
 | ------------------ | -------------------------------------------------------------------- |
-| 데이터베이스       | `DATABASE_URL`, optional `DATABASE_EXPECTED_HOST`                    |
-| 로그인 세션        | `COOKIE_PASSWORD`                                                    |
-| 북마클릿 서명      | `BOOKMARKLET_SECRET`                                                 |
+| 데이터베이스       | `DATABASE_URL`                                                       |
+| 세션·북마클릿 서명 | `COOKIE_PASSWORD`, `BOOKMARKLET_SECRET`                              |
 | 서비스 주소        | `APP_URL`                                                            |
-| Discord OAuth      | `DISCORD_CLIENT_ID`, `DISCORD_CLIENT_SECRET`, `DISCORD_REDIRECT_URI` |
-| Kakao Maps         | `NEXT_PUBLIC_KAKAO_MAP_APP_KEY`                                      |
-| 공개 이미지 Blob   | `BLOB_READ_WRITE_TOKEN`, `BLOB_STORE_ID`, `BLOB_WEBHOOK_PUBLIC_KEY`  |
-| 비공개 증빙 Blob   | `PRIVATE_BLOB_READ_WRITE_TOKEN`                                      |
-| 개인정보 정리 Cron | `CRON_SECRET`                                                        |
+| Discord 로그인     | `DISCORD_CLIENT_ID`, `DISCORD_CLIENT_SECRET`, `DISCORD_REDIRECT_URI` |
+| 지도               | `NEXT_PUBLIC_KAKAO_MAP_APP_KEY`                                      |
 
-`COOKIE_PASSWORD`, `BOOKMARKLET_SECRET`, `CRON_SECRET`에는 충분히 긴 서로 다른 임의 문자열을 사용합니다. 실제 환경변수와 토큰은 Git에 커밋하지 않습니다.
+이미지 업로드, 개인정보 정리 Cron, 공식 소식 수집을 로컬에서 확인하려면 `.env.example`의 관련 선택 환경변수를 추가로 설정합니다. 모든 Secret은 Git에 커밋하지 않습니다.
 
-`DATABASE_EXPECTED_HOST`를 설정하면 `DATABASE_URL`의 실제 호스트가 정확히 일치하지
-않는 배포와 실행을 차단합니다. Main과 Dev의 Neon 프로젝트 호스트를 각 환경에 따로
-지정해 교차 연결을 방지합니다.
-
-Neon의 pooled `DATABASE_URL`을 사용한다면 `DATABASE_EXPECTED_HOST`에도 같은
-`-pooler` 호스트를 지정해야 합니다. Vercel에서 내려받은 `.env.production.local`의
-Secret 값이 빈 문자열이면 하위 우선순위의 `.env` 값을 가리므로, 로컬 빌드에서는 해당
-빈 키를 제거하고 Dev DB 및 로컬 전용 Secret을 사용합니다. Production DB 주소나
-Production Secret을 로컬 검증용으로 복사하지 않습니다.
-
-선택 환경변수:
-
-- `NEXT_PUBLIC_ENABLE_THEME_SWITCHING=false`: 임시 다크 전용 모드의 기본값입니다.
-  저장된 라이트 선호값과 OS 테마보다 다크를 우선하며 테마 변경 컨트롤은 비활성화합니다.
-  기존 라이트 스타일과 저장된 선호값은 보존합니다. 라이트 디자인 완료 후 `true`로
-  전환할 수 있으며, 공개 환경변수이므로 개발 서버 재시작 또는 배포 재빌드가 필요합니다.
-
-- `MAINTENANCE_MODE=true`: 일반 페이지와 API에 점검 안내 표시
-- `GOOGLE_SITE_VERIFICATION`: Google Search Console 인증값
-
-### 3. 데이터베이스 적용
+### 데이터베이스와 개발 서버
 
 ```bash
 npm run db:migrate:deploy
-```
-
-스키마를 변경한 뒤 Prisma Client만 다시 생성하려면 다음 명령을 사용합니다.
-
-```bash
-npx prisma generate
-```
-
-팀원이 같은 Neon 개발 DB를 사용한다면 데이터는 별도로 복사할 필요가 없습니다. 각 컴퓨터의 `DATABASE_URL`이 같은 개발 DB를 가리키도록 설정하면 됩니다.
-
-> `npm run db:seed:e2e`는 로컬 E2E 전용 PostgreSQL에서만 실행해야 합니다. 공유 Neon 개발 DB나 Production DB에는 실행하지 마세요.
-
-### 4. 개발 서버 실행
-
-```bash
 npm run dev
 ```
 
-기본 주소는 `http://localhost:3000`입니다.
+개발 서버는 [http://localhost:3000](http://localhost:3000)에서 실행됩니다.
 
-## 검증
+E2E 테스트는 공유 DB가 아닌 로컬 PostgreSQL에서만 실행합니다.
+
+```bash
+npm run db:migrate:deploy
+npm run db:seed:e2e
+npm run test:e2e
+```
+
+## 자주 쓰는 명령
+
+| 명령                         | 용도                  |
+| ---------------------------- | --------------------- |
+| `npm run dev`                | 개발 서버 실행        |
+| `npm run lint`               | ESLint 검사           |
+| `npm run typecheck`          | TypeScript 타입 검사  |
+| `npm test`                   | Vitest 테스트         |
+| `npm run build`              | 프로덕션 빌드         |
+| `npm run test:e2e`           | Playwright E2E 테스트 |
+| `npm run test:a11y`          | 접근성 E2E 테스트     |
+| `npm run check:dependencies` | 사용 중인 의존성 검사 |
+| `npx prisma generate`        | Prisma Client 재생성  |
+
+카탈로그·서열표·빙고·검정 데이터를 가져오는 명령은 운영 데이터에 영향을 줄 수 있으므로 실행 전에 해당 스크립트와 운영 문서를 확인하세요.
+
+## 프로젝트 구조
+
+```text
+app/                  Next.js 라우트, 레이아웃, Route Handler, Server Action 진입점
+features/<domain>/    도메인별 API, 컴포넌트, 훅, 스키마, 서버 코드
+components/           공용 UI와 채보 뷰어·편집기
+lib/                  인증, DB, i18n, 분석, 캐시와 공통 도메인 로직
+prisma/               스키마, 마이그레이션, 카탈로그 데이터와 import 스크립트
+tests/                Vitest 테스트
+e2e/                  Playwright 테스트와 픽스처
+docs/                 디자인, 기능, 운영, 코드 스타일 문서
+```
+
+새 도메인 코드는 가능한 한 `features/<domain>/` 아래에 두고, 공용 UI는 `components/ui/`를 사용합니다. 자세한 기준은 [코드 스타일](docs/code-style.md)을 참고하세요.
+
+## 문서 안내
+
+- [디자인 가이드](docs/design/README.md): 토큰, 레이아웃, 공용 부품, 로딩과 화면 확인 기준
+- [기능 규칙](docs/design/product-rules.md): 기록·동기화·투표·개인정보 동작
+- [코드 스타일](docs/code-style.md): 디렉터리, API 응답, Server Action, 폼과 스키마 규칙
+- [공식 X 소식 수집 운영](docs/operations/official-x-sync.md): GitHub Actions와 관련 Secret 설정
+- [이슈 템플릿](.github/ISSUE_TEMPLATE): 버그, 기능 제안, 데이터 수정 요청
+- [Pull Request 템플릿](.github/pull_request_template.md): 변경 사항과 확인 항목
+
+README에는 프로젝트를 시작하는 데 필요한 내용만 두고, 화면 규격·운영 절차·변경 결정은 위 문서에서 관리합니다.
+
+## 테스트와 CI
+
+로컬에서 변경을 확인할 때 다음 명령을 순서대로 실행합니다.
 
 ```bash
 npm run lint
 npm run typecheck
 npm test
 npm run build
-npm audit
 ```
 
-Prisma CLI는 빌드·마이그레이션 도구이므로 `devDependencies`에 둡니다. 현재
-`@prisma/config`가 고정한 취약 버전 대신 패치된 `deepmerge-ts`를 `overrides`로
-적용합니다. Prisma를 업데이트할 때는 upstream 의존성이 패치됐는지 확인한 뒤 불필요해진
-override를 제거하고, `prisma validate`, 전체 테스트와 프로덕션 빌드를 다시 실행합니다.
+GitHub Actions의 `verify` 작업은 의존성 설치, 린트, Vitest, 타입 검사와 프로덕션 빌드를 확인합니다. E2E 작업은 저장소 변수 `RUN_E2E=true`일 때 로컬 PostgreSQL 16과 Playwright Chromium으로 실행됩니다.
 
-Playwright E2E는 로컬 테스트 DB에 마이그레이션과 E2E 시드를 적용하고 개발 서버를 실행한 상태에서 사용할 수 있습니다.
+## 배포와 릴리스
 
-```bash
-npm run test:e2e
-```
+NosLog는 Vercel에서 운영하며 데이터베이스는 Neon PostgreSQL을 사용합니다. Production 배포에는 Production DB, 공개·비공개 Blob 저장소, Cron Secret과 서비스 인증 환경변수가 필요합니다.
 
-GitHub Actions에서는 다음 항목을 자동으로 확인합니다.
+일반적인 배포 흐름은 다음과 같습니다.
 
-1. 의존성 설치
-2. ESLint
-3. Vitest 단위 테스트
-4. TypeScript
-5. 프로덕션 빌드
-6. PostgreSQL 16에 전체 마이그레이션 적용
-7. E2E 시드 및 Playwright 모바일·데스크톱 테스트
+1. `dev`에서 기능을 개발하고 검증합니다.
+2. 변경 범위와 DB 마이그레이션·환경변수 변경 여부를 확인합니다.
+3. `dev`에서 `main`으로 Release PR을 엽니다.
+4. CI 통과 후 PR을 병합하고 Vercel Production 배포를 확인합니다.
+5. 같은 버전의 `vMAJOR.MINOR.PATCH` 태그와 GitHub Release를 생성합니다.
 
-Playwright는 한국어·일본어·영어 경로, 주요 사용자 흐름, 390px 반응형 오버플로, 기본 접근성 구조, 처리되지 않은 브라우저 오류와 완화된 성능 안전선을 함께 검사합니다.
+현재 `main`은 PR과 CI 통과가 필요하며, `v*` 태그는 발행 후 수정·삭제할 수 없도록 보호됩니다. 릴리스 변경 내역은 [GitHub Releases](https://github.com/Anchovia/noslog/releases)에서 확인할 수 있습니다.
 
-## 배포
+## 개인정보와 데이터
 
-Vercel Production 환경에는 `.env.example`에 명시된 서비스 환경변수와 다음 구성이 필요합니다.
+- 공개 아바타와 비공개 증빙 이미지는 용도가 나뉜 Blob 저장소에 보관합니다.
+- 채보 편집용 로컬 음원은 브라우저 안에서만 사용합니다.
+- 회원 탈퇴, 증빙 자료 보관 기간, 분석 데이터 처리 기준은 서비스의 [개인정보처리방침](https://noslog.app/ko/privacy)을 따릅니다.
+- 운영 DB에는 E2E 시드나 개발용 import 명령을 실행하지 않습니다.
 
-- 공개 아바타용 Blob Store
-- 검정·피드백 증빙용 비공개 Blob Store
-- `CRON_SECRET`
-- Neon Production `DATABASE_URL`
+## 기여하기
 
-`vercel.json`의 빌드 명령은 배포 시 `prisma migrate deploy`를 먼저 실행한 뒤 Next.js 프로덕션 빌드를 실행합니다. 따라서 Production 환경의 `DATABASE_URL`은 반드시 Production DB를 가리켜야 합니다.
+버그, 데이터 오류, 기능 제안은 [Issues](https://github.com/Anchovia/noslog/issues)에 남겨 주세요. 코드 변경은 작은 단위로 작성하고, 관련 테스트와 화면 확인 결과를 Pull Request에 함께 적습니다.
 
-`dev`를 `main`에 병합한 뒤 Vercel Production 배포가 시작되면 다음 순서로 진행됩니다.
+새로운 동작이나 화면 규칙을 추가할 때는 먼저 [디자인 가이드](docs/design/README.md)와 [기능 규칙](docs/design/product-rules.md)을 확인합니다. 가이드에 없는 토큰·색·움직임을 추가하거나 기존 기록의 의미를 바꾸는 변경은 사전 논의가 필요합니다.
 
-1. Production 환경변수 로드
-2. Production DB에 미적용 Prisma 마이그레이션 반영
-3. Next.js 프로덕션 빌드
-4. 새 배포 활성화
-5. `/api/health`에서 애플리케이션과 DB 연결 확인
+## 버전
 
-운영 DB에 `db:seed:e2e` 또는 개발용 import 명령을 실행하지 않습니다. 마이그레이션을 수동으로 먼저 적용하는 별도 배포 전략을 사용하지 않는 한, 현재 구성에서는 `main` 병합 후 Vercel 빌드가 적용하도록 둡니다.
+NosLog는 Semantic Versioning을 따릅니다.
 
-개인정보 보관 기간 정리 Cron은 매일 `18:00 UTC`에 실행됩니다. 한국 시간 기준 다음 날 오전 3시입니다.
+- `PATCH`: 버그 수정, 문서·UI 개선
+- `MINOR`: 기존 사용법과 호환되는 기능 추가
+- `MAJOR`: 호환되지 않는 데이터·인증·사용 방식 변경
 
-DB 마이그레이션이 포함된 배포는 Production DB 백업을 확인한 뒤 진행합니다.
+## 라이선스와 상표
 
-## 개인정보 처리 원칙
+현재 저장소에는 별도의 `LICENSE` 파일이 없습니다. 라이선스가 공표되기 전까지 코드를 재배포하거나 2차 프로젝트에 포함하려면 저장소 관리자에게 문의하세요.
 
-- 아바타는 공개 Blob에 저장합니다.
-- 검정 증빙과 피드백 이미지는 비공개 Blob에 저장하고 권한이 확인된 API를 통해서만 제공합니다.
-- 승인된 검정은 심사 완료 6개월 후 증빙 이미지와 심사 메모를 정리하고 합격 이력은 유지합니다.
-- 반려된 검정과 처리 완료된 피드백 자료는 6개월 후 정리합니다.
-- 회원 탈퇴 시 계정과 연결된 기록 및 업로드 자료를 영구 삭제합니다.
-- 채보 편집용 로컬 음원은 브라우저에서만 사용하며 서버로 전송하거나 저장하지 않습니다.
-
-자세한 내용은 서비스의 `/privacy` 페이지에서 확인할 수 있습니다.
-
-## 버전 관리
-
-NosLog는 `vMAJOR.MINOR.PATCH` 형식의 Semantic Versioning을 사용합니다.
-
-| 구분    | 변경 기준                                | 예시                |
-| ------- | ---------------------------------------- | ------------------- |
-| `PATCH` | 버그 수정, UI 개선, 데이터 정정          | `v1.0.1` → `v1.0.2` |
-| `MINOR` | 기존 기능과 호환되는 신규 기능 추가      | `v1.4.0` → `v1.5.0` |
-| `MAJOR` | 호환되지 않는 구조·인증·데이터 규격 변경 | `v1.5.0` → `v2.0.0` |
-
-### 배포 절차
-
-1. 기능 개발과 검증은 `dev` 브랜치에서 진행합니다.
-2. 배포할 변경에 맞춰 `package.json`과 `package-lock.json`의 버전을 올립니다.
-3. 타입 검사, 린트, 테스트, 빌드와 E2E를 통과시킵니다.
-4. `dev`에서 `main`으로 `release: NosLog v2.0.0` 형식의 PR을 생성합니다.
-5. PR 본문에 주요 변경, DB 마이그레이션과 환경변수 변경 여부를 기록합니다.
-6. `Create a merge commit`으로 병합하고 Production 배포를 확인합니다.
-7. 병합된 `main` 커밋에 같은 버전의 Git 태그와 GitHub Release를 생성합니다.
-
-### 공식 X 소식 예약 수집
-
-홈에서는 저장된 원문·번역만 읽습니다. 12시간 간격의 새 글 수집은 GitHub Actions가 담당합니다(Vercel Hobby). 최초 배포에는 DB 마이그레이션, `OFFICIAL_X_SYNC_SECRET`, GitHub Actions 변수·Secret 설정과 최초 수집이 필요합니다. [설정 및 확인 SQL](docs/operations/official-x-sync.md)을 따릅니다.
+NOSTALGIA와 관련 상표·콘텐츠의 권리는 각 권리자에게 있습니다. NosLog는 팬 제작 비공식 서비스입니다.
