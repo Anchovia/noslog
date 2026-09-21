@@ -1,6 +1,6 @@
 import type { FieldPath, FieldValues, UseFormSetError } from "react-hook-form";
 
-import type { ActionFieldErrors } from "@/lib/actions/result";
+import type { ActionFailure, ActionFieldErrors } from "@/lib/actions/result";
 
 type FormFieldName<TFieldValues extends FieldValues> = FieldPath<TFieldValues>;
 
@@ -22,4 +22,17 @@ export function applyFormFieldErrors<TFieldValues extends FieldValues>(
             message,
         });
     }
+}
+
+export function applyFormActionFailure<TFieldValues extends FieldValues>(
+    setError: UseFormSetError<TFieldValues>,
+    failure: ActionFailure<FormFieldName<TFieldValues>>,
+    notify: (message: string) => unknown
+) {
+    applyFormFieldErrors(setError, failure.fieldErrors);
+    setError("root.server", {
+        type: "server",
+        message: failure.message,
+    });
+    notify(failure.message);
 }

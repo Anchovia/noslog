@@ -13,7 +13,7 @@ import {
     type BingoFormValues,
     type BingoValues,
 } from "@/features/bingos/schemas/bingoEditorSchema";
-import { applyFormFieldErrors } from "@/lib/forms/errors";
+import { applyFormActionFailure } from "@/lib/forms/errors";
 
 import BingoBasicFields from "./bingoBasicFields";
 import { DeleteBingoButton, SaveBingoButton } from "./bingoEditorActions";
@@ -50,12 +50,7 @@ export default function BingoEditor({ bingo, musics }: BingoEditorProps) {
                 createBingoFormData(values, bingo.id)
             );
             if (!result.success) {
-                applyFormFieldErrors(setError, result.fieldErrors);
-                setError("root.server", {
-                    type: "server",
-                    message: result.message,
-                });
-                toast.error(result.message);
+                applyFormActionFailure(setError, result, toast.error);
                 return;
             }
 

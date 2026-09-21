@@ -20,7 +20,7 @@ import {
     type MusicTranslationStatus,
     type MusicTranslationValues,
 } from "@/features/music/schemas/musicTranslationAdminSchema";
-import { applyFormFieldErrors } from "@/lib/forms/errors";
+import { applyFormActionFailure } from "@/lib/forms/errors";
 
 interface MusicTranslationFormProps {
     label: string;
@@ -66,12 +66,7 @@ export default function MusicTranslationForm({
                 createMusicTranslationFormData(values)
             );
             if (!result.success) {
-                applyFormFieldErrors(setError, result.fieldErrors);
-                setError("root.server", {
-                    type: "server",
-                    message: result.message,
-                });
-                toast.error(result.message);
+                applyFormActionFailure(setError, result, toast.error);
                 return;
             }
 

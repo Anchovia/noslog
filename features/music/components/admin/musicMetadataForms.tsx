@@ -28,7 +28,7 @@ import {
     type MusicMetadataValues,
 } from "@/features/music/schemas/musicAdminSchema";
 import type { AdminMusicChart } from "@/features/music/types/musicAdmin";
-import { applyFormFieldErrors } from "@/lib/forms/errors";
+import { applyFormActionFailure } from "@/lib/forms/errors";
 
 const difficultyColor: Record<string, string> = {
     normal: "text-normal",
@@ -82,12 +82,7 @@ export function MusicMetadataForm({ defaultValues }: MusicMetadataFormProps) {
                 createMusicMetadataFormData(values)
             );
             if (!result.success) {
-                applyFormFieldErrors(setError, result.fieldErrors);
-                setError("root.server", {
-                    type: "server",
-                    message: result.message,
-                });
-                toast.error(result.message);
+                applyFormActionFailure(setError, result, toast.error);
                 return;
             }
 
@@ -233,12 +228,7 @@ export function ChartMetadataForm({
                 createChartMetadataFormData(values)
             );
             if (!result.success) {
-                applyFormFieldErrors(setError, result.fieldErrors);
-                setError("root.server", {
-                    type: "server",
-                    message: result.message,
-                });
-                toast.error(result.message);
+                applyFormActionFailure(setError, result, toast.error);
                 return;
             }
 

@@ -44,7 +44,7 @@ import ModalDialog from "@/components/ui/modalDialog";
 import { SegmentedControl } from "@/components/ui/segmentedControl";
 import { Select } from "@/components/ui/select";
 import { foundationButtonClass } from "@/components/ui/Button";
-import { applyFormFieldErrors } from "@/lib/forms/errors";
+import { applyFormActionFailure } from "@/lib/forms/errors";
 import useMediaQuery from "@/lib/hooks/useMediaQuery";
 import type { Locale } from "@/lib/i18n/routing";
 
@@ -201,12 +201,7 @@ export default function AnnouncementEditor({
                         ? await createAnnouncement(formData)
                         : await updateAnnouncement(formData);
                     if (!result.success) {
-                        applyFormFieldErrors(setError, result.fieldErrors);
-                        setError("root.server", {
-                            type: "server",
-                            message: result.message,
-                        });
-                        toast.error(result.message);
+                        applyFormActionFailure(setError, result, toast.error);
                         return;
                     }
                     setDialog(null);

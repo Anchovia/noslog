@@ -20,7 +20,7 @@ import {
     type ExamMode,
     type ExamStatus,
 } from "@/features/exams/schemas/examEditorSchema";
-import { applyFormFieldErrors } from "@/lib/forms/errors";
+import { applyFormActionFailure } from "@/lib/forms/errors";
 
 import ExamBasicFields from "./examBasicFields";
 import {
@@ -274,12 +274,7 @@ export default function ExamEditor({
         try {
             const result = await saveExam(values);
             if (!result.success) {
-                applyFormFieldErrors(setError, result.fieldErrors);
-                setError("root.server", {
-                    type: "server",
-                    message: result.message,
-                });
-                toast.error(result.message);
+                applyFormActionFailure(setError, result, toast.error);
                 return;
             }
 
