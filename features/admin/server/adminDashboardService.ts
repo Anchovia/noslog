@@ -125,11 +125,17 @@ export async function getAdminDashboard(
             FROM "analytics_daily_counts"
             WHERE "date" >= ${previous[0]}::date`,
         db.user.findMany({
-            where: { created_at: { gte: since } },
+            where: {
+                role: { not: "admin" },
+                created_at: { gte: since },
+            },
             select: { created_at: true },
         }),
         db.dataSync.findMany({
-            where: { started_at: { gte: since } },
+            where: {
+                user: { role: { not: "admin" } },
+                started_at: { gte: since },
+            },
             select: { started_at: true, status: true },
         }),
         db.examSubmission.count({ where: { status: "pending" } }),
@@ -156,6 +162,7 @@ export async function getAdminDashboard(
         // 전환 흐름 — 기간에 가입한 사람이 연동 · 기록까지 갔는지(이미 있는 데이터만 센다, 2026-09-20)
         db.user.findMany({
             where: {
+                role: { not: "admin" },
                 created_at: { gte: new Date(`${current[0]}T00:00:00+09:00`) },
             },
             select: {
@@ -167,11 +174,13 @@ export async function getAdminDashboard(
         // 기여 활동 — 기간에 새로 쓰거나 고친 것
         db.communityChartEvaluation.count({
             where: {
+                user: { role: { not: "admin" } },
                 updatedAt: { gte: new Date(`${current[0]}T00:00:00+09:00`) },
             },
         }),
         db.communityChartEvaluation.count({
             where: {
+                user: { role: { not: "admin" } },
                 opinionUpdatedAt: {
                     gte: new Date(`${current[0]}T00:00:00+09:00`),
                 },
@@ -179,16 +188,19 @@ export async function getAdminDashboard(
         }),
         db.chartGoalVote.count({
             where: {
+                user: { role: { not: "admin" } },
                 updatedAt: { gte: new Date(`${current[0]}T00:00:00+09:00`) },
             },
         }),
         db.communityEvent.count({
             where: {
+                author: { role: { not: "admin" } },
                 submittedAt: { gte: new Date(`${current[0]}T00:00:00+09:00`) },
             },
         }),
         db.feedbackReport.count({
             where: {
+                user: { role: { not: "admin" } },
                 arcadeId: { not: null },
                 createdAt: { gte: new Date(`${current[0]}T00:00:00+09:00`) },
             },

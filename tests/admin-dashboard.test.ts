@@ -181,6 +181,31 @@ describe("관리자 대시보드", () => {
             ["오락실 제보", 1, "/admin/feedback?status=open"],
             ["동기화 지연", 2, "/admin/syncs?status=processing"],
         ]);
+
+        expect(mocks.userFindMany.mock.calls[0][0].where).toMatchObject({
+            role: { not: "admin" },
+        });
+        expect(mocks.userFindMany.mock.calls[1][0].where).toMatchObject({
+            role: { not: "admin" },
+        });
+        expect(mocks.syncFindMany.mock.calls[0][0].where).toMatchObject({
+            user: { role: { not: "admin" } },
+        });
+        expect(
+            mocks.communityEvaluationCount.mock.calls[0][0].where
+        ).toMatchObject({ user: { role: { not: "admin" } } });
+        expect(
+            mocks.communityEvaluationCount.mock.calls[1][0].where
+        ).toMatchObject({ user: { role: { not: "admin" } } });
+        expect(mocks.goalVoteCount.mock.calls[0][0].where).toMatchObject({
+            user: { role: { not: "admin" } },
+        });
+        expect(mocks.communityEventCount.mock.calls[0][0].where).toMatchObject({
+            author: { role: { not: "admin" } },
+        });
+        expect(mocks.feedbackCount.mock.calls[2][0].where).toMatchObject({
+            user: { role: { not: "admin" } },
+        });
     });
 
     it("그래프 지표를 바꾸면 같은 날짜 칸에 그 지표를 싣는다", async () => {

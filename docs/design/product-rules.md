@@ -340,6 +340,12 @@ old design-stage checklist. Changes to material behavior require a user decision
 
 ## Visit analytics (2026-09-20)
 
+- Accounts whose current role is `admin` are excluded at collection time from
+  page views, daily visitors, hour/audience buckets, browser external events and
+  API-call totals. Dashboard signup, sync, funnel and contribution totals also
+  exclude current admins; operational queues and failure monitoring do not.
+  Existing aggregate visit rows cannot be retroactively separated because they
+  intentionally contain no account identifier (2026-09-21).
 - Counted totals only, never who visited. A page view increments the day total, the
   route total, the Seoul hour bucket (`hour`, `00`–`23`) and the signed-in split
   (`audience` / `audienceVisitor`, `member` | `guest`). The signed-in flag comes from

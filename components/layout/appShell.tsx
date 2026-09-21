@@ -35,8 +35,8 @@ export default function AppShell({
                     <div className="nl-main__content">{children}</div>
                 </main>
                 {footer}
-                {/* 방문 통계(자체 집계) — 관리자 셸(AdminShell)에는 없다 */}
-                <PageViewBeacon />
+                {/* 관리자 계정과 관리자 셸(AdminShell)은 방문 통계에서 제외한다 */}
+                {account?.role !== "admin" ? <PageViewBeacon /> : null}
             </div>
         </FeedbackUnreadProvider>
     );

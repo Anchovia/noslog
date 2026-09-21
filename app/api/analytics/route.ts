@@ -1,4 +1,5 @@
 import { recordExternalCall, recordPageView } from "@/lib/analytics";
+import db from "@/lib/db";
 import getSession from "@/lib/session";
 import { isBotUserAgent, isExternalEvent } from "@/lib/analyticsRoutes";
 import { logServerError } from "@/lib/observability/server";
@@ -36,13 +37,21 @@ export async function POST(request: Request) {
     };
 
     try {
+        const session = await getSession();
+        const account = session.id
+            ? await db.user.findUnique({
+                  where: { id: session.id },
+                  select: { role: true },
+              })
+            : null;
+        // 운영자가 공개 화면을 확인한 방문·동작은 서비스 이용 통계에서 제외한다.
+        if (account?.role === "admin") return noContent();
+
         if (type === "view" && typeof path === "string") {
             const forwarded = request.headers.get("x-forwarded-for");
             const ip =
                 forwarded?.split(",")[0]?.trim() ||
                 request.headers.get("x-real-ip");
-            // 로그인 여부만 확인한다(쿠키 해독, DB 조회 없음) — 계정 번호는 저장하지 않는다
-            const session = await getSession();
             await recordPageView({
                 path,
                 ip,
