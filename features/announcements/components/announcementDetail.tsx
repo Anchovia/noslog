@@ -5,7 +5,10 @@ import PageContainer from "@/components/layout/pageContainer";
 import { getServerI18n } from "@/lib/i18n/server";
 import { localizePath } from "@/lib/i18n/routing";
 import { SITE_URL } from "@/lib/metadata/site";
-import type { PublicAnnouncement } from "@/features/announcements/schemas/publicAnnouncementSchema";
+import type {
+    PublicAnnouncement,
+    PublicAnnouncementSummary,
+} from "@/features/announcements/schemas/publicAnnouncementSchema";
 import AnnouncementBody from "./announcementBody";
 import AnnouncementCategoryTag from "./announcementCategoryTag";
 import { announcementDate } from "./announcementRow";
@@ -14,8 +17,8 @@ export default async function AnnouncementDetail({
     announcement,
 }: {
     announcement: PublicAnnouncement & {
-        older: PublicAnnouncement | null;
-        newer: PublicAnnouncement | null;
+        older: PublicAnnouncementSummary | null;
+        newer: PublicAnnouncementSummary | null;
     };
 }) {
     const { locale, t } = await getServerI18n();

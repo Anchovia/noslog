@@ -9,7 +9,7 @@ import {
 } from "@/features/announcements/schemas/publicAnnouncementSchema";
 import type {
     AnnouncementCategory,
-    PublicAnnouncement,
+    PublicAnnouncementSummary,
 } from "@/features/announcements/schemas/publicAnnouncementSchema";
 import AnnouncementRow from "./announcementRow";
 import AnnouncementPagination from "./announcementPagination";
@@ -22,8 +22,8 @@ export default async function AnnouncementArchive({
     totalPages,
 }: {
     category: AnnouncementCategory | null;
-    pinned: PublicAnnouncement[];
-    announcements: PublicAnnouncement[];
+    pinned: PublicAnnouncementSummary[];
+    announcements: PublicAnnouncementSummary[];
     page: number;
     totalPages: number;
 }) {
@@ -34,7 +34,7 @@ export default async function AnnouncementArchive({
         timeZone: "Asia/Seoul",
     });
     const base = localizePath("/announcements", locale);
-    const categoryLabel = (item: PublicAnnouncement) =>
+    const categoryLabel = (item: PublicAnnouncementSummary) =>
         t(`announcements.category.${item.category}`);
     return (
         <PageContainer width="reading" className="nl-announcements">

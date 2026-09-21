@@ -90,44 +90,27 @@ export const getCachedMusicDetail = unstable_cache(
     }
 );
 
-// 상세 탭에서 사용하는 공개 투표 집계와 점수 분포를 캐시함
+// 상세 탭에서 사용하는 점수 분포를 캐시함
 // 점수 분포(점수 자 위 점)도 점수 비공개 플레이어를 뺀다 — 비공개인 본인이 볼 때만 자기 점수를 넣는다
 export const getCachedChartDetailStats = unstable_cache(
     async (chartId: number, includeUserId = 0) => {
-        const [evaluation, scores] = await Promise.all([
-            db.chartEvaluation.aggregate({
-                where: { chart_id: chartId },
-                _count: { _all: true },
-                _avg: {
-                    perceived_constant: true,
-                    stairs: true,
-                    chord: true,
-                    trill: true,
-                    glissando: true,
-                    repetition: true,
+        const scores = await db.playData.findMany({
+            where: {
+                chart_id: chartId,
+                score: { gt: 0 },
+                user: {
+                    OR: [{ hide_play_scores: false }, { id: includeUserId }],
                 },
-            }),
-            db.playData.findMany({
-                where: {
-                    chart_id: chartId,
-                    score: { gt: 0 },
-                    user: {
-                        OR: [
-                            { hide_play_scores: false },
-                            { id: includeUserId },
-                        ],
-                    },
-                },
-                select: { score: true, fc_type: true },
-            }),
-        ]);
+            },
+            select: { score: true, fc_type: true },
+        });
 
-        return { evaluation, scores };
+        return { scores };
     },
-    ["music-detail-stats"],
+    ["music-detail-stats-v2"],
     {
         revalidate: PUBLIC_DATA_REVALIDATE_SECONDS,
-        tags: [CACHE_TAGS.chartEvaluations, CACHE_TAGS.chartRankings],
+        tags: [CACHE_TAGS.chartRankings],
     }
 );
 

@@ -29,6 +29,10 @@ export interface KakaoOverlay {
     setMap(map: KakaoMapInstance | null): void;
 }
 
+export interface KakaoCustomOverlay extends KakaoOverlay {
+    setZIndex(zIndex: number): void;
+}
+
 interface GeocoderResult {
     x: string;
     y: string;
@@ -77,7 +81,7 @@ export interface KakaoMapsApi {
             xAnchor?: number;
             yAnchor?: number;
             zIndex?: number;
-        }) => KakaoOverlay;
+        }) => KakaoCustomOverlay;
         services: {
             Geocoder: new () => KakaoGeocoder;
             Status: { OK: string };

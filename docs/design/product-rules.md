@@ -290,6 +290,10 @@ old design-stage checklist. Changes to material behavior require a user decision
   list on page 1 of the matching filter and are left out of the dated list; page count
   ignores them. The detail page links the previous (older) and next (newer)
   announcement in publication order across all categories (2026-09-18).
+- Home/archive announcement reads carry metadata
+  and body-validity checks only; bodies are cached per announcement for detail.
+  Both caches share announcement invalidation. Publication and critical-period
+  checks run at read time, preserving scheduled visibility and expired history.
 - Admin announcement saving keeps the existing rules (slug and all three
   translations are required even for a draft). The editor fills an empty slug
   from the English (else Korean) title on save; "임시저장" / "비공개로 전환" saves

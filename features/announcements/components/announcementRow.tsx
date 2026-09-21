@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { localizePath } from "@/lib/i18n/routing";
 import type { Locale } from "@/lib/i18n/routing";
-import type { PublicAnnouncement } from "@/features/announcements/schemas/publicAnnouncementSchema";
+import type { PublicAnnouncementSummary } from "@/features/announcements/schemas/publicAnnouncementSchema";
 import AnnouncementCategoryTag from "./announcementCategoryTag";
 
 export function announcementDate(date: string, locale: Locale) {
@@ -19,7 +19,7 @@ export default function AnnouncementRow({
     pinned = false,
     pinnedLabel,
 }: {
-    announcement: PublicAnnouncement;
+    announcement: PublicAnnouncementSummary;
     locale: Locale;
     categoryLabel: string;
     // 활성 중대 공지로 목록 최상단에 고정된 행. 홈은 면 없이 「고정」 태그만(2026-09-18 N2), 전체 목록은 면 카드(B1)

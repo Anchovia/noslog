@@ -3,10 +3,10 @@ import Link from "next/link";
 import { getServerI18n } from "@/lib/i18n/server";
 import { getLocalizedHref } from "@/lib/i18n/routing";
 import AnnouncementRow from "@/features/announcements/components/announcementRow";
-import type { PublicAnnouncement } from "@/features/announcements/schemas/publicAnnouncementSchema";
+import type { PublicAnnouncementSummary } from "@/features/announcements/schemas/publicAnnouncementSchema";
 
 interface HomeAnnouncementsProps {
-    items: { announcement: PublicAnnouncement; pinned: boolean }[];
+    items: { announcement: PublicAnnouncementSummary; pinned: boolean }[];
 }
 
 export default async function HomeAnnouncements({
