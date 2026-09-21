@@ -20,7 +20,7 @@ import {
     type TierListFormValues,
     type TierListValues,
 } from "@/features/tiers/schemas/tierAdminSchema";
-import { applyFormActionFailure } from "@/lib/forms/errors";
+import { applyFormActionFailure, applyFormRootError } from "@/lib/forms/errors";
 
 export interface TierListFormData {
     id?: number;
@@ -88,8 +88,7 @@ export default function TierListForm({
             }
         } catch {
             const message = "서열표 정보를 저장하지 못했습니다.";
-            setError("root.server", { type: "server", message });
-            toast.error(message);
+            applyFormRootError(setError, message, toast.error);
         }
     }
 

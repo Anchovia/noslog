@@ -13,6 +13,7 @@ import {
     settingsFormData,
 } from "@/features/settings/schemas/settingsSchema";
 import type { SettingsPrivacyValues } from "@/features/settings/schemas/settingsSchema";
+import { applyFormRootError } from "@/lib/forms/errors";
 import UnsavedChangesGuard from "./unsavedChangesGuard";
 
 export default function PrivacySettings({
@@ -39,21 +40,22 @@ export default function PrivacySettings({
         clearErrors("root");
         setSaved("");
         if (!navigator.onLine) {
-            setError("root.server", {
-                message: `${t("settings.offline")} ${t("settings.offlineRetained")}`,
-            });
+            applyFormRootError(
+                setError,
+                `${t("settings.offline")} ${t("settings.offlineRetained")}`
+            );
             return;
         }
         try {
             const result = await submitAction(settingsFormData(values));
             if (!result.success) {
-                setError("root.server", { message: result.message });
+                applyFormRootError(setError, result.message);
                 return;
             }
             reset(result.values);
             setSaved(result.message);
         } catch {
-            setError("root.server", { message: t("settings.saveError") });
+            applyFormRootError(setError, t("settings.saveError"));
         }
     }
     return (

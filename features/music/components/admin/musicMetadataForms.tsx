@@ -28,7 +28,7 @@ import {
     type MusicMetadataValues,
 } from "@/features/music/schemas/musicAdminSchema";
 import type { AdminMusicChart } from "@/features/music/types/musicAdmin";
-import { applyFormActionFailure } from "@/lib/forms/errors";
+import { applyFormActionFailure, applyFormRootError } from "@/lib/forms/errors";
 
 const difficultyColor: Record<string, string> = {
     normal: "text-normal",
@@ -91,8 +91,7 @@ export function MusicMetadataForm({ defaultValues }: MusicMetadataFormProps) {
             router.refresh();
         } catch {
             const message = "악곡 공통 정보를 저장하지 못했습니다.";
-            setError("root.server", { type: "server", message });
-            toast.error(message);
+            applyFormRootError(setError, message, toast.error);
         }
     }
 
@@ -237,8 +236,7 @@ export function ChartMetadataForm({
             router.refresh();
         } catch {
             const message = "채보 정보를 저장하지 못했습니다.";
-            setError("root.server", { type: "server", message });
-            toast.error(message);
+            applyFormRootError(setError, message, toast.error);
         }
     }
 

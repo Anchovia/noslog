@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { put } from "@vercel/blob/client";
 import {
     useLocale,
     useLocalizedHref,
@@ -28,8 +27,9 @@ import type {
     SettingsPageData,
     SettingsUser,
 } from "@/features/settings/server/settingsPageService";
-import { applyFormFieldErrors } from "@/lib/forms/errors";
+import { applyFormFieldErrors, applyFormRootError } from "@/lib/forms/errors";
 import { IMAGE_ACCEPT, imageFileValidationError } from "@/lib/imageUploadRules";
+import { uploadGrantedImage } from "@/lib/uploads/clientImageUpload";
 import ArcadePicker from "./arcadePicker";
 import AvatarCropDialog from "./avatarCropDialog";
 import UnsavedChangesGuard from "./unsavedChangesGuard";
@@ -108,9 +108,10 @@ export default function ProfileSettings({
         setSaved("");
         clearErrors("root");
         if (!navigator.onLine) {
-            setError("root.server", {
-                message: `${t("settings.offline")} ${t("settings.offlineRetained")}`,
-            });
+            applyFormRootError(
+                setError,
+                `${t("settings.offline")} ${t("settings.offlineRetained")}`
+            );
             return;
         }
         try {
@@ -125,12 +126,12 @@ export default function ProfileSettings({
                         setError("avatar", { message: grant.message });
                         return;
                     }
-                    const blob = await put(grant.pathname, staged.file, {
-                        access: "public",
-                        token: grant.token,
-                        contentType: staged.file.type,
-                    });
-                    uploaded.current = { file: staged.file, url: blob.url };
+                    const url = await uploadGrantedImage(
+                        staged.file,
+                        grant,
+                        "public"
+                    );
+                    uploaded.current = { file: staged.file, url };
                 }
                 nextAvatar = uploaded.current.url;
             }
@@ -140,7 +141,7 @@ export default function ProfileSettings({
             if (!result.success) {
                 applyFormFieldErrors(setError, result.fieldErrors);
                 if (result.fieldErrors?.username) setFocus("username");
-                setError("root.server", { message: result.message });
+                applyFormRootError(setError, result.message);
                 return;
             }
             reset(result.values);
@@ -148,7 +149,7 @@ export default function ProfileSettings({
             uploaded.current = null;
             setSaved(result.message);
         } catch {
-            setError("root.server", { message: t("settings.saveError") });
+            applyFormRootError(setError, t("settings.saveError"));
         }
     }
     return (

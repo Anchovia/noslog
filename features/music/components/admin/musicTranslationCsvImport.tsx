@@ -16,7 +16,7 @@ import {
     type MusicTranslationCsvFormValues,
 } from "@/features/music/schemas/musicTranslationAdminSchema";
 import type { MusicTranslationCsvPreview } from "@/features/music/types/musicAdmin";
-import { applyFormFieldErrors } from "@/lib/forms/errors";
+import { applyFormActionFailure, applyFormRootError } from "@/lib/forms/errors";
 
 const templateCsv =
     "index,locale,title,status\n59d7b7a3714e108fd09e98971aa90161,ko,알테일,draft\n59d7b7a3714e108fd09e98971aa90161,en,Altale,approved\n";
@@ -71,11 +71,7 @@ export default function MusicTranslationCsvImport() {
             const result = await validateMusicTranslationsCsv(values.csv);
             setMessage(result.message);
             if (!result.success) {
-                applyFormFieldErrors(setError, result.fieldErrors);
-                setError("root.server", {
-                    type: "server",
-                    message: result.message,
-                });
+                applyFormActionFailure(setError, result);
                 setValidationErrors(result.fieldErrors?.csv ?? []);
                 setPreview(null);
                 return;
@@ -87,10 +83,7 @@ export default function MusicTranslationCsvImport() {
             });
         } catch {
             const errorMessage = "CSV를 검증하지 못했습니다.";
-            setError("root.server", {
-                type: "server",
-                message: errorMessage,
-            });
+            applyFormRootError(setError, errorMessage);
             setMessage(errorMessage);
             setPreview(null);
         }
@@ -105,13 +98,8 @@ export default function MusicTranslationCsvImport() {
             const result = await importMusicTranslationsCsv(getValues("csv"));
             setMessage(result.message);
             if (!result.success) {
-                applyFormFieldErrors(setError, result.fieldErrors);
-                setError("root.server", {
-                    type: "server",
-                    message: result.message,
-                });
+                applyFormActionFailure(setError, result, toast.error);
                 setValidationErrors(result.fieldErrors?.csv ?? []);
-                toast.error(result.message);
                 return;
             }
 
@@ -119,10 +107,7 @@ export default function MusicTranslationCsvImport() {
             toast.success(result.message);
         } catch {
             const errorMessage = "악곡 번역 CSV를 반영하지 못했습니다.";
-            setError("root.server", {
-                type: "server",
-                message: errorMessage,
-            });
+            applyFormRootError(setError, errorMessage);
             setMessage(errorMessage);
             toast.error(errorMessage);
         } finally {

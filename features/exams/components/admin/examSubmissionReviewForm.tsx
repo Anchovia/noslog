@@ -17,7 +17,7 @@ import {
     type ExamSubmissionReviewFormValues,
     type ExamSubmissionReviewValues,
 } from "@/features/exams/schemas/examSubmissionAdminSchema";
-import { applyFormActionFailure } from "@/lib/forms/errors";
+import { applyFormActionFailure, applyFormRootError } from "@/lib/forms/errors";
 
 interface ExamSubmissionReviewFormProps {
     reviewerNote: string;
@@ -66,8 +66,7 @@ export default function ExamSubmissionReviewForm({
             router.refresh();
         } catch {
             const message = "검정 인증을 심사하지 못했습니다.";
-            setError("root.server", { type: "server", message });
-            toast.error(message);
+            applyFormRootError(setError, message, toast.error);
         }
     }
 

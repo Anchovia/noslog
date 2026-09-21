@@ -20,7 +20,7 @@ import {
     type MusicTranslationStatus,
     type MusicTranslationValues,
 } from "@/features/music/schemas/musicTranslationAdminSchema";
-import { applyFormActionFailure } from "@/lib/forms/errors";
+import { applyFormActionFailure, applyFormRootError } from "@/lib/forms/errors";
 
 interface MusicTranslationFormProps {
     label: string;
@@ -75,8 +75,7 @@ export default function MusicTranslationForm({
             router.refresh();
         } catch {
             const message = "악곡 번역을 저장하지 못했습니다.";
-            setError("root.server", { type: "server", message });
-            toast.error(message);
+            applyFormRootError(setError, message, toast.error);
         }
     }
 

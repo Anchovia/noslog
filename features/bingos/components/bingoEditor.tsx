@@ -13,7 +13,7 @@ import {
     type BingoFormValues,
     type BingoValues,
 } from "@/features/bingos/schemas/bingoEditorSchema";
-import { applyFormActionFailure } from "@/lib/forms/errors";
+import { applyFormActionFailure, applyFormRootError } from "@/lib/forms/errors";
 
 import BingoBasicFields from "./bingoBasicFields";
 import { DeleteBingoButton, SaveBingoButton } from "./bingoEditorActions";
@@ -62,8 +62,7 @@ export default function BingoEditor({ bingo, musics }: BingoEditorProps) {
             }
         } catch {
             const message = "빙고를 저장하지 못했습니다.";
-            setError("root.server", { type: "server", message });
-            toast.error(message);
+            applyFormRootError(setError, message, toast.error);
         }
     }
 

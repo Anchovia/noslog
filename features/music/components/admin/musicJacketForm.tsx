@@ -2,10 +2,9 @@
 
 /* eslint-disable @next/next/no-img-element */
 
-import { put } from "@vercel/blob/client";
 import { ImageOff, ImagePlus, RotateCcw } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
 
 import {
@@ -24,6 +23,8 @@ import {
     isManualJacketUrl,
 } from "@/lib/musicJackets";
 import { IMAGE_ACCEPT, imageFileValidationError } from "@/lib/imageUploadRules";
+import useObjectUrl from "@/lib/hooks/useObjectUrl";
+import { uploadGrantedImage } from "@/lib/uploads/clientImageUpload";
 
 // 지금 화면에 보이는 자켓이 어디서 왔는지 — 잘못된 자켓을 고칠 때 원인을 알 수 있게
 function jacketSource(index: string, background: string | null) {
@@ -58,23 +59,15 @@ export default function MusicJacketForm({
     const router = useRouter();
     const fileInput = useRef<HTMLInputElement>(null);
     const [file, setFile] = useState<File | null>(null);
-    const [preview, setPreview] = useState<string | null>(null);
+    const preview = useObjectUrl(file);
     const [error, setError] = useState("");
     const [uploading, setUploading] = useState(false);
     const [pending, startTransition] = useTransition();
     const busy = uploading || pending;
     const manual = isManualJacketUrl(background);
 
-    useEffect(
-        () => () => {
-            if (preview) URL.revokeObjectURL(preview);
-        },
-        [preview]
-    );
-
     function clearDraft() {
         setFile(null);
-        setPreview(null);
         if (fileInput.current) fileInput.current.value = "";
     }
 
@@ -91,7 +84,6 @@ export default function MusicJacketForm({
             return;
         }
         setFile(next);
-        setPreview(URL.createObjectURL(next));
     }
 
     async function upload() {
@@ -104,14 +96,10 @@ export default function MusicJacketForm({
                 setError(grant.message);
                 return;
             }
-            const blob = await put(grant.pathname, file, {
-                access: "public",
-                token: grant.token,
-                contentType: file.type,
-            });
+            const imageUrl = await uploadGrantedImage(file, grant, "public");
             const formData = new FormData();
             formData.set("musicIndex", musicIndex);
-            formData.set("url", blob.url);
+            formData.set("url", imageUrl);
             const result = await saveMusicJacket(formData);
             if (!result.success) {
                 setError(result.message);

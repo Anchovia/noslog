@@ -8,7 +8,6 @@ import { Controller, useForm, useWatch } from "react-hook-form";
 import type { FieldErrors } from "react-hook-form";
 import { toast } from "sonner";
 
-import { put } from "@vercel/blob/client";
 import {
     createAnnouncement,
     requestAnnouncementImageUpload,
@@ -44,9 +43,10 @@ import ModalDialog from "@/components/ui/modalDialog";
 import { SegmentedControl } from "@/components/ui/segmentedControl";
 import { Select } from "@/components/ui/select";
 import { foundationButtonClass } from "@/components/ui/Button";
-import { applyFormActionFailure } from "@/lib/forms/errors";
+import { applyFormActionFailure, applyFormRootError } from "@/lib/forms/errors";
 import useMediaQuery from "@/lib/hooks/useMediaQuery";
 import type { Locale } from "@/lib/i18n/routing";
+import { uploadGrantedImage } from "@/lib/uploads/clientImageUpload";
 
 export interface AnnouncementEditorData {
     id?: number;
@@ -106,12 +106,7 @@ const EDITOR_LABELS: MarkdownEditorLabels = {
 async function uploadAnnouncementImage(file: File) {
     const upload = await requestAnnouncementImageUpload(file.type);
     if (!upload.success) throw new Error(upload.message);
-    const blob = await put(upload.pathname, file, {
-        access: "public",
-        token: upload.token,
-        contentType: file.type,
-    });
-    return blob.url;
+    return uploadGrantedImage(file, upload, "public");
 }
 
 type SaveMode = "draft" | "publish";
@@ -213,8 +208,7 @@ export default function AnnouncementEditor({
                     const message = isCreate
                         ? "공지사항을 등록하지 못했습니다."
                         : "공지사항을 저장하지 못했습니다.";
-                    setError("root.server", { type: "server", message });
-                    toast.error(message);
+                    applyFormRootError(setError, message, toast.error);
                 } finally {
                     setPending(null);
                 }

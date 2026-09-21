@@ -3,6 +3,7 @@ import type { FieldPath, FieldValues, UseFormSetError } from "react-hook-form";
 import type { ActionFailure, ActionFieldErrors } from "@/lib/actions/result";
 
 type FormFieldName<TFieldValues extends FieldValues> = FieldPath<TFieldValues>;
+type FormErrorNotifier = (message: string) => unknown;
 
 export function applyFormFieldErrors<TFieldValues extends FieldValues>(
     setError: UseFormSetError<TFieldValues>,
@@ -27,12 +28,20 @@ export function applyFormFieldErrors<TFieldValues extends FieldValues>(
 export function applyFormActionFailure<TFieldValues extends FieldValues>(
     setError: UseFormSetError<TFieldValues>,
     failure: ActionFailure<FormFieldName<TFieldValues>>,
-    notify: (message: string) => unknown
+    notify?: FormErrorNotifier
 ) {
     applyFormFieldErrors(setError, failure.fieldErrors);
+    applyFormRootError(setError, failure.message, notify);
+}
+
+export function applyFormRootError<TFieldValues extends FieldValues>(
+    setError: UseFormSetError<TFieldValues>,
+    message: string,
+    notify?: FormErrorNotifier
+) {
     setError("root.server", {
         type: "server",
-        message: failure.message,
+        message,
     });
-    notify(failure.message);
+    notify?.(message);
 }

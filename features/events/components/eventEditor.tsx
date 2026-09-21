@@ -1,10 +1,9 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { put } from "@vercel/blob/client";
 import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import type { ChangeEvent } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import type { FieldErrors } from "react-hook-form";
@@ -36,8 +35,10 @@ import {
     eventFormData,
     type EventFormValues,
 } from "@/features/events/schemas/eventSchema";
-import { applyFormFieldErrors } from "@/lib/forms/errors";
+import { applyFormActionFailure, applyFormRootError } from "@/lib/forms/errors";
+import useObjectUrl from "@/lib/hooks/useObjectUrl";
 import { IMAGE_ACCEPT, imageFileValidationError } from "@/lib/imageUploadRules";
+import { uploadGrantedImage } from "@/lib/uploads/clientImageUpload";
 import EventDeleteButton from "./eventDeleteButton";
 import useMediaQuery from "@/lib/hooks/useMediaQuery";
 
@@ -82,16 +83,7 @@ export default function EventEditor({
     });
     const content = useWatch({ control, name: "content" }) ?? "";
     const bannerUrl = useWatch({ control, name: "bannerUrl" }) ?? "";
-    const preview = useMemo(
-        () => (file ? URL.createObjectURL(file) : null),
-        [file]
-    );
-    useEffect(
-        () => () => {
-            if (preview) URL.revokeObjectURL(preview);
-        },
-        [preview]
-    );
+    const preview = useObjectUrl(file);
     const bannerSrc = preview ?? (bannerUrl || null);
 
     function changeFile(input: ChangeEvent<HTMLInputElement>) {
@@ -129,13 +121,11 @@ export default function EventEditor({
                             setDialog(mode);
                             return;
                         }
-                        uploaded = (
-                            await put(upload.pathname, file, {
-                                access: "public",
-                                token: upload.token,
-                                contentType: file.type,
-                            })
-                        ).url;
+                        uploaded = await uploadGrantedImage(
+                            file,
+                            upload,
+                            "public"
+                        );
                     }
                     const result = await saveEvent(
                         eventFormData(
@@ -148,9 +138,7 @@ export default function EventEditor({
                     );
                     if (!result.success) {
                         if (uploaded) await discardEventBanner(uploaded);
-                        applyFormFieldErrors(setError, result.fieldErrors);
-                        setError("root.server", { message: result.message });
-                        toast.error(result.message);
+                        applyFormActionFailure(setError, result, toast.error);
                         if (result.fieldErrors)
                             reveal(
                                 result.fieldErrors as FieldErrors<EventFormValues>,
@@ -171,10 +159,11 @@ export default function EventEditor({
                 } catch {
                     if (uploaded)
                         await discardEventBanner(uploaded).catch(() => null);
-                    setError("root.server", {
-                        message: t("events.saveFailed"),
-                    });
-                    toast.error(t("events.saveFailed"));
+                    applyFormRootError(
+                        setError,
+                        t("events.saveFailed"),
+                        toast.error
+                    );
                 } finally {
                     setPending(null);
                 }
@@ -380,13 +369,11 @@ export default function EventEditor({
                                 );
                                 if (!upload.success)
                                     throw new Error(upload.message);
-                                return (
-                                    await put(upload.pathname, file, {
-                                        access: "public",
-                                        token: upload.token,
-                                        contentType: file.type,
-                                    })
-                                ).url;
+                                return uploadGrantedImage(
+                                    file,
+                                    upload,
+                                    "public"
+                                );
                             }}
                             renderPreview={(value) => (
                                 <AnnouncementBody

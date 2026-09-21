@@ -1,10 +1,9 @@
 "use client";
 
-import { put } from "@vercel/blob/client";
 import { ImagePlus, Trash2 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
 
 import {
@@ -24,6 +23,8 @@ import {
     ARCADE_PHOTO_MAX,
 } from "@/features/arcades/schemas/arcadeSchema";
 import { IMAGE_ACCEPT, imageFileValidationError } from "@/lib/imageUploadRules";
+import useObjectUrl from "@/lib/hooks/useObjectUrl";
+import { uploadGrantedImage } from "@/lib/uploads/clientImageUpload";
 
 export interface ArcadeFormPhoto {
     id: number;
@@ -47,7 +48,7 @@ export default function ArcadePhotoManager({
     const router = useRouter();
     const fileInput = useRef<HTMLInputElement>(null);
     const [file, setFile] = useState<File | null>(null);
-    const [preview, setPreview] = useState<string | null>(null);
+    const preview = useObjectUrl(file);
     const [alt, setAlt] = useState("");
     const [capturedAt, setCapturedAt] = useState("");
     const [consent, setConsent] = useState(false);
@@ -56,16 +57,8 @@ export default function ArcadePhotoManager({
     const [pending, startTransition] = useTransition();
     const busy = uploading || pending;
 
-    useEffect(
-        () => () => {
-            if (preview) URL.revokeObjectURL(preview);
-        },
-        [preview]
-    );
-
     function clearDraft() {
         setFile(null);
-        setPreview(null);
         setAlt("");
         setCapturedAt("");
         setConsent(false);
@@ -85,7 +78,6 @@ export default function ArcadePhotoManager({
             return;
         }
         setFile(next);
-        setPreview(URL.createObjectURL(next));
         setAlt(`${arcadeName} 매장 사진`);
     }
 
@@ -107,14 +99,10 @@ export default function ArcadePhotoManager({
                 setError(grant.message);
                 return;
             }
-            const blob = await put(grant.pathname, file, {
-                access: "public",
-                token: grant.token,
-                contentType: file.type,
-            });
+            const imageUrl = await uploadGrantedImage(file, grant, "public");
             const formData = new FormData();
             formData.set("arcadeId", String(arcadeId));
-            formData.set("url", blob.url);
+            formData.set("url", imageUrl);
             formData.set("alt", alt);
             formData.set("capturedAt", capturedAt);
             formData.set("consent", String(consent));

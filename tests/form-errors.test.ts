@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 import {
     applyFormActionFailure,
     applyFormFieldErrors,
+    applyFormRootError,
 } from "@/lib/forms/errors";
 
 type FormValues = {
@@ -61,5 +62,18 @@ describe("React Hook Form 서버 오류 매핑", () => {
         });
         expect(notify).toHaveBeenCalledOnce();
         expect(notify).toHaveBeenCalledWith("저장하지 못했습니다.");
+    });
+
+    it("폼 전체 오류를 설정하고 선택적으로 알림을 보낸다", () => {
+        const setError = vi.fn() as unknown as UseFormSetError<FormValues>;
+        const notify = vi.fn();
+
+        applyFormRootError(setError, "다시 시도해주세요.", notify);
+
+        expect(setError).toHaveBeenCalledWith("root.server", {
+            type: "server",
+            message: "다시 시도해주세요.",
+        });
+        expect(notify).toHaveBeenCalledWith("다시 시도해주세요.");
     });
 });

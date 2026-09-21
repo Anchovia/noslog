@@ -9,7 +9,6 @@ import {
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MessageSquare } from "lucide-react";
-import { put } from "@vercel/blob/client";
 import Link from "next/link";
 import {
     useLocale,
@@ -41,6 +40,7 @@ import type {
 import type { PublicArcade } from "@/features/arcades/schemas/publicArcadeSchema";
 import { applyFormFieldErrors } from "@/lib/forms/errors";
 import { IMAGE_ACCEPT, imageFileValidationError } from "@/lib/imageUploadRules";
+import { uploadGrantedImage } from "@/lib/uploads/clientImageUpload";
 
 export default function ArcadeReportDialog({
     arcade,
@@ -116,13 +116,8 @@ export default function ArcadeReportDialog({
                     form.setError("root", { message: upload.message });
                     return;
                 }
-                const blob = await put(upload.pathname, file, {
-                    access: "private",
-                    token: upload.token,
-                    contentType: file.type,
-                });
-                imageUrl = blob.url;
-                uploadRef.current = { file, url: blob.url };
+                imageUrl = await uploadGrantedImage(file, upload, "private");
+                uploadRef.current = { file, url: imageUrl };
             }
             const data = new FormData();
             for (const [key, value] of Object.entries({

@@ -20,7 +20,7 @@ import {
     type ExamMode,
     type ExamStatus,
 } from "@/features/exams/schemas/examEditorSchema";
-import { applyFormActionFailure } from "@/lib/forms/errors";
+import { applyFormActionFailure, applyFormRootError } from "@/lib/forms/errors";
 
 import ExamBasicFields from "./examBasicFields";
 import {
@@ -286,8 +286,7 @@ export default function ExamEditor({
             }
         } catch {
             const message = "검정을 저장하지 못했습니다.";
-            setError("root.server", { type: "server", message });
-            toast.error(message);
+            applyFormRootError(setError, message, toast.error);
         }
     }
 
@@ -297,11 +296,7 @@ export default function ExamEditor({
         startDeleteTransition(async () => {
             const result = await deleteExam(examId);
             if (!result.success) {
-                setError("root.server", {
-                    type: "server",
-                    message: result.message,
-                });
-                toast.error(result.message);
+                applyFormRootError(setError, result.message, toast.error);
                 return;
             }
 

@@ -1,6 +1,5 @@
 "use client";
 
-import { put } from "@vercel/blob/client";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useRef, useState } from "react";
 import {
@@ -23,6 +22,7 @@ import ExamProofUpload from "@/features/exams/components/examProofUpload";
 import { createExamProofSubmissionFormData } from "@/features/exams/schemas/examProofSchema";
 import { localizePath } from "@/lib/i18n/routing";
 import { getExamIdentity } from "@/features/exams/examIdentity";
+import { uploadGrantedImage } from "@/lib/uploads/clientImageUpload";
 
 export type { ExamDashboardItem } from "@/components/exams/dashboard/examDashboardTypes";
 
@@ -136,12 +136,7 @@ export default function ExamDashboard({
                     });
                     return false;
                 }
-                const blob = await put(upload.pathname, file, {
-                    access: "private",
-                    token: upload.token,
-                    contentType: file.type,
-                });
-                url = blob.url;
+                url = await uploadGrantedImage(file, upload, "private");
                 uploaded.current = { examId, file, url };
             }
             const result = await submitExamProof(

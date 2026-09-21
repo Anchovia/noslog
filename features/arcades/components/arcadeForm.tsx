@@ -30,7 +30,7 @@ import {
     type ArcadeFormValues,
     type ArcadeValues,
 } from "@/features/arcades/schemas/arcadeSchema";
-import { applyFormFieldErrors } from "@/lib/forms/errors";
+import { applyFormActionFailure, applyFormRootError } from "@/lib/forms/errors";
 import {
     ARCADE_CABINET_AVAILABILITIES,
     ARCADE_CABINET_CONDITIONS,
@@ -209,11 +209,7 @@ export default function ArcadeForm(props: ArcadeFormProps) {
                 : await updateArcade(formData);
 
             if (!result.success) {
-                applyFormFieldErrors(setError, result.fieldErrors);
-                setError("root.server", {
-                    type: "server",
-                    message: result.message,
-                });
+                applyFormActionFailure(setError, result);
                 setStatusMessage(result.message);
                 toast.error(result.message);
                 return;
@@ -228,7 +224,7 @@ export default function ArcadeForm(props: ArcadeFormProps) {
                 error instanceof Error && error.message === "GEOCODING_TIMEOUT"
                     ? "주소 검색 응답이 지연되고 있습니다. 다시 시도해주세요."
                     : "저장하지 못했습니다. 카카오맵 설정과 입력 내용을 확인해주세요.";
-            setError("root.server", { type: "server", message });
+            applyFormRootError(setError, message);
             setStatusMessage(message);
             toast.error(message);
         }

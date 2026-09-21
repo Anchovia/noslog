@@ -1,11 +1,10 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { put } from "@vercel/blob/client";
 import { Check, MessageSquare, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useId, useMemo, useState } from "react";
+import { useId, useMemo, useState } from "react";
 import type { ChangeEvent, ReactNode } from "react";
 import { useForm, useWatch } from "react-hook-form";
 
@@ -27,8 +26,10 @@ import {
     type FeedbackReportFormValues,
     type FeedbackReportValues,
 } from "@/features/feedback/schemas/feedbackReportSchema";
-import { applyFormFieldErrors } from "@/lib/forms/errors";
+import { applyFormActionFailure, applyFormRootError } from "@/lib/forms/errors";
+import useObjectUrl from "@/lib/hooks/useObjectUrl";
 import { IMAGE_ACCEPT, imageFileValidationError } from "@/lib/imageUploadRules";
+import { uploadGrantedImage } from "@/lib/uploads/clientImageUpload";
 import ActionButton from "@/components/ui/actionButton";
 import { foundationButtonClass } from "@/components/ui/Button";
 import {
@@ -76,16 +77,7 @@ export default function FeedbackDialog({
     const [view, setView] = useState<"write" | "mine">("write");
     const wide = useMediaQuery("(min-width: 672px)");
     // 붙인 이미지 미리보기 — 브라우저 안에서만 쓰는 임시 주소, 파일이 바뀌거나 창이 닫히면 풀어 준다
-    const preview = useMemo(
-        () => (file ? URL.createObjectURL(file) : null),
-        [file]
-    );
-    useEffect(
-        () => () => {
-            if (preview) URL.revokeObjectURL(preview);
-        },
-        [preview]
-    );
+    const preview = useObjectUrl(file);
     const formId = useId();
     const {
         register,
@@ -148,18 +140,10 @@ export default function FeedbackDialog({
                     locale
                 );
                 if (!upload.success) {
-                    setError("root.server", {
-                        type: "server",
-                        message: upload.message,
-                    });
+                    applyFormRootError(setError, upload.message);
                     return;
                 }
-                const blob = await put(upload.pathname, file, {
-                    access: "private",
-                    token: upload.token,
-                    contentType: file.type,
-                });
-                uploadedUrl = blob.url;
+                uploadedUrl = await uploadGrantedImage(file, upload, "private");
             }
 
             const result = await submitFeedbackReport(
@@ -172,11 +156,7 @@ export default function FeedbackDialog({
                 if (uploadedUrl) {
                     await discardFeedbackImage(uploadedUrl).catch(() => null);
                 }
-                applyFormFieldErrors(setError, result.fieldErrors);
-                setError("root.server", {
-                    type: "server",
-                    message: result.message,
-                });
+                applyFormActionFailure(setError, result);
                 return;
             }
 
@@ -187,10 +167,7 @@ export default function FeedbackDialog({
             if (uploadedUrl) {
                 await discardFeedbackImage(uploadedUrl).catch(() => null);
             }
-            setError("root.server", {
-                type: "server",
-                message: t("feedback.error"),
-            });
+            applyFormRootError(setError, t("feedback.error"));
         }
     }
 
