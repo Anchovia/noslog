@@ -12,8 +12,8 @@ export function tierBrowserOverviewOptions(
     query: TierBrowserQuery,
     viewerId: number | null
 ) {
-    const { mode, goal, difficulties, levels } = query;
-    const filters = { mode, goal, difficulties, levels };
+    const { mode, goal, difficulties, levels, q } = query;
+    const filters = { mode, goal, difficulties, levels, q };
     return queryOptions({
         queryKey: ["tier-browser", viewerId, filters],
         queryFn: async ({ signal }) => {
@@ -37,8 +37,8 @@ export function tierBrowserBandOptions(
     viewerId: number | null,
     showLocalizedTitle: boolean
 ) {
-    const { mode, goal, difficulties, levels } = query;
-    const filters = { mode, goal, difficulties, levels };
+    const { mode, goal, difficulties, levels, q } = query;
+    const filters = { mode, goal, difficulties, levels, q };
     return queryOptions({
         queryKey: [
             "tier-browser-band",

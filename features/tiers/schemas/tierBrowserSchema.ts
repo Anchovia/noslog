@@ -21,6 +21,8 @@ const tierBrowserQuerySchema = z.object({
         .default([]),
     // 보기 방식 — 격자(자켓) · 목록(행). 예전 주소의 view=detailed 는 목록으로 읽는다(2026-09-22)
     view: z.enum(TIER_BROWSER_VIEWS).default("grid"),
+    // 곡 검색어(2026-09-22) — 악곡 목록 검색과 같은 필드(곡 코드 · 제목 · 가나 · 아티스트 · 승인된 번역 제목)
+    q: z.string().trim().max(100).default(""),
 });
 export type TierBrowserQuery = z.infer<typeof tierBrowserQuerySchema>;
 
@@ -43,6 +45,7 @@ export function parseTierBrowserQuery(
         view: ["list", "detailed"].includes(params.get("view") ?? "")
             ? "list"
             : "grid",
+        q: (params.get("q") ?? "").trim().slice(0, 100),
     });
     // Recital 은 서열표가 하나라 어떤 goal 이 와도 그 표로 맞춤
     return { ...query, goal: normalizeTierModeGoal(query.mode, query.goal) };
@@ -59,6 +62,7 @@ export function serializeTierBrowserQuery(query: TierBrowserQuery) {
             query.bands.map((value) => value.toFixed(1)).join(",")
         );
     if (query.view === "list") params.set("view", "list");
+    if (query.q) params.set("q", query.q);
     return params;
 }
 

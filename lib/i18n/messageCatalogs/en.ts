@@ -714,6 +714,7 @@ export const enMessages = {
     "tiers.retry": "Try again",
     "tiers.loading": "Loading tier data.",
     "tiers.noCharts": "No charts match these conditions.",
+    "tiers.searchEmpty": "No songs in this tier list match “{query}”.",
     "tiers.unplayed": "Unplayed",
     "tiers.recordAria": "My record details for {title} {difficulty}",
     "tiers.noPlayRecord": "No synced play record is available yet.",

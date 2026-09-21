@@ -708,6 +708,7 @@ export const jaMessages = {
     "tiers.retry": "再読み込み",
     "tiers.loading": "難易度データを読み込んでいます。",
     "tiers.noCharts": "この条件に該当する譜面がありません。",
+    "tiers.searchEmpty": "「{query}」に一致する曲はこの難易度表にありません。",
     "tiers.unplayed": "未プレー",
     "tiers.recordAria": "{title} {difficulty}の自分の記録詳細",
     "tiers.noPlayRecord": "連携済みのプレー記録がありません。",

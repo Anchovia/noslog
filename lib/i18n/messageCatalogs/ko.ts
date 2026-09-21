@@ -708,6 +708,7 @@ export const koMessages = {
     "tiers.retry": "다시 불러오기",
     "tiers.loading": "서열 데이터를 불러오는 중입니다.",
     "tiers.noCharts": "이 조건에 해당하는 채보가 없습니다.",
+    "tiers.searchEmpty": "「{query}」에 맞는 곡이 이 서열표에 없습니다.",
     "tiers.unplayed": "미플레이",
     "tiers.recordAria": "{title} {difficulty} 내 기록 상세",
     "tiers.noPlayRecord": "아직 연동된 플레이 기록이 없습니다.",

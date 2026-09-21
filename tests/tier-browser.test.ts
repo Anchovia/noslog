@@ -9,6 +9,7 @@ const mocks = vi.hoisted(() => ({
     band: vi.fn(),
     records: vi.fn(),
     preference: vi.fn(),
+    music: vi.fn(),
 }));
 vi.mock("next/cache", () => ({
     unstable_cache: (callback: unknown) => callback,
@@ -17,6 +18,7 @@ vi.mock("@/lib/db", () => ({
     default: {
         tierList: { findFirst: mocks.list },
         playData: { findMany: mocks.records },
+        music: { findMany: mocks.music },
     },
 }));
 vi.mock("@/features/tiers/server/publicTierData", () => ({
@@ -59,6 +61,7 @@ function inventory(goal: string, mode: string) {
                         ...chart,
                         difficulty: index === 1 ? "Real" : "Expert",
                         level: index === 1 ? 3 : 12,
+                        music_idx: index === 0 ? "stulti" : `other-${index}`,
                     },
                 })),
             },
@@ -117,6 +120,7 @@ describe("Tier browser request and data contract", () => {
             bands: [14.5, 1],
             // 예전 주소의 view=detailed 는 목록 보기로 읽는다(2026-09-22)
             view: "list",
+            q: "",
         });
         expect(serializeTierBrowserQuery(parsed).get("view")).toBe("list");
         expect(
@@ -125,7 +129,63 @@ describe("Tier browser request and data contract", () => {
         expect(
             parseTierBrowserQuery(new URLSearchParams("view=other")).view
         ).toBe("grid");
+        // 곡 검색어는 앞뒤 공백을 걷고 100자까지, 비면 주소에 남기지 않는다(2026-09-22)
+        const searched = parseTierBrowserQuery(
+            new URLSearchParams(`q=${encodeURIComponent("  Ave  ")}`)
+        );
+        expect(searched.q).toBe("Ave");
+        expect(serializeTierBrowserQuery(searched).get("q")).toBe("Ave");
+        expect(serializeTierBrowserQuery(query()).has("q")).toBe(false);
+        expect(
+            parseTierBrowserQuery(new URLSearchParams(`q=${"a".repeat(150)}`)).q
+        ).toHaveLength(100);
         expect(serializeTierBrowserQuery(query()).has("bands")).toBe(false);
+    });
+    it("narrows band counts and band entries to songs matching the search", async () => {
+        mocks.music.mockResolvedValue([{ index: "stulti" }]);
+        const searched = parseTierBrowserQuery(new URLSearchParams("q=STU"));
+        const overview = await getTierBrowserOverview(searched, null);
+        expect(mocks.music).toHaveBeenCalledWith(
+            expect.objectContaining({
+                where: {
+                    OR: expect.arrayContaining([
+                        { title: { contains: "STU", mode: "insensitive" } },
+                        {
+                            translations: {
+                                some: {
+                                    status: "approved",
+                                    title: {
+                                        contains: "STU",
+                                        mode: "insensitive",
+                                    },
+                                },
+                            },
+                        },
+                    ]),
+                },
+            })
+        );
+        expect(overview.list?.bands[0].totalCount).toBe(1);
+        mocks.band.mockResolvedValue({
+            id: 11,
+            value: 1,
+            position: 0,
+            entries: [
+                { id: 1, chartId: 1, position: 0, chart },
+                {
+                    id: 2,
+                    chartId: 80,
+                    position: 1,
+                    chart: { ...chart, music: { ...chart.music, index: "x" } },
+                },
+            ],
+        });
+        const band = await getTierBrowserBand(searched, 11, null, "ko");
+        expect(band?.entries.map((entry) => entry.chartId)).toEqual([1]);
+        // 검색어가 없으면 악곡을 찾지 않는다
+        mocks.music.mockClear();
+        await getTierBrowserOverview(query(), null);
+        expect(mocks.music).not.toHaveBeenCalled();
     });
     it("keeps Basic goals and maps every Recital goal to its single table", () => {
         const parse = (value: string) =>

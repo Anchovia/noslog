@@ -93,7 +93,11 @@ async function prepare(
                                     entry.chart.difficulty === "Real"
                                         ? `real-${entry.chart.level}`
                                         : String(entry.chart.level)
-                                ))
+                                )) &&
+                        (!params.get("q") ||
+                            entry.chart.music.title
+                                .toLowerCase()
+                                .includes(params.get("q")!.toLowerCase()))
                 )
                 .map((entry) => ({
                     ...entry,
@@ -135,7 +139,13 @@ async function prepare(
     });
     await page.goto(`/${locale}/tiers?goal=990k&level=1`);
     await page.locator(".nl-applied__token").first().click();
-    await page.locator(".nl-tier-goal").click();
+    // 목표 셀렉트 — 폰은 조건 줄, Wide 는 레일(둘 다 접근 이름 「목표」)
+    await page
+        .getByRole("combobox", {
+            name: { ko: "목표", ja: "目標", en: "Goal" }[locale],
+            exact: true,
+        })
+        .click();
     await page
         .getByRole("option", {
             name: { ko: "S 서열표", ja: "S難易度表", en: "S Tier List" }[
@@ -195,9 +205,10 @@ test("stages all three filter groups, cancels ranges, and commits once", async (
         .click();
     await expect(dialog).not.toBeVisible();
     await expect(page).toHaveURL(/difficulty=Expert.*level=12.*bands=14.3/);
+    // 폰 필터는 아이콘 버튼 44 + 적용 개수 배지(악곡 목록과 같음)
     await expect(
-        page.getByRole("button", { name: "필터 3", exact: true })
-    ).toBeVisible();
+        page.locator(".nl-filter-icon-trigger .nl-filter-count")
+    ).toHaveText("3");
     await expect(page.locator(".nl-tier-band")).toHaveCount(1);
     await page
         .getByRole("button", {
@@ -295,8 +306,11 @@ test("all four tier lists update the link context and guide without removing the
             page.getByRole("button", { name: "필터", exact: true })
         ).toBeVisible();
     }
-    // Recital 은 서열표가 하나라 목표 선택기가 없다
-    await page.getByRole("radio", { name: "Recital", exact: true }).click();
+    // Recital 은 서열표가 하나라 목표 선택기가 없다. 폰의 모드는 조건 줄 셀렉트
+    await page
+        .getByRole("combobox", { name: "서열표 모드", exact: true })
+        .click();
+    await page.getByRole("option", { name: "Recital", exact: true }).click();
     await expect(
         page.getByRole("combobox", { name: "목표", exact: true })
     ).toHaveCount(0);
@@ -375,6 +389,41 @@ test("Back restores a list band scan and its practical scroll position", async (
             Math.abs((await page.evaluate(() => window.scrollY)) - scroll)
         )
         .toBeLessThan(96);
+});
+
+test("song search narrows every band, keeps the filters and clears in place", async ({
+    page,
+}) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await prepare(page);
+    const search = page.getByRole("searchbox", {
+        name: "악곡 제목·아티스트 검색",
+    });
+    await search.fill("stulti 3-2");
+    await expect(page).toHaveURL(/q=stulti\+3-2|q=stulti%203-2/);
+    // 맞는 곡이 없는 구간은 숨기고, 결과 수는 찾은 곡 수
+    await expect(page.locator(".nl-tier-band")).toHaveCount(1);
+    await expect(
+        page.getByRole("region", { name: "14.3", exact: true })
+    ).toBeVisible();
+    await expect(page.locator(".nl-tier-card")).toHaveCount(1);
+    await expect(page.locator(".nl-page-heading [role=status]")).toContainText(
+        "1곡"
+    );
+    await search.fill("zzqq");
+    await expect(
+        page.getByText("「zzqq」에 맞는 곡이 이 서열표에 없습니다.", {
+            exact: true,
+        })
+    ).toBeVisible();
+    await page
+        // 검색창 안 × 가 아니라 결과 없음 상태의 보조 버튼
+        .locator(".nl-tier-results .nl-button")
+        .filter({ hasText: "검색어 지우기" })
+        .click();
+    await expect(page).not.toHaveURL(/q=/);
+    await expect(search).toHaveValue("");
+    await expect(page.locator(".nl-tier-band")).toHaveCount(3);
 });
 
 test("unpublished lists and request failures retain the scope controls", async ({
@@ -469,7 +518,7 @@ for (const locale of ["ko", "ja", "en"])
             for (const view of ["grid", "list"] as const) {
                 await page.setViewportSize({ width: 390, height: 844 });
                 await page
-                    .locator(".nl-tier-toolbar")
+                    .locator(".nl-tier-scope, .nl-tier-toolbar")
                     .getByRole("radio", { name: names[view], exact: true })
                     .click();
                 for (const width of [320, 390, 768, 1024, 1280, 1600]) {
@@ -478,10 +527,12 @@ for (const locale of ["ko", "ja", "en"])
                         width >= 1056 ? 1 : 0
                     );
                     await expect(
-                        page.locator(".nl-tier-toolbar").getByRole("radio", {
-                            name: names[view],
-                            exact: true,
-                        })
+                        page
+                            .locator(".nl-tier-scope, .nl-tier-toolbar")
+                            .getByRole("radio", {
+                                name: names[view],
+                                exact: true,
+                            })
                     ).toBeChecked();
                     await expect(
                         page

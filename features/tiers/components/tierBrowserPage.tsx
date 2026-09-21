@@ -2,7 +2,7 @@
 
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { LayoutGrid, List, ListFilter } from "lucide-react";
-import { useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import {
     useLocale,
@@ -16,6 +16,7 @@ import AppliedTokens from "@/components/ui/appliedTokens";
 import { FormField } from "@/components/ui/formField";
 import FullScreenDialog from "@/components/ui/fullScreenDialog";
 import ResultState from "@/components/ui/resultState";
+import SearchField from "@/components/ui/searchField";
 import CompactSelect from "@/components/ui/compactSelect";
 import { SegmentedControl } from "@/components/ui/segmentedControl";
 import { tierBrowserOverviewOptions } from "@/features/tiers/api/tierBrowser";
@@ -99,14 +100,76 @@ export default function TierBrowserPage({
             )
             .reduce((sum, band) => sum + band.totalCount, 0) ?? 0;
     if (wide && open) setOpen(false);
-    function commit(next: TierBrowserQuery) {
-        window.history[open ? "replaceState" : "pushState"](
+    function commit(next: TierBrowserQuery, replace = false) {
+        window.history[open || replace ? "replaceState" : "pushState"](
             {},
             "",
             href(`/tiers?${serializeTierBrowserQuery(next)}`)
         );
         setOpen(false);
     }
+    // 곡 검색(2026-09-22) — 악곡 목록 검색과 같은 방식: 300ms 쉬면 주소 q= 에 반영(기록은 덮어씀), 한글 조합 중에는 기다린다
+    const [search, setSearch] = useState(query.q);
+    const committedSearch = useRef(query.q);
+    const searchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const composing = useRef(false);
+    useEffect(() => {
+        // 뒤로 가기 등 바깥에서 검색어가 바뀐 경우만 입력칸을 맞춘다
+        if (query.q === committedSearch.current) return;
+        committedSearch.current = query.q;
+        setSearch(query.q);
+    }, [query.q]);
+    useEffect(
+        () => () => {
+            if (searchTimer.current) clearTimeout(searchTimer.current);
+        },
+        []
+    );
+    function commitSearch(value: string) {
+        if (searchTimer.current) clearTimeout(searchTimer.current);
+        const q = value.trim();
+        committedSearch.current = q;
+        if (q !== query.q) commit({ ...query, q }, true);
+    }
+    function scheduleSearch(value: string) {
+        if (searchTimer.current) clearTimeout(searchTimer.current);
+        searchTimer.current = setTimeout(() => commitSearch(value), 300);
+    }
+    const searchField = (
+        <form
+            role="search"
+            className="nl-tier-search__form"
+            noValidate
+            onSubmit={(event) => {
+                event.preventDefault();
+                if (!composing.current) commitSearch(search);
+            }}
+        >
+            <SearchField
+                value={search}
+                maxLength={100}
+                aria-label={t("discovery.musicPlaceholder")}
+                placeholder={t("discovery.musicPlaceholder")}
+                clearLabel={t("discovery.clearQuery")}
+                onClear={() => {
+                    setSearch("");
+                    commitSearch("");
+                }}
+                onChange={(event) => {
+                    setSearch(event.target.value);
+                    if (!composing.current) scheduleSearch(event.target.value);
+                }}
+                onCompositionStart={() => {
+                    composing.current = true;
+                    if (searchTimer.current) clearTimeout(searchTimer.current);
+                }}
+                onCompositionEnd={(event) => {
+                    composing.current = false;
+                    scheduleSearch(event.currentTarget.value);
+                }}
+            />
+        </form>
+    );
     function bandToken() {
         const selected = bands.filter((band) =>
             query.bands.includes(band.value)
@@ -142,22 +205,51 @@ export default function TierBrowserPage({
             )}
         </p>
     );
+    function changeMode(mode: TierBrowserQuery["mode"]) {
+        commit({
+            ...query,
+            mode,
+            goal: normalizeTierModeGoal(mode, query.goal),
+            bands: [],
+        });
+    }
+    function changeGoal(goal: TierBrowserQuery["goal"]) {
+        commit({ ...query, goal, bands: [] });
+    }
+    const goalOptions = TIER_MODE_GOALS[query.mode].map((goal) => ({
+        value: goal,
+        label: t("tiers.goalOption", { goal: tierGoalLabels[goal] }),
+    }));
+    // 폰 조건 줄(2026-09-22 B안) — 모드 · 목표를 테두리 없는 셀렉트 M 두 개로(악곡 목록 정렬 트리거와 같은 고스트 모양).
+    // Recital 은 서열표가 하나라 목표 셀렉트가 없다
+    const scopeSelects = (
+        <div className="nl-tier-scope__selects">
+            <CompactSelect
+                label={t("tiers.modeNav")}
+                value={query.mode}
+                onValueChange={changeMode}
+                options={[
+                    { value: "basic", label: "Basic" },
+                    { value: "recital", label: "Recital" },
+                ]}
+            />
+            {goalOptions.length > 1 ? (
+                <CompactSelect
+                    label={t("tiers.goal")}
+                    value={query.goal}
+                    onValueChange={changeGoal}
+                    options={goalOptions}
+                />
+            ) : null}
+        </div>
+    );
     const modeControl = (
         <div className="nl-tier-browser-mode">
-            {wide ? (
-                <span className="nl-control">{t("tiers.modeLabel")}</span>
-            ) : null}
+            <span className="nl-control">{t("tiers.modeLabel")}</span>
             <SegmentedControl
                 label={t("tiers.modeNav")}
                 value={query.mode}
-                onValueChange={(mode) =>
-                    commit({
-                        ...query,
-                        mode,
-                        goal: normalizeTierModeGoal(mode, query.goal),
-                        bands: [],
-                    })
-                }
+                onValueChange={changeMode}
                 options={[
                     { value: "basic", label: "Basic" },
                     { value: "recital", label: "Recital" },
@@ -165,43 +257,29 @@ export default function TierBrowserPage({
             />
         </div>
     );
-    // Recital 은 서열표가 하나라 목표 선택기를 두지 않는다.
-    // 선택지는 「S 서열표」 처럼 표 이름으로 — 폰은 라벨 없이 모드와 한 줄이라 이름이 뜻을 말한다(2026-09-22)
-    const goalSelect =
-        TIER_MODE_GOALS[query.mode].length > 1 ? (
-            <CompactSelect
-                id={goalId}
-                label={t("tiers.goal")}
-                outlined
-                className="nl-tier-goal"
-                value={query.goal}
-                onValueChange={(goal) =>
-                    commit({
-                        ...query,
-                        goal,
-                        bands: [],
-                    })
-                }
-                options={TIER_MODE_GOALS[query.mode].map((goal) => ({
-                    value: goal,
-                    label: t("tiers.goalOption", {
-                        goal: tierGoalLabels[goal],
-                    }),
-                }))}
-            />
+    // Wide 레일 — 라벨 있는 입력칸형 셀렉트(Recital 은 없음)
+    const goalControl =
+        goalOptions.length > 1 ? (
+            <FormField id={goalId} label={t("tiers.goal")}>
+                <CompactSelect
+                    id={goalId}
+                    label={t("tiers.goal")}
+                    outlined
+                    className="nl-tier-goal"
+                    value={query.goal}
+                    onValueChange={changeGoal}
+                    options={goalOptions}
+                />
+            </FormField>
         ) : null;
-    const goalControl = goalSelect ? (
-        <FormField id={goalId} label={t("tiers.goal")}>
-            {goalSelect}
-        </FormField>
-    ) : null;
-    // 보기 방식 — 격자(자켓) · 목록(행). 악곡 목록과 같은 부품 · 문구, 같은 줄 필터 트리거와 같은 높이(L)
+    // 보기 방식 — 격자(자켓) · 목록(행). 악곡 목록과 같은 부품 · 문구. 폰은 조건 줄에 M, Wide 는 결과 머리 줄에 L
     const viewSwitch = (
         <SegmentedControl
             label={t("discovery.view")}
             value={query.view}
             onValueChange={(view) => commit({ ...query, view })}
             iconOnly
+            size={wide ? undefined : "sm"}
             options={[
                 {
                     value: "grid",
@@ -232,6 +310,8 @@ export default function TierBrowserPage({
                     {!wide ? resultCount : null}
                 </div>
             </div>
+            {/* Wide 는 악곡 목록처럼 제목 아래 검색 전체 폭 → 레일 | 결과 */}
+            {wide ? <div className="nl-tier-search">{searchField}</div> : null}
             <div className="nl-tier-layout">
                 {wide ? (
                     <aside
@@ -249,15 +329,14 @@ export default function TierBrowserPage({
                 ) : null}
                 <div className="nl-tier-results">
                     <div className="nl-filter-control-block">
-                        {/* 폰 조작부 두 줄(2026-09-22 B안): 모드 · 목표 한 줄, 필터 · 보기 한 줄 — 모두 컨트롤 L */}
-                        {!wide ? (
-                            <div className="nl-tier-controls">
-                                {modeControl}
-                                {goalSelect}
-                            </div>
-                        ) : null}
-                        <div className="nl-tier-toolbar">
-                            {wide ? resultCount : null}
+                        {/* 폰 머리 두 줄(2026-09-22 B안): 검색 + ☰ 필터 44 / 모드 · 목표 셀렉트 M · 보기 전환 M
+                            — 악곡 목록 폰 머리와 같은 틀 */}
+                        <div
+                            className={
+                                wide ? "nl-tier-toolbar" : "nl-tier-search"
+                            }
+                        >
+                            {wide ? resultCount : searchField}
                             {!wide ? (
                                 <FullScreenDialog
                                     open={open}
@@ -275,21 +354,22 @@ export default function TierBrowserPage({
                                         })
                                     }
                                     trigger={
-                                        <Button
+                                        <ActionButton
                                             variant="secondary"
-                                            className="nl-filter-trigger"
+                                            size="icon"
+                                            className="nl-filter-icon-trigger"
+                                            aria-label={t("music.filter")}
                                         >
                                             <ListFilter
-                                                className="nl-icon"
+                                                className="nl-icon-small"
                                                 aria-hidden
                                             />
-                                            {t("music.filter")}
                                             {filterCount ? (
                                                 <span className="nl-filter-count nl-metadata">
                                                     {filterCount}
                                                 </span>
                                             ) : null}
-                                        </Button>
+                                        </ActionButton>
                                     }
                                     footer={
                                         <ActionButton
@@ -334,8 +414,14 @@ export default function TierBrowserPage({
                                     </div>
                                 </FullScreenDialog>
                             ) : null}
-                            {viewSwitch}
+                            {wide ? viewSwitch : null}
                         </div>
+                        {!wide ? (
+                            <div className="nl-tier-scope">
+                                {scopeSelects}
+                                {viewSwitch}
+                            </div>
+                        ) : null}
                     </div>
                     <AppliedTokens
                         label={t("tiers.conditions")}
@@ -454,6 +540,24 @@ export default function TierBrowserPage({
                         >
                             {!data.list ? (
                                 <ResultState message={t("tiers.noPublished")} />
+                            ) : !total && query.q ? (
+                                // 검색 결과 없음 — 한 줄 + 「검색어 지우기」(필터는 그대로)
+                                <ResultState
+                                    message={t("tiers.searchEmpty", {
+                                        query: query.q,
+                                    })}
+                                    action={
+                                        <Button
+                                            variant="secondary"
+                                            onClick={() => {
+                                                setSearch("");
+                                                commitSearch("");
+                                            }}
+                                        >
+                                            {t("discovery.clearQuery")}
+                                        </Button>
+                                    }
+                                />
                             ) : !total ? (
                                 <ResultState
                                     message={t("tiers.noCharts")}

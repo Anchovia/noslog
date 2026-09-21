@@ -10,18 +10,32 @@
     width: 100%;
     justify-content: space-between;
 }
-/* 폰 조작부 첫 줄(2026-09-22 B안) — 모드 세그먼트가 남는 폭, 목표 셀렉트는 글자만큼. 둘 다 컨트롤 L */
-.noslog-ui .nl-tier-controls {
+/* 머리(2026-09-22 B안 · 악곡 목록 폰 머리와 같은 틀) — 검색줄: 검색 남는 폭 + ☰ 필터 44(적용 개수 배지).
+   Wide 는 제목 아래 검색 전체 폭 */
+.noslog-ui .nl-tier-search {
     display: flex;
     gap: var(--nl-spacing-8);
     min-width: 0;
 }
-.noslog-ui .nl-tier-controls > .nl-tier-browser-mode {
+.noslog-ui .nl-tier-search__form {
     flex: 1;
+    min-width: 0;
 }
-.noslog-ui .nl-tier-controls > .nl-tier-goal {
-    flex: none;
-    width: auto;
+/* 조건 줄: 모드 · 목표 테두리 없는 셀렉트 M(잉크를 왼쪽 선에 — 안쪽 8 을 당김) · 오른쪽 보기 전환 M */
+.noslog-ui .nl-tier-scope {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+    min-width: 0;
+}
+.noslog-ui .nl-tier-scope__selects {
+    display: flex;
+    min-width: 0;
+    margin-inline-start: calc(var(--nl-spacing-8) * -1);
+}
+.noslog-ui .nl-tier-scope .nl-compact-select {
+    min-height: var(--nl-control-height-compact);
 }
 .noslog-ui .nl-tier-browser-mode {
     display: flex;
