@@ -4,6 +4,8 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 
+vi.mock("next/navigation", () => ({ useSearchParams: () => null }));
+
 vi.mock("recharts", async () => {
     const { createElement } = await import("react");
     const component = (name: string) =>
@@ -103,7 +105,18 @@ describe("관리자 대시보드 그래프 움직임", () => {
                     failed: null,
                 },
             ],
-            series: [{ date: "2026-09-21", label: "9/21", value: 5 }],
+            series: [
+                {
+                    date: "2026-09-21",
+                    label: "9/21",
+                    values: {
+                        visitors: 5,
+                        pageviews: 10,
+                        signups: 1,
+                        syncs: 2,
+                    },
+                },
+            ],
             topPages: [{ key: "/", label: "홈", detail: "/", count: 5 }],
             apiCalls: [],
             externalCalls: [],
@@ -121,7 +134,7 @@ describe("관리자 대시보드 그래프 움직임", () => {
         );
     });
 
-    it("기간·지표 로딩은 실제 대시보드 틀과 공용 스켈레톤만 쓴다", () => {
+    it("기간 로딩은 실제 대시보드 틀과 공용 스켈레톤만 쓴다", () => {
         const data: AdminDashboardData = {
             range: "7d",
             metric: "visitors",
@@ -144,7 +157,18 @@ describe("관리자 대시보드 그래프 움직임", () => {
                     failed: null,
                 },
             ],
-            series: [{ date: "2026-09-21", label: "9/21", value: 5 }],
+            series: [
+                {
+                    date: "2026-09-21",
+                    label: "9/21",
+                    values: {
+                        visitors: 5,
+                        pageviews: 10,
+                        signups: 1,
+                        syncs: 2,
+                    },
+                },
+            ],
             topPages: [{ key: "/", label: "홈", detail: "/", count: 5 }],
             apiCalls: [],
             externalCalls: [],

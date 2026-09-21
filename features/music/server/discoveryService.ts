@@ -4,12 +4,14 @@ import { Prisma } from "@prisma/client";
 
 import db from "@/lib/db";
 import {
+    discoveryCountsSchema,
     discoveryPageSchema,
     discoveryQuerySchema,
     getDiscoveryOrder,
     getDiscoverySort,
 } from "@/features/music/schemas/discoverySchema";
 import type {
+    DiscoveryCounts,
     DiscoveryPage,
     DiscoveryQuery,
 } from "@/features/music/schemas/discoverySchema";
@@ -74,16 +76,12 @@ function chartConditions(query: DiscoveryQuery, userId: number | null) {
         : Prisma.empty;
 }
 
-export async function getDiscoveryPage(
-    input: DiscoveryQuery,
-    offset = 0,
-    userId: number | null = null
-): Promise<DiscoveryPage> {
+// 목록과 개수 미리보기는 같은 공개 범위·검색·채보 조건을 사용한다.
+function discoveryCriteria(input: DiscoveryQuery, userId: number | null) {
     const query = publicDiscoveryQuery(
         discoveryQuerySchema.parse(input),
         userId
     );
-    const safeOffset = Math.max(0, Math.min(100000, Math.floor(offset)));
     const escaped = query.q.replace(/[\\%_]/g, "\\$&");
     const prefix = `${escaped}%`;
     const contains = `%${escaped}%`;
@@ -95,6 +93,48 @@ export async function getDiscoveryPage(
     if (query.q)
         filters.push(Prisma.sql`(music."index" ILIKE ${contains} OR music."title" ILIKE ${contains} OR music."title_kana" ILIKE ${contains} OR music."artist" ILIKE ${contains}
         OR EXISTS (SELECT 1 FROM "MusicTranslation" AS translation WHERE translation."music_index" = music."index" AND translation."status" = 'approved' AND translation."title" ILIKE ${contains}))`);
+    return {
+        query,
+        prefix,
+        contains,
+        eligible: Prisma.sql`
+            SELECT chart."id", chart."music_idx", chart."difficulty", chart."level", pattern."published_at"
+            FROM "MusicChart" AS chart
+            LEFT JOIN "ChartPattern" AS pattern ON pattern."chart_id" = chart."id"
+            LEFT JOIN "PlayData" AS play ON play."chart_id" = chart."id" AND play."user_id" = ${userId}
+            ${chartConditions(query, userId)}
+        `,
+        musicWhere: filters.length
+            ? Prisma.sql`WHERE ${Prisma.join(filters, " AND ")}`
+            : Prisma.empty,
+    };
+}
+
+export async function getDiscoveryCounts(
+    input: DiscoveryQuery,
+    userId: number | null = null
+): Promise<DiscoveryCounts> {
+    const { eligible, musicWhere } = discoveryCriteria(input, userId);
+    const rows = await db.$queryRaw<DiscoveryCounts[]>(Prisma.sql`
+        WITH eligible AS (${eligible})
+        SELECT COUNT(DISTINCT music."index")::int AS total,
+            COUNT(eligible."id")::int AS "chartTotal"
+        FROM "Music" AS music JOIN eligible ON eligible."music_idx" = music."index"
+        ${musicWhere}
+    `);
+    return discoveryCountsSchema.parse(rows[0] ?? { total: 0, chartTotal: 0 });
+}
+
+export async function getDiscoveryPage(
+    input: DiscoveryQuery,
+    offset = 0,
+    userId: number | null = null
+): Promise<DiscoveryPage> {
+    const { query, prefix, contains, eligible, musicWhere } = discoveryCriteria(
+        input,
+        userId
+    );
+    const safeOffset = Math.max(0, Math.min(100000, Math.floor(offset)));
     const sort = getDiscoverySort(query);
     const sortColumn =
         sort === "name"
@@ -111,13 +151,7 @@ export async function getDiscoveryPage(
     const rows = await db.$queryRaw<
         { total: number; chartTotal: number; items: DiscoveryPage["items"] }[]
     >(Prisma.sql`
-        WITH eligible AS (
-            SELECT chart."id", chart."music_idx", chart."difficulty", chart."level", pattern."published_at"
-            FROM "MusicChart" AS chart
-            LEFT JOIN "ChartPattern" AS pattern ON pattern."chart_id" = chart."id"
-            LEFT JOIN "PlayData" AS play ON play."chart_id" = chart."id" AND play."user_id" = ${userId}
-            ${chartConditions(query, userId)}
-        ), catalog AS (
+        WITH eligible AS (${eligible}), catalog AS (
             SELECT music."index", music."title", music."artist", music."category_short", music."background",
                 NULL::text AS "localizedTitle",
                 COALESCE(NULLIF(TRIM(music."title_kana"), ''), music."title") AS reading,
@@ -137,7 +171,7 @@ export async function getDiscoveryPage(
                 jsonb_agg(jsonb_build_object('difficulty', eligible."difficulty", 'level', eligible."level")
                     ORDER BY CASE eligible."difficulty" WHEN 'Normal' THEN 0 WHEN 'Hard' THEN 1 WHEN 'Expert' THEN 2 ELSE 3 END) AS targets
             FROM "Music" AS music JOIN eligible ON eligible."music_idx" = music."index"
-            ${filters.length ? Prisma.sql`WHERE ${Prisma.join(filters, " AND ")}` : Prisma.empty}
+            ${musicWhere}
             GROUP BY music."index", music."title", music."title_kana", music."artist", music."category_short", music."background"
         ), page AS (
             SELECT * FROM catalog ORDER BY ${sortColumn} ${direction} NULLS LAST, reading ASC, "index" ASC LIMIT 20 OFFSET ${safeOffset}

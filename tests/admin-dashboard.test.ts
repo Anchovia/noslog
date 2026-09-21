@@ -32,10 +32,8 @@ vi.mock("@/lib/db", () => ({
 }));
 
 import { currentAdminSection } from "@/components/admin/adminNav";
-import {
-    getAdminDashboard,
-    parseDashboardParams,
-} from "@/features/admin/server/adminDashboardService";
+import { getAdminDashboard } from "@/features/admin/server/adminDashboardService";
+import { parseDashboardParams } from "@/features/admin/dashboardParams";
 
 const NOW = new Date("2026-09-13T03:00:00Z"); // 서울 9/13 12:00
 
@@ -154,7 +152,7 @@ describe("관리자 대시보드", () => {
                 failed: 1,
             },
         ]);
-        expect(data.series.map((point) => point.value)).toEqual([
+        expect(data.series.map((point) => point.values.visitors)).toEqual([
             0, 0, 0, 0, 0, 3, 5,
         ]);
         expect(data.series[0].label).toBe("9/7");
@@ -208,13 +206,21 @@ describe("관리자 대시보드", () => {
         });
     });
 
-    it("그래프 지표를 바꾸면 같은 날짜 칸에 그 지표를 싣는다", async () => {
+    it("같은 조회에 네 지표를 모두 실어 브라우저에서 전환할 수 있다", async () => {
         const data = await getAdminDashboard(
             { range: "7d", metric: "syncs" },
             NOW
         );
-        expect(data.series.map((point) => point.value)).toEqual([
+        expect(data.series.map((point) => point.values.syncs)).toEqual([
             0, 0, 0, 1, 0, 0, 1,
         ]);
+        expect(data.series.at(-1)?.values).toEqual({
+            visitors: 5,
+            pageviews: 12,
+            signups: 0,
+            syncs: 1,
+        });
+        expect(mocks.queryRaw).toHaveBeenCalledTimes(1);
+        expect(mocks.requireAdmin).toHaveBeenCalledOnce();
     });
 });

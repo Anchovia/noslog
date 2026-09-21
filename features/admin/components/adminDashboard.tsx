@@ -6,9 +6,11 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-import AdminDashboardChart, {
-    AdminDashboardHours,
-} from "@/features/admin/components/adminDashboardChart";
+import {
+    AdminDashboardMetricLink,
+    AdminDashboardRangeLink,
+    AdminDashboardTrend,
+} from "@/features/admin/components/adminDashboardMetric";
 import AdminDashboardLoading from "@/features/admin/components/adminDashboardLoading";
 import {
     AdminDashboardLinkStatus,
@@ -16,27 +18,16 @@ import {
     AdminDashboardPendingRegion,
 } from "@/features/admin/components/adminDashboardPending";
 import {
-    DASHBOARD_METRICS,
+    DASHBOARD_METRIC_COLORS,
     DASHBOARD_RANGES,
-    type AdminDashboardData,
-    type DashboardMetric,
     type DashboardRange,
-    type DashboardRow,
+} from "@/features/admin/dashboardParams";
+import type {
+    AdminDashboardData,
+    DashboardRow,
 } from "@/features/admin/server/adminDashboardService";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
-
-// 수치마다 제 색(2026-09-20 C2) — 데이터 색 토큰 안에서. 그래프 선 · 막대와 수치 칸의 색 줄이 같은 색이다
-const METRIC_COLORS: Record<DashboardMetric, string> = {
-    visitors: "var(--nl-local-data-categorical-1)",
-    pageviews: "var(--nl-local-data-categorical-2)",
-    signups: "var(--nl-local-data-categorical-3)",
-    syncs: "var(--nl-local-data-categorical-5)",
-};
-
-function dashboardHref(range: DashboardRange, metric: DashboardMetric) {
-    return `/admin?range=${range}&metric=${metric}`;
-}
 
 function shortDate(key: string) {
     return `${Number(key.slice(5, 7))}/${Number(key.slice(8, 10))}`;
@@ -187,7 +178,6 @@ export default function AdminDashboard({ data }: { data: AdminDashboardData }) {
     const active = data.todo.filter((item) => item.count > 0);
     const clear = data.todo.filter((item) => item.count === 0);
     const todoTotal = active.reduce((total, item) => total + item.count, 0);
-    const metricLabel = DASHBOARD_METRICS[data.metric];
 
     return (
         <AdminDashboardPending>
@@ -206,19 +196,17 @@ export default function AdminDashboard({ data }: { data: AdminDashboardData }) {
                         {(
                             Object.keys(DASHBOARD_RANGES) as DashboardRange[]
                         ).map((key) => (
-                            <Link
+                            <AdminDashboardRangeLink
                                 key={key}
-                                href={dashboardHref(key, data.metric)}
-                                className="nl-segments__item nl-control"
-                                aria-current={
-                                    key === data.range ? "true" : undefined
-                                }
+                                range={key}
+                                currentRange={data.range}
+                                initialMetric={data.metric}
                             >
                                 {DASHBOARD_RANGES[key].label}
                                 <AdminDashboardLinkStatus
                                     statusKey={`range-${key}`}
                                 />
-                            </Link>
+                            </AdminDashboardRangeLink>
                         ))}
                     </nav>
                 </header>
@@ -288,18 +276,11 @@ export default function AdminDashboard({ data }: { data: AdminDashboardData }) {
                             <div className="nl-dashboard__kpi-group">
                                 <div className="nl-dashboard__kpis">
                                     {data.kpis.map((kpi) => (
-                                        <Link
+                                        <AdminDashboardMetricLink
                                             key={kpi.metric}
-                                            href={dashboardHref(
-                                                data.range,
-                                                kpi.metric
-                                            )}
-                                            className="nl-dashboard__kpi"
-                                            aria-current={
-                                                kpi.metric === data.metric
-                                                    ? "true"
-                                                    : undefined
-                                            }
+                                            range={data.range}
+                                            metric={kpi.metric}
+                                            initialMetric={data.metric}
                                         >
                                             <span className="nl-control nl-muted">
                                                 {kpi.label}
@@ -317,7 +298,7 @@ export default function AdminDashboard({ data }: { data: AdminDashboardData }) {
                                                 className="nl-dashboard__kpi-tone"
                                                 style={{
                                                     background:
-                                                        METRIC_COLORS[
+                                                        DASHBOARD_METRIC_COLORS[
                                                             kpi.metric
                                                         ],
                                                 }}
@@ -328,10 +309,7 @@ export default function AdminDashboard({ data }: { data: AdminDashboardData }) {
                                                     실패 {kpi.failed}
                                                 </span>
                                             ) : null}
-                                            <AdminDashboardLinkStatus
-                                                statusKey={`metric-${kpi.metric}`}
-                                            />
-                                        </Link>
+                                        </AdminDashboardMetricLink>
                                     ))}
                                 </div>
                                 <p className="nl-metadata nl-muted">
@@ -339,39 +317,12 @@ export default function AdminDashboard({ data }: { data: AdminDashboardData }) {
                                 </p>
                             </div>
 
-                            <section
-                                className="nl-dashboard__panel"
-                                aria-labelledby="dashboard-trend"
-                            >
-                                <div className="nl-dashboard__panel-head">
-                                    <h2
-                                        id="dashboard-trend"
-                                        className="nl-component-title"
-                                    >
-                                        {metricLabel}
-                                    </h2>
-                                </div>
-                                {data.hourly ? (
-                                    <>
-                                        <AdminDashboardHours
-                                            data={data.hourly}
-                                            color={METRIC_COLORS.pageviews}
-                                        />
-                                        <p className="nl-metadata nl-muted">
-                                            시간대별 페이지뷰 · 서울 기준.
-                                            날짜별 그래프는 7일 이상에서
-                                            보입니다.
-                                        </p>
-                                    </>
-                                ) : (
-                                    <AdminDashboardChart
-                                        key={`${data.range}-${data.metric}`}
-                                        data={data.series}
-                                        label={metricLabel}
-                                        color={METRIC_COLORS[data.metric]}
-                                    />
-                                )}
-                            </section>
+                            <AdminDashboardTrend
+                                range={data.range}
+                                initialMetric={data.metric}
+                                hourly={data.hourly}
+                                series={data.series}
+                            />
 
                             <section
                                 className="nl-dashboard__panel"

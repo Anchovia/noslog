@@ -340,6 +340,11 @@ old design-stage checklist. Changes to material behavior require a user decision
 
 ## Visit analytics (2026-09-20)
 
+- Within the loaded dashboard period, metric changes reuse the same snapshot and
+  update `metric` in browser history without another server request. Period changes
+  and page reloads fetch a new snapshot. Direct links, back/forward navigation,
+  admin authorization and the existing hourly page-view chart remain supported.
+
 - Accounts whose current role is `admin` are excluded at collection time from
   page views, daily visitors, hour/audience buckets, browser external events and
   API-call totals. Dashboard signup, sync, funnel and contribution totals also

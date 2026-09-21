@@ -21,6 +21,7 @@ const pretendard = localFont({
     variable: "--font-pretendard",
     weight: "45 920",
     display: "swap",
+    preload: false,
 });
 
 const themeScript =

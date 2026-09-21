@@ -11,41 +11,14 @@ import {
     routeLabel,
 } from "@/lib/analyticsRoutes";
 import db from "@/lib/db";
-
-// 기간 — 기본 7일(2026-09-13 사용자 결정). 통계 날짜는 서울 기준
-export const DASHBOARD_RANGES = {
-    today: { days: 1, label: "오늘" },
-    "7d": { days: 7, label: "7일" },
-    "28d": { days: 28, label: "28일" },
-    "90d": { days: 90, label: "90일" },
-} as const;
-export type DashboardRange = keyof typeof DASHBOARD_RANGES;
-
-export const DASHBOARD_METRICS = {
-    visitors: "방문자",
-    pageviews: "페이지뷰",
-    signups: "가입",
-    syncs: "동기화",
-} as const;
-export type DashboardMetric = keyof typeof DASHBOARD_METRICS;
-
-export function parseDashboardParams(params: {
-    range?: string | string[];
-    metric?: string | string[];
-}) {
-    // in 은 toString 같은 기본 속성까지 참으로 봐서 자기 열쇠만 받는다
-    const range: DashboardRange =
-        typeof params.range === "string" &&
-        Object.hasOwn(DASHBOARD_RANGES, params.range)
-            ? (params.range as DashboardRange)
-            : "7d";
-    const metric: DashboardMetric =
-        typeof params.metric === "string" &&
-        Object.hasOwn(DASHBOARD_METRICS, params.metric)
-            ? (params.metric as DashboardMetric)
-            : "visitors";
-    return { range, metric };
-}
+import {
+    DASHBOARD_METRICS,
+    DASHBOARD_RANGES,
+} from "@/features/admin/dashboardParams";
+import type {
+    DashboardMetric,
+    DashboardRange,
+} from "@/features/admin/dashboardParams";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -317,11 +290,14 @@ export async function getAdminDashboard(
         from: current[0],
         to: current[current.length - 1],
         kpis,
-        series: current.map((key) => ({
-            date: key,
-            label: `${Number(key.slice(5, 7))}/${Number(key.slice(8, 10))}`,
-            value: totals.get(key)?.[metric] ?? 0,
-        })),
+        series: current.map((key) => {
+            const { visitors, pageviews, signups, syncs } = day(key);
+            return {
+                date: key,
+                label: `${Number(key.slice(5, 7))}/${Number(key.slice(8, 10))}`,
+                values: { visitors, pageviews, signups, syncs },
+            };
+        }),
         topPages: sortedRows(pages, (key) => ({
             label: routeLabel(PAGE_ROUTES, key),
             detail: key,

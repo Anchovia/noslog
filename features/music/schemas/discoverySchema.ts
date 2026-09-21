@@ -232,11 +232,14 @@ const discoveryResultSchema = musicResultSchema.extend({
         })
     ),
 });
-export const discoveryPageSchema = z.object({
-    items: z.array(discoveryResultSchema),
+export const discoveryCountsSchema = z.object({
     total: z.number().int().nonnegative(),
     chartTotal: z.number().int().nonnegative(),
+});
+export const discoveryPageSchema = discoveryCountsSchema.extend({
+    items: z.array(discoveryResultSchema),
     nextOffset: z.number().int().nullable(),
 });
+export type DiscoveryCounts = z.infer<typeof discoveryCountsSchema>;
 export type DiscoveryResult = z.infer<typeof discoveryResultSchema>;
 export type DiscoveryPage = z.infer<typeof discoveryPageSchema>;

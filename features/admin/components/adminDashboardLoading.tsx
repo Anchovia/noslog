@@ -1,10 +1,10 @@
 import { SkeletonText } from "@/components/ui/skeleton";
-import {
-    DASHBOARD_METRICS,
-    DASHBOARD_RANGES,
-    type AdminDashboardData,
-    type DashboardRow,
+import { DASHBOARD_RANGES } from "@/features/admin/dashboardParams";
+import type {
+    AdminDashboardData,
+    DashboardRow,
 } from "@/features/admin/server/adminDashboardService";
+import { AdminDashboardMetricLabel } from "./adminDashboardMetric";
 
 function CountListLoading({
     rows,
@@ -177,7 +177,6 @@ export default function AdminDashboardLoading({
     data: AdminDashboardData;
 }) {
     const rangeLabel = DASHBOARD_RANGES[data.range].label;
-    const metricLabel = DASHBOARD_METRICS[data.metric];
     const funnelRows = data.funnel.map((row) => ({
         key: row.label,
         label: row.label,
@@ -198,7 +197,11 @@ export default function AdminDashboardLoading({
 
                 <section className="nl-dashboard__panel">
                     <div className="nl-dashboard__panel-head">
-                        <h2 className="nl-component-title">{metricLabel}</h2>
+                        <h2 className="nl-component-title">
+                            <AdminDashboardMetricLabel
+                                initialMetric={data.metric}
+                            />
+                        </h2>
                     </div>
                     <div className="nl-dashboard__chart nl-skeleton" />
                     {data.hourly ? (

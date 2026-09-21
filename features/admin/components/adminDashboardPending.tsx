@@ -20,7 +20,7 @@ type PendingContextValue = {
 
 const PendingContext = createContext<PendingContextValue | null>(null);
 
-/** 기간·지표 링크 하나의 Next 탐색 상태를 대시보드 로딩 영역에 전달한다. */
+/** 기간 링크 하나의 Next 탐색 상태를 대시보드 로딩 영역에 전달한다. */
 export function AdminDashboardLinkStatus({ statusKey }: { statusKey: string }) {
     const context = useContext(PendingContext);
     const update = context?.update;
@@ -34,7 +34,7 @@ export function AdminDashboardLinkStatus({ statusKey }: { statusKey: string }) {
     return null;
 }
 
-/** 대시보드 안 기간·지표 탐색 중인 링크를 한 영역의 바쁨 상태로 모은다. */
+/** 대시보드 안 기간 탐색 중인 링크를 한 영역의 바쁨 상태로 모은다. */
 export function AdminDashboardPending({ children }: { children: ReactNode }) {
     const [pendingKeys, setPendingKeys] = useState<Set<string>>(
         () => new Set()
