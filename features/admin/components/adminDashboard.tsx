@@ -74,7 +74,7 @@ function CountList({ rows, empty }: { rows: DashboardRow[]; empty: string }) {
             {rows.map((row) => (
                 <li key={row.key}>
                     <span
-                        className="nl-dashboard__bar"
+                        className="nl-dashboard__bar nl-chart-reveal nl-chart-bar"
                         style={{ width: `${(row.count / max) * 100}%` }}
                         aria-hidden
                     />
@@ -122,10 +122,11 @@ function AudienceSplit({
     ];
     return (
         <>
-            <div className="nl-dashboard__split" aria-hidden>
+            <div className="nl-dashboard__split nl-chart-reveal" aria-hidden>
                 {sides.map((side) => (
                     <span
                         key={side.key}
+                        className="nl-chart-bar"
                         style={{
                             width: `${(audience[side.key].pageviews / total) * 100}%`,
                             background: side.color,
@@ -335,6 +336,7 @@ export default function AdminDashboard({ data }: { data: AdminDashboardData }) {
                             </>
                         ) : (
                             <AdminDashboardChart
+                                key={`${data.range}-${data.metric}`}
                                 data={data.series}
                                 label={metricLabel}
                                 color={METRIC_COLORS[data.metric]}

@@ -12,8 +12,8 @@ import {
     YAxis,
 } from "recharts";
 
-// 대시보드 추이 그래프 — 한 계열 선 · 격자 border/default · 애니메이션 없음(문서에 없는 모션 금지).
-// 선 색은 보고 있는 수치의 색(2026-09-20 C2) — 수치 칸의 색 줄과 같다
+// 대시보드 추이 그래프 — 한 계열 선 · 격자 border/default.
+// 선 색은 보고 있는 수치의 색(2026-09-20 C2), 움직임은 공용 그래프 클래스만 쓴다(2026-09-21)
 export default function AdminDashboardChart({
     data,
     label,
@@ -78,6 +78,7 @@ export default function AdminDashboardChart({
                         ]}
                     />
                     <Line
+                        className="nl-chart-reveal"
                         type="linear"
                         dataKey="value"
                         stroke={color}
@@ -162,6 +163,7 @@ export function AdminDashboardHours({
                         ]}
                     />
                     <Bar
+                        className="nl-chart-reveal"
                         dataKey="value"
                         fill={color}
                         radius={[2, 2, 0, 0]}
