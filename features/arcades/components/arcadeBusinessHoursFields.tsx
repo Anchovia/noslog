@@ -41,7 +41,7 @@ export default function ArcadeBusinessHoursFields({
     const errorMessage = businessHoursErrorMessage(errors);
 
     return (
-        <fieldset className="border-border rounded-card grid gap-2 border p-3">
+        <fieldset className="border-border rounded-card grid min-w-0 grid-cols-1 gap-2 border p-3">
             <legend className="text-label px-1">영업시간</legend>
             <p className="text-caption">
                 체크를 해제한 요일은 휴무로 표시됩니다. 자정을 넘겨 영업하면

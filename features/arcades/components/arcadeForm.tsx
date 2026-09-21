@@ -257,7 +257,11 @@ export default function ArcadeForm(props: ArcadeFormProps) {
             <label className="sr-only" htmlFor={`${formKey}-name`}>
                 오락실 이름
             </label>
-            <div className={isCreate ? undefined : "flex items-center gap-2"}>
+            <div
+                className={
+                    isCreate ? undefined : "flex min-w-0 items-center gap-2"
+                }
+            >
                 {!isCreate ? (
                     <MapPin
                         className="text-chart size-4 shrink-0"
@@ -392,7 +396,7 @@ export default function ArcadeForm(props: ArcadeFormProps) {
                 register={register}
                 errors={errors}
             />
-            <fieldset className="border-border rounded-card grid gap-2 border p-3">
+            <fieldset className="border-border rounded-card grid min-w-0 grid-cols-1 gap-2 border p-3">
                 <legend className="text-label px-1">기체</legend>
                 <p className="text-caption">
                     가동·상태·메모를 바꾸거나 「오늘 확인」 을 체크하고 저장하면

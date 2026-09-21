@@ -140,7 +140,7 @@ export default function ArcadePhotoManager({
     }
 
     return (
-        <fieldset className="border-border rounded-card grid gap-2 border p-3">
+        <fieldset className="border-border rounded-card grid min-w-0 grid-cols-1 gap-2 border p-3">
             <legend className="text-label px-1">사진</legend>
             <p className="text-caption">
                 공개 상세 맨 위에 보입니다. 첫 번째 사진이 대표 사진이며{" "}

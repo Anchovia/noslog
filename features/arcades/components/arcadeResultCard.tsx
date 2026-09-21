@@ -104,6 +104,7 @@ export default function ArcadeResultCard({
     arcade,
     distance,
     now,
+    eagerPhoto = false,
     selected,
     expanded,
     onSelect,
@@ -113,6 +114,7 @@ export default function ArcadeResultCard({
     arcade: PublicArcade;
     distance: number | null;
     now: Date;
+    eagerPhoto?: boolean;
     selected: boolean;
     expanded: boolean;
     onSelect: (id: number) => void;
@@ -136,6 +138,7 @@ export default function ArcadeResultCard({
                         width={64}
                         height={64}
                         alt=""
+                        loading={eagerPhoto ? "eager" : "lazy"}
                         onError={() => setFailedPhoto(photo.url)}
                     />
                 ) : (

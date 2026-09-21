@@ -805,10 +805,11 @@ export default function ArcadeDiscoveryPage({
                                 className="nl-arcades__list"
                                 aria-label={t("arcades.list")}
                             >
-                                {result.map((arcade) => (
+                                {result.map((arcade, index) => (
                                     <li key={arcade.id}>
                                         <ArcadeResultCard
                                             arcade={arcade}
+                                            eagerPhoto={index === 0}
                                             distance={arcadeDistance(
                                                 arcade,
                                                 origin

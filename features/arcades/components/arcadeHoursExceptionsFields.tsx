@@ -52,7 +52,7 @@ export default function ArcadeHoursExceptionsFields({
         errors.hoursExceptions?.root?.message;
 
     return (
-        <fieldset className="border-border rounded-card grid gap-2 border p-3">
+        <fieldset className="border-border rounded-card grid min-w-0 grid-cols-1 gap-2 border p-3">
             <legend className="text-label px-1">날짜별 예외</legend>
             <p className="text-caption">
                 임시 휴무나 특별 영업시간처럼 그날만 다른 날을 적습니다. 공개

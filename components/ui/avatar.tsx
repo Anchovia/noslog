@@ -14,6 +14,7 @@ export default function Avatar({
     className,
     fallbackName,
     fallbackInitial,
+    loading,
     style,
 }: {
     src?: string | null;
@@ -22,6 +23,7 @@ export default function Avatar({
     className?: string;
     fallbackName?: string | null;
     fallbackInitial?: string;
+    loading?: "eager" | "lazy";
     style?: CSSProperties;
 }) {
     const [failedSource, setFailedSource] = useState<string | null>(null);
@@ -42,6 +44,7 @@ export default function Avatar({
                     alt={alt}
                     width={size}
                     height={size}
+                    loading={loading}
                     onError={() => setFailedSource(src)}
                 />
             ) : fallbackInitial || fallbackName?.trim() ? (

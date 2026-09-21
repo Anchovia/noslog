@@ -29,7 +29,6 @@ export default function BingoCatalogCard({
                 background={item.background}
                 title={item.title}
                 className="nl-bingo-card__cover"
-                fallback={<span />}
             >
                 {isAuthenticated ? (
                     <>

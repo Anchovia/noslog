@@ -83,6 +83,7 @@ export default function ProfileIdentity({
                     src={user.avatar}
                     alt={t("common.profileImage", { name })}
                     size={108}
+                    loading="eager"
                     style={{
                         width: "var(--nl-profile-avatar-size)",
                         height: "var(--nl-profile-avatar-size)",
