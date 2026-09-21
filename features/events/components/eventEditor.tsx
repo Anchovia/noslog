@@ -37,12 +37,12 @@ import {
     type EventFormValues,
 } from "@/features/events/schemas/eventSchema";
 import { applyFormFieldErrors } from "@/lib/forms/errors";
+import { IMAGE_ACCEPT, imageFileValidationError } from "@/lib/imageUploadRules";
 import EventDeleteButton from "./eventDeleteButton";
 import useMediaQuery from "@/lib/hooks/useMediaQuery";
 
 type SaveMode = "draft" | "submit";
 const DIALOG_FIELDS = ["startDate", "endDate", "bannerUrl"] as const;
-const IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
 // 이벤트 글쓰기 (2026-09-18 E2) — 쓰는 화면엔 제목 · 본문만, 기간 · 대표 이미지는 「게시 요청」 창.
 // 관리자 공지 작성과 같은 편집기 · 같은 흐름. 유저 버튼은 「게시」 대신 「게시 요청」
@@ -98,7 +98,7 @@ export default function EventEditor({
         const next = input.target.files?.[0] ?? null;
         input.target.value = "";
         if (!next) return;
-        if (!IMAGE_TYPES.includes(next.type) || next.size > 4 * 1024 * 1024) {
+        if (imageFileValidationError(next)) {
             setError("bannerUrl", { message: t("events.invalidImage") });
             return;
         }
@@ -263,7 +263,7 @@ export default function EventEditor({
                         {t("events.form.attachBanner")}
                         <input
                             type="file"
-                            accept={IMAGE_TYPES.join(",")}
+                            accept={IMAGE_ACCEPT}
                             className="sr-only"
                             onChange={changeFile}
                         />

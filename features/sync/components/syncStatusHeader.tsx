@@ -57,21 +57,13 @@ export default function SyncStatusHeader({
                     </div>
                 ) : null}
                 {reinstall ? (
-                    <Button
-                        appearance="foundation"
-                        className="nl-sync-primary"
-                        onClick={onReinstall}
-                    >
+                    <Button className="nl-sync-primary" onClick={onReinstall}>
                         {t("sync.reinstall")}
                     </Button>
                 ) : attempt && !active ? (
                     retryAfter > 0 ? (
                         <>
-                            <Button
-                                appearance="foundation"
-                                disabled
-                                className="nl-sync-primary"
-                            >
+                            <Button disabled className="nl-sync-primary">
                                 {t("sync.openOfficial")}
                             </Button>
                             <p className="nl-body-secondary nl-muted">

@@ -28,6 +28,7 @@ import {
     type FeedbackReportValues,
 } from "@/features/feedback/schemas/feedbackReportSchema";
 import { applyFormFieldErrors } from "@/lib/forms/errors";
+import { IMAGE_ACCEPT, imageFileValidationError } from "@/lib/imageUploadRules";
 import ActionButton from "@/components/ui/actionButton";
 import { foundationButtonClass } from "@/components/ui/Button";
 import {
@@ -115,9 +116,8 @@ export default function FeedbackDialog({
     function changeFile(event: ChangeEvent<HTMLInputElement>) {
         const nextFile = event.target.files?.[0] ?? null;
         if (!nextFile) return;
-        if (
-            !["image/jpeg", "image/png", "image/webp"].includes(nextFile.type)
-        ) {
+        const validationError = imageFileValidationError(nextFile);
+        if (validationError === "type") {
             setError("root.file", {
                 type: "file",
                 message: t("feedback.invalidImage"),
@@ -125,7 +125,7 @@ export default function FeedbackDialog({
             event.target.value = "";
             return;
         }
-        if (nextFile.size > 4 * 1024 * 1024) {
+        if (validationError === "size") {
             setError("root.file", {
                 type: "file",
                 message: t("feedback.imageTooLarge"),
@@ -374,7 +374,7 @@ export default function FeedbackDialog({
                             {t("feedback.addImage")}
                             <input
                                 type="file"
-                                accept="image/jpeg,image/png,image/webp"
+                                accept={IMAGE_ACCEPT}
                                 onChange={changeFile}
                                 disabled={isSubmitting}
                                 className="sr-only"

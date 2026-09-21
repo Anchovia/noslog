@@ -17,13 +17,12 @@ import {
     ARCADE_PHOTO_ALT_MAX_LENGTH,
     ARCADE_PHOTO_MAX,
 } from "@/features/arcades/schemas/arcadeSchema";
+import { IMAGE_ACCEPT, imageFileValidationError } from "@/lib/imageUploadRules";
 
 const inputClass =
     "border-border bg-bg text-input h-10 min-w-0 rounded-md border px-3 outline-none focus:border-focus";
 const secondaryButtonClass =
     "border-border hover:bg-surface-muted focus-visible:ring-focus/40 flex h-9 items-center justify-center gap-1.5 rounded-md border px-3 text-sm font-bold transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:opacity-50";
-const IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
-const MAX_IMAGE_SIZE = 4 * 1024 * 1024;
 
 export interface ArcadeFormPhoto {
     id: number;
@@ -75,11 +74,12 @@ export default function ArcadePhotoManager({
     function choose(next: File | undefined) {
         setError("");
         if (!next) return;
-        if (!IMAGE_TYPES.includes(next.type)) {
+        const validationError = imageFileValidationError(next);
+        if (validationError === "type") {
             setError("JPG·PNG·WebP 이미지만 올릴 수 있습니다.");
             return;
         }
-        if (next.size > MAX_IMAGE_SIZE) {
+        if (validationError === "size") {
             setError("이미지는 4MB 이하로 올려주세요.");
             return;
         }
@@ -210,7 +210,7 @@ export default function ArcadePhotoManager({
                 ref={fileInput}
                 type="file"
                 hidden
-                accept={IMAGE_TYPES.join(",")}
+                accept={IMAGE_ACCEPT}
                 aria-label="오락실 사진 파일"
                 onChange={(event) => choose(event.target.files?.[0])}
             />

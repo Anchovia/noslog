@@ -792,7 +792,6 @@ export default function ArcadeDiscoveryPage({
                         />
                         {bounds ? (
                             <Button
-                                appearance="foundation"
                                 size="sm"
                                 variant="ghost"
                                 onClick={() => setBounds(null)}

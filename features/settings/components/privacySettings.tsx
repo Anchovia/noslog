@@ -114,11 +114,7 @@ export default function PrivacySettings({
                 >
                     {saved}
                 </p>
-                <Button
-                    appearance="foundation"
-                    type="submit"
-                    disabled={!isDirty || isSubmitting}
-                >
+                <Button type="submit" disabled={!isDirty || isSubmitting}>
                     {t(isSubmitting ? "settings.saving" : "settings.save")}
                 </Button>
             </div>

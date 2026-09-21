@@ -250,7 +250,6 @@ export default function TierBrowserPage({
                                     }
                                     trigger={
                                         <Button
-                                            appearance="foundation"
                                             variant="secondary"
                                             className="nl-filter-trigger"
                                         >
@@ -438,7 +437,6 @@ export default function TierBrowserPage({
                                     message={t("tiers.noCharts")}
                                     action={
                                         <Button
-                                            appearance="foundation"
                                             variant="secondary"
                                             onClick={() =>
                                                 commit({

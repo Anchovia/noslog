@@ -926,7 +926,6 @@ export default function FallingChartViewer({
             <div className="nl-chart-stage__controls">
                 <div className="nl-chart-stage__transport">
                     <Button
-                        appearance="foundation"
                         variant="primary"
                         size="icon"
                         onClick={() =>
@@ -943,7 +942,6 @@ export default function FallingChartViewer({
                         )}
                     </Button>
                     <Button
-                        appearance="foundation"
                         variant="secondary"
                         size="icon"
                         onClick={() => {

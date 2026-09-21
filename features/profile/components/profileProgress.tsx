@@ -244,7 +244,6 @@ export default function ProfileProgress({
                     title={t("profile.sectionFailed")}
                     action={
                         <Button
-                            appearance="foundation"
                             variant="secondary"
                             onClick={() => void result.refetch()}
                         >

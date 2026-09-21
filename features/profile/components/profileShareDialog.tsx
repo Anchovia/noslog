@@ -167,7 +167,6 @@ function ProfileCardPreview({
             <div className="nl-profile-share__actions">
                 {failed ? (
                     <Button
-                        appearance="foundation"
                         variant="primary"
                         disabled={result.isFetching}
                         onClick={() => {
@@ -182,7 +181,6 @@ function ProfileCardPreview({
                     <>
                         <Button
                             className="nl-profile-share__save"
-                            appearance="foundation"
                             variant="primary"
                             disabled={disabled}
                             onClick={download}
@@ -191,7 +189,6 @@ function ProfileCardPreview({
                         </Button>
                         <div className="nl-profile-share__secondary">
                             <Button
-                                appearance="foundation"
                                 variant="secondary"
                                 disabled={disabled || !canCopy}
                                 onClick={() => void copy()}
@@ -199,7 +196,6 @@ function ProfileCardPreview({
                                 {t("profile.copyImage")}
                             </Button>
                             <Button
-                                appearance="foundation"
                                 variant="secondary"
                                 disabled={disabled}
                                 onClick={() => void share()}

@@ -328,7 +328,6 @@ export default function BingoDetailPage({
                                 {state.failed.message}
                             </p>
                             <Button
-                                appearance="foundation"
                                 variant="secondary"
                                 onClick={() =>
                                     state.failed &&
@@ -537,7 +536,6 @@ export default function BingoDetailPage({
                             trigger={
                                 state.hasSavedProgress ? (
                                     <Button
-                                        appearance="foundation"
                                         variant="danger"
                                         disabled={
                                             state.pending.size > 0 ||
@@ -560,7 +558,6 @@ export default function BingoDetailPage({
                                 <>
                                     <Button
                                         ref={cancelReset}
-                                        appearance="foundation"
                                         variant="secondary"
                                         disabled={state.resetting}
                                         onClick={() => setResetOpen(false)}

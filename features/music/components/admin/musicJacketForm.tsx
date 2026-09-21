@@ -18,11 +18,10 @@ import {
     getLocalJacketUrl,
     isManualJacketUrl,
 } from "@/lib/musicJackets";
+import { IMAGE_ACCEPT, imageFileValidationError } from "@/lib/imageUploadRules";
 
 const secondaryButtonClass =
     "border-border hover:bg-surface-muted focus-visible:ring-focus/40 flex h-9 items-center justify-center gap-1.5 rounded-md border px-3 text-sm font-bold transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:opacity-50";
-const IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
-const MAX_IMAGE_SIZE = 4 * 1024 * 1024;
 
 // 지금 화면에 보이는 자켓이 어디서 왔는지 — 잘못된 자켓을 고칠 때 원인을 알 수 있게
 function jacketSource(index: string, background: string | null) {
@@ -80,11 +79,12 @@ export default function MusicJacketForm({
     function choose(next: File | undefined) {
         setError("");
         if (!next) return;
-        if (!IMAGE_TYPES.includes(next.type)) {
+        const validationError = imageFileValidationError(next);
+        if (validationError === "type") {
             setError("JPG·PNG·WebP 이미지만 올릴 수 있습니다.");
             return;
         }
-        if (next.size > MAX_IMAGE_SIZE) {
+        if (validationError === "size") {
             setError("이미지는 4MB 이하로 올려주세요.");
             return;
         }
@@ -168,7 +168,7 @@ export default function MusicJacketForm({
                 ref={fileInput}
                 type="file"
                 hidden
-                accept={IMAGE_TYPES.join(",")}
+                accept={IMAGE_ACCEPT}
                 aria-label="자켓 이미지 파일"
                 onChange={(event) => choose(event.target.files?.[0])}
             />

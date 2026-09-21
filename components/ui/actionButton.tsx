@@ -19,7 +19,6 @@ export default function ActionButton({
     return (
         <Button
             {...props}
-            appearance="foundation"
             aria-busy={busy || undefined}
             aria-disabled={busy || props.disabled || undefined}
             onClick={(event) => {

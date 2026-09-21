@@ -88,14 +88,12 @@ export default function UnsavedChangesGuard({
                 <>
                     <Button
                         ref={cancel}
-                        appearance="foundation"
                         variant="secondary"
                         onClick={() => setDestination(null)}
                     >
                         {t("settings.stay")}
                     </Button>
                     <Button
-                        appearance="foundation"
                         onClick={() => {
                             if (destination) {
                                 leaving.current = true;

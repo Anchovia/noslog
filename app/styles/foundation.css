@@ -146,6 +146,10 @@ html[data-theme="light"] .noslog-ui,
     width: var(--nl-icon-large);
     height: var(--nl-icon-large);
 }
+.noslog-ui .nl-avatar--compact {
+    width: var(--nl-spacing-32);
+    height: var(--nl-spacing-32);
+}
 
 .noslog-ui .nl-button {
     display: inline-flex;

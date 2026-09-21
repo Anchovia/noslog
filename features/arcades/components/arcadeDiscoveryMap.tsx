@@ -377,7 +377,6 @@ export default function ArcadeDiscoveryMap({
                     {state === "error" ? (
                         <Button
                             variant="secondary"
-                            appearance="foundation"
                             size="sm"
                             onClick={() => setAttempt((value) => value + 1)}
                         >

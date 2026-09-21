@@ -40,6 +40,7 @@ import type {
 } from "@/features/arcades/schemas/arcadeReportSchema";
 import type { PublicArcade } from "@/features/arcades/schemas/publicArcadeSchema";
 import { applyFormFieldErrors } from "@/lib/forms/errors";
+import { IMAGE_ACCEPT, imageFileValidationError } from "@/lib/imageUploadRules";
 
 export default function ArcadeReportDialog({
     arcade,
@@ -151,7 +152,6 @@ export default function ArcadeReportDialog({
     const loginHref = `${href("/login")}?returnTo=${encodeURIComponent(href(`/gamecenter/${arcade.slug}`))}`;
     const trigger = iconOnly ? (
         <Button
-            appearance="foundation"
             variant="secondary"
             size="icon"
             aria-label={triggerAriaLabel ?? title}
@@ -161,7 +161,6 @@ export default function ArcadeReportDialog({
         </Button>
     ) : (
         <Button
-            appearance="foundation"
             variant={triggerVariant}
             size="sm"
             aria-label={triggerAriaLabel}
@@ -276,21 +275,17 @@ export default function ArcadeReportDialog({
                 ref={fileInput}
                 hidden
                 type="file"
-                accept="image/jpeg,image/png,image/webp"
+                accept={IMAGE_ACCEPT}
                 disabled={busy}
                 aria-label={t("feedback.attachImage")}
                 onChange={(event) => {
                     const next = event.target.files?.[0];
                     if (!next) return;
-                    if (
-                        !["image/jpeg", "image/png", "image/webp"].includes(
-                            next.type
-                        ) ||
-                        next.size > 4 * 1024 * 1024
-                    ) {
+                    const validationError = imageFileValidationError(next);
+                    if (validationError) {
                         form.setError("root", {
                             message: t(
-                                next.size > 4 * 1024 * 1024
+                                validationError === "size"
                                     ? "feedback.imageTooLarge"
                                     : "feedback.invalidImage"
                             ),

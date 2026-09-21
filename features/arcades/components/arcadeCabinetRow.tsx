@@ -194,7 +194,6 @@ export default function ArcadeCabinetRow({
                 ) : (
                     // 로그아웃 — 비활성처럼 어둡게(data-locked) · hover 에 이유(title). 진짜 disabled 는 hover 를 막아 title 이 안 뜬다
                     <Button
-                        appearance="foundation"
                         size="sm"
                         data-locked=""
                         aria-disabled="true"

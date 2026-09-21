@@ -1,16 +1,13 @@
 import { z } from "zod";
 
+import { IMAGE_CONTENT_TYPES, MAX_IMAGE_SIZE } from "@/lib/imageUploadRules";
 import type { createTranslator } from "@/lib/i18n/messages";
 import type { Locale } from "@/lib/i18n/routing";
 
 type Translator = ReturnType<typeof createTranslator>;
 
-export const EXAM_PROOF_CONTENT_TYPES = [
-    "image/jpeg",
-    "image/png",
-    "image/webp",
-] as const;
-export const MAX_EXAM_PROOF_IMAGE_SIZE = 4 * 1024 * 1024;
+export const EXAM_PROOF_CONTENT_TYPES = IMAGE_CONTENT_TYPES;
+export const MAX_EXAM_PROOF_IMAGE_SIZE = MAX_IMAGE_SIZE;
 
 function examIdSchema(t: Translator) {
     return z.coerce

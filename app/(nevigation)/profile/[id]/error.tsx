@@ -23,7 +23,6 @@ export default function ProfileError({
                 description={t("profile.recordsUnchanged")}
                 action={
                     <Button
-                        appearance="foundation"
                         variant="secondary"
                         onClick={() => {
                             router.refresh();
