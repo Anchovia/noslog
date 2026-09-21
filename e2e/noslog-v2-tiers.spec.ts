@@ -26,6 +26,7 @@ const bands: TierBrowserBand[] = Array.from({ length: 136 }, (_, index) => ({
                         entryIndex === 4
                             ? "非常に長い日本語の楽曲タイトルと 한국어 원문 긴 제목 검증 LongOriginalTitleWithoutSpaces"
                             : `STULTI ${index + 1}-${entryIndex + 1}`,
+                    reading: `すとぅるてぃ ${index + 1}-${entryIndex + 1}`,
                     localizedTitle: null,
                     background: null,
                 },
@@ -139,10 +140,14 @@ async function prepare(
     });
     await page.goto(`/${locale}/tiers?goal=990k&level=1`);
     await page.locator(".nl-applied__token").first().click();
-    // 목표 셀렉트 — 폰은 조건 줄, Wide 는 레일(둘 다 접근 이름 「목표」)
+    // 서열표는 제목 스위처에서 고른다(2026-09-22 ④) — 모든 폭에서 같은 자리
     await page
         .getByRole("combobox", {
-            name: { ko: "목표", ja: "目標", en: "Goal" }[locale],
+            name: {
+                ko: "서열표 선택",
+                ja: "難易度表を選ぶ",
+                en: "Choose tier list",
+            }[locale],
             exact: true,
         })
         .click();
@@ -287,7 +292,9 @@ test("all four tier lists update the link context and guide without removing the
     await page.setViewportSize({ width: 390, height: 844 });
     await prepare(page);
     for (const goal of ["s", "990k", "pianist"]) {
-        await page.getByRole("combobox", { name: "목표", exact: true }).click();
+        await page
+            .getByRole("combobox", { name: "서열표 선택", exact: true })
+            .click();
         await page
             .getByRole("option", {
                 name: {
@@ -306,14 +313,19 @@ test("all four tier lists update the link context and guide without removing the
             page.getByRole("button", { name: "필터", exact: true })
         ).toBeVisible();
     }
-    // Recital 은 서열표가 하나라 목표 선택기가 없다. 폰의 모드는 조건 줄 셀렉트
+    // Recital 은 서열표가 하나 — 같은 스위처의 Recital 묶음에서 고른다
     await page
-        .getByRole("combobox", { name: "서열표 모드", exact: true })
+        .getByRole("combobox", { name: "서열표 선택", exact: true })
         .click();
-    await page.getByRole("option", { name: "Recital", exact: true }).click();
     await expect(
-        page.getByRole("combobox", { name: "목표", exact: true })
-    ).toHaveCount(0);
+        page.getByRole("group", { name: "Recital", exact: true })
+    ).toBeVisible();
+    await page
+        .getByRole("option", { name: "Recital 서열표", exact: true })
+        .click();
+    await expect(
+        page.getByRole("combobox", { name: "서열표 선택", exact: true })
+    ).toHaveText("Recital 서열표");
     await expect(page.locator(".nl-tier-card").first()).toHaveAttribute(
         "href",
         /mode=recital&goal=pianist/
@@ -335,7 +347,9 @@ test("calculation guidance preserves chart geometry and keyboard access to exact
 }, testInfo) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await prepare(page);
-    await page.getByRole("combobox", { name: "목표", exact: true }).click();
+    await page
+        .getByRole("combobox", { name: "서열표 선택", exact: true })
+        .click();
     await page
         .getByRole("option", { name: "Pianist 서열표", exact: true })
         .click();
@@ -407,9 +421,9 @@ test("song search narrows every band, keeps the filters and clears in place", as
         page.getByRole("region", { name: "14.3", exact: true })
     ).toBeVisible();
     await expect(page.locator(".nl-tier-card")).toHaveCount(1);
-    await expect(page.locator(".nl-page-heading [role=status]")).toContainText(
-        "1곡"
-    );
+    await expect(
+        page.locator(".nl-tiers p[role=status]:not(.sr-only)")
+    ).toContainText("1곡");
     await search.fill("zzqq");
     await expect(
         page.getByText("「zzqq」에 맞는 곡이 이 서열표에 없습니다.", {
@@ -426,6 +440,48 @@ test("song search narrows every band, keeps the filters and clears in place", as
     await expect(page.locator(".nl-tier-band")).toHaveCount(3);
 });
 
+test("sorts songs inside each band and offers the score order only when signed in", async ({
+    page,
+}) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await prepare(page);
+    const band = page.getByRole("region", { name: "14.3", exact: true });
+    const firstTitle = () =>
+        band.locator(".nl-tier-card").first().getAttribute("aria-label");
+    const sort = page.locator(".nl-tier-scope .nl-filter-trigger");
+    await expect(sort).toHaveAccessibleName("정렬: 서열표 순");
+    await sort.click();
+    await expect(page.getByRole("menuitemradio")).toHaveText([
+        "서열표 순",
+        "레벨 순",
+        "일본어 읽기 순",
+        "점수 낮은 순",
+    ]);
+    await page
+        .getByRole("menuitemradio", { name: "점수 낮은 순", exact: true })
+        .click();
+    await expect(page).toHaveURL(/sort=score/);
+    // 기록 없는 곡(5번째)이 구간 맨 앞, 구간 순서는 그대로
+    expect(await firstTitle()).toContain("LongOriginalTitleWithoutSpaces");
+    await expect(page.locator(".nl-tier-band").first()).toHaveAccessibleName(
+        "14.5"
+    );
+    await sort.click();
+    await page
+        .getByRole("menuitemradio", { name: "서열표 순", exact: true })
+        .click();
+    await expect(page).not.toHaveURL(/sort=/);
+    expect(await firstTitle()).toContain("STULTI 3-1");
+
+    await prepare(page, { guest: true });
+    await sort.click();
+    await expect(page.getByRole("menuitemradio")).toHaveText([
+        "서열표 순",
+        "레벨 순",
+        "일본어 읽기 순",
+    ]);
+});
+
 test("unpublished lists and request failures retain the scope controls", async ({
     page,
 }) => {
@@ -435,7 +491,7 @@ test("unpublished lists and request failures retain the scope controls", async (
         page.getByText("선택한 목표의 공개 서열표가 없습니다.", { exact: true })
     ).toBeVisible();
     await expect(
-        page.getByRole("combobox", { name: "목표", exact: true })
+        page.getByRole("combobox", { name: "서열표 선택", exact: true })
     ).toBeVisible();
     await prepare(page, { failSummary: true });
     await expect(page.locator(".nl-tiers").getByRole("alert")).toContainText(

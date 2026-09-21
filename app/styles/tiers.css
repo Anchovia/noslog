@@ -6,11 +6,64 @@
     gap: var(--nl-spacing-16);
     align-items: flex-start;
 }
-.noslog-ui .nl-tier-goal {
-    width: 100%;
-    justify-content: space-between;
+/* 제목 = 서열표 스위처(2026-09-22 ④) — 글자는 페이지 제목 그대로 + 꺾쇠 24 흐림.
+   누르는 영역은 컨트롤 높이(줄 높이는 늘리지 않게 위아래로 당김), 올림 면이 칠해질 좌우 8 은 잉크가 제목 선에 서게 왼쪽으로 당긴다.
+   테두리 없는 컨트롤이라 포커스에서만 1px 흰 선 */
+.noslog-ui .nl-tier-heading {
+    display: flex;
+    min-width: 0;
+    margin: 0;
 }
-/* 머리(2026-09-22 B안 · 악곡 목록 폰 머리와 같은 틀) — 검색줄: 검색 남는 폭 + ☰ 필터 44(적용 개수 배지).
+.noslog-ui .nl-tier-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--nl-spacing-4);
+    min-width: 0;
+    min-height: var(--nl-control-height);
+    margin-block: calc((1lh - var(--nl-control-height)) / 2);
+    margin-inline-start: calc(var(--nl-spacing-8) * -1);
+    padding-inline: var(--nl-spacing-8);
+    border: 0;
+    border-radius: var(--nl-radius-field);
+    background: transparent;
+    color: var(--nl-content-default);
+    text-align: start;
+}
+.noslog-ui .nl-tier-switch > span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.noslog-ui .nl-tier-switch > svg {
+    flex: none;
+    width: var(--nl-icon-large);
+    height: var(--nl-icon-large);
+    color: var(--nl-content-subdued);
+}
+@media (hover: hover) {
+    .noslog-ui .nl-tier-switch:hover {
+        background: var(--nl-interaction-hover);
+    }
+}
+.noslog-ui .nl-tier-switch:focus-visible {
+    outline: none;
+    box-shadow: inset 0 0 0 1px var(--nl-focus-ring);
+}
+.noslog-ui .nl-tier-switch[data-state="open"] {
+    background: var(--nl-interaction-selected-pressed);
+}
+/* 목록 소제목(Basic · Recital) — 목록 메뉴 소제목 규격: metadata · 흐림 · 400 */
+.noslog-ui .nl-tier-switch__group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-4);
+}
+.noslog-ui .nl-tier-switch__heading {
+    padding: var(--nl-spacing-8) var(--nl-spacing-12) var(--nl-spacing-4);
+    color: var(--nl-content-subdued);
+}
+/* 머리(2026-09-22 · 악곡 목록 폰 머리와 같은 틀) — 검색줄: 검색 남는 폭 + ☰ 필터 44(적용 개수 배지).
    Wide 는 제목 아래 검색 전체 폭 */
 .noslog-ui .nl-tier-search {
     display: flex;
@@ -21,7 +74,7 @@
     flex: 1;
     min-width: 0;
 }
-/* 조건 줄: 모드 · 목표 테두리 없는 셀렉트 M(잉크를 왼쪽 선에 — 안쪽 8 을 당김) · 오른쪽 보기 전환 M */
+/* 폰 결과 줄: 왼쪽 결과 수 메타 · 오른쪽 보기 전환 M */
 .noslog-ui .nl-tier-scope {
     display: flex;
     justify-content: space-between;
@@ -29,19 +82,19 @@
     gap: var(--nl-spacing-8);
     min-width: 0;
 }
-.noslog-ui .nl-tier-scope__selects {
-    display: flex;
-    min-width: 0;
-    margin-inline-start: calc(var(--nl-spacing-8) * -1);
-}
-.noslog-ui .nl-tier-scope .nl-compact-select {
+/* 폰 결과 줄 = 악곡 목록과 같은 규칙 — 고스트 정렬은 안쪽 12 만큼 당겨 아이콘을 목록 왼쪽 선에 맞추고,
+   좁은 폭에서는 정렬 라벨이 말줄임되며 보기 전환은 줄지 않는다 */
+.noslog-ui .nl-tier-scope {
     min-height: var(--nl-control-height-compact);
 }
-.noslog-ui .nl-tier-browser-mode {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-12);
+.noslog-ui .nl-tier-scope > .nl-filter-trigger {
+    flex: 0 1 auto;
     min-width: 0;
+    margin-left: calc(-1 * var(--nl-spacing-12));
+}
+.noslog-ui .nl-tier-scope > .nl-segments {
+    flex: none;
+    margin-left: auto;
 }
 .noslog-ui .nl-tier-rail {
     display: flex;
@@ -65,7 +118,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    min-height: 44px;
     gap: var(--nl-spacing-12);
 }
 .noslog-ui .nl-tier-filter-body {

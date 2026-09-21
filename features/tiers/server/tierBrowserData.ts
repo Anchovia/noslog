@@ -269,6 +269,9 @@ export async function getTierBrowserBand(
                     music: {
                         index: entry.chart.music.index,
                         title: entry.chart.music.title,
+                        reading:
+                            entry.chart.music.title_kana?.trim() ||
+                            entry.chart.music.title,
                         background: entry.chart.music.background,
                         localizedTitle: getLocalizedMusicTitle(
                             entry.chart.music,

@@ -34,6 +34,7 @@ import {
 } from "@/features/tiers/server/tierBrowserData";
 import {
     nextTierBrowserVisibleCount,
+    sortTierBrowserEntries,
     tierBrowserSkeletonCount,
     TIER_BROWSER_BATCH_SIZE,
 } from "@/features/tiers/components/tierBrowserBands";
@@ -121,6 +122,7 @@ describe("Tier browser request and data contract", () => {
             // 예전 주소의 view=detailed 는 목록 보기로 읽는다(2026-09-22)
             view: "list",
             q: "",
+            sort: "position",
         });
         expect(serializeTierBrowserQuery(parsed).get("view")).toBe("list");
         expect(
@@ -140,6 +142,61 @@ describe("Tier browser request and data contract", () => {
             parseTierBrowserQuery(new URLSearchParams(`q=${"a".repeat(150)}`)).q
         ).toHaveLength(100);
         expect(serializeTierBrowserQuery(query()).has("bands")).toBe(false);
+        // 정렬은 기본(서열표 순)이면 주소에 남기지 않고, 모르는 값은 서열표 순으로 읽는다(2026-09-22)
+        expect(serializeTierBrowserQuery(query()).has("sort")).toBe(false);
+        const sorted = parseTierBrowserQuery(new URLSearchParams("sort=score"));
+        expect(sorted.sort).toBe("score");
+        expect(serializeTierBrowserQuery(sorted).get("sort")).toBe("score");
+        expect(
+            parseTierBrowserQuery(new URLSearchParams("sort=other")).sort
+        ).toBe("position");
+    });
+    it("sorts within a band and breaks ties by tier list order", () => {
+        const entry = (
+            position: number,
+            level: number,
+            reading: string,
+            score: number | null
+        ) => ({
+            id: position,
+            chartId: position,
+            position,
+            chart: {
+                difficulty: "Expert",
+                level,
+                music: {
+                    index: `m${position}`,
+                    title: reading,
+                    reading,
+                    localizedTitle: null,
+                    background: null,
+                },
+            },
+            record:
+                score === null
+                    ? null
+                    : {
+                          score,
+                          rank: "S",
+                          fc_type: 0,
+                          grade: null,
+                          rating: null,
+                      },
+        });
+        const entries = [
+            entry(2, 11, "か", 990_000),
+            entry(0, 12, "う", null),
+            entry(1, 12, "あ", 950_000),
+            entry(3, 11, "い", 950_000),
+        ];
+        const order = (sort: Parameters<typeof sortTierBrowserEntries>[1]) =>
+            sortTierBrowserEntries(entries, sort).map((item) => item.position);
+        expect(order("position")).toEqual([0, 1, 2, 3]);
+        expect(order("level")).toEqual([0, 1, 2, 3]);
+        expect(order("name")).toEqual([1, 3, 0, 2]);
+        // 기록 없는 곡이 먼저, 그다음 낮은 점수 · 같은 점수는 서열표 순
+        expect(order("score")).toEqual([0, 1, 3, 2]);
+        expect(entries.map((item) => item.position)).toEqual([2, 0, 1, 3]);
     });
     it("narrows band counts and band entries to songs matching the search", async () => {
         mocks.music.mockResolvedValue([{ index: "stulti" }]);
@@ -186,6 +243,37 @@ describe("Tier browser request and data contract", () => {
         mocks.music.mockClear();
         await getTierBrowserOverview(query(), null);
         expect(mocks.music).not.toHaveBeenCalled();
+    });
+    it("sends the Japanese reading, falling back to the original title", async () => {
+        mocks.band.mockResolvedValue({
+            id: 11,
+            value: 1,
+            position: 0,
+            entries: [
+                {
+                    id: 1,
+                    chartId: 1,
+                    position: 0,
+                    chart: {
+                        ...chart,
+                        music: { ...chart.music, title_kana: " すとぅるてぃ " },
+                    },
+                },
+                {
+                    id: 2,
+                    chartId: 80,
+                    position: 1,
+                    chart: {
+                        ...chart,
+                        music: { ...chart.music, title_kana: "" },
+                    },
+                },
+            ],
+        });
+        const band = await getTierBrowserBand(query(), 11, null, "ko");
+        expect(band?.entries.map((entry) => entry.chart.music.reading)).toEqual(
+            ["すとぅるてぃ", "STULTI"]
+        );
     });
     it("keeps Basic goals and maps every Recital goal to its single table", () => {
         const parse = (value: string) =>

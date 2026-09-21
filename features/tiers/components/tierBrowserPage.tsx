@@ -2,7 +2,7 @@
 
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { LayoutGrid, List, ListFilter } from "lucide-react";
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import {
     useLocale,
@@ -13,14 +13,14 @@ import PageContainer from "@/components/layout/pageContainer";
 import Button from "@/components/ui/Button";
 import ActionButton from "@/components/ui/actionButton";
 import AppliedTokens from "@/components/ui/appliedTokens";
-import { FormField } from "@/components/ui/formField";
 import FullScreenDialog from "@/components/ui/fullScreenDialog";
 import ResultState from "@/components/ui/resultState";
 import SearchField from "@/components/ui/searchField";
-import CompactSelect from "@/components/ui/compactSelect";
 import { SegmentedControl } from "@/components/ui/segmentedControl";
+import SortMenu from "@/components/ui/sortMenu";
 import { tierBrowserOverviewOptions } from "@/features/tiers/api/tierBrowser";
 import {
+    TIER_BROWSER_SORTS,
     parseTierBrowserQuery,
     serializeTierBrowserQuery,
 } from "@/features/tiers/schemas/tierBrowserSchema";
@@ -29,12 +29,7 @@ import type {
     TierBrowserOverview,
     TierBrowserQuery,
 } from "@/features/tiers/schemas/tierBrowserSchema";
-import {
-    TIER_MODE_GOALS,
-    tierGoalLabels,
-    formatTierValue,
-    normalizeTierModeGoal,
-} from "@/lib/tiers";
+import { formatTierValue } from "@/lib/tiers";
 import useWideLayout from "@/lib/hooks/useWideLayout";
 import { SkeletonText } from "@/components/ui/skeleton";
 import {
@@ -43,6 +38,7 @@ import {
 } from "./tierBrowserCard";
 import TierBrowserBands from "./tierBrowserBands";
 import TierFilterFields from "./tierFilterFields";
+import TierListSwitcher from "./tierListSwitcher";
 import TierRatingGuide from "./tierRatingGuide";
 
 export default function TierBrowserPage({
@@ -59,7 +55,6 @@ export default function TierBrowserPage({
     const t = useTranslations();
     const locale = useLocale();
     const href = useLocalizedHref();
-    const goalId = useId();
     const wide = useWideLayout();
     const searchParams = useSearchParams();
     const query = parseTierBrowserQuery(new URLSearchParams(searchParams));
@@ -186,7 +181,7 @@ export default function TierBrowserPage({
                   count: selected.length - 1,
               });
     }
-    // 결과 수 — 폰은 제목 아래 메타 글줄(악곡 목록과 같음), Wide 는 결과 머리 줄 왼쪽(2026-09-22)
+    // 결과 수 — 폰은 악곡 목록처럼 제목(스위처) 아래 메타 글줄, Wide 는 정렬 · 보기 툴바 아래(악곡 목록과 같은 자리)
     const countClass = wide ? "nl-body-secondary" : "nl-metadata";
     const resultCount = (
         <p className={`${countClass} nl-muted`} role="status">
@@ -205,74 +200,7 @@ export default function TierBrowserPage({
             )}
         </p>
     );
-    function changeMode(mode: TierBrowserQuery["mode"]) {
-        commit({
-            ...query,
-            mode,
-            goal: normalizeTierModeGoal(mode, query.goal),
-            bands: [],
-        });
-    }
-    function changeGoal(goal: TierBrowserQuery["goal"]) {
-        commit({ ...query, goal, bands: [] });
-    }
-    const goalOptions = TIER_MODE_GOALS[query.mode].map((goal) => ({
-        value: goal,
-        label: t("tiers.goalOption", { goal: tierGoalLabels[goal] }),
-    }));
-    // 폰 조건 줄(2026-09-22 B안) — 모드 · 목표를 테두리 없는 셀렉트 M 두 개로(악곡 목록 정렬 트리거와 같은 고스트 모양).
-    // Recital 은 서열표가 하나라 목표 셀렉트가 없다
-    const scopeSelects = (
-        <div className="nl-tier-scope__selects">
-            <CompactSelect
-                label={t("tiers.modeNav")}
-                value={query.mode}
-                onValueChange={changeMode}
-                options={[
-                    { value: "basic", label: "Basic" },
-                    { value: "recital", label: "Recital" },
-                ]}
-            />
-            {goalOptions.length > 1 ? (
-                <CompactSelect
-                    label={t("tiers.goal")}
-                    value={query.goal}
-                    onValueChange={changeGoal}
-                    options={goalOptions}
-                />
-            ) : null}
-        </div>
-    );
-    const modeControl = (
-        <div className="nl-tier-browser-mode">
-            <span className="nl-control">{t("tiers.modeLabel")}</span>
-            <SegmentedControl
-                label={t("tiers.modeNav")}
-                value={query.mode}
-                onValueChange={changeMode}
-                options={[
-                    { value: "basic", label: "Basic" },
-                    { value: "recital", label: "Recital" },
-                ]}
-            />
-        </div>
-    );
-    // Wide 레일 — 라벨 있는 입력칸형 셀렉트(Recital 은 없음)
-    const goalControl =
-        goalOptions.length > 1 ? (
-            <FormField id={goalId} label={t("tiers.goal")}>
-                <CompactSelect
-                    id={goalId}
-                    label={t("tiers.goal")}
-                    outlined
-                    className="nl-tier-goal"
-                    value={query.goal}
-                    onValueChange={changeGoal}
-                    options={goalOptions}
-                />
-            </FormField>
-        ) : null;
-    // 보기 방식 — 격자(자켓) · 목록(행). 악곡 목록과 같은 부품 · 문구. 폰은 조건 줄에 M, Wide 는 결과 머리 줄에 L
+    // 보기 방식 — 격자(자켓) · 목록(행). 악곡 목록과 같은 부품 · 문구. 폰은 결과 줄에 M, Wide 는 결과 머리 줄에 L
     const viewSwitch = (
         <SegmentedControl
             label={t("discovery.view")}
@@ -294,6 +222,29 @@ export default function TierBrowserPage({
             ]}
         />
     );
+    // 정렬 — 구간 안 곡 순서(2026-09-22 ②). 악곡 목록과 같은 SortMenu · 자리(폰 결과 줄 왼쪽 고스트 M, Wide 툴바 왼쪽 L).
+    // 점수 낮은 순은 로그인했을 때만 보인다 — 구간과 같은 기준(받은 서열 데이터의 viewerId)
+    const signedIn = (data?.viewerId ?? viewerId) !== null;
+    const sorts = TIER_BROWSER_SORTS.filter(
+        (value) => value !== "score" || signedIn
+    );
+    const sortMenu = (
+        <SortMenu
+            variant={wide ? undefined : "ghost"}
+            size={wide ? undefined : "sm"}
+            label={t("discovery.sortLabel")}
+            value={sorts.includes(query.sort) ? query.sort : "position"}
+            options={sorts.map((value) => ({
+                value,
+                label: t(
+                    value === "level" || value === "name"
+                        ? `discovery.sort.${value}`
+                        : `tiers.sort.${value}`
+                ),
+            }))}
+            onValueChange={(sort) => commit({ ...query, sort })}
+        />
+    );
     return (
         <PageContainer
             className="nl-tiers"
@@ -301,8 +252,17 @@ export default function TierBrowserPage({
         >
             <div className="nl-page-heading">
                 <div className="nl-page-heading__copy">
+                    {/* 제목 = 서열표 스위처(2026-09-22 ④) — 네 서열표를 여기서 고른다 */}
                     <div className="nl-heading-row">
-                        <h1 className="nl-page-title">{t("tiers.title")}</h1>
+                        <h1 className="nl-tier-heading">
+                            <span className="sr-only">{t("tiers.title")}</span>
+                            <TierListSwitcher
+                                value={query}
+                                onValueChange={({ mode, goal }) =>
+                                    commit({ ...query, mode, goal, bands: [] })
+                                }
+                            />
+                        </h1>
                         {data ? (
                             <TierRatingGuide query={query} overview={data} />
                         ) : null}
@@ -318,8 +278,6 @@ export default function TierBrowserPage({
                         className="nl-tier-rail"
                         aria-label={t("tiers.conditions")}
                     >
-                        {modeControl}
-                        {goalControl}
                         <TierFilterFields
                             query={query}
                             onChange={commit}
@@ -329,14 +287,14 @@ export default function TierBrowserPage({
                 ) : null}
                 <div className="nl-tier-results">
                     <div className="nl-filter-control-block">
-                        {/* 폰 머리 두 줄(2026-09-22 B안): 검색 + ☰ 필터 44 / 모드 · 목표 셀렉트 M · 보기 전환 M
-                            — 악곡 목록 폰 머리와 같은 틀 */}
+                        {/* 폰: 검색 + ☰ 필터 44 / 정렬 · 보기 전환 M. Wide: 정렬 L · 보기 전환 L
+                            — 악곡 목록 머리와 같은 틀(2026-09-22) */}
                         <div
                             className={
                                 wide ? "nl-tier-toolbar" : "nl-tier-search"
                             }
                         >
-                            {wide ? resultCount : searchField}
+                            {wide ? sortMenu : searchField}
                             {!wide ? (
                                 <FullScreenDialog
                                     open={open}
@@ -416,12 +374,15 @@ export default function TierBrowserPage({
                             ) : null}
                             {wide ? viewSwitch : null}
                         </div>
-                        {!wide ? (
+                        {/* 폰 결과 줄 — 왼쪽 정렬(고스트 M) · 오른쪽 보기 전환 M, Wide 는 툴바 아래 결과 수 (악곡 목록과 같은 틀) */}
+                        {wide ? (
+                            resultCount
+                        ) : (
                             <div className="nl-tier-scope">
-                                {scopeSelects}
+                                {sortMenu}
                                 {viewSwitch}
                             </div>
-                        ) : null}
+                        )}
                     </div>
                     <AppliedTokens
                         label={t("tiers.conditions")}
