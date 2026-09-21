@@ -1,6 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import {
+    startTransition,
+    useCallback,
+    useEffect,
+    useRef,
+    useState,
+} from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import ActionButton from "@/components/ui/actionButton";
@@ -15,6 +21,21 @@ import type {
 import { formatTierValue } from "@/lib/tiers";
 import TierBrowserCard, { TierBrowserCardSkeleton } from "./tierBrowserCard";
 import { tierValueColor } from "@/lib/music/tierValueColor";
+
+export const TIER_BROWSER_BATCH_SIZE = 20;
+export const TIER_BROWSER_AUTO_BATCHES = 3;
+export const TIER_BROWSER_IDLE_SKELETONS = 6;
+
+export function tierBrowserSkeletonCount(total: number, visible: boolean) {
+    return Math.min(
+        total,
+        visible ? TIER_BROWSER_BATCH_SIZE : TIER_BROWSER_IDLE_SKELETONS
+    );
+}
+
+export function nextTierBrowserVisibleCount(current: number, total: number) {
+    return Math.min(total, current + TIER_BROWSER_BATCH_SIZE);
+}
 
 function TierBrowserBandSection({
     summary,
@@ -32,7 +53,10 @@ function TierBrowserBandSection({
     const t = useTranslations();
     const locale = useLocale();
     const ref = useRef<HTMLElement>(null);
+    const progress = useRef<HTMLDivElement>(null);
     const [visible, setVisible] = useState(false);
+    const [visibleCount, setVisibleCount] = useState(TIER_BROWSER_BATCH_SIZE);
+    const [announcement, setAnnouncement] = useState("");
     const band = useQuery({
         ...tierBrowserBandOptions(
             query,
@@ -58,6 +82,35 @@ function TierBrowserBandSection({
         observer.observe(ref.current);
         return () => observer.disconnect();
     }, [visible]);
+    const total = band.data?.entries.length ?? 0;
+    const shown = band.data?.entries.slice(0, visibleCount) ?? [];
+    const nextAmount = Math.min(TIER_BROWSER_BATCH_SIZE, total - shown.length);
+    const autoLimit = TIER_BROWSER_BATCH_SIZE * (TIER_BROWSER_AUTO_BATCHES + 1);
+    const autoLoad = shown.length < Math.min(total, autoLimit);
+    const appendNext = useCallback(() => {
+        const next = nextTierBrowserVisibleCount(visibleCount, total);
+        if (next === visibleCount) return;
+        startTransition(() => {
+            setVisibleCount(next);
+            setAnnouncement(
+                t("discovery.added", { count: next - visibleCount })
+            );
+        });
+    }, [t, total, visibleCount]);
+    useEffect(() => {
+        const target = progress.current;
+        if (!autoLoad || !target) return;
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (!entry.isIntersecting) return;
+                observer.disconnect();
+                appendNext();
+            },
+            { rootMargin: "240px 0px" }
+        );
+        observer.observe(target);
+        return () => observer.disconnect();
+    }, [appendNext, autoLoad]);
     return (
         <section
             ref={ref}
@@ -98,7 +151,7 @@ function TierBrowserBandSection({
             ) : null}
             <div className="nl-tier-grid" data-detailed={query.detailed}>
                 {band.data
-                    ? band.data.entries.map((entry) => (
+                    ? shown.map((entry) => (
                           <TierBrowserCard
                               key={entry.id}
                               entry={entry}
@@ -109,7 +162,12 @@ function TierBrowserBandSection({
                       ))
                     : !band.isError
                       ? Array.from(
-                            { length: summary.totalCount },
+                            {
+                                length: tierBrowserSkeletonCount(
+                                    summary.totalCount,
+                                    visible
+                                ),
+                            },
                             (_, index) => (
                                 <TierBrowserCardSkeleton
                                     key={index}
@@ -120,6 +178,24 @@ function TierBrowserBandSection({
                         )
                       : null}
             </div>
+            {band.data && shown.length < total ? (
+                <div className="nl-discovery__progress" ref={progress}>
+                    <ActionButton variant="secondary" onClick={appendNext}>
+                        {t("discovery.loadMore", { count: nextAmount })}
+                    </ActionButton>
+                    <p className="nl-metadata nl-muted">
+                        {t("discovery.progress", {
+                            count: shown.length,
+                            total,
+                        })}
+                    </p>
+                </div>
+            ) : null}
+            {announcement ? (
+                <p className="sr-only" role="status">
+                    {announcement}
+                </p>
+            ) : null}
             {visible && band.isPending ? (
                 <span className="sr-only" role="status">
                     {t("tiers.loading")}
@@ -151,7 +227,7 @@ export default function TierBrowserBands({
         <div className="nl-tier-bands" aria-label={t("tiers.bands")}>
             {bands.map((summary) => (
                 <TierBrowserBandSection
-                    key={`${overview.list!.id}:${summary.id}`}
+                    key={`${overview.list!.id}:${query.mode}:${query.goal}:${query.difficulties.join(",")}:${query.levels.join(",")}:${summary.id}`}
                     summary={summary}
                     query={query}
                     overview={overview}

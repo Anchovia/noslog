@@ -30,6 +30,11 @@ import {
     getTierBrowserBand,
     getTierBrowserOverview,
 } from "@/features/tiers/server/tierBrowserData";
+import {
+    nextTierBrowserVisibleCount,
+    tierBrowserSkeletonCount,
+    TIER_BROWSER_BATCH_SIZE,
+} from "@/features/tiers/components/tierBrowserBands";
 
 const query = () => parseTierBrowserQuery(new URLSearchParams());
 const chart = {
@@ -89,6 +94,15 @@ beforeEach(() => {
 });
 
 describe("Tier browser request and data contract", () => {
+    it("bounds offscreen placeholders and appends one card batch at a time", () => {
+        expect(tierBrowserSkeletonCount(434, false)).toBe(6);
+        expect(tierBrowserSkeletonCount(434, true)).toBe(
+            TIER_BROWSER_BATCH_SIZE
+        );
+        expect(nextTierBrowserVisibleCount(20, 434)).toBe(40);
+        expect(nextTierBrowserVisibleCount(420, 434)).toBe(434);
+    });
+
     it("canonicalizes malformed, duplicate and discontinuous filter values", () => {
         const parsed = parseTierBrowserQuery(
             new URLSearchParams(
