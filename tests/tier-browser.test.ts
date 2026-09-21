@@ -115,11 +115,16 @@ describe("Tier browser request and data contract", () => {
             difficulties: ["Expert", "Real"],
             levels: ["12", "real-3"],
             bands: [14.5, 1],
-            detailed: true,
+            // 예전 주소의 view=detailed 는 목록 보기로 읽는다(2026-09-22)
+            view: "list",
         });
+        expect(serializeTierBrowserQuery(parsed).get("view")).toBe("list");
         expect(
             parseTierBrowserQuery(serializeTierBrowserQuery(parsed))
         ).toEqual(parsed);
+        expect(
+            parseTierBrowserQuery(new URLSearchParams("view=other")).view
+        ).toBe("grid");
         expect(serializeTierBrowserQuery(query()).has("bands")).toBe(false);
     });
     it("keeps Basic goals and maps every Recital goal to its single table", () => {

@@ -1,6 +1,5 @@
 "use client";
 
-/* eslint-disable @next/next/no-img-element */
 import { SkeletonText } from "@/components/ui/skeleton";
 import Link from "next/link";
 import {
@@ -9,7 +8,6 @@ import {
     useTranslations,
 } from "@/components/i18n/localeProvider";
 import MusicJacket from "@/components/music/musicJacket";
-import { FullComboMark } from "@/features/music/components/chartLeaderboard";
 import { serializeTierBrowserQuery } from "@/features/tiers/schemas/tierBrowserSchema";
 import { isTierGoalAchieved } from "@/lib/tiers";
 import type {
@@ -17,28 +15,19 @@ import type {
     TierBrowserQuery,
 } from "@/features/tiers/schemas/tierBrowserSchema";
 
-const ranks: Record<string, string> = {
-    P: "p",
-    S: "s",
-    "A+": "a2",
-    A: "a",
-    "B+": "b2",
-    B: "b",
-    C: "c",
-    D: "d",
+// 375 미만 4열 카드(66)는 「Expert 10」 판을 못 담아 약칭 — 악곡 상세 난이도 선택과 같은 N · H · EX · R (2026-09-22)
+const shortDifficulty: Record<string, string> = {
+    Normal: "N",
+    Hard: "H",
+    Expert: "EX",
+    Real: "R",
 };
 
-export default function TierBrowserCard({
-    entry,
-    query,
-    signedIn,
-    pending,
-}: {
-    entry: TierBrowserEntry;
-    query: TierBrowserQuery;
-    signedIn: boolean;
-    pending: boolean;
-}) {
+function useTierEntry(
+    entry: TierBrowserEntry,
+    query: TierBrowserQuery,
+    signedIn: boolean
+) {
     const locale = useLocale();
     const href = useLocalizedHref();
     const t = useTranslations();
@@ -47,11 +36,6 @@ export default function TierBrowserCard({
         record && (record.fc_type === 3 || record.score >= 1_000_000)
     );
     const fc = Boolean(record && record.fc_type >= 2 && !pianist);
-    const rank = record
-        ? pianist
-            ? "p"
-            : ranks[record.rank.toUpperCase()]
-        : undefined;
     const score = record
         ? record.score.toLocaleString(locale)
         : t("tiers.unplayed");
@@ -67,17 +51,43 @@ export default function TierBrowserCard({
         goal: query.goal,
         returnTo: href(`/tiers?${serializeTierBrowserQuery(query)}`),
     });
+    return {
+        t,
+        locale,
+        chart,
+        record,
+        score,
+        goalAchieved,
+        achievement,
+        link: href(
+            `/music/${encodeURIComponent(chart.music.index)}/${chart.difficulty.toLowerCase()}?${params}`
+        ),
+        label: `${chart.music.title} · ${chart.difficulty} ${chart.level} · ${t("detail.tier")}${signedIn ? ` · ${score}${pianist ? " · Pianist" : fc ? " · Full Combo" : ""}${goalAchieved ? ` · ${t("tiers.goalAchieved")}` : ""}` : ""}`,
+    };
+}
+
+/** 격자 보기 카드 — 자켓 1:1 · 오른쪽 아래 난이도 판 · 로그인하면 아래 점수(달성하면 기준 색) */
+export default function TierBrowserCard({
+    entry,
+    query,
+    signedIn,
+    pending,
+}: {
+    entry: TierBrowserEntry;
+    query: TierBrowserQuery;
+    signedIn: boolean;
+    pending: boolean;
+}) {
+    const { chart, score, goalAchieved, achievement, link, label } =
+        useTierEntry(entry, query, signedIn);
     return (
         <Link
             className="nl-tier-card"
-            data-detailed={query.detailed}
             data-goal={query.goal}
             aria-disabled={pending || undefined}
             tabIndex={pending ? -1 : undefined}
-            href={href(
-                `/music/${encodeURIComponent(chart.music.index)}/${chart.difficulty.toLowerCase()}?${params}`
-            )}
-            aria-label={`${chart.music.title} · ${chart.difficulty} ${chart.level} · ${t("detail.tier")}${signedIn ? ` · ${score}${pianist ? " · Pianist" : fc ? " · Full Combo" : ""}${goalAchieved ? ` · ${t("tiers.goalAchieved")}` : ""}` : ""}`}
+            href={link}
+            aria-label={label}
             onClick={(event) => {
                 if (pending) event.preventDefault();
             }}
@@ -92,34 +102,23 @@ export default function TierBrowserCard({
                     data-achievement={achievement}
                     aria-hidden
                 />
-                {/* 기본 보기 자켓 위에는 오른쪽 아래 난이도 판만 — 같은 구간에 한 곡의 여러 난이도가 있어도 구분되게.
-                    등급 메달·FC 마크는 테두리와 점수 색이 대신한다. 상세 보기는 점수 띠에 메달·FC 그대로 */}
-                {signedIn && rank && query.detailed ? (
-                    <img
-                        className="nl-tier-card__rank"
-                        src={`/grade/grade_${rank}.png`}
-                        alt=""
-                    />
-                ) : null}
-                {!query.detailed ? (
+                {/* 자켓 위에는 오른쪽 아래 난이도 판만 — 같은 구간에 한 곡의 여러 난이도가 있어도 구분되게.
+                    등급 메달·FC 마크는 테두리와 점수 색이 대신한다 */}
+                <span
+                    className="nl-tier-card__difficulty nl-metadata"
+                    data-difficulty={chart.difficulty.toLowerCase()}
+                    aria-hidden
+                >
                     <span
-                        className="nl-tier-card__difficulty nl-metadata"
-                        data-difficulty={chart.difficulty.toLowerCase()}
-                        aria-hidden
+                        className="nl-tier-card__difficulty-name"
+                        data-short={shortDifficulty[chart.difficulty]}
                     >
-                        {chart.difficulty} {chart.level}
-                    </span>
-                ) : null}
-                {signedIn && query.detailed ? (
-                    <span className="nl-tier-card__score-band nl-metric-value">
-                        {fc && record ? (
-                            <FullComboMark fcType={record.fc_type} />
-                        ) : null}
-                        <span>{score}</span>
-                    </span>
-                ) : null}
+                        {chart.difficulty}
+                    </span>{" "}
+                    {chart.level}
+                </span>
             </MusicJacket>
-            {signedIn && !query.detailed ? (
+            {signedIn ? (
                 <span
                     className="nl-tier-card__score nl-metric-value"
                     data-achieved={goalAchieved || undefined}
@@ -127,79 +126,145 @@ export default function TierBrowserCard({
                     {score}
                 </span>
             ) : null}
-            {query.detailed ? (
-                <>
-                    <span className="nl-component-title">
-                        {chart.music.title}
-                    </span>
-                    {chart.music.localizedTitle ? (
-                        <span className="nl-metadata nl-muted">
-                            {chart.music.localizedTitle}
-                        </span>
-                    ) : null}
-                    {/* 난이도명·레벨 모두 난이도 색 글자(DISC-45, 다른 결과 화면과 같은 nl-level-- 클래스) */}
+        </Link>
+    );
+}
+
+/**
+ * 목록 보기 행(2026-09-22 B안) — 자켓 48(채보 발견 채보 묶음과 같은 크기 · 모서리 4) · 곡 이름 · 난이도,
+ * 로그인하면 오른쪽에 점수(달성하면 기준 색)와 공식 Grd(없으면 NosLog 레이팅) 기여. 행 = 48 + 위아래 8, 아래 구분선
+ */
+export function TierBrowserRow({
+    entry,
+    query,
+    signedIn,
+    pending,
+}: {
+    entry: TierBrowserEntry;
+    query: TierBrowserQuery;
+    signedIn: boolean;
+    pending: boolean;
+}) {
+    const {
+        t,
+        locale,
+        chart,
+        record,
+        score,
+        goalAchieved,
+        achievement,
+        link,
+        label,
+    } = useTierEntry(entry, query, signedIn);
+    const contribution =
+        record?.grade !== null && record?.grade !== undefined
+            ? `${t("rankings.metric.grade")} +${record.grade.toLocaleString(
+                  locale,
+                  {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                  }
+              )}`
+            : record?.rating !== null && record?.rating !== undefined
+              ? `${t("rankings.metric.rating")} +${record.rating.toLocaleString(
+                    locale,
+                    {
+                        minimumFractionDigits: 1,
+                        maximumFractionDigits: 1,
+                    }
+                )}`
+              : null;
+    return (
+        <Link
+            className="nl-tier-row"
+            data-goal={query.goal}
+            aria-disabled={pending || undefined}
+            tabIndex={pending ? -1 : undefined}
+            href={link}
+            aria-label={label}
+            onClick={(event) => {
+                if (pending) event.preventDefault();
+            }}
+        >
+            <MusicJacket
+                appearance="foundation"
+                {...chart.music}
+                className="nl-tier-row__jacket"
+            >
+                <span
+                    className="nl-tier-card__outline"
+                    data-achievement={achievement}
+                    aria-hidden
+                />
+            </MusicJacket>
+            <span className="nl-tier-row__name">
+                <span className="nl-emphasis-label">{chart.music.title}</span>
+                {/* 난이도명·레벨 모두 난이도 색 글자(DISC-45, 다른 결과 화면과 같은 nl-level-- 클래스) */}
+                <span className="nl-metadata">
                     <span
-                        className={`nl-body-secondary nl-level--${chart.difficulty.toLowerCase()}`}
+                        className={`nl-level--${chart.difficulty.toLowerCase()}`}
                     >
                         {chart.difficulty} {chart.level}
                     </span>
-                    {signedIn &&
-                    record?.grade !== null &&
-                    record?.grade !== undefined ? (
-                        <span className="nl-control nl-muted">
-                            {t("rankings.metric.grade")} +
-                            {record.grade.toLocaleString(locale, {
-                                minimumFractionDigits: 2,
-                                maximumFractionDigits: 2,
-                            })}
+                    {chart.music.localizedTitle ? (
+                        <span className="nl-muted">
+                            {" · "}
+                            {chart.music.localizedTitle}
                         </span>
                     ) : null}
-                    {signedIn &&
-                    record?.rating !== null &&
-                    record?.rating !== undefined ? (
-                        <span className="nl-control nl-muted">
-                            {t("rankings.metric.rating")} +
-                            {record.rating.toLocaleString(locale, {
-                                minimumFractionDigits: 1,
-                                maximumFractionDigits: 1,
-                            })}
+                </span>
+            </span>
+            {signedIn ? (
+                <span className="nl-tier-row__record">
+                    <span
+                        className="nl-tier-card__score nl-metric-value"
+                        data-achieved={goalAchieved || undefined}
+                        data-unplayed={!record || undefined}
+                    >
+                        {score}
+                    </span>
+                    {contribution ? (
+                        <span className="nl-metadata nl-muted">
+                            {contribution}
                         </span>
                     ) : null}
-                </>
+                </span>
             ) : null}
         </Link>
     );
 }
 
 /**
- * 서열 카드 스켈레톤(2026-09-19 로딩 시안 S1) — 같은 카드 틀(자켓 1:1 · 사이 4, 자세히 보기면 8)에
- * 자켓 · 점수 · (자세히 보기면) 이름 · 난이도 글자 자리
+ * 서열 카드 스켈레톤(2026-09-19 로딩 시안 S1) — 같은 카드 틀(자켓 1:1 · 사이 4)에 자켓 · 점수 자리
  */
-export function TierBrowserCardSkeleton({
-    detailed,
-    signedIn,
-}: {
-    detailed: boolean;
-    signedIn: boolean;
-}) {
+export function TierBrowserCardSkeleton({ signedIn }: { signedIn: boolean }) {
     return (
-        <div
-            className="nl-tier-card"
-            data-detailed={detailed}
-            aria-hidden="true"
-        >
+        <div className="nl-tier-card" aria-hidden="true">
             <span className="nl-tier-card__jacket nl-skeleton" />
-            {signedIn && !detailed ? (
+            {signedIn ? (
                 <SkeletonText className="nl-metric-value" width="m" />
             ) : null}
-            {detailed ? (
-                <>
-                    <SkeletonText className="nl-component-title" width="l" />
-                    <SkeletonText className="nl-body-secondary" width="m" />
-                    {signedIn ? (
-                        <SkeletonText className="nl-metric-value" width="m" />
-                    ) : null}
-                </>
+        </div>
+    );
+}
+
+/** 목록 행 스켈레톤 — 같은 행 틀에 자켓 · 이름 · 난이도 · (로그인하면) 점수 · 기여 자리 */
+export function TierBrowserRowSkeleton({ signedIn }: { signedIn: boolean }) {
+    return (
+        <div className="nl-tier-row" aria-hidden="true">
+            <span className="nl-tier-row__jacket nl-skeleton" />
+            <span className="nl-tier-row__name">
+                <SkeletonText className="nl-emphasis-label" width="l" />
+                <SkeletonText className="nl-metadata" width="s" />
+            </span>
+            {signedIn ? (
+                <span className="nl-tier-row__record">
+                    <SkeletonText
+                        className="nl-metric-value"
+                        sample="000,000"
+                    />
+                    <SkeletonText className="nl-metadata" sample="Grd +00.00" />
+                </span>
             ) : null}
         </div>
     );

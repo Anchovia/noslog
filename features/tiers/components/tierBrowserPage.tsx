@@ -1,7 +1,7 @@
 "use client";
 
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { ChevronDown, ListFilter } from "lucide-react";
+import { LayoutGrid, List, ListFilter } from "lucide-react";
 import { useId, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import {
@@ -13,7 +13,6 @@ import PageContainer from "@/components/layout/pageContainer";
 import Button from "@/components/ui/Button";
 import ActionButton from "@/components/ui/actionButton";
 import AppliedTokens from "@/components/ui/appliedTokens";
-import { Checkbox } from "@/components/ui/checkbox";
 import { FormField } from "@/components/ui/formField";
 import FullScreenDialog from "@/components/ui/fullScreenDialog";
 import ResultState from "@/components/ui/resultState";
@@ -37,7 +36,10 @@ import {
 } from "@/lib/tiers";
 import useWideLayout from "@/lib/hooks/useWideLayout";
 import { SkeletonText } from "@/components/ui/skeleton";
-import { TierBrowserCardSkeleton } from "./tierBrowserCard";
+import {
+    TierBrowserCardSkeleton,
+    TierBrowserRowSkeleton,
+} from "./tierBrowserCard";
 import TierBrowserBands from "./tierBrowserBands";
 import TierFilterFields from "./tierFilterFields";
 import TierRatingGuide from "./tierRatingGuide";
@@ -121,13 +123,15 @@ export default function TierBrowserPage({
                   count: selected.length - 1,
               });
     }
+    // 결과 수 — 폰은 제목 아래 메타 글줄(악곡 목록과 같음), Wide 는 결과 머리 줄 왼쪽(2026-09-22)
+    const countClass = wide ? "nl-body-secondary" : "nl-metadata";
     const resultCount = (
-        <p className="nl-body-secondary nl-muted" role="status">
+        <p className={`${countClass} nl-muted`} role="status">
             {pending ? (
                 // 글자 대신 결과 수 자리 스켈레톤(안내는 화면 읽기에만)
                 <>
                     <span className="sr-only">{t("tiers.loading")}</span>
-                    <SkeletonText className="nl-body-secondary" width="s" />
+                    <SkeletonText className={countClass} width="s" />
                 </>
             ) : data?.list ? (
                 t("tiers.songCount", {
@@ -161,50 +165,73 @@ export default function TierBrowserPage({
             />
         </div>
     );
-    // Recital 은 서열표가 하나라 목표 선택기를 두지 않는다
-    const goalControl =
+    // Recital 은 서열표가 하나라 목표 선택기를 두지 않는다.
+    // 선택지는 「S 서열표」 처럼 표 이름으로 — 폰은 라벨 없이 모드와 한 줄이라 이름이 뜻을 말한다(2026-09-22)
+    const goalSelect =
         TIER_MODE_GOALS[query.mode].length > 1 ? (
-            <FormField id={goalId} label={t("tiers.goal")}>
-                <CompactSelect
-                    id={goalId}
-                    label={t("tiers.goal")}
-                    outlined
-                    className="nl-tier-goal"
-                    value={query.goal}
-                    onValueChange={(goal) =>
-                        commit({
-                            ...query,
-                            goal,
-                            bands: [],
-                        })
-                    }
-                    options={TIER_MODE_GOALS[query.mode].map((goal) => ({
-                        value: goal,
-                        label: tierGoalLabels[goal],
-                    }))}
-                />
-            </FormField>
+            <CompactSelect
+                id={goalId}
+                label={t("tiers.goal")}
+                outlined
+                className="nl-tier-goal"
+                value={query.goal}
+                onValueChange={(goal) =>
+                    commit({
+                        ...query,
+                        goal,
+                        bands: [],
+                    })
+                }
+                options={TIER_MODE_GOALS[query.mode].map((goal) => ({
+                    value: goal,
+                    label: t("tiers.goalOption", {
+                        goal: tierGoalLabels[goal],
+                    }),
+                }))}
+            />
         ) : null;
+    const goalControl = goalSelect ? (
+        <FormField id={goalId} label={t("tiers.goal")}>
+            {goalSelect}
+        </FormField>
+    ) : null;
+    // 보기 방식 — 격자(자켓) · 목록(행). 악곡 목록과 같은 부품 · 문구, 같은 줄 필터 트리거와 같은 높이(L)
+    const viewSwitch = (
+        <SegmentedControl
+            label={t("discovery.view")}
+            value={query.view}
+            onValueChange={(view) => commit({ ...query, view })}
+            iconOnly
+            options={[
+                {
+                    value: "grid",
+                    label: t("discovery.grid"),
+                    icon: <LayoutGrid aria-hidden />,
+                },
+                {
+                    value: "list",
+                    label: t("discovery.list"),
+                    icon: <List aria-hidden />,
+                },
+            ]}
+        />
+    );
     return (
         <PageContainer
             className="nl-tiers"
             data-layout={wide ? "wide" : "compact"}
         >
-            <h1 className="nl-page-title">{t("tiers.title")}</h1>
-            {!wide ? (
-                <>
-                    {modeControl}
-                    {goalControl}
-                    {data?.list?.description ? (
-                        <p className="nl-body-secondary nl-muted">
-                            {data.list.description}
-                        </p>
-                    ) : null}
-                    {data ? (
-                        <TierRatingGuide query={query} overview={data} />
-                    ) : null}
-                </>
-            ) : null}
+            <div className="nl-page-heading">
+                <div className="nl-page-heading__copy">
+                    <div className="nl-heading-row">
+                        <h1 className="nl-page-title">{t("tiers.title")}</h1>
+                        {data ? (
+                            <TierRatingGuide query={query} overview={data} />
+                        ) : null}
+                    </div>
+                    {!wide ? resultCount : null}
+                </div>
+            </div>
             <div className="nl-tier-layout">
                 {wide ? (
                     <aside
@@ -213,14 +240,6 @@ export default function TierBrowserPage({
                     >
                         {modeControl}
                         {goalControl}
-                        {data?.list?.description ? (
-                            <p className="nl-body-secondary nl-muted">
-                                {data.list.description}
-                            </p>
-                        ) : null}
-                        {data ? (
-                            <TierRatingGuide query={query} overview={data} />
-                        ) : null}
                         <TierFilterFields
                             query={query}
                             onChange={commit}
@@ -230,6 +249,13 @@ export default function TierBrowserPage({
                 ) : null}
                 <div className="nl-tier-results">
                     <div className="nl-filter-control-block">
+                        {/* 폰 조작부 두 줄(2026-09-22 B안): 모드 · 목표 한 줄, 필터 · 보기 한 줄 — 모두 컨트롤 L */}
+                        {!wide ? (
+                            <div className="nl-tier-controls">
+                                {modeControl}
+                                {goalSelect}
+                            </div>
+                        ) : null}
                         <div className="nl-tier-toolbar">
                             {wide ? resultCount : null}
                             {!wide ? (
@@ -263,10 +289,6 @@ export default function TierBrowserPage({
                                                     {filterCount}
                                                 </span>
                                             ) : null}
-                                            <ChevronDown
-                                                className="nl-icon"
-                                                aria-hidden
-                                            />
                                         </Button>
                                     }
                                     footer={
@@ -312,18 +334,8 @@ export default function TierBrowserPage({
                                     </div>
                                 </FullScreenDialog>
                             ) : null}
-                            <Checkbox
-                                label={t("tiers.detailedView")}
-                                checked={query.detailed}
-                                onChange={(event) =>
-                                    commit({
-                                        ...query,
-                                        detailed: event.target.checked,
-                                    })
-                                }
-                            />
+                            {viewSwitch}
                         </div>
-                        {!wide ? resultCount : null}
                     </div>
                     <AppliedTokens
                         label={t("tiers.conditions")}
@@ -413,15 +425,25 @@ export default function TierBrowserPage({
                                         width="s"
                                     />
                                 </header>
-                                <div className="nl-tier-grid">
-                                    {[0, 1, 2, 3, 4, 5].map((index) => (
-                                        <TierBrowserCardSkeleton
-                                            key={index}
-                                            detailed={query.detailed}
-                                            signedIn={viewerId !== null}
-                                        />
-                                    ))}
-                                </div>
+                                {query.view === "list" ? (
+                                    <div className="nl-tier-list">
+                                        {[0, 1, 2, 3, 4, 5].map((index) => (
+                                            <TierBrowserRowSkeleton
+                                                key={index}
+                                                signedIn={viewerId !== null}
+                                            />
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="nl-tier-grid">
+                                        {[0, 1, 2, 3, 4, 5].map((index) => (
+                                            <TierBrowserCardSkeleton
+                                                key={index}
+                                                signedIn={viewerId !== null}
+                                            />
+                                        ))}
+                                    </div>
+                                )}
                             </section>
                         </div>
                     ) : null}

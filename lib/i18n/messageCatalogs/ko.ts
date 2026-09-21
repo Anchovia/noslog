@@ -1433,7 +1433,6 @@ export const koMessages = {
     "record.timingBias": "타이밍 편향",
     "record.balanced": "균형",
     // Public Tier browser.
-    "tiers.detailedView": "상세 보기",
     "tiers.loadError": "서열 데이터를 불러오지 못했습니다.",
     "tiers.selectRange": "범위 선택",
     "tiers.selectRangeEnd": "끝 구간을 고르세요",

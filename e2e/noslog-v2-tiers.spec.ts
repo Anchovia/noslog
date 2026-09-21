@@ -136,14 +136,21 @@ async function prepare(
     await page.goto(`/${locale}/tiers?goal=990k&level=1`);
     await page.locator(".nl-applied__token").first().click();
     await page.locator(".nl-tier-goal").click();
-    await page.getByRole("option", { name: "S", exact: true }).click();
+    await page
+        .getByRole("option", {
+            name: { ko: "S 서열표", ja: "S難易度表", en: "S Tier List" }[
+                locale
+            ],
+            exact: true,
+        })
+        .click();
     if (failSummary)
         await expect(
             page.locator(".nl-tiers").getByRole("alert")
         ).toContainText("서열 데이터를 불러오지 못했습니다.");
     else
         await expect(
-            page.locator(".nl-tier-results [role=status]").first()
+            page.locator(".nl-tiers p[role=status]").first()
         ).toContainText(unpublished ? "" : "18");
     if (!failSummary && !unpublished && !errorBand)
         await expect(page.locator(".nl-tier-card").first()).toBeVisible();
@@ -156,7 +163,8 @@ test("stages all three filter groups, cancels ranges, and commits once", async (
     await prepare(page);
     await page.getByRole("button", { name: "필터", exact: true }).click();
     const dialog = page.getByRole("dialog", { name: "서열표 조건" });
-    await expect(dialog.getByRole("checkbox")).toHaveCount(136);
+    // 0곡 구간은 목록에서 뺀다(2026-09-22) — 곡이 있는 14.5 · 14.4 · 14.3 만
+    await expect(dialog.getByRole("checkbox")).toHaveCount(3);
     await dialog
         .getByRole("button", { name: "범위 선택", exact: true })
         .click();
@@ -208,7 +216,7 @@ test("Intermediate filters commit explicitly and clearing a constraint restores 
     await prepare(page);
     await expect(page.locator(".nl-tier-rail")).toHaveCount(0);
     await expect(
-        page.getByRole("checkbox", { name: "상세 보기" })
+        page.getByRole("radio", { name: "목록", exact: true })
     ).toBeVisible();
     await page.getByRole("button", { name: "필터", exact: true }).click();
     const dialog = page.getByRole("dialog", { name: "서열표 조건" });
@@ -226,33 +234,29 @@ test("Intermediate filters commit explicitly and clearing a constraint restores 
     await expect(page.locator(".nl-tier-card")).toHaveCount(18);
 });
 
-test("detailed cards keep square jackets and separate score rank from combo", async ({
+test("list rows keep 48 jackets, the goal outline and the contribution", async ({
     page,
 }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await prepare(page);
-    await page
-        .getByRole("checkbox", { name: "상세 보기", exact: true })
-        .check();
-    await expect(page).toHaveURL(/view=detailed/);
-    // 상세 보기는 점수 띠에 FC 마크가 남는다 — 이 표(S)를 달성한 FC 라 테두리는 초록 → 기준 색 그라데이션
+    await page.getByRole("radio", { name: "목록", exact: true }).click();
+    await expect(page).toHaveURL(/view=list/);
+    await expect(page.locator(".nl-tier-card")).toHaveCount(0);
+    // 이 표(S)를 달성한 FC 라 자켓 테두리는 초록 → 기준 색 그라데이션
     const fc = page
-        .locator(".nl-tier-card:has(.nl-tier-card__score-band .nl-full-combo)")
+        .locator('.nl-tier-row:has([data-achievement="goal-fc"])')
         .first();
-    await expect(fc.locator(".nl-tier-card__outline")).toHaveAttribute(
-        "data-achievement",
-        "goal-fc"
-    );
-    await expect(fc.locator(".nl-tier-card__rank")).toHaveAttribute(
-        "src",
-        "/grade/grade_s.png"
-    );
-    await expect(fc.locator(".nl-tier-card__score-band")).toContainText("FC");
-    const jacket = await fc.locator(".nl-jacket").boundingBox();
-    expect(jacket!.width).toBeCloseTo(jacket!.height, 1);
-    expect(jacket!.width).toBeCloseTo(173, 0);
+    await expect(fc).toBeVisible();
+    const row = await fc.boundingBox();
+    expect(row!.height).toBeCloseTo(64, 0);
+    const jacket = await fc.locator(".nl-tier-row__jacket").boundingBox();
+    expect(jacket!.width).toBeCloseTo(48, 0);
+    expect(jacket!.height).toBeCloseTo(48, 0);
+    await expect(fc).toContainText("Expert 12");
+    await expect(fc).toContainText("975,422");
     await expect(fc).toContainText("공식 Grd +0.42");
-    await expect(fc).toContainText("NosLog 레이팅 +36.5");
+    // 공식 Grd 가 없을 때만 NosLog 레이팅 — 한 줄에 하나
+    await expect(fc).not.toContainText("NosLog 레이팅");
     const link = new URL(
         (await fc.getAttribute("href"))!,
         "http://localhost:3000"
@@ -263,7 +267,7 @@ test("detailed cards keep square jackets and separate score rank from combo", as
         mode: "basic",
         goal: "s",
     });
-    expect(link.searchParams.get("returnTo")).toContain("view=detailed");
+    expect(link.searchParams.get("returnTo")).toContain("view=list");
 });
 
 test("all four tier lists update the link context and guide without removing the filters", async ({
@@ -275,7 +279,11 @@ test("all four tier lists update the link context and guide without removing the
         await page.getByRole("combobox", { name: "목표", exact: true }).click();
         await page
             .getByRole("option", {
-                name: { s: "S", "990k": "990k", pianist: "Pianist" }[goal],
+                name: {
+                    s: "S 서열표",
+                    "990k": "990k 서열표",
+                    pianist: "Pianist 서열표",
+                }[goal],
                 exact: true,
             })
             .click();
@@ -299,7 +307,9 @@ test("all four tier lists update the link context and guide without removing the
     await expect(
         page.getByRole("button", { name: "필터", exact: true })
     ).toBeVisible();
-    await page.locator(".nl-tiers summary").click();
+    await page
+        .getByRole("button", { name: "Recital 서열표 안내", exact: true })
+        .click();
     await expect(
         page.getByText("Recital Pianist · 1곡 기준", { exact: true })
     ).toBeVisible();
@@ -312,8 +322,12 @@ test("calculation guidance preserves chart geometry and keyboard access to exact
     await page.setViewportSize({ width: 390, height: 844 });
     await prepare(page);
     await page.getByRole("combobox", { name: "목표", exact: true }).click();
-    await page.getByRole("option", { name: "Pianist", exact: true }).click();
-    await page.locator(".nl-tiers summary").click();
+    await page
+        .getByRole("option", { name: "Pianist 서열표", exact: true })
+        .click();
+    await page
+        .getByRole("button", { name: "Pianist 서열표 안내", exact: true })
+        .click();
     const chart = page.locator(".nl-tier-weight");
     await expect(chart).toBeVisible();
     await expect(chart.locator(".nl-line-chart__y > span")).toHaveCount(5);
@@ -332,17 +346,15 @@ test("calculation guidance preserves chart geometry and keyboard access to exact
     });
 });
 
-test("Back restores a detailed band scan and its practical scroll position", async ({
+test("Back restores a list band scan and its practical scroll position", async ({
     page,
 }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await prepare(page);
-    await page
-        .getByRole("checkbox", { name: "상세 보기", exact: true })
-        .check();
+    await page.getByRole("radio", { name: "목록", exact: true }).click();
     const dense = page.getByRole("region", { name: "14.3", exact: true });
     await dense.scrollIntoViewIfNeeded();
-    const card = dense.locator("a.nl-tier-card").last();
+    const card = dense.locator("a.nl-tier-row").last();
     await card.scrollIntoViewIfNeeded();
     const url = page.url();
     const scroll = await page.evaluate(() => window.scrollY);
@@ -355,9 +367,9 @@ test("Back restores a detailed band scan and its practical scroll position", asy
     await page.goBack();
     await expect(page).toHaveURL(url);
     await expect(
-        page.getByRole("checkbox", { name: "상세 보기", exact: true })
+        page.getByRole("radio", { name: "목록", exact: true })
     ).toBeChecked();
-    await expect(dense.locator("a.nl-tier-card")).toHaveCount(15);
+    await expect(dense.locator("a.nl-tier-row")).toHaveCount(15);
     await expect
         .poll(async () =>
             Math.abs((await page.evaluate(() => window.scrollY)) - scroll)
@@ -432,7 +444,7 @@ test("band failures stay local and retry without losing the selected scope", asy
 
 for (const locale of ["ko", "ja", "en"])
     for (const theme of reviewThemes) {
-        test(`${locale} ${theme} reflows compact and detailed cards at six widths`, async ({
+        test(`${locale} ${theme} reflows grid cards and list rows at six widths`, async ({
             page,
         }, testInfo) => {
             test.skip(
@@ -449,29 +461,36 @@ for (const locale of ["ko", "ja", "en"])
                 "data-theme",
                 theme
             );
-            for (const detailed of [false, true]) {
+            const names = {
+                ko: { grid: "격자", list: "목록" },
+                ja: { grid: "グリッド", list: "リスト" },
+                en: { grid: "Grid", list: "List" },
+            }[locale]!;
+            for (const view of ["grid", "list"] as const) {
                 await page.setViewportSize({ width: 390, height: 844 });
                 await page
-                    .locator(".nl-tier-toolbar input[type=checkbox]")
-                    .setChecked(detailed);
+                    .locator(".nl-tier-toolbar")
+                    .getByRole("radio", { name: names[view], exact: true })
+                    .click();
                 for (const width of [320, 390, 768, 1024, 1280, 1600]) {
                     await page.setViewportSize({ width, height: 900 });
                     await expect(page.locator(".nl-tier-rail")).toHaveCount(
                         width >= 1056 ? 1 : 0
                     );
                     await expect(
-                        page.getByRole("checkbox", {
-                            name:
-                                locale === "ko"
-                                    ? "상세 보기"
-                                    : locale === "ja"
-                                      ? "詳細表示"
-                                      : "Detailed view",
+                        page.locator(".nl-tier-toolbar").getByRole("radio", {
+                            name: names[view],
                             exact: true,
                         })
-                    ).toBeVisible();
+                    ).toBeChecked();
                     await expect(
-                        page.locator(".nl-tier-card").first()
+                        page
+                            .locator(
+                                view === "grid"
+                                    ? ".nl-tier-card"
+                                    : ".nl-tier-row"
+                            )
+                            .first()
                     ).toBeVisible();
                     const size = await page.evaluate(() => ({
                         width: document.documentElement.clientWidth,
@@ -479,15 +498,33 @@ for (const locale of ["ko", "ja", "en"])
                         font: getComputedStyle(
                             document.querySelector(".nl-tiers")!
                         ).fontFamily,
-                        columns: getComputedStyle(
-                            document.querySelector(".nl-tier-grid")!
-                        ).gridTemplateColumns.split(" ").length,
+                        columns: document.querySelector(".nl-tier-grid")
+                            ? getComputedStyle(
+                                  document.querySelector(".nl-tier-grid")!
+                              ).gridTemplateColumns.split(" ").length
+                            : 0,
                     }));
                     expect(size.scroll).toBeLessThanOrEqual(size.width);
                     expect(size.font).toContain("Pretendard JP Variable");
-                    const expected = detailed
-                        ? { 320: 2, 390: 2, 768: 3, 1024: 5, 1280: 3, 1600: 3 }
-                        : { 320: 3, 390: 3, 768: 5, 1024: 7, 1280: 5, 1600: 5 };
+                    // 폰 4열(2026-09-22), 672 이상은 auto-fill
+                    const expected =
+                        view === "list"
+                            ? {
+                                  320: 0,
+                                  390: 0,
+                                  768: 0,
+                                  1024: 0,
+                                  1280: 0,
+                                  1600: 0,
+                              }
+                            : {
+                                  320: 4,
+                                  390: 4,
+                                  768: 5,
+                                  1024: 7,
+                                  1280: 6,
+                                  1600: 6,
+                              };
                     expect(size.columns).toBe(
                         expected[width as keyof typeof expected]
                     );

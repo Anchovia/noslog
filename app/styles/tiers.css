@@ -10,6 +10,19 @@
     width: 100%;
     justify-content: space-between;
 }
+/* 폰 조작부 첫 줄(2026-09-22 B안) — 모드 세그먼트가 남는 폭, 목표 셀렉트는 글자만큼. 둘 다 컨트롤 L */
+.noslog-ui .nl-tier-controls {
+    display: flex;
+    gap: var(--nl-spacing-8);
+    min-width: 0;
+}
+.noslog-ui .nl-tier-controls > .nl-tier-browser-mode {
+    flex: 1;
+}
+.noslog-ui .nl-tier-controls > .nl-tier-goal {
+    flex: none;
+    width: auto;
+}
 .noslog-ui .nl-tier-browser-mode {
     display: flex;
     flex-direction: column;
@@ -94,19 +107,17 @@
     min-height: 44px;
     padding-block: var(--nl-spacing-8);
     background: var(--nl-surface-canvas);
-    box-shadow: inset 0 -1px var(--nl-border-default);
+    box-shadow: inset 0 -1px var(--nl-border-divider);
 }
 .noslog-ui:has(.nl-header[data-scroll-state="hidden"]) .nl-tier-band__header {
     top: 0;
 }
+/* 폰 격자 4열 · 사이 8(2026-09-22 B안) — 672 이상은 아래 auto-fill 규칙 */
 .noslog-ui .nl-tier-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: var(--nl-spacing-12);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--nl-spacing-8);
     align-items: start;
-}
-.noslog-ui .nl-tier-grid[data-detailed="true"] {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 .noslog-ui .nl-tier-card {
     display: flex;
@@ -114,9 +125,6 @@
     min-width: 0;
     gap: var(--nl-spacing-4);
     border-radius: var(--nl-radius-container);
-}
-.noslog-ui .nl-tier-card[data-detailed="true"] {
-    gap: var(--nl-spacing-8);
 }
 .noslog-ui .nl-tier-card > span {
     overflow-wrap: anywhere;
@@ -210,27 +218,6 @@
         var(--nl-content-on-media)
     );
 }
-/* 등급 메달은 상세 보기 점수 띠 안에만 */
-.noslog-ui .nl-tier-card__rank {
-    position: absolute;
-    right: var(--nl-spacing-8);
-    bottom: var(--nl-spacing-8);
-    z-index: 1;
-    width: 24px;
-    height: 24px;
-    object-fit: contain;
-    border-radius: var(--nl-radius-control);
-}
-/* 상세 보기: 점수 띠(높이 36) 안 오른쪽 끝, 띠 세로 가운데 */
-.noslog-ui .nl-tier-card[data-detailed="true"] .nl-tier-card__rank {
-    bottom: calc((36px - 24px) / 2);
-}
-/* 메달이 있을 때만 점수가 메달 폭(24) + 간격 4 만큼 왼쪽으로 비켜난다 */
-.noslog-ui
-    .nl-tier-card__jacket:has(.nl-tier-card__rank)
-    .nl-tier-card__score-band {
-    padding-right: calc(var(--nl-spacing-8) + 24px + var(--nl-spacing-4));
-}
 .noslog-ui .nl-tier-card__score {
     display: flex;
     justify-content: center;
@@ -245,29 +232,66 @@
 .noslog-ui [data-pending="true"] .nl-tier-card__score[data-achieved] {
     color: inherit;
 }
-.noslog-ui .nl-tier-card__score-band {
-    position: absolute;
-    bottom: 0;
-    inset-inline: 0;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    min-height: 36px;
-    padding: var(--nl-spacing-8);
-    gap: var(--nl-spacing-4);
-    background: var(--nl-surface-media-scrim);
-    color: var(--nl-content-on-media);
-    white-space: nowrap;
-}
-.noslog-ui .nl-tier-card__score-band > span:first-child:not(:last-child) {
-    margin-right: auto;
-}
 @media (hover: hover) {
     .noslog-ui
-        .nl-tier-card:hover
+        :is(.nl-tier-card, .nl-tier-row):hover
         .nl-tier-card__outline:not([data-achievement]) {
         box-shadow: inset 0 0 0 1px var(--nl-border-strong);
     }
+}
+/* 375 미만(4열 카드 66)은 판 글자를 약칭 N · H · EX · R 로 — 악곡 상세 난이도 선택과 같은 규칙 */
+@media (max-width: 374px) {
+    .noslog-ui .nl-tier-card__difficulty-name {
+        font-size: 0;
+    }
+    .noslog-ui .nl-tier-card__difficulty-name::before {
+        content: attr(data-short);
+        font-size: var(--nl-type-size-12);
+    }
+}
+/* 목록 보기(2026-09-22 B안) — 행 = 자켓 48(채보 발견 채보 묶음과 같은 크기 · 모서리 4) + 위아래 8, 아래 divider.
+   이름 · 난이도는 한 줄씩(넘치면 말줄임), 로그인하면 오른쪽 점수 · 기여 */
+.noslog-ui .nl-tier-list {
+    display: flex;
+    flex-direction: column;
+}
+.noslog-ui .nl-tier-row {
+    display: grid;
+    grid-template-columns: 48px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--nl-spacing-12);
+    padding-block: var(--nl-spacing-8);
+    box-shadow: inset 0 -1px var(--nl-border-divider);
+}
+.noslog-ui .nl-tier-row__jacket {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    border-radius: var(--nl-radius-control);
+    background: var(--nl-surface-sunken);
+    overflow: hidden;
+}
+.noslog-ui .nl-tier-row__name,
+.noslog-ui .nl-tier-row__record {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+/* 한 줄 말줄임 — 같은 자켓 48 을 쓰는 채보 발견 채보 묶음과 같은 방식 */
+.noslog-ui .nl-tier-row__name > * {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.noslog-ui .nl-tier-row__record {
+    align-items: flex-end;
+    white-space: nowrap;
+}
+.noslog-ui .nl-tier-row__record .nl-tier-card__score[data-unplayed] {
+    color: var(--nl-content-subdued);
+}
+.noslog-ui [data-pending="true"] .nl-tier-row {
+    color: var(--nl-content-pending);
 }
 .noslog-ui [data-pending="true"] .nl-tier-card {
     color: var(--nl-content-pending);
@@ -276,7 +300,6 @@
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-12);
-    padding-block: var(--nl-spacing-4);
 }
 .noslog-ui .nl-tier-weight {
     display: flex;
@@ -329,9 +352,6 @@
     .noslog-ui .nl-tier-grid {
         grid-template-columns: repeat(auto-fill, minmax(111.333px, 1fr));
         gap: var(--nl-spacing-16);
-    }
-    .noslog-ui .nl-tier-grid[data-detailed="true"] {
-        grid-template-columns: repeat(auto-fill, minmax(156px, 1fr));
     }
 }
 .noslog-ui .nl-tiers[data-layout="wide"] .nl-tier-results {

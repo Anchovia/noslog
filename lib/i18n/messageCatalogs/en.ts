@@ -1447,7 +1447,6 @@ export const enMessages = {
     "record.timingBias": "Timing bias",
     "record.balanced": "Balanced",
     // Public Tier browser.
-    "tiers.detailedView": "Detailed view",
     "tiers.loadError": "Could not load the tier data.",
     "tiers.selectRange": "Select range",
     "tiers.selectRangeEnd": "Choose the ending band",

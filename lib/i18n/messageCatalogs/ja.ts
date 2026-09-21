@@ -1446,7 +1446,6 @@ export const jaMessages = {
     "record.timingBias": "タイミングの偏り",
     "record.balanced": "均等",
     // Public Tier browser.
-    "tiers.detailedView": "詳細表示",
     "tiers.loadError": "難易度データを読み込めませんでした。",
     "tiers.selectRange": "範囲を選択",
     "tiers.selectRangeEnd": "終了区間を選んでください",

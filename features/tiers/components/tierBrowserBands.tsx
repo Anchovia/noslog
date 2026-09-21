@@ -19,7 +19,11 @@ import type {
     TierBrowserQuery,
 } from "@/features/tiers/schemas/tierBrowserSchema";
 import { formatTierValue } from "@/lib/tiers";
-import TierBrowserCard, { TierBrowserCardSkeleton } from "./tierBrowserCard";
+import TierBrowserCard, {
+    TierBrowserCardSkeleton,
+    TierBrowserRow,
+    TierBrowserRowSkeleton,
+} from "./tierBrowserCard";
 import { tierValueColor } from "@/lib/music/tierValueColor";
 
 export const TIER_BROWSER_BATCH_SIZE = 20;
@@ -82,6 +86,8 @@ function TierBrowserBandSection({
         observer.observe(ref.current);
         return () => observer.disconnect();
     }, [visible]);
+    const list = query.view === "list";
+    const signedIn = overview.viewerId !== null;
     const total = band.data?.entries.length ?? 0;
     const shown = band.data?.entries.slice(0, visibleCount) ?? [];
     const nextAmount = Math.min(TIER_BROWSER_BATCH_SIZE, total - shown.length);
@@ -126,7 +132,7 @@ function TierBrowserBandSection({
                 >
                     {formatTierValue(summary.value)}
                 </h2>
-                {overview.viewerId !== null ? (
+                {signedIn ? (
                     <span className="nl-control nl-muted">
                         {t("tiers.achieved", {
                             count: summary.achievedCount ?? "—",
@@ -149,17 +155,27 @@ function TierBrowserBandSection({
                     }
                 />
             ) : null}
-            <div className="nl-tier-grid" data-detailed={query.detailed}>
+            <div className={list ? "nl-tier-list" : "nl-tier-grid"}>
                 {band.data
-                    ? shown.map((entry) => (
-                          <TierBrowserCard
-                              key={entry.id}
-                              entry={entry}
-                              query={query}
-                              signedIn={overview.viewerId !== null}
-                              pending={pending}
-                          />
-                      ))
+                    ? shown.map((entry) =>
+                          list ? (
+                              <TierBrowserRow
+                                  key={entry.id}
+                                  entry={entry}
+                                  query={query}
+                                  signedIn={signedIn}
+                                  pending={pending}
+                              />
+                          ) : (
+                              <TierBrowserCard
+                                  key={entry.id}
+                                  entry={entry}
+                                  query={query}
+                                  signedIn={signedIn}
+                                  pending={pending}
+                              />
+                          )
+                      )
                     : !band.isError
                       ? Array.from(
                             {
@@ -168,13 +184,18 @@ function TierBrowserBandSection({
                                     visible
                                 ),
                             },
-                            (_, index) => (
-                                <TierBrowserCardSkeleton
-                                    key={index}
-                                    detailed={query.detailed}
-                                    signedIn={overview.viewerId !== null}
-                                />
-                            )
+                            (_, index) =>
+                                list ? (
+                                    <TierBrowserRowSkeleton
+                                        key={index}
+                                        signedIn={signedIn}
+                                    />
+                                ) : (
+                                    <TierBrowserCardSkeleton
+                                        key={index}
+                                        signedIn={signedIn}
+                                    />
+                                )
                         )
                       : null}
             </div>
