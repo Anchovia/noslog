@@ -95,7 +95,7 @@ export const tierEntryMoveSchema = z.object({
     tierBandId: positiveIdSchema,
 });
 
-export const tierEntryPlacementSchema = z.object({
+const tierEntryPlacementSchema = z.object({
     id: positiveIdSchema,
     tierBandId: positiveIdSchema,
     position: positiveIdSchema,

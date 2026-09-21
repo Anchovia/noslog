@@ -14,9 +14,8 @@ export const PATTERN_AXES = [
     "offset",
     "chords",
 ] as const;
-export const patternAxisSchema = z.enum(PATTERN_AXES);
 const ratingSchema = z.number().int().min(0).max(4).nullable();
-export const patternRatingsSchema = z.object({
+const patternRatingsSchema = z.object({
     stairs: ratingSchema,
     repetition: ratingSchema,
     polyrhythm: ratingSchema,
@@ -35,7 +34,7 @@ export const communityEvaluationInputSchema = patternRatingsSchema
         { path: ["opinion"], message: "evaluation_empty" }
     );
 
-export const goalVoteScopeSchema = z.object({
+const goalVoteScopeSchema = z.object({
     chartId: z.number().int().positive(),
     mode: z.enum(TIER_MODES),
     goal: z.enum(TIER_GOALS),
@@ -95,10 +94,10 @@ export const patternSummarySchema = z.object({
     chords: aggregateSchema,
 });
 export const patternDataSchema = z.object({ pattern: patternSummarySchema });
-export const voteDistributionSchema = z.array(
+const voteDistributionSchema = z.array(
     z.object({ value: z.number(), count: z.number().int().positive() })
 );
-export const opinionSchema = z.object({
+const opinionSchema = z.object({
     id: z.number().int(),
     opinion: z.string(),
     createdAt: z.string(),
@@ -153,12 +152,8 @@ export const communityDataSchema = z.object({
     opinions: opinionPageSchema,
 });
 
-export type PatternAxis = z.infer<typeof patternAxisSchema>;
 export type PatternRatings = z.infer<typeof patternRatingsSchema>;
 export type PatternSummary = z.infer<typeof patternSummarySchema>;
-export type CommunityEvaluationInput = z.infer<
-    typeof communityEvaluationInputSchema
->;
 export type GoalVoteInput = z.infer<typeof goalVoteInputSchema>;
 export type CommunityMutation = z.infer<typeof communityMutationSchema>;
 export type CommunityData = z.infer<typeof communityDataSchema>;

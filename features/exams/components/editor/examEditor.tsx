@@ -35,8 +35,6 @@ import ExamPublicationSection from "./examPublicationSection";
 import ExamRewardSection from "./examRewardSection";
 import ExamStageSection from "./examStageSection";
 
-export type { ExamEditorFormValues as ExamEditorData } from "@/features/exams/schemas/examEditorSchema";
-
 function getErrorMessage(error: unknown): string | undefined {
     if (!error || typeof error !== "object") {
         return undefined;

@@ -1,4 +1,4 @@
-export interface KakaoLatLng {
+interface KakaoLatLng {
     getLat(): number;
     getLng(): number;
 }
@@ -19,7 +19,7 @@ export interface KakaoMapInstance {
     setLevel(level: number): void;
 }
 
-export interface KakaoLatLngBounds {
+interface KakaoLatLngBounds {
     getSouthWest(): KakaoLatLng;
     getNorthEast(): KakaoLatLng;
     extend(position: KakaoLatLng): void;

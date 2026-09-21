@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const syncAttemptSchema = z.object({
+const syncAttemptSchema = z.object({
     id: z.number().int().positive(),
     status: z.enum([
         "processing",

@@ -292,12 +292,11 @@ export async function approveMusicTranslation(
         musicTranslationApproveInputFromFormData(formData)
     );
     if (!result.success) {
-        return {
-            success: false,
-            message:
-                result.error.issues[0]?.message ??
-                "승인할 악곡 번역을 확인해주세요.",
-        };
+        return actionValidationFailure(result.error, {
+            message: "승인할 악곡 번역을 확인해주세요.",
+            preferFirstIssue: true,
+            fieldPath: false,
+        });
     }
     const input = result.data;
 

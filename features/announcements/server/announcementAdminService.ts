@@ -28,7 +28,7 @@ import db from "@/lib/db";
 import { logServerError } from "@/lib/observability/server";
 
 type AnnouncementLocale = (typeof ANNOUNCEMENT_LOCALES)[number];
-export type AnnouncementFieldName =
+type AnnouncementFieldName =
     | "id"
     | "publicSlug"
     | "placement"

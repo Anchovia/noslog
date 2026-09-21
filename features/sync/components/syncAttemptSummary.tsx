@@ -19,7 +19,7 @@ export function syncDateLabel(instant: string) {
     return `${part("year")}-${part("month")}-${part("day")} ${part("hour")}:${part("minute")}`;
 }
 
-export function SyncMetrics({
+function SyncMetrics({
     items,
 }: {
     items: Array<{ label: string; value: number }>;

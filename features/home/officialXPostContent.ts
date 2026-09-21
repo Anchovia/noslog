@@ -9,7 +9,7 @@ export type OfficialXPostLink = {
     isMedia: boolean;
 };
 
-export type OfficialXPostImage = {
+type OfficialXPostImage = {
     url: string;
     width: number;
     height: number;

@@ -7,6 +7,7 @@ import {
 } from "@/features/music/schemas/musicCatalogAdminSchema";
 import type { AdminMusicCatalogCandidate } from "@/features/music/types/musicCatalogAdmin";
 import type { ActionResult } from "@/lib/actions/result";
+import { actionValidationFailure } from "@/lib/actions/validation";
 import { requireAdmin } from "@/lib/admin";
 import { CACHE_TAGS } from "@/lib/cacheTags";
 import db from "@/lib/db";
@@ -96,12 +97,11 @@ export async function reviewMusicCatalogCandidate(
         musicCatalogReviewInputFromFormData(formData)
     );
     if (!result.success) {
-        return {
-            success: false,
-            message:
-                result.error.issues[0]?.message ??
-                "악곡 업데이트 검토 요청을 확인해주세요.",
-        };
+        return actionValidationFailure(result.error, {
+            message: "악곡 업데이트 검토 요청을 확인해주세요.",
+            preferFirstIssue: true,
+            fieldPath: false,
+        });
     }
     const input = result.data;
 

@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-export interface StackedBarSegment {
+interface StackedBarSegment {
     key: string;
     /** 0 이상 — 줄 안 합계에 대한 비율로 그린다 */
     value: number;

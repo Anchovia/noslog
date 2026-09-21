@@ -6,13 +6,6 @@ export interface JudgementCounts {
     judge_near: number | null;
 }
 
-export interface NoteSuccessRates {
-    note_rate_standard: number | null;
-    note_rate_tenuto: number | null;
-    note_rate_glissando: number | null;
-    note_rate_trill: number | null;
-}
-
 export function hasJudgementData(counts: JudgementCounts) {
     return Object.values(counts).some((value) => value !== null);
 }

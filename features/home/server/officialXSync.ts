@@ -12,7 +12,7 @@ import {
 import { fetchOfficialXLatestPost } from "./officialXTimeline";
 import { translateOfficialXPost } from "./officialXPostTranslation";
 
-export const OFFICIAL_X_SYNC_INTERVAL_MS = 12 * 60 * 60 * 1000;
+const OFFICIAL_X_SYNC_INTERVAL_MS = 12 * 60 * 60 * 1000;
 // Longer than the route's hard duration; protects a run just before a slot boundary.
 const RUN_GUARD_MS = 3 * 60 * 1000;
 

@@ -25,13 +25,3 @@ export function createAccountDeletionSchema(
 export type AccountDeletionFormValues = z.infer<
     ReturnType<typeof createAccountDeletionSchema>
 >;
-
-export const accountDeletionResultSchema = z.discriminatedUnion("success", [
-    z.object({ success: z.literal(true) }),
-    z.object({
-        success: z.literal(false),
-        message: z.string(),
-        reauthenticationRequired: z.boolean().optional(),
-    }),
-]);
-export type AccountDeletionResult = z.infer<typeof accountDeletionResultSchema>;

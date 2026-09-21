@@ -26,7 +26,7 @@ export const bingoCatalogQuerySchema = z.object({
 });
 export type BingoCatalogQuery = z.infer<typeof bingoCatalogQuerySchema>;
 
-export const bingoMissionSchema = z.object({
+const bingoMissionSchema = z.object({
     id: z.number().int().positive(),
     position: z.number().int().min(1).max(25),
     challenge: z.string(),

@@ -10,7 +10,7 @@ import {
 } from "@/features/arcades/schemas/publicArcadeSchema";
 
 // 이용자 확인은 30일, 미처리 신고는 60일 창으로 본다
-export const CABINET_CHECK_WINDOW_MS = 30 * 24 * 60 * 60 * 1000;
+const CABINET_CHECK_WINDOW_MS = 30 * 24 * 60 * 60 * 1000;
 const CABINET_REPORT_WINDOW_MS = 60 * 24 * 60 * 60 * 1000;
 
 function publicInclude(now: Date) {
@@ -65,7 +65,7 @@ function publicWebsite(value: string | null | undefined) {
     }
 }
 
-export function toPublicArcade(record: ArcadeRecord, now: Date) {
+function toPublicArcade(record: ArcadeRecord, now: Date) {
     const details = record.publicDetails;
     const hours = arcadeHoursSchema.safeParse(details?.hours);
     return publicArcadeSchema.parse({

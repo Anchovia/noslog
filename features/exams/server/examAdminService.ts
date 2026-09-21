@@ -454,10 +454,11 @@ export async function deleteExam(
     await requireAdmin();
     const result = examDeleteSchema.safeParse({ id: examId });
     if (!result.success) {
-        return {
-            success: false,
-            message: result.error.issues[0]?.message ?? "잘못된 검정입니다.",
-        };
+        return actionValidationFailure(result.error, {
+            message: "잘못된 검정입니다.",
+            preferFirstIssue: true,
+            fieldPath: false,
+        });
     }
 
     try {

@@ -7,6 +7,7 @@ import {
 } from "@/features/feedback/schemas/feedbackAdminSchema";
 import type { AdminFeedbackReport } from "@/features/feedback/types/feedbackAdmin";
 import type { ActionResult } from "@/lib/actions/result";
+import { actionValidationFailure } from "@/lib/actions/validation";
 import { requireAdmin } from "@/lib/admin";
 import db from "@/lib/db";
 import { logServerError } from "@/lib/observability/server";
@@ -116,12 +117,11 @@ export async function updateFeedbackStatus(
         feedbackStatusUpdateInputFromFormData(formData)
     );
     if (!result.success) {
-        return {
-            success: false,
-            message:
-                result.error.issues[0]?.message ??
-                "피드백 처리 요청을 확인해주세요.",
-        };
+        return actionValidationFailure(result.error, {
+            message: "피드백 처리 요청을 확인해주세요.",
+            preferFirstIssue: true,
+            fieldPath: false,
+        });
     }
     const input = result.data;
 

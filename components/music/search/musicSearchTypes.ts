@@ -53,15 +53,9 @@ export const MUSIC_DIFFICULTIES = [
     },
 ] as const;
 
-export type MusicDifficulty = (typeof MUSIC_DIFFICULTIES)[number]["value"];
-export type MusicDifficultyConfig = (typeof MUSIC_DIFFICULTIES)[number];
+type MusicDifficulty = (typeof MUSIC_DIFFICULTIES)[number]["value"];
 export type MusicDifficultyState = Record<MusicDifficulty, boolean>;
 export type MusicDifficultyRanges = Record<MusicDifficulty, [number, number]>;
-
-export interface MusicSearchProps {
-    searchParams: MusicSearchParams;
-    isLoggedIn: boolean;
-}
 
 export interface BuildMusicSearchParamsInput {
     categories: MusicCategory[];

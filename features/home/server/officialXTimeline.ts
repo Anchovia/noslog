@@ -7,9 +7,9 @@ import type {
 } from "@/features/home/officialXPostContent";
 import { officialXPostSchema } from "@/features/home/schemas/officialXPostSchema";
 
-export const OFFICIAL_X_USERNAME = "NOSTALGIA_573";
-export const OFFICIAL_X_URL = `https://x.com/${OFFICIAL_X_USERNAME}`;
-export const OFFICIAL_X_USER_ID = "831685375735132160";
+const OFFICIAL_X_USERNAME = "NOSTALGIA_573";
+const OFFICIAL_X_URL = `https://x.com/${OFFICIAL_X_USERNAME}`;
+const OFFICIAL_X_USER_ID = "831685375735132160";
 const X_API_TIMEOUT_MS = 8_000;
 
 type TimelineResponse = {

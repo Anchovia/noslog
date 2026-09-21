@@ -43,7 +43,7 @@ export async function updateDummy() {
     }
 }
 
-export const bingo = [
+const bingo = [
     {
         id: 1,
         nos: 3000,
@@ -52,7 +52,7 @@ export const bingo = [
     },
 ];
 
-export const bingoCell = [
+const bingoCell = [
     {
         id: 1,
         position: 1,

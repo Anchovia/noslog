@@ -2,7 +2,7 @@ export type ActionFieldErrors<TFieldName extends string = string> = Partial<
     Record<TFieldName, string[]>
 >;
 
-export type ActionSuccess<TData extends object = Record<never, never>> = {
+type ActionSuccess<TData extends object = Record<never, never>> = {
     success: true;
     message: string;
 } & TData;

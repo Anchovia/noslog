@@ -23,8 +23,8 @@ import TierBrowserCard, { TierBrowserCardSkeleton } from "./tierBrowserCard";
 import { tierValueColor } from "@/lib/music/tierValueColor";
 
 export const TIER_BROWSER_BATCH_SIZE = 20;
-export const TIER_BROWSER_AUTO_BATCHES = 3;
-export const TIER_BROWSER_IDLE_SKELETONS = 6;
+const TIER_BROWSER_AUTO_BATCHES = 3;
+const TIER_BROWSER_IDLE_SKELETONS = 6;
 
 export function tierBrowserSkeletonCount(total: number, visible: boolean) {
     return Math.min(

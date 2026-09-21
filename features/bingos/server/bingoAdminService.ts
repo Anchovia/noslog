@@ -164,10 +164,11 @@ export async function deleteBingo(
         bingoDeleteInputFromFormData(formData)
     );
     if (!result.success) {
-        return {
-            success: false,
-            message: result.error.issues[0]?.message ?? "잘못된 빙고입니다.",
-        };
+        return actionValidationFailure(result.error, {
+            message: "잘못된 빙고입니다.",
+            preferFirstIssue: true,
+            fieldPath: false,
+        });
     }
     const { id } = result.data;
 

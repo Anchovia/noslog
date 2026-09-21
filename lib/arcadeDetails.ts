@@ -8,7 +8,7 @@ export const ARCADE_WEEKDAYS = [
     { key: "sunday", label: "일" },
 ] as const;
 
-export type ArcadeWeekday = (typeof ARCADE_WEEKDAYS)[number]["key"];
+type ArcadeWeekday = (typeof ARCADE_WEEKDAYS)[number]["key"];
 
 export interface ArcadeBusinessHours {
     weekly: Partial<Record<ArcadeWeekday, { open: string; close: string }>>;

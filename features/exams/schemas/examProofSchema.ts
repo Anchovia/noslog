@@ -43,11 +43,11 @@ export function createExamProofSubmissionSchema(t: Translator) {
     });
 }
 
-export type ExamProofFileSchema = ReturnType<typeof createExamProofFileSchema>;
+type ExamProofFileSchema = ReturnType<typeof createExamProofFileSchema>;
 export type ExamProofFileFormValues = z.input<ExamProofFileSchema>;
 export type ExamProofFileValues = z.output<ExamProofFileSchema>;
 
-export type ExamProofSubmissionSchema = ReturnType<
+type ExamProofSubmissionSchema = ReturnType<
     typeof createExamProofSubmissionSchema
 >;
 export type ExamProofSubmissionFormValues = z.input<ExamProofSubmissionSchema>;

@@ -23,7 +23,7 @@ export type AnalyticsKind =
     | "audience"
     | "audienceVisitor";
 
-export type AnalyticsAudience = "member" | "guest";
+type AnalyticsAudience = "member" | "guest";
 
 // 방문 통계는 개인정보처리방침 2026-09-13 시행 버전이 알린 것이라 그날(서울 기준)부터 센다.
 // 바꾸면 policyCopy.json 의 시행일과 PRIVACY_PREVIOUS_VERSIONS 의 until 도 같이 바꾼다(테스트가 맞춰 본다)
@@ -54,7 +54,7 @@ export function analyticsHourKey(now = new Date()) {
 }
 
 // 동시에 들어와도 빠지지 않게 한 문장으로 더한다(없으면 1로 만들고 있으면 +1)
-export async function incrementAnalytics(
+async function incrementAnalytics(
     kind: AnalyticsKind,
     key: string,
     now = new Date()

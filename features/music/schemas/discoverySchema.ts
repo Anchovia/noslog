@@ -18,13 +18,8 @@ export const discoveryLevelBounds = {
     Expert: 12,
     Real: 3,
 } as const;
-export const discoveryRecordFilters = [
-    "unplayed",
-    "s",
-    "fc",
-    "pianist",
-] as const;
-export const discoverySorts = [
+const discoveryRecordFilters = ["unplayed", "s", "fc", "pianist"] as const;
+const discoverySorts = [
     "relevance",
     "published",
     "name",
@@ -229,7 +224,7 @@ export function discoveryFilterCount(query: DiscoveryQuery) {
     );
 }
 
-export const discoveryResultSchema = musicResultSchema.extend({
+const discoveryResultSchema = musicResultSchema.extend({
     targets: z.array(
         z.object({
             difficulty: z.enum(discoveryDifficulties),

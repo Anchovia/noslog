@@ -7,8 +7,6 @@ import {
 import { submitArcadeReport as submitArcadeReportService } from "@/features/arcades/server/arcadeReportService";
 import { confirmCabinetRunning as confirmCabinetRunningService } from "@/features/arcades/server/cabinetCheckService";
 
-export type { PreferredArcadeActionResult } from "@/features/arcades/server/preferredArcadeService";
-
 export async function setPreferredArcade(
     arcadeId: number,
     requestedLocale = "ko"

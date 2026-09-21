@@ -29,9 +29,7 @@ export function createFeedbackReportSchema(t: Translator) {
     });
 }
 
-export type FeedbackReportSchema = ReturnType<
-    typeof createFeedbackReportSchema
->;
+type FeedbackReportSchema = ReturnType<typeof createFeedbackReportSchema>;
 export type FeedbackReportFormValues = z.input<FeedbackReportSchema>;
 export type FeedbackReportValues = z.output<FeedbackReportSchema>;
 

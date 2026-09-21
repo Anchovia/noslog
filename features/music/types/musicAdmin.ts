@@ -3,13 +3,13 @@ import type {
     MusicTranslationStatus,
 } from "@/features/music/schemas/musicTranslationAdminSchema";
 
-export interface AdminMusicTranslation {
+interface AdminMusicTranslation {
     locale: MusicTranslationLocale;
     status: MusicTranslationStatus;
     title: string;
 }
 
-export interface AdminMusicListItem {
+interface AdminMusicListItem {
     artist: string | null;
     categoryShort: string;
     chartCount: number;

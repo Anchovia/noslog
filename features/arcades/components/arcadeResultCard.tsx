@@ -41,7 +41,7 @@ const DISCOVERY_KEYS = [
  * 기체 한 줄 — 「기체 2대 · 주의 1대」. 가동 대수는 전체와 다를 때만(「기체 2대 · 가동 1대」) — 같으면 같은 말의 반복이다.
  * 정보가 없으면 「기체 정보 없음 · 제보하기」
  */
-export function ArcadeCabinetLine({ arcade }: { arcade: PublicArcade }) {
+function ArcadeCabinetLine({ arcade }: { arcade: PublicArcade }) {
     const t = useTranslations();
     const summary = arcadeCabinetSummary(arcade);
     if (!summary.total)
@@ -60,13 +60,7 @@ export function ArcadeCabinetLine({ arcade }: { arcade: PublicArcade }) {
  * 영업시간을 모르면 「미확인」 한 단어 — 옆 정보가 오락실이라 무엇이 미확인인지는 읽힌다(스크린 리더에는 「영업시간」 을 붙인다).
  * 확인 신선도(「N일 전 확인」)는 목록에서 뺐다 — 기체 줄마다 상세에 있다
  */
-export function ArcadeOpenLine({
-    arcade,
-    now,
-}: {
-    arcade: PublicArcade;
-    now: Date;
-}) {
+function ArcadeOpenLine({ arcade, now }: { arcade: PublicArcade; now: Date }) {
     const t = useTranslations();
     const open = arcadeOpenState(arcade, now);
     const hint = arcadeScheduleHint(arcade, now);

@@ -12,9 +12,3 @@ export interface BingoCellItem {
 }
 
 export type MissionFilter = "incomplete" | "completed" | "rich";
-
-export interface BingoPlateProps {
-    cells: BingoCellItem[];
-    initialCompletedCellIds: number[];
-    canEdit: boolean;
-}

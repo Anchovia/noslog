@@ -34,20 +34,8 @@ import {
     isTierModeGoal,
 } from "@/lib/tiers";
 
-export const MUSIC_DIFFICULTIES: Difficulty[] = [
-    "Normal",
-    "Hard",
-    "Expert",
-    "Real",
-];
-export const MUSIC_DETAIL_TABS: DetailTab[] = [
-    "record",
-    "detail",
-    "ranking",
-    "tier",
-];
-export { MUSIC_RANKING_PAGE_SIZE } from "./chartRanking";
-
+const MUSIC_DIFFICULTIES: Difficulty[] = ["Normal", "Hard", "Expert", "Real"];
+const MUSIC_DETAIL_TABS: DetailTab[] = ["record", "detail", "ranking", "tier"];
 const emptyDistribution = [
     { key: "950", label: "950k", count: 0 },
     { key: "960", label: "960k", count: 0 },

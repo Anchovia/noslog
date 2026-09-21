@@ -19,7 +19,7 @@ export const PROFILE_LANGUAGES = [
 
 export const profileCountrySchema = z.enum(["ko-KR", "ja-JP", "global"]);
 
-export const profileLocaleSchema = z.enum(SUPPORTED_LOCALES);
+const profileLocaleSchema = z.enum(SUPPORTED_LOCALES);
 
 export const ONBOARDING_PRIVACY_KEYS = [
     "showNostalgiaName",
@@ -70,7 +70,7 @@ export function createOnboardingSchema(t: Translator) {
     });
 }
 
-export type OnboardingSchema = ReturnType<typeof createOnboardingSchema>;
+type OnboardingSchema = ReturnType<typeof createOnboardingSchema>;
 export type OnboardingFormValues = z.input<OnboardingSchema>;
 export type OnboardingValues = z.output<OnboardingSchema>;
 
@@ -152,9 +152,7 @@ export function createProfileSettingsSchema(t: Translator) {
     });
 }
 
-export type ProfileSettingsSchema = ReturnType<
-    typeof createProfileSettingsSchema
->;
+type ProfileSettingsSchema = ReturnType<typeof createProfileSettingsSchema>;
 export type ProfileSettingsFormValues = z.input<ProfileSettingsSchema>;
 export type ProfileSettingsValues = z.output<ProfileSettingsSchema>;
 

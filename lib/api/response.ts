@@ -1,4 +1,4 @@
-export type ApiFieldErrors<TFieldName extends string = string> = Partial<
+type ApiFieldErrors<TFieldName extends string = string> = Partial<
     Record<TFieldName, string[]>
 >;
 
@@ -73,7 +73,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
     return typeof value === "object" && value !== null;
 }
 
-export function isApiResponse(value: unknown): value is ApiResponse<unknown> {
+function isApiResponse(value: unknown): value is ApiResponse<unknown> {
     if (
         !isRecord(value) ||
         typeof value.isSuccess !== "boolean" ||

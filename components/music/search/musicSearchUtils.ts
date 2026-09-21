@@ -13,15 +13,12 @@ export function parseMusicCategories(value?: string): MusicCategory[] {
     return normalizeMusicCategories(value);
 }
 
-export function parseMusicFilterEnabled(
-    value: string | undefined,
-    fallback = false
-) {
+function parseMusicFilterEnabled(value: string | undefined, fallback = false) {
     if (value === undefined) return fallback;
     return value === "true";
 }
 
-export function parseMusicRange(
+function parseMusicRange(
     min: string | undefined,
     max: string | undefined,
     fallback: readonly [number, number]
@@ -35,7 +32,7 @@ export function parseMusicRange(
     ];
 }
 
-export function hasExplicitMusicDifficulty(searchParams: MusicSearchParams) {
+function hasExplicitMusicDifficulty(searchParams: MusicSearchParams) {
     return MUSIC_DIFFICULTIES.some(
         (difficulty) => searchParams[difficulty.value] !== undefined
     );

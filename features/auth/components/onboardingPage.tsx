@@ -13,7 +13,7 @@ export default async function OnboardingPage() {
     return <OnboardingContent data={await getOnboardingPageData()} />;
 }
 
-export async function OnboardingContent({
+async function OnboardingContent({
     data,
     children,
 }: {

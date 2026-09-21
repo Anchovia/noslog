@@ -35,7 +35,7 @@ export function cabinetState(cabinet: ArcadeCabinet): CabinetState {
 }
 
 /** 「가동 · 양호」·「가동 · 주의」·「이용 불가」·「미확인」 */
-export function cabinetStateLabel(
+function cabinetStateLabel(
     cabinet: ArcadeCabinet,
     t: ReturnType<typeof useTranslations>
 ) {

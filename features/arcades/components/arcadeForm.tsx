@@ -59,7 +59,7 @@ function verifiedLabel(value: string | null) {
         : "확인 기록 없음";
 }
 
-export interface ArcadeFormCabinet {
+interface ArcadeFormCabinet {
     id: number;
     label: string | null;
     note: string | null;

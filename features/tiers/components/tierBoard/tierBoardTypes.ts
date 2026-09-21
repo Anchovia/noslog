@@ -1,4 +1,4 @@
-export interface TierChartData {
+interface TierChartData {
     id: number;
     difficulty: string;
     level: number;

@@ -77,8 +77,8 @@ export const getChartRanking = unstable_cache(
 );
 
 /** 곡선 위 사진 — 참가자가 이 수 이하면 모두, 넘으면 상위 몇 명(+ 나)만 (2026-09-17 사용자 결정) */
-export const SCORE_PLAYERS_ALL_LIMIT = 30;
-export const SCORE_PLAYERS_TOP = 3;
+const SCORE_PLAYERS_ALL_LIMIT = 30;
+const SCORE_PLAYERS_TOP = 3;
 
 function scorePlayersQuery(
     chartId: number,

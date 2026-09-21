@@ -1,11 +1,5 @@
 export type ProfileMode = "basic" | "recital";
 
-export interface GradeHistoryPoint {
-    besttime: string;
-    grade_basic: number;
-    grade_recital: number | null;
-}
-
 export interface ProfileUser {
     id: number;
     username: string | null;
@@ -41,49 +35,6 @@ export interface ProfileUser {
     created_at: string;
     last_played_at: string | null;
     preferredArcade: { name: string } | null;
-}
-
-export interface BestPlayItem {
-    besttime: string;
-    score: number;
-    rank: string;
-    level: number;
-    difficulty: string;
-    max_combo: number;
-    music_idx: string;
-    fc_type: number;
-    grade_basic?: number;
-    grade_recital?: number | null;
-    music: {
-        title: string;
-        localizedTitle?: string | null;
-        background: string | null;
-    };
-}
-
-export interface RecentPlayItem {
-    id: number;
-    play_time: string;
-    score: number;
-    rank: string;
-    grade_basic: number;
-    difficulty: string;
-    level: number;
-    music_idx: string;
-    music: {
-        title: string;
-        localizedTitle?: string | null;
-        background: string | null;
-    };
-}
-
-export interface ProfileDashboardProps {
-    user: ProfileUser;
-    gradeHistory: GradeHistoryPoint[];
-    basicBestPlays: BestPlayItem[];
-    recitalBestPlays: BestPlayItem[];
-    recentPlays: RecentPlayItem[];
-    isOwner: boolean;
 }
 
 export interface ProfileRankRow {
