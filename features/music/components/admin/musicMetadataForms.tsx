@@ -12,6 +12,10 @@ import {
     saveMusicMetadata,
 } from "@/app/admin/music/actions";
 import {
+    AdminFieldError,
+    adminInputClass as inputClass,
+} from "@/components/admin/adminForm";
+import {
     chartMetadataSchema,
     createChartMetadataFormData,
     createMusicMetadataFormData,
@@ -24,9 +28,6 @@ import {
 import type { AdminMusicChart } from "@/features/music/types/musicAdmin";
 import { applyFormFieldErrors } from "@/lib/forms/errors";
 
-const inputClass =
-    "border-border bg-bg text-input h-11 w-full rounded-md border px-3";
-
 const difficultyColor: Record<string, string> = {
     normal: "text-normal",
     hard: "text-hard",
@@ -35,11 +36,9 @@ const difficultyColor: Record<string, string> = {
 };
 
 function FieldError({ message }: { message?: string }) {
-    return message ? (
-        <p className="text-danger text-xs" role="alert">
-            {message}
-        </p>
-    ) : null;
+    return (
+        <AdminFieldError message={message} className="text-danger text-xs" />
+    );
 }
 
 function SubmitButton({
@@ -177,11 +176,10 @@ export function MusicMetadataForm({ defaultValues }: MusicMetadataFormProps) {
                     <FieldError message={errors.durationSeconds?.message} />
                 </label>
             </div>
-            {errors.root?.server?.message ? (
-                <p className="text-danger text-xs" role="alert">
-                    {errors.root.server.message}
-                </p>
-            ) : null}
+            <AdminFieldError
+                message={errors.root?.server?.message}
+                className="text-danger text-xs"
+            />
             <SubmitButton
                 idleLabel="공통 정보 저장"
                 isSubmitting={isSubmitting}
@@ -383,11 +381,10 @@ export function ChartMetadataForm({
                         .join(" · ")}
                 </p>
             ) : null}
-            {errors.root?.server?.message ? (
-                <p className="text-danger text-xs" role="alert">
-                    {errors.root.server.message}
-                </p>
-            ) : null}
+            <AdminFieldError
+                message={errors.root?.server?.message}
+                className="text-danger text-xs"
+            />
             <SubmitButton idleLabel="채보 저장" isSubmitting={isSubmitting} />
         </form>
     );

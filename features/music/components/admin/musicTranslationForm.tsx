@@ -8,6 +8,10 @@ import { toast } from "sonner";
 
 import { saveMusicTranslation } from "@/app/admin/music/actions";
 import {
+    AdminFieldError,
+    adminInputClass as inputClass,
+} from "@/components/admin/adminForm";
+import {
     createMusicTranslationFormData,
     MUSIC_TRANSLATION_TITLE_MAX_LENGTH,
     musicTranslationFormSchema,
@@ -17,9 +21,6 @@ import {
     type MusicTranslationValues,
 } from "@/features/music/schemas/musicTranslationAdminSchema";
 import { applyFormFieldErrors } from "@/lib/forms/errors";
-
-const inputClass =
-    "border-border bg-bg text-input h-11 w-full rounded-md border px-3";
 
 interface MusicTranslationFormProps {
     label: string;
@@ -103,11 +104,10 @@ export default function MusicTranslationForm({
                     {...register("title")}
                 />
             </label>
-            {errors.title?.message ? (
-                <p className="text-danger text-xs" role="alert">
-                    {errors.title.message}
-                </p>
-            ) : null}
+            <AdminFieldError
+                message={errors.title?.message}
+                className="text-danger text-xs"
+            />
             <label className="text-caption flex flex-col gap-1">
                 검수 상태
                 <select
@@ -119,16 +119,14 @@ export default function MusicTranslationForm({
                     <option value="approved">승인</option>
                 </select>
             </label>
-            {errors.status?.message ? (
-                <p className="text-danger text-xs" role="alert">
-                    {errors.status.message}
-                </p>
-            ) : null}
-            {errors.root?.server?.message ? (
-                <p className="text-danger text-xs" role="alert">
-                    {errors.root.server.message}
-                </p>
-            ) : null}
+            <AdminFieldError
+                message={errors.status?.message}
+                className="text-danger text-xs"
+            />
+            <AdminFieldError
+                message={errors.root?.server?.message}
+                className="text-danger text-xs"
+            />
             <button
                 type="submit"
                 disabled={isSubmitting}

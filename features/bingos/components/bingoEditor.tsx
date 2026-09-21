@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 import { saveBingo } from "@/app/admin/bingos/actions";
+import { AdminFieldError } from "@/components/admin/adminForm";
 import {
     bingoFormSchema,
     createBingoFormData,
@@ -100,11 +101,10 @@ export default function BingoEditor({ bingo, musics }: BingoEditorProps) {
                     musics={musics}
                     register={register}
                 />
-                {errors.root?.server?.message ? (
-                    <p className="text-danger text-xs" role="alert">
-                        {errors.root.server.message}
-                    </p>
-                ) : null}
+                <AdminFieldError
+                    message={errors.root?.server?.message}
+                    className="text-danger text-xs"
+                />
                 <SaveBingoButton isSubmitting={isSubmitting} />
             </form>
             {bingo.id ? <DeleteBingoButton bingoId={bingo.id} /> : null}

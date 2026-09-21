@@ -1,10 +1,11 @@
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
 
+import {
+    AdminFieldError,
+    adminCompactInputClass as inputClass,
+} from "@/components/admin/adminForm";
 import type { ArcadeFormValues } from "@/features/arcades/schemas/arcadeSchema";
 import { ARCADE_WEEKDAYS } from "@/lib/arcadeDetails";
-
-const inputClass =
-    "border-border bg-bg text-input h-10 min-w-0 rounded-md border px-3 outline-none focus:border-focus";
 
 interface ArcadeBusinessHoursFieldsProps {
     formKey: string;
@@ -85,11 +86,10 @@ export default function ArcadeBusinessHoursFields({
                     기존 입력: {legacyNote}
                 </p>
             ) : null}
-            {errorMessage ? (
-                <p className="text-danger text-xs" role="alert">
-                    {errorMessage}
-                </p>
-            ) : null}
+            <AdminFieldError
+                message={errorMessage}
+                className="text-danger text-xs"
+            />
         </fieldset>
     );
 }

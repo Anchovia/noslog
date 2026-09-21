@@ -10,6 +10,7 @@ import {
     importMusicTranslationsCsv,
     validateMusicTranslationsCsv,
 } from "@/app/admin/music/actions";
+import { AdminFieldError } from "@/components/admin/adminForm";
 import {
     musicTranslationCsvTextSchema,
     type MusicTranslationCsvFormValues,
@@ -178,11 +179,14 @@ export default function MusicTranslationCsvImport() {
                         setMessage("");
                     }}
                 />
-                {errors.csv?.message && validationErrors.length === 0 ? (
-                    <p className="text-danger text-xs" role="alert">
-                        {errors.csv.message}
-                    </p>
-                ) : null}
+                <AdminFieldError
+                    message={
+                        validationErrors.length === 0
+                            ? errors.csv?.message
+                            : undefined
+                    }
+                    className="text-danger text-xs"
+                />
                 <button
                     type="submit"
                     disabled={isSubmitting || isApplying || !csv.trim()}

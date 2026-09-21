@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 import { reviewExamSubmission } from "@/app/admin/submissions/actions";
+import { AdminFieldError } from "@/components/admin/adminForm";
 import {
     createExamSubmissionReviewFormData,
     examSubmissionReviewSchema,
@@ -91,16 +92,14 @@ export default function ExamSubmissionReviewForm({
                 className="border-border bg-bg text-input w-full resize-none rounded-md border px-3 py-2"
                 {...register("reviewerNote")}
             />
-            {errors.reviewerNote?.message ? (
-                <p className="text-danger text-xs" role="alert">
-                    {errors.reviewerNote.message}
-                </p>
-            ) : null}
-            {errors.root?.server?.message ? (
-                <p className="text-danger text-xs" role="alert">
-                    {errors.root.server.message}
-                </p>
-            ) : null}
+            <AdminFieldError
+                message={errors.reviewerNote?.message}
+                className="text-danger text-xs"
+            />
+            <AdminFieldError
+                message={errors.root?.server?.message}
+                className="text-danger text-xs"
+            />
             <div className="grid grid-cols-2 gap-2">
                 <button
                     type="button"

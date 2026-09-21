@@ -14,14 +14,15 @@ import {
     saveMusicJacket,
 } from "@/app/admin/music/actions";
 import {
+    AdminFieldError,
+    adminSecondaryButtonClass as secondaryButtonClass,
+} from "@/components/admin/adminForm";
+import {
     getJacketUrl,
     getLocalJacketUrl,
     isManualJacketUrl,
 } from "@/lib/musicJackets";
 import { IMAGE_ACCEPT, imageFileValidationError } from "@/lib/imageUploadRules";
-
-const secondaryButtonClass =
-    "border-border hover:bg-surface-muted focus-visible:ring-focus/40 flex h-9 items-center justify-center gap-1.5 rounded-md border px-3 text-sm font-bold transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:opacity-50";
 
 // 지금 화면에 보이는 자켓이 어디서 왔는지 — 잘못된 자켓을 고칠 때 원인을 알 수 있게
 function jacketSource(index: string, background: string | null) {
@@ -222,11 +223,7 @@ export default function MusicJacketForm({
                     ) : null}
                 </div>
             )}
-            {error ? (
-                <p className="text-danger text-xs" role="alert">
-                    {error}
-                </p>
-            ) : null}
+            <AdminFieldError message={error} className="text-danger text-xs" />
         </section>
     );
 }

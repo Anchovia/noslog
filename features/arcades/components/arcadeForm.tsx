@@ -8,6 +8,11 @@ import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 
 import { createArcade, updateArcade } from "@/app/admin/arcades/actions";
+import {
+    AdminFieldError,
+    adminCompactInputClass as inputClass,
+    adminSecondaryButtonClass as secondaryButtonClass,
+} from "@/components/admin/adminForm";
 import { geocodeArcadeAddress } from "@/features/arcades/api/geocodeArcadeAddress";
 import {
     ARCADE_ADDRESS_MAX_LENGTH,
@@ -37,12 +42,8 @@ import ArcadeBusinessHoursFields from "./arcadeBusinessHoursFields";
 import ArcadeHoursExceptionsFields from "./arcadeHoursExceptionsFields";
 import ArcadePhotoManager, { type ArcadeFormPhoto } from "./arcadePhotoManager";
 
-const inputClass =
-    "border-border bg-bg text-input h-10 min-w-0 rounded-md border px-3 outline-none focus:border-focus";
 const textareaClass =
     "border-border bg-bg text-body min-h-20 min-w-0 resize-y rounded-md border px-3 py-2 outline-none focus:border-focus";
-const secondaryButtonClass =
-    "border-border hover:bg-surface-muted focus-visible:ring-focus/40 flex h-9 items-center justify-center gap-1.5 rounded-md border px-3 text-sm font-bold transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:opacity-50";
 
 // 관리자 화면은 서버·브라우저 시간대가 달라도 같은 날짜가 나오도록 서울 기준으로 적는다
 const verifiedDateFormat = new Intl.DateTimeFormat("ko-KR", {
@@ -95,9 +96,7 @@ type ArcadeFormProps =
     | { mode: "update"; appKey: string; arcade: ArcadeFormRecord };
 
 function FieldError({ message }: { message?: string }) {
-    return message ? (
-        <p className="text-danger mt-1 text-xs">{message}</p>
-    ) : null;
+    return <AdminFieldError message={message} role={null} />;
 }
 
 export default function ArcadeForm(props: ArcadeFormProps) {
@@ -592,11 +591,10 @@ export default function ArcadeForm(props: ArcadeFormProps) {
                     </span>
                 </div>
             ) : null}
-            {errors.root?.server?.message ? (
-                <p className="text-danger text-xs" role="alert">
-                    {errors.root.server.message}
-                </p>
-            ) : null}
+            <AdminFieldError
+                message={errors.root?.server?.message}
+                className="text-danger text-xs"
+            />
             <div className="flex min-w-0 flex-col items-stretch gap-1">
                 <button
                     type="submit"

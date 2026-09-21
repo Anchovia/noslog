@@ -1,7 +1,1 @@
-export default function BingoFieldError({ message }: { message?: string }) {
-    return message ? (
-        <p className="text-danger mt-1 text-xs" role="alert">
-            {message}
-        </p>
-    ) : null;
-}
+export { AdminFieldError as default } from "@/components/admin/adminForm";

@@ -14,15 +14,15 @@ import {
     setArcadeMainPhoto,
 } from "@/app/admin/arcades/actions";
 import {
+    AdminFieldError,
+    adminCompactInputClass as inputClass,
+    adminSecondaryButtonClass as secondaryButtonClass,
+} from "@/components/admin/adminForm";
+import {
     ARCADE_PHOTO_ALT_MAX_LENGTH,
     ARCADE_PHOTO_MAX,
 } from "@/features/arcades/schemas/arcadeSchema";
 import { IMAGE_ACCEPT, imageFileValidationError } from "@/lib/imageUploadRules";
-
-const inputClass =
-    "border-border bg-bg text-input h-10 min-w-0 rounded-md border px-3 outline-none focus:border-focus";
-const secondaryButtonClass =
-    "border-border hover:bg-surface-muted focus-visible:ring-focus/40 flex h-9 items-center justify-center gap-1.5 rounded-md border px-3 text-sm font-bold transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:opacity-50";
 
 export interface ArcadeFormPhoto {
     id: number;
@@ -291,11 +291,7 @@ export default function ArcadePhotoManager({
                     <ImagePlus className="size-4" aria-hidden /> 사진 추가
                 </button>
             ) : null}
-            {error ? (
-                <p className="text-danger text-xs" role="alert">
-                    {error}
-                </p>
-            ) : null}
+            <AdminFieldError message={error} className="text-danger text-xs" />
         </fieldset>
     );
 }
