@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PencilRuler, Save } from "lucide-react";
+import { PencilRuler } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -13,7 +13,9 @@ import {
 } from "@/app/admin/music/actions";
 import {
     AdminFieldError,
+    AdminSubmitButton,
     adminInputClass as inputClass,
+    adminTextareaClass,
 } from "@/components/admin/adminForm";
 import {
     chartMetadataSchema,
@@ -38,25 +40,6 @@ const difficultyColor: Record<string, string> = {
 function FieldError({ message }: { message?: string }) {
     return (
         <AdminFieldError message={message} className="text-danger text-xs" />
-    );
-}
-
-function SubmitButton({
-    idleLabel,
-    isSubmitting,
-}: {
-    idleLabel: string;
-    isSubmitting: boolean;
-}) {
-    return (
-        <button
-            type="submit"
-            disabled={isSubmitting}
-            className="bg-text-primary text-bg ml-auto flex h-10 cursor-pointer items-center gap-1 rounded-md px-3 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-60"
-        >
-            <Save className="size-4" aria-hidden />
-            {isSubmitting ? "저장 중..." : idleLabel}
-        </button>
     );
 }
 
@@ -134,7 +117,7 @@ export function MusicMetadataForm({ defaultValues }: MusicMetadataFormProps) {
             <textarea
                 id="description"
                 rows={3}
-                className="border-border bg-bg text-input w-full resize-none rounded-md border px-3 py-2"
+                className={adminTextareaClass}
                 {...register("description")}
             />
             <FieldError message={errors.description?.message} />
@@ -180,7 +163,7 @@ export function MusicMetadataForm({ defaultValues }: MusicMetadataFormProps) {
                 message={errors.root?.server?.message}
                 className="text-danger text-xs"
             />
-            <SubmitButton
+            <AdminSubmitButton
                 idleLabel="공통 정보 저장"
                 isSubmitting={isSubmitting}
             />
@@ -385,7 +368,10 @@ export function ChartMetadataForm({
                 message={errors.root?.server?.message}
                 className="text-danger text-xs"
             />
-            <SubmitButton idleLabel="채보 저장" isSubmitting={isSubmitting} />
+            <AdminSubmitButton
+                idleLabel="채보 저장"
+                isSubmitting={isSubmitting}
+            />
         </form>
     );
 }

@@ -7,7 +7,10 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 import { reviewExamSubmission } from "@/app/admin/submissions/actions";
-import { AdminFieldError } from "@/components/admin/adminForm";
+import {
+    AdminFieldError,
+    adminTextareaClass,
+} from "@/components/admin/adminForm";
 import {
     createExamSubmissionReviewFormData,
     examSubmissionReviewSchema,
@@ -89,7 +92,7 @@ export default function ExamSubmissionReviewForm({
                 placeholder="심사 메모 또는 반려 사유"
                 aria-label="심사 메모 또는 반려 사유"
                 aria-invalid={Boolean(errors.reviewerNote)}
-                className="border-border bg-bg text-input w-full resize-none rounded-md border px-3 py-2"
+                className={adminTextareaClass}
                 {...register("reviewerNote")}
             />
             <AdminFieldError

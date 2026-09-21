@@ -1,7 +1,6 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Save } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -9,6 +8,7 @@ import { toast } from "sonner";
 import { saveMusicTranslation } from "@/app/admin/music/actions";
 import {
     AdminFieldError,
+    AdminSubmitButton,
     adminInputClass as inputClass,
 } from "@/components/admin/adminForm";
 import {
@@ -127,14 +127,10 @@ export default function MusicTranslationForm({
                 message={errors.root?.server?.message}
                 className="text-danger text-xs"
             />
-            <button
-                type="submit"
-                disabled={isSubmitting}
-                className="bg-text-primary text-bg ml-auto flex h-10 cursor-pointer items-center gap-1 rounded-md px-3 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-60"
-            >
-                <Save className="size-4" aria-hidden />
-                {isSubmitting ? "저장 중..." : label + " 번역 저장"}
-            </button>
+            <AdminSubmitButton
+                idleLabel={label + " 번역 저장"}
+                isSubmitting={isSubmitting}
+            />
         </form>
     );
 }

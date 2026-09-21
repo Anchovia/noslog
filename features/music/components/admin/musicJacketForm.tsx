@@ -15,6 +15,7 @@ import {
 } from "@/app/admin/music/actions";
 import {
     AdminFieldError,
+    adminCompactPrimaryButtonClass as primaryButtonClass,
     adminSecondaryButtonClass as secondaryButtonClass,
 } from "@/components/admin/adminForm";
 import {
@@ -194,7 +195,7 @@ export default function MusicJacketForm({
                             type="button"
                             disabled={busy}
                             onClick={() => void upload()}
-                            className="bg-text-primary text-bg focus-visible:ring-focus/40 flex h-9 items-center justify-center gap-1.5 rounded-md text-sm font-bold focus-visible:ring-2 focus-visible:outline-none disabled:opacity-50"
+                            className={primaryButtonClass}
                         >
                             {uploading ? "올리는 중" : "올리기"}
                         </button>
