@@ -1,5 +1,6 @@
 import type { Prisma } from "@prisma/client";
 import { revalidatePath, updateTag } from "next/cache";
+import type { ZodError } from "zod";
 
 import {
     tierBandCreateInputFromFormData,
@@ -22,7 +23,8 @@ import {
     type TierListFormFieldName,
     type TierListSaveValues,
 } from "@/features/tiers/schemas/tierAdminSchema";
-import type { ActionFieldErrors, ActionResult } from "@/lib/actions/result";
+import type { ActionResult } from "@/lib/actions/result";
+import { actionValidationFailure } from "@/lib/actions/validation";
 import { requireAdmin } from "@/lib/admin";
 import { CACHE_TAGS } from "@/lib/cacheTags";
 import db from "@/lib/db";
@@ -32,6 +34,22 @@ import { getJacketUrl } from "@/lib/tiers";
 type TierListActionResult = ActionResult<{ id: number }, TierListFormFieldName>;
 type TierMutationActionResult = ActionResult;
 
+function invalidTierListInput(error: ZodError): TierListActionResult {
+    return actionValidationFailure<TierListFormFieldName>(error, {
+        message: "서열표 입력을 확인해주세요.",
+        preferFirstIssue: true,
+        omitFields: ["id"],
+    });
+}
+
+function invalidTierMutation(error: ZodError): TierMutationActionResult {
+    return actionValidationFailure(error, {
+        message: "서열표 요청을 확인해주세요.",
+        preferFirstIssue: true,
+        fieldPath: false,
+    });
+}
+
 function tierListData(input: TierListSaveValues) {
     return {
         slug: input.slug,
@@ -40,42 +58,6 @@ function tierListData(input: TierListSaveValues) {
         goal: input.goal,
         description: input.description || null,
         status: input.status,
-    };
-}
-
-function tierListFieldErrors(
-    issues: ReadonlyArray<{ path: PropertyKey[]; message: string }>
-) {
-    const fieldErrors: ActionFieldErrors<TierListFormFieldName> = {};
-
-    for (const issue of issues) {
-        const field = issue.path[0];
-        if (field === "id" || typeof field !== "string") continue;
-        const fieldName = field as TierListFormFieldName;
-        fieldErrors[fieldName] ??= [];
-        fieldErrors[fieldName]?.push(issue.message);
-    }
-
-    return fieldErrors;
-}
-
-function invalidTierListResult(
-    issues: ReadonlyArray<{ path: PropertyKey[]; message: string }>
-): TierListActionResult {
-    const fieldErrors = tierListFieldErrors(issues);
-    return {
-        success: false,
-        message: issues[0]?.message ?? "서열표 입력을 확인해주세요.",
-        ...(Object.keys(fieldErrors).length > 0 ? { fieldErrors } : {}),
-    };
-}
-
-function invalidMutationResult(
-    issues: ReadonlyArray<{ message: string }>
-): TierMutationActionResult {
-    return {
-        success: false,
-        message: issues[0]?.message ?? "서열표 요청을 확인해주세요.",
     };
 }
 
@@ -172,7 +154,7 @@ export async function createTierList(
     const result = tierListSaveSchema.safeParse(
         tierListSaveInputFromFormData(formData)
     );
-    if (!result.success) return invalidTierListResult(result.error.issues);
+    if (!result.success) return invalidTierListInput(result.error);
     const input = result.data;
 
     try {
@@ -228,7 +210,7 @@ export async function updateTierList(
     const result = tierListSaveSchema.safeParse(
         tierListSaveInputFromFormData(formData)
     );
-    if (!result.success) return invalidTierListResult(result.error.issues);
+    if (!result.success) return invalidTierListInput(result.error);
     const input = result.data;
     if (input.id === undefined) {
         return { success: false, message: "잘못된 서열표입니다." };
@@ -289,7 +271,7 @@ export async function deleteTierList(
     const result = tierListDeleteSchema.safeParse(
         tierIdInputFromFormData(formData)
     );
-    if (!result.success) return invalidMutationResult(result.error.issues);
+    if (!result.success) return invalidTierMutation(result.error);
 
     try {
         await db.tierList.delete({ where: { id: result.data.id } });
@@ -308,7 +290,7 @@ export async function addTierBand(
     const result = tierBandCreateSchema.safeParse(
         tierBandCreateInputFromFormData(formData)
     );
-    if (!result.success) return invalidMutationResult(result.error.issues);
+    if (!result.success) return invalidTierMutation(result.error);
     const { tierListId, value } = result.data;
 
     try {
@@ -363,7 +345,7 @@ export async function updateTierBand(
     const result = tierBandUpdateSchema.safeParse(
         tierBandUpdateInputFromFormData(formData)
     );
-    if (!result.success) return invalidMutationResult(result.error.issues);
+    if (!result.success) return invalidTierMutation(result.error);
     const { id, value } = result.data;
 
     try {
@@ -441,7 +423,7 @@ export async function deleteTierBand(
     const result = tierBandDeleteSchema.safeParse(
         tierIdInputFromFormData(formData)
     );
-    if (!result.success) return invalidMutationResult(result.error.issues);
+    if (!result.success) return invalidTierMutation(result.error);
     const { id } = result.data;
 
     try {
@@ -504,7 +486,7 @@ export async function addTierEntry(
     const result = tierEntryAddSchema.safeParse(
         tierEntryAddInputFromFormData(formData)
     );
-    if (!result.success) return invalidMutationResult(result.error.issues);
+    if (!result.success) return invalidTierMutation(result.error);
     const { tierListId, tierBandId, chartId } = result.data;
 
     try {
@@ -564,7 +546,7 @@ export async function applyTierBoardLayout(
 ): Promise<TierMutationActionResult> {
     await requireAdmin();
     const result = tierBoardLayoutSchema.safeParse({ tierListId, placements });
-    if (!result.success) return invalidMutationResult(result.error.issues);
+    if (!result.success) return invalidTierMutation(result.error);
     const input = result.data;
 
     try {
@@ -685,7 +667,7 @@ export async function deleteTierEntry(
     const result = tierEntryDeleteSchema.safeParse(
         tierIdInputFromFormData(formData)
     );
-    if (!result.success) return invalidMutationResult(result.error.issues);
+    if (!result.success) return invalidTierMutation(result.error);
     const { id } = result.data;
 
     try {
@@ -738,7 +720,7 @@ export async function moveTierEntryToBand(
     const result = tierEntryMoveSchema.safeParse(
         tierEntryMoveInputFromFormData(formData)
     );
-    if (!result.success) return invalidMutationResult(result.error.issues);
+    if (!result.success) return invalidTierMutation(result.error);
     const { entryId, tierBandId } = result.data;
 
     try {

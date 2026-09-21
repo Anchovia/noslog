@@ -11,7 +11,8 @@ import {
     type BingoFormFieldName,
     type BingoSaveValues,
 } from "@/features/bingos/schemas/bingoEditorSchema";
-import type { ActionFieldErrors, ActionResult } from "@/lib/actions/result";
+import type { ActionResult } from "@/lib/actions/result";
+import { actionValidationFailure } from "@/lib/actions/validation";
 import { requireAdmin } from "@/lib/admin";
 import { CACHE_TAGS } from "@/lib/cacheTags";
 import db from "@/lib/db";
@@ -37,35 +38,6 @@ function parseRuleConfig(value: string) {
     } catch {
         return { value } satisfies Prisma.InputJsonValue;
     }
-}
-
-function getBingoFieldErrors(
-    issues: ReadonlyArray<{ path: PropertyKey[]; message: string }>
-) {
-    const fieldErrors: ActionFieldErrors<BingoFormFieldName> = {};
-
-    for (const issue of issues) {
-        if (issue.path[0] === "id") continue;
-        const field = issue.path.join(".") as BingoFormFieldName;
-        fieldErrors[field] ??= [];
-        fieldErrors[field]?.push(issue.message);
-    }
-
-    return fieldErrors;
-}
-
-function invalidBingoResult(
-    issues: ReadonlyArray<{ path: PropertyKey[]; message: string }>
-): BingoActionResult {
-    const fieldErrors = getBingoFieldErrors(issues);
-    const firstMessage = Object.values(fieldErrors).flat()[0];
-
-    return {
-        success: false,
-        message:
-            firstMessage ?? issues[0]?.message ?? "빙고 입력을 확인해주세요.",
-        ...(Object.keys(fieldErrors).length > 0 ? { fieldErrors } : {}),
-    };
 }
 
 function bingoData(input: BingoSaveValues) {
@@ -96,7 +68,16 @@ export async function saveBingo(
     const result = bingoSaveSchema.safeParse(
         bingoSaveInputFromFormData(formData)
     );
-    if (!result.success) return invalidBingoResult(result.error.issues);
+    if (!result.success)
+        return actionValidationFailure<BingoFormFieldName>(result.error, {
+            message: "빙고 입력을 확인해주세요.",
+            fieldPath: "full",
+            omitFields: ["id"],
+            resolveMessage: ({ fieldErrors, firstIssueMessage }) =>
+                Object.values(fieldErrors).flat()[0] ??
+                firstIssueMessage ??
+                "빙고 입력을 확인해주세요.",
+        });
     const input = result.data;
 
     let bingoId = input.id;

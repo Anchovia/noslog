@@ -7,7 +7,8 @@ import {
     type ExamEditorFieldName,
     type ExamEditorFormValues,
 } from "@/features/exams/schemas/examEditorSchema";
-import type { ActionFieldErrors, ActionResult } from "@/lib/actions/result";
+import type { ActionResult } from "@/lib/actions/result";
+import { actionValidationFailure } from "@/lib/actions/validation";
 import { requireAdmin } from "@/lib/admin";
 import { CACHE_TAGS } from "@/lib/cacheTags";
 import db from "@/lib/db";
@@ -40,33 +41,6 @@ function getStageSignature(stages: StageSignatureInput[]) {
             }))
             .sort((first, second) => first.position - second.position)
     );
-}
-
-function examFieldErrors(
-    issues: ReadonlyArray<{ path: PropertyKey[]; message: string }>
-) {
-    const fieldErrors: ActionFieldErrors<ExamEditorFieldName> = {};
-
-    for (const issue of issues) {
-        if (issue.path[0] === "id") continue;
-        const field = issue.path.join(".") as ExamEditorFieldName;
-        fieldErrors[field] ??= [];
-        fieldErrors[field]?.push(issue.message);
-    }
-
-    return fieldErrors;
-}
-
-function invalidExamResult(
-    issues: ReadonlyArray<{ path: PropertyKey[]; message: string }>
-): ExamActionResult {
-    const fieldErrors = examFieldErrors(issues);
-
-    return {
-        success: false,
-        message: issues[0]?.message ?? "검정 입력을 확인해주세요.",
-        ...(Object.keys(fieldErrors).length > 0 ? { fieldErrors } : {}),
-    };
 }
 
 function refreshExams(examId?: number) {
@@ -243,7 +217,13 @@ export async function getExamEditorData(
 export async function saveExam(input: unknown): Promise<ExamActionResult> {
     await requireAdmin();
     const result = examEditorSchema.safeParse(input);
-    if (!result.success) return invalidExamResult(result.error.issues);
+    if (!result.success)
+        return actionValidationFailure<ExamEditorFieldName>(result.error, {
+            message: "검정 입력을 확인해주세요.",
+            preferFirstIssue: true,
+            fieldPath: "full",
+            omitFields: ["id"],
+        });
     const data = result.data;
 
     try {

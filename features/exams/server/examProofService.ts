@@ -10,6 +10,7 @@ import {
     type ExamProofSubmissionFormValues,
 } from "@/features/exams/schemas/examProofSchema";
 import type { ActionResult } from "@/lib/actions/result";
+import { actionValidationFailure } from "@/lib/actions/validation";
 import {
     createPrivateImageUploadToken,
     deleteBlobIfOwned,
@@ -104,16 +105,15 @@ export async function requestExamProofUpload(
         examId,
         contentType,
     });
-    if (!inputResult.success) {
-        const fieldErrors = inputResult.error.flatten().fieldErrors;
-        return {
-            success: false,
-            message: fieldErrors.examId?.length
-                ? t("exams.error.invalid")
-                : t("exams.proof.invalidImage"),
-            fieldErrors,
-        };
-    }
+    if (!inputResult.success)
+        return actionValidationFailure(inputResult.error, {
+            message: t("exams.proof.invalidImage"),
+            resolveMessage: ({ fieldErrors }) =>
+                fieldErrors.examId?.length
+                    ? t("exams.error.invalid")
+                    : t("exams.proof.invalidImage"),
+            alwaysIncludeFieldErrors: true,
+        });
     const userId = session.id;
     const input = inputResult.data;
     let grantId: number | null = null;
@@ -196,16 +196,15 @@ export async function submitExamProof(
     const inputResult = createExamProofSubmissionSchema(t).safeParse(
         examProofSubmissionInputFromFormData(formData)
     );
-    if (!inputResult.success) {
-        const fieldErrors = inputResult.error.flatten().fieldErrors;
-        return {
-            success: false,
-            message: fieldErrors.examId?.length
-                ? t("exams.error.invalid")
-                : t("exams.error.invalidUrl"),
-            fieldErrors,
-        };
-    }
+    if (!inputResult.success)
+        return actionValidationFailure(inputResult.error, {
+            message: t("exams.error.invalidUrl"),
+            resolveMessage: ({ fieldErrors }) =>
+                fieldErrors.examId?.length
+                    ? t("exams.error.invalid")
+                    : t("exams.error.invalidUrl"),
+            alwaysIncludeFieldErrors: true,
+        });
     const userId = session.id;
     const { examId, proofImageUrl } = inputResult.data;
 

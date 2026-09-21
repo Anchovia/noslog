@@ -2,6 +2,7 @@ import "server-only";
 
 import { revalidatePath, updateTag } from "next/cache";
 import { Prisma } from "@prisma/client";
+import type { ZodError } from "zod";
 
 import { arcadeHoursSchema } from "@/features/arcades/schemas/publicArcadeSchema";
 import {
@@ -13,6 +14,7 @@ import {
     type ArcadeValues,
 } from "@/features/arcades/schemas/arcadeSchema";
 import type { ActionResult } from "@/lib/actions/result";
+import { actionValidationFailure } from "@/lib/actions/validation";
 import { requireAdmin } from "@/lib/admin";
 import {
     ARCADE_WEEKDAYS,
@@ -37,8 +39,33 @@ const PUBLIC_DETAILS_DEFAULTS = {
 
 const CABINET_MISMATCH_MESSAGE =
     "기체 목록이 바뀌었습니다. 새로고침한 뒤 다시 저장해주세요.";
+const ARCADE_MESSAGE_FIELDS = [
+    "id",
+    "name",
+    "region",
+    "address",
+    "latitude",
+    "longitude",
+    "playPrice",
+    "coinCount",
+    "creditLabel",
+    "phone",
+    "website",
+    "businessHours",
+    "hoursExceptions",
+    "cabinets",
+    "notes",
+] as const satisfies readonly ArcadeFieldName[];
 
 class CabinetMismatchError extends Error {}
+
+function invalidArcadeInput(error: ZodError): ArcadeActionResult {
+    return actionValidationFailure<ArcadeFieldName>(error, {
+        message: "입력 내용을 확인해주세요.",
+        messageFields: ARCADE_MESSAGE_FIELDS,
+        alwaysIncludeFieldErrors: true,
+    });
+}
 
 function arcadeData(input: ArcadeValues) {
     return {
@@ -227,32 +254,6 @@ async function syncPublicFacts(
     return details?.slug ?? String(arcadeId);
 }
 
-function validationFailure(
-    fieldErrors: Partial<Record<ArcadeFieldName, string[] | undefined>>
-): ArcadeActionResult {
-    return {
-        success: false,
-        message:
-            fieldErrors.id?.[0] ??
-            fieldErrors.name?.[0] ??
-            fieldErrors.region?.[0] ??
-            fieldErrors.address?.[0] ??
-            fieldErrors.latitude?.[0] ??
-            fieldErrors.longitude?.[0] ??
-            fieldErrors.playPrice?.[0] ??
-            fieldErrors.coinCount?.[0] ??
-            fieldErrors.creditLabel?.[0] ??
-            fieldErrors.phone?.[0] ??
-            fieldErrors.website?.[0] ??
-            fieldErrors.businessHours?.[0] ??
-            fieldErrors.hoursExceptions?.[0] ??
-            fieldErrors.cabinets?.[0] ??
-            fieldErrors.notes?.[0] ??
-            "입력 내용을 확인해주세요.",
-        fieldErrors,
-    };
-}
-
 function cabinetMismatch(): ArcadeActionResult {
     return {
         success: false,
@@ -281,7 +282,7 @@ export async function createArcade(
         arcadeFormInputFromFormData(formData)
     );
     if (!result.success) {
-        return validationFailure(result.error.flatten().fieldErrors);
+        return invalidArcadeInput(result.error);
     }
 
     let slug: string;
@@ -319,7 +320,7 @@ export async function updateArcade(
         arcadeUpdateInputFromFormData(formData)
     );
     if (!result.success) {
-        return validationFailure(result.error.flatten().fieldErrors);
+        return invalidArcadeInput(result.error);
     }
     const { id, ...input } = result.data;
 

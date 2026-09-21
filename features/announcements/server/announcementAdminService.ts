@@ -2,6 +2,7 @@ import "server-only";
 
 import { Prisma } from "@prisma/client";
 import { revalidatePath, updateTag } from "next/cache";
+import type { ZodError } from "zod";
 
 import {
     ANNOUNCEMENT_LOCALES,
@@ -14,6 +15,7 @@ import {
     type AnnouncementValues,
 } from "@/features/announcements/schemas/announcementSchema";
 import type { ActionResult } from "@/lib/actions/result";
+import { actionValidationFailure } from "@/lib/actions/validation";
 import { requireAdmin } from "@/lib/admin";
 import { createImageUploadToken, isImageContentType } from "@/lib/blob";
 import {
@@ -45,27 +47,21 @@ type AnnouncementFailure = Extract<
     AnnouncementActionResult,
     { success: false }
 >;
-type Issue = { path: PropertyKey[]; message: string };
+
+function invalidAnnouncementInput(error: ZodError): AnnouncementFailure {
+    return actionValidationFailure<AnnouncementFieldName>(error, {
+        message: "공지사항 입력을 확인해주세요.",
+        preferFirstIssue: true,
+        fieldPath: "full",
+        alwaysIncludeFieldErrors: true,
+    });
+}
 
 function refreshAnnouncements() {
     updateTag(CACHE_TAGS.announcements);
     revalidatePath("/");
     revalidatePath("/announcements");
     revalidatePath("/admin/announcements");
-}
-
-// zod 의 중첩 경로(translations.ko.title)를 폼 필드 이름 그대로 돌려줌
-function invalidInput(issues: Issue[]): AnnouncementFailure {
-    const fieldErrors: Partial<Record<AnnouncementFieldName, string[]>> = {};
-    for (const issue of issues) {
-        const key = issue.path.join(".") as AnnouncementFieldName;
-        (fieldErrors[key] ??= []).push(issue.message);
-    }
-    return {
-        success: false,
-        message: issues[0]?.message ?? "공지사항 입력을 확인해주세요.",
-        fieldErrors,
-    };
 }
 
 function slugConflict(error: unknown): AnnouncementFailure | null {
@@ -115,7 +111,7 @@ export async function createAnnouncement(
     const result = announcementFormSchema.safeParse(
         announcementFormInputFromFormData(formData)
     );
-    if (!result.success) return invalidInput(result.error.issues);
+    if (!result.success) return invalidAnnouncementInput(result.error);
     const input = result.data;
     const publishedAt = input.isPublished ? new Date() : null;
 
@@ -162,7 +158,7 @@ export async function updateAnnouncement(
     const result = announcementUpdateSchema.safeParse(
         announcementUpdateInputFromFormData(formData)
     );
-    if (!result.success) return invalidInput(result.error.issues);
+    if (!result.success) return invalidAnnouncementInput(result.error);
     const { id, ...input } = result.data;
 
     try {
@@ -252,7 +248,7 @@ export async function deleteAnnouncement(
     const result = announcementDeleteSchema.safeParse(
         announcementDeleteInputFromFormData(formData)
     );
-    if (!result.success) return invalidInput(result.error.issues);
+    if (!result.success) return invalidAnnouncementInput(result.error);
     const { id } = result.data;
 
     try {

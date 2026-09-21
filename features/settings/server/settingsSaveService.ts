@@ -7,6 +7,7 @@ import { CACHE_TAGS, getUserProfileTag } from "@/lib/cacheTags";
 import { deleteBlobIfOwned, isValidImageBlob } from "@/lib/blob";
 import { logServerError } from "@/lib/observability/server";
 import type { ActionResult } from "@/lib/actions/result";
+import { actionValidationFailure } from "@/lib/actions/validation";
 import {
     createSettingsProfileSchema,
     settingsPrivacySchema,
@@ -39,11 +40,10 @@ export async function saveSettingsProfile(
         settingsProfileInput(formData)
     );
     if (!parsed.success)
-        return {
-            success: false,
+        return actionValidationFailure(parsed.error, {
             message: t("settings.checkInput"),
-            fieldErrors: parsed.error.flatten().fieldErrors,
-        };
+            alwaysIncludeFieldErrors: true,
+        });
     const values = parsed.data;
     const current = await db.user.findUnique({
         where: { id: session.id },

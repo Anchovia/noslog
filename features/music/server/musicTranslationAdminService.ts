@@ -23,6 +23,7 @@ import type {
     MusicTranslationCsvPreview,
 } from "@/features/music/types/musicAdmin";
 import type { ActionResult } from "@/lib/actions/result";
+import { actionValidationFailure } from "@/lib/actions/validation";
 import { requireAdmin } from "@/lib/admin";
 import { CACHE_TAGS } from "@/lib/cacheTags";
 import db from "@/lib/db";
@@ -227,15 +228,12 @@ export async function saveMusicTranslation(
     const result = musicTranslationFormSchema.safeParse(
         musicTranslationInputFromFormData(formData)
     );
-    if (!result.success) {
-        return {
-            success: false,
-            message:
-                result.error.issues[0]?.message ??
-                "악곡 번역 입력을 확인해주세요.",
-            fieldErrors: result.error.flatten().fieldErrors,
-        };
-    }
+    if (!result.success)
+        return actionValidationFailure(result.error, {
+            message: "악곡 번역 입력을 확인해주세요.",
+            preferFirstIssue: true,
+            alwaysIncludeFieldErrors: true,
+        });
     const input = result.data;
 
     try {
@@ -383,14 +381,12 @@ export async function validateMusicTranslationsCsv(
 ): Promise<MusicTranslationCsvValidationResult> {
     await requireAdmin();
     const inputResult = musicTranslationCsvTextSchema.safeParse({ csv });
-    if (!inputResult.success) {
-        return {
-            success: false,
-            message:
-                inputResult.error.issues[0]?.message ?? "CSV를 확인해주세요.",
-            fieldErrors: inputResult.error.flatten().fieldErrors,
-        };
-    }
+    if (!inputResult.success)
+        return actionValidationFailure(inputResult.error, {
+            message: "CSV를 확인해주세요.",
+            preferFirstIssue: true,
+            alwaysIncludeFieldErrors: true,
+        });
 
     try {
         const result = await validateTranslationCsvContent(
@@ -427,14 +423,12 @@ export async function importMusicTranslationsCsv(
 ): Promise<MusicTranslationCsvImportResult> {
     await requireAdmin();
     const inputResult = musicTranslationCsvTextSchema.safeParse({ csv });
-    if (!inputResult.success) {
-        return {
-            success: false,
-            message:
-                inputResult.error.issues[0]?.message ?? "CSV를 확인해주세요.",
-            fieldErrors: inputResult.error.flatten().fieldErrors,
-        };
-    }
+    if (!inputResult.success)
+        return actionValidationFailure(inputResult.error, {
+            message: "CSV를 확인해주세요.",
+            preferFirstIssue: true,
+            alwaysIncludeFieldErrors: true,
+        });
 
     try {
         const result = await validateTranslationCsvContent(

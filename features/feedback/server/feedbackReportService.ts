@@ -8,6 +8,7 @@ import {
     type FeedbackReportFormValues,
 } from "@/features/feedback/schemas/feedbackReportSchema";
 import type { ActionResult } from "@/lib/actions/result";
+import { actionValidationFailure } from "@/lib/actions/validation";
 import {
     createPrivateImageUploadToken,
     deleteBlobIfOwned,
@@ -111,15 +112,11 @@ export async function submitFeedbackReport(
         if (input.imageUrl.trim()) {
             await cleanupFeedbackImage(input.imageUrl.trim(), session.id);
         }
-        const fieldErrors = result.error.flatten().fieldErrors;
-        return {
-            success: false,
-            message:
-                fieldErrors.content?.[0] ??
-                fieldErrors.category?.[0] ??
-                t("feedback.attachmentError"),
-            fieldErrors,
-        };
+        return actionValidationFailure(result.error, {
+            message: t("feedback.attachmentError"),
+            messageFields: ["content", "category"],
+            alwaysIncludeFieldErrors: true,
+        });
     }
 
     const { category, content, imageUrl } = result.data;
