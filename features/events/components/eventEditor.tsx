@@ -23,10 +23,9 @@ import {
 import ActionButton from "@/components/ui/actionButton";
 import { foundationButtonClass } from "@/components/ui/Button";
 import { FormField, Input, fieldDescription } from "@/components/ui/formField";
-import FullScreenDialog from "@/components/ui/fullScreenDialog";
 import IconButton from "@/components/ui/iconButton";
 import MarkdownEditor from "@/components/ui/markdownEditor";
-import ModalDialog from "@/components/ui/modalDialog";
+import ResponsiveDialog from "@/components/ui/responsiveDialog";
 import AnnouncementBody from "@/features/announcements/components/announcementBody";
 import {
     EVENT_CONTENT_MAX_LENGTH,
@@ -40,7 +39,6 @@ import useObjectUrl from "@/lib/hooks/useObjectUrl";
 import { IMAGE_ACCEPT, imageFileValidationError } from "@/lib/imageUploadRules";
 import { uploadGrantedImage } from "@/lib/uploads/clientImageUpload";
 import EventDeleteButton from "./eventDeleteButton";
-import useMediaQuery from "@/lib/hooks/useMediaQuery";
 
 type SaveMode = "draft" | "submit";
 const DIALOG_FIELDS = ["startDate", "endDate", "bannerUrl"] as const;
@@ -64,7 +62,6 @@ export default function EventEditor({
     const locale = useLocale();
     const href = useLocalizedHref();
     const router = useRouter();
-    const wide = useMediaQuery("(min-width: 672px)");
     const [dialog, setDialog] = useState<SaveMode | null>(null);
     const [pending, setPending] = useState<SaveMode | null>(null);
     const [file, setFile] = useState<File | null>(null);
@@ -418,38 +415,28 @@ export default function EventEditor({
                 </ActionButton>
             </div>
 
-            {wide ? (
-                <ModalDialog
-                    open={dialog !== null}
-                    onOpenChange={closeDialog}
-                    title={t("events.dialog.title")}
-                    footer={
-                        <>
-                            <button
-                                type="button"
-                                className={foundationButtonClass({
-                                    variant: "secondary",
-                                })}
-                                onClick={() => closeDialog(false)}
-                            >
-                                {t("events.actions.cancel")}
-                            </button>
-                            {confirm}
-                        </>
-                    }
-                >
-                    {settings}
-                </ModalDialog>
-            ) : (
-                <FullScreenDialog
-                    open={dialog !== null}
-                    onOpenChange={closeDialog}
-                    title={t("events.dialog.title")}
-                    footer={confirm}
-                >
-                    {settings}
-                </FullScreenDialog>
-            )}
+            <ResponsiveDialog
+                open={dialog !== null}
+                onOpenChange={closeDialog}
+                title={t("events.dialog.title")}
+                footer={confirm}
+                modalFooter={
+                    <>
+                        <button
+                            type="button"
+                            className={foundationButtonClass({
+                                variant: "secondary",
+                            })}
+                            onClick={() => closeDialog(false)}
+                        >
+                            {t("events.actions.cancel")}
+                        </button>
+                        {confirm}
+                    </>
+                }
+            >
+                {settings}
+            </ResponsiveDialog>
         </form>
     );
 }

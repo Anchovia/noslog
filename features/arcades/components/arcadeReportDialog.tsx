@@ -15,8 +15,6 @@ import {
     useLocalizedHref,
     useTranslations,
 } from "@/components/i18n/localeProvider";
-import FullScreenDialog from "@/components/ui/fullScreenDialog";
-import ModalDialog from "@/components/ui/modalDialog";
 import ActionButton from "@/components/ui/actionButton";
 import Button, { foundationButtonClass } from "@/components/ui/Button";
 import RadioGroup from "@/components/ui/radioGroup";
@@ -26,7 +24,7 @@ import {
     TextArea,
 } from "@/components/ui/formField";
 import { StatusMessage } from "@/components/ui/statusMessage";
-import useMediaQuery from "@/lib/hooks/useMediaQuery";
+import ResponsiveDialog from "@/components/ui/responsiveDialog";
 import { requestFeedbackImageUpload } from "@/app/(nevigation)/(home)/feedbackActions";
 import { submitArcadeReport } from "@/app/(nevigation)/gamecenter/actions";
 import {
@@ -71,8 +69,6 @@ export default function ArcadeReportDialog({
     const locale = useLocale();
     const href = useLocalizedHref();
     const t = useTranslations();
-    // 필터와 같은 그릇 규칙 — 672 미만 전체 레이어, 672 이상 모달
-    const wide = useMediaQuery("(min-width: 672px)");
     const [open, setOpen] = useState(false);
     const [success, setSuccess] = useState(false);
     const [file, setFile] = useState<File | null>(null);
@@ -312,28 +308,28 @@ export default function ArcadeReportDialog({
         </>
     );
 
-    // Compact — 필터 레이어와 같은 전체 레이어: 머리 줄 제목·닫기, 하단 고정 줄에 제출
-    if (!wide)
-        return (
-            <FullScreenDialog
-                open={open}
-                onOpenChange={changeOpen}
-                title={title}
-                trigger={trigger}
-                footer={
-                    isAuthenticated && !success ? (
-                        <ActionButton
-                            className="nl-arcades__apply"
-                            busy={busy}
-                            busyLabel={t("feedback.submitting")}
-                            onClick={submitForm}
-                        >
-                            {t("feedback.submit")}
-                        </ActionButton>
-                    ) : null
-                }
-            >
-                {!isAuthenticated ? (
+    return (
+        <ResponsiveDialog
+            open={open}
+            onOpenChange={changeOpen}
+            title={title}
+            width="wide"
+            className="nl-feedback-dialog"
+            trigger={trigger}
+            fullScreenFooter={
+                isAuthenticated && !success ? (
+                    <ActionButton
+                        className="nl-arcades__apply"
+                        busy={busy}
+                        busyLabel={t("feedback.submitting")}
+                        onClick={submitForm}
+                    >
+                        {t("feedback.submit")}
+                    </ActionButton>
+                ) : null
+            }
+            fullScreenChildren={
+                !isAuthenticated ? (
                     <div className="nl-stack">
                         {loginRequired}
                         {loginLink}
@@ -349,65 +345,55 @@ export default function ArcadeReportDialog({
                     >
                         {fields}
                     </form>
-                )}
-            </FullScreenDialog>
-        );
-
-    // 672+ — 피드백 다이얼로그와 같은 768 모달(SHELL-37): 제보 대상 화면이 뒤에 남고 [닫기][제출] 이 오른쪽
-    return (
-        <ModalDialog
-            open={open}
-            onOpenChange={changeOpen}
-            title={title}
-            width="wide"
-            className="nl-feedback-dialog"
-            trigger={trigger}
-        >
-            {!isAuthenticated ? (
-                <div className="nl-stack nl-feedback-dialog__body">
-                    {loginRequired}
-                    <div className="nl-dialog__actions">
-                        <ActionButton variant="secondary" onClick={close}>
-                            {t("common.close")}
-                        </ActionButton>
-                        {loginLink}
+                )
+            }
+            modalChildren={
+                !isAuthenticated ? (
+                    <div className="nl-stack nl-feedback-dialog__body">
+                        {loginRequired}
+                        <div className="nl-dialog__actions">
+                            <ActionButton variant="secondary" onClick={close}>
+                                {t("common.close")}
+                            </ActionButton>
+                            {loginLink}
+                        </div>
                     </div>
-                </div>
-            ) : success ? (
-                <div className="nl-stack nl-feedback-dialog__body">
-                    {successMessage}
-                    <div className="nl-dialog__actions">
-                        <ActionButton onClick={close}>
-                            {t("common.close")}
-                        </ActionButton>
+                ) : success ? (
+                    <div className="nl-stack nl-feedback-dialog__body">
+                        {successMessage}
+                        <div className="nl-dialog__actions">
+                            <ActionButton onClick={close}>
+                                {t("common.close")}
+                            </ActionButton>
+                        </div>
                     </div>
-                </div>
-            ) : (
-                <form
-                    className="nl-stack nl-feedback-dialog__body"
-                    noValidate
-                    aria-busy={busy}
-                    onSubmit={submitForm}
-                >
-                    {fields}
-                    <div className="nl-dialog__actions">
-                        <ActionButton
-                            variant="secondary"
-                            disabled={busy}
-                            onClick={close}
-                        >
-                            {t("common.close")}
-                        </ActionButton>
-                        <ActionButton
-                            type="submit"
-                            busy={busy}
-                            busyLabel={t("feedback.submitting")}
-                        >
-                            {t("feedback.submit")}
-                        </ActionButton>
-                    </div>
-                </form>
-            )}
-        </ModalDialog>
+                ) : (
+                    <form
+                        className="nl-stack nl-feedback-dialog__body"
+                        noValidate
+                        aria-busy={busy}
+                        onSubmit={submitForm}
+                    >
+                        {fields}
+                        <div className="nl-dialog__actions">
+                            <ActionButton
+                                variant="secondary"
+                                disabled={busy}
+                                onClick={close}
+                            >
+                                {t("common.close")}
+                            </ActionButton>
+                            <ActionButton
+                                type="submit"
+                                busy={busy}
+                                busyLabel={t("feedback.submitting")}
+                            >
+                                {t("feedback.submit")}
+                            </ActionButton>
+                        </div>
+                    </form>
+                )
+            }
+        />
     );
 }

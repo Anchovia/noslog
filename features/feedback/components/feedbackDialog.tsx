@@ -37,13 +37,11 @@ import {
     TextArea,
     fieldDescription,
 } from "@/components/ui/formField";
-import FullScreenDialog from "@/components/ui/fullScreenDialog";
 import IconButton from "@/components/ui/iconButton";
-import ModalDialog from "@/components/ui/modalDialog";
+import ResponsiveDialog from "@/components/ui/responsiveDialog";
 import AreaTabs from "@/components/ui/areaTabs";
 import { Select } from "@/components/ui/select";
 import { StatusMessage } from "@/components/ui/statusMessage";
-import useMediaQuery from "@/lib/hooks/useMediaQuery";
 import { useFeedbackUnread } from "./feedbackUnread";
 import MyFeedbackList from "./myFeedbackList";
 
@@ -75,7 +73,6 @@ export default function FeedbackDialog({
     const [submitted, setSubmitted] = useState(false);
     // 창 안 두 탭 — 새로 쓰기 · 내 제보(2026-09-18 F1)
     const [view, setView] = useState<"write" | "mine">("write");
-    const wide = useMediaQuery("(min-width: 672px)");
     // 붙인 이미지 미리보기 — 브라우저 안에서만 쓰는 임시 주소, 파일이 바뀌거나 창이 닫히면 풀어 준다
     const preview = useObjectUrl(file);
     const formId = useId();
@@ -372,55 +369,62 @@ export default function FeedbackDialog({
     );
 
     // 버튼 — 폰(전체 화면)은 닫기가 머리 ×라 주 액션 하나, 창은 취소 · 주 액션. 보내기는 늘 켜 둔다(비면 칸 아래 오류, D2)
-    const actions = !isAuthenticated ? (
-        <>
-            {wide ? (
-                <ActionButton
-                    variant="secondary"
-                    onClick={() => changeOpen(false)}
-                >
-                    {t("common.close")}
-                </ActionButton>
-            ) : null}
-            <Link
-                href={localizedHref("/login")}
-                className={foundationButtonClass()}
-            >
-                {t("common.login")}
-            </Link>
-        </>
-    ) : submitted || view === "mine" ? (
+    const loginAction = (
+        <Link
+            href={localizedHref("/login")}
+            className={foundationButtonClass()}
+        >
+            {t("common.login")}
+        </Link>
+    );
+    const closeAction = (
         <ActionButton
             variant={view === "mine" ? "secondary" : "primary"}
             onClick={() => changeOpen(false)}
         >
             {t("common.close")}
         </ActionButton>
+    );
+    const submitAction = (
+        <ActionButton
+            type="submit"
+            form={formId}
+            busy={isSubmitting}
+            busyLabel={t("feedback.sending")}
+        >
+            {t("feedback.send")}
+        </ActionButton>
+    );
+    const fullScreenFooter = !isAuthenticated
+        ? loginAction
+        : submitted || view === "mine"
+          ? closeAction
+          : submitAction;
+    const modalFooter = !isAuthenticated ? (
+        <>
+            <ActionButton variant="secondary" onClick={() => changeOpen(false)}>
+                {t("common.close")}
+            </ActionButton>
+            {loginAction}
+        </>
+    ) : submitted || view === "mine" ? (
+        closeAction
     ) : (
         <>
-            {wide ? (
-                <ActionButton
-                    variant="secondary"
-                    disabled={isSubmitting}
-                    onClick={() => changeOpen(false)}
-                >
-                    {t("feedback.cancel")}
-                </ActionButton>
-            ) : null}
             <ActionButton
-                type="submit"
-                form={formId}
-                busy={isSubmitting}
-                busyLabel={t("feedback.sending")}
+                variant="secondary"
+                disabled={isSubmitting}
+                onClick={() => changeOpen(false)}
             >
-                {t("feedback.send")}
+                {t("feedback.cancel")}
             </ActionButton>
+            {submitAction}
         </>
     );
 
     // 긴 창은 672 미만에서 전체 화면(가이드 대화상자 절 · 2026-09-18 구현)
-    return wide ? (
-        <ModalDialog
+    return (
+        <ResponsiveDialog
             open={open}
             onOpenChange={changeOpen}
             title={t("feedback.title")}
@@ -428,21 +432,11 @@ export default function FeedbackDialog({
             className="nl-feedback-dialog"
             onCloseAutoFocus={onCloseAutoFocus}
             trigger={triggerNode}
-            footer={actions}
+            footer={fullScreenFooter}
+            modalFooter={modalFooter}
         >
             {body}
-        </ModalDialog>
-    ) : (
-        <FullScreenDialog
-            open={open}
-            onOpenChange={changeOpen}
-            title={t("feedback.title")}
-            onCloseAutoFocus={onCloseAutoFocus}
-            trigger={triggerNode}
-            footer={actions}
-        >
-            {body}
-        </FullScreenDialog>
+        </ResponsiveDialog>
     );
 }
 

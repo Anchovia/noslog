@@ -36,15 +36,13 @@ import {
 } from "@/features/announcements/schemas/publicAnnouncementSchema";
 import ActionButton from "@/components/ui/actionButton";
 import { FormField, Input, fieldDescription } from "@/components/ui/formField";
-import FullScreenDialog from "@/components/ui/fullScreenDialog";
 import MarkdownEditor from "@/components/ui/markdownEditor";
 import type { MarkdownEditorLabels } from "@/components/ui/markdownEditor";
-import ModalDialog from "@/components/ui/modalDialog";
+import ResponsiveDialog from "@/components/ui/responsiveDialog";
 import { SegmentedControl } from "@/components/ui/segmentedControl";
 import { Select } from "@/components/ui/select";
 import { foundationButtonClass } from "@/components/ui/Button";
 import { applyFormActionFailure, applyFormRootError } from "@/lib/forms/errors";
-import useMediaQuery from "@/lib/hooks/useMediaQuery";
 import type { Locale } from "@/lib/i18n/routing";
 import { uploadGrantedImage } from "@/lib/uploads/clientImageUpload";
 
@@ -126,7 +124,6 @@ export default function AnnouncementEditor({
     const [locale, setLocale] = useState<Locale>("ko");
     const [dialog, setDialog] = useState<SaveMode | null>(null);
     const [pending, setPending] = useState<SaveMode | null>(null);
-    const wide = useMediaQuery("(min-width: 672px)");
     const {
         register,
         control,
@@ -599,38 +596,28 @@ export default function AnnouncementEditor({
                 </div>
             </div>
 
-            {wide ? (
-                <ModalDialog
-                    open={dialog !== null}
-                    onOpenChange={closeDialog}
-                    title={dialogTitle}
-                    footer={
-                        <>
-                            <button
-                                type="button"
-                                className={foundationButtonClass({
-                                    variant: "secondary",
-                                })}
-                                onClick={() => closeDialog(false)}
-                            >
-                                취소
-                            </button>
-                            {confirm}
-                        </>
-                    }
-                >
-                    {settings}
-                </ModalDialog>
-            ) : (
-                <FullScreenDialog
-                    open={dialog !== null}
-                    onOpenChange={closeDialog}
-                    title={dialogTitle}
-                    footer={confirm}
-                >
-                    {settings}
-                </FullScreenDialog>
-            )}
+            <ResponsiveDialog
+                open={dialog !== null}
+                onOpenChange={closeDialog}
+                title={dialogTitle}
+                footer={confirm}
+                modalFooter={
+                    <>
+                        <button
+                            type="button"
+                            className={foundationButtonClass({
+                                variant: "secondary",
+                            })}
+                            onClick={() => closeDialog(false)}
+                        >
+                            취소
+                        </button>
+                        {confirm}
+                    </>
+                }
+            >
+                {settings}
+            </ResponsiveDialog>
         </form>
     );
 }
