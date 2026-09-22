@@ -149,6 +149,15 @@ export default function ExamDashboard({
         }
     }
 
+    const rewardIsTitle = Boolean(
+        selected &&
+        selected.grade !== null &&
+        selected.rewards.length > 0 &&
+        selected.rewards.every(
+            (reward) => reward.type === "title" || reward.type === "grade"
+        )
+    );
+
     return (
         <div className="nl-exams">
             <header className="nl-exams__identity">
@@ -212,25 +221,24 @@ export default function ExamDashboard({
                                         label: t("exams.fee"),
                                         value: `${selected.feeNos.toLocaleString(locale)} nos`,
                                     },
-                                    {
+                                    // 칭호 보상만 띠 칸에 — 곡 해금 같은 긴 보상은 띠 아래 한 줄(칸을 넘치지 않게)
+                                    rewardIsTitle && {
                                         key: "reward",
                                         label: t("exams.reward"),
-                                        value: selected.rewards.length
-                                            ? selected.rewards
-                                                  .map((reward) =>
-                                                      (reward.type ===
-                                                          "title" ||
-                                                          reward.type ===
-                                                              "grade") &&
-                                                      selected.grade !== null
-                                                          ? examTitle(selected)
-                                                          : reward.label
-                                                  )
-                                                  .join(" · ")
-                                            : t("exams.none"),
+                                        value: examTitle(selected),
                                     },
                                 ]}
                             />
+                            {!rewardIsTitle ? (
+                                <p className="nl-body-secondary nl-muted">
+                                    {t("exams.reward")} ·{" "}
+                                    {selected.rewards.length
+                                        ? selected.rewards
+                                              .map((reward) => reward.label)
+                                              .join(" · ")
+                                        : t("exams.none")}
+                                </p>
+                            ) : null}
                         </section>
                         {selected.scoringType === "recital_point" ? (
                             <p className="nl-body-secondary nl-muted">

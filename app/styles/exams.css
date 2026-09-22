@@ -84,12 +84,6 @@
     align-items: center;
     width: 100%;
 }
-.noslog-ui .nl-exam-select__value {
-    display: flex;
-    align-items: center;
-    gap: var(--nl-spacing-12);
-    min-width: 0;
-}
 /* 검정 선택 목록 = 셀렉트 목록과 같은 패널·행 (2026-09-14 M2).
    오른쪽 칸은 검정 상태가 쓰므로 체크는 두지 않고 선택은 면 + 굵기로 표시한다 */
 .noslog-ui.nl-exam-select__popup {
@@ -179,6 +173,13 @@
 .noslog-ui .nl-exam-passline__mark [data-tone="danger"] {
     color: var(--nl-feedback-danger-marker);
 }
+/* 여유 색(2026-09-22 M2, 사용자) — 합격까지 범례의 여유와 과제곡 카드의 내 베스트가 같은 색. + = slow 주황 · − = 알림 파랑(fast 파랑은 #111 위 글자 대비 4.11 로 미달이라 info). 부호 · ✓/✗ 는 그대로 */
+.noslog-ui :is(.nl-exam-margin, .nl-exam-stage__best)[data-sign="ahead"] {
+    color: var(--nl-local-data-slow);
+}
+.noslog-ui :is(.nl-exam-margin, .nl-exam-stage__best)[data-sign="behind"] {
+    color: var(--nl-feedback-info-marker);
+}
 .noslog-ui .nl-exam-stage__row {
     display: flex;
     align-items: center;
@@ -218,11 +219,18 @@
     flex-shrink: 0;
     white-space: nowrap;
 }
+/* 난이도 줄 · 곡 이름 줄은 한 줄 — 넘치면 끝 페이드(카드를 누르면 악곡 · 채보 선택으로 전체를 본다) */
 .noslog-ui .nl-exam-stage__charts {
-    flex-wrap: wrap;
-    row-gap: 0;
+    flex: 1;
+    overflow: hidden;
+    white-space: nowrap;
 }
-.noslog-ui .nl-exam-stage__charts > span {
+.noslog-ui .nl-exam-stage__title {
+    display: flex;
+    align-items: baseline;
+    gap: var(--nl-spacing-8);
+    min-width: 0;
+    overflow: hidden;
     white-space: nowrap;
 }
 .noslog-ui .nl-exam-stage__condition {
@@ -338,7 +346,7 @@
     white-space: nowrap;
 }
 .noslog-ui .nl-exam-progress__labels .nl-metric-value,
-.noslog-ui .nl-exam-progress__legend .nl-metric-value {
+.noslog-ui .nl-exam-progress__legend .nl-metric-value:not([data-sign]) {
     color: var(--nl-content-default);
 }
 .noslog-ui .nl-exam-progress__legend {

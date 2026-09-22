@@ -903,8 +903,7 @@ export const koMessages = {
     "exams.description":
         "공식 검정의 응시 조건·과제곡을 확인하고 합격을 인증합니다.",
     "exams.practice.title": "연습 분석",
-    "exams.practice.limitation":
-        "베스트 기록은 서로 다른 플레이에서 온 값이라, 한 번의 검정 주행에서 세 곡을 연속으로 통과할 수 있다는 뜻은 아닙니다.",
+    "exams.practice.limitation": "악곡마다 최고 기록을 더한 값입니다.",
     "exams.certification": "인증",
     "exams.proof.title": "합격 인증",
     "exams.proof.checklist": "한 장에 모두 보여야 합니다",
@@ -939,7 +938,8 @@ export const koMessages = {
     "exams.margin.behind": "부족 {value}",
     "exams.progress.title": "합격까지",
     "exams.progress.remaining": "합격까지 {value}점",
-    "exams.progress.reached": "베스트 합이 합격선을 넘었습니다",
+    "exams.progress.reached": "합격이 가능합니다",
+    "exams.passline.cumulative": "누적 {value}",
     "exams.progress.basis": "베스트 기준",
     "exams.progress.line": "{count}차",
     "exams.progress.pass": "합격",

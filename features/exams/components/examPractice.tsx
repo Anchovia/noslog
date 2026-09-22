@@ -10,6 +10,37 @@ import { getExamPractice } from "@/features/exams/examPractice";
  * 합격까지(2026-09-22 P2-a) — 내 베스트를 곡별 조각(차트 범주 색 1 · 2 · 3)으로 쌓은 막대 위에
  * 공식 합격선 눈금(1차 · 2차 · 합격)을 긋는다. 색만으로 구분하지 않게 아래에 「색 · 곡 · 점수」 범례를 늘 둔다
  */
+function Margin({
+    value,
+    noRecord,
+}: {
+    value: number | null;
+    noRecord: boolean;
+}) {
+    const t = useTranslations();
+    const locale = useLocale();
+    if (value === null)
+        return (
+            <span className="nl-metric-value">
+                {noRecord ? t("exams.stage.noRecord") : "—"}
+            </span>
+        );
+    const amount = Math.abs(value).toLocaleString(locale);
+    return (
+        <span
+            className="nl-exam-margin nl-metric-value"
+            data-sign={value >= 0 ? "ahead" : "behind"}
+            aria-label={t(
+                value >= 0 ? "exams.margin.ahead" : "exams.margin.behind",
+                { value: amount }
+            )}
+        >
+            {value >= 0 ? "+" : "−"}
+            {amount}
+        </span>
+    );
+}
+
 export default function ExamPractice({ exam }: { exam: ExamDashboardItem }) {
     const t = useTranslations();
     const locale = useLocale();
@@ -117,11 +148,16 @@ export default function ExamPractice({ exam }: { exam: ExamDashboardItem }) {
                             aria-hidden
                         />
                         {getStageLabel(stage, index, exam.stages.length)}
-                        <span className="nl-metric-value">
-                            {stage.bestValue === null
-                                ? t("exams.stage.noRecord")
-                                : stage.bestValue.toLocaleString(locale)}
-                        </span>
+                        {/* 범례 값 = 그 단계 합격선 대비 여유(2026-09-22 사용자 — 전체 점수보다 구분이 쉬움) */}
+                        <Margin
+                            value={
+                                practice.rows[index]?.comparison == null
+                                    ? null
+                                    : practice.rows[index].comparison! -
+                                      stage.requiredValue
+                            }
+                            noRecord={stage.bestValue === null}
+                        />
                     </li>
                 ))}
             </ul>

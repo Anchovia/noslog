@@ -911,8 +911,7 @@ export const enMessages = {
     "exams.description":
         "Check official exam requirements and tunes, and submit passing proof.",
     "exams.practice.title": "Practice Analysis",
-    "exams.practice.limitation":
-        "These best records come from separate plays. They do not mean you can clear all three tunes in one exam run.",
+    "exams.practice.limitation": "The sum of your best score on each song.",
     "exams.certification": "Proof",
     "exams.proof.title": "Passing Proof",
     "exams.proof.checklist": "All of these must be visible in one image",
@@ -949,7 +948,8 @@ export const enMessages = {
     "exams.margin.behind": "{value} short",
     "exams.progress.title": "To Pass",
     "exams.progress.remaining": "{value} points to pass",
-    "exams.progress.reached": "Your bests clear the pass line",
+    "exams.progress.reached": "You can pass",
+    "exams.passline.cumulative": "Total {value}",
     "exams.progress.basis": "Based on bests",
     "exams.progress.line": "Stage {count}",
     "exams.progress.pass": "Pass",

@@ -19,11 +19,14 @@ function StageRow({
     index,
     exam,
     personal,
+    sign,
 }: {
     stage: ExamStageItem;
     index: number;
     exam: ExamDashboardItem;
     personal: boolean;
+    /** 아래 통과선의 여유 부호 — 내 베스트 숫자도 같은 색(2026-09-22 사용자) */
+    sign: "ahead" | "behind" | null;
 }) {
     const locale = useLocale();
     const t = useTranslations();
@@ -49,7 +52,7 @@ function StageRow({
                     <span className="nl-metadata nl-muted">
                         {getStageLabel(stage, index, exam.stages.length)}
                     </span>
-                    <span className="nl-exam-stage__charts">
+                    <span className="nl-exam-stage__charts nl-fade-end">
                         {stage.charts.map((chart) => (
                             <span
                                 className={`nl-metric-value nl-level--${chart.difficulty.toLowerCase()}`}
@@ -60,17 +63,25 @@ function StageRow({
                         ))}
                     </span>
                 </span>
-                <span className="nl-entity-title">{stage.title}</span>
-                {exam.mode === "recital" && stage.artist ? (
-                    <span className="nl-metadata nl-muted">{stage.artist}</span>
-                ) : null}
+                {/* 곡 이름 줄은 한 줄 · 넘치면 끝 페이드 — 카드 높이 = 자켓 64 로 고정(2026-09-22 사용자) */}
+                <span className="nl-exam-stage__title nl-fade-end">
+                    <span className="nl-entity-title">{stage.title}</span>
+                    {exam.mode === "recital" && stage.artist ? (
+                        <span className="nl-metadata nl-muted">
+                            {stage.artist}
+                        </span>
+                    ) : null}
+                </span>
             </span>
             {personal ? (
                 <span className="nl-exam-stage__condition">
                     <span className="nl-metadata nl-muted">
                         {t("exams.stage.myBest")}
                     </span>
-                    <span className="nl-metric-value">
+                    <span
+                        className="nl-exam-stage__best nl-metric-value"
+                        data-sign={sign ?? undefined}
+                    >
                         {stage.bestValue === null
                             ? t("exams.stage.noRecord")
                             : stage.bestValue.toLocaleString(locale)}
@@ -145,23 +156,14 @@ function PassLine({
 }) {
     const locale = useLocale();
     const t = useTranslations();
-    const scope =
-        stage.requirementType !== "cumulative"
-            ? t("exams.scope.single")
-            : index === exam.stages.length - 1
-              ? t("exams.scope.total", { count: index + 1 })
-              : t("exams.scope.cumulative", {
-                    stages: exam.stages
-                        .slice(0, index + 1)
-                        .map((item, i) =>
-                            getStageLabel(item, i, exam.stages.length)
-                        )
-                        .join("+"),
-                });
+    // 짧게(2026-09-22 사용자) — 첫 곡 「1st 925,000」, 누적은 「누적 1,875,000」
+    const value = stage.requiredValue.toLocaleString(locale);
+    const line =
+        stage.requirementType === "cumulative"
+            ? t("exams.passline.cumulative", { value })
+            : `${getStageLabel(stage, index, exam.stages.length)} ${value}`;
     const margin =
         comparison === null ? null : comparison - stage.requiredValue;
-    const amount =
-        margin === null ? "" : Math.abs(margin).toLocaleString(locale);
     return (
         <li className="nl-exam-passline">
             <span className="nl-exam-passline__mark">
@@ -179,23 +181,7 @@ function PassLine({
                     />
                 )}
             </span>
-            <span className="nl-metadata nl-muted">
-                {scope} {stage.requiredValue.toLocaleString(locale)}
-            </span>
-            {margin === null ? null : (
-                <span
-                    className="nl-metric-value"
-                    aria-label={t(
-                        margin >= 0
-                            ? "exams.margin.ahead"
-                            : "exams.margin.behind",
-                        { value: amount }
-                    )}
-                >
-                    {margin >= 0 ? "+" : "−"}
-                    {amount}
-                </span>
-            )}
+            <span className="nl-metadata nl-muted">{line}</span>
         </li>
     );
 }
@@ -223,6 +209,14 @@ export default function ExamStages({
                             index={index}
                             exam={exam}
                             personal={personal}
+                            sign={
+                                practice?.rows[index]?.comparison == null
+                                    ? null
+                                    : practice.rows[index].comparison! >=
+                                        stage.requiredValue
+                                      ? "ahead"
+                                      : "behind"
+                            }
                         />
                         <PassLine
                             stage={stage}

@@ -25,7 +25,7 @@ export default function ExamNavigation({
     onModeChange: (mode: ExamMode) => void;
     onSelect: (exam: ExamDashboardItem) => void;
     getLabel: (exam: ExamDashboardItem) => string;
-    /** 급 상태(2026-09-22 G1-a) — 셀렉트 트리거 · 목록 · 레일이 같은 모양 */
+    /** 급 상태(2026-09-22 G1-a) — 셀렉트 목록 · 레일이 같은 모양 */
     getState: (exam: ExamDashboardItem) => ReactNode;
 }) {
     const t = useTranslations();
@@ -64,12 +64,8 @@ export default function ExamNavigation({
                             className="nl-input nl-exam-select__trigger"
                             id="exam-select"
                         >
-                            <span className="nl-exam-select__value">
-                                <Select.Value>
-                                    {getLabel(selected)}
-                                </Select.Value>
-                                {getState(selected)}
-                            </span>
+                            {/* 고른 급의 상태는 급 머리 태그에 있어 트리거에는 두지 않는다(2026-09-22 사용자) */}
+                            <Select.Value />
                             <Select.Icon>
                                 <ChevronDown className="nl-icon" aria-hidden />
                             </Select.Icon>

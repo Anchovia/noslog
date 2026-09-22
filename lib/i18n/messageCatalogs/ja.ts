@@ -901,8 +901,7 @@ export const jaMessages = {
     "exams.description":
         "公式検定の受験条件・課題曲を確認し、合格を証明します。",
     "exams.practice.title": "練習分析",
-    "exams.practice.limitation":
-        "ベスト記録は別々のプレーの値です。1回の検定で3曲を連続して通過できることを示すものではありません。",
+    "exams.practice.limitation": "楽曲ごとのベストを合計した値です。",
     "exams.certification": "証明",
     "exams.proof.title": "合格証明",
     "exams.proof.checklist": "1枚にすべて写っている必要があります",
@@ -938,7 +937,8 @@ export const jaMessages = {
     "exams.margin.behind": "不足 {value}",
     "exams.progress.title": "合格まで",
     "exams.progress.remaining": "合格まであと{value}点",
-    "exams.progress.reached": "ベストの合計が合格ラインを超えています",
+    "exams.progress.reached": "合格できます",
+    "exams.passline.cumulative": "累計 {value}",
     "exams.progress.basis": "ベスト基準",
     "exams.progress.line": "{count}次",
     "exams.progress.pass": "合格",
