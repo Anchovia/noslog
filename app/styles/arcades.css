@@ -825,6 +825,13 @@
 .noslog-ui .nl-arcade-hours > [data-muted] {
     color: var(--nl-content-subdued);
 }
+/* 토 · 일 = 요일·날짜 칸만 파랑 · 빨강(지도 서비스 관례) — 기존 글자용 토큰을 빌림, 캔버스 위 대비 4.5 이상 (2026-09-22) */
+.noslog-ui .nl-arcade-hours > [data-weekend="sat"] > dt {
+    color: var(--nl-judgement-near);
+}
+.noslog-ui .nl-arcade-hours > [data-weekend="sun"] > dt {
+    color: var(--nl-feedback-error-text);
+}
 .noslog-ui .nl-arcade-detail__rail-box {
     display: flex;
     flex-direction: column;

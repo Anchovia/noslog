@@ -11,7 +11,7 @@ import {
 const dayKeys = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"] as const;
 
 /**
- * 오늘부터 7일 — 요일·날짜와 함께, 오늘 줄은 굵게. 날짜별 예외(임시 휴무 등)가 그 날짜 줄에 그대로 보인다.
+ * 오늘부터 7일 — 요일·날짜와 함께, 오늘 줄은 굵게. 토요일 · 일요일은 요일·날짜 칸만 파랑 · 빨강(지도 서비스 관례). 날짜별 예외(임시 휴무 등)가 그 날짜 줄에 그대로 보인다.
  * 마감은 요약 줄과 같은 표기(자정 24:00, 넘기면 다음 날 시각)
  */
 export default function ArcadeHours({
@@ -41,6 +41,9 @@ export default function ArcadeHours({
                         className={day.today ? "nl-emphasis-label" : undefined}
                         data-today={day.today || undefined}
                         data-muted={day.hours ? undefined : true}
+                        data-weekend={
+                            day.weekday >= 5 ? dayKeys[day.weekday] : undefined
+                        }
                     >
                         <dt>
                             {t(`arcades.weekday.${dayKeys[day.weekday]}`)}{" "}
