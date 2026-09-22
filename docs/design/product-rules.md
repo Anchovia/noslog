@@ -181,7 +181,9 @@ old design-stage checklist. Changes to material behavior require a user decision
   axes and exact per-axis counts; missing/insufficient values are not zero. An
   axis average is shown from one rating (2026-09-17, previously three); an
   axis without ratings shows an empty bar and "—"; a rating input
-  left untouched stays "not rated", distinct from 0.
+  left untouched stays "not rated", distinct from 0. The 0–4 scale is the
+  pattern's strength compared with all charts, not its share of this chart
+  (2026-09-23); the criteria dialog and the pattern form say so.
 - Preserve ownership, participation checks and edit/delete in
   [community mutations](../../features/music/server/communityMutation.ts).
   Opinions are listed newest first. The helpful-vote control and helpful sort

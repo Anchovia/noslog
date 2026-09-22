@@ -155,17 +155,31 @@
 }
 /* 펼친 내용 첫 줄 오른쪽 끝 한 곳 = 저장 상태(메타) · 실패 문구 + 다시 시도 · 선택 해제
    (2026-09-17 바로 저장 · 09-18 구역이 아코디언이 되며 제목 줄 → 내용 첫 줄) */
+/* 내용 첫 줄 = 왼쪽 평가 기준 한 줄 + ⓘ · 오른쪽 저장 상태 · 동작. 좁으면 상태가 다음 줄 오른쪽으로 (2026-09-23 B2) */
 .noslog-ui .nl-pattern-form__status {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    justify-content: flex-end;
     gap: var(--nl-spacing-8);
     min-height: var(--nl-control-height-compact);
     margin-bottom: var(--nl-spacing-8);
 }
-/* 저장 상태 · 동작이 없을 때는 자리를 차지하지 않는다 — 제목 → 내용 간격이 벌어지지 않게 */
-.noslog-ui .nl-pattern-form__status:empty {
-    display: none;
+.noslog-ui .nl-pattern-form__basis {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-4);
+    min-width: 0;
+    margin: 0;
+}
+.noslog-ui .nl-pattern-form__basis strong {
+    color: var(--nl-content-default);
+    font-weight: var(--nl-type-weight-semibold);
+}
+.noslog-ui .nl-pattern-form__state {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+    margin-inline-start: auto;
 }
 .noslog-ui .nl-pattern-form__error {
     color: var(--nl-feedback-error-text);
