@@ -173,7 +173,7 @@
 .noslog-ui .nl-exam-passline__mark [data-tone="danger"] {
     color: var(--nl-feedback-danger-marker);
 }
-/* 여유 색(2026-09-22 M2, 사용자) — 합격까지 범례의 여유와 과제곡 카드의 내 베스트가 같은 색. + = slow 주황 · − = 알림 파랑(fast 파랑은 #111 위 글자 대비 4.11 로 미달이라 info). 부호 · ✓/✗ 는 그대로 */
+/* 여유 색(2026-09-22 M2, 사용자) — 합격까지 눈금 아래 여유와 과제곡 카드의 내 베스트가 같은 색. + = slow 주황 · − = 알림 파랑(fast 파랑은 #111 위 글자 대비 4.11 로 미달이라 info). 부호 · ✓/✗ 는 그대로 */
 .noslog-ui :is(.nl-exam-margin, .nl-exam-stage__best)[data-sign="ahead"] {
     color: var(--nl-local-data-slow);
 }
@@ -281,6 +281,10 @@
     border-radius: var(--nl-radius-control);
     background: var(--nl-surface-raised);
 }
+.noslog-ui .nl-exam-progress__fill {
+    position: absolute;
+    inset: 0;
+}
 .noslog-ui .nl-exam-progress__segment {
     position: absolute;
     top: 0;
@@ -345,8 +349,8 @@
     transform: translateX(-100%);
     white-space: nowrap;
 }
-.noslog-ui .nl-exam-progress__labels .nl-metric-value,
-.noslog-ui .nl-exam-progress__legend .nl-metric-value:not([data-sign]) {
+.noslog-ui .nl-exam-progress__labels .nl-metric-value:not([data-sign]),
+.noslog-ui .nl-exam-progress__legend .nl-metric-value {
     color: var(--nl-content-default);
 }
 .noslog-ui .nl-exam-progress__legend {

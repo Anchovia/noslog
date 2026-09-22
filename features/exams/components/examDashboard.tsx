@@ -262,7 +262,9 @@ export default function ExamDashboard({
                                     exam={selected}
                                 />
                             ) : null}
-                            {selected.mode !== "event" ? (
+                            {/* 합격한 급은 인증 구역을 두지 않는다(상태는 머리 태그 「합격」, 2026-09-22 사용자) */}
+                            {selected.mode !== "event" &&
+                            !selected.isAchieved ? (
                                 <ExamProofUpload
                                     key={`proof-${selected.id}`}
                                     exam={selected}

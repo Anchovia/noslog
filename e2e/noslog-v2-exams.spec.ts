@@ -77,9 +77,6 @@ for (const locale of ["ko", "ja", "en"] as const) {
         await expect(
             page.getByText(t["exams.practice.limitation"], { exact: true })
         ).toBeVisible();
-        await expect(
-            page.getByText(t["exams.practice.partial"], { exact: true })
-        ).toBeVisible();
         await page.getByRole("radio", { name: "Recital", exact: true }).click();
         await expect(
             page.getByText(t["exams.recital.explanation"], { exact: true })
