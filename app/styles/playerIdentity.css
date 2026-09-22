@@ -24,7 +24,7 @@
     content: "";
     position: absolute;
     pointer-events: none;
-    border: 1px solid var(--nl-exam-badge-metal);
+    border: var(--nl-stroke-default) solid var(--nl-exam-badge-metal);
 }
 .noslog-ui .nl-exam-badge::before {
     inset: 0;
@@ -109,7 +109,7 @@
     visibility: visible;
 }
 .noslog-ui .nl-exam-badge__divider {
-    width: 1px;
+    width: var(--nl-stroke-default);
     height: var(--nl-spacing-12);
     background: var(--nl-exam-badge-metal);
 }
@@ -172,7 +172,7 @@
     gap: var(--nl-spacing-8);
     padding-inline: var(--nl-spacing-12);
     background: var(--nl-surface-surface);
-    box-shadow: inset 0 0 0 1px var(--nl-border-input);
+    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-input);
     font-size: var(--nl-type-size-16);
     line-height: var(--nl-type-line-height-24);
     font-weight: var(--nl-type-weight-regular);
@@ -180,13 +180,13 @@
 @media (hover: hover) {
     .noslog-ui .nl-compact-select.nl-compact-select--outlined:hover {
         background: var(--nl-surface-surface);
-        box-shadow: inset 0 0 0 1px var(--nl-border-strong);
+        box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-strong);
     }
 }
 .noslog-ui .nl-compact-select.nl-compact-select--outlined:focus-visible {
     outline: none;
     box-shadow:
-        inset 0 0 0 1px var(--nl-focus-ring),
+        inset 0 0 0 var(--nl-stroke-default) var(--nl-focus-ring),
         0 0 0 var(--nl-spacing-4) var(--nl-state-halo);
 }
 .noslog-ui .nl-compact-select--outlined svg {

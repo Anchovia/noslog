@@ -37,6 +37,10 @@
     --nl-icon-small: 16px;
     --nl-icon-medium: 20px;
     --nl-icon-large: 24px;
+    /* 선 두께 두 단계(2026-09-22) — 기본: 구분선 · 경계 · 포커스 선 · 칸 사이 선 = 1
+       강조: 선택 밑줄 · 강조 테두리(달성 · 체크박스 · 라디오 링) · 진행 막대 = 2. 테두리를 빼는 여백 보정도 이 값으로 */
+    --nl-stroke-default: 1px;
+    --nl-stroke-strong: 2px;
     color: var(--nl-content-default);
     font-family: var(--nl-font-family);
     font-size: var(--nl-type-size-16);
@@ -78,8 +82,8 @@ html[data-theme="light"] .noslog-ui,
     opacity: 1;
 }
 .noslog-ui :focus-visible {
-    outline: 1px solid var(--nl-focus-ring);
-    outline-offset: -1px;
+    outline: var(--nl-stroke-default) solid var(--nl-focus-ring);
+    outline-offset: calc(var(--nl-stroke-default) * -1);
 }
 .noslog-ui :is(a, button, input, textarea, select) {
     scroll-margin-block: 76px;
@@ -157,8 +161,9 @@ html[data-theme="light"] .noslog-ui,
     align-items: center;
     justify-content: center;
     gap: var(--nl-spacing-8);
-    padding: calc(var(--nl-spacing-8) - 1px) calc(var(--nl-spacing-16) - 1px);
-    border: 1px solid transparent;
+    padding: calc(var(--nl-spacing-8) - var(--nl-stroke-default))
+        calc(var(--nl-spacing-16) - var(--nl-stroke-default));
+    border: var(--nl-stroke-default) solid transparent;
     border-radius: var(--nl-radius-field);
     background: var(--nl-primary-default);
     color: var(--nl-primary-on-primary);
@@ -320,8 +325,9 @@ html[data-theme="light"] .noslog-ui,
     width: 100%;
     min-width: 0;
     min-height: var(--nl-control-height);
-    padding: calc(var(--nl-spacing-8) - 1px) calc(var(--nl-spacing-12) - 1px);
-    border: 1px solid var(--nl-border-input);
+    padding: calc(var(--nl-spacing-8) - var(--nl-stroke-default))
+        calc(var(--nl-spacing-12) - var(--nl-stroke-default));
+    border: var(--nl-stroke-default) solid var(--nl-border-input);
     border-radius: var(--nl-radius-field);
     background: var(--nl-surface-surface);
     color: var(--nl-content-default);
@@ -353,7 +359,7 @@ html[data-theme="light"] .noslog-ui,
 }
 .noslog-ui textarea.nl-input {
     min-height: 96px;
-    padding: calc(var(--nl-spacing-12) - 1px);
+    padding: calc(var(--nl-spacing-12) - var(--nl-stroke-default));
     resize: vertical;
 }
 /* 셀렉트 트리거 = 입력칸과 같은 모양 + 오른쪽 꺾쇠 · 목록은 .nl-select-menu (2026-09-14 M2) */
@@ -394,7 +400,7 @@ html[data-theme="light"] .noslog-ui,
     width: 20px;
     height: 20px;
     flex-shrink: 0;
-    border: 2px solid var(--nl-border-strong);
+    border: var(--nl-stroke-strong) solid var(--nl-border-strong);
     border-radius: var(--nl-radius-control);
 }
 /* 테두리 2 는 라디오 링과 같은 굵기. 체크는 Lucide 모양 그대로 선만 3(16 에서 2px, 상자의 10%) */
@@ -432,8 +438,8 @@ html[data-theme="light"] .noslog-ui,
     gap: var(--nl-spacing-4);
     min-width: 0;
     min-height: var(--nl-control-height);
-    padding: calc(var(--nl-spacing-4) - 1px);
-    border: 1px solid var(--nl-border-subtle);
+    padding: calc(var(--nl-spacing-4) - var(--nl-stroke-default));
+    border: var(--nl-stroke-default) solid var(--nl-border-subtle);
     border-radius: var(--nl-radius-container);
     background: var(--nl-surface-sunken);
 }
@@ -444,7 +450,7 @@ html[data-theme="light"] .noslog-ui,
     align-items: center;
     justify-content: center;
     padding: var(--nl-spacing-4) var(--nl-spacing-16);
-    border: 1px solid transparent;
+    border: var(--nl-stroke-default) solid transparent;
     border-radius: var(--nl-radius-control);
     color: var(--nl-content-subdued);
     font-size: var(--nl-type-size-14);
@@ -488,7 +494,7 @@ html[data-theme="light"] .noslog-ui,
         flex: none;
         min-height: var(--nl-control-height);
         justify-content: space-between;
-        padding-inline: calc(var(--nl-spacing-8) - 1px);
+        padding-inline: calc(var(--nl-spacing-8) - var(--nl-stroke-default));
     }
 }
 /* M 단계 세그먼트(size="sm") — 트랙 36/32 · 아이콘 항목 36/32 정사각 · 결과 줄 같은 인라인 자리 */
@@ -510,7 +516,8 @@ html[data-theme="light"] .noslog-ui,
     flex-shrink: 0;
 }
 .noslog-ui .nl-tabs--primary {
-    box-shadow: inset 0 -1px var(--nl-border-divider);
+    box-shadow: inset 0 calc(var(--nl-stroke-default) * -1)
+        var(--nl-border-divider);
     overflow-x: auto;
     scrollbar-width: none;
 }
@@ -551,13 +558,13 @@ html[data-theme="light"] .noslog-ui,
     position: absolute;
     inset-inline: 0;
     bottom: 0;
-    height: 2px;
+    height: var(--nl-stroke-strong);
     background: var(--nl-content-default);
 }
 /* FOCUS-1B — 탭 자신의 1px 안쪽 경계 */
 .noslog-ui .nl-tabs__item:focus-visible {
     outline: none;
-    box-shadow: inset 0 0 0 1px var(--nl-focus-ring);
+    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-focus-ring);
 }
 /* 1단 탭 구역(AreaTabs) — 탭 →24→ 내용. 악곡 상세 · 피드백 창(2026-09-19) */
 .noslog-ui .nl-area {
@@ -700,7 +707,7 @@ html[data-theme="light"] .noslog-ui,
     border-radius: var(--nl-radius-overlay);
     background: var(--nl-surface-overlay);
     box-shadow:
-        inset 0 0 0 1px var(--nl-border-overlay),
+        inset 0 0 0 var(--nl-stroke-default) var(--nl-border-overlay),
         var(--nl-overlay-shadow);
 }
 .noslog-ui .nl-dialog__header {
@@ -804,7 +811,7 @@ html[data-theme="light"] .noslog-ui,
     border: 0;
     border-radius: var(--nl-radius-field);
     background: var(--nl-surface-surface);
-    box-shadow: inset 0 0 0 1px var(--nl-border-default);
+    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-default);
     color: var(--nl-content-subdued);
     cursor: pointer;
 }
@@ -830,7 +837,7 @@ html[data-theme="light"] .noslog-ui,
         :disabled
     ) {
     color: var(--nl-content-pending);
-    box-shadow: inset 0 0 0 1px var(--nl-border-divider);
+    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-divider);
 }
 .noslog-ui .nl-scale-picker__option:disabled {
     cursor: default;
@@ -845,7 +852,7 @@ html[data-theme="light"] .noslog-ui,
 .noslog-ui .nl-stat-card {
     display: flex;
     flex-direction: column;
-    gap: 1px;
+    gap: var(--nl-stroke-default);
     overflow: hidden;
     border-radius: var(--nl-radius-container);
     background: var(--nl-border-divider);
@@ -857,7 +864,7 @@ html[data-theme="light"] .noslog-ui,
    글자(control 600 · interactive) + 끝 › 16(subdued, 사이 4) — 누를 곳 표시. 없는 동작도 칸은 두고 비활성 글자색 (2026-09-17 I1C) */
 .noslog-ui .nl-action-group {
     display: flex;
-    gap: 1px;
+    gap: var(--nl-stroke-default);
 }
 .noslog-ui .nl-action-group__item {
     display: inline-flex;
@@ -946,7 +953,7 @@ html[data-theme="light"] .noslog-ui,
 .noslog-ui .nl-stat-strip {
     display: flex;
     flex-wrap: wrap;
-    gap: 1px;
+    gap: var(--nl-stroke-default);
     margin: 0;
     overflow: hidden;
     border-radius: var(--nl-radius-container);
@@ -1152,7 +1159,7 @@ html[data-theme="light"] .noslog-ui,
     position: fixed;
     inset: 0 0 auto;
     z-index: 60;
-    height: 2px;
+    height: var(--nl-stroke-strong);
     pointer-events: none;
 }
 .noslog-ui .nl-progress__bar {
@@ -1200,7 +1207,7 @@ html[data-theme="light"] .noslog-ui,
     align-items: center;
     height: 24px;
     padding-inline: var(--nl-spacing-8);
-    border: 1px solid var(--nl-border-default);
+    border: var(--nl-stroke-default) solid var(--nl-border-default);
     border-radius: var(--nl-radius-control);
     color: var(--nl-content-subdued);
     white-space: nowrap;
@@ -1271,7 +1278,7 @@ html[data-theme="light"] .noslog-ui,
     max-width: min(280px, calc(100vw - 32px));
     background: var(--nl-surface-overlay);
     color: var(--nl-content-default);
-    border: 1px solid var(--nl-border-overlay);
+    border: var(--nl-stroke-default) solid var(--nl-border-overlay);
     border-radius: var(--nl-radius-overlay);
     box-shadow: var(--nl-overlay-shadow);
     padding: var(--nl-spacing-12);
@@ -1319,7 +1326,7 @@ html[data-theme="light"] .noslog-ui,
 .noslog-ui .nl-markdown-editor {
     min-width: 0;
     overflow: hidden;
-    border: 1px solid var(--nl-border-input);
+    border: var(--nl-stroke-default) solid var(--nl-border-input);
     border-radius: var(--nl-radius-field);
     background: var(--nl-surface-surface);
 }
@@ -1341,7 +1348,8 @@ html[data-theme="light"] .noslog-ui,
     justify-content: space-between;
     min-width: 0;
     background: var(--nl-surface-sunken);
-    box-shadow: inset 0 -1px var(--nl-border-divider);
+    box-shadow: inset 0 calc(var(--nl-stroke-default) * -1)
+        var(--nl-border-divider);
 }
 .noslog-ui .nl-markdown-editor__tools {
     display: flex;
@@ -1528,7 +1536,7 @@ html:has(.noslog-ui) [data-sonner-toaster] [data-sonner-toast] > * {
     width: min(334px, calc(100vw - 32px));
     border: 0;
     box-shadow:
-        inset 0 0 0 1px var(--nl-border-overlay),
+        inset 0 0 0 var(--nl-stroke-default) var(--nl-border-overlay),
         var(--nl-elevation-overlay);
 }
 .noslog-ui .nl-image-share .nl-dialog__header {

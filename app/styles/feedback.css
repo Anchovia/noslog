@@ -28,8 +28,8 @@
     align-items: center;
     gap: var(--nl-spacing-8);
     min-height: var(--nl-control-height);
-    padding-inline: calc(var(--nl-spacing-12) - 1px);
-    border: 1px solid var(--nl-border-input);
+    padding-inline: calc(var(--nl-spacing-12) - var(--nl-stroke-default));
+    border: var(--nl-stroke-default) solid var(--nl-border-input);
     border-radius: var(--nl-radius-field);
     background: var(--nl-surface-surface);
 }
@@ -52,7 +52,7 @@
 /* 지우기(아이콘 버튼 = 컨트롤 정사각)를 (컨트롤 − 20) / 2 만큼 당겨 잉크가 안쪽 12 선에, 위아래 1 은 경계만큼 */
 .noslog-ui .nl-feedback-file > .nl-button--icon {
     margin-right: calc((var(--nl-control-height) - var(--nl-icon-medium)) / -2);
-    margin-block: -1px;
+    margin-block: calc(var(--nl-stroke-default) * -1);
 }
 /* 보낸 뒤 — 창 안에 체크 · 한 줄 · 설명 (2026-09-18 결정 3) */
 .noslog-ui .nl-feedback-done {
@@ -80,7 +80,8 @@
     flex-direction: column;
     gap: var(--nl-spacing-4);
     padding-block: var(--nl-spacing-12);
-    box-shadow: inset 0 -1px var(--nl-border-divider);
+    box-shadow: inset 0 calc(var(--nl-stroke-default) * -1)
+        var(--nl-border-divider);
     overflow-wrap: anywhere;
 }
 .noslog-ui .nl-feedback-mine__row:first-child {

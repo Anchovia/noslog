@@ -199,7 +199,7 @@
 @media (min-width: 1056px) {
     /* 세로 변형의 안쪽 값을 쓴다(잉크 12 정렬) */
     .noslog-ui .nl-difficulty-selector .nl-segments__item {
-        padding-inline: calc(var(--nl-spacing-8) - 1px);
+        padding-inline: calc(var(--nl-spacing-8) - var(--nl-stroke-default));
     }
 }
 /* 375 미만(4칸이 「Expert 11」 을 못 담는 폭)은 약칭 N · H · EX · R */
@@ -250,7 +250,7 @@
     justify-content: space-between;
     gap: var(--nl-spacing-16);
     padding-block: var(--nl-spacing-12);
-    border-bottom: 1px solid var(--nl-border-divider);
+    border-bottom: var(--nl-stroke-default) solid var(--nl-border-divider);
 }
 .noslog-ui .nl-facts > div:last-child {
     border-bottom: 0;
@@ -361,7 +361,7 @@
     background: var(--nl-surface-surface);
 }
 .noslog-ui .nl-recent-plays > li + li {
-    border-top: 1px solid var(--nl-border-divider);
+    border-top: var(--nl-stroke-default) solid var(--nl-border-divider);
 }
 .noslog-ui .nl-recent-play {
     display: flex;

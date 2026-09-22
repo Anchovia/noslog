@@ -61,7 +61,7 @@
 }
 .noslog-ui .nl-profile-identity__avatar {
     background: var(--nl-surface-sunken);
-    border: 1px solid var(--nl-border-empty-slot);
+    border: var(--nl-stroke-default) solid var(--nl-border-empty-slot);
 }
 /* 불러오는 동안의 사진 자리 — 실제 사진과 같은 변수 크기(인라인 대신) */
 .noslog-ui .nl-profile-identity__avatar.nl-skeleton {
@@ -80,7 +80,7 @@
     flex-shrink: 0;
     width: 32px;
     height: 32px;
-    border: 1px solid var(--nl-border-default);
+    border: var(--nl-stroke-default) solid var(--nl-border-default);
     border-radius: var(--nl-radius-control);
 }
 .noslog-ui .nl-profile-owner-action svg {
@@ -183,7 +183,7 @@
     .noslog-ui .nl-profile-overview > .nl-section-title {
         min-height: calc(
             var(--nl-spacing-12) + var(--nl-type-line-height-20) +
-                var(--nl-spacing-8) + 2px
+                var(--nl-spacing-8) + var(--nl-stroke-strong)
         );
     }
     .noslog-ui .nl-profile-overview > .nl-section-title {
@@ -423,7 +423,7 @@
     }
     .noslog-ui .nl-profile-summary > :nth-child(even) {
         padding-left: var(--nl-spacing-24);
-        border-left: 1px solid var(--nl-border-divider);
+        border-left: var(--nl-stroke-default) solid var(--nl-border-divider);
     }
 }
 @container profile-summary (min-width: 720px) {
@@ -433,7 +433,7 @@
     }
     .noslog-ui .nl-profile-summary > :not(:first-child) {
         padding-left: var(--nl-spacing-24);
-        border-left: 1px solid var(--nl-border-divider);
+        border-left: var(--nl-stroke-default) solid var(--nl-border-divider);
     }
 }
 @container profile-section (min-width: 334px) {

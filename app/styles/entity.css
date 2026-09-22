@@ -7,7 +7,7 @@
     background: var(--nl-surface-sunken);
 }
 .noslog-ui .nl-jacket[data-empty="true"] {
-    box-shadow: inset 0 0 0 1px var(--nl-border-empty-slot);
+    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-empty-slot);
 }
 .noslog-ui .nl-jacket__fallback {
     position: absolute;
@@ -65,7 +65,7 @@
     content: "";
     position: absolute;
     inset: 0;
-    border: 1px solid var(--nl-focus-ring);
+    border: var(--nl-stroke-default) solid var(--nl-focus-ring);
     border-radius: inherit;
     pointer-events: none;
 }
@@ -118,7 +118,7 @@
     position: absolute;
     inset-inline: 0;
     bottom: 0;
-    height: 1px;
+    height: var(--nl-stroke-default);
     background: var(--nl-border-subtle);
 }
 .noslog-ui .nl-music-card--grid .nl-jacket__category {

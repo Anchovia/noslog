@@ -23,7 +23,8 @@
     flex-direction: column;
     gap: var(--nl-spacing-4);
     padding-block: var(--nl-spacing-12);
-    box-shadow: inset 0 -1px var(--nl-border-divider);
+    box-shadow: inset 0 calc(var(--nl-stroke-default) * -1)
+        var(--nl-border-divider);
     overflow-wrap: anywhere;
 }
 /* 공지 줄 제목 = 16/600 — 전체 목록(B1) · 홈 카드(N2) · 내 이벤트 글 모두. 홈 고정 줄엔 면을 두지 않는다(맨 위 중대 공지 배너와 겹침) */
@@ -95,7 +96,7 @@
 }
 .noslog-ui .nl-announcements__adjacent-link:focus-visible {
     outline: none;
-    box-shadow: inset 0 0 0 1px var(--nl-focus-ring);
+    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-focus-ring);
 }
 .noslog-ui .nl-announcement-body {
     display: flex;

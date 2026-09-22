@@ -26,7 +26,7 @@
     }
 }
 .noslog-ui .nl-pagination__item[aria-current="page"] {
-    box-shadow: inset 0 0 0 1px var(--nl-border-strong);
+    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-strong);
     color: var(--nl-content-default);
     font-weight: var(--nl-type-weight-semibold);
 }
@@ -127,7 +127,7 @@
     top: calc(var(--nl-spacing-8) * -1);
     right: calc(var(--nl-spacing-12) * -1);
     padding-inline: var(--nl-spacing-4);
-    border: 1px solid var(--nl-border-default);
+    border: var(--nl-stroke-default) solid var(--nl-border-default);
     color: var(--nl-content-default);
 }
 .noslog-ui .nl-score-pin:focus-visible {
@@ -201,7 +201,8 @@
     align-items: center;
     justify-content: center;
     padding: 2px var(--nl-spacing-4);
-    box-shadow: inset 0 0 0 1px var(--nl-achievement-full-combo);
+    box-shadow: inset 0 0 0 var(--nl-stroke-default)
+        var(--nl-achievement-full-combo);
     border-radius: var(--nl-radius-control);
 }
 /* 순위 구역 — 제목 줄(구역 제목 + 오른쪽 내 순위) → 12 → 목록 */
@@ -222,6 +223,6 @@
     min-height: 48px;
     margin: 0;
     padding-inline: var(--nl-ranking-inset);
-    border-bottom: 1px solid var(--nl-border-divider);
+    border-bottom: var(--nl-stroke-default) solid var(--nl-border-divider);
     text-align: center;
 }
