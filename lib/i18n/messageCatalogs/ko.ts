@@ -691,6 +691,8 @@ export const koMessages = {
     "tiers.goal": "목표",
     "tiers.goalOption": "{goal} 서열표",
     "tiers.listLabel": "서열표 선택",
+    "tiers.guideLink": "안내",
+    "tiers.updatedOn": "{date} 업데이트",
     "tiers.sort.position": "서열표 순",
     "tiers.sort.score": "점수 낮은 순",
     "tiers.difficulty": "난이도",

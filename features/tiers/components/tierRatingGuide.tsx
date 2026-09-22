@@ -1,6 +1,5 @@
 "use client";
 
-import { Info } from "lucide-react";
 import { useState } from "react";
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import LineChart from "@/components/ui/lineChart";
@@ -19,7 +18,7 @@ import type {
 } from "@/features/tiers/schemas/tierBrowserSchema";
 
 /**
- * 서열표 안내 — 제목 옆 ⓘ 가 여는 설명 창(2026-09-22 B안). 가이드 「기준 설명」 문법: 설명이 긴 곳은 ⓘ → 대화상자.
+ * 서열표 안내 — 제목 아래 메타 글줄 끝 「안내」 글자 링크가 여는 설명 창(2026-09-22 A). 제목 뒤에는 스위처 꺾쇠만 둔다.
  * 이 표의 설명 · 쓰는 법 · 업데이트 날짜 · 목표 기준(Pianist 는 서열 상수별 기여 그래프)
  */
 export default function TierRatingGuide({
@@ -50,12 +49,13 @@ export default function TierRatingGuide({
             onOpenChange={setOpen}
             title={title}
             trigger={
+                // 보이는 글자(「안내」)는 접근 이름(「S 서열표 안내」) 안에 들어 있다
                 <button
                     type="button"
-                    className="nl-info-trigger"
+                    className="nl-tier-meta__guide nl-link nl-text-link--underlined"
                     aria-label={title}
                 >
-                    <Info className="nl-icon-small" aria-hidden />
+                    {t("tiers.guideLink")}
                 </button>
             }
         >

@@ -54,6 +54,24 @@
     background: var(--nl-interaction-selected-pressed);
 }
 /* 목록 소제목(Basic · Recital) — 목록 메뉴 소제목 규격: metadata · 흐림 · 400 */
+/* 제목 아래 메타 글줄(2026-09-22 A) — 곡 수 · 업데이트 · 「안내」 글자 링크. 좁으면 항목 단위로 줄바꿈 */
+.noslog-ui .nl-tier-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    min-width: 0;
+    margin: 0;
+}
+.noslog-ui .nl-tier-meta__item {
+    white-space: pre;
+}
+.noslog-ui .nl-tier-meta__guide {
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    cursor: pointer;
+}
 .noslog-ui .nl-tier-switch__group {
     display: flex;
     flex-direction: column;

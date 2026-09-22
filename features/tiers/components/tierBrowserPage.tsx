@@ -181,24 +181,66 @@ export default function TierBrowserPage({
                   count: selected.length - 1,
               });
     }
-    // 결과 수 — 폰은 악곡 목록처럼 제목(스위처) 아래 메타 글줄, Wide 는 정렬 · 보기 툴바 아래(악곡 목록과 같은 자리)
+    // 결과 수 — 폰은 악곡 목록처럼 제목(스위처) 아래 메타 글줄 맨 앞, Wide 는 정렬 · 보기 툴바 아래(악곡 목록과 같은 자리)
     const countClass = wide ? "nl-body-secondary" : "nl-metadata";
+    const countText = pending ? (
+        // 글자 대신 결과 수 자리 스켈레톤(안내는 화면 읽기에만)
+        <>
+            <span className="sr-only">{t("tiers.loading")}</span>
+            <SkeletonText className={countClass} width="s" />
+        </>
+    ) : data?.list ? (
+        t("tiers.songCount", {
+            count: total.toLocaleString(locale),
+        })
+    ) : (
+        ""
+    );
     const resultCount = (
         <p className={`${countClass} nl-muted`} role="status">
-            {pending ? (
-                // 글자 대신 결과 수 자리 스켈레톤(안내는 화면 읽기에만)
-                <>
-                    <span className="sr-only">{t("tiers.loading")}</span>
-                    <SkeletonText className={countClass} width="s" />
-                </>
-            ) : data?.list ? (
-                t("tiers.songCount", {
-                    count: total.toLocaleString(locale),
-                })
-            ) : (
-                ""
-            )}
+            {countText}
         </p>
+    );
+    // 제목 아래 메타 글줄(2026-09-22 A) — 「2,159곡 · 9월 2일 업데이트 · 안내」. Wide 는 곡 수 없이 업데이트 · 안내
+    const updated = data?.list ? new Date(data.list.updatedAt) : null;
+    const seoulYear = (date: Date) =>
+        new Intl.DateTimeFormat("en", {
+            year: "numeric",
+            timeZone: "Asia/Seoul",
+        }).format(date);
+    const metaParts = [
+        ...(updated
+            ? [
+                  <span key="updated">
+                      {t("tiers.updatedOn", {
+                          date: new Intl.DateTimeFormat(locale, {
+                              ...(seoulYear(updated) === seoulYear(new Date())
+                                  ? {}
+                                  : { year: "numeric" }),
+                              month: "short",
+                              day: "numeric",
+                              timeZone: "Asia/Seoul",
+                          }).format(updated),
+                      })}
+                  </span>,
+              ]
+            : []),
+        ...(data?.list
+            ? [<TierRatingGuide key="guide" query={query} overview={data} />]
+            : []),
+    ];
+    const meta = (
+        <div className="nl-tier-meta nl-metadata nl-muted">
+            {!wide ? <span role="status">{countText}</span> : null}
+            {metaParts.map((part, index) => (
+                <span key={part.key} className="nl-tier-meta__item">
+                    {index || !wide ? (
+                        <span aria-hidden="true"> · </span>
+                    ) : null}
+                    {part}
+                </span>
+            ))}
+        </div>
     );
     // 보기 방식 — 격자(자켓) · 목록(행). 악곡 목록과 같은 부품 · 문구. 폰은 결과 줄에 M, Wide 는 결과 머리 줄에 L
     const viewSwitch = (
@@ -253,21 +295,16 @@ export default function TierBrowserPage({
             <div className="nl-page-heading">
                 <div className="nl-page-heading__copy">
                     {/* 제목 = 서열표 스위처(2026-09-22 ④) — 네 서열표를 여기서 고른다 */}
-                    <div className="nl-heading-row">
-                        <h1 className="nl-tier-heading">
-                            <span className="sr-only">{t("tiers.title")}</span>
-                            <TierListSwitcher
-                                value={query}
-                                onValueChange={({ mode, goal }) =>
-                                    commit({ ...query, mode, goal, bands: [] })
-                                }
-                            />
-                        </h1>
-                        {data ? (
-                            <TierRatingGuide query={query} overview={data} />
-                        ) : null}
-                    </div>
-                    {!wide ? resultCount : null}
+                    <h1 className="nl-tier-heading">
+                        <span className="sr-only">{t("tiers.title")}</span>
+                        <TierListSwitcher
+                            value={query}
+                            onValueChange={({ mode, goal }) =>
+                                commit({ ...query, mode, goal, bands: [] })
+                            }
+                        />
+                    </h1>
+                    {meta}
                 </div>
             </div>
             {/* Wide 는 악곡 목록처럼 제목 아래 검색 전체 폭 → 레일 | 결과 */}

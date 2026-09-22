@@ -697,6 +697,8 @@ export const enMessages = {
     "tiers.goal": "Goal",
     "tiers.goalOption": "{goal} Tier List",
     "tiers.listLabel": "Choose tier list",
+    "tiers.guideLink": "Guide",
+    "tiers.updatedOn": "Updated {date}",
     "tiers.sort.position": "Tier list order",
     "tiers.sort.score": "Lowest score first",
     "tiers.difficulty": "Difficulty",

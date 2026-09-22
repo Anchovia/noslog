@@ -165,7 +165,7 @@ async function prepare(
         ).toContainText("서열 데이터를 불러오지 못했습니다.");
     else
         await expect(
-            page.locator(".nl-tiers p[role=status]").first()
+            page.locator(".nl-tiers [role=status]:not(.sr-only)").first()
         ).toContainText(unpublished ? "" : "18");
     if (!failSummary && !unpublished && !errorBand)
         await expect(page.locator(".nl-tier-card").first()).toBeVisible();
@@ -422,7 +422,7 @@ test("song search narrows every band, keeps the filters and clears in place", as
     ).toBeVisible();
     await expect(page.locator(".nl-tier-card")).toHaveCount(1);
     await expect(
-        page.locator(".nl-tiers p[role=status]:not(.sr-only)")
+        page.locator(".nl-tiers [role=status]:not(.sr-only)").first()
     ).toContainText("1곡");
     await search.fill("zzqq");
     await expect(

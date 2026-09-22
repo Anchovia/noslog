@@ -691,6 +691,8 @@ export const jaMessages = {
     "tiers.goal": "目標",
     "tiers.goalOption": "{goal}難易度表",
     "tiers.listLabel": "難易度表を選ぶ",
+    "tiers.guideLink": "ガイド",
+    "tiers.updatedOn": "{date}更新",
     "tiers.sort.position": "難易度表順",
     "tiers.sort.score": "スコアが低い順",
     "tiers.difficulty": "難易度",
