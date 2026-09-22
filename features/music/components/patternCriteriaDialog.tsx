@@ -37,9 +37,7 @@ export default function PatternCriteriaDialog() {
                     <li key={level} className="nl-body-secondary">
                         <span
                             className="nl-pattern-steps__swatch"
-                            style={{
-                                background: `var(--nl-pattern-level-${level})`,
-                            }}
+                            data-level={level}
                             aria-hidden
                         />
                         <span className="nl-control">{level}</span>

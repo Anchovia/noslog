@@ -275,7 +275,7 @@
 .noslog-ui .nl-detail-loading__ruler {
     height: 72px;
 }
-/* 기준 창 단계 목록 — 색 네모 12(막대 단계 색) · 숫자 · 이름. 줄 사이 4 */
+/* 기준 창 단계 목록 — 색 네모 8(막대 단계 색 · 모서리 없음 = 검정 「합격까지」 범례와 같은 막대 범례 문법) · 숫자 · 이름. 줄 사이 4 (2026-09-23 Q2) */
 .noslog-ui .nl-pattern-steps {
     display: flex;
     flex-direction: column;
@@ -286,7 +286,7 @@
 }
 .noslog-ui .nl-pattern-steps > li {
     display: grid;
-    grid-template-columns: var(--nl-spacing-12) var(--nl-spacing-16) minmax(
+    grid-template-columns: var(--nl-spacing-8) var(--nl-spacing-16) minmax(
             0,
             1fr
         );
@@ -294,9 +294,23 @@
     gap: var(--nl-spacing-8);
 }
 .noslog-ui .nl-pattern-steps__swatch {
-    width: var(--nl-spacing-12);
-    height: var(--nl-spacing-12);
-    border-radius: var(--nl-radius-control);
+    width: var(--nl-spacing-8);
+    height: var(--nl-spacing-8);
+}
+.noslog-ui .nl-pattern-steps__swatch[data-level="0"] {
+    background: var(--nl-pattern-level-0);
+}
+.noslog-ui .nl-pattern-steps__swatch[data-level="1"] {
+    background: var(--nl-pattern-level-1);
+}
+.noslog-ui .nl-pattern-steps__swatch[data-level="2"] {
+    background: var(--nl-pattern-level-2);
+}
+.noslog-ui .nl-pattern-steps__swatch[data-level="3"] {
+    background: var(--nl-pattern-level-3);
+}
+.noslog-ui .nl-pattern-steps__swatch[data-level="4"] {
+    background: var(--nl-pattern-level-4);
 }
 .noslog-ui .nl-pattern-help {
     display: flex;

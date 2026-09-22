@@ -155,19 +155,17 @@
 }
 /* 펼친 내용 첫 줄 오른쪽 끝 한 곳 = 저장 상태(메타) · 실패 문구 + 다시 시도 · 선택 해제
    (2026-09-17 바로 저장 · 09-18 구역이 아코디언이 되며 제목 줄 → 내용 첫 줄) */
-/* 내용 첫 줄 = 왼쪽 평가 기준 한 줄 + ⓘ · 오른쪽 저장 상태 · 동작. 좁으면 상태가 다음 줄 오른쪽으로 (2026-09-23 B2) */
+/* 내용 첫 줄 = 공용 제목 줄(서열 투표 · 의견 첫 줄과 같게 →8→ 내용) — 왼쪽 평가 기준 한 줄 + ⓘ · 오른쪽 저장 상태 · 동작.
+   「선택 해제」 · 「다시 시도」 는 제목 줄 규칙대로 28 로 당겨지므로, 버튼이 나타날 때 목록이 밀리지 않게 줄을 늘 28 로 (2026-09-23) */
 .noslog-ui .nl-pattern-form__status {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--nl-spacing-8);
-    min-height: var(--nl-control-height-compact);
+    min-height: var(--nl-type-line-height-28);
     margin-bottom: var(--nl-spacing-8);
 }
+/* 글 → ⓘ 8 = 제목 줄의 제목 → ⓘ 간격과 같게 */
 .noslog-ui .nl-pattern-form__basis {
     display: flex;
     align-items: center;
-    gap: var(--nl-spacing-4);
+    gap: var(--nl-spacing-8);
     min-width: 0;
     margin: 0;
 }

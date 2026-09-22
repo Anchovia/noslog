@@ -143,7 +143,7 @@ export default function PatternEvaluationForm({
         >
             {/* 제목 줄이 펼침 줄이 되면서 저장 상태 · 동작은 내용 첫 줄로 (2026-09-18 아코디언).
                 같은 줄 왼쪽에 평가 기준 한 줄 + ⓘ(개요와 같은 기준 창) — 잠겨 있어도 보인다 (2026-09-23 B2) */}
-            <div className="nl-pattern-form__status">
+            <div className="nl-heading-row nl-pattern-form__status">
                 <p className="nl-pattern-form__basis nl-metadata nl-muted">
                     <span>
                         {t("pattern.basisShort")} · <strong>0</strong>{" "}
