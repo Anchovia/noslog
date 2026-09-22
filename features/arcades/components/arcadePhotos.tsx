@@ -7,18 +7,16 @@ import {
     Image as ImageIcon,
     LayoutGrid,
 } from "lucide-react";
+import PhotoViewer from "@/components/ui/photoViewer";
 import { useTranslations } from "@/components/i18n/localeProvider";
-import Button from "@/components/ui/Button";
-import IconButton from "@/components/ui/iconButton";
-import ModalDialog from "@/components/ui/modalDialog";
 import type { PublicArcade } from "@/features/arcades/schemas/publicArcadeSchema";
 import useMediaQuery from "@/lib/hooks/useMediaQuery";
 
 /**
  * 오락실 사진(P1 · 2026-09-22).
  * - 1056 이상 · 사진 2장 이상 = 모자이크(큰 사진 1 + 작은 사진 최대 2) — 한눈에 보는 자리라 위에 ‹ › 가 없다.
- *   어느 사진이든 · 「사진 N장 모두 보기」 를 누르면 창의 격자 → 한 장 · ‹ › (모자이크 5곳 모두 같은 방식).
- * - 그 아래 = 한 장 + 밀어 넘김 · 카운터(672 이상은 ‹ › 도), 누르면 창에서 그 사진 한 장.
+ * - 그 아래 = 한 장 + 밀어 넘김 · ‹ ›(폰 포함 — WCAG 2.5.7) · 카운터.
+ * - 어느 사진을 눌러도 그 사진이 전체 화면 뷰어에서 바로 열린다(2026-09-23 V3 · S2, 격자 단계 없음).
  */
 export default function ArcadePhotos({
     photos,
@@ -29,7 +27,6 @@ export default function ArcadePhotos({
     const wide = useMediaQuery("(min-width: 1056px)");
     const [index, setIndex] = useState(0);
     const [open, setOpen] = useState(false);
-    const [view, setView] = useState<"grid" | "single">("single");
     const [failed, setFailed] = useState<number[]>([]);
     const [startX, setStartX] = useState<number | null>(null);
     const opener = useRef<HTMLButtonElement | null>(null);
@@ -48,15 +45,11 @@ export default function ArcadePhotos({
     const mosaic = wide && visible.length > 1;
     // 모자이크는 순서 고정(첫 장이 큰 사진) — 넘기지 않으니 같은 사진이 두 번 보이지 않는다
     const lead = mosaic ? visible[0] : visible[active];
-    const photo = visible[active];
     const advance = (direction: number) =>
         setIndex((active + direction + visible.length) % visible.length);
-    const openDialog = (
-        target: HTMLButtonElement,
-        nextView: "grid" | "single"
-    ) => {
+    const openViewer = (target: HTMLButtonElement, nextIndex: number) => {
         opener.current = target;
-        setView(nextView);
+        setIndex(nextIndex);
         setOpen(true);
     };
     return (
@@ -109,9 +102,9 @@ export default function ArcadePhotos({
                                 swiped.current = false;
                                 return;
                             }
-                            openDialog(
+                            openViewer(
                                 event.currentTarget,
-                                mosaic ? "grid" : "single"
+                                mosaic ? 0 : active
                             );
                         }}
                     >
@@ -166,7 +159,10 @@ export default function ArcadePhotos({
                                     type="button"
                                     key={item.id}
                                     onClick={(event) =>
-                                        openDialog(event.currentTarget, "grid")
+                                        openViewer(
+                                            event.currentTarget,
+                                            itemIndex + 1
+                                        )
                                     }
                                     aria-label={t("arcades.photo", {
                                         index: itemIndex + 2,
@@ -187,7 +183,7 @@ export default function ArcadePhotos({
                             type="button"
                             className="nl-arcade-photos__all nl-control"
                             onClick={(event) =>
-                                openDialog(event.currentTarget, "grid")
+                                openViewer(event.currentTarget, 0)
                             }
                         >
                             <LayoutGrid className="nl-icon" aria-hidden />
@@ -196,103 +192,23 @@ export default function ArcadePhotos({
                     </>
                 ) : null}
             </div>
-            <ModalDialog
+            <PhotoViewer
+                photos={visible}
+                index={active}
                 open={open}
+                onIndexChange={setIndex}
                 onOpenChange={setOpen}
-                width="wide"
+                onError={markFailed}
                 onCloseAutoFocus={(event) => {
                     event.preventDefault();
                     opener.current?.focus();
                 }}
-                title={
-                    view === "grid"
-                        ? t("arcades.photoGridTitle", { count: visible.length })
-                        : t("arcades.photo", {
-                              index: active + 1,
-                              total: visible.length,
-                          })
+                label={(position, total) =>
+                    t("arcades.photo", { index: position, total })
                 }
-            >
-                {view === "grid" ? (
-                    <ul className="nl-arcade-photos__grid">
-                        {visible.map((item, itemIndex) => (
-                            <li key={item.id}>
-                                <button
-                                    type="button"
-                                    aria-label={t("arcades.photo", {
-                                        index: itemIndex + 1,
-                                        total: visible.length,
-                                    })}
-                                    onClick={() => {
-                                        setIndex(itemIndex);
-                                        setView("single");
-                                    }}
-                                >
-                                    <Image
-                                        src={item.url}
-                                        alt={item.alt}
-                                        fill
-                                        sizes="(max-width: 767px) 50vw, 240px"
-                                        onError={() => markFailed(item.id)}
-                                    />
-                                </button>
-                            </li>
-                        ))}
-                    </ul>
-                ) : (
-                    <>
-                        <div
-                            className="nl-arcade-photos__full"
-                            // 창 안 한 장 보기도 키보드 ← → 로 넘긴다
-                            onKeyDown={(event) => {
-                                if (visible.length < 2) return;
-                                if (event.key === "ArrowRight") advance(1);
-                                else if (event.key === "ArrowLeft") advance(-1);
-                            }}
-                        >
-                            <Image
-                                src={photo.url}
-                                alt={photo.alt}
-                                fill
-                                sizes="90vw"
-                                onError={() => markFailed(photo.id)}
-                            />
-                        </div>
-                        <div className="nl-arcade-photos__full-controls">
-                            {visible.length > 1 ? (
-                                <Button
-                                    variant="secondary"
-                                    onClick={() => setView("grid")}
-                                >
-                                    {t("arcades.photoBackToGrid")}
-                                </Button>
-                            ) : null}
-                            {visible.length > 1 ? (
-                                <>
-                                    <IconButton
-                                        label={t("arcades.photoPrevious")}
-                                        onClick={() => advance(-1)}
-                                    >
-                                        <ChevronLeft
-                                            className="nl-icon"
-                                            aria-hidden
-                                        />
-                                    </IconButton>
-                                    <IconButton
-                                        label={t("arcades.photoNext")}
-                                        onClick={() => advance(1)}
-                                    >
-                                        <ChevronRight
-                                            className="nl-icon"
-                                            aria-hidden
-                                        />
-                                    </IconButton>
-                                </>
-                            ) : null}
-                        </div>
-                    </>
-                )}
-            </ModalDialog>
+                previousLabel={t("arcades.photoPrevious")}
+                nextLabel={t("arcades.photoNext")}
+            />
         </>
     );
 }

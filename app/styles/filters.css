@@ -55,6 +55,18 @@
     flex-wrap: wrap;
     gap: var(--nl-spacing-8);
 }
+/* 늘 보이는 한 줄(빙고 목록 상태 칩) — 좁아져도 줄이 늘지 않고 넘치면 가로로 넘긴다(밑줄 탭과 같은 문법, 2026-09-23) */
+.noslog-ui .nl-chips--row {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+.noslog-ui .nl-chips--row::-webkit-scrollbar {
+    display: none;
+}
+.noslog-ui .nl-chips--row > .nl-chip {
+    flex-shrink: 0;
+}
 .noslog-ui .nl-chip {
     display: inline-flex;
     align-items: center;

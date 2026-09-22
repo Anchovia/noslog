@@ -1,4 +1,7 @@
 import Link from "next/link";
+import PollWidget from "@/features/polls/components/pollWidget";
+import { getPublicPoll } from "@/features/polls/server/pollService";
+import { getUser } from "@/lib/user";
 import BackLink from "@/components/ui/backLink";
 import { foundationButtonClass } from "@/components/ui/Button";
 import PageContainer from "@/components/layout/pageContainer";
@@ -22,6 +25,12 @@ export default async function AnnouncementDetail({
     };
 }) {
     const { locale, t } = await getServerI18n();
+    const user = await getUser();
+    const poll = await getPublicPoll(
+        { announcementId: announcement.id },
+        locale,
+        user?.id ?? null
+    );
     return (
         <PageContainer width="reading" className="nl-announcements">
             <article className="nl-announcements__detail">
@@ -66,6 +75,10 @@ export default async function AnnouncementDetail({
                     siteUrl={SITE_URL}
                     externalLabel={t("shell.externalLink")}
                 />
+                {/* 글에 딸린 투표(2026-09-23 V2) — 본문 끝에 붙는다 */}
+                {poll ? (
+                    <PollWidget poll={poll} isAuthenticated={Boolean(user)} />
+                ) : null}
                 {/* 끝 — 이전(더 오래된) · 다음(더 새) 글 두 칸 + 목록으로. 없는 쪽은 빈 칸 (2026-09-18 결정 3). 공지가 하나뿐이면 목록으로만 */}
                 <nav
                     className="nl-announcements__pager"

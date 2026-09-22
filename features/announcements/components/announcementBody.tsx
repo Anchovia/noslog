@@ -1,4 +1,5 @@
 import Markdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { ExternalLink } from "lucide-react";
 import { getLocalizedHref } from "@/lib/i18n/routing";
 import type { Locale } from "@/lib/i18n/routing";
@@ -62,7 +63,9 @@ export default function AnnouncementBody({
         <div className="nl-announcement-body nl-body">
             <Markdown
                 skipHtml
-                // 허용 목록 밖 요소(`code` · `em` · 제목 h1 등)는 태그만 벗기고 글자는 남긴다 —
+                // 표 · 취소선은 GFM 문법(2026-09-23 T-c)
+                remarkPlugins={[remarkGfm]}
+                // 허용 목록 밖 요소(제목 h1 등)는 태그만 벗기고 글자는 남긴다 —
                 // 백틱으로 감싼 글자가 통째로 사라지던 문제(v2.9.2 공지, 2026-09-18)
                 unwrapDisallowed
                 allowedElements={[
@@ -73,6 +76,18 @@ export default function AnnouncementBody({
                     "ol",
                     "li",
                     "strong",
+                    "em",
+                    "del",
+                    "blockquote",
+                    "hr",
+                    "code",
+                    "pre",
+                    "table",
+                    "thead",
+                    "tbody",
+                    "tr",
+                    "th",
+                    "td",
                     "a",
                     "img",
                 ]}
@@ -87,6 +102,12 @@ export default function AnnouncementBody({
                     ),
                     h3: ({ children }) => (
                         <h3 className="nl-component-title">{children}</h3>
+                    ),
+                    // 표는 열을 줄이면 뜻이 망가지므로 접지 않고 표만 가로로 민다(TB1, 2026-09-23)
+                    table: ({ children }) => (
+                        <div className="nl-announcement-body__table">
+                            <table>{children}</table>
+                        </div>
                     ),
                     // 본문 폭 · 모서리 8 · 원래 비율. 설명([ ] 글)은 화면 읽기용으로만 (시안 I1)
                     img: ({ src, alt }) => {

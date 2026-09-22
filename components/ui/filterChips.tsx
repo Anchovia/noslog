@@ -34,6 +34,7 @@ export interface FilterChipOption<Value extends string> {
  * 짧은 열거를 고르는 토글 칩 (Material 3 filter chip 형태).
  * 높이 36 · 선택 = surface/raised + border/strong + 체크 16 + 굵기(세그먼트 선택 언어 재사용).
  * multiple=false 면 라디오처럼 하나만 유지하고, 선택된 것을 다시 눌러도 해제되지 않는다.
+ * row 는 창 · 팝오버 밖에서 늘 보이는 한 줄(줄바꿈 없이 가로 스크롤 — 2026-09-23).
  */
 export default function FilterChips<Value extends string>({
     label,
@@ -41,6 +42,7 @@ export default function FilterChips<Value extends string>({
     value,
     onValueChange,
     multiple = true,
+    row = false,
     className,
 }: {
     label: string;
@@ -48,6 +50,8 @@ export default function FilterChips<Value extends string>({
     value: readonly Value[];
     onValueChange: (values: Value[]) => void;
     multiple?: boolean;
+    /** 늘 보이는 한 줄(빙고 목록 상태 칩) — 줄바꿈 대신 넘치면 가로 스크롤 */
+    row?: boolean;
     className?: string;
     /** SelectionList 와 같은 자리에서 쓰기 위한 호환 속성 — 칩은 항상 aria-label 만 쓰므로 무시한다 */
     hideLabel?: boolean;
@@ -56,7 +60,7 @@ export default function FilterChips<Value extends string>({
         <div
             role="group"
             aria-label={label}
-            className={cn("nl-chips", className)}
+            className={cn("nl-chips", row && "nl-chips--row", className)}
         >
             {options.map((option) => {
                 const selected = value.includes(option.value);

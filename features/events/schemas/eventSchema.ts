@@ -1,4 +1,8 @@
 import { z } from "zod";
+import {
+    pollFormValueSchema,
+    type PollInput,
+} from "@/features/polls/schemas/pollSchema";
 
 import type { createTranslator } from "@/lib/i18n/messages";
 
@@ -78,6 +82,7 @@ export function createEventFormSchema(t: Translate) {
             endDate: z
                 .string()
                 .refine(validDate, t("events.form.dateRequired")),
+            poll: pollFormValueSchema.optional(),
             bannerUrl: z.string().trim(),
         })
         .superRefine((value, ctx) => {
@@ -98,7 +103,12 @@ export type EventFormValues = z.input<ReturnType<typeof createEventFormSchema>>;
 
 export function eventFormData(
     values: EventFormValues,
-    options: { id?: number; submit: boolean; locale: string }
+    options: {
+        id?: number;
+        submit: boolean;
+        locale: string;
+        poll?: PollInput | null;
+    }
 ) {
     const formData = new FormData();
     if (options.id !== undefined) formData.set("id", String(options.id));
@@ -109,6 +119,9 @@ export function eventFormData(
     formData.set("startDate", values.startDate);
     formData.set("endDate", values.endDate);
     formData.set("bannerUrl", values.bannerUrl);
+    // 글에 딸린 투표(2026-09-23 V2) — JSON 한 덩이, 지우면 "null"
+    if (options.poll !== undefined)
+        formData.set("poll", JSON.stringify(options.poll));
     return formData;
 }
 export function eventInputFromFormData(formData: FormData) {
@@ -119,6 +132,7 @@ export function eventInputFromFormData(formData: FormData) {
         startDate: read("startDate"),
         endDate: read("endDate"),
         bannerUrl: read("bannerUrl"),
+        poll: formData.has("poll") ? read("poll") : undefined,
     };
 }
 

@@ -944,7 +944,7 @@
     color: var(--nl-content-on-media);
     background: var(--nl-surface-media-scrim);
 }
-/* 사진 위 넘김 — 672 이상(마우스)만, 좌우 가장자리 세로 가운데. 672 미만은 밀어 넘김 + 카운터만(폰 사례 3/3 · 2026-09-15).
+/* 사진 위 넘김 — 모든 폭에서 좌우 가장자리 세로 가운데(N2 · 2026-09-23 — 밀어 넘김만 두면 WCAG 2.5.7 위반).
    미디어 위 버튼이라 공용 아이콘 버튼과 따로 둔다(어두운 판 안 44 · 2026-09-14 부품 결정 ①) */
 .noslog-ui .nl-arcade-photos__nav {
     position: absolute;
@@ -964,11 +964,6 @@
 }
 .noslog-ui .nl-arcade-photos__nav--next {
     right: var(--nl-spacing-8);
-}
-@media (max-width: 671px) {
-    .noslog-ui .nl-arcade-photos__nav {
-        display: none;
-    }
 }
 .noslog-ui .nl-arcade-photos__thumbnails {
     display: none;

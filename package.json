@@ -1,6 +1,6 @@
 {
     "name": "noslog",
-    "version": "2.12.0",
+    "version": "2.13.0",
     "private": true,
     "scripts": {
         "predev": "npm run generate:jacket-manifest",
@@ -73,6 +73,7 @@
         "react-hook-form": "^7.81.0",
         "react-markdown": "10.1.0",
         "recharts": "^3.9.2",
+        "remark-gfm": "^4.0.1",
         "server-only": "^0.0.1",
         "sonner": "^2.0.7",
         "tailwind-merge": "^3.6.0",

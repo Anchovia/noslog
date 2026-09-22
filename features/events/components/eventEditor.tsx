@@ -27,6 +27,9 @@ import IconButton from "@/components/ui/iconButton";
 import MarkdownEditor from "@/components/ui/markdownEditor";
 import ResponsiveDialog from "@/components/ui/responsiveDialog";
 import AnnouncementBody from "@/features/announcements/components/announcementBody";
+import PollFormSection from "@/features/polls/components/pollFormSection";
+import { pollLabelsFrom } from "@/features/polls/components/pollLabels";
+import type { PollInput } from "@/features/polls/schemas/pollSchema";
 import {
     EVENT_CONTENT_MAX_LENGTH,
     EVENT_TITLE_MAX_LENGTH,
@@ -55,6 +58,8 @@ export default function EventEditor({
         submittedBefore: boolean;
         /** 저장된 글이면 아래 줄 왼쪽에 「삭제」(2026-09-18 D1) */
         isPublic?: boolean;
+        /** 글에 딸린 투표(2026-09-23 V2) */
+        poll?: { input: PollInput; votes: number } | null;
     };
     siteUrl: string;
 }) {
@@ -64,21 +69,29 @@ export default function EventEditor({
     const router = useRouter();
     const [dialog, setDialog] = useState<SaveMode | null>(null);
     const [pending, setPending] = useState<SaveMode | null>(null);
+    // 저장 상태(2026-09-23 L2)
+    const [saveState, setSaveState] = useState<"saved" | "failed" | null>(null);
     const [file, setFile] = useState<File | null>(null);
+    const [poll, setPoll] = useState<PollInput | null>(
+        event.poll?.input ?? null
+    );
     const schema = useMemo(() => createEventFormSchema(t), [t]);
     const {
         register,
         control,
         handleSubmit,
         setValue,
+        reset,
         setError,
         clearErrors,
-        formState: { errors },
+        formState: { errors, isDirty },
     } = useForm<EventFormValues>({
         resolver: zodResolver(schema),
+        mode: "onTouched",
         defaultValues: event.values,
     });
     const content = useWatch({ control, name: "content" }) ?? "";
+    const title = useWatch({ control, name: "title" }) ?? "";
     const bannerUrl = useWatch({ control, name: "bannerUrl" }) ?? "";
     const preview = useObjectUrl(file);
     const bannerSrc = preview ?? (bannerUrl || null);
@@ -130,10 +143,16 @@ export default function EventEditor({
                                 ...values,
                                 bannerUrl: uploaded || values.bannerUrl,
                             },
-                            { id: event.id, submit: mode === "submit", locale }
+                            {
+                                id: event.id,
+                                submit: mode === "submit",
+                                locale,
+                                poll,
+                            }
                         )
                     );
                     if (!result.success) {
+                        setSaveState("failed");
                         if (uploaded) await discardEventBanner(uploaded);
                         applyFormActionFailure(setError, result, toast.error);
                         if (result.fieldErrors)
@@ -147,6 +166,8 @@ export default function EventEditor({
                         setValue("bannerUrl", uploaded);
                         setFile(null);
                     }
+                    setSaveState("saved");
+                    reset(values, { keepDefaultValues: false });
                     setDialog(null);
                     toast.success(result.message);
                     if (mode === "submit") router.replace(href("/events/mine"));
@@ -320,10 +341,15 @@ export default function EventEditor({
                         ) : (
                             <span>{t("events.form.contentHelp")}</span>
                         )}
-                        <span>
-                            {content.length.toLocaleString(locale)} /{" "}
-                            {EVENT_CONTENT_MAX_LENGTH.toLocaleString(locale)}
-                        </span>
+                        {/* 글자 수는 한도의 75% 를 넘을 때만(2026-09-23 C) */}
+                        {content.length >= EVENT_CONTENT_MAX_LENGTH * 0.75 ? (
+                            <span>
+                                {content.length.toLocaleString(locale)} /{" "}
+                                {EVENT_CONTENT_MAX_LENGTH.toLocaleString(
+                                    locale
+                                )}
+                            </span>
+                        ) : null}
                     </span>
                 }
             >
@@ -349,8 +375,18 @@ export default function EventEditor({
                                 tabs: t("events.editor.tabs"),
                                 tools: t("events.editor.tools"),
                                 empty: t("events.editor.empty"),
+                                back: t("events.editor.back"),
+                                headings: t("events.editor.headings"),
                                 heading: t("events.editor.heading"),
+                                subheading: t("events.editor.subheading"),
                                 bold: t("events.editor.bold"),
+                                italic: t("events.editor.italic"),
+                                strike: t("events.editor.strike"),
+                                quote: t("events.editor.quote"),
+                                code: t("events.editor.code"),
+                                table: t("events.editor.table"),
+                                tableBlock: t("events.editor.tableBlock"),
+                                rule: t("events.editor.rule"),
                                 list: t("events.editor.list"),
                                 ordered: t("events.editor.ordered"),
                                 link: t("events.editor.link"),
@@ -372,47 +408,94 @@ export default function EventEditor({
                                     "public"
                                 );
                             }}
+                            // 미리보기는 공개 글과 같은 틀 — 제목 · 본문(2026-09-23 P2)
+                            onPrimaryAction={() => {
+                                clearErrors("root");
+                                setDialog("submit");
+                            }}
                             renderPreview={(value) => (
-                                <AnnouncementBody
-                                    content={value}
-                                    locale={locale}
-                                    siteUrl={siteUrl}
-                                    externalLabel={t("shell.externalLink")}
-                                />
+                                <article className="nl-announcements__detail">
+                                    <header className="nl-announcements__heading">
+                                        <h1 className="nl-page-title">
+                                            {title || t("events.form.title")}
+                                        </h1>
+                                    </header>
+                                    <AnnouncementBody
+                                        content={value}
+                                        locale={locale}
+                                        siteUrl={siteUrl}
+                                        externalLabel={t("shell.externalLink")}
+                                    />
+                                </article>
                             )}
                         />
                     )}
                 />
             </FormField>
+            <PollFormSection
+                value={poll}
+                onChange={setPoll}
+                labels={pollLabelsFrom(t)}
+                locales={[locale]}
+                locale={locale}
+                votes={event.poll?.votes ?? 0}
+            />
+
             {!dialog && errors.root?.server?.message ? (
                 <p className="nl-body-secondary nl-field__error" role="alert">
                     {errors.root.server.message}
                 </p>
             ) : null}
-            <div className="nl-events__form-actions">
-                {event.id !== undefined ? (
-                    <EventDeleteButton
-                        id={event.id}
-                        title={event.values.title}
-                        isPublic={Boolean(event.isPublic)}
-                    />
-                ) : null}
-                <ActionButton
-                    variant="secondary"
-                    busy={pending === "draft" && dialog === null}
-                    busyLabel={t("events.actions.saving")}
-                    onClick={() => save("draft")}
-                >
-                    {t("events.actions.saveDraft")}
-                </ActionButton>
-                <ActionButton
-                    onClick={() => {
-                        clearErrors("root");
-                        setDialog("submit");
-                    }}
-                >
-                    {submitLabel}
-                </ActionButton>
+            <div className="nl-form-bar nl-events__form-actions">
+                <div>
+                    {event.id !== undefined ? (
+                        <EventDeleteButton
+                            id={event.id}
+                            title={event.values.title}
+                            isPublic={Boolean(event.isPublic)}
+                        />
+                    ) : null}
+                </div>
+                <div>
+                    {/* 저장 상태 — 오른쪽 묶음 맨 앞(2026-09-23 L2) */}
+                    {pending !== null || saveState || isDirty ? (
+                        <span
+                            className="nl-form-bar__state nl-metadata"
+                            data-state={
+                                pending !== null
+                                    ? "saving"
+                                    : isDirty
+                                      ? "dirty"
+                                      : (saveState ?? undefined)
+                            }
+                            role="status"
+                        >
+                            {pending !== null
+                                ? t("events.save.saving")
+                                : isDirty
+                                  ? t("events.save.unsaved")
+                                  : saveState === "failed"
+                                    ? t("events.save.failed")
+                                    : t("events.save.saved")}
+                        </span>
+                    ) : null}
+                    <ActionButton
+                        variant="secondary"
+                        busy={pending === "draft" && dialog === null}
+                        busyLabel={t("events.actions.saving")}
+                        onClick={() => save("draft")}
+                    >
+                        {t("events.actions.saveDraft")}
+                    </ActionButton>
+                    <ActionButton
+                        onClick={() => {
+                            clearErrors("root");
+                            setDialog("submit");
+                        }}
+                    >
+                        {submitLabel}
+                    </ActionButton>
+                </div>
             </div>
 
             <ResponsiveDialog

@@ -275,6 +275,43 @@
 .noslog-ui .nl-detail-loading__ruler {
     height: 72px;
 }
+/* 기준 창 단계 목록 — 색 네모 8(막대 단계 색 · 모서리 없음 = 검정 「합격까지」 범례와 같은 막대 범례 문법) · 숫자 · 이름. 줄 사이 4 (2026-09-23 Q2) */
+.noslog-ui .nl-pattern-steps {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-4);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.noslog-ui .nl-pattern-steps > li {
+    display: grid;
+    grid-template-columns: var(--nl-spacing-8) var(--nl-spacing-16) minmax(
+            0,
+            1fr
+        );
+    align-items: center;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-pattern-steps__swatch {
+    width: var(--nl-spacing-8);
+    height: var(--nl-spacing-8);
+}
+.noslog-ui .nl-pattern-steps__swatch[data-level="0"] {
+    background: var(--nl-pattern-level-0);
+}
+.noslog-ui .nl-pattern-steps__swatch[data-level="1"] {
+    background: var(--nl-pattern-level-1);
+}
+.noslog-ui .nl-pattern-steps__swatch[data-level="2"] {
+    background: var(--nl-pattern-level-2);
+}
+.noslog-ui .nl-pattern-steps__swatch[data-level="3"] {
+    background: var(--nl-pattern-level-3);
+}
+.noslog-ui .nl-pattern-steps__swatch[data-level="4"] {
+    background: var(--nl-pattern-level-4);
+}
 .noslog-ui .nl-pattern-help {
     display: flex;
     flex-direction: column;
@@ -452,8 +489,10 @@
     --nl-local-data-fast: var(--nl-judgement-near);
 }
 
-/* 패턴 경향 단계 색 = 기존 토큰 별칭(새 색 없음 · 2026-09-17 E2). 테마마다 가리키는 값이 따라 바뀌게 개요 안에서 정의 */
-.noslog-ui .nl-overview {
+/* 패턴 경향 단계 색 = 기존 토큰 별칭(새 색 없음 · 2026-09-17 E2). 테마마다 가리키는 값이 따라 바뀌게 개요 안에서 정의.
+   기준 창(포털)의 단계 목록도 같은 색 네모를 쓰므로 그 목록에서도 정의 (2026-09-23) */
+.noslog-ui .nl-overview,
+.noslog-ui .nl-pattern-steps {
     --nl-pattern-level-0: var(--nl-local-data-bucket-3);
     --nl-pattern-level-1: var(--nl-judgement-near);
     --nl-pattern-level-2: var(--nl-judgement-just);

@@ -1,4 +1,8 @@
 import "server-only";
+import {
+    savePollWithPost,
+    type PollSaveError,
+} from "@/features/polls/server/pollService";
 
 import { revalidatePath, unstable_cache, updateTag } from "next/cache";
 
@@ -177,6 +181,23 @@ function localeFrom(formData: FormData): Locale {
 
 // 임시저장 · 게시 요청 — 한 액션. 게시 요청이면 검토 대기로, 아니면 임시저장.
 // 공개판은 건드리지 않는다(승인 때만 바뀐다)
+// 투표 저장이 막힌 이유 → 화면 문구 키 (2026-09-23 V2)
+class PollSaveAbort extends Error {
+    constructor(readonly reason: PollSaveError) {
+        super(reason);
+    }
+}
+const POLL_SAVE_MESSAGE_KEYS = {
+    invalid: "poll.error.invalid",
+    locked: "poll.error.locked",
+    closed: "poll.error.closed",
+    question: "poll.error.question",
+    options: "poll.error.options",
+    duplicate: "poll.error.duplicate",
+    maxChoices: "poll.error.maxChoices",
+    closesAt: "poll.error.closesAt",
+} as const satisfies Record<PollSaveError, string>;
+
 export async function saveEvent(
     formData: FormData
 ): Promise<ActionResult<{ id: number }, EventFieldName>> {
@@ -231,16 +252,27 @@ export async function saveEvent(
         ...(submit ? { submittedAt: now } : {}),
     };
     try {
-        const saved = existing
-            ? await db.communityEvent.update({
-                  where: { id: existing.id },
-                  data,
-                  select: { id: true },
-              })
-            : await db.communityEvent.create({
-                  data: { ...data, authorId: writer.userId },
-                  select: { id: true },
-              });
+        // 글과 투표를 한 번에 — 투표가 규칙에 막히면 글 저장도 되돌린다(2026-09-23 V2)
+        const saved = await db.$transaction(async (tx) => {
+            const row = existing
+                ? await tx.communityEvent.update({
+                      where: { id: existing.id },
+                      data,
+                      select: { id: true },
+                  })
+                : await tx.communityEvent.create({
+                      data: { ...data, authorId: writer.userId },
+                      select: { id: true },
+                  });
+            const failed = await savePollWithPost(
+                tx,
+                { eventId: row.id },
+                parsed.data.poll ?? null,
+                now
+            );
+            if (failed) throw new PollSaveAbort(failed);
+            return row;
+        });
         // 바꾼 배너의 옛 파일은 작성자 폴더의 파일이고 공개판이 쓰고 있지 않을 때만 지운다
         // (deleteBlobIfOwned 는 저장소 안 파일이면 무엇이든 지우므로 폴더를 먼저 확인)
         if (
@@ -263,6 +295,11 @@ export async function saveEvent(
             id: saved.id,
         };
     } catch (error) {
+        if (error instanceof PollSaveAbort)
+            return {
+                success: false,
+                message: t(POLL_SAVE_MESSAGE_KEYS[error.reason]),
+            };
         logServerError(error, {
             event: "events.save.failed",
             routePath: "/events",

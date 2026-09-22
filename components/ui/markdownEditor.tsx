@@ -2,19 +2,54 @@
 
 import {
     Bold,
-    Heading2,
+    Code,
+    Heading,
     ImagePlus,
+    Italic,
     Link2,
     List,
     ListOrdered,
+    Minus,
+    Quote,
+    Strikethrough,
+    Table,
 } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
 import type { ClipboardEvent, DragEvent, ReactNode } from "react";
 import { toast } from "sonner";
+import ActionButton from "@/components/ui/actionButton";
+import ActionMenu from "@/components/ui/actionMenu";
+import FullScreenDialog from "@/components/ui/fullScreenDialog";
 import IconButton from "@/components/ui/iconButton";
 import { IMAGE_ACCEPT, imageFileValidationError } from "@/lib/imageUploadRules";
 
-type Tool = "heading" | "bold" | "list" | "ordered" | "link";
+type Tool =
+    | "heading"
+    | "subheading"
+    | "bold"
+    | "italic"
+    | "strike"
+    | "quote"
+    | "code"
+    | "table"
+    | "rule"
+    | "list"
+    | "ordered"
+    | "link";
+
+/** 머리 줄에 아이콘으로 나오는 도구 — 소제목은 단계 메뉴라 여기 없다(2026-09-23 T-c) */
+const TOOLBAR: Exclude<Tool, "heading" | "subheading">[] = [
+    "bold",
+    "italic",
+    "strike",
+    "quote",
+    "code",
+    "table",
+    "rule",
+    "list",
+    "ordered",
+    "link",
+];
 
 export interface MarkdownEditorLabels {
     write: string;
@@ -22,11 +57,24 @@ export interface MarkdownEditorLabels {
     tabs: string;
     tools: string;
     empty: string;
+    /** 미리보기 창에서 편집으로 돌아가는 버튼 */
+    back: string;
+    /** 소제목 단계 메뉴 — 트리거와 두 항목 */
+    headings: string;
     heading: string;
+    subheading: string;
     bold: string;
+    italic: string;
+    strike: string;
+    quote: string;
+    code: string;
+    table: string;
+    rule: string;
     list: string;
     ordered: string;
     link: string;
+    /** 표 버튼이 넣는 틀 — 머리 · 칸 글자가 화면 말이라 부르는 쪽이 준다 */
+    tableBlock?: string;
     /** 본문 이미지(2026-09-18) — 올리기를 받을 때만 쓴다 */
     image?: string;
     uploading?: string;
@@ -34,9 +82,14 @@ export interface MarkdownEditorLabels {
     uploadFailed?: string;
 }
 
-const TOOL_ICONS: Record<Tool, ReactNode> = {
-    heading: <Heading2 className="nl-icon" aria-hidden />,
+const TOOL_ICONS: Record<Exclude<Tool, "heading" | "subheading">, ReactNode> = {
     bold: <Bold className="nl-icon" aria-hidden />,
+    italic: <Italic className="nl-icon" aria-hidden />,
+    strike: <Strikethrough className="nl-icon" aria-hidden />,
+    quote: <Quote className="nl-icon" aria-hidden />,
+    code: <Code className="nl-icon" aria-hidden />,
+    table: <Table className="nl-icon" aria-hidden />,
+    rule: <Minus className="nl-icon" aria-hidden />,
     list: <List className="nl-icon" aria-hidden />,
     ordered: <ListOrdered className="nl-icon" aria-hidden />,
     link: <Link2 className="nl-icon" aria-hidden />,
@@ -45,15 +98,27 @@ const TOOL_ICONS: Record<Tool, ReactNode> = {
 // 줄 앞에 기호를 붙이는 도구 — 고른 줄 전부에
 const LINE_PREFIX: Partial<Record<Tool, string>> = {
     heading: "## ",
+    subheading: "### ",
+    quote: "> ",
     list: "- ",
     ordered: "1. ",
+};
+
+// 고른 글자를 감싸는 도구 — 감싼 뒤 안쪽 글자를 고른 상태로 둔다
+const WRAP: Partial<Record<Tool, string>> = {
+    bold: "**",
+    italic: "*",
+    strike: "~~",
+    code: "`",
 };
 
 export function applyMarkdownTool(
     value: string,
     start: number,
     end: number,
-    tool: Tool
+    tool: Tool,
+    /** 표 틀 — 머리 · 칸 글자는 화면 말을 따르므로 부르는 쪽이 준다 */
+    tableBlock = "| A | B |\n| --- | --- |\n|  |  |"
 ) {
     const prefix = LINE_PREFIX[tool];
     if (prefix) {
@@ -70,12 +135,25 @@ export function applyMarkdownTool(
         };
     }
     const selected = value.slice(start, end);
-    if (tool === "bold") {
-        const inner = selected || "";
+    const wrap = WRAP[tool];
+    if (wrap) {
         return {
-            value: `${value.slice(0, start)}**${inner}**${value.slice(end)}`,
-            start: start + 2,
-            end: start + 2 + inner.length,
+            value: `${value.slice(0, start)}${wrap}${selected}${wrap}${value.slice(end)}`,
+            start: start + wrap.length,
+            end: start + wrap.length + selected.length,
+        };
+    }
+    // 덩이로 넣는 도구(구분선 · 표) — 앞뒤로 빈 줄을 만들어 문단이 붙지 않게 한다
+    if (tool === "rule" || tool === "table") {
+        const body = tool === "rule" ? "---" : tableBlock;
+        const before = value.slice(0, start).replace(/\n*$/u, "");
+        const after = value.slice(end).replace(/^\n*/u, "");
+        const head = before ? `${before}\n\n` : "";
+        const block = `${head}${body}`;
+        return {
+            value: `${block}${after ? `\n\n${after}` : "\n"}`,
+            start: head.length,
+            end: head.length + body.length,
         };
     }
     // 링크 — 고른 글자를 링크 글자로, 주소 자리를 고른 상태로 둔다
@@ -108,6 +186,7 @@ export default function MarkdownEditor({
     labels,
     renderPreview,
     onUploadImage,
+    onPrimaryAction,
 }: {
     id: string;
     value: string;
@@ -125,6 +204,8 @@ export default function MarkdownEditor({
     renderPreview: (value: string) => ReactNode;
     /** 이미지 한 장을 올리고 공개 주소를 돌려준다. 있으면 「이미지」 버튼 · 붙여 넣기 · 끌어다 놓기가 켜진다 */
     onUploadImage?: (file: File) => Promise<string>;
+    /** Ctrl/Cmd + Enter 로 부르는 주 동작(게시 · 게시 요청, 2026-09-23 C) */
+    onPrimaryAction?: () => void;
 }) {
     const tabsId = useId();
     const [mode, setMode] = useState<"write" | "preview">("write");
@@ -198,7 +279,8 @@ export default function MarkdownEditor({
             value,
             node.selectionStart,
             node.selectionEnd,
-            tool
+            tool,
+            labels.tableBlock
         );
         if (maxLength && result.value.length > maxLength) return;
         change(result.value);
@@ -211,6 +293,7 @@ export default function MarkdownEditor({
     return (
         <div className="nl-markdown-editor" data-invalid={invalid || undefined}>
             <div className="nl-markdown-editor__head">
+                {/* 「쓰기 / 미리보기」 2단 탭 — 미리보기 탭은 전체 화면 창을 연다(2026-09-23 P2 · 사용자 선택 A) */}
                 <div
                     role="tablist"
                     aria-label={labels.tabs}
@@ -224,6 +307,9 @@ export default function MarkdownEditor({
                             id={`${tabsId}-${item}`}
                             aria-selected={mode === item}
                             aria-controls={`${tabsId}-panel`}
+                            aria-haspopup={
+                                item === "preview" ? "dialog" : undefined
+                            }
                             data-state={mode === item ? "active" : "inactive"}
                             className="nl-tabs__item nl-control"
                             onClick={() => setMode(item)}
@@ -239,11 +325,29 @@ export default function MarkdownEditor({
                         aria-controls={id}
                         className="nl-markdown-editor__tools"
                     >
-                        {(Object.keys(TOOL_ICONS) as Tool[]).map((tool) => (
+                        {/* 소제목은 단계가 둘이라 그 버튼의 작은 메뉴로 묶는다(2026-09-23 T-c) */}
+                        <ActionMenu
+                            label={labels.headings}
+                            disabled={readOnly}
+                            icon={<Heading className="nl-icon" aria-hidden />}
+                            items={[
+                                {
+                                    label: labels.heading,
+                                    onSelect: () => apply("heading"),
+                                },
+                                {
+                                    label: labels.subheading,
+                                    onSelect: () => apply("subheading"),
+                                },
+                            ]}
+                        />
+                        {TOOLBAR.map((tool) => (
                             <IconButton
                                 key={tool}
                                 label={labels[tool]}
                                 disabled={readOnly}
+                                // 버튼을 눌러도 입력칸 포커스 · 고른 자리를 지킨다(2026-09-23)
+                                onMouseDown={(event) => event.preventDefault()}
                                 onClick={() => apply(tool)}
                             >
                                 {TOOL_ICONS[tool]}
@@ -298,6 +402,20 @@ export default function MarkdownEditor({
                     aria-describedby={describedBy}
                     className="nl-markdown-editor__input"
                     onChange={(event) => change(event.target.value)}
+                    // 굵게 · 기울임 단축키 — 확인한 에디터가 모두 쓰는 두 가지만(2026-09-23)
+                    onKeyDown={(event) => {
+                        if (!(event.metaKey || event.ctrlKey) || event.altKey)
+                            return;
+                        if (event.key === "Enter" && onPrimaryAction) {
+                            event.preventDefault();
+                            onPrimaryAction();
+                            return;
+                        }
+                        const key = event.key.toLowerCase();
+                        if (key !== "b" && key !== "i") return;
+                        event.preventDefault();
+                        apply(key === "b" ? "bold" : "italic");
+                    }}
                     onBlur={onBlur}
                     onPaste={pastedFiles}
                     onDragOver={(event) => {
@@ -309,16 +427,26 @@ export default function MarkdownEditor({
                     }}
                     onDrop={droppedFiles}
                 />
-                {mode === "preview" ? (
-                    <div className="nl-markdown-editor__preview" lang={lang}>
-                        {value.trim() ? (
-                            renderPreview(value)
-                        ) : (
-                            <p className="nl-body nl-muted">{labels.empty}</p>
-                        )}
-                    </div>
-                ) : null}
             </div>
+            {/* 미리보기(2026-09-23 P2) = 전체 화면 창에 공개 화면 그대로 — 상자 안에서 글만 바뀌지 않는다 */}
+            <FullScreenDialog
+                open={mode === "preview"}
+                onOpenChange={(open) => setMode(open ? "preview" : "write")}
+                title={labels.preview}
+                footer={
+                    <ActionButton onClick={() => setMode("write")}>
+                        {labels.back}
+                    </ActionButton>
+                }
+            >
+                <div className="nl-markdown-editor__preview" lang={lang}>
+                    {value.trim() ? (
+                        renderPreview(value)
+                    ) : (
+                        <p className="nl-body nl-muted">{labels.empty}</p>
+                    )}
+                </div>
+            </FullScreenDialog>
         </div>
     );
 }

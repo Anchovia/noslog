@@ -1,9 +1,9 @@
 "use client";
 
-import { ChevronRight, Info } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import { Fragment, useId, useState, type ReactNode } from "react";
+import { Fragment, useId, type ReactNode } from "react";
 
 import {
     useLocale,
@@ -14,12 +14,12 @@ import type { MusicDetailProps } from "@/components/music/musicDetailTypes";
 import ActionButton from "@/components/ui/actionButton";
 import BarList, { BarListSkeleton } from "@/components/ui/barList";
 import { LoadingStatus } from "@/components/ui/skeleton";
-import ModalDialog from "@/components/ui/modalDialog";
 import ResultState from "@/components/ui/resultState";
 import StatStrip from "@/components/ui/statStrip";
 import { rankTone, scoreTone } from "@/lib/music/scoreTone";
 import { PATTERN_AXES } from "@/features/music/schemas/communitySchema";
 import { communityPatternOptions } from "../api/community";
+import PatternCriteriaDialog from "./patternCriteriaDialog";
 import TierHistory from "./tierHistory";
 
 /**
@@ -38,7 +38,6 @@ export default function OverviewPanel({
     const href = useLocalizedHref();
     const chart = data.chartDetail;
     const pattern = useQuery(communityPatternOptions(chart.id));
-    const [helpOpen, setHelpOpen] = useState(false);
     const id = useId();
     const summary = pattern.data?.pattern;
     const evaluatorCount = summary
@@ -119,36 +118,7 @@ export default function OverviewPanel({
                     <h2 id={`${id}-pattern`} className="nl-section-title">
                         {t("pattern.title")}
                     </h2>
-                    <ModalDialog
-                        open={helpOpen}
-                        onOpenChange={setHelpOpen}
-                        title={t("pattern.criteria")}
-                        trigger={
-                            <button
-                                type="button"
-                                className="nl-info-trigger"
-                                aria-label={t("pattern.criteria")}
-                            >
-                                <Info className="nl-icon-small" aria-hidden />
-                            </button>
-                        }
-                    >
-                        <p className="nl-body-secondary nl-muted">
-                            {t("pattern.scale")}
-                        </p>
-                        <dl className="nl-pattern-help">
-                            {PATTERN_AXES.map((axis) => (
-                                <div key={axis}>
-                                    <dt className="nl-control">
-                                        {t(`pattern.axis.${axis}`)}
-                                    </dt>
-                                    <dd className="nl-body-secondary nl-muted">
-                                        {t(`pattern.definition.${axis}`)}
-                                    </dd>
-                                </div>
-                            ))}
-                        </dl>
-                    </ModalDialog>
+                    <PatternCriteriaDialog />
                     {evaluatorCount !== null ? (
                         <span className="nl-metadata nl-muted">
                             {t("pattern.count", { count: evaluatorCount })}

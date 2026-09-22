@@ -17,6 +17,7 @@ import {
 } from "@/features/music/schemas/communitySchema";
 import type { CommunityData } from "@/features/music/schemas/communitySchema";
 import DeleteContributionDialog from "./deleteContributionDialog";
+import PatternCriteriaDialog from "./patternCriteriaDialog";
 
 type Ratings = typeof EMPTY_PATTERN_RATINGS;
 type Status = "idle" | "saving" | "saved" | "failed";
@@ -34,7 +35,8 @@ const ratingsOf = (data: CommunityData): Ratings =>
 
 /**
  * 패턴 투표 — 축마다 이름 + 숫자 버튼 0~4. 저장 버튼 없이 누르면 바로 저장(연달아 누르면 모아서 한 번) (2026-09-17 A).
- * 상태는 제목 줄 오른쪽 한 곳(저장 중 · 저장됨 · 실패 + 다시 시도). 같은 숫자를 다시 누르면 그 축만 해제,
+ * 펼친 내용 첫 줄(공용 제목 줄) = 왼쪽 평가 기준 한 줄 + ⓘ, 오른쪽 한 곳에 상태(저장 중 · 저장됨 · 실패 + 다시 시도).
+ * 같은 숫자를 다시 누르면 그 축만 해제,
  * 「선택 해제」 는 확인창 뒤 모든 축을 지운다. 의견은 같은 행이라 서버에 저장된 의견을 그대로 보낸다.
  */
 export default function PatternEvaluationForm({
@@ -140,45 +142,56 @@ export default function PatternEvaluationForm({
             titleId={`${id}-title`}
             titleRef={heading}
         >
-            {/* 제목 줄이 펼침 줄이 되면서 저장 상태 · 동작은 내용 첫 줄로 (2026-09-18 아코디언) */}
-            {!disabled ? (
-                <div
-                    className="nl-pattern-form__status"
-                    role="status"
-                    aria-live="polite"
-                >
-                    {status === "saving" ? (
-                        <span className="nl-metadata nl-muted">
-                            {t("community.saving")}
-                        </span>
-                    ) : status === "saved" ? (
-                        <span className="nl-metadata nl-muted">
-                            {t("community.savedShort")}
-                        </span>
-                    ) : status === "failed" ? (
-                        <>
-                            <span className="nl-metadata nl-pattern-form__error">
-                                {t("community.saveFailed")}
+            {/* 제목 줄이 펼침 줄이 되면서 저장 상태 · 동작은 내용 첫 줄로 (2026-09-18 아코디언).
+                같은 줄 왼쪽에 평가 기준 한 줄 + ⓘ(개요와 같은 기준 창) — 잠겨 있어도 보인다 (2026-09-23 B2) */}
+            <div className="nl-heading-row nl-pattern-form__status">
+                <p className="nl-pattern-form__basis nl-metadata nl-muted">
+                    <span>
+                        {t("pattern.basisShort")} · <strong>0</strong>{" "}
+                        {t("pattern.basisLow")} – <strong>4</strong>{" "}
+                        {t("pattern.basisHigh")}
+                    </span>
+                    <PatternCriteriaDialog />
+                </p>
+                {!disabled ? (
+                    <div
+                        className="nl-pattern-form__state"
+                        role="status"
+                        aria-live="polite"
+                    >
+                        {status === "saving" ? (
+                            <span className="nl-metadata nl-muted">
+                                {t("community.saving")}
                             </span>
+                        ) : status === "saved" ? (
+                            <span className="nl-metadata nl-muted">
+                                {t("community.savedShort")}
+                            </span>
+                        ) : status === "failed" ? (
+                            <>
+                                <span className="nl-metadata nl-pattern-form__error">
+                                    {t("community.saveFailed")}
+                                </span>
+                                <ActionButton
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => void persist(ratings)}
+                                >
+                                    {t("common.retry")}
+                                </ActionButton>
+                            </>
+                        ) : hasAny ? (
                             <ActionButton
                                 variant="ghost"
                                 size="sm"
-                                onClick={() => void persist(ratings)}
+                                onClick={() => setClearing(true)}
                             >
-                                {t("common.retry")}
+                                {t("community.clearRating")}
                             </ActionButton>
-                        </>
-                    ) : hasAny ? (
-                        <ActionButton
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => setClearing(true)}
-                        >
-                            {t("community.clearRating")}
-                        </ActionButton>
-                    ) : null}
-                </div>
-            ) : null}
+                        ) : null}
+                    </div>
+                ) : null}
+            </div>
             {/* 평가할 수 없으면 목록을 흐리고(5px) 가운데 떠 있는 카드로 이유 · 로그인 (2026-09-17 L2).
                 흐린 목록은 누를 수도 읽을 수도 없고, 카드만 읽힌다 */}
             <div

@@ -25,6 +25,10 @@ import {
 } from "@/lib/uploadRateLimit";
 import { CACHE_TAGS } from "@/lib/cacheTags";
 import db from "@/lib/db";
+import {
+    savePollWithPost,
+    type PollSaveError,
+} from "@/features/polls/server/pollService";
 import { logServerError } from "@/lib/observability/server";
 
 type AnnouncementLocale = (typeof ANNOUNCEMENT_LOCALES)[number];
@@ -104,6 +108,24 @@ function translationRows(input: AnnouncementValues) {
     }));
 }
 
+// 투표 저장이 막힌 이유를 관리자 화면 문구로 (2026-09-23 V2)
+class PollSaveAbort extends Error {
+    constructor(readonly reason: PollSaveError) {
+        super(reason);
+    }
+}
+
+const POLL_SAVE_MESSAGES: Record<PollSaveError, string> = {
+    invalid: "투표 내용을 다시 확인해주세요.",
+    locked: "표가 들어온 뒤에는 질문과 선택지를 바꿀 수 없습니다.",
+    closed: "마감한 투표는 고칠 수 없습니다.",
+    question: "투표 질문을 입력해주세요.",
+    options: "선택지를 2개 이상 20개 이하로 입력해주세요.",
+    duplicate: "같은 선택지를 두 번 넣을 수 없습니다.",
+    maxChoices: "고를 수 있는 최대 개수를 다시 확인해주세요.",
+    closesAt: "마감은 지금보다 뒤여야 합니다.",
+};
+
 export async function createAnnouncement(
     formData: FormData
 ): Promise<AnnouncementActionResult> {
@@ -116,19 +138,28 @@ export async function createAnnouncement(
     const publishedAt = input.isPublished ? new Date() : null;
 
     try {
-        const created = await db.announcement.create({
-            data: {
-                title: input.translations.ko.title,
-                content: input.translations.ko.content,
-                publicSlug: input.publicSlug,
-                placement: input.placement,
-                category: input.category,
-                isPublished: input.isPublished,
-                publishedAt,
-                ...resolveSchedule(input, publishedAt),
-                translations: { create: translationRows(input) },
-            },
-            select: { id: true },
+        const created = await db.$transaction(async (tx) => {
+            const row = await tx.announcement.create({
+                data: {
+                    title: input.translations.ko.title,
+                    content: input.translations.ko.content,
+                    publicSlug: input.publicSlug,
+                    placement: input.placement,
+                    category: input.category,
+                    isPublished: input.isPublished,
+                    publishedAt,
+                    ...resolveSchedule(input, publishedAt),
+                    translations: { create: translationRows(input) },
+                },
+                select: { id: true },
+            });
+            const failed = await savePollWithPost(
+                tx,
+                { announcementId: row.id },
+                input.poll ?? null
+            );
+            if (failed) throw new PollSaveAbort(failed);
+            return row;
         });
         refreshAnnouncements();
         return {
@@ -137,6 +168,11 @@ export async function createAnnouncement(
             id: created.id,
         };
     } catch (error) {
+        if (error instanceof PollSaveAbort)
+            return {
+                success: false,
+                message: POLL_SAVE_MESSAGES[error.reason],
+            };
         const conflict = slugConflict(error);
         if (conflict) return conflict;
         logServerError(error, {
@@ -182,51 +218,65 @@ export async function updateAnnouncement(
             : null;
         const now = new Date();
 
-        await db.announcement.update({
-            where: { id },
-            data: {
-                title: input.translations.ko.title,
-                content: input.translations.ko.content,
-                publicSlug: input.publicSlug,
-                placement: input.placement,
-                category: input.category,
-                isPublished: input.isPublished,
-                publishedAt,
-                ...resolveSchedule(input, publishedAt),
-                translations: {
-                    upsert: translationRows(input).map((row) => {
-                        const previous = current.translations.find(
-                            (item) => item.locale === row.locale
-                        );
-                        const changed =
-                            !previous ||
-                            previous.title !== row.title ||
-                            previous.content !== row.content;
-                        return {
-                            where: {
-                                announcementId_locale: {
-                                    announcementId: id,
-                                    locale: row.locale,
+        await db.$transaction(async (tx) => {
+            await tx.announcement.update({
+                where: { id },
+                data: {
+                    title: input.translations.ko.title,
+                    content: input.translations.ko.content,
+                    publicSlug: input.publicSlug,
+                    placement: input.placement,
+                    category: input.category,
+                    isPublished: input.isPublished,
+                    publishedAt,
+                    ...resolveSchedule(input, publishedAt),
+                    translations: {
+                        upsert: translationRows(input).map((row) => {
+                            const previous = current.translations.find(
+                                (item) => item.locale === row.locale
+                            );
+                            const changed =
+                                !previous ||
+                                previous.title !== row.title ||
+                                previous.content !== row.content;
+                            return {
+                                where: {
+                                    announcementId_locale: {
+                                        announcementId: id,
+                                        locale: row.locale,
+                                    },
                                 },
-                            },
-                            create: row,
-                            // 내용이 바뀐 번역만 수정 시각을 남김
-                            update: changed
-                                ? {
-                                      title: row.title,
-                                      content: row.content,
-                                      modifiedAt: now,
-                                  }
-                                : {},
-                        };
-                    }),
+                                create: row,
+                                // 내용이 바뀐 번역만 수정 시각을 남김
+                                update: changed
+                                    ? {
+                                          title: row.title,
+                                          content: row.content,
+                                          modifiedAt: now,
+                                      }
+                                    : {},
+                            };
+                        }),
+                    },
                 },
-            },
-            select: { id: true },
+                select: { id: true },
+            });
+            // 글과 투표를 한 번에 — 투표가 막히면 글 저장도 되돌린다(2026-09-23 V2)
+            const failed = await savePollWithPost(
+                tx,
+                { announcementId: id },
+                input.poll ?? null
+            );
+            if (failed) throw new PollSaveAbort(failed);
         });
         refreshAnnouncements();
         return { success: true, message: "공지사항을 저장했습니다.", id };
     } catch (error) {
+        if (error instanceof PollSaveAbort)
+            return {
+                success: false,
+                message: POLL_SAVE_MESSAGES[error.reason],
+            };
         const conflict = slugConflict(error);
         if (conflict) return conflict;
         logServerError(error, {

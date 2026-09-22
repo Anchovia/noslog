@@ -84,6 +84,7 @@ model User {
   chartPatternRevisions      ChartPatternRevision[]      @relation("ChartPatternRevisionCreatedBy")
   communityEvents            CommunityEvent[]            @relation("CommunityEventAuthor")
   communityEventsReviewed    CommunityEvent[]            @relation("CommunityEventReviewer")
+  pollVotes                  PollVote[]
 
   @@index([grade_basic, id])
   @@index([grade_recital, id])
@@ -161,6 +162,7 @@ model Announcement {
   activeFrom   DateTime?                 @map("active_from")
   expiresAt    DateTime?                 @map("expires_at")
   translations AnnouncementTranslation[]
+  poll         Poll?
 
   @@index([isPublished, publishedAt])
 }
@@ -216,6 +218,7 @@ model CommunityEvent {
   reviewer           User?                @relation("CommunityEventReviewer", fields: [reviewerId], references: [id], onDelete: SetNull)
   createdAt          DateTime             @default(now()) @map("created_at")
   updatedAt          DateTime             @updatedAt @map("updated_at")
+  poll               Poll?
 
   @@index([status, submittedAt])
   @@index([authorId, updatedAt])
@@ -229,6 +232,89 @@ enum CommunityEventStatus {
   CHANGES_REQUESTED
   PUBLISHED
   REJECTED
+}
+
+// 글에 딸린 투표 (2026-09-23 V2) — 본문에 흔적을 남기지 않고 글 하나에 하나씩 딸린다.
+// 질문 · 선택지 글은 번역 표에 두고(공지는 ko · ja · en 세 벌, 이벤트는 쓴 언어 한 벌), 표는 PollVote 가 센다.
+// 표가 하나라도 들어오면 질문 · 선택지를 잠그고(추가만 허용) 마감 시각만 바꿀 수 있다 — 규칙은 서버에서 지킨다
+model Poll {
+  id              Int                   @id @default(autoincrement())
+  announcementId  Int?                  @unique @map("announcement_id")
+  announcement    Announcement?         @relation(fields: [announcementId], references: [id], onDelete: Cascade)
+  eventId         Int?                  @unique @map("event_id")
+  event           CommunityEvent?       @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  /// 여러 개 고르기 — 끄면 누르는 즉시 한 표, 켜면 「투표하기」 버튼으로 모아서 낸다
+  multiple        Boolean               @default(false)
+  /// 여러 개 고르기일 때 최대 개수. 비우면 선택지 수만큼
+  maxChoices      Int?                  @map("max_choices")
+  closesAt        DateTime?             @map("closes_at")
+  results         PollResultsVisibility @default(ALWAYS)
+  /// 누가 무엇을 골랐는지 보여 줄지. 기본은 숨김(익명)
+  showVoters      Boolean               @default(false) @map("show_voters")
+  /// 게시한 뒤에도 선택지를 더할 수 있게 할지
+  allowAddOptions Boolean               @default(false) @map("allow_add_options")
+  createdAt       DateTime              @default(now()) @map("created_at")
+  updatedAt       DateTime              @updatedAt @map("updated_at")
+  translations    PollTranslation[]
+  options         PollOption[]
+  votes           PollVote[]
+
+  @@index([closesAt])
+}
+
+// 결과를 언제 보여 줄지 — 항상 · 투표한 뒤 · 마감한 뒤
+enum PollResultsVisibility {
+  ALWAYS
+  AFTER_VOTE
+  AFTER_CLOSE
+}
+
+model PollTranslation {
+  id       Int    @id @default(autoincrement())
+  pollId   Int    @map("poll_id")
+  poll     Poll   @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  locale   String
+  question String
+
+  @@unique([pollId, locale])
+}
+
+model PollOption {
+  id           Int                     @id @default(autoincrement())
+  pollId       Int                     @map("poll_id")
+  poll         Poll                    @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  /// 보이는 차례 — 글쓴이가 넣은 순서 그대로 둔다(득표순으로 바꾸지 않는다)
+  position     Int
+  createdAt    DateTime                @default(now()) @map("created_at")
+  translations PollOptionTranslation[]
+  votes        PollVote[]
+
+  @@unique([pollId, position])
+}
+
+model PollOptionTranslation {
+  id       Int        @id @default(autoincrement())
+  optionId Int        @map("option_id")
+  option   PollOption @relation(fields: [optionId], references: [id], onDelete: Cascade)
+  locale   String
+  text     String
+
+  @@unique([optionId, locale])
+}
+
+// 한 사람이 한 선택지에 한 표 — 여러 개 고르기면 줄이 여러 개 생긴다
+model PollVote {
+  pollId    Int        @map("poll_id")
+  poll      Poll       @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  optionId  Int        @map("option_id")
+  option    PollOption @relation(fields: [optionId], references: [id], onDelete: Cascade)
+  userId    Int        @map("user_id")
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime   @default(now()) @map("created_at")
+
+  @@id([optionId, userId])
+  @@index([pollId, userId])
+  @@index([userId])
 }
 
 // 유저가 선택할 수 있는 오락실 목록을 관리자 데이터로 관리함
