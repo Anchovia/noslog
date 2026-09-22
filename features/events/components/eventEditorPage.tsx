@@ -10,6 +10,7 @@ import { getServerI18n } from "@/lib/i18n/server";
 import { localizePath } from "@/lib/i18n/routing";
 import { SITE_URL } from "@/lib/metadata/site";
 import EventDeleteButton from "./eventDeleteButton";
+import { getPollInput } from "@/features/polls/server/pollService";
 import EventEditor from "./eventEditor";
 
 type OwnEvent = NonNullable<Awaited<ReturnType<typeof getOwnEvent>>>;
@@ -24,6 +25,8 @@ export default async function EventEditorPage({
     eligible: boolean;
 }) {
     const { locale, t } = await getServerI18n();
+    const saved = event ? await getPollInput({ eventId: event.id }) : null;
+    const poll = saved ? { input: saved.input, votes: saved.votes } : null;
     const status = event?.status as EventStatus | undefined;
     const today = new Date();
     const values = event
@@ -84,6 +87,7 @@ export default async function EventEditorPage({
                         values,
                         submittedBefore: Boolean(event?.submittedAt),
                         isPublic: Boolean(event?.publishedAt),
+                        poll,
                     }}
                     siteUrl={SITE_URL}
                 />

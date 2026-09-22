@@ -364,6 +364,21 @@ old design-stage checklist. Changes to material behavior require a user decision
   must preserve safe context. Missing/unauthorized resources must not leak existence
   or private details. These states do not authorize changes to preserved viewers.
 
+## Polls on posts (2026-09-23)
+
+- A poll belongs to one post (announcement or community event); it is stored beside the post,
+  not inside the body, and is rendered at the end of the published post.
+- Question and option texts are translated rows. Announcements are written in ko/ja/en; an event
+  keeps only the locale it was written in. Readers get their locale, then Korean, then whatever exists.
+- Options keep the author's order, 2 to 20 of them. Two options cannot share the same text in one locale.
+- Single-choice polls record the vote on click; multiple-choice polls submit with a button and respect
+  the optional maximum. A vote is one (option, user) pair, so one account cannot count twice.
+- Signed-out readers see results only; voting asks them to sign in. Results visibility follows the poll
+  setting: always, after voting, or after it closes.
+- Once any vote exists, the question, the options and the way of choosing are locked; only the deadline
+  can change, and options can be added if the poll allowed it. After the deadline nothing can change, and
+  votes are refused. Deleting the post deletes the poll and its votes.
+
 ## Official X news (2026-09-19)
 
 - Home reads the persisted latest post and successful ko/en translations through the data cache; it never calls X or Gemini. New posts are checked every 12 hours outside page rendering using `since_id`. Successful translations have no time-based expiry.

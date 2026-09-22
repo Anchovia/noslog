@@ -34,6 +34,9 @@ import {
     ANNOUNCEMENT_CATEGORIES,
     type AnnouncementCategory,
 } from "@/features/announcements/schemas/publicAnnouncementSchema";
+import PollFormSection from "@/features/polls/components/pollFormSection";
+import { ANNOUNCEMENT_POLL_LABELS } from "@/features/polls/components/pollLabels";
+import type { PollInput } from "@/features/polls/schemas/pollSchema";
 import ActionButton from "@/components/ui/actionButton";
 import { FormField, Input, fieldDescription } from "@/components/ui/formField";
 import MarkdownEditor from "@/components/ui/markdownEditor";
@@ -56,6 +59,8 @@ export interface AnnouncementEditorData {
     expiresAt: string;
     isPublished: boolean;
     translations: Record<Locale, { title: string; content: string }>;
+    /** 글에 딸린 투표(2026-09-23 V2) — 없으면 null, 표가 들어왔으면 votes 로 잠근다 */
+    poll?: { input: PollInput; votes: number } | null;
 }
 
 export const emptyAnnouncementEditorData: AnnouncementEditorData = {
@@ -132,6 +137,9 @@ export default function AnnouncementEditor({
     const isCreate = announcement.id === undefined;
     const wasPublished = announcement.isPublished;
     const [locale, setLocale] = useState<Locale>("ko");
+    const [poll, setPoll] = useState<PollInput | null>(
+        announcement.poll?.input ?? null
+    );
     const [dialog, setDialog] = useState<SaveMode | null>(null);
     const [pending, setPending] = useState<SaveMode | null>(null);
     // 저장 상태(2026-09-23 L2) — 저장 안 한 변경 · 저장 중 · 저장됨 · 저장 실패
@@ -202,7 +210,7 @@ export default function AnnouncementEditor({
                 setPending(mode);
                 try {
                     const formData = createAnnouncementFormData(
-                        values,
+                        { ...values, poll },
                         announcement.id
                     );
                     const result = isCreate
@@ -591,6 +599,15 @@ export default function AnnouncementEditor({
                     </div>
                 );
             })}
+
+            <PollFormSection
+                value={poll}
+                onChange={setPoll}
+                labels={ANNOUNCEMENT_POLL_LABELS}
+                locales={[...ANNOUNCEMENT_LOCALES]}
+                locale={locale}
+                votes={announcement.poll?.votes ?? 0}
+            />
 
             {!dialog && errors.root?.server?.message ? (
                 <p className="nl-body-secondary nl-field__error" role="alert">

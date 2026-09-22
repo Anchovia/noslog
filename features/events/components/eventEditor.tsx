@@ -27,6 +27,9 @@ import IconButton from "@/components/ui/iconButton";
 import MarkdownEditor from "@/components/ui/markdownEditor";
 import ResponsiveDialog from "@/components/ui/responsiveDialog";
 import AnnouncementBody from "@/features/announcements/components/announcementBody";
+import PollFormSection from "@/features/polls/components/pollFormSection";
+import { pollLabelsFrom } from "@/features/polls/components/pollLabels";
+import type { PollInput } from "@/features/polls/schemas/pollSchema";
 import {
     EVENT_CONTENT_MAX_LENGTH,
     EVENT_TITLE_MAX_LENGTH,
@@ -55,6 +58,8 @@ export default function EventEditor({
         submittedBefore: boolean;
         /** 저장된 글이면 아래 줄 왼쪽에 「삭제」(2026-09-18 D1) */
         isPublic?: boolean;
+        /** 글에 딸린 투표(2026-09-23 V2) */
+        poll?: { input: PollInput; votes: number } | null;
     };
     siteUrl: string;
 }) {
@@ -67,6 +72,9 @@ export default function EventEditor({
     // 저장 상태(2026-09-23 L2)
     const [saveState, setSaveState] = useState<"saved" | "failed" | null>(null);
     const [file, setFile] = useState<File | null>(null);
+    const [poll, setPoll] = useState<PollInput | null>(
+        event.poll?.input ?? null
+    );
     const schema = useMemo(() => createEventFormSchema(t), [t]);
     const {
         register,
@@ -135,7 +143,12 @@ export default function EventEditor({
                                 ...values,
                                 bannerUrl: uploaded || values.bannerUrl,
                             },
-                            { id: event.id, submit: mode === "submit", locale }
+                            {
+                                id: event.id,
+                                submit: mode === "submit",
+                                locale,
+                                poll,
+                            }
                         )
                     );
                     if (!result.success) {
@@ -419,6 +432,15 @@ export default function EventEditor({
                     )}
                 />
             </FormField>
+            <PollFormSection
+                value={poll}
+                onChange={setPoll}
+                labels={pollLabelsFrom(t)}
+                locales={[locale]}
+                locale={locale}
+                votes={event.poll?.votes ?? 0}
+            />
+
             {!dialog && errors.root?.server?.message ? (
                 <p className="nl-body-secondary nl-field__error" role="alert">
                     {errors.root.server.message}

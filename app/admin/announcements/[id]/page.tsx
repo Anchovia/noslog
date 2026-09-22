@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { getPollInput } from "@/features/polls/server/pollService";
 
 import BackLink from "@/components/ui/backLink";
 import PageContainer, { PageHeading } from "@/components/layout/pageContainer";
@@ -62,6 +63,7 @@ export default async function EditAnnouncementPage({
         })
     ) as AnnouncementEditorData["translations"];
 
+    const poll = await getPollInput({ announcementId: announcement.id });
     const data: AnnouncementEditorData = {
         id: announcement.id,
         publicSlug: announcement.publicSlug ?? "",
@@ -72,6 +74,7 @@ export default async function EditAnnouncementPage({
         expiresAt: toDateTimeLocalValue(announcement.expiresAt),
         isPublished: announcement.isPublished,
         translations,
+        poll: poll ? { input: poll.input, votes: poll.votes } : null,
     };
     const modifiedAt = announcement.translations
         .map((item) => item.modifiedAt)

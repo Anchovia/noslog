@@ -209,3 +209,167 @@
     font-weight: var(--nl-type-weight-semibold);
     white-space: nowrap;
 }
+
+/* 글쓰기 화면의 투표 구역(2026-09-23 V2) — 본문 아래. 만들기 전에는 버튼 하나, 만든 뒤에는 요약 카드 */
+.noslog-ui .nl-poll-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-12);
+    min-width: 0;
+}
+.noslog-ui .nl-poll-section__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-poll-section__card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-4);
+    min-width: 0;
+    padding: var(--nl-spacing-12);
+    border-radius: var(--nl-radius-container);
+    background: var(--nl-surface-surface);
+}
+.noslog-ui .nl-poll-section__card-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+    min-width: 0;
+}
+.noslog-ui .nl-poll-section__actions {
+    display: flex;
+    gap: var(--nl-spacing-4);
+    margin-inline-start: auto;
+}
+/* 만들기 창(2026-09-23 W1) — 칸 사이 16, 선택지 줄은 입력칸 + 지우기 아이콘 */
+.noslog-ui .nl-poll-builder {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-16);
+    min-width: 0;
+}
+.noslog-ui .nl-poll-builder__options {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-poll-builder__option {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+    min-width: 0;
+}
+.noslog-ui .nl-poll-builder__option > .nl-input {
+    flex: 1;
+    min-width: 0;
+}
+.noslog-ui .nl-poll-builder__option-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--nl-spacing-8);
+    margin-top: var(--nl-spacing-8);
+}
+
+/* 공개 화면 투표 위젯(2026-09-23 R1) — 글 끝. 라벨 오른쪽 퍼센트 · 막대는 그 아래(트랙 8) */
+.noslog-ui .nl-poll {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-12);
+    min-width: 0;
+    padding: var(--nl-spacing-12);
+    border-radius: var(--nl-radius-container);
+    background: var(--nl-surface-surface);
+}
+.noslog-ui .nl-poll > p {
+    margin: 0;
+}
+.noslog-ui .nl-poll__options,
+.noslog-ui .nl-poll__results {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+/* 고르는 줄 — 컨트롤 높이 · 고른 줄은 경계를 세게 */
+.noslog-ui .nl-poll__option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--nl-spacing-8);
+    width: 100%;
+    min-height: var(--nl-control-height);
+    padding: var(--nl-spacing-8) var(--nl-spacing-12);
+    border: var(--nl-stroke-default) solid var(--nl-border-default);
+    border-radius: var(--nl-radius-field);
+    background: none;
+    color: var(--nl-content-default);
+    text-align: start;
+}
+@media (hover: hover) {
+    .noslog-ui .nl-poll__option:hover:not(:disabled) {
+        border-color: var(--nl-border-strong);
+    }
+}
+.noslog-ui .nl-poll__option[aria-pressed="true"] {
+    border-color: var(--nl-content-default);
+    border-width: var(--nl-stroke-strong);
+    padding-block: calc(var(--nl-spacing-8) - var(--nl-stroke-default));
+    padding-inline: calc(var(--nl-spacing-12) - var(--nl-stroke-default));
+    font-weight: var(--nl-type-weight-semibold);
+}
+.noslog-ui .nl-poll__option:disabled {
+    color: var(--nl-content-disabled);
+}
+.noslog-ui .nl-poll__result {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-4);
+    min-width: 0;
+}
+.noslog-ui .nl-poll__label {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--nl-spacing-8);
+    margin: 0;
+    min-width: 0;
+}
+/* 라벨 = 글 + 내 표 체크가 한 줄, 오른쪽 끝에 퍼센트 */
+.noslog-ui .nl-poll__label > span:first-child {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--nl-spacing-4);
+    min-width: 0;
+}
+.noslog-ui .nl-poll__label svg {
+    flex-shrink: 0;
+}
+/* 진행 막대 — 검정 · 빙고와 같은 규격(트랙 8 · 모서리 full) */
+.noslog-ui .nl-poll__bar {
+    display: block;
+    height: var(--nl-spacing-8);
+    border-radius: var(--nl-radius-full);
+    background: var(--nl-border-divider);
+    overflow: hidden;
+}
+.noslog-ui .nl-poll__bar i {
+    display: block;
+    height: 100%;
+    border-radius: var(--nl-radius-full);
+    background: var(--nl-border-strong);
+}
+.noslog-ui .nl-poll__bar i[data-mine] {
+    background: var(--nl-content-default);
+}
+.noslog-ui .nl-poll__foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--nl-spacing-8);
+}

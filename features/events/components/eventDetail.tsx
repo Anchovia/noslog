@@ -1,4 +1,7 @@
 import Link from "next/link";
+import PollWidget from "@/features/polls/components/pollWidget";
+import { getPublicPoll } from "@/features/polls/server/pollService";
+import { getUser } from "@/lib/user";
 
 import PageContainer from "@/components/layout/pageContainer";
 import BackLink from "@/components/ui/backLink";
@@ -21,6 +24,12 @@ export default async function EventDetail({
     own: { editing: boolean } | null;
 }) {
     const { locale, t } = await getServerI18n();
+    const user = await getUser();
+    const poll = await getPublicPoll(
+        { eventId: event.id },
+        locale,
+        user?.id ?? null
+    );
     return (
         <PageContainer width="reading" className="nl-events">
             <article className="nl-events__detail">
@@ -64,6 +73,10 @@ export default async function EventDetail({
                     siteUrl={SITE_URL}
                     externalLabel={t("shell.externalLink")}
                 />
+                {/* 글에 딸린 투표(2026-09-23 V2) */}
+                {poll ? (
+                    <PollWidget poll={poll} isAuthenticated={Boolean(user)} />
+                ) : null}
                 {own ? (
                     <Link
                         href={localizePath(`/events/${event.id}/edit`, locale)}

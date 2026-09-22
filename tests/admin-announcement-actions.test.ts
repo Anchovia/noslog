@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
     requireAdmin: vi.fn(),
+    pollFindFirst: vi.fn(),
     announcementCreate: vi.fn(),
     announcementFindUnique: vi.fn(),
     announcementUpdate: vi.fn(),
@@ -15,16 +16,20 @@ vi.mock("@/lib/admin", () => ({
     requireAdmin: mocks.requireAdmin,
 }));
 
-vi.mock("@/lib/db", () => ({
-    default: {
+// 공지와 투표를 한 트랜잭션에서 저장하므로($transaction) 같은 mock 을 그대로 넘긴다 (2026-09-23)
+vi.mock("@/lib/db", () => {
+    const client = {
         announcement: {
             create: mocks.announcementCreate,
             findUnique: mocks.announcementFindUnique,
             update: mocks.announcementUpdate,
             delete: mocks.announcementDelete,
         },
-    },
-}));
+        poll: { findFirst: mocks.pollFindFirst },
+        $transaction: (run: (tx: unknown) => unknown) => run(client),
+    };
+    return { default: client };
+});
 
 vi.mock("next/cache", () => ({
     updateTag: mocks.updateTag,
@@ -99,6 +104,7 @@ function expectAnnouncementCacheRefresh() {
 
 describe("관리자 공지사항 액션", () => {
     beforeEach(() => {
+        mocks.pollFindFirst.mockResolvedValue(null);
         vi.clearAllMocks();
         mocks.requireAdmin.mockResolvedValue({ id: 1, role: "admin" });
         mocks.announcementCreate.mockResolvedValue({ id: 10 });

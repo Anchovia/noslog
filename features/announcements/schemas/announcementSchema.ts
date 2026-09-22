@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { SUPPORTED_LOCALES, type Locale } from "@/lib/i18n/routing";
+import { pollFormValueSchema } from "@/features/polls/schemas/pollSchema";
 import {
     ANNOUNCEMENT_CATEGORIES,
     type AnnouncementCategory,
@@ -130,6 +131,8 @@ export const announcementFormSchema = z
             ja: translationSchema,
             en: translationSchema,
         }),
+        // 글에 딸린 투표 — 화면은 JSON 한 덩이로 싣고, 칸이 없으면 그대로 둔다 (2026-09-23 V2)
+        poll: pollFormValueSchema.optional(),
     })
     .superRefine((value, ctx) => {
         if (value.placement === "SERVICE_CRITICAL" && !value.activeFrom) {
@@ -192,6 +195,8 @@ export function announcementFormInputFromFormData(formData: FormData) {
                 },
             ])
         ),
+        // 글에 딸린 투표(2026-09-23 V2) — 칸이 없으면 undefined(그대로 둠), 지우면 "null"
+        poll: formData.has("poll") ? readString(formData, "poll") : undefined,
     };
 }
 
@@ -224,6 +229,8 @@ export function createAnnouncementFormData(
         formData.set(`content.${locale}`, values.translations[locale].content);
     }
     if (id !== undefined) formData.set("id", String(id));
+    if (values.poll !== undefined)
+        formData.set("poll", JSON.stringify(values.poll));
 
     return formData;
 }
