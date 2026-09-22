@@ -854,7 +854,7 @@ export const jaMessages = {
     "bingo.catalog.all": "すべて",
     "bingo.catalog.progress": "進行中",
     "bingo.catalog.unlocked": "解禁条件達成",
-    "bingo.catalog.full": "全マス達成",
+    "bingo.catalog.full": "完成",
     "bingo.catalog.chance": "ビンゴチャンス",
     "bingo.catalog.sort.release": "収録順",
     "bingo.catalog.sort.recent": "最近の記録順",

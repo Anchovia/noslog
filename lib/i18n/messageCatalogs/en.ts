@@ -863,7 +863,7 @@ export const enMessages = {
     "bingo.catalog.all": "All",
     "bingo.catalog.progress": "In progress",
     "bingo.catalog.unlocked": "Unlock complete",
-    "bingo.catalog.full": "Full board complete",
+    "bingo.catalog.full": "Complete",
     "bingo.catalog.chance": "Bingo chance",
     "bingo.catalog.sort.release": "Release order",
     "bingo.catalog.sort.recent": "Recently recorded",

@@ -143,6 +143,7 @@ export default function BingoCatalogPage({
             <div className="nl-filter-control-block nl-bingo-catalog__controls">
                 {isAuthenticated ? (
                     <FilterChips
+                        row
                         label={t("bingo.catalog.status")}
                         multiple={false}
                         value={[query.status]}

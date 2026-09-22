@@ -855,7 +855,7 @@ export const koMessages = {
     "bingo.catalog.all": "전체",
     "bingo.catalog.progress": "진행 중",
     "bingo.catalog.unlocked": "해금 완료",
-    "bingo.catalog.full": "풀보드 완료",
+    "bingo.catalog.full": "완성",
     "bingo.catalog.chance": "빙고 찬스",
     "bingo.catalog.sort.release": "수록순",
     "bingo.catalog.sort.recent": "최근 기록순",
