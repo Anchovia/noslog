@@ -72,9 +72,8 @@ for (const locale of ["ko", "ja", "en"] as const) {
         await expect(page.locator("#exam-title")).toContainText("7");
         await page.goBack();
         await expect(page.locator("#exam-title")).toContainText("8");
-        await page
-            .getByText(t["exams.practice.title"], { exact: true })
-            .click();
+        // 합격까지(2026-09-22 P2-a) — 펼침 없이 늘 보인다
+        await expect(page.locator(".nl-exam-practice")).toBeVisible();
         await expect(
             page.getByText(t["exams.practice.limitation"], { exact: true })
         ).toBeVisible();

@@ -2,6 +2,7 @@
 
 import * as Select from "@radix-ui/react-select";
 import { ChevronDown } from "lucide-react";
+import type { ReactNode } from "react";
 import type {
     ExamDashboardItem,
     ExamMode,
@@ -24,7 +25,8 @@ export default function ExamNavigation({
     onModeChange: (mode: ExamMode) => void;
     onSelect: (exam: ExamDashboardItem) => void;
     getLabel: (exam: ExamDashboardItem) => string;
-    getState: (exam: ExamDashboardItem) => string;
+    /** 급 상태(2026-09-22 G1-a) — 셀렉트 트리거 · 목록 · 레일이 같은 모양 */
+    getState: (exam: ExamDashboardItem) => ReactNode;
 }) {
     const t = useTranslations();
     return (
@@ -39,6 +41,11 @@ export default function ExamNavigation({
                     { value: "event", label: "Event" },
                 ]}
             />
+            {mode === "event" ? (
+                <p className="nl-body-secondary nl-muted">
+                    {t("exams.event.reference")}
+                </p>
+            ) : null}
             {selected ? (
                 <div className="nl-exam-select">
                     <label className="nl-control" htmlFor="exam-select">
@@ -57,7 +64,12 @@ export default function ExamNavigation({
                             className="nl-input nl-exam-select__trigger"
                             id="exam-select"
                         >
-                            <Select.Value />
+                            <span className="nl-exam-select__value">
+                                <Select.Value>
+                                    {getLabel(selected)}
+                                </Select.Value>
+                                {getState(selected)}
+                            </span>
                             <Select.Icon>
                                 <ChevronDown className="nl-icon" aria-hidden />
                             </Select.Icon>
@@ -80,9 +92,7 @@ export default function ExamNavigation({
                                             <Select.ItemText>
                                                 {getLabel(exam)}
                                             </Select.ItemText>
-                                            <span className="nl-metadata nl-muted">
-                                                {getState(exam)}
-                                            </span>
+                                            {getState(exam)}
                                         </Select.Item>
                                     ))}
                                 </Select.Viewport>
@@ -103,9 +113,7 @@ export default function ExamNavigation({
                         onClick={() => onSelect(exam)}
                     >
                         <span>{getLabel(exam)}</span>
-                        <span className="nl-metadata nl-muted">
-                            {getState(exam)}
-                        </span>
+                        {getState(exam)}
                     </button>
                 ))}
             </nav>
