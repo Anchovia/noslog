@@ -15,17 +15,17 @@ import MusicJacket from "@/components/music/musicJacket";
 import { Checkbox } from "@/components/ui/checkbox";
 import Button from "@/components/ui/Button";
 import Disclosure from "@/components/ui/disclosure";
+import useMediaQuery from "@/lib/hooks/useMediaQuery";
 import FilterChips from "@/components/ui/filterChips";
 import BingoTermHelp from "@/components/bingo/bingoTermHelp";
-import {
-    getBingoCellLabel,
-    getBingoMissionLink,
-} from "@/components/bingo/plate/bingoPlateUtils";
-import BingoCoordinateBoard from "@/features/bingos/components/bingoCoordinateBoard";
+import { getBingoMissionLink } from "@/components/bingo/plate/bingoPlateUtils";
+import BingoCoordinateBoard, {
+    useBingoPosition,
+} from "@/features/bingos/components/bingoCoordinateBoard";
+import BingoPosition from "@/features/bingos/components/bingoPosition";
 import BingoMissionDetail from "@/features/bingos/components/bingoMissionDetail";
 import { useBingoProgress } from "@/features/bingos/hooks/useBingoProgress";
 import type { BingoDetail } from "@/features/bingos/schemas/publicBingoSchema";
-import { getBingoRowProgress } from "@/lib/bingo";
 import type {
     setBingoCellCompletion,
     resetBingoProgress,
@@ -51,7 +51,9 @@ export default function BingoDetailPage({
             .filter((cell) => state.completed.has(cell.id))
             .map((cell) => cell.position)
     );
-    const rows = getBingoRowProgress(completedPositions);
+    const positionText = useBingoPosition();
+    // 넓은 화면(1056+, 2026-09-22 E · W1) = 판 | 오른쪽(머리 · 선택 칸 상세 · 미션) 1:1, 칸 상세는 팝오버 대신 오른쪽에 그대로
+    const wide = useMediaQuery("(min-width: 1056px)");
     const filters = [
         {
             value: "all" as const,
@@ -142,58 +144,28 @@ export default function BingoDetailPage({
                     ) : null}
                 </header>
 
-                {/* 진행은 보드를 읽는 데 필요한 값이라 한 줄로 상시 노출, 보상 구조는 「빙고 정보」 펼침 안에 */}
-                <div className="nl-bingo-summary">
-                    <Disclosure
-                        compact
-                        title={t("bingo.info")}
-                        meta={t("bingo.totalReward", {
+                {/* 보상 구조는 펼침 없이 한 줄(2026-09-22) — 필요 줄 · 줄당 · 풀보드 · 총 보상 */}
+                <p className="nl-bingo-summary nl-metadata nl-muted">
+                    {[
+                        t("bingo.requiredLinesLabel", {
+                            count: bingo.requiredLines,
+                        }),
+                        t("bingo.perLineReward", {
+                            value: bingo.lineRewardNos.toLocaleString(locale),
+                        }),
+                        `${t("bingo.summaryFull")} +${bingo.completionRewardNos.toLocaleString(locale)} nos`,
+                        t("bingo.totalReward", {
                             value: bingo.rewardNos.toLocaleString(locale),
-                        })}
-                    >
-                        <dl className="nl-bingo-info">
-                            <div>
-                                <dt className="nl-body-secondary nl-muted">
-                                    {t("bingo.summaryReward")}
-                                </dt>
-                                <dd className="nl-metric-value">
-                                    {bingo.rewardNos.toLocaleString(locale)} nos
-                                </dd>
-                            </div>
-                            <div>
-                                <dt className="nl-body-secondary nl-muted">
-                                    {t("bingo.requiredLinesLabel", {
-                                        count: bingo.requiredLines,
-                                    })}
-                                </dt>
-                                <dd className="nl-metric-value">
-                                    {t("bingo.perLineReward", {
-                                        value: bingo.lineRewardNos.toLocaleString(
-                                            locale
-                                        ),
-                                    })}
-                                </dd>
-                            </div>
-                            <div>
-                                <dt className="nl-body-secondary nl-muted">
-                                    {t("bingo.summaryFull")}
-                                </dt>
-                                <dd className="nl-metric-value">
-                                    +
-                                    {bingo.completionRewardNos.toLocaleString(
-                                        locale
-                                    )}{" "}
-                                    nos
-                                </dd>
-                            </div>
-                        </dl>
-                    </Disclosure>
-                </div>
+                        }),
+                    ].join(" · ")}
+                </p>
 
                 <div className="nl-bingo-board-area">
                     <BingoCoordinateBoard
                         cells={bingo.cells}
                         completed={state.completed}
+                        completedPositions={completedPositions}
+                        lineLabels={wide}
                         chance={state.progress.richPositions}
                         lines={state.linePositions}
                         selected={state.selected}
@@ -205,6 +177,7 @@ export default function BingoDetailPage({
                                 return;
                             }
                             state.select(cell);
+                            if (wide) return;
                             const el = document.querySelector<HTMLElement>(
                                 `.nl-bingo-board [data-cell-id="${cell.id}"]`
                             );
@@ -213,7 +186,7 @@ export default function BingoDetailPage({
                         }}
                     />
                     <Popover.Root
-                        open={detailOpen && Boolean(selectedCell)}
+                        open={!wide && detailOpen && Boolean(selectedCell)}
                         onOpenChange={setDetailOpen}
                     >
                         <Popover.Anchor virtualRef={anchor} />
@@ -304,212 +277,198 @@ export default function BingoDetailPage({
                     ) : null}
                 </div>
 
+                {wide ? (
+                    // 넓은 화면 선택 칸 상세 — 팝오버와 같은 내용을 판 오른쪽에 그대로
+                    <div className="nl-bingo-detail-panel">
+                        {selectedCell ? (
+                            <BingoMissionDetail
+                                cell={selectedCell}
+                                checked={state.completed.has(selectedCell.id)}
+                                busy={state.pending.has(selectedCell.id)}
+                                completedPositions={completedPositions}
+                                lineRewardNos={bingo.lineRewardNos}
+                                isAuthenticated={bingo.isAuthenticated}
+                                onToggle={() =>
+                                    void state.save(
+                                        selectedCell.id,
+                                        !state.completed.has(selectedCell.id)
+                                    )
+                                }
+                                onPrev={() => state.selectRelative(-1)}
+                                onNext={() => state.selectRelative(1)}
+                                onClose={() => state.clearSelection()}
+                            />
+                        ) : (
+                            <p className="nl-body-secondary nl-muted nl-bingo-detail-panel__hint">
+                                {t("bingo.selectHint")}
+                            </p>
+                        )}
+                    </div>
+                ) : null}
+
                 <section
                     className="nl-bingo-missions"
                     aria-label={t("bingo.missions")}
                 >
-                    {bingo.isAuthenticated ? (
-                        <FilterChips
-                            label={t("bingo.filter")}
-                            multiple={false}
-                            value={[state.filter]}
-                            onValueChange={([filter]) =>
-                                state.setFilter(filter)
-                            }
-                            options={filters}
-                        />
-                    ) : null}
-                    <p className="sr-only" role="status">
-                        {state.message}
-                    </p>
-                    {state.failed ? (
-                        <div className="nl-bingo-save-error" role="alert">
-                            <p className="nl-body-secondary">
-                                {state.failed.message}
-                            </p>
-                            <Button
-                                variant="secondary"
-                                onClick={() =>
-                                    state.failed &&
-                                    void state.save(
-                                        state.failed.cellId,
-                                        state.failed.next
-                                    )
+                    {/* 기본 펼침(2026-09-22) — 판 아래에서 25칸 전체 문장을 한눈에 */}
+                    <Disclosure
+                        open
+                        className="nl-bingo-missions__all"
+                        title={t("bingo.missions")}
+                        meta={bingo.cells.length}
+                    >
+                        {bingo.isAuthenticated ? (
+                            <FilterChips
+                                label={t("bingo.filter")}
+                                multiple={false}
+                                value={[state.filter]}
+                                onValueChange={([filter]) =>
+                                    state.setFilter(filter)
                                 }
-                            >
-                                {t("common.retry")}
-                            </Button>
-                        </div>
-                    ) : null}
-                    {/* 줄(A~E) 단위 묶음 — 줄 진행과 찬스는 헤더에, 행에는 미션 본문과 체크만 */}
-                    {rows.map((row) => {
-                        const cells = state.filtered.filter((cell) =>
-                            row.positions.includes(cell.position)
-                        );
-                        if (!cells.length) return null;
-                        return (
-                            <div
-                                className="nl-bingo-row"
-                                key={row.label}
-                                role="group"
-                                aria-label={t("bingo.rowLabel", {
-                                    row: row.label,
-                                })}
-                            >
-                                <div className="nl-bingo-row__head">
-                                    <h2 className="nl-component-title">
-                                        {t("bingo.rowLabel", {
-                                            row: row.label,
-                                        })}
-                                    </h2>
-                                    {bingo.isAuthenticated ? (
-                                        <span className="nl-metric-value nl-muted">
-                                            {row.done}/5
-                                        </span>
-                                    ) : null}
-                                    {bingo.isAuthenticated && row.chance ? (
-                                        <span className="nl-tag nl-tag--strong nl-metadata">
-                                            {t("bingo.filter.chance")}
-                                        </span>
-                                    ) : null}
-                                </div>
-                                <ul className="nl-bingo-missions__list">
-                                    {cells.map((cell) => {
-                                        const checked = state.completed.has(
-                                            cell.id
-                                        );
-                                        const busy = state.pending.has(cell.id);
-                                        const chance =
-                                            state.progress.richPositions.has(
-                                                cell.position
-                                            );
-                                        const missionLink =
-                                            getBingoMissionLink(cell);
-                                        const label = getBingoCellLabel(
-                                            cell.position
-                                        );
-                                        const typeKey =
-                                            cell.missionType === "music"
-                                                ? "bingo.mission.music"
-                                                : cell.missionType ===
-                                                    "category"
-                                                  ? "bingo.mission.category"
-                                                  : cell.missionType === "exam"
-                                                    ? "bingo.mission.exam"
-                                                    : null;
-                                        return (
-                                            <li
-                                                key={cell.id}
-                                                id={`bingo-mission-${cell.id}`}
-                                                className="nl-bingo-mission"
-                                                tabIndex={-1}
-                                                data-selected={
-                                                    state.selected ===
-                                                        cell.id && !busy
-                                                }
-                                                aria-busy={busy}
-                                                onFocus={() =>
-                                                    state.select(cell)
-                                                }
-                                                onClick={() =>
-                                                    state.select(cell)
-                                                }
-                                            >
-                                                <span className="nl-metric-value nl-muted">
-                                                    {label}
-                                                </span>
-                                                <div className="nl-bingo-mission__text">
-                                                    <p
-                                                        className="nl-body-secondary"
-                                                        lang={cell.language}
-                                                    >
-                                                        <BingoTermHelp
-                                                            text={
-                                                                cell.challenge
-                                                            }
-                                                        />
-                                                    </p>
-                                                    {busy ||
-                                                    (bingo.isAuthenticated &&
-                                                        !checked &&
-                                                        chance) ||
-                                                    typeKey ? (
-                                                        <p className="nl-metadata nl-muted">
-                                                            {busy
-                                                                ? t(
-                                                                      "bingo.saving"
-                                                                  )
-                                                                : bingo.isAuthenticated &&
-                                                                    !checked &&
-                                                                    chance
-                                                                  ? t(
-                                                                        "bingo.mission.chance"
-                                                                    )
-                                                                  : typeKey
-                                                                    ? t(typeKey)
-                                                                    : null}
-                                                            {!busy &&
-                                                            missionLink ? (
-                                                                <>
-                                                                    {" · "}
-                                                                    <Link
-                                                                        className="nl-bingo-mission__link"
-                                                                        href={href(
-                                                                            missionLink
-                                                                        )}
-                                                                    >
-                                                                        {t(
-                                                                            cell.missionType ===
-                                                                                "music"
-                                                                                ? "bingo.viewMusic"
-                                                                                : "bingo.move"
-                                                                        )}
-                                                                    </Link>
-                                                                </>
-                                                            ) : null}
-                                                        </p>
-                                                    ) : null}
-                                                </div>
-                                                {bingo.isAuthenticated ? (
-                                                    <Checkbox
-                                                        className="nl-bingo-mission__checkbox"
-                                                        checked={checked}
-                                                        disabled={
-                                                            busy ||
-                                                            state.resetting
-                                                        }
-                                                        onChange={() =>
-                                                            void state.save(
-                                                                cell.id,
-                                                                !checked
-                                                            )
-                                                        }
-                                                        label={
-                                                            <span className="sr-only">
-                                                                {t(
-                                                                    checked
-                                                                        ? "bingo.uncompleteAria"
-                                                                        : "bingo.completeAria",
-                                                                    {
-                                                                        challenge: `${label} ${cell.challenge}`,
-                                                                    }
-                                                                )}
-                                                            </span>
-                                                        }
-                                                    />
-                                                ) : null}
-                                            </li>
-                                        );
-                                    })}
-                                </ul>
-                            </div>
-                        );
-                    })}
-                    {!state.filtered.length ? (
-                        <p className="nl-body-secondary" role="status">
-                            {t("bingo.noMissions")}
+                                options={filters}
+                            />
+                        ) : null}
+                        <p className="sr-only" role="status">
+                            {state.message}
                         </p>
-                    ) : null}
+                        {state.failed ? (
+                            <div className="nl-bingo-save-error" role="alert">
+                                <p className="nl-body-secondary">
+                                    {state.failed.message}
+                                </p>
+                                <Button
+                                    variant="secondary"
+                                    onClick={() =>
+                                        state.failed &&
+                                        void state.save(
+                                            state.failed.cellId,
+                                            state.failed.next
+                                        )
+                                    }
+                                >
+                                    {t("common.retry")}
+                                </Button>
+                            </div>
+                        ) : null}
+                        {/* 미션 전체(2026-09-22) — 판 순서 그대로 한 목록, 칸 위치는 좌표 대신 작은 판(그 칸만 켬) */}
+                        <ul className="nl-bingo-missions__list">
+                            {state.filtered.map((cell) => {
+                                const checked = state.completed.has(cell.id);
+                                const busy = state.pending.has(cell.id);
+                                const chance = state.progress.richPositions.has(
+                                    cell.position
+                                );
+                                const missionLink = getBingoMissionLink(cell);
+                                const label = positionText(cell.position);
+                                const typeKey =
+                                    cell.missionType === "music"
+                                        ? "bingo.mission.music"
+                                        : cell.missionType === "category"
+                                          ? "bingo.mission.category"
+                                          : cell.missionType === "exam"
+                                            ? "bingo.mission.exam"
+                                            : null;
+                                return (
+                                    <li
+                                        key={cell.id}
+                                        id={`bingo-mission-${cell.id}`}
+                                        className="nl-bingo-mission"
+                                        tabIndex={-1}
+                                        data-selected={
+                                            state.selected === cell.id && !busy
+                                        }
+                                        aria-busy={busy}
+                                        onFocus={() => state.select(cell)}
+                                        onClick={() => state.select(cell)}
+                                    >
+                                        <BingoPosition
+                                            position={cell.position}
+                                            label={label}
+                                        />
+                                        <div className="nl-bingo-mission__text">
+                                            <p
+                                                className="nl-body-secondary"
+                                                lang={cell.language}
+                                            >
+                                                <BingoTermHelp
+                                                    text={cell.challenge}
+                                                />
+                                            </p>
+                                            {busy ||
+                                            (bingo.isAuthenticated &&
+                                                !checked &&
+                                                chance) ||
+                                            typeKey ? (
+                                                <p className="nl-metadata nl-muted">
+                                                    {busy
+                                                        ? t("bingo.saving")
+                                                        : bingo.isAuthenticated &&
+                                                            !checked &&
+                                                            chance
+                                                          ? t(
+                                                                "bingo.mission.chance"
+                                                            )
+                                                          : typeKey
+                                                            ? t(typeKey)
+                                                            : null}
+                                                    {!busy && missionLink ? (
+                                                        <>
+                                                            {" · "}
+                                                            <Link
+                                                                className="nl-bingo-mission__link"
+                                                                href={href(
+                                                                    missionLink
+                                                                )}
+                                                            >
+                                                                {t(
+                                                                    cell.missionType ===
+                                                                        "music"
+                                                                        ? "bingo.viewMusic"
+                                                                        : "bingo.move"
+                                                                )}
+                                                            </Link>
+                                                        </>
+                                                    ) : null}
+                                                </p>
+                                            ) : null}
+                                        </div>
+                                        {bingo.isAuthenticated ? (
+                                            <Checkbox
+                                                className="nl-bingo-mission__checkbox"
+                                                checked={checked}
+                                                disabled={
+                                                    busy || state.resetting
+                                                }
+                                                onChange={() =>
+                                                    void state.save(
+                                                        cell.id,
+                                                        !checked
+                                                    )
+                                                }
+                                                label={
+                                                    <span className="sr-only">
+                                                        {t(
+                                                            checked
+                                                                ? "bingo.uncompleteAria"
+                                                                : "bingo.completeAria",
+                                                            {
+                                                                challenge: `${label} ${cell.challenge}`,
+                                                            }
+                                                        )}
+                                                    </span>
+                                                }
+                                            />
+                                        ) : null}
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                        {!state.filtered.length ? (
+                            <p className="nl-body-secondary" role="status">
+                                {t("bingo.noMissions")}
+                            </p>
+                        ) : null}
+                    </Disclosure>
                     {!bingo.isAuthenticated ? (
                         <Link
                             className="nl-button nl-button--primary"

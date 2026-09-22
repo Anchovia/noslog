@@ -66,6 +66,10 @@ export function useBingoProgress(
     function select(cell: BingoMission) {
         setSelected(cell.id);
     }
+    // 넓은 화면 오른쪽 상세의 닫기 — 선택만 푼다(체크는 바꾸지 않음)
+    function clearSelection() {
+        setSelected(null);
+    }
     function selectRelative(delta: 1 | -1) {
         const index = bingo.cells.findIndex((cell) => cell.id === selected);
         const next =
@@ -161,6 +165,7 @@ export function useBingoProgress(
         progress,
         linePositions,
         select,
+        clearSelection,
         selectRelative,
         save,
         setFilter,

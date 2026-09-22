@@ -27,10 +27,11 @@ export type BingoLineKind =
 
 function describeBingoLine(line: readonly number[]): BingoLineKind {
     const first = line[0];
+    // 행은 번호(2026-09-22) — 판에 A~E 좌표를 두지 않아 「5행 완성」처럼 위에서부터 센다
     if (line[1] === first + 1)
         return {
             kind: "row",
-            label: String.fromCharCode(65 + Math.floor((first - 1) / 5)),
+            label: String(Math.floor((first - 1) / 5) + 1),
         };
     if (line[1] === first + 5) return { kind: "column", index: first };
     return { kind: "diagonal" };
@@ -50,6 +51,15 @@ export function getBingoLinesCompletedBy(
                 )
         )
         .map(describeBingoLine);
+}
+
+/** 12줄(가로 5 · 세로 5 · 대각 둘) 각각 채운 칸 수 — 넓은 화면 판 가장자리 줄 진행용 */
+export function getBingoLineProgress(completedPositions: ReadonlySet<number>) {
+    return BINGO_LINES.map((line: readonly number[]) => ({
+        positions: [...line],
+        done: line.filter((position) => completedPositions.has(position))
+            .length,
+    }));
 }
 
 /** 행(A~E) 단위 진행 — 목록 묶음 헤더용 */

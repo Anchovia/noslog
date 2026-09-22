@@ -805,6 +805,8 @@ export const enMessages = {
     "bingo.rowLabel": "Row {row}",
     "bingo.columnLabel": "Column {column}",
     "bingo.diagonalLabel": "Diagonal",
+    "bingo.position": "Row {row}, column {column}",
+    "bingo.selectHint": "Select a cell to see its mission here.",
     "bingo.cellChanceLine": "Fill this cell to complete {line} · +{reward} nos",
     "bingo.selectedMission": "Selected mission",
     "bingo.prevCell": "Previous cell",

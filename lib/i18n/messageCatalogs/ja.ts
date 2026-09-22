@@ -796,6 +796,8 @@ export const jaMessages = {
     "bingo.rowLabel": "{row}行",
     "bingo.columnLabel": "{column}列",
     "bingo.diagonalLabel": "斜め",
+    "bingo.position": "{row}行{column}列",
+    "bingo.selectHint": "マスを押すとここにミッションが表示されます。",
     "bingo.cellChanceLine": "このマスを埋めると{line}が完成 · +{reward} nos",
     "bingo.selectedMission": "選択中のミッション",
     "bingo.prevCell": "前のマス",

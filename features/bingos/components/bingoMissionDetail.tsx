@@ -11,10 +11,9 @@ import {
 import ActionButton from "@/components/ui/actionButton";
 import IconButton from "@/components/ui/iconButton";
 import BingoTermHelp from "@/components/bingo/bingoTermHelp";
-import {
-    getBingoCellLabel,
-    getBingoMissionLink,
-} from "@/components/bingo/plate/bingoPlateUtils";
+import { getBingoMissionLink } from "@/components/bingo/plate/bingoPlateUtils";
+import BingoPosition from "@/features/bingos/components/bingoPosition";
+import { useBingoPosition } from "@/features/bingos/components/bingoCoordinateBoard";
 import type { BingoMission } from "@/features/bingos/schemas/publicBingoSchema";
 import { getBingoLinesCompletedBy } from "@/lib/bingo";
 import type { BingoLineKind } from "@/lib/bingo";
@@ -49,7 +48,7 @@ export default function BingoMissionDetail({
     const t = useTranslations();
     const locale = useLocale();
     const href = useLocalizedHref();
-    const label = getBingoCellLabel(cell.position);
+    const label = useBingoPosition()(cell.position);
     const missionLink = getBingoMissionLink(cell);
     const linesCompletedBy = isAuthenticated
         ? getBingoLinesCompletedBy(cell.position, completedPositions)
@@ -77,9 +76,8 @@ export default function BingoMissionDetail({
             data-pending={busy || undefined}
         >
             <div className="nl-bingo-cell-detail__head">
-                <span className="nl-component-title nl-bingo-cell-detail__pos">
-                    {label}
-                </span>
+                {/* 위치 = 작은 판에서 그 칸만 켬(보이는 좌표 없이, 2026-09-22) — 글은 화면 읽기에만 */}
+                <BingoPosition position={cell.position} label={label} />
                 {typeKey ? (
                     <span className="nl-tag nl-metadata">{t(typeKey)}</span>
                 ) : null}
