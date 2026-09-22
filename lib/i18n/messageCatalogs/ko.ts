@@ -1488,6 +1488,9 @@ export const koMessages = {
     "arcades.photoNext": "다음 사진",
     "arcades.photoPrevious": "이전 사진",
     "arcades.photoOpen": "사진 크게 보기",
+    "arcades.photoAll": "사진 {count}장 모두 보기",
+    "arcades.photoGridTitle": "사진 {count}장",
+    "arcades.photoBackToGrid": "격자로 보기",
     "arcades.copyFailed":
         "주소를 복사하지 못했습니다. 주소를 선택해 복사해 주세요.",
     "arcades.settingPreferred": "지정 중",

@@ -1502,6 +1502,9 @@ export const enMessages = {
     "arcades.photoNext": "Next photo",
     "arcades.photoPrevious": "Previous photo",
     "arcades.photoOpen": "Enlarge photo",
+    "arcades.photoAll": "View all {count} photos",
+    "arcades.photoGridTitle": "{count} photos",
+    "arcades.photoBackToGrid": "Back to grid",
     "arcades.copyFailed":
         "Could not copy the address. Select it to copy manually.",
     "arcades.settingPreferred": "Saving preference",

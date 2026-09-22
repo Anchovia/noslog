@@ -1501,6 +1501,9 @@ export const jaMessages = {
     "arcades.photoNext": "次の写真",
     "arcades.photoPrevious": "前の写真",
     "arcades.photoOpen": "写真を拡大",
+    "arcades.photoAll": "写真{count}枚をすべて見る",
+    "arcades.photoGridTitle": "写真{count}枚",
+    "arcades.photoBackToGrid": "一覧に戻る",
     "arcades.copyFailed":
         "住所をコピーできませんでした。住所を選択してコピーしてください。",
     "arcades.settingPreferred": "設定中",

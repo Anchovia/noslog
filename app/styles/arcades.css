@@ -923,6 +923,46 @@
     justify-content: center;
     gap: var(--nl-spacing-8);
 }
+/* 모자이크 오른쪽 아래 「사진 N장 모두 보기」 — 카운터와 같은 사진 위 어두운 판(새 색 없음), 컴팩트 32 (P1 · 2026-09-22) */
+.noslog-ui .nl-arcade-photos__all {
+    position: absolute;
+    right: var(--nl-spacing-12);
+    bottom: var(--nl-spacing-12);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+    min-height: 32px;
+    padding-inline: var(--nl-spacing-12);
+    border-radius: var(--nl-radius-control);
+    color: var(--nl-content-on-media);
+    background: var(--nl-surface-media-scrim);
+}
+/* 창 안 격자 — 672 이상 3열 · 그 아래 2열, 사이 8 · 4 : 3 · 모서리 4 */
+.noslog-ui .nl-arcade-photos__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--nl-spacing-8);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+@media (min-width: 672px) {
+    .noslog-ui .nl-arcade-photos__grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+.noslog-ui .nl-arcade-photos__grid button {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: var(--nl-radius-control);
+    background: var(--nl-surface-sunken);
+}
+.noslog-ui .nl-arcade-photos__grid img {
+    object-fit: cover;
+}
 @media (min-width: 1056px) {
     .noslog-ui .nl-arcade-detail__layout {
         display: grid;
@@ -947,7 +987,7 @@
         height: 240px;
         min-height: 240px;
     }
-    .noslog-ui .nl-arcade-photos:has(.nl-arcade-photos__thumbnails > button) {
+    .noslog-ui .nl-arcade-photos[data-mosaic] {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         height: 360px;
