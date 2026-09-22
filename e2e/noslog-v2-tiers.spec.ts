@@ -554,6 +554,9 @@ test("exports the current view as a JPEG and remembers the display options", asy
     await expect(
         dialog.getByText("담기는 것 · S 서열표 · 3구간 18곡", { exact: true })
     ).toBeVisible();
+    // 500곡 안이면 구간 목록은 접힌 채 — 「구간 고르기」 로 펼친다(2026-09-22 R2)
+    const pick = dialog.getByRole("button", { name: "구간 고르기" });
+    await expect(pick).toHaveAttribute("aria-expanded", "false");
     const preview = dialog.locator(".nl-tier-export__preview img");
     await expect(preview).toBeVisible({ timeout: 30_000 });
     const size = () =>

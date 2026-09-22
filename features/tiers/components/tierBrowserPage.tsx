@@ -180,12 +180,9 @@ export default function TierBrowserPage({
             ? `Real ${value.slice(5)}`
             : `Lv.${value}`;
     }
-    function bandToken() {
-        const selected = bands.filter((band) =>
-            query.bands.includes(band.value)
-        );
-        if (!selected.length)
-            return query.bands.map(formatTierValue).join(", ");
+    function bandToken(values: number[] = query.bands) {
+        const selected = bands.filter((band) => values.includes(band.value));
+        if (!selected.length) return values.map(formatTierValue).join(", ");
         if (selected.length === 1) return formatTierValue(selected[0].value);
         const first = bands.indexOf(selected[0]);
         const last = bands.indexOf(selected.at(-1)!);
@@ -384,8 +381,8 @@ export default function TierBrowserPage({
                 title={t("tiers.goalOption", {
                     goal: tierListLabel(query.mode, query.goal),
                 })}
+                formatBands={bandToken}
                 conditions={[
-                    ...(query.bands.length ? [bandToken()] : []),
                     ...query.difficulties,
                     ...query.levels.map(levelToken),
                     ...(query.q

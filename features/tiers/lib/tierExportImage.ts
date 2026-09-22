@@ -15,6 +15,26 @@ import type {
 export const TIER_EXPORT_MAX = 500;
 export const TIER_EXPORT_WIDTH = 1200;
 export const TIER_EXPORT_COLUMNS = 12;
+
+/**
+ * 창의 기본 구간 — 지금 조건의 구간이 한 장(500곡)에 들면 전부, 넘으면 위(높은 구간)부터 이어서 500곡 안까지(2026-09-22 R2).
+ * 가장 큰 구간도 500 안(434)이라 구간 하나는 늘 담긴다
+ */
+export function defaultExportBands(
+    bands: { value: number; totalCount: number }[],
+    max = TIER_EXPORT_MAX
+) {
+    const total = bands.reduce((sum, band) => sum + band.totalCount, 0);
+    if (total <= max) return bands.map((band) => band.value);
+    const picked: number[] = [];
+    let sum = 0;
+    for (const band of bands) {
+        if (sum + band.totalCount > max) break;
+        picked.push(band.value);
+        sum += band.totalCount;
+    }
+    return picked;
+}
 const JPEG_QUALITY = 0.9;
 const JACKET_LOADS = 8;
 
