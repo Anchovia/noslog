@@ -2,7 +2,13 @@ import "server-only";
 import { cache } from "react";
 import type { Prisma } from "@prisma/client";
 import db from "@/lib/db";
-import { legacyToPublicArcadeHours } from "@/lib/arcadeDetails";
+import {
+    ARCADE_CABINET_TAGS,
+    ARCADE_FACILITIES,
+    knownArcadeValues,
+    knownFeatureValue,
+    legacyToPublicArcadeHours,
+} from "@/lib/arcadeDetails";
 import {
     arcadeCabinetSchema,
     arcadeHoursSchema,
@@ -94,6 +100,7 @@ function toPublicArcade(record: ArcadeRecord, now: Date) {
                 ? record.coin_count
                 : null,
         creditLabel: details?.creditLabel ?? null,
+        facilities: knownArcadeValues(ARCADE_FACILITIES, details?.facilities),
         notes: record.notes,
         preferredCount: record._count.users >= 3 ? record._count.users : null,
         cabinets: record.cabinets.map((cabinet) => {
@@ -131,6 +138,22 @@ function toPublicArcade(record: ArcadeRecord, now: Date) {
                         : "unknown",
                 note: cabinet.note,
                 conditionNote: cabinet.conditionNote,
+                tags: knownArcadeValues(ARCADE_CABINET_TAGS, cabinet.tags),
+                features: {
+                    keyWeight: knownFeatureValue(
+                        "keyWeight",
+                        cabinet.keyWeight
+                    ),
+                    screenLag: knownFeatureValue(
+                        "screenLag",
+                        cabinet.screenLag
+                    ),
+                    soundVolume: knownFeatureValue(
+                        "soundVolume",
+                        cabinet.soundVolume
+                    ),
+                },
+                featureNote: cabinet.featureNote,
                 verifiedAt: userConfirmed
                     ? lastCheck!.toISOString()
                     : adminVerified

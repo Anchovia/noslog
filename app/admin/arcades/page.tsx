@@ -16,6 +16,11 @@ export default async function AdminArcadesPage() {
                     label: true,
                     note: true,
                     conditionNote: true,
+                    tags: true,
+                    keyWeight: true,
+                    screenLag: true,
+                    soundVolume: true,
+                    featureNote: true,
                     availability: true,
                     condition: true,
                     position: true,
@@ -28,6 +33,7 @@ export default async function AdminArcadesPage() {
                     phone: true,
                     website: true,
                     creditLabel: true,
+                    facilities: true,
                 },
             },
             // 공개 상세 맨 위 사진 — 자리(slot) 순서가 공개 순서
@@ -71,6 +77,7 @@ export default async function AdminArcadesPage() {
                             website: arcade.publicDetails?.website ?? null,
                             creditLabel:
                                 arcade.publicDetails?.creditLabel ?? null,
+                            facilities: arcade.publicDetails?.facilities ?? [],
                             photos: arcade.publicPhotos,
                             cabinets: arcade.cabinets.map((cabinet) => ({
                                 ...cabinet,

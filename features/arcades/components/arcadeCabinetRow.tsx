@@ -12,6 +12,7 @@ import type {
 } from "@/features/arcades/schemas/publicArcadeSchema";
 import { daysAgo } from "@/features/arcades/arcadeDiscovery";
 import ArcadeReportDialog from "./arcadeReportDialog";
+import { CabinetFeatures, CabinetTags } from "./arcadeTraits";
 
 export function cabinetLabel(
     cabinet: ArcadeCabinet,
@@ -173,6 +174,12 @@ export default function ArcadeCabinetRow({
                     </span>
                 </span>
             </div>
+            {/* 태그(있다 / 없다) → 특징(정도) → 버튼 (2026-09-22 S1 · L1) */}
+            <CabinetTags tags={cabinet.tags} />
+            <CabinetFeatures
+                features={cabinet.features}
+                note={cabinet.featureNote}
+            />
             <div className="nl-arcade-cabinet__actions">
                 {isAuthenticated ? (
                     <ActionButton

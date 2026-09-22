@@ -34,6 +34,10 @@ import { applyFormActionFailure, applyFormRootError } from "@/lib/forms/errors";
 import {
     ARCADE_CABINET_AVAILABILITIES,
     ARCADE_CABINET_CONDITIONS,
+    ARCADE_CABINET_FEATURE_NOTE_MAX_LENGTH,
+    ARCADE_CABINET_FEATURES,
+    ARCADE_CABINET_TAGS,
+    ARCADE_FACILITIES,
     normalizeArcadeBusinessHours,
 } from "@/lib/arcadeDetails";
 import { ARCADE_REGIONS } from "@/lib/arcadeRegions";
@@ -64,6 +68,11 @@ interface ArcadeFormCabinet {
     label: string | null;
     note: string | null;
     conditionNote: string | null;
+    tags: string[];
+    keyWeight: string | null;
+    screenLag: string | null;
+    soundVolume: string | null;
+    featureNote: string | null;
     availability: string;
     condition: string;
     position: number;
@@ -84,6 +93,7 @@ interface ArcadeFormRecord {
     phone: string | null;
     website: string | null;
     creditLabel: string | null;
+    facilities: string[];
     photos: ArcadeFormPhoto[];
     cabinets: ArcadeFormCabinet[];
     notes: string | null;
@@ -121,6 +131,7 @@ export default function ArcadeForm(props: ArcadeFormProps) {
                           phone: arcade.phone,
                           website: arcade.website,
                           creditLabel: arcade.creditLabel,
+                          facilities: arcade.facilities,
                           cabinets: arcade.cabinets,
                           notes: arcade.notes,
                           isActive: arcade.isActive,
@@ -385,6 +396,26 @@ export default function ArcadeForm(props: ArcadeFormProps) {
                     <FieldError message={errors.website?.message} />
                 </label>
             </div>
+            {/* 시설 — 공개 상세 「시설」 구역(아이콘 + 글자)에 보인다 */}
+            <fieldset className="border-border rounded-card grid min-w-0 grid-cols-1 gap-2 border p-3">
+                <legend className="text-label px-1">시설 (선택)</legend>
+                <div className="grid grid-cols-2 gap-2">
+                    {ARCADE_FACILITIES.map((option) => (
+                        <label
+                            key={option.value}
+                            className="text-body-muted flex items-center gap-2"
+                        >
+                            <input
+                                type="checkbox"
+                                value={option.value}
+                                {...register("facilities")}
+                            />
+                            {option.label}
+                        </label>
+                    ))}
+                </div>
+                <FieldError message={errors.facilities?.message} />
+            </fieldset>
             <ArcadeBusinessHoursFields
                 formKey={formKey}
                 register={register}
@@ -512,11 +543,68 @@ export default function ArcadeForm(props: ArcadeFormProps) {
                                     )}
                                 />
                             ) : null}
+                            {/* 태그 · 특징은 공개 기체 카드에 보인다 — 바꿔도 확인 날짜는 그대로 */}
+                            <div className="grid grid-cols-2 gap-2">
+                                {ARCADE_CABINET_TAGS.map((option) => (
+                                    <label
+                                        key={option.value}
+                                        className="text-body-muted flex items-center gap-2"
+                                    >
+                                        <input
+                                            type="checkbox"
+                                            value={option.value}
+                                            {...register(
+                                                `cabinets.${index}.tags`
+                                            )}
+                                        />
+                                        {option.label}
+                                    </label>
+                                ))}
+                            </div>
+                            <div className="grid grid-cols-3 gap-2">
+                                {ARCADE_CABINET_FEATURES.map((feature) => (
+                                    <select
+                                        key={feature.key}
+                                        aria-label={`${name} ${feature.label}`}
+                                        className={inputClass}
+                                        {...register(
+                                            `cabinets.${index}.${feature.key}`
+                                        )}
+                                    >
+                                        <option value="">
+                                            {feature.label} · 모름
+                                        </option>
+                                        {feature.options.map((option) => (
+                                            <option
+                                                key={option.value}
+                                                value={option.value}
+                                            >
+                                                {feature.label} · {option.label}
+                                            </option>
+                                        ))}
+                                    </select>
+                                ))}
+                            </div>
+                            <input
+                                maxLength={
+                                    ARCADE_CABINET_FEATURE_NOTE_MAX_LENGTH
+                                }
+                                placeholder="기체 특징 기타 (선택) · 예: 방송용 카메라는 오른쪽 위"
+                                aria-label={`${name} 기체 특징 기타`}
+                                aria-invalid={Boolean(rowErrors?.featureNote)}
+                                className={inputClass}
+                                {...register(`cabinets.${index}.featureNote`)}
+                            />
                             <FieldError
                                 message={
                                     rowErrors?.conditionNote?.message ??
                                     rowErrors?.note?.message ??
-                                    rowErrors?.label?.message
+                                    rowErrors?.label?.message ??
+                                    rowErrors?.featureNote?.message ??
+                                    rowErrors?.tags?.message ??
+                                    rowErrors?.keyWeight?.message ??
+                                    rowErrors?.screenLag?.message ??
+                                    rowErrors?.soundVolume?.message
                                 }
                             />
                             {saved ? (
@@ -547,6 +635,11 @@ export default function ArcadeForm(props: ArcadeFormProps) {
                             conditionNote: "",
                             availability: "unknown",
                             condition: "unknown",
+                            tags: [],
+                            keyWeight: "",
+                            screenLag: "",
+                            soundVolume: "",
+                            featureNote: "",
                             confirm: false,
                         })
                     }

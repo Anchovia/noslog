@@ -156,9 +156,16 @@ describe("관리자 오락실 스키마", () => {
                     conditionNote: null,
                     availability: "available",
                     condition: "good",
+                    tags: [],
+                    keyWeight: null,
+                    screenLag: null,
+                    soundVolume: null,
+                    featureNote: null,
                     confirm: false,
                 },
             ],
+            // 시설 칸 없이 온 입력은 저장된 시설을 그대로 둔다
+            facilities: null,
             notes: "이어폰 단자 지원",
             isActive: true,
         });
@@ -288,6 +295,52 @@ describe("관리자 오락실 스키마", () => {
         ).toEqual(values);
     });
 
+    it("기체 태그 · 특징과 시설을 정해진 값으로만 받는다", () => {
+        const input = validArcadeInput();
+        const parsed = arcadeFormSchema.parse({
+            ...input,
+            facilities: ["wifi", "parking", "wifi"],
+            cabinets: [
+                {
+                    ...input.cabinets[0],
+                    tags: ["headphone", "broadcast"],
+                    keyWeight: "light",
+                    screenLag: "",
+                    soundVolume: "high",
+                    featureNote: " 방송용 카메라는 오른쪽 위 ",
+                },
+            ],
+        });
+        expect(parsed.facilities).toEqual(["parking", "wifi"]);
+        expect(parsed.cabinets[0]).toMatchObject({
+            tags: ["broadcast", "headphone"],
+            keyWeight: "light",
+            screenLag: null,
+            soundVolume: "high",
+            featureNote: "방송용 카메라는 오른쪽 위",
+        });
+        expect(
+            arcadeFormSchema.safeParse({
+                ...input,
+                cabinets: [{ ...input.cabinets[0], keyWeight: "high" }],
+            }).success
+        ).toBe(false);
+        expect(
+            arcadeFormSchema.safeParse({
+                ...input,
+                cabinets: [{ ...input.cabinets[0], tags: ["unknown"] }],
+            }).success
+        ).toBe(false);
+        expect(
+            arcadeFormSchema.safeParse({
+                ...input,
+                cabinets: [
+                    { ...input.cabinets[0], featureNote: "가".repeat(101) },
+                ],
+            }).success
+        ).toBe(false);
+    });
+
     it("기존 값으로 폼을 채울 때 공개 영업시간과 기체를 먼저 쓴다", () => {
         expect(createArcadeFormDefaultValues().region).toBe("");
 
@@ -337,6 +390,11 @@ describe("관리자 오락실 스키마", () => {
                 conditionNote: "",
                 availability: "unknown",
                 condition: "good",
+                tags: [],
+                keyWeight: "",
+                screenLag: "",
+                soundVolume: "",
+                featureNote: "",
                 confirm: false,
             },
         ]);

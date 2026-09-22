@@ -3,7 +3,13 @@ import { z } from "zod";
 import {
     ARCADE_CABINET_AVAILABILITIES,
     ARCADE_CABINET_CONDITIONS,
+    ARCADE_CABINET_FEATURE_NOTE_MAX_LENGTH,
+    ARCADE_CABINET_FEATURES,
+    ARCADE_CABINET_TAGS,
+    ARCADE_FACILITIES,
     ARCADE_WEEKDAYS,
+    knownArcadeValues,
+    knownFeatureValue,
     fromPublicArcadeWeekly,
     normalizeArcadeBusinessHours,
     readPublicArcadeExceptions,
@@ -107,6 +113,32 @@ const hoursExceptionSchema = z.object({
     close: z.string(),
 });
 
+const cabinetTagValues = ARCADE_CABINET_TAGS.map(({ value }) => value) as [
+    (typeof ARCADE_CABINET_TAGS)[number]["value"],
+    ...(typeof ARCADE_CABINET_TAGS)[number]["value"][],
+];
+const facilityValues = ARCADE_FACILITIES.map(({ value }) => value) as [
+    (typeof ARCADE_FACILITIES)[number]["value"],
+    ...(typeof ARCADE_FACILITIES)[number]["value"][],
+];
+
+// 특징 한 칸 — 빈 값(모름) 또는 그 항목의 보기 중 하나
+function featureValueSchema(
+    key: (typeof ARCADE_CABINET_FEATURES)[number]["key"]
+) {
+    const feature = ARCADE_CABINET_FEATURES.find((item) => item.key === key)!;
+    return z
+        .string()
+        .default("")
+        .refine(
+            (value) =>
+                value === "" ||
+                feature.options.some((option) => option.value === value),
+            `${feature.label}를 다시 선택해주세요.`
+        )
+        .transform((value) => knownFeatureValue(key, value));
+}
+
 // 기체 한 줄 — 공개 기체 행과 같은 규칙: 상태(양호·보통·주의)는 가동일 때만 남기고, 보통·주의는 상태 이유 필수
 const cabinetSchema = z
     .object({
@@ -145,6 +177,27 @@ const cabinetSchema = z
         availability: z.enum(availabilityValues, {
             error: "가동 여부를 선택해주세요.",
         }),
+        // 태그 · 특징 — 이 칸을 모르는 옛 화면에서 온 저장은 빈 값으로 받는다
+        tags: z
+            .array(
+                z.enum(cabinetTagValues, { error: "기체 태그를 확인해주세요." })
+            )
+            .default([])
+            .transform((values) =>
+                knownArcadeValues(ARCADE_CABINET_TAGS, values)
+            ),
+        keyWeight: featureValueSchema("keyWeight"),
+        screenLag: featureValueSchema("screenLag"),
+        soundVolume: featureValueSchema("soundVolume"),
+        featureNote: z
+            .string()
+            .trim()
+            .max(
+                ARCADE_CABINET_FEATURE_NOTE_MAX_LENGTH,
+                `기체 특징 기타는 ${ARCADE_CABINET_FEATURE_NOTE_MAX_LENGTH}자 이하로 입력해주세요.`
+            )
+            .default("")
+            .transform((value) => value || null),
         condition: z.enum(conditionValues, {
             error: "기체 상태를 선택해주세요.",
         }),
@@ -234,6 +287,15 @@ const arcadeBaseSchema = z.object({
         )
         .transform((value) => value || null),
     businessHours: businessHoursSchema,
+    // 시설(주차 · 흡연실 …) — 이 칸을 모르는 옛 화면에서 온 저장은 저장된 시설을 그대로 둔다(null)
+    facilities: z
+        .array(z.enum(facilityValues, { error: "시설을 확인해주세요." }))
+        .optional()
+        .transform((values) =>
+            values === undefined
+                ? null
+                : knownArcadeValues(ARCADE_FACILITIES, values)
+        ),
     // 없으면(이 칸을 모르는 옛 화면에서 보낸 저장) 저장된 예외를 그대로 둔다
     hoursExceptions: z
         .array(hoursExceptionSchema, { error: "날짜별 예외를 확인해주세요." })
@@ -429,6 +491,11 @@ interface ArcadeFormCabinetSource {
     conditionNote: string | null;
     availability: string;
     condition: string;
+    tags?: string[];
+    keyWeight?: string | null;
+    screenLag?: string | null;
+    soundVolume?: string | null;
+    featureNote?: string | null;
 }
 
 interface ArcadeFormSource {
@@ -445,6 +512,7 @@ interface ArcadeFormSource {
     phone?: string | null;
     website?: string | null;
     creditLabel?: string | null;
+    facilities?: string[];
     cabinets?: ArcadeFormCabinetSource[];
     notes: string | null;
     isActive: boolean;
@@ -514,6 +582,7 @@ export function createArcadeFormDefaultValues(
             sunday: dayDefaultValues(businessHours, "sunday"),
         },
         hoursExceptions: readPublicArcadeExceptions(source?.hours),
+        facilities: knownArcadeValues(ARCADE_FACILITIES, source?.facilities),
         cabinets: (source?.cabinets ?? []).map((cabinet) => ({
             cabinetId: String(cabinet.id),
             label: cabinet.label ?? "",
@@ -525,6 +594,12 @@ export function createArcadeFormDefaultValues(
             condition: isCondition(cabinet.condition)
                 ? cabinet.condition
                 : "unknown",
+            tags: knownArcadeValues(ARCADE_CABINET_TAGS, cabinet.tags),
+            keyWeight: knownFeatureValue("keyWeight", cabinet.keyWeight) ?? "",
+            screenLag: knownFeatureValue("screenLag", cabinet.screenLag) ?? "",
+            soundVolume:
+                knownFeatureValue("soundVolume", cabinet.soundVolume) ?? "",
+            featureNote: cabinet.featureNote ?? "",
             confirm: false,
         })),
         notes: source?.notes ?? "",
@@ -560,6 +635,7 @@ export function arcadeFormInputFromFormData(formData: FormData) {
         ])
     );
     const exceptions = formData.get("hoursExceptions");
+    const facilities = formData.get("facilities");
 
     return {
         name: String(formData.get("name") ?? ""),
@@ -575,6 +651,8 @@ export function arcadeFormInputFromFormData(formData: FormData) {
         businessHours,
         hoursExceptions:
             exceptions === null ? undefined : listFromFormData(exceptions),
+        facilities:
+            facilities === null ? undefined : listFromFormData(facilities),
         cabinets: listFromFormData(formData.get("cabinets")),
         notes: String(formData.get("notes") ?? ""),
         isActive: booleanFromFormData(formData.get("isActive")),
@@ -616,6 +694,8 @@ export function createArcadeFormData(values: ArcadeValues, id?: number) {
                 })
             )
         );
+    if (values.facilities !== null)
+        formData.set("facilities", JSON.stringify(values.facilities));
     formData.set(
         "cabinets",
         JSON.stringify(
@@ -627,6 +707,11 @@ export function createArcadeFormData(values: ArcadeValues, id?: number) {
                 conditionNote: cabinet.conditionNote ?? "",
                 availability: cabinet.availability,
                 condition: cabinet.condition,
+                tags: cabinet.tags,
+                keyWeight: cabinet.keyWeight ?? "",
+                screenLag: cabinet.screenLag ?? "",
+                soundVolume: cabinet.soundVolume ?? "",
+                featureNote: cabinet.featureNote ?? "",
                 confirm: cabinet.confirm,
             }))
         )

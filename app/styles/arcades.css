@@ -670,6 +670,24 @@
 .noslog-ui .nl-arcade-detail__section-head > h2 {
     min-width: 0;
 }
+/* 시설 — 아이콘 20 흐림 + 글자 본문 보조 기본색, 두 열 · 사이 세로 12 · 가로 16 (2026-09-22 B2) */
+.noslog-ui .nl-arcade-facilities {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--nl-spacing-12) var(--nl-spacing-16);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.noslog-ui .nl-arcade-facilities > li {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-12);
+    min-width: 0;
+}
+.noslog-ui .nl-arcade-facilities .nl-icon {
+    color: var(--nl-content-subdued);
+}
 /* 기체 카드 — 번호·위치 | 상태 · 신선도 · 액션 2개가 한 덩어리. 목록 카드와 같은 면(surface · 모서리 8) · 안쪽 12/16 · 사이 8 (2026-09-15) */
 .noslog-ui .nl-arcade-cabinets {
     display: flex;
@@ -738,6 +756,48 @@
 }
 /* 상태 라벨은 중립 글자 — marker 색은 Light 에서 3.1:1 이라 12·14px 텍스트에 못 쓴다(FC 라벨 선례). 색은 점만 */
 /* 확인·신고 — 줄마다 반반 전체 폭. 정보보다 무겁지 않게 32(적용 조건 「전체 지우기」 와 같은 인라인 액션 높이) */
+/* 기체 태그 — 아이콘 16 + 글자 metadata 흐림, 사이 가로 12 · 세로 4 (2026-09-22 S1) */
+.noslog-ui .nl-arcade-cabinet__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--nl-spacing-4) var(--nl-spacing-12);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.noslog-ui .nl-arcade-cabinet__tags > li {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--nl-spacing-4);
+}
+/* 기체 특징 — 카드 안 한 단 낮은 판(raised · 모서리 4 · 안쪽 8/12), 키 흐림 · 값 기본색 본문 보조, 기타 글은 구분선 아래 (L1) */
+.noslog-ui .nl-arcade-cabinet__features {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
+    padding: var(--nl-spacing-8) var(--nl-spacing-12);
+    border-radius: var(--nl-radius-control);
+    background: var(--nl-surface-raised);
+}
+.noslog-ui .nl-arcade-cabinet__features dl {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    gap: var(--nl-spacing-4) var(--nl-spacing-16);
+    margin: 0;
+}
+.noslog-ui .nl-arcade-cabinet__features dl > div {
+    display: contents;
+}
+.noslog-ui .nl-arcade-cabinet__features dt {
+    color: var(--nl-content-subdued);
+}
+.noslog-ui .nl-arcade-cabinet__features dd {
+    margin: 0;
+}
+.noslog-ui .nl-arcade-cabinet__features dl + .nl-arcade-cabinet__feature-note {
+    padding-top: var(--nl-spacing-8);
+    border-top: 1px solid var(--nl-border-divider);
+}
 .noslog-ui .nl-arcade-cabinet__actions {
     display: flex;
     gap: var(--nl-spacing-8);
