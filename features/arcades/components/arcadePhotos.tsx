@@ -115,10 +115,12 @@ export default function ArcadePhotos({
                             );
                         }}
                     >
+                        {/* 대표 사진은 들어오자마자 보이는 가장 큰 그림(LCP) — 나중에 받기(lazy) 대신 바로 받는다 */}
                         <Image
                             src={lead.url}
                             alt={lead.alt}
                             fill
+                            loading="eager"
                             sizes="(max-width: 959px) 100vw, 952px"
                             onError={() => markFailed(lead.id)}
                         />
