@@ -28,9 +28,13 @@ Tailwind 4: 설정은 CSS(`app/globals.css`), `tailwind.config` 를 만들지 �
 명령은 지어내지 않고 `package.json` 스크립트를 쓴다.
 
 - `npm run typecheck` · `npm run lint` · `npm test`(파일 하나는 `npx vitest run tests/<파일>`) · `npm run build`
-- e2e 는 로컬 PostgreSQL 에서만: `DATABASE_URL` 을 로컬 DB 로 둔 셸에서 `npm run db:migrate:deploy` → `npm run db:seed:e2e` →
-  그 DB 로 띄운 별도 서버 주소를 `PLAYWRIGHT_BASE_URL` 로 주고 `npm run test:e2e`.
-  주소를 주지 않으면 사용자의 localhost:3000 으로 간다 — 그 서버에는 e2e 를 돌리지 않는다.
+- **e2e** — 화면 · 흐름을 바꿨고 관련 스펙이 있으면 그 스펙 하나를 로컬에서 돌린다(전체는 먼저 묻는다). 사용자의 localhost:3000 에는 돌리지 않는다
+  (`PLAYWRIGHT_BASE_URL` 이 없으면 그리로 간다). 한 번에 한 세션 — 포트 3100 이 쓰이고 있으면 기다린다. 확인된 절차(2026-09-22):
+    1. 리포를 리포 밖 임시 폴더로 복사(`.git` · `.next` · `node_modules` · `.env*` 제외), `node_modules` 는 `cp -c -R` 로 복제(링크는 Turbopack 이 거부).
+       `.env` 는 e2e 값만 새로 쓴다(`DATABASE_URL=postgresql://<사용자>@localhost:5432/noslog_e2e` · 임시 `COOKIE_PASSWORD` · `BOOKMARKLET_SECRET`) —
+       실제 `.env*` 를 가져오지 않는다(`.env.production.local` 에 운영 값이 있다).
+    2. 복사본에서 `npx prisma migrate deploy` → `E2E_SEED=1 npm run db:seed:e2e` → `node prisma/import-music-catalog.mjs --apply`.
+    3. 복사본에서 `npx next dev -p 3100`, `PLAYWRIGHT_BASE_URL=http://localhost:3100 npx playwright test e2e/<스펙>`. 끝나면 3100 서버를 끈다.
 
 ## 사용자 규칙
 
@@ -84,7 +88,12 @@ Tailwind 4: 설정은 CSS(`app/globals.css`), `tailwind.config` 를 만들지 �
 - 결정이 나면 같은 작업에서 코드 → 가이드 해당 절 → `decisions.md` 한 줄 → 테스트 기대값을 맞춘다.
 - 작게 나눠 구현하고, 바꾼 화면은 [가이드 「확인」 절](docs/design/README.md)대로 잰다.
   실패는 원래 있던 것과 이번에 생긴 것을 구분한다.
-- **끝내기 전:** `typecheck` · `lint` · 관련 테스트 → 바꾼 화면은 가이드 「확인」 → 결정이 났으면 가이드 · `decisions.md` · 테스트 기대값
-  → 공개 화면의 새 문구는 `lib/i18n/messageCatalogs` 의 ko · en · ja 세 곳 모두 → 커밋 제목 · 파일별 `git add`.
+- **끝내기 전 검사** — 바꾼 것에 따라 더한다.
+    - 코드(ts · tsx · css): `npm run typecheck` · `npm run lint` · `npm test` 전체(합쳐 30초 남짓 — 관련 파일만 고르지 않는다).
+    - 화면 · CSS · 토큰: + 가이드 「확인」 실측. Prisma 스키마: + `npx prisma generate` 먼저.
+    - `next.config` · 의존성 · 라우트 구조 · 환경 변수: + `npm run build`.
+    - 문서만(md): `npx prettier --check <파일>`.
+- **끝내기 전 정리** — 결정이 났으면 가이드 · `decisions.md` · 테스트 기대값 → 공개 화면의 새 문구는 `lib/i18n/messageCatalogs` 의
+  ko · en · ja 세 곳 모두 → 커밋 제목 · 파일별 `git add`.
 - 보고에는 실제로 한 것만 쓴다. 안 한 검사는 「안 함」, 남은 한계는 그대로 적는다.
 - 이 파일은 짧게 둔다 — 같은 실수가 두 번 나오면 한 줄 더하고, 이미 지켜져 필요 없어진 줄은 뺀다.
