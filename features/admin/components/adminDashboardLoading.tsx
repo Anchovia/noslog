@@ -4,7 +4,7 @@ import type {
     AdminDashboardData,
     DashboardRow,
 } from "@/features/admin/server/adminDashboardService";
-import { AdminDashboardMetricLabel } from "./adminDashboardMetric";
+import { AdminDashboardTrendLoading } from "./adminDashboardMetric";
 
 function CountListLoading({
     rows,
@@ -195,22 +195,10 @@ export default function AdminDashboardLoading({
             <div className="nl-dashboard__main">
                 <KpiLoading data={data} />
 
-                <section className="nl-dashboard__panel">
-                    <div className="nl-dashboard__panel-head">
-                        <h2 className="nl-component-title">
-                            <AdminDashboardMetricLabel
-                                initialMetric={data.metric}
-                            />
-                        </h2>
-                    </div>
-                    <div className="nl-dashboard__chart nl-skeleton" />
-                    {data.hourly ? (
-                        <p className="nl-metadata nl-muted">
-                            시간대별 페이지뷰 · 서울 기준. 날짜별 그래프는 7일
-                            이상에서 보입니다.
-                        </p>
-                    ) : null}
-                </section>
+                <AdminDashboardTrendLoading
+                    initialMetric={data.metric}
+                    hourly={Boolean(data.hourly)}
+                />
 
                 <AudienceLoading data={data} />
 

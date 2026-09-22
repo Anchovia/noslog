@@ -98,21 +98,23 @@ export default function AdminDashboardChart({
 }
 
 /**
- * 오늘 시간대별 페이지뷰(2026-09-20 H1) — 0~23시 막대. 아직 오지 않은 시각은 빈 칸으로 둔다.
- * 색은 페이지뷰 수치의 색
+ * 오늘 시간대별 막대(2026-09-20 H1) — 0~23시. 아직 오지 않은 시각은 빈 칸으로 둔다.
+ * 색은 보고 있는 수치의 색(페이지뷰 · 가입 · 동기화, 2026-09-22)
  */
 export function AdminDashboardHours({
     data,
+    label,
     color,
 }: {
     data: { hour: string; label: string; value: number; future: boolean }[];
+    label: string;
     color: string;
 }) {
     return (
         <div
             className="nl-dashboard__chart"
             role="img"
-            aria-label={`오늘 시간대별 페이지뷰 — ${data
+            aria-label={`오늘 시간대별 ${label} — ${data
                 .filter((point) => !point.future)
                 .map((point) => `${point.label} ${point.value}`)
                 .join(", ")}`}
@@ -159,7 +161,7 @@ export function AdminDashboardHours({
                         labelStyle={{ color: "var(--nl-content-subdued)" }}
                         formatter={(value) => [
                             Number(value).toLocaleString("ko-KR"),
-                            "페이지뷰",
+                            label,
                         ]}
                     />
                     <Bar

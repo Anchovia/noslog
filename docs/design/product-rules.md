@@ -347,7 +347,10 @@ old design-stage checklist. Changes to material behavior require a user decision
 - Within the loaded dashboard period, metric changes reuse the same snapshot and
   update `metric` in browser history without another server request. Period changes
   and page reloads fetch a new snapshot. Direct links, back/forward navigation,
-  admin authorization and the existing hourly page-view chart remain supported.
+  admin authorization and today's hourly chart remain supported. Today's hourly
+  bars follow the selected metric: page views from the hour bucket, signups and
+  syncs from their existing timestamps (Seoul hour). Visitors are counted per day
+  only, so today shows a note instead of hourly bars (2026-09-22).
 
 - Accounts whose current role is `admin` are excluded at collection time from
   page views, daily visitors, hour/audience buckets, browser external events and

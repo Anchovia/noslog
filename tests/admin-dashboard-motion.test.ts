@@ -73,6 +73,7 @@ describe("관리자 대시보드 그래프 움직임", () => {
                         future: false,
                     },
                 ],
+                label: "페이지뷰",
                 color: "var(--nl-local-data-categorical-2)",
             })
         );

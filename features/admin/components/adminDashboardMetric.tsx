@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import type { ReactNode } from "react";
 
+import { SkeletonText } from "@/components/ui/skeleton";
 import {
     DASHBOARD_METRICS,
     DASHBOARD_METRIC_COLORS,
@@ -19,6 +20,8 @@ import AdminDashboardChart, {
     AdminDashboardHours,
 } from "./adminDashboardChart";
 
+const HOURLY_NOTE_DAILY = "날짜별 그래프는 7일 이상에서 보입니다.";
+
 function useDashboardMetric(initialMetric: DashboardMetric) {
     const params = useSearchParams();
     if (!params) return initialMetric;
@@ -26,14 +29,6 @@ function useDashboardMetric(initialMetric: DashboardMetric) {
     return parseDashboardParams({
         metric: metrics.length > 1 ? metrics : metrics[0],
     }).metric;
-}
-
-export function AdminDashboardMetricLabel({
-    initialMetric,
-}: {
-    initialMetric: DashboardMetric;
-}) {
-    return DASHBOARD_METRICS[useDashboardMetric(initialMetric)];
 }
 
 export function AdminDashboardMetricLink({
@@ -102,6 +97,8 @@ export function AdminDashboardTrend({
 }) {
     const metric = useDashboardMetric(initialMetric);
     const label = DASHBOARD_METRICS[metric];
+    // 방문자는 하루 단위로만 세어 시각별 값이 없다
+    const hourlyMetric = metric === "visitors" ? null : metric;
     return (
         <section
             className="nl-dashboard__panel"
@@ -112,15 +109,28 @@ export function AdminDashboardTrend({
                     {label}
                 </h2>
             </div>
-            {hourly ? (
+            {hourly && hourlyMetric === null ? (
+                <>
+                    <p className="nl-body-secondary nl-muted">
+                        시간대별 방문자는 모으지 않습니다.
+                    </p>
+                    <p className="nl-metadata nl-muted">{HOURLY_NOTE_DAILY}</p>
+                </>
+            ) : hourly ? (
                 <>
                     <AdminDashboardHours
-                        data={hourly}
-                        color={DASHBOARD_METRIC_COLORS.pageviews}
+                        key={metric}
+                        data={hourly.map(({ hour, label, values, future }) => ({
+                            hour,
+                            label,
+                            value: hourlyMetric ? values[hourlyMetric] : 0,
+                            future,
+                        }))}
+                        label={label}
+                        color={DASHBOARD_METRIC_COLORS[metric]}
                     />
                     <p className="nl-metadata nl-muted">
-                        시간대별 페이지뷰 · 서울 기준. 날짜별 그래프는 7일
-                        이상에서 보입니다.
+                        시간대별 {label} · 서울 기준. {HOURLY_NOTE_DAILY}
                     </p>
                 </>
             ) : (
@@ -134,6 +144,40 @@ export function AdminDashboardTrend({
                     label={label}
                     color={DASHBOARD_METRIC_COLORS[metric]}
                 />
+            )}
+        </section>
+    );
+}
+
+/** 추이 패널 로딩 — 오늘 보기의 방문자는 그래프 대신 안내 글이라 글자 스켈레톤으로 (2026-09-22) */
+export function AdminDashboardTrendLoading({
+    initialMetric,
+    hourly,
+}: {
+    initialMetric: DashboardMetric;
+    hourly: boolean;
+}) {
+    const metric = useDashboardMetric(initialMetric);
+    const label = DASHBOARD_METRICS[metric];
+    return (
+        <section className="nl-dashboard__panel">
+            <div className="nl-dashboard__panel-head">
+                <h2 className="nl-component-title">{label}</h2>
+            </div>
+            {hourly && metric === "visitors" ? (
+                <>
+                    <SkeletonText className="nl-body-secondary" width="l" />
+                    <p className="nl-metadata nl-muted">{HOURLY_NOTE_DAILY}</p>
+                </>
+            ) : (
+                <>
+                    <div className="nl-dashboard__chart nl-skeleton" />
+                    {hourly ? (
+                        <p className="nl-metadata nl-muted">
+                            시간대별 {label} · 서울 기준. {HOURLY_NOTE_DAILY}
+                        </p>
+                    ) : null}
+                </>
             )}
         </section>
     );
