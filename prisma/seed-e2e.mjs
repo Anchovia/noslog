@@ -25,7 +25,7 @@ async function seed() {
             artist: "NosLog Test",
             category: "Original",
             category_short: "Org",
-            background: "/bg/0ff2ac56c4fd26219090d5b5cfcad29c.png",
+            background: "/bg/0ff2ac56c4fd26219090d5b5cfcad29c.webp",
         },
         create: {
             index: "e2e-music-001",
@@ -34,7 +34,7 @@ async function seed() {
             artist: "NosLog Test",
             category: "Original",
             category_short: "Org",
-            background: "/bg/0ff2ac56c4fd26219090d5b5cfcad29c.png",
+            background: "/bg/0ff2ac56c4fd26219090d5b5cfcad29c.webp",
         },
     });
 
@@ -239,7 +239,7 @@ async function seed() {
             "PUBLISHED",
             -3,
             5,
-            "/bg/0ff2ac56c4fd26219090d5b5cfcad29c.png",
+            "/bg/0ff2ac56c4fd26219090d5b5cfcad29c.webp",
         ],
         ["E2E 진행 중 이벤트 — 곧 끝남", "PUBLISHED", -1, 2, null],
         ["E2E 예정 이벤트", "PUBLISHED", 10, 14, null],

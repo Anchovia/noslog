@@ -8,7 +8,8 @@ function normalizeJacketUrl(url: string) {
 }
 
 export function getLocalJacketUrl(index: string) {
-    return localJacketIndexSet.has(index) ? `/bg/${index}.png` : null;
+    // 로컬 자켓은 WebP(긴 변 512px, 2026-09-22) — scripts/convert-music-jackets.mjs
+    return localJacketIndexSet.has(index) ? `/bg/${index}.webp` : null;
 }
 
 // 관리자가 직접 올린 자켓의 공개 Blob 경로 — 잘못된 로컬 파일·수집 자켓을 바로잡는 값이라 무엇보다 먼저 쓴다

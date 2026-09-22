@@ -11,7 +11,8 @@ const manifestPath = path.join(
 );
 
 const jacketIndexes = (await readdir(jacketDirectory))
-    .filter((fileName) => fileName.toLowerCase().endsWith(".png"))
+    // 자켓은 WebP 로 둔다(2026-09-22) — PNG 를 넣었다면 먼저 convert-music-jackets 를 돌린다
+    .filter((fileName) => fileName.toLowerCase().endsWith(".webp"))
     .map((fileName) => path.parse(fileName).name)
     .sort();
 
