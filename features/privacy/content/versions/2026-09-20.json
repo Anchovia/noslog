@@ -1,7 +1,7 @@
 {
     "ko": {
         "title": "개인정보처리방침",
-        "dates": "최종 수정 2026년 9월 22일 · 시행 2026년 9월 22일",
+        "dates": "최종 수정 2026년 9월 20일 · 시행 2026년 9월 20일",
         "contents": "이 페이지에서",
         "detailLabel": "자세히 보기",
         "settingsLogin": "로그인 후 설정에서 관리",
@@ -76,11 +76,6 @@
                     },
                     {
                         "kind": "item",
-                        "title": "커뮤니티 활동",
-                        "text": "패턴 평가, 서열 투표, 의견, 답글, 좋아요, 신고를 악곡 정보 제공과 커뮤니티 운영에 사용합니다. 의견과 답글은 작성자 이름과 함께 공개되고, 좋아요는 개수만 공개됩니다."
-                    },
-                    {
-                        "kind": "item",
                         "title": "자동 생성 정보",
                         "text": "접속 IP, 브라우저·기기 정보, 접속 시각, 요청 및 오류 로그가 서비스 보안, 장애 대응과 운영 과정에서 생성될 수 있습니다."
                     },
@@ -150,7 +145,6 @@
                             "처리 완료된 피드백: 완료일로부터 6개월 후 내용과 첨부 이미지 전체 삭제",
                             "승인된 검정 제출: 심사 완료 6개월 후 증빙 이미지와 심사 메모 삭제, 합격 이력은 회원 탈퇴 시까지 보관",
                             "반려된 검정 제출: 심사 완료 6개월 후 제출 기록과 증빙 이미지 전체 삭제",
-                            "의견·답글: 작성자가 지우거나 회원 탈퇴할 때까지. 번역문은 원문과 함께 보관하고, 원문을 고치거나 지우면 함께 삭제",
                             "방문 통계: 하루 식별값은 다음 날 삭제, 합계(하루 방문자 수·페이지 조회 수·시간대별 조회 수·로그인 여부별 합계·API 호출 수)는 90일 후 삭제"
                         ]
                     },
@@ -183,11 +177,6 @@
                         "kind": "item",
                         "title": "Neon",
                         "text": "회원과 서비스 데이터를 PostgreSQL 데이터베이스에 저장합니다. 저장 리전은 싱가포르(sin1)이며 서비스 제공 기간 동안 처리됩니다."
-                    },
-                    {
-                        "kind": "item",
-                        "title": "Google (Gemini API)",
-                        "text": "의견·답글에서 「번역 보기」를 누르면 그 글의 본문만 번역을 위해 Google에 보냅니다. 입력을 서비스 개선·학습에 쓰지 않는 유료 등급으로만 이용하며, 작성자 이름 등 다른 정보는 보내지 않습니다. Google의 국외 서버에서 처리될 수 있습니다."
                     },
                     {
                         "kind": "paragraph",
@@ -286,7 +275,7 @@
     },
     "ja": {
         "title": "プライバシーポリシー",
-        "dates": "最終更新 2026年9月22日 · 施行 2026年9月22日",
+        "dates": "最終更新 2026年9月20日 · 施行 2026年9月20日",
         "contents": "このページの内容",
         "detailLabel": "詳しく見る",
         "settingsLogin": "ログインして設定で管理",
@@ -361,11 +350,6 @@
                     },
                     {
                         "kind": "item",
-                        "title": "コミュニティ活動",
-                        "text": "パターン評価、序列投票、意見、返信、いいね、報告を、楽曲情報の提供とコミュニティ運営に使用します。意見と返信は投稿者名とともに公開され、いいねは件数のみ公開されます。"
-                    },
-                    {
-                        "kind": "item",
                         "title": "自動的に生成される情報",
                         "text": "接続IP、ブラウザー・端末情報、接続時刻、リクエストおよびエラーログが、サービスのセキュリティ、障害対応、運営の過程で生成される場合があります。"
                     },
@@ -435,7 +419,6 @@
                             "対応済みのフィードバック：対応完了日から6か月後に内容と添付画像をすべて削除",
                             "承認された検定提出：審査完了から6か月後に証明画像と審査メモを削除し、合格履歴は退会まで保管",
                             "却下された検定提出：審査完了から6か月後に提出記録と証明画像をすべて削除",
-                            "意見・返信：投稿者が削除するか退会するまで。翻訳文は原文とともに保管し、原文を編集・削除すると一緒に削除",
                             "訪問統計：1日の識別値は翌日に削除し、合計（1日の訪問者数・ページ閲覧数・時間帯ごとの閲覧数・ログイン状態別の合計・API呼び出し回数）は90日後に削除"
                         ]
                     },
@@ -468,11 +451,6 @@
                         "kind": "item",
                         "title": "Neon",
                         "text": "会員およびサービスデータをPostgreSQLデータベースに保存します。保存リージョンはシンガポール（sin1）で、サービス提供期間中に処理されます。"
-                    },
-                    {
-                        "kind": "item",
-                        "title": "Google（Gemini API）",
-                        "text": "意見・返信で「翻訳を見る」を押すと、その投稿の本文のみを翻訳のためにGoogleへ送信します。入力をサービス改善・学習に使用しない有料プランでのみ利用し、投稿者名などほかの情報は送信しません。Googleの国外サーバーで処理される場合があります。"
                     },
                     {
                         "kind": "paragraph",
@@ -571,7 +549,7 @@
     },
     "en": {
         "title": "Privacy Policy",
-        "dates": "Last updated September 22, 2026 · Effective September 22, 2026",
+        "dates": "Last updated September 20, 2026 · Effective September 20, 2026",
         "contents": "On this page",
         "detailLabel": "See details",
         "settingsLogin": "Manage in Settings after logging in",
@@ -646,11 +624,6 @@
                     },
                     {
                         "kind": "item",
-                        "title": "Community activity",
-                        "text": "We use pattern ratings, tier votes, opinions, replies, likes, and reports to provide song information and run the community. Opinions and replies are public with the author's name; only like counts are public."
-                    },
-                    {
-                        "kind": "item",
                         "title": "Automatically generated information",
                         "text": "Connection IP addresses, browser and device information, access times, requests, and error logs may be generated for service security, incident response, and operations."
                     },
@@ -720,7 +693,6 @@
                             "Resolved feedback: all content and attached images are deleted six months after resolution",
                             "Approved exam submissions: evidence images and review notes are deleted six months after review; passing history is retained until account deletion",
                             "Rejected exam submissions: submission records and evidence images are deleted six months after review",
-                            "Opinions and replies: until the author deletes them or deletes their account. Translations are kept with the original and deleted when the original is edited or deleted",
                             "Visit statistics: daily identifiers are deleted the next day; totals (daily visitors, page views, views per hour, totals split by signed-in status, API calls) are deleted after 90 days"
                         ]
                     },
@@ -753,11 +725,6 @@
                         "kind": "item",
                         "title": "Neon",
                         "text": "Neon stores member and service data in a PostgreSQL database. The storage region is Singapore (sin1), and data is processed for the duration of service provision."
-                    },
-                    {
-                        "kind": "item",
-                        "title": "Google (Gemini API)",
-                        "text": "When you select \"See translation\" on an opinion or reply, only that text is sent to Google to translate it. We use only the paid tier, where inputs are not used to improve or train Google's services, and we send no other information such as the author's name. It may be processed on Google servers outside your country."
                     },
                     {
                         "kind": "paragraph",
