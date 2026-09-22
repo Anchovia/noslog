@@ -223,4 +223,37 @@ describe("관리자 대시보드", () => {
         expect(mocks.queryRaw).toHaveBeenCalledTimes(1);
         expect(mocks.requireAdmin).toHaveBeenCalledOnce();
     });
+
+    it("오늘은 페이지뷰 · 가입 · 동기화를 시각별로 나눈다", async () => {
+        mocks.queryRaw.mockResolvedValue([
+            { date: "2026-09-13", kind: "hour", key: "09", count: 4 },
+            { date: "2026-09-12", kind: "hour", key: "09", count: 50 },
+        ]);
+        mocks.userFindMany.mockReset();
+        mocks.userFindMany
+            .mockResolvedValueOnce([
+                // 서울 9/13 10:30 · 어제 10:00 은 빠진다
+                { created_at: new Date("2026-09-13T01:30:00Z") },
+                { created_at: new Date("2026-09-12T01:00:00Z") },
+            ])
+            .mockResolvedValueOnce([]);
+        const data = await getAdminDashboard(
+            { range: "today", metric: "signups" },
+            NOW
+        );
+        const hour = (key: string) =>
+            data.hourly?.find((point) => point.hour === key);
+        expect(hour("09")?.values).toEqual({
+            pageviews: 4,
+            signups: 0,
+            syncs: 0,
+        });
+        expect(hour("10")?.values.signups).toBe(1);
+        // 서울 9/13 11:00 동기화 — 9/10 것은 빠진다
+        expect(hour("11")?.values.syncs).toBe(1);
+        expect(
+            data.hourly?.reduce((total, point) => total + point.values.syncs, 0)
+        ).toBe(1);
+        expect(hour("13")?.future).toBe(true);
+    });
 });

@@ -134,6 +134,12 @@ async function syncPublicFacts(
             conditionNote: cabinet.conditionNote,
             availability: cabinet.availability,
             condition: cabinet.condition,
+            // 태그 · 특징은 오래 가는 설명이라 바꿔도 가동 확인 시각은 그대로(아래 changed 에 넣지 않는다)
+            tags: cabinet.tags,
+            keyWeight: cabinet.keyWeight,
+            screenLag: cabinet.screenLag,
+            soundVolume: cabinet.soundVolume,
+            featureNote: cabinet.featureNote,
         };
         const changed =
             !current ||
@@ -191,6 +197,7 @@ async function syncPublicFacts(
             phone: true,
             website: true,
             creditLabel: true,
+            facilities: true,
         },
     });
     const weekly = input.businessHours
@@ -212,10 +219,13 @@ async function syncPublicFacts(
         website: input.website,
         creditLabel: input.creditLabel,
     };
+    // 시설 칸 없이 온 저장(옛 화면)은 저장된 시설을 그대로 둔다
+    const facilities = input.facilities ?? details?.facilities ?? [];
     const contactChanged =
         (details?.phone ?? null) !== contact.phone ||
         (details?.website ?? null) !== contact.website ||
-        (details?.creditLabel ?? null) !== contact.creditLabel;
+        (details?.creditLabel ?? null) !== contact.creditLabel ||
+        (details?.facilities ?? []).join() !== facilities.join();
 
     if (
         hoursChanged ||
@@ -237,7 +247,7 @@ async function syncPublicFacts(
                   }
                 : {}),
             ...(cabinetVerified ? { cabinetVerifiedAt: now } : {}),
-            ...(contactChanged ? contact : {}),
+            ...(contactChanged ? { ...contact, facilities } : {}),
         };
         await tx.arcadePublicDetails.upsert({
             where: { arcadeId },

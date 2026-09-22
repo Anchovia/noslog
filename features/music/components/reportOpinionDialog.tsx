@@ -22,13 +22,16 @@ type ReportFormValues = z.infer<typeof opinionReportSchema>;
 export default function ReportOpinionDialog({
     chartId,
     evaluationId,
+    replyId,
     accountId,
     returnTo,
     onClose,
     onReported,
 }: {
     chartId: number;
-    evaluationId: number;
+    /** 의견 신고면 의견 번호, 답글 신고면 replyId(2026-09-22) — 둘 중 하나 */
+    evaluationId?: number;
+    replyId?: number;
     accountId?: number;
     returnTo: string;
     onClose: () => void;
@@ -40,7 +43,7 @@ export default function ReportOpinionDialog({
     const mutation = useCommunityMutation(chartId);
     const form = useForm<ReportFormValues>({
         resolver: zodResolver(opinionReportSchema),
-        defaultValues: { evaluationId, explanation: "" },
+        defaultValues: { evaluationId, replyId, explanation: "" },
     });
     const reason = useWatch({ control: form.control, name: "reason" });
     const handleSubmit = async (input: ReportFormValues) => {

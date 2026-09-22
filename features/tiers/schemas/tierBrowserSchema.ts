@@ -9,6 +9,19 @@ import {
     normalizeTierModeGoal,
 } from "@/lib/tiers";
 
+export const TIER_BROWSER_VIEWS = ["grid", "list"] as const;
+// 구간 안 곡 순서(2026-09-22 ②) — 서열표 순(기본) · 레벨 순 · 일본어 읽기 순 · 점수 낮은 순(로그인)
+export const TIER_BROWSER_SORTS = [
+    "position",
+    "level",
+    "name",
+    "score",
+] as const;
+export type TierBrowserSort = (typeof TIER_BROWSER_SORTS)[number];
+// 격자 카드 자켓 위 띠(2026-09-22 A) — 공식 Grd(기본) · NosLog 레이팅 · 표시 안 함
+export const TIER_BROWSER_STRIPS = ["grade", "rating", "off"] as const;
+export type TierBrowserStrip = (typeof TIER_BROWSER_STRIPS)[number];
+
 const tierBrowserQuerySchema = z.object({
     mode: z.enum(TIER_MODES).catch("basic"),
     goal: z.enum(TIER_GOALS).catch("s"),
@@ -17,7 +30,12 @@ const tierBrowserQuerySchema = z.object({
     bands: z
         .array(z.number().refine((value) => TIER_BAND_VALUES.includes(value)))
         .default([]),
-    detailed: z.boolean().default(false),
+    // 보기 방식 — 격자(자켓) · 목록(행). 예전 주소의 view=detailed 는 목록으로 읽는다(2026-09-22)
+    view: z.enum(TIER_BROWSER_VIEWS).default("grid"),
+    // 곡 검색어(2026-09-22) — 악곡 목록 검색과 같은 필드(곡 코드 · 제목 · 가나 · 아티스트 · 승인된 번역 제목)
+    q: z.string().trim().max(100).default(""),
+    sort: z.enum(TIER_BROWSER_SORTS).catch("position"),
+    strip: z.enum(TIER_BROWSER_STRIPS).catch("grade"),
 });
 export type TierBrowserQuery = z.infer<typeof tierBrowserQuerySchema>;
 
@@ -37,7 +55,12 @@ export function parseTierBrowserQuery(
         bands: split("bands")
             .map(Number)
             .filter((value) => TIER_BAND_VALUES.includes(value)),
-        detailed: params.get("view") === "detailed",
+        view: ["list", "detailed"].includes(params.get("view") ?? "")
+            ? "list"
+            : "grid",
+        q: (params.get("q") ?? "").trim().slice(0, 100),
+        sort: params.get("sort"),
+        strip: params.get("strip"),
     });
     // Recital 은 서열표가 하나라 어떤 goal 이 와도 그 표로 맞춤
     return { ...query, goal: normalizeTierModeGoal(query.mode, query.goal) };
@@ -53,7 +76,10 @@ export function serializeTierBrowserQuery(query: TierBrowserQuery) {
             "bands",
             query.bands.map((value) => value.toFixed(1)).join(",")
         );
-    if (query.detailed) params.set("view", "detailed");
+    if (query.view === "list") params.set("view", "list");
+    if (query.q) params.set("q", query.q);
+    if (query.sort !== "position") params.set("sort", query.sort);
+    if (query.strip !== "grade") params.set("strip", query.strip);
     return params;
 }
 
@@ -88,6 +114,9 @@ const tierBrowserEntrySchema = z.object({
         music: z.object({
             index: z.string(),
             title: z.string(),
+            // 일본어 읽기(가나, 없으면 원제) — 읽기 순 정렬 기준. 악곡 목록 이름 순과 같은 값.
+            // 이 칸이 없는 응답(배포 전환 중 옛 서버)도 받아서 원제로 정렬한다
+            reading: z.string().optional(),
             localizedTitle: z.string().nullable(),
             background: z.string().nullable(),
         }),

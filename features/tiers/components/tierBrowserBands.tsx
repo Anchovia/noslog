@@ -4,6 +4,7 @@ import {
     startTransition,
     useCallback,
     useEffect,
+    useMemo,
     useRef,
     useState,
 } from "react";
@@ -15,11 +16,17 @@ import { tierBrowserBandOptions } from "@/features/tiers/api/tierBrowser";
 import type {
     TierBrowserBand,
     TierBrowserBandSummary,
+    TierBrowserEntry,
     TierBrowserOverview,
     TierBrowserQuery,
+    TierBrowserSort,
 } from "@/features/tiers/schemas/tierBrowserSchema";
 import { formatTierValue } from "@/lib/tiers";
-import TierBrowserCard, { TierBrowserCardSkeleton } from "./tierBrowserCard";
+import TierBrowserCard, {
+    TierBrowserCardSkeleton,
+    TierBrowserRow,
+    TierBrowserRowSkeleton,
+} from "./tierBrowserCard";
 import { tierValueColor } from "@/lib/music/tierValueColor";
 
 export const TIER_BROWSER_BATCH_SIZE = 20;
@@ -31,6 +38,33 @@ export function tierBrowserSkeletonCount(total: number, visible: boolean) {
         total,
         visible ? TIER_BROWSER_BATCH_SIZE : TIER_BROWSER_IDLE_SKELETONS
     );
+}
+
+/**
+ * 구간 안 곡 순서(2026-09-22 ②). 구간은 곡 전체를 한 번에 받으므로 20개씩 자르기 전에 정렬한다.
+ * 레벨 순 = 높은 레벨 먼저 · 읽기 순 = 일본어 읽기 가나다 · 점수 낮은 순 = 기록 없는 곡 먼저, 그다음 낮은 점수.
+ * 같은 값끼리는 서열표 순
+ */
+export function sortTierBrowserEntries(
+    entries: readonly TierBrowserEntry[],
+    sort: TierBrowserSort
+) {
+    const byPosition = (a: TierBrowserEntry, b: TierBrowserEntry) =>
+        a.position - b.position;
+    const compare: Record<
+        TierBrowserSort,
+        (a: TierBrowserEntry, b: TierBrowserEntry) => number
+    > = {
+        position: () => 0,
+        level: (a, b) => b.chart.level - a.chart.level,
+        name: (a, b) =>
+            (a.chart.music.reading ?? a.chart.music.title).localeCompare(
+                b.chart.music.reading ?? b.chart.music.title,
+                "ja"
+            ),
+        score: (a, b) => (a.record?.score ?? -1) - (b.record?.score ?? -1),
+    };
+    return [...entries].sort((a, b) => compare[sort](a, b) || byPosition(a, b));
 }
 
 export function nextTierBrowserVisibleCount(current: number, total: number) {
@@ -82,8 +116,16 @@ function TierBrowserBandSection({
         observer.observe(ref.current);
         return () => observer.disconnect();
     }, [visible]);
-    const total = band.data?.entries.length ?? 0;
-    const shown = band.data?.entries.slice(0, visibleCount) ?? [];
+    const list = query.view === "list";
+    const signedIn = overview.viewerId !== null;
+    // 점수 순은 로그인했을 때만 — 주소에 남아 있어도 로그아웃이면 서열표 순
+    const sort = query.sort === "score" && !signedIn ? "position" : query.sort;
+    const entries = useMemo(
+        () => sortTierBrowserEntries(band.data?.entries ?? [], sort),
+        [band.data, sort]
+    );
+    const total = entries.length;
+    const shown = entries.slice(0, visibleCount);
     const nextAmount = Math.min(TIER_BROWSER_BATCH_SIZE, total - shown.length);
     const autoLimit = TIER_BROWSER_BATCH_SIZE * (TIER_BROWSER_AUTO_BATCHES + 1);
     const autoLoad = shown.length < Math.min(total, autoLimit);
@@ -126,7 +168,7 @@ function TierBrowserBandSection({
                 >
                     {formatTierValue(summary.value)}
                 </h2>
-                {overview.viewerId !== null ? (
+                {signedIn ? (
                     <span className="nl-control nl-muted">
                         {t("tiers.achieved", {
                             count: summary.achievedCount ?? "—",
@@ -149,17 +191,27 @@ function TierBrowserBandSection({
                     }
                 />
             ) : null}
-            <div className="nl-tier-grid" data-detailed={query.detailed}>
+            <div className={list ? "nl-tier-list" : "nl-tier-grid"}>
                 {band.data
-                    ? shown.map((entry) => (
-                          <TierBrowserCard
-                              key={entry.id}
-                              entry={entry}
-                              query={query}
-                              signedIn={overview.viewerId !== null}
-                              pending={pending}
-                          />
-                      ))
+                    ? shown.map((entry) =>
+                          list ? (
+                              <TierBrowserRow
+                                  key={entry.id}
+                                  entry={entry}
+                                  query={query}
+                                  signedIn={signedIn}
+                                  pending={pending}
+                              />
+                          ) : (
+                              <TierBrowserCard
+                                  key={entry.id}
+                                  entry={entry}
+                                  query={query}
+                                  signedIn={signedIn}
+                                  pending={pending}
+                              />
+                          )
+                      )
                     : !band.isError
                       ? Array.from(
                             {
@@ -168,13 +220,18 @@ function TierBrowserBandSection({
                                     visible
                                 ),
                             },
-                            (_, index) => (
-                                <TierBrowserCardSkeleton
-                                    key={index}
-                                    detailed={query.detailed}
-                                    signedIn={overview.viewerId !== null}
-                                />
-                            )
+                            (_, index) =>
+                                list ? (
+                                    <TierBrowserRowSkeleton
+                                        key={index}
+                                        signedIn={signedIn}
+                                    />
+                                ) : (
+                                    <TierBrowserCardSkeleton
+                                        key={index}
+                                        signedIn={signedIn}
+                                    />
+                                )
                         )
                       : null}
             </div>

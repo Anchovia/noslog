@@ -12,6 +12,7 @@ export default function CompactSelect<Value extends string>({
     options,
     disabled = false,
     outlined = false,
+    size,
     id,
     className,
 }: {
@@ -26,6 +27,8 @@ export default function CompactSelect<Value extends string>({
     }[];
     disabled?: boolean;
     outlined?: boolean;
+    /** 결과 줄처럼 한 줄이 M 인 곳 — 높이만 M(--nl-control-height-compact), 글자 · 여백은 같다 */
+    size?: "sm";
     id?: string;
     className?: string;
 }) {
@@ -41,6 +44,7 @@ export default function CompactSelect<Value extends string>({
                 className={cn(
                     "nl-compact-select nl-control",
                     outlined && "nl-compact-select--outlined",
+                    size === "sm" && "nl-compact-select--compact",
                     className
                 )}
                 aria-label={label}

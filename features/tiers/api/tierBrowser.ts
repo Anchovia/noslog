@@ -12,13 +12,19 @@ export function tierBrowserOverviewOptions(
     query: TierBrowserQuery,
     viewerId: number | null
 ) {
-    const { mode, goal, difficulties, levels } = query;
-    const filters = { mode, goal, difficulties, levels };
+    const { mode, goal, difficulties, levels, q } = query;
+    const filters = { mode, goal, difficulties, levels, q };
     return queryOptions({
         queryKey: ["tier-browser", viewerId, filters],
         queryFn: async ({ signal }) => {
             const response = await fetch(
-                `/api/tier-browser?${serializeTierBrowserQuery({ ...filters, bands: [], detailed: false })}`,
+                `/api/tier-browser?${serializeTierBrowserQuery({
+                    ...filters,
+                    bands: [],
+                    view: "grid",
+                    sort: "position",
+                    strip: "grade",
+                })}`,
                 { signal }
             );
             return tierBrowserOverviewSchema.parse(
@@ -37,8 +43,8 @@ export function tierBrowserBandOptions(
     viewerId: number | null,
     showLocalizedTitle: boolean
 ) {
-    const { mode, goal, difficulties, levels } = query;
-    const filters = { mode, goal, difficulties, levels };
+    const { mode, goal, difficulties, levels, q } = query;
+    const filters = { mode, goal, difficulties, levels, q };
     return queryOptions({
         queryKey: [
             "tier-browser-band",
@@ -52,7 +58,9 @@ export function tierBrowserBandOptions(
             const params = serializeTierBrowserQuery({
                 ...filters,
                 bands: [],
-                detailed: false,
+                view: "grid",
+                sort: "position",
+                strip: "grade",
             });
             params.set("bandId", String(bandId));
             params.set("locale", locale);

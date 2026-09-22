@@ -7,6 +7,7 @@ import { saveChartContribution } from "@/app/(nevigation)/music/communityActions
 import type {
     CommunityMutation,
     OpinionPage,
+    OpinionReplyList,
 } from "@/features/music/schemas/communitySchema";
 
 export default function useCommunityMutation(chartId: number) {
@@ -43,6 +44,39 @@ export default function useCommunityMutation(chartId: number) {
                                               : item
                                       ),
                                   })),
+                              }
+                            : data
+                );
+                return;
+            }
+            // 답글 좋아요 — 그 답글 목록만 고친다
+            if (input.action === "reply-like") {
+                client.setQueriesData<OpinionReplyList>(
+                    {
+                        queryKey: [
+                            "music-community",
+                            chartId,
+                            "replies",
+                            result.evaluationId,
+                        ],
+                    },
+                    (data) =>
+                        data
+                            ? {
+                                  ...data,
+                                  items: data.items.map((item) =>
+                                      item.id === input.replyId
+                                          ? {
+                                                ...item,
+                                                likeCount:
+                                                    result.likeCount ??
+                                                    item.likeCount,
+                                                viewerLiked:
+                                                    result.selected ??
+                                                    item.viewerLiked,
+                                            }
+                                          : item
+                                  ),
                               }
                             : data
                 );

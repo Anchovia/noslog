@@ -28,7 +28,7 @@
 .noslog-ui .nl-privacy-summary__group + .nl-privacy-summary__group::before {
     content: "";
     width: 100px;
-    height: 1px;
+    height: var(--nl-stroke-default);
     background: var(--nl-border-divider);
     /* 선 위(묶음 간격 12)와 아래를 같게 — 선으로 나눈 묶음 규칙 2026-09-15 */
     margin-bottom: var(--nl-spacing-12);
@@ -191,7 +191,7 @@
         margin-bottom: 24px;
     }
     .noslog-ui .nl-privacy .nl-status {
-        border: 1px solid black;
+        border: var(--nl-stroke-default) solid black;
         background: white;
         color: black;
         break-inside: avoid;

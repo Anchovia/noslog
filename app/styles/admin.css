@@ -4,7 +4,8 @@
     top: 60px;
     z-index: 40;
     background: var(--nl-surface-canvas);
-    box-shadow: inset 0 -1px var(--nl-border-divider);
+    box-shadow: inset 0 calc(var(--nl-stroke-default) * -1)
+        var(--nl-border-divider);
 }
 /* 스크롤로 사이트 헤더가 숨으면 맨 위에 붙는다 — 60 에 남으면 헤더가 빠진 자리가 빈다(서열표 구간 헤더와 같은 규칙) */
 .noslog-ui:has(.nl-header[data-scroll-state="hidden"]) .nl-admin-nav {
@@ -114,7 +115,7 @@
     flex-direction: column;
     gap: var(--nl-spacing-4);
     padding: var(--nl-spacing-12);
-    border: 1px solid transparent;
+    border: var(--nl-stroke-default) solid transparent;
     border-radius: var(--nl-radius-container);
     background: var(--nl-surface-surface);
     color: inherit;
@@ -142,7 +143,9 @@
 .noslog-ui .nl-dashboard__delta [data-trend="down"] {
     color: var(--nl-feedback-danger-marker);
 }
+/* 시각별로 세지 않는 수치는 빈 틀 가운데에 공용 그래프 안내(nl-line-chart__state)를 둔다 */
 .noslog-ui .nl-dashboard__chart {
+    position: relative;
     height: 160px;
 }
 .noslog-ui .nl-dashboard__list {
@@ -183,7 +186,7 @@
     padding-block: var(--nl-spacing-12) var(--nl-spacing-4);
 }
 .noslog-ui .nl-dashboard__todo-list > li + li {
-    box-shadow: inset 0 1px var(--nl-border-divider);
+    box-shadow: inset 0 var(--nl-stroke-default) var(--nl-border-divider);
 }
 .noslog-ui .nl-dashboard__todo-item {
     display: flex;
@@ -283,7 +286,7 @@
     min-height: 44px;
     padding-inline: var(--nl-spacing-12);
     color: var(--nl-content-subdued);
-    box-shadow: inset 0 -2px transparent;
+    box-shadow: inset 0 calc(var(--nl-stroke-strong) * -1) transparent;
     white-space: nowrap;
 }
 .noslog-ui .nl-admin-nav__tab:hover {
@@ -292,11 +295,12 @@
 .noslog-ui .nl-admin-nav__tab--current {
     color: var(--nl-content-default);
     font-weight: var(--nl-type-weight-semibold);
-    box-shadow: inset 0 -2px var(--nl-border-strong);
+    box-shadow: inset 0 calc(var(--nl-stroke-strong) * -1)
+        var(--nl-border-strong);
 }
 .noslog-ui .nl-admin-nav__tab:focus-visible {
-    outline: 1px solid var(--nl-focus-ring);
-    outline-offset: -1px;
+    outline: var(--nl-stroke-default) solid var(--nl-focus-ring);
+    outline-offset: calc(var(--nl-stroke-default) * -1);
 }
 
 /* 공지 관리 — 목록 */
@@ -311,7 +315,8 @@
     gap: var(--nl-spacing-16);
     min-height: 64px;
     padding-block: var(--nl-spacing-12);
-    box-shadow: inset 0 -1px var(--nl-border-divider);
+    box-shadow: inset 0 calc(var(--nl-stroke-default) * -1)
+        var(--nl-border-divider);
     color: inherit;
 }
 .noslog-ui .nl-admin-row:hover .nl-admin-row__title {
@@ -353,7 +358,7 @@
     gap: var(--nl-spacing-4);
     min-height: 20px;
     padding-inline: var(--nl-spacing-8);
-    border: 1px solid var(--nl-border-default);
+    border: var(--nl-stroke-default) solid var(--nl-border-default);
     border-radius: var(--nl-radius-control);
     color: var(--nl-content-subdued);
 }
@@ -409,7 +414,7 @@
     justify-content: space-between;
     gap: var(--nl-spacing-16);
     padding-top: var(--nl-spacing-24);
-    box-shadow: inset 0 1px var(--nl-border-divider);
+    box-shadow: inset 0 var(--nl-stroke-default) var(--nl-border-divider);
 }
 .noslog-ui .nl-admin-form__actions > div {
     display: flex;
@@ -431,14 +436,16 @@
 /* 수치마다 제 색(2026-09-20 C2) — 수치 칸 아래 색 줄. 그래프 선 · 막대와 같은 색 */
 .noslog-ui .nl-dashboard__kpi-tone {
     display: block;
-    height: 3px;
+    /* 탭 밑줄과 같은 두께 2 */
+    height: var(--nl-spacing-2);
     border-radius: var(--nl-radius-control);
     margin-top: var(--nl-spacing-4);
 }
 /* 가입자 · 손님 비율 한 줄 */
 .noslog-ui .nl-dashboard__split {
     display: flex;
-    height: 10px;
+    /* 막대 목록 트랙과 같은 높이 8 */
+    height: var(--nl-spacing-8);
     border-radius: var(--nl-radius-control);
     overflow: hidden;
 }
@@ -464,4 +471,23 @@
 }
 .noslog-ui .nl-dashboard__legend .nl-metric-value:last-child {
     margin-left: auto;
+}
+/* 수치 · 가입자/손님 색 — 데이터 색 토큰만(인라인 금지). 그래프 선 · 막대 색(dashboardParams)과 같은 토큰 */
+.noslog-ui .nl-dashboard__kpi-tone[data-metric="visitors"] {
+    background: var(--nl-local-data-categorical-1);
+}
+.noslog-ui .nl-dashboard__kpi-tone[data-metric="pageviews"] {
+    background: var(--nl-local-data-categorical-2);
+}
+.noslog-ui .nl-dashboard__kpi-tone[data-metric="signups"] {
+    background: var(--nl-local-data-categorical-3);
+}
+.noslog-ui .nl-dashboard__kpi-tone[data-metric="syncs"] {
+    background: var(--nl-local-data-categorical-5);
+}
+.noslog-ui [data-side="member"]:is(.nl-chart-bar, .nl-dashboard__legend-dot) {
+    background: var(--nl-local-data-categorical-1);
+}
+.noslog-ui [data-side="guest"]:is(.nl-chart-bar, .nl-dashboard__legend-dot) {
+    background: var(--nl-local-data-bucket-5);
 }

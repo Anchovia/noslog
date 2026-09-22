@@ -125,7 +125,7 @@
 }
 .noslog-ui .nl-arcades__sheet-toggle:focus-visible {
     outline: none;
-    box-shadow: inset 0 0 0 1px var(--nl-focus-ring);
+    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-focus-ring);
 }
 .noslog-ui .nl-arcades__sheet-body {
     display: flex;
@@ -140,7 +140,7 @@
     gap: var(--nl-spacing-16);
     margin-top: var(--nl-spacing-8);
     padding-block: var(--nl-spacing-16);
-    border-top: 1px solid var(--nl-border-divider);
+    border-top: var(--nl-stroke-default) solid var(--nl-border-divider);
 }
 
 /* 결과 카드 — 요약 줄(사진 64 · 이름/거리 · 기체 한 줄 · 영업 상태) 이 펼침 버튼, 아래로 펼침 칸 */
@@ -160,11 +160,11 @@
     }
 }
 .noslog-ui .nl-arcade-result[data-selected] {
-    box-shadow: inset 0 0 0 1px var(--nl-border-strong);
+    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-strong);
 }
 /* FOCUS-1B — 카드 자신의 1px INSIDE 경계 색만 바꾼다 */
 .noslog-ui .nl-arcade-result:has(> .nl-arcade-result__summary:focus-visible) {
-    box-shadow: inset 0 0 0 1px var(--nl-focus-ring);
+    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-focus-ring);
 }
 .noslog-ui .nl-arcade-result__summary {
     display: flex;
@@ -195,7 +195,7 @@
     gap: var(--nl-spacing-12);
     margin-inline: var(--nl-spacing-16);
     padding: var(--nl-spacing-12) 0 var(--nl-spacing-16);
-    border-top: 1px solid var(--nl-border-divider);
+    border-top: var(--nl-stroke-default) solid var(--nl-border-divider);
 }
 .noslog-ui .nl-arcade-result__facts {
     display: grid;
@@ -245,7 +245,7 @@
     height: 64px;
     border-radius: var(--nl-radius-container);
     background: var(--nl-surface-sunken);
-    box-shadow: inset 0 0 0 1px var(--nl-border-empty-slot);
+    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-empty-slot);
     overflow: hidden;
 }
 .noslog-ui .nl-arcade-result__photo img {
@@ -287,7 +287,7 @@
     width: 8px;
     height: 8px;
     border-radius: var(--nl-radius-full);
-    border: 1px solid var(--nl-content-subdued);
+    border: var(--nl-stroke-default) solid var(--nl-content-subdued);
 }
 .noslog-ui .nl-arcade-result__dot[data-open="closed"] {
     background: var(--nl-content-subdued);
@@ -332,7 +332,7 @@
     position: absolute;
     background: var(--nl-surface-overlay);
     box-shadow:
-        inset 0 0 0 1px var(--nl-border-overlay),
+        inset 0 0 0 var(--nl-stroke-default) var(--nl-border-overlay),
         var(--nl-overlay-shadow);
     border-radius: var(--nl-radius-control);
 }
@@ -365,7 +365,7 @@
 .noslog-ui .nl-arcade-map .nl-arcade-map__legend:focus-visible {
     outline: none;
     box-shadow:
-        inset 0 0 0 1px var(--nl-focus-ring),
+        inset 0 0 0 var(--nl-stroke-default) var(--nl-focus-ring),
         var(--nl-overlay-shadow);
 }
 /* 범례 팝오버 — 버튼 위 오른쪽 맞춤 · 오버레이 계약(면 · 경계 · radius 10 · 그림자) */
@@ -380,7 +380,7 @@
     background: var(--nl-surface-overlay);
     color: var(--nl-content-default);
     box-shadow:
-        inset 0 0 0 1px var(--nl-border-overlay),
+        inset 0 0 0 var(--nl-stroke-default) var(--nl-border-overlay),
         var(--nl-overlay-shadow);
 }
 .noslog-ui.nl-arcade-map__legend-popover ul {
@@ -423,13 +423,14 @@
     border-radius: var(--nl-radius-full);
     background: var(--nl-surface-media-scrim);
     color: var(--nl-content-on-media);
-    box-shadow: inset 0 0 0 2px var(--nl-feedback-warning-marker);
+    box-shadow: inset 0 0 0 var(--nl-stroke-strong)
+        var(--nl-feedback-warning-marker);
 }
 .noslog-ui .nl-arcade-marker:focus-visible {
     outline: none;
 }
 .noslog-ui .nl-arcade-marker:focus-visible > * {
-    outline: 2px solid var(--nl-content-on-media);
+    outline: var(--nl-stroke-strong) solid var(--nl-content-on-media);
     outline-offset: 2px;
 }
 /* 필터 레이어 */
@@ -658,7 +659,8 @@
 .noslog-ui .nl-arcade-detail__head + .nl-arcade-detail__section {
     padding-top: 0;
     padding-bottom: var(--nl-spacing-16);
-    box-shadow: inset 0 -1px var(--nl-border-divider);
+    box-shadow: inset 0 calc(var(--nl-stroke-default) * -1)
+        var(--nl-border-divider);
 }
 .noslog-ui .nl-arcade-detail__section-head {
     display: flex;
@@ -669,6 +671,24 @@
 }
 .noslog-ui .nl-arcade-detail__section-head > h2 {
     min-width: 0;
+}
+/* 시설 — 아이콘 20 흐림 + 글자 본문 보조 기본색, 두 열 · 사이 세로 12 · 가로 16 (2026-09-22 B2) */
+.noslog-ui .nl-arcade-facilities {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--nl-spacing-12) var(--nl-spacing-16);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.noslog-ui .nl-arcade-facilities > li {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-12);
+    min-width: 0;
+}
+.noslog-ui .nl-arcade-facilities .nl-icon {
+    color: var(--nl-content-subdued);
 }
 /* 기체 카드 — 번호·위치 | 상태 · 신선도 · 액션 2개가 한 덩어리. 목록 카드와 같은 면(surface · 모서리 8) · 안쪽 12/16 · 사이 8 (2026-09-15) */
 .noslog-ui .nl-arcade-cabinets {
@@ -710,7 +730,7 @@
     .nl-arcade-cabinet__state[data-state="unknown"]
     .nl-arcade-cabinet__dot {
     background: transparent;
-    box-shadow: inset 0 0 0 1px var(--nl-border-strong);
+    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-strong);
 }
 /* 두 열 — 왼쪽 이름(14/20) 아래 위치 메모(12/16), 오른쪽 상태(14/20) 아래 확인 시각(12/16). 첫 줄끼리 같은 14/20 이라 위 맞춤 = 글자선 맞춤 */
 .noslog-ui .nl-arcade-cabinet__row {
@@ -738,6 +758,48 @@
 }
 /* 상태 라벨은 중립 글자 — marker 색은 Light 에서 3.1:1 이라 12·14px 텍스트에 못 쓴다(FC 라벨 선례). 색은 점만 */
 /* 확인·신고 — 줄마다 반반 전체 폭. 정보보다 무겁지 않게 32(적용 조건 「전체 지우기」 와 같은 인라인 액션 높이) */
+/* 기체 태그 — 아이콘 16 + 글자 metadata 흐림, 사이 가로 12 · 세로 4 (2026-09-22 S1) */
+.noslog-ui .nl-arcade-cabinet__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--nl-spacing-4) var(--nl-spacing-12);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.noslog-ui .nl-arcade-cabinet__tags > li {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--nl-spacing-4);
+}
+/* 기체 특징 — 카드 안 한 단 낮은 판(raised · 모서리 4 · 안쪽 8/12), 키 흐림 · 값 기본색 본문 보조, 기타 글은 구분선 아래 (L1) */
+.noslog-ui .nl-arcade-cabinet__features {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
+    padding: var(--nl-spacing-8) var(--nl-spacing-12);
+    border-radius: var(--nl-radius-control);
+    background: var(--nl-surface-raised);
+}
+.noslog-ui .nl-arcade-cabinet__features dl {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    gap: var(--nl-spacing-4) var(--nl-spacing-16);
+    margin: 0;
+}
+.noslog-ui .nl-arcade-cabinet__features dl > div {
+    display: contents;
+}
+.noslog-ui .nl-arcade-cabinet__features dt {
+    color: var(--nl-content-subdued);
+}
+.noslog-ui .nl-arcade-cabinet__features dd {
+    margin: 0;
+}
+.noslog-ui .nl-arcade-cabinet__features dl + .nl-arcade-cabinet__feature-note {
+    padding-top: var(--nl-spacing-8);
+    border-top: var(--nl-stroke-default) solid var(--nl-border-divider);
+}
 .noslog-ui .nl-arcade-cabinet__actions {
     display: flex;
     gap: var(--nl-spacing-8);
@@ -824,6 +886,14 @@
 }
 .noslog-ui .nl-arcade-hours > [data-muted] {
     color: var(--nl-content-subdued);
+}
+/* 토 · 일 = 줄 전체(요일 · 날짜 · 시간) 파랑 · 빨강(지도 서비스 관례) — 기존 글자용 토큰을 빌림, 캔버스 위 대비 4.5 이상.
+   휴무 · 미확인 줄보다 뒤에 두어 주말 색이 이긴다 (2026-09-22) */
+.noslog-ui .nl-arcade-hours > [data-weekend="sat"] {
+    color: var(--nl-judgement-near);
+}
+.noslog-ui .nl-arcade-hours > [data-weekend="sun"] {
+    color: var(--nl-feedback-error-text);
 }
 .noslog-ui .nl-arcade-detail__rail-box {
     display: flex;
@@ -915,6 +985,46 @@
     justify-content: center;
     gap: var(--nl-spacing-8);
 }
+/* 모자이크 오른쪽 아래 「사진 N장 모두 보기」 — 카운터와 같은 사진 위 어두운 판(새 색 없음), 컴팩트 높이(1056 이상 32) (P1 · 2026-09-22) */
+.noslog-ui .nl-arcade-photos__all {
+    position: absolute;
+    right: var(--nl-spacing-12);
+    bottom: var(--nl-spacing-12);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+    min-height: var(--nl-control-height-compact);
+    padding-inline: var(--nl-spacing-12);
+    border-radius: var(--nl-radius-control);
+    color: var(--nl-content-on-media);
+    background: var(--nl-surface-media-scrim);
+}
+/* 창 안 격자 — 672 이상 3열 · 그 아래 2열, 사이 8 · 4 : 3 · 모서리 4 */
+.noslog-ui .nl-arcade-photos__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--nl-spacing-8);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+@media (min-width: 672px) {
+    .noslog-ui .nl-arcade-photos__grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+.noslog-ui .nl-arcade-photos__grid button {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: var(--nl-radius-control);
+    background: var(--nl-surface-sunken);
+}
+.noslog-ui .nl-arcade-photos__grid img {
+    object-fit: cover;
+}
 @media (min-width: 1056px) {
     .noslog-ui .nl-arcade-detail__layout {
         display: grid;
@@ -939,7 +1049,7 @@
         height: 240px;
         min-height: 240px;
     }
-    .noslog-ui .nl-arcade-photos:has(.nl-arcade-photos__thumbnails > button) {
+    .noslog-ui .nl-arcade-photos[data-mosaic] {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         height: 360px;
@@ -964,7 +1074,7 @@
     gap: var(--nl-spacing-8);
     color: var(--nl-content-subdued);
     background: transparent;
-    box-shadow: inset 0 0 0 1px var(--nl-border-empty-slot);
+    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-empty-slot);
 }
 /* 672 미만 — 사진 자리는 화면 좌우 끝까지(모서리 없음). 끝에 닿는 상자라 경계 대신 면으로 채운다 */
 @media (max-width: 671px) {
@@ -990,7 +1100,7 @@
     padding: var(--nl-spacing-12) var(--nl-spacing-16)
         calc(var(--nl-spacing-12) + env(safe-area-inset-bottom));
     background: var(--nl-surface-surface);
-    box-shadow: inset 0 1px var(--nl-border-divider);
+    box-shadow: inset 0 var(--nl-stroke-default) var(--nl-border-divider);
 }
 /* 바가 푸터를 가리지 않게 페이지 끝에 바 높이만큼 */
 .noslog-ui.nl-app:has(.nl-arcade-detail__bar) {

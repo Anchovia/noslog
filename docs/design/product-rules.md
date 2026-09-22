@@ -111,6 +111,13 @@ old design-stage checklist. Changes to material behavior require a user decision
 - Personal record, judgement analysis and Recital values keep their source units
   and limitations. Missing mode-specific values are not substituted with Basic
   values. Retry the failed region without losing the current chart context.
+- Arcade facilities (parking, smoking room …) and cabinet tags (streaming
+  cabinet, headphone jack …) are fixed lists chosen by admins; cabinet features
+  (key weight, screen lag, sound volume) are three-step choices plus an optional
+  free-text note (100 chars). Values are stored as keys and translated on
+  screen; the free-text note is shown as written. Editing tags, features or
+  facilities does not refresh a cabinet's verification time — only availability
+  or condition changes (or 「오늘 확인」) do (2026-09-22).
 - Chart and music data fields (note count, constant, BPM, length, release date,
   unlock condition) record where each value came from in `chart_field_sources`
   (play-record inference, BEMANIWiki, RemyWiki, official level or manual). Values
@@ -188,6 +195,26 @@ old design-stage checklist. Changes to material behavior require a user decision
   other's stored value. Deleting the pattern evaluation keeps an existing
   opinion.
   No contribution rewards or automatic tier changes are introduced.
+- Opinion interactions (2026-09-22). Likes reuse the existing helpful table: a
+  signed-in player with a positive record on that chart may like others' opinions
+  and replies (not their own). Sort: newest or most liked.
+  Replies are one level deep (`CommunityOpinionReply`); replying to a reply
+  prefixes `@name`. Writing a reply needs the same chart record as writing an
+  opinion; the author may edit or delete their reply, and replies can be reported
+  (same report table with `replyId`). When an opinion with replies is deleted, its
+  row stays as "deleted by author" so others' replies remain; no new replies are
+  accepted there. Clearing a whole evaluation that has replies keeps the row with
+  ratings and opinion emptied. Account deletion cascades the author's replies.
+- Opinion translation (2026-09-22). The text language is detected from its script
+  (Hangul → ko, kana/Han → ja, Latin → en; one or two letters → none). When an
+  opinion or reply is written or edited, the server translates it into the other
+  two locales after the response (`after`) with the same Gemini key as official X
+  news (`GEMINI_API_KEY`, free tier — user decision) and stores them; viewers reuse
+  the stored text. "See translation" appears only when the text language differs
+  from the viewer's locale; if a stored translation is missing (older text or a
+  failed call) the first click creates and stores it once. Editing clears stale
+  translations before re-translating; deleting removes them. Without the key no
+  button is shown. The privacy policy (2026-09-22) discloses the free-tier transfer.
 
 ## Data synchronization
 
@@ -347,7 +374,10 @@ old design-stage checklist. Changes to material behavior require a user decision
 - Within the loaded dashboard period, metric changes reuse the same snapshot and
   update `metric` in browser history without another server request. Period changes
   and page reloads fetch a new snapshot. Direct links, back/forward navigation,
-  admin authorization and the existing hourly page-view chart remain supported.
+  admin authorization and today's hourly chart remain supported. Today's hourly
+  bars follow the selected metric: page views from the hour bucket, signups and
+  syncs from their existing timestamps (Seoul hour). Visitors are counted per day
+  only, so today keeps the empty hourly frame with a centered note (2026-09-22).
 
 - Accounts whose current role is `admin` are excluded at collection time from
   page views, daily visitors, hour/audience buckets, browser external events and

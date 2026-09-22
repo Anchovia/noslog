@@ -1,8 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
-import Disclosure from "@/components/ui/disclosure";
 import LineChart from "@/components/ui/lineChart";
+import ModalDialog from "@/components/ui/modalDialog";
 import { tierListLabel, TIER_BAND_VALUES } from "@/lib/tiers";
 import {
     BASIC_RATING_ACTIVE_CURVE,
@@ -16,6 +17,10 @@ import type {
     TierBrowserQuery,
 } from "@/features/tiers/schemas/tierBrowserSchema";
 
+/**
+ * 서열표 안내 — 제목 아래 메타 글줄 끝 「안내」 글자 링크가 여는 설명 창(2026-09-22 A). 제목 뒤에는 스위처 꺾쇠만 둔다.
+ * 이 표의 설명 · 쓰는 법 · 업데이트 날짜 · 목표 기준(Pianist 는 서열 상수별 기여 그래프)
+ */
 export default function TierRatingGuide({
     query,
     overview,
@@ -25,6 +30,10 @@ export default function TierRatingGuide({
 }) {
     const t = useTranslations();
     const locale = useLocale();
+    const [open, setOpen] = useState(false);
+    const title = t("tiers.guide", {
+        goal: tierListLabel(query.mode, query.goal),
+    });
     const max = overview.theoreticalMax;
     const points = max
         ? [...TIER_BAND_VALUES].reverse().map((value) => ({
@@ -35,14 +44,25 @@ export default function TierRatingGuide({
           }))
         : [];
     return (
-        <Disclosure
-            compact
-            className="nl-tier-guide-disclosure"
-            title={t("tiers.guide", {
-                goal: tierListLabel(query.mode, query.goal),
-            })}
+        <ModalDialog
+            open={open}
+            onOpenChange={setOpen}
+            title={title}
+            trigger={
+                // 보이는 글자(「안내」)는 접근 이름(「S 서열표 안내」) 안에 들어 있다
+                <button
+                    type="button"
+                    className="nl-tier-meta__guide nl-link nl-text-link--underlined"
+                    aria-label={title}
+                >
+                    {t("tiers.guideLink")}
+                </button>
+            }
         >
             <div className="nl-tier-guide nl-body-secondary nl-muted">
+                {overview.list?.description ? (
+                    <p>{overview.list.description}</p>
+                ) : null}
                 <p>{t("tiers.filterHelp")}</p>
                 {overview.list ? (
                     <p className="nl-metadata">
@@ -146,6 +166,6 @@ export default function TierRatingGuide({
                     </p>
                 ) : null}
             </div>
-        </Disclosure>
+        </ModalDialog>
     );
 }

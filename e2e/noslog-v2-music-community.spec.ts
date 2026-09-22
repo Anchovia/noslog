@@ -38,6 +38,9 @@ const opinions: OpinionPage["items"] = Array.from(
         viewerHelpful: false,
         own: index === 0,
         canReact: index !== 0,
+        replyCount: 0,
+        language: "ja" as const,
+        translations: {},
     })
 );
 const distribution = [12.0, 12.3, 12.8, 12.9, 13.0, 13.1, 13.3, 13.5, 13.8].map(
@@ -50,7 +53,7 @@ function fixture(): CommunityData {
         currentEvaluation: {
             ...axes,
             stairs: 0,
-            opinion: opinions[0].opinion,
+            opinion: opinions[0].opinion ?? "",
             excluded: false,
         },
         scopes: (["basic", "recital"] as const).flatMap((mode) =>
@@ -92,6 +95,7 @@ function fixture(): CommunityData {
             items: opinions.slice(0, 10),
             total: opinions.length,
             nextOffset: 10,
+            translationEnabled: false,
         },
     };
 }
@@ -507,7 +511,7 @@ test("Opinions append ten at a time and expose contextual author and report acti
     await page.getByRole("menuitem", { name: "수정", exact: true }).click();
     const editor = own.getByRole("textbox", { name: "의견", exact: true });
     await expect(editor).toBeFocused();
-    await expect(editor).toHaveValue(opinions[0].opinion);
+    await expect(editor).toHaveValue(opinions[0].opinion ?? "");
     await editor.press("Escape");
     await expect(own.getByRole("textbox")).toHaveCount(0);
     await page

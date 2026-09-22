@@ -9,20 +9,20 @@
     padding-inline: var(--nl-spacing-12);
     border-radius: var(--nl-radius-field);
     background: var(--nl-surface-surface);
-    box-shadow: inset 0 0 0 1px var(--nl-border-input);
+    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-input);
 }
 @media (hover: hover) {
     .noslog-ui .nl-search:hover {
-        box-shadow: inset 0 0 0 1px var(--nl-border-strong);
+        box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-strong);
     }
 }
 .noslog-ui .nl-search:has(input:focus-visible) {
     box-shadow:
-        inset 0 0 0 1px var(--nl-focus-ring),
+        inset 0 0 0 var(--nl-stroke-default) var(--nl-focus-ring),
         0 0 0 var(--nl-spacing-4) var(--nl-state-halo);
 }
 .noslog-ui .nl-search__divider {
-    width: 1px;
+    width: var(--nl-stroke-default);
     height: 24px;
     flex-shrink: 0;
     background: var(--nl-border-subtle);
@@ -94,7 +94,7 @@
 }
 .noslog-ui .nl-search > .nl-compact-select:focus-visible::before,
 .noslog-ui .nl-search__clear:focus-visible::before {
-    box-shadow: inset 0 0 0 1px var(--nl-focus-ring);
+    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-focus-ring);
 }
 .noslog-ui .nl-search__busy {
     flex-shrink: 0;
@@ -108,6 +108,10 @@
     border-radius: var(--nl-radius-field);
     flex-shrink: 0;
     white-space: nowrap;
+}
+/* M 크기(size="sm") — 한 줄이 M 인 결과 줄 등. 같은 줄 한 단계 규칙 */
+.noslog-ui .nl-compact-select--compact {
+    min-height: var(--nl-control-height-compact);
 }
 .noslog-ui .nl-compact-select svg {
     width: var(--nl-icon-small);
@@ -132,7 +136,7 @@
     max-height: var(--radix-select-content-available-height);
     max-width: calc(100vw - 32px);
     padding: var(--nl-spacing-8);
-    border: 1px solid var(--nl-border-overlay);
+    border: var(--nl-stroke-default) solid var(--nl-border-overlay);
     border-radius: var(--nl-radius-overlay);
     background: var(--nl-surface-overlay);
     box-shadow: var(--nl-overlay-shadow);

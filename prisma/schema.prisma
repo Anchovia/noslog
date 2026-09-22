@@ -8,27 +8,27 @@ datasource db {
 }
 
 model User {
-  id                         Int                        @id @default(autoincrement())
-  username                   String?                    @unique
+  id                         Int                         @id @default(autoincrement())
+  username                   String?                     @unique
   nostalgia_name             String?
-  discord_id                 String?                    @unique
+  discord_id                 String?                     @unique
   discord_name               String?
   discord_username           String?
   avatar                     String?
-  avatar_user_managed        Boolean                    @default(false)
-  country                    String                     @default("ko-KR")
-  locale                     String                     @default("ko")
-  show_localized_music_title Boolean                    @default(true)
+  avatar_user_managed        Boolean                     @default(false)
+  country                    String                      @default("ko-KR")
+  locale                     String                      @default("ko")
+  show_localized_music_title Boolean                     @default(true)
   profile_completed_at       DateTime?
   preferred_arcade_id        Int?
-  hide_nostalgia_name        Boolean                    @default(true)
-  hide_discord_name          Boolean                    @default(true)
-  hide_play_count            Boolean                    @default(true)
-  hide_preferred_arcade      Boolean                    @default(true)
-  hide_play_activity         Boolean                    @default(true)
+  hide_nostalgia_name        Boolean                     @default(true)
+  hide_discord_name          Boolean                     @default(true)
+  hide_play_count            Boolean                     @default(true)
+  hide_preferred_arcade      Boolean                     @default(true)
+  hide_play_activity         Boolean                     @default(true)
   // 플레이 점수 공개(2026-09-18) — 켜면 랭킹에서 빠지고 프로필의 점수 · 기록이 남에게 가려진다. 기본 공개
-  hide_play_scores           Boolean                    @default(false)
-  preferredArcade            Arcade?                    @relation(fields: [preferred_arcade_id], references: [id], onDelete: SetNull)
+  hide_play_scores           Boolean                     @default(false)
+  preferredArcade            Arcade?                     @relation(fields: [preferred_arcade_id], references: [id], onDelete: SetNull)
   rank_basic                 Int?
   rank_recital               Int?
   rank_basic_country         Int?
@@ -37,7 +37,7 @@ model User {
   nostalgia_nos              Int?
   nostalgia_last_playtime    String?
   equipped_brooch_index      String?
-  equippedBrooch             Brooch?                    @relation("EquippedBrooch", fields: [equipped_brooch_index], references: [index], onDelete: SetNull)
+  equippedBrooch             Brooch?                     @relation("EquippedBrooch", fields: [equipped_brooch_index], references: [index], onDelete: SetNull)
   // 후에 score Int[]로 변경 필요(postgresql 기준)
   score_p                    Int?
   score_f                    Int?
@@ -48,13 +48,13 @@ model User {
   score_b                    Int?
   score_c                    Int?
   score_d                    Int?
-  role                       String                     @default("user")
+  role                       String                      @default("user")
   grade_basic                Int?
   grade_recital              Int?
-  last_full_record_at         DateTime?
-  sync_token_version         Int                        @default(0)
-  created_at                 DateTime                   @default(now())
-  updated_at                 DateTime                   @updatedAt
+  last_full_record_at        DateTime?
+  sync_token_version         Int                         @default(0)
+  created_at                 DateTime                    @default(now())
+  updated_at                 DateTime                    @updatedAt
   PlayData                   PlayData[]
   UserBestGrade              UserBestGrade[]
   ratingHistory              UserRatingHistory[]
@@ -63,8 +63,10 @@ model User {
   chartReactions             ChartEvaluationReaction[]
   communityEvaluations       CommunityChartEvaluation[]
   communityHelpful           CommunityOpinionHelpful[]
-  communityReports           CommunityOpinionReport[]   @relation("CommunityReportReporter")
-  communityReportsAuthored   CommunityOpinionReport[]   @relation("CommunityReportAuthor")
+  communityReplies           CommunityOpinionReply[]
+  communityReplyLikes        CommunityOpinionReplyLike[]
+  communityReports           CommunityOpinionReport[]    @relation("CommunityReportReporter")
+  communityReportsAuthored   CommunityOpinionReport[]    @relation("CommunityReportAuthor")
   chartGoalVotes             ChartGoalVote[]
   chartGoalVoteAudit         ChartGoalVoteAudit[]
   dataSyncs                  DataSync[]
@@ -76,12 +78,12 @@ model User {
   feedbackReports            FeedbackReport[]
   cabinetChecks              ArcadeCabinetCheck[]
   brooches                   UserBrooch[]
-  chartPatternsCreated       ChartPattern[]             @relation("ChartPatternCreatedBy")
-  chartPatternsUpdated       ChartPattern[]             @relation("ChartPatternUpdatedBy")
-  chartPatternsPublished     ChartPattern[]             @relation("ChartPatternPublishedBy")
-  chartPatternRevisions      ChartPatternRevision[]     @relation("ChartPatternRevisionCreatedBy")
-  communityEvents            CommunityEvent[]           @relation("CommunityEventAuthor")
-  communityEventsReviewed    CommunityEvent[]           @relation("CommunityEventReviewer")
+  chartPatternsCreated       ChartPattern[]              @relation("ChartPatternCreatedBy")
+  chartPatternsUpdated       ChartPattern[]              @relation("ChartPatternUpdatedBy")
+  chartPatternsPublished     ChartPattern[]              @relation("ChartPatternPublishedBy")
+  chartPatternRevisions      ChartPatternRevision[]      @relation("ChartPatternRevisionCreatedBy")
+  communityEvents            CommunityEvent[]            @relation("CommunityEventAuthor")
+  communityEventsReviewed    CommunityEvent[]            @relation("CommunityEventReviewer")
 
   @@index([grade_basic, id])
   @@index([grade_recital, id])
@@ -274,6 +276,8 @@ model ArcadePublicDetails {
   phone              String?
   website            String?
   creditLabel        String?
+  // 시설(주차 · 흡연실 …) — lib/arcadeDetails ARCADE_FACILITIES 의 값
+  facilities         String[]  @default([])
   hours              Json?
   hoursVerifiedAt    DateTime?
   hoursValidUntil    DateTime?
@@ -296,6 +300,13 @@ model ArcadeCabinet {
   note               String?
   // 상태 이유(「우측 건반 씹힘」) — 보통·주의일 때 상태 라벨 팝오버로 보인다
   conditionNote      String?              @map("condition_note")
+  // 태그(방송기체 · 헤드폰 단자 …) — lib/arcadeDetails ARCADE_CABINET_TAGS 의 값
+  tags               String[]             @default([])
+  // 특징(정해진 보기 3단계 · 모르면 비움) — ARCADE_CABINET_FEATURES, 그 밖의 이야기는 featureNote(100자)
+  keyWeight          String?              @map("key_weight")
+  screenLag          String?              @map("screen_lag")
+  soundVolume        String?              @map("sound_volume")
+  featureNote        String?              @map("feature_note")
   verifiedAt         DateTime?
   validUntil         DateTime?
   verificationSource String?
@@ -779,26 +790,29 @@ model ChartEvaluationReaction {
 
 // 2.0 패턴 평가는 기존 ChartEvaluation의 서로 다른 축 값을 재해석하지 않음.
 model CommunityChartEvaluation {
-  id               Int                       @id @default(autoincrement())
-  chartId          Int
-  userId           Int
-  stairs           Int?
-  repetition       Int?
-  polyrhythm       Int?
-  offset           Int?
-  chords           Int?
-  opinion          String?
-  opinionHidden    Boolean                   @default(false)
-  excluded         Boolean                   @default(false)
-  moderationReason String?
-  createdAt        DateTime                  @default(now())
-  updatedAt        DateTime                  @updatedAt
-  opinionUpdatedAt DateTime?
-  opinionCreatedAt DateTime?
-  chart            MusicChart                @relation(fields: [chartId], references: [id], onDelete: Cascade)
-  user             User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  helpful          CommunityOpinionHelpful[]
-  reports          CommunityOpinionReport[]
+  id                  Int                       @id @default(autoincrement())
+  chartId             Int
+  userId              Int
+  stairs              Int?
+  repetition          Int?
+  polyrhythm          Int?
+  offset              Int?
+  chords              Int?
+  opinion             String?
+  opinionHidden       Boolean                   @default(false)
+  excluded            Boolean                   @default(false)
+  moderationReason    String?
+  createdAt           DateTime                  @default(now())
+  updatedAt           DateTime                  @updatedAt
+  opinionUpdatedAt    DateTime?
+  opinionCreatedAt    DateTime?
+  // 처음 누를 때 만든 번역 { ko?, ja?, en? } — 글을 고치면 비운다. 글 언어는 읽을 때 글자 종류로 판별(2026-09-22)
+  opinionTranslations Json?
+  chart               MusicChart                @relation(fields: [chartId], references: [id], onDelete: Cascade)
+  user                User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  helpful             CommunityOpinionHelpful[]
+  reports             CommunityOpinionReport[]
+  replies             CommunityOpinionReply[]
 
   @@unique([chartId, userId])
   @@index([chartId, excluded, opinionUpdatedAt])
@@ -818,6 +832,8 @@ model CommunityOpinionHelpful {
 model CommunityOpinionReport {
   id              Int                       @id @default(autoincrement())
   evaluationId    Int?
+  // 답글 신고면 답글 번호(2026-09-22). 의견 신고는 null
+  replyId         Int?
   userId          Int
   authorId        Int
   opinionSnapshot String
@@ -828,11 +844,44 @@ model CommunityOpinionReport {
   createdAt       DateTime                  @default(now())
   updatedAt       DateTime                  @updatedAt
   evaluation      CommunityChartEvaluation? @relation(fields: [evaluationId], references: [id], onDelete: SetNull)
+  reply           CommunityOpinionReply?    @relation(fields: [replyId], references: [id], onDelete: SetNull)
   user            User                      @relation("CommunityReportReporter", fields: [userId], references: [id], onDelete: Cascade)
   author          User                      @relation("CommunityReportAuthor", fields: [authorId], references: [id], onDelete: Cascade)
 
   @@unique([evaluationId, userId])
+  @@unique([replyId, userId])
   @@index([status, createdAt])
+}
+
+// 의견에 다는 답글(2026-09-22 R1 — 한 단계). 답글에 답할 때는 본문 앞에 @이름을 붙인다
+model CommunityOpinionReply {
+  id           Int                         @id @default(autoincrement())
+  evaluationId Int
+  userId       Int
+  body         String
+  // 답글 번역 — 의견과 같은 방식(2026-09-22)
+  translations Json?
+  hidden       Boolean                     @default(false)
+  createdAt    DateTime                    @default(now())
+  updatedAt    DateTime                    @updatedAt
+  evaluation   CommunityChartEvaluation    @relation(fields: [evaluationId], references: [id], onDelete: Cascade)
+  user         User                        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  likes        CommunityOpinionReplyLike[]
+  reports      CommunityOpinionReport[]
+
+  @@index([evaluationId, createdAt])
+  @@index([userId])
+}
+
+model CommunityOpinionReplyLike {
+  replyId   Int
+  userId    Int
+  createdAt DateTime              @default(now())
+  reply     CommunityOpinionReply @relation(fields: [replyId], references: [id], onDelete: Cascade)
+  user      User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([replyId, userId])
+  @@index([userId])
 }
 
 // 목표 투표는 관리자 서열표 버전 및 일반 패턴 평가와 독립적으로 유지함.

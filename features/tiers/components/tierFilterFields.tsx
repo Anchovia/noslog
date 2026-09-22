@@ -23,13 +23,18 @@ const difficultyTone = (value: string) =>
 export default function TierFilterFields({
     query,
     onChange,
-    bands,
+    bands: allBands,
 }: {
     query: TierBrowserQuery;
     onChange: (query: TierBrowserQuery) => void;
     bands: TierBrowserBandSummary[];
 }) {
     const t = useTranslations();
+    // 지금 조건에서 0곡인 구간은 목록에서 뺀다(2026-09-22) — 이미 고른 구간은 해제할 수 있게 남긴다.
+    // 범위 선택도 보이는 구간 안에서 잇는다
+    const bands = allBands.filter(
+        (band) => band.totalCount > 0 || query.bands.includes(band.value)
+    );
     const [range, setRange] = useState(false);
     const [rangeStart, setRangeStart] = useState<number | null>(null);
     function chooseBand(value: number) {

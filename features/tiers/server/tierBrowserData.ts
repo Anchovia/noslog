@@ -42,7 +42,11 @@ const getPublishedTierInventory = unstable_cache(
                             select: {
                                 chartId: true,
                                 chart: {
-                                    select: { difficulty: true, level: true },
+                                    select: {
+                                        difficulty: true,
+                                        level: true,
+                                        music_idx: true,
+                                    },
                                 },
                             },
                         },
@@ -51,7 +55,7 @@ const getPublishedTierInventory = unstable_cache(
             },
         });
     },
-    ["tier-browser-inventory-v3"],
+    ["tier-browser-inventory-v4"],
     { revalidate: 3600, tags: [CACHE_TAGS.tierLists] }
 );
 
@@ -81,6 +85,32 @@ export const getModePianistRatingBasis = unstable_cache(
     { revalidate: 3600, tags: [CACHE_TAGS.tierLists] }
 );
 
+/**
+ * 검색어에 맞는 악곡 코드 — 악곡 목록 검색과 같은 필드 · 대소문자 무시 부분 일치(2026-09-22).
+ * 검색어가 없으면 null(좁히지 않음)
+ */
+async function findMatchingMusic(q: string) {
+    if (!q) return null;
+    const contains = { contains: q, mode: "insensitive" as const };
+    const music = await db.music.findMany({
+        where: {
+            OR: [
+                { index: contains },
+                { title: contains },
+                { title_kana: contains },
+                { artist: contains },
+                {
+                    translations: {
+                        some: { status: "approved", title: contains },
+                    },
+                },
+            ],
+        },
+        select: { index: true },
+    });
+    return new Set(music.map((item) => item.index));
+}
+
 function matchesChart(
     chart: { difficulty: string; level: number },
     query: TierBrowserQuery
@@ -101,16 +131,20 @@ export async function getTierBrowserOverview(
     query: TierBrowserQuery,
     viewerId: number | null
 ): Promise<TierBrowserOverview> {
-    const [list, basis, showLocalizedTitle] = await Promise.all([
+    const [list, basis, showLocalizedTitle, music] = await Promise.all([
         getPublishedTierInventory(query.mode, query.goal),
         getModePianistRatingBasis(query.mode),
         getMusicTitleDisplayPreference(viewerId ?? undefined),
+        findMatchingMusic(query.q),
     ]);
+    const matches = (entry: {
+        chart: { difficulty: string; level: number; music_idx: string };
+    }) =>
+        matchesChart(entry.chart, query) &&
+        (!music || music.has(entry.chart.music_idx));
     const chartIds =
         list?.bands.flatMap((band) =>
-            band.entries
-                .filter((entry) => matchesChart(entry.chart, query))
-                .map((entry) => entry.chartId)
+            band.entries.filter(matches).map((entry) => entry.chartId)
         ) ?? [];
     const records =
         viewerId && chartIds.length
@@ -137,9 +171,7 @@ export async function getTierBrowserOverview(
                   description: list.description,
                   updatedAt: new Date(list.updatedAt).toISOString(),
                   bands: list.bands.map((band) => {
-                      const entries = band.entries.filter((entry) =>
-                          matchesChart(entry.chart, query)
-                      );
+                      const entries = band.entries.filter(matches);
                       return {
                           id: band.id,
                           value: band.value,
@@ -171,19 +203,28 @@ export async function getTierBrowserBand(
     viewerId: number | null,
     locale: Locale
 ): Promise<TierBrowserBand | null> {
-    const [list, basis, showLocalizedTitle] = await Promise.all([
+    const [list, basis, showLocalizedTitle, music] = await Promise.all([
         getPublishedTierInventory(query.mode, query.goal),
         getModePianistRatingBasis(query.mode),
         getMusicTitleDisplayPreference(viewerId ?? undefined),
+        findMatchingMusic(query.q),
     ]);
     if (!list?.bands.some((band) => band.id === bandId)) return null;
-    const band = await getCachedTierBand(
+    const cached = await getCachedTierBand(
         list.slug,
         bandId,
         query.difficulties,
         query.levels
     );
-    if (!band) return null;
+    if (!cached) return null;
+    const band = music
+        ? {
+              ...cached,
+              entries: cached.entries.filter((entry) =>
+                  music.has(entry.chart.music.index)
+              ),
+          }
+        : cached;
     const records =
         viewerId && band.entries.length
             ? await db.playData.findMany({
@@ -228,6 +269,9 @@ export async function getTierBrowserBand(
                     music: {
                         index: entry.chart.music.index,
                         title: entry.chart.music.title,
+                        reading:
+                            entry.chart.music.title_kana?.trim() ||
+                            entry.chart.music.title,
                         background: entry.chart.music.background,
                         localizedTitle: getLocalizedMusicTitle(
                             entry.chart.music,

@@ -73,6 +73,7 @@ describe("관리자 대시보드 그래프 움직임", () => {
                         future: false,
                     },
                 ],
+                label: "페이지뷰",
                 color: "var(--nl-local-data-categorical-2)",
             })
         );
@@ -80,6 +81,25 @@ describe("관리자 대시보드 그래프 움직임", () => {
         expect(html).toContain('data-recharts="bar"');
         expect(html).toContain('data-class="nl-chart-reveal"');
         expect(html).toContain('data-animation="false"');
+    });
+
+    it("시각별로 세지 않는 수치는 같은 틀 가운데 공용 안내를 둔다", () => {
+        const html = renderToStaticMarkup(
+            createElement(AdminDashboardHours, {
+                data: [{ hour: "00", label: "0시", value: 0, future: false }],
+                label: "방문자",
+                color: "var(--nl-local-data-categorical-1)",
+                emptyMessage: "시간대별로 모으지 않습니다",
+            })
+        );
+
+        expect(html).toContain('class="nl-dashboard__chart"');
+        expect(html).toContain(
+            'aria-label="오늘 시간대별 방문자 — 시간대별로 모으지 않습니다"'
+        );
+        expect(html).toContain(
+            'class="nl-line-chart__state nl-body-secondary nl-muted" data-placement="center"'
+        );
     });
 
     it("비율과 목록 막대는 공용 드러남·값 변경 클래스를 쓴다", () => {

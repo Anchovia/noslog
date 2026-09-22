@@ -45,6 +45,7 @@ import ArcadeCabinetRow from "./arcadeCabinetRow";
 import ArcadeDiscoveryMap from "./arcadeDiscoveryMap";
 import ArcadeHours from "./arcadeHours";
 import ArcadePhotos from "./arcadePhotos";
+import { ArcadeFacilities } from "./arcadeTraits";
 import ArcadeReportDialog from "./arcadeReportDialog";
 
 /**
@@ -411,6 +412,18 @@ export default function ArcadeDetailPage({
                             ) : null}
                         </ul>
                     </section>
+
+                    {/* 시설 — 정보 행 다음 · 위치 앞, 입력한 오락실만 (2026-09-22 B2) */}
+                    {arcade.facilities.length ? (
+                        <section className="nl-arcade-detail__section">
+                            <div className="nl-arcade-detail__section-head">
+                                <h2 className="nl-section-title">
+                                    {t("arcades.facilities")}
+                                </h2>
+                            </div>
+                            <ArcadeFacilities facilities={arcade.facilities} />
+                        </section>
+                    ) : null}
 
                     {/* 위치 — 정보 행과 기체 사이 */}
                     {hasLocation ? (

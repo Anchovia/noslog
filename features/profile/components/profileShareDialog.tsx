@@ -115,7 +115,7 @@ function ProfileCardPreview({
         }
     }
     return (
-        <div className="nl-profile-share__body">
+        <div className="nl-image-share__body">
             {failed ? (
                 <StatusMessage
                     severity="danger"
@@ -126,7 +126,7 @@ function ProfileCardPreview({
                 <>
                     <div
                         className={cn(
-                            "nl-profile-share__preview",
+                            "nl-image-share__preview nl-profile-card-preview",
                             preparing && "nl-skeleton"
                         )}
                         aria-busy={preparing}
@@ -164,7 +164,7 @@ function ProfileCardPreview({
                     ) : null}
                 </>
             )}
-            <div className="nl-profile-share__actions">
+            <div className="nl-image-share__actions">
                 {failed ? (
                     <Button
                         variant="primary"
@@ -180,14 +180,14 @@ function ProfileCardPreview({
                 ) : (
                     <>
                         <Button
-                            className="nl-profile-share__save"
+                            className="nl-image-share__save"
                             variant="primary"
                             disabled={disabled}
                             onClick={download}
                         >
                             {t("profile.saveImage")}
                         </Button>
-                        <div className="nl-profile-share__secondary">
+                        <div className="nl-image-share__secondary">
                             <Button
                                 variant="secondary"
                                 disabled={disabled || !canCopy}
@@ -230,7 +230,7 @@ export default function ProfileShareDialog({
             open={open}
             onOpenChange={setOpen}
             title={t("profile.shareTitle")}
-            className="nl-profile-share"
+            className="nl-image-share"
             trigger={
                 <button
                     type="button"

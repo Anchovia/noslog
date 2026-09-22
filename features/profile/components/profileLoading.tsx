@@ -72,13 +72,7 @@ export default function ProfileLoading() {
             <LoadingStatus label={t("profile.loading")} />
             <section className="nl-profile-identity" aria-hidden="true" inert>
                 <div className="nl-profile-identity__row">
-                    <span
-                        className="nl-avatar nl-profile-identity__avatar nl-skeleton"
-                        style={{
-                            width: "var(--nl-profile-avatar-size)",
-                            height: "var(--nl-profile-avatar-size)",
-                        }}
-                    />
+                    <span className="nl-avatar nl-profile-identity__avatar nl-skeleton" />
                     <div className="nl-profile-identity__name-stack">
                         <SkeletonText className="nl-page-title" width="m" />
                         <SkeletonText className="nl-metadata" width="s" />

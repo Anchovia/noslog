@@ -47,7 +47,7 @@
     padding-block: var(--nl-spacing-8);
 }
 .noslog-ui .nl-tier-history li + li {
-    border-top: 1px solid var(--nl-border-divider);
+    border-top: var(--nl-stroke-default) solid var(--nl-border-divider);
 }
 /* 서열 투표 목록 — 카드(surface · 모서리 8 · 안쪽 좌우 16) 안 선 목록. 줄 = 컨트롤 높이 · 줄 사이 1px divider.
    여는 줄 올림 · 누름 = 줄 전체 면(좌우 12 넓혀 칠함, 글자 선 그대로). 펼친 내용은 같은 카드 안 위 8 · 아래 8 (2026-09-18) */
@@ -69,7 +69,7 @@
 }
 .noslog-ui .nl-vote-list > .nl-vote-row + .nl-vote-row,
 .noslog-ui .nl-vote-list__body + .nl-vote-row {
-    border-top: 1px solid var(--nl-border-divider);
+    border-top: var(--nl-stroke-default) solid var(--nl-border-divider);
 }
 .noslog-ui .nl-vote-row > span:last-child {
     display: flex;
@@ -94,7 +94,7 @@
     );
     background-repeat: no-repeat;
     background-position: var(--nl-spacing-12) 0;
-    background-size: calc(100% - var(--nl-spacing-24)) 1px;
+    background-size: calc(100% - var(--nl-spacing-24)) var(--nl-stroke-default);
 }
 @media (hover: hover) {
     .noslog-ui button.nl-vote-row:hover {
@@ -198,7 +198,7 @@
     border-radius: var(--nl-radius-overlay);
     background: var(--nl-surface-overlay);
     box-shadow:
-        inset 0 0 0 1px var(--nl-border-overlay),
+        inset 0 0 0 var(--nl-stroke-default) var(--nl-border-overlay),
         var(--nl-overlay-shadow);
     text-align: center;
 }
@@ -219,7 +219,7 @@
     padding-block: var(--nl-spacing-4);
 }
 .noslog-ui .nl-pattern-axis + .nl-pattern-axis {
-    border-top: 1px solid var(--nl-border-divider);
+    border-top: var(--nl-stroke-default) solid var(--nl-border-divider);
 }
 .noslog-ui .nl-pattern-axis > .nl-control {
     min-width: 0;
@@ -264,7 +264,7 @@
 }
 .noslog-ui .nl-vote-form .nl-select {
     min-height: var(--nl-control-height-compact);
-    padding-block: calc(var(--nl-spacing-8) - 1px);
+    padding-block: calc(var(--nl-spacing-8) - var(--nl-stroke-default));
     font-size: var(--nl-type-size-14);
     line-height: var(--nl-type-line-height-20);
 }
@@ -297,7 +297,7 @@
     scroll-margin-top: 76px;
 }
 .noslog-ui .nl-opinion-row > .nl-avatar:has(> svg) {
-    box-shadow: inset 0 0 0 1px var(--nl-border-empty-slot);
+    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-empty-slot);
 }
 .noslog-ui .nl-opinion-row__content {
     display: flex;
@@ -361,7 +361,9 @@
 .noslog-ui textarea.nl-opinion-composer__input:not([data-expanded]) {
     min-height: var(--nl-control-height);
     height: var(--nl-control-height);
-    padding-block: calc((var(--nl-control-height) - 24px - 2px) / 2);
+    padding-block: calc(
+        (var(--nl-control-height) - 24px - var(--nl-stroke-default) * 2) / 2
+    );
     overflow: hidden;
     resize: none;
     white-space: nowrap;
@@ -388,7 +390,7 @@
     border-radius: var(--nl-radius-overlay);
     background: var(--nl-surface-overlay);
     box-shadow: var(--nl-overlay-shadow);
-    border: 1px solid var(--nl-border-overlay);
+    border: var(--nl-stroke-default) solid var(--nl-border-overlay);
     z-index: 70;
 }
 /* 되돌릴 수 없는 항목은 위험 버튼과 같은 글자색 (2026-09-18 사용자 지적) */
@@ -417,4 +419,91 @@
         gap: var(--nl-spacing-32) var(--nl-spacing-16);
         align-items: start;
     }
+}
+/* 의견 동작 줄(2026-09-22 L1) — 본문 아래. 누르는 자리는 컨트롤 높이, 잉크는 본문 선에 맞춰 왼쪽으로 당긴다 */
+.noslog-ui .nl-opinion-row__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-4);
+    margin-inline-start: calc(var(--nl-spacing-8) * -1);
+}
+.noslog-ui .nl-opinion-like {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--nl-spacing-4);
+    min-height: var(--nl-control-height-compact);
+    padding-inline: var(--nl-spacing-8);
+    border: 0;
+    border-radius: var(--nl-radius-control);
+    background: none;
+    color: var(--nl-content-subdued);
+    font-variant-numeric: tabular-nums;
+    text-decoration: none;
+}
+/* 올림 · 누름 색은 공용 고스트 버튼과 같은 토큰, 포커스는 공용 :focus-visible 그대로 */
+@media (hover: hover) {
+    .noslog-ui .nl-opinion-like:is(button, a):hover {
+        background: var(--nl-interaction-hover);
+        color: var(--nl-content-default);
+    }
+}
+.noslog-ui .nl-opinion-like:is(button, a):active {
+    background: var(--nl-interaction-selected-pressed);
+}
+.noslog-ui .nl-opinion-like[data-static] {
+    cursor: default;
+}
+/* 눌림 = 채운 하트 + 데이터 색 categorical-4(새 색 아님) — 모양과 색 둘로 말한다 */
+.noslog-ui .nl-opinion-like[aria-pressed="true"] > svg {
+    color: var(--nl-local-data-categorical-4);
+}
+.noslog-ui .nl-opinion-like[aria-pressed="true"] {
+    color: var(--nl-content-default);
+}
+.noslog-ui .nl-opinions__sort {
+    display: flex;
+}
+/* 답글(2026-09-22 R1) — 의견 내용 열 안에서 한 단계. 사진 24(점수 자 핀과 같은 값) · 줄 사이 12 */
+.noslog-ui .nl-opinion-row[data-reply] {
+    grid-template-columns: var(--nl-spacing-24) minmax(0, 1fr);
+}
+.noslog-ui .nl-opinion-replies {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-12);
+    margin-top: var(--nl-spacing-8);
+}
+.noslog-ui .nl-opinion-replies__toggle {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--nl-spacing-4);
+    min-height: var(--nl-control-height-compact);
+    margin-inline-start: calc(var(--nl-spacing-8) * -1);
+    padding-inline: var(--nl-spacing-8);
+    border: 0;
+    border-radius: var(--nl-radius-control);
+    background: none;
+    color: var(--nl-content-default);
+}
+@media (hover: hover) {
+    .noslog-ui .nl-opinion-replies__toggle:hover {
+        background: var(--nl-interaction-hover);
+    }
+}
+.noslog-ui .nl-opinion-replies__toggle:active {
+    background: var(--nl-interaction-selected-pressed);
+}
+/* 답글 사진 스켈레톤 — 답글 줄 사진과 같은 24(간격 토큰) */
+.noslog-ui .nl-opinion-row[data-reply] > .nl-avatar.nl-skeleton {
+    width: var(--nl-spacing-24);
+    height: var(--nl-spacing-24);
+}
+/* 번역 표시(2026-09-22 T1) — 본문 바로 아래 한 줄: 「일본어에서 번역됨 · Gemini · 원문 보기」 */
+.noslog-ui .nl-opinion-row__translation {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--nl-spacing-4);
+    margin: 0;
 }

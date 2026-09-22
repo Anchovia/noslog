@@ -229,12 +229,24 @@ export async function getAdminDashboard(
             target?.set(row.key, (target.get(row.key) ?? 0) + count);
         }
     }
-    for (const user of users)
+    // 가입 · 동기화의 오늘 시각별 수 — 이미 있는 시각 칸에서 센다(새로 모으지 않음)
+    const todayKey = current[current.length - 1];
+    const hourlySignups = new Map<string, number>();
+    const hourlySyncs = new Map<string, number>();
+    const countHour = (counts: Map<string, number>, at: Date) => {
+        if (days !== 1 || analyticsDateKey(at) !== todayKey) return;
+        const key = analyticsHourKey(at);
+        counts.set(key, (counts.get(key) ?? 0) + 1);
+    };
+    for (const user of users) {
         day(analyticsDateKey(user.created_at)).signups += 1;
+        countHour(hourlySignups, user.created_at);
+    }
     for (const sync of syncs) {
         const entry = day(analyticsDateKey(sync.started_at));
         entry.syncs += 1;
         if (sync.status === "failed") entry.failed += 1;
+        countHour(hourlySyncs, sync.started_at);
     }
     const sum = (keys: string[], field: keyof DayTotals) =>
         keys.reduce((total, key) => total + (totals.get(key)?.[field] ?? 0), 0);
@@ -254,7 +266,8 @@ export async function getAdminDashboard(
         range,
         metric,
         days,
-        // 오늘은 날짜 하나뿐이라 시각별로 — 아직 오지 않은 시각은 빈 칸으로 둔다 (2026-09-20)
+        // 오늘은 날짜 하나뿐이라 시각별로 — 아직 오지 않은 시각은 빈 칸으로 둔다 (2026-09-20).
+        // 방문자는 하루 단위로만 세므로 시각별 값이 없다 (2026-09-22)
         hourly:
             days === 1
                 ? Array.from({ length: 24 }, (_, hour) => {
@@ -262,7 +275,11 @@ export async function getAdminDashboard(
                       return {
                           hour: key,
                           label: `${hour}시`,
-                          value: hours.get(key) ?? 0,
+                          values: {
+                              pageviews: hours.get(key) ?? 0,
+                              signups: hourlySignups.get(key) ?? 0,
+                              syncs: hourlySyncs.get(key) ?? 0,
+                          },
                           future: key > analyticsHourKey(now),
                       };
                   })

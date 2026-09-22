@@ -37,6 +37,7 @@ vi.mock("@/features/admin/components/adminDashboardChart", () => ({
         return null;
     },
 }));
+import { DASHBOARD_METRIC_COLORS } from "@/features/admin/dashboardParams";
 import {
     AdminDashboardMetricLink,
     AdminDashboardRangeLink,
@@ -137,19 +138,61 @@ describe("dashboard metric navigation", () => {
         }
     });
 
-    it("retains today's hourly pageview chart regardless of the selected metric", () => {
-        mocks.params = new URLSearchParams("range=today&metric=signups");
-        const hourly = [{ hour: "00", label: "0시", value: 9, future: false }];
+    it("draws today's hourly bars for the selected metric in its own color", () => {
+        const hourly = [
+            {
+                hour: "00",
+                label: "0시",
+                values: { pageviews: 9, signups: 2, syncs: 5 },
+                future: false,
+            },
+        ];
+        for (const [metric, label] of [
+            ["pageviews", "페이지뷰"],
+            ["signups", "가입"],
+            ["syncs", "동기화"],
+        ] as const) {
+            mocks.params = new URLSearchParams(`range=today&metric=${metric}`);
+            const html = renderToStaticMarkup(
+                createElement(AdminDashboardTrend, {
+                    range: "today",
+                    initialMetric: "visitors",
+                    hourly,
+                    series: [],
+                })
+            );
+            expect(html).toContain(`시간대별 ${label}`);
+            const props = mocks.hours.mock.lastCall?.[0];
+            expect(props.label).toBe(label);
+            expect(props.color).toBe(DASHBOARD_METRIC_COLORS[metric]);
+            expect(props.data[0].value).toBe(hourly[0].values[metric]);
+        }
+        expect(mocks.chart).not.toHaveBeenCalled();
+    });
+
+    it("keeps the same hourly frame for visitors with a centered note (B1)", () => {
+        mocks.params = new URLSearchParams("range=today&metric=visitors");
         const html = renderToStaticMarkup(
             createElement(AdminDashboardTrend, {
                 range: "today",
-                initialMetric: "signups",
-                hourly,
+                initialMetric: "visitors",
+                hourly: [
+                    {
+                        hour: "00",
+                        label: "0시",
+                        values: { pageviews: 9, signups: 2, syncs: 5 },
+                        future: false,
+                    },
+                ],
                 series: [],
             })
         );
-        expect(html).toContain("시간대별 페이지뷰");
-        expect(mocks.hours.mock.lastCall?.[0].data).toEqual(hourly);
+        expect(html).toContain("날짜별 그래프는 7일 이상에서 보입니다.");
+        expect(html).not.toContain("시간대별 방문자 · 서울 기준");
+        const props = mocks.hours.mock.lastCall?.[0];
+        expect(props.emptyMessage).toBe("시간대별로 모으지 않습니다");
+        expect(props.data).toHaveLength(1);
+        expect(props.data[0].value).toBe(0);
         expect(mocks.chart).not.toHaveBeenCalled();
     });
 });

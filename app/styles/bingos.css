@@ -77,7 +77,7 @@
     flex-shrink: 0;
 }
 .noslog-ui .nl-bingo-card__cover[data-empty="true"] {
-    border: 1px solid var(--nl-border-empty-slot);
+    border: var(--nl-stroke-default) solid var(--nl-border-empty-slot);
 }
 .noslog-ui .nl-bingo-mini {
     display: grid;
@@ -123,7 +123,7 @@
     justify-content: space-between;
     gap: var(--nl-spacing-8);
     margin-top: auto;
-    border-top: 1px solid var(--nl-border-divider);
+    border-top: var(--nl-stroke-default) solid var(--nl-border-divider);
     padding-top: var(--nl-spacing-8);
 }
 .noslog-ui .nl-bingo-card__meta > :only-child {
@@ -225,7 +225,7 @@
     width: 12px;
     height: 12px;
     border-radius: 2px;
-    border: 1px solid var(--nl-border-default);
+    border: var(--nl-stroke-default) solid var(--nl-border-default);
     background: var(--nl-surface-surface);
 }
 .noslog-ui .nl-bingo-legend i[data-kind="done"] {
@@ -233,7 +233,7 @@
     border-color: transparent;
 }
 .noslog-ui .nl-bingo-legend i[data-kind="chance"] {
-    border: 1px dashed var(--nl-border-strong);
+    border: var(--nl-stroke-default) dashed var(--nl-border-strong);
 }
 .noslog-ui .nl-bingo-legend i[data-kind="line"] {
     background: var(--nl-interaction-menu-set);
@@ -245,7 +245,7 @@
     max-height: var(--radix-popover-content-available-height);
     overflow-y: auto;
     overscroll-behavior: contain;
-    border: 1px solid var(--nl-border-overlay);
+    border: var(--nl-stroke-default) solid var(--nl-border-overlay);
     border-radius: var(--nl-radius-overlay);
     background: var(--nl-surface-overlay);
     box-shadow: var(--nl-overlay-shadow);
@@ -346,7 +346,7 @@
     aspect-ratio: 1;
     min-width: 0;
     background: var(--nl-surface-surface);
-    border: 1px solid var(--nl-border-default);
+    border: var(--nl-stroke-default) solid var(--nl-border-default);
     border-radius: var(--nl-radius-control);
     color: var(--nl-content-subdued);
 }
@@ -367,7 +367,7 @@
 .noslog-ui .nl-bingo-board__cell[data-line="true"][data-completed="true"] {
     background: var(--nl-content-default);
     color: var(--nl-primary-on-primary);
-    box-shadow: inset 0 0 0 2px var(--nl-border-strong);
+    box-shadow: inset 0 0 0 var(--nl-stroke-strong) var(--nl-border-strong);
     border-color: transparent;
 }
 .noslog-ui .nl-bingo-board__cell[data-completed="true"] {
@@ -376,11 +376,11 @@
     border-color: transparent;
 }
 .noslog-ui .nl-bingo-board__cell[data-chance="true"] {
-    border: 1px dashed var(--nl-border-strong);
+    border: var(--nl-stroke-default) dashed var(--nl-border-strong);
     color: var(--nl-content-default);
 }
 .noslog-ui .nl-bingo-board__cell[aria-pressed="true"] {
-    box-shadow: inset 0 0 0 2px var(--nl-border-strong);
+    box-shadow: inset 0 0 0 var(--nl-stroke-strong) var(--nl-border-strong);
     border-color: transparent;
 }
 .noslog-ui .nl-bingo-missions__list {

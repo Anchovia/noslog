@@ -55,7 +55,7 @@
    오른쪽 칸은 검정 상태가 쓰므로 체크는 두지 않고 선택은 면 + 굵기로 표시한다 */
 .noslog-ui.nl-exam-select__popup {
     background: var(--nl-surface-overlay);
-    border: 1px solid var(--nl-border-overlay);
+    border: var(--nl-stroke-default) solid var(--nl-border-overlay);
     border-radius: var(--nl-radius-overlay);
     box-shadow: var(--nl-overlay-shadow);
     color: var(--nl-content-default);
@@ -104,9 +104,11 @@
 .noslog-ui .nl-exam-stage + .nl-exam-stage::before {
     content: "";
     display: block;
-    width: 2px;
+    width: var(--nl-stroke-strong);
     height: var(--nl-spacing-16);
-    margin-inline-start: calc(var(--nl-exam-jacket-size) / 2 - 1px);
+    margin-inline-start: calc(
+        var(--nl-exam-jacket-size) / 2 - var(--nl-stroke-strong) / 2
+    );
     background: var(--nl-border-strong);
 }
 .noslog-ui .nl-exam-stage__row {
@@ -192,7 +194,7 @@
     justify-content: space-between;
     flex-wrap: wrap;
     gap: var(--nl-spacing-8);
-    border-top: 1px solid var(--nl-border-divider);
+    border-top: var(--nl-stroke-default) solid var(--nl-border-divider);
     padding-top: var(--nl-spacing-12);
 }
 @media (min-width: 672px) {

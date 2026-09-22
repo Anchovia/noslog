@@ -11,7 +11,7 @@
     align-items: center;
     gap: var(--nl-spacing-12);
     padding-block: var(--nl-spacing-12);
-    border-bottom: 1px solid var(--nl-border-divider);
+    border-bottom: var(--nl-stroke-default) solid var(--nl-border-divider);
 }
 .noslog-ui .nl-settings__category > span {
     display: flex;
@@ -50,7 +50,7 @@
     width: 20px;
     height: 20px;
     flex-shrink: 0;
-    border: 2px solid var(--nl-border-strong);
+    border: var(--nl-stroke-strong) solid var(--nl-border-strong);
     border-radius: 50%;
 }
 .noslog-ui .nl-radio-group__option input:checked {
@@ -169,20 +169,20 @@
 .noslog-ui .nl-settings__crop-circle {
     position: absolute;
     inset: calc(31 / 302 * 100%);
-    border: 1px solid var(--nl-border-default);
+    border: var(--nl-stroke-default) solid var(--nl-border-default);
     border-radius: var(--nl-radius-full);
     pointer-events: none;
 }
 .noslog-ui .nl-settings-dialog {
     padding: var(--nl-spacing-16);
-    box-shadow: inset 0 0 0 1px var(--nl-border-default);
+    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-default);
 }
 .noslog-ui .nl-settings-dialog > .nl-body {
     font-size: var(--nl-type-size-14);
     line-height: var(--nl-type-line-height-20);
 }
 .noslog-ui .nl-account-deletion {
-    border-top: 1px solid var(--nl-border-divider);
+    border-top: var(--nl-stroke-default) solid var(--nl-border-divider);
     padding-top: var(--nl-spacing-24);
 }
 .noslog-ui .nl-account-confirmation {

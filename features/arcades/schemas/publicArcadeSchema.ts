@@ -11,6 +11,16 @@ export const arcadeCabinetSchema = z
         note: z.string().nullable(),
         // 상태 이유 — 보통·주의 상태 라벨의 팝오버. 나누기 전 기체는 이유가 위치 메모에 남아 있다
         conditionNote: z.string().nullable(),
+        // 태그(아이콘 + 글자) · 특징(정해진 보기, 모르면 null) · 기타 글 — 2026-09-22
+        tags: z.array(
+            z.enum(["broadcast", "headphone", "seat", "card_payment"])
+        ),
+        features: z.object({
+            keyWeight: z.enum(["light", "normal", "heavy"]).nullable(),
+            screenLag: z.enum(["low", "normal", "high"]).nullable(),
+            soundVolume: z.enum(["low", "normal", "high"]).nullable(),
+        }),
+        featureNote: z.string().nullable(),
         verifiedAt: z.iso.datetime().nullable(),
         stale: z.boolean(),
         // 이용자 가동 확인 — 최근 30일 안 마지막 확인 시각과 확인한 사람 수
@@ -93,6 +103,17 @@ export const publicArcadeSchema = z.object({
     playPrice: z.number().nonnegative().nullable(),
     coinCount: z.number().int().positive().nullable(),
     creditLabel: z.string().nullable(),
+    // 시설(아이콘 + 글자 · 「시설」 구역) — 2026-09-22
+    facilities: z.array(
+        z.enum([
+            "parking",
+            "smoking",
+            "wifi",
+            "restroom",
+            "card_sales",
+            "locker",
+        ])
+    ),
     notes: z.string().nullable(),
     preferredCount: z.number().int().min(3).nullable(),
     cabinets: z.array(arcadeCabinetSchema),

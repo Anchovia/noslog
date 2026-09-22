@@ -6,15 +6,116 @@
     gap: var(--nl-spacing-16);
     align-items: flex-start;
 }
-.noslog-ui .nl-tier-goal {
-    width: 100%;
-    justify-content: space-between;
+/* 제목 = 서열표 스위처(2026-09-22 ④) — 글자는 페이지 제목 그대로 + 꺾쇠 24 흐림.
+   누르는 영역은 컨트롤 높이(줄 높이는 늘리지 않게 위아래로 당김), 올림 면이 칠해질 좌우 8 은 잉크가 제목 선에 서게 왼쪽으로 당긴다.
+   테두리 없는 컨트롤이라 포커스에서만 1px 흰 선 */
+.noslog-ui .nl-tier-heading {
+    display: flex;
+    min-width: 0;
+    margin: 0;
 }
-.noslog-ui .nl-tier-browser-mode {
+.noslog-ui .nl-tier-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--nl-spacing-4);
+    min-width: 0;
+    min-height: var(--nl-control-height);
+    margin-block: calc((1lh - var(--nl-control-height)) / 2);
+    margin-inline-start: calc(var(--nl-spacing-8) * -1);
+    padding-inline: var(--nl-spacing-8);
+    border: 0;
+    border-radius: var(--nl-radius-field);
+    background: transparent;
+    color: var(--nl-content-default);
+    text-align: start;
+}
+.noslog-ui .nl-tier-switch > span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.noslog-ui .nl-tier-switch > svg {
+    flex: none;
+    width: var(--nl-icon-large);
+    height: var(--nl-icon-large);
+    color: var(--nl-content-subdued);
+}
+@media (hover: hover) {
+    .noslog-ui .nl-tier-switch:hover {
+        background: var(--nl-interaction-hover);
+    }
+}
+.noslog-ui .nl-tier-switch:focus-visible {
+    outline: none;
+    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-focus-ring);
+}
+.noslog-ui .nl-tier-switch[data-state="open"] {
+    background: var(--nl-interaction-selected-pressed);
+}
+/* 목록 소제목(Basic · Recital) — 목록 메뉴 소제목 규격: metadata · 흐림 · 400 */
+/* 제목 아래 메타 글줄(2026-09-22 A) — 곡 수 · 업데이트 · 「안내」 글자 링크. 좁으면 항목 단위로 줄바꿈 */
+.noslog-ui .nl-tier-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    min-width: 0;
+    margin: 0;
+}
+.noslog-ui .nl-tier-meta__item {
+    white-space: pre;
+}
+.noslog-ui .nl-tier-meta__guide {
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    cursor: pointer;
+}
+.noslog-ui .nl-tier-switch__group {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-12);
+    gap: var(--nl-spacing-4);
+}
+.noslog-ui .nl-tier-switch__heading {
+    padding: var(--nl-spacing-8) var(--nl-spacing-12) var(--nl-spacing-4);
+    color: var(--nl-content-subdued);
+}
+/* 머리(2026-09-22 · 악곡 목록 폰 머리와 같은 틀) — 검색줄: 검색 남는 폭 + ☰ 필터 44(적용 개수 배지).
+   Wide 는 제목 아래 검색 전체 폭 */
+.noslog-ui .nl-tier-search {
+    display: flex;
+    gap: var(--nl-spacing-8);
     min-width: 0;
+}
+.noslog-ui .nl-tier-search__form {
+    flex: 1;
+    min-width: 0;
+}
+/* 폰 결과 줄: 왼쪽 결과 수 메타 · 오른쪽 보기 전환 M */
+.noslog-ui .nl-tier-scope {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+    min-width: 0;
+}
+/* 폰 결과 줄 = 악곡 목록과 같은 규칙 — 고스트 정렬은 안쪽 12 만큼 당겨 아이콘을 목록 왼쪽 선에 맞추고,
+   좁은 폭에서는 정렬 라벨이 말줄임되며 보기 전환은 줄지 않는다 */
+.noslog-ui .nl-tier-scope {
+    min-height: var(--nl-control-height-compact);
+}
+.noslog-ui .nl-tier-scope > .nl-filter-trigger {
+    flex: 0 1 auto;
+    min-width: 0;
+    margin-left: calc(-1 * var(--nl-spacing-12));
+}
+.noslog-ui .nl-tier-scope > .nl-segments {
+    flex: none;
+    margin-left: auto;
+}
+.noslog-ui .nl-tier-toolbar > .nl-segments {
+    margin-left: auto;
 }
 .noslog-ui .nl-tier-rail {
     display: flex;
@@ -38,7 +139,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    min-height: 44px;
     gap: var(--nl-spacing-12);
 }
 .noslog-ui .nl-tier-filter-body {
@@ -94,19 +194,18 @@
     min-height: 44px;
     padding-block: var(--nl-spacing-8);
     background: var(--nl-surface-canvas);
-    box-shadow: inset 0 -1px var(--nl-border-default);
+    box-shadow: inset 0 calc(var(--nl-stroke-default) * -1)
+        var(--nl-border-divider);
 }
 .noslog-ui:has(.nl-header[data-scroll-state="hidden"]) .nl-tier-band__header {
     top: 0;
 }
+/* 폰 격자 4열 · 사이 8(2026-09-22 B안) — 672 이상은 아래 auto-fill 규칙 */
 .noslog-ui .nl-tier-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: var(--nl-spacing-12);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--nl-spacing-8);
     align-items: start;
-}
-.noslog-ui .nl-tier-grid[data-detailed="true"] {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 .noslog-ui .nl-tier-card {
     display: flex;
@@ -114,9 +213,6 @@
     min-width: 0;
     gap: var(--nl-spacing-4);
     border-radius: var(--nl-radius-container);
-}
-.noslog-ui .nl-tier-card[data-detailed="true"] {
-    gap: var(--nl-spacing-8);
 }
 .noslog-ui .nl-tier-card > span {
     overflow-wrap: anywhere;
@@ -135,7 +231,7 @@
     inset: 0;
     z-index: 2;
     border-radius: inherit;
-    box-shadow: inset 0 0 0 1px var(--nl-border-empty-slot);
+    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-empty-slot);
     pointer-events: none;
 }
 /* 그 표의 기준 색(2026-09-14) — S 표 = JUST 노랑 · 990k 표 = 노랑과 ◆JUST 분홍 사이 살구 · Pianist 표 = ◆JUST 분홍.
@@ -152,11 +248,11 @@
 /* 테두리 = 이 표 달성(2026-09-14): 달성 = 기준 색 · 달성 + FC = 좌상단 FC 초록 → 우하단 기준 색 그라데이션
    (가운데 절반 25–75% 에서 전환) · Pianist 는 퍼펙트라 FC 여도 기준 색 하나 · 달성 못 한 FC 는 테두리 없음(2026-09-17) */
 .noslog-ui .nl-tier-card__outline[data-achievement="goal"] {
-    box-shadow: inset 0 0 0 2px var(--nl-tier-goal);
+    box-shadow: inset 0 0 0 var(--nl-stroke-strong) var(--nl-tier-goal);
 }
 .noslog-ui .nl-tier-card__outline[data-achievement="goal-fc"] {
     box-shadow: none;
-    padding: 2px;
+    padding: var(--nl-stroke-strong);
     background: linear-gradient(
         135deg,
         var(--nl-achievement-full-combo) 25%,
@@ -210,26 +306,23 @@
         var(--nl-content-on-media)
     );
 }
-/* 등급 메달은 상세 보기 점수 띠 안에만 */
-.noslog-ui .nl-tier-card__rank {
+/* 자켓 위 띠(2026-09-22 A) — 고른 값(공식 Grd · NosLog 레이팅). 이미지 위 글자 토큰(media-scrim · on-media),
+   글자 · 여백은 오른쪽 아래 난이도 판과 같게. 테두리(z 2) 아래에 둔다 */
+.noslog-ui .nl-tier-card__strip {
     position: absolute;
-    right: var(--nl-spacing-8);
-    bottom: var(--nl-spacing-8);
+    inset-inline: 0;
+    top: 0;
     z-index: 1;
-    width: 24px;
-    height: 24px;
-    object-fit: contain;
-    border-radius: var(--nl-radius-control);
+    padding: var(--nl-spacing-2) var(--nl-spacing-4);
+    background: var(--nl-surface-media-scrim);
+    color: var(--nl-content-on-media);
+    text-align: center;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
 }
-/* 상세 보기: 점수 띠(높이 36) 안 오른쪽 끝, 띠 세로 가운데 */
-.noslog-ui .nl-tier-card[data-detailed="true"] .nl-tier-card__rank {
-    bottom: calc((36px - 24px) / 2);
-}
-/* 메달이 있을 때만 점수가 메달 폭(24) + 간격 4 만큼 왼쪽으로 비켜난다 */
-.noslog-ui
-    .nl-tier-card__jacket:has(.nl-tier-card__rank)
-    .nl-tier-card__score-band {
-    padding-right: calc(var(--nl-spacing-8) + 24px + var(--nl-spacing-4));
+/* 목표 미달성 = 자켓 그림만 흑백(2026-09-22 B) — 판 · 띠 · 점수 글자 · 누름 반응은 그대로(disabled 아님) */
+.noslog-ui :is(.nl-tier-card, .nl-tier-row)[data-unachieved] .nl-jacket > img {
+    filter: grayscale(1);
 }
 .noslog-ui .nl-tier-card__score {
     display: flex;
@@ -245,29 +338,67 @@
 .noslog-ui [data-pending="true"] .nl-tier-card__score[data-achieved] {
     color: inherit;
 }
-.noslog-ui .nl-tier-card__score-band {
-    position: absolute;
-    bottom: 0;
-    inset-inline: 0;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    min-height: 36px;
-    padding: var(--nl-spacing-8);
-    gap: var(--nl-spacing-4);
-    background: var(--nl-surface-media-scrim);
-    color: var(--nl-content-on-media);
-    white-space: nowrap;
-}
-.noslog-ui .nl-tier-card__score-band > span:first-child:not(:last-child) {
-    margin-right: auto;
-}
 @media (hover: hover) {
     .noslog-ui
-        .nl-tier-card:hover
+        :is(.nl-tier-card, .nl-tier-row):hover
         .nl-tier-card__outline:not([data-achievement]) {
-        box-shadow: inset 0 0 0 1px var(--nl-border-strong);
+        box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-strong);
     }
+}
+/* 375 미만(4열 카드 66)은 판 글자를 약칭 N · H · EX · R 로 — 악곡 상세 난이도 선택과 같은 규칙 */
+@media (max-width: 374px) {
+    .noslog-ui .nl-tier-card__difficulty-name {
+        font-size: 0;
+    }
+    .noslog-ui .nl-tier-card__difficulty-name::before {
+        content: attr(data-short);
+        font-size: var(--nl-type-size-12);
+    }
+}
+/* 목록 보기(2026-09-22 B안) — 행 = 자켓 48(채보 발견 채보 묶음과 같은 크기 · 모서리 4) + 위아래 8, 아래 divider.
+   이름 · 난이도는 한 줄씩(넘치면 말줄임), 로그인하면 오른쪽 점수 · 기여 */
+.noslog-ui .nl-tier-list {
+    display: flex;
+    flex-direction: column;
+}
+.noslog-ui .nl-tier-row {
+    display: grid;
+    grid-template-columns: 48px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--nl-spacing-12);
+    padding-block: var(--nl-spacing-8);
+    box-shadow: inset 0 calc(var(--nl-stroke-default) * -1)
+        var(--nl-border-divider);
+}
+.noslog-ui .nl-tier-row__jacket {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    border-radius: var(--nl-radius-control);
+    background: var(--nl-surface-sunken);
+    overflow: hidden;
+}
+.noslog-ui .nl-tier-row__name,
+.noslog-ui .nl-tier-row__record {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+/* 한 줄 말줄임 — 같은 자켓 48 을 쓰는 채보 발견 채보 묶음과 같은 방식 */
+.noslog-ui .nl-tier-row__name > * {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.noslog-ui .nl-tier-row__record {
+    align-items: flex-end;
+    white-space: nowrap;
+}
+.noslog-ui .nl-tier-row__record .nl-tier-card__score[data-unplayed] {
+    color: var(--nl-content-subdued);
+}
+.noslog-ui [data-pending="true"] .nl-tier-row {
+    color: var(--nl-content-pending);
 }
 .noslog-ui [data-pending="true"] .nl-tier-card {
     color: var(--nl-content-pending);
@@ -276,7 +407,6 @@
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-12);
-    padding-block: var(--nl-spacing-4);
 }
 .noslog-ui .nl-tier-weight {
     display: flex;
@@ -315,7 +445,7 @@
 }
 .noslog-ui .nl-tier-weight > h4 {
     padding-top: var(--nl-spacing-12);
-    border-top: 1px solid var(--nl-border-divider);
+    border-top: var(--nl-stroke-default) solid var(--nl-border-divider);
 }
 .noslog-ui .nl-tier-weight__ratios {
     display: grid;
@@ -330,13 +460,22 @@
         grid-template-columns: repeat(auto-fill, minmax(111.333px, 1fr));
         gap: var(--nl-spacing-16);
     }
-    .noslog-ui .nl-tier-grid[data-detailed="true"] {
-        grid-template-columns: repeat(auto-fill, minmax(156px, 1fr));
-    }
 }
 .noslog-ui .nl-tiers[data-layout="wide"] .nl-tier-results {
     gap: var(--nl-spacing-16);
 }
 .noslog-ui .nl-tiers[data-layout="wide"] .nl-tier-rail .nl-field {
     gap: var(--nl-spacing-12);
+}
+/* 제목 줄 오른쪽 내보내기 버튼(2026-09-22 E3) — 스위처와 같은 방법으로 제목 글줄(1lh) 가운데에 선다.
+   감싸는 칸에 page-title 글자 규격을 붙여 1lh 를 제목 줄 높이로 읽는다(안은 아이콘 버튼뿐) */
+.noslog-ui .nl-tier-export__trigger {
+    display: flex;
+    margin-block: calc((1lh - var(--nl-control-height)) / 2);
+}
+/* 이미지 내보내기 창(2026-09-22 D1) — 공용 nl-image-share 안에서 서열표만의 표시 선택 두 줄 */
+.noslog-ui .nl-tier-export__options {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
 }

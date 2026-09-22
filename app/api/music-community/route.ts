@@ -2,11 +2,15 @@ import { NextResponse } from "next/server";
 import { createApiFailure, createApiSuccess } from "@/lib/api/response";
 import { logServerError } from "@/lib/observability/server";
 import getSession from "@/lib/session";
-import { opinionQuerySchema } from "@/features/music/schemas/communitySchema";
+import {
+    opinionQuerySchema,
+    opinionReplyQuerySchema,
+} from "@/features/music/schemas/communitySchema";
 import {
     getCommunityData,
     getCommunityOpinions,
     getCommunityPattern,
+    getOpinionReplies,
 } from "@/features/music/server/communityData";
 
 const headers = { "Cache-Control": "private, no-store" };
@@ -24,6 +28,26 @@ export async function GET(request: Request) {
         );
     try {
         const session = await getSession();
+        // 답글(2026-09-22) — 의견 하나의 답글 목록
+        if (params.get("area") === "replies") {
+            const replies = opinionReplyQuerySchema.safeParse(
+                Object.fromEntries(params)
+            );
+            if (!replies.success)
+                return NextResponse.json(
+                    createApiFailure({
+                        code: "COMMUNITY_INVALID_REQUEST",
+                        message: "Invalid chart community request.",
+                    }),
+                    { status: 400, headers }
+                );
+            return NextResponse.json(
+                createApiSuccess(
+                    await getOpinionReplies(replies.data, session.id)
+                ),
+                { headers }
+            );
+        }
         const data =
             params.get("area") === "pattern"
                 ? { pattern: await getCommunityPattern(parsed.data.chartId) }

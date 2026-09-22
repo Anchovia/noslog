@@ -8,12 +8,14 @@ import {
     type OfficialXPostTranslations,
 } from "@/features/home/officialXPostContent";
 
-// Free-tier Gemini Flash, newest first. The free lane sheds load with 503s,
+// Free-tier Gemini Flash, most reliable first (measured). The free lane sheds load with 503s,
 // so the next model in the list is tried before giving up.
 export const OFFICIAL_X_TRANSLATION_MODELS = [
+    // 앞에서부터 시도. 3.6 을 맨 앞에 — 2026-09-22 실측(같은 지시문 4회)에서 3.6 4/4 · 3.8 1/4 · 3.5 0/4 성공.
+    // 2.5 는 새 사용자에게 더는 제공되지 않는다(404)
+    "gemini-3.6-flash",
     "gemini-3.8-flash",
     "gemini-3.5-flash",
-    "gemini-2.5-flash",
 ] as const;
 export const OFFICIAL_X_TRANSLATION_MODEL = OFFICIAL_X_TRANSLATION_MODELS[0];
 const TRANSLATION_TIMEOUT_MS = 20_000;

@@ -196,6 +196,11 @@ describe("관리자 오락실 액션", () => {
                 conditionNote: null,
                 availability: "available",
                 condition: "good",
+                tags: [],
+                keyWeight: null,
+                screenLag: null,
+                soundVolume: null,
+                featureNote: null,
                 verifiedAt: expect.any(Date),
                 verificationSource: "admin",
             },
@@ -246,6 +251,11 @@ describe("관리자 오락실 액션", () => {
                 conditionNote: "우측 건반 씹힘",
                 availability: "available",
                 condition: "caution",
+                tags: [],
+                keyWeight: null,
+                screenLag: null,
+                soundVolume: null,
+                featureNote: null,
                 isActive: true,
                 verifiedAt: expect.any(Date),
                 verificationSource: "admin",
@@ -297,6 +307,11 @@ describe("관리자 오락실 액션", () => {
                 conditionNote: null,
                 availability: "available",
                 condition: "good",
+                tags: [],
+                keyWeight: null,
+                screenLag: null,
+                soundVolume: null,
+                featureNote: null,
                 isActive: true,
             },
         });
@@ -403,6 +418,8 @@ describe("관리자 오락실 액션", () => {
         formData.set("phone", " 02-123-4567 ");
         formData.set("website", "https://example.com/arcade");
         formData.set("creditLabel", "1크레딧");
+        // 모르는 값 · 중복은 버리고 정해진 순서로
+        formData.set("facilities", JSON.stringify(["wifi", "parking", "wifi"]));
         formData.set(
             "hoursExceptions",
             JSON.stringify([
@@ -433,6 +450,7 @@ describe("관리자 오락실 액션", () => {
                     phone: "02-123-4567",
                     website: "https://example.com/arcade",
                     creditLabel: "1크레딧",
+                    facilities: ["parking", "wifi"],
                 },
             })
         );

@@ -117,7 +117,7 @@
     height: 8px;
 }
 .noslog-ui .nl-line-chart__legend [data-series="fast"] {
-    border: 2px solid var(--nl-local-data-fast);
+    border: var(--nl-stroke-strong) solid var(--nl-local-data-fast);
     border-radius: var(--nl-radius-full);
 }
 .noslog-ui .nl-line-chart__legend [data-series="slow"] {
@@ -162,7 +162,7 @@
     border-radius: var(--nl-radius-overlay);
     background: var(--nl-surface-overlay);
     box-shadow:
-        inset 0 0 0 1px var(--nl-border-overlay),
+        inset 0 0 0 var(--nl-stroke-default) var(--nl-border-overlay),
         var(--nl-overlay-shadow);
     position: absolute;
     width: max-content;
@@ -177,7 +177,7 @@
 .noslog-ui .nl-chart-table th,
 .noslog-ui .nl-chart-table td {
     padding-block: var(--nl-spacing-8);
-    border-bottom: 1px solid var(--nl-border-divider);
+    border-bottom: var(--nl-stroke-default) solid var(--nl-border-divider);
     text-align: start;
 }
 .noslog-ui .nl-chart-table tbody th {
