@@ -482,6 +482,105 @@ test("sorts songs inside each band and offers the score order only when signed i
     ]);
 });
 
+test("unachieved jackets turn grey and the jacket strip follows the select in the address", async ({
+    page,
+}) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await prepare(page);
+    const band = page.getByRole("region", { name: "14.3", exact: true });
+    // 목표 미달성(기록 없는 5번째)만 흑백 — 자켓 그림에만 거는 필터(2026-09-22 B)
+    await expect(band.locator(".nl-tier-card[data-unachieved]")).toHaveCount(1);
+    const greyed = await band
+        .locator(".nl-tier-card[data-unachieved]")
+        .evaluate((card) => {
+            const image = card.querySelector(".nl-jacket > img");
+            return image ? getComputedStyle(image).filter : "grayscale(1)";
+        });
+    expect(greyed).toBe("grayscale(1)");
+    // 띠 기본 = 공식 Grd, 목록 보기 기여와 같은 형식
+    await expect(band.locator(".nl-tier-card__strip").first()).toHaveText(
+        "+0.42"
+    );
+    const select = page.getByRole("combobox", {
+        name: "자켓 위 값",
+        exact: true,
+    });
+    await expect(select).toHaveText("Grd");
+    await select.click();
+    await page
+        .getByRole("option", { name: "NosLog 레이팅", exact: true })
+        .click();
+    await expect(page).toHaveURL(/strip=rating/);
+    await expect(band.locator(".nl-tier-card__strip").first()).toHaveText(
+        "+36.5"
+    );
+    // 레이팅이 없는 곡(4번째) · 기록 없는 곡은 띠 없음 — 다른 값으로 채우지 않는다
+    await expect(band.locator(".nl-tier-card__strip")).toHaveCount(13);
+    await select.click();
+    await page.getByRole("option", { name: "표시 안 함", exact: true }).click();
+    await expect(page).toHaveURL(/strip=off/);
+    await expect(page.locator(".nl-tier-card__strip")).toHaveCount(0);
+    // 목록 보기에는 띠가 없어 셀렉트도 없다
+    await page
+        .locator(".nl-tier-scope")
+        .getByRole("radio", { name: "목록", exact: true })
+        .click();
+    await expect(select).toHaveCount(0);
+
+    await prepare(page, { guest: true });
+    await expect(select).toHaveCount(0);
+    await expect(page.locator("[data-unachieved]")).toHaveCount(0);
+    await expect(page.locator(".nl-tier-card__strip")).toHaveCount(0);
+});
+
+test("exports the current view as a JPEG and remembers the display options", async ({
+    page,
+}) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await prepare(page);
+    const open = page.getByRole("button", {
+        name: "서열표 이미지 내보내기",
+        exact: true,
+    });
+    await open.click();
+    const dialog = page.getByRole("dialog", { name: "서열표 내보내기" });
+    await expect(
+        dialog.getByText("담기는 것 · S 서열표 · 3구간 18곡", { exact: true })
+    ).toBeVisible();
+    const preview = dialog.locator(".nl-tier-export__preview img");
+    await expect(preview).toBeVisible({ timeout: 30_000 });
+    const size = () =>
+        preview.evaluate((image: HTMLImageElement) => [
+            image.naturalWidth,
+            image.naturalHeight,
+        ]);
+    const [width, compactHeight] = await size();
+    expect(width).toBe(1200);
+    const names = dialog.getByRole("checkbox", {
+        name: "곡 이름 표시",
+        exact: true,
+    });
+    await expect(names).not.toBeChecked();
+    await names.check();
+    await expect
+        .poll(async () => (await size())[1], { timeout: 30_000 })
+        .toBeGreaterThan(compactHeight);
+    const download = page.waitForEvent("download");
+    await dialog
+        .getByRole("button", { name: "이미지 저장", exact: true })
+        .click();
+    expect((await download).suggestedFilename()).toMatch(
+        /^noslog-basic-s-\d{4}-\d{2}-\d{2}\.jpg$/
+    );
+    await page.keyboard.press("Escape");
+    await open.click();
+    await expect(
+        page
+            .getByRole("dialog", { name: "서열표 내보내기" })
+            .getByRole("checkbox", { name: "곡 이름 표시", exact: true })
+    ).toBeChecked();
+});
+
 test("unpublished lists and request failures retain the scope controls", async ({
     page,
 }) => {

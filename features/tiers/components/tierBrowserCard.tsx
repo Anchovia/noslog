@@ -13,6 +13,7 @@ import { isTierGoalAchieved } from "@/lib/tiers";
 import type {
     TierBrowserEntry,
     TierBrowserQuery,
+    TierBrowserStrip,
 } from "@/features/tiers/schemas/tierBrowserSchema";
 
 // 375 미만 4열 카드(66)는 「Expert 10」 판을 못 담아 약칭 — 악곡 상세 난이도 선택과 같은 N · H · EX · R (2026-09-22)
@@ -22,6 +23,29 @@ const shortDifficulty: Record<string, string> = {
     Expert: "EX",
     Real: "R",
 };
+
+/**
+ * 자켓 위 띠 값(2026-09-22 A) — 목록 보기 기여와 같은 형식(Grd 소수 둘째 · 레이팅 첫째 자리).
+ * 고른 값이 없는 곡(미플레이 · 공식 Grd 미수집 · 상수 없음)은 띠 없음 — 다른 값으로 채우지 않는다
+ */
+export function tierStripValue(
+    record: TierBrowserEntry["record"],
+    strip: TierBrowserStrip,
+    locale: string
+) {
+    const value =
+        strip === "grade"
+            ? record?.grade
+            : strip === "rating"
+              ? record?.rating
+              : null;
+    if (value === null || value === undefined) return null;
+    const digits = strip === "grade" ? 2 : 1;
+    return `+${value.toLocaleString(locale, {
+        minimumFractionDigits: digits,
+        maximumFractionDigits: digits,
+    })}`;
+}
 
 function useTierEntry(
     entry: TierBrowserEntry,
@@ -44,6 +68,11 @@ function useTierEntry(
     // 테두리: 달성 + FC = 초록 → 기준 색 그라데이션 · 달성 = 기준 색(Pianist 는 퍼펙트라 FC 여도 기준 색 하나).
     // 달성 못 한 FC 는 테두리 없음(2026-09-17 사용자 결정)
     const achievement = goalAchieved ? (fc ? "goal-fc" : "goal") : undefined;
+    const strip = signedIn ? tierStripValue(record, query.strip, locale) : null;
+    const stripLabel =
+        strip && query.strip !== "off"
+            ? ` · ${t(query.strip === "grade" ? "rankings.metric.grade" : "rankings.metric.rating")} ${strip}`
+            : "";
     const params = new URLSearchParams({
         tab: "tier",
         source: "tiers",
@@ -59,14 +88,19 @@ function useTierEntry(
         score,
         goalAchieved,
         achievement,
+        strip,
         link: href(
             `/music/${encodeURIComponent(chart.music.index)}/${chart.difficulty.toLowerCase()}?${params}`
         ),
         label: `${chart.music.title} · ${chart.difficulty} ${chart.level} · ${t("detail.tier")}${signedIn ? ` · ${score}${pianist ? " · Pianist" : fc ? " · Full Combo" : ""}${goalAchieved ? ` · ${t("tiers.goalAchieved")}` : ""}` : ""}`,
+        labelWithStrip: `${chart.music.title} · ${chart.difficulty} ${chart.level} · ${t("detail.tier")}${signedIn ? ` · ${score}${stripLabel}${pianist ? " · Pianist" : fc ? " · Full Combo" : ""}${goalAchieved ? ` · ${t("tiers.goalAchieved")}` : ""}` : ""}`,
     };
 }
 
-/** 격자 보기 카드 — 자켓 1:1 · 오른쪽 아래 난이도 판 · 로그인하면 아래 점수(달성하면 기준 색) */
+/**
+ * 격자 보기 카드 — 자켓 1:1 · 오른쪽 아래 난이도 판 · 로그인하면 아래 점수(달성하면 기준 색),
+ * 자켓 위 띠(공식 Grd · 레이팅, 2026-09-22 A) · 목표 미달성은 자켓 흑백(2026-09-22 B)
+ */
 export default function TierBrowserCard({
     entry,
     query,
@@ -78,16 +112,24 @@ export default function TierBrowserCard({
     signedIn: boolean;
     pending: boolean;
 }) {
-    const { chart, score, goalAchieved, achievement, link, label } =
-        useTierEntry(entry, query, signedIn);
+    const {
+        chart,
+        score,
+        goalAchieved,
+        achievement,
+        strip,
+        link,
+        labelWithStrip,
+    } = useTierEntry(entry, query, signedIn);
     return (
         <Link
             className="nl-tier-card"
             data-goal={query.goal}
+            data-unachieved={(signedIn && !goalAchieved) || undefined}
             aria-disabled={pending || undefined}
             tabIndex={pending ? -1 : undefined}
             href={link}
-            aria-label={label}
+            aria-label={labelWithStrip}
             onClick={(event) => {
                 if (pending) event.preventDefault();
             }}
@@ -97,6 +139,14 @@ export default function TierBrowserCard({
                 {...chart.music}
                 className="nl-tier-card__jacket"
             >
+                {strip ? (
+                    <span
+                        className="nl-tier-card__strip nl-metadata"
+                        aria-hidden
+                    >
+                        {strip}
+                    </span>
+                ) : null}
                 <span
                     className="nl-tier-card__outline"
                     data-achievement={achievement}
@@ -178,6 +228,7 @@ export function TierBrowserRow({
         <Link
             className="nl-tier-row"
             data-goal={query.goal}
+            data-unachieved={(signedIn && !goalAchieved) || undefined}
             aria-disabled={pending || undefined}
             tabIndex={pending ? -1 : undefined}
             href={link}

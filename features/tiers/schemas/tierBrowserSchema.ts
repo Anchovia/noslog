@@ -18,6 +18,9 @@ export const TIER_BROWSER_SORTS = [
     "score",
 ] as const;
 export type TierBrowserSort = (typeof TIER_BROWSER_SORTS)[number];
+// 격자 카드 자켓 위 띠(2026-09-22 A) — 공식 Grd(기본) · NosLog 레이팅 · 표시 안 함
+export const TIER_BROWSER_STRIPS = ["grade", "rating", "off"] as const;
+export type TierBrowserStrip = (typeof TIER_BROWSER_STRIPS)[number];
 
 const tierBrowserQuerySchema = z.object({
     mode: z.enum(TIER_MODES).catch("basic"),
@@ -32,6 +35,7 @@ const tierBrowserQuerySchema = z.object({
     // 곡 검색어(2026-09-22) — 악곡 목록 검색과 같은 필드(곡 코드 · 제목 · 가나 · 아티스트 · 승인된 번역 제목)
     q: z.string().trim().max(100).default(""),
     sort: z.enum(TIER_BROWSER_SORTS).catch("position"),
+    strip: z.enum(TIER_BROWSER_STRIPS).catch("grade"),
 });
 export type TierBrowserQuery = z.infer<typeof tierBrowserQuerySchema>;
 
@@ -56,6 +60,7 @@ export function parseTierBrowserQuery(
             : "grid",
         q: (params.get("q") ?? "").trim().slice(0, 100),
         sort: params.get("sort"),
+        strip: params.get("strip"),
     });
     // Recital 은 서열표가 하나라 어떤 goal 이 와도 그 표로 맞춤
     return { ...query, goal: normalizeTierModeGoal(query.mode, query.goal) };
@@ -74,6 +79,7 @@ export function serializeTierBrowserQuery(query: TierBrowserQuery) {
     if (query.view === "list") params.set("view", "list");
     if (query.q) params.set("q", query.q);
     if (query.sort !== "position") params.set("sort", query.sort);
+    if (query.strip !== "grade") params.set("strip", query.strip);
     return params;
 }
 

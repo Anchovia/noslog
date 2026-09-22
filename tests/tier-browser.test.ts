@@ -32,6 +32,7 @@ import {
     getTierBrowserBand,
     getTierBrowserOverview,
 } from "@/features/tiers/server/tierBrowserData";
+import { tierStripValue } from "@/features/tiers/components/tierBrowserCard";
 import {
     nextTierBrowserVisibleCount,
     sortTierBrowserEntries,
@@ -123,6 +124,7 @@ describe("Tier browser request and data contract", () => {
             view: "list",
             q: "",
             sort: "position",
+            strip: "grade",
         });
         expect(serializeTierBrowserQuery(parsed).get("view")).toBe("list");
         expect(
@@ -150,6 +152,16 @@ describe("Tier browser request and data contract", () => {
         expect(
             parseTierBrowserQuery(new URLSearchParams("sort=other")).sort
         ).toBe("position");
+        // 자켓 위 띠는 기본 공식 Grd 면 주소에 남기지 않는다(2026-09-22 A)
+        expect(serializeTierBrowserQuery(query()).has("strip")).toBe(false);
+        const rating = parseTierBrowserQuery(
+            new URLSearchParams("strip=rating")
+        );
+        expect(rating.strip).toBe("rating");
+        expect(serializeTierBrowserQuery(rating).get("strip")).toBe("rating");
+        expect(
+            parseTierBrowserQuery(new URLSearchParams("strip=other")).strip
+        ).toBe("grade");
     });
     it("sorts within a band and breaks ties by tier list order", () => {
         const entry = (
@@ -243,6 +255,23 @@ describe("Tier browser request and data contract", () => {
         mocks.music.mockClear();
         await getTierBrowserOverview(query(), null);
         expect(mocks.music).not.toHaveBeenCalled();
+    });
+    it("formats the jacket strip like the list contribution and leaves missing values empty", () => {
+        const record = {
+            score: 990_000,
+            rank: "S",
+            fc_type: 0,
+            grade: 41.256,
+            rating: 36.54,
+        };
+        expect(tierStripValue(record, "grade", "ko")).toBe("+41.26");
+        expect(tierStripValue(record, "rating", "ko")).toBe("+36.5");
+        expect(tierStripValue(record, "off", "ko")).toBeNull();
+        // 고른 값이 없으면 다른 값으로 채우지 않는다
+        expect(
+            tierStripValue({ ...record, grade: null }, "grade", "ko")
+        ).toBeNull();
+        expect(tierStripValue(null, "grade", "ko")).toBeNull();
     });
     it("sends the Japanese reading, falling back to the original title", async () => {
         mocks.band.mockResolvedValue({

@@ -18,7 +18,13 @@ export function tierBrowserOverviewOptions(
         queryKey: ["tier-browser", viewerId, filters],
         queryFn: async ({ signal }) => {
             const response = await fetch(
-                `/api/tier-browser?${serializeTierBrowserQuery({ ...filters, bands: [], view: "grid", sort: "position" })}`,
+                `/api/tier-browser?${serializeTierBrowserQuery({
+                    ...filters,
+                    bands: [],
+                    view: "grid",
+                    sort: "position",
+                    strip: "grade",
+                })}`,
                 { signal }
             );
             return tierBrowserOverviewSchema.parse(
@@ -54,6 +60,7 @@ export function tierBrowserBandOptions(
                 bands: [],
                 view: "grid",
                 sort: "position",
+                strip: "grade",
             });
             params.set("bandId", String(bandId));
             params.set("locale", locale);

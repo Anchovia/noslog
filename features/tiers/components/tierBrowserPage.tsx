@@ -17,10 +17,12 @@ import FullScreenDialog from "@/components/ui/fullScreenDialog";
 import ResultState from "@/components/ui/resultState";
 import SearchField from "@/components/ui/searchField";
 import { SegmentedControl } from "@/components/ui/segmentedControl";
+import CompactSelect from "@/components/ui/compactSelect";
 import SortMenu from "@/components/ui/sortMenu";
 import { tierBrowserOverviewOptions } from "@/features/tiers/api/tierBrowser";
 import {
     TIER_BROWSER_SORTS,
+    TIER_BROWSER_STRIPS,
     parseTierBrowserQuery,
     serializeTierBrowserQuery,
 } from "@/features/tiers/schemas/tierBrowserSchema";
@@ -29,7 +31,7 @@ import type {
     TierBrowserOverview,
     TierBrowserQuery,
 } from "@/features/tiers/schemas/tierBrowserSchema";
-import { formatTierValue } from "@/lib/tiers";
+import { formatTierValue, tierListLabel } from "@/lib/tiers";
 import useWideLayout from "@/lib/hooks/useWideLayout";
 import { SkeletonText } from "@/components/ui/skeleton";
 import {
@@ -38,6 +40,7 @@ import {
 } from "./tierBrowserCard";
 import TierBrowserBands from "./tierBrowserBands";
 import TierFilterFields from "./tierFilterFields";
+import TierExportDialog from "./tierExportDialog";
 import TierListSwitcher from "./tierListSwitcher";
 import TierRatingGuide from "./tierRatingGuide";
 
@@ -165,6 +168,11 @@ export default function TierBrowserPage({
             />
         </form>
     );
+    function levelToken(value: string) {
+        return value.startsWith("real-")
+            ? `Real ${value.slice(5)}`
+            : `Lv.${value}`;
+    }
     function bandToken() {
         const selected = bands.filter((band) =>
             query.bands.includes(band.value)
@@ -287,6 +295,27 @@ export default function TierBrowserPage({
             onValueChange={(sort) => commit({ ...query, sort })}
         />
     );
+    // 자켓 위 띠 값(2026-09-22 A) — V-ARCHIVE 식 셀렉트, 기존 CompactSelect(폰 결과 줄 M · Wide 툴바 L).
+    // 기록이 있어야 뜻이 있어 로그인 · 격자 보기에서만. 값은 보기 · 정렬처럼 주소(strip=, 기본 Grd 는 생략)
+    const stripSelect =
+        signedIn && query.view === "grid" ? (
+            <CompactSelect
+                label={t("tiers.strip.label")}
+                value={query.strip}
+                onValueChange={(strip) => commit({ ...query, strip })}
+                options={TIER_BROWSER_STRIPS.map((value) => ({
+                    value,
+                    label: t(
+                        value === "grade"
+                            ? "rankings.metric.grade"
+                            : value === "rating"
+                              ? "rankings.metric.rating"
+                              : "tiers.strip.off"
+                    ),
+                    shortLabel: t(`tiers.strip.short.${value}`),
+                }))}
+            />
+        ) : null;
     return (
         <PageContainer
             className="nl-tiers"
@@ -306,6 +335,24 @@ export default function TierBrowserPage({
                     </h1>
                     {meta}
                 </div>
+                {/* 제목 줄 오른쪽 = 이미지 내보내기(2026-09-22 E3 — 프로필 카드 공유와 같은 자리) */}
+                {data?.list ? (
+                    <div className="nl-tier-export__trigger nl-page-title">
+                        <TierExportDialog
+                            query={query}
+                            overview={data}
+                            title={t("tiers.goalOption", {
+                                goal: tierListLabel(query.mode, query.goal),
+                            })}
+                            conditions={[
+                                ...(query.bands.length ? [bandToken()] : []),
+                                ...query.difficulties,
+                                ...query.levels.map(levelToken),
+                                ...(query.q ? [`「${query.q}」`] : []),
+                            ]}
+                        />
+                    </div>
+                ) : null}
             </div>
             {/* Wide 는 악곡 목록처럼 제목 아래 검색 전체 폭 → 레일 | 결과 */}
             {wide ? <div className="nl-tier-search">{searchField}</div> : null}
@@ -332,6 +379,7 @@ export default function TierBrowserPage({
                             }
                         >
                             {wide ? sortMenu : searchField}
+                            {wide ? stripSelect : null}
                             {!wide ? (
                                 <FullScreenDialog
                                     open={open}
@@ -417,6 +465,7 @@ export default function TierBrowserPage({
                         ) : (
                             <div className="nl-tier-scope">
                                 {sortMenu}
+                                {stripSelect}
                                 {viewSwitch}
                             </div>
                         )}
@@ -464,9 +513,7 @@ export default function TierBrowserPage({
                                     }),
                             })),
                             ...query.levels.map((value) => {
-                                const label = value.startsWith("real-")
-                                    ? `Real ${value.slice(5)}`
-                                    : `Lv.${value}`;
+                                const label = levelToken(value);
                                 return {
                                     key: `level-${value}`,
                                     label,

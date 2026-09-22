@@ -1522,3 +1522,78 @@ html:has(.noslog-ui) [data-sonner-toaster] [data-sonner-toast] > * {
         translate: 0 var(--nl-motion-distance);
     }
 }
+/* 이미지 내보내기 창(프로필 카드 · 서열표 공용, 2026-09-22 공용으로 옮김) — 미리보기 → 상태 → 저장(주) · 복사 · 공유 */
+.noslog-ui .nl-image-share {
+    padding: var(--nl-spacing-16) 0 var(--nl-spacing-24);
+    width: min(334px, calc(100vw - 32px));
+    border: 0;
+    box-shadow:
+        inset 0 0 0 1px var(--nl-border-overlay),
+        var(--nl-elevation-overlay);
+}
+.noslog-ui .nl-image-share .nl-dialog__header {
+    padding-inline: var(--nl-spacing-24) var(--nl-spacing-16);
+}
+.noslog-ui .nl-image-share .nl-dialog__close {
+    margin: 0;
+}
+.noslog-ui .nl-image-share .nl-dialog__close svg {
+    width: 24px;
+    height: 24px;
+}
+.noslog-ui .nl-image-share__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-16);
+    padding-inline: var(--nl-spacing-24);
+    min-width: 0;
+}
+.noslog-ui .nl-image-share__preview {
+    border-radius: var(--nl-radius-container);
+    overflow: hidden;
+}
+.noslog-ui .nl-image-share__preview img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+.noslog-ui .nl-image-share__actions,
+.noslog-ui .nl-image-share__secondary {
+    display: flex;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-image-share__actions {
+    flex-direction: column;
+}
+.noslog-ui .nl-image-share__secondary > * {
+    flex: 1;
+    min-width: 0;
+}
+.noslog-ui .nl-image-share .nl-button {
+    height: auto;
+    padding-block: var(--nl-spacing-8);
+}
+@media (min-width: 672px) {
+    .noslog-ui .nl-image-share {
+        width: min(768px, calc(100vw - 48px));
+    }
+    .noslog-ui .nl-image-share__actions {
+        flex-direction: row;
+        justify-content: flex-end;
+    }
+    .noslog-ui .nl-image-share__save {
+        order: 1;
+    }
+    .noslog-ui .nl-image-share__secondary > * {
+        flex: none;
+        white-space: nowrap;
+    }
+}
+@media (max-width: 389px) {
+    .noslog-ui .nl-image-share__secondary {
+        flex-wrap: wrap;
+    }
+    .noslog-ui .nl-image-share__secondary > * {
+        flex-basis: 100%;
+    }
+}
