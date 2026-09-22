@@ -983,7 +983,7 @@
     justify-content: center;
     gap: var(--nl-spacing-8);
 }
-/* 모자이크 오른쪽 아래 「사진 N장 모두 보기」 — 카운터와 같은 사진 위 어두운 판(새 색 없음), 컴팩트 32 (P1 · 2026-09-22) */
+/* 모자이크 오른쪽 아래 「사진 N장 모두 보기」 — 카운터와 같은 사진 위 어두운 판(새 색 없음), 컴팩트 높이(1056 이상 32) (P1 · 2026-09-22) */
 .noslog-ui .nl-arcade-photos__all {
     position: absolute;
     right: var(--nl-spacing-12);
@@ -991,7 +991,7 @@
     display: inline-flex;
     align-items: center;
     gap: var(--nl-spacing-8);
-    min-height: 32px;
+    min-height: var(--nl-control-height-compact);
     padding-inline: var(--nl-spacing-12);
     border-radius: var(--nl-radius-control);
     color: var(--nl-content-on-media);
