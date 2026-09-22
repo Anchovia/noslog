@@ -13,14 +13,35 @@ NosLog — NOSTALGIA 비공식 기록 · 랭킹 · 아카이브 서비스. 이 �
 **Figma, Z1, 옛 브리프 · 핸드오프 · 감사 문서 · PDF, 레거시 NOSTORY 는 폐기됐다.** 읽지도 쓰지도 인용하지도 않는다.
 git 기록에서 옛 문서나 「남은 일」 을 되살리지 않는다(사용자가 명시적으로 요청할 때만).
 
+## 스택 · 명령
+
+Next.js 16.3(App Router) · React 19.2 · Prisma 6.19 · Zod 4 · TanStack Query 5 · Tailwind 4 · Vitest 4 · Playwright.
+Next.js 는 기억 대신 설치된 버전 문서(`node_modules/next/dist/docs/`)를, Prisma 는 v6 문서를 본다(웹 문서 기본값은 v7).
+옛 버전 문법을 옮기지 않는다 — Next 16: 미들웨어는 `proxy.ts` · `params` · `searchParams` · `cookies()` · `headers()` 는 `await` ·
+`revalidateTag(tag, "max")` 두 번째 인자 · `next lint` 없음(ESLint 직접). Zod 4: `z.email()` 같은 최상위 형식 · 옵션 이름은 `error`.
+Tailwind 4: 설정은 CSS(`app/globals.css`), `tailwind.config` 를 만들지 않는다.
+
+폴더: `app/`(라우트 · Route Handler · Server Action 입구) · `features/<도메인>/{api,components,hooks,schemas,server}` ·
+`components/ui`(공용 부품) · `app/styles`(토큰 · 공용 스타일) · `lib/i18n/messageCatalogs` · `prisma/` · `tests/` · `e2e/`.
+자세한 경계는 [코드 스타일](docs/code-style.md).
+
+명령은 지어내지 않고 `package.json` 스크립트를 쓴다.
+
+- `npm run typecheck` · `npm run lint` · `npm test`(파일 하나는 `npx vitest run tests/<파일>`) · `npm run build`
+- e2e 는 로컬 PostgreSQL 에서만: `DATABASE_URL` 을 로컬 DB 로 둔 셸에서 `npm run db:migrate:deploy` → `npm run db:seed:e2e` →
+  그 DB 로 띄운 별도 서버 주소를 `PLAYWRIGHT_BASE_URL` 로 주고 `npm run test:e2e`.
+  주소를 주지 않으면 사용자의 localhost:3000 으로 간다 — 그 서버에는 e2e 를 돌리지 않는다.
+
 ## 사용자 규칙
 
 - 답은 한국어.
 - **git 은 사용자가 한다** — 커밋 · 푸시 · 스테이징 · 브랜치 · PR 모두. 상태 조회만 한다.
   작업이 끝나면 커밋 제목(영어 type + 한국어 설명, 예 `fix: 악곡 상세 반응형 전환 기준 통일`)과 묶음별 `git add` 명령을 준다.
-- **운영 DB 에 쓰지 않는다.** 사용자가 켜 둔 localhost:3000 도 운영 DB 를 쓴다. 읽기 조회는 괜찮다.
-  DB 를 고쳐야 하면 확인용 `SELECT` · 수정 `UPDATE` · 확인 쿼리를 사용자에게 준다(사용자가 Neon 에서 실행).
-  e2e 는 로컬 테스트 DB 에서만 돌린다.
+- **운영 DB 에 쓰지 않는다.** 운영 = Neon 운영 프로젝트(steep-hill-21603078)의 production 브랜치.
+  운영을 고쳐야 하면 확인용 `SELECT` · 수정 `UPDATE` · 확인 쿼리를 사용자에게 준다(사용자가 Neon 에서 실행).
+- 사용자가 켜 둔 localhost:3000 과 `.env` 는 **개발 DB**(Neon 프로젝트 `noslog-dev`)를 쓴다. 테스트 데이터 · 검증용 쓰기는 해도 되고,
+  만든 데이터는 지우거나 보고한다. 파일 업로드(Blob)는 실제 스토어로 가므로 따로 조심한다.
+- **비밀값을 드러내지 않는다** — `.env` 값 · DB 주소 · 토큰을 답 · 보고 · 커밋 · 로그에 쓰지 않는다. 필요한 값이 없으면 멈추고 묻는다.
 - 로그인은 사용자가 한다. 인증을 우회하지 않는다. 로그인 상태로 검수할 때 저장 · 제출 · 삭제를 누르지 않는다.
 - 개발 서버는 사용자가 켜 둔 localhost:3000 을 쓴다.
 - 커밋되지 않은 사용자 작업과 관계없는 파일을 건드리지 않는다.
@@ -33,6 +54,13 @@ git 기록에서 옛 문서나 「남은 일」 을 되살리지 않는다(사�
 - 주는 `git add` 명령에는 내가 바꾼 파일 이름을 하나씩 적는다. `git add -A` · `git add .` 는 주지 않는다.
 - 여럿이 함께 고치는 파일(`docs/design/decisions.md` · `lib/i18n/messageCatalogs/*` · 공용 스타일)은 내 줄만 고치고,
   보고할 때 스테이징 전에 `git diff` 로 다른 세션 변경이 섞였는지 보라고 적는다.
+
+## 먼저 묻는다 · 하지 않는다
+
+- **먼저 묻는다:** 의존성 추가 · 업그레이드, `prisma/schema.prisma` 변경 · 마이그레이션 만들기, 파일 삭제 · 이름 바꾸기, e2e 전체 실행.
+- 스키마 변경을 허락받으면 `npx prisma migrate dev --create-only` 로 파일만 만들어 사용자가 검토하게 하고, 적용은 개발 DB 까지만. 뒤에 `npx prisma generate`.
+- **하지 않는다:** `prisma migrate reset` · `prisma db push` · 운영 대상 `migrate deploy` · `--force` · `--accept-data-loss`.
+  `PRISMA_USER_CONSENT_FOR_DANGEROUS_AI_ACTION` 을 스스로 켜지 않는다 — 막혔다는 뜻이니 멈추고 묻는다.
 
 ## 손대지 않는 곳
 
@@ -56,4 +84,7 @@ git 기록에서 옛 문서나 「남은 일」 을 되살리지 않는다(사�
 - 결정이 나면 같은 작업에서 코드 → 가이드 해당 절 → `decisions.md` 한 줄 → 테스트 기대값을 맞춘다.
 - 작게 나눠 구현하고, 바꾼 화면은 [가이드 「확인」 절](docs/design/README.md)대로 잰다.
   실패는 원래 있던 것과 이번에 생긴 것을 구분한다.
+- **끝내기 전:** `typecheck` · `lint` · 관련 테스트 → 바꾼 화면은 가이드 「확인」 → 결정이 났으면 가이드 · `decisions.md` · 테스트 기대값
+  → 공개 화면의 새 문구는 `lib/i18n/messageCatalogs` 의 ko · en · ja 세 곳 모두 → 커밋 제목 · 파일별 `git add`.
 - 보고에는 실제로 한 것만 쓴다. 안 한 검사는 「안 함」, 남은 한계는 그대로 적는다.
+- 이 파일은 짧게 둔다 — 같은 실수가 두 번 나오면 한 줄 더하고, 이미 지켜져 필요 없어진 줄은 뺀다.
