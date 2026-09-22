@@ -66,6 +66,13 @@ Tailwind 4: 설정은 CSS(`app/globals.css`), `tailwind.config` 를 만들지 �
 - **하지 않는다:** `prisma migrate reset` · `prisma db push` · 운영 대상 `migrate deploy` · `--force` · `--accept-data-loss`.
   `PRISMA_USER_CONSENT_FOR_DANGEROUS_AI_ACTION` 을 스스로 켜지 않는다 — 막혔다는 뜻이니 멈추고 묻는다.
 
+## 릴리스
+
+- 순서: 버전 올리기(`package.json` · `package-lock.json` · README) → `dev` 에서 `main` 으로 PR → **PR 이 합쳐진 뒤에** 그 커밋에 GitHub 릴리스 `vX.Y.Z`(target `main`).
+- 이 저장소는 변경 불가 릴리스(immutable)라 **한 번 게시한 태그 이름은 지워도 다시 못 쓴다**(2026-09-22 합치기 전에 만들어 v2.11.0 을 잃음).
+  릴리스 명령을 주기 전에 PR 이 `main` 에 합쳐졌는지, `main` 의 `package.json` 버전이 태그와 같은지 먼저 확인한다. `v*` 태그는 규칙으로 삭제 · 변경도 막혀 있다.
+- PR · 공지 · 릴리스 본문은 복사할 수 있게 채팅에 코드 블록으로 준다(스크래치패드 파일은 세션이 바뀌면 사라진다).
+
 ## 손대지 않는 곳
 
 - 채보 에디터(`/admin/music/*/pattern`)와 관리자 화면(`/admin/*`)은 재설계하지 않는다. 기능에 필요한 칸만 기존 모양으로 더한다.
