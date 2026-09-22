@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import type { ReactNode } from "react";
 
-import { SkeletonText } from "@/components/ui/skeleton";
 import {
     DASHBOARD_METRICS,
     DASHBOARD_METRIC_COLORS,
@@ -21,6 +20,20 @@ import AdminDashboardChart, {
 } from "./adminDashboardChart";
 
 const HOURLY_NOTE_DAILY = "날짜별 그래프는 7일 이상에서 보입니다.";
+const HOURLY_NOTE_UNCOUNTED = "시간대별로 모으지 않습니다";
+
+// 방문자는 시각별로 세지 않아 「시간대별 방문자 · 서울 기준」 을 붙이지 않는다
+function HourlyNote({
+    metric,
+    label,
+}: {
+    metric: DashboardMetric;
+    label: string;
+}) {
+    return metric === "visitors"
+        ? HOURLY_NOTE_DAILY
+        : `시간대별 ${label} · 서울 기준. ${HOURLY_NOTE_DAILY}`;
+}
 
 function useDashboardMetric(initialMetric: DashboardMetric) {
     const params = useSearchParams();
@@ -109,14 +122,7 @@ export function AdminDashboardTrend({
                     {label}
                 </h2>
             </div>
-            {hourly && hourlyMetric === null ? (
-                <>
-                    <p className="nl-body-secondary nl-muted">
-                        시간대별 방문자는 모으지 않습니다.
-                    </p>
-                    <p className="nl-metadata nl-muted">{HOURLY_NOTE_DAILY}</p>
-                </>
-            ) : hourly ? (
+            {hourly ? (
                 <>
                     <AdminDashboardHours
                         key={metric}
@@ -128,9 +134,12 @@ export function AdminDashboardTrend({
                         }))}
                         label={label}
                         color={DASHBOARD_METRIC_COLORS[metric]}
+                        emptyMessage={
+                            hourlyMetric ? undefined : HOURLY_NOTE_UNCOUNTED
+                        }
                     />
                     <p className="nl-metadata nl-muted">
-                        시간대별 {label} · 서울 기준. {HOURLY_NOTE_DAILY}
+                        <HourlyNote metric={metric} label={label} />
                     </p>
                 </>
             ) : (
@@ -149,7 +158,7 @@ export function AdminDashboardTrend({
     );
 }
 
-/** 추이 패널 로딩 — 오늘 보기의 방문자는 그래프 대신 안내 글이라 글자 스켈레톤으로 (2026-09-22) */
+/** 추이 패널 로딩 — 오늘 보기도 수치와 관계없이 같은 그래프 틀이라 그래프 자리 스켈레톤 하나 (2026-09-22 B1) */
 export function AdminDashboardTrendLoading({
     initialMetric,
     hourly,
@@ -164,21 +173,12 @@ export function AdminDashboardTrendLoading({
             <div className="nl-dashboard__panel-head">
                 <h2 className="nl-component-title">{label}</h2>
             </div>
-            {hourly && metric === "visitors" ? (
-                <>
-                    <SkeletonText className="nl-body-secondary" width="l" />
-                    <p className="nl-metadata nl-muted">{HOURLY_NOTE_DAILY}</p>
-                </>
-            ) : (
-                <>
-                    <div className="nl-dashboard__chart nl-skeleton" />
-                    {hourly ? (
-                        <p className="nl-metadata nl-muted">
-                            시간대별 {label} · 서울 기준. {HOURLY_NOTE_DAILY}
-                        </p>
-                    ) : null}
-                </>
-            )}
+            <div className="nl-dashboard__chart nl-skeleton" />
+            {hourly ? (
+                <p className="nl-metadata nl-muted">
+                    <HourlyNote metric={metric} label={label} />
+                </p>
+            ) : null}
         </section>
     );
 }

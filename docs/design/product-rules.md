@@ -350,7 +350,7 @@ old design-stage checklist. Changes to material behavior require a user decision
   admin authorization and today's hourly chart remain supported. Today's hourly
   bars follow the selected metric: page views from the hour bucket, signups and
   syncs from their existing timestamps (Seoul hour). Visitors are counted per day
-  only, so today shows a note instead of hourly bars (2026-09-22).
+  only, so today keeps the empty hourly frame with a centered note (2026-09-22).
 
 - Accounts whose current role is `admin` are excluded at collection time from
   page views, daily visitors, hour/audience buckets, browser external events and

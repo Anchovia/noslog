@@ -142,7 +142,9 @@
 .noslog-ui .nl-dashboard__delta [data-trend="down"] {
     color: var(--nl-feedback-danger-marker);
 }
+/* 시각별로 세지 않는 수치는 빈 틀 가운데에 공용 그래프 안내(nl-line-chart__state)를 둔다 */
 .noslog-ui .nl-dashboard__chart {
+    position: relative;
     height: 160px;
 }
 .noslog-ui .nl-dashboard__list {

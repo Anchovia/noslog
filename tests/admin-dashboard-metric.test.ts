@@ -170,7 +170,7 @@ describe("dashboard metric navigation", () => {
         expect(mocks.chart).not.toHaveBeenCalled();
     });
 
-    it("shows a note instead of hourly bars for visitors, which are counted per day", () => {
+    it("keeps the same hourly frame for visitors with a centered note (B1)", () => {
         mocks.params = new URLSearchParams("range=today&metric=visitors");
         const html = renderToStaticMarkup(
             createElement(AdminDashboardTrend, {
@@ -187,8 +187,12 @@ describe("dashboard metric navigation", () => {
                 series: [],
             })
         );
-        expect(html).toContain("시간대별 방문자는 모으지 않습니다.");
-        expect(mocks.hours).not.toHaveBeenCalled();
+        expect(html).toContain("날짜별 그래프는 7일 이상에서 보입니다.");
+        expect(html).not.toContain("시간대별 방문자 · 서울 기준");
+        const props = mocks.hours.mock.lastCall?.[0];
+        expect(props.emptyMessage).toBe("시간대별로 모으지 않습니다");
+        expect(props.data).toHaveLength(1);
+        expect(props.data[0].value).toBe(0);
         expect(mocks.chart).not.toHaveBeenCalled();
     });
 });
