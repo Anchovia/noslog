@@ -108,8 +108,9 @@ const tierBrowserEntrySchema = z.object({
         music: z.object({
             index: z.string(),
             title: z.string(),
-            // 일본어 읽기(가나, 없으면 원제) — 읽기 순 정렬 기준. 악곡 목록 이름 순과 같은 값
-            reading: z.string(),
+            // 일본어 읽기(가나, 없으면 원제) — 읽기 순 정렬 기준. 악곡 목록 이름 순과 같은 값.
+            // 이 칸이 없는 응답(배포 전환 중 옛 서버)도 받아서 원제로 정렬한다
+            reading: z.string().optional(),
             localizedTitle: z.string().nullable(),
             background: z.string().nullable(),
         }),

@@ -58,7 +58,10 @@ export function sortTierBrowserEntries(
         position: () => 0,
         level: (a, b) => b.chart.level - a.chart.level,
         name: (a, b) =>
-            a.chart.music.reading.localeCompare(b.chart.music.reading, "ja"),
+            (a.chart.music.reading ?? a.chart.music.title).localeCompare(
+                b.chart.music.reading ?? b.chart.music.title,
+                "ja"
+            ),
         score: (a, b) => (a.record?.score ?? -1) - (b.record?.score ?? -1),
     };
     return [...entries].sort((a, b) => compare[sort](a, b) || byPosition(a, b));
