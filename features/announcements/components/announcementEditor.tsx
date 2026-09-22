@@ -89,8 +89,18 @@ const EDITOR_LABELS: MarkdownEditorLabels = {
     tabs: "본문 보기",
     tools: "서식",
     empty: "미리 볼 내용이 없습니다.",
-    heading: "소제목",
+    back: "이어 쓰기",
+    headings: "소제목",
+    heading: "큰 소제목",
+    subheading: "작은 소제목",
     bold: "굵게",
+    italic: "기울임",
+    strike: "취소선",
+    quote: "인용",
+    code: "코드",
+    table: "표",
+    tableBlock: "| 제목 | 제목 |\n| --- | --- |\n| 내용 | 내용 |",
+    rule: "구분선",
     list: "목록",
     ordered: "번호 목록",
     link: "링크",
@@ -124,17 +134,21 @@ export default function AnnouncementEditor({
     const [locale, setLocale] = useState<Locale>("ko");
     const [dialog, setDialog] = useState<SaveMode | null>(null);
     const [pending, setPending] = useState<SaveMode | null>(null);
+    // 저장 상태(2026-09-23 L2) — 저장 안 한 변경 · 저장 중 · 저장됨 · 저장 실패
+    const [saveState, setSaveState] = useState<"saved" | "failed" | null>(null);
     const {
         register,
         control,
         handleSubmit,
         getValues,
+        reset,
         setValue,
         setError,
         clearErrors,
-        formState: { errors },
+        formState: { errors, isDirty },
     } = useForm<AnnouncementFormValues, unknown, AnnouncementValues>({
         resolver: zodResolver(announcementFormSchema),
+        mode: "onTouched",
         defaultValues: {
             publicSlug: announcement.publicSlug,
             placement: announcement.placement,
@@ -148,6 +162,8 @@ export default function AnnouncementEditor({
     });
     const placement = useWatch({ control, name: "placement" });
     const translations = useWatch({ control, name: "translations" });
+    const category = (useWatch({ control, name: "category" }) ??
+        "NOTICE") as AnnouncementCategory;
 
     // 오류가 난 곳으로 데려간다 — 번역이면 창을 닫고 그 언어 탭, 게시 창 칸이면 창을 연다
     function reveal(
@@ -193,9 +209,13 @@ export default function AnnouncementEditor({
                         ? await createAnnouncement(formData)
                         : await updateAnnouncement(formData);
                     if (!result.success) {
+                        setSaveState("failed");
                         applyFormActionFailure(setError, result, toast.error);
                         return;
                     }
+                    setSaveState("saved");
+                    // 저장한 값이 곧 기준값 — 「저장 안 한 변경」 표시가 풀린다
+                    reset(getValues(), { keepDefaultValues: false });
                     setDialog(null);
                     toast.success(result.message);
                     if (isCreate)
@@ -498,12 +518,16 @@ export default function AnnouncementEditor({
                                             · 붙여 넣기 · 끌어다 놓기
                                         </span>
                                     )}
-                                    <span>
-                                        {length.toLocaleString("ko-KR")} /{" "}
-                                        {ANNOUNCEMENT_CONTENT_MAX_LENGTH.toLocaleString(
-                                            "ko-KR"
-                                        )}
-                                    </span>
+                                    {/* 글자 수는 한도의 75% 를 넘을 때만 보여 준다(2026-09-23 C) */}
+                                    {length >=
+                                    ANNOUNCEMENT_CONTENT_MAX_LENGTH * 0.75 ? (
+                                        <span>
+                                            {length.toLocaleString("ko-KR")} /{" "}
+                                            {ANNOUNCEMENT_CONTENT_MAX_LENGTH.toLocaleString(
+                                                "ko-KR"
+                                            )}
+                                        </span>
+                                    ) : null}
                                 </span>
                             }
                         >
@@ -529,13 +553,36 @@ export default function AnnouncementEditor({
                                         )}
                                         labels={EDITOR_LABELS}
                                         onUploadImage={uploadAnnouncementImage}
+                                        onPrimaryAction={() => {
+                                            clearErrors();
+                                            setDialog("publish");
+                                        }}
+                                        // 미리보기는 공개 글과 같은 틀 — 분류 · 제목 · 본문(2026-09-23 P2)
                                         renderPreview={(value) => (
-                                            <AnnouncementBody
-                                                content={value}
-                                                locale={item}
-                                                siteUrl={siteUrl}
-                                                externalLabel="외부 링크"
-                                            />
+                                            <article className="nl-announcements__detail">
+                                                <header className="nl-announcements__heading">
+                                                    <div className="nl-announcement-meta nl-metadata nl-muted">
+                                                        <span className="nl-tag">
+                                                            {
+                                                                ANNOUNCEMENT_CATEGORY_LABELS[
+                                                                    category
+                                                                ]
+                                                            }
+                                                        </span>
+                                                    </div>
+                                                    <h1 className="nl-page-title">
+                                                        {translations[item]
+                                                            ?.title ||
+                                                            "제목 없음"}
+                                                    </h1>
+                                                </header>
+                                                <AnnouncementBody
+                                                    content={value}
+                                                    locale={item}
+                                                    siteUrl={siteUrl}
+                                                    externalLabel="외부 링크"
+                                                />
+                                            </article>
                                         )}
                                     />
                                 )}
@@ -551,7 +598,7 @@ export default function AnnouncementEditor({
                 </p>
             ) : null}
 
-            <div className="nl-admin-form__actions">
+            <div className="nl-form-bar nl-admin-form__actions">
                 <div>
                     {!isCreate && announcement.id !== undefined ? (
                         <AnnouncementDeleteButton
@@ -577,6 +624,28 @@ export default function AnnouncementEditor({
                     ) : null}
                 </div>
                 <div>
+                    {/* 저장 상태 — 오른쪽 묶음 맨 앞(2026-09-23 L2) */}
+                    {pending !== null || saveState || isDirty ? (
+                        <span
+                            className="nl-form-bar__state nl-metadata"
+                            data-state={
+                                pending !== null
+                                    ? "saving"
+                                    : isDirty
+                                      ? "dirty"
+                                      : (saveState ?? undefined)
+                            }
+                            role="status"
+                        >
+                            {pending !== null
+                                ? "저장 중"
+                                : isDirty
+                                  ? "저장 안 한 변경"
+                                  : saveState === "failed"
+                                    ? "저장 실패"
+                                    : "저장됨"}
+                        </span>
+                    ) : null}
                     <ActionButton
                         variant="secondary"
                         busy={pending !== null && dialog === null}

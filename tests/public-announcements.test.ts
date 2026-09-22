@@ -273,28 +273,42 @@ describe("P11 restricted Markdown", () => {
         expect(html).toContain('alt="지도"');
         expect(html).not.toContain("example.com");
     });
-    it("never renders executable HTML, outside images, code, H1 or unsafe URLs", () => {
+    it("never renders executable HTML, outside images, H1 or unsafe URLs", () => {
         const html = render(
-            '# Hidden\n\n<script>alert(1)</script>\n\n<img src=x onerror="alert(1)">\n\n![image](https://example.com/a.png)\n\n[attack](javascript:alert%281%29)\n\n`code`'
+            '# Hidden\n\n<script>alert(1)</script>\n\n<img src=x onerror="alert(1)">\n\n![image](https://example.com/a.png)\n\n[attack](javascript:alert%281%29)'
         );
         for (const unsafe of [
             "<script",
             "<img",
             "<h1",
-            "<code",
             "javascript:",
             "onerror=",
         ])
             expect(html).not.toContain(unsafe);
     });
-    it("keeps the text of disallowed inline elements instead of dropping it", () => {
+    // 2026-09-23 T-c — 인용 · 코드 · 표 · 취소선 · 구분선까지 그린다
+    it("renders quotes, code, tables, strikethrough and rules", () => {
         const html = render(
-            "줄이 `내 Grd / 최대 Grd` 로 바뀌고 *기울임* 도 남는다"
+            "> 인용\n\n줄이 `내 Grd` 로 바뀌고 *기울임* · ~~취소선~~ 도 남는다\n\n```\nnpm run build\n```\n\n| A | B |\n| --- | --- |\n| 1 | 2 |\n\n---"
         );
-        expect(html).toContain("내 Grd / 최대 Grd");
-        expect(html).toContain("기울임");
-        expect(html).not.toContain("<code");
-        expect(html).not.toContain("<em");
+        for (const element of [
+            "<blockquote",
+            "<code",
+            "<em",
+            "<del",
+            "<pre",
+            "<table",
+            "<th",
+            "<td",
+            "<hr",
+        ])
+            expect(html).toContain(element);
+        expect(html).toContain('class="nl-announcement-body__table"');
+    });
+    it("keeps the text of disallowed elements instead of dropping it", () => {
+        const html = render("# 큰 제목은 태그만 벗긴다");
+        expect(html).toContain("큰 제목은 태그만 벗긴다");
+        expect(html).not.toContain("<h1");
     });
     it.each([
         "javascript:alert(1)",

@@ -102,6 +102,7 @@
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-16);
+    min-width: 0;
     overflow-wrap: anywhere;
 }
 /* 본문 이미지(2026-09-18 I1) — 본문 폭 · 모서리 8 · 원래 비율 */
@@ -133,4 +134,78 @@
     height: var(--nl-icon-small);
     margin-left: var(--nl-spacing-4);
     vertical-align: text-bottom;
+}
+
+/* 인용 · 코드 · 표 · 취소선 · 구분선(2026-09-23 T-c · M1 · K1 · B1 · TB1 · Q1).
+   고정폭은 기기에 있는 글자만 쓰고 파일을 더 싣지 않는다(M1) */
+/* 기울임(2026-09-23 I2) — 우리 글꼴에 기울임 글꼴이 없고 사이트 규칙이 합성을 꺼 두어(font-synthesis: none)
+   글자가 전혀 바뀌지 않았다. 본문 기울임에만 합성을 허용한다 */
+.noslog-ui .nl-announcement-body em {
+    font-style: italic;
+    font-synthesis: style;
+}
+.noslog-ui .nl-announcement-body del {
+    text-decoration: line-through;
+}
+/* 인용(Q1) = 왼쪽 선 + 흐린 글자. 코드 덩이는 면(B1)이라 서로 구분된다 */
+.noslog-ui .nl-announcement-body blockquote {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
+    border-inline-start: var(--nl-stroke-strong) solid var(--nl-border-strong);
+    padding-inline-start: var(--nl-spacing-12);
+    color: var(--nl-content-subdued);
+}
+.noslog-ui .nl-announcement-body hr {
+    margin: var(--nl-spacing-8) 0;
+    border: 0;
+    border-top: var(--nl-stroke-default) solid var(--nl-border-divider);
+}
+/* 글 안의 코드(K1) = 옅은 면 + 모서리 4 */
+.noslog-ui .nl-announcement-body code {
+    border-radius: var(--nl-radius-control);
+    background: var(--nl-surface-raised);
+    padding: var(--nl-spacing-2) var(--nl-spacing-4);
+    font-family: var(--nl-font-family-mono);
+    font-size: var(--nl-type-size-14);
+}
+/* 코드 덩이(B1) = 가라앉은 면 상자 · 긴 줄은 접지 않고 이 상자만 가로로 민다 */
+.noslog-ui .nl-announcement-body pre {
+    margin: 0;
+    /* 세로 flex 안에서 줄지 않으면 글 전체가 넘친다 — 이 상자만 줄여 놓고 안에서 민다 */
+    min-width: 0;
+    border: var(--nl-stroke-default) solid var(--nl-border-subtle);
+    border-radius: var(--nl-radius-field);
+    background: var(--nl-surface-sunken);
+    padding: var(--nl-spacing-12);
+    overflow-x: auto;
+}
+.noslog-ui .nl-announcement-body pre code {
+    border-radius: 0;
+    background: none;
+    padding: 0;
+    line-height: var(--nl-type-line-height-20);
+}
+/* 표(TB1) = 열을 줄이지 않고 표만 가로로 민다 */
+.noslog-ui .nl-announcement-body__table {
+    min-width: 0;
+    overflow-x: auto;
+}
+.noslog-ui .nl-announcement-body table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--nl-type-size-14);
+    line-height: var(--nl-type-line-height-20);
+}
+.noslog-ui .nl-announcement-body th,
+.noslog-ui .nl-announcement-body td {
+    border-bottom: var(--nl-stroke-default) solid var(--nl-border-divider);
+    padding: var(--nl-spacing-8) var(--nl-spacing-12);
+    text-align: start;
+    vertical-align: top;
+}
+.noslog-ui .nl-announcement-body th {
+    color: var(--nl-content-subdued);
+    font-weight: var(--nl-type-weight-semibold);
+    white-space: nowrap;
 }
