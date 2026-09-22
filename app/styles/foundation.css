@@ -691,6 +691,87 @@ html[data-theme="light"] .noslog-ui,
     flex-direction: column;
     gap: var(--nl-spacing-4);
 }
+/* 사진 뷰어(2026-09-23 V3 · B2 · C2 · S2) — 모든 폭에서 화면을 채우고 바탕은 페이지 바탕색(새 색 없음), 사진은 contain.
+   닫기 우상 · ‹ › 좌우 · 아래에 카운터와 썸네일 줄(컨트롤 높이 · 4 : 3). 폰의 시스템 영역은 safe-area 로 피한다 */
+.noslog-ui .nl-photo-viewer {
+    position: fixed;
+    inset: 0;
+    z-index: 81;
+    display: flex;
+    flex-direction: column;
+    background: var(--nl-surface-canvas);
+    padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px)
+        env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+}
+.noslog-ui .nl-photo-viewer__stage {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+}
+.noslog-ui .nl-photo-viewer__stage img {
+    object-fit: contain;
+}
+.noslog-ui .nl-photo-viewer__close {
+    position: absolute;
+    top: var(--nl-spacing-8);
+    right: var(--nl-spacing-8);
+    display: inline-flex;
+    width: var(--nl-control-height);
+    height: var(--nl-control-height);
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--nl-radius-control);
+    color: var(--nl-content-on-media);
+    background: var(--nl-surface-media-scrim);
+}
+.noslog-ui .nl-photo-viewer__nav {
+    position: absolute;
+    top: 50%;
+    display: inline-flex;
+    width: var(--nl-control-height);
+    height: var(--nl-control-height);
+    align-items: center;
+    justify-content: center;
+    transform: translateY(-50%);
+    border-radius: var(--nl-radius-control);
+    color: var(--nl-content-on-media);
+    background: var(--nl-surface-media-scrim);
+}
+.noslog-ui .nl-photo-viewer__nav--previous {
+    left: var(--nl-spacing-8);
+}
+.noslog-ui .nl-photo-viewer__nav--next {
+    right: var(--nl-spacing-8);
+}
+.noslog-ui .nl-photo-viewer__bar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+    padding: var(--nl-spacing-12) var(--nl-spacing-16);
+}
+.noslog-ui .nl-photo-viewer__thumbnails {
+    display: flex;
+    gap: var(--nl-spacing-8);
+    max-width: 100%;
+    overflow-x: auto;
+}
+.noslog-ui .nl-photo-viewer__thumbnails button {
+    position: relative;
+    display: block;
+    height: var(--nl-control-height);
+    aspect-ratio: 4 / 3;
+    border-radius: var(--nl-radius-control);
+    overflow: hidden;
+    opacity: 0.6;
+}
+.noslog-ui .nl-photo-viewer__thumbnails button img {
+    object-fit: cover;
+}
+.noslog-ui .nl-photo-viewer__thumbnails button[aria-current="true"] {
+    opacity: 1;
+    box-shadow: inset 0 0 0 var(--nl-stroke-strong) var(--nl-border-strong);
+}
 .noslog-ui .nl-dialog-overlay {
     position: fixed;
     inset: 0;
@@ -1449,7 +1530,8 @@ html[data-theme="light"] .noslog-ui,
     animation: nl-fade-in var(--nl-motion-duration-overlay-in)
         var(--nl-ease-enter);
 }
-.noslog-ui :is(.nl-dialog, .nl-full-dialog)[data-state="open"] {
+.noslog-ui
+    :is(.nl-dialog, .nl-full-dialog, .nl-photo-viewer)[data-state="open"] {
     animation: nl-rise-in var(--nl-motion-duration-overlay-in)
         var(--nl-ease-enter);
 }

@@ -150,7 +150,17 @@ export const enMessages = {
     "pattern.axis.offset": "Offset",
     "pattern.axis.chords": "Meter changes",
     "pattern.scale":
-        "Rate each axis from 0–4. An average is published after at least three ratings for that axis. An omitted rating is distinct from zero.",
+        "An average is published from the first rating. An omitted rating is distinct from zero.",
+    "pattern.basis":
+        "Rate how strong each pattern is from 0–4 compared with all charts — not how much of this chart it takes up.",
+    "pattern.basisShort": "Compared with all charts",
+    "pattern.basisLow": "none",
+    "pattern.basisHigh": "a lot",
+    "pattern.level.0": "None",
+    "pattern.level.1": "A little",
+    "pattern.level.2": "Clearly present",
+    "pattern.level.3": "Heavy",
+    "pattern.level.4": "Defines the chart",
     "pattern.definition.stairs":
         "The playing burden of notes moving in a sequential staircase pattern.",
     "pattern.definition.repetition":
@@ -1574,8 +1584,6 @@ export const enMessages = {
     "arcades.photoPrevious": "Previous photo",
     "arcades.photoOpen": "Enlarge photo",
     "arcades.photoAll": "View all {count} photos",
-    "arcades.photoGridTitle": "{count} photos",
-    "arcades.photoBackToGrid": "Back to grid",
     "arcades.facilities": "Facilities",
     "arcades.facility.parking": "Parking",
     "arcades.facility.smoking": "Smoking room",

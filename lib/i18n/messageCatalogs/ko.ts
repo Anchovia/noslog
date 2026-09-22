@@ -147,7 +147,17 @@ export const koMessages = {
     "pattern.axis.offset": "즈레",
     "pattern.axis.chords": "변박",
     "pattern.scale":
-        "각 항목은 0–4로 평가합니다. 항목별로 3명 이상 평가하면 평균을 공개합니다. 선택하지 않은 항목은 0과 구분합니다.",
+        "평가 1명부터 평균을 공개합니다. 선택하지 않은 항목은 0과 구분합니다.",
+    "pattern.basis":
+        "모든 곡을 기준으로 각 항목의 세기를 0–4로 평가합니다. 곡 안에서 차지하는 비중이 아닙니다.",
+    "pattern.basisShort": "모든 곡 기준",
+    "pattern.basisLow": "없음",
+    "pattern.basisHigh": "많음",
+    "pattern.level.0": "없음",
+    "pattern.level.1": "조금 나옴",
+    "pattern.level.2": "뚜렷하게 나옴",
+    "pattern.level.3": "심한 편",
+    "pattern.level.4": "악곡의 특색일 정도",
     "pattern.definition.stairs":
         "음이 순차적으로 이동하는 계단 패턴의 연주 부담입니다.",
     "pattern.definition.repetition":
@@ -1558,8 +1568,6 @@ export const koMessages = {
     "arcades.photoPrevious": "이전 사진",
     "arcades.photoOpen": "사진 크게 보기",
     "arcades.photoAll": "사진 {count}장 모두 보기",
-    "arcades.photoGridTitle": "사진 {count}장",
-    "arcades.photoBackToGrid": "격자로 보기",
     "arcades.facilities": "시설",
     "arcades.facility.parking": "주차",
     "arcades.facility.smoking": "흡연실",

@@ -148,7 +148,17 @@ export const jaMessages = {
     "pattern.axis.offset": "ズレ",
     "pattern.axis.chords": "変拍子",
     "pattern.scale":
-        "各項目を0–4で評価します。項目ごとに3人以上の評価で平均を公開します。未選択の項目と0は区別されます。",
+        "1人の評価から平均を公開します。未選択の項目と0は区別されます。",
+    "pattern.basis":
+        "全曲を基準に、各項目の強さを0–4で評価します。曲の中で占める割合ではありません。",
+    "pattern.basisShort": "全曲基準",
+    "pattern.basisLow": "なし",
+    "pattern.basisHigh": "多い",
+    "pattern.level.0": "なし",
+    "pattern.level.1": "少しある",
+    "pattern.level.2": "はっきりある",
+    "pattern.level.3": "強め",
+    "pattern.level.4": "曲の特色になるほど",
     "pattern.definition.stairs":
         "音が順番に移動する階段パターンの演奏負担です。",
     "pattern.definition.repetition":
@@ -1571,8 +1581,6 @@ export const jaMessages = {
     "arcades.photoPrevious": "前の写真",
     "arcades.photoOpen": "写真を拡大",
     "arcades.photoAll": "写真{count}枚をすべて見る",
-    "arcades.photoGridTitle": "写真{count}枚",
-    "arcades.photoBackToGrid": "一覧に戻る",
     "arcades.facilities": "設備",
     "arcades.facility.parking": "駐車場",
     "arcades.facility.smoking": "喫煙所",

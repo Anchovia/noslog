@@ -2,12 +2,12 @@
 
 import * as Dialog from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
-import { useEffect, useEffectEvent, useId } from "react";
 import type { ReactNode } from "react";
 
 import { useTranslations } from "@/components/i18n/localeProvider";
 import ActionButton from "@/components/ui/actionButton";
 import IconButton from "@/components/ui/iconButton";
+import useOverlayHistory from "@/lib/hooks/useOverlayHistory";
 
 export default function FullScreenDialog({
     open,
@@ -31,25 +31,7 @@ export default function FullScreenDialog({
     onCloseAutoFocus?: (event: Event) => void;
 }) {
     const t = useTranslations();
-    const historyId = useId();
-    const closeFromHistory = useEffectEvent(() => onOpenChange(false));
-    useEffect(() => {
-        if (!open) return;
-        window.history.pushState(
-            { ...window.history.state, noslogOverlay: historyId },
-            ""
-        );
-        const handleBack = () => {
-            if (window.history.state?.noslogOverlay !== historyId)
-                closeFromHistory();
-        };
-        window.addEventListener("popstate", handleBack);
-        return () => {
-            window.removeEventListener("popstate", handleBack);
-            if (window.history.state?.noslogOverlay === historyId)
-                window.history.back();
-        };
-    }, [open, historyId]);
+    useOverlayHistory(open, () => onOpenChange(false));
     return (
         <Dialog.Root open={open} onOpenChange={onOpenChange}>
             {trigger ? (
