@@ -109,6 +109,10 @@
     flex-shrink: 0;
     white-space: nowrap;
 }
+/* M 크기(size="sm") — 한 줄이 M 인 결과 줄 등. 같은 줄 한 단계 규칙 */
+.noslog-ui .nl-compact-select--compact {
+    min-height: var(--nl-control-height-compact);
+}
 .noslog-ui .nl-compact-select svg {
     width: var(--nl-icon-small);
     height: var(--nl-icon-small);

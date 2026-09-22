@@ -735,6 +735,7 @@ export const jaMessages = {
     "tiers.export.names": "曲名を表示",
     "tiers.export.achievement": "自分の達成を表示",
     "tiers.export.preview": "{list}の画像プレビュー",
+    "tiers.export.query": "「{query}」",
     "tiers.export.shareTitle": "{list} · NosLog",
     "tiers.export.shareText": "NosLog {list}",
     "tiers.difficulty": "難易度",

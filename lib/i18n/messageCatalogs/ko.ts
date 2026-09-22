@@ -735,6 +735,7 @@ export const koMessages = {
     "tiers.export.names": "곡 이름 표시",
     "tiers.export.achievement": "내 달성 표시",
     "tiers.export.preview": "{list} 이미지 미리보기",
+    "tiers.export.query": "「{query}」",
     "tiers.export.shareTitle": "{list} · NosLog",
     "tiers.export.shareText": "NosLog {list}",
     "tiers.difficulty": "난이도",

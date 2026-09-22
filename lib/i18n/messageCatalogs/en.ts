@@ -742,6 +742,7 @@ export const enMessages = {
     "tiers.export.names": "Show song names",
     "tiers.export.achievement": "Show my progress",
     "tiers.export.preview": "{list} image preview",
+    "tiers.export.query": "“{query}”",
     "tiers.export.shareTitle": "{list} · NosLog",
     "tiers.export.shareText": "NosLog {list}",
     "tiers.difficulty": "Difficulty",

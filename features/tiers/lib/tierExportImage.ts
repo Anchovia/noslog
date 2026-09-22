@@ -184,6 +184,7 @@ export async function drawTierImage(input: TierExportInput) {
             onMedia: tokens.color("var(--nl-content-on-media)"),
             fullCombo: tokens.color("var(--nl-achievement-full-combo)"),
             goal: tokens.color(`var(--nl-score-goal-${input.goal})`),
+            wordmark: tokens.color("var(--nl-identity-mark)"),
         };
         const difficultyColor = (difficulty: string) =>
             tokens.color(
@@ -261,7 +262,7 @@ export async function drawTierImage(input: TierExportInput) {
         context.fillStyle = colors.text;
         context.font = titleFont;
         const brandWidth = (() => {
-            context.font = font(size(20), weight("bold"));
+            context.font = bandFont;
             return context.measureText("NosLog").width;
         })();
         context.font = titleFont;
@@ -283,9 +284,10 @@ export async function drawTierImage(input: TierExportInput) {
                 padding + line(40) + space(4) + (line(20) - size(14)) / 2
             );
         }
+        // NosLog = 헤더 워드마크와 같은 규격(section-title · identity/mark)
         context.textAlign = "right";
-        context.fillStyle = colors.text;
-        context.font = font(size(20), weight("bold"));
+        context.fillStyle = colors.wordmark;
+        context.font = bandFont;
         context.fillText(
             "NosLog",
             TIER_EXPORT_WIDTH - padding,

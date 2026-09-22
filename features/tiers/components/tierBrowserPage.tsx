@@ -300,6 +300,7 @@ export default function TierBrowserPage({
     const stripSelect =
         signedIn && query.view === "grid" ? (
             <CompactSelect
+                size={wide ? undefined : "sm"}
                 label={t("tiers.strip.label")}
                 value={query.strip}
                 onValueChange={(strip) => commit({ ...query, strip })}
@@ -348,7 +349,13 @@ export default function TierBrowserPage({
                                 ...(query.bands.length ? [bandToken()] : []),
                                 ...query.difficulties,
                                 ...query.levels.map(levelToken),
-                                ...(query.q ? [`「${query.q}」`] : []),
+                                ...(query.q
+                                    ? [
+                                          t("tiers.export.query", {
+                                              query: query.q,
+                                          }),
+                                      ]
+                                    : []),
                             ]}
                         />
                     </div>
