@@ -825,11 +825,12 @@
 .noslog-ui .nl-arcade-hours > [data-muted] {
     color: var(--nl-content-subdued);
 }
-/* 토 · 일 = 요일·날짜 칸만 파랑 · 빨강(지도 서비스 관례) — 기존 글자용 토큰을 빌림, 캔버스 위 대비 4.5 이상 (2026-09-22) */
-.noslog-ui .nl-arcade-hours > [data-weekend="sat"] > dt {
+/* 토 · 일 = 줄 전체(요일 · 날짜 · 시간) 파랑 · 빨강(지도 서비스 관례) — 기존 글자용 토큰을 빌림, 캔버스 위 대비 4.5 이상.
+   휴무 · 미확인 줄보다 뒤에 두어 주말 색이 이긴다 (2026-09-22) */
+.noslog-ui .nl-arcade-hours > [data-weekend="sat"] {
     color: var(--nl-judgement-near);
 }
-.noslog-ui .nl-arcade-hours > [data-weekend="sun"] > dt {
+.noslog-ui .nl-arcade-hours > [data-weekend="sun"] {
     color: var(--nl-feedback-error-text);
 }
 .noslog-ui .nl-arcade-detail__rail-box {
