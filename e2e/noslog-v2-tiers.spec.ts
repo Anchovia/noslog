@@ -538,15 +538,25 @@ test("exports the current view as a JPEG and remembers the display options", asy
 }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await prepare(page);
-    const open = page.getByRole("button", {
-        name: "서열표 이미지 내보내기",
+    // 제목 줄 오른쪽 ⋯ 메뉴 → 「이미지로 내보내기」(2026-09-22 S7-a)
+    const more = page.getByRole("button", {
+        name: "서열표 더보기",
         exact: true,
     });
-    await open.click();
+    await more.click();
+    await expect(page.getByRole("menuitem")).toHaveText([
+        "이미지로 내보내기",
+        "링크 복사",
+        "S 서열표 안내",
+    ]);
+    await page.getByRole("menuitem", { name: "이미지로 내보내기" }).click();
     const dialog = page.getByRole("dialog", { name: "서열표 내보내기" });
     await expect(
         dialog.getByText("담기는 것 · S 서열표 · 3구간 18곡", { exact: true })
     ).toBeVisible();
+    // 500곡 안이면 구간 목록은 접힌 채 — 「구간 고르기」 로 펼친다(2026-09-22 R2)
+    const pick = dialog.getByRole("button", { name: "구간 고르기" });
+    await expect(pick).toHaveAttribute("aria-expanded", "false");
     const preview = dialog.locator(".nl-tier-export__preview img");
     await expect(preview).toBeVisible({ timeout: 30_000 });
     const size = () =>
@@ -573,7 +583,10 @@ test("exports the current view as a JPEG and remembers the display options", asy
         /^noslog-basic-s-\d{4}-\d{2}-\d{2}\.jpg$/
     );
     await page.keyboard.press("Escape");
-    await open.click();
+    // 창을 닫으면 포커스는 ⋯ 로 돌아온다 — 다시 열어 기억한 선택을 확인
+    await expect(more).toBeFocused();
+    await more.click();
+    await page.getByRole("menuitem", { name: "이미지로 내보내기" }).click();
     await expect(
         page
             .getByRole("dialog", { name: "서열표 내보내기" })

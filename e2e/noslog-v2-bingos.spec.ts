@@ -74,26 +74,27 @@ for (const locale of ["ko", "ja", "en"] as const) {
             "color",
             "rgb(175, 175, 175)"
         );
-        await expect(
-            page.getByRole("button", { name: t["bingo.filter"], exact: true })
-        ).toBeDisabled();
-        const cards = page.locator(".nl-bingo-card--loading");
-        await expect(cards).toHaveCount(4);
+        // 필터 창이 없어지고 상태 칩은 목록이 온 뒤에 보인다(2026-09-22) — 스켈레톤은 격자(기본 보기) 카드 6장
+        const cards = page.locator(
+            'ul.nl-bingo-catalog__grid[aria-hidden="true"] .nl-bingo-card'
+        );
+        await expect(cards).toHaveCount(6);
         await expect(page.locator(".nl-bingo-catalog__grid")).toHaveAttribute(
             "aria-hidden",
             "true"
         );
         await expect(page.locator(".nl-bingo-catalog__grid")).toHaveCSS(
             "gap",
-            "12px"
+            "8px"
         );
-        expect((await cards.first().boundingBox())!.width).toBe(173);
+        // 폰 격자 3열 · 사이 8 — (358 − 16) ÷ 3
+        expect((await cards.first().boundingBox())!.width).toBe(114);
         expect(
             (await cards
                 .first()
                 .locator(".nl-bingo-card__cover")
                 .boundingBox())!.height
-        ).toBe(173);
+        ).toBe(114);
         await page.evaluate(() => document.fonts.ready.then(() => undefined));
         await page.screenshot({
             path: testInfo.outputPath("catalog-loading-390.png"),
@@ -107,7 +108,7 @@ for (const locale of ["ko", "ja", "en"] as const) {
             page.getByRole("heading", { name: t["bingo.title"], exact: true })
         ).toBeVisible();
     });
-    test(`P14 ${locale} catalog reflow, full list and staged filters`, async ({
+    test(`P14 ${locale} catalog reflow, full list and status chips`, async ({
         page,
     }, testInfo) => {
         const t = getMessages(locale);
@@ -116,11 +117,11 @@ for (const locale of ["ko", "ja", "en"] as const) {
             page.locator("ul.nl-bingo-catalog__grid > li")
         ).toHaveCount(44);
         for (const [width, columns] of [
-            [320, 1],
-            [390, 2],
-            [520, 2],
-            [768, 3],
-            [1470, 4],
+            [320, 3],
+            [390, 3],
+            [520, 3],
+            [768, 4],
+            [1470, 6],
         ]) {
             await page.setViewportSize({ width, height: 900 });
             expect(
@@ -144,35 +145,21 @@ for (const locale of ["ko", "ja", "en"] as const) {
                     fullPage: true,
                 });
         }
+        // 상태는 늘 보이는 칩 — 누르면 바로 적용되고 한 걸음씩 뒤로가기에 남는다(2026-09-22)
         await page.setViewportSize({ width: 390, height: 900 });
-        await page
-            .getByRole("button", { name: t["bingo.filter"], exact: true })
-            .click();
-        await page
-            .getByRole("button", { name: t["bingo.catalog.full"], exact: true })
-            .click();
-        await page
-            .getByRole("button", { name: t["common.close"], exact: true })
-            .click();
+        const chips = page.getByRole("group", {
+            name: t["bingo.catalog.status"],
+            exact: true,
+        });
         await expect(
-            page.locator("ul.nl-bingo-catalog__grid > li")
-        ).toHaveCount(44);
-        await page
-            .getByRole("button", { name: t["bingo.filter"], exact: true })
-            .click();
-        await expect(
-            page.getByRole("button", {
-                name: t["bingo.catalog.all"],
-                exact: true,
+            chips.getByRole("button", {
+                name: new RegExp(`^${t["bingo.catalog.all"]}`),
             })
         ).toHaveAttribute("aria-pressed", "true");
-        await page
-            .getByRole("button", { name: t["bingo.catalog.full"], exact: true })
-            .click();
-        await page
-            .getByRole("dialog")
-            .getByRole("button", { name: /결果|結果|results|개 보기/ })
-            .last()
+        await chips
+            .getByRole("button", {
+                name: new RegExp(`^${t["bingo.catalog.full"]}`),
+            })
             .click();
         await expect(page).toHaveURL(/status=full/);
         await expect(
@@ -181,6 +168,14 @@ for (const locale of ["ko", "ja", "en"] as const) {
         await page.goBack();
         await expect(
             page.locator("ul.nl-bingo-catalog__grid > li")
+        ).toHaveCount(44);
+        // 보기 전환 — 목록형은 주소 view=list, 넓은 화면 두 열
+        await page
+            .getByRole("radio", { name: t["discovery.list"], exact: true })
+            .click();
+        await expect(page).toHaveURL(/view=list/);
+        await expect(
+            page.locator("ul.nl-bingo-catalog__list > li")
         ).toHaveCount(44);
         expect(
             (
@@ -191,7 +186,7 @@ for (const locale of ["ko", "ja", "en"] as const) {
         ).toEqual([]);
     });
 
-    test(`P14 ${locale} detail coordinates, missions, terms and selection`, async ({
+    test(`P14 ${locale} detail board text, missions, terms and selection`, async ({
         page,
     }, testInfo) => {
         const t = getMessages(locale);
@@ -218,11 +213,26 @@ for (const locale of ["ko", "ja", "en"] as const) {
                     fullPage: true,
                 });
         }
-        await page.locator(".nl-bingo-board button").nth(8).click();
-        // 칸 선택은 스크롤 대신 제자리 상세 카드의 내용만 바꾼다
+        // 칸에는 좌표 대신 미션 글, 위치는 화면 읽기 글(2행 4열)로만(2026-09-22)
         await expect(
-            page.locator(".nl-bingo-cell-popover .nl-bingo-cell-detail__pos")
-        ).toHaveText("B4");
+            page.locator(".nl-bingo-board button").nth(8)
+        ).not.toContainText("B4");
+        // 넓은 화면: 칸을 누르면 판 오른쪽 상세가 바뀌고 팝오버는 없다
+        await page.locator(".nl-bingo-board button").nth(8).click();
+        await expect(
+            page.locator(".nl-bingo-detail-panel .sr-only")
+        ).toHaveText(
+            t["bingo.position"].replace("{row}", "2").replace("{column}", "4")
+        );
+        await expect(page.locator(".nl-bingo-cell-popover")).toHaveCount(0);
+        // 폰: 칸 팝오버
+        await page.setViewportSize({ width: 390, height: 900 });
+        await page.locator(".nl-bingo-board button").nth(8).click();
+        await expect(
+            page.locator(".nl-bingo-cell-popover .nl-bingo-position .sr-only")
+        ).toHaveText(
+            t["bingo.position"].replace("{row}", "2").replace("{column}", "4")
+        );
         await page.keyboard.press("Escape");
         await expect(page.locator(".nl-bingo-cell-popover")).toHaveCount(0);
         await expect(page.locator("#bingo-mission-900009")).toHaveAttribute(
@@ -310,7 +320,10 @@ for (const locale of ["ko", "ja", "en"] as const) {
             )
         ).toHaveCount(0);
         await expect(
-            page.getByRole("button", { name: t["bingo.filter"], exact: true })
+            page.getByRole("group", {
+                name: t["bingo.catalog.status"],
+                exact: true,
+            })
         ).toHaveCount(0);
         await page.goto(
             `/${locale}/p7-verification?fixture=bingos&state=detail-guest`

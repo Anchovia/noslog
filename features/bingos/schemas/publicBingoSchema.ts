@@ -23,6 +23,8 @@ export const bingoCatalogQuerySchema = z.object({
         .catch("all"),
     sort: z.enum(["release", "recent", "progress"]).catch("release"),
     q: z.string().max(200).catch(""),
+    // 보기 방식(2026-09-22) — 격자(기본) · 목록, 주소 view=list
+    view: z.enum(["grid", "list"]).catch("grid"),
 });
 export type BingoCatalogQuery = z.infer<typeof bingoCatalogQuerySchema>;
 

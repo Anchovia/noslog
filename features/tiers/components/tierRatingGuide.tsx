@@ -24,13 +24,22 @@ import type {
 export default function TierRatingGuide({
     query,
     overview,
+    open: openProp,
+    onOpenChange,
+    onCloseAutoFocus,
 }: {
     query: TierBrowserQuery;
     overview: TierBrowserOverview;
+    /** 제목 줄 ⋯ 메뉴 「서열표 안내」 도 같은 창을 연다(2026-09-22 S7-a) — 주면 열림을 밖에서 쥔다 */
+    open?: boolean;
+    onOpenChange?: (open: boolean) => void;
+    onCloseAutoFocus?: (event: Event) => void;
 }) {
     const t = useTranslations();
     const locale = useLocale();
-    const [open, setOpen] = useState(false);
+    const [openState, setOpenState] = useState(false);
+    const open = openProp ?? openState;
+    const setOpen = onOpenChange ?? setOpenState;
     const title = t("tiers.guide", {
         goal: tierListLabel(query.mode, query.goal),
     });
@@ -47,6 +56,7 @@ export default function TierRatingGuide({
         <ModalDialog
             open={open}
             onOpenChange={setOpen}
+            onCloseAutoFocus={onCloseAutoFocus}
             title={title}
             trigger={
                 // 보이는 글자(「안내」)는 접근 이름(「S 서열표 안내」) 안에 들어 있다

@@ -22,23 +22,56 @@
     gap: var(--nl-spacing-32);
     min-width: 0;
 }
+/* 급 머리 H2(2026-09-22) — 제목 + 상태 태그 한 줄 →12→ 수치 띠(요구 Grd. · 검정료 · 합격 보상) */
 .noslog-ui .nl-exam-head {
-    background: var(--nl-surface-surface);
-    border-radius: var(--nl-radius-container);
-    padding: var(--nl-spacing-16);
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-12);
 }
-.noslog-ui .nl-exam-facts {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--nl-spacing-16);
-}
-.noslog-ui .nl-exam-facts > div {
+.noslog-ui .nl-exam-head__title {
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--nl-spacing-8);
+}
+/* 급 상태(2026-09-22 G1-a) — 셀렉트 트리거 · 목록 · 레일 · 머리 태그가 같은 모양.
+   합격 = 체크 · Grd. 부족 = 자물쇠(아이콘 16, 사이 4, 흐린 글자) / 응시 가능 · 심사 중 · 반려 = 상태 점 8(사이 8, 기본 글자) */
+.noslog-ui .nl-exam-status {
+    display: inline-flex;
+    align-items: center;
     gap: var(--nl-spacing-4);
+    flex-shrink: 0;
+    color: var(--nl-content-subdued);
+    white-space: nowrap;
+    font-weight: var(--nl-type-weight-regular);
+}
+.noslog-ui .nl-exam-status[data-kind="passed"] svg {
+    color: var(--nl-feedback-success-marker);
+}
+.noslog-ui
+    .nl-exam-status:is(
+        [data-kind="available"],
+        [data-kind="pending"],
+        [data-kind="rejected"]
+    ) {
+    gap: var(--nl-spacing-8);
+    color: var(--nl-content-default);
+}
+.noslog-ui .nl-exam-status__dot {
+    width: 8px;
+    height: 8px;
+    flex-shrink: 0;
+    border-radius: var(--nl-radius-full);
+}
+.noslog-ui .nl-exam-status__dot[data-tone="success"] {
+    background: var(--nl-feedback-success-marker);
+}
+.noslog-ui .nl-exam-status__dot[data-tone="warning"] {
+    background: var(--nl-feedback-warning-marker);
+}
+.noslog-ui .nl-exam-status__dot[data-tone="danger"] {
+    background: var(--nl-feedback-danger-marker);
 }
 .noslog-ui .nl-exam-select {
     display: flex;
@@ -101,15 +134,51 @@
     flex-direction: column;
     gap: var(--nl-spacing-12);
 }
-.noslog-ui .nl-exam-stage + .nl-exam-stage::before {
+/* 통과선 줄(2026-09-22 T7) — 곡 카드 사이. 자켓 가운데를 지나는 세로 선 위에 ✓/✗ 16, 합격선 글자 · 오른쪽 여유(±) */
+.noslog-ui .nl-exam-passline {
+    display: grid;
+    grid-template-columns: var(--nl-exam-jacket-size) minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: var(--nl-spacing-12);
+    min-height: var(--nl-control-height-compact);
+    padding-inline-end: var(--nl-spacing-16);
+}
+.noslog-ui .nl-exam-passline__mark {
+    position: relative;
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.noslog-ui .nl-exam-passline__mark::before {
     content: "";
-    display: block;
-    width: var(--nl-stroke-strong);
-    height: var(--nl-spacing-16);
-    margin-inline-start: calc(
-        var(--nl-exam-jacket-size) / 2 - var(--nl-stroke-strong) / 2
-    );
-    background: var(--nl-border-strong);
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(50% - var(--nl-stroke-default) / 2);
+    width: var(--nl-stroke-default);
+    background: var(--nl-border-default);
+}
+.noslog-ui .nl-exam-passline:last-child .nl-exam-passline__mark::before {
+    bottom: 50%;
+}
+.noslog-ui .nl-exam-passline__mark svg {
+    position: relative;
+    background: var(--nl-surface-canvas);
+    border-radius: var(--nl-radius-full);
+}
+.noslog-ui .nl-exam-passline__mark [data-tone="success"] {
+    color: var(--nl-feedback-success-marker);
+}
+.noslog-ui .nl-exam-passline__mark [data-tone="danger"] {
+    color: var(--nl-feedback-danger-marker);
+}
+/* 여유 색(2026-09-22 M2, 사용자) — 합격까지 눈금 아래 여유와 과제곡 카드의 내 베스트가 같은 색. + = slow 주황 · − = 알림 파랑(fast 파랑은 #111 위 글자 대비 4.11 로 미달이라 info). 부호 · ✓/✗ 는 그대로 */
+.noslog-ui :is(.nl-exam-margin, .nl-exam-stage__best)[data-sign="ahead"] {
+    color: var(--nl-local-data-slow);
+}
+.noslog-ui :is(.nl-exam-margin, .nl-exam-stage__best)[data-sign="behind"] {
+    color: var(--nl-feedback-info-marker);
 }
 .noslog-ui .nl-exam-stage__row {
     display: flex;
@@ -146,11 +215,22 @@
 .noslog-ui .nl-exam-stage__head {
     align-items: flex-start;
 }
-.noslog-ui .nl-exam-stage__charts {
-    flex-wrap: wrap;
-    row-gap: 0;
+.noslog-ui .nl-exam-stage__head > .nl-metadata {
+    flex-shrink: 0;
+    white-space: nowrap;
 }
-.noslog-ui .nl-exam-stage__charts > span {
+/* 난이도 줄 · 곡 이름 줄은 한 줄 — 넘치면 끝 페이드(카드를 누르면 악곡 · 채보 선택으로 전체를 본다) */
+.noslog-ui .nl-exam-stage__charts {
+    flex: 1;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.noslog-ui .nl-exam-stage__title {
+    display: flex;
+    align-items: baseline;
+    gap: var(--nl-spacing-8);
+    min-width: 0;
+    overflow: hidden;
     white-space: nowrap;
 }
 .noslog-ui .nl-exam-stage__condition {
@@ -170,32 +250,128 @@
 .noslog-ui .nl-exam-chart-options a {
     width: 100%;
 }
-.noslog-ui .nl-exam-practice > .nl-disclosure__body {
+/* 합격까지(2026-09-22 P2-a) — 상자 surface · 안쪽 16 · 사이 12.
+   막대 = 트랙 8(모서리 4 · raised) 위에 곡별 베스트 조각(차트 범주 색 1 · 2 · 3, 조각 사이 2 틈),
+   합격선 눈금 = 2 × 16 기본 글자색, 아래 눈금 이름 · 값, 범례 「색 · 곡 · 점수」 */
+.noslog-ui .nl-exam-practice {
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-12);
+    padding: var(--nl-spacing-16);
+    border-radius: var(--nl-radius-container);
+    background: var(--nl-surface-surface);
+    min-width: 0;
 }
-.noslog-ui .nl-exam-practice__rows {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-12);
-}
-.noslog-ui .nl-exam-practice__rows > div {
+.noslog-ui .nl-exam-practice__head {
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
-    gap: var(--nl-spacing-8);
-}
-.noslog-ui .nl-exam-practice__rows dd:last-child:not(:nth-child(2)) {
-    margin-inline-start: auto;
-}
-.noslog-ui .nl-exam-practice__total {
-    display: flex;
     justify-content: space-between;
-    flex-wrap: wrap;
     gap: var(--nl-spacing-8);
-    border-top: var(--nl-stroke-default) solid var(--nl-border-divider);
-    padding-top: var(--nl-spacing-12);
+}
+.noslog-ui .nl-exam-progress {
+    position: relative;
+    height: var(--nl-spacing-8);
+    margin-block: var(--nl-spacing-4);
+}
+.noslog-ui .nl-exam-progress__track {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    border-radius: var(--nl-radius-control);
+    background: var(--nl-surface-raised);
+}
+.noslog-ui .nl-exam-progress__fill {
+    position: absolute;
+    inset: 0;
+}
+.noslog-ui .nl-exam-progress__segment {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    box-shadow: inset calc(var(--nl-spacing-2) * -1) 0 0
+        var(--nl-surface-surface);
+}
+.noslog-ui .nl-exam-progress__tick {
+    position: absolute;
+    top: calc(var(--nl-spacing-4) * -1);
+    width: var(--nl-stroke-strong);
+    height: var(--nl-spacing-16);
+    background: var(--nl-content-default);
+    transform: translateX(-50%);
+}
+.noslog-ui
+    :is(
+        .nl-exam-progress__segment,
+        .nl-exam-progress__swatch
+    )[data-series="1"] {
+    background: var(--nl-local-data-categorical-1);
+}
+.noslog-ui
+    :is(
+        .nl-exam-progress__segment,
+        .nl-exam-progress__swatch
+    )[data-series="2"] {
+    background: var(--nl-local-data-categorical-2);
+}
+.noslog-ui
+    :is(
+        .nl-exam-progress__segment,
+        .nl-exam-progress__swatch
+    )[data-series="3"] {
+    background: var(--nl-local-data-categorical-3);
+}
+.noslog-ui
+    :is(
+        .nl-exam-progress__segment,
+        .nl-exam-progress__swatch
+    )[data-series="4"] {
+    background: var(--nl-local-data-categorical-4);
+}
+.noslog-ui
+    :is(
+        .nl-exam-progress__segment,
+        .nl-exam-progress__swatch
+    )[data-series="5"] {
+    background: var(--nl-local-data-categorical-5);
+}
+.noslog-ui .nl-exam-progress__labels {
+    position: relative;
+    height: var(--nl-spacing-48);
+}
+/* 눈금 이름 · 값은 모두 자기 눈금 왼쪽에 오른쪽 맞춤 — 가운데 맞춤은 좁은 폭에서 2차 · 합격 값이 겹쳤다(2026-09-22 실측 330) */
+.noslog-ui .nl-exam-progress__labels li {
+    position: absolute;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    transform: translateX(-100%);
+    white-space: nowrap;
+}
+.noslog-ui .nl-exam-progress__labels .nl-metric-value:not([data-sign]),
+.noslog-ui .nl-exam-progress__legend .nl-metric-value {
+    color: var(--nl-content-default);
+}
+.noslog-ui .nl-exam-progress__legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--nl-spacing-4) var(--nl-spacing-12);
+}
+.noslog-ui .nl-exam-progress__legend li {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--nl-spacing-4);
+}
+.noslog-ui .nl-exam-progress__swatch {
+    width: var(--nl-spacing-8);
+    height: var(--nl-spacing-8);
+    flex-shrink: 0;
+}
+.noslog-ui .nl-exam-practice__priority {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-4);
 }
 @media (min-width: 672px) {
     .noslog-ui .nl-exam-navigation > .nl-segments,
@@ -239,9 +415,6 @@
         border-radius: var(--nl-radius-container);
         padding: var(--nl-spacing-8);
     }
-    .noslog-ui .nl-exam-facts {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
     .noslog-ui .nl-exams__personal {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -259,22 +432,34 @@
     gap: var(--nl-spacing-12);
     min-width: 0;
 }
-/* 상자 제목 → 내용 8 */
+/* 합격 인증 C2(2026-09-22) — 페이지 구역(제목 → 내용 12). 1056 이상 두 열에서는 옆 「합격까지」 상자와 같은 상자 */
 .noslog-ui .nl-exam-proof {
-    gap: var(--nl-spacing-8);
-    background: var(--nl-surface-surface);
-    border-radius: var(--nl-radius-container);
-    padding: var(--nl-spacing-16);
     overflow-wrap: anywhere;
+}
+@media (min-width: 1056px) {
+    .noslog-ui .nl-exam-proof {
+        background: var(--nl-surface-surface);
+        border-radius: var(--nl-radius-container);
+        padding: var(--nl-spacing-16);
+    }
+}
+.noslog-ui .nl-exam-proof__checklist {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-4);
+}
+.noslog-ui .nl-exam-proof__checklist li {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-exam-proof__checklist svg {
+    color: var(--nl-content-subdued);
 }
 .noslog-ui .nl-exam-proof__guidance {
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-8);
-}
-.noslog-ui .nl-exam-proof__guidance ul {
-    list-style: disc;
-    padding-inline-start: var(--nl-spacing-16);
 }
 .noslog-ui .nl-exam-proof__preview {
     display: block;

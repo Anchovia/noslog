@@ -467,11 +467,32 @@
 .noslog-ui .nl-tiers[data-layout="wide"] .nl-tier-rail .nl-field {
     gap: var(--nl-spacing-12);
 }
-/* 제목 줄 오른쪽 내보내기 버튼(2026-09-22 E3) — 스위처와 같은 방법으로 제목 글줄(1lh) 가운데에 선다.
+/* 제목 줄 오른쪽 ⋯ 메뉴(2026-09-22 S7-a) — 스위처와 같은 방법으로 제목 글줄(1lh) 가운데에 선다.
    감싸는 칸에 page-title 글자 규격을 붙여 1lh 를 제목 줄 높이로 읽는다(안은 아이콘 버튼뿐) */
-.noslog-ui .nl-tier-export__trigger {
+.noslog-ui .nl-tier-more {
     display: flex;
     margin-block: calc((1lh - var(--nl-control-height)) / 2);
+}
+/* 내보내기 창 구간 고르기(2026-09-22 R2) — 「담기는 것」 줄 오른쪽 끝 「구간 고르기」, 펼치면 레일과 같은 구간 체크 목록 →8→ 선택 곡 수 */
+.noslog-ui .nl-tier-export__scope {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-tier-export__scope > button {
+    flex: none;
+}
+.noslog-ui .nl-tier-export__picker {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-tier-export__tally {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--nl-spacing-8);
+    font-variant-numeric: tabular-nums;
 }
 /* 이미지 내보내기 창(2026-09-22 D1) — 공용 nl-image-share 안에서 서열표만의 표시 선택 두 줄 */
 .noslog-ui .nl-tier-export__options {

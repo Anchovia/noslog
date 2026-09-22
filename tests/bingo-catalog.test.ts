@@ -61,7 +61,14 @@ describe("Bingo catalog truth and restoration", () => {
                 sort: "unknown",
                 count: 24,
             })
-        ).toEqual({ status: "all", sort: "release", q: "" });
+        ).toEqual({ status: "all", sort: "release", q: "", view: "grid" });
+        // 보기는 격자가 기본, 주소 view=list 만 목록형(2026-09-22)
+        expect(bingoCatalogQuerySchema.parse({ view: "list" }).view).toBe(
+            "list"
+        );
+        expect(bingoCatalogQuerySchema.parse({ view: "table" }).view).toBe(
+            "grid"
+        );
         expect(
             getBingoCatalog([board(1, 1, 0), board(2, 1, 0)], {
                 status: "all",

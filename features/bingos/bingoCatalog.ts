@@ -9,7 +9,7 @@ const normalized = (value: string) =>
 
 export function getBingoCatalog(
     items: BingoCatalogItem[],
-    query: BingoCatalogQuery
+    query: Pick<BingoCatalogQuery, "status" | "sort" | "q">
 ) {
     const search = normalized(query.q);
     return items

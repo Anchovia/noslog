@@ -19,6 +19,10 @@ import ExamNavigation from "@/features/exams/components/examNavigation";
 import ExamStages from "@/features/exams/components/examStages";
 import ExamPractice from "@/features/exams/components/examPractice";
 import ExamProofUpload from "@/features/exams/components/examProofUpload";
+import ExamStatus, {
+    getExamStatus,
+} from "@/features/exams/components/examStatus";
+import StatStrip from "@/components/ui/statStrip";
 import { createExamProofSubmissionFormData } from "@/features/exams/schemas/examProofSchema";
 import { localizePath } from "@/lib/i18n/routing";
 import { getExamIdentity } from "@/features/exams/examIdentity";
@@ -65,20 +69,12 @@ export default function ExamDashboard({
         getExamIdentity(exam, t).label;
     const examTitle = (exam: ExamDashboardItem) =>
         getExamIdentity(exam, t).title;
-    const examState = (exam: ExamDashboardItem) =>
-        exam.mode === "event"
-            ? ""
-            : exam.isAchieved
-              ? t("exams.status.completed")
-              : exam.submissionStatus === "pending"
-                ? t("exams.status.pending")
-                : exam.playerGrade === null || !exam.hasSyncedIdentity
-                  ? t("sync.title")
-                  : !canEnterExam(exam)
-                    ? t("exams.insufficient")
-                    : exam.submissionStatus === "rejected"
-                      ? t("exams.status.rejected")
-                      : t("exams.status.available");
+    const examState = (exam: ExamDashboardItem, detailed = false) => {
+        const kind = getExamStatus(exam, isAuthenticated);
+        return kind ? (
+            <ExamStatus exam={exam} kind={kind} detailed={detailed} />
+        ) : null;
+    };
 
     function selectExam(exam: ExamDashboardItem) {
         window.history.pushState(
@@ -100,17 +96,6 @@ export default function ExamDashboard({
                 "",
                 localizePath(`/exams?mode=${nextMode}`, locale)
             );
-    }
-    function setAnalysis(open: boolean) {
-        if ((query.get("analysis") === "1") === open) return;
-        const params = new URLSearchParams(window.location.search);
-        if (open) params.set("analysis", "1");
-        else params.delete("analysis");
-        window.history.replaceState(
-            {},
-            "",
-            window.location.pathname + (params.size ? `?${params}` : "")
-        );
     }
     async function handleProofUpload(file: File) {
         if (!selected) return false;
@@ -164,6 +149,15 @@ export default function ExamDashboard({
         }
     }
 
+    const rewardIsTitle = Boolean(
+        selected &&
+        selected.grade !== null &&
+        selected.rewards.length > 0 &&
+        selected.rewards.every(
+            (reward) => reward.type === "title" || reward.type === "grade"
+        )
+    );
+
     return (
         <div className="nl-exams">
             <header className="nl-exams__identity">
@@ -188,82 +182,77 @@ export default function ExamDashboard({
                             className="nl-exam-head"
                             aria-labelledby="exam-title"
                         >
-                            <h2 className="nl-section-title" id="exam-title">
-                                {examTitle(selected)}
-                            </h2>
-                            <dl className="nl-exam-facts">
-                                <div>
-                                    <dt className="nl-control">
-                                        {t("exams.requiredGrade")}
-                                    </dt>
-                                    <dd className="nl-body">
-                                        {selected.requiredGrade
+                            <div className="nl-exam-head__title">
+                                <h2
+                                    className="nl-section-title"
+                                    id="exam-title"
+                                >
+                                    {examTitle(selected)}
+                                </h2>
+                                {getExamStatus(selected, isAuthenticated) ? (
+                                    <span className="nl-tag">
+                                        {examState(selected, true)}
+                                    </span>
+                                ) : null}
+                            </div>
+                            {/* 급 머리 H2(2026-09-22) — 상태는 제목 옆 태그, 사실은 수치 띠 세 칸 */}
+                            <StatStrip
+                                items={[
+                                    {
+                                        key: "required",
+                                        label:
+                                            selected.playerGrade !== null &&
+                                            isAuthenticated &&
+                                            selected.mode !== "event"
+                                                ? t("exams.requiredGradeMine", {
+                                                      value: selected.playerGrade.toLocaleString(
+                                                          locale
+                                                      ),
+                                                  })
+                                                : t("exams.requiredGrade"),
+                                        value: selected.requiredGrade
                                             ? selected.requiredGrade.toLocaleString(
                                                   locale
                                               )
-                                            : t("exams.none")}
-                                    </dd>
-                                    {selected.playerGrade !== null &&
-                                    isAuthenticated ? (
-                                        <dd className="nl-metadata nl-muted">
-                                            {t("exams.current", {
-                                                value: selected.playerGrade.toLocaleString(
-                                                    locale
-                                                ),
-                                            })}
-                                        </dd>
-                                    ) : null}
-                                </div>
-                                <div>
-                                    <dt className="nl-control">
-                                        {t("exams.fee")}
-                                    </dt>
-                                    <dd className="nl-body">
-                                        {selected.feeNos.toLocaleString(locale)}{" "}
-                                        nos
-                                    </dd>
-                                </div>
-                                <div>
-                                    <dt className="nl-control">
-                                        {t("exams.reward")}
-                                    </dt>
-                                    {selected.rewards.length ? (
-                                        selected.rewards.map((reward) => (
-                                            <dd
-                                                className="nl-body"
-                                                key={reward.id}
-                                            >
-                                                {(reward.type === "title" ||
-                                                    reward.type === "grade") &&
-                                                selected.grade !== null
-                                                    ? examTitle(selected)
-                                                    : reward.label}
-                                            </dd>
-                                        ))
-                                    ) : (
-                                        <dd className="nl-body">
-                                            {t("exams.none")}
-                                        </dd>
-                                    )}
-                                </div>
-                                {selected.mode !== "event" ? (
-                                    <div>
-                                        <dt className="nl-control">
-                                            {t("exams.certification")}
-                                        </dt>
-                                        <dd className="nl-body">
-                                            {examState(selected)}
-                                        </dd>
-                                    </div>
-                                ) : null}
-                            </dl>
+                                            : t("exams.none"),
+                                    },
+                                    {
+                                        key: "fee",
+                                        label: t("exams.fee"),
+                                        value: `${selected.feeNos.toLocaleString(locale)} nos`,
+                                    },
+                                    // 칭호 보상만 띠 칸에 — 곡 해금 같은 긴 보상은 띠 아래 한 줄(칸을 넘치지 않게)
+                                    rewardIsTitle && {
+                                        key: "reward",
+                                        label: t("exams.reward"),
+                                        value: examTitle(selected),
+                                    },
+                                ]}
+                            />
+                            {!rewardIsTitle ? (
+                                <p className="nl-body-secondary nl-muted">
+                                    {t("exams.reward")} ·{" "}
+                                    {selected.rewards.length
+                                        ? selected.rewards
+                                              .map((reward) => reward.label)
+                                              .join(" · ")
+                                        : t("exams.none")}
+                                </p>
+                            ) : null}
                         </section>
                         {selected.scoringType === "recital_point" ? (
                             <p className="nl-body-secondary nl-muted">
                                 {t("exams.recital.explanation")}
                             </p>
                         ) : null}
-                        <ExamStages exam={selected} />
+                        <ExamStages
+                            exam={selected}
+                            personal={
+                                isAuthenticated &&
+                                selected.scoringType === "score" &&
+                                selected.mode !== "recital"
+                            }
+                        />
                         <div className="nl-exams__personal">
                             {isAuthenticated &&
                             selected.scoringType === "score" &&
@@ -271,11 +260,11 @@ export default function ExamDashboard({
                                 <ExamPractice
                                     key={`practice-${selected.id}`}
                                     exam={selected}
-                                    open={query.get("analysis") === "1"}
-                                    onOpenChange={setAnalysis}
                                 />
                             ) : null}
-                            {selected.mode !== "event" ? (
+                            {/* 합격한 급은 인증 구역을 두지 않는다(상태는 머리 태그 「합격」, 2026-09-22 사용자) */}
+                            {selected.mode !== "event" &&
+                            !selected.isAchieved ? (
                                 <ExamProofUpload
                                     key={`proof-${selected.id}`}
                                     exam={selected}

@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Camera, Check } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
 import { useForm, useWatch } from "react-hook-form";
@@ -101,7 +102,7 @@ export default function ExamProofUpload({
 
     return (
         <section className="nl-exam-proof" aria-labelledby={`${inputId}-title`}>
-            <h3 id={`${inputId}-title`} className="nl-component-title">
+            <h3 id={`${inputId}-title`} className="nl-section-title">
                 {t("exams.proof.title")}
             </h3>
             {!isAuthenticated ? (
@@ -157,6 +158,31 @@ export default function ExamProofUpload({
                         disabled={isSubmitting}
                         onChange={changeFile}
                     />
+                    {/* C2(2026-09-22) — 찍을 것을 사진 고르기 전부터 보여 준다 */}
+                    <div className="nl-exam-proof__guidance">
+                        <p className="nl-body-secondary nl-muted">
+                            {t("exams.proof.intro")}
+                        </p>
+                        <ul className="nl-exam-proof__checklist nl-body-secondary">
+                            {(
+                                [
+                                    "finalResult",
+                                    "mode",
+                                    "grade",
+                                    "passLabel",
+                                    "playerName",
+                                ] as const
+                            ).map((key) => (
+                                <li key={key}>
+                                    <Check
+                                        className="nl-icon-small"
+                                        aria-hidden
+                                    />
+                                    {t(`exams.proof.${key}`)}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
                     {exam.submissionStatus === "rejected" ? (
                         <div className="nl-exam-proof__guidance" role="status">
                             <p className="nl-emphasis-label">
@@ -189,26 +215,6 @@ export default function ExamProofUpload({
                                 )}{" "}
                                 MB
                             </p>
-                            <div className="nl-exam-proof__guidance">
-                                <p className="nl-control">
-                                    {t("exams.proof.checklist")}
-                                </p>
-                                <ul className="nl-body-secondary">
-                                    {(
-                                        [
-                                            "finalResult",
-                                            "mode",
-                                            "grade",
-                                            "passLabel",
-                                            "playerName",
-                                        ] as const
-                                    ).map((key) => (
-                                        <li key={key}>
-                                            {t(`exams.proof.${key}`)}
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
                             <p className="nl-metadata nl-muted">
                                 {t("exams.proof.retention")}
                             </p>
@@ -251,6 +257,7 @@ export default function ExamProofUpload({
                             variant="primary"
                             onClick={() => inputRef.current?.click()}
                         >
+                            <Camera className="nl-icon" aria-hidden />
                             {t(
                                 exam.submissionStatus === "rejected"
                                     ? "exams.proof.resubmit"

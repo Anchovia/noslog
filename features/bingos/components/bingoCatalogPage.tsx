@@ -1,15 +1,12 @@
 "use client";
 
-import { ListFilter, ChevronDown } from "lucide-react";
+import { LayoutGrid, List } from "lucide-react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useRef, useState } from "react";
 import { useTranslations } from "@/components/i18n/localeProvider";
-import ActionButton from "@/components/ui/actionButton";
-import AppliedTokens from "@/components/ui/appliedTokens";
 import FilterChips from "@/components/ui/filterChips";
-import FilterGroup from "@/components/ui/filterGroup";
-import FilterSurface from "@/components/ui/filterSurface";
 import SearchField from "@/components/ui/searchField";
+import { SegmentedControl } from "@/components/ui/segmentedControl";
 import SortMenu from "@/components/ui/sortMenu";
 import useMediaQuery from "@/lib/hooks/useMediaQuery";
 import BingoCatalogCard from "@/features/bingos/components/bingoCatalogCard";
@@ -46,28 +43,32 @@ export default function BingoCatalogPage({
         setCommittedQuery(query.q);
         setSearch(query.q);
     }
-    const [open, setOpen] = useState(false);
-    const [draft, setDraft] = useState<BingoCatalogQuery>(query);
     const wide = useMediaQuery("(min-width: 672px)");
     const visible = getBingoCatalog(items, query);
     const searching = query.q.trim() !== "";
     // 검색 중에는 「최근 기록」 을 숨긴다 — 찾는 판과 상관없는 카드가 결과 앞에 끼지 않게
     const recent =
         isAuthenticated && !searching ? getRecentBingo(items) : undefined;
+    // 상태 칩(2026-09-22) — 필터 창 대신 늘 보이는 한 줄, 칩마다 지금 검색어 기준 개수. 게스트는 기록이 없어 칩 없음
     const statuses = (
         ["all", "progress", "unlocked", "full", "chance"] as const
-    ).map((value) => ({ value, label: t(`bingo.catalog.${value}`) }));
+    ).map((value) => ({
+        value,
+        label: t(`bingo.catalog.${value}`),
+        count: getBingoCatalog(items, { ...query, status: value }).length,
+    }));
     const sorts = (["release", "recent", "progress"] as const).map((value) => ({
         value,
         label: t(`bingo.catalog.sort.${value}`),
     }));
-    // 정렬·필터는 한 걸음씩 뒤로가기에 남기고, 검색어 입력은 글자마다 쌓이지 않게 현재 기록을 바꾼다
+    // 정렬 · 상태 · 보기는 한 걸음씩 뒤로가기에 남기고, 검색어 입력은 글자마다 쌓이지 않게 현재 기록을 바꾼다
     function commit(next: BingoCatalogQuery, replace = false) {
         const nextParams = new URLSearchParams({
             status: next.status,
             sort: next.sort,
         });
         if (next.q) nextParams.set("q", next.q);
+        if (next.view === "list") nextParams.set("view", "list");
         const url = `${pathname}?${nextParams}`;
         if (replace) window.history.replaceState({}, "", url);
         else window.history.pushState({}, "", url);
@@ -77,107 +78,35 @@ export default function BingoCatalogPage({
         setCommittedQuery(q);
         commit({ ...query, q }, true);
     }
-    function setFilterOpen(value: boolean) {
-        if (value) setDraft(query);
-        setOpen(value);
-    }
-    // 팝오버(672+)는 즉시 적용, 전체 레이어는 배치 적용
-    function changeStatus(status: BingoCatalogQuery["status"]) {
-        const next = { ...draft, status };
-        setDraft(next);
-        if (wide) commit({ ...query, status });
-    }
-    const draftTotal = getBingoCatalog(items, draft).length;
-    const statusLabel = statuses.find(
-        (option) => option.value === query.status
-    )?.label;
-    // 필터 그릇 — 폰은 검색줄 오른쪽 ☰ 아이콘 44(적용 개수 배지) + 전체 화면 창, 672+ 는 라벨 트리거 + 팝오버 (악곡 · 오락실과 같은 부품)
-    const filterSurface = isAuthenticated ? (
-        <FilterSurface
-            popover={wide}
-            open={open}
-            onOpenChange={setFilterOpen}
-            title={t("bingo.filter")}
-            trigger={
-                wide ? (
-                    <ActionButton
-                        variant="secondary"
-                        className="nl-filter-trigger"
-                        aria-label={t("bingo.filter")}
-                    >
-                        <ListFilter className="nl-icon-small" aria-hidden />
-                        {t("bingo.filter")}
-                        {query.status !== "all" ? (
-                            <span className="nl-filter-count nl-metadata">
-                                1
-                            </span>
-                        ) : null}
-                        <ChevronDown className="nl-icon-small" aria-hidden />
-                    </ActionButton>
-                ) : (
-                    <ActionButton
-                        variant="secondary"
-                        size="icon"
-                        className="nl-filter-icon-trigger"
-                        aria-label={t("bingo.filter")}
-                    >
-                        <ListFilter className="nl-icon-small" aria-hidden />
-                        {query.status !== "all" ? (
-                            <span className="nl-filter-count nl-metadata">
-                                1
-                            </span>
-                        ) : null}
-                    </ActionButton>
-                )
-            }
-            onReset={() => changeStatus("all")}
-            footer={
-                <ActionButton
-                    onClick={() => {
-                        commit(draft);
-                        setOpen(false);
-                    }}
-                >
-                    {t("discovery.apply", { count: draftTotal })}
-                </ActionButton>
-            }
-        >
-            <FilterGroup label={t("bingo.catalog.status")}>
-                <FilterChips
-                    label={t("bingo.catalog.status")}
-                    multiple={false}
-                    value={[draft.status]}
-                    onValueChange={([status]) => changeStatus(status)}
-                    options={statuses}
-                />
-            </FilterGroup>
-        </FilterSurface>
-    ) : null;
-    const appliedTokens = isAuthenticated ? (
-        <AppliedTokens
-            label={t("bingo.filter")}
-            clearLabel={t("discovery.clearFilters")}
-            onClear={() => commit({ ...query, status: "all" })}
-            tokens={
-                query.status !== "all" && statusLabel
-                    ? [
-                          {
-                              key: "status",
-                              label: statusLabel,
-                              removeLabel: t("discovery.removeCondition", {
-                                  condition: statusLabel,
-                              }),
-                              onRemove: () =>
-                                  commit({ ...query, status: "all" }),
-                          },
-                      ]
-                    : []
-            }
+    // 보기 전환 — 악곡 목록과 같은 부품 · 문구(폰 M · 672 이상 L)
+    const viewSwitch = (
+        <SegmentedControl
+            label={t("discovery.view")}
+            value={query.view}
+            onValueChange={(view) => commit({ ...query, view })}
+            iconOnly
+            size={wide ? undefined : "sm"}
+            options={[
+                {
+                    value: "grid",
+                    label: t("discovery.grid"),
+                    icon: <LayoutGrid aria-hidden />,
+                },
+                {
+                    value: "list",
+                    label: t("discovery.list"),
+                    icon: <List aria-hidden />,
+                },
+            ]}
         />
-    ) : null;
+    );
+    const listClass =
+        query.view === "list"
+            ? "nl-bingo-catalog__list"
+            : "nl-bingo-catalog__grid";
     return (
         <div className="nl-bingo-catalog">
-            {/* 폰(672 미만): 제목 → 개수 메타 글줄 8 → 검색 + ☰ 필터 16 → 정렬 고스트 줄 (악곡 목록 2026-09-16 E′ · R2 와 같은 배치) */}
+            {/* 머리(2026-09-22): 제목 → (폰) 개수 메타 → 검색(전체 폭) → 상태 칩(로그인) → 정렬 · 보기 전환 */}
             <div
                 className="nl-bingo-catalog__head"
                 data-compact={wide ? undefined : ""}
@@ -209,7 +138,32 @@ export default function BingoCatalogPage({
                             commitSearch(event.currentTarget.value);
                         }}
                     />
-                    {!wide ? filterSurface : null}
+                </div>
+            </div>
+            <div className="nl-filter-control-block nl-bingo-catalog__controls">
+                {isAuthenticated ? (
+                    <FilterChips
+                        label={t("bingo.catalog.status")}
+                        multiple={false}
+                        value={[query.status]}
+                        onValueChange={([status]) =>
+                            commit({ ...query, status })
+                        }
+                        options={statuses}
+                    />
+                ) : null}
+                <div className="nl-bingo-catalog__summary-row">
+                    {isAuthenticated ? (
+                        <SortMenu
+                            label={t("discovery.sortLabel")}
+                            value={query.sort}
+                            options={sorts}
+                            onValueChange={(sort) => commit({ ...query, sort })}
+                            variant={wide ? undefined : "ghost"}
+                            size={wide ? undefined : "sm"}
+                        />
+                    ) : null}
+                    {viewSwitch}
                 </div>
             </div>
             {recent ? (
@@ -220,50 +174,23 @@ export default function BingoCatalogPage({
                     <h2 id="bingo-recent-title" className="nl-component-title">
                         {t("bingo.recent")}
                     </h2>
-                    <div className="nl-bingo-catalog__grid">
-                        <BingoCatalogCard item={recent} isAuthenticated />
+                    <div className={listClass}>
+                        <BingoCatalogCard
+                            item={recent}
+                            isAuthenticated
+                            view={query.view}
+                        />
                     </div>
                 </section>
             ) : null}
-            {isAuthenticated && wide ? (
-                <>
-                    <div
-                        className="nl-bingo-catalog__controls nl-filter-toolbar"
-                        data-filter-layout="popover"
-                    >
-                        <SortMenu
-                            label={t("discovery.sortLabel")}
-                            value={query.sort}
-                            options={sorts}
-                            onValueChange={(sort) => commit({ ...query, sort })}
-                        />
-                        {filterSurface}
-                    </div>
-                    {appliedTokens}
-                </>
-            ) : null}
-            {isAuthenticated && !wide ? (
-                <div className="nl-filter-control-block nl-bingo-catalog__controls--compact">
-                    <div className="nl-bingo-catalog__summary-row">
-                        <SortMenu
-                            label={t("discovery.sortLabel")}
-                            value={query.sort}
-                            options={sorts}
-                            onValueChange={(sort) => commit({ ...query, sort })}
-                            variant="ghost"
-                            size="sm"
-                        />
-                    </div>
-                    {appliedTokens}
-                </div>
-            ) : null}
             {visible.length ? (
-                <ul className="nl-bingo-catalog__grid">
+                <ul className={listClass}>
                     {visible.map((item) => (
                         <li key={item.id}>
                             <BingoCatalogCard
                                 item={item}
                                 isAuthenticated={isAuthenticated}
+                                view={query.view}
                             />
                         </li>
                     ))}
