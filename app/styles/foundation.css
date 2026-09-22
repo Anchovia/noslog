@@ -257,6 +257,12 @@ html[data-theme="light"] .noslog-ui,
     padding: 0;
     flex-shrink: 0;
 }
+/* M 줄의 아이콘 버튼 — 컴팩트 높이 정사각(폰 36 · 1056 이상 32). 아이콘 버튼은 자기 줄의 단계 (2026-09-22) */
+.noslog-ui .nl-button--icon.nl-button--compact {
+    width: var(--nl-control-height-compact);
+    height: var(--nl-control-height-compact);
+    min-height: var(--nl-control-height-compact);
+}
 /* 로그인이 필요해 지금은 쓸 수 없는 액션 — 비활성과 같은 모습이지만 hover·탭을 받아 이유(title·안내)를 보여 준다.
    공용 aria-disabled 에 걸지 않는다: busy 버튼도 aria-disabled 를 쓰는데 busy 는 비활성처럼 보이면 안 된다 */
 .noslog-ui .nl-button[data-locked] {

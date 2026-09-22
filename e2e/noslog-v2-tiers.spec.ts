@@ -538,10 +538,12 @@ test("exports the current view as a JPEG and remembers the display options", asy
 }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await prepare(page);
-    const open = page.getByRole("button", {
+    // 결과 줄 끝(보기 전환 옆) · 줄의 단계 M(2026-09-22 S5)
+    const open = page.locator(".nl-tier-scope").getByRole("button", {
         name: "서열표 이미지 내보내기",
         exact: true,
     });
+    await expect(open).toHaveCSS("height", "36px");
     await open.click();
     const dialog = page.getByRole("dialog", { name: "서열표 내보내기" });
     await expect(

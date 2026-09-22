@@ -408,11 +408,14 @@ export default function TierExportDialog({
     overview,
     title,
     conditions,
+    size = "icon",
 }: {
     query: TierBrowserQuery;
     overview: TierBrowserOverview;
     title: string;
     conditions: string[];
+    /** 여는 버튼 크기 = 놓인 줄의 단계 — 폰 결과 줄 M(icon-sm) · Wide 도구 줄 L(icon) */
+    size?: "icon" | "icon-sm";
 }) {
     const t = useTranslations();
     const [open, setOpen] = useState(false);
@@ -425,7 +428,7 @@ export default function TierExportDialog({
             trigger={
                 <ActionButton
                     variant="secondary"
-                    size="icon"
+                    size={size}
                     aria-label={t("tiers.export.trigger")}
                 >
                     <Share className="nl-icon-small" aria-hidden />

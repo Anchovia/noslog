@@ -2,7 +2,8 @@ import { cn } from "@/lib/utils";
 import { type ComponentPropsWithRef } from "react";
 
 type ButtonVariant = "primary" | "secondary" | "ghost" | "danger";
-type ButtonSize = "sm" | "md" | "lg" | "icon";
+// icon = 컨트롤 높이 정사각(L), icon-sm = 컴팩트 높이 정사각(M) — 아이콘 버튼은 자기 줄의 단계(2026-09-22)
+type ButtonSize = "sm" | "md" | "lg" | "icon" | "icon-sm";
 
 interface ButtonProps extends ComponentPropsWithRef<"button"> {
     variant?: ButtonVariant | null;
@@ -42,8 +43,8 @@ export function foundationButtonClass({
     return cn(
         "nl-button",
         variant && `nl-button--${variant}`,
-        size === "icon" && "nl-button--icon",
-        size === "sm" && "nl-button--compact",
+        (size === "icon" || size === "icon-sm") && "nl-button--icon",
+        (size === "sm" || size === "icon-sm") && "nl-button--compact",
         destructiveFilled && "nl-button--danger-filled"
     );
 }

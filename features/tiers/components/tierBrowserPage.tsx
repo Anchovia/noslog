@@ -317,6 +317,30 @@ export default function TierBrowserPage({
                 }))}
             />
         ) : null;
+    // 이미지 내보내기 — 결과 줄 끝, 보기 전환 오른쪽(2026-09-22 S5). 담기는 범위가 지금 정렬 · 보기 · 필터 결과라 그 줄에 둔다.
+    // 버튼 크기 = 줄의 단계: 폰 결과 줄 M · Wide 도구 줄 L
+    const exportButton = data?.list ? (
+        <TierExportDialog
+            size={wide ? "icon" : "icon-sm"}
+            query={query}
+            overview={data}
+            title={t("tiers.goalOption", {
+                goal: tierListLabel(query.mode, query.goal),
+            })}
+            conditions={[
+                ...(query.bands.length ? [bandToken()] : []),
+                ...query.difficulties,
+                ...query.levels.map(levelToken),
+                ...(query.q
+                    ? [
+                          t("tiers.export.query", {
+                              query: query.q,
+                          }),
+                      ]
+                    : []),
+            ]}
+        />
+    ) : null;
     return (
         <PageContainer
             className="nl-tiers"
@@ -336,30 +360,6 @@ export default function TierBrowserPage({
                     </h1>
                     {meta}
                 </div>
-                {/* 제목 줄 오른쪽 = 이미지 내보내기(2026-09-22 E3 — 프로필 카드 공유와 같은 자리) */}
-                {data?.list ? (
-                    <div className="nl-tier-export__trigger nl-page-title">
-                        <TierExportDialog
-                            query={query}
-                            overview={data}
-                            title={t("tiers.goalOption", {
-                                goal: tierListLabel(query.mode, query.goal),
-                            })}
-                            conditions={[
-                                ...(query.bands.length ? [bandToken()] : []),
-                                ...query.difficulties,
-                                ...query.levels.map(levelToken),
-                                ...(query.q
-                                    ? [
-                                          t("tiers.export.query", {
-                                              query: query.q,
-                                          }),
-                                      ]
-                                    : []),
-                            ]}
-                        />
-                    </div>
-                ) : null}
             </div>
             {/* Wide 는 악곡 목록처럼 제목 아래 검색 전체 폭 → 레일 | 결과 */}
             {wide ? <div className="nl-tier-search">{searchField}</div> : null}
@@ -465,8 +465,9 @@ export default function TierBrowserPage({
                                 </FullScreenDialog>
                             ) : null}
                             {wide ? viewSwitch : null}
+                            {wide ? exportButton : null}
                         </div>
-                        {/* 폰 결과 줄 — 왼쪽 정렬(고스트 M) · 오른쪽 보기 전환 M, Wide 는 툴바 아래 결과 수 (악곡 목록과 같은 틀) */}
+                        {/* 폰 결과 줄 — 왼쪽 정렬(고스트 M) · 오른쪽 보기 전환 M · 내보내기 M, Wide 는 툴바 아래 결과 수 (악곡 목록과 같은 틀) */}
                         {wide ? (
                             resultCount
                         ) : (
@@ -474,6 +475,7 @@ export default function TierBrowserPage({
                                 {sortMenu}
                                 {stripSelect}
                                 {viewSwitch}
+                                {exportButton}
                             </div>
                         )}
                     </div>
