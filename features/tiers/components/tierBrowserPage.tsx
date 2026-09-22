@@ -11,6 +11,7 @@ import {
 } from "@/components/i18n/localeProvider";
 import PageContainer from "@/components/layout/pageContainer";
 import Button from "@/components/ui/Button";
+import ActionMenu from "@/components/ui/actionMenu";
 import ActionButton from "@/components/ui/actionButton";
 import AppliedTokens from "@/components/ui/appliedTokens";
 import FullScreenDialog from "@/components/ui/fullScreenDialog";
@@ -34,6 +35,7 @@ import type {
 import { formatTierValue, tierListLabel } from "@/lib/tiers";
 import useWideLayout from "@/lib/hooks/useWideLayout";
 import { SkeletonText } from "@/components/ui/skeleton";
+import { toast } from "sonner";
 import {
     TierBrowserCardSkeleton,
     TierBrowserRowSkeleton,
@@ -63,6 +65,11 @@ export default function TierBrowserPage({
     const query = parseTierBrowserQuery(new URLSearchParams(searchParams));
     const [draft, setDraft] = useState(initialQuery);
     const [open, setOpen] = useState(false);
+    // 제목 줄 ⋯ 메뉴(2026-09-22 S7-a) — 이미지 내보내기 · 링크 복사 · 서열표 안내. 메뉴가 연 창을 닫으면 포커스는 ⋯ 로
+    const [exportOpen, setExportOpen] = useState(false);
+    const [guideOpen, setGuideOpen] = useState(false);
+    const moreRef = useRef<HTMLButtonElement>(null);
+    const guideFromMenu = useRef(false);
     const options = tierBrowserOverviewOptions(query, viewerId);
     const initial =
         JSON.stringify(options.queryKey) ===
@@ -234,7 +241,22 @@ export default function TierBrowserPage({
               ]
             : []),
         ...(data?.list
-            ? [<TierRatingGuide key="guide" query={query} overview={data} />]
+            ? [
+                  <TierRatingGuide
+                      key="guide"
+                      query={query}
+                      overview={data}
+                      open={guideOpen}
+                      onOpenChange={setGuideOpen}
+                      onCloseAutoFocus={(event) => {
+                          // 메뉴에서 열었으면 ⋯ 로, 메타 줄 링크로 열었으면 링크로(기본)
+                          if (!guideFromMenu.current) return;
+                          guideFromMenu.current = false;
+                          event.preventDefault();
+                          moreRef.current?.focus();
+                      }}
+                  />,
+              ]
             : []),
     ];
     const meta = (
@@ -317,29 +339,65 @@ export default function TierBrowserPage({
                 }))}
             />
         ) : null;
-    // 이미지 내보내기 — 결과 줄 끝, 보기 전환 오른쪽(2026-09-22 S5). 담기는 범위가 지금 정렬 · 보기 · 필터 결과라 그 줄에 둔다.
-    // 버튼 크기 = 줄의 단계: 폰 결과 줄 M · Wide 도구 줄 L
-    const exportButton = data?.list ? (
-        <TierExportDialog
-            size={wide ? "icon" : "icon-sm"}
-            query={query}
-            overview={data}
-            title={t("tiers.goalOption", {
-                goal: tierListLabel(query.mode, query.goal),
-            })}
-            conditions={[
-                ...(query.bands.length ? [bandToken()] : []),
-                ...query.difficulties,
-                ...query.levels.map(levelToken),
-                ...(query.q
-                    ? [
-                          t("tiers.export.query", {
-                              query: query.q,
-                          }),
-                      ]
-                    : []),
-            ]}
-        />
+    async function copyLink() {
+        try {
+            await navigator.clipboard.writeText(window.location.href);
+            toast.success(t("tiers.linkCopied"));
+        } catch {
+            toast.error(t("tiers.linkCopyFailed"));
+        }
+    }
+    const moreMenu = data?.list ? (
+        <div className="nl-tier-more nl-page-title">
+            <ActionMenu
+                label={t("tiers.more")}
+                triggerRef={moreRef}
+                items={[
+                    {
+                        label: t("tiers.export.menu"),
+                        onSelect: () => setExportOpen(true),
+                    },
+                    {
+                        label: t("tiers.copyLink"),
+                        onSelect: () => void copyLink(),
+                    },
+                    {
+                        label: t("tiers.guide", {
+                            goal: tierListLabel(query.mode, query.goal),
+                        }),
+                        onSelect: () => {
+                            guideFromMenu.current = true;
+                            setGuideOpen(true);
+                        },
+                    },
+                ]}
+            />
+            <TierExportDialog
+                open={exportOpen}
+                onOpenChange={setExportOpen}
+                onCloseAutoFocus={(event) => {
+                    event.preventDefault();
+                    moreRef.current?.focus();
+                }}
+                query={query}
+                overview={data}
+                title={t("tiers.goalOption", {
+                    goal: tierListLabel(query.mode, query.goal),
+                })}
+                conditions={[
+                    ...(query.bands.length ? [bandToken()] : []),
+                    ...query.difficulties,
+                    ...query.levels.map(levelToken),
+                    ...(query.q
+                        ? [
+                              t("tiers.export.query", {
+                                  query: query.q,
+                              }),
+                          ]
+                        : []),
+                ]}
+            />
+        </div>
     ) : null;
     return (
         <PageContainer
@@ -360,6 +418,7 @@ export default function TierBrowserPage({
                     </h1>
                     {meta}
                 </div>
+                {moreMenu}
             </div>
             {/* Wide 는 악곡 목록처럼 제목 아래 검색 전체 폭 → 레일 | 결과 */}
             {wide ? <div className="nl-tier-search">{searchField}</div> : null}
@@ -465,9 +524,8 @@ export default function TierBrowserPage({
                                 </FullScreenDialog>
                             ) : null}
                             {wide ? viewSwitch : null}
-                            {wide ? exportButton : null}
                         </div>
-                        {/* 폰 결과 줄 — 왼쪽 정렬(고스트 M) · 오른쪽 보기 전환 M · 내보내기 M, Wide 는 툴바 아래 결과 수 (악곡 목록과 같은 틀) */}
+                        {/* 폰 결과 줄 — 왼쪽 정렬(고스트 M) · 오른쪽 보기 전환 M, Wide 는 툴바 아래 결과 수 (악곡 목록과 같은 틀) */}
                         {wide ? (
                             resultCount
                         ) : (
@@ -475,7 +533,6 @@ export default function TierBrowserPage({
                                 {sortMenu}
                                 {stripSelect}
                                 {viewSwitch}
-                                {exportButton}
                             </div>
                         )}
                     </div>

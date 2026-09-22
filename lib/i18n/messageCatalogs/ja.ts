@@ -726,7 +726,12 @@ export const jaMessages = {
     "tiers.strip.short.grade": "Grd",
     "tiers.strip.short.rating": "レーティング",
     "tiers.strip.short.off": "表示なし",
-    "tiers.export.trigger": "難易度表を画像で書き出す",
+    "tiers.more": "難易度表のその他の操作",
+    "tiers.export.menu": "画像で書き出す",
+    "tiers.copyLink": "リンクをコピー",
+    "tiers.linkCopied": "リンクをコピーしました",
+    "tiers.linkCopyFailed":
+        "リンクをコピーできませんでした。アドレスバーからコピーしてください。",
     "tiers.export.title": "難易度表を書き出す",
     "tiers.export.scope": "含まれる内容 · {list} · {bands}区間 {count}曲",
     "tiers.export.tooMany":

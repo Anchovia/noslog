@@ -726,7 +726,12 @@ export const koMessages = {
     "tiers.strip.short.grade": "Grd",
     "tiers.strip.short.rating": "레이팅",
     "tiers.strip.short.off": "띠 없음",
-    "tiers.export.trigger": "서열표 이미지 내보내기",
+    "tiers.more": "서열표 더보기",
+    "tiers.export.menu": "이미지로 내보내기",
+    "tiers.copyLink": "링크 복사",
+    "tiers.linkCopied": "링크 복사됨",
+    "tiers.linkCopyFailed":
+        "링크를 복사하지 못했습니다. 주소창에서 복사해 주세요.",
     "tiers.export.title": "서열표 내보내기",
     "tiers.export.scope": "담기는 것 · {list} · {bands}구간 {count}곡",
     "tiers.export.tooMany":

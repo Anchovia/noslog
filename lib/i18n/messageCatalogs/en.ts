@@ -733,7 +733,12 @@ export const enMessages = {
     "tiers.strip.short.grade": "Grd",
     "tiers.strip.short.rating": "Rating",
     "tiers.strip.short.off": "Hidden",
-    "tiers.export.trigger": "Export tier list image",
+    "tiers.more": "More tier list actions",
+    "tiers.export.menu": "Export as image",
+    "tiers.copyLink": "Copy link",
+    "tiers.linkCopied": "Link copied",
+    "tiers.linkCopyFailed":
+        "Couldn't copy the link. Copy it from the address bar.",
     "tiers.export.title": "Export tier list",
     "tiers.export.scope": "Includes · {list} · {bands} bands, {count} songs",
     "tiers.export.tooMany":

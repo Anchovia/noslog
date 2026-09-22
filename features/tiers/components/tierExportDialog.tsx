@@ -3,10 +3,8 @@
 /* eslint-disable @next/next/no-img-element */
 
 import { useQueryClient } from "@tanstack/react-query";
-import { Share } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
-import ActionButton from "@/components/ui/actionButton";
 import Button from "@/components/ui/Button";
 import { Checkbox } from "@/components/ui/checkbox";
 import ModalDialog from "@/components/ui/modalDialog";
@@ -408,32 +406,27 @@ export default function TierExportDialog({
     overview,
     title,
     conditions,
-    size = "icon",
+    open,
+    onOpenChange,
+    onCloseAutoFocus,
 }: {
     query: TierBrowserQuery;
     overview: TierBrowserOverview;
     title: string;
     conditions: string[];
-    /** 여는 버튼 크기 = 놓인 줄의 단계 — 폰 결과 줄 M(icon-sm) · Wide 도구 줄 L(icon) */
-    size?: "icon" | "icon-sm";
+    /** 제목 줄 ⋯ 메뉴 「이미지로 내보내기」 가 연다(2026-09-22 S7-a) — 창만 있고 여는 버튼은 없다 */
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
+    onCloseAutoFocus?: (event: Event) => void;
 }) {
     const t = useTranslations();
-    const [open, setOpen] = useState(false);
     return (
         <ModalDialog
             open={open}
-            onOpenChange={setOpen}
+            onOpenChange={onOpenChange}
+            onCloseAutoFocus={onCloseAutoFocus}
             title={t("tiers.export.title")}
             className="nl-image-share"
-            trigger={
-                <ActionButton
-                    variant="secondary"
-                    size={size}
-                    aria-label={t("tiers.export.trigger")}
-                >
-                    <Share className="nl-icon-small" aria-hidden />
-                </ActionButton>
-            }
         >
             {open ? (
                 <TierExportPreview

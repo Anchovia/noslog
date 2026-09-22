@@ -2,23 +2,26 @@
 
 import * as Popover from "@radix-ui/react-popover";
 import { Ellipsis } from "lucide-react";
-import { useRef, useState } from "react";
+import { useRef, useState, type Ref } from "react";
 
 import IconButton from "@/components/ui/iconButton";
 
 export default function ActionMenu({
     label,
     items,
+    triggerRef,
 }: {
     label: string;
     items: { label: string; onSelect: () => void; destructive?: boolean }[];
+    /** 항목이 창을 열 때, 창을 닫으면 포커스를 ⋯ 로 돌려주기 위한 ref */
+    triggerRef?: Ref<HTMLButtonElement>;
 }) {
     const [open, setOpen] = useState(false);
     const content = useRef<HTMLDivElement>(null);
     return (
         <Popover.Root open={open} onOpenChange={setOpen}>
             <Popover.Trigger asChild>
-                <IconButton label={label} aria-haspopup="menu">
+                <IconButton label={label} aria-haspopup="menu" ref={triggerRef}>
                     <Ellipsis className="nl-icon" aria-hidden />
                 </IconButton>
             </Popover.Trigger>
