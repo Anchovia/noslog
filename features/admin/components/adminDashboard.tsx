@@ -18,7 +18,6 @@ import {
     AdminDashboardPendingRegion,
 } from "@/features/admin/components/adminDashboardPending";
 import {
-    DASHBOARD_METRIC_COLORS,
     DASHBOARD_RANGES,
     type DashboardRange,
 } from "@/features/admin/dashboardParams";
@@ -105,17 +104,10 @@ function AudienceSplit({
                 아직 방문 기록이 없습니다.
             </p>
         );
+    // 색은 admin.css 의 data-side 규칙(데이터 색 토큰) — 인라인으로 칠하지 않는다
     const sides = [
-        {
-            key: "member" as const,
-            label: "가입자",
-            color: "var(--nl-local-data-categorical-1)",
-        },
-        {
-            key: "guest" as const,
-            label: "손님",
-            color: "var(--nl-local-data-bucket-5)",
-        },
+        { key: "member" as const, label: "가입자" },
+        { key: "guest" as const, label: "손님" },
     ];
     return (
         <>
@@ -124,9 +116,9 @@ function AudienceSplit({
                     <span
                         key={side.key}
                         className="nl-chart-bar"
+                        data-side={side.key}
                         style={{
                             width: `${(audience[side.key].pageviews / total) * 100}%`,
-                            background: side.color,
                         }}
                     />
                 ))}
@@ -136,7 +128,7 @@ function AudienceSplit({
                     <li key={side.key}>
                         <span
                             className="nl-dashboard__legend-dot"
-                            style={{ background: side.color }}
+                            data-side={side.key}
                             aria-hidden
                         />
                         <span className="nl-body-secondary">{side.label}</span>
@@ -296,12 +288,7 @@ export default function AdminDashboard({ data }: { data: AdminDashboardData }) {
                                             />
                                             <span
                                                 className="nl-dashboard__kpi-tone"
-                                                style={{
-                                                    background:
-                                                        DASHBOARD_METRIC_COLORS[
-                                                            kpi.metric
-                                                        ],
-                                                }}
+                                                data-metric={kpi.metric}
                                                 aria-hidden
                                             />
                                             {kpi.failed ? (

@@ -63,6 +63,11 @@
     background: var(--nl-surface-sunken);
     border: 1px solid var(--nl-border-empty-slot);
 }
+/* 불러오는 동안의 사진 자리 — 실제 사진과 같은 변수 크기(인라인 대신) */
+.noslog-ui .nl-profile-identity__avatar.nl-skeleton {
+    width: var(--nl-profile-avatar-size);
+    height: var(--nl-profile-avatar-size);
+}
 .noslog-ui .nl-profile-identity__avatar .nl-metadata {
     font-size: var(--nl-type-size-40);
     line-height: var(--nl-type-line-height-48);

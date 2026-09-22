@@ -433,14 +433,16 @@
 /* 수치마다 제 색(2026-09-20 C2) — 수치 칸 아래 색 줄. 그래프 선 · 막대와 같은 색 */
 .noslog-ui .nl-dashboard__kpi-tone {
     display: block;
-    height: 3px;
+    /* 탭 밑줄과 같은 두께 2 */
+    height: var(--nl-spacing-2);
     border-radius: var(--nl-radius-control);
     margin-top: var(--nl-spacing-4);
 }
 /* 가입자 · 손님 비율 한 줄 */
 .noslog-ui .nl-dashboard__split {
     display: flex;
-    height: 10px;
+    /* 막대 목록 트랙과 같은 높이 8 */
+    height: var(--nl-spacing-8);
     border-radius: var(--nl-radius-control);
     overflow: hidden;
 }
@@ -466,4 +468,23 @@
 }
 .noslog-ui .nl-dashboard__legend .nl-metric-value:last-child {
     margin-left: auto;
+}
+/* 수치 · 가입자/손님 색 — 데이터 색 토큰만(인라인 금지). 그래프 선 · 막대 색(dashboardParams)과 같은 토큰 */
+.noslog-ui .nl-dashboard__kpi-tone[data-metric="visitors"] {
+    background: var(--nl-local-data-categorical-1);
+}
+.noslog-ui .nl-dashboard__kpi-tone[data-metric="pageviews"] {
+    background: var(--nl-local-data-categorical-2);
+}
+.noslog-ui .nl-dashboard__kpi-tone[data-metric="signups"] {
+    background: var(--nl-local-data-categorical-3);
+}
+.noslog-ui .nl-dashboard__kpi-tone[data-metric="syncs"] {
+    background: var(--nl-local-data-categorical-5);
+}
+.noslog-ui [data-side="member"]:is(.nl-chart-bar, .nl-dashboard__legend-dot) {
+    background: var(--nl-local-data-categorical-1);
+}
+.noslog-ui [data-side="guest"]:is(.nl-chart-bar, .nl-dashboard__legend-dot) {
+    background: var(--nl-local-data-bucket-5);
 }

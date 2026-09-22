@@ -438,13 +438,15 @@
     font-variant-numeric: tabular-nums;
     text-decoration: none;
 }
-.noslog-ui .nl-opinion-like:is(button, a):hover {
-    background: var(--nl-surface-raised);
-    color: var(--nl-content-default);
+/* 올림 · 누름 색은 공용 고스트 버튼과 같은 토큰, 포커스는 공용 :focus-visible 그대로 */
+@media (hover: hover) {
+    .noslog-ui .nl-opinion-like:is(button, a):hover {
+        background: var(--nl-interaction-hover);
+        color: var(--nl-content-default);
+    }
 }
-.noslog-ui .nl-opinion-like:focus-visible {
-    outline: 1px solid var(--nl-focus-ring);
-    outline-offset: 0;
+.noslog-ui .nl-opinion-like:is(button, a):active {
+    background: var(--nl-interaction-selected-pressed);
 }
 .noslog-ui .nl-opinion-like[data-static] {
     cursor: default;
@@ -461,7 +463,7 @@
 }
 /* 답글(2026-09-22 R1) — 의견 내용 열 안에서 한 단계. 사진 24(점수 자 핀과 같은 값) · 줄 사이 12 */
 .noslog-ui .nl-opinion-row[data-reply] {
-    grid-template-columns: 24px minmax(0, 1fr);
+    grid-template-columns: var(--nl-spacing-24) minmax(0, 1fr);
 }
 .noslog-ui .nl-opinion-replies {
     display: flex;
@@ -482,12 +484,18 @@
     background: none;
     color: var(--nl-content-default);
 }
-.noslog-ui .nl-opinion-replies__toggle:hover {
-    background: var(--nl-surface-raised);
+@media (hover: hover) {
+    .noslog-ui .nl-opinion-replies__toggle:hover {
+        background: var(--nl-interaction-hover);
+    }
 }
-.noslog-ui .nl-opinion-replies__toggle:focus-visible {
-    outline: 1px solid var(--nl-focus-ring);
-    outline-offset: 0;
+.noslog-ui .nl-opinion-replies__toggle:active {
+    background: var(--nl-interaction-selected-pressed);
+}
+/* 답글 사진 스켈레톤 — 답글 줄 사진과 같은 24(간격 토큰) */
+.noslog-ui .nl-opinion-row[data-reply] > .nl-avatar.nl-skeleton {
+    width: var(--nl-spacing-24);
+    height: var(--nl-spacing-24);
 }
 /* 번역 표시(2026-09-22 T1) — 본문 바로 아래 한 줄: 「일본어에서 번역됨 · Gemini · 원문 보기」 */
 .noslog-ui .nl-opinion-row__translation {

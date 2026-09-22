@@ -498,10 +498,7 @@ function ReplyComposer({
 function ReplySkeleton() {
     return (
         <div className="nl-opinion-row" data-reply="" aria-hidden="true">
-            <span
-                className="nl-avatar nl-skeleton"
-                style={{ width: 24, height: 24 }}
-            />
+            <span className="nl-avatar nl-skeleton" />
             <div className="nl-opinion-row__content">
                 <div className="nl-opinion-row__header">
                     <SkeletonText className="nl-emphasis-label" width="s" />

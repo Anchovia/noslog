@@ -12,6 +12,15 @@ import {
     YAxis,
 } from "recharts";
 
+// 툴팁 = 떠 있는 창 규격(overlay 면 · 경계 · 모서리 overlay) · 본문 14
+const TOOLTIP_STYLE = {
+    background: "var(--nl-surface-overlay)",
+    border: "1px solid var(--nl-border-overlay)",
+    borderRadius: "var(--nl-radius-overlay)",
+    color: "var(--nl-content-default)",
+    fontSize: "var(--nl-type-size-14)",
+};
+
 // 대시보드 추이 그래프 — 한 계열 선 · 격자 border/default.
 // 선 색은 보고 있는 수치의 색(2026-09-20 C2), 움직임은 공용 그래프 클래스만 쓴다(2026-09-21)
 export default function AdminDashboardChart({
@@ -64,13 +73,7 @@ export default function AdminDashboardChart({
                     />
                     <Tooltip
                         cursor={{ stroke: "var(--nl-border-strong)" }}
-                        contentStyle={{
-                            background: "var(--nl-surface-overlay)",
-                            border: "1px solid var(--nl-border-overlay)",
-                            borderRadius: 10,
-                            color: "var(--nl-content-default)",
-                            fontSize: 14,
-                        }}
+                        contentStyle={TOOLTIP_STYLE}
                         labelStyle={{ color: "var(--nl-content-subdued)" }}
                         formatter={(value) => [
                             Number(value).toLocaleString("ko-KR"),
@@ -173,13 +176,7 @@ export function AdminDashboardHours({
                     {emptyMessage ? null : (
                         <Tooltip
                             cursor={{ fill: "var(--nl-surface-raised)" }}
-                            contentStyle={{
-                                background: "var(--nl-surface-overlay)",
-                                border: "1px solid var(--nl-border-overlay)",
-                                borderRadius: 10,
-                                color: "var(--nl-content-default)",
-                                fontSize: 14,
-                            }}
+                            contentStyle={TOOLTIP_STYLE}
                             labelStyle={{ color: "var(--nl-content-subdued)" }}
                             formatter={(value) => [
                                 Number(value).toLocaleString("ko-KR"),
@@ -191,7 +188,6 @@ export function AdminDashboardHours({
                         className="nl-chart-reveal"
                         dataKey="value"
                         fill={color}
-                        radius={[2, 2, 0, 0]}
                         isAnimationActive={false}
                     />
                 </BarChart>
