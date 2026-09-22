@@ -188,6 +188,23 @@ old design-stage checklist. Changes to material behavior require a user decision
   other's stored value. Deleting the pattern evaluation keeps an existing
   opinion.
   No contribution rewards or automatic tier changes are introduced.
+- Opinion interactions (2026-09-22). Likes reuse the existing helpful table: a
+  signed-in player with a positive record on that chart may like others' opinions
+  and replies (not their own). Sort: newest or most liked.
+  Replies are one level deep (`CommunityOpinionReply`); replying to a reply
+  prefixes `@name`. Writing a reply needs the same chart record as writing an
+  opinion; the author may edit or delete their reply, and replies can be reported
+  (same report table with `replyId`). When an opinion with replies is deleted, its
+  row stays as "deleted by author" so others' replies remain; no new replies are
+  accepted there. Clearing a whole evaluation that has replies keeps the row with
+  ratings and opinion emptied. Account deletion cascades the author's replies.
+- Opinion translation (2026-09-22). The text language is detected from its script
+  (Hangul → ko, kana/Han → ja, Latin → en; one or two letters → none). "See
+  translation" appears only when that language differs from the viewer's locale.
+  The first request calls Gemini with the paid-tier key `GEMINI_COMMUNITY_API_KEY`
+  (never the free key) and stores the result; later viewers reuse it. Editing or
+  deleting the text clears stored translations. Without that key the button is
+  not shown. The privacy policy (2026-09-22) discloses this transfer.
 
 ## Data synchronization
 

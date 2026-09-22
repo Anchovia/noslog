@@ -418,3 +418,82 @@
         align-items: start;
     }
 }
+/* 의견 동작 줄(2026-09-22 L1) — 본문 아래. 누르는 자리는 컨트롤 높이, 잉크는 본문 선에 맞춰 왼쪽으로 당긴다 */
+.noslog-ui .nl-opinion-row__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-4);
+    margin-inline-start: calc(var(--nl-spacing-8) * -1);
+}
+.noslog-ui .nl-opinion-like {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--nl-spacing-4);
+    min-height: var(--nl-control-height-compact);
+    padding-inline: var(--nl-spacing-8);
+    border: 0;
+    border-radius: var(--nl-radius-control);
+    background: none;
+    color: var(--nl-content-subdued);
+    font-variant-numeric: tabular-nums;
+    text-decoration: none;
+}
+.noslog-ui .nl-opinion-like:is(button, a):hover {
+    background: var(--nl-surface-raised);
+    color: var(--nl-content-default);
+}
+.noslog-ui .nl-opinion-like:focus-visible {
+    outline: 1px solid var(--nl-focus-ring);
+    outline-offset: 0;
+}
+.noslog-ui .nl-opinion-like[data-static] {
+    cursor: default;
+}
+/* 눌림 = 채운 하트 + 데이터 색 categorical-4(새 색 아님) — 모양과 색 둘로 말한다 */
+.noslog-ui .nl-opinion-like[aria-pressed="true"] > svg {
+    color: var(--nl-local-data-categorical-4);
+}
+.noslog-ui .nl-opinion-like[aria-pressed="true"] {
+    color: var(--nl-content-default);
+}
+.noslog-ui .nl-opinions__sort {
+    display: flex;
+}
+/* 답글(2026-09-22 R1) — 의견 내용 열 안에서 한 단계. 사진 24(점수 자 핀과 같은 값) · 줄 사이 12 */
+.noslog-ui .nl-opinion-row[data-reply] {
+    grid-template-columns: 24px minmax(0, 1fr);
+}
+.noslog-ui .nl-opinion-replies {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-12);
+    margin-top: var(--nl-spacing-8);
+}
+.noslog-ui .nl-opinion-replies__toggle {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--nl-spacing-4);
+    min-height: var(--nl-control-height-compact);
+    margin-inline-start: calc(var(--nl-spacing-8) * -1);
+    padding-inline: var(--nl-spacing-8);
+    border: 0;
+    border-radius: var(--nl-radius-control);
+    background: none;
+    color: var(--nl-content-default);
+}
+.noslog-ui .nl-opinion-replies__toggle:hover {
+    background: var(--nl-surface-raised);
+}
+.noslog-ui .nl-opinion-replies__toggle:focus-visible {
+    outline: 1px solid var(--nl-focus-ring);
+    outline-offset: 0;
+}
+/* 번역 표시(2026-09-22 T1) — 본문 바로 아래 한 줄: 「일본어에서 번역됨 · Gemini · 원문 보기」 */
+.noslog-ui .nl-opinion-row__translation {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--nl-spacing-4);
+    margin: 0;
+}

@@ -19,11 +19,18 @@ import {
     PATTERN_AXES,
     communityDataSchema,
     opinionPageSchema,
+    opinionReplyListSchema,
     patternSummarySchema,
 } from "@/features/music/schemas/communitySchema";
+import {
+    communityTranslationsSchema,
+    isCommunityTranslationEnabled,
+} from "@/features/music/server/communityTranslation";
+import { detectTextLanguage } from "@/lib/i18n/textLanguage";
 import type {
     CommunityData,
     OpinionQuery,
+    OpinionReplyQuery,
 } from "@/features/music/schemas/communitySchema";
 
 export async function getCommunityPattern(chartId: number) {
@@ -64,20 +71,27 @@ export async function getCommunityOpinions(
     query: OpinionQuery,
     userId?: number
 ) {
+    // 지운 의견이라도 남의 답글이 남아 있으면 자리를 남긴다(2026-09-22)
     const where: Prisma.CommunityChartEvaluationWhereInput = {
         chartId: query.chartId,
         excluded: false,
         opinionHidden: false,
-        opinion: { not: null },
+        OR: [
+            { opinion: { not: null } },
+            { replies: { some: { hidden: false } } },
+        ],
     };
     const orderBy: Prisma.CommunityChartEvaluationOrderByWithRelationInput[] =
         query.sort === "helpful"
             ? [
                   { helpful: { _count: "desc" } },
-                  { opinionUpdatedAt: "desc" },
+                  { opinionUpdatedAt: { sort: "desc", nulls: "last" } },
                   { id: "desc" },
               ]
-            : [{ opinionUpdatedAt: "desc" }, { id: "desc" }];
+            : [
+                  { opinionUpdatedAt: { sort: "desc", nulls: "last" } },
+                  { id: "desc" },
+              ];
     const [rows, total, record] = await Promise.all([
         db.communityChartEvaluation.findMany({
             where,
@@ -90,8 +104,14 @@ export async function getCommunityOpinions(
                 createdAt: true,
                 opinionCreatedAt: true,
                 opinionUpdatedAt: true,
+                opinionTranslations: true,
                 user: { select: { id: true, username: true, avatar: true } },
-                _count: { select: { helpful: true } },
+                _count: {
+                    select: {
+                        helpful: true,
+                        replies: { where: { hidden: false } },
+                    },
+                },
                 helpful: {
                     where: { userId: userId ?? -1 },
                     select: { userId: true },
@@ -125,8 +145,17 @@ export async function getCommunityOpinions(
             helpfulCount: row._count.helpful,
             viewerHelpful: row.helpful.length > 0,
             own: row.user.id === userId,
-            canReact: Boolean(record && row.user.id !== userId),
+            // 지운 의견 자리에는 좋아요 · 신고를 받지 않는다
+            canReact: Boolean(
+                record && row.opinion !== null && row.user.id !== userId
+            ),
+            replyCount: row._count.replies,
+            language: row.opinion ? detectTextLanguage(row.opinion) : null,
+            translations: communityTranslationsSchema.parse(
+                row.opinionTranslations ?? {}
+            ),
         })),
+        translationEnabled: isCommunityTranslationEnabled(),
         total,
         nextOffset:
             query.offset + rows.length < total
@@ -269,5 +298,81 @@ export async function getCommunityData(
         ),
         history: events,
         opinions,
+    });
+}
+
+// 의견 하나의 답글 — 한 단계, 오래된 것부터(대화 순서). 한 의견에 많아야 수십 개라 한 번에 준다(2026-09-22 R1)
+export async function getOpinionReplies(
+    query: OpinionReplyQuery,
+    userId?: number
+) {
+    const [rows, opinion, record] = await Promise.all([
+        db.communityOpinionReply.findMany({
+            where: {
+                evaluationId: query.evaluationId,
+                hidden: false,
+                evaluation: {
+                    chartId: query.chartId,
+                    excluded: false,
+                    opinionHidden: false,
+                },
+            },
+            orderBy: [{ createdAt: "asc" }, { id: "asc" }],
+            take: 200,
+            select: {
+                id: true,
+                body: true,
+                translations: true,
+                createdAt: true,
+                updatedAt: true,
+                user: { select: { id: true, username: true, avatar: true } },
+                _count: { select: { likes: true } },
+                likes: {
+                    where: { userId: userId ?? -1 },
+                    select: { userId: true },
+                },
+            },
+        }),
+        db.communityChartEvaluation.findFirst({
+            where: {
+                id: query.evaluationId,
+                chartId: query.chartId,
+                excluded: false,
+                opinionHidden: false,
+            },
+            select: { opinion: true },
+        }),
+        userId
+            ? db.playData.findFirst({
+                  where: {
+                      chart_id: query.chartId,
+                      user_id: userId,
+                      score: { gt: 0 },
+                  },
+                  select: { id: true },
+              })
+            : null,
+    ]);
+    return opinionReplyListSchema.parse({
+        items: rows.map((row) => ({
+            id: row.id,
+            body: row.body,
+            createdAt: row.createdAt.toISOString(),
+            updatedAt: row.updatedAt.toISOString(),
+            // 좋아요만 눌려도 updatedAt 은 바뀌지 않는다(본문 고침에만) — 1초 여유
+            edited: row.updatedAt.getTime() - row.createdAt.getTime() > 1000,
+            user: row.user,
+            likeCount: row._count.likes,
+            viewerLiked: row.likes.length > 0,
+            own: row.user.id === userId,
+            canReact: Boolean(record && row.user.id !== userId),
+            language: detectTextLanguage(row.body),
+            translations: communityTranslationsSchema.parse(
+                row.translations ?? {}
+            ),
+        })),
+        translationEnabled: isCommunityTranslationEnabled(),
+        // 새 답글은 보이는 의견에만(지운 의견 자리에는 받지 않는다)
+        canReply: Boolean(record && opinion?.opinion),
     });
 }

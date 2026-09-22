@@ -30,6 +30,8 @@ export const serverEnv = createEnv({
         X_BEARER_TOKEN: optionalSecret,
         OFFICIAL_X_SYNC_SECRET: z.string().min(32).optional(),
         GEMINI_API_KEY: optionalSecret,
+        // 이용자 글(의견 · 답글) 번역 전용 — 유료 등급 키만 넣는다(무료 등급은 입력을 제품 개선에 쓴다, 2026-09-22)
+        GEMINI_COMMUNITY_API_KEY: optionalSecret,
         VERCEL_ENV: z.enum(["development", "preview", "production"]).optional(),
         VERCEL_AUTOMATION_BYPASS_SECRET: optionalSecret,
     },
@@ -52,6 +54,7 @@ export const serverEnv = createEnv({
         X_BEARER_TOKEN: process.env.X_BEARER_TOKEN,
         OFFICIAL_X_SYNC_SECRET: process.env.OFFICIAL_X_SYNC_SECRET,
         GEMINI_API_KEY: process.env.GEMINI_API_KEY,
+        GEMINI_COMMUNITY_API_KEY: process.env.GEMINI_COMMUNITY_API_KEY,
         VERCEL_ENV: process.env.VERCEL_ENV,
         VERCEL_AUTOMATION_BYPASS_SECRET:
             process.env.VERCEL_AUTOMATION_BYPASS_SECRET,

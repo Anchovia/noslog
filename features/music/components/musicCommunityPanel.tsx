@@ -77,6 +77,7 @@ export default function MusicCommunityPanel({
                         accountId={music.accountId}
                         returnTo={returnTo}
                         onEdit={() => setEditing(true)}
+                        canReply={Boolean(music.accountId && data.canEvaluate)}
                         // 로그아웃이면 작성 칸 대신 제목 줄 오른쪽 끝 제목 링크(가이드 2절)
                         headerAction={
                             music.accountId ? null : (

@@ -71,11 +71,146 @@ async function updateVoteReview(
     }
 }
 
+type ReplyMutation = Extract<
+    CommunityMutation,
+    { action: "reply-save" | "reply-delete" | "reply-like" }
+>;
+
+// 답글(2026-09-22 R1) — 의견과 같은 자격(그 채보 기록이 있어야 쓰기 · 좋아요), 한 단계만
+async function executeReplyMutation(
+    transaction: Prisma.TransactionClient,
+    input: ReplyMutation,
+    userId: number
+) {
+    const hasRecord = async (chartId: number) =>
+        Boolean(
+            await transaction.playData.findFirst({
+                where: { chart_id: chartId, user_id: userId, score: { gt: 0 } },
+                select: { id: true },
+            })
+        );
+
+    if (input.action === "reply-save") {
+        // 답글은 보이는 의견(또는 지운 의견 자리)에만 — 제외 · 숨김 의견에는 달 수 없다
+        const opinion = await transaction.communityChartEvaluation.findFirst({
+            where: {
+                id: input.evaluationId,
+                chartId: input.chartId,
+                excluded: false,
+                opinionHidden: false,
+            },
+            select: { id: true, opinion: true },
+        });
+        if (!opinion) throw new ApiError("opinion_unavailable", "unavailable");
+        if (!(await hasRecord(input.chartId)))
+            throw new ApiError("chart_record_required", "ineligible");
+        if (input.replyId !== undefined) {
+            const updated = await transaction.communityOpinionReply.updateMany({
+                where: {
+                    id: input.replyId,
+                    evaluationId: opinion.id,
+                    userId,
+                    hidden: false,
+                },
+                data: { body: input.body, translations: Prisma.DbNull },
+            });
+            if (!updated.count)
+                throw new ApiError("reply_unavailable", "unavailable");
+            return { chartId: input.chartId, evaluationId: opinion.id };
+        }
+        // 지운 의견 자리에는 새 답글을 받지 않는다 — 남은 대화만 보인다
+        if (opinion.opinion === null)
+            throw new ApiError("opinion_unavailable", "unavailable");
+        await transaction.communityOpinionReply.create({
+            data: { evaluationId: opinion.id, userId, body: input.body },
+        });
+        return { chartId: input.chartId, evaluationId: opinion.id };
+    }
+
+    const reply = await transaction.communityOpinionReply.findFirst({
+        where: {
+            id: input.replyId,
+            hidden: false,
+            evaluation: { chartId: input.chartId, excluded: false },
+        },
+        select: { id: true, userId: true, evaluationId: true },
+    });
+    if (!reply) throw new ApiError("reply_unavailable", "unavailable");
+
+    if (input.action === "reply-delete") {
+        if (reply.userId !== userId)
+            throw new ApiError("reply_unavailable", "unavailable");
+        // 신고 기록은 남기되 답글과의 연결만 끊는다(의견 삭제와 같은 방식)
+        await transaction.communityOpinionReport.updateMany({
+            where: { replyId: reply.id },
+            data: { replyId: null },
+        });
+        await transaction.communityOpinionReply.delete({
+            where: { id: reply.id },
+        });
+        return { chartId: input.chartId, evaluationId: reply.evaluationId };
+    }
+
+    // reply-like — 내 답글에는 누를 수 없다
+    if (reply.userId === userId)
+        throw new ApiError("reply_unavailable", "unavailable");
+    if (!(await hasRecord(input.chartId)))
+        throw new ApiError("chart_record_required", "ineligible");
+    if (input.selected)
+        await transaction.communityOpinionReplyLike.upsert({
+            where: { replyId_userId: { replyId: reply.id, userId } },
+            create: { replyId: reply.id, userId },
+            update: {},
+        });
+    else
+        await transaction.communityOpinionReplyLike.deleteMany({
+            where: { replyId: reply.id, userId },
+        });
+    return {
+        chartId: input.chartId,
+        evaluationId: reply.evaluationId,
+        likeCount: await transaction.communityOpinionReplyLike.count({
+            where: { replyId: reply.id },
+        }),
+        selected: input.selected,
+    };
+}
+
 async function executeMutation(
     transaction: Prisma.TransactionClient,
     input: CommunityMutation,
     userId: number
 ) {
+    if (input.action === "report" && input.input.replyId !== undefined) {
+        const { replyId, reason, explanation } = input.input;
+        const reply = await transaction.communityOpinionReply.findFirst({
+            where: {
+                id: replyId,
+                hidden: false,
+                userId: { not: userId },
+                evaluation: { excluded: false },
+            },
+            select: {
+                userId: true,
+                body: true,
+                evaluation: { select: { chartId: true } },
+            },
+        });
+        if (!reply) throw new ApiError("reply_unavailable", "unavailable");
+        await transaction.communityOpinionReport.upsert({
+            where: { replyId_userId: { replyId, userId } },
+            create: {
+                replyId,
+                userId,
+                reason,
+                explanation,
+                authorId: reply.userId,
+                opinionSnapshot: reply.body,
+            },
+            update: {},
+        });
+        return { chartId: reply.evaluation.chartId };
+    }
     if (input.action === "report") {
         const opinion = await transaction.communityChartEvaluation.findFirst({
             where: {
@@ -88,7 +223,8 @@ async function executeMutation(
             select: { id: true, chartId: true, userId: true, opinion: true },
         });
         if (!opinion) throw new ApiError("opinion_unavailable", "unavailable");
-        const { evaluationId, reason, explanation } = input.input;
+        const { reason, explanation } = input.input;
+        const evaluationId = opinion.id;
         await transaction.communityOpinionReport.upsert({
             where: { evaluationId_userId: { evaluationId, userId } },
             create: {
@@ -149,6 +285,13 @@ async function executeMutation(
         };
     }
 
+    if (
+        input.action === "reply-save" ||
+        input.action === "reply-delete" ||
+        input.action === "reply-like"
+    )
+        return executeReplyMutation(transaction, input, userId);
+
     const chartId = "input" in input ? input.input.chartId : input.chartId;
     const chart = await transaction.musicChart.findUnique({
         where: { id: chartId },
@@ -157,6 +300,30 @@ async function executeMutation(
     if (!chart) throw new ApiError("chart_unavailable", "unavailable");
 
     if (input.action === "delete-evaluation") {
+        // 남의 답글이 달린 의견은 행을 지우면 답글까지 사라진다 — 평가 · 의견만 비우고 행은 남긴다(2026-09-22)
+        const withReplies =
+            await transaction.communityChartEvaluation.findFirst({
+                where: { chartId, userId, replies: { some: {} } },
+                select: { id: true },
+            });
+        if (withReplies) {
+            await detachDeletedOpinion(transaction, withReplies.id);
+            await transaction.communityChartEvaluation.update({
+                where: { id: withReplies.id },
+                data: {
+                    stairs: null,
+                    repetition: null,
+                    polyrhythm: null,
+                    offset: null,
+                    chords: null,
+                    opinion: null,
+                    opinionUpdatedAt: null,
+                    opinionCreatedAt: null,
+                    opinionTranslations: Prisma.DbNull,
+                },
+            });
+            return { chartId };
+        }
         await transaction.communityChartEvaluation.deleteMany({
             where: { chartId, userId },
         });
@@ -174,6 +341,7 @@ async function executeMutation(
                 opinion: null,
                 opinionUpdatedAt: null,
                 opinionCreatedAt: null,
+                opinionTranslations: Prisma.DbNull,
             },
         });
         return { chartId };
@@ -226,6 +394,10 @@ async function executeMutation(
             opinion,
             opinionUpdatedAt,
             opinionCreatedAt,
+            // 글이 바뀌면 전에 만든 번역은 맞지 않는다(2026-09-22)
+            ...(previous?.opinion === opinion
+                ? {}
+                : { opinionTranslations: Prisma.DbNull }),
         };
         await transaction.communityChartEvaluation.upsert({
             where: { chartId_userId: { chartId, userId } },

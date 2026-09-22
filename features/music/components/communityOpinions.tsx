@@ -1,11 +1,12 @@
 "use client";
 
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { useEffect, useId, useRef } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { useTranslations } from "@/components/i18n/localeProvider";
 import ActionButton from "@/components/ui/actionButton";
 import Disclosure from "@/components/ui/disclosure";
+import SortMenu from "@/components/ui/sortMenu";
 import { StatusMessage } from "@/components/ui/statusMessage";
 import { communityOpinionOptions } from "@/features/music/api/community";
 import type { OpinionPage } from "@/features/music/schemas/communitySchema";
@@ -22,6 +23,7 @@ export default function CommunityOpinions({
     composer,
     headerAction,
     editor,
+    canReply = false,
 }: {
     chartId: number;
     initialData: OpinionPage;
@@ -34,17 +36,22 @@ export default function CommunityOpinions({
     headerAction?: ReactNode;
     /** 내 의견을 고치는 중이면 그 줄에 넣을 작성 칸 */
     editor?: ReactNode;
+    /** 로그인했고 이 채보 기록이 있어 답글을 쓸 수 있는지(2026-09-22) */
+    canReply?: boolean;
 }) {
     const t = useTranslations();
     const id = useId();
-    // 의견은 최신순 하나 — 추천 기능을 없애 「추천순」 도 뺐다(2026-09-16)
-    const sort = "newest" as const;
+    // 최신순 · 좋아요순(2026-09-22 — 좋아요를 되살리며 정렬도 되살림). 첫 화면에 받은 목록은 최신순
+    const [sort, setSort] = useState<"newest" | "helpful">("newest");
     const list = useRef<HTMLDivElement>(null);
     const heading = useRef<HTMLHeadingElement>(null);
     const appendFocus = useRef<number | null>(null);
     const query = useInfiniteQuery({
         ...communityOpinionOptions({ chartId, sort }, accountId),
-        initialData: { pageParams: [0], pages: [initialData] },
+        initialData:
+            sort === "newest"
+                ? { pageParams: [0], pages: [initialData] }
+                : undefined,
     });
     const items =
         query.data?.pages
@@ -84,6 +91,28 @@ export default function CommunityOpinions({
             ) : null}
             <div className="nl-opinions__body">
                 {composer}
+                {/* 정렬은 의견이 둘 이상일 때만 — 목록 위 왼쪽 고스트(악곡 · 서열 결과 줄과 같은 자리) */}
+                {(query.data?.pages[0].total ?? initialData.total) > 1 ? (
+                    <div className="nl-opinions__sort">
+                        <SortMenu
+                            variant="ghost"
+                            size="sm"
+                            label={t("discovery.sortLabel")}
+                            value={sort}
+                            onValueChange={setSort}
+                            options={[
+                                {
+                                    value: "newest",
+                                    label: t("community.sort.newest"),
+                                },
+                                {
+                                    value: "helpful",
+                                    label: t("community.sort.likes"),
+                                },
+                            ]}
+                        />
+                    </div>
+                ) : null}
                 {items.length ? (
                     <div className="nl-opinions__list" ref={list}>
                         {items.map((item) => (
@@ -96,6 +125,11 @@ export default function CommunityOpinions({
                                 onEdit={onEdit}
                                 onDeleted={() => heading.current?.focus()}
                                 editor={item.own ? editor : undefined}
+                                canReply={canReply}
+                                translationEnabled={
+                                    query.data?.pages[0].translationEnabled ??
+                                    initialData.translationEnabled
+                                }
                             />
                         ))}
                     </div>
