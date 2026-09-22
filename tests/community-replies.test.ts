@@ -97,12 +97,13 @@ describe("의견 답글", () => {
         expect(tx.communityOpinionReply.create).not.toHaveBeenCalled();
     });
 
-    it("보이는 의견에 답글을 새로 쓴다", async () => {
+    it("보이는 의견에 답글을 새로 쓰고 번역할 답글 번호를 돌려준다", async () => {
         tx.communityChartEvaluation.findFirst.mockResolvedValue({
             id: 5,
             opinion: "후반 트릴",
         });
-        await mutateChartCommunity(
+        tx.communityOpinionReply.create.mockResolvedValue({ id: 31 });
+        const result = await mutateChartCommunity(
             {
                 action: "reply-save",
                 chartId: 3,
@@ -113,7 +114,9 @@ describe("의견 답글", () => {
         );
         expect(tx.communityOpinionReply.create).toHaveBeenCalledWith({
             data: { evaluationId: 5, userId: ME, body: "동의해요" },
+            select: { id: true },
         });
+        expect(result).toMatchObject({ translate: { kind: "reply", id: 31 } });
     });
 
     it("지운 의견 자리에는 새 답글을 받지 않는다", async () => {

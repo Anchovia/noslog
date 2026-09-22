@@ -116,15 +116,24 @@ async function executeReplyMutation(
             });
             if (!updated.count)
                 throw new ApiError("reply_unavailable", "unavailable");
-            return { chartId: input.chartId, evaluationId: opinion.id };
+            return {
+                chartId: input.chartId,
+                evaluationId: opinion.id,
+                translate: { kind: "reply" as const, id: input.replyId },
+            };
         }
         // 지운 의견 자리에는 새 답글을 받지 않는다 — 남은 대화만 보인다
         if (opinion.opinion === null)
             throw new ApiError("opinion_unavailable", "unavailable");
-        await transaction.communityOpinionReply.create({
+        const created = await transaction.communityOpinionReply.create({
             data: { evaluationId: opinion.id, userId, body: input.body },
+            select: { id: true },
         });
-        return { chartId: input.chartId, evaluationId: opinion.id };
+        return {
+            chartId: input.chartId,
+            evaluationId: opinion.id,
+            translate: { kind: "reply" as const, id: created.id },
+        };
     }
 
     const reply = await transaction.communityOpinionReply.findFirst({
@@ -399,12 +408,19 @@ async function executeMutation(
                 ? {}
                 : { opinionTranslations: Prisma.DbNull }),
         };
-        await transaction.communityChartEvaluation.upsert({
+        const saved = await transaction.communityChartEvaluation.upsert({
             where: { chartId_userId: { chartId, userId } },
             create: { chartId, userId, ...values },
             update: values,
+            select: { id: true },
         });
-        return { chartId };
+        // 글이 새로 쓰였거나 바뀌었으면 응답 뒤 번역해 둔다(2026-09-22 — 올릴 때 한 번)
+        return opinion && previous?.opinion !== opinion
+            ? {
+                  chartId,
+                  translate: { kind: "opinion" as const, id: saved.id },
+              }
+            : { chartId };
     }
 
     const { mode, goal } = input.input;

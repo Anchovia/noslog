@@ -187,7 +187,7 @@
                     {
                         "kind": "item",
                         "title": "Google (Gemini API)",
-                        "text": "의견·답글에서 「번역 보기」를 누르면 그 글의 본문만 번역을 위해 Google에 보냅니다. 입력을 서비스 개선·학습에 쓰지 않는 유료 등급으로만 이용하며, 작성자 이름 등 다른 정보는 보내지 않습니다. Google의 국외 서버에서 처리될 수 있습니다."
+                        "text": "의견·답글을 쓰거나 고치면 그 글의 본문만 다른 두 언어로 번역하려고 Google에 보내고, 번역문을 저장해 「번역 보기」에 씁니다. 작성자 이름 등 다른 정보는 보내지 않습니다. 무료 이용 등급이라 Google이 보낸 글과 번역 결과를 서비스 개선에 쓸 수 있고 Google의 검토자가 볼 수 있습니다. Google의 국외 서버에서 처리될 수 있습니다."
                     },
                     {
                         "kind": "paragraph",
@@ -472,7 +472,7 @@
                     {
                         "kind": "item",
                         "title": "Google（Gemini API）",
-                        "text": "意見・返信で「翻訳を見る」を押すと、その投稿の本文のみを翻訳のためにGoogleへ送信します。入力をサービス改善・学習に使用しない有料プランでのみ利用し、投稿者名などほかの情報は送信しません。Googleの国外サーバーで処理される場合があります。"
+                        "text": "意見・返信を投稿または編集すると、その本文のみをほかの2言語に翻訳するためにGoogleへ送信し、翻訳文を保存して「翻訳を見る」に使用します。投稿者名などほかの情報は送信しません。無料利用枠のため、Googleは送信された本文と翻訳結果をサービス改善に使用でき、Googleのレビュアーが閲覧する場合があります。Googleの国外サーバーで処理される場合があります。"
                     },
                     {
                         "kind": "paragraph",
@@ -757,7 +757,7 @@
                     {
                         "kind": "item",
                         "title": "Google (Gemini API)",
-                        "text": "When you select \"See translation\" on an opinion or reply, only that text is sent to Google to translate it. We use only the paid tier, where inputs are not used to improve or train Google's services, and we send no other information such as the author's name. It may be processed on Google servers outside your country."
+                        "text": "When you post or edit an opinion or reply, only its text is sent to Google to translate it into the other two languages, and the translations are stored for \"See translation\". We send no other information such as the author's name. Because we use Google's free tier, Google may use the submitted text and results to improve its services, and Google reviewers may see them. It may be processed on Google servers outside your country."
                     },
                     {
                         "kind": "paragraph",
