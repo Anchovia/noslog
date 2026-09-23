@@ -69,6 +69,7 @@ import NoteInspector from "./noteInspector";
 import PixiNoteEditor, { type NoteEditorTool } from "./pixiNoteEditor";
 import TimingInspector from "./timingInspector";
 import TimingRuler from "./timingRuler";
+import Vid2bmapImportPanel from "./vid2bmapImportPanel";
 import { useChartAudio } from "./useChartAudio";
 import WaveformTimeline from "./waveformTimeline";
 
@@ -230,6 +231,10 @@ function ChartTimingEditorWorkspace({
     const [metronomeVolume, setMetronomeVolume] = useMetronomeVolume();
     const audioInputRef = useRef<HTMLInputElement | null>(null);
     const importInputRef = useRef<HTMLInputElement | null>(null);
+    const vid2bmapInputRef = useRef<HTMLInputElement | null>(null);
+    const importMenuRef = useRef<HTMLDivElement | null>(null);
+    const [importMenuOpen, setImportMenuOpen] = useState(false);
+    const [vid2bmapFile, setVid2bmapFile] = useState<File | null>(null);
     const [pixelsPerSecond, setPixelsPerSecond] = useState(150);
     const [revisionHistory, setRevisionHistory] = useState(revisions);
     const [editorMode, setEditorMode] = useState<"timing" | "notes">("timing");
@@ -460,6 +465,40 @@ function ChartTimingEditorWorkspace({
         return () => window.removeEventListener("keydown", handleKeyDown);
     }, [redo, runExplicitSave, togglePlayback, undo]);
 
+    useEffect(() => {
+        if (!importMenuOpen) return;
+        const close = (event: MouseEvent) => {
+            if (!importMenuRef.current?.contains(event.target as Node)) {
+                setImportMenuOpen(false);
+            }
+        };
+        const escape = (event: KeyboardEvent) => {
+            if (event.key === "Escape") setImportMenuOpen(false);
+        };
+        window.addEventListener("mousedown", close);
+        window.addEventListener("keydown", escape);
+        return () => {
+            window.removeEventListener("mousedown", close);
+            window.removeEventListener("keydown", escape);
+        };
+    }, [importMenuOpen]);
+
+    function handleVid2bmapFile(event: ChangeEvent<HTMLInputElement>) {
+        const file = event.target.files?.[0];
+        event.target.value = "";
+        if (!file) return;
+        setVid2bmapFile(file);
+        // 미리보기는 노트 캔버스에만 그린다
+        setEditorMode("notes");
+    }
+
+    /** 가져오기 직전 지금 초안을 복구 가능한 버전으로 — 저장 버전 번호가 올랐으면 성공 */
+    const saveBeforeImport = useCallback(async () => {
+        const before = store.getState().savedRevision;
+        await runExplicitSave("manual");
+        return store.getState().savedRevision > before;
+    }, [runExplicitSave, store]);
+
     async function handleAudioFile(event: ChangeEvent<HTMLInputElement>) {
         const file = event.target.files?.[0];
         event.target.value = "";
@@ -635,12 +674,58 @@ function ChartTimingEditorWorkspace({
                         >
                             <Redo2 className="size-4" />
                         </EditorButton>
-                        <EditorButton
-                            label="채보 가져오기"
-                            onClick={() => importInputRef.current?.click()}
-                        >
-                            <Upload className="size-4" />
-                        </EditorButton>
+                        <div ref={importMenuRef} className="relative">
+                            <EditorButton
+                                label="채보 가져오기"
+                                onClick={() =>
+                                    setImportMenuOpen((open) => !open)
+                                }
+                            >
+                                <Upload className="size-4" />
+                            </EditorButton>
+                            {importMenuOpen ? (
+                                <div
+                                    role="menu"
+                                    aria-label="채보 가져오기"
+                                    className="border-border bg-surface-muted absolute top-11 right-0 z-10 flex w-60 flex-col gap-0.5 rounded-lg border p-1 shadow-xl"
+                                >
+                                    <button
+                                        type="button"
+                                        role="menuitem"
+                                        onClick={() => {
+                                            setImportMenuOpen(false);
+                                            importInputRef.current?.click();
+                                        }}
+                                        className="hover:bg-border rounded-md px-2.5 py-2 text-left"
+                                    >
+                                        <span className="block text-xs font-semibold">
+                                            NosLog 채보 파일
+                                        </span>
+                                        <span className="text-micro block">
+                                            .noslog-chart.json — 지금 초안을
+                                            교체
+                                        </span>
+                                    </button>
+                                    <button
+                                        type="button"
+                                        role="menuitem"
+                                        onClick={() => {
+                                            setImportMenuOpen(false);
+                                            vid2bmapInputRef.current?.click();
+                                        }}
+                                        className="hover:bg-border rounded-md px-2.5 py-2 text-left"
+                                    >
+                                        <span className="block text-xs font-semibold">
+                                            영상 추출 결과
+                                        </span>
+                                        <span className="text-micro block">
+                                            vid2bmap 결과 zip → 미리보고 초안에
+                                            넣기
+                                        </span>
+                                    </button>
+                                </div>
+                            ) : null}
+                        </div>
                         <EditorButton
                             label="채보 내보내기"
                             onClick={exportChart}
@@ -906,6 +991,29 @@ function ChartTimingEditorWorkspace({
                                 onToolChange={setNoteTool}
                             />
                         )}
+                        {vid2bmapFile && editorMode === "notes" ? (
+                            <dl
+                                aria-label="가져오기 미리보기 범례"
+                                className="border-border bg-bg/90 pointer-events-none absolute top-3 right-3 flex flex-col gap-1 rounded-md border px-2.5 py-2 text-xs shadow-lg"
+                            >
+                                <div className="flex items-center gap-2">
+                                    <dt className="bg-score h-2.5 w-5 rounded-sm" />
+                                    <dd>넣을 노트</dd>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <dt className="bg-text-secondary/40 h-2.5 w-5 rounded-sm" />
+                                    <dd>지금 초안(흐리게)</dd>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <dt className="border-danger h-2.5 w-5 rounded-sm border-2" />
+                                    <dd>빠질 노트</dd>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <dt className="bg-text-primary/15 border-text-primary h-2.5 w-5 border-x-2" />
+                                    <dd>목록에서 고른 곳</dd>
+                                </div>
+                            </dl>
+                        ) : null}
                         <div className="border-border bg-surface/95 absolute top-3 left-3 flex items-center gap-1 rounded-md border p-1 shadow-lg">
                             <button
                                 type="button"
@@ -937,7 +1045,18 @@ function ChartTimingEditorWorkspace({
                         </div>
                     </main>
 
-                    {editorMode === "timing" ? (
+                    {vid2bmapFile ? (
+                        <Vid2bmapImportPanel
+                            key={`${vid2bmapFile.name}-${vid2bmapFile.lastModified}`}
+                            file={vid2bmapFile}
+                            onClose={() => setVid2bmapFile(null)}
+                            onReplaceFile={() =>
+                                vid2bmapInputRef.current?.click()
+                            }
+                            onSeek={(time) => void seek(time)}
+                            onBeforeApply={saveBeforeImport}
+                        />
+                    ) : editorMode === "timing" ? (
                         <TimingInspector />
                     ) : (
                         <NoteInspector />
@@ -952,6 +1071,13 @@ function ChartTimingEditorWorkspace({
                             accept="audio/*,.mp3,.ogg,.wav,.m4a,.flac"
                             className="sr-only"
                             onChange={(event) => void handleAudioFile(event)}
+                        />
+                        <input
+                            ref={vid2bmapInputRef}
+                            type="file"
+                            accept=".zip,application/zip"
+                            className="sr-only"
+                            onChange={handleVid2bmapFile}
                         />
                         <input
                             ref={importInputRef}

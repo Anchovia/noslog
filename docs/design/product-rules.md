@@ -379,6 +379,24 @@ old design-stage checklist. Changes to material behavior require a user decision
   can change, and options can be added if the poll allowed it. After the deadline nothing can change, and
   votes are refused. Deleting the post deletes the poll and its votes.
 
+## Chart import from video extraction (2026-09-23)
+
+- The admin chart editor can import a vid2bmap result zip (Kim Yeonghun · Choi Sunghee, KAIST,
+  MIT) as a preview. Nothing changes until "초안에 넣기"; it writes the draft only (publishing
+  stays separate), saves the current draft as a revision first, and is undoable. Videos and
+  frames never reach the site — extraction runs on the operator's own computer.
+- Notes are placed by beat lines, not video time: a note's beat is its position between the
+  neighbouring bar lines the game draws each beat (one line = one beat of the active time
+  signature). Only the first bar line's beat is chosen by a person; when the draft already has
+  notes it starts at the position that agrees with the most of them.
+- Snap to the suggested grid (smallest average offset per grid step); only notes that a grid
+  squeezes onto one spot are re-snapped finer. Same-lane reads within 3 frames are one note.
+  Hands are guessed by lane centre and the centre notes are selected for review. Glissando
+  pieces are not imported; trills are split in the middle and flagged.
+- Against an existing draft every difference is listed (same tick, overlapping lanes = same
+  note; hand is not compared) and chosen per place; notes after the draft are a separate
+  new-section toggle. An import that would create overlapping notes cannot be applied.
+
 ## Official X news (2026-09-19)
 
 - Home reads the persisted latest post and successful ko/en translations through the data cache; it never calls X or Gemini. New posts are checked every 12 hours outside page rendering using `since_id`. Successful translations have no time-based expiry.

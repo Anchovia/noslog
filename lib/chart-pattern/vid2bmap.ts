@@ -6,6 +6,7 @@
  * 게임은 박마다 선을 그린다(Altale: BPM 90 · 40프레임 간격 = 1박). 첫 박자선이 곡의 몇 번째 틱인지는 사람이 정한다.
  * Altale Real 앞부분 232개로 박 위치 · 칸 · 폭 · 종류가 모두 일치함을 확인(2026-09-23).
  */
+import { findChartNoteConflicts } from "./editor";
 import { CHART_LANE_COUNT, CHART_TICKS_PER_QUARTER } from "./schema";
 import type { ChartNote, ChartNoteType, ChartTimingPoint } from "./schema";
 import { sortTimingPoints } from "./timing";
@@ -45,10 +46,14 @@ export type Vid2bmapWarning =
     | { kind: "endCheck"; lastBarTick: number }
     | {
           kind: "bpmMismatch";
+          /** 박자선 간격이 타이밍과 다른 구간(이어진 곳은 하나로) */
           tick: number;
+          endTick: number;
           estimatedBpm: number;
           chartBpm: number;
       }
+    /** 기본 격자로는 한 자리로 뭉쳐 겹친 빠른 노트를 더 촘촘한 격자로 맞춘 수 */
+    | { kind: "denseSnap"; count: number; tick: number }
     | { kind: "shortTenuto"; count: number }
     | { kind: "trillSplit"; count: number };
 
@@ -248,7 +253,18 @@ function barWarnings(
     const rows = result.barRows;
     const sorted = sortTimingPoints(options.timingPoints);
     const intervals = rows.slice(1).map((row, index) => row - rows[index]);
-    let lastBpmWarning: number | null = null;
+    let run: { tick: number; bpms: number[]; chartBpm: number } | null = null;
+    const closeRun = (endTick: number) => {
+        if (!run) return;
+        warnings.push({
+            kind: "bpmMismatch",
+            tick: run.tick,
+            endTick,
+            estimatedBpm: Math.round(median(run.bpms) * 10) / 10,
+            chartBpm: run.chartBpm,
+        });
+        run = null;
+    };
     intervals.forEach((interval, index) => {
         const window = intervals.slice(Math.max(0, index - 4), index + 5);
         const local = median(window);
@@ -259,22 +275,18 @@ function barWarnings(
         else if (interval < local * 0.6)
             warnings.push({ kind: "extraBar", tick });
         if (!result.fps) return;
-        // BPM 추정 — 프레임 드롭 보정으로 간격이 ±10% 흔들려 주변 9개 중앙값으로
+        // BPM 추정 — 프레임 드롭 보정으로 간격이 ±10% 흔들려 주변 9개 중앙값으로. 벗어난 박이 이어지면 한 구간
         const point = activePoint(sorted, tick);
         const estimatedBpm =
             ((60 * result.fps) / local) *
             (beatTicksOf(point) / CHART_TICKS_PER_QUARTER);
         const off = Math.abs(estimatedBpm - point.bpm) / point.bpm > 0.05;
-        if (off && (lastBpmWarning === null || index - lastBpmWarning > 8)) {
-            warnings.push({
-                kind: "bpmMismatch",
-                tick,
-                estimatedBpm: Math.round(estimatedBpm * 10) / 10,
-                chartBpm: point.bpm,
-            });
-            lastBpmWarning = index;
-        }
+        if (off) {
+            if (!run) run = { tick, bpms: [], chartBpm: point.bpm };
+            run.bpms.push(estimatedBpm);
+        } else closeRun(tick);
     });
+    closeRun(vid2bmapTickAt(rows.length - 1, options.firstBarTick, sorted));
     return warnings;
 }
 
@@ -295,7 +307,8 @@ export function convertVid2bmap(
             firstBarTick,
             timingPoints
         );
-    const output: ChartNote[] = [];
+    let output: ChartNote[] = [];
+    const rawTicks = new Map<string, number>();
     const handUncertainIds: string[] = [];
     let shortTenuto = 0;
     let trillSplit = 0;
@@ -347,7 +360,32 @@ export function convertVid2bmap(
         if (center >= HAND_UNCERTAIN_MIN && center <= HAND_UNCERTAIN_MAX) {
             handUncertainIds.push(chartNote.id);
         }
+        rawTicks.set(chartNote.id, rawTick);
         output.push(chartNote);
+    }
+
+    // 빠른 구간(Altale 후반 약 0.1박 간격): 기본 격자로 같은 자리에 뭉쳐 칸이 겹친 노트만 ×2 · ×4 격자로 다시 맞춘다.
+    // 이미 겹치지 않는 노트는 건드리지 않는다(앞부분 232개 정답 그대로)
+    const refined = new Set<string>();
+    for (const factor of [2, 4]) {
+        const clashing = new Set(
+            findChartNoteConflicts(output, CHART_TICKS_PER_QUARTER).flatMap(
+                ({ firstId, secondId }) => [firstId, secondId]
+            )
+        );
+        if (clashing.size === 0) break;
+        output = output.map((note) => {
+            const raw = rawTicks.get(note.id);
+            if (!clashing.has(note.id) || raw === undefined) return note;
+            const tick = snapVid2bmapTick(
+                raw,
+                snapDivisor * factor,
+                timingPoints
+            );
+            if (tick === note.tick) return note;
+            refined.add(note.id);
+            return { ...note, tick };
+        });
     }
 
     const warnings = barWarnings(result, options);
@@ -359,6 +397,17 @@ export function convertVid2bmap(
             timingPoints
         ),
     });
+    if (refined.size > 0) {
+        warnings.push({
+            kind: "denseSnap",
+            count: refined.size,
+            tick: Math.min(
+                ...output
+                    .filter((note) => refined.has(note.id))
+                    .map((note) => note.tick)
+            ),
+        });
+    }
     if (shortTenuto > 0)
         warnings.push({ kind: "shortTenuto", count: shortTenuto });
     if (trillSplit > 0)
@@ -436,4 +485,221 @@ export function diffChartNotes(
     }
     diff.onlyCurrent = current.filter((note) => !used.has(note.id));
     return diff;
+}
+
+const FRACTION_GLYPHS: Record<string, string> = {
+    "1/2": "½",
+    "1/3": "⅓",
+    "2/3": "⅔",
+    "1/4": "¼",
+    "3/4": "¾",
+    "1/6": "⅙",
+    "5/6": "⅚",
+    "1/8": "⅛",
+    "3/8": "⅜",
+    "5/8": "⅝",
+    "7/8": "⅞",
+};
+
+function gcd(a: number, b: number): number {
+    return b === 0 ? a : gcd(b, a % b);
+}
+
+/**
+ * 틱 → 「N마디 M박」(박 안 위치는 분수 글자). 타이밍 포인트마다 새 마디가 시작한다고 본다(에디터 마디 번호와 같음).
+ * 첫 포인트보다 앞은 0마디 · 음수 마디.
+ */
+export function chartPositionLabel(
+    tick: number,
+    timingPoints: ChartTimingPoint[]
+) {
+    const sorted = sortTimingPoints(timingPoints);
+    let measureOffset = 0;
+    let point = sorted[0];
+    for (let index = 0; index < sorted.length; index += 1) {
+        const candidate = sorted[index];
+        if (candidate.tick > tick && index > 0) break;
+        if (index > 0) {
+            const previous = sorted[index - 1];
+            const measureTicks = beatTicksOf(previous) * previous.numerator;
+            measureOffset += Math.ceil(
+                (candidate.tick - previous.tick) / measureTicks
+            );
+        }
+        point = candidate;
+    }
+    const beatTicks = beatTicksOf(point);
+    const measureTicks = beatTicks * point.numerator;
+    const measureIndex = Math.floor((tick - point.tick) / measureTicks);
+    const inMeasure = tick - point.tick - measureIndex * measureTicks;
+    const beat = Math.floor(inMeasure / beatTicks);
+    const remainder = Math.round(inMeasure - beat * beatTicks);
+    let fraction = "";
+    if (remainder > 0) {
+        const divisor = gcd(remainder, beatTicks);
+        const key = `${remainder / divisor}/${beatTicks / divisor}`;
+        fraction = FRACTION_GLYPHS[key] ?? ` ${key}`;
+    }
+    return `${measureOffset + measureIndex + 1}마디 ${beat + 1}${fraction}박`;
+}
+
+export type Vid2bmapMergeKind =
+    "changed" | "moved" | "onlyCurrent" | "onlyIncoming";
+
+export interface Vid2bmapMergeItem {
+    key: string;
+    kind: Vid2bmapMergeKind;
+    tick: number;
+    current: ChartNote[];
+    incoming: ChartNote[];
+    fields: ChartNoteDiffField[];
+}
+
+export interface Vid2bmapMergePlan {
+    items: Vid2bmapMergeItem[];
+    /** 지금 초안의 마지막 노트 뒤 — 목록 대신 한꺼번에 넣거나 뺀다 */
+    newSection: ChartNote[];
+    sameCount: number;
+}
+
+/**
+ * 비교 결과 → 고를 항목. 같은 틱에서 칸이 안 겹쳐 「내 초안에만 + 가져온 것에만」 으로 갈린 것은 한 항목(moved)으로 묶는다.
+ * 기본 선택(defaultVid2bmapChoice): 달라짐 · 옮겨짐 · 초안 범위 안 새 노트 = 가져온 것, 내 초안에만 = 내 것.
+ */
+export function planVid2bmapMerge(
+    current: ChartNote[],
+    diff: ChartNoteDiff
+): Vid2bmapMergePlan {
+    const lastCurrentTick = current.reduce(
+        (max, note) => Math.max(max, note.tick + note.durationTicks),
+        Number.NEGATIVE_INFINITY
+    );
+    const items: Vid2bmapMergeItem[] = diff.changed.map((change) => ({
+        key: `c:${change.current.id}`,
+        kind: "changed",
+        tick: change.current.tick,
+        current: [change.current],
+        incoming: [change.incoming],
+        fields: change.fields,
+    }));
+    const byTick = new Map<
+        number,
+        { current: ChartNote[]; incoming: ChartNote[] }
+    >();
+    const group = (tick: number) => {
+        const entry = byTick.get(tick) ?? { current: [], incoming: [] };
+        byTick.set(tick, entry);
+        return entry;
+    };
+    for (const note of diff.onlyCurrent) group(note.tick).current.push(note);
+    const newSection: ChartNote[] = [];
+    for (const note of diff.onlyIncoming) {
+        if (note.tick > lastCurrentTick) newSection.push(note);
+        else group(note.tick).incoming.push(note);
+    }
+    for (const [tick, entry] of byTick) {
+        const kind: Vid2bmapMergeKind =
+            entry.current.length > 0 && entry.incoming.length > 0
+                ? "moved"
+                : entry.current.length > 0
+                  ? "onlyCurrent"
+                  : "onlyIncoming";
+        items.push({
+            key: `t:${tick}`,
+            kind,
+            tick,
+            current: entry.current,
+            incoming: entry.incoming,
+            fields: [],
+        });
+    }
+    items.sort((a, b) => a.tick - b.tick || a.key.localeCompare(b.key));
+    return { items, newSection, sameCount: diff.same.length };
+}
+
+export type Vid2bmapChoice = "current" | "incoming";
+
+export function defaultVid2bmapChoice(item: Vid2bmapMergeItem): Vid2bmapChoice {
+    return item.kind === "onlyCurrent" ? "current" : "incoming";
+}
+
+/** 고른 대로 합친 노트 목록과 새로 들어간 노트 id. 같은 노트는 내 것을 그대로 둔다 */
+export function applyVid2bmapMerge(
+    current: ChartNote[],
+    plan: Vid2bmapMergePlan,
+    choices: Record<string, Vid2bmapChoice>,
+    includeNewSection: boolean
+) {
+    const removed = new Set<string>();
+    const added: ChartNote[] = [];
+    for (const item of plan.items) {
+        const choice = choices[item.key] ?? defaultVid2bmapChoice(item);
+        if (choice !== "incoming") continue;
+        for (const note of item.current) removed.add(note.id);
+        added.push(...item.incoming);
+    }
+    if (includeNewSection) added.push(...plan.newSection);
+    return {
+        notes: [...current.filter((note) => !removed.has(note.id)), ...added],
+        removedIds: [...removed],
+        addedIds: added.map((note) => note.id),
+    };
+}
+
+/** 틱 길이 → 「⅙박」 · 「1½박」 · 「2박」 (그 자리 박자표의 한 박 기준) */
+export function beatLengthLabel(ticks: number, beatTicks: number) {
+    const whole = Math.floor(ticks / beatTicks);
+    const remainder = Math.round(ticks - whole * beatTicks);
+    let fraction = "";
+    if (remainder > 0) {
+        const divisor = gcd(remainder, beatTicks);
+        const key = `${remainder / divisor}/${beatTicks / divisor}`;
+        fraction = FRACTION_GLYPHS[key] ?? `${whole > 0 ? " " : ""}${key}`;
+    }
+    return `${whole > 0 || !fraction ? whole : ""}${fraction}박`;
+}
+
+/** 박자선 간격 중앙값으로 본 곡 BPM(첫 타이밍 포인트 박자표 기준). fps 를 모르면 null */
+export function estimateVid2bmapBpm(
+    result: Vid2bmapResult,
+    timingPoints: ChartTimingPoint[]
+) {
+    if (!result.fps || result.barRows.length < 3) return null;
+    const rows = result.barRows;
+    const intervals = rows.slice(1).map((row, index) => row - rows[index]);
+    const origin = sortTimingPoints(timingPoints)[0];
+    const bpm =
+        ((60 * result.fps) / median(intervals)) *
+        (beatTicksOf(origin) / CHART_TICKS_PER_QUARTER);
+    return Math.round(bpm * 10) / 10;
+}
+
+/**
+ * 초안에 노트가 있으면 첫 박자선을 초안과 가장 많이 맞는 곳으로 — 기본값에서 앞뒤 range 박을 시험해
+ * 「같음 + 달라짐」(같은 틱 · 칸 겹침) 이 가장 많은 위치. 초안이 비었거나 하나도 안 맞으면 null
+ */
+export function alignVid2bmapFirstBarTick(
+    result: Vid2bmapResult,
+    notes: Vid2bmapRawNote[],
+    options: Omit<Vid2bmapOptions, "firstBarTick" | "createId">,
+    currentNotes: ChartNote[],
+    startTick: number,
+    range = 32
+) {
+    if (currentNotes.length === 0) return null;
+    const sorted = sortTimingPoints(options.timingPoints);
+    let best: { tick: number; matches: number } | null = null;
+    for (let step = -range; step <= range; step += 1) {
+        const tick = vid2bmapTickAt(step, startTick, sorted);
+        let serial = 0;
+        const { notes: converted } = convertVid2bmap(result, notes, {
+            ...options,
+            firstBarTick: tick,
+            createId: () => `a${serial++}`,
+        });
+        const diff = diffChartNotes(currentNotes, converted);
+        const matches = diff.same.length + diff.changed.length;
+        if (!best || matches > best.matches) best = { tick, matches };
+    }
+    return best && best.matches > 0 ? best : null;
 }

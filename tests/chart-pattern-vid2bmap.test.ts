@@ -3,7 +3,14 @@ import { describe, expect, it } from "vitest";
 import altale from "./fixtures/vid2bmap-altale-real.json";
 import type { ChartNote, ChartTimingPoint } from "@/lib/chart-pattern/schema";
 import {
+    alignVid2bmapFirstBarTick,
+    applyVid2bmapMerge,
+    beatLengthLabel,
+    estimateVid2bmapBpm,
+    chartPositionLabel,
     collectVid2bmapNotes,
+    defaultVid2bmapChoice,
+    planVid2bmapMerge,
     convertVid2bmap,
     defaultVid2bmapFirstBarTick,
     diffChartNotes,
@@ -309,8 +316,8 @@ describe("vid2bmap warnings", () => {
         expect(kinds).toContain("missingBar");
         expect(kinds).toContain("extraBar");
         expect(kinds).toContain("endCheck");
-        // 40프레임 간격 @60fps = 90 BPM ≠ 120
-        expect(kinds).toContain("bpmMismatch");
+        // 40프레임 간격 @60fps = 90 BPM ≠ 120 — 곡 전체가 한 구간이라 경고 하나
+        expect(kinds.filter((kind) => kind === "bpmMismatch")).toHaveLength(1);
     });
 
     it("never imports glissando pieces and splits a trill into two positions", () => {
@@ -367,5 +374,222 @@ describe("chart note diff", () => {
         ).toEqual([["b", "y", ["lane"]]]);
         expect(diff.onlyCurrent.map((n) => n.id)).toEqual(["c"]);
         expect(diff.onlyIncoming.map((n) => n.id)).toEqual(["z"]);
+    });
+});
+
+describe("chart position label", () => {
+    const altalePoints = [point(0, 60, 90, 3, 4)];
+
+    it("names measures and beats with fraction glyphs, before the first point as measure 0", () => {
+        expect(chartPositionLabel(-480, altalePoints)).toBe("0마디 3박");
+        expect(chartPositionLabel(1200, altalePoints)).toBe("1마디 3½박");
+        expect(chartPositionLabel(1360, altalePoints)).toBe("1마디 3⅚박");
+        expect(chartPositionLabel(1440, altalePoints)).toBe("2마디 1박");
+    });
+
+    it("restarts measures at each timing point", () => {
+        const points = [point(0, 0, 120, 4, 4), point(1920, 1000, 120, 6, 8)];
+        expect(chartPositionLabel(1920, points)).toBe("2마디 1박");
+        expect(chartPositionLabel(1920 + 240 * 6 + 120, points)).toBe(
+            "3마디 1½박"
+        );
+    });
+});
+
+describe("vid2bmap merge plan", () => {
+    const note = (
+        id: string,
+        tick: number,
+        lane: number,
+        extra: Partial<ChartNote> = {}
+    ): ChartNote => ({
+        id,
+        type: "standard",
+        hand: "left",
+        tick,
+        durationTicks: 0,
+        lane,
+        width: 3,
+        points: [],
+        ...extra,
+    });
+    const current = [
+        note("a", 0, 3),
+        note("b", 480, 10),
+        note("c", 960, 20),
+        note("d", 1440, 5),
+    ];
+    const incoming = [
+        note("w", 0, 3),
+        note("x", 480, 11),
+        note("y", 960, 16),
+        note("z", 1200, 8),
+        note("n", 3000, 1),
+    ];
+    const plan = planVid2bmapMerge(current, diffChartNotes(current, incoming));
+
+    it("groups a moved note at one tick and keeps notes after the draft as a new section", () => {
+        expect(plan.sameCount).toBe(1);
+        expect(plan.items.map((item) => [item.kind, item.tick])).toEqual([
+            ["changed", 480],
+            ["moved", 960],
+            ["onlyIncoming", 1200],
+            ["onlyCurrent", 1440],
+        ]);
+        expect(plan.newSection.map((n) => n.id)).toEqual(["n"]);
+        expect(plan.items.map(defaultVid2bmapChoice)).toEqual([
+            "incoming",
+            "incoming",
+            "incoming",
+            "current",
+        ]);
+    });
+
+    it("applies choices without duplicating same notes", () => {
+        const byDefault = applyVid2bmapMerge(current, plan, {}, true);
+        expect(byDefault.notes.map((n) => n.id).sort()).toEqual([
+            "a",
+            "d",
+            "n",
+            "x",
+            "y",
+            "z",
+        ]);
+        expect(byDefault.removedIds.sort()).toEqual(["b", "c"]);
+        const keepMine = applyVid2bmapMerge(
+            current,
+            plan,
+            Object.fromEntries(plan.items.map((item) => [item.key, "current"])),
+            false
+        );
+        expect(keepMine.notes.map((n) => n.id).sort()).toEqual([
+            "a",
+            "b",
+            "c",
+            "d",
+        ]);
+        expect(keepMine.addedIds).toEqual([]);
+    });
+});
+
+describe("vid2bmap labels", () => {
+    it("writes lengths in beats", () => {
+        expect(beatLengthLabel(80, 480)).toBe("⅙박");
+        expect(beatLengthLabel(720, 480)).toBe("1½박");
+        expect(beatLengthLabel(960, 480)).toBe("2박");
+    });
+
+    it("estimates the song BPM from the median bar interval", () => {
+        const rows = [0, 40, 80, 121, 160, 199, 240];
+        expect(
+            estimateVid2bmapBpm(
+                {
+                    fps: 60,
+                    startSec: 0,
+                    barRows: rows,
+                    simple: [],
+                    tenuto: [],
+                    trill: [],
+                    glissando: [],
+                },
+                [point(0, 0, 90, 3, 4)]
+            )
+        ).toBe(90);
+    });
+});
+
+describe("vid2bmap alignment with an existing draft", () => {
+    const result = altale as unknown as Vid2bmapResult & {
+        expected: {
+            timingPoint: ChartTimingPoint;
+            notes: [number, number, number, string, number, string][];
+        };
+    };
+    const timingPoints = [result.expected.timingPoint];
+    const draft: ChartNote[] = result.expected.notes.map(
+        ([tick, lane, width, type, durationTicks, hand], index) => ({
+            id: `d${index}`,
+            type: type as ChartNote["type"],
+            hand: hand as ChartNote["hand"],
+            tick,
+            durationTicks,
+            lane,
+            width,
+            points: [],
+        })
+    );
+    const { notes } = collectVid2bmapNotes(result);
+
+    it("finds the first bar line the draft agrees with, from a default a few beats off", () => {
+        const start = defaultVid2bmapFirstBarTick(
+            result.barRows,
+            notes,
+            timingPoints
+        );
+        const aligned = alignVid2bmapFirstBarTick(
+            result,
+            notes,
+            {
+                timingPoints,
+                snapDivisor: 6,
+                include: { standard: true, tenuto: true, trill: true },
+            },
+            draft,
+            start
+        );
+        expect(aligned?.tick).toBe(-480);
+        expect(aligned?.matches).toBe(232);
+    });
+
+    it("does nothing for an empty draft", () => {
+        expect(
+            alignVid2bmapFirstBarTick(
+                result,
+                notes,
+                {
+                    timingPoints,
+                    snapDivisor: 6,
+                    include: { standard: true, tenuto: true, trill: true },
+                },
+                [],
+                0
+            )
+        ).toBeNull();
+    });
+});
+
+describe("vid2bmap dense passages", () => {
+    it("re-snaps only the notes a coarse grid squeezes onto one spot", () => {
+        const dense: Vid2bmapResult = {
+            fps: 60,
+            startSec: 0,
+            barRows: [0, 120, 240, 360],
+            // 박자선 간격 120 = 1박. 1.5박 · 1.55박(칸이 겹침) + 2⅓박(1/6박에 딱 맞음)
+            simple: [
+                [180, 5, 7],
+                [186, 6, 8],
+                [280, 20, 22],
+            ],
+            tenuto: [],
+            trill: [],
+            glissando: [],
+        };
+        const { notes } = collectVid2bmapNotes(dense);
+        const conversion = convertVid2bmap(dense, notes, {
+            timingPoints: [point(0, 0, 90, 3, 4)],
+            firstBarTick: 0,
+            snapDivisor: 6,
+            include: { standard: true, tenuto: true, trill: true },
+        });
+        const ticks = conversion.notes
+            .map((note) => note.tick)
+            .sort((a, b) => a - b);
+        // 1/6박(80)로는 둘 다 720 → 겹침. 겹친 둘만 1/12박(40)으로 720 · 760, 나머지는 그대로 1120
+        expect(ticks).toEqual([720, 760, 1120]);
+        expect(conversion.warnings).toContainEqual({
+            kind: "denseSnap",
+            count: 1,
+            tick: 760,
+        });
     });
 });

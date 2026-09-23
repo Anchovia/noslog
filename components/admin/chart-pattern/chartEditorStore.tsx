@@ -17,6 +17,16 @@ import type {
 import { sortTimingPoints } from "@/lib/chart-pattern/timing";
 
 export type ChartSaveStatus = "idle" | "saving" | "saved" | "error";
+
+/** 영상 추출 가져오기 미리보기 — 캔버스에만 그리고 초안 · 되돌리기 기록에는 들어가지 않는다 */
+export interface ChartImportPreview {
+    /** 넣으면 새로 들어갈 노트(노랑) */
+    incoming: ChartNote[];
+    /** 넣으면 빠질 지금 초안 노트 */
+    removingIds: string[];
+    /** 목록에서 고른 곳 — 캔버스에 띠로 표시 */
+    focusTick: number | null;
+}
 export type ChartPlaybackRate = 0.25 | 0.5 | 0.75 | 1 | 1.5 | 2;
 
 type HistoryEntry =
@@ -54,6 +64,8 @@ interface ChartEditorState {
     lastSavedAt: Date | null;
     undoStack: HistoryEntry[];
     redoStack: HistoryEntry[];
+    importPreview: ChartImportPreview | null;
+    setImportPreview: (preview: ChartImportPreview | null) => void;
     selectTimingPoint: (id: string) => void;
     selectNotes: (ids: string[]) => void;
     toggleNoteSelection: (id: string) => void;
@@ -127,6 +139,8 @@ function createChartEditorStore(input: CreateChartEditorStoreInput) {
         lastSavedAt: input.updatedAt,
         undoStack: [],
         redoStack: [],
+        importPreview: null,
+        setImportPreview: (preview) => set({ importPreview: preview }),
         selectTimingPoint: (id) => set({ selectedTimingPointId: id }),
         selectNotes: (ids) =>
             set({
