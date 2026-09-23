@@ -1723,4 +1723,51 @@ export const koMessages = {
     "arcades.recentChecks": "최근 확인",
     "arcades.info": "정보",
     "arcades.filters": "필터",
+    "contribution.loginRequired": "로그인하면 정보를 제안할 수 있습니다.",
+    "contribution.submitError":
+        "제안하지 못했습니다. 잠시 뒤 다시 시도해 주세요.",
+    "contribution.add": "추가",
+    "contribution.addLabel": "{field} 추가",
+    "contribution.suggestEdit": "수정 제안",
+    "contribution.more": "{field} 더보기",
+    "contribution.pending": "검토 중",
+    "contribution.proposal.titleAdd": "{field} 추가",
+    "contribution.proposal.titleEdit": "{field} 수정 제안",
+    "contribution.proposal.current": "지금 {value}",
+    "contribution.proposal.pendingNotice":
+        "검토 중인 내 제안 {value} — 다시 내면 새 값으로 바뀝니다.",
+    "contribution.proposal.help.bpm": "변속이 있으면 최소–최대(예: 120-180)",
+    "contribution.proposal.help.note_count": "결과 화면의 총 노트 수",
+    "contribution.proposal.help.duration": "분:초(예: 2:04)",
+    "contribution.proposal.evidence": "근거",
+    "contribution.proposal.evidence.video": "영상",
+    "contribution.proposal.evidence.official": "공식",
+    "contribution.proposal.evidence.direct": "직접 확인",
+    "contribution.proposal.url": "주소",
+    "contribution.proposal.urlPlaceholder": "https://",
+    "contribution.proposal.note": "설명",
+    "contribution.proposal.notePlaceholder.video":
+        "시각 · 설명(예: 1:23 결과 화면)",
+    "contribution.proposal.notePlaceholder.official": "설명(선택)",
+    "contribution.proposal.notePlaceholder.direct": "어떻게 확인했는지",
+    "contribution.proposal.notice": "운영자가 확인한 뒤 반영됩니다.",
+    "contribution.proposal.submit": "제안하기",
+    "contribution.proposal.submitting": "보내는 중",
+    "contribution.proposal.submitted":
+        "제안했습니다 · 운영자가 확인한 뒤 반영됩니다.",
+    "contribution.proposal.checkInput": "입력한 값을 확인해 주세요.",
+    "contribution.proposal.same": "지금 값과 같습니다.",
+    "contribution.proposal.dailyLimit":
+        "오늘은 더 제안할 수 없습니다. 내일 다시 시도해 주세요.",
+    "contribution.proposal.urlRequired": "근거 주소를 넣어 주세요(https://…).",
+    "contribution.proposal.urlInvalid": "주소 형식을 확인해 주세요.",
+    "contribution.proposal.noteRequired": "어떻게 확인했는지 적어 주세요.",
+    "contribution.proposal.noteTooLong": "설명은 200자까지 쓸 수 있습니다.",
+    "contribution.proposal.invalid.bpm":
+        "1–999 사이 숫자, 변속이면 최소-최대로 적어 주세요.",
+    "contribution.proposal.invalid.note_count":
+        "1–9,999 사이 숫자를 적어 주세요.",
+    "contribution.proposal.invalid.duration": "분:초로 적어 주세요(예: 2:04).",
+    "contribution.proposal.invalid.released_at":
+        "2017-01-01부터 오늘까지의 날짜를 YYYY-MM-DD로 적어 주세요.",
 } as const;

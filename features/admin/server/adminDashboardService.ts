@@ -84,6 +84,7 @@ export async function getAdminDashboard(
         staleSyncs,
         pendingCatalog,
         pendingOpinions,
+        pendingProposals,
         cohort,
         patternVotes,
         opinions,
@@ -132,6 +133,7 @@ export async function getAdminDashboard(
         }),
         db.musicCatalogCandidate.count({ where: { status: "pending" } }),
         db.communityOpinionReport.count({ where: { status: "pending" } }),
+        db.chartFieldProposal.count({ where: { status: "pending" } }),
         // 전환 흐름 — 기간에 가입한 사람이 연동 · 기록까지 갔는지(이미 있는 데이터만 센다, 2026-09-20)
         db.user.findMany({
             where: {
@@ -364,6 +366,11 @@ export async function getAdminDashboard(
                 label: "의견 신고",
                 count: pendingOpinions,
                 href: "/admin/community",
+            },
+            {
+                label: "기여 제안",
+                count: pendingProposals,
+                href: "/admin/contributions",
             },
         ],
     };

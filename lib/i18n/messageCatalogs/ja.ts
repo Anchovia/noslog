@@ -1736,4 +1736,54 @@ export const jaMessages = {
     "arcades.recentChecks": "最近の確認",
     "arcades.info": "情報",
     "arcades.filters": "フィルター",
+    "contribution.loginRequired": "ログインすると情報を提案できます。",
+    "contribution.submitError":
+        "提案できませんでした。しばらくしてからもう一度お試しください。",
+    "contribution.add": "追加",
+    "contribution.addLabel": "{field}を追加",
+    "contribution.suggestEdit": "修正を提案",
+    "contribution.more": "{field}のその他",
+    "contribution.pending": "確認中",
+    "contribution.proposal.titleAdd": "{field}を追加",
+    "contribution.proposal.titleEdit": "{field}の修正を提案",
+    "contribution.proposal.current": "現在 {value}",
+    "contribution.proposal.pendingNotice":
+        "確認中の提案 {value} — もう一度送ると新しい値に置き換わります。",
+    "contribution.proposal.help.bpm": "ソフランがあれば最小–最大(例: 120-180)",
+    "contribution.proposal.help.note_count": "リザルト画面の総ノート数",
+    "contribution.proposal.help.duration": "分:秒(例: 2:04)",
+    "contribution.proposal.evidence": "根拠",
+    "contribution.proposal.evidence.video": "動画",
+    "contribution.proposal.evidence.official": "公式",
+    "contribution.proposal.evidence.direct": "直接確認",
+    "contribution.proposal.url": "URL",
+    "contribution.proposal.urlPlaceholder": "https://",
+    "contribution.proposal.note": "説明",
+    "contribution.proposal.notePlaceholder.video":
+        "時刻 · 説明(例: 1:23 リザルト画面)",
+    "contribution.proposal.notePlaceholder.official": "説明(任意)",
+    "contribution.proposal.notePlaceholder.direct": "どのように確認したか",
+    "contribution.proposal.notice": "運営者が確認してから反映されます。",
+    "contribution.proposal.submit": "提案する",
+    "contribution.proposal.submitting": "送信中",
+    "contribution.proposal.submitted":
+        "提案しました · 運営者が確認してから反映されます。",
+    "contribution.proposal.checkInput": "入力した値を確認してください。",
+    "contribution.proposal.same": "現在の値と同じです。",
+    "contribution.proposal.dailyLimit":
+        "今日はこれ以上提案できません。明日もう一度お試しください。",
+    "contribution.proposal.urlRequired":
+        "根拠のURLを入力してください(https://…)。",
+    "contribution.proposal.urlInvalid": "URLの形式を確認してください。",
+    "contribution.proposal.noteRequired":
+        "どのように確認したか書いてください。",
+    "contribution.proposal.noteTooLong": "説明は200文字までです。",
+    "contribution.proposal.invalid.bpm":
+        "1–999の数字、ソフランなら最小-最大で入力してください。",
+    "contribution.proposal.invalid.note_count":
+        "1–9,999の数字を入力してください。",
+    "contribution.proposal.invalid.duration":
+        "分:秒で入力してください(例: 2:04)。",
+    "contribution.proposal.invalid.released_at":
+        "2017-01-01から今日までの日付をYYYY-MM-DDで入力してください。",
 } satisfies Messages;

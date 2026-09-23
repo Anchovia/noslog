@@ -85,6 +85,8 @@ model User {
   communityEvents            CommunityEvent[]            @relation("CommunityEventAuthor")
   communityEventsReviewed    CommunityEvent[]            @relation("CommunityEventReviewer")
   pollVotes                  PollVote[]
+  fieldProposals             ChartFieldProposal[]        @relation("ChartFieldProposalAuthor")
+  fieldProposalsReviewed     ChartFieldProposal[]        @relation("ChartFieldProposalReviewer")
 
   @@index([grade_basic, id])
   @@index([grade_recital, id])
@@ -515,21 +517,59 @@ model Music {
 // 악곡 · 채보 데이터 칸(노트 수 · 공식 레벨 · BPM · 길이 · 수록일 · 해금 조건)에 값을 넣을 때마다 출처를 한 줄씩 쌓음
 // source: play_records(사용자 기록 역산) · bemaniwiki · remywiki · manual. 위키 값은 기록으로 다시 구한 값이 생기면 바꿀 수 있다
 model ChartFieldSource {
-  id         Int         @id @default(autoincrement())
-  chartId    Int?        @map("chart_id")
-  chart      MusicChart? @relation(fields: [chartId], references: [id], onDelete: Cascade)
-  musicIndex String?     @map("music_index")
-  music      Music?      @relation(fields: [musicIndex], references: [index], onDelete: Cascade)
+  id         Int                 @id @default(autoincrement())
+  chartId    Int?                @map("chart_id")
+  chart      MusicChart?         @relation(fields: [chartId], references: [id], onDelete: Cascade)
+  musicIndex String?             @map("music_index")
+  music      Music?              @relation(fields: [musicIndex], references: [index], onDelete: Cascade)
   field      String
   value      String
   source     String
-  sourceUrl  String?     @map("source_url")
+  sourceUrl  String?             @map("source_url")
   note       String?
-  createdAt  DateTime    @default(now()) @map("created_at")
+  // 유저 기여로 반영된 값이면 그 제안(누가 · 근거) — 「출처 보기」 가 여기로 이어진다(2026-09-23)
+  proposalId Int?                @unique @map("proposal_id")
+  proposal   ChartFieldProposal? @relation(fields: [proposalId], references: [id], onDelete: SetNull)
+  createdAt  DateTime            @default(now()) @map("created_at")
 
   @@index([chartId, field])
   @@index([musicIndex, field])
   @@map("chart_field_sources")
+}
+
+// 유저가 제안한 채보 정보 값(BPM · 노트 수 · 길이 · 수록일) — 운영자가 반영하거나 사유와 함께 반려한다(2026-09-23)
+// 같은 사람 · 같은 채보 · 같은 칸의 대기 중 제안은 하나 — 다시 내면 값을 바꾼다
+model ChartFieldProposal {
+  id            Int               @id @default(autoincrement())
+  userId        Int               @map("user_id")
+  user          User              @relation("ChartFieldProposalAuthor", fields: [userId], references: [id], onDelete: Cascade)
+  chartId       Int               @map("chart_id")
+  chart         MusicChart        @relation(fields: [chartId], references: [id], onDelete: Cascade)
+  // bpm | note_count | duration | released_at
+  field         String
+  // 제안 값 — BPM 「60」 · 「60-120」, 노트 수 정수, 길이 초, 수록일 YYYY-MM-DD
+  value         String
+  // 제안할 때 화면에 있던 값(비어 있었으면 null) — 그 사이 값이 바뀌었는지 검토에서 본다
+  previousValue String?           @map("previous_value")
+  // video | official | direct
+  evidenceKind  String            @map("evidence_kind")
+  evidenceUrl   String?           @map("evidence_url")
+  evidenceNote  String?           @map("evidence_note")
+  // pending | applied | rejected | withdrawn
+  status        String            @default("pending")
+  rejectReason  String?           @map("reject_reason")
+  reviewedById  Int?              @map("reviewed_by_id")
+  reviewedBy    User?             @relation("ChartFieldProposalReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+  reviewedAt    DateTime?         @map("reviewed_at")
+  createdAt     DateTime          @default(now()) @map("created_at")
+  updatedAt     DateTime          @updatedAt @map("updated_at")
+  source        ChartFieldSource?
+
+  @@index([status, createdAt])
+  @@index([userId, createdAt])
+  @@index([chartId, field, status])
+  @@index([reviewedById])
+  @@map("chart_field_proposals")
 }
 
 // 해금 조건 원문(이벤트 · 곡 묶음 이름, 일본어)의 언어별 번역 사전 — 이름 하나를 한 번만 번역한다
@@ -614,6 +654,7 @@ model MusicChart {
   tierEntries          TierEntry[]
   tierPlacementHistory TierPlacementHistory[]
   pattern              ChartPattern?
+  fieldProposals       ChartFieldProposal[]
 
   @@unique([music_idx, difficulty])
   @@index([level])

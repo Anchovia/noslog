@@ -1742,4 +1742,55 @@ export const enMessages = {
     "arcades.recentChecks": "Recent checks",
     "arcades.info": "Info",
     "arcades.filters": "Filters",
+    "contribution.loginRequired": "Sign in to suggest information.",
+    "contribution.submitError":
+        "Couldn't send the suggestion. Try again in a moment.",
+    "contribution.add": "Add",
+    "contribution.addLabel": "Add {field}",
+    "contribution.suggestEdit": "Suggest a fix",
+    "contribution.more": "More for {field}",
+    "contribution.pending": "In review",
+    "contribution.proposal.titleAdd": "Add {field}",
+    "contribution.proposal.titleEdit": "Suggest a fix for {field}",
+    "contribution.proposal.current": "Now {value}",
+    "contribution.proposal.pendingNotice":
+        "Your suggestion {value} is in review — sending again replaces it.",
+    "contribution.proposal.help.bpm":
+        "Use min–max if the tempo changes (e.g. 120-180)",
+    "contribution.proposal.help.note_count":
+        "Total notes from the result screen",
+    "contribution.proposal.help.duration": "Minutes:seconds (e.g. 2:04)",
+    "contribution.proposal.evidence": "Source",
+    "contribution.proposal.evidence.video": "Video",
+    "contribution.proposal.evidence.official": "Official",
+    "contribution.proposal.evidence.direct": "In person",
+    "contribution.proposal.url": "Link",
+    "contribution.proposal.urlPlaceholder": "https://",
+    "contribution.proposal.note": "Note",
+    "contribution.proposal.notePlaceholder.video":
+        "Time and note (e.g. 1:23 result screen)",
+    "contribution.proposal.notePlaceholder.official": "Note (optional)",
+    "contribution.proposal.notePlaceholder.direct": "How you checked it",
+    "contribution.proposal.notice":
+        "An admin will review it before it's applied.",
+    "contribution.proposal.submit": "Suggest",
+    "contribution.proposal.submitting": "Sending",
+    "contribution.proposal.submitted":
+        "Suggestion sent · An admin will review it.",
+    "contribution.proposal.checkInput": "Check the values you entered.",
+    "contribution.proposal.same": "That's the same as the current value.",
+    "contribution.proposal.dailyLimit":
+        "You've reached today's limit. Try again tomorrow.",
+    "contribution.proposal.urlRequired": "Add a source link (https://…).",
+    "contribution.proposal.urlInvalid": "Check the link format.",
+    "contribution.proposal.noteRequired": "Describe how you checked it.",
+    "contribution.proposal.noteTooLong": "Notes can be up to 200 characters.",
+    "contribution.proposal.invalid.bpm":
+        "Enter 1–999, or min-max for tempo changes.",
+    "contribution.proposal.invalid.note_count":
+        "Enter a number from 1 to 9,999.",
+    "contribution.proposal.invalid.duration":
+        "Use minutes:seconds (e.g. 2:04).",
+    "contribution.proposal.invalid.released_at":
+        "Enter a date from 2017-01-01 to today as YYYY-MM-DD.",
 } satisfies Messages;

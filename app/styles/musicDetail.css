@@ -263,6 +263,33 @@
     text-align: end;
     min-width: 0;
 }
+/* 기여 받는 칸(BPM · 노트 수 · 길이 · 수록일, 2026-09-23) — 값 · 「검토 중」 · 「추가」 또는 ⋯ 를 한 줄에.
+   줄 높이(글자 20)를 늘리지 않게 태그(24)와 ⋯(컨트롤 높이)는 위아래로 당기고, ⋯ 잉크는 카드 안쪽 선에 맞춰 오른쪽으로 당긴다 */
+.noslog-ui .nl-facts__value {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-facts__empty {
+    color: var(--nl-content-pending);
+}
+.noslog-ui .nl-facts__tag {
+    margin-block: calc(
+        (var(--nl-type-line-height-20) - var(--nl-spacing-24)) / 2
+    );
+    font-variant-numeric: normal;
+}
+.noslog-ui .nl-facts__action {
+    display: flex;
+    margin-block: calc(
+        (var(--nl-type-line-height-20) - var(--nl-control-height)) / 2
+    );
+    margin-inline-end: calc(
+        (var(--nl-icon-medium) - var(--nl-control-height)) / 2
+    );
+}
 .noslog-ui .nl-detail-columns {
     display: grid;
     grid-template-columns: minmax(0, 1fr);

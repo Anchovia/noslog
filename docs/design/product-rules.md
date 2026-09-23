@@ -379,6 +379,27 @@ old design-stage checklist. Changes to material behavior require a user decision
   can change, and options can be added if the poll allowed it. After the deadline nothing can change, and
   votes are refused. Deleting the post deletes the poll and its votes.
 
+## User contributions (2026-09-23)
+
+- Two roles only: **contributors** (any signed-in user) and **admins**. There
+  is no reviewer role; only admins apply or publish. Contribution levels
+  (「기여 Lv.1–6」, later stage) are a reward label and never unlock
+  permissions.
+- Stage 1 — chart info suggestions for BPM, note count, length and release
+  date. A suggestion carries a value plus evidence (video or official link, or
+  a note for "checked myself"). It must differ from the current value. One
+  pending suggestion per user · chart · field (resubmitting replaces it); at
+  most 30 new suggestions per user per 24 hours. Level constants stay
+  admin-only.
+- Admin review (`/admin/contributions`, existing admin look): apply writes the
+  chart value, a `chart_field_sources` row (`source = "contribution"`, linked
+  to the suggestion) and marks it applied in one transaction; reject needs a
+  reason that the author can see. Several suggestions can be applied or
+  rejected at once. Suggestions whose current value changed since they were
+  made are flagged.
+- Later stages (not built yet): contributor points and 「기여 Lv」 labels,
+  profile 「기여」 tab, user chart drafts with timestamped comments.
+
 ## Chart import from video extraction (2026-09-23)
 
 - The admin chart editor can import a vid2bmap result zip (Kim Yeonghun · Choi Sunghee, KAIST,
