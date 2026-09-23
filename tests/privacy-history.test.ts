@@ -20,14 +20,38 @@ describe("개인정보처리방침 이전 버전", () => {
     it("세 언어 모두 새 시행일로 바뀌었고 직전 버전과 다르다", () => {
         const [previous] = PRIVACY_PREVIOUS_VERSIONS;
         const effective = {
-            ko: "시행 2026년 9월 22일",
-            ja: "施行 2026年9月22日",
-            en: "Effective September 22, 2026",
+            ko: "시행 2026년 9월 24일",
+            ja: "施行 2026年9月24日",
+            en: "Effective September 24, 2026",
         } as const;
         for (const locale of ["ko", "ja", "en"] as const) {
             expect(getPrivacyCopy(locale).dates).toContain(effective[locale]);
             expect(getPrivacyVersionCopy(previous, locale)).not.toEqual(
                 getPrivacyCopy(locale)
+            );
+        }
+    });
+
+    it("세 언어 모두 기여 제안의 이용 · 공개 · 보유를 알린다(2026-09-24)", () => {
+        const title = {
+            ko: "기여 제안",
+            ja: "情報の提案",
+            en: "Information suggestions",
+        } as const;
+        for (const locale of ["ko", "ja", "en"] as const) {
+            const copy = getPrivacyCopy(locale);
+            const text = (id: string) =>
+                JSON.stringify(
+                    copy.sections.find((section) => section.id === id)
+                );
+            expect(text("data")).toContain(title[locale]);
+            expect(text("public")).toContain(
+                { ko: "제안자 이름", ja: "提案者名", en: "Your name" }[locale]
+            );
+            expect(text("retention")).toContain(
+                { ko: "기여 제안:", ja: "情報の提案：", en: "Suggestions:" }[
+                    locale
+                ]
             );
         }
     });
@@ -51,7 +75,7 @@ describe("개인정보처리방침 이전 버전", () => {
     });
 
     it("없는 버전 주소는 찾지 않는다", () => {
-        expect(getPrivacyVersion("2026-09-22")).toBeNull();
+        expect(getPrivacyVersion("2026-09-24")).toBeNull();
         expect(getPrivacyVersion("toString")).toBeNull();
     });
 });
