@@ -26,12 +26,14 @@ import {
 import {
     alignVid2bmapFirstBarTick,
     applyVid2bmapMerge,
+    applyVid2bmapTempoChanges,
     beatLengthLabel,
     chartPositionLabel,
     collectVid2bmapNotes,
     convertVid2bmap,
     defaultVid2bmapChoice,
     defaultVid2bmapFirstBarTick,
+    detectVid2bmapTempoChanges,
     diffChartNotes,
     estimateVid2bmapBpm,
     planVid2bmapMerge,
@@ -215,6 +217,10 @@ export default function Vid2bmapImportPanel({
     const [choices, setChoices] = useState<Record<string, Vid2bmapChoice>>({});
     const [focusIndex, setFocusIndex] = useState<number | null>(null);
     const [showAllWarnings, setShowAllWarnings] = useState(false);
+    /** 넣지 않기로 한 템포 제안(틱) — 기본은 모두 넣는다 */
+    const [skippedTempo, setSkippedTempo] = useState<Record<number, boolean>>(
+        {}
+    );
     const [applying, setApplying] = useState(false);
 
     const timingPoints = document.timingPoints;
@@ -289,6 +295,25 @@ export default function Vid2bmapImportPanel({
             include,
         });
     }, [loaded, collected, timingPoints, include]);
+    // 템포 변화 → 타이밍 포인트 제안(영상 원본 프레임으로 잰 박 간격, 2026-09-23 T2)
+    const tempo = useMemo(
+        () =>
+            loaded
+                ? detectVid2bmapTempoChanges(
+                      loaded.result,
+                      loaded.firstBarTick,
+                      timingPoints
+                  )
+                : null,
+        [loaded, timingPoints]
+    );
+    const tempoChanges = useMemo(
+        () =>
+            (tempo?.changes ?? []).filter(
+                (change) => !skippedTempo[change.tick]
+            ),
+        [tempo, skippedTempo]
+    );
     const diff = useMemo(
         () =>
             conversion
@@ -346,8 +371,9 @@ export default function Vid2bmapImportPanel({
             incoming: conversion.notes.filter((note) => added.has(note.id)),
             removingIds: merged.removedIds,
             focusTick: focusItem?.tick ?? null,
+            timingTicks: tempoChanges.map((change) => change.tick),
         });
-    }, [merged, conversion, focusItem, setImportPreview]);
+    }, [merged, conversion, focusItem, tempoChanges, setImportPreview]);
     useEffect(() => () => setImportPreview(null), [setImportPreview]);
 
     const focusOn = (index: number) => {
@@ -417,7 +443,21 @@ export default function Vid2bmapImportPanel({
             const selection = selectCenter
                 ? conversion.handUncertainIds.filter((id) => added.has(id))
                 : [];
-            store.getState().replaceNotes(merged.notes, selection);
+            if (tempoChanges.length > 0) {
+                // 노트와 타이밍 포인트를 한 번에 — 실행 취소도 한 번. 노트는 박(틱)이라 위치는 그대로
+                const state = store.getState();
+                state.replaceDocument({
+                    ...state.document,
+                    timingPoints: applyVid2bmapTempoChanges(
+                        state.document.timingPoints,
+                        tempoChanges
+                    ),
+                    notes: merged.notes,
+                });
+                store.getState().selectNotes(selection);
+            } else {
+                store.getState().replaceNotes(merged.notes, selection);
+            }
             const origin = sortTimingPoints(timingPoints)[0];
             const editorSnap =
                 (loaded?.snapDivisor ?? 4) * (origin.denominator === 4 ? 4 : 8);
@@ -425,7 +465,7 @@ export default function Vid2bmapImportPanel({
                 store.getState().setSnapDivisor(editorSnap);
             }
             toast.success(
-                `영상 추출 노트를 초안에 넣었습니다 — 새로 ${merged.addedIds.length.toLocaleString("ko-KR")} · 뺌 ${merged.removedIds.length.toLocaleString("ko-KR")}${selection.length > 0 ? ` · 손 확인 ${selection.length}개 선택됨` : ""}`
+                `영상 추출 노트를 초안에 넣었습니다 — 새로 ${merged.addedIds.length.toLocaleString("ko-KR")} · 뺌 ${merged.removedIds.length.toLocaleString("ko-KR")}${tempoChanges.length > 0 ? ` · 타이밍 포인트 ${tempoChanges.length}` : ""}${selection.length > 0 ? ` · 손 확인 ${selection.length}개 선택됨` : ""}`
             );
             onClose();
         } finally {
@@ -544,6 +584,80 @@ export default function Vid2bmapImportPanel({
                                     타이밍 {startBpm}
                                 </p>
                             ) : null}
+                            {tempo?.startMismatch ? (
+                                <p className="text-text-secondary flex gap-1.5 text-xs leading-relaxed">
+                                    <TriangleAlert
+                                        className="text-score mt-0.5 size-3.5 shrink-0"
+                                        aria-hidden
+                                    />
+                                    영상 박자선으로 잰 첫 구간 BPM{" "}
+                                    {tempo.startMismatch.measuredBpm} ≠ 시작
+                                    타이밍 {tempo.startMismatch.chartBpm} — 시작
+                                    타이밍 포인트 확인
+                                </p>
+                            ) : null}
+                            {(tempo?.changes ?? []).map((change) => {
+                                const checked = !skippedTempo[change.tick];
+                                const slower = change.bpm < change.fromBpm;
+                                return (
+                                    <div
+                                        key={change.tick}
+                                        className="border-score/40 bg-score/10 flex flex-col gap-1 rounded-md border px-2 py-1.5"
+                                    >
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                onSeek(
+                                                    Math.max(
+                                                        0,
+                                                        tickToMilliseconds(
+                                                            change.tick,
+                                                            timingPoints,
+                                                            document.ticksPerQuarter
+                                                        ) - FOCUS_LEAD_MS
+                                                    )
+                                                )
+                                            }
+                                            title="캔버스에서 이 위치 보기"
+                                            className="flex items-center gap-1.5 text-left text-xs font-bold underline-offset-2 hover:underline"
+                                        >
+                                            <TriangleAlert
+                                                className="text-score size-3.5 shrink-0"
+                                                aria-hidden
+                                            />
+                                            {chartPositionLabel(
+                                                change.tick,
+                                                timingPoints
+                                            )}
+                                            부터 {slower ? "느려짐" : "빨라짐"}
+                                        </button>
+                                        <p className="text-micro">
+                                            영상 박자선 {change.beats}박으로 잰
+                                            BPM {change.measuredBpm} — 지금
+                                            타이밍 {change.fromBpm}
+                                        </p>
+                                        <label className="flex items-center gap-2 text-xs font-semibold">
+                                            <input
+                                                type="checkbox"
+                                                checked={checked}
+                                                onChange={(event) =>
+                                                    setSkippedTempo(
+                                                        (current) => ({
+                                                            ...current,
+                                                            [change.tick]:
+                                                                !event.target
+                                                                    .checked,
+                                                        })
+                                                    )
+                                                }
+                                                className="accent-text-primary size-3.5"
+                                            />
+                                            타이밍 포인트 넣기 · BPM{" "}
+                                            {change.bpm}
+                                        </label>
+                                    </div>
+                                );
+                            })}
                             {visibleWarnings.map((warning, index) => (
                                 <p
                                     key={`${warning.kind}-${index}`}
@@ -993,14 +1107,19 @@ export default function Vid2bmapImportPanel({
                             <LoaderCircle className="size-3.5 animate-spin" />
                         ) : null}
                         초안에 넣기
-                        {merged
+                        {merged &&
+                        (merged.addedIds.length > 0 ||
+                            tempoChanges.length === 0)
                             ? ` · ${merged.addedIds.length.toLocaleString("ko-KR")}개`
+                            : ""}
+                        {tempoChanges.length > 0
+                            ? `${merged && merged.addedIds.length > 0 ? " +" : " ·"} 타이밍 ${tempoChanges.length}`
                             : ""}
                     </button>
                 </div>
                 <p className="text-micro">
                     {merged && hasDraft
-                        ? `새로 ${merged.addedIds.length.toLocaleString("ko-KR")} · 뺌 ${merged.removedIds.length.toLocaleString("ko-KR")} — 넣기 전 지금 초안을 버전으로 저장합니다.`
+                        ? `새로 ${merged.addedIds.length.toLocaleString("ko-KR")} · 뺌 ${merged.removedIds.length.toLocaleString("ko-KR")}${tempoChanges.length > 0 ? ` · 타이밍 포인트 ${tempoChanges.length}` : ""} — 넣기 전 지금 초안을 버전으로 저장합니다.`
                         : "초안에만 들어갑니다. 공개는 따로 합니다."}
                 </p>
                 <p className="text-micro">

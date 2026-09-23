@@ -396,6 +396,14 @@ old design-stage checklist. Changes to material behavior require a user decision
 - Against an existing draft every difference is listed (same tick, overlapping lanes = same
   note; hand is not compared) and chosen per place; notes after the draft are a separate
   new-section toggle. An import that would create overlapping notes cannot be applied.
+- Tempo changes become proposed timing points (2026-09-23 T2): the result zip carries
+  `beat_frames.json` — frames where bar lines crossed one grid row, before vid2bmap's
+  frame-drop correction — and the tempo is measured from those (the corrected bar lines
+  jitter ±10%). A change is a shift of more than 1.5% in the trimmed mean of 8 beats that
+  lasts at least 8 beats; the BPM is rounded to 0.5 with the measurement shown. Proposals
+  replace the bar-interval BPM warning, are on by default, add the point at the beat with the
+  previous time signature, and go in with the notes in one undoable step. No proposal where a
+  timing point already exists; older zips without beat frames keep the warning only.
 
 ## Official X news (2026-09-19)
 

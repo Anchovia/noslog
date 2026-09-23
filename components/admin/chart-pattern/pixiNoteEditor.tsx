@@ -817,6 +817,11 @@ export default function PixiNoteEditor({
         }
 
         if (importPreview) {
+            for (const tick of importPreview.timingTicks) {
+                const y = yForTick(tick);
+                if (y < 0 || y > height) continue;
+                drawImportTiming(scene, width, y);
+            }
             const removing = new Set(importPreview.removingIds);
             for (const note of document.notes) {
                 if (!removing.has(note.id) || !isVisible(note)) continue;
@@ -1939,6 +1944,22 @@ function drawImportRemoval(
         .moveTo(x + 4, centerY - 5)
         .lineTo(x + width - 4, centerY + 5)
         .stroke({ color: colors.conflict, width: 2, alpha: 0.95 });
+}
+
+/** 넣으면 생길 타이밍 포인트(템포 변화 제안) — 미리보기 노랑 점선과 양 끝 삼각 표지 */
+function drawImportTiming(graphics: Graphics, width: number, y: number) {
+    for (let x = 0; x < width; x += 12) {
+        graphics
+            .moveTo(x, y)
+            .lineTo(Math.min(width, x + 7), y)
+            .stroke({ color: colors.preview, width: 2, alpha: 0.95 });
+    }
+    graphics
+        .poly([0, y - 7, 10, y, 0, y + 7], true)
+        .fill({ color: colors.preview, alpha: 0.95 });
+    graphics
+        .poly([width, y - 7, width - 10, y, width, y + 7], true)
+        .fill({ color: colors.preview, alpha: 0.95 });
 }
 
 /** 가져오기 목록에서 고른 곳 — 흰 띠와 양 끝 막대(노랑 미리보기 · 선택 색과 헷갈리지 않게 마디선 흰색) */

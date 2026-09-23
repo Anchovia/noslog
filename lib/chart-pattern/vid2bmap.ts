@@ -9,7 +9,7 @@
 import { findChartNoteConflicts } from "./editor";
 import { CHART_LANE_COUNT, CHART_TICKS_PER_QUARTER } from "./schema";
 import type { ChartNote, ChartNoteType, ChartTimingPoint } from "./schema";
-import { sortTimingPoints } from "./timing";
+import { sortTimingPoints, tickToMilliseconds } from "./timing";
 import type { Vid2bmapResult } from "./vid2bmapFile";
 
 /** 같은 칸 · 같은 종류가 이 프레임 이내로 겹치면 한 노트를 두 번 읽은 것 */
@@ -66,6 +66,12 @@ export interface Vid2bmapOptions {
     include: Record<Exclude<Vid2bmapKind, "glissando">, boolean>;
     createId?: () => string;
 }
+
+/** 템포 제안이 있으면(beat_frames) 보정된 박자선으로 잰 BPM 경고는 내지 않는다 — 같은 내용을 더 정확히 제안이 말한다 */
+const hasBeatFrames = (result: Vid2bmapResult) =>
+    Boolean(
+        result.fps && result.beatFrames && result.beatFrames.frames.length > 8
+    );
 
 export interface Vid2bmapConversion {
     notes: ChartNote[];
@@ -274,7 +280,7 @@ function barWarnings(
             warnings.push({ kind: "missingBar", tick });
         else if (interval < local * 0.6)
             warnings.push({ kind: "extraBar", tick });
-        if (!result.fps) return;
+        if (!result.fps || hasBeatFrames(result)) return;
         // BPM 추정 — 프레임 드롭 보정으로 간격이 ±10% 흔들려 주변 9개 중앙값으로. 벗어난 박이 이어지면 한 구간
         const point = activePoint(sorted, tick);
         const estimatedBpm =
@@ -702,4 +708,246 @@ export function alignVid2bmapFirstBarTick(
         if (!best || matches > best.matches) best = { tick, matches };
     }
     return best && best.matches > 0 ? best : null;
+}
+
+export interface Vid2bmapTempoChange {
+    /** 새 타이밍 포인트를 둘 박(박자선 위치) */
+    tick: number;
+    /** 0.5 단위로 다듬은 BPM */
+    bpm: number;
+    /** 측정값(소수 둘째 자리) */
+    measuredBpm: number;
+    /** 이 템포로 잰 박 수 */
+    beats: number;
+    /** 이 자리 바로 앞의 BPM(타이밍 포인트 또는 앞 제안) */
+    fromBpm: number;
+}
+
+export interface Vid2bmapTempo {
+    changes: Vid2bmapTempoChange[];
+    /** 첫 구간 측정 BPM 이 시작 타이밍과 다르면 그 값(제안하지 않고 알리기만) */
+    startMismatch: { measuredBpm: number; chartBpm: number } | null;
+}
+
+/** 템포가 바뀌었다고 볼 차이(비율) */
+const TEMPO_TOLERANCE = 0.015;
+/** 한 번에 보는 박 수 — 이만큼 이어져야 바뀐 것으로 본다 */
+const TEMPO_WINDOW = 8;
+
+/**
+ * 템포 변화 → 타이밍 포인트 제안(2026-09-23 T2).
+ * vid2bmap 보정 전 실제 프레임(beat_frames)으로 박 간격을 잰다 — 보정된 박자선(chart_bar)은 ±10% 흔들린다.
+ * 놓친 박자선(간격 ≈ 2박)은 둘로 나누고, 8박 중앙값이 1.5% 넘게 바뀐 곳을 경계로(Altale: 2~62마디 90.00 · 63마디부터 83.06).
+ * 첫 박자선은 beat_frames 의 격자 줄에서 판정선 줄까지 줄 수만큼(한 줄 = 한 프레임) 뒤의 박자선과 짝짓는다.
+ */
+export function detectVid2bmapTempoChanges(
+    result: Vid2bmapResult,
+    firstBarTick: number,
+    timingPoints: ChartTimingPoint[]
+): Vid2bmapTempo | null {
+    const beatFrames = result.beatFrames;
+    const fps = result.fps;
+    if (!beatFrames || !fps || beatFrames.frames.length < TEMPO_WINDOW * 2) {
+        return null;
+    }
+    const rows = result.barRows;
+    if (rows.length < 2) return null;
+    const frames = beatFrames.frames;
+    const intervals = frames
+        .slice(1)
+        .map((frame, index) => frame - frames[index]);
+    // 박마다 걸린 프레임 수 — 놓친 박자선은 주변 간격으로 나눠 박 수를 되살린다
+    const durations: number[] = [];
+    intervals.forEach((interval, index) => {
+        const local = median(
+            intervals.slice(Math.max(0, index - 4), index + 5)
+        );
+        const beats = Math.max(1, Math.round(interval / local));
+        for (let beat = 0; beat < beats; beat += 1) {
+            durations.push(interval / beats);
+        }
+    });
+    if (durations.length < TEMPO_WINDOW * 2) return null;
+
+    // beat_frames 첫 박자선 ↔ 보정된 박자선 몇 번째(격자 줄 → 판정선 줄 = 한 줄 한 프레임)
+    const expected = frames[0] + (beatFrames.gridRows - 1 - beatFrames.row);
+    let firstIndex = 0;
+    for (let index = 1; index < rows.length; index += 1) {
+        if (
+            Math.abs(rows[index] - expected) <
+            Math.abs(rows[firstIndex] - expected)
+        ) {
+            firstIndex = index;
+        }
+    }
+    if (Math.abs(rows[firstIndex] - expected) > 20) return null;
+
+    // 박 간격은 정수 프레임이라 83 BPM(43.37프레임)이면 43 · 44 가 번갈아 나온다 — 중앙값은 한쪽으로 쏠려
+    // 양 끝 하나씩 뺀 평균으로 본다
+    const trimmedMean = (values: number[]) => {
+        if (values.length <= 2) {
+            return (
+                values.reduce((sum, value) => sum + value, 0) /
+                Math.max(1, values.length)
+            );
+        }
+        const sortedValues = [...values].sort((a, b) => a - b).slice(1, -1);
+        return (
+            sortedValues.reduce((sum, value) => sum + value, 0) /
+            sortedValues.length
+        );
+    };
+    const windowMedian = (start: number) =>
+        trimmedMean(durations.slice(start, start + TEMPO_WINDOW));
+    const segments: { start: number; frames: number }[] = [
+        { start: 0, frames: trimmedMean(durations.slice(0, TEMPO_WINDOW * 2)) },
+    ];
+    for (let beat = 1; beat + TEMPO_WINDOW <= durations.length; beat += 1) {
+        const current = segments[segments.length - 1];
+        const moved =
+            Math.abs(windowMedian(beat) - current.frames) / current.frames >
+            TEMPO_TOLERANCE;
+        const settled =
+            beat + TEMPO_WINDOW + 4 > durations.length ||
+            Math.abs(windowMedian(beat + 4) - current.frames) / current.frames >
+                TEMPO_TOLERANCE;
+        if (!moved || !settled) continue;
+        // 바뀐 박을 정확히 — 앞은 지금 템포, 뒤는 새 템포에 가장 잘 맞게 나누는 곳
+        const next = trimmedMean(
+            durations.slice(beat + 4, beat + 4 + TEMPO_WINDOW * 2)
+        );
+        let split = beat;
+        let bestCost = Number.POSITIVE_INFINITY;
+        for (
+            let candidate = Math.max(current.start + 1, beat - TEMPO_WINDOW);
+            candidate <= beat + TEMPO_WINDOW && candidate < durations.length;
+            candidate += 1
+        ) {
+            let cost = 0;
+            for (
+                let index = beat - TEMPO_WINDOW;
+                index < beat + TEMPO_WINDOW * 2;
+                index += 1
+            ) {
+                if (index < 0 || index >= durations.length) continue;
+                cost += Math.abs(
+                    durations[index] -
+                        (index < candidate ? current.frames : next)
+                );
+            }
+            if (cost < bestCost) {
+                bestCost = cost;
+                split = candidate;
+            }
+        }
+        segments.push({
+            start: split,
+            frames: trimmedMean(
+                durations.slice(split, split + TEMPO_WINDOW * 2)
+            ),
+        });
+        beat = split + TEMPO_WINDOW;
+    }
+    // 구간 값은 구간 전체로 다시 재고, 8박보다 짧거나 앞 구간과 사실상 같은 템포면 합친다
+    const measure = (start: number, end: number) =>
+        trimmedMean(durations.slice(start, end));
+    let merged = true;
+    while (merged && segments.length > 1) {
+        merged = false;
+        for (let index = 0; index < segments.length; index += 1) {
+            const end = segments[index + 1]?.start ?? durations.length;
+            segments[index].frames = measure(segments[index].start, end);
+        }
+        for (let index = 1; index < segments.length; index += 1) {
+            const end = segments[index + 1]?.start ?? durations.length;
+            const previous = segments[index - 1];
+            const current = segments[index];
+            if (
+                end - current.start < TEMPO_WINDOW ||
+                Math.abs(current.frames - previous.frames) / previous.frames <=
+                    TEMPO_TOLERANCE
+            ) {
+                segments.splice(index, 1);
+                merged = true;
+                break;
+            }
+        }
+    }
+
+    const sorted = sortTimingPoints(timingPoints);
+    const toBpm = (frameCount: number, point: ChartTimingPoint) =>
+        ((60 * fps) / frameCount) *
+        (beatTicksOf(point) / CHART_TICKS_PER_QUARTER);
+    const origin = sorted[0];
+    const firstMeasured = toBpm(segments[0].frames, origin);
+    const startMismatch =
+        Math.abs(firstMeasured - origin.bpm) / origin.bpm > TEMPO_TOLERANCE
+            ? {
+                  measuredBpm: Math.round(firstMeasured * 100) / 100,
+                  chartBpm: origin.bpm,
+              }
+            : null;
+
+    const changes: Vid2bmapTempoChange[] = [];
+    segments.forEach((segment, index) => {
+        const end = segments[index + 1]?.start ?? durations.length;
+        if (index === 0) {
+            return;
+        }
+        const tick = Math.round(
+            vid2bmapTickAt(firstIndex + segment.start, firstBarTick, sorted)
+        );
+        const point = activePoint(sorted, tick);
+        const measured = toBpm(segment.frames, point);
+        const bpm = Math.round(measured * 2) / 2;
+        const fromBpm =
+            changes.length > 0 && changes[changes.length - 1].tick > point.tick
+                ? changes[changes.length - 1].bpm
+                : point.bpm;
+        // 이미 그 자리에 타이밍 포인트가 있거나, 앞 BPM 과 같으면 제안하지 않는다
+        if (
+            point.tick === tick ||
+            Math.abs(bpm - fromBpm) / fromBpm <= TEMPO_TOLERANCE
+        ) {
+            return;
+        }
+        changes.push({
+            tick,
+            bpm,
+            measuredBpm: Math.round(measured * 100) / 100,
+            beats: end - segment.start,
+            fromBpm,
+        });
+    });
+    return { changes, startMismatch };
+}
+
+/** 제안을 타이밍 포인트로 — 시각(ms)은 앞 타이밍(앞 제안 포함)에서 이어 계산, 박자표는 앞 구간을 잇는다 */
+export function applyVid2bmapTempoChanges(
+    timingPoints: ChartTimingPoint[],
+    changes: Vid2bmapTempoChange[],
+    createId: () => string = () => `timing-${crypto.randomUUID()}`
+) {
+    let points = sortTimingPoints(timingPoints);
+    for (const change of [...changes].sort((a, b) => a.tick - b.tick)) {
+        const previous = activePoint(points, change.tick);
+        // 에디터와 같은 계산(앞 타이밍 · 앞 제안 기준)
+        const timeMs = tickToMilliseconds(
+            change.tick,
+            points,
+            CHART_TICKS_PER_QUARTER
+        );
+        points = sortTimingPoints([
+            ...points,
+            {
+                id: createId(),
+                tick: change.tick,
+                timeMs: Math.round(timeMs * 1000) / 1000,
+                bpm: change.bpm,
+                numerator: previous.numerator,
+                denominator: previous.denominator,
+            },
+        ]);
+    }
+    return points;
 }

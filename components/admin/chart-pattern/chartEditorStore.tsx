@@ -26,6 +26,8 @@ export interface ChartImportPreview {
     removingIds: string[];
     /** 목록에서 고른 곳 — 캔버스에 띠로 표시 */
     focusTick: number | null;
+    /** 넣으면 생길 타이밍 포인트(템포 변화 제안) 위치 — 노랑 점선 */
+    timingTicks: number[];
 }
 export type ChartPlaybackRate = 0.25 | 0.5 | 0.75 | 1 | 1.5 | 2;
 

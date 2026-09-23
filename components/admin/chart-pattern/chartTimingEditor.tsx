@@ -235,6 +235,9 @@ function ChartTimingEditorWorkspace({
     const importMenuRef = useRef<HTMLDivElement | null>(null);
     const [importMenuOpen, setImportMenuOpen] = useState(false);
     const [vid2bmapFile, setVid2bmapFile] = useState<File | null>(null);
+    const importTimingCount = useChartEditorStore(
+        (state) => state.importPreview?.timingTicks.length ?? 0
+    );
     const [pixelsPerSecond, setPixelsPerSecond] = useState(150);
     const [revisionHistory, setRevisionHistory] = useState(revisions);
     const [editorMode, setEditorMode] = useState<"timing" | "notes">("timing");
@@ -1012,6 +1015,12 @@ function ChartTimingEditorWorkspace({
                                     <dt className="bg-text-primary/15 border-text-primary h-2.5 w-5 border-x-2" />
                                     <dd>목록에서 고른 곳</dd>
                                 </div>
+                                {importTimingCount > 0 ? (
+                                    <div className="flex items-center gap-2">
+                                        <dt className="border-score h-0 w-5 border-t-2 border-dashed" />
+                                        <dd>넣을 타이밍 포인트</dd>
+                                    </div>
+                                ) : null}
                             </dl>
                         ) : null}
                         <div className="border-border bg-surface/95 absolute top-3 left-3 flex items-center gap-1 rounded-md border p-1 shadow-lg">

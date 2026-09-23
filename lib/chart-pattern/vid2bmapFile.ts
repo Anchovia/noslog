@@ -23,6 +23,11 @@ export interface Vid2bmapResult {
     trill: number[][];
     /** [y, x1, x2] — 대각선 노트를 조각으로 읽은 것 */
     glissando: number[][];
+    /**
+     * 박자선이 격자 한 줄(row)을 지난 실제 영상 프레임(시작 프레임 기준, vid2bmap 보정 전) — 템포 측정용.
+     * 실행 스크립트가 labels.npy 에서 뽑아 넣는다. 옛 zip 에는 없다(null)
+     */
+    beatFrames: { frames: number[]; row: number; gridRows: number } | null;
 }
 
 const NPY_MAGIC = [0x93, 0x4e, 0x55, 0x4d, 0x50, 0x59];
@@ -223,6 +228,34 @@ export async function readVid2bmapZip(
     const trill = await load(RESULT_FILES.trill, false);
     const glissando = await load(RESULT_FILES.glissando, false);
 
+    let beatFrames: Vid2bmapResult["beatFrames"] = null;
+    const beatEntry = entries.find((entry) =>
+        entry.name.endsWith("beat_frames.json")
+    );
+    if (beatEntry) {
+        try {
+            const data = JSON.parse(
+                new TextDecoder("utf-8").decode(
+                    await readZipEntry(bytes, beatEntry)
+                )
+            ) as { frames?: unknown; row?: unknown; gridRows?: unknown };
+            if (
+                Array.isArray(data.frames) &&
+                data.frames.every((value) => typeof value === "number") &&
+                typeof data.row === "number" &&
+                typeof data.gridRows === "number"
+            ) {
+                beatFrames = {
+                    frames: data.frames as number[],
+                    row: data.row,
+                    gridRows: data.gridRows,
+                };
+            }
+        } catch {
+            // 없거나 깨졌으면 템포 제안 없이(예전처럼 경고만)
+        }
+    }
+
     let fps: number | null = null;
     let startSec: number | null = null;
     const metaEntry = entries.find((entry) => entry.name.endsWith("meta.json"));
@@ -250,5 +283,6 @@ export async function readVid2bmapZip(
         tenuto: npyRows(tenuto!, 4),
         trill: trill ? npyRows(trill, 4) : [],
         glissando: glissando ? npyRows(glissando, 3) : [],
+        beatFrames,
     };
 }

@@ -4,6 +4,8 @@ import altale from "./fixtures/vid2bmap-altale-real.json";
 import type { ChartNote, ChartTimingPoint } from "@/lib/chart-pattern/schema";
 import {
     alignVid2bmapFirstBarTick,
+    applyVid2bmapTempoChanges,
+    detectVid2bmapTempoChanges,
     applyVid2bmapMerge,
     beatLengthLabel,
     estimateVid2bmapBpm,
@@ -153,6 +155,7 @@ describe("vid2bmap file reading", () => {
             tenuto: [],
             trill: [],
             glissando: [],
+            beatFrames: null,
         });
     });
 
@@ -301,6 +304,7 @@ describe("vid2bmap warnings", () => {
         tenuto: [],
         trill: [[50, 60, 10, 15]],
         glissando: [[70, 1, 3]],
+        beatFrames: null,
     };
     const collected = collectVid2bmapNotes(base);
     const conversion = convertVid2bmap(base, collected.notes, {
@@ -491,6 +495,7 @@ describe("vid2bmap labels", () => {
                     tenuto: [],
                     trill: [],
                     glissando: [],
+                    beatFrames: null,
                 },
                 [point(0, 0, 90, 3, 4)]
             )
@@ -573,6 +578,7 @@ describe("vid2bmap dense passages", () => {
             tenuto: [],
             trill: [],
             glissando: [],
+            beatFrames: null,
         };
         const { notes } = collectVid2bmapNotes(dense);
         const conversion = convertVid2bmap(dense, notes, {
@@ -591,5 +597,117 @@ describe("vid2bmap dense passages", () => {
             count: 1,
             tick: 760,
         });
+    });
+});
+
+describe("vid2bmap tempo changes from raw beat frames", () => {
+    // 60fps · 90 BPM = 40프레임, 83 BPM = 43.37프레임. 박자선은 격자 12번 줄(22줄) → 판정선까지 9프레임
+    const build = (drop?: number) => {
+        const frames: number[] = [];
+        let frame = 30;
+        for (let beat = 0; beat < 90; beat += 1) {
+            frames.push(Math.round(frame * 100) / 100);
+            frame += beat < 60 ? 40 : 3600 / 83;
+        }
+        const barRows = frames.map((value) => Math.round(value + 9));
+        const beatFrames =
+            drop === undefined
+                ? frames
+                : frames.filter((_, index) => index !== drop);
+        return {
+            fps: 60,
+            startSec: 11.5,
+            barRows,
+            simple: [],
+            tenuto: [],
+            trill: [],
+            glissando: [],
+            beatFrames: { frames: beatFrames, row: 12, gridRows: 22 },
+        } satisfies Vid2bmapResult;
+    };
+    const altalePoints = [point(0, 60, 90, 3, 4)];
+
+    it("proposes one timing point at the beat where the tempo drops", () => {
+        const tempo = detectVid2bmapTempoChanges(build(), -480, altalePoints);
+        expect(tempo?.startMismatch).toBeNull();
+        expect(tempo?.changes).toHaveLength(1);
+        const [change] = tempo!.changes;
+        // 60번째 박자선 = -480 + 60 × 480
+        expect(change.tick).toBe(28320);
+        expect(change.bpm).toBe(83);
+        expect(change.fromBpm).toBe(90);
+        expect(Math.abs(change.measuredBpm - 83)).toBeLessThan(0.2);
+    });
+
+    it("recovers a missed bar line instead of seeing a tempo change", () => {
+        const tempo = detectVid2bmapTempoChanges(build(20), -480, altalePoints);
+        expect(
+            tempo?.changes.map((change) => [change.tick, change.bpm])
+        ).toEqual([[28320, 83]]);
+    });
+
+    it("stays quiet for a steady song and without beat frames", () => {
+        const steady = {
+            ...build(),
+            beatFrames: {
+                frames: Array.from(
+                    { length: 60 },
+                    (_, index) => 30 + index * 40
+                ),
+                row: 12,
+                gridRows: 22,
+            },
+        };
+        expect(
+            detectVid2bmapTempoChanges(steady, -480, altalePoints)?.changes
+        ).toEqual([]);
+        expect(
+            detectVid2bmapTempoChanges(
+                { ...build(), beatFrames: null },
+                -480,
+                altalePoints
+            )
+        ).toBeNull();
+    });
+
+    it("turns proposals into timing points continuing the time and signature", () => {
+        const points = applyVid2bmapTempoChanges(
+            altalePoints,
+            [
+                {
+                    tick: 28320,
+                    bpm: 83,
+                    measuredBpm: 83.02,
+                    beats: 30,
+                    fromBpm: 90,
+                },
+            ],
+            () => "t-new"
+        );
+        expect(points).toEqual([
+            altalePoints[0],
+            {
+                id: "t-new",
+                tick: 28320,
+                timeMs:
+                    Math.round((60 + (28320 / 480) * (60000 / 90)) * 1000) /
+                    1000,
+                bpm: 83,
+                numerator: 3,
+                denominator: 4,
+            },
+        ]);
+    });
+
+    it("leaves the bar-interval BPM warning to the proposal when beat frames exist", () => {
+        const result = build();
+        const { notes } = collectVid2bmapNotes(result);
+        const kinds = convertVid2bmap(result, notes, {
+            timingPoints: altalePoints,
+            firstBarTick: -480,
+            snapDivisor: 6,
+            include: { standard: true, tenuto: true, trill: true },
+        }).warnings.map((warning) => warning.kind);
+        expect(kinds).not.toContain("bpmMismatch");
     });
 });
