@@ -30,7 +30,7 @@ export default function SortMenu<Value extends string>({
     onOpenChange,
     children,
     className,
-    variant = "secondary",
+    variant = "ghost",
     size,
 }: {
     label: string;
@@ -40,7 +40,7 @@ export default function SortMenu<Value extends string>({
     onOpenChange?: (open: boolean) => void;
     children?: ReactNode;
     className?: string;
-    /** 결과 수 줄 안에 넣을 때는 ghost · sm — 트리거 모양만 다르고 메뉴는 같다 */
+    /** 정렬 트리거는 모든 폭에서 고스트(2026-09-23 T2) — 높이만 줄 단계를 따른다(폰 M · 1056 이상 L) */
     variant?: "secondary" | "ghost";
     size?: "sm";
 }) {

@@ -160,7 +160,6 @@ export default function BingoCatalogPage({
                             value={query.sort}
                             options={sorts}
                             onValueChange={(sort) => commit({ ...query, sort })}
-                            variant={wide ? undefined : "ghost"}
                             size={wide ? undefined : "sm"}
                         />
                     ) : null}

@@ -558,7 +558,6 @@ export default function DiscoveryPage({
                                 query={query}
                                 signedIn={Boolean(accountId)}
                                 onChange={(next) => commit(next)}
-                                variant="ghost"
                                 size="sm"
                             />
                             {viewSwitchCompact}

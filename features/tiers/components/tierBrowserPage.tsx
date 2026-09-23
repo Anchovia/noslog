@@ -299,7 +299,6 @@ export default function TierBrowserPage({
     );
     const sortMenu = (
         <SortMenu
-            variant={wide ? undefined : "ghost"}
             size={wide ? undefined : "sm"}
             label={t("discovery.sortLabel")}
             value={sorts.includes(query.sort) ? query.sort : "position"}
