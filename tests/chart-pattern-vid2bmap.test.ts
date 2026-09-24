@@ -902,6 +902,28 @@ describe("vid2bmap grid per beat", () => {
     });
 });
 
+describe("vid2bmap default first bar", () => {
+    it("puts a first note read a frame before a bar line on that bar line's beat", () => {
+        const notes = collectVid2bmapNotes({
+            fps: 60,
+            startSec: 0,
+            barRows: [32, 56, 82, 108, 132],
+            // アルストロメリア Real: 첫 노트 107 = 박자선 108 보다 1프레임 앞(2.96박)
+            simple: [[107, 3, 5]],
+            tenuto: [],
+            trill: [],
+            glissando: [],
+            beatFrames: null,
+        }).notes;
+        // 첫 노트가 첫 타이밍 포인트(0틱)의 박 안에 — 첫 박자선은 3박 앞
+        expect(
+            defaultVid2bmapFirstBarTick([32, 56, 82, 108, 132], notes, [
+                point(0, 0, 144),
+            ])
+        ).toBe(-1440);
+    });
+});
+
 describe("vid2bmap glissando", () => {
     // 40프레임 = 1박. 1박부터 5프레임마다 한 칸씩 오르는 조각 9개(0 → 8번 칸) + 멀리 떨어진 조각 하나
     const pieces = Array.from({ length: 9 }, (_, index) => [

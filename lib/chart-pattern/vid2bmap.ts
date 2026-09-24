@@ -287,6 +287,8 @@ export function suggestVid2bmapSnap(
     return { divisor: best.divisor, candidates };
 }
 
+const FIRST_NOTE_EARLY_BEATS = 0.1;
+
 /** 첫 박자선 기본값 — 첫 노트가 첫 타이밍 포인트 뒤 첫 박 안에 오도록(관리자가 박 단위로 옮겨 맞춘다) */
 export function defaultVid2bmapFirstBarTick(
     barRows: number[],
@@ -296,7 +298,11 @@ export function defaultVid2bmapFirstBarTick(
     const first = notes[0];
     const origin = sortTimingPoints(timingPoints)[0];
     if (!first) return origin.tick;
-    const beats = Math.floor(vid2bmapBeatPosition(barRows, first.y));
+    // 박자선 바로 앞(0.1박 이내)에 찍힌 첫 노트는 그 박자선의 박 — 내림하면 한 박 앞으로 잡혀 첫 노트가 1마디 2박이 된다
+    // (アルストロメリア Real: 첫 노트가 박자선보다 1프레임 앞, 2.96박)
+    const beats = Math.floor(
+        vid2bmapBeatPosition(barRows, first.y) + FIRST_NOTE_EARLY_BEATS
+    );
     return origin.tick - beats * beatTicksOf(origin);
 }
 
