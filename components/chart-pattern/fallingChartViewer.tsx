@@ -491,6 +491,47 @@ function drawPlayfield(
     }
 }
 
+/**
+ * 가로 박자선(2026-09-25 G1) — 게임처럼 박마다 같은 선이 노트와 함께 내려온다(노트 뒤).
+ * 레인 0–28 끝을 같은 원근으로 잇고, 가까울수록 굵게. 색은 판정선 흰색을 옅게
+ */
+function drawBeatLines(
+    graphics: Graphics,
+    beatTimes: readonly number[],
+    currentTimeMs: number,
+    approachDurationMs: number,
+    width: number,
+    horizonY: number,
+    judgmentY: number
+) {
+    for (const timeMs of beatTimes) {
+        const progress = 1 - (timeMs - currentTimeMs) / approachDurationMs;
+        if (progress < 0 || progress > 1) continue;
+        const left = projectPlaybackLane({
+            lane: 0,
+            progress,
+            canvasWidth: width,
+            horizonY,
+            judgmentY,
+        });
+        const right = projectPlaybackLane({
+            lane: CHART_LANE_COUNT,
+            progress,
+            canvasWidth: width,
+            horizonY,
+            judgmentY,
+        });
+        graphics
+            .moveTo(left.x, left.y)
+            .lineTo(right.x, right.y)
+            .stroke({
+                color: colors.judgment,
+                width: 2 * (0.6 + 0.8 * progress),
+                alpha: 0.55,
+            });
+    }
+}
+
 function drawPiano(
     graphics: Graphics,
     width: number,
@@ -753,6 +794,7 @@ function renderPlaybackFrame({
     width,
     height,
     strictPerformance,
+    beatTimes,
 }: {
     graphics: Graphics;
     notes: PreparedPlaybackNote[];
@@ -761,12 +803,22 @@ function renderPlaybackFrame({
     width: number;
     height: number;
     strictPerformance: boolean;
+    beatTimes: readonly number[];
 }) {
     const horizonY = Math.max(40, height * 0.12);
     const judgmentY = height * 0.79;
     const visualScale = getPlaybackVisualScale(width);
     graphics.clear();
     drawPlayfield(graphics, width, height, horizonY, judgmentY);
+    drawBeatLines(
+        graphics,
+        beatTimes,
+        currentTimeMs,
+        approachDurationMs,
+        width,
+        horizonY,
+        judgmentY
+    );
 
     for (let index = notes.length - 1; index >= 0; index -= 1) {
         drawPreparedNote({
@@ -815,6 +867,17 @@ export default function FallingChartViewer({
     const currentTimeRef = useRef(0);
     const durationRef = useRef(getChartPlaybackDurationMs(document));
     const noteSpeedRef = useRef(2);
+    // 박자선 계산용 — 렌더 루프(Pixi 틱)는 문서가 바뀌어도 다시 만들지 않으므로 최신 타이밍을 ref 로 본다
+    const timingRef = useRef({
+        points: document.timingPoints,
+        ticksPerQuarter: document.ticksPerQuarter,
+    });
+    useEffect(() => {
+        timingRef.current = {
+            points: document.timingPoints,
+            ticksPerQuarter: document.ticksPerQuarter,
+        };
+    }, [document.ticksPerQuarter, document.timingPoints]);
     const strictPerformanceRef = useRef(false);
     const clockAnchorRef = useRef<PlaybackClockAnchor | null>(null);
     const lastUiUpdateRef = useRef(0);
@@ -948,16 +1011,24 @@ export default function FallingChartViewer({
                     (application.screen.width - STAGE_WIDTH * scale) / 2,
                     (application.screen.height - STAGE_HEIGHT * scale) / 2
                 );
+                const approachDurationMs = getApproachDurationMs(
+                    noteSpeedRef.current
+                );
+                const playhead = currentTimeRef.current;
                 renderPlaybackFrame({
                     graphics: scene,
                     notes: preparedNotes,
-                    currentTimeMs: currentTimeRef.current,
-                    approachDurationMs: getApproachDurationMs(
-                        noteSpeedRef.current
-                    ),
+                    currentTimeMs: playhead,
+                    approachDurationMs,
                     width: STAGE_WIDTH,
                     height: STAGE_HEIGHT,
                     strictPerformance: strictPerformanceRef.current,
+                    beatTimes: getBeatMarkers(
+                        timingRef.current.points,
+                        timingRef.current.ticksPerQuarter,
+                        playhead,
+                        playhead + approachDurationMs
+                    ).map((beat) => beat.timeMs),
                 });
             });
         })();
