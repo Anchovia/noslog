@@ -1,7 +1,7 @@
 {
     "ko": {
         "title": "개인정보처리방침",
-        "dates": "최종 수정 2026년 9월 24일 · 시행 2026년 9월 24일",
+        "dates": "최종 수정 2026년 9월 25일 · 시행 2026년 9월 25일",
         "contents": "이 페이지에서",
         "detailLabel": "자세히 보기",
         "settingsLogin": "로그인 후 설정에서 관리",
@@ -14,7 +14,7 @@
             },
             {
                 "title": "공개되는 것",
-                "text": "공개 프로필·기록·랭킹·평가·채보 의견·기여 등급과 5가지 공개 설정 그룹(플레이어명·Discord·선호 오락실·플레이 횟수·플레이 활동)",
+                "text": "공개 프로필·기록·랭킹·평가·업적·채보 의견·기여 등급과 5가지 공개 설정 그룹(플레이어명·Discord·선호 오락실·플레이 횟수·플레이 활동)",
                 "target": "public"
             },
             {
@@ -91,6 +91,11 @@
                     },
                     {
                         "kind": "item",
+                        "title": "업적",
+                        "text": "동기화한 기록과 사이트 활동(의견 · 좋아요 · 패턴 평가 · 검정 · 빙고)으로 업적 달성 여부와 NosLog 가 확인한 날짜를 계산해 저장하고, 본인이 고른 업적(최대 3개)을 프로필 머리에 표시하는 데 사용합니다. 업적 페이지에는 단계마다 달성한 인원 수만 보이고 달성한 사람 목록은 없습니다."
+                    },
+                    {
+                        "kind": "item",
                         "title": "자동 생성 정보",
                         "text": "접속 IP, 브라우저·기기 정보, 접속 시각, 요청 및 오류 로그가 서비스 보안, 장애 대응과 운영 과정에서 생성될 수 있습니다."
                     },
@@ -134,6 +139,10 @@
                     {
                         "kind": "paragraph",
                         "text": "공개된 기여 채보에는 작성자 이름과 기여 등급이 채보 뷰어에 표시되고, 공개 채보에 남긴 채보 의견은 이름 · 기여 등급 · 재생 시각 · 날짜와 함께 공개됩니다. 채보 초안과 초안에 남긴 의견은 작성자와 운영자만 봅니다."
+                    },
+                    {
+                        "kind": "paragraph",
+                        "text": "업적은 공개 프로필과 업적 페이지에 보입니다. 플레이 점수를 비공개로 하면 다른 사람에게는 실력 · 수집 업적이 보이지 않고(기록 범위가 드러나므로), 도전 · 커뮤니티 업적은 그대로 보입니다. 업적 진행 값은 본인에게만 보입니다."
                     }
                 ]
             },
@@ -173,6 +182,7 @@
                             "기여 점수 기록: 회원 탈퇴 시까지. 원본(제안·제보 등)이 보관 기간으로 삭제되어도 점수 기록은 남습니다.",
                             "채보 초안과 초안 의견: 회원 탈퇴 시까지(초안은 채보마다 하나이며, 공개된 뒤 다시 열면 그때의 공개 채보로 새로 시작합니다). 탈퇴하면 삭제되고, 이미 공개된 채보는 작성자 표시 없이 남습니다.",
                             "채보 의견: 작성자가 지우거나(해결 전까지) 회원 탈퇴할 때까지. 운영자가 가린 의견은 공개되지 않으며 탈퇴 시 함께 삭제됩니다.",
+                            "업적과 프로필 업적 진열: 회원 탈퇴 시까지. 한 번 달성한 단계는 이후 기록이 바뀌어도 지우지 않습니다.",
                             "방문 통계: 하루 식별값은 다음 날 삭제, 합계(하루 방문자 수·페이지 조회 수·시간대별 조회 수·로그인 여부별 합계·API 호출 수)는 90일 후 삭제"
                         ]
                     },
@@ -308,7 +318,7 @@
     },
     "ja": {
         "title": "プライバシーポリシー",
-        "dates": "最終更新 2026年9月24日 · 施行 2026年9月24日",
+        "dates": "最終更新 2026年9月25日 · 施行 2026年9月25日",
         "contents": "このページの内容",
         "detailLabel": "詳しく見る",
         "settingsLogin": "ログインして設定で管理",
@@ -321,7 +331,7 @@
             },
             {
                 "title": "公開されるもの",
-                "text": "公開プロフィール・記録・ランキング・評価・譜面への意見・貢献ランクと、5つの公開設定グループ（プレーヤー名・Discord・よく行くゲームセンター・プレー回数・プレー活動）",
+                "text": "公開プロフィール・記録・ランキング・評価・実績・譜面への意見・貢献ランクと、5つの公開設定グループ（プレーヤー名・Discord・よく行くゲームセンター・プレー回数・プレー活動）",
                 "target": "public"
             },
             {
@@ -398,6 +408,11 @@
                     },
                     {
                         "kind": "item",
+                        "title": "実績",
+                        "text": "同期した記録とサイトでの活動(意見・いいね・譜面傾向の評価・検定・ビンゴ)から実績の達成状況とNosLogが確認した日付を計算して保存し、本人が選んだ実績(最大3つ)をプロフィールの上部に表示するために使用します。実績ページには段階ごとの達成人数のみを表示し、達成したユーザーの一覧は表示しません。"
+                    },
+                    {
+                        "kind": "item",
                         "title": "自動的に生成される情報",
                         "text": "接続IP、ブラウザー・端末情報、接続時刻、リクエストおよびエラーログが、サービスのセキュリティ、障害対応、運営の過程で生成される場合があります。"
                     },
@@ -441,6 +456,10 @@
                     {
                         "kind": "paragraph",
                         "text": "公開された貢献譜面には、作成者名と貢献ランクが譜面ビューアーに表示され、公開譜面に残した譜面への意見は名前・貢献ランク・再生時刻・日付とともに公開されます。譜面の下書きと下書きに残した意見は、作成者と運営者のみが閲覧します。"
+                    },
+                    {
+                        "kind": "paragraph",
+                        "text": "実績は公開プロフィールと実績ページに表示されます。プレースコアを非公開にすると、他のユーザーには実力・コレクションの実績が表示されず(記録の範囲が分かるため)、チャレンジ・コミュニティの実績はそのまま表示されます。実績の進捗は本人にのみ表示されます。"
                     }
                 ]
             },
@@ -480,6 +499,7 @@
                             "貢献ポイントの記録：退会まで。元の記録(提案・報告など)が保管期間により削除されても、ポイントの記録は残ります。",
                             "譜面の下書きと下書きへの意見：退会まで(下書きは譜面ごとに1つで、公開後にもう一度開くとその時点の公開譜面から新しく始まります)。退会すると削除され、すでに公開された譜面は作成者の表示なしで残ります。",
                             "譜面への意見：投稿者が削除する(解決前まで)か退会するまで。運営者が非表示にした意見は公開されず、退会時に一緒に削除されます。",
+                            "実績とプロフィールの実績表示：退会まで。一度達成した段階は、その後記録が変わっても削除しません。",
                             "訪問統計：1日の識別値は翌日に削除し、合計（1日の訪問者数・ページ閲覧数・時間帯ごとの閲覧数・ログイン状態別の合計・API呼び出し回数）は90日後に削除"
                         ]
                     },
@@ -615,7 +635,7 @@
     },
     "en": {
         "title": "Privacy Policy",
-        "dates": "Last updated September 24, 2026 · Effective September 24, 2026",
+        "dates": "Last updated September 25, 2026 · Effective September 25, 2026",
         "contents": "On this page",
         "detailLabel": "See details",
         "settingsLogin": "Manage in Settings after logging in",
@@ -628,7 +648,7 @@
             },
             {
                 "title": "What becomes public",
-                "text": "Your public profile, records, rankings, evaluations, chart comments and contribution level, plus five visibility groups you control (player name, Discord, preferred arcade, play count, play activity)",
+                "text": "Your public profile, records, rankings, evaluations, achievements, chart comments and contribution level, plus five visibility groups you control (player name, Discord, preferred arcade, play count, play activity)",
                 "target": "public"
             },
             {
@@ -705,6 +725,11 @@
                     },
                     {
                         "kind": "item",
+                        "title": "Achievements",
+                        "text": "We calculate which achievements you have reached, and the date NosLog confirmed each one, from the records you sync and your activity on the site (opinions, likes, pattern ratings, exams and bingo). We store them and show the achievements you choose (up to three) at the top of your profile. The achievement page shows only how many players reached each tier, never a list of who did."
+                    },
+                    {
+                        "kind": "item",
                         "title": "Automatically generated information",
                         "text": "Connection IP addresses, browser and device information, access times, requests, and error logs may be generated for service security, incident response, and operations."
                     },
@@ -748,6 +773,10 @@
                     {
                         "kind": "paragraph",
                         "text": "Published contributed charts show the author's name and contribution level in the chart viewer, and chart comments on public charts are public with the name, contribution level, playback time and date. Chart drafts and comments on drafts are visible only to their author and admins."
+                    },
+                    {
+                        "kind": "paragraph",
+                        "text": "Achievements appear on your public profile and on the achievement page. If your play scores are private, other people do not see your skill or collection achievements (they reveal the range of your records); challenge and community achievements stay visible. Achievement progress is shown only to you."
                     }
                 ]
             },
@@ -787,6 +816,7 @@
                             "Contribution points: until you delete your account. Point records remain even after the originals (suggestions, reports) are deleted under their retention periods.",
                             "Chart drafts and draft comments: until account deletion (one draft per chart; reopening it after it is published starts again from the public chart at that time). They are deleted when you delete your account, and charts already published remain without the author credit.",
                             "Chart comments: until the author deletes them (before they are resolved) or deletes their account. Comments hidden by an admin are not public and are deleted with the account.",
+                            "Achievements and your profile achievement showcase: until account deletion. A tier you have reached is never removed, even if your records change later.",
                             "Visit statistics: daily identifiers are deleted the next day; totals (daily visitors, page views, views per hour, totals split by signed-in status, API calls) are deleted after 90 days"
                         ]
                     },

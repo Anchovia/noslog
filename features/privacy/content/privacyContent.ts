@@ -18,7 +18,7 @@ export const PRIVACY_PREVIOUS_VERSIONS = [
     {
         id: "2026-09-22",
         effective: "2026-09-22",
-        until: "2026-09-23",
+        until: "2026-09-24",
         copy: version20260922,
     },
     {
