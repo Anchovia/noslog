@@ -192,6 +192,7 @@ export default function Vid2bmapImportPanel({
     onReplaceFile,
     onSeek,
     onBeforeApply,
+    onAfterApply,
 }: {
     file: File;
     onClose: () => void;
@@ -199,6 +200,8 @@ export default function Vid2bmapImportPanel({
     onSeek: (timeMs: number) => void;
     /** 넣기 직전 지금 초안을 버전으로 저장. 실패하면 false */
     onBeforeApply: () => Promise<boolean>;
+    /** 넣은 직후 「영상 추출」 버전으로 저장 — 공개 채보 출처 표기의 근거 */
+    onAfterApply: (message: string) => Promise<boolean>;
 }) {
     const store = useChartEditorStoreApi();
     const document = useChartEditorStore((state) => state.document);
@@ -464,6 +467,10 @@ export default function Vid2bmapImportPanel({
             if (EDITOR_SNAP_DIVISORS.includes(editorSnap)) {
                 store.getState().setSnapDivisor(editorSnap);
             }
+            // 출처 기록 — 이 버전 이하가 공개되면 뷰어에 「노트 배치 · 영상에서 추출(vid2bmap)」
+            await onAfterApply(
+                `vid2bmap · 새로 ${merged.addedIds.length} · 뺌 ${merged.removedIds.length}${tempoChanges.length > 0 ? ` · 타이밍 ${tempoChanges.length}` : ""}`
+            );
             toast.success(
                 `영상 추출 노트를 초안에 넣었습니다 — 새로 ${merged.addedIds.length.toLocaleString("ko-KR")} · 뺌 ${merged.removedIds.length.toLocaleString("ko-KR")}${tempoChanges.length > 0 ? ` · 타이밍 포인트 ${tempoChanges.length}` : ""}${selection.length > 0 ? ` · 손 확인 ${selection.length}개 선택됨` : ""}`
             );

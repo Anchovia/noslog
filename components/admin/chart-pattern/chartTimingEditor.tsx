@@ -35,6 +35,7 @@ import { toast } from "sonner";
 
 import {
     createChartPatternRevision,
+    createChartPatternVid2bmapRevision,
     publishChartPattern,
     restoreChartPatternRevision,
     saveChartPatternDraft,
@@ -322,7 +323,7 @@ function ChartTimingEditorWorkspace({
     }, [metadata.chartId, store, validateCurrentDocument]);
 
     const runExplicitSave = useCallback(
-        async (kind: "manual" | "publish") => {
+        async (kind: "manual" | "publish" | "vid2bmap", message?: string) => {
             const state = store.getState();
             if (state.saveStatus === "saving") {
                 toast.error("현재 저장이 끝난 뒤 다시 시도해주세요.");
@@ -353,11 +354,14 @@ function ChartTimingEditorWorkspace({
                 const action =
                     kind === "publish"
                         ? publishChartPattern
-                        : createChartPatternRevision;
+                        : kind === "vid2bmap"
+                          ? createChartPatternVid2bmapRevision
+                          : createChartPatternRevision;
                 const result = await action({
                     chartId: metadata.chartId,
                     baseVersion: state.draftVersion,
                     document: validDocument,
+                    ...(message ? { message } : {}),
                 });
                 if (!result.success || result.draftVersion === undefined) {
                     store.getState().markSaveError(result.message);
@@ -494,6 +498,16 @@ function ChartTimingEditorWorkspace({
         // 미리보기는 노트 캔버스에만 그린다
         setEditorMode("notes");
     }
+
+    /** 넣은 직후 「영상 추출」 버전으로 — 이 버전이 공개 채보 출처 표기의 근거(2026-09-24 C2) */
+    const saveAfterImport = useCallback(
+        async (message: string) => {
+            const before = store.getState().savedRevision;
+            await runExplicitSave("vid2bmap", message);
+            return store.getState().savedRevision > before;
+        },
+        [runExplicitSave, store]
+    );
 
     /** 가져오기 직전 지금 초안을 복구 가능한 버전으로 — 저장 버전 번호가 올랐으면 성공 */
     const saveBeforeImport = useCallback(async () => {
@@ -956,7 +970,10 @@ function ChartTimingEditorWorkspace({
                                                 <span className="text-micro">
                                                     {revision.kind === "publish"
                                                         ? "공개"
-                                                        : "저장"}
+                                                        : revision.kind ===
+                                                            "vid2bmap"
+                                                          ? "영상 추출"
+                                                          : "저장"}
                                                 </span>
                                             </span>
                                             <span className="text-micro mt-1 block">
@@ -1064,6 +1081,7 @@ function ChartTimingEditorWorkspace({
                             }
                             onSeek={(time) => void seek(time)}
                             onBeforeApply={saveBeforeImport}
+                            onAfterApply={saveAfterImport}
                         />
                     ) : editorMode === "timing" ? (
                         <TimingInspector />

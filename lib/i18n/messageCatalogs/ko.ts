@@ -1585,6 +1585,18 @@ export const koMessages = {
     "chart.strictPerformance": "엄밀한 연주 켜기",
     "chart.audioHelp":
         "음원 없이도 재생할 수 있습니다. 음원은 업로드되지 않습니다.",
+    "chart.source.author": "채보 · {name}",
+    "chart.source.operator": "운영자",
+    "chart.source.extracted": "노트 배치 · 영상에서 추출(vid2bmap)",
+    "chart.source.open": "출처 보기",
+    "chart.source.title": "출처",
+    "chart.source.chart": "채보",
+    "chart.source.published": "공개 v{revision} · {date}",
+    "chart.source.notes": "노트 배치",
+    "chart.source.notesBody":
+        "플레이 영상에서 자동 추출한 뒤 운영자가 검수했습니다.",
+    "chart.source.tool": "vid2bmap — 김영훈 · 최성희(KAIST) · MIT 라이선스",
+    "chart.source.paper": "논문(KSC 2023)",
     "chart.audioError": "브라우저에서 이 음원을 재생할 수 없습니다.",
     "record.analysis": "판정 분석",
     "record.bestDifference": "최고 점수 대비",

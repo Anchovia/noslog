@@ -1598,6 +1598,19 @@ export const jaMessages = {
     "chart.strictPerformance": "厳密演奏を有効化",
     "chart.audioHelp":
         "音源がなくても再生できます。音源はアップロードされません。",
+    "chart.source.author": "譜面 · {name}",
+    "chart.source.operator": "運営",
+    "chart.source.extracted": "ノーツ配置 · 動画から抽出(vid2bmap)",
+    "chart.source.open": "出典を見る",
+    "chart.source.title": "出典",
+    "chart.source.chart": "譜面",
+    "chart.source.published": "公開 v{revision} · {date}",
+    "chart.source.notes": "ノーツ配置",
+    "chart.source.notesBody":
+        "プレイ動画から自動で抽出し、運営が確認しました。",
+    "chart.source.tool":
+        "vid2bmap — キム・ヨンフン · チェ・ソンヒ(KAIST) · MIT ライセンス",
+    "chart.source.paper": "論文(KSC 2023)",
     "chart.audioError": "このブラウザでは音源を再生できません。",
     "record.analysis": "判定分析",
     "record.bestDifference": "ベストスコアとの差",

@@ -68,6 +68,10 @@ describe("공개 채보 페이지", () => {
             pattern: {
                 publishedContent: publishedDocument,
                 publishedRevision: 3,
+                publishedAt: new Date("2026-09-24T02:34:50.000Z"),
+                publishedBy: { username: "운영자A", role: "admin" },
+                // 영상 추출 버전(2)이 공개 번호(3) 이하 → 출처 표기
+                revisions: [{ number: 2 }],
             },
         });
 
@@ -87,6 +91,11 @@ describe("공개 채보 페이지", () => {
             document: publishedDocument,
             jacketUrl: "/jackets/music.webp",
             backHref: "/ko/music/music-index/normal?tab=detail",
+            source: {
+                author: { name: "운영자A", operator: true },
+                publishedAt: "2026-09-24T02:34:50.000Z",
+                extracted: true,
+            },
         });
         expect(mocks.findFirst).toHaveBeenCalledWith(
             expect.objectContaining({
@@ -99,14 +108,59 @@ describe("공개 채보 페이지", () => {
                 },
                 select: expect.objectContaining({
                     pattern: {
-                        select: {
+                        select: expect.objectContaining({
                             publishedContent: true,
                             publishedRevision: true,
-                        },
+                        }),
                     },
                 }),
             })
         );
+    });
+
+    it("초안 내용은 읽지 않는다", async () => {
+        mocks.findFirst.mockResolvedValue(null);
+        await expect(
+            PublicChartPatternPage({
+                params: Promise.resolve({
+                    index: "music-index",
+                    difficulty: "normal",
+                }),
+            })
+        ).rejects.toThrow("NEXT_NOT_FOUND");
+        const select = mocks.findFirst.mock.calls[0][0].select.pattern.select;
+        expect(select).not.toHaveProperty("draftContent");
+    });
+
+    it("영상 추출 버전이 공개 뒤에만 있으면 출처 표기를 하지 않는다", async () => {
+        mocks.findFirst.mockResolvedValue({
+            difficulty: "Normal",
+            level: 1,
+            music: {
+                index: "music-index",
+                title: "테스트 악곡",
+                artist: null,
+                background: null,
+            },
+            pattern: {
+                publishedContent: publishedDocument,
+                publishedRevision: 3,
+                publishedAt: null,
+                publishedBy: null,
+                revisions: [{ number: 5 }],
+            },
+        });
+        const element = await PublicChartPatternPage({
+            params: Promise.resolve({
+                index: "music-index",
+                difficulty: "normal",
+            }),
+        });
+        expect(element.props.source).toEqual({
+            author: null,
+            publishedAt: null,
+            extracted: false,
+        });
     });
 
     it("공개 스냅샷이 없으면 채보를 노출하지 않는다", async () => {

@@ -425,6 +425,11 @@ old design-stage checklist. Changes to material behavior require a user decision
   replace the bar-interval BPM warning, are on by default, add the point at the beat with the
   previous time signature, and go in with the notes in one undoable step. No proposal where a
   timing point already exists; older zips without beat frames keep the warning only.
+- Provenance (2026-09-24 C2): right after an import the editor saves a revision with
+  kind `vid2bmap`. A published chart whose published revision number is at or after the first
+  `vid2bmap` revision shows "노트 배치 · 영상에서 추출(vid2bmap)" and a sources dialog (vid2bmap,
+  its authors, MIT, paper and repository links). The byline is the publisher's username with the
+  operator tag when their role is admin. The viewer never reads draft content.
 
 ## Official X news (2026-09-19)
 

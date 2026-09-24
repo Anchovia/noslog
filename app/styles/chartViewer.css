@@ -11,6 +11,45 @@
     gap: var(--nl-spacing-4);
     min-width: 0;
 }
+/* 출처 표기(2026-09-24 C2) — 아티스트 아래 「채보 · 이름 [운영자]」, 메타 아래 「노트 배치 · 영상에서 추출 … 출처 보기 ›」.
+   태그(24)는 글자 줄(20)을 늘리지 않게 위아래로 당긴다(채보 정보 기여 칸과 같은 방식) */
+.noslog-ui .nl-chart-viewer__byline {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+    margin: 0;
+}
+.noslog-ui .nl-chart-viewer__byline > .nl-tag {
+    margin-block: calc(
+        (var(--nl-type-line-height-20) - var(--nl-spacing-24)) / 2
+    );
+}
+.noslog-ui .nl-chart-viewer__source {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--nl-spacing-8);
+}
+/* 출처 창 목록 — 「패턴 경향 기준」 창과 같은 간격(항목 사이 16 · 제목 → 내용 8) */
+.noslog-ui .nl-chart-viewer__sources {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-16);
+    margin: 0;
+}
+.noslog-ui .nl-chart-viewer__sources > div {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-chart-viewer__sources dd {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-4);
+    margin: 0;
+}
 .noslog-ui .nl-chart-viewer__title-row {
     display: flex;
     flex-wrap: wrap;

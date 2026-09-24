@@ -1,10 +1,13 @@
 "use client";
 
+import { ChevronRight } from "lucide-react";
+
 import BackLink from "@/components/ui/backLink";
 import { useMemo, useState, useSyncExternalStore } from "react";
 
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import PageContainer from "@/components/layout/pageContainer";
+import ModalDialog from "@/components/ui/modalDialog";
 import { SegmentedControl } from "@/components/ui/segmentedControl";
 import { StatusMessage } from "@/components/ui/statusMessage";
 import {
@@ -48,7 +51,19 @@ interface ChartSheetViewerProps {
     backHref: string;
     jacketUrl: string | null;
     preview?: boolean;
+    /** 출처 표기(2026-09-24 C2) — 공개 채보만. 작성자 = 공개한 사람, extracted = 영상 추출 버전에서 나온 채보 */
+    source?: ChartSource;
 }
+
+export interface ChartSource {
+    author: { name: string; operator: boolean } | null;
+    publishedAt: string | null;
+    extracted: boolean;
+}
+
+const VID2BMAP_PAPER_URL =
+    "https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE11705207";
+const VID2BMAP_GITHUB_URL = "https://github.com/Neutrinoant/vid2bmap";
 
 const CHART_WIDTH = 220;
 const MEASURE_GUTTER_WIDTH = 56;
@@ -88,12 +103,14 @@ export default function ChartSheetViewer({
     backHref,
     jacketUrl,
     preview = false,
+    source,
 }: ChartSheetViewerProps) {
     const locale = useLocale();
     const t = useTranslations();
     const numberLocale =
         locale === "ja" ? "ja-JP" : locale === "en" ? "en-US" : "ko-KR";
     const [viewMode, setViewMode] = useState<"falling" | "sheet">("falling");
+    const [sourceOpen, setSourceOpen] = useState(false);
     const browserSupport = useSyncExternalStore(
         subscribeBrowserSupport,
         getBrowserSupportSnapshot,
@@ -158,6 +175,16 @@ export default function ChartSheetViewer({
                 <p className="nl-body-secondary">
                     {artist ?? t("chart.unknownArtist")}
                 </p>
+                {source?.author ? (
+                    <p className="nl-chart-viewer__byline nl-body-secondary">
+                        {t("chart.source.author", { name: source.author.name })}
+                        {source.author.operator ? (
+                            <span className="nl-tag nl-tag--strong">
+                                {t("chart.source.operator")}
+                            </span>
+                        ) : null}
+                    </p>
+                ) : null}
                 <p className="nl-metadata nl-muted">
                     {t("chart.noteCount", {
                         count: document.notes.length.toLocaleString(
@@ -175,6 +202,97 @@ export default function ChartSheetViewer({
                     {" · "}
                     {formatEditorTime(playbackDurationMs)}
                 </p>
+                {source?.extracted ? (
+                    <div className="nl-chart-viewer__source">
+                        <span className="nl-metadata nl-muted">
+                            {t("chart.source.extracted")}
+                        </span>
+                        <ModalDialog
+                            open={sourceOpen}
+                            onOpenChange={setSourceOpen}
+                            title={t("chart.source.title")}
+                            trigger={
+                                <button
+                                    type="button"
+                                    className="nl-heading-link nl-control"
+                                >
+                                    {t("chart.source.open")}
+                                    <ChevronRight aria-hidden />
+                                </button>
+                            }
+                        >
+                            <dl className="nl-chart-viewer__sources">
+                                <div>
+                                    <dt className="nl-metadata nl-muted">
+                                        {t("chart.source.chart")}
+                                    </dt>
+                                    <dd>
+                                        {source.author ? (
+                                            <p className="nl-chart-viewer__byline nl-body-secondary">
+                                                {source.author.name}
+                                                {source.author.operator ? (
+                                                    <span className="nl-tag nl-tag--strong">
+                                                        {t(
+                                                            "chart.source.operator"
+                                                        )}
+                                                    </span>
+                                                ) : null}
+                                            </p>
+                                        ) : null}
+                                        {revision !== null &&
+                                        source.publishedAt ? (
+                                            <p className="nl-metadata nl-muted">
+                                                {t("chart.source.published", {
+                                                    revision,
+                                                    date: new Intl.DateTimeFormat(
+                                                        numberLocale,
+                                                        { dateStyle: "medium" }
+                                                    ).format(
+                                                        new Date(
+                                                            source.publishedAt
+                                                        )
+                                                    ),
+                                                })}
+                                            </p>
+                                        ) : null}
+                                    </dd>
+                                </div>
+                                <div>
+                                    <dt className="nl-metadata nl-muted">
+                                        {t("chart.source.notes")}
+                                    </dt>
+                                    <dd>
+                                        <p className="nl-body-secondary">
+                                            {t("chart.source.notesBody")}
+                                        </p>
+                                        <p className="nl-body-secondary">
+                                            {t("chart.source.tool")}
+                                        </p>
+                                        <p className="nl-metadata">
+                                            <a
+                                                href={VID2BMAP_PAPER_URL}
+                                                target="_blank"
+                                                rel="noreferrer"
+                                                className="nl-link nl-text-link--underlined"
+                                            >
+                                                {t("chart.source.paper")}
+                                            </a>
+                                            {" · "}
+                                            <a
+                                                href={VID2BMAP_GITHUB_URL}
+                                                target="_blank"
+                                                rel="noreferrer"
+                                                className="nl-link nl-text-link--underlined"
+                                            >
+                                                GitHub
+                                            </a>
+                                        </p>
+                                    </dd>
+                                </div>
+                            </dl>
+                        </ModalDialog>
+                    </div>
+                ) : null}
             </header>
 
             <div className="nl-chart-viewer__controls">

@@ -58,6 +58,15 @@ export default async function PublicChartPatternPage({
                 select: {
                     publishedContent: true,
                     publishedRevision: true,
+                    publishedAt: true,
+                    publishedBy: { select: { username: true, role: true } },
+                    // 출처 표기(2026-09-24 C2) — 공개 번호 이하에 「영상 추출」 버전이 있으면 영상에서 추출한 채보
+                    revisions: {
+                        where: { kind: "vid2bmap" },
+                        select: { number: true },
+                        orderBy: { number: "asc" },
+                        take: 1,
+                    },
                 },
             },
         },
@@ -87,6 +96,19 @@ export default async function PublicChartPatternPage({
             difficulty={chart.difficulty}
             level={chart.level}
             revision={chart.pattern.publishedRevision}
+            source={{
+                author: chart.pattern.publishedBy?.username
+                    ? {
+                          name: chart.pattern.publishedBy.username,
+                          operator: chart.pattern.publishedBy.role === "admin",
+                      }
+                    : null,
+                publishedAt: chart.pattern.publishedAt?.toISOString() ?? null,
+                extracted:
+                    (chart.pattern.revisions[0]?.number ??
+                        Number.POSITIVE_INFINITY) <=
+                    chart.pattern.publishedRevision,
+            }}
             document={document.data}
             jacketUrl={getJacketUrl(chart.music.index, chart.music.background)}
             backHref={localizePath(

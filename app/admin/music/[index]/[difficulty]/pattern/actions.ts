@@ -158,7 +158,7 @@ export async function saveChartPatternDraft(
 
 async function saveRevision(
     input: unknown,
-    kind: "manual" | "publish"
+    kind: "manual" | "publish" | "vid2bmap"
 ): Promise<ChartPatternActionResult> {
     const admin = await requireAdmin();
     const parsed = revisionInputSchema.safeParse(input);
@@ -320,6 +320,14 @@ async function saveRevision(
 
 export async function createChartPatternRevision(input: unknown) {
     return saveRevision(input, "manual");
+}
+
+/**
+ * 영상 추출(vid2bmap) 가져오기를 넣은 직후의 버전 — kind "vid2bmap" 이 공개 채보의 출처 표기 근거가 된다
+ * (그 번호 이하가 공개되면 「노트 배치 · 영상에서 추출」, 2026-09-24 C2 · 스키마 변경 없음)
+ */
+export async function createChartPatternVid2bmapRevision(input: unknown) {
+    return saveRevision(input, "vid2bmap");
 }
 
 export async function publishChartPattern(input: unknown) {
