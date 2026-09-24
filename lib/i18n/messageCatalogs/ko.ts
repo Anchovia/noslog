@@ -1016,7 +1016,6 @@ export const koMessages = {
     "exams.status.available": "응시 가능",
     "exams.status.insufficientBy": "Grd. {value} 부족",
     "exams.event.reference": "이벤트 검정은 참고용 — 인증하지 않습니다.",
-    "exams.requiredGradeMine": "요구 Grd. · 내 {value}",
     "exams.margin.ahead": "여유 {value}",
     "exams.margin.behind": "부족 {value}",
     "exams.progress.title": "합격까지",

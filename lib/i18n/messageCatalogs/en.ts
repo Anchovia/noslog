@@ -1027,7 +1027,6 @@ export const enMessages = {
     "exams.status.insufficientBy": "Grd. {value} short",
     "exams.event.reference":
         "Event exams are for reference only — no certification.",
-    "exams.requiredGradeMine": "Required Grd. · Yours {value}",
     "exams.margin.ahead": "{value} ahead",
     "exams.margin.behind": "{value} short",
     "exams.progress.title": "To Pass",

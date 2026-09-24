@@ -1015,7 +1015,6 @@ export const jaMessages = {
     "exams.status.available": "受検可能",
     "exams.status.insufficientBy": "Grd. {value} 不足",
     "exams.event.reference": "イベント検定は参考用です — 認証はしません。",
-    "exams.requiredGradeMine": "必要Grd.・自分 {value}",
     "exams.margin.ahead": "余裕 {value}",
     "exams.margin.behind": "不足 {value}",
     "exams.progress.title": "合格まで",
