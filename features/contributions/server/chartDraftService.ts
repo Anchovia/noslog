@@ -480,19 +480,21 @@ function noteKey(note: ChartDocument["notes"][number]) {
     return `${note.tick}:${note.lane}:${note.width}:${note.type}:${note.hand}:${note.durationTicks}`;
 }
 
-function changedNoteCount(next: ChartDocument, base: ChartDocument) {
+/** 공개본 대비 바뀐 노트 수 — 고친 노트는 「빠진 것 + 생긴 것」 한 쌍이라 둘 중 큰 쪽으로 센다 */
+export function changedNoteCount(next: ChartDocument, base: ChartDocument) {
     const before = new Map<string, number>();
     for (const note of base.notes)
         before.set(noteKey(note), (before.get(noteKey(note)) ?? 0) + 1);
-    let changed = 0;
+    let added = 0;
     for (const note of next.notes) {
         const key = noteKey(note);
         const count = before.get(key) ?? 0;
         if (count) before.set(key, count - 1);
-        else changed += 1;
+        else added += 1;
     }
-    for (const count of before.values()) changed += count;
-    return changed;
+    let removed = 0;
+    for (const count of before.values()) removed += count;
+    return Math.max(added, removed);
 }
 
 export async function listChartDraftsForReview(
