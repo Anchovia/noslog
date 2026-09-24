@@ -127,10 +127,7 @@ export default function ProfileIdentity({
                         )}
                         {/* 기여 라벨(2026-09-24 P1) — 프로필에서는 Lv.1 부터, 누르면 아래 「기여」 구역으로 */}
                         {user.role === "admin" ? (
-                            <a
-                                href="#profile-contribution"
-                                className="nl-tag nl-tag--strong"
-                            >
+                            <a href="#profile-contribution" className="nl-tag">
                                 {t("contribution.label.operator")}
                             </a>
                         ) : contributionLevel(user.contribution?.points ?? 0)

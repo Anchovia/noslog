@@ -27,7 +27,7 @@ export default function ContributionLabel({
                 title={t("contribution.label.operator")}
                 description={t("contribution.label.operatorHelp")}
             >
-                <span className="nl-tag nl-tag--strong">
+                <span className="nl-tag">
                     {t("contribution.label.operator")}
                 </span>
             </TermHelp>
