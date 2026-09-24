@@ -1575,13 +1575,8 @@ export const jaMessages = {
     "chart.sheet": "全譜面",
     "chart.safariHelp":
         "Safariでは落下表示に対応していないため、全譜面を表示します。落下表示はChromeまたはEdgeでご確認ください。",
-    "chart.fallingHelp":
-        "ノートが判定ラインへ到達する流れを再生します。ローカル音源はブラウザ内だけで使用され、サーバーへ送信されません。",
-    "chart.sheetHelp":
-        "下から上へ続きます。右のミニマップで好きな区間へ移動できます。",
     "chart.leftHand": "左手ガイド",
     "chart.rightHand": "右手ガイド",
-    "chart.layout": "28レーン・1列4小節",
     "chart.empty": "表示するノートがありません。",
     "chart.sheetScroll": "全譜面",
     "chart.columnAria": "{count}列、{start}から{end}まで",

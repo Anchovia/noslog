@@ -199,12 +199,6 @@ export default function ChartSheetViewer({
         [contentEndMs, document.ticksPerQuarter, document.timingPoints, panels]
     );
 
-    const helpText =
-        browserSupport === "safari"
-            ? t("chart.safariHelp")
-            : effectiveViewMode === "falling"
-              ? t("chart.fallingHelp")
-              : t("chart.sheetHelp");
     const difficultyClass = `nl-level--${difficulty.toLowerCase()}`;
     // 의견 시각 누름 · 주소 `?t=` — 낙하형으로 그 시각에 서고, 캔버스가 보이게 올린다. 주소는 공유용으로 바꿔 둔다
     const seekTo = (timeMs: number) => {
@@ -405,10 +399,13 @@ export default function ChartSheetViewer({
                         { value: "sheet", label: t("chart.sheet") },
                     ]}
                 />
-                <StatusMessage
-                    severity={browserSupport === "safari" ? "warning" : "info"}
-                    title={helpText}
-                />
+                {/* 낙하형 · 전체 악보 도움말(파란 안내 창)은 두지 않는다(2026-09-25, 사용자) — Safari 경고만 */}
+                {browserSupport === "safari" ? (
+                    <StatusMessage
+                        severity="warning"
+                        title={t("chart.safariHelp")}
+                    />
+                ) : null}
                 <div className="nl-chart-viewer__legend">
                     <Legend
                         color={handColors.left}
@@ -418,9 +415,6 @@ export default function ChartSheetViewer({
                         color={handColors.right}
                         label={t("chart.rightHand")}
                     />
-                    <span className="nl-metadata nl-muted nl-chart-viewer__layout">
-                        {t("chart.layout")}
-                    </span>
                 </div>
             </div>
 

@@ -1580,13 +1580,8 @@ export const enMessages = {
     "chart.sheet": "Full Chart",
     "chart.safariHelp":
         "Safari does not support the falling viewer, so the full chart is shown. Use Chrome or Edge for the falling view.",
-    "chart.fallingHelp":
-        "Plays the flow of notes reaching the judgement line. Local audio stays in your browser and is never sent to the server.",
-    "chart.sheetHelp":
-        "Reads from bottom to top. Use the minimap on the right to jump to any part.",
     "chart.leftHand": "Left-hand guide",
     "chart.rightHand": "Right-hand guide",
-    "chart.layout": "28 lanes · 4 measures per column",
     "chart.empty": "No notes to display.",
     "chart.sheetScroll": "Full chart",
     "chart.columnAria": "Column {count}, {start} to {end}",

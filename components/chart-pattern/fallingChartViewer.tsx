@@ -860,6 +860,12 @@ export default function FallingChartViewer({
     const [settingsOpen, setSettingsOpen] = useState(false);
     // 설정 창을 닫으려고 무대를 누른 것은 재생 · 일시정지로 치지 않는다(동영상 플레이어처럼)
     const closedSettingsRef = useRef(false);
+    // 누르기 시작(pointerdown)에 기록 — iOS Safari 의 click 에는 pointerType 이 없고, 손가락으로 바깥을 누르면
+    // Radix 는 창 닫힘을 click 때로 미뤄 무대 click 이 먼저 온다(2026-09-25). 그래서 click 대신 누르기 시작을 본다
+    const pressRef = useRef<{ touch: boolean; settingsOpen: boolean }>({
+        touch: false,
+        settingsOpen: false,
+    });
     const idleTimerRef = useRef<number | null>(null);
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const objectUrlRef = useRef<string | null>(null);
@@ -1361,13 +1367,24 @@ export default function FallingChartViewer({
                 {/* 무대를 누르면 재생 · 일시정지(2026-09-25, 동영상 플레이어처럼) — 키보드는 재생 버튼으로 */}
                 <div
                     className="nl-chart-stage__canvas"
+                    onPointerDownCapture={(event) => {
+                        pressRef.current = {
+                            touch: event.pointerType === "touch",
+                            settingsOpen,
+                        };
+                    }}
                     onClick={(event) => {
-                        if (closedSettingsRef.current) {
+                        const press = pressRef.current;
+                        pressRef.current = {
+                            touch: false,
+                            settingsOpen: false,
+                        };
+                        if (closedSettingsRef.current || press.settingsOpen) {
                             closedSettingsRef.current = false;
                             return;
                         }
                         const native = event.nativeEvent as PointerEvent;
-                        if (native.pointerType === "touch") {
+                        if (press.touch || native.pointerType === "touch") {
                             const rect =
                                 event.currentTarget.getBoundingClientRect();
                             handleStageTap(
