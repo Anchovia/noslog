@@ -19,6 +19,7 @@ import {
     collectVid2bmapNotes,
     defaultVid2bmapChoice,
     planVid2bmapMerge,
+    roundVid2bmapBpm,
     convertVid2bmap,
     defaultVid2bmapFirstBarTick,
     diffChartNotes,
@@ -1245,6 +1246,15 @@ describe("vid2bmap tempo changes from raw beat frames", () => {
         expect(
             applyVid2bmapStartTiming(points, { bpm: null, numerator: 3 })
         ).toEqual([{ ...points[0], numerator: 3 }, points[1]]);
+    });
+
+    it("rounds a measured BPM to a whole number when close, otherwise to 0.5", () => {
+        // 海神 Real: 시작 159.82 · 원래 빠르기로 돌아온 곳 159.74 → 둘 다 160, 느린 구간 111.63 → 111.5, 끝 120.29 → 120
+        expect(
+            [159.82, 159.74, 111.63, 120.29, 82.96, 144.02].map(
+                roundVid2bmapBpm
+            )
+        ).toEqual([160, 160, 111.5, 120, 83, 144]);
     });
 
     it("stays quiet for a steady song and without beat frames", () => {

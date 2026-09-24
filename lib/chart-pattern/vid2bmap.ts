@@ -1277,6 +1277,18 @@ export interface Vid2bmapTempo {
     } | null;
 }
 
+/**
+ * 영상으로 잰 BPM → 제안 값(2026-09-25 B, 사용자): 정수에서 0.3 안이면 정수, 아니면 0.5 단위.
+ * 0.5 단위만이면 海神 Real 48마디(원래 빠르기로 돌아옴) 159.74 가 159.5 가 되어 시작 160 과 어긋났다.
+ * 정수에서 먼 값(111.63)은 0.5 단위로 남겨 반 BPM 곡을 잃지 않는다
+ */
+export function roundVid2bmapBpm(measured: number) {
+    const whole = Math.round(measured);
+    return Math.abs(measured - whole) <= 0.3
+        ? whole
+        : Math.round(measured * 2) / 2;
+}
+
 /** 템포가 바뀌었다고 볼 차이(비율) */
 const TEMPO_TOLERANCE = 0.015;
 /** 한 번에 보는 박 수 — 이만큼 이어져야 바뀐 것으로 본다 */
@@ -1441,7 +1453,7 @@ export function detectVid2bmapTempoChanges(
             ? {
                   measuredBpm: Math.round(firstMeasured * 100) / 100,
                   chartBpm: origin.bpm,
-                  bpm: Math.round(firstMeasured * 2) / 2,
+                  bpm: roundVid2bmapBpm(firstMeasured),
                   beats: segments[1]?.start ?? durations.length,
               }
             : null;
@@ -1457,7 +1469,7 @@ export function detectVid2bmapTempoChanges(
         );
         const point = activePoint(sorted, tick);
         const measured = toBpm(segment.frames, point);
-        const bpm = Math.round(measured * 2) / 2;
+        const bpm = roundVid2bmapBpm(measured);
         // 시작 BPM 제안이 있으면 첫 구간은 그 값에서 바뀌는 것으로 본다
         const fromBpm =
             changes.length > 0 && changes[changes.length - 1].tick > point.tick
