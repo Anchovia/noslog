@@ -16,6 +16,7 @@ import {
     convertVid2bmap,
     defaultVid2bmapFirstBarTick,
     diffChartNotes,
+    groupVid2bmapGlissando,
     snapVid2bmapTick,
     suggestVid2bmapSnap,
     vid2bmapBeatPosition,
@@ -508,6 +509,59 @@ describe("chart note diff for notes moved to a nearby beat", () => {
     });
 });
 
+describe("vid2bmap merge plan with draft notes in the way", () => {
+    it("defaults to removing a draft-only note an incoming note would overlap", () => {
+        const base = {
+            hand: "left" as const,
+            points: [],
+        };
+        // 초안: 가로대를 일반 노트로 읽은 것(1박 뒤 4번 칸) · 가져올 것: 0 → 8번 칸 글리산도(1박 길이 2박)
+        const current: ChartNote[] = [
+            {
+                ...base,
+                id: "rung",
+                type: "standard",
+                tick: 720,
+                durationTicks: 0,
+                lane: 4,
+                width: 3,
+            },
+            {
+                ...base,
+                id: "far",
+                type: "standard",
+                tick: 2400,
+                durationTicks: 0,
+                lane: 20,
+                width: 3,
+            },
+        ];
+        const incoming: ChartNote[] = [
+            {
+                ...base,
+                id: "g",
+                type: "glissando",
+                tick: 480,
+                durationTicks: 480,
+                lane: 0,
+                width: 3,
+                points: [{ tickOffset: 480, lane: 8, width: 3 }],
+            },
+        ];
+        const plan = planVid2bmapMerge(
+            current,
+            diffChartNotes(current, incoming)
+        );
+        const rung = plan.items.find((item) => item.current[0]?.id === "rung")!;
+        const far = plan.items.find((item) => item.current[0]?.id === "far")!;
+        expect([rung.blocksIncoming, defaultVid2bmapChoice(rung)]).toEqual([
+            true,
+            "incoming",
+        ]);
+        expect(defaultVid2bmapChoice(far)).toBe("current");
+    });
+});
+
 describe("chart position label", () => {
     const altalePoints = [point(0, 60, 90, 3, 4)];
 
@@ -823,6 +877,78 @@ describe("vid2bmap grid per beat", () => {
             tick: 496,
         });
         expect(conversion.gridCheckIds).toEqual([conversion.notes[1].id]);
+    });
+});
+
+describe("vid2bmap glissando", () => {
+    // 40프레임 = 1박. 1박부터 5프레임마다 한 칸씩 오르는 조각 9개(0 → 8번 칸) + 멀리 떨어진 조각 하나
+    const pieces = Array.from({ length: 9 }, (_, index) => [
+        40 + index * 5,
+        index,
+        index + 2,
+    ]);
+    const result: Vid2bmapResult = {
+        fps: 60,
+        startSec: 0,
+        barRows: [0, 40, 80, 120, 160],
+        // 경로 위 일반 노트 = 가로대를 두 번 읽은 것
+        simple: [[60, 4, 6]],
+        tenuto: [],
+        trill: [],
+        glissando: [...pieces, [150, 20, 22]],
+        beatFrames: null,
+    };
+    const collected = collectVid2bmapNotes(result);
+
+    it("joins pieces into chains and drops a lone piece", () => {
+        const { chains, dropped } = groupVid2bmapGlissando(collected.notes);
+        expect(chains.map((chain) => chain.length)).toEqual([9]);
+        expect(dropped).toBe(1);
+    });
+
+    it("imports a chain as one glissando with a simplified path and drops rung reads", () => {
+        let next = 0;
+        const conversion = convertVid2bmap(result, collected.notes, {
+            timingPoints: [point(0, 0, 90, 3, 4)],
+            firstBarTick: 0,
+            snapDivisor: 6,
+            include: {
+                standard: true,
+                tenuto: true,
+                trill: true,
+                glissando: true,
+            },
+            createId: () => `n${(next += 1)}`,
+        });
+        expect(conversion.notes).toHaveLength(1);
+        const [glissando] = conversion.notes;
+        expect(glissando).toMatchObject({
+            type: "glissando",
+            hand: "left",
+            tick: 480,
+            durationTicks: 480,
+            lane: 0,
+            width: 3,
+            glissandoSnapDivisor: 24,
+            points: [{ tickOffset: 480, lane: 8, width: 3 }],
+        });
+        expect(conversion.glissandoIds).toEqual([glissando.id]);
+        expect(conversion.warnings).toContainEqual({
+            kind: "glissandoJoined",
+            count: 1,
+            dropped: 1,
+            rungNotes: 1,
+        });
+    });
+
+    it("leaves glissando out unless asked", () => {
+        const conversion = convertVid2bmap(result, collected.notes, {
+            timingPoints: [point(0, 0, 90, 3, 4)],
+            firstBarTick: 0,
+            snapDivisor: 6,
+            include: { standard: true, tenuto: true, trill: true },
+        });
+        expect(conversion.notes.map((note) => note.type)).toEqual(["standard"]);
     });
 });
 

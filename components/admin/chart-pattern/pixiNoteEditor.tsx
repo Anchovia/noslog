@@ -1913,7 +1913,30 @@ function drawImportNote(
             .fill({ color: colors.preview, alpha: 1 })
             .stroke({ color: colors.noteShadow, width: 1.2, alpha: 1 });
     };
-    if (note.type !== "standard" && note.durationTicks > 0) {
+    if (note.type === "glissando" && note.durationTicks > 0) {
+        // 글리산도는 경로를 따라(영상 추출 가져오기, 2026-09-24) — 왼쪽 가장자리를 올라가 오른쪽으로 내려오는 띠
+        const points = getChartNoteRenderPoints(note);
+        graphics
+            .poly(
+                [
+                    ...points.flatMap((point) => [
+                        point.lane * laneWidth + 3,
+                        yForTick(point.tick),
+                    ]),
+                    ...[...points]
+                        .reverse()
+                        .flatMap((point) => [
+                            (point.lane + point.width) * laneWidth - 3,
+                            yForTick(point.tick),
+                        ]),
+                ],
+                true
+            )
+            .fill({ color: colors.preview, alpha: 0.24 })
+            .stroke({ color: colors.preview, width: 1.4, alpha: 0.9 });
+        const last = points[points.length - 1];
+        cap(last.lane, last.width, yForTick(last.tick), true);
+    } else if (note.type !== "standard" && note.durationTicks > 0) {
         const endY = yForTick(note.tick + note.durationTicks);
         const lanes =
             note.type === "trill" && note.pairLane !== undefined

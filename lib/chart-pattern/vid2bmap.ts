@@ -7,7 +7,7 @@
  * Altale Real 앞부분 232개로 박 위치 · 칸 · 폭 · 종류가 모두 일치함을 확인(2026-09-23).
  * 손은 실행 스크립트가 LR_classification 브랜치 결과에서 붙여 온 것을 쓰고(Altale 232/232, 2026-09-24), 없으면 칸 위치로 추정한다.
  */
-import { findChartNoteConflicts } from "./editor";
+import { chartNotesOverlap, findChartNoteConflicts } from "./editor";
 import { CHART_LANE_COUNT, CHART_TICKS_PER_QUARTER } from "./schema";
 import type { ChartNote, ChartNoteType, ChartTimingPoint } from "./schema";
 import { sortTimingPoints, tickToMilliseconds } from "./timing";
@@ -68,7 +68,14 @@ export type Vid2bmapWarning =
     /** 기본 격자로는 한 자리로 뭉쳐 겹친 빠른 노트를 더 촘촘한 격자로 맞춘 수 */
     | { kind: "denseSnap"; count: number; tick: number }
     | { kind: "shortTenuto"; count: number }
-    | { kind: "trillSplit"; count: number };
+    | { kind: "trillSplit"; count: number }
+    /** 글리산도 조각을 이어 만든 수 · 이어지지 않아 버린 조각 수 · 가로대를 일반 노트로도 읽어 뺀 수 */
+    | {
+          kind: "glissandoJoined";
+          count: number;
+          dropped: number;
+          rungNotes: number;
+      };
 
 export interface Vid2bmapOptions {
     timingPoints: ChartTimingPoint[];
@@ -76,7 +83,10 @@ export interface Vid2bmapOptions {
     firstBarTick: number;
     /** 한 박을 몇으로 나눈 격자에 맞출지 */
     snapDivisor: number;
-    include: Record<Exclude<Vid2bmapKind, "glissando">, boolean>;
+    include: Record<Exclude<Vid2bmapKind, "glissando">, boolean> & {
+        /** 조각을 이어 글리산도 노트로(없으면 넣지 않음) */
+        glissando?: boolean;
+    };
     createId?: () => string;
 }
 
@@ -94,6 +104,8 @@ export interface Vid2bmapConversion {
     handUncertainIds: string[];
     /** 곡 전체 격자 대신 그 박의 격자로 맞춰 자리가 달라졌거나 영상 위치 그대로 둔 노트 id */
     gridCheckIds: string[];
+    /** 조각을 이어 만든 글리산도 id — 경로는 확인 필요 */
+    glissandoIds: string[];
     warnings: Vid2bmapWarning[];
 }
 
@@ -442,6 +454,67 @@ function snapByBeat(
     return { ticks, changedBeats, changed, offGrid, divisorAt };
 }
 
+/** 글리산도 조각 사이 최대 간격(영상 프레임) · 한 조각에서 다음 조각까지 최대 칸 이동 — Altale 은 약 5프레임 · 1~2칸, 빠진 조각이 있어도 11프레임 */
+export const VID2BMAP_GLISSANDO_GAP_FRAMES = 12;
+export const VID2BMAP_GLISSANDO_LANE_STEP = 4;
+
+/**
+ * 글리산도 조각 → 줄기. vid2bmap 은 대각선 노트를 가로대(조각)마다 [y, x1, x2] 로 준다(Altale 42조각 = 6줄기).
+ * y 순으로 간격 · 칸 이동이 한도 안이면 같은 줄기. 조각 하나뿐인 줄기는 버린다(길이 · 방향을 알 수 없음).
+ */
+export function groupVid2bmapGlissando(pieces: Vid2bmapRawNote[]) {
+    const sorted = pieces
+        .filter((piece) => piece.kind === "glissando")
+        .sort((a, b) => a.y - b.y || a.lane - b.lane);
+    const chains: Vid2bmapRawNote[][] = [];
+    for (const piece of sorted) {
+        const chain = chains.find((candidate) => {
+            const last = candidate[candidate.length - 1];
+            return (
+                piece.y > last.y &&
+                piece.y - last.y <= VID2BMAP_GLISSANDO_GAP_FRAMES &&
+                Math.abs(piece.lane - last.lane) <= VID2BMAP_GLISSANDO_LANE_STEP
+            );
+        });
+        if (chain) chain.push(piece);
+        else chains.push([piece]);
+    }
+    return {
+        chains: chains.filter((chain) => chain.length > 1),
+        dropped: chains.filter((chain) => chain.length === 1).length,
+    };
+}
+
+/** 경로 점 줄이기 — 앞뒤 점을 이은 직선에서 1칸 넘게 벗어나는 점만 남긴다(Ramer–Douglas–Peucker) */
+function simplifyPath<T extends { tick: number; lane: number }>(
+    points: T[]
+): T[] {
+    if (points.length <= 2) return points;
+    const first = points[0];
+    const last = points[points.length - 1];
+    let farthest = 0;
+    let distance = 0;
+    for (let index = 1; index < points.length - 1; index += 1) {
+        const point = points[index];
+        const ratio =
+            last.tick === first.tick
+                ? 0
+                : (point.tick - first.tick) / (last.tick - first.tick);
+        const gap = Math.abs(
+            point.lane - (first.lane + (last.lane - first.lane) * ratio)
+        );
+        if (gap > distance) {
+            distance = gap;
+            farthest = index;
+        }
+    }
+    if (distance <= 1) return [first, last];
+    return [
+        ...simplifyPath(points.slice(0, farthest + 1)).slice(0, -1),
+        ...simplifyPath(points.slice(farthest)),
+    ];
+}
+
 /** 추출 결과 → 초안에 넣을 노트 · 손 확인 목록 · 경고 */
 export function convertVid2bmap(
     result: Vid2bmapResult,
@@ -622,6 +695,112 @@ export function convertVid2bmap(
             ),
         });
     }
+    // 글리산도: 조각을 이어 시작 · 끝 · 꺾이는 점만 남긴 경로로(가로대 간격은 조각 간격, 2026-09-24).
+    // 겹침 재맞춤 뒤에 넣는다 — 경로가 다른 노트를 옮기게 하지 않는다
+    const glissandoIds: string[] = [];
+    let rungNotes = 0;
+    const glissando = groupVid2bmapGlissando(notes);
+    if (include.glissando) {
+        const sortedPoints = sortTimingPoints(timingPoints);
+        const snapAt = (y: number) => {
+            const raw = rawTickOf(y);
+            const point = activePoint(sortedPoints, raw);
+            const step =
+                beatTicksOf(point) /
+                snapped.divisorAt(raw, rawTickOf(y + 1) - raw);
+            return Math.round(
+                point.tick + Math.round((raw - point.tick) / step) * step
+            );
+        };
+        for (const chain of glissando.chains) {
+            const first = chain[0];
+            const tick = snapAt(first.y);
+            const path = simplifyPath(
+                chain.map((piece) => ({
+                    tick: Math.max(tick, snapAt(piece.y)),
+                    lane: piece.lane,
+                    width: piece.width,
+                }))
+            );
+            const beatTicks = beatTicksOf(activePoint(sortedPoints, tick));
+            const endTick = Math.max(
+                path[path.length - 1].tick,
+                tick + Math.round(beatTicks / snapDivisor)
+            );
+            // 가로대 간격 = 조각 간격(중간값, 에디터 스냅 1/4 ~ 1/32 중 가장 가까운 것)
+            const gaps = chain
+                .slice(1)
+                .map((piece, index) => snapAt(piece.y) - snapAt(chain[index].y))
+                .filter((gap) => gap > 0)
+                .sort((a, b) => a - b);
+            const gap = gaps[Math.floor(gaps.length / 2)] ?? beatTicks;
+            const rungDivisor = [4, 8, 12, 16, 24, 32].reduce(
+                (best, divisor) =>
+                    Math.abs((CHART_TICKS_PER_QUARTER * 4) / divisor - gap) <
+                    Math.abs((CHART_TICKS_PER_QUARTER * 4) / best - gap)
+                        ? divisor
+                        : best
+            );
+            const hands = chain.map((piece) => piece.hand).filter(Boolean);
+            const left = hands.filter((hand) => hand === "left").length;
+            const hand: ChartNote["hand"] =
+                hands.length > 0
+                    ? left * 2 >= hands.length
+                        ? "left"
+                        : "right"
+                    : first.lane + first.width / 2 <= CHART_LANE_COUNT / 2
+                      ? "left"
+                      : "right";
+            const note: ChartNote = {
+                id: createId(),
+                type: "glissando",
+                hand,
+                tick,
+                durationTicks: endTick - tick,
+                lane: first.lane,
+                width: first.width,
+                glissandoSnapDivisor: rungDivisor,
+                points: [
+                    ...new Map(
+                        path.slice(1).map((point, index, rest) => {
+                            const tickOffset =
+                                index === rest.length - 1
+                                    ? endTick - tick
+                                    : point.tick - tick;
+                            return [
+                                tickOffset,
+                                {
+                                    tickOffset,
+                                    lane: point.lane,
+                                    width: point.width,
+                                },
+                            ] as const;
+                        })
+                    ).values(),
+                ].filter((point) => point.tickOffset > 0),
+            };
+            if (hands.length > 0) handKnownIds.push(note.id);
+            glissandoIds.push(note.id);
+            // vid2bmap 은 가로대를 일반 노트로도 읽는다(Altale 34마디 3박: 영상엔 띠 하나, 일반 노트 2개가 경로 위에 겹침) — 경로와 겹치는 일반 노트는 뺀다
+            const before = output.length;
+            output = output.filter(
+                (other) =>
+                    other.type !== "standard" ||
+                    !chartNotesOverlap(note, other, CHART_TICKS_PER_QUARTER)
+            );
+            rungNotes += before - output.length;
+            output.push(note);
+        }
+    }
+
+    if (include.glissando && glissando.chains.length + glissando.dropped > 0) {
+        warnings.push({
+            kind: "glissandoJoined",
+            count: glissando.chains.length,
+            dropped: glissando.dropped,
+            rungNotes,
+        });
+    }
     if (shortTenuto > 0)
         warnings.push({ kind: "shortTenuto", count: shortTenuto });
     if (trillSplit > 0)
@@ -631,12 +810,13 @@ export function convertVid2bmap(
         handKnownIds,
         handUncertainIds,
         gridCheckIds,
+        glissandoIds,
         warnings,
     };
 }
 
 export type ChartNoteDiffField =
-    "tick" | "type" | "lane" | "width" | "duration" | "pair" | "hand";
+    "tick" | "type" | "lane" | "width" | "duration" | "pair" | "path" | "hand";
 
 /**
  * 같은 틱에 짝이 없을 때, 같은 칸 · 폭 · 종류로 이만큼 안에 있으면 박 위치만 옮겨진 같은 노트로 본다(1/8 사분음표 = 60틱).
@@ -759,6 +939,15 @@ function noteDiffFields(
     ) {
         fields.push("pair");
     }
+    const pathOf = (note: ChartNote) =>
+        JSON.stringify(
+            note.points.map(({ tickOffset, lane, width }) => [
+                tickOffset,
+                lane,
+                width,
+            ])
+        );
+    if (pathOf(current) !== pathOf(incoming)) fields.push("path");
     if (
         current.hand !== incoming.hand &&
         (fields.length > 0 || handKnownIds.has(incoming.id))
@@ -834,6 +1023,8 @@ export interface Vid2bmapMergeItem {
     current: ChartNote[];
     incoming: ChartNote[];
     fields: ChartNoteDiffField[];
+    /** 내 초안에만 있는 노트가 가져올 노트와 겹침 — 남기면 넣을 수 없으니 기본은 빼기 */
+    blocksIncoming?: boolean;
 }
 
 export interface Vid2bmapMergePlan {
@@ -845,7 +1036,8 @@ export interface Vid2bmapMergePlan {
 
 /**
  * 비교 결과 → 고를 항목. 같은 틱에서 칸이 안 겹쳐 「내 초안에만 + 가져온 것에만」 으로 갈린 것은 한 항목(moved)으로 묶는다.
- * 기본 선택(defaultVid2bmapChoice): 달라짐 · 옮겨짐 · 초안 범위 안 새 노트 = 가져온 것, 내 초안에만 = 내 것.
+ * 기본 선택(defaultVid2bmapChoice): 달라짐 · 옮겨짐 · 초안 범위 안 새 노트 = 가져온 것, 내 초안에만 = 내 것
+ * (가져올 노트와 겹치면 빼기 — 예: 글리산도 가로대를 일반 노트로 두 번 읽어 초안에 들어가 있던 것).
  */
 export function planVid2bmapMerge(
     current: ChartNote[],
@@ -878,6 +1070,11 @@ export function planVid2bmapMerge(
         if (note.tick > lastCurrentTick) newSection.push(note);
         else group(note.tick).incoming.push(note);
     }
+    const incomingNotes = [
+        ...diff.same.map(([, note]) => note),
+        ...diff.changed.map((change) => change.incoming),
+        ...diff.onlyIncoming,
+    ];
     for (const [tick, entry] of byTick) {
         const kind: Vid2bmapMergeKind =
             entry.current.length > 0 && entry.incoming.length > 0
@@ -892,6 +1089,14 @@ export function planVid2bmapMerge(
             current: entry.current,
             incoming: entry.incoming,
             fields: [],
+            ...(kind === "onlyCurrent" &&
+            entry.current.some((note) =>
+                incomingNotes.some((other) =>
+                    chartNotesOverlap(note, other, CHART_TICKS_PER_QUARTER)
+                )
+            )
+                ? { blocksIncoming: true }
+                : {}),
         });
     }
     items.sort((a, b) => a.tick - b.tick || a.key.localeCompare(b.key));
@@ -901,7 +1106,9 @@ export function planVid2bmapMerge(
 export type Vid2bmapChoice = "current" | "incoming";
 
 export function defaultVid2bmapChoice(item: Vid2bmapMergeItem): Vid2bmapChoice {
-    return item.kind === "onlyCurrent" ? "current" : "incoming";
+    return item.kind === "onlyCurrent" && !item.blocksIncoming
+        ? "current"
+        : "incoming";
 }
 
 /** 고른 대로 합친 노트 목록과 새로 들어간 노트 id. 같은 노트는 내 것을 그대로 둔다 */

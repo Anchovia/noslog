@@ -59,7 +59,12 @@ const EDITOR_SNAP_DIVISORS = [1, 2, 3, 4, 6, 8, 12, 16, 24, 32];
 /** 목록에서 고른 곳이 판정선 위에 보이도록 조금 앞으로 되감는다 */
 const FOCUS_LEAD_MS = 600;
 
-type Include = { standard: boolean; tenuto: boolean; trill: boolean };
+type Include = {
+    standard: boolean;
+    tenuto: boolean;
+    trill: boolean;
+    glissando: boolean;
+};
 
 interface Loaded {
     result: Vid2bmapResult;
@@ -116,6 +121,7 @@ function describeItem(
                     return `길이 ${beatLengthLabel(current.durationTicks, beatTicks)} → ${beatLengthLabel(incoming.durationTicks, beatTicks)}`;
                 }
                 if (field === "pair") return "트릴 두 번째 위치";
+                if (field === "path") return "글리산도 경로";
                 if (field === "tick") {
                     return `→ ${chartPositionLabel(incoming.tick, timingPoints)}`;
                 }
@@ -129,7 +135,7 @@ function describeItem(
         return `칸 ${ranges(item.current)} → ${ranges(item.incoming)}`;
     }
     if (item.kind === "onlyCurrent")
-        return `내 초안에만 · 칸 ${ranges(item.current)}`;
+        return `내 초안에만 · 칸 ${ranges(item.current)}${item.blocksIncoming ? " · 가져올 노트와 겹침" : ""}`;
     return `가져온 것에만 · 칸 ${ranges(item.incoming)}`;
 }
 
@@ -156,6 +162,8 @@ function warningText(
             return `${chartPositionLabel(warning.tick, timingPoints)} ~ ${chartPositionLabel(warning.endTick, timingPoints)} 박자선 간격으로 본 BPM ${warning.estimatedBpm} ≠ 타이밍 ${warning.chartBpm} — 곡이 실제로 바뀌는지 타이밍 포인트 확인`;
         case "endCheck":
             return `마지막 박자선(${chartPositionLabel(warning.lastBarTick, timingPoints)}) 뒤 노트는 추출이 지웁니다 — 끝부분 확인`;
+        case "glissandoJoined":
+            return `글리산도 조각을 이어 ${warning.count}개로 만들었어요${warning.dropped > 0 ? `(이어지지 않은 조각 ${warning.dropped}개는 뺌)` : ""}${warning.rungNotes > 0 ? ` · 경로와 겹친 일반 노트 ${warning.rungNotes}개는 가로대를 두 번 읽은 것으로 보고 뺌` : ""} — 경로 확인 필요`;
         case "offGrid":
             return `${warning.count}개는 어느 격자에도 맞지 않아 영상 위치 그대로 넣었어요(${chartPositionLabel(warning.tick, timingPoints)}부터) — 넣은 뒤 「스냅 확인」 에서 확인`;
         case "localGrid":
@@ -221,6 +229,7 @@ export default function Vid2bmapImportPanel({
         standard: true,
         tenuto: true,
         trill: true,
+        glissando: true,
     });
     const [selectCenter, setSelectCenter] = useState(true);
     const [selectGridCheck, setSelectGridCheck] = useState(true);
@@ -795,6 +804,7 @@ export default function Vid2bmapImportPanel({
                                         ["standard", "일반"],
                                         ["tenuto", "테누토"],
                                         ["trill", "트릴"],
+                                        ["glissando", "글리산도"],
                                     ] as const
                                 ).map(([key, label]) => (
                                     <label
@@ -813,25 +823,14 @@ export default function Vid2bmapImportPanel({
                                             className="accent-text-primary size-3.5"
                                         />
                                         {label}
-                                        {key === "trill" ? (
+                                        {key === "trill" ||
+                                        key === "glissando" ? (
                                             <span className="text-micro font-normal">
                                                 확인 필요
                                             </span>
                                         ) : null}
                                     </label>
                                 ))}
-                                <label className="text-text-disabled flex h-6 items-center gap-2 text-xs font-semibold">
-                                    <input
-                                        type="checkbox"
-                                        checked={false}
-                                        disabled
-                                        className="size-3.5"
-                                    />
-                                    글리산도
-                                    <span className="text-micro font-normal">
-                                        조각 · 아직 안 됨
-                                    </span>
-                                </label>
                             </div>
                             <label className="flex items-start gap-2 text-xs font-semibold">
                                 <input
