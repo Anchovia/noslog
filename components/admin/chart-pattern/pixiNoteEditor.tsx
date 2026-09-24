@@ -45,6 +45,11 @@ import {
     tickToMilliseconds,
 } from "@/lib/chart-pattern/timing";
 import { findOffGridNotes } from "@/lib/chart-pattern/snapCheck";
+import {
+    trillHexes,
+    trillSolidSpan,
+    trillUnion,
+} from "@/lib/chart-pattern/trillShape";
 
 import { useTranslations } from "@/components/i18n/localeProvider";
 
@@ -174,6 +179,10 @@ const colors = {
     pianoRail: 0x252a34,
     pianoEdge: 0x969aa5,
 };
+
+/** 트릴 몸통(B′) — 칠 자리 투명도 · 옅어지는 쪽을 나눌 띠 수(공개 뷰어 낙하형과 같은 방식) */
+const TRILL_SOLID_ALPHA = 0.82;
+const TRILL_FADE_STRIPS = 8;
 
 function colorForHand(hand: ChartHand) {
     return hand === "left" ? colors.left : colors.right;
@@ -2187,101 +2196,107 @@ function drawNote({
             conflicted: isConflicted,
         });
     } else if (note.type === "trill") {
-        const pairLane = note.pairLane ?? note.lane;
-        const pairWidth = note.pairWidth ?? note.width;
-        const stepTicks = Math.max(
-            1,
-            Math.round((ticksPerQuarter * 4) / (note.trillSnapDivisor ?? 8))
-        );
-        const stepCount = Math.max(
-            1,
-            Math.ceil(note.durationTicks / stepTicks)
-        );
-        for (let index = 0; index < stepCount; index += 1) {
-            const startTick = note.tick + index * stepTicks;
-            const endTick = Math.min(
-                note.tick + note.durationTicks,
-                startTick + stepTicks
+        // 공개 뷰어와 같은 게임식(2026-09-24 B′): 두 자리를 합친 범위 전체에 촘촘한 육각형, 칠 자리 쪽만 진하고 반대편은 옅어짐
+        const union = trillUnion(note);
+        const x1 = union.lane * laneWidth + 2;
+        const x2 = (union.lane + union.width) * laneWidth - 2;
+        const color = colorForHand(note.hand);
+        for (const hex of trillHexes(note, ticksPerQuarter)) {
+            const bottomY = yForTick(hex.startTick) - 0.5;
+            const topY = yForTick(hex.endTick) + 0.5;
+            const middleY = (bottomY + topY) / 2;
+            const bevel = Math.min(
+                6,
+                (x2 - x1) * 0.12,
+                (bottomY - topY) * 0.35
             );
-            const fromLane = index % 2 === 0 ? note.lane : pairLane;
-            const fromWidth = index % 2 === 0 ? note.width : pairWidth;
-            const toLane = index % 2 === 0 ? pairLane : note.lane;
-            const toWidth = index % 2 === 0 ? pairWidth : note.width;
-            const topY = yForTick(endTick);
-            const bottomY = yForTick(startTick);
-            const gap = Math.min(2.5, Math.abs(bottomY - topY) * 0.08);
-            const polygon = [
-                fromLane * laneWidth + 2,
-                bottomY - gap,
-                (fromLane + fromWidth) * laneWidth - 2,
-                bottomY - gap,
-                (toLane + toWidth) * laneWidth - 2,
-                topY + gap,
-                toLane * laneWidth + 2,
-                topY + gap,
-            ];
-            graphics
-                .poly(polygon, true)
-                .fill({
-                    color: colorForHand(note.hand),
-                    alpha: baseAlpha * 0.72,
-                })
-                .stroke({
-                    color: colors.noteFace,
-                    width: 0.8,
-                    alpha: baseAlpha * 0.45,
-                });
-            if (isSelected) {
-                graphics.poly(polygon, true).stroke({
-                    color: colors.selection,
-                    width: 1.5,
-                    alpha: 0.92,
-                });
-            }
-            if (isConflicted) {
-                graphics.poly(polygon, true).stroke({
-                    color: colors.conflict,
-                    width: 2.8,
-                    alpha: 0.92,
-                });
+            const xAt = (fraction: number, inset: number) =>
+                Math.min(
+                    x2 - inset,
+                    Math.max(x1 + inset, x1 + (x2 - x1) * fraction)
+                );
+            const band = (from: number, to: number, alpha: number) =>
+                graphics
+                    .poly(
+                        [
+                            xAt(from, bevel),
+                            bottomY,
+                            xAt(to, bevel),
+                            bottomY,
+                            xAt(to, 0),
+                            middleY,
+                            xAt(to, bevel),
+                            topY,
+                            xAt(from, bevel),
+                            topY,
+                            xAt(from, 0),
+                            middleY,
+                        ],
+                        true
+                    )
+                    .fill({ color, alpha: baseAlpha * alpha });
+            const span = trillSolidSpan(hex, union);
+            band(span.from, span.to, TRILL_SOLID_ALPHA);
+            for (let strip = 0; strip < TRILL_FADE_STRIPS; strip += 1) {
+                const alpha =
+                    TRILL_SOLID_ALPHA * (1 - (strip + 0.5) / TRILL_FADE_STRIPS);
+                if (span.fadeLeft) {
+                    const step = span.from / TRILL_FADE_STRIPS;
+                    band(
+                        span.from - (strip + 1) * step,
+                        span.from - strip * step,
+                        alpha
+                    );
+                }
+                if (span.fadeRight) {
+                    const step = (1 - span.to) / TRILL_FADE_STRIPS;
+                    band(
+                        span.to + strip * step,
+                        span.to + (strip + 1) * step,
+                        alpha
+                    );
+                }
             }
         }
-        const startCenterX = (note.lane + note.width / 2) * laneWidth;
+        const headY = yForTick(note.tick);
+        const tailY = yForTick(note.tick + note.durationTicks);
+        if (isSelected || isConflicted) {
+            graphics
+                .rect(x1, tailY, x2 - x1, Math.max(1, headY - tailY))
+                .stroke({
+                    color: isConflicted ? colors.conflict : colors.selection,
+                    width: isConflicted ? 2.8 : 1.5,
+                    alpha: 0.92,
+                });
+        }
+        // 끝 막대(어두운 막대 + 손 색 테두리) · 머리(범위 전체) · 마름모
+        graphics
+            .poly(capPolygon(x1, tailY - 3.5, x2 - x1, 7), true)
+            .fill({ color: colors.background, alpha: baseAlpha })
+            .stroke({ color, width: 1.4, alpha: baseAlpha });
         drawCap({
             graphics,
-            x: note.lane * laneWidth,
-            centerY: yForTick(note.tick),
-            width: note.width * laneWidth,
+            x: union.lane * laneWidth,
+            centerY: headY,
+            width: union.width * laneWidth,
             hand: note.hand,
             alpha: baseAlpha,
             selected: isSelected,
             conflicted: isConflicted,
         });
-        const finalSegmentIndex = stepCount - 1;
-        const endLane = finalSegmentIndex % 2 === 0 ? pairLane : note.lane;
-        const endWidth = finalSegmentIndex % 2 === 0 ? pairWidth : note.width;
-        drawCap({
-            graphics,
-            x: endLane * laneWidth,
-            centerY: yForTick(note.tick + note.durationTicks),
-            width: endWidth * laneWidth,
-            hand: note.hand,
-            alpha: baseAlpha,
-            selected: isSelected,
-            conflicted: isConflicted,
-        });
+        const centerX = (union.lane + union.width / 2) * laneWidth;
         drawDiamond(
             graphics,
-            startCenterX,
-            yForTick(note.tick) - 1,
+            centerX - 3,
+            headY + 1,
             5,
             colors.selection,
             baseAlpha
         );
         drawDiamond(
             graphics,
-            startCenterX + 8,
-            yForTick(note.tick) - 8,
+            centerX + 4,
+            headY - 5,
             4,
             colors.selection,
             baseAlpha * 0.92
