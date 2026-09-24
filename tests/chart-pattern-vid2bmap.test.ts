@@ -465,6 +465,49 @@ describe("vid2bmap hands from the LR run", () => {
     });
 });
 
+describe("chart note diff for notes moved to a nearby beat", () => {
+    const note = (
+        id: string,
+        tick: number,
+        lane: number,
+        extra: Partial<ChartNote> = {}
+    ): ChartNote => ({
+        id,
+        type: "standard",
+        hand: "left",
+        tick,
+        durationTicks: 0,
+        lane,
+        width: 3,
+        points: [],
+        ...extra,
+    });
+
+    it("pairs the same lane moved within 1/8 of a quarter as a tick change, not remove + add", () => {
+        // 예전 1/6박 초안의 ⅓박(160) · ⅚박(400) → 박마다 격자의 ¼박(120) · ¾박(360)
+        const current = [
+            note("a", 160, 8),
+            note("b", 400, 8),
+            note("c", 960, 3),
+        ];
+        const incoming = [
+            note("x", 120, 8),
+            note("y", 360, 8),
+            note("z", 880, 3, { type: "tenuto", durationTicks: 80 }),
+        ];
+        const diff = diffChartNotes(current, incoming);
+        expect(
+            diff.changed.map((c) => [c.current.id, c.incoming.id, c.fields])
+        ).toEqual([
+            ["a", "x", ["tick"]],
+            ["b", "y", ["tick"]],
+        ]);
+        // 종류가 다르면 옮겨진 것으로 보지 않는다
+        expect(diff.onlyCurrent.map((n) => n.id)).toEqual(["c"]);
+        expect(diff.onlyIncoming.map((n) => n.id)).toEqual(["z"]);
+    });
+});
+
 describe("chart position label", () => {
     const altalePoints = [point(0, 60, 90, 3, 4)];
 
@@ -652,12 +695,12 @@ describe("vid2bmap dense passages", () => {
         const dense: Vid2bmapResult = {
             fps: 60,
             startSec: 0,
-            barRows: [0, 120, 240, 360],
-            // 박자선 간격 120 = 1박. 1.5박 · 1.55박(칸이 겹침) + 2⅓박(1/6박에 딱 맞음)
+            barRows: [0, 40, 80, 120],
+            // 박자선 간격 40 = 1박(한 프레임 12틱). 1.5박 · 1.55박(칸이 겹침, 1/6박 허용 안) + 2⅓박 근처
             simple: [
-                [180, 5, 7],
-                [186, 6, 8],
-                [280, 20, 22],
+                [60, 5, 7],
+                [62, 6, 8],
+                [93, 20, 22],
             ],
             tenuto: [],
             trill: [],
@@ -681,6 +724,74 @@ describe("vid2bmap dense passages", () => {
             count: 1,
             tick: 760,
         });
+    });
+});
+
+describe("vid2bmap grid per beat", () => {
+    const convert = (barRows: number[], simple: number[][]) => {
+        const result: Vid2bmapResult = {
+            fps: 60,
+            startSec: 0,
+            barRows,
+            simple,
+            tenuto: [],
+            trill: [],
+            glissando: [],
+            beatFrames: null,
+        };
+        let next = 0;
+        return convertVid2bmap(result, collectVid2bmapNotes(result).notes, {
+            timingPoints: [point(0, 0, 90, 3, 4)],
+            firstBarTick: 0,
+            snapDivisor: 6,
+            include: { standard: true, tenuto: true, trill: true },
+            createId: () => `n${(next += 1)}`,
+        });
+    };
+
+    it("keeps a 1/8-beat run in a 1/6-beat song apart instead of pairing it (Altale 35마디)", () => {
+        // 40프레임 = 1박, 5프레임 = 1/8박. 오른손 20 · 17번 칸 번갈아
+        const run = Array.from({ length: 8 }, (_, index) => [
+            40 + index * 5,
+            index % 2 === 0 ? 20 : 17,
+            (index % 2 === 0 ? 20 : 17) + 2,
+        ]);
+        const conversion = convert([0, 40, 80, 120], [...run, [100, 4, 6]]);
+        const ticks = conversion.notes.map((note) => note.tick);
+        expect(ticks).toEqual([480, 540, 600, 660, 720, 780, 840, 900, 1200]);
+        expect(conversion.warnings).toContainEqual({
+            kind: "localGrid",
+            count: 1,
+            tick: 480,
+            divisors: [8],
+        });
+        // 확인 대상은 1/6박으로 맞췄을 때와 자리가 달라진 것만(0 · 240 은 같음, 다음 박 노트도 아님)
+        expect(conversion.gridCheckIds).toEqual([
+            "n2",
+            "n3",
+            "n4",
+            "n6",
+            "n7",
+            "n8",
+        ]);
+    });
+
+    it("leaves a note no grid fits at its video position for the snap check", () => {
+        // 120프레임 = 1박(한 프레임 4틱, 허용 10틱). 16틱은 어느 격자(1/16 = 30틱)에서도 10틱 넘게 벗어남
+        const conversion = convert(
+            [0, 120, 240, 360],
+            [
+                [120, 4, 6],
+                [124, 20, 22],
+            ]
+        );
+        expect(conversion.notes.map((note) => note.tick)).toEqual([480, 496]);
+        expect(conversion.warnings).toContainEqual({
+            kind: "offGrid",
+            count: 1,
+            tick: 496,
+        });
+        expect(conversion.gridCheckIds).toEqual([conversion.notes[1].id]);
     });
 });
 

@@ -19,6 +19,7 @@ import {
 import { millisecondsToTick } from "@/lib/chart-pattern/timing";
 
 import { useChartEditorStore } from "./chartEditorStore";
+import SnapCheckSection from "./snapCheckSection";
 
 const inputClass =
     "border-border bg-bg text-text-primary h-9 w-full rounded-md border px-2 text-sm tabular-nums outline-none focus:border-text-secondary";
@@ -568,6 +569,8 @@ export default function NoteInspector() {
                     </button>
                 </div>
             ) : null}
+
+            <SnapCheckSection />
 
             <footer className="border-divider text-micro border-t px-3 py-2">
                 전체 {notes.length.toLocaleString("ko-KR")}개

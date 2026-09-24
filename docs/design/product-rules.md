@@ -419,17 +419,27 @@ old design-stage checklist. Changes to material behavior require a user decision
   neighbouring bar lines the game draws each beat (one line = one beat of the active time
   signature). Only the first bar line's beat is chosen by a person; when the draft already has
   notes it starts at the position that agrees with the most of them.
-- Snap to the suggested grid (smallest average offset per grid step); only notes that a grid
-  squeezes onto one spot are re-snapped finer. Same-lane reads within 3 frames are one note.
+- Snap to the suggested grid (smallest average offset per grid step), chosen again per beat
+  (2026-09-24 C): a beat keeps the song grid only when every note in it is within 2.5 video
+  frames and no two notes more than that apart land on one spot; otherwise the coarsest grid
+  from 1/2 to 1/16 that does both (e.g. a 1/8-beat run inside a 1/6-beat song), and if none
+  does, notes off the song grid keep their video position. Moved notes can be selected for
+  review after import. Notes that clash on one spot are then re-snapped finer. Same-lane reads
+  within 3 frames are one note.
   Hands come from the zip when it carries them (2026-09-24: the runner takes notes and bar lines
   from the main vid2bmap run and only the hand from the `LR_classification` branch run, matched
   by kind, lanes and nearby frame); otherwise they are guessed by lane centre, and only guessed
   centre notes are selected for review. Glissando pieces are not imported; trills are split in
   the middle and flagged.
 - Against an existing draft every difference is listed (same tick, overlapping lanes = same
-  note; a hand read from the video counts as a difference, a guessed hand does not) and chosen
+  note; otherwise the same lane, width and type within 1/8 of a quarter = the same note moved;
+  a hand read from the video counts as a difference, a guessed hand does not) and chosen
   per place; notes after the draft are a separate
   new-section toggle. An import that would create overlapping notes cannot be applied.
+- Snap check in the editor (2026-09-24 C, like osu!'s "Unsnapped hitobjects" check): a note
+  whose start is off every editor snap (1/1–1/32 of the active beat) gets a dashed warning
+  outline, and the note inspector lists them with the nearest grid and offset in ms, one by one
+  or all at once to the nearest grid.
 - Tempo changes become proposed timing points (2026-09-23 T2): the result zip carries
   `beat_frames.json` — frames where bar lines crossed one grid row, before vid2bmap's
   frame-drop correction — and the tempo is measured from those (the corrected bar lines

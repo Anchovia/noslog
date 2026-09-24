@@ -17,6 +17,12 @@ import type { Vid2bmapResult } from "./vid2bmapFile";
 export const VID2BMAP_DUPLICATE_FRAMES = 3;
 /** 한 박을 나누는 격자 후보 */
 export const VID2BMAP_SNAP_DIVISORS = [2, 3, 4, 6, 8, 12, 16] as const;
+/**
+ * 박마다 격자를 고를 때 허용하는 어긋남(영상 프레임). 박자선 · 노트 위치의 흔들림은 1프레임 안팎이다.
+ * 곡 전체 격자로 이보다 크게 어긋나는 박만 다른 격자로 맞춘다.
+ * Altale: 1.5 는 정답 232개 중 14개가 틀리고, 3 은 뭉친 곳이 10곳 남아 2.5(정답 그대로 · 뭉친 곳 12 → 3)
+ */
+export const VID2BMAP_LOCAL_GRID_TOLERANCE_FRAMES = 2.5;
 /** 칸 위치로 손을 추정할 때 불확실한 가운데 구간(노트 가운데 칸 기준) */
 const HAND_UNCERTAIN_MIN = 12;
 const HAND_UNCERTAIN_MAX = 16;
@@ -55,6 +61,10 @@ export type Vid2bmapWarning =
           estimatedBpm: number;
           chartBpm: number;
       }
+    /** 곡 전체 격자로는 크게 어긋나 그 박만 다른 격자(예: 셋잇단 곡 안의 1/8박 연타)로 맞춘 박 수 */
+    | { kind: "localGrid"; count: number; tick: number; divisors: number[] }
+    /** 어느 격자에도 맞지 않아 영상 위치 그대로 넣은 노트 수 — 에디터 「스냅 확인」 에 걸린다 */
+    | { kind: "offGrid"; count: number; tick: number }
     /** 기본 격자로는 한 자리로 뭉쳐 겹친 빠른 노트를 더 촘촘한 격자로 맞춘 수 */
     | { kind: "denseSnap"; count: number; tick: number }
     | { kind: "shortTenuto"; count: number }
@@ -82,6 +92,8 @@ export interface Vid2bmapConversion {
     handKnownIds: string[];
     /** 손을 칸 위치로 추정했는데 가운데라 확인이 필요한 노트 id */
     handUncertainIds: string[];
+    /** 곡 전체 격자 대신 그 박의 격자로 맞춰 자리가 달라졌거나 영상 위치 그대로 둔 노트 id */
+    gridCheckIds: string[];
     warnings: Vid2bmapWarning[];
 }
 
@@ -316,6 +328,103 @@ function barWarnings(
 
 const defaultId = () => crypto.randomUUID();
 
+/**
+ * 박마다 격자 고르기 — 그 박의 노트가 곡 전체 격자(base)로 모두 허용 안에 들면 그대로,
+ * 아니면 모두 들어오는 가장 성긴 격자(1/2 → 1/16). 그것도 없으면 base 로 허용 안에 드는 노트만 base,
+ * 나머지는 영상 위치 그대로(격자 밖 — 에디터 「스냅 확인」 이 표시한다, 2026-09-24 C).
+ * Altale 35 · 36마디: 1/6박 곡 안의 1/8박 오른손 연타(약 60틱 간격)가 1/6 격자에서 두 개씩 한 자리로 뭉쳐 겹노트가 됐다(2026-09-24).
+ * frameTicks = 그 자리 영상 한 프레임의 틱 수(박자선 간격으로 잼)
+ */
+function snapByBeat(
+    entries: { raw: number; frameTicks: number }[],
+    baseDivisor: number,
+    timingPoints: ChartTimingPoint[]
+) {
+    const sorted = sortTimingPoints(timingPoints);
+    const placed = entries.map(({ raw, frameTicks }) => {
+        const point = activePoint(sorted, raw);
+        const beatTicks = beatTicksOf(point);
+        const tolerance = VID2BMAP_LOCAL_GRID_TOLERANCE_FRAMES * frameTicks;
+        // 박 끝에 조금 못 미친 노트는 다음 박의 첫 자리로 본다
+        const beat = Math.floor((raw - point.tick + tolerance) / beatTicks);
+        const start = point.tick + beat * beatTicks;
+        return { raw, start, beatTicks, tolerance, key: `${point.id}:${beat}` };
+    });
+    const groups = new Map<string, number[]>();
+    placed.forEach((entry, index) => {
+        groups.set(entry.key, [...(groups.get(entry.key) ?? []), index]);
+    });
+    const slotOf = (index: number, divisor: number) => {
+        const { raw, start, beatTicks } = placed[index];
+        const step = beatTicks / divisor;
+        return Math.round((raw - start) / step);
+    };
+    // 허용 안에 들고, 영상에서 허용보다 멀리 떨어진 두 노트를 한 자리로 합치지 않을 때만 맞는 격자
+    // (Altale 35마디 3박: 1/6박으로도 허용 안이지만 4프레임 떨어진 연타 둘이 한 자리 → 1/8박)
+    const fits = (indexes: number[], divisor: number) =>
+        indexes.every((index) => {
+            const { raw, start, beatTicks, tolerance } = placed[index];
+            const step = beatTicks / divisor;
+            return (
+                Math.abs(raw - start - slotOf(index, divisor) * step) <=
+                tolerance
+            );
+        }) &&
+        indexes.every((first) =>
+            indexes.every(
+                (second) =>
+                    slotOf(first, divisor) !== slotOf(second, divisor) ||
+                    Math.abs(placed[first].raw - placed[second].raw) <=
+                        Math.max(
+                            placed[first].tolerance,
+                            placed[second].tolerance
+                        )
+            )
+        );
+    /** null = 격자 밖(영상 위치 그대로) */
+    const divisors = new Array<number | null>(entries.length).fill(baseDivisor);
+    const changedBeats: { tick: number; divisor: number }[] = [];
+    const changed = new Set<number>();
+    for (const indexes of groups.values()) {
+        if (fits(indexes, baseDivisor)) continue;
+        const divisor = VID2BMAP_SNAP_DIVISORS.find((candidate) =>
+            fits(indexes, candidate)
+        );
+        if (divisor) {
+            for (const index of indexes) {
+                divisors[index] = divisor;
+                changed.add(index);
+            }
+            changedBeats.push({ tick: placed[indexes[0]].start, divisor });
+            continue;
+        }
+        for (const index of indexes) {
+            if (fits([index], baseDivisor)) continue;
+            divisors[index] = null;
+            changed.add(index);
+        }
+    }
+    const ticks = placed.map(({ raw, start, beatTicks }, index) => {
+        const divisor = divisors[index];
+        if (divisor === null) return Math.round(raw);
+        const step = beatTicks / divisor;
+        return Math.round(start + Math.round((raw - start) / step) * step);
+    });
+    // 확인 대상은 곡 전체 격자로 맞췄을 때와 자리가 달라진 노트만(같은 박의 나머지는 그대로라 볼 필요 없음)
+    for (const index of [...changed]) {
+        const { raw, start, beatTicks } = placed[index];
+        const step = beatTicks / baseDivisor;
+        const base = Math.round(
+            start + Math.round((raw - start) / step) * step
+        );
+        if (ticks[index] === base) changed.delete(index);
+    }
+    const offGrid = divisors.flatMap((divisor, index) =>
+        divisor === null ? [index] : []
+    );
+    return { ticks, changedBeats, changed, offGrid };
+}
+
 /** 추출 결과 → 초안에 넣을 노트 · 손 확인 목록 · 경고 */
 export function convertVid2bmap(
     result: Vid2bmapResult,
@@ -338,10 +447,23 @@ export function convertVid2bmap(
     let shortTenuto = 0;
     let trillSplit = 0;
 
-    for (const note of notes) {
-        if (note.kind === "glissando" || !include[note.kind]) continue;
+    const included = notes.filter(
+        (note) => note.kind !== "glissando" && include[note.kind]
+    );
+    const snapped = snapByBeat(
+        included.map((note) => {
+            const raw = rawTickOf(note.y);
+            return { raw, frameTicks: rawTickOf(note.y + 1) - raw };
+        }),
+        snapDivisor,
+        timingPoints
+    );
+
+    const gridCheckIds: string[] = [];
+    const offGridTicks: number[] = [];
+    for (const [index, note] of included.entries()) {
         const rawTick = rawTickOf(note.y);
-        const tick = snapVid2bmapTick(rawTick, snapDivisor, timingPoints);
+        const tick = snapped.ticks[index];
         const center = note.lane + note.width / 2;
         const hand: ChartNote["hand"] =
             note.hand ?? (center <= CHART_LANE_COUNT / 2 ? "left" : "right");
@@ -391,6 +513,8 @@ export function convertVid2bmap(
         ) {
             handUncertainIds.push(chartNote.id);
         }
+        if (snapped.changed.has(index)) gridCheckIds.push(chartNote.id);
+        if (snapped.offGrid.includes(index)) offGridTicks.push(tick);
         rawTicks.set(chartNote.id, rawTick);
         output.push(chartNote);
     }
@@ -420,6 +544,23 @@ export function convertVid2bmap(
     }
 
     const warnings = barWarnings(result, options);
+    if (snapped.changedBeats.length > 0) {
+        warnings.push({
+            kind: "localGrid",
+            count: snapped.changedBeats.length,
+            tick: Math.min(...snapped.changedBeats.map((beat) => beat.tick)),
+            divisors: [
+                ...new Set(snapped.changedBeats.map((beat) => beat.divisor)),
+            ].sort((x, y) => x - y),
+        });
+    }
+    if (offGridTicks.length > 0) {
+        warnings.push({
+            kind: "offGrid",
+            count: offGridTicks.length,
+            tick: Math.min(...offGridTicks),
+        });
+    }
     warnings.push({
         kind: "endCheck",
         lastBarTick: vid2bmapTickAt(
@@ -443,11 +584,23 @@ export function convertVid2bmap(
         warnings.push({ kind: "shortTenuto", count: shortTenuto });
     if (trillSplit > 0)
         warnings.push({ kind: "trillSplit", count: trillSplit });
-    return { notes: output, handKnownIds, handUncertainIds, warnings };
+    return {
+        notes: output,
+        handKnownIds,
+        handUncertainIds,
+        gridCheckIds,
+        warnings,
+    };
 }
 
 export type ChartNoteDiffField =
-    "type" | "lane" | "width" | "duration" | "pair" | "hand";
+    "tick" | "type" | "lane" | "width" | "duration" | "pair" | "hand";
+
+/**
+ * 같은 틱에 짝이 없을 때, 같은 칸 · 폭 · 종류로 이만큼 안에 있으면 박 위치만 옮겨진 같은 노트로 본다(1/8 사분음표 = 60틱).
+ * 예전 1/6박 한 격자로 넣은 초안(¼ 자리가 ⅙ · ⅓ 로 갈림)을 박마다 격자로 다시 가져올 때 「내 초안에만 + 가져온 것에만」 으로 갈리지 않게
+ */
+export const VID2BMAP_NEARBY_TICKS = CHART_TICKS_PER_QUARTER / 8;
 
 export interface ChartNoteDiff {
     /** 틱 · 칸 · 폭 · 종류 · 길이가 같음(손은 영상에서 읽은 노트만 본다 — 칸 위치 추정은 보지 않음) */
@@ -500,31 +653,77 @@ export function diffChartNotes(
             continue;
         }
         used.add(match.id);
-        const fields: ChartNoteDiffField[] = [];
-        if (match.type !== note.type) fields.push("type");
-        if (match.lane !== note.lane) fields.push("lane");
-        if (match.width !== note.width) fields.push("width");
-        if (match.durationTicks !== note.durationTicks) fields.push("duration");
-        if (
-            match.pairLane !== note.pairLane ||
-            match.pairWidth !== note.pairWidth
-        ) {
-            fields.push("pair");
-        }
-        if (
-            match.hand !== note.hand &&
-            (fields.length > 0 || handKnownIds.has(note.id))
-        ) {
-            fields.push("hand");
-        }
+        const fields = noteDiffFields(match, note, handKnownIds);
         if (fields.length === 0) {
             diff.same.push([match, note]);
             continue;
         }
         diff.changed.push({ current: match, incoming: note, fields });
     }
+    // 남은 것끼리: 같은 칸 · 폭 · 종류가 가까운 박에 있으면 박 위치만 옮겨진 것(가장 가까운 짝부터)
+    const pairs = diff.onlyIncoming
+        .flatMap((note) =>
+            current
+                .filter(
+                    (candidate) =>
+                        !used.has(candidate.id) &&
+                        candidate.lane === note.lane &&
+                        candidate.width === note.width &&
+                        candidate.type === note.type &&
+                        Math.abs(candidate.tick - note.tick) <=
+                            VID2BMAP_NEARBY_TICKS
+                )
+                .map((candidate) => ({ candidate, note }))
+        )
+        .sort(
+            (a, b) =>
+                Math.abs(a.candidate.tick - a.note.tick) -
+                Math.abs(b.candidate.tick - b.note.tick)
+        );
+    const paired = new Set<string>();
+    for (const { candidate, note } of pairs) {
+        if (used.has(candidate.id) || paired.has(note.id)) continue;
+        used.add(candidate.id);
+        paired.add(note.id);
+        diff.changed.push({
+            current: candidate,
+            incoming: note,
+            fields: ["tick", ...noteDiffFields(candidate, note, handKnownIds)],
+        });
+    }
+    diff.onlyIncoming = diff.onlyIncoming.filter(
+        (note) => !paired.has(note.id)
+    );
     diff.onlyCurrent = current.filter((note) => !used.has(note.id));
     return diff;
+}
+
+/** 틱 말고 달라진 속성. 손은 다른 속성이 다르거나 영상에서 읽은 노트일 때만 */
+function noteDiffFields(
+    current: ChartNote,
+    incoming: ChartNote,
+    handKnownIds: ReadonlySet<string>
+) {
+    const fields: ChartNoteDiffField[] = [];
+    if (current.type !== incoming.type) fields.push("type");
+    if (current.lane !== incoming.lane) fields.push("lane");
+    if (current.width !== incoming.width) fields.push("width");
+    if (current.durationTicks !== incoming.durationTicks) {
+        fields.push("duration");
+    }
+    if (
+        current.pairLane !== incoming.pairLane ||
+        current.pairWidth !== incoming.pairWidth
+    ) {
+        fields.push("pair");
+    }
+    if (
+        current.hand !== incoming.hand &&
+        (fields.length > 0 || handKnownIds.has(incoming.id))
+    ) {
+        fields.push("hand");
+    }
+    return fields;
 }
 
 const FRACTION_GLYPHS: Record<string, string> = {

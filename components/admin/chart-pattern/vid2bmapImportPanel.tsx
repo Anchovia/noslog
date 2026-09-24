@@ -116,6 +116,9 @@ function describeItem(
                     return `길이 ${beatLengthLabel(current.durationTicks, beatTicks)} → ${beatLengthLabel(incoming.durationTicks, beatTicks)}`;
                 }
                 if (field === "pair") return "트릴 두 번째 위치";
+                if (field === "tick") {
+                    return `→ ${chartPositionLabel(incoming.tick, timingPoints)}`;
+                }
                 return "손";
             })
             .filter((text, index, all) => all.indexOf(text) === index)
@@ -153,6 +156,10 @@ function warningText(
             return `${chartPositionLabel(warning.tick, timingPoints)} ~ ${chartPositionLabel(warning.endTick, timingPoints)} 박자선 간격으로 본 BPM ${warning.estimatedBpm} ≠ 타이밍 ${warning.chartBpm} — 곡이 실제로 바뀌는지 타이밍 포인트 확인`;
         case "endCheck":
             return `마지막 박자선(${chartPositionLabel(warning.lastBarTick, timingPoints)}) 뒤 노트는 추출이 지웁니다 — 끝부분 확인`;
+        case "offGrid":
+            return `${warning.count}개는 어느 격자에도 맞지 않아 영상 위치 그대로 넣었어요(${chartPositionLabel(warning.tick, timingPoints)}부터) — 넣은 뒤 「스냅 확인」 에서 확인`;
+        case "localGrid":
+            return `${warning.count}박은 곡 전체 격자와 맞지 않아 그 박만 ${warning.divisors.map((divisor) => `1/${divisor}`).join(" · ")}박 격자로 맞췄어요(${chartPositionLabel(warning.tick, timingPoints)}부터) — 확인 필요`;
         case "denseSnap":
             return `빠른 구간 노트 ${warning.count}개는 한 자리로 뭉치지 않게 더 촘촘한 격자로 맞췄어요(${chartPositionLabel(warning.tick, timingPoints)}부터)`;
         case "shortTenuto":
@@ -216,6 +223,7 @@ export default function Vid2bmapImportPanel({
         trill: true,
     });
     const [selectCenter, setSelectCenter] = useState(true);
+    const [selectGridCheck, setSelectGridCheck] = useState(true);
     const [includeNewSection, setIncludeNewSection] = useState(true);
     const [choices, setChoices] = useState<Record<string, Vid2bmapChoice>>({});
     const [focusIndex, setFocusIndex] = useState<number | null>(null);
@@ -447,9 +455,12 @@ export default function Vid2bmapImportPanel({
         try {
             if (document.notes.length > 0 && !(await onBeforeApply())) return;
             const added = new Set(merged.addedIds);
-            const selection = selectCenter
-                ? conversion.handUncertainIds.filter((id) => added.has(id))
-                : [];
+            const selection = [
+                ...new Set([
+                    ...(selectCenter ? conversion.handUncertainIds : []),
+                    ...(selectGridCheck ? conversion.gridCheckIds : []),
+                ]),
+            ].filter((id) => added.has(id));
             if (tempoChanges.length > 0) {
                 // 노트와 타이밍 포인트를 한 번에 — 실행 취소도 한 번. 노트는 박(틱)이라 위치는 그대로
                 const state = store.getState();
@@ -476,7 +487,7 @@ export default function Vid2bmapImportPanel({
                 `vid2bmap · 새로 ${merged.addedIds.length} · 뺌 ${merged.removedIds.length}${tempoChanges.length > 0 ? ` · 타이밍 ${tempoChanges.length}` : ""}`
             );
             toast.success(
-                `영상 추출 노트를 초안에 넣었습니다 — 새로 ${merged.addedIds.length.toLocaleString("ko-KR")} · 뺌 ${merged.removedIds.length.toLocaleString("ko-KR")}${tempoChanges.length > 0 ? ` · 타이밍 포인트 ${tempoChanges.length}` : ""}${selection.length > 0 ? ` · 손 확인 ${selection.length}개 선택됨` : ""}`
+                `영상 추출 노트를 초안에 넣었습니다 — 새로 ${merged.addedIds.length.toLocaleString("ko-KR")} · 뺌 ${merged.removedIds.length.toLocaleString("ko-KR")}${tempoChanges.length > 0 ? ` · 타이밍 포인트 ${tempoChanges.length}` : ""}${selection.length > 0 ? ` · 확인할 노트 ${selection.length}개 선택됨` : ""}`
             );
             onClose();
         } finally {
@@ -840,6 +851,28 @@ export default function Vid2bmapImportPanel({
                                             : "손은 칸 위치로 추정"}{" "}
                                         — 가운데는 확인 필요 (
                                         {conversion.handUncertainIds.length.toLocaleString(
+                                            "ko-KR"
+                                        )}
+                                        개)
+                                    </span>
+                                </span>
+                            </label>
+                            <label className="flex items-start gap-2 text-xs font-semibold">
+                                <input
+                                    type="checkbox"
+                                    checked={selectGridCheck}
+                                    onChange={(event) =>
+                                        setSelectGridCheck(event.target.checked)
+                                    }
+                                    className="accent-text-primary mt-0.5 size-3.5"
+                                />
+                                <span>
+                                    넣은 뒤 박 격자를 따로 맞춘 노트 선택해 두기
+                                    <span className="text-micro block font-normal">
+                                        그 박의 격자로 맞춰 곡 전체 격자와
+                                        자리가 달라졌거나 영상 위치 그대로 둔
+                                        노트 — 확인 필요 (
+                                        {conversion.gridCheckIds.length.toLocaleString(
                                             "ko-KR"
                                         )}
                                         개)

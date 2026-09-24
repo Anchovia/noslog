@@ -44,8 +44,10 @@ import {
     snapTick,
     tickToMilliseconds,
 } from "@/lib/chart-pattern/timing";
+import { findOffGridNotes } from "@/lib/chart-pattern/snapCheck";
 
 import { useChartEditorStore } from "./chartEditorStore";
+import { drawOffGridMarker } from "./snapCheckMarker";
 
 export type NoteEditorTool = "select" | ChartNoteType;
 
@@ -567,6 +569,11 @@ export default function PixiNoteEditor({
         }
         return ids;
     }, [document.notes, document.ticksPerQuarter]);
+    // 스냅 확인(격자 밖 노트) 점선 — 목록은 노트 검사기 아래 SnapCheckSection
+    const offGridNoteIds = useMemo(
+        () => new Set(findOffGridNotes(document).map((item) => item.id)),
+        [document]
+    );
 
     const previewNotes = (() => {
         if (!gesture) {
@@ -831,6 +838,11 @@ export default function PixiNoteEditor({
                 if (!isVisible(note)) continue;
                 drawImportNote(scene, note, laneWidth, yForTick);
             }
+        } else {
+            for (const note of document.notes) {
+                if (!offGridNoteIds.has(note.id) || !isVisible(note)) continue;
+                drawOffGridMarker(scene, note, laneWidth, yForTick);
+            }
         }
 
         if (gesture?.kind === "marquee") {
@@ -916,6 +928,7 @@ export default function PixiNoteEditor({
         gesture,
         conflictingNoteIds,
         importPreview,
+        offGridNoteIds,
         pixelsPerSecond,
         pianoVisible,
         previewNotes,
