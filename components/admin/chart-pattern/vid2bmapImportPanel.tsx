@@ -40,10 +40,12 @@ import {
     estimateVid2bmapMeter,
     planVid2bmapMerge,
     suggestVid2bmapSnap,
+    vid2bmapBarRestore,
     vid2bmapMeterFirstBarTick,
     type Vid2bmapChoice,
     type Vid2bmapMergeItem,
     type Vid2bmapMeter,
+    type Vid2bmapTempoChange,
     type Vid2bmapWarning,
 } from "@/lib/chart-pattern/vid2bmap";
 import {
@@ -172,6 +174,35 @@ function bpmPrecisionText(
           ? "소수 첫째 자리로"
           : "소수 둘째 자리로";
     return ` · 정수 ${Math.round(measuredBpm)} 는 끝에서 ${integerDriftFrames.toFixed(1)}프레임 어긋나 ${unit}`;
+}
+
+/** 템포 제안 카드 제목(2026-09-25 B) — 한 번 바뀜 · 몇 박만 바뀌고 돌아옴 · 박마다 바뀜 */
+function tempoTitle(
+    change: Vid2bmapTempoChange,
+    timingPoints: ChartTimingPoint[]
+) {
+    const start = chartPositionLabel(change.tick, timingPoints);
+    if (change.bpm !== change.fromBpm) {
+        return `${start}부터 ${change.bpm < change.fromBpm ? "느려짐" : "빨라짐"}`;
+    }
+    if (change.points.length === 2) {
+        return `${start} — ${change.beats}박 ${change.points[0].bpm < change.fromBpm ? "느려짐" : "빨라짐"}`;
+    }
+    const last = change.points[change.points.length - 1];
+    return `${start} ~ ${chartPositionLabel(last.tick, timingPoints)} — 박마다 바뀜`;
+}
+
+function tempoDetail(change: Vid2bmapTempoChange) {
+    if (change.beatFrames.length === 0) {
+        return `영상 박자선 ${change.beats}박으로 잰 BPM ${change.measuredBpm} — 지금 타이밍 ${change.fromBpm}${bpmPrecisionText(change.bpm, change.measuredBpm, change.integerDriftFrames)}`;
+    }
+    const after =
+        change.bpm !== change.fromBpm
+            ? ` — 뒤는 ${change.bpm}`
+            : change.points.length === 2
+              ? ` — 앞뒤는 ${change.fromBpm}`
+              : "";
+    return `영상 박 간격 ${change.beatFrames.join(" · ")}프레임${after}`;
 }
 
 function warningText(
@@ -431,9 +462,21 @@ export default function Vid2bmapImportPanel({
             ),
         [tempo, skippedTempo]
     );
+    // 마디선 맞춤(2026-09-25 마) — 켜진 카드끼리 보고, 넣기 전 타이밍(시작 박자 제안 포함)의 마디로
+    const barRestores = new Map(
+        tempoChanges.map((change) => [
+            change.tick,
+            vid2bmapBarRestore(change, timingPoints, tempoChanges),
+        ])
+    );
     const timingCount =
-        tempoChanges.length +
-        (proposedStartBpm === null && proposedNumerator === null ? 0 : 1);
+        tempoChanges.reduce(
+            (sum, change) =>
+                sum +
+                change.points.length +
+                (barRestores.get(change.tick) ? 1 : 0),
+            0
+        ) + (proposedStartBpm === null && proposedNumerator === null ? 0 : 1);
     const diff = useMemo(
         () =>
             conversion
@@ -808,7 +851,9 @@ export default function Vid2bmapImportPanel({
                             ) : null}
                             {(tempo?.changes ?? []).map((change) => {
                                 const checked = !skippedTempo[change.tick];
-                                const slower = change.bpm < change.fromBpm;
+                                const barRestore = checked
+                                    ? barRestores.get(change.tick)
+                                    : null;
                                 return (
                                     <div
                                         key={change.tick}
@@ -835,21 +880,10 @@ export default function Vid2bmapImportPanel({
                                                 className="text-score size-3.5 shrink-0"
                                                 aria-hidden
                                             />
-                                            {chartPositionLabel(
-                                                change.tick,
-                                                timingPoints
-                                            )}
-                                            부터 {slower ? "느려짐" : "빨라짐"}
+                                            {tempoTitle(change, timingPoints)}
                                         </button>
                                         <p className="text-micro">
-                                            영상 박자선 {change.beats}박으로 잰
-                                            BPM {change.measuredBpm} — 지금
-                                            타이밍 {change.fromBpm}
-                                            {bpmPrecisionText(
-                                                change.bpm,
-                                                change.measuredBpm,
-                                                change.integerDriftFrames
-                                            )}
+                                            {tempoDetail(change)}
                                         </p>
                                         <label className="flex items-center gap-2 text-xs font-semibold">
                                             <input
@@ -867,8 +901,12 @@ export default function Vid2bmapImportPanel({
                                                 }
                                                 className="accent-text-primary size-3.5"
                                             />
-                                            타이밍 포인트 넣기 · BPM{" "}
-                                            {change.bpm}
+                                            {change.points.length === 1
+                                                ? `타이밍 포인트 넣기 · BPM ${change.bpm}`
+                                                : `타이밍 포인트 ${change.points.length}개 넣기 · ${change.points.map((point) => point.bpm).join(" → ")}`}
+                                            {barRestore
+                                                ? ` · ${chartPositionLabel(barRestore.tick, timingPoints)} 마디선 맞춤`
+                                                : ""}
                                         </label>
                                     </div>
                                 );

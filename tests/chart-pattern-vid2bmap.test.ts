@@ -6,9 +6,11 @@ import {
     getGlissandoSnapRenderPoints,
 } from "@/lib/chart-pattern/editor";
 import type { ChartNote, ChartTimingPoint } from "@/lib/chart-pattern/schema";
+import { getBeatMarkers, tickToMilliseconds } from "@/lib/chart-pattern/timing";
 import {
     alignVid2bmapFirstBarTick,
     applyVid2bmapTempoChanges,
+    vid2bmapBarRestore,
     detectVid2bmapTempoChanges,
     applyVid2bmapMerge,
     applyVid2bmapStartTiming,
@@ -1269,6 +1271,108 @@ describe("vid2bmap tempo changes from raw beat frames", () => {
         expect(chooseVid2bmapBpm(stepped, toBpm).bpm).toBe(160);
     });
 
+    it("follows a tempo that moves beat by beat so every beat stays on the video's beat lines", () => {
+        // 곡마다 규칙을 맞추지 않아도 — 두 박 멈칫 · 12박 리타르단도 · 곡 전체 박마다 흔들림(유비트 채보처럼)
+        const cases = {
+            dip: (beat: number) => (beat === 60 || beat === 61 ? 140 : 160),
+            ritardando: (beat: number) =>
+                beat >= 100 && beat < 112
+                    ? 160 - 70 * Math.sin((Math.PI * (beat - 100)) / 12)
+                    : 160,
+            wobble: (beat: number) =>
+                160 + 6 * Math.sin(beat * 1.3) + 4 * Math.sin(beat * 0.31),
+        };
+        const results = Object.fromEntries(
+            Object.entries(cases).map(([name, bpmAt]) => {
+                // 60fps 정수 프레임(영상처럼)
+                const frames: number[] = [];
+                let frame = 30;
+                for (let beat = 0; beat < 200; beat += 1) {
+                    frames.push(Math.round(frame));
+                    frame += 3600 / bpmAt(beat);
+                }
+                const song = {
+                    ...build(),
+                    barRows: frames.map((value) => value + 9),
+                    beatFrames: { frames, row: 12, gridRows: 22 },
+                };
+                const base = [point(0, 0, 160, 4, 4)];
+                const tempo = detectVid2bmapTempoChanges(song, 0, base)!;
+                const timing = applyVid2bmapTempoChanges(
+                    applyVid2bmapStartTiming(base, {
+                        bpm: tempo.startMismatch?.bpm,
+                    }),
+                    tempo.changes
+                );
+                // 박자선 n번째 = n × 480틱. 영상 박자선과의 차이(ms) — 60fps 2.5프레임 = 42ms 안
+                const worst = Math.max(
+                    ...frames.map((value, beat) =>
+                        Math.abs(
+                            tickToMilliseconds(beat * 480, timing, 480) -
+                                ((value - frames[0]) / 60) * 1000
+                        )
+                    )
+                );
+                return [name, { tempo, worst }];
+            })
+        );
+        for (const { worst } of Object.values(results)) {
+            expect(worst).toBeLessThanOrEqual(42);
+        }
+        // 멈칫은 한 카드에 포인트 둘(느려졌다 160 으로 돌아옴), 영상 박 간격을 함께
+        const [dip] = results.dip.tempo.changes;
+        expect(results.dip.tempo.changes).toHaveLength(1);
+        expect(dip.points).toHaveLength(2);
+        expect(dip.points[1].bpm).toBe(160);
+        expect(dip.beatFrames.length).toBeGreaterThan(0);
+        // 꾸준한 곡에서 한 번 바뀌는 곳은 지금처럼 포인트 하나(아래 Altale 테스트)
+    });
+
+    it("puts the bar lines back on the song's downbeat after a card ending mid-bar, like osu! mappers do", () => {
+        // 4/4 · 160. 2마디 3박부터 120, 3마디 2박에 160 으로 돌아옴(마디 중간) → 4마디 1박에 160 한 번 더
+        const base = [point(0, 0, 160, 4, 4)];
+        const card = (ticks: [number, number][]) => ({
+            tick: ticks[0][0],
+            points: ticks.map(([tick, bpm]) => ({ tick, bpm })),
+            bpm: ticks[ticks.length - 1][1],
+            measuredBpm: 0,
+            beats: 3,
+            fromBpm: 160,
+            integerDriftFrames: 0,
+            beatFrames: [30, 30, 30],
+        });
+        const ritardando = card([
+            [6 * 480, 120],
+            [9 * 480, 160],
+        ]);
+        expect(vid2bmapBarRestore(ritardando, base, [ritardando])).toEqual({
+            tick: 12 * 480,
+            bpm: 160,
+        });
+        const timing = applyVid2bmapTempoChanges(base, [ritardando]);
+        expect(timing.map((entry) => [entry.tick / 480, entry.bpm])).toEqual([
+            [0, 160],
+            [6, 120],
+            [9, 160],
+            [12, 160],
+        ]);
+        // 4마디부터 마디선(강박)이 곡의 마디 첫 박에 다시 온다
+        const accents = getBeatMarkers(timing, 480, 0, 12000)
+            .filter((marker) => marker.accent && marker.tick >= 12 * 480)
+            .map((marker) => (marker.tick / 480) % 4);
+        expect(new Set(accents)).toEqual(new Set([0]));
+        // 마지막 포인트가 마디 첫 박이거나, 다음 마디 첫 박까지 다른 포인트가 있으면 더하지 않는다
+        const dip = card([
+            [6 * 480, 150],
+            [8 * 480, 160],
+        ]);
+        expect(vid2bmapBarRestore(dip, base, [dip])).toBeNull();
+        const next = card([[11 * 480, 140]]);
+        expect(
+            vid2bmapBarRestore(ritardando, base, [ritardando, next])
+        ).toBeNull();
+    });
+
     it("stays quiet for a steady song and without beat frames", () => {
         const steady = {
             ...build(),
@@ -1294,16 +1398,19 @@ describe("vid2bmap tempo changes from raw beat frames", () => {
     });
 
     it("turns proposals into timing points continuing the time and signature", () => {
+        // 3/4 의 마디 첫 박(60박째)이라 마디선 맞춤 포인트는 붙지 않는다
         const points = applyVid2bmapTempoChanges(
             altalePoints,
             [
                 {
-                    tick: 28320,
+                    tick: 28800,
+                    points: [{ tick: 28800, bpm: 83 }],
                     bpm: 83,
                     measuredBpm: 83.02,
                     beats: 30,
                     fromBpm: 90,
                     integerDriftFrames: 0,
+                    beatFrames: [],
                 },
             ],
             () => "t-new"
@@ -1312,9 +1419,9 @@ describe("vid2bmap tempo changes from raw beat frames", () => {
             altalePoints[0],
             {
                 id: "t-new",
-                tick: 28320,
+                tick: 28800,
                 timeMs:
-                    Math.round((60 + (28320 / 480) * (60000 / 90)) * 1000) /
+                    Math.round((60 + (28800 / 480) * (60000 / 90)) * 1000) /
                     1000,
                 bpm: 83,
                 numerator: 3,

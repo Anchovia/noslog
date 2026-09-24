@@ -480,7 +480,15 @@ old design-stage checklist. Changes to material behavior require a user decision
   lasts at least 8 beats; each section's BPM is measured by a straight-line fit over all its beats (shared slope, separate offsets across steps where
   the beats jump by more than 1.5 frames; sections under 32 beats use the first-to-last average), then the first of whole →
   0.5 → 0.1 → 0.01 whose beats stay within the video jitter + 0.5 frames to the section end is proposed (2026-09-25 B′),
-  with the measurement shown. The start BPM is proposed only when the current one drifts past that limit. Proposals
+  with the measurement shown. The start BPM is proposed only when the current one drifts past that limit.
+  Where the video moves beat by beat (2026-09-25 B) — two beats together off the section BPM by 2.5 frames or
+  more, sections under 32 beats, or a beat drifting 2.5 frames from the video — the beats are chained with the
+  longest whole BPMs that keep every beat within 1.5 frames (the one that ends a run is picked by the next 16
+  beats), then the section BPM resumes; the points of one such place share a card (「17마디 3박 — 2박 느려짐」,
+  「45마디 3박 ~ 48마디 2박 — 박마다 바뀜」) showing the beat intervals in frames. No song-specific values.
+  Timing points start a new measure, as in osu!, so a card whose last point is mid-bar also puts a point with the
+  same BPM on the next downbeat of the song's bars (the timing before import, with the proposed start meter) unless
+  another point comes first (2026-09-25 마) — 「… · 49마디 1박 마디선 맞춤」 on the card. Proposals
   replace the bar-interval BPM warning, are on by default, add the point at the beat with the
   previous time signature, and go in with the notes in one undoable step. No proposal where a
   timing point already exists; older zips without beat frames keep the warning only.

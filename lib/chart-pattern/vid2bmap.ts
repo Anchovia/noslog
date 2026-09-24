@@ -1250,19 +1250,29 @@ export function alignVid2bmapFirstBarTick(
     return best && best.matches > 0 ? best : null;
 }
 
-export interface Vid2bmapTempoChange {
-    /** 새 타이밍 포인트를 둘 박(박자선 위치) */
+export interface Vid2bmapTempoPoint {
     tick: number;
-    /** 제안 BPM(구간 끝까지 맞는 가장 단순한 값, 2026-09-25 B′) */
     bpm: number;
-    /** 측정값(소수 둘째 자리) */
+}
+
+/** 제안 카드 하나 — 템포가 바뀐 곳은 포인트 하나, 영상이 박마다 바뀌는 곳은 여럿을 한 카드로(2026-09-25 B) */
+export interface Vid2bmapTempoChange {
+    /** 첫 타이밍 포인트 자리 — 카드를 켜고 끄는 기준 */
+    tick: number;
+    /** 넣을 타이밍 포인트(차례대로) */
+    points: Vid2bmapTempoPoint[];
+    /** 마지막 포인트의 BPM */
+    bpm: number;
+    /** 구간 측정값(소수 둘째 자리) — 템포가 한 번 바뀐 곳만 */
     measuredBpm: number;
-    /** 이 템포로 잰 박 수 */
+    /** 템포가 한 번 바뀐 곳이면 그 구간 박 수, 박 단위 묶음이면 박 단위로 맞춘 박 수 */
     beats: number;
     /** 이 자리 바로 앞의 BPM(타이밍 포인트 또는 앞 제안) */
     fromBpm: number;
     /** 정수가 아닌 값이면 정수로 뒀을 때 구간 안 가장 큰 어긋남(프레임) */
     integerDriftFrames: number;
+    /** 박 단위로 맞춘 박들의 영상 간격(프레임, 0.5 단위) — 템포가 한 번 바뀐 곳이면 빈 배열 */
+    beatFrames: number[];
 }
 
 export interface Vid2bmapTempo {
@@ -1429,6 +1439,17 @@ export function chooseVid2bmapBpm(
 
 /** 템포가 바뀌었다고 볼 차이(비율) */
 const TEMPO_TOLERANCE = 0.015;
+/**
+ * 박 단위로 맞출 박(2026-09-25 B) — 이어진 두 박의 합이 구간 BPM 보다 이만큼(프레임) 넘게 벗어난 곳.
+ * 정수 프레임 흔들림(22 · 23 번갈아)은 두 박을 합치면 1프레임 안이라 걸리지 않는다
+ */
+const TEMPO_EVENT_PAIR_FRAMES = 2.5;
+/** 박 단위로 맞출 때 모든 박이 영상 박자선에서 이 안(프레임, 60fps 25ms) */
+const TEMPO_BEAT_TOLERANCE_FRAMES = 1.5;
+/** 구간 BPM 으로 가는 박도 영상에서 이만큼(프레임, 60fps 42ms) 넘게 벌어지면 박 단위로 바로잡는다 — 정수 프레임 흔들림 1 + 박 단위 끝 1.5 */
+const TEMPO_DRIFT_LIMIT_FRAMES = 2.5;
+/** 박 단위 구간을 끝낼 BPM 은 뒤따르는 이만큼의 박까지 보고 고른다 */
+const TEMPO_SETTLE_BEATS = 16;
 /** 한 번에 보는 박 수 — 이만큼 이어져야 바뀐 것으로 본다 */
 const TEMPO_WINDOW = 8;
 
@@ -1610,43 +1631,184 @@ export function detectVid2bmapTempoChanges(
               }
             : null;
 
-    const changes: Vid2bmapTempoChange[] = [];
-    segments.forEach((segment, index) => {
-        const end = segments[index + 1]?.start ?? durations.length;
-        if (index === 0) {
-            return;
+    // 박마다 쓸 BPM(2026-09-25 B) — 꾸준한 곳은 구간 BPM(B′) 하나, 영상이 그 BPM 에서 벗어난 박만
+    // 영상 박자선에서 1.5프레임 안에 드는 가장 긴 정수 BPM 으로 이어 붙이고 끝나면 구간 BPM 으로 돌아온다
+    const beatCount = durations.length;
+    const ticks = Array.from({ length: beatCount }, (_, beat) =>
+        Math.round(vid2bmapTickAt(firstIndex + beat, firstBarTick, sorted))
+    );
+    const scaleAt = (beat: number) =>
+        toBpm(1, activePoint(sorted, ticks[beat]));
+    const segmentOf = (beat: number) =>
+        segments.findLastIndex((segment) => segment.start <= beat);
+    const startBpm = startMismatch?.bpm ?? origin.bpm;
+    const choices = segments.map((_, index) =>
+        index === 0
+            ? first
+            : chooseVid2bmapBpm(positionsOf(index), (frameCount) =>
+                  toBpm(
+                      frameCount,
+                      activePoint(sorted, ticks[segments[index].start])
+                  )
+              )
+    );
+    const segmentBpm = segments.map((segment, index) => {
+        if (index === 0) return startBpm;
+        // 이미 그 자리에 타이밍 포인트가 있으면 그 값을 따른다
+        const existing = sorted.find(
+            (point) => point.tick === ticks[segment.start]
+        );
+        return existing ? existing.bpm : choices[index].bpm;
+    });
+    const periodAt = (beat: number) =>
+        scaleAt(beat) / segmentBpm[segmentOf(beat)];
+    // 짧은 구간(리타르단도 등)은 통째로, 꾸준한 구간은 벗어난 박만 박 단위로
+    const event = durations.map((_, beat) => {
+        const index = segmentOf(beat);
+        const end = segments[index + 1]?.start ?? beatCount;
+        return end - segments[index].start < BPM_FIT_MIN_BEATS;
+    });
+    for (let beat = 0; beat + 1 < beatCount; beat += 1) {
+        const pair =
+            durations[beat] +
+            durations[beat + 1] -
+            periodAt(beat) -
+            periodAt(beat + 1);
+        if (Math.abs(pair) >= TEMPO_EVENT_PAIR_FRAMES) {
+            event[beat] = true;
+            event[beat + 1] = true;
         }
-        const tick = Math.round(
-            vid2bmapTickAt(firstIndex + segment.start, firstBarTick, sorted)
-        );
-        const point = activePoint(sorted, tick);
-        const choice = chooseVid2bmapBpm(positionsOf(index), (frameCount) =>
-            toBpm(frameCount, point)
-        );
-        const bpm = choice.bpm;
-        // 시작 BPM 제안이 있으면 첫 구간은 그 값에서 바뀌는 것으로 본다
-        const fromBpm =
-            changes.length > 0 && changes[changes.length - 1].tick > point.tick
-                ? changes[changes.length - 1].bpm
-                : point === origin && startMismatch
-                  ? startMismatch.bpm
-                  : point.bpm;
-        // 이미 그 자리에 타이밍 포인트가 있거나, 앞 BPM 과 같으면 제안하지 않는다
-        if (
-            point.tick === tick ||
-            Math.abs(bpm - fromBpm) / fromBpm <= TEMPO_TOLERANCE
+    }
+    const beatBpm: number[] = [];
+    let model = positions[0];
+    for (let beat = 0; beat < beatCount;) {
+        // 첫 타이밍 자리까지의 박은 시작 BPM 그대로(그 앞엔 포인트를 둘 수 없다)
+        if (ticks[beat] <= origin.tick) {
+            event[beat] = false;
+            beatBpm.push(startBpm);
+            model += scaleAt(beat) / startBpm;
+            beat += 1;
+            continue;
+        }
+        if (!event[beat]) {
+            const bpm = segmentBpm[segmentOf(beat)];
+            const next = model + scaleAt(beat) / bpm;
+            // 두 박씩 봐선 안 걸리는 완만한 흐름도 영상에서 2.5프레임 넘게 벌어지면 이 박부터 바로잡는다
+            if (
+                Math.abs(next - positions[beat + 1]) <= TEMPO_DRIFT_LIMIT_FRAMES
+            ) {
+                beatBpm.push(bpm);
+                model = next;
+                beat += 1;
+                continue;
+            }
+            event[beat] = true;
+        }
+        const start = beat;
+        const scale = scaleAt(start);
+        // 박 하나 프레임 수가 [low, high] 면 start 뒤 박이 모두 영상 박에서 1.5프레임 안
+        let low = 0;
+        let high = Number.POSITIVE_INFINITY;
+        let reach = start;
+        let range: [number, number] | null = null;
+        for (
+            let next = start + 1;
+            next <= beatCount && event[next - 1];
+            next += 1
         ) {
-            return;
+            const span = next - start;
+            low = Math.max(
+                low,
+                (positions[next] - TEMPO_BEAT_TOLERANCE_FRAMES - model) / span
+            );
+            high = Math.min(
+                high,
+                (positions[next] + TEMPO_BEAT_TOLERANCE_FRAMES - model) / span
+            );
+            if (high <= 0 || low > high) break;
+            const slowest = Math.ceil(scale / high);
+            const fastest =
+                low > 0 ? Math.floor(scale / low) : Number.POSITIVE_INFINITY;
+            if (slowest > fastest) break;
+            reach = next;
+            range = [slowest, fastest];
         }
+        let bpm: number;
+        if (range) {
+            // 끝 박 하나(정수 프레임 ±1)가 아니라 뒤따르는 박들에 맞는 값 — 박 단위 구간이 끝날 때마다 치우침이 쌓이지 않게
+            const settle = (candidate: number) => {
+                let at = model + ((reach - start) * scale) / candidate;
+                let worst = Math.abs(at - positions[reach]);
+                for (
+                    let index = reach;
+                    index < Math.min(beatCount, reach + TEMPO_SETTLE_BEATS);
+                    index += 1
+                ) {
+                    at += periodAt(index);
+                    worst = Math.max(
+                        worst,
+                        Math.abs(at - positions[index + 1])
+                    );
+                }
+                return worst;
+            };
+            bpm = range[0];
+            for (
+                let candidate = range[0] + 1;
+                candidate <= Math.min(range[1], range[0] + 400);
+                candidate += 1
+            ) {
+                if (settle(candidate) < settle(bpm)) bpm = candidate;
+            }
+        } else {
+            // 정수로는 한 박도 못 맞추면 그 박만 정확히
+            reach = start + 1;
+            bpm = Math.round((scale / (positions[reach] - model)) * 100) / 100;
+        }
+        for (let index = start; index < reach; index += 1) beatBpm.push(bpm);
+        model += ((reach - start) * scale) / bpm;
+        beat = reach;
+    }
+
+    // BPM 이 바뀌는 박 = 타이밍 포인트. 박 단위로 맞춘 박 바로 뒤의 포인트는 같은 카드로 묶는다
+    const changes: Vid2bmapTempoChange[] = [];
+    let previousBpm = startBpm;
+    for (let beat = 0; beat < beatCount; beat += 1) {
+        const bpm = beatBpm[beat];
+        const fromBpm = previousBpm;
+        previousBpm = bpm;
+        if (bpm === fromBpm) continue;
+        const tick = ticks[beat];
+        // 첫 타이밍 앞이거나 이미 그 자리에 타이밍 포인트가 있으면 넣지 않는다
+        if (tick <= origin.tick || sorted.some((point) => point.tick === tick))
+            continue;
+        const index = segmentOf(beat);
+        const segmentStart = segments[index].start === beat && index > 0;
+        const group = changes.at(-1);
+        if (group && beat > 0 && event[beat - 1]) {
+            group.points.push({ tick, bpm });
+            group.bpm = bpm;
+            continue;
+        }
+        const beatFrames: number[] = [];
+        for (let index = beat; index < beatCount && event[index]; index += 1)
+            beatFrames.push(Math.round(durations[index] * 2) / 2);
         changes.push({
             tick,
+            points: [{ tick, bpm }],
             bpm,
-            measuredBpm: choice.measuredBpm,
-            beats: end - segment.start,
+            measuredBpm: segmentStart ? choices[index].measuredBpm : bpm,
+            beats:
+                beatFrames.length > 0
+                    ? beatFrames.length
+                    : (segments[index + 1]?.start ?? beatCount) - beat,
             fromBpm,
-            integerDriftFrames: choice.integerDriftFrames,
+            integerDriftFrames: segmentStart
+                ? choices[index].integerDriftFrames
+                : 0,
+            beatFrames,
         });
-    });
+    }
     return { changes, startMismatch };
 }
 
@@ -1769,14 +1931,51 @@ export function vid2bmapMeterFirstBarTick(
     return origin.tick - measureStart * beatTicksOf(origin);
 }
 
-/** 제안을 타이밍 포인트로 — 시각(ms)은 앞 타이밍(앞 제안 포함)에서 이어 계산, 박자표는 앞 구간을 잇는다 */
+/**
+ * 마디선 맞춤 포인트(2026-09-25 마, osu! 식) — 에디터는 타이밍 포인트마다 마디를 새로 시작하므로, 카드의 마지막 포인트가
+ * 곡의 마디 첫 박이 아니면 다음 마디 첫 박에 같은 BPM 포인트를 하나 더 둬 마디선을 곡에 다시 맞춘다.
+ * 곡의 마디 = 넣기 전 타이밍(시작 박자 제안 포함)의 마디. 다음 마디 첫 박까지 다른 포인트가 있으면 그 포인트에 맡긴다
+ */
+export function vid2bmapBarRestore(
+    change: Vid2bmapTempoChange,
+    timingPoints: ChartTimingPoint[],
+    changes: Vid2bmapTempoChange[]
+): Vid2bmapTempoPoint | null {
+    const sorted = sortTimingPoints(timingPoints);
+    const last = change.points[change.points.length - 1];
+    const point = activePoint(sorted, last.tick);
+    const measureTicks = beatTicksOf(point) * point.numerator;
+    const offset = (last.tick - point.tick) % measureTicks;
+    if (offset === 0) return null;
+    const tick = last.tick - offset + measureTicks;
+    const between = (candidate: number) =>
+        candidate > last.tick && candidate <= tick;
+    if (
+        sorted.some((existing) => between(existing.tick)) ||
+        changes.some((other) =>
+            other.points.some((candidate) => between(candidate.tick))
+        )
+    ) {
+        return null;
+    }
+    return { tick, bpm: last.bpm };
+}
+
+/** 제안 카드의 포인트(마디선 맞춤 포함)를 타이밍 포인트로 — 시각(ms)은 앞 타이밍(앞 제안 포함)에서 이어 계산, 박자표는 앞 구간을 잇는다 */
 export function applyVid2bmapTempoChanges(
     timingPoints: ChartTimingPoint[],
     changes: Vid2bmapTempoChange[],
     createId: () => string = () => `timing-${crypto.randomUUID()}`
 ) {
     let points = sortTimingPoints(timingPoints);
-    for (const change of [...changes].sort((a, b) => a.tick - b.tick)) {
+    const restores = changes.flatMap((change) => {
+        const restore = vid2bmapBarRestore(change, timingPoints, changes);
+        return restore ? [restore] : [];
+    });
+    for (const change of [
+        ...changes.flatMap((group) => group.points),
+        ...restores,
+    ].sort((a, b) => a.tick - b.tick)) {
         const previous = activePoint(points, change.tick);
         // 에디터와 같은 계산(앞 타이밍 · 앞 제안 기준)
         const timeMs = tickToMilliseconds(
