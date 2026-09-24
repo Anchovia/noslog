@@ -1598,13 +1598,15 @@ html[data-theme="light"] .noslog-ui,
         --nl-state-layer var(--nl-motion-duration-state) var(--nl-ease-enter);
 }
 
-/* ③ 떠 있는 메뉴(셀렉트 · 정렬 · ⋯ · 필터 팝오버 · 빙고 칸 · 지도 범례 · ≡ 메뉴) — 열 때 페이드만, 닫을 때 즉시.
-   용어 도움말은 툴팁이라 즉시(⑧) */
+/* ③ 떠 있는 메뉴(셀렉트 · 정렬 · ⋯ · 필터 팝오버 · 빙고 칸 · 지도 범례 · ≡ 메뉴 · 업적 배지 카드) — 열 때 페이드만, 닫을 때 즉시.
+   용어 도움말은 툴팁이라 즉시(⑧). 업적 배지 카드는 같은 부품이지만 떠 있는 창 크기라 ③(2026-09-25 A1) */
 .noslog-ui
     [data-radix-popper-content-wrapper]
     > [data-state="open"]:not(.nl-term__popover),
 [data-radix-popper-content-wrapper]
     > .noslog-ui[data-state="open"]:not(.nl-term__popover),
+[data-radix-popper-content-wrapper]
+    > .noslog-ui.nl-achievement-card-popover[data-state="open"],
 .noslog-ui .nl-destinations,
 .noslog-ui .nl-nav-scrim {
     animation: nl-fade-in var(--nl-motion-duration-popup) var(--nl-ease-enter);
