@@ -656,7 +656,8 @@ export function convertVid2bmap(
     // 빠른 구간(Altale 후반 약 0.1박 간격): 기본 격자로 같은 자리에 뭉쳐 칸이 겹친 노트만 ×2 · ×4 격자로 다시 맞춘다.
     // 이미 겹치지 않는 노트는 건드리지 않는다(앞부분 232개 정답 그대로)
     const refined = new Set<string>();
-    for (const factor of [2, 4]) {
+    // ×6 · ×8 까지(Gaia 1마디: 1프레임 간격 계단 17 → 19 → 21 이 1/16박으로도 뭉침 — 1/24박이면 떨어진다)
+    for (const factor of [2, 4, 6, 8]) {
         const clashing = new Set(
             findChartNoteConflicts(output, CHART_TICKS_PER_QUARTER).flatMap(
                 ({ firstId, secondId }) => [firstId, secondId]
@@ -741,45 +742,49 @@ export function convertVid2bmap(
                     width: piece.width,
                 }))
             );
-            const beatTicks = beatTicksOf(activePoint(sortedPoints, tick));
-            // 가로대 간격 = 영상 프레임 기준 조각 간격 중 가장 짧은 무리의 평균(에디터 스냅 1/4 ~ 1/32 중 가장 가까운 것).
-            // 격자에 맞춘 뒤 재면 1/6박 격자에 뭉쳐 커지고, AI 가 조각을 놓친 줄기(Altale 34마디: 11 · 4 · 11 · 4프레임)는 더 커진다
+            // 가로대 하나 = 판정 하나(アルストロメリア 6 · Gaia 10 모두 조각 수 = 판정 수와 맞음, 2026-09-25).
+            // 가로대 수 = 조각 수 + AI 가 건너뛴 자리(보통 간격의 2배 이상 벌어진 곳을 내림으로 — Altale 34마디 11 · 4 · 11 · 4프레임은 하나씩).
+            // 세 곡 판정 수와 모두 일치: Altale 1,604 · アルストロメリア 1,394 · Gaia 1,539
+            // 게임의 가로대 간격은 표준 격자에 딱 맞지 않아(Gaia 180 BPM: 약 1/9박) 첫 · 끝 조각 사이를 그 수로 나눈다
             const frameGaps = chain
                 .slice(1)
-                .map((piece, index) => piece.y - chain[index].y)
+                .map((piece, index) => piece.y - chain[index].y);
+            const regular = frameGaps
                 .filter((frames) => frames >= 2)
                 .sort((a, b) => a - b);
-            const shortest = frameGaps.filter(
-                (frames) => frames <= frameGaps[0] * 1.5
+            const shortest = regular.filter(
+                (frames) => frames <= (regular[0] ?? 0) * 1.5
             );
-            const frameTicks = rawTickOf(first.y + 1) - rawTickOf(first.y);
-            const gap =
-                shortest.length > 0
-                    ? (shortest.reduce((sum, frames) => sum + frames, 0) /
-                          shortest.length) *
-                      frameTicks
-                    : beatTicks;
-            const rungDivisor = [4, 8, 12, 16, 24, 32].reduce(
-                (best, divisor) =>
-                    Math.abs((CHART_TICKS_PER_QUARTER * 4) / divisor - gap) <
-                    Math.abs((CHART_TICKS_PER_QUARTER * 4) / best - gap)
-                        ? divisor
-                        : best
+            const typical =
+                shortest[Math.floor(shortest.length / 2)] ?? regular[0] ?? 1;
+            const missing = frameGaps.reduce(
+                (sum, frames) =>
+                    sum +
+                    (frames >= typical * 2
+                        ? Math.floor(frames / typical) - 1
+                        : 0),
+                0
             );
-            // 끝 = 시작 + 가로대 간격 × 개수(첫 조각 ~ 마지막 조각 길이를 가로대 간격으로 반올림). 게임은 가로대 하나가 판정 하나라
-            // 끝을 격자에 맞춰 줄이면 가로대가 빠진다(アルストロメリア 64마디: 조각 6개 · 0.58박 → ½박으로 줄어 가로대 5개, 최종 콤보와 1개 차이)
-            const rungTicks = (CHART_TICKS_PER_QUARTER * 4) / rungDivisor;
-            const endTick =
-                tick +
+            const rungCount = chain.length + missing;
+            const spanTicks = Math.max(
+                rungCount - 1,
+                snapAt(chain[chain.length - 1].y) - tick
+            );
+            // 에디터가 그리는 가로대(점 간격 = 온음표 ÷ 연결 간격, 반올림)와 같아지도록 간격 → 연결 간격 → 간격 순으로 맞춘다
+            const rungDivisor = Math.min(
+                64,
                 Math.max(
                     1,
                     Math.round(
-                        (rawTickOf(chain[chain.length - 1].y) -
-                            rawTickOf(first.y)) /
-                            rungTicks
+                        (CHART_TICKS_PER_QUARTER * 4 * (rungCount - 1)) /
+                            spanTicks
                     )
-                ) *
-                    rungTicks;
+                )
+            );
+            const rungTicks = Math.round(
+                (CHART_TICKS_PER_QUARTER * 4) / rungDivisor
+            );
+            const endTick = tick + rungTicks * Math.max(1, rungCount - 1);
             const hands = chain.map((piece) => piece.hand).filter(Boolean);
             const left = hands.filter((hand) => hand === "left").length;
             const hand: ChartNote["hand"] =

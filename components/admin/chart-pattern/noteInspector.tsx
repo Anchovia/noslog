@@ -519,14 +519,23 @@ export default function NoteInspector() {
                                         }
                                         className={inputClass}
                                     >
-                                        {pathSnapDivisors.map((divisor) => (
-                                            <option
-                                                key={divisor}
-                                                value={divisor}
-                                            >
-                                                1/{divisor}
-                                            </option>
-                                        ))}
+                                        {/* 영상 추출 글리산도는 게임 가로대 간격 그대로라 목록 밖 값(1/36 등)일 수 있다 — 지금 값도 보이게 */}
+                                        {[
+                                            ...new Set([
+                                                ...pathSnapDivisors,
+                                                selected.glissandoSnapDivisor ??
+                                                    4,
+                                            ]),
+                                        ]
+                                            .sort((a, b) => a - b)
+                                            .map((divisor) => (
+                                                <option
+                                                    key={divisor}
+                                                    value={divisor}
+                                                >
+                                                    1/{divisor}
+                                                </option>
+                                            ))}
                                     </select>
                                 </label>
                             ) : null}

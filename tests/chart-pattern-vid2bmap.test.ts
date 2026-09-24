@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 
 import altale from "./fixtures/vid2bmap-altale-real.json";
+import {
+    findChartNoteConflicts,
+    getGlissandoSnapRenderPoints,
+} from "@/lib/chart-pattern/editor";
 import type { ChartNote, ChartTimingPoint } from "@/lib/chart-pattern/schema";
 import {
     alignVid2bmapFirstBarTick,
@@ -769,6 +773,39 @@ describe("vid2bmap alignment with an existing draft", () => {
     });
 });
 
+describe("vid2bmap very fast staircase", () => {
+    it("keeps a one-frame staircase apart instead of clashing (Gaia 1마디)", () => {
+        // 20프레임 = 1박. 박자선 120 → 140 사이 136 · 137 · 138 에 17 · 19 · 21번 칸(칸이 겹침), 140 에 23번 칸
+        const stairs: Vid2bmapResult = {
+            fps: 60,
+            startSec: 0,
+            barRows: [0, 20, 40, 60, 80, 100, 120, 140, 160],
+            simple: [
+                [136, 17, 19],
+                [137, 19, 21],
+                [138, 21, 23],
+                [140, 23, 25],
+            ],
+            tenuto: [],
+            trill: [],
+            glissando: [],
+            beatFrames: null,
+        };
+        const conversion = convertVid2bmap(
+            stairs,
+            collectVid2bmapNotes(stairs).notes,
+            {
+                timingPoints: [point(0, 0, 180, 4, 4)],
+                firstBarTick: 0,
+                snapDivisor: 4,
+                include: { standard: true, tenuto: true, trill: true },
+            }
+        );
+        expect(findChartNoteConflicts(conversion.notes, 480)).toEqual([]);
+        expect(new Set(conversion.notes.map((note) => note.tick)).size).toBe(4);
+    });
+});
+
 describe("vid2bmap dense passages", () => {
     it("re-snaps only the notes a coarse grid squeezes onto one spot", () => {
         const dense: Vid2bmapResult = {
@@ -1055,6 +1092,67 @@ describe("vid2bmap glissando", () => {
             dropped: 1,
             rungNotes: 1,
         });
+    });
+
+    it("makes one rung per piece even when the game spacing is off the grid (Gaia: 10 pieces in a beat)", () => {
+        // 20프레임 = 1박(180 BPM). 조각 10개가 2~3프레임 간격으로 한 박에 — 판정 10개
+        const ys = [0, 2, 5, 8, 10, 12, 14, 16, 18, 21];
+        const gaia: Vid2bmapResult = {
+            ...result,
+            barRows: [0, 20, 40, 60],
+            simple: [],
+            glissando: ys.map((y, index) => [20 + y, 25 - index, 27 - index]),
+        };
+        const conversion = convertVid2bmap(
+            gaia,
+            collectVid2bmapNotes(gaia).notes,
+            {
+                timingPoints: [point(0, 0, 180, 4, 4)],
+                firstBarTick: 0,
+                snapDivisor: 4,
+                include: {
+                    standard: true,
+                    tenuto: true,
+                    trill: true,
+                    glissando: true,
+                },
+            }
+        );
+        const [glissando] = conversion.notes;
+        expect(getGlissandoSnapRenderPoints(glissando, 480)).toHaveLength(10);
+        expect(glissando.glissandoSnapDivisor).toBe(36);
+    });
+
+    it("fills a rung the extraction skipped (Altale 34마디: 11 · 4 · 11 · 4 frames)", () => {
+        const ys = [0, 11, 15, 26, 30];
+        const skipped: Vid2bmapResult = {
+            ...result,
+            simple: [],
+            glissando: ys.map((y, index) => [
+                40 + y,
+                12 - index * 3,
+                14 - index * 3,
+            ]),
+        };
+        const conversion = convertVid2bmap(
+            skipped,
+            collectVid2bmapNotes(skipped).notes,
+            {
+                timingPoints: [point(0, 0, 90, 3, 4)],
+                firstBarTick: 0,
+                snapDivisor: 6,
+                include: {
+                    standard: true,
+                    tenuto: true,
+                    trill: true,
+                    glissando: true,
+                },
+            }
+        );
+        // 조각 5 + 11프레임 간격마다 하나 = 7
+        expect(
+            getGlissandoSnapRenderPoints(conversion.notes[0], 480)
+        ).toHaveLength(7);
     });
 
     it("leaves glissando out unless asked", () => {

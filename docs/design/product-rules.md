@@ -447,7 +447,7 @@ old design-stage checklist. Changes to material behavior require a user decision
   from 1/2 to 1/16 that does both (e.g. a 1/8-beat run inside a 1/6-beat song), and if none
   does, notes off the song grid keep their video position. Tenuto and trill lengths use the
   grid of the beat they end in, and the end is put on that grid. Moved notes can be selected for
-  review after import. Notes that clash on one spot are then re-snapped finer. Same-lane reads
+  review after import. Notes that clash on one spot are then re-snapped finer (×2 … ×8, e.g. a one-frame staircase at 180 BPM needs 1/24). Same-lane reads
   within 3 frames are one note, and so are two reads of the same kind within 3 frames where one
   lane range contains the other (the wider is kept — vid2bmap sometimes reads a note again one
   frame later, narrower).
@@ -456,10 +456,11 @@ old design-stage checklist. Changes to material behavior require a user decision
   by kind, lanes and nearby frame); otherwise they are guessed by lane centre, and only guessed
   centre notes are selected for review. Glissando pieces (vid2bmap reads each rung) are joined
   into one glissando when the next piece is within 12 frames and 4 lanes (2026-09-24); the path
-  keeps the start, end and bends over 1 lane, rungs follow the shortest video-frame gaps
-  between pieces (pieces missed by vid2bmap do not widen them), the end is the start plus the
-  first-to-last piece span rounded to whole rungs and bends sit on rungs (one rung = one judgement,
-  so the rung count matches the video's final combo — アルストロメリア Real 1,394), a lone piece is
+  keeps the start, end and bends over 1 lane, one rung per piece plus rungs vid2bmap skipped
+  (gaps at least twice the usual, counted down) — one rung = one judgement, and the game's rung
+  spacing is not a clean grid (Gaia 180 BPM ≈ 1/9 beat), so the spacing is the first-to-last span
+  divided by that count and bends sit on rungs (note counts match the result screen for all three
+  checked songs: Altale 1,604 · アルストロメリア 1,394 · Gaia 1,539), a lone piece is
   dropped, and a standard note on the path is taken as a rung read twice and dropped. A trill's
   head width w becomes two positions of width w-1 one lane apart (the video's hexes alternate
   one lane within the head, 2026-09-24) and is flagged.
