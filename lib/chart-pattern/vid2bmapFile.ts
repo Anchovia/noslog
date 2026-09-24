@@ -15,13 +15,16 @@ export interface Vid2bmapResult {
     startSec: number | null;
     /** 박자선이 있는 줄(y). 붙어 있는 줄은 하나로 합친 가운데 값 */
     barRows: number[];
-    /** [y, x1, x2] */
+    /**
+     * [y, x1, x2, 손?] — 손 열은 실행 스크립트가 LR_classification 결과에서 붙인 것(0 왼손 · 1 오른손 · -1 모름).
+     * 옛 zip 에는 없다
+     */
     simple: number[][];
-    /** [y1, y2, x1, x2] */
+    /** [y1, y2, x1, x2, 손?] */
     tenuto: number[][];
-    /** [y1, y2, x1, x2] */
+    /** [y1, y2, x1, x2, 손?] */
     trill: number[][];
-    /** [y, x1, x2] — 대각선 노트를 조각으로 읽은 것 */
+    /** [y, x1, x2, 손?] — 대각선 노트를 조각으로 읽은 것 */
     glissando: number[][];
     /**
      * 박자선이 격자 한 줄(row)을 지난 실제 영상 프레임(시작 프레임 기준, vid2bmap 보정 전) — 템포 측정용.
@@ -89,13 +92,13 @@ export function parseNpy(bytes: Uint8Array): NpyArray {
     return { shape, values };
 }
 
-/** 2차원 배열을 줄 목록으로. np.empty((0, n)) 이 (0,) 으로 저장된 경우도 빈 목록 */
-export function npyRows(array: NpyArray, columns: number): number[][] {
+/** 2차원 배열을 줄 목록으로. np.empty((0, n)) 이 (0,) 으로 저장된 경우도 빈 목록. columns 는 받을 수 있는 열 수 */
+export function npyRows(array: NpyArray, columns: number[]): number[][] {
     if (array.values.length === 0) return [];
-    const width = array.shape[1] ?? columns;
-    if (array.shape.length !== 2 || width !== columns) {
+    const width = array.shape[1];
+    if (array.shape.length !== 2 || !columns.includes(width)) {
         throw new Error(
-            `열 ${columns}개짜리 배열이어야 합니다(지금 ${array.shape.join("×")}).`
+            `열 ${columns.join(" · ")}개짜리 배열이어야 합니다(지금 ${array.shape.join("×")}).`
         );
     }
     const rows: number[][] = [];
@@ -279,10 +282,10 @@ export async function readVid2bmapZip(
         fps,
         startSec,
         barRows: barRowsFromMask(bar!.values),
-        simple: npyRows(simple!, 3),
-        tenuto: npyRows(tenuto!, 4),
-        trill: trill ? npyRows(trill, 4) : [],
-        glissando: glissando ? npyRows(glissando, 3) : [],
+        simple: npyRows(simple!, [3, 4]),
+        tenuto: npyRows(tenuto!, [4, 5]),
+        trill: trill ? npyRows(trill, [4, 5]) : [],
+        glissando: glissando ? npyRows(glissando, [3, 4]) : [],
         beatFrames,
     };
 }

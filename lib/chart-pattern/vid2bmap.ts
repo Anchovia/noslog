@@ -5,6 +5,7 @@
  * 노트와 박자선은 같은 띠 위에서 함께 흔들리므로 「앞뒤 박자선 사이 어디쯤인가」 로 박 위치를 계산한다.
  * 게임은 박마다 선을 그린다(Altale: BPM 90 · 40프레임 간격 = 1박). 첫 박자선이 곡의 몇 번째 틱인지는 사람이 정한다.
  * Altale Real 앞부분 232개로 박 위치 · 칸 · 폭 · 종류가 모두 일치함을 확인(2026-09-23).
+ * 손은 실행 스크립트가 LR_classification 브랜치 결과에서 붙여 온 것을 쓰고(Altale 232/232, 2026-09-24), 없으면 칸 위치로 추정한다.
  */
 import { findChartNoteConflicts } from "./editor";
 import { CHART_LANE_COUNT, CHART_TICKS_PER_QUARTER } from "./schema";
@@ -16,7 +17,7 @@ import type { Vid2bmapResult } from "./vid2bmapFile";
 export const VID2BMAP_DUPLICATE_FRAMES = 3;
 /** 한 박을 나누는 격자 후보 */
 export const VID2BMAP_SNAP_DIVISORS = [2, 3, 4, 6, 8, 12, 16] as const;
-/** 손 추정이 불확실한 가운데 구간(노트 가운데 칸 기준) */
+/** 칸 위치로 손을 추정할 때 불확실한 가운데 구간(노트 가운데 칸 기준) */
 const HAND_UNCERTAIN_MIN = 12;
 const HAND_UNCERTAIN_MAX = 16;
 
@@ -28,6 +29,8 @@ export interface Vid2bmapRawNote {
     endY: number | null;
     lane: number;
     width: number;
+    /** 영상에서 읽은 손. 손 열이 없거나 모르면 null */
+    hand: ChartNote["hand"] | null;
 }
 
 export interface Vid2bmapCounts {
@@ -75,56 +78,71 @@ const hasBeatFrames = (result: Vid2bmapResult) =>
 
 export interface Vid2bmapConversion {
     notes: ChartNote[];
+    /** 손을 영상에서 읽은 노트 id */
+    handKnownIds: string[];
     /** 손을 칸 위치로 추정했는데 가운데라 확인이 필요한 노트 id */
     handUncertainIds: string[];
     warnings: Vid2bmapWarning[];
 }
 
+/** 손 열(0 왼손 · 1 오른손 · -1 모름). 열이 없으면 모름 */
+const handOf = (value: number | undefined): ChartNote["hand"] | null =>
+    value === 0 ? "left" : value === 1 ? "right" : null;
+
 /** 결과 → 노트 목록(같은 노트를 두 번 읽은 것은 합침) */
 export function collectVid2bmapNotes(result: Vid2bmapResult) {
     const all: Vid2bmapRawNote[] = [
-        ...result.simple.map(([y, x1, x2]) => ({
+        ...result.simple.map(([y, x1, x2, hand]) => ({
             kind: "standard" as const,
             y,
             endY: null,
             lane: x1,
             width: x2 - x1 + 1,
+            hand: handOf(hand),
         })),
-        ...result.tenuto.map(([y1, y2, x1, x2]) => ({
+        ...result.tenuto.map(([y1, y2, x1, x2, hand]) => ({
             kind: "tenuto" as const,
             y: y1,
             endY: y2,
             lane: x1,
             width: x2 - x1 + 1,
+            hand: handOf(hand),
         })),
-        ...result.trill.map(([y1, y2, x1, x2]) => ({
+        ...result.trill.map(([y1, y2, x1, x2, hand]) => ({
             kind: "trill" as const,
             y: y1,
             endY: y2,
             lane: x1,
             width: x2 - x1 + 1,
+            hand: handOf(hand),
         })),
-        ...result.glissando.map(([y, x1, x2]) => ({
+        ...result.glissando.map(([y, x1, x2, hand]) => ({
             kind: "glissando" as const,
             y,
             endY: null,
             lane: x1,
             width: x2 - x1 + 1,
+            hand: handOf(hand),
         })),
     ].sort((a, b) => a.y - b.y || a.lane - b.lane);
 
     const kept: Vid2bmapRawNote[] = [];
     let duplicates = 0;
     for (const note of all) {
-        const duplicate = kept.some(
+        const duplicate = kept.find(
             (other) =>
                 other.kind === note.kind &&
                 other.lane === note.lane &&
                 other.width === note.width &&
                 note.y - other.y <= VID2BMAP_DUPLICATE_FRAMES
         );
-        if (duplicate) duplicates += 1;
-        else kept.push(note);
+        if (!duplicate) {
+            kept.push(note);
+            continue;
+        }
+        duplicates += 1;
+        // 먼저 읽은 쪽이 손을 모르면 나중 쪽 손을 쓴다
+        duplicate.hand ??= note.hand;
     }
     const counts: Vid2bmapCounts = {
         standard: kept.filter((note) => note.kind === "standard").length,
@@ -315,6 +333,7 @@ export function convertVid2bmap(
         );
     let output: ChartNote[] = [];
     const rawTicks = new Map<string, number>();
+    const handKnownIds: string[] = [];
     const handUncertainIds: string[] = [];
     let shortTenuto = 0;
     let trillSplit = 0;
@@ -324,11 +343,12 @@ export function convertVid2bmap(
         const rawTick = rawTickOf(note.y);
         const tick = snapVid2bmapTick(rawTick, snapDivisor, timingPoints);
         const center = note.lane + note.width / 2;
-        const hand = center <= CHART_LANE_COUNT / 2 ? "left" : "right";
+        const hand: ChartNote["hand"] =
+            note.hand ?? (center <= CHART_LANE_COUNT / 2 ? "left" : "right");
         const base = {
             id: createId(),
             type: note.kind as ChartNoteType,
-            hand: hand as ChartNote["hand"],
+            hand,
             tick,
             lane: note.lane,
             width: note.width,
@@ -363,7 +383,12 @@ export function convertVid2bmap(
                 trillSplit += 1;
             }
         }
-        if (center >= HAND_UNCERTAIN_MIN && center <= HAND_UNCERTAIN_MAX) {
+        if (note.hand) {
+            handKnownIds.push(chartNote.id);
+        } else if (
+            center >= HAND_UNCERTAIN_MIN &&
+            center <= HAND_UNCERTAIN_MAX
+        ) {
             handUncertainIds.push(chartNote.id);
         }
         rawTicks.set(chartNote.id, rawTick);
@@ -418,14 +443,14 @@ export function convertVid2bmap(
         warnings.push({ kind: "shortTenuto", count: shortTenuto });
     if (trillSplit > 0)
         warnings.push({ kind: "trillSplit", count: trillSplit });
-    return { notes: output, handUncertainIds, warnings };
+    return { notes: output, handKnownIds, handUncertainIds, warnings };
 }
 
 export type ChartNoteDiffField =
     "type" | "lane" | "width" | "duration" | "pair" | "hand";
 
 export interface ChartNoteDiff {
-    /** 틱 · 칸 · 폭 · 종류 · 길이가 같음(손은 추정이라 보지 않음) */
+    /** 틱 · 칸 · 폭 · 종류 · 길이가 같음(손은 영상에서 읽은 노트만 본다 — 칸 위치 추정은 보지 않음) */
     same: [ChartNote, ChartNote][];
     /** 같은 틱에서 칸이 겹치지만 속성이 다름 */
     changed: {
@@ -440,10 +465,14 @@ export interface ChartNoteDiff {
 const overlaps = (a: ChartNote, b: ChartNote) =>
     a.lane <= b.lane + b.width - 1 && b.lane <= a.lane + a.width - 1;
 
-/** 지금 초안과 가져올 노트 비교 — 같은 틱에서 칸이 겹치는 것끼리, 칸이 가장 가까운 짝부터 */
+/**
+ * 지금 초안과 가져올 노트 비교 — 같은 틱에서 칸이 겹치는 것끼리, 칸이 가장 가까운 짝부터.
+ * handKnownIds: 손을 영상에서 읽은 가져올 노트 — 손만 달라도 「달라짐」
+ */
 export function diffChartNotes(
     current: ChartNote[],
-    incoming: ChartNote[]
+    incoming: ChartNote[],
+    handKnownIds: ReadonlySet<string> = new Set()
 ): ChartNoteDiff {
     const byTick = new Map<number, ChartNote[]>();
     for (const note of current) {
@@ -482,11 +511,16 @@ export function diffChartNotes(
         ) {
             fields.push("pair");
         }
+        if (
+            match.hand !== note.hand &&
+            (fields.length > 0 || handKnownIds.has(note.id))
+        ) {
+            fields.push("hand");
+        }
         if (fields.length === 0) {
             diff.same.push([match, note]);
             continue;
         }
-        if (match.hand !== note.hand) fields.push("hand");
         diff.changed.push({ current: match, incoming: note, fields });
     }
     diff.onlyCurrent = current.filter((note) => !used.has(note.id));

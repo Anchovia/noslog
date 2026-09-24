@@ -320,7 +320,11 @@ export default function Vid2bmapImportPanel({
     const diff = useMemo(
         () =>
             conversion
-                ? diffChartNotes(document.notes, conversion.notes)
+                ? diffChartNotes(
+                      document.notes,
+                      conversion.notes,
+                      new Set(conversion.handKnownIds)
+                  )
                 : null,
         [conversion, document.notes]
     );
@@ -828,10 +832,13 @@ export default function Vid2bmapImportPanel({
                                     className="accent-text-primary mt-0.5 size-3.5"
                                 />
                                 <span>
-                                    넣은 뒤 가운데(12~16번 칸) 노트 선택해 두기
+                                    넣은 뒤 손을 추정한 가운데(12~16번 칸) 노트
+                                    선택해 두기
                                     <span className="text-micro block font-normal">
-                                        손은 칸 위치로 추정 — 가운데는 확인 필요
-                                        (
+                                        {conversion.handKnownIds.length > 0
+                                            ? `손은 영상에서 읽음 ${conversion.handKnownIds.length.toLocaleString("ko-KR")}개 · 나머지는 칸 위치로 추정`
+                                            : "손은 칸 위치로 추정"}{" "}
+                                        — 가운데는 확인 필요 (
                                         {conversion.handUncertainIds.length.toLocaleString(
                                             "ko-KR"
                                         )}

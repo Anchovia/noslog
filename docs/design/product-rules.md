@@ -412,10 +412,14 @@ old design-stage checklist. Changes to material behavior require a user decision
   notes it starts at the position that agrees with the most of them.
 - Snap to the suggested grid (smallest average offset per grid step); only notes that a grid
   squeezes onto one spot are re-snapped finer. Same-lane reads within 3 frames are one note.
-  Hands are guessed by lane centre and the centre notes are selected for review. Glissando
-  pieces are not imported; trills are split in the middle and flagged.
+  Hands come from the zip when it carries them (2026-09-24: the runner takes notes and bar lines
+  from the main vid2bmap run and only the hand from the `LR_classification` branch run, matched
+  by kind, lanes and nearby frame); otherwise they are guessed by lane centre, and only guessed
+  centre notes are selected for review. Glissando pieces are not imported; trills are split in
+  the middle and flagged.
 - Against an existing draft every difference is listed (same tick, overlapping lanes = same
-  note; hand is not compared) and chosen per place; notes after the draft are a separate
+  note; a hand read from the video counts as a difference, a guessed hand does not) and chosen
+  per place; notes after the draft are a separate
   new-section toggle. An import that would create overlapping notes cannot be applied.
 - Tempo changes become proposed timing points (2026-09-23 T2): the result zip carries
   `beat_frames.json` — frames where bar lines crossed one grid row, before vid2bmap's

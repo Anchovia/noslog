@@ -159,6 +159,31 @@ describe("vid2bmap file reading", () => {
         });
     });
 
+    it("reads the hand column the runner adds from the LR run", async () => {
+        const archive = await zip([
+            ["chart_bar.npy", npy("|b1", [2], [1, 0]), false],
+            [
+                "chart_simple.npy",
+                npy("<i8", [2, 4], [2, 4, 6, 1, 3, 1, 2, -1]),
+                true,
+            ],
+            ["chart_tenuto.npy", npy("<i8", [1, 5], [5, 9, 20, 22, 0]), true],
+        ]);
+        const result = await readVid2bmapZip(archive);
+        expect(result.simple).toEqual([
+            [2, 4, 6, 1],
+            [3, 1, 2, -1],
+        ]);
+        expect(result.tenuto).toEqual([[5, 9, 20, 22, 0]]);
+
+        const wrong = await zip([
+            ["chart_bar.npy", npy("|b1", [2], [1, 0]), false],
+            ["chart_simple.npy", npy("<i8", [1, 2], [2, 4]), false],
+            ["chart_tenuto.npy", npy("<i8", [0], []), false],
+        ]);
+        await expect(readVid2bmapZip(wrong)).rejects.toThrow("3 · 4");
+    });
+
     it("says which result file is missing", async () => {
         const archive = await zip([
             ["chart_bar.npy", npy("|b1", [2], [1, 1]), false],
@@ -378,6 +403,65 @@ describe("chart note diff", () => {
         ).toEqual([["b", "y", ["lane"]]]);
         expect(diff.onlyCurrent.map((n) => n.id)).toEqual(["c"]);
         expect(diff.onlyIncoming.map((n) => n.id)).toEqual(["z"]);
+    });
+});
+
+describe("vid2bmap hands from the LR run", () => {
+    const result: Vid2bmapResult = {
+        fps: null,
+        startSec: null,
+        barRows: [0, 40, 80, 120],
+        simple: [
+            // 가운데지만 영상에서 왼손으로 읽음
+            [20, 13, 15, 0],
+            // 모름 → 3프레임 뒤 중복이 왼손을 알려 줌
+            [20, 2, 4, -1],
+            [22, 2, 4, 0],
+            // 손 열이 없는 옛 zip 줄 — 가운데라 확인 필요
+            [60, 13, 15],
+        ],
+        tenuto: [[40, 60, 20, 22, 1]],
+        trill: [],
+        glissando: [],
+        beatFrames: null,
+    };
+    let next = 0;
+    const collected = collectVid2bmapNotes(result);
+    const conversion = convertVid2bmap(result, collected.notes, {
+        timingPoints: [point(0, 0, 90, 4, 4)],
+        firstBarTick: 0,
+        snapDivisor: 4,
+        include: { standard: true, tenuto: true, trill: true },
+        createId: () => `n${(next += 1)}`,
+    });
+    const at = (tick: number, lane: number) =>
+        conversion.notes.find(
+            (note) => note.tick === tick && note.lane === lane
+        )!;
+
+    it("uses the hand read from the video before the lane-centre guess", () => {
+        expect(collected.counts.duplicates).toBe(1);
+        expect(at(240, 13).hand).toBe("left");
+        expect(at(240, 2).hand).toBe("left");
+        expect(at(480, 20).hand).toBe("right");
+        expect(at(720, 13).hand).toBe("right");
+    });
+
+    it("asks to check only centre notes whose hand was guessed", () => {
+        expect(conversion.handKnownIds).toEqual(
+            [at(240, 2), at(240, 13), at(480, 20)].map((note) => note.id)
+        );
+        expect(conversion.handUncertainIds).toEqual([at(720, 13).id]);
+    });
+
+    it("counts a hand difference as a change only when the hand was read", () => {
+        const incoming = at(240, 13);
+        const current = { ...incoming, id: "mine", hand: "right" as const };
+        expect(
+            diffChartNotes([current], [incoming], new Set([incoming.id]))
+                .changed[0].fields
+        ).toEqual(["hand"]);
+        expect(diffChartNotes([current], [incoming]).same).toHaveLength(1);
     });
 });
 
