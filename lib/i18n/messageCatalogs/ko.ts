@@ -1788,7 +1788,7 @@ export const koMessages = {
     "contribution.label.help":
         "Lv.{next}까지 {remaining}점 — 곡 정보와 오락실 정보를 채운 만큼 오릅니다.",
     "contribution.label.helpMax": "가장 높은 등급입니다.",
-    "contribution.label.operator": "운영자",
+    "contribution.label.operator": "Admin",
     "contribution.label.operatorHelp":
         "NosLog 운영자입니다. 기여 제안을 확인하고 반영합니다.",
     "contribution.section.title": "기여",

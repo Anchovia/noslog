@@ -1805,7 +1805,7 @@ export const jaMessages = {
     "contribution.label.help":
         "Lv.{next}まであと{remaining}pt — 楽曲情報やゲームセンター情報を提供するほど上がります。",
     "contribution.label.helpMax": "最高ランクです。",
-    "contribution.label.operator": "運営者",
+    "contribution.label.operator": "Admin",
     "contribution.label.operatorHelp":
         "NosLogの運営者です。情報の提案を確認して反映します。",
     "contribution.section.title": "貢献",
