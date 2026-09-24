@@ -1591,6 +1591,8 @@ export const jaMessages = {
     "chart.play": "再生",
     "chart.restart": "先頭へ戻る",
     "chart.position": "譜面の再生位置",
+    "chart.fullscreen": "全画面表示",
+    "chart.exitFullscreen": "全画面表示を終了",
     "chart.localAudio": "ローカル音源",
     "chart.noteSpeed": "ノート速度",
     "chart.metronome": "メトロノーム",

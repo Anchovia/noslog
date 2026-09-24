@@ -119,12 +119,73 @@
     border-radius: var(--nl-radius-container);
     background: var(--nl-surface-surface);
 }
+/* 무대 = 폭 가득 · 16:9 고정(2026-09-25 A1) — 그림은 16:9 논리 크기를 폭에 맞춰 줄여 어느 기기에서나 같다 */
 .noslog-ui .nl-chart-stage__canvas {
     position: relative;
-    height: min(68dvh, 680px);
-    min-height: 440px;
+    aspect-ratio: 16 / 9;
     overflow: hidden;
     background: #05070c;
+}
+/* 전체화면(2026-09-25 B1) — 무대만 화면에, 16:9 를 지켜 가운데(남는 곳은 무대 바탕색).
+   조작 줄은 아래에 겹쳐 뜨고, 재생 중 가만히 있으면 즉시 숨는다(움직임 없음) */
+.noslog-ui .nl-chart-stage__screen {
+    position: relative;
+}
+/* 조작부 첫 줄 오른쪽 끝 — 320 처럼 줄이 넘치면 다음 줄 오른쪽 끝으로 */
+.noslog-ui .nl-chart-stage__fullscreen {
+    margin-inline-start: auto;
+}
+.noslog-ui .nl-chart-stage__screen[data-fullscreen] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background: #05070c;
+}
+.noslog-ui .nl-chart-stage__screen[data-fullscreen="fill"] {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    height: 100dvh;
+}
+.noslog-ui .nl-chart-stage__screen[data-fullscreen] .nl-chart-stage__canvas {
+    width: min(100%, calc(100dvh * 16 / 9));
+}
+.noslog-ui .nl-chart-stage__screen[data-idle] {
+    cursor: none;
+}
+.noslog-ui .nl-chart-stage__overlay {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-12);
+    padding: var(--nl-spacing-12) var(--nl-spacing-16);
+    color: var(--nl-content-on-media);
+    background: var(--nl-surface-media-scrim);
+}
+.noslog-ui .nl-chart-stage__overlay[hidden] {
+    display: none;
+}
+/* 미디어 위 버튼 — 어두운 판 안 44(사진 넘김 버튼과 같은 규격, 2026-09-14 부품 결정 ①) */
+.noslog-ui .nl-chart-stage__media-button {
+    display: inline-flex;
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: var(--nl-radius-control);
+    color: var(--nl-content-on-media);
+    background: var(--nl-surface-media-scrim);
+    cursor: pointer;
+}
+.noslog-ui .nl-chart-stage__media-button:focus-visible {
+    outline: var(--nl-stroke-strong) solid var(--nl-content-on-media);
+    outline-offset: 2px;
 }
 .noslog-ui .nl-chart-stage__art {
     position: absolute;
@@ -298,6 +359,31 @@
 /* 읽기 한 줄 — 현재 시각(보이는 영역 아래 끝) / 전체 길이 */
 .noslog-ui .nl-chart-strip__position {
     margin: 0;
+}
+/* 읽기 줄 + 오른쪽 끝 전체화면 버튼(2026-09-25 B1) */
+.noslog-ui .nl-chart-strip__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--nl-spacing-12);
+}
+/* 전체화면 — 띠가 화면을 채운다(안쪽 16 · 틀은 남는 높이 전체). 열 폭 · 배율 상한 2.0 은 그대로라 한 번에 보이는 마디가 는다 */
+.noslog-ui .nl-chart-strip[data-fullscreen] {
+    height: 100dvh;
+    padding: var(--nl-spacing-16);
+    background: var(--nl-surface-canvas);
+}
+.noslog-ui .nl-chart-strip[data-fullscreen="fill"] {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+}
+.noslog-ui
+    .nl-chart-strip[data-fullscreen][data-layout]
+    .nl-chart-strip__frame {
+    flex: 1;
+    min-height: 0;
+    height: auto;
 }
 /* 프레임 높이 — Compact 560, 672+ 는 뷰포트에서 유도(헤더 60 + 위아래 여백 48) */
 .noslog-ui .nl-chart-strip__frame {

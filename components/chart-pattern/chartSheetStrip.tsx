@@ -9,6 +9,7 @@ import {
     useState,
 } from "react";
 import type { KeyboardEvent, PointerEvent as ReactPointerEvent } from "react";
+import { Maximize, Minimize } from "lucide-react";
 
 import { useTranslations } from "@/components/i18n/localeProvider";
 import type { ChartDocument } from "@/lib/chart-pattern/schema";
@@ -17,6 +18,7 @@ import {
     formatEditorTime,
     type MeasureMarker,
 } from "@/lib/chart-pattern/timing";
+import Button from "@/components/ui/Button";
 import useMediaQuery from "@/lib/hooks/useMediaQuery";
 import { cn } from "@/lib/utils";
 
@@ -29,6 +31,7 @@ import {
     drawPanel,
     type SheetPanel,
 } from "./chartSheetViewer";
+import { useFullscreen } from "./useFullscreen";
 
 /**
  * 전체 악보 = 열을 아래→위로 이어 붙인 세로 띠 하나 + 같은 띠의 축소판(미니맵).
@@ -68,6 +71,8 @@ export default function ChartSheetStrip({
     // 레일 배치는 Intermediate(672+)부터 — 본문 414 + 레일 96 + 여백이 624 안에 들어온다
     const wide = useMediaQuery("(min-width: 672px)");
     const mainRef = useRef<HTMLDivElement | null>(null);
+    const stripRef = useRef<HTMLDivElement | null>(null);
+    const fullscreen = useFullscreen(stripRef);
     const miniRef = useRef<HTMLDivElement | null>(null);
     const [mainWidth, setMainWidth] = useState(PANEL_WIDTH);
     const [viewportHeight, setViewportHeight] = useState(FRAME_HEIGHT_COMPACT);
@@ -275,18 +280,42 @@ export default function ChartSheetStrip({
     }
 
     return (
-        <div className="nl-chart-strip" data-layout={wide ? "wide" : "compact"}>
-            <p
-                className="nl-metric-value nl-chart-strip__position"
-                aria-live="polite"
-                aria-label={t("chart.position")}
-            >
-                {formatEditorTime(currentMs)}
-                <span className="nl-muted">
-                    {" / "}
-                    {formatEditorTime(durationMs)}
-                </span>
-            </p>
+        <div
+            ref={stripRef}
+            className="nl-chart-strip"
+            data-layout={wide ? "wide" : "compact"}
+            data-fullscreen={fullscreen.active ? fullscreen.mode : undefined}
+        >
+            {/* 읽기 줄 오른쪽 끝 = 전체화면(2026-09-25 B1) — 전체화면이면 띠가 화면 높이를 채워 한 번에 보이는 마디가 는다 */}
+            <div className="nl-chart-strip__head">
+                <p
+                    className="nl-metric-value nl-chart-strip__position"
+                    aria-live="polite"
+                    aria-label={t("chart.position")}
+                >
+                    {formatEditorTime(currentMs)}
+                    <span className="nl-muted">
+                        {" / "}
+                        {formatEditorTime(durationMs)}
+                    </span>
+                </p>
+                <Button
+                    variant="secondary"
+                    size="icon"
+                    onClick={() => void fullscreen.toggle()}
+                    aria-label={t(
+                        fullscreen.active
+                            ? "chart.exitFullscreen"
+                            : "chart.fullscreen"
+                    )}
+                >
+                    {fullscreen.active ? (
+                        <Minimize className="nl-icon" />
+                    ) : (
+                        <Maximize className="nl-icon" />
+                    )}
+                </Button>
+            </div>
             <div className="nl-chart-strip__frame">
                 <div
                     ref={mainRef}

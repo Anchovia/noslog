@@ -1,8 +1,17 @@
 "use client";
 
-import { Pause, Play, RotateCcw, Upload, Volume2 } from "lucide-react";
+import {
+    Maximize,
+    Minimize,
+    Pause,
+    Play,
+    RotateCcw,
+    Upload,
+    Volume2,
+} from "lucide-react";
 import {
     type ChangeEvent,
+    useCallback,
     useEffect,
     useEffectEvent,
     useMemo,
@@ -38,6 +47,7 @@ import {
 } from "@/lib/chart-pattern/schema";
 import { formatEditorTime, getBeatMarkers } from "@/lib/chart-pattern/timing";
 
+import { useFullscreen } from "./useFullscreen";
 import { useMetronomeVolume } from "./useMetronomeVolume";
 import { useStrictPerformance } from "./useStrictPerformance";
 interface FallingChartViewerProps {
@@ -716,6 +726,15 @@ function drawPreparedNote({
     }
 }
 
+/**
+ * 무대는 한 가지 그림(2026-09-25 A1) — 16:9 논리 크기에 그리고 화면 폭에 맞춰 통째로 줄인다.
+ * 그래서 어느 기기에서나 원근 · 노트 간격 · 두께 · 내려오는 비율이 같고 크기만 다르다.
+ */
+const STAGE_WIDTH = 1280;
+const STAGE_HEIGHT = 720;
+/** 전체화면에서 재생 중 조작 줄을 숨기기까지 가만히 있는 시간 — 동영상 플레이어와 같은 문법 */
+const OVERLAY_IDLE_MS = 3_000;
+
 function renderPlaybackFrame({
     graphics,
     notes,
@@ -773,6 +792,10 @@ export default function FallingChartViewer({
 }: FallingChartViewerProps) {
     const t = useTranslations();
     const hostRef = useRef<HTMLDivElement | null>(null);
+    const screenRef = useRef<HTMLDivElement | null>(null);
+    const fullscreen = useFullscreen(screenRef);
+    const [overlayIdle, setOverlayIdle] = useState(false);
+    const idleTimerRef = useRef<number | null>(null);
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const objectUrlRef = useRef<string | null>(null);
     const isPlayingRef = useRef(false);
@@ -807,6 +830,25 @@ export default function FallingChartViewer({
         durationRef.current = durationMs;
     }, [durationMs]);
 
+    // 전체화면 조작 줄 — 재생 중 3초 가만히 있으면 숨기고, 움직이거나 누르면 바로 다시(움직임 없이)
+    const wakeOverlay = useCallback(() => {
+        setOverlayIdle(false);
+        if (idleTimerRef.current !== null)
+            window.clearTimeout(idleTimerRef.current);
+        idleTimerRef.current = window.setTimeout(
+            () => setOverlayIdle(true),
+            OVERLAY_IDLE_MS
+        );
+    }, []);
+    useEffect(
+        () => () => {
+            if (idleTimerRef.current !== null)
+                window.clearTimeout(idleTimerRef.current);
+        },
+        []
+    );
+    const overlayHidden = fullscreen.active && isPlaying && overlayIdle;
+
     const applySeekRequest = useEffectEvent((timeMs: number) => seek(timeMs));
     useEffect(() => {
         if (seekRequest) applySeekRequest(seekRequest.timeMs);
@@ -830,6 +872,7 @@ export default function FallingChartViewer({
         let disposed = false;
         let application: Application | null = null;
         let scene: Graphics | null = null;
+        let resizeObserver: ResizeObserver | null = null;
 
         void (async () => {
             const pixi = await import("pixi.js");
@@ -837,6 +880,9 @@ export default function FallingChartViewer({
             const nextApplication = new pixi.Application();
             await nextApplication.init({
                 resizeTo: host,
+                // 폰처럼 작게 줄여 그려도 선이 뭉개지지 않게 기기 픽셀 밀도로 그린다
+                resolution: window.devicePixelRatio || 1,
+                autoDensity: true,
                 antialias: true,
                 backgroundAlpha: 0,
                 preference: "webgl",
@@ -850,6 +896,9 @@ export default function FallingChartViewer({
             scene = new pixi.Graphics();
             nextApplication.stage.addChild(scene);
             host.replaceChildren(nextApplication.canvas);
+            // resizeTo 는 창 크기 변화만 본다 — 창은 그대로인데 무대 상자만 바뀌는 전체화면 진입 · 나감도 따라간다
+            resizeObserver = new ResizeObserver(() => nextApplication.resize());
+            resizeObserver.observe(host);
 
             nextApplication.ticker.add(() => {
                 if (!scene || !application) return;
@@ -874,6 +923,16 @@ export default function FallingChartViewer({
                         setCurrentTimeMs(currentTimeRef.current);
                     }
                 }
+                // 16:9 논리 무대를 화면에 맞게 줄여 가운데에(무대 상자가 16:9 라 보통 여백 없음)
+                const scale = Math.min(
+                    application.screen.width / STAGE_WIDTH,
+                    application.screen.height / STAGE_HEIGHT
+                );
+                scene.scale.set(scale);
+                scene.position.set(
+                    (application.screen.width - STAGE_WIDTH * scale) / 2,
+                    (application.screen.height - STAGE_HEIGHT * scale) / 2
+                );
                 renderPlaybackFrame({
                     graphics: scene,
                     notes: preparedNotes,
@@ -881,8 +940,8 @@ export default function FallingChartViewer({
                     approachDurationMs: getApproachDurationMs(
                         noteSpeedRef.current
                     ),
-                    width: application.screen.width,
-                    height: application.screen.height,
+                    width: STAGE_WIDTH,
+                    height: STAGE_HEIGHT,
                     strictPerformance: strictPerformanceRef.current,
                 });
             });
@@ -890,6 +949,7 @@ export default function FallingChartViewer({
 
         return () => {
             disposed = true;
+            resizeObserver?.disconnect();
             application?.destroy(true);
             host.replaceChildren();
         };
@@ -1074,25 +1134,110 @@ export default function FallingChartViewer({
         }
     }
 
+    // 재생 막대 — 조작부와 전체화면 조작 줄이 같이 쓴다
+    const seekTrack = (
+        <div className="nl-chart-stage__seek-track">
+            <input
+                type="range"
+                min="0"
+                max={Math.max(1, durationMs)}
+                step="10"
+                value={Math.min(currentTimeMs, durationMs)}
+                onChange={(event) => seek(Number(event.target.value))}
+                aria-label={t("chart.position")}
+                className="nl-chart-stage__seek"
+            />
+            {/* 의견 시각 눈금 — 손잡이 중심이 움직이는 폭(양끝 10 안쪽)에 맞춘다. 누르는 건 의견 목록의 시각 */}
+            {markers?.map((timeMs, index) => (
+                <span
+                    key={`${timeMs}-${index}`}
+                    aria-hidden
+                    className="nl-chart-stage__marker"
+                    style={{
+                        left: `calc(10px + (100% - 20px) * ${Math.min(
+                            1,
+                            Math.max(0, timeMs / Math.max(1, durationMs))
+                        )})`,
+                    }}
+                />
+            ))}
+        </div>
+    );
+
     return (
         <section className="nl-chart-stage">
-            <div className="nl-chart-stage__canvas">
-                {jacketUrl ? (
+            <div
+                ref={screenRef}
+                className="nl-chart-stage__screen"
+                data-fullscreen={
+                    fullscreen.active ? fullscreen.mode : undefined
+                }
+                data-idle={overlayHidden || undefined}
+                onPointerMove={fullscreen.active ? wakeOverlay : undefined}
+                onPointerDown={fullscreen.active ? wakeOverlay : undefined}
+            >
+                <div className="nl-chart-stage__canvas">
+                    {jacketUrl ? (
+                        <div
+                            aria-hidden
+                            className="nl-chart-stage__art"
+                            style={{ backgroundImage: `url("${jacketUrl}")` }}
+                        />
+                    ) : null}
+                    <div aria-hidden className="nl-chart-stage__scrim" />
                     <div
-                        aria-hidden
-                        className="nl-chart-stage__art"
-                        style={{ backgroundImage: `url("${jacketUrl}")` }}
+                        ref={hostRef}
+                        role="img"
+                        aria-label={t("chart.fallingAria", {
+                            time: formatEditorTime(currentTimeMs),
+                        })}
+                        className="nl-chart-stage__host"
                     />
+                </div>
+                {fullscreen.active ? (
+                    // 전체화면 조작 줄 — 재생 · 시각 · 막대 · 길이 · 끝내기만(설정은 전체화면 밖에서)
+                    <div
+                        className="nl-chart-stage__overlay"
+                        hidden={overlayHidden}
+                    >
+                        <button
+                            type="button"
+                            className="nl-chart-stage__media-button"
+                            onClick={() =>
+                                isPlaying
+                                    ? pausePlayback()
+                                    : void startPlayback()
+                            }
+                            aria-label={
+                                isPlaying ? t("chart.pause") : t("chart.play")
+                            }
+                        >
+                            {isPlaying ? (
+                                <Pause
+                                    className="nl-icon"
+                                    fill="currentColor"
+                                />
+                            ) : (
+                                <Play className="nl-icon" fill="currentColor" />
+                            )}
+                        </button>
+                        <span className="nl-metric-value nl-chart-stage__time">
+                            {formatEditorTime(currentTimeMs)}
+                        </span>
+                        {seekTrack}
+                        <span className="nl-metric-value nl-chart-stage__time">
+                            {formatEditorTime(durationMs)}
+                        </span>
+                        <button
+                            type="button"
+                            className="nl-chart-stage__media-button"
+                            onClick={() => void fullscreen.toggle()}
+                            aria-label={t("chart.exitFullscreen")}
+                        >
+                            <Minimize className="nl-icon" />
+                        </button>
+                    </div>
                 ) : null}
-                <div aria-hidden className="nl-chart-stage__scrim" />
-                <div
-                    ref={hostRef}
-                    role="img"
-                    aria-label={t("chart.fallingAria", {
-                        time: formatEditorTime(currentTimeMs),
-                    })}
-                    className="nl-chart-stage__host"
-                />
             </div>
 
             <div className="nl-chart-stage__controls">
@@ -1127,40 +1272,19 @@ export default function FallingChartViewer({
                     <span className="nl-metric-value nl-chart-stage__time">
                         {formatEditorTime(currentTimeMs)}
                     </span>
-                    <div className="nl-chart-stage__seek-track">
-                        <input
-                            type="range"
-                            min="0"
-                            max={Math.max(1, durationMs)}
-                            step="10"
-                            value={Math.min(currentTimeMs, durationMs)}
-                            onChange={(event) =>
-                                seek(Number(event.target.value))
-                            }
-                            aria-label={t("chart.position")}
-                            className="nl-chart-stage__seek"
-                        />
-                        {/* 의견 시각 눈금 — 손잡이 중심이 움직이는 폭(양끝 10 안쪽)에 맞춘다. 누르는 건 의견 목록의 시각 */}
-                        {markers?.map((timeMs, index) => (
-                            <span
-                                key={`${timeMs}-${index}`}
-                                aria-hidden
-                                className="nl-chart-stage__marker"
-                                style={{
-                                    left: `calc(10px + (100% - 20px) * ${Math.min(
-                                        1,
-                                        Math.max(
-                                            0,
-                                            timeMs / Math.max(1, durationMs)
-                                        )
-                                    )})`,
-                                }}
-                            />
-                        ))}
-                    </div>
+                    {seekTrack}
                     <span className="nl-metric-value nl-chart-stage__time">
                         {formatEditorTime(durationMs)}
                     </span>
+                    <Button
+                        variant="secondary"
+                        size="icon"
+                        className="nl-chart-stage__fullscreen"
+                        onClick={() => void fullscreen.toggle()}
+                        aria-label={t("chart.fullscreen")}
+                    >
+                        <Maximize className="nl-icon" />
+                    </Button>
                 </div>
 
                 <div className="nl-chart-stage__options">
