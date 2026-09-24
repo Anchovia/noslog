@@ -15,6 +15,7 @@ export default function CompactSelect<Value extends string>({
     size,
     id,
     className,
+    container,
 }: {
     value: Value;
     onValueChange: (value: Value) => void;
@@ -31,6 +32,8 @@ export default function CompactSelect<Value extends string>({
     size?: "sm";
     id?: string;
     className?: string;
+    /** 목록을 띄울 곳 — 기본은 문서 끝. 브라우저 전체화면 안에서는 그 요소를 넘긴다(밖에 뜨면 안 보임) */
+    container?: HTMLElement | null;
 }) {
     const selected = options.find((option) => option.value === value);
     return (
@@ -56,7 +59,7 @@ export default function CompactSelect<Value extends string>({
                     <ChevronDown aria-hidden />
                 </Select.Icon>
             </Select.Trigger>
-            <Select.Portal>
+            <Select.Portal container={container ?? undefined}>
                 <div className="noslog-ui">
                     <Select.Content
                         className="nl-select-menu"

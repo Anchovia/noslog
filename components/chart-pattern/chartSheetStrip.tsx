@@ -355,6 +355,7 @@ export default function ChartSheetStrip({
                                             measureMarkers={measureMarkers}
                                             scale={mainScale}
                                             offsetTop={-padTop}
+                                            startDetails={false}
                                             label={t("chart.columnAria", {
                                                 count: panel.index + 1,
                                                 start: formatEditorTime(
@@ -368,12 +369,18 @@ export default function ChartSheetStrip({
                                     ) : null}
                                     {panel.index ===
                                     panels.length - 1 ? null : (
-                                        <span
-                                            className="nl-metadata nl-chart-strip__seam"
-                                            aria-hidden
-                                        >
-                                            {formatEditorTime(panel.endMs)}
-                                        </span>
+                                        <SeamLabel
+                                            timeMs={panel.endMs}
+                                            marker={measureMarkers.find(
+                                                (marker) =>
+                                                    Math.abs(
+                                                        marker.timeMs -
+                                                            panel.endMs
+                                                    ) <= 0.001 &&
+                                                    (marker.showBpm ||
+                                                        marker.showTimeSignature)
+                                            )}
+                                        />
                                     )}
                                 </div>
                             );
@@ -436,6 +443,37 @@ export default function ChartSheetStrip({
 }
 
 /** 열 캔버스 — drawPanel 을 주어진 배율로 그린다(CSS 확대가 아니라 재렌더) */
+/**
+ * 열 이음새 라벨 — 이 열 맨 위(윗열과의 경계) 시각. 경계에서 BPM · 박자가 바뀌면 그 글자를 먼저, 시각을 아래에(2026-09-25).
+ * 캔버스가 그리면 열 아래 여백과 함께 잘려 반만 보이고 시각과 겹쳐서 글자로 옮겼다
+ */
+function SeamLabel({
+    timeMs,
+    marker,
+}: {
+    timeMs: number;
+    marker: MeasureMarker | undefined;
+}) {
+    const detail = marker
+        ? [
+              marker.showBpm ? `BPM ${formatBpm(marker.bpm)}` : null,
+              marker.showTimeSignature
+                  ? `${marker.numerator}/${marker.denominator}`
+                  : null,
+          ]
+              .filter(Boolean)
+              .join(" · ")
+        : "";
+    return (
+        <span className="nl-metadata nl-chart-strip__seam" aria-hidden>
+            {detail ? (
+                <span className="nl-chart-strip__seam-change">{detail}</span>
+            ) : null}
+            <span>{formatEditorTime(timeMs)}</span>
+        </span>
+    );
+}
+
 function SheetCanvas({
     panel,
     document,
@@ -443,6 +481,7 @@ function SheetCanvas({
     scale,
     offsetTop = 0,
     label,
+    startDetails = true,
 }: {
     panel: SheetPanel;
     document: ChartDocument;
@@ -451,6 +490,8 @@ function SheetCanvas({
     /** 이음새 여백을 감추기 위한 위쪽 오프셋(음수) — 그림은 그대로, 보여줄 범위만 바뀐다 */
     offsetTop?: number;
     label?: string;
+    /** 열 맨 아래 마디선의 BPM · 박자 글자를 그릴지 — 본 띠는 이음새 라벨로 따로 쓴다 */
+    startDetails?: boolean;
 }) {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const width = Math.round(PANEL_WIDTH * scale);
@@ -469,6 +510,7 @@ function SheetCanvas({
             endMs: panel.endMs,
             document,
             measureMarkers,
+            startDetails,
         });
     }, [
         document,
@@ -477,6 +519,7 @@ function SheetCanvas({
         panel.endMs,
         panel.startMs,
         scale,
+        startDetails,
         width,
     ]);
     return (

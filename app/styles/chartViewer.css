@@ -152,8 +152,27 @@
 .noslog-ui .nl-chart-stage__screen[data-fullscreen] .nl-chart-stage__canvas {
     width: min(100%, calc(100dvh * 16 / 9));
 }
-.noslog-ui .nl-chart-stage__screen[data-idle] {
+/* 무대를 누르면 재생 · 일시정지, 폰은 두 번 두드려 ∓10초 — 두 번 두드리기 확대를 끈다 */
+.noslog-ui .nl-chart-stage__canvas {
+    cursor: pointer;
+    touch-action: manipulation;
+}
+.noslog-ui .nl-chart-stage__screen[data-idle],
+.noslog-ui .nl-chart-stage__screen[data-idle] .nl-chart-stage__canvas {
     cursor: none;
+}
+/* 전체화면 설정 창(2026-09-25 C1) — 떠 있는 창 규격(⋯ 메뉴와 같은 면 · 경계 · 모서리 · 그림자), 안쪽 12 · 줄 사이 12 */
+.noslog-ui .nl-chart-stage__settings {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-12);
+    padding: var(--nl-spacing-12);
+    border-radius: var(--nl-radius-overlay);
+    background: var(--nl-surface-overlay);
+    color: var(--nl-content-default);
+    border: var(--nl-stroke-default) solid var(--nl-border-overlay);
+    box-shadow: var(--nl-overlay-shadow);
+    z-index: 110;
 }
 .noslog-ui .nl-chart-stage__overlay {
     position: absolute;
@@ -424,6 +443,8 @@
     position: absolute;
     top: var(--nl-spacing-4);
     left: var(--nl-spacing-4);
+    display: flex;
+    flex-direction: column;
     color: #90909d;
     font-variant-numeric: tabular-nums;
     pointer-events: none;

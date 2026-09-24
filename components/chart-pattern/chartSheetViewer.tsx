@@ -485,11 +485,17 @@ export function drawPanel(
         endMs,
         document,
         measureMarkers,
+        startDetails = true,
     }: {
         startMs: number;
         endMs: number;
         document: ChartDocument;
         measureMarkers: MeasureMarker[];
+        /**
+         * 열 맨 아래(시작) 마디선의 BPM · 박자 글자 — 전체 악보 띠는 열 아래 여백을 잘라 이어 붙여 글자가 반만 보인다.
+         * 띠는 이 글자를 아래 열 이음새 라벨(시각 위)로 따로 쓰므로 그리지 않는다(2026-09-25)
+         */
+        startDetails?: boolean;
     }
 ) {
     const chartHeight = PANEL_HEIGHT - PADDING_TOP - PADDING_BOTTOM;
@@ -592,6 +598,7 @@ export function drawPanel(
         startMs,
         endMs,
         yForMeasureTime,
+        startDetails,
     });
 }
 
@@ -602,11 +609,13 @@ function drawMeasureAnnotations(
         startMs,
         endMs,
         yForMeasureTime,
+        startDetails,
     }: {
         markers: MeasureMarker[];
         startMs: number;
         endMs: number;
         yForMeasureTime: (timeMs: number) => number;
+        startDetails: boolean;
     }
 ) {
     const visibleMarkers = markers.filter(
@@ -624,6 +633,11 @@ function drawMeasureAnnotations(
         context.textBaseline = "bottom";
         context.fillText(String(marker.measureNumber), 4, y - 2);
 
+        if (
+            !startDetails &&
+            Math.abs(marker.timeMs - startMs) <= PANEL_BOUNDARY_EPSILON_MS
+        )
+            continue;
         let detailY = y + 2;
         context.fillStyle = "#90909d";
         context.font = "9px ui-monospace, monospace";
