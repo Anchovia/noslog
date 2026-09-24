@@ -46,8 +46,10 @@ import {
 } from "@/lib/chart-pattern/timing";
 import { findOffGridNotes } from "@/lib/chart-pattern/snapCheck";
 
+import { useTranslations } from "@/components/i18n/localeProvider";
+
 import { useChartEditorStore } from "./chartEditorStore";
-import { drawOffGridMarker } from "./snapCheckMarker";
+import { drawCommentLine, drawOffGridMarker } from "./snapCheckMarker";
 
 export type NoteEditorTool = "select" | ChartNoteType;
 
@@ -557,6 +559,8 @@ export default function PixiNoteEditor({
     const replaceNotes = useChartEditorStore((state) => state.replaceNotes);
     const setSnapDivisor = useChartEditorStore((state) => state.setSnapDivisor);
     const importPreview = useChartEditorStore((state) => state.importPreview);
+    const commentTimes = useChartEditorStore((state) => state.commentTimes);
+    const t = useTranslations();
     const navigationDurationMs = getChartEditorNavigationDurationMs(document);
     const conflictingNoteIds = useMemo(() => {
         const ids = new Set<string>();
@@ -918,9 +922,19 @@ export default function PixiNoteEditor({
                 .lineTo(width, judgmentY + 0.5)
                 .stroke({ color: colors.judgment, width: 2 });
         }
+        // 시각 댓글 자리는 판정선 위에도 보이게 맨 마지막에(2026-09-24 B1)
+        for (const timeMs of commentTimes) {
+            if (timeMs < startMs || timeMs > endMs) continue;
+            drawCommentLine(
+                scene,
+                width,
+                judgmentY - (timeMs - currentTimeMs) * pixelsPerMs
+            );
+        }
         application.stage.addChild(scene);
         application.render();
     }, [
+        commentTimes,
         currentTimeMs,
         document.notes,
         document.ticksPerQuarter,
@@ -1813,7 +1827,7 @@ export default function PixiNoteEditor({
         <div
             ref={hostRef}
             role="application"
-            aria-label="28칸 WebGL 채보 작성 영역. 1~5 도구 전환, 좌클릭 작성과 선택, 우클릭 삭제, 드래그 범위 선택을 지원합니다."
+            aria-label={t("editor.canvasLabel")}
             tabIndex={0}
             className={`h-full min-h-80 w-full overflow-hidden outline-none ${
                 (gesture?.kind === "resize" && gesture.action === "end") ||

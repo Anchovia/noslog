@@ -49,6 +49,12 @@ type HistoryEntry =
       };
 
 interface ChartEditorState {
+    /** 검토 모드 · 검토 요청 중인 초안(2026-09-24 C1) — 고치는 동작을 모두 막는다 */
+    readOnly: boolean;
+    /** 시각 댓글 자리(ms) — 캔버스 점선 · 파형 눈금(2026-09-24 B1) */
+    commentTimes: number[];
+    setReadOnly: (readOnly: boolean) => void;
+    setCommentTimes: (times: number[]) => void;
     document: ChartDocument;
     draftVersion: number;
     savedRevision: number;
@@ -93,6 +99,9 @@ interface ChartEditorState {
 }
 
 interface CreateChartEditorStoreInput {
+    readOnly?: boolean;
+    /** 스토어가 띄우는 글(에디터 글은 ko · ja · en) */
+    text: { overlap: string; saving: string };
     document: ChartDocument;
     draftVersion: number;
     savedRevision: number;
@@ -123,7 +132,12 @@ function applyHistoryDocument(
 }
 
 function createChartEditorStore(input: CreateChartEditorStoreInput) {
+    // 읽기 전용(readOnly)이면 문서를 바꾸는 동작은 아무것도 하지 않는다
     return createStore<ChartEditorState>((set, get) => ({
+        readOnly: input.readOnly ?? false,
+        commentTimes: [],
+        setReadOnly: (readOnly) => set({ readOnly }),
+        setCommentTimes: (commentTimes) => set({ commentTimes }),
         document: input.document,
         draftVersion: input.draftVersion,
         savedRevision: input.savedRevision,
@@ -167,6 +181,7 @@ function createChartEditorStore(input: CreateChartEditorStoreInput) {
         setSnapDivisor: (snapDivisor) => set({ snapDivisor }),
         setMetronomeEnabled: (metronomeEnabled) => set({ metronomeEnabled }),
         replaceTimingPoints: (points) => {
+            if (get().readOnly) return;
             const state = get();
             const next = sortTimingPoints(points);
             if (
@@ -190,6 +205,10 @@ function createChartEditorStore(input: CreateChartEditorStoreInput) {
         },
         replaceNotes: (notes, selectedNoteIds) => {
             const state = get();
+            if (get().readOnly) {
+                if (selectedNoteIds !== undefined) set({ selectedNoteIds });
+                return;
+            }
             if (
                 JSON.stringify(state.document.notes) === JSON.stringify(notes)
             ) {
@@ -205,7 +224,7 @@ function createChartEditorStore(input: CreateChartEditorStoreInput) {
                     state.document.ticksPerQuarter
                 )
             ) {
-                toast.error("다른 노트와 겹치는 위치입니다.", {
+                toast.error(input.text.overlap, {
                     id: "chart-note-overlap",
                 });
                 return;
@@ -229,6 +248,7 @@ function createChartEditorStore(input: CreateChartEditorStoreInput) {
             });
         },
         replaceDocument: (document) => {
+            if (get().readOnly) return;
             const state = get();
             set({
                 document,
@@ -250,6 +270,7 @@ function createChartEditorStore(input: CreateChartEditorStoreInput) {
             });
         },
         setDurationMs: (durationMs) => {
+            if (get().readOnly) return;
             const state = get();
             const rounded = Math.max(0, Math.round(durationMs));
             if (state.document.durationMs === rounded) return;
@@ -268,6 +289,7 @@ function createChartEditorStore(input: CreateChartEditorStoreInput) {
             });
         },
         undo: () => {
+            if (get().readOnly) return;
             const state = get();
             const entry = state.undoStack.at(-1);
             if (!entry) return;
@@ -282,6 +304,7 @@ function createChartEditorStore(input: CreateChartEditorStoreInput) {
             });
         },
         redo: () => {
+            if (get().readOnly) return;
             const state = get();
             const entry = state.redoStack.at(-1);
             if (!entry) return;
@@ -298,7 +321,7 @@ function createChartEditorStore(input: CreateChartEditorStoreInput) {
         markSaving: () =>
             set({
                 saveStatus: "saving",
-                saveMessage: "저장 중...",
+                saveMessage: input.text.saving,
             }),
         markSaveSuccess: ({
             draftVersion,

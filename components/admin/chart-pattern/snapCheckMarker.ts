@@ -31,6 +31,16 @@ function dashedPolygon(graphics: Graphics, points: number[]) {
     graphics.stroke({ color: OFF_GRID_COLOR, width: 2, alpha: 0.95 });
 }
 
+/** 시각 댓글 자리(2026-09-24 B1) — 캔버스 가로 전체에 같은 경고 표시색 점선 2px */
+export function drawCommentLine(graphics: Graphics, width: number, y: number) {
+    for (let start = 0; start < width; start += DASH + GAP) {
+        graphics
+            .moveTo(start, y + 0.5)
+            .lineTo(Math.min(start + DASH, width), y + 0.5);
+    }
+    graphics.stroke({ color: OFF_GRID_COLOR, width: 2, alpha: 0.95 });
+}
+
 /** 스냅 확인에 걸린 노트 머리 바깥 2px 점선(에디터 노트 머리와 같은 육각형) */
 export function drawOffGridMarker(
     graphics: Graphics,

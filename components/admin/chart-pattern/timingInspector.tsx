@@ -16,6 +16,8 @@ import {
     sortTimingPoints,
 } from "@/lib/chart-pattern/timing";
 
+import { useTranslations } from "@/components/i18n/localeProvider";
+
 import { useChartEditorStore } from "./chartEditorStore";
 
 const inputClass =
@@ -26,6 +28,9 @@ function roundedBpm(value: number) {
 }
 
 export default function TimingInspector() {
+    const t = useTranslations();
+    // 검토 모드(2026-09-24 C1)는 읽기 전용 — 고르기만 되고 입력은 잠근다
+    const readOnly = useChartEditorStore((state) => state.readOnly);
     const document = useChartEditorStore((state) => state.document);
     const currentTimeMs = useChartEditorStore((state) => state.currentTimeMs);
     const snapDivisor = useChartEditorStore((state) => state.snapDivisor);
@@ -89,7 +94,7 @@ export default function TimingInspector() {
                     Math.abs(point.timeMs - currentTimeMs) < 1
             )
         ) {
-            toast.error("같은 위치에 이미 타이밍 포인트가 있습니다.");
+            toast.error(t("editor.timing.exists"));
             return;
         }
 
@@ -157,18 +162,21 @@ export default function TimingInspector() {
         <aside className="border-divider bg-surface flex h-full w-80 shrink-0 flex-col border-l">
             <header className="border-divider flex items-center justify-between border-b px-3 py-2.5">
                 <div>
-                    <h2 className="text-sm font-bold">타이밍 포인트</h2>
+                    <h2 className="text-sm font-bold">
+                        {t("editor.timing.title")}
+                    </h2>
                     <p className="text-micro mt-0.5">
-                        BPM·박자표·메트로놈 기준
+                        {t("editor.timing.subtitle")}
                     </p>
                 </div>
                 <button
                     type="button"
                     onClick={addTimingPoint}
+                    disabled={readOnly}
                     className="border-border hover:bg-surface-muted flex h-8 items-center gap-1 rounded-md border px-2 text-xs font-semibold"
                 >
                     <Plus className="size-3.5" />
-                    추가
+                    {t("editor.add")}
                 </button>
             </header>
 
@@ -188,8 +196,10 @@ export default function TimingInspector() {
                             <span className="flex items-center justify-between gap-2 text-xs">
                                 <strong className="font-semibold">
                                     {index === 0
-                                        ? "시작 타이밍"
-                                        : `타이밍 ${index + 1}`}
+                                        ? t("editor.timing.first")
+                                        : t("editor.timing.nth", {
+                                              index: index + 1,
+                                          })}
                                 </strong>
                                 <span className="tabular-nums">
                                     {formatEditorTime(point.timeMs)}
@@ -204,10 +214,15 @@ export default function TimingInspector() {
                 </div>
             </div>
 
-            <div className="min-h-0 flex-1 overflow-y-auto p-3">
+            <fieldset
+                disabled={readOnly}
+                className="m-0 min-h-0 min-w-0 flex-1 overflow-y-auto border-0 p-3"
+            >
                 <div className="grid grid-cols-2 gap-3">
                     <label className="text-caption col-span-2 flex flex-col gap-1">
-                        {selectedIndex === 0 ? "첫 박자 오프셋" : "음원 시간"}
+                        {selectedIndex === 0
+                            ? t("editor.timing.offset")
+                            : t("editor.timing.audioTime")}
                         <div className="relative">
                             <input
                                 key={`${selected.id}-time-${selected.timeMs}`}
@@ -231,7 +246,7 @@ export default function TimingInspector() {
                             onClick={useCurrentTime}
                             className="border-border hover:bg-surface-muted mt-1 h-8 rounded-md border text-xs font-semibold"
                         >
-                            현재 재생 위치 적용
+                            {t("editor.timing.useCurrent")}
                         </button>
                     </label>
 
@@ -261,7 +276,9 @@ export default function TimingInspector() {
                     </label>
 
                     <fieldset className="col-span-2">
-                        <legend className="text-caption mb-1.5">박자표</legend>
+                        <legend className="text-caption mb-1.5">
+                            {t("editor.timing.signature")}
+                        </legend>
                         <div className="flex flex-col gap-1.5">
                             <label
                                 className={`border-border hover:bg-surface-muted flex h-9 cursor-pointer items-center gap-2 rounded-md border px-2.5 ${
@@ -279,7 +296,9 @@ export default function TimingInspector() {
                                     className="accent-text-primary size-3.5"
                                 />
                                 <strong className="text-xs">3/4</strong>
-                                <span className="text-micro">왈츠</span>
+                                <span className="text-micro">
+                                    {t("editor.timing.waltz")}
+                                </span>
                             </label>
 
                             <label
@@ -298,7 +317,9 @@ export default function TimingInspector() {
                                     className="accent-text-primary size-3.5"
                                 />
                                 <strong className="text-xs">4/4</strong>
-                                <span className="text-micro">일반</span>
+                                <span className="text-micro">
+                                    {t("editor.timing.common")}
+                                </span>
                             </label>
 
                             <div
@@ -322,13 +343,13 @@ export default function TimingInspector() {
                                         className="accent-text-primary size-3.5"
                                     />
                                     <strong className="text-xs">
-                                        기타 박자표
+                                        {t("editor.timing.other")}
                                     </strong>
                                 </label>
 
                                 <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
                                     <label className="text-caption flex flex-col gap-1">
-                                        박자 수
+                                        {t("editor.timing.numerator")}
                                         <input
                                             key={`${selected.id}-numerator-${selected.numerator}`}
                                             type="number"
@@ -362,7 +383,7 @@ export default function TimingInspector() {
                                         /
                                     </span>
                                     <label className="text-caption flex flex-col gap-1">
-                                        기준 음표
+                                        {t("editor.timing.denominator")}
                                         <select
                                             key={`${selected.id}-denominator-${selected.denominator}`}
                                             defaultValue={selected.denominator}
@@ -405,7 +426,7 @@ export default function TimingInspector() {
                     </fieldset>
 
                     <label className="text-caption col-span-2 flex flex-col gap-1">
-                        기준 틱
+                        {t("editor.timing.tick")}
                         <input
                             key={`${selected.id}-tick-${selected.tick}`}
                             type="number"
@@ -427,7 +448,7 @@ export default function TimingInspector() {
                         <div>
                             <h3 className="text-xs font-semibold">Tap BPM</h3>
                             <p className="text-micro mt-0.5">
-                                박자에 맞춰 반복해서 누르세요.
+                                {t("editor.timing.tapHelp")}
                             </p>
                         </div>
                         <span className="text-sm font-bold tabular-nums">
@@ -440,7 +461,7 @@ export default function TimingInspector() {
                         className="border-border bg-bg hover:bg-surface-muted mt-2 flex h-12 w-full items-center justify-center gap-2 rounded-md border text-sm font-bold"
                     >
                         <Gauge className="size-4" />
-                        박자 입력
+                        {t("editor.timing.tap")}
                     </button>
                 </section>
 
@@ -451,9 +472,9 @@ export default function TimingInspector() {
                     className="border-danger/40 text-danger mt-4 flex h-9 w-full items-center justify-center gap-1 rounded-md border text-xs font-semibold disabled:cursor-not-allowed disabled:opacity-35"
                 >
                     <Trash2 className="size-3.5" />
-                    타이밍 포인트 삭제
+                    {t("editor.timing.delete")}
                 </button>
-            </div>
+            </fieldset>
         </aside>
     );
 }

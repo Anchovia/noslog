@@ -5,6 +5,8 @@ import { useCallback, useEffect, useRef } from "react";
 import { getChartEditorNavigationDurationMs } from "@/lib/chart-pattern/editor";
 import { formatEditorTime } from "@/lib/chart-pattern/timing";
 
+import { useTranslations } from "@/components/i18n/localeProvider";
+
 import { useChartEditorStore } from "./chartEditorStore";
 
 interface WaveformTimelineProps {
@@ -25,7 +27,9 @@ export default function WaveformTimeline({
     peaks,
     onSeek,
 }: WaveformTimelineProps) {
+    const t = useTranslations();
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
+    const commentTimes = useChartEditorStore((state) => state.commentTimes);
     const chartDocument = useChartEditorStore((state) => state.document);
     const durationMs = getChartEditorNavigationDurationMs(chartDocument);
     const timingPoints = useChartEditorStore(
@@ -89,8 +93,8 @@ export default function WaveformTimeline({
             context.textBaseline = "middle";
             context.fillText(
                 durationMs > 0
-                    ? "음원을 불러오면 파형이 표시됩니다."
-                    : "먼저 로컬 음원을 불러오세요.",
+                    ? t("editor.waveformHint")
+                    : t("editor.waveformEmpty"),
                 viewWidth / 2,
                 centerY
             );
@@ -111,6 +115,18 @@ export default function WaveformTimeline({
                 context.stroke();
             }
 
+            // 시각 댓글 눈금(2026-09-24 B1) — 경고 표시색, 위아래 끝에서 짧게
+            context.fillStyle = cssColor(
+                "--nl-feedback-warning-marker",
+                "#fbc828"
+            );
+            for (const timeMs of commentTimes) {
+                if (timeMs < 0 || timeMs > durationMs) continue;
+                const x = (timeMs / durationMs) * viewWidth;
+                context.fillRect(x - 1, 0, 2, 12);
+                context.fillRect(x - 1, viewHeight - 12, 2, 12);
+            }
+
             const playheadX =
                 (Math.min(currentTimeMs, durationMs) / durationMs) * viewWidth;
             context.strokeStyle = cssColor("--color-text-primary", "#f2f2f5");
@@ -120,7 +136,15 @@ export default function WaveformTimeline({
             context.lineTo(playheadX + 0.5, viewHeight);
             context.stroke();
         }
-    }, [currentTimeMs, durationMs, peaks, selectedTimingPointId, timingPoints]);
+    }, [
+        commentTimes,
+        currentTimeMs,
+        durationMs,
+        peaks,
+        selectedTimingPointId,
+        t,
+        timingPoints,
+    ]);
 
     useEffect(() => {
         draw();
@@ -154,7 +178,7 @@ export default function WaveformTimeline({
             <canvas
                 ref={canvasRef}
                 role="slider"
-                aria-label="곡 전체 타임라인"
+                aria-label={t("editor.timelineLabel")}
                 aria-valuemin={0}
                 aria-valuemax={durationMs}
                 aria-valuenow={Math.round(currentTimeMs)}

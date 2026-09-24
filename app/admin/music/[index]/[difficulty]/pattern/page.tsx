@@ -94,19 +94,21 @@ export default async function AdminChartPatternEditorPage({
             savedRevision={chart.pattern?.savedRevision ?? 0}
             publishedRevision={chart.pattern?.publishedRevision ?? null}
             updatedAt={chart.pattern?.updatedAt.toISOString() ?? null}
-            revisions={
-                chart.pattern?.revisions.map((revision) => ({
-                    id: revision.id,
-                    number: revision.number,
-                    kind: revision.kind,
-                    message: revision.message,
-                    createdAt: revision.createdAt.toISOString(),
-                    createdBy:
-                        revision.createdBy?.nostalgia_name ??
-                        revision.createdBy?.username ??
-                        null,
-                })) ?? []
-            }
+            mode={{
+                kind: "admin",
+                revisions:
+                    chart.pattern?.revisions.map((revision) => ({
+                        id: revision.id,
+                        number: revision.number,
+                        kind: revision.kind,
+                        message: revision.message,
+                        createdAt: revision.createdAt.toISOString(),
+                        createdBy:
+                            revision.createdBy?.nostalgia_name ??
+                            revision.createdBy?.username ??
+                            null,
+                    })) ?? [],
+            }}
         />
     );
 }
