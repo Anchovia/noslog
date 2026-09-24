@@ -1806,4 +1806,32 @@ export const enMessages = {
         "Use minutes:seconds (e.g. 2:04).",
     "contribution.proposal.invalid.released_at":
         "Enter a date from 2017-01-01 to today as YYYY-MM-DD.",
+    "contribution.label.prefix": "Contributor",
+    "contribution.label.level": "Contributor Lv.{level}",
+    "contribution.label.points": "{points} pts",
+    "contribution.label.help":
+        "{remaining} pts to Lv.{next} — grows as you add music and arcade information.",
+    "contribution.label.helpMax": "This is the highest level.",
+    "contribution.label.operator": "Admin",
+    "contribution.label.operatorHelp":
+        "Runs NosLog and reviews and applies suggestions.",
+    "contribution.section.title": "Contributions",
+    "contribution.section.progress": "{remaining} pts to Lv.{next}",
+    "contribution.section.max": "Highest level",
+    "contribution.section.progressAria": "Progress to the next level",
+    "contribution.section.kind.chart_field": "Music info",
+    "contribution.section.kind.arcade_report": "Arcade reports",
+    "contribution.section.kind.cabinet_check": "Cabinet checks",
+    "contribution.section.none": "No contributions yet.",
+    "contribution.section.hint":
+        "Suggest missing values with “Add” in a chart's info, or confirm arcade cabinets, to earn points.",
+    "contribution.section.mine": "My suggestions · only visible to you",
+    "contribution.section.mineEmpty": "You haven't suggested anything yet.",
+    "contribution.section.all": "View all",
+    "contribution.section.allTitle": "My suggestions",
+    "contribution.section.loadError": "Couldn't load your suggestions.",
+    "contribution.status.pending": "In review",
+    "contribution.status.applied": "Applied",
+    "contribution.status.rejected": "Rejected",
+    "contribution.rejectReason": "Reason: {reason}",
 } satisfies Messages;

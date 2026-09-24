@@ -14,7 +14,7 @@
             },
             {
                 "title": "공개되는 것",
-                "text": "공개 프로필·기록·랭킹·평가와 5가지 공개 설정 그룹(플레이어명·Discord·선호 오락실·플레이 횟수·플레이 활동)",
+                "text": "공개 프로필·기록·랭킹·평가·기여 등급과 5가지 공개 설정 그룹(플레이어명·Discord·선호 오락실·플레이 횟수·플레이 활동)",
                 "target": "public"
             },
             {
@@ -82,7 +82,7 @@
                     {
                         "kind": "item",
                         "title": "기여 제안",
-                        "text": "악곡 채보 정보(BPM · 노트 수 · 길이 · 수록일)에 대해 제안한 값과 근거(영상 · 페이지 주소, 설명), 처리 결과와 반려 사유를 운영자 검토와 악곡 정보 개선에 사용합니다. 운영자가 반영한 값은 악곡 정보로 공개되고, 그 값의 출처로 제안과 근거가 기록됩니다."
+                        "text": "악곡 채보 정보(BPM · 노트 수 · 길이 · 수록일)에 대해 제안한 값과 근거(영상 · 페이지 주소, 설명), 처리 결과와 반려 사유를 운영자 검토와 악곡 정보 개선에 사용합니다. 운영자가 반영한 값은 악곡 정보로 공개되고, 그 값의 출처로 제안과 근거가 기록됩니다. 반영된 제안, 처리 완료된 오락실 제보, 기체 확인(하루 1회)은 기여 점수로 기록되어 기여 등급을 정합니다."
                     },
                     {
                         "kind": "item",
@@ -124,7 +124,7 @@
                     },
                     {
                         "kind": "paragraph",
-                        "text": "기여 제안은 운영자가 반영한 값만 악곡 정보로 공개됩니다. 제안자 이름, 근거, 반려된 제안은 공개하지 않습니다."
+                        "text": "기여 등급·점수·종류별 반영 수는 프로필에 공개되고, 기여 등급 3 이상과 운영자 표시는 랭킹·의견·답글의 이름 옆에 보입니다. 기여 제안은 운영자가 반영한 값만 악곡 정보로 공개됩니다. 제안자 이름, 근거, 반려된 제안은 공개하지 않으며 제안 목록은 본인에게만 보입니다."
                     }
                 ]
             },
@@ -161,6 +161,7 @@
                             "반려된 검정 제출: 심사 완료 6개월 후 제출 기록과 증빙 이미지 전체 삭제",
                             "의견·답글: 작성자가 지우거나 회원 탈퇴할 때까지. 번역문은 원문과 함께 보관하고, 원문을 고치거나 지우면 함께 삭제",
                             "기여 제안: 회원 탈퇴 시까지. 탈퇴하면 제안 기록은 삭제되고, 이미 반영된 값과 그 근거(주소 · 설명)는 제안자와 연결되지 않은 출처 기록으로 남습니다.",
+                            "기여 점수 기록: 회원 탈퇴 시까지. 원본(제안·제보 등)이 보관 기간으로 삭제되어도 점수 기록은 남습니다.",
                             "방문 통계: 하루 식별값은 다음 날 삭제, 합계(하루 방문자 수·페이지 조회 수·시간대별 조회 수·로그인 여부별 합계·API 호출 수)는 90일 후 삭제"
                         ]
                     },
@@ -309,7 +310,7 @@
             },
             {
                 "title": "公開されるもの",
-                "text": "公開プロフィール・記録・ランキング・評価と、5つの公開設定グループ（プレーヤー名・Discord・よく行くゲームセンター・プレー回数・プレー活動）",
+                "text": "公開プロフィール・記録・ランキング・評価・貢献ランクと、5つの公開設定グループ（プレーヤー名・Discord・よく行くゲームセンター・プレー回数・プレー活動）",
                 "target": "public"
             },
             {
@@ -377,7 +378,7 @@
                     {
                         "kind": "item",
                         "title": "情報の提案",
-                        "text": "楽曲の譜面情報(BPM・ノーツ数・長さ・収録日)について提案した値と根拠(動画・ページのURL、説明)、処理結果と却下理由を、運営者による確認と楽曲情報の改善に使用します。運営者が反映した値は楽曲情報として公開され、その値の出典として提案と根拠が記録されます。"
+                        "text": "楽曲の譜面情報(BPM・ノーツ数・長さ・収録日)について提案した値と根拠(動画・ページのURL、説明)、処理結果と却下理由を、運営者による確認と楽曲情報の改善に使用します。運営者が反映した値は楽曲情報として公開され、その値の出典として提案と根拠が記録されます。反映された提案、処理済みのゲームセンター報告、筐体の確認(1日1回)は貢献ポイントとして記録され、貢献ランクを決めます。"
                     },
                     {
                         "kind": "item",
@@ -419,7 +420,7 @@
                     },
                     {
                         "kind": "paragraph",
-                        "text": "情報の提案は、運営者が反映した値のみ楽曲情報として公開されます。提案者名、根拠、却下された提案は公開しません。"
+                        "text": "貢献ランク・ポイント・種類別の反映数はプロフィールに公開され、貢献ランク3以上と運営者の表示はランキング・意見・返信の名前の横に表示されます。情報の提案は、運営者が反映した値のみ楽曲情報として公開されます。提案者名、根拠、却下された提案は公開せず、提案の一覧は本人にのみ表示されます。"
                     }
                 ]
             },
@@ -456,6 +457,7 @@
                             "却下された検定提出：審査完了から6か月後に提出記録と証明画像をすべて削除",
                             "意見・返信：投稿者が削除するか退会するまで。翻訳文は原文とともに保管し、原文を編集・削除すると一緒に削除",
                             "情報の提案：退会まで。退会すると提案の記録は削除され、すでに反映された値とその根拠(URL・説明)は提案者と結び付かない出典記録として残ります。",
+                            "貢献ポイントの記録：退会まで。元の記録(提案・報告など)が保管期間により削除されても、ポイントの記録は残ります。",
                             "訪問統計：1日の識別値は翌日に削除し、合計（1日の訪問者数・ページ閲覧数・時間帯ごとの閲覧数・ログイン状態別の合計・API呼び出し回数）は90日後に削除"
                         ]
                     },
@@ -604,7 +606,7 @@
             },
             {
                 "title": "What becomes public",
-                "text": "Your public profile, records, rankings, and evaluations, plus five visibility groups you control (player name, Discord, preferred arcade, play count, play activity)",
+                "text": "Your public profile, records, rankings, evaluations and contribution level, plus five visibility groups you control (player name, Discord, preferred arcade, play count, play activity)",
                 "target": "public"
             },
             {
@@ -672,7 +674,7 @@
                     {
                         "kind": "item",
                         "title": "Information suggestions",
-                        "text": "We use the values you suggest for chart information (BPM, note count, length, release date), your sources (video or page links and notes), and the review result and any rejection reason to review suggestions and improve music information. Values an admin applies become public music information, and the suggestion and its source are recorded as that value's origin."
+                        "text": "We use the values you suggest for chart information (BPM, note count, length, release date), your sources (video or page links and notes), and the review result and any rejection reason to review suggestions and improve music information. Values an admin applies become public music information, and the suggestion and its source are recorded as that value's origin. Applied suggestions, resolved arcade reports and cabinet checks (once a day) are recorded as contribution points that set your contribution level."
                     },
                     {
                         "kind": "item",
@@ -714,7 +716,7 @@
                     },
                     {
                         "kind": "paragraph",
-                        "text": "For suggestions, only values an admin applies are published as music information. Your name, your sources and rejected suggestions are not made public."
+                        "text": "Your contribution level, points and counts by type are shown on your profile, and contribution levels 3 and above and the admin label appear next to your name in rankings, opinions and replies. For suggestions, only values an admin applies are published as music information. Your name, your sources and rejected suggestions are not made public, and your suggestion list is visible only to you."
                     }
                 ]
             },
@@ -751,6 +753,7 @@
                             "Rejected exam submissions: submission records and evidence images are deleted six months after review",
                             "Opinions and replies: until the author deletes them or deletes their account. Translations are kept with the original and deleted when the original is edited or deleted",
                             "Suggestions: until you delete your account. The suggestion records are then deleted; values already applied and their sources (links and notes) remain as source records no longer linked to you.",
+                            "Contribution points: until you delete your account. Point records remain even after the originals (suggestions, reports) are deleted under their retention periods.",
                             "Visit statistics: daily identifiers are deleted the next day; totals (daily visitors, page views, views per hour, totals split by signed-in status, API calls) are deleted after 90 days"
                         ]
                     },

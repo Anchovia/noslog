@@ -14,6 +14,10 @@ import {
 } from "@/features/contributions/schemas/chartFieldProposalSchema";
 import type { ActionResult } from "@/lib/actions/result";
 import { actionValidationFailure } from "@/lib/actions/validation";
+import {
+    contributionAwardQuery,
+    refreshContributionViews,
+} from "@/features/contributions/server/contributionPointService";
 import { requireAdmin } from "@/lib/admin";
 import { CACHE_TAGS } from "@/lib/cacheTags";
 import db from "@/lib/db";
@@ -326,8 +330,18 @@ export async function reviewChartFieldProposals(
                             reviewedAt: now,
                         },
                     }),
+                    // 반영 1건 = 기여 1점(같은 제안은 한 번만)
+                    contributionAwardQuery([
+                        {
+                            userId: proposal.userId,
+                            kind: "chart_field",
+                            sourceKey: String(proposal.id),
+                        },
+                    ]),
                 ]);
             }
+            if (proposals.length)
+                refreshContributionViews(proposals.map((item) => item.userId));
             for (const chart of new Map(
                 proposals.map((item) => [item.chartId, item.chart])
             ).values()) {
@@ -350,4 +364,71 @@ export async function reviewChartFieldProposals(
         });
         return { success: false, message: "제안을 처리하지 못했습니다." };
     }
+}
+
+export interface MyChartFieldProposal {
+    id: number;
+    field: ChartFieldProposalField;
+    value: string;
+    previousValue: string | null;
+    status: string;
+    rejectReason: string | null;
+    createdAt: string;
+    chart: {
+        difficulty: string;
+        level: number;
+        musicIndex: string;
+        title: string;
+    };
+}
+
+/** 내 제안 목록(최근 순) — 본인만. 반려 사유까지 보이므로 남에게는 주지 않는다 */
+export async function listMyChartFieldProposals(
+    limit: number
+): Promise<MyChartFieldProposal[]> {
+    const session = await getSession();
+    if (!session.id) return [];
+    const rows = await db.chartFieldProposal.findMany({
+        where: { userId: session.id },
+        orderBy: [{ updatedAt: "desc" }, { id: "desc" }],
+        take: Math.min(Math.max(1, Math.floor(limit)), 100),
+        select: {
+            id: true,
+            field: true,
+            value: true,
+            previousValue: true,
+            status: true,
+            rejectReason: true,
+            createdAt: true,
+            chart: {
+                select: {
+                    difficulty: true,
+                    level: true,
+                    music_idx: true,
+                    music: { select: { title: true } },
+                },
+            },
+        },
+    });
+    return rows.flatMap((row) =>
+        isChartFieldProposalField(row.field)
+            ? [
+                  {
+                      id: row.id,
+                      field: row.field,
+                      value: row.value,
+                      previousValue: row.previousValue,
+                      status: row.status,
+                      rejectReason: row.rejectReason,
+                      createdAt: row.createdAt.toISOString(),
+                      chart: {
+                          difficulty: row.chart.difficulty,
+                          level: row.chart.level,
+                          musicIndex: row.chart.music_idx,
+                          title: row.chart.music.title,
+                      },
+                  },
+              ]
+            : []
+    );
 }

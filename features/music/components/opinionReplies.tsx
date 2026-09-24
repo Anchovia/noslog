@@ -1,5 +1,6 @@
 "use client";
 
+import ContributionLabel from "@/features/contributions/components/contributionLabel";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronDown, ChevronUp, CornerDownRight } from "lucide-react";
 import Link from "next/link";
@@ -233,6 +234,7 @@ function ReplyRow({
                     >
                         {name}
                     </Link>
+                    <ContributionLabel label={reply.user.label} />
                     <span className="nl-metadata nl-muted">
                         <time
                             dateTime={reply.createdAt}

@@ -5,6 +5,7 @@ import {
 import "server-only";
 
 import { unstable_cache } from "next/cache";
+import { getNameLabels } from "@/features/contributions/server/contributionPointService";
 import db from "@/lib/db";
 import { CACHE_TAGS } from "@/lib/cacheTags";
 import { PUBLIC_DATA_REVALIDATE_SECONDS } from "@/lib/cachePolicy";
@@ -185,22 +186,32 @@ export async function getGlobalRankingPage(
         return { ...row, rank };
     });
     const myIndex = rankedRows.findIndex((row) => row.id === viewerId);
+    const pageRows = rankedRows.slice(
+        (page - 1) * GLOBAL_RANKING_PAGE_SIZE,
+        page * GLOBAL_RANKING_PAGE_SIZE
+    );
+    // 기여 라벨은 캐시 밖에서 보이는 줄만 — 적립되면 바로 바뀐다
+    const labels = await getNameLabels([
+        ...pageRows.map((row) => row.id),
+        ...(myIndex < 0 ? [] : [rankedRows[myIndex].id]),
+    ]);
     return globalRankingPayloadSchema.parse({
         query: { ...query, page },
         page,
         totalCount,
         status: population.status,
         viewerId,
-        rows: rankedRows.slice(
-            (page - 1) * GLOBAL_RANKING_PAGE_SIZE,
-            page * GLOBAL_RANKING_PAGE_SIZE
-        ),
+        rows: pageRows.map((row) => ({
+            ...row,
+            label: labels.get(row.id) ?? null,
+        })),
         // Containing page uses stable row position: a shared rank can span multiple pages.
         currentUser:
             myIndex < 0
                 ? null
                 : {
                       ...rankedRows[myIndex],
+                      label: labels.get(rankedRows[myIndex].id) ?? null,
                       page: Math.floor(myIndex / GLOBAL_RANKING_PAGE_SIZE) + 1,
                   },
     });

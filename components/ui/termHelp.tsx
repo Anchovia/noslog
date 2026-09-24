@@ -8,6 +8,7 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
  * 용어 뜻 도움말 — 점선 밑줄 글자 + ? 16, 마우스 올림·포커스·탭으로 위쪽 작은 창(부품 결정 ④ 2026-09-15).
  * 빙고 용어(테누토 등) · 오락실 기체 상태 이유에 쓴다.
  * 행 끝에 붙어 줄끼리 끝이 맞아야 하는 자리(기체 상태)는 물음표 아이콘을 끈다.
+ * plain = 점선 밑줄 · 물음표 없이 내용(태그 등)을 그대로 누르는 자리로 — 기여 라벨(2026-09-24)
  */
 export default function TermHelp({
     children,
@@ -15,12 +16,14 @@ export default function TermHelp({
     description,
     ariaLabel,
     icon = true,
+    plain = false,
 }: {
     children: ReactNode;
     title: ReactNode;
     description: ReactNode;
     ariaLabel: string;
     icon?: boolean;
+    plain?: boolean;
 }) {
     const [open, setOpen] = useState(false);
     const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -42,7 +45,7 @@ export default function TermHelp({
     return (
         <Popover.Root open={open} onOpenChange={setOpen}>
             <span
-                className="nl-term"
+                className={plain ? "nl-term nl-term--plain" : "nl-term"}
                 onMouseEnter={() => {
                     cancelClose();
                     setOpen(true);
@@ -53,7 +56,11 @@ export default function TermHelp({
                     <button
                         type="button"
                         aria-label={ariaLabel}
-                        className="nl-term__trigger"
+                        className={
+                            plain
+                                ? "nl-term__trigger nl-term__trigger--plain"
+                                : "nl-term__trigger"
+                        }
                         onFocus={() => setOpen(true)}
                         onClick={(event) => {
                             // Hover or focus may already have opened the help.
@@ -64,7 +71,7 @@ export default function TermHelp({
                         }}
                     >
                         <span>{children}</span>
-                        {icon ? (
+                        {icon && !plain ? (
                             <CircleHelp className="nl-icon-small" aria-hidden />
                         ) : null}
                     </button>

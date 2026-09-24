@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { nameLabelSchema } from "@/features/contributions/schemas/contributionLabelSchema";
 import { TIER_GOALS, TIER_MODE_GOALS, TIER_MODES } from "@/lib/tiers";
 
 // 모드별 서열표 수의 합 — Basic 3 + Recital 1
@@ -154,6 +155,8 @@ const opinionSchema = z.object({
         id: z.number().int(),
         username: z.string().nullable(),
         avatar: z.string().nullable(),
+        // 이름 옆 기여 라벨(운영자 · 기여 Lv.3 이상, 2026-09-24)
+        label: nameLabelSchema.nullable().optional(),
     }),
     helpfulCount: z.number().int(),
     viewerHelpful: z.boolean(),
@@ -173,6 +176,8 @@ const opinionReplySchema = z.object({
         id: z.number().int(),
         username: z.string().nullable(),
         avatar: z.string().nullable(),
+        // 이름 옆 기여 라벨(운영자 · 기여 Lv.3 이상, 2026-09-24)
+        label: nameLabelSchema.nullable().optional(),
     }),
     likeCount: z.number().int().min(0),
     viewerLiked: z.boolean(),

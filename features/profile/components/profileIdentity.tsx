@@ -13,6 +13,7 @@ import CountryMarker from "@/components/ui/countryMarker";
 import DiscordIcon from "@/components/ui/DiscordIcon";
 import ExamBadge from "@/components/ui/examBadge";
 import ExamBadgeGroup from "@/components/ui/examBadgeGroup";
+import { contributionLevel } from "@/features/contributions/contributionLevel";
 import ProfileShareDialog from "@/features/profile/components/profileShareDialog";
 import { formatProfileDate } from "@/components/profile/dashboard/profileUtils";
 import type {
@@ -119,6 +120,28 @@ export default function ProfileIdentity({
                                 {t("rankings.examNone")}
                             </span>
                         )}
+                        {/* 기여 라벨(2026-09-24 P1) — 프로필에서는 Lv.1 부터, 누르면 아래 「기여」 구역으로 */}
+                        {user.role === "admin" ? (
+                            <a
+                                href="#profile-contribution"
+                                className="nl-tag nl-tag--strong"
+                            >
+                                {t("contribution.label.operator")}
+                            </a>
+                        ) : contributionLevel(user.contribution?.points ?? 0)
+                              .level ? (
+                            <a href="#profile-contribution" className="nl-tag">
+                                <span className="nl-contribution-label__prefix">
+                                    {t("contribution.label.prefix")}
+                                </span>
+                                Lv.
+                                {
+                                    contributionLevel(
+                                        user.contribution?.points ?? 0
+                                    ).level
+                                }
+                            </a>
+                        ) : null}
                     </ExamBadgeGroup>
                 </div>
                 {isOwner ? (

@@ -6,6 +6,7 @@ import {
     type FeedbackStatus,
 } from "@/features/feedback/schemas/feedbackAdminSchema";
 import type { AdminFeedbackReport } from "@/features/feedback/types/feedbackAdmin";
+import { awardContribution } from "@/features/contributions/server/contributionPointService";
 import type { ActionResult } from "@/lib/actions/result";
 import { actionValidationFailure } from "@/lib/actions/validation";
 import { requireAdmin } from "@/lib/admin";
@@ -128,7 +129,7 @@ export async function updateFeedbackStatus(
     try {
         const feedback = await db.feedbackReport.findUnique({
             where: { id: input.feedbackId },
-            select: { id: true, status: true },
+            select: { id: true, status: true, userId: true, arcadeId: true },
         });
         if (!feedback) {
             return {
@@ -161,6 +162,14 @@ export async function updateFeedbackStatus(
                     : {}),
             },
         });
+        // 오락실 제보를 처리 완료하면 제보한 사람에게 기여 1점 — 다시 열었다 닫아도 한 번만
+        if (input.status === "resolved" && feedback.arcadeId !== null) {
+            await awardContribution({
+                userId: feedback.userId,
+                kind: "arcade_report",
+                sourceKey: String(feedback.id),
+            });
+        }
     } catch (error) {
         logFeedbackAdminError(error, "admin.feedback.status-update.failed");
         return {

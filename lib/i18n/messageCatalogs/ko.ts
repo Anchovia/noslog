@@ -1782,4 +1782,32 @@ export const koMessages = {
     "contribution.proposal.invalid.duration": "분:초로 적어 주세요(예: 2:04).",
     "contribution.proposal.invalid.released_at":
         "2017-01-01부터 오늘까지의 날짜를 YYYY-MM-DD로 적어 주세요.",
+    "contribution.label.prefix": "기여",
+    "contribution.label.level": "기여 Lv.{level}",
+    "contribution.label.points": "{points}점",
+    "contribution.label.help":
+        "Lv.{next}까지 {remaining}점 — 곡 정보와 오락실 정보를 채운 만큼 오릅니다.",
+    "contribution.label.helpMax": "가장 높은 등급입니다.",
+    "contribution.label.operator": "운영자",
+    "contribution.label.operatorHelp":
+        "NosLog 운영자입니다. 기여 제안을 확인하고 반영합니다.",
+    "contribution.section.title": "기여",
+    "contribution.section.progress": "Lv.{next}까지 {remaining}점",
+    "contribution.section.max": "가장 높은 등급",
+    "contribution.section.progressAria": "다음 등급까지 진행도",
+    "contribution.section.kind.chart_field": "곡 정보",
+    "contribution.section.kind.arcade_report": "오락실 제보",
+    "contribution.section.kind.cabinet_check": "기체 확인",
+    "contribution.section.none": "아직 반영된 기여가 없습니다.",
+    "contribution.section.hint":
+        "곡 상세 「채보 정보」의 빈 값을 「추가」로 제안하거나, 오락실 기체 상태를 확인하면 점수가 쌓입니다.",
+    "contribution.section.mine": "내 제안 · 나에게만 보입니다",
+    "contribution.section.mineEmpty": "아직 낸 제안이 없습니다.",
+    "contribution.section.all": "모두 보기",
+    "contribution.section.allTitle": "내 제안",
+    "contribution.section.loadError": "내 제안을 불러오지 못했습니다.",
+    "contribution.status.pending": "검토 중",
+    "contribution.status.applied": "반영됨",
+    "contribution.status.rejected": "반려",
+    "contribution.rejectReason": "사유: {reason}",
 } as const;

@@ -1799,4 +1799,32 @@ export const jaMessages = {
         "分:秒で入力してください(例: 2:04)。",
     "contribution.proposal.invalid.released_at":
         "2017-01-01から今日までの日付をYYYY-MM-DDで入力してください。",
+    "contribution.label.prefix": "貢献",
+    "contribution.label.level": "貢献 Lv.{level}",
+    "contribution.label.points": "{points}pt",
+    "contribution.label.help":
+        "Lv.{next}まであと{remaining}pt — 楽曲情報やゲームセンター情報を提供するほど上がります。",
+    "contribution.label.helpMax": "最高ランクです。",
+    "contribution.label.operator": "運営者",
+    "contribution.label.operatorHelp":
+        "NosLogの運営者です。情報の提案を確認して反映します。",
+    "contribution.section.title": "貢献",
+    "contribution.section.progress": "Lv.{next}まであと{remaining}pt",
+    "contribution.section.max": "最高ランク",
+    "contribution.section.progressAria": "次のランクまでの進み具合",
+    "contribution.section.kind.chart_field": "楽曲情報",
+    "contribution.section.kind.arcade_report": "ゲームセンター報告",
+    "contribution.section.kind.cabinet_check": "筐体の確認",
+    "contribution.section.none": "まだ反映された貢献はありません。",
+    "contribution.section.hint":
+        "楽曲詳細「譜面情報」の空欄を「追加」で提案したり、ゲームセンターの筐体状況を確認したりするとポイントが貯まります。",
+    "contribution.section.mine": "自分の提案 · 自分にだけ表示されます",
+    "contribution.section.mineEmpty": "まだ提案していません。",
+    "contribution.section.all": "すべて表示",
+    "contribution.section.allTitle": "自分の提案",
+    "contribution.section.loadError": "提案を読み込めませんでした。",
+    "contribution.status.pending": "確認中",
+    "contribution.status.applied": "反映済み",
+    "contribution.status.rejected": "却下",
+    "contribution.rejectReason": "理由: {reason}",
 } satisfies Messages;

@@ -2,6 +2,8 @@ import "server-only";
 
 import { revalidatePath, updateTag } from "next/cache";
 
+import { seoulDateKey } from "@/features/contributions/contributionLevel";
+import { awardContribution } from "@/features/contributions/server/contributionPointService";
 import type { ActionResult } from "@/lib/actions/result";
 import { CACHE_TAGS } from "@/lib/cacheTags";
 import db from "@/lib/db";
@@ -70,6 +72,14 @@ export async function confirmCabinetRunning(
                 data: { cabinetId: cabinet.id, userId: session.id },
                 select: { checkedAt: true },
             }));
+        // 새 확인이면 기여 적립 — 기체가 여럿이어도 서울 날짜로 하루 1점
+        if (!recent) {
+            await awardContribution({
+                userId: session.id,
+                kind: "cabinet_check",
+                sourceKey: seoulDateKey(check.checkedAt),
+            });
+        }
 
         updateTag(CACHE_TAGS.arcades);
         const slug =

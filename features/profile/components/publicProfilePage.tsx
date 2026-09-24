@@ -25,6 +25,7 @@ import type {
 import type { ProfileOverviewContext } from "@/features/profile/server/profileOverviewService";
 import ProfileIdentity from "./profileIdentity";
 import ProfilePlaysList from "./profilePlaysList";
+import ProfileContribution from "@/features/contributions/components/profileContribution";
 import ProfileRecordOverview from "./profileRecordOverview";
 
 export default function PublicProfilePage({
@@ -63,6 +64,11 @@ export default function PublicProfilePage({
                         description={t("profile.scoresPrivateBody")}
                     />
                 </div>
+                {/* 기여는 점수 비공개와 별개로 보인다(2026-09-24) */}
+                <ProfileContribution
+                    totals={user.contribution}
+                    isOwner={false}
+                />
             </PageContainer>
         );
     const mode: ProfileMode =
@@ -193,14 +199,21 @@ export default function PublicProfilePage({
                             user={user}
                             judgement={overview.judgement}
                         />
-                        {initialRecent?.status !== "hidden" ? (
-                            <ProfilePlaysList
-                                userId={user.id}
-                                kind="recent"
-                                mode="basic"
-                                initialData={initialRecent}
+                        {/* 오른쪽 열 = 최근 플레이 · 기여(넓은 화면), 폰은 그대로 맨 아래(2026-09-24 P1) */}
+                        <div className="nl-profile-side">
+                            {initialRecent?.status !== "hidden" ? (
+                                <ProfilePlaysList
+                                    userId={user.id}
+                                    kind="recent"
+                                    mode="basic"
+                                    initialData={initialRecent}
+                                />
+                            ) : null}
+                            <ProfileContribution
+                                totals={user.contribution}
+                                isOwner={isOwner}
                             />
-                        ) : null}
+                        </div>
                     </div>
                 </>
             ) : (
@@ -217,6 +230,12 @@ export default function PublicProfilePage({
                         </Link>
                     ) : null}
                 </div>
+            )}
+            {hasRecords ? null : (
+                <ProfileContribution
+                    totals={user.contribution}
+                    isOwner={isOwner}
+                />
             )}
         </PageContainer>
     );

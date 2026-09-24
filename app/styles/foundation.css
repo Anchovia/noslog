@@ -1358,6 +1358,18 @@ html[data-theme="light"] .noslog-ui,
     text-decoration: underline dotted;
     text-underline-offset: 3px;
 }
+/* 내용 그대로 누르는 도움말(기여 라벨, 2026-09-24) — 밑줄 없이, 태그 모양이 누를 자리를 말한다 */
+.noslog-ui .nl-term--plain {
+    display: inline-flex;
+    vertical-align: middle;
+}
+.noslog-ui .nl-term__trigger--plain {
+    cursor: pointer;
+}
+.noslog-ui .nl-term__trigger--plain > span {
+    display: inline-flex;
+    text-decoration: none;
+}
 .noslog-ui.nl-term__popover {
     display: flex;
     flex-direction: column;

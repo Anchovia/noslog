@@ -87,6 +87,7 @@ model User {
   pollVotes                  PollVote[]
   fieldProposals             ChartFieldProposal[]        @relation("ChartFieldProposalAuthor")
   fieldProposalsReviewed     ChartFieldProposal[]        @relation("ChartFieldProposalReviewer")
+  contributionPoints         ContributionPoint[]
 
   @@index([grade_basic, id])
   @@index([grade_recital, id])
@@ -570,6 +571,22 @@ model ChartFieldProposal {
   @@index([chartId, field, status])
   @@index([reviewedById])
   @@map("chart_field_proposals")
+}
+
+// 기여 점수 기록 — 반영 · 처리된 기여마다 한 줄(2026-09-24). 원본(제보 등)이 보관 기간으로 지워져도 점수는 남는다.
+// kind: chart_field(제안 번호) · arcade_report(제보 번호) · cabinet_check(서울 날짜, 하루 1점). 같은 기여는 한 번만
+model ContributionPoint {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  kind      String
+  sourceKey String   @map("source_key")
+  points    Int
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([userId, kind, sourceKey])
+  @@index([userId])
+  @@map("contribution_points")
 }
 
 // 해금 조건 원문(이벤트 · 곡 묶음 이름, 일본어)의 언어별 번역 사전 — 이름 하나를 한 번만 번역한다

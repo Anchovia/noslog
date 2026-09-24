@@ -53,6 +53,14 @@ describe("개인정보처리방침 이전 버전", () => {
                     locale
                 ]
             );
+            // 2단계 — 기여 점수 기록은 원본이 지워져도 탈퇴 전까지 남는다
+            expect(text("retention")).toContain(
+                {
+                    ko: "기여 점수 기록:",
+                    ja: "貢献ポイントの記録：",
+                    en: "Contribution points:",
+                }[locale]
+            );
         }
     });
 

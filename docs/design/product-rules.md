@@ -397,8 +397,17 @@ old design-stage checklist. Changes to material behavior require a user decision
   reason that the author can see. Several suggestions can be applied or
   rejected at once. Suggestions whose current value changed since they were
   made are flagged.
-- Later stages (not built yet): contributor points and 「기여 Lv」 labels,
-  profile 「기여」 tab, user chart drafts with timestamped comments.
+- Stage 2 — contribution points (2026-09-24). Points are written to
+  `contribution_points` when a contribution is accepted, one row per source and
+  never removed except with the account: applied suggestion 1, resolved arcade
+  report 1 (reopening and resolving again does not add more), cabinet check 1
+  per Seoul day. Awarding never blocks the underlying action. Levels 1–6 at
+  1 · 10 · 30 · 100 · 300 · 1,000 points; admins show 「운영자」 instead.
+  Names in rankings, opinions and replies show the label from level 3; the
+  profile shows it from level 1 with a public 「기여」 section (level, points,
+  counts) and, for the owner only, their suggestion list with rejection reasons.
+- Later stage (not built yet): user chart drafts with timestamped comments and
+  chart author credits.
 
 ## Chart import from video extraction (2026-09-23)
 

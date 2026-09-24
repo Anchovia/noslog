@@ -1,3 +1,4 @@
+import type { ContributionTotals } from "@/features/contributions/contributionLevel";
 export type ProfileMode = "basic" | "recital";
 
 export interface ProfileUser {
@@ -35,6 +36,10 @@ export interface ProfileUser {
     created_at: string;
     last_played_at: string | null;
     preferredArcade: { name: string } | null;
+    /** 운영자면 「운영자」 라벨(2026-09-24) */
+    role?: string;
+    /** 기여 점수 · 종류별 반영 수(공개, 2026-09-24) */
+    contribution?: ContributionTotals;
 }
 
 export interface ProfileRankRow {

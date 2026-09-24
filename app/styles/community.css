@@ -519,3 +519,8 @@
     gap: var(--nl-spacing-4);
     margin: 0;
 }
+
+/* 의견 · 답글 머리의 기여 라벨(2026-09-24) — 랭킹 줄처럼 이름 글줄(20) 높이로, 라벨 있는 줄만 높아지지 않게 */
+.noslog-ui .nl-opinion-row__header .nl-tag {
+    height: var(--nl-type-line-height-20);
+}
