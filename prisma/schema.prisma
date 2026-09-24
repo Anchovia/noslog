@@ -93,6 +93,8 @@ model User {
   chartComments              ChartComment[]              @relation("ChartCommentAuthor")
   chartCommentsResolved      ChartComment[]              @relation("ChartCommentResolver")
   chartPatternsAuthored      ChartPattern[]              @relation("ChartPatternAuthor")
+  achievements               UserAchievement[]
+  achievementShowcase        UserAchievementShowcase[]
 
   @@index([grade_basic, id])
   @@index([grade_recital, id])
@@ -1393,4 +1395,31 @@ model OfficialXFeed {
   content       Json?
   lastAttemptAt DateTime? @map("last_attempt_at")
   lastSuccessAt DateTime? @map("last_success_at")
+}
+
+// 업적 단계 획득 기록(2026-09-24). 업적 정의(키 · 기준)는 코드(features/achievements)에 둔다.
+// 동기화 때 판정해 새 단계만 더한다. 기준을 넘었다가 내려가도 지우지 않는다. 날짜는 NosLog 가 확인한 때
+model UserAchievement {
+  id          Int      @id @default(autoincrement())
+  user_id     Int
+  user        User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  key         String
+  // 1 동 · 2 은 · 3 금
+  tier        Int
+  achieved_at DateTime @default(now())
+
+  @@unique([user_id, key, tier])
+  @@index([key, tier])
+}
+
+// 프로필 머리에 거는 업적(최대 3칸). 비어 있으면 높은 단계를 자동으로 보인다
+model UserAchievementShowcase {
+  user_id  Int
+  user     User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  // 1~3
+  position Int
+  key      String
+
+  @@id([user_id, position])
+  @@unique([user_id, key])
 }
