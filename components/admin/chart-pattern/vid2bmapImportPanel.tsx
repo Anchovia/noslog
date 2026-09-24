@@ -26,7 +26,7 @@ import {
 import {
     alignVid2bmapFirstBarTick,
     applyVid2bmapMerge,
-    applyVid2bmapStartBpm,
+    applyVid2bmapStartTiming,
     applyVid2bmapTempoChanges,
     beatLengthLabel,
     chartPositionLabel,
@@ -37,10 +37,13 @@ import {
     detectVid2bmapTempoChanges,
     diffChartNotes,
     estimateVid2bmapBpm,
+    estimateVid2bmapMeter,
     planVid2bmapMerge,
     suggestVid2bmapSnap,
+    vid2bmapMeterFirstBarTick,
     type Vid2bmapChoice,
     type Vid2bmapMergeItem,
+    type Vid2bmapMeter,
     type Vid2bmapWarning,
 } from "@/lib/chart-pattern/vid2bmap";
 import {
@@ -73,6 +76,12 @@ interface Loaded {
     snapDivisor: number;
     /** 초안과 맞춰 첫 박을 자동으로 정했으면 그때 일치한 노트 수 */
     alignedMatches: number | null;
+    /** 강세로 본 박자표 · 마디 첫 박(2026-09-24 A)과 그걸로 잡은 첫 박자선 · 첫 노트 기준 첫 박자선 */
+    meter: Vid2bmapMeter | null;
+    meterFirstBarTick: number | null;
+    defaultFirstBarTick: number;
+    /** 첫 박을 강세 위치로 잡았는지(빈 초안 · 뚜렷함) */
+    usesMeterFirstBar: boolean;
 }
 
 function formatFileSize(bytes: number) {
@@ -241,12 +250,15 @@ export default function Vid2bmapImportPanel({
     /** 넣지 않기로 한 템포 제안(틱) — 기본은 모두 넣는다 */
     /** 시작 BPM 제안을 넣을지 — 고르기 전(null)이면 초안이 비었을 때만 넣는다(시작 BPM 을 바꾸면 기존 노트 시각이 전부 움직임) */
     const [startBpmChoice, setStartBpmChoice] = useState<boolean | null>(null);
+    /** 박자 제안을 넣을지 — 고르기 전(null)이면 빈 초안 · 강세 뚜렷함일 때만 */
+    const [meterChoice, setMeterChoice] = useState<boolean | null>(null);
     const [skippedTempo, setSkippedTempo] = useState<Record<number, boolean>>(
         {}
     );
     const [applying, setApplying] = useState(false);
 
-    const timingPoints = document.timingPoints;
+    /** 지금 초안의 타이밍 — 템포 · 시작 BPM · 박자 제안은 이것과 비교한다. 아래 timingPoints 는 제안을 넣은 뒤의 타이밍 */
+    const baseTimingPoints = document.timingPoints;
 
     useEffect(() => {
         let cancelled = false;
@@ -265,6 +277,15 @@ export default function Vid2bmapImportPanel({
                     notes,
                     current.timingPoints
                 );
+                const meter = estimateVid2bmapMeter(result, notes);
+                const meterFirstBarTick = meter
+                    ? vid2bmapMeterFirstBarTick(
+                          result.barRows,
+                          notes,
+                          meter,
+                          current.timingPoints
+                      )
+                    : null;
                 // 초안에 노트가 있으면 초안과 가장 많이 맞는 첫 박으로(Altale: 2박 어긋난 기본값 → 229개 일치)
                 const aligned = alignVid2bmapFirstBarTick(
                     result,
@@ -277,11 +298,23 @@ export default function Vid2bmapImportPanel({
                     current.notes,
                     start
                 );
+                // 빈 초안이면 강세로 본 마디 첫 박(뚜렷할 때) — 첫 노트가 마디 첫 박이 아닌 곡(Altale 1마디 3½박)도 맞게
+                const usesMeterFirstBar =
+                    !aligned &&
+                    current.notes.length === 0 &&
+                    Boolean(meter?.clear) &&
+                    meterFirstBarTick !== null;
                 setLoaded({
                     result,
-                    firstBarTick: aligned?.tick ?? start,
+                    firstBarTick:
+                        aligned?.tick ??
+                        (usesMeterFirstBar ? meterFirstBarTick! : start),
                     snapDivisor,
                     alignedMatches: aligned?.matches ?? null,
+                    meter,
+                    meterFirstBarTick,
+                    defaultFirstBarTick: start,
+                    usesMeterFirstBar,
                 });
                 setLoadError(null);
             } catch (error) {
@@ -309,6 +342,64 @@ export default function Vid2bmapImportPanel({
                 : null,
         [loaded, collected]
     );
+    // 템포 변화 → 타이밍 포인트 제안(영상 원본 프레임으로 잰 박 간격, 2026-09-23 T2)
+    const tempo = useMemo(
+        () =>
+            loaded
+                ? detectVid2bmapTempoChanges(
+                      loaded.result,
+                      loaded.firstBarTick,
+                      baseTimingPoints
+                  )
+                : null,
+        [loaded, baseTimingPoints]
+    );
+    const proposedStartBpm =
+        tempo?.startMismatch && (startBpmChoice ?? document.notes.length === 0)
+            ? tempo.startMismatch.bpm
+            : null;
+    // 박자 제안 — 지금 시작 박자와 다를 때만(2026-09-24 A)
+    const baseOrigin = sortTimingPoints(baseTimingPoints)[0];
+    const meterProposal =
+        loaded?.meter &&
+        (loaded.meter.numerator !== baseOrigin.numerator ||
+            baseOrigin.denominator !== 4)
+            ? loaded.meter
+            : null;
+    const proposedNumerator =
+        meterProposal &&
+        (meterChoice ?? (meterProposal.clear && document.notes.length === 0))
+            ? meterProposal.numerator
+            : null;
+    const timingPoints = useMemo(
+        () =>
+            proposedStartBpm === null && proposedNumerator === null
+                ? baseTimingPoints
+                : applyVid2bmapStartTiming(baseTimingPoints, {
+                      bpm: proposedStartBpm,
+                      numerator: proposedNumerator,
+                  }),
+        [baseTimingPoints, proposedStartBpm, proposedNumerator]
+    );
+    const chooseMeter = (checked: boolean) => {
+        setMeterChoice(checked);
+        // 빈 초안이면 박자를 켜고 끌 때 첫 박도 강세 위치 ↔ 첫 노트 기준으로
+        if (document.notes.length === 0) {
+            setLoaded((current) =>
+                current
+                    ? {
+                          ...current,
+                          firstBarTick:
+                              checked && current.meterFirstBarTick !== null
+                                  ? current.meterFirstBarTick
+                                  : current.defaultFirstBarTick,
+                          usesMeterFirstBar:
+                              checked && current.meterFirstBarTick !== null,
+                      }
+                    : current
+            );
+        }
+    };
     const conversion = useMemo(() => {
         if (!loaded || !collected) return null;
         return convertVid2bmap(loaded.result, collected.notes, {
@@ -318,22 +409,6 @@ export default function Vid2bmapImportPanel({
             include,
         });
     }, [loaded, collected, timingPoints, include]);
-    // 템포 변화 → 타이밍 포인트 제안(영상 원본 프레임으로 잰 박 간격, 2026-09-23 T2)
-    const tempo = useMemo(
-        () =>
-            loaded
-                ? detectVid2bmapTempoChanges(
-                      loaded.result,
-                      loaded.firstBarTick,
-                      timingPoints
-                  )
-                : null,
-        [loaded, timingPoints]
-    );
-    const proposedStartBpm =
-        tempo?.startMismatch && (startBpmChoice ?? document.notes.length === 0)
-            ? tempo.startMismatch.bpm
-            : null;
     const tempoChanges = useMemo(
         () =>
             (tempo?.changes ?? []).filter(
@@ -342,7 +417,8 @@ export default function Vid2bmapImportPanel({
         [tempo, skippedTempo]
     );
     const timingCount =
-        tempoChanges.length + (proposedStartBpm === null ? 0 : 1);
+        tempoChanges.length +
+        (proposedStartBpm === null && proposedNumerator === null ? 0 : 1);
     const diff = useMemo(
         () =>
             conversion
@@ -464,6 +540,7 @@ export default function Vid2bmapImportPanel({
                 ...current,
                 firstBarTick: current.firstBarTick + step * beatTicks,
                 alignedMatches: null,
+                usesMeterFirstBar: false,
             };
         });
 
@@ -486,12 +563,10 @@ export default function Vid2bmapImportPanel({
                 state.replaceDocument({
                     ...state.document,
                     timingPoints: applyVid2bmapTempoChanges(
-                        proposedStartBpm === null
-                            ? state.document.timingPoints
-                            : applyVid2bmapStartBpm(
-                                  state.document.timingPoints,
-                                  proposedStartBpm
-                              ),
+                        applyVid2bmapStartTiming(state.document.timingPoints, {
+                            bpm: proposedStartBpm,
+                            numerator: proposedNumerator,
+                        }),
                         tempoChanges
                     ),
                     notes: merged.notes,
@@ -631,8 +706,8 @@ export default function Vid2bmapImportPanel({
                                     타이밍 {startBpm}
                                 </p>
                             ) : null}
-                            {tempo?.startMismatch ? (
-                                // 시작 BPM 제안(2026-09-24 A) — 템포 변화 제안과 같은 카드
+                            {tempo?.startMismatch || meterProposal ? (
+                                // 시작 BPM · 박자 제안(2026-09-24 A) — 템포 변화 제안과 같은 카드
                                 <div className="border-score/40 bg-score/10 flex flex-col gap-1 rounded-md border px-2 py-1.5">
                                     <p className="flex items-center gap-1.5 text-xs font-bold">
                                         <TriangleAlert
@@ -640,32 +715,73 @@ export default function Vid2bmapImportPanel({
                                             aria-hidden
                                         />
                                         {chartPositionLabel(
-                                            sortTimingPoints(timingPoints)[0]
-                                                .tick,
-                                            timingPoints
+                                            baseOrigin.tick,
+                                            baseTimingPoints
                                         )}{" "}
                                         · 시작 타이밍
                                     </p>
-                                    <p className="text-micro">
-                                        영상 박자선 {tempo.startMismatch.beats}
-                                        박으로 잰 BPM{" "}
-                                        {tempo.startMismatch.measuredBpm} — 지금{" "}
-                                        {tempo.startMismatch.chartBpm}
-                                    </p>
-                                    <label className="flex items-center gap-2 text-xs font-semibold">
-                                        <input
-                                            type="checkbox"
-                                            checked={proposedStartBpm !== null}
-                                            onChange={(event) =>
-                                                setStartBpmChoice(
-                                                    event.target.checked
-                                                )
-                                            }
-                                            className="accent-text-primary size-3.5"
-                                        />
-                                        시작 타이밍을 BPM{" "}
-                                        {tempo.startMismatch.bpm} 로
-                                    </label>
+                                    {tempo?.startMismatch ? (
+                                        <>
+                                            <p className="text-micro">
+                                                영상 박자선{" "}
+                                                {tempo.startMismatch.beats}
+                                                박으로 잰 BPM{" "}
+                                                {
+                                                    tempo.startMismatch
+                                                        .measuredBpm
+                                                }{" "}
+                                                — 지금{" "}
+                                                {tempo.startMismatch.chartBpm}
+                                            </p>
+                                            <label className="flex items-center gap-2 text-xs font-semibold">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={
+                                                        proposedStartBpm !==
+                                                        null
+                                                    }
+                                                    onChange={(event) =>
+                                                        setStartBpmChoice(
+                                                            event.target.checked
+                                                        )
+                                                    }
+                                                    className="accent-text-primary size-3.5"
+                                                />
+                                                시작 타이밍을 BPM{" "}
+                                                {tempo.startMismatch.bpm} 로
+                                            </label>
+                                        </>
+                                    ) : null}
+                                    {meterProposal ? (
+                                        <>
+                                            <p className="text-micro">
+                                                강세가 {meterProposal.numerator}
+                                                박마다(
+                                                {meterProposal.clear
+                                                    ? "뚜렷함"
+                                                    : "약함"}
+                                                ) — 지금 {baseOrigin.numerator}/
+                                                {baseOrigin.denominator}
+                                            </p>
+                                            <label className="flex items-center gap-2 text-xs font-semibold">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={
+                                                        proposedNumerator !==
+                                                        null
+                                                    }
+                                                    onChange={(event) =>
+                                                        chooseMeter(
+                                                            event.target.checked
+                                                        )
+                                                    }
+                                                    className="accent-text-primary size-3.5"
+                                                />
+                                                박자를 {meterProposal.numerator}
+                                                /4 로
+                                            </label>
+                                        </>
+                                    ) : null}
                                 </div>
                             ) : null}
                             {(tempo?.changes ?? []).map((change) => {
@@ -791,7 +907,9 @@ export default function Vid2bmapImportPanel({
                                     : ""}
                                 {typeof loaded.alignedMatches === "number"
                                     ? `지금 초안과 가장 많이 맞는 곳(${loaded.alignedMatches.toLocaleString("ko-KR")}개 일치)으로 맞췄어요. 틀리면 박 단위로 옮기세요.`
-                                    : "캔버스의 노랑 노트가 음원 · 메트로놈과 맞을 때까지 박 단위로 옮기세요."}
+                                    : loaded.usesMeterFirstBar
+                                      ? "마디 첫 박은 강세 위치로 잡았어요 — 틀리면 박 단위로 옮기세요."
+                                      : "캔버스의 노랑 노트가 음원 · 메트로놈과 맞을 때까지 박 단위로 옮기세요."}
                             </p>
                         </Section>
 

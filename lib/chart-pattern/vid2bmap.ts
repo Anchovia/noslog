@@ -1478,15 +1478,123 @@ export function detectVid2bmapTempoChanges(
     return { changes, startMismatch };
 }
 
-/** 시작 타이밍의 BPM 만 바꾼다 — 에디터에서 BPM 칸을 고치는 것과 같다(시각 · 박자표 · 뒤 포인트는 그대로) */
-export function applyVid2bmapStartBpm(
+/**
+ * 시작 타이밍의 BPM · 박자만 바꾼다 — 에디터에서 그 칸을 고치는 것과 같다(시각 · 뒤 포인트는 그대로).
+ * 박자는 x/4 로(영상 추정은 3/4 · 4/4 만)
+ */
+export function applyVid2bmapStartTiming(
     timingPoints: ChartTimingPoint[],
-    bpm: number
+    changes: { bpm?: number | null; numerator?: number | null }
 ) {
     const origin = sortTimingPoints(timingPoints)[0];
     return timingPoints.map((point) =>
-        point.id === origin.id ? { ...point, bpm } : point
+        point.id === origin.id
+            ? {
+                  ...point,
+                  ...(changes.bpm == null ? {} : { bpm: changes.bpm }),
+                  ...(changes.numerator == null
+                      ? {}
+                      : {
+                            numerator: changes.numerator,
+                            denominator: 4 as const,
+                        }),
+              }
+            : point
     );
+}
+
+/** 박자 추정에서 테누토 · 트릴 시작의 무게 — 긴 음은 센박에 온다(Altale · アルストロメリア 둘 다 이 값에서 박자 · 마디 첫 박이 맞음, 노트 수만이면 アルストロメリア 마디 첫 박이 틀림) */
+const METER_LONG_NOTE_WEIGHT = 3;
+/** 「뚜렷함」: 고른 주기 강세가 이 값 이상이고 다른 주기의 2배 이상 */
+const METER_CLEAR_SCORE = 0.15;
+
+export interface Vid2bmapMeter {
+    numerator: 3 | 4;
+    clear: boolean;
+    /** 마디 첫 박인 박자선 번호의 나머지(박자선 번호 % numerator) */
+    phase: number;
+    scores: { 3: number; 4: number };
+}
+
+/**
+ * 박자표 · 마디 첫 박 추정(2026-09-24 A) — 게임은 박마다 같은 선을 그려 마디선이 없어, 박 머리 강세가 몇 박마다 되풀이되는지로 본다.
+ * 강세 = 박자선 ±3프레임 안 노트 수(테누토 · 트릴 시작은 ×3). 주기마다 「가장 센 위치 − 평균」 ÷ 평균을 비교(3 vs 4).
+ */
+export function estimateVid2bmapMeter(
+    result: Vid2bmapResult,
+    notes: Vid2bmapRawNote[]
+): Vid2bmapMeter | null {
+    const rows = result.barRows;
+    if (rows.length < 16) return null;
+    const accents = rows.map((row) =>
+        notes
+            .filter(
+                (note) =>
+                    note.kind !== "glissando" &&
+                    Math.abs(note.y - row) <= VID2BMAP_DUPLICATE_FRAMES
+            )
+            .reduce(
+                (sum, note) =>
+                    sum +
+                    (note.kind === "standard" ? 1 : METER_LONG_NOTE_WEIGHT),
+                0
+            )
+    );
+    const measure = (period: number) => {
+        const phases = Array.from({ length: period }, (_, phase) => {
+            const values = accents.filter(
+                (_, index) => index % period === phase
+            );
+            return (
+                values.reduce((sum, value) => sum + value, 0) / values.length
+            );
+        });
+        const mean = phases.reduce((sum, value) => sum + value, 0) / period;
+        const best = Math.max(...phases);
+        return {
+            score: mean > 0 ? (best - mean) / mean : 0,
+            phase: phases.indexOf(best),
+        };
+    };
+    const three = measure(3);
+    const four = measure(4);
+    if (three.score === 0 && four.score === 0) return null;
+    const chosen = three.score > four.score ? three : four;
+    const other = three.score > four.score ? four : three;
+    return {
+        numerator: three.score > four.score ? 3 : 4,
+        clear:
+            chosen.score >= METER_CLEAR_SCORE &&
+            chosen.score >= other.score * 2,
+        phase: chosen.phase,
+        scores: {
+            3: Math.round(three.score * 100) / 100,
+            4: Math.round(four.score * 100) / 100,
+        },
+    };
+}
+
+/** 추정한 마디 첫 박으로 첫 박자선 — 첫 노트가 든 박 이하의 마지막 마디 첫 박이 1마디 1박(없으면 첫 마디 첫 박, 첫 노트는 0마디 못갖춘마디) */
+export function vid2bmapMeterFirstBarTick(
+    barRows: number[],
+    notes: Vid2bmapRawNote[],
+    meter: Vid2bmapMeter,
+    timingPoints: ChartTimingPoint[]
+) {
+    const origin = sortTimingPoints(timingPoints)[0];
+    const first = notes[0];
+    if (!first) return origin.tick;
+    const firstBeat = Math.floor(
+        vid2bmapBeatPosition(barRows, first.y) + FIRST_NOTE_EARLY_BEATS
+    );
+    const downbeats = Array.from(
+        { length: Math.max(1, firstBeat + meter.numerator + 1) },
+        (_, index) => index
+    ).filter((index) => index % meter.numerator === meter.phase);
+    const measureStart =
+        [...downbeats].reverse().find((index) => index <= firstBeat) ??
+        downbeats[0];
+    return origin.tick - measureStart * beatTicksOf(origin);
 }
 
 /** 제안을 타이밍 포인트로 — 시각(ms)은 앞 타이밍(앞 제안 포함)에서 이어 계산, 박자표는 앞 구간을 잇는다 */

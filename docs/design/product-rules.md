@@ -484,7 +484,13 @@ old design-stage checklist. Changes to material behavior require a user decision
   over its whole length, not the first beats — differs from it: 「시작 타이밍을 BPM ○ 로」, on by
   default only when the draft has no notes (changing the start BPM moves every existing note in
   time); it changes only that point's BPM, like editing it, and goes in with the notes. The offset
-  (start time against the audio) cannot come from the video.
+  (start time against the audio) cannot come from the video. The meter is proposed in the same
+  card (2026-09-24 A): the game draws the same line every beat, so accents at beat heads (notes
+  within 3 frames, tenuto/trill starts ×3) are compared for 3- and 4-beat cycles; 「박자를 ○/4 로」
+  shows 뚜렷함/약함 (clear = score ≥ 0.15 and twice the other) and is on by default only when
+  clear and the draft has no notes. With it on, an empty draft's first bar goes to the strongest
+  accent (measure 1 = last downbeat at or before the first note), so a song that does not start on
+  a downbeat lands right (Altale: first note 1마디 3½박).
 - Provenance (2026-09-24 C2): right after an import the editor saves a revision with
   kind `vid2bmap`. A published chart whose published revision number is at or after the first
   `vid2bmap` revision shows "노트 배치 · 영상에서 추출(vid2bmap)" and a sources dialog (vid2bmap,

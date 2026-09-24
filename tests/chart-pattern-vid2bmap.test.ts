@@ -7,9 +7,10 @@ import {
     applyVid2bmapTempoChanges,
     detectVid2bmapTempoChanges,
     applyVid2bmapMerge,
-    applyVid2bmapStartBpm,
+    applyVid2bmapStartTiming,
     beatLengthLabel,
     estimateVid2bmapBpm,
+    estimateVid2bmapMeter,
     chartPositionLabel,
     collectVid2bmapNotes,
     defaultVid2bmapChoice,
@@ -21,6 +22,7 @@ import {
     snapVid2bmapTick,
     suggestVid2bmapSnap,
     vid2bmapBeatPosition,
+    vid2bmapMeterFirstBarTick,
     vid2bmapTickAt,
 } from "@/lib/chart-pattern/vid2bmap";
 import {
@@ -925,6 +927,74 @@ describe("vid2bmap default first bar", () => {
     });
 });
 
+describe("vid2bmap meter from accents", () => {
+    // 박자선 40프레임마다 48개. 마디 첫 박에 화음 + 테누토, 나머지 박에 노트 하나
+    const build = (numerator: number, phase: number, firstBeat = 0) => {
+        const barRows = Array.from({ length: 48 }, (_, index) => index * 40);
+        const simple: number[][] = [];
+        const tenuto: number[][] = [];
+        for (let beat = firstBeat; beat < 47; beat += 1) {
+            simple.push([beat * 40, 10, 12]);
+            if (beat % numerator === phase) {
+                simple.push([beat * 40, 20, 22]);
+                tenuto.push([beat * 40, beat * 40 + 20, 2, 4]);
+            }
+        }
+        const result: Vid2bmapResult = {
+            fps: 60,
+            startSec: 0,
+            barRows,
+            simple,
+            tenuto,
+            trill: [],
+            glissando: [],
+            beatFrames: null,
+        };
+        return { result, notes: collectVid2bmapNotes(result).notes };
+    };
+
+    it("tells 3/4 from 4/4 and finds the downbeat", () => {
+        const three = build(3, 1);
+        expect(estimateVid2bmapMeter(three.result, three.notes)).toMatchObject({
+            numerator: 3,
+            clear: true,
+            phase: 1,
+        });
+        const four = build(4, 3);
+        expect(estimateVid2bmapMeter(four.result, four.notes)).toMatchObject({
+            numerator: 4,
+            clear: true,
+            phase: 3,
+        });
+    });
+
+    it("starts measure 1 at the last downbeat before the first note (Altale: first note on beat 3½)", () => {
+        // 3/4, 마디 첫 박 = 박자선 1 · 4 · 7 … , 첫 노트 박자선 3 → 1마디는 박자선 1 = 첫 박자선이 2박 앞
+        const song = build(3, 1, 3);
+        const meter = estimateVid2bmapMeter(song.result, song.notes)!;
+        expect(
+            vid2bmapMeterFirstBarTick(song.result.barRows, song.notes, meter, [
+                point(0, 0, 120, 4, 4),
+            ])
+        ).toBe(-480);
+    });
+
+    it("calls weak accents weak", () => {
+        const flat = build(4, 0);
+        // 모든 박을 같게 — 강세 없음
+        const even: Vid2bmapResult = {
+            ...flat.result,
+            simple: flat.result.barRows.map((row) => [row, 10, 12]),
+            tenuto: [],
+        };
+        const meter = estimateVid2bmapMeter(
+            even,
+            collectVid2bmapNotes(even).notes
+        );
+        expect(meter === null || meter.clear === false).toBe(true);
+    });
+});
+
 describe("vid2bmap glissando", () => {
     // 40프레임 = 1박. 1박부터 5프레임마다 한 칸씩 오르는 조각 9개(0 → 8번 칸) + 멀리 떨어진 조각 하나
     const pieces = Array.from({ length: 9 }, (_, index) => [
@@ -1068,12 +1138,15 @@ describe("vid2bmap tempo changes from raw beat frames", () => {
         });
     });
 
-    it("changes only the start timing's BPM, like editing it in the editor", () => {
+    it("changes only the start timing's BPM and meter, like editing it in the editor", () => {
         const points = [point(0, 60, 120, 4, 4), point(1920, 2000, 100, 3, 4)];
-        expect(applyVid2bmapStartBpm(points, 144)).toEqual([
+        expect(applyVid2bmapStartTiming(points, { bpm: 144 })).toEqual([
             { ...points[0], bpm: 144 },
             points[1],
         ]);
+        expect(
+            applyVid2bmapStartTiming(points, { bpm: null, numerator: 3 })
+        ).toEqual([{ ...points[0], numerator: 3 }, points[1]]);
     });
 
     it("stays quiet for a steady song and without beat frames", () => {
