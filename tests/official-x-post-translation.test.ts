@@ -132,6 +132,31 @@ describe("official X post translation", () => {
         );
     });
 
+    // 시간 초과 · 네트워크 오류는 ApiError 가 아니다 — 그래도 다음 모델로 넘어가야 한다(2026-09-24)
+    it("falls through to the next model on a timeout", async () => {
+        generateContent
+            .mockRejectedValueOnce(
+                Object.assign(
+                    new Error("The operation was aborted due to timeout"),
+                    {
+                        name: "TimeoutError",
+                    }
+                )
+            )
+            .mockResolvedValueOnce({
+                text: JSON.stringify({ ko: "한", en: "en" }),
+            });
+        const { translateOfficialXPost, OFFICIAL_X_TRANSLATION_MODELS } =
+            await load();
+        await expect(translateOfficialXPost(text, links)).resolves.toEqual({
+            ko: "한",
+            en: "en",
+        });
+        expect(generateContent.mock.calls.map((call) => call[0].model)).toEqual(
+            OFFICIAL_X_TRANSLATION_MODELS.slice(0, 2)
+        );
+    });
+
     it("falls through to the next model on 503/429 and stops on other errors", async () => {
         const { ApiError } = await import("@google/genai");
         generateContent
