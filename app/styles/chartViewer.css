@@ -20,7 +20,8 @@
     gap: var(--nl-spacing-8);
     margin: 0;
 }
-.noslog-ui .nl-chart-viewer__byline > .nl-tag {
+.noslog-ui .nl-chart-viewer__byline > .nl-tag,
+.noslog-ui .nl-chart-viewer__byline > .nl-term {
     margin-block: calc(
         (var(--nl-type-line-height-20) - var(--nl-spacing-24)) / 2
     );
@@ -31,6 +32,21 @@
     align-items: center;
     justify-content: space-between;
     gap: var(--nl-spacing-8);
+}
+/* 머리 링크 묶음(2026-09-24 A1) — 「고치기 ›」 · 「출처 보기 ›」 를 줄 오른쪽 끝에, 사이 16 */
+.noslog-ui .nl-chart-viewer__links {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-16);
+    margin-left: auto;
+}
+.noslog-ui .nl-chart-viewer__links .nl-heading-link {
+    margin-left: 0;
+}
+/* 의견 시각을 누르면 캔버스 위 끝으로 올린다 — 고정 머리(60) + 16 만큼 비운다(의견 줄과 같은 값) */
+.noslog-ui .nl-chart-viewer__stage {
+    min-width: 0;
+    scroll-margin-top: 76px;
 }
 /* 출처 창 목록 — 「패턴 경향 기준」 창과 같은 간격(항목 사이 16 · 제목 → 내용 8) */
 .noslog-ui .nl-chart-viewer__sources {
@@ -151,6 +167,25 @@
 }
 .noslog-ui .nl-chart-stage__time:first-of-type {
     text-align: right;
+}
+/* 재생 막대 + 의견 시각 눈금(2026-09-24 D1) */
+.noslog-ui .nl-chart-stage__seek-track {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex: 1;
+    min-width: 0;
+}
+/* 눈금 = 경고 표시색 2 × 12(범례 점과 같은 높이) · 누르지 않음 — 누르는 곳은 아래 의견 목록의 시각 */
+.noslog-ui .nl-chart-stage__marker {
+    position: absolute;
+    top: 50%;
+    width: var(--nl-spacing-2);
+    height: 12px;
+    border-radius: var(--nl-radius-full);
+    background: var(--nl-feedback-warning-marker);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
 }
 .noslog-ui .nl-chart-stage__seek {
     flex: 1;
@@ -388,11 +423,57 @@
     .noslog-ui .nl-chart-stage__transport {
         flex-wrap: wrap;
     }
-    .noslog-ui .nl-chart-stage__transport .nl-chart-stage__seek {
+    .noslog-ui .nl-chart-stage__transport .nl-chart-stage__seek-track {
         order: -1;
         flex-basis: 100%;
     }
     .noslog-ui .nl-chart-stage__time:last-of-type {
         margin-inline-start: auto;
     }
+}
+
+/* 채보 의견(2026-09-24 D1) — 의견 구역 문법: 제목 줄 →12→ 쓰기 칸 →16→ 목록(줄 사이 16 · 상자 없음 · 아바타 없음).
+   쓰기 칸 = 시각(제목 링크 글자) · 한 줄 입력 · 주 버튼, 사이 8 */
+.noslog-ui .nl-chart-comments {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-12);
+    min-width: 0;
+}
+.noslog-ui .nl-chart-comments__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-16);
+    min-width: 0;
+}
+.noslog-ui .nl-chart-comments__composer {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-chart-comments__composer-row {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+    min-width: 0;
+}
+.noslog-ui .nl-chart-comments__input {
+    flex: 1;
+    min-width: 0;
+}
+.noslog-ui .nl-chart-comments__time {
+    flex-shrink: 0;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+.noslog-ui .nl-chart-comments__composer-row > .nl-chart-comments__time {
+    min-height: var(--nl-control-height);
+}
+/* 이름 줄은 글자 줄 20 그대로 — 태그(24)는 위아래로 당긴다 */
+.noslog-ui .nl-chart-comments .nl-opinion-row__header > .nl-tag,
+.noslog-ui .nl-chart-comments .nl-opinion-row__header > .nl-term {
+    flex-shrink: 0;
+    margin-block: calc(
+        (var(--nl-type-line-height-20) - var(--nl-spacing-24)) / 2
+    );
 }

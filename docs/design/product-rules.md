@@ -406,8 +406,30 @@ old design-stage checklist. Changes to material behavior require a user decision
   Names in rankings, opinions and replies show the label from level 3; the
   profile shows it from level 1 with a public 「기여」 section (level, points,
   counts) and, for the owner only, their suggestion list with rejection reasons.
-- Later stage (not built yet): user chart drafts with timestamped comments and
-  chart author credits.
+- Stage 3 — user chart drafts and timestamped comments (2026-09-24). One draft
+  per user · chart (`chart_drafts`): it starts from the published chart, or an
+  empty chart when none is published, and only its author and admins can see
+  it. Draft → 「검토 요청」 (locked; the author can withdraw) → admin
+  「수정 요청」 or 「공개」. Size limits: 20,000 notes, 1,000 timing points,
+  30 minutes. Saving uses the draft version, so a stale window gets a conflict
+  instead of overwriting. A request with overlapping notes is refused.
+- Publishing (admin only, one transaction): unpublished admin editor changes
+  are first kept as a revision, then the draft becomes the published chart,
+  a `contribution` revision records the draft and its base published version
+  (「· 기준 vN」 / 「· 새 채보」), the chart author (`author_id`) is set and the
+  author gets 20 points once per published version. Reopening a published
+  draft starts again from the current published chart.
+- Timestamped comments (`chart_comments`): on a published chart anyone signed
+  in can comment (500 characters, 50 per 24 hours); on a draft only its author
+  and admins. Authors can delete their own comment until it is resolved. Only
+  admins resolve (+1 point when the writer is not an admin, published-chart
+  comments only) or hide. Comment times link to the viewer as `?t=` in seconds.
+- The public viewer credits the author with their name label (level 3+, or
+  「운영자」) and names the publishing admin in 「출처」. 「영상에서 추출」 follows
+  the published chart's lineage: a contribution inherits it only through its
+  base version, so a chart started from empty never shows it.
+- The editor stays wide-screen only (1056+). Narrower screens get a notice with
+  「주소 복사」 instead of opening it.
 
 ## Chart import from video extraction (2026-09-23)
 

@@ -4,7 +4,9 @@ import {
     addChartComment as addChartCommentService,
     deleteMyChartComment as deleteMyChartCommentService,
     getMyChartDraftStatus as getMyChartDraftStatusService,
+    hideChartComment as hideChartCommentService,
     listChartComments as listChartCommentsService,
+    resolveChartComment as resolveChartCommentService,
     saveMyChartDraft as saveMyChartDraftService,
     submitMyChartDraft as submitMyChartDraftService,
     withdrawMyChartDraft as withdrawMyChartDraftService,
@@ -39,4 +41,13 @@ export async function addChartComment(input: unknown, locale: string) {
 
 export async function deleteMyChartComment(commentId: number, locale: string) {
     return deleteMyChartCommentService(commentId, locale);
+}
+
+/** 운영자만 — 서비스가 권한을 확인한다 */
+export async function resolveChartComment(commentId: number) {
+    return resolveChartCommentService(commentId);
+}
+
+export async function hideChartComment(commentId: number) {
+    return hideChartCommentService(commentId);
 }

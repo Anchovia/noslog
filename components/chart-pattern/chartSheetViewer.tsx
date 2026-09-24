@@ -2,14 +2,22 @@
 
 import { ChevronRight } from "lucide-react";
 
+import { useQuery } from "@tanstack/react-query";
 import BackLink from "@/components/ui/backLink";
-import { useMemo, useState, useSyncExternalStore } from "react";
+import { useMemo, useRef, useState, useSyncExternalStore } from "react";
 
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import PageContainer from "@/components/layout/pageContainer";
 import ModalDialog from "@/components/ui/modalDialog";
 import { SegmentedControl } from "@/components/ui/segmentedControl";
 import { StatusMessage } from "@/components/ui/statusMessage";
+import ChartComments, {
+    chartCommentsOptions,
+} from "@/features/contributions/components/chartComments";
+import ChartDraftEntry from "@/features/contributions/components/chartDraftEntry";
+import ContributionLabel from "@/features/contributions/components/contributionLabel";
+import type { NameLabel } from "@/features/contributions/contributionLevel";
+import type { ChartCommentItem } from "@/features/contributions/server/chartDraftService";
 import {
     getBrowserSupportSnapshot,
     getServerBrowserSupportSnapshot,
@@ -39,6 +47,7 @@ import {
 
 import ChartSheetStrip from "./chartSheetStrip";
 import FallingChartViewer from "./fallingChartViewer";
+import { createPlaybackClock, timeParam } from "./playbackClock";
 
 interface ChartSheetViewerProps {
     title: string;
@@ -51,14 +60,31 @@ interface ChartSheetViewerProps {
     backHref: string;
     jacketUrl: string | null;
     preview?: boolean;
-    /** 출처 표기(2026-09-24 C2) — 공개 채보만. 작성자 = 공개한 사람, extracted = 영상 추출 버전에서 나온 채보 */
+    /** 출처 표기(2026-09-24 C2) — 공개 채보만. extracted = 영상 추출 버전에서 나온 채보 */
     source?: ChartSource;
+    /** 유저 기여(2026-09-24 3단계) — 공개 채보만. 「고치기 ›」 · 「채보 의견」 구역 */
+    contribution?: ChartViewerContribution;
 }
 
 export interface ChartSource {
-    author: { name: string; operator: boolean } | null;
+    /** 작성자 — 유저 기여 채보면 실제 작성자 + 기여 라벨(E1), 아니면 공개한 운영자 */
+    author: { id: number | null; name: string; label: NameLabel | null } | null;
+    /** 작성자와 공개한 사람이 다를 때(유저 기여 채보)만 — 출처 창에 따로 적는다 */
+    publisher: { name: string } | null;
     publishedAt: string | null;
     extracted: boolean;
+}
+
+export interface ChartViewerContribution {
+    chartId: number;
+    signedIn: boolean;
+    canModerate: boolean;
+    draftHref: string;
+    loginHref: string;
+    returnTo: string;
+    initialComments: ChartCommentItem[];
+    /** 주소 `?t=` — 처음 열 때 그 시각으로 */
+    initialTimeMs: number | null;
 }
 
 const VID2BMAP_PAPER_URL =
@@ -104,6 +130,7 @@ export default function ChartSheetViewer({
     jacketUrl,
     preview = false,
     source,
+    contribution,
 }: ChartSheetViewerProps) {
     const locale = useLocale();
     const t = useTranslations();
@@ -111,6 +138,29 @@ export default function ChartSheetViewer({
         locale === "ja" ? "ja-JP" : locale === "en" ? "en-US" : "ko-KR";
     const [viewMode, setViewMode] = useState<"falling" | "sheet">("falling");
     const [sourceOpen, setSourceOpen] = useState(false);
+    const stageRef = useRef<HTMLDivElement | null>(null);
+    const [clock] = useState(() =>
+        createPlaybackClock(contribution?.initialTimeMs ?? 0)
+    );
+    const [seekRequest, setSeekRequest] = useState(() =>
+        contribution?.initialTimeMs == null
+            ? null
+            : { timeMs: contribution.initialTimeMs, key: 0 }
+    );
+    const comments = useQuery({
+        ...chartCommentsOptions(
+            contribution?.chartId ?? 0,
+            contribution?.initialComments ?? []
+        ),
+        enabled: Boolean(contribution),
+    }).data;
+    const markers = useMemo(
+        () =>
+            comments
+                .filter((comment) => !comment.resolved)
+                .map((comment) => comment.timeMs),
+        [comments]
+    );
     const browserSupport = useSyncExternalStore(
         subscribeBrowserSupport,
         getBrowserSupportSnapshot,
@@ -151,6 +201,142 @@ export default function ChartSheetViewer({
               ? t("chart.fallingHelp")
               : t("chart.sheetHelp");
     const difficultyClass = `nl-level--${difficulty.toLowerCase()}`;
+    // 의견 시각 누름 · 주소 `?t=` — 낙하형으로 그 시각에 서고, 캔버스가 보이게 올린다. 주소는 공유용으로 바꿔 둔다
+    const seekTo = (timeMs: number) => {
+        if (browserSupport === "supported") setViewMode("falling");
+        setSeekRequest({ timeMs, key: Date.now() });
+        clock.set(timeMs);
+        const url = new URL(window.location.href);
+        url.searchParams.set("t", timeParam(timeMs));
+        window.history.replaceState(
+            window.history.state,
+            "",
+            `${url.pathname}${url.search}`
+        );
+        stageRef.current?.scrollIntoView({ block: "start" });
+    };
+    const links = contribution ? (
+        <div className="nl-chart-viewer__links">
+            <ChartDraftEntry
+                chartId={contribution.chartId}
+                draftHref={contribution.draftHref}
+                loginHref={contribution.loginHref}
+                signedIn={contribution.signedIn}
+                label={t("contribution.entry.edit")}
+                className="nl-heading-link nl-control"
+                chevron={<ChevronRight aria-hidden />}
+            />
+            {source?.extracted ? sourceDialog() : null}
+        </div>
+    ) : source?.extracted ? (
+        sourceDialog()
+    ) : null;
+    const metadata = (
+        <p className="nl-metadata nl-muted">
+            {t("chart.noteCount", {
+                count: document.notes.length.toLocaleString(numberLocale),
+            })}
+            {revision === null
+                ? ""
+                : ` · ${t(
+                      preview
+                          ? "chart.savedRevision"
+                          : "chart.publishedRevision",
+                      { revision }
+                  )}`}
+            {" · "}
+            {formatEditorTime(playbackDurationMs)}
+        </p>
+    );
+
+    function sourceDialog() {
+        if (!source) return null;
+        return (
+            <ModalDialog
+                open={sourceOpen}
+                onOpenChange={setSourceOpen}
+                title={t("chart.source.title")}
+                trigger={
+                    <button
+                        type="button"
+                        className="nl-heading-link nl-control"
+                    >
+                        {t("chart.source.open")}
+                        <ChevronRight aria-hidden />
+                    </button>
+                }
+            >
+                <dl className="nl-chart-viewer__sources">
+                    <div>
+                        <dt className="nl-metadata nl-muted">
+                            {t("chart.source.chart")}
+                        </dt>
+                        <dd>
+                            {source.author ? (
+                                <p className="nl-chart-viewer__byline nl-body-secondary">
+                                    {source.author.name}
+                                    <ContributionLabel
+                                        label={source.author.label}
+                                    />
+                                </p>
+                            ) : null}
+                            {revision !== null && source.publishedAt ? (
+                                <p className="nl-metadata nl-muted">
+                                    {t(
+                                        source.publisher
+                                            ? "chart.source.publishedBy"
+                                            : "chart.source.published",
+                                        {
+                                            revision,
+                                            name: source.publisher?.name ?? "",
+                                            date: new Intl.DateTimeFormat(
+                                                numberLocale,
+                                                { dateStyle: "medium" }
+                                            ).format(
+                                                new Date(source.publishedAt)
+                                            ),
+                                        }
+                                    )}
+                                </p>
+                            ) : null}
+                        </dd>
+                    </div>
+                    <div>
+                        <dt className="nl-metadata nl-muted">
+                            {t("chart.source.notes")}
+                        </dt>
+                        <dd>
+                            <p className="nl-body-secondary">
+                                {t("chart.source.notesBody")}
+                            </p>
+                            <p className="nl-body-secondary">
+                                {t("chart.source.tool")}
+                            </p>
+                            <p className="nl-metadata">
+                                <a
+                                    href={VID2BMAP_PAPER_URL}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="nl-link nl-text-link--underlined"
+                                >
+                                    {t("chart.source.paper")}
+                                </a>
+                                {" · "}
+                                <a
+                                    href={VID2BMAP_GITHUB_URL}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="nl-link nl-text-link--underlined"
+                                >
+                                    GitHub
+                                </a>
+                            </p>
+                        </dd>
+                    </div>
+                </dl>
+            </ModalDialog>
+        );
+    }
 
     return (
         <PageContainer className="noslog-ui nl-chart-viewer">
@@ -178,119 +364,24 @@ export default function ChartSheetViewer({
                 {source?.author ? (
                     <p className="nl-chart-viewer__byline nl-body-secondary">
                         {t("chart.source.author", { name: source.author.name })}
-                        {source.author.operator ? (
-                            <span className="nl-tag nl-tag--strong">
-                                {t("chart.source.operator")}
-                            </span>
-                        ) : null}
+                        <ContributionLabel label={source.author.label} />
                     </p>
                 ) : null}
-                <p className="nl-metadata nl-muted">
-                    {t("chart.noteCount", {
-                        count: document.notes.length.toLocaleString(
-                            numberLocale
-                        ),
-                    })}
-                    {revision === null
-                        ? ""
-                        : ` · ${t(
-                              preview
-                                  ? "chart.savedRevision"
-                                  : "chart.publishedRevision",
-                              { revision }
-                          )}`}
-                    {" · "}
-                    {formatEditorTime(playbackDurationMs)}
-                </p>
+                {/* 영상 추출이 아니면 링크(「고치기 ›」)는 메타 줄 오른쪽 끝, 영상 추출이면 출처 줄 오른쪽 끝(2026-09-24 A1) */}
+                {links && !source?.extracted ? (
+                    <div className="nl-chart-viewer__source">
+                        {metadata}
+                        {links}
+                    </div>
+                ) : (
+                    metadata
+                )}
                 {source?.extracted ? (
                     <div className="nl-chart-viewer__source">
                         <span className="nl-metadata nl-muted">
                             {t("chart.source.extracted")}
                         </span>
-                        <ModalDialog
-                            open={sourceOpen}
-                            onOpenChange={setSourceOpen}
-                            title={t("chart.source.title")}
-                            trigger={
-                                <button
-                                    type="button"
-                                    className="nl-heading-link nl-control"
-                                >
-                                    {t("chart.source.open")}
-                                    <ChevronRight aria-hidden />
-                                </button>
-                            }
-                        >
-                            <dl className="nl-chart-viewer__sources">
-                                <div>
-                                    <dt className="nl-metadata nl-muted">
-                                        {t("chart.source.chart")}
-                                    </dt>
-                                    <dd>
-                                        {source.author ? (
-                                            <p className="nl-chart-viewer__byline nl-body-secondary">
-                                                {source.author.name}
-                                                {source.author.operator ? (
-                                                    <span className="nl-tag nl-tag--strong">
-                                                        {t(
-                                                            "chart.source.operator"
-                                                        )}
-                                                    </span>
-                                                ) : null}
-                                            </p>
-                                        ) : null}
-                                        {revision !== null &&
-                                        source.publishedAt ? (
-                                            <p className="nl-metadata nl-muted">
-                                                {t("chart.source.published", {
-                                                    revision,
-                                                    date: new Intl.DateTimeFormat(
-                                                        numberLocale,
-                                                        { dateStyle: "medium" }
-                                                    ).format(
-                                                        new Date(
-                                                            source.publishedAt
-                                                        )
-                                                    ),
-                                                })}
-                                            </p>
-                                        ) : null}
-                                    </dd>
-                                </div>
-                                <div>
-                                    <dt className="nl-metadata nl-muted">
-                                        {t("chart.source.notes")}
-                                    </dt>
-                                    <dd>
-                                        <p className="nl-body-secondary">
-                                            {t("chart.source.notesBody")}
-                                        </p>
-                                        <p className="nl-body-secondary">
-                                            {t("chart.source.tool")}
-                                        </p>
-                                        <p className="nl-metadata">
-                                            <a
-                                                href={VID2BMAP_PAPER_URL}
-                                                target="_blank"
-                                                rel="noreferrer"
-                                                className="nl-link nl-text-link--underlined"
-                                            >
-                                                {t("chart.source.paper")}
-                                            </a>
-                                            {" · "}
-                                            <a
-                                                href={VID2BMAP_GITHUB_URL}
-                                                target="_blank"
-                                                rel="noreferrer"
-                                                className="nl-link nl-text-link--underlined"
-                                            >
-                                                GitHub
-                                            </a>
-                                        </p>
-                                    </dd>
-                                </div>
-                            </dl>
-                        </ModalDialog>
+                        {links}
                     </div>
                 ) : null}
             </header>
@@ -328,27 +419,43 @@ export default function ChartSheetViewer({
                 </div>
             </div>
 
-            {browserSupport === "checking" ? (
-                <div className="nl-chart-viewer__placeholder" aria-busy />
-            ) : effectiveViewMode === "falling" ? (
-                document.notes.length === 0 ? (
-                    <p className="nl-chart-viewer__placeholder nl-body-secondary nl-muted">
-                        {t("chart.empty")}
-                    </p>
+            <div ref={stageRef} className="nl-chart-viewer__stage">
+                {browserSupport === "checking" ? (
+                    <div className="nl-chart-viewer__placeholder" aria-busy />
+                ) : effectiveViewMode === "falling" ? (
+                    document.notes.length === 0 ? (
+                        <p className="nl-chart-viewer__placeholder nl-body-secondary nl-muted">
+                            {t("chart.empty")}
+                        </p>
+                    ) : (
+                        <FallingChartViewer
+                            document={document}
+                            jacketUrl={jacketUrl}
+                            seekRequest={seekRequest}
+                            markers={contribution ? markers : undefined}
+                            onTimeChange={clock.set}
+                        />
+                    )
                 ) : (
-                    <FallingChartViewer
+                    <ChartSheetStrip
+                        panels={panels}
                         document={document}
-                        jacketUrl={jacketUrl}
+                        measureMarkers={measureMarkers}
+                        durationMs={playbackDurationMs}
                     />
-                )
-            ) : (
-                <ChartSheetStrip
-                    panels={panels}
-                    document={document}
-                    measureMarkers={measureMarkers}
-                    durationMs={playbackDurationMs}
+                )}
+            </div>
+            {contribution ? (
+                <ChartComments
+                    chartId={contribution.chartId}
+                    initialComments={contribution.initialComments}
+                    signedIn={contribution.signedIn}
+                    canModerate={contribution.canModerate}
+                    returnTo={contribution.returnTo}
+                    clock={clock}
+                    onSeek={seekTo}
                 />
-            )}
+            ) : null}
         </PageContainer>
     );
 }

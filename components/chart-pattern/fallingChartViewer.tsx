@@ -1,7 +1,14 @@
 "use client";
 
 import { Pause, Play, RotateCcw, Upload, Volume2 } from "lucide-react";
-import { type ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
+import {
+    type ChangeEvent,
+    useEffect,
+    useEffectEvent,
+    useMemo,
+    useRef,
+    useState,
+} from "react";
 import type { Application, Graphics } from "pixi.js";
 
 import { useTranslations } from "@/components/i18n/localeProvider";
@@ -36,6 +43,11 @@ import { useStrictPerformance } from "./useStrictPerformance";
 interface FallingChartViewerProps {
     document: ChartDocument;
     jacketUrl: string | null;
+    /** 밖에서 재생 위치 옮기기(채보 의견 시각 · 주소 `?t=`) — key 가 바뀔 때마다, 처음 그릴 때도 한 번 */
+    seekRequest?: { timeMs: number; key: number } | null;
+    /** 진행 막대 눈금(채보 의견 시각, 2026-09-24 D1) */
+    markers?: readonly number[];
+    onTimeChange?: (timeMs: number) => void;
 }
 
 interface PlaybackClockAnchor {
@@ -607,6 +619,9 @@ function renderPlaybackFrame({
 export default function FallingChartViewer({
     document,
     jacketUrl,
+    seekRequest,
+    markers,
+    onTimeChange,
 }: FallingChartViewerProps) {
     const t = useTranslations();
     const hostRef = useRef<HTMLDivElement | null>(null);
@@ -643,6 +658,15 @@ export default function FallingChartViewer({
     useEffect(() => {
         durationRef.current = durationMs;
     }, [durationMs]);
+
+    const applySeekRequest = useEffectEvent((timeMs: number) => seek(timeMs));
+    useEffect(() => {
+        if (seekRequest) applySeekRequest(seekRequest.timeMs);
+    }, [seekRequest]);
+
+    useEffect(() => {
+        onTimeChange?.(currentTimeMs);
+    }, [currentTimeMs, onTimeChange]);
 
     useEffect(() => {
         noteSpeedRef.current = noteSpeed;
@@ -955,16 +979,37 @@ export default function FallingChartViewer({
                     <span className="nl-metric-value nl-chart-stage__time">
                         {formatEditorTime(currentTimeMs)}
                     </span>
-                    <input
-                        type="range"
-                        min="0"
-                        max={Math.max(1, durationMs)}
-                        step="10"
-                        value={Math.min(currentTimeMs, durationMs)}
-                        onChange={(event) => seek(Number(event.target.value))}
-                        aria-label={t("chart.position")}
-                        className="nl-chart-stage__seek"
-                    />
+                    <div className="nl-chart-stage__seek-track">
+                        <input
+                            type="range"
+                            min="0"
+                            max={Math.max(1, durationMs)}
+                            step="10"
+                            value={Math.min(currentTimeMs, durationMs)}
+                            onChange={(event) =>
+                                seek(Number(event.target.value))
+                            }
+                            aria-label={t("chart.position")}
+                            className="nl-chart-stage__seek"
+                        />
+                        {/* 의견 시각 눈금 — 손잡이 중심이 움직이는 폭(양끝 10 안쪽)에 맞춘다. 누르는 건 의견 목록의 시각 */}
+                        {markers?.map((timeMs, index) => (
+                            <span
+                                key={`${timeMs}-${index}`}
+                                aria-hidden
+                                className="nl-chart-stage__marker"
+                                style={{
+                                    left: `calc(10px + (100% - 20px) * ${Math.min(
+                                        1,
+                                        Math.max(
+                                            0,
+                                            timeMs / Math.max(1, durationMs)
+                                        )
+                                    )})`,
+                                }}
+                            />
+                        ))}
+                    </div>
                     <span className="nl-metric-value nl-chart-stage__time">
                         {formatEditorTime(durationMs)}
                     </span>

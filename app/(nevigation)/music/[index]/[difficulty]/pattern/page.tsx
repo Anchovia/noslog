@@ -1,6 +1,13 @@
 import { notFound } from "next/navigation";
 
 import ChartSheetViewer from "@/components/chart-pattern/chartSheetViewer";
+import { parseTimeParam } from "@/components/chart-pattern/playbackClock";
+import { listChartComments } from "@/features/contributions/server/chartDraftService";
+import { getNameLabels } from "@/features/contributions/server/contributionPointService";
+import {
+    contributionBaseRevision,
+    isExtractedChart,
+} from "@/lib/chart-pattern/chartSource";
 import { chartDocumentSchema } from "@/lib/chart-pattern/schema";
 import db from "@/lib/db";
 import {
@@ -14,14 +21,18 @@ import getSession from "@/lib/session";
 
 export default async function PublicChartPatternPage({
     params,
+    searchParams,
 }: {
     params: Promise<{ index: string; difficulty: string }>;
+    searchParams?: Promise<{ t?: string | string[] }>;
 }) {
-    const [{ index, difficulty }, { locale }, session] = await Promise.all([
-        params,
-        getServerI18n(),
-        getSession(),
-    ]);
+    const [{ index, difficulty }, query, { locale }, session] =
+        await Promise.all([
+            params,
+            searchParams ?? Promise.resolve({} as { t?: string | string[] }),
+            getServerI18n(),
+            getSession(),
+        ]);
     const musicIndex = decodeURIComponent(index);
     const chart = await db.musicChart.findFirst({
         where: {
@@ -32,6 +43,7 @@ export default async function PublicChartPatternPage({
             },
         },
         select: {
+            id: true,
             difficulty: true,
             level: true,
             music: {
@@ -60,12 +72,14 @@ export default async function PublicChartPatternPage({
                     publishedRevision: true,
                     publishedAt: true,
                     publishedBy: { select: { username: true, role: true } },
-                    // 출처 표기(2026-09-24 C2) — 공개 번호 이하에 「영상 추출」 버전이 있으면 영상에서 추출한 채보
+                    // 유저 기여 채보면 실제 작성자(2026-09-24 E1)
+                    author: { select: { id: true, username: true } },
+                    // 출처 표기(2026-09-24 C2) — 공개 채보 줄기에 「영상 추출」 버전이 있으면 영상에서 추출한 채보.
+                    // 기여 버전은 기준 공개 버전에서 갈라지므로 함께 읽는다(lib/chart-pattern/chartSource)
                     revisions: {
-                        where: { kind: "vid2bmap" },
-                        select: { number: true },
-                        orderBy: { number: "asc" },
-                        take: 1,
+                        where: { kind: { in: ["vid2bmap", "contribution"] } },
+                        select: { number: true, kind: true, message: true },
+                        orderBy: { number: "desc" },
                     },
                 },
             },
@@ -82,7 +96,27 @@ export default async function PublicChartPatternPage({
         chart.pattern.publishedContent
     );
     if (!document.success) notFound();
-    const showLocalizedTitle = await getMusicTitleDisplayPreference(session.id);
+    const pattern = chart.pattern;
+    const publishedRevision = chart.pattern.publishedRevision;
+    const author = pattern.author?.username
+        ? { id: pattern.author.id, username: pattern.author.username }
+        : null;
+    const [showLocalizedTitle, labels, viewer, initialComments] =
+        await Promise.all([
+            getMusicTitleDisplayPreference(session.id),
+            author ? getNameLabels([author.id]) : null,
+            session.id
+                ? db.user.findUnique({
+                      where: { id: session.id },
+                      select: { role: true },
+                  })
+                : null,
+            listChartComments({ chartId: chart.id }),
+        ]);
+    const musicPath = `/music/${encodeURIComponent(chart.music.index)}/${chart.difficulty.toLowerCase()}`;
+    const draftHref = localizePath(`${musicPath}/pattern/draft`, locale);
+    const patternHref = localizePath(`${musicPath}/pattern`, locale);
+    const t = Array.isArray(query.t) ? query.t[0] : query.t;
 
     return (
         <ChartSheetViewer
@@ -97,17 +131,52 @@ export default async function PublicChartPatternPage({
             level={chart.level}
             revision={chart.pattern.publishedRevision}
             source={{
-                author: chart.pattern.publishedBy?.username
+                author: author
                     ? {
-                          name: chart.pattern.publishedBy.username,
-                          operator: chart.pattern.publishedBy.role === "admin",
+                          id: author.id,
+                          name: author.username,
+                          label: labels?.get(author.id) ?? null,
                       }
-                    : null,
-                publishedAt: chart.pattern.publishedAt?.toISOString() ?? null,
-                extracted:
-                    (chart.pattern.revisions[0]?.number ??
-                        Number.POSITIVE_INFINITY) <=
-                    chart.pattern.publishedRevision,
+                    : pattern.publishedBy?.username
+                      ? {
+                            id: null,
+                            name: pattern.publishedBy.username,
+                            label:
+                                pattern.publishedBy.role === "admin"
+                                    ? { kind: "operator" }
+                                    : null,
+                        }
+                      : null,
+                // 유저 기여 채보만 — 출처 창에 「공개 · 운영자 이름」 을 따로 적는다
+                publisher:
+                    author && pattern.publishedBy?.username
+                        ? { name: pattern.publishedBy.username }
+                        : null,
+                publishedAt: pattern.publishedAt?.toISOString() ?? null,
+                extracted: isExtractedChart(
+                    publishedRevision,
+                    pattern.revisions.map((revision) => ({
+                        number: revision.number,
+                        kind: revision.kind,
+                        baseRevision:
+                            revision.kind === "contribution"
+                                ? contributionBaseRevision(revision.message)
+                                : null,
+                    }))
+                ),
+            }}
+            contribution={{
+                chartId: chart.id,
+                signedIn: Boolean(session.id),
+                canModerate: viewer?.role === "admin",
+                draftHref,
+                loginHref: localizePath(
+                    `/login?returnTo=${encodeURIComponent(draftHref)}`,
+                    locale
+                ),
+                returnTo: patternHref,
+                initialComments: initialComments ?? [],
+                initialTimeMs: parseTimeParam(t),
             }}
             document={document.data}
             jacketUrl={getJacketUrl(chart.music.index, chart.music.background)}

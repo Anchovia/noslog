@@ -21,6 +21,7 @@ import type { NameLabel } from "@/features/contributions/contributionLevel";
 import type { ActionResult } from "@/lib/actions/result";
 import { requireAdmin } from "@/lib/admin";
 import { CACHE_TAGS } from "@/lib/cacheTags";
+import { contributionRevisionMessage } from "@/lib/chart-pattern/chartSource";
 import { findChartNoteConflicts } from "@/lib/chart-pattern/editor";
 import {
     chartDocumentSchema,
@@ -603,6 +604,7 @@ export async function reviewChartDraft(
             content: true,
             chartId: true,
             userId: true,
+            baseRevision: true,
             user: { select: { username: true } },
             chart: { select: { music_idx: true, difficulty: true } },
         },
@@ -699,7 +701,12 @@ export async function reviewChartDraft(
                     patternId: pattern.id,
                     number: nextRevision,
                     kind: "contribution",
-                    message: `기여 초안 #${draft.id} · ${draft.user.username ?? "이름 없음"}`,
+                    // 기준 버전을 남겨 둔다 — 공개 채보 출처(영상 추출 여부)를 줄기로 따진다
+                    message: contributionRevisionMessage(
+                        draft.id,
+                        draft.user.username ?? "이름 없음",
+                        draft.baseRevision
+                    ),
                     content: inputJson(document.data),
                     createdById: admin.id,
                 },
