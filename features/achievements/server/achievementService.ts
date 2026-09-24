@@ -308,3 +308,60 @@ export async function setAchievementShowcase(
     ]);
     return { status: "ok", keys: unique };
 }
+
+export const ACHIEVEMENT_REJUDGE_BATCH = 50;
+
+export interface AchievementRejudgeBatch {
+    /** 이번에 판정한 사용자 수 */
+    judged: number;
+    /** 이번에 새로 더한 단계 수 */
+    awarded: number;
+    /** 새 단계를 얻은 사용자(프로필 캐시 비우기용) */
+    awardedUserIds: number[];
+    /** 다음 묶음 시작점 — 끝이면 null */
+    nextCursor: number | null;
+}
+
+/**
+ * 관리자 「업적 다시 판정」(2026-09-25 B1) — 판정할 거리가 있는 사용자(기록 · 검정 합격 · 빙고 · 커뮤니티 평가)를
+ * id 순으로 한 묶음씩. 새로 닿은 단계만 더하고 얻은 단계는 빼지 않는다(동기화 판정과 같은 함수).
+ * 연결 수를 넘지 않게 한 사람씩 차례로 돈다.
+ */
+export async function rejudgeAchievementsBatch(
+    afterUserId: number,
+    limit = ACHIEVEMENT_REJUDGE_BATCH,
+    evaluate: (
+        userId: number
+    ) => Promise<NewAchievement[]> = evaluateUserAchievements
+): Promise<AchievementRejudgeBatch> {
+    const users = await db.user.findMany({
+        where: {
+            id: { gt: afterUserId },
+            OR: [
+                { PlayData: { some: {} } },
+                { chartPlayHistory: { some: {} } },
+                { examAchievements: { some: {} } },
+                { bingoProgress: { some: { isCompleted: true } } },
+                { communityEvaluations: { some: {} } },
+            ],
+        },
+        orderBy: { id: "asc" },
+        take: limit,
+        select: { id: true },
+    });
+    let awarded = 0;
+    const awardedUserIds: number[] = [];
+    for (const { id } of users) {
+        const added = await evaluate(id);
+        if (added.length) {
+            awarded += added.length;
+            awardedUserIds.push(id);
+        }
+    }
+    return {
+        judged: users.length,
+        awarded,
+        awardedUserIds,
+        nextCursor: users.length === limit ? users[users.length - 1].id : null,
+    };
+}

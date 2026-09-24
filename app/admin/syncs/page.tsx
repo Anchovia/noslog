@@ -11,6 +11,7 @@ import Link from "next/link";
 import { getSyncHealthClassName } from "@/lib/admin/syncHealth";
 import { getAdminSyncs } from "@/features/admin/server/adminSyncService";
 import { ADMIN_SYNC_STATUSES as statuses } from "@/features/admin/schemas/adminSyncSchema";
+import AchievementRejudgePanel from "@/features/achievements/components/admin/achievementRejudgePanel";
 
 export default async function AdminSyncsPage({
     searchParams,
@@ -56,6 +57,8 @@ export default async function AdminSyncsPage({
                     데이터 수집 범위와 처리 결과, 오류를 확인합니다.
                 </p>
             </section>
+            {/* 업적 다시 판정(2026-09-25 B1) — 배포 뒤 첫 판정 · 기준 수치를 바꾼 뒤 */}
+            <AchievementRejudgePanel />
             <section className="grid grid-cols-2 gap-2">
                 {summaries.map((summary) => (
                     <div
