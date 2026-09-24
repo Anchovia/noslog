@@ -18,13 +18,20 @@ import ResultState from "@/components/ui/resultState";
 import StatStrip from "@/components/ui/statStrip";
 import { rankTone, scoreTone } from "@/lib/music/scoreTone";
 import { PATTERN_AXES } from "@/features/music/schemas/communitySchema";
+import { myPendingChartFieldsOptions } from "@/features/contributions/api/chartFieldProposals";
+import ChartFieldFactAction from "@/features/contributions/components/chartFieldFactAction";
+import {
+    chartFieldValue,
+    type ChartFieldProposalField,
+} from "@/features/contributions/schemas/chartFieldProposalSchema";
 import { communityPatternOptions } from "../api/community";
 import PatternCriteriaDialog from "./patternCriteriaDialog";
 import TierHistory from "./tierHistory";
 
 /**
- * 개요 탭 — ① 패턴 경향(가로 막대 5줄 · 제목 줄 오른쪽 「평가하기 ›」) ② 내 기록 요약 띠 ③ 채보 정보(값 있는 행만)
- * ④ 서열 변경 이력(접힘). 값이 없는 구역은 두지 않는다 (2026-09-16)
+ * 개요 탭 — ① 패턴 경향(가로 막대 5줄 · 제목 줄 오른쪽 「평가하기 ›」) ② 내 기록 요약 띠 ③ 채보 정보
+ * ④ 서열 변경 이력(접힘). 값이 없는 구역은 두지 않는다 (2026-09-16).
+ * 채보 정보의 BPM · 노트 수 · 길이 · 수록일은 비어 있어도 줄을 두고 「추가」 로 기여를 받는다(2026-09-23)
  */
 export default function OverviewPanel({
     data,
@@ -44,42 +51,54 @@ export default function OverviewPanel({
         ? Math.max(...PATTERN_AXES.map((axis) => summary[axis].count))
         : null;
     const record = data.userPlayData;
+    const pendingOptions = myPendingChartFieldsOptions(
+        chart.id,
+        data.accountId
+    );
+    const pending = useQuery(pendingOptions).data;
+    const loginHref = href(
+        `/login?returnTo=${encodeURIComponent(
+            href(`/music/${data.music.index}/${data.difficulty.toLowerCase()}`)
+        )}`
+    );
     const facts: ({
         label: string;
         value: ReactNode;
         numeric: boolean;
+        field?: ChartFieldProposalField;
     } | null)[] = [
-        chart.bpm_min !== null
-            ? {
-                  label: "BPM",
-                  numeric: true,
-                  value:
-                      chart.bpm_max !== null && chart.bpm_max !== chart.bpm_min
-                          ? `${chart.bpm_min}–${chart.bpm_max}`
-                          : String(chart.bpm_min),
-              }
-            : null,
-        chart.note_count !== null
-            ? {
-                  label: t("music.info.noteCount"),
-                  numeric: true,
-                  value: chart.note_count.toLocaleString(locale),
-              }
-            : null,
-        chart.duration_seconds !== null
-            ? {
-                  label: t("detail.duration"),
-                  numeric: true,
-                  value: `${Math.floor(chart.duration_seconds / 60)}:${String(chart.duration_seconds % 60).padStart(2, "0")}`,
-              }
-            : null,
-        chart.released_at
-            ? {
-                  label: t("music.info.releaseDate"),
-                  numeric: false,
-                  value: chart.released_at.slice(0, 10),
-              }
-            : null,
+        {
+            label: "BPM",
+            numeric: true,
+            field: "bpm",
+            value:
+                chart.bpm_min === null
+                    ? null
+                    : chart.bpm_max !== null && chart.bpm_max !== chart.bpm_min
+                      ? `${chart.bpm_min}–${chart.bpm_max}`
+                      : String(chart.bpm_min),
+        },
+        {
+            label: t("music.info.noteCount"),
+            numeric: true,
+            field: "note_count",
+            value: chart.note_count?.toLocaleString(locale) ?? null,
+        },
+        {
+            label: t("detail.duration"),
+            numeric: true,
+            field: "duration",
+            value:
+                chart.duration_seconds === null
+                    ? null
+                    : `${Math.floor(chart.duration_seconds / 60)}:${String(chart.duration_seconds % 60).padStart(2, "0")}`,
+        },
+        {
+            label: t("music.info.releaseDate"),
+            numeric: false,
+            field: "released_at",
+            value: chart.released_at?.slice(0, 10) ?? null,
+        },
         chart.unlockSteps.length
             ? {
                   label: t("music.info.unlock"),
@@ -257,7 +276,36 @@ export default function OverviewPanel({
                                             : undefined
                                     }
                                 >
-                                    {fact.value}
+                                    {fact.field ? (
+                                        <span className="nl-facts__value">
+                                            {fact.value ?? (
+                                                <span className="nl-facts__empty">
+                                                    —
+                                                </span>
+                                            )}
+                                            <ChartFieldFactAction
+                                                chartId={chart.id}
+                                                field={fact.field}
+                                                fieldLabel={fact.label}
+                                                currentValue={chartFieldValue(
+                                                    chart,
+                                                    fact.field
+                                                )}
+                                                pendingValue={
+                                                    pending?.[fact.field]
+                                                }
+                                                signedIn={Boolean(
+                                                    data.accountId
+                                                )}
+                                                loginHref={loginHref}
+                                                queryKey={
+                                                    pendingOptions.queryKey
+                                                }
+                                            />
+                                        </span>
+                                    ) : (
+                                        fact.value
+                                    )}
                                 </dd>
                             </div>
                         ))}

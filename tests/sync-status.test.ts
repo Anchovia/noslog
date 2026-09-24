@@ -9,6 +9,7 @@ const mocks = vi.hoisted(() => ({
     recordCounts: vi.fn(),
     recent: vi.fn(),
     session: vi.fn(),
+    achievements: vi.fn(),
 }));
 vi.mock("server-only", () => ({}));
 vi.mock("@/lib/db", () => ({
@@ -20,6 +21,7 @@ vi.mock("@/lib/db", () => ({
             findMany: mocks.records,
             groupBy: mocks.recordCounts,
         },
+        userAchievement: { findMany: mocks.achievements },
     },
 }));
 vi.mock("@/lib/session", () => ({ default: mocks.session }));
@@ -46,6 +48,7 @@ const attempt = {
 };
 beforeEach(() => {
     vi.clearAllMocks();
+    mocks.achievements.mockResolvedValue([]);
     mocks.attempts.mockResolvedValue([attempt]);
     mocks.previous.mockResolvedValue({ id: 39 });
     mocks.count.mockResolvedValue(12);
@@ -143,6 +146,36 @@ describe("P8 safe own-account sync status", () => {
             timing: 1,
         });
         expect(mocks.records).not.toHaveBeenCalled();
+    });
+    it("가장 최근 완료 시도에 그 시도 동안 얻은 업적 단계를 싣는다(E1)", async () => {
+        mocks.achievements.mockResolvedValue([
+            { key: "pianist", tier: 2 },
+            { key: "s-rank", tier: 1 },
+        ]);
+        const result = await getSyncStatus(7, now);
+        expect(mocks.achievements).toHaveBeenCalledWith(
+            expect.objectContaining({
+                where: {
+                    user_id: 7,
+                    achieved_at: {
+                        gte: attempt.started_at,
+                        lte: attempt.completed_at,
+                    },
+                },
+            })
+        );
+        expect(result.attempts[0].newAchievements).toEqual([
+            { key: "pianist", tier: 2 },
+            { key: "s-rank", tier: 1 },
+        ]);
+    });
+    it("완료되지 않은 시도에는 업적을 찾지 않는다", async () => {
+        mocks.attempts.mockResolvedValue([
+            { ...attempt, status: "processing", completed_at: null },
+        ]);
+        const result = await getSyncStatus(7, now);
+        expect(mocks.achievements).not.toHaveBeenCalled();
+        expect(result.attempts[0].newAchievements).toEqual([]);
     });
     it("returns only a safe count from the known exclusion diagnostic", async () => {
         mocks.attempts.mockResolvedValue([

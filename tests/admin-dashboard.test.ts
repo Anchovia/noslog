@@ -10,6 +10,8 @@ const mocks = vi.hoisted(() => ({
     feedbackCount: vi.fn(),
     catalogCount: vi.fn(),
     opinionCount: vi.fn(),
+    proposalCount: vi.fn(),
+    draftCount: vi.fn(),
     communityEvaluationCount: vi.fn(),
     goalVoteCount: vi.fn(),
     communityEventCount: vi.fn(),
@@ -28,6 +30,8 @@ vi.mock("@/lib/db", () => ({
         feedbackReport: { count: mocks.feedbackCount },
         musicCatalogCandidate: { count: mocks.catalogCount },
         communityOpinionReport: { count: mocks.opinionCount },
+        chartFieldProposal: { count: mocks.proposalCount },
+        chartDraft: { count: mocks.draftCount },
     },
 }));
 
@@ -85,6 +89,8 @@ describe("관리자 대시보드", () => {
             .mockResolvedValueOnce(3);
         mocks.catalogCount.mockResolvedValue(0);
         mocks.opinionCount.mockResolvedValue(0);
+        mocks.proposalCount.mockResolvedValue(3);
+        mocks.draftCount.mockResolvedValue(1);
         // 패턴 평가 → 의견 순서로 불린다
         mocks.communityEvaluationCount
             .mockResolvedValueOnce(6)
@@ -178,6 +184,8 @@ describe("관리자 대시보드", () => {
         ).toEqual([
             ["오락실 제보", 1, "/admin/feedback?status=open"],
             ["동기화 지연", 2, "/admin/syncs?status=processing"],
+            ["기여 제안", 3, "/admin/contributions"],
+            ["채보 검토", 1, "/admin/contributions?kind=chart"],
         ]);
 
         expect(mocks.userFindMany.mock.calls[0][0].where).toMatchObject({

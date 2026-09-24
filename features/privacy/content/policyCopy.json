@@ -1,7 +1,7 @@
 {
     "ko": {
         "title": "개인정보처리방침",
-        "dates": "최종 수정 2026년 9월 22일 · 시행 2026년 9월 22일",
+        "dates": "최종 수정 2026년 9월 25일 · 시행 2026년 9월 25일",
         "contents": "이 페이지에서",
         "detailLabel": "자세히 보기",
         "settingsLogin": "로그인 후 설정에서 관리",
@@ -9,12 +9,12 @@
         "summary": [
             {
                 "title": "NosLog가 사용하는 것",
-                "text": "Discord 기본 식별 정보, 프로필 설정, 직접 동기화한 NOSTALGIA 기록, 제출물과 커뮤니티 활동, 필수 서비스 로그",
+                "text": "Discord 기본 식별 정보, 프로필 설정, 직접 동기화한 NOSTALGIA 기록, 제출물과 커뮤니티 활동, 기여 제안·채보 초안·채보 의견, 필수 서비스 로그",
                 "target": "data"
             },
             {
                 "title": "공개되는 것",
-                "text": "공개 프로필·기록·랭킹·평가와 5가지 공개 설정 그룹(플레이어명·Discord·선호 오락실·플레이 횟수·플레이 활동)",
+                "text": "공개 프로필·기록·랭킹·평가·업적·채보 의견·기여 등급과 5가지 공개 설정 그룹(플레이어명·Discord·선호 오락실·플레이 횟수·플레이 활동)",
                 "target": "public"
             },
             {
@@ -81,6 +81,21 @@
                     },
                     {
                         "kind": "item",
+                        "title": "기여 제안",
+                        "text": "악곡 채보 정보(BPM · 노트 수 · 길이 · 수록일)에 대해 제안한 값과 근거(영상 · 페이지 주소, 설명), 처리 결과와 반려 사유를 운영자 검토와 악곡 정보 개선에 사용합니다. 운영자가 반영한 값은 악곡 정보로 공개되고, 그 값의 출처로 제안과 근거가 기록됩니다. 반영된 제안, 처리 완료된 오락실 제보, 기체 확인(하루 1회)은 기여 점수로 기록되어 기여 등급을 정합니다."
+                    },
+                    {
+                        "kind": "item",
+                        "title": "채보 초안과 채보 의견",
+                        "text": "직접 만든 채보 초안(노트 배치 · 타이밍)과 그 진행 상태(작성 중 · 검토 대기 · 수정 요청 · 공개), 재생 시각을 붙인 채보 의견을 운영자 검토와 공개 채보 개선에 사용합니다. 검토를 요청한 초안은 운영자가 공개 채보로 게시할 수 있고, 게시된 뒤에는 다른 기여나 운영자의 수정으로 바뀔 수 있습니다. 운영자가 공개한 초안은 작성자로 기록되고 공개할 때마다 기여 점수가 쌓이며, 공개 채보에 남긴 의견이 해결되면 그것도 기여 점수로 기록됩니다."
+                    },
+                    {
+                        "kind": "item",
+                        "title": "업적",
+                        "text": "동기화한 기록과 사이트 활동(의견 · 좋아요 · 패턴 평가 · 검정 · 빙고)으로 업적 달성 여부와 NosLog 가 확인한 날짜를 계산해 저장하고, 본인이 고른 업적(최대 3개)을 프로필 머리에 표시하는 데 사용합니다. 업적 페이지에는 단계마다 달성한 인원 수만 보이고 달성한 사람 목록은 없습니다."
+                    },
+                    {
+                        "kind": "item",
                         "title": "자동 생성 정보",
                         "text": "접속 IP, 브라우저·기기 정보, 접속 시각, 요청 및 오류 로그가 서비스 보안, 장애 대응과 운영 과정에서 생성될 수 있습니다."
                     },
@@ -116,6 +131,18 @@
                     {
                         "kind": "paragraph",
                         "text": "공개 아바타는 공개 저장소에 저장되며 프로필·랭킹·공유 카드에 표시될 수 있습니다."
+                    },
+                    {
+                        "kind": "paragraph",
+                        "text": "기여 등급·점수·종류별 반영 수는 프로필에 공개되고, 기여 등급 3 이상과 운영자 표시는 랭킹·의견·답글의 이름 옆에 보입니다. 기여 제안은 운영자가 반영한 값만 악곡 정보로 공개됩니다. 제안자 이름, 근거, 반려된 제안은 공개하지 않으며 제안 목록은 본인에게만 보입니다."
+                    },
+                    {
+                        "kind": "paragraph",
+                        "text": "공개된 기여 채보에는 작성자 이름과 기여 등급이 채보 뷰어에 표시되고, 공개 채보에 남긴 채보 의견은 이름 · 기여 등급 · 재생 시각 · 날짜와 함께 공개됩니다. 채보 초안과 초안에 남긴 의견은 작성자와 운영자만 봅니다."
+                    },
+                    {
+                        "kind": "paragraph",
+                        "text": "업적은 공개 프로필과 업적 페이지에 보입니다. 플레이 점수를 비공개로 하면 다른 사람에게는 실력 · 수집 업적이 보이지 않고(기록 범위가 드러나므로), 도전 · 커뮤니티 업적은 그대로 보입니다. 업적 진행 값은 본인에게만 보입니다."
                     }
                 ]
             },
@@ -151,6 +178,11 @@
                             "승인된 검정 제출: 심사 완료 6개월 후 증빙 이미지와 심사 메모 삭제, 합격 이력은 회원 탈퇴 시까지 보관",
                             "반려된 검정 제출: 심사 완료 6개월 후 제출 기록과 증빙 이미지 전체 삭제",
                             "의견·답글: 작성자가 지우거나 회원 탈퇴할 때까지. 번역문은 원문과 함께 보관하고, 원문을 고치거나 지우면 함께 삭제",
+                            "기여 제안: 회원 탈퇴 시까지. 탈퇴하면 제안 기록은 삭제되고, 이미 반영된 값과 그 근거(주소 · 설명)는 제안자와 연결되지 않은 출처 기록으로 남습니다.",
+                            "기여 점수 기록: 회원 탈퇴 시까지. 원본(제안·제보 등)이 보관 기간으로 삭제되어도 점수 기록은 남습니다.",
+                            "채보 초안과 초안 의견: 회원 탈퇴 시까지(초안은 채보마다 하나이며, 공개된 뒤 다시 열면 그때의 공개 채보로 새로 시작합니다). 탈퇴하면 삭제되고, 이미 공개된 채보는 작성자 표시 없이 남습니다.",
+                            "채보 의견: 작성자가 지우거나(해결 전까지) 회원 탈퇴할 때까지. 운영자가 가린 의견은 공개되지 않으며 탈퇴 시 함께 삭제됩니다.",
+                            "업적과 프로필 업적 진열: 회원 탈퇴 시까지. 한 번 달성한 단계는 이후 기록이 바뀌어도 지우지 않습니다.",
                             "방문 통계: 하루 식별값은 다음 날 삭제, 합계(하루 방문자 수·페이지 조회 수·시간대별 조회 수·로그인 여부별 합계·API 호출 수)는 90일 후 삭제"
                         ]
                     },
@@ -286,7 +318,7 @@
     },
     "ja": {
         "title": "プライバシーポリシー",
-        "dates": "最終更新 2026年9月22日 · 施行 2026年9月22日",
+        "dates": "最終更新 2026年9月25日 · 施行 2026年9月25日",
         "contents": "このページの内容",
         "detailLabel": "詳しく見る",
         "settingsLogin": "ログインして設定で管理",
@@ -294,12 +326,12 @@
         "summary": [
             {
                 "title": "NosLogが使用するもの",
-                "text": "Discordの基本識別情報、プロフィール設定、ユーザーが同期したNOSTALGIA記録、提出物とコミュニティ活動、必須のサービスログ",
+                "text": "Discordの基本識別情報、プロフィール設定、ユーザーが同期したNOSTALGIA記録、提出物とコミュニティ活動、情報の提案・譜面の下書き・譜面への意見、必須のサービスログ",
                 "target": "data"
             },
             {
                 "title": "公開されるもの",
-                "text": "公開プロフィール・記録・ランキング・評価と、5つの公開設定グループ（プレーヤー名・Discord・よく行くゲームセンター・プレー回数・プレー活動）",
+                "text": "公開プロフィール・記録・ランキング・評価・実績・譜面への意見・貢献ランクと、5つの公開設定グループ（プレーヤー名・Discord・よく行くゲームセンター・プレー回数・プレー活動）",
                 "target": "public"
             },
             {
@@ -366,6 +398,21 @@
                     },
                     {
                         "kind": "item",
+                        "title": "情報の提案",
+                        "text": "楽曲の譜面情報(BPM・ノーツ数・長さ・収録日)について提案した値と根拠(動画・ページのURL、説明)、処理結果と却下理由を、運営者による確認と楽曲情報の改善に使用します。運営者が反映した値は楽曲情報として公開され、その値の出典として提案と根拠が記録されます。反映された提案、処理済みのゲームセンター報告、筐体の確認(1日1回)は貢献ポイントとして記録され、貢献ランクを決めます。"
+                    },
+                    {
+                        "kind": "item",
+                        "title": "譜面の下書きと譜面への意見",
+                        "text": "ユーザーが作成した譜面の下書き(ノーツ配置・タイミング)とその進行状況(作成中・確認待ち・修正依頼・公開)、再生時刻を付けた譜面への意見を、運営者による確認と公開譜面の改善に使用します。レビューを依頼した下書きは運営者が公開譜面として掲載でき、掲載後はほかの貢献や運営者の修正により変わることがあります。運営者が公開した下書きは作成者として記録され、公開のたびに貢献ポイントが加算されます。公開譜面に残した意見が解決された場合も貢献ポイントとして記録されます。"
+                    },
+                    {
+                        "kind": "item",
+                        "title": "実績",
+                        "text": "同期した記録とサイトでの活動(意見・いいね・譜面傾向の評価・検定・ビンゴ)から実績の達成状況とNosLogが確認した日付を計算して保存し、本人が選んだ実績(最大3つ)をプロフィールの上部に表示するために使用します。実績ページには段階ごとの達成人数のみを表示し、達成したユーザーの一覧は表示しません。"
+                    },
+                    {
+                        "kind": "item",
                         "title": "自動的に生成される情報",
                         "text": "接続IP、ブラウザー・端末情報、接続時刻、リクエストおよびエラーログが、サービスのセキュリティ、障害対応、運営の過程で生成される場合があります。"
                     },
@@ -401,6 +448,18 @@
                     {
                         "kind": "paragraph",
                         "text": "公開アバターは公開ストレージに保存され、プロフィール・ランキング・共有カードに表示されることがあります。"
+                    },
+                    {
+                        "kind": "paragraph",
+                        "text": "貢献ランク・ポイント・種類別の反映数はプロフィールに公開され、貢献ランク3以上と運営者の表示はランキング・意見・返信の名前の横に表示されます。情報の提案は、運営者が反映した値のみ楽曲情報として公開されます。提案者名、根拠、却下された提案は公開せず、提案の一覧は本人にのみ表示されます。"
+                    },
+                    {
+                        "kind": "paragraph",
+                        "text": "公開された貢献譜面には、作成者名と貢献ランクが譜面ビューアーに表示され、公開譜面に残した譜面への意見は名前・貢献ランク・再生時刻・日付とともに公開されます。譜面の下書きと下書きに残した意見は、作成者と運営者のみが閲覧します。"
+                    },
+                    {
+                        "kind": "paragraph",
+                        "text": "実績は公開プロフィールと実績ページに表示されます。プレースコアを非公開にすると、他のユーザーには実力・コレクションの実績が表示されず(記録の範囲が分かるため)、チャレンジ・コミュニティの実績はそのまま表示されます。実績の進捗は本人にのみ表示されます。"
                     }
                 ]
             },
@@ -436,6 +495,11 @@
                             "承認された検定提出：審査完了から6か月後に証明画像と審査メモを削除し、合格履歴は退会まで保管",
                             "却下された検定提出：審査完了から6か月後に提出記録と証明画像をすべて削除",
                             "意見・返信：投稿者が削除するか退会するまで。翻訳文は原文とともに保管し、原文を編集・削除すると一緒に削除",
+                            "情報の提案：退会まで。退会すると提案の記録は削除され、すでに反映された値とその根拠(URL・説明)は提案者と結び付かない出典記録として残ります。",
+                            "貢献ポイントの記録：退会まで。元の記録(提案・報告など)が保管期間により削除されても、ポイントの記録は残ります。",
+                            "譜面の下書きと下書きへの意見：退会まで(下書きは譜面ごとに1つで、公開後にもう一度開くとその時点の公開譜面から新しく始まります)。退会すると削除され、すでに公開された譜面は作成者の表示なしで残ります。",
+                            "譜面への意見：投稿者が削除する(解決前まで)か退会するまで。運営者が非表示にした意見は公開されず、退会時に一緒に削除されます。",
+                            "実績とプロフィールの実績表示：退会まで。一度達成した段階は、その後記録が変わっても削除しません。",
                             "訪問統計：1日の識別値は翌日に削除し、合計（1日の訪問者数・ページ閲覧数・時間帯ごとの閲覧数・ログイン状態別の合計・API呼び出し回数）は90日後に削除"
                         ]
                     },
@@ -571,7 +635,7 @@
     },
     "en": {
         "title": "Privacy Policy",
-        "dates": "Last updated September 22, 2026 · Effective September 22, 2026",
+        "dates": "Last updated September 25, 2026 · Effective September 25, 2026",
         "contents": "On this page",
         "detailLabel": "See details",
         "settingsLogin": "Manage in Settings after logging in",
@@ -579,12 +643,12 @@
         "summary": [
             {
                 "title": "What NosLog uses",
-                "text": "Discord basic identity, your profile settings, NOSTALGIA records you deliberately sync, submissions and community activity, and essential service logs",
+                "text": "Discord basic identity, your profile settings, NOSTALGIA records you deliberately sync, submissions and community activity, information suggestions, chart drafts and chart comments, and essential service logs",
                 "target": "data"
             },
             {
                 "title": "What becomes public",
-                "text": "Your public profile, records, rankings, and evaluations, plus five visibility groups you control (player name, Discord, preferred arcade, play count, play activity)",
+                "text": "Your public profile, records, rankings, evaluations, achievements, chart comments and contribution level, plus five visibility groups you control (player name, Discord, preferred arcade, play count, play activity)",
                 "target": "public"
             },
             {
@@ -651,6 +715,21 @@
                     },
                     {
                         "kind": "item",
+                        "title": "Information suggestions",
+                        "text": "We use the values you suggest for chart information (BPM, note count, length, release date), your sources (video or page links and notes), and the review result and any rejection reason to review suggestions and improve music information. Values an admin applies become public music information, and the suggestion and its source are recorded as that value's origin. Applied suggestions, resolved arcade reports and cabinet checks (once a day) are recorded as contribution points that set your contribution level."
+                    },
+                    {
+                        "kind": "item",
+                        "title": "Chart drafts and chart comments",
+                        "text": "We use the chart drafts you make (note layout and timing), their progress (draft, pending review, changes requested, published), and chart comments tied to a playback time to review charts and improve published charts. A draft you submit for review may be published by an admin as the public chart, and after that it may change through other contributions or admin edits. A published draft records you as its author and adds contribution points each time it is published; a comment on a public chart that gets resolved is also recorded as contribution points."
+                    },
+                    {
+                        "kind": "item",
+                        "title": "Achievements",
+                        "text": "We calculate which achievements you have reached, and the date NosLog confirmed each one, from the records you sync and your activity on the site (opinions, likes, pattern ratings, exams and bingo). We store them and show the achievements you choose (up to three) at the top of your profile. The achievement page shows only how many players reached each tier, never a list of who did."
+                    },
+                    {
+                        "kind": "item",
                         "title": "Automatically generated information",
                         "text": "Connection IP addresses, browser and device information, access times, requests, and error logs may be generated for service security, incident response, and operations."
                     },
@@ -686,6 +765,18 @@
                     {
                         "kind": "paragraph",
                         "text": "Public avatars are stored in public storage and may appear on profiles, rankings, and generated share cards."
+                    },
+                    {
+                        "kind": "paragraph",
+                        "text": "Your contribution level, points and counts by type are shown on your profile, and contribution levels 3 and above and the admin label appear next to your name in rankings, opinions and replies. For suggestions, only values an admin applies are published as music information. Your name, your sources and rejected suggestions are not made public, and your suggestion list is visible only to you."
+                    },
+                    {
+                        "kind": "paragraph",
+                        "text": "Published contributed charts show the author's name and contribution level in the chart viewer, and chart comments on public charts are public with the name, contribution level, playback time and date. Chart drafts and comments on drafts are visible only to their author and admins."
+                    },
+                    {
+                        "kind": "paragraph",
+                        "text": "Achievements appear on your public profile and on the achievement page. If your play scores are private, other people do not see your skill or collection achievements (they reveal the range of your records); challenge and community achievements stay visible. Achievement progress is shown only to you."
                     }
                 ]
             },
@@ -721,6 +812,11 @@
                             "Approved exam submissions: evidence images and review notes are deleted six months after review; passing history is retained until account deletion",
                             "Rejected exam submissions: submission records and evidence images are deleted six months after review",
                             "Opinions and replies: until the author deletes them or deletes their account. Translations are kept with the original and deleted when the original is edited or deleted",
+                            "Suggestions: until you delete your account. The suggestion records are then deleted; values already applied and their sources (links and notes) remain as source records no longer linked to you.",
+                            "Contribution points: until you delete your account. Point records remain even after the originals (suggestions, reports) are deleted under their retention periods.",
+                            "Chart drafts and draft comments: until account deletion (one draft per chart; reopening it after it is published starts again from the public chart at that time). They are deleted when you delete your account, and charts already published remain without the author credit.",
+                            "Chart comments: until the author deletes them (before they are resolved) or deletes their account. Comments hidden by an admin are not public and are deleted with the account.",
+                            "Achievements and your profile achievement showcase: until account deletion. A tier you have reached is never removed, even if your records change later.",
                             "Visit statistics: daily identifiers are deleted the next day; totals (daily visitors, page views, views per hour, totals split by signed-in status, API calls) are deleted after 90 days"
                         ]
                     },

@@ -17,6 +17,8 @@ import {
     getBeatMarkers,
 } from "@/lib/chart-pattern/timing";
 
+import { useTranslations } from "@/components/i18n/localeProvider";
+
 import { useChartEditorStore } from "./chartEditorStore";
 
 function cssColor(name: string, fallback: string) {
@@ -83,6 +85,7 @@ export default function TimingRuler({
     pianoVisible: boolean;
     onSeek: (timeMs: number) => void;
 }) {
+    const t = useTranslations();
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const currentTimeMs = useChartEditorStore((state) => state.currentTimeMs);
     const chartDocument = useChartEditorStore((state) => state.document);
@@ -232,7 +235,7 @@ export default function TimingRuler({
         <canvas
             ref={canvasRef}
             role="application"
-            aria-label="타이밍 정렬 영역"
+            aria-label={t("editor.rulerLabel")}
             tabIndex={0}
             className="h-full min-h-80 w-full touch-none"
             onPointerDown={(event) => {

@@ -13,6 +13,9 @@ import CountryMarker from "@/components/ui/countryMarker";
 import DiscordIcon from "@/components/ui/DiscordIcon";
 import ExamBadge from "@/components/ui/examBadge";
 import ExamBadgeGroup from "@/components/ui/examBadgeGroup";
+import type { AchievementSummary } from "@/features/achievements/achievementDefinitions";
+import AchievementShowcase from "@/features/achievements/components/achievementShowcase";
+import { contributionLevel } from "@/features/contributions/contributionLevel";
 import ProfileShareDialog from "@/features/profile/components/profileShareDialog";
 import { formatProfileDate } from "@/components/profile/dashboard/profileUtils";
 import type {
@@ -36,12 +39,15 @@ export default function ProfileIdentity({
     mode,
     syncLabel,
     showSyncAction = false,
+    achievements,
 }: {
     user: ProfileUser;
     isOwner: boolean;
     mode: ProfileMode;
     syncLabel?: string;
     showSyncAction?: boolean;
+    /** 업적 요약 — 머리 진열(2026-09-24 P5 · B1) */
+    achievements?: AchievementSummary | null;
 }) {
     const locale = useLocale();
     const href = useLocalizedHref();
@@ -64,16 +70,6 @@ export default function ProfileIdentity({
           })
         : null;
     const metadata = [lastPlayed, isOwner ? syncLabel : null]
-        .filter(Boolean)
-        .join(" · ");
-    const privateLabels = [
-        user.hide_nostalgia_name ? "NOSTALGIA ID" : null,
-        user.hide_discord_name ? "Discord" : null,
-        user.hide_preferred_arcade ? t("settings.preferredArcade") : null,
-        user.hide_play_count ? t("profile.playCountLabel") : null,
-        user.hide_play_activity ? t("profile.recentPlays") : null,
-        user.hide_play_scores ? t("profile.playScores") : null,
-    ]
         .filter(Boolean)
         .join(" · ");
     return (
@@ -119,6 +115,33 @@ export default function ProfileIdentity({
                                 {t("rankings.examNone")}
                             </span>
                         )}
+                        {/* 기여 라벨(2026-09-24 P1) — 프로필에서는 Lv.1 부터, 누르면 아래 「기여」 구역으로 */}
+                        {user.role === "admin" ? (
+                            <a href="#profile-contribution" className="nl-tag">
+                                {t("contribution.label.operator")}
+                            </a>
+                        ) : contributionLevel(user.contribution?.points ?? 0)
+                              .level ? (
+                            <a href="#profile-contribution" className="nl-tag">
+                                <span className="nl-contribution-label__prefix">
+                                    {t("contribution.label.prefix")}
+                                </span>
+                                Lv.
+                                {
+                                    contributionLevel(
+                                        user.contribution?.points ?? 0
+                                    ).level
+                                }
+                            </a>
+                        ) : null}
+                        {/* 업적 진열(2026-09-24 B1) — 명판 · 라벨 뒤에 이어서. 명판 줄이기 폭 계산에는 넣지 않는다(넘치면 다음 줄) */}
+                        {achievements ? (
+                            <AchievementShowcase
+                                userId={user.id}
+                                summary={achievements}
+                                isOwner={isOwner}
+                            />
+                        ) : null}
                     </ExamBadgeGroup>
                 </div>
                 {isOwner ? (
@@ -143,14 +166,7 @@ export default function ProfileIdentity({
                     </p>
                 ) : null}
             </div>
-            {isOwner && privateLabels ? (
-                <p className="nl-body-secondary nl-muted">
-                    {t("profile.private")} · {privateLabels}{" "}
-                    <Link className="nl-control" href={href("/settings")}>
-                        {t("profile.settings")}
-                    </Link>
-                </p>
-            ) : null}
+            {/* 본인에게 보이던 「비공개 · … 프로필 설정」 줄은 두지 않는다(2026-09-25, 사용자) */}
             {(!user.hide_nostalgia_name && user.nostalgia_name) ||
             discord ||
             user.preferredArcade ? (

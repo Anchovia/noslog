@@ -77,7 +77,11 @@
 }
 @media (hover: hover) {
     .noslog-ui .nl-home-tile:hover {
-        background: var(--nl-interaction-hover);
+        --nl-state-layer: var(--nl-interaction-hover);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
     }
 }
 .noslog-ui .nl-home-updates {

@@ -156,7 +156,11 @@
 @media (hover: hover) {
     .noslog-ui .nl-login:hover,
     .noslog-ui .nl-nav-trigger:hover {
-        background: var(--nl-interaction-hover);
+        --nl-state-layer: var(--nl-interaction-hover);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
     }
 }
 .noslog-ui .nl-nav-scrim {
@@ -196,11 +200,19 @@
 }
 @media (hover: hover) {
     .noslog-ui .nl-destination:hover {
-        background: var(--nl-interaction-hover);
+        --nl-state-layer: var(--nl-interaction-hover);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
     }
 }
 .noslog-ui .nl-destination[aria-current="page"] {
-    background: var(--nl-interaction-menu-set);
+    --nl-state-layer: var(--nl-interaction-menu-set);
+    background-image: linear-gradient(
+        var(--nl-state-layer),
+        var(--nl-state-layer)
+    );
     font-weight: var(--nl-type-weight-semibold);
 }
 .noslog-ui .nl-destinations__divider {

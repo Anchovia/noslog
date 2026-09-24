@@ -718,7 +718,6 @@ export default function ArcadeDiscoveryPage({
                             </p>
                             {popover ? null : (
                                 <SortMenu
-                                    variant="ghost"
                                     size="sm"
                                     className="nl-arcades__sort"
                                     label={t("discovery.sortLabel")}

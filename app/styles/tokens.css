@@ -51,19 +51,19 @@
     --nl-content-default: #dbdbdb;
     --nl-content-subdued: #afafaf;
     --nl-content-interactive: #f2f2f2;
-    --nl-content-subdued-interactive: #dbdbdb;
     --nl-content-disabled: #444444;
     --nl-border-divider: #323232;
-    --nl-border-subtle: #393939;
+    --nl-border-subtle: var(--nl-border-divider);
     --nl-border-default: #444444;
     --nl-border-strong: #8a8a8a;
     --nl-border-input: #717171;
-    --nl-interaction-hover: #2c2c2c;
-    --nl-interaction-selected-hover: #323232;
-    --nl-interaction-selected-pressed: #393939;
-    --nl-interaction-menu-set: #323232;
-    --nl-interaction-disabled-bg: #2c2c2c;
-    --nl-interaction-disabled-border: #393939;
+    /* 상호작용 = 지금 면 위에 겹치는 흰색 반투명(2026-09-23 I2) — 어느 면 위에서도 같은 세기(바탕 1.15 · 카드 1.18 · 떠 있는 면 1.19).
+       배경을 덮어쓰지 않고 background-image 로 겹친다(규칙은 각 CSS). 비활성 면은 덮어쓰기 그대로 */
+    --nl-interaction-hover: rgb(255 255 255 / 6%);
+    --nl-interaction-selected-pressed: rgb(255 255 255 / 10%);
+    --nl-interaction-menu-set: rgb(255 255 255 / 10%);
+    --nl-interaction-disabled-bg: rgb(255 255 255 / 6%);
+    --nl-interaction-disabled-border: rgb(255 255 255 / 10%);
     --nl-interaction-disabled-content: #444444;
     --nl-focus-ring: #ffffff;
     --nl-identity-mark: #dbdbdb;
@@ -106,7 +106,7 @@
     --nl-local-data-categorical-5: #8b47d7;
     --nl-local-data-personal: #3278be;
     --nl-local-data-benchmark: #f2a634;
-    --nl-border-empty-slot: #393939;
+    --nl-border-empty-slot: var(--nl-border-divider);
     --nl-primary-pressed: #ffffff;
     --nl-feedback-destructive-border-pressed: #fd9891;
     --nl-achievement-full-combo: #b4ce35;
@@ -135,7 +135,6 @@
     --nl-category-var: #6e9a7c;
     --nl-category-cljz: #b09365;
     --nl-border-overlay: #444444;
-    --nl-surface-plate: #2c2c2c;
     --nl-exam-tier-low: #8a8a8a;
     --nl-exam-tier-mid: #b98b67;
     --nl-exam-tier-high: #c4c8ce;
@@ -162,7 +161,6 @@ html[data-theme="light"] .noslog-ui,
     --nl-content-default: #292929;
     --nl-content-subdued: #505050;
     --nl-content-interactive: #131313;
-    --nl-content-subdued-interactive: #292929;
     --nl-content-disabled: #c6c6c6;
     --nl-border-divider: #e1e1e1;
     --nl-border-subtle: #dadada;
@@ -170,7 +168,6 @@ html[data-theme="light"] .noslog-ui,
     --nl-border-strong: #717171;
     --nl-border-input: #717171;
     --nl-interaction-hover: #e9e9e9;
-    --nl-interaction-selected-hover: #e1e1e1;
     --nl-interaction-selected-pressed: #dadada;
     --nl-interaction-menu-set: #e9e9e9;
     --nl-interaction-disabled-bg: #e9e9e9;
@@ -246,7 +243,6 @@ html[data-theme="light"] .noslog-ui,
     --nl-category-var: #237547;
     --nl-category-cljz: #7a5d17;
     --nl-border-overlay: #ffffff;
-    --nl-surface-plate: #e9e9e9;
     --nl-exam-tier-low: #717171;
     --nl-exam-tier-mid: #8c5b38;
     --nl-exam-tier-high: #6d737b;
@@ -394,4 +390,12 @@ html:has(.noslog-ui) [data-sonner-toaster] {
         --nl-motion-loop-pulse: 0ms;
         --nl-motion-distance: 0px;
     }
+}
+
+/* 상호작용 겹침 층(2026-09-23 I2) — 올림 · 선택 · 누름 규칙이 이 색을 지금 면 위에 background-image 로 겹친다.
+   색으로 등록해 두어야 ① 올림 · 누름 색 움직임(--nl-motion-duration-state)이 켜질 때 서서히 나타난다 */
+@property --nl-state-layer {
+    syntax: "<color>";
+    inherits: false;
+    initial-value: rgb(255 255 255 / 0%);
 }

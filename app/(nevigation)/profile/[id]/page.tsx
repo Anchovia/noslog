@@ -12,6 +12,7 @@ import getSession from "@/lib/session";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getCachedProfileData } from "./data";
+import { achievementRecordsForViewer } from "@/features/achievements/achievementDefinitions";
 
 export async function generateMetadata({
     params,
@@ -82,6 +83,13 @@ export default async function ProfilePage({
                     score_b: null,
                     score_c: null,
                     score_d: null,
+                    // 점수에서 나온 업적(실력 · 수집)도 남에게 넘기지 않는다
+                    achievements: profileData.user.achievements
+                        ? achievementRecordsForViewer(
+                              profileData.user.achievements,
+                              true
+                          )
+                        : undefined,
                 }}
                 isOwner={false}
                 scoresHidden

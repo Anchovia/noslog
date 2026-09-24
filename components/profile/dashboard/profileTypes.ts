@@ -1,3 +1,5 @@
+import type { AchievementRecords } from "@/features/achievements/achievementDefinitions";
+import type { ContributionTotals } from "@/features/contributions/contributionLevel";
 export type ProfileMode = "basic" | "recital";
 
 export interface ProfileUser {
@@ -35,6 +37,12 @@ export interface ProfileUser {
     created_at: string;
     last_played_at: string | null;
     preferredArcade: { name: string } | null;
+    /** 운영자면 「운영자」 라벨(2026-09-24) */
+    role?: string;
+    /** 기여 점수 · 종류별 반영 수(공개, 2026-09-24) */
+    contribution?: ContributionTotals;
+    /** 업적 원자료(2026-09-24) — 점수 비공개를 남이 보면 실력 · 수집을 뺀 것 */
+    achievements?: AchievementRecords;
 }
 
 export interface ProfileRankRow {

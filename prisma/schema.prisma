@@ -85,6 +85,16 @@ model User {
   communityEvents            CommunityEvent[]            @relation("CommunityEventAuthor")
   communityEventsReviewed    CommunityEvent[]            @relation("CommunityEventReviewer")
   pollVotes                  PollVote[]
+  fieldProposals             ChartFieldProposal[]        @relation("ChartFieldProposalAuthor")
+  fieldProposalsReviewed     ChartFieldProposal[]        @relation("ChartFieldProposalReviewer")
+  contributionPoints         ContributionPoint[]
+  chartDrafts                ChartDraft[]                @relation("ChartDraftAuthor")
+  chartDraftsReviewed        ChartDraft[]                @relation("ChartDraftReviewer")
+  chartComments              ChartComment[]              @relation("ChartCommentAuthor")
+  chartCommentsResolved      ChartComment[]              @relation("ChartCommentResolver")
+  chartPatternsAuthored      ChartPattern[]              @relation("ChartPatternAuthor")
+  achievements               UserAchievement[]
+  achievementShowcase        UserAchievementShowcase[]
 
   @@index([grade_basic, id])
   @@index([grade_recital, id])
@@ -515,21 +525,133 @@ model Music {
 // 악곡 · 채보 데이터 칸(노트 수 · 공식 레벨 · BPM · 길이 · 수록일 · 해금 조건)에 값을 넣을 때마다 출처를 한 줄씩 쌓음
 // source: play_records(사용자 기록 역산) · bemaniwiki · remywiki · manual. 위키 값은 기록으로 다시 구한 값이 생기면 바꿀 수 있다
 model ChartFieldSource {
-  id         Int         @id @default(autoincrement())
-  chartId    Int?        @map("chart_id")
-  chart      MusicChart? @relation(fields: [chartId], references: [id], onDelete: Cascade)
-  musicIndex String?     @map("music_index")
-  music      Music?      @relation(fields: [musicIndex], references: [index], onDelete: Cascade)
+  id         Int                 @id @default(autoincrement())
+  chartId    Int?                @map("chart_id")
+  chart      MusicChart?         @relation(fields: [chartId], references: [id], onDelete: Cascade)
+  musicIndex String?             @map("music_index")
+  music      Music?              @relation(fields: [musicIndex], references: [index], onDelete: Cascade)
   field      String
   value      String
   source     String
-  sourceUrl  String?     @map("source_url")
+  sourceUrl  String?             @map("source_url")
   note       String?
-  createdAt  DateTime    @default(now()) @map("created_at")
+  // 유저 기여로 반영된 값이면 그 제안(누가 · 근거) — 「출처 보기」 가 여기로 이어진다(2026-09-23)
+  proposalId Int?                @unique @map("proposal_id")
+  proposal   ChartFieldProposal? @relation(fields: [proposalId], references: [id], onDelete: SetNull)
+  createdAt  DateTime            @default(now()) @map("created_at")
 
   @@index([chartId, field])
   @@index([musicIndex, field])
   @@map("chart_field_sources")
+}
+
+// 유저가 제안한 채보 정보 값(BPM · 노트 수 · 길이 · 수록일) — 운영자가 반영하거나 사유와 함께 반려한다(2026-09-23)
+// 같은 사람 · 같은 채보 · 같은 칸의 대기 중 제안은 하나 — 다시 내면 값을 바꾼다
+model ChartFieldProposal {
+  id            Int               @id @default(autoincrement())
+  userId        Int               @map("user_id")
+  user          User              @relation("ChartFieldProposalAuthor", fields: [userId], references: [id], onDelete: Cascade)
+  chartId       Int               @map("chart_id")
+  chart         MusicChart        @relation(fields: [chartId], references: [id], onDelete: Cascade)
+  // bpm | note_count | duration | released_at
+  field         String
+  // 제안 값 — BPM 「60」 · 「60-120」, 노트 수 정수, 길이 초, 수록일 YYYY-MM-DD
+  value         String
+  // 제안할 때 화면에 있던 값(비어 있었으면 null) — 그 사이 값이 바뀌었는지 검토에서 본다
+  previousValue String?           @map("previous_value")
+  // video | official | direct
+  evidenceKind  String            @map("evidence_kind")
+  evidenceUrl   String?           @map("evidence_url")
+  evidenceNote  String?           @map("evidence_note")
+  // pending | applied | rejected | withdrawn
+  status        String            @default("pending")
+  rejectReason  String?           @map("reject_reason")
+  reviewedById  Int?              @map("reviewed_by_id")
+  reviewedBy    User?             @relation("ChartFieldProposalReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+  reviewedAt    DateTime?         @map("reviewed_at")
+  createdAt     DateTime          @default(now()) @map("created_at")
+  updatedAt     DateTime          @updatedAt @map("updated_at")
+  source        ChartFieldSource?
+
+  @@index([status, createdAt])
+  @@index([userId, createdAt])
+  @@index([chartId, field, status])
+  @@index([reviewedById])
+  @@map("chart_field_proposals")
+}
+
+// 유저별 채보 초안(2026-09-24 3단계) — 한 사람 · 한 채보에 하나. 작성자와 운영자만 본다.
+// status: draft(작성 중) · submitted(검토 요청) · changes_requested(수정 요청) · published(공개됨 — 다시 고치면 draft)
+model ChartDraft {
+  id           Int            @id @default(autoincrement())
+  userId       Int            @map("user_id")
+  user         User           @relation("ChartDraftAuthor", fields: [userId], references: [id], onDelete: Cascade)
+  chartId      Int            @map("chart_id")
+  chart        MusicChart     @relation(fields: [chartId], references: [id], onDelete: Cascade)
+  content      Json
+  // 자동 저장 충돌 방지 — 관리자 에디터의 draftVersion 과 같은 방식
+  version      Int            @default(0)
+  status       String         @default("draft")
+  // 공개본에서 시작했으면 그 공개 버전 — 검토 때 「공개본 대비」 비교
+  baseRevision Int?           @map("base_revision")
+  submittedAt  DateTime?      @map("submitted_at")
+  reviewedAt   DateTime?      @map("reviewed_at")
+  reviewedById Int?           @map("reviewed_by_id")
+  reviewedBy   User?          @relation("ChartDraftReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+  publishedAt  DateTime?      @map("published_at")
+  createdAt    DateTime       @default(now()) @map("created_at")
+  updatedAt    DateTime       @updatedAt @map("updated_at")
+  comments     ChartComment[]
+
+  @@unique([userId, chartId])
+  @@index([status, submittedAt])
+  @@index([chartId])
+  @@index([reviewedById])
+  @@map("chart_drafts")
+}
+
+// 채보 시각 댓글(2026-09-24 3단계) — 초안 검토(draftId 있음 · 작성자와 운영자만) 또는 공개 채보(draftId 없음 · 누구나 읽음).
+// 「해결」 은 운영자만, 공개 채보 댓글이 해결되면 쓴 사람에게 기여 1점
+model ChartComment {
+  id           Int         @id @default(autoincrement())
+  chartId      Int         @map("chart_id")
+  chart        MusicChart  @relation(fields: [chartId], references: [id], onDelete: Cascade)
+  draftId      Int?        @map("draft_id")
+  draft        ChartDraft? @relation(fields: [draftId], references: [id], onDelete: Cascade)
+  userId       Int         @map("user_id")
+  user         User        @relation("ChartCommentAuthor", fields: [userId], references: [id], onDelete: Cascade)
+  timeMs       Int         @map("time_ms")
+  body         String
+  resolved     Boolean     @default(false)
+  resolvedAt   DateTime?   @map("resolved_at")
+  resolvedById Int?        @map("resolved_by_id")
+  resolvedBy   User?       @relation("ChartCommentResolver", fields: [resolvedById], references: [id], onDelete: SetNull)
+  // 운영자가 가린 댓글(신고 · 장난 대응) — 목록에서 빠진다
+  hidden       Boolean     @default(false)
+  createdAt    DateTime    @default(now()) @map("created_at")
+  updatedAt    DateTime    @updatedAt @map("updated_at")
+
+  @@index([chartId, draftId, timeMs])
+  @@index([draftId])
+  @@index([userId, createdAt])
+  @@index([resolvedById])
+  @@map("chart_comments")
+}
+
+// 기여 점수 기록 — 반영 · 처리된 기여마다 한 줄(2026-09-24). 원본(제보 등)이 보관 기간으로 지워져도 점수는 남는다.
+// kind: chart_field(제안 번호) · arcade_report(제보 번호) · cabinet_check(서울 날짜, 하루 1점). 같은 기여는 한 번만
+model ContributionPoint {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  kind      String
+  sourceKey String   @map("source_key")
+  points    Int
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([userId, kind, sourceKey])
+  @@index([userId])
+  @@map("contribution_points")
 }
 
 // 해금 조건 원문(이벤트 · 곡 묶음 이름, 일본어)의 언어별 번역 사전 — 이름 하나를 한 번만 번역한다
@@ -614,6 +736,9 @@ model MusicChart {
   tierEntries          TierEntry[]
   tierPlacementHistory TierPlacementHistory[]
   pattern              ChartPattern?
+  fieldProposals       ChartFieldProposal[]
+  drafts               ChartDraft[]
+  comments             ChartComment[]
 
   @@unique([music_idx, difficulty])
   @@index([level])
@@ -637,6 +762,9 @@ model ChartPattern {
   updatedBy         User?                  @relation("ChartPatternUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
   publishedById     Int?                   @map("published_by_id")
   publishedBy       User?                  @relation("ChartPatternPublishedBy", fields: [publishedById], references: [id], onDelete: SetNull)
+  // 유저 초안을 공개한 채보의 실제 작성자(2026-09-24 3단계) — 비어 있으면 작성자 줄은 공개한 사람
+  authorId          Int?                   @map("author_id")
+  author            User?                  @relation("ChartPatternAuthor", fields: [authorId], references: [id], onDelete: SetNull)
   publishedAt       DateTime?              @map("published_at")
   createdAt         DateTime               @default(now()) @map("created_at")
   updatedAt         DateTime               @updatedAt @map("updated_at")
@@ -1267,4 +1395,31 @@ model OfficialXFeed {
   content       Json?
   lastAttemptAt DateTime? @map("last_attempt_at")
   lastSuccessAt DateTime? @map("last_success_at")
+}
+
+// 업적 단계 획득 기록(2026-09-24). 업적 정의(키 · 기준)는 코드(features/achievements)에 둔다.
+// 동기화 때 판정해 새 단계만 더한다. 기준을 넘었다가 내려가도 지우지 않는다. 날짜는 NosLog 가 확인한 때
+model UserAchievement {
+  id          Int      @id @default(autoincrement())
+  user_id     Int
+  user        User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  key         String
+  // 1 동 · 2 은 · 3 금
+  tier        Int
+  achieved_at DateTime @default(now())
+
+  @@unique([user_id, key, tier])
+  @@index([key, tier])
+}
+
+// 프로필 머리에 거는 업적(최대 3칸). 비어 있으면 높은 단계를 자동으로 보인다
+model UserAchievementShowcase {
+  user_id  Int
+  user     User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  // 1~3
+  position Int
+  key      String
+
+  @@id([user_id, position])
+  @@unique([user_id, key])
 }

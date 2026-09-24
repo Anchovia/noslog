@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { nameLabelSchema } from "@/features/contributions/schemas/contributionLabelSchema";
 
 export const GLOBAL_RANKING_PAGE_SIZE = 25;
 const globalRankingQuerySchema = z.object({
@@ -44,6 +45,8 @@ const globalRankingRowSchema = z.object({
     value: z.number().int().nonnegative(),
     rating: z.number().int().nonnegative().optional(),
     filledSlots: z.number().int().nonnegative().optional(),
+    // 이름 옆 기여 라벨(운영자 · 기여 Lv.3 이상, 2026-09-24) — 페이지에 보이는 줄만 채운다
+    label: nameLabelSchema.nullable().optional(),
 });
 export type GlobalRankingRow = z.infer<typeof globalRankingRowSchema>;
 

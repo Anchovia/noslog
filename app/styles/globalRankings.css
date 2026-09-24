@@ -107,6 +107,23 @@
 .noslog-ui .nl-player-row__identity > .nl-exam-badge {
     flex-shrink: 0;
 }
+/* 명판 뒤 기여 라벨(2026-09-24) — 줄지 않고, 명판처럼 이름 글줄(20) 높이로.
+   이름 · 명판(B·R)까지 넣고 남는 자리가 없으면 라벨을 숨긴다 — 폭은 계속 재도록 보이지 않게 겹쳐 둔다 */
+.noslog-ui .nl-player-row__identity > .nl-term {
+    flex-shrink: 0;
+}
+.noslog-ui .nl-player-row__identity {
+    position: relative;
+}
+.noslog-ui .nl-player-row__identity[data-contribution="hidden"] > .nl-term {
+    position: absolute;
+    inset-inline-start: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+.noslog-ui .nl-player-row .nl-tag {
+    height: var(--nl-type-line-height-20);
+}
 /* 랭킹 행의 명판은 이름 글줄(20)과 같은 높이 — 글자 12 그대로, 상자 여백만 2/6 */
 .noslog-ui .nl-player-row .nl-exam-badge {
     padding: 2px 6px;

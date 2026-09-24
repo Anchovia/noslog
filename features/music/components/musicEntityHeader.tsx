@@ -3,6 +3,7 @@
 import { ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import ChartDraftEntry from "@/features/contributions/components/chartDraftEntry";
 import { useLayoutEffect, useRef, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 
@@ -141,6 +142,26 @@ export default function MusicEntityHeader({
                 {t("detail.viewChart")}
                 {chevron}
             </Link>
+        ) : !pending && chart ? (
+            // 공개 채보가 없으면 「채보 만들기 ›」 — 내 초안이 있으면 그 상태(2026-09-24 A1)
+            <ChartDraftEntry
+                key="chart"
+                chartId={chart.id}
+                signedIn={signedIn}
+                draftHref={href(
+                    `/music/${music.index}/${difficulty.toLowerCase()}/pattern/draft`
+                )}
+                loginHref={href(
+                    `/login?returnTo=${encodeURIComponent(
+                        href(
+                            `/music/${music.index}/${difficulty.toLowerCase()}/pattern/draft`
+                        )
+                    )}`
+                )}
+                label={t("contribution.entry.create")}
+                className="nl-action-group__item"
+                chevron={chevron}
+            />
         ) : (
             unavailable("chart", t("detail.viewChart"))
         ),

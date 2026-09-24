@@ -420,7 +420,11 @@
 }
 @media (hover: hover) {
     .noslog-ui .nl-action-menu__item:hover {
-        background: var(--nl-interaction-hover);
+        --nl-state-layer: var(--nl-interaction-hover);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
     }
 }
 @media (min-width: 1056px) {
@@ -455,12 +459,20 @@
 /* 올림 · 누름 색은 공용 고스트 버튼과 같은 토큰, 포커스는 공용 :focus-visible 그대로 */
 @media (hover: hover) {
     .noslog-ui .nl-opinion-like:is(button, a):hover {
-        background: var(--nl-interaction-hover);
+        --nl-state-layer: var(--nl-interaction-hover);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
         color: var(--nl-content-default);
     }
 }
 .noslog-ui .nl-opinion-like:is(button, a):active {
-    background: var(--nl-interaction-selected-pressed);
+    --nl-state-layer: var(--nl-interaction-selected-pressed);
+    background-image: linear-gradient(
+        var(--nl-state-layer),
+        var(--nl-state-layer)
+    );
 }
 .noslog-ui .nl-opinion-like[data-static] {
     cursor: default;
@@ -500,11 +512,19 @@
 }
 @media (hover: hover) {
     .noslog-ui .nl-opinion-replies__toggle:hover {
-        background: var(--nl-interaction-hover);
+        --nl-state-layer: var(--nl-interaction-hover);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
     }
 }
 .noslog-ui .nl-opinion-replies__toggle:active {
-    background: var(--nl-interaction-selected-pressed);
+    --nl-state-layer: var(--nl-interaction-selected-pressed);
+    background-image: linear-gradient(
+        var(--nl-state-layer),
+        var(--nl-state-layer)
+    );
 }
 /* 답글 사진 스켈레톤 — 답글 줄 사진과 같은 24(간격 토큰) */
 .noslog-ui .nl-opinion-row[data-reply] > .nl-avatar.nl-skeleton {
@@ -518,4 +538,9 @@
     align-items: center;
     gap: var(--nl-spacing-4);
     margin: 0;
+}
+
+/* 의견 · 답글 머리의 기여 라벨(2026-09-24) — 랭킹 줄처럼 이름 글줄(20) 높이로, 라벨 있는 줄만 높아지지 않게 */
+.noslog-ui .nl-opinion-row__header .nl-tag {
+    height: var(--nl-type-line-height-20);
 }

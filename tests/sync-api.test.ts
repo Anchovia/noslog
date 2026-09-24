@@ -20,6 +20,7 @@ const mocks = vi.hoisted(() => ({
     updateDummy: vi.fn(),
     revalidateTag: vi.fn(),
     getMissingJacketIndexes: vi.fn(),
+    evaluateUserAchievements: vi.fn(),
 }));
 
 vi.mock("@/lib/bookmarklet", () => ({
@@ -67,6 +68,9 @@ vi.mock("next/cache", () => ({
 }));
 vi.mock("@/features/music/server/jacketCollectionService", () => ({
     getMissingJacketIndexes: mocks.getMissingJacketIndexes,
+}));
+vi.mock("@/features/achievements/server/achievementService", () => ({
+    evaluateUserAchievements: mocks.evaluateUserAchievements,
 }));
 
 import { POST } from "@/app/api/receivePlayerData/route";
@@ -225,6 +229,7 @@ function createRequestWithHeaders(body: unknown, headers: HeadersInit) {
 describe("POST /api/receivePlayerData", () => {
     beforeEach(() => {
         vi.clearAllMocks();
+        mocks.evaluateUserAchievements.mockResolvedValue([]);
         mocks.verifySyncToken.mockReturnValue({ userId: 1, version: 0 });
         mocks.userFindUnique.mockResolvedValue({
             id: 1,
@@ -456,6 +461,35 @@ describe("POST /api/receivePlayerData", () => {
             "user-profile-1",
             "max"
         );
+    });
+
+    it("기록을 반영한 뒤 업적을 판정하고 새 단계 수를 돌려준다", async () => {
+        mocks.evaluateUserAchievements.mockResolvedValueOnce([
+            { key: "s-rank", tier: 1 },
+            { key: "s-rank", tier: 2 },
+        ]);
+        const response = await POST(createRequest(requestBody()));
+        const data = await response.json();
+        expect(response.status).toBe(200);
+        expect(mocks.evaluateUserAchievements).toHaveBeenCalledWith(1);
+        expect(
+            mocks.evaluateUserAchievements.mock.invocationCallOrder[0]
+        ).toBeGreaterThan(mocks.updateGrade.mock.invocationCallOrder[0]);
+        expect(data.newAchievements).toBe(2);
+    });
+
+    it("업적 판정이 실패해도 동기화는 완료로 남긴다", async () => {
+        const error = vi.spyOn(console, "error").mockImplementation(() => {});
+        mocks.evaluateUserAchievements.mockRejectedValueOnce(new Error("x"));
+        const response = await POST(createRequest(requestBody()));
+        const data = await response.json();
+        expect(response.status).toBe(200);
+        expect(data.newAchievements).toBe(0);
+        expect(mocks.dataSyncUpdate).toHaveBeenCalledWith({
+            where: { id: 10 },
+            data: expect.objectContaining({ status: "completed" }),
+        });
+        error.mockRestore();
     });
 
     it("중복 연동이어도 이전 실패로 빠진 Grd·Rating 계산을 복구한다", async () => {

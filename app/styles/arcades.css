@@ -152,11 +152,19 @@
     overflow-wrap: anywhere;
 }
 .noslog-ui .nl-arcade-result[data-selected] {
-    background: var(--nl-interaction-hover);
+    --nl-state-layer: var(--nl-interaction-hover);
+    background-image: linear-gradient(
+        var(--nl-state-layer),
+        var(--nl-state-layer)
+    );
 }
 @media (hover: hover) {
     .noslog-ui .nl-arcade-result:has(> button.nl-arcade-result__summary:hover) {
-        background: var(--nl-interaction-hover);
+        --nl-state-layer: var(--nl-interaction-hover);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
     }
 }
 .noslog-ui .nl-arcade-result[data-selected] {
@@ -863,7 +871,11 @@
 @media (hover: hover) {
     .noslog-ui
         .nl-arcade-fact:has(> .nl-arcade-fact__action[aria-expanded]:hover) {
-        background: var(--nl-interaction-hover);
+        --nl-state-layer: var(--nl-interaction-hover);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
     }
 }
 .noslog-ui .nl-arcade-fact__link {

@@ -8,6 +8,7 @@ import { deleteBlobIfOwned, isValidImageBlob } from "@/lib/blob";
 import { logServerError } from "@/lib/observability/server";
 import type { ActionResult } from "@/lib/actions/result";
 import { actionValidationFailure } from "@/lib/actions/validation";
+import { setAchievementShowcase } from "@/features/achievements/server/achievementService";
 import {
     createSettingsProfileSchema,
     settingsPrivacySchema,
@@ -83,7 +84,26 @@ export async function saveSettingsProfile(
                 },
             };
     }
+    // 업적 진열(2026-09-25 D1) — 얻은 업적 · 3개까지만. 잘못된 값이면 프로필도 저장하지 않는다
+    const showcaseKeys =
+        values.achievementShowcase === undefined
+            ? null
+            : values.achievementShowcase.split(",").filter(Boolean);
     try {
+        if (showcaseKeys) {
+            const showcase = await setAchievementShowcase(
+                session.id,
+                showcaseKeys
+            );
+            if (showcase.status !== "ok")
+                return {
+                    success: false,
+                    message: t("achievement.pin.failed"),
+                    fieldErrors: {
+                        achievementShowcase: [t("achievement.pin.failed")],
+                    },
+                };
+        }
         await db.user.update({
             where: { id: session.id, avatar: current.avatar },
             data: {

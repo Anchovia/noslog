@@ -20,14 +20,72 @@ describe("개인정보처리방침 이전 버전", () => {
     it("세 언어 모두 새 시행일로 바뀌었고 직전 버전과 다르다", () => {
         const [previous] = PRIVACY_PREVIOUS_VERSIONS;
         const effective = {
-            ko: "시행 2026년 9월 22일",
-            ja: "施行 2026年9月22日",
-            en: "Effective September 22, 2026",
+            ko: "시행 2026년 9월 25일",
+            ja: "施行 2026年9月25日",
+            en: "Effective September 25, 2026",
         } as const;
         for (const locale of ["ko", "ja", "en"] as const) {
             expect(getPrivacyCopy(locale).dates).toContain(effective[locale]);
             expect(getPrivacyVersionCopy(previous, locale)).not.toEqual(
                 getPrivacyCopy(locale)
+            );
+        }
+    });
+
+    it("세 언어 모두 기여 제안의 이용 · 공개 · 보유를 알린다(2026-09-25)", () => {
+        const title = {
+            ko: "기여 제안",
+            ja: "情報の提案",
+            en: "Information suggestions",
+        } as const;
+        for (const locale of ["ko", "ja", "en"] as const) {
+            const copy = getPrivacyCopy(locale);
+            const text = (id: string) =>
+                JSON.stringify(
+                    copy.sections.find((section) => section.id === id)
+                );
+            expect(text("data")).toContain(title[locale]);
+            expect(text("public")).toContain(
+                { ko: "제안자 이름", ja: "提案者名", en: "Your name" }[locale]
+            );
+            expect(text("retention")).toContain(
+                { ko: "기여 제안:", ja: "情報の提案：", en: "Suggestions:" }[
+                    locale
+                ]
+            );
+            // 3단계 — 채보 초안 · 채보 의견의 이용 · 공개 · 보유
+            expect(text("data")).toContain(
+                {
+                    ko: "채보 초안과 채보 의견",
+                    ja: "譜面の下書きと譜面への意見",
+                    en: "Chart drafts and chart comments",
+                }[locale]
+            );
+            expect(text("retention")).toContain(
+                {
+                    ko: "채보 의견:",
+                    ja: "譜面への意見：",
+                    en: "Chart comments:",
+                }[locale]
+            );
+            // 업적 — 이용 · 점수 비공개일 때 공개 범위 · 보유
+            expect(text("data")).toContain(
+                { ko: "업적", ja: "実績", en: "Achievements" }[locale]
+            );
+            expect(text("public")).toContain(
+                {
+                    ko: "실력 · 수집 업적",
+                    ja: "実力・コレクションの実績",
+                    en: "skill or collection achievements",
+                }[locale]
+            );
+            // 2단계 — 기여 점수 기록은 원본이 지워져도 탈퇴 전까지 남는다
+            expect(text("retention")).toContain(
+                {
+                    ko: "기여 점수 기록:",
+                    ja: "貢献ポイントの記録：",
+                    en: "Contribution points:",
+                }[locale]
             );
         }
     });
@@ -51,7 +109,7 @@ describe("개인정보처리방침 이전 버전", () => {
     });
 
     it("없는 버전 주소는 찾지 않는다", () => {
-        expect(getPrivacyVersion("2026-09-22")).toBeNull();
+        expect(getPrivacyVersion("2026-09-25")).toBeNull();
         expect(getPrivacyVersion("toString")).toBeNull();
     });
 });

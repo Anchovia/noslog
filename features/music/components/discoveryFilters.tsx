@@ -42,7 +42,10 @@ const categoryTone = {
     "Cl/Jz": "cljz",
 } as const satisfies Record<(typeof MUSIC_CATEGORY_VALUES)[number], ChoiceTone>;
 
-/** 정렬 메뉴 — 전 폭 공통 · 즉시 적용. 레벨 순이면 난이도, 정렬을 고르면 방향이 종속 섹션으로 붙는다 */
+/**
+ * 정렬 메뉴 — 전 폭 공통 · 즉시 적용. 방향은 따로 고르지 않고 항목에 녹인다(2026-09-23 D2 —
+ * 「레벨 높은 순 / 레벨 낮은 순」). 레벨 순은 정렬할 난이도가 종속 섹션으로 붙는다
+ */
 export function DiscoverySortMenu({
     query,
     onChange,
@@ -59,15 +62,88 @@ export function DiscoverySortMenu({
     const t = useTranslations();
     // 레벨 순은 정렬할 난이도가 있어야 성립한다 — 난이도를 고를 때까지 메뉴 안에서만 보류하고, 닫으면 버린다
     const [pendingLevel, setPendingLevel] = useState(false);
-    const sorts: DiscoverySort[] = [
-        ...(query.q ? ["relevance" as const] : []),
-        ...(query.scope === "chart" ? ["published" as const] : []),
-        "name",
-        "level",
-        ...(signedIn ? ["recent" as const] : []),
+    const unplayed = query.records.includes("unplayed");
+    // 항목 = 기준 + 방향 한 쌍. 자연스러운 방향을 먼저 둔다(관련도는 방향이 없다)
+    const entries: {
+        key: string;
+        sort: DiscoverySort;
+        order?: "asc" | "desc";
+        label: string;
+    }[] = [
+        ...(query.q
+            ? [
+                  {
+                      key: "relevance",
+                      sort: "relevance" as const,
+                      label: t("discovery.sort.relevance"),
+                  },
+              ]
+            : []),
+        ...(query.scope === "chart"
+            ? [
+                  {
+                      key: "published-desc",
+                      sort: "published" as const,
+                      order: "desc" as const,
+                      label: t("discovery.sort.published"),
+                  },
+                  {
+                      key: "published-asc",
+                      sort: "published" as const,
+                      order: "asc" as const,
+                      label: t("discovery.sort.publishedAsc"),
+                  },
+              ]
+            : []),
+        {
+            key: "name-asc",
+            sort: "name",
+            order: "asc",
+            label: t("discovery.sort.name"),
+        },
+        {
+            key: "name-desc",
+            sort: "name",
+            order: "desc",
+            label: t("discovery.sort.nameDesc"),
+        },
+        {
+            key: "level-desc",
+            sort: "level",
+            order: "desc",
+            label: t("discovery.sort.levelDesc"),
+        },
+        {
+            key: "level-asc",
+            sort: "level",
+            order: "asc",
+            label: t("discovery.sort.levelAsc"),
+        },
+        ...(signedIn
+            ? [
+                  {
+                      key: "recent-desc",
+                      sort: "recent" as const,
+                      order: "desc" as const,
+                      label: t("discovery.sort.recent"),
+                  },
+                  {
+                      key: "recent-asc",
+                      sort: "recent" as const,
+                      order: "asc" as const,
+                      label: t("discovery.sort.recentAsc"),
+                  },
+              ]
+            : []),
     ];
     const sort = pendingLevel ? "level" : getDiscoverySort(query);
-    const unplayed = query.records.includes("unplayed");
+    const order = getDiscoveryOrder(query);
+    const value =
+        entries.find(
+            (entry) =>
+                entry.sort === sort &&
+                (entry.order === undefined || entry.order === order)
+        )?.key ?? entries[0].key;
     const change = (next: DiscoveryQuery) => {
         if (discoveryQuerySchema.safeParse(next).success) onChange(next);
     };
@@ -76,25 +152,27 @@ export function DiscoverySortMenu({
             variant={variant}
             size={size}
             label={t("discovery.sortLabel")}
-            value={sort}
-            options={sorts.map((value) => ({
-                value,
-                label: t(`discovery.sort.${value}`),
-                disabled: value === "recent" && unplayed,
+            value={value}
+            options={entries.map((entry) => ({
+                value: entry.key,
+                label: entry.label,
+                disabled: entry.sort === "recent" && unplayed,
                 description:
-                    value === "recent" && unplayed
+                    entry.sort === "recent" && unplayed
                         ? t("discovery.unplayedReason")
                         : undefined,
-                hasDependent: value === "level",
+                hasDependent: entry.sort === "level",
             }))}
             onOpenChange={(open) => {
                 if (!open) setPendingLevel(false);
             }}
             onValueChange={(next) => {
-                const pending = next === "level" && !query.sortDifficulty;
+                const entry = entries.find((item) => item.key === next);
+                if (!entry) return;
+                const pending = entry.sort === "level" && !query.sortDifficulty;
                 setPendingLevel(pending);
                 if (!pending)
-                    change({ ...query, sort: next, order: undefined });
+                    change({ ...query, sort: entry.sort, order: entry.order });
             }}
         >
             {sort === "level" ? (
@@ -114,7 +192,11 @@ export function DiscoverySortMenu({
                                 ...query,
                                 sort: "level",
                                 sortDifficulty,
-                                order: pendingLevel ? undefined : query.order,
+                                order: pendingLevel
+                                    ? entries.find(
+                                          (entry) => entry.key === "level-desc"
+                                      )?.order
+                                    : query.order,
                             });
                         }}
                         options={discoveryDifficulties.map((difficulty) => ({
@@ -122,20 +204,6 @@ export function DiscoverySortMenu({
                             label: difficulty,
                             tone: difficultyTone(difficulty),
                         }))}
-                    />
-                </SortMenuSection>
-            ) : null}
-            {query.sort && !pendingLevel ? (
-                <SortMenuSection label={t("discovery.direction")}>
-                    <FilterChips
-                        label={t("discovery.direction")}
-                        multiple={false}
-                        value={[getDiscoveryOrder(query)]}
-                        onValueChange={([order]) => change({ ...query, order })}
-                        options={[
-                            { value: "asc", label: t("discovery.ascending") },
-                            { value: "desc", label: t("discovery.descending") },
-                        ]}
                     />
                 </SortMenuSection>
             ) : null}

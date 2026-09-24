@@ -11,6 +11,61 @@
     gap: var(--nl-spacing-4);
     min-width: 0;
 }
+/* 출처 표기(2026-09-24 C2) — 아티스트 아래 「채보 · 이름 [운영자]」, 메타 아래 「노트 배치 · 영상에서 추출 … 출처 보기 ›」.
+   태그(24)는 글자 줄(20)을 늘리지 않게 위아래로 당긴다(채보 정보 기여 칸과 같은 방식) */
+.noslog-ui .nl-chart-viewer__byline {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+    margin: 0;
+}
+.noslog-ui .nl-chart-viewer__byline > .nl-tag,
+.noslog-ui .nl-chart-viewer__byline > .nl-term {
+    margin-block: calc(
+        (var(--nl-type-line-height-20) - var(--nl-spacing-24)) / 2
+    );
+}
+.noslog-ui .nl-chart-viewer__source {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--nl-spacing-8);
+}
+/* 머리 링크 묶음(2026-09-24 A1) — 「고치기 ›」 · 「출처 보기 ›」 를 줄 오른쪽 끝에, 사이 16 */
+.noslog-ui .nl-chart-viewer__links {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-16);
+    margin-left: auto;
+}
+.noslog-ui .nl-chart-viewer__links .nl-heading-link {
+    margin-left: 0;
+}
+/* 의견 시각을 누르면 캔버스 위 끝으로 올린다 — 고정 머리(60) + 16 만큼 비운다(의견 줄과 같은 값) */
+.noslog-ui .nl-chart-viewer__stage {
+    min-width: 0;
+    scroll-margin-top: 76px;
+}
+/* 출처 창 목록 — 「패턴 경향 기준」 창과 같은 간격(항목 사이 16 · 제목 → 내용 8) */
+.noslog-ui .nl-chart-viewer__sources {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-16);
+    margin: 0;
+}
+.noslog-ui .nl-chart-viewer__sources > div {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-chart-viewer__sources dd {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-4);
+    margin: 0;
+}
 .noslog-ui .nl-chart-viewer__title-row {
     display: flex;
     flex-wrap: wrap;
@@ -64,12 +119,92 @@
     border-radius: var(--nl-radius-container);
     background: var(--nl-surface-surface);
 }
+/* 무대 = 폭 가득 · 16:9 고정(2026-09-25 A1) — 그림은 16:9 논리 크기를 폭에 맞춰 줄여 어느 기기에서나 같다 */
 .noslog-ui .nl-chart-stage__canvas {
     position: relative;
-    height: min(68dvh, 680px);
-    min-height: 440px;
+    aspect-ratio: 16 / 9;
     overflow: hidden;
     background: #05070c;
+}
+/* 전체화면(2026-09-25 B1) — 무대만 화면에, 16:9 를 지켜 가운데(남는 곳은 무대 바탕색).
+   조작 줄은 아래에 겹쳐 뜨고, 재생 중 가만히 있으면 즉시 숨는다(움직임 없음) */
+.noslog-ui .nl-chart-stage__screen {
+    position: relative;
+}
+/* 조작부 첫 줄 오른쪽 끝 — 320 처럼 줄이 넘치면 다음 줄 오른쪽 끝으로 */
+.noslog-ui .nl-chart-stage__fullscreen {
+    margin-inline-start: auto;
+}
+.noslog-ui .nl-chart-stage__screen[data-fullscreen] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background: #05070c;
+}
+.noslog-ui .nl-chart-stage__screen[data-fullscreen="fill"] {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    height: 100dvh;
+}
+.noslog-ui .nl-chart-stage__screen[data-fullscreen] .nl-chart-stage__canvas {
+    width: min(100%, calc(100dvh * 16 / 9));
+}
+/* 무대를 누르면 재생 · 일시정지, 폰은 두 번 두드려 ∓10초 — 두 번 두드리기 확대를 끈다 */
+.noslog-ui .nl-chart-stage__canvas {
+    cursor: pointer;
+    touch-action: manipulation;
+}
+.noslog-ui .nl-chart-stage__screen[data-idle],
+.noslog-ui .nl-chart-stage__screen[data-idle] .nl-chart-stage__canvas {
+    cursor: none;
+}
+/* 전체화면 설정 창(2026-09-25 C1) — 떠 있는 창 규격(⋯ 메뉴와 같은 면 · 경계 · 모서리 · 그림자), 안쪽 12 · 줄 사이 12 */
+.noslog-ui .nl-chart-stage__settings {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-12);
+    padding: var(--nl-spacing-12);
+    border-radius: var(--nl-radius-overlay);
+    background: var(--nl-surface-overlay);
+    color: var(--nl-content-default);
+    border: var(--nl-stroke-default) solid var(--nl-border-overlay);
+    box-shadow: var(--nl-overlay-shadow);
+    z-index: 110;
+}
+.noslog-ui .nl-chart-stage__overlay {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-12);
+    padding: var(--nl-spacing-12) var(--nl-spacing-16);
+    color: var(--nl-content-on-media);
+    background: var(--nl-surface-media-scrim);
+}
+.noslog-ui .nl-chart-stage__overlay[hidden] {
+    display: none;
+}
+/* 미디어 위 버튼 — 어두운 판 안 44(사진 넘김 버튼과 같은 규격, 2026-09-14 부품 결정 ①) */
+.noslog-ui .nl-chart-stage__media-button {
+    display: inline-flex;
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: var(--nl-radius-control);
+    color: var(--nl-content-on-media);
+    background: var(--nl-surface-media-scrim);
+    cursor: pointer;
+}
+.noslog-ui .nl-chart-stage__media-button:focus-visible {
+    outline: var(--nl-stroke-strong) solid var(--nl-content-on-media);
+    outline-offset: 2px;
 }
 .noslog-ui .nl-chart-stage__art {
     position: absolute;
@@ -112,6 +247,25 @@
 }
 .noslog-ui .nl-chart-stage__time:first-of-type {
     text-align: right;
+}
+/* 재생 막대 + 의견 시각 눈금(2026-09-24 D1) */
+.noslog-ui .nl-chart-stage__seek-track {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex: 1;
+    min-width: 0;
+}
+/* 눈금 = 경고 표시색 2 × 12(범례 점과 같은 높이) · 누르지 않음 — 누르는 곳은 아래 의견 목록의 시각 */
+.noslog-ui .nl-chart-stage__marker {
+    position: absolute;
+    top: 50%;
+    width: var(--nl-spacing-2);
+    height: 12px;
+    border-radius: var(--nl-radius-full);
+    background: var(--nl-feedback-warning-marker);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
 }
 .noslog-ui .nl-chart-stage__seek {
     flex: 1;
@@ -225,6 +379,31 @@
 .noslog-ui .nl-chart-strip__position {
     margin: 0;
 }
+/* 읽기 줄 + 오른쪽 끝 전체화면 버튼(2026-09-25 B1) */
+.noslog-ui .nl-chart-strip__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--nl-spacing-12);
+}
+/* 전체화면 — 띠가 화면을 채운다(안쪽 16 · 틀은 남는 높이 전체). 열 폭 · 배율 상한 2.0 은 그대로라 한 번에 보이는 마디가 는다 */
+.noslog-ui .nl-chart-strip[data-fullscreen] {
+    height: 100dvh;
+    padding: var(--nl-spacing-16);
+    background: var(--nl-surface-canvas);
+}
+.noslog-ui .nl-chart-strip[data-fullscreen="fill"] {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+}
+.noslog-ui
+    .nl-chart-strip[data-fullscreen][data-layout]
+    .nl-chart-strip__frame {
+    flex: 1;
+    min-height: 0;
+    height: auto;
+}
 /* 프레임 높이 — Compact 560, 672+ 는 뷰포트에서 유도(헤더 60 + 위아래 여백 48) */
 .noslog-ui .nl-chart-strip__frame {
     position: relative;
@@ -264,6 +443,8 @@
     position: absolute;
     top: var(--nl-spacing-4);
     left: var(--nl-spacing-4);
+    display: flex;
+    flex-direction: column;
     color: #90909d;
     font-variant-numeric: tabular-nums;
     pointer-events: none;
@@ -349,11 +530,57 @@
     .noslog-ui .nl-chart-stage__transport {
         flex-wrap: wrap;
     }
-    .noslog-ui .nl-chart-stage__transport .nl-chart-stage__seek {
+    .noslog-ui .nl-chart-stage__transport .nl-chart-stage__seek-track {
         order: -1;
         flex-basis: 100%;
     }
     .noslog-ui .nl-chart-stage__time:last-of-type {
         margin-inline-start: auto;
     }
+}
+
+/* 채보 의견(2026-09-24 D1) — 의견 구역 문법: 제목 줄 →12→ 쓰기 칸 →16→ 목록(줄 사이 16 · 상자 없음 · 아바타 없음).
+   쓰기 칸 = 시각(제목 링크 글자) · 한 줄 입력 · 주 버튼, 사이 8 */
+.noslog-ui .nl-chart-comments {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-12);
+    min-width: 0;
+}
+.noslog-ui .nl-chart-comments__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-16);
+    min-width: 0;
+}
+.noslog-ui .nl-chart-comments__composer {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-chart-comments__composer-row {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+    min-width: 0;
+}
+.noslog-ui .nl-chart-comments__input {
+    flex: 1;
+    min-width: 0;
+}
+.noslog-ui .nl-chart-comments__time {
+    flex-shrink: 0;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+.noslog-ui .nl-chart-comments__composer-row > .nl-chart-comments__time {
+    min-height: var(--nl-control-height);
+}
+/* 이름 줄은 글자 줄 20 그대로 — 태그(24)는 위아래로 당긴다 */
+.noslog-ui .nl-chart-comments .nl-opinion-row__header > .nl-tag,
+.noslog-ui .nl-chart-comments .nl-opinion-row__header > .nl-term {
+    flex-shrink: 0;
+    margin-block: calc(
+        (var(--nl-type-line-height-20) - var(--nl-spacing-24)) / 2
+    );
 }

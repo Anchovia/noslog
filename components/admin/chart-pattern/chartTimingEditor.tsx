@@ -9,6 +9,7 @@ import {
     History,
     LoaderCircle,
     Maximize2,
+    MessageSquare,
     MousePointer2,
     Pause,
     Play,
@@ -34,11 +35,22 @@ import {
 import { toast } from "sonner";
 
 import {
+    saveMyChartDraft,
+    submitMyChartDraft,
+    withdrawMyChartDraft,
+} from "@/app/(nevigation)/music/[index]/[difficulty]/draftActions";
+import { reviewChartDraft } from "@/app/admin/contributions/actions";
+import {
     createChartPatternRevision,
+    createChartPatternVid2bmapRevision,
     publishChartPattern,
     restoreChartPatternRevision,
     saveChartPatternDraft,
 } from "@/app/admin/music/[index]/[difficulty]/pattern/actions";
+import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
+import ContributionLabel from "@/features/contributions/components/contributionLabel";
+import type { NameLabel } from "@/features/contributions/contributionLevel";
+import type { ChartDraftStatus } from "@/features/contributions/schemas/chartDraftSchema";
 import {
     getBrowserSupportSnapshot,
     getServerBrowserSupportSnapshot,
@@ -65,10 +77,12 @@ import {
     useChartEditorStore,
     useChartEditorStoreApi,
 } from "./chartEditorStore";
+import ChartReviewPanel, { useDraftComments } from "./chartReviewPanel";
 import NoteInspector from "./noteInspector";
 import PixiNoteEditor, { type NoteEditorTool } from "./pixiNoteEditor";
 import TimingInspector from "./timingInspector";
 import TimingRuler from "./timingRuler";
+import Vid2bmapImportPanel from "./vid2bmapImportPanel";
 import { useChartAudio } from "./useChartAudio";
 import WaveformTimeline from "./waveformTimeline";
 
@@ -90,6 +104,27 @@ export interface ChartEditorMetadata {
     level: number;
 }
 
+/**
+ * 에디터 모드(2026-09-24 유저 기여 3단계) — 캔버스 · 편집 조작은 같고 셸(위 막대 버튼 · 레일 탭)만 다르다.
+ * admin = 운영자 초안(버전 저장 · 공개 · 영상 추출), contributor = 내 초안(자동 저장 · 검토 요청),
+ * review = 운영자가 유저 초안을 읽기 전용으로(시각 댓글 · 수정 요청 · 공개).
+ */
+export type ChartEditorMode =
+    | { kind: "admin"; revisions: ChartEditorRevision[] }
+    | {
+          kind: "contributor";
+          draftId: number;
+          status: ChartDraftStatus;
+          backHref: string;
+      }
+    | {
+          kind: "review";
+          draftId: number;
+          status: ChartDraftStatus;
+          author: { name: string; label: NameLabel | null };
+          backHref: string;
+      };
+
 interface ChartTimingEditorProps {
     metadata: ChartEditorMetadata;
     initialDocument: ChartDocument;
@@ -97,20 +132,17 @@ interface ChartTimingEditorProps {
     savedRevision: number;
     publishedRevision: number | null;
     updatedAt: string | null;
-    revisions: ChartEditorRevision[];
+    mode: ChartEditorMode;
 }
+
+type EditorTab = "timing" | "notes" | "review";
 
 const playbackRates: ChartPlaybackRate[] = [0.25, 0.5, 0.75, 1, 1.5, 2];
 const snapDivisors = [1, 2, 3, 4, 6, 8, 12, 16, 24, 32];
 const PIANO_VISIBILITY_STORAGE_KEY = "noslog-chart-editor-piano-visible";
 const PIANO_VISIBILITY_CHANGE_EVENT =
     "noslog-chart-editor-piano-visibility-change";
-const noteTypeLabels: Record<ChartNoteType, string> = {
-    standard: "일반",
-    tenuto: "테누토",
-    glissando: "글리산도",
-    trill: "트릴",
-};
+const noteTypes: ChartNoteType[] = ["standard", "tenuto", "glissando", "trill"];
 const noteToolShortcuts: Record<ChartNoteType, number> = {
     standard: 2,
     tenuto: 3,
@@ -148,6 +180,31 @@ function safeFileName(value: string) {
         .slice(0, 80);
 }
 
+const STATUS_TONES: Partial<Record<ChartDraftStatus, string>> = {
+    submitted: "warning",
+    changes_requested: "info",
+    published: "success",
+};
+
+function StatusTag({ status }: { status: ChartDraftStatus }) {
+    const t = useTranslations();
+    const tone = STATUS_TONES[status];
+    return (
+        <span
+            // 태그 글자 12/600(가이드) — 에디터 셸에는 글자 크기를 물려줄 부모가 없다
+            className={
+                tone ? "nl-tag nl-tag--status text-xs" : "nl-tag text-xs"
+            }
+            data-tone={tone}
+        >
+            {t(`contribution.draftStatus.${status}`)}
+        </span>
+    );
+}
+
+/** 읽기 전용일 때 도구 전환 요청을 버린다 */
+function ignoreTool() {}
+
 function formatSavedTime(value: Date) {
     return new Date(value.getTime() + 9 * 60 * 60 * 1_000)
         .toISOString()
@@ -181,11 +238,22 @@ function EditorButton({
 
 function ChartTimingEditorWorkspace({
     metadata,
-    revisions,
-}: Pick<ChartTimingEditorProps, "metadata" | "revisions">) {
+    mode,
+}: Pick<ChartTimingEditorProps, "metadata" | "mode">) {
+    const t = useTranslations();
+    const locale = useLocale();
     const router = useRouter();
     const store = useChartEditorStoreApi();
     const chartDocument = useChartEditorStore((state) => state.document);
+    const readOnly = useChartEditorStore((state) => state.readOnly);
+    const setReadOnly = useChartEditorStore((state) => state.setReadOnly);
+    const draftId = mode.kind === "admin" ? null : mode.draftId;
+    const [draftStatus, setDraftStatus] = useState<ChartDraftStatus | null>(
+        mode.kind === "admin" ? null : mode.status
+    );
+    const [statusPending, setStatusPending] = useState(false);
+    const comments = useDraftComments(metadata.chartId, draftId);
+    const openComments = comments.filter((comment) => !comment.resolved);
     const savedRevision = useChartEditorStore((state) => state.savedRevision);
     const publishedRevision = useChartEditorStore(
         (state) => state.publishedRevision
@@ -230,9 +298,26 @@ function ChartTimingEditorWorkspace({
     const [metronomeVolume, setMetronomeVolume] = useMetronomeVolume();
     const audioInputRef = useRef<HTMLInputElement | null>(null);
     const importInputRef = useRef<HTMLInputElement | null>(null);
+    const vid2bmapInputRef = useRef<HTMLInputElement | null>(null);
+    const importMenuRef = useRef<HTMLDivElement | null>(null);
+    const [importMenuOpen, setImportMenuOpen] = useState(false);
+    const [vid2bmapFile, setVid2bmapFile] = useState<File | null>(null);
+    const importTimingCount = useChartEditorStore(
+        (state) => state.importPreview?.timingTicks.length ?? 0
+    );
     const [pixelsPerSecond, setPixelsPerSecond] = useState(150);
-    const [revisionHistory, setRevisionHistory] = useState(revisions);
-    const [editorMode, setEditorMode] = useState<"timing" | "notes">("timing");
+    const [revisionHistory, setRevisionHistory] = useState(
+        mode.kind === "admin" ? mode.revisions : []
+    );
+    // 검토 모드 · 수정 요청을 받은 초안은 「검토」 탭부터, 기여자는 노트가 있으면 「채보 작성」 부터
+    const [editorMode, setEditorMode] = useState<EditorTab>(() =>
+        mode.kind === "review" ||
+        (mode.kind === "contributor" && mode.status === "changes_requested")
+            ? "review"
+            : mode.kind === "contributor" && chartDocument.notes.length
+              ? "notes"
+              : "timing"
+    );
     const [noteTool, setNoteTool] = useState<NoteEditorTool>("select");
     const [noteHand, setNoteHand] = useState<ChartHand>("left");
     const [noteWidth, setNoteWidth] = useState(2);
@@ -268,13 +353,11 @@ function ChartTimingEditorWorkspace({
             const first = parsed.error.issues[0];
             store
                 .getState()
-                .markSaveError(
-                    first?.message ?? "채보 데이터 형식을 확인해주세요."
-                );
+                .markSaveError(first?.message ?? t("editor.checkFormat"));
             return null;
         }
         return parsed.data;
-    }, [store]);
+    }, [store, t]);
 
     const runAutoSave = useCallback(async () => {
         const state = store.getState();
@@ -291,6 +374,28 @@ function ChartTimingEditorWorkspace({
         const version = state.draftVersion;
         state.markSaving();
         try {
+            // 기여자 초안은 내 초안 자리(chart_drafts)에 — 버전이 맞을 때만 쓴다
+            if (mode.kind === "contributor") {
+                const result = await saveMyChartDraft(
+                    {
+                        chartId: metadata.chartId,
+                        baseVersion: version,
+                        document: validDocument,
+                    },
+                    locale
+                );
+                if (!result.success || result.version === undefined) {
+                    store.getState().markSaveError(result.message);
+                    if (result.conflict) toast.error(result.message);
+                    return;
+                }
+                store.getState().markSaveSuccess({
+                    draftVersion: result.version,
+                    persistedSerial: serial,
+                    message: result.message,
+                });
+                return;
+            }
             const result = await saveChartPatternDraft({
                 chartId: metadata.chartId,
                 baseVersion: version,
@@ -309,12 +414,108 @@ function ChartTimingEditorWorkspace({
                 message: result.message,
             });
         } catch {
-            store.getState().markSaveError("자동 저장 중 오류가 발생했습니다.");
+            store.getState().markSaveError(t("editor.autoSaveError"));
         }
-    }, [metadata.chartId, store, validateCurrentDocument]);
+    }, [
+        locale,
+        metadata.chartId,
+        mode.kind,
+        store,
+        t,
+        validateCurrentDocument,
+    ]);
+
+    /** 검토 요청 전 — 저장 중이면 기다리고, 안 된 변경이 있으면 지금 저장한다 */
+    const flushSave = useCallback(async () => {
+        for (let attempt = 0; attempt < 40; attempt += 1) {
+            const state = store.getState();
+            if (state.saveStatus === "saving") {
+                await new Promise((resolve) => window.setTimeout(resolve, 150));
+                continue;
+            }
+            if (state.changeSerial <= state.persistedSerial) return true;
+            await runAutoSave();
+            if (store.getState().saveStatus === "error") return false;
+        }
+        return false;
+    }, [runAutoSave, store]);
+
+    async function submitDraft() {
+        if (!window.confirm(t("editor.contributor.submitConfirm"))) return;
+        setStatusPending(true);
+        try {
+            if (!(await flushSave())) {
+                toast.error(
+                    store.getState().saveMessage ?? t("editor.autoSaveError")
+                );
+                return;
+            }
+            const result = await submitMyChartDraft(metadata.chartId, locale);
+            if (!result.success) {
+                toast.error(result.message);
+                return;
+            }
+            toast.success(result.message);
+            setDraftStatus("submitted");
+            setReadOnly(true);
+            setNoteTool("select");
+        } catch {
+            toast.error(t("contribution.submitError"));
+        } finally {
+            setStatusPending(false);
+        }
+    }
+
+    async function withdrawDraft() {
+        setStatusPending(true);
+        try {
+            const result = await withdrawMyChartDraft(metadata.chartId, locale);
+            if (!result.success) {
+                toast.error(result.message);
+                return;
+            }
+            toast.success(result.message);
+            setDraftStatus("draft");
+            setReadOnly(false);
+        } catch {
+            toast.error(t("contribution.submitError"));
+        } finally {
+            setStatusPending(false);
+        }
+    }
+
+    /** 운영자 결정(검토 모드) — 끝나면 기여 「채보」 목록으로 */
+    async function decide(decision: "request_changes" | "publish") {
+        if (mode.kind !== "review") return;
+        if (
+            !window.confirm(
+                decision === "publish"
+                    ? "이 초안을 공개 채보로 바꿀까요? 운영자 초안에 공개 안 한 변경이 있으면 먼저 이력으로 보관합니다."
+                    : "작성자에게 수정을 요청할까요? 요청 전에 고칠 곳을 시각 댓글로 남겨 주세요."
+            )
+        )
+            return;
+        setStatusPending(true);
+        try {
+            const result = await reviewChartDraft({
+                draftId: mode.draftId,
+                decision,
+            });
+            if (!result.success) {
+                toast.error(result.message);
+                return;
+            }
+            toast.success(result.message);
+            router.push(mode.backHref);
+        } catch {
+            toast.error("처리하지 못했습니다.");
+        } finally {
+            setStatusPending(false);
+        }
+    }
 
     const runExplicitSave = useCallback(
-        async (kind: "manual" | "publish") => {
+        async (kind: "manual" | "publish" | "vid2bmap", message?: string) => {
             const state = store.getState();
             if (state.saveStatus === "saving") {
                 toast.error("현재 저장이 끝난 뒤 다시 시도해주세요.");
@@ -345,11 +546,14 @@ function ChartTimingEditorWorkspace({
                 const action =
                     kind === "publish"
                         ? publishChartPattern
-                        : createChartPatternRevision;
+                        : kind === "vid2bmap"
+                          ? createChartPatternVid2bmapRevision
+                          : createChartPatternRevision;
                 const result = await action({
                     chartId: metadata.chartId,
                     baseVersion: state.draftVersion,
                     document: validDocument,
+                    ...(message ? { message } : {}),
                 });
                 if (!result.success || result.draftVersion === undefined) {
                     store.getState().markSaveError(result.message);
@@ -431,7 +635,9 @@ function ChartTimingEditorWorkspace({
                 event.key.toLowerCase() === "s"
             ) {
                 event.preventDefault();
-                void runExplicitSave("manual");
+                // 버전 저장은 운영자 초안만 — 기여자 초안은 바로 자동 저장
+                if (mode.kind === "admin") void runExplicitSave("manual");
+                else if (mode.kind === "contributor") void runAutoSave();
                 return;
             }
             if (
@@ -458,7 +664,51 @@ function ChartTimingEditorWorkspace({
         };
         window.addEventListener("keydown", handleKeyDown);
         return () => window.removeEventListener("keydown", handleKeyDown);
-    }, [redo, runExplicitSave, togglePlayback, undo]);
+    }, [mode.kind, redo, runAutoSave, runExplicitSave, togglePlayback, undo]);
+
+    useEffect(() => {
+        if (!importMenuOpen) return;
+        const close = (event: MouseEvent) => {
+            if (!importMenuRef.current?.contains(event.target as Node)) {
+                setImportMenuOpen(false);
+            }
+        };
+        const escape = (event: KeyboardEvent) => {
+            if (event.key === "Escape") setImportMenuOpen(false);
+        };
+        window.addEventListener("mousedown", close);
+        window.addEventListener("keydown", escape);
+        return () => {
+            window.removeEventListener("mousedown", close);
+            window.removeEventListener("keydown", escape);
+        };
+    }, [importMenuOpen]);
+
+    function handleVid2bmapFile(event: ChangeEvent<HTMLInputElement>) {
+        const file = event.target.files?.[0];
+        event.target.value = "";
+        if (!file) return;
+        setVid2bmapFile(file);
+        // 미리보기는 노트 캔버스에만 그린다
+        setEditorMode("notes");
+    }
+
+    /** 넣은 직후 「영상 추출」 버전으로 — 이 버전이 공개 채보 출처 표기의 근거(2026-09-24 C2) */
+    const saveAfterImport = useCallback(
+        async (message: string) => {
+            const before = store.getState().savedRevision;
+            await runExplicitSave("vid2bmap", message);
+            return store.getState().savedRevision > before;
+        },
+        [runExplicitSave, store]
+    );
+
+    /** 가져오기 직전 지금 초안을 복구 가능한 버전으로 — 저장 버전 번호가 올랐으면 성공 */
+    const saveBeforeImport = useCallback(async () => {
+        const before = store.getState().savedRevision;
+        await runExplicitSave("manual");
+        return store.getState().savedRevision > before;
+    }, [runExplicitSave, store]);
 
     async function handleAudioFile(event: ChangeEvent<HTMLInputElement>) {
         const file = event.target.files?.[0];
@@ -477,7 +727,7 @@ function ChartTimingEditorWorkspace({
             if (!parsed.success) {
                 toast.error(
                     parsed.error.issues[0]?.message ??
-                        "지원하지 않는 채보 파일입니다."
+                        t("editor.file.unsupported")
                 );
                 return;
             }
@@ -486,24 +736,20 @@ function ChartTimingEditorWorkspace({
                 parsed.data.music.difficulty.toLowerCase() !==
                     metadata.difficulty.toLowerCase()
             ) {
-                const confirmed = window.confirm(
-                    "다른 악곡 또는 난이도에서 내보낸 채보입니다. 현재 채보를 교체할까요?"
-                );
+                const confirmed = window.confirm(t("editor.file.otherChart"));
                 if (!confirmed) return;
             }
             store.getState().replaceDocument(parsed.data.chart);
-            toast.success("채보 파일을 현재 초안으로 불러왔습니다.");
+            toast.success(t("editor.file.imported"));
         } catch {
-            toast.error("채보 파일을 읽을 수 없습니다.");
+            toast.error(t("editor.file.unreadable"));
         }
     }
 
     function exportChart() {
         const validDocument = validateCurrentDocument();
         if (!validDocument) {
-            toast.error(
-                store.getState().saveMessage ?? "채보 데이터를 확인해주세요."
-            );
+            toast.error(store.getState().saveMessage ?? t("editor.checkData"));
             return;
         }
         const payload: ChartExport = {
@@ -528,7 +774,7 @@ function ChartTimingEditorWorkspace({
         anchor.download = `${safeFileName(metadata.title)}-${metadata.difficulty.toLowerCase()}.noslog-chart.json`;
         anchor.click();
         URL.revokeObjectURL(url);
-        toast.success("채보 파일을 내보냈습니다.");
+        toast.success(t("editor.file.exported"));
     }
 
     async function restoreRevision(revision: ChartEditorRevision) {
@@ -573,8 +819,18 @@ function ChartTimingEditorWorkspace({
             <div className="bg-bg fixed inset-0 z-[100] hidden min-h-0 flex-col min-[1024px]:flex">
                 <header className="border-divider bg-surface flex h-14 shrink-0 items-center gap-3 border-b px-3">
                     <Link
-                        href={`/admin/music/${encodeURIComponent(metadata.musicIndex)}`}
-                        aria-label="악곡 관리로 돌아가기"
+                        href={
+                            mode.kind === "admin"
+                                ? `/admin/music/${encodeURIComponent(metadata.musicIndex)}`
+                                : mode.backHref
+                        }
+                        aria-label={
+                            mode.kind === "contributor"
+                                ? t("editor.back")
+                                : mode.kind === "review"
+                                  ? "기여 채보 목록으로 돌아가기"
+                                  : "악곡 관리로 돌아가기"
+                        }
                         className="border-border hover:bg-surface-muted flex size-9 shrink-0 items-center justify-center rounded-md border"
                     >
                         <ArrowLeft className="size-4" />
@@ -589,8 +845,14 @@ function ChartTimingEditorWorkspace({
                             </span>
                         </div>
                         <p className="text-micro mt-0.5 truncate">
-                            채보 편집기 ·{" "}
-                            {editorMode === "timing" ? "타이밍" : "채보 작성"}
+                            {mode.kind === "review"
+                                ? `채보 검토 · ${mode.author.name}`
+                                : t("editor.subtitle", {
+                                      tab:
+                                          mode.kind === "contributor"
+                                              ? t("editor.myDraft")
+                                              : t(`editor.tab.${editorMode}`),
+                                  })}
                         </p>
                     </div>
 
@@ -604,105 +866,268 @@ function ChartTimingEditorWorkspace({
                         >
                             <span className="block truncate">
                                 {hasNoteConflicts
-                                    ? `노트 충돌 ${noteConflicts.length.toLocaleString("ko-KR")}건`
+                                    ? t("editor.status.conflicts", {
+                                          count: noteConflicts.length.toLocaleString(
+                                              locale
+                                          ),
+                                      })
                                     : saveStatus === "saving"
-                                      ? "저장 중..."
+                                      ? t("editor.saving")
                                       : hasUnsavedChanges
-                                        ? "저장되지 않은 변경"
-                                        : (saveMessage ??
-                                          (lastSavedAt
-                                              ? `${formatSavedTime(lastSavedAt)} 저장`
-                                              : "새 채보"))}
+                                        ? t("editor.status.unsaved")
+                                        : mode.kind === "review"
+                                          ? "읽기 전용"
+                                          : readOnly
+                                            ? t("editor.status.locked")
+                                            : (saveMessage ??
+                                              (lastSavedAt
+                                                  ? t("editor.status.savedAt", {
+                                                        time: formatSavedTime(
+                                                            lastSavedAt
+                                                        ),
+                                                    })
+                                                  : t("editor.status.new")))}
                             </span>
-                            <span className="text-micro block">
-                                저장 v{savedRevision}
-                                {publishedRevision
-                                    ? ` · 공개 v${publishedRevision}`
-                                    : " · 비공개"}
-                            </span>
+                            {mode.kind === "admin" ? (
+                                <span className="text-micro block">
+                                    저장 v{savedRevision}
+                                    {publishedRevision
+                                        ? ` · 공개 v${publishedRevision}`
+                                        : " · 비공개"}
+                                </span>
+                            ) : null}
                         </div>
+                        {mode.kind === "review" ? null : (
+                            <>
+                                <EditorButton
+                                    label={t("editor.undo")}
+                                    disabled={readOnly || undoStackLength === 0}
+                                    onClick={undo}
+                                >
+                                    <Undo2 className="size-4" />
+                                </EditorButton>
+                                <EditorButton
+                                    label={t("editor.redo")}
+                                    disabled={readOnly || redoStackLength === 0}
+                                    onClick={redo}
+                                >
+                                    <Redo2 className="size-4" />
+                                </EditorButton>
+                            </>
+                        )}
+                        {mode.kind === "admin" ? (
+                            <div ref={importMenuRef} className="relative">
+                                <EditorButton
+                                    label="채보 가져오기"
+                                    onClick={() =>
+                                        setImportMenuOpen((open) => !open)
+                                    }
+                                >
+                                    <Upload className="size-4" />
+                                </EditorButton>
+                                {importMenuOpen ? (
+                                    <div
+                                        role="menu"
+                                        aria-label="채보 가져오기"
+                                        className="border-border bg-surface-muted absolute top-11 right-0 z-10 flex w-60 flex-col gap-0.5 rounded-lg border p-1 shadow-xl"
+                                    >
+                                        <button
+                                            type="button"
+                                            role="menuitem"
+                                            onClick={() => {
+                                                setImportMenuOpen(false);
+                                                importInputRef.current?.click();
+                                            }}
+                                            className="hover:bg-border rounded-md px-2.5 py-2 text-left"
+                                        >
+                                            <span className="block text-xs font-semibold">
+                                                NosLog 채보 파일
+                                            </span>
+                                            <span className="text-micro block">
+                                                .noslog-chart.json — 지금 초안을
+                                                교체
+                                            </span>
+                                        </button>
+                                        <button
+                                            type="button"
+                                            role="menuitem"
+                                            onClick={() => {
+                                                setImportMenuOpen(false);
+                                                vid2bmapInputRef.current?.click();
+                                            }}
+                                            className="hover:bg-border rounded-md px-2.5 py-2 text-left"
+                                        >
+                                            <span className="block text-xs font-semibold">
+                                                영상 추출 결과
+                                            </span>
+                                            <span className="text-micro block">
+                                                vid2bmap 결과 zip → 미리보고
+                                                초안에 넣기
+                                            </span>
+                                        </button>
+                                    </div>
+                                ) : null}
+                            </div>
+                        ) : mode.kind === "contributor" ? (
+                            // 기여자는 NosLog 채보 파일만(영상 추출은 운영자 도구)
+                            <EditorButton
+                                label={t("editor.file.import")}
+                                disabled={readOnly}
+                                onClick={() => importInputRef.current?.click()}
+                            >
+                                <Upload className="size-4" />
+                            </EditorButton>
+                        ) : null}
                         <EditorButton
-                            label="실행 취소"
-                            disabled={undoStackLength === 0}
-                            onClick={undo}
-                        >
-                            <Undo2 className="size-4" />
-                        </EditorButton>
-                        <EditorButton
-                            label="다시 실행"
-                            disabled={redoStackLength === 0}
-                            onClick={redo}
-                        >
-                            <Redo2 className="size-4" />
-                        </EditorButton>
-                        <EditorButton
-                            label="채보 가져오기"
-                            onClick={() => importInputRef.current?.click()}
-                        >
-                            <Upload className="size-4" />
-                        </EditorButton>
-                        <EditorButton
-                            label="채보 내보내기"
+                            label={t("editor.file.export")}
                             onClick={exportChart}
                         >
                             <Download className="size-4" />
                         </EditorButton>
-                        <Link
-                            href={`/admin/music/${encodeURIComponent(metadata.musicIndex)}/${metadata.difficulty.toLowerCase()}/pattern/preview`}
-                            target="_blank"
-                            aria-label="전체 채보 미리보기"
-                            title="전체 채보 미리보기"
-                            className="border-border hover:bg-surface-muted flex size-9 shrink-0 items-center justify-center rounded-md border"
-                        >
-                            <Eye className="size-4" />
-                        </Link>
-                        <button
-                            type="button"
-                            disabled={
-                                saveStatus === "saving" || hasNoteConflicts
-                            }
-                            title={
-                                hasNoteConflicts
-                                    ? "겹치는 노트를 먼저 수정해주세요."
-                                    : "복구 가능한 버전 저장"
-                            }
-                            onClick={() => void runExplicitSave("manual")}
-                            className="border-border hover:bg-surface-muted flex h-9 items-center gap-1.5 rounded-md border px-3 text-xs font-bold disabled:opacity-40"
-                        >
-                            {saveStatus === "saving" ? (
-                                <LoaderCircle className="size-3.5 animate-spin" />
-                            ) : (
-                                <Save className="size-3.5" />
-                            )}
-                            버전 저장
-                        </button>
-                        <button
-                            type="button"
-                            disabled={
-                                saveStatus === "saving" ||
-                                chartDocument.notes.length === 0 ||
-                                hasNoteConflicts
-                            }
-                            title={
-                                hasNoteConflicts
-                                    ? "겹치는 노트를 먼저 수정해주세요."
-                                    : chartDocument.notes.length === 0
-                                      ? "노트를 작성한 뒤 공개할 수 있습니다."
-                                      : "현재 채보 공개"
-                            }
-                            onClick={() => {
-                                if (
-                                    window.confirm(
-                                        "현재 초안을 일반 사용자에게 공개할까요?"
-                                    )
-                                ) {
-                                    void runExplicitSave("publish");
-                                }
-                            }}
-                            className="bg-text-primary text-bg flex h-9 items-center rounded-md px-3 text-xs font-bold disabled:cursor-not-allowed disabled:opacity-35"
-                        >
-                            공개
-                        </button>
+                        {mode.kind === "admin" ? (
+                            <>
+                                <Link
+                                    href={`/admin/music/${encodeURIComponent(metadata.musicIndex)}/${metadata.difficulty.toLowerCase()}/pattern/preview`}
+                                    target="_blank"
+                                    aria-label="전체 채보 미리보기"
+                                    title="전체 채보 미리보기"
+                                    className="border-border hover:bg-surface-muted flex size-9 shrink-0 items-center justify-center rounded-md border"
+                                >
+                                    <Eye className="size-4" />
+                                </Link>
+                                <button
+                                    type="button"
+                                    disabled={
+                                        saveStatus === "saving" ||
+                                        hasNoteConflicts
+                                    }
+                                    title={
+                                        hasNoteConflicts
+                                            ? "겹치는 노트를 먼저 수정해주세요."
+                                            : "복구 가능한 버전 저장"
+                                    }
+                                    onClick={() =>
+                                        void runExplicitSave("manual")
+                                    }
+                                    className="border-border hover:bg-surface-muted flex h-9 items-center gap-1.5 rounded-md border px-3 text-xs font-bold disabled:opacity-40"
+                                >
+                                    {saveStatus === "saving" ? (
+                                        <LoaderCircle className="size-3.5 animate-spin" />
+                                    ) : (
+                                        <Save className="size-3.5" />
+                                    )}
+                                    버전 저장
+                                </button>
+                                <button
+                                    type="button"
+                                    disabled={
+                                        saveStatus === "saving" ||
+                                        chartDocument.notes.length === 0 ||
+                                        hasNoteConflicts
+                                    }
+                                    title={
+                                        hasNoteConflicts
+                                            ? "겹치는 노트를 먼저 수정해주세요."
+                                            : chartDocument.notes.length === 0
+                                              ? "노트를 작성한 뒤 공개할 수 있습니다."
+                                              : "현재 채보 공개"
+                                    }
+                                    onClick={() => {
+                                        if (
+                                            window.confirm(
+                                                "현재 초안을 일반 사용자에게 공개할까요?"
+                                            )
+                                        ) {
+                                            void runExplicitSave("publish");
+                                        }
+                                    }}
+                                    className="bg-text-primary text-bg flex h-9 items-center rounded-md px-3 text-xs font-bold disabled:cursor-not-allowed disabled:opacity-35"
+                                >
+                                    공개
+                                </button>
+                            </>
+                        ) : mode.kind === "contributor" && draftStatus ? (
+                            <span className="flex items-center gap-2">
+                                <StatusTag status={draftStatus} />
+                                {draftStatus === "submitted" ? (
+                                    <button
+                                        type="button"
+                                        disabled={statusPending}
+                                        onClick={() => void withdrawDraft()}
+                                        className="border-border hover:bg-surface-muted flex h-9 items-center gap-1.5 rounded-md border px-3 text-xs font-bold disabled:opacity-40"
+                                    >
+                                        {statusPending ? (
+                                            <LoaderCircle className="size-3.5 animate-spin" />
+                                        ) : null}
+                                        {t("editor.contributor.withdraw")}
+                                    </button>
+                                ) : (
+                                    <button
+                                        type="button"
+                                        disabled={
+                                            statusPending ||
+                                            saveStatus === "saving" ||
+                                            chartDocument.notes.length === 0 ||
+                                            hasNoteConflicts
+                                        }
+                                        title={
+                                            hasNoteConflicts
+                                                ? t(
+                                                      "editor.contributor.fixConflicts"
+                                                  )
+                                                : chartDocument.notes.length ===
+                                                    0
+                                                  ? t(
+                                                        "editor.contributor.needNotes"
+                                                    )
+                                                  : undefined
+                                        }
+                                        onClick={() => void submitDraft()}
+                                        className="bg-text-primary text-bg flex h-9 items-center gap-1.5 rounded-md px-3 text-xs font-bold disabled:cursor-not-allowed disabled:opacity-35"
+                                    >
+                                        {statusPending ? (
+                                            <LoaderCircle className="size-3.5 animate-spin" />
+                                        ) : null}
+                                        {t("editor.contributor.submit")}
+                                    </button>
+                                )}
+                            </span>
+                        ) : mode.kind === "review" && draftStatus ? (
+                            <span className="flex items-center gap-2">
+                                <StatusTag status={draftStatus} />
+                                <span className="text-micro flex items-center gap-1.5">
+                                    {mode.author.name}
+                                    <ContributionLabel
+                                        label={mode.author.label}
+                                    />
+                                </span>
+                                <button
+                                    type="button"
+                                    disabled={
+                                        statusPending ||
+                                        draftStatus !== "submitted"
+                                    }
+                                    onClick={() =>
+                                        void decide("request_changes")
+                                    }
+                                    className="border-border hover:bg-surface-muted flex h-9 items-center rounded-md border px-3 text-xs font-bold disabled:opacity-40"
+                                >
+                                    수정 요청
+                                </button>
+                                <button
+                                    type="button"
+                                    disabled={
+                                        statusPending ||
+                                        draftStatus !== "submitted" ||
+                                        hasNoteConflicts
+                                    }
+                                    onClick={() => void decide("publish")}
+                                    className="bg-text-primary text-bg flex h-9 items-center rounded-md px-3 text-xs font-bold disabled:cursor-not-allowed disabled:opacity-35"
+                                >
+                                    공개
+                                </button>
+                            </span>
+                        ) : null}
                     </div>
                 </header>
 
@@ -725,7 +1150,7 @@ function ChartTimingEditorWorkspace({
                                             : ""
                                     }`}
                                 />
-                                타이밍
+                                {t("editor.tab.timing")}
                             </button>
                             <button
                                 type="button"
@@ -737,14 +1162,45 @@ function ChartTimingEditorWorkspace({
                                 }`}
                             >
                                 <Maximize2 className="size-4" />
-                                채보 작성
+                                {t("editor.tab.notes")}
                             </button>
+                            {draftId !== null ? (
+                                // 「검토」 탭(2026-09-24 B1) — 단계 줄 · 시각 댓글. 남은 댓글 수를 붙인다
+                                <button
+                                    type="button"
+                                    onClick={() => setEditorMode("review")}
+                                    className={`flex h-10 items-center gap-2 rounded-md px-3 text-left text-xs font-bold ${
+                                        editorMode === "review"
+                                            ? "bg-surface-muted"
+                                            : "text-text-secondary hover:bg-surface-muted/60"
+                                    }`}
+                                >
+                                    <MessageSquare className="size-4" />
+                                    <span className="tabular-nums">
+                                        {t("editor.tab.review")}
+                                        {openComments.length
+                                            ? ` · ${openComments.length}`
+                                            : ""}
+                                    </span>
+                                </button>
+                            ) : null}
                         </nav>
 
-                        {editorMode === "notes" ? (
+                        {editorMode === "review" && draftId !== null ? (
+                            <ChartReviewPanel
+                                chartId={metadata.chartId}
+                                draftId={draftId}
+                                status={draftStatus ?? "draft"}
+                                comments={comments}
+                                canModerate={mode.kind === "review"}
+                                onSeek={(time) => void seek(time)}
+                            />
+                        ) : null}
+
+                        {editorMode === "notes" && !readOnly ? (
                             <section className="border-divider border-b p-2">
                                 <p className="text-micro mb-1.5 px-1">
-                                    작성 도구
+                                    {t("editor.tools")}
                                 </p>
                                 <button
                                     type="button"
@@ -756,68 +1212,57 @@ function ChartTimingEditorWorkspace({
                                     }`}
                                 >
                                     <MousePointer2 className="size-3.5" />
-                                    선택
+                                    {t("editor.toolSelect")}
                                     <kbd className="text-micro ml-auto">1</kbd>
                                 </button>
                                 <div className="mt-1 grid grid-cols-2 gap-1">
-                                    {Object.entries(noteTypeLabels).map(
-                                        ([value, label]) => (
+                                    {noteTypes.map((value) => (
+                                        <button
+                                            key={value}
+                                            type="button"
+                                            onClick={() => setNoteTool(value)}
+                                            className={`h-9 rounded-md px-1 text-xs font-semibold ${
+                                                noteTool === value
+                                                    ? "bg-surface-muted text-text-primary"
+                                                    : "text-text-secondary hover:bg-surface-muted/60"
+                                            }`}
+                                        >
+                                            {t(`editor.noteType.${value}`)}
+                                            <kbd className="text-micro ml-1">
+                                                {noteToolShortcuts[value]}
+                                            </kbd>
+                                        </button>
+                                    ))}
+                                </div>
+
+                                <p className="text-micro mt-3 mb-1.5 px-1">
+                                    {t("editor.note.hand")}
+                                </p>
+                                <div className="grid grid-cols-2 gap-1">
+                                    {(["left", "right"] as const).map(
+                                        (hand) => (
                                             <button
-                                                key={value}
+                                                key={hand}
                                                 type="button"
                                                 onClick={() =>
-                                                    setNoteTool(
-                                                        value as ChartNoteType
-                                                    )
+                                                    setNoteHand(hand)
                                                 }
-                                                className={`h-9 rounded-md px-1 text-xs font-semibold ${
-                                                    noteTool === value
-                                                        ? "bg-surface-muted text-text-primary"
-                                                        : "text-text-secondary hover:bg-surface-muted/60"
+                                                className={`h-8 rounded-md border text-xs font-semibold ${
+                                                    noteHand === hand
+                                                        ? hand === "left"
+                                                            ? "border-cyan-400/50 bg-cyan-400/10 text-cyan-200"
+                                                            : "border-red-400/50 bg-red-400/10 text-red-200"
+                                                        : "border-border text-text-secondary"
                                                 }`}
                                             >
-                                                {label}
-                                                <kbd className="text-micro ml-1">
-                                                    {
-                                                        noteToolShortcuts[
-                                                            value as ChartNoteType
-                                                        ]
-                                                    }
-                                                </kbd>
+                                                {t(`editor.hand.${hand}`)}
                                             </button>
                                         )
                                     )}
                                 </div>
 
                                 <p className="text-micro mt-3 mb-1.5 px-1">
-                                    연주 안내 손
-                                </p>
-                                <div className="grid grid-cols-2 gap-1">
-                                    {(
-                                        [
-                                            ["left", "왼손"],
-                                            ["right", "오른손"],
-                                        ] as const
-                                    ).map(([hand, label]) => (
-                                        <button
-                                            key={hand}
-                                            type="button"
-                                            onClick={() => setNoteHand(hand)}
-                                            className={`h-8 rounded-md border text-xs font-semibold ${
-                                                noteHand === hand
-                                                    ? hand === "left"
-                                                        ? "border-cyan-400/50 bg-cyan-400/10 text-cyan-200"
-                                                        : "border-red-400/50 bg-red-400/10 text-red-200"
-                                                    : "border-border text-text-secondary"
-                                            }`}
-                                        >
-                                            {label}
-                                        </button>
-                                    ))}
-                                </div>
-
-                                <p className="text-micro mt-3 mb-1.5 px-1">
-                                    기본 폭
+                                    {t("editor.defaultWidth")}
                                 </p>
                                 <div className="grid grid-cols-4 gap-1">
                                     {[1, 2, 3, 4].map((width) => (
@@ -836,56 +1281,65 @@ function ChartTimingEditorWorkspace({
                                     ))}
                                 </div>
                                 <p className="text-micro mt-2 px-1 leading-relaxed">
-                                    좌클릭으로 작성·선택하고 우클릭으로
-                                    삭제합니다. 선택 도구에서 빈 공간을
-                                    드래그하면 여러 노트를 선택할 수 있습니다.
+                                    {t("editor.toolHelp")}
                                 </p>
                             </section>
                         ) : null}
 
-                        <section className="min-h-0 flex-1 overflow-y-auto p-2">
-                            <div className="mb-2 flex items-center gap-1.5 px-1">
-                                <History className="size-3.5" />
-                                <h2 className="text-xs font-semibold">
-                                    저장 이력
-                                </h2>
-                            </div>
-                            {revisionHistory.length > 0 ? (
-                                <div className="flex flex-col gap-1">
-                                    {revisionHistory.map((revision) => (
-                                        <button
-                                            key={revision.id}
-                                            type="button"
-                                            onClick={() =>
-                                                void restoreRevision(revision)
-                                            }
-                                            className="hover:bg-surface-muted rounded-md px-2 py-2 text-left"
-                                        >
-                                            <span className="flex items-center justify-between text-xs">
-                                                <strong>
-                                                    v{revision.number}
-                                                </strong>
-                                                <span className="text-micro">
-                                                    {revision.kind === "publish"
-                                                        ? "공개"
-                                                        : "저장"}
-                                                </span>
-                                            </span>
-                                            <span className="text-micro mt-1 block">
-                                                {formatRevisionDateTime(
-                                                    revision.createdAt
-                                                )}
-                                            </span>
-                                        </button>
-                                    ))}
+                        {mode.kind === "admin" ? (
+                            <section className="min-h-0 flex-1 overflow-y-auto p-2">
+                                <div className="mb-2 flex items-center gap-1.5 px-1">
+                                    <History className="size-3.5" />
+                                    <h2 className="text-xs font-semibold">
+                                        저장 이력
+                                    </h2>
                                 </div>
-                            ) : (
-                                <p className="text-micro px-1 leading-relaxed">
-                                    Ctrl+S 또는 버전 저장을 누르면 복구 지점이
-                                    만들어집니다.
-                                </p>
-                            )}
-                        </section>
+                                {revisionHistory.length > 0 ? (
+                                    <div className="flex flex-col gap-1">
+                                        {revisionHistory.map((revision) => (
+                                            <button
+                                                key={revision.id}
+                                                type="button"
+                                                onClick={() =>
+                                                    void restoreRevision(
+                                                        revision
+                                                    )
+                                                }
+                                                className="hover:bg-surface-muted rounded-md px-2 py-2 text-left"
+                                            >
+                                                <span className="flex items-center justify-between text-xs">
+                                                    <strong>
+                                                        v{revision.number}
+                                                    </strong>
+                                                    <span className="text-micro">
+                                                        {revision.kind ===
+                                                        "publish"
+                                                            ? "공개"
+                                                            : revision.kind ===
+                                                                "vid2bmap"
+                                                              ? "영상 추출"
+                                                              : revision.kind ===
+                                                                  "contribution"
+                                                                ? "기여 공개"
+                                                                : "저장"}
+                                                    </span>
+                                                </span>
+                                                <span className="text-micro mt-1 block">
+                                                    {formatRevisionDateTime(
+                                                        revision.createdAt
+                                                    )}
+                                                </span>
+                                            </button>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <p className="text-micro px-1 leading-relaxed">
+                                        Ctrl+S 또는 버전 저장을 누르면 복구
+                                        지점이 만들어집니다.
+                                    </p>
+                                )}
+                            </section>
+                        ) : null}
                     </aside>
 
                     <main className="relative min-w-0 flex-1 overflow-hidden">
@@ -899,13 +1353,45 @@ function ChartTimingEditorWorkspace({
                             <PixiNoteEditor
                                 pixelsPerSecond={pixelsPerSecond}
                                 pianoVisible={pianoVisible}
-                                tool={noteTool}
+                                // 읽기 전용이면 선택 도구만(숫자 키로도 바꾸지 않는다)
+                                tool={readOnly ? "select" : noteTool}
                                 hand={noteHand}
                                 defaultWidth={noteWidth}
                                 onSeek={(time) => void seek(time)}
-                                onToolChange={setNoteTool}
+                                onToolChange={
+                                    readOnly ? ignoreTool : setNoteTool
+                                }
                             />
                         )}
+                        {vid2bmapFile && editorMode === "notes" ? (
+                            <dl
+                                aria-label="가져오기 미리보기 범례"
+                                className="border-border bg-bg/90 pointer-events-none absolute top-3 right-3 flex flex-col gap-1 rounded-md border px-2.5 py-2 text-xs shadow-lg"
+                            >
+                                <div className="flex items-center gap-2">
+                                    <dt className="bg-score h-2.5 w-5 rounded-sm" />
+                                    <dd>넣을 노트</dd>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <dt className="bg-text-secondary/40 h-2.5 w-5 rounded-sm" />
+                                    <dd>지금 초안(흐리게)</dd>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <dt className="border-danger h-2.5 w-5 rounded-sm border-2" />
+                                    <dd>빠질 노트</dd>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <dt className="bg-text-primary/15 border-text-primary h-2.5 w-5 border-x-2" />
+                                    <dd>목록에서 고른 곳</dd>
+                                </div>
+                                {importTimingCount > 0 ? (
+                                    <div className="flex items-center gap-2">
+                                        <dt className="border-score h-0 w-5 border-t-2 border-dashed" />
+                                        <dd>넣을 타이밍 포인트</dd>
+                                    </div>
+                                ) : null}
+                            </dl>
+                        ) : null}
                         <div className="border-border bg-surface/95 absolute top-3 left-3 flex items-center gap-1 rounded-md border p-1 shadow-lg">
                             <button
                                 type="button"
@@ -915,7 +1401,7 @@ function ChartTimingEditorWorkspace({
                                     )
                                 }
                                 className="hover:bg-surface-muted size-7 rounded text-sm"
-                                aria-label="타이밍 화면 축소"
+                                aria-label={t("editor.zoomOut")}
                             >
                                 −
                             </button>
@@ -930,14 +1416,26 @@ function ChartTimingEditorWorkspace({
                                     )
                                 }
                                 className="hover:bg-surface-muted size-7 rounded text-sm"
-                                aria-label="타이밍 화면 확대"
+                                aria-label={t("editor.zoomIn")}
                             >
                                 +
                             </button>
                         </div>
                     </main>
 
-                    {editorMode === "timing" ? (
+                    {vid2bmapFile ? (
+                        <Vid2bmapImportPanel
+                            key={`${vid2bmapFile.name}-${vid2bmapFile.lastModified}`}
+                            file={vid2bmapFile}
+                            onClose={() => setVid2bmapFile(null)}
+                            onReplaceFile={() =>
+                                vid2bmapInputRef.current?.click()
+                            }
+                            onSeek={(time) => void seek(time)}
+                            onBeforeApply={saveBeforeImport}
+                            onAfterApply={saveAfterImport}
+                        />
+                    ) : editorMode === "timing" ? (
                         <TimingInspector />
                     ) : (
                         <NoteInspector />
@@ -952,6 +1450,13 @@ function ChartTimingEditorWorkspace({
                             accept="audio/*,.mp3,.ogg,.wav,.m4a,.flac"
                             className="sr-only"
                             onChange={(event) => void handleAudioFile(event)}
+                        />
+                        <input
+                            ref={vid2bmapInputRef}
+                            type="file"
+                            accept=".zip,application/zip"
+                            className="sr-only"
+                            onChange={handleVid2bmapFile}
                         />
                         <input
                             ref={importInputRef}
@@ -972,11 +1477,13 @@ function ChartTimingEditorWorkspace({
                                 <FileAudio className="size-3.5" />
                             )}
                             <span className="truncate">
-                                {fileName ?? "로컬 음원 불러오기"}
+                                {fileName ?? t("editor.loadAudio")}
                             </span>
                         </button>
                         <EditorButton
-                            label={isPlaying ? "일시정지" : "재생"}
+                            label={
+                                isPlaying ? t("chart.pause") : t("chart.play")
+                            }
                             onClick={() => void togglePlayback()}
                         >
                             {isPlaying ? (
@@ -986,7 +1493,7 @@ function ChartTimingEditorWorkspace({
                             )}
                         </EditorButton>
                         <EditorButton
-                            label="처음으로 이동"
+                            label={t("chart.restart")}
                             disabled={currentTimeMs <= 0}
                             onClick={() => void seek(0)}
                         >
@@ -997,7 +1504,7 @@ function ChartTimingEditorWorkspace({
                         </span>
 
                         <label className="text-micro ml-1 flex items-center gap-1">
-                            속도
+                            {t("editor.speed")}
                             <select
                                 value={playbackRate}
                                 onChange={(event) =>
@@ -1018,7 +1525,7 @@ function ChartTimingEditorWorkspace({
                         </label>
 
                         <label className="text-micro flex items-center gap-1">
-                            스냅
+                            {t("editor.snap")}
                             <select
                                 value={snapDivisor}
                                 onChange={(event) =>
@@ -1043,7 +1550,7 @@ function ChartTimingEditorWorkspace({
                                 }
                                 className="accent-text-primary size-3.5"
                             />
-                            메트로놈
+                            {t("chart.metronome")}
                         </label>
 
                         <label className="border-border flex h-8 items-center gap-1.5 rounded-md border px-2">
@@ -1062,7 +1569,7 @@ function ChartTimingEditorWorkspace({
                                         Number(event.target.value)
                                     )
                                 }
-                                aria-label="메트로놈 음량"
+                                aria-label={t("chart.metronomeVolume")}
                                 className="accent-text-primary w-16"
                             />
                             <span className="text-micro w-8 text-right tabular-nums">
@@ -1079,7 +1586,7 @@ function ChartTimingEditorWorkspace({
                                 }
                                 className="accent-text-primary size-3.5"
                             />
-                            피아노
+                            {t("editor.piano")}
                         </label>
 
                         {audioError ? (
@@ -1088,8 +1595,7 @@ function ChartTimingEditorWorkspace({
                             </span>
                         ) : (
                             <span className="text-micro ml-auto">
-                                음원은 브라우저에서만 사용되며 업로드되지
-                                않습니다.
+                                {t("editor.audioNote")}
                             </span>
                         )}
                     </div>
@@ -1108,17 +1614,20 @@ function ChartTimingEditorWorkspace({
                         <Maximize2 className="size-5" />
                     </div>
                     <h1 className="text-title mt-4">
-                        큰 화면에서 편집해주세요
+                        {t("editor.narrowTitle")}
                     </h1>
                     <p className="text-body-muted mt-2">
-                        28칸 채보와 타이밍 도구를 정확하게 다루기 위해 데스크톱
-                        또는 가로형 태블릿을 지원합니다.
+                        {t("editor.narrowBody")}
                     </p>
                     <Link
-                        href={`/admin/music/${encodeURIComponent(metadata.musicIndex)}`}
+                        href={
+                            mode.kind === "admin"
+                                ? `/admin/music/${encodeURIComponent(metadata.musicIndex)}`
+                                : mode.backHref
+                        }
                         className="border-border mt-5 inline-flex h-10 items-center rounded-md border px-4 text-sm font-semibold"
                     >
-                        악곡 관리로 돌아가기
+                        {t("editor.goBack")}
                     </Link>
                 </div>
             </div>
@@ -1127,6 +1636,7 @@ function ChartTimingEditorWorkspace({
 }
 
 export default function ChartTimingEditor(props: ChartTimingEditorProps) {
+    const t = useTranslations();
     const browserSupport = useSyncExternalStore(
         subscribeBrowserSupport,
         getBrowserSupportSnapshot,
@@ -1145,17 +1655,20 @@ export default function ChartTimingEditor(props: ChartTimingEditorProps) {
                         <Maximize2 className="size-5" />
                     </div>
                     <h1 className="text-title mt-4">
-                        Safari에서는 편집할 수 없습니다
+                        {t("editor.safariTitle")}
                     </h1>
                     <p className="text-body-muted mt-2">
-                        채보 편집기는 Chrome 또는 Edge를 지원합니다. macOS에서도
-                        Chrome으로 다시 열어주세요.
+                        {t("editor.safariBody")}
                     </p>
                     <Link
-                        href={`/admin/music/${encodeURIComponent(props.metadata.musicIndex)}`}
+                        href={
+                            props.mode.kind === "admin"
+                                ? `/admin/music/${encodeURIComponent(props.metadata.musicIndex)}`
+                                : props.mode.backHref
+                        }
                         className="border-border mt-5 inline-flex h-10 items-center rounded-md border px-4 text-sm font-semibold"
                     >
-                        악곡 관리로 돌아가기
+                        {t("editor.goBack")}
                     </Link>
                 </div>
             </div>
@@ -1165,6 +1678,15 @@ export default function ChartTimingEditor(props: ChartTimingEditorProps) {
     return (
         <ChartEditorStoreProvider
             initialState={{
+                // 검토 모드와 검토 요청 중인 내 초안은 읽기 전용으로 연다
+                readOnly:
+                    props.mode.kind === "review" ||
+                    (props.mode.kind === "contributor" &&
+                        props.mode.status === "submitted"),
+                text: {
+                    overlap: t("editor.overlap"),
+                    saving: t("editor.saving"),
+                },
                 document: props.initialDocument,
                 draftVersion: props.draftVersion,
                 savedRevision: props.savedRevision,
@@ -1174,7 +1696,7 @@ export default function ChartTimingEditor(props: ChartTimingEditorProps) {
         >
             <ChartTimingEditorWorkspace
                 metadata={props.metadata}
-                revisions={props.revisions}
+                mode={props.mode}
             />
         </ChartEditorStoreProvider>
     );

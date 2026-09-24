@@ -7,7 +7,7 @@
 
 [서비스 바로가기](https://noslog.app/ko) · [이슈 제보](https://github.com/Anchovia/noslog/issues) · [최신 Release](https://github.com/Anchovia/noslog/releases/latest)
 
-NosLog는 NOSTALGIA 플레이 데이터를 한곳에서 확인하고 기록을 돌아볼 수 있도록 만든 웹 서비스입니다. 한국어·일본어·영어 화면을 제공하며, 현재 서비스 버전은 **v2.13.0**입니다.
+NosLog는 NOSTALGIA 플레이 데이터를 한곳에서 확인하고 기록을 돌아볼 수 있도록 만든 웹 서비스입니다. 한국어·일본어·영어 화면을 제공하며, 현재 서비스 버전은 **v2.14.0**입니다.
 
 > NosLog는 KONAMI 및 공식 NOSTALGIA 서비스와 관련이 없습니다.
 

@@ -9,6 +9,7 @@ import {
     type ChartNoteType,
 } from "./schema";
 import { tickToMilliseconds } from "./timing";
+import { trillHexes, trillUnion } from "./trillShape";
 
 export interface PlaybackPathPoint {
     lane: number;
@@ -34,6 +35,16 @@ export interface PreparedPlaybackNote {
     endTimeMs: number;
     pathPoints: PlaybackPathPoint[];
     trillSegments: PlaybackTrillSegment[];
+    /** 트릴 표시(B′): 두 자리를 합친 범위와 촘촘한 육각형 — 그리기 전용, 판정 · 건반 표시는 trillSegments 그대로 */
+    trillShape?: {
+        union: { lane: number; width: number };
+        hexes: {
+            startTimeMs: number;
+            endTimeMs: number;
+            lane: number;
+            width: number;
+        }[];
+    };
 }
 
 export interface PlaybackProjection {
@@ -165,6 +176,17 @@ export function prepareChartPlaybackNotes(
                         },
                     ],
                     trillSegments,
+                    trillShape: {
+                        union: trillUnion(note),
+                        hexes: trillHexes(note, document.ticksPerQuarter).map(
+                            (hex) => ({
+                                startTimeMs: toTime(hex.startTick),
+                                endTimeMs: toTime(hex.endTick),
+                                lane: hex.lane,
+                                width: hex.width,
+                            })
+                        ),
+                    },
                 };
             }
 

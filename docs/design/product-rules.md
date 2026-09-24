@@ -379,6 +379,141 @@ old design-stage checklist. Changes to material behavior require a user decision
   can change, and options can be added if the poll allowed it. After the deadline nothing can change, and
   votes are refused. Deleting the post deletes the poll and its votes.
 
+## User contributions (2026-09-23)
+
+- Two roles only: **contributors** (any signed-in user) and **admins**. There
+  is no reviewer role; only admins apply or publish. Contribution levels
+  (「기여 Lv.1–6」, later stage) are a reward label and never unlock
+  permissions.
+- Stage 1 — chart info suggestions for BPM, note count, length and release
+  date. A suggestion carries a value plus evidence (video or official link, or
+  a note for "checked myself"). It must differ from the current value. One
+  pending suggestion per user · chart · field (resubmitting replaces it); at
+  most 30 new suggestions per user per 24 hours. Level constants stay
+  admin-only.
+- Admin review (`/admin/contributions`, existing admin look): apply writes the
+  chart value, a `chart_field_sources` row (`source = "contribution"`, linked
+  to the suggestion) and marks it applied in one transaction; reject needs a
+  reason that the author can see. Several suggestions can be applied or
+  rejected at once. Suggestions whose current value changed since they were
+  made are flagged.
+- Stage 2 — contribution points (2026-09-24). Points are written to
+  `contribution_points` when a contribution is accepted, one row per source and
+  never removed except with the account: applied suggestion 1, resolved arcade
+  report 1 (reopening and resolving again does not add more), cabinet check 1
+  per Seoul day. Awarding never blocks the underlying action. Levels 1–6 at
+  1 · 10 · 30 · 100 · 300 · 1,000 points; admins show 「운영자」 instead.
+  Names in rankings, opinions and replies show the label from level 3; the
+  profile shows it from level 1 with a public 「기여」 section (level, points,
+  counts) and, for the owner only, their suggestion list with rejection reasons.
+- Stage 3 — user chart drafts and timestamped comments (2026-09-24). One draft
+  per user · chart (`chart_drafts`): it starts from the published chart, or an
+  empty chart when none is published, and only its author and admins can see
+  it. Draft → 「검토 요청」 (locked; the author can withdraw) → admin
+  「수정 요청」 or 「공개」. Size limits: 20,000 notes, 1,000 timing points,
+  30 minutes. Saving uses the draft version, so a stale window gets a conflict
+  instead of overwriting. A request with overlapping notes is refused.
+- Publishing (admin only, one transaction): unpublished admin editor changes
+  are first kept as a revision, then the draft becomes the published chart,
+  a `contribution` revision records the draft and its base published version
+  (「· 기준 vN」 / 「· 새 채보」), the chart author (`author_id`) is set and the
+  author gets 20 points once per published version. Reopening a published
+  draft starts again from the current published chart.
+- Timestamped comments (`chart_comments`): on a published chart anyone signed
+  in can comment (500 characters, 50 per 24 hours); on a draft only its author
+  and admins. Authors can delete their own comment until it is resolved. Only
+  admins resolve (+1 point when the writer is not an admin, published-chart
+  comments only) or hide. Comment times link to the viewer as `?t=` in seconds.
+- The public viewer credits the author with their name label (level 3+, or
+  「운영자」) and names the publishing admin in 「출처」. 「영상에서 추출」 follows
+  the published chart's lineage: a contribution inherits it only through its
+  base version, so a chart started from empty never shows it.
+- The editor stays wide-screen only (1056+). Narrower screens get a notice with
+  「주소 복사」 instead of opening it.
+
+## Chart import from video extraction (2026-09-23)
+
+- The admin chart editor can import a vid2bmap result zip (Kim Yeonghun · Choi Sunghee, KAIST,
+  MIT) as a preview. Nothing changes until "초안에 넣기"; it writes the draft only (publishing
+  stays separate), saves the current draft as a revision first, and is undoable. Videos and
+  frames never reach the site — extraction runs on the operator's own computer.
+- Notes are placed by beat lines, not video time: a note's beat is its position between the
+  neighbouring bar lines the game draws each beat (one line = one beat of the active time
+  signature). Only the first bar line's beat is chosen by a person; when the draft already has
+  notes it starts at the position that agrees with the most of them.
+- Snap to the suggested grid (smallest average offset per grid step), chosen again per beat
+  (2026-09-24 C): a beat keeps the song grid only when every note in it is within 2.5 video
+  frames and no two notes more than that apart land on one spot; otherwise the coarsest grid
+  from 1/2 to 1/16 that does both (e.g. a 1/8-beat run inside a 1/6-beat song), and if none
+  does, notes off the song grid keep their video position. Tenuto and trill lengths use the
+  grid of the beat they end in, and the end is put on that grid. Moved notes can be selected for
+  review after import. Notes that clash on one spot are then re-snapped finer (×2 … ×8, e.g. a one-frame staircase at 180 BPM needs 1/24). Same-lane reads
+  within 3 frames are one note, and so are two reads of the same kind within 3 frames where one
+  lane range contains the other (the wider is kept — vid2bmap sometimes reads a note again one
+  frame later, narrower).
+  Hands come from the zip when it carries them (2026-09-24: the runner takes notes and bar lines
+  from the main vid2bmap run and only the hand from the `LR_classification` branch run, matched
+  by kind, lanes and nearby frame); otherwise they are guessed by lane centre, and only guessed
+  centre notes are selected for review. Glissando pieces (vid2bmap reads each rung) are joined
+  into one glissando when the next piece is within 12 frames and 4 lanes (2026-09-24); the path
+  keeps the start, end and bends over 1 lane, one rung per piece plus rungs vid2bmap skipped
+  (gaps at least twice the usual, counted down) — one rung = one judgement, and the game's rung
+  spacing is not a clean grid (Gaia 180 BPM ≈ 1/9 beat), so the spacing is the first-to-last span
+  divided by that count and bends sit on rungs (note counts match the result screen for all three
+  checked songs: Altale 1,604 · アルストロメリア 1,394 · Gaia 1,539), a lone piece is
+  dropped, and a standard note on the path is taken as a rung read twice and dropped. A trill's
+  head width w becomes two positions of width w-1 one lane apart (the video's hexes alternate
+  one lane within the head, 2026-09-24) and is flagged.
+- Against an existing draft every difference is listed (same tick, overlapping lanes = same
+  note; otherwise the same lane, width and type within 1/8 of a quarter = the same note moved;
+  a hand read from the video counts as a difference, a guessed hand does not) and chosen
+  per place; notes after the draft are a separate
+  new-section toggle. An import that would create overlapping notes cannot be applied.
+- Snap check in the editor (2026-09-24 C, like osu!'s "Unsnapped hitobjects" check): a note
+  whose start is off every editor snap (1/1–1/32 of the active beat) gets a dashed warning
+  outline, and the note inspector lists them with the nearest grid and offset in ms, one by one
+  or all at once to the nearest grid.
+- Tempo changes become proposed timing points (2026-09-23 T2): the result zip carries
+  `beat_frames.json` — frames where bar lines crossed one grid row, before vid2bmap's
+  frame-drop correction — and the tempo is measured from those (the corrected bar lines
+  jitter ±10%). A change is a shift of more than 1.5% in the trimmed mean of 8 beats that
+  lasts at least 8 beats; each section's BPM is measured by a straight-line fit over all its beats (shared slope, separate offsets across steps where
+  the beats jump by more than 1.5 frames; sections under 32 beats use the first-to-last average), then the first of whole →
+  0.5 → 0.1 → 0.01 whose beats stay within the video jitter + 0.5 frames to the section end is proposed (2026-09-25 B′),
+  with the measurement shown. The start BPM is proposed only when the current one drifts past that limit.
+  Where the video moves beat by beat (2026-09-25 B) — two beats together off the section BPM by 2.5 frames or
+  more, sections under 32 beats, or a beat drifting 2.5 frames from the video — the beats are chained with the
+  longest whole BPMs that keep every beat within 1.5 frames (the one that ends a run is picked by the next 16
+  beats), then the section BPM resumes; the points of one such place share a card (「17마디 3박 — 2박 느려짐」,
+  「45마디 3박 ~ 48마디 2박 — 박마다 바뀜」) showing the beat intervals in frames. No song-specific values.
+  Timing points start a new measure, as in osu!, so a card whose last point is mid-bar also puts a point with the
+  same BPM on the next downbeat of the song's bars (the timing before import, with the proposed start meter) unless
+  another point comes first (2026-09-25 마) — 「… · 49마디 1박 마디선 맞춤」 on the card.
+  When the draft has timing points besides the start and they miss the video (a beat more than 2.5 frames off after
+  removing the average offset), a card offers 「기존 타이밍 포인트를 영상 타이밍으로」 (2026-09-25 B): proposals are made
+  as if only the start point existed and the others are removed with the import (one undo step; the start point and
+  its time stay). On by default only when the draft has no notes; off keeps them and says which proposals they block.
+  Proposals
+  replace the bar-interval BPM warning, are on by default, add the point at the beat with the
+  previous time signature, and go in with the notes in one undoable step. No proposal where a
+  timing point already exists; older zips without beat frames keep the warning only.
+  The start timing gets the same kind of proposal (2026-09-24 A) when the first section — measured
+  over its whole length, not the first beats — differs from it: 「시작 타이밍을 BPM ○ 로」, on by
+  default only when the draft has no notes (changing the start BPM moves every existing note in
+  time); it changes only that point's BPM, like editing it, and goes in with the notes. The offset
+  (start time against the audio) cannot come from the video. The meter is proposed in the same
+  card (2026-09-24 A): the game draws the same line every beat, so accents at beat heads (notes
+  within 3 frames, tenuto/trill starts ×3) are compared for 3- and 4-beat cycles; 「박자를 ○/4 로」
+  shows 뚜렷함/약함 (clear = score ≥ 0.15 and twice the other) and is on by default only when
+  clear and the draft has no notes. With it on, an empty draft's first bar goes to the strongest
+  accent (measure 1 = last downbeat at or before the first note), so a song that does not start on
+  a downbeat lands right (Altale: first note 1마디 3½박).
+- Provenance (2026-09-24 C2): right after an import the editor saves a revision with
+  kind `vid2bmap`. A published chart whose published revision number is at or after the first
+  `vid2bmap` revision shows "노트 배치 · 영상에서 추출(vid2bmap)" and a sources dialog (vid2bmap,
+  its authors, MIT, paper and repository links). The byline is the publisher's username with the
+  operator tag when their role is admin. The viewer never reads draft content.
+
 ## Official X news (2026-09-19)
 
 - Home reads the persisted latest post and successful ko/en translations through the data cache; it never calls X or Gemini. New posts are checked every 12 hours outside page rendering using `since_id`. Successful translations have no time-based expiry.
@@ -427,3 +562,24 @@ old design-stage checklist. Changes to material behavior require a user decision
 - Audio stays local to the browser. Never upload MP3 files to NosLog storage or DB.
 - Documentation consolidation does not declare unresolved real-provider, privacy
   copy or assisted-browser checks passed. Record actual verification separately.
+
+## Achievements (2026-09-24)
+
+- Tiered achievements (bronze I · silver II · gold III) judged automatically from synced records and site
+  activity. There are no hidden achievements and no conditions based on play counts, sync counts, streaks
+  or luck. Definitions and thresholds live in code (`features/achievements`); thresholds are provisional
+  until they are set from the production distribution.
+- Judging runs at the end of every sync, after records and Grd are updated. It only adds newly reached
+  tiers (`user_achievements`, one row per user · achievement · tier) and never removes a tier, even if the
+  value later drops. A failed judgement never fails the sync. Achievements that come from activity
+  (opinions, helpful marks, pattern ratings, exams, bingo) are also picked up at the next sync.
+- The date of a tier is when NosLog confirmed it (the sync time), not when it was played.
+- Rarity is shown as the number of players who reached each tier, only on the achievement page.
+  No player list.
+- The profile head shows up to three achievements the owner chose (`user_achievement_showcase`), or the
+  highest tiers automatically when none are chosen. They are chosen in Settings → Profile (2026-09-25) and
+  saved with the rest of the profile form; only earned achievements, at most three, in the chosen order.
+  An invalid choice blocks the whole save. The achievement list itself has no pin controls.
+- Profiles with private scores: other people do not see skill or collection achievements (they reveal
+  record ranges); challenge and community achievements stay visible. Progress values are shown only to the
+  owner.

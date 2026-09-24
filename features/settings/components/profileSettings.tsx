@@ -30,6 +30,7 @@ import type {
 import { applyFormFieldErrors, applyFormRootError } from "@/lib/forms/errors";
 import { IMAGE_ACCEPT, imageFileValidationError } from "@/lib/imageUploadRules";
 import { uploadGrantedImage } from "@/lib/uploads/clientImageUpload";
+import AchievementShowcasePicker from "@/features/achievements/components/achievementShowcasePicker";
 import ArcadePicker from "./arcadePicker";
 import AvatarCropDialog from "./avatarCropDialog";
 import UnsavedChangesGuard from "./unsavedChangesGuard";
@@ -64,6 +65,10 @@ export default function ProfileSettings({
     });
     const avatar = useWatch({ control, name: "avatar" });
     const arcadeId = useWatch({ control, name: "preferredArcadeId" });
+    const achievementShowcase = useWatch({
+        control,
+        name: "achievementShowcase",
+    });
     const [saved, setSaved] = useState("");
     const [crop, setCrop] = useState<File | null>(null);
     const [staged, setStaged] = useState<{ file: File; url: string } | null>(
@@ -321,6 +326,19 @@ export default function ProfileSettings({
                         </p>
                     ) : null}
                 </div>
+                {/* 프로필 업적(2026-09-25 D1) — 선호 오락실 칸과 같은 모양, 「저장」 때 함께 저장 */}
+                <AchievementShowcasePicker
+                    records={user.achievements}
+                    value={achievementShowcase ?? ""}
+                    onChange={(value) =>
+                        setValue("achievementShowcase", value, {
+                            shouldDirty: true,
+                            shouldValidate: true,
+                        })
+                    }
+                    disabled={isSubmitting}
+                    error={errors.achievementShowcase?.message}
+                />
                 <div className="nl-settings__save">
                     <a
                         href={href(`/profile/${user.id}`)}

@@ -211,3 +211,10 @@
         display: none;
     }
 }
+
+/* 기여 라벨(2026-09-24 N1 · L2) — 기존 태그 안에서 「기여」 는 보조 글자 · 보통 굵기, 「Lv.N」 만 굵게 */
+.noslog-ui .nl-contribution-label__prefix {
+    margin-inline-end: var(--nl-spacing-4);
+    color: var(--nl-content-subdued);
+    font-weight: var(--nl-type-weight-regular);
+}

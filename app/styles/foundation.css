@@ -75,7 +75,8 @@ html[data-theme="light"] .noslog-ui,
         0 4px 12px rgb(0 0 0 / 8%);
 }
 .noslog-ui ::selection {
-    background: var(--nl-interaction-menu-set);
+    /* ::selection 은 배경 그림을 받지 않아 색으로 — 반투명이라 밑면 위에 그대로 겹친다 */
+    background-color: var(--nl-interaction-menu-set);
     color: var(--nl-content-default);
 }
 .noslog-ui :is(input, textarea) {
@@ -206,15 +207,30 @@ html[data-theme="light"] .noslog-ui,
     background: transparent;
     color: var(--nl-content-interactive);
 }
+/* 올림 · 누름은 제 면 위에 겹친다 — 공용 .nl-button:hover · :active 의 주 버튼 면이 새지 않게 면을 다시 적는다(2026-09-23 I2) */
+.noslog-ui .nl-button--secondary:is(:hover, :active) {
+    background-color: var(--nl-surface-surface);
+}
+.noslog-ui .nl-button--ghost:is(:hover, :active) {
+    background-color: transparent;
+}
 @media (hover: hover) {
     .noslog-ui .nl-button--secondary:hover,
     .noslog-ui .nl-button--ghost:hover {
-        background: var(--nl-interaction-hover);
+        --nl-state-layer: var(--nl-interaction-hover);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
     }
 }
 .noslog-ui .nl-button--secondary:active,
 .noslog-ui .nl-button--ghost:active {
-    background: var(--nl-interaction-selected-pressed);
+    --nl-state-layer: var(--nl-interaction-selected-pressed);
+    background-image: linear-gradient(
+        var(--nl-state-layer),
+        var(--nl-state-layer)
+    );
 }
 .noslog-ui .nl-button--secondary:focus-visible,
 .noslog-ui .nl-button--ghost:focus-visible {
@@ -618,7 +634,11 @@ html[data-theme="light"] .noslog-ui,
 }
 @media (hover: hover) {
     .noslog-ui .nl-disclosure > summary:hover {
-        background: var(--nl-interaction-hover);
+        --nl-state-layer: var(--nl-interaction-hover);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
     }
 }
 .noslog-ui .nl-disclosure__body {
@@ -645,7 +665,11 @@ html[data-theme="light"] .noslog-ui,
 }
 @media (hover: hover) {
     .noslog-ui .nl-disclosure--card:has(> summary:hover) {
-        background: var(--nl-interaction-hover);
+        --nl-state-layer: var(--nl-interaction-hover);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
     }
 }
 .noslog-ui .nl-disclosure--card > .nl-disclosure__body {
@@ -915,7 +939,11 @@ html[data-theme="light"] .noslog-ui,
 /* 올림은 포인터 장치에서만 — 고른 값은 올려도 primary 면 그대로 */
 @media (hover: hover) {
     .noslog-ui .nl-scale-picker__option:not(:disabled):hover {
-        background: var(--nl-interaction-hover);
+        --nl-state-layer: var(--nl-interaction-hover);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
     }
     .noslog-ui .nl-scale-picker__option--checked:not(:disabled):hover {
         background: var(--nl-primary-default);
@@ -982,11 +1010,19 @@ html[data-theme="light"] .noslog-ui,
 }
 @media (hover: hover) {
     .noslog-ui .nl-action-group__item:hover {
-        background: var(--nl-interaction-hover);
+        --nl-state-layer: var(--nl-interaction-hover);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
     }
 }
 .noslog-ui .nl-action-group__item:active {
-    background: var(--nl-interaction-selected-pressed);
+    --nl-state-layer: var(--nl-interaction-selected-pressed);
+    background-image: linear-gradient(
+        var(--nl-state-layer),
+        var(--nl-state-layer)
+    );
 }
 .noslog-ui .nl-action-group__item[aria-disabled="true"],
 .noslog-ui
@@ -1293,46 +1329,43 @@ html[data-theme="light"] .noslog-ui,
 }
 /* 태그 — 누르지 않는 라벨(공지 분류 · 빙고 미션 종류 · 상태). 부품 결정 ⑤(2026-09-15).
    높이 24 · 모서리 4 · 1px 아웃라인 · 글자 metadata 흐림 / --strong = 글자 기본 · 경계 진하게 */
+/* 태그 · 배지(2026-09-23 N3 · R1 · S-c · C-a — 다크 실측 15곳 · 가이드 8종).
+   다크에서 무채색 테두리만 쓰면 형태 단서가 1.94 : 1 로 3 : 1 에 못 미쳐 덩어리로 안 보인다(실측 15곳 중 그렇게 두는 곳 0).
+   그래서 면을 깔고 테두리를 없앤다 — 면 raised(면 대 배경 1.19) · 글자 default(11.49) · 12/600. 모서리는 control 4 그대로 */
 .noslog-ui .nl-tag {
     display: inline-flex;
     align-items: center;
     height: 24px;
     padding-inline: var(--nl-spacing-8);
-    border: var(--nl-stroke-default) solid var(--nl-border-default);
+    /* 테두리는 border/input — 캔버스 3.87 · 카드 3.53 · 팝오버 3.26 으로 어디서나 3 : 1 을 넘는다.
+       면만 두면 카드(1.08) · 팝오버(1.00) 위에서 배지가 사라진다(2026-09-23 X2) */
+    border: var(--nl-stroke-default) solid var(--nl-border-input);
     border-radius: var(--nl-radius-control);
-    color: var(--nl-content-subdued);
+    background: var(--nl-surface-raised);
+    color: var(--nl-content-default);
+    font-weight: var(--nl-type-weight-semibold);
     white-space: nowrap;
 }
+/* 하나만 세게 — 반전(면 = 글자색 · 글자 = 캔버스). 한 줄에 하나까지만 쓴다 */
 .noslog-ui .nl-tag--strong {
-    color: var(--nl-content-default);
-    border-color: var(--nl-border-strong);
+    border-color: var(--nl-content-default);
+    background: var(--nl-content-default);
+    color: var(--nl-surface-canvas);
 }
-/* 상태 태그(이벤트 진행 · 글 승인, 2026-09-18 T3) = 기본 테두리 태그 + 앞에 색 점 8(사이 8 — 오락실 기체 「색 점 + 글자」 와 같은 문법).
-   점 색 = 알림 표시색(marker) — 그래픽 대비 3 : 1 을 두 테마 모두 넘는다. 중립(임시저장 · 종료)은 점 없음. 색 단독이 아니라 늘 글자와 함께 */
-.noslog-ui .nl-tag--status {
-    gap: var(--nl-spacing-8);
+/* 상태 태그(이벤트 진행 · 글 승인, 2026-09-23 S-c) = 같은 면에 글자만 알림 표시색.
+   면 색을 상태마다 만들지 않아 분류 태그와 무게가 같고, 색이 글자에 있어 12px 에서도 4.54 ~ 10.15 : 1 로 읽힌다.
+   색 단독으로 뜻을 전하지 않는다 — 배지 글자가 늘 상태 이름을 말한다(WCAG 1.4.1) */
+.noslog-ui .nl-tag--status[data-tone="success"] {
+    color: var(--nl-feedback-success-marker);
 }
-.noslog-ui .nl-tag--status::before {
-    content: "";
-    flex-shrink: 0;
-    width: 8px;
-    height: 8px;
-    border-radius: var(--nl-radius-full);
+.noslog-ui .nl-tag--status[data-tone="info"] {
+    color: var(--nl-feedback-info-marker);
 }
-.noslog-ui .nl-tag--status[data-tone="neutral"]::before {
-    content: none;
+.noslog-ui .nl-tag--status[data-tone="warning"] {
+    color: var(--nl-feedback-warning-marker);
 }
-.noslog-ui .nl-tag--status[data-tone="success"]::before {
-    background: var(--nl-feedback-success-marker);
-}
-.noslog-ui .nl-tag--status[data-tone="info"]::before {
-    background: var(--nl-feedback-info-marker);
-}
-.noslog-ui .nl-tag--status[data-tone="warning"]::before {
-    background: var(--nl-feedback-warning-marker);
-}
-.noslog-ui .nl-tag--status[data-tone="danger"]::before {
-    background: var(--nl-feedback-danger-marker);
+.noslog-ui .nl-tag--status[data-tone="danger"] {
+    color: var(--nl-feedback-danger-marker);
 }
 /* 필터 개수 배지 — 「필터」 버튼 안 적용 조건 묶음 수. 개수 전용이라 태그와 다른 모양: 원 20 · 면 raised · 글자 metadata */
 .noslog-ui .nl-filter-count {
@@ -1360,6 +1393,18 @@ html[data-theme="light"] .noslog-ui,
 .noslog-ui .nl-term__trigger > span {
     text-decoration: underline dotted;
     text-underline-offset: 3px;
+}
+/* 내용 그대로 누르는 도움말(기여 라벨, 2026-09-24) — 밑줄 없이, 태그 모양이 누를 자리를 말한다 */
+.noslog-ui .nl-term--plain {
+    display: inline-flex;
+    vertical-align: middle;
+}
+.noslog-ui .nl-term__trigger--plain {
+    cursor: pointer;
+}
+.noslog-ui .nl-term__trigger--plain > span {
+    display: inline-flex;
+    text-decoration: none;
 }
 .noslog-ui.nl-term__popover {
     display: flex;
@@ -1549,16 +1594,19 @@ html[data-theme="light"] .noslog-ui,
 .noslog-ui :is(a, button)::before {
     transition:
         background-color var(--nl-motion-duration-state) var(--nl-ease-enter),
-        color var(--nl-motion-duration-state) var(--nl-ease-enter);
+        color var(--nl-motion-duration-state) var(--nl-ease-enter),
+        --nl-state-layer var(--nl-motion-duration-state) var(--nl-ease-enter);
 }
 
-/* ③ 떠 있는 메뉴(셀렉트 · 정렬 · ⋯ · 필터 팝오버 · 빙고 칸 · 지도 범례 · ≡ 메뉴) — 열 때 페이드만, 닫을 때 즉시.
-   용어 도움말은 툴팁이라 즉시(⑧) */
+/* ③ 떠 있는 메뉴(셀렉트 · 정렬 · ⋯ · 필터 팝오버 · 빙고 칸 · 지도 범례 · ≡ 메뉴 · 업적 배지 카드) — 열 때 페이드만, 닫을 때 즉시.
+   용어 도움말은 툴팁이라 즉시(⑧). 업적 배지 카드는 같은 부품이지만 떠 있는 창 크기라 ③(2026-09-25 A1) */
 .noslog-ui
     [data-radix-popper-content-wrapper]
     > [data-state="open"]:not(.nl-term__popover),
 [data-radix-popper-content-wrapper]
     > .noslog-ui[data-state="open"]:not(.nl-term__popover),
+[data-radix-popper-content-wrapper]
+    > .noslog-ui.nl-achievement-card-popover[data-state="open"],
 .noslog-ui .nl-destinations,
 .noslog-ui .nl-nav-scrim {
     animation: nl-fade-in var(--nl-motion-duration-popup) var(--nl-ease-enter);

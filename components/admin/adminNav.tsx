@@ -16,6 +16,7 @@ const adminSections = [
     { href: "/admin/syncs", label: "동기화" },
     { href: "/admin/music", label: "악곡" },
     { href: "/admin/catalog", label: "업데이트" },
+    { href: "/admin/contributions", label: "기여" },
     { href: "/admin/tiers", label: "서열표" },
     { href: "/admin/exams", label: "검정" },
     { href: "/admin/submissions", label: "인증" },

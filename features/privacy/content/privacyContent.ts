@@ -2,6 +2,7 @@ import copy from "@/features/privacy/content/policyCopy.json";
 import version20260727 from "@/features/privacy/content/versions/2026-07-27.json";
 import version20260913 from "@/features/privacy/content/versions/2026-09-13.json";
 import version20260920 from "@/features/privacy/content/versions/2026-09-20.json";
+import version20260922 from "@/features/privacy/content/versions/2026-09-22.json";
 import { privacyCopySchema } from "@/features/privacy/schemas/privacyCopySchema";
 import type { Locale } from "@/lib/i18n/routing";
 
@@ -14,6 +15,12 @@ export function getPrivacyCopy(locale: Locale) {
 // 이전 시행 버전 — 새 시행 버전을 낼 때 직전 policyCopy.json 을 versions/{시행일}.json 으로 손대지 않고 보관하고
 // 여기 맨 앞에 한 줄 더한다. until 은 다음 버전 시행 전날(서울 기준). 지어낸 날짜나 지운 문서로 이력을 만들지 않는다
 export const PRIVACY_PREVIOUS_VERSIONS = [
+    {
+        id: "2026-09-22",
+        effective: "2026-09-22",
+        until: "2026-09-24",
+        copy: version20260922,
+    },
     {
         id: "2026-09-20",
         effective: "2026-09-20",

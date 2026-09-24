@@ -31,7 +31,11 @@
 }
 @media (hover: hover) {
     .noslog-ui .nl-selection-list__option:hover {
-        background: var(--nl-interaction-hover);
+        --nl-state-layer: var(--nl-interaction-hover);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
     }
 }
 .noslog-ui .nl-selection-list__option:has(:focus-visible) {
@@ -325,7 +329,11 @@
 }
 @media (hover: hover) {
     .noslog-ui .nl-chart-target:hover {
-        background: var(--nl-interaction-hover);
+        --nl-state-layer: var(--nl-interaction-hover);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
     }
 }
 .noslog-ui .nl-difficulty-marker {

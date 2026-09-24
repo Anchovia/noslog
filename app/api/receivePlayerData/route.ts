@@ -10,6 +10,7 @@ import { updatePlayData } from "@/lib/services/user/updatePlayData";
 import { updatePlayerProfile } from "@/lib/services/user/updatePlayerProfile";
 import { updateRecentBestRecords } from "@/lib/services/user/updateRecentBestRecords";
 import { updateRecentPlay } from "@/lib/services/user/updateRecentPlay";
+import { evaluateUserAchievements } from "@/features/achievements/server/achievementService";
 import { getMissingJacketIndexes } from "@/features/music/server/jacketCollectionService";
 import { recordProfileRatings } from "@/features/profile/server/profileRatingHistoryService";
 import { NextRequest, NextResponse } from "next/server";
@@ -473,6 +474,14 @@ export async function POST(request: NextRequest) {
             await recordProfileRatings(user.id, syncId);
         }
 
+        // 업적 판정(2026-09-24 N1) — 실패해도 동기화 결과는 그대로. 새 단계는 동기화 결과 화면이 달성 시각으로 모아 보인다
+        const newAchievements = await evaluateUserAchievements(user.id).catch(
+            (error) => {
+                console.error("Achievement evaluation failed", error);
+                return [];
+            }
+        );
+
         await db.dataSync.update({
             where: { id: syncId },
             data: {
@@ -512,6 +521,7 @@ export async function POST(request: NextRequest) {
             insertedPlays,
             changedRecords,
             catalogUpdates,
+            newAchievements: newAchievements.length,
             ...(missingJackets ? { missingJackets } : {}),
         });
     } catch (error) {

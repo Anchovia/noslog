@@ -7,6 +7,8 @@ import {
     getBestExamGrades,
 } from "@/features/exams/examGrades";
 import { unstable_cache } from "next/cache";
+import { getContributionTotal } from "@/features/contributions/server/contributionPointService";
+import { getAchievementRecords } from "@/features/achievements/server/achievementService";
 
 async function queryProfileData(id: number) {
     const [user, recentPlays] = await Promise.all([
@@ -40,6 +42,7 @@ async function queryProfileData(id: number) {
                 score_c: true,
                 score_d: true,
                 created_at: true,
+                role: true,
                 preferredArcade: { select: { name: true } },
             },
         }),
@@ -53,31 +56,41 @@ async function queryProfileData(id: number) {
 
     if (!user) return null;
 
-    const [rankBasic, rankBasicCountry, rankRecital, rankRecitalCountry] =
-        await Promise.all([
-            getUserRankingPosition({
-                userId: user.id,
-                grade: user.grade_basic,
-                mode: "basic",
-            }),
-            getUserRankingPosition({
-                userId: user.id,
-                grade: user.grade_basic,
-                mode: "basic",
-                scope: { country: user.country },
-            }),
-            getUserRankingPosition({
-                userId: user.id,
-                grade: user.grade_recital,
-                mode: "recital",
-            }),
-            getUserRankingPosition({
-                userId: user.id,
-                grade: user.grade_recital,
-                mode: "recital",
-                scope: { country: user.country },
-            }),
-        ]);
+    const [
+        rankBasic,
+        rankBasicCountry,
+        rankRecital,
+        rankRecitalCountry,
+        contribution,
+        achievements,
+    ] = await Promise.all([
+        getUserRankingPosition({
+            userId: user.id,
+            grade: user.grade_basic,
+            mode: "basic",
+        }),
+        getUserRankingPosition({
+            userId: user.id,
+            grade: user.grade_basic,
+            mode: "basic",
+            scope: { country: user.country },
+        }),
+        getUserRankingPosition({
+            userId: user.id,
+            grade: user.grade_recital,
+            mode: "recital",
+        }),
+        getUserRankingPosition({
+            userId: user.id,
+            grade: user.grade_recital,
+            mode: "recital",
+            scope: { country: user.country },
+        }),
+        // 기여 점수 · 종류별 수(공개, 2026-09-24) — 적립되면 이 사람 프로필 캐시를 비운다
+        getContributionTotal(user.id),
+        // 업적(2026-09-24) — 동기화 · 머리에 걸기가 이 사람 프로필 캐시를 비운다
+        getAchievementRecords(user.id),
+    ]);
 
     // 검정 급수는 승인된 합격 기록이 유일한 출처 — 공개 데이터에는 모드별 최고 급수만 싣는다
     const { examAchievements, ...publicUser } = user;
@@ -100,6 +113,8 @@ async function queryProfileData(id: number) {
             rank_basic_country: rankBasicCountry,
             rank_recital: rankRecital,
             rank_recital_country: rankRecitalCountry,
+            contribution,
+            achievements,
             created_at: user.created_at.toISOString(),
             last_played_at: user.hide_play_activity
                 ? null
@@ -112,7 +127,7 @@ async function queryProfileData(id: number) {
 export function getCachedProfileData(id: number) {
     return unstable_cache(
         () => queryProfileData(id),
-        ["profile-public-visibility-v4", String(id)],
+        ["profile-public-visibility-v6", String(id)],
         {
             revalidate: PUBLIC_DATA_REVALIDATE_SECONDS,
             tags: [CACHE_TAGS.userProfiles, getUserProfileTag(id)],

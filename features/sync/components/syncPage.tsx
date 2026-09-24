@@ -213,7 +213,16 @@ export default function SyncPage({
                             title={t("sync.latestResult")}
                             heading="section"
                         >
-                            <SyncAttemptSummary attempt={attempt} />
+                            <SyncAttemptSummary
+                                attempt={attempt}
+                                achievementsHref={
+                                    userId
+                                        ? href(
+                                              `/profile/${userId}/achievements`
+                                          )
+                                        : undefined
+                                }
+                            />
                         </Disclosure>
                     ) : null}
                     {data?.firstFullImport ? (

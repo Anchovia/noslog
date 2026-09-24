@@ -21,8 +21,17 @@ export default function ExamBadgeGroup({
             const badges = [
                 ...element.querySelectorAll<HTMLElement>(".nl-exam-badge"),
             ];
+            // 명판 뒤에 붙는 기여 라벨(2026-09-24)도 같은 줄 폭을 쓴다
+            const extras = [
+                ...element.querySelectorAll<HTMLElement>(":scope > .nl-tag"),
+            ];
             const gap = parseFloat(getComputedStyle(element).columnGap) || 0;
-            let needed = gap * Math.max(badges.length - 1, 0);
+            let needed =
+                gap * Math.max(badges.length + extras.length - 1, 0) +
+                extras.reduce(
+                    (sum, extra) => sum + extra.getBoundingClientRect().width,
+                    0
+                );
             for (const badge of badges) {
                 needed += badge.getBoundingClientRect().width;
                 const full = badge.querySelector<HTMLElement>(

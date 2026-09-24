@@ -18,6 +18,20 @@ vi.mock("@/lib/db", () => ({
 vi.mock("@/features/rankings/server/rankingPosition", () => ({
     getUserRankingPosition: vi.fn().mockResolvedValue(1),
 }));
+vi.mock("@/features/contributions/server/contributionPointService", () => ({
+    getContributionTotal: vi.fn().mockResolvedValue({
+        points: 0,
+        chart_field: 0,
+        arcade_report: 0,
+        cabinet_check: 0,
+    }),
+}));
+
+vi.mock("@/features/achievements/server/achievementService", () => ({
+    getAchievementRecords: vi
+        .fn()
+        .mockResolvedValue({ earned: [], pins: [], recipients: {} }),
+}));
 
 import { getCachedProfileData } from "@/app/(nevigation)/profile/[id]/data";
 

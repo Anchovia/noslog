@@ -44,8 +44,17 @@ import {
     snapTick,
     tickToMilliseconds,
 } from "@/lib/chart-pattern/timing";
+import { findOffGridNotes } from "@/lib/chart-pattern/snapCheck";
+import {
+    trillHexes,
+    trillSolidSpan,
+    trillUnion,
+} from "@/lib/chart-pattern/trillShape";
+
+import { useTranslations } from "@/components/i18n/localeProvider";
 
 import { useChartEditorStore } from "./chartEditorStore";
+import { drawCommentLine, drawOffGridMarker } from "./snapCheckMarker";
 
 export type NoteEditorTool = "select" | ChartNoteType;
 
@@ -170,6 +179,10 @@ const colors = {
     pianoRail: 0x252a34,
     pianoEdge: 0x969aa5,
 };
+
+/** 트릴 몸통(B′) — 칠 자리 투명도 · 옅어지는 쪽을 나눌 띠 수(공개 뷰어 낙하형과 같은 방식) */
+const TRILL_SOLID_ALPHA = 0.82;
+const TRILL_FADE_STRIPS = 8;
 
 function colorForHand(hand: ChartHand) {
     return hand === "left" ? colors.left : colors.right;
@@ -554,6 +567,9 @@ export default function PixiNoteEditor({
     );
     const replaceNotes = useChartEditorStore((state) => state.replaceNotes);
     const setSnapDivisor = useChartEditorStore((state) => state.setSnapDivisor);
+    const importPreview = useChartEditorStore((state) => state.importPreview);
+    const commentTimes = useChartEditorStore((state) => state.commentTimes);
+    const t = useTranslations();
     const navigationDurationMs = getChartEditorNavigationDurationMs(document);
     const conflictingNoteIds = useMemo(() => {
         const ids = new Set<string>();
@@ -566,6 +582,11 @@ export default function PixiNoteEditor({
         }
         return ids;
     }, [document.notes, document.ticksPerQuarter]);
+    // 스냅 확인(격자 밖 노트) 점선 — 목록은 노트 검사기 아래 SnapCheckSection
+    const offGridNoteIds = useMemo(
+        () => new Set(findOffGridNotes(document).map((item) => item.id)),
+        [document]
+    );
 
     const previewNotes = (() => {
         if (!gesture) {
@@ -754,6 +775,32 @@ export default function PixiNoteEditor({
 
         const selected = new Set(selectedNoteIds);
         const hasSelection = selected.size > 0;
+        const yForTick = (tick: number) =>
+            judgmentY -
+            (tickToMilliseconds(
+                tick,
+                document.timingPoints,
+                document.ticksPerQuarter
+            ) -
+                currentTimeMs) *
+                pixelsPerMs;
+        const isVisible = (note: ChartNote) =>
+            tickToMilliseconds(
+                note.tick + note.durationTicks,
+                document.timingPoints,
+                document.ticksPerQuarter
+            ) >= startMs &&
+            tickToMilliseconds(
+                note.tick,
+                document.timingPoints,
+                document.ticksPerQuarter
+            ) <= endMs;
+        if (
+            importPreview?.focusTick !== null &&
+            importPreview?.focusTick !== undefined
+        ) {
+            drawImportFocus(scene, width, yForTick(importPreview.focusTick));
+        }
         for (const note of previewNotes) {
             const noteStartMs = tickToMilliseconds(
                 note.tick,
@@ -781,10 +828,34 @@ export default function PixiNoteEditor({
                 isPreview:
                     isPlacementPreview || (gesture !== null && isSelected),
                 isSelected,
-                isDimmed: hasSelection && !isSelected && !isPlacementPreview,
+                isDimmed:
+                    importPreview !== null ||
+                    (hasSelection && !isSelected && !isPlacementPreview),
                 showControls: isSelected && selected.size === 1,
                 isConflicted: conflictingNoteIds.has(note.id),
             });
+        }
+
+        if (importPreview) {
+            for (const tick of importPreview.timingTicks) {
+                const y = yForTick(tick);
+                if (y < 0 || y > height) continue;
+                drawImportTiming(scene, width, y);
+            }
+            const removing = new Set(importPreview.removingIds);
+            for (const note of document.notes) {
+                if (!removing.has(note.id) || !isVisible(note)) continue;
+                drawImportRemoval(scene, note, laneWidth, yForTick);
+            }
+            for (const note of importPreview.incoming) {
+                if (!isVisible(note)) continue;
+                drawImportNote(scene, note, laneWidth, yForTick);
+            }
+        } else {
+            for (const note of document.notes) {
+                if (!offGridNoteIds.has(note.id) || !isVisible(note)) continue;
+                drawOffGridMarker(scene, note, laneWidth, yForTick);
+            }
         }
 
         if (gesture?.kind === "marquee") {
@@ -860,14 +931,27 @@ export default function PixiNoteEditor({
                 .lineTo(width, judgmentY + 0.5)
                 .stroke({ color: colors.judgment, width: 2 });
         }
+        // 시각 댓글 자리는 판정선 위에도 보이게 맨 마지막에(2026-09-24 B1)
+        for (const timeMs of commentTimes) {
+            if (timeMs < startMs || timeMs > endMs) continue;
+            drawCommentLine(
+                scene,
+                width,
+                judgmentY - (timeMs - currentTimeMs) * pixelsPerMs
+            );
+        }
         application.stage.addChild(scene);
         application.render();
     }, [
+        commentTimes,
         currentTimeMs,
+        document.notes,
         document.ticksPerQuarter,
         document.timingPoints,
         gesture,
         conflictingNoteIds,
+        importPreview,
+        offGridNoteIds,
         pixelsPerSecond,
         pianoVisible,
         previewNotes,
@@ -1752,7 +1836,7 @@ export default function PixiNoteEditor({
         <div
             ref={hostRef}
             role="application"
-            aria-label="28칸 WebGL 채보 작성 영역. 1~5 도구 전환, 좌클릭 작성과 선택, 우클릭 삭제, 드래그 범위 선택을 지원합니다."
+            aria-label={t("editor.canvasLabel")}
             tabIndex={0}
             className={`h-full min-h-80 w-full overflow-hidden outline-none ${
                 (gesture?.kind === "resize" && gesture.action === "end") ||
@@ -1794,6 +1878,160 @@ export default function PixiNoteEditor({
             onContextMenu={(event) => event.preventDefault()}
         />
     );
+}
+
+/**
+ * 영상 추출 가져오기 미리보기 노트 — 손 색 대신 미리보기 노랑을 꽉 채우고, 캔버스 바탕색 테두리로 아래(흐린 초안) 노트와 가른다.
+ * 테누토 · 트릴은 몸통을 옅은 노랑 + 노랑 선으로, 트릴은 두 위치를 모두 덮는다.
+ */
+function drawImportNote(
+    graphics: Graphics,
+    note: ChartNote,
+    laneWidth: number,
+    yForTick: (tick: number) => number
+) {
+    const startY = yForTick(note.tick);
+    const cap = (
+        lane: number,
+        width: number,
+        centerY: number,
+        small = false
+    ) => {
+        const height = small ? 7 : 10;
+        graphics
+            .poly(
+                capPolygon(
+                    lane * laneWidth,
+                    centerY - height / 2 - 2.5,
+                    width * laneWidth,
+                    height + 5
+                ),
+                true
+            )
+            .fill({ color: colors.background, alpha: 0.9 });
+        graphics
+            .poly(
+                capPolygon(
+                    lane * laneWidth + 2,
+                    centerY - height / 2,
+                    Math.max(1, width * laneWidth - 4),
+                    height
+                ),
+                true
+            )
+            .fill({ color: colors.preview, alpha: 1 })
+            .stroke({ color: colors.noteShadow, width: 1.2, alpha: 1 });
+    };
+    if (note.type === "glissando" && note.durationTicks > 0) {
+        // 글리산도는 경로를 따라(영상 추출 가져오기, 2026-09-24) — 왼쪽 가장자리를 올라가 오른쪽으로 내려오는 띠
+        const points = getChartNoteRenderPoints(note);
+        graphics
+            .poly(
+                [
+                    ...points.flatMap((point) => [
+                        point.lane * laneWidth + 3,
+                        yForTick(point.tick),
+                    ]),
+                    ...[...points]
+                        .reverse()
+                        .flatMap((point) => [
+                            (point.lane + point.width) * laneWidth - 3,
+                            yForTick(point.tick),
+                        ]),
+                ],
+                true
+            )
+            .fill({ color: colors.preview, alpha: 0.24 })
+            .stroke({ color: colors.preview, width: 1.4, alpha: 0.9 });
+        const last = points[points.length - 1];
+        cap(last.lane, last.width, yForTick(last.tick), true);
+    } else if (note.type !== "standard" && note.durationTicks > 0) {
+        const endY = yForTick(note.tick + note.durationTicks);
+        const lanes =
+            note.type === "trill" && note.pairLane !== undefined
+                ? [
+                      Math.min(note.lane, note.pairLane),
+                      Math.max(
+                          note.lane + note.width,
+                          note.pairLane + (note.pairWidth ?? note.width)
+                      ),
+                  ]
+                : [note.lane, note.lane + note.width];
+        graphics
+            .rect(
+                lanes[0] * laneWidth + 3,
+                endY,
+                Math.max(1, (lanes[1] - lanes[0]) * laneWidth - 6),
+                Math.max(1, startY - endY)
+            )
+            .fill({ color: colors.preview, alpha: 0.24 })
+            .stroke({ color: colors.preview, width: 1.4, alpha: 0.9 });
+        if (note.type === "trill" && note.pairLane !== undefined) {
+            cap(note.pairLane, note.pairWidth ?? note.width, endY, true);
+        } else {
+            cap(note.lane, note.width, endY, true);
+        }
+    }
+    cap(note.lane, note.width, startY);
+}
+
+/** 넣으면 빠질 지금 초안 노트 — 충돌 빨강 테두리 + 사선 */
+function drawImportRemoval(
+    graphics: Graphics,
+    note: ChartNote,
+    laneWidth: number,
+    yForTick: (tick: number) => number
+) {
+    const centerY = yForTick(note.tick);
+    const x = note.lane * laneWidth;
+    const width = note.width * laneWidth;
+    if (note.type !== "standard" && note.durationTicks > 0) {
+        const endY = yForTick(note.tick + note.durationTicks);
+        graphics
+            .rect(
+                x + 2,
+                endY,
+                Math.max(1, width - 4),
+                Math.max(1, centerY - endY)
+            )
+            .stroke({ color: colors.conflict, width: 1.6, alpha: 0.85 });
+    }
+    graphics
+        .poly(capPolygon(x, centerY - 7.5, width, 15), true)
+        .stroke({ color: colors.conflict, width: 2.4, alpha: 0.95 });
+    graphics
+        .moveTo(x + 4, centerY - 5)
+        .lineTo(x + width - 4, centerY + 5)
+        .stroke({ color: colors.conflict, width: 2, alpha: 0.95 });
+}
+
+/** 넣으면 생길 타이밍 포인트(템포 변화 제안) — 미리보기 노랑 점선과 양 끝 삼각 표지 */
+function drawImportTiming(graphics: Graphics, width: number, y: number) {
+    for (let x = 0; x < width; x += 12) {
+        graphics
+            .moveTo(x, y)
+            .lineTo(Math.min(width, x + 7), y)
+            .stroke({ color: colors.preview, width: 2, alpha: 0.95 });
+    }
+    graphics
+        .poly([0, y - 7, 10, y, 0, y + 7], true)
+        .fill({ color: colors.preview, alpha: 0.95 });
+    graphics
+        .poly([width, y - 7, width - 10, y, width, y + 7], true)
+        .fill({ color: colors.preview, alpha: 0.95 });
+}
+
+/** 가져오기 목록에서 고른 곳 — 흰 띠와 양 끝 막대(노랑 미리보기 · 선택 색과 헷갈리지 않게 마디선 흰색) */
+function drawImportFocus(graphics: Graphics, width: number, centerY: number) {
+    graphics
+        .rect(0, centerY - 16, width, 32)
+        .fill({ color: colors.snapWhite, alpha: 0.1 });
+    graphics
+        .rect(0, centerY - 16, 4, 32)
+        .fill({ color: colors.snapWhite, alpha: 0.95 });
+    graphics
+        .rect(width - 4, centerY - 16, 4, 32)
+        .fill({ color: colors.snapWhite, alpha: 0.95 });
 }
 
 function capPolygon(x: number, y: number, width: number, height: number) {
@@ -1958,101 +2196,107 @@ function drawNote({
             conflicted: isConflicted,
         });
     } else if (note.type === "trill") {
-        const pairLane = note.pairLane ?? note.lane;
-        const pairWidth = note.pairWidth ?? note.width;
-        const stepTicks = Math.max(
-            1,
-            Math.round((ticksPerQuarter * 4) / (note.trillSnapDivisor ?? 8))
-        );
-        const stepCount = Math.max(
-            1,
-            Math.ceil(note.durationTicks / stepTicks)
-        );
-        for (let index = 0; index < stepCount; index += 1) {
-            const startTick = note.tick + index * stepTicks;
-            const endTick = Math.min(
-                note.tick + note.durationTicks,
-                startTick + stepTicks
+        // 공개 뷰어와 같은 게임식(2026-09-24 B′): 두 자리를 합친 범위 전체에 촘촘한 육각형, 칠 자리 쪽만 진하고 반대편은 옅어짐
+        const union = trillUnion(note);
+        const x1 = union.lane * laneWidth + 2;
+        const x2 = (union.lane + union.width) * laneWidth - 2;
+        const color = colorForHand(note.hand);
+        for (const hex of trillHexes(note, ticksPerQuarter)) {
+            const bottomY = yForTick(hex.startTick) - 0.5;
+            const topY = yForTick(hex.endTick) + 0.5;
+            const middleY = (bottomY + topY) / 2;
+            const bevel = Math.min(
+                6,
+                (x2 - x1) * 0.12,
+                (bottomY - topY) * 0.35
             );
-            const fromLane = index % 2 === 0 ? note.lane : pairLane;
-            const fromWidth = index % 2 === 0 ? note.width : pairWidth;
-            const toLane = index % 2 === 0 ? pairLane : note.lane;
-            const toWidth = index % 2 === 0 ? pairWidth : note.width;
-            const topY = yForTick(endTick);
-            const bottomY = yForTick(startTick);
-            const gap = Math.min(2.5, Math.abs(bottomY - topY) * 0.08);
-            const polygon = [
-                fromLane * laneWidth + 2,
-                bottomY - gap,
-                (fromLane + fromWidth) * laneWidth - 2,
-                bottomY - gap,
-                (toLane + toWidth) * laneWidth - 2,
-                topY + gap,
-                toLane * laneWidth + 2,
-                topY + gap,
-            ];
-            graphics
-                .poly(polygon, true)
-                .fill({
-                    color: colorForHand(note.hand),
-                    alpha: baseAlpha * 0.72,
-                })
-                .stroke({
-                    color: colors.noteFace,
-                    width: 0.8,
-                    alpha: baseAlpha * 0.45,
-                });
-            if (isSelected) {
-                graphics.poly(polygon, true).stroke({
-                    color: colors.selection,
-                    width: 1.5,
-                    alpha: 0.92,
-                });
-            }
-            if (isConflicted) {
-                graphics.poly(polygon, true).stroke({
-                    color: colors.conflict,
-                    width: 2.8,
-                    alpha: 0.92,
-                });
+            const xAt = (fraction: number, inset: number) =>
+                Math.min(
+                    x2 - inset,
+                    Math.max(x1 + inset, x1 + (x2 - x1) * fraction)
+                );
+            const band = (from: number, to: number, alpha: number) =>
+                graphics
+                    .poly(
+                        [
+                            xAt(from, bevel),
+                            bottomY,
+                            xAt(to, bevel),
+                            bottomY,
+                            xAt(to, 0),
+                            middleY,
+                            xAt(to, bevel),
+                            topY,
+                            xAt(from, bevel),
+                            topY,
+                            xAt(from, 0),
+                            middleY,
+                        ],
+                        true
+                    )
+                    .fill({ color, alpha: baseAlpha * alpha });
+            const span = trillSolidSpan(hex, union);
+            band(span.from, span.to, TRILL_SOLID_ALPHA);
+            for (let strip = 0; strip < TRILL_FADE_STRIPS; strip += 1) {
+                const alpha =
+                    TRILL_SOLID_ALPHA * (1 - (strip + 0.5) / TRILL_FADE_STRIPS);
+                if (span.fadeLeft) {
+                    const step = span.from / TRILL_FADE_STRIPS;
+                    band(
+                        span.from - (strip + 1) * step,
+                        span.from - strip * step,
+                        alpha
+                    );
+                }
+                if (span.fadeRight) {
+                    const step = (1 - span.to) / TRILL_FADE_STRIPS;
+                    band(
+                        span.to + strip * step,
+                        span.to + (strip + 1) * step,
+                        alpha
+                    );
+                }
             }
         }
-        const startCenterX = (note.lane + note.width / 2) * laneWidth;
+        const headY = yForTick(note.tick);
+        const tailY = yForTick(note.tick + note.durationTicks);
+        if (isSelected || isConflicted) {
+            graphics
+                .rect(x1, tailY, x2 - x1, Math.max(1, headY - tailY))
+                .stroke({
+                    color: isConflicted ? colors.conflict : colors.selection,
+                    width: isConflicted ? 2.8 : 1.5,
+                    alpha: 0.92,
+                });
+        }
+        // 끝 막대(어두운 막대 + 손 색 테두리) · 머리(범위 전체) · 마름모
+        graphics
+            .poly(capPolygon(x1, tailY - 3.5, x2 - x1, 7), true)
+            .fill({ color: colors.background, alpha: baseAlpha })
+            .stroke({ color, width: 1.4, alpha: baseAlpha });
         drawCap({
             graphics,
-            x: note.lane * laneWidth,
-            centerY: yForTick(note.tick),
-            width: note.width * laneWidth,
+            x: union.lane * laneWidth,
+            centerY: headY,
+            width: union.width * laneWidth,
             hand: note.hand,
             alpha: baseAlpha,
             selected: isSelected,
             conflicted: isConflicted,
         });
-        const finalSegmentIndex = stepCount - 1;
-        const endLane = finalSegmentIndex % 2 === 0 ? pairLane : note.lane;
-        const endWidth = finalSegmentIndex % 2 === 0 ? pairWidth : note.width;
-        drawCap({
-            graphics,
-            x: endLane * laneWidth,
-            centerY: yForTick(note.tick + note.durationTicks),
-            width: endWidth * laneWidth,
-            hand: note.hand,
-            alpha: baseAlpha,
-            selected: isSelected,
-            conflicted: isConflicted,
-        });
+        const centerX = (union.lane + union.width / 2) * laneWidth;
         drawDiamond(
             graphics,
-            startCenterX,
-            yForTick(note.tick) - 1,
+            centerX - 3,
+            headY + 1,
             5,
             colors.selection,
             baseAlpha
         );
         drawDiamond(
             graphics,
-            startCenterX + 8,
-            yForTick(note.tick) - 8,
+            centerX + 4,
+            headY - 5,
             4,
             colors.selection,
             baseAlpha * 0.92

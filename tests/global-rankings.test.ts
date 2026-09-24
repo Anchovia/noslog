@@ -17,6 +17,9 @@ vi.mock("@/lib/db", () => ({
 vi.mock("@/features/tiers/server/tierBrowserData", () => ({
     getModePianistRatingBasis: mocks.basis,
 }));
+vi.mock("@/features/contributions/server/contributionPointService", () => ({
+    getNameLabels: async () => new Map(),
+}));
 import { getGlobalRankingPage } from "@/features/rankings/server/globalRankingData";
 import {
     parseGlobalRankingQuery,

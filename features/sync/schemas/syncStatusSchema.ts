@@ -17,6 +17,16 @@ const syncAttemptSchema = z.object({
     insertedPlays: z.number().int().nonnegative(),
     changedRecords: z.number().int().nonnegative(),
     excludedCount: z.number().int().nonnegative().nullable(),
+    // 이 동기화에서 새로 얻은 업적 단계(2026-09-24 N1 · E1) — 가장 최근 완료 시도에만 채운다
+    newAchievements: z
+        .array(
+            z.object({
+                key: z.string(),
+                tier: z.number().int().min(1).max(3),
+            })
+        )
+        .max(100)
+        .default([]),
 });
 export const syncStatusSchema = z.object({
     observedAt: z.string().datetime(),

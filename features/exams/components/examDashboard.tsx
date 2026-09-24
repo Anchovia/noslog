@@ -22,6 +22,7 @@ import ExamProofUpload from "@/features/exams/components/examProofUpload";
 import ExamStatus, {
     getExamStatus,
 } from "@/features/exams/components/examStatus";
+import ExamBadge, { isExamGrade } from "@/components/ui/examBadge";
 import StatStrip from "@/components/ui/statStrip";
 import { createExamProofSubmissionFormData } from "@/features/exams/schemas/examProofSchema";
 import { localizePath } from "@/lib/i18n/routing";
@@ -149,6 +150,14 @@ export default function ExamDashboard({
         }
     }
 
+    const gradeMet = Boolean(
+        selected &&
+        isAuthenticated &&
+        selected.mode !== "event" &&
+        selected.requiredGrade &&
+        selected.playerGrade !== null &&
+        selected.playerGrade >= selected.requiredGrade
+    );
     const rewardIsTitle = Boolean(
         selected &&
         selected.grade !== null &&
@@ -200,21 +209,16 @@ export default function ExamDashboard({
                                 items={[
                                     {
                                         key: "required",
-                                        label:
-                                            selected.playerGrade !== null &&
-                                            isAuthenticated &&
-                                            selected.mode !== "event"
-                                                ? t("exams.requiredGradeMine", {
-                                                      value: selected.playerGrade.toLocaleString(
-                                                          locale
-                                                      ),
-                                                  })
-                                                : t("exams.requiredGrade"),
+                                        label: t("exams.requiredGrade"),
                                         value: selected.requiredGrade
                                             ? selected.requiredGrade.toLocaleString(
                                                   locale
                                               )
                                             : t("exams.none"),
+                                        // 넘었으면 합격 체크와 같은 성공색(2026-09-25 R1) — 모자란 양은 머리 태그가 말한다
+                                        color: gradeMet
+                                            ? "var(--nl-feedback-success-marker)"
+                                            : undefined,
                                     },
                                     {
                                         key: "fee",
@@ -225,7 +229,25 @@ export default function ExamDashboard({
                                     rewardIsTitle && {
                                         key: "reward",
                                         label: t("exams.reward"),
-                                        value: examTitle(selected),
+                                        // 칭호 = 랭킹 · 프로필의 검정 명판, 칸이 넉넉해 풀 이름형(2026-09-25 B2)
+                                        value:
+                                            (selected.mode === "basic" ||
+                                                selected.mode === "recital") &&
+                                            isExamGrade(selected.grade) ? (
+                                                <span data-exam-label="full">
+                                                    <ExamBadge
+                                                        mode={
+                                                            selected.mode ===
+                                                            "recital"
+                                                                ? "recital"
+                                                                : "basic"
+                                                        }
+                                                        exam={selected.grade}
+                                                    />
+                                                </span>
+                                            ) : (
+                                                examTitle(selected)
+                                            ),
                                     },
                                 ]}
                             />

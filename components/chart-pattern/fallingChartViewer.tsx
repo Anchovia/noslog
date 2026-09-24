@@ -1,7 +1,25 @@
 "use client";
 
-import { Pause, Play, RotateCcw, Upload, Volume2 } from "lucide-react";
-import { type ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
+import * as Popover from "@radix-ui/react-popover";
+import {
+    Maximize,
+    Minimize,
+    Pause,
+    Play,
+    RotateCcw,
+    Settings,
+    Upload,
+    Volume2,
+} from "lucide-react";
+import {
+    type ChangeEvent,
+    useCallback,
+    useEffect,
+    useEffectEvent,
+    useMemo,
+    useRef,
+    useState,
+} from "react";
 import type { Application, Graphics } from "pixi.js";
 
 import { useTranslations } from "@/components/i18n/localeProvider";
@@ -31,11 +49,17 @@ import {
 } from "@/lib/chart-pattern/schema";
 import { formatEditorTime, getBeatMarkers } from "@/lib/chart-pattern/timing";
 
+import { useFullscreen } from "./useFullscreen";
 import { useMetronomeVolume } from "./useMetronomeVolume";
 import { useStrictPerformance } from "./useStrictPerformance";
 interface FallingChartViewerProps {
     document: ChartDocument;
     jacketUrl: string | null;
+    /** 밖에서 재생 위치 옮기기(채보 의견 시각 · 주소 `?t=`) — key 가 바뀔 때마다, 처음 그릴 때도 한 번 */
+    seekRequest?: { timeMs: number; key: number } | null;
+    /** 진행 막대 눈금(채보 의견 시각, 2026-09-24 D1) */
+    markers?: readonly number[];
+    onTimeChange?: (timeMs: number) => void;
 }
 
 interface PlaybackClockAnchor {
@@ -295,6 +319,144 @@ function sampleProjectedSegment(
     });
 }
 
+const TRILL_FADE_STRIPS = 10;
+const TRILL_SOLID_ALPHA = 0.82;
+const TRILL_DIAMOND = 0xf2c75c;
+const TRILL_TAIL = 0x070910;
+
+/**
+ * 트릴(2026-09-24 B′, 사용자) — 두 자리를 합친 범위 전체에 촘촘한 육각형, 칠 자리 쪽만 진하고 반대편은 옅어진다.
+ * 그라데이션 채우기는 텍스처를 매번 만들어 무거워, 옅어지는 부분은 투명도를 줄여 가는 띠 몇 개로 그린다
+ */
+function drawTrillShape(
+    graphics: Graphics,
+    note: PreparedPlaybackNote,
+    shape: NonNullable<PreparedPlaybackNote["trillShape"]>,
+    {
+        currentTimeMs,
+        visibleEnd,
+        project,
+        visualScale,
+    }: {
+        currentTimeMs: number;
+        visibleEnd: number;
+        project: (point: PlaybackPathPoint) => ProjectedRange;
+        visualScale: number;
+    }
+) {
+    const color = colorForHand(note.hand);
+    const at = (timeMs: number) =>
+        project({ ...shape.union, timeMs, hand: note.hand });
+    for (let index = shape.hexes.length - 1; index >= 0; index -= 1) {
+        const hex = shape.hexes[index];
+        const start = Math.max(hex.startTimeMs, currentTimeMs);
+        const end = Math.min(hex.endTimeMs, visibleEnd);
+        if (start >= end) continue;
+        const bottom = at(start);
+        const top = at(end);
+        const middle = at((start + end) / 2);
+        const bevel = Math.min(
+            6 * visualScale,
+            (middle.right - middle.left) * 0.12
+        );
+        // 범위 안 위치(0~1) → 세 높이의 x. 위 · 아래는 육각형 모서리만큼 안쪽으로
+        const xAt = (range: ProjectedRange, fraction: number, inset: number) =>
+            Math.min(
+                range.right - inset,
+                Math.max(
+                    range.left + inset,
+                    range.left + (range.right - range.left) * fraction
+                )
+            );
+        const band = (from: number, to: number, alpha: number) => {
+            graphics
+                .poly(
+                    [
+                        xAt(bottom, from, bevel),
+                        bottom.y,
+                        xAt(bottom, to, bevel),
+                        bottom.y,
+                        xAt(middle, to, 0),
+                        middle.y,
+                        xAt(top, to, bevel),
+                        top.y,
+                        xAt(top, from, bevel),
+                        top.y,
+                        xAt(middle, from, 0),
+                        middle.y,
+                    ],
+                    true
+                )
+                .fill({ color, alpha });
+        };
+        const lane = (hex.lane - shape.union.lane) / shape.union.width;
+        const span = {
+            from: lane,
+            to: lane + hex.width / shape.union.width,
+        };
+        band(span.from, span.to, TRILL_SOLID_ALPHA);
+        for (let strip = 0; strip < TRILL_FADE_STRIPS; strip += 1) {
+            const alpha =
+                TRILL_SOLID_ALPHA * (1 - (strip + 0.5) / TRILL_FADE_STRIPS);
+            if (span.from > 0) {
+                const width = span.from / TRILL_FADE_STRIPS;
+                band(
+                    span.from - (strip + 1) * width,
+                    span.from - strip * width,
+                    alpha
+                );
+            }
+            if (span.to < 1) {
+                const width = (1 - span.to) / TRILL_FADE_STRIPS;
+                band(
+                    span.to + strip * width,
+                    span.to + (strip + 1) * width,
+                    alpha
+                );
+            }
+        }
+    }
+
+    // 끝 막대 · 머리(범위 전체) · 마름모
+    if (note.endTimeMs >= currentTimeMs && note.endTimeMs <= visibleEnd) {
+        const tail = at(note.endTimeMs);
+        const height = (4 + tail.depth * 2) * visualScale;
+        graphics
+            .poly(
+                capPolygon(tail.left, tail.right, tail.y, height, visualScale),
+                true
+            )
+            .fill({ color: TRILL_TAIL, alpha: 0.95 })
+            .stroke({ color, width: visualScale, alpha: 0.9 });
+    }
+    if (
+        note.startTimeMs >= currentTimeMs - 90 &&
+        note.startTimeMs <= visibleEnd
+    ) {
+        const head = at(note.startTimeMs);
+        drawHitGlow(
+            graphics,
+            head,
+            note.hand,
+            note.startTimeMs - currentTimeMs,
+            visualScale
+        );
+        drawPlaybackCap(graphics, head, note.hand, 0.98, visualScale);
+        const size = (4.5 + head.depth * 2) * visualScale;
+        for (const [dx, dy, scale] of [
+            [-0.8, 0.4, 1],
+            [0.8, -1, 0.72],
+        ] as const) {
+            const cx = head.center + dx * size;
+            const cy = head.y + dy * size;
+            const r = size * scale;
+            graphics
+                .poly([cx, cy - r, cx + r, cy, cx, cy + r, cx - r, cy], true)
+                .fill({ color: TRILL_DIAMOND, alpha: 0.98 });
+        }
+    }
+}
+
 function drawPlayfield(
     graphics: Graphics,
     width: number,
@@ -326,6 +488,47 @@ function drawPlayfield(
             width: 1,
             alpha: 0.38,
         });
+    }
+}
+
+/**
+ * 가로 박자선(2026-09-25 G1) — 게임처럼 박마다 같은 선이 노트와 함께 내려온다(노트 뒤).
+ * 레인 0–28 끝을 같은 원근으로 잇고, 가까울수록 굵게. 색은 판정선 흰색 30%(레인 안내선과 비슷한 무게, 2026-09-25 O2)
+ */
+function drawBeatLines(
+    graphics: Graphics,
+    beatTimes: readonly number[],
+    currentTimeMs: number,
+    approachDurationMs: number,
+    width: number,
+    horizonY: number,
+    judgmentY: number
+) {
+    for (const timeMs of beatTimes) {
+        const progress = 1 - (timeMs - currentTimeMs) / approachDurationMs;
+        if (progress < 0 || progress > 1) continue;
+        const left = projectPlaybackLane({
+            lane: 0,
+            progress,
+            canvasWidth: width,
+            horizonY,
+            judgmentY,
+        });
+        const right = projectPlaybackLane({
+            lane: CHART_LANE_COUNT,
+            progress,
+            canvasWidth: width,
+            horizonY,
+            judgmentY,
+        });
+        graphics
+            .moveTo(left.x, left.y)
+            .lineTo(right.x, right.y)
+            .stroke({
+                color: colors.judgment,
+                width: 2 * (0.6 + 0.8 * progress),
+                alpha: 0.3,
+            });
     }
 }
 
@@ -469,6 +672,16 @@ function drawPreparedNote({
         return;
     }
 
+    if (note.type === "trill" && note.trillShape) {
+        drawTrillShape(graphics, note, note.trillShape, {
+            currentTimeMs,
+            visibleEnd,
+            project,
+            visualScale,
+        });
+        return;
+    }
+
     if (note.type === "trill") {
         for (
             let index = note.trillSegments.length - 1;
@@ -556,6 +769,23 @@ function drawPreparedNote({
     }
 }
 
+/**
+ * 무대는 한 가지 그림(2026-09-25 A1) — 16:9 논리 크기에 그리고 화면 폭에 맞춰 통째로 줄인다.
+ * 그래서 어느 기기에서나 원근 · 노트 간격 · 두께 · 내려오는 비율이 같고 크기만 다르다.
+ */
+const STAGE_WIDTH = 1280;
+const STAGE_HEIGHT = 720;
+const noteSpeedOptions = Array.from({ length: 31 }, (_, index) => {
+    const value = (1 + index * 0.1).toFixed(1);
+    return { value, label: value };
+});
+/** 유튜브와 같은 이동 폭 — 화살표 5초 · 폰 두 번 두드리기 10초 · 두 번으로 치는 간격 */
+const KEY_SEEK_MS = 5_000;
+const DOUBLE_TAP_SEEK_MS = 10_000;
+const DOUBLE_TAP_WINDOW_MS = 300;
+/** 전체화면에서 재생 중 조작 줄을 숨기기까지 가만히 있는 시간 — 동영상 플레이어와 같은 문법 */
+const OVERLAY_IDLE_MS = 3_000;
+
 function renderPlaybackFrame({
     graphics,
     notes,
@@ -564,6 +794,7 @@ function renderPlaybackFrame({
     width,
     height,
     strictPerformance,
+    beatTimes,
 }: {
     graphics: Graphics;
     notes: PreparedPlaybackNote[];
@@ -572,12 +803,22 @@ function renderPlaybackFrame({
     width: number;
     height: number;
     strictPerformance: boolean;
+    beatTimes: readonly number[];
 }) {
     const horizonY = Math.max(40, height * 0.12);
     const judgmentY = height * 0.79;
     const visualScale = getPlaybackVisualScale(width);
     graphics.clear();
     drawPlayfield(graphics, width, height, horizonY, judgmentY);
+    drawBeatLines(
+        graphics,
+        beatTimes,
+        currentTimeMs,
+        approachDurationMs,
+        width,
+        horizonY,
+        judgmentY
+    );
 
     for (let index = notes.length - 1; index >= 0; index -= 1) {
         drawPreparedNote({
@@ -607,15 +848,36 @@ function renderPlaybackFrame({
 export default function FallingChartViewer({
     document,
     jacketUrl,
+    seekRequest,
+    markers,
+    onTimeChange,
 }: FallingChartViewerProps) {
     const t = useTranslations();
     const hostRef = useRef<HTMLDivElement | null>(null);
+    const screenRef = useRef<HTMLDivElement | null>(null);
+    const fullscreen = useFullscreen(screenRef);
+    const [overlayIdle, setOverlayIdle] = useState(false);
+    const [settingsOpen, setSettingsOpen] = useState(false);
+    // 설정 창을 닫으려고 무대를 누른 것은 재생 · 일시정지로 치지 않는다(동영상 플레이어처럼)
+    const closedSettingsRef = useRef(false);
+    const idleTimerRef = useRef<number | null>(null);
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const objectUrlRef = useRef<string | null>(null);
     const isPlayingRef = useRef(false);
     const currentTimeRef = useRef(0);
     const durationRef = useRef(getChartPlaybackDurationMs(document));
     const noteSpeedRef = useRef(2);
+    // 박자선 계산용 — 렌더 루프(Pixi 틱)는 문서가 바뀌어도 다시 만들지 않으므로 최신 타이밍을 ref 로 본다
+    const timingRef = useRef({
+        points: document.timingPoints,
+        ticksPerQuarter: document.ticksPerQuarter,
+    });
+    useEffect(() => {
+        timingRef.current = {
+            points: document.timingPoints,
+            ticksPerQuarter: document.ticksPerQuarter,
+        };
+    }, [document.ticksPerQuarter, document.timingPoints]);
     const strictPerformanceRef = useRef(false);
     const clockAnchorRef = useRef<PlaybackClockAnchor | null>(null);
     const lastUiUpdateRef = useRef(0);
@@ -644,6 +906,36 @@ export default function FallingChartViewer({
         durationRef.current = durationMs;
     }, [durationMs]);
 
+    // 전체화면 조작 줄 — 재생 중 3초 가만히 있으면 숨기고, 움직이거나 누르면 바로 다시(움직임 없이)
+    const wakeOverlay = useCallback(() => {
+        setOverlayIdle(false);
+        if (idleTimerRef.current !== null)
+            window.clearTimeout(idleTimerRef.current);
+        idleTimerRef.current = window.setTimeout(
+            () => setOverlayIdle(true),
+            OVERLAY_IDLE_MS
+        );
+    }, []);
+    useEffect(
+        () => () => {
+            if (idleTimerRef.current !== null)
+                window.clearTimeout(idleTimerRef.current);
+        },
+        []
+    );
+    // 설정 창이 열려 있는 동안은 숨기지 않는다
+    const overlayHidden =
+        fullscreen.active && isPlaying && overlayIdle && !settingsOpen;
+
+    const applySeekRequest = useEffectEvent((timeMs: number) => seek(timeMs));
+    useEffect(() => {
+        if (seekRequest) applySeekRequest(seekRequest.timeMs);
+    }, [seekRequest]);
+
+    useEffect(() => {
+        onTimeChange?.(currentTimeMs);
+    }, [currentTimeMs, onTimeChange]);
+
     useEffect(() => {
         noteSpeedRef.current = noteSpeed;
     }, [noteSpeed]);
@@ -658,6 +950,7 @@ export default function FallingChartViewer({
         let disposed = false;
         let application: Application | null = null;
         let scene: Graphics | null = null;
+        let resizeObserver: ResizeObserver | null = null;
 
         void (async () => {
             const pixi = await import("pixi.js");
@@ -665,6 +958,9 @@ export default function FallingChartViewer({
             const nextApplication = new pixi.Application();
             await nextApplication.init({
                 resizeTo: host,
+                // 폰처럼 작게 줄여 그려도 선이 뭉개지지 않게 기기 픽셀 밀도로 그린다
+                resolution: window.devicePixelRatio || 1,
+                autoDensity: true,
                 antialias: true,
                 backgroundAlpha: 0,
                 preference: "webgl",
@@ -678,6 +974,9 @@ export default function FallingChartViewer({
             scene = new pixi.Graphics();
             nextApplication.stage.addChild(scene);
             host.replaceChildren(nextApplication.canvas);
+            // resizeTo 는 창 크기 변화만 본다 — 창은 그대로인데 무대 상자만 바뀌는 전체화면 진입 · 나감도 따라간다
+            resizeObserver = new ResizeObserver(() => nextApplication.resize());
+            resizeObserver.observe(host);
 
             nextApplication.ticker.add(() => {
                 if (!scene || !application) return;
@@ -702,22 +1001,41 @@ export default function FallingChartViewer({
                         setCurrentTimeMs(currentTimeRef.current);
                     }
                 }
+                // 16:9 논리 무대를 화면에 맞게 줄여 가운데에(무대 상자가 16:9 라 보통 여백 없음)
+                const scale = Math.min(
+                    application.screen.width / STAGE_WIDTH,
+                    application.screen.height / STAGE_HEIGHT
+                );
+                scene.scale.set(scale);
+                scene.position.set(
+                    (application.screen.width - STAGE_WIDTH * scale) / 2,
+                    (application.screen.height - STAGE_HEIGHT * scale) / 2
+                );
+                const approachDurationMs = getApproachDurationMs(
+                    noteSpeedRef.current
+                );
+                const playhead = currentTimeRef.current;
                 renderPlaybackFrame({
                     graphics: scene,
                     notes: preparedNotes,
-                    currentTimeMs: currentTimeRef.current,
-                    approachDurationMs: getApproachDurationMs(
-                        noteSpeedRef.current
-                    ),
-                    width: application.screen.width,
-                    height: application.screen.height,
+                    currentTimeMs: playhead,
+                    approachDurationMs,
+                    width: STAGE_WIDTH,
+                    height: STAGE_HEIGHT,
                     strictPerformance: strictPerformanceRef.current,
+                    beatTimes: getBeatMarkers(
+                        timingRef.current.points,
+                        timingRef.current.ticksPerQuarter,
+                        playhead,
+                        playhead + approachDurationMs
+                    ).map((beat) => beat.timeMs),
                 });
             });
         })();
 
         return () => {
             disposed = true;
+            resizeObserver?.disconnect();
             application?.destroy(true);
             host.replaceChildren();
         };
@@ -809,6 +1127,80 @@ export default function FallingChartViewer({
         }
         return metronomeContextRef.current;
     }
+
+    function togglePlayback() {
+        if (isPlayingRef.current) pausePlayback();
+        else void startPlayback();
+    }
+
+    // 키보드(2026-09-25, 유튜브와 같게) — 스페이스 재생 · 일시정지, ← → 5초.
+    // 글 입력 · 버튼 · 막대 · 셀렉트에 포커스가 있으면 그 부품의 원래 동작을 둔다(두 번 눌리지 않게)
+    const handleKey = useEffectEvent((event: KeyboardEvent) => {
+        if (
+            event.defaultPrevented ||
+            event.altKey ||
+            event.ctrlKey ||
+            event.metaKey
+        )
+            return;
+        const target = event.target as HTMLElement | null;
+        if (
+            target?.closest(
+                "input, textarea, select, button, a, [contenteditable], [role=button], [role=radio], [role=checkbox], [role=slider], [role=combobox], [role=option], [role=menuitem], [role=dialog]"
+            )
+        )
+            return;
+        if (event.key === " ") {
+            event.preventDefault();
+            togglePlayback();
+        } else if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+            event.preventDefault();
+            seek(
+                currentTimeRef.current +
+                    (event.key === "ArrowLeft" ? -KEY_SEEK_MS : KEY_SEEK_MS)
+            );
+        } else return;
+        if (fullscreen.active) wakeOverlay();
+    });
+    useEffect(() => {
+        const listener = (event: KeyboardEvent) => handleKey(event);
+        window.addEventListener("keydown", listener);
+        return () => window.removeEventListener("keydown", listener);
+    }, []);
+
+    // 무대 누르기 — 마우스는 누를 때마다 재생 · 일시정지. 손가락은 두 번 두드리면 그쪽 절반으로 10초,
+    // 한 번이면 두 번째를 기다렸다가(300ms) 재생 · 일시정지
+    const tapRef = useRef<{ time: number; timer: number | null }>({
+        time: 0,
+        timer: null,
+    });
+    function handleStageTap(side: -1 | 1) {
+        const tap = tapRef.current;
+        const now = performance.now();
+        if (tap.timer !== null && now - tap.time < DOUBLE_TAP_WINDOW_MS) {
+            window.clearTimeout(tap.timer);
+            tap.timer = null;
+            // 이어서 두드리면 계속 이동한다
+            tap.time = now;
+            seek(currentTimeRef.current + side * DOUBLE_TAP_SEEK_MS);
+            tap.timer = window.setTimeout(() => {
+                tap.timer = null;
+            }, DOUBLE_TAP_WINDOW_MS);
+            return;
+        }
+        tap.time = now;
+        tap.timer = window.setTimeout(() => {
+            tap.timer = null;
+            togglePlayback();
+        }, DOUBLE_TAP_WINDOW_MS);
+    }
+    useEffect(
+        () => () => {
+            if (tapRef.current.timer !== null)
+                window.clearTimeout(tapRef.current.timer);
+        },
+        []
+    );
 
     function pausePlayback() {
         const audio = audioRef.current;
@@ -902,25 +1294,222 @@ export default function FallingChartViewer({
         }
     }
 
+    // 메트로놈 음량 — 조작부와 전체화면 설정 창이 같이 쓴다
+    const volumeControl = (
+        <label className="nl-chart-stage__option nl-chart-stage__volume">
+            <Volume2 className="nl-icon nl-muted" aria-hidden />
+            <input
+                type="range"
+                min="0"
+                max="100"
+                step="5"
+                value={metronomeVolume}
+                onChange={(event) =>
+                    setMetronomeVolume(Number(event.target.value))
+                }
+                aria-label={t("chart.metronomeVolume")}
+                className="nl-chart-stage__seek"
+            />
+            <span className="nl-metric-value nl-chart-stage__percent">
+                {metronomeVolume}%
+            </span>
+        </label>
+    );
+
+    // 재생 막대 — 조작부와 전체화면 조작 줄이 같이 쓴다
+    const seekTrack = (
+        <div className="nl-chart-stage__seek-track">
+            <input
+                type="range"
+                min="0"
+                max={Math.max(1, durationMs)}
+                step="10"
+                value={Math.min(currentTimeMs, durationMs)}
+                onChange={(event) => seek(Number(event.target.value))}
+                aria-label={t("chart.position")}
+                className="nl-chart-stage__seek"
+            />
+            {/* 의견 시각 눈금 — 손잡이 중심이 움직이는 폭(양끝 10 안쪽)에 맞춘다. 누르는 건 의견 목록의 시각 */}
+            {markers?.map((timeMs, index) => (
+                <span
+                    key={`${timeMs}-${index}`}
+                    aria-hidden
+                    className="nl-chart-stage__marker"
+                    style={{
+                        left: `calc(10px + (100% - 20px) * ${Math.min(
+                            1,
+                            Math.max(0, timeMs / Math.max(1, durationMs))
+                        )})`,
+                    }}
+                />
+            ))}
+        </div>
+    );
+
     return (
         <section className="nl-chart-stage">
-            <div className="nl-chart-stage__canvas">
-                {jacketUrl ? (
-                    <div
-                        aria-hidden
-                        className="nl-chart-stage__art"
-                        style={{ backgroundImage: `url("${jacketUrl}")` }}
-                    />
-                ) : null}
-                <div aria-hidden className="nl-chart-stage__scrim" />
+            <div
+                ref={screenRef}
+                className="nl-chart-stage__screen"
+                data-fullscreen={
+                    fullscreen.active ? fullscreen.mode : undefined
+                }
+                data-idle={overlayHidden || undefined}
+                onPointerMove={fullscreen.active ? wakeOverlay : undefined}
+                onPointerDown={fullscreen.active ? wakeOverlay : undefined}
+            >
+                {/* 무대를 누르면 재생 · 일시정지(2026-09-25, 동영상 플레이어처럼) — 키보드는 재생 버튼으로 */}
                 <div
-                    ref={hostRef}
-                    role="img"
-                    aria-label={t("chart.fallingAria", {
-                        time: formatEditorTime(currentTimeMs),
-                    })}
-                    className="nl-chart-stage__host"
-                />
+                    className="nl-chart-stage__canvas"
+                    onClick={(event) => {
+                        if (closedSettingsRef.current) {
+                            closedSettingsRef.current = false;
+                            return;
+                        }
+                        const native = event.nativeEvent as PointerEvent;
+                        if (native.pointerType === "touch") {
+                            const rect =
+                                event.currentTarget.getBoundingClientRect();
+                            handleStageTap(
+                                event.clientX - rect.left < rect.width / 2
+                                    ? -1
+                                    : 1
+                            );
+                            return;
+                        }
+                        togglePlayback();
+                    }}
+                >
+                    {jacketUrl ? (
+                        <div
+                            aria-hidden
+                            className="nl-chart-stage__art"
+                            style={{ backgroundImage: `url("${jacketUrl}")` }}
+                        />
+                    ) : null}
+                    <div aria-hidden className="nl-chart-stage__scrim" />
+                    <div
+                        ref={hostRef}
+                        role="img"
+                        aria-label={t("chart.fallingAria", {
+                            time: formatEditorTime(currentTimeMs),
+                        })}
+                        className="nl-chart-stage__host"
+                    />
+                </div>
+                {fullscreen.active ? (
+                    // 전체화면 조작 줄 — 재생 · 시각 · 막대 · 길이 · 끝내기만(설정은 전체화면 밖에서)
+                    <div
+                        className="nl-chart-stage__overlay"
+                        hidden={overlayHidden}
+                    >
+                        <button
+                            type="button"
+                            className="nl-chart-stage__media-button"
+                            onClick={() =>
+                                isPlaying
+                                    ? pausePlayback()
+                                    : void startPlayback()
+                            }
+                            aria-label={
+                                isPlaying ? t("chart.pause") : t("chart.play")
+                            }
+                        >
+                            {isPlaying ? (
+                                <Pause
+                                    className="nl-icon"
+                                    fill="currentColor"
+                                />
+                            ) : (
+                                <Play className="nl-icon" fill="currentColor" />
+                            )}
+                        </button>
+                        <span className="nl-metric-value nl-chart-stage__time">
+                            {formatEditorTime(currentTimeMs)}
+                        </span>
+                        {seekTrack}
+                        <span className="nl-metric-value nl-chart-stage__time">
+                            {formatEditorTime(durationMs)}
+                        </span>
+                        {/* 설정(2026-09-25 C1) — 톱니 → 조작 줄 위 떠 있는 창. 전체화면 안에 띄워야 보인다 */}
+                        <Popover.Root
+                            open={settingsOpen}
+                            onOpenChange={setSettingsOpen}
+                        >
+                            <Popover.Trigger asChild>
+                                <button
+                                    type="button"
+                                    className="nl-chart-stage__media-button"
+                                    aria-label={t("chart.settings")}
+                                >
+                                    <Settings className="nl-icon" />
+                                </button>
+                            </Popover.Trigger>
+                            <Popover.Portal container={screenRef.current}>
+                                <Popover.Content
+                                    side="top"
+                                    align="end"
+                                    sideOffset={8}
+                                    collisionPadding={16}
+                                    className="nl-chart-stage__settings"
+                                    onPointerDownOutside={(event) => {
+                                        const target = event.detail
+                                            .originalEvent
+                                            .target as Element | null;
+                                        closedSettingsRef.current = Boolean(
+                                            target?.closest(
+                                                ".nl-chart-stage__canvas"
+                                            )
+                                        );
+                                    }}
+                                >
+                                    <div className="nl-chart-stage__option">
+                                        <span className="nl-control nl-muted">
+                                            {t("chart.noteSpeed")}
+                                        </span>
+                                        <CompactSelect
+                                            label={t("chart.noteSpeed")}
+                                            value={noteSpeed.toFixed(1)}
+                                            onValueChange={(value) =>
+                                                setNoteSpeed(Number(value))
+                                            }
+                                            outlined
+                                            container={screenRef.current}
+                                            options={noteSpeedOptions}
+                                        />
+                                    </div>
+                                    <Checkbox
+                                        label={t("chart.metronome")}
+                                        checked={metronomeEnabled}
+                                        onChange={(event) =>
+                                            void updateMetronomeEnabled(
+                                                event.target.checked
+                                            )
+                                        }
+                                    />
+                                    {volumeControl}
+                                    <Checkbox
+                                        label={t("chart.strictPerformance")}
+                                        checked={strictPerformance}
+                                        onChange={(event) =>
+                                            setStrictPerformance(
+                                                event.target.checked
+                                            )
+                                        }
+                                    />
+                                </Popover.Content>
+                            </Popover.Portal>
+                        </Popover.Root>
+                        <button
+                            type="button"
+                            className="nl-chart-stage__media-button"
+                            onClick={() => void fullscreen.toggle()}
+                            aria-label={t("chart.exitFullscreen")}
+                        >
+                            <Minimize className="nl-icon" />
+                        </button>
+                    </div>
+                ) : null}
             </div>
 
             <div className="nl-chart-stage__controls">
@@ -955,19 +1544,19 @@ export default function FallingChartViewer({
                     <span className="nl-metric-value nl-chart-stage__time">
                         {formatEditorTime(currentTimeMs)}
                     </span>
-                    <input
-                        type="range"
-                        min="0"
-                        max={Math.max(1, durationMs)}
-                        step="10"
-                        value={Math.min(currentTimeMs, durationMs)}
-                        onChange={(event) => seek(Number(event.target.value))}
-                        aria-label={t("chart.position")}
-                        className="nl-chart-stage__seek"
-                    />
+                    {seekTrack}
                     <span className="nl-metric-value nl-chart-stage__time">
                         {formatEditorTime(durationMs)}
                     </span>
+                    <Button
+                        variant="secondary"
+                        size="icon"
+                        className="nl-chart-stage__fullscreen"
+                        onClick={() => void fullscreen.toggle()}
+                        aria-label={t("chart.fullscreen")}
+                    >
+                        <Maximize className="nl-icon" />
+                    </Button>
                 </div>
 
                 <div className="nl-chart-stage__options">
@@ -992,10 +1581,7 @@ export default function FallingChartViewer({
                                 setNoteSpeed(Number(value))
                             }
                             outlined
-                            options={Array.from({ length: 31 }, (_, index) => {
-                                const value = (1 + index * 0.1).toFixed(1);
-                                return { value, label: value };
-                            })}
+                            options={noteSpeedOptions}
                         />
                     </div>
                     <Checkbox
@@ -1005,24 +1591,7 @@ export default function FallingChartViewer({
                             void updateMetronomeEnabled(event.target.checked)
                         }
                     />
-                    <label className="nl-chart-stage__option nl-chart-stage__volume">
-                        <Volume2 className="nl-icon nl-muted" aria-hidden />
-                        <input
-                            type="range"
-                            min="0"
-                            max="100"
-                            step="5"
-                            value={metronomeVolume}
-                            onChange={(event) =>
-                                setMetronomeVolume(Number(event.target.value))
-                            }
-                            aria-label={t("chart.metronomeVolume")}
-                            className="nl-chart-stage__seek"
-                        />
-                        <span className="nl-metric-value nl-chart-stage__percent">
-                            {metronomeVolume}%
-                        </span>
-                    </label>
+                    {volumeControl}
                     <Checkbox
                         label={t("chart.strictPerformance")}
                         checked={strictPerformance}

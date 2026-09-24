@@ -29,13 +29,14 @@ for (const locale of ["ko", "ja", "en"] as const) {
                 name: "PROFILE_OWNER_FIXTURE",
                 exact: true,
             });
-            await expect(identity).toContainText(t["profile.private"]);
+            // 「비공개 · … 프로필 설정」 줄은 두지 않는다(2026-09-25) — 설정 링크는 머리 오른쪽 아이콘 하나
+            await expect(identity).not.toContainText(t["profile.private"]);
             await expect(
                 identity.getByRole("link", {
                     name: t["profile.settings"],
                     exact: true,
                 })
-            ).toHaveCount(2);
+            ).toHaveCount(1);
             for (const [flag, secret] of [
                 ["nostalgia", "FIXTURE_NOSTALGIA"],
                 ["discord", "FIXTURE_DISCORD"],

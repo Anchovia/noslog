@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { useTranslations } from "@/components/i18n/localeProvider";
+
 import { getChartEditorNavigationDurationMs } from "@/lib/chart-pattern/editor";
 import { getMetronomePeakGain } from "@/lib/chart-pattern/metronome";
 import { getBeatMarkers } from "@/lib/chart-pattern/timing";
@@ -47,6 +49,7 @@ interface PlaybackAnchor {
 }
 
 export function useChartAudio(metronomeVolume: number) {
+    const t = useTranslations();
     const store = useChartEditorStoreApi();
     const playbackRate = useChartEditorStore((state) => state.playbackRate);
     const metronomeEnabled = useChartEditorStore(
@@ -198,14 +201,12 @@ export function useChartAudio(metronomeVolume: number) {
                 bufferRef.current = null;
                 setFileName(null);
                 setWaveformPeaks(null);
-                setError(
-                    "이 음원 파일을 읽을 수 없습니다. MP3, OGG 또는 WAV 파일을 사용해주세요."
-                );
+                setError(t("editor.audioError"));
             } finally {
                 setIsDecoding(false);
             }
         },
-        [getContext, stopSource, store]
+        [getContext, stopSource, store, t]
     );
 
     const togglePlayback = useCallback(async () => {

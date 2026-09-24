@@ -1,5 +1,6 @@
 "use client";
 
+import ContributionLabel from "@/features/contributions/components/contributionLabel";
 import { SkeletonText } from "@/components/ui/skeleton";
 import Link from "next/link";
 import { useId, useState } from "react";
@@ -79,6 +80,7 @@ export default function CommunityOpinionRow({
                     >
                         {name}
                     </Link>
+                    <ContributionLabel label={item.user.label} />
                     <span className="nl-metadata nl-muted">
                         <time
                             dateTime={item.updatedAt}

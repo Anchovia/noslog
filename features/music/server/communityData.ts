@@ -1,4 +1,5 @@
 import "server-only";
+import { getNameLabels } from "@/features/contributions/server/contributionPointService";
 
 import type { Prisma } from "@prisma/client";
 import db from "@/lib/db";
@@ -130,6 +131,7 @@ export async function getCommunityOpinions(
               })
             : null,
     ]);
+    const labels = await getNameLabels(rows.map((row) => row.user.id));
     return opinionPageSchema.parse({
         items: rows.map((row) => ({
             id: row.id,
@@ -141,7 +143,7 @@ export async function getCommunityOpinions(
                 row.opinionUpdatedAt.getTime() >
                     (row.opinionCreatedAt ?? row.createdAt).getTime()
             ),
-            user: row.user,
+            user: { ...row.user, label: labels.get(row.user.id) ?? null },
             helpfulCount: row._count.helpful,
             viewerHelpful: row.helpful.length > 0,
             own: row.user.id === userId,
@@ -353,6 +355,7 @@ export async function getOpinionReplies(
               })
             : null,
     ]);
+    const labels = await getNameLabels(rows.map((row) => row.user.id));
     return opinionReplyListSchema.parse({
         items: rows.map((row) => ({
             id: row.id,
@@ -361,7 +364,7 @@ export async function getOpinionReplies(
             updatedAt: row.updatedAt.toISOString(),
             // 좋아요만 눌려도 updatedAt 은 바뀌지 않는다(본문 고침에만) — 1초 여유
             edited: row.updatedAt.getTime() - row.createdAt.getTime() > 1000,
-            user: row.user,
+            user: { ...row.user, label: labels.get(row.user.id) ?? null },
             likeCount: row._count.likes,
             viewerLiked: row.likes.length > 0,
             own: row.user.id === userId,
