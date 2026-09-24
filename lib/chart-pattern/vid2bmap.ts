@@ -736,10 +736,6 @@ export function convertVid2bmap(
                 }))
             );
             const beatTicks = beatTicksOf(activePoint(sortedPoints, tick));
-            const endTick = Math.max(
-                path[path.length - 1].tick,
-                tick + Math.round(beatTicks / snapDivisor)
-            );
             // 가로대 간격 = 영상 프레임 기준 조각 간격 중 가장 짧은 무리의 평균(에디터 스냅 1/4 ~ 1/32 중 가장 가까운 것).
             // 격자에 맞춘 뒤 재면 1/6박 격자에 뭉쳐 커지고, AI 가 조각을 놓친 줄기(Altale 34마디: 11 · 4 · 11 · 4프레임)는 더 커진다
             const frameGaps = chain
@@ -764,6 +760,20 @@ export function convertVid2bmap(
                         ? divisor
                         : best
             );
+            // 끝 = 시작 + 가로대 간격 × 개수(첫 조각 ~ 마지막 조각 길이를 가로대 간격으로 반올림). 게임은 가로대 하나가 판정 하나라
+            // 끝을 격자에 맞춰 줄이면 가로대가 빠진다(アルストロメリア 64마디: 조각 6개 · 0.58박 → ½박으로 줄어 가로대 5개, 최종 콤보와 1개 차이)
+            const rungTicks = (CHART_TICKS_PER_QUARTER * 4) / rungDivisor;
+            const endTick =
+                tick +
+                Math.max(
+                    1,
+                    Math.round(
+                        (rawTickOf(chain[chain.length - 1].y) -
+                            rawTickOf(first.y)) /
+                            rungTicks
+                    )
+                ) *
+                    rungTicks;
             const hands = chain.map((piece) => piece.hand).filter(Boolean);
             const left = hands.filter((hand) => hand === "left").length;
             const hand: ChartNote["hand"] =
@@ -786,10 +796,13 @@ export function convertVid2bmap(
                 points: [
                     ...new Map(
                         path.slice(1).map((point, index, rest) => {
+                            // 꺾이는 점도 가로대 칸에 — 칸 밖이면 가로대가 하나 더 그려진다(가로대 수 = 판정 수)
                             const tickOffset =
                                 index === rest.length - 1
                                     ? endTick - tick
-                                    : point.tick - tick;
+                                    : Math.round(
+                                          (point.tick - tick) / rungTicks
+                                      ) * rungTicks;
                             return [
                                 tickOffset,
                                 {
@@ -800,7 +813,11 @@ export function convertVid2bmap(
                             ] as const;
                         })
                     ).values(),
-                ].filter((point) => point.tickOffset > 0),
+                ].filter(
+                    (point) =>
+                        point.tickOffset > 0 &&
+                        point.tickOffset <= endTick - tick
+                ),
             };
             if (hands.length > 0) handKnownIds.push(note.id);
             glissandoIds.push(note.id);
