@@ -29,6 +29,11 @@ import {
 } from "@/lib/chart-pattern/editor";
 import { getChartPlaybackDurationMs } from "@/lib/chart-pattern/playback";
 import {
+    trillHexes,
+    trillSolidSpan,
+    trillUnion,
+} from "@/lib/chart-pattern/trillShape";
+import {
     CHART_LANE_COUNT,
     isChartLaneGroupBoundary,
     type ChartDocument,
@@ -698,65 +703,67 @@ function drawSheetNote(
     }
 
     if (note.type === "trill") {
-        const pairLane = note.pairLane ?? note.lane;
-        const pairWidth = note.pairWidth ?? note.width;
-        const stepTicks = Math.max(
-            1,
-            Math.round(
-                (document.ticksPerQuarter * 4) / (note.trillSnapDivisor ?? 8)
-            )
-        );
-        const steps = Math.max(1, Math.ceil(note.durationTicks / stepTicks));
-        for (let index = 0; index < steps; index += 1) {
-            const startTick = note.tick + index * stepTicks;
-            const endTick = Math.min(
-                note.tick + note.durationTicks,
-                startTick + stepTicks
+        // 게임처럼(2026-09-24 B′): 두 자리를 합친 범위 전체에 촘촘한 육각형, 칠 자리 쪽만 진하고 반대편은 옅어짐
+        const union = trillUnion(note);
+        const x1 = chartLeft + union.lane * laneWidth + 1;
+        const x2 = chartLeft + (union.lane + union.width) * laneWidth - 1;
+        const hexes = trillHexes(note, document.ticksPerQuarter);
+        for (let index = hexes.length - 1; index >= 0; index -= 1) {
+            const hex = hexes[index];
+            const yBottom = yForRenderedTick(hex.startTick) - 0.5;
+            const yTop = yForRenderedTick(hex.endTick) + 0.5;
+            const middle = (yBottom + yTop) / 2;
+            // 악보는 세로가 촘촘해 육각형이 낮다 — 모서리를 높이에 맞춰 화살표처럼 보이지 않게
+            const bevel = Math.min(
+                6,
+                (x2 - x1) * 0.12,
+                (yBottom - yTop) * 0.35
             );
-            const fromLane = index % 2 === 0 ? note.lane : pairLane;
-            const fromWidth = index % 2 === 0 ? note.width : pairWidth;
-            const toLane = index % 2 === 0 ? pairLane : note.lane;
-            const toWidth = index % 2 === 0 ? pairWidth : note.width;
+            const span = trillSolidSpan(hex, union);
+            const gradient = context.createLinearGradient(x1, 0, x2, 0);
+            const solid = colorWithAlpha(handColors[note.hand], 0.82);
+            const clear = colorWithAlpha(handColors[note.hand], 0.04);
+            gradient.addColorStop(0, span.fadeLeft ? clear : solid);
+            gradient.addColorStop(span.from, solid);
+            gradient.addColorStop(span.to, solid);
+            gradient.addColorStop(1, span.fadeRight ? clear : solid);
             context.save();
-            context.globalAlpha = 0.78;
-            context.fillStyle = handColors[note.hand];
-            context.strokeStyle = "rgba(255,255,255,.42)";
-            context.lineWidth = 0.7;
+            context.fillStyle = gradient;
             context.beginPath();
-            context.moveTo(
-                chartLeft + fromLane * laneWidth + 1,
-                yForRenderedTick(startTick) - 1
-            );
-            context.lineTo(
-                chartLeft + (fromLane + fromWidth) * laneWidth - 1,
-                yForRenderedTick(startTick) - 1
-            );
-            context.lineTo(
-                chartLeft + (toLane + toWidth) * laneWidth - 1,
-                yForRenderedTick(endTick) + 1
-            );
-            context.lineTo(
-                chartLeft + toLane * laneWidth + 1,
-                yForRenderedTick(endTick) + 1
-            );
+            context.moveTo(x1 + bevel, yBottom);
+            context.lineTo(x2 - bevel, yBottom);
+            context.lineTo(x2, middle);
+            context.lineTo(x2 - bevel, yTop);
+            context.lineTo(x1 + bevel, yTop);
+            context.lineTo(x1, middle);
             context.closePath();
             context.fill();
-            context.stroke();
             context.restore();
         }
-        drawHead(note.lane, note.width, note.tick);
-        const centerX = chartLeft + (note.lane + note.width / 2) * laneWidth;
+        // 끝 막대(어두운 막대, 게임과 같은 자리)
+        const endY = yForRenderedTick(note.tick + note.durationTicks);
+        context.save();
+        context.fillStyle = "#0b0b10";
+        context.strokeStyle = handColors[note.hand];
+        context.lineWidth = 1.2;
+        context.beginPath();
+        context.roundRect(x1 + 1, endY - 2.5, x2 - x1 - 2, 5, 2.5);
+        context.fill();
+        context.stroke();
+        context.restore();
+        drawHead(union.lane, union.width, note.tick);
+        const centerX = chartLeft + (union.lane + union.width / 2) * laneWidth;
         drawSheetDiamond(
             context,
-            centerX,
-            yForRenderedTick(note.tick) - 1,
+            centerX - 2.5,
+            yForRenderedTick(note.tick) + 1,
             3.3,
             "#f2c75c"
         );
         drawSheetDiamond(
             context,
-            centerX + 5,
-            yForRenderedTick(note.tick) - 5,
+            centerX + 2.5,
+            yForRenderedTick(note.tick) - 3,
             2.4,
             "#f2c75c"
         );
@@ -863,6 +870,12 @@ function drawSheetCap(
     context.lineTo(right - bevel - 1, centerY + 1);
     context.stroke();
     context.restore();
+}
+
+/** "#rrggbb" → 같은 색의 rgba — 그라데이션이 투명 쪽에서 검게 번지지 않게 */
+function colorWithAlpha(hex: string, alpha: number) {
+    const value = Number.parseInt(hex.slice(1), 16);
+    return `rgba(${(value >> 16) & 255}, ${(value >> 8) & 255}, ${value & 255}, ${alpha})`;
 }
 
 function drawSheetDiamond(

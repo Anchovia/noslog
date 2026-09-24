@@ -307,6 +307,144 @@ function sampleProjectedSegment(
     });
 }
 
+const TRILL_FADE_STRIPS = 10;
+const TRILL_SOLID_ALPHA = 0.82;
+const TRILL_DIAMOND = 0xf2c75c;
+const TRILL_TAIL = 0x070910;
+
+/**
+ * 트릴(2026-09-24 B′, 사용자) — 두 자리를 합친 범위 전체에 촘촘한 육각형, 칠 자리 쪽만 진하고 반대편은 옅어진다.
+ * 그라데이션 채우기는 텍스처를 매번 만들어 무거워, 옅어지는 부분은 투명도를 줄여 가는 띠 몇 개로 그린다
+ */
+function drawTrillShape(
+    graphics: Graphics,
+    note: PreparedPlaybackNote,
+    shape: NonNullable<PreparedPlaybackNote["trillShape"]>,
+    {
+        currentTimeMs,
+        visibleEnd,
+        project,
+        visualScale,
+    }: {
+        currentTimeMs: number;
+        visibleEnd: number;
+        project: (point: PlaybackPathPoint) => ProjectedRange;
+        visualScale: number;
+    }
+) {
+    const color = colorForHand(note.hand);
+    const at = (timeMs: number) =>
+        project({ ...shape.union, timeMs, hand: note.hand });
+    for (let index = shape.hexes.length - 1; index >= 0; index -= 1) {
+        const hex = shape.hexes[index];
+        const start = Math.max(hex.startTimeMs, currentTimeMs);
+        const end = Math.min(hex.endTimeMs, visibleEnd);
+        if (start >= end) continue;
+        const bottom = at(start);
+        const top = at(end);
+        const middle = at((start + end) / 2);
+        const bevel = Math.min(
+            6 * visualScale,
+            (middle.right - middle.left) * 0.12
+        );
+        // 범위 안 위치(0~1) → 세 높이의 x. 위 · 아래는 육각형 모서리만큼 안쪽으로
+        const xAt = (range: ProjectedRange, fraction: number, inset: number) =>
+            Math.min(
+                range.right - inset,
+                Math.max(
+                    range.left + inset,
+                    range.left + (range.right - range.left) * fraction
+                )
+            );
+        const band = (from: number, to: number, alpha: number) => {
+            graphics
+                .poly(
+                    [
+                        xAt(bottom, from, bevel),
+                        bottom.y,
+                        xAt(bottom, to, bevel),
+                        bottom.y,
+                        xAt(middle, to, 0),
+                        middle.y,
+                        xAt(top, to, bevel),
+                        top.y,
+                        xAt(top, from, bevel),
+                        top.y,
+                        xAt(middle, from, 0),
+                        middle.y,
+                    ],
+                    true
+                )
+                .fill({ color, alpha });
+        };
+        const lane = (hex.lane - shape.union.lane) / shape.union.width;
+        const span = {
+            from: lane,
+            to: lane + hex.width / shape.union.width,
+        };
+        band(span.from, span.to, TRILL_SOLID_ALPHA);
+        for (let strip = 0; strip < TRILL_FADE_STRIPS; strip += 1) {
+            const alpha =
+                TRILL_SOLID_ALPHA * (1 - (strip + 0.5) / TRILL_FADE_STRIPS);
+            if (span.from > 0) {
+                const width = span.from / TRILL_FADE_STRIPS;
+                band(
+                    span.from - (strip + 1) * width,
+                    span.from - strip * width,
+                    alpha
+                );
+            }
+            if (span.to < 1) {
+                const width = (1 - span.to) / TRILL_FADE_STRIPS;
+                band(
+                    span.to + strip * width,
+                    span.to + (strip + 1) * width,
+                    alpha
+                );
+            }
+        }
+    }
+
+    // 끝 막대 · 머리(범위 전체) · 마름모
+    if (note.endTimeMs >= currentTimeMs && note.endTimeMs <= visibleEnd) {
+        const tail = at(note.endTimeMs);
+        const height = (4 + tail.depth * 2) * visualScale;
+        graphics
+            .poly(
+                capPolygon(tail.left, tail.right, tail.y, height, visualScale),
+                true
+            )
+            .fill({ color: TRILL_TAIL, alpha: 0.95 })
+            .stroke({ color, width: visualScale, alpha: 0.9 });
+    }
+    if (
+        note.startTimeMs >= currentTimeMs - 90 &&
+        note.startTimeMs <= visibleEnd
+    ) {
+        const head = at(note.startTimeMs);
+        drawHitGlow(
+            graphics,
+            head,
+            note.hand,
+            note.startTimeMs - currentTimeMs,
+            visualScale
+        );
+        drawPlaybackCap(graphics, head, note.hand, 0.98, visualScale);
+        const size = (4.5 + head.depth * 2) * visualScale;
+        for (const [dx, dy, scale] of [
+            [-0.8, 0.4, 1],
+            [0.8, -1, 0.72],
+        ] as const) {
+            const cx = head.center + dx * size;
+            const cy = head.y + dy * size;
+            const r = size * scale;
+            graphics
+                .poly([cx, cy - r, cx + r, cy, cx, cy + r, cx - r, cy], true)
+                .fill({ color: TRILL_DIAMOND, alpha: 0.98 });
+        }
+    }
+}
+
 function drawPlayfield(
     graphics: Graphics,
     width: number,
@@ -478,6 +616,16 @@ function drawPreparedNote({
             visualScale
         );
         drawPlaybackCap(graphics, projected, point.hand, alpha, visualScale);
+        return;
+    }
+
+    if (note.type === "trill" && note.trillShape) {
+        drawTrillShape(graphics, note, note.trillShape, {
+            currentTimeMs,
+            visibleEnd,
+            project,
+            visualScale,
+        });
         return;
     }
 
