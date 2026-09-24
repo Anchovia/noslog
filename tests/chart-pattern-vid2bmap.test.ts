@@ -350,7 +350,7 @@ describe("vid2bmap warnings", () => {
         expect(kinds.filter((kind) => kind === "bpmMismatch")).toHaveLength(1);
     });
 
-    it("never imports glissando pieces and splits a trill into two positions", () => {
+    it("never imports glissando pieces and splits a trill into two overlapping positions", () => {
         expect(conversion.notes.some((note) => note.type === "glissando")).toBe(
             false
         );
@@ -360,7 +360,8 @@ describe("vid2bmap warnings", () => {
             trill.width,
             trill.pairLane,
             trill.pairWidth,
-        ]).toEqual([10, 3, 13, 3]);
+            // 머리 10~15(폭 6) → 10~14 ↔ 11~15(영상: 한 칸씩 겹쳐 번갈아)
+        ]).toEqual([10, 5, 11, 5]);
         expect(conversion.warnings).toContainEqual({
             kind: "trillSplit",
             count: 1,

@@ -455,8 +455,9 @@ old design-stage checklist. Changes to material behavior require a user decision
   centre notes are selected for review. Glissando pieces (vid2bmap reads each rung) are joined
   into one glissando when the next piece is within 12 frames and 4 lanes (2026-09-24); the path
   keeps the start, end and bends over 1 lane, rungs follow the piece spacing, a lone piece is
-  dropped, and a standard note on the path is taken as a rung read twice and dropped. Trills are
-  split in the middle and flagged.
+  dropped, and a standard note on the path is taken as a rung read twice and dropped. A trill's
+  head width w becomes two positions of width w-1 one lane apart (the video's hexes alternate
+  one lane within the head, 2026-09-24) and is flagged.
 - Against an existing draft every difference is listed (same tick, overlapping lanes = same
   note; otherwise the same lane, width and type within 1/8 of a quarter = the same note moved;
   a hand read from the video counts as a difference, a guessed hand does not) and chosen

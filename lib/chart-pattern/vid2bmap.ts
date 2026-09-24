@@ -609,13 +609,14 @@ export function convertVid2bmap(
             }
             chartNote = { ...base, durationTicks: duration };
             if (note.kind === "trill") {
-                // vid2bmap 은 트릴 전체 폭만 준다 — 가운데로 나눠 두 위치로(확인 필요)
-                const firstWidth = Math.max(1, Math.floor(note.width / 2));
+                // vid2bmap 은 트릴 머리 폭만 준다. 영상의 육각형은 머리 안에서 한 칸씩 겹쳐 번갈아 간다
+                // (Altale 머리 15~18 · 24~27: 두 자리 중심이 약 1칸 차이 — 폭 w-1 두 자리, 2026-09-24). 반으로 나누면 2칸 차이라 어긋남(확인 필요)
+                const pairWidth = Math.max(1, note.width - 1);
                 chartNote = {
                     ...chartNote,
-                    width: firstWidth,
-                    pairLane: note.lane + firstWidth,
-                    pairWidth: Math.max(1, note.width - firstWidth),
+                    width: pairWidth,
+                    pairLane: note.lane + (note.width - pairWidth),
+                    pairWidth,
                 };
                 trillSplit += 1;
             }
