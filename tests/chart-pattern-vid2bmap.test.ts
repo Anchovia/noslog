@@ -7,6 +7,7 @@ import {
     applyVid2bmapTempoChanges,
     detectVid2bmapTempoChanges,
     applyVid2bmapMerge,
+    applyVid2bmapStartBpm,
     beatLengthLabel,
     estimateVid2bmapBpm,
     chartPositionLabel,
@@ -1041,6 +1042,38 @@ describe("vid2bmap tempo changes from raw beat frames", () => {
         expect(
             tempo?.changes.map((change) => [change.tick, change.bpm])
         ).toEqual([[28320, 83]]);
+    });
+
+    it("proposes the start BPM measured over the whole first section, rounded to 0.5", () => {
+        // 144 BPM(25프레임) 곡 — 처음 16박만 24.8프레임으로 흔들림(처음만 재면 145 로 반올림된다), 새 초안은 기본 120
+        const frames: number[] = [];
+        let frame = 30;
+        for (let beat = 0; beat < 120; beat += 1) {
+            frames.push(Math.round(frame * 100) / 100);
+            frame += beat < 16 ? 24.8 : 25;
+        }
+        const song = {
+            ...build(),
+            barRows: frames.map((value) => Math.round(value + 9)),
+            beatFrames: { frames, row: 12, gridRows: 22 },
+        };
+        const tempo = detectVid2bmapTempoChanges(song, -1440, [
+            point(0, 0, 120, 4, 4),
+        ]);
+        expect(tempo?.changes).toEqual([]);
+        expect(tempo?.startMismatch).toMatchObject({
+            bpm: 144,
+            chartBpm: 120,
+            beats: frames.length - 1,
+        });
+    });
+
+    it("changes only the start timing's BPM, like editing it in the editor", () => {
+        const points = [point(0, 60, 120, 4, 4), point(1920, 2000, 100, 3, 4)];
+        expect(applyVid2bmapStartBpm(points, 144)).toEqual([
+            { ...points[0], bpm: 144 },
+            points[1],
+        ]);
     });
 
     it("stays quiet for a steady song and without beat frames", () => {

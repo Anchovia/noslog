@@ -480,6 +480,11 @@ old design-stage checklist. Changes to material behavior require a user decision
   replace the bar-interval BPM warning, are on by default, add the point at the beat with the
   previous time signature, and go in with the notes in one undoable step. No proposal where a
   timing point already exists; older zips without beat frames keep the warning only.
+  The start timing gets the same kind of proposal (2026-09-24 A) when the first section — measured
+  over its whole length, not the first beats — differs from it: 「시작 타이밍을 BPM ○ 로」, on by
+  default only when the draft has no notes (changing the start BPM moves every existing note in
+  time); it changes only that point's BPM, like editing it, and goes in with the notes. The offset
+  (start time against the audio) cannot come from the video.
 - Provenance (2026-09-24 C2): right after an import the editor saves a revision with
   kind `vid2bmap`. A published chart whose published revision number is at or after the first
   `vid2bmap` revision shows "노트 배치 · 영상에서 추출(vid2bmap)" and a sources dialog (vid2bmap,

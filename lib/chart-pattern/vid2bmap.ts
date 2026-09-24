@@ -1260,8 +1260,16 @@ export interface Vid2bmapTempoChange {
 
 export interface Vid2bmapTempo {
     changes: Vid2bmapTempoChange[];
-    /** 첫 구간 측정 BPM 이 시작 타이밍과 다르면 그 값(제안하지 않고 알리기만) */
-    startMismatch: { measuredBpm: number; chartBpm: number } | null;
+    /**
+     * 첫 구간(첫 템포 변화 전까지 전체) 측정 BPM 이 시작 타이밍과 다르면 — bpm 은 0.5 단위 제안값(2026-09-24 A:
+     * 가져오기 창의 템포 제안 카드로 「시작 타이밍을 BPM ○ 로」, 초안이 비었으면 기본 켬)
+     */
+    startMismatch: {
+        measuredBpm: number;
+        chartBpm: number;
+        bpm: number;
+        beats: number;
+    } | null;
 }
 
 /** 템포가 바뀌었다고 볼 차이(비율) */
@@ -1409,6 +1417,14 @@ export function detectVid2bmapTempoChanges(
         }
     }
 
+    // 구간이 하나여도 구간 전체로 — 처음 16박만 재면 흔들림이 남는다(アルストロメリア: 144.83 → 전체 144.0)
+    segments.forEach((segment, index) => {
+        segment.frames = measure(
+            segment.start,
+            segments[index + 1]?.start ?? durations.length
+        );
+    });
+
     const sorted = sortTimingPoints(timingPoints);
     const toBpm = (frameCount: number, point: ChartTimingPoint) =>
         ((60 * fps) / frameCount) *
@@ -1420,6 +1436,8 @@ export function detectVid2bmapTempoChanges(
             ? {
                   measuredBpm: Math.round(firstMeasured * 100) / 100,
                   chartBpm: origin.bpm,
+                  bpm: Math.round(firstMeasured * 2) / 2,
+                  beats: segments[1]?.start ?? durations.length,
               }
             : null;
 
@@ -1435,10 +1453,13 @@ export function detectVid2bmapTempoChanges(
         const point = activePoint(sorted, tick);
         const measured = toBpm(segment.frames, point);
         const bpm = Math.round(measured * 2) / 2;
+        // 시작 BPM 제안이 있으면 첫 구간은 그 값에서 바뀌는 것으로 본다
         const fromBpm =
             changes.length > 0 && changes[changes.length - 1].tick > point.tick
                 ? changes[changes.length - 1].bpm
-                : point.bpm;
+                : point === origin && startMismatch
+                  ? startMismatch.bpm
+                  : point.bpm;
         // 이미 그 자리에 타이밍 포인트가 있거나, 앞 BPM 과 같으면 제안하지 않는다
         if (
             point.tick === tick ||
@@ -1455,6 +1476,17 @@ export function detectVid2bmapTempoChanges(
         });
     });
     return { changes, startMismatch };
+}
+
+/** 시작 타이밍의 BPM 만 바꾼다 — 에디터에서 BPM 칸을 고치는 것과 같다(시각 · 박자표 · 뒤 포인트는 그대로) */
+export function applyVid2bmapStartBpm(
+    timingPoints: ChartTimingPoint[],
+    bpm: number
+) {
+    const origin = sortTimingPoints(timingPoints)[0];
+    return timingPoints.map((point) =>
+        point.id === origin.id ? { ...point, bpm } : point
+    );
 }
 
 /** 제안을 타이밍 포인트로 — 시각(ms)은 앞 타이밍(앞 제안 포함)에서 이어 계산, 박자표는 앞 구간을 잇는다 */

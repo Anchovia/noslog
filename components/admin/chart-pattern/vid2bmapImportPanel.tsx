@@ -26,6 +26,7 @@ import {
 import {
     alignVid2bmapFirstBarTick,
     applyVid2bmapMerge,
+    applyVid2bmapStartBpm,
     applyVid2bmapTempoChanges,
     beatLengthLabel,
     chartPositionLabel,
@@ -238,6 +239,8 @@ export default function Vid2bmapImportPanel({
     const [focusIndex, setFocusIndex] = useState<number | null>(null);
     const [showAllWarnings, setShowAllWarnings] = useState(false);
     /** 넣지 않기로 한 템포 제안(틱) — 기본은 모두 넣는다 */
+    /** 시작 BPM 제안을 넣을지 — 고르기 전(null)이면 초안이 비었을 때만 넣는다(시작 BPM 을 바꾸면 기존 노트 시각이 전부 움직임) */
+    const [startBpmChoice, setStartBpmChoice] = useState<boolean | null>(null);
     const [skippedTempo, setSkippedTempo] = useState<Record<number, boolean>>(
         {}
     );
@@ -327,6 +330,10 @@ export default function Vid2bmapImportPanel({
                 : null,
         [loaded, timingPoints]
     );
+    const proposedStartBpm =
+        tempo?.startMismatch && (startBpmChoice ?? document.notes.length === 0)
+            ? tempo.startMismatch.bpm
+            : null;
     const tempoChanges = useMemo(
         () =>
             (tempo?.changes ?? []).filter(
@@ -334,6 +341,8 @@ export default function Vid2bmapImportPanel({
             ),
         [tempo, skippedTempo]
     );
+    const timingCount =
+        tempoChanges.length + (proposedStartBpm === null ? 0 : 1);
     const diff = useMemo(
         () =>
             conversion
@@ -470,13 +479,19 @@ export default function Vid2bmapImportPanel({
                     ...(selectGridCheck ? conversion.gridCheckIds : []),
                 ]),
             ].filter((id) => added.has(id));
-            if (tempoChanges.length > 0) {
-                // 노트와 타이밍 포인트를 한 번에 — 실행 취소도 한 번. 노트는 박(틱)이라 위치는 그대로
+            if (timingCount > 0) {
+                // 노트와 타이밍 포인트를 한 번에 — 실행 취소도 한 번. 노트는 박(틱)이라 위치는 그대로.
+                // 시작 BPM 을 먼저 바꿔야 뒤 제안 포인트의 시각이 새 BPM 으로 이어진다
                 const state = store.getState();
                 state.replaceDocument({
                     ...state.document,
                     timingPoints: applyVid2bmapTempoChanges(
-                        state.document.timingPoints,
+                        proposedStartBpm === null
+                            ? state.document.timingPoints
+                            : applyVid2bmapStartBpm(
+                                  state.document.timingPoints,
+                                  proposedStartBpm
+                              ),
                         tempoChanges
                     ),
                     notes: merged.notes,
@@ -493,10 +508,10 @@ export default function Vid2bmapImportPanel({
             }
             // 출처 기록 — 이 버전 이하가 공개되면 뷰어에 「노트 배치 · 영상에서 추출(vid2bmap)」
             await onAfterApply(
-                `vid2bmap · 새로 ${merged.addedIds.length} · 뺌 ${merged.removedIds.length}${tempoChanges.length > 0 ? ` · 타이밍 ${tempoChanges.length}` : ""}`
+                `vid2bmap · 새로 ${merged.addedIds.length} · 뺌 ${merged.removedIds.length}${timingCount > 0 ? ` · 타이밍 ${timingCount}` : ""}`
             );
             toast.success(
-                `영상 추출 노트를 초안에 넣었습니다 — 새로 ${merged.addedIds.length.toLocaleString("ko-KR")} · 뺌 ${merged.removedIds.length.toLocaleString("ko-KR")}${tempoChanges.length > 0 ? ` · 타이밍 포인트 ${tempoChanges.length}` : ""}${selection.length > 0 ? ` · 확인할 노트 ${selection.length}개 선택됨` : ""}`
+                `영상 추출 노트를 초안에 넣었습니다 — 새로 ${merged.addedIds.length.toLocaleString("ko-KR")} · 뺌 ${merged.removedIds.length.toLocaleString("ko-KR")}${timingCount > 0 ? ` · 타이밍 ${timingCount}` : ""}${selection.length > 0 ? ` · 확인할 노트 ${selection.length}개 선택됨` : ""}`
             );
             onClose();
         } finally {
@@ -602,6 +617,7 @@ export default function Vid2bmapImportPanel({
                                 ))}
                             </dl>
                             {estimatedBpm !== null &&
+                            !tempo?.startMismatch &&
                             !warnings.some(
                                 (warning) => warning.kind === "bpmMismatch"
                             ) ? (
@@ -616,16 +632,41 @@ export default function Vid2bmapImportPanel({
                                 </p>
                             ) : null}
                             {tempo?.startMismatch ? (
-                                <p className="text-text-secondary flex gap-1.5 text-xs leading-relaxed">
-                                    <TriangleAlert
-                                        className="text-score mt-0.5 size-3.5 shrink-0"
-                                        aria-hidden
-                                    />
-                                    영상 박자선으로 잰 첫 구간 BPM{" "}
-                                    {tempo.startMismatch.measuredBpm} ≠ 시작
-                                    타이밍 {tempo.startMismatch.chartBpm} — 시작
-                                    타이밍 포인트 확인
-                                </p>
+                                // 시작 BPM 제안(2026-09-24 A) — 템포 변화 제안과 같은 카드
+                                <div className="border-score/40 bg-score/10 flex flex-col gap-1 rounded-md border px-2 py-1.5">
+                                    <p className="flex items-center gap-1.5 text-xs font-bold">
+                                        <TriangleAlert
+                                            className="text-score size-3.5 shrink-0"
+                                            aria-hidden
+                                        />
+                                        {chartPositionLabel(
+                                            sortTimingPoints(timingPoints)[0]
+                                                .tick,
+                                            timingPoints
+                                        )}{" "}
+                                        · 시작 타이밍
+                                    </p>
+                                    <p className="text-micro">
+                                        영상 박자선 {tempo.startMismatch.beats}
+                                        박으로 잰 BPM{" "}
+                                        {tempo.startMismatch.measuredBpm} — 지금{" "}
+                                        {tempo.startMismatch.chartBpm}
+                                    </p>
+                                    <label className="flex items-center gap-2 text-xs font-semibold">
+                                        <input
+                                            type="checkbox"
+                                            checked={proposedStartBpm !== null}
+                                            onChange={(event) =>
+                                                setStartBpmChoice(
+                                                    event.target.checked
+                                                )
+                                            }
+                                            className="accent-text-primary size-3.5"
+                                        />
+                                        시작 타이밍을 BPM{" "}
+                                        {tempo.startMismatch.bpm} 로
+                                    </label>
+                                </div>
                             ) : null}
                             {(tempo?.changes ?? []).map((change) => {
                                 const checked = !skippedTempo[change.tick];
@@ -1154,18 +1195,17 @@ export default function Vid2bmapImportPanel({
                         ) : null}
                         초안에 넣기
                         {merged &&
-                        (merged.addedIds.length > 0 ||
-                            tempoChanges.length === 0)
+                        (merged.addedIds.length > 0 || timingCount === 0)
                             ? ` · ${merged.addedIds.length.toLocaleString("ko-KR")}개`
                             : ""}
-                        {tempoChanges.length > 0
-                            ? `${merged && merged.addedIds.length > 0 ? " +" : " ·"} 타이밍 ${tempoChanges.length}`
+                        {timingCount > 0
+                            ? `${merged && merged.addedIds.length > 0 ? " +" : " ·"} 타이밍 ${timingCount}`
                             : ""}
                     </button>
                 </div>
                 <p className="text-micro">
                     {merged && hasDraft
-                        ? `새로 ${merged.addedIds.length.toLocaleString("ko-KR")} · 뺌 ${merged.removedIds.length.toLocaleString("ko-KR")}${tempoChanges.length > 0 ? ` · 타이밍 포인트 ${tempoChanges.length}` : ""} — 넣기 전 지금 초안을 버전으로 저장합니다.`
+                        ? `새로 ${merged.addedIds.length.toLocaleString("ko-KR")} · 뺌 ${merged.removedIds.length.toLocaleString("ko-KR")}${timingCount > 0 ? ` · 타이밍 ${timingCount}` : ""} — 넣기 전 지금 초안을 버전으로 저장합니다.`
                         : "초안에만 들어갑니다. 공개는 따로 합니다."}
                 </p>
                 <p className="text-micro">
