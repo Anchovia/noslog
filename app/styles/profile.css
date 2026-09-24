@@ -89,7 +89,11 @@
 }
 @media (hover: hover) {
     .noslog-ui .nl-profile-owner-action:hover {
-        background: var(--nl-interaction-hover);
+        --nl-state-layer: var(--nl-interaction-hover);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
     }
 }
 .noslog-ui .nl-profile-identity__chips,
@@ -251,7 +255,11 @@
 }
 @media (hover: hover) {
     .noslog-ui .nl-profile-play-row:hover {
-        background: var(--nl-interaction-hover);
+        --nl-state-layer: var(--nl-interaction-hover);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
     }
 }
 .noslog-ui .nl-profile-play-row__jacket {

@@ -20,27 +20,32 @@
 
 ### 색 — 역할 이름으로만 쓴다 (다크 값)
 
-| 역할                                                  | 값                          | 쓰는 곳                                               |
-| ----------------------------------------------------- | --------------------------- | ----------------------------------------------------- |
-| `surface/canvas` · `sunken`                           | #111                        | 페이지 바탕, 트랙 · 자켓 빈자리                       |
-| `surface/surface`                                     | #1b1b1b                     | 카드, 입력칸, 보조 버튼 면                            |
-| `surface/raised` · `overlay`                          | #222                        | 선택된 세그먼트 · 칩, 떠 있는 창                      |
-| `content/default` · `subdued`                         | #dbdbdb · #afafaf           | 본문 · 보조 글자                                      |
-| `content/pending`                                     | #8a8a8a                     | 요청 중이라 잠시 보류된 값 (흐리게 하는 opacity 대신) |
-| `border/divider` · `subtle` · `default`               | #323232 · #393939 · #444    | 구분선 · 세그먼트 트랙 · 카드 경계                    |
-| `border/input` · `strong`                             | #717171 · #8a8a8a           | 입력 · 보조 버튼 · 태그 경계 · 올림 · 선택 경계       |
-| `border/overlay`                                      | #444                        | 떠 있는 창 경계                                       |
-| `interaction/hover` · `selected-pressed` · `menu-set` | #2c2c2c · #393939 · #323232 | 올림 · 누름 · 목록에서 선택된 행                      |
-| `primary/default` · `on-primary`                      | #dbdbdb · #111              | 주 버튼 면 · 그 위 글자                               |
-| `content/interactive`                                 | #f2f2f2                     | 제목 링크 · 동작 칸 글자                              |
-| `content/disabled` · `interaction/disabled-content`   | #444                        | 비활성 글자 · 값 없는 줄                              |
-| `surface/scrim`                                       | #000 60%                    | 대화상자 뒤 가림막                                    |
-| `focus/ring`                                          | #fff                        | 포커스 선                                             |
+| 역할                                                  | 값                       | 쓰는 곳                                               |
+| ----------------------------------------------------- | ------------------------ | ----------------------------------------------------- |
+| `surface/canvas` · `sunken`                           | #111                     | 페이지 바탕, 트랙 · 자켓 빈자리                       |
+| `surface/surface`                                     | #1b1b1b                  | 카드, 입력칸, 보조 버튼 면                            |
+| `surface/raised` · `overlay`                          | #222                     | 선택된 세그먼트 · 칩, 떠 있는 창                      |
+| `content/default` · `subdued`                         | #dbdbdb · #afafaf        | 본문 · 보조 글자                                      |
+| `content/pending`                                     | #8a8a8a                  | 요청 중이라 잠시 보류된 값 (흐리게 하는 opacity 대신) |
+| `border/divider` · `subtle` · `default`               | #323232 · #323232 · #444 | 구분선 · 세그먼트 트랙 · 카드 경계                    |
+| `border/input` · `strong`                             | #717171 · #8a8a8a        | 입력 · 보조 버튼 · 태그 경계 · 올림 · 선택 경계       |
+| `border/overlay`                                      | #444                     | 떠 있는 창 경계                                       |
+| `interaction/hover` · `selected-pressed` · `menu-set` | #fff 6% · 10% · 10%      | 올림 · 누름 · 목록에서 선택된 행 (면 위에 겹침)       |
+| `primary/default` · `on-primary`                      | #dbdbdb · #111           | 주 버튼 면 · 그 위 글자                               |
+| `content/interactive`                                 | #f2f2f2                  | 제목 링크 · 동작 칸 글자                              |
+| `content/disabled` · `interaction/disabled-content`   | #444                     | 비활성 글자 · 값 없는 줄                              |
+| `surface/scrim`                                       | #000 60%                 | 대화상자 뒤 가림막                                    |
+| `focus/ring`                                          | #fff                     | 포커스 선                                             |
 
 - 도메인 색은 이미 있는 것만 쓴다: 난이도 글자 `difficulty/text-*`(다크 값은 난이도 판 면 `raised` 위에서도 4.5 를 넘게 한 칸 밝힘 — 2026-09-18), 판정 `judgement/*`, 카테고리
   `category/*`, 달성 `achievement/*`, 검정 `exam/*`, 상태 `feedback/*`, 차트 `local-data/*`.
   **새 색이 필요해 보이면 만들지 말고 묻는다.**
 - 상호작용 면(올림 · 누름 · 선택 · 비활성)은 그 상태에만 칠한다. 평소 요소에 칠하지 않는다.
+- 올림 · 누름 · 선택은 **제 면 위에 겹친다**(2026-09-23 I2) — 면 색을 바꾸지 않고
+  `--nl-state-layer: var(--nl-interaction-…)` + `background-image: linear-gradient(var(--nl-state-layer), var(--nl-state-layer))`.
+  그래서 어느 면(바탕 · 카드 · 떠 있는 창) 위에서도 한 단계씩 밝아진다. `--nl-state-layer` 는 `@property` 로 등록돼 ① 전환을 탄다.
+  예외 = 배경 그림을 이미 쓰는 요소(투표 줄의 구분선)와 `::selection` 은 `background-color` 로 칠한다.
+  공용 부품의 올림 규칙이 면 색을 바꾸면(예 `.nl-button:hover`) 변형 쪽에서 제 면 색을 다시 적는다.
 - 글자 대비 4.5:1, 글자 아닌 단서 3:1. 색만으로 상태를 전달하지 않는다.
 
 ### 글자 — 13종 (`tokens.css` 의 클래스). 이 밖의 조합 금지
@@ -119,7 +124,7 @@ NosLog 는 데이터 서비스라 움직임은 **상태 · 위치 · 로딩**에
 | `--nl-motion-delay-progress` · `--nl-motion-delay-skeleton` | 100 · 300ms                                           | 이 안에 끝나면 위쪽 진행 막대 · 스켈레톤을 띄우지 않음        |
 | `--nl-motion-duration-progress`                             | 1500ms                                                | 위쪽 진행 막대가 80% 까지 차오름                              |
 
-- **① 올림 · 누름 색** — 누를 수 있는 모든 것(`a` · `button` · `summary` · `label` 로 만든 줄 · 옵션 · 메뉴 항목 · 탭, 누를 줄을 품고 올림 면을 칠하는 카드 — 펼침 카드 · 오락실 결과, 올림 면을 `::before` 로 그리는 버튼)에 같은 값. 배경 · 글자색만 움직이고 포커스 선 · 경계는 즉시.
+- **① 올림 · 누름 색** — 누를 수 있는 모든 것(`a` · `button` · `summary` · `label` 로 만든 줄 · 옵션 · 메뉴 항목 · 탭, 누를 줄을 품고 올림 면을 칠하는 카드 — 펼침 카드 · 오락실 결과, 올림 면을 `::before` 로 그리는 버튼)에 같은 값. 배경 · 글자색 · 겹침 층(`--nl-state-layer`)만 움직이고 포커스 선 · 경계는 즉시. 겹침 층은 켜질 때만 움직이고 꺼질 때는 즉시(층이 올림 규칙에만 있어서).
 - **③ 떠 있는 메뉴**(셀렉트 · 정렬 · ⋯ · 필터 팝오버 · 빙고 칸 · 지도 범례 · ≡ 메뉴 · 폰 ≡ 뒤 어둠) — 열 때 페이드만, **닫을 때 즉시**
   (셀렉트 · ≡ 메뉴는 닫는 순간 떼어져 닫힘 움직임을 줄 수 없어 모두 즉시로 맞춤).
 - **④ 대화상자 · 전체 화면 창** — 나타날 때 페이드 + 8 떠오름, 사라질 때 페이드만. 떠오름은 `translate` 속성(가운데 맞춤 `transform` 과 따로).

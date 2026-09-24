@@ -80,7 +80,11 @@
 }
 @media (hover: hover) {
     .noslog-ui .nl-chip:hover {
-        background: var(--nl-interaction-hover);
+        --nl-state-layer: var(--nl-interaction-hover);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
     }
 }
 /* 선택 = 버튼 칩은 aria-pressed, 링크 칩(FilterChipLinks)은 aria-current */
@@ -202,11 +206,19 @@
 }
 @media (hover: hover) {
     .noslog-ui .nl-sort-menu__item:hover {
-        background: var(--nl-interaction-hover);
+        --nl-state-layer: var(--nl-interaction-hover);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
     }
 }
 .noslog-ui .nl-sort-menu__item[aria-checked="true"] {
-    background: var(--nl-interaction-menu-set);
+    --nl-state-layer: var(--nl-interaction-menu-set);
+    background-image: linear-gradient(
+        var(--nl-state-layer),
+        var(--nl-state-layer)
+    );
     font-weight: var(--nl-type-weight-semibold);
 }
 .noslog-ui .nl-sort-menu__item:focus-visible {
@@ -307,7 +319,11 @@
 }
 @media (hover: hover) {
     .noslog-ui .nl-applied__token:hover {
-        background: var(--nl-interaction-hover);
+        --nl-state-layer: var(--nl-interaction-hover);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
     }
 }
 .noslog-ui .nl-applied__token:focus-visible {

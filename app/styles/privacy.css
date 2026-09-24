@@ -98,7 +98,11 @@
     text-decoration: none;
 }
 .noslog-ui .nl-privacy-contents a[aria-current] {
-    background: var(--nl-interaction-menu-set);
+    --nl-state-layer: var(--nl-interaction-menu-set);
+    background-image: linear-gradient(
+        var(--nl-state-layer),
+        var(--nl-state-layer)
+    );
     font-weight: 600;
 }
 .noslog-ui .nl-privacy-contents__wide {

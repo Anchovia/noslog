@@ -150,7 +150,11 @@
     overflow-wrap: anywhere;
 }
 .noslog-ui .nl-settings__arcade-option[data-active] {
-    background: var(--nl-interaction-menu-set);
+    --nl-state-layer: var(--nl-interaction-menu-set);
+    background-image: linear-gradient(
+        var(--nl-state-layer),
+        var(--nl-state-layer)
+    );
 }
 .noslog-ui .nl-settings__crop {
     position: relative;
@@ -273,7 +277,11 @@
         font-weight: var(--nl-type-weight-medium);
     }
     .noslog-ui .nl-settings__category--current {
-        background: var(--nl-interaction-menu-set);
+        --nl-state-layer: var(--nl-interaction-menu-set);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
     }
     .noslog-ui .nl-settings__category--current .nl-entity-title {
         font-weight: var(--nl-type-weight-semibold);

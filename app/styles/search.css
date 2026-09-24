@@ -84,7 +84,11 @@
 @media (hover: hover) {
     .noslog-ui .nl-search > .nl-compact-select:hover::before,
     .noslog-ui .nl-search__clear:hover::before {
-        background: var(--nl-interaction-hover);
+        --nl-state-layer: var(--nl-interaction-hover);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
     }
 }
 .noslog-ui .nl-search > .nl-compact-select:focus-visible,
@@ -119,7 +123,11 @@
 }
 @media (hover: hover) {
     .noslog-ui .nl-compact-select:hover {
-        background: var(--nl-interaction-hover);
+        --nl-state-layer: var(--nl-interaction-hover);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
     }
 }
 .noslog-ui .nl-compact-select:disabled {
@@ -168,14 +176,22 @@
     flex-shrink: 0;
 }
 .noslog-ui .nl-select-option[data-highlighted] {
-    background: var(--nl-interaction-hover);
+    --nl-state-layer: var(--nl-interaction-hover);
+    background-image: linear-gradient(
+        var(--nl-state-layer),
+        var(--nl-state-layer)
+    );
 }
 /* 마우스로 연 목록은 선택 항목에 흰 1px 을 그리지 않는다 — 키보드 위치 표시는 키보드일 때만(M2 · lib/inputModality) */
 :root[data-input="pointer"] .noslog-ui .nl-select-option:focus-visible {
     outline: none;
 }
 .noslog-ui .nl-select-option[data-state="checked"] {
-    background: var(--nl-interaction-menu-set);
+    --nl-state-layer: var(--nl-interaction-menu-set);
+    background-image: linear-gradient(
+        var(--nl-state-layer),
+        var(--nl-state-layer)
+    );
     font-weight: var(--nl-type-weight-semibold);
 }
 .noslog-ui .nl-select-option[data-disabled] {

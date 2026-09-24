@@ -75,7 +75,8 @@ html[data-theme="light"] .noslog-ui,
         0 4px 12px rgb(0 0 0 / 8%);
 }
 .noslog-ui ::selection {
-    background: var(--nl-interaction-menu-set);
+    /* ::selection 은 배경 그림을 받지 않아 색으로 — 반투명이라 밑면 위에 그대로 겹친다 */
+    background-color: var(--nl-interaction-menu-set);
     color: var(--nl-content-default);
 }
 .noslog-ui :is(input, textarea) {
@@ -206,15 +207,30 @@ html[data-theme="light"] .noslog-ui,
     background: transparent;
     color: var(--nl-content-interactive);
 }
+/* 올림 · 누름은 제 면 위에 겹친다 — 공용 .nl-button:hover · :active 의 주 버튼 면이 새지 않게 면을 다시 적는다(2026-09-23 I2) */
+.noslog-ui .nl-button--secondary:is(:hover, :active) {
+    background-color: var(--nl-surface-surface);
+}
+.noslog-ui .nl-button--ghost:is(:hover, :active) {
+    background-color: transparent;
+}
 @media (hover: hover) {
     .noslog-ui .nl-button--secondary:hover,
     .noslog-ui .nl-button--ghost:hover {
-        background: var(--nl-interaction-hover);
+        --nl-state-layer: var(--nl-interaction-hover);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
     }
 }
 .noslog-ui .nl-button--secondary:active,
 .noslog-ui .nl-button--ghost:active {
-    background: var(--nl-interaction-selected-pressed);
+    --nl-state-layer: var(--nl-interaction-selected-pressed);
+    background-image: linear-gradient(
+        var(--nl-state-layer),
+        var(--nl-state-layer)
+    );
 }
 .noslog-ui .nl-button--secondary:focus-visible,
 .noslog-ui .nl-button--ghost:focus-visible {
@@ -618,7 +634,11 @@ html[data-theme="light"] .noslog-ui,
 }
 @media (hover: hover) {
     .noslog-ui .nl-disclosure > summary:hover {
-        background: var(--nl-interaction-hover);
+        --nl-state-layer: var(--nl-interaction-hover);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
     }
 }
 .noslog-ui .nl-disclosure__body {
@@ -645,7 +665,11 @@ html[data-theme="light"] .noslog-ui,
 }
 @media (hover: hover) {
     .noslog-ui .nl-disclosure--card:has(> summary:hover) {
-        background: var(--nl-interaction-hover);
+        --nl-state-layer: var(--nl-interaction-hover);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
     }
 }
 .noslog-ui .nl-disclosure--card > .nl-disclosure__body {
@@ -915,7 +939,11 @@ html[data-theme="light"] .noslog-ui,
 /* 올림은 포인터 장치에서만 — 고른 값은 올려도 primary 면 그대로 */
 @media (hover: hover) {
     .noslog-ui .nl-scale-picker__option:not(:disabled):hover {
-        background: var(--nl-interaction-hover);
+        --nl-state-layer: var(--nl-interaction-hover);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
     }
     .noslog-ui .nl-scale-picker__option--checked:not(:disabled):hover {
         background: var(--nl-primary-default);
@@ -982,11 +1010,19 @@ html[data-theme="light"] .noslog-ui,
 }
 @media (hover: hover) {
     .noslog-ui .nl-action-group__item:hover {
-        background: var(--nl-interaction-hover);
+        --nl-state-layer: var(--nl-interaction-hover);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
     }
 }
 .noslog-ui .nl-action-group__item:active {
-    background: var(--nl-interaction-selected-pressed);
+    --nl-state-layer: var(--nl-interaction-selected-pressed);
+    background-image: linear-gradient(
+        var(--nl-state-layer),
+        var(--nl-state-layer)
+    );
 }
 .noslog-ui .nl-action-group__item[aria-disabled="true"],
 .noslog-ui
@@ -1558,7 +1594,8 @@ html[data-theme="light"] .noslog-ui,
 .noslog-ui :is(a, button)::before {
     transition:
         background-color var(--nl-motion-duration-state) var(--nl-ease-enter),
-        color var(--nl-motion-duration-state) var(--nl-ease-enter);
+        color var(--nl-motion-duration-state) var(--nl-ease-enter),
+        --nl-state-layer var(--nl-motion-duration-state) var(--nl-ease-enter);
 }
 
 /* ③ 떠 있는 메뉴(셀렉트 · 정렬 · ⋯ · 필터 팝오버 · 빙고 칸 · 지도 범례 · ≡ 메뉴) — 열 때 페이드만, 닫을 때 즉시.

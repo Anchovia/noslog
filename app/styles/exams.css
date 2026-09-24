@@ -118,11 +118,19 @@
     min-height: var(--nl-control-height);
 }
 .noslog-ui .nl-exam-select__option[data-highlighted] {
-    background: var(--nl-interaction-hover);
+    --nl-state-layer: var(--nl-interaction-hover);
+    background-image: linear-gradient(
+        var(--nl-state-layer),
+        var(--nl-state-layer)
+    );
 }
 .noslog-ui .nl-exam-select__option[data-state="checked"],
 .noslog-ui .nl-exam-rail [aria-current="true"] {
-    background: var(--nl-interaction-menu-set);
+    --nl-state-layer: var(--nl-interaction-menu-set);
+    background-image: linear-gradient(
+        var(--nl-state-layer),
+        var(--nl-state-layer)
+    );
     font-weight: 600;
 }
 .noslog-ui .nl-exam-rail {

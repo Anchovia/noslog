@@ -122,7 +122,11 @@
     text-decoration: none;
 }
 .noslog-ui .nl-dashboard__kpi:hover {
-    background: var(--nl-interaction-hover);
+    --nl-state-layer: var(--nl-interaction-hover);
+    background-image: linear-gradient(
+        var(--nl-state-layer),
+        var(--nl-state-layer)
+    );
 }
 .noslog-ui .nl-dashboard__kpi[aria-current="true"] {
     border-color: var(--nl-border-strong);
@@ -199,7 +203,11 @@
     text-decoration: none;
 }
 .noslog-ui .nl-dashboard__todo-item:hover {
-    background: var(--nl-interaction-hover);
+    --nl-state-layer: var(--nl-interaction-hover);
+    background-image: linear-gradient(
+        var(--nl-state-layer),
+        var(--nl-state-layer)
+    );
 }
 .noslog-ui .nl-dashboard__todo-item .nl-metric-value {
     margin-left: auto;
