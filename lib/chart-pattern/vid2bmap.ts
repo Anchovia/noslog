@@ -1253,7 +1253,7 @@ export function alignVid2bmapFirstBarTick(
 export interface Vid2bmapTempoChange {
     /** 새 타이밍 포인트를 둘 박(박자선 위치) */
     tick: number;
-    /** 0.5 단위로 다듬은 BPM */
+    /** 제안 BPM(구간 끝까지 맞는 가장 단순한 값, 2026-09-25 B′) */
     bpm: number;
     /** 측정값(소수 둘째 자리) */
     measuredBpm: number;
@@ -1261,6 +1261,8 @@ export interface Vid2bmapTempoChange {
     beats: number;
     /** 이 자리 바로 앞의 BPM(타이밍 포인트 또는 앞 제안) */
     fromBpm: number;
+    /** 정수가 아닌 값이면 정수로 뒀을 때 구간 안 가장 큰 어긋남(프레임) */
+    integerDriftFrames: number;
 }
 
 export interface Vid2bmapTempo {
@@ -1274,19 +1276,155 @@ export interface Vid2bmapTempo {
         chartBpm: number;
         bpm: number;
         beats: number;
+        integerDriftFrames: number;
     } | null;
 }
 
+/** 박자선이 영상 흔들림보다 이만큼(프레임) 더 어긋나면 그 BPM 은 틀린 것으로 본다 */
+const BPM_DRIFT_MARGIN_FRAMES = 0.5;
+/** 시험할 BPM 자릿수 — 단순한 값부터 */
+const BPM_STEPS = [1, 0.5, 0.1, 0.01];
 /**
- * 영상으로 잰 BPM → 제안 값(2026-09-25 B, 사용자): 정수에서 0.3 안이면 정수, 아니면 0.5 단위.
- * 0.5 단위만이면 海神 Real 48마디(원래 빠르기로 돌아옴) 159.74 가 159.5 가 되어 시작 160 과 어긋났다.
- * 정수에서 먼 값(111.63)은 0.5 단위로 남겨 반 BPM 곡을 잃지 않는다
+ * 박 위치가 한꺼번에 밀린 곳(계단) — 앞뒤 4박 평균이 1.5프레임 넘게 차이 나면 그 앞뒤를 따로 맞춘다(기울기는 함께).
+ * 녹화 프레임 누락 · 구간 끝에서 템포가 막 바뀌기 시작한 박 같은 것. 정수 프레임 반올림 흔들림은 1프레임 안이라 걸리지 않는다
  */
-export function roundVid2bmapBpm(measured: number) {
-    const whole = Math.round(measured);
-    return Math.abs(measured - whole) <= 0.3
-        ? whole
-        : Math.round(measured * 2) / 2;
+const BPM_STEP_FRAMES = 1.5;
+const BPM_STEP_WINDOW = 4;
+/**
+ * 직선 맞춤 · 계단 찾기를 할 만큼 긴 구간(박). 짧은 구간은 계단과 템포 변화를 구분할 수 없고 리타르단도처럼 고르지 않기도 해
+ * 처음~끝 평균으로 잰다 — 다음 구간이 영상과 같은 시각에 시작하게(海神 느린 10박: 직선 108 이면 뒤가 140ms 늦고, 평균 110.8)
+ */
+const BPM_FIT_MIN_BEATS = 32;
+const BPM_STEP_MAX = 4;
+
+type BeatPiece = [start: number, end: number];
+
+/** 조각마다 따로 평행 이동한 직선들의 공통 기울기(박 하나의 프레임 수) */
+function sharedSlope(positions: number[], pieces: BeatPiece[]): number {
+    let covariance = 0;
+    let variance = 0;
+    for (const [start, end] of pieces) {
+        const meanX = (start + end - 1) / 2;
+        const meanY = mean(positions.slice(start, end));
+        for (let index = start; index < end; index += 1) {
+            covariance += (index - meanX) * (positions[index] - meanY);
+            variance += (index - meanX) ** 2;
+        }
+    }
+    return variance > 0 ? covariance / variance : positions[1] - positions[0];
+}
+
+/** 박 하나가 period 프레임일 때 조각마다 가장 잘 맞춘 박 위치와의 차이 */
+function beatResiduals(
+    positions: number[],
+    pieces: BeatPiece[],
+    period: number
+): number[] {
+    const residuals = positions.map((value, index) => value - period * index);
+    for (const [start, end] of pieces) {
+        const offset = mean(residuals.slice(start, end));
+        for (let index = start; index < end; index += 1)
+            residuals[index] -= offset;
+    }
+    return residuals;
+}
+
+function beatPieces(positions: number[]): BeatPiece[] {
+    const cuts: number[] = [];
+    const piecesOf = (): BeatPiece[] =>
+        [0, ...cuts].map((start, index) => [
+            start,
+            cuts[index] ?? positions.length,
+        ]);
+    if (positions.length < BPM_FIT_MIN_BEATS) return piecesOf();
+    while (cuts.length < BPM_STEP_MAX) {
+        const pieces = piecesOf();
+        const residuals = beatResiduals(
+            positions,
+            pieces,
+            sharedSlope(positions, pieces)
+        );
+        let best: { jump: number; at: number } | null = null;
+        for (const [start, end] of pieces) {
+            for (let at = start + 2; at < end - 1; at += 1) {
+                const jump = Math.abs(
+                    mean(
+                        residuals.slice(at, Math.min(end, at + BPM_STEP_WINDOW))
+                    ) -
+                        mean(
+                            residuals.slice(
+                                Math.max(start, at - BPM_STEP_WINDOW),
+                                at
+                            )
+                        )
+                );
+                if (jump >= BPM_STEP_FRAMES && (!best || jump > best.jump))
+                    best = { jump, at };
+            }
+        }
+        if (!best) break;
+        cuts.push(best.at);
+        cuts.sort((left, right) => left - right);
+    }
+    return piecesOf();
+}
+
+function mean(values: number[]): number {
+    return values.reduce((sum, value) => sum + value, 0) / values.length;
+}
+
+export interface Vid2bmapBpmChoice {
+    /** 제안 값 — 정수 → 0.5 → 0.1 → 0.01 중 구간 끝까지 맞는 첫 값 */
+    bpm: number;
+    /** 구간 전체 직선 맞춤 측정값(소수 둘째 자리) */
+    measuredBpm: number;
+    /** 영상 자체의 흔들림(직선에서 가장 먼 박, 프레임) */
+    noiseFrames: number;
+    /** 정수로 뒀을 때 구간 안 가장 큰 어긋남(프레임) — 정수가 아닌 값을 고른 이유 */
+    integerDriftFrames: number;
+    /** 이 BPM 으로 계산한 박이 구간 안에서 가장 크게 어긋나는 프레임 */
+    driftAt: (bpm: number) => number;
+}
+
+/**
+ * 영상으로 잰 BPM → 제안 값(2026-09-25 B′, 사용자). 박마다 걸린 프레임 위치(positions, 박마다 하나)를 구간 전체로 직선에 맞춰 재고
+ * (60fps 로도 0.01~0.02 BPM 정밀도 — Altale 89.983 · アルストロメリア 143.994 · GAIA 179.986),
+ * 정수 → 0.5 → 0.1 → 0.01 순으로 그 값의 박 위치가 구간 끝까지 영상 흔들림 + 0.5프레임 안에 드는 첫 값을 고른다.
+ * 222.22 곡은 300박이면 222.2(정수 222 는 끝에서 3.8프레임 어긋남), 짧은 구간이면 그 안에서 구분되지 않아 222.
+ * 박 위치가 한꺼번에 밀린 계단은 앞뒤를 따로 맞춘다 — 海神 시작 구간은 70박째에서 3프레임 밀려 통째로 재면 159.84, 나눠 재면 160.01.
+ * framesToBpm: 박 하나의 프레임 수 → BPM(박자표 분모 반영)
+ */
+export function chooseVid2bmapBpm(
+    positions: number[],
+    framesToBpm: (framesPerBeat: number) => number
+): Vid2bmapBpmChoice {
+    const pieces = beatPieces(positions);
+    const slope =
+        positions.length < BPM_FIT_MIN_BEATS
+            ? (positions[positions.length - 1] - positions[0]) /
+              (positions.length - 1)
+            : sharedSlope(positions, pieces);
+    const largest = (values: number[]) =>
+        Math.max(...values.map((value) => Math.abs(value)));
+    const noiseFrames = largest(beatResiduals(positions, pieces, slope));
+    const measured = framesToBpm(slope);
+    // BPM = K ÷ 박 하나의 프레임 수
+    const scale = framesToBpm(1);
+    const driftAt = (bpm: number) =>
+        largest(beatResiduals(positions, pieces, scale / bpm));
+    const limit = noiseFrames + BPM_DRIFT_MARGIN_FRAMES;
+    const bpm =
+        BPM_STEPS.map(
+            (step) => Math.round(Math.round(measured / step) * step * 100) / 100
+        ).find((candidate) => driftAt(candidate) <= limit) ??
+        Math.round(measured * 100) / 100;
+    return {
+        bpm,
+        measuredBpm: Math.round(measured * 100) / 100,
+        noiseFrames,
+        integerDriftFrames: driftAt(Math.round(measured)),
+        driftAt,
+    };
 }
 
 /** 템포가 바뀌었다고 볼 차이(비율) */
@@ -1447,14 +1585,28 @@ export function detectVid2bmapTempoChanges(
         ((60 * fps) / frameCount) *
         (beatTicksOf(point) / CHART_TICKS_PER_QUARTER);
     const origin = sorted[0];
-    const firstMeasured = toBpm(segments[0].frames, origin);
+    // 박마다 걸린 프레임을 이어 붙인 박 위치 — 구간마다 직선으로 맞춰 BPM 을 고른다(B′)
+    const positions = [0];
+    for (const duration of durations) {
+        positions.push(positions[positions.length - 1] + duration);
+    }
+    const positionsOf = (index: number) =>
+        positions.slice(
+            segments[index].start,
+            (segments[index + 1]?.start ?? durations.length) + 1
+        );
+    const first = chooseVid2bmapBpm(positionsOf(0), (frameCount) =>
+        toBpm(frameCount, origin)
+    );
+    // 지금 시작 BPM 으로 구간 끝까지 영상과 맞으면 제안하지 않는다(사람이 넣은 222.22 를 222.2 로 바꾸지 않게)
     const startMismatch =
-        Math.abs(firstMeasured - origin.bpm) / origin.bpm > TEMPO_TOLERANCE
+        first.driftAt(origin.bpm) > first.noiseFrames + BPM_DRIFT_MARGIN_FRAMES
             ? {
-                  measuredBpm: Math.round(firstMeasured * 100) / 100,
+                  measuredBpm: first.measuredBpm,
                   chartBpm: origin.bpm,
-                  bpm: roundVid2bmapBpm(firstMeasured),
+                  bpm: first.bpm,
                   beats: segments[1]?.start ?? durations.length,
+                  integerDriftFrames: first.integerDriftFrames,
               }
             : null;
 
@@ -1468,8 +1620,10 @@ export function detectVid2bmapTempoChanges(
             vid2bmapTickAt(firstIndex + segment.start, firstBarTick, sorted)
         );
         const point = activePoint(sorted, tick);
-        const measured = toBpm(segment.frames, point);
-        const bpm = roundVid2bmapBpm(measured);
+        const choice = chooseVid2bmapBpm(positionsOf(index), (frameCount) =>
+            toBpm(frameCount, point)
+        );
+        const bpm = choice.bpm;
         // 시작 BPM 제안이 있으면 첫 구간은 그 값에서 바뀌는 것으로 본다
         const fromBpm =
             changes.length > 0 && changes[changes.length - 1].tick > point.tick
@@ -1487,9 +1641,10 @@ export function detectVid2bmapTempoChanges(
         changes.push({
             tick,
             bpm,
-            measuredBpm: Math.round(measured * 100) / 100,
+            measuredBpm: choice.measuredBpm,
             beats: end - segment.start,
             fromBpm,
+            integerDriftFrames: choice.integerDriftFrames,
         });
     });
     return { changes, startMismatch };

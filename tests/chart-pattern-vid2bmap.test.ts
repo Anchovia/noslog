@@ -19,7 +19,7 @@ import {
     collectVid2bmapNotes,
     defaultVid2bmapChoice,
     planVid2bmapMerge,
-    roundVid2bmapBpm,
+    chooseVid2bmapBpm,
     convertVid2bmap,
     defaultVid2bmapFirstBarTick,
     diffChartNotes,
@@ -1213,14 +1213,12 @@ describe("vid2bmap tempo changes from raw beat frames", () => {
         ).toEqual([[28320, 83]]);
     });
 
-    it("proposes the start BPM measured over the whole first section, rounded to 0.5", () => {
-        // 144 BPM(25프레임) 곡 — 처음 16박만 24.8프레임으로 흔들림(처음만 재면 145 로 반올림된다), 새 초안은 기본 120
-        const frames: number[] = [];
-        let frame = 30;
-        for (let beat = 0; beat < 120; beat += 1) {
-            frames.push(Math.round(frame * 100) / 100);
-            frame += beat < 16 ? 24.8 : 25;
-        }
+    it("proposes the start BPM measured over the whole first section", () => {
+        // 144 BPM(25프레임) 곡 — 영상처럼 정수 프레임, 처음 16박은 조금씩 앞당겨졌다(최대 1.5프레임) 되돌아옴.
+        // 구간 전체 직선 맞춤은 143.98 → 정수 144 가 끝까지 흔들림 안에 든다. 새 초안은 기본 120
+        const frames = Array.from({ length: 120 }, (_, beat) =>
+            Math.round(30 + 25 * beat - (beat < 16 ? beat * 0.1 : 0))
+        );
         const song = {
             ...build(),
             barRows: frames.map((value) => Math.round(value + 9)),
@@ -1248,13 +1246,27 @@ describe("vid2bmap tempo changes from raw beat frames", () => {
         ).toEqual([{ ...points[0], numerator: 3 }, points[1]]);
     });
 
-    it("rounds a measured BPM to a whole number when close, otherwise to 0.5", () => {
-        // 海神 Real: 시작 159.82 · 원래 빠르기로 돌아온 곳 159.74 → 둘 다 160, 느린 구간 111.63 → 111.5, 끝 120.29 → 120
-        expect(
-            [159.82, 159.74, 111.63, 120.29, 82.96, 144.02].map(
-                roundVid2bmapBpm
-            )
-        ).toEqual([160, 160, 111.5, 120, 83, 144]);
+    it("picks the simplest BPM that stays on the video's beats to the end of the section", () => {
+        // 60fps · 박 위치를 정수 프레임으로(영상처럼). 흔들림은 반올림만
+        const beatsAt = (bpm: number, count: number) =>
+            Array.from({ length: count }, (_, index) =>
+                Math.round((index * 3600) / bpm)
+            );
+        const toBpm = (framesPerBeat: number) => 3600 / framesPerBeat;
+        // 222.22 · 300박: 정수 222 는 끝에서 어긋나 소수 첫째 자리까지
+        const long = chooseVid2bmapBpm(beatsAt(222.22, 300), toBpm);
+        expect(long.bpm).toBe(222.2);
+        expect(long.integerDriftFrames).toBeGreaterThan(long.noiseFrames + 0.5);
+        // 정수 곡은 정수 그대로 · 반 BPM 곡은 0.5
+        expect(chooseVid2bmapBpm(beatsAt(180, 300), toBpm).bpm).toBe(180);
+        expect(chooseVid2bmapBpm(beatsAt(150.5, 200), toBpm).bpm).toBe(150.5);
+        // 짧은 구간이면 그 안에서 222 와 222.22 가 구분되지 않는다
+        expect(chooseVid2bmapBpm(beatsAt(222.22, 40), toBpm).bpm).toBe(222);
+        // 160 곡 180박 — 70박째부터 박 위치가 3프레임 밀린 계단(녹화 프레임 누락처럼)은 앞뒤를 따로 맞춰 160
+        const stepped = beatsAt(160, 180).map((frame, index) =>
+            index >= 70 ? frame + 3 : frame
+        );
+        expect(chooseVid2bmapBpm(stepped, toBpm).bpm).toBe(160);
     });
 
     it("stays quiet for a steady song and without beat frames", () => {
@@ -1291,6 +1303,7 @@ describe("vid2bmap tempo changes from raw beat frames", () => {
                     measuredBpm: 83.02,
                     beats: 30,
                     fromBpm: 90,
+                    integerDriftFrames: 0,
                 },
             ],
             () => "t-new"

@@ -159,6 +159,21 @@ const CHOICE_LABELS: Record<
     onlyIncoming: ["안 넣기", "넣기"],
 };
 
+/** 정수가 아닌 BPM 을 고른 이유(2026-09-25 B′) — 정수로 두면 구간 끝에서 몇 프레임 어긋나는지 */
+function bpmPrecisionText(
+    bpm: number,
+    measuredBpm: number,
+    integerDriftFrames: number
+) {
+    if (Number.isInteger(bpm)) return "";
+    const unit = Number.isInteger(bpm * 2)
+        ? "0.5 단위로"
+        : Number.isInteger(Math.round(bpm * 100) / 10)
+          ? "소수 첫째 자리로"
+          : "소수 둘째 자리로";
+    return ` · 정수 ${Math.round(measuredBpm)} 는 끝에서 ${integerDriftFrames.toFixed(1)}프레임 어긋나 ${unit}`;
+}
+
 function warningText(
     warning: Vid2bmapWarning,
     timingPoints: ChartTimingPoint[]
@@ -732,6 +747,13 @@ export default function Vid2bmapImportPanel({
                                                 }{" "}
                                                 — 지금{" "}
                                                 {tempo.startMismatch.chartBpm}
+                                                {bpmPrecisionText(
+                                                    tempo.startMismatch.bpm,
+                                                    tempo.startMismatch
+                                                        .measuredBpm,
+                                                    tempo.startMismatch
+                                                        .integerDriftFrames
+                                                )}
                                             </p>
                                             <label className="flex items-center gap-2 text-xs font-semibold">
                                                 <input
@@ -823,6 +845,11 @@ export default function Vid2bmapImportPanel({
                                             영상 박자선 {change.beats}박으로 잰
                                             BPM {change.measuredBpm} — 지금
                                             타이밍 {change.fromBpm}
+                                            {bpmPrecisionText(
+                                                change.bpm,
+                                                change.measuredBpm,
+                                                change.integerDriftFrames
+                                            )}
                                         </p>
                                         <label className="flex items-center gap-2 text-xs font-semibold">
                                             <input
