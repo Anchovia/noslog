@@ -445,7 +445,8 @@ old design-stage checklist. Changes to material behavior require a user decision
   (2026-09-24 C): a beat keeps the song grid only when every note in it is within 2.5 video
   frames and no two notes more than that apart land on one spot; otherwise the coarsest grid
   from 1/2 to 1/16 that does both (e.g. a 1/8-beat run inside a 1/6-beat song), and if none
-  does, notes off the song grid keep their video position. Moved notes can be selected for
+  does, notes off the song grid keep their video position. Tenuto and trill lengths use the
+  grid of the beat they end in, and the end is put on that grid. Moved notes can be selected for
   review after import. Notes that clash on one spot are then re-snapped finer. Same-lane reads
   within 3 frames are one note.
   Hands come from the zip when it carries them (2026-09-24: the runner takes notes and bar lines
@@ -524,3 +525,22 @@ old design-stage checklist. Changes to material behavior require a user decision
 - Audio stays local to the browser. Never upload MP3 files to NosLog storage or DB.
 - Documentation consolidation does not declare unresolved real-provider, privacy
   copy or assisted-browser checks passed. Record actual verification separately.
+
+## Achievements (2026-09-24)
+
+- Tiered achievements (bronze I · silver II · gold III) judged automatically from synced records and site
+  activity. There are no hidden achievements and no conditions based on play counts, sync counts, streaks
+  or luck. Definitions and thresholds live in code (`features/achievements`); thresholds are provisional
+  until they are set from the production distribution.
+- Judging runs at the end of every sync, after records and Grd are updated. It only adds newly reached
+  tiers (`user_achievements`, one row per user · achievement · tier) and never removes a tier, even if the
+  value later drops. A failed judgement never fails the sync. Achievements that come from activity
+  (opinions, helpful marks, pattern ratings, exams, bingo) are also picked up at the next sync.
+- The date of a tier is when NosLog confirmed it (the sync time), not when it was played.
+- Rarity is shown as the number of players who reached each tier, only on the achievement page.
+  No player list.
+- The profile head shows up to three achievements the owner pinned (`user_achievement_showcase`), or the
+  highest tiers automatically when nothing is pinned. Only earned achievements can be pinned.
+- Profiles with private scores: other people do not see skill or collection achievements (they reveal
+  record ranges); challenge and community achievements stay visible. Progress values are shown only to the
+  owner.

@@ -422,7 +422,24 @@ function snapByBeat(
     const offGrid = divisors.flatMap((divisor, index) =>
         divisor === null ? [index] : []
     );
-    return { ticks, changedBeats, changed, offGrid };
+    const beatDivisors = new Map<string, number>();
+    for (const { tick, divisor } of changedBeats) {
+        const point = activePoint(sorted, tick);
+        beatDivisors.set(
+            `${point.id}:${Math.round((tick - point.tick) / beatTicksOf(point))}`,
+            divisor
+        );
+    }
+    /** 그 자리 박에서 고른 격자(시작 노트가 없는 박은 곡 전체 격자) — 테누토 · 트릴 끝 박에 쓴다 */
+    const divisorAt = (raw: number, frameTicks: number) => {
+        const point = activePoint(sorted, raw);
+        const tolerance = VID2BMAP_LOCAL_GRID_TOLERANCE_FRAMES * frameTicks;
+        const beat = Math.floor(
+            (raw - point.tick + tolerance) / beatTicksOf(point)
+        );
+        return beatDivisors.get(`${point.id}:${beat}`) ?? baseDivisor;
+    };
+    return { ticks, changedBeats, changed, offGrid, divisorAt };
 }
 
 /** 추출 결과 → 초안에 넣을 노트 · 손 확인 목록 · 경고 */
@@ -483,13 +500,38 @@ export function convertVid2bmap(
             const step =
                 beatTicksOf(activePoint(sortTimingPoints(timingPoints), tick)) /
                 snapDivisor;
-            // 끝 위치가 아니라 길이를 격자에 맞춘다(Altale 테누토 57개 중 50 정확 — 끝을 맞추면 48)
-            let duration =
-                Math.round((rawTickOf(note.endY ?? note.y) - rawTick) / step) *
-                step;
-            duration = Math.round(duration);
+            const endY = note.endY ?? note.y;
+            const endRaw = rawTickOf(endY);
+            // 끝 위치가 아니라 길이를 격자에 맞춘다(Altale 테누토 57개 중 50 정확 — 끝을 맞추면 48).
+            // 격자 단위는 끝이 떨어지는 박에서 고른 격자 — 1/6박 곡 안의 1/8박 구간에서 끝이 ⅙ · ⅓ 사이로 갈리지 않게(2026-09-24, 여전히 50)
+            const endPoint = activePoint(
+                sortTimingPoints(timingPoints),
+                endRaw
+            );
+            const endStep =
+                beatTicksOf(endPoint) /
+                snapped.divisorAt(endRaw, rawTickOf(endY + 1) - endRaw);
+            const lengthStep =
+                (step * snapDivisor * endStep) / beatTicksOf(endPoint);
+            let duration = Math.round(
+                Math.round((endRaw - rawTick) / lengthStep) * lengthStep
+            );
+            // 시작과 끝 박의 격자가 달라 끝이 그 박 격자 밖이면(1/12박 시작 + 1/8박 길이 → 23/24 같은 자리) 끝을 그 박 격자에 맞춘다
+            const endOffset = tick + duration - endPoint.tick;
+            if (
+                Math.abs(
+                    endOffset / endStep - Math.round(endOffset / endStep)
+                ) > 1e-6
+            ) {
+                duration =
+                    Math.round(
+                        endPoint.tick +
+                            Math.round((endRaw - endPoint.tick) / endStep) *
+                                endStep
+                    ) - tick;
+            }
             if (duration <= 0) {
-                duration = Math.round(step);
+                duration = Math.round(lengthStep);
                 shortTenuto += 1;
             }
             chartNote = { ...base, durationTicks: duration };

@@ -776,6 +776,37 @@ describe("vid2bmap grid per beat", () => {
         ]);
     });
 
+    it("ends a tenuto on the grid of the beat it ends in", () => {
+        // 0박에서 시작한 테누토가 1/8박 연타 박(1박)의 ⅜ 자리(프레임 55)에서 끝남 → 660틱(1/6박 격자면 640)
+        const result: Vid2bmapResult = {
+            fps: 60,
+            startSec: 0,
+            barRows: [0, 40, 80, 120],
+            simple: [
+                [40, 20, 22],
+                [45, 17, 19],
+                [50, 20, 22],
+                [55, 17, 19],
+            ],
+            tenuto: [[0, 55, 4, 6]],
+            trill: [],
+            glissando: [],
+            beatFrames: null,
+        };
+        const conversion = convertVid2bmap(
+            result,
+            collectVid2bmapNotes(result).notes,
+            {
+                timingPoints: [point(0, 0, 90, 3, 4)],
+                firstBarTick: 0,
+                snapDivisor: 6,
+                include: { standard: true, tenuto: true, trill: true },
+            }
+        );
+        const tenuto = conversion.notes.find((note) => note.type === "tenuto")!;
+        expect([tenuto.tick, tenuto.durationTicks]).toEqual([0, 660]);
+    });
+
     it("leaves a note no grid fits at its video position for the snap check", () => {
         // 120프레임 = 1박(한 프레임 4틱, 허용 10틱). 16틱은 어느 격자(1/16 = 30틱)에서도 10틱 넘게 벗어남
         const conversion = convert(
