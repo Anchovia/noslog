@@ -73,7 +73,6 @@ export default async function ProfileAchievementsRoute({
             records={records}
             metrics={metrics}
             recipients={recipients}
-            isOwner={isOwner}
             scoresHidden={scoresHidden}
         />
     );

@@ -154,14 +154,21 @@ describe("요약(프로필 구역 · 머리)", () => {
     });
 
     it("건 업적이 있으면 그 순서 그대로(가장 높은 단계), 없으면 자동", () => {
-        expect(summarizeAchievements(records).showcase).toEqual([
+        expect(
+            summarizeAchievements(records).showcase.map(({ key, tier }) => ({
+                key,
+                tier,
+            }))
+        ).toEqual([
             { key: "s-rank", tier: 2 },
             { key: "pianist", tier: 1 },
             { key: "opinion", tier: 1 },
         ]);
         expect(
-            summarizeAchievements({ ...records, pins: ["opinion", "s-rank"] })
-                .showcase
+            summarizeAchievements({
+                ...records,
+                pins: ["opinion", "s-rank"],
+            }).showcase.map(({ key, tier }) => ({ key, tier }))
         ).toEqual([
             { key: "opinion", tier: 1 },
             { key: "s-rank", tier: 2 },
@@ -194,5 +201,16 @@ describe("점수 비공개(남이 볼 때)", () => {
 
     it("공개면 자료를 그대로 넘긴다", () => {
         expect(achievementRecordsForViewer(records, false)).toBe(records);
+    });
+});
+
+describe("머리 배지 도움말(2026-09-25)", () => {
+    it("진열 배지에 그 단계의 달성일 · 달성 인원을 싣는다", () => {
+        expect(summarizeAchievements(records).showcase[0]).toEqual({
+            key: "s-rank",
+            tier: 2,
+            achievedAt: "2026-09-22T00:00:00.000Z",
+            recipients: 30,
+        });
     });
 });

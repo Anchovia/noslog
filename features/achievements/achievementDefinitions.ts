@@ -370,10 +370,17 @@ export interface AchievementSummary {
     total: number;
     /** 동 · 은 · 금 단계 수 */
     byTier: [number, number, number];
-    /** 머리 진열(P5) — 건 것이 있으면 그것, 없으면 자동 */
-    showcase: { key: string; tier: number }[];
+    /** 머리 진열(P5) — 고른 것이 있으면 그것, 없으면 자동. 배지 도움말용 달성일 · 달성 인원 포함 */
+    showcase: AchievementShowcaseItem[];
     /** 최근 얻은 단계(프로필 구역) */
     recent: AchievementRecord[];
+}
+
+export interface AchievementShowcaseItem {
+    key: string;
+    tier: number;
+    achievedAt?: string;
+    recipients?: number;
 }
 
 export const ACHIEVEMENT_RECENT_COUNT = 3;
@@ -392,7 +399,7 @@ export function summarizeAchievements(
     const pinned = records.pins
         .filter((key) => highest.has(key))
         .map((key) => ({ key, tier: highest.get(key) ?? 0 }));
-    const showcase = pinned.length
+    const chosen = pinned.length
         ? pinned
         : autoShowcase(
               [...highest].map(([key, tier]) => ({
@@ -401,6 +408,14 @@ export function summarizeAchievements(
                   recipients: records.recipients[recipientKey(key, tier)],
               }))
           ).map(({ key, tier }) => ({ key, tier }));
+    const showcase: AchievementShowcaseItem[] = chosen.map(({ key, tier }) => ({
+        key,
+        tier,
+        achievedAt: earned.find(
+            (item) => item.key === key && item.tier === tier
+        )?.achievedAt,
+        recipients: records.recipients[recipientKey(key, tier)],
+    }));
     return {
         earned: earned.length,
         total: definitions.length * ACHIEVEMENT_TIERS.length,

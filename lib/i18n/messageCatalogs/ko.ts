@@ -2003,8 +2003,6 @@ export const koMessages = {
     "achievement.metaDescription":
         "NOSTALGIA 기록으로 자동으로 쌓이는 업적과 단계",
     "achievement.count": "업적 {earned} / {total}",
-    "achievement.countAria":
-        "업적 {total}단계 중 {earned}단계 달성 — 업적 보기",
     "achievement.all": "모두 보기",
     "achievement.recent": "최근 달성",
     "achievement.empty": "아직 얻은 업적이 없습니다.",
@@ -2030,14 +2028,18 @@ export const koMessages = {
     "achievement.detail": "단계 보기",
     "achievement.scoresHidden":
         "점수 비공개 프로필이라 실력 · 수집 업적은 보이지 않습니다.",
-    "achievement.pin.add": "{name} 프로필에 걸기",
-    "achievement.pin.remove": "{name} 프로필에서 빼기",
-    "achievement.pin.count": "프로필에 건 업적 {count} / {max}",
-    "achievement.pin.auto": "고르지 않으면 높은 단계부터 자동으로 걸립니다.",
-    "achievement.pin.full":
-        "프로필에는 {max}개까지 걸 수 있습니다. 하나를 뺀 뒤 걸어 주세요.",
     "achievement.pin.failed":
         "업적을 걸지 못했습니다. 잠시 후 다시 시도해 주세요.",
+    "achievement.settings.label": "프로필 업적",
+    "achievement.settings.change": "변경",
+    "achievement.settings.auto": "자동 · 높은 단계 순",
+    "achievement.settings.help": "프로필 이름 옆에 {max}개까지 걸립니다.",
+    "achievement.settings.dialogHelp":
+        "{max}개까지 고를 수 있고, 고른 순서대로 걸립니다.",
+    "achievement.settings.emptySlot": "빈 칸",
+    "achievement.settings.earned": "얻은 업적",
+    "achievement.settings.useAuto": "자동으로",
+    "achievement.settings.apply": "적용",
     "achievement.sync.new": "새 업적",
     "achievement.sync.more": "외 {count}개",
     "achievement.sync.view": "업적 보기",

@@ -44,7 +44,8 @@ export const ACHIEVEMENT_ICONS: Record<string, LucideIcon> = {
 
 /**
  * 업적 육각(2026-09-24 I1 · T2) — 테두리 = 검정 명판 금속 사다리(동 · 은 · 금), 못 얻은 것은 흐린 선 · 흐린 그림(K1).
- * `size="row"` 목록 48 + 단계 숫자 알약(색 + 숫자 두 단서), `size="inline"` 머리 · 한 줄 24(색만, 이름은 aria · title).
+ * `size="row"` 목록 48 + 단계 숫자 알약(색 + 숫자 두 단서), `size="inline"` 머리 · 한 줄 24(색만, 이름은 aria · title),
+ * `size="large"` 배지 정보 창 64(2026-09-25 M1 — 단계는 제목의 로마 숫자가 말한다).
  * 글자 · 이름은 부르는 쪽이 붙인다 — 여기는 그림만.
  */
 export default function AchievementHex({
@@ -57,7 +58,7 @@ export default function AchievementHex({
     achievementKey: string;
     /** 0 = 아직 없음 */
     tier: number;
-    size?: "row" | "inline";
+    size?: "row" | "inline" | "large";
     /** 접근 이름 — 주면 그림으로 읽고(title 도), 없으면 옆 글자가 설명하는 장식 */
     label?: string;
     className?: string;

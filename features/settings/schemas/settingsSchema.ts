@@ -29,6 +29,13 @@ export function createSettingsProfileSchema(
             ],
             { error: t("settings.validation.arcadeRequired") }
         ),
+        // 프로필 머리에 걸 업적 키(쉼표로 이음, 최대 3 · 빈 값 = 자동). 폼에 없으면 바꾸지 않는다(2026-09-25 D1)
+        achievementShowcase: z
+            .string()
+            .regex(/^(?:[a-z0-9-]{1,64}(?:,[a-z0-9-]{1,64}){0,2})?$/, {
+                error: t("achievement.pin.failed"),
+            })
+            .optional(),
     });
 }
 export type SettingsProfileFormValues = z.input<
@@ -61,6 +68,9 @@ export function settingsProfileInput(formData: FormData) {
         country: formData.get("country"),
         avatar: formData.get("avatar"),
         preferredArcadeId: formData.get("preferredArcadeId"),
+        achievementShowcase: formData.has("achievementShowcase")
+            ? formData.get("achievementShowcase")
+            : undefined,
     };
 }
 

@@ -563,8 +563,10 @@ old design-stage checklist. Changes to material behavior require a user decision
 - The date of a tier is when NosLog confirmed it (the sync time), not when it was played.
 - Rarity is shown as the number of players who reached each tier, only on the achievement page.
   No player list.
-- The profile head shows up to three achievements the owner pinned (`user_achievement_showcase`), or the
-  highest tiers automatically when nothing is pinned. Only earned achievements can be pinned.
+- The profile head shows up to three achievements the owner chose (`user_achievement_showcase`), or the
+  highest tiers automatically when none are chosen. They are chosen in Settings → Profile (2026-09-25) and
+  saved with the rest of the profile form; only earned achievements, at most three, in the chosen order.
+  An invalid choice blocks the whole save. The achievement list itself has no pin controls.
 - Profiles with private scores: other people do not see skill or collection achievements (they reveal
   record ranges); challenge and community achievements stay visible. Progress values are shown only to the
   owner.

@@ -74,15 +74,12 @@
     text-align: center;
 }
 
-/* 프로필 머리(B1) — 명판 · 기여 라벨 줄 뒤에 이어서, 넘치면 다음 줄로 흐른다 */
+/* 프로필 머리(B1) — 명판 · 기여 라벨 줄 뒤에 배지만 이어서(개수 글자 없음, 2026-09-25), 넘치면 다음 줄로 흐른다 */
 .noslog-ui .nl-achievement-showcase {
     display: inline-flex;
     align-items: center;
     gap: var(--nl-spacing-8);
     min-height: 24px;
-}
-.noslog-ui .nl-achievement-showcase__count {
-    white-space: nowrap;
 }
 
 /* 프로필 구역(C1) — 수 요약 → 최근 달성 3줄 */
@@ -148,12 +145,6 @@
     align-items: center;
     gap: var(--nl-spacing-4);
 }
-/* 건 업적 — 아이콘 버튼 선택 상태(세그먼트 선택 언어: raised 면 · strong 경계) */
-.noslog-ui .nl-achievement-row__pin[aria-pressed="true"] {
-    background-color: var(--nl-surface-raised);
-    border-color: var(--nl-border-strong);
-    color: var(--nl-content-default);
-}
 
 /* 상세(D1) — 단계 사다리, 육각 24 · 조건 · 날짜 또는 진행 · 달성 인원 */
 .noslog-ui .nl-achievement-ladder {
@@ -203,4 +194,109 @@
     display: inline-flex;
     align-items: center;
     gap: var(--nl-spacing-4);
+}
+
+/* 설정 「프로필 업적」 칸(2026-09-25 D1) — 선호 오락실 칸 모양, 값 자리에 한 줄 육각 */
+.noslog-ui .nl-achievement-settings__value {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+}
+/* 고르기 창 — 3칸(고른 순서) →12→ 「얻은 업적」 →8→ 고를 업적 격자 */
+.noslog-ui .nl-achievement-picker {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-12);
+}
+.noslog-ui .nl-achievement-picker__slots {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--nl-spacing-8);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.noslog-ui .nl-achievement-picker__slot,
+.noslog-ui .nl-achievement-picker__choice {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--nl-spacing-8);
+    min-width: 0;
+    padding: var(--nl-spacing-12) var(--nl-spacing-4);
+    border: var(--nl-stroke-default) solid var(--nl-border-default);
+    border-radius: var(--nl-radius-field);
+    text-align: center;
+    overflow-wrap: anywhere;
+}
+.noslog-ui .nl-achievement-picker__slot[data-empty="true"] {
+    border-color: var(--nl-border-empty-slot);
+}
+.noslog-ui .nl-achievement-picker__choices {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-achievement-picker__choice {
+    background: none;
+    color: var(--nl-content-default);
+    cursor: pointer;
+}
+/* 고른 것 = 선택 언어(raised 면 · strong 경계), 3칸이 차면 나머지는 비활성 */
+.noslog-ui .nl-achievement-picker__choice[aria-pressed="true"] {
+    background-color: var(--nl-surface-raised);
+    border-color: var(--nl-border-strong);
+}
+.noslog-ui .nl-achievement-picker__choice:disabled {
+    cursor: not-allowed;
+    color: var(--nl-interaction-disabled-content);
+}
+@media (hover: hover) {
+    .noslog-ui .nl-achievement-picker__choice:not(:disabled):hover {
+        --nl-state-layer: var(--nl-interaction-hover);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
+    }
+}
+.noslog-ui .nl-achievement-picker__choice:focus-visible {
+    outline: var(--nl-stroke-default) solid var(--nl-focus-ring);
+    outline-offset: calc(var(--nl-stroke-default) * -1);
+}
+
+/* 배지 정보 창 큰 육각(2026-09-25 M1) — 58 × 64 · 선 2 · 그림 32 */
+.noslog-ui .nl-achievement-hex[data-size="large"] {
+    width: 58px;
+    height: 64px;
+}
+.noslog-ui .nl-achievement-hex[data-size="large"] .nl-achievement-hex__icon {
+    width: 32px;
+    height: 32px;
+}
+/* 머리 배지 정보 창(M1, osu! 메달 창 순서) — 분류 → 큰 육각 → 제목 → 조건 →구분선→ 달성 인원 · 달성일, 가운데 정렬 · 폭 240 · 안쪽 16 */
+.noslog-ui.nl-term__popover.nl-achievement-card-popover {
+    width: 240px;
+    padding: var(--nl-spacing-16);
+}
+.noslog-ui .nl-achievement-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+    text-align: center;
+    overflow-wrap: anywhere;
+}
+.noslog-ui .nl-achievement-card__facts {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--nl-spacing-4);
+    align-self: stretch;
+    margin-inline: calc(var(--nl-spacing-16) * -1);
+    margin-top: var(--nl-spacing-4);
+    padding-top: var(--nl-spacing-12);
+    border-top: var(--nl-stroke-default) solid var(--nl-border-overlay);
 }

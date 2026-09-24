@@ -3,11 +3,12 @@ import db from "@/lib/db";
 import getSession from "@/lib/session";
 import { getActiveArcades } from "@/lib/arcades";
 import { profileCountrySchema } from "@/features/profile/schemas/profileSettingsSchema";
+import { getAchievementRecords } from "@/features/achievements/server/achievementService";
 
 export async function getSettingsPageData() {
     const session = await getSession();
     if (!session.id) return { user: null, arcades: [] };
-    const [user, arcades] = await Promise.all([
+    const [user, arcades, achievements] = await Promise.all([
         db.user.findUnique({
             where: { id: session.id },
             select: {
@@ -36,6 +37,8 @@ export async function getSettingsPageData() {
             },
         }),
         getActiveArcades(),
+        // 프로필 업적 칸(2026-09-25 D1) — 얻은 단계 · 건 업적 · 자동 진열 순서용 달성 인원
+        getAchievementRecords(session.id),
     ]);
     if (!user) return { user: null, arcades: [] };
     return {
@@ -48,7 +51,9 @@ export async function getSettingsPageData() {
                     .catch("global")
                     .parse(user.country),
                 preferredArcadeId: user.preferred_arcade_id?.toString() ?? "",
+                achievementShowcase: achievements.pins.join(","),
             },
+            achievements,
             nostalgiaName: user.nostalgia_name,
             preferredArcade: user.preferredArcade,
             discordName:

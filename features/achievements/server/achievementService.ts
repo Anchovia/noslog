@@ -271,52 +271,40 @@ export async function getAchievementRecipientCounts() {
     );
 }
 
-export type AchievementPinResult =
-    | { status: "ok"; pins: string[] }
-    | { status: "full" | "not-earned" | "unknown" };
+export type AchievementShowcaseResult =
+    | { status: "ok"; keys: string[] }
+    | { status: "too-many" | "not-earned" | "unknown" };
 
 /**
- * 프로필 머리에 걸기 · 빼기(2026-09-24 D1) — 얻은 업적만, 최대 3칸. 빼면 남은 칸을 앞으로 당긴다.
- * 다 빼면 머리는 다시 자동 진열.
+ * 프로필 머리에 걸 업적을 통째로 바꾼다(2026-09-25 D1 — 설정 「프로필」 탭에서 저장).
+ * 얻은 업적만 · 겹치지 않게 · 최대 3칸, 빈 목록이면 머리는 다시 자동 진열.
  */
-export async function setAchievementPinned(
+export async function setAchievementShowcase(
     userId: number,
-    key: string,
-    pinned: boolean
-): Promise<AchievementPinResult> {
-    if (!getAchievementDefinition(key)) return { status: "unknown" };
-    return db.$transaction(async (tx) => {
-        const current = (
-            await tx.userAchievementShowcase.findMany({
-                where: { user_id: userId },
-                select: { key: true },
-                orderBy: { position: "asc" },
-            })
-        ).map((item) => item.key);
-        let next = current.filter((item) => item !== key);
-        if (pinned && !current.includes(key)) {
-            const earned = await tx.userAchievement.findFirst({
-                where: { user_id: userId, key },
-                select: { id: true },
-            });
-            if (!earned) return { status: "not-earned" as const };
-            if (current.length >= ACHIEVEMENT_SHOWCASE_SIZE)
-                return { status: "full" as const };
-            next = [...current, key];
-        } else if (pinned) {
-            next = current;
-        }
-        await tx.userAchievementShowcase.deleteMany({
-            where: { user_id: userId },
+    keys: readonly string[]
+): Promise<AchievementShowcaseResult> {
+    const unique = [...new Set(keys)];
+    if (unique.length > ACHIEVEMENT_SHOWCASE_SIZE)
+        return { status: "too-many" };
+    if (unique.some((key) => !getAchievementDefinition(key)))
+        return { status: "unknown" };
+    if (unique.length) {
+        const earned = await db.userAchievement.findMany({
+            where: { user_id: userId, key: { in: unique } },
+            distinct: ["key"],
+            select: { key: true },
         });
-        if (next.length)
-            await tx.userAchievementShowcase.createMany({
-                data: next.map((item, index) => ({
-                    user_id: userId,
-                    position: index + 1,
-                    key: item,
-                })),
-            });
-        return { status: "ok" as const, pins: next };
-    });
+        if (earned.length !== unique.length) return { status: "not-earned" };
+    }
+    await db.$transaction([
+        db.userAchievementShowcase.deleteMany({ where: { user_id: userId } }),
+        db.userAchievementShowcase.createMany({
+            data: unique.map((key, index) => ({
+                user_id: userId,
+                position: index + 1,
+                key,
+            })),
+        }),
+    ]);
+    return { status: "ok", keys: unique };
 }

@@ -1,8 +1,7 @@
 "use client";
 
-import { ChevronDown, Pin } from "lucide-react";
-import { useId, useState, useTransition } from "react";
-import { toast } from "sonner";
+import { ChevronDown } from "lucide-react";
+import { useId, useState } from "react";
 
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import PageContainer from "@/components/layout/pageContainer";
@@ -11,7 +10,6 @@ import FilterChips from "@/components/ui/filterChips";
 import IconButton from "@/components/ui/iconButton";
 import {
     ACHIEVEMENT_CATEGORIES,
-    ACHIEVEMENT_SHOWCASE_SIZE,
     ACHIEVEMENT_TIERS,
     achievementProgress,
     highestAchievementTiers,
@@ -26,7 +24,6 @@ import {
 import AchievementHex from "@/features/achievements/components/achievementHex";
 import { formatAchievementDate } from "@/features/achievements/components/profileAchievements";
 import { useAchievementText } from "@/features/achievements/components/useAchievementText";
-import { pinAchievement } from "@/features/achievements/server/achievementActions";
 import type { MessageKey } from "@/lib/i18n/messageTypes";
 
 type CategoryFilter = "all" | AchievementCategory;
@@ -47,19 +44,11 @@ function AchievementRow({
     records,
     metrics,
     recipients,
-    isOwner,
-    pinned,
-    pinPending,
-    onPin,
 }: {
     definition: AchievementDefinition;
     records: AchievementRecords;
     metrics: AchievementMetrics | null;
     recipients: Record<string, number>;
-    isOwner: boolean;
-    pinned: boolean;
-    pinPending: boolean;
-    onPin: (key: string, pinned: boolean) => void;
 }) {
     const t = useTranslations();
     const locale = useLocale();
@@ -134,24 +123,6 @@ function AchievementRow({
                     ) : null}
                 </div>
                 <div className="nl-achievement-row__actions">
-                    {isOwner && tier ? (
-                        <IconButton
-                            size="compact"
-                            variant="secondary"
-                            className="nl-achievement-row__pin"
-                            label={t(
-                                pinned
-                                    ? "achievement.pin.remove"
-                                    : "achievement.pin.add",
-                                { name: text.name(key) }
-                            )}
-                            aria-pressed={pinned}
-                            disabled={pinPending}
-                            onClick={() => onPin(key, !pinned)}
-                        >
-                            <Pin aria-hidden />
-                        </IconButton>
-                    ) : null}
                     <IconButton
                         size="compact"
                         label={`${text.name(key)} · ${t("achievement.detail")}`}
@@ -232,7 +203,7 @@ function AchievementRow({
 
 /**
  * 업적 페이지(2026-09-24 C1 · L2 · K1 · D1) — 머리(돌아가기 · 제목 · 수) → 분류 칩 → 목록.
- * 본인: 진행 막대 · 핀(최대 3, 머리 진열). 남: 얻은 단계 · 날짜 · 조건만.
+ * 본인: 진행 막대. 남: 얻은 단계 · 날짜 · 조건만. 머리 진열은 설정 「프로필」 탭에서 고른다(2026-09-25 D1).
  */
 export default function AchievementsPage({
     userName,
@@ -240,7 +211,6 @@ export default function AchievementsPage({
     records,
     metrics,
     recipients,
-    isOwner,
     scoresHidden,
 }: {
     userName: string;
@@ -248,16 +218,13 @@ export default function AchievementsPage({
     records: AchievementRecords;
     metrics: AchievementMetrics | null;
     recipients: Record<string, number>;
-    isOwner: boolean;
     scoresHidden: boolean;
 }) {
     const t = useTranslations();
     const locale = useLocale();
     const [category, setCategory] = useState<CategoryFilter>("all");
-    const [pins, setPins] = useState(records.pins);
-    const [pinPending, startPin] = useTransition();
     const definitions = visibleAchievementDefinitions(scoresHidden);
-    const summary = summarizeAchievements({ ...records, pins }, scoresHidden);
+    const summary = summarizeAchievements(records, scoresHidden);
     const highest = highestAchievementTiers(records.earned);
     const categories = ACHIEVEMENT_CATEGORIES.filter((item) =>
         definitions.some((definition) => definition.category === item)
@@ -279,26 +246,6 @@ export default function AchievementsPage({
             (definition) => item === "all" || definition.category === item
         ).length * ACHIEVEMENT_TIERS.length;
 
-    function onPin(key: string, pinned: boolean) {
-        if (pinned && pins.length >= ACHIEVEMENT_SHOWCASE_SIZE) {
-            toast.error(
-                t("achievement.pin.full", { max: ACHIEVEMENT_SHOWCASE_SIZE })
-            );
-            return;
-        }
-        const previous = pins;
-        setPins(pinned ? [...pins, key] : pins.filter((item) => item !== key));
-        startPin(async () => {
-            const result = await pinAchievement(key, pinned);
-            if (!result.success) {
-                setPins(previous);
-                toast.error(result.message);
-                return;
-            }
-            if (result.pins) setPins(result.pins);
-        });
-    }
-
     return (
         <PageContainer width="reading" className="nl-achievements-page">
             <div className="nl-achievements-page__head">
@@ -316,15 +263,6 @@ export default function AchievementsPage({
                         bronze: summary.byTier[0],
                     })}
                 </p>
-                {isOwner ? (
-                    <p className="nl-metadata nl-muted">
-                        {t("achievement.pin.count", {
-                            count: pins.length,
-                            max: ACHIEVEMENT_SHOWCASE_SIZE,
-                        })}{" "}
-                        · {t("achievement.pin.auto")}
-                    </p>
-                ) : null}
                 {scoresHidden ? (
                     <p className="nl-metadata nl-muted">
                         {t("achievement.scoresHidden")}
@@ -353,10 +291,6 @@ export default function AchievementsPage({
                         records={records}
                         metrics={metrics}
                         recipients={recipients}
-                        isOwner={isOwner}
-                        pinned={pins.includes(definition.key)}
-                        pinPending={pinPending}
-                        onPin={onPin}
                     />
                 ))}
             </ul>

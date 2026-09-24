@@ -2030,8 +2030,6 @@ export const enMessages = {
     "achievement.metaDescription":
         "Achievements and tiers earned automatically from NOSTALGIA records",
     "achievement.count": "Achievements {earned} / {total}",
-    "achievement.countAria":
-        "{earned} of {total} achievement tiers earned — view achievements",
     "achievement.all": "View all",
     "achievement.recent": "Recently earned",
     "achievement.empty": "No achievements earned yet.",
@@ -2057,14 +2055,19 @@ export const enMessages = {
     "achievement.detail": "Show tiers",
     "achievement.scoresHidden":
         "Skill and collection achievements are hidden because this player keeps scores private.",
-    "achievement.pin.add": "Show {name} on profile",
-    "achievement.pin.remove": "Remove {name} from profile",
-    "achievement.pin.count": "Shown on profile {count} / {max}",
-    "achievement.pin.auto":
-        "If you pick none, your highest tiers are shown automatically.",
-    "achievement.pin.full": "You can show up to {max}. Remove one first.",
     "achievement.pin.failed":
         "Couldn't update your profile achievements. Try again shortly.",
+    "achievement.settings.label": "Profile achievements",
+    "achievement.settings.change": "Change",
+    "achievement.settings.auto": "Automatic · highest tiers first",
+    "achievement.settings.help":
+        "Up to {max} are shown next to your profile name.",
+    "achievement.settings.dialogHelp":
+        "Pick up to {max}. They are shown in the order you pick them.",
+    "achievement.settings.emptySlot": "Empty",
+    "achievement.settings.earned": "Earned achievements",
+    "achievement.settings.useAuto": "Use automatic",
+    "achievement.settings.apply": "Apply",
     "achievement.sync.new": "New achievements",
     "achievement.sync.more": "+{count} more",
     "achievement.sync.view": "View achievements",

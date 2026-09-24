@@ -9,6 +9,7 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
  * 빙고 용어(테누토 등) · 오락실 기체 상태 이유에 쓴다.
  * 행 끝에 붙어 줄끼리 끝이 맞아야 하는 자리(기체 상태)는 물음표 아이콘을 끈다.
  * plain = 점선 밑줄 · 물음표 없이 내용(태그 등)을 그대로 누르는 자리로 — 기여 라벨(2026-09-24)
+ * content = 제목 · 설명 두 줄 대신 창 안을 통째로(업적 배지 정보 카드, 2026-09-25 M1). popoverClassName 으로 창 폭 · 안쪽 여백만 바꾼다
  */
 export default function TermHelp({
     children,
@@ -17,13 +18,17 @@ export default function TermHelp({
     ariaLabel,
     icon = true,
     plain = false,
+    content,
+    popoverClassName,
 }: {
     children: ReactNode;
-    title: ReactNode;
-    description: ReactNode;
+    title?: ReactNode;
+    description?: ReactNode;
     ariaLabel: string;
     icon?: boolean;
     plain?: boolean;
+    content?: ReactNode;
+    popoverClassName?: string;
 }) {
     const [open, setOpen] = useState(false);
     const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -86,10 +91,18 @@ export default function TermHelp({
                     onCloseAutoFocus={(event) => event.preventDefault()}
                     onMouseEnter={cancelClose}
                     onMouseLeave={scheduleClose}
-                    className="noslog-ui nl-term__popover"
+                    className={
+                        popoverClassName
+                            ? `noslog-ui nl-term__popover ${popoverClassName}`
+                            : "noslog-ui nl-term__popover"
+                    }
                 >
-                    <strong className="nl-control">{title}</strong>
-                    <p className="nl-body-secondary">{description}</p>
+                    {content ?? (
+                        <>
+                            <strong className="nl-control">{title}</strong>
+                            <p className="nl-body-secondary">{description}</p>
+                        </>
+                    )}
                 </Popover.Content>
             </Popover.Portal>
         </Popover.Root>

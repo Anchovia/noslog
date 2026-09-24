@@ -72,16 +72,6 @@ export default function ProfileIdentity({
     const metadata = [lastPlayed, isOwner ? syncLabel : null]
         .filter(Boolean)
         .join(" · ");
-    const privateLabels = [
-        user.hide_nostalgia_name ? "NOSTALGIA ID" : null,
-        user.hide_discord_name ? "Discord" : null,
-        user.hide_preferred_arcade ? t("settings.preferredArcade") : null,
-        user.hide_play_count ? t("profile.playCountLabel") : null,
-        user.hide_play_activity ? t("profile.recentPlays") : null,
-        user.hide_play_scores ? t("profile.playScores") : null,
-    ]
-        .filter(Boolean)
-        .join(" · ");
     return (
         <section className="nl-profile-identity" aria-labelledby="profile-name">
             <div className="nl-profile-identity__row">
@@ -176,14 +166,7 @@ export default function ProfileIdentity({
                     </p>
                 ) : null}
             </div>
-            {isOwner && privateLabels ? (
-                <p className="nl-body-secondary nl-muted">
-                    {t("profile.private")} · {privateLabels}{" "}
-                    <Link className="nl-control" href={href("/settings")}>
-                        {t("profile.settings")}
-                    </Link>
-                </p>
-            ) : null}
+            {/* 본인에게 보이던 「비공개 · … 프로필 설정」 줄은 두지 않는다(2026-09-25, 사용자) */}
             {(!user.hide_nostalgia_name && user.nostalgia_name) ||
             discord ||
             user.preferredArcade ? (

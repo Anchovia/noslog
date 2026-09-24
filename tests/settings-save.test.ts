@@ -9,6 +9,7 @@ const mocks = vi.hoisted(() => ({
     deleteBlob: vi.fn(),
     updateTag: vi.fn(),
     log: vi.fn(),
+    setShowcase: vi.fn(),
 }));
 vi.mock("@/lib/session", () => ({ default: async () => mocks.session }));
 vi.mock("@/lib/db", () => ({
@@ -23,6 +24,9 @@ vi.mock("@/lib/blob", () => ({
     deleteBlobIfOwned: mocks.deleteBlob,
 }));
 vi.mock("@/lib/observability/server", () => ({ logServerError: mocks.log }));
+vi.mock("@/features/achievements/server/achievementService", () => ({
+    setAchievementShowcase: mocks.setShowcase,
+}));
 vi.mock("@/lib/i18n/server", () => ({
     getServerI18n: async () => ({ t: (key: string) => key }),
 }));
@@ -60,6 +64,7 @@ describe("P10 settings save boundaries", () => {
         mocks.updateUser.mockResolvedValue({ id: 9 });
         mocks.findArcade.mockResolvedValue({ id: 3 });
         mocks.validateBlob.mockResolvedValue(true);
+        mocks.setShowcase.mockResolvedValue({ status: "ok", keys: [] });
     });
     it("requires a completed authenticated account before accessing data", async () => {
         mocks.session.id = undefined;
@@ -226,5 +231,53 @@ describe("P10 settings save boundaries", () => {
             },
         });
         expect(mocks.deleteBlob).not.toHaveBeenCalled();
+    });
+
+    describe("프로필 업적 진열(2026-09-25 D1)", () => {
+        it("폼에 칸이 없으면 진열은 건드리지 않는다", async () => {
+            expect(
+                (await saveSettingsProfile(settingsFormData(profile))).success
+            ).toBe(true);
+            expect(mocks.setShowcase).not.toHaveBeenCalled();
+        });
+        it("고른 키를 순서대로, 빈 값이면 자동(빈 목록)으로 저장한다", async () => {
+            await saveSettingsProfile(
+                settingsFormData({
+                    ...profile,
+                    achievementShowcase: "pianist,s-rank",
+                })
+            );
+            expect(mocks.setShowcase).toHaveBeenLastCalledWith(9, [
+                "pianist",
+                "s-rank",
+            ]);
+            await saveSettingsProfile(
+                settingsFormData({ ...profile, achievementShowcase: "" })
+            );
+            expect(mocks.setShowcase).toHaveBeenLastCalledWith(9, []);
+        });
+        it("4개 이상 · 형식이 틀리면 저장 전에 막는다", async () => {
+            for (const value of ["a,b,c,d", "S-RANK", "a,,b"]) {
+                const result = await saveSettingsProfile(
+                    settingsFormData({ ...profile, achievementShowcase: value })
+                );
+                expect(result.success).toBe(false);
+            }
+            expect(mocks.setShowcase).not.toHaveBeenCalled();
+            expect(mocks.updateUser).not.toHaveBeenCalled();
+        });
+        it("얻지 않은 업적이면 프로필도 저장하지 않는다", async () => {
+            mocks.setShowcase.mockResolvedValueOnce({ status: "not-earned" });
+            const result = await saveSettingsProfile(
+                settingsFormData({ ...profile, achievementShowcase: "pianist" })
+            );
+            expect(result).toMatchObject({
+                success: false,
+                fieldErrors: {
+                    achievementShowcase: ["achievement.pin.failed"],
+                },
+            });
+            expect(mocks.updateUser).not.toHaveBeenCalled();
+        });
     });
 });

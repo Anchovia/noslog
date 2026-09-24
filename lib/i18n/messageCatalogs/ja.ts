@@ -2021,7 +2021,6 @@ export const jaMessages = {
     "achievement.metaTitle": "{name}の実績",
     "achievement.metaDescription": "NOSTALGIAの記録から自動で集まる実績と段階",
     "achievement.count": "実績 {earned} / {total}",
-    "achievement.countAria": "実績 {total}段階中 {earned}段階達成 — 実績を見る",
     "achievement.all": "すべて見る",
     "achievement.recent": "最近の達成",
     "achievement.empty": "まだ獲得した実績はありません。",
@@ -2047,14 +2046,19 @@ export const jaMessages = {
     "achievement.detail": "段階を見る",
     "achievement.scoresHidden":
         "スコア非公開のため、実力・コレクションの実績は表示されません。",
-    "achievement.pin.add": "{name}をプロフィールに表示",
-    "achievement.pin.remove": "{name}をプロフィールから外す",
-    "achievement.pin.count": "プロフィールに表示 {count} / {max}",
-    "achievement.pin.auto": "選ばない場合は高い段階から自動で表示されます。",
-    "achievement.pin.full":
-        "プロフィールには{max}個まで表示できます。1つ外してから選んでください。",
     "achievement.pin.failed":
         "実績を更新できませんでした。しばらくしてからもう一度お試しください。",
+    "achievement.settings.label": "プロフィールの実績",
+    "achievement.settings.change": "変更",
+    "achievement.settings.auto": "自動 · 高い段階順",
+    "achievement.settings.help":
+        "プロフィール名の横に{max}個まで表示されます。",
+    "achievement.settings.dialogHelp":
+        "{max}個まで選べます。選んだ順に表示されます。",
+    "achievement.settings.emptySlot": "空き",
+    "achievement.settings.earned": "獲得した実績",
+    "achievement.settings.useAuto": "自動にする",
+    "achievement.settings.apply": "適用",
     "achievement.sync.new": "新しい実績",
     "achievement.sync.more": "ほか{count}個",
     "achievement.sync.view": "実績を見る",
