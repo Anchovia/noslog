@@ -121,7 +121,7 @@ function describeItem(
                     return `길이 ${beatLengthLabel(current.durationTicks, beatTicks)} → ${beatLengthLabel(incoming.durationTicks, beatTicks)}`;
                 }
                 if (field === "pair") return "트릴 두 번째 위치";
-                if (field === "path") return "글리산도 경로";
+                if (field === "path") return "글리산도 경로 · 가로대";
                 if (field === "tick") {
                     return `→ ${chartPositionLabel(incoming.tick, timingPoints)}`;
                 }

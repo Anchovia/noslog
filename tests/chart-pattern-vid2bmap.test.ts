@@ -563,6 +563,27 @@ describe("vid2bmap merge plan with draft notes in the way", () => {
     });
 });
 
+describe("chart note diff for glissando rungs", () => {
+    it("counts a changed rung spacing as a path change", () => {
+        const glissando: ChartNote = {
+            id: "g",
+            type: "glissando",
+            hand: "left",
+            tick: 480,
+            durationTicks: 480,
+            lane: 0,
+            width: 3,
+            glissandoSnapDivisor: 24,
+            points: [{ tickOffset: 480, lane: 8, width: 3 }],
+        };
+        const diff = diffChartNotes(
+            [glissando],
+            [{ ...glissando, id: "n", glissandoSnapDivisor: 32 }]
+        );
+        expect(diff.changed.map((change) => change.fields)).toEqual([["path"]]);
+    });
+});
+
 describe("chart position label", () => {
     const altalePoints = [point(0, 60, 90, 3, 4)];
 

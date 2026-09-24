@@ -958,7 +958,8 @@ function noteDiffFields(
     }
     if (
         current.pairLane !== incoming.pairLane ||
-        current.pairWidth !== incoming.pairWidth
+        current.pairWidth !== incoming.pairWidth ||
+        current.trillSnapDivisor !== incoming.trillSnapDivisor
     ) {
         fields.push("pair");
     }
@@ -970,7 +971,13 @@ function noteDiffFields(
                 width,
             ])
         );
-    if (pathOf(current) !== pathOf(incoming)) fields.push("path");
+    // 가로대 간격도 경로의 일부(2026-09-24 — 빠져서 가로대만 바뀐 글리산도가 「같음」 으로 남았다)
+    if (
+        pathOf(current) !== pathOf(incoming) ||
+        current.glissandoSnapDivisor !== incoming.glissandoSnapDivisor
+    ) {
+        fields.push("path");
+    }
     if (
         current.hand !== incoming.hand &&
         (fields.length > 0 || handKnownIds.has(incoming.id))
