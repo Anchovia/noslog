@@ -930,7 +930,8 @@ describe("vid2bmap glissando", () => {
             durationTicks: 480,
             lane: 0,
             width: 3,
-            glissandoSnapDivisor: 24,
+            // 5프레임(= 1/8박)마다 조각 → 가로대 1/32
+            glissandoSnapDivisor: 32,
             points: [{ tickOffset: 480, lane: 8, width: 3 }],
         });
         expect(conversion.glissandoIds).toEqual([glissando.id]);

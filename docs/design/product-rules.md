@@ -448,13 +448,16 @@ old design-stage checklist. Changes to material behavior require a user decision
   does, notes off the song grid keep their video position. Tenuto and trill lengths use the
   grid of the beat they end in, and the end is put on that grid. Moved notes can be selected for
   review after import. Notes that clash on one spot are then re-snapped finer. Same-lane reads
-  within 3 frames are one note.
+  within 3 frames are one note, and so are two reads of the same kind within 3 frames where one
+  lane range contains the other (the wider is kept — vid2bmap sometimes reads a note again one
+  frame later, narrower).
   Hands come from the zip when it carries them (2026-09-24: the runner takes notes and bar lines
   from the main vid2bmap run and only the hand from the `LR_classification` branch run, matched
   by kind, lanes and nearby frame); otherwise they are guessed by lane centre, and only guessed
   centre notes are selected for review. Glissando pieces (vid2bmap reads each rung) are joined
   into one glissando when the next piece is within 12 frames and 4 lanes (2026-09-24); the path
-  keeps the start, end and bends over 1 lane, rungs follow the piece spacing, a lone piece is
+  keeps the start, end and bends over 1 lane, rungs follow the shortest video-frame gaps
+  between pieces (pieces missed by vid2bmap do not widen them), a lone piece is
   dropped, and a standard note on the path is taken as a rung read twice and dropped. A trill's
   head width w becomes two positions of width w-1 one lane apart (the video's hexes alternate
   one lane within the head, 2026-09-24) and is flagged.

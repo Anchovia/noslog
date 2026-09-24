@@ -153,18 +153,30 @@ export function collectVid2bmapNotes(result: Vid2bmapResult) {
     const kept: Vid2bmapRawNote[] = [];
     let duplicates = 0;
     for (const note of all) {
+        const contains = (outer: Vid2bmapRawNote, inner: Vid2bmapRawNote) =>
+            outer.lane <= inner.lane &&
+            inner.lane + inner.width <= outer.lane + outer.width;
+        // 같은 칸 · 폭이거나, 글리산도가 아니면서 한쪽 칸 범위가 다른 쪽 안에 들어가면 같은 노트
+        // (Altale 37마디: 10~12 를 한 프레임 뒤에 11~12 로 한 번 더 읽음 — 같은 순간 칸이 겹치는 두 노트는 채보에 없다)
         const duplicate = kept.find(
             (other) =>
                 other.kind === note.kind &&
-                other.lane === note.lane &&
-                other.width === note.width &&
-                note.y - other.y <= VID2BMAP_DUPLICATE_FRAMES
+                note.y - other.y <= VID2BMAP_DUPLICATE_FRAMES &&
+                ((other.lane === note.lane && other.width === note.width) ||
+                    (note.kind !== "glissando" &&
+                        (contains(other, note) || contains(note, other))))
         );
         if (!duplicate) {
             kept.push(note);
             continue;
         }
         duplicates += 1;
+        // 넓게 읽은 쪽을 남긴다
+        if (note.width > duplicate.width) {
+            duplicate.lane = note.lane;
+            duplicate.width = note.width;
+            duplicate.endY = note.endY;
+        }
         // 먼저 읽은 쪽이 손을 모르면 나중 쪽 손을 쓴다
         duplicate.hand ??= note.hand;
     }
@@ -728,13 +740,23 @@ export function convertVid2bmap(
                 path[path.length - 1].tick,
                 tick + Math.round(beatTicks / snapDivisor)
             );
-            // 가로대 간격 = 조각 간격(중간값, 에디터 스냅 1/4 ~ 1/32 중 가장 가까운 것)
-            const gaps = chain
+            // 가로대 간격 = 영상 프레임 기준 조각 간격 중 가장 짧은 무리의 평균(에디터 스냅 1/4 ~ 1/32 중 가장 가까운 것).
+            // 격자에 맞춘 뒤 재면 1/6박 격자에 뭉쳐 커지고, AI 가 조각을 놓친 줄기(Altale 34마디: 11 · 4 · 11 · 4프레임)는 더 커진다
+            const frameGaps = chain
                 .slice(1)
-                .map((piece, index) => snapAt(piece.y) - snapAt(chain[index].y))
-                .filter((gap) => gap > 0)
+                .map((piece, index) => piece.y - chain[index].y)
+                .filter((frames) => frames >= 2)
                 .sort((a, b) => a - b);
-            const gap = gaps[Math.floor(gaps.length / 2)] ?? beatTicks;
+            const shortest = frameGaps.filter(
+                (frames) => frames <= frameGaps[0] * 1.5
+            );
+            const frameTicks = rawTickOf(first.y + 1) - rawTickOf(first.y);
+            const gap =
+                shortest.length > 0
+                    ? (shortest.reduce((sum, frames) => sum + frames, 0) /
+                          shortest.length) *
+                      frameTicks
+                    : beatTicks;
             const rungDivisor = [4, 8, 12, 16, 24, 32].reduce(
                 (best, divisor) =>
                     Math.abs((CHART_TICKS_PER_QUARTER * 4) / divisor - gap) <
