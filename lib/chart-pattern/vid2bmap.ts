@@ -1459,11 +1459,8 @@ const TEMPO_WINDOW = 8;
  * 놓친 박자선(간격 ≈ 2박)은 둘로 나누고, 8박 중앙값이 1.5% 넘게 바뀐 곳을 경계로(Altale: 2~62마디 90.00 · 63마디부터 83.06).
  * 첫 박자선은 beat_frames 의 격자 줄에서 판정선 줄까지 줄 수만큼(한 줄 = 한 프레임) 뒤의 박자선과 짝짓는다.
  */
-export function detectVid2bmapTempoChanges(
-    result: Vid2bmapResult,
-    firstBarTick: number,
-    timingPoints: ChartTimingPoint[]
-): Vid2bmapTempo | null {
+/** 영상 원본 박자선(beat_frames) — 박마다 걸린 프레임 수와, 첫 박자선이 보정된 박자선(barRows) 몇 번째인지 */
+function readBeatTrack(result: Vid2bmapResult) {
     const beatFrames = result.beatFrames;
     const fps = result.fps;
     if (!beatFrames || !fps || beatFrames.frames.length < TEMPO_WINDOW * 2) {
@@ -1500,6 +1497,50 @@ export function detectVid2bmapTempoChanges(
         }
     }
     if (Math.abs(rows[firstIndex] - expected) > 20) return null;
+    return { fps, durations, firstIndex };
+}
+
+/**
+ * 지금 타이밍이 영상 박자선과 얼마나 어긋나는지(2026-09-25 B) — 박마다 (타이밍으로 계산한 시각 − 영상 시각)에서
+ * 평균(음원 오프셋 몫)을 빼고 가장 큰 값. 템포 제안과 같은 한도(2.5프레임) 안이면 영상과 맞는 것으로 본다
+ */
+export function vid2bmapTimingDrift(
+    result: Vid2bmapResult,
+    firstBarTick: number,
+    timingPoints: ChartTimingPoint[]
+): { maxMs: number; onVideo: boolean } | null {
+    const track = readBeatTrack(result);
+    if (!track) return null;
+    const sorted = sortTimingPoints(timingPoints);
+    let position = 0;
+    const errors = [0, ...track.durations].map((duration, beat) => {
+        position += duration;
+        const tick = vid2bmapTickAt(
+            track.firstIndex + beat,
+            firstBarTick,
+            sorted
+        );
+        return (
+            tickToMilliseconds(tick, sorted, CHART_TICKS_PER_QUARTER) -
+            (position / track.fps) * 1000
+        );
+    });
+    const offset = mean(errors);
+    const maxMs = Math.max(...errors.map((error) => Math.abs(error - offset)));
+    return {
+        maxMs: Math.round(maxMs),
+        onVideo: maxMs <= (TEMPO_DRIFT_LIMIT_FRAMES / track.fps) * 1000,
+    };
+}
+
+export function detectVid2bmapTempoChanges(
+    result: Vid2bmapResult,
+    firstBarTick: number,
+    timingPoints: ChartTimingPoint[]
+): Vid2bmapTempo | null {
+    const track = readBeatTrack(result);
+    if (!track) return null;
+    const { fps, durations, firstIndex } = track;
 
     // 박 간격은 정수 프레임이라 83 BPM(43.37프레임)이면 43 · 44 가 번갈아 나온다 — 중앙값은 한쪽으로 쏠려
     // 양 끝 하나씩 뺀 평균으로 본다

@@ -488,7 +488,12 @@ old design-stage checklist. Changes to material behavior require a user decision
   「45마디 3박 ~ 48마디 2박 — 박마다 바뀜」) showing the beat intervals in frames. No song-specific values.
   Timing points start a new measure, as in osu!, so a card whose last point is mid-bar also puts a point with the
   same BPM on the next downbeat of the song's bars (the timing before import, with the proposed start meter) unless
-  another point comes first (2026-09-25 마) — 「… · 49마디 1박 마디선 맞춤」 on the card. Proposals
+  another point comes first (2026-09-25 마) — 「… · 49마디 1박 마디선 맞춤」 on the card.
+  When the draft has timing points besides the start and they miss the video (a beat more than 2.5 frames off after
+  removing the average offset), a card offers 「기존 타이밍 포인트를 영상 타이밍으로」 (2026-09-25 B): proposals are made
+  as if only the start point existed and the others are removed with the import (one undo step; the start point and
+  its time stay). On by default only when the draft has no notes; off keeps them and says which proposals they block.
+  Proposals
   replace the bar-interval BPM warning, are on by default, add the point at the beat with the
   previous time signature, and go in with the notes in one undoable step. No proposal where a
   timing point already exists; older zips without beat frames keep the warning only.

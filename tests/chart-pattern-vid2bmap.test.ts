@@ -11,6 +11,7 @@ import {
     alignVid2bmapFirstBarTick,
     applyVid2bmapTempoChanges,
     vid2bmapBarRestore,
+    vid2bmapTimingDrift,
     detectVid2bmapTempoChanges,
     applyVid2bmapMerge,
     applyVid2bmapStartTiming,
@@ -1313,11 +1314,22 @@ describe("vid2bmap tempo changes from raw beat frames", () => {
                         )
                     )
                 );
-                return [name, { tempo, worst }];
+                return [
+                    name,
+                    {
+                        tempo,
+                        worst,
+                        // 가져오기 창의 「기존 타이밍 포인트를 영상 타이밍으로」 기준 — 넣기 전은 어긋남, 넣은 뒤는 맞음
+                        before: vid2bmapTimingDrift(song, 0, base),
+                        after: vid2bmapTimingDrift(song, 0, timing),
+                    },
+                ];
             })
         );
-        for (const { worst } of Object.values(results)) {
+        for (const { worst, before, after } of Object.values(results)) {
             expect(worst).toBeLessThanOrEqual(42);
+            expect(before?.onVideo).toBe(false);
+            expect(after?.onVideo).toBe(true);
         }
         // 멈칫은 한 카드에 포인트 둘(느려졌다 160 으로 돌아옴), 영상 박 간격을 함께
         const [dip] = results.dip.tempo.changes;

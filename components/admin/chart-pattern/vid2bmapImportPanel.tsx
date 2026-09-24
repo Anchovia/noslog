@@ -42,6 +42,7 @@ import {
     suggestVid2bmapSnap,
     vid2bmapBarRestore,
     vid2bmapMeterFirstBarTick,
+    vid2bmapTimingDrift,
     type Vid2bmapChoice,
     type Vid2bmapMergeItem,
     type Vid2bmapMeter,
@@ -301,10 +302,34 @@ export default function Vid2bmapImportPanel({
     const [skippedTempo, setSkippedTempo] = useState<Record<number, boolean>>(
         {}
     );
+    /** 영상과 어긋난 기존 타이밍 포인트를 영상 타이밍으로 바꿀지 — 고르기 전(null)이면 초안에 노트가 없을 때만(2026-09-25 B) */
+    const [replaceChoice, setReplaceChoice] = useState<boolean | null>(null);
     const [applying, setApplying] = useState(false);
 
-    /** 지금 초안의 타이밍 — 템포 · 시작 BPM · 박자 제안은 이것과 비교한다. 아래 timingPoints 는 제안을 넣은 뒤의 타이밍 */
-    const baseTimingPoints = document.timingPoints;
+    // 초안에 시작 타이밍 말고 포인트가 있고 영상과 어긋나면, 없는 것처럼 영상으로 다시 제안하고 넣을 때 지운다(2026-09-25 B)
+    const draftOrigin = sortTimingPoints(document.timingPoints)[0];
+    const extraTimingPoints = sortTimingPoints(document.timingPoints).slice(1);
+    const draftDrift = useMemo(
+        () =>
+            loaded && extraTimingPoints.length > 0
+                ? vid2bmapTimingDrift(
+                      loaded.result,
+                      loaded.firstBarTick,
+                      document.timingPoints
+                  )
+                : null,
+        [loaded, extraTimingPoints.length, document.timingPoints]
+    );
+    const replaceProposal =
+        draftDrift && !draftDrift.onVideo ? draftDrift : null;
+    const replaceTiming =
+        replaceProposal !== null &&
+        (replaceChoice ?? document.notes.length === 0);
+    /** 비교 기준 타이밍 — 템포 · 시작 BPM · 박자 제안은 이것과 비교한다. 아래 timingPoints 는 제안을 넣은 뒤의 타이밍 */
+    const baseTimingPoints = useMemo(
+        () => (replaceTiming ? [draftOrigin] : document.timingPoints),
+        [replaceTiming, draftOrigin, document.timingPoints]
+    );
 
     useEffect(() => {
         let cancelled = false;
@@ -614,17 +639,26 @@ export default function Vid2bmapImportPanel({
                     ...(selectGridCheck ? conversion.gridCheckIds : []),
                 ]),
             ].filter((id) => added.has(id));
-            if (timingCount > 0) {
+            if (timingCount > 0 || replaceTiming) {
                 // 노트와 타이밍 포인트를 한 번에 — 실행 취소도 한 번. 노트는 박(틱)이라 위치는 그대로.
                 // 시작 BPM 을 먼저 바꿔야 뒤 제안 포인트의 시각이 새 BPM 으로 이어진다
                 const state = store.getState();
                 state.replaceDocument({
                     ...state.document,
                     timingPoints: applyVid2bmapTempoChanges(
-                        applyVid2bmapStartTiming(state.document.timingPoints, {
-                            bpm: proposedStartBpm,
-                            numerator: proposedNumerator,
-                        }),
+                        applyVid2bmapStartTiming(
+                            replaceTiming
+                                ? [
+                                      sortTimingPoints(
+                                          state.document.timingPoints
+                                      )[0],
+                                  ]
+                                : state.document.timingPoints,
+                            {
+                                bpm: proposedStartBpm,
+                                numerator: proposedNumerator,
+                            }
+                        ),
                         tempoChanges
                     ),
                     notes: merged.notes,
@@ -763,6 +797,61 @@ export default function Vid2bmapImportPanel({
                                     개 · 간격으로 본 BPM {estimatedBpm} ≈ 시작
                                     타이밍 {startBpm}
                                 </p>
+                            ) : null}
+                            {replaceProposal ? (
+                                // 영상과 어긋난 기존 타이밍 포인트(2026-09-25 B) — 템포 제안과 같은 카드
+                                <div className="border-score/40 bg-score/10 flex flex-col gap-1 rounded-md border px-2 py-1.5">
+                                    <p className="flex items-center gap-1.5 text-xs font-bold">
+                                        <TriangleAlert
+                                            className="text-score size-3.5 shrink-0"
+                                            aria-hidden
+                                        />
+                                        {replaceTiming
+                                            ? "기존 타이밍 포인트를 영상 타이밍으로"
+                                            : `기존 타이밍 포인트 ${extraTimingPoints.length}개가 제안을 막았어요`}
+                                    </p>
+                                    <p className="text-micro">
+                                        지금 초안 {extraTimingPoints.length}개 —{" "}
+                                        {extraTimingPoints.map(
+                                            (point, index) => (
+                                                <span key={point.id}>
+                                                    {index > 0 ? " · " : ""}
+                                                    <span
+                                                        className={
+                                                            replaceTiming
+                                                                ? "line-through"
+                                                                : undefined
+                                                        }
+                                                    >
+                                                        {chartPositionLabel(
+                                                            point.tick,
+                                                            document.timingPoints
+                                                        )}{" "}
+                                                        {point.bpm}
+                                                    </span>
+                                                </span>
+                                            )
+                                        )}{" "}
+                                        — 영상과 최대 {replaceProposal.maxMs}ms.{" "}
+                                        {replaceTiming
+                                            ? `시작 타이밍(${chartPositionLabel(draftOrigin.tick, document.timingPoints)})은 그대로`
+                                            : "그 자리 제안은 빠져요 — 타이밍 모드에서 지우고 다시 넣거나 여기서 바꾸기"}
+                                    </p>
+                                    <label className="flex items-center gap-2 text-xs font-semibold">
+                                        <input
+                                            type="checkbox"
+                                            checked={replaceTiming}
+                                            onChange={(event) =>
+                                                setReplaceChoice(
+                                                    event.target.checked
+                                                )
+                                            }
+                                            className="accent-text-primary size-3.5"
+                                        />
+                                        기존 포인트 {extraTimingPoints.length}개
+                                        지우고 아래 제안으로
+                                    </label>
+                                </div>
                             ) : null}
                             {tempo?.startMismatch || meterProposal ? (
                                 // 시작 BPM · 박자 제안(2026-09-24 A) — 템포 변화 제안과 같은 카드
@@ -1383,6 +1472,9 @@ export default function Vid2bmapImportPanel({
                             : ""}
                         {timingCount > 0
                             ? `${merged && merged.addedIds.length > 0 ? " +" : " ·"} 타이밍 ${timingCount}`
+                            : ""}
+                        {replaceTiming
+                            ? ` (${extraTimingPoints.length}개 바꿈)`
                             : ""}
                     </button>
                 </div>
