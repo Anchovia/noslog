@@ -108,6 +108,30 @@ describe("official X post translation", () => {
         }
     );
 
+    // 2026-09-23 — 첫 모델이 그 키에서 404 로 막히자 나머지를 시도조차 안 해 번역이 멈췄다
+    it("falls through to the next model when a model is unavailable for the key", async () => {
+        const { ApiError } = await import("@google/genai");
+        generateContent
+            .mockRejectedValueOnce(
+                new ApiError({ status: 404, message: "model not found" })
+            )
+            .mockRejectedValueOnce(
+                new ApiError({ status: 403, message: "forbidden" })
+            )
+            .mockResolvedValueOnce({
+                text: JSON.stringify({ ko: "한", en: "en" }),
+            });
+        const { translateOfficialXPost, OFFICIAL_X_TRANSLATION_MODELS } =
+            await load();
+        await expect(translateOfficialXPost(text, links)).resolves.toEqual({
+            ko: "한",
+            en: "en",
+        });
+        expect(generateContent.mock.calls.map((call) => call[0].model)).toEqual(
+            [...OFFICIAL_X_TRANSLATION_MODELS]
+        );
+    });
+
     it("falls through to the next model on 503/429 and stops on other errors", async () => {
         const { ApiError } = await import("@google/genai");
         generateContent
