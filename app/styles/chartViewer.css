@@ -99,9 +99,6 @@
     border-radius: var(--nl-radius-full);
     flex-shrink: 0;
 }
-.noslog-ui .nl-chart-viewer__layout {
-    margin-inline-start: auto;
-}
 .noslog-ui .nl-chart-viewer__placeholder {
     display: flex;
     align-items: center;

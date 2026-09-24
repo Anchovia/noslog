@@ -1562,13 +1562,8 @@ export const koMessages = {
     "chart.sheet": "전체 악보",
     "chart.safariHelp":
         "Safari에서는 낙하형 뷰어를 지원하지 않아 전체 악보로 표시합니다. 낙하형은 Chrome 또는 Edge에서 확인해주세요.",
-    "chart.fallingHelp":
-        "노트가 판정선에 도착하는 흐름을 재생합니다. 로컬 음원을 불러오면 브라우저에서만 사용되며 서버에는 전송되지 않습니다.",
-    "chart.sheetHelp":
-        "아래에서 위로 이어집니다. 오른쪽 미니맵으로 원하는 구간으로 이동할 수 있습니다.",
     "chart.leftHand": "왼손 안내",
     "chart.rightHand": "오른손 안내",
-    "chart.layout": "28칸 · 열당 4마디",
     "chart.empty": "표시할 노트가 없습니다.",
     "chart.sheetScroll": "전체 악보",
     "chart.columnAria": "{count}열 {start}부터 {end}까지",
