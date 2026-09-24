@@ -58,7 +58,14 @@ export async function awardContribution(award: ContributionAward) {
 export type { ContributionTotals };
 
 function emptyTotals(): ContributionTotals {
-    return { points: 0, chart_field: 0, arcade_report: 0, cabinet_check: 0 };
+    return {
+        points: 0,
+        chart_field: 0,
+        chart: 0,
+        chart_comment: 0,
+        arcade_report: 0,
+        cabinet_check: 0,
+    };
 }
 
 /** 여러 사람의 점수 · 종류별 수를 한 번에 — 랭킹 · 의견 목록처럼 이름이 여럿 나오는 곳 */

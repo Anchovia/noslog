@@ -1834,4 +1834,36 @@ export const enMessages = {
     "contribution.status.applied": "Applied",
     "contribution.status.rejected": "Rejected",
     "contribution.rejectReason": "Reason: {reason}",
+    "contribution.draft.invalid": "The chart format is invalid.",
+    "contribution.draft.locked":
+        "This draft can't be edited right now. If it's in review, withdraw the request first.",
+    "contribution.draft.conflict":
+        "This draft changed in another window. Reload and try again.",
+    "contribution.draft.saved": "Saved.",
+    "contribution.draft.overlap":
+        "Fix overlapping notes before requesting a review.",
+    "contribution.draft.submitted":
+        "Review requested · An admin will check it.",
+    "contribution.draft.withdrawn":
+        "Review request withdrawn. You can edit again.",
+    "contribution.comment.invalid": "You can't leave a comment here.",
+    "contribution.comment.added": "Comment posted.",
+    "contribution.comment.deleted": "Comment deleted.",
+    "contribution.entry.create": "Create chart",
+    "contribution.entry.edit": "Improve",
+    "contribution.entry.myDraft": "My draft · {status}",
+    "contribution.entry.wideTitle": "Edit charts on a wider screen",
+    "contribution.entry.wideBody":
+        "The chart editor works on a computer or a tablet in landscape. Copy the link and open it on a wider screen.",
+    "contribution.entry.copyLink": "Copy link",
+    "contribution.entry.copied": "Link copied.",
+    "contribution.draftStatus.draft": "In progress",
+    "contribution.draftStatus.submitted": "In review",
+    "contribution.draftStatus.changes_requested": "Changes requested",
+    "contribution.draftStatus.published": "Published",
+    "contribution.section.kind.chart": "Charts",
+    "contribution.section.kind.chart_comment": "Chart notes",
+    "contribution.section.chartItem": "Chart",
+    "contribution.section.openComments": "{count} open notes",
+    "contribution.section.publishedPoints": "+{points} pts",
 } satisfies Messages;

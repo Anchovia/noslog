@@ -1,6 +1,6 @@
 /**
  * 기여 등급(2026-09-23 N1) — 반영 · 처리된 기여의 점수 합으로 Lv.1–6. 권한은 열지 않는 보상 라벨.
- * 점수: 곡 정보 반영 · 오락실 제보 처리 · 기체 확인(하루) 각 1점. 숫자는 운영하며 바꿀 수 있다.
+ * 점수: 곡 정보 반영 · 오락실 제보 처리 · 기체 확인(하루) · 해결된 채보 댓글 각 1점, 채보 공개 20점.
  */
 export const CONTRIBUTION_LEVEL_THRESHOLDS = [
     1, 10, 30, 100, 300, 1000,
@@ -11,9 +11,26 @@ export const CONTRIBUTION_NAME_MIN_LEVEL = 3;
 
 export const CONTRIBUTION_KINDS = [
     "chart_field",
+    "chart",
+    "chart_comment",
     "arcade_report",
     "cabinet_check",
 ] as const;
+
+/** 종류별 점수(2026-09-23 결정) — 채보 공개 20, 나머지 1 */
+export const CONTRIBUTION_POINTS: Record<ContributionKindName, number> = {
+    chart_field: 1,
+    chart: 20,
+    chart_comment: 1,
+    arcade_report: 1,
+    cabinet_check: 1,
+};
+type ContributionKindName =
+    | "chart_field"
+    | "chart"
+    | "chart_comment"
+    | "arcade_report"
+    | "cabinet_check";
 export type ContributionKind = (typeof CONTRIBUTION_KINDS)[number];
 
 /** 한 사람의 기여 점수 합과 종류별 반영 수 */

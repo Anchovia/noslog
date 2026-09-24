@@ -1827,4 +1827,35 @@ export const jaMessages = {
     "contribution.status.applied": "反映済み",
     "contribution.status.rejected": "却下",
     "contribution.rejectReason": "理由: {reason}",
+    "contribution.draft.invalid": "譜面の形式が正しくありません。",
+    "contribution.draft.locked":
+        "今はこの下書きを編集できません。確認依頼中の場合は、先に依頼を取り消してください。",
+    "contribution.draft.conflict":
+        "別のウィンドウでこの下書きが変更されました。再読み込みしてからもう一度お試しください。",
+    "contribution.draft.saved": "保存しました。",
+    "contribution.draft.overlap":
+        "重なっているノーツを直してから確認を依頼してください。",
+    "contribution.draft.submitted": "確認を依頼しました · 運営者が確認します。",
+    "contribution.draft.withdrawn":
+        "確認依頼を取り消しました。再び編集できます。",
+    "contribution.comment.invalid": "コメントを残せません。",
+    "contribution.comment.added": "意見を残しました。",
+    "contribution.comment.deleted": "意見を削除しました。",
+    "contribution.entry.create": "譜面を作る",
+    "contribution.entry.edit": "修正する",
+    "contribution.entry.myDraft": "自分の下書き · {status}",
+    "contribution.entry.wideTitle": "譜面の編集は広い画面で",
+    "contribution.entry.wideBody":
+        "譜面エディタはPC・タブレットの横向き画面で使えます。URLをコピーして広い画面で開いてください。",
+    "contribution.entry.copyLink": "URLをコピー",
+    "contribution.entry.copied": "URLをコピーしました。",
+    "contribution.draftStatus.draft": "作成中",
+    "contribution.draftStatus.submitted": "確認待ち",
+    "contribution.draftStatus.changes_requested": "修正依頼",
+    "contribution.draftStatus.published": "公開",
+    "contribution.section.kind.chart": "譜面",
+    "contribution.section.kind.chart_comment": "譜面の意見",
+    "contribution.section.chartItem": "譜面",
+    "contribution.section.openComments": "未解決の意見 {count}件",
+    "contribution.section.publishedPoints": "+{points}pt",
 } satisfies Messages;

@@ -4,7 +4,10 @@ import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useState } from "react";
 
-import { listMyChartFieldProposals } from "@/app/(nevigation)/profile/[id]/contributionActions";
+import {
+    listMyChartDrafts,
+    listMyChartFieldProposals,
+} from "@/app/(nevigation)/profile/[id]/contributionActions";
 import {
     useLocale,
     useLocalizedHref,
@@ -24,6 +27,7 @@ import {
     formatProposalValue,
     type ChartFieldProposalField,
 } from "@/features/contributions/schemas/chartFieldProposalSchema";
+import type { MyChartDraftItem } from "@/features/contributions/server/chartDraftService";
 import type { MyChartFieldProposal } from "@/features/contributions/server/chartFieldProposalService";
 import type { MessageKey } from "@/lib/i18n/messageTypes";
 
@@ -42,14 +46,96 @@ const STATUS_TONES: Record<string, "warning" | "success" | "danger"> = {
     applied: "success",
     rejected: "danger",
 };
+// 채보 초안 상태 — 가이드 상태 태그: 검토 대기 = 경고 · 수정 요청 = 정보 · 공개 = 성공 · 작성 중 = 중립
+const DRAFT_TONES: Record<string, "warning" | "info" | "success" | undefined> =
+    {
+        draft: undefined,
+        submitted: "warning",
+        changes_requested: "info",
+        published: "success",
+    };
 
-function ProposalList({ items }: { items: MyChartFieldProposal[] }) {
+type MineItem =
+    | { kind: "field"; at: string; item: MyChartFieldProposal }
+    | { kind: "chart"; at: string; item: MyChartDraftItem };
+
+/** 곡 정보 제안 + 채보 초안을 최근 순으로 한 목록에 */
+async function loadMine(limit: number): Promise<MineItem[]> {
+    const [fields, drafts] = await Promise.all([
+        listMyChartFieldProposals(limit),
+        listMyChartDrafts(limit),
+    ]);
+    return [
+        ...fields.map((item) => ({
+            kind: "field" as const,
+            at: item.createdAt,
+            item,
+        })),
+        ...drafts.map((item) => ({
+            kind: "chart" as const,
+            at: item.updatedAt,
+            item,
+        })),
+    ]
+        .sort((left, right) => right.at.localeCompare(left.at))
+        .slice(0, limit);
+}
+
+function DraftRow({ item }: { item: MyChartDraftItem }) {
+    const t = useTranslations();
+    const locale = useLocale();
+    const href = useLocalizedHref();
+    const base = `/music/${item.chart.musicIndex}/${item.chart.difficulty.toLowerCase()}/pattern`;
+    const tone = DRAFT_TONES[item.status];
+    return (
+        <li className="nl-profile-contribution__item">
+            <div className="nl-profile-contribution__item-head">
+                <Link
+                    href={href(
+                        item.status === "published" ? base : `${base}/draft`
+                    )}
+                    className="nl-profile-contribution__what nl-control nl-link"
+                >
+                    {item.chart.title} · {item.chart.difficulty}{" "}
+                    {item.chart.level} · {t("contribution.section.chartItem")}
+                </Link>
+                <span
+                    className={tone ? "nl-tag nl-tag--status" : "nl-tag"}
+                    data-tone={tone}
+                >
+                    {t(`contribution.draftStatus.${item.status}`)}
+                </span>
+            </div>
+            <p className="nl-metadata nl-muted nl-profile-contribution__number">
+                {item.status === "published" && item.publishedAt
+                    ? `${t("contribution.section.publishedPoints", { points: 20 })} · ${item.publishedAt.slice(0, 10)}`
+                    : item.openComments
+                      ? t("contribution.section.openComments", {
+                            count: item.openComments.toLocaleString(locale),
+                        })
+                      : new Date(item.updatedAt).toLocaleDateString(locale, {
+                            timeZone: "Asia/Seoul",
+                        })}
+            </p>
+        </li>
+    );
+}
+
+function ProposalList({ items }: { items: MineItem[] }) {
     const t = useTranslations();
     const locale = useLocale();
     const href = useLocalizedHref();
     return (
         <ul className="nl-profile-contribution__list">
-            {items.map((item) => {
+            {items.map((entry) => {
+                if (entry.kind === "chart")
+                    return (
+                        <DraftRow
+                            key={`chart-${entry.item.id}`}
+                            item={entry.item}
+                        />
+                    );
+                const item = entry.item;
                 const labelKey = FIELD_LABEL_KEYS[item.field];
                 const fieldLabel = labelKey ? t(labelKey) : "BPM";
                 const tone = STATUS_TONES[item.status] ?? "warning";
@@ -62,7 +148,10 @@ function ProposalList({ items }: { items: MyChartFieldProposal[] }) {
                               locale
                           );
                 return (
-                    <li key={item.id} className="nl-profile-contribution__item">
+                    <li
+                        key={`field-${item.id}`}
+                        className="nl-profile-contribution__item"
+                    >
                         <div className="nl-profile-contribution__item-head">
                             <Link
                                 href={href(
@@ -124,13 +213,13 @@ function MyProposals() {
     const [open, setOpen] = useState(false);
     const recent = useQuery({
         queryKey: ["contribution", "mine", "recent"],
-        queryFn: () => listMyChartFieldProposals(RECENT_COUNT + 1),
+        queryFn: () => loadMine(RECENT_COUNT + 1),
         staleTime: 60_000,
         retry: false,
     });
     const all = useQuery({
         queryKey: ["contribution", "mine", "all"],
-        queryFn: () => listMyChartFieldProposals(ALL_COUNT),
+        queryFn: () => loadMine(ALL_COUNT),
         enabled: open,
         staleTime: 60_000,
         retry: false,
@@ -260,6 +349,8 @@ export default function ProfileContribution({
                             items={(
                                 [
                                     "chart_field",
+                                    "chart",
+                                    "chart_comment",
                                     "arcade_report",
                                     "cabinet_check",
                                 ] as const

@@ -1,0 +1,120 @@
+"use client";
+
+import { useQuery } from "@tanstack/react-query";
+import Link from "next/link";
+import { useState, type ReactNode } from "react";
+import { toast } from "sonner";
+
+import { getMyChartDraftStatus } from "@/app/(nevigation)/music/[index]/[difficulty]/draftActions";
+import { useTranslations } from "@/components/i18n/localeProvider";
+import Button from "@/components/ui/Button";
+import ModalDialog from "@/components/ui/modalDialog";
+
+/** 에디터는 넓은 화면 도구 — 이 폭 아래에서는 들어가는 대신 안내(2026-09-24 F1) */
+const EDITOR_MIN_WIDTH = 1056;
+
+export function myChartDraftOptions(chartId: number, signedIn: boolean) {
+    return {
+        queryKey: ["chart-draft", "mine", chartId],
+        queryFn: () => getMyChartDraftStatus(chartId),
+        enabled: signedIn,
+        staleTime: 60_000,
+        retry: false,
+    } as const;
+}
+
+/**
+ * 채보 초안으로 들어가는 링크(2026-09-24 A1) — 곡 상세 「채보 만들기 ›」 · 뷰어 머리 「고치기 ›」.
+ * 내 초안이 있으면 글자가 상태를 말한다(「내 초안 · 수정 요청 ›」). 로그아웃이면 로그인으로,
+ * 좁은 화면이면 에디터 대신 「넓은 화면에서」 안내 창(주소 복사).
+ */
+export default function ChartDraftEntry({
+    chartId,
+    draftHref,
+    loginHref,
+    signedIn,
+    label,
+    className,
+    chevron,
+}: {
+    chartId: number;
+    draftHref: string;
+    loginHref: string;
+    signedIn: boolean;
+    /** 초안이 없을 때 글자 — 「채보 만들기」 · 「고치기」 */
+    label: string;
+    className: string;
+    chevron?: ReactNode;
+}) {
+    const t = useTranslations();
+    const [narrow, setNarrow] = useState(false);
+    const draft = useQuery(myChartDraftOptions(chartId, signedIn)).data;
+    const text = draft
+        ? t("contribution.entry.myDraft", {
+              status: t(`contribution.draftStatus.${draft.status}`),
+          })
+        : label;
+    if (!signedIn)
+        return (
+            <Link href={loginHref} className={className}>
+                {label}
+                {chevron}
+            </Link>
+        );
+    return (
+        <>
+            <Link
+                href={draftHref}
+                className={className}
+                data-status={draft?.status}
+                onClick={(event) => {
+                    if (window.innerWidth >= EDITOR_MIN_WIDTH) return;
+                    event.preventDefault();
+                    setNarrow(true);
+                }}
+            >
+                {text}
+                {chevron}
+            </Link>
+            <ModalDialog
+                open={narrow}
+                onOpenChange={setNarrow}
+                title={t("contribution.entry.wideTitle")}
+                description={t("contribution.entry.wideBody")}
+                footer={
+                    <>
+                        <Button
+                            variant="secondary"
+                            onClick={() => setNarrow(false)}
+                        >
+                            {t("common.close")}
+                        </Button>
+                        <Button
+                            onClick={() => {
+                                void navigator.clipboard
+                                    .writeText(
+                                        new URL(draftHref, window.location.href)
+                                            .href
+                                    )
+                                    .then(
+                                        () => {
+                                            toast.success(
+                                                t("contribution.entry.copied")
+                                            );
+                                            setNarrow(false);
+                                        },
+                                        () =>
+                                            toast.error(
+                                                t("tiers.linkCopyFailed")
+                                            )
+                                    );
+                            }}
+                        >
+                            {t("contribution.entry.copyLink")}
+                        </Button>
+                    </>
+                }
+            />
+        </>
+    );
+}

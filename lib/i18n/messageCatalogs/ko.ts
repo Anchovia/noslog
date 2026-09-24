@@ -1810,4 +1810,35 @@ export const koMessages = {
     "contribution.status.applied": "반영됨",
     "contribution.status.rejected": "반려",
     "contribution.rejectReason": "사유: {reason}",
+    "contribution.draft.invalid": "채보 형식이 올바르지 않습니다.",
+    "contribution.draft.locked":
+        "지금은 이 초안을 고칠 수 없습니다. 검토 요청 중이면 먼저 요청을 취소해 주세요.",
+    "contribution.draft.conflict":
+        "다른 창에서 이 초안이 바뀌었습니다. 새로고침한 뒤 다시 시도해 주세요.",
+    "contribution.draft.saved": "저장했습니다.",
+    "contribution.draft.overlap": "겹치는 노트를 고친 뒤 검토를 요청해 주세요.",
+    "contribution.draft.submitted":
+        "검토를 요청했습니다 · 운영자가 확인합니다.",
+    "contribution.draft.withdrawn":
+        "검토 요청을 취소했습니다. 다시 고칠 수 있습니다.",
+    "contribution.comment.invalid": "댓글을 남길 수 없습니다.",
+    "contribution.comment.added": "의견을 남겼습니다.",
+    "contribution.comment.deleted": "의견을 지웠습니다.",
+    "contribution.entry.create": "채보 만들기",
+    "contribution.entry.edit": "고치기",
+    "contribution.entry.myDraft": "내 초안 · {status}",
+    "contribution.entry.wideTitle": "채보 편집은 넓은 화면에서",
+    "contribution.entry.wideBody":
+        "채보 편집기는 PC · 태블릿 가로 화면에서 쓸 수 있습니다. 주소를 복사해 두고 넓은 화면에서 열어 주세요.",
+    "contribution.entry.copyLink": "주소 복사",
+    "contribution.entry.copied": "주소를 복사했습니다.",
+    "contribution.draftStatus.draft": "작성 중",
+    "contribution.draftStatus.submitted": "검토 대기",
+    "contribution.draftStatus.changes_requested": "수정 요청",
+    "contribution.draftStatus.published": "공개",
+    "contribution.section.kind.chart": "채보",
+    "contribution.section.kind.chart_comment": "채보 의견",
+    "contribution.section.chartItem": "채보",
+    "contribution.section.openComments": "남은 의견 {count}개",
+    "contribution.section.publishedPoints": "+{points}점",
 } as const;
