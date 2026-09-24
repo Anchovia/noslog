@@ -296,3 +296,121 @@ export function autoShowcase(earned: readonly EarnedAchievement[]) {
 /** 전체 단계 수 — 「업적 42 / 51」 의 분모 */
 export const ACHIEVEMENT_TIER_TOTAL =
     ACHIEVEMENT_DEFINITIONS.length * ACHIEVEMENT_TIERS.length;
+
+/**
+ * 점수 비공개(2026-09-18 S3) 프로필을 남이 볼 때는 점수에서 나온 업적(실력 · 수집)을 보이지 않는다 —
+ * 단계만으로도 기록 범위가 드러나서. 도전 · 커뮤니티는 기여처럼 그대로 보인다.
+ */
+export const SCORE_BASED_ACHIEVEMENT_CATEGORIES: readonly AchievementCategory[] =
+    ["skill", "collection"];
+
+export function visibleAchievementDefinitions(scoresHidden: boolean) {
+    return scoresHidden
+        ? ACHIEVEMENT_DEFINITIONS.filter(
+              (definition) =>
+                  !SCORE_BASED_ACHIEVEMENT_CATEGORIES.includes(
+                      definition.category
+                  )
+          )
+        : ACHIEVEMENT_DEFINITIONS;
+}
+
+/** 얻은 단계 한 줄 — 날짜는 NosLog 가 확인한 때(2026-09-24 D-a) */
+export interface AchievementRecord {
+    key: string;
+    tier: number;
+    achievedAt: string;
+}
+
+/** 한 사람의 업적 원자료 — 프로필 캐시에 싣고, 요약 · 목록은 여기서 계산한다 */
+export interface AchievementRecords {
+    earned: AchievementRecord[];
+    /** 프로필 머리에 건 업적 키(칸 순서) */
+    pins: string[];
+    /** `${key}:${tier}` → 그 단계를 얻은 사람 수(R1) */
+    recipients: Record<string, number>;
+}
+
+export function recipientKey(key: string, tier: number) {
+    return `${key}:${tier}`;
+}
+
+/** 보는 사람에게 넘길 자료만 — 점수 비공개면 실력 · 수집 줄을 뺀다 */
+export function achievementRecordsForViewer(
+    records: AchievementRecords,
+    scoresHidden: boolean
+): AchievementRecords {
+    if (!scoresHidden) return records;
+    const visible = new Set(
+        visibleAchievementDefinitions(true).map((definition) => definition.key)
+    );
+    return {
+        earned: records.earned.filter((item) => visible.has(item.key)),
+        pins: records.pins.filter((key) => visible.has(key)),
+        recipients: Object.fromEntries(
+            Object.entries(records.recipients).filter(([key]) =>
+                visible.has(key.split(":")[0])
+            )
+        ),
+    };
+}
+
+/** 업적 키별 얻은 가장 높은 단계 */
+export function highestAchievementTiers(earned: readonly AchievementRecord[]) {
+    const tiers = new Map<string, number>();
+    for (const item of earned)
+        if (getAchievementDefinition(item.key))
+            tiers.set(item.key, Math.max(tiers.get(item.key) ?? 0, item.tier));
+    return tiers;
+}
+
+export interface AchievementSummary {
+    /** 얻은 단계 수 · 전체 단계 수 — 「업적 23 / 51」 */
+    earned: number;
+    total: number;
+    /** 동 · 은 · 금 단계 수 */
+    byTier: [number, number, number];
+    /** 머리 진열(P5) — 건 것이 있으면 그것, 없으면 자동 */
+    showcase: { key: string; tier: number }[];
+    /** 최근 얻은 단계(프로필 구역) */
+    recent: AchievementRecord[];
+}
+
+export const ACHIEVEMENT_RECENT_COUNT = 3;
+
+export function summarizeAchievements(
+    records: AchievementRecords,
+    scoresHidden = false
+): AchievementSummary {
+    const definitions = visibleAchievementDefinitions(scoresHidden);
+    const visible = new Set(definitions.map((definition) => definition.key));
+    const earned = records.earned.filter((item) => visible.has(item.key));
+    const highest = highestAchievementTiers(earned);
+    const byTier: [number, number, number] = [0, 0, 0];
+    for (const item of earned)
+        if (item.tier >= 1 && item.tier <= 3) byTier[item.tier - 1] += 1;
+    const pinned = records.pins
+        .filter((key) => highest.has(key))
+        .map((key) => ({ key, tier: highest.get(key) ?? 0 }));
+    const showcase = pinned.length
+        ? pinned
+        : autoShowcase(
+              [...highest].map(([key, tier]) => ({
+                  key,
+                  tier,
+                  recipients: records.recipients[recipientKey(key, tier)],
+              }))
+          ).map(({ key, tier }) => ({ key, tier }));
+    return {
+        earned: earned.length,
+        total: definitions.length * ACHIEVEMENT_TIERS.length,
+        byTier,
+        showcase,
+        recent: [...earned]
+            .sort(
+                (a, b) =>
+                    b.achievedAt.localeCompare(a.achievedAt) || b.tier - a.tier
+            )
+            .slice(0, ACHIEVEMENT_RECENT_COUNT),
+    };
+}

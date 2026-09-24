@@ -5,9 +5,13 @@ import { Prisma } from "@prisma/client";
 import {
     ACHIEVEMENT_DEFINITIONS,
     ACHIEVEMENT_MUSIC_CATEGORIES,
+    ACHIEVEMENT_SHOWCASE_SIZE,
     examGradeScore,
+    getAchievementDefinition,
     newAchievementTiers,
+    recipientKey,
     type AchievementMetrics,
+    type AchievementRecords,
     type AchievementTier,
 } from "@/features/achievements/achievementDefinitions";
 import {
@@ -208,4 +212,111 @@ export async function evaluateUserAchievements(
         skipDuplicates: true,
     });
     return awarded;
+}
+
+/** 한 사람의 얻은 단계 · 건 업적 · 그 단계들의 달성 인원 — 프로필 캐시 · 업적 페이지가 같이 쓴다 */
+export async function getAchievementRecords(
+    userId: number
+): Promise<AchievementRecords> {
+    const [earned, pins] = await Promise.all([
+        db.userAchievement.findMany({
+            where: { user_id: userId },
+            select: { key: true, tier: true, achieved_at: true },
+            orderBy: [{ achieved_at: "desc" }, { tier: "desc" }],
+        }),
+        db.userAchievementShowcase.findMany({
+            where: { user_id: userId },
+            select: { key: true },
+            orderBy: { position: "asc" },
+        }),
+    ]);
+    const counts = earned.length
+        ? await db.userAchievement.groupBy({
+              by: ["key", "tier"],
+              where: {
+                  OR: earned.map((item) => ({
+                      key: item.key,
+                      tier: item.tier,
+                  })),
+              },
+              _count: { _all: true },
+          })
+        : [];
+    return {
+        earned: earned
+            .filter((item) => getAchievementDefinition(item.key))
+            .map((item) => ({
+                key: item.key,
+                tier: item.tier,
+                achievedAt: item.achieved_at.toISOString(),
+            })),
+        pins: pins.map((item) => item.key),
+        recipients: Object.fromEntries(
+            counts.map((row) => [
+                recipientKey(row.key, row.tier),
+                row._count._all,
+            ])
+        ),
+    };
+}
+
+/** 업적 페이지 — 정의별 달성 인원(얻지 않은 단계 포함, 상세 사다리용) */
+export async function getAchievementRecipientCounts() {
+    const rows = await db.userAchievement.groupBy({
+        by: ["key", "tier"],
+        _count: { _all: true },
+    });
+    return Object.fromEntries(
+        rows.map((row) => [recipientKey(row.key, row.tier), row._count._all])
+    );
+}
+
+export type AchievementPinResult =
+    | { status: "ok"; pins: string[] }
+    | { status: "full" | "not-earned" | "unknown" };
+
+/**
+ * 프로필 머리에 걸기 · 빼기(2026-09-24 D1) — 얻은 업적만, 최대 3칸. 빼면 남은 칸을 앞으로 당긴다.
+ * 다 빼면 머리는 다시 자동 진열.
+ */
+export async function setAchievementPinned(
+    userId: number,
+    key: string,
+    pinned: boolean
+): Promise<AchievementPinResult> {
+    if (!getAchievementDefinition(key)) return { status: "unknown" };
+    return db.$transaction(async (tx) => {
+        const current = (
+            await tx.userAchievementShowcase.findMany({
+                where: { user_id: userId },
+                select: { key: true },
+                orderBy: { position: "asc" },
+            })
+        ).map((item) => item.key);
+        let next = current.filter((item) => item !== key);
+        if (pinned && !current.includes(key)) {
+            const earned = await tx.userAchievement.findFirst({
+                where: { user_id: userId, key },
+                select: { id: true },
+            });
+            if (!earned) return { status: "not-earned" as const };
+            if (current.length >= ACHIEVEMENT_SHOWCASE_SIZE)
+                return { status: "full" as const };
+            next = [...current, key];
+        } else if (pinned) {
+            next = current;
+        }
+        await tx.userAchievementShowcase.deleteMany({
+            where: { user_id: userId },
+        });
+        if (next.length)
+            await tx.userAchievementShowcase.createMany({
+                data: next.map((item, index) => ({
+                    user_id: userId,
+                    position: index + 1,
+                    key: item,
+                })),
+            });
+        return { status: "ok" as const, pins: next };
+    });
 }

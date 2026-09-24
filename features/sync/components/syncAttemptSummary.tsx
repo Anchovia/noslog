@@ -1,7 +1,10 @@
 "use client";
 
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
+import Link from "next/link";
 import { StatusMessage } from "@/components/ui/statusMessage";
+import AchievementHex from "@/features/achievements/components/achievementHex";
+import { useAchievementText } from "@/features/achievements/components/useAchievementText";
 import type { SyncAttempt } from "@/features/sync/schemas/syncStatusSchema";
 
 export function syncDateLabel(instant: string) {
@@ -39,12 +42,66 @@ function SyncMetrics({
     );
 }
 
+/** 새 업적 한 줄(2026-09-24 E1) — 3개까지 이름, 넘치면 「외 N개」, 끝에 「업적 보기」 */
+const NEW_ACHIEVEMENTS_SHOWN = 3;
+
+function SyncNewAchievements({
+    items,
+    href,
+}: {
+    items: SyncAttempt["newAchievements"];
+    href?: string;
+}) {
+    const t = useTranslations();
+    const text = useAchievementText();
+    if (!items.length) return null;
+    const rest = items.length - NEW_ACHIEVEMENTS_SHOWN;
+    return (
+        <p className="nl-sync-achievements">
+            <span className="nl-metadata nl-muted">
+                {t("achievement.sync.new")}
+            </span>
+            {items.slice(0, NEW_ACHIEVEMENTS_SHOWN).map((item) => (
+                <span
+                    key={`${item.key}-${item.tier}`}
+                    className="nl-sync-achievements__item"
+                >
+                    <AchievementHex
+                        achievementKey={item.key}
+                        tier={item.tier}
+                        size="inline"
+                    />
+                    <span className="nl-body-secondary">
+                        {text.titled(item.key, item.tier)}
+                    </span>
+                </span>
+            ))}
+            {rest > 0 ? (
+                <span className="nl-body-secondary nl-muted">
+                    {t("achievement.sync.more", { count: rest })}
+                </span>
+            ) : null}
+            {href ? (
+                <Link
+                    href={href}
+                    className="nl-body-secondary nl-link nl-text-link--underlined"
+                >
+                    {t("achievement.sync.view")}
+                </Link>
+            ) : null}
+        </p>
+    );
+}
+
 export default function SyncAttemptSummary({
     attempt,
     compact = false,
+    achievementsHref,
 }: {
     attempt: SyncAttempt;
     compact?: boolean;
+    /** 새 업적 줄의 「업적 보기」 — 내 업적 페이지 */
+    achievementsHref?: string;
 }) {
     const t = useTranslations();
     const locale = useLocale();
@@ -114,7 +171,20 @@ export default function SyncAttemptSummary({
                         label: t("sync.changedCharts"),
                         value: attempt.changedRecords,
                     },
+                    // 새 업적 칸(2026-09-24 E1) — 없으면 칸도 두지 않는다
+                    ...(attempt.newAchievements.length
+                        ? [
+                              {
+                                  label: t("achievement.sync.new"),
+                                  value: attempt.newAchievements.length,
+                              },
+                          ]
+                        : []),
                 ]}
+            />
+            <SyncNewAchievements
+                items={attempt.newAchievements}
+                href={achievementsHref}
             />
             {attempt.scope === "recent" ? (
                 <p className="nl-body-secondary nl-muted">

@@ -13,6 +13,8 @@ import CountryMarker from "@/components/ui/countryMarker";
 import DiscordIcon from "@/components/ui/DiscordIcon";
 import ExamBadge from "@/components/ui/examBadge";
 import ExamBadgeGroup from "@/components/ui/examBadgeGroup";
+import type { AchievementSummary } from "@/features/achievements/achievementDefinitions";
+import AchievementShowcase from "@/features/achievements/components/achievementShowcase";
 import { contributionLevel } from "@/features/contributions/contributionLevel";
 import ProfileShareDialog from "@/features/profile/components/profileShareDialog";
 import { formatProfileDate } from "@/components/profile/dashboard/profileUtils";
@@ -37,12 +39,15 @@ export default function ProfileIdentity({
     mode,
     syncLabel,
     showSyncAction = false,
+    achievements,
 }: {
     user: ProfileUser;
     isOwner: boolean;
     mode: ProfileMode;
     syncLabel?: string;
     showSyncAction?: boolean;
+    /** 업적 요약 — 머리 진열(2026-09-24 P5 · B1) */
+    achievements?: AchievementSummary | null;
 }) {
     const locale = useLocale();
     const href = useLocalizedHref();
@@ -141,6 +146,14 @@ export default function ProfileIdentity({
                                     ).level
                                 }
                             </a>
+                        ) : null}
+                        {/* 업적 진열(2026-09-24 B1) — 명판 · 라벨 뒤에 이어서. 명판 줄이기 폭 계산에는 넣지 않는다(넘치면 다음 줄) */}
+                        {achievements ? (
+                            <AchievementShowcase
+                                userId={user.id}
+                                summary={achievements}
+                                isOwner={isOwner}
+                            />
                         ) : null}
                     </ExamBadgeGroup>
                 </div>

@@ -22,6 +22,7 @@ export function syncFixtureData(state = "full"): SyncStatus {
         insertedPlays: state === "recent" ? 6 : 0,
         changedRecords: state === "large" ? 500 : 1,
         excludedCount: state === "partial" ? 3 : null,
+        newAchievements: [],
     };
     return {
         observedAt: now.toISOString(),

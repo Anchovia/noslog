@@ -158,6 +158,22 @@ export async function getSyncStatus(userId: number, now = new Date()) {
                     take: 3,
                     select: { score: true, chart },
                 });
+    // 새 업적(2026-09-24 E1) — 판정은 동기화 끝에서 하므로 그 시도의 시작 ~ 완료 사이에 얻은 단계
+    const newAchievements =
+        latest?.status === "completed" && latest.completed_at
+            ? await db.userAchievement.findMany({
+                  where: {
+                      user_id: userId,
+                      achieved_at: {
+                          gte: latest.started_at,
+                          lte: latest.completed_at,
+                      },
+                  },
+                  orderBy: [{ tier: "desc" }, { id: "asc" }],
+                  take: 100,
+                  select: { key: true, tier: true },
+              })
+            : [];
     return syncStatusSchema.parse({
         observedAt: now.toISOString(),
         attempts: attempts.map((sync) => {
@@ -178,6 +194,7 @@ export async function getSyncStatus(userId: number, now = new Date()) {
                         ? (playedChanges.get(sync.id) ?? 0)
                         : 0,
                 excludedCount: excluded ? Number(excluded[1]) : null,
+                newAchievements: sync.id === latest?.id ? newAchievements : [],
             };
         }),
         coverage: { played, judgement, timing: timing.length },

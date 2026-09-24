@@ -26,6 +26,8 @@ import type { ProfileOverviewContext } from "@/features/profile/server/profileOv
 import ProfileIdentity from "./profileIdentity";
 import ProfilePlaysList from "./profilePlaysList";
 import ProfileContribution from "@/features/contributions/components/profileContribution";
+import ProfileAchievements from "@/features/achievements/components/profileAchievements";
+import { summarizeAchievements } from "@/features/achievements/achievementDefinitions";
 import ProfileRecordOverview from "./profileRecordOverview";
 
 export default function PublicProfilePage({
@@ -53,10 +55,18 @@ export default function PublicProfilePage({
     const href = useLocalizedHref();
     const params = useSearchParams();
     const pathname = usePathname();
+    const achievements = user.achievements
+        ? summarizeAchievements(user.achievements, Boolean(scoresHidden))
+        : null;
     if (scoresHidden || !overview)
         return (
             <PageContainer className="nl-profile">
-                <ProfileIdentity user={user} isOwner={false} mode="basic" />
+                <ProfileIdentity
+                    user={user}
+                    isOwner={false}
+                    mode="basic"
+                    achievements={achievements}
+                />
                 <div className="nl-profile-empty">
                     <StatusMessage
                         icon={Lock}
@@ -64,6 +74,13 @@ export default function PublicProfilePage({
                         description={t("profile.scoresPrivateBody")}
                     />
                 </div>
+                {achievements ? (
+                    <ProfileAchievements
+                        userId={user.id}
+                        summary={achievements}
+                        isOwner={false}
+                    />
+                ) : null}
                 {/* 기여는 점수 비공개와 별개로 보인다(2026-09-24) */}
                 <ProfileContribution
                     totals={user.contribution}
@@ -98,6 +115,7 @@ export default function PublicProfilePage({
                 isOwner={isOwner}
                 mode={mode}
                 syncLabel={syncLabel}
+                achievements={achievements}
                 showSyncAction={
                     isOwner &&
                     Boolean(
@@ -199,7 +217,7 @@ export default function PublicProfilePage({
                             user={user}
                             judgement={overview.judgement}
                         />
-                        {/* 오른쪽 열 = 최근 플레이 · 기여(넓은 화면), 폰은 그대로 맨 아래(2026-09-24 P1) */}
+                        {/* 오른쪽 열 = 최근 플레이 · 업적 · 기여(넓은 화면), 폰은 그대로 맨 아래(2026-09-24 P1 · 업적 C1) */}
                         <div className="nl-profile-side">
                             {initialRecent?.status !== "hidden" ? (
                                 <ProfilePlaysList
@@ -207,6 +225,13 @@ export default function PublicProfilePage({
                                     kind="recent"
                                     mode="basic"
                                     initialData={initialRecent}
+                                />
+                            ) : null}
+                            {achievements ? (
+                                <ProfileAchievements
+                                    userId={user.id}
+                                    summary={achievements}
+                                    isOwner={isOwner}
                                 />
                             ) : null}
                             <ProfileContribution
@@ -231,6 +256,13 @@ export default function PublicProfilePage({
                     ) : null}
                 </div>
             )}
+            {!hasRecords && achievements ? (
+                <ProfileAchievements
+                    userId={user.id}
+                    summary={achievements}
+                    isOwner={isOwner}
+                />
+            ) : null}
             {hasRecords ? null : (
                 <ProfileContribution
                     totals={user.contribution}

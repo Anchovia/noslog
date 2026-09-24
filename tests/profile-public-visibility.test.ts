@@ -27,6 +27,12 @@ vi.mock("@/features/contributions/server/contributionPointService", () => ({
     }),
 }));
 
+vi.mock("@/features/achievements/server/achievementService", () => ({
+    getAchievementRecords: vi
+        .fn()
+        .mockResolvedValue({ earned: [], pins: [], recipients: {} }),
+}));
+
 import { getCachedProfileData } from "@/app/(nevigation)/profile/[id]/data";
 
 const sourceUser = {

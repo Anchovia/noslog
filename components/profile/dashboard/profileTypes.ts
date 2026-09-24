@@ -1,3 +1,4 @@
+import type { AchievementRecords } from "@/features/achievements/achievementDefinitions";
 import type { ContributionTotals } from "@/features/contributions/contributionLevel";
 export type ProfileMode = "basic" | "recital";
 
@@ -40,6 +41,8 @@ export interface ProfileUser {
     role?: string;
     /** 기여 점수 · 종류별 반영 수(공개, 2026-09-24) */
     contribution?: ContributionTotals;
+    /** 업적 원자료(2026-09-24) — 점수 비공개를 남이 보면 실력 · 수집을 뺀 것 */
+    achievements?: AchievementRecords;
 }
 
 export interface ProfileRankRow {
