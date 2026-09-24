@@ -493,7 +493,7 @@ function drawPlayfield(
 
 /**
  * 가로 박자선(2026-09-25 G1) — 게임처럼 박마다 같은 선이 노트와 함께 내려온다(노트 뒤).
- * 레인 0–28 끝을 같은 원근으로 잇고, 가까울수록 굵게. 색은 판정선 흰색을 옅게
+ * 레인 0–28 끝을 같은 원근으로 잇고, 가까울수록 굵게. 색은 판정선 흰색 30%(레인 안내선과 비슷한 무게, 2026-09-25 O2)
  */
 function drawBeatLines(
     graphics: Graphics,
@@ -527,7 +527,7 @@ function drawBeatLines(
             .stroke({
                 color: colors.judgment,
                 width: 2 * (0.6 + 0.8 * progress),
-                alpha: 0.55,
+                alpha: 0.3,
             });
     }
 }
