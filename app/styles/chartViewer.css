@@ -5,11 +5,46 @@
     padding-block: var(--nl-spacing-32) var(--nl-spacing-48);
     min-width: 0;
 }
+/* 머리(2026-09-26 A) — 무대 아래. 제목 묶음 →12→ 채보 · 동작 줄 →12→ 정보 상자 (→12→ Safari 경고) */
 .noslog-ui .nl-chart-viewer__head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-12);
+    min-width: 0;
+}
+.noslog-ui .nl-chart-viewer__titles {
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-4);
     min-width: 0;
+}
+/* 채보 줄 — 왼쪽 「채보 · 이름 [라벨]」, 오른쪽 끝 동작 버튼(보조 M, 사이 8). 좁아 넘치면 다음 줄 */
+.noslog-ui .nl-chart-viewer__byline-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--nl-spacing-8) var(--nl-spacing-16);
+    min-width: 0;
+}
+.noslog-ui .nl-chart-viewer__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+    margin-inline-start: auto;
+}
+/* 정보 상자 — 면 · 모서리 8 · 안쪽 12 16, 줄 사이 8 */
+.noslog-ui .nl-chart-viewer__info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
+    padding: var(--nl-spacing-12) var(--nl-spacing-16);
+    border-radius: var(--nl-radius-container);
+    background: var(--nl-surface-surface);
+}
+.noslog-ui .nl-chart-viewer__info > p {
+    margin: 0;
 }
 /* 출처 표기(2026-09-24 C2) — 아티스트 아래 「채보 · 이름 [운영자]」, 메타 아래 「노트 배치 · 영상에서 추출 … 출처 보기 ›」.
    태그(24)는 글자 줄(20)을 늘리지 않게 위아래로 당긴다(채보 정보 기여 칸과 같은 방식) */
@@ -25,23 +60,6 @@
     margin-block: calc(
         (var(--nl-type-line-height-20) - var(--nl-spacing-24)) / 2
     );
-}
-.noslog-ui .nl-chart-viewer__source {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--nl-spacing-8);
-}
-/* 머리 링크 묶음(2026-09-24 A1) — 「고치기 ›」 · 「출처 보기 ›」 를 줄 오른쪽 끝에, 사이 16 */
-.noslog-ui .nl-chart-viewer__links {
-    display: flex;
-    align-items: center;
-    gap: var(--nl-spacing-16);
-    margin-left: auto;
-}
-.noslog-ui .nl-chart-viewer__links .nl-heading-link {
-    margin-left: 0;
 }
 /* 의견 시각을 누르면 캔버스 위 끝으로 올린다 — 고정 머리(60) + 16 만큼 비운다(의견 줄과 같은 값) */
 .noslog-ui .nl-chart-viewer__stage {
@@ -77,11 +95,6 @@
     min-width: 0;
     overflow-wrap: anywhere;
 }
-.noslog-ui .nl-chart-viewer__controls {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-12);
-}
 .noslog-ui .nl-chart-viewer__legend {
     display: flex;
     flex-wrap: wrap;
@@ -109,9 +122,13 @@
     margin: 0;
 }
 
+/* 무대 폭 = 폭 가득, 단 첫 화면 안에 들어오도록 높이에서 유도한 폭까지(유튜브 플레이어처럼).
+   176 = 헤더 60 + 위 여백 32 + 돌아가기 44 + 간격 24 + 아래 숨 16 */
 .noslog-ui .nl-chart-stage {
     display: flex;
     flex-direction: column;
+    width: min(100%, calc((100dvh - 176px) * 16 / 9));
+    margin-inline: auto;
     overflow: hidden;
     border-radius: var(--nl-radius-container);
     background: var(--nl-surface-surface);
@@ -127,10 +144,6 @@
    조작 줄은 아래에 겹쳐 뜨고, 재생 중 가만히 있으면 즉시 숨는다(움직임 없음) */
 .noslog-ui .nl-chart-stage__screen {
     position: relative;
-}
-/* 조작부 첫 줄 오른쪽 끝 — 320 처럼 줄이 넘치면 다음 줄 오른쪽 끝으로 */
-.noslog-ui .nl-chart-stage__fullscreen {
-    margin-inline-start: auto;
 }
 .noslog-ui .nl-chart-stage__screen[data-fullscreen] {
     display: flex;
@@ -171,21 +184,52 @@
     box-shadow: var(--nl-overlay-shadow);
     z-index: 110;
 }
+/* 조작 줄(2026-09-26 A, 유튜브와 같게) — 인라인 · 전체화면 모두 무대 아래쪽에 겹친다.
+   판 = 아래에서 위로 옅어지는 미디어 판(`surface/media-scrim` → 투명), 재생 막대 한 줄 → 버튼 줄(사이 4).
+   빈 곳을 누르면 무대로 지나가(재생 · 일시정지) 버튼 · 막대만 받는다 */
 .noslog-ui .nl-chart-stage__overlay {
     position: absolute;
     inset-inline: 0;
     bottom: 0;
     display: flex;
-    align-items: center;
-    gap: var(--nl-spacing-12);
-    padding: var(--nl-spacing-12) var(--nl-spacing-16);
+    flex-direction: column;
+    gap: var(--nl-spacing-4);
+    padding: var(--nl-spacing-32) var(--nl-spacing-8) var(--nl-spacing-4);
     color: var(--nl-content-on-media);
-    background: var(--nl-surface-media-scrim);
+    background: linear-gradient(
+        to top,
+        var(--nl-surface-media-scrim),
+        transparent
+    );
+    pointer-events: none;
+}
+.noslog-ui .nl-chart-stage__overlay > * {
+    pointer-events: auto;
 }
 .noslog-ui .nl-chart-stage__overlay[hidden] {
     display: none;
 }
-/* 미디어 위 버튼 — 어두운 판 안 44(사진 넘김 버튼과 같은 규격, 2026-09-14 부품 결정 ①) */
+.noslog-ui .nl-chart-stage__bar {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-4);
+    min-width: 0;
+}
+/* 시각 / 길이 — 뒤 버튼들을 오른쪽 끝으로 민다. 아주 좁으면 길이부터 잘린다 */
+.noslog-ui .nl-chart-stage__time {
+    flex: 0 1 auto;
+    min-width: 0;
+    margin-inline: var(--nl-spacing-8) auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+/* 노트 속도 값 버튼 — 글자 폭만큼 */
+.noslog-ui .nl-chart-stage__media-button.nl-chart-stage__speed {
+    width: auto;
+    padding-inline: var(--nl-spacing-8);
+}
+/* 미디어 위 버튼 — 44(사진 넘김 버튼과 같은 규격, 2026-09-14 부품 결정 ①). 조작 줄 판이 어두우므로 버튼 판은 두지 않는다(2026-09-26) */
 .noslog-ui .nl-chart-stage__media-button {
     display: inline-flex;
     flex-shrink: 0;
@@ -196,8 +240,13 @@
     border: 0;
     border-radius: var(--nl-radius-control);
     color: var(--nl-content-on-media);
-    background: var(--nl-surface-media-scrim);
+    background: transparent;
     cursor: pointer;
+}
+@media (hover: hover) {
+    .noslog-ui .nl-chart-stage__media-button:hover {
+        background: var(--nl-interaction-hover);
+    }
 }
 .noslog-ui .nl-chart-stage__media-button:focus-visible {
     outline: var(--nl-stroke-strong) solid var(--nl-content-on-media);
@@ -225,26 +274,6 @@
     position: absolute;
     inset: 0;
 }
-.noslog-ui .nl-chart-stage__controls {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-12);
-    padding: var(--nl-spacing-16);
-    box-shadow: inset 0 var(--nl-stroke-default) var(--nl-border-divider);
-}
-.noslog-ui .nl-chart-stage__transport {
-    display: flex;
-    align-items: center;
-    gap: var(--nl-spacing-12);
-    min-width: 0;
-}
-.noslog-ui .nl-chart-stage__time {
-    flex-shrink: 0;
-    min-width: 64px;
-}
-.noslog-ui .nl-chart-stage__time:first-of-type {
-    text-align: right;
-}
 /* 재생 막대 + 의견 시각 눈금(2026-09-24 D1) */
 .noslog-ui .nl-chart-stage__seek-track {
     position: relative;
@@ -252,6 +281,7 @@
     align-items: center;
     flex: 1;
     min-width: 0;
+    margin-inline: var(--nl-spacing-8);
 }
 /* 눈금 = 경고 표시색 2 × 12(범례 점과 같은 높이) · 누르지 않음 — 누르는 곳은 아래 의견 목록의 시각 */
 .noslog-ui .nl-chart-stage__marker {
@@ -330,15 +360,6 @@
         inset 0 0 0 var(--nl-stroke-default) var(--nl-primary-on-primary),
         0 0 0 8px var(--nl-state-halo);
 }
-.noslog-ui .nl-chart-stage__options {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--nl-spacing-8) var(--nl-spacing-16);
-}
-.noslog-ui .nl-chart-stage__options .nl-button {
-    cursor: pointer;
-}
 .noslog-ui .nl-chart-stage__option {
     display: inline-flex;
     align-items: center;
@@ -353,12 +374,22 @@
     min-width: 40px;
     text-align: right;
 }
+/* 설정 창 안 로컬 음원 — 버튼 →4→ 파일 이름(없으면 안내). 창 폭을 늘리지 않게 280 안에서 줄바꿈 */
+.noslog-ui .nl-chart-stage__audio {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--nl-spacing-4);
+    max-width: 280px;
+}
+.noslog-ui .nl-chart-stage__audio .nl-button {
+    cursor: pointer;
+}
 .noslog-ui .nl-chart-stage__file {
+    max-width: 100%;
     margin: 0;
     min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    overflow-wrap: anywhere;
 }
 .noslog-ui .nl-chart-stage__error {
     margin: 0;
@@ -382,6 +413,12 @@
     align-items: center;
     justify-content: space-between;
     gap: var(--nl-spacing-12);
+}
+/* 「낙하형」(보기 전환, 2026-09-26) · 전체화면 — 사이 8 */
+.noslog-ui .nl-chart-strip__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-8);
 }
 /* 전체화면 — 띠가 화면을 채운다(안쪽 16 · 틀은 남는 높이 전체). 열 폭 · 배율 상한 2.0 은 그대로라 한 번에 보이는 마디가 는다 */
 .noslog-ui .nl-chart-strip[data-fullscreen] {
@@ -523,16 +560,18 @@
     transition: none;
 }
 
+/* 좁은 화면(2026-09-26 A) — 낙하형 무대는 화면 끝까지(유튜브 앱처럼 모서리 없음), 조작 줄은 처음으로 · 속도 값을 빼고
+   재생 · 시각 · 전체 악보 · 설정 · 전체화면만(처음으로는 막대 · ← 로, 속도는 설정 창에서) */
 @media (max-width: 671px) {
-    .noslog-ui .nl-chart-stage__transport {
-        flex-wrap: wrap;
+    .noslog-ui .nl-chart-viewer__stage[data-view="falling"] {
+        margin-inline: calc(-1 * var(--nl-layout-margin));
     }
-    .noslog-ui .nl-chart-stage__transport .nl-chart-stage__seek-track {
-        order: -1;
-        flex-basis: 100%;
+    .noslog-ui .nl-chart-viewer__stage[data-view="falling"] .nl-chart-stage {
+        border-radius: 0;
     }
-    .noslog-ui .nl-chart-stage__time:last-of-type {
-        margin-inline-start: auto;
+    .noslog-ui .nl-chart-stage__restart,
+    .noslog-ui .nl-chart-stage__speed {
+        display: none;
     }
 }
 

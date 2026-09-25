@@ -1650,7 +1650,6 @@ export const jaMessages = {
     "chart.savedRevision": "保存 v{revision}",
     "chart.publishedRevision": "公開 v{revision}",
     "chart.noteCount": "ノート {count}個",
-    "chart.viewMode": "譜面表示形式",
     "chart.falling": "落下表示",
     "chart.sheet": "全譜面",
     "chart.safariHelp":
@@ -1668,6 +1667,7 @@ export const jaMessages = {
     "chart.fullscreen": "全画面表示",
     "chart.exitFullscreen": "全画面表示を終了",
     "chart.settings": "再生設定",
+    "chart.share": "共有",
     "chart.localAudio": "ローカル音源",
     "chart.noteSpeed": "ノート速度",
     "chart.metronome": "メトロノーム",

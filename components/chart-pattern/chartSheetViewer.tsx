@@ -1,6 +1,7 @@
 "use client";
 
-import { ChevronRight } from "lucide-react";
+import { Info, Pencil, Share2 } from "lucide-react";
+import { toast } from "sonner";
 
 import { useQuery } from "@tanstack/react-query";
 import BackLink from "@/components/ui/backLink";
@@ -8,8 +9,8 @@ import { useMemo, useRef, useState, useSyncExternalStore } from "react";
 
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import PageContainer from "@/components/layout/pageContainer";
+import Button, { foundationButtonClass } from "@/components/ui/Button";
 import ModalDialog from "@/components/ui/modalDialog";
-import { SegmentedControl } from "@/components/ui/segmentedControl";
 import { StatusMessage } from "@/components/ui/statusMessage";
 import ChartComments, {
     chartCommentsOptions,
@@ -214,24 +215,49 @@ export default function ChartSheetViewer({
         );
         stageRef.current?.scrollIntoView({ block: "start" });
     };
-    const links = contribution ? (
-        <div className="nl-chart-viewer__links">
-            <ChartDraftEntry
-                chartId={contribution.chartId}
-                draftHref={contribution.draftHref}
-                loginHref={contribution.loginHref}
-                signedIn={contribution.signedIn}
-                label={t("contribution.entry.edit")}
-                className="nl-heading-link nl-control"
-                chevron={<ChevronRight aria-hidden />}
-            />
+    // 무대 아래 동작 버튼(2026-09-26 A, 유튜브 채널 줄의 버튼 자리) — 고치기 · 출처(영상 추출만) · 공유
+    const actionClass = foundationButtonClass({
+        variant: "secondary",
+        size: "sm",
+    });
+    async function copyLink() {
+        const url = new URL(window.location.href);
+        url.searchParams.delete("t");
+        try {
+            await navigator.clipboard.writeText(url.href);
+            toast.success(t("tiers.linkCopied"));
+        } catch {
+            toast.error(t("tiers.linkCopyFailed"));
+        }
+    }
+    const actions = (
+        <div className="nl-chart-viewer__actions">
+            {contribution ? (
+                <ChartDraftEntry
+                    chartId={contribution.chartId}
+                    draftHref={contribution.draftHref}
+                    loginHref={contribution.loginHref}
+                    signedIn={contribution.signedIn}
+                    label={t("contribution.entry.edit")}
+                    className={actionClass}
+                    icon={<Pencil className="nl-icon" aria-hidden />}
+                />
+            ) : null}
             {source?.extracted ? sourceDialog() : null}
+            {preview ? null : (
+                <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => void copyLink()}
+                >
+                    <Share2 className="nl-icon" aria-hidden />
+                    {t("chart.share")}
+                </Button>
+            )}
         </div>
-    ) : source?.extracted ? (
-        sourceDialog()
-    ) : null;
+    );
     const metadata = (
-        <p className="nl-metadata nl-muted">
+        <p className="nl-body-secondary">
             {t("chart.noteCount", {
                 count: document.notes.length.toLocaleString(numberLocale),
             })}
@@ -256,12 +282,9 @@ export default function ChartSheetViewer({
                 onOpenChange={setSourceOpen}
                 title={t("chart.source.title")}
                 trigger={
-                    <button
-                        type="button"
-                        className="nl-heading-link nl-control"
-                    >
+                    <button type="button" className={actionClass}>
+                        <Info className="nl-icon" aria-hidden />
                         {t("chart.source.open")}
-                        <ChevronRight aria-hidden />
                     </button>
                 }
             >
@@ -340,85 +363,12 @@ export default function ChartSheetViewer({
     return (
         <PageContainer className="noslog-ui nl-chart-viewer">
             <BackLink href={backHref}>{t("chart.back")}</BackLink>
-            <header className="nl-chart-viewer__head">
-                <div className="nl-chart-viewer__title-row">
-                    <h1 className="nl-page-title">{title}</h1>
-                    <span className={`nl-control ${difficultyClass}`}>
-                        {difficulty} · Lv {level}
-                    </span>
-                    {preview ? (
-                        <span className="nl-metadata nl-muted">
-                            {t("chart.preview")}
-                        </span>
-                    ) : null}
-                </div>
-                {localizedTitle ? (
-                    <p className="nl-body-secondary nl-muted">
-                        {localizedTitle}
-                    </p>
-                ) : null}
-                <p className="nl-body-secondary">
-                    {artist ?? t("chart.unknownArtist")}
-                </p>
-                {source?.author ? (
-                    <p className="nl-chart-viewer__byline nl-body-secondary">
-                        {t("chart.source.author", { name: source.author.name })}
-                        <ContributionLabel label={source.author.label} />
-                    </p>
-                ) : null}
-                {/* 영상 추출이 아니면 링크(「고치기 ›」)는 메타 줄 오른쪽 끝, 영상 추출이면 출처 줄 오른쪽 끝(2026-09-24 A1) */}
-                {links && !source?.extracted ? (
-                    <div className="nl-chart-viewer__source">
-                        {metadata}
-                        {links}
-                    </div>
-                ) : (
-                    metadata
-                )}
-                {source?.extracted ? (
-                    <div className="nl-chart-viewer__source">
-                        <span className="nl-metadata nl-muted">
-                            {t("chart.source.extracted")}
-                        </span>
-                        {links}
-                    </div>
-                ) : null}
-            </header>
-
-            <div className="nl-chart-viewer__controls">
-                <SegmentedControl
-                    label={t("chart.viewMode")}
-                    value={effectiveViewMode}
-                    onValueChange={setViewMode}
-                    options={[
-                        {
-                            value: "falling",
-                            label: t("chart.falling"),
-                            disabled: browserSupport !== "supported",
-                        },
-                        { value: "sheet", label: t("chart.sheet") },
-                    ]}
-                />
-                {/* 낙하형 · 전체 악보 도움말(파란 안내 창)은 두지 않는다(2026-09-25, 사용자) — Safari 경고만 */}
-                {browserSupport === "safari" ? (
-                    <StatusMessage
-                        severity="warning"
-                        title={t("chart.safariHelp")}
-                    />
-                ) : null}
-                <div className="nl-chart-viewer__legend">
-                    <Legend
-                        color={handColors.left}
-                        label={t("chart.leftHand")}
-                    />
-                    <Legend
-                        color={handColors.right}
-                        label={t("chart.rightHand")}
-                    />
-                </div>
-            </div>
-
-            <div ref={stageRef} className="nl-chart-viewer__stage">
+            {/* 무대 먼저(2026-09-26 A, 유튜브 시청 페이지) — 조작은 무대 위에 겹치고, 곡 정보 · 동작은 무대 아래 */}
+            <div
+                ref={stageRef}
+                className="nl-chart-viewer__stage"
+                data-view={effectiveViewMode}
+            >
                 {browserSupport === "checking" ? (
                     <div className="nl-chart-viewer__placeholder" aria-busy />
                 ) : effectiveViewMode === "falling" ? (
@@ -433,6 +383,7 @@ export default function ChartSheetViewer({
                             seekRequest={seekRequest}
                             markers={contribution ? markers : undefined}
                             onTimeChange={clock.set}
+                            onShowSheet={() => setViewMode("sheet")}
                         />
                     )
                 ) : (
@@ -441,9 +392,74 @@ export default function ChartSheetViewer({
                         document={document}
                         measureMarkers={measureMarkers}
                         durationMs={playbackDurationMs}
+                        onShowFalling={
+                            browserSupport === "supported"
+                                ? () => setViewMode("falling")
+                                : undefined
+                        }
                     />
                 )}
             </div>
+            <header className="nl-chart-viewer__head">
+                <div className="nl-chart-viewer__titles">
+                    <div className="nl-chart-viewer__title-row">
+                        <h1 className="nl-page-title">{title}</h1>
+                        <span className={`nl-control ${difficultyClass}`}>
+                            {difficulty} · Lv {level}
+                        </span>
+                        {preview ? (
+                            <span className="nl-metadata nl-muted">
+                                {t("chart.preview")}
+                            </span>
+                        ) : null}
+                    </div>
+                    {localizedTitle ? (
+                        <p className="nl-body-secondary nl-muted">
+                            {localizedTitle}
+                        </p>
+                    ) : null}
+                    <p className="nl-body-secondary">
+                        {artist ?? t("chart.unknownArtist")}
+                    </p>
+                </div>
+                <div className="nl-chart-viewer__byline-row">
+                    {source?.author ? (
+                        <p className="nl-chart-viewer__byline nl-body-secondary">
+                            {t("chart.source.author", {
+                                name: source.author.name,
+                            })}
+                            <ContributionLabel label={source.author.label} />
+                        </p>
+                    ) : null}
+                    {actions}
+                </div>
+                {/* 정보 상자 — 노트 수 · 버전 · 길이 → 영상 추출 → 손 범례 */}
+                <div className="nl-chart-viewer__info">
+                    {metadata}
+                    {source?.extracted ? (
+                        <p className="nl-metadata nl-muted">
+                            {t("chart.source.extracted")}
+                        </p>
+                    ) : null}
+                    <div className="nl-chart-viewer__legend">
+                        <Legend
+                            color={handColors.left}
+                            label={t("chart.leftHand")}
+                        />
+                        <Legend
+                            color={handColors.right}
+                            label={t("chart.rightHand")}
+                        />
+                    </div>
+                </div>
+                {/* Safari 에서 낙하형을 못 쓴다는 경고만(2026-09-25) */}
+                {browserSupport === "safari" ? (
+                    <StatusMessage
+                        severity="warning"
+                        title={t("chart.safariHelp")}
+                    />
+                ) : null}
+            </header>
             {contribution ? (
                 <ChartComments
                     chartId={contribution.chartId}

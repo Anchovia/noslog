@@ -35,6 +35,7 @@ export default function ChartDraftEntry({
     signedIn,
     label,
     className,
+    icon,
     chevron,
 }: {
     chartId: number;
@@ -44,6 +45,8 @@ export default function ChartDraftEntry({
     /** 초안이 없을 때 글자 — 「채보 만들기」 · 「고치기」 */
     label: string;
     className: string;
+    /** 글자 앞 아이콘 — 채보 뷰어 동작 버튼(2026-09-26) */
+    icon?: ReactNode;
     chevron?: ReactNode;
 }) {
     const t = useTranslations();
@@ -59,6 +62,7 @@ export default function ChartDraftEntry({
     if (!signedIn)
         return (
             <Link href={loginHref} className={className}>
+                {icon}
                 {label}
                 {chevron}
             </Link>
@@ -75,6 +79,7 @@ export default function ChartDraftEntry({
                     setNarrow(true);
                 }}
             >
+                {icon}
                 {text}
                 {chevron}
             </Link>

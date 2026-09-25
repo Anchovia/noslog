@@ -1636,7 +1636,6 @@ export const koMessages = {
     "chart.savedRevision": "저장 v{revision}",
     "chart.publishedRevision": "공개 v{revision}",
     "chart.noteCount": "노트 {count}개",
-    "chart.viewMode": "채보 보기 방식",
     "chart.falling": "낙하형",
     "chart.sheet": "전체 악보",
     "chart.safariHelp":
@@ -1654,6 +1653,7 @@ export const koMessages = {
     "chart.fullscreen": "전체화면",
     "chart.exitFullscreen": "전체화면 끝내기",
     "chart.settings": "재생 설정",
+    "chart.share": "공유",
     "chart.localAudio": "로컬 음원",
     "chart.noteSpeed": "노트 속도",
     "chart.metronome": "메트로놈",

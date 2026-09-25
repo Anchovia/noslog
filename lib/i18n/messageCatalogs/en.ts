@@ -1655,7 +1655,6 @@ export const enMessages = {
     "chart.savedRevision": "Saved v{revision}",
     "chart.publishedRevision": "Published v{revision}",
     "chart.noteCount": "{count} notes",
-    "chart.viewMode": "Chart view mode",
     "chart.falling": "Falling",
     "chart.sheet": "Full Chart",
     "chart.safariHelp":
@@ -1673,6 +1672,7 @@ export const enMessages = {
     "chart.fullscreen": "Full screen",
     "chart.exitFullscreen": "Exit full screen",
     "chart.settings": "Playback settings",
+    "chart.share": "Share",
     "chart.localAudio": "Local Audio",
     "chart.noteSpeed": "Note Speed",
     "chart.metronome": "Metronome",
