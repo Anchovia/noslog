@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 import {
     useLocale,
@@ -23,6 +24,8 @@ export default function ProfilePinned({
     const t = useTranslations();
     const locale = useLocale();
     const href = useLocalizedHref();
+    const mode =
+        useSearchParams().get("mode") === "recital" ? "recital" : "basic";
     if (!pinned.items.length) return null;
     return (
         <section
@@ -80,18 +83,29 @@ export default function ProfilePinned({
                                     </q>
                                 ) : null}
                             </span>
-                            {play.chartRank !== null ? (
-                                <span className="nl-profile-pinned__rank nl-metadata nl-muted">
-                                    <span className="sr-only">
-                                        {t("profile.column.chartRank")}{" "}
+                            {/* 오른쪽 = Grd(지금 모드) 위 · 곡 순위 아래 — 베스트 성과 폰 줄과 같은 자리(2026-09-26, 사용자) */}
+                            <span className="nl-profile-pinned__side">
+                                {play.grades[mode] !== null ? (
+                                    <span className="nl-metric-value">
+                                        {Math.round(
+                                            play.grades[mode]!
+                                        ).toLocaleString(locale)}{" "}
+                                        Grd
                                     </span>
-                                    {t("profile.pinned.chartRank", {
-                                        rank: play.chartRank.toLocaleString(
-                                            locale
-                                        ),
-                                    })}
-                                </span>
-                            ) : null}
+                                ) : null}
+                                {play.chartRank !== null ? (
+                                    <span className="nl-profile-pinned__rank nl-metadata nl-muted">
+                                        <span className="sr-only">
+                                            {t("profile.column.chartRank")}{" "}
+                                        </span>
+                                        {t("profile.pinned.chartRank", {
+                                            rank: play.chartRank.toLocaleString(
+                                                locale
+                                            ),
+                                        })}
+                                    </span>
+                                ) : null}
+                            </span>
                         </Link>
                     </li>
                 ))}

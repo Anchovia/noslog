@@ -7,12 +7,11 @@ import { ScoreGrade } from "@/features/music/components/chartLeaderboard";
 import JudgementMarker, {
     judgementLabels,
 } from "@/components/ui/judgementMarker";
-import BarList from "@/components/ui/barList";
 import type { ProfileUser } from "@/components/profile/dashboard/profileTypes";
 import type { ProfileStats } from "@/features/profile/schemas/profileStatsSchema";
 
 /**
- * 「통계」 탭의 기록 구역(2026-09-26) — 랭크 분포(공식 사이트 랭크 수 + FC 막대 · 플레이 횟수, 막대 = 등급 색) · 판정 요약 · 노트 종류별 성공률.
+ * 「통계」 탭의 기록 구역(2026-09-26) — 랭크 분포(공식 사이트 랭크 수 + FC 막대 · 플레이 횟수, 막대 = 등급 색) · 판정 요약.
  * 개요 옆 열에 있던 「기록 개요」 를 나눠 옮겼다(개요 옆 열은 레벨별 달성 요약)
  */
 export function ProfileRankDistribution({
@@ -216,43 +215,6 @@ export function ProfileJudgementSummary({
                     {t("profile.judgementEmpty")}
                 </p>
             )}
-        </section>
-    );
-}
-
-/** 노트 종류별 성공률 — 그 노트가 있는 채보의 베스트 기록 평균(막대 목록, 값 소수 한 자리) */
-export function ProfileNoteRates({ notes }: { notes: ProfileStats["notes"] }) {
-    const locale = useLocale();
-    const t = useTranslations();
-    return (
-        <section
-            className="nl-profile-section nl-profile-notes"
-            aria-labelledby="profile-notes-title"
-        >
-            <div className="nl-profile-judgement-header">
-                <h2 id="profile-notes-title" className="nl-section-title">
-                    {t("profile.notes.title")}
-                </h2>
-                <p className="nl-metadata nl-muted">
-                    {t("profile.notes.basis")}
-                </p>
-            </div>
-            <BarList
-                label={t("profile.notes.title")}
-                max={100}
-                rows={notes.map((note) => ({
-                    key: note.key,
-                    label: t(`music.filter.${note.key}`),
-                    value: note.rate,
-                    display:
-                        note.rate === null
-                            ? "—"
-                            : `${note.rate.toLocaleString(locale, {
-                                  minimumFractionDigits: 1,
-                                  maximumFractionDigits: 1,
-                              })}%`,
-                }))}
-            />
         </section>
     );
 }

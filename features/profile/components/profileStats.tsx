@@ -11,13 +11,12 @@ import ProfileLevels from "./profileLevels";
 import ProfileProgress from "./profileProgress";
 import {
     ProfileJudgementSummary,
-    ProfileNoteRates,
     ProfileRankDistribution,
 } from "./profileRecordOverview";
 
 /**
- * 프로필 「통계」 탭(2026-09-26) — 넓은 화면: 성장 추이(2) | 레벨별 달성(1), 아래 판정 · 랭크 · 노트 세 칸.
- * 태블릿: 레벨별 달성 → 성장 추이 → 판정 | 랭크 → 노트, 폰: 한 줄로 같은 순서. 모드는 성장 추이만 바꾼다
+ * 프로필 「통계」 탭(2026-09-26) — 넓은 화면: 성장 추이(2) | 레벨별 달성(1, 두 줄), 성장 추이 아래 판정 | 랭크.
+ * 태블릿: 레벨별 달성 → 성장 추이 → 판정 | 랭크, 폰: 한 줄로 같은 순서. 노트 종류별 성공률은 뺐다(사용자). 모드는 성장 추이만 바꾼다
  */
 export default function ProfileStats({
     user,
@@ -57,7 +56,6 @@ export default function ProfileStats({
                 user={user}
                 privatePlayCount={privatePlayCount}
             />
-            <ProfileNoteRates notes={stats.notes} />
         </div>
     );
 }

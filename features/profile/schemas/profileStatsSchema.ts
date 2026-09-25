@@ -1,18 +1,23 @@
 import { z } from "zod";
 
-/** 레벨별 달성의 램프 · 랭크 칸(2026-09-26 R2) — 「안 함」 은 수록 채보 수에서 뺀 나머지 */
-export const PROFILE_LAMP_KEYS = ["pianist", "fc", "clear", "fail"] as const;
-export const PROFILE_RANK_KEYS = ["P", "S", "A+", "A", "B"] as const;
-export type ProfileLampKey = (typeof PROFILE_LAMP_KEYS)[number];
-export type ProfileRankKey = (typeof PROFILE_RANK_KEYS)[number];
+/** 레벨별 달성 한 막대의 칸(2026-09-26 L1) — 채보마다 가장 높은 한 칸: Pianist(= P) → FC → S → A+ → A → B 이하.
+ * 「실패」 는 따로 세지 않고(그 판의 랭크 칸), 「안 함」 은 수록 채보 수에서 뺀 나머지 */
+export const PROFILE_TIER_KEYS = [
+    "pianist",
+    "fc",
+    "S",
+    "A+",
+    "A",
+    "B",
+] as const;
+export type ProfileTierKey = (typeof PROFILE_TIER_KEYS)[number];
 
 const count = z.number().int().min(0);
 const levelRowSchema = z.object({
     difficulty: z.string(),
     level: z.number().int(),
     total: count,
-    lamp: z.record(z.enum(PROFILE_LAMP_KEYS), count),
-    rank: z.record(z.enum(PROFILE_RANK_KEYS), count),
+    tiers: z.record(z.enum(PROFILE_TIER_KEYS), count),
 });
 export type ProfileLevelRow = z.infer<typeof levelRowSchema>;
 
@@ -28,13 +33,6 @@ export const profileStatsSchema = z.object({
         }),
         chartCount: count,
     }),
-    notes: z.array(
-        z.object({
-            key: z.enum(["standard", "tenuto", "glissando", "trill"]),
-            rate: z.number().min(0).max(100).nullable(),
-            charts: count,
-        })
-    ),
     played: count,
 });
 export type ProfileStats = z.infer<typeof profileStatsSchema>;

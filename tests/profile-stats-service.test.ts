@@ -16,8 +16,7 @@ vi.mock("@/lib/db", () => ({
 
 import {
     getProfileStats,
-    playLamp,
-    playRankKey,
+    playTier,
 } from "@/features/profile/server/profileStatsService";
 import {
     getProfileActivity,
@@ -54,22 +53,17 @@ function play(
 
 describe("profile stats", () => {
     beforeEach(() => vi.clearAllMocks());
-    it("lamp = Pianist > FC > clear, fail only when the clear count is known to be zero", () => {
-        expect(playLamp({ fc_type: 3, clear_count: 0 })).toBe("pianist");
-        expect(playLamp({ fc_type: 2, clear_count: 0 })).toBe("fc");
-        expect(playLamp({ fc_type: 0, clear_count: 4 })).toBe("clear");
-        expect(playLamp({ fc_type: 0, clear_count: null })).toBe("clear");
-        expect(playLamp({ fc_type: 0, clear_count: 0 })).toBe("fail");
-        expect(["P", "S", "A2", "A", "B2", "C"].map(playRankKey)).toEqual([
-            "P",
-            "S",
-            "A+",
-            "A",
-            "B",
-            "B",
-        ]);
+    it("one bar: Pianist > FC > rank, a failed play goes to its rank", () => {
+        expect(playTier({ fc_type: 3, rank: "S" })).toBe("pianist");
+        expect(playTier({ fc_type: 0, rank: "P" })).toBe("pianist");
+        expect(playTier({ fc_type: 2, rank: "A" })).toBe("fc");
+        expect(
+            ["S", "A2", "A", "B2", "C"].map((rank) =>
+                playTier({ fc_type: 0, rank })
+            )
+        ).toEqual(["S", "A+", "A", "B", "B"]);
     });
-    it("counts lamps and ranks per difficulty level against every listed chart, REAL rows last", async () => {
+    it("counts one-bar groups per difficulty level against every listed chart, REAL rows last", async () => {
         mocks.charts.mockResolvedValue([
             { difficulty: "Real", level: 3, _count: { _all: 4 } },
             { difficulty: "Expert", level: 12, _count: { _all: 10 } },
@@ -86,20 +80,10 @@ describe("profile stats", () => {
         ).toEqual(["expert:12", "real:3"]);
         expect(stats.levels[0]).toMatchObject({
             total: 10,
-            lamp: { pianist: 1, fc: 1, clear: 0, fail: 1 },
-            rank: { P: 1, S: 1, "A+": 1, A: 0, B: 0 },
+            tiers: { pianist: 1, fc: 1, S: 0, "A+": 1, A: 0, B: 0 },
         });
         expect(stats.judgement.chartCount).toBe(4);
         expect(stats.judgement.counts.sjust).toBe(360);
-        // 만분율 평균 → % · 그 노트가 없는 채보(null)는 빼고
-        expect(stats.notes.find((note) => note.key === "trill")).toEqual({
-            key: "trill",
-            rate: 95,
-            charts: 2,
-        });
-        expect(
-            stats.notes.find((note) => note.key === "tenuto")?.rate
-        ).toBeNull();
         expect(stats.played).toBe(4);
     });
 });

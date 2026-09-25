@@ -7,9 +7,7 @@ import { foundationButtonClass } from "@/components/ui/Button";
 import JudgementMarker, {
     judgementLabels,
 } from "@/components/ui/judgementMarker";
-import MetricSwitch from "@/components/ui/metricSwitch";
 import { SegmentedControl } from "@/components/ui/segmentedControl";
-import { BarListSkeleton } from "@/components/ui/barList";
 import { LoadingStatus, SkeletonText } from "@/components/ui/skeleton";
 import StackedBar from "@/components/ui/stackedBar";
 import { StatStripSkeleton } from "@/components/ui/statStrip";
@@ -115,16 +113,8 @@ export function ProfileHeaderSkeleton() {
 export default function ProfileLoading() {
     const t = useTranslations();
     const metricOptions = [
-        {
-            value: "grade",
-            label: t("rankings.metric.grade"),
-            shortLabel: "Grd",
-        },
-        {
-            value: "rating",
-            label: t("rankings.metric.rating"),
-            shortLabel: "Rating",
-        },
+        { value: "grade", label: "Grade" },
+        { value: "rating", label: "Rating" },
     ] as const;
     const plays = (kind: "best" | "recent", title: string) => (
         <section
@@ -140,7 +130,8 @@ export default function ProfileLoading() {
                     </span>
                 </div>
                 {kind === "best" ? (
-                    <MetricSwitch
+                    <SegmentedControl
+                        size="sm"
                         label={title}
                         value="grade"
                         options={metricOptions}
@@ -199,7 +190,7 @@ function ProgressSkeleton() {
                             { value: "grade", label: "Grade" },
                             {
                                 value: "rating",
-                                label: t("profile.ratingShort"),
+                                label: "Rating",
                             },
                         ]}
                     />
@@ -217,7 +208,7 @@ function ProgressSkeleton() {
     );
 }
 
-/** 레벨별 달성 스켈레톤 — 제목 · 램프/랭크 세그먼트(실제 부품) · 레벨 이름(요약 = 9 이상 + REAL) + 빈 트랙 · 값 자리 */
+/** 레벨별 달성 스켈레톤 — 제목 · 레벨 이름(요약 = 9 이상 + REAL) + 빈 트랙 · 값 자리 */
 function ProfileLevelsSkeleton({ variant }: { variant: "summary" | "full" }) {
     const t = useTranslations();
     const labels = [
@@ -236,31 +227,16 @@ function ProfileLevelsSkeleton({ variant }: { variant: "summary" | "full" }) {
             data-variant={variant}
             aria-hidden="true"
         >
-            <div
-                className="nl-profile-section__header"
-                data-linked={variant === "summary" || undefined}
-            >
-                <div className="nl-heading-row">
-                    <h2 className="nl-section-title">
-                        {t("profile.levels.title")}
-                    </h2>
-                    {variant === "summary" ? (
-                        <span className="nl-heading-link nl-control">
-                            {t("achievement.all")}
-                            <ChevronRight aria-hidden />
-                        </span>
-                    ) : null}
-                </div>
-                <SegmentedControl
-                    size="sm"
-                    label={t("profile.levels.viewLabel")}
-                    value="lamp"
-                    onValueChange={noop}
-                    options={[
-                        { value: "lamp", label: t("profile.levels.lamp") },
-                        { value: "rank", label: t("profile.levels.rank") },
-                    ]}
-                />
+            <div className="nl-heading-row">
+                <h2 className="nl-section-title">
+                    {t("profile.levels.title")}
+                </h2>
+                {variant === "summary" ? (
+                    <span className="nl-heading-link nl-control">
+                        {t("achievement.all")}
+                        <ChevronRight aria-hidden />
+                    </span>
+                ) : null}
             </div>
             <StackedBar
                 rows={labels.map((label) => ({
@@ -279,7 +255,7 @@ function ProfileLevelsSkeleton({ variant }: { variant: "summary" | "full" }) {
     );
 }
 
-/** 「통계」 탭 스켈레톤 — 실제 탭과 같은 구역 · 순서(성장 추이 · 레벨별 달성 · 판정 · 랭크 · 노트) */
+/** 「통계」 탭 스켈레톤 — 실제 탭과 같은 구역 · 순서(성장 추이 · 레벨별 달성 · 판정 · 랭크) */
 export function ProfileStatsTabSkeleton() {
     const t = useTranslations();
     const judgementKeys = Object.keys(
@@ -345,21 +321,6 @@ export function ProfileStatsTabSkeleton() {
                         </div>
                     ))}
                 </dl>
-            </section>
-            <section
-                className="nl-profile-section nl-profile-notes"
-                aria-hidden="true"
-            >
-                <div className="nl-profile-judgement-header">
-                    <h2 className="nl-section-title">
-                        {t("profile.notes.title")}
-                    </h2>
-                </div>
-                <BarListSkeleton
-                    labels={(
-                        ["standard", "tenuto", "glissando", "trill"] as const
-                    ).map((key) => t(`music.filter.${key}`))}
-                />
             </section>
         </div>
     );

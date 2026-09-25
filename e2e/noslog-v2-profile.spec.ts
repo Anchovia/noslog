@@ -63,7 +63,7 @@ test("P6 progress uses real dates, retains content on failure and supports keybo
         );
     expect(x[1] - x[0]).toBeLessThan((x[2] - x[0]) / 10);
     // 지표 전환 = 세그먼트(2026-09-25 G2, 짧은 라벨)
-    await progress.getByRole("radio", { name: "레이팅", exact: true }).click();
+    await progress.getByRole("radio", { name: "Rating", exact: true }).click();
     await expect(progress.getByRole("table")).toContainText("2,070 pt");
     // 기간 = 공용 셀렉트(Radix 콤보박스) — 열고 항목을 고른다
     const range = progress.getByRole("combobox");
@@ -256,11 +256,12 @@ for (const locale of ["ko", "ja", "en"]) {
                     0
                 );
             } else {
-                // 폰(F2) — 베스트 → 최근 → 성장 추이 → 레벨별 달성
+                // 폰 — 성장 추이 → (고정 기록) → 베스트 → 최근 → 레벨별 달성(2026-09-26, 사용자)
                 expect(controls.y).toBeGreaterThanOrEqual(
                     heading.y + heading.height
                 );
-                expect(progress.y).toBeGreaterThan((recent ?? best).y);
+                expect(best.y).toBeGreaterThan(progress.y);
+                if (recent) expect(recent.y).toBeGreaterThan(best.y);
                 expect(overview.y).toBeGreaterThan(progress.y);
                 expect(progress.width).toBeCloseTo(overview.width, 0);
             }

@@ -19,10 +19,16 @@ const playSelect = {
     rank: true,
     fc_type: true,
     besttime: true,
+    grade_basic: true,
+    grade_recital: true,
     music: { select: { title: true, background: true } },
 } as const;
 
-export type ProfilePinnedRecord = ProfilePlay & { comment: string | null };
+export type ProfilePinnedRecord = ProfilePlay & {
+    comment: string | null;
+    /** 모드별 Grd 기여(베스트 성과 줄과 같은 값) — 0 이면 null */
+    grades: { basic: number | null; recital: number | null };
+};
 
 /**
  * 프로필 개요 「고정 기록」(2026-09-26 S2) — 고른 채보의 지금 기록(고른 순서) · 한 줄 소감.
@@ -84,6 +90,13 @@ export async function getProfilePinnedRecords(userId: number) {
             position: null,
             newBest: false,
             comment,
+            grades: {
+                basic: play.grade_basic > 0 ? play.grade_basic / 100 : null,
+                recital:
+                    (play.grade_recital ?? 0) > 0
+                        ? play.grade_recital! / 100
+                        : null,
+            },
         })),
     };
 }

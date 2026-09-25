@@ -11,9 +11,12 @@ import {
 } from "@/components/i18n/localeProvider";
 import { SegmentedControl } from "@/components/ui/segmentedControl";
 import StackedBar from "@/components/ui/stackedBar";
-import type { ProfileLevelRow } from "@/features/profile/schemas/profileStatsSchema";
+import {
+    PROFILE_TIER_KEYS,
+    type ProfileLevelRow,
+    type ProfileTierKey,
+} from "@/features/profile/schemas/profileStatsSchema";
 
-type View = "lamp" | "rank";
 type Difficulty = "all" | "normal" | "hard" | "expert" | "real";
 
 const DIFFICULTIES = [
@@ -22,21 +25,17 @@ const DIFFICULTIES = [
     ["expert", "EX"],
     ["real", "R"],
 ] as const;
-/** 칸 색 — 램프는 달성 색 + 차트 단일 색, 랭크는 등급 색(랭크 분포와 같음, 2026-09-26 C2a). 「안 함」 은 트랙 면 그대로 */
+/** 칸 색 = 등급 색(랭크 분포와 같음, 2026-09-26 C2a · L1). 고른 칸 밖은 흐린 회색, 「안 함」 은 트랙 면 그대로 */
 const NONE = "var(--nl-surface-raised)";
-const LAMP_COLORS = {
-    pianist: "var(--nl-achievement-pianist)",
+const DIMMED = "var(--nl-content-disabled)";
+const TIER_COLORS: Record<ProfileTierKey, string> = {
+    pianist: "var(--nl-score-goal-pianist)",
     fc: "var(--nl-achievement-full-combo)",
-    clear: "var(--nl-local-data-single)",
-    fail: "var(--nl-content-disabled)",
-} as const;
-const RANK_COLORS = {
-    P: "var(--nl-score-goal-pianist)",
     S: "var(--nl-score-goal-s)",
     "A+": "var(--nl-score-grade-a-plus)",
     A: "var(--nl-score-grade-a)",
     B: "var(--nl-score-grade-b)",
-} as const;
+};
 
 const LOW_LEVEL_MAX = 8;
 
@@ -63,26 +62,20 @@ export function profileLevelRows(
               : `${row.level}`;
         const current = rows.get(key);
         if (!current) {
-            rows.set(key, {
-                ...row,
-                lamp: { ...row.lamp },
-                rank: { ...row.rank },
-                label,
-            });
+            rows.set(key, { ...row, tiers: { ...row.tiers }, label });
             continue;
         }
         current.total += row.total;
-        for (const lamp of Object.keys(row.lamp) as (keyof typeof row.lamp)[])
-            current.lamp[lamp] += row.lamp[lamp];
-        for (const rank of Object.keys(row.rank) as (keyof typeof row.rank)[])
-            current.rank[rank] += row.rank[rank];
+        for (const tier of PROFILE_TIER_KEYS)
+            current.tiers[tier] += row.tiers[tier];
     }
     return [...rows.values()];
 }
 
 /**
- * 레벨별 달성(2026-09-26 R2) — 레벨마다 누적 막대(`StackedBar`) · 오른쪽 달성 비율. 램프(Pianist · FC · 클리어 · 실패 · 안 함) ↔
- * 랭크(P · S · A+ · A · B 이하 · 안 함) 전환. 개요 옆 열은 요약(9 이상 + REAL, 제목 옆 「모두 보기」 = 통계 탭),
+ * 레벨별 달성(2026-09-26 R2 · L1) — 레벨마다 한 막대(`StackedBar`): 채보마다 가장 높은 한 칸(Pianist → FC → S → A+ → A → B 이하),
+ * 칠하지 않은 트랙 = 안 함. 범례 항목을 누르면 그 칸만 제 색 · 나머지는 흐린 회색이 되고 오른쪽 % 가 그 칸의 비율(한 번 더 누르면 풀림),
+ * 고르지 않았으면 % = 여섯 칸을 합친 비율(친 채보). 개요 옆 열은 요약(9 이상 + REAL, 제목 줄 오른쪽 끝 「모두 보기」 = 통계 탭),
  * 통계 탭은 전체 + 난이도 세그먼트
  */
 export default function ProfileLevels({
@@ -97,8 +90,8 @@ export default function ProfileLevels({
     const t = useTranslations();
     const locale = useLocale();
     const href = useLocalizedHref();
-    const [view, setView] = useState<View>("lamp");
     const [difficulty, setDifficulty] = useState<Difficulty>("all");
+    const [selected, setSelected] = useState<ProfileTierKey | null>(null);
     const rows = profileLevelRows(
         levels,
         variant === "full" ? difficulty : "all"
@@ -106,32 +99,18 @@ export default function ProfileLevels({
         (row) =>
             variant === "full" || row.difficulty === "real" || row.level >= 9
     );
-    const keys =
-        view === "lamp"
-            ? (["pianist", "fc", "clear", "fail"] as const)
-            : (["P", "S", "A+", "A", "B"] as const);
-    const label = (key: (typeof keys)[number] | "none") =>
+    const label = (key: ProfileTierKey) =>
         key === "pianist"
             ? "Pianist"
             : key === "fc"
               ? t("profile.fullComboShort")
-              : key === "clear" || key === "fail" || key === "none"
-                ? t(`profile.levels.${key}`)
-                : key === "B"
-                  ? t("profile.levels.rankLow")
-                  : key;
+              : key === "B"
+                ? t("profile.levels.rankLow")
+                : key;
     const percent = (value: number, total: number) =>
         `${(total ? Math.round((value / total) * 100) : 0).toLocaleString(locale)}%`;
-    const counts = (row: ProfileLevelRow) =>
-        view === "lamp"
-            ? (keys as readonly (keyof ProfileLevelRow["lamp"])[]).map(
-                  (key) => row.lamp[key]
-              )
-            : (keys as readonly (keyof ProfileLevelRow["rank"])[]).map(
-                  (key) => row.rank[key]
-              );
-    const colors: Record<string, string> =
-        view === "lamp" ? LAMP_COLORS : RANK_COLORS;
+    const played = (row: ProfileLevelRow) =>
+        PROFILE_TIER_KEYS.reduce((sum, key) => sum + row.tiers[key], 0);
     const pageHref = href(`/profile/${userId}/stats`);
     return (
         <section
@@ -139,38 +118,22 @@ export default function ProfileLevels({
             data-variant={variant}
             aria-labelledby={`profile-levels-${variant}`}
         >
-            {/* 제목 링크가 있으면 제목 줄 오른쪽 끝(가이드 2절), 전환은 다음 줄 — 목록 바로 위(2026-09-26 A) */}
-            <div
-                className="nl-profile-section__header"
-                data-linked={variant === "summary" || undefined}
-            >
-                <div className="nl-heading-row">
-                    <h2
-                        id={`profile-levels-${variant}`}
-                        className="nl-section-title"
+            <div className="nl-heading-row">
+                <h2
+                    id={`profile-levels-${variant}`}
+                    className="nl-section-title"
+                >
+                    {t("profile.levels.title")}
+                </h2>
+                {variant === "summary" ? (
+                    <Link
+                        href={pageHref}
+                        className="nl-heading-link nl-control"
                     >
-                        {t("profile.levels.title")}
-                    </h2>
-                    {variant === "summary" ? (
-                        <Link
-                            href={pageHref}
-                            className="nl-heading-link nl-control"
-                        >
-                            {t("achievement.all")}
-                            <ChevronRight aria-hidden />
-                        </Link>
-                    ) : null}
-                </div>
-                <SegmentedControl
-                    size="sm"
-                    label={t("profile.levels.viewLabel")}
-                    value={view}
-                    onValueChange={setView}
-                    options={[
-                        { value: "lamp", label: t("profile.levels.lamp") },
-                        { value: "rank", label: t("profile.levels.rank") },
-                    ]}
-                />
+                        {t("achievement.all")}
+                        <ChevronRight aria-hidden />
+                    </Link>
+                ) : null}
             </div>
             {variant === "full" ? (
                 <SegmentedControl
@@ -201,84 +164,79 @@ export default function ProfileLevels({
                 />
             ) : null}
             <StackedBar
-                rows={rows.map((row) => {
-                    const values = counts(row);
-                    const played = values.reduce(
-                        (sum, value) => sum + value,
-                        0
-                    );
-                    return {
-                        key: `${row.difficulty}:${row.level}`,
-                        label: row.label,
-                        segments: [
-                            ...keys.map((key, index) => ({
-                                key,
-                                value: values[index],
-                                color: colors[key],
-                            })),
-                            {
-                                key: "none",
-                                value: Math.max(0, row.total - played),
-                                color: NONE,
-                            },
-                        ],
-                        // 램프 = 클리어 이상, 랭크 = S 이상의 비율
-                        value: percent(
-                            values[0] +
-                                values[1] +
-                                (view === "lamp" ? values[2] : 0),
-                            row.total
-                        ),
-                    };
-                })}
+                rows={rows.map((row) => ({
+                    key: `${row.difficulty}:${row.level}`,
+                    label: row.label,
+                    segments: [
+                        ...PROFILE_TIER_KEYS.map((key) => ({
+                            key,
+                            value: row.tiers[key],
+                            color:
+                                selected === null || selected === key
+                                    ? TIER_COLORS[key]
+                                    : DIMMED,
+                        })),
+                        {
+                            key: "none",
+                            value: Math.max(0, row.total - played(row)),
+                            color: NONE,
+                        },
+                    ],
+                    value: percent(
+                        selected ? row.tiers[selected] : played(row),
+                        row.total
+                    ),
+                }))}
             />
-            <ul
+            {/* 범례 = 칸 강조 전환(누르는 버튼, 고른 항목은 글자가 진해진다) + 지금 % 가 무엇인지 */}
+            <div
                 className="nl-profile-legend nl-metadata nl-muted"
-                aria-hidden="true"
+                role="group"
+                aria-label={t("profile.levels.legendLabel")}
             >
-                {[...keys, "none" as const].map((key) => (
-                    <li key={key}>
+                {PROFILE_TIER_KEYS.map((key) => (
+                    <button
+                        key={key}
+                        type="button"
+                        className="nl-profile-legend__item"
+                        aria-pressed={selected === key}
+                        onClick={() =>
+                            setSelected((current) =>
+                                current === key ? null : key
+                            )
+                        }
+                    >
                         <i
-                            style={{
-                                background: key === "none" ? NONE : colors[key],
-                            }}
-                            data-empty={key === "none" || undefined}
+                            aria-hidden
+                            style={{ background: TIER_COLORS[key] }}
                         />
                         {label(key)}
+                    </button>
+                ))}
+                <span>
+                    {selected
+                        ? t("profile.levels.valueTier", {
+                              name: label(selected),
+                          })
+                        : t("profile.levels.valuePlayed")}
+                </span>
+            </div>
+            {/* 막대는 화면 읽기에서 숨기고 줄마다 수를 글로 */}
+            <ul className="sr-only">
+                {rows.map((row) => (
+                    <li key={`${row.difficulty}:${row.level}`}>
+                        {t("profile.levels.rowSummary", {
+                            level: row.label,
+                            parts: [
+                                ...PROFILE_TIER_KEYS.map(
+                                    (key) => `${label(key)} ${row.tiers[key]}`
+                                ),
+                                `${t("profile.levels.none")} ${Math.max(0, row.total - played(row))}`,
+                            ].join(", "),
+                            total: row.total,
+                        })}
                     </li>
                 ))}
-                <li>
-                    {t(
-                        view === "lamp"
-                            ? "profile.levels.valueLamp"
-                            : "profile.levels.valueRank"
-                    )}
-                </li>
-            </ul>
-            {/* 막대 · 범례는 화면 읽기에서 숨기고 줄마다 수를 글로 */}
-            <ul className="sr-only">
-                {rows.map((row) => {
-                    const values = counts(row);
-                    const played = values.reduce(
-                        (sum, value) => sum + value,
-                        0
-                    );
-                    return (
-                        <li key={`${row.difficulty}:${row.level}`}>
-                            {t("profile.levels.rowSummary", {
-                                level: row.label,
-                                parts: [
-                                    ...keys.map(
-                                        (key, index) =>
-                                            `${label(key)} ${values[index]}`
-                                    ),
-                                    `${label("none")} ${Math.max(0, row.total - played)}`,
-                                ].join(", "),
-                                total: row.total,
-                            })}
-                        </li>
-                    );
-                })}
             </ul>
         </section>
     );

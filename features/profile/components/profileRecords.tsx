@@ -6,7 +6,7 @@ import { useState } from "react";
 
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import Button from "@/components/ui/Button";
-import MetricSwitch from "@/components/ui/metricSwitch";
+import { SegmentedControl } from "@/components/ui/segmentedControl";
 import { LoadingStatus } from "@/components/ui/skeleton";
 import SortMenu from "@/components/ui/sortMenu";
 import { StatusMessage } from "@/components/ui/statusMessage";
@@ -26,7 +26,7 @@ import ProfilePlayRow, {
 } from "./profilePlayRow";
 
 /**
- * 프로필 「기록」 탭(2026-09-25 2단계) — 위 줄: 2단 탭(베스트 50 · 모든 기록) | 고스트 정렬,
+ * 프로필 「기록」 탭(2026-09-25 2단계) — 위 줄: 세그먼트 M(베스트 50 · 모든 기록) | 고스트 정렬 M(2026-09-26 R1),
  * 표(순번 · 자켓 · 곡 · 난이도 · 점수 · 등급 · 곡 순위 · 날짜 · Grd), 20개씩 「더 보기」.
  * 검색 · 필터 · 베스트 설명 줄은 두지 않는다(2026-09-26, 사용자 — 필요 없음 · 설명 없이도 안다)
  */
@@ -75,18 +75,20 @@ export default function ProfileRecords({
             aria-label={t("profile.tabs.records")}
         >
             <div className="nl-profile-records__toolbar">
-                <MetricSwitch
+                {/* 보기 전환 = 세그먼트 M + 고스트 정렬 M(같은 줄 한 단계, 2026-09-26 R1) */}
+                <SegmentedControl
+                    size="sm"
                     label={t("profile.records.viewLabel")}
                     value={view}
                     onValueChange={setView}
                     options={(["best", "all"] as const).map((key) => ({
                         value: key,
                         label: viewLabel(key),
-                        shortLabel: viewLabel(key),
                     }))}
                 />
                 <SortMenu
                     variant="ghost"
+                    size="sm"
                     label={t("discovery.sortLabel")}
                     value={sort}
                     onValueChange={setSort}

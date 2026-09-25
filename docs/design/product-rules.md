@@ -97,16 +97,17 @@ old design-stage checklist. Changes to material behavior require a user decision
   the imported best time; the never-played placeholder (1970) shows no date. The
   records API rechecks score privacy on every request like the plays API.
 - Stats tab (2026-09-26) is mode-independent except the progress chart. Level
-  achievement counts every listed chart per difficulty and level; the lamp is
-  Pianist (FC type 3) > FC (FC type 2) > clear > failed, where failed means a
-  clear count known to be 0 (older imports without a clear count count as clear),
-  and unplayed = listed charts − played charts. "All" merges NORMAL · HARD · EXPERT
-  by level and keeps REAL levels as separate rows; the overview side shows levels
-  9 and up plus REAL. The row percentage is clear-or-better (lamp) or S-or-better
-  (rank) over listed charts. Note-type success is the mean of best-record rates on
-  charts that have that note (null rates are skipped). Rank counts and play count
-  are the official-site values as before. Rank and play-count history for the
-  progress chart do not exist yet, so the chart keeps Grd and rating only.
+  achievement counts every listed chart per difficulty and level in one bar: each
+  played chart goes to its highest group — Pianist (FC type 3 or rank P) > FC
+  (FC type 2) > rank S > A+ > A > B or lower. A failed play has no group of its own
+  (it counts under its rank); unplayed = listed charts − played charts. "All" merges
+  NORMAL · HARD · EXPERT by level (levels 1–8 in one row) and keeps REAL levels as
+  separate rows; the overview side shows levels 9 and up plus REAL. The row
+  percentage is played charts over listed charts, or one group's share when that
+  group is picked in the legend. Rank counts and play count are the official-site
+  values as before, with an FC bar (FC lamp + Pianist). There is no note-type
+  success section. Rank and play-count history for the progress chart do not exist
+  yet, so the chart keeps Grd and rating only.
 - Activity tab (2026-09-26) counts imported play history per Korean calendar day
   over 53 weeks ending today (history exists only after bookmarklet sync). Summary
   = plays in that window, plays this month, days played and the longest run of

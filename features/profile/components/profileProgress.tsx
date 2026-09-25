@@ -98,11 +98,11 @@ export default function ProfileProgress({
                         }
                         onValueChange={setMetric}
                         options={[
-                            // 「Grade」 · 「레이팅」(2026-09-26 — 조작부 폭이 넉넉해 Grd 대신 Grade, 사용자)
+                            // 「Grade · Rating」(2026-09-26 — 짝이 되는 영어 용어로, 사용자)
                             { value: "grade", label: "Grade" },
                             {
                                 value: "rating",
-                                label: t("profile.ratingShort"),
+                                label: "Rating",
                             },
                         ]}
                     />

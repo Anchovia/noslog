@@ -1,7 +1,7 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
-// 프로필 「기록」 탭(2026-09-25 2단계) — 베스트 50 · 모든 기록, 정렬, 모드 유지, 가로 넘침 없음(검색 · 필터 없음, 2026-09-26)
+// 프로필 「기록」 탭(2026-09-25 2단계) — 최고 기록 · 모든 기록(세그먼트), 정렬, 모드 유지, 가로 넘침 없음(검색 · 필터 없음, 2026-09-26)
 test("P6 records tab switches view and sort and keeps the mode across tabs", async ({
     page,
 }) => {
@@ -65,7 +65,9 @@ test("P6 records tab switches view and sort and keeps the mode across tabs", asy
         records.getByText("베스트 성과 기록이 없습니다.")
     ).toBeVisible();
 
-    await records.getByRole("button", { name: /^모든 기록/ }).click();
+    await records
+        .getByRole("radio", { name: "모든 기록", exact: true })
+        .click();
     await expect(records).toHaveAttribute("data-kind", "all");
     await expect(rows).toHaveCount(3);
     await expect(rows.first()).toContainText("#1");

@@ -14,7 +14,7 @@ import {
     useTranslations,
 } from "@/components/i18n/localeProvider";
 import Button from "@/components/ui/Button";
-import MetricSwitch from "@/components/ui/metricSwitch";
+import { SegmentedControl } from "@/components/ui/segmentedControl";
 import { StatusMessage } from "@/components/ui/statusMessage";
 import { profilePlaysOptions } from "@/features/profile/api/profilePlays";
 import { PROFILE_BATCH_SIZE } from "@/features/profile/schemas/publicProfileSchema";
@@ -142,7 +142,9 @@ export default function ProfilePlaysList({
                     ) : null}
                 </div>
                 {kind === "best" ? (
-                    <MetricSwitch
+                    // 구역 안 보기 전환 = 세그먼트 M(2026-09-26 S1 — 위 구역 탭과 같은 밑줄 탭이 두 겹이던 것)
+                    <SegmentedControl
+                        size="sm"
                         label={title}
                         value={
                             result.isError && first
@@ -151,15 +153,11 @@ export default function ProfilePlaysList({
                         }
                         onValueChange={setMetric}
                         options={[
-                            {
-                                value: "grade",
-                                label: t("rankings.metric.grade"),
-                                shortLabel: "Grd",
-                            },
+                            // 성장 추이와 같은 말 「Grade · Rating」(2026-09-26, 사용자)
+                            { value: "grade", label: "Grade" },
                             {
                                 value: "rating",
-                                label: t("rankings.metric.rating"),
-                                shortLabel: "Rating",
+                                label: "Rating",
                             },
                         ]}
                     />

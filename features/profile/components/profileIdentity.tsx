@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Lock, MapPin, Settings } from "lucide-react";
+import { Globe, Lock, MapPin, Settings } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import {
@@ -443,14 +443,22 @@ export default function ProfileIdentity({
                                         key={key}
                                         className="nl-profile-headline__rank"
                                     >
-                                        <dt className="nl-metadata nl-muted">
+                                        {/* 라벨 control 14 + 앞에 표시(세계 = 지구본 16 · 국가 = 국기), 순위 = component-title 16/600(2026-09-26, 사용자) */}
+                                        <dt className="nl-control nl-muted">
+                                            {key === "world" ? (
+                                                <Globe aria-hidden />
+                                            ) : (
+                                                <CountryMarker
+                                                    country={user.country}
+                                                />
+                                            )}
                                             {t(label)}
                                         </dt>
                                         <dd
                                             className={
                                                 value
-                                                    ? "nl-metric-value nl-toned"
-                                                    : "nl-metric-value nl-muted"
+                                                    ? "nl-component-title nl-toned"
+                                                    : "nl-component-title nl-muted"
                                             }
                                             data-tone={
                                                 value
