@@ -46,7 +46,11 @@ import {
     type ChartDocument,
     type ChartHand,
 } from "@/lib/chart-pattern/schema";
-import { formatEditorTime, getBeatMarkers } from "@/lib/chart-pattern/timing";
+import {
+    formatEditorTime,
+    getBeatMarkers,
+    getMeasureMarkers,
+} from "@/lib/chart-pattern/timing";
 
 import { useFullscreen } from "./useFullscreen";
 import { useMetronomeVolume } from "./useMetronomeVolume";
@@ -780,9 +784,10 @@ const noteSpeedOptions = Array.from({ length: 31 }, (_, index) => {
     const value = (NOTE_SPEED_MIN + index * 0.1).toFixed(1);
     return { value, label: value };
 });
-/** 유튜브와 같은 이동 폭 — 화살표 5초 · 폰 두 번 두드리기 10초 · 두 번으로 치는 간격 */
-const KEY_SEEK_MS = 5_000;
-const DOUBLE_TAP_SEEK_MS = 10_000;
+/** 화살표 · 폰 두 번 두드리기 = 한 마디씩(2026-09-26, 사용자 — 초 단위는 박 사이에 멈춘다).
+ *  되감기는 그 마디 처음으로, 처음에서 이만큼 안이면 앞 마디 처음으로(이어서 누르면 계속 뒤로) */
+const MEASURE_BACK_SNAP_MS = 300;
+/** 두 번으로 치는 간격 */
 const DOUBLE_TAP_WINDOW_MS = 300;
 /** 재생 중 조작 줄을 숨기기까지 가만히 있는 시간 — 동영상 플레이어와 같은 문법(2026-09-26 부터 인라인도) */
 const OVERLAY_IDLE_MS = 3_000;
@@ -908,6 +913,15 @@ export default function FallingChartViewer({
         [document]
     );
     const durationMs = Math.max(chartDurationMs, audioDurationMs);
+    const measureTimes = useMemo(
+        () =>
+            getMeasureMarkers(
+                document.timingPoints,
+                document.ticksPerQuarter,
+                chartDurationMs
+            ).map((marker) => marker.timeMs),
+        [chartDurationMs, document.ticksPerQuarter, document.timingPoints]
+    );
 
     useEffect(() => {
         durationRef.current = durationMs;
@@ -1176,10 +1190,7 @@ export default function FallingChartViewer({
             togglePlayback();
         } else if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
             event.preventDefault();
-            seek(
-                currentTimeRef.current +
-                    (event.key === "ArrowLeft" ? -KEY_SEEK_MS : KEY_SEEK_MS)
-            );
+            seekMeasure(event.key === "ArrowLeft" ? -1 : 1);
         } else if (event.key === ">" || event.key === "<") {
             event.preventDefault();
             stepNoteSpeed(event.key === ">" ? 0.1 : -0.1);
@@ -1192,7 +1203,7 @@ export default function FallingChartViewer({
         return () => window.removeEventListener("keydown", listener);
     }, []);
 
-    // 무대 누르기 — 마우스는 누를 때마다 재생 · 일시정지. 손가락은 두 번 두드리면 그쪽 절반으로 10초,
+    // 무대 누르기 — 마우스는 누를 때마다 재생 · 일시정지. 손가락은 두 번 두드리면 그쪽 절반으로 한 마디,
     // 한 번이면 두 번째를 기다렸다가(300ms) 재생 · 일시정지
     const tapRef = useRef<{ time: number; timer: number | null }>({
         time: 0,
@@ -1206,7 +1217,7 @@ export default function FallingChartViewer({
             tap.timer = null;
             // 이어서 두드리면 계속 이동한다
             tap.time = now;
-            seek(currentTimeRef.current + side * DOUBLE_TAP_SEEK_MS);
+            seekMeasure(side);
             tap.timer = window.setTimeout(() => {
                 tap.timer = null;
             }, DOUBLE_TAP_WINDOW_MS);
@@ -1271,6 +1282,20 @@ export default function FallingChartViewer({
         isPlayingRef.current = true;
         setIsPlaying(true);
         wakeOverlay();
+    }
+
+    // 한 마디 이동 — 앞으로는 다음 마디 처음, 뒤로는 그 마디 처음(처음 가까이면 앞 마디 처음). 마디가 없으면 끝 · 처음
+    function seekMeasure(direction: -1 | 1) {
+        const now = currentTimeRef.current;
+        if (direction > 0) {
+            const next = measureTimes.find((timeMs) => timeMs > now + 1);
+            seek(next ?? durationRef.current);
+            return;
+        }
+        const previous = measureTimes.findLast(
+            (timeMs) => timeMs <= now - MEASURE_BACK_SNAP_MS
+        );
+        seek(previous ?? 0);
     }
 
     function seek(nextTimeMs: number) {
