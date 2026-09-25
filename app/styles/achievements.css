@@ -136,9 +136,6 @@
 .noslog-ui .nl-achievement-row[data-earned="false"] .nl-achievement-row__name {
     color: var(--nl-content-pending);
 }
-.noslog-ui .nl-achievement-row__number {
-    font-variant-numeric: tabular-nums;
-}
 .noslog-ui .nl-achievement-row__actions {
     display: flex;
     flex-shrink: 0;
@@ -316,7 +313,11 @@
 /* 촘촘한 격자(2026-09-25 D1) — 육각 44 × 48 만 빽빽하게(osu! 메달 벽), 줄 사이 12 · 칸 사이 8 */
 .noslog-ui .nl-achievement-dense {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(52px, 1fr));
+    /* 칸 최소 = 육각 44 + 8(2026-09-26 E2 — 값 그대로 뜻이 보이게) */
+    grid-template-columns: repeat(
+        auto-fill,
+        minmax(calc(44px + var(--nl-spacing-8)), 1fr)
+    );
     gap: var(--nl-spacing-12) var(--nl-spacing-8);
     justify-items: center;
     margin: 0;

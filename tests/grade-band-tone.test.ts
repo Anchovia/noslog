@@ -2,7 +2,11 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
-import { gradeBandTone, STAT_TONE_DARK_HEX } from "@/lib/music/scoreTone";
+import {
+    EXAM_TIER_DARK_HEX,
+    gradeBandTone,
+    STAT_TONE_DARK_HEX,
+} from "@/lib/music/scoreTone";
 
 describe("Grd · 레이팅 구간 색", () => {
     it("6,000 · 6,500 · 7,000 · 7,500 · 8,000 에서 한 단계씩 오른다", () => {
@@ -47,6 +51,16 @@ describe("Grd · 레이팅 구간 색", () => {
                 token("judgement-s-just")!
             ),
             "grade-5": token("judgement-s-just"),
+        });
+        // 검정 명판(공유 카드, 2026-09-26 E4)
+        expect(EXAM_TIER_DARK_HEX).toEqual({
+            low: token("exam-tier-low"),
+            mid: token("exam-tier-mid"),
+            high: token("exam-tier-high"),
+            top: token("exam-tier-top"),
+            peak: token("exam-tier-peak"),
+            topTint: token("exam-tint-top"),
+            peakPlate: token("exam-plate-peak"),
         });
     });
 });

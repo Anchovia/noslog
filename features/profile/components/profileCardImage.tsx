@@ -25,6 +25,7 @@ import type { StatTone } from "@/components/ui/statStrip";
 import {
     gradeBandTone,
     rankTone,
+    EXAM_TIER_DARK_HEX,
     STAT_TONE_DARK_HEX,
 } from "@/lib/music/scoreTone";
 import { formatToComma } from "@/lib/utils";
@@ -75,12 +76,16 @@ function Divider() {
 
 // 검정 명판 — UI ExamBadge 의 카드 배율(×2) 원시값 판. 카드 면이 그라디언트라
 // Recital 의 파인 모서리는 원판으로 덮지 않고 면을 조각으로 나눠 모서리를 비워 둔다.
+// 금속 · 속 색 = 토큰 다크 값(EXAM_TIER_DARK_HEX, 테스트가 tokens.css 와 대조 — 2026-09-26 E4)
 const examPlates: Record<ExamTier, { metal: string; fill: string | null }> = {
-    low: { metal: "#8a8a8a", fill: null },
-    mid: { metal: "#b98b67", fill: null },
-    high: { metal: "#c4c8ce", fill: null },
-    top: { metal: "#d6b56d", fill: "#25211a" },
-    peak: { metal: "#d6b56d", fill: "#000000" },
+    low: { metal: EXAM_TIER_DARK_HEX.low, fill: null },
+    mid: { metal: EXAM_TIER_DARK_HEX.mid, fill: null },
+    high: { metal: EXAM_TIER_DARK_HEX.high, fill: null },
+    top: { metal: EXAM_TIER_DARK_HEX.top, fill: EXAM_TIER_DARK_HEX.topTint },
+    peak: {
+        metal: EXAM_TIER_DARK_HEX.peak,
+        fill: EXAM_TIER_DARK_HEX.peakPlate,
+    },
 };
 const plateLine = 2;
 const plateInset = 4;
