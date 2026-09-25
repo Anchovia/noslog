@@ -408,7 +408,8 @@ old design-stage checklist. Changes to material behavior require a user decision
   counts) and, for the owner only, their suggestion list with rejection reasons.
 - Stage 3 — user chart drafts and timestamped comments (2026-09-24). One draft
   per user · chart (`chart_drafts`): it starts from the published chart, or an
-  empty chart when none is published, and only its author and admins can see
+  empty chart when none is published (an empty chart, here and in the admin editor, starts its timing at
+  500 ms so notes on 1마디 1박 are seen falling — 2026-09-25), and only its author and admins can see
   it. Draft → 「검토 요청」 (locked; the author can withdraw) → admin
   「수정 요청」 or 「공개」. Size limits: 20,000 notes, 1,000 timing points,
   30 minutes. Saving uses the draft version, so a stale window gets a conflict

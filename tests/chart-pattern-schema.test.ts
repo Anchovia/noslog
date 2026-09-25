@@ -34,7 +34,8 @@ describe("채보 문서 스키마", () => {
             timingPoints: [
                 {
                     tick: 0,
-                    timeMs: 0,
+                    // 음원 오프셋 기본값 — 1마디 1박 노트가 떨어지는 걸 볼 수 있게
+                    timeMs: 500,
                     bpm: 180,
                     numerator: 4,
                     denominator: 4,
