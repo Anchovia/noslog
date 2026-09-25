@@ -15,6 +15,11 @@
     --nl-grade-band-3: var(--nl-score-goal-s);
     --nl-grade-band-4: var(--nl-score-goal-990k);
     --nl-grade-band-5: var(--nl-score-goal-pianist);
+    /* 등급 색(2026-09-26 C2a) — 게임 등급 아이콘 색을 있는 토큰으로 빌린다(새 값 없음). S · P 는 점수 목표 색,
+       A+ = 난이도 글자 빨강(한 단계 밝게) · A = 난이도 빨강 · B = 차트 파랑, C · D 는 정하지 않음(흐린 글자색) */
+    --nl-score-grade-a-plus: var(--nl-difficulty-text-expert);
+    --nl-score-grade-a: var(--nl-difficulty-expert);
+    --nl-score-grade-b: var(--nl-local-data-single);
     --nl-font-family:
         "Pretendard JP Variable", "Pretendard JP", Pretendard, -apple-system,
         BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI",

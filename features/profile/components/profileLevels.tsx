@@ -22,7 +22,7 @@ const DIFFICULTIES = [
     ["expert", "EX"],
     ["real", "R"],
 ] as const;
-/** 칸 색 — 램프는 달성 색 + 차트 단일 색, 랭크는 차트 단계 색(높을수록 밝게). 「안 함」 은 트랙 면 그대로 */
+/** 칸 색 — 램프는 달성 색 + 차트 단일 색, 랭크는 등급 색(랭크 분포와 같음, 2026-09-26 C2a). 「안 함」 은 트랙 면 그대로 */
 const NONE = "var(--nl-surface-raised)";
 const LAMP_COLORS = {
     pianist: "var(--nl-achievement-pianist)",
@@ -31,11 +31,11 @@ const LAMP_COLORS = {
     fail: "var(--nl-content-disabled)",
 } as const;
 const RANK_COLORS = {
-    P: "var(--nl-local-data-bucket-6)",
-    S: "var(--nl-local-data-bucket-5)",
-    "A+": "var(--nl-local-data-bucket-4)",
-    A: "var(--nl-local-data-bucket-3)",
-    B: "var(--nl-local-data-bucket-2)",
+    P: "var(--nl-score-goal-pianist)",
+    S: "var(--nl-score-goal-s)",
+    "A+": "var(--nl-score-grade-a-plus)",
+    A: "var(--nl-score-grade-a)",
+    B: "var(--nl-score-grade-b)",
 } as const;
 
 const LOW_LEVEL_MAX = 8;

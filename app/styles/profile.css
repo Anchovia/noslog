@@ -561,7 +561,7 @@
     border-radius: var(--nl-radius-full);
     background: var(--nl-border-divider);
 }
-/* 막대 색 = 가이드 등급 색(2026-09-26 D7) — P 분홍 · S 노랑(점수 목표 색) · FC 초록(달성 색). 색이 정해지지 않은 A+ 이하는 흐린 글자색 */
+/* 막대 색 = 등급 색(2026-09-26 D7 · C2a) — P 분홍 · S 노랑 · A+ · A 빨강 두 단계 · B+ · B 파랑 · FC 초록, 색을 정하지 않은 C · D 는 흐린 글자색 */
 .noslog-ui .nl-profile-distribution__track > span {
     display: block;
     height: 100%;
@@ -576,6 +576,17 @@
 }
 .noslog-ui .nl-profile-distribution__track > [data-rank="FC"] {
     background: var(--nl-achievement-full-combo);
+}
+.noslog-ui .nl-profile-distribution__track > [data-rank="A+"] {
+    background: var(--nl-score-grade-a-plus);
+}
+.noslog-ui .nl-profile-distribution__track > [data-rank="A"] {
+    background: var(--nl-score-grade-a);
+}
+.noslog-ui
+    .nl-profile-distribution__track
+    > :is([data-rank="B+"], [data-rank="B"]) {
+    background: var(--nl-score-grade-b);
 }
 .noslog-ui .nl-profile-disclosure {
     display: inline-flex;
