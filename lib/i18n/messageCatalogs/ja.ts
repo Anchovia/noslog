@@ -494,6 +494,8 @@ export const jaMessages = {
     "home.arcades": "ゲームセンター",
     "home.dataSyncGuide": "データ連携ガイド",
     "home.announcements": "お知らせ",
+    "news.title": "ニュース",
+    "news.tabs": "ニュースの掲示板",
     "home.officialNews": "NOSTALGIA 公式ニュース",
     "home.officialX": "公式X →",
     "music.title": "楽曲検索",

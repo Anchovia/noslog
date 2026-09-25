@@ -496,6 +496,8 @@ export const koMessages = {
     "home.arcades": "오락실",
     "home.dataSyncGuide": "데이터 연동 가이드",
     "home.announcements": "공지사항",
+    "news.title": "소식",
+    "news.tabs": "소식 게시판",
     "home.officialNews": "NOSTALGIA 공식 소식",
     "home.officialX": "공식 X →",
     "music.title": "악곡 검색",

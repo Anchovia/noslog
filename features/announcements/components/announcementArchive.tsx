@@ -13,6 +13,7 @@ import type {
 } from "@/features/announcements/schemas/publicAnnouncementSchema";
 import AnnouncementRow from "./announcementRow";
 import AnnouncementPagination from "./announcementPagination";
+import NewsTabs from "./newsTabs";
 
 export default async function AnnouncementArchive({
     category,
@@ -36,7 +37,8 @@ export default async function AnnouncementArchive({
             <BackLink href={localizePath("/", locale)}>
                 {t("common.home")}
             </BackLink>
-            <PageHeading title={t("home.announcements")} />
+            <PageHeading title={t("news.title")} />
+            <NewsTabs current="announcements" />
             {/* 분류 필터 — 태그를 누르게 하지 않고 목록 위에 따로 (2026-09-18 B1) */}
             <FilterChipLinks
                 label={t("announcements.filter")}

@@ -166,12 +166,16 @@ for (const locale of ["ko", "ja", "en"] as const) {
         await expect(back).toBeFocused();
         await back.press("Enter");
         await expect(page).toHaveURL(new RegExp(`/${locale}/announcements$`));
+        // 목록 제목은 「소식」, 공지사항은 입구 탭(2026-09-26 N1)
         await expect(
-            page.getByRole("heading", {
+            page.getByRole("heading", { name: t["news.title"], exact: true })
+        ).toBeVisible();
+        await expect(
+            page.getByRole("link", {
                 name: t["home.announcements"],
                 exact: true,
             })
-        ).toBeVisible();
+        ).toHaveAttribute("aria-current", "page");
         const missing = await page.goto(
             `/${locale}/announcements/not-a-public-announcement`
         );

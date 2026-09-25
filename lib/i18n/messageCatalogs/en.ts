@@ -500,6 +500,8 @@ export const enMessages = {
     "home.arcades": "Arcades",
     "home.dataSyncGuide": "Data Sync Guide",
     "home.announcements": "Announcements",
+    "news.title": "News",
+    "news.tabs": "News boards",
     "home.officialNews": "Official NOSTALGIA News",
     "home.officialX": "Official X →",
     "music.title": "Song Search",
