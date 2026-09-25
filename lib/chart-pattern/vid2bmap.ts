@@ -12,6 +12,7 @@ import { CHART_LANE_COUNT, CHART_TICKS_PER_QUARTER } from "./schema";
 import type { ChartNote, ChartNoteType, ChartTimingPoint } from "./schema";
 import { sortTimingPoints, tickToMilliseconds } from "./timing";
 import type { Vid2bmapResult } from "./vid2bmapFile";
+import { beatFrameTimes, matchBeatFrames } from "./vid2bmapFile";
 
 /** 같은 칸 · 같은 종류가 이 프레임 이내로 겹치면 한 노트를 두 번 읽은 것 */
 export const VID2BMAP_DUPLICATE_FRAMES = 3;
@@ -61,6 +62,13 @@ export interface Vid2bmapCounts {
 export type Vid2bmapWarning =
     | { kind: "missingBar"; tick: number }
     | { kind: "extraBar"; tick: number }
+    /** 읽을 때 바로잡은 박자선(2026-09-25) — ticks 는 자리, 확인하라고 알린다 */
+    | {
+          kind: "barRepaired";
+          inserted: number;
+          removed: number;
+          ticks: number[];
+      }
     /** vid2bmap 은 첫 · 마지막 박자선 밖의 라벨을 스스로 지운다 — 늘 끝부분을 확인하게 한다 */
     | { kind: "endCheck"; lastBarTick: number }
     | {
@@ -329,6 +337,26 @@ function barWarnings(
 ): Vid2bmapWarning[] {
     const warnings: Vid2bmapWarning[] = [];
     const rows = result.barRows;
+    const sortedPoints = sortTimingPoints(options.timingPoints);
+    const repairs = result.barRepairs ?? [];
+    if (repairs.length > 0) {
+        warnings.push({
+            kind: "barRepaired",
+            inserted: repairs.filter((repair) => repair.kind === "inserted")
+                .length,
+            removed: repairs.filter((repair) => repair.kind === "removed")
+                .length,
+            ticks: repairs.map((repair) =>
+                Math.round(
+                    vid2bmapTickAt(
+                        vid2bmapBeatPosition(rows, repair.row),
+                        options.firstBarTick,
+                        sortedPoints
+                    )
+                )
+            ),
+        });
+    }
     const sorted = sortTimingPoints(options.timingPoints);
     const intervals = rows.slice(1).map((row, index) => row - rows[index]);
     let run: { tick: number; bpms: number[]; chartBpm: number } | null = null;
@@ -1547,44 +1575,27 @@ const TEMPO_WINDOW = 8;
  * 놓친 박자선(간격 ≈ 2박)은 둘로 나누고, 8박 중앙값이 1.5% 넘게 바뀐 곳을 경계로(Altale: 2~62마디 90.00 · 63마디부터 83.06).
  * 첫 박자선은 beat_frames 의 격자 줄에서 판정선 줄까지 줄 수만큼(한 줄 = 한 프레임) 뒤의 박자선과 짝짓는다.
  */
-/** 영상 원본 박자선(beat_frames) — 박마다 걸린 프레임 수와, 첫 박자선이 보정된 박자선(barRows) 몇 번째인지 */
+/**
+ * 박마다 걸린 원본 프레임 수(2026-09-25) — 박은 노트 배치와 같은 AI 박자선(barRows, 읽을 때 빈 곳을 메움)으로 세고,
+ * 시각은 그 선마다 짝지은 원본 프레임 박자선(beat_frames, 프레임 빠짐 보정 전)으로. 짝이 없는 선은 앞뒤 짝의 차이로 채운다.
+ * firstIndex · 끝 = 원본 프레임 박자선이 덮는 처음 · 마지막 박자선
+ */
 function readBeatTrack(result: Vid2bmapResult) {
-    const beatFrames = result.beatFrames;
     const fps = result.fps;
-    if (!beatFrames || !fps || beatFrames.frames.length < TEMPO_WINDOW * 2) {
-        return null;
-    }
     const rows = result.barRows;
-    if (rows.length < 2) return null;
-    const frames = beatFrames.frames;
-    const intervals = frames
-        .slice(1)
-        .map((frame, index) => frame - frames[index]);
-    // 박마다 걸린 프레임 수 — 놓친 박자선은 주변 간격으로 나눠 박 수를 되살린다
-    const durations: number[] = [];
-    intervals.forEach((interval, index) => {
-        const local = median(
-            intervals.slice(Math.max(0, index - 4), index + 5)
-        );
-        const beats = Math.max(1, Math.round(interval / local));
-        for (let beat = 0; beat < beats; beat += 1) {
-            durations.push(interval / beats);
-        }
-    });
+    if (!result.beatFrames || !fps || rows.length < 2) return null;
+    const matched = matchBeatFrames(rows, result.beatFrames);
+    const times = beatFrameTimes(rows, matched);
+    const known = matched
+        .map((frame, index) => (frame === null ? null : index))
+        .filter((index): index is number => index !== null);
+    if (!times || known.length < 2) return null;
+    const firstIndex = known[0];
+    const lastIndex = known[known.length - 1];
+    const durations = times
+        .slice(firstIndex + 1, lastIndex + 1)
+        .map((time, index) => time - times[firstIndex + index]);
     if (durations.length < TEMPO_WINDOW * 2) return null;
-
-    // beat_frames 첫 박자선 ↔ 보정된 박자선 몇 번째(격자 줄 → 판정선 줄 = 한 줄 한 프레임)
-    const expected = frames[0] + (beatFrames.gridRows - 1 - beatFrames.row);
-    let firstIndex = 0;
-    for (let index = 1; index < rows.length; index += 1) {
-        if (
-            Math.abs(rows[index] - expected) <
-            Math.abs(rows[firstIndex] - expected)
-        ) {
-            firstIndex = index;
-        }
-    }
-    if (Math.abs(rows[firstIndex] - expected) > 20) return null;
     return { fps, durations, firstIndex };
 }
 

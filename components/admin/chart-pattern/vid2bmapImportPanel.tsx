@@ -212,6 +212,13 @@ function warningText(
     timingPoints: ChartTimingPoint[]
 ) {
     switch (warning.kind) {
+        case "barRepaired":
+            return `AI 가 ${[warning.inserted > 0 ? `놓친 박자선 ${warning.inserted}곳을 메우고` : "", warning.removed > 0 ? `두 번 잡은 박자선 ${warning.removed}곳을 빼고` : ""].filter(Boolean).join(" ")} 넣어요(${warning.ticks
+                .slice(0, 3)
+                .map((tick) => chartPositionLabel(tick, timingPoints))
+                .join(
+                    " · "
+                )}${warning.ticks.length > 3 ? " …" : ""}) — 그 근처 확인`;
         case "missingBar":
             return `${chartPositionLabel(warning.tick, timingPoints)} 근처 박자선을 놓쳤을 수 있어요 — 뒤 노트가 한 박 밀렸는지 확인`;
         case "extraBar":

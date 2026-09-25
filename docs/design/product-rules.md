@@ -485,7 +485,13 @@ old design-stage checklist. Changes to material behavior require a user decision
 - Tempo changes become proposed timing points (2026-09-23 T2): the result zip carries
   `beat_frames.json` — frames where bar lines crossed one grid row, before vid2bmap's
   frame-drop correction — and the tempo is measured from those (the corrected bar lines
-  jitter ±10%). A change is a shift of more than 1.5% in the trimmed mean of 8 beats that
+  jitter ±10%). Beats are counted on the AI bar lines the notes use (2026-09-25): when the zip is
+  read, a gap of 1.5× the neighbours or more gets the raw bar line inside it, or, when neither has
+  one, even lines from 1.8× (below that it may be a fermata); a line under half a beat from its
+  neighbour with no raw line is dropped; the import panel says where 「AI 가 놓친 박자선 ○곳을
+  메우고 …」. Each AI line is paired with its raw frame (within 35% of a beat, following the offset
+  that frame-drop correction shifts); unpaired beats share the raw time between their paired
+  neighbours evenly. A change is a shift of more than 1.5% in the trimmed mean of 8 beats that
   lasts at least 8 beats; each section's BPM is measured by a straight-line fit over all its beats (shared slope, separate offsets across steps where
   the beats jump by more than 1.5 frames; sections under 32 beats use the first-to-last average), then the first of whole →
   0.5 → 0.1 → 0.01 whose beats stay within the video jitter + 0.5 frames to the section end is proposed (2026-09-25 B′),

@@ -31,6 +31,194 @@ export interface Vid2bmapResult {
      * 실행 스크립트가 labels.npy 에서 뽑아 넣는다. 옛 zip 에는 없다(null)
      */
     beatFrames: { frames: number[]; row: number; gridRows: number } | null;
+    /** 읽을 때 바로잡은 박자선(2026-09-25) — AI 가 놓친 선을 메우거나 두 번 잡은 선을 뺀 자리(y) */
+    barRepairs?: Vid2bmapBarRepair[];
+}
+
+export interface Vid2bmapBarRepair {
+    row: number;
+    kind: "inserted" | "removed";
+    /** frames = 원본 프레임 박자선에 그 선이 있었음, spacing = 둘 다 없어 간격 배수로 */
+    evidence: "frames" | "spacing";
+}
+
+type BeatFrames = NonNullable<Vid2bmapResult["beatFrames"]>;
+
+const localMedian = (values: number[], index: number) => {
+    const window = values
+        .slice(Math.max(0, index - 4), index + 5)
+        .filter((_, position) => position !== Math.min(index, 4));
+    const sorted = [...(window.length > 0 ? window : [values[index]])].sort(
+        (left, right) => left - right
+    );
+    const middle = Math.floor(sorted.length / 2);
+    return sorted.length % 2
+        ? sorted[middle]
+        : (sorted[middle - 1] + sorted[middle]) / 2;
+};
+
+/** 원본 프레임 박자선과 이만큼(박 간격 비율) 안이면 같은 선 */
+const BEAT_MATCH_RATIO = 0.35;
+
+/**
+ * AI 박자선(보정된 시간축의 y)마다 짝이 되는 원본 프레임 박자선(beat_frames) — 없으면 null(2026-09-25).
+ * 첫 짝은 격자 줄에서 판정선 줄까지 줄 수만큼(한 줄 = 한 프레임) 뒤, 그다음은 앞 짝의 차이(프레임 빠짐 보정으로 조금씩 변함)를 따라간다
+ */
+export function matchBeatFrames(
+    rows: number[],
+    beatFrames: BeatFrames | null
+): (number | null)[] {
+    const matched: (number | null)[] = rows.map(() => null);
+    if (!beatFrames || beatFrames.frames.length === 0 || rows.length < 2) {
+        return matched;
+    }
+    const frames = beatFrames.frames;
+    const intervals = rows.slice(1).map((row, index) => row - rows[index]);
+    const expected = frames[0] + (beatFrames.gridRows - 1 - beatFrames.row);
+    let first = 0;
+    rows.forEach((row, index) => {
+        if (Math.abs(row - expected) < Math.abs(rows[first] - expected)) {
+            first = index;
+        }
+    });
+    if (Math.abs(rows[first] - expected) > 20) return matched;
+    let offset = rows[first] - frames[0];
+    /** 마지막 짝 다음 원본 박자선 */
+    let next = 0;
+    for (let index = first; index < rows.length; index += 1) {
+        const local = localMedian(
+            intervals,
+            Math.min(index, intervals.length - 1)
+        );
+        const predicted = rows[index] - offset;
+        let cursor = next;
+        while (
+            cursor + 1 < frames.length &&
+            Math.abs(frames[cursor + 1] - predicted) <=
+                Math.abs(frames[cursor] - predicted)
+        ) {
+            cursor += 1;
+        }
+        if (cursor >= frames.length) break;
+        const found: number | null =
+            Math.abs(frames[cursor] - predicted) <= local * BEAT_MATCH_RATIO
+                ? cursor
+                : null;
+        if (found !== null) {
+            matched[index] = frames[found];
+            offset = rows[index] - frames[found];
+            next = found + 1;
+        }
+    }
+    return matched;
+}
+
+/**
+ * 짝이 없는 줄의 원본 프레임 시각 — 앞뒤 짝 사이 원본 시간을 박 수로 고르게 나눈다(AI 박자선 위치는 ±8프레임 흔들려
+ * 그대로 쓰면 템포가 튄다, Towards the TOWER 48마디 427 BPM). 처음 · 마지막 짝 바깥은 가장 가까운 짝의 차이로
+ */
+export function beatFrameTimes(rows: number[], matched: (number | null)[]) {
+    const known = matched
+        .map((frame, index) => (frame === null ? null : index))
+        .filter((index): index is number => index !== null);
+    if (known.length === 0) return null;
+    return rows.map((row, index) => {
+        const frame = matched[index];
+        if (frame !== null) return frame;
+        const before = [...known]
+            .reverse()
+            .find((candidate) => candidate < index);
+        const after = known.find((candidate) => candidate > index);
+        if (before === undefined)
+            return row - (rows[after!] - (matched[after!] as number));
+        if (after === undefined)
+            return row - (rows[before] - (matched[before] as number));
+        const start = matched[before] as number;
+        const end = matched[after] as number;
+        return start + ((end - start) * (index - before)) / (after - before);
+    });
+}
+
+/**
+ * AI 박자선 바로잡기(2026-09-25) — 노트 배치 · 템포 · 박자 추정이 같은 박자선을 쓰게.
+ * 간격이 주변의 1.5배 넘으면 그 안에 원본 프레임 박자선이 있을 때 그 자리에 메우고, 둘 다 없으면 1.8배 넘을 때만
+ * 고르게 메운다(그 아래는 한 박을 길게 끄는 페르마타일 수 있어 그대로). 절반 아래로 붙은 선은 두 번 잡은 것으로 보고 뺀다
+ */
+export function repairVid2bmapBarRows(
+    rows: number[],
+    beatFrames: BeatFrames | null
+): { rows: number[]; repairs: Vid2bmapBarRepair[] } {
+    const repairs: Vid2bmapBarRepair[] = [];
+    if (rows.length < 3) return { rows, repairs };
+    // 두 번 잡은 선 — 짧은 간격 둘을 합쳐 한 박에 가까우면 가운데 선을 뺀다(원본 프레임에 그 선이 있으면 두지 않는다)
+    const matched = matchBeatFrames(rows, beatFrames);
+    let kept = [...rows];
+    let keptMatched = [...matched];
+    for (let index = 1; index + 1 < kept.length; index += 1) {
+        const intervals = kept.slice(1).map((row, at) => row - kept[at]);
+        const local = localMedian(intervals, index);
+        const before = kept[index] - kept[index - 1];
+        const after = kept[index + 1] - kept[index];
+        if (
+            Math.min(before, after) < local * 0.6 &&
+            before + after < local * 1.4 &&
+            keptMatched[index] === null
+        ) {
+            repairs.push({
+                row: kept[index],
+                kind: "removed",
+                evidence: "spacing",
+            });
+            kept = kept.filter((_, at) => at !== index);
+            keptMatched = keptMatched.filter((_, at) => at !== index);
+            index -= 1;
+        }
+    }
+    const times = beatFrameTimes(kept, keptMatched);
+    const frames = beatFrames?.frames ?? [];
+    const intervals = kept.slice(1).map((row, index) => row - kept[index]);
+    const repaired: number[] = [kept[0]];
+    intervals.forEach((interval, index) => {
+        const local = localMedian(intervals, index);
+        const ratio = interval / local;
+        if (ratio >= 1.5) {
+            const start = kept[index];
+            const end = kept[index + 1];
+            const inside =
+                times === null
+                    ? []
+                    : frames
+                          .map((frame) => {
+                              // 앞 줄의 시간 차이로 원본 프레임 → y
+                              const offset = start - times[index];
+                              return frame + offset;
+                          })
+                          .filter(
+                              (row) =>
+                                  row > start + local * 0.25 &&
+                                  row < end - local * 0.25
+                          );
+            if (inside.length > 0) {
+                for (const row of inside) {
+                    repaired.push(row);
+                    repairs.push({ row, kind: "inserted", evidence: "frames" });
+                }
+            } else if (ratio >= 1.8) {
+                const count = Math.round(ratio);
+                for (let step = 1; step < count; step += 1) {
+                    const row = start + (interval * step) / count;
+                    repaired.push(row);
+                    repairs.push({
+                        row,
+                        kind: "inserted",
+                        evidence: "spacing",
+                    });
+                }
+            }
+        }
+        repaired.push(kept[index + 1]);
+    });
+    return { rows: repaired, repairs };
 }
 
 const NPY_MAGIC = [0x93, 0x4e, 0x55, 0x4d, 0x50, 0x59];
@@ -278,10 +466,15 @@ export async function readVid2bmapZip(
         }
     }
 
+    const repaired = repairVid2bmapBarRows(
+        barRowsFromMask(bar!.values),
+        beatFrames
+    );
     return {
         fps,
         startSec,
-        barRows: barRowsFromMask(bar!.values),
+        barRows: repaired.rows,
+        barRepairs: repaired.repairs,
         simple: npyRows(simple!, [3, 4]),
         tenuto: npyRows(tenuto!, [4, 5]),
         trill: trill ? npyRows(trill, [4, 5]) : [],
