@@ -1389,7 +1389,7 @@ export const enMessages = {
     "profile.levels.rowSummary": "{level}: {parts} (of {total})",
     "profile.notes.title": "Success rate by note type",
     "profile.notes.basis": "Average of best records on charts with that note",
-    "profile.newBest": "New best",
+    "profile.newBest": "New",
     "profile.activity.year": "Past year",
     "profile.activity.month": "This month",
     "profile.activity.activeDays": "Days played",

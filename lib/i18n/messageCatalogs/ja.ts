@@ -1378,7 +1378,7 @@ export const jaMessages = {
     "profile.levels.rowSummary": "{level}: {parts}（全{total}）",
     "profile.notes.title": "ノーツ種類別成功率",
     "profile.notes.basis": "そのノーツがある譜面のベスト記録の平均",
-    "profile.newBest": "自己ベスト",
+    "profile.newBest": "New",
     "profile.activity.year": "直近1年",
     "profile.activity.month": "今月",
     "profile.activity.activeDays": "プレイした日",

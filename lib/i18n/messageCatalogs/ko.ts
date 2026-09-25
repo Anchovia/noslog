@@ -1375,7 +1375,7 @@ export const koMessages = {
     "profile.levels.rowSummary": "{level}: {parts} (전체 {total})",
     "profile.notes.title": "노트 종류별 성공률",
     "profile.notes.basis": "그 노트가 있는 채보의 베스트 기록 평균",
-    "profile.newBest": "새 기록",
+    "profile.newBest": "New",
     "profile.activity.year": "최근 1년",
     "profile.activity.month": "이번 달",
     "profile.activity.activeDays": "플레이한 날",
