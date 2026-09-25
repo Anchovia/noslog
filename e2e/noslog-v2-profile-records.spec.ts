@@ -1,8 +1,8 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
-// 프로필 「기록」 탭(2026-09-25 2단계) — 베스트 50 · 모든 기록, 필터 · 검색 · 적용 조건, 모드 유지, 가로 넘침 없음
-test("P6 records tab filters, searches and keeps the mode across tabs", async ({
+// 프로필 「기록」 탭(2026-09-25 2단계) — 베스트 50 · 모든 기록, 정렬, 모드 유지, 가로 넘침 없음(검색 · 필터 없음, 2026-09-26)
+test("P6 records tab switches view and sort and keeps the mode across tabs", async ({
     page,
 }) => {
     const errors: string[] = [];
@@ -17,28 +17,23 @@ test("P6 records tab filters, searches and keeps the mode across tabs", async ({
         const query = Object.fromEntries(
             new URL(route.request().url()).searchParams
         );
-        const difficulty = query.difficulty?.split(",") ?? [];
-        const items = plays
-            .filter(
-                ([, level]) =>
-                    !difficulty.length ||
-                    difficulty.includes(level.toLowerCase())
-            )
-            .map(([title, level, number, score, rank], index) => ({
-                id: index + 1,
-                musicIndex: String(index + 1),
-                title,
-                background: null,
-                difficulty: level,
-                level: number,
-                score,
-                rank,
-                fullCombo: false,
-                contribution: 120 - index,
-                playedAt: "2026-09-19 01:01",
-                chartRank: index + 1,
-                position: null,
-            }));
+        const items = (
+            query.sort === "title" ? [...plays].reverse() : plays
+        ).map(([title, level, number, score, rank], index) => ({
+            id: index + 1,
+            musicIndex: String(index + 1),
+            title,
+            background: null,
+            difficulty: level,
+            level: number,
+            score,
+            rank,
+            fullCombo: false,
+            contribution: 120 - index,
+            playedAt: "2026-09-19 01:01",
+            chartRank: index + 1,
+            position: null,
+        }));
         await route.fulfill({
             json: {
                 isSuccess: true,
@@ -48,15 +43,10 @@ test("P6 records tab filters, searches and keeps the mode across tabs", async ({
                     query: {
                         view: query.view,
                         mode: query.mode,
-                        q: query.q ?? "",
-                        difficulty,
-                        rank: [],
-                        lamp: [],
                         sort: query.sort,
                         offset: Number(query.offset),
-                        size: Number(query.size),
                     },
-                    items: Number(query.size) ? items : [],
+                    items,
                     total: items.length,
                     hasMore: false,
                 },
@@ -72,7 +62,7 @@ test("P6 records tab filters, searches and keeps the mode across tabs", async ({
     const records = page.getByRole("region", { name: "기록", exact: true });
     const rows = records.getByRole("list").getByRole("link");
     await expect(
-        records.getByText("조건에 맞는 기록이 없습니다")
+        records.getByText("베스트 성과 기록이 없습니다.")
     ).toBeVisible();
 
     await records.getByRole("button", { name: /^모든 기록/ }).click();
@@ -80,22 +70,11 @@ test("P6 records tab filters, searches and keeps the mode across tabs", async ({
     await expect(rows).toHaveCount(3);
     await expect(rows.first()).toContainText("#1");
 
-    const wide = page.viewportSize()!.width >= 672;
-    await records.getByRole("button", { name: "필터" }).click();
-    await page.getByRole("button", { name: "REAL", exact: true }).click();
-    if (!wide)
-        await page.getByRole("button", { name: /^기록 .*곡 보기$/ }).click();
-    else await page.keyboard.press("Escape");
-    await expect(
-        records.getByRole("button", { name: "REAL 조건 해제" })
-    ).toBeVisible();
-    await expect(rows).toHaveCount(2);
-    await expect(rows.first()).toContainText("REAL");
-
-    await records.getByRole("button", { name: "필터 모두 지우기" }).click();
-    await expect(
-        records.getByRole("button", { name: "REAL 조건 해제" })
-    ).toHaveCount(0);
+    await expect(records.getByRole("searchbox")).toHaveCount(0);
+    await expect(records.getByRole("button", { name: "필터" })).toHaveCount(0);
+    await records.getByRole("button", { name: /^정렬/ }).click();
+    await page.getByRole("menuitemradio", { name: "곡 이름 순" }).click();
+    await expect(rows.first()).toContainText("Twinkle Wonderland");
 
     // 모드는 주소로 — 탭을 옮겨도 그대로
     await page.getByRole("radio", { name: "Recital", exact: true }).click();

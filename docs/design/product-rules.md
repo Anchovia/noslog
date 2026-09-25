@@ -84,8 +84,8 @@ old design-stage checklist. Changes to material behavior require a user decision
   population the rank counts. The 90-day change is the official Grd change over the
   progress range and is shown only when it rose.
 - Records tab (2026-09-25): "Best" is the top 50 charts by the mode's official Grd
-  contribution (the same set official Grd counts); conditions and sorts apply inside
-  that set and each row keeps its best position. "All records" is every chart with a
+  contribution (the same set official Grd counts); sorts apply inside that set and
+  each row keeps its best position. There is no search or filter (2026-09-26). "All records" is every chart with a
   score. A row's chart rank is the chart ranking's RANK among players who show scores
   (a private player's own rows count among the public players). The achieved date is
   the imported best time; the never-played placeholder (1970) shows no date. The

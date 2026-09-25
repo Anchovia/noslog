@@ -4,18 +4,12 @@ import { Prisma } from "@prisma/client";
 
 import db from "@/lib/db";
 import {
+    PROFILE_RECORDS_PAGE_SIZE,
     profileRecordsPayloadSchema,
     type ProfileRecordsQuery,
 } from "@/features/profile/schemas/publicProfileSchema";
 
 const BEST_LIMIT = 50;
-const DIFFICULTY_NAMES = {
-    normal: "Normal",
-    hard: "Hard",
-    expert: "Expert",
-    real: "Real",
-} as const;
-
 /** 가져온 기록의 「달성 시각」 — 한 번도 안 한 채보의 자리 값(1970 년)은 날짜가 없는 것으로 */
 export function recordPlayedAt(besttime: string | null | undefined) {
     const value = besttime?.trim();
@@ -40,7 +34,7 @@ export async function getChartRanks(playIds: readonly number[]) {
     return new Map(rows.map((row) => [row.id, row.position]));
 }
 
-/** 「기록」 탭 목록 — 베스트 50(공식 Grd 기여 상위) 또는 모든 기록에 검색 · 필터 · 정렬을 건다 */
+/** 「기록」 탭 목록 — 베스트 50(공식 Grd 기여 상위) 또는 모든 기록을 고른 순으로 */
 export async function getPublicProfileRecords(
     userId: number,
     query: ProfileRecordsQuery
@@ -72,49 +66,6 @@ export async function getPublicProfileRecords(
         user_id: userId,
         score: { gt: 0 },
         ...(best ? { id: { in: best.map((play) => play.id) } } : {}),
-        AND: [
-            query.difficulty.length
-                ? {
-                      difficulty: {
-                          in: query.difficulty.map(
-                              (value) => DIFFICULTY_NAMES[value]
-                          ),
-                      },
-                  }
-                : {},
-            query.rank.length ? { rank: { in: query.rank } } : {},
-            query.lamp.length
-                ? {
-                      OR: query.lamp.map((lamp) =>
-                          lamp === "pianist"
-                              ? { fc_type: 3 }
-                              : lamp === "fullCombo"
-                                ? { fc_type: 2 }
-                                : { fc_type: { lt: 2 } }
-                      ),
-                  }
-                : {},
-            query.q
-                ? {
-                      music: {
-                          OR: [
-                              {
-                                  title: {
-                                      contains: query.q,
-                                      mode: "insensitive",
-                                  },
-                              },
-                              {
-                                  title_kana: {
-                                      contains: query.q,
-                                      mode: "insensitive",
-                                  },
-                              },
-                          ],
-                      },
-                  }
-                : {},
-        ],
     };
     const orderBy: Prisma.PlayDataOrderByWithRelationInput[] =
         query.sort === "score"
@@ -131,27 +82,25 @@ export async function getPublicProfileRecords(
                   ];
     const [total, plays] = await Promise.all([
         db.playData.count({ where }),
-        query.size
-            ? db.playData.findMany({
-                  where,
-                  orderBy,
-                  skip: query.offset,
-                  take: query.size,
-                  select: {
-                      id: true,
-                      music_idx: true,
-                      difficulty: true,
-                      level: true,
-                      score: true,
-                      rank: true,
-                      fc_type: true,
-                      besttime: true,
-                      grade_basic: true,
-                      grade_recital: true,
-                      music: { select: { title: true, background: true } },
-                  },
-              })
-            : [],
+        db.playData.findMany({
+            where,
+            orderBy,
+            skip: query.offset,
+            take: PROFILE_RECORDS_PAGE_SIZE,
+            select: {
+                id: true,
+                music_idx: true,
+                difficulty: true,
+                level: true,
+                score: true,
+                rank: true,
+                fc_type: true,
+                besttime: true,
+                grade_basic: true,
+                grade_recital: true,
+                music: { select: { title: true, background: true } },
+            },
+        }),
     ]);
     const ranks = await getChartRanks(plays.map((play) => play.id));
     return profileRecordsPayloadSchema.parse({

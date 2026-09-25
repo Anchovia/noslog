@@ -62,59 +62,19 @@ export type ProfileProgressPayload = z.infer<
     typeof profileProgressPayloadSchema
 >;
 
-/** 「기록」 탭(2026-09-25 2단계) — 베스트 50 · 모든 기록, 검색 · 필터 · 정렬, 20개씩 */
+/** 「기록」 탭(2026-09-25 2단계) — 베스트 50 · 모든 기록, 정렬, 20개씩(검색 · 필터 없음 — 2026-09-26) */
 export const PROFILE_RECORDS_PAGE_SIZE = 20;
-export const PROFILE_RECORD_DIFFICULTIES = [
-    "normal",
-    "hard",
-    "expert",
-    "real",
-] as const;
-export const PROFILE_RECORD_RANKS = [
-    "P",
-    "S",
-    "A2",
-    "A",
-    "B2",
-    "B",
-    "C",
-    "D",
-] as const;
-export const PROFILE_RECORD_LAMPS = ["pianist", "fullCombo", "clear"] as const;
 export const PROFILE_RECORD_SORTS = [
     "value",
     "score",
     "recent",
     "title",
 ] as const;
-const listParam = <Values extends readonly [string, ...string[]]>(
-    values: Values
-) =>
-    z
-        .preprocess(
-            (value) =>
-                typeof value === "string"
-                    ? value.split(",").filter(Boolean)
-                    : value,
-            z.array(z.enum(values)).max(values.length)
-        )
-        .default([]);
 export const profileRecordsQuerySchema = z.object({
     view: z.enum(["best", "all"]).default("best"),
     mode: profileModeSchema.default("basic"),
-    q: z.string().trim().max(60).default(""),
-    difficulty: listParam(PROFILE_RECORD_DIFFICULTIES),
-    rank: listParam(PROFILE_RECORD_RANKS),
-    lamp: listParam(PROFILE_RECORD_LAMPS),
     sort: z.enum(PROFILE_RECORD_SORTS).default("value"),
     offset: z.coerce.number().int().min(0).max(100000).default(0),
-    /** 0 = 개수만(폰 필터 창의 「결과 N개 보기」) */
-    size: z.coerce
-        .number()
-        .int()
-        .min(0)
-        .max(PROFILE_RECORDS_PAGE_SIZE)
-        .default(PROFILE_RECORDS_PAGE_SIZE),
 });
 export const profileRecordsPayloadSchema = z.object({
     query: profileRecordsQuerySchema,

@@ -795,55 +795,15 @@
     gap: var(--nl-spacing-4) var(--nl-spacing-12);
     min-width: 0;
 }
-/* 「기록」 탭(2026-09-25 2단계) — 2단 탭 | 검색 · 필터 · 정렬 →12→ 곡 수 · 적용 조건 →16→ 표 */
+/* 「기록」 탭(2026-09-25 2단계) — 2단 탭 | 고스트 정렬 한 줄(모든 폭) →16→ 표. 검색 · 필터 없음(2026-09-26) */
 .noslog-ui .nl-profile-records {
     gap: var(--nl-spacing-16);
 }
 .noslog-ui .nl-profile-records__toolbar {
     display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-12);
-    min-width: 0;
-}
-.noslog-ui .nl-profile-records__actions {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-8);
-    min-width: 0;
-}
-.noslog-ui .nl-profile-records__actions .nl-filter-toolbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--nl-spacing-8);
-}
-.noslog-ui .nl-profile-records__summary {
-    display: flex;
     flex-wrap: wrap;
     align-items: center;
+    justify-content: space-between;
     gap: var(--nl-spacing-8) var(--nl-spacing-12);
     min-width: 0;
-}
-.noslog-ui .nl-profile-records__filters {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-}
-.noslog-ui .nl-profile-records__apply {
-    flex: 1;
-}
-@media (min-width: 672px) {
-    .noslog-ui .nl-profile-records__toolbar {
-        flex-direction: row;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: space-between;
-    }
-    .noslog-ui .nl-profile-records__actions {
-        flex-direction: row;
-        align-items: center;
-    }
-    .noslog-ui .nl-profile-records__search {
-        width: 240px;
-    }
 }

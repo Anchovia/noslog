@@ -77,13 +77,8 @@ export default async function ProfileRecordsRoute({
         getPublicProfileRecords(id, {
             view: "best",
             mode,
-            q: "",
-            difficulty: [],
-            rank: [],
-            lamp: [],
             sort: "value",
             offset: 0,
-            size: 20,
         }),
     ]);
     return (

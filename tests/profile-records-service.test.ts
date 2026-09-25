@@ -45,66 +45,61 @@ describe("profile records tab", () => {
         mocks.ranks.mockResolvedValue([]);
     });
 
-    it("parses comma lists and rejects unknown values", () => {
-        const query = profileRecordsQuerySchema.parse({
-            difficulty: "real,expert",
-            rank: "P,S",
-        });
-        expect(query.difficulty).toEqual(["real", "expert"]);
-        expect(query.rank).toEqual(["P", "S"]);
+    it("rejects unknown views and sorts", () => {
+        expect(profileRecordsQuerySchema.parse({}).view).toBe("best");
         expect(
-            profileRecordsQuerySchema.safeParse({ difficulty: "extreme" })
-                .success
+            profileRecordsQuerySchema.safeParse({ sort: "level" }).success
+        ).toBe(false);
+        expect(
+            profileRecordsQuerySchema.safeParse({ view: "recent" }).success
         ).toBe(false);
     });
 
-    it("keeps best membership to fifty and applies conditions inside it with best positions", async () => {
+    it("keeps best membership to fifty, sorts inside it and keeps best positions", async () => {
         mocks.findMany
             .mockResolvedValueOnce([{ id: 11 }, { id: 12 }, { id: 13 }])
             .mockResolvedValueOnce([play(13), play(11)]);
-        mocks.count.mockResolvedValue(2);
+        mocks.count.mockResolvedValue(3);
         mocks.ranks.mockResolvedValue([{ id: 13, position: 4 }]);
         const result = await getPublicProfileRecords(
             7,
-            profileRecordsQuerySchema.parse({
-                view: "best",
-                difficulty: "real",
-                lamp: "fullCombo",
-                q: "moon",
-                sort: "score",
-            })
+            profileRecordsQuerySchema.parse({ view: "best", sort: "score" })
         );
         expect(mocks.findMany.mock.calls[0][0]).toMatchObject({
             where: { user_id: 7, grade_basic: { gt: 0 } },
             take: 50,
         });
-        const where = mocks.findMany.mock.calls[1][0].where;
-        expect(where.id).toEqual({ in: [11, 12, 13] });
-        expect(where.AND).toEqual(
-            expect.arrayContaining([
-                { difficulty: { in: ["Real"] } },
-                { OR: [{ fc_type: 2 }] },
-            ])
-        );
-        expect(mocks.findMany.mock.calls[1][0].orderBy[0]).toEqual({
-            score: "desc",
+        const second = mocks.findMany.mock.calls[1][0];
+        expect(second.where).toEqual({
+            user_id: 7,
+            score: { gt: 0 },
+            id: { in: [11, 12, 13] },
         });
+        expect(second.orderBy[0]).toEqual({ score: "desc" });
+        expect(second.take).toBe(20);
         expect(result?.items.map((item) => item.position)).toEqual([3, 1]);
         expect(result?.items[0].chartRank).toBe(4);
         expect(result?.items[0].contribution).toBe(120);
-        expect(result?.total).toBe(2);
-        expect(result?.hasMore).toBe(false);
+        expect(result?.total).toBe(3);
+        expect(result?.hasMore).toBe(true);
     });
 
-    it("counts only when size is zero (phone filter results button)", async () => {
-        mocks.count.mockResolvedValue(94);
+    it("lists every scored chart for all records without best positions", async () => {
+        mocks.findMany.mockResolvedValueOnce([play(21)]);
+        mocks.count.mockResolvedValue(1);
         const result = await getPublicProfileRecords(
             7,
-            profileRecordsQuerySchema.parse({ view: "all", size: 0 })
+            profileRecordsQuerySchema.parse({ view: "all", sort: "recent" })
         );
-        expect(mocks.findMany).not.toHaveBeenCalled();
-        expect(result?.total).toBe(94);
-        expect(result?.items).toEqual([]);
+        expect(mocks.findMany).toHaveBeenCalledTimes(1);
+        expect(mocks.findMany.mock.calls[0][0].where).toEqual({
+            user_id: 7,
+            score: { gt: 0 },
+        });
+        expect(mocks.findMany.mock.calls[0][0].orderBy[0]).toEqual({
+            besttime: "desc",
+        });
+        expect(result?.items[0].position).toBeNull();
     });
 
     it("treats the never-played placeholder time as no date", () => {
