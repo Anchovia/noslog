@@ -59,14 +59,3 @@ export function getProfileRankRows(user: ProfileUser): ProfileRankRow[] {
         { label: "D", value: user.score_d ?? 0 },
     ];
 }
-
-/** 상위 N% — 1% 아래는 소수 한 자리(최소 0.1), 그 위는 정수 */
-export function formatTopPercent(rank: number, total: number, locale: string) {
-    const percent = (rank / total) * 100;
-    return percent < 1
-        ? Math.max(0.1, Math.ceil(percent * 10) / 10).toLocaleString(locale, {
-              minimumFractionDigits: 1,
-              maximumFractionDigits: 1,
-          })
-        : Math.ceil(percent).toLocaleString(locale);
-}

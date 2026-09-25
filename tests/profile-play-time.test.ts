@@ -17,6 +17,10 @@ describe("profile play time", () => {
         expect(formatProfilePlayTime("2026-08-11T12:04:00Z", "en")).toEqual(
             formatProfilePlayTime(source, "en")
         );
+        // 북마클릿 최근 플레이 형식(빗금 날짜 · 초 없음)
+        expect(formatProfilePlayTime("2026/08/11 21:04", "ko")).toEqual(
+            formatProfilePlayTime(source, "ko")
+        );
     });
     it("handles midnight, missing values and invalid source data without invented timestamps", () => {
         expect(formatProfilePlayTime("2026-08-11 00:04:00", "en")?.label).toBe(

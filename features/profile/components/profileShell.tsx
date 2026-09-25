@@ -71,7 +71,11 @@ export default async function ProfileShell({ id }: { id: number }) {
                     Boolean(sync && ["failed", "partial"].includes(sync.status))
                 }
             />
-            <ProfileTabs userId={id} scoresHidden={scoresHidden} />
+            <ProfileTabs
+                userId={id}
+                scoresHidden={scoresHidden}
+                activityHidden={profileData.user.hide_play_activity}
+            />
         </>
     );
 }

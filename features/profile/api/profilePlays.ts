@@ -12,7 +12,8 @@ import type { InfiniteData } from "@tanstack/react-query";
 
 export function profilePlaysOptions(
     userId: number,
-    query: Omit<ProfileListQuery, "offset">,
+    query: Omit<ProfileListQuery, "offset" | "limit"> &
+        Partial<Pick<ProfileListQuery, "limit">>,
     visit = 0
 ) {
     return infiniteQueryOptions<
@@ -27,7 +28,7 @@ export function profilePlaysOptions(
             profileListPayloadSchema.parse(
                 await readApiResponse(
                     await fetch(
-                        `/api/profiles/${userId}/plays?${new URLSearchParams({ ...query, offset: String(pageParam) })}`,
+                        `/api/profiles/${userId}/plays?${new URLSearchParams({ ...query, limit: String(query.limit ?? PROFILE_BATCH_SIZE), offset: String(pageParam) })}`,
                         {
                             cache: "no-store",
                             signal,
@@ -37,7 +38,7 @@ export function profilePlaysOptions(
             ),
         initialPageParam: 0,
         getNextPageParam: (last) =>
-            last.hasMore ? last.query.offset + PROFILE_BATCH_SIZE : undefined,
+            last.hasMore ? last.query.offset + last.query.limit : undefined,
         // Every visit/expansion rechecks current privacy; do not reuse hidden history.
         staleTime: 0,
         retry: false,

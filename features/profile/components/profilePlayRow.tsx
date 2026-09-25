@@ -20,7 +20,7 @@ import type {
 
 /**
  * 기록 줄(2026-09-25 B2) — 좁은 칸(폰)은 두 줄(자켓 44 · 곡 / 난이도 · 점수 · 등급 · 오른쪽 값), 넓은 칸은 열 고정 표 행
- * (베스트: 순번 · 자켓 36 · 곡 · 난이도 · 점수 · 등급 · 날짜 · Grd, 최근: 자켓 · 곡 · 난이도 · 점수 · 등급 · 플레이 시각).
+ * (베스트: 순번 · 자켓 36 · 곡 · 난이도 · 점수 · 등급 · 날짜 · Grd, 최근: 자켓 · 곡 · 난이도 · 점수 · 등급 · 새 기록 · 플레이 시각).
  * 같은 마크업에 칸 폭(container query)만 다르다 — profile.css `nl-profile-play-row`
  */
 export default function ProfilePlayRow({
@@ -93,6 +93,11 @@ export default function ProfilePlayRow({
                         #{play.chartRank.toLocaleString(locale)}
                     </span>
                 ) : null}
+                {play.newBest ? (
+                    <span className="nl-profile-play-row__new nl-metadata">
+                        {t("profile.newBest")}
+                    </span>
+                ) : null}
                 {playedAt ? (
                     <time
                         className="nl-profile-play-row__time nl-metadata nl-muted"
@@ -147,7 +152,9 @@ export function ProfilePlayListHead({
                 <span className="nl-profile-play-row__chart">
                     {t("profile.column.chartRank")}
                 </span>
-            ) : null}
+            ) : (
+                <span className="nl-profile-play-row__new" />
+            )}
             <span className="nl-profile-play-row__time">
                 {t(record ? "profile.column.date" : "profile.column.playedAt")}
             </span>

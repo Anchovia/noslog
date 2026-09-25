@@ -78,11 +78,13 @@ old design-stage checklist. Changes to material behavior require a user decision
   approved exam achievement per mode; do not introduce a generic `GRADE 57` badge.
 - The public profile (2026-09-25) is one head (identity, meta line, mode, headline
   Grd) above section tabs with their own URLs — overview `/profile/[id]`, records
-  `/profile/[id]/records` and achievements `/profile/[id]/achievements` so far. The selected mode lives in the
-  URL (`?mode=recital`) and carries across tabs. The headline "top N%" is the world
-  rank divided by the players who show scores and have that mode's Grd — the same
-  population the rank counts. The 90-day change is the official Grd change over the
-  progress range and is shown only when it rose.
+  `/records`, stats `/stats`, achievements `/achievements` and activity `/activity`.
+  The selected mode lives in the URL (`?mode=recital`) and carries across tabs; only
+  the overview, records and the stats progress chart use it. Others do not see the
+  records and stats tabs of a score-private profile; nobody sees the activity tab
+  while "hide play activity" is on (same rule as the recent-play list). The headline
+  shows official Grd, world and country rank and the rating — no mode name, "top N%"
+  or 90-day change (2026-09-26, user).
 - Records tab (2026-09-25): "Best" is the top 50 charts by the mode's official Grd
   contribution (the same set official Grd counts); sorts apply inside that set and
   each row keeps its best position. There is no search or filter (2026-09-26). "All records" is every chart with a
@@ -90,6 +92,24 @@ old design-stage checklist. Changes to material behavior require a user decision
   (a private player's own rows count among the public players). The achieved date is
   the imported best time; the never-played placeholder (1970) shows no date. The
   records API rechecks score privacy on every request like the plays API.
+- Stats tab (2026-09-26) is mode-independent except the progress chart. Level
+  achievement counts every listed chart per difficulty and level; the lamp is
+  Pianist (FC type 3) > FC (FC type 2) > clear > failed, where failed means a
+  clear count known to be 0 (older imports without a clear count count as clear),
+  and unplayed = listed charts − played charts. "All" merges NORMAL · HARD · EXPERT
+  by level and keeps REAL levels as separate rows; the overview side shows levels
+  9 and up plus REAL. The row percentage is clear-or-better (lamp) or S-or-better
+  (rank) over listed charts. Note-type success is the mean of best-record rates on
+  charts that have that note (null rates are skipped). Rank counts and play count
+  are the official-site values as before. Rank and play-count history for the
+  progress chart do not exist yet, so the chart keeps Grd and rating only.
+- Activity tab (2026-09-26) counts imported play history per Korean calendar day
+  over 53 weeks ending today (history exists only after bookmarklet sync). Summary
+  = plays in that window, plays this month, days played and the longest run of
+  consecutive days. Calendar colour steps are relative to the player's busiest day.
+  Recent plays are listed one play per row, 20 per page; "new best" marks a play
+  whose score beat the best score recorded just before it (a first play counts).
+  Score-private profiles show others the calendar and summary without the list.
 - Public share links use stable profile IDs and the selected locale. Card export,
   clipboard or native-share failure must offer a usable fallback without changing
   privacy settings. Respect the existing public-data policy on every request.

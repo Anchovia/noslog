@@ -17,10 +17,12 @@ import Button from "@/components/ui/Button";
 import MetricSwitch from "@/components/ui/metricSwitch";
 import { StatusMessage } from "@/components/ui/statusMessage";
 import { profilePlaysOptions } from "@/features/profile/api/profilePlays";
+import { PROFILE_BATCH_SIZE } from "@/features/profile/schemas/publicProfileSchema";
 import type {
     ProfileListPayload,
     ProfileMetric,
     ProfileMode,
+    PROFILE_ACTIVITY_BATCH_SIZE,
 } from "@/features/profile/schemas/publicProfileSchema";
 import { LoadingStatus } from "@/components/ui/skeleton";
 import useDelayedFlag from "@/lib/hooks/useDelayedFlag";
@@ -34,11 +36,14 @@ export default function ProfilePlaysList({
     kind,
     mode,
     initialData,
+    batch = PROFILE_BATCH_SIZE,
 }: {
     userId: number;
     kind: "best" | "recent";
     mode: ProfileMode;
     initialData: ProfileListPayload | null;
+    /** 한 번에 불러오는 수 — 개요 5, 「활동」 탭 20(제목 옆 링크 없음) */
+    batch?: typeof PROFILE_BATCH_SIZE | typeof PROFILE_ACTIVITY_BATCH_SIZE;
 }) {
     const t = useTranslations();
     const href = useLocalizedHref();
@@ -54,7 +59,12 @@ export default function ProfilePlaysList({
     }
     const options = profilePlaysOptions(
         userId,
-        { kind, mode: kind === "recent" ? "basic" : mode, metric },
+        {
+            kind,
+            mode: kind === "recent" ? "basic" : mode,
+            metric,
+            limit: batch,
+        },
         visit
     );
     const result = useInfiniteQuery({
@@ -108,11 +118,13 @@ export default function ProfilePlaysList({
                     >
                         {title}
                     </h2>
-                    {/* 베스트 전체는 「기록」 탭(2026-09-25 2단계) — 모드를 그대로 넘긴다 */}
-                    {kind === "best" ? (
+                    {/* 베스트 전체는 「기록」 탭(2026-09-25 2단계, 모드를 그대로 넘긴다) · 최근 플레이 전체는 「활동」 탭(2026-09-26) */}
+                    {batch === PROFILE_BATCH_SIZE ? (
                         <Link
                             href={href(
-                                `/profile/${userId}/records${mode === "recital" ? "?mode=recital" : ""}`
+                                kind === "best"
+                                    ? `/profile/${userId}/records${mode === "recital" ? "?mode=recital" : ""}`
+                                    : `/profile/${userId}/activity`
                             )}
                             className="nl-heading-link nl-control"
                         >
@@ -213,7 +225,7 @@ export default function ProfilePlaysList({
             ) : null}
             {!switching &&
             plays.length > 0 &&
-            (result.hasNextPage || plays.length > 5) ? (
+            (result.hasNextPage || plays.length > batch) ? (
                 <div className="nl-profile-list-actions">
                     {result.hasNextPage ? (
                         <Button
@@ -224,7 +236,7 @@ export default function ProfilePlaysList({
                             {t("profile.more")}
                         </Button>
                     ) : null}
-                    {plays.length > 5 ? (
+                    {plays.length > batch ? (
                         <Button
                             variant="secondary"
                             disabled={busy}

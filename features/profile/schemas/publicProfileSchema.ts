@@ -9,11 +9,22 @@ export const profileIdSchema = z.coerce
 const profileModeSchema = z.enum(["basic", "recital"]);
 const profileMetricSchema = z.enum(["grade", "rating"]);
 export const PROFILE_BATCH_SIZE = 5;
+/** 「활동」 탭의 최근 플레이는 20판씩(기록 탭과 같은 수) */
+export const PROFILE_ACTIVITY_BATCH_SIZE = 20;
 export const profileListQuerySchema = z.object({
     kind: z.enum(["best", "recent"]).default("best"),
     mode: profileModeSchema.default("basic"),
     metric: profileMetricSchema.default("grade"),
     offset: z.coerce.number().int().min(0).max(100000).default(0),
+    limit: z.coerce
+        .number()
+        .pipe(
+            z.union([
+                z.literal(PROFILE_BATCH_SIZE),
+                z.literal(PROFILE_ACTIVITY_BATCH_SIZE),
+            ])
+        )
+        .default(PROFILE_BATCH_SIZE),
 });
 const profilePlaySchema = z.object({
     id: z.number().int(),
@@ -31,6 +42,8 @@ const profilePlaySchema = z.object({
     chartRank: z.number().int().positive().nullable().default(null),
     /** 베스트 50 안의 순번(Grd 기여 순) — 거르거나 다른 순으로 봐도 그대로. 베스트가 아니면 없음 */
     position: z.number().int().positive().nullable().default(null),
+    /** 최근 플레이 — 그 판이 그때까지의 최고 점수를 넘었는지(첫 플레이 포함, 2026-09-26) */
+    newBest: z.boolean().default(false),
 });
 export const profileListPayloadSchema = z.object({
     query: profileListQuerySchema,

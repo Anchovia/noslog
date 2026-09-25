@@ -19,10 +19,7 @@ import type { AchievementSummary } from "@/features/achievements/achievementDefi
 import AchievementShowcase from "@/features/achievements/components/achievementShowcase";
 import { contributionLevel } from "@/features/contributions/contributionLevel";
 import ProfileShareDialog from "@/features/profile/components/profileShareDialog";
-import {
-    formatProfileDate,
-    formatTopPercent,
-} from "@/components/profile/dashboard/profileUtils";
+import { formatProfileDate } from "@/components/profile/dashboard/profileUtils";
 import { gradeBandTone, rankTone } from "@/lib/music/scoreTone";
 import type { ProfileHeaderContext } from "@/features/profile/server/profileOverviewService";
 import type {
@@ -42,7 +39,8 @@ function initialForName(name: string | null, locale: string) {
 
 /**
  * 프로필 머리(2026-09-25 H3 · K2 · M2 · CM1) — 신원(아바타 · 이름 · 명판 · 라벨 · 업적 진열) · 메타 줄(NOSTALGIA ID · Discord ·
- * 오락실 · 마지막 플레이, 아이콘 16 + metadata) · 모드 세그먼트 · 핵심 수치(공식 Grd 크게 + 세계 · 상위 % · 국가 · 레이팅 · 90일 변화).
+ * 오락실 · 마지막 플레이, 아이콘 16 + metadata) · 모드 세그먼트 · 핵심 수치(공식 Grd 크게 + 세계 · 국가 · 레이팅).
+ * 모드 이름 · 상위 % · 90일 변화는 두지 않는다(2026-09-26, 사용자 — 모드는 세그먼트가 말하고, 변화는 성장 추이에 있다).
  * 넓은 화면은 수치가 머리 오른쪽, 좁으면 메타 줄 아래로 쌓인다(폰은 세그먼트가 폭 전체). 점수 비공개면 모드 · 수치가 없다
  */
 export default function ProfileIdentity({
@@ -59,7 +57,7 @@ export default function ProfileIdentity({
     showSyncAction?: boolean;
     /** 업적 요약 — 머리 진열(2026-09-24 P5 · B1) */
     achievements?: AchievementSummary | null;
-    /** 레이팅 · 변화 · 상위 % 분모. 점수 비공개면 null */
+    /** 모드별 레이팅. 점수 비공개면 null */
     header: ProfileHeaderContext | null;
 }) {
     const locale = useLocale();
@@ -81,6 +79,8 @@ export default function ProfileIdentity({
             query ? `${pathname}?${query}` : pathname
         );
     }
+    // 업적 · 활동 탭은 모드와 관계없다 — 모드 세그먼트를 두지 않고, 폰은 수치 상자도 숨긴다(2026-09-25 v2 시안)
+    const modeFree = /\/(achievements|activity)$/.test(pathname);
     const hasGrades = Boolean(
         header && ((user.grade_basic ?? 0) > 0 || (user.grade_recital ?? 0) > 0)
     );
@@ -89,8 +89,6 @@ export default function ProfileIdentity({
     const countryRank =
         mode === "basic" ? user.rank_basic_country : user.rank_recital_country;
     const rating = header?.ratings[mode] ?? null;
-    const change = header?.gradeChange[mode] ?? null;
-    const total = header?.rankedTotals[mode] ?? 0;
     const modeLabel = mode === "basic" ? "Basic" : "Recital";
     const name = user.username || t("common.unnamedUser");
     const discord = user.hide_discord_name
@@ -115,7 +113,10 @@ export default function ProfileIdentity({
             : null;
     return (
         <section className="nl-profile-identity" aria-labelledby="profile-name">
-            <div className="nl-profile-identity__row">
+            <div
+                className="nl-profile-identity__row"
+                data-mode-free={modeFree || undefined}
+            >
                 <Avatar
                     src={user.avatar}
                     alt={t("common.profileImage", { name })}
@@ -246,7 +247,7 @@ export default function ProfileIdentity({
                         ) : null}
                     </ul>
                 ) : null}
-                {hasGrades ? (
+                {hasGrades && !modeFree ? (
                     <div className="nl-profile-identity__mode">
                         <SegmentedControl
                             label={t("profile.modeAria")}
@@ -273,9 +274,7 @@ export default function ProfileIdentity({
                                 >
                                     <div className="nl-profile-headline__grade">
                                         <dt className="nl-metadata nl-muted">
-                                            {t("profile.headlineGrade", {
-                                                mode: modeLabel,
-                                            })}
+                                            {t("profile.headlineGrade")}
                                         </dt>
                                         <dd
                                             className="nl-metric-display nl-toned"
@@ -305,19 +304,6 @@ export default function ProfileIdentity({
                                             >
                                                 #{rank.toLocaleString(locale)}
                                             </dd>
-                                            {total > 0 ? (
-                                                <dd className="nl-metadata nl-muted">
-                                                    ·{" "}
-                                                    {t("profile.topPercent", {
-                                                        percent:
-                                                            formatTopPercent(
-                                                                rank,
-                                                                total,
-                                                                locale
-                                                            ),
-                                                    })}
-                                                </dd>
-                                            ) : null}
                                         </div>
                                     ) : null}
                                     {countryRank ? (
@@ -340,38 +326,12 @@ export default function ProfileIdentity({
                                         </div>
                                     ) : null}
                                 </dl>
-                                <dl className="nl-profile-headline__foot nl-metadata nl-muted">
-                                    {rating !== null ? (
-                                        <>
-                                            <dt>
-                                                {t("rankings.metric.rating")}
-                                            </dt>
-                                            <dd>
-                                                {rating.toLocaleString(locale)}
-                                            </dd>
-                                        </>
-                                    ) : null}
-                                    {change !== null && change > 0 ? (
-                                        <>
-                                            <dt className="sr-only">
-                                                {t("profile.change")}
-                                            </dt>
-                                            <dd>
-                                                {rating !== null ? "· " : ""}
-                                                <span className="nl-profile-headline__up">
-                                                    ▲{" "}
-                                                    {change.toLocaleString(
-                                                        locale,
-                                                        {
-                                                            maximumFractionDigits: 2,
-                                                        }
-                                                    )}
-                                                </span>{" "}
-                                                {t("profile.range.90")}
-                                            </dd>
-                                        </>
-                                    ) : null}
-                                </dl>
+                                {rating !== null ? (
+                                    <dl className="nl-profile-headline__foot nl-metadata nl-muted">
+                                        <dt>{t("rankings.metric.rating")}</dt>
+                                        <dd>{rating.toLocaleString(locale)}</dd>
+                                    </dl>
+                                ) : null}
                             </>
                         ) : (
                             <p className="nl-body-secondary nl-muted">

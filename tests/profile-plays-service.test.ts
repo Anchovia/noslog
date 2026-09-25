@@ -134,6 +134,50 @@ describe("profile incremental public plays", () => {
         expect(result?.hasMore).toBe(false);
         expect(mocks.recent).not.toHaveBeenCalled();
     });
+    it("recent plays mark a new best only when the play beat the previous best, twenty per page on the activity tab", async () => {
+        const recent = (
+            id: number,
+            score: number,
+            best_score: number | null
+        ) => ({
+            id,
+            source_play_time: "2026/09/19 01:01",
+            score,
+            best_score,
+            rank: "S",
+            max_combo: 10,
+            chart: {
+                difficulty: "Real",
+                level: 3,
+                music_idx: String(id),
+                note_count: 100,
+                music: { title: `Music ${id}`, background: null },
+            },
+        });
+        mocks.recent.mockResolvedValue([
+            recent(1, 950000, 940000),
+            recent(2, 930000, 940000),
+            recent(3, 900000, 0),
+            recent(4, 900000, null),
+        ]);
+        const result = await getPublicProfilePlays(
+            7,
+            profileListQuerySchema.parse({ kind: "recent", limit: 20 })
+        );
+        expect(result?.items.map((item) => item.newBest)).toEqual([
+            true,
+            false,
+            true,
+            false,
+        ]);
+        expect(mocks.recent).toHaveBeenCalledWith(
+            expect.objectContaining({ skip: 0, take: 21 })
+        );
+        expect(
+            profileListQuerySchema.safeParse({ kind: "recent", limit: 100 })
+                .success
+        ).toBe(false);
+    });
     it("reports unavailable rating source rather than a zero-valued list", async () => {
         const result = await getPublicProfilePlays(
             7,

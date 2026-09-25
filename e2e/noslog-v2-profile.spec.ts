@@ -203,8 +203,9 @@ for (const locale of ["ko", "ja", "en"]) {
             const progress = (await page
                 .locator(".nl-profile-progress")
                 .boundingBox())!;
+            // 옆 열 첫 구역 = 레벨별 달성 요약(2026-09-26 R2)
             const overview = (await page
-                .locator(".nl-profile-overview")
+                .locator(".nl-profile-body .nl-profile-levels")
                 .boundingBox())!;
             const best = (await page
                 .locator('.nl-profile-plays[data-kind="best"]')
@@ -223,7 +224,7 @@ for (const locale of ["ko", "ja", "en"]) {
                 .locator(".nl-profile-progress__controls")
                 .boundingBox())!;
             if (width >= 1056) {
-                // 2 : 1 — 주 열(성장 추이 · 베스트 · 최근) | 옆 열(기록 개요 …), 제목과 조작부는 위쪽을 맞춤(2026-09-25 D2)
+                // 2 : 1 — 주 열(성장 추이 · 베스트 · 최근) | 옆 열(레벨별 달성 …), 제목과 조작부는 위쪽을 맞춤(2026-09-25 D2)
                 expect(heading.x + heading.width).toBeLessThanOrEqual(
                     controls.x
                 );
@@ -242,7 +243,7 @@ for (const locale of ["ko", "ja", "en"]) {
                 );
                 if (recent) expect(recent.y).toBeGreaterThan(best.y);
             } else if (width >= 672) {
-                // 태블릿 — 성장 추이 → 베스트 → 최근, 그 아래 기록 개요 | 업적 · 기여 두 칸
+                // 태블릿 — 성장 추이 → 베스트 → 최근, 그 아래 레벨별 달성 | 업적 · 기여 두 칸
                 expect(controls.y).toBeGreaterThanOrEqual(
                     heading.y + heading.height
                 );
@@ -254,37 +255,13 @@ for (const locale of ["ko", "ja", "en"]) {
                     0
                 );
             } else {
-                // 폰(F2) — 베스트 → 최근 → 성장 추이 → 기록 개요
+                // 폰(F2) — 베스트 → 최근 → 성장 추이 → 레벨별 달성
                 expect(controls.y).toBeGreaterThanOrEqual(
                     heading.y + heading.height
                 );
                 expect(progress.y).toBeGreaterThan((recent ?? best).y);
                 expect(overview.y).toBeGreaterThan(progress.y);
                 expect(progress.width).toBeCloseTo(overview.width, 0);
-            }
-            const colors = {
-                sjust: "rgb(255, 141, 204)",
-                just: "rgb(255, 202, 22)",
-                good: "rgb(76, 204, 230)",
-                near: "rgb(112, 184, 255)",
-                miss: "rgb(180, 180, 180)",
-            };
-            // 판정 값이 없는 플레이어(시드 E2E_RANKER)는 판정 막대가 없다
-            const judged =
-                (await page.locator(".nl-profile-judgement-stack").count()) > 0;
-            for (const [judgement, color] of judged
-                ? Object.entries(colors)
-                : []) {
-                await expect(
-                    page.locator(
-                        `.nl-profile-judgement-stack > [data-judgement="${judgement}"]`
-                    )
-                ).toHaveCSS("background-color", color);
-                await expect(
-                    page.locator(
-                        `.nl-profile-judgements [data-judgement="${judgement}"] i`
-                    )
-                ).toHaveCSS("background-color", color);
             }
             if ([390, 1056, 1280].includes(width)) {
                 await page.screenshot({
@@ -295,6 +272,118 @@ for (const locale of ["ko", "ja", "en"]) {
         }
         const audit = await new AxeBuilder({ page }).include("main").analyze();
         expect(audit.violations).toEqual([]);
+        // 「통계」 탭(2026-09-26) — 판정 색 · 배치(폰 한 줄 · 태블릿 판정 | 랭크 · 넓은 화면 성장 추이 2 | 레벨별 달성 1)
+        await page.goto(`/${locale}/profile/1/stats`);
+        await expect(
+            page.locator(".nl-profile-stats .nl-profile-levels")
+        ).toBeVisible();
+        const colors = {
+            sjust: "rgb(255, 141, 204)",
+            just: "rgb(255, 202, 22)",
+            good: "rgb(76, 204, 230)",
+            near: "rgb(112, 184, 255)",
+            miss: "rgb(180, 180, 180)",
+        };
+        // 판정 값이 없는 플레이어(시드 E2E_RANKER)는 판정 막대가 없다
+        const judged =
+            (await page.locator(".nl-profile-judgement-stack").count()) > 0;
+        for (const [judgement, color] of judged ? Object.entries(colors) : []) {
+            await expect(
+                page.locator(
+                    `.nl-profile-judgement-stack > [data-judgement="${judgement}"]`
+                )
+            ).toHaveCSS("background-color", color);
+            await expect(
+                page.locator(
+                    `.nl-profile-judgements [data-judgement="${judgement}"] i`
+                )
+            ).toHaveCSS("background-color", color);
+        }
+        for (const width of [390, 768, 1280]) {
+            await page.setViewportSize({ width, height: 900 });
+            const box = async (name: string) =>
+                (await page
+                    .locator(`.nl-profile-stats > .nl-profile-${name}`)
+                    .boundingBox())!;
+            const [levels, progress, judgement, ranks] = await Promise.all(
+                ["levels", "progress", "judgement", "ranks"].map(box)
+            );
+            expect(
+                await page.evaluate(
+                    () => document.documentElement.scrollWidth - innerWidth
+                )
+            ).toBeLessThanOrEqual(0);
+            if (width >= 1056) {
+                expect(levels.y).toBeCloseTo(progress.y, 0);
+                expect(progress.width / levels.width).toBeGreaterThan(1.9);
+                expect(judgement.y).toBeCloseTo(ranks.y, 0);
+            } else if (width >= 672) {
+                expect(progress.y).toBeGreaterThan(levels.y);
+                expect(judgement.y).toBeCloseTo(ranks.y, 0);
+                expect(ranks.x).toBeGreaterThan(judgement.x);
+            } else {
+                expect(progress.y).toBeGreaterThan(levels.y);
+                expect(ranks.y).toBeGreaterThan(judgement.y);
+            }
+        }
+        // 누적 막대 줄들은 라벨 폭이 달라도 막대 시작이 같다(subgrid)
+        const starts = await page
+            .locator(".nl-profile-levels .nl-stacked-bar__track")
+            .evaluateAll((nodes) =>
+                nodes.map((node) => Math.round(node.getBoundingClientRect().x))
+            );
+        expect(new Set(starts).size).toBe(1);
+        const statsAudit = await new AxeBuilder({ page })
+            .include("main")
+            .analyze();
+        expect(statsAudit.violations).toEqual([]);
         expect(errors).toEqual([]);
     });
 }
+
+test("profile activity tab shows a year calendar that starts at today's end and plays one row each", async ({
+    page,
+}) => {
+    await page.goto("/ko/profile/1/activity");
+    const hidden = await page
+        .getByText("이 플레이어는 플레이 활동을 공개하지 않습니다.")
+        .count();
+    if (hidden) {
+        // 활동 비공개 시드 — 탭이 없고 주소로 들어오면 잠금 한 줄
+        await expect(
+            page.getByRole("link", { name: "활동", exact: true })
+        ).toHaveCount(0);
+        return;
+    }
+    await expect(
+        page.locator('nav.nl-tabs--primary [aria-current="page"]')
+    ).toHaveText("활동");
+    const cells = page.locator(
+        ".nl-profile-calendar__grid .nl-profile-calendar__cell"
+    );
+    expect(await cells.count()).toBeGreaterThan(52 * 7);
+    for (const width of [390, 768, 1280]) {
+        await page.setViewportSize({ width, height: 900 });
+        await page.reload();
+        const scroller = page.locator(".nl-profile-calendar__scroller");
+        const { client, scroll, left } = await scroller.evaluate((node) => ({
+            client: node.clientWidth,
+            scroll: node.scrollWidth,
+            left: node.scrollLeft,
+        }));
+        // 처음에는 오늘 쪽 끝 — 넘치면 오른쪽 끝까지 밀려 있다(rtl 스크롤 칸이라 scrollLeft 는 0 이하)
+        expect(Math.abs(left)).toBeLessThanOrEqual(1);
+        const last = await cells.last().boundingBox();
+        expect(last!.x + last!.width).toBeLessThanOrEqual(width);
+        expect(scroll).toBeGreaterThanOrEqual(client);
+        expect(
+            await page.evaluate(
+                () => document.documentElement.scrollWidth - innerWidth
+            )
+        ).toBeLessThanOrEqual(0);
+        // 업적 · 활동 탭은 모드 세그먼트가 없다
+        await expect(page.locator(".nl-profile-identity__mode")).toHaveCount(0);
+    }
+    const audit = await new AxeBuilder({ page }).include("main").analyze();
+    expect(audit.violations).toEqual([]);
+});

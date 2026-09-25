@@ -112,6 +112,7 @@ export async function getPublicProfilePlays(
                 id: true,
                 source_play_time: true,
                 score: true,
+                best_score: true,
                 rank: true,
                 max_combo: true,
                 chart: {
@@ -126,13 +127,13 @@ export async function getPublicProfilePlays(
             },
             orderBy: [{ source_play_time: "desc" }, { id: "desc" }],
             skip: query.offset,
-            take: PROFILE_BATCH_SIZE + 1,
+            take: query.limit + 1,
         });
         return profileListPayloadSchema.parse({
             query,
             status: "available",
-            hasMore: plays.length > PROFILE_BATCH_SIZE,
-            items: plays.slice(0, PROFILE_BATCH_SIZE).map((play) => ({
+            hasMore: plays.length > query.limit,
+            items: plays.slice(0, query.limit).map((play) => ({
                 id: play.id,
                 musicIndex: play.chart.music_idx,
                 title: play.chart.music.title,
@@ -148,6 +149,9 @@ export async function getPublicProfilePlays(
                         play.max_combo >= play.chart.note_count),
                 contribution: null,
                 playedAt: play.source_play_time,
+                // best_score = 그 판 직전까지의 최고 점수(첫 플레이는 0). 모르면 표시하지 않는다
+                newBest:
+                    play.best_score !== null && play.score > play.best_score,
             })),
         });
     }

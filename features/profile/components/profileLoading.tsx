@@ -9,7 +9,10 @@ import JudgementMarker, {
 } from "@/components/ui/judgementMarker";
 import MetricSwitch from "@/components/ui/metricSwitch";
 import { SegmentedControl } from "@/components/ui/segmentedControl";
+import { BarListSkeleton } from "@/components/ui/barList";
 import { LoadingStatus, SkeletonText } from "@/components/ui/skeleton";
+import StackedBar from "@/components/ui/stackedBar";
+import { StatStripSkeleton } from "@/components/ui/statStrip";
 import { ProfilePlayListSkeleton } from "./profilePlayRow";
 import { ProfileProgressSkeleton } from "./profileProgress";
 
@@ -64,17 +67,23 @@ export function ProfileHeaderSkeleton() {
                 </div>
             </section>
             <nav className="nl-tabs nl-tabs--primary" aria-hidden="true">
-                {(["overview", "records", "achievements"] as const).map(
-                    (key, index) => (
-                        <span
-                            key={key}
-                            className="nl-tabs__item nl-control"
-                            aria-current={index ? undefined : "page"}
-                        >
-                            {t(`profile.tabs.${key}`)}
-                        </span>
-                    )
-                )}
+                {(
+                    [
+                        "overview",
+                        "records",
+                        "stats",
+                        "achievements",
+                        "activity",
+                    ] as const
+                ).map((key, index) => (
+                    <span
+                        key={key}
+                        className="nl-tabs__item nl-control"
+                        aria-current={index ? undefined : "page"}
+                    >
+                        {t(`profile.tabs.${key}`)}
+                    </span>
+                ))}
             </nav>
         </>
     );
@@ -98,9 +107,6 @@ export default function ProfileLoading() {
             shortLabel: "Rating",
         },
     ] as const;
-    const judgementKeys = Object.keys(
-        judgementLabels
-    ) as (keyof typeof judgementLabels)[];
     const plays = (kind: "best" | "recent", title: string) => (
         <section
             className="nl-profile-section nl-profile-plays"
@@ -133,91 +139,214 @@ export default function ProfileLoading() {
         <div className="nl-profile-body" aria-busy="true">
             <LoadingStatus label={t("profile.loading")} />
             <div className="nl-profile-main" aria-hidden="true" inert>
-                <section className="nl-profile-section nl-profile-progress">
-                    <div className="nl-profile-progress__header">
-                        <div className="nl-profile-progress__title">
-                            <h2 className="nl-section-title">
-                                {t("profile.progress")}
-                            </h2>
-                        </div>
-                        <div className="nl-profile-progress__controls">
-                            <SegmentedControl
-                                label={t("profile.progressMetric")}
-                                value="grade"
-                                onValueChange={noop}
-                                options={[
-                                    { value: "grade", label: "Grd" },
-                                    {
-                                        value: "rating",
-                                        label: t("profile.ratingShort"),
-                                    },
-                                ]}
-                            />
-                            {/* 셀렉트 값은 스크립트가 돈 뒤 채워져 빈 칸으로 보이므로 같은 모양의 정적 트리거로 */}
-                            <span className="nl-input nl-select">
-                                <span>{t("profile.range.90")}</span>
-                                <ChevronDown className="nl-icon" aria-hidden />
-                            </span>
-                        </div>
-                    </div>
-                    <div className="nl-profile-progress__content">
-                        <ProfileProgressSkeleton />
-                    </div>
-                </section>
+                <ProgressSkeleton />
                 {plays("best", t("profile.bestPlays"))}
                 {plays("recent", t("profile.recentPlays"))}
             </div>
             <div className="nl-profile-side" aria-hidden="true" inert>
-                <section className="nl-profile-section nl-profile-overview">
-                    <h2 className="nl-section-title">
-                        {t("profile.recordOverview")}
-                    </h2>
-                    <h3 className="nl-control nl-muted">
-                        {t("profile.rankDistribution")}
-                    </h3>
-                    <dl className="nl-profile-distribution">
-                        {[0, 1, 2, 3].map((index) => (
-                            <div key={index}>
-                                <dt>
-                                    <span className="nl-score-grade nl-skeleton" />
-                                </dt>
-                                <dd className="nl-profile-distribution__track" />
-                                <dd className="nl-metric-value">
-                                    <SkeletonText
-                                        className="nl-metric-value"
-                                        sample="000"
-                                    />
-                                </dd>
-                            </div>
-                        ))}
-                    </dl>
-                    <span className="nl-profile-disclosure nl-control">
-                        {t("profile.showAllRanks")}
-                        <ChevronDown aria-hidden />
-                    </span>
-                    <div className="nl-profile-judgement-header">
-                        <h3 className="nl-control nl-muted">
-                            {t("profile.judgementSummary")}
-                        </h3>
-                    </div>
-                    <div className="nl-profile-judgement-stack nl-skeleton" />
-                    <dl className="nl-profile-judgements">
-                        {judgementKeys.map((key) => (
-                            <div key={key}>
-                                <dt>
-                                    <JudgementMarker judgement={key} />
-                                </dt>
-                                <dd className="nl-metric-value">
-                                    <SkeletonText
-                                        className="nl-metric-value"
-                                        sample="000,000"
-                                    />
-                                </dd>
-                            </div>
-                        ))}
-                    </dl>
-                </section>
+                <ProfileLevelsSkeleton variant="summary" />
             </div>
+        </div>
+    );
+}
+
+/** 성장 추이 스켈레톤 — 제목 · 지표 세그먼트 · 기간(실제 글자) + 그래프 자리 */
+function ProgressSkeleton() {
+    const t = useTranslations();
+    return (
+        <section
+            className="nl-profile-section nl-profile-progress"
+            aria-hidden="true"
+        >
+            <div className="nl-profile-progress__header">
+                <div className="nl-profile-progress__title">
+                    <h2 className="nl-section-title">
+                        {t("profile.progress")}
+                    </h2>
+                </div>
+                <div className="nl-profile-progress__controls">
+                    <SegmentedControl
+                        label={t("profile.progressMetric")}
+                        value="grade"
+                        onValueChange={noop}
+                        options={[
+                            { value: "grade", label: "Grd" },
+                            {
+                                value: "rating",
+                                label: t("profile.ratingShort"),
+                            },
+                        ]}
+                    />
+                    {/* 셀렉트 값은 스크립트가 돈 뒤 채워져 빈 칸으로 보이므로 같은 모양의 정적 트리거로 */}
+                    <span className="nl-input nl-select">
+                        <span>{t("profile.range.90")}</span>
+                        <ChevronDown className="nl-icon" aria-hidden />
+                    </span>
+                </div>
+            </div>
+            <div className="nl-profile-progress__content">
+                <ProfileProgressSkeleton />
+            </div>
+        </section>
+    );
+}
+
+/** 레벨별 달성 스켈레톤 — 제목 · 램프/랭크 세그먼트(실제 부품) · 레벨 이름(요약 = 9 이상 + REAL) + 빈 트랙 · 값 자리 */
+function ProfileLevelsSkeleton({ variant }: { variant: "summary" | "full" }) {
+    const t = useTranslations();
+    const labels = [
+        ...Array.from({ length: 12 }, (_, index) => `${index + 1}`).slice(
+            variant === "summary" ? 8 : 0
+        ),
+        "REAL 1",
+        "REAL 2",
+        "REAL 3",
+    ];
+    return (
+        <section
+            className="nl-profile-section nl-profile-levels"
+            data-variant={variant}
+            aria-hidden="true"
+        >
+            <div className="nl-profile-section__header">
+                <h2 className="nl-section-title">
+                    {t("profile.levels.title")}
+                </h2>
+                <SegmentedControl
+                    size="sm"
+                    label={t("profile.levels.viewLabel")}
+                    value="lamp"
+                    onValueChange={noop}
+                    options={[
+                        { value: "lamp", label: t("profile.levels.lamp") },
+                        { value: "rank", label: t("profile.levels.rank") },
+                    ]}
+                />
+            </div>
+            <StackedBar
+                rows={labels.map((label) => ({
+                    key: label,
+                    label,
+                    segments: [],
+                    value: (
+                        <SkeletonText
+                            className="nl-metric-value"
+                            sample="00%"
+                        />
+                    ),
+                }))}
+            />
+        </section>
+    );
+}
+
+/** 「통계」 탭 스켈레톤 — 실제 탭과 같은 구역 · 순서(성장 추이 · 레벨별 달성 · 판정 · 랭크 · 노트) */
+export function ProfileStatsTabSkeleton() {
+    const t = useTranslations();
+    const judgementKeys = Object.keys(
+        judgementLabels
+    ) as (keyof typeof judgementLabels)[];
+    return (
+        <div className="nl-profile-stats" aria-busy="true">
+            <LoadingStatus label={t("profile.loading")} />
+            <ProgressSkeleton />
+            <ProfileLevelsSkeleton variant="full" />
+            <section
+                className="nl-profile-section nl-profile-judgement"
+                aria-hidden="true"
+            >
+                <div className="nl-profile-judgement-header">
+                    <h2 className="nl-section-title">
+                        {t("profile.judgementSummary")}
+                    </h2>
+                </div>
+                <div className="nl-profile-judgement-stack nl-skeleton" />
+                <dl className="nl-profile-judgements">
+                    {judgementKeys.map((key) => (
+                        <div key={key}>
+                            <dt>
+                                <JudgementMarker judgement={key} />
+                            </dt>
+                            <dd className="nl-metric-value">
+                                <SkeletonText
+                                    className="nl-metric-value"
+                                    sample="000,000"
+                                />
+                            </dd>
+                        </div>
+                    ))}
+                </dl>
+            </section>
+            <section
+                className="nl-profile-section nl-profile-ranks"
+                aria-hidden="true"
+            >
+                <h2 className="nl-section-title">
+                    {t("profile.rankDistribution")}
+                </h2>
+                <dl className="nl-profile-distribution">
+                    {[0, 1, 2, 3].map((index) => (
+                        <div key={index}>
+                            <dt>
+                                <span className="nl-score-grade nl-skeleton" />
+                            </dt>
+                            <dd className="nl-profile-distribution__track" />
+                            <dd className="nl-metric-value">
+                                <SkeletonText
+                                    className="nl-metric-value"
+                                    sample="000"
+                                />
+                            </dd>
+                        </div>
+                    ))}
+                </dl>
+            </section>
+            <section
+                className="nl-profile-section nl-profile-notes"
+                aria-hidden="true"
+            >
+                <div className="nl-profile-judgement-header">
+                    <h2 className="nl-section-title">
+                        {t("profile.notes.title")}
+                    </h2>
+                </div>
+                <BarListSkeleton
+                    labels={(
+                        ["standard", "tenuto", "glissando", "trill"] as const
+                    ).map((key) => t(`music.filter.${key}`))}
+                />
+            </section>
+        </div>
+    );
+}
+
+/** 「활동」 탭 스켈레톤 — 요약 띠(라벨 실제 글자) · 달력 자리 · 최근 플레이 줄 */
+export function ProfileActivityTabSkeleton() {
+    const t = useTranslations();
+    return (
+        <div className="nl-profile-activity" aria-busy="true">
+            <LoadingStatus label={t("profile.loading")} />
+            <section className="nl-profile-section" aria-hidden="true">
+                <StatStripSkeleton
+                    labels={[
+                        t("profile.activity.year"),
+                        t("profile.activity.month"),
+                        t("profile.activity.activeDays"),
+                        t("profile.activity.longestStreak"),
+                    ]}
+                />
+                <div className="nl-profile-calendar__skeleton nl-skeleton" />
+            </section>
+            <section
+                className="nl-profile-section nl-profile-plays"
+                data-kind="recent"
+                aria-hidden="true"
+            >
+                <h2 className="nl-section-title">{t("profile.recentPlays")}</h2>
+                <div className="nl-profile-plays__content">
+                    <ProfilePlayListSkeleton count={8} />
+                </div>
+            </section>
         </div>
     );
 }

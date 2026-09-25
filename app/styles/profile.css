@@ -97,16 +97,26 @@
 .noslog-ui .nl-profile-headline__foot dd {
     margin: 0;
 }
-.noslog-ui .nl-profile-headline__up {
-    color: var(--nl-feedback-success-marker);
+/* 업적 · 활동 탭(모드와 관계없음) — 세그먼트 없음, 폰은 수치 상자도 숨긴다(2026-09-25 v2 시안) */
+.noslog-ui .nl-profile-identity__row[data-mode-free] {
+    grid-template-areas:
+        "avatar identity"
+        "meta meta";
+}
+.noslog-ui .nl-profile-identity__row[data-mode-free] .nl-profile-headline {
+    display: none;
 }
 @media (min-width: 672px) {
-    .noslog-ui .nl-profile-identity__row {
+    .noslog-ui .nl-profile-identity__row,
+    .noslog-ui .nl-profile-identity__row[data-mode-free] {
         grid-template-columns: var(--nl-profile-avatar-size) minmax(0, 1fr) auto;
         grid-template-areas:
             "avatar identity mode"
             "meta meta meta"
             "headline headline headline";
+    }
+    .noslog-ui .nl-profile-identity__row[data-mode-free] .nl-profile-headline {
+        display: block;
     }
     .noslog-ui .nl-profile-identity__mode {
         width: 200px;
@@ -114,7 +124,8 @@
     }
 }
 @media (min-width: 1056px) {
-    .noslog-ui .nl-profile-identity__row {
+    .noslog-ui .nl-profile-identity__row,
+    .noslog-ui .nl-profile-identity__row[data-mode-free] {
         --nl-profile-avatar-size: 108px;
         grid-template-areas:
             "avatar identity mode"
@@ -221,7 +232,7 @@
     gap: var(--nl-spacing-32);
     padding-block: var(--nl-spacing-32);
 }
-/* 개요 탭(2026-09-25 D2 · F2) — 구역 사이 32. 폰은 베스트 → 최근 → 성장 추이 → 기록 개요 → 업적 → 기여 */
+/* 개요 탭(2026-09-25 D2 · F2) — 구역 사이 32. 폰은 베스트 → 최근 → 성장 추이 → 레벨별 달성 → 업적 → 기여 */
 .noslog-ui .nl-profile-body {
     display: flex;
     flex-direction: column;
@@ -242,7 +253,7 @@
 .noslog-ui .nl-profile-progress {
     order: 3;
 }
-.noslog-ui .nl-profile-overview {
+.noslog-ui .nl-profile-body .nl-profile-levels {
     order: 4;
 }
 .noslog-ui .nl-profile-achievements {
@@ -251,7 +262,7 @@
 .noslog-ui .nl-profile-contribution {
     order: 6;
 }
-/* 태블릿 — 성장 추이 → 베스트 → 최근, 그 아래 옆 열이 두 칸(기록 개요 | 업적 · 기여) */
+/* 태블릿 — 성장 추이 → 베스트 → 최근, 그 아래 옆 열이 두 칸(레벨별 달성 | 업적 · 기여) */
 @media (min-width: 672px) {
     .noslog-ui .nl-profile-progress {
         order: 1;
@@ -269,11 +280,11 @@
         gap: var(--nl-spacing-32) var(--nl-spacing-16);
         order: 4;
     }
-    .noslog-ui .nl-profile-side .nl-profile-overview {
+    .noslog-ui .nl-profile-side .nl-profile-levels {
         grid-row: span 2;
     }
 }
-/* 넓은 화면 2 : 1 — 주 열(성장 추이 · 베스트 · 최근) | 옆 열(기록 개요 · 업적 · 기여) */
+/* 넓은 화면 2 : 1 — 주 열(성장 추이 · 베스트 · 최근) | 옆 열(레벨별 달성 · 업적 · 기여) */
 @media (min-width: 1056px) {
     .noslog-ui .nl-profile-body:not(.nl-profile-body--single) {
         display: grid;
@@ -291,7 +302,7 @@
         gap: var(--nl-spacing-32);
         min-width: 0;
     }
-    .noslog-ui .nl-profile-side .nl-profile-overview {
+    .noslog-ui .nl-profile-side .nl-profile-levels {
         grid-row: auto;
     }
 }
@@ -418,15 +429,26 @@
     justify-self: end;
     white-space: nowrap;
 }
+/* 최근 플레이 「새 기록」(2026-09-26) — 그 판이 최고 점수를 넘었을 때만, 좁으면 오른쪽 아래 · 표는 등급 뒤 칸 */
+.noslog-ui .nl-profile-play-row__new {
+    grid-area: value;
+    justify-self: end;
+    white-space: nowrap;
+    color: var(--nl-feedback-success-marker);
+}
 .noslog-ui .nl-profile-play-head {
     display: none;
 }
 @container profile-section (min-width: 560px) {
     .noslog-ui .nl-profile-play-head,
     .noslog-ui .nl-profile-play-row {
-        grid-template-columns: 36px minmax(0, 1fr) 84px 76px 56px 104px;
-        grid-template-areas: "jacket title difficulty score grade time";
+        grid-template-columns: 36px minmax(0, 1fr) 84px 76px 56px 64px 104px;
+        grid-template-areas: "jacket title difficulty score grade new time";
         column-gap: var(--nl-spacing-12);
+    }
+    .noslog-ui .nl-profile-play-row__new {
+        grid-area: new;
+        justify-self: start;
     }
     .noslog-ui
         :is(.nl-profile-plays, .nl-profile-records)[data-kind="best"]
@@ -806,4 +828,191 @@
     justify-content: space-between;
     gap: var(--nl-spacing-8) var(--nl-spacing-12);
     min-width: 0;
+}
+
+/* 레벨별 달성(2026-09-26 R2) — 제목 | 램프 · 랭크 세그먼트(M) →12→ (통계 탭: 난이도 세그먼트 →12→) 누적 막대 + 값 →12→ 범례 */
+.noslog-ui .nl-profile-levels__difficulty {
+    align-self: stretch;
+}
+.noslog-ui .nl-profile-levels__full {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+@container profile-section (min-width: 440px) {
+    .noslog-ui .nl-profile-levels__full {
+        position: static;
+        width: auto;
+        height: auto;
+        overflow: visible;
+        clip-path: none;
+    }
+    .noslog-ui .nl-profile-levels__short {
+        display: none;
+    }
+}
+/* 범례 — 칸 12 · 모서리 2(빙고 범례와 같은 모양), 항목 사이 12 */
+.noslog-ui .nl-profile-legend {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--nl-spacing-4) var(--nl-spacing-12);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.noslog-ui .nl-profile-legend li {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--nl-spacing-4);
+}
+.noslog-ui .nl-profile-levels .nl-profile-legend i {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+}
+.noslog-ui .nl-profile-legend i[data-empty] {
+    border: var(--nl-stroke-default) solid var(--nl-border-default);
+}
+
+/* 「통계」 탭(2026-09-26) — 폰: 레벨별 달성 → 성장 추이 → 판정 → 랭크 → 노트, 태블릿: 판정 | 랭크 두 칸,
+   넓은 화면: 성장 추이(2) | 레벨별 달성(1), 아래 판정 · 랭크 · 노트 세 칸 */
+.noslog-ui .nl-profile-stats {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "levels" "progress" "judgement" "ranks" "notes";
+    align-items: start;
+    gap: var(--nl-spacing-32) var(--nl-spacing-16);
+    min-width: 0;
+}
+.noslog-ui .nl-profile-stats > .nl-profile-progress {
+    grid-area: progress;
+}
+.noslog-ui .nl-profile-stats > .nl-profile-levels {
+    grid-area: levels;
+}
+.noslog-ui .nl-profile-stats > .nl-profile-judgement {
+    grid-area: judgement;
+}
+.noslog-ui .nl-profile-stats > .nl-profile-ranks {
+    grid-area: ranks;
+}
+.noslog-ui .nl-profile-stats > .nl-profile-notes {
+    grid-area: notes;
+}
+@media (min-width: 672px) {
+    .noslog-ui .nl-profile-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-areas:
+            "levels levels"
+            "progress progress"
+            "judgement ranks"
+            "notes notes";
+    }
+}
+@media (min-width: 1056px) {
+    .noslog-ui .nl-profile-stats {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-areas:
+            "progress progress levels"
+            "judgement ranks notes";
+    }
+}
+
+/* 「활동」 탭(2026-09-26) — 제목 →12→ 요약 띠 →16→ 달력 →8→ 안내 · 범례 →32→ 최근 플레이 */
+.noslog-ui .nl-profile-activity {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-32);
+    min-width: 0;
+}
+.noslog-ui .nl-profile-calendar__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
+    min-width: 0;
+    margin-top: var(--nl-spacing-4);
+}
+/* 칸 = 폰 19 · 태블릿 15 · 넓은 화면 17(시안 v2), 사이 4 · 모서리 2. 칸 폭만큼 보이고 옆으로 밀면 1년 */
+.noslog-ui .nl-profile-calendar {
+    --nl-profile-calendar-cell: 19px;
+}
+@container profile-section (min-width: 560px) {
+    .noslog-ui .nl-profile-calendar__body {
+        --nl-profile-calendar-cell: 15px;
+    }
+}
+@container profile-section (min-width: 1060px) {
+    .noslog-ui .nl-profile-calendar__body {
+        --nl-profile-calendar-cell: 17px;
+    }
+    .noslog-ui .nl-profile-calendar__hint {
+        visibility: hidden;
+    }
+}
+/* 처음부터 오늘 쪽(오른쪽) 끝 — 스크롤 칸만 오른쪽에서 시작(rtl), 칸 안은 왼쪽부터. 들어가면 왼쪽 정렬 */
+.noslog-ui .nl-profile-calendar__scroller {
+    overflow-x: auto;
+    min-width: 0;
+    direction: rtl;
+    border-radius: var(--nl-radius-control);
+}
+.noslog-ui .nl-profile-calendar__scroller:focus-visible {
+    outline: var(--nl-stroke-default) solid var(--nl-focus-ring);
+    outline-offset: var(--nl-spacing-4);
+}
+.noslog-ui .nl-profile-calendar__grid {
+    display: grid;
+    grid-template-rows: repeat(7, var(--nl-profile-calendar-cell));
+    grid-auto-flow: column;
+    grid-auto-columns: var(--nl-profile-calendar-cell);
+    gap: var(--nl-spacing-4);
+    width: max-content;
+    margin-inline-end: auto;
+    direction: ltr;
+}
+.noslog-ui .nl-profile-calendar__cell {
+    display: block;
+    border-radius: 2px;
+    background: var(--nl-surface-raised);
+}
+.noslog-ui .nl-profile-legend .nl-profile-calendar__cell {
+    width: 12px;
+    height: 12px;
+}
+.noslog-ui .nl-profile-calendar__cell[data-level="1"] {
+    background: var(--nl-local-data-bucket-1);
+}
+.noslog-ui .nl-profile-calendar__cell[data-level="2"] {
+    background: var(--nl-local-data-bucket-2);
+}
+.noslog-ui .nl-profile-calendar__cell[data-level="3"] {
+    background: var(--nl-local-data-bucket-3);
+}
+.noslog-ui .nl-profile-calendar__cell[data-level="4"] {
+    background: var(--nl-local-data-bucket-4);
+}
+.noslog-ui .nl-profile-calendar__cell[data-level="5"] {
+    background: var(--nl-local-data-bucket-5);
+}
+.noslog-ui .nl-profile-calendar__cell[data-level="6"] {
+    background: var(--nl-local-data-bucket-6);
+}
+.noslog-ui .nl-profile-calendar__foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-profile-calendar__foot .nl-profile-legend {
+    gap: var(--nl-spacing-4);
+    margin-inline-start: auto;
+}
+.noslog-ui .nl-profile-calendar__skeleton {
+    height: calc(19px * 7 + var(--nl-spacing-4) * 6);
+    border-radius: var(--nl-radius-control);
 }
