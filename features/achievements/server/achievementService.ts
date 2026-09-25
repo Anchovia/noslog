@@ -42,7 +42,6 @@ export async function collectAchievementMetrics(
         oneHand,
         user,
         exams,
-        bingoCells,
         opinions,
         patternEvaluations,
         helpfulReceived,
@@ -80,14 +79,6 @@ export async function collectAchievementMetrics(
             where: { userId },
             ...examAchievementGradeSelect,
         }),
-        db.bingoCellProgress.findMany({
-            where: {
-                userId,
-                isCompleted: true,
-                cell: { bingo: { status: { not: "draft" } } },
-            },
-            select: { cell: { select: { bingoId: true } } },
-        }),
         db.communityChartEvaluation.count({
             where: {
                 userId,
@@ -117,26 +108,6 @@ export async function collectAchievementMetrics(
         }),
     ]);
 
-    const completedByBingo = new Map<number, number>();
-    for (const { cell } of bingoCells) {
-        completedByBingo.set(
-            cell.bingoId,
-            (completedByBingo.get(cell.bingoId) ?? 0) + 1
-        );
-    }
-    const cellCounts = completedByBingo.size
-        ? await db.bingoCell.groupBy({
-              by: ["bingoId"],
-              where: { bingoId: { in: [...completedByBingo.keys()] } },
-              _count: { _all: true },
-          })
-        : [];
-    const bingoFullBoards = cellCounts.filter(
-        (row) =>
-            row._count._all > 0 &&
-            completedByBingo.get(row.bingoId) === row._count._all
-    ).length;
-
     const category = (code: string) => {
         const row = categories.find((item) => item.category === code);
         return { value: row?.got ?? 0, total: row?.total ?? 0 };
@@ -157,7 +128,6 @@ export async function collectAchievementMetrics(
         examRecital: {
             value: examGradeScore(getBestExamGrade(exams, "recital")),
         },
-        bingoFullBoards: { value: bingoFullBoards },
         opinions: { value: opinions },
         helpfulReceived: { value: helpfulReceived },
         patternEvaluations: { value: patternEvaluations },
@@ -323,7 +293,7 @@ export interface AchievementRejudgeBatch {
 }
 
 /**
- * 관리자 「업적 다시 판정」(2026-09-25 B1) — 판정할 거리가 있는 사용자(기록 · 검정 합격 · 빙고 · 커뮤니티 평가)를
+ * 관리자 「업적 다시 판정」(2026-09-25 B1) — 판정할 거리가 있는 사용자(기록 · 검정 합격 · 커뮤니티 평가)를
  * id 순으로 한 묶음씩. 새로 닿은 단계만 더하고 얻은 단계는 빼지 않는다(동기화 판정과 같은 함수).
  * 연결 수를 넘지 않게 한 사람씩 차례로 돈다.
  */
@@ -341,7 +311,6 @@ export async function rejudgeAchievementsBatch(
                 { PlayData: { some: {} } },
                 { chartPlayHistory: { some: {} } },
                 { examAchievements: { some: {} } },
-                { bingoProgress: { some: { isCompleted: true } } },
                 { communityEvaluations: { some: {} } },
             ],
         },

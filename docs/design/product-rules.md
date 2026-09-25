@@ -574,14 +574,17 @@ old design-stage checklist. Changes to material behavior require a user decision
 
 ## Achievements (2026-09-24)
 
-- Tiered achievements (bronze I · silver II · gold III) judged automatically from synced records and site
-  activity. There are no hidden achievements and no conditions based on play counts, sync counts, streaks
-  or luck. Definitions and thresholds live in code (`features/achievements`); thresholds are provisional
-  until they are set from the production distribution.
+- Tiered achievements judged automatically from synced records and site activity. Five grades — bronze I ·
+  silver II · gold III · platinum IV · diamond V (2026-09-25) — and each achievement has its own set of
+  grades: all five, only bronze · silver · gold, or a single diamond for a very rare one. The stored tier is
+  the grade. There are no hidden achievements and no conditions based on play counts, sync counts, streaks
+  or luck, and no bingo achievement (bingo cells are ticked by players themselves). Definitions and
+  thresholds live in code (`features/achievements`); they can be tuned again from the production
+  distribution.
 - Judging runs at the end of every sync, after records and Grd are updated. It only adds newly reached
   tiers (`user_achievements`, one row per user · achievement · tier) and never removes a tier, even if the
   value later drops. A failed judgement never fails the sync. Achievements that come from activity
-  (opinions, helpful marks, pattern ratings, exams, bingo) are also picked up at the next sync.
+  (opinions, helpful marks, pattern ratings, exams) are also picked up at the next sync.
 - The date of a tier is when NosLog confirmed it (the sync time), not when it was played.
 - Rarity is shown as the number of players who reached each tier, only on the achievement page.
   No player list.

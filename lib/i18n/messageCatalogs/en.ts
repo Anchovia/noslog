@@ -2035,6 +2035,8 @@ export const enMessages = {
     "achievement.tier.1": "Bronze",
     "achievement.tier.2": "Silver",
     "achievement.tier.3": "Gold",
+    "achievement.tier.4": "Platinum",
+    "achievement.tier.5": "Diamond",
     "achievement.tierAria": "{name} tier {tier} · {metal}",
     "achievement.lockedAria": "{name} · not earned yet",
     "achievement.category.all": "All",
@@ -2045,8 +2047,6 @@ export const enMessages = {
     "achievement.categoryLabel": "Achievement category",
     "achievement.achievedOn": "Earned {date}",
     "achievement.progress": "{current} / {target}",
-    "achievement.nextTier": "Next: {tier}",
-    "achievement.maxed": "All tiers earned",
     "achievement.recipients": "{count} players",
     "achievement.detail": "Show tiers",
     "achievement.scoresHidden":
@@ -2080,7 +2080,6 @@ export const enMessages = {
     "achievement.name.category-var": "VARIETY Conqueror",
     "achievement.name.exam-basic": "Basic Exam",
     "achievement.name.exam-recital": "Recital Exam",
-    "achievement.name.bingo": "Bingo",
     "achievement.name.opinion": "Opinions",
     "achievement.name.helpful": "Helpful",
     "achievement.name.pattern-evaluation": "Pattern Ratings",
@@ -2095,7 +2094,6 @@ export const enMessages = {
     "achievement.condition.category":
         "S or better on {percent}% of {category} songs",
     "achievement.condition.exam": "Pass {mode} Class {grade} or higher",
-    "achievement.condition.bingo": "Complete {count} full bingo boards",
     "achievement.condition.opinion": "Write {count} opinions",
     "achievement.condition.helpful": "Receive {count} Helpful marks",
     "achievement.condition.pattern-evaluation":

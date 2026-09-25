@@ -2,12 +2,14 @@
 
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import {
+    achievementSteps,
     examGradeFromScore,
     getAchievementDefinition,
+    type AchievementTier,
 } from "@/features/achievements/achievementDefinitions";
 import type { MessageKey } from "@/lib/i18n/messageTypes";
 
-const ROMAN = ["", "I", "II", "III"] as const;
+const ROMAN = ["", "I", "II", "III", "IV", "V"] as const;
 
 /** 카테고리 업적의 조건 글에 넣는 이름(고유명사라 번역하지 않는다) */
 const CATEGORY_NAMES: Record<string, string> = {
@@ -30,7 +32,11 @@ export function useAchievementText() {
     const condition = (key: string, tier: number) => {
         const definition = getAchievementDefinition(key);
         if (!definition) return "";
-        const threshold = definition.thresholds[Math.max(1, tier) - 1];
+        // 그 등급의 기준 — 이 업적에 없는 등급이면 첫 단계 기준
+        const threshold =
+            definition.thresholds[tier as AchievementTier] ??
+            achievementSteps(definition)[0]?.threshold ??
+            0;
         if (definition.unit === "ratio")
             return t("achievement.condition.category", {
                 category: CATEGORY_NAMES[key] ?? key,

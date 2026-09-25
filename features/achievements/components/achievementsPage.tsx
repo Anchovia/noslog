@@ -10,8 +10,9 @@ import FilterChips from "@/components/ui/filterChips";
 import IconButton from "@/components/ui/iconButton";
 import {
     ACHIEVEMENT_CATEGORIES,
-    ACHIEVEMENT_TIERS,
     achievementProgress,
+    achievementStepTotal,
+    achievementSteps,
     highestAchievementTiers,
     recipientKey,
     summarizeAchievements,
@@ -28,11 +29,13 @@ import type { MessageKey } from "@/lib/i18n/messageTypes";
 
 type CategoryFilter = "all" | AchievementCategory;
 
-function ProgressBar({ ratio }: { ratio: number }) {
+/** 진행 막대 — 쫓는 다음 등급의 색(2026-09-25) · ⑯ 그래프 움직임(나타날 때 드러남 · 값이 바뀌면 옮겨 감) */
+function ProgressBar({ ratio, tier }: { ratio: number; tier: number }) {
     return (
         <span className="nl-bar-list__track" aria-hidden>
             <span
-                className="nl-bar-list__fill"
+                className="nl-bar-list__fill nl-achievement-progress nl-chart-reveal nl-chart-bar"
+                data-tier={tier}
                 style={{ width: `${Math.round(ratio * 100)}%` }}
             />
         </span>
@@ -66,7 +69,8 @@ function AchievementRow({
         : null;
     const showNumbers = definition.unit !== "exam";
     const number = (value: number) => value.toLocaleString(locale);
-    const shownTier = progress?.nextTier ?? (tier || 1);
+    const steps = achievementSteps(definition);
+    const shownTier = progress?.nextTier ?? (tier || steps[0]?.tier || 1);
     const earnedDate = tier ? achievedAt(tier) : undefined;
     return (
         <li className="nl-achievement-row" data-earned={tier > 0}>
@@ -81,19 +85,6 @@ function AchievementRow({
                         <span className="nl-emphasis-label nl-achievement-row__name">
                             {text.titled(key, tier)}
                         </span>
-                        {progress?.nextTier ? (
-                            tier ? (
-                                <span className="nl-metadata nl-muted">
-                                    {t("achievement.nextTier", {
-                                        tier: text.roman(progress.nextTier),
-                                    })}
-                                </span>
-                            ) : null
-                        ) : tier === 3 ? (
-                            <span className="nl-metadata nl-muted">
-                                {t("achievement.maxed")}
-                            </span>
-                        ) : null}
                     </span>
                     <span className="nl-metadata nl-muted nl-achievement-row__number">
                         {progress?.nextTier && progress.target !== null
@@ -119,7 +110,10 @@ function AchievementRow({
                               : text.condition(key, shownTier)}
                     </span>
                     {progress?.nextTier ? (
-                        <ProgressBar ratio={progress.ratio} />
+                        <ProgressBar
+                            ratio={progress.ratio}
+                            tier={progress.nextTier}
+                        />
                     ) : null}
                 </div>
                 <div className="nl-achievement-row__actions">
@@ -139,7 +133,7 @@ function AchievementRow({
             </div>
             {/* 상세(D1) — 단계 사다리 · 달성 인원(명단 없음) */}
             <ol id={detailId} className="nl-achievement-ladder" hidden={!open}>
-                {ACHIEVEMENT_TIERS.map((step) => {
+                {steps.map(({ tier: step }) => {
                     const date = achievedAt(step);
                     const stepProgress =
                         metrics && !date
@@ -225,26 +219,26 @@ export default function AchievementsPage({
     const [category, setCategory] = useState<CategoryFilter>("all");
     const definitions = visibleAchievementDefinitions(scoresHidden);
     const summary = summarizeAchievements(records, scoresHidden);
-    const highest = highestAchievementTiers(records.earned);
     const categories = ACHIEVEMENT_CATEGORIES.filter((item) =>
         definitions.some((definition) => definition.category === item)
     );
     const shown = definitions.filter(
         (definition) => category === "all" || definition.category === category
     );
-    const earnedIn = (item: CategoryFilter) =>
-        definitions
-            .filter(
-                (definition) => item === "all" || definition.category === item
-            )
-            .reduce(
-                (sum, definition) => sum + (highest.get(definition.key) ?? 0),
-                0
-            );
-    const totalIn = (item: CategoryFilter) =>
+    // 칩 수 = 얻은 단계 수 / 가진 단계 수(업적마다 단계 수가 다르다)
+    const inCategory = (item: CategoryFilter) =>
         definitions.filter(
             (definition) => item === "all" || definition.category === item
-        ).length * ACHIEVEMENT_TIERS.length;
+        );
+    const earnedIn = (item: CategoryFilter) => {
+        const keys = new Set(
+            inCategory(item).map((definition) => definition.key)
+        );
+        return summary.earnedRecords.filter((record) => keys.has(record.key))
+            .length;
+    };
+    const totalIn = (item: CategoryFilter) =>
+        achievementStepTotal(inCategory(item));
 
     return (
         <PageContainer width="reading" className="nl-achievements-page">

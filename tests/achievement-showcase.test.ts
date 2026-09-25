@@ -59,7 +59,7 @@ describe("프로필 업적 진열 저장(2026-09-25 D1)", () => {
                 "pianist",
                 "s-rank",
                 "opinion",
-                "bingo",
+                "helpful",
             ])
         ).toEqual({ status: "too-many" });
         expect(await setAchievementShowcase(7, ["gone"])).toEqual({

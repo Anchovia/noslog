@@ -10,14 +10,26 @@
     flex-shrink: 0;
     color: var(--nl-content-pending);
 }
-.noslog-ui .nl-achievement-hex[data-tier="1"] {
+.noslog-ui .nl-achievement-hex[data-tier="1"],
+.noslog-ui .nl-achievement-progress[data-tier="1"] {
     --nl-achievement-metal: var(--nl-exam-tier-mid);
 }
-.noslog-ui .nl-achievement-hex[data-tier="2"] {
+.noslog-ui .nl-achievement-hex[data-tier="2"],
+.noslog-ui .nl-achievement-progress[data-tier="2"] {
     --nl-achievement-metal: var(--nl-exam-tier-high);
 }
-.noslog-ui .nl-achievement-hex[data-tier="3"] {
+.noslog-ui .nl-achievement-hex[data-tier="3"],
+.noslog-ui .nl-achievement-progress[data-tier="3"] {
     --nl-achievement-metal: var(--nl-exam-tier-top);
+}
+/* 플래티넘 · 다이아(2026-09-25 C1) — 있는 색을 그대로: 판정 GOOD 청록 · 판정 ◆JUST 분홍(사이트에서 「최고」 를 뜻하는 색) */
+.noslog-ui .nl-achievement-hex[data-tier="4"],
+.noslog-ui .nl-achievement-progress[data-tier="4"] {
+    --nl-achievement-metal: var(--nl-judgement-good);
+}
+.noslog-ui .nl-achievement-hex[data-tier="5"],
+.noslog-ui .nl-achievement-progress[data-tier="5"] {
+    --nl-achievement-metal: var(--nl-judgement-s-just);
 }
 .noslog-ui .nl-achievement-hex[data-tier] {
     color: var(--nl-achievement-metal);
@@ -296,4 +308,9 @@
     margin-top: var(--nl-spacing-4);
     padding-top: var(--nl-spacing-12);
     border-top: var(--nl-stroke-default) solid var(--nl-border-overlay);
+}
+
+/* 진행 막대(2026-09-25) — 쫓는 다음 등급의 색. 움직임은 ⑯ 공용 클래스(nl-chart-reveal · nl-chart-bar) */
+.noslog-ui .nl-bar-list__fill.nl-achievement-progress {
+    background: var(--nl-achievement-metal);
 }
