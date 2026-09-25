@@ -82,6 +82,9 @@ export default function ProfilePinned({
                             </span>
                             {play.chartRank !== null ? (
                                 <span className="nl-profile-pinned__rank nl-metadata nl-muted">
+                                    <span className="sr-only">
+                                        {t("profile.column.chartRank")}{" "}
+                                    </span>
                                     {t("profile.pinned.chartRank", {
                                         rank: play.chartRank.toLocaleString(
                                             locale

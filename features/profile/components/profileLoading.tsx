@@ -172,6 +172,7 @@ function ProgressSkeleton() {
                 </div>
                 <div className="nl-profile-progress__controls">
                     <SegmentedControl
+                        size="sm"
                         label={t("profile.progressMetric")}
                         value="grade"
                         onValueChange={noop}
@@ -184,9 +185,9 @@ function ProgressSkeleton() {
                         ]}
                     />
                     {/* 셀렉트 값은 스크립트가 돈 뒤 채워져 빈 칸으로 보이므로 같은 모양의 정적 트리거로 */}
-                    <span className="nl-input nl-select">
+                    <span className="nl-compact-select nl-control nl-compact-select--outlined nl-compact-select--compact">
                         <span>{t("profile.range.90")}</span>
-                        <ChevronDown className="nl-icon" aria-hidden />
+                        <ChevronDown aria-hidden />
                     </span>
                 </div>
             </div>
@@ -201,9 +202,11 @@ function ProgressSkeleton() {
 function ProfileLevelsSkeleton({ variant }: { variant: "summary" | "full" }) {
     const t = useTranslations();
     const labels = [
-        ...Array.from({ length: 12 }, (_, index) => `${index + 1}`).slice(
-            variant === "summary" ? 8 : 0
-        ),
+        ...(variant === "summary" ? [] : ["1–8"]),
+        "9",
+        "10",
+        "11",
+        "12",
         "REAL 1",
         "REAL 2",
         "REAL 3",
@@ -302,10 +305,16 @@ export function ProfileStatsTabSkeleton() {
                     {t("profile.rankDistribution")}
                 </h2>
                 <dl className="nl-profile-distribution">
-                    {[0, 1, 2, 3].map((index) => (
+                    {[0, 1, 2, 3, 4].map((index) => (
                         <div key={index}>
-                            <dt>
-                                <span className="nl-score-grade nl-skeleton" />
+                            <dt className="nl-full-combo-slot">
+                                {index === 4 ? (
+                                    <span className="nl-full-combo nl-metadata">
+                                        {t("profile.fullComboShort")}
+                                    </span>
+                                ) : (
+                                    <span className="nl-score-grade nl-skeleton" />
+                                )}
                             </dt>
                             <dd className="nl-profile-distribution__track" />
                             <dd className="nl-metric-value">

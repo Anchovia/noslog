@@ -1361,10 +1361,7 @@ export const enMessages = {
     "profile.headlineWorld": "World",
     "profile.headlineCountry": "Country",
     "profile.modeEmpty": "No {mode} records yet",
-    "profile.progressSummary": "{range}: {change} · now {current}",
-    "profile.progressAtPeak": "all-time high",
     "profile.progressMetric": "Progress metric",
-    "profile.perWeek": "Per week",
     "profile.ratingShort": "Rating",
     "profile.column.chartRank": "Chart rank",
     "profile.tabs.records": "Records",
@@ -1405,7 +1402,6 @@ export const enMessages = {
     "profile.activity.more": "More",
     "profile.activity.scrollHint": "Scroll sideways for the full year",
     "profile.activity.hidden": "This player keeps their play activity private.",
-    "profile.peak": "Peak",
     "profile.pinned.title": "Pinned records",
     "profile.pinned.auto": "Automatic · top 3 bests",
     "profile.pinned.help":
@@ -1421,7 +1417,7 @@ export const enMessages = {
     "profile.pinned.commentAria": "Note for {title}",
     "profile.pinned.remove": "Remove",
     "profile.pinned.removeAria": "Remove {title}",
-    "profile.pinned.chartRank": "Chart #{rank}",
+    "profile.pinned.chartRank": "#{rank}",
     "profile.pinned.failed":
         "Couldn't save pinned records. Only records with a score can be pinned.",
     "profile.fullComboShort": "FC",

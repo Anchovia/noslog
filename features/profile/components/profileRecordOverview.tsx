@@ -12,7 +12,7 @@ import type { ProfileUser } from "@/components/profile/dashboard/profileTypes";
 import type { ProfileStats } from "@/features/profile/schemas/profileStatsSchema";
 
 /**
- * 「통계」 탭의 기록 구역(2026-09-26) — 랭크 분포(공식 사이트 랭크 수 · 플레이 횟수) · 판정 요약 · 노트 종류별 성공률.
+ * 「통계」 탭의 기록 구역(2026-09-26) — 랭크 분포(공식 사이트 랭크 수 + FC 막대 · 플레이 횟수, 막대 = 등급 색) · 판정 요약 · 노트 종류별 성공률.
  * 개요 옆 열에 있던 「기록 개요」 를 나눠 옮겼다(개요 옆 열은 레벨별 달성 요약)
  */
 export function ProfileRankDistribution({ user }: { user: ProfileUser }) {
@@ -29,8 +29,21 @@ export function ProfileRankDistribution({ user }: { user: ProfileUser }) {
         { rank: "C", value: user.score_c },
         { rank: "D", value: user.score_d },
     ];
-    const maximum = Math.max(1, ...rows.map((row) => row.value ?? 0));
-    const countWidth = `${Math.max(...rows.map((row) => (row.value?.toLocaleString(locale) ?? "—").length))}ch`;
+    // FC 막대(2026-09-26 D7) — FC 램프 + Pianist(= P 랭크, 프로필 카드와 같은 계산)
+    const fullCombo =
+        user.score_f === null && user.score_p === null
+            ? null
+            : (user.score_f ?? 0) + (user.score_p ?? 0);
+    const shown = [
+        ...(expanded ? rows : rows.slice(0, 4)),
+        { rank: "FC", value: fullCombo },
+    ];
+    const maximum = Math.max(
+        1,
+        fullCombo ?? 0,
+        ...rows.map((row) => row.value ?? 0)
+    );
+    const countWidth = `${Math.max(...shown.map((row) => (row.value?.toLocaleString(locale) ?? "—").length))}ch`;
     return (
         <section
             className="nl-profile-section nl-profile-ranks"
@@ -43,10 +56,16 @@ export function ProfileRankDistribution({ user }: { user: ProfileUser }) {
                 id="profile-rank-distribution"
                 className="nl-profile-distribution"
             >
-                {(expanded ? rows : rows.slice(0, 4)).map((row) => (
+                {shown.map((row) => (
                     <div key={row.rank}>
-                        <dt>
-                            <ScoreGrade rank={row.rank} />
+                        <dt className="nl-full-combo-slot">
+                            {row.rank === "FC" ? (
+                                <span className="nl-full-combo nl-metadata">
+                                    {t("profile.fullComboShort")}
+                                </span>
+                            ) : (
+                                <ScoreGrade rank={row.rank} />
+                            )}
                         </dt>
                         <dd
                             className="nl-profile-distribution__track"
@@ -54,6 +73,7 @@ export function ProfileRankDistribution({ user }: { user: ProfileUser }) {
                         >
                             <span
                                 className="nl-chart-reveal nl-chart-bar"
+                                data-rank={row.rank}
                                 style={{
                                     width: `${((row.value ?? 0) / maximum) * 100}%`,
                                 }}

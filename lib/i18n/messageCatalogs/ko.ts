@@ -1347,10 +1347,7 @@ export const koMessages = {
     "profile.headlineWorld": "세계",
     "profile.headlineCountry": "국가",
     "profile.modeEmpty": "아직 {mode} 기록이 없습니다",
-    "profile.progressSummary": "{range} {change} · 지금 {current}",
-    "profile.progressAtPeak": "최고 기록",
     "profile.progressMetric": "성장 추이 지표",
-    "profile.perWeek": "주당",
     "profile.ratingShort": "레이팅",
     "profile.column.chartRank": "곡 순위",
     "profile.tabs.records": "기록",
@@ -1391,7 +1388,6 @@ export const koMessages = {
     "profile.activity.more": "많이",
     "profile.activity.scrollHint": "옆으로 밀면 1년",
     "profile.activity.hidden": "이 플레이어는 플레이 활동을 공개하지 않습니다.",
-    "profile.peak": "최고",
     "profile.pinned.title": "고정 기록",
     "profile.pinned.auto": "자동 · 베스트 상위 3곡",
     "profile.pinned.help":
@@ -1406,7 +1402,7 @@ export const koMessages = {
     "profile.pinned.commentAria": "{title} 한 줄 소감",
     "profile.pinned.remove": "빼기",
     "profile.pinned.removeAria": "{title} 빼기",
-    "profile.pinned.chartRank": "곡 #{rank}",
+    "profile.pinned.chartRank": "#{rank}",
     "profile.pinned.failed":
         "고정 기록을 저장하지 못했습니다. 점수가 있는 기록만 고를 수 있습니다.",
     "profile.fullComboShort": "FC",

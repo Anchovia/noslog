@@ -38,7 +38,9 @@ const RANK_COLORS = {
     B: "var(--nl-local-data-bucket-2)",
 } as const;
 
-/** 전체 = NORMAL · HARD · EXPERT 를 레벨마다 합치고 REAL 은 따로(「REAL 3」), 난이도를 고르면 그 난이도의 레벨만 */
+const LOW_LEVEL_MAX = 8;
+
+/** 전체 = NORMAL · HARD · EXPERT 를 레벨마다 합치고(1–8 은 한 줄) REAL 은 따로(「REAL 3」), 난이도를 고르면 그 난이도의 레벨만 */
 export function profileLevelRows(
     levels: readonly ProfileLevelRow[],
     difficulty: Difficulty
@@ -47,12 +49,18 @@ export function profileLevelRows(
     for (const row of levels) {
         if (difficulty !== "all" && row.difficulty !== difficulty) continue;
         const real = row.difficulty === "real";
-        const key =
-            difficulty === "all" && !real
-                ? `${row.level}`
-                : `${row.difficulty}:${row.level}`;
-        const label =
-            difficulty === "all" && real ? `REAL ${row.level}` : `${row.level}`;
+        // 전체는 낮은 레벨(1–8)을 한 줄로 묶는다 — 레벨마다 한 줄이면 15줄이라 옆 구역보다 길어져서(2026-09-26 D4)
+        const low = difficulty === "all" && !real && row.level <= LOW_LEVEL_MAX;
+        const key = low
+            ? "low"
+            : difficulty === "all" && !real
+              ? `${row.level}`
+              : `${row.difficulty}:${row.level}`;
+        const label = low
+            ? `1–${LOW_LEVEL_MAX}`
+            : difficulty === "all" && real
+              ? `REAL ${row.level}`
+              : `${row.level}`;
         const current = rows.get(key);
         if (!current) {
             rows.set(key, {

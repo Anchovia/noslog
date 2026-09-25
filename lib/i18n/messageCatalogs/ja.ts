@@ -1350,10 +1350,7 @@ export const jaMessages = {
     "profile.headlineWorld": "世界",
     "profile.headlineCountry": "国",
     "profile.modeEmpty": "{mode}の記録はまだありません",
-    "profile.progressSummary": "{range} {change} · 現在 {current}",
-    "profile.progressAtPeak": "自己最高",
     "profile.progressMetric": "推移の指標",
-    "profile.perWeek": "週あたり",
     "profile.ratingShort": "レーティング",
     "profile.column.chartRank": "曲順位",
     "profile.tabs.records": "記録",
@@ -1394,7 +1391,6 @@ export const jaMessages = {
     "profile.activity.more": "多",
     "profile.activity.scrollHint": "横にスクロールで1年分",
     "profile.activity.hidden": "このプレイヤーはプレイ活動を公開していません。",
-    "profile.peak": "最高",
     "profile.pinned.title": "固定記録",
     "profile.pinned.auto": "自動 · ベスト上位3曲",
     "profile.pinned.help":
@@ -1410,7 +1406,7 @@ export const jaMessages = {
     "profile.pinned.commentAria": "{title}の一言コメント",
     "profile.pinned.remove": "外す",
     "profile.pinned.removeAria": "{title}を外す",
-    "profile.pinned.chartRank": "曲 #{rank}",
+    "profile.pinned.chartRank": "#{rank}",
     "profile.pinned.failed":
         "固定記録を保存できませんでした。スコアのある記録だけ選べます。",
     "profile.fullComboShort": "FC",

@@ -563,11 +563,21 @@
     border-radius: var(--nl-radius-full);
     background: var(--nl-border-divider);
 }
+/* 막대 색 = 가이드 등급 색(2026-09-26 D7) — P 분홍 · S 노랑(점수 목표 색) · FC 초록(달성 색). 색이 정해지지 않은 A+ 이하는 흐린 글자색 */
 .noslog-ui .nl-profile-distribution__track > span {
     display: block;
     height: 100%;
     border-radius: inherit;
-    background: var(--nl-local-data-single);
+    background: var(--nl-content-subdued);
+}
+.noslog-ui .nl-profile-distribution__track > [data-rank="P"] {
+    background: var(--nl-score-goal-pianist);
+}
+.noslog-ui .nl-profile-distribution__track > [data-rank="S"] {
+    background: var(--nl-score-goal-s);
+}
+.noslog-ui .nl-profile-distribution__track > [data-rank="FC"] {
+    background: var(--nl-achievement-full-combo);
 }
 .noslog-ui .nl-profile-disclosure {
     display: inline-flex;
@@ -645,13 +655,7 @@
 .noslog-ui .nl-profile-progress__header {
     gap: var(--nl-spacing-12);
 }
-/* 제목 →4→ 요약 문장(2026-09-25 G2) */
-.noslog-ui .nl-profile-progress__title {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-4);
-    min-width: 0;
-}
+/* 조작부(2026-09-26 D3) = 지표 세그먼트 M + 기간 CompactSelect M, 폰 · 태블릿은 세그먼트가 남는 폭을 채움 */
 .noslog-ui .nl-profile-progress__controls {
     display: flex;
     justify-content: space-between;
@@ -659,14 +663,13 @@
     gap: var(--nl-spacing-8);
 }
 .noslog-ui .nl-profile-progress__controls .nl-segments {
-    flex: none;
+    flex: 1;
 }
 .noslog-ui .nl-profile-progress__controls .nl-segments__item {
     white-space: nowrap;
 }
-.noslog-ui .nl-profile-progress__controls .nl-select {
+.noslog-ui .nl-profile-progress__controls .nl-compact-select {
     flex-shrink: 0;
-    width: auto;
 }
 @media (min-width: 1056px) {
     .noslog-ui .nl-profile-progress__header {
@@ -677,28 +680,18 @@
     .noslog-ui .nl-profile-progress__controls {
         flex-shrink: 0;
     }
+    .noslog-ui .nl-profile-progress__controls .nl-segments {
+        flex: none;
+    }
 }
 .noslog-ui .nl-profile-progress .nl-line-chart__area {
     padding-top: 0;
-    gap: var(--nl-spacing-16);
-}
-.noslog-ui .nl-profile-progress__summary,
-.noslog-ui .nl-profile-progress__summary > div {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: var(--nl-spacing-8);
-}
-.noslog-ui .nl-profile-progress__summary {
     gap: var(--nl-spacing-16);
 }
 .noslog-ui .nl-profile-progress__content[aria-busy="true"] {
     color: var(--nl-content-pending);
 }
 @container profile-section (min-width: 334px) {
-    .noslog-ui .nl-profile-progress__summary {
-        gap: var(--nl-spacing-24);
-    }
     .noslog-ui .nl-profile-section .nl-tabs .nl-metric-switch__item {
         padding-inline: var(--nl-spacing-16);
     }
@@ -858,7 +851,7 @@
     clip-path: inset(50%);
     white-space: nowrap;
 }
-@container profile-section (min-width: 440px) {
+@container profile-section (min-width: 328px) {
     .noslog-ui .nl-profile-levels__full {
         position: static;
         width: auto;
@@ -870,7 +863,7 @@
         display: none;
     }
 }
-/* 범례 — 칸 12 · 모서리 2(빙고 범례와 같은 모양), 항목 사이 12 */
+/* 범례 — 칸 12 · 모서리 control 4, 항목 사이 12 */
 .noslog-ui .nl-profile-legend {
     display: flex;
     flex-wrap: wrap;
@@ -888,7 +881,7 @@
 .noslog-ui .nl-profile-levels .nl-profile-legend i {
     width: 12px;
     height: 12px;
-    border-radius: 2px;
+    border-radius: var(--nl-radius-control);
 }
 .noslog-ui .nl-profile-legend i[data-empty] {
     border: var(--nl-stroke-default) solid var(--nl-border-default);
@@ -945,6 +938,15 @@
     gap: var(--nl-spacing-32);
     min-width: 0;
 }
+/* 칸 16 · 사이 4 · 모서리 control 4(2026-09-26 T2 · T3 — 가이드 값만). 한 주 20 = 폰 약 17주 · 태블릿 약 36주 · 넓은 화면 53주 */
+.noslog-ui .nl-profile-calendar {
+    --nl-profile-calendar-cell: var(--nl-spacing-16);
+}
+@container profile-section (min-width: 1060px) {
+    .noslog-ui .nl-profile-calendar__hint {
+        visibility: hidden;
+    }
+}
 .noslog-ui .nl-profile-calendar__body {
     display: flex;
     flex-direction: column;
@@ -952,24 +954,6 @@
     min-width: 0;
     margin-top: var(--nl-spacing-4);
 }
-/* 칸 = 폰 19 · 태블릿 15 · 넓은 화면 17(시안 v2), 사이 4 · 모서리 2. 칸 폭만큼 보이고 옆으로 밀면 1년 */
-.noslog-ui .nl-profile-calendar {
-    --nl-profile-calendar-cell: 19px;
-}
-@container profile-section (min-width: 560px) {
-    .noslog-ui .nl-profile-calendar__body {
-        --nl-profile-calendar-cell: 15px;
-    }
-}
-@container profile-section (min-width: 1060px) {
-    .noslog-ui .nl-profile-calendar__body {
-        --nl-profile-calendar-cell: 17px;
-    }
-    .noslog-ui .nl-profile-calendar__hint {
-        visibility: hidden;
-    }
-}
-/* 처음부터 오늘 쪽(오른쪽) 끝 — 스크롤 칸만 오른쪽에서 시작(rtl), 칸 안은 왼쪽부터. 들어가면 왼쪽 정렬 */
 .noslog-ui .nl-profile-calendar__scroller {
     overflow-x: auto;
     min-width: 0;
@@ -992,7 +976,7 @@
 }
 .noslog-ui .nl-profile-calendar__cell {
     display: block;
-    border-radius: 2px;
+    border-radius: var(--nl-radius-control);
     background: var(--nl-surface-raised);
 }
 .noslog-ui .nl-profile-legend .nl-profile-calendar__cell {
@@ -1029,11 +1013,11 @@
     margin-inline-start: auto;
 }
 .noslog-ui .nl-profile-calendar__skeleton {
-    height: calc(19px * 7 + var(--nl-spacing-4) * 6);
+    height: calc(var(--nl-spacing-16) * 7 + var(--nl-spacing-4) * 6);
     border-radius: var(--nl-radius-control);
 }
 
-/* 고정 기록(2026-09-26 S2) — 구분선 목록, 줄 = 자켓 48 · 곡 / 난이도 · 점수 · 등급 + FC / 한 줄 소감 · 오른쪽 위 곡 순위, 위아래 12 */
+/* 고정 기록(2026-09-26 S2) — 구분선 목록, 줄 = 자켓 48 · 곡 / 난이도 · 점수 · 등급 + FC / 한 줄 소감 · 오른쪽 위 곡 순위, 위아래 8(가이드 목록 줄 · T4) */
 .noslog-ui .nl-profile-pinned__list {
     display: flex;
     flex-direction: column;
@@ -1047,7 +1031,7 @@
     grid-template-columns: 48px minmax(0, 1fr) auto;
     align-items: start;
     column-gap: var(--nl-spacing-12);
-    padding-block: var(--nl-spacing-12);
+    padding-block: var(--nl-spacing-8);
     border-bottom: var(--nl-stroke-default) solid var(--nl-border-divider);
 }
 @media (hover: hover) {
