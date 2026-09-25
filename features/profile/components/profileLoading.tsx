@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, ChevronRight } from "lucide-react";
 
 import { useTranslations } from "@/components/i18n/localeProvider";
 import { foundationButtonClass } from "@/components/ui/Button";
@@ -112,8 +112,14 @@ export default function ProfileLoading() {
             className="nl-profile-section nl-profile-plays"
             data-kind={kind}
         >
-            <div className="nl-profile-section__header">
-                <h2 className="nl-section-title">{title}</h2>
+            <div className="nl-profile-section__header" data-linked>
+                <div className="nl-heading-row">
+                    <h2 className="nl-section-title">{title}</h2>
+                    <span className="nl-heading-link nl-control">
+                        {t("achievement.all")}
+                        <ChevronRight aria-hidden />
+                    </span>
+                </div>
                 {kind === "best" ? (
                     <MetricSwitch
                         label={title}
@@ -208,10 +214,21 @@ function ProfileLevelsSkeleton({ variant }: { variant: "summary" | "full" }) {
             data-variant={variant}
             aria-hidden="true"
         >
-            <div className="nl-profile-section__header">
-                <h2 className="nl-section-title">
-                    {t("profile.levels.title")}
-                </h2>
+            <div
+                className="nl-profile-section__header"
+                data-linked={variant === "summary" || undefined}
+            >
+                <div className="nl-heading-row">
+                    <h2 className="nl-section-title">
+                        {t("profile.levels.title")}
+                    </h2>
+                    {variant === "summary" ? (
+                        <span className="nl-heading-link nl-control">
+                            {t("achievement.all")}
+                            <ChevronRight aria-hidden />
+                        </span>
+                    ) : null}
+                </div>
                 <SegmentedControl
                     size="sm"
                     label={t("profile.levels.viewLabel")}

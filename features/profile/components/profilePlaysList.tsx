@@ -110,8 +110,12 @@ export default function ProfilePlaysList({
             data-kind={kind}
             aria-labelledby={`profile-${kind}-title`}
         >
-            <div className="nl-profile-section__header">
-                <div className="nl-profile-section__title">
+            {/* 제목 링크가 있으면 제목 줄 오른쪽 끝(가이드 2절), 전환은 다음 줄 — 목록 바로 위(2026-09-26 A) */}
+            <div
+                className="nl-profile-section__header"
+                data-linked={batch === PROFILE_BATCH_SIZE || undefined}
+            >
+                <div className="nl-heading-row">
                     <h2
                         id={`profile-${kind}-title`}
                         className="nl-section-title"

@@ -825,13 +825,13 @@
 .noslog-ui .nl-profile-contribution__reason {
     color: var(--nl-feedback-error-text);
 }
-/* 제목 + 제목 옆 링크(베스트 → 기록 탭) */
-.noslog-ui .nl-profile-section__title {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--nl-spacing-4) var(--nl-spacing-12);
-    min-width: 0;
+/* 제목 링크가 있는 구역(2026-09-26 A) — 제목 줄(제목 · 오른쪽 끝 「모두 보기 ›」) →12→ 전환 */
+.noslog-ui .nl-profile-section__header[data-linked] {
+    flex-direction: column;
+    align-items: stretch;
+}
+.noslog-ui .nl-profile-section__header[data-linked] > :not(.nl-heading-row) {
+    align-self: flex-start;
 }
 /* 「기록」 탭(2026-09-25 2단계) — 2단 탭 | 고스트 정렬 한 줄(모든 폭) →16→ 표. 검색 · 필터 없음(2026-09-26) */
 .noslog-ui .nl-profile-records {
