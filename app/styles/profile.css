@@ -971,11 +971,6 @@
 .noslog-ui .nl-profile-calendar {
     --nl-profile-calendar-cell: var(--nl-spacing-16);
 }
-@container profile-section (min-width: 1060px) {
-    .noslog-ui .nl-profile-calendar__hint {
-        visibility: hidden;
-    }
-}
 .noslog-ui .nl-profile-calendar__body {
     display: flex;
     flex-direction: column;
