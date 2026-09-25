@@ -594,7 +594,7 @@ export default function Vid2bmapImportPanel({
                 document.ticksPerQuarter
             )
         ) {
-            return { count: 0, ticks: [] as number[] };
+            return { count: 0, ticks: [] as number[], withDraft: 0 };
         }
         const conflicts = findChartNoteConflicts(
             merged.notes,
@@ -619,7 +619,13 @@ export default function Vid2bmapImportPanel({
                     )
             ),
         ].sort((a, b) => a - b);
+        // 기존 초안 노트와 가져온 노트의 겹침은 넣기를 막는다 — 가져온 노트끼리(추출 오류)만 선택된 채로 넣기(2026-09-26 A)
+        const withDraft = conflicts.filter(
+            ({ firstId, secondId }) =>
+                added.has(firstId) !== added.has(secondId)
+        ).length;
         return {
+            withDraft,
             count: Math.max(
                 1,
                 conflicts.length -
@@ -711,7 +717,7 @@ export default function Vid2bmapImportPanel({
         });
 
     async function apply() {
-        if (!merged || !conversion) return;
+        if (!merged || !conversion || newConflicts.withDraft > 0) return;
         setApplying(true);
         try {
             if (document.notes.length > 0 && !(await onBeforeApply())) return;
@@ -728,7 +734,15 @@ export default function Vid2bmapImportPanel({
                     ? findChartNoteConflicts(
                           merged.notes,
                           document.ticksPerQuarter
-                      ).flatMap(({ firstId, secondId }) => [firstId, secondId])
+                      )
+                          .filter(
+                              ({ firstId, secondId }) =>
+                                  added.has(firstId) && added.has(secondId)
+                          )
+                          .flatMap(({ firstId, secondId }) => [
+                              firstId,
+                              secondId,
+                          ])
                     : [];
             if (conflictIds.length > 0) {
                 selection.splice(
@@ -1588,7 +1602,17 @@ export default function Vid2bmapImportPanel({
             </div>
 
             <footer className="border-divider flex flex-col gap-2 border-t px-3 py-2.5">
-                {newConflicts.count > 0 ? (
+                {newConflicts.withDraft > 0 ? (
+                    <p className="text-danger text-xs leading-relaxed">
+                        기존 초안 노트와 겹칩니다(
+                        {newConflicts.withDraft.toLocaleString("ko-KR")}건
+                        {newConflicts.ticks.length > 0
+                            ? ` · ${positionList(newConflicts.ticks, timingPoints)}`
+                            : ""}
+                        ) — 목록에서 「내 것 / 가져온 것」 을 바꾸거나, 초안의
+                        노트를 비운 뒤 넣어 주세요.
+                    </p>
+                ) : newConflicts.count > 0 ? (
                     <p className="text-danger text-xs leading-relaxed">
                         겹치는 노트 {newConflicts.count.toLocaleString("ko-KR")}
                         곳
@@ -1598,9 +1622,6 @@ export default function Vid2bmapImportPanel({
                         을 선택된 채로 넣어요 — 추출 오류(대개 긴 테누토나 그
                         안의 노트)라 에디터에서 가짜 쪽을 지우거나 길이를 고친
                         뒤 버전을 저장하세요(겹친 채로는 저장 안 됨).
-                        {hasDraft
-                            ? " 목록에서 「내 것 / 가져온 것」 을 바꿔도 돼요."
-                            : ""}
                     </p>
                 ) : null}
                 <div className="flex gap-2">
@@ -1613,7 +1634,9 @@ export default function Vid2bmapImportPanel({
                     </button>
                     <button
                         type="button"
-                        disabled={!merged || applying}
+                        disabled={
+                            !merged || applying || newConflicts.withDraft > 0
+                        }
                         onClick={() => void apply()}
                         className="bg-text-primary text-bg flex h-9 flex-[1.4] items-center justify-center gap-1.5 rounded-md text-xs font-bold disabled:cursor-not-allowed disabled:opacity-35"
                     >
