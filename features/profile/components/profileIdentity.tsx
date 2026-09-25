@@ -97,6 +97,23 @@ export default function ProfileIdentity({
                             {name}
                         </h1>
                         <CountryMarker country={user.country} />
+                        {/* 공유 · 설정은 이름 줄에만 붙는다(2026-09-25) — 아래 명판 · 배지 줄이 머리 폭 끝까지 가게 */}
+                        {isOwner ? (
+                            <div className="nl-profile-identity__actions">
+                                <ProfileShareDialog
+                                    user={user}
+                                    mode={mode}
+                                    triggerClassName="nl-profile-owner-action"
+                                />
+                                <Link
+                                    href={href("/settings")}
+                                    aria-label={t("profile.settings")}
+                                    className="nl-profile-owner-action"
+                                >
+                                    <Settings aria-hidden />
+                                </Link>
+                            </div>
+                        ) : null}
                     </div>
                     <ExamBadgeGroup className="nl-profile-identity__exams">
                         {hasExam ? (
@@ -144,22 +161,6 @@ export default function ProfileIdentity({
                         ) : null}
                     </ExamBadgeGroup>
                 </div>
-                {isOwner ? (
-                    <div className="nl-profile-identity__actions">
-                        <ProfileShareDialog
-                            user={user}
-                            mode={mode}
-                            triggerClassName="nl-profile-owner-action"
-                        />
-                        <Link
-                            href={href("/settings")}
-                            aria-label={t("profile.settings")}
-                            className="nl-profile-owner-action"
-                        >
-                            <Settings aria-hidden />
-                        </Link>
-                    </div>
-                ) : null}
                 {metadata ? (
                     <p className="nl-profile-identity__metadata nl-body-secondary nl-muted">
                         {metadata}

@@ -8,7 +8,7 @@
 .noslog-ui .nl-profile-identity__row {
     --nl-profile-avatar-size: 64px;
     display: grid;
-    grid-template-columns: var(--nl-profile-avatar-size) minmax(0, 1fr) auto;
+    grid-template-columns: var(--nl-profile-avatar-size) minmax(0, 1fr);
     align-items: flex-start;
     gap: var(--nl-spacing-12) var(--nl-spacing-16);
     min-width: 0;
@@ -56,8 +56,10 @@
 .noslog-ui .nl-profile-identity__exams {
     flex-wrap: wrap;
 }
+/* 공유 · 설정 = 이름 줄 오른쪽 끝(2026-09-25) — 머리 전체 높이를 차지하지 않아 명판 · 배지 줄이 끝까지 간다 */
 .noslog-ui .nl-profile-identity__actions {
     flex-shrink: 0;
+    margin-inline-start: auto;
 }
 .noslog-ui .nl-profile-identity__avatar {
     background: var(--nl-surface-sunken);
