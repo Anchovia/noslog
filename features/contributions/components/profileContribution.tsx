@@ -106,7 +106,7 @@ function DraftRow({ item }: { item: MyChartDraftItem }) {
                     {t(`contribution.draftStatus.${item.status}`)}
                 </span>
             </div>
-            <p className="nl-metadata nl-muted nl-profile-contribution__number">
+            <p className="nl-metadata nl-muted">
                 {item.status === "published" && item.publishedAt
                     ? `${t("contribution.section.publishedPoints", { points: 20 })} · ${item.publishedAt.slice(0, 10)}`
                     : item.openComments
@@ -171,7 +171,7 @@ function ProposalList({ items }: { items: MineItem[] }) {
                                 )}
                             </span>
                         </div>
-                        <p className="nl-metadata nl-muted nl-profile-contribution__number">
+                        <p className="nl-metadata nl-muted">
                             {before} →{" "}
                             {formatProposalValue(
                                 item.field,
@@ -317,7 +317,7 @@ export default function ProfileContribution({
                                 </span>
                                 Lv.{value.level}
                             </span>
-                            <span className="nl-metadata nl-muted nl-profile-contribution__number">
+                            <span className="nl-metadata nl-muted">
                                 {t("contribution.label.points", {
                                     points: value.points.toLocaleString(locale),
                                 })}{" "}

@@ -820,10 +820,6 @@
     min-width: 0;
     overflow-wrap: anywhere;
 }
-/* 점수 · 값 줄은 메타 글자(12) 그대로 숫자 폭만 맞춘다 */
-.noslog-ui .nl-profile-contribution__number {
-    font-variant-numeric: tabular-nums;
-}
 .noslog-ui .nl-profile-contribution__reason {
     color: var(--nl-feedback-error-text);
 }
