@@ -45,13 +45,27 @@ export function gradeBandTone(
 }
 
 /**
+ * 이미지(공유 카드)용 검정 명판 다크 값(2026-09-26 E4) — 카드는 CSS 변수를 못 읽어 tokens.css 다크 값을 옮겨 둔다.
+ * 값이 토큰과 같은지는 tests/grade-band-tone.test.ts 가 확인한다
+ */
+export const EXAM_TIER_DARK_HEX = {
+    low: "#8a8a8a", // exam-tier-low
+    mid: "#b98b67", // exam-tier-mid
+    high: "#c4c8ce", // exam-tier-high
+    top: "#d6b56d", // exam-tier-top
+    peak: "#d6b56d", // exam-tier-peak
+    topTint: "#25211a", // exam-tint-top
+    peakPlate: "#000000", // exam-plate-peak
+} as const;
+
+/**
  * 이미지(공유 카드)용 다크 값 — 카드는 CSS 변수를 못 읽어 tokens.css 다크 값을 그대로 옮겨 둔다.
  * 값이 토큰과 같은지는 tests/grade-band-tone.test.ts 가 tokens.css 를 읽어 확인한다
  */
 export const STAT_TONE_DARK_HEX: Partial<Record<StatTone, string>> = {
-    "rank-1": "#d6b56d", // exam-tier-top
-    "rank-2": "#c4c8ce", // exam-tier-high
-    "rank-3": "#b98b67", // exam-tier-mid
+    "rank-1": EXAM_TIER_DARK_HEX.top,
+    "rank-2": EXAM_TIER_DARK_HEX.high,
+    "rank-3": EXAM_TIER_DARK_HEX.mid,
     rank: "#afafaf", // content-subdued
     "grade-1": "#70b8ff", // judgement-near
     "grade-2": "#4ccce6", // judgement-good
