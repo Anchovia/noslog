@@ -2010,7 +2010,6 @@ export const koMessages = {
     "achievement.tier.3": "금",
     "achievement.tierAria": "{name} {tier}단계 · {metal}",
     "achievement.lockedAria": "{name} · 아직 얻지 않음",
-    "achievement.byTier": "금 {gold} · 은 {silver} · 동 {bronze}",
     "achievement.category.all": "전체",
     "achievement.category.skill": "실력",
     "achievement.category.collection": "수집",

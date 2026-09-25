@@ -255,12 +255,6 @@ export default function AchievementsPage({
                     {t("achievement.count", {
                         earned: summary.earned.toLocaleString(locale),
                         total: summary.total.toLocaleString(locale),
-                    })}{" "}
-                    ·{" "}
-                    {t("achievement.byTier", {
-                        gold: summary.byTier[2],
-                        silver: summary.byTier[1],
-                        bronze: summary.byTier[0],
                     })}
                 </p>
                 {scoresHidden ? (

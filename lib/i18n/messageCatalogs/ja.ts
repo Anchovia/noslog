@@ -2028,7 +2028,6 @@ export const jaMessages = {
     "achievement.tier.3": "金",
     "achievement.tierAria": "{name} {tier}段階 · {metal}",
     "achievement.lockedAria": "{name} · 未獲得",
-    "achievement.byTier": "金 {gold} · 銀 {silver} · 銅 {bronze}",
     "achievement.category.all": "すべて",
     "achievement.category.skill": "実力",
     "achievement.category.collection": "コレクション",

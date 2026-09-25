@@ -90,9 +90,6 @@
     justify-content: space-between;
     gap: var(--nl-spacing-8);
 }
-.noslog-ui .nl-profile-achievements__tiers {
-    font-variant-numeric: tabular-nums;
-}
 
 /* 목록 줄(L2) — 육각 48 · 제목 · 조건 · 진행 막대, 구분선 목록 */
 .noslog-ui .nl-achievement-list {

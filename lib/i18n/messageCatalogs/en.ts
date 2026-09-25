@@ -2037,7 +2037,6 @@ export const enMessages = {
     "achievement.tier.3": "Gold",
     "achievement.tierAria": "{name} tier {tier} · {metal}",
     "achievement.lockedAria": "{name} · not earned yet",
-    "achievement.byTier": "Gold {gold} · Silver {silver} · Bronze {bronze}",
     "achievement.category.all": "All",
     "achievement.category.skill": "Skill",
     "achievement.category.collection": "Collection",

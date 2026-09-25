@@ -20,7 +20,7 @@ export function formatAchievementDate(value: string, locale: string) {
 
 /**
  * 프로필 「업적」 구역(2026-09-24 C1) — 넓은 화면은 오른쪽 열(최근 플레이 아래 · 기여 위), 폰은 기여 위.
- * 얻은 단계 수 · 금은동 수 → 최근 달성 3줄, 머리 오른쪽 「모두 보기」 → 업적 페이지.
+ * 얻은 단계 수 → 최근 달성 3줄(금 · 은 · 동 개수는 두지 않는다, 2026-09-25), 머리 오른쪽 「모두 보기」 → 업적 페이지.
  * 남의 프로필에서 얻은 업적이 없으면 구역을 두지 않는다.
  */
 export default function ProfileAchievements({
@@ -37,7 +37,6 @@ export default function ProfileAchievements({
     const href = useLocalizedHref();
     const text = useAchievementText();
     if (!summary.earned && !isOwner) return null;
-    const [bronze, silver, gold] = summary.byTier;
     return (
         <section
             id="profile-achievements"
@@ -65,9 +64,6 @@ export default function ProfileAchievements({
                         earned: summary.earned.toLocaleString(locale),
                         total: summary.total.toLocaleString(locale),
                     })}
-                </span>
-                <span className="nl-metadata nl-muted nl-profile-achievements__tiers">
-                    {t("achievement.byTier", { gold, silver, bronze })}
                 </span>
             </div>
             {summary.recent.length ? (
