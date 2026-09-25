@@ -249,7 +249,8 @@ export default function ChartSheetViewer({
                         iconOnly={compact}
                     />
                 ) : null}
-                {source?.extracted ? (
+                {/* 폰은 출처를 「더보기」 창 끝에 합친다(2026-09-26 M1) — ⓘ 는 넓은 화면만 */}
+                {source?.extracted && !compact ? (
                     <button
                         type="button"
                         className={compact ? iconClass : actionClass}
@@ -313,49 +314,37 @@ export default function ChartSheetViewer({
         </p>
     );
 
-    function sourceDialog() {
+    // 출처 — 채보(작성자 · 공개 버전 · 날짜) · 노트 배치(영상 추출만). 넓은 화면 「출처 보기」 창과 폰 「더보기」 창 끝이 같이 쓴다
+    function sourceDetails() {
         if (!source) return null;
         return (
-            <ModalDialog
-                open={sourceOpen}
-                onOpenChange={setSourceOpen}
-                title={t("chart.source.title")}
-            >
-                <dl className="nl-chart-viewer__sources">
-                    <div>
-                        <dt className="nl-metadata nl-muted">
-                            {t("chart.source.chart")}
-                        </dt>
-                        <dd>
-                            {source.author ? (
-                                <p className="nl-chart-viewer__byline nl-body-secondary">
-                                    {source.author.name}
-                                    <ContributionLabel
-                                        label={source.author.label}
-                                    />
-                                </p>
-                            ) : null}
-                            {revision !== null && source.publishedAt ? (
-                                <p className="nl-metadata nl-muted">
-                                    {t(
-                                        source.publisher
-                                            ? "chart.source.publishedBy"
-                                            : "chart.source.published",
-                                        {
-                                            revision,
-                                            name: source.publisher?.name ?? "",
-                                            date: new Intl.DateTimeFormat(
-                                                numberLocale,
-                                                { dateStyle: "medium" }
-                                            ).format(
-                                                new Date(source.publishedAt)
-                                            ),
-                                        }
-                                    )}
-                                </p>
-                            ) : null}
-                        </dd>
-                    </div>
+            <dl className="nl-chart-viewer__sources">
+                <div>
+                    <dt className="nl-metadata nl-muted">
+                        {t("chart.source.chart")}
+                    </dt>
+                    <dd>
+                        {renderAuthor(false)}
+                        {revision !== null && source.publishedAt ? (
+                            <p className="nl-metadata nl-muted">
+                                {t(
+                                    source.publisher
+                                        ? "chart.source.publishedBy"
+                                        : "chart.source.published",
+                                    {
+                                        revision,
+                                        name: source.publisher?.name ?? "",
+                                        date: new Intl.DateTimeFormat(
+                                            numberLocale,
+                                            { dateStyle: "medium" }
+                                        ).format(new Date(source.publishedAt)),
+                                    }
+                                )}
+                            </p>
+                        ) : null}
+                    </dd>
+                </div>
+                {source.extracted ? (
                     <div>
                         <dt className="nl-metadata nl-muted">
                             {t("chart.source.notes")}
@@ -388,7 +377,20 @@ export default function ChartSheetViewer({
                             </p>
                         </dd>
                     </div>
-                </dl>
+                ) : null}
+            </dl>
+        );
+    }
+
+    function sourceDialog() {
+        if (!source) return null;
+        return (
+            <ModalDialog
+                open={sourceOpen}
+                onOpenChange={setSourceOpen}
+                title={t("chart.source.title")}
+            >
+                {sourceDetails()}
             </ModalDialog>
         );
     }
@@ -542,14 +544,8 @@ export default function ChartSheetViewer({
                             {artist ?? t("chart.unknownArtist")}
                         </p>
                     </div>
-                    {renderAuthor(true)}
                     <div className="nl-chart-viewer__info">
                         {metadata}
-                        {source?.extracted ? (
-                            <p className="nl-metadata nl-muted">
-                                {t("chart.source.extracted")}
-                            </p>
-                        ) : null}
                         <div className="nl-chart-viewer__legend">
                             <Legend
                                 color={handColors.left}
@@ -561,6 +557,8 @@ export default function ChartSheetViewer({
                             />
                         </div>
                     </div>
+                    {/* 출처(2026-09-26 M1) — 폰은 ⓘ 창 대신 여기 */}
+                    {sourceDetails()}
                 </div>
             </ModalDialog>
             {sourceDialog()}
