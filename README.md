@@ -7,7 +7,7 @@
 
 [서비스 바로가기](https://noslog.app/ko) · [이슈 제보](https://github.com/Anchovia/noslog/issues) · [최신 Release](https://github.com/Anchovia/noslog/releases/latest)
 
-NosLog는 NOSTALGIA 플레이 데이터를 한곳에서 확인하고 기록을 돌아볼 수 있도록 만든 웹 서비스입니다. 한국어·일본어·영어 화면을 제공하며, 현재 서비스 버전은 **v2.14.0**입니다.
+NosLog는 NOSTALGIA 플레이 데이터를 한곳에서 확인하고 기록을 돌아볼 수 있도록 만든 웹 서비스입니다. 한국어·일본어·영어 화면을 제공하며, 현재 서비스 버전은 **v2.15.0**입니다.
 
 > NosLog는 KONAMI 및 공식 NOSTALGIA 서비스와 관련이 없습니다.
 
@@ -20,7 +20,7 @@ NosLog는 NOSTALGIA 플레이 데이터를 한곳에서 확인하고 기록을 �
 - 점수, 콤보, 판정, FAST/SLOW, 음표별 성공률과 최근 기록 추이
 - Basic·Recital 공식 Grd 및 Basic 서열 레이팅 랭킹
 - S·Full Combo·Pianist 목표별 서열표
-- 프로필의 베스트 성과 · 전체 기록, 통계(레벨별 달성 · 판정 · 랭크 분포 · 노트 종류별 성공률), 활동 달력과 최근 플레이
+- 프로필 개요 · 기록 · 통계(성장 추이 · 레벨별 달성 · 판정 · 랭크 분포) · 업적 · 활동(1년 달력 · 최근 플레이) 탭과 고정 기록
 
 ### 커뮤니티와 아카이브
 
