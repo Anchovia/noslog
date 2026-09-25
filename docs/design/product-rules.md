@@ -636,6 +636,15 @@ old design-stage checklist. Changes to material behavior require a user decision
   highest tiers automatically when none are chosen. They are chosen in Settings → Profile (2026-09-25) and
   saved with the rest of the profile form; only earned achievements, at most three, in the chosen order.
   An invalid choice blocks the whole save. The achievement list itself has no pin controls.
+- Pinned records (2026-09-26 S2, `UserPinnedRecord`): up to three charts the owner
+  chose, each with an optional one-line note (80 characters, whitespace collapsed),
+  shown on the overview in the chosen order with that chart's current best record.
+  Pins are by chart because sync may replace record rows; a pin whose chart has no
+  scored record anymore is skipped, and with no usable pin the overview shows the top
+  three Basic Grd records. Only charts with a score can be pinned; they are chosen in
+  Settings → Profile and saved with the profile form, and an invalid choice blocks the
+  whole save. Score-private profiles show nothing of this to others (the overview is
+  locked). Notes are public profile text.
 - Profiles with private scores: other people do not see skill or collection achievements (they reveal
   record ranges); challenge and community achievements stay visible. Progress values are shown only to the
   owner.

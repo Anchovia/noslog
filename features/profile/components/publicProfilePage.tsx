@@ -23,11 +23,13 @@ import ProfileContribution from "@/features/contributions/components/profileCont
 import ProfileAchievements from "@/features/achievements/components/profileAchievements";
 import { summarizeAchievements } from "@/features/achievements/achievementDefinitions";
 import ProfileLevels from "./profileLevels";
+import ProfilePinned from "./profilePinned";
+import type { ProfilePinnedRecords } from "@/features/profile/server/profilePinnedService";
 import type { ProfileLevelRow } from "@/features/profile/schemas/profileStatsSchema";
 
 /**
  * 프로필 「개요」 탭(2026-09-25 D2) — 머리 · 탭은 레이아웃이 그린다.
- * 넓은 화면 2 : 1 — 주 열(성장 추이 · 베스트 · 최근 플레이) | 옆 열(레벨별 달성 요약 · 업적 · 기여).
+ * 넓은 화면 2 : 1 — 주 열(성장 추이 · 베스트 · 최근 플레이) | 옆 열(고정 기록 · 레벨별 달성 요약 · 업적 · 기여).
  * 랭크 분포 · 판정 요약은 「통계」 탭으로 옮겼다(2026-09-26).
  * 태블릿은 주 열 다음 옆 열이 두 칸 격자, 폰은 베스트 → 최근 → 성장 추이 → 나머지(F2)
  */
@@ -39,6 +41,7 @@ export default function PublicProfilePage({
     initialRecent,
     initialProgress,
     levels = [],
+    pinned = null,
     scoresHidden = false,
 }: {
     user: ProfileUser;
@@ -51,6 +54,8 @@ export default function PublicProfilePage({
     initialProgress: ProfileProgressPayload | null;
     /** 레벨별 달성 요약(옆 열, 2026-09-26 R2) */
     levels?: readonly ProfileLevelRow[];
+    /** 고정 기록(옆 열 맨 위, 2026-09-26 S2) */
+    pinned?: ProfilePinnedRecords | null;
 }) {
     const t = useTranslations();
     const href = useLocalizedHref();
@@ -136,6 +141,7 @@ export default function PublicProfilePage({
                 ) : null}
             </div>
             <div className="nl-profile-side">
+                {pinned ? <ProfilePinned pinned={pinned} /> : null}
                 <ProfileLevels
                     userId={user.id}
                     levels={levels}

@@ -1391,6 +1391,24 @@ export const jaMessages = {
     "profile.activity.scrollHint": "横にスクロールで1年分",
     "profile.activity.hidden": "このプレイヤーはプレイ活動を公開していません。",
     "profile.peak": "最高",
+    "profile.pinned.title": "固定記録",
+    "profile.pinned.auto": "自動 · ベスト上位3曲",
+    "profile.pinned.help":
+        "プロフィール概要の上に{max}件まで固定し、記録ごとに一言コメントを付けられます。",
+    "profile.pinned.dialogHelp":
+        "選んだ順に{max}件まで表示されます。コメントは空でもかまいません。",
+    "profile.pinned.search": "曲名で記録を探す",
+    "profile.pinned.results": "{count}件の記録",
+    "profile.pinned.full":
+        "{max}枠すべて埋まっています。1件外してから選んでください。",
+    "profile.pinned.noResults": "該当する記録がありません。",
+    "profile.pinned.comment": "一言コメント（任意）",
+    "profile.pinned.commentAria": "{title}の一言コメント",
+    "profile.pinned.remove": "外す",
+    "profile.pinned.removeAria": "{title}を外す",
+    "profile.pinned.chartRank": "曲 #{rank}",
+    "profile.pinned.failed":
+        "固定記録を保存できませんでした。スコアのある記録だけ選べます。",
     "profile.fullComboShort": "FC",
     "profile.column.song": "曲",
     "profile.column.difficulty": "難易度",

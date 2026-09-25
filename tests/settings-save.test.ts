@@ -10,6 +10,7 @@ const mocks = vi.hoisted(() => ({
     updateTag: vi.fn(),
     log: vi.fn(),
     setShowcase: vi.fn(),
+    setPinned: vi.fn(),
 }));
 vi.mock("@/lib/session", () => ({ default: async () => mocks.session }));
 vi.mock("@/lib/db", () => ({
@@ -26,6 +27,9 @@ vi.mock("@/lib/blob", () => ({
 vi.mock("@/lib/observability/server", () => ({ logServerError: mocks.log }));
 vi.mock("@/features/achievements/server/achievementService", () => ({
     setAchievementShowcase: mocks.setShowcase,
+}));
+vi.mock("@/features/profile/server/profilePinnedService", () => ({
+    setPinnedRecords: mocks.setPinned,
 }));
 vi.mock("@/lib/i18n/server", () => ({
     getServerI18n: async () => ({ t: (key: string) => key }),
@@ -65,6 +69,7 @@ describe("P10 settings save boundaries", () => {
         mocks.findArcade.mockResolvedValue({ id: 3 });
         mocks.validateBlob.mockResolvedValue(true);
         mocks.setShowcase.mockResolvedValue({ status: "ok", keys: [] });
+        mocks.setPinned.mockResolvedValue({ status: "ok" });
     });
     it("requires a completed authenticated account before accessing data", async () => {
         mocks.session.id = undefined;
@@ -276,6 +281,50 @@ describe("P10 settings save boundaries", () => {
                 fieldErrors: {
                     achievementShowcase: ["achievement.pin.failed"],
                 },
+            });
+            expect(mocks.updateUser).not.toHaveBeenCalled();
+        });
+    });
+    describe("고정 기록(2026-09-26 S2)", () => {
+        it("폼에 칸이 없으면 건드리지 않고, 있으면 고른 순서대로 · 빈 값은 자동으로 저장한다", async () => {
+            await saveSettingsProfile(settingsFormData(profile));
+            expect(mocks.setPinned).not.toHaveBeenCalled();
+            await saveSettingsProfile(
+                settingsFormData({
+                    ...profile,
+                    pinnedRecords: JSON.stringify([
+                        { chartId: 5, comment: "첫 S" },
+                        { chartId: 2, comment: null },
+                    ]),
+                })
+            );
+            expect(mocks.setPinned).toHaveBeenLastCalledWith(9, [
+                { chartId: 5, comment: "첫 S" },
+                { chartId: 2, comment: null },
+            ]);
+            await saveSettingsProfile(
+                settingsFormData({ ...profile, pinnedRecords: "" })
+            );
+            expect(mocks.setPinned).toHaveBeenLastCalledWith(9, []);
+        });
+        it("형식이 틀리거나 점수가 없는 채보면 프로필도 저장하지 않는다", async () => {
+            const bad = await saveSettingsProfile(
+                settingsFormData({ ...profile, pinnedRecords: "[1,2" })
+            );
+            expect(bad.success).toBe(false);
+            expect(mocks.setPinned).not.toHaveBeenCalled();
+            mocks.setPinned.mockResolvedValueOnce({ status: "not-played" });
+            const result = await saveSettingsProfile(
+                settingsFormData({
+                    ...profile,
+                    pinnedRecords: JSON.stringify([
+                        { chartId: 5, comment: null },
+                    ]),
+                })
+            );
+            expect(result).toMatchObject({
+                success: false,
+                fieldErrors: { pinnedRecords: ["profile.pinned.failed"] },
             });
             expect(mocks.updateUser).not.toHaveBeenCalled();
         });

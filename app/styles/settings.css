@@ -290,3 +290,50 @@
         align-self: flex-start;
     }
 }
+
+/* 설정 「고정 기록」 창(2026-09-26 S2) — 고른 3칸(칸 = 곡 · 빼기 →8→ 한 줄 소감, 「프로필 업적」 창의 칸 경계) →12→ 기록 찾기 목록(선호 오락실 창과 같은 목록) */
+.noslog-ui .nl-pinned-picker {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-12);
+}
+.noslog-ui .nl-pinned-picker__slots {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.noslog-ui .nl-pinned-picker__slot {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
+    min-width: 0;
+    padding: var(--nl-spacing-12);
+    border: var(--nl-stroke-default) solid var(--nl-border-default);
+    border-radius: var(--nl-radius-field);
+}
+.noslog-ui .nl-pinned-picker__slot[data-empty="true"] {
+    border-color: var(--nl-border-empty-slot);
+}
+.noslog-ui .nl-pinned-picker__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--nl-spacing-8);
+    min-width: 0;
+}
+.noslog-ui .nl-pinned-picker__name {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+.noslog-ui .nl-pinned-picker .nl-settings__arcade-option[aria-selected="true"] {
+    font-weight: var(--nl-type-weight-semibold);
+}
+.noslog-ui .nl-pinned-picker .nl-settings__arcade-option[aria-disabled="true"] {
+    cursor: not-allowed;
+    color: var(--nl-interaction-disabled-content);
+}

@@ -3,6 +3,7 @@ import { getProfileOverviewContext } from "@/features/profile/server/profileOver
 import { getPublicProfilePlays } from "@/features/profile/server/profilePlaysService";
 import { getPublicProfileProgress } from "@/features/profile/server/profileProgressService";
 import { getProfileStats } from "@/features/profile/server/profileStatsService";
+import { getProfilePinnedRecords } from "@/features/profile/server/profilePinnedService";
 import { profileIdSchema } from "@/features/profile/schemas/publicProfileSchema";
 import { localizePath } from "@/lib/i18n/routing";
 import { getServerI18n } from "@/lib/i18n/server";
@@ -73,30 +74,37 @@ export default async function ProfilePage({
                 initialProgress={null}
             />
         );
-    const [overview, initialBest, initialRecent, initialProgress, stats] =
-        await Promise.all([
-            getProfileOverviewContext(id, isOwner),
-            getPublicProfilePlays(id, {
-                kind: "best",
-                mode,
-                metric: "grade",
-                offset: 0,
-                limit: 5,
-            }),
-            getPublicProfilePlays(id, {
-                kind: "recent",
-                mode: "basic",
-                metric: "grade",
-                offset: 0,
-                limit: 5,
-            }),
-            getPublicProfileProgress(id, {
-                mode,
-                metric: "grade",
-                range: "90",
-            }),
-            getProfileStats(id),
-        ]);
+    const [
+        overview,
+        initialBest,
+        initialRecent,
+        initialProgress,
+        stats,
+        pinned,
+    ] = await Promise.all([
+        getProfileOverviewContext(id, isOwner),
+        getPublicProfilePlays(id, {
+            kind: "best",
+            mode,
+            metric: "grade",
+            offset: 0,
+            limit: 5,
+        }),
+        getPublicProfilePlays(id, {
+            kind: "recent",
+            mode: "basic",
+            metric: "grade",
+            offset: 0,
+            limit: 5,
+        }),
+        getPublicProfileProgress(id, {
+            mode,
+            metric: "grade",
+            range: "90",
+        }),
+        getProfileStats(id),
+        getProfilePinnedRecords(id),
+    ]);
 
     return (
         <PublicProfilePage
@@ -107,6 +115,7 @@ export default async function ProfilePage({
             initialBest={initialBest}
             initialRecent={initialRecent}
             levels={stats.levels}
+            pinned={pinned}
         />
     );
 }

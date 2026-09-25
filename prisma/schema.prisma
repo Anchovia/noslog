@@ -95,6 +95,7 @@ model User {
   chartPatternsAuthored      ChartPattern[]              @relation("ChartPatternAuthor")
   achievements               UserAchievement[]
   achievementShowcase        UserAchievementShowcase[]
+  pinnedRecords              UserPinnedRecord[]
 
   @@index([grade_basic, id])
   @@index([grade_recital, id])
@@ -739,6 +740,7 @@ model MusicChart {
   fieldProposals       ChartFieldProposal[]
   drafts               ChartDraft[]
   comments             ChartComment[]
+  pinnedBy             UserPinnedRecord[]
 
   @@unique([music_idx, difficulty])
   @@index([level])
@@ -1422,4 +1424,22 @@ model UserAchievementShowcase {
 
   @@id([user_id, position])
   @@unique([user_id, key])
+}
+
+// 프로필 개요에 고정한 기록(최대 3칸 · 한 줄 소감, 2026-09-26 S2). 비어 있으면 베스트 상위 3곡을 보인다.
+// 동기화 때마다 기록 행이 바뀔 수 있어 채보 기준으로 고정한다
+model UserPinnedRecord {
+  id         Int        @id @default(autoincrement())
+  user_id    Int
+  user       User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  chart_id   Int
+  chart      MusicChart @relation(fields: [chart_id], references: [id], onDelete: Cascade)
+  // 1~3
+  position   Int
+  comment    String?    @db.VarChar(80)
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
+
+  @@unique([user_id, position])
+  @@unique([user_id, chart_id])
 }

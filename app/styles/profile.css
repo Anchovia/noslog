@@ -253,7 +253,8 @@
 .noslog-ui .nl-profile-progress {
     order: 3;
 }
-.noslog-ui .nl-profile-body .nl-profile-levels {
+/* 고정 기록 → 레벨별 달성(같은 순서값, 마크업 순서대로) */
+.noslog-ui .nl-profile-body :is(.nl-profile-pinned, .nl-profile-levels) {
     order: 4;
 }
 .noslog-ui .nl-profile-achievements {
@@ -282,6 +283,10 @@
     }
     .noslog-ui .nl-profile-side .nl-profile-levels {
         grid-row: span 2;
+    }
+    /* 고정 기록이 있으면 두 칸 두 줄 — 고정 기록 | 레벨별 달성, 업적 | 기여(v2 시안) */
+    .noslog-ui .nl-profile-side:has(.nl-profile-pinned) .nl-profile-levels {
+        grid-row: auto;
     }
 }
 /* 넓은 화면 2 : 1 — 주 열(성장 추이 · 베스트 · 최근) | 옆 열(레벨별 달성 · 업적 · 기여) */
@@ -1015,4 +1020,54 @@
 .noslog-ui .nl-profile-calendar__skeleton {
     height: calc(19px * 7 + var(--nl-spacing-4) * 6);
     border-radius: var(--nl-radius-control);
+}
+
+/* 고정 기록(2026-09-26 S2) — 구분선 목록, 줄 = 자켓 48 · 곡 / 난이도 · 점수 · 등급 + FC / 한 줄 소감 · 오른쪽 위 곡 순위, 위아래 12 */
+.noslog-ui .nl-profile-pinned__list {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.noslog-ui .nl-profile-pinned__row {
+    display: grid;
+    grid-template-columns: 48px minmax(0, 1fr) auto;
+    align-items: start;
+    column-gap: var(--nl-spacing-12);
+    padding-block: var(--nl-spacing-12);
+    border-bottom: var(--nl-stroke-default) solid var(--nl-border-divider);
+}
+@media (hover: hover) {
+    .noslog-ui .nl-profile-pinned__row:hover {
+        --nl-state-layer: var(--nl-interaction-hover);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
+    }
+}
+.noslog-ui .nl-profile-pinned__jacket {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--nl-radius-control);
+}
+.noslog-ui .nl-profile-pinned__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-4);
+    min-width: 0;
+}
+.noslog-ui .nl-profile-pinned__title {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.noslog-ui .nl-profile-pinned__comment {
+    overflow-wrap: anywhere;
+}
+.noslog-ui .nl-profile-pinned__rank {
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
 }

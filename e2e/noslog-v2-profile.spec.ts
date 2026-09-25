@@ -203,9 +203,10 @@ for (const locale of ["ko", "ja", "en"]) {
             const progress = (await page
                 .locator(".nl-profile-progress")
                 .boundingBox())!;
-            // 옆 열 첫 구역 = 레벨별 달성 요약(2026-09-26 R2)
+            // 옆 열 첫 구역 = 고정 기록(있으면, 2026-09-26 S2) 또는 레벨별 달성 요약(R2)
             const overview = (await page
-                .locator(".nl-profile-body .nl-profile-levels")
+                .locator(".nl-profile-body .nl-profile-side > section")
+                .first()
                 .boundingBox())!;
             const best = (await page
                 .locator('.nl-profile-plays[data-kind="best"]')
