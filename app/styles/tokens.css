@@ -300,6 +300,14 @@ html[data-theme="light"] .noslog-ui,
     letter-spacing: 0;
     font-variant-numeric: normal;
 }
+/* 읽기 본문(2026-09-26 H1) — 공지 · 이벤트 글 본문만. 크기는 본문과 같고 행간만 28(한국어 긴 글 행간 중앙값 1.7) */
+.noslog-ui .nl-body-reading {
+    font-size: var(--nl-type-size-16);
+    line-height: var(--nl-type-line-height-28);
+    font-weight: var(--nl-type-weight-regular);
+    letter-spacing: 0;
+    font-variant-numeric: normal;
+}
 .noslog-ui .nl-body-secondary {
     font-size: var(--nl-type-size-14);
     line-height: var(--nl-type-line-height-20);

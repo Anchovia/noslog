@@ -28,11 +28,6 @@ export default async function AnnouncementArchive({
     totalPages: number;
 }) {
     const { locale, t } = await getServerI18n();
-    const month = new Intl.DateTimeFormat(locale, {
-        year: "numeric",
-        month: "long",
-        timeZone: "Asia/Seoul",
-    });
     const base = localizePath("/announcements", locale);
     const categoryLabel = (item: PublicAnnouncementSummary) =>
         t(`announcements.category.${item.category}`);
@@ -71,30 +66,16 @@ export default async function AnnouncementArchive({
             ) : null}
             {announcements.length ? (
                 <ul className="nl-announcements__list">
-                    {announcements.map((announcement, index) => {
-                        const label = month.format(
-                            new Date(announcement.publishedAt)
-                        );
-                        const startsMonth =
-                            index === 0 ||
-                            month.format(
-                                new Date(announcements[index - 1].publishedAt)
-                            ) !== label;
-                        return (
-                            <li key={announcement.id}>
-                                {startsMonth ? (
-                                    <h2 className="nl-section-title nl-announcements__month">
-                                        {label}
-                                    </h2>
-                                ) : null}
-                                <AnnouncementRow
-                                    announcement={announcement}
-                                    locale={locale}
-                                    categoryLabel={categoryLabel(announcement)}
-                                />
-                            </li>
-                        );
-                    })}
+                    {/* 월 제목 없음(2026-09-26 G1) — 날짜가 줄마다 오른쪽에 있다 */}
+                    {announcements.map((announcement) => (
+                        <li key={announcement.id}>
+                            <AnnouncementRow
+                                announcement={announcement}
+                                locale={locale}
+                                categoryLabel={categoryLabel(announcement)}
+                            />
+                        </li>
+                    ))}
                 </ul>
             ) : pinned.length ? null : (
                 <p className="nl-body nl-muted">{t("announcements.empty")}</p>

@@ -305,6 +305,27 @@ describe("P11 restricted Markdown", () => {
             expect(html).toContain(element);
         expect(html).toContain('class="nl-announcement-body__table"');
     });
+    // 라벨 항목(2026-09-26 L2) — 「**라벨:** 설명」 문단이 둘 이상 이어지면 라벨(dt) + 설명(dd) 목록
+    it("renders consecutive bold-label paragraphs as a label list", () => {
+        const html = render(
+            "## 새 기능\n\n**채보 뷰어:** 16:9로 고정했습니다.\n\n**전체화면 · 조작:** 스페이스로 [재생](/ko/music)합니다.\n\n고친 것: 번역 문제를 고쳤습니다."
+        );
+        expect(html).toContain(
+            '<dl class="nl-announcement-body__items"><dt class="nl-component-title">채보 뷰어</dt><dd>16:9로 고정했습니다.</dd>'
+        );
+        expect(html).toContain(
+            '<dt class="nl-component-title">전체화면 · 조작</dt><dd>스페이스로 <a href="/ja/music">재생</a>합니다.</dd></dl>'
+        );
+        expect(html).toContain("<p>고친 것: 번역 문제를 고쳤습니다.</p>");
+        expect(html).toContain('class="nl-announcement-body nl-body-reading"');
+    });
+    it("keeps a single bold-label paragraph and bold words without a colon as paragraphs", () => {
+        const html = render(
+            "**주의:** 점검 중에는 동기화할 수 없습니다.\n\n**굵은 말** 뒤 문장.\n\n**라벨만:**"
+        );
+        expect(html).not.toContain("<dl");
+        expect(html).toContain("<p><strong>주의:</strong> 점검 중에는");
+    });
     it("keeps the text of disallowed elements instead of dropping it", () => {
         const html = render("# 큰 제목은 태그만 벗긴다");
         expect(html).toContain("큰 제목은 태그만 벗긴다");

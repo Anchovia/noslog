@@ -7,7 +7,7 @@ test.skip(
     "Requires the isolated local announcement presentation harness."
 );
 for (const locale of ["ko", "ja", "en"] as const) {
-    test(`P11 ${locale} archive reflows with month groups and bounded pagination`, async ({
+    test(`P11 ${locale} archive reflows in one-line rows and bounded pagination`, async ({
         page,
     }, testInfo) => {
         const t = getMessages(locale);
@@ -15,7 +15,8 @@ for (const locale of ["ko", "ja", "en"] as const) {
         page.on("pageerror", (error) => errors.push(error.message));
         await page.goto(`/${locale}/p7-verification?fixture=announcements`);
         await expect(page.locator(".nl-announcement-row")).toHaveCount(20);
-        await expect(page.locator(".nl-announcements__month")).toHaveCount(7);
+        // 월 제목 없이 한 줄(2026-09-26 R1 · G1) — 넓으면 날짜가 제목 오른쪽, 폰은 태그 줄 오른쪽
+        await expect(page.locator(".nl-announcements__month")).toHaveCount(0);
         await expect(page.locator(".nl-pagination")).toBeVisible();
         await expect(
             page.locator('.nl-pagination [aria-current="page"]')
@@ -38,6 +39,23 @@ for (const locale of ["ko", "ja", "en"] as const) {
                 expect(
                     Math.abs(bounds.x - (width - bounds.width) / 2)
                 ).toBeLessThan(10);
+            const row = page
+                .locator(".nl-announcements__list .nl-announcement-row")
+                .first();
+            const title = (await row
+                .locator(".nl-announcement-row__title")
+                .boundingBox())!;
+            const date = (await row
+                .locator(".nl-announcement-row__date")
+                .boundingBox())!;
+            const tag = (await row.locator(".nl-tag").first().boundingBox())!;
+            if (width >= 768) expect(date.x).toBeGreaterThan(title.x);
+            else
+                expect(
+                    Math.abs(
+                        date.y + date.height / 2 - (tag.y + tag.height / 2)
+                    )
+                ).toBeLessThan(2);
             if (width === 390 || width === 1470)
                 await page.screenshot({
                     path: testInfo.outputPath(`archive-${width}.png`),
@@ -85,6 +103,11 @@ for (const locale of ["ko", "ja", "en"] as const) {
         await expect(page.locator(".nl-announcement-body")).toHaveCSS(
             "font-weight",
             "400"
+        );
+        // 읽기 본문 16/28(2026-09-26 H1)
+        await expect(page.locator(".nl-announcement-body")).toHaveCSS(
+            "line-height",
+            "28px"
         );
         await expect(page.locator(".nl-announcement-body")).toHaveCSS(
             "font-family",
