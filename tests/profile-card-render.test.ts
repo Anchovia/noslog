@@ -5,6 +5,7 @@ import { describe, expect, it } from "vitest";
 import type { ProfileUser } from "@/components/profile/dashboard/profileTypes";
 import ProfileCardImage from "@/features/profile/components/profileCardImage";
 import {
+    getProfileCardFullComboCount,
     getProfileCardInitial,
     getProfileCardMode,
 } from "@/features/profile/profileCardModel";
@@ -60,6 +61,17 @@ describe("P16 share card", () => {
         ).toMatchObject({ grade: null });
         expect(getProfileCardInitial("🎵 계롤", "ko")).toBe("계");
         expect(getProfileCardInitial("étoile", "en")).toBe("É");
+    });
+
+    it("counts Pianist records as full combos too", () => {
+        expect(getProfileCardFullComboCount(base)).toBe(12 + 87);
+        expect(
+            getProfileCardFullComboCount({
+                ...base,
+                score_p: null,
+                score_f: null,
+            })
+        ).toBe(0);
     });
     for (const scenario of [
         "ko-base",

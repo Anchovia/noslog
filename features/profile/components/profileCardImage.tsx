@@ -15,6 +15,7 @@ import {
     type ExamTier,
 } from "@/features/exams/examGrades";
 import {
+    getProfileCardFullComboCount,
     getProfileCardInitial,
     getProfileCardMode,
 } from "@/features/profile/profileCardModel";
@@ -649,7 +650,11 @@ export default function ProfileCardImage({
                 <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
                     {[
                         { label: "P", value: user.score_p, color: "#f5d98b" },
-                        { label: "FC", value: user.score_f, color: "#a3e635" },
+                        {
+                            label: "FC",
+                            value: getProfileCardFullComboCount(user),
+                            color: "#a3e635",
+                        },
                         { label: "S", value: user.score_s, color: gold },
                     ].map((item, index) => (
                         <div
