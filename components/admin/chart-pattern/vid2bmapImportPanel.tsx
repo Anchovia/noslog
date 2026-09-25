@@ -711,7 +711,7 @@ export default function Vid2bmapImportPanel({
         });
 
     async function apply() {
-        if (!merged || !conversion || newConflicts.count > 0) return;
+        if (!merged || !conversion) return;
         setApplying(true);
         try {
             if (document.notes.length > 0 && !(await onBeforeApply())) return;
@@ -722,6 +722,21 @@ export default function Vid2bmapImportPanel({
                     ...(selectGridCheck ? conversion.gridCheckIds : []),
                 ]),
             ].filter((id) => added.has(id));
+            // 겹친 채로 넣기(2026-09-26 A) — 겹친 노트(양쪽)를 선택해 두고 사람이 에디터에서 고친다
+            const conflictIds =
+                newConflicts.count > 0
+                    ? findChartNoteConflicts(
+                          merged.notes,
+                          document.ticksPerQuarter
+                      ).flatMap(({ firstId, secondId }) => [firstId, secondId])
+                    : [];
+            if (conflictIds.length > 0) {
+                selection.splice(
+                    0,
+                    selection.length,
+                    ...new Set([...conflictIds, ...selection])
+                );
+            }
             if (timingCount > 0 || replaceTiming) {
                 // 노트와 타이밍 포인트를 한 번에 — 실행 취소도 한 번. 노트는 박(틱)이라 위치는 그대로.
                 // 시작 BPM 을 먼저 바꿔야 뒤 제안 포인트의 시각이 새 BPM 으로 이어진다
@@ -762,7 +777,7 @@ export default function Vid2bmapImportPanel({
                 `vid2bmap · 새로 ${merged.addedIds.length} · 뺌 ${merged.removedIds.length}${timingCount > 0 ? ` · 타이밍 ${timingCount}` : ""}`
             );
             toast.success(
-                `영상 추출 노트를 초안에 넣었습니다 — 새로 ${merged.addedIds.length.toLocaleString("ko-KR")} · 뺌 ${merged.removedIds.length.toLocaleString("ko-KR")}${timingCount > 0 ? ` · 타이밍 ${timingCount}` : ""}${selection.length > 0 ? ` · 확인할 노트 ${selection.length}개 선택됨` : ""}`
+                `영상 추출 노트를 초안에 넣었습니다 — 새로 ${merged.addedIds.length.toLocaleString("ko-KR")} · 뺌 ${merged.removedIds.length.toLocaleString("ko-KR")}${timingCount > 0 ? ` · 타이밍 ${timingCount}` : ""}${selection.length > 0 ? ` · 확인할 노트 ${selection.length}개 선택됨` : ""}${conflictIds.length > 0 ? ` · 겹침 ${newConflicts.count}곳 — 고친 뒤 버전 저장` : ""}`
             );
             onClose();
         } finally {
@@ -1575,15 +1590,17 @@ export default function Vid2bmapImportPanel({
             <footer className="border-divider flex flex-col gap-2 border-t px-3 py-2.5">
                 {newConflicts.count > 0 ? (
                     <p className="text-danger text-xs leading-relaxed">
-                        이대로 넣으면 노트가 겹칩니다(
-                        {newConflicts.count.toLocaleString("ko-KR")}건
+                        겹치는 노트 {newConflicts.count.toLocaleString("ko-KR")}
+                        곳
                         {newConflicts.ticks.length > 0
-                            ? ` · ${positionList(newConflicts.ticks, timingPoints)}`
+                            ? `(${positionList(newConflicts.ticks, timingPoints)})`
                             : ""}
-                        ).{" "}
+                        을 선택된 채로 넣어요 — 추출 오류(대개 긴 테누토나 그
+                        안의 노트)라 에디터에서 가짜 쪽을 지우거나 길이를 고친
+                        뒤 버전을 저장하세요(겹친 채로는 저장 안 됨).
                         {hasDraft
-                            ? "목록에서 「내 것 / 가져온 것」 을 바꿔 주세요."
-                            : "추출 오류(대개 테누토 길이)로 보여요 — 이대로는 넣을 수 없어요."}
+                            ? " 목록에서 「내 것 / 가져온 것」 을 바꿔도 돼요."
+                            : ""}
                     </p>
                 ) : null}
                 <div className="flex gap-2">
@@ -1596,7 +1613,7 @@ export default function Vid2bmapImportPanel({
                     </button>
                     <button
                         type="button"
-                        disabled={!merged || applying || newConflicts.count > 0}
+                        disabled={!merged || applying}
                         onClick={() => void apply()}
                         className="bg-text-primary text-bg flex h-9 flex-[1.4] items-center justify-center gap-1.5 rounded-md text-xs font-bold disabled:cursor-not-allowed disabled:opacity-35"
                     >
