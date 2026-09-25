@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Grid3x3, List } from "lucide-react";
 import { useId, useState } from "react";
 
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
@@ -8,6 +8,8 @@ import PageContainer from "@/components/layout/pageContainer";
 import BackLink from "@/components/ui/backLink";
 import FilterChips from "@/components/ui/filterChips";
 import IconButton from "@/components/ui/iconButton";
+import { SegmentedControl } from "@/components/ui/segmentedControl";
+import SortMenu from "@/components/ui/sortMenu";
 import {
     ACHIEVEMENT_CATEGORIES,
     achievementProgress,
@@ -22,9 +24,16 @@ import {
     type AchievementMetrics,
     type AchievementRecords,
 } from "@/features/achievements/achievementDefinitions";
+import {
+    ACHIEVEMENT_SORTS,
+    sortAchievementDefinitions,
+    type AchievementSort,
+} from "@/features/achievements/achievementSort";
 import AchievementHex from "@/features/achievements/components/achievementHex";
+import AchievementInfoBadge from "@/features/achievements/components/achievementInfoBadge";
 import { formatAchievementDate } from "@/features/achievements/components/profileAchievements";
 import { useAchievementText } from "@/features/achievements/components/useAchievementText";
+import useWideLayout from "@/lib/hooks/useWideLayout";
 import type { MessageKey } from "@/lib/i18n/messageTypes";
 
 type CategoryFilter = "all" | AchievementCategory;
@@ -196,7 +205,8 @@ function AchievementRow({
 }
 
 /**
- * 업적 페이지(2026-09-24 C1 · L2 · K1 · D1) — 머리(돌아가기 · 제목 · 수) → 분류 칩 → 목록.
+ * 업적 페이지(2026-09-24 C1 · L2 · K1 · D1) — 머리(돌아가기 · 제목 · 수) → 분류 칩 → 결과 줄 → 목록 · 촘촘한 격자.
+ * 결과 줄(2026-09-25) = 악곡 · 서열표와 같은 문법: 왼쪽 정렬 SortMenu 고스트 · 오른쪽 보기 전환(목록 · 촘촘한 격자) — 폰 M · 1056 이상 L.
  * 본인: 진행 막대. 남: 얻은 단계 · 날짜 · 조건만. 머리 진열은 설정 「프로필」 탭에서 고른다(2026-09-25 D1).
  */
 export default function AchievementsPage({
@@ -216,14 +226,28 @@ export default function AchievementsPage({
 }) {
     const t = useTranslations();
     const locale = useLocale();
+    const wide = useWideLayout();
     const [category, setCategory] = useState<CategoryFilter>("all");
+    const [sort, setSort] = useState<AchievementSort>("category");
+    const [view, setView] = useState<"list" | "dense">("list");
+    const highest = highestAchievementTiers(records.earned);
     const definitions = visibleAchievementDefinitions(scoresHidden);
     const summary = summarizeAchievements(records, scoresHidden);
     const categories = ACHIEVEMENT_CATEGORIES.filter((item) =>
         definitions.some((definition) => definition.category === item)
     );
-    const shown = definitions.filter(
-        (definition) => category === "all" || definition.category === category
+    const shown = sortAchievementDefinitions(
+        definitions.filter(
+            (definition) =>
+                category === "all" || definition.category === category
+        ),
+        sort,
+        records,
+        metrics
+    );
+    // 「다음 단계에 가까운 순」 은 진행 값이 있는 본인에게만
+    const sorts = ACHIEVEMENT_SORTS.filter(
+        (item) => item !== "closest" || metrics
     );
     // 칩 수 = 얻은 단계 수 / 가진 단계 수(업적마다 단계 수가 다르다)
     const inCategory = (item: CategoryFilter) =>
@@ -271,17 +295,83 @@ export default function AchievementsPage({
                     })
                 )}
             />
-            <ul className="nl-achievement-list">
-                {shown.map((definition) => (
-                    <AchievementRow
-                        key={definition.key}
-                        definition={definition}
-                        records={records}
-                        metrics={metrics}
-                        recipients={recipients}
-                    />
-                ))}
-            </ul>
+            <div className="nl-achievements-page__results">
+                <SortMenu
+                    size={wide ? undefined : "sm"}
+                    label={t("discovery.sortLabel")}
+                    value={sort}
+                    options={sorts.map((value) => ({
+                        value,
+                        label: t(`achievement.sort.${value}` as MessageKey),
+                    }))}
+                    onValueChange={setSort}
+                />
+                <SegmentedControl
+                    label={t("discovery.view")}
+                    value={view}
+                    onValueChange={setView}
+                    iconOnly
+                    size={wide ? undefined : "sm"}
+                    options={[
+                        {
+                            value: "list",
+                            label: t("discovery.list"),
+                            icon: <List aria-hidden />,
+                        },
+                        {
+                            value: "dense",
+                            label: t("discovery.denseGrid"),
+                            icon: <Grid3x3 aria-hidden />,
+                        },
+                    ]}
+                />
+            </div>
+            {view === "dense" ? (
+                // 촘촘한 격자(2026-09-25 D1) — osu! 메달 벽처럼 육각만, 누르거나 올리면 정보 카드
+                <ul className="nl-achievement-dense">
+                    {shown.map((definition) => {
+                        const tier = highest.get(definition.key) ?? 0;
+                        return (
+                            <li key={definition.key}>
+                                <AchievementInfoBadge
+                                    achievementKey={definition.key}
+                                    tier={tier}
+                                    achievedAt={
+                                        records.earned.find(
+                                            (item) =>
+                                                item.key === definition.key &&
+                                                item.tier === tier
+                                        )?.achievedAt
+                                    }
+                                    recipients={
+                                        tier
+                                            ? recipients[
+                                                  recipientKey(
+                                                      definition.key,
+                                                      tier
+                                                  )
+                                              ]
+                                            : undefined
+                                    }
+                                    size="row"
+                                />
+                            </li>
+                        );
+                    })}
+                </ul>
+            ) : (
+                <ul className="nl-achievement-list">
+                    {shown.map((definition) => (
+                        <AchievementRow
+                            key={definition.key}
+                            definition={definition}
+                            records={records}
+                            metrics={metrics}
+                            recipients={recipients}
+                        />
+                    ))}
+                </ul>
+            )}
         </PageContainer>
     );
 }

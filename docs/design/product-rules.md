@@ -589,7 +589,9 @@ old design-stage checklist. Changes to material behavior require a user decision
   distribution.
 - Judging runs at the end of every sync, after records and Grd are updated. It only adds newly reached
   tiers (`user_achievements`, one row per user · achievement · tier) and never removes a tier, even if the
-  value later drops. A failed judgement never fails the sync. Achievements that come from activity
+  value later drops. The only exception is the admin 「업적 다시 판정」 with 「기준에 못 미치는 단계도 빼기」
+  checked (2026-09-25, off by default, used after thresholds change): it removes tiers of removed
+  achievements, grades an achievement no longer has, and tiers whose current value is below the threshold. A failed judgement never fails the sync. Achievements that come from activity
   (opinions, helpful marks, pattern ratings, exams) are also picked up at the next sync.
 - The date of a tier is when NosLog confirmed it (the sync time), not when it was played.
 - Rarity is shown as the number of players who reached each tier, only on the achievement page.

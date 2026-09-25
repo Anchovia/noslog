@@ -314,3 +314,21 @@
 .noslog-ui .nl-bar-list__fill.nl-achievement-progress {
     background: var(--nl-achievement-metal);
 }
+
+/* 결과 줄(2026-09-25) — 왼쪽 정렬 · 오른쪽 보기 전환(악곡 · 서열표와 같은 문법) */
+.noslog-ui .nl-achievements-page__results {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--nl-spacing-8);
+}
+/* 촘촘한 격자(2026-09-25 D1) — 육각 44 × 48 만 빽빽하게(osu! 메달 벽), 줄 사이 12 · 칸 사이 8 */
+.noslog-ui .nl-achievement-dense {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(52px, 1fr));
+    gap: var(--nl-spacing-12) var(--nl-spacing-8);
+    justify-items: center;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
