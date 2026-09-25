@@ -14,6 +14,7 @@ import AreaTabLinks from "@/components/ui/areaTabLinks";
  */
 const PROFILE_TABS = [
     { key: "overview", path: "", scores: false },
+    { key: "records", path: "/records", scores: true },
     { key: "achievements", path: "/achievements", scores: false },
 ] as const;
 

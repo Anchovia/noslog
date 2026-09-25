@@ -1,6 +1,10 @@
 import "server-only";
 
 import db from "@/lib/db";
+import {
+    getChartRanks,
+    recordPlayedAt,
+} from "@/features/profile/server/profileRecordsService";
 import { getModePianistRatingBasis } from "@/features/tiers/server/tierBrowserData";
 import {
     BASIC_RATING_ACTIVE_CURVE,
@@ -29,6 +33,7 @@ const playFields = {
     fc_type: true,
     grade_basic: true,
     grade_recital: true,
+    besttime: true,
     music: { select: musicFields },
 } as const;
 
@@ -167,11 +172,13 @@ export async function getPublicProfilePlays(
                           limit - query.offset
                       ),
                   });
+        const shown = plays.slice(0, PROFILE_BATCH_SIZE);
+        const ranks = await getChartRanks(shown.map((play) => play.id));
         return profileListPayloadSchema.parse({
             query,
             status: "available",
             hasMore: plays.length > PROFILE_BATCH_SIZE,
-            items: plays.slice(0, PROFILE_BATCH_SIZE).map((play) => ({
+            items: shown.map((play, index) => ({
                 id: play.id,
                 musicIndex: play.music_idx,
                 title: play.music.title,
@@ -182,7 +189,9 @@ export async function getPublicProfilePlays(
                 rank: play.rank,
                 fullCombo: play.fc_type >= 2,
                 contribution: (play[field] ?? 0) / 100,
-                playedAt: null,
+                playedAt: recordPlayedAt(play.besttime),
+                chartRank: ranks.get(play.id) ?? null,
+                position: query.offset + index + 1,
             })),
         });
     }
@@ -208,6 +217,7 @@ export async function getPublicProfilePlays(
           })
         : [];
     const byChart = new Map(plays.map((play) => [play.chart_id, play]));
+    const ranks = await getChartRanks(plays.map((play) => play.id));
     return profileListPayloadSchema.parse({
         query,
         status: "available",
@@ -230,7 +240,8 @@ export async function getPublicProfilePlays(
                           contribution:
                               (item.points / rating.theoreticalMax) *
                               BASIC_RATING_MAX,
-                          playedAt: null,
+                          playedAt: recordPlayedAt(play.besttime),
+                          chartRank: ranks.get(play.id) ?? null,
                       },
                   ]
                 : [];

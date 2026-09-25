@@ -64,15 +64,17 @@ export function ProfileHeaderSkeleton() {
                 </div>
             </section>
             <nav className="nl-tabs nl-tabs--primary" aria-hidden="true">
-                {(["overview", "achievements"] as const).map((key, index) => (
-                    <span
-                        key={key}
-                        className="nl-tabs__item nl-control"
-                        aria-current={index ? undefined : "page"}
-                    >
-                        {t(`profile.tabs.${key}`)}
-                    </span>
-                ))}
+                {(["overview", "records", "achievements"] as const).map(
+                    (key, index) => (
+                        <span
+                            key={key}
+                            className="nl-tabs__item nl-control"
+                            aria-current={index ? undefined : "page"}
+                        >
+                            {t(`profile.tabs.${key}`)}
+                        </span>
+                    )
+                )}
             </nav>
         </>
     );
@@ -252,5 +254,25 @@ export function ProfileAchievementsTabSkeleton() {
                 ))}
             </ul>
         </div>
+    );
+}
+
+/** 「기록」 탭 스켈레톤 — 도구 줄(2단 탭 · 검색 · 필터 · 정렬 자리) →16→ 표 줄 */
+export function ProfileRecordsTabSkeleton() {
+    const t = useTranslations();
+    return (
+        <section
+            className="nl-profile-section nl-profile-records"
+            data-kind="best"
+            aria-busy="true"
+        >
+            <LoadingStatus label={t("profile.loading")} />
+            <div className="nl-profile-records__toolbar" aria-hidden="true">
+                <SkeletonText className="nl-control" width="m" />
+            </div>
+            <div className="nl-profile-plays__content" aria-hidden="true">
+                <ProfilePlayListSkeleton count={8} />
+            </div>
+        </section>
     );
 }

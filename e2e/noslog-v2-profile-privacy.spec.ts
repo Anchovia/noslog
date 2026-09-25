@@ -184,6 +184,7 @@ for (const flag of flags) {
             await expect(
                 page
                     .getByRole("region", { name: "베스트 성과", exact: true })
+                    .getByRole("list")
                     .getByRole("link")
             ).toHaveCount(1);
             await expect(

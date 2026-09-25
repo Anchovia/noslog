@@ -341,10 +341,31 @@
     padding-block: var(--nl-spacing-8);
     border-bottom: var(--nl-stroke-default) solid var(--nl-border-divider);
 }
-.noslog-ui .nl-profile-plays[data-kind="best"] .nl-profile-play-row {
+/* 베스트 · 기록 탭 줄 — 좁으면 오른쪽 위 Grd · 아래 곡 순위(날짜는 표에서만) */
+.noslog-ui
+    :is(.nl-profile-plays, .nl-profile-records):is(
+        [data-kind="best"],
+        [data-kind="all"]
+    )
+    .nl-profile-play-row {
     grid-template-areas:
         "jacket title value"
-        "jacket meta time";
+        "jacket meta chart";
+}
+.noslog-ui
+    :is(.nl-profile-plays, .nl-profile-records):is(
+        [data-kind="best"],
+        [data-kind="all"]
+    )
+    .nl-profile-play-row
+    > .nl-profile-play-row__time {
+    display: none;
+}
+.noslog-ui .nl-profile-play-row__chart {
+    grid-area: chart;
+    justify-self: end;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
 }
 @media (hover: hover) {
     .noslog-ui .nl-profile-play-row:hover {
@@ -403,17 +424,37 @@
 @container profile-section (min-width: 560px) {
     .noslog-ui .nl-profile-play-head,
     .noslog-ui .nl-profile-play-row {
-        grid-template-columns: 36px minmax(0, 1fr) 84px 76px 56px max-content;
+        grid-template-columns: 36px minmax(0, 1fr) 84px 76px 56px 104px;
         grid-template-areas: "jacket title difficulty score grade time";
         column-gap: var(--nl-spacing-12);
     }
     .noslog-ui
-        .nl-profile-plays[data-kind="best"]
+        :is(.nl-profile-plays, .nl-profile-records)[data-kind="best"]
         :is(.nl-profile-play-head, .nl-profile-play-row) {
         grid-template-columns:
-            20px 36px minmax(0, 1fr)
-            84px 76px 56px max-content 64px;
-        grid-template-areas: "position jacket title difficulty score grade time value";
+            20px 36px minmax(0, 1fr) 84px 76px 56px 56px 88px
+            64px;
+        grid-template-areas: "position jacket title difficulty score grade chart time value";
+    }
+    .noslog-ui
+        .nl-profile-records[data-kind="all"]
+        :is(.nl-profile-play-head, .nl-profile-play-row) {
+        grid-template-columns:
+            36px minmax(0, 1fr) 84px 76px 56px 56px 88px
+            64px;
+        grid-template-areas: "jacket title difficulty score grade chart time value";
+    }
+    .noslog-ui
+        :is(.nl-profile-plays, .nl-profile-records):is(
+            [data-kind="best"],
+            [data-kind="all"]
+        )
+        .nl-profile-play-row
+        > .nl-profile-play-row__time {
+        display: block;
+    }
+    .noslog-ui .nl-profile-play-head .nl-profile-play-row__chart {
+        justify-self: end;
     }
     .noslog-ui .nl-profile-play-head {
         display: grid;
@@ -745,4 +786,64 @@
 }
 .noslog-ui .nl-profile-contribution__reason {
     color: var(--nl-feedback-error-text);
+}
+/* 제목 + 제목 옆 링크(베스트 → 기록 탭) */
+.noslog-ui .nl-profile-section__title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--nl-spacing-4) var(--nl-spacing-12);
+    min-width: 0;
+}
+/* 「기록」 탭(2026-09-25 2단계) — 2단 탭 | 검색 · 필터 · 정렬 →12→ 곡 수 · 적용 조건 →16→ 표 */
+.noslog-ui .nl-profile-records {
+    gap: var(--nl-spacing-16);
+}
+.noslog-ui .nl-profile-records__toolbar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-12);
+    min-width: 0;
+}
+.noslog-ui .nl-profile-records__actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
+    min-width: 0;
+}
+.noslog-ui .nl-profile-records__actions .nl-filter-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-profile-records__summary {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--nl-spacing-8) var(--nl-spacing-12);
+    min-width: 0;
+}
+.noslog-ui .nl-profile-records__filters {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+.noslog-ui .nl-profile-records__apply {
+    flex: 1;
+}
+@media (min-width: 672px) {
+    .noslog-ui .nl-profile-records__toolbar {
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .noslog-ui .nl-profile-records__actions {
+        flex-direction: row;
+        align-items: center;
+    }
+    .noslog-ui .nl-profile-records__search {
+        width: 240px;
+    }
 }

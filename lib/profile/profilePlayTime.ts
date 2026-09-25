@@ -31,3 +31,28 @@ export function formatProfilePlayTime(source: string | null, locale: Locale) {
               : `${part("month")} ${part("day")}, ${time}`;
     return { label, dateTime: date.toISOString() };
 }
+
+/** 베스트 기록의 달성 날짜(2026-09-25) — 올해면 월 · 일, 지난해 것은 연도까지. 시각은 두지 않는다 */
+export function formatProfileRecordDate(
+    source: string | null,
+    locale: Locale,
+    now = new Date()
+) {
+    const time = formatProfilePlayTime(source, locale);
+    if (!time?.dateTime) return time;
+    const date = new Date(time.dateTime);
+    const year = (value: Date) =>
+        new Intl.DateTimeFormat("en", {
+            timeZone: "Asia/Seoul",
+            year: "numeric",
+        }).format(value);
+    return {
+        dateTime: time.dateTime,
+        label: new Intl.DateTimeFormat(locale, {
+            timeZone: "Asia/Seoul",
+            year: year(date) === year(now) ? undefined : "numeric",
+            month: locale === "en" ? "short" : "numeric",
+            day: "numeric",
+        }).format(date),
+    };
+}

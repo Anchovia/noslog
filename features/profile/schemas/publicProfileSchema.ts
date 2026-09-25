@@ -27,6 +27,10 @@ const profilePlaySchema = z.object({
     fullCombo: z.boolean(),
     contribution: z.number().nullable(),
     playedAt: z.string().nullable(),
+    /** 그 채보에서의 순위 — 점수를 공개한 플레이어 사이(곡 상세 순위표와 같은 RANK). 최근 플레이는 없음 */
+    chartRank: z.number().int().positive().nullable().default(null),
+    /** 베스트 50 안의 순번(Grd 기여 순) — 거르거나 다른 순으로 봐도 그대로. 베스트가 아니면 없음 */
+    position: z.number().int().positive().nullable().default(null),
 });
 export const profileListPayloadSchema = z.object({
     query: profileListQuerySchema,
@@ -57,3 +61,66 @@ export type ProfileProgressQuery = z.infer<typeof profileProgressQuerySchema>;
 export type ProfileProgressPayload = z.infer<
     typeof profileProgressPayloadSchema
 >;
+
+/** 「기록」 탭(2026-09-25 2단계) — 베스트 50 · 모든 기록, 검색 · 필터 · 정렬, 20개씩 */
+export const PROFILE_RECORDS_PAGE_SIZE = 20;
+export const PROFILE_RECORD_DIFFICULTIES = [
+    "normal",
+    "hard",
+    "expert",
+    "real",
+] as const;
+export const PROFILE_RECORD_RANKS = [
+    "P",
+    "S",
+    "A2",
+    "A",
+    "B2",
+    "B",
+    "C",
+    "D",
+] as const;
+export const PROFILE_RECORD_LAMPS = ["pianist", "fullCombo", "clear"] as const;
+export const PROFILE_RECORD_SORTS = [
+    "value",
+    "score",
+    "recent",
+    "title",
+] as const;
+const listParam = <Values extends readonly [string, ...string[]]>(
+    values: Values
+) =>
+    z
+        .preprocess(
+            (value) =>
+                typeof value === "string"
+                    ? value.split(",").filter(Boolean)
+                    : value,
+            z.array(z.enum(values)).max(values.length)
+        )
+        .default([]);
+export const profileRecordsQuerySchema = z.object({
+    view: z.enum(["best", "all"]).default("best"),
+    mode: profileModeSchema.default("basic"),
+    q: z.string().trim().max(60).default(""),
+    difficulty: listParam(PROFILE_RECORD_DIFFICULTIES),
+    rank: listParam(PROFILE_RECORD_RANKS),
+    lamp: listParam(PROFILE_RECORD_LAMPS),
+    sort: z.enum(PROFILE_RECORD_SORTS).default("value"),
+    offset: z.coerce.number().int().min(0).max(100000).default(0),
+    /** 0 = 개수만(폰 필터 창의 「결과 N개 보기」) */
+    size: z.coerce
+        .number()
+        .int()
+        .min(0)
+        .max(PROFILE_RECORDS_PAGE_SIZE)
+        .default(PROFILE_RECORDS_PAGE_SIZE),
+});
+export const profileRecordsPayloadSchema = z.object({
+    query: profileRecordsQuerySchema,
+    items: z.array(profilePlaySchema),
+    total: z.number().int().min(0),
+    hasMore: z.boolean(),
+});
+export type ProfileRecordsQuery = z.infer<typeof profileRecordsQuerySchema>;
+export type ProfileRecordsPayload = z.infer<typeof profileRecordsPayloadSchema>;

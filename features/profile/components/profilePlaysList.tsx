@@ -7,7 +7,12 @@ import {
     useQueryClient,
 } from "@tanstack/react-query";
 import type { InfiniteData } from "@tanstack/react-query";
-import { useTranslations } from "@/components/i18n/localeProvider";
+import { ChevronRight } from "lucide-react";
+import Link from "next/link";
+import {
+    useLocalizedHref,
+    useTranslations,
+} from "@/components/i18n/localeProvider";
 import Button from "@/components/ui/Button";
 import MetricSwitch from "@/components/ui/metricSwitch";
 import { StatusMessage } from "@/components/ui/statusMessage";
@@ -36,6 +41,7 @@ export default function ProfilePlaysList({
     initialData: ProfileListPayload | null;
 }) {
     const t = useTranslations();
+    const href = useLocalizedHref();
     const client = useQueryClient();
     const region = useRef<HTMLElement>(null);
     const [metric, setMetric] = useState<ProfileMetric>("grade");
@@ -95,9 +101,26 @@ export default function ProfilePlaysList({
             aria-labelledby={`profile-${kind}-title`}
         >
             <div className="nl-profile-section__header">
-                <h2 id={`profile-${kind}-title`} className="nl-section-title">
-                    {title}
-                </h2>
+                <div className="nl-profile-section__title">
+                    <h2
+                        id={`profile-${kind}-title`}
+                        className="nl-section-title"
+                    >
+                        {title}
+                    </h2>
+                    {/* 베스트 전체는 「기록」 탭(2026-09-25 2단계) — 모드를 그대로 넘긴다 */}
+                    {kind === "best" ? (
+                        <Link
+                            href={href(
+                                `/profile/${userId}/records${mode === "recital" ? "?mode=recital" : ""}`
+                            )}
+                            className="nl-heading-link nl-control"
+                        >
+                            {t("achievement.all")}
+                            <ChevronRight aria-hidden />
+                        </Link>
+                    ) : null}
+                </div>
                 {kind === "best" ? (
                     <MetricSwitch
                         label={title}
@@ -142,14 +165,12 @@ export default function ProfilePlaysList({
                             className="nl-profile-play-list"
                             aria-label={`${kind === "best" ? `${first?.query.mode === "recital" ? "Recital" : "Basic"} · ${t(first?.query.metric === "rating" ? "rankings.metric.rating" : "rankings.metric.grade")} · ` : ""}${title}`}
                         >
-                            {plays.map((play, index) => (
+                            {plays.map((play) => (
                                 <ProfilePlayRow
                                     key={play.id}
                                     play={play}
                                     metric={first?.query.metric ?? metric}
-                                    position={
-                                        kind === "best" ? index + 1 : undefined
-                                    }
+                                    position={kind === "best"}
                                 />
                             ))}
                         </ol>

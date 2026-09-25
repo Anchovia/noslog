@@ -77,12 +77,19 @@ old design-stage checklist. Changes to material behavior require a user decision
 - Basic and Recital retain their distinct record/grade meaning. Show the highest
   approved exam achievement per mode; do not introduce a generic `GRADE 57` badge.
 - The public profile (2026-09-25) is one head (identity, meta line, mode, headline
-  Grd) above section tabs with their own URLs — overview `/profile/[id]` and
-  achievements `/profile/[id]/achievements` so far. The selected mode lives in the
+  Grd) above section tabs with their own URLs — overview `/profile/[id]`, records
+  `/profile/[id]/records` and achievements `/profile/[id]/achievements` so far. The selected mode lives in the
   URL (`?mode=recital`) and carries across tabs. The headline "top N%" is the world
   rank divided by the players who show scores and have that mode's Grd — the same
   population the rank counts. The 90-day change is the official Grd change over the
   progress range and is shown only when it rose.
+- Records tab (2026-09-25): "Best" is the top 50 charts by the mode's official Grd
+  contribution (the same set official Grd counts); conditions and sorts apply inside
+  that set and each row keeps its best position. "All records" is every chart with a
+  score. A row's chart rank is the chart ranking's RANK among players who show scores
+  (a private player's own rows count among the public players). The achieved date is
+  the imported best time; the never-played placeholder (1970) shows no date. The
+  records API rechecks score privacy on every request like the plays API.
 - Public share links use stable profile IDs and the selected locale. Card export,
   clipboard or native-share failure must offer a usable fallback without changing
   privacy settings. Respect the existing public-data policy on every request.

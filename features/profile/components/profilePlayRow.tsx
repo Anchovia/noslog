@@ -9,7 +9,10 @@ import {
 } from "@/components/i18n/localeProvider";
 import MusicJacket from "@/components/music/musicJacket";
 import { ScoreGrade } from "@/features/music/components/chartLeaderboard";
-import { formatProfilePlayTime } from "@/lib/profile/profilePlayTime";
+import {
+    formatProfilePlayTime,
+    formatProfileRecordDate,
+} from "@/lib/profile/profilePlayTime";
 import type {
     ProfileMetric,
     ProfilePlay,
@@ -27,13 +30,17 @@ export default function ProfilePlayRow({
 }: {
     play: ProfilePlay;
     metric: ProfileMetric;
-    /** 베스트 순번(1부터). 최근 플레이는 없음 */
-    position?: number;
+    /** 베스트 순번을 보일지(베스트 목록) — 값은 서버가 준 베스트 안 순번(`play.position`) */
+    position?: boolean;
 }) {
     const locale = useLocale();
     const href = useLocalizedHref();
     const t = useTranslations();
-    const playedAt = formatProfilePlayTime(play.playedAt, locale);
+    // 베스트 · 기록 탭 = 달성 날짜만, 최근 플레이 = 플레이 시각
+    const playedAt =
+        play.chartRank !== null || play.position !== null
+            ? formatProfileRecordDate(play.playedAt, locale)
+            : formatProfilePlayTime(play.playedAt, locale);
     return (
         <li>
             <Link
@@ -44,7 +51,7 @@ export default function ProfilePlayRow({
             >
                 {position ? (
                     <span className="nl-profile-play-row__position nl-metadata nl-muted">
-                        {position}
+                        {play.position ?? ""}
                     </span>
                 ) : null}
                 <MusicJacket
@@ -78,6 +85,14 @@ export default function ProfilePlayRow({
                         ) : null}
                     </span>
                 </span>
+                {play.chartRank !== null ? (
+                    <span className="nl-profile-play-row__chart nl-metric-value nl-muted">
+                        <span className="sr-only">
+                            {t("profile.column.chartRank")}{" "}
+                        </span>
+                        #{play.chartRank.toLocaleString(locale)}
+                    </span>
+                ) : null}
                 {playedAt ? (
                     <time
                         className="nl-profile-play-row__time nl-metadata nl-muted"
@@ -102,10 +117,12 @@ export function ProfilePlayListHead({
     kind,
     metric,
 }: {
-    kind: "best" | "recent";
+    /** best = 순번 · 곡 순위 · 날짜 · 값, all = 순번 없이, recent = 플레이 시각까지 */
+    kind: "best" | "all" | "recent";
     metric: ProfileMetric;
 }) {
     const t = useTranslations();
+    const record = kind !== "recent";
     return (
         <div
             className="nl-profile-play-head nl-metadata nl-muted"
@@ -126,14 +143,15 @@ export function ProfilePlayListHead({
             <span className="nl-profile-play-row__grade">
                 {t("profile.column.rank")}
             </span>
+            {record ? (
+                <span className="nl-profile-play-row__chart">
+                    {t("profile.column.chartRank")}
+                </span>
+            ) : null}
             <span className="nl-profile-play-row__time">
-                {t(
-                    kind === "best"
-                        ? "profile.column.date"
-                        : "profile.column.playedAt"
-                )}
+                {t(record ? "profile.column.date" : "profile.column.playedAt")}
             </span>
-            {kind === "best" ? (
+            {record ? (
                 <span className="nl-profile-play-row__contribution">
                     {metric === "grade" ? "Grd" : "pt"}
                 </span>

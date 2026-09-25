@@ -138,26 +138,26 @@ test("P6 Best expands by five, retries the failed batch and collapses to five", 
     });
     await page.goto("/ko/profile/1");
     const best = page.getByRole("region", { name: "베스트 성과", exact: true });
-    await expect(best.getByRole("link")).toHaveCount(5);
+    await expect(best.getByRole("list").getByRole("link")).toHaveCount(5);
     await best.getByRole("button", { name: "더 보기", exact: true }).click();
     await expect(best.getByRole("alert")).toBeVisible();
-    await expect(best.getByRole("link")).toHaveCount(5);
+    await expect(best.getByRole("list").getByRole("link")).toHaveCount(5);
     failNext = false;
     await best.getByRole("button", { name: "다시 시도", exact: true }).click();
-    await expect(best.getByRole("link")).toHaveCount(10);
+    await expect(best.getByRole("list").getByRole("link")).toHaveCount(10);
     for (const width of [1055, 1056, 1470, 1055, 390]) {
         await page.setViewportSize({ width, height: 900 });
-        await expect(best.getByRole("link")).toHaveCount(10);
+        await expect(best.getByRole("list").getByRole("link")).toHaveCount(10);
     }
     await best.getByRole("button", { name: "접기", exact: true }).click();
-    await expect(best.getByRole("link")).toHaveCount(5);
+    await expect(best.getByRole("list").getByRole("link")).toHaveCount(5);
     await expect(best).toBeFocused();
     await page.getByRole("radio", { name: "Recital", exact: true }).click();
     await expect(best.getByRole("list")).toHaveAttribute(
         "aria-label",
         /Recital/
     );
-    await expect(best.getByRole("link")).toHaveCount(5);
+    await expect(best.getByRole("list").getByRole("link")).toHaveCount(5);
 });
 
 for (const locale of ["ko", "ja", "en"]) {

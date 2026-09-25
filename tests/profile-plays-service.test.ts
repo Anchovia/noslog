@@ -5,6 +5,7 @@ const mocks = vi.hoisted(() => ({
     plays: vi.fn(),
     recent: vi.fn(),
     basis: vi.fn(),
+    ranks: vi.fn(),
 }));
 vi.mock("server-only", () => ({}));
 vi.mock("@/lib/db", () => ({
@@ -12,6 +13,7 @@ vi.mock("@/lib/db", () => ({
         user: { findUnique: mocks.user },
         playData: { findMany: mocks.plays },
         chartPlayHistory: { findMany: mocks.recent },
+        $queryRaw: mocks.ranks,
     },
 }));
 vi.mock("@/features/tiers/server/tierBrowserData", () => ({
@@ -36,6 +38,7 @@ function play(id: number) {
         fc_type: 0,
         grade_basic: 10000,
         grade_recital: 20000,
+        besttime: id === 1 ? "2026-09-19 01:01" : "1970-01-01 09:00",
         music: { title: `Music ${id}`, background: null },
     };
 }
@@ -49,6 +52,7 @@ describe("profile incremental public plays", () => {
         mocks.plays.mockResolvedValue([]);
         mocks.recent.mockResolvedValue([]);
         mocks.basis.mockResolvedValue({ theoreticalMax: null, entries: [] });
+        mocks.ranks.mockResolvedValue([]);
     });
     it("returns only five initial grade rows while retaining More and applying the active mode", async () => {
         mocks.plays.mockResolvedValue(
@@ -76,6 +80,11 @@ describe("profile incremental public plays", () => {
         );
         // Official Grd does not inherit the Rating floor.
         expect(result?.items[0].score).toBe(940000);
+        // 곡 순위 · 달성 날짜 · 베스트 순번(2026-09-25) — 한 번도 안 한 자리 값(1970)은 날짜 없음
+        expect(result?.items[0].position).toBe(1);
+        expect(result?.items[0].playedAt).toBe("2026-09-19 01:01");
+        expect(result?.items[1].playedAt).toBeNull();
+        expect(result?.items[0].chartRank).toBeNull();
     });
     it("caps grade membership at fifty without retrieving a fifty-first chart", async () => {
         mocks.plays.mockResolvedValue(
