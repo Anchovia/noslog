@@ -110,7 +110,6 @@ export default function ProfileIdentity({
     const rank = mode === "basic" ? user.rank_basic : user.rank_recital;
     const countryRank =
         mode === "basic" ? user.rank_basic_country : user.rank_recital_country;
-    const rating = header?.ratings[mode] ?? null;
     const modeLabel = mode === "basic" ? "Basic" : "Recital";
     const name = user.username || t("common.unnamedUser");
     const discord = user.hide_discord_name
@@ -365,72 +364,68 @@ export default function ProfileIdentity({
                         aria-live="polite"
                     >
                         {grade && grade > 0 ? (
-                            <>
-                                <dl
-                                    className="nl-profile-headline__values"
-                                    aria-label={`${modeLabel} · ${t("profile.grade")}`}
-                                >
-                                    <div className="nl-profile-headline__grade">
+                            // 칸 나눈 수치 상자(2026-09-26 B1) — 왼쪽 절반 공식 Grd, 오른쪽 절반 위 세계 · 아래 국가, 칸 사이 1px 선(수치 띠와 같은 만듦새)
+                            <dl
+                                className="nl-profile-headline__cells"
+                                aria-label={`${modeLabel} · ${t("profile.grade")}`}
+                            >
+                                <div className="nl-profile-headline__grade">
+                                    <dt className="nl-metadata nl-muted">
+                                        {t("profile.headlineGrade")}
+                                    </dt>
+                                    <dd
+                                        className="nl-metric-display nl-toned"
+                                        data-tone={gradeBandTone(
+                                            Math.round(grade / 100)
+                                        )}
+                                    >
+                                        {(grade / 100).toLocaleString(locale, {
+                                            minimumFractionDigits: 2,
+                                            maximumFractionDigits: 2,
+                                        })}
+                                    </dd>
+                                </div>
+                                {(
+                                    [
+                                        [
+                                            "world",
+                                            "profile.headlineWorld",
+                                            rank,
+                                        ],
+                                        [
+                                            "country",
+                                            "profile.headlineCountry",
+                                            countryRank,
+                                        ],
+                                    ] as const
+                                ).map(([key, label, value]) => (
+                                    <div
+                                        key={key}
+                                        className="nl-profile-headline__rank"
+                                    >
                                         <dt className="nl-metadata nl-muted">
-                                            {t("profile.headlineGrade")}
+                                            {t(label)}
                                         </dt>
                                         <dd
-                                            className="nl-metric-display nl-toned"
-                                            data-tone={gradeBandTone(
-                                                Math.round(grade / 100)
-                                            )}
+                                            className={
+                                                value
+                                                    ? "nl-metric-value nl-toned"
+                                                    : "nl-metric-value nl-muted"
+                                            }
+                                            data-tone={
+                                                value
+                                                    ? rankTone(value)
+                                                    : undefined
+                                            }
+                                            data-rank={key}
                                         >
-                                            {(grade / 100).toLocaleString(
-                                                locale,
-                                                {
-                                                    minimumFractionDigits: 2,
-                                                    maximumFractionDigits: 2,
-                                                }
-                                            )}
+                                            {value
+                                                ? `#${value.toLocaleString(locale)}`
+                                                : "—"}
                                         </dd>
                                     </div>
-
-                                    {rank ? (
-                                        <div>
-                                            <dt className="nl-metric-value">
-                                                {t("profile.headlineWorld")}
-                                            </dt>
-                                            <dd
-                                                className="nl-metric-value nl-toned"
-                                                data-tone={rankTone(rank)}
-                                                data-rank="world"
-                                            >
-                                                #{rank.toLocaleString(locale)}
-                                            </dd>
-                                        </div>
-                                    ) : null}
-                                    {countryRank ? (
-                                        <div>
-                                            <dt className="nl-metric-value">
-                                                {t("profile.headlineCountry")}
-                                            </dt>
-                                            <dd
-                                                className="nl-metric-value nl-toned"
-                                                data-tone={rankTone(
-                                                    countryRank
-                                                )}
-                                                data-rank="country"
-                                            >
-                                                #
-                                                {countryRank.toLocaleString(
-                                                    locale
-                                                )}
-                                            </dd>
-                                        </div>
-                                    ) : null}
-                                </dl>
-                                {rating !== null ? (
-                                    <dl className="nl-profile-headline__foot nl-metadata nl-muted">
-                                        <dt>{t("rankings.metric.rating")}</dt>
-                                        <dd>{rating.toLocaleString(locale)}</dd>
-                                    </dl>
-                                ) : null}
-                            </>
+                                ))}
+                            </dl>
                         ) : (
                             <p className="nl-body-secondary nl-muted">
                                 {t("profile.modeEmpty", { mode: modeLabel })}

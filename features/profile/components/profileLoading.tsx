@@ -51,7 +51,7 @@ export function ProfileHeaderSkeleton() {
                         />
                     </div>
                     <div className="nl-profile-headline">
-                        <div className="nl-profile-headline__values">
+                        <div className="nl-profile-headline__cells">
                             <div className="nl-profile-headline__grade">
                                 <SkeletonText
                                     className="nl-metadata"
@@ -62,6 +62,25 @@ export function ProfileHeaderSkeleton() {
                                     sample="0,000.00"
                                 />
                             </div>
+                            {(
+                                [
+                                    "profile.headlineWorld",
+                                    "profile.headlineCountry",
+                                ] as const
+                            ).map((label) => (
+                                <div
+                                    key={label}
+                                    className="nl-profile-headline__rank"
+                                >
+                                    <span className="nl-metadata nl-muted">
+                                        {t(label)}
+                                    </span>
+                                    <SkeletonText
+                                        className="nl-metric-value"
+                                        sample="#00"
+                                    />
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </div>

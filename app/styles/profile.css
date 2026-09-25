@@ -92,23 +92,26 @@
     grid-area: mode;
     min-width: 0;
 }
-/* 핵심 수치(K2) — 공식 Grd 만 크게(metric-display 32), 세계 · 상위 % · 국가 · 레이팅 · 변화는 작은 줄 */
+/* 핵심 수치(2026-09-26 B1) — 칸 나눈 상자: 왼쪽 절반 공식 Grd(라벨 metadata + metric-display 32),
+   오른쪽 절반 위 세계 · 아래 국가(라벨 metadata 왼쪽 · 순위 metric-value 오른쪽). 수치 띠와 같은 만듦새 —
+   면 surface · 칸 사이 1px(gap + divider 바탕) · 모서리 8. 레이팅 줄은 두지 않는다 */
 .noslog-ui .nl-profile-headline {
     grid-area: headline;
     min-width: 0;
-    padding: var(--nl-spacing-12) var(--nl-spacing-16);
-    border-radius: var(--nl-radius-container);
-    background: var(--nl-surface-surface);
 }
-/* 정의 목록 한 겹(dt · dd 묶음 div 만) — 공식 Grd 칸이 두 줄을 차지하고 세계 · 국가가 오른쪽에 쌓인다 */
-.noslog-ui .nl-profile-headline__values {
+.noslog-ui .nl-profile-headline__cells {
     display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
-    grid-auto-flow: column;
-    grid-template-rows: auto auto;
-    align-items: end;
-    column-gap: var(--nl-spacing-16);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    gap: var(--nl-stroke-default);
     margin: 0;
+    overflow: hidden;
+    border-radius: var(--nl-radius-container);
+    background: var(--nl-border-divider);
+}
+.noslog-ui .nl-profile-headline__cells > div {
+    min-width: 0;
+    background: var(--nl-surface-surface);
 }
 .noslog-ui .nl-profile-headline dd {
     margin: 0;
@@ -116,25 +119,23 @@
 .noslog-ui .nl-profile-headline__grade {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     grid-row: 1 / 3;
+    padding: var(--nl-spacing-12) var(--nl-spacing-16);
 }
-.noslog-ui .nl-profile-headline__values > div:not(.nl-profile-headline__grade) {
+.noslog-ui .nl-profile-headline__rank {
     display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: var(--nl-spacing-4);
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--nl-spacing-8);
+    padding: var(--nl-spacing-8) var(--nl-spacing-16);
 }
-.noslog-ui .nl-profile-headline__values > div:last-child {
-    padding-bottom: var(--nl-spacing-4);
-}
-.noslog-ui .nl-profile-headline__foot {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0 var(--nl-spacing-4);
-    margin: var(--nl-spacing-4) 0 0;
-}
-.noslog-ui .nl-profile-headline__foot dd {
+/* 그 모드 기록이 없을 때 — 같은 상자에 문장 */
+.noslog-ui .nl-profile-headline > p {
     margin: 0;
+    padding: var(--nl-spacing-12) var(--nl-spacing-16);
+    border-radius: var(--nl-radius-container);
+    background: var(--nl-surface-surface);
 }
 @media (min-width: 672px) {
     .noslog-ui .nl-profile-identity__row {
@@ -166,11 +167,6 @@
     }
     .noslog-ui .nl-profile-headline {
         justify-self: end;
-        padding: 0;
-        background: none;
-    }
-    .noslog-ui .nl-profile-headline__values {
-        column-gap: var(--nl-spacing-24);
     }
 }
 .noslog-ui .nl-profile-identity__recovery {
