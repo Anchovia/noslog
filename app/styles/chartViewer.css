@@ -46,6 +46,81 @@
 .noslog-ui .nl-chart-viewer__info > p {
     margin: 0;
 }
+/* 작성자 = 동그란 프로필 이미지 32 · 이름 · 기여 라벨(2026-09-26, 사용자) */
+.noslog-ui .nl-chart-viewer__byline > .nl-avatar {
+    flex-shrink: 0;
+}
+/* 머리 두 벌 — 넓은 화면(1056+)은 제목 묶음 · 채보 줄 · 정보 상자, 그 아래는 유튜브 폰 시청 화면(Y1) */
+/* 폰 머리는 무대 바로 아래 12(유튜브 폰 — 영상 → 제목), 컨테이너 간격 24 를 여기서만 당긴다 */
+.noslog-ui .nl-chart-viewer__head--compact {
+    gap: var(--nl-spacing-4);
+    margin-top: calc(var(--nl-spacing-12) - var(--nl-spacing-24));
+}
+@media (min-width: 1056px) {
+    .noslog-ui .nl-chart-viewer__head--compact {
+        display: none;
+    }
+}
+@media (max-width: 1055px) {
+    .noslog-ui .nl-chart-viewer__head--wide {
+        display: none;
+    }
+}
+/* 제목 한 줄 — 넘치면 줄임표(전체는 「더보기」 창) */
+.noslog-ui .nl-chart-viewer__compact-title {
+    margin: 0;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+/* 메타 한 줄 + 끝에 「더보기」 — 메타가 넘치면 줄임표, 「더보기」 는 늘 보인다 */
+.noslog-ui .nl-chart-viewer__compact-meta {
+    display: flex;
+    align-items: baseline;
+    gap: var(--nl-spacing-8);
+    min-width: 0;
+}
+.noslog-ui .nl-chart-viewer__compact-meta > p {
+    flex: 0 1 auto;
+    min-width: 0;
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.noslog-ui .nl-chart-viewer__more {
+    flex-shrink: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--nl-content-interactive);
+    font-weight: var(--nl-type-weight-semibold);
+    cursor: pointer;
+}
+/* 작성자 · 아이콘 동작 줄 = 48 한 줄(접히지 않음) */
+.noslog-ui .nl-chart-viewer__byline-row--compact {
+    flex-wrap: nowrap;
+    min-height: 48px;
+}
+.noslog-ui .nl-chart-viewer__byline-row--compact .nl-chart-viewer__byline {
+    flex-wrap: nowrap;
+    min-width: 0;
+}
+.noslog-ui .nl-chart-viewer__byline-row--compact .nl-chart-viewer__actions {
+    flex-wrap: nowrap;
+    gap: 0;
+}
+/* 「더보기」 창 — 제목 묶음 →16→ 작성자 →16→ 정보 상자 */
+.noslog-ui .nl-chart-viewer__info-sheet {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-16);
+    min-width: 0;
+}
+.noslog-ui .nl-chart-viewer__info-sheet p {
+    margin: 0;
+}
 /* 출처 표기(2026-09-24 C2) — 아티스트 아래 「채보 · 이름 [운영자]」, 메타 아래 「노트 배치 · 영상에서 추출 … 출처 보기 ›」.
    태그(24)는 글자 줄(20)을 늘리지 않게 위아래로 당긴다(채보 정보 기여 칸과 같은 방식) */
 .noslog-ui .nl-chart-viewer__byline {

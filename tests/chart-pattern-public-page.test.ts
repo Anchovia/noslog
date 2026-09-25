@@ -107,6 +107,7 @@ describe("공개 채보 페이지", () => {
                 author: {
                     id: null,
                     name: "운영자A",
+                    avatar: null,
                     label: { kind: "operator" },
                 },
                 publisher: null,
@@ -234,6 +235,7 @@ describe("공개 채보 페이지", () => {
             author: {
                 id: 42,
                 name: "하늘",
+                avatar: null,
                 label: { kind: "level", level: 3, points: 45 },
             },
             publisher: { name: "운영자A" },

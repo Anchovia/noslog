@@ -1672,6 +1672,8 @@ export const enMessages = {
     "chart.exitFullscreen": "Exit full screen",
     "chart.settings": "Playback settings",
     "chart.share": "Share",
+    "chart.more": "More",
+    "chart.info": "Chart info",
     "chart.localAudio": "Local Audio",
     "chart.noteSpeed": "Note Speed",
     "chart.metronome": "Metronome",

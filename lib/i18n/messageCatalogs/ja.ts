@@ -1667,6 +1667,8 @@ export const jaMessages = {
     "chart.exitFullscreen": "全画面表示を終了",
     "chart.settings": "再生設定",
     "chart.share": "共有",
+    "chart.more": "もっと見る",
+    "chart.info": "譜面情報",
     "chart.localAudio": "ローカル音源",
     "chart.noteSpeed": "ノート速度",
     "chart.metronome": "メトロノーム",

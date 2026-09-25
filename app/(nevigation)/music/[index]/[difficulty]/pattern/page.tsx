@@ -71,9 +71,13 @@ export default async function PublicChartPatternPage({
                     publishedContent: true,
                     publishedRevision: true,
                     publishedAt: true,
-                    publishedBy: { select: { username: true, role: true } },
+                    publishedBy: {
+                        select: { username: true, role: true, avatar: true },
+                    },
                     // 유저 기여 채보면 실제 작성자(2026-09-24 E1)
-                    author: { select: { id: true, username: true } },
+                    author: {
+                        select: { id: true, username: true, avatar: true },
+                    },
                     // 출처 표기(2026-09-24 C2) — 공개 채보 줄기에 「영상 추출」 버전이 있으면 영상에서 추출한 채보.
                     // 기여 버전은 기준 공개 버전에서 갈라지므로 함께 읽는다(lib/chart-pattern/chartSource)
                     revisions: {
@@ -99,7 +103,11 @@ export default async function PublicChartPatternPage({
     const pattern = chart.pattern;
     const publishedRevision = chart.pattern.publishedRevision;
     const author = pattern.author?.username
-        ? { id: pattern.author.id, username: pattern.author.username }
+        ? {
+              id: pattern.author.id,
+              username: pattern.author.username,
+              avatar: pattern.author.avatar ?? null,
+          }
         : null;
     const [showLocalizedTitle, labels, viewer, initialComments] =
         await Promise.all([
@@ -135,12 +143,14 @@ export default async function PublicChartPatternPage({
                     ? {
                           id: author.id,
                           name: author.username,
+                          avatar: author.avatar,
                           label: labels?.get(author.id) ?? null,
                       }
                     : pattern.publishedBy?.username
                       ? {
                             id: null,
                             name: pattern.publishedBy.username,
+                            avatar: pattern.publishedBy.avatar ?? null,
                             label:
                                 pattern.publishedBy.role === "admin"
                                     ? { kind: "operator" }

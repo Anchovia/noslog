@@ -1653,6 +1653,8 @@ export const koMessages = {
     "chart.exitFullscreen": "전체화면 끝내기",
     "chart.settings": "재생 설정",
     "chart.share": "공유",
+    "chart.more": "더보기",
+    "chart.info": "채보 정보",
     "chart.localAudio": "로컬 음원",
     "chart.noteSpeed": "노트 속도",
     "chart.metronome": "메트로놈",

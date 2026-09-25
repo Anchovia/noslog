@@ -9,7 +9,8 @@ import { useMemo, useRef, useState } from "react";
 
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import PageContainer from "@/components/layout/pageContainer";
-import Button, { foundationButtonClass } from "@/components/ui/Button";
+import Avatar from "@/components/ui/avatar";
+import { foundationButtonClass } from "@/components/ui/Button";
 import ModalDialog from "@/components/ui/modalDialog";
 import { SegmentedControl } from "@/components/ui/segmentedControl";
 import ChartComments, {
@@ -69,7 +70,13 @@ interface ChartSheetViewerProps {
 
 export interface ChartSource {
     /** 작성자 — 유저 기여 채보면 실제 작성자 + 기여 라벨(E1), 아니면 공개한 운영자 */
-    author: { id: number | null; name: string; label: NameLabel | null } | null;
+    author: {
+        id: number | null;
+        name: string;
+        /** 프로필 이미지(2026-09-26 — 이름 옆 동그랗게) */
+        avatar: string | null;
+        label: NameLabel | null;
+    } | null;
     /** 작성자와 공개한 사람이 다를 때(유저 기여 채보)만 — 출처 창에 따로 적는다 */
     publisher: { name: string } | null;
     publishedAt: string | null;
@@ -139,6 +146,8 @@ export default function ChartSheetViewer({
         locale === "ja" ? "ja-JP" : locale === "en" ? "en-US" : "ko-KR";
     const [viewMode, setViewMode] = useState<"falling" | "sheet">("falling");
     const [sourceOpen, setSourceOpen] = useState(false);
+    // 폰 「더보기」 창(2026-09-26 Y1, 유튜브 폰 설명 창)
+    const [infoOpen, setInfoOpen] = useState(false);
     const stageRef = useRef<HTMLDivElement | null>(null);
     const [clock] = useState(() =>
         createPlaybackClock(contribution?.initialTimeMs ?? 0)
@@ -220,32 +229,72 @@ export default function ChartSheetViewer({
             toast.error(t("tiers.linkCopyFailed"));
         }
     }
-    const actions = (
-        <div className="nl-chart-viewer__actions">
-            {contribution ? (
-                <ChartDraftEntry
-                    chartId={contribution.chartId}
-                    draftHref={contribution.draftHref}
-                    loginHref={contribution.loginHref}
-                    signedIn={contribution.signedIn}
-                    label={t("contribution.entry.edit")}
-                    className={actionClass}
-                    icon={<Pencil className="nl-icon" aria-hidden />}
+    // 넓은 화면 = 보조 M 아이콘+글자, 폰 = 글자 없는 아이콘 버튼(유튜브 폰 동작 줄 — 이름은 스크린리더 · 툴팁)
+    function renderActions(compact: boolean) {
+        const iconClass = foundationButtonClass({
+            variant: "ghost",
+            size: "icon",
+        });
+        return (
+            <div className="nl-chart-viewer__actions">
+                {contribution ? (
+                    <ChartDraftEntry
+                        chartId={contribution.chartId}
+                        draftHref={contribution.draftHref}
+                        loginHref={contribution.loginHref}
+                        signedIn={contribution.signedIn}
+                        label={t("contribution.entry.edit")}
+                        className={compact ? iconClass : actionClass}
+                        icon={<Pencil className="nl-icon" aria-hidden />}
+                        iconOnly={compact}
+                    />
+                ) : null}
+                {source?.extracted ? (
+                    <button
+                        type="button"
+                        className={compact ? iconClass : actionClass}
+                        onClick={() => setSourceOpen(true)}
+                        aria-label={
+                            compact ? t("chart.source.open") : undefined
+                        }
+                        title={compact ? t("chart.source.open") : undefined}
+                    >
+                        <Info className="nl-icon" aria-hidden />
+                        {compact ? null : t("chart.source.open")}
+                    </button>
+                ) : null}
+                {preview ? null : (
+                    <button
+                        type="button"
+                        className={compact ? iconClass : actionClass}
+                        onClick={() => void copyLink()}
+                        aria-label={compact ? t("chart.share") : undefined}
+                        title={compact ? t("chart.share") : undefined}
+                    >
+                        <Share2 className="nl-icon" aria-hidden />
+                        {compact ? null : t("chart.share")}
+                    </button>
+                )}
+            </div>
+        );
+    }
+    // 작성자 — 동그란 프로필 이미지 + 이름 + 기여 라벨(2026-09-26, 사용자)
+    function renderAuthor(prefixed: boolean) {
+        if (!source?.author) return null;
+        return (
+            <p className="nl-chart-viewer__byline nl-body-secondary">
+                <Avatar
+                    src={source.author.avatar}
+                    size={32}
+                    fallbackName={source.author.name}
                 />
-            ) : null}
-            {source?.extracted ? sourceDialog() : null}
-            {preview ? null : (
-                <Button
-                    variant="secondary"
-                    size="sm"
-                    onClick={() => void copyLink()}
-                >
-                    <Share2 className="nl-icon" aria-hidden />
-                    {t("chart.share")}
-                </Button>
-            )}
-        </div>
-    );
+                {prefixed
+                    ? t("chart.source.author", { name: source.author.name })
+                    : source.author.name}
+                <ContributionLabel label={source.author.label} />
+            </p>
+        );
+    }
     const metadata = (
         <p className="nl-body-secondary">
             {t("chart.noteCount", {
@@ -271,12 +320,6 @@ export default function ChartSheetViewer({
                 open={sourceOpen}
                 onOpenChange={setSourceOpen}
                 title={t("chart.source.title")}
-                trigger={
-                    <button type="button" className={actionClass}>
-                        <Info className="nl-icon" aria-hidden />
-                        {t("chart.source.open")}
-                    </button>
-                }
             >
                 <dl className="nl-chart-viewer__sources">
                     <div>
@@ -394,7 +437,8 @@ export default function ChartSheetViewer({
                     )}
                 </div>
             </div>
-            <header className="nl-chart-viewer__head">
+            {/* 넓은 화면(1056+) 머리 — 제목 묶음 → 채보 줄(작성자 · 동작) → 정보 상자 */}
+            <header className="nl-chart-viewer__head nl-chart-viewer__head--wide">
                 <div className="nl-chart-viewer__titles">
                     <div className="nl-chart-viewer__title-row">
                         <h1 className="nl-page-title">{title}</h1>
@@ -417,15 +461,8 @@ export default function ChartSheetViewer({
                     </p>
                 </div>
                 <div className="nl-chart-viewer__byline-row">
-                    {source?.author ? (
-                        <p className="nl-chart-viewer__byline nl-body-secondary">
-                            {t("chart.source.author", {
-                                name: source.author.name,
-                            })}
-                            <ContributionLabel label={source.author.label} />
-                        </p>
-                    ) : null}
-                    {actions}
+                    {renderAuthor(true)}
+                    {renderActions(false)}
                 </div>
                 {/* 정보 상자 — 노트 수 · 버전 · 길이 → 영상 추출 → 손 범례 */}
                 <div className="nl-chart-viewer__info">
@@ -447,6 +484,85 @@ export default function ChartSheetViewer({
                     </div>
                 </div>
             </header>
+            {/* 폰 · 태블릿 머리(2026-09-26 Y1, 유튜브 폰 시청 화면) — 제목 한 줄 → 메타 한 줄 + 「더보기」 → 작성자 · 아이콘 동작 48 */}
+            <header className="nl-chart-viewer__head nl-chart-viewer__head--compact">
+                <div className="nl-chart-viewer__titles">
+                    <h1 className="nl-section-title nl-chart-viewer__compact-title">
+                        {title}
+                    </h1>
+                    <div className="nl-chart-viewer__compact-meta">
+                        <p className="nl-metadata nl-muted">
+                            <span className={difficultyClass}>
+                                {difficulty} · Lv {level}
+                            </span>
+                            {" · "}
+                            {artist ?? t("chart.unknownArtist")}
+                            {" · "}
+                            {t("chart.noteCount", {
+                                count: document.notes.length.toLocaleString(
+                                    numberLocale
+                                ),
+                            })}
+                            {" · "}
+                            {formatEditorTime(playbackDurationMs)}
+                        </p>
+                        <button
+                            type="button"
+                            className="nl-chart-viewer__more nl-metadata"
+                            onClick={() => setInfoOpen(true)}
+                        >
+                            {t("chart.more")}
+                        </button>
+                    </div>
+                </div>
+                <div className="nl-chart-viewer__byline-row nl-chart-viewer__byline-row--compact">
+                    {renderAuthor(false)}
+                    {renderActions(true)}
+                </div>
+            </header>
+            <ModalDialog
+                open={infoOpen}
+                onOpenChange={setInfoOpen}
+                title={t("chart.info")}
+            >
+                <div className="nl-chart-viewer__info-sheet">
+                    <div className="nl-chart-viewer__titles">
+                        <p className="nl-section-title">{title}</p>
+                        {localizedTitle ? (
+                            <p className="nl-body-secondary nl-muted">
+                                {localizedTitle}
+                            </p>
+                        ) : null}
+                        <p className="nl-body-secondary">
+                            <span className={`nl-control ${difficultyClass}`}>
+                                {difficulty} · Lv {level}
+                            </span>
+                            {" · "}
+                            {artist ?? t("chart.unknownArtist")}
+                        </p>
+                    </div>
+                    {renderAuthor(true)}
+                    <div className="nl-chart-viewer__info">
+                        {metadata}
+                        {source?.extracted ? (
+                            <p className="nl-metadata nl-muted">
+                                {t("chart.source.extracted")}
+                            </p>
+                        ) : null}
+                        <div className="nl-chart-viewer__legend">
+                            <Legend
+                                color={handColors.left}
+                                label={t("chart.leftHand")}
+                            />
+                            <Legend
+                                color={handColors.right}
+                                label={t("chart.rightHand")}
+                            />
+                        </div>
+                    </div>
+                </div>
+            </ModalDialog>
+            {sourceDialog()}
             {contribution ? (
                 <ChartComments
                     chartId={contribution.chartId}
