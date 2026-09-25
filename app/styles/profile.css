@@ -407,7 +407,6 @@
     display: none;
     grid-area: position;
     text-align: right;
-    font-variant-numeric: tabular-nums;
 }
 .noslog-ui .nl-profile-play-row__jacket {
     grid-area: jacket;
@@ -445,12 +444,11 @@
     justify-self: end;
     white-space: nowrap;
 }
-/* 최근 플레이 「새 기록」(2026-09-26) — 그 판이 최고 점수를 넘었을 때만, 좁으면 오른쪽 아래 · 표는 등급 뒤 칸 */
+/* 최근 플레이 「New」(2026-09-26 T5) — 공용 상태 태그(성공, 이벤트 「진행 중」 과 같음), 그 판이 직전 최고를 넘었을 때만.
+   좁으면 오른쪽 아래 · 표는 등급 뒤 칸 */
 .noslog-ui .nl-profile-play-row__new {
     grid-area: value;
     justify-self: end;
-    white-space: nowrap;
-    color: var(--nl-feedback-success-marker);
 }
 .noslog-ui .nl-profile-play-head {
     display: none;
@@ -1064,5 +1062,4 @@
 }
 .noslog-ui .nl-profile-pinned__rank {
     white-space: nowrap;
-    font-variant-numeric: tabular-nums;
 }

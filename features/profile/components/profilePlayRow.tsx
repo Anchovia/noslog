@@ -94,7 +94,10 @@ export default function ProfilePlayRow({
                     </span>
                 ) : null}
                 {play.newBest ? (
-                    <span className="nl-profile-play-row__new nl-metadata">
+                    <span
+                        className="nl-profile-play-row__new nl-tag nl-tag--status nl-metadata"
+                        data-tone="success"
+                    >
                         {t("profile.newBest")}
                     </span>
                 ) : null}
