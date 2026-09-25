@@ -1369,7 +1369,7 @@ export const koMessages = {
     "profile.newBest": "New",
     "profile.activity.year": "최근 1년",
     "profile.activity.month": "이번 달",
-    "profile.activity.activeDays": "플레이한 날",
+    "profile.activity.currentStreak": "연속",
     "profile.activity.longestStreak": "가장 긴 연속",
     "profile.activity.playsUnit": "판",
     "profile.activity.daysUnit": "일",

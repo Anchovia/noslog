@@ -1383,7 +1383,7 @@ export const enMessages = {
     "profile.newBest": "New",
     "profile.activity.year": "Past year",
     "profile.activity.month": "This month",
-    "profile.activity.activeDays": "Days played",
+    "profile.activity.currentStreak": "Current streak",
     "profile.activity.longestStreak": "Longest streak",
     "profile.activity.playsUnit": "plays",
     "profile.activity.daysUnit": "days",

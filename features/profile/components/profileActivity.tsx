@@ -16,7 +16,7 @@ export function activityLevel(count: number, max: number) {
 }
 
 /**
- * 프로필 「활동」 탭(2026-09-26) — 요약 띠(최근 1년 · 이번 달 · 플레이한 날 · 가장 긴 연속) →16→ 활동 달력(53주, 칸 폭만큼 보이고
+ * 프로필 「활동」 탭(2026-09-26) — 요약 띠(최근 1년 · 이번 달 · 연속 · 가장 긴 연속) →16→ 활동 달력(53주, 칸 폭만큼 보이고
  * 옆으로 밀면 1년 · 처음에는 오늘 쪽 끝) → 최근 플레이(한 판씩 · 20판씩 더 보기 · 새 기록 표시). 모드와 관계없는 모든 플레이
  */
 export default function ProfileActivity({
@@ -70,8 +70,8 @@ export default function ProfileActivity({
                         },
                         {
                             key: "days",
-                            label: t("profile.activity.activeDays"),
-                            value: number(activity.summary.activeDays),
+                            label: t("profile.activity.currentStreak"),
+                            value: number(activity.summary.currentStreak),
                             unit: t("profile.activity.daysUnit"),
                         },
                         {

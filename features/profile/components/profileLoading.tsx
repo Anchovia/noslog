@@ -337,7 +337,7 @@ export function ProfileActivityTabSkeleton() {
                     labels={[
                         t("profile.activity.year"),
                         t("profile.activity.month"),
-                        t("profile.activity.activeDays"),
+                        t("profile.activity.currentStreak"),
                         t("profile.activity.longestStreak"),
                     ]}
                 />

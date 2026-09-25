@@ -17,8 +17,17 @@ export function playDay(source: string) {
         : null;
 }
 
+/** 지금 이어지는 연속 플레이 일수 — 오늘부터 거꾸로, 오늘 아직 안 쳤으면 어제부터(오늘은 아직 끊긴 게 아니다, 2026-09-26) */
+export function currentStreak(days: readonly { count: number }[]) {
+    let index = days.length - 1;
+    if (index >= 0 && days[index].count === 0) index -= 1;
+    let streak = 0;
+    for (; index >= 0 && days[index].count > 0; index -= 1) streak += 1;
+    return streak;
+}
+
 /**
- * 「활동」 탭(2026-09-26) — 최근 1년(53주) 날짜별 플레이 수와 요약(최근 1년 · 이번 달 · 플레이한 날 · 가장 긴 연속).
+ * 「활동」 탭(2026-09-26) — 최근 1년(53주) 날짜별 플레이 수와 요약(최근 1년 · 이번 달 · 지금 연속 · 가장 긴 연속).
  * 플레이 기록은 북마클릿 연동 뒤부터라 그 전 날짜는 0 이다. 날짜는 게임과 같은 한국 날짜
  */
 export async function getProfileActivity(userId: number, now = new Date()) {
@@ -64,7 +73,7 @@ export async function getProfileActivity(userId: number, now = new Date()) {
             month: days
                 .filter((item) => item.date.startsWith(month))
                 .reduce((sum, item) => sum + item.count, 0),
-            activeDays: days.filter((item) => item.count > 0).length,
+            currentStreak: currentStreak(days),
             longestStreak,
         },
     });

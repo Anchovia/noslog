@@ -1372,7 +1372,7 @@ export const jaMessages = {
     "profile.newBest": "New",
     "profile.activity.year": "直近1年",
     "profile.activity.month": "今月",
-    "profile.activity.activeDays": "プレイした日",
+    "profile.activity.currentStreak": "連続",
     "profile.activity.longestStreak": "最長連続",
     "profile.activity.playsUnit": "回",
     "profile.activity.daysUnit": "日",

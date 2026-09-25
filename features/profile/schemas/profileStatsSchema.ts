@@ -46,7 +46,8 @@ export const profileActivitySchema = z.object({
     summary: z.object({
         year: count,
         month: count,
-        activeDays: count,
+        /** 지금 이어지는 연속 플레이 일수(오늘 아직 안 쳤으면 어제까지) */
+        currentStreak: count,
         longestStreak: count,
     }),
 });

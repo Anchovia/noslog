@@ -19,6 +19,7 @@ import {
     playTier,
 } from "@/features/profile/server/profileStatsService";
 import {
+    currentStreak,
     getProfileActivity,
     playDay,
 } from "@/features/profile/server/profileActivityService";
@@ -117,8 +118,15 @@ describe("profile activity", () => {
         expect(activity.summary).toEqual({
             year: 5,
             month: 4,
-            activeDays: 4,
+            currentStreak: 3,
             longestStreak: 3,
         });
+    });
+    it("current streak runs back from today, or from yesterday when today has no play yet", () => {
+        const days = (counts: number[]) => counts.map((count) => ({ count }));
+        expect(currentStreak(days([1, 0, 2, 3, 1]))).toBe(3);
+        expect(currentStreak(days([1, 2, 3, 0]))).toBe(3);
+        expect(currentStreak(days([1, 0, 0]))).toBe(0);
+        expect(currentStreak([])).toBe(0);
     });
 });

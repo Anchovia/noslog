@@ -110,7 +110,8 @@ old design-stage checklist. Changes to material behavior require a user decision
   yet, so the chart keeps Grd and rating only.
 - Activity tab (2026-09-26) counts imported play history per Korean calendar day
   over 53 weeks ending today (history exists only after bookmarklet sync). Summary
-  = plays in that window, plays this month, days played and the longest run of
+  = plays in that window, plays this month, the current streak (consecutive days
+  ending today, or yesterday when today has no play yet) and the longest run of
   consecutive days. Calendar colour steps are relative to the player's busiest day.
   Recent plays are listed one play per row, 20 per page; "new best" marks a play
   whose score beat the best score recorded just before it (a first play counts).
