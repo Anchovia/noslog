@@ -102,6 +102,8 @@ export interface ChartEditorMetadata {
     artist: string | null;
     difficulty: string;
     level: number;
+    /** 악곡 정보의 노트 수 — 영상 추출 가져오기가 판정 수와 비교한다(운영자 에디터만) */
+    noteCount?: number | null;
 }
 
 /**
@@ -1434,6 +1436,7 @@ function ChartTimingEditorWorkspace({
                             onSeek={(time) => void seek(time)}
                             onBeforeApply={saveBeforeImport}
                             onAfterApply={saveAfterImport}
+                            officialNoteCount={metadata.noteCount ?? null}
                         />
                     ) : editorMode === "timing" ? (
                         <TimingInspector />

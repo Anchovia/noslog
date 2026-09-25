@@ -464,11 +464,19 @@ old design-stage checklist. Changes to material behavior require a user decision
   dropped, and a standard note on the path is taken as a rung read twice and dropped. A trill's
   head width w becomes two positions of width w-1 one lane apart (the video's hexes alternate
   one lane within the head, 2026-09-24) and is flagged.
+  When the zip carries hands for at least half its notes, notes whose hand was not read and that
+  look like extraction ghosts are dropped before import and listed in a warning with their
+  places (2026-09-25 F1′, checked against the videos by the combo counter): a tenuto of 8 beats
+  or more that overlaps another note, and a standard note inside a tenuto's lanes within ¾ of a
+  beat after its head. Notes whose hand was read are never dropped. When the chart has a note
+  count, the panel compares it with the import's judgement count (one per note, one per
+  glissando rung).
 - Against an existing draft every difference is listed (same tick, overlapping lanes = same
   note; otherwise the same lane, width and type within 1/8 of a quarter = the same note moved;
   a hand read from the video counts as a difference, a guessed hand does not) and chosen
   per place; notes after the draft are a separate
-  new-section toggle. An import that would create overlapping notes cannot be applied.
+  new-section toggle. An import that would create overlapping notes cannot be applied; the
+  footer names the first places where an imported note overlaps.
 - Snap check in the editor (2026-09-24 C, like osu!'s "Unsnapped hitobjects" check): a note
   whose start is off every editor snap (1/1–1/32 of the active beat) gets a dashed warning
   outline, and the note inspector lists them with the nearest grid and offset in ms, one by one
