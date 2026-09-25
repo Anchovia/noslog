@@ -1,6 +1,6 @@
 "use client";
 
-import { Clock, IdCard, MapPin, RefreshCw, Settings } from "lucide-react";
+import { MapPin, Settings } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import {
@@ -38,22 +38,23 @@ function initialForName(name: string | null, locale: string) {
 }
 
 /**
- * 프로필 머리(2026-09-25 H3 · K2 · M2 · CM1) — 신원(아바타 · 이름 · 명판 · 라벨 · 업적 진열) · 메타 줄(NOSTALGIA ID · Discord ·
- * 오락실 · 마지막 플레이, 아이콘 16 + metadata) · 모드 세그먼트 · 핵심 수치(공식 Grd 크게 + 세계 · 국가 · 레이팅).
+ * 프로필 머리(2026-09-25 H3 · K2 · M2 · CM1) — 신원(아바타 · 이름 · 명판 · 라벨 · 업적 진열) · 정보 두 줄(2026-09-26 H1 —
+ * 활동: 마지막 플레이 · (본인) 동기화, 계정: Discord · 오락실 · NOSTALGIA) · 모드 세그먼트 · 핵심 수치(공식 Grd 크게 + 세계 · 국가 · 레이팅).
  * 모드 이름 · 상위 % · 90일 변화는 두지 않는다(2026-09-26, 사용자 — 모드는 세그먼트가 말하고, 변화는 성장 추이에 있다).
  * 넓은 화면은 수치가 머리 오른쪽, 좁으면 메타 줄 아래로 쌓인다(폰은 세그먼트가 폭 전체). 점수 비공개면 모드 · 수치가 없다
  */
 export default function ProfileIdentity({
     user,
     isOwner,
-    syncLabel,
+    sync,
     showSyncAction = false,
     achievements,
     header,
 }: {
     user: ProfileUser;
     isOwner: boolean;
-    syncLabel?: string;
+    /** 본인에게만 — 마지막 동기화: 끝났으면 「N일 전」(값), 아니면 상태 문장 */
+    sync?: { distance: string } | { message: string };
     showSyncAction?: boolean;
     /** 업적 요약 — 머리 진열(2026-09-24 P5 · B1) */
     achievements?: AchievementSummary | null;
@@ -103,9 +104,7 @@ export default function ProfileIdentity({
         (exam) => exam !== null && exam >= 1 && exam <= 10
     );
     const lastPlayed = user.last_played_at
-        ? t("profile.lastPlayed", {
-              date: formatProfileDate(user.last_played_at, locale),
-          })
+        ? formatProfileDate(user.last_played_at, locale)
         : null;
     const nostalgiaName =
         !user.hide_nostalgia_name && user.nostalgia_name
@@ -203,49 +202,72 @@ export default function ProfileIdentity({
                         ) : null}
                     </ExamBadgeGroup>
                 </div>
-                {/* 메타 줄(2026-09-25 H3) — 전폭 정보 상자 3개 대신 아이콘 16 + metadata 한 줄, 좁으면 줄바꿈 */}
+                {/* 정보 두 줄(2026-09-26 H1, osu! 정보 칸) — 활동 줄(아이콘 없이 라벨 + 값) · 계정 줄(링크 성격만 아이콘) */}
                 {nostalgiaName ||
                 discord ||
                 user.preferredArcade ||
                 lastPlayed ||
-                (isOwner && syncLabel) ? (
-                    <ul className="nl-profile-identity__meta nl-metadata nl-muted">
-                        {nostalgiaName ? (
-                            <li title="NOSTALGIA ID">
-                                <IdCard aria-hidden />
-                                <span className="sr-only">NOSTALGIA ID </span>
-                                {nostalgiaName}
-                            </li>
+                (isOwner && sync) ? (
+                    <div className="nl-profile-identity__meta nl-metadata nl-muted">
+                        {lastPlayed || (isOwner && sync) ? (
+                            <p className="nl-profile-identity__line">
+                                {lastPlayed ? (
+                                    <span>
+                                        {t("profile.meta.lastPlayed")}{" "}
+                                        <span className="nl-profile-identity__value">
+                                            {lastPlayed}
+                                        </span>
+                                    </span>
+                                ) : null}
+                                {isOwner && sync ? (
+                                    "distance" in sync ? (
+                                        <span>
+                                            {t("profile.meta.synced")}{" "}
+                                            <span className="nl-profile-identity__value">
+                                                {sync.distance}
+                                            </span>
+                                        </span>
+                                    ) : (
+                                        <span>{sync.message}</span>
+                                    )
+                                ) : null}
+                            </p>
                         ) : null}
-                        {discord ? (
-                            <li title={discord}>
-                                <DiscordIcon />
-                                <span className="sr-only">Discord </span>
-                                {discord}
-                            </li>
+                        {discord || user.preferredArcade || nostalgiaName ? (
+                            <ul className="nl-profile-identity__line">
+                                {discord ? (
+                                    <li title={discord}>
+                                        <DiscordIcon />
+                                        <span className="sr-only">
+                                            Discord{" "}
+                                        </span>
+                                        <span className="nl-profile-identity__value">
+                                            {discord}
+                                        </span>
+                                    </li>
+                                ) : null}
+                                {user.preferredArcade ? (
+                                    <li title={user.preferredArcade.name}>
+                                        <MapPin aria-hidden />
+                                        <span className="sr-only">
+                                            {t("settings.preferredArcade")}{" "}
+                                        </span>
+                                        <span className="nl-profile-identity__value">
+                                            {user.preferredArcade.name}
+                                        </span>
+                                    </li>
+                                ) : null}
+                                {nostalgiaName ? (
+                                    <li>
+                                        NOSTALGIA{" "}
+                                        <span className="nl-profile-identity__value">
+                                            {nostalgiaName}
+                                        </span>
+                                    </li>
+                                ) : null}
+                            </ul>
                         ) : null}
-                        {user.preferredArcade ? (
-                            <li title={user.preferredArcade.name}>
-                                <MapPin aria-hidden />
-                                <span className="sr-only">
-                                    {t("settings.preferredArcade")}{" "}
-                                </span>
-                                {user.preferredArcade.name}
-                            </li>
-                        ) : null}
-                        {lastPlayed ? (
-                            <li>
-                                <Clock aria-hidden />
-                                {lastPlayed}
-                            </li>
-                        ) : null}
-                        {isOwner && syncLabel ? (
-                            <li>
-                                <RefreshCw aria-hidden />
-                                {syncLabel}
-                            </li>
-                        ) : null}
-                    </ul>
+                    </div>
                 ) : null}
                 {hasGrades && !modeFree ? (
                     <div className="nl-profile-identity__mode">

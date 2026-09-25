@@ -30,20 +30,23 @@ export default async function ProfileShell({ id }: { id: number }) {
     const header = scoresHidden
         ? null
         : await getProfileHeaderContext(id, isOwner);
-    const sync = header?.sync;
-    const syncLabel = !isOwner
+    const syncState = header?.sync;
+    // 본인에게만 — 끝난 동기화는 「N일 전」 값, 나머지 상태는 문장(2026-09-26 H1 활동 줄)
+    const sync = !isOwner
         ? undefined
-        : !sync
-          ? t("sync.none")
-          : sync.status === "failed"
-            ? t("sync.failed")
-            : sync.status === "partial"
-              ? t("profile.syncPartial")
-              : sync.status !== "completed"
-                ? t("sync.processing")
-                : t("sync.last", {
+        : !syncState
+          ? { message: t("sync.none") }
+          : syncState.status === "failed"
+            ? { message: t("sync.failed") }
+            : syncState.status === "partial"
+              ? { message: t("profile.syncPartial") }
+              : syncState.status !== "completed"
+                ? { message: t("sync.processing") }
+                : {
                       distance: formatDistanceToNow(
-                          new Date(sync.completedAt ?? sync.startedAt),
+                          new Date(
+                              syncState.completedAt ?? syncState.startedAt
+                          ),
                           {
                               addSuffix: true,
                               locale:
@@ -54,7 +57,7 @@ export default async function ProfileShell({ id }: { id: number }) {
                                         : ko,
                           }
                       ),
-                  });
+                  };
     const achievements = user.achievements
         ? summarizeAchievements(user.achievements, scoresHidden)
         : null;
@@ -63,12 +66,15 @@ export default async function ProfileShell({ id }: { id: number }) {
             <ProfileIdentity
                 user={user}
                 isOwner={isOwner}
-                syncLabel={syncLabel}
+                sync={sync}
                 achievements={achievements}
                 header={header}
                 showSyncAction={
                     isOwner &&
-                    Boolean(sync && ["failed", "partial"].includes(sync.status))
+                    Boolean(
+                        syncState &&
+                        ["failed", "partial"].includes(syncState.status)
+                    )
                 }
             />
             <ProfileTabs

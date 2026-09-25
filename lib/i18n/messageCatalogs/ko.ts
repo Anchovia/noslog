@@ -1295,6 +1295,8 @@ export const koMessages = {
     "profile.settings": "프로필 설정",
     "profile.joined": "{date} 가입",
     "profile.lastPlayed": "마지막 플레이 {date}",
+    "profile.meta.lastPlayed": "마지막 플레이",
+    "profile.meta.synced": "동기화",
     "profile.noRecord": "기록 없음",
     "profile.private": "비공개",
     "profile.arcadeUnset": "선호 오락실 미설정",

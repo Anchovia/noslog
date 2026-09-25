@@ -1298,6 +1298,8 @@ export const jaMessages = {
     "profile.settings": "プロフィール設定",
     "profile.joined": "{date} 登録",
     "profile.lastPlayed": "最終プレー {date}",
+    "profile.meta.lastPlayed": "最終プレー",
+    "profile.meta.synced": "同期",
     "profile.noRecord": "記録なし",
     "profile.private": "非公開",
     "profile.arcadeUnset": "お気に入り店舗未設定",

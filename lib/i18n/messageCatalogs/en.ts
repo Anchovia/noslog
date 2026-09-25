@@ -1310,6 +1310,8 @@ export const enMessages = {
     "profile.settings": "Profile Settings",
     "profile.joined": "Joined {date}",
     "profile.lastPlayed": "Last played {date}",
+    "profile.meta.lastPlayed": "Last played",
+    "profile.meta.synced": "Synced",
     "profile.noRecord": "No record",
     "profile.private": "Private",
     "profile.arcadeUnset": "No favorite arcade set",

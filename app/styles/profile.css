@@ -26,8 +26,16 @@
 .noslog-ui .nl-profile-identity__name-stack {
     grid-area: identity;
 }
+/* 정보 두 줄(2026-09-26 H1, osu! 정보 칸) — 활동 줄(아이콘 없이 라벨 subdued + 값 default) →4→ 계정 줄(Discord · 오락실만 아이콘 16),
+   항목 사이 16 · 줄바꿈 4. 12 굵게는 가이드 밖이라 값은 색으로만 구분 */
 .noslog-ui .nl-profile-identity__meta {
     grid-area: meta;
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-4);
+    min-width: 0;
+}
+.noslog-ui .nl-profile-identity__line {
     display: flex;
     flex-wrap: wrap;
     gap: var(--nl-spacing-4) var(--nl-spacing-16);
@@ -36,12 +44,15 @@
     padding: 0;
     list-style: none;
 }
-.noslog-ui .nl-profile-identity__meta li {
+.noslog-ui .nl-profile-identity__line > * {
     display: inline-flex;
     align-items: center;
     gap: var(--nl-spacing-4);
     min-width: 0;
     overflow-wrap: anywhere;
+}
+.noslog-ui .nl-profile-identity__value {
+    color: var(--nl-content-default);
 }
 .noslog-ui .nl-profile-identity__meta svg {
     flex-shrink: 0;
