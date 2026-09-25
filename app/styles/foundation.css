@@ -873,6 +873,23 @@ html[data-theme="light"] .noslog-ui,
 .noslog-ui .nl-dialog--wide {
     width: min(var(--nl-container-reading), calc(100vw - 56px));
 }
+/* 아래 시트(2026-09-26, 유튜브 폰 설명 창) — 1055 이하에서 화면 아래 폭 가득, 위 모서리만 둥글게.
+   면 · 경계 · 머리(제목 + 닫기)는 대화상자 그대로 */
+@media (max-width: 1055px) {
+    .noslog-ui .nl-dialog--sheet {
+        top: auto;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        max-height: calc(100dvh - var(--nl-spacing-48));
+        transform: none;
+        padding-bottom: calc(
+            var(--nl-spacing-24) + env(safe-area-inset-bottom, 0px)
+        );
+        border-radius: var(--nl-radius-overlay) var(--nl-radius-overlay) 0 0;
+    }
+}
 /* 구역 제목 줄 HeadingRow — 제목(20/600) · 도움말 · 메타 · 오른쪽 끝 제목 링크. 좁으면 줄바꿈(열 8 · 행 4) (2026-09-16) */
 .noslog-ui .nl-heading-row {
     display: flex;
@@ -1646,6 +1663,13 @@ html[data-theme="light"] .noslog-ui,
     animation: nl-rise-in var(--nl-motion-duration-overlay-in)
         var(--nl-ease-enter);
 }
+/* 아래 시트는 아래에서 올라온다 — ⑫ 위치 이동(오락실 시트와 같은 감속 200) */
+@media (max-width: 1055px) {
+    .noslog-ui .nl-dialog--sheet[data-state="open"] {
+        animation: nl-sheet-in var(--nl-motion-duration-move)
+            var(--nl-ease-enter);
+    }
+}
 .noslog-ui
     :is(.nl-dialog-overlay, .nl-dialog, .nl-full-dialog)[data-state="closed"] {
     animation: nl-fade-out var(--nl-motion-duration-overlay-out)
@@ -1706,6 +1730,11 @@ html:has(.noslog-ui) [data-sonner-toaster] [data-sonner-toast] > * {
     }
     to {
         clip-path: inset(0 0 0 0);
+    }
+}
+@keyframes nl-sheet-in {
+    from {
+        translate: 0 100%;
     }
 }
 @keyframes nl-fade-in {

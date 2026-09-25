@@ -524,6 +524,7 @@ export default function ChartSheetViewer({
                 open={infoOpen}
                 onOpenChange={setInfoOpen}
                 title={t("chart.info")}
+                sheet
             >
                 <div className="nl-chart-viewer__info-sheet">
                     <div className="nl-chart-viewer__titles">

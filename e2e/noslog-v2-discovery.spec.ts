@@ -382,11 +382,12 @@ test("Chart scope lists one row per published chart and hides the Music view swi
         .click();
     await page.getByRole("option", { name: "채보 검색", exact: true }).click();
     await expect(page.locator(".nl-chart-row")).toHaveCount(2);
-    await expect(page.locator(".nl-chart-row").first()).toContainText(
-        "운영자 · 영상에서 추출 · 9월 24일 공개"
+    // 작성자 · 출처 · 공개일은 목록에 없다(2026-09-26, 사용자 — 뷰어에서 본다)
+    await expect(page.locator(".nl-chart-row").first()).not.toContainText(
+        "영상에서 추출"
     );
-    await expect(page.locator(".nl-chart-row").last()).toContainText(
-        "기여자 Lv.3 · 9월 20일 공개"
+    await expect(page.locator(".nl-chart-row").last()).not.toContainText(
+        "기여자"
     );
     await expect(
         page.getByRole("radiogroup", { name: "보기 방식" })
