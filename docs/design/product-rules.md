@@ -516,7 +516,9 @@ old design-stage checklist. Changes to material behavior require a user decision
   over its whole length, not the first beats — differs from it: 「시작 타이밍을 BPM ○ 로」, on by
   default only when the draft has no notes (changing the start BPM moves every existing note in
   time); it changes only that point's BPM, like editing it, and goes in with the notes. The offset
-  (start time against the audio) cannot come from the video. The meter is proposed in the same
+  (start time against the audio) cannot come from the video; when the start time is 0 ms the same
+  card offers 「시작 시각을 500ms 로」 (2026-09-25 B, the new-draft default), on by default only when
+  the draft has no notes, moving every timing point by the same amount. The meter is proposed in the same
   card (2026-09-24 A): the game draws the same line every beat, so accents at beat heads (notes
   within 3 frames, tenuto/trill starts ×3) are compared for 3- and 4-beat cycles; 「박자를 ○/4 로」
   shows 뚜렷함/약함 (clear = score ≥ 0.15 and twice the other) and is on by default only when

@@ -1438,6 +1438,11 @@ describe("vid2bmap tempo changes from raw beat frames", () => {
         expect(
             applyVid2bmapStartTiming(points, { bpm: null, numerator: 3 })
         ).toEqual([{ ...points[0], numerator: 3 }, points[1]]);
+        // 시작 시각(음원 오프셋)을 옮기면 뒤 포인트도 같은 만큼 — 박 사이 간격은 그대로
+        expect(applyVid2bmapStartTiming(points, { timeMs: 500 })).toEqual([
+            { ...points[0], timeMs: 500 },
+            { ...points[1], timeMs: 2440 },
+        ]);
     });
 
     it("picks the simplest BPM that stays on the video's beats to the end of the section", () => {

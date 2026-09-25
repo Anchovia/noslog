@@ -1953,18 +1953,30 @@ export function detectVid2bmapTempoChanges(
 }
 
 /**
- * 시작 타이밍의 BPM · 박자만 바꾼다 — 에디터에서 그 칸을 고치는 것과 같다(시각 · 뒤 포인트는 그대로).
- * 박자는 x/4 로(영상 추정은 3/4 · 4/4 만)
+ * 시작 타이밍의 BPM · 박자 · 시각을 바꾼다 — 에디터에서 그 칸을 고치는 것과 같다(뒤 포인트의 박 위치는 그대로).
+ * 박자는 x/4 로(영상 추정은 3/4 · 4/4 만). 시각을 바꾸면 음원 오프셋을 옮기는 것이라 모든 포인트의 시각을 같은 만큼 옮긴다(2026-09-25)
  */
 export function applyVid2bmapStartTiming(
     timingPoints: ChartTimingPoint[],
-    changes: { bpm?: number | null; numerator?: number | null }
+    changes: {
+        bpm?: number | null;
+        numerator?: number | null;
+        timeMs?: number | null;
+    }
 ) {
     const origin = sortTimingPoints(timingPoints)[0];
-    return timingPoints.map((point) =>
-        point.id === origin.id
+    const shift = changes.timeMs == null ? 0 : changes.timeMs - origin.timeMs;
+    return timingPoints.map((point) => {
+        const moved =
+            shift === 0
+                ? point
+                : {
+                      ...point,
+                      timeMs: Math.round((point.timeMs + shift) * 1000) / 1000,
+                  };
+        return point.id === origin.id
             ? {
-                  ...point,
+                  ...moved,
                   ...(changes.bpm == null ? {} : { bpm: changes.bpm }),
                   ...(changes.numerator == null
                       ? {}
@@ -1973,8 +1985,8 @@ export function applyVid2bmapStartTiming(
                             denominator: 4 as const,
                         }),
               }
-            : point
-    );
+            : moved;
+    });
 }
 
 /** 박자 추정에서 테누토 · 트릴 시작의 무게 — 긴 음은 센박에 온다(Altale · アルストロメリア 둘 다 이 값에서 박자 · 마디 첫 박이 맞음, 노트 수만이면 アルストロメリア 마디 첫 박이 틀림) */

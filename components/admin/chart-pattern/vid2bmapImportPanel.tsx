@@ -19,7 +19,11 @@ import {
     findChartNoteConflicts,
     hasNewChartNoteConflicts,
 } from "@/lib/chart-pattern/editor";
-import type { ChartNote, ChartTimingPoint } from "@/lib/chart-pattern/schema";
+import {
+    type ChartNote,
+    type ChartTimingPoint,
+    DEFAULT_CHART_OFFSET_MS,
+} from "@/lib/chart-pattern/schema";
 import {
     sortTimingPoints,
     tickToMilliseconds,
@@ -328,6 +332,8 @@ export default function Vid2bmapImportPanel({
     /** 넣지 않기로 한 템포 제안(틱) — 기본은 모두 넣는다 */
     /** 시작 BPM 제안을 넣을지 — 고르기 전(null)이면 초안이 비었을 때만 넣는다(시작 BPM 을 바꾸면 기존 노트 시각이 전부 움직임) */
     const [startBpmChoice, setStartBpmChoice] = useState<boolean | null>(null);
+    /** 시작 시각을 500ms 로 옮길지 — 시작 시각이 0ms 일 때만, 고르기 전(null)이면 초안에 노트가 없을 때만(2026-09-25 B) */
+    const [offsetChoice, setOffsetChoice] = useState<boolean | null>(null);
     /** 박자 제안을 넣을지 — 고르기 전(null)이면 빈 초안 · 강세 뚜렷함일 때만 */
     const [meterChoice, setMeterChoice] = useState<boolean | null>(null);
     const [skippedTempo, setSkippedTempo] = useState<Record<number, boolean>>(
@@ -473,15 +479,33 @@ export default function Vid2bmapImportPanel({
         (meterChoice ?? (meterProposal.clear && document.notes.length === 0))
             ? meterProposal.numerator
             : null;
+    // 시작 시각 0ms 면 1마디 1박 노트가 재생과 동시에 판정선에 있어 못 본다 — 새 빈 초안 기본값(500ms)으로
+    const offsetProposal = baseOrigin.timeMs === 0;
+    const proposedStartTimeMs =
+        offsetProposal && (offsetChoice ?? document.notes.length === 0)
+            ? DEFAULT_CHART_OFFSET_MS
+            : null;
+    const startChanged =
+        proposedStartBpm !== null ||
+        proposedNumerator !== null ||
+        proposedStartTimeMs !== null;
     const timingPoints = useMemo(
         () =>
-            proposedStartBpm === null && proposedNumerator === null
+            proposedStartBpm === null &&
+            proposedNumerator === null &&
+            proposedStartTimeMs === null
                 ? baseTimingPoints
                 : applyVid2bmapStartTiming(baseTimingPoints, {
                       bpm: proposedStartBpm,
                       numerator: proposedNumerator,
+                      timeMs: proposedStartTimeMs,
                   }),
-        [baseTimingPoints, proposedStartBpm, proposedNumerator]
+        [
+            baseTimingPoints,
+            proposedStartBpm,
+            proposedNumerator,
+            proposedStartTimeMs,
+        ]
     );
     const chooseMeter = (checked: boolean) => {
         setMeterChoice(checked);
@@ -532,7 +556,7 @@ export default function Vid2bmapImportPanel({
                 change.points.length +
                 (barRestores.get(change.tick) ? 1 : 0),
             0
-        ) + (proposedStartBpm === null && proposedNumerator === null ? 0 : 1);
+        ) + (startChanged ? 1 : 0);
     const diff = useMemo(
         () =>
             conversion
@@ -716,6 +740,7 @@ export default function Vid2bmapImportPanel({
                             {
                                 bpm: proposedStartBpm,
                                 numerator: proposedNumerator,
+                                timeMs: proposedStartTimeMs,
                             }
                         ),
                         tempoChanges
@@ -933,7 +958,9 @@ export default function Vid2bmapImportPanel({
                                     </label>
                                 </div>
                             ) : null}
-                            {tempo?.startMismatch || meterProposal ? (
+                            {tempo?.startMismatch ||
+                            meterProposal ||
+                            offsetProposal ? (
                                 // 시작 BPM · 박자 제안(2026-09-24 A) — 템포 변화 제안과 같은 카드
                                 <div className="border-score/40 bg-score/10 flex flex-col gap-1 rounded-md border px-2 py-1.5">
                                     <p className="flex items-center gap-1.5 text-xs font-bold">
@@ -1013,6 +1040,31 @@ export default function Vid2bmapImportPanel({
                                                 />
                                                 박자를 {meterProposal.numerator}
                                                 /4 로
+                                            </label>
+                                        </>
+                                    ) : null}
+                                    {offsetProposal ? (
+                                        <>
+                                            <p className="text-micro">
+                                                시작 시각 0ms — 1마디 1박 노트가
+                                                재생과 동시에 판정선에 있어요
+                                            </p>
+                                            <label className="flex items-center gap-2 text-xs font-semibold">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={
+                                                        proposedStartTimeMs !==
+                                                        null
+                                                    }
+                                                    onChange={(event) =>
+                                                        setOffsetChoice(
+                                                            event.target.checked
+                                                        )
+                                                    }
+                                                    className="accent-text-primary size-3.5"
+                                                />
+                                                시작 시각을{" "}
+                                                {DEFAULT_CHART_OFFSET_MS}ms 로
                                             </label>
                                         </>
                                     ) : null}
