@@ -12,22 +12,27 @@ const cursorSchema = z.number().int().min(0);
 
 /**
  * 업적 다시 판정 한 묶음(2026-09-25 B1) — 관리자만. 화면이 nextCursor 가 null 이 될 때까지 이어 부른다.
- * 새 단계를 얻은 사람의 프로필 캐시를 비운다.
+ * 단계가 바뀐 사람의 프로필 캐시를 비운다. prune = 「기준에 못 미치는 단계도 빼기」(2026-09-25 R1).
  */
-export async function rejudgeAchievements(cursor: number) {
+export async function rejudgeAchievements(cursor: number, prune = false) {
     await requireAdmin();
     const parsed = cursorSchema.safeParse(cursor);
     if (!parsed.success)
         return { success: false as const, message: "잘못된 요청입니다." };
     try {
-        const batch = await rejudgeAchievementsBatch(parsed.data);
+        const batch = await rejudgeAchievementsBatch(
+            parsed.data,
+            undefined,
+            prune === true
+        );
         for (const userId of batch.awardedUserIds)
             updateTag(getUserProfileTag(userId));
-        if (batch.awarded) updateTag(CACHE_TAGS.userProfiles);
+        if (batch.awarded || batch.removed) updateTag(CACHE_TAGS.userProfiles);
         return {
             success: true as const,
             judged: batch.judged,
             awarded: batch.awarded,
+            removed: batch.removed,
             nextCursor: batch.nextCursor,
         };
     } catch (error) {

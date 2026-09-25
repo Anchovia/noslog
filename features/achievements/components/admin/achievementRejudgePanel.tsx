@@ -9,11 +9,13 @@ import { adminSecondaryButtonClass } from "@/components/admin/adminForm";
 /**
  * 관리자 「업적 다시 판정」(2026-09-25 B1) — 동기화 내역 화면에 기존 관리자 모양으로 칸 하나.
  * 배포 뒤 첫 판정 · 기준 수치를 바꾼 뒤에 누른다. 50명씩 끝까지 이어서 돌고 진행 수를 보인다.
+ * 「기준에 못 미치는 단계도 빼기」(2026-09-25 R1, 기본 꺼짐) — 기준을 바꾼 날에만 켠다.
  */
 export default function AchievementRejudgePanel() {
     const [pending, startTransition] = useTransition();
     const [status, setStatus] = useState<string | null>(null);
     const [failed, setFailed] = useState(false);
+    const [prune, setPrune] = useState(false);
 
     function run() {
         setFailed(false);
@@ -21,8 +23,9 @@ export default function AchievementRejudgePanel() {
             let cursor: number | null = 0;
             let judged = 0;
             let awarded = 0;
+            let removed = 0;
             while (cursor !== null) {
-                const result = await rejudgeAchievements(cursor);
+                const result = await rejudgeAchievements(cursor, prune);
                 if (!result.success) {
                     setFailed(true);
                     setStatus(
@@ -32,9 +35,10 @@ export default function AchievementRejudgePanel() {
                 }
                 judged += result.judged;
                 awarded += result.awarded;
+                removed += result.removed;
                 cursor = result.nextCursor;
                 setStatus(
-                    `${judged.toLocaleString("ko-KR")}명 판정 · 새 단계 ${awarded.toLocaleString("ko-KR")}개${cursor === null ? " · 끝" : " · 진행 중"}`
+                    `${judged.toLocaleString("ko-KR")}명 판정 · 새 단계 ${awarded.toLocaleString("ko-KR")}개${prune ? ` · 뺀 단계 ${removed.toLocaleString("ko-KR")}개` : ""}${cursor === null ? " · 끝" : " · 진행 중"}`
                 );
             }
         });
@@ -48,6 +52,16 @@ export default function AchievementRejudgePanel() {
                     기록이 있는 사용자 모두의 업적을 지금 기준으로 판정합니다.
                     얻은 단계는 빼지 않습니다.
                 </p>
+                <label className="text-caption mt-2 flex cursor-pointer items-center gap-2">
+                    <input
+                        type="checkbox"
+                        checked={prune}
+                        disabled={pending}
+                        onChange={(event) => setPrune(event.target.checked)}
+                        className="size-4"
+                    />
+                    기준에 못 미치는 단계도 빼기(기준을 바꾼 뒤에만)
+                </label>
                 {status ? (
                     <p
                         role="status"

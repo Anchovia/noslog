@@ -6,6 +6,7 @@ import {
     ACHIEVEMENT_DEFINITIONS,
     ACHIEVEMENT_MUSIC_CATEGORIES,
     ACHIEVEMENT_SHOWCASE_SIZE,
+    staleAchievementRows,
     examGradeScore,
     getAchievementDefinition,
     newAchievementTiers,
@@ -143,16 +144,6 @@ export interface NewAchievement {
     tier: AchievementTier;
 }
 
-/** 업적 키별 얻은 가장 높은 단계 */
-async function earnedTiers(userId: number) {
-    const rows = await db.userAchievement.groupBy({
-        by: ["key"],
-        where: { user_id: userId },
-        _max: { tier: true },
-    });
-    return new Map(rows.map((row) => [row.key, row._max.tier ?? 0]));
-}
-
 /**
  * 동기화 뒤 판정(N1) — 새로 닿은 단계만 더하고 돌려준다. 같은 단계는 한 번만(유일 키).
  * 날짜는 NosLog 가 확인한 때(2026-09-24 D-a).
@@ -160,10 +151,47 @@ async function earnedTiers(userId: number) {
 export async function evaluateUserAchievements(
     userId: number
 ): Promise<NewAchievement[]> {
-    const [metrics, earned] = await Promise.all([
+    return (await judgeUserAchievements(userId, false)).added;
+}
+
+export interface AchievementJudgement {
+    added: NewAchievement[];
+    /** 뺀 단계 수 — prune 일 때만 */
+    removed: number;
+}
+
+/**
+ * 한 사람 판정. prune = 관리자 「기준에 못 미치는 단계도 빼기」(2026-09-25 R1) — 기준을 바꾼 뒤에만 켠다.
+ * 빼는 것: 없어진 업적(예: 빙고) · 그 업적이 갖지 않은 등급 · 지금 값이 그 등급 기준에 못 미치는 단계.
+ * 평소(동기화 · prune 꺼짐)는 얻은 단계를 빼지 않는다.
+ */
+export async function judgeUserAchievements(
+    userId: number,
+    prune: boolean
+): Promise<AchievementJudgement> {
+    const [metrics, earnedRows] = await Promise.all([
         collectAchievementMetrics(userId),
-        earnedTiers(userId),
+        db.userAchievement.findMany({
+            where: { user_id: userId },
+            select: { id: true, key: true, tier: true },
+        }),
     ]);
+    let removed = 0;
+    let kept = earnedRows;
+    if (prune) {
+        const stale = staleAchievementRows(earnedRows, metrics);
+        if (stale.length) {
+            const result = await db.userAchievement.deleteMany({
+                where: { id: { in: stale.map((row) => row.id) } },
+            });
+            removed = result.count;
+            const staleIds = new Set(stale.map((row) => row.id));
+            kept = earnedRows.filter((row) => !staleIds.has(row.id));
+        }
+    }
+    const earned = new Map<string, number>();
+    for (const row of kept)
+        earned.set(row.key, Math.max(earned.get(row.key) ?? 0, row.tier));
     const awarded: NewAchievement[] = ACHIEVEMENT_DEFINITIONS.flatMap(
         (definition) =>
             newAchievementTiers(
@@ -172,16 +200,16 @@ export async function evaluateUserAchievements(
                 earned.get(definition.key) ?? 0
             ).map((tier) => ({ key: definition.key, tier }))
     );
-    if (awarded.length === 0) return [];
-    await db.userAchievement.createMany({
-        data: awarded.map((item) => ({
-            user_id: userId,
-            key: item.key,
-            tier: item.tier,
-        })),
-        skipDuplicates: true,
-    });
-    return awarded;
+    if (awarded.length)
+        await db.userAchievement.createMany({
+            data: awarded.map((item) => ({
+                user_id: userId,
+                key: item.key,
+                tier: item.tier,
+            })),
+            skipDuplicates: true,
+        });
+    return { added: awarded, removed };
 }
 
 /** 한 사람의 얻은 단계 · 건 업적 · 그 단계들의 달성 인원 — 프로필 캐시 · 업적 페이지가 같이 쓴다 */
@@ -286,7 +314,9 @@ export interface AchievementRejudgeBatch {
     judged: number;
     /** 이번에 새로 더한 단계 수 */
     awarded: number;
-    /** 새 단계를 얻은 사용자(프로필 캐시 비우기용) */
+    /** 뺀 단계 수(「기준에 못 미치는 단계도 빼기」 일 때) */
+    removed: number;
+    /** 단계가 바뀐 사용자(프로필 캐시 비우기용) */
     awardedUserIds: number[];
     /** 다음 묶음 시작점 — 끝이면 null */
     nextCursor: number | null;
@@ -300,9 +330,11 @@ export interface AchievementRejudgeBatch {
 export async function rejudgeAchievementsBatch(
     afterUserId: number,
     limit = ACHIEVEMENT_REJUDGE_BATCH,
-    evaluate: (
-        userId: number
-    ) => Promise<NewAchievement[]> = evaluateUserAchievements
+    prune = false,
+    judge: (
+        userId: number,
+        prune: boolean
+    ) => Promise<AchievementJudgement> = judgeUserAchievements
 ): Promise<AchievementRejudgeBatch> {
     const users = await db.user.findMany({
         where: {
@@ -319,17 +351,18 @@ export async function rejudgeAchievementsBatch(
         select: { id: true },
     });
     let awarded = 0;
+    let removed = 0;
     const awardedUserIds: number[] = [];
     for (const { id } of users) {
-        const added = await evaluate(id);
-        if (added.length) {
-            awarded += added.length;
-            awardedUserIds.push(id);
-        }
+        const result = await judge(id, prune);
+        awarded += result.added.length;
+        removed += result.removed;
+        if (result.added.length || result.removed) awardedUserIds.push(id);
     }
     return {
         judged: users.length,
         awarded,
+        removed,
         awardedUserIds,
         nextCursor: users.length === limit ? users[users.length - 1].id : null,
     };

@@ -455,3 +455,22 @@ export function summarizeAchievements(
             .slice(0, ACHIEVEMENT_RECENT_COUNT),
     };
 }
+
+/**
+ * 「기준에 못 미치는 단계도 빼기」(2026-09-25 R1)에서 뺄 줄 — 없어진 업적(예: 빙고) · 그 업적이 갖지 않은 등급 ·
+ * 지금 값이 그 등급 기준에 못 미치는 단계. 관리자가 켤 때만 쓴다(평소 판정은 빼지 않는다).
+ */
+export function staleAchievementRows<T extends { key: string; tier: number }>(
+    rows: readonly T[],
+    metrics: AchievementMetrics
+): T[] {
+    return rows.filter((row) => {
+        const definition = getAchievementDefinition(row.key);
+        if (!definition) return true;
+        const threshold = definition.thresholds[row.tier as AchievementTier];
+        if (threshold === undefined) return true;
+        return (
+            achievementScore(definition, metrics[definition.metric]) < threshold
+        );
+    });
+}
