@@ -1,6 +1,6 @@
 "use client";
 
-import { MapPin, Settings } from "lucide-react";
+import { Lock, MapPin, Settings } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import {
@@ -22,6 +22,7 @@ import ProfileShareDialog from "@/features/profile/components/profileShareDialog
 import { formatProfileDate } from "@/components/profile/dashboard/profileUtils";
 import { gradeBandTone, rankTone } from "@/lib/music/scoreTone";
 import type { ProfileHeaderContext } from "@/features/profile/server/profileOverviewService";
+import type { OwnerPrivateFields } from "@/features/profile/server/ownerPrivateService";
 import type {
     ProfileMode,
     ProfileUser,
@@ -37,6 +38,25 @@ function initialForName(name: string | null, locale: string) {
     return undefined;
 }
 
+/** 정보 줄 값 — 공개면 기본 글자색, 본인에게만 보이는 값은 흐린 채로 두고 화면 읽기에 「나에게만 보입니다」 */
+function MetaValue({
+    item,
+    onlyMe,
+}: {
+    item: { text: string; private: boolean };
+    onlyMe: string;
+}) {
+    return (
+        <span
+            className="nl-profile-identity__value"
+            data-private={item.private || undefined}
+        >
+            {item.text}
+            {item.private ? <span className="sr-only"> ({onlyMe})</span> : null}
+        </span>
+    );
+}
+
 /**
  * 프로필 머리(2026-09-25 H3 · K2 · M2 · CM1) — 신원(아바타 · 이름 · 명판 · 라벨 · 업적 진열) · 정보 두 줄(2026-09-26 H1 —
  * 활동: 마지막 플레이 · (본인) 동기화, 계정: Discord · 오락실 · NOSTALGIA) · 모드 세그먼트 · 핵심 수치(공식 Grd 크게 + 세계 · 국가 · 레이팅).
@@ -47,12 +67,15 @@ export default function ProfileIdentity({
     user,
     isOwner,
     sync,
+    privateFields,
     showSyncAction = false,
     achievements,
     header,
 }: {
     user: ProfileUser;
     isOwner: boolean;
+    /** 본인에게만 — 공개 설정으로 숨긴 항목(자물쇠와 함께 보인다, 2026-09-26 P1) */
+    privateFields?: OwnerPrivateFields | null;
     /** 본인에게만 — 마지막 동기화: 끝났으면 「N일 전」(값), 아니면 상태 문장 */
     sync?: { distance: string } | { message: string };
     showSyncAction?: boolean;
@@ -80,8 +103,6 @@ export default function ProfileIdentity({
             query ? `${pathname}?${query}` : pathname
         );
     }
-    // 업적 · 활동 탭은 모드와 관계없다 — 모드 세그먼트를 두지 않고, 폰은 수치 상자도 숨긴다(2026-09-25 v2 시안)
-    const modeFree = /\/(achievements|activity)$/.test(pathname);
     const hasGrades = Boolean(
         header && ((user.grade_basic ?? 0) > 0 || (user.grade_recital ?? 0) > 0)
     );
@@ -103,19 +124,31 @@ export default function ProfileIdentity({
     const hasExam = [user.exam_basic, user.exam_recital].some(
         (exam) => exam !== null && exam >= 1 && exam <= 10
     );
-    const lastPlayed = user.last_played_at
-        ? formatProfileDate(user.last_played_at, locale)
-        : null;
-    const nostalgiaName =
-        !user.hide_nostalgia_name && user.nostalgia_name
-            ? user.nostalgia_name
-            : null;
+    // 공개 값이 있으면 그대로, 본인에게는 숨긴 값도 비공개 표시로(2026-09-26 P1)
+    const pick = (value: string | null | undefined, hidden?: string | null) =>
+        value
+            ? { text: value, private: false }
+            : hidden
+              ? { text: hidden, private: true }
+              : null;
+    const onlyMe = t("profile.onlyMe");
+    const lastPlayedValue = pick(
+        user.last_played_at
+            ? formatProfileDate(user.last_played_at, locale)
+            : null,
+        privateFields?.lastPlayedAt
+            ? formatProfileDate(privateFields.lastPlayedAt, locale)
+            : null
+    );
+    const nostalgia = pick(
+        !user.hide_nostalgia_name ? user.nostalgia_name : null,
+        privateFields?.nostalgiaName
+    );
+    const discordValue = pick(discord, privateFields?.discord);
+    const arcade = pick(user.preferredArcade?.name, privateFields?.arcade);
     return (
         <section className="nl-profile-identity" aria-labelledby="profile-name">
-            <div
-                className="nl-profile-identity__row"
-                data-mode-free={modeFree || undefined}
-            >
+            <div className="nl-profile-identity__row">
                 <Avatar
                     src={user.avatar}
                     alt={t("common.profileImage", { name })}
@@ -202,21 +235,32 @@ export default function ProfileIdentity({
                         ) : null}
                     </ExamBadgeGroup>
                 </div>
-                {/* 정보 두 줄(2026-09-26 H1, osu! 정보 칸) — 활동 줄(아이콘 없이 라벨 + 값) · 계정 줄(링크 성격만 아이콘) */}
-                {nostalgiaName ||
-                discord ||
-                user.preferredArcade ||
-                lastPlayed ||
+                {/* 정보 두 줄(2026-09-26 H1, osu! 정보 칸) — 활동 줄(아이콘 없이 라벨 + 값) · 계정 줄(링크 성격만 아이콘).
+                    본인에게는 숨긴 항목도 보이고, 원래 아이콘 대신 자물쇠 + 흐린 값(2026-09-26 P1) */}
+                {nostalgia ||
+                discordValue ||
+                arcade ||
+                lastPlayedValue ||
                 (isOwner && sync) ? (
                     <div className="nl-profile-identity__meta nl-metadata nl-muted">
-                        {lastPlayed || (isOwner && sync) ? (
+                        {lastPlayedValue || (isOwner && sync) ? (
                             <p className="nl-profile-identity__line">
-                                {lastPlayed ? (
-                                    <span>
+                                {lastPlayedValue ? (
+                                    <span
+                                        title={
+                                            lastPlayedValue.private
+                                                ? onlyMe
+                                                : undefined
+                                        }
+                                    >
+                                        {lastPlayedValue.private ? (
+                                            <Lock aria-hidden />
+                                        ) : null}
                                         {t("profile.meta.lastPlayed")}{" "}
-                                        <span className="nl-profile-identity__value">
-                                            {lastPlayed}
-                                        </span>
+                                        <MetaValue
+                                            item={lastPlayedValue}
+                                            onlyMe={onlyMe}
+                                        />
                                     </span>
                                 ) : null}
                                 {isOwner && sync ? (
@@ -233,43 +277,75 @@ export default function ProfileIdentity({
                                 ) : null}
                             </p>
                         ) : null}
-                        {discord || user.preferredArcade || nostalgiaName ? (
+                        {discordValue || arcade || nostalgia ? (
                             <ul className="nl-profile-identity__line">
-                                {discord ? (
-                                    <li title={discord}>
-                                        <DiscordIcon />
+                                {discordValue ? (
+                                    <li
+                                        title={
+                                            discordValue.private
+                                                ? onlyMe
+                                                : discordValue.text
+                                        }
+                                    >
+                                        {discordValue.private ? (
+                                            <Lock aria-hidden />
+                                        ) : (
+                                            <DiscordIcon />
+                                        )}
                                         <span className="sr-only">
                                             Discord{" "}
                                         </span>
-                                        <span className="nl-profile-identity__value">
-                                            {discord}
-                                        </span>
+                                        <MetaValue
+                                            item={discordValue}
+                                            onlyMe={onlyMe}
+                                        />
                                     </li>
                                 ) : null}
-                                {user.preferredArcade ? (
-                                    <li title={user.preferredArcade.name}>
-                                        <MapPin aria-hidden />
+                                {arcade ? (
+                                    <li
+                                        title={
+                                            arcade.private
+                                                ? onlyMe
+                                                : arcade.text
+                                        }
+                                    >
+                                        {arcade.private ? (
+                                            <Lock aria-hidden />
+                                        ) : (
+                                            <MapPin aria-hidden />
+                                        )}
                                         <span className="sr-only">
                                             {t("settings.preferredArcade")}{" "}
                                         </span>
-                                        <span className="nl-profile-identity__value">
-                                            {user.preferredArcade.name}
-                                        </span>
+                                        <MetaValue
+                                            item={arcade}
+                                            onlyMe={onlyMe}
+                                        />
                                     </li>
                                 ) : null}
-                                {nostalgiaName ? (
-                                    <li>
+                                {nostalgia ? (
+                                    <li
+                                        title={
+                                            nostalgia.private
+                                                ? onlyMe
+                                                : undefined
+                                        }
+                                    >
+                                        {nostalgia.private ? (
+                                            <Lock aria-hidden />
+                                        ) : null}
                                         NOSTALGIA{" "}
-                                        <span className="nl-profile-identity__value">
-                                            {nostalgiaName}
-                                        </span>
+                                        <MetaValue
+                                            item={nostalgia}
+                                            onlyMe={onlyMe}
+                                        />
                                     </li>
                                 ) : null}
                             </ul>
                         ) : null}
                     </div>
                 ) : null}
-                {hasGrades && !modeFree ? (
+                {hasGrades ? (
                     <div className="nl-profile-identity__mode">
                         <SegmentedControl
                             label={t("profile.modeAria")}

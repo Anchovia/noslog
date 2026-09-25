@@ -26,6 +26,7 @@ import type {
 } from "@/features/profile/schemas/publicProfileSchema";
 import { LoadingStatus } from "@/components/ui/skeleton";
 import useDelayedFlag from "@/lib/hooks/useDelayedFlag";
+import ProfileOnlyMe from "./profileOnlyMe";
 import ProfilePlayRow, {
     ProfilePlayListHead,
     ProfilePlayListSkeleton,
@@ -37,6 +38,7 @@ export default function ProfilePlaysList({
     mode,
     initialData,
     batch = PROFILE_BATCH_SIZE,
+    onlyMe = false,
 }: {
     userId: number;
     kind: "best" | "recent";
@@ -44,6 +46,8 @@ export default function ProfilePlaysList({
     initialData: ProfileListPayload | null;
     /** 한 번에 불러오는 수 — 개요 5, 「활동」 탭 20(제목 옆 링크 없음) */
     batch?: typeof PROFILE_BATCH_SIZE | typeof PROFILE_ACTIVITY_BATCH_SIZE;
+    /** 공개 설정으로 숨긴 최근 플레이를 본인이 볼 때 — 제목 아래 「나에게만 보입니다」(2026-09-26 P1) */
+    onlyMe?: boolean;
 }) {
     const t = useTranslations();
     const href = useLocalizedHref();
@@ -161,6 +165,7 @@ export default function ProfilePlaysList({
                     />
                 ) : null}
             </div>
+            {onlyMe ? <ProfileOnlyMe /> : null}
             <div className="nl-profile-plays__content" aria-busy={busy}>
                 {first?.status === "unavailable" ? (
                     <p className="nl-body-secondary nl-muted">

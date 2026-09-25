@@ -54,6 +54,34 @@
 .noslog-ui .nl-profile-identity__value {
     color: var(--nl-content-default);
 }
+/* 본인에게만 보이는 값(2026-09-26 P1) — 원래 아이콘 대신 자물쇠 16, 값은 흐린 채로 */
+.noslog-ui .nl-profile-identity__value[data-private] {
+    color: var(--nl-content-subdued);
+}
+.noslog-ui .nl-profile-play-count__value {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--nl-spacing-4);
+}
+.noslog-ui .nl-profile-play-count__value[data-private] {
+    color: var(--nl-content-subdued);
+}
+.noslog-ui .nl-profile-play-count__value svg {
+    width: var(--nl-icon-small);
+    height: var(--nl-icon-small);
+}
+/* 「나에게만 보입니다」 한 줄 — 자물쇠 16 + metadata 흐림(숨긴 구역을 본인이 볼 때) */
+.noslog-ui .nl-profile-only-me {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-4);
+    margin: 0;
+}
+.noslog-ui .nl-profile-only-me svg {
+    flex-shrink: 0;
+    width: var(--nl-icon-small);
+    height: var(--nl-icon-small);
+}
 .noslog-ui .nl-profile-identity__meta svg {
     flex-shrink: 0;
     width: var(--nl-icon-small);
@@ -108,26 +136,13 @@
 .noslog-ui .nl-profile-headline__foot dd {
     margin: 0;
 }
-/* 업적 · 활동 탭(모드와 관계없음) — 세그먼트 없음, 폰은 수치 상자도 숨긴다(2026-09-25 v2 시안) */
-.noslog-ui .nl-profile-identity__row[data-mode-free] {
-    grid-template-areas:
-        "avatar identity"
-        "meta meta";
-}
-.noslog-ui .nl-profile-identity__row[data-mode-free] .nl-profile-headline {
-    display: none;
-}
 @media (min-width: 672px) {
-    .noslog-ui .nl-profile-identity__row,
-    .noslog-ui .nl-profile-identity__row[data-mode-free] {
+    .noslog-ui .nl-profile-identity__row {
         grid-template-columns: var(--nl-profile-avatar-size) minmax(0, 1fr) auto;
         grid-template-areas:
             "avatar identity mode"
             "meta meta meta"
             "headline headline headline";
-    }
-    .noslog-ui .nl-profile-identity__row[data-mode-free] .nl-profile-headline {
-        display: block;
     }
     .noslog-ui .nl-profile-identity__mode {
         width: 200px;
@@ -135,8 +150,7 @@
     }
 }
 @media (min-width: 1056px) {
-    .noslog-ui .nl-profile-identity__row,
-    .noslog-ui .nl-profile-identity__row[data-mode-free] {
+    .noslog-ui .nl-profile-identity__row {
         --nl-profile-avatar-size: 108px;
         grid-template-areas:
             "avatar identity mode"

@@ -81,8 +81,12 @@ old design-stage checklist. Changes to material behavior require a user decision
   `/records`, stats `/stats`, achievements `/achievements` and activity `/activity`.
   The selected mode lives in the URL (`?mode=recital`) and carries across tabs; only
   the overview, records and the stats progress chart use it. Others do not see the
-  records and stats tabs of a score-private profile; nobody sees the activity tab
-  while "hide play activity" is on (same rule as the recent-play list). The headline
+  records and stats tabs of a score-private profile; others do not see the activity
+  tab while "hide play activity" is on (same rule as the recent-play list).
+- Owner view (2026-09-26 P1): the owner sees their own hidden items — NOSTALGIA ID,
+  Discord, preferred arcade, last played, play count, recent plays and the activity
+  tab — marked "only visible to you". These values are loaded only for the owner's
+  request (the plays API checks the session) and never enter the public profile cache. The headline
   shows official Grd, world and country rank and the rating — no mode name, "top N%"
   or 90-day change (2026-09-26, user).
 - Records tab (2026-09-25): "Best" is the top 50 charts by the mode's official Grd

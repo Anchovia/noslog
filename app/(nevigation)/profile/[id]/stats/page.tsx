@@ -6,6 +6,7 @@ import PublicProfilePage from "@/features/profile/components/publicProfilePage";
 import { profileIdSchema } from "@/features/profile/schemas/publicProfileSchema";
 import { getPublicProfileProgress } from "@/features/profile/server/profileProgressService";
 import { getProfileStats } from "@/features/profile/server/profileStatsService";
+import { getOwnerPrivateFields } from "@/features/profile/server/ownerPrivateService";
 import { hideProfileScores } from "@/features/profile/server/scoreVisibility";
 import { localizePath } from "@/lib/i18n/routing";
 import { getServerI18n } from "@/lib/i18n/server";
@@ -70,15 +71,18 @@ export default async function ProfileStatsRoute({
             />
         );
     const mode = query.mode === "recital" ? "recital" : "basic";
-    const [stats, initialProgress] = await Promise.all([
+    const [stats, initialProgress, ownerPrivate] = await Promise.all([
         getProfileStats(id),
         getPublicProfileProgress(id, { mode, metric: "grade", range: "90" }),
+        // 본인에게는 숨긴 플레이 횟수도 자물쇠와 함께(2026-09-26 P1)
+        isOwner ? getOwnerPrivateFields(id) : null,
     ]);
     return (
         <ProfileStats
             user={profileData.user}
             stats={stats}
             initialProgress={initialProgress}
+            privatePlayCount={ownerPrivate?.playCount ?? null}
         />
     );
 }

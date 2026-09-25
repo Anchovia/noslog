@@ -89,17 +89,19 @@ export async function getProfileRating(userId: number, mode: ProfileMode) {
 
 export async function getPublicProfilePlays(
     userId: number,
-    query: ProfileListQuery
+    query: ProfileListQuery,
+    /** 본인이 자기 프로필을 볼 때 — 숨긴 플레이 활동도 본인에게는 보인다(2026-09-26 P1) */
+    { owner = false }: { owner?: boolean } = {}
 ) {
     // Recheck visibility for every incremental request, including a previously
-    // opened tab. Hidden history is never fetched or returned through this route.
+    // opened tab. Hidden history is never fetched or returned to other viewers.
     const user = await db.user.findUnique({
         where: { id: userId },
         select: { hide_play_activity: true },
     });
     if (!user) return null;
     if (query.kind === "recent") {
-        if (user.hide_play_activity)
+        if (user.hide_play_activity && !owner)
             return profileListPayloadSchema.parse({
                 query,
                 status: "hidden",

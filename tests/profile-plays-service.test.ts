@@ -123,6 +123,17 @@ describe("profile incremental public plays", () => {
             true,
         ]);
     });
+    it("shows hidden recent plays only to the owner", async () => {
+        mocks.user.mockResolvedValue({ hide_play_activity: true });
+        mocks.recent.mockResolvedValue([]);
+        const owner = await getPublicProfilePlays(
+            7,
+            profileListQuerySchema.parse({ kind: "recent" }),
+            { owner: true }
+        );
+        expect(owner?.status).toBe("available");
+        expect(mocks.recent).toHaveBeenCalled();
+    });
     it("checks current privacy before any expanded history query", async () => {
         mocks.user.mockResolvedValue({ hide_play_activity: true });
         const result = await getPublicProfilePlays(

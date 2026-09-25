@@ -42,6 +42,7 @@ export default function PublicProfilePage({
     initialProgress,
     levels = [],
     pinned = null,
+    recentOnlyMe = false,
     scoresHidden = false,
 }: {
     user: ProfileUser;
@@ -56,6 +57,8 @@ export default function PublicProfilePage({
     levels?: readonly ProfileLevelRow[];
     /** 고정 기록(옆 열 맨 위, 2026-09-26 S2) */
     pinned?: ProfilePinnedRecords | null;
+    /** 숨긴 최근 플레이를 본인이 볼 때(2026-09-26 P1) */
+    recentOnlyMe?: boolean;
 }) {
     const t = useTranslations();
     const href = useLocalizedHref();
@@ -137,6 +140,7 @@ export default function PublicProfilePage({
                         kind="recent"
                         mode="basic"
                         initialData={initialRecent}
+                        onlyMe={recentOnlyMe}
                     />
                 ) : null}
             </div>

@@ -23,10 +23,13 @@ export default function ProfileStats({
     user,
     stats,
     initialProgress,
+    privatePlayCount = null,
 }: {
     user: ProfileUser;
     stats: ProfileStatsData;
     initialProgress: ProfileProgressPayload | null;
+    /** 본인에게만 — 숨긴 플레이 횟수(2026-09-26 P1) */
+    privatePlayCount?: number | null;
 }) {
     const t = useTranslations();
     const params = useSearchParams();
@@ -50,7 +53,10 @@ export default function ProfileStats({
                 variant="full"
             />
             <ProfileJudgementSummary judgement={stats.judgement} />
-            <ProfileRankDistribution user={user} />
+            <ProfileRankDistribution
+                user={user}
+                privatePlayCount={privatePlayCount}
+            />
             <ProfileNoteRates notes={stats.notes} />
         </div>
     );

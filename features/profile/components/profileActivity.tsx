@@ -5,6 +5,7 @@ import StatStrip from "@/components/ui/statStrip";
 import type { ProfileActivity as ProfileActivityData } from "@/features/profile/schemas/profileStatsSchema";
 import type { ProfileListPayload } from "@/features/profile/schemas/publicProfileSchema";
 import { PROFILE_ACTIVITY_BATCH_SIZE } from "@/features/profile/schemas/publicProfileSchema";
+import ProfileOnlyMe from "./profileOnlyMe";
 import ProfilePlaysList from "./profilePlaysList";
 
 const LEVELS = [0, 1, 2, 3, 4, 5, 6] as const;
@@ -22,11 +23,14 @@ export default function ProfileActivity({
     userId,
     activity,
     initialRecent,
+    onlyMe = false,
 }: {
     userId: number;
     activity: ProfileActivityData;
     /** 점수 비공개 프로필을 남이 보면 null — 목록 없이 달력만 */
     initialRecent: ProfileListPayload | null;
+    /** 숨긴 플레이 활동을 본인이 볼 때 — 제목 아래 「나에게만 보입니다」(2026-09-26 P1) */
+    onlyMe?: boolean;
 }) {
     const t = useTranslations();
     const locale = useLocale();
@@ -48,6 +52,7 @@ export default function ProfileActivity({
                 <h2 id="profile-activity-title" className="nl-section-title">
                     {t("profile.tabs.activity")}
                 </h2>
+                {onlyMe ? <ProfileOnlyMe /> : null}
                 <StatStrip
                     label={t("profile.tabs.activity")}
                     items={[

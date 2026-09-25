@@ -90,13 +90,18 @@ export default async function ProfilePage({
             offset: 0,
             limit: 5,
         }),
-        getPublicProfilePlays(id, {
-            kind: "recent",
-            mode: "basic",
-            metric: "grade",
-            offset: 0,
-            limit: 5,
-        }),
+        // 본인에게는 숨긴 최근 플레이도 보인다(2026-09-26 P1)
+        getPublicProfilePlays(
+            id,
+            {
+                kind: "recent",
+                mode: "basic",
+                metric: "grade",
+                offset: 0,
+                limit: 5,
+            },
+            { owner: isOwner }
+        ),
         getPublicProfileProgress(id, {
             mode,
             metric: "grade",
@@ -116,6 +121,7 @@ export default async function ProfilePage({
             initialRecent={initialRecent}
             levels={stats.levels}
             pinned={pinned}
+            recentOnlyMe={isOwner && profileData.user.hide_play_activity}
         />
     );
 }

@@ -276,7 +276,9 @@ for (const locale of ["ko", "ja", "en"]) {
         // 「통계」 탭(2026-09-26) — 판정 색 · 배치(폰 한 줄 · 태블릿 판정 | 랭크 · 넓은 화면 성장 추이 2 | 레벨별 달성 1)
         await page.goto(`/${locale}/profile/1/stats`);
         await expect(
-            page.locator(".nl-profile-stats .nl-profile-levels")
+            page.locator(
+                '.nl-profile-stats:not([aria-busy="true"]) .nl-profile-levels'
+            )
         ).toBeVisible();
         const colors = {
             sjust: "rgb(255, 141, 204)",
@@ -304,7 +306,9 @@ for (const locale of ["ko", "ja", "en"]) {
             await page.setViewportSize({ width, height: 900 });
             const box = async (name: string) =>
                 (await page
-                    .locator(`.nl-profile-stats > .nl-profile-${name}`)
+                    .locator(
+                        `.nl-profile-stats:not([aria-busy="true"]) > .nl-profile-${name}`
+                    )
                     .boundingBox())!;
             const [levels, progress, judgement, ranks] = await Promise.all(
                 ["levels", "progress", "judgement", "ranks"].map(box)
@@ -329,7 +333,9 @@ for (const locale of ["ko", "ja", "en"]) {
         }
         // 누적 막대 줄들은 라벨 폭이 달라도 막대 시작이 같다(subgrid)
         const starts = await page
-            .locator(".nl-profile-levels .nl-stacked-bar__track")
+            .locator(
+                '.nl-profile-stats:not([aria-busy="true"]) .nl-profile-levels .nl-stacked-bar__track'
+            )
             .evaluateAll((nodes) =>
                 nodes.map((node) => Math.round(node.getBoundingClientRect().x))
             );
@@ -382,8 +388,8 @@ test("profile activity tab shows a year calendar that starts at today's end and 
                 () => document.documentElement.scrollWidth - innerWidth
             )
         ).toBeLessThanOrEqual(0);
-        // 업적 · 활동 탭은 모드 세그먼트가 없다
-        await expect(page.locator(".nl-profile-identity__mode")).toHaveCount(0);
+        // 머리는 모든 탭이 같다 — 탭을 옮겨도 모드 세그먼트 · 수치 상자가 사라지지 않는다(2026-09-26, 사용자)
+        await expect(page.locator(".nl-profile-identity__mode")).toHaveCount(1);
     }
     const audit = await new AxeBuilder({ page }).include("main").analyze();
     expect(audit.violations).toEqual([]);

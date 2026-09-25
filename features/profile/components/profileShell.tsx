@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { getCachedProfileData } from "@/app/(nevigation)/profile/[id]/data";
 import { summarizeAchievements } from "@/features/achievements/achievementDefinitions";
 import { getProfileHeaderContext } from "@/features/profile/server/profileOverviewService";
+import { getOwnerPrivateFields } from "@/features/profile/server/ownerPrivateService";
 import { hideProfileScores } from "@/features/profile/server/scoreVisibility";
 import { getServerI18n } from "@/lib/i18n/server";
 import getSession from "@/lib/session";
@@ -27,9 +28,11 @@ export default async function ProfileShell({ id }: { id: number }) {
     const user = scoresHidden
         ? hideProfileScores(profileData.user)
         : profileData.user;
-    const header = scoresHidden
-        ? null
-        : await getProfileHeaderContext(id, isOwner);
+    const [header, ownerPrivate] = await Promise.all([
+        scoresHidden ? null : getProfileHeaderContext(id, isOwner),
+        // 본인에게는 숨긴 항목도 자물쇠와 함께 보인다(2026-09-26 P1)
+        isOwner ? getOwnerPrivateFields(id) : null,
+    ]);
     const syncState = header?.sync;
     // 본인에게만 — 끝난 동기화는 「N일 전」 값, 나머지 상태는 문장(2026-09-26 H1 활동 줄)
     const sync = !isOwner
@@ -69,6 +72,7 @@ export default async function ProfileShell({ id }: { id: number }) {
                 sync={sync}
                 achievements={achievements}
                 header={header}
+                privateFields={ownerPrivate}
                 showSyncAction={
                     isOwner &&
                     Boolean(
@@ -80,7 +84,7 @@ export default async function ProfileShell({ id }: { id: number }) {
             <ProfileTabs
                 userId={id}
                 scoresHidden={scoresHidden}
-                activityHidden={profileData.user.hide_play_activity}
+                activityHidden={!isOwner && profileData.user.hide_play_activity}
             />
         </>
     );

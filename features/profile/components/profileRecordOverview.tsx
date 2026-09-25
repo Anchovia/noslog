@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Lock } from "lucide-react";
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import { ScoreGrade } from "@/features/music/components/chartLeaderboard";
 import JudgementMarker, {
@@ -15,10 +15,24 @@ import type { ProfileStats } from "@/features/profile/schemas/profileStatsSchema
  * 「통계」 탭의 기록 구역(2026-09-26) — 랭크 분포(공식 사이트 랭크 수 + FC 막대 · 플레이 횟수, 막대 = 등급 색) · 판정 요약 · 노트 종류별 성공률.
  * 개요 옆 열에 있던 「기록 개요」 를 나눠 옮겼다(개요 옆 열은 레벨별 달성 요약)
  */
-export function ProfileRankDistribution({ user }: { user: ProfileUser }) {
+export function ProfileRankDistribution({
+    user,
+    privatePlayCount = null,
+}: {
+    user: ProfileUser;
+    /** 본인에게만 — 공개 설정으로 숨긴 플레이 횟수(자물쇠와 함께, 2026-09-26 P1) */
+    privatePlayCount?: number | null;
+}) {
     const locale = useLocale();
     const t = useTranslations();
     const [expanded, setExpanded] = useState(false);
+    const publicPlayCount =
+        user.play_count !== null && !user.hide_play_count
+            ? user.play_count
+            : null;
+    const playCountPrivate =
+        publicPlayCount === null && privatePlayCount !== null;
+    const playCount = publicPlayCount ?? privatePlayCount;
     const rows = [
         { rank: "P", value: user.score_p },
         { rank: "S", value: user.score_s },
@@ -98,13 +112,26 @@ export function ProfileRankDistribution({ user }: { user: ProfileUser }) {
                 {t(expanded ? "profile.collapse" : "profile.showAllRanks")}
                 <ChevronDown aria-hidden />
             </button>
-            {user.play_count !== null && !user.hide_play_count ? (
+            {playCount !== null ? (
                 <dl className="nl-profile-play-count">
                     <dt className="nl-control nl-muted">
                         {t("profile.playCountLabel")}
                     </dt>
-                    <dd className="nl-metric-value">
-                        {user.play_count.toLocaleString(locale)}
+                    <dd
+                        className="nl-metric-value nl-profile-play-count__value"
+                        data-private={playCountPrivate || undefined}
+                        title={
+                            playCountPrivate ? t("profile.onlyMe") : undefined
+                        }
+                    >
+                        {playCountPrivate ? <Lock aria-hidden /> : null}
+                        {playCount.toLocaleString(locale)}
+                        {playCountPrivate ? (
+                            <span className="sr-only">
+                                {" "}
+                                ({t("profile.onlyMe")})
+                            </span>
+                        ) : null}
                     </dd>
                 </dl>
             ) : null}

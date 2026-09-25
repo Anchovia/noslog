@@ -40,7 +40,8 @@ export async function generateMetadata({
 }
 
 /**
- * 프로필 「활동」 탭(2026-09-26) — 활동 달력 · 요약 · 최근 플레이(한 판씩). 「플레이 활동 비공개」 면 탭이 없고 주소로 들어오면 잠금,
+ * 프로필 「활동」 탭(2026-09-26) — 활동 달력 · 요약 · 최근 플레이(한 판씩). 「플레이 활동 비공개」 면 남에게는 탭이 없고 주소로 들어오면 잠금
+ * (본인에게는 보인다 — P1),
  * 점수 비공개 프로필을 남이 보면 달력 · 요약만(점수가 있는 목록 없음)
  */
 export default async function ProfileActivityRoute({
@@ -57,26 +58,33 @@ export default async function ProfileActivityRoute({
         getSession(),
     ]);
     if (!profileData) notFound();
-    if (profileData.user.hide_play_activity) return <ProfileActivityHidden />;
-    const scoresHidden =
-        session.id !== profileData.user.id && profileData.user.hide_play_scores;
+    const isOwner = session.id === profileData.user.id;
+    // 「플레이 활동 비공개」 — 남에게는 잠금, 본인에게는 「나에게만 보입니다」 와 함께 보인다(2026-09-26 P1)
+    if (profileData.user.hide_play_activity && !isOwner)
+        return <ProfileActivityHidden />;
+    const scoresHidden = !isOwner && profileData.user.hide_play_scores;
     const [activity, initialRecent] = await Promise.all([
         getProfileActivity(id),
         scoresHidden
             ? null
-            : getPublicProfilePlays(id, {
-                  kind: "recent",
-                  mode: "basic",
-                  metric: "grade",
-                  offset: 0,
-                  limit: PROFILE_ACTIVITY_BATCH_SIZE,
-              }),
+            : getPublicProfilePlays(
+                  id,
+                  {
+                      kind: "recent",
+                      mode: "basic",
+                      metric: "grade",
+                      offset: 0,
+                      limit: PROFILE_ACTIVITY_BATCH_SIZE,
+                  },
+                  { owner: isOwner }
+              ),
     ]);
     return (
         <ProfileActivity
             userId={id}
             activity={activity}
             initialRecent={initialRecent}
+            onlyMe={isOwner && profileData.user.hide_play_activity}
         />
     );
 }
