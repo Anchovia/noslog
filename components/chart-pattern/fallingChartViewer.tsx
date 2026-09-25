@@ -28,6 +28,12 @@ import CompactSelect from "@/components/ui/compactSelect";
 import { getMetronomePeakGain } from "@/lib/chart-pattern/metronome";
 import { chartPianoColors } from "@/lib/chart-pattern/piano";
 import {
+    HAND_COLORS,
+    hexToNumber,
+    PRESSED_HAND_COLORS,
+    STAGE_CANVAS,
+} from "@/lib/chart-pattern/stageColors";
+import {
     getActivePlaybackPianoRanges,
     getApproachDurationMs,
     getChartPlaybackDurationMs,
@@ -78,9 +84,10 @@ interface ProjectedRange {
     depth: number;
 }
 
+// 손 색 · 무대 검정은 토큰(`--nl-hand-*` · `--nl-stage-canvas`)과 같은 값(2026-09-26)
 const colors = {
-    left: 0x4fc8dc,
-    right: 0xe85f5d,
+    left: hexToNumber(HAND_COLORS.left),
+    right: hexToNumber(HAND_COLORS.right),
     noteFace: 0xf8f7f1,
     judgment: 0xf2f0e9,
     judgmentEdge: 0x8f929d,
@@ -325,7 +332,7 @@ function sampleProjectedSegment(
 const TRILL_FADE_STRIPS = 10;
 const TRILL_SOLID_ALPHA = 0.82;
 const TRILL_DIAMOND = 0xf2c75c;
-const TRILL_TAIL = 0x070910;
+const TRILL_TAIL = hexToNumber(STAGE_CANVAS);
 
 /**
  * 트릴(2026-09-24 B′, 사용자) — 두 자리를 합친 범위 전체에 촘촘한 육각형, 칠 자리 쪽만 진하고 반대편은 옅어진다.
@@ -468,7 +475,7 @@ function drawPlayfield(
     judgmentY: number
 ) {
     graphics.rect(0, 0, width, height).fill({
-        color: 0x070910,
+        color: hexToNumber(STAGE_CANVAS),
         alpha: 0.74,
     });
     for (const lane of CHART_LANE_GROUP_BOUNDARIES) {
@@ -576,9 +583,9 @@ function drawPiano(
             .fill({
                 color:
                     activeHand === "left"
-                        ? chartPianoColors.pressedLeft
+                        ? PRESSED_HAND_COLORS.left
                         : activeHand === "right"
-                          ? chartPianoColors.pressedRight
+                          ? PRESSED_HAND_COLORS.right
                           : lane % 2 === 0
                             ? chartPianoColors.white
                             : chartPianoColors.whiteAlt,

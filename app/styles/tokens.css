@@ -114,6 +114,10 @@
     --nl-content-pending: #8a8a8a;
     --nl-surface-media-scrim: #00000099;
     --nl-content-on-media: #ffffff;
+    /* 채보 무대(2026-09-26) — 테마와 무관하게 늘 어둡다. 캔버스 값은 lib/chart-pattern/stageColors.ts 와 같게 */
+    --nl-stage-canvas: #070910;
+    --nl-hand-left: #4fc8dc;
+    --nl-hand-right: #e85f5d;
     --nl-brand-discord: #5865f2;
     --nl-brand-on-discord: #ffffff;
     --nl-feedback-destructive-surface: #ae2e24;
@@ -222,6 +226,10 @@ html[data-theme="light"] .noslog-ui,
     --nl-content-pending: #717171;
     --nl-surface-media-scrim: #00000099;
     --nl-content-on-media: #ffffff;
+    /* 채보 무대(2026-09-26) — 테마와 무관하게 늘 어둡다. 캔버스 값은 lib/chart-pattern/stageColors.ts 와 같게 */
+    --nl-stage-canvas: #070910;
+    --nl-hand-left: #4fc8dc;
+    --nl-hand-right: #e85f5d;
     --nl-brand-discord: #5865f2;
     --nl-brand-on-discord: #ffffff;
     --nl-feedback-destructive-surface: #c9372c;

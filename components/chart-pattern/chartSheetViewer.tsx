@@ -25,6 +25,7 @@ import {
     getGlissandoSnapRenderPoints,
 } from "@/lib/chart-pattern/editor";
 import { getChartPlaybackDurationMs } from "@/lib/chart-pattern/playback";
+import { HAND_COLORS, STAGE_CANVAS } from "@/lib/chart-pattern/stageColors";
 import {
     trillHexes,
     trillSolidSpan,
@@ -110,10 +111,8 @@ const PANEL_NOTE_EDGE_INSET = 4;
 export const PANEL_MEASURE_EDGE_INSET = 5;
 const PANEL_BOUNDARY_EPSILON_MS = 0.001;
 
-const handColors: Record<ChartHand, string> = {
-    left: "#62d4e8",
-    right: "#f06b68",
-};
+// 손 색 = 토큰 `--nl-hand-*` 와 같은 값(2026-09-26 H1 — 범례 · 전체 악보 · 낙하형 한 벌)
+const handColors: Record<ChartHand, string> = HAND_COLORS;
 
 function chartContentEnd(document: ChartDocument) {
     return document.notes.reduce((maximum, note) => {
@@ -489,7 +488,7 @@ export default function ChartSheetViewer({
             {/* 폰 · 태블릿 머리(2026-09-26 Y1, 유튜브 폰 시청 화면) — 제목 한 줄 → 메타 한 줄 + 「더보기」 → 작성자 · 아이콘 동작 48 */}
             <header className="nl-chart-viewer__head nl-chart-viewer__head--compact">
                 <div className="nl-chart-viewer__titles">
-                    <h1 className="nl-section-title nl-chart-viewer__compact-title">
+                    <h1 className="nl-page-title nl-chart-viewer__compact-title">
                         {title}
                     </h1>
                     <div className="nl-chart-viewer__compact-meta">
@@ -620,7 +619,7 @@ export function drawPanel(
         Math.min(chartBottom - PANEL_MEASURE_EDGE_INSET, yForTime(timeMs));
 
     context.clearRect(0, 0, PANEL_WIDTH, PANEL_HEIGHT);
-    context.fillStyle = "#0b0b10";
+    context.fillStyle = STAGE_CANVAS;
     context.fillRect(0, 0, PANEL_WIDTH, PANEL_HEIGHT);
 
     context.save();
@@ -869,7 +868,7 @@ function drawSheetNote(
         // 끝 막대(어두운 막대, 게임과 같은 자리)
         const endY = yForRenderedTick(note.tick + note.durationTicks);
         context.save();
-        context.fillStyle = "#0b0b10";
+        context.fillStyle = STAGE_CANVAS;
         context.strokeStyle = handColors[note.hand];
         context.lineWidth = 1.2;
         context.beginPath();
