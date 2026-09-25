@@ -1392,7 +1392,7 @@ export const enMessages = {
     "profile.activity.cell": "{date} · {count} plays",
     "profile.activity.less": "Less",
     "profile.activity.more": "More",
-    "profile.activity.scrollHint": "Scroll sideways for the full year",
+    "profile.activity.scrollHint": "Past year of plays",
     "profile.activity.hidden": "This player keeps their play activity private.",
     "profile.pinned.title": "Pinned records",
     "profile.pinned.auto": "Automatic · top 3 bests",

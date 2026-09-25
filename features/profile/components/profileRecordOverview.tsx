@@ -7,9 +7,17 @@ import { ScoreGrade } from "@/features/music/components/chartLeaderboard";
 import JudgementMarker, {
     judgementLabels,
 } from "@/components/ui/judgementMarker";
+import StackedBar from "@/components/ui/stackedBar";
 import type { ProfileUser } from "@/components/profile/dashboard/profileTypes";
 import type { ProfileStats } from "@/features/profile/schemas/profileStatsSchema";
 
+const judgementColors: Record<keyof typeof judgementLabels, string> = {
+    sjust: "var(--nl-judgement-s-just)",
+    just: "var(--nl-judgement-just)",
+    good: "var(--nl-judgement-good)",
+    near: "var(--nl-judgement-near)",
+    miss: "var(--nl-judgement-miss)",
+};
 /**
  * 「통계」 탭의 기록 구역(2026-09-26) — 랭크 분포(공식 사이트 랭크 수 + FC 막대 · 플레이 횟수, 막대 = 등급 색) · 판정 요약.
  * 개요 옆 열에 있던 「기록 개요」 를 나눠 옮겼다(개요 옆 열은 레벨별 달성 요약)
@@ -81,11 +89,11 @@ export function ProfileRankDistribution({
                             )}
                         </dt>
                         <dd
-                            className="nl-profile-distribution__track"
+                            className="nl-bar-list__track nl-profile-distribution__track"
                             aria-hidden
                         >
                             <span
-                                className="nl-chart-reveal nl-chart-bar"
+                                className="nl-bar-list__fill nl-chart-reveal nl-chart-bar"
                                 data-rank={row.rank}
                                 style={{
                                     width: `${((row.value ?? 0) / maximum) * 100}%`,
@@ -170,21 +178,19 @@ export function ProfileJudgementSummary({
             </div>
             {total > 0 ? (
                 <>
-                    <div
-                        className="nl-profile-judgement-stack nl-chart-reveal"
-                        aria-hidden
-                    >
-                        {keys.map((key) => (
-                            <span
-                                key={key}
-                                data-judgement={key}
-                                className="nl-chart-bar"
-                                style={{
-                                    width: `${(judgement.counts[key] / total) * 100}%`,
-                                }}
-                            />
-                        ))}
-                    </div>
+                    {/* 공용 누적 막대 한 줄(라벨 없음, 2026-09-26 D1) */}
+                    <StackedBar
+                        rows={[
+                            {
+                                key: "judgement",
+                                segments: keys.map((key) => ({
+                                    key,
+                                    value: judgement.counts[key],
+                                    color: judgementColors[key],
+                                })),
+                            },
+                        ]}
+                    />
                     <dl className="nl-profile-judgements">
                         {keys.map((key) => (
                             <div key={key}>

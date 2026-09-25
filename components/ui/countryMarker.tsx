@@ -2,7 +2,14 @@ import Image from "next/image";
 import { Globe } from "lucide-react";
 import { useTranslations } from "@/components/i18n/localeProvider";
 
-export default function CountryMarker({ country }: { country: string }) {
+/** 국기 칸 16(기본) · 24(large — 프로필 이름 옆, 2026-09-26 D5). 그림 높이는 칸의 3/4 */
+export default function CountryMarker({
+    country,
+    size,
+}: {
+    country: string;
+    size?: "large";
+}) {
     const t = useTranslations();
     const flag = country === "ko-KR" ? "kr" : country === "ja-JP" ? "jp" : null;
     const label = t(
@@ -13,13 +20,13 @@ export default function CountryMarker({ country }: { country: string }) {
               : "rankings.region.other"
     );
     return (
-        <span className="nl-country-marker">
+        <span className="nl-country-marker" data-size={size}>
             {flag ? (
                 <Image
                     src={`/flags/${flag}.png`}
                     alt={label}
-                    width={16}
-                    height={12}
+                    width={size === "large" ? 24 : 16}
+                    height={size === "large" ? 18 : 12}
                 />
             ) : (
                 <Globe role="img" aria-label={label} />

@@ -1089,6 +1089,13 @@ html[data-theme="light"] .noslog-ui,
 .noslog-ui .nl-stacked-bar[data-valued] {
     grid-template-columns: minmax(40px, max-content) minmax(0, 1fr) max-content;
 }
+/* 라벨 없는 누적 막대(프로필 판정 요약 한 줄, 2026-09-26 D1) — 라벨 열 없이 막대(+ 값) */
+.noslog-ui .nl-stacked-bar[data-unlabeled] {
+    grid-template-columns: minmax(0, 1fr);
+}
+.noslog-ui .nl-stacked-bar[data-unlabeled][data-valued] {
+    grid-template-columns: minmax(0, 1fr) max-content;
+}
 .noslog-ui .nl-stacked-bar__row {
     display: grid;
     grid-column: 1 / -1;

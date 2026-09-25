@@ -1381,7 +1381,7 @@ export const jaMessages = {
     "profile.activity.cell": "{date} · {count}回",
     "profile.activity.less": "少",
     "profile.activity.more": "多",
-    "profile.activity.scrollHint": "横にスクロールで1年分",
+    "profile.activity.scrollHint": "直近1年の記録",
     "profile.activity.hidden": "このプレイヤーはプレイ活動を公開していません。",
     "profile.pinned.title": "固定記録",
     "profile.pinned.auto": "自動 · ベスト上位3曲",

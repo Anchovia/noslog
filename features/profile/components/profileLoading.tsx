@@ -275,7 +275,7 @@ export function ProfileStatsTabSkeleton() {
                         {t("profile.judgementSummary")}
                     </h2>
                 </div>
-                <div className="nl-profile-judgement-stack nl-skeleton" />
+                <StackedBar rows={[{ key: "judgement", segments: [] }]} />
                 <dl className="nl-profile-judgements">
                     {judgementKeys.map((key) => (
                         <div key={key}>
@@ -311,7 +311,7 @@ export function ProfileStatsTabSkeleton() {
                                     <span className="nl-score-grade nl-skeleton" />
                                 )}
                             </dt>
-                            <dd className="nl-profile-distribution__track" />
+                            <dd className="nl-bar-list__track nl-profile-distribution__track" />
                             <dd className="nl-metric-value">
                                 <SkeletonText
                                     className="nl-metric-value"

@@ -1378,7 +1378,7 @@ export const koMessages = {
     "profile.activity.cell": "{date} · {count}판",
     "profile.activity.less": "적게",
     "profile.activity.more": "많이",
-    "profile.activity.scrollHint": "옆으로 밀면 1년",
+    "profile.activity.scrollHint": "최근 1년 기록",
     "profile.activity.hidden": "이 플레이어는 플레이 활동을 공개하지 않습니다.",
     "profile.pinned.title": "고정 기록",
     "profile.pinned.auto": "자동 · 베스트 상위 3곡",

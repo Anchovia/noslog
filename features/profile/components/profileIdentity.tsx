@@ -30,6 +30,12 @@ import type {
     ProfileUser,
 } from "@/components/profile/dashboard/profileTypes";
 
+/** 본인용 공유 · 설정 = 공용 보조 아이콘 버튼 M(2026-09-26 D4 — 폰 36 · 1056 이상 32) */
+const ownerActionClass = foundationButtonClass({
+    variant: "secondary",
+    size: "icon-sm",
+});
+
 function initialForName(name: string | null, locale: string) {
     if (!name) return undefined;
     const graphemes = new Intl.Segmenter(locale, {
@@ -164,6 +170,7 @@ export default function ProfileIdentity({
                         height: "var(--nl-profile-avatar-size)",
                     }}
                     fallbackInitial={initialForName(user.username, locale)}
+                    initialClassName="nl-display"
                     className="nl-profile-identity__avatar"
                 />
                 <div className="nl-profile-identity__name-stack">
@@ -175,21 +182,21 @@ export default function ProfileIdentity({
                         >
                             {name}
                         </h1>
-                        <CountryMarker country={user.country} />
+                        <CountryMarker country={user.country} size="large" />
                         {/* 공유 · 설정은 이름 줄에만 붙는다(2026-09-25) — 아래 명판 · 배지 줄이 머리 폭 끝까지 가게 */}
                         {isOwner ? (
                             <div className="nl-profile-identity__actions">
                                 <ProfileShareDialog
                                     user={user}
                                     mode={mode}
-                                    triggerClassName="nl-profile-owner-action"
+                                    triggerClassName={ownerActionClass}
                                 />
                                 <Link
                                     href={href("/settings")}
                                     aria-label={t("profile.settings")}
-                                    className="nl-profile-owner-action"
+                                    className={ownerActionClass}
                                 >
-                                    <Settings aria-hidden />
+                                    <Settings size={20} aria-hidden />
                                 </Link>
                             </div>
                         ) : null}

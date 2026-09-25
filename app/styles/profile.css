@@ -5,8 +5,8 @@
     min-width: 0;
     container: profile-identity / inline-size;
 }
-/* 머리 격자(2026-09-25 H3 · K2 · M2 · CM1) — 폰: 아바타 · 이름 → 메타 → 모드(폭 전체) → 수치 상자,
-   672 이상: 모드가 이름 줄 오른쪽 · 메타와 수치 상자는 아래로, 1056 이상: 수치가 머리 오른쪽(상자 없음) */
+/* 머리 격자(2026-09-25 H3 · K2 · M2 · CM1) — 폰: 아바타 · 이름 → 정보 → 모드(폭 전체) → 수치 상자,
+   672 이상: 모드가 이름 줄 오른쪽 · 정보와 수치 상자는 아래로, 1056 이상: 수치 상자가 머리 오른쪽 */
 .noslog-ui .nl-profile-identity__row {
     --nl-profile-avatar-size: 64px;
     display: grid;
@@ -92,9 +92,9 @@
     grid-area: mode;
     min-width: 0;
 }
-/* 핵심 수치(2026-09-26 B1) — 칸 나눈 상자: 왼쪽 절반 공식 Grd(라벨 metadata + metric-display 32),
-   오른쪽 절반 위 세계 · 아래 국가(라벨 metadata 왼쪽 · 순위 metric-value 오른쪽). 수치 띠와 같은 만듦새 —
-   면 surface · 칸 사이 1px(gap + divider 바탕) · 모서리 8. 레이팅 줄은 두지 않는다 */
+/* 핵심 수치(2026-09-26 B1 · T1) — 칸 나눈 상자: 왼쪽 절반 Grade · Rating 고르기 + metric-display 32,
+   오른쪽 절반 위 세계 순위 · 아래 국가 순위(라벨 control 왼쪽 · 순위 component-title 오른쪽). 수치 띠와 같은 만듦새 —
+   면 surface · 칸 사이 1px(gap + divider 바탕) · 모서리 8 */
 .noslog-ui .nl-profile-headline {
     grid-area: headline;
     min-width: 0;
@@ -199,7 +199,6 @@
         grid-template-areas:
             "avatar identity mode"
             "avatar meta headline";
-        row-gap: var(--nl-spacing-12);
     }
     .noslog-ui .nl-profile-identity__mode {
         width: 240px;
@@ -235,13 +234,6 @@
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-.noslog-ui .nl-profile-identity__name .nl-country-marker {
-    width: var(--nl-icon-large);
-    height: var(--nl-icon-large);
-}
-.noslog-ui .nl-profile-identity__name .nl-country-marker img {
-    height: 18px;
-}
 .noslog-ui .nl-profile-identity__exams,
 .noslog-ui .nl-profile-identity__actions {
     display: flex;
@@ -263,34 +255,6 @@
 .noslog-ui .nl-profile-identity__avatar.nl-skeleton {
     width: var(--nl-profile-avatar-size);
     height: var(--nl-profile-avatar-size);
-}
-.noslog-ui .nl-profile-identity__avatar .nl-metadata {
-    font-size: var(--nl-type-size-40);
-    line-height: var(--nl-type-line-height-48);
-    font-weight: var(--nl-type-weight-bold);
-}
-.noslog-ui .nl-profile-owner-action {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    width: 32px;
-    height: 32px;
-    border: var(--nl-stroke-default) solid var(--nl-border-default);
-    border-radius: var(--nl-radius-control);
-}
-.noslog-ui .nl-profile-owner-action svg {
-    width: var(--nl-icon-medium);
-    height: var(--nl-icon-medium);
-}
-@media (hover: hover) {
-    .noslog-ui .nl-profile-owner-action:hover {
-        --nl-state-layer: var(--nl-interaction-hover);
-        background-image: linear-gradient(
-            var(--nl-state-layer),
-            var(--nl-state-layer)
-        );
-    }
 }
 .noslog-ui .nl-profile {
     gap: var(--nl-spacing-32);
@@ -447,7 +411,6 @@
     grid-area: chart;
     justify-self: end;
     white-space: nowrap;
-    font-variant-numeric: tabular-nums;
 }
 @media (hover: hover) {
     .noslog-ui .nl-profile-play-row:hover {
@@ -609,18 +572,13 @@
     white-space: nowrap;
     text-align: right;
 }
+/* 트랙 = 공용 막대 목록 트랙(nl-bar-list__track — 8 · 모서리 4 · raised, 2026-09-26 D1) */
 .noslog-ui .nl-profile-distribution__track {
     flex: 1;
     min-width: 0;
-    height: 6px;
-    border-radius: var(--nl-radius-full);
-    background: var(--nl-border-divider);
 }
 /* 막대 색 = 등급 색(2026-09-26 D7 · C2a) — P 분홍 · S 노랑 · A+ · A 빨강 두 단계 · B+ · B 파랑 · FC 초록, 색을 정하지 않은 C · D 는 흐린 글자색 */
 .noslog-ui .nl-profile-distribution__track > span {
-    display: block;
-    height: 100%;
-    border-radius: inherit;
     background: var(--nl-content-subdued);
 }
 .noslog-ui .nl-profile-distribution__track > [data-rank="P"] {
@@ -665,12 +623,6 @@
     gap: var(--nl-spacing-8);
     flex-wrap: wrap;
 }
-.noslog-ui .nl-profile-judgement-stack {
-    display: flex;
-    height: 16px;
-    border-radius: var(--nl-radius-full);
-    overflow: hidden;
-}
 .noslog-ui .nl-profile-judgements > div {
     display: flex;
     align-items: center;
@@ -684,10 +636,11 @@
     align-items: center;
     gap: var(--nl-spacing-8);
 }
+/* 판정 색 표시 = 원 8(악곡 상세 판정 분석과 같음, 2026-09-26 D2) */
 .noslog-ui .nl-judgement-marker i {
     display: inline-block;
-    width: 28px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
     border-radius: var(--nl-radius-full);
 }
 .noslog-ui [data-judgement="miss"] {
@@ -705,7 +658,6 @@
 .noslog-ui [data-judgement="near"] {
     --judgement-color: var(--nl-judgement-near);
 }
-.noslog-ui .nl-profile-judgement-stack > span,
 .noslog-ui .nl-judgement-marker i {
     background: var(--judgement-color);
 }
@@ -729,9 +681,6 @@
 .noslog-ui .nl-profile-progress__controls .nl-segments {
     flex: 1;
 }
-.noslog-ui .nl-profile-progress__controls .nl-segments__item {
-    white-space: nowrap;
-}
 .noslog-ui .nl-profile-progress__controls .nl-compact-select {
     flex-shrink: 0;
 }
@@ -748,33 +697,8 @@
         flex: none;
     }
 }
-.noslog-ui .nl-profile-progress .nl-line-chart__area {
-    padding-top: 0;
-    gap: var(--nl-spacing-16);
-}
 .noslog-ui .nl-profile-progress__content[aria-busy="true"] {
     color: var(--nl-content-pending);
-}
-@container profile-section (min-width: 334px) {
-    .noslog-ui .nl-profile-section .nl-tabs .nl-metric-switch__item {
-        padding-inline: var(--nl-spacing-16);
-    }
-}
-@container profile-section (min-width: 358px) {
-    .noslog-ui .nl-profile-section:lang(ko) .nl-metric-switch__full {
-        display: inline;
-    }
-    .noslog-ui .nl-profile-section:lang(ko) .nl-metric-switch__short {
-        display: none;
-    }
-}
-@container profile-section (min-width: 440px) {
-    .noslog-ui .nl-profile-section .nl-metric-switch__full {
-        display: inline;
-    }
-    .noslog-ui .nl-profile-section .nl-metric-switch__short {
-        display: none;
-    }
 }
 /* 프로필 카드 미리보기 = 카드 비율(1200×630) 자리를 먼저 잡는다. 창 규격은 공용 nl-image-share(foundation.css) */
 .noslog-ui .nl-profile-card-preview {
@@ -844,7 +768,7 @@
     display: none;
 }
 /* 기여 구역(2026-09-24 P1) — 등급 줄(태그 · 점수 · 다음 등급까지) →8→ 진행 막대 →12→ 종류별 수치 띠,
-   본인에게만 그 아래 「내 제안」(메타 제목 →8→ 선 목록 · 반려 사유는 오류 글자색) */
+   본인에게만 그 아래 「내 제안」 선 목록(반려 사유는 오류 글자색) */
 .noslog-ui .nl-profile-contribution__card {
     display: flex;
     flex-direction: column;
@@ -910,7 +834,7 @@
 .noslog-ui .nl-profile-section .nl-segments__item {
     white-space: nowrap;
 }
-/* 「기록」 탭(2026-09-25 2단계) — 2단 탭 | 고스트 정렬 한 줄(모든 폭) →16→ 표. 검색 · 필터 없음(2026-09-26) */
+/* 「기록」 탭(2026-09-25 2단계) — 세그먼트 M | 고스트 정렬 한 줄(모든 폭, 2026-09-26 R1) →16→ 표. 검색 · 필터 없음(2026-09-26) */
 .noslog-ui .nl-profile-records {
     gap: var(--nl-spacing-16);
 }
@@ -923,7 +847,7 @@
     min-width: 0;
 }
 
-/* 레벨별 달성(2026-09-26 R2) — 제목 | 램프 · 랭크 세그먼트(M) →12→ (통계 탭: 난이도 세그먼트 →12→) 누적 막대 + 값 →12→ 범례 */
+/* 레벨별 달성(2026-09-26 R2 · L1) — 제목 →12→ (통계 탭: 난이도 세그먼트 →12→) 한 막대 + 값 →12→ 범례 */
 .noslog-ui .nl-profile-levels__difficulty {
     align-self: stretch;
 }
@@ -963,8 +887,8 @@
     gap: var(--nl-spacing-4);
 }
 .noslog-ui .nl-profile-levels .nl-profile-legend i {
-    width: 12px;
-    height: 12px;
+    width: var(--nl-spacing-12);
+    height: var(--nl-spacing-12);
     border-radius: var(--nl-radius-control);
 }
 /* 레벨별 달성 범례 = 칸 강조 전환(2026-09-26 L1) — 글자 그대로 누르는 버튼, 고른 항목만 기본 글자색 */
@@ -991,7 +915,6 @@
 }
 .noslog-ui .nl-profile-legend__item:focus-visible {
     outline: var(--nl-stroke-default) solid var(--nl-focus-ring);
-    outline-offset: 2px;
 }
 .noslog-ui .nl-profile-legend i[data-empty] {
     border: var(--nl-stroke-default) solid var(--nl-border-default);
@@ -1086,8 +1009,8 @@
     background: var(--nl-surface-raised);
 }
 .noslog-ui .nl-profile-legend .nl-profile-calendar__cell {
-    width: 12px;
-    height: 12px;
+    width: var(--nl-spacing-12);
+    height: var(--nl-spacing-12);
 }
 .noslog-ui .nl-profile-calendar__cell[data-level="1"] {
     background: var(--nl-local-data-bucket-1);
@@ -1123,7 +1046,7 @@
     border-radius: var(--nl-radius-control);
 }
 
-/* 고정 기록(2026-09-26 S2) — 구분선 목록, 줄 = 자켓 48 · 곡 / 난이도 · 점수 · 등급 + FC / 한 줄 소감 · 오른쪽 위 곡 순위, 위아래 8(가이드 목록 줄 · T4) */
+/* 고정 기록(2026-09-26 S2) — 구분선 목록, 줄 = 자켓 48 · 곡 / 난이도 · 점수 · 등급 + FC / 한 줄 소감 · 오른쪽 위 Grd · 아래 곡 순위, 위아래 8(가이드 목록 줄 · T4) */
 .noslog-ui .nl-profile-pinned__list {
     display: flex;
     flex-direction: column;

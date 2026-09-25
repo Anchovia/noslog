@@ -12,7 +12,8 @@ interface StackedBarSegment {
 
 export interface StackedBarRow {
     key: string;
-    label: string;
+    /** 줄 라벨 — 모든 줄에 없으면 라벨 열 없이 막대만(프로필 판정 요약 한 줄, 2026-09-26 D1) */
+    label?: string;
     segments: StackedBarSegment[];
     /** 줄 오른쪽 값(metric-value) — 한 줄이라도 있으면 모든 줄에 값 칸이 생긴다(프로필 레벨별 달성, 2026-09-26) */
     value?: ReactNode;
@@ -31,10 +32,12 @@ export default function StackedBar({
     className?: string;
 }) {
     const valued = rows.some((row) => row.value !== undefined);
+    const labeled = rows.some((row) => row.label !== undefined);
     return (
         <div
             className={cn("nl-stacked-bar", className)}
             data-valued={valued || undefined}
+            data-unlabeled={!labeled || undefined}
             aria-hidden="true"
         >
             {rows.map((row) => {
@@ -44,9 +47,11 @@ export default function StackedBar({
                 );
                 return (
                     <div key={row.key} className="nl-stacked-bar__row">
-                        <span className="nl-metadata nl-muted">
-                            {row.label}
-                        </span>
+                        {labeled ? (
+                            <span className="nl-metadata nl-muted">
+                                {row.label}
+                            </span>
+                        ) : null}
                         <span className="nl-stacked-bar__track">
                             {total > 0 ? (
                                 <span className="nl-stacked-bar__fill nl-chart-reveal">

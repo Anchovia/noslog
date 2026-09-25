@@ -288,15 +288,20 @@ for (const locale of ["ko", "ja", "en"]) {
             near: "rgb(112, 184, 255)",
             miss: "rgb(180, 180, 180)",
         };
-        // 판정 값이 없는 플레이어(시드 E2E_RANKER)는 판정 막대가 없다
-        const judged =
-            (await page.locator(".nl-profile-judgement-stack").count()) > 0;
+        // 판정 값이 없는 플레이어(시드 E2E_RANKER)는 판정 막대가 없다. 막대 = 공용 누적 막대(2026-09-26 D1)
+        const segments = page.locator(
+            ".nl-profile-judgement .nl-stacked-bar__segment"
+        );
+        const judged = (await segments.count()) > 0;
+        if (judged) {
+            const painted = await segments.evaluateAll((nodes) =>
+                nodes.map((node) => getComputedStyle(node).backgroundColor)
+            );
+            expect(
+                painted.every((color) => Object.values(colors).includes(color))
+            ).toBe(true);
+        }
         for (const [judgement, color] of judged ? Object.entries(colors) : []) {
-            await expect(
-                page.locator(
-                    `.nl-profile-judgement-stack > [data-judgement="${judgement}"]`
-                )
-            ).toHaveCSS("background-color", color);
             await expect(
                 page.locator(
                     `.nl-profile-judgements [data-judgement="${judgement}"] i`
