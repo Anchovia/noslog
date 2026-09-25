@@ -319,6 +319,12 @@ describe("P11 restricted Markdown", () => {
         expect(html).toContain("<p>고친 것: 번역 문제를 고쳤습니다.</p>");
         expect(html).toContain('class="nl-announcement-body nl-body-reading"');
     });
+    it("also accepts the colon written after the bold label", () => {
+        const html = render("**대상**: Real 13 이상\n\n**기간**: 9월 한 달");
+        expect(html).toContain(
+            '<dt class="nl-component-title">대상</dt><dd>Real 13 이상</dd><dt class="nl-component-title">기간</dt><dd>9월 한 달</dd>'
+        );
+    });
     it("keeps a single bold-label paragraph and bold words without a colon as paragraphs", () => {
         const html = render(
             "**주의:** 점검 중에는 동기화할 수 없습니다.\n\n**굵은 말** 뒤 문장.\n\n**라벨만:**"

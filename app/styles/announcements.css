@@ -84,7 +84,7 @@
     background: var(--nl-surface-surface);
     box-shadow: none;
 }
-/* 분류·날짜 줄 — 제목 위. 칩 폭이 제각각이어도 제목 시작선이 흔들리지 않는다 */
+/* 분류(· 고정) 태그 묶음 — 목록 줄 왼쪽 열, 상세 · 이벤트 머리의 분류 · 날짜 줄 */
 .noslog-ui .nl-announcement-meta {
     display: flex;
     flex-wrap: wrap;
@@ -169,13 +169,14 @@
     height: auto;
     border-radius: var(--nl-radius-container);
 }
-/* 목록 들여쓰기 24 — 간격 단계 값(16 + 4 = 20 은 단계 밖이라 2026-09-18 감사에서 맞춤) */
+/* 목록 들여쓰기 24 — 간격 단계 값(16 + 4 = 20 은 단계 밖이라 2026-09-18 감사에서 맞춤). 번호 목록도 같은 들여쓰기(2026-09-26 감사) */
 .noslog-ui .nl-announcement-body ul {
     padding-inline-start: var(--nl-spacing-24);
     list-style: disc;
 }
 .noslog-ui .nl-announcement-body ol {
-    list-style: decimal inside;
+    padding-inline-start: var(--nl-spacing-24);
+    list-style: decimal;
 }
 .noslog-ui .nl-announcement-body strong {
     font-weight: var(--nl-type-weight-semibold);

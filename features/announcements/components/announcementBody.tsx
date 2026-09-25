@@ -49,19 +49,32 @@ function announcementImage(src: string) {
     }
 }
 
-// 라벨 항목(2026-09-26 L2) — 「**채보 뷰어:** 설명」 처럼 굵은 라벨로 시작해 「:」 로 끝나는 문단이 둘 이상 이어지면
+// 라벨 항목(2026-09-26 L2) — 「**채보 뷰어:** 설명」 · 「**채보 뷰어**: 설명」 처럼 굵은 라벨 + 「:」 로 시작하는 문단이 둘 이상 이어지면
 // 라벨 한 줄(dt) + 설명(dd) 목록으로 그린다. 글 쓰는 방식은 그대로, 한 개뿐이면 문단 그대로 둔다
 function labelParts(node: ElementContent) {
     if (node.type !== "element" || node.tagName !== "p") return null;
     const [first, ...rest] = node.children;
     if (first?.type !== "element" || first.tagName !== "strong") return null;
     const last = first.children.at(-1);
-    if (last?.type !== "text" || !/[:：]\s*$/u.test(last.value)) return null;
-    const label: ElementContent[] = [
-        ...first.children.slice(0, -1),
-        { ...last, value: last.value.replace(/\s*[:：]\s*$/u, "") },
-    ];
-    const body = [...rest];
+    const next = rest[0];
+    const colon = /\s*[:：]\s*$/u;
+    let label: ElementContent[];
+    let body: ElementContent[];
+    if (last?.type === "text" && colon.test(last.value)) {
+        // 「**라벨:** 설명」
+        label = [
+            ...first.children.slice(0, -1),
+            { ...last, value: last.value.replace(colon, "") },
+        ];
+        body = [...rest];
+    } else if (next?.type === "text" && /^\s*[:：]/u.test(next.value)) {
+        // 「**라벨**: 설명」
+        label = [...first.children];
+        body = [
+            { ...next, value: next.value.replace(/^\s*[:：]/u, "") },
+            ...rest.slice(1),
+        ];
+    } else return null;
     const lead = body[0];
     if (lead?.type === "text")
         body[0] = { ...lead, value: lead.value.trimStart() };
@@ -70,6 +83,7 @@ function labelParts(node: ElementContent) {
     );
     return hasBody ? { label, body } : null;
 }
+
 function rehypeLabelItems() {
     return (tree: Root) => {
         const children: Root["children"] = [];
