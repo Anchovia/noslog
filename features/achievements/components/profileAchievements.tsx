@@ -26,7 +26,7 @@ const STRIP_LIMIT = 7;
 
 /**
  * 프로필 「업적」 구역(2026-09-25 A2) — 넓은 화면은 옆 열(기록 개요 아래 · 기여 위), 폰은 기여 위.
- * 제목 줄 오른쪽 「얻은 수 / 전체 ›」 = 업적 탭 · 얻은 업적 육각 한 줄(높은 단계 → 최근 순, 7개까지) · 「최근 · 이름 …」 한 줄.
+ * 제목 줄 오른쪽 「얻은 수 / 전체 ›」 = 업적 탭 · 얻은 업적 육각 한 줄(높은 단계 → 최근 순, 7개까지) · 「최근 달성 · 이름」 한 줄(가장 최근 하나, 2026-09-26).
  * 금 · 은 · 동 개수는 두지 않는다(2026-09-25). 남의 프로필에서 얻은 업적이 없으면 구역을 두지 않는다.
  */
 export default function ProfileAchievements({
@@ -100,9 +100,11 @@ export default function ProfileAchievements({
                     {summary.recent.length ? (
                         <p className="nl-metadata nl-muted">
                             {t("achievement.recent")} ·{" "}
-                            {summary.recent
-                                .map((item) => text.titled(item.key, item.tier))
-                                .join(" · ")}
+                            {/* 가장 최근 하나만(2026-09-26, 사용자) */}
+                            {text.titled(
+                                summary.recent[0].key,
+                                summary.recent[0].tier
+                            )}
                         </p>
                     ) : null}
                 </>

@@ -226,10 +226,8 @@ function MyProposals() {
     });
     const items = recent.data ?? [];
     return (
+        // 「내 제안 · 나에게만 보입니다」 머리 줄은 두지 않는다(2026-09-26, 사용자 — 목록만으로 충분)
         <div className="nl-profile-contribution__mine">
-            <p className="nl-metadata nl-muted">
-                {t("contribution.section.mine")}
-            </p>
             {recent.isPending ? (
                 <ProposalListSkeleton count={RECENT_COUNT} />
             ) : recent.isError ? (

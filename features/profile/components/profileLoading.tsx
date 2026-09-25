@@ -196,7 +196,7 @@ function ProgressSkeleton() {
                         value="grade"
                         onValueChange={noop}
                         options={[
-                            { value: "grade", label: "Grd" },
+                            { value: "grade", label: "Grade" },
                             {
                                 value: "rating",
                                 label: t("profile.ratingShort"),

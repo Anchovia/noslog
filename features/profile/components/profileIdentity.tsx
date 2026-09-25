@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Lock, MapPin, Settings } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
@@ -14,6 +15,7 @@ import CountryMarker from "@/components/ui/countryMarker";
 import DiscordIcon from "@/components/ui/DiscordIcon";
 import ExamBadge from "@/components/ui/examBadge";
 import ExamBadgeGroup from "@/components/ui/examBadgeGroup";
+import CompactSelect from "@/components/ui/compactSelect";
 import { SegmentedControl } from "@/components/ui/segmentedControl";
 import type { AchievementSummary } from "@/features/achievements/achievementDefinitions";
 import AchievementShowcase from "@/features/achievements/components/achievementShowcase";
@@ -107,6 +109,10 @@ export default function ProfileIdentity({
         header && ((user.grade_basic ?? 0) > 0 || (user.grade_recital ?? 0) > 0)
     );
     const grade = mode === "basic" ? user.grade_basic : user.grade_recital;
+    const [metric, setMetric] = useState<"grade" | "rating">("grade");
+    const standing = header?.ratingStandings[mode] ?? null;
+    // 그 모드 레이팅이 없으면 공식 Grd 로 되돌아간다
+    const shownMetric = metric === "rating" && standing ? "rating" : "grade";
     const rank = mode === "basic" ? user.rank_basic : user.rank_recital;
     const countryRank =
         mode === "basic" ? user.rank_basic_country : user.rank_recital_country;
@@ -367,22 +373,52 @@ export default function ProfileIdentity({
                             // 칸 나눈 수치 상자(2026-09-26 B1) — 왼쪽 절반 공식 Grd, 오른쪽 절반 위 세계 · 아래 국가, 칸 사이 1px 선(수치 띠와 같은 만듦새)
                             <dl
                                 className="nl-profile-headline__cells"
-                                aria-label={`${modeLabel} · ${t("profile.grade")}`}
+                                aria-label={`${modeLabel} · ${t(shownMetric === "rating" ? "rankings.metric.rating" : "profile.headlineGrade")}`}
                             >
                                 <div className="nl-profile-headline__grade">
-                                    <dt className="nl-metadata nl-muted">
-                                        {t("profile.headlineGrade")}
+                                    {/* 공식 Grd ↔ NosLog 레이팅(2026-09-26 T1) — 라벨 자리의 고르기, 순위 칸도 같이 바뀐다 */}
+                                    <dt>
+                                        <CompactSelect
+                                            size="sm"
+                                            label={t("profile.headlineMetric")}
+                                            value={shownMetric}
+                                            onValueChange={setMetric}
+                                            options={[
+                                                {
+                                                    value: "grade",
+                                                    label: t(
+                                                        "profile.headlineGrade"
+                                                    ),
+                                                },
+                                                {
+                                                    value: "rating",
+                                                    label: t(
+                                                        "rankings.metric.rating"
+                                                    ),
+                                                    disabled: !standing,
+                                                },
+                                            ]}
+                                        />
                                     </dt>
                                     <dd
                                         className="nl-metric-display nl-toned"
                                         data-tone={gradeBandTone(
-                                            Math.round(grade / 100)
+                                            shownMetric === "rating" && standing
+                                                ? standing.value
+                                                : Math.round(grade / 100)
                                         )}
                                     >
-                                        {(grade / 100).toLocaleString(locale, {
-                                            minimumFractionDigits: 2,
-                                            maximumFractionDigits: 2,
-                                        })}
+                                        {shownMetric === "rating" && standing
+                                            ? standing.value.toLocaleString(
+                                                  locale
+                                              )
+                                            : (grade / 100).toLocaleString(
+                                                  locale,
+                                                  {
+                                                      minimumFractionDigits: 2,
+                                                      maximumFractionDigits: 2,
+                                                  }
+                                              )}
                                     </dd>
                                 </div>
                                 {(
@@ -390,12 +426,16 @@ export default function ProfileIdentity({
                                         [
                                             "world",
                                             "profile.headlineWorld",
-                                            rank,
+                                            shownMetric === "rating"
+                                                ? (standing?.world ?? null)
+                                                : rank,
                                         ],
                                         [
                                             "country",
                                             "profile.headlineCountry",
-                                            countryRank,
+                                            shownMetric === "rating"
+                                                ? (standing?.country ?? null)
+                                                : countryRank,
                                         ],
                                     ] as const
                                 ).map(([key, label, value]) => (

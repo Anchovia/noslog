@@ -123,6 +123,17 @@
     grid-row: 1 / 3;
     padding: var(--nl-spacing-12) var(--nl-spacing-16);
 }
+/* 라벨 자리 고르기(2026-09-26 T1) = 공용 CompactSelect 고스트 M — 줄 높이를 늘리지 않게 위아래로, 글자가 칸 안쪽 선에 서게 왼쪽으로 당긴다
+   (제목 줄 끝 고스트 동작과 같은 보정) */
+.noslog-ui .nl-profile-headline__grade > dt {
+    display: flex;
+}
+.noslog-ui .nl-profile-headline__grade .nl-compact-select {
+    margin-block: calc(
+        (var(--nl-control-height-compact) - var(--nl-type-line-height-20)) / -2
+    );
+    margin-inline-start: calc(var(--nl-spacing-8) * -1);
+}
 .noslog-ui .nl-profile-headline__rank {
     display: flex;
     align-items: center;

@@ -216,3 +216,31 @@ export async function getGlobalRankingPage(
                   },
     });
 }
+
+/**
+ * 프로필 머리 수치 상자 「NosLog 레이팅」(2026-09-26 T1) — 랭킹 페이지와 같은 캐시된 레이팅 집계에서 내 값 · 자리만.
+ * 순위 = 점수를 공개한 다른 플레이어 중 반올림 레이팅이 나보다 높은 수 + 1(공동 순위는 랭킹 표와 같음),
+ * 국가는 같은 국가 코드끼리. 집계에 없으면(레이팅 0 · 기준표 없음) null
+ */
+export async function getProfileRatingStanding(
+    userId: number,
+    mode: GlobalRankingQuery["mode"],
+    country: string | null
+) {
+    const population = await getPublicRankingPopulation(mode, "rating");
+    if (population.status !== "available") return null;
+    const me = population.rows.find((row) => row.id === userId);
+    if (!me) return null;
+    const others = population.rows.filter(
+        (row) => !row.hidden && row.id !== userId
+    );
+    const position = (rows: PopulationRow[]) =>
+        rows.filter((row) => row.value > me.value).length + 1;
+    return {
+        value: me.value,
+        world: position(others),
+        country: country
+            ? position(others.filter((row) => row.country === country))
+            : null,
+    };
+}

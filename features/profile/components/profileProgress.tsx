@@ -98,8 +98,8 @@ export default function ProfileProgress({
                         }
                         onValueChange={setMetric}
                         options={[
-                            // 짧은 라벨(2026-09-25 G2) — 세그먼트 한 줄에 들어가게. 긴 이름은 요약 · 표 라벨이 말한다
-                            { value: "grade", label: "Grd" },
+                            // 「Grade」 · 「레이팅」(2026-09-26 — 조작부 폭이 넉넉해 Grd 대신 Grade, 사용자)
+                            { value: "grade", label: "Grade" },
                             {
                                 value: "rating",
                                 label: t("profile.ratingShort"),

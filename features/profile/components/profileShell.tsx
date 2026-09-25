@@ -29,7 +29,9 @@ export default async function ProfileShell({ id }: { id: number }) {
         ? hideProfileScores(profileData.user)
         : profileData.user;
     const [header, ownerPrivate] = await Promise.all([
-        scoresHidden ? null : getProfileHeaderContext(id, isOwner),
+        scoresHidden
+            ? null
+            : getProfileHeaderContext(id, isOwner, profileData.user.country),
         // 본인에게는 숨긴 항목도 자물쇠와 함께 보인다(2026-09-26 P1)
         isOwner ? getOwnerPrivateFields(id) : null,
     ]);
