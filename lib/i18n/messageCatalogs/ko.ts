@@ -1636,10 +1636,9 @@ export const koMessages = {
     "chart.savedRevision": "저장 v{revision}",
     "chart.publishedRevision": "공개 v{revision}",
     "chart.noteCount": "노트 {count}개",
+    "chart.viewMode": "채보 보기 방식",
     "chart.falling": "낙하형",
     "chart.sheet": "전체 악보",
-    "chart.safariHelp":
-        "Safari에서는 낙하형 뷰어를 지원하지 않아 전체 악보로 표시합니다. 낙하형은 Chrome 또는 Edge에서 확인해주세요.",
     "chart.leftHand": "왼손 안내",
     "chart.rightHand": "오른손 안내",
     "chart.empty": "표시할 노트가 없습니다.",

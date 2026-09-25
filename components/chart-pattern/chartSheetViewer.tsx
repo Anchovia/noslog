@@ -5,13 +5,13 @@ import { toast } from "sonner";
 
 import { useQuery } from "@tanstack/react-query";
 import BackLink from "@/components/ui/backLink";
-import { useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { useMemo, useRef, useState } from "react";
 
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import PageContainer from "@/components/layout/pageContainer";
 import Button, { foundationButtonClass } from "@/components/ui/Button";
 import ModalDialog from "@/components/ui/modalDialog";
-import { StatusMessage } from "@/components/ui/statusMessage";
+import { SegmentedControl } from "@/components/ui/segmentedControl";
 import ChartComments, {
     chartCommentsOptions,
 } from "@/features/contributions/components/chartComments";
@@ -19,11 +19,6 @@ import ChartDraftEntry from "@/features/contributions/components/chartDraftEntry
 import ContributionLabel from "@/features/contributions/components/contributionLabel";
 import type { NameLabel } from "@/features/contributions/contributionLevel";
 import type { ChartCommentItem } from "@/features/contributions/server/chartDraftService";
-import {
-    getBrowserSupportSnapshot,
-    getServerBrowserSupportSnapshot,
-    subscribeBrowserSupport,
-} from "@/lib/browserSupport";
 import {
     getChartNoteRenderPoints,
     getGlissandoSnapRenderPoints,
@@ -167,13 +162,8 @@ export default function ChartSheetViewer({
                 .map((comment) => comment.timeMs),
         [comments]
     );
-    const browserSupport = useSyncExternalStore(
-        subscribeBrowserSupport,
-        getBrowserSupportSnapshot,
-        getServerBrowserSupportSnapshot
-    );
-    const effectiveViewMode =
-        browserSupport === "supported" ? viewMode : "sheet";
+    // Safari 도 막지 않는다(2026-09-26, 사용자) — 낙하형을 모든 브라우저에서
+    const effectiveViewMode = viewMode;
     const playbackDurationMs = useMemo(
         () => getChartPlaybackDurationMs(document),
         [document]
@@ -203,7 +193,7 @@ export default function ChartSheetViewer({
     const difficultyClass = `nl-level--${difficulty.toLowerCase()}`;
     // 의견 시각 누름 · 주소 `?t=` — 낙하형으로 그 시각에 서고, 캔버스가 보이게 올린다. 주소는 공유용으로 바꿔 둔다
     const seekTo = (timeMs: number) => {
-        if (browserSupport === "supported") setViewMode("falling");
+        setViewMode("falling");
         setSeekRequest({ timeMs, key: Date.now() });
         clock.set(timeMs);
         const url = new URL(window.location.href);
@@ -363,42 +353,46 @@ export default function ChartSheetViewer({
     return (
         <PageContainer className="noslog-ui nl-chart-viewer">
             <BackLink href={backHref}>{t("chart.back")}</BackLink>
-            {/* 무대 먼저(2026-09-26 A, 유튜브 시청 페이지) — 조작은 무대 위에 겹치고, 곡 정보 · 동작은 무대 아래 */}
-            <div
-                ref={stageRef}
-                className="nl-chart-viewer__stage"
-                data-view={effectiveViewMode}
-            >
-                {browserSupport === "checking" ? (
-                    <div className="nl-chart-viewer__placeholder" aria-busy />
-                ) : effectiveViewMode === "falling" ? (
-                    document.notes.length === 0 ? (
-                        <p className="nl-chart-viewer__placeholder nl-body-secondary nl-muted">
-                            {t("chart.empty")}
-                        </p>
+            {/* 무대 먼저(2026-09-26 A, 유튜브 시청 페이지) — 조작은 무대 위에 겹치고, 곡 정보 · 동작은 무대 아래.
+                보기 방식 세그먼트는 무대 바로 위에 늘 보이게(2026-09-26 V1 — 조작 줄 아이콘은 안 보여 되돌림) */}
+            <div className="nl-chart-viewer__view">
+                <SegmentedControl
+                    label={t("chart.viewMode")}
+                    value={effectiveViewMode}
+                    onValueChange={setViewMode}
+                    options={[
+                        { value: "falling", label: t("chart.falling") },
+                        { value: "sheet", label: t("chart.sheet") },
+                    ]}
+                />
+                <div
+                    ref={stageRef}
+                    className="nl-chart-viewer__stage"
+                    data-view={effectiveViewMode}
+                >
+                    {effectiveViewMode === "falling" ? (
+                        document.notes.length === 0 ? (
+                            <p className="nl-chart-viewer__placeholder nl-body-secondary nl-muted">
+                                {t("chart.empty")}
+                            </p>
+                        ) : (
+                            <FallingChartViewer
+                                document={document}
+                                jacketUrl={jacketUrl}
+                                seekRequest={seekRequest}
+                                markers={contribution ? markers : undefined}
+                                onTimeChange={clock.set}
+                            />
+                        )
                     ) : (
-                        <FallingChartViewer
+                        <ChartSheetStrip
+                            panels={panels}
                             document={document}
-                            jacketUrl={jacketUrl}
-                            seekRequest={seekRequest}
-                            markers={contribution ? markers : undefined}
-                            onTimeChange={clock.set}
-                            onShowSheet={() => setViewMode("sheet")}
+                            measureMarkers={measureMarkers}
+                            durationMs={playbackDurationMs}
                         />
-                    )
-                ) : (
-                    <ChartSheetStrip
-                        panels={panels}
-                        document={document}
-                        measureMarkers={measureMarkers}
-                        durationMs={playbackDurationMs}
-                        onShowFalling={
-                            browserSupport === "supported"
-                                ? () => setViewMode("falling")
-                                : undefined
-                        }
-                    />
-                )}
+                    )}
+                </div>
             </div>
             <header className="nl-chart-viewer__head">
                 <div className="nl-chart-viewer__titles">
@@ -452,13 +446,6 @@ export default function ChartSheetViewer({
                         />
                     </div>
                 </div>
-                {/* Safari 에서 낙하형을 못 쓴다는 경고만(2026-09-25) */}
-                {browserSupport === "safari" ? (
-                    <StatusMessage
-                        severity="warning"
-                        title={t("chart.safariHelp")}
-                    />
-                ) : null}
             </header>
             {contribution ? (
                 <ChartComments

@@ -1655,10 +1655,9 @@ export const enMessages = {
     "chart.savedRevision": "Saved v{revision}",
     "chart.publishedRevision": "Published v{revision}",
     "chart.noteCount": "{count} notes",
+    "chart.viewMode": "Chart view mode",
     "chart.falling": "Falling",
     "chart.sheet": "Full Chart",
-    "chart.safariHelp":
-        "Safari does not support the falling viewer, so the full chart is shown. Use Chrome or Edge for the falling view.",
     "chart.leftHand": "Left-hand guide",
     "chart.rightHand": "Right-hand guide",
     "chart.empty": "No notes to display.",

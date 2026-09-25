@@ -7,7 +7,6 @@ import {
     Pause,
     Play,
     RotateCcw,
-    ScrollText,
     Settings,
     Upload,
     Volume2,
@@ -60,8 +59,6 @@ interface FallingChartViewerProps {
     /** 진행 막대 눈금(채보 의견 시각, 2026-09-24 D1) */
     markers?: readonly number[];
     onTimeChange?: (timeMs: number) => void;
-    /** 조작 줄 「전체 악보」 — 보기 방식 전환(2026-09-26 A, 유튜브식 재배치) */
-    onShowSheet?: () => void;
 }
 
 interface PlaybackClockAnchor {
@@ -855,7 +852,6 @@ export default function FallingChartViewer({
     seekRequest,
     markers,
     onTimeChange,
-    onShowSheet,
 }: FallingChartViewerProps) {
     const t = useTranslations();
     const hostRef = useRef<HTMLDivElement | null>(null);
@@ -1448,7 +1444,7 @@ export default function FallingChartViewer({
                     />
                 </div>
                 {/* 조작 줄(2026-09-26 A, 유튜브 시청 페이지와 같게) — 무대 아래쪽에 겹친다. 인라인 · 전체화면 같은 줄.
-                    재생 막대 한 줄 → 재생 · 처음으로 · 시각 / 길이 … 노트 속도 · 전체 악보 · 설정 · 전체화면 */}
+                    재생 막대 한 줄 → 재생 · 처음으로 · 시각 / 길이 … 노트 속도 · 설정 · 전체화면 */}
                 <div
                     className="nl-chart-stage__overlay"
                     hidden={overlayHidden}
@@ -1502,17 +1498,6 @@ export default function FallingChartViewer({
                         >
                             {noteSpeed.toFixed(1)}×
                         </button>
-                        {onShowSheet ? (
-                            <button
-                                type="button"
-                                className="nl-chart-stage__media-button"
-                                onClick={onShowSheet}
-                                aria-label={t("chart.sheet")}
-                                title={t("chart.sheet")}
-                            >
-                                <ScrollText className="nl-icon" />
-                            </button>
-                        ) : null}
                         {/* 설정(2026-09-25 C1) — 톱니 → 조작 줄 위 떠 있는 창 */}
                         <Popover.Root
                             open={settingsOpen}

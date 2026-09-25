@@ -122,12 +122,19 @@
     margin: 0;
 }
 
+/* 보기 방식 세그먼트(2026-09-26 V1) →12→ 무대. Safari 경고는 세그먼트 아래 */
+.noslog-ui .nl-chart-viewer__view {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-12);
+    min-width: 0;
+}
 /* 무대 폭 = 폭 가득, 단 첫 화면 안에 들어오도록 높이에서 유도한 폭까지(유튜브 플레이어처럼).
-   176 = 헤더 60 + 위 여백 32 + 돌아가기 44 + 간격 24 + 아래 숨 16 */
+   232 = 헤더 60 + 위 여백 32 + 돌아가기 44 + 간격 24 + 세그먼트 44 + 간격 12 + 아래 숨 16 */
 .noslog-ui .nl-chart-stage {
     display: flex;
     flex-direction: column;
-    width: min(100%, calc((100dvh - 176px) * 16 / 9));
+    width: min(100%, calc((100dvh - 232px) * 16 / 9));
     margin-inline: auto;
     overflow: hidden;
     border-radius: var(--nl-radius-container);
@@ -413,12 +420,6 @@
     align-items: center;
     justify-content: space-between;
     gap: var(--nl-spacing-12);
-}
-/* 「낙하형」(보기 전환, 2026-09-26) · 전체화면 — 사이 8 */
-.noslog-ui .nl-chart-strip__actions {
-    display: flex;
-    align-items: center;
-    gap: var(--nl-spacing-8);
 }
 /* 전체화면 — 띠가 화면을 채운다(안쪽 16 · 틀은 남는 높이 전체). 열 폭 · 배율 상한 2.0 은 그대로라 한 번에 보이는 마디가 는다 */
 .noslog-ui .nl-chart-strip[data-fullscreen] {

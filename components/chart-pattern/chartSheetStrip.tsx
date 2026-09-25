@@ -61,14 +61,11 @@ export default function ChartSheetStrip({
     document,
     measureMarkers,
     durationMs,
-    onShowFalling,
 }: {
     panels: SheetPanel[];
     document: ChartDocument;
     measureMarkers: MeasureMarker[];
     durationMs: number;
-    /** 읽기 줄 오른쪽 「낙하형」 — 보기 방식 전환(2026-09-26 A). 낙하형을 못 쓰는 브라우저면 없음 */
-    onShowFalling?: () => void;
 }) {
     const t = useTranslations();
     // 레일 배치는 Intermediate(672+)부터 — 본문 414 + 레일 96 + 여백이 624 안에 들어온다
@@ -302,29 +299,22 @@ export default function ChartSheetStrip({
                         {formatEditorTime(durationMs)}
                     </span>
                 </p>
-                <div className="nl-chart-strip__actions">
-                    {onShowFalling ? (
-                        <Button variant="secondary" onClick={onShowFalling}>
-                            {t("chart.falling")}
-                        </Button>
-                    ) : null}
-                    <Button
-                        variant="secondary"
-                        size="icon"
-                        onClick={() => void fullscreen.toggle()}
-                        aria-label={t(
-                            fullscreen.active
-                                ? "chart.exitFullscreen"
-                                : "chart.fullscreen"
-                        )}
-                    >
-                        {fullscreen.active ? (
-                            <Minimize className="nl-icon" />
-                        ) : (
-                            <Maximize className="nl-icon" />
-                        )}
-                    </Button>
-                </div>
+                <Button
+                    variant="secondary"
+                    size="icon"
+                    onClick={() => void fullscreen.toggle()}
+                    aria-label={t(
+                        fullscreen.active
+                            ? "chart.exitFullscreen"
+                            : "chart.fullscreen"
+                    )}
+                >
+                    {fullscreen.active ? (
+                        <Minimize className="nl-icon" />
+                    ) : (
+                        <Maximize className="nl-icon" />
+                    )}
+                </Button>
             </div>
             <div className="nl-chart-strip__frame">
                 <div

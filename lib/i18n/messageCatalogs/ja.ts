@@ -1650,10 +1650,9 @@ export const jaMessages = {
     "chart.savedRevision": "保存 v{revision}",
     "chart.publishedRevision": "公開 v{revision}",
     "chart.noteCount": "ノート {count}個",
+    "chart.viewMode": "譜面表示形式",
     "chart.falling": "落下表示",
     "chart.sheet": "全譜面",
-    "chart.safariHelp":
-        "Safariでは落下表示に対応していないため、全譜面を表示します。落下表示はChromeまたはEdgeでご確認ください。",
     "chart.leftHand": "左手ガイド",
     "chart.rightHand": "右手ガイド",
     "chart.empty": "表示するノートがありません。",
