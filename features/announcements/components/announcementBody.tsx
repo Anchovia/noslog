@@ -1,6 +1,7 @@
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { ExternalLink } from "lucide-react";
+import type { Element, ElementContent, Root } from "hast";
 import { getLocalizedHref } from "@/lib/i18n/routing";
 import type { Locale } from "@/lib/i18n/routing";
 
@@ -48,6 +49,90 @@ function announcementImage(src: string) {
     }
 }
 
+// 라벨 항목(2026-09-26 L2) — 「**채보 뷰어:** 설명」 · 「**채보 뷰어**: 설명」 처럼 굵은 라벨 + 「:」 로 시작하는 문단이 둘 이상 이어지면
+// 라벨 한 줄(dt) + 설명(dd) 목록으로 그린다. 글 쓰는 방식은 그대로, 한 개뿐이면 문단 그대로 둔다
+function labelParts(node: ElementContent) {
+    if (node.type !== "element" || node.tagName !== "p") return null;
+    const [first, ...rest] = node.children;
+    if (first?.type !== "element" || first.tagName !== "strong") return null;
+    const last = first.children.at(-1);
+    const next = rest[0];
+    const colon = /\s*[:：]\s*$/u;
+    let label: ElementContent[];
+    let body: ElementContent[];
+    if (last?.type === "text" && colon.test(last.value)) {
+        // 「**라벨:** 설명」
+        label = [
+            ...first.children.slice(0, -1),
+            { ...last, value: last.value.replace(colon, "") },
+        ];
+        body = [...rest];
+    } else if (next?.type === "text" && /^\s*[:：]/u.test(next.value)) {
+        // 「**라벨**: 설명」
+        label = [...first.children];
+        body = [
+            { ...next, value: next.value.replace(/^\s*[:：]/u, "") },
+            ...rest.slice(1),
+        ];
+    } else return null;
+    const lead = body[0];
+    if (lead?.type === "text")
+        body[0] = { ...lead, value: lead.value.trimStart() };
+    const hasBody = body.some(
+        (child) => child.type !== "text" || child.value.trim()
+    );
+    return hasBody ? { label, body } : null;
+}
+
+function rehypeLabelItems() {
+    return (tree: Root) => {
+        const children: Root["children"] = [];
+        let run: { label: ElementContent[]; body: ElementContent[] }[] = [];
+        const flush = (pending: Root["children"]) => {
+            if (run.length > 1) {
+                children.push({
+                    type: "element",
+                    tagName: "dl",
+                    properties: { className: ["nl-announcement-body__items"] },
+                    children: run.flatMap(({ label, body }): Element[] => [
+                        {
+                            type: "element",
+                            tagName: "dt",
+                            properties: { className: ["nl-component-title"] },
+                            children: label,
+                        },
+                        {
+                            type: "element",
+                            tagName: "dd",
+                            properties: {},
+                            children: body,
+                        },
+                    ]),
+                });
+            } else children.push(...pending);
+            run = [];
+        };
+        let pending: Root["children"] = [];
+        for (const node of tree.children) {
+            const parts = node.type === "element" ? labelParts(node) : null;
+            if (parts) {
+                run.push(parts);
+                pending.push(node);
+                continue;
+            }
+            // 문단 사이 줄바꿈 글자는 묶음을 끊지 않는다
+            if (node.type === "text" && !node.value.trim() && run.length) {
+                continue;
+            }
+            flush(pending);
+            pending = [];
+            children.push(node);
+        }
+        flush(pending);
+        tree.children = children;
+    };
+}
+
 export default function AnnouncementBody({
     content,
     locale,
@@ -60,11 +145,12 @@ export default function AnnouncementBody({
     externalLabel: string;
 }) {
     return (
-        <div className="nl-announcement-body nl-body">
+        <div className="nl-announcement-body nl-body-reading">
             <Markdown
                 skipHtml
                 // 표 · 취소선은 GFM 문법(2026-09-23 T-c)
                 remarkPlugins={[remarkGfm]}
+                rehypePlugins={[rehypeLabelItems]}
                 // 허용 목록 밖 요소(제목 h1 등)는 태그만 벗기고 글자는 남긴다 —
                 // 백틱으로 감싼 글자가 통째로 사라지던 문제(v2.9.2 공지, 2026-09-18)
                 unwrapDisallowed
@@ -90,6 +176,9 @@ export default function AnnouncementBody({
                     "td",
                     "a",
                     "img",
+                    "dl",
+                    "dt",
+                    "dd",
                 ]}
                 urlTransform={(url, key) =>
                     key === "src"

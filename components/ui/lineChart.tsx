@@ -34,6 +34,7 @@ export default function LineChart({
     showPoints = true,
     tableVisibility = "visible",
     responsivePlot = false,
+    plotHeight: fixedPlotHeight,
     showValueAxis = true,
     showGrid = true,
     keepPlotGeometry = false,
@@ -58,6 +59,8 @@ export default function LineChart({
     showPoints?: boolean;
     tableVisibility?: "visible" | "screen-reader";
     responsivePlot?: boolean;
+    /** 플롯 높이를 고정한다(px) — 요약을 위에 둔 프로필 성장 추이(2026-09-25 G2, 200) */
+    plotHeight?: number;
     showValueAxis?: boolean;
     showGrid?: boolean;
     /** 점이 2개 미만이어도 플롯 틀(높이·격자)을 그대로 두고 그 안에 상태 문구를 둔다 */
@@ -79,9 +82,10 @@ export default function LineChart({
     const range = domain[1] - domain[0] || 1;
     // responsivePlot: 폭의 16:9(상한 344)를 최소 높이로 두고, 부모가 더 주는 높이(옆 구역과의 행 파리티)는 채운다
     const frameMin =
-        (responsivePlot
-            ? Math.min(344, (Math.max(0, width - 32) * 9) / 16)
-            : 120) +
+        (fixedPlotHeight ??
+            (responsivePlot
+                ? Math.min(344, (Math.max(0, width - 32) * 9) / 16)
+                : 120)) +
         verticalInset * 2;
     const frameHeight = responsivePlot && height > frameMin ? height : frameMin;
     const plotHeight = frameHeight - verticalInset * 2;

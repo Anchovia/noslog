@@ -102,6 +102,8 @@ export interface ChartEditorMetadata {
     artist: string | null;
     difficulty: string;
     level: number;
+    /** 악곡 정보의 노트 수 — 영상 추출 가져오기가 판정 수와 비교한다(운영자 에디터만) */
+    noteCount?: number | null;
 }
 
 /**
@@ -298,6 +300,8 @@ function ChartTimingEditorWorkspace({
     const [metronomeVolume, setMetronomeVolume] = useMetronomeVolume();
     const audioInputRef = useRef<HTMLInputElement | null>(null);
     const importInputRef = useRef<HTMLInputElement | null>(null);
+    /** 겹친 채로 넣은 영상 추출(2026-09-26 A) — 겹침을 고친 뒤 첫 버전 저장을 「영상 추출」 버전으로 남긴다 */
+    const pendingVid2bmapRef = useRef<string | null>(null);
     const vid2bmapInputRef = useRef<HTMLInputElement | null>(null);
     const importMenuRef = useRef<HTMLDivElement | null>(null);
     const [importMenuOpen, setImportMenuOpen] = useState(false);
@@ -515,7 +519,15 @@ function ChartTimingEditorWorkspace({
     }
 
     const runExplicitSave = useCallback(
-        async (kind: "manual" | "publish" | "vid2bmap", message?: string) => {
+        async (
+            requestedKind: "manual" | "publish" | "vid2bmap",
+            requestedMessage?: string
+        ) => {
+            // 겹친 채로 넣은 영상 추출이 아직 버전으로 안 남았으면, 겹침을 고친 뒤 첫 버전 저장을 그 버전으로
+            const pending =
+                requestedKind === "manual" ? pendingVid2bmapRef.current : null;
+            const kind = pending ? "vid2bmap" : requestedKind;
+            const message = pending ?? requestedMessage;
             const state = store.getState();
             if (state.saveStatus === "saving") {
                 toast.error("현재 저장이 끝난 뒤 다시 시도해주세요.");
@@ -560,6 +572,7 @@ function ChartTimingEditorWorkspace({
                     toast.error(result.message);
                     return;
                 }
+                if (kind === "vid2bmap") pendingVid2bmapRef.current = null;
                 store.getState().markSaveSuccess({
                     draftVersion: result.draftVersion,
                     savedRevision: result.savedRevision,
@@ -696,6 +709,17 @@ function ChartTimingEditorWorkspace({
     /** 넣은 직후 「영상 추출」 버전으로 — 이 버전이 공개 채보 출처 표기의 근거(2026-09-24 C2) */
     const saveAfterImport = useCallback(
         async (message: string) => {
+            const state = store.getState();
+            // 겹친 채로 넣었으면(가져오기 창이 알림) 지금은 버전 저장 안 됨 — 고친 뒤 첫 버전 저장을 이 버전으로
+            if (
+                findChartNoteConflicts(
+                    state.document.notes,
+                    state.document.ticksPerQuarter
+                ).length > 0
+            ) {
+                pendingVid2bmapRef.current = message;
+                return false;
+            }
             const before = store.getState().savedRevision;
             await runExplicitSave("vid2bmap", message);
             return store.getState().savedRevision > before;
@@ -1434,6 +1458,7 @@ function ChartTimingEditorWorkspace({
                             onSeek={(time) => void seek(time)}
                             onBeforeApply={saveBeforeImport}
                             onAfterApply={saveAfterImport}
+                            officialNoteCount={metadata.noteCount ?? null}
                         />
                     ) : editorMode === "timing" ? (
                         <TimingInspector />

@@ -1,16 +1,18 @@
 "use client";
 
-import { ChevronRight } from "lucide-react";
+import { Info, Pencil, Share2 } from "lucide-react";
+import { toast } from "sonner";
 
 import { useQuery } from "@tanstack/react-query";
 import BackLink from "@/components/ui/backLink";
-import { useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { useMemo, useRef, useState } from "react";
 
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import PageContainer from "@/components/layout/pageContainer";
+import Avatar from "@/components/ui/avatar";
+import { foundationButtonClass } from "@/components/ui/Button";
 import ModalDialog from "@/components/ui/modalDialog";
 import { SegmentedControl } from "@/components/ui/segmentedControl";
-import { StatusMessage } from "@/components/ui/statusMessage";
 import ChartComments, {
     chartCommentsOptions,
 } from "@/features/contributions/components/chartComments";
@@ -19,15 +21,11 @@ import ContributionLabel from "@/features/contributions/components/contributionL
 import type { NameLabel } from "@/features/contributions/contributionLevel";
 import type { ChartCommentItem } from "@/features/contributions/server/chartDraftService";
 import {
-    getBrowserSupportSnapshot,
-    getServerBrowserSupportSnapshot,
-    subscribeBrowserSupport,
-} from "@/lib/browserSupport";
-import {
     getChartNoteRenderPoints,
     getGlissandoSnapRenderPoints,
 } from "@/lib/chart-pattern/editor";
 import { getChartPlaybackDurationMs } from "@/lib/chart-pattern/playback";
+import { HAND_COLORS, STAGE_CANVAS } from "@/lib/chart-pattern/stageColors";
 import {
     trillHexes,
     trillSolidSpan,
@@ -73,7 +71,13 @@ interface ChartSheetViewerProps {
 
 export interface ChartSource {
     /** 작성자 — 유저 기여 채보면 실제 작성자 + 기여 라벨(E1), 아니면 공개한 운영자 */
-    author: { id: number | null; name: string; label: NameLabel | null } | null;
+    author: {
+        id: number | null;
+        name: string;
+        /** 프로필 이미지(2026-09-26 — 이름 옆 동그랗게) */
+        avatar: string | null;
+        label: NameLabel | null;
+    } | null;
     /** 작성자와 공개한 사람이 다를 때(유저 기여 채보)만 — 출처 창에 따로 적는다 */
     publisher: { name: string } | null;
     publishedAt: string | null;
@@ -107,10 +111,8 @@ const PANEL_NOTE_EDGE_INSET = 4;
 export const PANEL_MEASURE_EDGE_INSET = 5;
 const PANEL_BOUNDARY_EPSILON_MS = 0.001;
 
-const handColors: Record<ChartHand, string> = {
-    left: "#62d4e8",
-    right: "#f06b68",
-};
+// 손 색 = 토큰 `--nl-hand-*` 와 같은 값(2026-09-26 H1 — 범례 · 전체 악보 · 낙하형 한 벌)
+const handColors: Record<ChartHand, string> = HAND_COLORS;
 
 function chartContentEnd(document: ChartDocument) {
     return document.notes.reduce((maximum, note) => {
@@ -143,6 +145,8 @@ export default function ChartSheetViewer({
         locale === "ja" ? "ja-JP" : locale === "en" ? "en-US" : "ko-KR";
     const [viewMode, setViewMode] = useState<"falling" | "sheet">("falling");
     const [sourceOpen, setSourceOpen] = useState(false);
+    // 폰 「더보기」 창(2026-09-26 Y1, 유튜브 폰 설명 창)
+    const [infoOpen, setInfoOpen] = useState(false);
     const stageRef = useRef<HTMLDivElement | null>(null);
     const [clock] = useState(() =>
         createPlaybackClock(contribution?.initialTimeMs ?? 0)
@@ -166,13 +170,8 @@ export default function ChartSheetViewer({
                 .map((comment) => comment.timeMs),
         [comments]
     );
-    const browserSupport = useSyncExternalStore(
-        subscribeBrowserSupport,
-        getBrowserSupportSnapshot,
-        getServerBrowserSupportSnapshot
-    );
-    const effectiveViewMode =
-        browserSupport === "supported" ? viewMode : "sheet";
+    // Safari 도 막지 않는다(2026-09-26, 사용자) — 낙하형을 모든 브라우저에서
+    const effectiveViewMode = viewMode;
     const playbackDurationMs = useMemo(
         () => getChartPlaybackDurationMs(document),
         [document]
@@ -202,7 +201,7 @@ export default function ChartSheetViewer({
     const difficultyClass = `nl-level--${difficulty.toLowerCase()}`;
     // 의견 시각 누름 · 주소 `?t=` — 낙하형으로 그 시각에 서고, 캔버스가 보이게 올린다. 주소는 공유용으로 바꿔 둔다
     const seekTo = (timeMs: number) => {
-        if (browserSupport === "supported") setViewMode("falling");
+        setViewMode("falling");
         setSeekRequest({ timeMs, key: Date.now() });
         clock.set(timeMs);
         const url = new URL(window.location.href);
@@ -214,24 +213,90 @@ export default function ChartSheetViewer({
         );
         stageRef.current?.scrollIntoView({ block: "start" });
     };
-    const links = contribution ? (
-        <div className="nl-chart-viewer__links">
-            <ChartDraftEntry
-                chartId={contribution.chartId}
-                draftHref={contribution.draftHref}
-                loginHref={contribution.loginHref}
-                signedIn={contribution.signedIn}
-                label={t("contribution.entry.edit")}
-                className="nl-heading-link nl-control"
-                chevron={<ChevronRight aria-hidden />}
-            />
-            {source?.extracted ? sourceDialog() : null}
-        </div>
-    ) : source?.extracted ? (
-        sourceDialog()
-    ) : null;
+    // 무대 아래 동작 버튼(2026-09-26 A, 유튜브 채널 줄의 버튼 자리) — 고치기 · 출처(영상 추출만) · 공유
+    const actionClass = foundationButtonClass({
+        variant: "secondary",
+        size: "sm",
+    });
+    async function copyLink() {
+        const url = new URL(window.location.href);
+        url.searchParams.delete("t");
+        try {
+            await navigator.clipboard.writeText(url.href);
+            toast.success(t("tiers.linkCopied"));
+        } catch {
+            toast.error(t("tiers.linkCopyFailed"));
+        }
+    }
+    // 넓은 화면 = 보조 M 아이콘+글자, 폰 = 글자 없는 아이콘 버튼(유튜브 폰 동작 줄 — 이름은 스크린리더 · 툴팁)
+    function renderActions(compact: boolean) {
+        const iconClass = foundationButtonClass({
+            variant: "ghost",
+            size: "icon",
+        });
+        return (
+            <div className="nl-chart-viewer__actions">
+                {contribution ? (
+                    <ChartDraftEntry
+                        chartId={contribution.chartId}
+                        draftHref={contribution.draftHref}
+                        loginHref={contribution.loginHref}
+                        signedIn={contribution.signedIn}
+                        label={t("contribution.entry.edit")}
+                        className={compact ? iconClass : actionClass}
+                        icon={<Pencil className="nl-icon" aria-hidden />}
+                        iconOnly={compact}
+                    />
+                ) : null}
+                {/* 폰은 출처를 「더보기」 창 끝에 합친다(2026-09-26 M1) — ⓘ 는 넓은 화면만 */}
+                {source?.extracted && !compact ? (
+                    <button
+                        type="button"
+                        className={compact ? iconClass : actionClass}
+                        onClick={() => setSourceOpen(true)}
+                        aria-label={
+                            compact ? t("chart.source.open") : undefined
+                        }
+                        title={compact ? t("chart.source.open") : undefined}
+                    >
+                        <Info className="nl-icon" aria-hidden />
+                        {compact ? null : t("chart.source.open")}
+                    </button>
+                ) : null}
+                {preview ? null : (
+                    <button
+                        type="button"
+                        className={compact ? iconClass : actionClass}
+                        onClick={() => void copyLink()}
+                        aria-label={compact ? t("chart.share") : undefined}
+                        title={compact ? t("chart.share") : undefined}
+                    >
+                        <Share2 className="nl-icon" aria-hidden />
+                        {compact ? null : t("chart.share")}
+                    </button>
+                )}
+            </div>
+        );
+    }
+    // 작성자 — 동그란 프로필 이미지 + 이름 + 기여 라벨(2026-09-26, 사용자)
+    function renderAuthor(prefixed: boolean) {
+        if (!source?.author) return null;
+        return (
+            <p className="nl-chart-viewer__byline nl-body-secondary">
+                <Avatar
+                    src={source.author.avatar}
+                    size={32}
+                    fallbackName={source.author.name}
+                />
+                {prefixed
+                    ? t("chart.source.author", { name: source.author.name })
+                    : source.author.name}
+                <ContributionLabel label={source.author.label} />
+            </p>
+        );
+    }
     const metadata = (
-        <p className="nl-metadata nl-muted">
+        <p className="nl-body-secondary">
             {t("chart.noteCount", {
                 count: document.notes.length.toLocaleString(numberLocale),
             })}
@@ -248,58 +313,37 @@ export default function ChartSheetViewer({
         </p>
     );
 
-    function sourceDialog() {
+    // 출처 — 채보(작성자 · 공개 버전 · 날짜) · 노트 배치(영상 추출만). 넓은 화면 「출처 보기」 창과 폰 「더보기」 창 끝이 같이 쓴다
+    function sourceDetails() {
         if (!source) return null;
         return (
-            <ModalDialog
-                open={sourceOpen}
-                onOpenChange={setSourceOpen}
-                title={t("chart.source.title")}
-                trigger={
-                    <button
-                        type="button"
-                        className="nl-heading-link nl-control"
-                    >
-                        {t("chart.source.open")}
-                        <ChevronRight aria-hidden />
-                    </button>
-                }
-            >
-                <dl className="nl-chart-viewer__sources">
-                    <div>
-                        <dt className="nl-metadata nl-muted">
-                            {t("chart.source.chart")}
-                        </dt>
-                        <dd>
-                            {source.author ? (
-                                <p className="nl-chart-viewer__byline nl-body-secondary">
-                                    {source.author.name}
-                                    <ContributionLabel
-                                        label={source.author.label}
-                                    />
-                                </p>
-                            ) : null}
-                            {revision !== null && source.publishedAt ? (
-                                <p className="nl-metadata nl-muted">
-                                    {t(
-                                        source.publisher
-                                            ? "chart.source.publishedBy"
-                                            : "chart.source.published",
-                                        {
-                                            revision,
-                                            name: source.publisher?.name ?? "",
-                                            date: new Intl.DateTimeFormat(
-                                                numberLocale,
-                                                { dateStyle: "medium" }
-                                            ).format(
-                                                new Date(source.publishedAt)
-                                            ),
-                                        }
-                                    )}
-                                </p>
-                            ) : null}
-                        </dd>
-                    </div>
+            <dl className="nl-chart-viewer__sources">
+                <div>
+                    <dt className="nl-metadata nl-muted">
+                        {t("chart.source.chart")}
+                    </dt>
+                    <dd>
+                        {renderAuthor(false)}
+                        {revision !== null && source.publishedAt ? (
+                            <p className="nl-metadata nl-muted">
+                                {t(
+                                    source.publisher
+                                        ? "chart.source.publishedBy"
+                                        : "chart.source.published",
+                                    {
+                                        revision,
+                                        name: source.publisher?.name ?? "",
+                                        date: new Intl.DateTimeFormat(
+                                            numberLocale,
+                                            { dateStyle: "medium" }
+                                        ).format(new Date(source.publishedAt)),
+                                    }
+                                )}
+                            </p>
+                        ) : null}
+                    </dd>
+                </div>
+                {source.extracted ? (
                     <div>
                         <dt className="nl-metadata nl-muted">
                             {t("chart.source.notes")}
@@ -332,7 +376,20 @@ export default function ChartSheetViewer({
                             </p>
                         </dd>
                     </div>
-                </dl>
+                ) : null}
+            </dl>
+        );
+    }
+
+    function sourceDialog() {
+        if (!source) return null;
+        return (
+            <ModalDialog
+                open={sourceOpen}
+                onOpenChange={setSourceOpen}
+                title={t("chart.source.title")}
+            >
+                {sourceDetails()}
             </ModalDialog>
         );
     }
@@ -340,110 +397,170 @@ export default function ChartSheetViewer({
     return (
         <PageContainer className="noslog-ui nl-chart-viewer">
             <BackLink href={backHref}>{t("chart.back")}</BackLink>
-            <header className="nl-chart-viewer__head">
-                <div className="nl-chart-viewer__title-row">
-                    <h1 className="nl-page-title">{title}</h1>
-                    <span className={`nl-control ${difficultyClass}`}>
-                        {difficulty} · Lv {level}
-                    </span>
-                    {preview ? (
-                        <span className="nl-metadata nl-muted">
-                            {t("chart.preview")}
-                        </span>
-                    ) : null}
-                </div>
-                {localizedTitle ? (
-                    <p className="nl-body-secondary nl-muted">
-                        {localizedTitle}
-                    </p>
-                ) : null}
-                <p className="nl-body-secondary">
-                    {artist ?? t("chart.unknownArtist")}
-                </p>
-                {source?.author ? (
-                    <p className="nl-chart-viewer__byline nl-body-secondary">
-                        {t("chart.source.author", { name: source.author.name })}
-                        <ContributionLabel label={source.author.label} />
-                    </p>
-                ) : null}
-                {/* 영상 추출이 아니면 링크(「고치기 ›」)는 메타 줄 오른쪽 끝, 영상 추출이면 출처 줄 오른쪽 끝(2026-09-24 A1) */}
-                {links && !source?.extracted ? (
-                    <div className="nl-chart-viewer__source">
-                        {metadata}
-                        {links}
-                    </div>
-                ) : (
-                    metadata
-                )}
-                {source?.extracted ? (
-                    <div className="nl-chart-viewer__source">
-                        <span className="nl-metadata nl-muted">
-                            {t("chart.source.extracted")}
-                        </span>
-                        {links}
-                    </div>
-                ) : null}
-            </header>
-
-            <div className="nl-chart-viewer__controls">
+            {/* 무대 먼저(2026-09-26 A, 유튜브 시청 페이지) — 조작은 무대 위에 겹치고, 곡 정보 · 동작은 무대 아래.
+                보기 방식 세그먼트는 무대 바로 위에 늘 보이게(2026-09-26 V1 — 조작 줄 아이콘은 안 보여 되돌림) */}
+            <div className="nl-chart-viewer__view">
                 <SegmentedControl
                     label={t("chart.viewMode")}
                     value={effectiveViewMode}
                     onValueChange={setViewMode}
                     options={[
-                        {
-                            value: "falling",
-                            label: t("chart.falling"),
-                            disabled: browserSupport !== "supported",
-                        },
+                        { value: "falling", label: t("chart.falling") },
                         { value: "sheet", label: t("chart.sheet") },
                     ]}
                 />
-                {/* 낙하형 · 전체 악보 도움말(파란 안내 창)은 두지 않는다(2026-09-25, 사용자) — Safari 경고만 */}
-                {browserSupport === "safari" ? (
-                    <StatusMessage
-                        severity="warning"
-                        title={t("chart.safariHelp")}
-                    />
-                ) : null}
-                <div className="nl-chart-viewer__legend">
-                    <Legend
-                        color={handColors.left}
-                        label={t("chart.leftHand")}
-                    />
-                    <Legend
-                        color={handColors.right}
-                        label={t("chart.rightHand")}
-                    />
+                <div
+                    ref={stageRef}
+                    className="nl-chart-viewer__stage"
+                    data-view={effectiveViewMode}
+                >
+                    {effectiveViewMode === "falling" ? (
+                        document.notes.length === 0 ? (
+                            <p className="nl-chart-viewer__placeholder nl-body-secondary nl-muted">
+                                {t("chart.empty")}
+                            </p>
+                        ) : (
+                            <FallingChartViewer
+                                document={document}
+                                jacketUrl={jacketUrl}
+                                seekRequest={seekRequest}
+                                markers={contribution ? markers : undefined}
+                                onTimeChange={clock.set}
+                            />
+                        )
+                    ) : (
+                        <ChartSheetStrip
+                            panels={panels}
+                            document={document}
+                            measureMarkers={measureMarkers}
+                            durationMs={playbackDurationMs}
+                        />
+                    )}
                 </div>
             </div>
-
-            <div ref={stageRef} className="nl-chart-viewer__stage">
-                {browserSupport === "checking" ? (
-                    <div className="nl-chart-viewer__placeholder" aria-busy />
-                ) : effectiveViewMode === "falling" ? (
-                    document.notes.length === 0 ? (
-                        <p className="nl-chart-viewer__placeholder nl-body-secondary nl-muted">
-                            {t("chart.empty")}
+            {/* 넓은 화면(1056+) 머리 — 제목 묶음 → 채보 줄(작성자 · 동작) → 정보 상자 */}
+            <header className="nl-chart-viewer__head nl-chart-viewer__head--wide">
+                <div className="nl-chart-viewer__titles">
+                    <div className="nl-chart-viewer__title-row">
+                        <h1 className="nl-page-title">{title}</h1>
+                        <span className={`nl-control ${difficultyClass}`}>
+                            {difficulty} · Lv {level}
+                        </span>
+                        {preview ? (
+                            <span className="nl-metadata nl-muted">
+                                {t("chart.preview")}
+                            </span>
+                        ) : null}
+                    </div>
+                    {localizedTitle ? (
+                        <p className="nl-body-secondary nl-muted">
+                            {localizedTitle}
                         </p>
-                    ) : (
-                        <FallingChartViewer
-                            document={document}
-                            jacketUrl={jacketUrl}
-                            seekRequest={seekRequest}
-                            markers={contribution ? markers : undefined}
-                            onTimeChange={clock.set}
+                    ) : null}
+                    <p className="nl-body-secondary">
+                        {artist ?? t("chart.unknownArtist")}
+                    </p>
+                </div>
+                <div className="nl-chart-viewer__byline-row">
+                    {renderAuthor(true)}
+                    {renderActions(false)}
+                </div>
+                {/* 정보 상자 — 노트 수 · 버전 · 길이 → 영상 추출 → 손 범례 */}
+                <div className="nl-chart-viewer__info">
+                    {metadata}
+                    {source?.extracted ? (
+                        <p className="nl-metadata nl-muted">
+                            {t("chart.source.extracted")}
+                        </p>
+                    ) : null}
+                    <div className="nl-chart-viewer__legend">
+                        <Legend
+                            color={handColors.left}
+                            label={t("chart.leftHand")}
                         />
-                    )
-                ) : (
-                    <ChartSheetStrip
-                        panels={panels}
-                        document={document}
-                        measureMarkers={measureMarkers}
-                        durationMs={playbackDurationMs}
-                    />
-                )}
-            </div>
+                        <Legend
+                            color={handColors.right}
+                            label={t("chart.rightHand")}
+                        />
+                    </div>
+                </div>
+            </header>
+            {/* 폰 · 태블릿 머리(2026-09-26 Y1, 유튜브 폰 시청 화면) — 제목 한 줄 → 메타 한 줄 + 「더보기」 → 작성자 · 아이콘 동작 48 */}
+            <header className="nl-chart-viewer__head nl-chart-viewer__head--compact">
+                <div className="nl-chart-viewer__titles">
+                    <h1 className="nl-page-title nl-chart-viewer__compact-title">
+                        {title}
+                    </h1>
+                    <div className="nl-chart-viewer__compact-meta">
+                        <p className="nl-metadata nl-muted">
+                            <span className={difficultyClass}>
+                                {difficulty} · Lv {level}
+                            </span>
+                            {" · "}
+                            {artist ?? t("chart.unknownArtist")}
+                            {" · "}
+                            {t("chart.noteCount", {
+                                count: document.notes.length.toLocaleString(
+                                    numberLocale
+                                ),
+                            })}
+                            {" · "}
+                            {formatEditorTime(playbackDurationMs)}
+                        </p>
+                        <button
+                            type="button"
+                            className="nl-chart-viewer__more nl-metadata"
+                            onClick={() => setInfoOpen(true)}
+                        >
+                            {t("chart.more")}
+                        </button>
+                    </div>
+                </div>
+                <div className="nl-chart-viewer__byline-row nl-chart-viewer__byline-row--compact">
+                    {renderAuthor(false)}
+                    {renderActions(true)}
+                </div>
+            </header>
+            <ModalDialog
+                open={infoOpen}
+                onOpenChange={setInfoOpen}
+                title={t("chart.info")}
+                sheet
+            >
+                <div className="nl-chart-viewer__info-sheet">
+                    <div className="nl-chart-viewer__titles">
+                        <p className="nl-section-title">{title}</p>
+                        {localizedTitle ? (
+                            <p className="nl-body-secondary nl-muted">
+                                {localizedTitle}
+                            </p>
+                        ) : null}
+                        <p className="nl-body-secondary">
+                            <span className={`nl-control ${difficultyClass}`}>
+                                {difficulty} · Lv {level}
+                            </span>
+                            {" · "}
+                            {artist ?? t("chart.unknownArtist")}
+                        </p>
+                    </div>
+                    <div className="nl-chart-viewer__info">
+                        {metadata}
+                        <div className="nl-chart-viewer__legend">
+                            <Legend
+                                color={handColors.left}
+                                label={t("chart.leftHand")}
+                            />
+                            <Legend
+                                color={handColors.right}
+                                label={t("chart.rightHand")}
+                            />
+                        </div>
+                    </div>
+                    {/* 출처(2026-09-26 M1) — 폰은 ⓘ 창 대신 여기 */}
+                    {sourceDetails()}
+                </div>
+            </ModalDialog>
+            {sourceDialog()}
             {contribution ? (
                 <ChartComments
                     chartId={contribution.chartId}
@@ -502,7 +619,7 @@ export function drawPanel(
         Math.min(chartBottom - PANEL_MEASURE_EDGE_INSET, yForTime(timeMs));
 
     context.clearRect(0, 0, PANEL_WIDTH, PANEL_HEIGHT);
-    context.fillStyle = "#0b0b10";
+    context.fillStyle = STAGE_CANVAS;
     context.fillRect(0, 0, PANEL_WIDTH, PANEL_HEIGHT);
 
     context.save();
@@ -751,7 +868,7 @@ function drawSheetNote(
         // 끝 막대(어두운 막대, 게임과 같은 자리)
         const endY = yForRenderedTick(note.tick + note.durationTicks);
         context.save();
-        context.fillStyle = "#0b0b10";
+        context.fillStyle = STAGE_CANVAS;
         context.strokeStyle = handColors[note.hand];
         context.lineWidth = 1.2;
         context.beginPath();

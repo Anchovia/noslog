@@ -106,7 +106,7 @@ function DraftRow({ item }: { item: MyChartDraftItem }) {
                     {t(`contribution.draftStatus.${item.status}`)}
                 </span>
             </div>
-            <p className="nl-metadata nl-muted nl-profile-contribution__number">
+            <p className="nl-metadata nl-muted">
                 {item.status === "published" && item.publishedAt
                     ? `${t("contribution.section.publishedPoints", { points: 20 })} · ${item.publishedAt.slice(0, 10)}`
                     : item.openComments
@@ -171,7 +171,7 @@ function ProposalList({ items }: { items: MineItem[] }) {
                                 )}
                             </span>
                         </div>
-                        <p className="nl-metadata nl-muted nl-profile-contribution__number">
+                        <p className="nl-metadata nl-muted">
                             {before} →{" "}
                             {formatProposalValue(
                                 item.field,
@@ -226,10 +226,8 @@ function MyProposals() {
     });
     const items = recent.data ?? [];
     return (
+        // 「내 제안 · 나에게만 보입니다」 머리 줄은 두지 않는다(2026-09-26, 사용자 — 목록만으로 충분)
         <div className="nl-profile-contribution__mine">
-            <p className="nl-metadata nl-muted">
-                {t("contribution.section.mine")}
-            </p>
             {recent.isPending ? (
                 <ProposalListSkeleton count={RECENT_COUNT} />
             ) : recent.isError ? (
@@ -317,7 +315,7 @@ export default function ProfileContribution({
                                 </span>
                                 Lv.{value.level}
                             </span>
-                            <span className="nl-metadata nl-muted nl-profile-contribution__number">
+                            <span className="nl-metadata nl-muted">
                                 {t("contribution.label.points", {
                                     points: value.points.toLocaleString(locale),
                                 })}{" "}

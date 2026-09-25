@@ -2,7 +2,6 @@
 
 import { SkeletonText } from "@/components/ui/skeleton";
 import Link from "next/link";
-import { useId } from "react";
 
 import {
     useLocalizedHref,
@@ -11,7 +10,12 @@ import {
 import MusicJacket from "@/components/music/musicJacket";
 import type { DiscoveryResult } from "@/features/music/schemas/discoverySchema";
 
-export default function ChartResultGroup({
+/**
+ * 채보 줄(2026-09-25 A2 · R1 · I2 · D1) — 채보 하나 = 줄 하나 = 링크 하나. 악곡 목록 줄과 같은 틀에
+ * 자켓 80 · 이름 · 아티스트 두 줄, 오른쪽 끝 난이도 칩 「Real 3」. 작성자 · 출처 · 공개일은 뷰어에서 본다(2026-09-26, 사용자).
+ * 응답이 곡 묶음(난이도 여럿)이어도 난이도마다 줄을 나눈다
+ */
+export default function ChartResultRows({
     music,
     pending = false,
 }: {
@@ -20,78 +24,73 @@ export default function ChartResultGroup({
 }) {
     const href = useLocalizedHref();
     const t = useTranslations();
-    const id = useId();
-    return (
-        <article className="nl-chart-group" aria-labelledby={id}>
-            <div className="nl-chart-group__identity">
-                <MusicJacket
-                    index={music.index}
-                    title={music.title}
-                    background={music.background}
-                    appearance="foundation"
+    return music.targets.map((target) => (
+        <Link
+            key={target.difficulty}
+            href={href(
+                `/music/${music.index}/${target.difficulty.toLowerCase()}/pattern`
+            )}
+            className="nl-music-card nl-music-card--list nl-chart-row"
+            aria-disabled={pending || undefined}
+            onClick={(event) => {
+                if (pending) event.preventDefault();
+            }}
+        >
+            <MusicJacket
+                index={music.index}
+                title={music.title}
+                background={music.background}
+                appearance="foundation"
+            >
+                <span
+                    className="nl-jacket__category nl-metadata"
+                    lang="en"
+                    data-category={music.category_short}
                 >
+                    {music.category_short}
+                </span>
+            </MusicJacket>
+            <span className="nl-music-card__body">
+                <span className="nl-music-card__identity">
                     <span
-                        className="nl-jacket__category nl-metadata"
-                        lang="en"
-                        data-category={music.category_short}
+                        className="nl-entity-title"
+                        lang={
+                            /[぀-ヿ㐀-鿿]/u.test(music.title) ? "ja" : undefined
+                        }
                     >
-                        {music.category_short}
-                    </span>
-                </MusicJacket>
-                <div className="nl-music-card__identity">
-                    <h2 id={id} className="nl-entity-title">
                         {music.title}
-                    </h2>
-                    <p className="nl-body-secondary nl-muted">
+                    </span>
+                    <span className="nl-body-secondary nl-muted">
                         {music.artist || t("music.unknownArtist")}
-                    </p>
-                </div>
-            </div>
-            <div className="nl-chart-group__targets">
-                {music.targets.map((target) => (
-                    <Link
-                        key={target.difficulty}
-                        href={href(
-                            `/music/${music.index}/${target.difficulty.toLowerCase()}/pattern`
-                        )}
-                        className="nl-chart-target nl-control"
-                        aria-label={`${music.title} · ${target.difficulty} ${target.level}`}
-                        aria-disabled={pending || undefined}
-                        onClick={(event) => {
-                            if (pending) event.preventDefault();
-                        }}
-                    >
-                        <span
-                            className={`nl-difficulty-marker nl-difficulty-marker--${target.difficulty.toLowerCase()}`}
-                            aria-hidden
-                        />
-                        <span>{target.difficulty}</span>
-                        <span className="nl-metric-value">{target.level}</span>
-                    </Link>
-                ))}
-            </div>
-        </article>
-    );
+                    </span>
+                </span>
+                <span
+                    className={`nl-chart-chip nl-level--${target.difficulty.toLowerCase()}`}
+                    lang="en"
+                >
+                    <span className="nl-control">{target.difficulty}</span>
+                    <span className="nl-metric-value">{target.level}</span>
+                </span>
+            </span>
+        </Link>
+    ));
 }
 
-/** 채보 결과 묶음 스켈레톤(2026-09-19 로딩 시안 S1) — 같은 묶음 틀에 자켓 · 이름 · 아티스트 · 난이도 줄 둘 */
-export function ChartResultGroupSkeleton() {
+/** 채보 줄 스켈레톤 — 같은 줄 틀에 자켓 · 이름 · 아티스트 · 난이도 칩 */
+export function ChartResultRowSkeleton() {
     return (
-        <div className="nl-chart-group" aria-hidden="true">
-            <div className="nl-chart-group__identity">
-                <span className="nl-jacket nl-skeleton" />
-                <div className="nl-music-card__identity">
+        <div
+            className="nl-music-card nl-music-card--list nl-chart-row"
+            aria-hidden="true"
+        >
+            <span className="nl-jacket nl-skeleton" />
+            <span className="nl-music-card__body">
+                <span className="nl-music-card__identity">
                     <SkeletonText className="nl-entity-title" width="l" />
                     <SkeletonText className="nl-body-secondary" width="m" />
-                </div>
-            </div>
-            <div className="nl-chart-group__targets">
-                {[0, 1].map((index) => (
-                    <span key={index} className="nl-chart-target">
-                        <SkeletonText className="nl-control" width="s" />
-                    </span>
-                ))}
-            </div>
+                </span>
+                <span className="nl-chart-chip nl-skeleton" />
+            </span>
         </div>
     );
 }

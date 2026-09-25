@@ -14,6 +14,7 @@ export default function Avatar({
     className,
     fallbackName,
     fallbackInitial,
+    initialClassName = "nl-metadata",
     loading,
     style,
 }: {
@@ -23,6 +24,8 @@ export default function Avatar({
     className?: string;
     fallbackName?: string | null;
     fallbackInitial?: string;
+    /** 첫 글자 글자 스타일 — 기본 metadata, 프로필 머리 108 만 display(2026-09-26 D6) */
+    initialClassName?: string;
     loading?: "eager" | "lazy";
     style?: CSSProperties;
 }) {
@@ -48,7 +51,7 @@ export default function Avatar({
                     onError={() => setFailedSource(src)}
                 />
             ) : fallbackInitial || fallbackName?.trim() ? (
-                <span className="nl-metadata" aria-hidden>
+                <span className={initialClassName} aria-hidden>
                     {fallbackInitial ??
                         Array.from(fallbackName!.trim())[0].toLocaleUpperCase()}
                 </span>

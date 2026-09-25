@@ -10,14 +10,26 @@
     flex-shrink: 0;
     color: var(--nl-content-pending);
 }
-.noslog-ui .nl-achievement-hex[data-tier="1"] {
+.noslog-ui .nl-achievement-hex[data-tier="1"],
+.noslog-ui .nl-achievement-progress[data-tier="1"] {
     --nl-achievement-metal: var(--nl-exam-tier-mid);
 }
-.noslog-ui .nl-achievement-hex[data-tier="2"] {
+.noslog-ui .nl-achievement-hex[data-tier="2"],
+.noslog-ui .nl-achievement-progress[data-tier="2"] {
     --nl-achievement-metal: var(--nl-exam-tier-high);
 }
-.noslog-ui .nl-achievement-hex[data-tier="3"] {
+.noslog-ui .nl-achievement-hex[data-tier="3"],
+.noslog-ui .nl-achievement-progress[data-tier="3"] {
     --nl-achievement-metal: var(--nl-exam-tier-top);
+}
+/* 플래티넘 · 다이아(2026-09-25 C1) — 있는 색을 그대로: 판정 GOOD 청록 · 판정 ◆JUST 분홍(사이트에서 「최고」 를 뜻하는 색) */
+.noslog-ui .nl-achievement-hex[data-tier="4"],
+.noslog-ui .nl-achievement-progress[data-tier="4"] {
+    --nl-achievement-metal: var(--nl-judgement-good);
+}
+.noslog-ui .nl-achievement-hex[data-tier="5"],
+.noslog-ui .nl-achievement-progress[data-tier="5"] {
+    --nl-achievement-metal: var(--nl-judgement-s-just);
 }
 .noslog-ui .nl-achievement-hex[data-tier] {
     color: var(--nl-achievement-metal);
@@ -80,18 +92,6 @@
     align-items: center;
     gap: var(--nl-spacing-8);
     min-height: 24px;
-}
-
-/* 프로필 구역(C1) — 수 요약 → 최근 달성 3줄 */
-.noslog-ui .nl-profile-achievements__summary {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: var(--nl-spacing-8);
-}
-.noslog-ui .nl-profile-achievements__tiers {
-    font-variant-numeric: tabular-nums;
 }
 
 /* 목록 줄(L2) — 육각 48 · 제목 · 조건 · 진행 막대, 구분선 목록 */
@@ -299,4 +299,27 @@
     margin-top: var(--nl-spacing-4);
     padding-top: var(--nl-spacing-12);
     border-top: var(--nl-stroke-default) solid var(--nl-border-overlay);
+}
+
+/* 진행 막대(2026-09-25) — 쫓는 다음 등급의 색. 움직임은 ⑯ 공용 클래스(nl-chart-reveal · nl-chart-bar) */
+.noslog-ui .nl-bar-list__fill.nl-achievement-progress {
+    background: var(--nl-achievement-metal);
+}
+
+/* 결과 줄(2026-09-25) — 왼쪽 정렬 · 오른쪽 보기 전환(악곡 · 서열표와 같은 문법) */
+.noslog-ui .nl-achievements-page__results {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--nl-spacing-8);
+}
+/* 촘촘한 격자(2026-09-25 D1) — 육각 44 × 48 만 빽빽하게(osu! 메달 벽), 줄 사이 12 · 칸 사이 8 */
+.noslog-ui .nl-achievement-dense {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(52px, 1fr));
+    gap: var(--nl-spacing-12) var(--nl-spacing-8);
+    justify-items: center;
+    margin: 0;
+    padding: 0;
+    list-style: none;
 }

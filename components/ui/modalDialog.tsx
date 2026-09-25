@@ -19,6 +19,7 @@ export default function ModalDialog({
     trigger,
     showClose = true,
     width = "compact",
+    sheet = false,
     onCloseAutoFocus,
     onOpenAutoFocus,
     className,
@@ -32,6 +33,8 @@ export default function ModalDialog({
     trigger?: ReactNode;
     showClose?: boolean;
     width?: "compact" | "wide";
+    /** 1055 이하에서 화면 아래에 붙는 시트로(2026-09-26, 유튜브 폰 설명 창). 넓은 화면은 가운데 창 그대로 */
+    sheet?: boolean;
     onCloseAutoFocus?: (event: Event) => void;
     onOpenAutoFocus?: (event: Event) => void;
     className?: string;
@@ -50,6 +53,7 @@ export default function ModalDialog({
                         className={cn(
                             "nl-dialog",
                             `nl-dialog--${width}`,
+                            sheet && "nl-dialog--sheet",
                             className
                         )}
                         onCloseAutoFocus={onCloseAutoFocus}

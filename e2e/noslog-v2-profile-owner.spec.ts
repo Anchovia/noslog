@@ -75,12 +75,13 @@ for (const locale of ["ko", "ja", "en"] as const) {
                 ["partial", "failed"].includes(sync) ? 1 : 0
             );
             if (["partial", "failed"].includes(sync)) {
-                const chips = await identity
-                    .locator(".nl-profile-identity__chips")
+                // 정보 두 줄(2026-09-26 H1) — 동기화 버튼은 머리 격자 바로 아래 12
+                const row = await identity
+                    .locator(".nl-profile-identity__row")
                     .boundingBox();
                 const action = await recovery.boundingBox();
                 expect(action!.height).toBe(40);
-                expect(action!.y - chips!.y - chips!.height).toBe(12);
+                expect(action!.y - row!.y - row!.height).toBe(12);
             }
         }
         expect(

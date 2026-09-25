@@ -328,7 +328,7 @@ for (const locale of ["ko", "ja", "en"]) {
     });
 }
 
-test("Chart scope groups published difficulty destinations and hides the Music view switch", async ({
+test("Chart scope lists one row per published chart and hides the Music view switch", async ({
     page,
     request,
 }, testInfo) => {
@@ -346,16 +346,30 @@ test("Chart scope groups published difficulty destinations and hides the Music v
                 code: "SUCCESS",
                 message: "",
                 result: {
+                    // 채보 보기는 채보마다 한 줄(2026-09-25 A2)
                     items: [
                         {
                             ...music,
-                            targets: [
-                                { difficulty: "Expert", level: 12 },
-                                { difficulty: "Real", level: 2 },
-                            ],
+                            targets: [{ difficulty: "Expert", level: 12 }],
+                            chart: {
+                                publishedAt: "2026-09-24T03:00:00.000Z",
+                                author: "운영자",
+                                authorLevel: null,
+                                extracted: true,
+                            },
+                        },
+                        {
+                            ...music,
+                            targets: [{ difficulty: "Real", level: 2 }],
+                            chart: {
+                                publishedAt: "2026-09-20T03:00:00.000Z",
+                                author: "기여자",
+                                authorLevel: 3,
+                                extracted: false,
+                            },
                         },
                     ],
-                    total: 1,
+                    total: 2,
                     chartTotal: 2,
                     nextOffset: null,
                 },
@@ -367,16 +381,22 @@ test("Chart scope groups published difficulty destinations and hides the Music v
         .getByRole("combobox", { name: "검색 범위", exact: true })
         .click();
     await page.getByRole("option", { name: "채보 검색", exact: true }).click();
-    await expect(page.locator(".nl-chart-group")).toHaveCount(1);
-    await expect(page.locator(".nl-chart-target")).toHaveCount(2);
+    await expect(page.locator(".nl-chart-row")).toHaveCount(2);
+    // 작성자 · 출처 · 공개일은 목록에 없다(2026-09-26, 사용자 — 뷰어에서 본다)
+    await expect(page.locator(".nl-chart-row").first()).not.toContainText(
+        "영상에서 추출"
+    );
+    await expect(page.locator(".nl-chart-row").last()).not.toContainText(
+        "기여자"
+    );
     await expect(
         page.getByRole("radiogroup", { name: "보기 방식" })
     ).not.toBeVisible();
-    await expect(page.locator(".nl-chart-target").first()).toHaveAttribute(
+    await expect(page.locator(".nl-chart-row").first()).toHaveAttribute(
         "href",
         `/ko/music/${music.index}/expert/pattern`
     );
-    await expect(page.locator(".nl-chart-target").last()).toHaveAttribute(
+    await expect(page.locator(".nl-chart-row").last()).toHaveAttribute(
         "href",
         `/ko/music/${music.index}/real/pattern`
     );

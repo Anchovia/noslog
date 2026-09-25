@@ -32,7 +32,7 @@ export default function AnnouncementRow({
             className="nl-announcement-row"
             data-pinned={pinned ? "" : undefined}
         >
-            {/* 분류·날짜는 제목 위 한 줄 — 칩 폭이 달라도 제목이 같은 선에서 시작한다 (GitHub·Apple 방식) */}
+            {/* 한 줄(2026-09-26 R1) — 분류 · 고정 태그 · 제목 · 오른쪽 날짜. 폰은 「태그 … 날짜」 위 · 제목 아래 */}
             <div className="nl-announcement-meta">
                 <AnnouncementCategoryTag
                     category={announcement.category}
@@ -41,12 +41,6 @@ export default function AnnouncementRow({
                 {pinnedLabel ? (
                     <span className="nl-tag nl-metadata">{pinnedLabel}</span>
                 ) : null}
-                <time
-                    className="nl-metadata nl-muted"
-                    dateTime={announcement.publishedAt}
-                >
-                    {announcementDate(announcement.publishedAt, locale)}
-                </time>
             </div>
             <p className="nl-announcement-row__title nl-body">
                 <Link
@@ -59,6 +53,12 @@ export default function AnnouncementRow({
                     {announcement.title}
                 </Link>
             </p>
+            <time
+                className="nl-announcement-row__date nl-metadata nl-muted"
+                dateTime={announcement.publishedAt}
+            >
+                {announcementDate(announcement.publishedAt, locale)}
+            </time>
         </div>
     );
 }

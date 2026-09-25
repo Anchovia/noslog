@@ -27,16 +27,23 @@ test("guests see live events by closing date, a locked write button and no hidde
     const t = getMessages("ko");
     await page.goto("/ko/events");
     await expectPageLoaded(page);
-    await expect(page.locator("h1")).toHaveText(t["events.title"]);
+    // 「소식」 입구 탭(2026-09-26 N1 · E1) — 제목은 「소식」, 공지사항 · 이벤트 탭 아래 상태 칩
+    await expect(page.locator("h1")).toHaveText(t["news.title"]);
+    const newsTabs = page.locator(".nl-tabs__item");
+    await expect(newsTabs).toHaveText([
+        t["home.announcements"],
+        t["events.title"],
+    ]);
+    await expect(newsTabs.last()).toHaveAttribute("aria-current", "page");
     expect(await cardTitles(page)).toEqual(LIVE);
     for (const title of HIDDEN)
         await expect(page.locator("body")).not.toContainText(title);
 
-    const tabs = page.locator(".nl-tabs__item");
+    const tabs = page.locator(".nl-chips .nl-chip");
     await expect(tabs).toHaveText([
-        `${t["events.phase.live"]}3`,
-        `${t["events.phase.upcoming"]}1`,
-        `${t["events.phase.ended"]}1`,
+        `${t["events.phase.live"]} 3`,
+        `${t["events.phase.upcoming"]} 1`,
+        `${t["events.phase.ended"]} 1`,
     ]);
     await expect(tabs.first()).toHaveAttribute("aria-current", "page");
 
@@ -189,8 +196,8 @@ for (const locale of ["ja", "en"] as const) {
         const t = getMessages(locale);
         await page.goto(`/${locale}/events`);
         await expectPageLoaded(page);
-        await expect(page.locator("h1")).toHaveText(t["events.title"]);
-        await expect(page.locator(".nl-tabs__item").first()).toContainText(
+        await expect(page.locator("h1")).toHaveText(t["news.title"]);
+        await expect(page.locator(".nl-chips .nl-chip").first()).toContainText(
             t["events.phase.live"]
         );
     });

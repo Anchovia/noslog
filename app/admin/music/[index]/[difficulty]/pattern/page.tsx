@@ -27,6 +27,7 @@ export default async function AdminChartPatternEditorPage({
             difficulty: true,
             level: true,
             bpm_min: true,
+            note_count: true,
             duration_seconds: true,
             music: {
                 select: {
@@ -88,6 +89,7 @@ export default async function AdminChartPatternEditorPage({
                 artist: chart.music.artist,
                 difficulty: chart.difficulty,
                 level: chart.level,
+                noteCount: chart.note_count,
             }}
             initialDocument={initialDocument}
             draftVersion={chart.pattern?.draftVersion ?? 0}

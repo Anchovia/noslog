@@ -31,6 +31,7 @@ import { applyFormFieldErrors, applyFormRootError } from "@/lib/forms/errors";
 import { IMAGE_ACCEPT, imageFileValidationError } from "@/lib/imageUploadRules";
 import { uploadGrantedImage } from "@/lib/uploads/clientImageUpload";
 import AchievementShowcasePicker from "@/features/achievements/components/achievementShowcasePicker";
+import PinnedRecordsPicker from "@/features/profile/components/pinnedRecordsPicker";
 import ArcadePicker from "./arcadePicker";
 import AvatarCropDialog from "./avatarCropDialog";
 import UnsavedChangesGuard from "./unsavedChangesGuard";
@@ -69,6 +70,7 @@ export default function ProfileSettings({
         control,
         name: "achievementShowcase",
     });
+    const pinnedRecords = useWatch({ control, name: "pinnedRecords" });
     const [saved, setSaved] = useState("");
     const [crop, setCrop] = useState<File | null>(null);
     const [staged, setStaged] = useState<{ file: File; url: string } | null>(
@@ -338,6 +340,19 @@ export default function ProfileSettings({
                     }
                     disabled={isSubmitting}
                     error={errors.achievementShowcase?.message}
+                />
+                {/* 고정 기록(2026-09-26 S2) — 프로필 업적 칸과 같은 모양, 「저장」 때 함께 저장 */}
+                <PinnedRecordsPicker
+                    records={user.pinnableRecords}
+                    value={pinnedRecords ?? ""}
+                    onChange={(value) =>
+                        setValue("pinnedRecords", value, {
+                            shouldDirty: true,
+                            shouldValidate: true,
+                        })
+                    }
+                    disabled={isSubmitting}
+                    error={errors.pinnedRecords?.message}
                 />
                 <div className="nl-settings__save">
                     <a

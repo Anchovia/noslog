@@ -13,11 +13,14 @@ import {
 interface MusicTranslationApproveButtonProps {
     locale: MusicTranslationLocale;
     musicIndex: string;
+    /** 승인 뒤 — 목록이 클라이언트에서 불러온 쪽을 다시 받게(2026-09-25 무한 스크롤) */
+    onApproved?: () => void;
 }
 
 export default function MusicTranslationApproveButton({
     locale,
     musicIndex,
+    onApproved,
 }: MusicTranslationApproveButtonProps) {
     const router = useRouter();
     const [isPending, startTransition] = useTransition();
@@ -34,6 +37,7 @@ export default function MusicTranslationApproveButton({
                 }
 
                 toast.success(result.message);
+                onApproved?.();
                 router.refresh();
             } catch {
                 toast.error("악곡 번역을 승인하지 못했습니다.");

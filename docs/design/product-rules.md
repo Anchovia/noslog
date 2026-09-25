@@ -76,6 +76,46 @@ old design-stage checklist. Changes to material behavior require a user decision
   Do not leak private values through response payloads or generated images.
 - Basic and Recital retain their distinct record/grade meaning. Show the highest
   approved exam achievement per mode; do not introduce a generic `GRADE 57` badge.
+- The public profile (2026-09-25) is one head (identity, meta line, mode, headline
+  Grd) above section tabs with their own URLs — overview `/profile/[id]`, records
+  `/records`, stats `/stats`, achievements `/achievements` and activity `/activity`.
+  The selected mode lives in the URL (`?mode=recital`) and carries across tabs; only
+  the overview, records and the stats progress chart use it. Others do not see the
+  records and stats tabs of a score-private profile; others do not see the activity
+  tab while "hide play activity" is on (same rule as the recent-play list).
+- Owner view (2026-09-26 P1): the owner sees their own hidden items — NOSTALGIA ID,
+  Discord, preferred arcade, last played, play count, recent plays and the activity
+  tab — marked "only visible to you". These values are loaded only for the owner's
+  request (the plays API checks the session) and never enter the public profile cache. The headline
+  shows official Grd, world and country rank and the rating — no mode name, "top N%"
+  or 90-day change (2026-09-26, user).
+- Records tab (2026-09-25): "Best" is the top 50 charts by the mode's official Grd
+  contribution (the same set official Grd counts); sorts apply inside that set and
+  each row keeps its best position. There is no search or filter (2026-09-26). "All records" is every chart with a
+  score. A row's chart rank is the chart ranking's RANK among players who show scores
+  (a private player's own rows count among the public players). The achieved date is
+  the imported best time; the never-played placeholder (1970) shows no date. The
+  records API rechecks score privacy on every request like the plays API.
+- Stats tab (2026-09-26) is mode-independent except the progress chart. Level
+  achievement counts every listed chart per difficulty and level in one bar: each
+  played chart goes to its highest group — Pianist (FC type 3 or rank P) > FC
+  (FC type 2) > rank S > A+ > A > B or lower. A failed play has no group of its own
+  (it counts under its rank); unplayed = listed charts − played charts. "All" merges
+  NORMAL · HARD · EXPERT by level (levels 1–8 in one row) and keeps REAL levels as
+  separate rows; the overview side shows levels 9 and up plus REAL. The row
+  percentage is played charts over listed charts, or one group's share when that
+  group is picked in the legend. Rank counts and play count are the official-site
+  values as before, with an FC bar (FC lamp + Pianist). There is no note-type
+  success section. Rank and play-count history for the progress chart do not exist
+  yet, so the chart keeps Grd and rating only.
+- Activity tab (2026-09-26) counts imported play history per Korean calendar day
+  over 53 weeks ending today (history exists only after bookmarklet sync). Summary
+  = plays in that window, plays this month, the current streak (consecutive days
+  ending today, or yesterday when today has no play yet) and the longest run of
+  consecutive days. Calendar colour steps are relative to the player's busiest day.
+  Recent plays are listed one play per row, 20 per page; "new best" marks a play
+  whose score beat the best score recorded just before it (a first play counts).
+  Score-private profiles show others the calendar and summary without the list.
 - Public share links use stable profile IDs and the selected locale. Card export,
   clipboard or native-share failure must offer a usable fallback without changing
   privacy settings. Respect the existing public-data policy on every request.
@@ -408,7 +448,8 @@ old design-stage checklist. Changes to material behavior require a user decision
   counts) and, for the owner only, their suggestion list with rejection reasons.
 - Stage 3 — user chart drafts and timestamped comments (2026-09-24). One draft
   per user · chart (`chart_drafts`): it starts from the published chart, or an
-  empty chart when none is published, and only its author and admins can see
+  empty chart when none is published (an empty chart, here and in the admin editor, starts its timing at
+  500 ms so notes on 1마디 1박 are seen falling — 2026-09-25), and only its author and admins can see
   it. Draft → 「검토 요청」 (locked; the author can withdraw) → admin
   「수정 요청」 or 「공개」. Size limits: 20,000 notes, 1,000 timing points,
   30 minutes. Saving uses the draft version, so a stale window gets a conflict
@@ -464,11 +505,23 @@ old design-stage checklist. Changes to material behavior require a user decision
   dropped, and a standard note on the path is taken as a rung read twice and dropped. A trill's
   head width w becomes two positions of width w-1 one lane apart (the video's hexes alternate
   one lane within the head, 2026-09-24) and is flagged.
+  When the zip carries hands for at least half its notes, notes whose hand was not read and that
+  look like extraction ghosts are dropped before import and listed in a warning with their
+  places (2026-09-25 F1′, checked against the videos by the combo counter): a tenuto of 8 beats
+  or more that overlaps another note, and a standard note inside a tenuto's lanes within ¾ of a
+  beat after its head. Notes whose hand was read are never dropped. When the chart has a note
+  count, the panel compares it with the import's judgement count (one per note, one per
+  glissando rung).
 - Against an existing draft every difference is listed (same tick, overlapping lanes = same
   note; otherwise the same lane, width and type within 1/8 of a quarter = the same note moved;
   a hand read from the video counts as a difference, a guessed hand does not) and chosen
   per place; notes after the draft are a separate
-  new-section toggle. An import that would create overlapping notes cannot be applied.
+  new-section toggle. An import that would create overlapping notes can still be applied
+  (2026-09-26 A): the footer names the places, the overlapping notes (both sides) go in selected, and
+  the admin removes the false side or fixes the length in the editor — the video's combo tells which
+  side is false (パヴァーヌ: the notes inside a long tenuto; 平均律: the tenuto). Revisions still refuse
+  overlaps, so the 「영상 추출」 revision is kept pending and the first revision saved after the overlaps
+  are fixed is recorded as the video-extraction revision.
 - Snap check in the editor (2026-09-24 C, like osu!'s "Unsnapped hitobjects" check): a note
   whose start is off every editor snap (1/1–1/32 of the active beat) gets a dashed warning
   outline, and the note inspector lists them with the nearest grid and offset in ms, one by one
@@ -476,7 +529,13 @@ old design-stage checklist. Changes to material behavior require a user decision
 - Tempo changes become proposed timing points (2026-09-23 T2): the result zip carries
   `beat_frames.json` — frames where bar lines crossed one grid row, before vid2bmap's
   frame-drop correction — and the tempo is measured from those (the corrected bar lines
-  jitter ±10%). A change is a shift of more than 1.5% in the trimmed mean of 8 beats that
+  jitter ±10%). Beats are counted on the AI bar lines the notes use (2026-09-25): when the zip is
+  read, a gap of 1.5× the neighbours or more gets the raw bar line inside it, or, when neither has
+  one, even lines from 1.8× (below that it may be a fermata); a line under half a beat from its
+  neighbour with no raw line is dropped; the import panel says where 「AI 가 놓친 박자선 ○곳을
+  메우고 …」. Each AI line is paired with its raw frame (within 35% of a beat, following the offset
+  that frame-drop correction shifts); unpaired beats share the raw time between their paired
+  neighbours evenly. A change is a shift of more than 1.5% in the trimmed mean of 8 beats that
   lasts at least 8 beats; each section's BPM is measured by a straight-line fit over all its beats (shared slope, separate offsets across steps where
   the beats jump by more than 1.5 frames; sections under 32 beats use the first-to-last average), then the first of whole →
   0.5 → 0.1 → 0.01 whose beats stay within the video jitter + 0.5 frames to the section end is proposed (2026-09-25 B′),
@@ -501,7 +560,9 @@ old design-stage checklist. Changes to material behavior require a user decision
   over its whole length, not the first beats — differs from it: 「시작 타이밍을 BPM ○ 로」, on by
   default only when the draft has no notes (changing the start BPM moves every existing note in
   time); it changes only that point's BPM, like editing it, and goes in with the notes. The offset
-  (start time against the audio) cannot come from the video. The meter is proposed in the same
+  (start time against the audio) cannot come from the video; when the start time is 0 ms the same
+  card offers 「시작 시각을 500ms 로」 (2026-09-25 B, the new-draft default), on by default only when
+  the draft has no notes, moving every timing point by the same amount. The meter is proposed in the same
   card (2026-09-24 A): the game draws the same line every beat, so accents at beat heads (notes
   within 3 frames, tenuto/trill starts ×3) are compared for 3- and 4-beat cycles; 「박자를 ○/4 로」
   shows 뚜렷함/약함 (clear = score ≥ 0.15 and twice the other) and is on by default only when
@@ -565,14 +626,19 @@ old design-stage checklist. Changes to material behavior require a user decision
 
 ## Achievements (2026-09-24)
 
-- Tiered achievements (bronze I · silver II · gold III) judged automatically from synced records and site
-  activity. There are no hidden achievements and no conditions based on play counts, sync counts, streaks
-  or luck. Definitions and thresholds live in code (`features/achievements`); thresholds are provisional
-  until they are set from the production distribution.
+- Tiered achievements judged automatically from synced records and site activity. Five grades — bronze I ·
+  silver II · gold III · platinum IV · diamond V (2026-09-25) — and each achievement has its own set of
+  grades: all five, only bronze · silver · gold, or a single diamond for a very rare one. The stored tier is
+  the grade. There are no hidden achievements and no conditions based on play counts, sync counts, streaks
+  or luck, and no bingo achievement (bingo cells are ticked by players themselves). Definitions and
+  thresholds live in code (`features/achievements`); they can be tuned again from the production
+  distribution.
 - Judging runs at the end of every sync, after records and Grd are updated. It only adds newly reached
   tiers (`user_achievements`, one row per user · achievement · tier) and never removes a tier, even if the
-  value later drops. A failed judgement never fails the sync. Achievements that come from activity
-  (opinions, helpful marks, pattern ratings, exams, bingo) are also picked up at the next sync.
+  value later drops. The only exception is the admin 「업적 다시 판정」 with 「기준에 못 미치는 단계도 빼기」
+  checked (2026-09-25, off by default, used after thresholds change): it removes tiers of removed
+  achievements, grades an achievement no longer has, and tiers whose current value is below the threshold. A failed judgement never fails the sync. Achievements that come from activity
+  (opinions, helpful marks, pattern ratings, exams) are also picked up at the next sync.
 - The date of a tier is when NosLog confirmed it (the sync time), not when it was played.
 - Rarity is shown as the number of players who reached each tier, only on the achievement page.
   No player list.
@@ -580,6 +646,15 @@ old design-stage checklist. Changes to material behavior require a user decision
   highest tiers automatically when none are chosen. They are chosen in Settings → Profile (2026-09-25) and
   saved with the rest of the profile form; only earned achievements, at most three, in the chosen order.
   An invalid choice blocks the whole save. The achievement list itself has no pin controls.
+- Pinned records (2026-09-26 S2, `UserPinnedRecord`): up to three charts the owner
+  chose, each with an optional one-line note (80 characters, whitespace collapsed),
+  shown on the overview in the chosen order with that chart's current best record.
+  Pins are by chart because sync may replace record rows; a pin whose chart has no
+  scored record anymore is skipped, and with no usable pin the overview shows the top
+  three Basic Grd records. Only charts with a score can be pinned; they are chosen in
+  Settings → Profile and saved with the profile form, and an invalid choice blocks the
+  whole save. Score-private profiles show nothing of this to others (the overview is
+  locked). Notes are public profile text.
 - Profiles with private scores: other people do not see skill or collection achievements (they reveal
   record ranges); challenge and community achievements stay visible. Progress values are shown only to the
   owner.

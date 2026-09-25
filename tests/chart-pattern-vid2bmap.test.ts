@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import altale from "./fixtures/vid2bmap-altale-real.json";
 import {
+    countChartJudgments,
     findChartNoteConflicts,
     getGlissandoSnapRenderPoints,
 } from "@/lib/chart-pattern/editor";
@@ -35,8 +36,10 @@ import {
 } from "@/lib/chart-pattern/vid2bmap";
 import {
     barRowsFromMask,
+    matchBeatFrames,
     parseNpy,
     readVid2bmapZip,
+    repairVid2bmapBarRows,
 } from "@/lib/chart-pattern/vid2bmapFile";
 import type { Vid2bmapResult } from "@/lib/chart-pattern/vid2bmapFile";
 
@@ -168,6 +171,7 @@ describe("vid2bmap file reading", () => {
             trill: [],
             glissando: [],
             beatFrames: null,
+            barRepairs: [],
         });
     });
 
@@ -475,6 +479,111 @@ describe("vid2bmap hands from the LR run", () => {
                 .changed[0].fields
         ).toEqual(["hand"]);
         expect(diffChartNotes([current], [incoming]).same).toHaveLength(1);
+    });
+});
+
+describe("vid2bmap notes the hand run did not see", () => {
+    // 40프레임 = 1박(90 BPM 4/4), 첫 박자선 = 틱 0
+    const rows = {
+        // 손을 읽은 테누토(1박 · ½박) — 머리 ¼박 뒤 칸 안의 손 없는 일반 노트는 몸통을 다시 읽은 것
+        heldHalf: [40, 60, 20, 22, 1],
+        ghost: [50, 21, 22, -1],
+        // 손을 읽은 2박 테누토 — 1박 뒤 칸 안의 손 없는 노트는 진짜일 수 있어 남긴다
+        heldTwo: [120, 200, 5, 7, 0],
+        oneBeatLater: [160, 6, 7, -1],
+        // 손 없는 9박 테누토가 다른 노트와 겹침 → 영상에 없던 테누토
+        phantom: [240, 600, 12, 15, -1],
+        underPhantom: [280, 13, 14, 0],
+        // 손을 읽은 9박 테누토는 겹쳐도 남긴다(길이만 틀린 진짜 테누토)
+        longRead: [240, 600, 1, 3, 0],
+        underLongRead: [320, 2, 3, 0],
+    };
+    const others = [0, 80, 360, 440, 520].map((y) => [y, 25, 26, 1]);
+    const build = (withHands: boolean): Vid2bmapResult => {
+        const strip = (row: number[]) => (withHands ? row : row.slice(0, -1));
+        return {
+            fps: null,
+            startSec: null,
+            barRows: Array.from({ length: 20 }, (_, index) => index * 40),
+            simple: [
+                rows.ghost,
+                rows.oneBeatLater,
+                rows.underPhantom,
+                rows.underLongRead,
+                ...others,
+            ].map(strip),
+            tenuto: [
+                rows.heldHalf,
+                rows.heldTwo,
+                rows.phantom,
+                rows.longRead,
+            ].map(strip),
+            trill: [],
+            glissando: [],
+            beatFrames: null,
+        };
+    };
+    const convert = (result: Vid2bmapResult) => {
+        let next = 0;
+        return convertVid2bmap(result, collectVid2bmapNotes(result).notes, {
+            timingPoints: [point(0, 0, 90, 4, 4)],
+            firstBarTick: 0,
+            snapDivisor: 4,
+            include: { standard: true, tenuto: true, trill: true },
+            createId: () => `n${(next += 1)}`,
+        });
+    };
+    const has = (notes: ChartNote[], tick: number, lane: number) =>
+        notes.some((note) => note.tick === tick && note.lane === lane);
+
+    it("drops a standard note inside a held tenuto just after its head", () => {
+        const { notes } = convert(build(true));
+        expect(has(notes, 600, 21)).toBe(false);
+        expect(has(notes, 480, 20)).toBe(true);
+    });
+
+    it("keeps a note a full beat after the head", () => {
+        expect(has(convert(build(true)).notes, 1920, 6)).toBe(true);
+    });
+
+    it("drops a long overlapping tenuto whose hand was not read, not one whose hand was", () => {
+        const { notes, warnings } = convert(build(true));
+        expect(has(notes, 2880, 12)).toBe(false);
+        expect(has(notes, 3360, 13)).toBe(true);
+        expect(has(notes, 2880, 1)).toBe(true);
+        expect(warnings[0]).toEqual({
+            kind: "phantomDropped",
+            tenutoTicks: [2880],
+            headTicks: [600],
+        });
+    });
+
+    it("leaves an old zip without a hand column alone", () => {
+        const { notes, warnings } = convert(build(false));
+        expect(has(notes, 600, 21)).toBe(true);
+        expect(has(notes, 2880, 12)).toBe(true);
+        expect(
+            warnings.some((warning) => warning.kind === "phantomDropped")
+        ).toBe(false);
+    });
+});
+
+describe("chart judgment count", () => {
+    it("counts one per note and one per glissando rung", () => {
+        const base = { hand: "left" as const, lane: 1, width: 2, points: [] };
+        const notes: ChartNote[] = [
+            { ...base, id: "s", type: "standard", tick: 0, durationTicks: 0 },
+            { ...base, id: "t", type: "tenuto", tick: 480, durationTicks: 960 },
+            {
+                ...base,
+                id: "g",
+                type: "glissando",
+                tick: 1920,
+                durationTicks: 480,
+                glissandoSnapDivisor: 16,
+            },
+        ];
+        expect(countChartJudgments(notes, 480)).toBe(2 + 5);
     });
 });
 
@@ -1170,6 +1279,88 @@ describe("vid2bmap glissando", () => {
     });
 });
 
+describe("vid2bmap bar line repair", () => {
+    // 160 BPM(22.5프레임) 80박. AI 박자선(y) = 원본 프레임 + 9(격자 12번 줄 → 판정선, 22줄)
+    const beats = Array.from({ length: 80 }, (_, beat) =>
+        Math.round(30 + beat * 22.5)
+    );
+    const frames = (skip: number[] = []) => ({
+        frames: beats.filter((_, beat) => !skip.includes(beat)),
+        row: 12,
+        gridRows: 22,
+    });
+    const rowsOf = (list: number[]) => list.map((frame) => frame + 9);
+
+    it("fills a bar line the AI missed from the raw frames, like 海神 Real 18마디", () => {
+        const rows = rowsOf(beats.filter((_, beat) => beat !== 40));
+        const repaired = repairVid2bmapBarRows(rows, frames());
+        expect(repaired.rows).toEqual(rowsOf(beats));
+        expect(repaired.repairs).toEqual([
+            { row: beats[40] + 9, kind: "inserted", evidence: "frames" },
+        ]);
+    });
+
+    it("fills by spacing only when neither has the line, and keeps a fermata", () => {
+        const missing = repairVid2bmapBarRows(
+            rowsOf(beats.filter((_, beat) => beat !== 40)),
+            frames([40])
+        );
+        expect(missing.rows).toHaveLength(80);
+        expect(missing.repairs[0]).toMatchObject({
+            kind: "inserted",
+            evidence: "spacing",
+        });
+        // 한 박을 1.55배로 끄는 페르마타 — 원본에도 선이 없으면 그대로 한 박
+        const fermata = beats.map((frame, beat) =>
+            beat > 40 ? frame + 12 : frame
+        );
+        const kept = repairVid2bmapBarRows(rowsOf(fermata), {
+            ...frames(),
+            frames: fermata,
+        });
+        expect(kept.rows).toEqual(rowsOf(fermata));
+        expect(kept.repairs).toEqual([]);
+    });
+
+    it("drops a line read twice and matches every line to its raw frame", () => {
+        const doubled = [...rowsOf(beats), beats[30] + 9 + 2].sort(
+            (left, right) => left - right
+        );
+        const repaired = repairVid2bmapBarRows(doubled, frames());
+        expect(repaired.rows).toHaveLength(80);
+        expect(repaired.repairs).toMatchObject([
+            { kind: "removed", evidence: "spacing" },
+        ]);
+        // 원본 프레임에 없는 박(20번째)만 짝이 없다
+        const matched = matchBeatFrames(rowsOf(beats), frames([20]));
+        expect(matched.filter((frame) => frame === null)).toHaveLength(1);
+        expect(matched[20]).toBeNull();
+        expect(matched[21]).toBe(beats[21]);
+    });
+
+    it("keeps the tempo on the same beats as the notes after a missed bar line", () => {
+        const rows = repairVid2bmapBarRows(
+            rowsOf(beats.filter((_, beat) => beat !== 40)),
+            frames()
+        ).rows;
+        const song = {
+            fps: 60,
+            startSec: 0,
+            barRows: rows,
+            simple: [],
+            tenuto: [],
+            trill: [],
+            glissando: [],
+            beatFrames: frames(),
+        } satisfies Vid2bmapResult;
+        const base = [point(0, 0, 160, 4, 4)];
+        const tempo = detectVid2bmapTempoChanges(song, 0, base);
+        expect(tempo?.changes).toEqual([]);
+        expect(tempo?.startMismatch).toBeNull();
+        expect(vid2bmapTimingDrift(song, 0, base)?.onVideo).toBe(true);
+    });
+});
+
 describe("vid2bmap tempo changes from raw beat frames", () => {
     // 60fps · 90 BPM = 40프레임, 83 BPM = 43.37프레임. 박자선은 격자 12번 줄(22줄) → 판정선까지 9프레임
     const build = (drop?: number) => {
@@ -1247,6 +1438,11 @@ describe("vid2bmap tempo changes from raw beat frames", () => {
         expect(
             applyVid2bmapStartTiming(points, { bpm: null, numerator: 3 })
         ).toEqual([{ ...points[0], numerator: 3 }, points[1]]);
+        // 시작 시각(음원 오프셋)을 옮기면 뒤 포인트도 같은 만큼 — 박 사이 간격은 그대로
+        expect(applyVid2bmapStartTiming(points, { timeMs: 500 })).toEqual([
+            { ...points[0], timeMs: 500 },
+            { ...points[1], timeMs: 2440 },
+        ]);
     });
 
     it("picks the simplest BPM that stays on the video's beats to the end of the section", () => {

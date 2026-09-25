@@ -1,9 +1,9 @@
 /**
  * 업적(2026-09-24 T2 · K1 · R1 · P5 · N1 · D1) — 동기화한 기록 · 활동으로 자동 판정하는 단계형 업적.
- * 한 업적 = 동 I · 은 II · 금 III 세 단계. 숨긴 업적 · 플레이 횟수 · 연속 일수 · 운 조건은 두지 않는다
+ * 한 업적 = 동 I · 은 II · 금 III · 플래티넘 IV · 다이아 V 다섯 단계(2026-09-25). 숨긴 업적 · 플레이 횟수 · 연속 일수 · 운 조건은 두지 않는다
  * (오락실은 한 판이 돈 — 반복을 부르는 조건 금지). 얻은 단계는 기준 아래로 내려가도 지우지 않는다.
  *
- * 기준 수치는 운영 분포를 보고 정한다 — 지금 값은 임시(2026-09-24).
+ * 기준 수치(2026-09-25 사용자 · 제안표) — 운영 분포를 보고 다시 조정할 수 있다.
  */
 export const ACHIEVEMENT_CATEGORIES = [
     "skill",
@@ -24,7 +24,6 @@ export const ACHIEVEMENT_METRICS = [
     "basicGrade",
     "examBasic",
     "examRecital",
-    "bingoFullBoards",
     "opinions",
     "helpfulReceived",
     "patternEvaluations",
@@ -45,20 +44,24 @@ export type AchievementMetrics = Record<
     AchievementMetricValue
 >;
 
-export const ACHIEVEMENT_TIERS = [1, 2, 3] as const;
+/** 등급 — 1 동 · 2 은 · 3 금 · 4 플래티넘 · 5 다이아(2026-09-25). 알약 숫자 I–V 는 등급을 뜻한다 */
+export const ACHIEVEMENT_TIERS = [1, 2, 3, 4, 5] as const;
 export type AchievementTier = (typeof ACHIEVEMENT_TIERS)[number];
 
 export interface AchievementDefinition {
     key: string;
     category: AchievementCategory;
     metric: AchievementMetric;
-    /** 동 · 은 · 금 기준 — 오름차순. 비율 업적은 0–1 */
-    thresholds: readonly [number, number, number];
+    /**
+     * 이 업적이 가진 등급과 기준(2026-09-25) — 업적마다 다르다. 다섯 단계 모두 · 동 · 은 · 금 셋만 ·
+     * 아주 드문 업적은 다이아 하나만(`{ 5: 1 }`)도 된다. 높은 등급일수록 기준도 높다. 비율 업적은 0–1
+     */
+    thresholds: Readonly<Partial<Record<AchievementTier, number>>>;
     /** 검정처럼 「급」 으로 읽는 값 — 화면에서 기준을 급수로 보인다 */
     unit?: "count" | "grade" | "ratio" | "exam";
 }
 
-/** 검정 급수(10 → 1)를 올라가는 값으로 — 7급 = 4, 4급 = 7, 2급 = 9. 명판 금속 사다리(동 7~5 · 은 4~3 · 금 2~1)와 같은 경계 */
+/** 검정 급수(10 → 1)를 올라가는 값으로 — 7급 = 4 · 5급 = 6 · 3급 = 8 · 2급 = 9 · 1급 = 10(업적 기준 7 · 5 · 3 · 2 · 1급, 2026-09-25) */
 export function examGradeScore(grade: number | null): number {
     return grade === null ? 0 : 11 - grade;
 }
@@ -72,71 +75,71 @@ export const ACHIEVEMENT_DEFINITIONS: readonly AchievementDefinition[] = [
         key: "s-rank",
         category: "skill",
         metric: "sRankCharts",
-        thresholds: [10, 50, 200],
+        thresholds: { 1: 10, 2: 50, 3: 200, 4: 500, 5: 1000 },
     },
     {
         key: "score-990k",
         category: "skill",
         metric: "score990kCharts",
-        thresholds: [1, 20, 100],
+        thresholds: { 1: 10, 2: 50, 3: 200, 4: 500, 5: 1000 },
     },
     {
         key: "full-combo",
         category: "skill",
         metric: "fullComboCharts",
-        thresholds: [10, 50, 200],
+        thresholds: { 1: 10, 2: 50, 3: 200, 4: 500, 5: 1000 },
     },
     {
         key: "pianist",
         category: "skill",
         metric: "pianistCharts",
-        thresholds: [1, 10, 50],
+        thresholds: { 1: 10, 2: 50, 3: 200, 4: 500, 5: 1000 },
     },
     {
         key: "real-s-rank",
         category: "skill",
         metric: "realSRankCharts",
-        thresholds: [1, 10, 30],
+        thresholds: { 1: 1, 2: 10, 3: 50, 4: 150, 5: 300 },
     },
     {
         key: "one-hand",
         category: "skill",
         metric: "oneHandSRankCharts",
-        thresholds: [1, 10, 50],
+        thresholds: { 1: 1, 2: 10, 3: 50, 4: 100, 5: 200 },
     },
     {
         key: "basic-grade",
         category: "skill",
         metric: "basicGrade",
-        thresholds: [6500, 7500, 8000],
+        thresholds: { 1: 6000, 2: 6500, 3: 7000, 4: 7500, 5: 8000 },
     },
     // 수집 — 카테고리 곡 중 S 이상을 받은 곡(난이도 무관)의 비율
     {
         key: "category-bm",
         category: "collection",
         metric: "categoryBM",
-        thresholds: [0.25, 0.5, 1],
+        thresholds: { 1: 0.1, 2: 0.25, 3: 0.5, 4: 0.75, 5: 1 },
         unit: "ratio",
     },
     {
         key: "category-org",
         category: "collection",
         metric: "categoryOrg",
-        thresholds: [0.25, 0.5, 1],
+        thresholds: { 1: 0.1, 2: 0.25, 3: 0.5, 4: 0.75, 5: 1 },
         unit: "ratio",
     },
     {
         key: "category-cljz",
         category: "collection",
         metric: "categoryClJz",
-        thresholds: [0.25, 0.5, 1],
+        thresholds: { 1: 0.1, 2: 0.25, 3: 0.5, 4: 0.75, 5: 1 },
         unit: "ratio",
     },
     {
         key: "category-var",
         category: "collection",
         metric: "categoryVar",
-        thresholds: [0.25, 0.5, 1],
+        thresholds: { 1: 0.1, 2: 0.25, 3: 0.5, 4: 0.75, 5: 1 },
         unit: "ratio",
     },
     // 도전
@@ -144,40 +147,34 @@ export const ACHIEVEMENT_DEFINITIONS: readonly AchievementDefinition[] = [
         key: "exam-basic",
         category: "challenge",
         metric: "examBasic",
-        thresholds: [4, 7, 9],
+        thresholds: { 1: 4, 2: 6, 3: 8, 4: 9, 5: 10 },
         unit: "exam",
     },
     {
         key: "exam-recital",
         category: "challenge",
         metric: "examRecital",
-        thresholds: [4, 7, 9],
+        thresholds: { 1: 4, 2: 6, 3: 8, 4: 9, 5: 10 },
         unit: "exam",
-    },
-    {
-        key: "bingo",
-        category: "challenge",
-        metric: "bingoFullBoards",
-        thresholds: [1, 3, 5],
     },
     // 커뮤니티
     {
         key: "opinion",
         category: "community",
         metric: "opinions",
-        thresholds: [1, 10, 50],
+        thresholds: { 1: 1, 2: 10, 3: 30, 4: 50, 5: 100 },
     },
     {
         key: "helpful",
         category: "community",
         metric: "helpfulReceived",
-        thresholds: [10, 50, 200],
+        thresholds: { 1: 5, 2: 20, 3: 50, 4: 100, 5: 200 },
     },
     {
         key: "pattern-evaluation",
         category: "community",
         metric: "patternEvaluations",
-        thresholds: [10, 50, 200],
+        thresholds: { 1: 10, 2: 50, 3: 100, 4: 200, 5: 500 },
     },
 ];
 
@@ -206,33 +203,47 @@ export function achievementScore(
     return metric.total ? metric.value / metric.total : 0;
 }
 
-/** 지금 값으로 닿은 가장 높은 단계 — 0 이면 아직 없음 */
+export interface AchievementStep {
+    tier: AchievementTier;
+    threshold: number;
+}
+
+/** 이 업적의 단계들 — 등급 순(가진 등급만) */
+export function achievementSteps(
+    definition: AchievementDefinition
+): AchievementStep[] {
+    return ACHIEVEMENT_TIERS.flatMap((tier) => {
+        const threshold = definition.thresholds[tier];
+        return threshold === undefined ? [] : [{ tier, threshold }];
+    });
+}
+
+/** 지금 값으로 닿은 가장 높은 등급 — 0 이면 아직 없음 */
 export function achievementTierFor(
     definition: AchievementDefinition,
     metric: AchievementMetricValue
 ): 0 | AchievementTier {
     const score = achievementScore(definition, metric);
-    let tier = 0;
-    for (const threshold of definition.thresholds) {
-        if (score >= threshold) tier += 1;
-    }
-    return tier as 0 | AchievementTier;
+    let tier: 0 | AchievementTier = 0;
+    for (const step of achievementSteps(definition))
+        if (score >= step.threshold) tier = step.tier;
+    return tier;
 }
 
-/** 이미 얻은 단계 다음부터 이번 값으로 새로 닿은 단계들 */
+/** 이미 얻은 등급 위로, 이번 값으로 새로 닿은 단계들 */
 export function newAchievementTiers(
     definition: AchievementDefinition,
     metric: AchievementMetricValue,
     earnedTier: number
 ): AchievementTier[] {
-    const reached = achievementTierFor(definition, metric);
-    return ACHIEVEMENT_TIERS.filter(
-        (tier) => tier > earnedTier && tier <= reached
-    );
+    const score = achievementScore(definition, metric);
+    return achievementSteps(definition)
+        .filter((step) => step.tier > earnedTier && score >= step.threshold)
+        .map((step) => step.tier);
 }
 
 export interface AchievementProgress {
-    /** 다음 단계 — 금까지 얻었으면 null */
+    /** 다음 단계의 등급 — 가진 단계를 다 얻었으면 null */
     nextTier: AchievementTier | null;
     /** 다음 단계 기준(비율 업적은 곡 수로 바꾼 값) */
     target: number | null;
@@ -248,13 +259,15 @@ export function achievementProgress(
     metric: AchievementMetricValue,
     earnedTier: number
 ): AchievementProgress {
-    const nextTier = (ACHIEVEMENT_TIERS.find((tier) => tier > earnedTier) ??
-        null) as AchievementTier | null;
+    const next = achievementSteps(definition).find(
+        (step) => step.tier > earnedTier
+    );
     const current = metric.value;
-    if (nextTier === null) {
-        return { nextTier, target: null, current, ratio: 1 };
+    if (!next) {
+        return { nextTier: null, target: null, current, ratio: 1 };
     }
-    const threshold = definition.thresholds[nextTier - 1];
+    const nextTier = next.tier;
+    const threshold = next.threshold;
     const target =
         definition.unit === "ratio"
             ? Math.ceil(threshold * (metric.total ?? 0))
@@ -293,9 +306,18 @@ export function autoShowcase(earned: readonly EarnedAchievement[]) {
         .slice(0, ACHIEVEMENT_SHOWCASE_SIZE);
 }
 
-/** 전체 단계 수 — 「업적 42 / 51」 의 분모 */
-export const ACHIEVEMENT_TIER_TOTAL =
-    ACHIEVEMENT_DEFINITIONS.length * ACHIEVEMENT_TIERS.length;
+/** 업적들이 가진 단계 수의 합 — 「업적 42 / 80」 의 분모(업적마다 단계 수가 다르다) */
+export function achievementStepTotal(
+    definitions: readonly AchievementDefinition[]
+) {
+    return definitions.reduce(
+        (sum, definition) => sum + achievementSteps(definition).length,
+        0
+    );
+}
+export const ACHIEVEMENT_TIER_TOTAL = achievementStepTotal(
+    ACHIEVEMENT_DEFINITIONS
+);
 
 /**
  * 점수 비공개(2026-09-18 S3) 프로필을 남이 볼 때는 점수에서 나온 업적(실력 · 수집)을 보이지 않는다 —
@@ -368,12 +390,12 @@ export interface AchievementSummary {
     /** 얻은 단계 수 · 전체 단계 수 — 「업적 23 / 51」 */
     earned: number;
     total: number;
-    /** 동 · 은 · 금 단계 수 */
-    byTier: [number, number, number];
     /** 머리 진열(P5) — 고른 것이 있으면 그것, 없으면 자동. 배지 도움말용 달성일 · 달성 인원 포함 */
     showcase: AchievementShowcaseItem[];
     /** 최근 얻은 단계(프로필 구역) */
     recent: AchievementRecord[];
+    /** 세는 단계 줄 전부(보이는 업적 · 가진 등급만) — 분류 칩 수 */
+    earnedRecords: AchievementRecord[];
 }
 
 export interface AchievementShowcaseItem {
@@ -391,11 +413,15 @@ export function summarizeAchievements(
 ): AchievementSummary {
     const definitions = visibleAchievementDefinitions(scoresHidden);
     const visible = new Set(definitions.map((definition) => definition.key));
-    const earned = records.earned.filter((item) => visible.has(item.key));
+    // 정의에 없는 업적 · 그 업적이 갖지 않은 등급의 줄은 세지 않는다(단계 구성을 바꿔도 분모와 맞게)
+    const earned = records.earned.filter(
+        (item) =>
+            visible.has(item.key) &&
+            getAchievementDefinition(item.key)?.thresholds[
+                item.tier as AchievementTier
+            ] !== undefined
+    );
     const highest = highestAchievementTiers(earned);
-    const byTier: [number, number, number] = [0, 0, 0];
-    for (const item of earned)
-        if (item.tier >= 1 && item.tier <= 3) byTier[item.tier - 1] += 1;
     const pinned = records.pins
         .filter((key) => highest.has(key))
         .map((key) => ({ key, tier: highest.get(key) ?? 0 }));
@@ -418,8 +444,8 @@ export function summarizeAchievements(
     }));
     return {
         earned: earned.length,
-        total: definitions.length * ACHIEVEMENT_TIERS.length,
-        byTier,
+        earnedRecords: earned,
+        total: achievementStepTotal(definitions),
         showcase,
         recent: [...earned]
             .sort(
@@ -428,4 +454,23 @@ export function summarizeAchievements(
             )
             .slice(0, ACHIEVEMENT_RECENT_COUNT),
     };
+}
+
+/**
+ * 「기준에 못 미치는 단계도 빼기」(2026-09-25 R1)에서 뺄 줄 — 없어진 업적(예: 빙고) · 그 업적이 갖지 않은 등급 ·
+ * 지금 값이 그 등급 기준에 못 미치는 단계. 관리자가 켤 때만 쓴다(평소 판정은 빼지 않는다).
+ */
+export function staleAchievementRows<T extends { key: string; tier: number }>(
+    rows: readonly T[],
+    metrics: AchievementMetrics
+): T[] {
+    return rows.filter((row) => {
+        const definition = getAchievementDefinition(row.key);
+        if (!definition) return true;
+        const threshold = definition.thresholds[row.tier as AchievementTier];
+        if (threshold === undefined) return true;
+        return (
+            achievementScore(definition, metrics[definition.metric]) < threshold
+        );
+    });
 }

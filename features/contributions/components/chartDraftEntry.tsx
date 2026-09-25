@@ -35,6 +35,8 @@ export default function ChartDraftEntry({
     signedIn,
     label,
     className,
+    icon,
+    iconOnly = false,
     chevron,
 }: {
     chartId: number;
@@ -44,6 +46,10 @@ export default function ChartDraftEntry({
     /** 초안이 없을 때 글자 — 「채보 만들기」 · 「고치기」 */
     label: string;
     className: string;
+    /** 글자 앞 아이콘 — 채보 뷰어 동작 버튼(2026-09-26) */
+    icon?: ReactNode;
+    /** 아이콘만 보이고 글자는 스크린리더용(채보 뷰어 폰 동작 줄, 2026-09-26 Y1) */
+    iconOnly?: boolean;
     chevron?: ReactNode;
 }) {
     const t = useTranslations();
@@ -58,8 +64,13 @@ export default function ChartDraftEntry({
         : label;
     if (!signedIn)
         return (
-            <Link href={loginHref} className={className}>
-                {label}
+            <Link
+                href={loginHref}
+                className={className}
+                title={iconOnly ? label : undefined}
+            >
+                {icon}
+                {iconOnly ? <span className="sr-only">{label}</span> : label}
                 {chevron}
             </Link>
         );
@@ -68,6 +79,7 @@ export default function ChartDraftEntry({
             <Link
                 href={draftHref}
                 className={className}
+                title={iconOnly ? text : undefined}
                 data-status={draft?.status}
                 onClick={(event) => {
                     if (window.innerWidth >= EDITOR_MIN_WIDTH) return;
@@ -75,7 +87,8 @@ export default function ChartDraftEntry({
                     setNarrow(true);
                 }}
             >
-                {text}
+                {icon}
+                {iconOnly ? <span className="sr-only">{text}</span> : text}
                 {chevron}
             </Link>
             <ModalDialog

@@ -184,10 +184,11 @@ for (const flag of flags) {
             await expect(
                 page
                     .getByRole("region", { name: "베스트 성과", exact: true })
+                    .getByRole("list")
                     .getByRole("link")
             ).toHaveCount(1);
             await expect(
-                page.getByRole("heading", { name: "판정 요약", exact: true })
+                page.getByRole("heading", { name: "레벨별 달성", exact: true })
             ).toBeVisible();
             await expect(
                 page.getByRole("button", {

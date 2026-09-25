@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Grid3x3, List } from "lucide-react";
 import { useId, useState } from "react";
 
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
@@ -8,10 +8,13 @@ import PageContainer from "@/components/layout/pageContainer";
 import BackLink from "@/components/ui/backLink";
 import FilterChips from "@/components/ui/filterChips";
 import IconButton from "@/components/ui/iconButton";
+import { SegmentedControl } from "@/components/ui/segmentedControl";
+import SortMenu from "@/components/ui/sortMenu";
 import {
     ACHIEVEMENT_CATEGORIES,
-    ACHIEVEMENT_TIERS,
     achievementProgress,
+    achievementStepTotal,
+    achievementSteps,
     highestAchievementTiers,
     recipientKey,
     summarizeAchievements,
@@ -21,18 +24,27 @@ import {
     type AchievementMetrics,
     type AchievementRecords,
 } from "@/features/achievements/achievementDefinitions";
+import {
+    ACHIEVEMENT_SORTS,
+    sortAchievementDefinitions,
+    type AchievementSort,
+} from "@/features/achievements/achievementSort";
 import AchievementHex from "@/features/achievements/components/achievementHex";
+import AchievementInfoBadge from "@/features/achievements/components/achievementInfoBadge";
 import { formatAchievementDate } from "@/features/achievements/components/profileAchievements";
 import { useAchievementText } from "@/features/achievements/components/useAchievementText";
+import useWideLayout from "@/lib/hooks/useWideLayout";
 import type { MessageKey } from "@/lib/i18n/messageTypes";
 
 type CategoryFilter = "all" | AchievementCategory;
 
-function ProgressBar({ ratio }: { ratio: number }) {
+/** 진행 막대 — 쫓는 다음 등급의 색(2026-09-25) · ⑯ 그래프 움직임(나타날 때 드러남 · 값이 바뀌면 옮겨 감) */
+function ProgressBar({ ratio, tier }: { ratio: number; tier: number }) {
     return (
         <span className="nl-bar-list__track" aria-hidden>
             <span
-                className="nl-bar-list__fill"
+                className="nl-bar-list__fill nl-achievement-progress nl-chart-reveal nl-chart-bar"
+                data-tier={tier}
                 style={{ width: `${Math.round(ratio * 100)}%` }}
             />
         </span>
@@ -66,7 +78,8 @@ function AchievementRow({
         : null;
     const showNumbers = definition.unit !== "exam";
     const number = (value: number) => value.toLocaleString(locale);
-    const shownTier = progress?.nextTier ?? (tier || 1);
+    const steps = achievementSteps(definition);
+    const shownTier = progress?.nextTier ?? (tier || steps[0]?.tier || 1);
     const earnedDate = tier ? achievedAt(tier) : undefined;
     return (
         <li className="nl-achievement-row" data-earned={tier > 0}>
@@ -81,19 +94,6 @@ function AchievementRow({
                         <span className="nl-emphasis-label nl-achievement-row__name">
                             {text.titled(key, tier)}
                         </span>
-                        {progress?.nextTier ? (
-                            tier ? (
-                                <span className="nl-metadata nl-muted">
-                                    {t("achievement.nextTier", {
-                                        tier: text.roman(progress.nextTier),
-                                    })}
-                                </span>
-                            ) : null
-                        ) : tier === 3 ? (
-                            <span className="nl-metadata nl-muted">
-                                {t("achievement.maxed")}
-                            </span>
-                        ) : null}
                     </span>
                     <span className="nl-metadata nl-muted nl-achievement-row__number">
                         {progress?.nextTier && progress.target !== null
@@ -119,7 +119,10 @@ function AchievementRow({
                               : text.condition(key, shownTier)}
                     </span>
                     {progress?.nextTier ? (
-                        <ProgressBar ratio={progress.ratio} />
+                        <ProgressBar
+                            ratio={progress.ratio}
+                            tier={progress.nextTier}
+                        />
                     ) : null}
                 </div>
                 <div className="nl-achievement-row__actions">
@@ -139,7 +142,7 @@ function AchievementRow({
             </div>
             {/* 상세(D1) — 단계 사다리 · 달성 인원(명단 없음) */}
             <ol id={detailId} className="nl-achievement-ladder" hidden={!open}>
-                {ACHIEVEMENT_TIERS.map((step) => {
+                {steps.map(({ tier: step }) => {
                     const date = achievedAt(step);
                     const stepProgress =
                         metrics && !date
@@ -202,7 +205,8 @@ function AchievementRow({
 }
 
 /**
- * 업적 페이지(2026-09-24 C1 · L2 · K1 · D1) — 머리(돌아가기 · 제목 · 수) → 분류 칩 → 목록.
+ * 업적 페이지(2026-09-24 C1 · L2 · K1 · D1) — 머리(돌아가기 · 제목 · 수) → 분류 칩 → 결과 줄 → 목록 · 촘촘한 격자.
+ * 결과 줄(2026-09-25) = 악곡 · 서열표와 같은 문법: 왼쪽 정렬 SortMenu 고스트 · 오른쪽 보기 전환(목록 · 촘촘한 격자) — 폰 M · 1056 이상 L.
  * 본인: 진행 막대. 남: 얻은 단계 · 날짜 · 조건만. 머리 진열은 설정 「프로필」 탭에서 고른다(2026-09-25 D1).
  */
 export default function AchievementsPage({
@@ -212,9 +216,12 @@ export default function AchievementsPage({
     metrics,
     recipients,
     scoresHidden,
+    embedded = false,
 }: {
-    userName: string;
-    profileHref: string;
+    userName?: string;
+    profileHref?: string;
+    /** 프로필 「업적」 탭 안(2026-09-25) — 머리 · 탭은 프로필 레이아웃이 그려 돌아가기 · 제목을 두지 않는다 */
+    embedded?: boolean;
     records: AchievementRecords;
     metrics: AchievementMetrics | null;
     recipients: Record<string, number>;
@@ -222,45 +229,69 @@ export default function AchievementsPage({
 }) {
     const t = useTranslations();
     const locale = useLocale();
+    const wide = useWideLayout();
     const [category, setCategory] = useState<CategoryFilter>("all");
+    const [sort, setSort] = useState<AchievementSort>("category");
+    const [view, setView] = useState<"list" | "dense">("list");
+    const highest = highestAchievementTiers(records.earned);
     const definitions = visibleAchievementDefinitions(scoresHidden);
     const summary = summarizeAchievements(records, scoresHidden);
-    const highest = highestAchievementTiers(records.earned);
     const categories = ACHIEVEMENT_CATEGORIES.filter((item) =>
         definitions.some((definition) => definition.category === item)
     );
-    const shown = definitions.filter(
-        (definition) => category === "all" || definition.category === category
+    const shown = sortAchievementDefinitions(
+        definitions.filter(
+            (definition) =>
+                category === "all" || definition.category === category
+        ),
+        sort,
+        records,
+        metrics
     );
-    const earnedIn = (item: CategoryFilter) =>
-        definitions
-            .filter(
-                (definition) => item === "all" || definition.category === item
-            )
-            .reduce(
-                (sum, definition) => sum + (highest.get(definition.key) ?? 0),
-                0
-            );
-    const totalIn = (item: CategoryFilter) =>
+    // 「다음 단계에 가까운 순」 은 진행 값이 있는 본인에게만
+    const sorts = ACHIEVEMENT_SORTS.filter(
+        (item) => item !== "closest" || metrics
+    );
+    // 칩 수 = 얻은 단계 수 / 가진 단계 수(업적마다 단계 수가 다르다)
+    const inCategory = (item: CategoryFilter) =>
         definitions.filter(
             (definition) => item === "all" || definition.category === item
-        ).length * ACHIEVEMENT_TIERS.length;
+        );
+    const earnedIn = (item: CategoryFilter) => {
+        const keys = new Set(
+            inCategory(item).map((definition) => definition.key)
+        );
+        return summary.earnedRecords.filter((record) => keys.has(record.key))
+            .length;
+    };
+    const totalIn = (item: CategoryFilter) =>
+        achievementStepTotal(inCategory(item));
 
+    const Wrapper = embedded ? "div" : PageContainer;
     return (
-        <PageContainer width="reading" className="nl-achievements-page">
+        <Wrapper
+            {...(embedded ? {} : { width: "reading" as const })}
+            className="nl-achievements-page"
+        >
             <div className="nl-achievements-page__head">
-                <BackLink href={profileHref}>{userName}</BackLink>
-                <h1 className="nl-page-title">{t("achievement.title")}</h1>
-                <p className="nl-body-secondary nl-muted">
+                {embedded || !profileHref ? null : (
+                    <>
+                        <BackLink href={profileHref}>{userName}</BackLink>
+                        <h1 className="nl-page-title">
+                            {t("achievement.title")}
+                        </h1>
+                    </>
+                )}
+                <p
+                    className={
+                        embedded
+                            ? "nl-emphasis-label"
+                            : "nl-body-secondary nl-muted"
+                    }
+                >
                     {t("achievement.count", {
                         earned: summary.earned.toLocaleString(locale),
                         total: summary.total.toLocaleString(locale),
-                    })}{" "}
-                    ·{" "}
-                    {t("achievement.byTier", {
-                        gold: summary.byTier[2],
-                        silver: summary.byTier[1],
-                        bronze: summary.byTier[0],
                     })}
                 </p>
                 {scoresHidden ? (
@@ -283,17 +314,83 @@ export default function AchievementsPage({
                     })
                 )}
             />
-            <ul className="nl-achievement-list">
-                {shown.map((definition) => (
-                    <AchievementRow
-                        key={definition.key}
-                        definition={definition}
-                        records={records}
-                        metrics={metrics}
-                        recipients={recipients}
-                    />
-                ))}
-            </ul>
-        </PageContainer>
+            <div className="nl-achievements-page__results">
+                <SortMenu
+                    size={wide ? undefined : "sm"}
+                    label={t("discovery.sortLabel")}
+                    value={sort}
+                    options={sorts.map((value) => ({
+                        value,
+                        label: t(`achievement.sort.${value}` as MessageKey),
+                    }))}
+                    onValueChange={setSort}
+                />
+                <SegmentedControl
+                    label={t("discovery.view")}
+                    value={view}
+                    onValueChange={setView}
+                    iconOnly
+                    size={wide ? undefined : "sm"}
+                    options={[
+                        {
+                            value: "list",
+                            label: t("discovery.list"),
+                            icon: <List aria-hidden />,
+                        },
+                        {
+                            value: "dense",
+                            label: t("discovery.denseGrid"),
+                            icon: <Grid3x3 aria-hidden />,
+                        },
+                    ]}
+                />
+            </div>
+            {view === "dense" ? (
+                // 촘촘한 격자(2026-09-25 D1) — osu! 메달 벽처럼 육각만, 누르거나 올리면 정보 카드
+                <ul className="nl-achievement-dense">
+                    {shown.map((definition) => {
+                        const tier = highest.get(definition.key) ?? 0;
+                        return (
+                            <li key={definition.key}>
+                                <AchievementInfoBadge
+                                    achievementKey={definition.key}
+                                    tier={tier}
+                                    achievedAt={
+                                        records.earned.find(
+                                            (item) =>
+                                                item.key === definition.key &&
+                                                item.tier === tier
+                                        )?.achievedAt
+                                    }
+                                    recipients={
+                                        tier
+                                            ? recipients[
+                                                  recipientKey(
+                                                      definition.key,
+                                                      tier
+                                                  )
+                                              ]
+                                            : undefined
+                                    }
+                                    size="row"
+                                />
+                            </li>
+                        );
+                    })}
+                </ul>
+            ) : (
+                <ul className="nl-achievement-list">
+                    {shown.map((definition) => (
+                        <AchievementRow
+                            key={definition.key}
+                            definition={definition}
+                            records={records}
+                            metrics={metrics}
+                            recipients={recipients}
+                        />
+                    ))}
+                </ul>
+            )}
+        </Wrapper>
     );
 }

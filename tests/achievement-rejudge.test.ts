@@ -14,14 +14,17 @@ describe("업적 다시 판정 묶음(2026-09-25 B1)", () => {
 
     it("판정할 거리가 있는 사용자를 id 순으로 한 묶음 — 가득 차면 다음 시작점을 준다", async () => {
         mocks.users.mockResolvedValue([{ id: 3 }, { id: 8 }]);
-        const evaluate = vi
+        const judge = vi
             .fn()
-            .mockResolvedValueOnce([])
-            .mockResolvedValueOnce([
-                { key: "s-rank", tier: 1 },
-                { key: "s-rank", tier: 2 },
-            ]);
-        const batch = await service.rejudgeAchievementsBatch(0, 2, evaluate);
+            .mockResolvedValueOnce({ added: [], removed: 0 })
+            .mockResolvedValueOnce({
+                added: [
+                    { key: "s-rank", tier: 1 },
+                    { key: "s-rank", tier: 2 },
+                ],
+                removed: 1,
+            });
+        const batch = await service.rejudgeAchievementsBatch(0, 2, true, judge);
         expect(mocks.users).toHaveBeenCalledWith(
             expect.objectContaining({
                 where: expect.objectContaining({ id: { gt: 0 } }),
@@ -29,10 +32,14 @@ describe("업적 다시 판정 묶음(2026-09-25 B1)", () => {
                 take: 2,
             })
         );
-        expect(evaluate.mock.calls).toEqual([[3], [8]]);
+        expect(judge.mock.calls).toEqual([
+            [3, true],
+            [8, true],
+        ]);
         expect(batch).toEqual({
             judged: 2,
             awarded: 2,
+            removed: 1,
             awardedUserIds: [8],
             nextCursor: 8,
         });
@@ -43,6 +50,7 @@ describe("업적 다시 판정 묶음(2026-09-25 B1)", () => {
         expect(await service.rejudgeAchievementsBatch(8, 2)).toEqual({
             judged: 0,
             awarded: 0,
+            removed: 0,
             awardedUserIds: [],
             nextCursor: null,
         });

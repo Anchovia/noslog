@@ -15,10 +15,15 @@ import { type KeyboardEvent, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
 import {
+    countChartJudgments,
     findChartNoteConflicts,
     hasNewChartNoteConflicts,
 } from "@/lib/chart-pattern/editor";
-import type { ChartNote, ChartTimingPoint } from "@/lib/chart-pattern/schema";
+import {
+    type ChartNote,
+    type ChartTimingPoint,
+    DEFAULT_CHART_OFFSET_MS,
+} from "@/lib/chart-pattern/schema";
 import {
     sortTimingPoints,
     tickToMilliseconds,
@@ -211,6 +216,13 @@ function warningText(
     timingPoints: ChartTimingPoint[]
 ) {
     switch (warning.kind) {
+        case "barRepaired":
+            return `AI 가 ${[warning.inserted > 0 ? `놓친 박자선 ${warning.inserted}곳을 메우고` : "", warning.removed > 0 ? `두 번 잡은 박자선 ${warning.removed}곳을 빼고` : ""].filter(Boolean).join(" ")} 넣어요(${warning.ticks
+                .slice(0, 3)
+                .map((tick) => chartPositionLabel(tick, timingPoints))
+                .join(
+                    " · "
+                )}${warning.ticks.length > 3 ? " …" : ""}) — 그 근처 확인`;
         case "missingBar":
             return `${chartPositionLabel(warning.tick, timingPoints)} 근처 박자선을 놓쳤을 수 있어요 — 뒤 노트가 한 박 밀렸는지 확인`;
         case "extraBar":
@@ -231,7 +243,27 @@ function warningText(
             return `아주 짧은 테누토 ${warning.count}개를 한 칸 길이로 늘렸어요`;
         case "trillSplit":
             return `트릴 ${warning.count}개는 가운데로 나눠 두 위치를 정했어요 — 확인 필요`;
+        case "phantomDropped":
+            return `손을 읽지 못해 영상에 없던 것으로 보이는 ${[
+                warning.tenutoTicks.length > 0
+                    ? `긴 테누토 ${warning.tenutoTicks.length}개(${positionList(warning.tenutoTicks, timingPoints)})`
+                    : "",
+                warning.headTicks.length > 0
+                    ? `테누토 안 머리 ${warning.headTicks.length}개(${positionList(warning.headTicks, timingPoints)})`
+                    : "",
+            ]
+                .filter(Boolean)
+                .join(" · ")}를 뺐어요 — 영상과 확인`;
     }
+}
+
+/** 자리 목록 — 앞 3곳과 나머지 수 */
+function positionList(ticks: number[], timingPoints: ChartTimingPoint[]) {
+    const shown = ticks
+        .slice(0, 3)
+        .map((tick) => chartPositionLabel(tick, timingPoints))
+        .join(" · ");
+    return ticks.length > 3 ? `${shown} 외 ${ticks.length - 3}곳` : shown;
 }
 
 function Section({
@@ -265,8 +297,11 @@ export default function Vid2bmapImportPanel({
     onSeek,
     onBeforeApply,
     onAfterApply,
+    officialNoteCount = null,
 }: {
     file: File;
+    /** 악곡 정보의 노트 수(게임 결과 화면 판정 수) — 있으면 가져올 노트의 판정 수와 비교해 보인다 */
+    officialNoteCount?: number | null;
     onClose: () => void;
     onReplaceFile: () => void;
     onSeek: (timeMs: number) => void;
@@ -297,6 +332,8 @@ export default function Vid2bmapImportPanel({
     /** 넣지 않기로 한 템포 제안(틱) — 기본은 모두 넣는다 */
     /** 시작 BPM 제안을 넣을지 — 고르기 전(null)이면 초안이 비었을 때만 넣는다(시작 BPM 을 바꾸면 기존 노트 시각이 전부 움직임) */
     const [startBpmChoice, setStartBpmChoice] = useState<boolean | null>(null);
+    /** 시작 시각을 500ms 로 옮길지 — 시작 시각이 0ms 일 때만, 고르기 전(null)이면 초안에 노트가 없을 때만(2026-09-25 B) */
+    const [offsetChoice, setOffsetChoice] = useState<boolean | null>(null);
     /** 박자 제안을 넣을지 — 고르기 전(null)이면 빈 초안 · 강세 뚜렷함일 때만 */
     const [meterChoice, setMeterChoice] = useState<boolean | null>(null);
     const [skippedTempo, setSkippedTempo] = useState<Record<number, boolean>>(
@@ -442,15 +479,33 @@ export default function Vid2bmapImportPanel({
         (meterChoice ?? (meterProposal.clear && document.notes.length === 0))
             ? meterProposal.numerator
             : null;
+    // 시작 시각 0ms 면 1마디 1박 노트가 재생과 동시에 판정선에 있어 못 본다 — 새 빈 초안 기본값(500ms)으로
+    const offsetProposal = baseOrigin.timeMs === 0;
+    const proposedStartTimeMs =
+        offsetProposal && (offsetChoice ?? document.notes.length === 0)
+            ? DEFAULT_CHART_OFFSET_MS
+            : null;
+    const startChanged =
+        proposedStartBpm !== null ||
+        proposedNumerator !== null ||
+        proposedStartTimeMs !== null;
     const timingPoints = useMemo(
         () =>
-            proposedStartBpm === null && proposedNumerator === null
+            proposedStartBpm === null &&
+            proposedNumerator === null &&
+            proposedStartTimeMs === null
                 ? baseTimingPoints
                 : applyVid2bmapStartTiming(baseTimingPoints, {
                       bpm: proposedStartBpm,
                       numerator: proposedNumerator,
+                      timeMs: proposedStartTimeMs,
                   }),
-        [baseTimingPoints, proposedStartBpm, proposedNumerator]
+        [
+            baseTimingPoints,
+            proposedStartBpm,
+            proposedNumerator,
+            proposedStartTimeMs,
+        ]
     );
     const chooseMeter = (checked: boolean) => {
         setMeterChoice(checked);
@@ -501,7 +556,7 @@ export default function Vid2bmapImportPanel({
                 change.points.length +
                 (barRestores.get(change.tick) ? 1 : 0),
             0
-        ) + (proposedStartBpm === null && proposedNumerator === null ? 0 : 1);
+        ) + (startChanged ? 1 : 0);
     const diff = useMemo(
         () =>
             conversion
@@ -529,24 +584,52 @@ export default function Vid2bmapImportPanel({
                 : null,
         [plan, document.notes, choices, includeNewSection]
     );
+    /** 넣으면 새로 생기는 겹침 수와, 가져온 노트가 낀 겹침 자리(틱) */
     const newConflicts = useMemo(() => {
-        if (!merged) return 0;
         if (
+            !merged ||
             !hasNewChartNoteConflicts(
                 document.notes,
                 merged.notes,
                 document.ticksPerQuarter
             )
         ) {
-            return 0;
+            return { count: 0, ticks: [] as number[] };
         }
-        return Math.max(
-            1,
-            findChartNoteConflicts(merged.notes, document.ticksPerQuarter)
-                .length -
-                findChartNoteConflicts(document.notes, document.ticksPerQuarter)
-                    .length
+        const conflicts = findChartNoteConflicts(
+            merged.notes,
+            document.ticksPerQuarter
         );
+        const added = new Set(merged.addedIds);
+        const tickOf = new Map(
+            merged.notes.map((note) => [note.id, note.tick])
+        );
+        const ticks = [
+            ...new Set(
+                conflicts
+                    .filter(
+                        ({ firstId, secondId }) =>
+                            added.has(firstId) || added.has(secondId)
+                    )
+                    .map(({ firstId, secondId }) =>
+                        Math.min(
+                            tickOf.get(firstId) ?? 0,
+                            tickOf.get(secondId) ?? 0
+                        )
+                    )
+            ),
+        ].sort((a, b) => a - b);
+        return {
+            count: Math.max(
+                1,
+                conflicts.length -
+                    findChartNoteConflicts(
+                        document.notes,
+                        document.ticksPerQuarter
+                    ).length
+            ),
+            ticks,
+        };
     }, [merged, document.notes, document.ticksPerQuarter]);
 
     const items = plan?.items ?? [];
@@ -628,7 +711,7 @@ export default function Vid2bmapImportPanel({
         });
 
     async function apply() {
-        if (!merged || !conversion || newConflicts > 0) return;
+        if (!merged || !conversion) return;
         setApplying(true);
         try {
             if (document.notes.length > 0 && !(await onBeforeApply())) return;
@@ -639,6 +722,21 @@ export default function Vid2bmapImportPanel({
                     ...(selectGridCheck ? conversion.gridCheckIds : []),
                 ]),
             ].filter((id) => added.has(id));
+            // 겹친 채로 넣기(2026-09-26 A) — 겹친 노트(양쪽)를 선택해 두고 사람이 에디터에서 고친다
+            const conflictIds =
+                newConflicts.count > 0
+                    ? findChartNoteConflicts(
+                          merged.notes,
+                          document.ticksPerQuarter
+                      ).flatMap(({ firstId, secondId }) => [firstId, secondId])
+                    : [];
+            if (conflictIds.length > 0) {
+                selection.splice(
+                    0,
+                    selection.length,
+                    ...new Set([...conflictIds, ...selection])
+                );
+            }
             if (timingCount > 0 || replaceTiming) {
                 // 노트와 타이밍 포인트를 한 번에 — 실행 취소도 한 번. 노트는 박(틱)이라 위치는 그대로.
                 // 시작 BPM 을 먼저 바꿔야 뒤 제안 포인트의 시각이 새 BPM 으로 이어진다
@@ -657,6 +755,7 @@ export default function Vid2bmapImportPanel({
                             {
                                 bpm: proposedStartBpm,
                                 numerator: proposedNumerator,
+                                timeMs: proposedStartTimeMs,
                             }
                         ),
                         tempoChanges
@@ -678,7 +777,7 @@ export default function Vid2bmapImportPanel({
                 `vid2bmap · 새로 ${merged.addedIds.length} · 뺌 ${merged.removedIds.length}${timingCount > 0 ? ` · 타이밍 ${timingCount}` : ""}`
             );
             toast.success(
-                `영상 추출 노트를 초안에 넣었습니다 — 새로 ${merged.addedIds.length.toLocaleString("ko-KR")} · 뺌 ${merged.removedIds.length.toLocaleString("ko-KR")}${timingCount > 0 ? ` · 타이밍 ${timingCount}` : ""}${selection.length > 0 ? ` · 확인할 노트 ${selection.length}개 선택됨` : ""}`
+                `영상 추출 노트를 초안에 넣었습니다 — 새로 ${merged.addedIds.length.toLocaleString("ko-KR")} · 뺌 ${merged.removedIds.length.toLocaleString("ko-KR")}${timingCount > 0 ? ` · 타이밍 ${timingCount}` : ""}${selection.length > 0 ? ` · 확인할 노트 ${selection.length}개 선택됨` : ""}${conflictIds.length > 0 ? ` · 겹침 ${newConflicts.count}곳 — 고친 뒤 버전 저장` : ""}`
             );
             onClose();
         } finally {
@@ -692,6 +791,9 @@ export default function Vid2bmapImportPanel({
         : null;
     const startBpm = sortTimingPoints(timingPoints)[0].bpm;
     const warnings = conversion?.warnings ?? [];
+    const judgments = conversion
+        ? countChartJudgments(conversion.notes, document.ticksPerQuarter)
+        : 0;
     const visibleWarnings = showAllWarnings ? warnings : warnings.slice(0, 3);
     const hasDraft = document.notes.length > 0;
     const firstNote = conversion?.notes.reduce<ChartNote | null>(
@@ -798,6 +900,24 @@ export default function Vid2bmapImportPanel({
                                     타이밍 {startBpm}
                                 </p>
                             ) : null}
+                            {officialNoteCount !== null ? (
+                                <p className="text-text-secondary flex gap-1.5 text-xs leading-relaxed">
+                                    {judgments === officialNoteCount ? (
+                                        <Check
+                                            className="text-success mt-0.5 size-3.5 shrink-0"
+                                            aria-hidden
+                                        />
+                                    ) : (
+                                        <TriangleAlert
+                                            className="text-score mt-0.5 size-3.5 shrink-0"
+                                            aria-hidden
+                                        />
+                                    )}
+                                    {judgments === officialNoteCount
+                                        ? `판정 수 ${judgments.toLocaleString("ko-KR")} = 공식 노트 수`
+                                        : `판정 수 ${judgments.toLocaleString("ko-KR")} · 공식 ${officialNoteCount.toLocaleString("ko-KR")}(${judgments > officialNoteCount ? "+" : "−"}${Math.abs(judgments - officialNoteCount).toLocaleString("ko-KR")}) — ${judgments > officialNoteCount ? "더 읽은" : "놓친"} 노트가 있을 수 있어요`}
+                                </p>
+                            ) : null}
                             {replaceProposal ? (
                                 // 영상과 어긋난 기존 타이밍 포인트(2026-09-25 B) — 템포 제안과 같은 카드
                                 <div className="border-score/40 bg-score/10 flex flex-col gap-1 rounded-md border px-2 py-1.5">
@@ -853,7 +973,9 @@ export default function Vid2bmapImportPanel({
                                     </label>
                                 </div>
                             ) : null}
-                            {tempo?.startMismatch || meterProposal ? (
+                            {tempo?.startMismatch ||
+                            meterProposal ||
+                            offsetProposal ? (
                                 // 시작 BPM · 박자 제안(2026-09-24 A) — 템포 변화 제안과 같은 카드
                                 <div className="border-score/40 bg-score/10 flex flex-col gap-1 rounded-md border px-2 py-1.5">
                                     <p className="flex items-center gap-1.5 text-xs font-bold">
@@ -933,6 +1055,31 @@ export default function Vid2bmapImportPanel({
                                                 />
                                                 박자를 {meterProposal.numerator}
                                                 /4 로
+                                            </label>
+                                        </>
+                                    ) : null}
+                                    {offsetProposal ? (
+                                        <>
+                                            <p className="text-micro">
+                                                시작 시각 0ms — 1마디 1박 노트가
+                                                재생과 동시에 판정선에 있어요
+                                            </p>
+                                            <label className="flex items-center gap-2 text-xs font-semibold">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={
+                                                        proposedStartTimeMs !==
+                                                        null
+                                                    }
+                                                    onChange={(event) =>
+                                                        setOffsetChoice(
+                                                            event.target.checked
+                                                        )
+                                                    }
+                                                    className="accent-text-primary size-3.5"
+                                                />
+                                                시작 시각을{" "}
+                                                {DEFAULT_CHART_OFFSET_MS}ms 로
                                             </label>
                                         </>
                                     ) : null}
@@ -1441,11 +1588,19 @@ export default function Vid2bmapImportPanel({
             </div>
 
             <footer className="border-divider flex flex-col gap-2 border-t px-3 py-2.5">
-                {newConflicts > 0 ? (
+                {newConflicts.count > 0 ? (
                     <p className="text-danger text-xs leading-relaxed">
-                        이대로 넣으면 노트가 겹칩니다(
-                        {newConflicts.toLocaleString("ko-KR")}건). 목록에서 「내
-                        것 / 가져온 것」 을 바꿔 주세요.
+                        겹치는 노트 {newConflicts.count.toLocaleString("ko-KR")}
+                        곳
+                        {newConflicts.ticks.length > 0
+                            ? `(${positionList(newConflicts.ticks, timingPoints)})`
+                            : ""}
+                        을 선택된 채로 넣어요 — 추출 오류(대개 긴 테누토나 그
+                        안의 노트)라 에디터에서 가짜 쪽을 지우거나 길이를 고친
+                        뒤 버전을 저장하세요(겹친 채로는 저장 안 됨).
+                        {hasDraft
+                            ? " 목록에서 「내 것 / 가져온 것」 을 바꿔도 돼요."
+                            : ""}
                     </p>
                 ) : null}
                 <div className="flex gap-2">
@@ -1458,7 +1613,7 @@ export default function Vid2bmapImportPanel({
                     </button>
                     <button
                         type="button"
-                        disabled={!merged || applying || newConflicts > 0}
+                        disabled={!merged || applying}
                         onClick={() => void apply()}
                         className="bg-text-primary text-bg flex h-9 flex-[1.4] items-center justify-center gap-1.5 rounded-md text-xs font-bold disabled:cursor-not-allowed disabled:opacity-35"
                     >

@@ -2,6 +2,8 @@ import Link from "next/link";
 
 import PageContainer, { PageHeading } from "@/components/layout/pageContainer";
 import BackLink from "@/components/ui/backLink";
+import FilterChipLinks from "@/components/ui/filterChipLinks";
+import NewsTabs from "@/features/announcements/components/newsTabs";
 import { foundationButtonClass } from "@/components/ui/Button";
 import {
     EVENT_PHASES,
@@ -12,7 +14,7 @@ import { getServerI18n } from "@/lib/i18n/server";
 import { localizePath } from "@/lib/i18n/routing";
 import { EventBanner, eventPeriod } from "./eventParts";
 
-// 이벤트 목록 L1 (2026-09-18) — 상태 탭(진행 중 · 예정 · 종료) + 배너 카드. 탭이 상태를 말하므로 카드엔 상태 태그 없음
+// 이벤트 목록 L1 (2026-09-18) — 「소식」 입구 탭 아래 상태 칩(진행 중 · 예정 · 종료, 2026-09-26 E1) + 배너 카드. 칩이 상태를 말하므로 카드엔 상태 태그 없음
 export default async function EventBoard({
     phase,
     board,
@@ -37,7 +39,7 @@ export default async function EventBoard({
             </BackLink>
             {/* 쓸 수 없으면 비활성 버튼 + 이유 한 줄 — 서열 투표 잠금과 같은 방식 */}
             <PageHeading
-                title={t("events.title")}
+                title={t("news.title")}
                 description={lock}
                 action={
                     <div className="nl-events__actions">
@@ -77,26 +79,16 @@ export default async function EventBoard({
                     </div>
                 }
             />
-            <nav
-                className="nl-tabs nl-tabs--primary"
-                aria-label={t("events.tabs")}
-            >
-                {EVENT_PHASES.map((item) => (
-                    <Link
-                        key={item}
-                        prefetch={false}
-                        href={item === "live" ? base : `${base}?tab=${item}`}
-                        className="nl-tabs__item nl-control"
-                        data-state={item === phase ? "active" : "inactive"}
-                        aria-current={item === phase ? "page" : undefined}
-                    >
-                        {t(`events.phase.${item}`)}
-                        <span className="nl-events__count nl-muted">
-                            {board[item].length}
-                        </span>
-                    </Link>
-                ))}
-            </nav>
+            <NewsTabs current="events" />
+            <FilterChipLinks
+                label={t("events.tabs")}
+                options={EVENT_PHASES.map((item) => ({
+                    key: item,
+                    label: `${t(`events.phase.${item}`)} ${board[item].length}`,
+                    href: item === "live" ? base : `${base}?tab=${item}`,
+                    selected: item === phase,
+                }))}
+            />
             {events.length ? (
                 <ul className="nl-events__cards">
                     {events.map((event, index) => (

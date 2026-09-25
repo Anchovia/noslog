@@ -231,6 +231,15 @@ const discoveryResultSchema = musicResultSchema.extend({
             level: z.number(),
         })
     ),
+    // 채보 보기는 채보마다 한 줄(2026-09-25 A2) — 줄의 작성자 · 출처 · 공개일. 악곡 보기에는 없다
+    chart: z
+        .object({
+            publishedAt: z.string().nullable(),
+            author: z.string().nullable(),
+            authorLevel: z.number().int().nullable(),
+            extracted: z.boolean(),
+        })
+        .optional(),
 });
 export const discoveryCountsSchema = z.object({
     total: z.number().int().nonnegative(),

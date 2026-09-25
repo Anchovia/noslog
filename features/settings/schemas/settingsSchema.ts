@@ -1,6 +1,7 @@
 import type { MessageKey } from "@/lib/i18n/messages";
 import { z } from "zod";
 import { createOnboardingSchema } from "@/features/profile/schemas/profileSettingsSchema";
+import { pinnedRecordsValueSchema } from "@/features/profile/schemas/pinnedRecordSchema";
 import type { createTranslator } from "@/lib/i18n/messages";
 
 export const settingsCategorySchema = z.enum([
@@ -36,6 +37,15 @@ export function createSettingsProfileSchema(
                 error: t("achievement.pin.failed"),
             })
             .optional(),
+        // 프로필 고정 기록(2026-09-26 S2) — 고른 순서대로 JSON(채보 · 한 줄 소감), 빈 값 = 자동. 폼에 없으면 바꾸지 않는다
+        pinnedRecords: z
+            .string()
+            .max(2000)
+            .refine(
+                (value) => pinnedRecordsValueSchema.safeParse(value).success,
+                { error: t("profile.pinned.failed") }
+            )
+            .optional(),
     });
 }
 export type SettingsProfileFormValues = z.input<
@@ -70,6 +80,9 @@ export function settingsProfileInput(formData: FormData) {
         preferredArcadeId: formData.get("preferredArcadeId"),
         achievementShowcase: formData.has("achievementShowcase")
             ? formData.get("achievementShowcase")
+            : undefined,
+        pinnedRecords: formData.has("pinnedRecords")
+            ? formData.get("pinnedRecords")
             : undefined,
     };
 }

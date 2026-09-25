@@ -23,11 +23,16 @@ import {
 import type { Application, Graphics } from "pixi.js";
 
 import { useTranslations } from "@/components/i18n/localeProvider";
-import Button from "@/components/ui/Button";
 import { Checkbox } from "@/components/ui/checkbox";
 import CompactSelect from "@/components/ui/compactSelect";
 import { getMetronomePeakGain } from "@/lib/chart-pattern/metronome";
 import { chartPianoColors } from "@/lib/chart-pattern/piano";
+import {
+    HAND_COLORS,
+    hexToNumber,
+    PRESSED_HAND_COLORS,
+    STAGE_CANVAS,
+} from "@/lib/chart-pattern/stageColors";
 import {
     getActivePlaybackPianoRanges,
     getApproachDurationMs,
@@ -47,7 +52,11 @@ import {
     type ChartDocument,
     type ChartHand,
 } from "@/lib/chart-pattern/schema";
-import { formatEditorTime, getBeatMarkers } from "@/lib/chart-pattern/timing";
+import {
+    formatEditorTime,
+    getBeatMarkers,
+    getMeasureMarkers,
+} from "@/lib/chart-pattern/timing";
 
 import { useFullscreen } from "./useFullscreen";
 import { useMetronomeVolume } from "./useMetronomeVolume";
@@ -75,9 +84,10 @@ interface ProjectedRange {
     depth: number;
 }
 
+// 손 색 · 무대 검정은 토큰(`--nl-hand-*` · `--nl-stage-canvas`)과 같은 값(2026-09-26)
 const colors = {
-    left: 0x4fc8dc,
-    right: 0xe85f5d,
+    left: hexToNumber(HAND_COLORS.left),
+    right: hexToNumber(HAND_COLORS.right),
     noteFace: 0xf8f7f1,
     judgment: 0xf2f0e9,
     judgmentEdge: 0x8f929d,
@@ -322,7 +332,7 @@ function sampleProjectedSegment(
 const TRILL_FADE_STRIPS = 10;
 const TRILL_SOLID_ALPHA = 0.82;
 const TRILL_DIAMOND = 0xf2c75c;
-const TRILL_TAIL = 0x070910;
+const TRILL_TAIL = hexToNumber(STAGE_CANVAS);
 
 /**
  * 트릴(2026-09-24 B′, 사용자) — 두 자리를 합친 범위 전체에 촘촘한 육각형, 칠 자리 쪽만 진하고 반대편은 옅어진다.
@@ -465,7 +475,7 @@ function drawPlayfield(
     judgmentY: number
 ) {
     graphics.rect(0, 0, width, height).fill({
-        color: 0x070910,
+        color: hexToNumber(STAGE_CANVAS),
         alpha: 0.74,
     });
     for (const lane of CHART_LANE_GROUP_BOUNDARIES) {
@@ -573,9 +583,9 @@ function drawPiano(
             .fill({
                 color:
                     activeHand === "left"
-                        ? chartPianoColors.pressedLeft
+                        ? PRESSED_HAND_COLORS.left
                         : activeHand === "right"
-                          ? chartPianoColors.pressedRight
+                          ? PRESSED_HAND_COLORS.right
                           : lane % 2 === 0
                             ? chartPianoColors.white
                             : chartPianoColors.whiteAlt,
@@ -775,15 +785,18 @@ function drawPreparedNote({
  */
 const STAGE_WIDTH = 1280;
 const STAGE_HEIGHT = 720;
+const NOTE_SPEED_MIN = 1;
+const NOTE_SPEED_MAX = 4;
 const noteSpeedOptions = Array.from({ length: 31 }, (_, index) => {
-    const value = (1 + index * 0.1).toFixed(1);
+    const value = (NOTE_SPEED_MIN + index * 0.1).toFixed(1);
     return { value, label: value };
 });
-/** 유튜브와 같은 이동 폭 — 화살표 5초 · 폰 두 번 두드리기 10초 · 두 번으로 치는 간격 */
-const KEY_SEEK_MS = 5_000;
-const DOUBLE_TAP_SEEK_MS = 10_000;
+/** 화살표 · 폰 두 번 두드리기 = 한 마디씩(2026-09-26, 사용자 — 초 단위는 박 사이에 멈춘다).
+ *  되감기는 그 마디 처음으로, 처음에서 이만큼 안이면 앞 마디 처음으로(이어서 누르면 계속 뒤로) */
+const MEASURE_BACK_SNAP_MS = 300;
+/** 두 번으로 치는 간격 */
 const DOUBLE_TAP_WINDOW_MS = 300;
-/** 전체화면에서 재생 중 조작 줄을 숨기기까지 가만히 있는 시간 — 동영상 플레이어와 같은 문법 */
+/** 재생 중 조작 줄을 숨기기까지 가만히 있는 시간 — 동영상 플레이어와 같은 문법(2026-09-26 부터 인라인도) */
 const OVERLAY_IDLE_MS = 3_000;
 
 function renderPlaybackFrame({
@@ -907,12 +920,21 @@ export default function FallingChartViewer({
         [document]
     );
     const durationMs = Math.max(chartDurationMs, audioDurationMs);
+    const measureTimes = useMemo(
+        () =>
+            getMeasureMarkers(
+                document.timingPoints,
+                document.ticksPerQuarter,
+                chartDurationMs
+            ).map((marker) => marker.timeMs),
+        [chartDurationMs, document.ticksPerQuarter, document.timingPoints]
+    );
 
     useEffect(() => {
         durationRef.current = durationMs;
     }, [durationMs]);
 
-    // 전체화면 조작 줄 — 재생 중 3초 가만히 있으면 숨기고, 움직이거나 누르면 바로 다시(움직임 없이)
+    // 조작 줄(인라인 · 전체화면 같음) — 재생 중 3초 가만히 있으면 숨기고, 움직이거나 누르면 바로 다시(움직임 없이)
     const wakeOverlay = useCallback(() => {
         setOverlayIdle(false);
         if (idleTimerRef.current !== null)
@@ -930,8 +952,21 @@ export default function FallingChartViewer({
         []
     );
     // 설정 창이 열려 있는 동안은 숨기지 않는다
-    const overlayHidden =
-        fullscreen.active && isPlaying && overlayIdle && !settingsOpen;
+    const overlayHidden = isPlaying && overlayIdle && !settingsOpen;
+    // 마우스가 무대를 벗어나면 재생 중에는 바로 숨긴다(유튜브와 같음)
+    const hideOverlay = useCallback(() => {
+        if (idleTimerRef.current !== null)
+            window.clearTimeout(idleTimerRef.current);
+        setOverlayIdle(true);
+    }, []);
+    function stepNoteSpeed(delta: number) {
+        setNoteSpeed((speed) =>
+            Math.min(
+                NOTE_SPEED_MAX,
+                Math.max(NOTE_SPEED_MIN, Math.round((speed + delta) * 10) / 10)
+            )
+        );
+    }
 
     const applySeekRequest = useEffectEvent((timeMs: number) => seek(timeMs));
     useEffect(() => {
@@ -1139,7 +1174,8 @@ export default function FallingChartViewer({
         else void startPlayback();
     }
 
-    // 키보드(2026-09-25, 유튜브와 같게) — 스페이스 재생 · 일시정지, ← → 5초.
+    // 키보드(2026-09-25, 유튜브와 같게) — 스페이스 재생 · 일시정지, ← → 5초,
+    // Shift + > · < 노트 속도 ±0.1(2026-09-26 — 유튜브의 속도 단축키 자리).
     // 글 입력 · 버튼 · 막대 · 셀렉트에 포커스가 있으면 그 부품의 원래 동작을 둔다(두 번 눌리지 않게)
     const handleKey = useEffectEvent((event: KeyboardEvent) => {
         if (
@@ -1161,12 +1197,12 @@ export default function FallingChartViewer({
             togglePlayback();
         } else if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
             event.preventDefault();
-            seek(
-                currentTimeRef.current +
-                    (event.key === "ArrowLeft" ? -KEY_SEEK_MS : KEY_SEEK_MS)
-            );
+            seekMeasure(event.key === "ArrowLeft" ? -1 : 1);
+        } else if (event.key === ">" || event.key === "<") {
+            event.preventDefault();
+            stepNoteSpeed(event.key === ">" ? 0.1 : -0.1);
         } else return;
-        if (fullscreen.active) wakeOverlay();
+        wakeOverlay();
     });
     useEffect(() => {
         const listener = (event: KeyboardEvent) => handleKey(event);
@@ -1174,7 +1210,7 @@ export default function FallingChartViewer({
         return () => window.removeEventListener("keydown", listener);
     }, []);
 
-    // 무대 누르기 — 마우스는 누를 때마다 재생 · 일시정지. 손가락은 두 번 두드리면 그쪽 절반으로 10초,
+    // 무대 누르기 — 마우스는 누를 때마다 재생 · 일시정지. 손가락은 두 번 두드리면 그쪽 절반으로 한 마디,
     // 한 번이면 두 번째를 기다렸다가(300ms) 재생 · 일시정지
     const tapRef = useRef<{ time: number; timer: number | null }>({
         time: 0,
@@ -1188,7 +1224,7 @@ export default function FallingChartViewer({
             tap.timer = null;
             // 이어서 두드리면 계속 이동한다
             tap.time = now;
-            seek(currentTimeRef.current + side * DOUBLE_TAP_SEEK_MS);
+            seekMeasure(side);
             tap.timer = window.setTimeout(() => {
                 tap.timer = null;
             }, DOUBLE_TAP_WINDOW_MS);
@@ -1252,6 +1288,21 @@ export default function FallingChartViewer({
         }
         isPlayingRef.current = true;
         setIsPlaying(true);
+        wakeOverlay();
+    }
+
+    // 한 마디 이동 — 앞으로는 다음 마디 처음, 뒤로는 그 마디 처음(처음 가까이면 앞 마디 처음). 마디가 없으면 끝 · 처음
+    function seekMeasure(direction: -1 | 1) {
+        const now = currentTimeRef.current;
+        if (direction > 0) {
+            const next = measureTimes.find((timeMs) => timeMs > now + 1);
+            seek(next ?? durationRef.current);
+            return;
+        }
+        const previous = measureTimes.findLast(
+            (timeMs) => timeMs <= now - MEASURE_BACK_SNAP_MS
+        );
+        seek(previous ?? 0);
     }
 
     function seek(nextTimeMs: number) {
@@ -1300,7 +1351,7 @@ export default function FallingChartViewer({
         }
     }
 
-    // 메트로놈 음량 — 조작부와 전체화면 설정 창이 같이 쓴다
+    // 메트로놈 음량 — 설정 창 안
     const volumeControl = (
         <label className="nl-chart-stage__option nl-chart-stage__volume">
             <Volume2 className="nl-icon nl-muted" aria-hidden />
@@ -1322,7 +1373,7 @@ export default function FallingChartViewer({
         </label>
     );
 
-    // 재생 막대 — 조작부와 전체화면 조작 줄이 같이 쓴다
+    // 재생 막대 — 조작 줄 맨 위 한 줄(유튜브처럼 폭 가득)
     const seekTrack = (
         <div className="nl-chart-stage__seek-track">
             <input
@@ -1351,6 +1402,8 @@ export default function FallingChartViewer({
             ))}
         </div>
     );
+    // 떠 있는 창 · 셀렉트 목록은 전체화면이면 전체화면 요소 안에(밖에 뜨면 안 보임), 인라인이면 문서에(무대에 잘리지 않게)
+    const layerContainer = fullscreen.active ? screenRef.current : undefined;
 
     return (
         <section className="nl-chart-stage">
@@ -1361,8 +1414,16 @@ export default function FallingChartViewer({
                     fullscreen.active ? fullscreen.mode : undefined
                 }
                 data-idle={overlayHidden || undefined}
-                onPointerMove={fullscreen.active ? wakeOverlay : undefined}
-                onPointerDown={fullscreen.active ? wakeOverlay : undefined}
+                onPointerMove={wakeOverlay}
+                onPointerDown={wakeOverlay}
+                onPointerLeave={(event) => {
+                    if (
+                        event.pointerType === "mouse" &&
+                        isPlayingRef.current &&
+                        !settingsOpen
+                    )
+                        hideOverlay();
+                }}
             >
                 {/* 무대를 누르면 재생 · 일시정지(2026-09-25, 동영상 플레이어처럼) — 키보드는 재생 버튼으로 */}
                 <div
@@ -1414,12 +1475,15 @@ export default function FallingChartViewer({
                         className="nl-chart-stage__host"
                     />
                 </div>
-                {fullscreen.active ? (
-                    // 전체화면 조작 줄 — 재생 · 시각 · 막대 · 길이 · 끝내기만(설정은 전체화면 밖에서)
-                    <div
-                        className="nl-chart-stage__overlay"
-                        hidden={overlayHidden}
-                    >
+                {/* 조작 줄(2026-09-26 A, 유튜브 시청 페이지와 같게) — 무대 아래쪽에 겹친다. 인라인 · 전체화면 같은 줄.
+                    재생 막대 한 줄 → 재생 · 처음으로 · 시각 / 길이 … 노트 속도 · 설정 · 전체화면 */}
+                <div
+                    className="nl-chart-stage__overlay"
+                    hidden={overlayHidden}
+                    onFocus={wakeOverlay}
+                >
+                    {seekTrack}
+                    <div className="nl-chart-stage__bar">
                         <button
                             type="button"
                             className="nl-chart-stage__media-button"
@@ -1441,14 +1505,32 @@ export default function FallingChartViewer({
                                 <Play className="nl-icon" fill="currentColor" />
                             )}
                         </button>
+                        <button
+                            type="button"
+                            className="nl-chart-stage__media-button nl-chart-stage__restart"
+                            onClick={() => {
+                                pausePlayback();
+                                seek(0);
+                            }}
+                            aria-label={t("chart.restart")}
+                        >
+                            <RotateCcw className="nl-icon" />
+                        </button>
                         <span className="nl-metric-value nl-chart-stage__time">
                             {formatEditorTime(currentTimeMs)}
-                        </span>
-                        {seekTrack}
-                        <span className="nl-metric-value nl-chart-stage__time">
+                            {" / "}
                             {formatEditorTime(durationMs)}
                         </span>
-                        {/* 설정(2026-09-25 C1) — 톱니 → 조작 줄 위 떠 있는 창. 전체화면 안에 띄워야 보인다 */}
+                        {/* 노트 속도 — 지금 값을 보여 주고 누르면 설정 창(좁은 화면은 설정 창에서만) */}
+                        <button
+                            type="button"
+                            className="nl-chart-stage__media-button nl-chart-stage__speed nl-metric-value"
+                            onClick={() => setSettingsOpen(true)}
+                            aria-label={`${t("chart.noteSpeed")} ${noteSpeed.toFixed(1)}`}
+                        >
+                            {noteSpeed.toFixed(1)}×
+                        </button>
+                        {/* 설정(2026-09-25 C1) — 톱니 → 조작 줄 위 떠 있는 창 */}
                         <Popover.Root
                             open={settingsOpen}
                             onOpenChange={setSettingsOpen}
@@ -1462,184 +1544,122 @@ export default function FallingChartViewer({
                                     <Settings className="nl-icon" />
                                 </button>
                             </Popover.Trigger>
-                            <Popover.Portal container={screenRef.current}>
-                                <Popover.Content
-                                    side="top"
-                                    align="end"
-                                    sideOffset={8}
-                                    collisionPadding={16}
-                                    className="nl-chart-stage__settings"
-                                    onPointerDownOutside={(event) => {
-                                        const target = event.detail
-                                            .originalEvent
-                                            .target as Element | null;
-                                        closedSettingsRef.current = Boolean(
-                                            target?.closest(
-                                                ".nl-chart-stage__canvas"
-                                            )
-                                        );
-                                    }}
-                                >
-                                    <div className="nl-chart-stage__option">
-                                        <span className="nl-control nl-muted">
-                                            {t("chart.noteSpeed")}
-                                        </span>
-                                        <CompactSelect
-                                            label={t("chart.noteSpeed")}
-                                            value={noteSpeed.toFixed(1)}
-                                            onValueChange={(value) =>
-                                                setNoteSpeed(Number(value))
+                            <Popover.Portal container={layerContainer}>
+                                {/* 문서에 띄울 때도 공용 스타일 범위(.noslog-ui) 안에 — ⋯ 메뉴와 같은 방식 */}
+                                <div className="noslog-ui">
+                                    <Popover.Content
+                                        side="top"
+                                        align="end"
+                                        sideOffset={8}
+                                        collisionPadding={16}
+                                        className="nl-chart-stage__settings"
+                                        onPointerDownOutside={(event) => {
+                                            const target = event.detail
+                                                .originalEvent
+                                                .target as Element | null;
+                                            closedSettingsRef.current = Boolean(
+                                                target?.closest(
+                                                    ".nl-chart-stage__canvas"
+                                                )
+                                            );
+                                        }}
+                                    >
+                                        <div className="nl-chart-stage__option">
+                                            <span className="nl-control nl-muted">
+                                                {t("chart.noteSpeed")}
+                                            </span>
+                                            <CompactSelect
+                                                label={t("chart.noteSpeed")}
+                                                value={noteSpeed.toFixed(1)}
+                                                onValueChange={(value) =>
+                                                    setNoteSpeed(Number(value))
+                                                }
+                                                outlined
+                                                container={layerContainer}
+                                                options={noteSpeedOptions}
+                                            />
+                                        </div>
+                                        <Checkbox
+                                            label={t("chart.metronome")}
+                                            checked={metronomeEnabled}
+                                            onChange={(event) =>
+                                                void updateMetronomeEnabled(
+                                                    event.target.checked
+                                                )
                                             }
-                                            outlined
-                                            container={screenRef.current}
-                                            options={noteSpeedOptions}
                                         />
-                                    </div>
-                                    <Checkbox
-                                        label={t("chart.metronome")}
-                                        checked={metronomeEnabled}
-                                        onChange={(event) =>
-                                            void updateMetronomeEnabled(
-                                                event.target.checked
-                                            )
-                                        }
-                                    />
-                                    {volumeControl}
-                                    <Checkbox
-                                        label={t("chart.strictPerformance")}
-                                        checked={strictPerformance}
-                                        onChange={(event) =>
-                                            setStrictPerformance(
-                                                event.target.checked
-                                            )
-                                        }
-                                    />
-                                </Popover.Content>
+                                        {volumeControl}
+                                        <Checkbox
+                                            label={t("chart.strictPerformance")}
+                                            checked={strictPerformance}
+                                            onChange={(event) =>
+                                                setStrictPerformance(
+                                                    event.target.checked
+                                                )
+                                            }
+                                        />
+                                        {/* 로컬 음원 — 브라우저 안에서만 재생(올리지 않음) */}
+                                        <div className="nl-chart-stage__audio">
+                                            <label className="nl-button nl-button--secondary">
+                                                <Upload
+                                                    className="nl-icon"
+                                                    aria-hidden
+                                                />
+                                                {t("chart.localAudio")}
+                                                <input
+                                                    type="file"
+                                                    accept="audio/mpeg,audio/ogg,audio/wav,audio/flac,audio/mp4"
+                                                    onChange={loadAudio}
+                                                    className="sr-only"
+                                                />
+                                            </label>
+                                            <p className="nl-metadata nl-muted nl-chart-stage__file">
+                                                {fileName ??
+                                                    t("chart.audioHelp")}
+                                            </p>
+                                        </div>
+                                    </Popover.Content>
+                                </div>
                             </Popover.Portal>
                         </Popover.Root>
                         <button
                             type="button"
                             className="nl-chart-stage__media-button"
                             onClick={() => void fullscreen.toggle()}
-                            aria-label={t("chart.exitFullscreen")}
+                            aria-label={t(
+                                fullscreen.active
+                                    ? "chart.exitFullscreen"
+                                    : "chart.fullscreen"
+                            )}
                         >
-                            <Minimize className="nl-icon" />
+                            {fullscreen.active ? (
+                                <Minimize className="nl-icon" />
+                            ) : (
+                                <Maximize className="nl-icon" />
+                            )}
                         </button>
                     </div>
-                ) : null}
+                </div>
             </div>
-
-            <div className="nl-chart-stage__controls">
-                <div className="nl-chart-stage__transport">
-                    <Button
-                        variant="primary"
-                        size="icon"
-                        onClick={() =>
-                            isPlaying ? pausePlayback() : void startPlayback()
-                        }
-                        aria-label={
-                            isPlaying ? t("chart.pause") : t("chart.play")
-                        }
-                    >
-                        {isPlaying ? (
-                            <Pause className="nl-icon" fill="currentColor" />
-                        ) : (
-                            <Play className="nl-icon" fill="currentColor" />
-                        )}
-                    </Button>
-                    <Button
-                        variant="secondary"
-                        size="icon"
-                        onClick={() => {
-                            pausePlayback();
-                            seek(0);
-                        }}
-                        aria-label={t("chart.restart")}
-                    >
-                        <RotateCcw className="nl-icon" />
-                    </Button>
-                    <span className="nl-metric-value nl-chart-stage__time">
-                        {formatEditorTime(currentTimeMs)}
-                    </span>
-                    {seekTrack}
-                    <span className="nl-metric-value nl-chart-stage__time">
-                        {formatEditorTime(durationMs)}
-                    </span>
-                    <Button
-                        variant="secondary"
-                        size="icon"
-                        className="nl-chart-stage__fullscreen"
-                        onClick={() => void fullscreen.toggle()}
-                        aria-label={t("chart.fullscreen")}
-                    >
-                        <Maximize className="nl-icon" />
-                    </Button>
-                </div>
-
-                <div className="nl-chart-stage__options">
-                    <label className="nl-button nl-button--secondary">
-                        <Upload className="nl-icon" aria-hidden />
-                        {t("chart.localAudio")}
-                        <input
-                            type="file"
-                            accept="audio/mpeg,audio/ogg,audio/wav,audio/flac,audio/mp4"
-                            onChange={loadAudio}
-                            className="sr-only"
-                        />
-                    </label>
-                    <div className="nl-chart-stage__option">
-                        <span className="nl-control nl-muted">
-                            {t("chart.noteSpeed")}
-                        </span>
-                        <CompactSelect
-                            label={t("chart.noteSpeed")}
-                            value={noteSpeed.toFixed(1)}
-                            onValueChange={(value) =>
-                                setNoteSpeed(Number(value))
-                            }
-                            outlined
-                            options={noteSpeedOptions}
-                        />
-                    </div>
-                    <Checkbox
-                        label={t("chart.metronome")}
-                        checked={metronomeEnabled}
-                        onChange={(event) =>
-                            void updateMetronomeEnabled(event.target.checked)
-                        }
-                    />
-                    {volumeControl}
-                    <Checkbox
-                        label={t("chart.strictPerformance")}
-                        checked={strictPerformance}
-                        onChange={(event) =>
-                            setStrictPerformance(event.target.checked)
-                        }
-                    />
-                </div>
-                <p className="nl-metadata nl-muted nl-chart-stage__file">
-                    {fileName ?? t("chart.audioHelp")}
+            {audioError ? (
+                <p className="nl-body-secondary nl-chart-stage__error">
+                    {audioError}
                 </p>
-                {audioError ? (
-                    <p className="nl-body-secondary nl-chart-stage__error">
-                        {audioError}
-                    </p>
-                ) : null}
-                <audio
-                    ref={audioRef}
-                    preload="metadata"
-                    onLoadedMetadata={(event) =>
-                        setAudioDurationMs(
-                            Math.round(event.currentTarget.duration * 1_000)
-                        )
-                    }
-                    onEnded={() => {
-                        isPlayingRef.current = false;
-                        clockAnchorRef.current = null;
-                        setIsPlaying(false);
-                    }}
-                />
-            </div>
+            ) : null}
+            <audio
+                ref={audioRef}
+                preload="metadata"
+                onLoadedMetadata={(event) =>
+                    setAudioDurationMs(
+                        Math.round(event.currentTarget.duration * 1_000)
+                    )
+                }
+                onEnded={() => {
+                    isPlayingRef.current = false;
+                    clockAnchorRef.current = null;
+                    setIsPlaying(false);
+                }}
+            />
         </section>
     );
 }

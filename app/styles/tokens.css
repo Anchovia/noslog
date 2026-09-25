@@ -114,6 +114,10 @@
     --nl-content-pending: #8a8a8a;
     --nl-surface-media-scrim: #00000099;
     --nl-content-on-media: #ffffff;
+    /* 채보 무대(2026-09-26) — 테마와 무관하게 늘 어둡다. 캔버스 값은 lib/chart-pattern/stageColors.ts 와 같게 */
+    --nl-stage-canvas: #070910;
+    --nl-hand-left: #4fc8dc;
+    --nl-hand-right: #e85f5d;
     --nl-brand-discord: #5865f2;
     --nl-brand-on-discord: #ffffff;
     --nl-feedback-destructive-surface: #ae2e24;
@@ -222,6 +226,10 @@ html[data-theme="light"] .noslog-ui,
     --nl-content-pending: #717171;
     --nl-surface-media-scrim: #00000099;
     --nl-content-on-media: #ffffff;
+    /* 채보 무대(2026-09-26) — 테마와 무관하게 늘 어둡다. 캔버스 값은 lib/chart-pattern/stageColors.ts 와 같게 */
+    --nl-stage-canvas: #070910;
+    --nl-hand-left: #4fc8dc;
+    --nl-hand-right: #e85f5d;
     --nl-brand-discord: #5865f2;
     --nl-brand-on-discord: #ffffff;
     --nl-feedback-destructive-surface: #c9372c;
@@ -296,6 +304,14 @@ html[data-theme="light"] .noslog-ui,
 .noslog-ui .nl-body {
     font-size: var(--nl-type-size-16);
     line-height: var(--nl-type-line-height-24);
+    font-weight: var(--nl-type-weight-regular);
+    letter-spacing: 0;
+    font-variant-numeric: normal;
+}
+/* 읽기 본문(2026-09-26 H1) — 공지 · 이벤트 글 본문만. 크기는 본문과 같고 행간만 28(한국어 긴 글 행간 중앙값 1.7) */
+.noslog-ui .nl-body-reading {
+    font-size: var(--nl-type-size-16);
+    line-height: var(--nl-type-line-height-28);
     font-weight: var(--nl-type-weight-regular);
     letter-spacing: 0;
     font-variant-numeric: normal;

@@ -5,7 +5,6 @@ import {
     Flame,
     Gem,
     GraduationCap,
-    Grid3x3,
     Hand,
     Link2,
     MessageSquare,
@@ -36,14 +35,16 @@ export const ACHIEVEMENT_ICONS: Record<string, LucideIcon> = {
     "category-var": Shapes,
     "exam-basic": GraduationCap,
     "exam-recital": Music,
-    bingo: Grid3x3,
     opinion: MessageSquare,
     helpful: ThumbsUp,
     "pattern-evaluation": ClipboardCheck,
 };
 
+/** 단계 숫자 알약 — 로마 숫자 I–V(2026-09-25) */
+const TIER_NUMERALS = ["", "I", "II", "III", "IV", "V"];
+
 /**
- * 업적 육각(2026-09-24 I1 · T2) — 테두리 = 검정 명판 금속 사다리(동 · 은 · 금), 못 얻은 것은 흐린 선 · 흐린 그림(K1).
+ * 업적 육각(2026-09-24 I1 · T2) — 테두리 = 동 · 은 · 금(검정 명판 금속 사다리) · 플래티넘(판정 GOOD) · 다이아(판정 ◆JUST), 못 얻은 것은 흐린 선 · 흐린 그림(K1).
  * `size="row"` 목록 48 + 단계 숫자 알약(색 + 숫자 두 단서), `size="inline"` 머리 · 한 줄 24(색만, 이름은 aria · title),
  * `size="large"` 배지 정보 창 64(2026-09-25 M1 — 단계는 제목의 로마 숫자가 말한다).
  * 글자 · 이름은 부르는 쪽이 붙인다 — 여기는 그림만.
@@ -77,7 +78,7 @@ export default function AchievementHex({
             <Icon aria-hidden className="nl-achievement-hex__icon" />
             {size === "row" && tier ? (
                 <span className="nl-achievement-hex__tier nl-metadata">
-                    {tier}
+                    {TIER_NUMERALS[tier] ?? tier}
                 </span>
             ) : null}
         </span>

@@ -1,4 +1,4 @@
-/* 이벤트 게시판(2026-09-18 L1) · 글쓰기(E2). 목록 = 1단 탭 → 배너 카드, 상세 = 공지 상세 문법 */
+/* 이벤트 게시판(2026-09-18 L1) · 글쓰기(E2). 목록 = 「소식」 입구 탭 → 상태 칩 → 배너 카드(2026-09-26 E1), 상세 = 공지 상세 문법 */
 .noslog-ui .nl-events {
     padding-bottom: var(--nl-spacing-48);
 }
@@ -7,7 +7,7 @@
     flex-wrap: wrap;
     gap: var(--nl-spacing-8);
 }
-/* 탭 글자 뒤 개수 */
+/* 탭 글자 뒤 개수 — 관리자 이벤트 탭(공개 목록은 칩 글자에 개수를 붙인다) */
 .noslog-ui .nl-events__count {
     margin-inline-start: var(--nl-spacing-4);
     font-weight: var(--nl-type-weight-regular);

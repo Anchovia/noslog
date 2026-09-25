@@ -9,6 +9,8 @@ import { logServerError } from "@/lib/observability/server";
 import type { ActionResult } from "@/lib/actions/result";
 import { actionValidationFailure } from "@/lib/actions/validation";
 import { setAchievementShowcase } from "@/features/achievements/server/achievementService";
+import { pinnedRecordsValueSchema } from "@/features/profile/schemas/pinnedRecordSchema";
+import { setPinnedRecords } from "@/features/profile/server/profilePinnedService";
 import {
     createSettingsProfileSchema,
     settingsPrivacySchema,
@@ -101,6 +103,21 @@ export async function saveSettingsProfile(
                     message: t("achievement.pin.failed"),
                     fieldErrors: {
                         achievementShowcase: [t("achievement.pin.failed")],
+                    },
+                };
+        }
+        // 고정 기록(2026-09-26 S2) — 점수가 있는 채보만. 잘못된 값이면 프로필도 저장하지 않는다
+        if (values.pinnedRecords !== undefined) {
+            const pinned = await setPinnedRecords(
+                session.id,
+                pinnedRecordsValueSchema.parse(values.pinnedRecords)
+            );
+            if (pinned.status !== "ok")
+                return {
+                    success: false,
+                    message: t("profile.pinned.failed"),
+                    fieldErrors: {
+                        pinnedRecords: [t("profile.pinned.failed")],
                     },
                 };
         }

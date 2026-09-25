@@ -12,6 +12,7 @@ import { CHART_LANE_COUNT, CHART_TICKS_PER_QUARTER } from "./schema";
 import type { ChartNote, ChartNoteType, ChartTimingPoint } from "./schema";
 import { sortTimingPoints, tickToMilliseconds } from "./timing";
 import type { Vid2bmapResult } from "./vid2bmapFile";
+import { beatFrameTimes, matchBeatFrames } from "./vid2bmapFile";
 
 /** 같은 칸 · 같은 종류가 이 프레임 이내로 겹치면 한 노트를 두 번 읽은 것 */
 export const VID2BMAP_DUPLICATE_FRAMES = 3;
@@ -26,6 +27,16 @@ export const VID2BMAP_LOCAL_GRID_TOLERANCE_FRAMES = 2.5;
 /** 칸 위치로 손을 추정할 때 불확실한 가운데 구간(노트 가운데 칸 기준) */
 const HAND_UNCERTAIN_MIN = 12;
 const HAND_UNCERTAIN_MAX = 16;
+/**
+ * 손을 읽지 못한 테누토가 이 박 이상 이어지며 다른 노트와 겹치면 영상에 없던 테누토로 본다(2026-09-25 F1′).
+ * 영상 대조: 幻想即興曲 47마디 115박 · 64마디 50박, 平均律 30마디 32.5박, パヴァーヌ 37마디 8박 — 그 자리엔 일반 노트만 지나감
+ */
+const PHANTOM_TENUTO_BEATS = 8;
+/**
+ * 손을 읽지 못한 일반 노트가 테누토 머리 뒤 이 박 안, 그 테누토 칸 안에 있으면 테누토 몸통을 다시 읽은 것으로 본다(2026-09-25 F1′).
+ * 영상 대조: 확인한 곳 모두 누르는 동안 콤보 그대로(ピアノ協奏曲 7마디 3박 +⅜박 등, 0.3–0.6박). 1박 뒤는 진짜 노트였다(かぞへうた 9마디 3박)
+ */
+const PHANTOM_HEAD_BEATS = 0.75;
 
 export type Vid2bmapKind = "standard" | "tenuto" | "trill" | "glissando";
 
@@ -51,6 +62,13 @@ export interface Vid2bmapCounts {
 export type Vid2bmapWarning =
     | { kind: "missingBar"; tick: number }
     | { kind: "extraBar"; tick: number }
+    /** 읽을 때 바로잡은 박자선(2026-09-25) — ticks 는 자리, 확인하라고 알린다 */
+    | {
+          kind: "barRepaired";
+          inserted: number;
+          removed: number;
+          ticks: number[];
+      }
     /** vid2bmap 은 첫 · 마지막 박자선 밖의 라벨을 스스로 지운다 — 늘 끝부분을 확인하게 한다 */
     | { kind: "endCheck"; lastBarTick: number }
     | {
@@ -69,6 +87,8 @@ export type Vid2bmapWarning =
     | { kind: "denseSnap"; count: number; tick: number }
     | { kind: "shortTenuto"; count: number }
     | { kind: "trillSplit"; count: number }
+    /** 손을 읽지 못해 영상에 없던 것으로 보고 뺀 긴 테누토 · 테누토 안 머리의 자리(틱) */
+    | { kind: "phantomDropped"; tenutoTicks: number[]; headTicks: number[] }
     /** 글리산도 조각을 이어 만든 수 · 이어지지 않아 버린 조각 수 · 가로대를 일반 노트로도 읽어 뺀 수 */
     | {
           kind: "glissandoJoined";
@@ -317,6 +337,26 @@ function barWarnings(
 ): Vid2bmapWarning[] {
     const warnings: Vid2bmapWarning[] = [];
     const rows = result.barRows;
+    const sortedPoints = sortTimingPoints(options.timingPoints);
+    const repairs = result.barRepairs ?? [];
+    if (repairs.length > 0) {
+        warnings.push({
+            kind: "barRepaired",
+            inserted: repairs.filter((repair) => repair.kind === "inserted")
+                .length,
+            removed: repairs.filter((repair) => repair.kind === "removed")
+                .length,
+            ticks: repairs.map((repair) =>
+                Math.round(
+                    vid2bmapTickAt(
+                        vid2bmapBeatPosition(rows, repair.row),
+                        options.firstBarTick,
+                        sortedPoints
+                    )
+                )
+            ),
+        });
+    }
     const sorted = sortTimingPoints(options.timingPoints);
     const intervals = rows.slice(1).map((row, index) => row - rows[index]);
     let run: { tick: number; bpms: number[]; chartBpm: number } | null = null;
@@ -653,6 +693,14 @@ export function convertVid2bmap(
         output.push(chartNote);
     }
 
+    // 손을 읽지 못한 가짜 노트 빼기 — 겹침 재맞춤 전에(가짜와 겹친 노트를 옮기지 않게)
+    const phantom = dropVid2bmapPhantoms(
+        output,
+        new Set(handKnownIds),
+        timingPoints
+    );
+    output = phantom.notes;
+
     // 빠른 구간(Altale 후반 약 0.1박 간격): 기본 격자로 같은 자리에 뭉쳐 칸이 겹친 노트만 ×2 · ×4 격자로 다시 맞춘다.
     // 이미 겹치지 않는 노트는 건드리지 않는다(앞부분 232개 정답 그대로)
     const refined = new Set<string>();
@@ -679,6 +727,14 @@ export function convertVid2bmap(
     }
 
     const warnings = barWarnings(result, options);
+    if (phantom.tenutoTicks.length + phantom.headTicks.length > 0) {
+        // 노트를 지우는 경고라 맨 앞에(처음 3개만 보인다)
+        warnings.unshift({
+            kind: "phantomDropped",
+            tenutoTicks: phantom.tenutoTicks,
+            headTicks: phantom.headTicks,
+        });
+    }
     if (snapped.changedBeats.length > 0) {
         warnings.push({
             kind: "localGrid",
@@ -856,13 +912,73 @@ export function convertVid2bmap(
         warnings.push({ kind: "shortTenuto", count: shortTenuto });
     if (trillSplit > 0)
         warnings.push({ kind: "trillSplit", count: trillSplit });
+    const kept = new Set(output.map((note) => note.id));
     return {
         notes: output,
         handKnownIds,
-        handUncertainIds,
-        gridCheckIds,
+        handUncertainIds: handUncertainIds.filter((id) => kept.has(id)),
+        gridCheckIds: gridCheckIds.filter((id) => kept.has(id)),
         glissandoIds,
         warnings,
+    };
+}
+
+/**
+ * 손 열이 있는 zip(절반 넘게 손을 읽음)에서 손을 읽지 못한 노트 중 영상에 없던 것으로 보이는 것을 뺀다(2026-09-25 F1′).
+ * LR 실행이 손을 못 읽었다 = 그 자리에 노트가 보이지 않았다는 뜻이 많다 — 겹침 10곡 영상 대조에서 가짜 58개 중 50개가 손 없음.
+ * 손 열이 없는 옛 zip 은 모두 손이 없으므로 건드리지 않는다
+ */
+function dropVid2bmapPhantoms(
+    notes: ChartNote[],
+    handRead: Set<string>,
+    timingPoints: ChartTimingPoint[]
+) {
+    const tenutoTicks: number[] = [];
+    const headTicks: number[] = [];
+    if (handRead.size * 2 < notes.length) {
+        return { notes, tenutoTicks, headTicks };
+    }
+    const sorted = sortTimingPoints(timingPoints);
+    const beatAt = (tick: number) => beatTicksOf(activePoint(sorted, tick));
+    const dropped = new Set<string>();
+    for (const note of notes) {
+        if (
+            note.type !== "tenuto" ||
+            handRead.has(note.id) ||
+            note.durationTicks < beatAt(note.tick) * PHANTOM_TENUTO_BEATS ||
+            !notes.some(
+                (other) =>
+                    other.id !== note.id &&
+                    chartNotesOverlap(note, other, CHART_TICKS_PER_QUARTER)
+            )
+        ) {
+            continue;
+        }
+        dropped.add(note.id);
+        tenutoTicks.push(note.tick);
+    }
+    const tenutos = notes.filter(
+        (note) => note.type === "tenuto" && !dropped.has(note.id)
+    );
+    for (const note of notes) {
+        if (note.type !== "standard" || handRead.has(note.id)) continue;
+        const inside = tenutos.some(
+            (tenuto) =>
+                note.tick > tenuto.tick &&
+                note.tick < tenuto.tick + tenuto.durationTicks &&
+                note.tick - tenuto.tick <=
+                    beatAt(tenuto.tick) * PHANTOM_HEAD_BEATS &&
+                note.lane < tenuto.lane + tenuto.width &&
+                note.lane + note.width > tenuto.lane
+        );
+        if (!inside) continue;
+        dropped.add(note.id);
+        headTicks.push(note.tick);
+    }
+    return {
+        notes: notes.filter((note) => !dropped.has(note.id)),
+        tenutoTicks: tenutoTicks.sort((a, b) => a - b),
+        headTicks: headTicks.sort((a, b) => a - b),
     };
 }
 
@@ -1459,44 +1575,27 @@ const TEMPO_WINDOW = 8;
  * 놓친 박자선(간격 ≈ 2박)은 둘로 나누고, 8박 중앙값이 1.5% 넘게 바뀐 곳을 경계로(Altale: 2~62마디 90.00 · 63마디부터 83.06).
  * 첫 박자선은 beat_frames 의 격자 줄에서 판정선 줄까지 줄 수만큼(한 줄 = 한 프레임) 뒤의 박자선과 짝짓는다.
  */
-/** 영상 원본 박자선(beat_frames) — 박마다 걸린 프레임 수와, 첫 박자선이 보정된 박자선(barRows) 몇 번째인지 */
+/**
+ * 박마다 걸린 원본 프레임 수(2026-09-25) — 박은 노트 배치와 같은 AI 박자선(barRows, 읽을 때 빈 곳을 메움)으로 세고,
+ * 시각은 그 선마다 짝지은 원본 프레임 박자선(beat_frames, 프레임 빠짐 보정 전)으로. 짝이 없는 선은 앞뒤 짝의 차이로 채운다.
+ * firstIndex · 끝 = 원본 프레임 박자선이 덮는 처음 · 마지막 박자선
+ */
 function readBeatTrack(result: Vid2bmapResult) {
-    const beatFrames = result.beatFrames;
     const fps = result.fps;
-    if (!beatFrames || !fps || beatFrames.frames.length < TEMPO_WINDOW * 2) {
-        return null;
-    }
     const rows = result.barRows;
-    if (rows.length < 2) return null;
-    const frames = beatFrames.frames;
-    const intervals = frames
-        .slice(1)
-        .map((frame, index) => frame - frames[index]);
-    // 박마다 걸린 프레임 수 — 놓친 박자선은 주변 간격으로 나눠 박 수를 되살린다
-    const durations: number[] = [];
-    intervals.forEach((interval, index) => {
-        const local = median(
-            intervals.slice(Math.max(0, index - 4), index + 5)
-        );
-        const beats = Math.max(1, Math.round(interval / local));
-        for (let beat = 0; beat < beats; beat += 1) {
-            durations.push(interval / beats);
-        }
-    });
+    if (!result.beatFrames || !fps || rows.length < 2) return null;
+    const matched = matchBeatFrames(rows, result.beatFrames);
+    const times = beatFrameTimes(rows, matched);
+    const known = matched
+        .map((frame, index) => (frame === null ? null : index))
+        .filter((index): index is number => index !== null);
+    if (!times || known.length < 2) return null;
+    const firstIndex = known[0];
+    const lastIndex = known[known.length - 1];
+    const durations = times
+        .slice(firstIndex + 1, lastIndex + 1)
+        .map((time, index) => time - times[firstIndex + index]);
     if (durations.length < TEMPO_WINDOW * 2) return null;
-
-    // beat_frames 첫 박자선 ↔ 보정된 박자선 몇 번째(격자 줄 → 판정선 줄 = 한 줄 한 프레임)
-    const expected = frames[0] + (beatFrames.gridRows - 1 - beatFrames.row);
-    let firstIndex = 0;
-    for (let index = 1; index < rows.length; index += 1) {
-        if (
-            Math.abs(rows[index] - expected) <
-            Math.abs(rows[firstIndex] - expected)
-        ) {
-            firstIndex = index;
-        }
-    }
-    if (Math.abs(rows[firstIndex] - expected) > 20) return null;
     return { fps, durations, firstIndex };
 }
 
@@ -1854,18 +1953,30 @@ export function detectVid2bmapTempoChanges(
 }
 
 /**
- * 시작 타이밍의 BPM · 박자만 바꾼다 — 에디터에서 그 칸을 고치는 것과 같다(시각 · 뒤 포인트는 그대로).
- * 박자는 x/4 로(영상 추정은 3/4 · 4/4 만)
+ * 시작 타이밍의 BPM · 박자 · 시각을 바꾼다 — 에디터에서 그 칸을 고치는 것과 같다(뒤 포인트의 박 위치는 그대로).
+ * 박자는 x/4 로(영상 추정은 3/4 · 4/4 만). 시각을 바꾸면 음원 오프셋을 옮기는 것이라 모든 포인트의 시각을 같은 만큼 옮긴다(2026-09-25)
  */
 export function applyVid2bmapStartTiming(
     timingPoints: ChartTimingPoint[],
-    changes: { bpm?: number | null; numerator?: number | null }
+    changes: {
+        bpm?: number | null;
+        numerator?: number | null;
+        timeMs?: number | null;
+    }
 ) {
     const origin = sortTimingPoints(timingPoints)[0];
-    return timingPoints.map((point) =>
-        point.id === origin.id
+    const shift = changes.timeMs == null ? 0 : changes.timeMs - origin.timeMs;
+    return timingPoints.map((point) => {
+        const moved =
+            shift === 0
+                ? point
+                : {
+                      ...point,
+                      timeMs: Math.round((point.timeMs + shift) * 1000) / 1000,
+                  };
+        return point.id === origin.id
             ? {
-                  ...point,
+                  ...moved,
                   ...(changes.bpm == null ? {} : { bpm: changes.bpm }),
                   ...(changes.numerator == null
                       ? {}
@@ -1874,8 +1985,8 @@ export function applyVid2bmapStartTiming(
                             denominator: 4 as const,
                         }),
               }
-            : point
-    );
+            : moved;
+    });
 }
 
 /** 박자 추정에서 테누토 · 트릴 시작의 무게 — 긴 음은 센박에 온다(Altale · アルストロメリア 둘 다 이 값에서 박자 · 마디 첫 박이 맞음, 노트 수만이면 アルストロメリア 마디 첫 박이 틀림) */

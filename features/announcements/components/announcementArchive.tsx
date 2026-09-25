@@ -13,6 +13,7 @@ import type {
 } from "@/features/announcements/schemas/publicAnnouncementSchema";
 import AnnouncementRow from "./announcementRow";
 import AnnouncementPagination from "./announcementPagination";
+import NewsTabs from "./newsTabs";
 
 export default async function AnnouncementArchive({
     category,
@@ -28,11 +29,6 @@ export default async function AnnouncementArchive({
     totalPages: number;
 }) {
     const { locale, t } = await getServerI18n();
-    const month = new Intl.DateTimeFormat(locale, {
-        year: "numeric",
-        month: "long",
-        timeZone: "Asia/Seoul",
-    });
     const base = localizePath("/announcements", locale);
     const categoryLabel = (item: PublicAnnouncementSummary) =>
         t(`announcements.category.${item.category}`);
@@ -41,7 +37,8 @@ export default async function AnnouncementArchive({
             <BackLink href={localizePath("/", locale)}>
                 {t("common.home")}
             </BackLink>
-            <PageHeading title={t("home.announcements")} />
+            <PageHeading title={t("news.title")} />
+            <NewsTabs current="announcements" />
             {/* 분류 필터 — 태그를 누르게 하지 않고 목록 위에 따로 (2026-09-18 B1) */}
             <FilterChipLinks
                 label={t("announcements.filter")}
@@ -71,30 +68,16 @@ export default async function AnnouncementArchive({
             ) : null}
             {announcements.length ? (
                 <ul className="nl-announcements__list">
-                    {announcements.map((announcement, index) => {
-                        const label = month.format(
-                            new Date(announcement.publishedAt)
-                        );
-                        const startsMonth =
-                            index === 0 ||
-                            month.format(
-                                new Date(announcements[index - 1].publishedAt)
-                            ) !== label;
-                        return (
-                            <li key={announcement.id}>
-                                {startsMonth ? (
-                                    <h2 className="nl-section-title nl-announcements__month">
-                                        {label}
-                                    </h2>
-                                ) : null}
-                                <AnnouncementRow
-                                    announcement={announcement}
-                                    locale={locale}
-                                    categoryLabel={categoryLabel(announcement)}
-                                />
-                            </li>
-                        );
-                    })}
+                    {/* 월 제목 없음(2026-09-26 G1) — 날짜가 줄마다 오른쪽에 있다 */}
+                    {announcements.map((announcement) => (
+                        <li key={announcement.id}>
+                            <AnnouncementRow
+                                announcement={announcement}
+                                locale={locale}
+                                categoryLabel={categoryLabel(announcement)}
+                            />
+                        </li>
+                    ))}
                 </ul>
             ) : pinned.length ? null : (
                 <p className="nl-body nl-muted">{t("announcements.empty")}</p>

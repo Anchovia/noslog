@@ -39,15 +39,6 @@ export default async function MyEvents({
                                             {t("events.mine.public")}
                                         </span>
                                     ) : null}
-                                    <time
-                                        className="nl-metadata nl-muted"
-                                        dateTime={event.updatedAt.toISOString()}
-                                    >
-                                        {announcementDate(
-                                            event.updatedAt.toISOString(),
-                                            locale
-                                        )}
-                                    </time>
                                 </div>
                                 <p className="nl-announcement-row__title nl-body">
                                     <Link
@@ -63,6 +54,15 @@ export default async function MyEvents({
                                             t("events.mine.untitled")}
                                     </Link>
                                 </p>
+                                <time
+                                    className="nl-announcement-row__date nl-metadata nl-muted"
+                                    dateTime={event.updatedAt.toISOString()}
+                                >
+                                    {announcementDate(
+                                        event.updatedAt.toISOString(),
+                                        locale
+                                    )}
+                                </time>
                             </li>
                         );
                     })}

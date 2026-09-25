@@ -157,9 +157,13 @@
     height: var(--nl-icon-small);
     flex-shrink: 0;
 }
+.noslog-ui .nl-country-marker[data-size="large"] {
+    width: var(--nl-icon-large);
+    height: var(--nl-icon-large);
+}
 .noslog-ui .nl-country-marker img {
     width: 100%;
-    height: 12px;
+    height: 75%;
     object-fit: cover;
     border-radius: 0;
 }

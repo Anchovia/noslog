@@ -5,12 +5,11 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import Button from "@/components/ui/Button";
 import LineChart from "@/components/ui/lineChart";
-import MetricSwitch from "@/components/ui/metricSwitch";
-import { Select } from "@/components/ui/select";
+import { SegmentedControl } from "@/components/ui/segmentedControl";
+import CompactSelect from "@/components/ui/compactSelect";
 import { StatusMessage } from "@/components/ui/statusMessage";
 import { profileProgressOptions } from "@/features/profile/api/profileProgress";
 import { formatDaysAgo } from "@/lib/music/scoreTrend";
-import { gradeBandTone } from "@/lib/music/scoreTone";
 import { LoadingStatus, SkeletonText } from "@/components/ui/skeleton";
 import useDelayedFlag from "@/lib/hooks/useDelayedFlag";
 import type {
@@ -64,8 +63,6 @@ export default function ProfileProgress({
         value.toLocaleString(locale, { maximumFractionDigits: 2 });
     const points = data?.points ?? [];
     const current = data?.current ?? null;
-    const first = points[0]?.value ?? null;
-    const change = first === null || current === null ? null : current - first;
     const values = points.map((point) => point.value);
     const minimum = Math.min(...values);
     const maximum = Math.max(...values);
@@ -84,42 +81,55 @@ export default function ProfileProgress({
             aria-labelledby="profile-progress-title"
         >
             <div className="nl-profile-progress__header">
-                <h2 id="profile-progress-title" className="nl-section-title">
-                    {t("profile.progress")}
-                </h2>
+                <div className="nl-profile-progress__title">
+                    <h2
+                        id="profile-progress-title"
+                        className="nl-section-title"
+                    >
+                        {t("profile.progress")}
+                    </h2>
+                </div>
                 <div className="nl-profile-progress__controls">
-                    <MetricSwitch
-                        label={t("profile.progress")}
+                    <SegmentedControl
+                        size="sm"
+                        label={t("profile.progressMetric")}
                         value={
                             result.isError && data ? data.query.metric : metric
                         }
                         onValueChange={setMetric}
                         options={[
-                            {
-                                value: "grade",
-                                label: t("rankings.metric.grade"),
-                                shortLabel: "Grd",
-                            },
+                            // 「Grade · Rating」(2026-09-26 — 짝이 되는 영어 용어로, 사용자)
+                            { value: "grade", label: "Grade" },
                             {
                                 value: "rating",
-                                label: t("rankings.metric.rating"),
-                                shortLabel: "Rating",
+                                label: "Rating",
                             },
                         ]}
                     />
-                    <Select
-                        aria-label={t("profile.rangeLabel")}
+                    <CompactSelect
+                        outlined
+                        size="sm"
+                        label={t("profile.rangeLabel")}
                         value={
                             result.isError && data ? data.query.range : range
                         }
-                        onValueChange={(next) =>
-                            setRange(next as ProfileProgressQuery["range"])
+                        onValueChange={(next: ProfileProgressQuery["range"]) =>
+                            setRange(next)
                         }
                         options={[
-                            { value: "30", label: t("profile.range.30") },
-                            { value: "90", label: t("profile.range.90") },
-                            { value: "year", label: t("profile.range.year") },
-                            { value: "all", label: t("profile.all") },
+                            {
+                                value: "30" as const,
+                                label: t("profile.range.30"),
+                            },
+                            {
+                                value: "90" as const,
+                                label: t("profile.range.90"),
+                            },
+                            {
+                                value: "year" as const,
+                                label: t("profile.range.year"),
+                            },
+                            { value: "all" as const, label: t("profile.all") },
                         ]}
                     />
                 </div>
@@ -182,7 +192,7 @@ export default function ProfileProgress({
                                 singleMessage={t(
                                     "profile.progressInsufficient"
                                 )}
-                                responsivePlot
+                                plotHeight={200}
                                 showValueAxis={false}
                                 showPoints={false}
                                 dimensionTickIndices={[
@@ -192,47 +202,6 @@ export default function ProfileProgress({
                                 tooltipValueLabel={false}
                                 tableVisibility="screen-reader"
                             />
-                        }
-                        {
-                            <dl
-                                className="nl-profile-progress__summary nl-body-secondary"
-                                aria-label={metricLabel}
-                            >
-                                <div>
-                                    <dt className="nl-muted">
-                                        {t("profile.start")}
-                                    </dt>
-                                    <dd
-                                        className="nl-metric-value nl-toned"
-                                        data-tone={gradeBandTone(first)}
-                                    >
-                                        {first === null ? "—" : format(first)}
-                                    </dd>
-                                </div>
-                                <div>
-                                    <dt className="nl-muted">
-                                        {t("profile.current")}
-                                    </dt>
-                                    <dd
-                                        className="nl-metric-value nl-toned"
-                                        data-tone={gradeBandTone(current)}
-                                    >
-                                        {current === null
-                                            ? "—"
-                                            : format(current)}
-                                    </dd>
-                                </div>
-                                <div>
-                                    <dt className="nl-muted">
-                                        {t("profile.change")}
-                                    </dt>
-                                    <dd className="nl-metric-value">
-                                        {change === null
-                                            ? "—"
-                                            : `${change > 0 ? "+" : ""}${format(change)}`}
-                                    </dd>
-                                </div>
-                            </dl>
                         }
                     </>
                 )}
@@ -257,11 +226,9 @@ export default function ProfileProgress({
 }
 
 /**
- * 성장 추이 스켈레톤(2026-09-19 로딩 시안 S1) — 선 그래프 틀과 같은 구조(플롯 = 폭의 16:9 · 상한 344 →16→ 날짜 줄)와
- * 요약 줄(시작 · 현재 · 변화 라벨은 실제 글자). 프로필 로딩 화면과 지표 · 기간 · 모드 전환이 함께 쓴다
+ * 성장 추이 스켈레톤(2026-09-19 로딩 시안 S1) — 선 그래프 틀(플롯 200 →16→ 날짜 줄). 프로필 로딩 화면과 지표 · 기간 · 모드 전환이 함께 쓴다
  */
 export function ProfileProgressSkeleton() {
-    const t = useTranslations();
     return (
         <>
             <figure className="nl-line-chart" aria-hidden="true">
@@ -281,22 +248,6 @@ export function ProfileProgressSkeleton() {
                     </div>
                 </div>
             </figure>
-            <dl
-                className="nl-profile-progress__summary nl-body-secondary"
-                aria-hidden="true"
-            >
-                {(["start", "current", "change"] as const).map((key) => (
-                    <div key={key}>
-                        <dt className="nl-muted">{t(`profile.${key}`)}</dt>
-                        <dd className="nl-metric-value">
-                            <SkeletonText
-                                className="nl-metric-value"
-                                sample="0,000.00"
-                            />
-                        </dd>
-                    </div>
-                ))}
-            </dl>
         </>
     );
 }

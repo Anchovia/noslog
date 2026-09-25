@@ -217,7 +217,7 @@ function ProfileCardPreview({
 export default function ProfileShareDialog({
     user,
     mode,
-    triggerClassName = "nl-profile-owner-action",
+    triggerClassName,
 }: {
     user: ProfileUser;
     mode: ProfileMode;

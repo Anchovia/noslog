@@ -5,6 +5,8 @@ import {
     ACHIEVEMENT_METRICS,
     ACHIEVEMENT_TIER_TOTAL,
     achievementProgress,
+    achievementStepTotal,
+    achievementSteps,
     achievementRecordsForViewer,
     achievementTierFor,
     autoShowcase,
@@ -22,36 +24,84 @@ const categoryBM = getAchievementDefinition("category-bm")!;
 const examBasic = getAchievementDefinition("exam-basic")!;
 
 describe("업적 정의", () => {
-    it("키는 겹치지 않고, 기준은 세 단계 오름차순이며, 쓰는 값은 모두 모아 오는 값이다", () => {
+    it("키는 겹치지 않고, 가진 등급이 높을수록 기준도 높으며, 쓰는 값은 모두 모아 오는 값이다", () => {
         const keys = ACHIEVEMENT_DEFINITIONS.map((item) => item.key);
         expect(new Set(keys).size).toBe(keys.length);
         for (const definition of ACHIEVEMENT_DEFINITIONS) {
-            const [bronze, silver, gold] = definition.thresholds;
-            expect(bronze).toBeLessThan(silver);
-            expect(silver).toBeLessThan(gold);
+            const steps = achievementSteps(definition);
+            expect(steps.length).toBeGreaterThan(0);
+            steps
+                .slice(1)
+                .forEach((step, index) =>
+                    expect(steps[index].threshold).toBeLessThan(step.threshold)
+                );
             expect(ACHIEVEMENT_METRICS).toContain(definition.metric);
         }
-        expect(ACHIEVEMENT_TIER_TOTAL).toBe(ACHIEVEMENT_DEFINITIONS.length * 3);
+        expect(ACHIEVEMENT_TIER_TOTAL).toBe(
+            ACHIEVEMENT_DEFINITIONS.reduce(
+                (sum, definition) => sum + achievementSteps(definition).length,
+                0
+            )
+        );
+    });
+
+    it("업적마다 가진 등급만 — 다이아 하나만 · 동 · 은 · 금 셋만도 된다(2026-09-25)", () => {
+        const diamondOnly = {
+            key: "rare",
+            category: "skill" as const,
+            metric: "pianistCharts" as const,
+            thresholds: { 5: 1 },
+        };
+        expect(achievementTierFor(diamondOnly, { value: 0 })).toBe(0);
+        expect(achievementTierFor(diamondOnly, { value: 1 })).toBe(5);
+        expect(newAchievementTiers(diamondOnly, { value: 3 }, 0)).toEqual([5]);
+        expect(achievementProgress(diamondOnly, { value: 0 }, 0)).toMatchObject(
+            { nextTier: 5, target: 1 }
+        );
+        const threeTier = { ...diamondOnly, thresholds: { 1: 1, 2: 5, 3: 10 } };
+        expect(newAchievementTiers(threeTier, { value: 99 }, 1)).toEqual([
+            2, 3,
+        ]);
+        expect(achievementProgress(threeTier, { value: 99 }, 3)).toMatchObject({
+            nextTier: null,
+        });
+        expect(achievementStepTotal([diamondOnly, threeTier])).toBe(4);
+    });
+
+    it("빙고 업적은 없다(유저가 직접 체크하는 기록, 2026-09-25)", () => {
+        expect(getAchievementDefinition("bingo")).toBeNull();
+    });
+
+    it("S 헌터 · 990k · 풀콤보 · 피아니스트 = 10 · 50 · 200 · 500 · 1000(사용자 지정)", () => {
+        for (const key of ["s-rank", "score-990k", "full-combo", "pianist"])
+            expect(getAchievementDefinition(key)!.thresholds).toEqual({
+                1: 10,
+                2: 50,
+                3: 200,
+                4: 500,
+                5: 1000,
+            });
     });
 
     it("값이 기준에 닿은 단계까지 — 기준값과 같으면 닿은 것", () => {
         expect(achievementTierFor(sRank, { value: 9 })).toBe(0);
         expect(achievementTierFor(sRank, { value: 10 })).toBe(1);
         expect(achievementTierFor(sRank, { value: 199 })).toBe(2);
-        expect(achievementTierFor(sRank, { value: 500 })).toBe(3);
+        expect(achievementTierFor(sRank, { value: 500 })).toBe(4);
+        expect(achievementTierFor(sRank, { value: 1000 })).toBe(5);
     });
 
     it("카테고리는 곡 수 대비 비율 — 곡이 없으면 0", () => {
         expect(achievementTierFor(categoryBM, { value: 50, total: 200 })).toBe(
-            1
+            2
         );
         expect(achievementTierFor(categoryBM, { value: 200, total: 200 })).toBe(
-            3
+            5
         );
         expect(achievementTierFor(categoryBM, { value: 0, total: 0 })).toBe(0);
     });
 
-    it("검정은 급수를 올라가는 값으로 — 7급 동 · 4급 은 · 2급 금(명판 사다리와 같은 경계)", () => {
+    it("검정은 급수를 올라가는 값으로 — 7 · 5 · 3 · 2 · 1급(사용자 지정)", () => {
         expect(examGradeScore(null)).toBe(0);
         expect(examGradeFromScore(examGradeScore(7))).toBe(7);
         expect(
@@ -64,8 +114,14 @@ describe("업적 정의", () => {
             achievementTierFor(examBasic, { value: examGradeScore(4) })
         ).toBe(2);
         expect(
-            achievementTierFor(examBasic, { value: examGradeScore(2) })
+            achievementTierFor(examBasic, { value: examGradeScore(3) })
         ).toBe(3);
+        expect(
+            achievementTierFor(examBasic, { value: examGradeScore(2) })
+        ).toBe(4);
+        expect(
+            achievementTierFor(examBasic, { value: examGradeScore(1) })
+        ).toBe(5);
     });
 });
 
@@ -76,7 +132,7 @@ describe("새 단계 판정", () => {
 
     it("얻은 단계는 다시 주지 않고, 값이 내려가도 빼앗지 않는다(새 단계 없음)", () => {
         expect(newAchievementTiers(sRank, { value: 60 }, 2)).toEqual([]);
-        expect(newAchievementTiers(sRank, { value: 0 }, 3)).toEqual([]);
+        expect(newAchievementTiers(sRank, { value: 0 }, 5)).toEqual([]);
     });
 });
 
@@ -90,8 +146,8 @@ describe("진행", () => {
         });
     });
 
-    it("금까지 얻었으면 다음 없음 · 막대 가득", () => {
-        expect(achievementProgress(sRank, { value: 10 }, 3)).toMatchObject({
+    it("다이아까지 얻었으면 다음 없음 · 막대 가득", () => {
+        expect(achievementProgress(sRank, { value: 10 }, 5)).toMatchObject({
             nextTier: null,
             target: null,
             ratio: 1,
@@ -100,8 +156,8 @@ describe("진행", () => {
 
     it("카테고리는 기준 비율을 곡 수로 바꿔 보인다", () => {
         expect(
-            achievementProgress(categoryBM, { value: 30, total: 222 }, 0)
-        ).toMatchObject({ nextTier: 1, target: 56, current: 30 });
+            achievementProgress(categoryBM, { value: 30, total: 222 }, 1)
+        ).toMatchObject({ nextTier: 2, target: 56, current: 30 });
     });
 
     it("검정은 합격 전 0, 합격하면 가득", () => {
@@ -143,11 +199,10 @@ const records: AchievementRecords = {
 };
 
 describe("요약(프로필 구역 · 머리)", () => {
-    it("얻은 단계 수 · 금은동 수 · 최근 순 3개 — 없어진 업적 키는 세지 않는다", () => {
+    it("얻은 단계 수 · 최근 순 3개 — 없어진 업적 키는 세지 않는다", () => {
         const summary = summarizeAchievements(records);
         expect(summary.earned).toBe(4);
         expect(summary.total).toBe(ACHIEVEMENT_TIER_TOTAL);
-        expect(summary.byTier).toEqual([3, 1, 0]);
         expect(
             summary.recent.map((item) => `${item.key}:${item.tier}`)
         ).toEqual(["opinion:1", "s-rank:2", "pianist:1"]);
@@ -188,7 +243,7 @@ describe("점수 비공개(남이 볼 때)", () => {
         const summary = summarizeAchievements(visible, true);
         expect(summary.earned).toBe(1);
         expect(summary.total).toBe(
-            visibleAchievementDefinitions(true).length * 3
+            visibleAchievementDefinitions(true).length * 5
         );
         expect(
             visibleAchievementDefinitions(true).every(

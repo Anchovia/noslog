@@ -9,7 +9,7 @@ interface AdminMusicTranslation {
     title: string;
 }
 
-interface AdminMusicListItem {
+export interface AdminMusicListItem {
     artist: string | null;
     categoryShort: string;
     chartCount: number;
@@ -45,7 +45,15 @@ export interface AdminMusicListData {
     coverage: AdminMusicTranslationCoverage[];
     missingLevelConstant: boolean;
     musics: AdminMusicListItem[];
+    /** 다음 쪽이 더 있는지(무한 스크롤, 2026-09-25) */
+    hasMore: boolean;
     query: string;
+}
+
+/** 무한 스크롤 한 쪽 */
+export interface AdminMusicPage {
+    musics: AdminMusicListItem[];
+    hasMore: boolean;
 }
 
 export interface AdminMusicChart {

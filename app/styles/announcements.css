@@ -18,14 +18,52 @@
 .noslog-ui .nl-announcements__heading h1 {
     min-width: 0;
 }
+/* 공지 줄(2026-09-26 R1) — 분류 · 고정 태그 · 제목 · 오른쪽 날짜 한 줄. 672 미만은 「태그 … 날짜」 위 →4→ 제목 */
 .noslog-ui .nl-announcement-row {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-4);
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas: "meta title date";
+    gap: var(--nl-spacing-4) var(--nl-spacing-12);
+    align-items: center;
     padding-block: var(--nl-spacing-12);
     box-shadow: inset 0 calc(var(--nl-stroke-default) * -1)
         var(--nl-border-divider);
     overflow-wrap: anywhere;
+}
+.noslog-ui .nl-announcement-row > .nl-announcement-meta {
+    grid-area: meta;
+}
+.noslog-ui .nl-announcement-row__date {
+    grid-area: date;
+    white-space: nowrap;
+}
+.noslog-ui .nl-announcement-row > .nl-announcement-row__title {
+    grid-area: title;
+}
+/* 672 이상 — 한 목록의 줄들이 열(태그 · 제목 · 날짜)을 함께 써서 태그 폭이 달라도 제목 시작선이 같다 */
+@media (min-width: 672px) {
+    .noslog-ui ul:has(> li > .nl-announcement-row, > li.nl-announcement-row) {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+    }
+    .noslog-ui ul:has(> li > .nl-announcement-row) > li,
+    .noslog-ui ul > li:has(> .nl-announcement-row) > .nl-announcement-row,
+    .noslog-ui ul > li.nl-announcement-row {
+        display: grid;
+        grid-column: 1 / -1;
+        grid-template-columns: subgrid;
+    }
+    .noslog-ui .nl-announcements__pinned {
+        row-gap: var(--nl-spacing-8);
+    }
+}
+@media (max-width: 671px) {
+    .noslog-ui .nl-announcement-row {
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-areas:
+            "meta date"
+            "title title";
+    }
 }
 /* 공지 줄 제목 = 16/600 — 전체 목록(B1) · 홈 카드(N2) · 내 이벤트 글 모두. 홈 고정 줄엔 면을 두지 않는다(맨 위 중대 공지 배너와 겹침) */
 .noslog-ui .nl-announcement-row__title {
@@ -46,7 +84,7 @@
     background: var(--nl-surface-surface);
     box-shadow: none;
 }
-/* 분류·날짜 줄 — 제목 위. 칩 폭이 제각각이어도 제목 시작선이 흔들리지 않는다 */
+/* 분류(· 고정) 태그 묶음 — 목록 줄 왼쪽 열, 상세 · 이벤트 머리의 분류 · 날짜 줄 */
 .noslog-ui .nl-announcement-meta {
     display: flex;
     flex-wrap: wrap;
@@ -56,13 +94,6 @@
 }
 .noslog-ui .nl-announcement-meta > p {
     margin: 0;
-}
-/* 월 제목 = 구역 제목: 앞 구역과 32 · 아래 목록과 12 (간격 결정 2026-09-15) */
-.noslog-ui .nl-announcements__month {
-    padding-block: var(--nl-spacing-32) var(--nl-spacing-12);
-}
-.noslog-ui .nl-announcements__list > li:first-child .nl-announcements__month {
-    padding-top: var(--nl-spacing-0);
 }
 /* 상세 끝 — 이전 · 다음 글 두 칸(목록 항목 카드 · 사이 8) → 16 → 「목록으로」 */
 .noslog-ui .nl-announcements__pager {
@@ -109,6 +140,28 @@
     min-width: 0;
     overflow-wrap: anywhere;
 }
+/* 본문 소제목(2026-09-26 역할 값) — 사이 16 위에 더해 구역 사이 32 · 구역 제목 → 첫 내용 12, 상자 제목(h3) → 내용 8 */
+.noslog-ui .nl-announcement-body > h2:not(:first-child) {
+    margin-top: calc(var(--nl-spacing-32) - var(--nl-spacing-16));
+}
+.noslog-ui .nl-announcement-body > h2 + * {
+    margin-top: calc(var(--nl-spacing-12) - var(--nl-spacing-16));
+}
+.noslog-ui .nl-announcement-body > h3 + * {
+    margin-top: calc(var(--nl-spacing-8) - var(--nl-spacing-16));
+}
+/* 라벨 항목(2026-09-26 L2) — 라벨(component-title) → 설명 8(상자 제목 → 내용), 항목 사이 16(문단 사이) */
+.noslog-ui .nl-announcement-body__items {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+}
+.noslog-ui .nl-announcement-body__items > dt:not(:first-child) {
+    margin-top: var(--nl-spacing-16);
+}
+.noslog-ui .nl-announcement-body__items > dd {
+    margin: var(--nl-spacing-8) 0 0;
+}
 /* 본문 이미지(2026-09-18 I1) — 본문 폭 · 모서리 8 · 원래 비율 */
 .noslog-ui .nl-announcement-body__image {
     display: block;
@@ -116,13 +169,14 @@
     height: auto;
     border-radius: var(--nl-radius-container);
 }
-/* 목록 들여쓰기 24 — 간격 단계 값(16 + 4 = 20 은 단계 밖이라 2026-09-18 감사에서 맞춤) */
+/* 목록 들여쓰기 24 — 간격 단계 값(16 + 4 = 20 은 단계 밖이라 2026-09-18 감사에서 맞춤). 번호 목록도 같은 들여쓰기(2026-09-26 감사) */
 .noslog-ui .nl-announcement-body ul {
     padding-inline-start: var(--nl-spacing-24);
     list-style: disc;
 }
 .noslog-ui .nl-announcement-body ol {
-    list-style: decimal inside;
+    padding-inline-start: var(--nl-spacing-24);
+    list-style: decimal;
 }
 .noslog-ui .nl-announcement-body strong {
     font-weight: var(--nl-type-weight-semibold);

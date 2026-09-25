@@ -349,6 +349,21 @@ export function getGlissandoSnapRenderPoints(
         });
 }
 
+/** 판정 수 = 게임 결과 화면의 노트 수 — 글리산도는 가로대 하나가 판정 하나, 나머지는 노트 하나가 하나 */
+export function countChartJudgments(
+    notes: ChartNote[],
+    ticksPerQuarter: number
+) {
+    return notes.reduce(
+        (sum, note) =>
+            sum +
+            (note.type === "glissando"
+                ? getGlissandoSnapRenderPoints(note, ticksPerQuarter).length
+                : 1),
+        0
+    );
+}
+
 export function chartNoteRangeAtTick(note: ChartNote, tick: number) {
     if (note.type === "trill") {
         const divisor = note.trillSnapDivisor ?? 8;

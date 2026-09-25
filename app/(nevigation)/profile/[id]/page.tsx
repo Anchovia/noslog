@@ -2,9 +2,9 @@ import PublicProfilePage from "@/features/profile/components/publicProfilePage";
 import { getProfileOverviewContext } from "@/features/profile/server/profileOverviewService";
 import { getPublicProfilePlays } from "@/features/profile/server/profilePlaysService";
 import { getPublicProfileProgress } from "@/features/profile/server/profileProgressService";
+import { getProfileStats } from "@/features/profile/server/profileStatsService";
+import { getProfilePinnedRecords } from "@/features/profile/server/profilePinnedService";
 import { profileIdSchema } from "@/features/profile/schemas/publicProfileSchema";
-import { formatDistanceToNow } from "date-fns";
-import { enUS, ja, ko } from "date-fns/locale";
 import { localizePath } from "@/lib/i18n/routing";
 import { getServerI18n } from "@/lib/i18n/server";
 import { createPageMetadata } from "@/lib/metadata/site";
@@ -12,7 +12,7 @@ import getSession from "@/lib/session";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getCachedProfileData } from "./data";
-import { achievementRecordsForViewer } from "@/features/achievements/achievementDefinitions";
+import { hideProfileScores } from "@/features/profile/server/scoreVisibility";
 
 export async function generateMetadata({
     params,
@@ -51,8 +51,7 @@ export default async function ProfilePage({
     if (!parsedId.success) notFound();
     const id = parsedId.data;
 
-    const [{ locale, t }, profileData, session, query] = await Promise.all([
-        getServerI18n(),
+    const [profileData, session, query] = await Promise.all([
         getCachedProfileData(id),
         getSession(),
         searchParams,
@@ -66,31 +65,7 @@ export default async function ProfilePage({
     if (!isOwner && profileData.user.hide_play_scores)
         return (
             <PublicProfilePage
-                user={{
-                    ...profileData.user,
-                    grade_basic: null,
-                    grade_recital: null,
-                    rank_basic: null,
-                    rank_basic_country: null,
-                    rank_recital: null,
-                    rank_recital_country: null,
-                    score_p: null,
-                    score_f: null,
-                    score_s: null,
-                    score_a2: null,
-                    score_a: null,
-                    score_b2: null,
-                    score_b: null,
-                    score_c: null,
-                    score_d: null,
-                    // 점수에서 나온 업적(실력 · 수집)도 남에게 넘기지 않는다
-                    achievements: profileData.user.achievements
-                        ? achievementRecordsForViewer(
-                              profileData.user.achievements,
-                              true
-                          )
-                        : undefined,
-                }}
+                user={hideProfileScores(profileData.user)}
                 isOwner={false}
                 scoresHidden
                 overview={null}
@@ -99,52 +74,42 @@ export default async function ProfilePage({
                 initialProgress={null}
             />
         );
-    const [overview, initialBest, initialRecent, initialProgress] =
-        await Promise.all([
-            getProfileOverviewContext(id, isOwner),
-            getPublicProfilePlays(id, {
-                kind: "best",
-                mode,
-                metric: "grade",
-                offset: 0,
-            }),
-            getPublicProfilePlays(id, {
+    const [
+        overview,
+        initialBest,
+        initialRecent,
+        initialProgress,
+        stats,
+        pinned,
+    ] = await Promise.all([
+        getProfileOverviewContext(id, isOwner),
+        getPublicProfilePlays(id, {
+            kind: "best",
+            mode,
+            metric: "grade",
+            offset: 0,
+            limit: 5,
+        }),
+        // 본인에게는 숨긴 최근 플레이도 보인다(2026-09-26 P1)
+        getPublicProfilePlays(
+            id,
+            {
                 kind: "recent",
                 mode: "basic",
                 metric: "grade",
                 offset: 0,
-            }),
-            getPublicProfileProgress(id, {
-                mode,
-                metric: "grade",
-                range: "90",
-            }),
-        ]);
-    const sync = overview.sync;
-    const syncLabel = !isOwner
-        ? undefined
-        : !sync
-          ? t("sync.none")
-          : sync.status === "failed"
-            ? t("sync.failed")
-            : sync.status === "partial"
-              ? t("profile.syncPartial")
-              : sync.status !== "completed"
-                ? t("sync.processing")
-                : t("sync.last", {
-                      distance: formatDistanceToNow(
-                          new Date(sync.completedAt ?? sync.startedAt),
-                          {
-                              addSuffix: true,
-                              locale:
-                                  locale === "ja"
-                                      ? ja
-                                      : locale === "en"
-                                        ? enUS
-                                        : ko,
-                          }
-                      ),
-                  });
+                limit: 5,
+            },
+            { owner: isOwner }
+        ),
+        getPublicProfileProgress(id, {
+            mode,
+            metric: "grade",
+            range: "90",
+        }),
+        getProfileStats(id),
+        getProfilePinnedRecords(id),
+    ]);
 
     return (
         <PublicProfilePage
@@ -154,7 +119,9 @@ export default async function ProfilePage({
             overview={overview}
             initialBest={initialBest}
             initialRecent={initialRecent}
-            syncLabel={syncLabel}
+            levels={stats.levels}
+            pinned={pinned}
+            recentOnlyMe={isOwner && profileData.user.hide_play_activity}
         />
     );
 }

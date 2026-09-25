@@ -37,4 +37,17 @@ describe("StackedBar", () => {
         expect(html).toContain("nl-stacked-bar__track");
         expect(html).not.toContain("nl-stacked-bar__segment");
     });
+    it("drops the label column when no row has a label", () => {
+        const html = render([
+            {
+                key: "judgement",
+                segments: [{ key: "a", value: 1, color: "red" }],
+            },
+        ]);
+        expect(html).toContain("data-unlabeled");
+        expect(html).not.toContain("nl-metadata");
+        expect(
+            render([{ key: "me", label: "나", segments: [] }])
+        ).not.toContain("data-unlabeled");
+    });
 });

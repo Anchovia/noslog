@@ -235,6 +235,12 @@ export type ChartNote = z.infer<typeof chartNoteSchema>;
 export type ChartDocument = z.infer<typeof chartDocumentSchema>;
 export type ChartExport = z.infer<typeof chartExportSchema>;
 
+/**
+ * 빈 채보의 시작 타이밍 시각(음원 오프셋 기본값, 2026-09-25 사용자) — 0 이면 1마디 1박 노트가 재생과 동시에 판정선에 있어
+ * 떨어지는 걸 못 본다. 음원에 맞춘 값은 사람이 타이밍 모드에서 고친다
+ */
+export const DEFAULT_CHART_OFFSET_MS = 500;
+
 export function createDefaultChartDocument({
     bpm = 120,
     durationMs = 0,
@@ -251,7 +257,7 @@ export function createDefaultChartDocument({
             {
                 id: "timing-0",
                 tick: 0,
-                timeMs: 0,
+                timeMs: DEFAULT_CHART_OFFSET_MS,
                 bpm: Math.min(1_000, Math.max(1, bpm ?? 120)),
                 numerator: 4,
                 denominator: 4,
