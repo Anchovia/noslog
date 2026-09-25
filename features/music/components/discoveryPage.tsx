@@ -45,8 +45,8 @@ import type { MusicSearchFormValues } from "@/features/music/schemas/musicSearch
 import MusicResultCard, {
     MusicResultCardSkeleton,
 } from "@/features/music/components/musicResultCard";
-import ChartResultGroup, {
-    ChartResultGroupSkeleton,
+import ChartResultRows, {
+    ChartResultRowSkeleton,
 } from "@/features/music/components/chartResultGroup";
 import { LoadingStatus } from "@/components/ui/skeleton";
 import DiscoveryFilters, {
@@ -385,7 +385,11 @@ export default function DiscoveryPage({
                     {validDraft
                         ? count.data && delayedDraft === draft
                             ? t("discovery.apply", {
-                                  count: count.data.total,
+                                  // 채보 보기는 줄이 채보라 채보 수로 센다(2026-09-25 A2)
+                                  count:
+                                      draft.scope === "chart"
+                                          ? count.data.chartTotal
+                                          : count.data.total,
                               })
                             : t("discovery.applyWithoutCount")
                         : t("discovery.invalidRange")}
@@ -688,7 +692,7 @@ export default function DiscoveryPage({
                             >
                                 {Array.from({ length: 8 }, (_, index) =>
                                     query.scope === "chart" ? (
-                                        <ChartResultGroupSkeleton key={index} />
+                                        <ChartResultRowSkeleton key={index} />
                                     ) : (
                                         <MusicResultCardSkeleton
                                             key={index}
@@ -721,9 +725,12 @@ export default function DiscoveryPage({
                             )}
                         >
                             {items.map((music) => (
-                                <div key={music.index} data-result>
+                                <div
+                                    key={`${music.index}:${music.targets.map((target) => target.difficulty).join(",")}`}
+                                    data-result
+                                >
                                     {query.scope === "chart" ? (
-                                        <ChartResultGroup
+                                        <ChartResultRows
                                             music={music}
                                             pending={pending}
                                         />

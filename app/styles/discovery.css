@@ -275,8 +275,9 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--nl-spacing-12);
 }
-.noslog-ui .nl-discovery__items--chart {
-    gap: var(--nl-spacing-12);
+.noslog-ui .nl-discovery__items--chart > div {
+    display: grid;
+    gap: var(--nl-spacing-8);
 }
 .noslog-ui .nl-discovery__progress {
     display: flex;
@@ -285,76 +286,39 @@
     align-items: center;
     text-align: center;
 }
-.noslog-ui .nl-chart-group {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-12);
-    padding: var(--nl-spacing-12);
-    background: var(--nl-surface-surface);
-    border-radius: var(--nl-radius-container);
+/* 채보 줄(2026-09-25 A2 · R1 · I2 · D1) — 악곡 목록 줄(nl-music-card--list) 틀에 자켓 80 정사각 · 세 줄(이름 · 아티스트 · 메타).
+   세 줄 68 + 위아래 4 가 자켓 80 안에 가운데로 선다 */
+.noslog-ui .nl-chart-row {
+    min-height: 80px;
 }
-.noslog-ui .nl-chart-group__identity {
-    display: flex;
-    gap: var(--nl-spacing-12);
-    align-items: center;
-    min-width: 0;
+.noslog-ui .nl-chart-row > .nl-jacket {
+    width: 80px;
+    height: 80px;
+    min-height: 80px;
+    align-self: flex-start;
 }
-.noslog-ui .nl-chart-group__identity .nl-jacket {
-    width: 48px;
-    height: 48px;
-    border-radius: var(--nl-radius-control);
+.noslog-ui .nl-chart-row .nl-music-card__body {
+    padding-block: var(--nl-spacing-4);
 }
-.noslog-ui .nl-chart-group__identity :is(h2, p) {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-.noslog-ui .nl-chart-group__targets {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-4);
-}
-.noslog-ui .nl-chart-target {
-    display: flex;
-    min-height: 44px;
-    gap: var(--nl-spacing-12);
-    align-items: center;
-    padding-inline: var(--nl-spacing-12);
-    background: var(--nl-surface-sunken);
-    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-default);
-    border-radius: var(--nl-radius-control);
-}
-.noslog-ui .nl-chart-target > span:nth-child(2) {
-    flex: 1;
-}
-@media (hover: hover) {
-    .noslog-ui .nl-chart-target:hover {
-        --nl-state-layer: var(--nl-interaction-hover);
-        background-image: linear-gradient(
-            var(--nl-state-layer),
-            var(--nl-state-layer)
-        );
-    }
-}
-.noslog-ui .nl-difficulty-marker {
-    width: var(--nl-stroke-strong);
-    height: 20px;
-    border-radius: var(--nl-radius-full);
+/* 난이도 칩 「Real 3」 — 악곡 목록 레벨 판(nl-level)을 이름까지 넓힌 것: 높이 24 · raised · 모서리 4 · 난이도 글자색 */
+.noslog-ui .nl-chart-chip {
+    display: inline-flex;
     flex-shrink: 0;
+    gap: var(--nl-spacing-4);
+    align-items: center;
+    height: 24px;
+    padding-inline: var(--nl-spacing-8);
+    border-radius: var(--nl-radius-control);
+    background: var(--nl-surface-raised);
+    white-space: nowrap;
 }
-.noslog-ui .nl-difficulty-marker--normal {
-    background: var(--nl-difficulty-normal);
+.noslog-ui .nl-chart-chip.nl-skeleton {
+    width: var(--nl-spacing-64);
 }
-.noslog-ui .nl-difficulty-marker--hard {
-    background: var(--nl-difficulty-hard);
-}
-.noslog-ui .nl-difficulty-marker--expert {
-    background: var(--nl-difficulty-expert);
-}
-.noslog-ui .nl-difficulty-marker--real {
-    background: var(--nl-difficulty-real);
-}
-.noslog-ui [data-pending="true"] .nl-chart-group :is(h2, p, a) {
+.noslog-ui
+    [aria-busy="true"]
+    .nl-chart-row[aria-disabled="true"]
+    :is(.nl-metadata, .nl-chart-chip) {
     color: var(--nl-content-pending);
 }
 @container results (min-width: 536px) {
