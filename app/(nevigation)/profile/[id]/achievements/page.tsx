@@ -38,7 +38,7 @@ export async function generateMetadata({
     });
 }
 
-/** 업적 페이지(2026-09-24 C1) — 프로필 「업적」 구역 · 머리 숫자에서 들어온다 */
+/** 프로필 「업적」 탭(2026-09-25 D2) — 머리 · 탭은 레이아웃이 그리고 여기는 내용만(2026-09-24 C1 업적 페이지 그대로) */
 export default async function ProfileAchievementsRoute({
     params,
 }: {
@@ -48,8 +48,7 @@ export default async function ProfileAchievementsRoute({
     const parsedId = profileIdSchema.safeParse(rawId);
     if (!parsedId.success) notFound();
     const id = parsedId.data;
-    const [{ locale, t }, profileData, session] = await Promise.all([
-        getServerI18n(),
+    const [profileData, session] = await Promise.all([
         getCachedProfileData(id),
         getSession(),
     ]);
@@ -68,8 +67,7 @@ export default async function ProfileAchievementsRoute({
     ]);
     return (
         <AchievementsPage
-            userName={profileData.user.username || t("common.unnamedUser")}
-            profileHref={localizePath(`/profile/${id}`, locale)}
+            embedded
             records={records}
             metrics={metrics}
             recipients={recipients}

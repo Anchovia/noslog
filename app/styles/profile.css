@@ -5,18 +5,137 @@
     min-width: 0;
     container: profile-identity / inline-size;
 }
+/* 머리 격자(2026-09-25 H3 · K2 · M2 · CM1) — 폰: 아바타 · 이름 → 메타 → 모드(폭 전체) → 수치 상자,
+   672 이상: 모드가 이름 줄 오른쪽 · 메타와 수치 상자는 아래로, 1056 이상: 수치가 머리 오른쪽(상자 없음) */
 .noslog-ui .nl-profile-identity__row {
     --nl-profile-avatar-size: 64px;
     display: grid;
     grid-template-columns: var(--nl-profile-avatar-size) minmax(0, 1fr);
-    align-items: flex-start;
+    grid-template-areas:
+        "avatar identity"
+        "meta meta"
+        "mode mode"
+        "headline headline";
+    align-items: center;
     gap: var(--nl-spacing-12) var(--nl-spacing-16);
     min-width: 0;
 }
-.noslog-ui .nl-profile-identity__metadata {
-    grid-column: 1 / -1;
+.noslog-ui .nl-profile-identity__avatar {
+    grid-area: avatar;
+}
+.noslog-ui .nl-profile-identity__name-stack {
+    grid-area: identity;
+}
+.noslog-ui .nl-profile-identity__meta {
+    grid-area: meta;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--nl-spacing-4) var(--nl-spacing-16);
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.noslog-ui .nl-profile-identity__meta li {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--nl-spacing-4);
     min-width: 0;
     overflow-wrap: anywhere;
+}
+.noslog-ui .nl-profile-identity__meta svg {
+    flex-shrink: 0;
+    width: var(--nl-icon-small);
+    height: var(--nl-icon-small);
+    color: var(--nl-content-subdued);
+}
+.noslog-ui .nl-profile-identity__mode {
+    grid-area: mode;
+    min-width: 0;
+}
+/* 핵심 수치(K2) — 공식 Grd 만 크게(metric-display 32), 세계 · 상위 % · 국가 · 레이팅 · 변화는 작은 줄 */
+.noslog-ui .nl-profile-headline {
+    grid-area: headline;
+    min-width: 0;
+    padding: var(--nl-spacing-12) var(--nl-spacing-16);
+    border-radius: var(--nl-radius-container);
+    background: var(--nl-surface-surface);
+}
+/* 정의 목록 한 겹(dt · dd 묶음 div 만) — 공식 Grd 칸이 두 줄을 차지하고 세계 · 국가가 오른쪽에 쌓인다 */
+.noslog-ui .nl-profile-headline__values {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-auto-flow: column;
+    grid-template-rows: auto auto;
+    align-items: end;
+    column-gap: var(--nl-spacing-16);
+    margin: 0;
+}
+.noslog-ui .nl-profile-headline dd {
+    margin: 0;
+}
+.noslog-ui .nl-profile-headline__grade {
+    display: flex;
+    flex-direction: column;
+    grid-row: 1 / 3;
+}
+.noslog-ui .nl-profile-headline__values > div:not(.nl-profile-headline__grade) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--nl-spacing-4);
+}
+.noslog-ui .nl-profile-headline__values > div:last-child {
+    padding-bottom: var(--nl-spacing-4);
+}
+.noslog-ui .nl-profile-headline__foot {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--nl-spacing-4);
+    margin: var(--nl-spacing-4) 0 0;
+}
+.noslog-ui .nl-profile-headline__foot dd {
+    margin: 0;
+}
+.noslog-ui .nl-profile-headline__up {
+    color: var(--nl-feedback-success-marker);
+}
+@media (min-width: 672px) {
+    .noslog-ui .nl-profile-identity__row {
+        grid-template-columns: var(--nl-profile-avatar-size) minmax(0, 1fr) auto;
+        grid-template-areas:
+            "avatar identity mode"
+            "meta meta meta"
+            "headline headline headline";
+    }
+    .noslog-ui .nl-profile-identity__mode {
+        width: 200px;
+        align-self: start;
+    }
+}
+@media (min-width: 1056px) {
+    .noslog-ui .nl-profile-identity__row {
+        --nl-profile-avatar-size: 108px;
+        grid-template-areas:
+            "avatar identity mode"
+            "avatar meta headline";
+        row-gap: var(--nl-spacing-12);
+    }
+    .noslog-ui .nl-profile-identity__mode {
+        width: 240px;
+        justify-self: end;
+    }
+    .noslog-ui .nl-profile-identity__meta {
+        align-self: start;
+    }
+    .noslog-ui .nl-profile-headline {
+        justify-self: end;
+        padding: 0;
+        background: none;
+    }
+    .noslog-ui .nl-profile-headline__values {
+        column-gap: var(--nl-spacing-24);
+    }
 }
 .noslog-ui .nl-profile-identity__recovery {
     display: flex;
@@ -98,107 +217,82 @@
         );
     }
 }
-.noslog-ui .nl-profile-identity__chips,
-.noslog-ui .nl-profile-identity__chip-pair {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-8);
-    min-width: 0;
-}
-.noslog-ui .nl-profile-identity__chip {
-    display: flex;
-    align-items: center;
-    gap: var(--nl-spacing-12);
-    height: 44px;
-    min-width: 0;
-    padding: var(--nl-spacing-12);
-    background: var(--nl-surface-surface);
-    border-radius: var(--nl-radius-container);
-}
-.noslog-ui .nl-profile-identity__chip .nl-metadata {
-    flex-shrink: 0;
-}
-.noslog-ui .nl-profile-identity__chip .nl-body-secondary {
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-.noslog-ui .nl-profile-identity__chip svg {
-    width: var(--nl-icon-small);
-    height: var(--nl-icon-small);
-    flex-shrink: 0;
-    color: var(--nl-content-subdued);
-}
-@container profile-identity (min-width: 334px) {
-    .noslog-ui .nl-profile-identity__chip-pair {
-        flex-direction: row;
-    }
-    .noslog-ui .nl-profile-identity__chip-pair > * {
-        flex: 1;
-    }
-}
-
 .noslog-ui .nl-profile {
     gap: var(--nl-spacing-32);
     padding-block: var(--nl-spacing-32);
 }
-/* 구역 사이 32 (간격 결정 2026-09-15) */
+/* 개요 탭(2026-09-25 D2 · F2) — 구역 사이 32. 폰은 베스트 → 최근 → 성장 추이 → 기록 개요 → 업적 → 기여 */
 .noslog-ui .nl-profile-body {
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-32);
+    min-width: 0;
 }
-@media (min-width: 1056px) {
-    .noslog-ui .nl-profile-identity__row {
-        --nl-profile-avatar-size: 108px;
-        row-gap: var(--nl-spacing-12);
-        align-content: start;
-    }
-    .noslog-ui .nl-profile-identity__avatar {
-        grid-row: 1 / 3;
-    }
-    .noslog-ui .nl-profile-identity__name-stack {
-        gap: var(--nl-spacing-12);
-    }
-    .noslog-ui .nl-profile-identity__metadata {
-        grid-column: 2;
-        grid-row: 2;
-    }
-    .noslog-ui .nl-profile-body {
-        display: grid;
-        grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
-        grid-template-areas: "progress overview" "best recent";
-        column-gap: var(--nl-spacing-16);
-    }
+.noslog-ui
+    .nl-profile-body:not(.nl-profile-body--single)
+    :is(.nl-profile-main, .nl-profile-side) {
+    display: contents;
+}
+.noslog-ui .nl-profile-plays[data-kind="best"] {
+    order: 1;
+}
+.noslog-ui .nl-profile-plays[data-kind="recent"] {
+    order: 2;
+}
+.noslog-ui .nl-profile-progress {
+    order: 3;
+}
+.noslog-ui .nl-profile-overview {
+    order: 4;
+}
+.noslog-ui .nl-profile-achievements {
+    order: 5;
+}
+.noslog-ui .nl-profile-contribution {
+    order: 6;
+}
+/* 태블릿 — 성장 추이 → 베스트 → 최근, 그 아래 옆 열이 두 칸(기록 개요 | 업적 · 기여) */
+@media (min-width: 672px) {
     .noslog-ui .nl-profile-progress {
-        grid-area: progress;
-    }
-    .noslog-ui .nl-profile-overview {
-        grid-area: overview;
+        order: 1;
     }
     .noslog-ui .nl-profile-plays[data-kind="best"] {
-        grid-area: best;
-    }
-    /* 오른쪽 열 묶음(최근 플레이 · 기여, 2026-09-24) — 최근 플레이 자리에 들어간다 */
-    .noslog-ui .nl-profile-side {
-        grid-area: recent;
+        order: 2;
     }
     .noslog-ui .nl-profile-plays[data-kind="recent"] {
-        grid-area: recent;
+        order: 3;
     }
-    /* 나란한 두 구역의 헤더 높이를 맞춘다. 기준은 MetricSwitch 높이(패딩 12 + 라벨 20 + 간격 8 + 지시선 2 = 42):
-       컨트롤이 없는 「기록 개요」·「최근 플레이」 헤더도 같은 높이를 가져 목록 첫 행이 옆 구역과 같은 y 에서 시작한다 */
-    .noslog-ui .nl-profile-plays .nl-profile-section__header,
-    .noslog-ui .nl-profile-overview > .nl-section-title {
-        min-height: calc(
-            var(--nl-spacing-12) + var(--nl-type-line-height-20) +
-                var(--nl-spacing-8) + var(--nl-stroke-strong)
-        );
+    .noslog-ui .nl-profile-body:not(.nl-profile-body--single) .nl-profile-side {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        align-items: start;
+        gap: var(--nl-spacing-32) var(--nl-spacing-16);
+        order: 4;
     }
-    .noslog-ui .nl-profile-overview > .nl-section-title {
+    .noslog-ui .nl-profile-side .nl-profile-overview {
+        grid-row: span 2;
+    }
+}
+/* 넓은 화면 2 : 1 — 주 열(성장 추이 · 베스트 · 최근) | 옆 열(기록 개요 · 업적 · 기여) */
+@media (min-width: 1056px) {
+    .noslog-ui .nl-profile-body:not(.nl-profile-body--single) {
+        display: grid;
+        grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+        align-items: start;
+        column-gap: var(--nl-spacing-16);
+    }
+    .noslog-ui
+        .nl-profile-body:not(.nl-profile-body--single)
+        :is(.nl-profile-main, .nl-profile-side) {
         display: flex;
-        align-items: center;
+        flex-direction: column;
+        /* 태블릿 격자의 align-items: start 를 되돌린다 — 크기 컨테이너인 구역이 폭 0 으로 줄지 않게 */
+        align-items: stretch;
+        gap: var(--nl-spacing-32);
+        min-width: 0;
+    }
+    .noslog-ui .nl-profile-side .nl-profile-overview {
+        grid-row: auto;
     }
 }
 .noslog-ui .nl-profile-section {
@@ -216,24 +310,6 @@
     gap: var(--nl-spacing-12);
     flex-wrap: wrap;
 }
-.noslog-ui .nl-profile-competitive {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-16);
-    container: profile-summary / inline-size;
-}
-.noslog-ui .nl-profile-summary {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: var(--nl-spacing-16) 0;
-    padding: var(--nl-spacing-16);
-    border-radius: var(--nl-radius-container);
-    background: var(--nl-surface-surface);
-}
-.noslog-ui .nl-profile-summary .nl-metric__value {
-    flex-wrap: nowrap;
-}
-.noslog-ui .nl-profile-play-list,
 .noslog-ui .nl-profile-distribution,
 .noslog-ui .nl-profile-judgements {
     display: flex;
@@ -241,19 +317,34 @@
     gap: var(--nl-spacing-8);
     min-width: 0;
 }
+/* 기록 줄(2026-09-25 B2) — 구분선 목록. 좁은 칸 = 두 줄(자켓 44 · 곡 / 난이도 · 점수 · 등급 · 오른쪽 값),
+   넓은 칸(560 이상) = 열 고정 표 행(자켓 36 · 높이 52) + 표 머리 */
+.noslog-ui .nl-profile-play-list {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
 .noslog-ui .nl-profile-play-row {
     display: grid;
-    grid-template-columns: 64px minmax(0, 1fr) auto;
-    grid-template-rows: 24px 20px;
+    grid-template-columns: 44px minmax(0, 1fr) auto;
+    grid-template-areas:
+        "jacket title time"
+        "jacket meta value";
     column-gap: var(--nl-spacing-12);
-    row-gap: var(--nl-spacing-4);
-    align-content: center;
+    row-gap: 0;
     align-items: center;
     min-width: 0;
-    height: 64px;
-    padding-right: var(--nl-spacing-12);
-    border-radius: var(--nl-radius-container);
-    background: var(--nl-surface-sunken);
+    min-height: 64px;
+    padding-block: var(--nl-spacing-8);
+    border-bottom: var(--nl-stroke-default) solid var(--nl-border-divider);
+}
+.noslog-ui .nl-profile-plays[data-kind="best"] .nl-profile-play-row {
+    grid-template-areas:
+        "jacket title value"
+        "jacket meta time";
 }
 @media (hover: hover) {
     .noslog-ui .nl-profile-play-row:hover {
@@ -264,65 +355,102 @@
         );
     }
 }
+.noslog-ui .nl-profile-play-row__position {
+    display: none;
+    grid-area: position;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
 .noslog-ui .nl-profile-play-row__jacket {
-    grid-column: 1;
-    grid-row: 1 / 3;
-    width: 64px;
-    height: 64px;
-    border-radius: var(--nl-radius-container) 0 0 var(--nl-radius-container);
+    grid-area: jacket;
+    width: 44px;
+    height: 44px;
+    border-radius: var(--nl-radius-control);
 }
-/* 자켓 위 표시는 우하단으로 통일 — 카테고리 레이블과 같은 모서리·같은 inset 4 (2026-09-12 사용자 결정) */
-.noslog-ui .nl-profile-play-row__fc {
-    position: absolute;
-    right: var(--nl-spacing-4);
-    bottom: var(--nl-spacing-4);
-}
-.noslog-ui .nl-profile-play-row__identity {
-    display: contents;
-}
-.noslog-ui .nl-profile-play-row__title-line {
-    display: flex;
-    align-items: center;
-    gap: var(--nl-spacing-12);
-    grid-column: 2 / -1;
-    grid-row: 1;
-    min-width: 0;
-}
-.noslog-ui
-    .nl-profile-play-row:has(.nl-profile-play-row__contribution)
-    .nl-profile-play-row__title-line {
-    grid-column: 2;
-}
-.noslog-ui .nl-profile-play-row__title-line .nl-entity-title {
-    flex: 1;
+.noslog-ui .nl-profile-play-row__title {
+    grid-area: title;
     min-width: 0;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
 }
-.noslog-ui .nl-profile-play-row__title-line time {
-    flex-shrink: 0;
-    white-space: nowrap;
-}
 .noslog-ui .nl-profile-play-row__meta {
-    grid-column: 2 / -1;
-    grid-row: 2;
+    grid-area: meta;
     display: flex;
     align-items: center;
     gap: var(--nl-spacing-8);
+    min-width: 0;
+    white-space: nowrap;
+}
+.noslog-ui .nl-profile-play-row__grade {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--nl-spacing-4);
+}
+.noslog-ui .nl-profile-play-row__time {
+    grid-area: time;
+    justify-self: end;
     white-space: nowrap;
 }
 .noslog-ui .nl-profile-play-row__contribution {
-    grid-column: 3;
-    grid-row: 1;
+    grid-area: value;
+    justify-self: end;
     white-space: nowrap;
 }
-.noslog-ui .nl-profile-play-row .nl-score-grade,
-.noslog-ui .nl-profile-distribution .nl-score-grade,
-.noslog-ui .nl-profile-play-row .nl-score-grade img,
-.noslog-ui .nl-profile-distribution .nl-score-grade img {
-    width: var(--nl-icon-medium);
-    height: var(--nl-icon-medium);
+.noslog-ui .nl-profile-play-head {
+    display: none;
+}
+@container profile-section (min-width: 560px) {
+    .noslog-ui .nl-profile-play-head,
+    .noslog-ui .nl-profile-play-row {
+        grid-template-columns: 36px minmax(0, 1fr) 84px 76px 56px max-content;
+        grid-template-areas: "jacket title difficulty score grade time";
+        column-gap: var(--nl-spacing-12);
+    }
+    .noslog-ui
+        .nl-profile-plays[data-kind="best"]
+        :is(.nl-profile-play-head, .nl-profile-play-row) {
+        grid-template-columns:
+            20px 36px minmax(0, 1fr)
+            84px 76px 56px max-content 64px;
+        grid-template-areas: "position jacket title difficulty score grade time value";
+    }
+    .noslog-ui .nl-profile-play-head {
+        display: grid;
+        align-items: center;
+        min-height: 32px;
+        border-bottom: var(--nl-stroke-default) solid var(--nl-border-divider);
+    }
+    .noslog-ui .nl-profile-play-head__song {
+        grid-column: jacket / title;
+    }
+    .noslog-ui .nl-profile-play-row {
+        min-height: 52px;
+        padding-block: var(--nl-spacing-8);
+    }
+    .noslog-ui .nl-profile-play-row__position {
+        display: block;
+    }
+    .noslog-ui .nl-profile-play-row__jacket {
+        width: 36px;
+        height: 36px;
+    }
+    .noslog-ui .nl-profile-play-row__meta {
+        display: contents;
+    }
+    .noslog-ui .nl-profile-play-row__difficulty {
+        grid-area: difficulty;
+    }
+    .noslog-ui .nl-profile-play-row__score {
+        grid-area: score;
+        text-align: right;
+    }
+    .noslog-ui .nl-profile-play-row__grade {
+        grid-area: grade;
+    }
+    .noslog-ui .nl-profile-play-head .nl-profile-play-row__time {
+        justify-self: end;
+    }
 }
 .noslog-ui .nl-profile-list-actions {
     display: flex;
@@ -428,38 +556,6 @@
 .noslog-ui .nl-judgement-marker i {
     background: var(--judgement-color);
 }
-@container profile-summary (min-width: 334px) {
-    .noslog-ui .nl-profile-summary {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-    .noslog-ui .nl-profile-summary > :nth-child(odd) {
-        padding-right: var(--nl-spacing-24);
-    }
-    .noslog-ui .nl-profile-summary > :nth-child(even) {
-        padding-left: var(--nl-spacing-24);
-        border-left: var(--nl-stroke-default) solid var(--nl-border-divider);
-    }
-}
-@container profile-summary (min-width: 720px) {
-    .noslog-ui .nl-profile-summary {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        padding: var(--nl-spacing-24);
-    }
-    .noslog-ui .nl-profile-summary > :not(:first-child) {
-        padding-left: var(--nl-spacing-24);
-        border-left: var(--nl-stroke-default) solid var(--nl-border-divider);
-    }
-}
-@container profile-section (min-width: 334px) {
-    .noslog-ui
-        .nl-profile-play-row:has(.nl-profile-play-row__contribution)
-        .nl-profile-play-row__meta {
-        grid-column: 2;
-    }
-    .noslog-ui .nl-profile-play-row__contribution {
-        grid-row: 1 / 3;
-    }
-}
 .noslog-ui .nl-profile-progress__header,
 .noslog-ui .nl-profile-progress__content {
     display: flex;
@@ -470,11 +566,24 @@
 .noslog-ui .nl-profile-progress__header {
     gap: var(--nl-spacing-12);
 }
+/* 제목 →4→ 요약 문장(2026-09-25 G2) */
+.noslog-ui .nl-profile-progress__title {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-4);
+    min-width: 0;
+}
 .noslog-ui .nl-profile-progress__controls {
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-profile-progress__controls .nl-segments {
+    flex: none;
+}
+.noslog-ui .nl-profile-progress__controls .nl-segments__item {
+    white-space: nowrap;
 }
 .noslog-ui .nl-profile-progress__controls .nl-select {
     flex-shrink: 0;
@@ -483,7 +592,7 @@
 @media (min-width: 1056px) {
     .noslog-ui .nl-profile-progress__header {
         flex-direction: row;
-        align-items: center;
+        align-items: flex-start;
         justify-content: space-between;
     }
     .noslog-ui .nl-profile-progress__controls {
@@ -493,13 +602,6 @@
 .noslog-ui .nl-profile-progress .nl-line-chart__area {
     padding-top: 0;
     gap: var(--nl-spacing-16);
-}
-/* 플롯이 옆 「기록 개요」 행 높이까지 채운다 (16:9 는 최소). 폭이 좁아 한 열일 때는 최소 높이만 */
-.noslog-ui .nl-profile-progress__content,
-.noslog-ui .nl-profile-progress .nl-line-chart,
-.noslog-ui .nl-profile-progress .nl-line-chart__plot,
-.noslog-ui .nl-profile-progress .nl-line-chart__series {
-    flex: 1 1 auto;
 }
 .noslog-ui .nl-profile-progress__summary,
 .noslog-ui .nl-profile-progress__summary > div {
@@ -556,7 +658,23 @@
     width: 100%;
 }
 .noslog-ui .nl-profile-loading__plot {
-    height: min(344px, calc((100cqw - 32px) * 0.5625));
+    height: 200px;
+}
+/* 업적 한 줄(2026-09-25 A2) — 육각 44 × 48 을 7개까지, 넘치면 자른다 */
+.noslog-ui .nl-profile-achievements__strip {
+    display: flex;
+    gap: var(--nl-spacing-8);
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    list-style: none;
+}
+/* 반 폭 칸(태블릿 옆 열 약 352)은 6개 — 7개(356)가 들어가지 않는다 */
+@container profile-section (max-width: 355px) {
+    .noslog-ui .nl-profile-achievements__strip > :nth-child(n + 7) {
+        display: none;
+    }
 }
 
 /* 오른쪽 열 묶음 — 폰에서는 본문 흐름 그대로(구역 사이 32) */

@@ -216,9 +216,12 @@ export default function AchievementsPage({
     metrics,
     recipients,
     scoresHidden,
+    embedded = false,
 }: {
-    userName: string;
-    profileHref: string;
+    userName?: string;
+    profileHref?: string;
+    /** 프로필 「업적」 탭 안(2026-09-25) — 머리 · 탭은 프로필 레이아웃이 그려 돌아가기 · 제목을 두지 않는다 */
+    embedded?: boolean;
     records: AchievementRecords;
     metrics: AchievementMetrics | null;
     recipients: Record<string, number>;
@@ -264,12 +267,28 @@ export default function AchievementsPage({
     const totalIn = (item: CategoryFilter) =>
         achievementStepTotal(inCategory(item));
 
+    const Wrapper = embedded ? "div" : PageContainer;
     return (
-        <PageContainer width="reading" className="nl-achievements-page">
+        <Wrapper
+            {...(embedded ? {} : { width: "reading" as const })}
+            className="nl-achievements-page"
+        >
             <div className="nl-achievements-page__head">
-                <BackLink href={profileHref}>{userName}</BackLink>
-                <h1 className="nl-page-title">{t("achievement.title")}</h1>
-                <p className="nl-body-secondary nl-muted">
+                {embedded || !profileHref ? null : (
+                    <>
+                        <BackLink href={profileHref}>{userName}</BackLink>
+                        <h1 className="nl-page-title">
+                            {t("achievement.title")}
+                        </h1>
+                    </>
+                )}
+                <p
+                    className={
+                        embedded
+                            ? "nl-emphasis-label"
+                            : "nl-body-secondary nl-muted"
+                    }
+                >
                     {t("achievement.count", {
                         earned: summary.earned.toLocaleString(locale),
                         total: summary.total.toLocaleString(locale),
@@ -372,6 +391,6 @@ export default function AchievementsPage({
                     ))}
                 </ul>
             )}
-        </PageContainer>
+        </Wrapper>
     );
 }

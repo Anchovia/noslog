@@ -76,6 +76,13 @@ old design-stage checklist. Changes to material behavior require a user decision
   Do not leak private values through response payloads or generated images.
 - Basic and Recital retain their distinct record/grade meaning. Show the highest
   approved exam achievement per mode; do not introduce a generic `GRADE 57` badge.
+- The public profile (2026-09-25) is one head (identity, meta line, mode, headline
+  Grd) above section tabs with their own URLs — overview `/profile/[id]` and
+  achievements `/profile/[id]/achievements` so far. The selected mode lives in the
+  URL (`?mode=recital`) and carries across tabs. The headline "top N%" is the world
+  rank divided by the players who show scores and have that mode's Grd — the same
+  population the rank counts. The 90-day change is the official Grd change over the
+  progress range and is shown only when it rose.
 - Public share links use stable profile IDs and the selected locale. Card export,
   clipboard or native-share failure must offer a usable fallback without changing
   privacy settings. Respect the existing public-data policy on every request.

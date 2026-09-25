@@ -2,17 +2,12 @@
 
 import { Lock } from "lucide-react";
 
-import { usePathname, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import PageContainer from "@/components/layout/pageContainer";
 import {
-    useLocale,
     useLocalizedHref,
     useTranslations,
 } from "@/components/i18n/localeProvider";
-import { gradeBandTone, rankTone } from "@/lib/music/scoreTone";
-import MetricSummary from "@/components/ui/metricSummary";
-import { SegmentedControl } from "@/components/ui/segmentedControl";
 import { StatusMessage } from "@/components/ui/statusMessage";
 import { foundationButtonClass } from "@/components/ui/Button";
 import ProfileProgress from "./profileProgress";
@@ -23,13 +18,17 @@ import type {
     ProfileProgressPayload,
 } from "@/features/profile/schemas/publicProfileSchema";
 import type { ProfileOverviewContext } from "@/features/profile/server/profileOverviewService";
-import ProfileIdentity from "./profileIdentity";
 import ProfilePlaysList from "./profilePlaysList";
 import ProfileContribution from "@/features/contributions/components/profileContribution";
 import ProfileAchievements from "@/features/achievements/components/profileAchievements";
 import { summarizeAchievements } from "@/features/achievements/achievementDefinitions";
 import ProfileRecordOverview from "./profileRecordOverview";
 
+/**
+ * 프로필 「개요」 탭(2026-09-25 D2) — 머리 · 탭은 레이아웃이 그린다.
+ * 넓은 화면 2 : 1 — 주 열(성장 추이 · 베스트 · 최근 플레이) | 옆 열(기록 개요 · 업적 · 기여).
+ * 태블릿은 주 열 다음 옆 열이 두 칸 격자, 폰은 베스트 → 최근 → 성장 추이 → 나머지(F2)
+ */
 export default function PublicProfilePage({
     user,
     isOwner,
@@ -37,7 +36,6 @@ export default function PublicProfilePage({
     initialBest,
     initialRecent,
     initialProgress,
-    syncLabel,
     scoresHidden = false,
 }: {
     user: ProfileUser;
@@ -48,25 +46,29 @@ export default function PublicProfilePage({
     initialBest: ProfileListPayload | null;
     initialRecent: ProfileListPayload | null;
     initialProgress: ProfileProgressPayload | null;
-    syncLabel?: string;
 }) {
     const t = useTranslations();
-    const locale = useLocale();
     const href = useLocalizedHref();
     const params = useSearchParams();
-    const pathname = usePathname();
     const achievements = user.achievements
         ? summarizeAchievements(user.achievements, Boolean(scoresHidden))
         : null;
+    const side = (
+        <>
+            {achievements ? (
+                <ProfileAchievements
+                    userId={user.id}
+                    summary={achievements}
+                    isOwner={isOwner}
+                />
+            ) : null}
+            {/* 기여는 점수 비공개와 별개로 보인다(2026-09-24) */}
+            <ProfileContribution totals={user.contribution} isOwner={isOwner} />
+        </>
+    );
     if (scoresHidden || !overview)
         return (
-            <PageContainer className="nl-profile">
-                <ProfileIdentity
-                    user={user}
-                    isOwner={false}
-                    mode="basic"
-                    achievements={achievements}
-                />
+            <div className="nl-profile-body nl-profile-body--single">
                 <div className="nl-profile-empty">
                     <StatusMessage
                         icon={Lock}
@@ -74,27 +76,11 @@ export default function PublicProfilePage({
                         description={t("profile.scoresPrivateBody")}
                     />
                 </div>
-                {achievements ? (
-                    <ProfileAchievements
-                        userId={user.id}
-                        summary={achievements}
-                        isOwner={false}
-                    />
-                ) : null}
-                {/* 기여는 점수 비공개와 별개로 보인다(2026-09-24) */}
-                <ProfileContribution
-                    totals={user.contribution}
-                    isOwner={false}
-                />
-            </PageContainer>
+                {side}
+            </div>
         );
     const mode: ProfileMode =
         params.get("mode") === "recital" ? "recital" : "basic";
-    const grade = mode === "basic" ? user.grade_basic : user.grade_recital;
-    const rank = mode === "basic" ? user.rank_basic : user.rank_recital;
-    const countryRank =
-        mode === "basic" ? user.rank_basic_country : user.rank_recital_country;
-    const rating = overview.ratings[mode];
     const hasRecords = Boolean(
         overview.hasRecords ||
         user.grade_basic ||
@@ -102,146 +88,9 @@ export default function PublicProfilePage({
         initialBest?.items.length ||
         initialRecent?.items.length
     );
-    function selectMode(value: ProfileMode) {
-        if (value === mode) return;
-        const next = new URLSearchParams(params);
-        next.set("mode", value);
-        window.history.pushState(null, "", `${pathname}?${next}`);
-    }
-    return (
-        <PageContainer className="nl-profile">
-            <ProfileIdentity
-                user={user}
-                isOwner={isOwner}
-                mode={mode}
-                syncLabel={syncLabel}
-                achievements={achievements}
-                showSyncAction={
-                    isOwner &&
-                    Boolean(
-                        overview.sync &&
-                        ["failed", "partial"].includes(overview.sync.status)
-                    )
-                }
-            />
-            {hasRecords ? (
-                <>
-                    <section
-                        className="nl-profile-competitive"
-                        aria-label={t("profile.modeAria")}
-                    >
-                        <div aria-controls="profile-performance-summary profile-progress profile-best-title">
-                            <SegmentedControl
-                                label={t("profile.modeAria")}
-                                value={mode}
-                                onValueChange={selectMode}
-                                options={[
-                                    { value: "basic", label: "Basic" },
-                                    { value: "recital", label: "Recital" },
-                                ]}
-                            />
-                        </div>
-                        <dl
-                            id="profile-performance-summary"
-                            className="nl-profile-summary"
-                            aria-label={`${mode === "basic" ? "Basic" : "Recital"} · ${t("profile.grade")}`}
-                        >
-                            <MetricSummary
-                                label={t("rankings.metric.grade")}
-                                prominent
-                                tone={
-                                    grade && grade > 0
-                                        ? gradeBandTone(Math.round(grade / 100))
-                                        : undefined
-                                }
-                                value={
-                                    grade && grade > 0
-                                        ? Math.round(
-                                              grade / 100
-                                          ).toLocaleString(locale)
-                                        : "—"
-                                }
-                                unit={grade && grade > 0 ? "Grd" : undefined}
-                            />
-                            <MetricSummary
-                                label={t("rankings.metric.rating")}
-                                prominent
-                                tone={gradeBandTone(rating)}
-                                value={
-                                    rating === null
-                                        ? "—"
-                                        : rating.toLocaleString(locale)
-                                }
-                                unit={rating === null ? undefined : "pt"}
-                                description={
-                                    rating === null
-                                        ? t("rankings.ratingUnavailable")
-                                        : undefined
-                                }
-                            />
-                            <MetricSummary
-                                label={t("profile.globalRank")}
-                                prominent
-                                tone={rankTone(rank)}
-                                value={
-                                    rank
-                                        ? `#${rank.toLocaleString(locale)}`
-                                        : "—"
-                                }
-                            />
-                            <MetricSummary
-                                label={t("profile.countryPosition")}
-                                prominent
-                                tone={rankTone(countryRank)}
-                                value={
-                                    countryRank
-                                        ? `#${countryRank.toLocaleString(locale)}`
-                                        : "—"
-                                }
-                            />
-                        </dl>
-                    </section>
-                    <div className="nl-profile-body">
-                        <ProfileProgress
-                            userId={user.id}
-                            mode={mode}
-                            initialData={initialProgress}
-                        />
-                        <ProfilePlaysList
-                            userId={user.id}
-                            kind="best"
-                            mode={mode}
-                            initialData={initialBest}
-                        />
-                        <ProfileRecordOverview
-                            user={user}
-                            judgement={overview.judgement}
-                        />
-                        {/* 오른쪽 열 = 최근 플레이 · 업적 · 기여(넓은 화면), 폰은 그대로 맨 아래(2026-09-24 P1 · 업적 C1) */}
-                        <div className="nl-profile-side">
-                            {initialRecent?.status !== "hidden" ? (
-                                <ProfilePlaysList
-                                    userId={user.id}
-                                    kind="recent"
-                                    mode="basic"
-                                    initialData={initialRecent}
-                                />
-                            ) : null}
-                            {achievements ? (
-                                <ProfileAchievements
-                                    userId={user.id}
-                                    summary={achievements}
-                                    isOwner={isOwner}
-                                />
-                            ) : null}
-                            <ProfileContribution
-                                totals={user.contribution}
-                                isOwner={isOwner}
-                            />
-                        </div>
-                    </div>
-                </>
-            ) : (
+    if (!hasRecords)
+        return (
+            <div className="nl-profile-body nl-profile-body--single">
                 <div className="nl-profile-empty">
                     <StatusMessage title={t("profile.noSyncedRecords")} />
                     {isOwner ? (
@@ -255,20 +104,39 @@ export default function PublicProfilePage({
                         </Link>
                     ) : null}
                 </div>
-            )}
-            {!hasRecords && achievements ? (
-                <ProfileAchievements
+                {side}
+            </div>
+        );
+    return (
+        <div className="nl-profile-body">
+            <div className="nl-profile-main">
+                <ProfileProgress
                     userId={user.id}
-                    summary={achievements}
-                    isOwner={isOwner}
+                    mode={mode}
+                    initialData={initialProgress}
                 />
-            ) : null}
-            {hasRecords ? null : (
-                <ProfileContribution
-                    totals={user.contribution}
-                    isOwner={isOwner}
+                <ProfilePlaysList
+                    userId={user.id}
+                    kind="best"
+                    mode={mode}
+                    initialData={initialBest}
                 />
-            )}
-        </PageContainer>
+                {initialRecent?.status !== "hidden" ? (
+                    <ProfilePlaysList
+                        userId={user.id}
+                        kind="recent"
+                        mode="basic"
+                        initialData={initialRecent}
+                    />
+                ) : null}
+            </div>
+            <div className="nl-profile-side">
+                <ProfileRecordOverview
+                    user={user}
+                    judgement={overview.judgement}
+                />
+                {side}
+            </div>
+        </div>
     );
 }

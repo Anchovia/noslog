@@ -574,12 +574,21 @@ html[data-theme="light"] .noslog-ui,
         color: var(--nl-content-default);
     }
 }
-.noslog-ui .nl-tabs__item:is([data-state="active"], [aria-pressed="true"]) {
+.noslog-ui
+    .nl-tabs__item:is(
+        [data-state="active"],
+        [aria-pressed="true"],
+        [aria-current="page"]
+    ) {
     color: var(--nl-content-default);
     font-weight: var(--nl-type-weight-semibold);
 }
 .noslog-ui
-    .nl-tabs__item:is([data-state="active"], [aria-pressed="true"])::after {
+    .nl-tabs__item:is(
+        [data-state="active"],
+        [aria-pressed="true"],
+        [aria-current="page"]
+    )::after {
     content: "";
     position: absolute;
     inset-inline: 0;

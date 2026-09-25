@@ -2,6 +2,7 @@ import "server-only";
 
 import db from "@/lib/db";
 import { getProfileRating } from "@/features/profile/server/profilePlaysService";
+import { getPublicProfileProgress } from "@/features/profile/server/profileProgressService";
 
 export async function getProfileOverviewContext(
     userId: number,
@@ -79,4 +80,79 @@ export async function getProfileOverviewContext(
 }
 export type ProfileOverviewContext = Awaited<
     ReturnType<typeof getProfileOverviewContext>
+>;
+
+/**
+ * 프로필 머리(2026-09-25 H3 · K2) — 모드별 레이팅 · 최근 90일 Grd 변화 · 상위 % 의 분모(순위와 같은 기준:
+ * 점수를 공개하고 그 모드 Grd 가 있는 사람), 본인에게만 마지막 동기화 상태
+ */
+export async function getProfileHeaderContext(
+    userId: number,
+    isOwner: boolean
+) {
+    const [basic, recital, basicProgress, recitalProgress, totals, sync] =
+        await Promise.all([
+            getProfileRating(userId, "basic"),
+            getProfileRating(userId, "recital"),
+            getPublicProfileProgress(userId, {
+                mode: "basic",
+                metric: "grade",
+                range: "90",
+            }),
+            getPublicProfileProgress(userId, {
+                mode: "recital",
+                metric: "grade",
+                range: "90",
+            }),
+            Promise.all(
+                (["grade_basic", "grade_recital"] as const).map((field) =>
+                    db.user.count({
+                        where: { hide_play_scores: false, [field]: { gt: 0 } },
+                    })
+                )
+            ),
+            isOwner
+                ? db.dataSync.findFirst({
+                      where: { user_id: userId },
+                      orderBy: [{ started_at: "desc" }, { id: "desc" }],
+                      select: {
+                          status: true,
+                          started_at: true,
+                          completed_at: true,
+                          error_message: true,
+                      },
+                  })
+                : null,
+        ]);
+    const change = (
+        progress: Awaited<ReturnType<typeof getPublicProfileProgress>>
+    ) =>
+        progress?.current != null && progress.points.length
+            ? Math.round((progress.current - progress.points[0].value) * 100) /
+              100
+            : null;
+    return {
+        ratings: {
+            basic: basic ? Math.round(basic.rating) : null,
+            recital: recital ? Math.round(recital.rating) : null,
+        },
+        gradeChange: {
+            basic: change(basicProgress),
+            recital: change(recitalProgress),
+        },
+        rankedTotals: { basic: totals[0], recital: totals[1] },
+        sync: sync
+            ? {
+                  status:
+                      sync.status === "completed" && sync.error_message
+                          ? "partial"
+                          : sync.status,
+                  startedAt: sync.started_at.toISOString(),
+                  completedAt: sync.completed_at?.toISOString() ?? null,
+              }
+            : null,
+    };
+}
+export type ProfileHeaderContext = Awaited<
+    ReturnType<typeof getProfileHeaderContext>
 >;

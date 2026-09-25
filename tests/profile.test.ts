@@ -4,6 +4,7 @@ import type { ProfileUser } from "@/components/profile/dashboard/profileTypes";
 import {
     formatProfileDate,
     formatProfileGrade,
+    formatTopPercent,
     getProfileCountryCode,
     getProfileDifficultyColor,
     getProfileRankRows,
@@ -89,5 +90,14 @@ describe("프로필 표시 유틸리티", () => {
         expect(rows.map((row) => row.value)).toEqual([
             1, 2, 3, 4, 5, 6, 7, 8, 9,
         ]);
+    });
+});
+
+describe("profile headline top percent", () => {
+    it("shows one decimal under 1% (at least 0.1) and whole numbers above", () => {
+        expect(formatTopPercent(9, 2300, "ko")).toBe("0.4");
+        expect(formatTopPercent(1, 50000, "ko")).toBe("0.1");
+        expect(formatTopPercent(120, 2300, "ko")).toBe("6");
+        expect(formatTopPercent(1, 1, "ko")).toBe("100");
     });
 });

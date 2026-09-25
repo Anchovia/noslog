@@ -1,7 +1,8 @@
 "use client";
 
-import { MapPin, Settings } from "lucide-react";
+import { Clock, IdCard, MapPin, RefreshCw, Settings } from "lucide-react";
 import Link from "next/link";
+import { usePathname, useSearchParams } from "next/navigation";
 import {
     useLocale,
     useLocalizedHref,
@@ -13,11 +14,17 @@ import CountryMarker from "@/components/ui/countryMarker";
 import DiscordIcon from "@/components/ui/DiscordIcon";
 import ExamBadge from "@/components/ui/examBadge";
 import ExamBadgeGroup from "@/components/ui/examBadgeGroup";
+import { SegmentedControl } from "@/components/ui/segmentedControl";
 import type { AchievementSummary } from "@/features/achievements/achievementDefinitions";
 import AchievementShowcase from "@/features/achievements/components/achievementShowcase";
 import { contributionLevel } from "@/features/contributions/contributionLevel";
 import ProfileShareDialog from "@/features/profile/components/profileShareDialog";
-import { formatProfileDate } from "@/components/profile/dashboard/profileUtils";
+import {
+    formatProfileDate,
+    formatTopPercent,
+} from "@/components/profile/dashboard/profileUtils";
+import { gradeBandTone, rankTone } from "@/lib/music/scoreTone";
+import type { ProfileHeaderContext } from "@/features/profile/server/profileOverviewService";
 import type {
     ProfileMode,
     ProfileUser,
@@ -33,25 +40,58 @@ function initialForName(name: string | null, locale: string) {
     return undefined;
 }
 
+/**
+ * 프로필 머리(2026-09-25 H3 · K2 · M2 · CM1) — 신원(아바타 · 이름 · 명판 · 라벨 · 업적 진열) · 메타 줄(NOSTALGIA ID · Discord ·
+ * 오락실 · 마지막 플레이, 아이콘 16 + metadata) · 모드 세그먼트 · 핵심 수치(공식 Grd 크게 + 세계 · 상위 % · 국가 · 레이팅 · 90일 변화).
+ * 넓은 화면은 수치가 머리 오른쪽, 좁으면 메타 줄 아래로 쌓인다(폰은 세그먼트가 폭 전체). 점수 비공개면 모드 · 수치가 없다
+ */
 export default function ProfileIdentity({
     user,
     isOwner,
-    mode,
     syncLabel,
     showSyncAction = false,
     achievements,
+    header,
 }: {
     user: ProfileUser;
     isOwner: boolean;
-    mode: ProfileMode;
     syncLabel?: string;
     showSyncAction?: boolean;
     /** 업적 요약 — 머리 진열(2026-09-24 P5 · B1) */
     achievements?: AchievementSummary | null;
+    /** 레이팅 · 변화 · 상위 % 분모. 점수 비공개면 null */
+    header: ProfileHeaderContext | null;
 }) {
     const locale = useLocale();
     const href = useLocalizedHref();
     const t = useTranslations();
+    const params = useSearchParams();
+    const pathname = usePathname();
+    const mode: ProfileMode =
+        params.get("mode") === "recital" ? "recital" : "basic";
+    function selectMode(value: ProfileMode) {
+        if (value === mode) return;
+        const next = new URLSearchParams(params);
+        if (value === "recital") next.set("mode", value);
+        else next.delete("mode");
+        const query = next.toString();
+        window.history.pushState(
+            null,
+            "",
+            query ? `${pathname}?${query}` : pathname
+        );
+    }
+    const hasGrades = Boolean(
+        header && ((user.grade_basic ?? 0) > 0 || (user.grade_recital ?? 0) > 0)
+    );
+    const grade = mode === "basic" ? user.grade_basic : user.grade_recital;
+    const rank = mode === "basic" ? user.rank_basic : user.rank_recital;
+    const countryRank =
+        mode === "basic" ? user.rank_basic_country : user.rank_recital_country;
+    const rating = header?.ratings[mode] ?? null;
+    const change = header?.gradeChange[mode] ?? null;
+    const total = header?.rankedTotals[mode] ?? 0;
+    const modeLabel = mode === "basic" ? "Basic" : "Recital";
     const name = user.username || t("common.unnamedUser");
     const discord = user.hide_discord_name
         ? ""
@@ -69,9 +109,10 @@ export default function ProfileIdentity({
               date: formatProfileDate(user.last_played_at, locale),
           })
         : null;
-    const metadata = [lastPlayed, isOwner ? syncLabel : null]
-        .filter(Boolean)
-        .join(" · ");
+    const nostalgiaName =
+        !user.hide_nostalgia_name && user.nostalgia_name
+            ? user.nostalgia_name
+            : null;
     return (
         <section className="nl-profile-identity" aria-labelledby="profile-name">
             <div className="nl-profile-identity__row">
@@ -161,55 +202,185 @@ export default function ProfileIdentity({
                         ) : null}
                     </ExamBadgeGroup>
                 </div>
-                {metadata ? (
-                    <p className="nl-profile-identity__metadata nl-body-secondary nl-muted">
-                        {metadata}
-                    </p>
+                {/* 메타 줄(2026-09-25 H3) — 전폭 정보 상자 3개 대신 아이콘 16 + metadata 한 줄, 좁으면 줄바꿈 */}
+                {nostalgiaName ||
+                discord ||
+                user.preferredArcade ||
+                lastPlayed ||
+                (isOwner && syncLabel) ? (
+                    <ul className="nl-profile-identity__meta nl-metadata nl-muted">
+                        {nostalgiaName ? (
+                            <li title="NOSTALGIA ID">
+                                <IdCard aria-hidden />
+                                <span className="sr-only">NOSTALGIA ID </span>
+                                {nostalgiaName}
+                            </li>
+                        ) : null}
+                        {discord ? (
+                            <li title={discord}>
+                                <DiscordIcon />
+                                <span className="sr-only">Discord </span>
+                                {discord}
+                            </li>
+                        ) : null}
+                        {user.preferredArcade ? (
+                            <li title={user.preferredArcade.name}>
+                                <MapPin aria-hidden />
+                                <span className="sr-only">
+                                    {t("settings.preferredArcade")}{" "}
+                                </span>
+                                {user.preferredArcade.name}
+                            </li>
+                        ) : null}
+                        {lastPlayed ? (
+                            <li>
+                                <Clock aria-hidden />
+                                {lastPlayed}
+                            </li>
+                        ) : null}
+                        {isOwner && syncLabel ? (
+                            <li>
+                                <RefreshCw aria-hidden />
+                                {syncLabel}
+                            </li>
+                        ) : null}
+                    </ul>
+                ) : null}
+                {hasGrades ? (
+                    <div className="nl-profile-identity__mode">
+                        <SegmentedControl
+                            label={t("profile.modeAria")}
+                            value={mode}
+                            onValueChange={selectMode}
+                            options={[
+                                { value: "basic", label: "Basic" },
+                                { value: "recital", label: "Recital" },
+                            ]}
+                        />
+                    </div>
+                ) : null}
+                {hasGrades ? (
+                    <div
+                        id="profile-performance-summary"
+                        className="nl-profile-headline"
+                        aria-live="polite"
+                    >
+                        {grade && grade > 0 ? (
+                            <>
+                                <dl
+                                    className="nl-profile-headline__values"
+                                    aria-label={`${modeLabel} · ${t("profile.grade")}`}
+                                >
+                                    <div className="nl-profile-headline__grade">
+                                        <dt className="nl-metadata nl-muted">
+                                            {t("profile.headlineGrade", {
+                                                mode: modeLabel,
+                                            })}
+                                        </dt>
+                                        <dd
+                                            className="nl-metric-display nl-toned"
+                                            data-tone={gradeBandTone(
+                                                Math.round(grade / 100)
+                                            )}
+                                        >
+                                            {(grade / 100).toLocaleString(
+                                                locale,
+                                                {
+                                                    minimumFractionDigits: 2,
+                                                    maximumFractionDigits: 2,
+                                                }
+                                            )}
+                                        </dd>
+                                    </div>
+
+                                    {rank ? (
+                                        <div>
+                                            <dt className="nl-metric-value">
+                                                {t("profile.headlineWorld")}
+                                            </dt>
+                                            <dd
+                                                className="nl-metric-value nl-toned"
+                                                data-tone={rankTone(rank)}
+                                                data-rank="world"
+                                            >
+                                                #{rank.toLocaleString(locale)}
+                                            </dd>
+                                            {total > 0 ? (
+                                                <dd className="nl-metadata nl-muted">
+                                                    ·{" "}
+                                                    {t("profile.topPercent", {
+                                                        percent:
+                                                            formatTopPercent(
+                                                                rank,
+                                                                total,
+                                                                locale
+                                                            ),
+                                                    })}
+                                                </dd>
+                                            ) : null}
+                                        </div>
+                                    ) : null}
+                                    {countryRank ? (
+                                        <div>
+                                            <dt className="nl-metric-value">
+                                                {t("profile.headlineCountry")}
+                                            </dt>
+                                            <dd
+                                                className="nl-metric-value nl-toned"
+                                                data-tone={rankTone(
+                                                    countryRank
+                                                )}
+                                                data-rank="country"
+                                            >
+                                                #
+                                                {countryRank.toLocaleString(
+                                                    locale
+                                                )}
+                                            </dd>
+                                        </div>
+                                    ) : null}
+                                </dl>
+                                <dl className="nl-profile-headline__foot nl-metadata nl-muted">
+                                    {rating !== null ? (
+                                        <>
+                                            <dt>
+                                                {t("rankings.metric.rating")}
+                                            </dt>
+                                            <dd>
+                                                {rating.toLocaleString(locale)}
+                                            </dd>
+                                        </>
+                                    ) : null}
+                                    {change !== null && change > 0 ? (
+                                        <>
+                                            <dt className="sr-only">
+                                                {t("profile.change")}
+                                            </dt>
+                                            <dd>
+                                                {rating !== null ? "· " : ""}
+                                                <span className="nl-profile-headline__up">
+                                                    ▲{" "}
+                                                    {change.toLocaleString(
+                                                        locale,
+                                                        {
+                                                            maximumFractionDigits: 2,
+                                                        }
+                                                    )}
+                                                </span>{" "}
+                                                {t("profile.range.90")}
+                                            </dd>
+                                        </>
+                                    ) : null}
+                                </dl>
+                            </>
+                        ) : (
+                            <p className="nl-body-secondary nl-muted">
+                                {t("profile.modeEmpty", { mode: modeLabel })}
+                            </p>
+                        )}
+                    </div>
                 ) : null}
             </div>
-            {/* 본인에게 보이던 「비공개 · … 프로필 설정」 줄은 두지 않는다(2026-09-25, 사용자) */}
-            {(!user.hide_nostalgia_name && user.nostalgia_name) ||
-            discord ||
-            user.preferredArcade ? (
-                <div className="nl-profile-identity__chips">
-                    {!user.hide_nostalgia_name && user.nostalgia_name ? (
-                        <div className="nl-profile-identity__chip">
-                            <span className="nl-metadata nl-muted">
-                                NOSTALGIA ID
-                            </span>
-                            <span className="nl-body-secondary">
-                                {user.nostalgia_name}
-                            </span>
-                        </div>
-                    ) : null}
-                    {discord || user.preferredArcade ? (
-                        <div className="nl-profile-identity__chip-pair">
-                            {discord ? (
-                                <div
-                                    className="nl-profile-identity__chip"
-                                    title={discord}
-                                >
-                                    <DiscordIcon />
-                                    <span className="nl-body-secondary">
-                                        {discord}
-                                    </span>
-                                </div>
-                            ) : null}
-                            {user.preferredArcade ? (
-                                <div
-                                    className="nl-profile-identity__chip"
-                                    title={user.preferredArcade.name}
-                                >
-                                    <MapPin aria-hidden />
-                                    <span className="nl-body-secondary">
-                                        {user.preferredArcade.name}
-                                    </span>
-                                </div>
-                            ) : null}
-                        </div>
-                    ) : null}
-                </div>
-            ) : null}
             {showSyncAction ? (
                 <div className="nl-profile-identity__recovery">
                     <Link

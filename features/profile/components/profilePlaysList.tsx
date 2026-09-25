@@ -19,7 +19,10 @@ import type {
 } from "@/features/profile/schemas/publicProfileSchema";
 import { LoadingStatus } from "@/components/ui/skeleton";
 import useDelayedFlag from "@/lib/hooks/useDelayedFlag";
-import ProfilePlayRow, { ProfilePlayListSkeleton } from "./profilePlayRow";
+import ProfilePlayRow, {
+    ProfilePlayListHead,
+    ProfilePlayListSkeleton,
+} from "./profilePlayRow";
 
 export default function ProfilePlaysList({
     userId,
@@ -130,18 +133,27 @@ export default function ProfilePlaysList({
                         <ProfilePlayListSkeleton />
                     </>
                 ) : plays.length ? (
-                    <ol
-                        className="nl-profile-play-list"
-                        aria-label={`${kind === "best" ? `${first?.query.mode === "recital" ? "Recital" : "Basic"} · ${t(first?.query.metric === "rating" ? "rankings.metric.rating" : "rankings.metric.grade")} · ` : ""}${title}`}
-                    >
-                        {plays.map((play) => (
-                            <ProfilePlayRow
-                                key={play.id}
-                                play={play}
-                                metric={first?.query.metric ?? metric}
-                            />
-                        ))}
-                    </ol>
+                    <>
+                        <ProfilePlayListHead
+                            kind={kind}
+                            metric={first?.query.metric ?? metric}
+                        />
+                        <ol
+                            className="nl-profile-play-list"
+                            aria-label={`${kind === "best" ? `${first?.query.mode === "recital" ? "Recital" : "Basic"} · ${t(first?.query.metric === "rating" ? "rankings.metric.rating" : "rankings.metric.grade")} · ` : ""}${title}`}
+                        >
+                            {plays.map((play, index) => (
+                                <ProfilePlayRow
+                                    key={play.id}
+                                    play={play}
+                                    metric={first?.query.metric ?? metric}
+                                    position={
+                                        kind === "best" ? index + 1 : undefined
+                                    }
+                                />
+                            ))}
+                        </ol>
+                    </>
                 ) : busy ? (
                     // 첫 불러오기 — 글자 대신 같은 줄 틀의 스켈레톤(안내는 화면 읽기에만)
                     <>

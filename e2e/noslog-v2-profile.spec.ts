@@ -62,28 +62,33 @@ test("P6 progress uses real dates, retains content on failure and supports keybo
             )
         );
     expect(x[1] - x[0]).toBeLessThan((x[2] - x[0]) / 10);
-    await progress
-        .getByRole("button", { name: "NosLog 레이팅", exact: true })
-        .click();
+    // 지표 전환 = 세그먼트(2026-09-25 G2, 짧은 라벨)
+    await progress.getByRole("radio", { name: "레이팅", exact: true }).click();
     await expect(progress.getByRole("table")).toContainText("2,070 pt");
-    await progress.getByRole("combobox").selectOption("30");
-    await expect(progress.getByRole("combobox")).toHaveValue("30");
+    // 기간 = 공용 셀렉트(Radix 콤보박스) — 열고 항목을 고른다
+    const range = progress.getByRole("combobox");
+    const choose = async (label: string) => {
+        await range.click();
+        await page.getByRole("option", { name: label, exact: true }).click();
+    };
+    await choose("30일");
+    await expect(range).toHaveText("30일");
     for (const width of [1055, 1056, 1470, 1055, 390]) {
         await page.setViewportSize({ width, height: 900 });
-        await expect(progress.getByRole("combobox")).toHaveValue("30");
+        await expect(range).toHaveText("30일");
         await expect(progress.getByRole("table")).toContainText("2,070 pt");
     }
     fail = true;
-    await progress.getByRole("combobox").selectOption("year");
+    await choose("1년");
     await expect(progress.getByRole("alert")).toBeVisible();
     await expect(progress.getByRole("table")).toContainText("2,070 pt");
-    await expect(progress.getByRole("combobox")).toHaveValue("30");
+    await expect(range).toHaveText("30일");
     fail = false;
     await progress
         .getByRole("button", { name: "다시 시도", exact: true })
         .click();
     await expect(progress.getByRole("alert")).toHaveCount(0);
-    await expect(progress.getByRole("combobox")).toHaveValue("year");
+    await expect(range).toHaveText("1년");
 });
 
 test("P6 Best expands by five, retries the failed batch and collapses to five", async ({
@@ -162,7 +167,12 @@ for (const locale of ["ko", "ja", "en"]) {
         const errors: string[] = [];
         page.on("pageerror", (error) => errors.push(error.message));
         await page.goto(`/${locale}/profile/1`);
-        await expect(page.locator(".nl-profile-progress")).toBeVisible();
+        // 로딩 스켈레톤(aria-busy)과 실제 내용이 잠깐 함께 있을 수 있다 — 실제 본문을 기다린다
+        await expect(
+            page.locator(
+                '.nl-profile-body:not([aria-busy="true"]) .nl-profile-progress'
+            )
+        ).toBeVisible();
         for (const width of [
             320, 390, 671, 672, 768, 1000, 1055, 1056, 1280, 1470, 1056, 1055,
             390,
@@ -199,51 +209,58 @@ for (const locale of ["ko", "ja", "en"]) {
             const best = (await page
                 .locator('.nl-profile-plays[data-kind="best"]')
                 .boundingBox())!;
-            const recent = (await page
-                .locator('.nl-profile-plays[data-kind="recent"]')
+            // 최근 플레이는 플레이 활동을 공개할 때만 있다(E2E_RANKER 는 비공개일 수 있음)
+            const recentSection = page.locator(
+                '.nl-profile-plays[data-kind="recent"]'
+            );
+            const recent = (await recentSection.count())
+                ? await recentSection.boundingBox()
+                : null;
+            const heading = (await page
+                .locator("#profile-progress-title")
+                .boundingBox())!;
+            const controls = (await page
+                .locator(".nl-profile-progress__controls")
                 .boundingBox())!;
             if (width >= 1056) {
-                const heading = (await page
-                    .locator("#profile-progress-title")
-                    .boundingBox())!;
-                const controls = (await page
-                    .locator(".nl-profile-progress__controls")
-                    .boundingBox())!;
-                expect(heading.y + heading.height / 2).toBeCloseTo(
-                    controls.y + controls.height / 2,
-                    0
-                );
+                // 2 : 1 — 주 열(성장 추이 · 베스트 · 최근) | 옆 열(기록 개요 …), 제목과 조작부는 위쪽을 맞춤(2026-09-25 D2)
                 expect(heading.x + heading.width).toBeLessThanOrEqual(
                     controls.x
                 );
+                expect(controls.y).toBeLessThan(heading.y + heading.height);
                 expect(progress.y).toBeCloseTo(overview.y, 0);
-                expect(best.y).toBeCloseTo(recent.y, 0);
                 expect(progress.width / overview.width).toBeCloseTo(2, 2);
                 expect(overview.x - progress.x - progress.width).toBeCloseTo(
                     16,
                     0
                 );
                 expect(best.x).toBeCloseTo(progress.x, 0);
-                expect(recent.x).toBeCloseTo(overview.x, 0);
+                if (recent) expect(recent.x).toBeCloseTo(progress.x, 0);
                 expect(best.y - progress.y - progress.height).toBeCloseTo(
-                    48,
+                    32,
                     0
                 );
-            } else {
-                const heading = (await page
-                    .locator("#profile-progress-title")
-                    .boundingBox())!;
-                const controls = (await page
-                    .locator(".nl-profile-progress__controls")
-                    .boundingBox())!;
+                if (recent) expect(recent.y).toBeGreaterThan(best.y);
+            } else if (width >= 672) {
+                // 태블릿 — 성장 추이 → 베스트 → 최근, 그 아래 기록 개요 | 업적 · 기여 두 칸
                 expect(controls.y).toBeGreaterThanOrEqual(
                     heading.y + heading.height
                 );
-                expect(progress.x).toBeCloseTo(overview.x, 0);
-                expect(progress.width).toBeCloseTo(overview.width, 0);
                 expect(best.y).toBeGreaterThan(progress.y);
-                expect(overview.y).toBeGreaterThan(best.y);
-                expect(recent.y).toBeGreaterThan(overview.y);
+                expect(overview.y).toBeGreaterThan((recent ?? best).y);
+                expect(overview.x).toBeCloseTo(progress.x, 0);
+                expect(overview.width).toBeCloseTo(
+                    (progress.width - 16) / 2,
+                    0
+                );
+            } else {
+                // 폰(F2) — 베스트 → 최근 → 성장 추이 → 기록 개요
+                expect(controls.y).toBeGreaterThanOrEqual(
+                    heading.y + heading.height
+                );
+                expect(progress.y).toBeGreaterThan((recent ?? best).y);
+                expect(overview.y).toBeGreaterThan(progress.y);
+                expect(progress.width).toBeCloseTo(overview.width, 0);
             }
             const colors = {
                 sjust: "rgb(255, 141, 204)",
@@ -252,7 +269,12 @@ for (const locale of ["ko", "ja", "en"]) {
                 near: "rgb(112, 184, 255)",
                 miss: "rgb(180, 180, 180)",
             };
-            for (const [judgement, color] of Object.entries(colors)) {
+            // 판정 값이 없는 플레이어(시드 E2E_RANKER)는 판정 막대가 없다
+            const judged =
+                (await page.locator(".nl-profile-judgement-stack").count()) > 0;
+            for (const [judgement, color] of judged
+                ? Object.entries(colors)
+                : []) {
                 await expect(
                     page.locator(
                         `.nl-profile-judgement-stack > [data-judgement="${judgement}"]`
