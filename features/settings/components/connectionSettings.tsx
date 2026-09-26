@@ -115,7 +115,7 @@ export default function ConnectionSettings({
                 }}
                 title={t("settings.changeLoginAccount")}
                 description={t("settings.changeLoginAccountWarning")}
-                showClose={false}
+                variant="confirm"
                 onOpenAutoFocus={(event) => {
                     event.preventDefault();
                     cancelButton.current?.focus();

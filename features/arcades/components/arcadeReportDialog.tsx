@@ -313,7 +313,7 @@ export default function ArcadeReportDialog({
             open={open}
             onOpenChange={changeOpen}
             title={title}
-            width="wide"
+            size="large"
             className="nl-feedback-dialog"
             trigger={trigger}
             fullScreenFooter={

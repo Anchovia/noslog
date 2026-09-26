@@ -9,6 +9,11 @@ import { useTranslations } from "@/components/i18n/localeProvider";
 import IconButton from "@/components/ui/iconButton";
 import { cn } from "@/lib/utils";
 
+/**
+ * 대화상자(2026-09-26 A, GitHub · Primer 3칸 창) — 머리(제목 + 닫기 + 아래 구분선) · 본문(여기만 스크롤) · 발(버튼 오른쪽, 위 구분선).
+ * 크기 = small 440 · medium 560(기본) · large 768. 확인 창(`variant="confirm"`)은 small · 큰 제목 · 구분선 없음 · 닫기 없음.
+ * 672 미만: 입력 칸이 있는 창은 전체 화면, 그 밖은 아래 시트(Primer 좁은 화면 규칙, CSS 가 내용으로 가른다).
+ */
 export default function ModalDialog({
     open,
     onOpenChange,
@@ -17,8 +22,9 @@ export default function ModalDialog({
     children,
     footer,
     trigger,
-    showClose = true,
-    width = "compact",
+    showClose,
+    size,
+    variant = "default",
     sheet = false,
     onCloseAutoFocus,
     onOpenAutoFocus,
@@ -31,8 +37,12 @@ export default function ModalDialog({
     children?: ReactNode;
     footer?: ReactNode;
     trigger?: ReactNode;
+    /** 기본 = 확인 창이 아니면 보임 */
     showClose?: boolean;
-    width?: "compact" | "wide";
+    /** small 440 · medium 560 · large 768(읽기 폭). 기본 = 확인 창 small, 그 밖 medium */
+    size?: "small" | "medium" | "large";
+    /** confirm = 되돌릴 수 없는 결정 · 경고(큰 제목 · 구분선 없음 · 닫기 없음) */
+    variant?: "default" | "confirm";
     /** 1055 이하에서 화면 아래에 붙는 시트로(2026-09-26, 유튜브 폰 설명 창). 넓은 화면은 가운데 창 그대로 */
     sheet?: boolean;
     onCloseAutoFocus?: (event: Event) => void;
@@ -41,6 +51,9 @@ export default function ModalDialog({
 }) {
     const t = useTranslations();
     const descriptionId = useId();
+    const confirm = variant === "confirm";
+    const closeVisible = showClose ?? !confirm;
+    const dialogSize = size ?? (confirm ? "small" : "medium");
     return (
         <Dialog.Root open={open} onOpenChange={onOpenChange}>
             {trigger ? (
@@ -52,7 +65,8 @@ export default function ModalDialog({
                     <Dialog.Content
                         className={cn(
                             "nl-dialog",
-                            `nl-dialog--${width}`,
+                            `nl-dialog--${dialogSize}`,
+                            confirm && "nl-dialog--confirm",
                             sheet && "nl-dialog--sheet",
                             className
                         )}
@@ -63,35 +77,43 @@ export default function ModalDialog({
                         }
                     >
                         <div className="nl-dialog__header">
-                            <Dialog.Title className="nl-component-title">
+                            <Dialog.Title
+                                className={
+                                    confirm
+                                        ? "nl-section-title"
+                                        : "nl-component-title"
+                                }
+                            >
                                 {title}
                             </Dialog.Title>
-                            {showClose ? (
-                                /* 창 머리 가장자리 닫기 — 전체 화면 창과 같은 IconButton · 아이콘 24, 잉크를 안쪽 24 선에 맞춰 당김 */
+                            {closeVisible ? (
+                                /* 머리 오른쪽 닫기 — 컴팩트 아이콘 버튼(M) · 아이콘 20 */
                                 <Dialog.Close asChild>
                                     <IconButton
                                         className="nl-dialog__close"
+                                        size="compact"
                                         label={t("common.close")}
                                     >
-                                        <X
-                                            className="nl-icon nl-icon--large"
-                                            aria-hidden
-                                        />
+                                        <X className="nl-icon" aria-hidden />
                                     </IconButton>
                                 </Dialog.Close>
                             ) : null}
                         </div>
-                        {description ? (
-                            <Dialog.Description
-                                id={descriptionId}
-                                className="nl-body nl-muted"
-                            >
-                                {description}
-                            </Dialog.Description>
-                        ) : null}
-                        {children}
+                        <div className="nl-dialog__body">
+                            {description ? (
+                                <Dialog.Description
+                                    id={descriptionId}
+                                    className="nl-body-secondary nl-muted"
+                                >
+                                    {description}
+                                </Dialog.Description>
+                            ) : null}
+                            {children}
+                        </div>
                         {footer ? (
-                            <div className="nl-dialog__actions">{footer}</div>
+                            <div className="nl-dialog__footer nl-dialog__actions">
+                                {footer}
+                            </div>
                         ) : null}
                     </Dialog.Content>
                 </div>

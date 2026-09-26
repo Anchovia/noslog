@@ -188,7 +188,8 @@ html[data-theme="light"] .noslog-ui,
     }
 }
 /* size="sm" = 중간 단계 M — 세로 패딩 없이 높이로만 맞춘다(글자 20 이 가운데) */
-.noslog-ui .nl-button--compact {
+.noslog-ui .nl-button--compact,
+.noslog-ui .nl-dialog__actions > .nl-button {
     min-height: var(--nl-control-height-compact);
     padding-block: 0;
 }
@@ -820,61 +821,193 @@ html[data-theme="light"] .noslog-ui,
     z-index: 80;
     background: var(--nl-surface-scrim);
 }
+/* 대화상자(2026-09-26 A, GitHub · Primer 3칸 창) — 머리 · 본문 · 발. 면 · 경계 · 그림자 · 모서리는 떠 있는 창 그대로.
+   크기 = small 440 · medium 560(기본) · large 768(읽기 폭), 화면 가장자리 16 은 늘 비운다 */
 .noslog-ui .nl-dialog {
+    --nl-dialog-width: 560px;
     position: fixed;
     top: 50%;
     left: 50%;
     z-index: 81;
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-16);
-    width: min(334px, calc(100vw - 56px));
-    max-height: calc(100dvh - 48px);
-    overflow-y: auto;
+    width: min(var(--nl-dialog-width), calc(100vw - var(--nl-spacing-32)));
+    max-height: calc(100dvh - var(--nl-spacing-48));
+    overflow: hidden;
     transform: translate(-50%, -50%);
-    padding: var(--nl-spacing-24);
     border-radius: var(--nl-radius-overlay);
     background: var(--nl-surface-overlay);
     box-shadow:
         inset 0 0 0 var(--nl-stroke-default) var(--nl-border-overlay),
         var(--nl-overlay-shadow);
 }
+.noslog-ui .nl-dialog--small {
+    --nl-dialog-width: 440px;
+}
+.noslog-ui .nl-dialog--large {
+    --nl-dialog-width: var(--nl-container-reading);
+}
+/* 머리 = 제목(component-title) + 오른쪽 닫기(아이콘 버튼 M · 아이콘 20), 아래 구분선. 안쪽 12 · 오른쪽 16 · 왼쪽 24 */
 .noslog-ui .nl-dialog__header {
     display: flex;
+    flex: none;
     align-items: center;
     justify-content: space-between;
     gap: var(--nl-spacing-8);
+    min-height: calc(var(--nl-control-height-compact) + var(--nl-spacing-24));
+    padding: var(--nl-spacing-12) var(--nl-spacing-16) var(--nl-spacing-12)
+        var(--nl-spacing-24);
+    box-shadow: inset 0 calc(var(--nl-stroke-default) * -1)
+        var(--nl-border-divider);
 }
-/* 닫기 아이콘 버튼(컨트롤 정사각 · 아이콘 24)을 (컨트롤 − 24) / 2 만큼 위 · 오른쪽 · 아래로 당겨 잉크가 안쪽 24 선에 선다 */
 .noslog-ui .nl-dialog__close {
-    --nl-dialog-close-pull: calc(
-        (var(--nl-control-height) - var(--nl-icon-large)) / -2
-    );
-    margin: var(--nl-dialog-close-pull) var(--nl-dialog-close-pull)
-        var(--nl-dialog-close-pull) 0;
+    flex: none;
 }
+/* 본문 = 여기만 스크롤 · 안쪽 24 · 세로 간격 16 */
+.noslog-ui .nl-dialog__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--nl-spacing-16);
+    min-height: 0;
+    padding: var(--nl-spacing-24);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+/* 버튼 줄 = 오른쪽 끝에 「보조 → 주」(Primer · Atlassian · Apple · Fluent · Material 3) */
 .noslog-ui .nl-dialog__actions {
     display: flex;
     flex-wrap: wrap;
     gap: var(--nl-spacing-8);
     justify-content: flex-end;
 }
-/* Compact 창과 672 미만의 모든 창: 액션이 폭을 채운다(둘이면 취소 먼저 등폭). Wide 는 672 이상에서 오른쪽 정렬 */
-.noslog-ui .nl-dialog--compact .nl-dialog__actions > .nl-button {
-    flex: 1 1 0;
-    min-width: 0;
+/* 발 = 위 구분선 · 안쪽 16 · 24, 버튼은 M */
+.noslog-ui .nl-dialog__footer {
+    flex: none;
+    padding: var(--nl-spacing-16) var(--nl-spacing-24);
+    box-shadow: inset 0 var(--nl-stroke-default) var(--nl-border-divider);
 }
+/* 확인 창 — 큰 제목(section-title) · 구분선 없음 · 한 판(안쪽 24 · 사이 12) */
+.noslog-ui .nl-dialog--confirm {
+    gap: var(--nl-spacing-12);
+    padding: var(--nl-spacing-24);
+}
+.noslog-ui
+    .nl-dialog--confirm
+    > :is(.nl-dialog__header, .nl-dialog__body, .nl-dialog__footer) {
+    min-height: 0;
+    padding: 0;
+    box-shadow: none;
+}
+.noslog-ui .nl-dialog--confirm > .nl-dialog__footer {
+    padding-top: var(--nl-spacing-12);
+}
+
+/* 672 미만(2026-09-26 A, Primer 좁은 화면 규칙) — 입력 칸이 있는 창은 전체 화면(전체 화면 창과 같은 머리 · 발),
+   그 밖은 아래 시트(폭 가득 · 위 모서리만 둥글게 · 버튼은 L 로 폭 가득, 주 버튼이 위). 이미지 내보내기 창은 따로 */
 @media (max-width: 671px) {
-    .noslog-ui .nl-dialog__actions > .nl-button {
+    .noslog-ui .nl-dialog:not(.nl-image-share) {
+        top: auto;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        transform: none;
+        border-radius: var(--nl-radius-overlay) var(--nl-radius-overlay) 0 0;
+    }
+    .noslog-ui .nl-dialog:not(.nl-image-share) > .nl-dialog__actions,
+    .noslog-ui .nl-dialog--confirm > .nl-dialog__actions {
+        flex-direction: column-reverse;
+        padding-bottom: calc(
+            var(--nl-spacing-16) + env(safe-area-inset-bottom, 0px)
+        );
+    }
+    .noslog-ui
+        .nl-dialog:not(.nl-image-share)
+        .nl-dialog__actions
+        > .nl-button {
+        min-height: var(--nl-control-height);
+    }
+    .noslog-ui
+        .nl-dialog:not(.nl-image-share):has(
+            :is(
+                input:not([type="hidden"]),
+                textarea,
+                select,
+                [role="combobox"],
+                [role="slider"]
+            )
+        ) {
+        top: 0;
+        height: 100dvh;
+        max-height: none;
+        border-radius: 0;
+        background: var(--nl-surface-canvas);
+        box-shadow: none;
+    }
+    .noslog-ui
+        .nl-dialog:not(.nl-image-share):has(
+            :is(
+                input:not([type="hidden"]),
+                textarea,
+                select,
+                [role="combobox"],
+                [role="slider"]
+            )
+        )
+        > .nl-dialog__header {
+        min-height: 60px;
+        padding: var(--nl-spacing-8) var(--nl-spacing-8) var(--nl-spacing-8)
+            var(--nl-spacing-16);
+    }
+    .noslog-ui
+        .nl-dialog:not(.nl-image-share):has(
+            :is(
+                input:not([type="hidden"]),
+                textarea,
+                select,
+                [role="combobox"],
+                [role="slider"]
+            )
+        )
+        > .nl-dialog__body {
+        padding: var(--nl-spacing-24) var(--nl-spacing-16);
+    }
+    .noslog-ui
+        .nl-dialog:not(.nl-image-share):has(
+            :is(
+                input:not([type="hidden"]),
+                textarea,
+                select,
+                [role="combobox"],
+                [role="slider"]
+            )
+        )
+        > .nl-dialog__footer {
+        flex-direction: row;
+        padding: var(--nl-spacing-16);
+        padding-bottom: max(
+            var(--nl-spacing-16),
+            env(safe-area-inset-bottom, 0px)
+        );
+    }
+    .noslog-ui
+        .nl-dialog:not(.nl-image-share):has(
+            :is(
+                input:not([type="hidden"]),
+                textarea,
+                select,
+                [role="combobox"],
+                [role="slider"]
+            )
+        )
+        > .nl-dialog__footer
+        > .nl-button {
         flex: 1 1 0;
         min-width: 0;
     }
 }
-.noslog-ui .nl-dialog--wide {
-    width: min(var(--nl-container-reading), calc(100vw - 56px));
-}
-/* 아래 시트(2026-09-26, 유튜브 폰 설명 창) — 1055 이하에서 화면 아래 폭 가득, 위 모서리만 둥글게.
-   면 · 경계 · 머리(제목 + 닫기)는 대화상자 그대로 */
+/* 아래 시트(2026-09-26, 유튜브 폰 설명 창) — `sheet` 는 1055 이하까지 아래 시트 */
 @media (max-width: 1055px) {
     .noslog-ui .nl-dialog--sheet {
         top: auto;
@@ -882,12 +1015,13 @@ html[data-theme="light"] .noslog-ui,
         bottom: 0;
         left: 0;
         width: 100%;
-        max-height: calc(100dvh - var(--nl-spacing-48));
         transform: none;
+        border-radius: var(--nl-radius-overlay) var(--nl-radius-overlay) 0 0;
+    }
+    .noslog-ui .nl-dialog--sheet > .nl-dialog__body {
         padding-bottom: calc(
             var(--nl-spacing-24) + env(safe-area-inset-bottom, 0px)
         );
-        border-radius: var(--nl-radius-overlay) var(--nl-radius-overlay) 0 0;
     }
 }
 /* 구역 제목 줄 HeadingRow — 제목(20/600) · 도움말 · 메타 · 오른쪽 끝 제목 링크. 좁으면 줄바꿈(열 8 · 행 4) (2026-09-16) */
@@ -1670,7 +1804,13 @@ html[data-theme="light"] .noslog-ui,
     animation: nl-rise-in var(--nl-motion-duration-overlay-in)
         var(--nl-ease-enter);
 }
-/* 아래 시트는 아래에서 올라온다 — ⑫ 위치 이동(오락실 시트와 같은 감속 200) */
+/* 아래 시트는 아래에서 올라온다 — ⑫ 위치 이동(오락실 시트와 같은 감속 200). 672 미만은 모든 대화상자(시트 · 전체 화면) */
+@media (max-width: 671px) {
+    .noslog-ui .nl-dialog:not(.nl-image-share)[data-state="open"] {
+        animation: nl-sheet-in var(--nl-motion-duration-move)
+            var(--nl-ease-enter);
+    }
+}
 @media (max-width: 1055px) {
     .noslog-ui .nl-dialog--sheet[data-state="open"] {
         animation: nl-sheet-in var(--nl-motion-duration-move)
@@ -1767,15 +1907,29 @@ html:has(.noslog-ui) [data-sonner-toaster] [data-sonner-toast] > * {
 }
 /* 이미지 내보내기 창(프로필 카드 · 서열표 공용, 2026-09-22 공용으로 옮김) — 미리보기 → 상태 → 저장(주) · 복사 · 공유 */
 .noslog-ui .nl-image-share {
+    gap: var(--nl-spacing-16);
     padding: var(--nl-spacing-16) 0 var(--nl-spacing-24);
+    overflow-y: auto;
     width: min(334px, calc(100vw - 32px));
     border: 0;
     box-shadow:
         inset 0 0 0 var(--nl-stroke-default) var(--nl-border-overlay),
         var(--nl-elevation-overlay);
 }
+/* 이미지 내보내기 창은 3칸 창 이전 모양 그대로(다른 작업 중 — 2026-09-26) — 머리 구분선 · 본문 안쪽 없음 */
 .noslog-ui .nl-image-share .nl-dialog__header {
+    min-height: 0;
+    padding-block: 0;
     padding-inline: var(--nl-spacing-24) var(--nl-spacing-16);
+    box-shadow: none;
+}
+.noslog-ui .nl-image-share .nl-dialog__body {
+    padding: 0;
+    overflow: visible;
+}
+.noslog-ui .nl-image-share .nl-dialog__close {
+    width: var(--nl-control-height);
+    height: var(--nl-control-height);
 }
 .noslog-ui .nl-image-share .nl-dialog__close {
     margin: 0;

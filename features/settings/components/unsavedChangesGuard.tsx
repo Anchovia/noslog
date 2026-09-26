@@ -75,7 +75,7 @@ export default function UnsavedChangesGuard({
             }}
             title={t("settings.unsaved")}
             description={t("settings.leaveWarning")}
-            showClose={false}
+            variant="confirm"
             onOpenAutoFocus={(event) => {
                 event.preventDefault();
                 cancel.current?.focus();

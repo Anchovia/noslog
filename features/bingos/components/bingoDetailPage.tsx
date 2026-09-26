@@ -486,7 +486,7 @@ export default function BingoDetailPage({
                                 if (!state.resetting) setResetOpen(next);
                             }}
                             title={t("bingo.resetTitle")}
-                            showClose={false}
+                            variant="confirm"
                             className="nl-bingo-reset-dialog"
                             onOpenAutoFocus={(event) => {
                                 event.preventDefault();

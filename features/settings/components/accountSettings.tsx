@@ -150,7 +150,7 @@ export default function AccountSettings({
                         }
                     }}
                     title={t("settings.deleteTitle")}
-                    showClose={false}
+                    variant="confirm"
                     className="nl-settings-dialog nl-account-dialog"
                     onOpenAutoFocus={(event) => {
                         event.preventDefault();

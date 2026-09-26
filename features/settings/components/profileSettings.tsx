@@ -432,7 +432,7 @@ export default function ProfileSettings({
                 }}
                 title={t("settings.changeCountry")}
                 description={t("settings.countryConsequence")}
-                showClose={false}
+                variant="confirm"
                 onOpenAutoFocus={(event) => {
                     event.preventDefault();
                     countryCancel.current?.focus();

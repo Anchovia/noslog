@@ -428,7 +428,7 @@ export default function FeedbackDialog({
             open={open}
             onOpenChange={changeOpen}
             title={t("feedback.title")}
-            width="wide"
+            size="large"
             className="nl-feedback-dialog"
             onCloseAutoFocus={onCloseAutoFocus}
             trigger={triggerNode}
