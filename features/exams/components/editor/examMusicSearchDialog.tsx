@@ -1,15 +1,9 @@
-import * as Dialog from "@radix-ui/react-dialog";
-import { LoaderCircle, Search, X } from "lucide-react";
 import type { FormEvent } from "react";
 
-import { cn } from "@/lib/utils";
+import ModalDialog from "@/components/ui/modalDialog";
+import SearchField from "@/components/ui/searchField";
 
-import {
-    EXAM_INPUT_CLASS,
-    getDifficultyColor,
-    type MusicSearchResult,
-    type SearchPurpose,
-} from "./examEditorTypes";
+import type { MusicSearchResult, SearchPurpose } from "./examEditorTypes";
 
 interface ExamMusicSearchDialogProps {
     isSearching: boolean;
@@ -23,6 +17,10 @@ interface ExamMusicSearchDialogProps {
     results: MusicSearchResult[];
 }
 
+/**
+ * 과제곡 · 보상 악곡 고르기(2026-09-26 P1) — 공용 대화상자 + 검색 칸(Enter 로 찾기) + 고르기 목록.
+ * 줄 = 곡 이름 · 아티스트 → 채보 난이도 · 레벨(난이도 글자색). 관리자 화면이라 한국어 그대로
+ */
 export default function ExamMusicSearchDialog({
     isSearching,
     onChoose,
@@ -35,81 +33,54 @@ export default function ExamMusicSearchDialog({
     results,
 }: ExamMusicSearchDialogProps) {
     return (
-        <Dialog.Root open={open} onOpenChange={onOpenChange}>
-            <Dialog.Portal>
-                <Dialog.Overlay className="fixed inset-0 z-40 bg-black/70" />
-                <Dialog.Content className="bg-bg fixed inset-x-4 top-1/2 z-50 mx-auto max-h-[75vh] max-w-90 -translate-y-1/2 overflow-hidden rounded-lg p-4 shadow-xl">
-                    <div className="flex items-center justify-between">
-                        <Dialog.Title className="text-body font-bold">
-                            {purpose === "stage"
-                                ? "과제곡 추가"
-                                : "보상 악곡 추가"}
-                        </Dialog.Title>
-                        <Dialog.Close
-                            className="text-text-secondary p-1"
-                            aria-label="닫기"
-                        >
-                            <X className="size-5" />
-                        </Dialog.Close>
-                    </div>
-
-                    <form onSubmit={onSearch} className="mt-3 flex gap-2">
-                        <input
-                            autoFocus
-                            value={query}
-                            onChange={(event) =>
-                                onQueryChange(event.target.value)
-                            }
-                            placeholder="곡 제목 · 아티스트 검색"
-                            className={EXAM_INPUT_CLASS}
-                        />
+        <ModalDialog
+            open={open}
+            onOpenChange={onOpenChange}
+            title={purpose === "stage" ? "과제곡 추가" : "보상 악곡 추가"}
+        >
+            <form onSubmit={onSearch}>
+                <SearchField
+                    autoFocus
+                    aria-label="곡 제목 · 아티스트 검색"
+                    placeholder="곡 제목 · 아티스트 검색 후 Enter"
+                    value={query}
+                    onChange={(event) => onQueryChange(event.target.value)}
+                    clearLabel="검색어 지우기"
+                    onClear={() => onQueryChange("")}
+                    busy={isSearching}
+                    busyLabel="찾는 중"
+                />
+            </form>
+            {results.length ? (
+                <div className="nl-pick-list">
+                    {results.map((music) => (
                         <button
-                            type="submit"
-                            className="bg-text-primary text-bg flex size-11 shrink-0 items-center justify-center rounded-md"
-                            aria-label="검색"
+                            key={music.musicIndex}
+                            type="button"
+                            className="nl-pick-row"
+                            onClick={() => onChoose(music)}
                         >
-                            {isSearching ? (
-                                <LoaderCircle className="size-4 animate-spin" />
-                            ) : (
-                                <Search className="size-4" />
-                            )}
-                        </button>
-                    </form>
-
-                    <div className="mt-3 max-h-96 overflow-y-auto">
-                        {results.map((music) => (
-                            <button
-                                key={music.musicIndex}
-                                type="button"
-                                onClick={() => onChoose(music)}
-                                className="border-divider hover:bg-surface flex w-full flex-col border-b px-2 py-3 text-left"
-                            >
-                                <span className="text-body font-semibold">
+                            <span className="nl-pick-row__main">
+                                <span className="nl-emphasis-label">
                                     {music.title}
                                 </span>
-                                <span className="text-caption mt-0.5">
+                                <span className="nl-metadata nl-muted">
                                     {music.artist ?? "아티스트 정보 없음"}
-                                </span>
-                                <span className="mt-1 flex flex-wrap gap-1">
                                     {music.charts.map((chart) => (
                                         <span
                                             key={chart.chartId}
-                                            className={cn(
-                                                "text-xs capitalize",
-                                                getDifficultyColor(
-                                                    chart.difficulty
-                                                )
-                                            )}
+                                            className={`nl-level--${chart.difficulty.toLowerCase()}`}
                                         >
+                                            {" · "}
                                             {chart.difficulty} {chart.level}
                                         </span>
                                     ))}
                                 </span>
-                            </button>
-                        ))}
-                    </div>
-                </Dialog.Content>
-            </Dialog.Portal>
-        </Dialog.Root>
+                            </span>
+                        </button>
+                    ))}
+                </div>
+            ) : null}
+        </ModalDialog>
     );
 }

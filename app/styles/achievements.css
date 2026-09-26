@@ -206,15 +206,6 @@
     flex-direction: column;
     gap: var(--nl-spacing-12);
 }
-.noslog-ui .nl-achievement-picker__slots {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: var(--nl-spacing-8);
-    margin: 0;
-    padding: 0;
-    list-style: none;
-}
-.noslog-ui .nl-achievement-picker__slot,
 .noslog-ui .nl-achievement-picker__choice {
     display: flex;
     flex-direction: column;
@@ -227,9 +218,6 @@
     border-radius: var(--nl-radius-field);
     text-align: center;
     overflow-wrap: anywhere;
-}
-.noslog-ui .nl-achievement-picker__slot[data-empty="true"] {
-    border-color: var(--nl-border-empty-slot);
 }
 .noslog-ui .nl-achievement-picker__choices {
     display: grid;

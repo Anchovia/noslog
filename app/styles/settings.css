@@ -139,22 +139,12 @@
 .noslog-ui .nl-settings__control-help {
     margin-top: var(--nl-spacing-8);
 }
-.noslog-ui .nl-settings__arcade-options {
-    overflow-y: auto;
-    max-height: min(320px, 40dvh);
-}
-.noslog-ui .nl-settings__arcade-option {
-    min-height: var(--nl-control-height);
-    padding: var(--nl-spacing-8) var(--nl-spacing-12);
-    cursor: pointer;
-    overflow-wrap: anywhere;
-}
-.noslog-ui .nl-settings__arcade-option[data-active] {
-    --nl-state-layer: var(--nl-interaction-menu-set);
-    background-image: linear-gradient(
-        var(--nl-state-layer),
-        var(--nl-state-layer)
-    );
+/* 고르기 창 묶음(「지금 선택」 · 결과) — 라벨 →4→ 목록 */
+.noslog-ui .nl-settings__pick-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-4);
+    min-width: 0;
 }
 .noslog-ui .nl-settings__crop {
     position: relative;
@@ -190,23 +180,38 @@
     font-size: var(--nl-type-size-14);
     line-height: var(--nl-type-line-height-20);
 }
+/* 회원 탈퇴 창(2026-09-26 폼 창) — 지워지는 것 = 면 상자(안쪽 16 · 소제목 metadata →8→ 이름 · 값 줄 사이 8),
+   1단계 = 다시 인증 버튼 + 한 줄 안내 */
 .noslog-ui .nl-account-consequences {
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-8);
+    padding: var(--nl-spacing-16);
+    background: var(--nl-surface-surface);
+    border-radius: var(--nl-radius-container);
+}
+.noslog-ui .nl-account-consequences > dl {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
+    margin: 0;
     font-size: var(--nl-type-size-14);
     line-height: var(--nl-type-line-height-20);
 }
-.noslog-ui .nl-account-consequences > div {
+.noslog-ui .nl-account-consequences dl > div {
     display: flex;
     justify-content: space-between;
     gap: var(--nl-spacing-12);
 }
 .noslog-ui .nl-account-consequences dd {
     flex-shrink: 0;
+    margin: 0;
 }
 .noslog-ui .nl-account-reauth {
-    align-self: stretch;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--nl-spacing-8) var(--nl-spacing-12);
 }
 .noslog-ui .nl-settings__layout,
 .noslog-ui .nl-settings__detail {
@@ -288,44 +293,4 @@
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-12);
-}
-.noslog-ui .nl-pinned-picker__slots {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-8);
-    margin: 0;
-    padding: 0;
-    list-style: none;
-}
-.noslog-ui .nl-pinned-picker__slot {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-8);
-    min-width: 0;
-    padding: var(--nl-spacing-12);
-    border: var(--nl-stroke-default) solid var(--nl-border-default);
-    border-radius: var(--nl-radius-field);
-}
-.noslog-ui .nl-pinned-picker__slot[data-empty="true"] {
-    border-color: var(--nl-border-empty-slot);
-}
-.noslog-ui .nl-pinned-picker__head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--nl-spacing-8);
-    min-width: 0;
-}
-.noslog-ui .nl-pinned-picker__name {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-    overflow-wrap: anywhere;
-}
-.noslog-ui .nl-pinned-picker .nl-settings__arcade-option[aria-selected="true"] {
-    font-weight: var(--nl-type-weight-semibold);
-}
-.noslog-ui .nl-pinned-picker .nl-settings__arcade-option[aria-disabled="true"] {
-    cursor: not-allowed;
-    color: var(--nl-interaction-disabled-content);
 }

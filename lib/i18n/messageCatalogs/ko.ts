@@ -57,6 +57,8 @@ export const koMessages = {
         "의견을 남기려면 이 채보의 플레이 기록이 필요합니다.",
     "community.edit": "수정",
     "community.cancel": "취소",
+    "community.loginPromptTitle": "로그인하면 신고할 수 있어요",
+    "community.loginPromptBody": "신고는 운영자만 확인합니다.",
     "community.delete.vote.title": "이 투표를 삭제할까요?",
     "community.delete.vote.body":
         "{scope} 투표만 삭제됩니다. 다른 목표의 투표와 패턴 평가·의견은 유지됩니다.",
@@ -158,6 +160,8 @@ export const koMessages = {
     "pattern.level.2": "뚜렷하게 나옴",
     "pattern.level.3": "심한 편",
     "pattern.level.4": "악곡의 특색일 정도",
+    "pattern.levels": "단계",
+    "pattern.axes": "항목",
     "pattern.definition.stairs":
         "음이 순차적으로 이동하는 계단 패턴의 연주 부담입니다.",
     "pattern.definition.repetition":
@@ -681,7 +685,9 @@ export const koMessages = {
     "feedback.category.bug": "오류 제보",
     "feedback.categoryLabel": "종류",
     "feedback.contentLabel": "내용",
-    "feedback.loginRequired": "로그인 후 피드백을 남길 수 있습니다.",
+    "feedback.loginPromptTitle": "로그인하면 제보를 남길 수 있어요",
+    "feedback.loginPromptBody":
+        "보낸 제보와 답변은 「내 제보」에서 볼 수 있어요.",
     "feedback.placeholder": "제보 내용을 입력해주세요.",
     "feedback.attachImage": "이미지 첨부 (선택)",
     "feedback.submit": "제출",
@@ -842,7 +848,7 @@ export const koMessages = {
     "tiers.guide": "{goal} 서열표 안내",
     "tiers.filterHelp":
         "난이도와 공식 레벨은 채보를 찾기 위한 필터이며, 서열 배치는 목표별로 독립적으로 관리됩니다.",
-    "tiers.updated": "업데이트 {date}",
+    "tiers.guideUpdated": "업데이트",
     "tiers.noPublished": "선택한 목표의 공개 서열표가 없습니다.",
     "tiers.bands": "서열표 구간",
     "tiers.achieved": "달성 {count}/{total}",
@@ -871,9 +877,8 @@ export const koMessages = {
     "tiers.weight.maxContribution": "{goal} 최대 기여",
     "tiers.weight.formula": "서열 상수² ÷ 상위 {count}곡 이론값 × {score}",
     "tiers.weight.scoreRatio": "점수별 반영 비율",
-    "tiers.weight.sRequirement": "S 달성 기준은 950,000점 이상입니다.",
-    "tiers.weight.score990kRequirement":
-        "990k 달성 기준은 990,000점 이상입니다.",
+    "tiers.guideRequirement": "달성 기준",
+    "tiers.guideMinScore": "{score}점 이상",
     "bingo.title": "빙고",
     "bingo.requiredLinesLabel": "필요 줄 {count}",
     "bingo.lineComplete": "완성된 줄",
@@ -1450,8 +1455,10 @@ export const koMessages = {
     "settings.loginAccount": "로그인 계정",
     "settings.deletionBoundary":
         "Discord 계정과 공식 NOSTALGIA 계정은 영향을 받지 않습니다.",
-    "settings.reauthenticateNotice":
-        "삭제하려면 Discord로 다시 인증해야 합니다.",
+    "settings.reauthenticateNext": "인증하면 다음 단계가 열립니다.",
+    "settings.deletionHeading": "지워지는 것",
+    "settings.deleteStepReauth": "1. Discord로 다시 인증",
+    "settings.deleteStepConfirm": "2. 확인 글자 입력",
     "settings.reauthenticate": "Discord로 다시 인증",
     "settings.reauthenticated": "Discord 인증 완료",
     "settings.deletionGroup.plays": "플레이·동기화 기록",
@@ -1507,6 +1514,7 @@ export const koMessages = {
     "settings.viewProfile": "내 프로필 보기",
     "settings.arcadeSearch": "오락실 이름·지역 검색",
     "settings.arcadeResults": "검색 결과 {count}개",
+    "settings.arcadeCurrent": "지금 선택",
     "settings.cropTitle": "프로필 이미지 조정",
     "settings.cropPosition":
         "이미지를 드래그하거나 방향키로 위치를 조정하세요.",
@@ -1717,6 +1725,7 @@ export const koMessages = {
     "arcades.phone": "전화",
     "arcades.website": "웹사이트",
     "arcades.report": "오락실 제보",
+    "arcades.loginPromptTitle": "로그인하면 오락실을 제보할 수 있어요",
     "arcades.photo": "오락실 사진 {index} / {total}",
     "arcades.photoNext": "다음 사진",
     "arcades.photoPrevious": "이전 사진",
@@ -1814,7 +1823,7 @@ export const koMessages = {
     "contribution.pending": "검토 중",
     "contribution.proposal.titleAdd": "{field} 추가",
     "contribution.proposal.titleEdit": "{field} 수정 제안",
-    "contribution.proposal.current": "지금 {value}",
+    "contribution.proposal.current": "지금 값",
     "contribution.proposal.pendingNotice":
         "검토 중인 내 제안 {value} — 다시 내면 새 값으로 바뀝니다.",
     "contribution.proposal.help.bpm": "변속이 있으면 최소–최대(예: 120-180)",
@@ -2110,6 +2119,7 @@ export const koMessages = {
     "achievement.settings.dialogHelp":
         "{max}개까지 고를 수 있고, 고른 순서대로 걸립니다.",
     "achievement.settings.emptySlot": "빈 칸",
+    "achievement.settings.removeAria": "{name} 빼기",
     "achievement.settings.earned": "얻은 업적",
     "achievement.settings.useAuto": "자동으로",
     "achievement.settings.apply": "적용",

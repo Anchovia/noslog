@@ -12,13 +12,15 @@ import {
 import ActionButton from "@/components/ui/actionButton";
 import { foundationButtonClass } from "@/components/ui/Button";
 import { FormField, TextArea } from "@/components/ui/formField";
+import LoginPrompt from "@/components/ui/loginPrompt";
 import ModalDialog from "@/components/ui/modalDialog";
-import { Select } from "@/components/ui/select";
+import RadioGroup from "@/components/ui/radioGroup";
 import { StatusMessage } from "@/components/ui/statusMessage";
 import useCommunityMutation from "@/features/music/hooks/useCommunityMutation";
 import { opinionReportSchema } from "@/features/music/schemas/communitySchema";
 
 type ReportFormValues = z.infer<typeof opinionReportSchema>;
+/** 의견 · 답글 신고 — 사유 4개는 라디오로 모두 보이게(2026-09-26 F1 · Carbon · Material 3), 「기타」 일 때만 설명 칸 */
 export default function ReportOpinionDialog({
     chartId,
     evaluationId,
@@ -88,7 +90,7 @@ export default function ReportOpinionDialog({
                         </ActionButton>
                     </>
                 ) : (
-                    // 로그아웃 — 로그인도 창 액션 줄에(창 규격: 오른쪽 정렬 · 좁으면 폭 채움)
+                    // 로그아웃 — 본문은 로그인 안내, 발은 취소 · 로그인(2026-09-26 F1)
                     <>
                         <ActionButton variant="secondary" onClick={onClose}>
                             {t("community.cancel")}
@@ -107,51 +109,41 @@ export default function ReportOpinionDialog({
                 )
             }
         >
-            {!accountId ? null : (
+            {!accountId ? (
+                <LoginPrompt
+                    title={t("community.loginPromptTitle")}
+                    description={t("community.loginPromptBody")}
+                />
+            ) : (
                 <form
                     id={id}
                     className="nl-stack"
                     noValidate
                     onSubmit={form.handleSubmit(handleSubmit)}
                 >
-                    <FormField
-                        id={`${id}-reason`}
-                        label={t("community.reportReason")}
-                        error={
-                            form.formState.errors.reason
-                                ? t("community.action.invalid")
-                                : undefined
-                        }
-                    >
-                        <Controller
-                            control={form.control}
-                            name="reason"
-                            render={({ field }) => (
-                                <Select
-                                    id={`${id}-reason`}
-                                    value={field.value ?? ""}
-                                    onValueChange={field.onChange}
-                                    onBlur={field.onBlur}
-                                    triggerRef={field.ref}
-                                    invalid={Boolean(
-                                        form.formState.errors.reason
-                                    )}
-                                    disabled={mutation.isPending}
-                                    options={[
-                                        { value: "", label: "—" },
-                                        ...opinionReportSchema.shape.reason.options.map(
-                                            (reason) => ({
-                                                value: reason,
-                                                label: t(
-                                                    `community.report.${reason}`
-                                                ),
-                                            })
-                                        ),
-                                    ]}
-                                />
-                            )}
-                        />
-                    </FormField>
+                    <Controller
+                        control={form.control}
+                        name="reason"
+                        render={({ field }) => (
+                            <RadioGroup
+                                label={t("community.reportReason")}
+                                value={field.value}
+                                onValueChange={field.onChange}
+                                disabled={mutation.isPending}
+                                error={
+                                    form.formState.errors.reason
+                                        ? t("community.action.invalid")
+                                        : undefined
+                                }
+                                options={opinionReportSchema.shape.reason.options.map(
+                                    (reason) => ({
+                                        value: reason,
+                                        label: t(`community.report.${reason}`),
+                                    })
+                                )}
+                            />
+                        )}
+                    />
                     {reason === "other" ? (
                         <FormField
                             id={`${id}-explanation`}

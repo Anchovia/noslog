@@ -8,7 +8,7 @@ import Link from "next/link";
 import Button from "@/components/ui/Button";
 import ActionButton from "@/components/ui/actionButton";
 import ModalDialog from "@/components/ui/modalDialog";
-import { FormField, Input } from "@/components/ui/formField";
+import { fieldDescription, FormField, Input } from "@/components/ui/formField";
 import {
     useLocale,
     useLocalizedHref,
@@ -22,6 +22,10 @@ import type {
     AccountDeletionSummary,
 } from "../schemas/accountDeletionSchema";
 
+/**
+ * 계정 설정 — 로그아웃 · 회원 탈퇴. 탈퇴 창은 입력 칸이 있는 폼 창(닫기 · 발 버튼, 2026-09-26 확인 창에서 옮김):
+ * 지워지는 것 상자 → 1. Discord 다시 인증 → 2. 확인 글자 입력(인증 전엔 잠김)
+ */
 export default function AccountSettings({
     summary,
     expiresAt,
@@ -42,6 +46,7 @@ export default function AccountSettings({
     const href = useLocalizedHref();
     const cache = useQueryClient();
     const id = useId();
+    const formId = `${id}-form`;
     const [open, setOpen] = useState(result === "delete" || Boolean(error));
     const [verified, setVerified] = useState(() =>
         Boolean(expiresAt && expiresAt > Date.now())
@@ -150,8 +155,7 @@ export default function AccountSettings({
                         }
                     }}
                     title={t("settings.deleteTitle")}
-                    variant="confirm"
-                    className="nl-settings-dialog nl-account-dialog"
+                    className="nl-account-dialog"
                     onOpenAutoFocus={(event) => {
                         event.preventDefault();
                         cancelRef.current?.focus();
@@ -165,87 +169,8 @@ export default function AccountSettings({
                             {t("settings.deleteTitle")}
                         </Button>
                     }
-                >
-                    <p className="nl-body-secondary nl-muted">
-                        {t("settings.deleteIrreversible")}{" "}
-                        {t("settings.deletionBoundary")}
-                    </p>
-                    <dl className="nl-account-consequences">
-                        {(
-                            Object.keys(
-                                summary
-                            ) as (keyof AccountDeletionSummary)[]
-                        ).map((key) => (
-                            <div key={key}>
-                                <dt>{t(`settings.deletionGroup.${key}`)}</dt>
-                                <dd>
-                                    {t("settings.deletionCount", {
-                                        count: summary[key].toLocaleString(
-                                            locale
-                                        ),
-                                    })}
-                                </dd>
-                            </div>
-                        ))}
-                    </dl>
-                    <p className="nl-body-secondary nl-muted" role="status">
-                        {t(
-                            verified
-                                ? "settings.reauthenticated"
-                                : "settings.reauthenticateNotice"
-                        )}
-                    </p>
-                    {!verified ? (
-                        <a
-                            className="nl-button nl-button--secondary nl-account-reauth"
-                            href={`/discord/start?${new URLSearchParams({ mode: "delete", returnTo: `${href("/settings")}?category=account` })}`}
-                        >
-                            {t("settings.reauthenticate")}
-                        </a>
-                    ) : null}
-                    <form
-                        onSubmit={(event) =>
-                            void form.handleSubmit(submit)(event)
-                        }
-                        noValidate
-                        className="nl-account-confirmation"
-                        aria-busy={busy}
-                    >
-                        <FormField
-                            id={id}
-                            label={t("settings.deletePrompt", {
-                                confirmation: t("settings.deleteConfirmation"),
-                            })}
-                            error={form.formState.errors.confirmation?.message}
-                        >
-                            <Input
-                                id={id}
-                                {...form.register("confirmation")}
-                                disabled={busy}
-                                autoComplete="off"
-                                placeholder={t("settings.deleteConfirmation")}
-                                aria-invalid={Boolean(
-                                    form.formState.errors.confirmation
-                                )}
-                                aria-describedby={
-                                    form.formState.errors.confirmation
-                                        ? `${id}-error`
-                                        : undefined
-                                }
-                            />
-                        </FormField>
-                        {deleteError ? (
-                            <div
-                                role="alert"
-                                className="nl-body-secondary nl-field__error"
-                            >
-                                <p>{deleteError}</p>
-                                <Link href={href("/privacy")}>
-                                    {t("footer.privacy")}
-                                </Link>
-                            </div>
-                        ) : null}
-                        <div className="nl-dialog__actions">
+                    footer={
+                        <>
                             <Button
                                 ref={cancelRef}
                                 variant="secondary"
@@ -262,6 +187,7 @@ export default function AccountSettings({
                                 variant="danger"
                                 destructiveFilled
                                 type="submit"
+                                form={formId}
                                 busy={busy}
                                 disabled={
                                     !verified ||
@@ -271,7 +197,112 @@ export default function AccountSettings({
                             >
                                 {t("settings.deleteEverything")}
                             </ActionButton>
+                        </>
+                    }
+                >
+                    <p className="nl-body-secondary nl-muted">
+                        {t("settings.deleteIrreversible")}{" "}
+                        {t("settings.deletionBoundary")}
+                    </p>
+                    <section className="nl-account-consequences">
+                        <h3 className="nl-metadata">
+                            {t("settings.deletionHeading")}
+                        </h3>
+                        <dl>
+                            {(
+                                Object.keys(
+                                    summary
+                                ) as (keyof AccountDeletionSummary)[]
+                            ).map((key) => (
+                                <div key={key}>
+                                    <dt className="nl-muted">
+                                        {t(`settings.deletionGroup.${key}`)}
+                                    </dt>
+                                    <dd>
+                                        {t("settings.deletionCount", {
+                                            count: summary[key].toLocaleString(
+                                                locale
+                                            ),
+                                        })}
+                                    </dd>
+                                </div>
+                            ))}
+                        </dl>
+                    </section>
+                    <section className="nl-field">
+                        <h3 className="nl-field__label">
+                            {t("settings.deleteStepReauth")}
+                        </h3>
+                        <div className="nl-account-reauth">
+                            {!verified ? (
+                                <a
+                                    className="nl-button nl-button--secondary"
+                                    href={`/discord/start?${new URLSearchParams({ mode: "delete", returnTo: `${href("/settings")}?category=account` })}`}
+                                >
+                                    {t("settings.reauthenticate")}
+                                </a>
+                            ) : null}
+                            <p
+                                className={
+                                    verified
+                                        ? "nl-body-secondary"
+                                        : "nl-metadata"
+                                }
+                                role="status"
+                            >
+                                {t(
+                                    verified
+                                        ? "settings.reauthenticated"
+                                        : "settings.reauthenticateNext"
+                                )}
+                            </p>
                         </div>
+                    </section>
+                    <form
+                        id={formId}
+                        onSubmit={(event) =>
+                            void form.handleSubmit(submit)(event)
+                        }
+                        noValidate
+                        className="nl-account-confirmation"
+                        aria-busy={busy}
+                    >
+                        <FormField
+                            id={id}
+                            label={t("settings.deleteStepConfirm")}
+                            help={t("settings.deletePrompt", {
+                                confirmation: t("settings.deleteConfirmation"),
+                            })}
+                            error={form.formState.errors.confirmation?.message}
+                        >
+                            <Input
+                                id={id}
+                                {...form.register("confirmation")}
+                                disabled={busy || !verified}
+                                autoComplete="off"
+                                placeholder={t("settings.deleteConfirmation")}
+                                aria-invalid={Boolean(
+                                    form.formState.errors.confirmation
+                                )}
+                                aria-describedby={fieldDescription(id, {
+                                    help: true,
+                                    error: Boolean(
+                                        form.formState.errors.confirmation
+                                    ),
+                                })}
+                            />
+                        </FormField>
+                        {deleteError ? (
+                            <div
+                                role="alert"
+                                className="nl-body-secondary nl-field__error"
+                            >
+                                <p>{deleteError}</p>
+                                <Link href={href("/privacy")}>
+                                    {t("footer.privacy")}
+                                </Link>
+                            </div>
+                        ) : null}
                     </form>
                 </ModalDialog>
                 <Link href={href("/privacy")} className="nl-control">

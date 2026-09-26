@@ -38,6 +38,7 @@ import {
     fieldDescription,
 } from "@/components/ui/formField";
 import IconButton from "@/components/ui/iconButton";
+import LoginPrompt from "@/components/ui/loginPrompt";
 import ResponsiveDialog from "@/components/ui/responsiveDialog";
 import AreaTabs from "@/components/ui/areaTabs";
 import { Select } from "@/components/ui/select";
@@ -225,7 +226,10 @@ export default function FeedbackDialog({
         </AreaTabs>
     );
     const body = !isAuthenticated ? (
-        <StatusMessage title={t("feedback.loginRequired")} />
+        <LoginPrompt
+            title={t("feedback.loginPromptTitle")}
+            description={t("feedback.loginPromptBody")}
+        />
     ) : submitted ? (
         <div className="nl-feedback-done" role="status">
             <span className="nl-feedback-done__mark" aria-hidden>
@@ -403,7 +407,7 @@ export default function FeedbackDialog({
     const modalFooter = !isAuthenticated ? (
         <>
             <ActionButton variant="secondary" onClick={() => changeOpen(false)}>
-                {t("common.close")}
+                {t("feedback.cancel")}
             </ActionButton>
             {loginAction}
         </>
@@ -428,7 +432,8 @@ export default function FeedbackDialog({
             open={open}
             onOpenChange={changeOpen}
             title={t("feedback.title")}
-            size="large"
+            // 로그아웃이면 로그인 안내 한 덩이라 기본 폭(2026-09-26 F1)
+            size={isAuthenticated ? "large" : "medium"}
             className="nl-feedback-dialog"
             onCloseAutoFocus={onCloseAutoFocus}
             trigger={triggerNode}

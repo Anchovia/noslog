@@ -1024,6 +1024,194 @@ html[data-theme="light"] .noslog-ui,
         );
     }
 }
+/* 고르기 창(2026-09-26 P1 — 당근 지역 변경 · Booking 통화 · Google 항공편)
+   고른 것 = 순번 알약 한 줄(적용 조건 토큰과 같은 모양 · × 로 빼기, 빈 칸은 빈자리 경계),
+   목록 = 줄마다 이름(emphasis-label) + 보조 글자(metadata) · 오른쪽 체크 · 줄 사이 구분선 */
+.noslog-ui .nl-pick-slots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--nl-spacing-8);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.noslog-ui .nl-pick-slot {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--nl-spacing-4);
+    min-width: 0;
+    min-height: var(--nl-control-height-compact);
+    padding: 0 var(--nl-spacing-4) 0 var(--nl-spacing-12);
+    border-radius: var(--nl-radius-field);
+    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-default);
+    color: var(--nl-content-default);
+}
+.noslog-ui .nl-pick-slot[data-empty] {
+    padding-inline-end: var(--nl-spacing-12);
+    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-empty-slot);
+    color: var(--nl-content-pending);
+}
+.noslog-ui .nl-pick-slot[data-active] {
+    background: var(--nl-surface-raised);
+    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-strong);
+}
+.noslog-ui .nl-pick-slot__label {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+}
+.noslog-ui .nl-pick-slot__label > span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.noslog-ui .nl-pick-slot__remove {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: var(--nl-spacing-24);
+    height: var(--nl-spacing-24);
+    padding: 0;
+    border: 0;
+    border-radius: var(--nl-radius-control);
+    background: none;
+    color: var(--nl-content-subdued);
+    cursor: pointer;
+}
+@media (hover: hover) {
+    .noslog-ui .nl-pick-slot__remove:hover {
+        background: var(--nl-interaction-hover);
+        color: var(--nl-content-interactive);
+    }
+}
+.noslog-ui .nl-pick-list {
+    display: flex;
+    flex-direction: column;
+    max-height: min(360px, 45dvh);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+.noslog-ui .nl-pick-row {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: var(--nl-spacing-12);
+    min-height: var(--nl-control-height);
+    padding: var(--nl-spacing-8) var(--nl-spacing-4);
+    box-shadow: inset 0 calc(var(--nl-stroke-default) * -1)
+        var(--nl-border-divider);
+    color: var(--nl-content-default);
+    text-align: left;
+    cursor: pointer;
+}
+.noslog-ui .nl-pick-row:last-child {
+    box-shadow: none;
+}
+.noslog-ui .nl-pick-row__main {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+.noslog-ui .nl-pick-row__check {
+    flex: none;
+    color: var(--nl-content-interactive);
+}
+.noslog-ui .nl-pick-row[data-active] {
+    --nl-state-layer: var(--nl-interaction-menu-set);
+    background-image: linear-gradient(
+        var(--nl-state-layer),
+        var(--nl-state-layer)
+    );
+}
+@media (hover: hover) {
+    .noslog-ui .nl-pick-row:not([aria-disabled="true"]):hover {
+        --nl-state-layer: var(--nl-interaction-hover);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
+    }
+}
+.noslog-ui .nl-pick-row[aria-disabled="true"] {
+    cursor: not-allowed;
+    color: var(--nl-interaction-disabled-content);
+}
+.noslog-ui .nl-pick-row[aria-disabled="true"] .nl-metadata {
+    color: inherit;
+}
+/* 정보 창 줄 목록(2026-09-26 I1 — GitHub · GitLab · tldraw · Excalidraw 도움말 창)
+   소제목(metadata) →8→ 구분선 줄 목록. 줄 = 이름 칸(가장 긴 이름 폭으로 맞춤) · 값/설명 칸, 줄 높이 = 컨트롤 높이 ·
+   위아래 8 · 좌우 4(고르기 줄과 같음). --value = 값을 오른쪽 끝에 */
+.noslog-ui .nl-info-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-info-rows {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: var(--nl-spacing-16);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.noslog-ui .nl-info-rows > * {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+    align-items: baseline;
+    align-content: center;
+    min-height: var(--nl-control-height);
+    padding: var(--nl-spacing-8) var(--nl-spacing-4);
+    box-shadow: inset 0 calc(var(--nl-stroke-default) * -1)
+        var(--nl-border-divider);
+}
+.noslog-ui .nl-info-rows > :last-child {
+    box-shadow: none;
+}
+.noslog-ui .nl-info-rows :is(dt, dd) {
+    margin: 0;
+}
+.noslog-ui .nl-info-rows__lead {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-info-rows--value > * > :last-child {
+    justify-self: end;
+    text-align: end;
+}
+/* 로그인 안내(2026-09-26 F1) — 피드백 「보냄」 표시와 같은 배치: 원 40(면 surface) →+4→ 제목 →8→ 설명 */
+.noslog-ui .nl-login-prompt {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-login-prompt__mark {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    margin-bottom: var(--nl-spacing-4);
+    border-radius: var(--nl-radius-full);
+    background: var(--nl-surface-surface);
+    color: var(--nl-content-interactive);
+}
+.noslog-ui .nl-login-prompt p {
+    margin: 0;
+}
+
 /* 구역 제목 줄 HeadingRow — 제목(20/600) · 도움말 · 메타 · 오른쪽 끝 제목 링크. 좁으면 줄바꿈(열 8 · 행 4) (2026-09-16) */
 .noslog-ui .nl-heading-row {
     display: flex;

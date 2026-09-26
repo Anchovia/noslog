@@ -1,11 +1,13 @@
 "use client";
 
+import { Check, X } from "lucide-react";
 import { useId, useRef, useState } from "react";
 
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import Button from "@/components/ui/Button";
 import { Input } from "@/components/ui/formField";
 import ModalDialog from "@/components/ui/modalDialog";
+import SearchField from "@/components/ui/searchField";
 import {
     PINNED_COMMENT_MAX,
     PINNED_RECORD_LIMIT,
@@ -27,7 +29,7 @@ function parse(value: string): Draft[] {
 
 /**
  * 설정 「프로필」 탭의 「고정 기록」 칸(2026-09-26 S2) — 「프로필 업적」 칸과 같은 모양(값 + 「변경」 → 창, 「저장」 때 함께 저장).
- * 창 = 고른 3칸(고른 순서 · 칸마다 한 줄 소감 입력 · 빼기) →12→ 기록 찾기(선호 오락실 창과 같은 검색 목록).
+ * 창(2026-09-26 P1) = 고른 것 순번 알약 한 줄(× 로 빼기 · 누르면 그 기록의 한 줄 소감 칸) →12→ 기록 찾기(검색 칸 + 고르기 목록).
  * 빈 값 = 자동(베스트 상위 3곡)
  */
 export default function PinnedRecordsPicker({
@@ -50,13 +52,13 @@ export default function PinnedRecordsPicker({
     const [draft, setDraft] = useState<Draft[]>([]);
     const [query, setQuery] = useState("");
     const [active, setActive] = useState(0);
+    // 소감을 적는 알약(고른 기록 chartId) — 새로 고르면 그 기록으로
+    const [editing, setEditing] = useState<number | null>(null);
     const listId = useId();
     const changeButton = useRef<HTMLButtonElement>(null);
     const input = useRef<HTMLInputElement>(null);
     const byChart = new Map(records.map((record) => [record.chartId, record]));
     const selected = parse(value).filter((item) => byChart.has(item.chartId));
-    const label = (record: PinnableRecord) =>
-        `${record.difficulty.toUpperCase()} ${record.level} · ${record.score.toLocaleString(locale)}`;
     const needle = query.normalize("NFKC").trim().toLocaleLowerCase();
     const matches = records.filter((record) =>
         record.title.normalize("NFKC").toLocaleLowerCase().includes(needle)
@@ -64,13 +66,24 @@ export default function PinnedRecordsPicker({
     const full = draft.length >= PINNED_RECORD_LIMIT;
 
     function add(record: PinnableRecord) {
-        setDraft((current) =>
-            current.some((item) => item.chartId === record.chartId) ||
-            current.length >= PINNED_RECORD_LIMIT
-                ? current
-                : [...current, { chartId: record.chartId, comment: "" }]
-        );
+        if (draft.some((item) => item.chartId === record.chartId)) {
+            setDraft((current) =>
+                current.filter((item) => item.chartId !== record.chartId)
+            );
+            return;
+        }
+        if (draft.length >= PINNED_RECORD_LIMIT) return;
+        setDraft((current) => [
+            ...current,
+            { chartId: record.chartId, comment: "" },
+        ]);
+        setEditing(record.chartId);
     }
+    const editingIndex = draft.findIndex((item) => item.chartId === editing);
+    const editingRecord =
+        editingIndex >= 0
+            ? byChart.get(draft[editingIndex].chartId)
+            : undefined;
     const move = (next: number) => {
         setActive(next);
         document
@@ -107,6 +120,7 @@ export default function PinnedRecordsPicker({
                             disabled={disabled}
                             onClick={() => {
                                 setDraft(selected);
+                                setEditing(selected[0]?.chartId ?? null);
                                 setQuery("");
                                 setActive(0);
                                 setOpen(true);
@@ -171,7 +185,7 @@ export default function PinnedRecordsPicker({
                 }
             >
                 <div className="nl-pinned-picker">
-                    <ol className="nl-pinned-picker__slots">
+                    <ol className="nl-pick-slots">
                         {Array.from(
                             { length: PINNED_RECORD_LIMIT },
                             (_, index) => {
@@ -179,93 +193,100 @@ export default function PinnedRecordsPicker({
                                 const record = item
                                     ? byChart.get(item.chartId)
                                     : undefined;
+                                if (!record)
+                                    return (
+                                        <li
+                                            key={`empty-${index}`}
+                                            className="nl-pick-slot nl-control"
+                                            data-empty
+                                        >
+                                            {index + 1} ·{" "}
+                                            {t(
+                                                "achievement.settings.emptySlot"
+                                            )}
+                                        </li>
+                                    );
                                 return (
                                     <li
-                                        key={item?.chartId ?? `empty-${index}`}
-                                        className="nl-pinned-picker__slot"
-                                        data-empty={!record}
+                                        key={record.chartId}
+                                        className="nl-pick-slot nl-control"
+                                        data-active={
+                                            editing === record.chartId ||
+                                            undefined
+                                        }
                                     >
-                                        {record ? (
-                                            <>
-                                                <div className="nl-pinned-picker__head">
-                                                    <div className="nl-pinned-picker__name">
-                                                        <span className="nl-emphasis-label">
-                                                            {record.title}
-                                                        </span>
-                                                        <span className="nl-metadata nl-muted">
-                                                            {label(record)}
-                                                        </span>
-                                                    </div>
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="sm"
-                                                        aria-label={t(
-                                                            "profile.pinned.removeAria",
-                                                            {
-                                                                title: record.title,
-                                                            }
-                                                        )}
-                                                        onClick={() =>
-                                                            setDraft(
-                                                                (current) =>
-                                                                    current.filter(
-                                                                        (
-                                                                            _,
-                                                                            at
-                                                                        ) =>
-                                                                            at !==
-                                                                            index
-                                                                    )
-                                                            )
-                                                        }
-                                                    >
-                                                        {t(
-                                                            "profile.pinned.remove"
-                                                        )}
-                                                    </Button>
-                                                </div>
-                                                <Input
-                                                    aria-label={t(
-                                                        "profile.pinned.commentAria",
-                                                        { title: record.title }
-                                                    )}
-                                                    placeholder={t(
-                                                        "profile.pinned.comment"
-                                                    )}
-                                                    maxLength={
-                                                        PINNED_COMMENT_MAX
-                                                    }
-                                                    value={item.comment}
-                                                    onChange={(event) => {
-                                                        const comment =
-                                                            event.target.value;
-                                                        setDraft((current) =>
-                                                            current.map(
-                                                                (entry, at) =>
-                                                                    at === index
-                                                                        ? {
-                                                                              ...entry,
-                                                                              comment,
-                                                                          }
-                                                                        : entry
-                                                            )
-                                                        );
-                                                    }}
-                                                />
-                                            </>
-                                        ) : (
-                                            <span className="nl-metadata nl-muted">
-                                                {t(
-                                                    "achievement.settings.emptySlot"
-                                                )}
+                                        <button
+                                            type="button"
+                                            className="nl-pick-slot__label"
+                                            aria-pressed={
+                                                editing === record.chartId
+                                            }
+                                            aria-label={t(
+                                                "profile.pinned.commentAria",
+                                                { title: record.title }
+                                            )}
+                                            onClick={() =>
+                                                setEditing(record.chartId)
+                                            }
+                                        >
+                                            <span>
+                                                {index + 1} · {record.title}
                                             </span>
-                                        )}
+                                            <span
+                                                className={`nl-metadata nl-level--${record.difficulty.toLowerCase()}`}
+                                            >
+                                                {record.difficulty.toUpperCase()}{" "}
+                                                {record.level}
+                                            </span>
+                                        </button>
+                                        <button
+                                            type="button"
+                                            className="nl-pick-slot__remove"
+                                            aria-label={t(
+                                                "profile.pinned.removeAria",
+                                                { title: record.title }
+                                            )}
+                                            onClick={() => {
+                                                setDraft((current) =>
+                                                    current.filter(
+                                                        (_, at) => at !== index
+                                                    )
+                                                );
+                                                if (editing === record.chartId)
+                                                    setEditing(null);
+                                            }}
+                                        >
+                                            <X
+                                                className="nl-icon-small"
+                                                aria-hidden
+                                            />
+                                        </button>
                                     </li>
                                 );
                             }
                         )}
                     </ol>
-                    <Input
+                    {editingRecord ? (
+                        <Input
+                            aria-label={t("profile.pinned.commentAria", {
+                                title: editingRecord.title,
+                            })}
+                            placeholder={t("profile.pinned.comment")}
+                            maxLength={PINNED_COMMENT_MAX}
+                            value={draft[editingIndex].comment}
+                            onChange={(event) => {
+                                const comment = event.target.value;
+                                setDraft((current) =>
+                                    current.map((entry, at) =>
+                                        at === editingIndex
+                                            ? { ...entry, comment }
+                                            : entry
+                                    )
+                                );
+                            }}
+                        />
+                    ) : null}
+                    <SearchField
                         ref={input}
                         role="combobox"
                         aria-label={t("profile.pinned.search")}
@@ -277,6 +298,12 @@ export default function PinnedRecordsPicker({
                         }
                         placeholder={t("profile.pinned.search")}
                         value={query}
+                        clearLabel={t("discovery.clear")}
+                        onClear={() => {
+                            setQuery("");
+                            setActive(0);
+                            input.current?.focus();
+                        }}
                         onChange={(event) => {
                             setQuery(event.target.value);
                             setActive(0);
@@ -301,55 +328,79 @@ export default function PinnedRecordsPicker({
                             }
                         }}
                     />
-                    <p role="status" className="nl-metadata nl-muted">
-                        {full
-                            ? t("profile.pinned.full", {
-                                  max: PINNED_RECORD_LIMIT,
-                              })
-                            : t("profile.pinned.results", {
-                                  count: matches.length.toLocaleString(locale),
-                              })}
-                    </p>
-                    <div
-                        id={listId}
-                        role="listbox"
-                        aria-label={t("profile.pinned.search")}
-                        className="nl-settings__arcade-options"
-                    >
-                        {matches.map((record, index) => {
-                            const picked = draft.some(
-                                (item) => item.chartId === record.chartId
-                            );
-                            return (
-                                <div
-                                    key={record.chartId}
-                                    id={`${listId}-${index}`}
-                                    role="option"
-                                    aria-selected={picked}
-                                    aria-disabled={
-                                        (!picked && full) || undefined
-                                    }
-                                    data-active={active === index || undefined}
-                                    className="nl-settings__arcade-option nl-control"
-                                    onMouseDown={(event) =>
-                                        event.preventDefault()
-                                    }
-                                    onClick={() => add(record)}
-                                >
-                                    {record.title}
-                                    <span className="nl-metadata nl-muted">
-                                        {" · "}
-                                        {label(record)}
-                                    </span>
-                                </div>
-                            );
-                        })}
-                    </div>
-                    {!matches.length ? (
-                        <p className="nl-body-secondary nl-muted">
-                            {t("profile.pinned.noResults")}
+                    <div className="nl-settings__pick-group">
+                        <p role="status" className="nl-metadata nl-muted">
+                            {full
+                                ? t("profile.pinned.full", {
+                                      max: PINNED_RECORD_LIMIT,
+                                  })
+                                : t("profile.pinned.results", {
+                                      count: matches.length.toLocaleString(
+                                          locale
+                                      ),
+                                  })}
                         </p>
-                    ) : null}
+                        <div
+                            id={listId}
+                            role="listbox"
+                            aria-label={t("profile.pinned.search")}
+                            className="nl-pick-list"
+                        >
+                            {matches.map((record, index) => {
+                                const picked = draft.some(
+                                    (item) => item.chartId === record.chartId
+                                );
+                                return (
+                                    <div
+                                        key={record.chartId}
+                                        id={`${listId}-${index}`}
+                                        role="option"
+                                        aria-selected={picked}
+                                        aria-disabled={
+                                            (!picked && full) || undefined
+                                        }
+                                        data-active={
+                                            active === index || undefined
+                                        }
+                                        className="nl-pick-row"
+                                        onMouseDown={(event) =>
+                                            event.preventDefault()
+                                        }
+                                        onClick={() => add(record)}
+                                    >
+                                        <span className="nl-pick-row__main">
+                                            <span className="nl-emphasis-label">
+                                                {record.title}
+                                            </span>
+                                            <span className="nl-metadata nl-muted">
+                                                <span
+                                                    className={`nl-level--${record.difficulty.toLowerCase()}`}
+                                                >
+                                                    {record.difficulty.toUpperCase()}{" "}
+                                                    {record.level}
+                                                </span>
+                                                {" · "}
+                                                {record.score.toLocaleString(
+                                                    locale
+                                                )}
+                                            </span>
+                                        </span>
+                                        {picked ? (
+                                            <Check
+                                                className="nl-icon nl-pick-row__check"
+                                                aria-hidden
+                                            />
+                                        ) : null}
+                                    </div>
+                                );
+                            })}
+                        </div>
+                        {!matches.length ? (
+                            <p className="nl-body-secondary nl-muted">
+                                {t("profile.pinned.noResults")}
+                            </p>
+                        ) : null}
+                    </div>
                 </div>
             </ModalDialog>
         </div>

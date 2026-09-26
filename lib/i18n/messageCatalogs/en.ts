@@ -59,6 +59,8 @@ export const enMessages = {
         "A play record for this chart is required to share an opinion.",
     "community.edit": "Edit",
     "community.cancel": "Cancel",
+    "community.loginPromptTitle": "Log in to report",
+    "community.loginPromptBody": "Only moderators see reports.",
     "community.delete.vote.title": "Delete this vote?",
     "community.delete.vote.body":
         "Only your {scope} vote will be deleted. Your other votes, pattern ratings, and opinion will remain.",
@@ -161,6 +163,8 @@ export const enMessages = {
     "pattern.level.2": "Clearly present",
     "pattern.level.3": "Heavy",
     "pattern.level.4": "Defines the chart",
+    "pattern.levels": "Levels",
+    "pattern.axes": "Patterns",
     "pattern.definition.stairs":
         "The playing burden of notes moving in a sequential staircase pattern.",
     "pattern.definition.repetition":
@@ -687,7 +691,9 @@ export const enMessages = {
     "feedback.category.bug": "Report a problem",
     "feedback.categoryLabel": "Type",
     "feedback.contentLabel": "Details",
-    "feedback.loginRequired": "Log in to leave feedback.",
+    "feedback.loginPromptTitle": "Log in to send feedback",
+    "feedback.loginPromptBody":
+        "You can follow your reports and replies in My reports.",
     "feedback.placeholder": "Enter your report.",
     "feedback.attachImage": "Attach image (optional)",
     "feedback.submit": "Submit",
@@ -850,7 +856,7 @@ export const enMessages = {
     "tiers.guide": "{goal} Tier List Guide",
     "tiers.filterHelp":
         "Difficulty and official level filter charts; tier placement is managed independently for each goal.",
-    "tiers.updated": "Updated {date}",
+    "tiers.guideUpdated": "Updated",
     "tiers.noPublished": "No public tier list is available for this goal.",
     "tiers.bands": "Tier list bands",
     "tiers.achieved": "Achieved {count}/{total}",
@@ -880,9 +886,8 @@ export const enMessages = {
     "tiers.weight.formula":
         "Tier constant² ÷ theoretical top {count} songs × {score}",
     "tiers.weight.scoreRatio": "Score weighting",
-    "tiers.weight.sRequirement": "S requires a score of at least 950,000.",
-    "tiers.weight.score990kRequirement":
-        "990k requires a score of at least 990,000.",
+    "tiers.guideRequirement": "Requirement",
+    "tiers.guideMinScore": "{score} or higher",
     "bingo.title": "Bingo",
     "bingo.requiredLinesLabel": "Lines needed {count}",
     "bingo.lineComplete": "Completed line",
@@ -1466,7 +1471,10 @@ export const enMessages = {
     "settings.loginAccount": "Login account",
     "settings.deletionBoundary":
         "Your Discord and official NOSTALGIA accounts are not affected.",
-    "settings.reauthenticateNotice": "Re-authenticate with Discord to delete.",
+    "settings.reauthenticateNext": "Verify to unlock the next step.",
+    "settings.deletionHeading": "What gets deleted",
+    "settings.deleteStepReauth": "1. Re-authenticate with Discord",
+    "settings.deleteStepConfirm": "2. Type the confirmation",
     "settings.reauthenticate": "Re-authenticate with Discord",
     "settings.reauthenticated": "Discord authentication complete",
     "settings.deletionGroup.plays": "Play and sync records",
@@ -1524,6 +1532,7 @@ export const enMessages = {
     "settings.viewProfile": "View my profile",
     "settings.arcadeSearch": "Search arcade name or region",
     "settings.arcadeResults": "{count} results",
+    "settings.arcadeCurrent": "Current",
     "settings.cropTitle": "Adjust profile image",
     "settings.cropPosition":
         "Drag the image or use arrow keys to adjust its position.",
@@ -1736,6 +1745,7 @@ export const enMessages = {
     "arcades.phone": "Phone",
     "arcades.website": "Website",
     "arcades.report": "Report",
+    "arcades.loginPromptTitle": "Log in to report on this arcade",
     "arcades.photo": "Arcade photo {index} of {total}",
     "arcades.photoNext": "Next photo",
     "arcades.photoPrevious": "Previous photo",
@@ -1835,7 +1845,7 @@ export const enMessages = {
     "contribution.pending": "In review",
     "contribution.proposal.titleAdd": "Add {field}",
     "contribution.proposal.titleEdit": "Suggest a fix for {field}",
-    "contribution.proposal.current": "Now {value}",
+    "contribution.proposal.current": "Current value",
     "contribution.proposal.pendingNotice":
         "Your suggestion {value} is in review — sending again replaces it.",
     "contribution.proposal.help.bpm":
@@ -2139,6 +2149,7 @@ export const enMessages = {
     "achievement.settings.dialogHelp":
         "Pick up to {max}. They are shown in the order you pick them.",
     "achievement.settings.emptySlot": "Empty",
+    "achievement.settings.removeAria": "Remove {name}",
     "achievement.settings.earned": "Earned achievements",
     "achievement.settings.useAuto": "Use automatic",
     "achievement.settings.apply": "Apply",

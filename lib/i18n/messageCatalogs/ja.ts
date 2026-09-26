@@ -59,6 +59,8 @@ export const jaMessages = {
         "意見を投稿するには、この譜面のプレー記録が必要です。",
     "community.edit": "編集",
     "community.cancel": "キャンセル",
+    "community.loginPromptTitle": "ログインすると報告できます",
+    "community.loginPromptBody": "報告は運営者だけが確認します。",
     "community.delete.vote.title": "この投票を削除しますか？",
     "community.delete.vote.body":
         "{scope}への投票のみ削除されます。他の目標への投票、パターン評価、意見は残ります。",
@@ -159,6 +161,8 @@ export const jaMessages = {
     "pattern.level.2": "はっきりある",
     "pattern.level.3": "強め",
     "pattern.level.4": "曲の特色になるほど",
+    "pattern.levels": "段階",
+    "pattern.axes": "項目",
     "pattern.definition.stairs":
         "音が順番に移動する階段パターンの演奏負担です。",
     "pattern.definition.repetition":
@@ -678,7 +682,9 @@ export const jaMessages = {
     "feedback.category.bug": "不具合報告",
     "feedback.categoryLabel": "種類",
     "feedback.contentLabel": "内容",
-    "feedback.loginRequired": "ログインするとフィードバックを送信できます。",
+    "feedback.loginPromptTitle": "ログインするとフィードバックを送れます",
+    "feedback.loginPromptBody":
+        "送った報告と返信は「自分の報告」で確認できます。",
     "feedback.placeholder": "報告内容を入力してください。",
     "feedback.attachImage": "画像を添付（任意）",
     "feedback.submit": "送信",
@@ -842,7 +848,7 @@ export const jaMessages = {
     "tiers.guide": "{goal}難易度表ガイド",
     "tiers.filterHelp":
         "難易度と公式レベルは譜面を探すための絞り込みで、難易度表上の配置は目標ごとに個別管理されます。",
-    "tiers.updated": "更新 {date}",
+    "tiers.guideUpdated": "更新",
     "tiers.noPublished": "選択した目標の公開難易度表がありません。",
     "tiers.bands": "難易度表の区分",
     "tiers.achieved": "達成 {count}/{total}",
@@ -871,8 +877,8 @@ export const jaMessages = {
     "tiers.weight.maxContribution": "{goal}の最大貢献",
     "tiers.weight.formula": "難易度定数² ÷ 上位{count}曲の理論値 × {score}",
     "tiers.weight.scoreRatio": "スコア別の反映率",
-    "tiers.weight.sRequirement": "S達成条件は950,000点以上です。",
-    "tiers.weight.score990kRequirement": "990k達成条件は990,000点以上です。",
+    "tiers.guideRequirement": "達成条件",
+    "tiers.guideMinScore": "{score}点以上",
     "bingo.title": "ビンゴ",
     "bingo.requiredLinesLabel": "必要ライン {count}",
     "bingo.lineComplete": "完成したライン",
@@ -1455,8 +1461,10 @@ export const jaMessages = {
     "settings.loginAccount": "ログインアカウント",
     "settings.deletionBoundary":
         "Discord アカウントと公式 NOSTALGIA アカウントには影響しません。",
-    "settings.reauthenticateNotice":
-        "削除するには Discord で再認証が必要です。",
+    "settings.reauthenticateNext": "認証すると次の手順に進めます。",
+    "settings.deletionHeading": "削除されるもの",
+    "settings.deleteStepReauth": "1. Discord で再認証",
+    "settings.deleteStepConfirm": "2. 確認の文字を入力",
     "settings.reauthenticate": "Discord で再認証",
     "settings.reauthenticated": "Discord 認証完了",
     "settings.deletionGroup.plays": "プレー・同期記録",
@@ -1514,6 +1522,7 @@ export const jaMessages = {
     "settings.viewProfile": "自分のプロフィールを見る",
     "settings.arcadeSearch": "ゲームセンター名・地域を検索",
     "settings.arcadeResults": "検索結果 {count}件",
+    "settings.arcadeCurrent": "現在の選択",
     "settings.cropTitle": "プロフィール画像を調整",
     "settings.cropPosition":
         "画像をドラッグするか、矢印キーで位置を調整してください。",
@@ -1732,6 +1741,7 @@ export const jaMessages = {
     "arcades.phone": "電話",
     "arcades.website": "ウェブサイト",
     "arcades.report": "店舗を報告",
+    "arcades.loginPromptTitle": "ログインすると店舗を報告できます",
     "arcades.photo": "店舗写真 {index} / {total}",
     "arcades.photoNext": "次の写真",
     "arcades.photoPrevious": "前の写真",
@@ -1829,7 +1839,7 @@ export const jaMessages = {
     "contribution.pending": "確認中",
     "contribution.proposal.titleAdd": "{field}を追加",
     "contribution.proposal.titleEdit": "{field}の修正を提案",
-    "contribution.proposal.current": "現在 {value}",
+    "contribution.proposal.current": "現在の値",
     "contribution.proposal.pendingNotice":
         "確認中の提案 {value} — もう一度送ると新しい値に置き換わります。",
     "contribution.proposal.help.bpm": "ソフランがあれば最小–最大(例: 120-180)",
@@ -2130,6 +2140,7 @@ export const jaMessages = {
     "achievement.settings.dialogHelp":
         "{max}個まで選べます。選んだ順に表示されます。",
     "achievement.settings.emptySlot": "空き",
+    "achievement.settings.removeAria": "{name}を外す",
     "achievement.settings.earned": "獲得した実績",
     "achievement.settings.useAuto": "自動にする",
     "achievement.settings.apply": "適用",

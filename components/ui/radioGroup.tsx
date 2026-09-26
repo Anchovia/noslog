@@ -10,6 +10,7 @@ export default function RadioGroup<Value extends string>({
     value,
     onValueChange,
     disabled = false,
+    error,
 }: {
     label: string;
     description?: string;
@@ -17,6 +18,8 @@ export default function RadioGroup<Value extends string>({
     value: Value;
     onValueChange: (value: Value) => void;
     disabled?: boolean;
+    /** 고르지 않고 보냈을 때 — 묶음 아래 오류 한 줄(FormField 와 같은 자리 · 모양) */
+    error?: ReactNode;
 }) {
     const id = useId();
     return (
@@ -39,7 +42,12 @@ export default function RadioGroup<Value extends string>({
                             value={option.value}
                             checked={value === option.value}
                             aria-describedby={
-                                description ? `${id}-help` : undefined
+                                [
+                                    description && `${id}-help`,
+                                    error && `${id}-error`,
+                                ]
+                                    .filter(Boolean)
+                                    .join(" ") || undefined
                             }
                             onChange={() => onValueChange(option.value)}
                         />
@@ -47,6 +55,15 @@ export default function RadioGroup<Value extends string>({
                     </label>
                 ))}
             </div>
+            {error ? (
+                <p
+                    id={`${id}-error`}
+                    className="nl-field__help nl-field__error"
+                    role="alert"
+                >
+                    {error}
+                </p>
+            ) : null}
         </fieldset>
     );
 }

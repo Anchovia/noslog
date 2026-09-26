@@ -30,6 +30,7 @@ function initialInput(field: ChartFieldProposalField, value: string | null) {
 /**
  * 채보 정보 제안 창(Compact, 2026-09-23 S2) — 값 + 근거(영상 · 공식 사이트 · 직접 확인).
  * 누구의 제안이든 운영자가 확인한 뒤 반영한다. 대기 중인 내 제안이 있으면 다시 내면 바뀐다고 알린다.
+ * 지금 값 = 이름 → 값 줄, 발 = 취소 · 제안하기(2026-09-26 F1)
  */
 export default function ChartFieldProposalDialog({
     open,
@@ -115,15 +116,24 @@ export default function ChartFieldProposalDialog({
             title={title}
             onCloseAutoFocus={onCloseAutoFocus}
             footer={
-                <Button
-                    type="submit"
-                    form={`${id}-form`}
-                    disabled={mutation.isPending}
-                >
-                    {mutation.isPending
-                        ? t("contribution.proposal.submitting")
-                        : t("contribution.proposal.submit")}
-                </Button>
+                <>
+                    <Button
+                        variant="secondary"
+                        disabled={mutation.isPending}
+                        onClick={() => onOpenChange(false)}
+                    >
+                        {t("settings.cancel")}
+                    </Button>
+                    <Button
+                        type="submit"
+                        form={`${id}-form`}
+                        disabled={mutation.isPending}
+                    >
+                        {mutation.isPending
+                            ? t("contribution.proposal.submitting")
+                            : t("contribution.proposal.submit")}
+                    </Button>
+                </>
             }
         >
             <form
@@ -136,11 +146,14 @@ export default function ChartFieldProposalDialog({
                     mutation.mutate();
                 }}
             >
-                <p className="nl-body-secondary nl-muted">
-                    {t("contribution.proposal.current", {
-                        value: shownCurrent,
-                    })}
-                </p>
+                <dl className="nl-info-rows nl-info-rows--value">
+                    <div>
+                        <dt className="nl-body-secondary nl-muted">
+                            {t("contribution.proposal.current")}
+                        </dt>
+                        <dd className="nl-emphasis-label">{shownCurrent}</dd>
+                    </div>
+                </dl>
                 {pendingValue !== undefined ? (
                     <p className="nl-body-secondary nl-muted">
                         {t("contribution.proposal.pendingNotice", {

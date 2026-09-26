@@ -122,18 +122,24 @@ function StageRow({
                     trigger.current?.focus();
                 }}
             >
-                <ul className="nl-exam-chart-options">
+                {/* 채보 고르기(2026-09-26 P1) — 고르기 목록 줄: 난이도(글자색) · 레벨 */}
+                <div className="nl-pick-list">
                     {stage.charts.map((chart) => (
-                        <li key={chart.chartId}>
-                            <Link
-                                className="nl-button nl-button--secondary"
-                                href={chartHref(chart.difficulty)}
-                            >
-                                {chart.difficulty} {chart.level}
-                            </Link>
-                        </li>
+                        <Link
+                            key={chart.chartId}
+                            className="nl-pick-row"
+                            href={chartHref(chart.difficulty)}
+                        >
+                            <span className="nl-pick-row__main">
+                                <span
+                                    className={`nl-emphasis-label nl-level--${chart.difficulty.toLowerCase()}`}
+                                >
+                                    {chart.difficulty} {chart.level}
+                                </span>
+                            </span>
+                        </Link>
                     ))}
-                </ul>
+                </div>
             </ModalDialog>
         </li>
     );

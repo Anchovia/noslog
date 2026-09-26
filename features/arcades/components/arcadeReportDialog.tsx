@@ -1,5 +1,6 @@
 "use client";
 import {
+    useId,
     useMemo,
     useRef,
     useState,
@@ -17,6 +18,7 @@ import {
 } from "@/components/i18n/localeProvider";
 import ActionButton from "@/components/ui/actionButton";
 import Button, { foundationButtonClass } from "@/components/ui/Button";
+import LoginPrompt from "@/components/ui/loginPrompt";
 import RadioGroup from "@/components/ui/radioGroup";
 import {
     fieldDescription,
@@ -88,6 +90,7 @@ export default function ArcadeReportDialog({
         defaultValues: defaults,
     });
     const busy = form.formState.isSubmitting;
+    const formId = useId();
     const reportType = useWatch({ control: form.control, name: "reportType" });
     function changeOpen(next: boolean) {
         if (busy) return;
@@ -164,7 +167,12 @@ export default function ArcadeReportDialog({
             {triggerSuffix}
         </Button>
     );
-    const loginRequired = <StatusMessage title={t("feedback.loginRequired")} />;
+    const loginRequired = (
+        <LoginPrompt
+            title={t("arcades.loginPromptTitle")}
+            description={t("feedback.loginPromptBody")}
+        />
+    );
     const loginLink = (
         <Link className={foundationButtonClass()} href={loginHref}>
             {t("common.login")}
@@ -308,92 +316,71 @@ export default function ArcadeReportDialog({
         </>
     );
 
+    const submitButton = (
+        <ActionButton
+            type="submit"
+            form={formId}
+            busy={busy}
+            busyLabel={t("feedback.submitting")}
+        >
+            {t("feedback.submit")}
+        </ActionButton>
+    );
+
+    // 버튼은 모두 창의 발(2026-09-26 F1) — 폰(전체 화면)은 닫기가 머리 ×라 주 액션 하나, 창은 취소 · 주 액션
     return (
         <ResponsiveDialog
             open={open}
             onOpenChange={changeOpen}
             title={title}
-            size="large"
+            // 로그아웃이면 로그인 안내 한 덩이라 기본 폭(2026-09-26 F1)
+            size={isAuthenticated ? "large" : "medium"}
             className="nl-feedback-dialog"
             trigger={trigger}
             fullScreenFooter={
-                isAuthenticated && !success ? (
-                    <ActionButton
-                        className="nl-arcades__apply"
-                        busy={busy}
-                        busyLabel={t("feedback.submitting")}
-                        onClick={submitForm}
-                    >
-                        {t("feedback.submit")}
-                    </ActionButton>
-                ) : null
+                !isAuthenticated ? loginLink : success ? null : submitButton
             }
-            fullScreenChildren={
+            modalFooter={
                 !isAuthenticated ? (
-                    <div className="nl-stack">
-                        {loginRequired}
+                    <>
+                        <ActionButton variant="secondary" onClick={close}>
+                            {t("feedback.cancel")}
+                        </ActionButton>
                         {loginLink}
-                    </div>
+                    </>
                 ) : success ? (
-                    successMessage
+                    <ActionButton onClick={close}>
+                        {t("common.close")}
+                    </ActionButton>
                 ) : (
-                    <form
-                        className="nl-stack"
-                        noValidate
-                        aria-busy={busy}
-                        onSubmit={submitForm}
-                    >
-                        {fields}
-                    </form>
+                    <>
+                        <ActionButton
+                            variant="secondary"
+                            disabled={busy}
+                            onClick={close}
+                        >
+                            {t("feedback.cancel")}
+                        </ActionButton>
+                        {submitButton}
+                    </>
                 )
             }
-            modalChildren={
-                !isAuthenticated ? (
-                    <div className="nl-stack nl-feedback-dialog__body">
-                        {loginRequired}
-                        <div className="nl-dialog__actions">
-                            <ActionButton variant="secondary" onClick={close}>
-                                {t("common.close")}
-                            </ActionButton>
-                            {loginLink}
-                        </div>
-                    </div>
-                ) : success ? (
-                    <div className="nl-stack nl-feedback-dialog__body">
-                        {successMessage}
-                        <div className="nl-dialog__actions">
-                            <ActionButton onClick={close}>
-                                {t("common.close")}
-                            </ActionButton>
-                        </div>
-                    </div>
-                ) : (
-                    <form
-                        className="nl-stack nl-feedback-dialog__body"
-                        noValidate
-                        aria-busy={busy}
-                        onSubmit={submitForm}
-                    >
-                        {fields}
-                        <div className="nl-dialog__actions">
-                            <ActionButton
-                                variant="secondary"
-                                disabled={busy}
-                                onClick={close}
-                            >
-                                {t("common.close")}
-                            </ActionButton>
-                            <ActionButton
-                                type="submit"
-                                busy={busy}
-                                busyLabel={t("feedback.submitting")}
-                            >
-                                {t("feedback.submit")}
-                            </ActionButton>
-                        </div>
-                    </form>
-                )
-            }
-        />
+        >
+            {!isAuthenticated ? (
+                loginRequired
+            ) : success ? (
+                successMessage
+            ) : (
+                <form
+                    id={formId}
+                    className="nl-stack"
+                    noValidate
+                    aria-busy={busy}
+                    onSubmit={submitForm}
+                >
+                    {fields}
+                </form>
+            )}
+        </ResponsiveDialog>
     );
 }
