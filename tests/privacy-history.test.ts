@@ -20,9 +20,9 @@ describe("개인정보처리방침 이전 버전", () => {
     it("세 언어 모두 새 시행일로 바뀌었고 직전 버전과 다르다", () => {
         const [previous] = PRIVACY_PREVIOUS_VERSIONS;
         const effective = {
-            ko: "시행 2026년 9월 25일",
-            ja: "施行 2026年9月25日",
-            en: "Effective September 25, 2026",
+            ko: "시행 2026년 9월 26일",
+            ja: "施行 2026年9月26日",
+            en: "Effective September 26, 2026",
         } as const;
         for (const locale of ["ko", "ja", "en"] as const) {
             expect(getPrivacyCopy(locale).dates).toContain(effective[locale]);
@@ -79,6 +79,31 @@ describe("개인정보처리방침 이전 버전", () => {
                     en: "skill or collection achievements",
                 }[locale]
             );
+            // 2026-09-26 — 고정 기록의 이용 · 공개 · 보유, 업적 기준 변경 뒤 다시 판정하면 단계를 지움
+            expect(text("data")).toContain(
+                { ko: "고정 기록", ja: "固定記録", en: "pinned records" }[
+                    locale
+                ]
+            );
+            expect(text("public")).toContain(
+                { ko: "고정 기록", ja: "固定記録", en: "pinned records" }[
+                    locale
+                ]
+            );
+            expect(text("retention")).toContain(
+                {
+                    ko: "고정 기록과 한 줄 소감:",
+                    ja: "固定記録とひとことコメント：",
+                    en: "Pinned records and notes:",
+                }[locale]
+            );
+            expect(text("retention")).toContain(
+                {
+                    ko: "새 기준에 못 미치는 단계는 삭제됩니다",
+                    ja: "新しい基準に満たない段階は削除されます",
+                    en: "tiers below the new thresholds are removed",
+                }[locale]
+            );
             // 2단계 — 기여 점수 기록은 원본이 지워져도 탈퇴 전까지 남는다
             expect(text("retention")).toContain(
                 {
@@ -109,7 +134,7 @@ describe("개인정보처리방침 이전 버전", () => {
     });
 
     it("없는 버전 주소는 찾지 않는다", () => {
-        expect(getPrivacyVersion("2026-09-25")).toBeNull();
+        expect(getPrivacyVersion("2026-09-26")).toBeNull();
         expect(getPrivacyVersion("toString")).toBeNull();
     });
 });
