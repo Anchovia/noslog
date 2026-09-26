@@ -533,6 +533,17 @@ html[data-theme="light"] .noslog-ui,
 .noslog-ui .nl-segments--compact {
     min-height: var(--nl-control-height-compact);
 }
+/* 글자형 M 세그먼트 = 바깥 높이가 M(폰 36 · 1056 이상 32, 2026-09-26) — 칸 위아래 여백으로 맞춘다.
+   바깥 = 칸 + 판 안쪽(4 − 선) × 2 + 판 선 × 2, 칸 = 글줄 20 + 칸 선 × 2 + 위아래 여백 */
+.noslog-ui .nl-segments--compact:not(.nl-segments--icons) .nl-segments__item {
+    padding-block: calc(
+        (
+                var(--nl-control-height-compact) - var(--nl-spacing-8) -
+                    var(--nl-type-line-height-20)
+            ) /
+            2 - var(--nl-stroke-default)
+    );
+}
 .noslog-ui .nl-segments--compact.nl-segments--icons .nl-segments__item {
     width: calc(var(--nl-control-height-compact) - var(--nl-spacing-8));
     padding-block: 0;
@@ -887,7 +898,7 @@ html[data-theme="light"] .noslog-ui,
     padding: var(--nl-spacing-16) var(--nl-spacing-24);
     box-shadow: inset 0 var(--nl-stroke-default) var(--nl-border-divider);
 }
-/* 확인 창 — 큰 제목(section-title) · 구분선 없음 · 한 판(안쪽 24 · 사이 12) */
+/* 확인 창 — 큰 제목(section-title) · 구분선 없음 · 한 판(안쪽 24 · 제목 → 본문 12 · 본문 → 버튼 24) */
 .noslog-ui .nl-dialog--confirm {
     gap: var(--nl-spacing-12);
     padding: var(--nl-spacing-24);
@@ -921,6 +932,26 @@ html[data-theme="light"] .noslog-ui,
         padding-bottom: calc(
             var(--nl-spacing-16) + env(safe-area-inset-bottom, 0px)
         );
+    }
+    /* 시트 좌우 = 폰 여백 16(2026-09-26 점검 B1 — 전체 화면 창 · 페이지와 같은 선). 닫기(M · 아이콘 20)는 오른쪽 8 이라 잉크가 16 선에 */
+    .noslog-ui
+        .nl-dialog:not(.nl-image-share):not(.nl-dialog--confirm)
+        > .nl-dialog__header {
+        padding-inline: var(--nl-spacing-16) var(--nl-spacing-8);
+    }
+    .noslog-ui
+        .nl-dialog:not(.nl-image-share):not(.nl-dialog--confirm)
+        > .nl-dialog__body {
+        padding-inline: var(--nl-spacing-16);
+    }
+    .noslog-ui
+        .nl-dialog:not(.nl-image-share):not(.nl-dialog--confirm)
+        > .nl-dialog__footer {
+        padding-inline: var(--nl-spacing-16);
+    }
+    /* 확인 시트 = 안쪽 위 24 · 좌우 16 · 아래 16 + 발 16(틀 시안 A 폰 확인 창 24 · 16 · 32) */
+    .noslog-ui .nl-dialog--confirm {
+        padding: var(--nl-spacing-24) var(--nl-spacing-16) var(--nl-spacing-16);
     }
     .noslog-ui
         .nl-dialog:not(.nl-image-share)
@@ -1003,8 +1034,54 @@ html[data-theme="light"] .noslog-ui,
         )
         > .nl-dialog__footer
         > .nl-button {
+        flex: none;
+    }
+    /* 발 = 보조 글자 폭 + 주(마지막) 남은 폭(틀 시안 A 폰 · 전체 화면 창 「초기화 + 주」 와 같은 문법, 2026-09-26 점검 D4) */
+    .noslog-ui
+        .nl-dialog:not(.nl-image-share):has(
+            :is(
+                input:not([type="hidden"]),
+                textarea,
+                select,
+                [role="combobox"],
+                [role="slider"]
+            )
+        )
+        > .nl-dialog__footer
+        > .nl-button:last-child {
         flex: 1 1 0;
         min-width: 0;
+    }
+    /* 닫기 = 전체 화면 창과 같은 L 정사각 · 아이콘 24(가장자리 닫기, 2026-09-26 점검 D5) */
+    .noslog-ui
+        .nl-dialog:not(.nl-image-share):has(
+            :is(
+                input:not([type="hidden"]),
+                textarea,
+                select,
+                [role="combobox"],
+                [role="slider"]
+            )
+        )
+        .nl-dialog__close {
+        width: var(--nl-control-height);
+        height: var(--nl-control-height);
+        min-height: var(--nl-control-height);
+    }
+    .noslog-ui
+        .nl-dialog:not(.nl-image-share):has(
+            :is(
+                input:not([type="hidden"]),
+                textarea,
+                select,
+                [role="combobox"],
+                [role="slider"]
+            )
+        )
+        .nl-dialog__close
+        svg {
+        width: var(--nl-icon-large);
+        height: var(--nl-icon-large);
     }
 }
 /* 아래 시트(2026-09-26, 유튜브 폰 설명 창) — `sheet` 는 1055 이하까지 아래 시트 */
@@ -1095,7 +1172,7 @@ html[data-theme="light"] .noslog-ui,
 .noslog-ui .nl-pick-list {
     display: flex;
     flex-direction: column;
-    max-height: min(360px, 45dvh);
+    max-height: min(320px, 40dvh);
     overflow-y: auto;
     overscroll-behavior: contain;
 }
@@ -1191,7 +1268,7 @@ html[data-theme="light"] .noslog-ui,
     justify-self: end;
     text-align: end;
 }
-/* 로그인 안내(2026-09-26 F1) — 피드백 「보냄」 표시와 같은 배치: 원 40(면 surface) →+4→ 제목 →8→ 설명 */
+/* 로그인 안내(2026-09-26 F1) — 피드백 「보냄」 표시와 같은 배치: 상태 표시 원 40(면 surface, 가이드 대화상자 절) →+4→ 제목 →8→ 설명 */
 .noslog-ui .nl-login-prompt {
     display: flex;
     flex-direction: column;
@@ -2176,7 +2253,10 @@ html:has(.noslog-ui) [data-sonner-toaster] [data-sonner-toast] > * {
     .noslog-ui .nl-image-share {
         gap: var(--nl-spacing-16);
         padding: var(--nl-spacing-16) 0 var(--nl-spacing-24);
-        width: min(768px, calc(100vw - 48px));
+        width: min(
+            var(--nl-container-reading),
+            calc(100vw - var(--nl-spacing-48))
+        );
         border: 0;
         box-shadow:
             inset 0 0 0 var(--nl-stroke-default) var(--nl-border-overlay),
@@ -2198,8 +2278,8 @@ html:has(.noslog-ui) [data-sonner-toaster] [data-sonner-toast] > * {
         margin: 0;
     }
     .noslog-ui .nl-image-share .nl-dialog__close svg {
-        width: 24px;
-        height: 24px;
+        width: var(--nl-icon-large);
+        height: var(--nl-icon-large);
     }
     /* 버튼 줄 = 본문 아래 고정(2026-09-26 A — 서열표처럼 내용이 길어도 늘 보임, 모양은 그대로).
        위 16 은 앞 간격을 옮긴 것이라 짧은 창(프로필 카드)의 배치는 같다 */

@@ -28,7 +28,6 @@
     align-items: flex-end;
     justify-content: space-between;
     flex-shrink: 0;
-    font-variant-numeric: tabular-nums;
 }
 .noslog-ui .nl-line-chart__area {
     padding-top: var(--nl-spacing-8);
@@ -128,7 +127,6 @@
     align-items: flex-start;
     justify-content: space-between;
     gap: var(--nl-spacing-8);
-    font-variant-numeric: tabular-nums;
 }
 .noslog-ui .nl-line-chart__x > span {
     white-space: nowrap;

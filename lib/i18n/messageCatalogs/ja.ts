@@ -1350,7 +1350,6 @@ export const jaMessages = {
     "profile.tabs.label": "プロフィールの項目",
     "profile.tabs.overview": "概要",
     "profile.tabs.achievements": "実績",
-    "profile.headlineGrade": "公式Grd",
     "profile.headlineMetric": "表示する指標",
     "profile.headlineWorld": "世界順位",
     "profile.headlineCountry": "国内順位",
@@ -1394,13 +1393,13 @@ export const jaMessages = {
     "profile.pinned.help":
         "プロフィール概要の上に{max}件まで固定し、記録ごとに一言コメントを付けられます。",
     "profile.pinned.dialogHelp":
-        "選んだ順に{max}件まで表示されます。コメントは空でもかまいません。",
+        "選んだ順に{max}件まで · チップを押すと一言コメントを書けます。",
     "profile.pinned.search": "曲名で記録を探す",
     "profile.pinned.results": "{count}件の記録",
     "profile.pinned.full":
         "{max}枠すべて埋まっています。1件外してから選んでください。",
     "profile.pinned.noResults": "該当する記録がありません。",
-    "profile.pinned.comment": "一言コメント（任意）",
+    "profile.pinned.commentLabel": "{title}の一言コメント（任意）",
     "profile.pinned.commentAria": "{title}の一言コメント",
     "profile.pinned.remove": "外す",
     "profile.pinned.removeAria": "{title}を外す",

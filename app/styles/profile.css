@@ -311,6 +311,10 @@
         gap: var(--nl-spacing-32) var(--nl-spacing-16);
         order: 4;
     }
+    /* 폰 순서(order)는 672 이상 옆 열 안에서 풀어 코드 순서(고정 기록 → 레벨별 달성 → 업적 → 기여)대로 */
+    .noslog-ui .nl-profile-body .nl-profile-side > * {
+        order: 0;
+    }
     .noslog-ui .nl-profile-side .nl-profile-levels {
         grid-row: span 2;
     }
@@ -519,9 +523,11 @@
     .noslog-ui .nl-profile-play-head__song {
         grid-column: jacket / title;
     }
+    /* 행 52 = 자켓 36 + 위 8 + 아래 8(구분선 두께를 뺌) */
     .noslog-ui .nl-profile-play-row {
         min-height: 52px;
-        padding-block: var(--nl-spacing-8);
+        padding-top: var(--nl-spacing-8);
+        padding-bottom: calc(var(--nl-spacing-8) - var(--nl-stroke-default));
     }
     .noslog-ui .nl-profile-play-row__position {
         display: block;
@@ -627,6 +633,10 @@
     display: flex;
     align-items: center;
     gap: var(--nl-spacing-8);
+}
+/* 판정 요약 — 누적 막대 →8→ 판정 줄(한 묶음, 2026-09-26 D1). 구역 간격 12 에서 4 당긴다 */
+.noslog-ui .nl-profile-judgement .nl-stacked-bar + .nl-profile-judgements {
+    margin-top: calc(var(--nl-spacing-4) * -1);
 }
 .noslog-ui .nl-profile-judgements dt {
     flex: 1;
@@ -1094,4 +1104,26 @@
 }
 .noslog-ui .nl-profile-pinned__rank {
     white-space: nowrap;
+}
+
+/* 프로필 카드 내보내기 창(2026-09-26 A) — 카드 →8→ 아래 한 줄(크기 · 모드 · 기준일). 1055 이하 전체 화면에서는 카드 묶음을 세로 가운데로,
+   1056 이상 가운데 창은 이전 모양 그대로(한 줄 없음) */
+.noslog-ui .nl-profile-share__stage {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
+}
+@media (max-width: 1055px) {
+    .noslog-ui .nl-profile-share__stage {
+        flex: 1;
+        justify-content: center;
+    }
+}
+@media (min-width: 1056px) {
+    .noslog-ui .nl-profile-share__stage {
+        gap: var(--nl-spacing-16);
+    }
+    .noslog-ui .nl-profile-share__caption {
+        display: none;
+    }
 }

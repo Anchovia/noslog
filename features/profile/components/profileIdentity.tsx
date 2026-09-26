@@ -380,10 +380,10 @@ export default function ProfileIdentity({
                             // 칸 나눈 수치 상자(2026-09-26 B1) — 왼쪽 절반 공식 Grd, 오른쪽 절반 위 세계 · 아래 국가, 칸 사이 1px 선(수치 띠와 같은 만듦새)
                             <dl
                                 className="nl-profile-headline__cells"
-                                aria-label={`${modeLabel} · ${t(shownMetric === "rating" ? "rankings.metric.rating" : "profile.headlineGrade")}`}
+                                aria-label={`${modeLabel} · ${shownMetric === "rating" ? "Rating" : "Grade"}`}
                             >
                                 <div className="nl-profile-headline__grade">
-                                    {/* 공식 Grd ↔ NosLog 레이팅(2026-09-26 T1) — 라벨 자리의 고르기, 순위 칸도 같이 바뀐다 */}
+                                    {/* Grade ↔ Rating(2026-09-26 T1) — 라벨 자리의 고르기, 순위 칸도 같이 바뀐다. 이름은 성장 추이 · 최고 기록 전환과 같게(세 언어 같음) */}
                                     <dt>
                                         <CompactSelect
                                             size="sm"
@@ -393,15 +393,11 @@ export default function ProfileIdentity({
                                             options={[
                                                 {
                                                     value: "grade",
-                                                    label: t(
-                                                        "profile.headlineGrade"
-                                                    ),
+                                                    label: "Grade",
                                                 },
                                                 {
                                                     value: "rating",
-                                                    label: t(
-                                                        "rankings.metric.rating"
-                                                    ),
+                                                    label: "Rating",
                                                     disabled: !standing,
                                                 },
                                             ]}

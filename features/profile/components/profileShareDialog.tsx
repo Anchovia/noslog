@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
+    useLocale,
     useLocalizedHref,
     useTranslations,
 } from "@/components/i18n/localeProvider";
@@ -12,6 +13,8 @@ import Button from "@/components/ui/Button";
 import ModalDialog from "@/components/ui/modalDialog";
 import { StatusMessage } from "@/components/ui/statusMessage";
 import { profileCardOptions } from "@/features/profile/api/profileCard";
+import { getProfileCardMode } from "@/features/profile/profileCardModel";
+import { formatProfileDate } from "@/components/profile/dashboard/profileUtils";
 import { cn } from "@/lib/utils";
 import type {
     ProfileMode,
@@ -36,6 +39,8 @@ function ProfileCardPreview({
         "idle" | "working" | "copied" | "error"
     >("idle");
     const username = user.username || t("profile.shareUser");
+    const locale = useLocale();
+    const card = getProfileCardMode(user, mode);
     const fileName = `${(user.username || "noslog-user").replaceAll(/[^\p{L}\p{N}_-]/gu, "-")}-${mode}-profile.png`;
     const file = result.data
         ? new File([result.data], fileName, { type: "image/png" })
@@ -124,31 +129,48 @@ function ProfileCardPreview({
                 />
             ) : (
                 <>
-                    <div
-                        className={cn(
-                            "nl-image-share__preview nl-profile-card-preview",
-                            preparing && "nl-skeleton"
-                        )}
-                        aria-busy={preparing}
-                    >
-                        {preview ? (
-                            <Image
-                                src={preview}
-                                width={1200}
-                                height={630}
-                                unoptimized
-                                alt={t("profile.cardPreview", {
-                                    name: username,
-                                })}
-                                onError={() => setPreviewFailed(true)}
-                            />
+                    {/* 카드 묶음(2026-09-26 A) — 1055 이하에서 화면 세로 가운데, 아래 한 줄 = 카드에 담긴 모드 · 기준일 */}
+                    <div className="nl-profile-share__stage">
+                        <div
+                            className={cn(
+                                "nl-image-share__preview nl-profile-card-preview",
+                                preparing && "nl-skeleton"
+                            )}
+                            aria-busy={preparing}
+                        >
+                            {preview ? (
+                                <Image
+                                    src={preview}
+                                    width={1200}
+                                    height={630}
+                                    unoptimized
+                                    alt={t("profile.cardPreview", {
+                                        name: username,
+                                    })}
+                                    onError={() => setPreviewFailed(true)}
+                                />
+                            ) : null}
+                        </div>
+                        <p className="nl-metadata nl-muted nl-profile-share__caption">
+                            {`1200 × 630 · ${card.label} · ${t("profile.asOf", {
+                                date: formatProfileDate(
+                                    user.hide_play_activity
+                                        ? null
+                                        : user.last_played_at,
+                                    locale,
+                                    t("profile.noRecord")
+                                ),
+                            })}`}
+                        </p>
+                        {preparing ? (
+                            <p
+                                className="nl-body-secondary nl-muted"
+                                role="status"
+                            >
+                                {t("profile.preparingImage")}
+                            </p>
                         ) : null}
                     </div>
-                    {preparing ? (
-                        <p className="nl-body-secondary nl-muted" role="status">
-                            {t("profile.preparingImage")}
-                        </p>
-                    ) : null}
                     {status === "copied" ? (
                         <StatusMessage
                             severity="success"

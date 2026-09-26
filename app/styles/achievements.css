@@ -169,15 +169,17 @@
 }
 
 /* 업적 페이지 — 머리 → 분류 칩 → 목록 */
+/* 머리 →16→ 분류 칩 →12→ 정렬 · 보기 전환 →12→ 목록(가이드 업적 절) */
 .noslog-ui .nl-achievements-page {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-16);
+    gap: var(--nl-spacing-12);
 }
 .noslog-ui .nl-achievements-page__head {
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-8);
+    margin-bottom: var(--nl-spacing-4);
 }
 
 /* 동기화 결과(E1) — 새 업적 한 줄 */

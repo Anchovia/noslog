@@ -1346,7 +1346,6 @@ export const koMessages = {
     "profile.tabs.label": "프로필 구역",
     "profile.tabs.overview": "개요",
     "profile.tabs.achievements": "업적",
-    "profile.headlineGrade": "공식 Grd",
     "profile.headlineMetric": "수치 기준",
     "profile.headlineWorld": "세계 순위",
     "profile.headlineCountry": "국가 순위",
@@ -1390,12 +1389,12 @@ export const koMessages = {
     "profile.pinned.help":
         "프로필 개요 맨 위에 {max}개까지 고정하고, 기록마다 한 줄 소감을 적을 수 있습니다.",
     "profile.pinned.dialogHelp":
-        "고른 순서대로 {max}개까지 보입니다. 소감은 비워 둬도 됩니다.",
+        "고른 순서대로 {max}개까지 · 소감은 칩을 누르면 적을 수 있습니다.",
     "profile.pinned.search": "곡 이름으로 기록 찾기",
     "profile.pinned.results": "{count}개 기록",
     "profile.pinned.full": "{max}칸이 모두 찼습니다. 하나를 빼고 고르세요.",
     "profile.pinned.noResults": "찾는 기록이 없습니다.",
-    "profile.pinned.comment": "한 줄 소감 (선택)",
+    "profile.pinned.commentLabel": "{title} 한 줄 소감 (선택)",
     "profile.pinned.commentAria": "{title} 한 줄 소감",
     "profile.pinned.remove": "빼기",
     "profile.pinned.removeAria": "{title} 빼기",

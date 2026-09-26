@@ -1360,7 +1360,6 @@ export const enMessages = {
     "profile.tabs.label": "Profile sections",
     "profile.tabs.overview": "Overview",
     "profile.tabs.achievements": "Achievements",
-    "profile.headlineGrade": "Official Grd",
     "profile.headlineMetric": "Figure shown",
     "profile.headlineWorld": "World rank",
     "profile.headlineCountry": "Country rank",
@@ -1404,13 +1403,13 @@ export const enMessages = {
     "profile.pinned.help":
         "Pin up to {max} records at the top of your profile overview, each with an optional one-line note.",
     "profile.pinned.dialogHelp":
-        "Shown in the order you pick, up to {max}. The note is optional.",
+        "Up to {max}, in the order you pick · Tap a chip to write a note.",
     "profile.pinned.search": "Find a record by song title",
     "profile.pinned.results": "{count} records",
     "profile.pinned.full":
         "All {max} slots are filled. Remove one to pick another.",
     "profile.pinned.noResults": "No matching records.",
-    "profile.pinned.comment": "One-line note (optional)",
+    "profile.pinned.commentLabel": "Note for {title} (optional)",
     "profile.pinned.commentAria": "Note for {title}",
     "profile.pinned.remove": "Remove",
     "profile.pinned.removeAria": "Remove {title}",

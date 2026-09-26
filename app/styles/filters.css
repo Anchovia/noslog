@@ -159,7 +159,6 @@
 .noslog-ui .nl-chip__count {
     color: var(--nl-content-subdued);
     font-weight: var(--nl-type-weight-regular);
-    font-variant-numeric: tabular-nums;
 }
 
 /* 정렬 메뉴: 팝오버 · 소제목 metadata subdued · 행 40 · 선택 = menu-set 면 + 굵기 + 체크 */
