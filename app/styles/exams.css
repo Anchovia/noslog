@@ -250,14 +250,6 @@
     max-width: 35%;
     text-align: end;
 }
-.noslog-ui .nl-exam-chart-options {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-8);
-}
-.noslog-ui .nl-exam-chart-options a {
-    width: 100%;
-}
 /* 합격까지(2026-09-22 P2-a) — 상자 surface · 안쪽 16 · 사이 12.
    막대 = 트랙 8(모서리 4 · raised) 위에 곡별 베스트 조각(차트 범주 색 1 · 2 · 3, 조각 사이 2 틈),
    합격선 눈금 = 2 × 16 기본 글자색, 아래 눈금 이름 · 값, 범례 「색 · 곡 · 점수」 */

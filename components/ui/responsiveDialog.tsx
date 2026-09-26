@@ -17,7 +17,7 @@ interface ResponsiveDialogProps {
     modalFooter?: ReactNode;
     fullScreenFooter?: ReactNode;
     trigger?: ReactNode;
-    width?: "compact" | "wide";
+    size?: "small" | "medium" | "large";
     className?: string;
     onCloseAutoFocus?: (event: Event) => void;
     onOpenAutoFocus?: (event: Event) => void;
@@ -35,7 +35,7 @@ export default function ResponsiveDialog({
     modalFooter,
     fullScreenFooter,
     trigger,
-    width,
+    size,
     className,
     onCloseAutoFocus,
     onOpenAutoFocus,
@@ -50,7 +50,7 @@ export default function ResponsiveDialog({
                 title={title}
                 footer={modalFooter ?? footer}
                 trigger={trigger}
-                width={width}
+                size={size}
                 className={className}
                 onCloseAutoFocus={onCloseAutoFocus}
                 onOpenAutoFocus={onOpenAutoFocus}

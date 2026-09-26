@@ -163,17 +163,21 @@ for (const locale of ["ko", "ja", "en"] as const) {
         for (const width of [320, 390, 768, 1470]) {
             await page.setViewportSize({ width, height: 844 });
             const box = await dialog.boundingBox();
-            expect(box!.x).toBeGreaterThanOrEqual(16);
-            expect(box!.x + box!.width).toBeLessThanOrEqual(width - 16);
-            if (width >= 768) {
-                const copyButton = await dialog
-                    .getByRole("button", {
-                        name: t["profile.copyImage"],
-                        exact: true,
-                    })
-                    .boundingBox();
-                expect(copyButton!.height).toBe(40);
+            // 1055 이하 = 전체 화면(2026-09-26 A), 1056 이상 = 가운데 창
+            if (width <= 1055) {
+                expect(box!.x).toBe(0);
+                expect(box!.width).toBe(width);
+            } else {
+                expect(box!.x).toBeGreaterThanOrEqual(16);
+                expect(box!.x + box!.width).toBeLessThanOrEqual(width - 16);
             }
+            const copyButton = await dialog
+                .getByRole("button", {
+                    name: t["profile.copyImage"],
+                    exact: true,
+                })
+                .boundingBox();
+            expect(copyButton!.height).toBe(width >= 1056 ? 40 : 44);
         }
         await page.setViewportSize({ width: 390, height: 844 });
         await page.screenshot({

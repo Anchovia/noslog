@@ -516,8 +516,9 @@ old design-stage checklist. Changes to material behavior require a user decision
   note; otherwise the same lane, width and type within 1/8 of a quarter = the same note moved;
   a hand read from the video counts as a difference, a guessed hand does not) and chosen
   per place; notes after the draft are a separate
-  new-section toggle. An import that would create overlapping notes can still be applied
-  (2026-09-26 A): the footer names the places, the overlapping notes (both sides) go in selected, and
+  new-section toggle. An import whose own notes overlap each other can still be applied
+  (2026-09-26 A; an overlap with a note already in the draft still blocks it — change 「내 것 / 가져온
+  것」 or clear the draft): the footer names the places, the overlapping notes (both sides) go in selected, and
   the admin removes the false side or fixes the length in the editor — the video's combo tells which
   side is false (パヴァーヌ: the notes inside a long tenuto; 平均律: the tenuto). Revisions still refuse
   overlaps, so the 「영상 추출」 revision is kept pending and the first revision saved after the overlaps

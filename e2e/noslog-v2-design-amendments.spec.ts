@@ -24,7 +24,7 @@ for (const locale of ["ko", "ja", "en"] as const) {
                 .toBe(
                     width < 672
                         ? Math.min(334, width - 32)
-                        : Math.min(768, width - 48)
+                        : Math.min(768, width - 32) // 대화상자 가장자리 16(2026-09-26 A)
                 );
             const buttons = dialog.locator(".nl-dialog__actions > button");
             if (width < 672)

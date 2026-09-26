@@ -1,7 +1,7 @@
 {
     "ko": {
         "title": "개인정보처리방침",
-        "dates": "최종 수정 2026년 9월 26일 · 시행 2026년 9월 26일",
+        "dates": "최종 수정 2026년 9월 25일 · 시행 2026년 9월 25일",
         "contents": "이 페이지에서",
         "detailLabel": "자세히 보기",
         "settingsLogin": "로그인 후 설정에서 관리",
@@ -14,7 +14,7 @@
             },
             {
                 "title": "공개되는 것",
-                "text": "공개 프로필·기록·고정 기록·랭킹·평가·업적·채보 의견·기여 등급과 5가지 공개 설정 그룹(플레이어명·Discord·선호 오락실·플레이 횟수·플레이 활동)",
+                "text": "공개 프로필·기록·랭킹·평가·업적·채보 의견·기여 등급과 5가지 공개 설정 그룹(플레이어명·Discord·선호 오락실·플레이 횟수·플레이 활동)",
                 "target": "public"
             },
             {
@@ -67,7 +67,7 @@
                     {
                         "kind": "item",
                         "title": "프로필 및 게임 기록",
-                        "text": "닉네임, 노스텔지어 플레이어명, 국가, 선호 오락실, 프로필 공개 설정, 플레이·판정·레이팅·동기화 기록, 본인이 고른 고정 기록(채보 최대 3개와 한 줄 소감)을 프로필과 기록 서비스를 제공하는 데 사용합니다."
+                        "text": "닉네임, 노스텔지어 플레이어명, 국가, 선호 오락실, 프로필 공개 설정, 플레이·판정·레이팅·동기화 기록을 프로필과 기록 서비스를 제공하는 데 사용합니다."
                     },
                     {
                         "kind": "item",
@@ -92,7 +92,7 @@
                     {
                         "kind": "item",
                         "title": "업적",
-                        "text": "동기화한 기록과 사이트 활동(의견 · 좋아요 · 패턴 평가 · 검정)으로 업적 달성 여부와 NosLog 가 확인한 날짜를 계산해 저장하고, 본인이 고른 업적(최대 3개)을 프로필 머리에 표시하는 데 사용합니다. 업적 페이지에는 단계마다 달성한 인원 수만 보이고 달성한 사람 목록은 없습니다."
+                        "text": "동기화한 기록과 사이트 활동(의견 · 좋아요 · 패턴 평가 · 검정 · 빙고)으로 업적 달성 여부와 NosLog 가 확인한 날짜를 계산해 저장하고, 본인이 고른 업적(최대 3개)을 프로필 머리에 표시하는 데 사용합니다. 업적 페이지에는 단계마다 달성한 인원 수만 보이고 달성한 사람 목록은 없습니다."
                     },
                     {
                         "kind": "item",
@@ -122,7 +122,7 @@
                 "blocks": [
                     {
                         "kind": "paragraph",
-                        "text": "프로필의 닉네임·아바타·국가·검정 이력·경쟁 지표·순위·기록·고정 기록과 한 줄 소감은 데이터가 있으면 공개됩니다. 플레이 점수를 비공개로 하면 고정 기록도 다른 사람에게 보이지 않습니다."
+                        "text": "프로필의 닉네임·아바타·국가·검정 이력·경쟁 지표·순위·기록은 데이터가 있으면 공개됩니다."
                     },
                     {
                         "kind": "paragraph",
@@ -182,8 +182,7 @@
                             "기여 점수 기록: 회원 탈퇴 시까지. 원본(제안·제보 등)이 보관 기간으로 삭제되어도 점수 기록은 남습니다.",
                             "채보 초안과 초안 의견: 회원 탈퇴 시까지(초안은 채보마다 하나이며, 공개된 뒤 다시 열면 그때의 공개 채보로 새로 시작합니다). 탈퇴하면 삭제되고, 이미 공개된 채보는 작성자 표시 없이 남습니다.",
                             "채보 의견: 작성자가 지우거나(해결 전까지) 회원 탈퇴할 때까지. 운영자가 가린 의견은 공개되지 않으며 탈퇴 시 함께 삭제됩니다.",
-                            "업적과 프로필 업적 진열: 회원 탈퇴 시까지. 달성한 단계는 이후 기록이 바뀌어도 자동으로 지우지 않습니다. 다만 업적 기준을 바꾸거나 업적을 없애 운영자가 다시 판정하면, 없어진 업적과 새 기준에 못 미치는 단계는 삭제됩니다.",
-                            "고정 기록과 한 줄 소감: 본인이 바꾸거나 지우거나 회원 탈퇴할 때까지. 고른 채보가 삭제되면 함께 삭제됩니다.",
+                            "업적과 프로필 업적 진열: 회원 탈퇴 시까지. 한 번 달성한 단계는 이후 기록이 바뀌어도 지우지 않습니다.",
                             "방문 통계: 하루 식별값은 다음 날 삭제, 합계(하루 방문자 수·페이지 조회 수·시간대별 조회 수·로그인 여부별 합계·API 호출 수)는 90일 후 삭제"
                         ]
                     },
@@ -319,7 +318,7 @@
     },
     "ja": {
         "title": "プライバシーポリシー",
-        "dates": "最終更新 2026年9月26日 · 施行 2026年9月26日",
+        "dates": "最終更新 2026年9月25日 · 施行 2026年9月25日",
         "contents": "このページの内容",
         "detailLabel": "詳しく見る",
         "settingsLogin": "ログインして設定で管理",
@@ -332,7 +331,7 @@
             },
             {
                 "title": "公開されるもの",
-                "text": "公開プロフィール・記録・固定記録・ランキング・評価・実績・譜面への意見・貢献ランクと、5つの公開設定グループ（プレーヤー名・Discord・よく行くゲームセンター・プレー回数・プレー活動）",
+                "text": "公開プロフィール・記録・ランキング・評価・実績・譜面への意見・貢献ランクと、5つの公開設定グループ（プレーヤー名・Discord・よく行くゲームセンター・プレー回数・プレー活動）",
                 "target": "public"
             },
             {
@@ -385,7 +384,7 @@
                     {
                         "kind": "item",
                         "title": "プロフィールおよびゲーム記録",
-                        "text": "ニックネーム、ノスタルジアのプレーヤー名、国・地域、よく利用するゲームセンター、プロフィール公開設定、プレー・判定・レーティング・同期記録、本人が選んだ固定記録(譜面最大3つとひとことコメント)を、プロフィールと記録サービスの提供に使用します。"
+                        "text": "ニックネーム、ノスタルジアのプレーヤー名、国・地域、よく利用するゲームセンター、プロフィール公開設定、プレー・判定・レーティング・同期記録を、プロフィールと記録サービスの提供に使用します。"
                     },
                     {
                         "kind": "item",
@@ -410,7 +409,7 @@
                     {
                         "kind": "item",
                         "title": "実績",
-                        "text": "同期した記録とサイトでの活動(意見・いいね・譜面傾向の評価・検定)から実績の達成状況とNosLogが確認した日付を計算して保存し、本人が選んだ実績(最大3つ)をプロフィールの上部に表示するために使用します。実績ページには段階ごとの達成人数のみを表示し、達成したユーザーの一覧は表示しません。"
+                        "text": "同期した記録とサイトでの活動(意見・いいね・譜面傾向の評価・検定・ビンゴ)から実績の達成状況とNosLogが確認した日付を計算して保存し、本人が選んだ実績(最大3つ)をプロフィールの上部に表示するために使用します。実績ページには段階ごとの達成人数のみを表示し、達成したユーザーの一覧は表示しません。"
                     },
                     {
                         "kind": "item",
@@ -440,7 +439,7 @@
                 "blocks": [
                     {
                         "kind": "paragraph",
-                        "text": "プロフィールのニックネーム・アバター・国・検定履歴・競技指標・順位・記録・固定記録とひとことコメントは、データがあれば公開されます。プレースコアを非公開にすると、固定記録も他の人には表示されません。"
+                        "text": "プロフィールのニックネーム・アバター・国・検定履歴・競技指標・順位・記録は、データがあれば公開されます。"
                     },
                     {
                         "kind": "paragraph",
@@ -500,8 +499,7 @@
                             "貢献ポイントの記録：退会まで。元の記録(提案・報告など)が保管期間により削除されても、ポイントの記録は残ります。",
                             "譜面の下書きと下書きへの意見：退会まで(下書きは譜面ごとに1つで、公開後にもう一度開くとその時点の公開譜面から新しく始まります)。退会すると削除され、すでに公開された譜面は作成者の表示なしで残ります。",
                             "譜面への意見：投稿者が削除する(解決前まで)か退会するまで。運営者が非表示にした意見は公開されず、退会時に一緒に削除されます。",
-                            "実績とプロフィールの実績表示：退会まで。達成した段階は、その後記録が変わっても自動では削除しません。ただし、実績の基準を変更したり実績を廃止したりして運営者が再判定した場合、廃止された実績と新しい基準に満たない段階は削除されます。",
-                            "固定記録とひとことコメント：本人が変更・削除するか退会するまで。選んだ譜面が削除された場合は一緒に削除されます。",
+                            "実績とプロフィールの実績表示：退会まで。一度達成した段階は、その後記録が変わっても削除しません。",
                             "訪問統計：1日の識別値は翌日に削除し、合計（1日の訪問者数・ページ閲覧数・時間帯ごとの閲覧数・ログイン状態別の合計・API呼び出し回数）は90日後に削除"
                         ]
                     },
@@ -637,7 +635,7 @@
     },
     "en": {
         "title": "Privacy Policy",
-        "dates": "Last updated September 26, 2026 · Effective September 26, 2026",
+        "dates": "Last updated September 25, 2026 · Effective September 25, 2026",
         "contents": "On this page",
         "detailLabel": "See details",
         "settingsLogin": "Manage in Settings after logging in",
@@ -650,7 +648,7 @@
             },
             {
                 "title": "What becomes public",
-                "text": "Your public profile, records, pinned records, rankings, evaluations, achievements, chart comments and contribution level, plus five visibility groups you control (player name, Discord, preferred arcade, play count, play activity)",
+                "text": "Your public profile, records, rankings, evaluations, achievements, chart comments and contribution level, plus five visibility groups you control (player name, Discord, preferred arcade, play count, play activity)",
                 "target": "public"
             },
             {
@@ -703,7 +701,7 @@
                     {
                         "kind": "item",
                         "title": "Profile and game records",
-                        "text": "We use your nickname, NOSTALGIA player name, country or region, preferred arcade, profile visibility settings, play, judgement, rating, and sync records, and the pinned records you choose (up to three charts, each with a one-line note) to provide profile and record services."
+                        "text": "We use your nickname, NOSTALGIA player name, country or region, preferred arcade, profile visibility settings, and play, judgement, rating, and sync records to provide profile and record services."
                     },
                     {
                         "kind": "item",
@@ -728,7 +726,7 @@
                     {
                         "kind": "item",
                         "title": "Achievements",
-                        "text": "We calculate which achievements you have reached, and the date NosLog confirmed each one, from the records you sync and your activity on the site (opinions, likes, pattern ratings and exams). We store them and show the achievements you choose (up to three) at the top of your profile. The achievement page shows only how many players reached each tier, never a list of who did."
+                        "text": "We calculate which achievements you have reached, and the date NosLog confirmed each one, from the records you sync and your activity on the site (opinions, likes, pattern ratings, exams and bingo). We store them and show the achievements you choose (up to three) at the top of your profile. The achievement page shows only how many players reached each tier, never a list of who did."
                     },
                     {
                         "kind": "item",
@@ -758,7 +756,7 @@
                 "blocks": [
                     {
                         "kind": "paragraph",
-                        "text": "Your profile nickname, avatar, country, exam history, competitive metrics, ranks, records, and pinned records with their notes are public when the data exists. If you make your play scores private, your pinned records are hidden from others too."
+                        "text": "Your profile nickname, avatar, country, exam history, competitive metrics, ranks, and records are public when the data exists."
                     },
                     {
                         "kind": "paragraph",
@@ -818,8 +816,7 @@
                             "Contribution points: until you delete your account. Point records remain even after the originals (suggestions, reports) are deleted under their retention periods.",
                             "Chart drafts and draft comments: until account deletion (one draft per chart; reopening it after it is published starts again from the public chart at that time). They are deleted when you delete your account, and charts already published remain without the author credit.",
                             "Chart comments: until the author deletes them (before they are resolved) or deletes their account. Comments hidden by an admin are not public and are deleted with the account.",
-                            "Achievements and your profile achievement showcase: until account deletion. A tier you have reached is not removed automatically, even if your records change later. However, when an admin re-evaluates achievements after changing their thresholds or retiring an achievement, retired achievements and tiers below the new thresholds are removed.",
-                            "Pinned records and notes: until you change or remove them, or delete your account. If a chosen chart is deleted, its pin is deleted with it.",
+                            "Achievements and your profile achievement showcase: until account deletion. A tier you have reached is never removed, even if your records change later.",
                             "Visit statistics: daily identifiers are deleted the next day; totals (daily visitors, page views, views per hour, totals split by signed-in status, API calls) are deleted after 90 days"
                         ]
                     },

@@ -41,7 +41,7 @@ function GuideMedia({
             open={open}
             onOpenChange={setOpen}
             title={label}
-            width="wide"
+            size="large"
             trigger={
                 <button
                     type="button"

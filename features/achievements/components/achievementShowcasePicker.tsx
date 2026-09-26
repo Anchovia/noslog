@@ -1,5 +1,6 @@
 "use client";
 
+import { X } from "lucide-react";
 import { useRef, useState } from "react";
 
 import { useTranslations } from "@/components/i18n/localeProvider";
@@ -148,37 +149,63 @@ export default function AchievementShowcasePicker({
                 }
             >
                 <div className="nl-achievement-picker">
-                    <ol className="nl-achievement-picker__slots">
+                    <ol className="nl-pick-slots">
                         {Array.from(
                             { length: ACHIEVEMENT_SHOWCASE_SIZE },
                             (_, index) => {
                                 const key = draft[index];
+                                if (!key)
+                                    return (
+                                        <li
+                                            key={`empty-${index}`}
+                                            className="nl-pick-slot nl-control"
+                                            data-empty
+                                        >
+                                            {index + 1} ·{" "}
+                                            {t(
+                                                "achievement.settings.emptySlot"
+                                            )}
+                                        </li>
+                                    );
+                                const name = text.titled(
+                                    key,
+                                    highest.get(key) ?? 0
+                                );
                                 return (
                                     <li
-                                        key={index}
-                                        className="nl-achievement-picker__slot"
-                                        data-empty={!key}
+                                        key={key}
+                                        className="nl-pick-slot nl-control"
                                     >
-                                        {key ? (
-                                            <>
-                                                <AchievementHex
-                                                    achievementKey={key}
-                                                    tier={highest.get(key) ?? 0}
-                                                />
-                                                <span className="nl-metadata">
-                                                    {text.titled(
-                                                        key,
-                                                        highest.get(key) ?? 0
-                                                    )}
-                                                </span>
-                                            </>
-                                        ) : (
-                                            <span className="nl-metadata nl-muted">
-                                                {t(
-                                                    "achievement.settings.emptySlot"
-                                                )}
+                                        <span className="nl-pick-slot__label">
+                                            <AchievementHex
+                                                achievementKey={key}
+                                                tier={highest.get(key) ?? 0}
+                                                size="inline"
+                                            />
+                                            <span>
+                                                {index + 1} · {name}
                                             </span>
-                                        )}
+                                        </span>
+                                        <button
+                                            type="button"
+                                            className="nl-pick-slot__remove"
+                                            aria-label={t(
+                                                "achievement.settings.removeAria",
+                                                { name }
+                                            )}
+                                            onClick={() =>
+                                                setDraft((current) =>
+                                                    current.filter(
+                                                        (item) => item !== key
+                                                    )
+                                                )
+                                            }
+                                        >
+                                            <X
+                                                className="nl-icon-small"
+                                                aria-hidden
+                                            />
+                                        </button>
                                     </li>
                                 );
                             }

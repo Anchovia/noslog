@@ -486,7 +486,7 @@ export default function BingoDetailPage({
                                 if (!state.resetting) setResetOpen(next);
                             }}
                             title={t("bingo.resetTitle")}
-                            showClose={false}
+                            variant="confirm"
                             className="nl-bingo-reset-dialog"
                             onOpenAutoFocus={(event) => {
                                 event.preventDefault();
@@ -525,6 +525,7 @@ export default function BingoDetailPage({
                                     </Button>
                                     <ActionButton
                                         variant="danger"
+                                        destructiveFilled
                                         busy={state.resetting}
                                         onClick={async () => {
                                             if (await state.reset())

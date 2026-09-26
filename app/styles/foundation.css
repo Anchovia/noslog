@@ -188,7 +188,8 @@ html[data-theme="light"] .noslog-ui,
     }
 }
 /* size="sm" = 중간 단계 M — 세로 패딩 없이 높이로만 맞춘다(글자 20 이 가운데) */
-.noslog-ui .nl-button--compact {
+.noslog-ui .nl-button--compact,
+.noslog-ui .nl-dialog__actions > .nl-button {
     min-height: var(--nl-control-height-compact);
     padding-block: 0;
 }
@@ -532,6 +533,17 @@ html[data-theme="light"] .noslog-ui,
 .noslog-ui .nl-segments--compact {
     min-height: var(--nl-control-height-compact);
 }
+/* 글자형 M 세그먼트 = 바깥 높이가 M(폰 36 · 1056 이상 32, 2026-09-26) — 칸 위아래 여백으로 맞춘다.
+   바깥 = 칸 + 판 안쪽(4 − 선) × 2 + 판 선 × 2, 칸 = 글줄 20 + 칸 선 × 2 + 위아래 여백 */
+.noslog-ui .nl-segments--compact:not(.nl-segments--icons) .nl-segments__item {
+    padding-block: calc(
+        (
+                var(--nl-control-height-compact) - var(--nl-spacing-8) -
+                    var(--nl-type-line-height-20)
+            ) /
+            2 - var(--nl-stroke-default)
+    );
+}
 .noslog-ui .nl-segments--compact.nl-segments--icons .nl-segments__item {
     width: calc(var(--nl-control-height-compact) - var(--nl-spacing-8));
     padding-block: 0;
@@ -820,61 +832,259 @@ html[data-theme="light"] .noslog-ui,
     z-index: 80;
     background: var(--nl-surface-scrim);
 }
+/* 대화상자(2026-09-26 A, GitHub · Primer 3칸 창) — 머리 · 본문 · 발. 면 · 경계 · 그림자 · 모서리는 떠 있는 창 그대로.
+   크기 = small 440 · medium 560(기본) · large 768(읽기 폭), 화면 가장자리 16 은 늘 비운다 */
 .noslog-ui .nl-dialog {
+    --nl-dialog-width: 560px;
     position: fixed;
     top: 50%;
     left: 50%;
     z-index: 81;
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-16);
-    width: min(334px, calc(100vw - 56px));
-    max-height: calc(100dvh - 48px);
-    overflow-y: auto;
+    width: min(var(--nl-dialog-width), calc(100vw - var(--nl-spacing-32)));
+    max-height: calc(100dvh - var(--nl-spacing-48));
+    overflow: hidden;
     transform: translate(-50%, -50%);
-    padding: var(--nl-spacing-24);
     border-radius: var(--nl-radius-overlay);
     background: var(--nl-surface-overlay);
     box-shadow:
         inset 0 0 0 var(--nl-stroke-default) var(--nl-border-overlay),
         var(--nl-overlay-shadow);
 }
+.noslog-ui .nl-dialog--small {
+    --nl-dialog-width: 440px;
+}
+.noslog-ui .nl-dialog--large {
+    --nl-dialog-width: var(--nl-container-reading);
+}
+/* 머리 = 제목(component-title) + 오른쪽 닫기(아이콘 버튼 M · 아이콘 20), 아래 구분선. 안쪽 12 · 오른쪽 16 · 왼쪽 24 */
 .noslog-ui .nl-dialog__header {
     display: flex;
+    flex: none;
     align-items: center;
     justify-content: space-between;
     gap: var(--nl-spacing-8);
+    min-height: calc(var(--nl-control-height-compact) + var(--nl-spacing-24));
+    padding: var(--nl-spacing-12) var(--nl-spacing-16) var(--nl-spacing-12)
+        var(--nl-spacing-24);
+    box-shadow: inset 0 calc(var(--nl-stroke-default) * -1)
+        var(--nl-border-divider);
 }
-/* 닫기 아이콘 버튼(컨트롤 정사각 · 아이콘 24)을 (컨트롤 − 24) / 2 만큼 위 · 오른쪽 · 아래로 당겨 잉크가 안쪽 24 선에 선다 */
 .noslog-ui .nl-dialog__close {
-    --nl-dialog-close-pull: calc(
-        (var(--nl-control-height) - var(--nl-icon-large)) / -2
-    );
-    margin: var(--nl-dialog-close-pull) var(--nl-dialog-close-pull)
-        var(--nl-dialog-close-pull) 0;
+    flex: none;
 }
+/* 본문 = 여기만 스크롤 · 안쪽 24 · 세로 간격 16 */
+.noslog-ui .nl-dialog__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--nl-spacing-16);
+    min-height: 0;
+    padding: var(--nl-spacing-24);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+/* 버튼 줄 = 오른쪽 끝에 「보조 → 주」(Primer · Atlassian · Apple · Fluent · Material 3) */
 .noslog-ui .nl-dialog__actions {
     display: flex;
     flex-wrap: wrap;
     gap: var(--nl-spacing-8);
     justify-content: flex-end;
 }
-/* Compact 창과 672 미만의 모든 창: 액션이 폭을 채운다(둘이면 취소 먼저 등폭). Wide 는 672 이상에서 오른쪽 정렬 */
-.noslog-ui .nl-dialog--compact .nl-dialog__actions > .nl-button {
-    flex: 1 1 0;
-    min-width: 0;
+/* 발 = 위 구분선 · 안쪽 16 · 24, 버튼은 M */
+.noslog-ui .nl-dialog__footer {
+    flex: none;
+    padding: var(--nl-spacing-16) var(--nl-spacing-24);
+    box-shadow: inset 0 var(--nl-stroke-default) var(--nl-border-divider);
 }
+/* 확인 창 — 큰 제목(section-title) · 구분선 없음 · 한 판(안쪽 24 · 제목 → 본문 12 · 본문 → 버튼 24) */
+.noslog-ui .nl-dialog--confirm {
+    gap: var(--nl-spacing-12);
+    padding: var(--nl-spacing-24);
+}
+.noslog-ui
+    .nl-dialog--confirm
+    > :is(.nl-dialog__header, .nl-dialog__body, .nl-dialog__footer) {
+    min-height: 0;
+    padding: 0;
+    box-shadow: none;
+}
+.noslog-ui .nl-dialog--confirm > .nl-dialog__footer {
+    padding-top: var(--nl-spacing-12);
+}
+
+/* 672 미만(2026-09-26 A, Primer 좁은 화면 규칙) — 입력 칸이 있는 창은 전체 화면(전체 화면 창과 같은 머리 · 발),
+   그 밖은 아래 시트(폭 가득 · 위 모서리만 둥글게 · 버튼은 L 로 폭 가득, 주 버튼이 위). 이미지 내보내기 창은 따로 */
 @media (max-width: 671px) {
-    .noslog-ui .nl-dialog__actions > .nl-button {
+    .noslog-ui .nl-dialog:not(.nl-image-share) {
+        top: auto;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        transform: none;
+        border-radius: var(--nl-radius-overlay) var(--nl-radius-overlay) 0 0;
+    }
+    .noslog-ui .nl-dialog:not(.nl-image-share) > .nl-dialog__actions,
+    .noslog-ui .nl-dialog--confirm > .nl-dialog__actions {
+        flex-direction: column-reverse;
+        padding-bottom: calc(
+            var(--nl-spacing-16) + env(safe-area-inset-bottom, 0px)
+        );
+    }
+    /* 시트 좌우 = 폰 여백 16(2026-09-26 점검 B1 — 전체 화면 창 · 페이지와 같은 선). 닫기(M · 아이콘 20)는 오른쪽 8 이라 잉크가 16 선에 */
+    .noslog-ui
+        .nl-dialog:not(.nl-image-share):not(.nl-dialog--confirm)
+        > .nl-dialog__header {
+        padding-inline: var(--nl-spacing-16) var(--nl-spacing-8);
+    }
+    .noslog-ui
+        .nl-dialog:not(.nl-image-share):not(.nl-dialog--confirm)
+        > .nl-dialog__body {
+        padding-inline: var(--nl-spacing-16);
+    }
+    .noslog-ui
+        .nl-dialog:not(.nl-image-share):not(.nl-dialog--confirm)
+        > .nl-dialog__footer {
+        padding-inline: var(--nl-spacing-16);
+    }
+    /* 확인 시트 = 안쪽 위 24 · 좌우 16 · 아래 16 + 발 16(틀 시안 A 폰 확인 창 24 · 16 · 32) */
+    .noslog-ui .nl-dialog--confirm {
+        padding: var(--nl-spacing-24) var(--nl-spacing-16) var(--nl-spacing-16);
+    }
+    .noslog-ui
+        .nl-dialog:not(.nl-image-share)
+        .nl-dialog__actions
+        > .nl-button {
+        min-height: var(--nl-control-height);
+    }
+    .noslog-ui
+        .nl-dialog:not(.nl-image-share):has(
+            :is(
+                input:not([type="hidden"]),
+                textarea,
+                select,
+                [role="combobox"],
+                [role="slider"]
+            )
+        ) {
+        top: 0;
+        height: 100dvh;
+        max-height: none;
+        border-radius: 0;
+        background: var(--nl-surface-canvas);
+        box-shadow: none;
+    }
+    .noslog-ui
+        .nl-dialog:not(.nl-image-share):has(
+            :is(
+                input:not([type="hidden"]),
+                textarea,
+                select,
+                [role="combobox"],
+                [role="slider"]
+            )
+        )
+        > .nl-dialog__header {
+        min-height: 60px;
+        padding: var(--nl-spacing-8) var(--nl-spacing-8) var(--nl-spacing-8)
+            var(--nl-spacing-16);
+    }
+    .noslog-ui
+        .nl-dialog:not(.nl-image-share):has(
+            :is(
+                input:not([type="hidden"]),
+                textarea,
+                select,
+                [role="combobox"],
+                [role="slider"]
+            )
+        )
+        > .nl-dialog__body {
+        padding: var(--nl-spacing-24) var(--nl-spacing-16);
+    }
+    .noslog-ui
+        .nl-dialog:not(.nl-image-share):has(
+            :is(
+                input:not([type="hidden"]),
+                textarea,
+                select,
+                [role="combobox"],
+                [role="slider"]
+            )
+        )
+        > .nl-dialog__footer {
+        flex-direction: row;
+        padding: var(--nl-spacing-16);
+        padding-bottom: max(
+            var(--nl-spacing-16),
+            env(safe-area-inset-bottom, 0px)
+        );
+    }
+    .noslog-ui
+        .nl-dialog:not(.nl-image-share):has(
+            :is(
+                input:not([type="hidden"]),
+                textarea,
+                select,
+                [role="combobox"],
+                [role="slider"]
+            )
+        )
+        > .nl-dialog__footer
+        > .nl-button {
+        flex: none;
+    }
+    /* 발 = 보조 글자 폭 + 주(마지막) 남은 폭(틀 시안 A 폰 · 전체 화면 창 「초기화 + 주」 와 같은 문법, 2026-09-26 점검 D4) */
+    .noslog-ui
+        .nl-dialog:not(.nl-image-share):has(
+            :is(
+                input:not([type="hidden"]),
+                textarea,
+                select,
+                [role="combobox"],
+                [role="slider"]
+            )
+        )
+        > .nl-dialog__footer
+        > .nl-button:last-child {
         flex: 1 1 0;
         min-width: 0;
     }
+    /* 닫기 = 전체 화면 창과 같은 L 정사각 · 아이콘 24(가장자리 닫기, 2026-09-26 점검 D5) */
+    .noslog-ui
+        .nl-dialog:not(.nl-image-share):has(
+            :is(
+                input:not([type="hidden"]),
+                textarea,
+                select,
+                [role="combobox"],
+                [role="slider"]
+            )
+        )
+        .nl-dialog__close {
+        width: var(--nl-control-height);
+        height: var(--nl-control-height);
+        min-height: var(--nl-control-height);
+    }
+    .noslog-ui
+        .nl-dialog:not(.nl-image-share):has(
+            :is(
+                input:not([type="hidden"]),
+                textarea,
+                select,
+                [role="combobox"],
+                [role="slider"]
+            )
+        )
+        .nl-dialog__close
+        svg {
+        width: var(--nl-icon-large);
+        height: var(--nl-icon-large);
+    }
 }
-.noslog-ui .nl-dialog--wide {
-    width: min(var(--nl-container-reading), calc(100vw - 56px));
-}
-/* 아래 시트(2026-09-26, 유튜브 폰 설명 창) — 1055 이하에서 화면 아래 폭 가득, 위 모서리만 둥글게.
-   면 · 경계 · 머리(제목 + 닫기)는 대화상자 그대로 */
+/* 아래 시트(2026-09-26, 유튜브 폰 설명 창) — `sheet` 는 1055 이하까지 아래 시트 */
 @media (max-width: 1055px) {
     .noslog-ui .nl-dialog--sheet {
         top: auto;
@@ -882,14 +1092,203 @@ html[data-theme="light"] .noslog-ui,
         bottom: 0;
         left: 0;
         width: 100%;
-        max-height: calc(100dvh - var(--nl-spacing-48));
         transform: none;
+        border-radius: var(--nl-radius-overlay) var(--nl-radius-overlay) 0 0;
+    }
+    .noslog-ui .nl-dialog--sheet > .nl-dialog__body {
         padding-bottom: calc(
             var(--nl-spacing-24) + env(safe-area-inset-bottom, 0px)
         );
-        border-radius: var(--nl-radius-overlay) var(--nl-radius-overlay) 0 0;
     }
 }
+/* 고르기 창(2026-09-26 P1 — 당근 지역 변경 · Booking 통화 · Google 항공편)
+   고른 것 = 순번 알약 한 줄(적용 조건 토큰과 같은 모양 · × 로 빼기, 빈 칸은 빈자리 경계),
+   목록 = 줄마다 이름(emphasis-label) + 보조 글자(metadata) · 오른쪽 체크 · 줄 사이 구분선 */
+.noslog-ui .nl-pick-slots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--nl-spacing-8);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.noslog-ui .nl-pick-slot {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--nl-spacing-4);
+    min-width: 0;
+    min-height: var(--nl-control-height-compact);
+    padding: 0 var(--nl-spacing-4) 0 var(--nl-spacing-12);
+    border-radius: var(--nl-radius-field);
+    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-default);
+    color: var(--nl-content-default);
+}
+.noslog-ui .nl-pick-slot[data-empty] {
+    padding-inline-end: var(--nl-spacing-12);
+    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-empty-slot);
+    color: var(--nl-content-pending);
+}
+.noslog-ui .nl-pick-slot[data-active] {
+    background: var(--nl-surface-raised);
+    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-strong);
+}
+.noslog-ui .nl-pick-slot__label {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+}
+.noslog-ui .nl-pick-slot__label > span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.noslog-ui .nl-pick-slot__remove {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: var(--nl-spacing-24);
+    height: var(--nl-spacing-24);
+    padding: 0;
+    border: 0;
+    border-radius: var(--nl-radius-control);
+    background: none;
+    color: var(--nl-content-subdued);
+    cursor: pointer;
+}
+@media (hover: hover) {
+    .noslog-ui .nl-pick-slot__remove:hover {
+        background: var(--nl-interaction-hover);
+        color: var(--nl-content-interactive);
+    }
+}
+.noslog-ui .nl-pick-list {
+    display: flex;
+    flex-direction: column;
+    max-height: min(320px, 40dvh);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+.noslog-ui .nl-pick-row {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: var(--nl-spacing-12);
+    min-height: var(--nl-control-height);
+    padding: var(--nl-spacing-8) var(--nl-spacing-4);
+    box-shadow: inset 0 calc(var(--nl-stroke-default) * -1)
+        var(--nl-border-divider);
+    color: var(--nl-content-default);
+    text-align: left;
+    cursor: pointer;
+}
+.noslog-ui .nl-pick-row:last-child {
+    box-shadow: none;
+}
+.noslog-ui .nl-pick-row__main {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+.noslog-ui .nl-pick-row__check {
+    flex: none;
+    color: var(--nl-content-interactive);
+}
+.noslog-ui .nl-pick-row[data-active] {
+    --nl-state-layer: var(--nl-interaction-menu-set);
+    background-image: linear-gradient(
+        var(--nl-state-layer),
+        var(--nl-state-layer)
+    );
+}
+@media (hover: hover) {
+    .noslog-ui .nl-pick-row:not([aria-disabled="true"]):hover {
+        --nl-state-layer: var(--nl-interaction-hover);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
+    }
+}
+.noslog-ui .nl-pick-row[aria-disabled="true"] {
+    cursor: not-allowed;
+    color: var(--nl-interaction-disabled-content);
+}
+.noslog-ui .nl-pick-row[aria-disabled="true"] .nl-metadata {
+    color: inherit;
+}
+/* 정보 창 줄 목록(2026-09-26 I1 — GitHub · GitLab · tldraw · Excalidraw 도움말 창)
+   소제목(metadata) →8→ 구분선 줄 목록. 줄 = 이름 칸(가장 긴 이름 폭으로 맞춤) · 값/설명 칸, 줄 높이 = 컨트롤 높이 ·
+   위아래 8 · 좌우 4(고르기 줄과 같음). --value = 값을 오른쪽 끝에 */
+.noslog-ui .nl-info-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-info-rows {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: var(--nl-spacing-16);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.noslog-ui .nl-info-rows > * {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+    align-items: baseline;
+    align-content: center;
+    min-height: var(--nl-control-height);
+    padding: var(--nl-spacing-8) var(--nl-spacing-4);
+    box-shadow: inset 0 calc(var(--nl-stroke-default) * -1)
+        var(--nl-border-divider);
+}
+.noslog-ui .nl-info-rows > :last-child {
+    box-shadow: none;
+}
+.noslog-ui .nl-info-rows :is(dt, dd) {
+    margin: 0;
+}
+.noslog-ui .nl-info-rows__lead {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-info-rows--value > * > :last-child {
+    justify-self: end;
+    text-align: end;
+}
+/* 로그인 안내(2026-09-26 F1) — 피드백 「보냄」 표시와 같은 배치: 상태 표시 원 40(면 surface, 가이드 대화상자 절) →+4→ 제목 →8→ 설명 */
+.noslog-ui .nl-login-prompt {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-login-prompt__mark {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    margin-bottom: var(--nl-spacing-4);
+    border-radius: var(--nl-radius-full);
+    background: var(--nl-surface-surface);
+    color: var(--nl-content-interactive);
+}
+.noslog-ui .nl-login-prompt p {
+    margin: 0;
+}
+
 /* 구역 제목 줄 HeadingRow — 제목(20/600) · 도움말 · 메타 · 오른쪽 끝 제목 링크. 좁으면 줄바꿈(열 8 · 행 4) (2026-09-16) */
 .noslog-ui .nl-heading-row {
     display: flex;
@@ -1670,8 +2069,15 @@ html[data-theme="light"] .noslog-ui,
     animation: nl-rise-in var(--nl-motion-duration-overlay-in)
         var(--nl-ease-enter);
 }
-/* 아래 시트는 아래에서 올라온다 — ⑫ 위치 이동(오락실 시트와 같은 감속 200) */
+/* 아래 시트는 아래에서 올라온다 — ⑫ 위치 이동(오락실 시트와 같은 감속 200). 672 미만은 모든 대화상자(시트 · 전체 화면) */
+@media (max-width: 671px) {
+    .noslog-ui .nl-dialog:not(.nl-image-share)[data-state="open"] {
+        animation: nl-sheet-in var(--nl-motion-duration-move)
+            var(--nl-ease-enter);
+    }
+}
 @media (max-width: 1055px) {
+    .noslog-ui .nl-image-share[data-state="open"],
     .noslog-ui .nl-dialog--sheet[data-state="open"] {
         animation: nl-sheet-in var(--nl-motion-duration-move)
             var(--nl-ease-enter);
@@ -1765,25 +2171,9 @@ html:has(.noslog-ui) [data-sonner-toaster] [data-sonner-toast] > * {
         translate: 0 var(--nl-motion-distance);
     }
 }
-/* 이미지 내보내기 창(프로필 카드 · 서열표 공용, 2026-09-22 공용으로 옮김) — 미리보기 → 상태 → 저장(주) · 복사 · 공유 */
-.noslog-ui .nl-image-share {
-    padding: var(--nl-spacing-16) 0 var(--nl-spacing-24);
-    width: min(334px, calc(100vw - 32px));
-    border: 0;
-    box-shadow:
-        inset 0 0 0 var(--nl-stroke-default) var(--nl-border-overlay),
-        var(--nl-elevation-overlay);
-}
-.noslog-ui .nl-image-share .nl-dialog__header {
-    padding-inline: var(--nl-spacing-24) var(--nl-spacing-16);
-}
-.noslog-ui .nl-image-share .nl-dialog__close {
-    margin: 0;
-}
-.noslog-ui .nl-image-share .nl-dialog__close svg {
-    width: 24px;
-    height: 24px;
-}
+/* 이미지 내보내기 창(프로필 카드 · 서열표 공용, 2026-09-22 공용으로 옮김) — 미리보기 → 상태 → 저장(주) · 복사 · 공유.
+   1055 이하 = 전체 화면(2026-09-26 A — Instagram 프로필 카드 · Telegram QR · 카카오톡 QR): 이미지는 화면 폭 끝까지, 버튼 줄은 아래 고정.
+   1056 이상 = 가운데 창(3칸 창 이전 모양 그대로 · 본문만 스크롤하고 버튼 줄은 아래 고정, 2026-09-26 A) */
 .noslog-ui .nl-image-share__body {
     display: flex;
     flex-direction: column;
@@ -1816,13 +2206,93 @@ html:has(.noslog-ui) [data-sonner-toaster] [data-sonner-toast] > * {
     height: auto;
     padding-block: var(--nl-spacing-8);
 }
-@media (min-width: 672px) {
+@media (max-width: 1055px) {
     .noslog-ui .nl-image-share {
-        width: min(768px, calc(100vw - 48px));
+        inset: 0;
+        width: 100%;
+        height: 100dvh;
+        max-height: none;
+        transform: none;
+        border-radius: 0;
+        background: var(--nl-surface-canvas);
+        box-shadow: none;
     }
+    /* 머리 = 전체 화면 창과 같은 60 */
+    .noslog-ui .nl-image-share > .nl-dialog__header {
+        min-height: 60px;
+        padding: var(--nl-spacing-8) var(--nl-spacing-8) var(--nl-spacing-8)
+            var(--nl-spacing-16);
+    }
+    .noslog-ui .nl-image-share > .nl-dialog__body {
+        padding: 0;
+    }
+    .noslog-ui .nl-image-share__body {
+        flex: 1;
+        padding: var(--nl-spacing-16) var(--nl-spacing-16) 0;
+    }
+    /* 이미지는 화면 폭 끝까지(모서리 없음) */
+    .noslog-ui .nl-image-share__preview {
+        margin-inline: calc(var(--nl-spacing-16) * -1);
+        border-radius: 0;
+    }
+    /* 버튼 줄 = 화면 아래 고정(본문이 길어도 늘 보임) · 위 구분선 · 안전 영역 */
     .noslog-ui .nl-image-share__actions {
+        position: sticky;
+        bottom: 0;
+        margin: auto calc(var(--nl-spacing-16) * -1) 0;
+        padding: var(--nl-spacing-16);
+        padding-bottom: max(
+            var(--nl-spacing-16),
+            env(safe-area-inset-bottom, 0px)
+        );
+        background: var(--nl-surface-canvas);
+        box-shadow: inset 0 var(--nl-stroke-default) var(--nl-border-divider);
+    }
+}
+@media (min-width: 1056px) {
+    .noslog-ui .nl-image-share {
+        gap: var(--nl-spacing-16);
+        padding: var(--nl-spacing-16) 0 var(--nl-spacing-24);
+        width: min(
+            var(--nl-container-reading),
+            calc(100vw - var(--nl-spacing-48))
+        );
+        border: 0;
+        box-shadow:
+            inset 0 0 0 var(--nl-stroke-default) var(--nl-border-overlay),
+            var(--nl-elevation-overlay);
+    }
+    .noslog-ui .nl-image-share .nl-dialog__header {
+        min-height: 0;
+        padding-block: 0;
+        padding-inline: var(--nl-spacing-24) var(--nl-spacing-16);
+        box-shadow: none;
+    }
+    /* 본문만 스크롤 — 머리(제목 · 닫기)는 위에 남는다(2026-09-26) */
+    .noslog-ui .nl-image-share .nl-dialog__body {
+        padding: 0;
+    }
+    .noslog-ui .nl-image-share .nl-dialog__close {
+        width: var(--nl-control-height);
+        height: var(--nl-control-height);
+        margin: 0;
+    }
+    .noslog-ui .nl-image-share .nl-dialog__close svg {
+        width: var(--nl-icon-large);
+        height: var(--nl-icon-large);
+    }
+    /* 버튼 줄 = 본문 아래 고정(2026-09-26 A — 서열표처럼 내용이 길어도 늘 보임, 모양은 그대로).
+       위 16 은 앞 간격을 옮긴 것이라 짧은 창(프로필 카드)의 배치는 같다 */
+    .noslog-ui .nl-image-share__actions {
+        position: sticky;
+        bottom: 0;
         flex-direction: row;
         justify-content: flex-end;
+        margin-top: calc(var(--nl-spacing-16) * -1);
+        padding-top: var(--nl-spacing-16);
+        background: var(--nl-surface-overlay);
+        /* 화면 확대 · 축소에서 생기는 1px 틈으로 아래 그림이 비치지 않게 면을 1 더 내린다 */
+        box-shadow: 0 var(--nl-stroke-default) 0 var(--nl-surface-overlay);
     }
     .noslog-ui .nl-image-share__save {
         order: 1;

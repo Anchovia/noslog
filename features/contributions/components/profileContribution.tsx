@@ -242,7 +242,7 @@ function MyProposals() {
                         <ModalDialog
                             open={open}
                             onOpenChange={setOpen}
-                            width="wide"
+                            size="large"
                             title={t("contribution.section.allTitle")}
                             trigger={
                                 <Button variant="secondary" size="sm">

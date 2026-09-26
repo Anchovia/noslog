@@ -48,7 +48,7 @@ export default function SyncInvalidation({
             }}
             title={t("sync.invalidate")}
             description={t("sync.invalidateHelp")}
-            showClose={false}
+            variant="confirm"
             trigger={
                 <Button variant="danger" destructiveFilled>
                     {t("sync.invalidate")}

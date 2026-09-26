@@ -66,7 +66,7 @@ export default function EventDeleteButton({
                 isPublic ? "events.delete.bodyPublic" : "events.delete.body",
                 { title }
             )}
-            showClose={false}
+            variant="confirm"
             trigger={
                 <ActionButton variant="danger">
                     {t("events.delete.button")}

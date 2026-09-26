@@ -61,7 +61,7 @@ export default function DeleteContributionDialog({
             }}
             title={t(`community.delete.${kind}.title`, { scope })}
             description={t(`community.delete.${kind}.body`, { scope })}
-            showClose={false}
+            variant="confirm"
             onCloseAutoFocus={(event) => {
                 if (confirmed.current) event.preventDefault();
             }}

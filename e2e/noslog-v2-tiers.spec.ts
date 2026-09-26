@@ -566,6 +566,15 @@ test("exports the current view as a JPEG and remembers the display options", asy
         ]);
     const [width, compactHeight] = await size();
     expect(width).toBe(1200);
+    // 폰 = 전체 화면 · 이미지는 화면 폭 끝까지 · 버튼 줄은 화면 아래 고정(2026-09-26 A)
+    const frame = await dialog.boundingBox();
+    expect([frame!.x, frame!.width]).toEqual([0, 390]);
+    expect((await preview.boundingBox())!.width).toBe(390);
+    const save = dialog.getByRole("button", {
+        name: "이미지 저장",
+        exact: true,
+    });
+    await expect(save).toBeInViewport();
     const names = dialog.getByRole("checkbox", {
         name: "곡 이름 표시",
         exact: true,

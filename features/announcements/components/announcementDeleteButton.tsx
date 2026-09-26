@@ -43,6 +43,7 @@ export default function AnnouncementDeleteButton({
 
     return (
         <ModalDialog
+            variant="confirm"
             open={open}
             onOpenChange={(next) => {
                 if (!isPending) setOpen(next);
