@@ -230,7 +230,7 @@ export default function AccountSettings({
                         </dl>
                     </section>
                     <section className="nl-field">
-                        <h3 className="nl-field__label">
+                        <h3 className="nl-emphasis-label">
                             {t("settings.deleteStepReauth")}
                         </h3>
                         <div className="nl-account-reauth">
@@ -269,7 +269,12 @@ export default function AccountSettings({
                     >
                         <FormField
                             id={id}
-                            label={t("settings.deleteStepConfirm")}
+                            // 단계 제목은 emphasis-label(2026-09-26 점검 C2, 시안)
+                            label={
+                                <span className="nl-emphasis-label">
+                                    {t("settings.deleteStepConfirm")}
+                                </span>
+                            }
                             help={t("settings.deletePrompt", {
                                 confirmation: t("settings.deleteConfirmation"),
                             })}

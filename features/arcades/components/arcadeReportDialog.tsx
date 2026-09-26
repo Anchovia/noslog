@@ -200,6 +200,7 @@ export default function ArcadeReportDialog({
                 render={({ field }) => (
                     <RadioGroup
                         label={t("arcades.reportTypeLabel")}
+                        labelStyle="field"
                         value={field.value}
                         disabled={busy}
                         options={ARCADE_REPORT_TYPES.map((value) => ({
@@ -221,6 +222,7 @@ export default function ArcadeReportDialog({
                     render={({ field }) => (
                         <RadioGroup
                             label={t("arcades.reportCabinet")}
+                            labelStyle="field"
                             value={
                                 field.value === null ? "" : String(field.value)
                             }
@@ -334,7 +336,7 @@ export default function ArcadeReportDialog({
             onOpenChange={changeOpen}
             title={title}
             // 로그아웃이면 로그인 안내 한 덩이라 기본 폭(2026-09-26 F1)
-            size={isAuthenticated ? "large" : "medium"}
+            size={isAuthenticated ? "large" : "small"}
             className="nl-feedback-dialog"
             trigger={trigger}
             fullScreenFooter={

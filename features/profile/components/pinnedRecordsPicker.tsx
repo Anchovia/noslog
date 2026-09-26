@@ -5,7 +5,7 @@ import { useId, useRef, useState } from "react";
 
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import Button from "@/components/ui/Button";
-import { Input } from "@/components/ui/formField";
+import { FormField, Input } from "@/components/ui/formField";
 import ModalDialog from "@/components/ui/modalDialog";
 import SearchField from "@/components/ui/searchField";
 import {
@@ -55,6 +55,7 @@ export default function PinnedRecordsPicker({
     // 소감을 적는 알약(고른 기록 chartId) — 새로 고르면 그 기록으로
     const [editing, setEditing] = useState<number | null>(null);
     const listId = useId();
+    const commentId = useId();
     const changeButton = useRef<HTMLButtonElement>(null);
     const input = useRef<HTMLInputElement>(null);
     const byChart = new Map(records.map((record) => [record.chartId, record]));
@@ -144,9 +145,6 @@ export default function PinnedRecordsPicker({
                 open={open}
                 onOpenChange={setOpen}
                 title={t("profile.pinned.title")}
-                description={t("profile.pinned.dialogHelp", {
-                    max: PINNED_RECORD_LIMIT,
-                })}
                 onCloseAutoFocus={(event) => {
                     event.preventDefault();
                     changeButton.current?.focus();
@@ -185,106 +183,123 @@ export default function PinnedRecordsPicker({
                 }
             >
                 <div className="nl-pinned-picker">
-                    <ol className="nl-pick-slots">
-                        {Array.from(
-                            { length: PINNED_RECORD_LIMIT },
-                            (_, index) => {
-                                const item = draft[index];
-                                const record = item
-                                    ? byChart.get(item.chartId)
-                                    : undefined;
-                                if (!record)
+                    {/* 고른 칩 →8→ 쓰는 법 한 줄(2026-09-26 점검 D2 — 시안 P1: 칩을 눌러 소감) */}
+                    <div className="nl-settings__pick-group">
+                        <ol className="nl-pick-slots">
+                            {Array.from(
+                                { length: PINNED_RECORD_LIMIT },
+                                (_, index) => {
+                                    const item = draft[index];
+                                    const record = item
+                                        ? byChart.get(item.chartId)
+                                        : undefined;
+                                    if (!record)
+                                        return (
+                                            <li
+                                                key={`empty-${index}`}
+                                                className="nl-pick-slot nl-control"
+                                                data-empty
+                                            >
+                                                {index + 1} ·{" "}
+                                                {t(
+                                                    "achievement.settings.emptySlot"
+                                                )}
+                                            </li>
+                                        );
                                     return (
                                         <li
-                                            key={`empty-${index}`}
+                                            key={record.chartId}
                                             className="nl-pick-slot nl-control"
-                                            data-empty
+                                            data-active={
+                                                editing === record.chartId ||
+                                                undefined
+                                            }
                                         >
-                                            {index + 1} ·{" "}
-                                            {t(
-                                                "achievement.settings.emptySlot"
-                                            )}
+                                            <button
+                                                type="button"
+                                                className="nl-pick-slot__label"
+                                                aria-pressed={
+                                                    editing === record.chartId
+                                                }
+                                                aria-label={t(
+                                                    "profile.pinned.commentAria",
+                                                    { title: record.title }
+                                                )}
+                                                onClick={() =>
+                                                    setEditing(record.chartId)
+                                                }
+                                            >
+                                                <span>
+                                                    {index + 1} · {record.title}
+                                                </span>
+                                                <span
+                                                    className={`nl-metadata nl-level--${record.difficulty.toLowerCase()}`}
+                                                >
+                                                    {record.difficulty.toUpperCase()}{" "}
+                                                    {record.level}
+                                                </span>
+                                            </button>
+                                            <button
+                                                type="button"
+                                                className="nl-pick-slot__remove"
+                                                aria-label={t(
+                                                    "profile.pinned.removeAria",
+                                                    { title: record.title }
+                                                )}
+                                                onClick={() => {
+                                                    setDraft((current) =>
+                                                        current.filter(
+                                                            (_, at) =>
+                                                                at !== index
+                                                        )
+                                                    );
+                                                    if (
+                                                        editing ===
+                                                        record.chartId
+                                                    )
+                                                        setEditing(null);
+                                                }}
+                                            >
+                                                <X
+                                                    className="nl-icon-small"
+                                                    aria-hidden
+                                                />
+                                            </button>
                                         </li>
                                     );
-                                return (
-                                    <li
-                                        key={record.chartId}
-                                        className="nl-pick-slot nl-control"
-                                        data-active={
-                                            editing === record.chartId ||
-                                            undefined
-                                        }
-                                    >
-                                        <button
-                                            type="button"
-                                            className="nl-pick-slot__label"
-                                            aria-pressed={
-                                                editing === record.chartId
-                                            }
-                                            aria-label={t(
-                                                "profile.pinned.commentAria",
-                                                { title: record.title }
-                                            )}
-                                            onClick={() =>
-                                                setEditing(record.chartId)
-                                            }
-                                        >
-                                            <span>
-                                                {index + 1} · {record.title}
-                                            </span>
-                                            <span
-                                                className={`nl-metadata nl-level--${record.difficulty.toLowerCase()}`}
-                                            >
-                                                {record.difficulty.toUpperCase()}{" "}
-                                                {record.level}
-                                            </span>
-                                        </button>
-                                        <button
-                                            type="button"
-                                            className="nl-pick-slot__remove"
-                                            aria-label={t(
-                                                "profile.pinned.removeAria",
-                                                { title: record.title }
-                                            )}
-                                            onClick={() => {
-                                                setDraft((current) =>
-                                                    current.filter(
-                                                        (_, at) => at !== index
-                                                    )
-                                                );
-                                                if (editing === record.chartId)
-                                                    setEditing(null);
-                                            }}
-                                        >
-                                            <X
-                                                className="nl-icon-small"
-                                                aria-hidden
-                                            />
-                                        </button>
-                                    </li>
-                                );
-                            }
-                        )}
-                    </ol>
+                                }
+                            )}
+                        </ol>
+                        <p className="nl-metadata nl-muted">
+                            {t("profile.pinned.dialogHelp", {
+                                max: PINNED_RECORD_LIMIT,
+                            })}
+                        </p>
+                    </div>
+                    {/* 소감 칸 = 어느 곡인지 보이는 라벨 위(2026-09-26 점검 D3 — 폼 「라벨 위」) */}
                     {editingRecord ? (
-                        <Input
-                            aria-label={t("profile.pinned.commentAria", {
+                        <FormField
+                            id={commentId}
+                            label={t("profile.pinned.commentLabel", {
                                 title: editingRecord.title,
                             })}
-                            placeholder={t("profile.pinned.comment")}
-                            maxLength={PINNED_COMMENT_MAX}
-                            value={draft[editingIndex].comment}
-                            onChange={(event) => {
-                                const comment = event.target.value;
-                                setDraft((current) =>
-                                    current.map((entry, at) =>
-                                        at === editingIndex
-                                            ? { ...entry, comment }
-                                            : entry
-                                    )
-                                );
-                            }}
-                        />
+                        >
+                            <Input
+                                id={commentId}
+                                maxLength={PINNED_COMMENT_MAX}
+                                value={draft[editingIndex].comment}
+                                onChange={(event) => {
+                                    const comment = event.target.value;
+                                    setDraft((current) =>
+                                        current.map((entry, at) =>
+                                            at === editingIndex
+                                                ? { ...entry, comment }
+                                                : entry
+                                        )
+                                    );
+                                }}
+                            />
+                        </FormField>
                     ) : null}
                     <SearchField
                         ref={input}

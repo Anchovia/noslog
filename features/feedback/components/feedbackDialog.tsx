@@ -433,7 +433,7 @@ export default function FeedbackDialog({
             onOpenChange={changeOpen}
             title={t("feedback.title")}
             // 로그아웃이면 로그인 안내 한 덩이라 기본 폭(2026-09-26 F1)
-            size={isAuthenticated ? "large" : "medium"}
+            size={isAuthenticated ? "large" : "small"}
             className="nl-feedback-dialog"
             onCloseAutoFocus={onCloseAutoFocus}
             trigger={triggerNode}

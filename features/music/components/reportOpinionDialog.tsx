@@ -69,6 +69,8 @@ export default function ReportOpinionDialog({
                 if (!next && !mutation.isPending) onClose();
             }}
             title={t("community.report")}
+            // 로그아웃이면 로그인 안내 한 덩이 — small(2026-09-26 점검 D1, 시안 F1)
+            size={accountId ? undefined : "small"}
             footer={
                 accountId ? (
                     <>
@@ -127,6 +129,7 @@ export default function ReportOpinionDialog({
                         render={({ field }) => (
                             <RadioGroup
                                 label={t("community.reportReason")}
+                                labelStyle="field"
                                 value={field.value}
                                 onValueChange={field.onChange}
                                 disabled={mutation.isPending}

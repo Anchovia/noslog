@@ -37,18 +37,22 @@
 .noslog-ui .nl-radio-group legend {
     margin-bottom: var(--nl-spacing-12);
 }
+/* 창 안 폼의 라디오 묶음 = 제목이 칸 라벨 모양 · 라벨 → 선택지 8(FormField 와 같음, 2026-09-26 점검 C1) */
+.noslog-ui .nl-radio-group--field legend {
+    margin-bottom: var(--nl-spacing-8);
+}
 .noslog-ui .nl-radio-group__option {
     display: flex;
     align-items: center;
     gap: var(--nl-spacing-8);
-    min-height: 44px;
+    min-height: var(--nl-control-height);
     cursor: pointer;
 }
-/* 링 + 점 — 2px 링 안에 8px 점. 마우스를 올려도 모양은 그대로(Carbon·Primer·shadcn) */
+/* 링 + 점 — 원 20(icon-medium) · 2px 링 안에 점 8. 마우스를 올려도 모양은 그대로(Carbon·Primer·shadcn). 줄 = 컨트롤 높이(1056 이상 40) */
 .noslog-ui .nl-radio-group__option input {
     appearance: none;
-    width: 20px;
-    height: 20px;
+    width: var(--nl-icon-medium);
+    height: var(--nl-icon-medium);
     flex-shrink: 0;
     border: var(--nl-stroke-strong) solid var(--nl-border-strong);
     border-radius: 50%;
@@ -59,9 +63,9 @@
 .noslog-ui .nl-radio-group__option input:checked::after {
     content: "";
     display: block;
-    width: 8px;
-    height: 8px;
-    margin: 4px;
+    width: var(--nl-spacing-8);
+    height: var(--nl-spacing-8);
+    margin: var(--nl-spacing-4);
     border-radius: 50%;
     background: var(--nl-primary-default);
 }
@@ -139,11 +143,11 @@
 .noslog-ui .nl-settings__control-help {
     margin-top: var(--nl-spacing-8);
 }
-/* 고르기 창 묶음(「지금 선택」 · 결과) — 라벨 →4→ 목록 */
+/* 고르기 창 묶음(「지금 선택」 · 결과) — 라벨 →8→ 목록(가이드 「소제목 → 내용 8」, 2026-09-26 점검 B2) */
 .noslog-ui .nl-settings__pick-group {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-4);
+    gap: var(--nl-spacing-8);
     min-width: 0;
 }
 .noslog-ui .nl-settings__crop {
