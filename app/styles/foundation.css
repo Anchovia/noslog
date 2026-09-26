@@ -2096,7 +2096,7 @@ html:has(.noslog-ui) [data-sonner-toaster] [data-sonner-toast] > * {
 }
 /* 이미지 내보내기 창(프로필 카드 · 서열표 공용, 2026-09-22 공용으로 옮김) — 미리보기 → 상태 → 저장(주) · 복사 · 공유.
    1055 이하 = 전체 화면(2026-09-26 A — Instagram 프로필 카드 · Telegram QR · 카카오톡 QR): 이미지는 화면 폭 끝까지, 버튼 줄은 아래 고정.
-   1056 이상 = 가운데 창(3칸 창 이전 모양 그대로) */
+   1056 이상 = 가운데 창(3칸 창 이전 모양 그대로 · 본문만 스크롤하고 버튼 줄은 아래 고정, 2026-09-26 A) */
 .noslog-ui .nl-image-share__body {
     display: flex;
     flex-direction: column;
@@ -2176,7 +2176,6 @@ html:has(.noslog-ui) [data-sonner-toaster] [data-sonner-toast] > * {
     .noslog-ui .nl-image-share {
         gap: var(--nl-spacing-16);
         padding: var(--nl-spacing-16) 0 var(--nl-spacing-24);
-        overflow-y: auto;
         width: min(768px, calc(100vw - 48px));
         border: 0;
         box-shadow:
@@ -2189,9 +2188,9 @@ html:has(.noslog-ui) [data-sonner-toaster] [data-sonner-toast] > * {
         padding-inline: var(--nl-spacing-24) var(--nl-spacing-16);
         box-shadow: none;
     }
+    /* 본문만 스크롤 — 머리(제목 · 닫기)는 위에 남는다(2026-09-26) */
     .noslog-ui .nl-image-share .nl-dialog__body {
         padding: 0;
-        overflow: visible;
     }
     .noslog-ui .nl-image-share .nl-dialog__close {
         width: var(--nl-control-height);
@@ -2202,9 +2201,18 @@ html:has(.noslog-ui) [data-sonner-toaster] [data-sonner-toast] > * {
         width: 24px;
         height: 24px;
     }
+    /* 버튼 줄 = 본문 아래 고정(2026-09-26 A — 서열표처럼 내용이 길어도 늘 보임, 모양은 그대로).
+       위 16 은 앞 간격을 옮긴 것이라 짧은 창(프로필 카드)의 배치는 같다 */
     .noslog-ui .nl-image-share__actions {
+        position: sticky;
+        bottom: 0;
         flex-direction: row;
         justify-content: flex-end;
+        margin-top: calc(var(--nl-spacing-16) * -1);
+        padding-top: var(--nl-spacing-16);
+        background: var(--nl-surface-overlay);
+        /* 화면 확대 · 축소에서 생기는 1px 틈으로 아래 그림이 비치지 않게 면을 1 더 내린다 */
+        box-shadow: 0 var(--nl-stroke-default) 0 var(--nl-surface-overlay);
     }
     .noslog-ui .nl-image-share__save {
         order: 1;

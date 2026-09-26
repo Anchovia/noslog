@@ -139,17 +139,27 @@
     min-width: 0;
     scroll-margin-top: 76px;
 }
-/* 출처 창 목록 — 「패턴 경향 기준」 창과 같은 간격(항목 사이 16 · 제목 → 내용 8) */
+/* 출처 창 목록 — 항목 사이 16 · 제목 → 내용 8, 항목 사이 구분선(2026-09-26 I1 — 정보 창 줄 목록과 같은 선) */
 .noslog-ui .nl-chart-viewer__sources {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-16);
     margin: 0;
 }
 .noslog-ui .nl-chart-viewer__sources > div {
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-8);
+    padding-block: var(--nl-spacing-16);
+}
+.noslog-ui .nl-chart-viewer__sources > div:first-child {
+    padding-top: 0;
+}
+.noslog-ui .nl-chart-viewer__sources > div:last-child {
+    padding-bottom: 0;
+}
+.noslog-ui .nl-chart-viewer__sources > div:not(:last-child) {
+    box-shadow: inset 0 calc(var(--nl-stroke-default) * -1)
+        var(--nl-border-divider);
 }
 .noslog-ui .nl-chart-viewer__sources dd {
     display: flex;
