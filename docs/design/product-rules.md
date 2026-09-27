@@ -509,7 +509,11 @@ old design-stage checklist. Changes to material behavior require a user decision
   look like extraction ghosts are dropped before import and listed in a warning with their
   places (2026-09-25 F1′, checked against the videos by the combo counter): a tenuto of 8 beats
   or more that overlaps another note, and a standard note inside a tenuto's lanes within ¾ of a
-  beat after its head. Notes whose hand was read are never dropped. When the chart has a note
+  beat after its head. Notes whose hand was read are never dropped. A tenuto that still crosses a
+  later note on its lanes is ended one grid step before that note (2026-09-27: a key cannot be held
+  and struck again, so the extraction paired the head with a later end — Field of Hopes and Dreams
+  16, Pink Rose 40 places); the judgement count stays the same and the places are listed in a
+  warning to check the length against the video. When the chart has a note
   count, the panel compares it with the import's judgement count (one per note, one per
   glissando rung).
 - Against an existing draft every difference is listed (same tick, overlapping lanes = same

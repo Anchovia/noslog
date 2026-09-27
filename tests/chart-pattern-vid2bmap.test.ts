@@ -482,6 +482,52 @@ describe("vid2bmap hands from the LR run", () => {
     });
 });
 
+describe("vid2bmap tenuto crossing a later note", () => {
+    // 테누토(0~3박) 가 같은 칸의 2박 노트를 가로지른다 — AI 가 끝을 뒤의 끝 모양과 짝지은 경우(2026-09-27)
+    const result: Vid2bmapResult = {
+        fps: null,
+        startSec: null,
+        barRows: [0, 40, 80, 120, 160],
+        simple: [
+            [80, 10, 12, 0],
+            [80, 20, 22, 1],
+        ],
+        tenuto: [
+            [0, 120, 10, 12, 0],
+            [0, 120, 16, 18, 1],
+        ],
+        trill: [],
+        glissando: [],
+        beatFrames: null,
+    };
+    let next = 0;
+    const conversion = convertVid2bmap(
+        result,
+        collectVid2bmapNotes(result).notes,
+        {
+            timingPoints: [point(0, 0, 120, 4, 4)],
+            firstBarTick: 0,
+            snapDivisor: 4,
+            include: { standard: true, tenuto: true, trill: true },
+            createId: () => `n${(next += 1)}`,
+        }
+    );
+    const tenutoAt = (lane: number) =>
+        conversion.notes.find(
+            (note) => note.type === "tenuto" && note.lane === lane
+        )!;
+
+    it("ends the tenuto one grid step before the note it crossed", () => {
+        expect(tenutoAt(10).durationTicks).toBe(960 - 120);
+        expect(tenutoAt(16).durationTicks).toBe(1440);
+        expect(findChartNoteConflicts(conversion.notes, 480)).toEqual([]);
+        expect(conversion.warnings).toContainEqual({
+            kind: "tenutoTrimmed",
+            ticks: [0],
+        });
+    });
+});
+
 describe("vid2bmap notes the hand run did not see", () => {
     // 40프레임 = 1박(90 BPM 4/4), 첫 박자선 = 틱 0
     const rows = {

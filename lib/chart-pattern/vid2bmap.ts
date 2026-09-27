@@ -89,6 +89,8 @@ export type Vid2bmapWarning =
     | { kind: "trillSplit"; count: number }
     /** 손을 읽지 못해 영상에 없던 것으로 보고 뺀 긴 테누토 · 테누토 안 머리의 자리(틱) */
     | { kind: "phantomDropped"; tenutoTicks: number[]; headTicks: number[] }
+    /** 같은 칸의 다음 노트를 가로질러 그 노트 한 격자 앞에서 끝낸 테누토의 자리(틱) */
+    | { kind: "tenutoTrimmed"; ticks: number[] }
     /** 글리산도 조각을 이어 만든 수 · 이어지지 않아 버린 조각 수 · 가로대를 일반 노트로도 읽어 뺀 수 */
     | {
           kind: "glissandoJoined";
@@ -574,6 +576,57 @@ function simplifyPath<T extends { tick: number; lane: number }>(
 }
 
 /** 추출 결과 → 초안에 넣을 노트 · 손 확인 목록 · 경고 */
+/** 뒤에 시작하는 노트와 겹치는 테누토를 그 노트 한 격자 앞에서 끝낸다(겹침이 여럿이면 가장 앞 노트 기준) */
+function trimVid2bmapTenutos(
+    notes: ChartNote[],
+    timingPoints: ChartTimingPoint[],
+    snapDivisor: number
+) {
+    const sorted = sortTimingPoints(timingPoints);
+    const byId = new Map(notes.map((note) => [note.id, note]));
+    const durations = new Map<string, number>();
+    for (const { firstId, secondId } of findChartNoteConflicts(
+        notes,
+        CHART_TICKS_PER_QUARTER
+    )) {
+        for (const [tenutoId, otherId] of [
+            [firstId, secondId],
+            [secondId, firstId],
+        ]) {
+            const tenuto = byId.get(tenutoId);
+            const other = byId.get(otherId);
+            if (
+                tenuto?.type !== "tenuto" ||
+                !other ||
+                other.tick <= tenuto.tick
+            )
+                continue;
+            const step =
+                beatTicksOf(activePoint(sorted, other.tick)) / snapDivisor;
+            const duration = Math.round(other.tick - step - tenuto.tick);
+            if (duration <= 0) continue;
+            durations.set(
+                tenuto.id,
+                Math.min(
+                    durations.get(tenuto.id) ?? tenuto.durationTicks,
+                    duration
+                )
+            );
+        }
+    }
+    return {
+        notes: notes.map((note) =>
+            durations.has(note.id)
+                ? { ...note, durationTicks: durations.get(note.id)! }
+                : note
+        ),
+        ticks: notes
+            .filter((note) => durations.has(note.id))
+            .map((note) => note.tick)
+            .sort((a, b) => a - b),
+    };
+}
+
 export function convertVid2bmap(
     result: Vid2bmapResult,
     notes: Vid2bmapRawNote[],
@@ -908,6 +961,12 @@ export function convertVid2bmap(
             rungNotes,
         });
     }
+    // 같은 칸의 다음 노트를 가로지르는 테누토 — 건반을 누른 채 같은 건반을 다시 칠 수 없으니 AI 가 끝을 한참 뒤의 끝 모양과
+    // 짝지은 것(Field of Hopes and Dreams 16 · Pink Rose 40곳, 2026-09-27). 그 노트 한 격자 앞에서 끝낸다 — 판정 수는 그대로
+    const trimmed = trimVid2bmapTenutos(output, timingPoints, snapDivisor);
+    output = trimmed.notes;
+    if (trimmed.ticks.length > 0)
+        warnings.push({ kind: "tenutoTrimmed", ticks: trimmed.ticks });
     if (shortTenuto > 0)
         warnings.push({ kind: "shortTenuto", count: shortTenuto });
     if (trillSplit > 0)

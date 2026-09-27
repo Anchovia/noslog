@@ -239,6 +239,8 @@ function warningText(
             return `${warning.count}박은 곡 전체 격자와 맞지 않아 그 박만 ${warning.divisors.map((divisor) => `1/${divisor}`).join(" · ")}박 격자로 맞췄어요(${chartPositionLabel(warning.tick, timingPoints)}부터) — 확인 필요`;
         case "denseSnap":
             return `빠른 구간 노트 ${warning.count}개는 한 자리로 뭉치지 않게 더 촘촘한 격자로 맞췄어요(${chartPositionLabel(warning.tick, timingPoints)}부터)`;
+        case "tenutoTrimmed":
+            return `같은 건반의 다음 노트를 가로지르는 테누토 ${warning.ticks.length}개를 그 노트 한 칸 앞에서 끝냈어요(${positionList(warning.ticks, timingPoints)}) — 길이를 영상과 확인`;
         case "shortTenuto":
             return `아주 짧은 테누토 ${warning.count}개를 한 칸 길이로 늘렸어요`;
         case "trillSplit":
