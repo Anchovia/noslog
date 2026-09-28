@@ -17,6 +17,7 @@ function PolicyBlock({
         case "warning":
             return (
                 <StatusMessage
+                    tone="boxed"
                     severity="warning"
                     title={block.title}
                     description={block.text}

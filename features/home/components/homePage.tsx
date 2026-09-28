@@ -4,7 +4,6 @@ import OfficialXPost from "@/components/home/officialXPost";
 import PageContainer from "@/components/layout/pageContainer";
 import HomeSearch from "@/features/home/components/homeSearch";
 import HomeDestinations from "@/features/home/components/homeDestinations";
-import CriticalAnnouncement from "@/features/announcements/components/criticalAnnouncement";
 import { getHomeAnnouncements } from "@/features/announcements/server/publicAnnouncementService";
 import { getHomeLiveEvents } from "@/features/events/server/eventService";
 import { getOfficialXLatestPost } from "@/features/home/server/officialXPostService";
@@ -48,7 +47,6 @@ export default async function HomePage() {
                     ),
                 }}
             />
-            <CriticalAnnouncement announcement={announcements.critical} />
             <section className="nl-home-hero">
                 <div className="nl-home-identity">
                     <span

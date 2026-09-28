@@ -149,12 +149,13 @@ export default function CommunityOpinions({
                 ) : null}
                 {query.isError ? (
                     <StatusMessage
+                        tone="quiet"
                         severity="danger"
                         role="alert"
                         title={t("community.loadError")}
                         action={
                             <ActionButton
-                                variant="secondary"
+                                variant="ghost"
                                 size="sm"
                                 onClick={() =>
                                     void (query.isFetchNextPageError

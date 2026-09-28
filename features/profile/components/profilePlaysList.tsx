@@ -212,12 +212,14 @@ export default function ProfilePlaysList({
             </div>
             {result.isError ? (
                 <StatusMessage
+                    tone="quiet"
                     severity="danger"
                     role="alert"
                     title={t("profile.sectionFailed")}
                     action={
                         <Button
-                            variant="secondary"
+                            variant="ghost"
+                            size="sm"
                             onClick={async () => {
                                 if (result.isFetchNextPageError)
                                     await result.fetchNextPage();

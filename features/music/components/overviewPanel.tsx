@@ -265,7 +265,8 @@ export default function OverviewPanel({
                     <h2 id={`${id}-facts`} className="nl-section-title">
                         {t("detail.chartInfo")}
                     </h2>
-                    <dl className="nl-facts nl-body-secondary nl-overview__card nl-overview__card--list">
+                    {/* 면 없는 구분선 줄 목록(2026-09-28 인상 점검 A6 — 구역 제목이 이미 묶음, 줄 글자가 제목과 같은 선) */}
+                    <dl className="nl-facts nl-body-secondary">
                         {shownFacts.map((fact) => (
                             <div key={fact.label}>
                                 <dt>{fact.label}</dt>

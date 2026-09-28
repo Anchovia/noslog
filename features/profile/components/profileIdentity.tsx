@@ -254,7 +254,7 @@ export default function ProfileIdentity({
                 arcade ||
                 lastPlayedValue ||
                 (isOwner && sync) ? (
-                    <div className="nl-profile-identity__meta nl-metadata nl-muted">
+                    <div className="nl-profile-identity__meta nl-body-secondary nl-muted">
                         {lastPlayedValue || (isOwner && sync) ? (
                             <p className="nl-profile-identity__line">
                                 {lastPlayedValue ? (

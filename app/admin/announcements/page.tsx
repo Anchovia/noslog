@@ -65,11 +65,8 @@ export default async function AdminAnnouncementsPage() {
     const visible = eligibleAnnouncements(announcements, now);
     const home = selectHomeAnnouncements(visible, now);
     const visibleIds = new Set(visible.map((item) => item.id));
-    const homeIds = new Set(
-        [...home.list.map((item) => item.record), home.critical]
-            .filter((item) => item !== null)
-            .map((item) => item.id)
-    );
+    // 중대 공지는 목록 맨 위 고정으로 들어 있다(홈 배너는 2026-09-28 뺌)
+    const homeIds = new Set(home.list.map((item) => item.record.id));
 
     return (
         <PageContainer>

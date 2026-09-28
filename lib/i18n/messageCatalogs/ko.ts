@@ -256,6 +256,7 @@ export const koMessages = {
     "common.pageError": "페이지를 불러오지 못했습니다.",
     "common.retryLater": "잠시 후 다시 시도해주세요.",
     "common.retry": "다시 시도",
+    "common.copied": "복사됨",
     "maintenance.title": "점검 중",
     "maintenance.heading": "점검 중입니다.",
     "maintenance.description":
@@ -345,7 +346,6 @@ export const koMessages = {
     "poll.error.closesAt": "마감은 지금보다 뒤여야 합니다.",
     "shell.externalLink": "외부 사이트",
     "announcements.empty": "공지사항이 없습니다.",
-    "announcements.critical": "중요 공지",
     "announcements.pageLabel": "공지사항 {page}페이지",
     "announcements.published": "게시일",
     "announcements.updated": "수정일",

@@ -6,7 +6,8 @@
     container: profile-identity / inline-size;
 }
 /* 머리 격자(2026-09-25 H3 · K2 · M2 · CM1) — 폰: 아바타 · 이름 → 정보 → 모드(폭 전체) → 수치 상자,
-   672 이상: 모드가 이름 줄 오른쪽 · 정보와 수치 상자는 아래로, 1056 이상: 수치 상자가 머리 오른쪽 */
+   672 이상: 모드가 이름 줄 오른쪽 · 정보와 수치 상자는 아래로, 1056 이상: 수치 상자가 머리 오른쪽.
+   두 묶음(2026-09-28 인상 점검 B2 — 근접): 「누구인가」 이름 →8→ 정보, 「얼마나 잘하나」 모드 →12→ 수치, 두 묶음 사이 24 */
 .noslog-ui .nl-profile-identity__row {
     --nl-profile-avatar-size: 64px;
     display: grid;
@@ -17,7 +18,7 @@
         "mode mode"
         "headline headline";
     align-items: center;
-    gap: var(--nl-spacing-12) var(--nl-spacing-16);
+    gap: var(--nl-spacing-8) var(--nl-spacing-16);
     min-width: 0;
 }
 .noslog-ui .nl-profile-identity__avatar {
@@ -91,6 +92,8 @@
 .noslog-ui .nl-profile-identity__mode {
     grid-area: mode;
     min-width: 0;
+    /* 정보 →24→ 모드(줄 사이 8 + 16) */
+    margin-top: var(--nl-spacing-16);
 }
 /* 핵심 수치(2026-09-26 B1 · T1) — 칸 나눈 상자: 왼쪽 절반 Grade · Rating 고르기 + metric-display 32,
    오른쪽 절반 위 세계 순위 · 아래 국가 순위(라벨 control 왼쪽 · 순위 component-title 오른쪽). 수치 띠와 같은 만듦새 —
@@ -98,6 +101,8 @@
 .noslog-ui .nl-profile-headline {
     grid-area: headline;
     min-width: 0;
+    /* 모드 →12→ 수치(줄 사이 8 + 4) */
+    margin-top: var(--nl-spacing-4);
 }
 .noslog-ui .nl-profile-headline__cells {
     display: grid;
@@ -191,6 +196,11 @@
     .noslog-ui .nl-profile-identity__mode {
         width: 200px;
         align-self: start;
+        margin-top: 0;
+    }
+    /* 모드가 이름 줄로 올라가면 정보 →24→ 수치(줄 사이 8 + 16) */
+    .noslog-ui .nl-profile-headline {
+        margin-top: var(--nl-spacing-16);
     }
 }
 @media (min-width: 1056px) {
@@ -209,6 +219,8 @@
     }
     .noslog-ui .nl-profile-headline {
         justify-self: end;
+        /* 1056 이상은 수치 상자가 모드 아래 오른쪽 — 모드 →12→ 수치(줄 사이 8 + 4) */
+        margin-top: var(--nl-spacing-4);
     }
 }
 .noslog-ui .nl-profile-identity__recovery {
@@ -259,6 +271,10 @@
 .noslog-ui .nl-profile {
     gap: var(--nl-spacing-32);
     padding-block: var(--nl-spacing-32);
+}
+/* 머리 →32→ 탭 →24→ 내용(2026-09-28 인상 점검 B1 — 탭은 아래 내용에 붙인다: NN/g · 실제 서비스 13곳 탭 → 내용 약 20) */
+.noslog-ui .nl-profile > .nl-tabs + * {
+    margin-top: calc(var(--nl-spacing-24) - var(--nl-spacing-32));
 }
 /* 개요 탭(2026-09-25 D2) — 구역 사이 32. 폰은 성장 추이 → 레벨별 달성 → 고정 기록 → 베스트 → 최근 → 업적 → 기여(2026-09-26, 사용자) */
 .noslog-ui .nl-profile-body {

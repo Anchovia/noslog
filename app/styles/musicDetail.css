@@ -230,9 +230,6 @@
     border-radius: var(--nl-radius-container);
     background: var(--nl-surface-surface);
 }
-.noslog-ui .nl-overview__card--list {
-    padding-block: 0;
-}
 .noslog-ui .nl-detail-panel {
     display: flex;
     flex-direction: column;

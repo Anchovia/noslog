@@ -708,35 +708,35 @@ html[data-theme="light"] .noslog-ui,
     transform: rotate(180deg);
 }
 
+/* 상태 메시지(2026-09-28 인상 점검 A1 — Carbon 「헷갈리면 약한 대비」 · GOV.UK 오류 글 · Primer 「동작 가까이」)
+   inline(기본) = 상자 없이 아이콘 16(첫 글줄 가운데) →8→ 글자, 오류는 오류 글자색.
+   quiet = 아이콘 없이 흐린 한 줄 + 오른쪽 동작(구역 불러오기 실패). boxed = 색 면 상자(개인정보 경고 · 관리자) */
 .noslog-ui .nl-status {
     display: flex;
-    align-items: center;
-    gap: var(--nl-spacing-12);
-    padding: var(--nl-spacing-16);
-    border-radius: var(--nl-radius-container);
-    color: var(--nl-feedback-message-text);
-    background: var(--nl-feedback-info-bg);
+    align-items: flex-start;
+    gap: var(--nl-spacing-8);
+    color: var(--nl-content-default);
 }
 .noslog-ui .nl-status > svg {
+    margin-top: calc(
+        (var(--nl-type-line-height-20) - var(--nl-icon-small)) / 2
+    );
     color: var(--nl-feedback-info-marker);
-}
-.noslog-ui .nl-status--success {
-    background: var(--nl-feedback-success-bg);
 }
 .noslog-ui .nl-status--success > svg {
     color: var(--nl-feedback-success-marker);
 }
-.noslog-ui .nl-status--warning {
-    background: var(--nl-feedback-warning-bg);
-}
 .noslog-ui .nl-status--warning > svg {
     color: var(--nl-feedback-warning-marker);
 }
-.noslog-ui .nl-status--danger {
-    background: var(--nl-feedback-danger-bg);
-}
 .noslog-ui .nl-status--danger > svg {
     color: var(--nl-feedback-danger-marker);
+}
+.noslog-ui
+    .nl-status--inline.nl-status--danger
+    > .nl-status__copy
+    > p:first-child {
+    color: var(--nl-feedback-error-text);
 }
 .noslog-ui .nl-status__copy {
     display: flex;
@@ -744,6 +744,40 @@ html[data-theme="light"] .noslog-ui,
     min-width: 0;
     flex-direction: column;
     gap: var(--nl-spacing-4);
+}
+.noslog-ui .nl-status__copy > .nl-body-secondary:not(:first-child) {
+    color: var(--nl-content-subdued);
+}
+.noslog-ui .nl-status--quiet > .nl-status__copy {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    column-gap: var(--nl-spacing-12);
+    color: var(--nl-content-subdued);
+}
+.noslog-ui .nl-status--boxed {
+    align-items: center;
+    gap: var(--nl-spacing-12);
+    padding: var(--nl-spacing-16);
+    border-radius: var(--nl-radius-container);
+    color: var(--nl-feedback-message-text);
+    background: var(--nl-feedback-info-bg);
+}
+.noslog-ui .nl-status--boxed > svg {
+    margin-top: 0;
+}
+.noslog-ui .nl-status--boxed.nl-status--success {
+    background: var(--nl-feedback-success-bg);
+}
+.noslog-ui .nl-status--boxed.nl-status--warning {
+    background: var(--nl-feedback-warning-bg);
+}
+.noslog-ui .nl-status--boxed.nl-status--danger {
+    background: var(--nl-feedback-danger-bg);
+}
+.noslog-ui .nl-status--boxed .nl-status__copy > .nl-body-secondary {
+    color: inherit;
 }
 /* 사진 뷰어(2026-09-23 V3 · B2 · C2 · S2) — 모든 폭에서 화면을 채우고 바탕은 페이지 바탕색(새 색 없음), 사진은 contain.
    닫기 우상 · ‹ › 좌우 · 아래에 카운터와 썸네일 줄(컨트롤 높이 · 4 : 3). 폰의 시스템 영역은 safe-area 로 피한다 */
@@ -1268,22 +1302,17 @@ html[data-theme="light"] .noslog-ui,
     justify-self: end;
     text-align: end;
 }
-/* 로그인 안내(2026-09-26 F1) — 피드백 「보냄」 표시와 같은 배치: 상태 표시 원 40(면 surface, 가이드 대화상자 절) →+4→ 제목 →8→ 설명 */
+/* 로그인 안내(2026-09-26 F1 · 2026-09-28 A5) — 제목 앞 자물쇠 16(→8→ 글자) →4→ 설명. 원 면 없음(피드백 「보냄」 과 같은 배치) */
 .noslog-ui .nl-login-prompt {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--nl-spacing-8);
+    gap: var(--nl-spacing-4);
 }
-.noslog-ui .nl-login-prompt__mark {
-    display: grid;
-    place-items: center;
-    width: 40px;
-    height: 40px;
-    margin-bottom: var(--nl-spacing-4);
-    border-radius: var(--nl-radius-full);
-    background: var(--nl-surface-surface);
-    color: var(--nl-content-interactive);
+.noslog-ui .nl-login-prompt__title {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-8);
 }
 .noslog-ui .nl-login-prompt p {
     margin: 0;

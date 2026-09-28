@@ -34,8 +34,8 @@ export function ProfileHeaderSkeleton() {
                         </div>
                         <SkeletonText className="nl-metadata" width="s" />
                     </div>
-                    <div className="nl-profile-identity__meta nl-metadata">
-                        <SkeletonText className="nl-metadata" width="m" />
+                    <div className="nl-profile-identity__meta nl-body-secondary">
+                        <SkeletonText className="nl-body-secondary" width="m" />
                     </div>
                     <div className="nl-profile-identity__mode">
                         <SegmentedControl

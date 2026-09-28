@@ -146,6 +146,7 @@ export default function OpinionReplies({
                             .map((index) => <ReplySkeleton key={index} />)
                     ) : replies.isError ? (
                         <StatusMessage
+                            tone="quiet"
                             severity="danger"
                             role="alert"
                             title={t("community.loadError")}

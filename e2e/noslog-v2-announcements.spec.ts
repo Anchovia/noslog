@@ -184,15 +184,11 @@ for (const locale of ["ko", "ja", "en"] as const) {
     test(`P11 ${locale} Home pins the critical notice above routine ones`, async ({
         page,
     }) => {
-        const t = getMessages(locale);
         await page.goto(
             `/${locale}/p7-verification?fixture=announcements&state=home`
         );
-        await expect(page.locator(".nl-home-critical")).toHaveCount(1);
-        await expect(page.locator(".nl-home-critical a")).toHaveAttribute(
-            "href",
-            `/${locale}/announcements/fixture-1`
-        );
+        // 홈 배너는 뺐다(2026-09-28 인상 점검 A2) — 중대 공지는 목록 맨 위 고정으로만
+        await expect(page.locator(".nl-home-critical")).toHaveCount(0);
         await expect(
             page.locator(".nl-home-announcements .nl-announcement-row")
         ).toHaveCount(3);
@@ -204,26 +200,12 @@ for (const locale of ["ko", "ja", "en"] as const) {
             1
         );
         await expect(rows.nth(1)).not.toHaveAttribute("data-pinned");
-        await expect(page.locator(".nl-home-critical")).toHaveAttribute(
-            "aria-label",
-            t["announcements.critical"]
-        );
-        await expect(
-            page
-                .locator(".nl-home-critical")
-                .getByText(t["announcements.critical"], { exact: true })
-        ).toHaveCount(0);
         for (const width of [320, 390, 768, 1470]) {
             await page.setViewportSize({ width, height: 900 });
-            const critical = (await page
-                .locator(".nl-home-critical")
-                .boundingBox())!;
             const routine = (await page
                 .locator(".nl-home-updates")
                 .boundingBox())!;
-            expect(critical.width).toBeLessThanOrEqual(640);
-            expect(critical.x).toBe(routine.x);
-            expect(critical.width).toBe(routine.width);
+            expect(routine.width).toBeLessThanOrEqual(640);
             expect(
                 await page.evaluate(
                     () => document.documentElement.scrollWidth <= innerWidth

@@ -132,12 +132,14 @@ export default function ProfileRecords({
             </div>
             {result.isError ? (
                 <StatusMessage
+                    tone="quiet"
                     severity="danger"
                     role="alert"
                     title={t("profile.sectionFailed")}
                     action={
                         <Button
-                            variant="secondary"
+                            variant="ghost"
+                            size="sm"
                             onClick={() =>
                                 void (result.isFetchNextPageError
                                     ? result.fetchNextPage()

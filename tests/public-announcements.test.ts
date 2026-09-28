@@ -124,12 +124,11 @@ describe("P11 public announcement eligibility", () => {
         const eligible = eligibleAnnouncements([a], now);
         expect(eligible).toHaveLength(1);
         const result = selectHomeAnnouncements(eligible, now);
-        expect(result.critical).toBeNull();
         expect(
             result.list.map((item) => [item.record.id, item.pinned])
         ).toEqual([[1, false]]);
     });
-    it("selects one critical item deterministically and pins active critical rows above routine ones", () => {
+    it("pins active critical rows above routine ones in priority order", () => {
         const records = Array.from({ length: 6 }, (_, id) => ({
             ...record(),
             id: id + 1,
@@ -145,7 +144,6 @@ describe("P11 public announcement eligibility", () => {
             eligibleAnnouncements([...records, ...critical], now),
             now
         );
-        expect(result.critical?.id).toBe(12);
         expect(
             result.list.map((item) => [item.record.id, item.pinned])
         ).toEqual([

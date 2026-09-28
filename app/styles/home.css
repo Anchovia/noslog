@@ -3,9 +3,16 @@
     gap: var(--nl-spacing-32);
     padding-block: var(--nl-spacing-32);
 }
+/* 묶음(2026-09-28 인상 점검 B4 — 근접의 법칙): 검색 · 타일은 「어디로 갈지 찾기」 한 묶음이라 16,
+   새 소식(공지 · 이벤트 · 공식 소식)은 다른 덩어리라 48. 구역끼리는 32 그대로 */
+.noslog-ui .nl-home > .nl-home-navigation {
+    margin-top: calc(var(--nl-spacing-16) - var(--nl-spacing-32));
+}
+.noslog-ui .nl-home > .nl-home-updates {
+    margin-top: calc(var(--nl-spacing-48) - var(--nl-spacing-32));
+}
 .noslog-ui .nl-home-hero,
 .noslog-ui .nl-home-navigation,
-.noslog-ui .nl-home-critical,
 .noslog-ui .nl-home-updates {
     width: 100%;
     max-width: var(--nl-home-search-width);
@@ -113,10 +120,6 @@
    좌우 -4 로 잉크 간격(5.25)과 오른쪽 잉크 끝(1.25)을 옆 「공식 X ↗」 에 맞춘다 */
 .noslog-ui .nl-home-update__heading svg.lucide-chevron-right {
     margin-inline: -4px;
-}
-.noslog-ui .nl-home-critical__link {
-    text-decoration: underline;
-    text-underline-position: under;
 }
 .noslog-ui .nl-home-news-state {
     padding: var(--nl-spacing-16);
@@ -271,21 +274,13 @@
     flex-direction: column;
     gap: var(--nl-spacing-8);
 }
-/* 진행 중인 이벤트가 없을 때(E1) — 배너와 같은 2.4 : 1 빈 카드(면 surface · 경계 divider · 모서리 8), 가운데 안내 →12→ 「이벤트 글쓰기」 M */
+/* 진행 중인 이벤트가 없을 때 — 안내 한 줄 + 오른쪽 「이벤트 글쓰기」 글자 링크(2026-09-28 인상 점검 A3 — 빈 상자 대신, 공지 제목 줄 링크와 같은 모양) */
 .noslog-ui .nl-home-events__empty {
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
     align-items: center;
-    justify-content: center;
-    gap: var(--nl-spacing-12);
-    width: 100%;
-    max-width: 100%;
-    aspect-ratio: 2.4 / 1;
-    padding: var(--nl-spacing-16);
-    border-radius: var(--nl-radius-container);
-    background: var(--nl-surface-surface);
-    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-divider);
-    text-align: center;
+    justify-content: space-between;
+    gap: var(--nl-spacing-4) var(--nl-spacing-12);
 }
 .noslog-ui .nl-home-events__empty p {
     margin: 0;

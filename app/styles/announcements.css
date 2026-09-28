@@ -18,7 +18,7 @@
 .noslog-ui .nl-announcements__heading h1 {
     min-width: 0;
 }
-/* 공지 줄(2026-09-26 R1) — 분류 · 고정 태그 · 제목 · 오른쪽 날짜 한 줄. 672 미만은 「태그 … 날짜」 위 →4→ 제목 */
+/* 공지 줄(2026-09-26 R1) — 분류 태그 · 제목 · 오른쪽 (고정 핀 16 →4→) 날짜 한 줄(핀 = 2026-09-28 A4). 672 미만은 「태그 … 날짜」 위 →4→ 제목 */
 .noslog-ui .nl-announcement-row {
     display: grid;
     grid-template-columns: auto minmax(0, 1fr) auto;
@@ -35,6 +35,10 @@
 }
 .noslog-ui .nl-announcement-row__date {
     grid-area: date;
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--nl-spacing-4);
     white-space: nowrap;
 }
 .noslog-ui .nl-announcement-row > .nl-announcement-row__title {

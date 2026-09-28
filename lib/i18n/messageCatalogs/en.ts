@@ -259,6 +259,7 @@ export const enMessages = {
     "common.pageError": "Could Not Load the Page",
     "common.retryLater": "Please try again in a moment.",
     "common.retry": "Try Again",
+    "common.copied": "Copied",
     "maintenance.title": "Under Maintenance",
     "maintenance.heading": "We're performing maintenance.",
     "maintenance.description":
@@ -349,7 +350,6 @@ export const enMessages = {
     "poll.error.closesAt": "The deadline has to be in the future.",
     "shell.externalLink": "External site",
     "announcements.empty": "No announcements.",
-    "announcements.critical": "Important notice",
     "announcements.pageLabel": "Announcements page {page}",
     "announcements.published": "Published",
     "announcements.updated": "Updated",

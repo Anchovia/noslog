@@ -256,6 +256,7 @@ export const jaMessages = {
     "common.pageError": "ページを読み込めませんでした。",
     "common.retryLater": "しばらくしてからもう一度お試しください。",
     "common.retry": "再試行",
+    "common.copied": "コピーしました",
     "maintenance.title": "メンテナンス中",
     "maintenance.heading": "ただいまメンテナンス中です。",
     "maintenance.description":
@@ -345,7 +346,6 @@ export const jaMessages = {
     "poll.error.closesAt": "締め切りは今より後にしてください。",
     "shell.externalLink": "外部サイト",
     "announcements.empty": "お知らせはありません。",
-    "announcements.critical": "重要なお知らせ",
     "announcements.pageLabel": "お知らせ {page}ページ",
     "announcements.published": "掲載日",
     "announcements.updated": "更新日",

@@ -54,21 +54,19 @@
     margin-right: calc((var(--nl-control-height) - var(--nl-icon-medium)) / -2);
     margin-block: calc(var(--nl-stroke-default) * -1);
 }
-/* 보낸 뒤 — 창 안에 체크 · 한 줄 · 설명 (2026-09-18 결정 3) */
+/* 보낸 뒤 — 창 안에 체크 · 한 줄 · 설명 (2026-09-18 결정 3). 원 면 없이 제목 앞 체크 16(성공 표시색) →4→ 설명(2026-09-28 A5) */
 .noslog-ui .nl-feedback-done {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    gap: var(--nl-spacing-4);
+}
+.noslog-ui .nl-feedback-done__title {
+    display: flex;
+    align-items: center;
     gap: var(--nl-spacing-8);
 }
-.noslog-ui .nl-feedback-done__mark {
-    display: grid;
-    place-items: center;
-    width: 40px;
-    height: 40px;
-    margin-bottom: var(--nl-spacing-4);
-    border-radius: var(--nl-radius-full);
-    background: var(--nl-feedback-success-bg);
+.noslog-ui .nl-feedback-done__title > svg {
     color: var(--nl-feedback-success-marker);
 }
 .noslog-ui .nl-feedback-done p {

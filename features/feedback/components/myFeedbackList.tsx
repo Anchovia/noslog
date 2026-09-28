@@ -47,6 +47,7 @@ export default function MyFeedbackList({
     if (failed)
         return (
             <StatusMessage
+                tone="quiet"
                 severity="danger"
                 title={t("feedback.mine.failed")}
             />
