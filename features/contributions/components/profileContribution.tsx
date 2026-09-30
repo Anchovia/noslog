@@ -99,10 +99,9 @@ function DraftRow({ item }: { item: MyChartDraftItem }) {
                     href={href(
                         item.status === "published" ? base : `${base}/draft`
                     )}
-                    className="nl-profile-contribution__what nl-control nl-link"
+                    className="nl-profile-contribution__what nl-entity-title nl-link"
                 >
-                    {item.chart.title} · {item.chart.difficulty}{" "}
-                    {item.chart.level} · {t("contribution.section.chartItem")}
+                    {item.chart.title}
                 </Link>
                 <span
                     className={tone ? "nl-tag nl-tag--status" : "nl-tag"}
@@ -111,7 +110,16 @@ function DraftRow({ item }: { item: MyChartDraftItem }) {
                     {t(`contribution.draftStatus.${item.status}`)}
                 </span>
             </div>
+            {/* 메타 줄 = 난이도(난이도 색) · 종류 · 그때그때 다른 값 — 최근 플레이 · 기록 표와 같은 문법(2026-10-01 B) */}
             <p className="nl-metadata nl-muted">
+                <span
+                    className={`nl-level--${item.chart.difficulty.toLowerCase()}`}
+                >
+                    {item.chart.difficulty.toUpperCase()} {item.chart.level}
+                </span>
+                {" · "}
+                {t("contribution.section.chartItem")}
+                {" · "}
                 {item.status === "published" && item.publishedAt
                     ? `${t("contribution.section.publishedPoints", { points: 20 })} · ${item.publishedAt.slice(0, 10)}`
                     : item.openComments
@@ -162,10 +170,9 @@ function ProposalList({ items }: { items: MineItem[] }) {
                                 href={href(
                                     `/music/${item.chart.musicIndex}/${item.chart.difficulty.toLowerCase()}`
                                 )}
-                                className="nl-profile-contribution__what nl-control nl-link"
+                                className="nl-profile-contribution__what nl-entity-title nl-link"
                             >
-                                {item.chart.title} · {item.chart.difficulty}{" "}
-                                {item.chart.level} · {fieldLabel}
+                                {item.chart.title}
                             </Link>
                             <span
                                 className="nl-tag nl-tag--status"
@@ -176,8 +183,16 @@ function ProposalList({ items }: { items: MineItem[] }) {
                                 )}
                             </span>
                         </div>
+                        {/* 메타 줄 = 난이도 · 칸 이름 · 값 변화(2026-10-01 B) */}
                         <p className="nl-metadata nl-muted">
-                            {before} →{" "}
+                            <span
+                                className={`nl-level--${item.chart.difficulty.toLowerCase()}`}
+                            >
+                                {item.chart.difficulty.toUpperCase()}{" "}
+                                {item.chart.level}
+                            </span>
+                            {" · "}
+                            {fieldLabel} {before} →{" "}
                             {formatProposalValue(
                                 item.field,
                                 item.value,

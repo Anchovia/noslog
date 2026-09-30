@@ -12,16 +12,18 @@ import {
     YAxis,
 } from "recharts";
 
-// 툴팁 = 떠 있는 창 규격(overlay 면 · 경계 · 모서리 overlay) · 본문 14
+// 툴팁 = 떠 있는 창 규격(overlay 면 · 경계 · 모서리 overlay · 그림자 · 안쪽 8) · 본문 14 (2026-10-01 A)
 const TOOLTIP_STYLE = {
     background: "var(--nl-surface-overlay)",
     border: "1px solid var(--nl-border-overlay)",
     borderRadius: "var(--nl-radius-overlay)",
+    boxShadow: "var(--nl-overlay-shadow)",
+    padding: "var(--nl-spacing-8)",
     color: "var(--nl-content-default)",
     fontSize: "var(--nl-type-size-14)",
 };
 
-// 대시보드 추이 그래프 — 한 계열 선 · 격자 border/default.
+// 대시보드 추이 그래프 — 한 계열 선 · 격자 border/divider(공용 선 그래프와 같은 값, 2026-10-01 A).
 // 선 색은 보고 있는 수치의 색(2026-09-20 C2), 움직임은 공용 그래프 클래스만 쓴다(2026-09-21)
 export default function AdminDashboardChart({
     data,
@@ -47,7 +49,7 @@ export default function AdminDashboardChart({
                     margin={{ top: 8, right: 12, bottom: 0, left: 0 }}
                 >
                     <CartesianGrid
-                        stroke="var(--nl-border-default)"
+                        stroke="var(--nl-border-divider)"
                         vertical={false}
                     />
                     <XAxis
@@ -58,7 +60,7 @@ export default function AdminDashboardChart({
                         minTickGap={16}
                         tick={{
                             fill: "var(--nl-content-subdued)",
-                            fontSize: 12,
+                            fontSize: "var(--nl-type-size-12)",
                         }}
                     />
                     <YAxis
@@ -68,7 +70,7 @@ export default function AdminDashboardChart({
                         width={40}
                         tick={{
                             fill: "var(--nl-content-subdued)",
-                            fontSize: 12,
+                            fontSize: "var(--nl-type-size-12)",
                         }}
                     />
                     <Tooltip
@@ -86,12 +88,14 @@ export default function AdminDashboardChart({
                         dataKey="value"
                         stroke={color}
                         strokeWidth={2}
-                        dot={{
-                            r: 3,
-                            fill: color,
-                            strokeWidth: 0,
+                        // 점은 가리킨 자리만 — 바탕색 채움 + 2px 테두리(공용 선 그래프와 같은 규격, 2026-10-01)
+                        dot={false}
+                        activeDot={{
+                            r: 4,
+                            fill: "var(--nl-surface-canvas)",
+                            stroke: color,
+                            strokeWidth: 2,
                         }}
-                        activeDot={{ r: 4, strokeWidth: 0 }}
                         isAnimationActive={false}
                     />
                 </LineChart>
@@ -136,7 +140,7 @@ export function AdminDashboardHours({
                     margin={{ top: 8, right: 12, bottom: 0, left: 0 }}
                 >
                     <CartesianGrid
-                        stroke="var(--nl-border-default)"
+                        stroke="var(--nl-border-divider)"
                         vertical={false}
                         // 빈 틀은 위 · 아래 선만 — 가운데 안내와 겹치지 않게(공용 선 그래프 빈 틀과 같음)
                         horizontalCoordinatesGenerator={
@@ -155,7 +159,7 @@ export function AdminDashboardHours({
                         interval={5}
                         tick={{
                             fill: "var(--nl-content-subdued)",
-                            fontSize: 12,
+                            fontSize: "var(--nl-type-size-12)",
                         }}
                     />
                     <YAxis
@@ -169,7 +173,7 @@ export function AdminDashboardHours({
                                 ? false
                                 : {
                                       fill: "var(--nl-content-subdued)",
-                                      fontSize: 12,
+                                      fontSize: "var(--nl-type-size-12)",
                                   }
                         }
                     />
