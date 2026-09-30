@@ -1372,8 +1372,6 @@ export const jaMessages = {
     "profile.tabs.activity": "アクティビティ",
     "profile.levels.title": "レベル別達成",
     "profile.levels.legendLabel": "強調する項目",
-    "profile.levels.valuePlayed": "% = プレイした譜面",
-    "profile.levels.valueTier": "% = {name}",
     "profile.levels.difficultyLabel": "難易度",
     "profile.levels.none": "未プレイ",
     "profile.levels.rankLow": "B以下",
@@ -1511,7 +1509,8 @@ export const jaMessages = {
     "settings.showPlayScores": "プレースコアを公開",
     "settings.scoresCoupling":
         "オフにするとランキングから外れ、プロフィールのスコア・記録がほかの人に表示されません。自分の順位は自分だけに表示されます。",
-    "settings.publicWhenOn": "オンにすると他のユーザーに公開されます。",
+    "settings.publicWhenOn":
+        "オンにすると他のユーザーに公開されます。変更はすぐに保存されます。",
     "settings.activityCoupling":
         "最終プレーと最近のプレーが一緒に公開されます。",
     "settings.changeArcade": "変更",

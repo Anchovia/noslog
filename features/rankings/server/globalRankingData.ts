@@ -238,6 +238,8 @@ export async function getProfileRatingStanding(
         rows.filter((row) => row.value > me.value).length + 1;
     return {
         value: me.value,
+        /** 프로필 머리는 Grd 처럼 소수 둘째 자리까지 보여 준다(2026-10-01 사용자) — 순위 계산은 반올림 값 그대로 */
+        exactValue: me.rawValue,
         world: position(others),
         country: country
             ? position(others.filter((row) => row.country === country))

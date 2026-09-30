@@ -110,7 +110,7 @@ const levelColor = (row: ProfileLevelGroup) =>
 /**
  * 레벨별 달성(2026-09-26 R2 · L1) — 레벨마다 한 막대(`StackedBar`): 채보마다 가장 높은 한 칸(Pianist → FC → S → A+ → A → B 이하),
  * 칠하지 않은 트랙 = 안 함. 범례 항목을 누르면 그 칸만 제 색 · 나머지는 흐린 회색이 되고 오른쪽 % 가 그 칸의 비율(한 번 더 누르면 풀림),
- * 고르지 않았으면 % = 여섯 칸을 합친 비율(친 채보). 개요 옆 열은 요약(9 이상 + REAL, 제목 줄 오른쪽 끝 「모두 보기」 = 통계 탭),
+ * 고르지 않았으면 % = 여섯 칸을 합친 비율(친 채보). 개요 옆 열은 요약(「1–8」 묶음 + 9 이상 + REAL, 제목 줄 오른쪽 끝 「모두 보기」 = 통계 탭),
  * 통계 탭은 전체 + 난이도 세그먼트. 「전체 레벨 보기」 를 누르면 1–12 + REAL 을 레벨마다(랭크 분포의 펼치기와 같은 버튼, 2026-09-30)
  */
 export default function ProfileLevels({
@@ -129,10 +129,12 @@ export default function ProfileLevels({
     const [selected, setSelected] = useState<ProfileTierKey | null>(null);
     const [expanded, setExpanded] = useState(false);
     const shownDifficulty = variant === "full" ? difficulty : "all";
+    // 개요 요약도 묶음 줄(「1–8」)은 남긴다 — 낮은 레벨을 통째로 빼면 달성이 있는데 없는 것처럼 보인다(2026-10-01 사용자)
     const rows = profileLevelRows(levels, shownDifficulty, expanded).filter(
         (row) =>
             variant === "full" ||
             expanded ||
+            row.grouped ||
             row.difficulty === "real" ||
             row.level >= 9
     );
@@ -266,13 +268,6 @@ export default function ProfileLevels({
                         {label(key)}
                     </button>
                 ))}
-                <span>
-                    {selected
-                        ? t("profile.levels.valueTier", {
-                              name: label(selected),
-                          })
-                        : t("profile.levels.valuePlayed")}
-                </span>
             </div>
             {/* 막대는 화면 읽기에서 숨기고 줄마다 수를 글로 */}
             <ul id={listId} className="sr-only">

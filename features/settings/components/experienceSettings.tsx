@@ -3,7 +3,7 @@
 import { useEffect, useState, useTransition } from "react";
 import { useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
-import RadioGroup from "@/components/ui/radioGroup";
+import CompactSelect from "@/components/ui/compactSelect";
 import { StatusMessage } from "@/components/ui/statusMessage";
 import { changeLocale } from "@/app/(nevigation)/settings/actions";
 import { localizePath } from "@/lib/i18n/routing";
@@ -84,32 +84,56 @@ export default function ExperienceSettings() {
         }
         window.dispatchEvent(new Event("noslog-theme-change"));
     };
+    // 줄 목록(2026-10-01 B1) — 라벨 왼쪽 · 드롭다운 오른쪽. 언어는 고르는 즉시 바뀐다
     return (
-        <div className="nl-settings__experience" aria-busy={pending}>
-            <RadioGroup
-                label={t("header.language")}
-                value={locale}
-                onValueChange={handleLocale}
-                disabled={pending}
-                options={[
-                    { value: "ko", label: <span lang="ko">한국어</span> },
-                    { value: "ja", label: <span lang="ja">日本語</span> },
-                    { value: "en", label: <span lang="en">English</span> },
-                ]}
-            />
+        <div className="nl-settings__form" aria-busy={pending}>
+            <div className="nl-settings__rows">
+                <div className="nl-settings__row">
+                    <label htmlFor="settings-language" className="nl-control">
+                        {t("header.language")}
+                    </label>
+                    <CompactSelect
+                        id="settings-language"
+                        outlined
+                        label={t("header.language")}
+                        value={locale}
+                        onValueChange={handleLocale}
+                        disabled={pending}
+                        options={[
+                            { value: "ko", label: "한국어" },
+                            { value: "ja", label: "日本語" },
+                            { value: "en", label: "English" },
+                        ]}
+                    />
+                </div>
+                <div className="nl-settings__row">
+                    <div className="nl-settings__row-copy">
+                        <label htmlFor="settings-theme" className="nl-control">
+                            {t("settings.themeLabel")}
+                        </label>
+                        <p className="nl-metadata nl-muted">
+                            {t("settings.themeDevice")}
+                        </p>
+                    </div>
+                    <CompactSelect
+                        id="settings-theme"
+                        outlined
+                        label={t("settings.themeLabel")}
+                        disabled={!themeSwitchingEnabled}
+                        value={theme}
+                        onValueChange={handleTheme}
+                        options={(["system", "dark", "light"] as const).map(
+                            (value) => ({
+                                value,
+                                label: t(`settings.theme.${value}`),
+                            })
+                        )}
+                    />
+                </div>
+            </div>
             {error ? (
                 <StatusMessage severity="danger" role="alert" title={error} />
             ) : null}
-            <RadioGroup
-                label={t("settings.themeLabel")}
-                description={t("settings.themeDevice")}
-                disabled={!themeSwitchingEnabled}
-                value={theme}
-                onValueChange={handleTheme}
-                options={(["system", "dark", "light"] as const).map(
-                    (value) => ({ value, label: t(`settings.theme.${value}`) })
-                )}
-            />
         </div>
     );
 }

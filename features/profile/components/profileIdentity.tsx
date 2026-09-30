@@ -411,17 +411,13 @@ export default function ProfileIdentity({
                                                 : Math.round(grade / 100)
                                         )}
                                     >
-                                        {shownMetric === "rating" && standing
-                                            ? standing.value.toLocaleString(
-                                                  locale
-                                              )
-                                            : (grade / 100).toLocaleString(
-                                                  locale,
-                                                  {
-                                                      minimumFractionDigits: 2,
-                                                      maximumFractionDigits: 2,
-                                                  }
-                                              )}
+                                        {(shownMetric === "rating" && standing
+                                            ? standing.exactValue
+                                            : grade / 100
+                                        ).toLocaleString(locale, {
+                                            minimumFractionDigits: 2,
+                                            maximumFractionDigits: 2,
+                                        })}
                                     </dd>
                                 </div>
                                 {(

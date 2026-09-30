@@ -1368,8 +1368,6 @@ export const koMessages = {
     "profile.tabs.activity": "활동",
     "profile.levels.title": "레벨별 달성",
     "profile.levels.legendLabel": "강조할 칸",
-    "profile.levels.valuePlayed": "% = 친 채보",
-    "profile.levels.valueTier": "% = {name}",
     "profile.levels.difficultyLabel": "난이도",
     "profile.levels.none": "안 함",
     "profile.levels.rankLow": "B 이하",
@@ -1503,7 +1501,8 @@ export const koMessages = {
     "settings.showPlayScores": "플레이 점수 공개",
     "settings.scoresCoupling":
         "끄면 랭킹에서 빠지고 프로필의 점수 · 기록이 다른 사람에게 보이지 않습니다. 내 순위는 나에게만 보입니다.",
-    "settings.publicWhenOn": "켜면 다른 사용자에게 보입니다.",
+    "settings.publicWhenOn":
+        "켜면 다른 사용자에게 보입니다. 바꾸면 바로 저장됩니다.",
     "settings.activityCoupling":
         "마지막 플레이와 최근 플레이가 함께 공개됩니다.",
     "settings.changeArcade": "변경",

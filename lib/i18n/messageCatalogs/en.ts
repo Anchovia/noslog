@@ -1382,8 +1382,6 @@ export const enMessages = {
     "profile.tabs.activity": "Activity",
     "profile.levels.title": "By level",
     "profile.levels.legendLabel": "Highlight a group",
-    "profile.levels.valuePlayed": "% = charts played",
-    "profile.levels.valueTier": "% = {name}",
     "profile.levels.difficultyLabel": "Difficulty",
     "profile.levels.none": "Unplayed",
     "profile.levels.rankLow": "B or lower",
@@ -1521,7 +1519,7 @@ export const enMessages = {
     "settings.scoresCoupling":
         "When off, you are left out of rankings and your scores and records are hidden from others on your profile. Only you can see your own rank.",
     "settings.publicWhenOn":
-        "When enabled, this information is visible to others.",
+        "When enabled, this information is visible to others. Changes save right away.",
     "settings.activityCoupling":
         "Last played and recent plays are published together.",
     "settings.changeArcade": "Change",

@@ -1,11 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useRef, useState } from "react";
 import { useTranslations } from "@/components/i18n/localeProvider";
-import { Checkbox } from "@/components/ui/checkbox";
-import Button from "@/components/ui/Button";
+import { Switch } from "@/components/ui/switch";
 import { savePrivacy } from "@/app/(nevigation)/settings/actions";
 import {
     PRIVACY_HELP,
@@ -13,9 +10,11 @@ import {
     settingsFormData,
 } from "@/features/settings/schemas/settingsSchema";
 import type { SettingsPrivacyValues } from "@/features/settings/schemas/settingsSchema";
-import { applyFormRootError } from "@/lib/forms/errors";
-import UnsavedChangesGuard from "./unsavedChangesGuard";
 
+/**
+ * 공개 설정(2026-10-01 A1) — 치지직 · Discord · YouTube 식 스위치 줄, 누르면 바로 저장. 저장 버튼 없음.
+ * 한 번에 하나씩 저장하고, 실패하면 스위치를 되돌리고 알린다
+ */
 export default function PrivacySettings({
     initialValues,
     submitAction = savePrivacy,
@@ -24,103 +23,93 @@ export default function PrivacySettings({
     submitAction?: typeof savePrivacy;
 }) {
     const t = useTranslations();
+    const [values, setValues] = useState(initialValues);
+    const [saving, setSaving] = useState(false);
     const [saved, setSaved] = useState("");
-    const {
-        register,
-        handleSubmit,
-        reset,
-        setError,
-        clearErrors,
-        formState: { errors, isDirty, isSubmitting },
-    } = useForm<SettingsPrivacyValues>({
-        resolver: zodResolver(settingsPrivacySchema),
-        defaultValues: initialValues,
-    });
-    async function submit(values: SettingsPrivacyValues) {
-        clearErrors("root");
+    const [error, setError] = useState("");
+    const busy = useRef(false);
+    async function toggle(key: keyof SettingsPrivacyValues, next: boolean) {
+        if (busy.current) return;
         setSaved("");
+        setError("");
         if (!navigator.onLine) {
-            applyFormRootError(
-                setError,
-                `${t("settings.offline")} ${t("settings.offlineRetained")}`
-            );
+            setError(t("settings.offline"));
             return;
         }
+        busy.current = true;
+        setSaving(true);
+        const previous = values;
+        const updated = { ...values, [key]: next };
+        setValues(updated);
         try {
-            const result = await submitAction(settingsFormData(values));
-            if (!result.success) {
-                applyFormRootError(setError, result.message);
-                return;
+            const result = await submitAction(settingsFormData(updated));
+            if (result.success) {
+                setValues(result.values);
+                setSaved(result.message);
+            } else {
+                setValues(previous);
+                setError(result.message);
             }
-            reset(result.values);
-            setSaved(result.message);
         } catch {
-            applyFormRootError(setError, t("settings.saveError"));
+            setValues(previous);
+            setError(t("settings.saveError"));
         }
+        busy.current = false;
+        setSaving(false);
     }
     return (
-        <form
-            className="nl-settings__form"
-            onSubmit={handleSubmit(submit)}
-            noValidate
-            aria-busy={isSubmitting}
-        >
+        <div className="nl-settings__form" aria-busy={saving}>
             <p className="nl-body-secondary nl-muted">
                 {t("settings.publicWhenOn")}
             </p>
-            <div className="nl-settings__privacy-controls">
+            <div className="nl-settings__rows">
                 {(
                     Object.keys(
                         settingsPrivacySchema.shape
                     ) as (keyof SettingsPrivacyValues)[]
                 ).map((key) => (
-                    <div key={key}>
-                        <Checkbox
-                            label={t(`settings.${key}`)}
-                            disabled={isSubmitting}
+                    <div key={key} className="nl-settings__row">
+                        <div className="nl-settings__row-copy">
+                            <label
+                                htmlFor={`settings-${key}`}
+                                className="nl-control"
+                            >
+                                {t(`settings.${key}`)}
+                            </label>
+                            {PRIVACY_HELP[key] ? (
+                                <p
+                                    id={`settings-${key}-help`}
+                                    className="nl-metadata nl-muted"
+                                >
+                                    {t(PRIVACY_HELP[key])}
+                                </p>
+                            ) : null}
+                        </div>
+                        <Switch
+                            id={`settings-${key}`}
+                            name={key}
+                            checked={values[key]}
+                            onCheckedChange={(next) => void toggle(key, next)}
                             aria-describedby={
                                 PRIVACY_HELP[key]
                                     ? `settings-${key}-help`
                                     : undefined
                             }
-                            {...register(key)}
                         />
-                        {PRIVACY_HELP[key] ? (
-                            <p
-                                id={`settings-${key}-help`}
-                                className="nl-metadata nl-muted nl-settings__control-help"
-                            >
-                                {t(PRIVACY_HELP[key])}
-                            </p>
-                        ) : null}
                     </div>
                 ))}
             </div>
-            <div className="nl-settings__save">
-                {isDirty ? (
-                    <p className="nl-body-secondary nl-muted">
-                        {t("settings.unsaved")}
-                    </p>
-                ) : null}
-                {errors.root?.server ? (
-                    <p
-                        role="alert"
-                        className="nl-body-secondary nl-field__error"
-                    >
-                        {errors.root.server.message}
-                    </p>
-                ) : null}
-                <p
-                    role="status"
-                    className={saved ? "nl-body-secondary" : "sr-only"}
-                >
-                    {saved}
+            {error ? (
+                <p role="alert" className="nl-body-secondary nl-field__error">
+                    {error}
                 </p>
-                <Button type="submit" disabled={!isDirty || isSubmitting}>
-                    {t(isSubmitting ? "settings.saving" : "settings.save")}
-                </Button>
-            </div>
-            <UnsavedChangesGuard dirty={isDirty} busy={isSubmitting} />
-        </form>
+            ) : null}
+            <p
+                role="status"
+                className={saved ? "nl-body-secondary" : "sr-only"}
+            >
+                {saved}
+            </p>
+        </div>
     );
 }

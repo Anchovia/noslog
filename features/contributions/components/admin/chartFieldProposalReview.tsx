@@ -112,7 +112,7 @@ export default function ChartFieldProposalReview({
                                 type="button"
                                 disabled={isPending || !selected.size}
                                 onClick={() => setRejecting((value) => !value)}
-                                className="bg-danger text-bg flex h-10 cursor-pointer items-center gap-2 rounded-md px-3 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-50"
+                                className="bg-danger-surface text-on-danger flex h-10 cursor-pointer items-center gap-2 rounded-md px-3 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-50"
                             >
                                 <X className="size-4" aria-hidden />
                                 반려
@@ -146,7 +146,7 @@ export default function ChartFieldProposalReview({
                                 type="button"
                                 disabled={isPending || !reason.trim()}
                                 onClick={() => review("reject")}
-                                className="bg-danger text-bg h-10 cursor-pointer rounded-md px-3 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-50"
+                                className="bg-danger-surface text-on-danger h-10 cursor-pointer rounded-md px-3 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-50"
                             >
                                 {`선택 ${selected.size}건 반려`}
                             </button>
@@ -255,7 +255,7 @@ export default function ChartFieldProposalReview({
                                             setSelected(new Set([item.id]));
                                             setRejecting(true);
                                         }}
-                                        className="bg-danger text-bg flex h-10 cursor-pointer items-center gap-2 rounded-md px-3 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-50"
+                                        className="bg-danger-surface text-on-danger flex h-10 cursor-pointer items-center gap-2 rounded-md px-3 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-50"
                                     >
                                         <X className="size-4" aria-hidden />
                                         반려
