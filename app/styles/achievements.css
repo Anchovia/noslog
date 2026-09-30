@@ -216,7 +216,7 @@
     gap: var(--nl-spacing-8);
     min-width: 0;
     padding: var(--nl-spacing-12) var(--nl-spacing-4);
-    border: var(--nl-stroke-default) solid var(--nl-border-default);
+    border: var(--nl-stroke-default) solid var(--nl-control-line, transparent);
     border-radius: var(--nl-radius-field);
     text-align: center;
     overflow-wrap: anywhere;
@@ -226,17 +226,19 @@
     grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
     gap: var(--nl-spacing-8);
 }
+/* 칸 = 칩과 같은 옅은 면 surface/control, 고른 것 = control-selected(2026-09-30 P1). 떠 있는 면 위에서는 약한 선(W1).
+   3칸이 차면 나머지는 비활성(칩의 비활성과 같은 면 · 글자) */
 .noslog-ui .nl-achievement-picker__choice {
-    background: none;
+    background: var(--nl-surface-control);
     color: var(--nl-content-default);
     cursor: pointer;
 }
-/* 고른 것 = 선택 언어(raised 면 · strong 경계), 3칸이 차면 나머지는 비활성 */
 .noslog-ui .nl-achievement-picker__choice[aria-pressed="true"] {
-    background-color: var(--nl-surface-raised);
-    border-color: var(--nl-border-strong);
+    background-color: var(--nl-surface-control-selected);
 }
 .noslog-ui .nl-achievement-picker__choice:disabled {
+    border-color: transparent;
+    background: var(--nl-interaction-disabled-bg);
     cursor: not-allowed;
     color: var(--nl-interaction-disabled-content);
 }

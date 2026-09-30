@@ -205,6 +205,7 @@ html[data-theme="light"] .noslog-ui,
 }
 /* 보조 = 옅은 면 · 선 없음(2026-09-30 K1 — Spectrum 2 보조 버튼 · shadcn secondary · YouTube). 경계는 포커스 때만 */
 .noslog-ui .nl-button--secondary {
+    border-color: var(--nl-control-line, transparent);
     background: var(--nl-surface-control);
     color: var(--nl-content-default);
 }
@@ -890,6 +891,13 @@ html[data-theme="light"] .noslog-ui,
         inset 0 0 0 var(--nl-stroke-default) var(--nl-border-overlay),
         var(--nl-overlay-shadow);
 }
+/* 떠 있는 면(surface/overlay) 위의 누르는 면은 약한 선을 더한다(2026-09-30 W1 — shadcn 대화상자 Cancel: 면 1.11 + 선 1.57).
+   overlay 위에서 surface/control 면은 1.14 라 면만으로는 안 보인다 — 선 = border/default(1.63).
+   보조 버튼 · 칩 · 상자 고르기 · 고르기 슬롯 · 업적 고르기 칸이 이 값을 읽는다. 누르는 면을 담는 떠 있는 그릇은 여기에 더하고,
+   바탕색으로 바뀌는 창(폰 전체 화면 입력 창 · 이미지 내보내기 1055 이하)은 아래에서 되돌린다 */
+.noslog-ui :is(.nl-dialog, .nl-filter-popover, .nl-chart-stage__settings) {
+    --nl-control-line: var(--nl-border-default);
+}
 .noslog-ui .nl-dialog--small {
     --nl-dialog-width: 440px;
 }
@@ -1007,6 +1015,7 @@ html[data-theme="light"] .noslog-ui,
                 [role="slider"]
             )
         ) {
+        --nl-control-line: initial;
         top: 0;
         height: 100dvh;
         max-height: none;
@@ -1140,8 +1149,9 @@ html[data-theme="light"] .noslog-ui,
     }
 }
 /* 고르기 창(2026-09-26 P1 — 당근 지역 변경 · Booking 통화 · Google 항공편)
-   고른 것 = 순번 알약 한 줄(적용 조건 토큰과 같은 모양 · × 로 빼기, 빈 칸은 빈자리 경계),
-   목록 = 줄마다 이름(emphasis-label) + 보조 글자(metadata) · 오른쪽 체크 · 줄 사이 구분선 */
+   고른 것 = 순번 알약 한 줄(× 로 빼기, 빈 칸은 빈자리 경계),
+   목록 = 줄마다 이름(emphasis-label) + 보조 글자(metadata) · 오른쪽 체크 · 줄 사이 구분선.
+   채운 알약 = 칩과 같은 옅은 면 surface/control · 누른 알약 = control-selected(2026-09-30 P1), 떠 있는 면 위에서는 약한 선(W1) */
 .noslog-ui .nl-pick-slots {
     display: flex;
     flex-wrap: wrap;
@@ -1158,17 +1168,23 @@ html[data-theme="light"] .noslog-ui,
     min-height: var(--nl-control-height-compact);
     padding: 0 var(--nl-spacing-4) 0 var(--nl-spacing-12);
     border-radius: var(--nl-radius-field);
-    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-default);
+    background: var(--nl-surface-control);
+    box-shadow: inset 0 0 0 var(--nl-stroke-default)
+        var(--nl-control-line, transparent);
     color: var(--nl-content-default);
 }
 .noslog-ui .nl-pick-slot[data-empty] {
     padding-inline-end: var(--nl-spacing-12);
+    background: none;
     box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-empty-slot);
     color: var(--nl-content-pending);
 }
 .noslog-ui .nl-pick-slot[data-active] {
-    background: var(--nl-surface-raised);
-    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-strong);
+    background: var(--nl-surface-control-selected);
+}
+/* 누른 알약 안의 색 글자(난이도)는 기본 글자색으로 — 고른 칩 · 고른 세그먼트 칸과 같은 규칙(control-selected 위 색 글자 3.7) */
+.noslog-ui .nl-pick-slot[data-active] [class*="nl-level--"] {
+    color: inherit;
 }
 .noslog-ui .nl-pick-slot__label {
     display: inline-flex;
@@ -2241,6 +2257,7 @@ html:has(.noslog-ui) [data-sonner-toaster] [data-sonner-toast] > * {
 }
 @media (max-width: 1055px) {
     .noslog-ui .nl-image-share {
+        --nl-control-line: initial;
         inset: 0;
         width: 100%;
         height: 100dvh;

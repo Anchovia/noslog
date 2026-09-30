@@ -176,6 +176,9 @@
     gap: var(--nl-spacing-8);
     padding-inline: var(--nl-spacing-12);
     background: var(--nl-surface-control);
+    /* 떠 있는 면 위에서만 약한 선(2026-09-30 W1 — foundation.css 의 --nl-control-line) */
+    box-shadow: inset 0 0 0 var(--nl-stroke-default)
+        var(--nl-control-line, transparent);
     font-size: var(--nl-type-size-16);
     line-height: var(--nl-type-line-height-24);
     font-weight: var(--nl-type-weight-regular);
