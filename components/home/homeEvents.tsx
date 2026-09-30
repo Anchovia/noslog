@@ -66,16 +66,11 @@ export default async function HomeEvents({
                     ))}
                 </ul>
             ) : (
+                /* 빈 상태는 한 줄만 — 「이벤트 글쓰기」 는 제목 줄 「전체 이벤트 ›」 와 겹쳐 꽉 차 보였다(2026-10-01 사용자) */
                 <div className="nl-home-events__empty">
                     <p className="nl-body-secondary nl-muted">
                         {t("events.empty.live")}
                     </p>
-                    <Link
-                        href={getLocalizedHref("/events/new", locale)}
-                        className="nl-control"
-                    >
-                        {t("home.writeEvent")}
-                    </Link>
                 </div>
             )}
         </section>

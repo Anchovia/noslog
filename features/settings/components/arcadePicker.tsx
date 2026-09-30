@@ -4,10 +4,7 @@ import { Check } from "lucide-react";
 import { useId, useRef, useState } from "react";
 import ModalDialog from "@/components/ui/modalDialog";
 import SearchField from "@/components/ui/searchField";
-import {
-    useLocalizedHref,
-    useTranslations,
-} from "@/components/i18n/localeProvider";
+import { useTranslations } from "@/components/i18n/localeProvider";
 import type { SettingsPageData } from "@/features/settings/server/settingsPageService";
 
 /**
@@ -30,7 +27,6 @@ export default function ArcadePicker({
     onCloseAutoFocus: (event: Event) => void;
 }) {
     const t = useTranslations();
-    const href = useLocalizedHref();
     const [query, setQuery] = useState("");
     const [active, setActive] = useState(0);
     const listId = useId();
@@ -172,9 +168,6 @@ export default function ArcadePicker({
                     </p>
                 ) : null}
             </div>
-            <a href={href("/gamecenter")} className="nl-text-link nl-control">
-                {t("header.arcades")}
-            </a>
         </ModalDialog>
     );
 }

@@ -414,9 +414,23 @@ export default function DiscoveryFilters({
                     onValueChange={changeRecords}
                     options={recordOptions}
                 />
-                {signedIn && !query.records.includes("unplayed") ? (
+            </FilterGroup>
+            {/* MISS 수는 「내 기록」 과 다른 조건이라 제 구역으로(2026-10-01 사용자) — 카테고리 · 난이도와 같은 제목 · 간격 */}
+            {signedIn && !query.records.includes("unplayed") ? (
+                <FilterGroup
+                    label={t("discovery.missCount")}
+                    aside={aside(
+                        (query.missMin !== undefined ? 1 : 0) +
+                            (query.missMax !== undefined ? 1 : 0),
+                        () =>
+                            onChange({
+                                ...query,
+                                missMin: undefined,
+                                missMax: undefined,
+                            })
+                    )}
+                >
                     <div className="nl-filter-miss">
-                        <p className="nl-control">{t("discovery.missCount")}</p>
                         {(["missMin", "missMax"] as const).map((key) => (
                             <FormField
                                 key={key}
@@ -453,8 +467,8 @@ export default function DiscoveryFilters({
                             </FormField>
                         ))}
                     </div>
-                ) : null}
-            </FilterGroup>
+                </FilterGroup>
+            ) : null}
         </>
     );
 }

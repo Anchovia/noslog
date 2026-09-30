@@ -130,14 +130,13 @@ export default function AchievementShowcasePicker({
                 }}
                 footer={
                     <>
+                        {/* 고정 기록 창과 같은 발(2026-10-01 사용자) — 고른 것만 비우고 창은 그대로 */}
                         <Button
                             variant="secondary"
-                            onClick={() => {
-                                onChange("");
-                                setOpen(false);
-                            }}
+                            disabled={!draft.length}
+                            onClick={() => setDraft([])}
                         >
-                            {t("achievement.settings.useAuto")}
+                            {t("common.reset")}
                         </Button>
                         <Button
                             onClick={() => {

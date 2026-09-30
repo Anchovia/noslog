@@ -486,7 +486,6 @@ export const enMessages = {
     "home.allAnnouncements": "All announcements",
     "home.liveEvents": "Live events",
     "home.allEvents": "All events",
-    "home.writeEvent": "Write an event",
     "home.officialLink": "Official X",
     "home.officialPostLink": "View original",
     "home.officialShowTranslation": "Show translation",
@@ -1404,8 +1403,6 @@ export const enMessages = {
     "profile.pinned.auto": "Automatic · top 3 bests",
     "profile.pinned.help":
         "Pin up to {max} records at the top of your profile overview, each with an optional one-line note.",
-    "profile.pinned.dialogHelp":
-        "Up to {max}, in the order you pick · Tap a chip to write a note.",
     "profile.pinned.search": "Find a record by song title",
     "profile.pinned.results": "{count} records",
     "profile.pinned.full":
@@ -2173,7 +2170,6 @@ export const enMessages = {
     "achievement.settings.emptySlot": "Empty",
     "achievement.settings.removeAria": "Remove {name}",
     "achievement.settings.earned": "Earned achievements",
-    "achievement.settings.useAuto": "Use automatic",
     "achievement.settings.apply": "Apply",
     "achievement.sync.new": "New achievements",
     "achievement.sync.more": "+{count} more",

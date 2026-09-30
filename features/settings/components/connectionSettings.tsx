@@ -75,8 +75,10 @@ export default function ConnectionSettings({
                         </div>
                     </div>
                     <div className="nl-settings__actions">
+                        {/* Discord 로 가는 버튼은 Discord 색(2026-10-01 사용자) — 로그인 화면 · 다시 인증과 같은 부품 */}
                         <Button
                             variant="secondary"
+                            className="nl-auth-discord"
                             disabled={pending !== null}
                             onClick={() => authenticate("refresh")}
                         >

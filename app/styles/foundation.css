@@ -1265,6 +1265,12 @@ html[data-theme="light"] .noslog-ui,
     overflow-y: auto;
     overscroll-behavior: contain;
 }
+/* 창 안에서는 목록이 창 높이를 채운다(2026-10-01 사용자) — 320 고정이면 큰 창에서 목록만 짧게 끊기고
+   빈 자리가 남는다. 창 본문이 스크롤을 넘겨주고 목록이 남는 높이를 모두 쓴다 */
+.noslog-ui .nl-dialog__body .nl-pick-list {
+    flex: 1;
+    max-height: none;
+}
 .noslog-ui .nl-pick-row {
     display: flex;
     flex: none;

@@ -3,6 +3,7 @@
 import * as Select from "@radix-ui/react-select";
 import { Check, ChevronDown } from "lucide-react";
 import "@/lib/inputModality";
+import { useSelectOpen } from "@/components/ui/useSelectOpen";
 import { cn } from "@/lib/utils";
 
 export default function CompactSelect<Value extends string>({
@@ -36,8 +37,10 @@ export default function CompactSelect<Value extends string>({
     container?: HTMLElement | null;
 }) {
     const selected = options.find((option) => option.value === value);
+    const openState = useSelectOpen();
     return (
         <Select.Root
+            {...openState}
             value={value}
             onValueChange={(next) => onValueChange(next as Value)}
             disabled={disabled}

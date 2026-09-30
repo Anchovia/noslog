@@ -480,7 +480,6 @@ export const jaMessages = {
     "home.allAnnouncements": "すべてのお知らせ",
     "home.liveEvents": "開催中のイベント",
     "home.allEvents": "すべてのイベント",
-    "home.writeEvent": "イベントを書く",
     "home.officialLink": "公式X",
     "home.officialPostLink": "原文を見る",
     "home.officialShowTranslation": "翻訳を見る",
@@ -1394,8 +1393,6 @@ export const jaMessages = {
     "profile.pinned.auto": "自動 · ベスト上位3曲",
     "profile.pinned.help":
         "プロフィール概要の上に{max}件まで固定し、記録ごとに一言コメントを付けられます。",
-    "profile.pinned.dialogHelp":
-        "選んだ順に{max}件まで · チップを押すと一言コメントを書けます。",
     "profile.pinned.search": "曲名で記録を探す",
     "profile.pinned.results": "{count}件の記録",
     "profile.pinned.full":
@@ -2163,7 +2160,6 @@ export const jaMessages = {
     "achievement.settings.emptySlot": "空き",
     "achievement.settings.removeAria": "{name}を外す",
     "achievement.settings.earned": "獲得した実績",
-    "achievement.settings.useAuto": "自動にする",
     "achievement.settings.apply": "適用",
     "achievement.sync.new": "新しい実績",
     "achievement.sync.more": "ほか{count}個",

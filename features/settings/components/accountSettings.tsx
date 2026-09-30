@@ -241,7 +241,8 @@ export default function AccountSettings({
                             <div className="nl-account-reauth">
                                 {!verified ? (
                                     <a
-                                        className="nl-button nl-button--secondary"
+                                        // 로그인 화면과 같은 Discord 색 버튼(2026-10-01 사용자) — 어디로 가는지 색이 먼저 말한다
+                                        className="nl-button nl-auth-discord"
                                         href={`/discord/start?${new URLSearchParams({ mode: "delete", returnTo: `${href("/settings")}?category=account` })}`}
                                     >
                                         {t("settings.reauthenticate")}
