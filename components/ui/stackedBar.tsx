@@ -14,6 +14,8 @@ export interface StackedBarRow {
     key: string;
     /** 줄 라벨 — 모든 줄에 없으면 라벨 열 없이 막대만(프로필 판정 요약 한 줄, 2026-09-26 D1) */
     label?: string;
+    /** 라벨 글자 색(CSS 색 · 토큰 변수) — 없으면 subdued(프로필 레벨별 달성의 레벨 색, 2026-09-30) */
+    labelColor?: string;
     segments: StackedBarSegment[];
     /** 줄 오른쪽 값(metric-value) — 한 줄이라도 있으면 모든 줄에 값 칸이 생긴다(프로필 레벨별 달성, 2026-09-26) */
     value?: ReactNode;
@@ -48,7 +50,14 @@ export default function StackedBar({
                 return (
                     <div key={row.key} className="nl-stacked-bar__row">
                         {labeled ? (
-                            <span className="nl-metadata nl-muted">
+                            <span
+                                className="nl-metadata nl-muted"
+                                style={
+                                    row.labelColor
+                                        ? { color: row.labelColor }
+                                        : undefined
+                                }
+                            >
                                 {row.label}
                             </span>
                         ) : null}

@@ -1323,6 +1323,7 @@ export const koMessages = {
     "profile.recordOverview": "기록 개요",
     "profile.judgementSummary": "판정 요약",
     "profile.showAllRanks": "전체 랭크 보기",
+    "profile.showAllLevels": "전체 레벨 보기",
     "profile.playCountLabel": "플레이 횟수",
     "profile.countryPosition": "국가 순위",
     "profile.noSyncedRecords": "아직 동기화된 기록이 없습니다.",

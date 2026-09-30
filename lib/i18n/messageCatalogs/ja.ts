@@ -1327,6 +1327,7 @@ export const jaMessages = {
     "profile.recordOverview": "記録概要",
     "profile.judgementSummary": "判定サマリー",
     "profile.showAllRanks": "すべてのランクを表示",
+    "profile.showAllLevels": "すべてのレベルを表示",
     "profile.playCountLabel": "プレー回数",
     "profile.countryPosition": "国内順位",
     "profile.noSyncedRecords": "まだ同期された記録がありません。",

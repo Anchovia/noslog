@@ -1337,6 +1337,7 @@ export const enMessages = {
     "profile.recordOverview": "Record overview",
     "profile.judgementSummary": "Judgement summary",
     "profile.showAllRanks": "Show all ranks",
+    "profile.showAllLevels": "Show all levels",
     "profile.playCountLabel": "Play count",
     "profile.countryPosition": "Country Rank",
     "profile.noSyncedRecords": "No records have been synced yet.",

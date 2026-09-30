@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronRight } from "lucide-react";
+import { ChevronDown, ChevronRight } from "lucide-react";
 import Link from "next/link";
 
 import {
@@ -11,6 +11,7 @@ import {
 } from "@/components/i18n/localeProvider";
 import { SegmentedControl } from "@/components/ui/segmentedControl";
 import StackedBar from "@/components/ui/stackedBar";
+import { tierValueColor } from "@/lib/music/tierValueColor";
 import {
     PROFILE_TIER_KEYS,
     type ProfileLevelRow,
@@ -38,18 +39,34 @@ const TIER_COLORS: Record<ProfileTierKey, string> = {
 };
 
 const LOW_LEVEL_MAX = 8;
+/** REAL 1 · 2 · 3 의 공식 레벨 값 = 11 · 12 · 13 — 레벨 글자 색을 서열 값 색(`tierValueColor`)에서 고를 때 쓴다 */
+const REAL_LEVEL_BASE = 10;
 
-/** 전체 = NORMAL · HARD · EXPERT 를 레벨마다 합치고(1–8 은 한 줄) REAL 은 따로(「REAL 3」), 난이도를 고르면 그 난이도의 레벨만 */
+type ProfileLevelGroup = ProfileLevelRow & {
+    label: string;
+    /** 여러 레벨을 묶은 줄(「1–8」) — 레벨 색이 하나로 정해지지 않는다 */
+    grouped: boolean;
+};
+
+/**
+ * 전체 = NORMAL · HARD · EXPERT 를 레벨마다 합치고(1–8 은 한 줄, `expanded` 면 레벨마다) REAL 은 따로(「REAL 3」),
+ * 난이도를 고르면 그 난이도의 레벨만
+ */
 export function profileLevelRows(
     levels: readonly ProfileLevelRow[],
-    difficulty: Difficulty
+    difficulty: Difficulty,
+    expanded = false
 ) {
-    const rows = new Map<string, ProfileLevelRow & { label: string }>();
+    const rows = new Map<string, ProfileLevelGroup>();
     for (const row of levels) {
         if (difficulty !== "all" && row.difficulty !== difficulty) continue;
         const real = row.difficulty === "real";
-        // 전체는 낮은 레벨(1–8)을 한 줄로 묶는다 — 레벨마다 한 줄이면 15줄이라 옆 구역보다 길어져서(2026-09-26 D4)
-        const low = difficulty === "all" && !real && row.level <= LOW_LEVEL_MAX;
+        // 전체는 낮은 레벨(1–8)을 한 줄로 묶는다 — 레벨마다 한 줄이면 15줄이라 옆 구역보다 길어져서(2026-09-26 D4). 「전체 레벨 보기」 로 펼친다(2026-09-30)
+        const low =
+            difficulty === "all" &&
+            !expanded &&
+            !real &&
+            row.level <= LOW_LEVEL_MAX;
         const key = low
             ? "low"
             : difficulty === "all" && !real
@@ -62,21 +79,43 @@ export function profileLevelRows(
               : `${row.level}`;
         const current = rows.get(key);
         if (!current) {
-            rows.set(key, { ...row, tiers: { ...row.tiers }, label });
+            rows.set(key, {
+                ...row,
+                tiers: { ...row.tiers },
+                label,
+                grouped: low,
+            });
             continue;
         }
         current.total += row.total;
         for (const tier of PROFILE_TIER_KEYS)
             current.tiers[tier] += row.tiers[tier];
     }
-    return [...rows.values()];
+    // 묶음 → 레벨 오름차순 → REAL (입력 순서와 무관하게)
+    const order = (row: ProfileLevelGroup) =>
+        row.grouped
+            ? 0
+            : row.difficulty === "real"
+              ? 100 + row.level
+              : row.level;
+    return [...rows.values()].sort((a, b) => order(a) - order(b));
 }
+
+/** 레벨 글자 색 = 그 레벨 공식 레벨 값의 서열 값 색(악곡 상세 「공식 레벨」 과 같은 색, 2026-09-30). 묶은 줄은 색 없음 */
+const levelColor = (row: ProfileLevelGroup) =>
+    row.grouped
+        ? undefined
+        : tierValueColor(
+              row.difficulty === "real"
+                  ? REAL_LEVEL_BASE + row.level
+                  : row.level
+          );
 
 /**
  * 레벨별 달성(2026-09-26 R2 · L1) — 레벨마다 한 막대(`StackedBar`): 채보마다 가장 높은 한 칸(Pianist → FC → S → A+ → A → B 이하),
  * 칠하지 않은 트랙 = 안 함. 범례 항목을 누르면 그 칸만 제 색 · 나머지는 흐린 회색이 되고 오른쪽 % 가 그 칸의 비율(한 번 더 누르면 풀림),
  * 고르지 않았으면 % = 여섯 칸을 합친 비율(친 채보). 개요 옆 열은 요약(9 이상 + REAL, 제목 줄 오른쪽 끝 「모두 보기」 = 통계 탭),
- * 통계 탭은 전체 + 난이도 세그먼트
+ * 통계 탭은 전체 + 난이도 세그먼트. 「전체 레벨 보기」 를 누르면 1–12 + REAL 을 레벨마다(랭크 분포의 펼치기와 같은 버튼, 2026-09-30)
  */
 export default function ProfileLevels({
     userId,
@@ -92,13 +131,16 @@ export default function ProfileLevels({
     const href = useLocalizedHref();
     const [difficulty, setDifficulty] = useState<Difficulty>("all");
     const [selected, setSelected] = useState<ProfileTierKey | null>(null);
-    const rows = profileLevelRows(
-        levels,
-        variant === "full" ? difficulty : "all"
-    ).filter(
+    const [expanded, setExpanded] = useState(false);
+    const shownDifficulty = variant === "full" ? difficulty : "all";
+    const rows = profileLevelRows(levels, shownDifficulty, expanded).filter(
         (row) =>
-            variant === "full" || row.difficulty === "real" || row.level >= 9
+            variant === "full" ||
+            expanded ||
+            row.difficulty === "real" ||
+            row.level >= 9
     );
+    const listId = `profile-levels-${variant}-rows`;
     const label = (key: ProfileTierKey) =>
         key === "pianist"
             ? "Pianist"
@@ -146,8 +188,9 @@ export default function ProfileLevels({
                         { value: "all", label: t("profile.all") },
                         ...DIFFICULTIES.map(([value, short]) => ({
                             value,
+                            // 난이도 색 글자 — 고른 칸은 기본 글자색(세그먼트 공용 규칙)
                             label: (
-                                <>
+                                <span className={`nl-level--${value}`}>
                                     <span className="nl-profile-levels__full">
                                         {value.toUpperCase()}
                                     </span>
@@ -157,7 +200,7 @@ export default function ProfileLevels({
                                     >
                                         {short}
                                     </span>
-                                </>
+                                </span>
                             ),
                         })),
                     ]}
@@ -167,6 +210,7 @@ export default function ProfileLevels({
                 rows={rows.map((row) => ({
                     key: `${row.difficulty}:${row.level}`,
                     label: row.label,
+                    labelColor: levelColor(row),
                     segments: [
                         ...PROFILE_TIER_KEYS.map((key) => ({
                             key,
@@ -188,6 +232,19 @@ export default function ProfileLevels({
                     ),
                 }))}
             />
+            {/* 난이도를 고르면 이미 레벨마다라 펼칠 것이 없다 */}
+            {shownDifficulty === "all" ? (
+                <button
+                    type="button"
+                    className="nl-profile-disclosure nl-control"
+                    aria-expanded={expanded}
+                    aria-controls={listId}
+                    onClick={() => setExpanded((value) => !value)}
+                >
+                    {t(expanded ? "profile.collapse" : "profile.showAllLevels")}
+                    <ChevronDown aria-hidden />
+                </button>
+            ) : null}
             {/* 범례 = 칸 강조 전환(누르는 버튼, 고른 항목은 글자가 진해진다) + 지금 % 가 무엇인지 */}
             <div
                 className="nl-profile-legend nl-metadata nl-muted"
@@ -222,7 +279,7 @@ export default function ProfileLevels({
                 </span>
             </div>
             {/* 막대는 화면 읽기에서 숨기고 줄마다 수를 글로 */}
-            <ul className="sr-only">
+            <ul id={listId} className="sr-only">
                 {rows.map((row) => (
                     <li key={`${row.difficulty}:${row.level}`}>
                         {t("profile.levels.rowSummary", {
