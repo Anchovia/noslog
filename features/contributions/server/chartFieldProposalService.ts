@@ -4,11 +4,13 @@ import { revalidatePath, updateTag } from "next/cache";
 
 import {
     CHART_FIELD_PROPOSAL_DAILY_LIMIT,
+    CHART_FIELD_PROPOSAL_STATUSES,
     chartFieldProposalReviewSchema,
     chartFieldUpdate,
     chartFieldValue,
     createChartFieldProposalSchema,
     isChartFieldProposalField,
+    isChartFieldProposalStatus,
     type ChartFieldProposalField,
     type ChartFieldProposalStatus,
 } from "@/features/contributions/schemas/chartFieldProposalSchema";
@@ -266,6 +268,67 @@ export async function listChartFieldProposals(
 
 export async function countPendingChartFieldProposals() {
     return db.chartFieldProposal.count({ where: { status: "pending" } });
+}
+
+export interface ChartFieldQueueStatus {
+    /** 검토를 기다리는 제안 수(전체) */
+    pending: number;
+    /** 가장 오래 기다린 제안의 날수 — 대기가 없으면 null */
+    oldestDays: number | null;
+}
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+/**
+ * 대기 현황(2026-10-01 G1) — 제안 창 안내에 붙는 두 숫자.
+ * 운영자가 한 명이라 「언제 처리되나」 를 개인 알림 대신 공개 숫자로 말한다(IMDb · Wikipedia AfC 방식)
+ */
+export async function getChartFieldQueueStatus(
+    now = new Date()
+): Promise<ChartFieldQueueStatus> {
+    const [pending, oldest] = await Promise.all([
+        db.chartFieldProposal.count({ where: { status: "pending" } }),
+        db.chartFieldProposal.findFirst({
+            where: { status: "pending" },
+            orderBy: { createdAt: "asc" },
+            select: { createdAt: true },
+        }),
+    ]);
+    return {
+        pending,
+        oldestDays: oldest
+            ? Math.max(
+                  0,
+                  Math.floor(
+                      (now.getTime() - oldest.createdAt.getTime()) / DAY_MS
+                  )
+              )
+            : null,
+    };
+}
+
+export type MyChartFieldProposalCounts = Record<
+    ChartFieldProposalStatus,
+    number
+>;
+
+/** 내 제안의 상태별 수(2026-10-01 B2) — 본인만. 반려 수까지 세므로 남에게는 주지 않는다 */
+export async function countMyChartFieldProposals(): Promise<MyChartFieldProposalCounts> {
+    const empty = Object.fromEntries(
+        CHART_FIELD_PROPOSAL_STATUSES.map((status) => [status, 0])
+    ) as MyChartFieldProposalCounts;
+    const session = await getSession();
+    if (!session.id) return empty;
+    const rows = await db.chartFieldProposal.groupBy({
+        by: ["status"],
+        where: { userId: session.id },
+        _count: { _all: true },
+    });
+    for (const row of rows) {
+        if (isChartFieldProposalStatus(row.status))
+            empty[row.status] = row._count._all;
+    }
+    return empty;
 }
 
 /**

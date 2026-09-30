@@ -56,8 +56,8 @@ export default function ChartFieldProposalReview({
         });
     }
 
-    function review(decision: "apply" | "reject") {
-        const ids = [...selected];
+    function review(decision: "apply" | "reject", only?: number) {
+        const ids = only === undefined ? [...selected] : [only];
         if (!ids.length) return;
         startTransition(async () => {
             try {
@@ -112,7 +112,7 @@ export default function ChartFieldProposalReview({
                                 type="button"
                                 disabled={isPending || !selected.size}
                                 onClick={() => setRejecting((value) => !value)}
-                                className="border-border text-text-secondary hover:bg-surface-muted flex h-10 cursor-pointer items-center gap-2 rounded-md border px-3 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-50"
+                                className="bg-danger text-bg flex h-10 cursor-pointer items-center gap-2 rounded-md px-3 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-50"
                             >
                                 <X className="size-4" aria-hidden />
                                 반려
@@ -146,7 +146,7 @@ export default function ChartFieldProposalReview({
                                 type="button"
                                 disabled={isPending || !reason.trim()}
                                 onClick={() => review("reject")}
-                                className="border-border text-text-primary h-10 cursor-pointer rounded-md border px-3 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-50"
+                                className="bg-danger text-bg h-10 cursor-pointer rounded-md px-3 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-50"
                             >
                                 {`선택 ${selected.size}건 반려`}
                             </button>
@@ -236,6 +236,32 @@ export default function ChartFieldProposalReview({
                                     ? ` · 반려 사유: ${item.rejectReason}`
                                     : ""}
                             </p>
+                            {/* 건별 처리(2026-10-01 C2) — 한 건만 볼 때 고르기 → 위쪽 버튼 두 단계를 없앤다 */}
+                            {reviewable ? (
+                                <div className="flex flex-wrap gap-2">
+                                    <button
+                                        type="button"
+                                        disabled={isPending}
+                                        onClick={() => review("apply", item.id)}
+                                        className="bg-text-primary text-bg flex h-10 cursor-pointer items-center gap-2 rounded-md px-3 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-50"
+                                    >
+                                        <Check className="size-4" aria-hidden />
+                                        반영
+                                    </button>
+                                    <button
+                                        type="button"
+                                        disabled={isPending}
+                                        onClick={() => {
+                                            setSelected(new Set([item.id]));
+                                            setRejecting(true);
+                                        }}
+                                        className="bg-danger text-bg flex h-10 cursor-pointer items-center gap-2 rounded-md px-3 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-50"
+                                    >
+                                        <X className="size-4" aria-hidden />
+                                        반려
+                                    </button>
+                                </div>
+                            ) : null}
                         </div>
                     </article>
                 );

@@ -25,6 +25,12 @@ export const CHART_FIELD_PROPOSAL_STATUSES = [
 export type ChartFieldProposalStatus =
     (typeof CHART_FIELD_PROPOSAL_STATUSES)[number];
 
+export function isChartFieldProposalStatus(
+    value: string
+): value is ChartFieldProposalStatus {
+    return (CHART_FIELD_PROPOSAL_STATUSES as readonly string[]).includes(value);
+}
+
 /** 한 사람이 하루(24시간)에 낼 수 있는 제안 수 — 장난 방지 */
 export const CHART_FIELD_PROPOSAL_DAILY_LIMIT = 30;
 export const PROPOSAL_EVIDENCE_URL_MAX = 500;

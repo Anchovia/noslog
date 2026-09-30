@@ -1841,6 +1841,10 @@ export const koMessages = {
         "시각 · 설명(예: 1:23 결과 화면)",
     "contribution.proposal.notePlaceholder.official": "설명(선택)",
     "contribution.proposal.notePlaceholder.direct": "어떻게 확인했는지",
+    "contribution.proposal.queue":
+        "지금 검토 대기 {count}건 · 가장 오래 기다린 제안 {days}일",
+    "contribution.proposal.queueToday":
+        "지금 검토 대기 {count}건 · 모두 오늘 들어왔습니다",
     "contribution.proposal.notice": "운영자가 확인한 뒤 반영됩니다.",
     "contribution.proposal.submit": "제안하기",
     "contribution.proposal.submitting": "보내는 중",

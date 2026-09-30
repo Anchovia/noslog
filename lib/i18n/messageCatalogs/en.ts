@@ -1865,6 +1865,10 @@ export const enMessages = {
         "Time and note (e.g. 1:23 result screen)",
     "contribution.proposal.notePlaceholder.official": "Note (optional)",
     "contribution.proposal.notePlaceholder.direct": "How you checked it",
+    "contribution.proposal.queue":
+        "{count} waiting for review · oldest has waited {days} days",
+    "contribution.proposal.queueToday":
+        "{count} waiting for review · all arrived today",
     "contribution.proposal.notice":
         "An admin will review it before it's applied.",
     "contribution.proposal.submit": "Suggest",

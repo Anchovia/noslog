@@ -7,7 +7,10 @@ import {
     type ChartFieldProposalStatus,
 } from "@/features/contributions/schemas/chartFieldProposalSchema";
 import { listChartDraftsForReview } from "@/features/contributions/server/chartDraftService";
-import { listChartFieldProposals } from "@/features/contributions/server/chartFieldProposalService";
+import {
+    getChartFieldQueueStatus,
+    listChartFieldProposals,
+} from "@/features/contributions/server/chartFieldProposalService";
 
 const DRAFT_STATUSES = ["submitted", "changes_requested", "published"] as const;
 type DraftStatus = (typeof DRAFT_STATUSES)[number];
@@ -83,7 +86,10 @@ export default async function AdminContributionsPage({
 async function FieldProposals({ status: raw }: { status?: string }) {
     const status =
         CHART_FIELD_PROPOSAL_STATUSES.find((item) => item === raw) ?? "pending";
-    const proposals = await listChartFieldProposals(status);
+    const [proposals, queue] = await Promise.all([
+        listChartFieldProposals(status),
+        getChartFieldQueueStatus(),
+    ]);
     return (
         <>
             <nav className="flex gap-2" aria-label="처리 상태">
@@ -97,6 +103,15 @@ async function FieldProposals({ status: raw }: { status?: string }) {
                     </Link>
                 ))}
             </nav>
+            {/* 대기 현황(2026-10-01 G1) — 기여자 쪽 제안 창과 같은 숫자를 운영자도 본다 */}
+            {queue.pending ? (
+                <p className="text-caption">
+                    검토 대기 {queue.pending.toLocaleString("ko-KR")}건
+                    {queue.oldestDays
+                        ? ` · 가장 오래 기다린 제안 ${queue.oldestDays.toLocaleString("ko-KR")}일`
+                        : " · 모두 오늘 들어왔습니다"}
+                </p>
+            ) : null}
             {proposals.length ? (
                 <ChartFieldProposalReview
                     proposals={proposals}

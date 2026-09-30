@@ -1857,6 +1857,10 @@ export const jaMessages = {
         "時刻 · 説明(例: 1:23 リザルト画面)",
     "contribution.proposal.notePlaceholder.official": "説明(任意)",
     "contribution.proposal.notePlaceholder.direct": "どのように確認したか",
+    "contribution.proposal.queue":
+        "現在の確認待ち {count}件 ・ 最も長く待っている提案 {days}日",
+    "contribution.proposal.queueToday":
+        "現在の確認待ち {count}件 ・ すべて今日届きました",
     "contribution.proposal.notice": "運営者が確認してから反映されます。",
     "contribution.proposal.submit": "提案する",
     "contribution.proposal.submitting": "送信中",
