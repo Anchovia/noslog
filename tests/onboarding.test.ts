@@ -12,6 +12,7 @@ const mocks = vi.hoisted(() => ({
     },
     getSession: vi.fn(),
     userFindUnique: vi.fn(),
+    userFindFirst: vi.fn(),
     userUpdate: vi.fn(),
     updateTag: vi.fn(),
     redirect: vi.fn(),
@@ -23,6 +24,7 @@ vi.mock("@/lib/db", () => ({
     default: {
         user: {
             findUnique: mocks.userFindUnique,
+            findFirst: mocks.userFindFirst,
             update: mocks.userUpdate,
         },
     },
@@ -33,7 +35,10 @@ vi.mock("@/lib/observability/server", () => ({
     logServerError: mocks.logServerError,
 }));
 
-import { completeOnboarding } from "@/app/(auth)/onboarding/actions";
+import {
+    checkNickname,
+    completeOnboarding,
+} from "@/app/(auth)/onboarding/actions";
 import { GET as completeOnboardingSession } from "@/app/(auth)/onboarding/complete/route";
 import { proxy } from "@/proxy";
 
@@ -186,6 +191,41 @@ describe("최초 프로필 설정", () => {
             fieldErrors: { username: ["이미 사용 중인 닉네임입니다."] },
         });
         expect(mocks.logServerError).not.toHaveBeenCalled();
+    });
+
+    // 닉네임 미리 확인(2026-10-01 온보딩 ②) — 저장 때 고유 제약과 같은 기준, 내 계정은 빼고 찾는다
+    it("쓸 수 있는 닉네임이면 알려 준다", async () => {
+        mocks.userFindFirst.mockResolvedValueOnce(null);
+
+        await expect(checkNickname("  carol ", "ko")).resolves.toEqual({
+            available: true,
+            message: "사용할 수 있는 닉네임입니다.",
+        });
+        expect(mocks.userFindFirst).toHaveBeenCalledWith({
+            where: { username: "carol", NOT: { id: 9 } },
+            select: { id: true },
+        });
+    });
+
+    it("다른 계정이 쓰는 닉네임이면 중복 문구를 돌려준다", async () => {
+        mocks.userFindFirst.mockResolvedValueOnce({ id: 3 });
+
+        await expect(checkNickname("carol", "en")).resolves.toEqual({
+            available: false,
+            message: "That nickname is already in use.",
+        });
+    });
+
+    it("로그인하지 않았거나 규칙에 맞지 않으면 DB 를 찾지 않는다", async () => {
+        mocks.session.id = undefined;
+        await expect(checkNickname("carol", "ko")).resolves.toMatchObject({
+            available: false,
+        });
+        mocks.session.id = 9;
+        await expect(checkNickname("a<b", "ko")).resolves.toMatchObject({
+            available: false,
+        });
+        expect(mocks.userFindFirst).not.toHaveBeenCalled();
     });
 
     it("예상하지 못한 저장 오류를 구조화해 기록한다", async () => {

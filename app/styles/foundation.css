@@ -353,6 +353,10 @@ html[data-theme="light"] .noslog-ui,
 .noslog-ui .nl-field__error {
     color: var(--nl-feedback-error-text);
 }
+/* 확인 성공 한 줄(2026-10-01 온보딩 ② — 쓸 수 있는 닉네임) = 합격 체크와 같은 초록 */
+.noslog-ui .nl-field__success {
+    color: var(--nl-feedback-success-marker);
+}
 /* 입력칸 = 면 surface/surface + 경계 border/input(3:1) · 마우스 올림은 경계만 border/strong (2026-09-14 B′) */
 .noslog-ui .nl-input {
     width: 100%;

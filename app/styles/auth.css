@@ -121,3 +121,13 @@
 .noslog-ui .nl-auth-reason {
     margin-top: var(--nl-spacing-32);
 }
+/* 온보딩 두 단계의 발 버튼(2026-10-01 C) — 주 버튼 아래 「이전」, 사이 12 */
+.noslog-ui .nl-auth-steps {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-12);
+    margin-top: var(--nl-spacing-8);
+}
+.noslog-ui .nl-auth-steps .nl-auth-submit {
+    margin-top: 0;
+}
