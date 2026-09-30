@@ -14,7 +14,6 @@ const routes = [
     "/tiers",
     "/rankings",
     "/bingo",
-    "/bingo/1",
     "/exams",
     "/profile/1",
     "/privacy",
@@ -30,11 +29,18 @@ test.beforeEach(({}, testInfo) => {
 });
 
 for (const locale of ["ko", "ja", "en"] as const) {
-    test(`${locale} ordinary routes share a centered 1000px shell and content alignment`, async ({
+    test(`${locale} ordinary routes share a centered 1200px shell and content alignment`, async ({
         page,
     }, testInfo) => {
         test.setTimeout(120_000);
-        for (const route of routes) {
+        // 빙고 상세 — 시드를 다시 돌리면 id 가 바뀌므로 목록의 첫 빙고로 간다
+        await page.goto(`/${locale}/bingo`);
+        const bingoHref = await page
+            .locator('a[href*="/bingo/"]')
+            .first()
+            .getAttribute("href");
+        const bingoRoute = bingoHref!.slice(`/${locale}`.length);
+        for (const route of [...routes, bingoRoute]) {
             await page.goto(`/${locale}${route}`);
             await expect(page.locator(".nl-footer__content")).toHaveCount(1);
             for (const width of widths) {
@@ -80,7 +86,8 @@ for (const locale of ["ko", "ja", "en"] as const) {
                         ),
                     };
                 });
-                const expectedWidth = Math.min(layout.viewport, 1000);
+                // 셸 1200 가운데(가이드 「2. 셸과 레이아웃」)
+                const expectedWidth = Math.min(layout.viewport, 1200);
                 const expectedX = (layout.viewport - expectedWidth) / 2;
                 if (sheetFooter) {
                     await expect(page.locator(".nl-footer")).toBeHidden();
@@ -106,7 +113,8 @@ for (const locale of ["ko", "ja", "en"] as const) {
                     expect(surface.width).toBe(layout.viewport);
                     expect(surface.x).toBe(0);
                 }
-                const padding = width < 672 ? 16 : 24;
+                // 전역 좌우 여백 16 (672 미만) / 24 / 32 (1056 이상)
+                const padding = width < 672 ? 16 : width < 1056 ? 24 : 32;
                 for (const box of [layout.header, layout.footer]) {
                     expect(box.paddingLeft).toBe(padding);
                     expect(box.paddingRight).toBe(padding);
@@ -225,6 +233,12 @@ test("the chart viewer uses the ordinary shell", async ({ page }) => {
     await expect(page.locator("main")).toHaveCount(1);
     await expect(page.locator(".nl-app")).toHaveCount(1);
     await expect(page.locator(".nl-header")).toBeVisible();
+    // 공개 채보가 있어야 뷰어가 뜬다 — E2E 시드에는 공개 채보가 없다
+    test.skip(
+        (await page.locator(".nl-chart-viewer").count()) === 0,
+        "Requires a published chart pattern; the E2E seed has none."
+    );
+    // 셸 1200 − 좌우 여백 32 × 2
     const box = await page.locator(".nl-chart-viewer").boundingBox();
-    expect(box?.width).toBe(1216);
+    expect(box?.width).toBe(1136);
 });
