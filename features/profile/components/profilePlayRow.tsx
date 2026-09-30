@@ -155,9 +155,7 @@ export function ProfilePlayListHead({
             <span className="nl-profile-play-row__score">
                 {t("profile.column.score")}
             </span>
-            <span className="nl-profile-play-row__grade">
-                {t("profile.column.rank")}
-            </span>
+            {/* 등급 칸은 머리 글자를 비운다(2026-09-30) — 「점수 랭크」 가 한 낱말처럼 붙어 보였다 */}
             {record ? (
                 <span className="nl-profile-play-row__chart">
                     {t("profile.column.chartRank")}

@@ -492,7 +492,9 @@
     display: none;
 }
 /* 표(칸 폭 560 이상, 2026-09-30) — 곡 칸 = 곡 이름 + 아랫줄 난이도(osu! · Spotify: 곡 정보는 곡 이름에 붙인다),
-   결과는 오른쪽에 모은다: 점수 72(오른쪽 정렬) · 등급 48(점수 바로 뒤) · 곡 순위 48(등급 옆) · 날짜 76 · 값 80(「119.74 Grd」).
+   결과는 오른쪽에 모은다: 점수 72 · 등급 48(점수 바로 뒤) · 곡 순위 48 · 날짜 76 · 값 80(「119.74 Grd」).
+   결과 칸(점수 · 곡 순위 · 날짜 · 값 · New)은 머리 글자도 값도 칸 가운데(op.gg · Premier League · osu! 랭킹 · ScoreSaber) —
+   짧은 머리 글자를 긴 값의 한쪽 끝에 맞추면 밀려 보인다. 등급 아이콘만 점수 뒤 그 자리(FC 가 붙어도 세로 선 유지).
    칸 폭은 가장 긴 내용 실측(1,000,000 = 69 · 등급 + FC = 45 · #1,234 = 47 · May 29, 2025 = 74 · 150.00 Grd = 74)에 맞춘 값 */
 @container profile-section (min-width: 560px) {
     .noslog-ui .nl-profile-play-head,
@@ -505,7 +507,7 @@
     }
     .noslog-ui .nl-profile-play-row__new {
         grid-area: new;
-        justify-self: start;
+        justify-self: center;
     }
     .noslog-ui
         :is(.nl-profile-plays, .nl-profile-records)[data-kind="best"]
@@ -536,9 +538,13 @@
         > .nl-profile-play-row__time {
         display: block;
     }
-    /* 곡 순위는 등급 옆에 붙인다(왼쪽 정렬) — 등급 → 곡 순위 빈틈 89 → 42 */
-    .noslog-ui .nl-profile-play-row__chart {
-        justify-self: start;
+    .noslog-ui
+        :is(
+            .nl-profile-play-row__chart,
+            .nl-profile-play-row__time,
+            .nl-profile-play-row__contribution
+        ) {
+        justify-self: center;
     }
     .noslog-ui .nl-profile-play-head {
         display: grid;
@@ -546,8 +552,9 @@
         min-height: 32px;
         border-bottom: var(--nl-stroke-default) solid var(--nl-border-divider);
     }
+    /* 「곡」 은 곡 이름 위(자켓 위 아님, 2026-09-30 사용자) */
     .noslog-ui .nl-profile-play-head__song {
-        grid-column: jacket / title;
+        grid-column: title;
         grid-row: 1 / -1;
     }
     /* 행 52 — 곡 칸이 두 줄(24 + 16 = 40)이라 위아래 4 에 가운데 맞춤(구분선 두께를 뺌) */
@@ -572,13 +579,10 @@
     }
     .noslog-ui .nl-profile-play-row__score {
         grid-area: score;
-        text-align: right;
+        text-align: center;
     }
     .noslog-ui .nl-profile-play-row__grade {
         grid-area: grade;
-    }
-    .noslog-ui .nl-profile-play-head .nl-profile-play-row__time {
-        justify-self: end;
     }
 }
 .noslog-ui .nl-profile-list-actions {
