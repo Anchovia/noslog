@@ -1,7 +1,7 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
-import { expectNoHorizontalOverflow, localeCopy } from "./helpers";
+import { expectNoHorizontalOverflow, headerMenuCopy } from "./helpers";
 
 const widths = [
     320, 390, 672, 768, 1000, 1055, 1056, 1173, 1174, 1280, 1440, 1470, 1512,
@@ -170,7 +170,7 @@ for (const locale of ["ko", "ja", "en"] as const) {
         for (const width of [320, 390, 768, 1440, 2560]) {
             await page.setViewportSize({ width, height: 900 });
             const trigger = page.getByRole("button", {
-                name: localeCopy[locale].openMenu,
+                name: headerMenuCopy(page, locale).open,
             });
             await trigger.click();
             const panel = page.locator("#app-destinations");
@@ -181,7 +181,8 @@ for (const locale of ["ko", "ja", "en"] as const) {
                 .locator(".nl-nav-trigger")
                 .boundingBox())!;
             if (width >= 672) {
-                expect(panelBox.width).toBe(488);
+                // 1056 이상은 설정 · 피드백만 담는 한 열 창
+                expect(panelBox.width).toBe(width >= 1056 ? 248 : 488);
                 expect(panelBox.x + panelBox.width).toBeCloseTo(
                     triggerBox.x + triggerBox.width,
                     1

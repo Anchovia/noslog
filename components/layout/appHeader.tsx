@@ -168,6 +168,32 @@ function HeaderContent({ account }: { account: ShellAccount | null }) {
                         >
                             NosLog
                         </Link>
+                        {/* 1056 이상에서만 보인다(CSS) — 그 아래 폭은 ≡ 안(2026-09-30 A1 · P1) */}
+                        <nav
+                            className="nl-header__nav"
+                            aria-label={t("header.primaryNav")}
+                        >
+                            {productDestinations.map(
+                                ({ href: destination, labelKey }) => (
+                                    <Link
+                                        key={destination}
+                                        href={href(destination)}
+                                        className="nl-header__nav-item nl-control"
+                                        aria-current={
+                                            isDestinationActive(
+                                                pathname,
+                                                chartScope,
+                                                destination
+                                            )
+                                                ? "page"
+                                                : undefined
+                                        }
+                                    >
+                                        {t(labelKey)}
+                                    </Link>
+                                )
+                            )}
+                        </nav>
                         <div className="nl-header__controls">
                             {account ? (
                                 <Link
@@ -193,9 +219,13 @@ function HeaderContent({ account }: { account: ShellAccount | null }) {
                                 ref={triggerRef}
                                 className="nl-nav-trigger"
                                 aria-label={t(
-                                    open
-                                        ? "header.closeMenu"
-                                        : "header.openMenu"
+                                    desktop
+                                        ? open
+                                            ? "header.closeMore"
+                                            : "header.openMore"
+                                        : open
+                                          ? "header.closeMenu"
+                                          : "header.openMenu"
                                 )}
                                 aria-expanded={open}
                                 aria-controls="app-destinations"
@@ -225,38 +255,47 @@ function HeaderContent({ account }: { account: ShellAccount | null }) {
                                 ref={panelRef}
                                 id="app-destinations"
                                 className="nl-destinations"
-                                aria-label={t("header.fullMenu")}
-                            >
-                                {productDestinations.map(
-                                    ({
-                                        href: destination,
-                                        labelKey,
-                                        icon: Icon,
-                                    }) => (
-                                        <Link
-                                            key={destination}
-                                            href={href(destination)}
-                                            className="nl-destination nl-control"
-                                            aria-current={
-                                                isDestinationActive(
-                                                    pathname,
-                                                    chartScope,
-                                                    destination
-                                                )
-                                                    ? "page"
-                                                    : undefined
-                                            }
-                                            onClick={() => setOpen(false)}
-                                        >
-                                            <Icon
-                                                className="nl-icon"
-                                                aria-hidden
-                                            />
-                                            <span>{t(labelKey)}</span>
-                                        </Link>
-                                    )
+                                aria-label={t(
+                                    desktop
+                                        ? "header.moreMenu"
+                                        : "header.fullMenu"
                                 )}
-                                <div className="nl-destinations__divider" />
+                            >
+                                {/* 1056 이상은 이동 메뉴가 헤더에 나와 있어 나머지(설정 · 피드백 · 관리자)만 담는다(S1) */}
+                                {desktop
+                                    ? null
+                                    : productDestinations.map(
+                                          ({
+                                              href: destination,
+                                              labelKey,
+                                              icon: Icon,
+                                          }) => (
+                                              <Link
+                                                  key={destination}
+                                                  href={href(destination)}
+                                                  className="nl-destination nl-control"
+                                                  aria-current={
+                                                      isDestinationActive(
+                                                          pathname,
+                                                          chartScope,
+                                                          destination
+                                                      )
+                                                          ? "page"
+                                                          : undefined
+                                                  }
+                                                  onClick={() => setOpen(false)}
+                                              >
+                                                  <Icon
+                                                      className="nl-icon"
+                                                      aria-hidden
+                                                  />
+                                                  <span>{t(labelKey)}</span>
+                                              </Link>
+                                          )
+                                      )}
+                                {desktop ? null : (
+                                    <div className="nl-destinations__divider" />
+                                )}
                                 <Link
                                     href={href("/settings")}
                                     className="nl-destination nl-control"

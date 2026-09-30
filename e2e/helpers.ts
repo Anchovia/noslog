@@ -15,6 +15,9 @@ export const localeCopy = {
         tiers: "서열표",
         login: "Discord로 계속하기",
         openMenu: "전체 메뉴 열기",
+        openMore: "더 보기 메뉴 열기",
+        fullMenu: "전체 메뉴",
+        moreMenu: "더 보기 메뉴",
     },
     ja: {
         lang: "ja",
@@ -24,6 +27,9 @@ export const localeCopy = {
         tiers: "難易度表",
         login: "Discordで続ける",
         openMenu: "全メニューを開く",
+        openMore: "その他のメニューを開く",
+        fullMenu: "全メニュー",
+        moreMenu: "その他のメニュー",
     },
     en: {
         lang: "en",
@@ -33,10 +39,23 @@ export const localeCopy = {
         tiers: "Tier Lists",
         login: "Continue with Discord",
         openMenu: "Open full menu",
+        openMore: "Open more menu",
+        fullMenu: "Full menu",
+        moreMenu: "More menu",
     },
 } as const;
 
 export type TestLocale = keyof typeof localeCopy;
+
+// 1056 이상은 이동 메뉴가 헤더에 나와 있고 ≡ 는 「더 보기」(설정 · 피드백)만 연다(2026-09-30 A1 · S1)
+export function headerMenuCopy(page: Page, locale: TestLocale) {
+    const wide = (page.viewportSize()?.width ?? 0) >= 1056;
+    return {
+        wide,
+        open: localeCopy[locale][wide ? "openMore" : "openMenu"],
+        menu: localeCopy[locale][wide ? "moreMenu" : "fullMenu"],
+    };
+}
 
 export async function expectNoHorizontalOverflow(page: Page) {
     // ResizeObserver-driven charts settle after viewport changes and font loading.
