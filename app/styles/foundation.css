@@ -203,11 +203,10 @@ html[data-theme="light"] .noslog-ui,
     outline: none;
     box-shadow: 0 0 0 var(--nl-spacing-4) var(--nl-state-halo);
 }
-/* 보조 = 입력칸과 같은 면·경계 (2026-09-14 B2) */
+/* 보조 = 옅은 면 · 선 없음(2026-09-30 K1 — Spectrum 2 보조 버튼 · shadcn secondary · YouTube). 경계는 포커스 때만 */
 .noslog-ui .nl-button--secondary {
-    background: var(--nl-surface-surface);
+    background: var(--nl-surface-control);
     color: var(--nl-content-default);
-    border-color: var(--nl-border-input);
 }
 .noslog-ui .nl-button--ghost {
     background: transparent;
@@ -215,7 +214,7 @@ html[data-theme="light"] .noslog-ui,
 }
 /* 올림 · 누름은 제 면 위에 겹친다 — 공용 .nl-button:hover · :active 의 주 버튼 면이 새지 않게 면을 다시 적는다(2026-09-23 I2) */
 .noslog-ui .nl-button--secondary:is(:hover, :active) {
-    background-color: var(--nl-surface-surface);
+    background-color: var(--nl-surface-control);
 }
 .noslog-ui .nl-button--ghost:is(:hover, :active) {
     background-color: transparent;
@@ -471,9 +470,10 @@ html[data-theme="light"] .noslog-ui,
     min-width: 0;
     min-height: var(--nl-control-height);
     padding: calc(var(--nl-spacing-4) - var(--nl-stroke-default));
-    border: var(--nl-stroke-default) solid var(--nl-border-subtle);
+    /* 판 = 카드 면 · 선 없음(2026-09-30 K1) — 자리는 그대로 두려고 투명 경계를 남긴다 */
+    border: var(--nl-stroke-default) solid transparent;
     border-radius: var(--nl-radius-container);
-    background: var(--nl-surface-sunken);
+    background: var(--nl-surface-surface);
 }
 .noslog-ui .nl-segments__item {
     display: flex;
@@ -489,11 +489,15 @@ html[data-theme="light"] .noslog-ui,
     line-height: var(--nl-type-line-height-20);
     font-weight: var(--nl-type-weight-medium);
 }
+/* 고른 칸 = 면 한 단계 위 · 선 없음(2026-09-30 K1) */
 .noslog-ui .nl-segments__item[aria-checked="true"] {
-    border-color: var(--nl-border-strong);
-    background: var(--nl-surface-raised);
-    color: var(--nl-content-default);
+    background: var(--nl-surface-control-selected);
+    color: var(--nl-content-interactive);
     font-weight: var(--nl-type-weight-semibold);
+}
+/* 고른 칸 안의 색 글자(난이도 레벨 숫자)는 기본 글자색으로 — 고른 칩과 같은 규칙. control-selected 면 위에서는 색 글자 대비가 모자란다(2026-09-30 A) */
+.noslog-ui .nl-segments__item[aria-checked="true"] [class*="nl-level--"] {
+    color: inherit;
 }
 .noslog-ui .nl-segments__item:focus-visible {
     border-color: var(--nl-focus-ring);

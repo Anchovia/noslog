@@ -47,6 +47,9 @@
     --nl-surface-sunken: #111111;
     --nl-surface-raised: #222222;
     --nl-surface-overlay: #222222;
+    /* 누르는 것의 면(2026-09-30 K1) — 보조 버튼 · 칩 · 고르기 = control(바탕 1.35 · 카드 위 1.23), 고른 세그먼트 · 칩 = control-selected(바탕 1.64) */
+    --nl-surface-control: #2c2c2c;
+    --nl-surface-control-selected: #393939;
     --nl-surface-scrim: #00000099;
     --nl-content-default: #dbdbdb;
     --nl-content-subdued: #afafaf;
@@ -128,15 +131,16 @@
     --nl-difficulty-BA5500: #ba5500;
     --nl-difficulty-D85C4F: #d85c4f;
     --nl-difficulty-9452CE: #9452ce;
-    --nl-difficulty-text-normal: #239d68;
-    --nl-difficulty-text-hard: #e26500;
-    --nl-difficulty-text-expert: #db675b;
-    --nl-difficulty-text-real: #ae6be9;
-    --nl-category-pops: #bb7a7a;
-    --nl-category-anime: #b57896;
-    --nl-category-bm: #718ab2;
-    --nl-category-org: #b08165;
-    --nl-category-var: #6e9a7c;
+    /* 색 글자는 누르는 면 surface/control(#2c2c2c) 위에서도 4.5 : 1 — 같은 색상각에서 명도만 한 칸(2026-09-30 A, 2026-09-18 의 연장) */
+    --nl-difficulty-text-normal: #25a76f;
+    --nl-difficulty-text-hard: #ef6b00;
+    --nl-difficulty-text-expert: #de7469;
+    --nl-difficulty-text-real: #b477eb;
+    --nl-category-pops: #bf8383;
+    --nl-category-anime: #ba829e;
+    --nl-category-bm: #7d94b8;
+    --nl-category-org: #b5896e;
+    --nl-category-var: #729d7f;
     --nl-category-cljz: #b09365;
     --nl-border-overlay: #444444;
     --nl-exam-tier-low: #8a8a8a;
@@ -161,6 +165,8 @@ html[data-theme="light"] .noslog-ui,
     --nl-surface-sunken: #e9e9e9;
     --nl-surface-raised: #ffffff;
     --nl-surface-overlay: #ffffff;
+    --nl-surface-control: #e9e9e9;
+    --nl-surface-control-selected: #dadada;
     --nl-surface-scrim: #00000066;
     --nl-content-default: #292929;
     --nl-content-subdued: #505050;

@@ -425,7 +425,7 @@ for (const locale of ["ko", "ja", "en"])
                             };
                         }),
                         regionHeight: box(region).height,
-                        regionShadow: getComputedStyle(region).boxShadow,
+                        regionFill: getComputedStyle(region).backgroundColor,
                         firstWeight: getComputedStyle(
                             rows[0].querySelector(".nl-player-row__rank")!
                         ).fontWeight,
@@ -473,7 +473,10 @@ for (const locale of ["ko", "ja", "en"])
                     });
                 else expect(long.truncated).toBe(false);
                 expect(geometry.regionHeight).toBe(width >= 1056 ? 40 : 44);
-                expect(geometry.regionShadow).toContain("1px");
+                // 상자 고르기 = 옅은 면 · 선 없음(2026-09-30 K1)
+                expect(geometry.regionFill).toBe(
+                    theme === "dark" ? "rgb(44, 44, 44)" : "rgb(233, 233, 233)"
+                );
                 expect(geometry.firstWeight).toBe("600");
                 expect(geometry.font).toContain("Pretendard JP Variable");
                 expect(geometry.personal).toEqual({

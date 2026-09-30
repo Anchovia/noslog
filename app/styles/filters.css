@@ -74,8 +74,8 @@
     min-height: var(--nl-control-height-compact);
     padding-inline: var(--nl-spacing-12);
     border-radius: var(--nl-radius-field);
-    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-strong);
-    background: transparent;
+    /* 옅은 면 · 선 없음(2026-09-30 K1) */
+    background: var(--nl-surface-control);
     color: var(--nl-content-default);
 }
 @media (hover: hover) {
@@ -89,8 +89,8 @@
 }
 /* 선택 = 버튼 칩은 aria-pressed, 링크 칩(FilterChipLinks)은 aria-current */
 .noslog-ui .nl-chip:is([aria-pressed="true"], [aria-current="page"]) {
-    background: var(--nl-surface-raised);
-    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-strong);
+    background: var(--nl-surface-control-selected);
+    color: var(--nl-content-interactive);
     font-weight: var(--nl-type-weight-semibold);
 }
 .noslog-ui .nl-chip:focus-visible {
@@ -99,9 +99,7 @@
 }
 .noslog-ui .nl-chip:disabled {
     color: var(--nl-interaction-disabled-content);
-    box-shadow: inset 0 0 0 var(--nl-stroke-default)
-        var(--nl-interaction-disabled-border);
-    background: transparent;
+    background: var(--nl-interaction-disabled-bg);
 }
 /* 항목 글자 색(tone) — 난이도 DU-01 텍스트 램프 · 카테고리 자켓 레이블 색 · 성취(S = 판정 JUST 노랑, FC·Pianist = achievement).
    칩은 선택되면 중립으로 돌아가고(면·경계·체크가 선택을 말한다), 레일 목록은 체크 상자가 선택을 말해 글자 색을 유지한다 */
