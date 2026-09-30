@@ -512,11 +512,6 @@
     text-decoration: underline;
     text-underline-offset: 3px;
 }
-.noslog-ui .nl-bingo-save-error {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-12);
-}
 @media (min-width: 1056px) {
     /* 넓은 화면(2026-09-22 E · W1) = 판 | 오른쪽 1:1 (악곡 상세 개요 두 열과 같은 비율 · 열 사이 16).
        판이 모든 행에 걸치므로 남는 높이는 미션 행(1fr)만 받는다 */

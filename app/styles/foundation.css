@@ -823,6 +823,34 @@ html[data-theme="light"] .noslog-ui,
 .noslog-ui .nl-status--boxed .nl-status__copy > .nl-body-secondary {
     color: inherit;
 }
+/* 알림 토스트(2026-10-01) = 떠 있는 창 규격(면 overlay · 경계 border/overlay · 모서리 10 · 그림자) · 안쪽 12 16 · 아이콘 16 →12→ 글자 emphasis-label.
+   색 면 없이 아이콘에만 표시색 — 상태 메시지 inline 과 같은 「약하게」 */
+.noslog-ui .nl-toast {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: var(--nl-spacing-12);
+    padding: var(--nl-spacing-12) var(--nl-spacing-16);
+    border-radius: var(--nl-radius-overlay);
+    background: var(--nl-surface-overlay);
+    color: var(--nl-content-default);
+    box-shadow:
+        inset 0 0 0 var(--nl-stroke-default) var(--nl-border-overlay),
+        var(--nl-overlay-shadow);
+}
+.noslog-ui .nl-toast__content {
+    min-width: 0;
+}
+.noslog-ui .nl-toast__icon {
+    flex-shrink: 0;
+    color: var(--nl-feedback-info-marker);
+}
+.noslog-ui .nl-toast--success .nl-toast__icon {
+    color: var(--nl-feedback-success-marker);
+}
+.noslog-ui .nl-toast--error .nl-toast__icon {
+    color: var(--nl-feedback-danger-marker);
+}
 /* 사진 뷰어(2026-09-23 V3 · B2 · C2 · S2) — 모든 폭에서 화면을 채우고 바탕은 페이지 바탕색(새 색 없음), 사진은 contain.
    닫기 우상 · ‹ › 좌우 · 아래에 카운터와 썸네일 줄(컨트롤 높이 · 4 : 3). 폰의 시스템 영역은 safe-area 로 피한다 */
 .noslog-ui .nl-photo-viewer {

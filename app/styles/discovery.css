@@ -162,7 +162,7 @@
 .noslog-ui .nl-filter-miss {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-12);
+    gap: var(--nl-spacing-16);
 }
 /* 제목 → 개수(메타 글줄) 8 → 검색 16 (역할값). 검색줄 = 검색(남는 폭) + 폰에서는 ☰ 필터 44 (2026-09-16 E′ · R2) */
 .noslog-ui .nl-discovery__heading {

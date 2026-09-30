@@ -210,7 +210,7 @@ export default function AccountSettings({
                             {t("settings.deletionBoundary")}
                         </p>
                         <section className="nl-account-consequences">
-                            <h3 className="nl-metadata">
+                            <h3 className="nl-metadata nl-muted">
                                 {t("settings.deletionHeading")}
                             </h3>
                             <dl>

@@ -34,7 +34,7 @@ export default function PatternCriteriaDialog() {
         >
             <p className="nl-body-secondary">{t("pattern.basis")}</p>
             <section className="nl-info-section">
-                <h3 className="nl-metadata">{t("pattern.levels")}</h3>
+                <h3 className="nl-metadata nl-muted">{t("pattern.levels")}</h3>
                 <ul className="nl-info-rows nl-pattern-steps">
                     {LEVELS.map((level) => (
                         <li key={level}>
@@ -56,7 +56,7 @@ export default function PatternCriteriaDialog() {
                 </ul>
             </section>
             <section className="nl-info-section">
-                <h3 className="nl-metadata">{t("pattern.axes")}</h3>
+                <h3 className="nl-metadata nl-muted">{t("pattern.axes")}</h3>
                 <dl className="nl-info-rows">
                     {PATTERN_AXES.map((axis) => (
                         <div key={axis}>

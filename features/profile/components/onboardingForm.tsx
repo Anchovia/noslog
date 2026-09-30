@@ -266,11 +266,12 @@ export default function OnboardingForm({
                                 {t("onboarding.nicknameDescription")}
                             </p>
                         </div>
+                        {/* 묶음 제목 = 칸 라벨 모양 →8→(닉네임 라벨과 같게, 2026-10-01) */}
                         <fieldset
-                            className="nl-radio-group"
+                            className="nl-radio-group nl-radio-group--field"
                             disabled={isSubmitting}
                         >
-                            <legend className="nl-control">
+                            <legend className="nl-field__label">
                                 {t("onboarding.country")}
                             </legend>
                             <p

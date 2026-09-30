@@ -14,6 +14,7 @@ import {
 import MusicJacket from "@/components/music/musicJacket";
 import { Checkbox } from "@/components/ui/checkbox";
 import Button from "@/components/ui/Button";
+import { StatusMessage } from "@/components/ui/statusMessage";
 import Disclosure from "@/components/ui/disclosure";
 import useMediaQuery from "@/lib/hooks/useMediaQuery";
 import FilterChips from "@/components/ui/filterChips";
@@ -333,23 +334,29 @@ export default function BingoDetailPage({
                             {state.message}
                         </p>
                         {state.failed ? (
-                            <div className="nl-bingo-save-error" role="alert">
-                                <p className="nl-body-secondary">
-                                    {state.failed.message}
-                                </p>
-                                <Button
-                                    variant="secondary"
-                                    onClick={() =>
-                                        state.failed &&
-                                        void state.save(
-                                            state.failed.cellId,
-                                            state.failed.next
-                                        )
-                                    }
-                                >
-                                    {t("common.retry")}
-                                </Button>
-                            </div>
+                            // 저장 실패 = 동작 결과 오류 inline + 고스트 M 「다시 시도」(2026-10-01 — 가이드 「상태 메시지」)
+                            <StatusMessage
+                                severity="danger"
+                                role="alert"
+                                title={state.failed.message}
+                                action={
+                                    <div>
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={() =>
+                                                state.failed &&
+                                                void state.save(
+                                                    state.failed.cellId,
+                                                    state.failed.next
+                                                )
+                                            }
+                                        >
+                                            {t("common.retry")}
+                                        </Button>
+                                    </div>
+                                }
+                            />
                         ) : null}
                         {/* 미션 전체(2026-09-22) — 판 순서 그대로 한 목록, 칸 위치는 좌표 대신 작은 판(그 칸만 켬) */}
                         <ul className="nl-bingo-missions__list">

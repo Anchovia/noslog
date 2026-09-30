@@ -313,6 +313,12 @@
     gap: var(--nl-spacing-16);
     min-width: 0;
 }
+/* 「고급」 안의 칸도 칸 사이 16(2026-10-01 — 세로 폼 칸 사이는 모두 16) */
+.noslog-ui .nl-poll-builder .nl-disclosure__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-16);
+}
 .noslog-ui .nl-poll-builder__options {
     display: flex;
     flex-direction: column;

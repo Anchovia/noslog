@@ -8,25 +8,28 @@ export default function AppToaster() {
     const t = useTranslations();
     useAccountResultNotice();
 
+    // 알림 = 떠 있는 창 규격 · 색은 아이콘에만(2026-10-01) — foundation.css `nl-toast`. 토큰이 걸리게 noslog-ui 안에 둔다(포털과 같은 방식)
     return (
-        <Toaster
-            position="bottom-center"
-            duration={3000}
-            visibleToasts={3}
-            offset={16}
-            mobileOffset={16}
-            containerAriaLabel={t("common.notifications")}
-            toastOptions={{
-                unstyled: true,
-                classNames: {
-                    toast: "border-border bg-surface text-text-primary rounded-card flex w-full items-center gap-3 border px-4 py-3 shadow-xl",
-                    title: "text-sm font-semibold",
-                    content: "min-w-0",
-                    icon: "shrink-0",
-                    success: "bg-success/10",
-                    error: "border-danger/40 bg-danger/10",
-                },
-            }}
-        />
+        <div className="noslog-ui">
+            <Toaster
+                position="bottom-center"
+                duration={3000}
+                visibleToasts={3}
+                offset={16}
+                mobileOffset={16}
+                containerAriaLabel={t("common.notifications")}
+                toastOptions={{
+                    unstyled: true,
+                    classNames: {
+                        toast: "nl-toast",
+                        title: "nl-emphasis-label",
+                        content: "nl-toast__content",
+                        icon: "nl-toast__icon",
+                        success: "nl-toast--success",
+                        error: "nl-toast--error",
+                    },
+                }}
+            />
+        </div>
     );
 }

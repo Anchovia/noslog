@@ -187,8 +187,9 @@ export default function ArcadeReportDialog({
     );
     const fields = (
         <>
-            <div>
-                <p className="nl-control">{t("arcades.reportTarget")}</p>
+            {/* 고정 값 칸 = 칸 라벨 모양 →8→ 값(2026-10-01, FormField 와 같은 간격) */}
+            <div className="nl-field">
+                <p className="nl-field__label">{t("arcades.reportTarget")}</p>
                 <p className="nl-body">
                     {arcade.name}
                     {arcade.region ? ` · ${arcade.region}` : ""}
