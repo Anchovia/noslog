@@ -6,6 +6,7 @@ import type { NextRequest } from "next/server";
 import { getCachedProfileData } from "@/app/(nevigation)/profile/[id]/data";
 import { getProfileCountryCode } from "@/components/profile/dashboard/profileUtils";
 import ProfileCardImage from "@/features/profile/components/profileCardImage";
+import { toCardAvatar } from "@/features/profile/server/profileCardAvatar";
 import getSession from "@/lib/session";
 import {
     isLocale,
@@ -71,13 +72,13 @@ function getFlag(country: string) {
         );
     return flags.get(file)!;
 }
+// 사진은 형식과 상관없이 PNG 로 바꿔서 넣는다 — 엔진이 webp 를 못 읽어 카드가 통째로 실패했다(2026-09-30)
 async function getAvatar(avatar: string | null) {
-    if (!avatar || avatar.startsWith("data:")) return avatar;
+    if (!avatar) return null;
     try {
         const response = await fetch(avatar, { cache: "force-cache" });
         if (!response.ok) return null;
-        const type = response.headers.get("content-type") || "image/png";
-        return `data:${type};base64,${Buffer.from(await response.arrayBuffer()).toString("base64")}`;
+        return toCardAvatar(new Uint8Array(await response.arrayBuffer()));
     } catch {
         return null;
     }
