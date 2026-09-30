@@ -107,7 +107,7 @@
 .noslog-ui .nl-bingo-mini {
     display: grid;
     grid-template-columns: repeat(5, 6px);
-    gap: 2px;
+    gap: var(--nl-spacing-2);
     padding: var(--nl-spacing-4);
     border-radius: var(--nl-radius-control);
     background: var(--nl-surface-media-scrim);

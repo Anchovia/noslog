@@ -126,7 +126,7 @@
 }
 /* 랭킹 행의 명판은 이름 글줄(20)과 같은 높이 — 글자 12 그대로, 상자 여백만 2/6 */
 .noslog-ui .nl-player-row .nl-exam-badge {
-    padding: 2px 6px;
+    padding: var(--nl-spacing-2) 6px;
 }
 .noslog-ui .nl-player-row .nl-exam-badge__divider {
     height: 10px;

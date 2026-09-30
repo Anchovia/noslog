@@ -77,7 +77,7 @@
     position: relative;
     height: 4px;
     width: calc(100% - 24px);
-    margin-inline: 12px;
+    margin-inline: var(--nl-spacing-12);
     border-radius: var(--nl-radius-full);
     background: var(--nl-border-default);
 }
