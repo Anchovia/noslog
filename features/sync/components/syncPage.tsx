@@ -98,7 +98,10 @@ export default function SyncPage({
         (result.error instanceof ApiError && result.error.status === 401)
     )
         return (
-            <PageContainer className="nl-sync-page nl-sync-page--guest">
+            <PageContainer
+                width="reading"
+                className="nl-sync-page nl-sync-page--guest"
+            >
                 <h1 className="nl-page-title">{t("sync.title")}</h1>
                 <p className="nl-body nl-muted">{t("sync.description")}</p>
                 <div className="nl-sync-columns">
@@ -163,6 +166,7 @@ export default function SyncPage({
         );
     return (
         <PageContainer
+            width="reading"
             className={
                 firstUse ? "nl-sync-page nl-sync-page--first" : "nl-sync-page"
             }

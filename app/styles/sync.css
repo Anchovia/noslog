@@ -194,13 +194,9 @@
 .noslog-ui .nl-sync-page .nl-sync-guide-detail > summary {
     color: var(--nl-content-subdued);
 }
-/* 글줄 폭 = 읽기 폭 768(2026-10-01 D8) — 설명 글이 내용 폭 1136 끝까지 한 줄로 늘어지지 않게. 왼쪽 정렬 그대로 */
+/* 페이지 폭 = 읽기 폭 768 · 가운데(2026-10-01 D8 → 사용자) — 컨테이너(nl-container--reading)가 맞춘다 */
 .noslog-ui .nl-sync-page .nl-sync-columns {
     width: 100%;
-    max-width: var(--nl-container-reading);
-}
-.noslog-ui .nl-sync-page > .nl-page-title + p {
-    max-width: var(--nl-container-reading);
 }
 .noslog-ui .nl-sync-page--first .nl-sync-columns > .nl-sync-column:last-child {
     border-top: var(--nl-stroke-default) solid var(--nl-border-divider);
