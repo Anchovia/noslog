@@ -86,7 +86,9 @@ export default function AchievementShowcasePicker({
                         )}
                     </p>
                 ) : (
-                    <p className="nl-body nl-muted">{t("achievement.empty")}</p>
+                    <p className="nl-body-secondary nl-muted">
+                        {t("achievement.empty")}
+                    </p>
                 )}
                 {earned.length ? (
                     <div className="nl-settings__actions">

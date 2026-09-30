@@ -43,7 +43,7 @@
     text-align: left;
 }
 /* 제목(페이지 제목 고정) · 번역 · 아티스트는 접힌 상태에서 모두 한 줄, 넘치면 끝 페이드.
-   등급 아이콘은 제목 줄 높이(폰 32 · 1056 이상 40)로 제목 글자 끝 8 뒤(제목이 넘치면 제목이 그 앞에서 흐려짐).
+   등급 아이콘은 제목 줄 높이(모든 폭 32 — 제목이 모든 폭 24/32, 2026-10-01 D5)로 제목 글자 끝 8 뒤(제목이 넘치면 제목이 그 앞에서 흐려짐).
    번역은 등급 자리(아이콘 + 8) 앞에서 끝. 펼치면 등급 아이콘은 숨김 (2026-09-18) */
 .noslog-ui .nl-music-entity__heading {
     display: flex;
@@ -88,19 +88,6 @@
     flex: none;
     width: var(--nl-type-line-height-32);
     height: var(--nl-type-line-height-32);
-}
-@media (min-width: 1056px) {
-    .noslog-ui
-        .nl-music-entity__heading[data-grade]
-        > .nl-music-entity__translation {
-        margin-inline-end: calc(
-            var(--nl-type-line-height-40) + var(--nl-spacing-8)
-        );
-    }
-    .noslog-ui .nl-music-entity__grade {
-        width: var(--nl-type-line-height-40);
-        height: var(--nl-type-line-height-40);
-    }
 }
 /* 그레이드 — 수치 상자 맨 위 칸(surface · 안쪽 8/12 · 줄과 막대 사이 8). 위 줄 = 왼쪽 「그레이드」 control,
    오른쪽 내 Grd = 정수 24/32 · 700, 소수 16/24 · 600 + 「/ 최대 Grd」 body-secondary 흐림(모르면 「/ —」).
@@ -212,17 +199,17 @@
         font-size: var(--nl-type-size-14);
     }
 }
-/* 개요 탭 — 구역 사이 32 · 구역 제목 → 내용 12 · 제목 줄 오른쪽 끝 「평가하기 ›」(고스트 M, 잉크를 오른쪽 선에) */
+/* 개요 탭 — 구역 사이 · 구역 제목 → 내용 = 구역 간격 토큰(2026-10-01 D1) · 제목 줄 오른쪽 끝 「평가하기 ›」(고스트 M, 잉크를 오른쪽 선에) */
 .noslog-ui .nl-overview {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-32);
+    gap: var(--nl-section-gap);
     min-width: 0;
 }
 .noslog-ui .nl-overview__section {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-12);
+    gap: var(--nl-section-title-gap);
     min-width: 0;
 }
 .noslog-ui .nl-overview__card {
@@ -269,7 +256,9 @@
     flex-wrap: wrap;
     gap: var(--nl-spacing-8);
 }
-.noslog-ui .nl-facts__empty {
+.noslog-ui .nl-facts__empty,
+/* 출처가 없는 값(2026-10-01 E2) — 확인된 값과 구분해 흐린 글자로 */
+.noslog-ui .nl-facts__value[data-verified="false"] {
     color: var(--nl-content-pending);
 }
 .noslog-ui .nl-facts__tag {
@@ -380,11 +369,11 @@
     gap: var(--nl-spacing-24);
 }
 /* 최근 플레이 · 판정 분석 펼침 묶음 — 사이 간격 없이 쌓고 구분선은 공용 펼침 규칙 */
-/* 접히는 구역 사이는 구분선 없이 「구역 사이 32」 — 구분선은 가이드에 없던 장식이라 뺀다 (2026-09-18 사용자 결정) */
+/* 접히는 구역 사이는 구분선 없이 「구역 사이」(구역 간격 토큰) — 구분선은 가이드에 없던 장식이라 뺀다 (2026-09-18 사용자 결정) */
 .noslog-ui .nl-record-disclosures {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-32);
+    gap: var(--nl-section-gap);
     min-width: 0;
 }
 /* 최근 플레이 = 카드 안 선 목록(카드 안쪽 16, 줄 올림 면은 안쪽 4 까지) */
@@ -466,12 +455,12 @@
     .noslog-ui .nl-music-entity__copy {
         min-height: 0;
     }
-    /* 개요 = 두 열(왼쪽 패턴 경향 · 오른쪽 내 기록 → 채보 정보 → 이력), 열 사이 16 · 구역 사이 32. 내 기록 탭은 한 열 */
+    /* 개요 = 두 열(왼쪽 패턴 경향 · 오른쪽 내 기록 → 채보 정보 → 이력), 열 사이 16 · 구역 사이는 구역 간격. 내 기록 탭은 한 열 */
     .noslog-ui .nl-overview {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         align-items: start;
-        gap: var(--nl-spacing-32) var(--nl-spacing-16);
+        gap: var(--nl-section-gap) var(--nl-spacing-16);
     }
     .noslog-ui .nl-overview > :first-child {
         grid-row: span 3;

@@ -399,9 +399,13 @@
     justify-content: space-between;
     gap: var(--nl-spacing-8);
 }
-/* 전체 화면 창은 선 위아래 24, 팝오버는 16 — 그룹을 감싸는 form · div(오락실 · 빙고 필터 폼)까지 같은 값 */
+/* 전체 화면 창은 선 위아래 24, 팝오버는 16 — 그룹을 감싸는 form · div(오락실 · 빙고 필터 폼)까지 같은 값.
+   그룹이 본문 바로 아래에 오는 창(악곡 필터)도 본문 간격 32 대신 24(2026-10-01 규칙 맞춤 — 선 위 32 · 아래 24 로 어긋나 있었다) */
 .noslog-ui .nl-full-dialog__body .nl-filter-group + .nl-filter-group {
     padding-top: var(--nl-spacing-24);
+}
+.noslog-ui .nl-full-dialog__body:has(> .nl-filter-group) {
+    gap: var(--nl-spacing-24);
 }
 .noslog-ui .nl-full-dialog__body :is(form, div):has(> .nl-filter-group) {
     gap: var(--nl-spacing-24);

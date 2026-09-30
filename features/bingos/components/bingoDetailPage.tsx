@@ -313,6 +313,7 @@ export default function BingoDetailPage({
                     {/* 기본 펼침(2026-09-22) — 판 아래에서 25칸 전체 문장을 한눈에 */}
                     <Disclosure
                         open
+                        heading="section"
                         className="nl-bingo-missions__all"
                         title={t("bingo.missions")}
                         meta={bingo.cells.length}
@@ -537,7 +538,7 @@ export default function BingoDetailPage({
                                 </>
                             }
                         >
-                            <p className="nl-body">
+                            <p className="nl-body-secondary nl-muted">
                                 {t("bingo.resetDescription", {
                                     title: bingo.title,
                                     count: state.completed.size,

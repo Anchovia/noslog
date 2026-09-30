@@ -841,7 +841,10 @@ export default function ArcadeDiscoveryPage({
                                 ))}
                             </ul>
                         ) : (
-                            <p className="nl-body nl-muted" data-sheet-peek>
+                            <p
+                                className="nl-body-secondary nl-muted"
+                                data-sheet-peek
+                            >
                                 {t("arcades.noResults")}
                             </p>
                         )}

@@ -315,7 +315,7 @@ export default function ExamDashboard({
                         </div>
                     </>
                 ) : (
-                    <p className="nl-body-secondary" role="status">
+                    <p className="nl-body-secondary nl-muted" role="status">
                         {t("exams.empty")}
                     </p>
                 )}

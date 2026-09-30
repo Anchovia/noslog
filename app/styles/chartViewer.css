@@ -11,10 +11,11 @@
     gap: var(--nl-spacing-12);
     min-width: 0;
 }
+/* 제목 → 메타 글줄 8(가이드 역할값 — 2026-10-01 규칙 맞춤) */
 .noslog-ui .nl-chart-viewer__titles {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-4);
+    gap: var(--nl-spacing-8);
     min-width: 0;
 }
 /* 채보 줄 — 왼쪽 「채보 · 이름 [라벨]」, 오른쪽 끝 동작 버튼(보조 M, 사이 8). 좁아 넘치면 다음 줄 */

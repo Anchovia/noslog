@@ -529,7 +529,7 @@ export default function ChartSheetViewer({
             >
                 <div className="nl-chart-viewer__info-sheet">
                     <div className="nl-chart-viewer__titles">
-                        <p className="nl-section-title">{title}</p>
+                        <p className="nl-entity-title">{title}</p>
                         {localizedTitle ? (
                             <p className="nl-body-secondary nl-muted">
                                 {localizedTitle}

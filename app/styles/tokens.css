@@ -10,6 +10,9 @@
     --nl-spacing-32: 32px;
     --nl-spacing-48: 48px;
     --nl-spacing-64: 64px;
+    /* 구역 간격(2026-10-01 D1) — 구역 사이 · 구역 제목(20) → 내용. 1055 이하 32 · 12, 1056 이상 48 · 16(아래 미디어 쿼리) */
+    --nl-section-gap: var(--nl-spacing-32);
+    --nl-section-title-gap: var(--nl-spacing-12);
     --nl-radius-control: 4px;
     --nl-radius-field: 8px;
     --nl-radius-container: 8px;
@@ -23,6 +26,7 @@
     --nl-type-size-32: 32px;
     --nl-type-size-40: 40px;
     --nl-type-line-height-16: 16px;
+    --nl-type-line-height-18: 18px;
     --nl-type-line-height-20: 20px;
     --nl-type-line-height-24: 24px;
     --nl-type-line-height-28: 28px;
@@ -286,10 +290,11 @@ html[data-theme="light"] .noslog-ui,
     letter-spacing: 0;
     font-variant-numeric: normal;
 }
+/* 구역 제목은 페이지 제목과 같은 700(2026-10-01 D2) — 목록 이름 · 상자 제목(600)과 굵기로도 갈린다 */
 .noslog-ui .nl-section-title {
     font-size: var(--nl-type-size-20);
     line-height: var(--nl-type-line-height-28);
-    font-weight: var(--nl-type-weight-semibold);
+    font-weight: var(--nl-type-weight-bold);
     letter-spacing: 0;
     font-variant-numeric: normal;
 }
@@ -343,6 +348,10 @@ html[data-theme="light"] .noslog-ui,
     letter-spacing: 0;
     font-variant-numeric: normal;
 }
+/* 여러 줄로 읽는 12 설명(칸 도움말 · 창 안 설명 문단)은 줄 높이만 18 — 한 줄 라벨 · 표 · 목록 줄 안 12 는 16 그대로(2026-10-01 D4) */
+.noslog-ui .nl-metadata--long {
+    line-height: var(--nl-type-line-height-18);
+}
 .noslog-ui .nl-metric-display {
     font-size: var(--nl-type-size-32);
     line-height: var(--nl-type-line-height-40);
@@ -364,9 +373,17 @@ html[data-theme="light"] .noslog-ui,
     letter-spacing: 0;
     font-variant-numeric: normal;
 }
-/* 페이지 제목은 데스크톱(1056 이상)에서 32/40 — 모든 페이지 같은 규칙(글자 결정 ① 2026-09-15) */
+/* 구역 간격 — 넓은 화면(1056 이상)만 넓힌다(2026-10-01 D1 · 왓챠피디아 · KRDS 방식). 폰 · 중간 폭은 그대로 */
 @media (min-width: 1056px) {
-    .noslog-ui .nl-page-title {
+    .noslog-ui {
+        --nl-section-gap: var(--nl-spacing-48);
+        --nl-section-title-gap: var(--nl-spacing-16);
+    }
+}
+/* 페이지 제목은 데스크톱(1056 이상)에서 32/40 — 모든 페이지 같은 규칙(글자 결정 ① 2026-09-15).
+   예외 `nl-page-title--fixed` = 좁은 열 안 제목(악곡 상세 머리 열 272 — 32 면 576곡 중 44% 가 잘림)은 모든 폭 24/32(2026-10-01 D5) */
+@media (min-width: 1056px) {
+    .noslog-ui .nl-page-title:not(.nl-page-title--fixed) {
         font-size: var(--nl-type-size-32);
         line-height: var(--nl-type-line-height-40);
     }

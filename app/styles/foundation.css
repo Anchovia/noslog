@@ -344,9 +344,10 @@ html[data-theme="light"] .noslog-ui,
     line-height: var(--nl-type-line-height-20);
     font-weight: var(--nl-type-weight-medium);
 }
+/* 칸 도움말은 두 줄로 넘어가는 설명이라 12/18(2026-10-01 D4) */
 .noslog-ui .nl-field__help {
     font-size: var(--nl-type-size-12);
-    line-height: var(--nl-type-line-height-16);
+    line-height: var(--nl-type-line-height-18);
     color: var(--nl-content-subdued);
 }
 .noslog-ui .nl-field__error {
@@ -1615,6 +1616,7 @@ html[data-theme="light"] .noslog-ui,
     border-radius: var(--nl-radius-container);
     background: var(--nl-border-divider);
 }
+/* 칸 안쪽 위아래 12 · 좌우 8(2026-10-01 D7 — 8 은 가장 빽빽한 칸이었다) */
 .noslog-ui .nl-stat-strip__cell {
     display: flex;
     flex: 1 1 64px;
@@ -1622,7 +1624,7 @@ html[data-theme="light"] .noslog-ui,
     flex-direction: column;
     align-items: center;
     gap: 0;
-    padding: var(--nl-spacing-8);
+    padding: var(--nl-spacing-12) var(--nl-spacing-8);
     background: var(--nl-surface-surface);
     text-align: center;
 }
@@ -1658,7 +1660,7 @@ html[data-theme="light"] .noslog-ui,
         align-items: center;
         justify-content: space-between;
         min-height: var(--nl-control-height);
-        padding-inline: var(--nl-spacing-12);
+        padding: var(--nl-spacing-8) var(--nl-spacing-12);
         text-align: start;
     }
 }

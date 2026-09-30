@@ -22,6 +22,7 @@ import FullScreenDialog from "@/components/ui/fullScreenDialog";
 import SearchField from "@/components/ui/searchField";
 import { SegmentedControl } from "@/components/ui/segmentedControl";
 import ResultState from "@/components/ui/resultState";
+import { StatusMessage } from "@/components/ui/statusMessage";
 import useDebouncedValue from "@/lib/hooks/useDebouncedValue";
 import useWideLayout from "@/lib/hooks/useWideLayout";
 import { cn } from "@/lib/utils";
@@ -757,9 +758,11 @@ export default function DiscoveryPage({
                     {items.length ? (
                         <div className="nl-discovery__progress" ref={progress}>
                             {collection.isFetchNextPageError ? (
-                                <p role="alert" className="nl-body-secondary">
-                                    {t("discovery.moreError")}
-                                </p>
+                                <StatusMessage
+                                    severity="danger"
+                                    role="alert"
+                                    title={t("discovery.moreError")}
+                                />
                             ) : null}
                             {collection.hasNextPage ? (
                                 <ActionButton

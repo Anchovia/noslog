@@ -13,20 +13,24 @@
     min-width: 0;
     margin-bottom: calc(var(--nl-spacing-16) - var(--nl-spacing-32));
 }
-/* 구역 사이 32 · 구역 제목 → 내용 12 (간격 결정 2026-09-15) */
+/* 구역 사이 · 구역 제목 → 내용 = 구역 간격 토큰(1055 이하 32 · 12, 1056 이상 48 · 16 — 2026-10-01 D1) */
 .noslog-ui .nl-exams__content,
 .noslog-ui .nl-exam-navigation,
 .noslog-ui .nl-exams__personal {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-32);
+    gap: var(--nl-section-gap);
     min-width: 0;
+}
+/* 급 고르기(세그먼트 → 셀렉트)는 구역이 아니라 32 그대로 */
+.noslog-ui .nl-exam-navigation {
+    gap: var(--nl-spacing-32);
 }
 /* 급 머리 H2(2026-09-22) — 제목 + 상태 태그 한 줄 →12→ 수치 띠(요구 Grd. · 검정료 · 합격 보상) */
 .noslog-ui .nl-exam-head {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-12);
+    gap: var(--nl-section-title-gap);
 }
 .noslog-ui .nl-exam-head__title {
     display: flex;
@@ -141,6 +145,10 @@
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-12);
+}
+/* 「과제곡」 → 첫 곡 = 구역 제목 → 내용(곡 카드 · 통과선 사이 12 는 그대로) */
+.noslog-ui .nl-exam-stages > h3 {
+    margin-bottom: calc(var(--nl-section-title-gap) - var(--nl-spacing-12));
 }
 /* 통과선 줄(2026-09-22 T7) — 곡 카드 사이. 자켓 가운데를 지나는 세로 선 위에 ✓/✗ 16, 합격선 글자 · 오른쪽 여유(±) */
 .noslog-ui .nl-exam-passline {
@@ -432,7 +440,8 @@
     gap: var(--nl-spacing-12);
     min-width: 0;
 }
-/* 합격 인증 C2(2026-09-22) — 페이지 구역(제목 → 내용 12). 1056 이상 두 열에서는 옆 「합격까지」 상자와 같은 상자 */
+/* 합격 인증 C2(2026-09-22) — 1055 이하는 페이지 구역(제목 20 → 내용 12). 1056 이상 두 열에서는 옆 「합격까지」 상자와 같은 상자라
+   제목도 상자 제목 16 → 내용 8(2026-10-01 D6 — 가이드 「상자 안 제목은 component-title」, 「합격까지」 와 같게) */
 .noslog-ui .nl-exam-proof {
     overflow-wrap: anywhere;
 }
@@ -441,6 +450,12 @@
         background: var(--nl-surface-surface);
         border-radius: var(--nl-radius-container);
         padding: var(--nl-spacing-16);
+    }
+    .noslog-ui .nl-exam-proof > h3 {
+        font-size: var(--nl-type-size-16);
+        line-height: var(--nl-type-line-height-24);
+        font-weight: var(--nl-type-weight-semibold);
+        margin-bottom: calc(var(--nl-spacing-8) - var(--nl-spacing-12));
     }
     /* 로그아웃 「로그인 후 인증 가능」 — 상자가 한 줄을 다 쓰므로 주 버튼은 내용 폭(2026-09-30 C1) */
     .noslog-ui .nl-exam-proof > .nl-button {

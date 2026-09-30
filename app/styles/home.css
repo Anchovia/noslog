@@ -41,10 +41,11 @@
     color: var(--nl-identity-mark);
     box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-identity-mark);
 }
+/* 제목 → 설명 글줄 8(가이드 역할값 — 2026-10-01 규칙 맞춤) */
 .noslog-ui .nl-home-identity__copy {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-4);
+    gap: var(--nl-spacing-8);
 }
 .noslog-ui .nl-home-search {
     position: relative;
@@ -93,13 +94,14 @@
 }
 .noslog-ui .nl-home-updates {
     display: grid;
-    gap: var(--nl-spacing-32);
+    gap: var(--nl-section-gap);
 }
+/* 새 소식 구역 — 사이 · 제목 → 내용 = 구역 간격 토큰(2026-10-01 D1) */
 .noslog-ui .nl-home-update {
     display: flex;
     min-width: 0;
     flex-direction: column;
-    gap: var(--nl-spacing-12);
+    gap: var(--nl-section-title-gap);
 }
 .noslog-ui .nl-home-update__heading {
     display: flex;
