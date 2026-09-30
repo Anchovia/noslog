@@ -1408,7 +1408,6 @@ export const jaMessages = {
         "固定記録を保存できませんでした。スコアのある記録だけ選べます。",
     "profile.fullComboShort": "FC",
     "profile.column.song": "曲",
-    "profile.column.difficulty": "難易度",
     "profile.column.score": "スコア",
     "profile.column.rank": "ランク",
     "profile.column.date": "日付",

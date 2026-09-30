@@ -1403,7 +1403,6 @@ export const koMessages = {
         "고정 기록을 저장하지 못했습니다. 점수가 있는 기록만 고를 수 있습니다.",
     "profile.fullComboShort": "FC",
     "profile.column.song": "곡",
-    "profile.column.difficulty": "난이도",
     "profile.column.score": "점수",
     "profile.column.rank": "랭크",
     "profile.column.date": "날짜",

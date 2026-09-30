@@ -1418,7 +1418,6 @@ export const enMessages = {
         "Couldn't save pinned records. Only records with a score can be pinned.",
     "profile.fullComboShort": "FC",
     "profile.column.song": "Song",
-    "profile.column.difficulty": "Difficulty",
     "profile.column.score": "Score",
     "profile.column.rank": "Rank",
     "profile.column.date": "Date",

@@ -20,7 +20,9 @@ import type {
 
 /**
  * 기록 줄(2026-09-25 B2) — 좁은 칸(폰)은 두 줄(자켓 44 · 곡 / 난이도 · 점수 · 등급 · 오른쪽 값), 넓은 칸은 열 고정 표 행
- * (베스트: 순번 · 자켓 36 · 곡 · 난이도 · 점수 · 등급 · 날짜 · Grd, 최근: 자켓 · 곡 · 난이도 · 점수 · 등급 · 새 기록 · 플레이 시각).
+ * (베스트: 순번 · 자켓 36 · 곡 + 아랫줄 난이도 · 점수 · 등급 · 곡 순위 · 날짜 · Grd, 최근: 자켓 · 곡 + 난이도 · 점수 · 등급 · 새 기록 · 플레이 시각).
+ * 표에서도 난이도는 곡 이름 아랫줄(2026-09-30 — osu! · Spotify: 곡 정보는 곡 이름에 붙이고 결과는 오른쪽에 모은다).
+ * 값(Grd · pt)은 늘 소수 둘째 자리 — 같은 정수로 보이던 곡을 비교할 수 있게(2026-09-30 피드백).
  * 같은 마크업에 칸 폭(container query)만 다르다 — profile.css `nl-profile-play-row`
  */
 export default function ProfilePlayRow({
@@ -111,7 +113,7 @@ export default function ProfilePlayRow({
                 ) : null}
                 {play.contribution !== null ? (
                     <span className="nl-metric-value nl-profile-play-row__contribution">
-                        {Math.round(play.contribution).toLocaleString(locale)}{" "}
+                        {formatProfileContribution(play.contribution, locale)}{" "}
                         {metric === "grade" ? "Grd" : "pt"}
                     </span>
                 ) : null}
@@ -120,7 +122,15 @@ export default function ProfilePlayRow({
     );
 }
 
-/** 표 머리(넓은 칸에서만 보인다) — 줄마다 글자가 스스로 설명해 화면 읽기에는 숨긴다 */
+/** 곡별 Grd · pt — 늘 소수 둘째 자리(118.30 · 150.00), 세로로 자리가 맞게 */
+export function formatProfileContribution(value: number, locale: string) {
+    return value.toLocaleString(locale, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    });
+}
+
+/** 표 머리(넓은 칸에서만 보인다) — 줄마다 글자가 스스로 설명해 화면 읽기에는 숨긴다. 난이도는 곡 칸 아랫줄이라 머리 글자가 없다 */
 export function ProfilePlayListHead({
     kind,
     metric,
@@ -141,9 +151,6 @@ export function ProfilePlayListHead({
             ) : null}
             <span className="nl-profile-play-head__song">
                 {t("profile.column.song")}
-            </span>
-            <span className="nl-profile-play-row__difficulty">
-                {t("profile.column.difficulty")}
             </span>
             <span className="nl-profile-play-row__score">
                 {t("profile.column.score")}

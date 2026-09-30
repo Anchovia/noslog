@@ -10,6 +10,7 @@ import {
 } from "@/components/i18n/localeProvider";
 import MusicJacket from "@/components/music/musicJacket";
 import { ScoreGrade } from "@/features/music/components/chartLeaderboard";
+import { formatProfileContribution } from "@/features/profile/components/profilePlayRow";
 import type { ProfilePinnedRecords } from "@/features/profile/server/profilePinnedService";
 
 /**
@@ -87,9 +88,10 @@ export default function ProfilePinned({
                             <span className="nl-profile-pinned__side">
                                 {play.grades[mode] !== null ? (
                                     <span className="nl-metric-value">
-                                        {Math.round(
-                                            play.grades[mode]!
-                                        ).toLocaleString(locale)}{" "}
+                                        {formatProfileContribution(
+                                            play.grades[mode]!,
+                                            locale
+                                        )}{" "}
                                         Grd
                                     </span>
                                 ) : null}
