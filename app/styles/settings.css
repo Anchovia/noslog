@@ -267,7 +267,15 @@
     gap: var(--nl-spacing-16);
     min-height: 0;
 }
-/* 목록을 안은 묶음이 남는 높이를 받아 목록에 넘긴다(2026-10-01) */
+/* 창 본문의 「칸은 줄지 않는다」(foundation) 예외 — 이 묶음은 남는 높이를 받아 목록만 줄인다 */
+.noslog-ui .nl-dialog__body > .nl-pinned-picker {
+    flex-shrink: 1;
+}
+/* 목록을 안은 묶음이 남는 높이를 받아 목록에 넘긴다(2026-10-01). 줄어드는 것은 목록뿐 —
+   고른 칸 · 검색 칸은 제 높이 그대로(창이 낮으면 검색 칸이 글줄 높이로 눌리던 것, 2026-10-01 사용자) */
+.noslog-ui .nl-pinned-picker > :not(:last-child) {
+    flex-shrink: 0;
+}
 .noslog-ui .nl-pinned-picker > .nl-settings__pick-group:last-child {
     flex: 1;
     min-height: 0;

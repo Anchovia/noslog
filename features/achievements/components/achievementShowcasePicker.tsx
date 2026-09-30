@@ -133,6 +133,7 @@ export default function AchievementShowcasePicker({
                         {/* 고정 기록 창과 같은 발(2026-10-01 사용자) — 고른 것만 비우고 창은 그대로 */}
                         <Button
                             variant="secondary"
+                            className="nl-dialog__reset"
                             disabled={!draft.length}
                             onClick={() => setDraft([])}
                         >

@@ -998,6 +998,11 @@ html[data-theme="light"] .noslog-ui,
     overflow-y: auto;
     overscroll-behavior: contain;
 }
+/* 본문 칸은 줄지 않고 창이 낮으면 본문이 스크롤한다 — 검색 칸처럼 높이를 정한 칸이 글줄 높이로 눌리지 않게(2026-10-01 사용자).
+   남는 높이를 받아 제 목록만 줄이는 묶음(고정 기록 창)은 그 CSS 가 다시 줄게 한다 */
+.noslog-ui .nl-dialog__body > * {
+    flex-shrink: 0;
+}
 /* 버튼 줄 = 오른쪽 끝에 「보조 → 주」(Primer · Atlassian · Apple · Fluent · Material 3) */
 .noslog-ui .nl-dialog__actions {
     display: flex;
@@ -1196,6 +1201,29 @@ html[data-theme="light"] .noslog-ui,
         svg {
         width: var(--nl-icon-large);
         height: var(--nl-icon-large);
+    }
+}
+/* 고르기 창 발(고정 기록 · 프로필 업적, 2026-10-01 사용자) — 폰에서도 한 줄: 「적용」 남은 폭 왼쪽 + 「초기화」 글자 폭 오른쪽.
+   아래 시트의 「주 버튼 위 · 폭 가득 두 줄」 과 전체 화면 창의 「보조 왼쪽」 대신. 672 이상은 대화상자 규칙(오른쪽 끝 보조 → 주) 그대로 */
+@media (max-width: 671px) {
+    .noslog-ui
+        .nl-dialog:not(.nl-image-share)
+        > .nl-dialog__footer:has(> .nl-dialog__reset) {
+        flex-direction: row;
+    }
+    .noslog-ui
+        .nl-dialog:not(.nl-image-share)
+        > .nl-dialog__footer:has(> .nl-dialog__reset)
+        > .nl-button:not(.nl-dialog__reset) {
+        flex: 1 1 0;
+        min-width: 0;
+    }
+    .noslog-ui
+        .nl-dialog:not(.nl-image-share)
+        > .nl-dialog__footer
+        > .nl-dialog__reset {
+        flex: none;
+        order: 1;
     }
 }
 /* 아래 시트(2026-09-26, 유튜브 폰 설명 창) — `sheet` 는 1055 이하까지 아래 시트 */

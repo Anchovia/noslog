@@ -206,11 +206,15 @@
     align-items: center;
     gap: var(--nl-spacing-8);
 }
-/* 고르기 창 — 3칸(고른 순서) →12→ 「얻은 업적」 →8→ 고를 업적 격자 */
+/* 고르기 창 — 3칸(고른 순서) →16→ 「얻은 업적」 →8→ 고를 업적 격자(2026-10-01 A — 고정 기록 · 선호 오락실 창과 같은
+   묶음 사이 16 · 묶음 라벨 → 목록 8) */
 .noslog-ui .nl-achievement-picker {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-12);
+    gap: var(--nl-spacing-16);
+}
+.noslog-ui .nl-achievement-picker > p + .nl-achievement-picker__choices {
+    margin-top: calc(var(--nl-spacing-8) - var(--nl-spacing-16));
 }
 .noslog-ui .nl-achievement-picker__choice {
     display: flex;
