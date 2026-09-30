@@ -9,6 +9,7 @@ import {
 } from "@/components/i18n/localeProvider";
 import MusicJacket from "@/components/music/musicJacket";
 import { ScoreGrade } from "@/features/music/components/chartLeaderboard";
+import { rankTone } from "@/lib/music/scoreTone";
 import {
     formatProfilePlayTime,
     formatProfileRecordDate,
@@ -88,7 +89,11 @@ export default function ProfilePlayRow({
                     </span>
                 </span>
                 {play.chartRank !== null ? (
-                    <span className="nl-profile-play-row__chart nl-metric-value nl-muted">
+                    // 악곡 순위 1 · 2 · 3 = 순위표 시상 색, 4위부터는 흐린 글자 그대로(2026-10-01 사용자)
+                    <span
+                        className="nl-profile-play-row__chart nl-metric-value nl-muted nl-toned"
+                        data-tone={rankTone(play.chartRank)}
+                    >
                         <span className="sr-only">
                             {t("profile.column.chartRank")}{" "}
                         </span>

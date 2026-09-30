@@ -15,6 +15,7 @@ import Avatar from "@/components/ui/avatar";
 import CountryMarker from "@/components/ui/countryMarker";
 import type { ChartRankingRow } from "@/features/music/schemas/chartRankingSchema";
 import { SkeletonText } from "@/components/ui/skeleton";
+import { scoreTone } from "@/lib/music/scoreTone";
 
 /** 등급 메달 — 순위표는 18(공용 순위표 규격 그대로), 악곡 상세 핀 창은 아이콘 규격 16 */
 export function ScoreGrade({
@@ -112,7 +113,11 @@ function ChartLeaderboardRow({
             </div>
             <span className="nl-chart-leaderboard__result">
                 <ScoreGrade rank={pianist ? "P" : row.rank} />
-                <span className="nl-player-row__value nl-metric-value">
+                {/* 점수 = 목표 색(950k S 노랑 · 990k · Pianist), 950k 아래는 기본 글자색 — 내 기록 · 개요 점수와 같은 색(2026-10-01 사용자) */}
+                <span
+                    className="nl-player-row__value nl-metric-value nl-toned"
+                    data-tone={pianist ? "pianist" : scoreTone(row.score)}
+                >
                     {row.score.toLocaleString(locale)}
                 </span>
                 <FullComboMark
