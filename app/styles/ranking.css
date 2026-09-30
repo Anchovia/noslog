@@ -29,8 +29,9 @@
         );
     }
 }
+/* 현재 쪽 = 고른 칩 · 고른 세그먼트 칸과 같은 면 · 선 없음(2026-09-30 F1, K1 규칙) */
 .noslog-ui .nl-pagination__item[aria-current="page"] {
-    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-strong);
+    background: var(--nl-surface-control-selected);
     color: var(--nl-content-default);
     font-weight: var(--nl-type-weight-semibold);
 }

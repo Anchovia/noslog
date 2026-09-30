@@ -120,7 +120,7 @@ export default function SyncPage({
                                         className="nl-sync-overview-step"
                                     >
                                         <span
-                                            className="nl-sync-step__number nl-emphasis-label"
+                                            className="nl-sync-step__number nl-metadata"
                                             aria-hidden
                                         >
                                             {index + 1}

@@ -442,6 +442,10 @@
         border-radius: var(--nl-radius-container);
         padding: var(--nl-spacing-16);
     }
+    /* 로그아웃 「로그인 후 인증 가능」 — 상자가 한 줄을 다 쓰므로 주 버튼은 내용 폭(2026-09-30 C1) */
+    .noslog-ui .nl-exam-proof > .nl-button {
+        align-self: flex-start;
+    }
 }
 .noslog-ui .nl-exam-proof__checklist {
     display: flex;
