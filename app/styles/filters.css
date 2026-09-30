@@ -300,7 +300,8 @@
     gap: var(--nl-spacing-12);
 }
 
-/* 적용 조건 행: 토큰 32 + × 16 · 끝에 전체 지우기 */
+/* 적용 조건 행: 토큰 32 + × 16 · 끝에 전체 지우기. 토큰 = 칩 · 고르기 알약과 같은 옅은 면 surface/control · 선 없음
+   (2026-10-01 T1 — Twitch 태그 필터 · GOG 걸린 필터), 난이도 조건은 글자만 난이도 색(× 는 기본색, 올리면 기본 글자색 — 칩과 같은 규칙) */
 .noslog-ui .nl-applied {
     display: flex;
     align-items: center;
@@ -314,8 +315,25 @@
     min-height: var(--nl-control-height-compact);
     padding: 0 var(--nl-spacing-8) 0 var(--nl-spacing-12);
     border-radius: var(--nl-radius-field);
-    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-default);
+    background: var(--nl-surface-control);
+    box-shadow: inset 0 0 0 var(--nl-stroke-default)
+        var(--nl-control-line, transparent);
     color: var(--nl-content-default);
+}
+.noslog-ui .nl-applied__token[data-tone="normal"] {
+    --nl-tone: var(--nl-difficulty-text-normal);
+}
+.noslog-ui .nl-applied__token[data-tone="hard"] {
+    --nl-tone: var(--nl-difficulty-text-hard);
+}
+.noslog-ui .nl-applied__token[data-tone="expert"] {
+    --nl-tone: var(--nl-difficulty-text-expert);
+}
+.noslog-ui .nl-applied__token[data-tone="real"] {
+    --nl-tone: var(--nl-difficulty-text-real);
+}
+.noslog-ui .nl-applied__token[data-tone]:not(:hover) > .nl-applied__label {
+    color: var(--nl-tone);
 }
 @media (hover: hover) {
     .noslog-ui .nl-applied__token:hover {

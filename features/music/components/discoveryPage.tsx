@@ -597,6 +597,9 @@ export default function DiscoveryPage({
                                 return {
                                     key: `difficulty-${range.difficulty}`,
                                     label,
+                                    tone: range.difficulty.toLowerCase() as Lowercase<
+                                        typeof range.difficulty
+                                    >,
                                     removeLabel: t(
                                         "discovery.removeCondition",
                                         { condition: label }
