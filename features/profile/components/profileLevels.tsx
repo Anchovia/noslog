@@ -99,10 +99,10 @@ export function profileLevelRows(
     return [...rows.values()].sort((a, b) => order(a) - order(b));
 }
 
-/** 레벨 글자 색 = 레벨 1–12 는 서열 값 색(악곡 상세 「공식 레벨」 과 같은 색), REAL 1–3 은 난이도 Real 보라(2026-09-30 사용자). 묶은 줄은 색 없음 */
+/** 레벨 글자 색 = 레벨 1–12 는 서열 값 색(악곡 상세 「공식 레벨」 과 같은 색), REAL 1–3 은 난이도 Real 보라(2026-09-30 사용자). 묶은 줄(「1–8」)은 난이도 Hard 색(2026-10-01 사용자) */
 const levelColor = (row: ProfileLevelGroup) =>
     row.grouped
-        ? undefined
+        ? "var(--nl-difficulty-text-hard)"
         : row.difficulty === "real"
           ? "var(--nl-difficulty-text-real)"
           : tierValueColor(row.level);

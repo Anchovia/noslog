@@ -109,6 +109,8 @@ export interface ChartDetail {
     play_video_url: string | null;
     chart_preview_url: string | null;
     has_published_pattern: boolean;
+    /** 출처(`chart_field_sources`)가 있는 칸 — 없으면 「확인 전」(2026-10-01 E2) */
+    sourced_fields?: string[];
     scoreDistribution: {
         key: string;
         label: string;

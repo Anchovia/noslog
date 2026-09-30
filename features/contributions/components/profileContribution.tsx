@@ -2,12 +2,14 @@
 
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
     countMyChartFieldProposals,
+    countUnseenContributionResults,
     listMyChartDrafts,
     listMyChartFieldProposals,
+    markContributionResultsSeen,
 } from "@/app/(nevigation)/profile/[id]/contributionActions";
 import {
     useLocale,
@@ -182,10 +184,31 @@ function ProposalList({ items }: { items: MineItem[] }) {
                                 locale
                             )}
                         </p>
-                        {item.status === "rejected" && item.rejectReason ? (
+                        {item.status === "applied" && item.appliedValue ? (
+                            <p className="nl-metadata nl-muted">
+                                {t("contribution.section.appliedEdited", {
+                                    value: formatProposalValue(
+                                        item.field,
+                                        item.appliedValue,
+                                        locale
+                                    ),
+                                })}
+                            </p>
+                        ) : null}
+                        {item.status === "rejected" &&
+                        (item.rejectReasonCode || item.rejectReason) ? (
                             <p className="nl-metadata nl-profile-contribution__reason">
                                 {t("contribution.rejectReason", {
-                                    reason: item.rejectReason,
+                                    reason: [
+                                        item.rejectReasonCode
+                                            ? t(
+                                                  `contribution.rejectReason.${item.rejectReasonCode}` as MessageKey
+                                              )
+                                            : null,
+                                        item.rejectReason,
+                                    ]
+                                        .filter(Boolean)
+                                        .join(" · "),
                                 })}
                             </p>
                         ) : null}
@@ -307,6 +330,31 @@ function MyProposals() {
 }
 
 /**
+ * 새 결과 점(2026-10-01 A2) — 아직 보지 않은 처리 결과가 있으면 구역 제목 뒤에 점 8.
+ * 피드백 새 답변과 같은 부품 · 같은 문법이고, 구역을 열어 본 순간 본 것으로 표시한다
+ */
+function UnseenResultDot() {
+    const t = useTranslations();
+    const unseen = useQuery({
+        queryKey: ["contribution", "mine", "unseen"],
+        queryFn: () => countUnseenContributionResults(),
+        staleTime: Infinity,
+        retry: false,
+    }).data;
+    useEffect(() => {
+        if (unseen) void markContributionResultsSeen();
+    }, [unseen]);
+    if (!unseen) return null;
+    return (
+        <span
+            className="nl-unread-dot"
+            role="img"
+            aria-label={t("contribution.section.newResult")}
+        />
+    );
+}
+
+/**
  * 등급이 무엇으로 쌓였는지(2026-10-01 F2) — 반영된 종류만 「곡 정보 5 · 채보 1」 로.
  * 숫자 등급만 두면 Lv.N 이 무엇을 뜻하는지 알 수 없다(지도 · 카탈로그 계열은 모두 등급 옆에 뜻을 적는다)
  */
@@ -352,6 +400,7 @@ export default function ProfileContribution({
                     className="nl-section-title"
                 >
                     {t("contribution.section.title")}
+                    {isOwner ? <UnseenResultDot /> : null}
                 </h2>
             </div>
             <div className="nl-profile-contribution__card">

@@ -55,12 +55,21 @@ export const saveUserDraftSchema = z.object({
     document: userDraftDocumentSchema,
 });
 
+/** 채보 의견 종류(2026-10-01 H2) — osu! beatmap discussion 의 Problem · Suggestion · Praise */
+export const CHART_COMMENT_KINDS = ["problem", "suggestion", "praise"] as const;
+export type ChartCommentKind = (typeof CHART_COMMENT_KINDS)[number];
+
+export function isChartCommentKind(value: string): value is ChartCommentKind {
+    return (CHART_COMMENT_KINDS as readonly string[]).includes(value);
+}
+
 export const chartCommentInputSchema = z.object({
     chartId: z.number().int().positive(),
     /** 있으면 초안 검토 댓글(작성자 · 운영자만), 없으면 공개 채보 댓글 */
     draftId: z.number().int().positive().optional(),
     timeMs: z.number().int().min(0).max(USER_DRAFT_MAX_DURATION_MS),
     body: z.string().trim().min(1).max(CHART_COMMENT_MAX_LENGTH),
+    kind: z.enum(CHART_COMMENT_KINDS).default("problem"),
 });
 export type ChartCommentInput = z.infer<typeof chartCommentInputSchema>;
 

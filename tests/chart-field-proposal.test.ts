@@ -146,7 +146,7 @@ describe("createChartFieldProposalSchema", () => {
 });
 
 describe("chartFieldProposalReviewSchema", () => {
-    it("반려는 사유가 있어야 한다", () => {
+    it("반려는 사유 코드가 있어야 한다", () => {
         expect(
             chartFieldProposalReviewSchema.safeParse({
                 decision: "reject",
@@ -166,5 +166,54 @@ describe("chartFieldProposalReviewSchema", () => {
                 ids: [],
             }).success
         ).toBe(false);
+    });
+});
+
+describe("반려 사유 · 고쳐서 반영(2026-10-01)", () => {
+    it("정해 둔 사유를 고르면 덧붙일 말은 선택", () => {
+        expect(
+            chartFieldProposalReviewSchema.safeParse({
+                decision: "reject",
+                ids: [1],
+                reasonCode: "evidence",
+            }).success
+        ).toBe(true);
+    });
+    it("「그 밖」 은 덧붙일 말이 있어야 한다", () => {
+        expect(
+            chartFieldProposalReviewSchema.safeParse({
+                decision: "reject",
+                ids: [1],
+                reasonCode: "other",
+            }).success
+        ).toBe(false);
+        expect(
+            chartFieldProposalReviewSchema.safeParse({
+                decision: "reject",
+                ids: [1],
+                reasonCode: "other",
+                reason: "직접 재 보니 달랐습니다",
+            }).success
+        ).toBe(true);
+    });
+    it("모르는 사유 코드는 받지 않는다", () => {
+        expect(
+            chartFieldProposalReviewSchema.safeParse({
+                decision: "reject",
+                ids: [1],
+                reasonCode: "because",
+            }).success
+        ).toBe(false);
+    });
+    it("반영은 고친 값을 함께 받을 수 있다", () => {
+        const result = chartFieldProposalReviewSchema.safeParse({
+            decision: "apply",
+            ids: [1],
+            value: "130-180",
+        });
+        expect(result.success && result.data).toMatchObject({
+            decision: "apply",
+            value: "130-180",
+        });
     });
 });

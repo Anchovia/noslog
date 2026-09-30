@@ -1841,6 +1841,7 @@ export const enMessages = {
     "contribution.addLabel": "Add {field}",
     "contribution.suggestEdit": "Suggest a fix",
     "contribution.more": "More for {field}",
+    "contribution.unverified": "Unverified",
     "contribution.pending": "In review",
     "contribution.proposal.titleAdd": "Add {field}",
     "contribution.proposal.titleEdit": "Suggest a fix for {field}",
@@ -1898,6 +1899,7 @@ export const enMessages = {
     "contribution.label.operator": "Admin",
     "contribution.label.operatorHelp":
         "Runs NosLog and reviews and applies suggestions.",
+    "contribution.section.newResult": "New result",
     "contribution.section.title": "Contributions",
     "contribution.section.progress": "{remaining} pts to Lv.{next}",
     "contribution.section.max": "Highest level",
@@ -1916,6 +1918,15 @@ export const enMessages = {
     "contribution.status.pending": "In review",
     "contribution.status.applied": "Applied",
     "contribution.status.rejected": "Rejected",
+    "contribution.section.appliedEdited": "An operator applied it as {value}",
+    "contribution.rejectReason.evidence":
+        "The evidence does not support the value",
+    "contribution.rejectReason.url":
+        "The link does not open, or is not a video",
+    "contribution.rejectReason.duplicate":
+        "Another suggestion was already applied",
+    "contribution.rejectReason.format": "The value does not follow the format",
+    "contribution.rejectReason.other": "Other",
     "contribution.rejectReason": "Reason: {reason}",
     "contribution.draft.invalid": "The chart format is invalid.",
     "contribution.draft.locked":
@@ -1946,6 +1957,14 @@ export const enMessages = {
     "contribution.comment.resolved": "Resolved",
     "contribution.comment.resolve": "Mark as resolved",
     "contribution.comment.delete": "Delete comment",
+    "contribution.comment.kindLabel": "Note type",
+    "contribution.comment.kind.problem": "Problem",
+    "contribution.comment.kind.suggestion": "Suggestion",
+    "contribution.comment.kind.praise": "Praise",
+    "contribution.comment.filterLabel": "Filter notes",
+    "contribution.comment.filter.all": "All",
+    "contribution.comment.filter.open": "Open",
+    "contribution.comment.filter.resolved": "Resolved",
     "contribution.comment.hide": "Hide",
     "contribution.comment.actions": "Actions for {name}’s comment",
     "contribution.entry.create": "Create chart",
