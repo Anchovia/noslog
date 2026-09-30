@@ -1409,7 +1409,6 @@ export const jaMessages = {
     "profile.fullComboShort": "FC",
     "profile.column.song": "曲",
     "profile.column.score": "スコア",
-    "profile.column.rank": "ランク",
     "profile.column.date": "日付",
     "profile.column.playedAt": "プレイ日時",
     "profile.bestTopFive": "Grd貢献 上位5曲",

@@ -1419,7 +1419,6 @@ export const enMessages = {
     "profile.fullComboShort": "FC",
     "profile.column.song": "Song",
     "profile.column.score": "Score",
-    "profile.column.rank": "Rank",
     "profile.column.date": "Date",
     "profile.column.playedAt": "Played",
     "profile.bestTopFive": "Top 5 Grd contributors",

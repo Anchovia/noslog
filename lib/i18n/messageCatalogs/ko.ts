@@ -1404,7 +1404,6 @@ export const koMessages = {
     "profile.fullComboShort": "FC",
     "profile.column.song": "곡",
     "profile.column.score": "점수",
-    "profile.column.rank": "랭크",
     "profile.column.date": "날짜",
     "profile.column.playedAt": "플레이 시각",
     "profile.bestTopFive": "Grd 기여 상위 5곡",
