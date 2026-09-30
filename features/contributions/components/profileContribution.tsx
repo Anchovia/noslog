@@ -18,8 +18,8 @@ import {
 } from "@/components/i18n/localeProvider";
 import Button from "@/components/ui/Button";
 import ModalDialog from "@/components/ui/modalDialog";
-import ResultState from "@/components/ui/resultState";
 import { SkeletonText } from "@/components/ui/skeleton";
+import { StatusMessage } from "@/components/ui/statusMessage";
 import StatStrip from "@/components/ui/statStrip";
 import {
     CONTRIBUTION_KINDS,
@@ -286,9 +286,21 @@ function MyProposals() {
             {recent.isPending ? (
                 <ProposalListSkeleton count={RECENT_COUNT} />
             ) : recent.isError ? (
-                <ResultState
-                    error
-                    message={t("contribution.section.loadError")}
+                // 구역 불러오기 실패 = quiet + 「다시 시도」(가이드 상태 메시지, 2026-10-01 규칙 맞춤)
+                <StatusMessage
+                    tone="quiet"
+                    severity="danger"
+                    role="alert"
+                    title={t("contribution.section.loadError")}
+                    action={
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => void recent.refetch()}
+                        >
+                            {t("common.retry")}
+                        </Button>
+                    }
                 />
             ) : items.length ? (
                 <>
@@ -308,11 +320,20 @@ function MyProposals() {
                             {all.isPending ? (
                                 <ProposalListSkeleton count={6} />
                             ) : all.isError ? (
-                                <ResultState
-                                    error
-                                    message={t(
-                                        "contribution.section.loadError"
-                                    )}
+                                <StatusMessage
+                                    tone="quiet"
+                                    severity="danger"
+                                    role="alert"
+                                    title={t("contribution.section.loadError")}
+                                    action={
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={() => void all.refetch()}
+                                        >
+                                            {t("common.retry")}
+                                        </Button>
+                                    }
                                 />
                             ) : (
                                 <ProposalList items={all.data ?? []} />

@@ -276,11 +276,11 @@
 .noslog-ui .nl-profile > .nl-tabs + * {
     margin-top: calc(var(--nl-spacing-24) - var(--nl-spacing-32));
 }
-/* 개요 탭(2026-09-25 D2) — 구역 사이 32. 폰은 성장 추이 → 레벨별 달성 → 고정 기록 → 베스트 → 최근 → 업적 → 기여(2026-09-26, 사용자) */
+/* 개요 탭(2026-09-25 D2) — 구역 사이 = 구역 간격 토큰(1055 이하 32 · 1056 이상 48, 2026-10-01 D1). 폰은 성장 추이 → 레벨별 달성 → 고정 기록 → 베스트 → 최근 → 업적 → 기여(2026-09-26, 사용자) */
 .noslog-ui .nl-profile-body {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-32);
+    gap: var(--nl-section-gap);
     min-width: 0;
 }
 .noslog-ui
@@ -324,7 +324,7 @@
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         align-items: start;
-        gap: var(--nl-spacing-32) var(--nl-spacing-16);
+        gap: var(--nl-section-gap) var(--nl-spacing-16);
         order: 4;
     }
     /* 폰 순서(order)는 672 이상 옆 열 안에서 풀어 코드 순서(고정 기록 → 레벨별 달성 → 업적 → 기여)대로 */
@@ -354,7 +354,7 @@
         flex-direction: column;
         /* 태블릿 격자의 align-items: start 를 되돌린다 — 크기 컨테이너인 구역이 폭 0 으로 줄지 않게 */
         align-items: stretch;
-        gap: var(--nl-spacing-32);
+        gap: var(--nl-section-gap);
         min-width: 0;
     }
     .noslog-ui .nl-profile-side .nl-profile-levels {
@@ -365,7 +365,7 @@
     display: flex;
     flex-direction: column;
     min-width: 0;
-    gap: var(--nl-spacing-12);
+    gap: var(--nl-section-title-gap);
     scroll-margin-top: 76px;
     container: profile-section / inline-size;
 }
@@ -799,11 +799,11 @@
     outline: var(--nl-stroke-default) solid var(--nl-focus-ring);
 }
 
-/* 오른쪽 열 묶음 — 폰에서는 본문 흐름 그대로(구역 사이 32) */
+/* 오른쪽 열 묶음 — 폰에서는 본문 흐름 그대로(구역 사이) */
 .noslog-ui .nl-profile-side {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-32);
+    gap: var(--nl-section-gap);
     min-width: 0;
 }
 .noslog-ui .nl-profile-side:empty {
@@ -969,7 +969,7 @@
     grid-template-columns: minmax(0, 1fr);
     grid-template-areas: "levels" "progress" "judgement" "ranks";
     align-items: start;
-    gap: var(--nl-spacing-32) var(--nl-spacing-16);
+    gap: var(--nl-section-gap) var(--nl-spacing-16);
     min-width: 0;
 }
 .noslog-ui .nl-profile-stats > .nl-profile-progress {
@@ -1002,11 +1002,11 @@
     }
 }
 
-/* 「활동」 탭(2026-09-26) — 제목 →12→ 요약 띠 →16→ 달력 →8→ 안내 · 범례 →32→ 최근 플레이 */
+/* 「활동」 탭(2026-09-26) — 제목 →12→ 요약 띠 →16→ 달력 →8→ 안내 · 범례 →구역 사이→ 최근 플레이(제목 → 내용 · 구역 사이는 구역 간격 토큰) */
 .noslog-ui .nl-profile-activity {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-32);
+    gap: var(--nl-section-gap);
     min-width: 0;
 }
 /* 칸 16 · 사이 4 · 모서리 control 4(2026-09-26 T2 · T3 — 가이드 값만). 한 주 20 = 폰 약 17주 · 태블릿 약 36주 · 넓은 화면 53주 */

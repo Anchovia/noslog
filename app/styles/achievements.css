@@ -181,6 +181,10 @@
     gap: var(--nl-spacing-8);
     margin-bottom: var(--nl-spacing-4);
 }
+/* 프로필 탭 안 = 구역 제목 → 내용(구역 간격 토큰, 2026-10-01 규칙 맞춤) */
+.noslog-ui .nl-achievements-page__head:has(> .nl-section-title) {
+    margin-bottom: calc(var(--nl-section-title-gap) - var(--nl-spacing-12));
+}
 
 /* 동기화 결과(E1) — 새 업적 한 줄 */
 .noslog-ui .nl-sync-achievements {

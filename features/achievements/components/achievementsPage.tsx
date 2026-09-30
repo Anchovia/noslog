@@ -91,11 +91,12 @@ function AchievementRow({
                 />
                 <div className="nl-achievement-row__text">
                     <span className="nl-achievement-row__title">
-                        <span className="nl-emphasis-label nl-achievement-row__name">
+                        {/* 한 열 목록 줄 = 이름 16/600 + 설명 14(다른 한 열 목록과 같게, 2026-10-01 D3) */}
+                        <span className="nl-entity-title nl-achievement-row__name">
                             {text.titled(key, tier)}
                         </span>
                     </span>
-                    <span className="nl-metadata nl-muted nl-achievement-row__number">
+                    <span className="nl-body-secondary nl-muted nl-achievement-row__number">
                         {progress?.nextTier && progress.target !== null
                             ? showNumbers
                                 ? `${text.condition(key, shownTier)} — ${t(
@@ -282,18 +283,22 @@ export default function AchievementsPage({
                         </h1>
                     </>
                 )}
-                <p
-                    className={
-                        embedded
-                            ? "nl-emphasis-label"
-                            : "nl-body-secondary nl-muted"
-                    }
-                >
-                    {t("achievement.count", {
-                        earned: summary.earned.toLocaleString(locale),
-                        total: summary.total.toLocaleString(locale),
-                    })}
-                </p>
+                {/* 프로필 탭 안에서는 다른 탭(「활동」 등)처럼 구역 제목(2026-10-01 규칙 맞춤) */}
+                {embedded ? (
+                    <h2 className="nl-section-title">
+                        {t("achievement.count", {
+                            earned: summary.earned.toLocaleString(locale),
+                            total: summary.total.toLocaleString(locale),
+                        })}
+                    </h2>
+                ) : (
+                    <p className="nl-body-secondary nl-muted">
+                        {t("achievement.count", {
+                            earned: summary.earned.toLocaleString(locale),
+                            total: summary.total.toLocaleString(locale),
+                        })}
+                    </p>
+                )}
                 {scoresHidden ? (
                     <p className="nl-metadata nl-muted">
                         {t("achievement.scoresHidden")}
