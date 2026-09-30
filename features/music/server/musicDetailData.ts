@@ -79,9 +79,15 @@ export const getCachedMusicDetail = unstable_cache(
                       has_published_pattern:
                           chart.pattern?.publishedRevision !== null &&
                           chart.pattern?.publishedRevision !== undefined,
+                      // 출처 칸 이름 맞추기(2026-10-01) — 운영에는 길이가 `duration_seconds` 로 쌓여 있고
+                      // 제안 · 화면은 `duration` 을 쓴다. 같은 칸이므로 하나로 읽는다
                       sourced_fields: [
                           ...new Set(
-                              chart.fieldSources.map((row) => row.field)
+                              chart.fieldSources.map((row) =>
+                                  row.field === "duration_seconds"
+                                      ? "duration"
+                                      : row.field
+                              )
                           ),
                       ],
                       fieldSources: undefined,

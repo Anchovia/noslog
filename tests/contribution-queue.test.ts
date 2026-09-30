@@ -88,3 +88,22 @@ describe("기여 대기 현황 · 내 제안 수", () => {
         expect(mocks.groupBy).not.toHaveBeenCalled();
     });
 });
+
+describe("출처 칸 이름(2026-10-01)", () => {
+    it("길이 출처는 duration · duration_seconds 를 같은 칸으로 읽는다", () => {
+        // 운영에는 remywiki 로 들어온 `duration_seconds` 2,053건이 있고, 제안 · 화면은 `duration` 을 쓴다
+        const rows = [
+            { field: "duration_seconds" },
+            { field: "bpm" },
+            { field: "duration" },
+        ];
+        const sourced = [
+            ...new Set(
+                rows.map((row) =>
+                    row.field === "duration_seconds" ? "duration" : row.field
+                )
+            ),
+        ];
+        expect(sourced).toEqual(["duration", "bpm"]);
+    });
+});
