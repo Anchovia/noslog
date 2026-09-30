@@ -39,8 +39,6 @@ const TIER_COLORS: Record<ProfileTierKey, string> = {
 };
 
 const LOW_LEVEL_MAX = 8;
-/** REAL 1 · 2 · 3 의 공식 레벨 값 = 11 · 12 · 13 — 레벨 글자 색을 서열 값 색(`tierValueColor`)에서 고를 때 쓴다 */
-const REAL_LEVEL_BASE = 10;
 
 type ProfileLevelGroup = ProfileLevelRow & {
     label: string;
@@ -101,15 +99,13 @@ export function profileLevelRows(
     return [...rows.values()].sort((a, b) => order(a) - order(b));
 }
 
-/** 레벨 글자 색 = 그 레벨 공식 레벨 값의 서열 값 색(악곡 상세 「공식 레벨」 과 같은 색, 2026-09-30). 묶은 줄은 색 없음 */
+/** 레벨 글자 색 = 레벨 1–12 는 서열 값 색(악곡 상세 「공식 레벨」 과 같은 색), REAL 1–3 은 난이도 Real 보라(2026-09-30 사용자). 묶은 줄은 색 없음 */
 const levelColor = (row: ProfileLevelGroup) =>
     row.grouped
         ? undefined
-        : tierValueColor(
-              row.difficulty === "real"
-                  ? REAL_LEVEL_BASE + row.level
-                  : row.level
-          );
+        : row.difficulty === "real"
+          ? "var(--nl-difficulty-text-real)"
+          : tierValueColor(row.level);
 
 /**
  * 레벨별 달성(2026-09-26 R2 · L1) — 레벨마다 한 막대(`StackedBar`): 채보마다 가장 높은 한 칸(Pianist → FC → S → A+ → A → B 이하),
