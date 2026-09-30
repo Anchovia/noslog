@@ -122,6 +122,10 @@
     color: var(--nl-identity-mark);
     flex-shrink: 0;
 }
+/* 넓은 화면 헤더 메뉴(2026-09-30 A1 · P1) — 1056 이상에서 이동 메뉴를 로고 옆에 나란히. 그 아래 폭은 ≡ 안에만 */
+.noslog-ui .nl-header__nav {
+    display: none;
+}
 .noslog-ui .nl-header__controls {
     display: flex;
     gap: var(--nl-spacing-8);
@@ -155,6 +159,7 @@
 }
 @media (hover: hover) {
     .noslog-ui .nl-login:hover,
+    .noslog-ui .nl-header__nav-item:hover,
     .noslog-ui .nl-nav-trigger:hover {
         --nl-state-layer: var(--nl-interaction-hover);
         background-image: linear-gradient(
@@ -292,6 +297,26 @@
     .noslog-ui .nl-destination {
         min-height: var(--nl-control-height);
     }
+    .noslog-ui .nl-header__nav {
+        display: flex;
+        align-items: center;
+        gap: var(--nl-spacing-4);
+        min-width: 0;
+        margin-inline: var(--nl-spacing-24) auto;
+    }
+    .noslog-ui .nl-header__nav-item {
+        display: flex;
+        align-items: center;
+        height: var(--nl-control-height);
+        padding-inline: var(--nl-spacing-12);
+        border-radius: var(--nl-radius-control);
+        color: var(--nl-content-subdued);
+        white-space: nowrap;
+    }
+    .noslog-ui .nl-header__nav-item[aria-current="page"] {
+        color: var(--nl-content-default);
+        font-weight: var(--nl-type-weight-semibold);
+    }
 }
 @media (min-width: 672px) {
     .noslog-ui.nl-recovery-minimal {
@@ -306,6 +331,13 @@
         box-shadow:
             inset 0 0 0 var(--nl-stroke-default) var(--nl-border-overlay),
             var(--nl-overlay-shadow);
+    }
+}
+/* 1056 이상 ≡ 창은 설정 · 피드백 · 관리자만(S1) — 한 열, 폭은 두 열 창(488)의 한 칸(232) + 안쪽 8 × 2 */
+@media (min-width: 1056px) {
+    .noslog-ui .nl-destinations {
+        width: 248px;
+        grid-template-columns: minmax(0, 1fr);
     }
 }
 @media (min-width: 840px) {

@@ -262,8 +262,15 @@ for (const locale of ["ko", "ja", "en"] as const) {
             t["settings.saveError"]
         );
         await expect(nickname).toHaveValue("Changed Ｎos 한글カナ");
+        // 국가/지역 = 줄 오른쪽 드롭다운(2026-10-01 C1)
         await form
-            .getByRole("radio", {
+            .getByRole("combobox", {
+                name: t["onboarding.country"],
+                exact: true,
+            })
+            .click();
+        await page
+            .getByRole("option", {
                 name: t["onboarding.country.jp"],
                 exact: true,
             })
@@ -283,11 +290,11 @@ for (const locale of ["ko", "ja", "en"] as const) {
             })
             .click();
         await expect(
-            form.getByRole("radio", {
-                name: t["onboarding.country.jp"],
+            form.getByRole("combobox", {
+                name: t["onboarding.country"],
                 exact: true,
             })
-        ).toBeChecked();
+        ).toHaveText(t["onboarding.country.jp"]);
         await expect(page.locator("html")).toHaveAttribute("lang", locale);
         await form
             .getByRole("button", {

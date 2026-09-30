@@ -259,6 +259,7 @@ export const enMessages = {
     "common.pageError": "Could Not Load the Page",
     "common.retryLater": "Please try again in a moment.",
     "common.retry": "Try Again",
+    "common.copied": "Copied",
     "maintenance.title": "Under Maintenance",
     "maintenance.heading": "We're performing maintenance.",
     "maintenance.description":
@@ -275,6 +276,9 @@ export const enMessages = {
     "header.openMenu": "Open full menu",
     "header.closeMenu": "Close full menu",
     "header.fullMenu": "Full menu",
+    "header.openMore": "Open more menu",
+    "header.closeMore": "Close more menu",
+    "header.moreMenu": "More menu",
     "header.profileLabel": "{name}'s profile",
     "header.language": "Language",
     "footer.privacy": "Privacy Policy",
@@ -349,7 +353,6 @@ export const enMessages = {
     "poll.error.closesAt": "The deadline has to be in the future.",
     "shell.externalLink": "External site",
     "announcements.empty": "No announcements.",
-    "announcements.critical": "Important notice",
     "announcements.pageLabel": "Announcements page {page}",
     "announcements.published": "Published",
     "announcements.updated": "Updated",
@@ -483,7 +486,6 @@ export const enMessages = {
     "home.allAnnouncements": "All announcements",
     "home.liveEvents": "Live events",
     "home.allEvents": "All events",
-    "home.writeEvent": "Write an event",
     "home.officialLink": "Official X",
     "home.officialPostLink": "View original",
     "home.officialShowTranslation": "Show translation",
@@ -767,6 +769,11 @@ export const enMessages = {
     "onboarding.country.global": "Other regions",
     "onboarding.setting": "Setting up",
     "onboarding.start": "Complete account setup",
+    "onboarding.next": "Next",
+    "onboarding.back": "Back",
+    "onboarding.step": "{current} / {total} · {name}",
+    "onboarding.stepProfile": "Profile",
+    "onboarding.nicknameAvailable": "This nickname is available.",
     "onboarding.error.loginRequired": "You need to log in.",
     "onboarding.error.invalid": "Please check the information you entered.",
     "onboarding.error.nicknameRequired": "Enter a nickname.",
@@ -1334,6 +1341,7 @@ export const enMessages = {
     "profile.recordOverview": "Record overview",
     "profile.judgementSummary": "Judgement summary",
     "profile.showAllRanks": "Show all ranks",
+    "profile.showAllLevels": "Show all levels",
     "profile.playCountLabel": "Play count",
     "profile.countryPosition": "Country Rank",
     "profile.noSyncedRecords": "No records have been synced yet.",
@@ -1378,8 +1386,6 @@ export const enMessages = {
     "profile.tabs.activity": "Activity",
     "profile.levels.title": "By level",
     "profile.levels.legendLabel": "Highlight a group",
-    "profile.levels.valuePlayed": "% = charts played",
-    "profile.levels.valueTier": "% = {name}",
     "profile.levels.difficultyLabel": "Difficulty",
     "profile.levels.none": "Unplayed",
     "profile.levels.rankLow": "B or lower",
@@ -1402,8 +1408,6 @@ export const enMessages = {
     "profile.pinned.auto": "Automatic · top 3 bests",
     "profile.pinned.help":
         "Pin up to {max} records at the top of your profile overview, each with an optional one-line note.",
-    "profile.pinned.dialogHelp":
-        "Up to {max}, in the order you pick · Tap a chip to write a note.",
     "profile.pinned.search": "Find a record by song title",
     "profile.pinned.results": "{count} records",
     "profile.pinned.full":
@@ -1418,9 +1422,7 @@ export const enMessages = {
         "Couldn't save pinned records. Only records with a score can be pinned.",
     "profile.fullComboShort": "FC",
     "profile.column.song": "Song",
-    "profile.column.difficulty": "Difficulty",
     "profile.column.score": "Score",
-    "profile.column.rank": "Rank",
     "profile.column.date": "Date",
     "profile.column.playedAt": "Played",
     "profile.bestTopFive": "Top 5 Grd contributors",
@@ -1519,7 +1521,7 @@ export const enMessages = {
     "settings.scoresCoupling":
         "When off, you are left out of rankings and your scores and records are hidden from others on your profile. Only you can see your own rank.",
     "settings.publicWhenOn":
-        "When enabled, this information is visible to others.",
+        "When enabled, this information is visible to others. Changes save right away.",
     "settings.activityCoupling":
         "Last played and recent plays are published together.",
     "settings.changeArcade": "Change",
@@ -1841,6 +1843,7 @@ export const enMessages = {
     "contribution.addLabel": "Add {field}",
     "contribution.suggestEdit": "Suggest a fix",
     "contribution.more": "More for {field}",
+    "contribution.unverified": "Unverified",
     "contribution.pending": "In review",
     "contribution.proposal.titleAdd": "Add {field}",
     "contribution.proposal.titleEdit": "Suggest a fix for {field}",
@@ -1863,6 +1866,10 @@ export const enMessages = {
         "Time and note (e.g. 1:23 result screen)",
     "contribution.proposal.notePlaceholder.official": "Note (optional)",
     "contribution.proposal.notePlaceholder.direct": "How you checked it",
+    "contribution.proposal.queue":
+        "{count} waiting for review · oldest has waited {days} days",
+    "contribution.proposal.queueToday":
+        "{count} waiting for review · all arrived today",
     "contribution.proposal.notice":
         "An admin will review it before it's applied.",
     "contribution.proposal.submit": "Suggest",
@@ -1894,6 +1901,7 @@ export const enMessages = {
     "contribution.label.operator": "Admin",
     "contribution.label.operatorHelp":
         "Runs NosLog and reviews and applies suggestions.",
+    "contribution.section.newResult": "New result",
     "contribution.section.title": "Contributions",
     "contribution.section.progress": "{remaining} pts to Lv.{next}",
     "contribution.section.max": "Highest level",
@@ -1912,6 +1920,15 @@ export const enMessages = {
     "contribution.status.pending": "In review",
     "contribution.status.applied": "Applied",
     "contribution.status.rejected": "Rejected",
+    "contribution.section.appliedEdited": "An operator applied it as {value}",
+    "contribution.rejectReason.evidence":
+        "The evidence does not support the value",
+    "contribution.rejectReason.url":
+        "The link does not open, or is not a video",
+    "contribution.rejectReason.duplicate":
+        "Another suggestion was already applied",
+    "contribution.rejectReason.format": "The value does not follow the format",
+    "contribution.rejectReason.other": "Other",
     "contribution.rejectReason": "Reason: {reason}",
     "contribution.draft.invalid": "The chart format is invalid.",
     "contribution.draft.locked":
@@ -1942,6 +1959,14 @@ export const enMessages = {
     "contribution.comment.resolved": "Resolved",
     "contribution.comment.resolve": "Mark as resolved",
     "contribution.comment.delete": "Delete comment",
+    "contribution.comment.kindLabel": "Note type",
+    "contribution.comment.kind.problem": "Problem",
+    "contribution.comment.kind.suggestion": "Suggestion",
+    "contribution.comment.kind.praise": "Praise",
+    "contribution.comment.filterLabel": "Filter notes",
+    "contribution.comment.filter.all": "All",
+    "contribution.comment.filter.open": "Open",
+    "contribution.comment.filter.resolved": "Resolved",
     "contribution.comment.hide": "Hide",
     "contribution.comment.actions": "Actions for {name}’s comment",
     "contribution.entry.create": "Create chart",
@@ -2150,7 +2175,6 @@ export const enMessages = {
     "achievement.settings.emptySlot": "Empty",
     "achievement.settings.removeAria": "Remove {name}",
     "achievement.settings.earned": "Earned achievements",
-    "achievement.settings.useAuto": "Use automatic",
     "achievement.settings.apply": "Apply",
     "achievement.sync.new": "New achievements",
     "achievement.sync.more": "+{count} more",

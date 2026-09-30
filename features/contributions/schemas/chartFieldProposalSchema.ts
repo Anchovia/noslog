@@ -25,6 +25,12 @@ export const CHART_FIELD_PROPOSAL_STATUSES = [
 export type ChartFieldProposalStatus =
     (typeof CHART_FIELD_PROPOSAL_STATUSES)[number];
 
+export function isChartFieldProposalStatus(
+    value: string
+): value is ChartFieldProposalStatus {
+    return (CHART_FIELD_PROPOSAL_STATUSES as readonly string[]).includes(value);
+}
+
 /** 한 사람이 하루(24시간)에 낼 수 있는 제안 수 — 장난 방지 */
 export const CHART_FIELD_PROPOSAL_DAILY_LIMIT = 30;
 export const PROPOSAL_EVIDENCE_URL_MAX = 500;
@@ -242,16 +248,49 @@ export type ChartFieldProposalInput = z.output<
     ReturnType<typeof createChartFieldProposalSchema>
 >;
 
+/**
+ * 정해 둔 반려 사유(2026-10-01 D2) — 자유 글만 받으면 건마다 뜻이 달라지고 번역도 매번 새로 쓴다.
+ * Stack Overflow(라디오 + 짧은 자유 글) · Wikipedia AfC 방식
+ */
+export const PROPOSAL_REJECT_REASONS = [
+    "evidence",
+    "url",
+    "duplicate",
+    "format",
+    "other",
+] as const;
+export type ProposalRejectReason = (typeof PROPOSAL_REJECT_REASONS)[number];
+
+export function isProposalRejectReason(
+    value: string
+): value is ProposalRejectReason {
+    return (PROPOSAL_REJECT_REASONS as readonly string[]).includes(value);
+}
+
 export const chartFieldProposalReviewSchema = z.discriminatedUnion("decision", [
     z.object({
         decision: z.literal("apply"),
         ids: z.array(z.coerce.number().int().positive()).min(1).max(100),
+        /** 고쳐서 반영(2026-10-01 C2) — 한 건만 고를 때, 비어 있으면 제안 값 그대로 */
+        value: z.string().trim().min(1).max(64).optional(),
     }),
-    z.object({
-        decision: z.literal("reject"),
-        ids: z.array(z.coerce.number().int().positive()).min(1).max(100),
-        reason: z.string().trim().min(1).max(PROPOSAL_REJECT_REASON_MAX),
-    }),
+    z
+        .object({
+            decision: z.literal("reject"),
+            ids: z.array(z.coerce.number().int().positive()).min(1).max(100),
+            reasonCode: z.enum(PROPOSAL_REJECT_REASONS),
+            // 덧붙일 말 — 「그 밖」 이면 반드시 쓴다
+            reason: z
+                .string()
+                .trim()
+                .max(PROPOSAL_REJECT_REASON_MAX)
+                .optional()
+                .default(""),
+        })
+        .refine(
+            (value) => value.reasonCode !== "other" || value.reason.length > 0,
+            { path: ["reason"], error: "reject_reason_required" }
+        ),
 ]);
 export type ChartFieldProposalReview = z.infer<
     typeof chartFieldProposalReviewSchema

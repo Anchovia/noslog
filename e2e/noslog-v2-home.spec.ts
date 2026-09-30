@@ -110,12 +110,10 @@ for (const locale of ["ko", "ja", "en"]) {
                     1
                 );
                 expect(measured.navigation.x).toBeCloseTo(measured.search.x, 1);
+                // 페이지 제목은 뷰포트 1056 부터 32/40(가이드 「글자」) — 검색 폭(최대 640)과 기준이 다르다
                 await expect(
                     page.locator(".nl-home-identity .nl-page-title")
-                ).toHaveCSS(
-                    "font-size",
-                    measured.search.width >= 640 ? "32px" : "24px"
-                );
+                ).toHaveCSS("font-size", width >= 1056 ? "32px" : "24px");
                 if (columns === 4)
                     expect(measured.navigation.width).toBeLessThanOrEqual(640);
                 const firstRow = measured.tiles.slice(0, columns);

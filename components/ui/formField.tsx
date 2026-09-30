@@ -6,6 +6,8 @@ interface FormFieldProps {
     label: ReactNode;
     help?: ReactNode;
     error?: ReactNode;
+    /** 확인이 끝나 문제가 없다는 한 줄(예: 쓸 수 있는 닉네임) — 오류와 같은 자리, 성공 표시색 */
+    success?: ReactNode;
     children: ReactNode;
     className?: string;
 }
@@ -15,6 +17,7 @@ export function FormField({
     label,
     help,
     error,
+    success,
     children,
     className,
 }: FormFieldProps) {
@@ -36,6 +39,14 @@ export function FormField({
                     role="alert"
                 >
                     {error}
+                </p>
+            ) : success ? (
+                <p
+                    id={`${id}-success`}
+                    className="nl-field__help nl-field__success"
+                    role="status"
+                >
+                    {success}
                 </p>
             ) : null}
         </div>

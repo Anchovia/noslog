@@ -443,7 +443,9 @@ export default function MarkdownEditor({
                     {value.trim() ? (
                         renderPreview(value)
                     ) : (
-                        <p className="nl-body nl-muted">{labels.empty}</p>
+                        <p className="nl-body-secondary nl-muted">
+                            {labels.empty}
+                        </p>
                     )}
                 </div>
             </FullScreenDialog>

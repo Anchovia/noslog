@@ -153,12 +153,14 @@ export default function PinnedRecordsPicker({
                     <>
                         <Button
                             variant="secondary"
+                            className="nl-dialog__reset"
+                            disabled={!draft.length}
                             onClick={() => {
-                                onChange("");
-                                setOpen(false);
+                                setDraft([]);
+                                setEditing(null);
                             }}
                         >
-                            {t("achievement.settings.useAuto")}
+                            {t("common.reset")}
                         </Button>
                         <Button
                             onClick={() => {
@@ -270,11 +272,6 @@ export default function PinnedRecordsPicker({
                                 }
                             )}
                         </ol>
-                        <p className="nl-metadata nl-muted">
-                            {t("profile.pinned.dialogHelp", {
-                                max: PINNED_RECORD_LIMIT,
-                            })}
-                        </p>
                     </div>
                     {/* 소감 칸 = 어느 곡인지 보이는 라벨 위(2026-09-26 점검 D3 — 폼 「라벨 위」) */}
                     {editingRecord ? (

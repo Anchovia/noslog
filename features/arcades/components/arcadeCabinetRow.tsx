@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import ActionButton from "@/components/ui/actionButton";
 import Button from "@/components/ui/Button";
+import { StatusMessage } from "@/components/ui/statusMessage";
 import TermHelp from "@/components/ui/termHelp";
 import { confirmCabinetRunning } from "@/app/(nevigation)/gamecenter/actions";
 import type {
@@ -234,9 +235,7 @@ export default function ArcadeCabinetRow({
                 />
             </div>
             {error ? (
-                <p className="nl-metadata nl-error-text" role="alert">
-                    {error}
-                </p>
+                <StatusMessage severity="danger" role="alert" title={error} />
             ) : null}
             {loginHint && !isAuthenticated ? (
                 <p className="nl-metadata nl-muted" role="status">

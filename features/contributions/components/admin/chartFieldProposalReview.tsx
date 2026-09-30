@@ -9,8 +9,10 @@ import { toast } from "sonner";
 import { reviewChartFieldProposals } from "@/app/admin/contributions/actions";
 import {
     PROPOSAL_REJECT_REASON_MAX,
+    PROPOSAL_REJECT_REASONS,
     formatProposalValue,
     type ChartFieldProposalField,
+    type ProposalRejectReason,
 } from "@/features/contributions/schemas/chartFieldProposalSchema";
 import type { AdminChartFieldProposal } from "@/features/contributions/server/chartFieldProposalService";
 
@@ -19,6 +21,14 @@ const FIELD_LABELS: Record<ChartFieldProposalField, string> = {
     note_count: "노트 수",
     duration: "길이",
     released_at: "수록일",
+};
+/** 정해 둔 반려 사유(2026-10-01 D2) — 고르면 기여자 화면에 그대로 보인다 */
+const REJECT_REASON_LABELS: Record<ProposalRejectReason, string> = {
+    evidence: "근거가 값을 뒷받침하지 않음",
+    url: "주소를 열 수 없음 · 영상이 아님",
+    duplicate: "이미 다른 제안이 반영됨",
+    format: "값 형식이 규칙과 다름",
+    other: "그 밖(덧붙일 말 필요)",
 };
 const EVIDENCE_LABELS: Record<string, string> = {
     video: "영상",
@@ -45,6 +55,11 @@ export default function ChartFieldProposalReview({
     const [selected, setSelected] = useState<Set<number>>(new Set());
     const [rejecting, setRejecting] = useState(false);
     const [reason, setReason] = useState("");
+    const [reasonCode, setReasonCode] =
+        useState<ProposalRejectReason>("evidence");
+    // 고쳐서 반영 — 지금 고치고 있는 제안과 그 값
+    const [editing, setEditing] = useState<number | null>(null);
+    const [editValue, setEditValue] = useState("");
     const [isPending, startTransition] = useTransition();
 
     function toggle(id: number) {
@@ -56,15 +71,19 @@ export default function ChartFieldProposalReview({
         });
     }
 
-    function review(decision: "apply" | "reject") {
-        const ids = [...selected];
+    function review(
+        decision: "apply" | "reject",
+        only?: number,
+        value?: string
+    ) {
+        const ids = only === undefined ? [...selected] : [only];
         if (!ids.length) return;
         startTransition(async () => {
             try {
                 const result = await reviewChartFieldProposals(
                     decision === "apply"
-                        ? { decision, ids }
-                        : { decision, ids, reason }
+                        ? { decision, ids, value }
+                        : { decision, ids, reasonCode, reason }
                 );
                 if (!result.success) {
                     toast.error(result.message);
@@ -74,6 +93,8 @@ export default function ChartFieldProposalReview({
                 setSelected(new Set());
                 setRejecting(false);
                 setReason("");
+                setEditing(null);
+                setEditValue("");
                 router.refresh();
             } catch {
                 toast.error("제안을 처리하지 못했습니다.");
@@ -112,7 +133,7 @@ export default function ChartFieldProposalReview({
                                 type="button"
                                 disabled={isPending || !selected.size}
                                 onClick={() => setRejecting((value) => !value)}
-                                className="border-border text-text-secondary hover:bg-surface-muted flex h-10 cursor-pointer items-center gap-2 rounded-md border px-3 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-50"
+                                className="bg-danger-surface text-on-danger flex h-10 cursor-pointer items-center gap-2 rounded-md px-3 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-50"
                             >
                                 <X className="size-4" aria-hidden />
                                 반려
@@ -131,25 +152,53 @@ export default function ChartFieldProposalReview({
                         </div>
                     </div>
                     {rejecting ? (
-                        <div className="flex flex-wrap gap-2">
-                            <input
-                                value={reason}
-                                maxLength={PROPOSAL_REJECT_REASON_MAX}
-                                onChange={(event) =>
-                                    setReason(event.target.value)
-                                }
-                                placeholder="반려 사유(제안한 사람에게 보입니다)"
-                                aria-label="반려 사유"
-                                className="border-border bg-bg h-10 min-w-0 flex-1 rounded-md border px-3 text-sm"
-                            />
-                            <button
-                                type="button"
-                                disabled={isPending || !reason.trim()}
-                                onClick={() => review("reject")}
-                                className="border-border text-text-primary h-10 cursor-pointer rounded-md border px-3 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-50"
-                            >
-                                {`선택 ${selected.size}건 반려`}
-                            </button>
+                        <div className="flex flex-col gap-2">
+                            {/* 정해 둔 사유(2026-10-01 D2) — 고른 사유가 기여자 화면에 그대로 보인다 */}
+                            <div className="flex flex-col gap-1">
+                                {PROPOSAL_REJECT_REASONS.map((code) => (
+                                    <label
+                                        key={code}
+                                        className="flex items-center gap-2 text-sm"
+                                    >
+                                        <input
+                                            type="radio"
+                                            name="reject-reason"
+                                            value={code}
+                                            checked={reasonCode === code}
+                                            onChange={() => setReasonCode(code)}
+                                        />
+                                        {REJECT_REASON_LABELS[code]}
+                                    </label>
+                                ))}
+                            </div>
+                            <div className="flex flex-wrap gap-2">
+                                <input
+                                    value={reason}
+                                    maxLength={PROPOSAL_REJECT_REASON_MAX}
+                                    onChange={(event) =>
+                                        setReason(event.target.value)
+                                    }
+                                    placeholder={
+                                        reasonCode === "other"
+                                            ? "반려 사유(제안한 사람에게 보입니다)"
+                                            : "덧붙일 말(선택)"
+                                    }
+                                    aria-label="덧붙일 말"
+                                    className="border-border bg-bg h-10 min-w-0 flex-1 rounded-md border px-3 text-sm"
+                                />
+                                <button
+                                    type="button"
+                                    disabled={
+                                        isPending ||
+                                        (reasonCode === "other" &&
+                                            !reason.trim())
+                                    }
+                                    onClick={() => review("reject")}
+                                    className="bg-danger-surface text-on-danger h-10 cursor-pointer rounded-md px-3 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-50"
+                                >
+                                    {`선택 ${selected.size}건 반려`}
+                                </button>
+                            </div>
                         </div>
                     ) : null}
                 </div>
@@ -236,6 +285,80 @@ export default function ChartFieldProposalReview({
                                     ? ` · 반려 사유: ${item.rejectReason}`
                                     : ""}
                             </p>
+                            {/* 고쳐서 반영(2026-10-01 C2) — 값이 살짝 틀렸을 때 반려 → 재제출 왕복을 없앤다 */}
+                            {reviewable && editing === item.id ? (
+                                <div className="flex flex-wrap gap-2">
+                                    <input
+                                        value={editValue}
+                                        onChange={(event) =>
+                                            setEditValue(event.target.value)
+                                        }
+                                        aria-label="고쳐서 반영할 값"
+                                        className="border-border bg-bg h-10 min-w-0 flex-1 rounded-md border px-3 text-sm"
+                                    />
+                                    <button
+                                        type="button"
+                                        disabled={
+                                            isPending || !editValue.trim()
+                                        }
+                                        onClick={() =>
+                                            review("apply", item.id, editValue)
+                                        }
+                                        className="bg-text-primary text-bg h-10 cursor-pointer rounded-md px-3 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-50"
+                                    >
+                                        이 값으로 반영
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setEditing(null)}
+                                        className="border-border text-text-secondary h-10 cursor-pointer rounded-md border px-3 text-sm font-bold"
+                                    >
+                                        취소
+                                    </button>
+                                </div>
+                            ) : null}
+                            {/* 건별 처리(2026-10-01 C2) — 한 건만 볼 때 고르기 → 위쪽 버튼 두 단계를 없앤다 */}
+                            {reviewable ? (
+                                <div className="flex flex-wrap gap-2">
+                                    <button
+                                        type="button"
+                                        disabled={isPending}
+                                        onClick={() => review("apply", item.id)}
+                                        className="bg-text-primary text-bg flex h-10 cursor-pointer items-center gap-2 rounded-md px-3 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-50"
+                                    >
+                                        <Check className="size-4" aria-hidden />
+                                        반영
+                                    </button>
+                                    <button
+                                        type="button"
+                                        disabled={isPending}
+                                        onClick={() => {
+                                            setEditing(item.id);
+                                            setEditValue(
+                                                formatProposalValue(
+                                                    item.field,
+                                                    item.value
+                                                )
+                                            );
+                                        }}
+                                        className="border-border text-text-primary h-10 cursor-pointer rounded-md border px-3 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-50"
+                                    >
+                                        고쳐서 반영
+                                    </button>
+                                    <button
+                                        type="button"
+                                        disabled={isPending}
+                                        onClick={() => {
+                                            setSelected(new Set([item.id]));
+                                            setRejecting(true);
+                                        }}
+                                        className="bg-danger-surface text-on-danger flex h-10 cursor-pointer items-center gap-2 rounded-md px-3 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-50"
+                                    >
+                                        <X className="size-4" aria-hidden />
+                                        반려
+                                    </button>
+                                </div>
+                            ) : null}
                         </div>
                     </article>
                 );

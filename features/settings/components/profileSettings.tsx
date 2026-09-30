@@ -11,7 +11,7 @@ import {
 import Button from "@/components/ui/Button";
 import Avatar from "@/components/ui/avatar";
 import { FormField, Input, fieldDescription } from "@/components/ui/formField";
-import RadioGroup from "@/components/ui/radioGroup";
+import CompactSelect from "@/components/ui/compactSelect";
 import ModalDialog from "@/components/ui/modalDialog";
 import { saveProfile } from "@/app/(nevigation)/settings/actions";
 import { requestProfileAvatarUpload } from "@/app/(nevigation)/profile/settings/actions";
@@ -167,14 +167,32 @@ export default function ProfileSettings({
                 noValidate
                 aria-busy={isSubmitting}
             >
-                <div className="nl-settings__zone">
-                    <p className="nl-control">{t("settings.avatar")}</p>
-                    <div className="nl-settings__identity-row">
-                        <Avatar
-                            src={avatar || null}
-                            alt={t("settings.avatar")}
-                            size={64}
-                        />
+                {/* 줄 목록(2026-10-01 C1) — Canva · Discord · 넥슨 식. 라벨 · 값 왼쪽, 버튼 오른쪽, 입력칸만 라벨 위 */}
+                <div className="nl-settings__rows">
+                    <div className="nl-settings__row nl-settings__row--stack">
+                        <div className="nl-settings__row-lead">
+                            <Avatar
+                                src={avatar || null}
+                                alt={t("settings.avatar")}
+                                size={64}
+                            />
+                            <div className="nl-settings__row-copy">
+                                <p className="nl-control">
+                                    {t("settings.avatar")}
+                                </p>
+                                <p className="nl-metadata nl-muted">
+                                    {t("settings.avatarFormat")}
+                                </p>
+                                {errors.avatar ? (
+                                    <p
+                                        role="alert"
+                                        className="nl-metadata nl-field__error"
+                                    >
+                                        {errors.avatar.message}
+                                    </p>
+                                ) : null}
+                            </div>
+                        </div>
                         <div className="nl-settings__actions">
                             <Button
                                 ref={photoButton}
@@ -212,155 +230,156 @@ export default function ProfileSettings({
                             }}
                         />
                     </div>
-                    <p className="nl-metadata nl-muted">
-                        {t("settings.avatarFormat")}
-                    </p>
-                    {errors.avatar ? (
-                        <p role="alert" className="nl-metadata nl-field__error">
-                            {errors.avatar.message}
-                        </p>
-                    ) : null}
-                </div>
-                <FormField
-                    id="settings-nickname"
-                    label={t("onboarding.nickname")}
-                    help={t("settings.nicknameHelp")}
-                    error={errors.username?.message}
-                >
-                    <Input
+                    <FormField
                         id="settings-nickname"
-                        autoComplete="nickname"
-                        readOnly={isSubmitting}
-                        aria-invalid={Boolean(errors.username)}
-                        aria-describedby={fieldDescription(
-                            "settings-nickname",
-                            { help: true, error: Boolean(errors.username) }
-                        )}
-                        {...register("username")}
-                    />
-                </FormField>
-                <div className="nl-settings__read-only">
-                    <p className="nl-control nl-muted">
-                        {t("settings.nostalgiaName")}
-                    </p>
-                    <p className="nl-body">{user.nostalgiaName || "—"}</p>
-                </div>
-                <Controller
-                    control={control}
-                    name="country"
-                    render={({ field }) => (
-                        <RadioGroup
-                            label={t("onboarding.country")}
-                            value={field.value}
-                            disabled={isSubmitting}
-                            options={[
-                                {
-                                    value: "ko-KR",
-                                    label: t("onboarding.country.kr"),
-                                },
-                                {
-                                    value: "ja-JP",
-                                    label: t("onboarding.country.jp"),
-                                },
-                                {
-                                    value: "global",
-                                    label: t("onboarding.country.global"),
-                                },
-                            ]}
-                            onValueChange={(value) => {
-                                if (value !== field.value) {
-                                    countryOrigin.current =
-                                        document.activeElement instanceof
-                                        HTMLElement
-                                            ? document.activeElement
-                                            : null;
-                                    setCountry(value);
-                                }
-                            }}
-                        />
-                    )}
-                />
-                <div className="nl-settings__zone">
-                    <p className="nl-control">
-                        {t("settings.preferredArcade")}
-                    </p>
-                    <div className="nl-settings__arcade-row">
-                        <p className="nl-body">
-                            {selectedArcade
-                                ? `${selectedArcade.name}${selectedArcade.region ? ` · ${selectedArcade.region}` : ""}`
-                                : t("settings.none")}
-                        </p>
-                        <div className="nl-settings__actions">
-                            <Button
-                                ref={arcadeButton}
-                                variant="secondary"
-                                disabled={isSubmitting}
-                                onClick={() => setArcadeOpen(true)}
-                            >
-                                {t("settings.changeArcade")}
-                            </Button>
-                            {arcadeId ? (
-                                <Button
-                                    variant="ghost"
-                                    disabled={isSubmitting}
-                                    onClick={() =>
-                                        setValue("preferredArcadeId", "", {
-                                            shouldDirty: true,
-                                            shouldValidate: true,
-                                        })
-                                    }
-                                >
-                                    {t("settings.clearArcade")}
-                                </Button>
-                            ) : null}
-                        </div>
-                    </div>
-                    {selectedArcade &&
-                    "is_active" in selectedArcade &&
-                    !selectedArcade.is_active ? (
-                        <p className="nl-metadata nl-muted">
-                            {t("settings.arcadeUnavailable")}
-                        </p>
-                    ) : null}
-                    {errors.preferredArcadeId ? (
-                        <p role="alert" className="nl-metadata nl-field__error">
-                            {errors.preferredArcadeId.message}
-                        </p>
-                    ) : null}
-                </div>
-                {/* 프로필 업적(2026-09-25 D1) — 선호 오락실 칸과 같은 모양, 「저장」 때 함께 저장 */}
-                <AchievementShowcasePicker
-                    records={user.achievements}
-                    value={achievementShowcase ?? ""}
-                    onChange={(value) =>
-                        setValue("achievementShowcase", value, {
-                            shouldDirty: true,
-                            shouldValidate: true,
-                        })
-                    }
-                    disabled={isSubmitting}
-                    error={errors.achievementShowcase?.message}
-                />
-                {/* 고정 기록(2026-09-26 S2) — 프로필 업적 칸과 같은 모양, 「저장」 때 함께 저장 */}
-                <PinnedRecordsPicker
-                    records={user.pinnableRecords}
-                    value={pinnedRecords ?? ""}
-                    onChange={(value) =>
-                        setValue("pinnedRecords", value, {
-                            shouldDirty: true,
-                            shouldValidate: true,
-                        })
-                    }
-                    disabled={isSubmitting}
-                    error={errors.pinnedRecords?.message}
-                />
-                <div className="nl-settings__save">
-                    <a
-                        href={href(`/profile/${user.id}`)}
-                        className="nl-control nl-settings__view-profile"
+                        label={t("onboarding.nickname")}
+                        help={t("settings.nicknameHelp")}
+                        error={errors.username?.message}
                     >
-                        {t("settings.viewProfile")}
-                    </a>
+                        <Input
+                            id="settings-nickname"
+                            autoComplete="nickname"
+                            readOnly={isSubmitting}
+                            aria-invalid={Boolean(errors.username)}
+                            aria-describedby={fieldDescription(
+                                "settings-nickname",
+                                { help: true, error: Boolean(errors.username) }
+                            )}
+                            {...register("username")}
+                        />
+                    </FormField>
+                    <div className="nl-settings__row">
+                        <p className="nl-control">
+                            {t("settings.nostalgiaName")}
+                        </p>
+                        <p className="nl-body">{user.nostalgiaName || "—"}</p>
+                    </div>
+                    <Controller
+                        control={control}
+                        name="country"
+                        render={({ field }) => (
+                            <div className="nl-settings__row">
+                                <label
+                                    htmlFor="settings-country"
+                                    className="nl-control"
+                                >
+                                    {t("onboarding.country")}
+                                </label>
+                                <CompactSelect
+                                    id="settings-country"
+                                    outlined
+                                    label={t("onboarding.country")}
+                                    value={field.value}
+                                    disabled={isSubmitting}
+                                    options={[
+                                        {
+                                            value: "ko-KR",
+                                            label: t("onboarding.country.kr"),
+                                        },
+                                        {
+                                            value: "ja-JP",
+                                            label: t("onboarding.country.jp"),
+                                        },
+                                        {
+                                            value: "global",
+                                            label: t(
+                                                "onboarding.country.global"
+                                            ),
+                                        },
+                                    ]}
+                                    onValueChange={(value) => {
+                                        if (value !== field.value) {
+                                            // 확인 창을 닫으면 국가 드롭다운으로 돌아간다
+                                            countryOrigin.current =
+                                                document.getElementById(
+                                                    "settings-country"
+                                                );
+                                            setCountry(value);
+                                        }
+                                    }}
+                                />
+                            </div>
+                        )}
+                    />
+                    <div className="nl-settings__zone">
+                        <p className="nl-control">
+                            {t("settings.preferredArcade")}
+                        </p>
+                        <div className="nl-settings__arcade-row">
+                            <p className="nl-body-secondary nl-muted">
+                                {selectedArcade
+                                    ? `${selectedArcade.name}${selectedArcade.region ? ` · ${selectedArcade.region}` : ""}`
+                                    : t("settings.none")}
+                            </p>
+                            <div className="nl-settings__actions">
+                                <Button
+                                    ref={arcadeButton}
+                                    variant="secondary"
+                                    disabled={isSubmitting}
+                                    onClick={() => setArcadeOpen(true)}
+                                >
+                                    {t("settings.changeArcade")}
+                                </Button>
+                                {arcadeId ? (
+                                    <Button
+                                        variant="ghost"
+                                        disabled={isSubmitting}
+                                        onClick={() =>
+                                            setValue("preferredArcadeId", "", {
+                                                shouldDirty: true,
+                                                shouldValidate: true,
+                                            })
+                                        }
+                                    >
+                                        {t("settings.clearArcade")}
+                                    </Button>
+                                ) : null}
+                            </div>
+                        </div>
+                        {selectedArcade &&
+                        "is_active" in selectedArcade &&
+                        !selectedArcade.is_active ? (
+                            <p className="nl-metadata nl-muted">
+                                {t("settings.arcadeUnavailable")}
+                            </p>
+                        ) : null}
+                        {errors.preferredArcadeId ? (
+                            <p
+                                role="alert"
+                                className="nl-metadata nl-field__error"
+                            >
+                                {errors.preferredArcadeId.message}
+                            </p>
+                        ) : null}
+                    </div>
+                    {/* 프로필 업적(2026-09-25 D1) — 선호 오락실 칸과 같은 모양, 「저장」 때 함께 저장 */}
+                    <AchievementShowcasePicker
+                        records={user.achievements}
+                        value={achievementShowcase ?? ""}
+                        onChange={(value) =>
+                            setValue("achievementShowcase", value, {
+                                shouldDirty: true,
+                                shouldValidate: true,
+                            })
+                        }
+                        disabled={isSubmitting}
+                        error={errors.achievementShowcase?.message}
+                    />
+                    {/* 고정 기록(2026-09-26 S2) — 프로필 업적 칸과 같은 모양, 「저장」 때 함께 저장 */}
+                    <PinnedRecordsPicker
+                        records={user.pinnableRecords}
+                        value={pinnedRecords ?? ""}
+                        onChange={(value) =>
+                            setValue("pinnedRecords", value, {
+                                shouldDirty: true,
+                                shouldValidate: true,
+                            })
+                        }
+                        disabled={isSubmitting}
+                        error={errors.pinnedRecords?.message}
+                    />
+                </div>
+                <div className="nl-settings__save">
                     {isDirty ? (
                         <p className="nl-body-secondary nl-muted">
                             {t("settings.unsaved")}
@@ -380,12 +399,24 @@ export default function ProfileSettings({
                     >
                         {saved}
                     </p>
-                    <Button
-                        type="submit"
-                        disabled={!isDirty || !isValid || isSubmitting}
-                    >
-                        {t(isSubmitting ? "settings.saving" : "settings.save")}
-                    </Button>
+                    <div className="nl-settings__foot">
+                        <Button
+                            type="submit"
+                            disabled={!isDirty || !isValid || isSubmitting}
+                        >
+                            {t(
+                                isSubmitting
+                                    ? "settings.saving"
+                                    : "settings.save"
+                            )}
+                        </Button>
+                        <a
+                            href={href(`/profile/${user.id}`)}
+                            className="nl-control"
+                        >
+                            {t("settings.viewProfile")}
+                        </a>
+                    </div>
                 </div>
             </form>
             <ArcadePicker

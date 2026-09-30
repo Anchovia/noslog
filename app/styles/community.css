@@ -3,10 +3,10 @@
 .noslog-ui .nl-community-contribute {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-32);
+    gap: var(--nl-section-gap);
     min-width: 0;
 }
-/* 구역 제목 → 내용 12 (간격 결정 2026-09-15) */
+/* 구역 제목 → 내용 12 (간격 결정 2026-09-15) · 구역 사이는 구역 간격 토큰(2026-10-01 D1) */
 .noslog-ui .nl-community-votes {
     min-width: 0;
 }
@@ -274,11 +274,15 @@
 .noslog-ui .nl-vote-form__row > .nl-button {
     flex-shrink: 0;
 }
+/* 셀렉트 글자는 모든 폭 16/24(가이드 입력 규칙 — 2026-10-01 규칙 맞춤). 높이는 옆 버튼과 같은 M 이라 위아래 여백으로 맞춘다 */
 .noslog-ui .nl-vote-form .nl-select {
     min-height: var(--nl-control-height-compact);
-    padding-block: calc(var(--nl-spacing-8) - var(--nl-stroke-default));
-    font-size: var(--nl-type-size-14);
-    line-height: var(--nl-type-line-height-20);
+    padding-block: calc(
+        (var(--nl-control-height-compact) - var(--nl-type-line-height-24)) / 2 -
+            var(--nl-stroke-default)
+    );
+    font-size: var(--nl-type-size-16);
+    line-height: var(--nl-type-line-height-24);
 }
 .noslog-ui .nl-opinions {
     min-width: 0;
@@ -431,8 +435,8 @@
     .noslog-ui .nl-music-detail .nl-community-columns {
         display: grid;
         grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
-        /* 열 사이 16 = 개요 두 열과 같음 (2026-09-18 사용자 결정) */
-        gap: var(--nl-spacing-32) var(--nl-spacing-16);
+        /* 열 사이 16 = 개요 두 열과 같음 (2026-09-18 사용자 결정) · 행 사이는 구역 간격 */
+        gap: var(--nl-section-gap) var(--nl-spacing-16);
         align-items: start;
     }
 }

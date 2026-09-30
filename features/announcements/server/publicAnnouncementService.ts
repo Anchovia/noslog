@@ -123,8 +123,5 @@ export async function getHomeAnnouncements(locale: Locale) {
             announcement: localizeAnnouncementSummary(record, locale),
             pinned,
         })),
-        critical: selected.critical
-            ? localizeAnnouncementSummary(selected.critical, locale)
-            : null,
     };
 }

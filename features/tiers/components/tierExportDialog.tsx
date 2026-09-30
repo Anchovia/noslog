@@ -3,6 +3,7 @@
 /* eslint-disable @next/next/no-img-element */
 
 import { useQueryClient } from "@tanstack/react-query";
+import { Check } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import Button from "@/components/ui/Button";
@@ -85,6 +86,12 @@ function TierExportPreview({
     const [status, setStatus] = useState<
         "idle" | "working" | "copied" | "error"
     >("idle");
+    // 「✓ 복사됨」 은 2초 뒤 원래 글자로
+    useEffect(() => {
+        if (status !== "copied") return;
+        const timer = window.setTimeout(() => setStatus("idle"), 2000);
+        return () => window.clearTimeout(timer);
+    }, [status]);
     const signedIn = overview.viewerId !== null;
     const showAchievement = signedIn && options.achievement;
     // 지금 조건(필터 · 구간)의 구간 — 창에서 이 안의 구간을 골라 이미지에만 쓴다(페이지 필터는 그대로)
@@ -453,12 +460,11 @@ function TierExportPreview({
                     />
                 ) : null}
             </div>
+            {/* 복사 성공은 상자 대신 버튼 글자가 잠깐 「✓ 복사됨」(2026-09-28 인상 점검 A1) — 알림은 화면 읽기로 */}
             {status === "copied" ? (
-                <StatusMessage
-                    severity="success"
-                    role="status"
-                    title={t("profile.copiedImage")}
-                />
+                <span className="sr-only" role="status">
+                    {t("profile.copiedImage")}
+                </span>
             ) : status === "error" ? (
                 <StatusMessage
                     severity="danger"
@@ -490,7 +496,17 @@ function TierExportPreview({
                                 disabled={disabled || !canCopy}
                                 onClick={() => void copy()}
                             >
-                                {t("profile.copyImage")}
+                                {status === "copied" ? (
+                                    <>
+                                        <Check
+                                            className="nl-icon-small"
+                                            aria-hidden
+                                        />
+                                        {t("common.copied")}
+                                    </>
+                                ) : (
+                                    t("profile.copyImage")
+                                )}
                             </Button>
                             <Button
                                 variant="secondary"

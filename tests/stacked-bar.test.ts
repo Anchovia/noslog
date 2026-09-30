@@ -50,4 +50,12 @@ describe("StackedBar", () => {
             render([{ key: "me", label: "나", segments: [] }])
         ).not.toContain("data-unlabeled");
     });
+    it("colors a row label only when the row gives a label color", () => {
+        const html = render([
+            { key: "9", label: "9", labelColor: "orange", segments: [] },
+            { key: "low", label: "1–8", segments: [] },
+        ]);
+        expect(html).toContain('style="color:orange">9<');
+        expect(html).toContain('class="nl-metadata nl-muted">1–8<');
+    });
 });

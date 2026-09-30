@@ -510,9 +510,10 @@
     gap: var(--nl-spacing-8);
     font-variant-numeric: tabular-nums;
 }
-/* 이미지 내보내기 창(2026-09-22 D1) — 공용 nl-image-share 안에서 서열표만의 표시 선택 두 줄 */
+/* 이미지 내보내기 창(2026-09-22 D1) — 공용 nl-image-share 안에서 서열표만의 표시 선택 두 줄.
+   체크 줄 사이 0 — 줄 높이(컨트롤 높이)가 간격(2026-10-01) */
 .noslog-ui .nl-tier-export__options {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-8);
+    gap: var(--nl-spacing-0);
 }

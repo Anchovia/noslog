@@ -1,7 +1,7 @@
 .noslog-ui .nl-privacy {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    gap: var(--nl-spacing-32);
+    gap: var(--nl-section-gap);
     padding-block: var(--nl-spacing-24) var(--nl-spacing-48);
     max-width: var(--nl-container-reading);
     margin-inline: auto;
@@ -12,7 +12,7 @@
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-8);
-    margin-bottom: calc(var(--nl-spacing-16) - var(--nl-spacing-32));
+    margin-bottom: calc(var(--nl-spacing-16) - var(--nl-section-gap));
 }
 .noslog-ui .nl-privacy-summary {
     display: flex;
@@ -39,17 +39,17 @@
     text-decoration: underline;
     text-underline-offset: 3px;
 }
-/* 절(구역) 사이 32 · 항목 제목(16) → 내용 8 (간격 결정 2026-09-15) */
+/* 절(구역) 사이 · 절 제목 → 내용 = 구역 간격 토큰(2026-10-01 D1) · 항목 제목(16) → 내용 8 (간격 결정 2026-09-15) */
 .noslog-ui .nl-privacy-prose {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-32);
+    gap: var(--nl-section-gap);
     min-width: 0;
 }
 .noslog-ui .nl-privacy-section {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-12);
+    gap: var(--nl-section-title-gap);
 }
 .noslog-ui .nl-privacy-section h2 {
     scroll-margin-top: 84px;
@@ -113,11 +113,15 @@
     flex-wrap: wrap;
     gap: var(--nl-spacing-16);
 }
+/* 헤더 → 돌아가기 24 · 돌아가기 → 제목 24 · 제목 → 목록 16 — 다른 상세 페이지 머리와 같게(2026-10-01 규칙 맞춤) */
 .noslog-ui .nl-privacy-history {
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-16);
-    padding-block: var(--nl-spacing-16) var(--nl-spacing-48);
+    padding-block: var(--nl-spacing-24) var(--nl-spacing-48);
+}
+.noslog-ui .nl-privacy-history > .nl-back-link {
+    margin-bottom: calc(var(--nl-spacing-24) - var(--nl-spacing-16));
 }
 .noslog-ui .nl-privacy-history__list {
     display: flex;
@@ -192,7 +196,7 @@
     }
     .noslog-ui .nl-privacy-identity,
     .noslog-ui .nl-privacy-summary {
-        margin-bottom: 24px;
+        margin-bottom: var(--nl-spacing-24);
     }
     .noslog-ui .nl-privacy .nl-status {
         border: var(--nl-stroke-default) solid black;

@@ -32,6 +32,9 @@ export default function TermHelp({
 }) {
     const [open, setOpen] = useState(false);
     const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const trigger = useRef<HTMLButtonElement>(null);
+    /** 눌러서 연 창인지 — 올림으로 열린 창은 누름이 「고정」 이고, 고정된 창을 다시 누르면 닫는다(2026-10-01 사용자) */
+    const pinned = useRef(false);
     useEffect(
         () => () => {
             if (closeTimer.current) clearTimeout(closeTimer.current);
@@ -44,7 +47,10 @@ export default function TermHelp({
     }
 
     function scheduleClose() {
-        closeTimer.current = setTimeout(() => setOpen(false), 120);
+        closeTimer.current = setTimeout(() => {
+            pinned.current = false;
+            setOpen(false);
+        }, 120);
     }
 
     return (
@@ -59,6 +65,7 @@ export default function TermHelp({
             >
                 <Popover.Trigger asChild>
                     <button
+                        ref={trigger}
                         type="button"
                         aria-label={ariaLabel}
                         className={
@@ -68,10 +75,15 @@ export default function TermHelp({
                         }
                         onFocus={() => setOpen(true)}
                         onClick={(event) => {
-                            // Hover or focus may already have opened the help.
-                            // A tap must keep it open instead of toggling it shut.
+                            // 올림 · 포커스로 이미 열려 있을 수 있다 — 첫 누름은 그 자리에 고정, 고정된 창을 누르면 닫는다
                             event.preventDefault();
                             cancelClose();
+                            if (open && pinned.current) {
+                                pinned.current = false;
+                                setOpen(false);
+                                return;
+                            }
+                            pinned.current = true;
                             setOpen(true);
                         }}
                     >
@@ -87,6 +99,11 @@ export default function TermHelp({
                     side="top"
                     sideOffset={8}
                     collisionPadding={16}
+                    onPointerDownOutside={(event) => {
+                        // 제 트리거를 누른 것은 바깥 누름이 아니다 — 여기서 닫으면 눌러 여는 것과 부딪혀 깜빡인다
+                        if (trigger.current?.contains(event.target as Node))
+                            event.preventDefault();
+                    }}
                     onOpenAutoFocus={(event) => event.preventDefault()}
                     onCloseAutoFocus={(event) => event.preventDefault()}
                     onMouseEnter={cancelClose}

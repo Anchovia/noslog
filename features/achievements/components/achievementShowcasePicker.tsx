@@ -86,7 +86,9 @@ export default function AchievementShowcasePicker({
                         )}
                     </p>
                 ) : (
-                    <p className="nl-body nl-muted">{t("achievement.empty")}</p>
+                    <p className="nl-body-secondary nl-muted">
+                        {t("achievement.empty")}
+                    </p>
                 )}
                 {earned.length ? (
                     <div className="nl-settings__actions">
@@ -128,14 +130,14 @@ export default function AchievementShowcasePicker({
                 }}
                 footer={
                     <>
+                        {/* 고정 기록 창과 같은 발(2026-10-01 사용자) — 고른 것만 비우고 창은 그대로 */}
                         <Button
                             variant="secondary"
-                            onClick={() => {
-                                onChange("");
-                                setOpen(false);
-                            }}
+                            className="nl-dialog__reset"
+                            disabled={!draft.length}
+                            onClick={() => setDraft([])}
                         >
-                            {t("achievement.settings.useAuto")}
+                            {t("common.reset")}
                         </Button>
                         <Button
                             onClick={() => {

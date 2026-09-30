@@ -39,12 +39,13 @@ export default function MusicCommunityPanel({
         <div className="nl-community-panel" aria-busy={query.isFetching}>
             {query.isError ? (
                 <StatusMessage
+                    tone="quiet"
                     severity="danger"
                     role="alert"
                     title={t("community.loadError")}
                     action={
                         <ActionButton
-                            variant="secondary"
+                            variant="ghost"
                             size="sm"
                             onClick={() => void query.refetch()}
                         >

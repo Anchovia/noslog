@@ -157,7 +157,7 @@ function eligibleRecords<T extends PublicAnnouncementSummaryRecord>(
         );
 }
 
-// 활성 중대 공지 — 홈 배너 후보이자 목록 맨 위에 고정되는 항목
+// 활성 중대 공지 — 목록 맨 위에 고정되는 항목(홈 배너는 2026-09-28 인상 점검 A2 에서 뺌 — 같은 글이 두 번 나와서)
 function activeCriticalAnnouncements<T extends PublicAnnouncementSummaryRecord>(
     records: T[],
     now: Date
@@ -190,7 +190,6 @@ export function selectHomeAnnouncements<
                 .filter((record) => !activeIds.has(record.id))
                 .map((record) => ({ record, pinned: false })),
         ].slice(0, 3),
-        critical: active[0] ?? null,
     };
 }
 

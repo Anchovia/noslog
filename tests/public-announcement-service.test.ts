@@ -117,12 +117,11 @@ describe("announcement summary and detail reads", () => {
         mocks.summaries.mockResolvedValue([summary(notice)]);
         expect((await getHomeAnnouncements("ko")).list).toEqual([]);
         vi.setSystemTime(notice.publishedAt);
-        expect((await getHomeAnnouncements("ko")).list).toHaveLength(1);
-        expect((await getHomeAnnouncements("ko")).critical).toBeNull();
+        expect((await getHomeAnnouncements("ko")).list[0].pinned).toBe(false);
         vi.setSystemTime(notice.activeFrom);
-        expect((await getHomeAnnouncements("ko")).critical?.id).toBe(1);
+        expect((await getHomeAnnouncements("ko")).list[0].pinned).toBe(true);
         vi.setSystemTime(notice.expiresAt);
-        expect((await getHomeAnnouncements("ko")).critical).toBeNull();
+        expect((await getHomeAnnouncements("ko")).list[0].pinned).toBe(false);
         expect((await getHomeAnnouncements("ko")).list).toHaveLength(1);
         expect(mocks.summaries).toHaveBeenCalledOnce();
     });

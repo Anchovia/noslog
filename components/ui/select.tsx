@@ -4,6 +4,7 @@ import * as SelectPrimitive from "@radix-ui/react-select";
 import { Check, ChevronDown } from "lucide-react";
 import type { Ref } from "react";
 import "@/lib/inputModality";
+import { useSelectOpen } from "@/components/ui/useSelectOpen";
 import { cn } from "@/lib/utils";
 
 // Radix 항목은 빈 문자열 값을 쓸 수 없어서 "" 선택지(전국 · — 등)는 안에서만 이 값으로 바꿔 쓴다
@@ -51,8 +52,10 @@ export function Select({
     "aria-describedby"?: string;
 }) {
     const hasEmpty = options.some((option) => option.value === "");
+    const openState = useSelectOpen();
     return (
         <SelectPrimitive.Root
+            {...openState}
             value={value === "" && !hasEmpty ? "" : toItem(value)}
             onValueChange={(next) => onValueChange(fromItem(next))}
             disabled={disabled}

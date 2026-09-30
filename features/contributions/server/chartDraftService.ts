@@ -308,6 +308,8 @@ export async function withdrawMyChartDraft(
 export interface ChartCommentItem {
     id: number;
     timeMs: number;
+    /** problem | suggestion | praise (2026-10-01 H2) */
+    kind: string;
     body: string;
     resolved: boolean;
     createdAt: string;
@@ -348,6 +350,7 @@ export async function listChartComments(query: {
         select: {
             id: true,
             timeMs: true,
+            kind: true,
             body: true,
             resolved: true,
             createdAt: true,
@@ -358,6 +361,7 @@ export async function listChartComments(query: {
     return rows.map((row) => ({
         id: row.id,
         timeMs: row.timeMs,
+        kind: row.kind,
         body: row.body,
         resolved: row.resolved,
         createdAt: row.createdAt.toISOString(),
@@ -378,7 +382,7 @@ export async function addChartComment(
     const parsed = chartCommentInputSchema.safeParse(input);
     if (!parsed.success)
         return { success: false, message: t("contribution.comment.invalid") };
-    const { chartId, draftId, timeMs, body } = parsed.data;
+    const { chartId, draftId, timeMs, body, kind } = parsed.data;
     try {
         if (draftId) {
             const draft = await db.chartDraft.findUnique({
@@ -423,6 +427,7 @@ export async function addChartComment(
                 draftId: draftId ?? null,
                 userId: session.id,
                 timeMs,
+                kind,
                 body,
             },
         });

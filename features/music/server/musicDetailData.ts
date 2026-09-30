@@ -65,6 +65,8 @@ export const getCachedMusicDetail = unstable_cache(
                             publishedRevision: true,
                         },
                     },
+                    // 출처가 있는 칸(2026-10-01 E2) — 출처가 없는 값은 「확인 전」 으로 흐리게 보여 준다
+                    fieldSources: { select: { field: true } },
                 },
             }),
         ]);
@@ -77,6 +79,12 @@ export const getCachedMusicDetail = unstable_cache(
                       has_published_pattern:
                           chart.pattern?.publishedRevision !== null &&
                           chart.pattern?.publishedRevision !== undefined,
+                      sourced_fields: [
+                          ...new Set(
+                              chart.fieldSources.map((row) => row.field)
+                          ),
+                      ],
+                      fieldSources: undefined,
                       pattern: undefined,
                       released_at: chart.released_at?.toISOString() ?? null,
                   }

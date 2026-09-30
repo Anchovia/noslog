@@ -120,7 +120,7 @@ export default function SyncPage({
                                         className="nl-sync-overview-step"
                                     >
                                         <span
-                                            className="nl-sync-step__number nl-emphasis-label"
+                                            className="nl-sync-step__number nl-metadata"
                                             aria-hidden
                                         >
                                             {index + 1}
@@ -169,14 +169,21 @@ export default function SyncPage({
         >
             <h1 className="nl-page-title">{t("sync.title")}</h1>
             {result.isError ? (
-                <StatusMessage severity="danger" title={t("common.pageError")}>
-                    <Button
-                        variant="secondary"
-                        onClick={() => void result.refetch()}
-                    >
-                        {t("common.retry")}
-                    </Button>
-                </StatusMessage>
+                <StatusMessage
+                    tone="quiet"
+                    severity="danger"
+                    role="alert"
+                    title={t("common.pageError")}
+                    action={
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => void result.refetch()}
+                        >
+                            {t("common.retry")}
+                        </Button>
+                    }
+                />
             ) : null}
             <div className="nl-sync-columns">
                 <div className="nl-sync-column">

@@ -22,12 +22,18 @@ import {
     useLocalizedHref,
     useTranslations,
 } from "@/components/i18n/localeProvider";
+import { SegmentedControl } from "@/components/ui/segmentedControl";
 import ActionButton from "@/components/ui/actionButton";
 import ActionMenu from "@/components/ui/actionMenu";
 import { StatusMessage } from "@/components/ui/statusMessage";
 import ContributionLabel from "@/features/contributions/components/contributionLabel";
 import { CHART_COMMENT_MAX_LENGTH } from "@/features/contributions/schemas/chartDraftSchema";
 import type { ChartCommentItem } from "@/features/contributions/server/chartDraftService";
+import {
+    CHART_COMMENT_KINDS,
+    isChartCommentKind,
+    type ChartCommentKind,
+} from "@/features/contributions/schemas/chartDraftSchema";
 
 export function chartCommentsKey(chartId: number) {
     return ["chart-comments", chartId] as const;
@@ -73,15 +79,40 @@ export default function ChartComments({
     const href = useLocalizedHref();
     const id = useId();
     const query = useQuery(chartCommentsOptions(chartId, initialComments));
-    const comments = query.data;
+    // 한 단어 필터(2026-10-01 H2, osu! discussion 의 Pending · Resolved · All)
+    const [filter, setFilter] = useState<"all" | "open" | "resolved">("all");
+    const all = query.data;
+    const comments = all.filter((comment) =>
+        filter === "all"
+            ? true
+            : filter === "open"
+              ? !comment.resolved
+              : comment.resolved
+    );
     return (
         <section className="nl-chart-comments" aria-labelledby={`${id}-title`}>
             <div className="nl-heading-row">
                 <h2 id={`${id}-title`} className="nl-section-title">
                     {t("contribution.comment.title", {
-                        count: comments.length,
+                        count: all.length,
                     })}
                 </h2>
+                {all.length ? (
+                    <SegmentedControl
+                        size="sm"
+                        label={t("contribution.comment.filterLabel")}
+                        value={filter}
+                        onValueChange={setFilter}
+                        options={(["all", "open", "resolved"] as const).map(
+                            (value) => ({
+                                value,
+                                label: t(
+                                    `contribution.comment.filter.${value}`
+                                ),
+                            })
+                        )}
+                    />
+                ) : null}
                 {signedIn ? null : (
                     <Link
                         className="nl-heading-link nl-control"
@@ -138,12 +169,13 @@ function ChartCommentComposer({
     const live = useSyncExternalStore(clock.subscribe, clock.get, () => 0);
     const [pinned, setPinned] = useState<number | null>(null);
     const [body, setBody] = useState("");
+    const [kind, setKind] = useState<ChartCommentKind>("problem");
     const [error, setError] = useState<string | null>(null);
     const timeMs = pinned ?? live;
     const mutation = useMutation({
         mutationFn: async () => {
             const result = await addChartComment(
-                { chartId, timeMs: Math.round(timeMs), body },
+                { chartId, timeMs: Math.round(timeMs), body, kind },
                 locale
             );
             if (!result.success) throw new Error(result.message);
@@ -169,6 +201,17 @@ function ChartCommentComposer({
                 if (trimmed && !mutation.isPending) mutation.mutate();
             }}
         >
+            {/* 종류는 제 줄에 — 좁은 화면에서 입력칸과 한 줄이면 글자가 세로로 눌린다(2026-10-01) */}
+            <SegmentedControl
+                size="sm"
+                label={t("contribution.comment.kindLabel")}
+                value={kind}
+                onValueChange={setKind}
+                options={CHART_COMMENT_KINDS.map((value) => ({
+                    value,
+                    label: t(`contribution.comment.kind.${value}`),
+                }))}
+            />
             <div className="nl-chart-comments__composer-row">
                 <button
                     type="button"
@@ -320,7 +363,15 @@ function ChartCommentRow({
                     <span className="nl-tag nl-tag--status" data-tone="success">
                         {t("contribution.comment.resolved")}
                     </span>
-                ) : null}
+                ) : (
+                    <span className="nl-tag">
+                        {t(
+                            isChartCommentKind(comment.kind)
+                                ? `contribution.comment.kind.${comment.kind}`
+                                : "contribution.comment.kind.problem"
+                        )}
+                    </span>
+                )}
                 {actions.length ? (
                     <ActionMenu
                         label={t("contribution.comment.actions", { name })}

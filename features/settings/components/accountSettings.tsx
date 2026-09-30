@@ -4,6 +4,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
+import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import Button from "@/components/ui/Button";
 import ActionButton from "@/components/ui/actionButton";
@@ -135,181 +136,193 @@ export default function AccountSettings({
                     </p>
                 ) : null}
             </div>
-            <section className="nl-settings__zone nl-account-deletion">
-                <h2 className="nl-section-title">
-                    {t("settings.deleteTitle")}
-                </h2>
-                <p className="nl-body-secondary nl-muted">
-                    {t("settings.deleteDescription")}{" "}
-                    {t("settings.deleteIrreversible")}
-                </p>
-                <p className="nl-body-secondary nl-muted">
-                    {t("settings.deletionBoundary")}
-                </p>
-                <ModalDialog
-                    open={open}
-                    onOpenChange={(next) => {
-                        if (!busyRef.current) {
-                            setOpen(next);
-                            form.reset();
-                        }
-                    }}
-                    title={t("settings.deleteTitle")}
-                    className="nl-account-dialog"
-                    onOpenAutoFocus={(event) => {
-                        event.preventDefault();
-                        cancelRef.current?.focus();
-                    }}
-                    trigger={
-                        <Button
-                            variant="danger"
-                            destructiveFilled
-                            disabled={loggingOut}
-                        >
-                            {t("settings.deleteTitle")}
-                        </Button>
-                    }
-                    footer={
-                        <>
-                            <Button
-                                ref={cancelRef}
-                                variant="secondary"
-                                type="button"
-                                disabled={busy}
-                                onClick={() => {
-                                    setOpen(false);
-                                    form.reset();
-                                }}
-                            >
-                                {t("settings.cancel")}
-                            </Button>
-                            <ActionButton
-                                variant="danger"
-                                destructiveFilled
-                                type="submit"
-                                form={formId}
-                                busy={busy}
-                                disabled={
-                                    !verified ||
-                                    confirmation !==
-                                        t("settings.deleteConfirmation")
-                                }
-                            >
-                                {t("settings.deleteEverything")}
-                            </ActionButton>
-                        </>
-                    }
-                >
-                    <p className="nl-body-secondary nl-muted">
-                        {t("settings.deleteIrreversible")}{" "}
-                        {t("settings.deletionBoundary")}
-                    </p>
-                    <section className="nl-account-consequences">
-                        <h3 className="nl-metadata">
-                            {t("settings.deletionHeading")}
-                        </h3>
-                        <dl>
-                            {(
-                                Object.keys(
-                                    summary
-                                ) as (keyof AccountDeletionSummary)[]
-                            ).map((key) => (
-                                <div key={key}>
-                                    <dt className="nl-muted">
-                                        {t(`settings.deletionGroup.${key}`)}
-                                    </dt>
-                                    <dd>
-                                        {t("settings.deletionCount", {
-                                            count: summary[key].toLocaleString(
-                                                locale
-                                            ),
-                                        })}
-                                    </dd>
-                                </div>
-                            ))}
-                        </dl>
-                    </section>
-                    <section className="nl-field">
-                        <h3 className="nl-emphasis-label">
-                            {t("settings.deleteStepReauth")}
-                        </h3>
-                        <div className="nl-account-reauth">
-                            {!verified ? (
-                                <a
-                                    className="nl-button nl-button--secondary"
-                                    href={`/discord/start?${new URLSearchParams({ mode: "delete", returnTo: `${href("/settings")}?category=account` })}`}
-                                >
-                                    {t("settings.reauthenticate")}
-                                </a>
-                            ) : null}
-                            <p
-                                className={
-                                    verified
-                                        ? "nl-body-secondary"
-                                        : "nl-metadata"
-                                }
-                                role="status"
-                            >
-                                {t(
-                                    verified
-                                        ? "settings.reauthenticated"
-                                        : "settings.reauthenticateNext"
-                                )}
-                            </p>
-                        </div>
-                    </section>
-                    <form
-                        id={formId}
-                        onSubmit={(event) =>
-                            void form.handleSubmit(submit)(event)
-                        }
-                        noValidate
-                        className="nl-account-confirmation"
-                        aria-busy={busy}
-                    >
-                        <FormField
-                            id={id}
-                            // 단계 제목은 emphasis-label(2026-09-26 점검 C2, 시안)
-                            label={
-                                <span className="nl-emphasis-label">
-                                    {t("settings.deleteStepConfirm")}
-                                </span>
+            {/* 회원 탈퇴(2026-10-01 E1) — 네이버 · 치지직 · note · 당근 식 보통 줄 + 꺾쇠. 빨간 채운 버튼은 확인 창의 확정 버튼에만 */}
+            <section className="nl-settings__zone">
+                <div className="nl-settings__rows">
+                    <ModalDialog
+                        open={open}
+                        onOpenChange={(next) => {
+                            if (!busyRef.current) {
+                                setOpen(next);
+                                form.reset();
                             }
-                            help={t("settings.deletePrompt", {
-                                confirmation: t("settings.deleteConfirmation"),
-                            })}
-                            error={form.formState.errors.confirmation?.message}
+                        }}
+                        title={t("settings.deleteTitle")}
+                        className="nl-account-dialog"
+                        onOpenAutoFocus={(event) => {
+                            event.preventDefault();
+                            cancelRef.current?.focus();
+                        }}
+                        trigger={
+                            <button
+                                type="button"
+                                className="nl-settings__row"
+                                disabled={loggingOut}
+                            >
+                                <span className="nl-settings__row-copy">
+                                    <span className="nl-control">
+                                        {t("settings.deleteTitle")}
+                                    </span>
+                                    <span className="nl-metadata nl-muted">
+                                        {t("settings.deleteDescription")}{" "}
+                                        {t("settings.deleteIrreversible")}
+                                    </span>
+                                </span>
+                                <ChevronRight
+                                    className="nl-settings__row-chevron"
+                                    aria-hidden
+                                />
+                            </button>
+                        }
+                        footer={
+                            <>
+                                <Button
+                                    ref={cancelRef}
+                                    variant="secondary"
+                                    type="button"
+                                    disabled={busy}
+                                    onClick={() => {
+                                        setOpen(false);
+                                        form.reset();
+                                    }}
+                                >
+                                    {t("settings.cancel")}
+                                </Button>
+                                <ActionButton
+                                    variant="danger"
+                                    destructiveFilled
+                                    type="submit"
+                                    form={formId}
+                                    busy={busy}
+                                    disabled={
+                                        !verified ||
+                                        confirmation !==
+                                            t("settings.deleteConfirmation")
+                                    }
+                                >
+                                    {t("settings.deleteEverything")}
+                                </ActionButton>
+                            </>
+                        }
+                    >
+                        <p className="nl-body-secondary nl-muted">
+                            {t("settings.deleteIrreversible")}{" "}
+                            {t("settings.deletionBoundary")}
+                        </p>
+                        <section className="nl-account-consequences">
+                            <h3 className="nl-metadata nl-muted">
+                                {t("settings.deletionHeading")}
+                            </h3>
+                            <dl>
+                                {(
+                                    Object.keys(
+                                        summary
+                                    ) as (keyof AccountDeletionSummary)[]
+                                ).map((key) => (
+                                    <div key={key}>
+                                        <dt className="nl-muted">
+                                            {t(`settings.deletionGroup.${key}`)}
+                                        </dt>
+                                        <dd>
+                                            {t("settings.deletionCount", {
+                                                count: summary[
+                                                    key
+                                                ].toLocaleString(locale),
+                                            })}
+                                        </dd>
+                                    </div>
+                                ))}
+                            </dl>
+                        </section>
+                        <section className="nl-field">
+                            <h3 className="nl-emphasis-label">
+                                {t("settings.deleteStepReauth")}
+                            </h3>
+                            <div className="nl-account-reauth">
+                                {!verified ? (
+                                    <a
+                                        // 로그인 화면과 같은 Discord 색 버튼(2026-10-01 사용자) — 어디로 가는지 색이 먼저 말한다
+                                        className="nl-button nl-auth-discord"
+                                        href={`/discord/start?${new URLSearchParams({ mode: "delete", returnTo: `${href("/settings")}?category=account` })}`}
+                                    >
+                                        {t("settings.reauthenticate")}
+                                    </a>
+                                ) : null}
+                                <p
+                                    className={
+                                        verified
+                                            ? "nl-body-secondary"
+                                            : "nl-metadata"
+                                    }
+                                    role="status"
+                                >
+                                    {t(
+                                        verified
+                                            ? "settings.reauthenticated"
+                                            : "settings.reauthenticateNext"
+                                    )}
+                                </p>
+                            </div>
+                        </section>
+                        <form
+                            id={formId}
+                            onSubmit={(event) =>
+                                void form.handleSubmit(submit)(event)
+                            }
+                            noValidate
+                            className="nl-account-confirmation"
+                            aria-busy={busy}
                         >
-                            <Input
+                            <FormField
                                 id={id}
-                                {...form.register("confirmation")}
-                                disabled={busy || !verified}
-                                autoComplete="off"
-                                placeholder={t("settings.deleteConfirmation")}
-                                aria-invalid={Boolean(
-                                    form.formState.errors.confirmation
-                                )}
-                                aria-describedby={fieldDescription(id, {
-                                    help: true,
-                                    error: Boolean(
-                                        form.formState.errors.confirmation
+                                // 단계 제목은 emphasis-label(2026-09-26 점검 C2, 시안)
+                                label={
+                                    <span className="nl-emphasis-label">
+                                        {t("settings.deleteStepConfirm")}
+                                    </span>
+                                }
+                                help={t("settings.deletePrompt", {
+                                    confirmation: t(
+                                        "settings.deleteConfirmation"
                                     ),
                                 })}
-                            />
-                        </FormField>
-                        {deleteError ? (
-                            <div
-                                role="alert"
-                                className="nl-body-secondary nl-field__error"
+                                error={
+                                    form.formState.errors.confirmation?.message
+                                }
                             >
-                                <p>{deleteError}</p>
-                                <Link href={href("/privacy")}>
-                                    {t("footer.privacy")}
-                                </Link>
-                            </div>
-                        ) : null}
-                    </form>
-                </ModalDialog>
+                                <Input
+                                    id={id}
+                                    {...form.register("confirmation")}
+                                    disabled={busy || !verified}
+                                    autoComplete="off"
+                                    placeholder={t(
+                                        "settings.deleteConfirmation"
+                                    )}
+                                    aria-invalid={Boolean(
+                                        form.formState.errors.confirmation
+                                    )}
+                                    aria-describedby={fieldDescription(id, {
+                                        help: true,
+                                        error: Boolean(
+                                            form.formState.errors.confirmation
+                                        ),
+                                    })}
+                                />
+                            </FormField>
+                            {deleteError ? (
+                                <div
+                                    role="alert"
+                                    className="nl-body-secondary nl-field__error"
+                                >
+                                    <p>{deleteError}</p>
+                                    <Link href={href("/privacy")}>
+                                        {t("footer.privacy")}
+                                    </Link>
+                                </div>
+                            ) : null}
+                        </form>
+                    </ModalDialog>
+                </div>
                 <Link href={href("/privacy")} className="nl-control">
                     {t("footer.privacy")}
                 </Link>

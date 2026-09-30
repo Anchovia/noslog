@@ -74,8 +74,10 @@
     min-height: var(--nl-control-height-compact);
     padding-inline: var(--nl-spacing-12);
     border-radius: var(--nl-radius-field);
-    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-strong);
-    background: transparent;
+    /* 옅은 면 · 선 없음(2026-09-30 K1). 떠 있는 면 위에서만 약한 선(W1 — foundation.css 의 --nl-control-line) */
+    background: var(--nl-surface-control);
+    box-shadow: inset 0 0 0 var(--nl-stroke-default)
+        var(--nl-control-line, transparent);
     color: var(--nl-content-default);
 }
 @media (hover: hover) {
@@ -89,8 +91,8 @@
 }
 /* 선택 = 버튼 칩은 aria-pressed, 링크 칩(FilterChipLinks)은 aria-current */
 .noslog-ui .nl-chip:is([aria-pressed="true"], [aria-current="page"]) {
-    background: var(--nl-surface-raised);
-    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-strong);
+    background: var(--nl-surface-control-selected);
+    color: var(--nl-content-interactive);
     font-weight: var(--nl-type-weight-semibold);
 }
 .noslog-ui .nl-chip:focus-visible {
@@ -99,9 +101,8 @@
 }
 .noslog-ui .nl-chip:disabled {
     color: var(--nl-interaction-disabled-content);
-    box-shadow: inset 0 0 0 var(--nl-stroke-default)
-        var(--nl-interaction-disabled-border);
-    background: transparent;
+    background: var(--nl-interaction-disabled-bg);
+    box-shadow: none;
 }
 /* 항목 글자 색(tone) — 난이도 DU-01 텍스트 램프 · 카테고리 자켓 레이블 색 · 성취(S = 판정 JUST 노랑, FC·Pianist = achievement).
    칩은 선택되면 중립으로 돌아가고(면·경계·체크가 선택을 말한다), 레일 목록은 체크 상자가 선택을 말해 글자 색을 유지한다 */
@@ -299,7 +300,8 @@
     gap: var(--nl-spacing-12);
 }
 
-/* 적용 조건 행: 토큰 32 + × 16 · 끝에 전체 지우기 */
+/* 적용 조건 행: 토큰 32 + × 16 · 끝에 전체 지우기. 토큰 = 칩 · 고르기 알약과 같은 옅은 면 surface/control · 선 없음
+   (2026-10-01 T1 — Twitch 태그 필터 · GOG 걸린 필터), 난이도 · 분류 · 기록(S · FC · Pianist) 조건은 글자만 필터 칩과 같은 색(× 는 기본색, 올리면 기본 글자색 — 칩과 같은 규칙) */
 .noslog-ui .nl-applied {
     display: flex;
     align-items: center;
@@ -313,8 +315,52 @@
     min-height: var(--nl-control-height-compact);
     padding: 0 var(--nl-spacing-8) 0 var(--nl-spacing-12);
     border-radius: var(--nl-radius-field);
-    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-default);
+    background: var(--nl-surface-control);
+    box-shadow: inset 0 0 0 var(--nl-stroke-default)
+        var(--nl-control-line, transparent);
     color: var(--nl-content-default);
+}
+.noslog-ui .nl-applied__token[data-tone="normal"] {
+    --nl-tone: var(--nl-difficulty-text-normal);
+}
+.noslog-ui .nl-applied__token[data-tone="hard"] {
+    --nl-tone: var(--nl-difficulty-text-hard);
+}
+.noslog-ui .nl-applied__token[data-tone="expert"] {
+    --nl-tone: var(--nl-difficulty-text-expert);
+}
+.noslog-ui .nl-applied__token[data-tone="real"] {
+    --nl-tone: var(--nl-difficulty-text-real);
+}
+.noslog-ui .nl-applied__token[data-tone="pops"] {
+    --nl-tone: var(--nl-category-pops);
+}
+.noslog-ui .nl-applied__token[data-tone="anime"] {
+    --nl-tone: var(--nl-category-anime);
+}
+.noslog-ui .nl-applied__token[data-tone="bm"] {
+    --nl-tone: var(--nl-category-bm);
+}
+.noslog-ui .nl-applied__token[data-tone="org"] {
+    --nl-tone: var(--nl-category-org);
+}
+.noslog-ui .nl-applied__token[data-tone="var"] {
+    --nl-tone: var(--nl-category-var);
+}
+.noslog-ui .nl-applied__token[data-tone="cljz"] {
+    --nl-tone: var(--nl-category-cljz);
+}
+.noslog-ui .nl-applied__token[data-tone="s"] {
+    --nl-tone: var(--nl-judgement-just);
+}
+.noslog-ui .nl-applied__token[data-tone="fc"] {
+    --nl-tone: var(--nl-achievement-full-combo);
+}
+.noslog-ui .nl-applied__token[data-tone="pianist"] {
+    --nl-tone: var(--nl-achievement-pianist);
+}
+.noslog-ui .nl-applied__token[data-tone]:not(:hover) > .nl-applied__label {
+    color: var(--nl-tone);
 }
 @media (hover: hover) {
     .noslog-ui .nl-applied__token:hover {
@@ -353,9 +399,13 @@
     justify-content: space-between;
     gap: var(--nl-spacing-8);
 }
-/* 전체 화면 창은 선 위아래 24, 팝오버는 16 — 그룹을 감싸는 form · div(오락실 · 빙고 필터 폼)까지 같은 값 */
+/* 전체 화면 창은 선 위아래 24, 팝오버는 16 — 그룹을 감싸는 form · div(오락실 · 빙고 필터 폼)까지 같은 값.
+   그룹이 본문 바로 아래에 오는 창(악곡 필터)도 본문 간격 32 대신 24(2026-10-01 규칙 맞춤 — 선 위 32 · 아래 24 로 어긋나 있었다) */
 .noslog-ui .nl-full-dialog__body .nl-filter-group + .nl-filter-group {
     padding-top: var(--nl-spacing-24);
+}
+.noslog-ui .nl-full-dialog__body:has(> .nl-filter-group) {
+    gap: var(--nl-spacing-24);
 }
 .noslog-ui .nl-full-dialog__body :is(form, div):has(> .nl-filter-group) {
     gap: var(--nl-spacing-24);

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Button from "@/components/ui/Button";
-import Avatar from "@/components/ui/avatar";
+import DiscordIcon from "@/components/ui/DiscordIcon";
 import ModalDialog from "@/components/ui/modalDialog";
 import {
     useLocalizedHref,
@@ -60,15 +60,42 @@ export default function ConnectionSettings({
             : "");
     return (
         <div className="nl-settings__form" aria-busy={pending !== null}>
-            <div className="nl-settings__zone">
-                <p className="nl-control nl-muted">
-                    {t("settings.loginAccount")}
-                </p>
-                <div className="nl-settings__identity-row">
-                    <Avatar alt="" size={40} />
-                    <div className="nl-settings__read-only">
-                        <p className="nl-body">{displayName}</p>
-                        <p className="nl-metadata nl-muted">Discord</p>
+            {/* 연결 줄(2026-10-01 D1) — Discord · GitHub · Twitch 식. 로고 · 이름 왼쪽, 버튼 오른쪽 */}
+            <div className="nl-settings__rows">
+                <div className="nl-settings__row nl-settings__row--stack">
+                    <div className="nl-settings__row-lead">
+                        <span className="nl-settings__logo" aria-hidden>
+                            <DiscordIcon />
+                        </span>
+                        <div className="nl-settings__row-copy">
+                            <p className="nl-control">{displayName}</p>
+                            <p className="nl-metadata nl-muted">
+                                Discord · {t("settings.loginAccount")}
+                            </p>
+                        </div>
+                    </div>
+                    <div className="nl-settings__actions">
+                        {/* Discord 로 가는 버튼은 Discord 색(2026-10-01 사용자) — 로그인 화면 · 다시 인증과 같은 부품 */}
+                        <Button
+                            variant="secondary"
+                            className="nl-auth-discord"
+                            disabled={pending !== null}
+                            onClick={() => authenticate("refresh")}
+                        >
+                            {t(
+                                pending === "refresh"
+                                    ? "settings.refreshingDiscord"
+                                    : "settings.refreshDiscord"
+                            )}
+                        </Button>
+                        <Button
+                            ref={changeButton}
+                            variant="secondary"
+                            disabled={pending !== null}
+                            onClick={() => setConfirmChange(true)}
+                        >
+                            {t("settings.changeLoginAccount")}
+                        </Button>
                     </div>
                 </div>
             </div>
@@ -86,27 +113,6 @@ export default function ConnectionSettings({
                     )}
                 </p>
             ) : null}
-            <div className="nl-settings__zone">
-                <Button
-                    variant="secondary"
-                    disabled={pending !== null}
-                    onClick={() => authenticate("refresh")}
-                >
-                    {t(
-                        pending === "refresh"
-                            ? "settings.refreshingDiscord"
-                            : "settings.refreshDiscord"
-                    )}
-                </Button>
-                <Button
-                    ref={changeButton}
-                    variant="secondary"
-                    disabled={pending !== null}
-                    onClick={() => setConfirmChange(true)}
-                >
-                    {t("settings.changeLoginAccount")}
-                </Button>
-            </div>
             <ModalDialog
                 className="nl-settings-dialog"
                 open={confirmChange}

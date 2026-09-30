@@ -1,8 +1,13 @@
+/* 헤더 → 제목 24 · 제목 → 설명 8 — 다른 페이지 머리와 같게(2026-10-01 규칙 맞춤) */
 .noslog-ui .nl-recovery {
     margin-inline: 0;
-    padding-block: var(--nl-spacing-48);
+    padding-block: var(--nl-spacing-24) var(--nl-spacing-48);
     gap: var(--nl-spacing-24);
     align-items: flex-start;
+}
+/* 공용 규칙이 제목 아래를 16 으로 당겨 두었으니(layout.css) 거기서 8 을 더 당긴다 */
+.noslog-ui .nl-recovery > .nl-page-title + p {
+    margin-top: calc(var(--nl-spacing-8) - var(--nl-spacing-16));
 }
 .noslog-ui .nl-recovery__actions {
     display: flex;
@@ -26,6 +31,10 @@
     align-items: flex-start;
     max-width: var(--nl-container-reading);
     gap: var(--nl-spacing-32);
+}
+/* 제목 → 설명 8(가이드 역할값 — 2026-10-01 규칙 맞춤) */
+.noslog-ui .nl-recovery-minimal__content > h1 + p {
+    margin-top: calc(var(--nl-spacing-8) - var(--nl-spacing-32));
 }
 .noslog-ui .nl-recovery__timing {
     display: flex;

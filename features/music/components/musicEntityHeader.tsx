@@ -284,7 +284,7 @@ export default function MusicEntityHeader({
                         <div className="nl-music-entity__title-row">
                             <h1
                                 className={cn(
-                                    "nl-page-title nl-music-entity__title",
+                                    "nl-page-title nl-page-title--fixed nl-music-entity__title",
                                     collapsed && fit.titleCut && "nl-fade-end"
                                 )}
                                 tabIndex={-1}

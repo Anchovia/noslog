@@ -80,7 +80,9 @@ export default async function AnnouncementArchive({
                     ))}
                 </ul>
             ) : pinned.length ? null : (
-                <p className="nl-body nl-muted">{t("announcements.empty")}</p>
+                <p className="nl-body-secondary nl-muted">
+                    {t("announcements.empty")}
+                </p>
             )}
             <AnnouncementPagination
                 page={page}

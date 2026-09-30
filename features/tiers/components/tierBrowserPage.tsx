@@ -563,6 +563,9 @@ export default function TierBrowserPage({
                             ...query.difficulties.map((value) => ({
                                 key: `difficulty-${value}`,
                                 label: value,
+                                tone: value.toLowerCase() as Lowercase<
+                                    typeof value
+                                >,
                                 removeLabel: t("tiers.removeCondition", {
                                     condition: value,
                                 }),

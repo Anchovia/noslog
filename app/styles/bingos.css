@@ -107,7 +107,7 @@
 .noslog-ui .nl-bingo-mini {
     display: grid;
     grid-template-columns: repeat(5, 6px);
-    gap: 2px;
+    gap: var(--nl-spacing-2);
     padding: var(--nl-spacing-4);
     border-radius: var(--nl-radius-control);
     background: var(--nl-surface-media-scrim);
@@ -186,12 +186,16 @@
 .noslog-ui .nl-bingo-catalog__empty {
     padding-block: var(--nl-spacing-32);
 }
+/* 헤더 → 돌아가기 24 · 돌아가기 → 내용 24 — 다른 상세 페이지 머리와 같게(2026-10-01 규칙 맞춤) */
 .noslog-ui .nl-bingo-detail {
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-16);
-    padding-block: var(--nl-spacing-16) var(--nl-spacing-48);
+    padding-block: var(--nl-spacing-24) var(--nl-spacing-48);
     min-width: 0;
+}
+.noslog-ui .nl-bingo-detail > .nl-back-link {
+    margin-bottom: calc(var(--nl-spacing-24) - var(--nl-spacing-16));
 }
 /* 상세 배치 — Compact 는 소스 순서(정체성 → 요약 → 보드 → 제자리 상세 → 목록), Wide 는 보드 | 상세 두 열 */
 .noslog-ui .nl-bingo-detail__layout {
@@ -331,7 +335,7 @@
     display: flex;
     flex: 1;
     flex-direction: column;
-    gap: var(--nl-spacing-4);
+    gap: var(--nl-spacing-8);
     min-width: 0;
 }
 .noslog-ui .nl-bingo-identity__cover {
@@ -507,11 +511,6 @@
     color: var(--nl-content-default);
     text-decoration: underline;
     text-underline-offset: 3px;
-}
-.noslog-ui .nl-bingo-save-error {
-    display: flex;
-    flex-direction: column;
-    gap: var(--nl-spacing-12);
 }
 @media (min-width: 1056px) {
     /* 넓은 화면(2026-09-22 E · W1) = 판 | 오른쪽 1:1 (악곡 상세 개요 두 열과 같은 비율 · 열 사이 16).

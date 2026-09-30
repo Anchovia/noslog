@@ -62,6 +62,9 @@
     /* 상태 / 데이터 */
     --color-success: #22c55e;
     --color-danger: #ef4444;
+    /* 채운 위험 버튼(2026-10-01) — 공개 화면 토큰과 같은 값. #ef4444 위 흰 글자는 3.76 : 1 로 기준 미달 */
+    --color-danger-surface: #ae2e24;
+    --color-on-danger: #ffffff;
     --color-chart: #38bdf8;
     --color-score: #facc15;
     --color-bronze: #b87333;
@@ -130,6 +133,8 @@ html[data-theme="light"] {
     /* 상태 / 데이터 */
     --color-success: #028450;
     --color-danger: #d22030;
+    --color-danger-surface: #ae2e24;
+    --color-on-danger: #ffffff;
     --color-chart: #1b64da;
     --color-score: #8a5f00;
     --color-bronze: #8a4c22;

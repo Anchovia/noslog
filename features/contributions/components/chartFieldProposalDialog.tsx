@@ -1,10 +1,13 @@
 "use client";
 
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useId, useState } from "react";
 import { toast } from "sonner";
 
-import { submitChartFieldProposal } from "@/app/(nevigation)/music/[index]/[difficulty]/proposalActions";
+import {
+    getChartFieldQueueStatus,
+    submitChartFieldProposal,
+} from "@/app/(nevigation)/music/[index]/[difficulty]/proposalActions";
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import Button from "@/components/ui/Button";
 import { FormField, Input, fieldDescription } from "@/components/ui/formField";
@@ -20,6 +23,35 @@ import {
 } from "@/features/contributions/schemas/chartFieldProposalSchema";
 
 type FieldName = "value" | "evidenceUrl" | "evidenceNote";
+
+/**
+ * 대기 현황(2026-10-01 G1) — 안내 문장 뒤에 「검토 대기 N건 · 가장 오래 기다린 제안 N일」.
+ * 운영자가 한 명이라 처리 시점을 개인 알림 대신 공개 숫자로 말한다(IMDb · Wikipedia AfC · Yelp)
+ */
+function QueueStatus({ open }: { open: boolean }) {
+    const t = useTranslations();
+    const locale = useLocale();
+    const status = useQuery({
+        queryKey: ["chart-field-proposal", "queue"],
+        queryFn: () => getChartFieldQueueStatus(),
+        enabled: open,
+        staleTime: 60_000,
+        retry: false,
+    }).data;
+    if (!status?.pending) return null;
+    const count = status.pending.toLocaleString(locale);
+    return (
+        <>
+            {" · "}
+            {status.oldestDays
+                ? t("contribution.proposal.queue", {
+                      count,
+                      days: status.oldestDays.toLocaleString(locale),
+                  })
+                : t("contribution.proposal.queueToday", { count })}
+        </>
+    );
+}
 
 /** 입력 칸의 처음 글자 — 지금 값을 고치기 쉬운 모양으로(길이는 m:ss) */
 function initialInput(field: ChartFieldProposalField, value: string | null) {
@@ -255,6 +287,7 @@ export default function ChartFieldProposalDialog({
                 </FormField>
                 <p className="nl-metadata nl-muted">
                     {t("contribution.proposal.notice")}
+                    <QueueStatus open={open} />
                 </p>
             </form>
         </ModalDialog>

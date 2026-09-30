@@ -163,13 +163,10 @@ test("Record preserves primary order and exposes exact values to keyboard and to
     page,
 }) => {
     await openRecord(page);
-    // 제목 한 줄(넘치면 끝 페이드) · 글자 끝 8 뒤 내 등급 아이콘 = 제목 줄 높이(32 · 1056 이상 40) (2026-09-18)
+    // 제목 한 줄(넘치면 끝 페이드) · 글자 끝 8 뒤 내 등급 아이콘 = 제목 줄 높이(모든 폭 24/32 — 2026-10-01 D5) (2026-09-18)
     const grade = page.locator(".nl-music-entity__grade");
     await expect(grade).toHaveAttribute("alt", "S 랭크");
-    await expect(grade).toHaveCSS(
-        "width",
-        (page.viewportSize()?.width ?? 390) >= 1056 ? "40px" : "32px"
-    );
+    await expect(grade).toHaveCSS("width", "32px");
     await expect(page.locator(".nl-music-entity__title")).toHaveCSS(
         "white-space",
         "nowrap"

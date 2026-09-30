@@ -22,6 +22,7 @@ import FullScreenDialog from "@/components/ui/fullScreenDialog";
 import SearchField from "@/components/ui/searchField";
 import { SegmentedControl } from "@/components/ui/segmentedControl";
 import ResultState from "@/components/ui/resultState";
+import { StatusMessage } from "@/components/ui/statusMessage";
 import useDebouncedValue from "@/lib/hooks/useDebouncedValue";
 import useWideLayout from "@/lib/hooks/useWideLayout";
 import { cn } from "@/lib/utils";
@@ -50,6 +51,7 @@ import ChartResultRows, {
 } from "@/features/music/components/chartResultGroup";
 import { LoadingStatus } from "@/components/ui/skeleton";
 import DiscoveryFilters, {
+    categoryTone,
     DiscoverySortMenu,
 } from "@/features/music/components/discoveryFilters";
 import AppliedTokens from "@/components/ui/appliedTokens";
@@ -575,6 +577,7 @@ export default function DiscoveryPage({
                             ...query.categories.map((category) => ({
                                 key: `category-${category}`,
                                 label: category,
+                                tone: categoryTone[category],
                                 removeLabel: t("discovery.removeCondition", {
                                     condition: category,
                                 }),
@@ -597,6 +600,9 @@ export default function DiscoveryPage({
                                 return {
                                     key: `difficulty-${range.difficulty}`,
                                     label,
+                                    tone: range.difficulty.toLowerCase() as Lowercase<
+                                        typeof range.difficulty
+                                    >,
                                     removeLabel: t(
                                         "discovery.removeCondition",
                                         { condition: label }
@@ -625,6 +631,10 @@ export default function DiscoveryPage({
                                 return {
                                     key: `record-${record}`,
                                     label,
+                                    tone:
+                                        record === "unplayed"
+                                            ? undefined
+                                            : record,
                                     removeLabel: t(
                                         "discovery.removeCondition",
                                         { condition: label }
@@ -748,9 +758,11 @@ export default function DiscoveryPage({
                     {items.length ? (
                         <div className="nl-discovery__progress" ref={progress}>
                             {collection.isFetchNextPageError ? (
-                                <p role="alert" className="nl-body-secondary">
-                                    {t("discovery.moreError")}
-                                </p>
+                                <StatusMessage
+                                    severity="danger"
+                                    role="alert"
+                                    title={t("discovery.moreError")}
+                                />
                             ) : null}
                             {collection.hasNextPage ? (
                                 <ActionButton

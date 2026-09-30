@@ -55,6 +55,7 @@ export default async function AdminEventPage({
             />
             {editingPublished ? (
                 <StatusMessage
+                    tone="boxed"
                     severity="info"
                     title="공개 중인 글을 고친 판입니다"
                     description="승인하면 공개판이 이 내용으로 바뀝니다. 수정 요청하면 지금 공개판이 그대로 남고, 반려하면 글 전체가 내려갑니다."
@@ -62,6 +63,7 @@ export default async function AdminEventPage({
             ) : null}
             {event.reviewNote ? (
                 <StatusMessage
+                    tone="boxed"
                     severity="warning"
                     title={`지난 검토 사유${event.reviewer?.username ? ` · ${event.reviewer.username}` : ""}`}
                     description={event.reviewNote}

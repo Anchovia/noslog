@@ -5,6 +5,7 @@ import {
     expectLocalizedDocument,
     expectNoHorizontalOverflow,
     expectPageLoaded,
+    headerMenuCopy,
     localeCopy,
     type TestLocale,
 } from "./helpers";
@@ -71,18 +72,21 @@ test("비로그인 사용자가 전체 메뉴에서 언어를 변경한다", asy
     await page.goto("/ko/music?sort=level&view=grid");
     await expectPageLoaded(page);
 
-    await page.getByRole("button", { name: localeCopy.ko.openMenu }).click();
-    const menu = page.getByRole("navigation", { name: "전체 메뉴" });
+    const copy = headerMenuCopy(page, "ko");
+    await page.getByRole("button", { name: copy.open }).click();
+    const menu = page.getByRole("navigation", { name: copy.menu });
     await menu.getByRole("link", { name: "설정", exact: true }).click();
     await page.getByRole("link", { name: /^화면 설정/ }).click();
-    await page.getByRole("radio", { name: "日本語", exact: true }).click();
+    // 언어 = 줄 오른쪽 드롭다운(2026-10-01 B1)
+    await page.getByRole("combobox", { name: "언어", exact: true }).click();
+    await page.getByRole("option", { name: "日本語", exact: true }).click();
 
     await expect(page).toHaveURL(/\/ja\/settings\?category=experience/, {
         timeout: 20_000,
     });
     await expectLocalizedDocument(page, "ja");
     await expect(
-        page.getByRole("button", { name: localeCopy.ja.openMenu })
+        page.getByRole("button", { name: headerMenuCopy(page, "ja").open })
     ).toBeVisible();
 });
 

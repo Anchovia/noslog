@@ -127,6 +127,7 @@ export default function OverviewPanel({
             : null,
     ];
     const shownFacts = facts.filter((fact) => fact !== null);
+    const sourced = new Set(chart.sourced_fields ?? []);
     return (
         <div className="nl-overview">
             <section
@@ -265,7 +266,8 @@ export default function OverviewPanel({
                     <h2 id={`${id}-facts`} className="nl-section-title">
                         {t("detail.chartInfo")}
                     </h2>
-                    <dl className="nl-facts nl-body-secondary nl-overview__card nl-overview__card--list">
+                    {/* 면 없는 구분선 줄 목록(2026-09-28 인상 점검 A6 — 구역 제목이 이미 묶음, 줄 글자가 제목과 같은 선) */}
+                    <dl className="nl-facts nl-body-secondary">
                         {shownFacts.map((fact) => (
                             <div key={fact.label}>
                                 <dt>{fact.label}</dt>
@@ -277,12 +279,29 @@ export default function OverviewPanel({
                                     }
                                 >
                                     {fact.field ? (
-                                        <span className="nl-facts__value">
+                                        <span
+                                            className="nl-facts__value"
+                                            data-verified={
+                                                fact.value === null ||
+                                                sourced.has(fact.field)
+                                                    ? undefined
+                                                    : "false"
+                                            }
+                                        >
                                             {fact.value ?? (
                                                 <span className="nl-facts__empty">
                                                     —
                                                 </span>
                                             )}
+                                            {/* 출처가 없는 값은 「확인 전」(2026-10-01 E2) — 추정값과 확인된 값을 구분한다 */}
+                                            {fact.value !== null &&
+                                            !sourced.has(fact.field) ? (
+                                                <span className="nl-tag">
+                                                    {t(
+                                                        "contribution.unverified"
+                                                    )}
+                                                </span>
+                                            ) : null}
                                             <ChartFieldFactAction
                                                 chartId={chart.id}
                                                 field={fact.field}

@@ -2,11 +2,14 @@
 
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
+    countMyChartFieldProposals,
+    countUnseenContributionResults,
     listMyChartDrafts,
     listMyChartFieldProposals,
+    markContributionResultsSeen,
 } from "@/app/(nevigation)/profile/[id]/contributionActions";
 import {
     useLocale,
@@ -15,15 +18,17 @@ import {
 } from "@/components/i18n/localeProvider";
 import Button from "@/components/ui/Button";
 import ModalDialog from "@/components/ui/modalDialog";
-import ResultState from "@/components/ui/resultState";
 import { SkeletonText } from "@/components/ui/skeleton";
+import { StatusMessage } from "@/components/ui/statusMessage";
 import StatStrip from "@/components/ui/statStrip";
 import {
+    CONTRIBUTION_KINDS,
     contributionLevel,
     contributionProgress,
     type ContributionTotals,
 } from "@/features/contributions/contributionLevel";
 import {
+    CHART_FIELD_PROPOSAL_STATUSES,
     formatProposalValue,
     type ChartFieldProposalField,
 } from "@/features/contributions/schemas/chartFieldProposalSchema";
@@ -94,10 +99,9 @@ function DraftRow({ item }: { item: MyChartDraftItem }) {
                     href={href(
                         item.status === "published" ? base : `${base}/draft`
                     )}
-                    className="nl-profile-contribution__what nl-control nl-link"
+                    className="nl-profile-contribution__what nl-entity-title nl-link"
                 >
-                    {item.chart.title} · {item.chart.difficulty}{" "}
-                    {item.chart.level} · {t("contribution.section.chartItem")}
+                    {item.chart.title}
                 </Link>
                 <span
                     className={tone ? "nl-tag nl-tag--status" : "nl-tag"}
@@ -106,7 +110,16 @@ function DraftRow({ item }: { item: MyChartDraftItem }) {
                     {t(`contribution.draftStatus.${item.status}`)}
                 </span>
             </div>
+            {/* 메타 줄 = 난이도(난이도 색) · 종류 · 그때그때 다른 값 — 최근 플레이 · 기록 표와 같은 문법(2026-10-01 B) */}
             <p className="nl-metadata nl-muted">
+                <span
+                    className={`nl-level--${item.chart.difficulty.toLowerCase()}`}
+                >
+                    {item.chart.difficulty.toUpperCase()} {item.chart.level}
+                </span>
+                {" · "}
+                {t("contribution.section.chartItem")}
+                {" · "}
                 {item.status === "published" && item.publishedAt
                     ? `${t("contribution.section.publishedPoints", { points: 20 })} · ${item.publishedAt.slice(0, 10)}`
                     : item.openComments
@@ -157,10 +170,9 @@ function ProposalList({ items }: { items: MineItem[] }) {
                                 href={href(
                                     `/music/${item.chart.musicIndex}/${item.chart.difficulty.toLowerCase()}`
                                 )}
-                                className="nl-profile-contribution__what nl-control nl-link"
+                                className="nl-profile-contribution__what nl-entity-title nl-link"
                             >
-                                {item.chart.title} · {item.chart.difficulty}{" "}
-                                {item.chart.level} · {fieldLabel}
+                                {item.chart.title}
                             </Link>
                             <span
                                 className="nl-tag nl-tag--status"
@@ -171,18 +183,47 @@ function ProposalList({ items }: { items: MineItem[] }) {
                                 )}
                             </span>
                         </div>
+                        {/* 메타 줄 = 난이도 · 칸 이름 · 값 변화(2026-10-01 B) */}
                         <p className="nl-metadata nl-muted">
-                            {before} →{" "}
+                            <span
+                                className={`nl-level--${item.chart.difficulty.toLowerCase()}`}
+                            >
+                                {item.chart.difficulty.toUpperCase()}{" "}
+                                {item.chart.level}
+                            </span>
+                            {" · "}
+                            {fieldLabel} {before} →{" "}
                             {formatProposalValue(
                                 item.field,
                                 item.value,
                                 locale
                             )}
                         </p>
-                        {item.status === "rejected" && item.rejectReason ? (
+                        {item.status === "applied" && item.appliedValue ? (
+                            <p className="nl-metadata nl-muted">
+                                {t("contribution.section.appliedEdited", {
+                                    value: formatProposalValue(
+                                        item.field,
+                                        item.appliedValue,
+                                        locale
+                                    ),
+                                })}
+                            </p>
+                        ) : null}
+                        {item.status === "rejected" &&
+                        (item.rejectReasonCode || item.rejectReason) ? (
                             <p className="nl-metadata nl-profile-contribution__reason">
                                 {t("contribution.rejectReason", {
-                                    reason: item.rejectReason,
+                                    reason: [
+                                        item.rejectReasonCode
+                                            ? t(
+                                                  `contribution.rejectReason.${item.rejectReasonCode}` as MessageKey
+                                              )
+                                            : null,
+                                        item.rejectReason,
+                                    ]
+                                        .filter(Boolean)
+                                        .join(" · "),
                                 })}
                             </p>
                         ) : null}
@@ -204,6 +245,35 @@ function ProposalListSkeleton({ count }: { count: number }) {
                 </li>
             ))}
         </ul>
+    );
+}
+
+/**
+ * 내 제안 상태별 수(2026-10-01 B2, 본인만) — 종류별 대신 검토 중 · 반영됨 · 반려를 센다.
+ * 거절을 한 덩어리로 뭉개지 않는 MusicBrainz 편집 목록과 같은 셈법. 종류별 수는 등급 줄 옆 글줄이 말한다
+ */
+function MyProposalCounts() {
+    const t = useTranslations();
+    const locale = useLocale();
+    const counts = useQuery({
+        queryKey: ["contribution", "mine", "counts"],
+        queryFn: () => countMyChartFieldProposals(),
+        staleTime: 60_000,
+        retry: false,
+    });
+    // 처음 받는 동안에는 라벨은 실제 글자 · 값 자리만 스켈레톤(가이드 「로딩」)
+    return (
+        <StatStrip
+            items={CHART_FIELD_PROPOSAL_STATUSES.map((status) => ({
+                key: status,
+                label: t(`contribution.status.${status}`),
+                value: counts.isPending ? (
+                    <SkeletonText className="nl-component-title" sample="00" />
+                ) : (
+                    (counts.data?.[status] ?? 0).toLocaleString(locale)
+                ),
+            }))}
+        />
     );
 }
 
@@ -231,9 +301,21 @@ function MyProposals() {
             {recent.isPending ? (
                 <ProposalListSkeleton count={RECENT_COUNT} />
             ) : recent.isError ? (
-                <ResultState
-                    error
-                    message={t("contribution.section.loadError")}
+                // 구역 불러오기 실패 = quiet + 「다시 시도」(가이드 상태 메시지, 2026-10-01 규칙 맞춤)
+                <StatusMessage
+                    tone="quiet"
+                    severity="danger"
+                    role="alert"
+                    title={t("contribution.section.loadError")}
+                    action={
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => void recent.refetch()}
+                        >
+                            {t("common.retry")}
+                        </Button>
+                    }
                 />
             ) : items.length ? (
                 <>
@@ -253,11 +335,20 @@ function MyProposals() {
                             {all.isPending ? (
                                 <ProposalListSkeleton count={6} />
                             ) : all.isError ? (
-                                <ResultState
-                                    error
-                                    message={t(
-                                        "contribution.section.loadError"
-                                    )}
+                                <StatusMessage
+                                    tone="quiet"
+                                    severity="danger"
+                                    role="alert"
+                                    title={t("contribution.section.loadError")}
+                                    action={
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={() => void all.refetch()}
+                                        >
+                                            {t("common.retry")}
+                                        </Button>
+                                    }
                                 />
                             ) : (
                                 <ProposalList items={all.data ?? []} />
@@ -272,6 +363,48 @@ function MyProposals() {
             )}
         </div>
     );
+}
+
+/**
+ * 새 결과 점(2026-10-01 A2) — 아직 보지 않은 처리 결과가 있으면 구역 제목 뒤에 점 8.
+ * 피드백 새 답변과 같은 부품 · 같은 문법이고, 구역을 열어 본 순간 본 것으로 표시한다
+ */
+function UnseenResultDot() {
+    const t = useTranslations();
+    const unseen = useQuery({
+        queryKey: ["contribution", "mine", "unseen"],
+        queryFn: () => countUnseenContributionResults(),
+        staleTime: Infinity,
+        retry: false,
+    }).data;
+    useEffect(() => {
+        if (unseen) void markContributionResultsSeen();
+    }, [unseen]);
+    if (!unseen) return null;
+    return (
+        <span
+            className="nl-unread-dot"
+            role="img"
+            aria-label={t("contribution.section.newResult")}
+        />
+    );
+}
+
+/**
+ * 등급이 무엇으로 쌓였는지(2026-10-01 F2) — 반영된 종류만 「곡 정보 5 · 채보 1」 로.
+ * 숫자 등급만 두면 Lv.N 이 무엇을 뜻하는지 알 수 없다(지도 · 카탈로그 계열은 모두 등급 옆에 뜻을 적는다)
+ */
+function LevelMadeOf({ totals }: { totals: ContributionTotals | undefined }) {
+    const t = useTranslations();
+    const locale = useLocale();
+    const parts = CONTRIBUTION_KINDS.filter(
+        (kind) => (totals?.[kind] ?? 0) > 0
+    ).map(
+        (kind) =>
+            `${t(`contribution.section.kind.${kind}`)} ${(totals?.[kind] ?? 0).toLocaleString(locale)}`
+    );
+    if (!parts.length) return null;
+    return <p className="nl-metadata nl-muted">{parts.join(" · ")}</p>;
 }
 
 /**
@@ -303,6 +436,7 @@ export default function ProfileContribution({
                     className="nl-section-title"
                 >
                     {t("contribution.section.title")}
+                    {isOwner ? <UnseenResultDot /> : null}
                 </h2>
             </div>
             <div className="nl-profile-contribution__card">
@@ -343,23 +477,22 @@ export default function ProfileContribution({
                                 style={{ width: `${progress * 100}%` }}
                             />
                         </div>
-                        <StatStrip
-                            items={(
-                                [
-                                    "chart_field",
-                                    "chart",
-                                    "chart_comment",
-                                    "arcade_report",
-                                    "cabinet_check",
-                                ] as const
-                            ).map((kind) => ({
-                                key: kind,
-                                label: t(`contribution.section.kind.${kind}`),
-                                value: (totals?.[kind] ?? 0).toLocaleString(
-                                    locale
-                                ),
-                            }))}
-                        />
+                        <LevelMadeOf totals={totals} />
+                        {isOwner ? (
+                            <MyProposalCounts />
+                        ) : (
+                            <StatStrip
+                                items={CONTRIBUTION_KINDS.map((kind) => ({
+                                    key: kind,
+                                    label: t(
+                                        `contribution.section.kind.${kind}`
+                                    ),
+                                    value: (totals?.[kind] ?? 0).toLocaleString(
+                                        locale
+                                    ),
+                                }))}
+                            />
+                        )}
                     </>
                 ) : (
                     <>

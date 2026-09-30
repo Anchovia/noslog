@@ -1,6 +1,7 @@
 "use server";
 
 import {
+    getChartFieldQueueStatus as getChartFieldQueueStatusService,
     listMyPendingChartFields as listMyPendingChartFieldsService,
     submitChartFieldProposal as submitChartFieldProposalService,
 } from "@/features/contributions/server/chartFieldProposalService";
@@ -14,4 +15,8 @@ export async function submitChartFieldProposal(
 
 export async function listMyPendingChartFields(chartId: number) {
     return listMyPendingChartFieldsService(chartId);
+}
+
+export async function getChartFieldQueueStatus() {
+    return getChartFieldQueueStatusService();
 }

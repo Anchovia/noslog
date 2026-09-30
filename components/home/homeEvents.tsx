@@ -2,14 +2,13 @@ import { ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-import { foundationButtonClass } from "@/components/ui/Button";
 import { eventPeriod } from "@/features/events/components/eventParts";
 import type { PublicEventItem } from "@/features/events/server/eventService";
 import { getServerI18n } from "@/lib/i18n/server";
 import { getLocalizedHref } from "@/lib/i18n/routing";
 
 // 홈 「진행 중인 이벤트」 (2026-09-18 H1) — 공지사항 바로 아래, 늘 보인다(이벤트로 가는 길). 큰 배너 카드 위에 제목 · 기간을 얹는다.
-// 진행 중인 이벤트가 없으면 같은 크기의 빈 카드 + 「이벤트 글쓰기」 (E1)
+// 진행 중인 이벤트가 없으면 안내 한 줄 + 「이벤트 글쓰기」 글자 링크(2026-09-28 인상 점검 A3)
 // 글자 아래는 어두운 층(media-scrim) + 위로 갈수록 옅어지는 흐림 — 경계가 딱딱하게 보이지 않게
 export default async function HomeEvents({
     events,
@@ -67,19 +66,11 @@ export default async function HomeEvents({
                     ))}
                 </ul>
             ) : (
+                /* 빈 상태는 한 줄만 — 「이벤트 글쓰기」 는 제목 줄 「전체 이벤트 ›」 와 겹쳐 꽉 차 보였다(2026-10-01 사용자) */
                 <div className="nl-home-events__empty">
                     <p className="nl-body-secondary nl-muted">
                         {t("events.empty.live")}
                     </p>
-                    <Link
-                        href={getLocalizedHref("/events/new", locale)}
-                        className={foundationButtonClass({
-                            variant: "secondary",
-                            size: "sm",
-                        })}
-                    >
-                        {t("home.writeEvent")}
-                    </Link>
                 </div>
             )}
         </section>

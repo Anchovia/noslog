@@ -549,30 +549,36 @@ model ChartFieldSource {
 // 유저가 제안한 채보 정보 값(BPM · 노트 수 · 길이 · 수록일) — 운영자가 반영하거나 사유와 함께 반려한다(2026-09-23)
 // 같은 사람 · 같은 채보 · 같은 칸의 대기 중 제안은 하나 — 다시 내면 값을 바꾼다
 model ChartFieldProposal {
-  id            Int               @id @default(autoincrement())
-  userId        Int               @map("user_id")
-  user          User              @relation("ChartFieldProposalAuthor", fields: [userId], references: [id], onDelete: Cascade)
-  chartId       Int               @map("chart_id")
-  chart         MusicChart        @relation(fields: [chartId], references: [id], onDelete: Cascade)
+  id               Int               @id @default(autoincrement())
+  userId           Int               @map("user_id")
+  user             User              @relation("ChartFieldProposalAuthor", fields: [userId], references: [id], onDelete: Cascade)
+  chartId          Int               @map("chart_id")
+  chart            MusicChart        @relation(fields: [chartId], references: [id], onDelete: Cascade)
   // bpm | note_count | duration | released_at
-  field         String
+  field            String
   // 제안 값 — BPM 「60」 · 「60-120」, 노트 수 정수, 길이 초, 수록일 YYYY-MM-DD
-  value         String
+  value            String
   // 제안할 때 화면에 있던 값(비어 있었으면 null) — 그 사이 값이 바뀌었는지 검토에서 본다
-  previousValue String?           @map("previous_value")
+  previousValue    String?           @map("previous_value")
   // video | official | direct
-  evidenceKind  String            @map("evidence_kind")
-  evidenceUrl   String?           @map("evidence_url")
-  evidenceNote  String?           @map("evidence_note")
+  evidenceKind     String            @map("evidence_kind")
+  evidenceUrl      String?           @map("evidence_url")
+  evidenceNote     String?           @map("evidence_note")
   // pending | applied | rejected | withdrawn
-  status        String            @default("pending")
-  rejectReason  String?           @map("reject_reason")
-  reviewedById  Int?              @map("reviewed_by_id")
-  reviewedBy    User?             @relation("ChartFieldProposalReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
-  reviewedAt    DateTime?         @map("reviewed_at")
-  createdAt     DateTime          @default(now()) @map("created_at")
-  updatedAt     DateTime          @updatedAt @map("updated_at")
-  source        ChartFieldSource?
+  status           String            @default("pending")
+  // 반려 사유 — 정해진 코드(evidence | url | duplicate | format | other)와 덧붙인 말(2026-10-01 D2)
+  rejectReasonCode String?           @map("reject_reason_code")
+  rejectReason     String?           @map("reject_reason")
+  // 운영자가 값을 고쳐 반영했으면 그 값 — 제안 값과 다르면 기여자에게 그대로 보여 준다(2026-10-01 C2)
+  appliedValue     String?           @map("applied_value")
+  // 기여자가 처리 결과를 본 시각 — 「새 결과」 점(2026-10-01 A2)
+  seenAt           DateTime?         @map("seen_at")
+  reviewedById     Int?              @map("reviewed_by_id")
+  reviewedBy       User?             @relation("ChartFieldProposalReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+  reviewedAt       DateTime?         @map("reviewed_at")
+  createdAt        DateTime          @default(now()) @map("created_at")
+  updatedAt        DateTime          @updatedAt @map("updated_at")
+  source           ChartFieldSource?
 
   @@index([status, createdAt])
   @@index([userId, createdAt])
@@ -600,6 +606,8 @@ model ChartDraft {
   reviewedById Int?           @map("reviewed_by_id")
   reviewedBy   User?          @relation("ChartDraftReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
   publishedAt  DateTime?      @map("published_at")
+  // 작성자가 검토 결과(수정 요청 · 공개)를 본 시각 — 「새 결과」 점(2026-10-01 A2)
+  seenAt       DateTime?      @map("seen_at")
   createdAt    DateTime       @default(now()) @map("created_at")
   updatedAt    DateTime       @updatedAt @map("updated_at")
   comments     ChartComment[]
@@ -622,6 +630,8 @@ model ChartComment {
   userId       Int         @map("user_id")
   user         User        @relation("ChartCommentAuthor", fields: [userId], references: [id], onDelete: Cascade)
   timeMs       Int         @map("time_ms")
+  // problem | suggestion | praise — 무엇이 고칠 것인지 한눈에(2026-10-01 H2, osu! 글쓰기 3종)
+  kind         String      @default("problem")
   body         String
   resolved     Boolean     @default(false)
   resolvedAt   DateTime?   @map("resolved_at")

@@ -103,3 +103,36 @@ export async function completeOnboarding(
     updateTag(getUserProfileTag(session.id));
     redirect(returnTo);
 }
+
+/**
+ * 닉네임을 쓸 수 있는지 미리 확인(2026-10-01 온보딩 ② — Discord 식, 칸을 떠날 때).
+ * 저장 때의 고유 제약과 같은 기준(검증 뒤 값이 똑같은 다른 계정이 있는지)이고, 최종 판단은 저장 때 다시 한다
+ */
+export async function checkOnboardingNickname(
+    username: string,
+    requestedLocale: string
+): Promise<{ available: boolean; message: string }> {
+    const locale = isLocale(requestedLocale) ? requestedLocale : DEFAULT_LOCALE;
+    const t = createTranslator(getMessages(locale));
+    const session = await getSession();
+    if (!session.id)
+        return {
+            available: false,
+            message: t("onboarding.error.loginRequired"),
+        };
+    const parsed = createOnboardingSchema(t).shape.username.safeParse(username);
+    if (!parsed.success)
+        return {
+            available: false,
+            message:
+                parsed.error.issues[0]?.message ??
+                t("onboarding.error.invalid"),
+        };
+    const taken = await db.user.findFirst({
+        where: { username: parsed.data, NOT: { id: session.id } },
+        select: { id: true },
+    });
+    return taken
+        ? { available: false, message: t("onboarding.error.nicknameTaken") }
+        : { available: true, message: t("onboarding.nicknameAvailable") };
+}

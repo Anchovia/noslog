@@ -4,11 +4,14 @@ import { revalidatePath, updateTag } from "next/cache";
 
 import {
     CHART_FIELD_PROPOSAL_DAILY_LIMIT,
+    CHART_FIELD_PROPOSAL_STATUSES,
     chartFieldProposalReviewSchema,
     chartFieldUpdate,
     chartFieldValue,
     createChartFieldProposalSchema,
     isChartFieldProposalField,
+    isChartFieldProposalStatus,
+    normalizeProposalValue,
     type ChartFieldProposalField,
     type ChartFieldProposalStatus,
 } from "@/features/contributions/schemas/chartFieldProposalSchema";
@@ -268,6 +271,67 @@ export async function countPendingChartFieldProposals() {
     return db.chartFieldProposal.count({ where: { status: "pending" } });
 }
 
+export interface ChartFieldQueueStatus {
+    /** 검토를 기다리는 제안 수(전체) */
+    pending: number;
+    /** 가장 오래 기다린 제안의 날수 — 대기가 없으면 null */
+    oldestDays: number | null;
+}
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+/**
+ * 대기 현황(2026-10-01 G1) — 제안 창 안내에 붙는 두 숫자.
+ * 운영자가 한 명이라 「언제 처리되나」 를 개인 알림 대신 공개 숫자로 말한다(IMDb · Wikipedia AfC 방식)
+ */
+export async function getChartFieldQueueStatus(
+    now = new Date()
+): Promise<ChartFieldQueueStatus> {
+    const [pending, oldest] = await Promise.all([
+        db.chartFieldProposal.count({ where: { status: "pending" } }),
+        db.chartFieldProposal.findFirst({
+            where: { status: "pending" },
+            orderBy: { createdAt: "asc" },
+            select: { createdAt: true },
+        }),
+    ]);
+    return {
+        pending,
+        oldestDays: oldest
+            ? Math.max(
+                  0,
+                  Math.floor(
+                      (now.getTime() - oldest.createdAt.getTime()) / DAY_MS
+                  )
+              )
+            : null,
+    };
+}
+
+export type MyChartFieldProposalCounts = Record<
+    ChartFieldProposalStatus,
+    number
+>;
+
+/** 내 제안의 상태별 수(2026-10-01 B2) — 본인만. 반려 수까지 세므로 남에게는 주지 않는다 */
+export async function countMyChartFieldProposals(): Promise<MyChartFieldProposalCounts> {
+    const empty = Object.fromEntries(
+        CHART_FIELD_PROPOSAL_STATUSES.map((status) => [status, 0])
+    ) as MyChartFieldProposalCounts;
+    const session = await getSession();
+    if (!session.id) return empty;
+    const rows = await db.chartFieldProposal.groupBy({
+        by: ["status"],
+        where: { userId: session.id },
+        _count: { _all: true },
+    });
+    for (const row of rows) {
+        if (isChartFieldProposalStatus(row.status))
+            empty[row.status] = row._count._all;
+    }
+    return empty;
+}
+
 /**
  * 운영자 검토 — 반영은 칸 값 변경 + 출처(contribution) 기록 + 제안 「반영됨」 을 한 트랜잭션으로.
  * 반려는 사유 필수. 이미 처리된 제안은 건너뛴다.
@@ -298,24 +362,39 @@ export async function reviewChartFieldProposals(
                 where: { id: { in: proposals.map((item) => item.id) } },
                 data: {
                     status: "rejected",
-                    rejectReason: review.reason,
+                    rejectReasonCode: review.reasonCode,
+                    rejectReason: review.reason || null,
                     reviewedById: admin.id,
                     reviewedAt: now,
+                    // 결과를 새로 알린다 — 전에 본 제안이라도 다시 점이 뜬다
+                    seenAt: null,
                 },
             });
         } else {
+            // 고쳐서 반영(C2)은 한 건만 고를 때 — 여러 건을 한 값으로 덮어쓰지 않는다
+            const edited =
+                proposals.length === 1 && review.value ? review.value : null;
             for (const proposal of proposals) {
                 if (!isChartFieldProposalField(proposal.field)) continue;
+                const parsed = edited
+                    ? normalizeProposalValue(proposal.field, edited)
+                    : proposal.value;
+                if (parsed === null) {
+                    return {
+                        success: false,
+                        message: "고친 값을 확인해 주세요.",
+                    };
+                }
                 await db.$transaction([
                     db.musicChart.update({
                         where: { id: proposal.chartId },
-                        data: chartFieldUpdate(proposal.field, proposal.value),
+                        data: chartFieldUpdate(proposal.field, parsed),
                     }),
                     db.chartFieldSource.create({
                         data: {
                             chartId: proposal.chartId,
                             field: proposal.field,
-                            value: proposal.value,
+                            value: parsed,
                             source: "contribution",
                             sourceUrl: proposal.evidenceUrl,
                             note: proposal.evidenceNote,
@@ -326,8 +405,11 @@ export async function reviewChartFieldProposals(
                         where: { id: proposal.id },
                         data: {
                             status: "applied",
+                            appliedValue:
+                                parsed === proposal.value ? null : parsed,
                             reviewedById: admin.id,
                             reviewedAt: now,
+                            seenAt: null,
                         },
                     }),
                     // 반영 1건 = 기여 1점(같은 제안은 한 번만)
@@ -371,7 +453,11 @@ export interface MyChartFieldProposal {
     field: ChartFieldProposalField;
     value: string;
     previousValue: string | null;
+    /** 운영자가 고쳐서 반영한 값(2026-10-01 C2) — 제안 값과 같으면 null */
+    appliedValue: string | null;
     status: string;
+    /** 정해 둔 반려 사유(2026-10-01 D2) */
+    rejectReasonCode: string | null;
     rejectReason: string | null;
     createdAt: string;
     chart: {
@@ -398,6 +484,8 @@ export async function listMyChartFieldProposals(
             value: true,
             previousValue: true,
             status: true,
+            appliedValue: true,
+            rejectReasonCode: true,
             rejectReason: true,
             createdAt: true,
             chart: {
@@ -419,6 +507,8 @@ export async function listMyChartFieldProposals(
                       value: row.value,
                       previousValue: row.previousValue,
                       status: row.status,
+                      appliedValue: row.appliedValue,
+                      rejectReasonCode: row.rejectReasonCode,
                       rejectReason: row.rejectReason,
                       createdAt: row.createdAt.toISOString(),
                       chart: {
@@ -431,4 +521,56 @@ export async function listMyChartFieldProposals(
               ]
             : []
     );
+}
+
+/**
+ * 아직 보지 않은 처리 결과 수(2026-10-01 A2) — 제안 · 채보 초안 두 가지를 합쳐 「새 결과」 점에 쓴다.
+ * 결과를 저장만 하고 알리지 않으면 기여자가 프로필을 다시 열 때까지 모른다(조사 16곳 중 11곳이 결과를 알린다)
+ */
+export async function countUnseenContributionResults(): Promise<number> {
+    const session = await getSession();
+    if (!session.id) return 0;
+    const [proposals, drafts] = await Promise.all([
+        db.chartFieldProposal.count({
+            where: {
+                userId: session.id,
+                status: { in: ["applied", "rejected"] },
+                reviewedAt: { not: null },
+                seenAt: null,
+            },
+        }),
+        db.chartDraft.count({
+            where: {
+                userId: session.id,
+                status: { in: ["changes_requested", "published"] },
+                reviewedAt: { not: null },
+                seenAt: null,
+            },
+        }),
+    ]);
+    return proposals + drafts;
+}
+
+/** 결과를 보았다고 표시 — 「기여」 를 열면 부른다 */
+export async function markContributionResultsSeen(now = new Date()) {
+    const session = await getSession();
+    if (!session.id) return;
+    await Promise.all([
+        db.chartFieldProposal.updateMany({
+            where: {
+                userId: session.id,
+                status: { in: ["applied", "rejected"] },
+                seenAt: null,
+            },
+            data: { seenAt: now },
+        }),
+        db.chartDraft.updateMany({
+            where: {
+                userId: session.id,
+                status: { in: ["changes_requested", "published"] },
+                seenAt: null,
+            },
+            data: { seenAt: now },
+        }),
+    ]);
 }

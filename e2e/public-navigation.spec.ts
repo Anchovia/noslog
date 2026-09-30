@@ -1,6 +1,10 @@
 import { expect, test } from "@playwright/test";
 
-import { expectNoHorizontalOverflow, expectPageLoaded } from "./helpers";
+import {
+    expectNoHorizontalOverflow,
+    expectPageLoaded,
+    headerMenuCopy,
+} from "./helpers";
 
 const publicRoutes = [
     { label: "악곡", path: "/ko/music", heading: "악곡" },
@@ -13,16 +17,19 @@ const publicRoutes = [
     },
 ];
 
-test("모바일 헤더에서 주요 공개 페이지로 이동한다", async ({ page }) => {
+test("헤더에서 주요 공개 페이지로 이동한다", async ({ page }) => {
     await page.goto("/ko");
     await expectPageLoaded(page);
 
     const banner = page.getByRole("banner");
     await expect(banner.getByRole("link", { name: "로그인" })).toBeVisible();
+    const copy = headerMenuCopy(page, "ko");
     for (const route of publicRoutes) {
-        await banner.getByRole("button", { name: "전체 메뉴 열기" }).click();
+        // 넓은 화면은 헤더에 나란한 「주요 메뉴」, 그 아래 폭은 ≡ 안
+        if (!copy.wide)
+            await banner.getByRole("button", { name: copy.open }).click();
         const navigation = banner.getByRole("navigation", {
-            name: "전체 메뉴",
+            name: copy.wide ? "주요 메뉴" : copy.menu,
         });
         await expect(navigation).toBeVisible();
         await navigation
@@ -35,7 +42,7 @@ test("모바일 헤더에서 주요 공개 페이지로 이동한다", async ({ 
         await expectPageLoaded(page);
         await expectNoHorizontalOverflow(page);
         await expect(
-            banner.getByRole("button", { name: "전체 메뉴 열기" })
+            banner.getByRole("button", { name: copy.open })
         ).toBeVisible();
     }
 });

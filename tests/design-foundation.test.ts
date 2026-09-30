@@ -63,6 +63,82 @@ describe("NosLog design foundation", () => {
         expect(raw).toEqual([]);
     });
 
+    // 간격 · 모서리 · 색 · 글자 크기는 토큰으로만 쓴다(2026-09-30 R1, 가이드 「간격 · 모서리 · 높이 · 아이콘」 절).
+    // 계산식(calc 등) 안의 크기 숫자와 폭 · 높이는 보지 않는다. 관리자 화면은 손대지 않는 곳이라 뺀다.
+    // 토큰으로 옮기면 모양이 바뀌는 값만 아래 예외에 이유와 함께 적는다 — 새 예외는 사용자 결정이 있을 때만
+    describe("takes spacing, radius, color and font size from tokens", () => {
+        const allowed = new Set([
+            // 랭킹 행 명판 — 이름 글줄(20)에 맞춘 상자 여백 2/6
+            "globalRankings.css: padding: var(--nl-spacing-2) 6px",
+            // 슬라이더 손잡이 세로 맞춤 — (트랙 4 − 손잡이 20) / 2
+            "chartViewer.css: margin-top: -8px",
+            // 빙고 미니 판 칸(6) · 범례 네모(12) — 모서리 토큰 4 는 크기에 비해 크다
+            "bingos.css: border-radius: 1px",
+            "bingos.css: border-radius: 2px",
+            // 지도 핀 그림자 — 지도 타일 위라 면 토큰과 무관한 검정
+            "arcades.css: filter: drop-shadow(0 1px 2px rgb(0 0 0 / 40%))",
+        ]);
+        // 안쪽부터 지운다 — 이름 없는 괄호는 계산식 안의 묶음
+        const functionCall =
+            /(?:\b(?:var|calc|min|max|clamp)|(?<![\w-]))\([^()]*\)/g;
+        function literals(check: (prop: string, bare: string) => boolean) {
+            const raw: string[] = [];
+            files.forEach((name, index) => {
+                if (name === "tokens.css" || name === "admin.css") return;
+                postcss.parse(styles[index]).walkDecls((decl) => {
+                    if (decl.prop.startsWith("--")) return;
+                    let bare = decl.value;
+                    for (let previous = ""; previous !== bare;) {
+                        previous = bare;
+                        bare = bare.replace(functionCall, "");
+                    }
+                    const entry = `${name}: ${decl.prop}: ${decl.value.replace(/\s+/g, " ")}`;
+                    if (check(decl.prop, bare) && !allowed.has(entry))
+                        raw.push(entry);
+                });
+            });
+            return raw;
+        }
+        const pixels = (value: string) =>
+            (value.match(/-?\d*\.?\d+px/g) ?? []).some(
+                (length) => parseFloat(length) !== 0
+            );
+
+        it("spacing", () => {
+            expect(
+                literals(
+                    (prop, bare) =>
+                        /^(gap|row-gap|column-gap|padding|margin)(-|$)/.test(
+                            prop
+                        ) && pixels(bare)
+                )
+            ).toEqual([]);
+        });
+        it("radius", () => {
+            expect(
+                literals(
+                    (prop, bare) =>
+                        /^border(-.+)?-radius$/.test(prop) && pixels(bare)
+                )
+            ).toEqual([]);
+        });
+        // 마스크의 #000 은 색이 아니라 가림 값이라 뺀다
+        it("color", () => {
+            expect(
+                literals(
+                    (prop, bare) =>
+                        !/mask/.test(prop) &&
+                        /#[0-9a-f]{3,8}\b|\b(rgb|hsl)a?\(/i.test(bare)
+                )
+            ).toEqual([]);
+        });
+        it("font size", () => {
+            expect(
+                literals((prop, bare) => prop === "font-size" && pixels(bare))
+            ).toEqual([]);
+        });
+    });
+
     it("mounts the shared navigation progress in both application shells", () => {
         const appShell = readFileSync(
             resolve("components/layout/appShell.tsx"),

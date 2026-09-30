@@ -9,6 +9,7 @@ import { useForm, useWatch } from "react-hook-form";
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import type { ExamDashboardItem } from "@/components/exams/dashboard/examDashboardTypes";
 import Button from "@/components/ui/Button";
+import { StatusMessage } from "@/components/ui/statusMessage";
 import {
     createExamProofFileSchema,
     EXAM_PROOF_CONTENT_TYPES,
@@ -116,13 +117,16 @@ export default function ExamProofUpload({
                     {t("exams.proof.login")}
                 </Link>
             ) : complete || pending ? (
-                <p className="nl-body-secondary" role="status">
-                    {t(
+                // 결과 한 줄 = 상태 메시지 inline(2026-10-01) — 완료는 성공 체크, 심사 중은 안내
+                <StatusMessage
+                    severity={complete ? "success" : "info"}
+                    role="status"
+                    title={t(
                         complete
                             ? "exams.proof.completed"
                             : "exams.proof.reviewing"
                     )}
-                </p>
+                />
             ) : disabled ? (
                 <div className="nl-exam-proof__guidance">
                     <p className="nl-body-secondary nl-muted">
@@ -271,9 +275,11 @@ export default function ExamProofUpload({
                         </p>
                     ) : null}
                     {displayedMessage ? (
-                        <p className="nl-body-secondary" role="alert">
-                            {displayedMessage}
-                        </p>
+                        <StatusMessage
+                            severity="danger"
+                            role="alert"
+                            title={displayedMessage}
+                        />
                     ) : null}
                     {requiresLogin ? (
                         <Link

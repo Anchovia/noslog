@@ -208,12 +208,14 @@ export default function ProfileProgress({
             </div>
             {result.isError ? (
                 <StatusMessage
+                    tone="quiet"
                     severity="danger"
                     role="alert"
                     title={t("profile.sectionFailed")}
                     action={
                         <Button
-                            variant="secondary"
+                            variant="ghost"
+                            size="sm"
                             onClick={() => void result.refetch()}
                         >
                             {t("common.retry")}

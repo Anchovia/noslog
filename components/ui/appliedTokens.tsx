@@ -4,10 +4,13 @@ import { X } from "lucide-react";
 import type { ReactNode } from "react";
 
 import ActionButton from "@/components/ui/actionButton";
+import type { ChoiceTone } from "@/components/ui/filterChips";
 
 export interface AppliedToken {
     key: string;
     label: ReactNode;
+    /** 글자 색 — 필터 칩과 같은 색(난이도 · 분류 · 기록). × 는 기본 글자색 그대로 */
+    tone?: ChoiceTone;
     /** 접근 이름 — "{조건} 조건 해제" 처럼 완결된 문장 */
     removeLabel: string;
     onRemove: () => void;
@@ -37,9 +40,10 @@ export default function AppliedTokens({
                     type="button"
                     className="nl-applied__token nl-control"
                     aria-label={token.removeLabel}
+                    data-tone={token.tone}
                     onClick={token.onRemove}
                 >
-                    {token.label}
+                    <span className="nl-applied__label">{token.label}</span>
                     <X className="nl-icon-small" aria-hidden />
                 </button>
             ))}

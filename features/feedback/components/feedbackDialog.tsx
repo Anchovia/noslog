@@ -232,10 +232,10 @@ export default function FeedbackDialog({
         />
     ) : submitted ? (
         <div className="nl-feedback-done" role="status">
-            <span className="nl-feedback-done__mark" aria-hidden>
-                <Check className="nl-icon" />
-            </span>
-            <p className="nl-emphasis-label">{t("feedback.doneTitle")}</p>
+            <p className="nl-emphasis-label nl-feedback-done__title">
+                <Check className="nl-icon-small" aria-hidden />
+                {t("feedback.doneTitle")}
+            </p>
             <p className="nl-body-secondary nl-muted">
                 {t("feedback.doneBody")}
             </p>

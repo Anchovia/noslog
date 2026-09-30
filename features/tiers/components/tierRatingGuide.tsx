@@ -169,13 +169,13 @@ export default function TierRatingGuide({
                             ]}
                             emptyMessage=""
                         />
-                        <p className="nl-metadata">
+                        <p className="nl-metadata nl-metadata--long">
                             {t("tiers.weight.formula", {
                                 count: BASIC_RATING_TOP_COUNT,
                                 score: BASIC_RATING_MAX.toLocaleString(locale),
                             })}
                         </p>
-                        <h4 className="nl-metadata">
+                        <h4 className="nl-metadata nl-muted">
                             {t("tiers.weight.scoreRatio")}
                         </h4>
                         <dl className="nl-tier-weight__ratios">

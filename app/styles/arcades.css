@@ -657,11 +657,12 @@
 }
 /* 제목이 있는 구역(위치·기체·선호) — 제목이 구획을 말하므로 구분선 없이 위 여백 16(+ 간격 16 = 32)으로만 나눈다.
    구분선은 목록 줄 사이와, 제목 없는 정보 구역 아래 하나에만 쓴다 */
+/* 구역 사이 = 부모 간격 16 + 위 여백(구역 간격 − 16) · 구역 제목 → 내용 = 구역 간격 토큰(2026-10-01 D1) */
 .noslog-ui .nl-arcade-detail__section {
     display: flex;
     flex-direction: column;
-    gap: var(--nl-spacing-12);
-    padding-top: var(--nl-spacing-16);
+    gap: var(--nl-section-title-gap);
+    padding-top: calc(var(--nl-section-gap) - var(--nl-spacing-16));
 }
 /* 제목 바로 아래 정보 구역 — 위는 간격 16 하나로(예전엔 여기 액션 줄이 있었다), 아래는 여백 16 + 구분선 */
 .noslog-ui .nl-arcade-detail__head + .nl-arcade-detail__section {
@@ -669,6 +670,13 @@
     padding-bottom: var(--nl-spacing-16);
     box-shadow: inset 0 calc(var(--nl-stroke-default) * -1)
         var(--nl-border-divider);
+}
+/* 구분선 아래 첫 구역(시설) — 선 아래 16 + 부모 간격 16 이 이미 있어 그만큼 빼고 구역 사이에 맞춘다(56 → 32 · 넓은 화면 48) */
+.noslog-ui
+    .nl-arcade-detail__head
+    + .nl-arcade-detail__section
+    + .nl-arcade-detail__section {
+    padding-top: calc(var(--nl-section-gap) - var(--nl-spacing-32));
 }
 .noslog-ui .nl-arcade-detail__section-head {
     display: flex;

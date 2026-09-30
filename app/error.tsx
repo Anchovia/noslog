@@ -1,8 +1,16 @@
 "use client";
 
+import Link from "next/link";
 import { RotateCcw } from "lucide-react";
 import { useEffect } from "react";
-import { useTranslations } from "@/components/i18n/localeProvider";
+import { usePathname, useRouter } from "next/navigation";
+import {
+    useLocalizedHref,
+    useTranslations,
+} from "@/components/i18n/localeProvider";
+import { foundationButtonClass } from "@/components/ui/Button";
+import RecoveryAction from "@/features/recovery/components/recoveryAction";
+import { stripLocaleFromPath } from "@/lib/i18n/routing";
 import { recordClientError } from "@/lib/observability/client";
 
 export default function ErrorPage({
@@ -13,25 +21,69 @@ export default function ErrorPage({
     reset: () => void;
 }) {
     const t = useTranslations();
+    const href = useLocalizedHref();
+    const router = useRouter();
+    const path = stripLocaleFromPath(usePathname());
+    // 관리자 · 채보 에디터는 원래 오류 화면 그대로((nevigation)/error.tsx 가 이 경계로 넘긴다)
+    const preserved =
+        /^\/admin(?:\/|$)/.test(path) ||
+        /^\/music\/[^/]+\/[^/]+\/pattern(?:\/|$)/.test(path);
     useEffect(() => {
         recordClientError(error, "route-error-boundary");
         console.error(error);
     }, [error]);
 
-    return (
-        <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 px-6 text-center">
-            <div>
-                <h1 className="text-title">{t("common.pageError")}</h1>
-                <p className="text-body-muted mt-2">{t("common.retryLater")}</p>
+    if (preserved) {
+        return (
+            <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 px-6 text-center">
+                <div>
+                    <h1 className="text-title">{t("common.pageError")}</h1>
+                    <p className="text-body-muted mt-2">
+                        {t("common.retryLater")}
+                    </p>
+                </div>
+                <button
+                    type="button"
+                    onClick={reset}
+                    className="border-border bg-surface text-text-primary flex h-10 cursor-pointer items-center gap-2 rounded-md border px-4 text-sm font-semibold"
+                >
+                    <RotateCcw className="size-4" aria-hidden />
+                    {t("common.retry")}
+                </button>
             </div>
-            <button
-                type="button"
-                onClick={reset}
-                className="border-border bg-surface text-text-primary flex h-10 cursor-pointer items-center gap-2 rounded-md border px-4 text-sm font-semibold"
-            >
-                <RotateCcw className="size-4" aria-hidden />
-                {t("common.retry")}
-            </button>
+        );
+    }
+
+    // 그 밖(로그인 · 온보딩 · 점검 · 레이아웃 실패)은 헤더가 없는 오류 화면(global-error)과 같은 모양 — 토큰 · 공용 버튼(2026-10-01)
+    return (
+        <div className="noslog-ui nl-recovery-minimal">
+            <main id="main-content">
+                <div className="nl-recovery-minimal__content">
+                    <title>{`${t("common.pageError")} | NosLog`}</title>
+                    <meta name="robots" content="noindex" />
+                    <p className="nl-page-title">NosLog</p>
+                    <h1 className="nl-page-title">{t("common.pageError")}</h1>
+                    <p className="nl-body nl-muted">{t("common.retryLater")}</p>
+                    <div className="nl-recovery__actions">
+                        <RecoveryAction
+                            label={t("common.retry")}
+                            busyLabel={t("recovery.retrying")}
+                            reset={() => {
+                                router.refresh();
+                                reset();
+                            }}
+                        />
+                        <Link
+                            href={href("/")}
+                            className={foundationButtonClass({
+                                variant: "secondary",
+                            })}
+                        >
+                            {t("common.goHome")}
+                        </Link>
+                    </div>
+                </div>
+            </main>
         </div>
     );
 }

@@ -51,12 +51,17 @@ for (const locale of ["ko", "ja", "en"] as const) {
             name: t["onboarding.nickname"],
             exact: true,
         });
+        // 두 단계(2026-10-01 C) — 1 프로필 「다음」 → 2 공개 설정 「계정 설정 완료」
+        const next = page.getByRole("button", {
+            name: t["onboarding.next"],
+            exact: true,
+        });
         const submit = page.getByRole("button", {
             name: t["onboarding.start"],
             exact: true,
         });
-        await expect(submit).toHaveCSS("min-height", "44px");
-        await submit.click();
+        await expect(next).toHaveCSS("min-height", "44px");
+        await next.click();
         await expect(input).toBeFocused();
         await expect(input).toHaveAttribute("aria-invalid", "true");
         await input.fill("Ｎos 한글カナ");
@@ -66,6 +71,10 @@ for (const locale of ["ko", "ja", "en"] as const) {
                 exact: true,
             })
             .check();
+        await next.click();
+        await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+            t["settings.privacy"]
+        );
         await submit.click();
         await expect(page.locator(".nl-auth-form")).toHaveAttribute(
             "aria-busy",
@@ -82,6 +91,9 @@ for (const locale of ["ko", "ja", "en"] as const) {
                 .getByRole("alert")
                 .filter({ hasText: t["onboarding.error.generic"] })
         ).toBeVisible();
+        await page
+            .getByRole("button", { name: t["onboarding.back"], exact: true })
+            .click();
         await expect(input).toHaveValue("Ｎos 한글カナ");
         await expect(
             page.getByRole("radio", {
@@ -98,6 +110,7 @@ for (const locale of ["ko", "ja", "en"] as const) {
                 exact: true,
             })
             .check();
+        await next.click();
         await submit.click();
         await expect(input).toHaveAttribute("aria-invalid", "true");
         await expect(input).toBeFocused();

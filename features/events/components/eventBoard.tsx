@@ -121,7 +121,9 @@ export default async function EventBoard({
                     ))}
                 </ul>
             ) : (
-                <p className="nl-body nl-muted">{t(`events.empty.${phase}`)}</p>
+                <p className="nl-body-secondary nl-muted">
+                    {t(`events.empty.${phase}`)}
+                </p>
             )}
         </PageContainer>
     );
