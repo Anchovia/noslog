@@ -41,6 +41,7 @@ Tailwind 4: 설정은 CSS(`app/globals.css`), `tailwind.config` 를 만들지 �
 - 답은 한국어.
 - **git 은 사용자가 한다** — 커밋 · 푸시 · 스테이징 · 브랜치 · PR 모두. 상태 조회만 한다.
   작업이 끝나면 커밋 제목(영어 type + 한국어 설명, 예 `fix: 악곡 상세 반응형 전환 기준 통일`)과 묶음별 `git add` 명령을 준다.
+  커밋 · PR · 릴리스 글에 「Generated with Claude Code」 · `Co-Authored-By` 같은 서명 줄을 넣지 않는다.
 - **운영 DB 에 쓰지 않는다.** 운영 = Neon 운영 프로젝트(steep-hill-21603078)의 production 브랜치.
   운영을 고쳐야 하면 확인용 `SELECT` · 수정 `UPDATE` · 확인 쿼리를 사용자에게 준다(사용자가 Neon 에서 실행).
 - 사용자가 켜 둔 localhost:3000 과 `.env` 는 **개발 DB**(Neon 프로젝트 `noslog-dev`)를 쓴다. 테스트 데이터 · 검증용 쓰기는 해도 되고,
