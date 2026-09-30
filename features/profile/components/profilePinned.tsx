@@ -12,6 +12,7 @@ import MusicJacket from "@/components/music/musicJacket";
 import { ScoreGrade } from "@/features/music/components/chartLeaderboard";
 import { formatProfileContribution } from "@/features/profile/components/profilePlayRow";
 import type { ProfilePinnedRecords } from "@/features/profile/server/profilePinnedService";
+import { rankTone } from "@/lib/music/scoreTone";
 
 /**
  * 프로필 개요 「고정 기록」(2026-09-26 S2) — 옆 열 맨 위. 줄 = 자켓 48 · 곡 / 난이도 · 점수 · 등급 + FC / 한 줄 소감 · 오른쪽 곡 순위,
@@ -96,7 +97,11 @@ export default function ProfilePinned({
                                     </span>
                                 ) : null}
                                 {play.chartRank !== null ? (
-                                    <span className="nl-profile-pinned__rank nl-metadata nl-muted">
+                                    // 곡 순위 1 · 2 · 3 = 순위표 시상 색, 4위부터는 흐린 글자 그대로(기록 줄과 같음, 2026-10-01 사용자)
+                                    <span
+                                        className="nl-profile-pinned__rank nl-metadata nl-muted nl-toned"
+                                        data-tone={rankTone(play.chartRank)}
+                                    >
                                         <span className="sr-only">
                                             {t("profile.column.chartRank")}{" "}
                                         </span>
