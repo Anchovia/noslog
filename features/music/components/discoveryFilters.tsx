@@ -33,7 +33,7 @@ const difficultyTone = (
 ): FilterChipOption<Difficulty>["tone"] =>
     difficulty.toLowerCase() as FilterChipOption<Difficulty>["tone"];
 // 카테고리 → 글자 색(자켓 카테고리 레이블과 같은 색)
-const categoryTone = {
+export const categoryTone = {
     pops: "pops",
     anime: "anime",
     BM: "bm",

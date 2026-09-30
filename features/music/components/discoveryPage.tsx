@@ -50,6 +50,7 @@ import ChartResultRows, {
 } from "@/features/music/components/chartResultGroup";
 import { LoadingStatus } from "@/components/ui/skeleton";
 import DiscoveryFilters, {
+    categoryTone,
     DiscoverySortMenu,
 } from "@/features/music/components/discoveryFilters";
 import AppliedTokens from "@/components/ui/appliedTokens";
@@ -575,6 +576,7 @@ export default function DiscoveryPage({
                             ...query.categories.map((category) => ({
                                 key: `category-${category}`,
                                 label: category,
+                                tone: categoryTone[category],
                                 removeLabel: t("discovery.removeCondition", {
                                     condition: category,
                                 }),
@@ -628,6 +630,10 @@ export default function DiscoveryPage({
                                 return {
                                     key: `record-${record}`,
                                     label,
+                                    tone:
+                                        record === "unplayed"
+                                            ? undefined
+                                            : record,
                                     removeLabel: t(
                                         "discovery.removeCondition",
                                         { condition: label }

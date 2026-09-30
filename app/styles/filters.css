@@ -301,7 +301,7 @@
 }
 
 /* 적용 조건 행: 토큰 32 + × 16 · 끝에 전체 지우기. 토큰 = 칩 · 고르기 알약과 같은 옅은 면 surface/control · 선 없음
-   (2026-10-01 T1 — Twitch 태그 필터 · GOG 걸린 필터), 난이도 조건은 글자만 난이도 색(× 는 기본색, 올리면 기본 글자색 — 칩과 같은 규칙) */
+   (2026-10-01 T1 — Twitch 태그 필터 · GOG 걸린 필터), 난이도 · 분류 · 기록(S · FC · Pianist) 조건은 글자만 필터 칩과 같은 색(× 는 기본색, 올리면 기본 글자색 — 칩과 같은 규칙) */
 .noslog-ui .nl-applied {
     display: flex;
     align-items: center;
@@ -331,6 +331,33 @@
 }
 .noslog-ui .nl-applied__token[data-tone="real"] {
     --nl-tone: var(--nl-difficulty-text-real);
+}
+.noslog-ui .nl-applied__token[data-tone="pops"] {
+    --nl-tone: var(--nl-category-pops);
+}
+.noslog-ui .nl-applied__token[data-tone="anime"] {
+    --nl-tone: var(--nl-category-anime);
+}
+.noslog-ui .nl-applied__token[data-tone="bm"] {
+    --nl-tone: var(--nl-category-bm);
+}
+.noslog-ui .nl-applied__token[data-tone="org"] {
+    --nl-tone: var(--nl-category-org);
+}
+.noslog-ui .nl-applied__token[data-tone="var"] {
+    --nl-tone: var(--nl-category-var);
+}
+.noslog-ui .nl-applied__token[data-tone="cljz"] {
+    --nl-tone: var(--nl-category-cljz);
+}
+.noslog-ui .nl-applied__token[data-tone="s"] {
+    --nl-tone: var(--nl-judgement-just);
+}
+.noslog-ui .nl-applied__token[data-tone="fc"] {
+    --nl-tone: var(--nl-achievement-full-combo);
+}
+.noslog-ui .nl-applied__token[data-tone="pianist"] {
+    --nl-tone: var(--nl-achievement-pianist);
 }
 .noslog-ui .nl-applied__token[data-tone]:not(:hover) > .nl-applied__label {
     color: var(--nl-tone);
