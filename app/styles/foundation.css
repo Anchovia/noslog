@@ -464,6 +464,40 @@ html[data-theme="light"] .noslog-ui,
     border-color: var(--nl-interaction-disabled-border);
     color: var(--nl-interaction-disabled-content);
 }
+/* 스위치(2026-10-01 A1) — 트랙 높이 = 아이콘 L(24) · 폭 = 그 + 16, 손잡이 = 아이콘 S(16) · 안쪽 4.
+   켜짐 = 체크박스와 같은 주 면. 움직임 목록에 없어 손잡이는 즉시 옮긴다 */
+.noslog-ui .nl-switch {
+    position: relative;
+    flex-shrink: 0;
+    width: calc(var(--nl-icon-large) + var(--nl-spacing-16));
+    height: var(--nl-icon-large);
+    padding: 0;
+    border-radius: var(--nl-radius-full);
+    background: var(--nl-border-default);
+}
+.noslog-ui .nl-switch::after {
+    content: "";
+    position: absolute;
+    top: var(--nl-spacing-4);
+    left: var(--nl-spacing-4);
+    width: var(--nl-icon-small);
+    height: var(--nl-icon-small);
+    border-radius: var(--nl-radius-full);
+    background: var(--nl-content-subdued);
+}
+.noslog-ui .nl-switch[aria-checked="true"] {
+    background: var(--nl-primary-default);
+}
+.noslog-ui .nl-switch[aria-checked="true"]::after {
+    left: calc(100% - var(--nl-icon-small) - var(--nl-spacing-4));
+    background: var(--nl-primary-on-primary);
+}
+.noslog-ui .nl-switch:disabled {
+    background: var(--nl-interaction-disabled-bg);
+}
+.noslog-ui .nl-switch:disabled::after {
+    background: var(--nl-interaction-disabled-content);
+}
 
 .noslog-ui .nl-segments {
     display: flex;
