@@ -9,7 +9,6 @@ import {
     useTranslations,
 } from "@/components/i18n/localeProvider";
 import Disclosure from "@/components/ui/disclosure";
-import { foundationButtonClass } from "@/components/ui/Button";
 import type { CommunityData } from "@/features/music/schemas/communitySchema";
 import TierVoteDistribution from "./tierVoteDistribution";
 import TierVoteContribution from "./tierVoteContribution";
@@ -72,20 +71,11 @@ export default function CommunityTierVotes({
                     const canVote = Boolean(
                         accountId && data.canEvaluate && scope.eligible
                     );
-                    // 모든 줄을 펼칠 수 있게 — 줄마다 ⌄ 자리가 같아야 값이 밀리지 않는다.
-                    // 투표할 수 없는 줄은 펼치면 패턴 투표처럼 흐린 폼 + 이유 카드 (2026-09-18 사용자 결정)
-                    const expandable = true;
-                    const lockReason = !canVote
-                        ? scope.mode === "recital"
-                            ? "community.voteLock.recital"
-                            : scope.goal === "990k"
-                              ? "community.voteLock.990k"
-                              : scope.goal === "pianist"
-                                ? "community.voteLock.pianist"
-                                : !accountId
-                                  ? "community.evaluationLogin"
-                                  : "community.evaluationRecord"
-                        : null;
+                    // 투표할 수 없는 줄(분포 평균 · 내 투표 · 투표 자격 모두 없음)은 보통 줄 — 잠긴 폼 · 이유 문장 없음(2026-10-01 D3)
+                    const hasOwnVote =
+                        Boolean(accountId) && scope.ownVote !== null;
+                    const expandable =
+                        scope.average !== null || hasOwnVote || canVote;
                     const expanded = expandable && key === selected;
                     const Row = expandable ? "button" : "div";
                     return (
@@ -160,44 +150,7 @@ export default function CommunityTierVotes({
                                             scope={scope}
                                         />
                                     ) : null}
-                                    {lockReason && scope.ownVote === null ? (
-                                        // 투표할 수 없으면 값 · 저장을 비활성으로 두고 이유를 한 줄로 (2026-09-18 사용자 결정)
-                                        <div className="nl-vote-form">
-                                            <div className="nl-vote-form__row">
-                                                <button
-                                                    type="button"
-                                                    className="nl-input nl-select"
-                                                    data-placeholder
-                                                    disabled
-                                                >
-                                                    <span>
-                                                        {t(
-                                                            "community.valuePlaceholder"
-                                                        )}
-                                                    </span>
-                                                    <ChevronDown
-                                                        className="nl-icon"
-                                                        aria-hidden
-                                                    />
-                                                </button>
-                                                <button
-                                                    type="button"
-                                                    className={foundationButtonClass(
-                                                        {
-                                                            variant: "primary",
-                                                            size: "sm",
-                                                        }
-                                                    )}
-                                                    disabled
-                                                >
-                                                    {t("community.saveVote")}
-                                                </button>
-                                            </div>
-                                            <p className="nl-body-secondary nl-muted">
-                                                {t(lockReason)}
-                                            </p>
-                                        </div>
-                                    ) : (
+                                    {canVote || hasOwnVote ? (
                                         <TierVoteContribution
                                             key={`${key}-contribution`}
                                             chartId={chartId}
@@ -205,7 +158,7 @@ export default function CommunityTierVotes({
                                             accountId={accountId}
                                             hasRecord={data.canEvaluate}
                                         />
-                                    )}
+                                    ) : null}
                                 </div>
                             ) : null}
                         </Fragment>

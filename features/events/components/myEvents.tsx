@@ -40,7 +40,7 @@ export default async function MyEvents({
                                         </span>
                                     ) : null}
                                 </div>
-                                <p className="nl-announcement-row__title nl-body">
+                                <p className="nl-announcement-row__title nl-entity-title">
                                     <Link
                                         prefetch={false}
                                         href={localizePath(

@@ -1,8 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Check, MessageSquare, X } from "lucide-react";
-import Image from "next/image";
+import { MessageSquare } from "lucide-react";
 import Link from "next/link";
 import { useId, useMemo, useState } from "react";
 import type { ChangeEvent, ReactNode } from "react";
@@ -27,7 +26,6 @@ import {
     type FeedbackReportValues,
 } from "@/features/feedback/schemas/feedbackReportSchema";
 import { applyFormActionFailure, applyFormRootError } from "@/lib/forms/errors";
-import useObjectUrl from "@/lib/hooks/useObjectUrl";
 import { IMAGE_ACCEPT, imageFileValidationError } from "@/lib/imageUploadRules";
 import { uploadGrantedImage } from "@/lib/uploads/clientImageUpload";
 import ActionButton from "@/components/ui/actionButton";
@@ -37,7 +35,7 @@ import {
     TextArea,
     fieldDescription,
 } from "@/components/ui/formField";
-import IconButton from "@/components/ui/iconButton";
+import FileRow from "@/components/ui/fileRow";
 import LoginPrompt from "@/components/ui/loginPrompt";
 import ResponsiveDialog from "@/components/ui/responsiveDialog";
 import AreaTabs from "@/components/ui/areaTabs";
@@ -74,8 +72,6 @@ export default function FeedbackDialog({
     const [submitted, setSubmitted] = useState(false);
     // 창 안 두 탭 — 새로 쓰기 · 내 제보(2026-09-18 F1)
     const [view, setView] = useState<"write" | "mine">("write");
-    // 붙인 이미지 미리보기 — 브라우저 안에서만 쓰는 임시 주소, 파일이 바뀌거나 창이 닫히면 풀어 준다
-    const preview = useObjectUrl(file);
     const formId = useId();
     const {
         register,
@@ -232,10 +228,7 @@ export default function FeedbackDialog({
         />
     ) : submitted ? (
         <div className="nl-feedback-done" role="status">
-            <p className="nl-emphasis-label nl-feedback-done__title">
-                <Check className="nl-icon-small" aria-hidden />
-                {t("feedback.doneTitle")}
-            </p>
+            <p className="nl-emphasis-label">{t("feedback.doneTitle")}</p>
             <p className="nl-body-secondary nl-muted">
                 {t("feedback.doneBody")}
             </p>
@@ -251,13 +244,10 @@ export default function FeedbackDialog({
                 className="nl-feedback-form"
                 aria-busy={isSubmitting}
             >
-                <div className="nl-field">
-                    <label
-                        htmlFor={`${formId}-category`}
-                        className="nl-field__label"
-                    >
-                        {t("feedback.categoryLabel")}
-                    </label>
+                <FormField
+                    id={`${formId}-category`}
+                    label={t("feedback.categoryLabel")}
+                >
                     <Select
                         id={`${formId}-category`}
                         value={category}
@@ -272,7 +262,7 @@ export default function FeedbackDialog({
                             label: t(`feedback.category.${value}`),
                         }))}
                     />
-                </div>
+                </FormField>
                 {/* 오류는 안내 문구 자리를 대신하고 글자 수는 그대로 — 작은 글자가 두 줄로 쌓이지 않게 (시안 D2 · M3 · Carbon · Primer) */}
                 <FormField
                     id="feedback-content"
@@ -315,32 +305,13 @@ export default function FeedbackDialog({
                         </span>
                     </span>
                     {file ? (
-                        // 붙인 파일 = 이름 · 크기 · 지우기 한 줄 (2026-09-18 A2 · Carbon 파일 목록 모양)
-                        <div className="nl-feedback-file">
-                            {preview ? (
-                                <Image
-                                    src={preview}
-                                    alt=""
-                                    width={36}
-                                    height={36}
-                                    unoptimized
-                                    className="nl-feedback-file__thumb"
-                                />
-                            ) : null}
-                            <span className="nl-feedback-file__name nl-body-secondary">
-                                {file.name}
-                            </span>
-                            <span className="nl-metadata nl-muted">
-                                {formatBytes(file.size, locale)}
-                            </span>
-                            <IconButton
-                                label={t("feedback.removeImage")}
-                                disabled={isSubmitting}
-                                onClick={() => setFile(null)}
-                            >
-                                <X className="nl-icon" aria-hidden />
-                            </IconButton>
-                        </div>
+                        // 붙인 파일 = 썸네일 · 이름 · 크기 · 지우기 한 줄(공용 파일 줄 — 오락실 제보와 같음)
+                        <FileRow
+                            file={file}
+                            removeLabel={t("feedback.removeImage")}
+                            disabled={isSubmitting}
+                            onRemove={() => setFile(null)}
+                        />
                     ) : (
                         <label
                             aria-disabled={isSubmitting}
@@ -443,12 +414,4 @@ export default function FeedbackDialog({
             {body}
         </ResponsiveDialog>
     );
-}
-
-function formatBytes(bytes: number, locale: string) {
-    const format = (value: number) =>
-        value.toLocaleString(locale, { maximumFractionDigits: 1 });
-    return bytes >= 1024 * 1024
-        ? `${format(bytes / 1024 / 1024)}MB`
-        : `${format(Math.max(1, Math.round(bytes / 1024)))}KB`;
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { foundationButtonClass } from "@/components/ui/Button";
 import DiscordIcon from "@/components/ui/DiscordIcon";
 import { useTranslations } from "@/components/i18n/localeProvider";
 
@@ -15,7 +16,7 @@ export default function DiscordAction({ returnPath }: { returnPath: string }) {
     return (
         <>
             <a
-                className="nl-auth-discord nl-control"
+                className={`${foundationButtonClass({ variant: "secondary" })} nl-auth-discord`}
                 href={`/discord/start?returnTo=${encodeURIComponent(returnPath)}`}
                 aria-disabled={pending || undefined}
                 aria-busy={pending}

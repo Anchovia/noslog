@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Button from "@/components/ui/Button";
+import ActionButton from "@/components/ui/actionButton";
 import DiscordIcon from "@/components/ui/DiscordIcon";
 import ModalDialog from "@/components/ui/modalDialog";
 import {
@@ -76,18 +77,16 @@ export default function ConnectionSettings({
                     </div>
                     <div className="nl-settings__actions">
                         {/* Discord 로 가는 버튼은 Discord 색(2026-10-01 사용자) — 로그인 화면 · 다시 인증과 같은 부품 */}
-                        <Button
+                        <ActionButton
                             variant="secondary"
                             className="nl-auth-discord"
-                            disabled={pending !== null}
+                            disabled={pending === "change"}
+                            busy={pending === "refresh"}
+                            busyLabel={t("settings.refreshingDiscord")}
                             onClick={() => authenticate("refresh")}
                         >
-                            {t(
-                                pending === "refresh"
-                                    ? "settings.refreshingDiscord"
-                                    : "settings.refreshDiscord"
-                            )}
-                        </Button>
+                            {t("settings.refreshDiscord")}
+                        </ActionButton>
                         <Button
                             ref={changeButton}
                             variant="secondary"
@@ -140,12 +139,12 @@ export default function ConnectionSettings({
                         >
                             {t("settings.cancel")}
                         </Button>
-                        <Button
-                            disabled={pending !== null}
+                        <ActionButton
+                            busy={pending === "change"}
                             onClick={() => authenticate("change")}
                         >
                             {t("settings.continue")}
-                        </Button>
+                        </ActionButton>
                     </>
                 }
             >

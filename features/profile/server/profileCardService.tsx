@@ -95,12 +95,45 @@ export async function createProfileCardResponse(
     if (session.id !== id) return new Response("Forbidden", { status: 403 });
     const profile = await getCachedProfileData(id);
     if (!profile) return new Response("Not found", { status: 404 });
-    const requestedLocale = request.headers.get(LOCALE_REQUEST_HEADER);
-    const locale = isLocale(requestedLocale) ? requestedLocale : "ko";
     const mode =
         request.nextUrl.searchParams.get("mode") === "recital"
             ? "recital"
             : "basic";
+    return renderProfileCard(request, id, profile, mode, {
+        "Cache-Control": "no-store",
+        "Content-Disposition": `inline; filename="noslog-profile-${id}-${mode}.png"`,
+    });
+}
+
+/**
+ * 공유 이미지(og:image, 2026-10-01 메타데이터 점검 A2) — 누구나 받는 Basic 카드.
+ * 점수 비공개 프로필은 404 — 메타데이터는 사이트 기본 이미지를 건다(기능 규칙: 비공개 값은 생성 이미지로도 내보내지 않는다)
+ */
+export async function createProfileShareImageResponse(
+    request: NextRequest,
+    rawId: string
+) {
+    const id = Number(rawId);
+    if (!Number.isInteger(id) || id < 1)
+        return new Response("Not found", { status: 404 });
+    const profile = await getCachedProfileData(id);
+    if (!profile || profile.user.hide_play_scores)
+        return new Response("Not found", { status: 404 });
+    return renderProfileCard(request, id, profile, "basic", {
+        "Cache-Control":
+            "public, max-age=0, s-maxage=3600, stale-while-revalidate=86400",
+    });
+}
+
+async function renderProfileCard(
+    request: NextRequest,
+    id: number,
+    profile: NonNullable<Awaited<ReturnType<typeof getCachedProfileData>>>,
+    mode: "basic" | "recital",
+    headers: Record<string, string>
+) {
+    const requestedLocale = request.headers.get(LOCALE_REQUEST_HEADER);
+    const locale = isLocale(requestedLocale) ? requestedLocale : "ko";
     const [fontData, avatar, flag] = await Promise.all([
         getFonts(),
         getAvatar(profile.user.avatar),
@@ -119,10 +152,7 @@ export async function createProfileCardResponse(
             width: 1200,
             height: 630,
             fonts: fontData,
-            headers: {
-                "Cache-Control": "no-store",
-                "Content-Disposition": `inline; filename="noslog-profile-${id}-${mode}.png"`,
-            },
+            headers,
         }
     );
 }

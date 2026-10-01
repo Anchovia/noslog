@@ -18,9 +18,6 @@ export const enMessages = {
     "community.historyCount": "Showing {count} changes",
     "community.votes": "Tier votes",
     "community.voteCount": "{count} votes",
-    "community.voteLock.990k": "Reach 990k to vote on this goal",
-    "community.voteLock.pianist": "Reach Pianist to vote on this goal",
-    "community.voteLock.recital": "Recital tiers are being prepared",
     "community.mean": "Mean",
     "community.distribution": "{scope} distribution",
     "community.previousValue": "Previous vote value",
@@ -252,6 +249,8 @@ export const enMessages = {
     "common.jacket": "{title} jacket",
     "common.notifications": "Notifications",
     "common.notFoundTitle": "Page Not Found",
+    "privacy.metaDescription":
+        "What information NosLog collects and why, how long it is kept, and how to delete it.",
     "common.notFoundDescription":
         "The address may have changed or the page does not exist.",
     "common.goHome": "Go Home",
@@ -259,6 +258,7 @@ export const enMessages = {
     "common.pageError": "Could Not Load the Page",
     "common.retryLater": "Please try again in a moment.",
     "common.retry": "Try Again",
+    "upload.limitReached": "You can upload up to {count} images per hour.",
     "common.copied": "Copied",
     "maintenance.title": "Under Maintenance",
     "maintenance.heading": "We're performing maintenance.",
@@ -303,6 +303,7 @@ export const enMessages = {
     "poll.question": "Question",
     "poll.options": "Options",
     "poll.addOption": "Add an option",
+    "poll.saveFailed": "Could not save the poll.",
     "poll.pasteOptions": "Paste several lines",
     "poll.pasteHelp": "One option per line.",
     "poll.optionHelp": "Press Enter to add a field below · {min}-{max} options",
@@ -368,6 +369,8 @@ export const enMessages = {
     "announcements.newer": "Next",
     "announcements.backToList": "Back to list",
     "events.title": "Events",
+    "events.metaDescription":
+        "NOSTALGIA community events and tournaments in one place.",
     "events.write": "Write",
     "events.mine": "My posts",
     "events.tabs": "Event status",
@@ -503,6 +506,8 @@ export const enMessages = {
     "home.arcades": "Arcades",
     "home.dataSyncGuide": "Data Sync Guide",
     "home.announcements": "Announcements",
+    "announcements.metaDescription":
+        "NosLog updates, maintenance notices and announcements.",
     "news.title": "News",
     "news.tabs": "News boards",
     "home.officialNews": "Official NOSTALGIA News",
@@ -783,6 +788,8 @@ export const enMessages = {
     "onboarding.error.nicknameTaken": "That nickname is already in use.",
     "onboarding.error.generic": "Could not complete profile setup.",
     "rankings.title": "User Rankings",
+    "rankings.metaDescription":
+        "World and country rankings of NOSTALGIA players by Grd and rating.",
     "rankings.showOfficialGrade": "Back to Official Grd",
     "rankings.loadingInitial": "Loading rankings.",
     "rankings.examGrade": "Class {exam}",
@@ -817,6 +824,8 @@ export const enMessages = {
     "country.japan": "Japan",
     "country.global": "Global",
     "tiers.title": "Tier Lists",
+    "tiers.metaDescription":
+        "NOSTALGIA tier lists that rank songs by perceived difficulty for S, 990k, Pianist and Recital goals. Filter by band, difficulty and level.",
     "tiers.editCurrent": "Edit current tier list",
     "tiers.conditions": "Tier list conditions",
     "tiers.modeNav": "Tier list mode",
@@ -896,6 +905,8 @@ export const enMessages = {
     "tiers.guideRequirement": "Requirement",
     "tiers.guideMinScore": "{score} or higher",
     "bingo.title": "Bingo",
+    "bingo.metaDescription":
+        "NOSTALGIA bingo missions and rewards — check off cells to track your progress.",
     "bingo.requiredLinesLabel": "Lines needed {count}",
     "bingo.lineComplete": "Completed line",
     "bingo.info": "Bingo details",
@@ -1121,6 +1132,8 @@ export const enMessages = {
     "exams.error.invalidUrl": "This image URL is not allowed.",
     "exams.error.submit": "Could not submit the passing proof.",
     "arcades.title": "Arcades",
+    "arcades.metaDescription":
+        "Find arcades with NOSTALGIA cabinets on a map and check opening hours and cabinet status.",
     "arcades.mapRegion": "Map region",
     "arcades.scope.nationwide": "Nationwide",
     "arcades.scope.seoul": "Seoul",
@@ -1314,10 +1327,11 @@ export const enMessages = {
         "Could not regenerate the sync token. Please try again.",
     "sync.gifPlaceholder": "{label} GIF placeholder",
     "sync.gifPending": "Example GIF coming soon",
-    "profile.metaTitle": "{name}'s Profile",
     "profile.fallbackTitle": "User Profile",
+    "profile.metaDescriptionPrivate": "{name}'s NosLog profile",
+    "profile.shareImageAlt": "{name}'s NosLog profile card",
     "profile.metaDescription":
-        "A NosLog user's NOSTALGIA play records and achievements.",
+        "{name}'s NOSTALGIA Grd, rating, best plays and achievements",
     "profile.settings": "Profile Settings",
     "profile.joined": "Joined {date}",
     "profile.lastPlayed": "Last played {date}",
@@ -1337,7 +1351,6 @@ export const enMessages = {
     "profile.rankDistribution": "Rank Distribution",
     "profile.progress": "Progress over time",
     "profile.syncPartial": "Only some records were synced.",
-    "profile.progressInsufficient": "More history is needed to show a trend.",
     "profile.recordOverview": "Record overview",
     "profile.judgementSummary": "Judgement summary",
     "profile.showAllRanks": "Show all ranks",
@@ -1405,9 +1418,8 @@ export const enMessages = {
     "profile.activity.scrollHint": "Past year of plays",
     "profile.activity.hidden": "This player keeps their play activity private.",
     "profile.pinned.title": "Pinned records",
-    "profile.pinned.auto": "Automatic · top 3 bests",
     "profile.pinned.help":
-        "Pin up to {max} records at the top of your profile overview, each with an optional one-line note.",
+        "Pin up to {max} records to your profile and add a note to each.",
     "profile.pinned.search": "Find a record by song title",
     "profile.pinned.results": "{count} records",
     "profile.pinned.full":
@@ -1456,7 +1468,9 @@ export const enMessages = {
     "profile.cardPreview": "{name} profile card preview",
     "profile.saveImage": "Save Image",
     "profile.copyImage": "Copy to Clipboard",
+    "profile.copyingImage": "Copying",
     "profile.shareAction": "Share",
+    "profile.sharing": "Sharing",
     "profile.shareX": "Share on X",
     "profile.preparingImage": "Preparing the image.",
     "profile.copiedImage": "Image copied to the clipboard.",
@@ -1513,15 +1527,13 @@ export const enMessages = {
     "settings.removePhoto": "Remove",
     "settings.nostalgiaName": "NOSTALGIA player name",
     "settings.showNostalgiaName": "Show NOSTALGIA player name",
-    "settings.showDiscordIdentity": "Show Discord nickname",
+    "settings.showDiscordIdentity": "Show Discord tag and nickname",
     "settings.showPreferredArcade": "Show preferred arcade",
     "settings.showPlayCount": "Show total play count",
     "settings.showPlayActivity": "Show play activity",
     "settings.showPlayScores": "Show play scores",
     "settings.scoresCoupling":
-        "When off, you are left out of rankings and your scores and records are hidden from others on your profile. Only you can see your own rank.",
-    "settings.publicWhenOn":
-        "When enabled, this information is visible to others. Changes save right away.",
+        "When off, you are excluded from rankings and the scores and records on your profile are hidden from other players.",
     "settings.activityCoupling":
         "Last played and recent plays are published together.",
     "settings.changeArcade": "Change",
@@ -2130,9 +2142,6 @@ export const enMessages = {
     "editor.zoomOut": "Zoom out",
     // 업적(2026-09-24)
     "achievement.title": "Achievements",
-    "achievement.metaTitle": "{name}'s Achievements",
-    "achievement.metaDescription":
-        "Achievements and tiers earned automatically from NOSTALGIA records",
     "achievement.count": "Achievements {earned} / {total}",
     "achievement.all": "View all",
     "achievement.recent": "Recently earned",
@@ -2167,9 +2176,8 @@ export const enMessages = {
         "Couldn't update your profile achievements. Try again shortly.",
     "achievement.settings.label": "Profile achievements",
     "achievement.settings.change": "Change",
-    "achievement.settings.auto": "Automatic · highest tiers first",
     "achievement.settings.help":
-        "Up to {max} are shown next to your profile name.",
+        "Up to {max} can be displayed on your profile.",
     "achievement.settings.dialogHelp":
         "Pick up to {max}. They are shown in the order you pick them.",
     "achievement.settings.emptySlot": "Empty",

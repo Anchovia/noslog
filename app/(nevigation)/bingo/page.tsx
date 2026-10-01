@@ -7,6 +7,7 @@ export async function generateMetadata() {
     const { locale, t } = await getServerI18n();
     return createPageMetadata({
         title: t("bingo.title"),
+        description: t("bingo.metaDescription"),
         path: localizePath("/bingo", locale),
     });
 }

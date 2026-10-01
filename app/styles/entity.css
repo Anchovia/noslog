@@ -123,7 +123,7 @@
     inset-inline: 0;
     bottom: 0;
     height: var(--nl-stroke-default);
-    background: var(--nl-border-subtle);
+    background: var(--nl-border-divider);
 }
 .noslog-ui .nl-music-card--grid .nl-jacket__category {
     right: var(--nl-spacing-8);

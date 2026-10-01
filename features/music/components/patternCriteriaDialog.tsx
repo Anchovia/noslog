@@ -70,7 +70,9 @@ export default function PatternCriteriaDialog() {
                     ))}
                 </dl>
             </section>
-            <p className="nl-metadata">{t("pattern.scale")}</p>
+            <p className="nl-metadata nl-metadata--long">
+                {t("pattern.scale")}
+            </p>
         </ModalDialog>
     );
 }

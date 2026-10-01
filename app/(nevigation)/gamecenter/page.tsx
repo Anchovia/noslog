@@ -10,6 +10,7 @@ export async function generateMetadata() {
 
     return createPageMetadata({
         title: t("arcades.title"),
+        description: t("arcades.metaDescription"),
         path: localizePath("/gamecenter", locale),
     });
 }

@@ -12,7 +12,6 @@ const base = {
     formatAxis: (value: number) => String(value),
     domain: [0, 10] as [number, number],
     emptyMessage: "기록 없음",
-    singleMessage: "추이를 표시하려면 더 많은 이력이 필요합니다.",
 };
 const point = {
     id: "a",
@@ -26,21 +25,11 @@ const render = (props: Partial<Parameters<typeof LineChart>[0]>) =>
     );
 
 describe("LineChart plot geometry for sparse data", () => {
-    it("keeps the plot frame and places the message inside it when asked", () => {
-        const single = render({ points: [point], keepPlotGeometry: true });
-        expect(single).toContain("nl-line-chart__series--placeholder");
-        expect(single).toContain("<circle");
-        expect(single).toContain(base.singleMessage);
-        expect(single).toMatch(/nl-line-chart__state[^>]*>추이를/);
-        expect(single).not.toContain("nl-line-chart__x");
-
-        // 1건 문구가 없으면 틀 유지 옵션이어도 점 하나는 일반 그래프로 그린다
-        const plain = render({
-            points: [point],
-            keepPlotGeometry: true,
-            singleMessage: undefined,
-        });
+    it("keeps the plot frame and places the empty message inside it when asked", () => {
+        // 점 하나는 틀 유지 옵션이어도 일반 그래프로 그린다 — 설명 문장 없음(2026-10-01 V11)
+        const plain = render({ points: [point], keepPlotGeometry: true });
         expect(plain).not.toContain("nl-line-chart__series--placeholder");
+        expect(plain).not.toContain("nl-line-chart__state");
         expect(plain).toContain("nl-line-chart__target");
 
         const empty = render({ points: [], keepPlotGeometry: true });
@@ -70,9 +59,12 @@ describe("LineChart plot geometry for sparse data", () => {
         expect(single).toMatch(/<circle[^>]*cx="4"/);
         expect(single).toContain("nl-line-chart__target");
         expect(single).toContain("nl-line-chart__x");
-        expect(single).toContain("justify-content:center");
-        expect(single).not.toContain(base.singleMessage);
+        expect(single).toContain('data-single=""');
         expect(single).toContain("<table");
+        // 평평한 선 · 속 빈 점 없이 가리킨 점과 같은 채운 점(반지름 4) 하나(2026-10-01 V11)
+        expect(single).not.toContain("<polyline");
+        expect(single.match(/<circle/g)).toHaveLength(1);
+        expect(single).toMatch(/<circle[^>]*r="4"[^>]*data-active/);
         // 점 표시를 끈 차트도 점 하나는 찍는다
         expect(render({ points: [point], showPoints: false })).toContain(
             "<circle"

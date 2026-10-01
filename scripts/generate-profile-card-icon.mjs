@@ -7,7 +7,7 @@ import { format, resolveConfig } from "prettier";
 // Satori cannot run Lucide's React hooks, and Next route handlers cannot import
 // react-dom/server. Preserve the installed official glyph as a generated asset.
 const svg = renderToStaticMarkup(
-    createElement(Globe, { size: 24, color: "#a0a0aa", strokeWidth: 2 })
+    createElement(Globe, { size: 24, color: "#afafaf", strokeWidth: 2 }) // content-subdued 다크(PROFILE_CARD_DARK_HEX.subdued)
 );
 const destination = new URL(
     "../features/profile/profileCardGlobe.ts",

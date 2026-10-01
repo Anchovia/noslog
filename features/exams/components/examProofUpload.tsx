@@ -8,6 +8,7 @@ import { useForm, useWatch } from "react-hook-form";
 
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import type { ExamDashboardItem } from "@/components/exams/dashboard/examDashboardTypes";
+import ActionButton from "@/components/ui/actionButton";
 import Button from "@/components/ui/Button";
 import { StatusMessage } from "@/components/ui/statusMessage";
 import {
@@ -16,6 +17,7 @@ import {
     type ExamProofFileFormValues,
     type ExamProofFileValues,
 } from "@/features/exams/schemas/examProofSchema";
+import useWideLayout from "@/lib/hooks/useWideLayout";
 import { localizePath } from "@/lib/i18n/routing";
 
 interface ExamProofUploadProps {
@@ -39,6 +41,8 @@ export default function ExamProofUpload({
 }: ExamProofUploadProps) {
     const t = useTranslations();
     const locale = useLocale();
+    // 1056 이상 두 열에서는 상자 안 제목이라 상자 제목(component-title), 그 밖은 구역 제목(2026-10-01 D6)
+    const wide = useWideLayout();
     const inputId = `exam-proof-${exam.id}`;
     const inputRef = useRef<HTMLInputElement | null>(null);
     const previewRef = useRef<string | null>(null);
@@ -103,7 +107,10 @@ export default function ExamProofUpload({
 
     return (
         <section className="nl-exam-proof" aria-labelledby={`${inputId}-title`}>
-            <h3 id={`${inputId}-title`} className="nl-section-title">
+            <h3
+                id={`${inputId}-title`}
+                className={wide ? "nl-component-title" : "nl-section-title"}
+            >
                 {t("exams.proof.title")}
             </h3>
             {!isAuthenticated ? (
@@ -225,17 +232,14 @@ export default function ExamProofUpload({
                             <p className="nl-metadata nl-muted">
                                 {t("exams.proof.nameSync")}
                             </p>
-                            <Button
+                            <ActionButton
                                 type="submit"
                                 variant="primary"
-                                disabled={isSubmitting}
+                                busy={isSubmitting}
+                                busyLabel={t("exams.proof.uploading")}
                             >
-                                {t(
-                                    isSubmitting
-                                        ? "exams.proof.uploading"
-                                        : "exams.proof.submit"
-                                )}
-                            </Button>
+                                {t("exams.proof.submit")}
+                            </ActionButton>
                             <div className="nl-exam-proof__secondary">
                                 <Button
                                     variant="secondary"
@@ -269,11 +273,6 @@ export default function ExamProofUpload({
                             )}
                         </Button>
                     )}
-                    {isSubmitting ? (
-                        <p className="nl-body-secondary" role="status">
-                            {t("exams.proof.uploading")}
-                        </p>
-                    ) : null}
                     {displayedMessage ? (
                         <StatusMessage
                             severity="danger"

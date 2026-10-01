@@ -73,14 +73,25 @@ export default async function SettingsLayout({
                                 }
                             >
                                 <span>
-                                    <span className="nl-entity-title">
+                                    <span className="nl-entity-title nl-settings__name">
+                                        {t(titles[item])}
+                                    </span>
+                                    {/* 넓은 화면 분류 이름 = 메뉴 줄 글자(control · 현재 emphasis-label) */}
+                                    <span
+                                        className={cn(
+                                            "nl-settings__name--wide",
+                                            current === item
+                                                ? "nl-emphasis-label"
+                                                : "nl-control"
+                                        )}
+                                    >
                                         {t(titles[item])}
                                     </span>
                                     <span className="nl-body-secondary nl-muted nl-settings__summary">
                                         {t(summaries[item])}
                                     </span>
                                 </span>
-                                <ChevronRight aria-hidden />
+                                <ChevronRight className="nl-icon" aria-hidden />
                             </a>
                         ))}
                     </nav>

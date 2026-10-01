@@ -66,7 +66,7 @@ export default function OfficialXPostArticle({
             <header className="nl-official-post__author">
                 {post.author.avatarUrl ? (
                     <Image
-                        className="nl-official-post__avatar"
+                        className="nl-avatar nl-avatar--compact nl-official-post__avatar"
                         src={post.author.avatarUrl}
                         alt=""
                         width={AVATAR_SIZE}
@@ -74,7 +74,10 @@ export default function OfficialXPostArticle({
                         unoptimized
                     />
                 ) : (
-                    <span className="nl-official-post__avatar" aria-hidden />
+                    <span
+                        className="nl-avatar nl-avatar--compact nl-official-post__avatar"
+                        aria-hidden
+                    />
                 )}
                 <div className="nl-official-post__identity">
                     <a

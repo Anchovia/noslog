@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { headers } from "next/headers";
 import Script from "next/script";
@@ -44,17 +44,6 @@ export const metadata: Metadata = {
         template: `%s | ${SITE_NAME}`,
     },
     description: SITE_DESCRIPTION,
-    keywords: [
-        "NosLog",
-        "노스로그",
-        "NOSTALGIA",
-        "노스텔지어",
-        "노스텔지어 기록",
-        "노스텔지어 랭킹",
-        "노스텔지어 서열표",
-        "노스텔지어 검정",
-        "BEMANI",
-    ],
     authors: [{ name: SITE_NAME, url: SITE_URL }],
     creator: SITE_NAME,
     publisher: SITE_NAME,
@@ -71,10 +60,10 @@ export const metadata: Metadata = {
             "max-video-preview": -1,
         },
     },
+    // url 은 페이지마다(createPageMetadata) — 여기 두면 404 등 페이지가 홈 주소를 공유 주소로 내보낸다
     openGraph: {
         type: "website",
         locale: "ko_KR",
-        url: "/",
         siteName: SITE_NAME,
         title: SITE_NAME,
         description: SITE_DESCRIPTION,
@@ -88,6 +77,12 @@ export const metadata: Metadata = {
         ? { google: serverEnv.GOOGLE_SITE_VERIFICATION }
         : undefined,
     manifest: "/manifest.webmanifest",
+};
+
+// 다크 전용(2026-10-01 메타데이터 점검 E2) — 주소창 색 = 바탕 토큰 surface/canvas, color-scheme 으로 스크롤바 · 기본 컨트롤도 어둡게
+export const viewport: Viewport = {
+    themeColor: "#111111",
+    colorScheme: "dark",
 };
 
 export default async function RootLayout({

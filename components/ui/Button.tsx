@@ -8,6 +8,7 @@ type ButtonSize = "sm" | "md" | "lg" | "icon" | "icon-sm";
 interface ButtonProps extends ComponentPropsWithRef<"button"> {
     variant?: ButtonVariant | null;
     size?: ButtonSize | null;
+    /** 위험 버튼은 채운 빨강 하나 — variant="danger" 와 같은 모양(2026-10-01 V12) */
     destructiveFilled?: boolean;
 }
 

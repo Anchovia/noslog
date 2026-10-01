@@ -14,7 +14,8 @@ type Search = Promise<{ tab?: string }>;
 export async function generateMetadata() {
     const { locale, t } = await getServerI18n();
     return createPageMetadata({
-        title: t("events.title"),
+        title: `${t("news.title")} · ${t("events.title")}`,
+        description: t("events.metaDescription"),
         path: localizePath("/events", locale),
     });
 }

@@ -5,6 +5,7 @@ import AnnouncementDetail from "@/features/announcements/components/announcement
 import { getAnnouncement } from "@/features/announcements/server/publicAnnouncementService";
 import { getServerI18n } from "@/lib/i18n/server";
 import { localizePath } from "@/lib/i18n/routing";
+import { markdownExcerpt } from "@/lib/metadata/excerpt";
 import { createPageMetadata, SITE_NAME, SITE_URL } from "@/lib/metadata/site";
 
 const read = cache(getAnnouncement);
@@ -19,7 +20,7 @@ export async function generateMetadata({
     if (!item) notFound();
     const base = createPageMetadata({
         title: item.title,
-        description: item.title,
+        description: markdownExcerpt(item.content) ?? item.title,
         path: localizePath(`/announcements/${item.slug}`, locale),
     });
     return {

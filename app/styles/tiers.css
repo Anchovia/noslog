@@ -1,5 +1,5 @@
 .noslog-ui .nl-tiers {
-    padding-block: var(--nl-spacing-24) var(--nl-spacing-32);
+    padding-block: var(--nl-spacing-24) var(--nl-spacing-48);
 }
 .noslog-ui .nl-tier-layout {
     display: flex;
@@ -127,7 +127,7 @@
 }
 .noslog-ui .nl-tier-rail {
     display: flex;
-    width: calc((100% - 3 * var(--nl-spacing-16)) / 4);
+    width: calc((100% - 3 * var(--nl-grid-gutter-wide)) / 4);
     flex: none;
     flex-direction: column;
     gap: var(--nl-spacing-32);
@@ -201,13 +201,13 @@
 }
 .noslog-ui .nl-tier-band__header {
     position: sticky;
-    top: 60px;
-    z-index: 10;
+    top: var(--nl-header-height);
+    z-index: var(--nl-layer-sticky);
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: var(--nl-spacing-8);
-    min-height: 44px;
+    min-height: var(--nl-control-height);
     padding-block: var(--nl-spacing-8);
     background: var(--nl-surface-canvas);
     box-shadow: inset 0 calc(var(--nl-stroke-default) * -1)
@@ -245,7 +245,7 @@
 .noslog-ui .nl-tier-card__outline {
     position: absolute;
     inset: 0;
-    z-index: 2;
+    z-index: calc(var(--nl-layer-above) + 1);
     border-radius: inherit;
     box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-empty-slot);
     pointer-events: none;
@@ -282,45 +282,29 @@
         linear-gradient(#000 0 0) content-box exclude,
         linear-gradient(#000 0 0);
 }
-/* 기본 보기 자켓 오른쪽 아래 난이도 판 — 자켓 카테고리 레이블과 같은 불투명 판. 판 위 4.5:1 을 맞추려고
-   난이도 글자색을 흰색 쪽으로 12% 밝힌다(판이 없는 곳의 난이도 글자는 원래 색). 여백 8 은 2px 테두리와 떨어지게 */
+/* 기본 보기 자켓 오른쪽 아래 난이도 판 — 자켓 카테고리 레이블과 같은 불투명 판. 판 글자는 난이도 글자색 그대로
+   (2026-10-01 D12 — 흰색 섞기 삭제, 악곡 카드 판과 같게). 여백 8 은 2px 테두리와 떨어지게 */
 .noslog-ui .nl-tier-card__difficulty {
     position: absolute;
     right: var(--nl-spacing-8);
     bottom: var(--nl-spacing-8);
-    z-index: 1;
+    z-index: var(--nl-layer-above);
     padding: var(--nl-spacing-2) var(--nl-spacing-4);
     border-radius: var(--nl-radius-control);
     background: var(--nl-surface-overlay);
     white-space: nowrap;
 }
 .noslog-ui .nl-tier-card__difficulty[data-difficulty="normal"] {
-    color: color-mix(
-        in srgb,
-        var(--nl-difficulty-text-normal) 88%,
-        var(--nl-content-on-media)
-    );
+    color: var(--nl-difficulty-text-normal);
 }
 .noslog-ui .nl-tier-card__difficulty[data-difficulty="hard"] {
-    color: color-mix(
-        in srgb,
-        var(--nl-difficulty-text-hard) 88%,
-        var(--nl-content-on-media)
-    );
+    color: var(--nl-difficulty-text-hard);
 }
 .noslog-ui .nl-tier-card__difficulty[data-difficulty="expert"] {
-    color: color-mix(
-        in srgb,
-        var(--nl-difficulty-text-expert) 88%,
-        var(--nl-content-on-media)
-    );
+    color: var(--nl-difficulty-text-expert);
 }
 .noslog-ui .nl-tier-card__difficulty[data-difficulty="real"] {
-    color: color-mix(
-        in srgb,
-        var(--nl-difficulty-text-real) 88%,
-        var(--nl-content-on-media)
-    );
+    color: var(--nl-difficulty-text-real);
 }
 /* 자켓 위 띠(2026-09-22 A) — 고른 값(공식 Grd · NosLog 레이팅). 이미지 위 글자 토큰(media-scrim · on-media),
    글자 · 여백은 오른쪽 아래 난이도 판과 같게. 테두리(z 2) 아래에 둔다 */
@@ -328,13 +312,12 @@
     position: absolute;
     inset-inline: 0;
     top: 0;
-    z-index: 1;
+    z-index: var(--nl-layer-above);
     padding: var(--nl-spacing-2) var(--nl-spacing-4);
     background: var(--nl-surface-media-scrim);
     color: var(--nl-content-on-media);
     text-align: center;
     white-space: nowrap;
-    font-variant-numeric: tabular-nums;
 }
 /* 목표 미달성 = 자켓 그림만 흑백(2026-09-22 B) — 판 · 띠 · 점수 글자 · 누름 반응은 그대로(disabled 아님) */
 .noslog-ui :is(.nl-tier-card, .nl-tier-row)[data-unachieved] .nl-jacket > img {
@@ -508,7 +491,6 @@
     display: flex;
     justify-content: space-between;
     gap: var(--nl-spacing-8);
-    font-variant-numeric: tabular-nums;
 }
 /* 이미지 내보내기 창(2026-09-22 D1) — 공용 nl-image-share 안에서 서열표만의 표시 선택 두 줄.
    체크 줄 사이 0 — 줄 높이(컨트롤 높이)가 간격(2026-10-01) */

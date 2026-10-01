@@ -27,13 +27,13 @@ export default async function OfficialXPost({
     const { locale, t } = await getServerI18n();
     return (
         <section className="nl-home-update">
-            <div className="nl-home-update__heading">
+            <div className="nl-heading-row">
                 <h2 className="nl-section-title">{t("home.officialNews")}</h2>
                 <a
                     href={OFFICIAL_X_URL}
                     target="_blank"
                     rel="noreferrer"
-                    className="nl-control"
+                    className="nl-heading-link nl-control"
                 >
                     {t("home.officialLink")}
                     <ExternalLink aria-hidden />

@@ -17,6 +17,9 @@ export interface LineChartPoint {
     detail?: string;
 }
 
+/** 기본 플롯 높이 — 프로필 성장 추이와 같은 200(2026-10-01 C2, 가이드 「선 그래프」) */
+const DEFAULT_PLOT_HEIGHT = 200;
+
 export default function LineChart({
     points,
     label,
@@ -26,15 +29,13 @@ export default function LineChart({
     formatAxis,
     domain,
     emptyMessage,
-    singleMessage,
     secondaryLabel,
     dimensionTickIndices,
     valueTickCount = 3,
     verticalInset = 0,
     showPoints = true,
     tableVisibility = "visible",
-    responsivePlot = false,
-    plotHeight: fixedPlotHeight,
+    plotHeight: fixedPlotHeight = DEFAULT_PLOT_HEIGHT,
     showValueAxis = true,
     showGrid = true,
     keepPlotGeometry = false,
@@ -50,20 +51,17 @@ export default function LineChart({
     formatAxis: (value: number) => string;
     domain: [number, number];
     emptyMessage: string;
-    /** 틀 유지(keepPlotGeometry) 때만 쓴다 — 기본 경로는 점 하나도 그래프로 그린다 */
-    singleMessage?: string;
     secondaryLabel?: string;
     dimensionTickIndices?: number[];
     valueTickCount?: number;
     verticalInset?: number;
     showPoints?: boolean;
     tableVisibility?: "visible" | "screen-reader";
-    responsivePlot?: boolean;
-    /** 플롯 높이를 고정한다(px) — 요약을 위에 둔 프로필 성장 추이(2026-09-25 G2, 200) */
+    /** 플롯 높이(px) — 기본 200(프로필 성장 추이와 같은 값, 2026-10-01 C2) */
     plotHeight?: number;
     showValueAxis?: boolean;
     showGrid?: boolean;
-    /** 점이 2개 미만이어도 플롯 틀(높이·격자)을 그대로 두고 그 안에 상태 문구를 둔다 */
+    /** 점이 없어도 플롯 틀(높이·격자)을 그대로 두고 그 가운데 빈 상태 문구를 둔다 */
     keepPlotGeometry?: boolean;
     /** 가로선을 맨 밑 바닥선 하나만 — 기록 추이 그래프(성장 추이 · 최근 판정 추이, 2026-09-19 G1) */
     baselineOnly?: boolean;
@@ -72,7 +70,7 @@ export default function LineChart({
     /** false 면 툴팁 값 앞 「라벨 ·」 을 뺀다 — 값 하나뿐인 그래프(성장 추이) */
     tooltipValueLabel?: boolean;
 }) {
-    const { ref, width, height } = useElementWidth<HTMLDivElement>();
+    const { ref, width } = useElementWidth<HTMLDivElement>();
     // 툴팁은 안쪽 여백까지 재야 오른쪽 끝에서 플롯 밖으로 삐져나가지 않는다 (2026-09-17)
     const { ref: tooltipRef, width: tooltipWidth } =
         useElementWidth<HTMLDivElement>("border-box");
@@ -80,18 +78,9 @@ export default function LineChart({
     const buttons = useRef<(HTMLButtonElement | null)[]>([]);
     const tooltipId = useId();
     const range = domain[1] - domain[0] || 1;
-    // responsivePlot: 폭의 16:9(상한 344)를 최소 높이로 두고, 부모가 더 주는 높이(옆 구역과의 행 파리티)는 채운다
-    const frameMin =
-        (fixedPlotHeight ??
-            (responsivePlot
-                ? Math.min(344, (Math.max(0, width - 32) * 9) / 16)
-                : 120)) +
-        verticalInset * 2;
-    const frameHeight = responsivePlot && height > frameMin ? height : frameMin;
-    const plotHeight = frameHeight - verticalInset * 2;
-    const frameStyle = responsivePlot
-        ? { minHeight: frameMin }
-        : { height: frameMin };
+    const plotHeight = fixedPlotHeight;
+    const frameHeight = plotHeight + verticalInset * 2;
+    const frameStyle = { height: frameHeight };
     const firstCoordinate = points[0]?.coordinate;
     const coordinateRange =
         (points.at(-1)?.coordinate ?? 0) - (firstCoordinate ?? 0);
@@ -188,8 +177,7 @@ export default function LineChart({
                     </span>
                 </div>
             ) : null}
-            {keepPlotGeometry &&
-            (points.length === 0 || (points.length === 1 && singleMessage)) ? (
+            {keepPlotGeometry && points.length === 0 ? (
                 <div className={cn("nl-line-chart__plot")}>
                     <div className="nl-line-chart__area">
                         <div
@@ -211,7 +199,6 @@ export default function LineChart({
                                               return null;
                                           // 비어 있으면 위 · 아래 선만 — 가운데 「기록 없음」 과 겹치지 않게
                                           if (
-                                              points.length === 0 &&
                                               index !== 0 &&
                                               index !== ticks.length - 1
                                           )
@@ -236,35 +223,12 @@ export default function LineChart({
                                           );
                                       })
                                     : null}
-                                {points.length === 1 ? (
-                                    // 값이 하나면 그 값의 평평한 선: 추이가 없다는 뜻을 선 자체가 말한다
-                                    <g className="nl-line-chart__marks nl-chart-reveal">
-                                        <line
-                                            x1="0"
-                                            x2="100%"
-                                            y1={verticalInset + plotHeight / 2}
-                                            y2={verticalInset + plotHeight / 2}
-                                            className="nl-line-chart__line"
-                                            data-series="personal"
-                                        />
-                                        <circle
-                                            cx="50%"
-                                            cy={verticalInset + plotHeight / 2}
-                                            r="4"
-                                            className="nl-line-chart__point"
-                                        />
-                                    </g>
-                                ) : null}
                             </svg>
                             <p
                                 className="nl-line-chart__state nl-body-secondary nl-muted"
-                                data-placement={
-                                    points.length === 1 ? "below" : "center"
-                                }
+                                data-placement="center"
                             >
-                                {points.length === 1
-                                    ? singleMessage
-                                    : emptyMessage}
+                                {emptyMessage}
                             </p>
                         </div>
                     </div>
@@ -373,19 +337,23 @@ export default function LineChart({
                                     key={signature}
                                     className="nl-line-chart__marks nl-chart-reveal"
                                 >
-                                    <polyline
-                                        points={points
-                                            .map((_, index) => {
-                                                const p = position(index);
-                                                return `${p.x},${p.y}`;
-                                            })
-                                            .join(" ")}
-                                        className="nl-line-chart__line"
-                                        data-series={
-                                            secondaryLabel ? "fast" : "personal"
-                                        }
-                                    />
-                                    {secondaryLabel ? (
+                                    {points.length > 1 ? (
+                                        <polyline
+                                            points={points
+                                                .map((_, index) => {
+                                                    const p = position(index);
+                                                    return `${p.x},${p.y}`;
+                                                })
+                                                .join(" ")}
+                                            className="nl-line-chart__line"
+                                            data-series={
+                                                secondaryLabel
+                                                    ? "fast"
+                                                    : "personal"
+                                            }
+                                        />
+                                    ) : null}
+                                    {secondaryLabel && points.length > 1 ? (
                                         <polyline
                                             points={points
                                                 .map((_, index) => {
@@ -400,7 +368,7 @@ export default function LineChart({
                                             data-series="slow"
                                         />
                                     ) : null}
-                                    {showPoints
+                                    {showPoints && points.length > 1
                                         ? points.map((point, index) => {
                                               const p = position(index);
                                               return (
@@ -420,10 +388,11 @@ export default function LineChart({
                                           })
                                         : null}
                                     {/* 점을 끈 그래프도 가리킨 자리에는 선 색으로 채운 점 4 를 찍는다 — osu! 처럼 (2026-09-19 P1) */}
-                                    {/* 점이 하나뿐이면 늘 그 점을 같은 모양으로 */}
-                                    {!showPoints &&
-                                    (points.length === 1 ||
-                                        (active !== null && points[active])) ? (
+                                    {/* 점이 하나뿐이면 선 · 문장 없이 늘 그 점 하나를 같은 모양으로(2026-10-01 V11) */}
+                                    {points.length === 1 ||
+                                    (!showPoints &&
+                                        active !== null &&
+                                        points[active]) ? (
                                         <circle
                                             cx={
                                                 position(
@@ -564,12 +533,11 @@ export default function LineChart({
                         </div>
                         <div
                             className="nl-line-chart__x nl-metadata nl-muted"
-                            style={
-                                dimensionTickIndices
-                                    ? { position: "relative", height: 16 }
-                                    : points.length === 1
-                                      ? { justifyContent: "center" }
-                                      : undefined
+                            data-ticks={dimensionTickIndices ? "" : undefined}
+                            data-single={
+                                !dimensionTickIndices && points.length === 1
+                                    ? ""
+                                    : undefined
                             }
                             aria-hidden
                         >
@@ -581,12 +549,8 @@ export default function LineChart({
                                             ? index === points.length - 1 &&
                                               points.length > 1
                                                 ? // 끝 라벨은 right:0 — left:100% 는 가용 폭이 0 이라 글자가 세로로 접힌다
-                                                  {
-                                                      position: "absolute",
-                                                      right: 0,
-                                                  }
+                                                  { right: 0 }
                                                 : {
-                                                      position: "absolute",
                                                       left: `${fraction(index) * 100}%`,
                                                       transform:
                                                           index === 0

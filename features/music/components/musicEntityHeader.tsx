@@ -198,7 +198,7 @@ export default function MusicEntityHeader({
                 {shownRecord ? (
                     <span className="nl-my-best__grd">
                         <span
-                            className="nl-my-best__grd-value"
+                            className="nl-my-best__grd-value nl-page-title nl-page-title--fixed"
                             style={
                                 maxGrade === null
                                     ? undefined
@@ -206,7 +206,7 @@ export default function MusicEntityHeader({
                             }
                         >
                             {grdWhole}
-                            <span className="nl-my-best__grd-fraction">
+                            <span className="nl-my-best__grd-fraction nl-component-title">
                                 .{grdFraction}
                             </span>
                         </span>

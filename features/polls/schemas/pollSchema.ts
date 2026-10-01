@@ -43,23 +43,25 @@ export const pollInputSchema = z.object({
     allowAddOptions: z.boolean().default(false),
 });
 
-/** 폼에 실어 보내는 값 — JSON 한 덩이(없으면 "null" · 빈 문자열) */
-export const pollFormValueSchema = z
-    .union([z.string(), z.null(), z.undefined(), pollInputSchema])
-    .transform((value, ctx) => {
-        if (value === null || value === undefined) return null;
-        if (typeof value !== "string") return value;
-        if (!value.trim() || value === "null") return null;
-        try {
-            return pollInputSchema.parse(JSON.parse(value));
-        } catch {
-            ctx.addIssue({
-                code: "custom",
-                message: "투표를 저장하지 못했습니다.",
-            });
-            return z.NEVER;
-        }
-    });
+/**
+ * 폼에 실어 보내는 값 — JSON 한 덩이(없으면 "null" · 빈 문자열).
+ * 오류 문구는 부르는 쪽이 넘긴다(이벤트 = 요청 언어 「poll.saveFailed」, 관리자 공지 = 한국어)
+ */
+export function createPollFormValueSchema(saveFailedMessage: string) {
+    return z
+        .union([z.string(), z.null(), z.undefined(), pollInputSchema])
+        .transform((value, ctx) => {
+            if (value === null || value === undefined) return null;
+            if (typeof value !== "string") return value;
+            if (!value.trim() || value === "null") return null;
+            try {
+                return pollInputSchema.parse(JSON.parse(value));
+            } catch {
+                ctx.addIssue({ code: "custom", message: saveFailedMessage });
+                return z.NEVER;
+            }
+        });
+}
 
 export type PollInput = z.infer<typeof pollInputSchema>;
 export type PollOptionInput = z.infer<typeof pollOptionInputSchema>;

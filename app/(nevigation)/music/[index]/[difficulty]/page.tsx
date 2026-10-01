@@ -1,5 +1,6 @@
 import MusicDetail from "@/features/music/components/musicDetailPage";
 import { createPageMetadata } from "@/lib/metadata/site";
+import { getJacketCandidates } from "@/lib/musicJackets";
 import getSession from "@/lib/session";
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
@@ -45,6 +46,8 @@ export async function generateMetadata({
     }
 
     const artist = music.artist ? ` · ${music.artist}` : "";
+    // 공유 이미지 = 자켓(정사각이라 작은 카드), 없으면 사이트 기본 이미지(2026-10-01 메타데이터 점검 A2)
+    const jacket = getJacketCandidates(index, music.background ?? null)[0];
     return createPageMetadata({
         title: `${music.title} ${selectedDifficulty}`,
         description: t("music.detailMetaDescription", {
@@ -53,6 +56,15 @@ export async function generateMetadata({
             difficulty: selectedDifficulty,
             level: chart.level,
         }),
+        ...(jacket
+            ? {
+                  image: {
+                      url: jacket,
+                      alt: t("common.jacket", { title: music.title }),
+                  },
+                  imageCard: "summary" as const,
+              }
+            : {}),
         path: localizePath(
             `/music/${encodeURIComponent(index)}/${selectedDifficulty.toLowerCase()}`,
             locale

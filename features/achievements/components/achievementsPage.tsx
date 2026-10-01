@@ -135,8 +135,8 @@ function AchievementRow({
                         onClick={() => setOpen((value) => !value)}
                     >
                         <ChevronDown
+                            className="nl-disclosure__chevron"
                             aria-hidden
-                            style={open ? { rotate: "180deg" } : undefined}
                         />
                     </IconButton>
                 </div>

@@ -7,11 +7,11 @@ import { createPageMetadata } from "@/lib/metadata/site";
 import getSession from "@/lib/session";
 
 export async function generateMetadata(): Promise<Metadata> {
-    const { locale } = await getServerI18n();
+    const { locale, t } = await getServerI18n();
     const copy = getPrivacyCopy(locale);
     return createPageMetadata({
         title: copy.title,
-        description: copy.summary[0].text,
+        description: t("privacy.metaDescription"),
         path: localizePath("/privacy", locale),
     });
 }

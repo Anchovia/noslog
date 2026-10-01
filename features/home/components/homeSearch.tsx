@@ -21,6 +21,7 @@ import MusicResultCard, {
     MusicResultCardSkeleton,
 } from "@/features/music/components/musicResultCard";
 import { LoadingStatus } from "@/components/ui/skeleton";
+import { StatusMessage } from "@/components/ui/statusMessage";
 import { musicSearchSchema } from "@/features/music/schemas/musicSearchSchema";
 import type { MusicSearchFormValues } from "@/features/music/schemas/musicSearchSchema";
 import type { SearchScope } from "@/features/music/schemas/searchPreviewSchema";
@@ -305,20 +306,23 @@ export default function HomeSearch() {
                         </div>
                     </div>
                 ) : query.isError ? (
-                    <div className="nl-inline">
-                        <p className="nl-body-secondary nl-muted">
-                            {t("home.previewError")}
-                        </p>
-                        <ActionButton
-                            variant="ghost"
-                            onClick={() => {
-                                setSlowRequest(null);
-                                void query.refetch();
-                            }}
-                        >
-                            {t("common.retry")}
-                        </ActionButton>
-                    </div>
+                    <StatusMessage
+                        tone="quiet"
+                        severity="danger"
+                        title={t("home.previewError")}
+                        action={
+                            <ActionButton
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => {
+                                    setSlowRequest(null);
+                                    void query.refetch();
+                                }}
+                            >
+                                {t("common.retry")}
+                            </ActionButton>
+                        }
+                    />
                 ) : data?.total === 0 ? (
                     <p className="nl-body-secondary nl-muted" role="status">
                         {t("home.previewEmpty")}

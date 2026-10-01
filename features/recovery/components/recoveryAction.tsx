@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, useTransition } from "react";
-import Button from "@/components/ui/Button";
+import ActionButton from "@/components/ui/actionButton";
 
 export default function RecoveryAction({
     label,
@@ -17,10 +17,9 @@ export default function RecoveryAction({
     const activating = useRef(false);
     const busy = pending || reloading;
     return (
-        <Button
+        <ActionButton
             variant="primary"
-            aria-busy={busy}
-            aria-disabled={busy}
+            busy={busy}
             onClick={() => {
                 if (busy || activating.current) return;
                 activating.current = true;
@@ -36,6 +35,6 @@ export default function RecoveryAction({
             }}
         >
             <span aria-live="polite">{busy ? busyLabel : label}</span>
-        </Button>
+        </ActionButton>
     );
 }

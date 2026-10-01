@@ -35,7 +35,7 @@ export default function RankingPersonalPosition({
             <span className="nl-muted">{t("rankings.myRank")}</span>
             {/* 순위 숫자가 곧 내 행으로 가는 링크라 따로 버튼을 두지 않는다 */}
             <a
-                className="nl-ranking-personal__rank nl-link nl-text-link--underlined"
+                className="nl-metric-value nl-link nl-text-link--underlined"
                 href={`${pageHref(mine.page)}#ranking-player-${mine.id}`}
                 aria-label={`${t("rankings.myPosition")} ${rank}`}
                 aria-disabled={busy || undefined}

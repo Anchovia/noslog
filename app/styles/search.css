@@ -19,13 +19,14 @@
 .noslog-ui .nl-search:has(input:focus-visible) {
     box-shadow:
         inset 0 0 0 var(--nl-stroke-default) var(--nl-focus-ring),
-        0 0 0 var(--nl-spacing-4) var(--nl-state-halo);
+        0 0 0 var(--nl-halo-control) var(--nl-state-halo);
 }
 .noslog-ui .nl-search__divider {
     width: var(--nl-stroke-default);
-    height: 24px;
+    /* 필드 안 잉크 아이콘(20)과 같은 높이 */
+    height: var(--nl-icon-medium);
     flex-shrink: 0;
-    background: var(--nl-border-subtle);
+    background: var(--nl-border-divider);
 }
 .noslog-ui .nl-search__input {
     width: 100%;
@@ -134,15 +135,15 @@
     color: var(--nl-interaction-disabled-content);
 }
 .noslog-ui .nl-compact-select:focus-visible {
-    box-shadow: 0 0 0 var(--nl-spacing-4) var(--nl-state-halo);
+    box-shadow: 0 0 0 var(--nl-halo-control) var(--nl-state-halo);
 }
 /* 셀렉트 목록 = 정렬 메뉴와 같은 한 모양 — 패널 overlay · 경계 border/overlay · 행 40 · 행 사이 4
    선택 = menu-set 면 + 600 + 오른쪽 체크 16 · 마우스 위치 = hover 면 · 키보드 위치 = 흰 1px (2026-09-14 M2) */
 .noslog-ui .nl-select-menu {
-    z-index: 90;
+    z-index: var(--nl-layer-select);
     width: 240px;
     max-height: var(--radix-select-content-available-height);
-    max-width: calc(100vw - 32px);
+    max-width: calc(100vw - var(--nl-spacing-32));
     padding: var(--nl-spacing-8);
     border: var(--nl-stroke-default) solid var(--nl-border-overlay);
     border-radius: var(--nl-radius-overlay);

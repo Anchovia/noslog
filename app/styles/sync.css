@@ -57,8 +57,8 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
+    width: var(--nl-icon-large);
+    height: var(--nl-icon-large);
     flex-shrink: 0;
     background: var(--nl-primary-default);
     color: var(--nl-primary-on-primary);
@@ -168,7 +168,7 @@
 }
 .noslog-ui .nl-sync-guide-step {
     display: grid;
-    grid-template-columns: 32px minmax(0, 1fr);
+    grid-template-columns: var(--nl-icon-large) minmax(0, 1fr);
     align-items: start;
     gap: var(--nl-spacing-16);
     padding: var(--nl-spacing-24);
@@ -181,12 +181,12 @@
     align-items: center;
     flex-wrap: wrap;
     gap: var(--nl-spacing-8);
-    min-height: 32px;
+    min-height: var(--nl-icon-large);
 }
 .noslog-ui .nl-sync-setup > :is(h2, h3) {
     display: flex;
     align-items: center;
-    min-height: 32px;
+    min-height: var(--nl-icon-large);
 }
 .noslog-ui .nl-sync-guide-detail {
     width: 100%;
@@ -215,7 +215,7 @@
     }
     .noslog-ui .nl-sync-step-heading,
     .noslog-ui .nl-sync-setup > :is(h2, h3) {
-        padding-inline-start: calc(32px + var(--nl-spacing-12));
+        padding-inline-start: calc(var(--nl-icon-large) + var(--nl-spacing-12));
     }
     .noslog-ui .nl-sync-guide-step .nl-sync-setup {
         gap: var(--nl-spacing-12);
@@ -241,8 +241,6 @@
     gap: var(--nl-spacing-12);
 }
 .noslog-ui .nl-sync-overview-step > .nl-sync-step__number {
-    width: var(--nl-spacing-24);
-    height: var(--nl-spacing-24);
     background: none;
     box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-default);
     color: var(--nl-content-subdued);

@@ -15,6 +15,7 @@ export async function generateMetadata() {
     const { locale, t } = await getServerI18n();
     return createPageMetadata({
         title: t("rankings.title"),
+        description: t("rankings.metaDescription"),
         path: localizePath("/rankings", locale),
     });
 }

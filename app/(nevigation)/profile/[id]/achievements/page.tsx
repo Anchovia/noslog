@@ -8,9 +8,8 @@ import {
     getAchievementRecipientCounts,
 } from "@/features/achievements/server/achievementService";
 import { profileIdSchema } from "@/features/profile/schemas/publicProfileSchema";
-import { localizePath } from "@/lib/i18n/routing";
 import { getServerI18n } from "@/lib/i18n/server";
-import { createPageMetadata } from "@/lib/metadata/site";
+import { createProfileMetadata } from "@/features/profile/server/profileMetadata";
 import getSession from "@/lib/session";
 import { getCachedProfileData } from "../data";
 
@@ -25,16 +24,12 @@ export async function generateMetadata({
     ]);
     const id = profileIdSchema.safeParse(rawId);
     const profile = id.success ? await getCachedProfileData(id.data) : null;
-    return createPageMetadata({
-        title: t("achievement.metaTitle", {
-            name: profile?.user.username || t("common.unnamedUser"),
-        }),
-        description: t("achievement.metaDescription"),
-        path: localizePath(
-            id.success ? `/profile/${id.data}/achievements` : "/profile",
-            locale
-        ),
-        noIndex: true,
+    return createProfileMetadata({
+        id: id.success ? id.data : null,
+        profile,
+        tab: "achievements",
+        locale,
+        t,
     });
 }
 

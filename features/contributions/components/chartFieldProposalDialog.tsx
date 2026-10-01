@@ -9,6 +9,7 @@ import {
     submitChartFieldProposal,
 } from "@/app/(nevigation)/music/[index]/[difficulty]/proposalActions";
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
+import ActionButton from "@/components/ui/actionButton";
 import Button from "@/components/ui/Button";
 import { FormField, Input, fieldDescription } from "@/components/ui/formField";
 import ModalDialog from "@/components/ui/modalDialog";
@@ -156,15 +157,14 @@ export default function ChartFieldProposalDialog({
                     >
                         {t("settings.cancel")}
                     </Button>
-                    <Button
+                    <ActionButton
                         type="submit"
                         form={`${id}-form`}
-                        disabled={mutation.isPending}
+                        busy={mutation.isPending}
+                        busyLabel={t("contribution.proposal.submitting")}
                     >
-                        {mutation.isPending
-                            ? t("contribution.proposal.submitting")
-                            : t("contribution.proposal.submit")}
-                    </Button>
+                        {t("contribution.proposal.submit")}
+                    </ActionButton>
                 </>
             }
         >
@@ -174,6 +174,7 @@ export default function ChartFieldProposalDialog({
                 noValidate
                 onSubmit={(event) => {
                     event.preventDefault();
+                    if (mutation.isPending) return;
                     setErrors({});
                     mutation.mutate();
                 }}
@@ -285,7 +286,7 @@ export default function ChartFieldProposalDialog({
                         })}
                     />
                 </FormField>
-                <p className="nl-metadata nl-muted">
+                <p className="nl-metadata nl-metadata--long nl-muted">
                     {t("contribution.proposal.notice")}
                     <QueueStatus open={open} />
                 </p>

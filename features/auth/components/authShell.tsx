@@ -30,7 +30,7 @@ export default async function AuthShell({
                         {privacy[0]}
                         <Link
                             prefetch={false}
-                            className="nl-text-link nl-text-link--underlined"
+                            className="nl-link nl-text-link--underlined"
                             href={localizePath("/privacy", locale)}
                         >
                             {t("auth.privacy")}

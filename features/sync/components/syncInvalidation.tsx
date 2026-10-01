@@ -4,6 +4,7 @@ import { useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import Button, { foundationButtonClass } from "@/components/ui/Button";
+import ActionButton from "@/components/ui/actionButton";
 import ModalDialog from "@/components/ui/modalDialog";
 import { StatusMessage } from "@/components/ui/statusMessage";
 import { regenerateSyncToken } from "@/app/(nevigation)/bookmarklet/action";
@@ -78,18 +79,15 @@ export default function SyncInvalidation({
                     >
                         {t("sync.cancel")}
                     </button>
-                    <Button
+                    <ActionButton
                         variant="danger"
                         destructiveFilled
-                        disabled={pending}
+                        busy={pending}
+                        busyLabel={t("sync.regenerating")}
                         onClick={invalidate}
                     >
-                        {t(
-                            pending
-                                ? "sync.regenerating"
-                                : "sync.invalidateConfirm"
-                        )}
-                    </Button>
+                        {t("sync.invalidateConfirm")}
+                    </ActionButton>
                 </>
             }
         >

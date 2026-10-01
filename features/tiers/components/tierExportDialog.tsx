@@ -9,6 +9,7 @@ import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
 import Button from "@/components/ui/Button";
 import { Checkbox } from "@/components/ui/checkbox";
 import ModalDialog from "@/components/ui/modalDialog";
+import { LoadingStatus } from "@/components/ui/skeleton";
 import { StatusMessage } from "@/components/ui/statusMessage";
 import { tierBrowserBandOptions } from "@/features/tiers/api/tierBrowser";
 import {
@@ -430,9 +431,7 @@ function TierExportPreview({
                         ) : null}
                     </div>
                     {preparing ? (
-                        <p className="nl-body-secondary nl-muted" role="status">
-                            {t("profile.preparingImage")}
-                        </p>
+                        <LoadingStatus label={t("profile.preparingImage")} />
                     ) : null}
                 </>
             )}

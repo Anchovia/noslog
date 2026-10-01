@@ -196,6 +196,12 @@
     border-radius: var(--nl-radius-full);
     flex-shrink: 0;
 }
+.noslog-ui .nl-chart-viewer__legend-dot[data-hand="left"] {
+    background: var(--nl-hand-left);
+}
+.noslog-ui .nl-chart-viewer__legend-dot[data-hand="right"] {
+    background: var(--nl-hand-right);
+}
 .noslog-ui .nl-chart-viewer__placeholder {
     display: flex;
     align-items: center;
@@ -222,8 +228,8 @@
         100%,
         calc(
             (
-                    100dvh - 60px - var(--nl-spacing-24) - 44px -
-                        var(--nl-spacing-24) - var(--nl-control-height) -
+                    100dvh - var(--nl-header-height) - var(--nl-spacing-24) -
+                        44px - var(--nl-spacing-24) - var(--nl-control-height) -
                         var(--nl-spacing-12) - var(--nl-spacing-16)
                 ) *
                 16 / 9
@@ -257,7 +263,7 @@
 .noslog-ui .nl-chart-stage__screen[data-fullscreen="fill"] {
     position: fixed;
     inset: 0;
-    z-index: 100;
+    z-index: var(--nl-layer-fullscreen);
     height: 100dvh;
 }
 .noslog-ui .nl-chart-stage__screen[data-fullscreen] .nl-chart-stage__canvas {
@@ -283,7 +289,7 @@
     color: var(--nl-content-default);
     border: var(--nl-stroke-default) solid var(--nl-border-overlay);
     box-shadow: var(--nl-overlay-shadow);
-    z-index: 110;
+    z-index: var(--nl-layer-fullscreen-dialog);
 }
 /* 조작 줄(2026-09-26 A, 유튜브와 같게) — 인라인 · 전체화면 모두 무대 아래쪽에 겹친다.
    판 = 아래에서 위로 옅어지는 미디어 판(`surface/media-scrim` → 투명), 재생 막대 한 줄 → 버튼 줄(사이 4).
@@ -346,7 +352,11 @@
 }
 @media (hover: hover) {
     .noslog-ui .nl-chart-stage__media-button:hover {
-        background: var(--nl-interaction-hover);
+        --nl-state-layer: var(--nl-interaction-hover);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
     }
 }
 .noslog-ui .nl-chart-stage__art {
@@ -366,7 +376,12 @@
         circle at 50% 18%,
         color-mix(
             in srgb,
-            color-mix(in srgb, var(--nl-stage-canvas), white 25%) 22%,
+            color-mix(
+                    in srgb,
+                    var(--nl-stage-canvas),
+                    var(--nl-content-on-media) 25%
+                )
+                22%,
             transparent
         ),
         color-mix(in srgb, var(--nl-stage-canvas) 96%, transparent) 72%
@@ -389,7 +404,7 @@
 .noslog-ui .nl-chart-stage__marker {
     position: absolute;
     top: 50%;
-    width: var(--nl-spacing-2);
+    width: var(--nl-stroke-strong);
     height: 12px;
     border-radius: var(--nl-radius-full);
     background: var(--nl-feedback-warning-marker);
@@ -424,7 +439,7 @@
     appearance: none;
     width: 20px;
     height: 20px;
-    margin-top: -8px;
+    margin-top: calc(var(--nl-spacing-8) * -1);
     border: 0;
     border-radius: var(--nl-radius-full);
     background: var(--nl-primary-default);
@@ -437,30 +452,30 @@
     background: var(--nl-primary-default);
 }
 .noslog-ui .nl-chart-stage__seek:active::-webkit-slider-thumb {
-    box-shadow: 0 0 0 6px var(--nl-state-halo);
+    box-shadow: 0 0 0 var(--nl-halo-slider) var(--nl-state-halo);
 }
 @media (hover: hover) {
     .noslog-ui .nl-chart-stage__seek::-webkit-slider-thumb:hover {
-        box-shadow: 0 0 0 6px var(--nl-state-halo);
+        box-shadow: 0 0 0 var(--nl-halo-slider) var(--nl-state-halo);
     }
 }
 .noslog-ui .nl-chart-stage__seek:active::-moz-range-thumb {
-    box-shadow: 0 0 0 6px var(--nl-state-halo);
+    box-shadow: 0 0 0 var(--nl-halo-slider) var(--nl-state-halo);
 }
 @media (hover: hover) {
     .noslog-ui .nl-chart-stage__seek::-moz-range-thumb:hover {
-        box-shadow: 0 0 0 6px var(--nl-state-halo);
+        box-shadow: 0 0 0 var(--nl-halo-slider) var(--nl-state-halo);
     }
 }
 .noslog-ui .nl-chart-stage__seek:focus-visible::-webkit-slider-thumb {
     box-shadow:
         inset 0 0 0 var(--nl-stroke-default) var(--nl-primary-on-primary),
-        0 0 0 6px var(--nl-state-halo);
+        0 0 0 var(--nl-halo-slider) var(--nl-state-halo);
 }
 .noslog-ui .nl-chart-stage__seek:focus-visible::-moz-range-thumb {
     box-shadow:
         inset 0 0 0 var(--nl-stroke-default) var(--nl-primary-on-primary),
-        0 0 0 6px var(--nl-state-halo);
+        0 0 0 var(--nl-halo-slider) var(--nl-state-halo);
 }
 .noslog-ui .nl-chart-stage__option {
     display: inline-flex;
@@ -525,7 +540,7 @@
 .noslog-ui .nl-chart-strip[data-fullscreen="fill"] {
     position: fixed;
     inset: 0;
-    z-index: 100;
+    z-index: var(--nl-layer-fullscreen);
 }
 .noslog-ui
     .nl-chart-strip[data-fullscreen][data-layout]
@@ -555,8 +570,9 @@
     background: var(--nl-stage-canvas);
     outline: none;
 }
+/* 포커스 = 평소 경계의 색만 바꾼다(2026-10-01 V15 — 경계가 있으면 색만, 안쪽 선을 겹치지 않는다) */
 .noslog-ui .nl-chart-strip__main:focus-visible {
-    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-focus-ring);
+    border-color: var(--nl-focus-ring);
 }
 .noslog-ui .nl-chart-strip__columns {
     position: relative;
@@ -601,7 +617,7 @@
     transition: height var(--nl-motion-duration-state) var(--nl-ease-exit);
 }
 .noslog-ui .nl-chart-strip__mini-column {
-    opacity: 0.3;
+    opacity: 0.25;
     transition: opacity var(--nl-motion-duration-state) var(--nl-ease-exit);
 }
 .noslog-ui .nl-chart-strip__mini::-webkit-scrollbar {
@@ -646,7 +662,10 @@
     pointer-events: none;
 }
 .noslog-ui .nl-chart-strip[data-layout="wide"] .nl-chart-strip__frame {
-    height: max(560px, calc(100dvh - 60px - var(--nl-spacing-48)));
+    height: max(
+        560px,
+        calc(100dvh - var(--nl-header-height) - var(--nl-spacing-48))
+    );
     padding: var(--nl-spacing-16);
 }
 .noslog-ui .nl-chart-strip[data-layout="wide"] .nl-chart-strip__mini {

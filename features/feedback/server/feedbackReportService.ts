@@ -65,7 +65,7 @@ export async function requestFeedbackImageUpload(
         if (!quota.allowed) {
             return {
                 success: false,
-                message: getUploadLimitMessage(),
+                message: getUploadLimitMessage(locale),
             };
         }
         grantId = quota.grantId;

@@ -79,11 +79,6 @@ export default function AchievementShowcasePicker({
                                 label={text.aria(item.key, item.tier)}
                             />
                         ))}
-                        {selected.length ? null : (
-                            <span className="nl-metadata nl-muted">
-                                {t("achievement.settings.auto")}
-                            </span>
-                        )}
                     </p>
                 ) : (
                     <p className="nl-body-secondary nl-muted">

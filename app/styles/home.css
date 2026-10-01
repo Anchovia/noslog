@@ -1,5 +1,5 @@
 .noslog-ui .nl-home {
-    --nl-home-search-width: 640px;
+    --nl-home-search-width: var(--nl-container-compact);
     gap: var(--nl-spacing-32);
     padding-block: var(--nl-spacing-32);
 }
@@ -64,7 +64,7 @@
     gap: var(--nl-spacing-8);
     /* 피드백 칸은 버튼이라 링크처럼 칸 폭을 저절로 채우지 않는다 */
     width: 100%;
-    min-height: 44px;
+    min-height: var(--nl-control-height);
     padding: var(--nl-spacing-12);
     border-radius: var(--nl-radius-container);
     background: var(--nl-surface-surface);
@@ -76,8 +76,10 @@
 }
 .noslog-ui .nl-home-tile__label[data-fit="compact"],
 .noslog-ui .nl-home-tile__label[data-fit="wrap"] {
+    /* 좁을 때는 metadata 조합(12/16 · 400) 그대로 — 12 굵게 금지 */
     font-size: var(--nl-type-size-12);
     line-height: var(--nl-type-line-height-16);
+    font-weight: var(--nl-type-weight-regular);
 }
 .noslog-ui .nl-home-tile__label[data-fit="wrap"] {
     white-space: normal;
@@ -103,26 +105,6 @@
     flex-direction: column;
     gap: var(--nl-section-title-gap);
 }
-.noslog-ui .nl-home-update__heading {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--nl-spacing-8);
-}
-.noslog-ui .nl-home-update__heading > a {
-    display: flex;
-    align-items: center;
-    gap: var(--nl-spacing-4);
-}
-.noslog-ui .nl-home-update__heading svg {
-    width: var(--nl-icon-small);
-    height: var(--nl-icon-small);
-}
-/* 꺾쇠 광학 보정 — 선이 16 상자 안 좌우 5.25 를 비워(↗ 는 1.25) 글자와 멀고 오른쪽 끝이 안으로 들어가 보인다.
-   좌우 -4 로 잉크 간격(5.25)과 오른쪽 잉크 끝(1.25)을 옆 「공식 X ↗」 에 맞춘다 */
-.noslog-ui .nl-home-update__heading svg.lucide-chevron-right {
-    margin-inline: calc(var(--nl-spacing-4) * -1);
-}
 .noslog-ui .nl-home-news-state {
     padding: var(--nl-spacing-16);
     border-radius: var(--nl-radius-container);
@@ -143,12 +125,9 @@
     gap: var(--nl-spacing-12);
     min-width: 0;
 }
+/* 원 32 · 빈 면은 공용 아바타(nl-avatar--compact) */
 .noslog-ui .nl-official-post__avatar {
     flex: none;
-    width: 32px;
-    height: 32px;
-    border-radius: var(--nl-radius-full);
-    background: var(--nl-surface-sunken);
     object-fit: cover;
 }
 .noslog-ui .nl-official-post__identity {
@@ -231,7 +210,7 @@
     position: absolute;
     top: calc(100% + var(--nl-spacing-8));
     inset-inline: 0;
-    z-index: 30;
+    z-index: var(--nl-layer-search-preview);
     padding: var(--nl-spacing-16);
     border-radius: var(--nl-radius-overlay);
     background: var(--nl-surface-overlay);
@@ -246,7 +225,7 @@
 }
 .noslog-ui .nl-search-preview__all {
     display: flex;
-    min-height: 44px;
+    min-height: var(--nl-control-height);
     align-items: center;
     justify-content: center;
     border-radius: var(--nl-radius-control);

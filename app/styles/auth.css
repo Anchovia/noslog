@@ -1,5 +1,4 @@
 .noslog-ui.nl-auth {
-    --nl-auth-width: 358px;
     display: flex;
     flex-direction: column;
     min-height: 100dvh;
@@ -18,7 +17,7 @@
 }
 .noslog-ui .nl-auth-column {
     width: 100%;
-    max-width: var(--nl-auth-width);
+    max-width: var(--nl-container-narrow);
     min-width: 0;
 }
 .noslog-ui .nl-auth-head {
@@ -35,21 +34,12 @@
     gap: var(--nl-spacing-12);
     text-align: center;
 }
-.noslog-ui .nl-auth-discord {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--nl-spacing-8);
-    /* 버튼과 같은 높이·모서리 (2026-09-14) */
-    min-height: var(--nl-control-height);
-    padding: var(--nl-spacing-8) var(--nl-spacing-16);
-    background: var(--nl-brand-discord);
+/* Discord 로 가는 버튼(로그인 · 연결 다시 인증 · 탈퇴 다시 인증) — 공용 보조 버튼 위에 면 · 글자색만 Discord 로.
+   크기 · 안쪽 · 모서리 · 올림 겹침 층은 공용 버튼 그대로(2026-10-01) */
+.noslog-ui .nl-button.nl-auth-discord:not(:disabled),
+.noslog-ui .nl-button.nl-auth-discord:not(:disabled):is(:hover, :active) {
+    background-color: var(--nl-brand-discord);
     color: var(--nl-brand-on-discord);
-    border-radius: var(--nl-radius-field);
-}
-.noslog-ui .nl-auth-discord .nl-icon {
-    width: 20px;
-    height: 20px;
 }
 .noslog-ui .nl-auth-browse {
     display: block;
@@ -72,12 +62,8 @@
     min-height: var(--nl-control-height);
     border-radius: var(--nl-radius-field);
 }
-.noslog-ui .nl-auth-language .nl-icon {
-    width: 16px;
-    height: 16px;
-}
 .noslog-ui .nl-auth-language:focus-visible {
-    box-shadow: 0 0 0 var(--nl-spacing-4) var(--nl-state-halo);
+    box-shadow: 0 0 0 var(--nl-halo-control) var(--nl-state-halo);
 }
 .noslog-ui .nl-auth-account {
     margin-top: var(--nl-spacing-32);
@@ -86,7 +72,6 @@
     gap: var(--nl-spacing-8);
 }
 .noslog-ui .nl-auth-account-row {
-    min-height: 100px;
     display: flex;
     gap: var(--nl-spacing-12);
     align-items: center;

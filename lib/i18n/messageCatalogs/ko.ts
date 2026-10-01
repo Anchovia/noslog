@@ -16,9 +16,6 @@ export const koMessages = {
     "community.historyCount": "변경 이력 {count}개 표시",
     "community.votes": "서열 투표",
     "community.voteCount": "투표 {count}명",
-    "community.voteLock.990k": "990k 이상을 달성하면 투표할 수 있어요",
-    "community.voteLock.pianist": "Pianist 를 달성하면 투표할 수 있어요",
-    "community.voteLock.recital": "Recital 서열은 준비 중이에요",
     "community.mean": "평균",
     "community.distribution": "{scope} 분포",
     "community.previousValue": "이전 투표 값",
@@ -249,6 +246,8 @@ export const koMessages = {
     "common.jacket": "{title} 자켓",
     "common.notifications": "알림",
     "common.notFoundTitle": "페이지를 찾을 수 없습니다.",
+    "privacy.metaDescription":
+        "NosLog 가 어떤 정보를 왜 모으고, 얼마나 보관하며, 어떻게 지울 수 있는지 안내합니다.",
     "common.notFoundDescription":
         "주소가 변경되었거나 존재하지 않는 페이지입니다.",
     "common.goHome": "홈으로 이동",
@@ -256,6 +255,8 @@ export const koMessages = {
     "common.pageError": "페이지를 불러오지 못했습니다.",
     "common.retryLater": "잠시 후 다시 시도해주세요.",
     "common.retry": "다시 시도",
+    "upload.limitReached":
+        "이미지는 한 시간에 최대 {count}회까지 업로드할 수 있습니다.",
     "common.copied": "복사됨",
     "maintenance.title": "점검 중",
     "maintenance.heading": "점검 중입니다.",
@@ -300,6 +301,7 @@ export const koMessages = {
     "poll.question": "질문",
     "poll.options": "선택지",
     "poll.addOption": "선택지 추가",
+    "poll.saveFailed": "투표를 저장하지 못했습니다.",
     "poll.pasteOptions": "여러 줄 붙여넣기",
     "poll.pasteHelp": "한 줄에 하나씩 넣으면 선택지로 나뉩니다.",
     "poll.optionHelp": "엔터를 치면 아래에 칸이 하나 생깁니다 · {min}~{max}개",
@@ -364,6 +366,8 @@ export const koMessages = {
     "announcements.newer": "다음 글",
     "announcements.backToList": "목록으로",
     "events.title": "이벤트",
+    "events.metaDescription":
+        "NOSTALGIA 커뮤니티 이벤트와 대회 소식을 모아 봅니다.",
     "events.write": "글쓰기",
     "events.mine": "내 글",
     "events.tabs": "이벤트 상태",
@@ -499,6 +503,8 @@ export const koMessages = {
     "home.arcades": "오락실",
     "home.dataSyncGuide": "데이터 연동 가이드",
     "home.announcements": "공지사항",
+    "announcements.metaDescription":
+        "NosLog 업데이트 · 점검 · 안내 소식입니다.",
     "news.title": "소식",
     "news.tabs": "소식 게시판",
     "home.officialNews": "NOSTALGIA 공식 소식",
@@ -774,6 +780,8 @@ export const koMessages = {
     "onboarding.error.nicknameTaken": "이미 사용 중인 닉네임입니다.",
     "onboarding.error.generic": "프로필 설정을 완료하지 못했습니다.",
     "rankings.title": "유저 랭킹",
+    "rankings.metaDescription":
+        "NOSTALGIA 플레이어를 Grd · 레이팅으로 줄 세운 세계 · 국가별 순위입니다.",
     "rankings.showOfficialGrade": "공식 Grd 보기",
     "rankings.loadingInitial": "랭킹을 불러오고 있습니다.",
     "rankings.examGrade": "{exam}급",
@@ -809,6 +817,8 @@ export const koMessages = {
     "country.japan": "일본",
     "country.global": "글로벌",
     "tiers.title": "서열표",
+    "tiers.metaDescription":
+        "NOSTALGIA 악곡을 S · 990k · Pianist · Recital 목표별 체감 난이도 순으로 정리한 서열표입니다. 구간 · 난이도 · 레벨로 걸러 볼 수 있습니다.",
     "tiers.editCurrent": "현재 서열표 편집",
     "tiers.conditions": "서열표 조건",
     "tiers.modeNav": "서열표 모드",
@@ -887,6 +897,8 @@ export const koMessages = {
     "tiers.guideRequirement": "달성 기준",
     "tiers.guideMinScore": "{score}점 이상",
     "bingo.title": "빙고",
+    "bingo.metaDescription":
+        "NOSTALGIA 빙고 미션과 보상을 확인하고, 칸을 체크하며 진행 상황을 기록합니다.",
     "bingo.requiredLinesLabel": "필요 줄 {count}",
     "bingo.lineComplete": "완성된 줄",
     "bingo.info": "빙고 정보",
@@ -1108,6 +1120,8 @@ export const koMessages = {
     "exams.error.invalidUrl": "허용되지 않은 이미지 주소입니다.",
     "exams.error.submit": "합격 인증 제출에 실패했습니다.",
     "arcades.title": "오락실",
+    "arcades.metaDescription":
+        "NOSTALGIA 기체가 있는 오락실을 지도에서 찾고 영업 시간 · 기체 상태를 확인합니다.",
     "arcades.mapRegion": "지도 지역",
     "arcades.scope.nationwide": "전국",
     "arcades.scope.seoul": "서울",
@@ -1299,10 +1313,11 @@ export const koMessages = {
         "연동 토큰을 재발급하지 못했습니다. 다시 시도해주세요.",
     "sync.gifPlaceholder": "{label} GIF 자리",
     "sync.gifPending": "예시 GIF 준비 중",
-    "profile.metaTitle": "{name} 프로필",
     "profile.fallbackTitle": "유저 프로필",
+    "profile.metaDescriptionPrivate": "{name}의 NosLog 프로필",
+    "profile.shareImageAlt": "{name}의 NosLog 프로필 카드",
     "profile.metaDescription":
-        "NosLog 유저의 노스텔지어 플레이 기록과 성과입니다.",
+        "{name}의 NOSTALGIA Grd · 레이팅 · 최고 기록 · 업적",
     "profile.settings": "프로필 설정",
     "profile.joined": "{date} 가입",
     "profile.lastPlayed": "마지막 플레이 {date}",
@@ -1322,8 +1337,6 @@ export const koMessages = {
     "profile.rankDistribution": "랭크 분포",
     "profile.progress": "성장 추이",
     "profile.syncPartial": "일부 기록만 동기화됐습니다.",
-    "profile.progressInsufficient":
-        "추이를 표시하려면 더 많은 이력이 필요합니다.",
     "profile.recordOverview": "기록 개요",
     "profile.judgementSummary": "판정 요약",
     "profile.showAllRanks": "전체 랭크 보기",
@@ -1391,9 +1404,8 @@ export const koMessages = {
     "profile.activity.scrollHint": "최근 1년 기록",
     "profile.activity.hidden": "이 플레이어는 플레이 활동을 공개하지 않습니다.",
     "profile.pinned.title": "고정 기록",
-    "profile.pinned.auto": "자동 · 베스트 상위 3곡",
     "profile.pinned.help":
-        "프로필 개요 맨 위에 {max}개까지 고정하고, 기록마다 한 줄 소감을 적을 수 있습니다.",
+        "프로필에 {max}개까지 고정 가능하며, 기록마다 소감을 적을 수 있습니다.",
     "profile.pinned.search": "곡 이름으로 기록 찾기",
     "profile.pinned.results": "{count}개 기록",
     "profile.pinned.full": "{max}칸이 모두 찼습니다. 하나를 빼고 고르세요.",
@@ -1440,7 +1452,9 @@ export const koMessages = {
     "profile.cardPreview": "{name} 프로필 카드 미리보기",
     "profile.saveImage": "이미지 저장",
     "profile.copyImage": "클립보드 복사",
+    "profile.copyingImage": "복사 중",
     "profile.shareAction": "공유",
+    "profile.sharing": "공유 중",
     "profile.shareX": "X 공유",
     "profile.preparingImage": "이미지를 준비하고 있습니다.",
     "profile.copiedImage": "이미지를 클립보드에 복사했습니다.",
@@ -1496,15 +1510,13 @@ export const koMessages = {
     "settings.removePhoto": "제거",
     "settings.nostalgiaName": "NOSTALGIA 플레이어명",
     "settings.showNostalgiaName": "NOSTALGIA 플레이어명 공개",
-    "settings.showDiscordIdentity": "Discord 닉네임 공개",
+    "settings.showDiscordIdentity": "Discord 태그 및 닉네임 공개",
     "settings.showPreferredArcade": "선호 오락실 공개",
     "settings.showPlayCount": "총 플레이 횟수 공개",
     "settings.showPlayActivity": "플레이 활동 공개",
     "settings.showPlayScores": "플레이 점수 공개",
     "settings.scoresCoupling":
-        "끄면 랭킹에서 빠지고 프로필의 점수 · 기록이 다른 사람에게 보이지 않습니다. 내 순위는 나에게만 보입니다.",
-    "settings.publicWhenOn":
-        "켜면 다른 사용자에게 보입니다. 바꾸면 바로 저장됩니다.",
+        "비활성화 시 랭킹 집계에서 제외되며, 본인 프로필의 점수 · 기록이 다른 플레이어에게 보이지 않습니다.",
     "settings.activityCoupling":
         "마지막 플레이와 최근 플레이가 함께 공개됩니다.",
     "settings.changeArcade": "변경",
@@ -2100,9 +2112,6 @@ export const koMessages = {
     "editor.zoomOut": "타이밍 화면 축소",
     // 업적(2026-09-24)
     "achievement.title": "업적",
-    "achievement.metaTitle": "{name}의 업적",
-    "achievement.metaDescription":
-        "NOSTALGIA 기록으로 자동으로 쌓이는 업적과 단계",
     "achievement.count": "업적 {earned} / {total}",
     "achievement.all": "모두 보기",
     "achievement.recent": "최근 달성",
@@ -2137,8 +2146,7 @@ export const koMessages = {
         "업적을 걸지 못했습니다. 잠시 후 다시 시도해 주세요.",
     "achievement.settings.label": "프로필 업적",
     "achievement.settings.change": "변경",
-    "achievement.settings.auto": "자동 · 높은 단계 순",
-    "achievement.settings.help": "프로필 이름 옆에 {max}개까지 걸립니다.",
+    "achievement.settings.help": "프로필에 {max}개까지 전시 가능합니다.",
     "achievement.settings.dialogHelp":
         "{max}개까지 고를 수 있고, 고른 순서대로 걸립니다.",
     "achievement.settings.emptySlot": "빈 칸",

@@ -32,6 +32,7 @@ export default async function PrivacyHistoryPage() {
                     {PRIVACY_PREVIOUS_VERSIONS.map((version) => (
                         <li key={version.id}>
                             <Link
+                                className="nl-link nl-text-link--underlined"
                                 href={localizePath(
                                     `/privacy/history/${version.id}`,
                                     locale

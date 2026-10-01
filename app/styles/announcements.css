@@ -73,7 +73,6 @@
 .noslog-ui .nl-announcement-row__title {
     margin: 0;
     min-width: 0;
-    font-weight: var(--nl-type-weight-semibold);
 }
 /* 활성 중대 공지 고정 줄 = 목록 항목 카드(면 surface · 모서리 8 · 안쪽 12), 날짜 목록 위. 여러 개면 사이 8 */
 .noslog-ui .nl-announcements__pinned {

@@ -9,6 +9,7 @@ import {
 } from "@/features/events/server/eventService";
 import { getServerI18n } from "@/lib/i18n/server";
 import { localizePath } from "@/lib/i18n/routing";
+import { markdownExcerpt } from "@/lib/metadata/excerpt";
 import { createPageMetadata } from "@/lib/metadata/site";
 
 type Params = Promise<{ id: string }>;
@@ -29,7 +30,7 @@ export async function generateMetadata({
     if (!event) notFound();
     return createPageMetadata({
         title: event.title,
-        description: event.title,
+        description: markdownExcerpt(event.content) ?? event.title,
         path: localizePath(`/events/${event.id}`, locale),
     });
 }

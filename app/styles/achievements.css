@@ -58,8 +58,8 @@
     height: 48px;
 }
 .noslog-ui .nl-achievement-hex[data-size="row"] .nl-achievement-hex__icon {
-    width: 24px;
-    height: 24px;
+    width: var(--nl-icon-large);
+    height: var(--nl-icon-large);
 }
 /* 머리 · 한 줄 24(명판 · 태그와 같은 높이) · 그림 16 · 선 1 */
 .noslog-ui .nl-achievement-hex[data-size="inline"] {
@@ -68,8 +68,8 @@
     height: 24px;
 }
 .noslog-ui .nl-achievement-hex[data-size="inline"] .nl-achievement-hex__icon {
-    width: 16px;
-    height: 16px;
+    width: var(--nl-icon-small);
+    height: var(--nl-icon-small);
 }
 /* 단계 숫자 알약 — 금속 면 위 어두운 글자(대비 6:1 이상), 오른쪽 아래에 걸친다 */
 .noslog-ui .nl-achievement-hex__tier {
@@ -107,7 +107,7 @@
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-12);
-    padding-block: var(--nl-spacing-12);
+    padding-block: var(--nl-spacing-8);
     border-top: var(--nl-stroke-default) solid var(--nl-border-divider);
 }
 .noslog-ui .nl-achievement-row:first-child {

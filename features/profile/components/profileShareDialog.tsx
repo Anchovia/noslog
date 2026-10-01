@@ -9,8 +9,10 @@ import {
     useLocalizedHref,
     useTranslations,
 } from "@/components/i18n/localeProvider";
+import ActionButton from "@/components/ui/actionButton";
 import Button from "@/components/ui/Button";
 import ModalDialog from "@/components/ui/modalDialog";
+import { LoadingStatus } from "@/components/ui/skeleton";
 import { StatusMessage } from "@/components/ui/statusMessage";
 import { profileCardOptions } from "@/features/profile/api/profileCard";
 import { getProfileCardMode } from "@/features/profile/profileCardModel";
@@ -36,7 +38,7 @@ function ProfileCardPreview({
     const [preview, setPreview] = useState<string | null>(null);
     const [previewFailed, setPreviewFailed] = useState(false);
     const [status, setStatus] = useState<
-        "idle" | "working" | "copied" | "error"
+        "idle" | "copying" | "sharing" | "copied" | "error"
     >("idle");
     // 「✓ 복사됨」 은 2초 뒤 원래 글자로
     useEffect(() => {
@@ -85,7 +87,8 @@ function ProfileCardPreview({
 
     const failed = result.isError || previewFailed;
     const preparing = result.isPending || !preview;
-    const disabled = preparing || result.isFetching || status === "working";
+    // 준비 전에만 비활성 — 복사 · 공유 중에는 누른 버튼이 바쁨(스피너)을 보인다(가이드 「바쁨은 비활성이 아니다」)
+    const disabled = preparing || result.isFetching;
     function download() {
         if (!preview) return;
         const anchor = document.createElement("a");
@@ -95,7 +98,7 @@ function ProfileCardPreview({
     }
     async function copy() {
         if (!result.data || !canCopy) return;
-        setStatus("working");
+        setStatus("copying");
         try {
             await navigator.clipboard.write([
                 new ClipboardItem({ "image/png": result.data }),
@@ -108,7 +111,7 @@ function ProfileCardPreview({
     async function share() {
         if (!payload) return;
         if (canShare) {
-            setStatus("working");
+            setStatus("sharing");
             try {
                 await navigator.share(payload);
                 setStatus("idle");
@@ -169,12 +172,9 @@ function ProfileCardPreview({
                             })}`}
                         </p>
                         {preparing ? (
-                            <p
-                                className="nl-body-secondary nl-muted"
-                                role="status"
-                            >
-                                {t("profile.preparingImage")}
-                            </p>
+                            <LoadingStatus
+                                label={t("profile.preparingImage")}
+                            />
                         ) : null}
                     </div>
                     {/* 복사 성공은 상자 대신 버튼 글자가 잠깐 「✓ 복사됨」(2026-09-28 인상 점검 A1 · GitHub 복사 버튼) — 알림은 화면 읽기로 */}
@@ -193,9 +193,10 @@ function ProfileCardPreview({
             )}
             <div className="nl-image-share__actions">
                 {failed ? (
-                    <Button
+                    <ActionButton
                         variant="primary"
-                        disabled={result.isFetching}
+                        busy={result.isFetching}
+                        busyLabel={t("recovery.retrying")}
                         onClick={() => {
                             setPreview(null);
                             setPreviewFailed(false);
@@ -203,7 +204,7 @@ function ProfileCardPreview({
                         }}
                     >
                         {t("common.retry")}
-                    </Button>
+                    </ActionButton>
                 ) : (
                     <>
                         <Button
@@ -215,8 +216,10 @@ function ProfileCardPreview({
                             {t("profile.saveImage")}
                         </Button>
                         <div className="nl-image-share__secondary">
-                            <Button
+                            <ActionButton
                                 variant="secondary"
+                                busy={status === "copying"}
+                                busyLabel={t("profile.copyingImage")}
                                 disabled={disabled || !canCopy}
                                 onClick={() => void copy()}
                             >
@@ -231,9 +234,11 @@ function ProfileCardPreview({
                                 ) : (
                                     t("profile.copyImage")
                                 )}
-                            </Button>
-                            <Button
+                            </ActionButton>
+                            <ActionButton
                                 variant="secondary"
+                                busy={status === "sharing"}
+                                busyLabel={t("profile.sharing")}
                                 disabled={disabled}
                                 onClick={() => void share()}
                             >
@@ -242,7 +247,7 @@ function ProfileCardPreview({
                                         ? "profile.shareAction"
                                         : "profile.shareX"
                                 )}
-                            </Button>
+                            </ActionButton>
                         </div>
                     </>
                 )}
@@ -274,7 +279,7 @@ export default function ProfileShareDialog({
                     className={triggerClassName}
                     aria-label={t("profile.share")}
                 >
-                    <Share size={20} aria-hidden />
+                    <Share className="nl-icon" aria-hidden />
                 </button>
             }
         >

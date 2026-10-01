@@ -189,10 +189,6 @@ export default function ProfileProgress({
                                             ? "rankings.ratingUnavailable"
                                             : "profile.noRecord"
                                 )}
-                                singleMessage={t(
-                                    "profile.progressInsufficient"
-                                )}
-                                plotHeight={200}
                                 showValueAxis={false}
                                 showPoints={false}
                                 dimensionTickIndices={[

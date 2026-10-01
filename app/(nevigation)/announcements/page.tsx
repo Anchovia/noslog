@@ -21,7 +21,8 @@ export async function generateMetadata({
     ]);
     const page = Number(query.page);
     return createPageMetadata({
-        title: t("home.announcements"),
+        title: `${t("news.title")} · ${t("home.announcements")}`,
+        description: t("announcements.metaDescription"),
         path: `${localizePath("/announcements", locale)}${announcementsQuery(
             announcementCategoryFromQuery(query.category) ?? null,
             Number.isSafeInteger(page) ? page : 1

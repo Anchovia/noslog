@@ -206,10 +206,12 @@ export async function drawTierImage(input: TierExportInput) {
             goal: tokens.color(`var(--nl-score-goal-${input.goal})`),
             wordmark: tokens.color("var(--nl-identity-mark)"),
         };
+        // 난이도 판 글자 = 난이도 글자색 그대로(2026-10-01 D12, 화면 서열 카드와 같게)
         const difficultyColor = (difficulty: string) =>
             tokens.color(
-                `color-mix(in srgb, var(--nl-difficulty-text-${difficulty.toLowerCase()}) 88%, var(--nl-content-on-media))`
+                `var(--nl-difficulty-text-${difficulty.toLowerCase()})`
             );
+        const hairline = tokens.px("--nl-stroke-default");
 
         const padding = space(32);
         const gap = space(8);
@@ -217,7 +219,7 @@ export async function drawTierImage(input: TierExportInput) {
         const plateRadius = tokens.px("--nl-radius-control");
         const titleFont = font(size(32), weight("bold"));
         const subtitleFont = font(size(14), weight("regular"));
-        const bandFont = font(size(20), weight("semibold"));
+        const bandFont = font(size(20), weight("bold"));
         const metaFont = font(size(12), weight("regular"));
         const plateFont = metaFont;
 
@@ -262,7 +264,7 @@ export async function drawTierImage(input: TierExportInput) {
                         gap
             )
         );
-        const footerHeight = space(16) + 1 + space(16) + line(16);
+        const footerHeight = space(16) + hairline + space(16) + line(16);
         const height = Math.ceil(
             padding +
                 headerHeight +
@@ -463,7 +465,7 @@ export async function drawTierImage(input: TierExportInput) {
 
                 // 테두리 — 달성 = 기준 색(달성 + FC = FC 초록 → 기준 색), 그 밖은 빈 칸 선
                 if (input.showAchievement && achieved) {
-                    const stroke = 2;
+                    const stroke = tokens.px("--nl-stroke-strong");
                     if (fc) {
                         const gradient = context.createLinearGradient(
                             x,
@@ -487,14 +489,14 @@ export async function drawTierImage(input: TierExportInput) {
                     context.stroke();
                 } else {
                     context.strokeStyle = colors.emptySlot;
-                    context.lineWidth = 1;
+                    context.lineWidth = hairline;
                     roundedRect(
                         context,
-                        x + 0.5,
-                        top + 0.5,
-                        cell - 1,
-                        cell - 1,
-                        radius - 0.5
+                        x + hairline / 2,
+                        top + hairline / 2,
+                        cell - hairline,
+                        cell - hairline,
+                        radius - hairline / 2
                     );
                     context.stroke();
                 }
@@ -522,8 +524,8 @@ export async function drawTierImage(input: TierExportInput) {
         // 바닥 — 구분선 · 이 서열표 주소
         y += space(16);
         context.fillStyle = colors.divider;
-        context.fillRect(padding, y, TIER_EXPORT_WIDTH - padding * 2, 1);
-        y += 1 + space(16);
+        context.fillRect(padding, y, TIER_EXPORT_WIDTH - padding * 2, hairline);
+        y += hairline + space(16);
         context.font = metaFont;
         context.fillStyle = colors.subdued;
         context.fillText(
