@@ -29,13 +29,24 @@ import {
     STAT_TONE_DARK_HEX,
 } from "@/lib/music/scoreTone";
 import { formatToComma } from "@/lib/utils";
+import {
+    PROFILE_CARD_DARK_HEX,
+    profileCardAlpha,
+} from "@/features/profile/profileCardColors";
 
-// P16 is a fixed-size generated image with its own approved raw palette, not
-// ordinary UI. ImageResponse requires inline styles and cannot use global CSS.
-const ink = "#f2f2f5";
-const gold = "#d8b54f";
-const divider = "#34343f";
-const subdued = "#afafaf";
+// P16 is a fixed-size generated image, not ordinary UI. ImageResponse requires
+// inline styles and cannot use global CSS — 색은 토큰 다크 값(PROFILE_CARD_DARK_HEX, 테스트 대조 · 2026-10-01 D9)
+const {
+    ink,
+    gold,
+    divider,
+    subdued,
+    flagBorder,
+    emptySurface,
+    pianist,
+    fullCombo,
+    s: goalS,
+} = PROFILE_CARD_DARK_HEX;
 // 값 색(Grd 구간 · 순위) — 화면과 같은 규칙, 카드는 이미지라 다크 값으로(2026-09-19)
 const toneHex = (tone: StatTone | undefined) =>
     (tone && STAT_TONE_DARK_HEX[tone]) ?? ink;
@@ -57,7 +68,7 @@ function CountryFlag({
             style={{
                 width,
                 height,
-                border: "1px solid #d8d8dc",
+                border: `1px solid ${flagBorder}`,
                 borderRadius: 2,
                 objectFit: "cover",
             }}
@@ -369,8 +380,7 @@ export default function ProfileCardImage({
                 style={{
                     position: "absolute",
                     inset: 0,
-                    backgroundImage:
-                        "linear-gradient(207.699473deg, rgba(216,181,79,.05) 16.667%, rgba(216,181,79,0) 20.833%)",
+                    backgroundImage: `linear-gradient(207.699473deg, ${profileCardAlpha(gold, 0.05)} 16.667%, ${profileCardAlpha(gold, 0)} 20.833%)`,
                 }}
             />
             <div
@@ -382,7 +392,7 @@ export default function ProfileCardImage({
                     top: 560,
                     transform: "rotate(18deg)",
                     transformOrigin: "top left",
-                    background: "rgba(216,181,79,.05)",
+                    background: profileCardAlpha(gold, 0.05),
                 }}
             />
             <div
@@ -393,7 +403,7 @@ export default function ProfileCardImage({
                     width: 1040,
                     height: 1040,
                     borderRadius: "50%",
-                    border: "1px solid rgba(216,181,79,.12)",
+                    border: `1px solid ${profileCardAlpha(gold, 0.12)}`,
                 }}
             />
             <div
@@ -404,7 +414,7 @@ export default function ProfileCardImage({
                     width: 720,
                     height: 720,
                     borderRadius: "50%",
-                    border: "2px solid rgba(216,181,79,.24)",
+                    border: `2px solid ${profileCardAlpha(gold, 0.24)}`,
                 }}
             />
             <div
@@ -437,13 +447,13 @@ export default function ProfileCardImage({
                             flexShrink: 0,
                             borderRadius: "50%",
                             border: `5px solid ${gold}`,
-                            background: "#20202a",
+                            background: emptySurface,
                             overflow: "hidden",
                             alignItems: "center",
                             justifyContent: "center",
                             fontSize: 42,
                             fontWeight: 700,
-                            color: "#a0a0aa",
+                            color: subdued,
                         }}
                     >
                         {avatar ? (
@@ -495,7 +505,7 @@ export default function ProfileCardImage({
                                 {name}
                             </span>
                         </div>
-                        <span style={{ color: "#a0a0aa", fontSize: 22 }}>
+                        <span style={{ color: subdued, fontSize: 22 }}>
                             {data.label} ·{" "}
                             {t("profile.asOf", {
                                 date: formatProfileDate(
@@ -585,7 +595,7 @@ export default function ProfileCardImage({
                     >
                         <span
                             style={{
-                                color: "#a0a0aa",
+                                color: subdued,
                                 fontSize: 19,
                                 lineHeight: "29px",
                             }}
@@ -617,7 +627,7 @@ export default function ProfileCardImage({
                                 display: "flex",
                                 alignItems: "center",
                                 gap: 8,
-                                color: "#a0a0aa",
+                                color: subdued,
                                 fontSize: 19,
                                 lineHeight: "29px",
                             }}
@@ -654,13 +664,13 @@ export default function ProfileCardImage({
             >
                 <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
                     {[
-                        { label: "P", value: user.score_p, color: "#f5d98b" },
+                        { label: "P", value: user.score_p, color: pianist },
                         {
                             label: "FC",
                             value: getProfileCardFullComboCount(user),
-                            color: "#a3e635",
+                            color: fullCombo,
                         },
-                        { label: "S", value: user.score_s, color: gold },
+                        { label: "S", value: user.score_s, color: goalS },
                     ].map((item, index) => (
                         <div
                             key={item.label}

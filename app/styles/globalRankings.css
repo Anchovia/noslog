@@ -13,7 +13,7 @@
     flex-direction: column;
     gap: var(--nl-spacing-24);
     width: 100%;
-    max-width: 640px;
+    max-width: var(--nl-container-compact);
     margin-inline: auto;
 }
 /* 페이지 제목 → 첫 내용(세그먼트) 16 — 폭 · 가운데 정렬은 이 줄이 아니라 위 묶음이 맡는다(2026-09-23:
@@ -27,13 +27,6 @@
     justify-content: space-between;
     align-items: center;
     gap: var(--nl-spacing-8);
-}
-.noslog-ui .nl-global-ranking-controls .nl-compact-select {
-    height: var(--nl-control-height);
-    min-height: var(--nl-control-height);
-    font-size: var(--nl-type-size-16);
-    line-height: var(--nl-type-line-height-24);
-    font-weight: var(--nl-type-weight-regular);
 }
 .noslog-ui .nl-global-ranking-content {
     display: flex;
@@ -74,7 +67,6 @@
 }
 .noslog-ui .nl-player-row__rank {
     white-space: nowrap;
-    font-variant-numeric: tabular-nums;
     color: var(--nl-content-subdued);
 }
 .noslog-ui .nl-player-row__rank[data-podium="1"] {
@@ -125,14 +117,11 @@
 .noslog-ui .nl-player-row .nl-exam-badge {
     padding: var(--nl-spacing-2) 6px;
 }
-.noslog-ui .nl-player-row .nl-exam-badge__divider {
-    height: 10px;
-}
 .noslog-ui
     .nl-player-row
     .nl-exam-badge[data-tier="peak"]
     .nl-exam-badge__divider::before {
-    top: 2px;
+    top: var(--nl-spacing-2);
 }
 /* 줄 전체 = 프로필 링크(2026-10-01 사용자) — 이름 링크의 누르는 자리를 줄 전체로 넓힌다.
    기여 라벨 도움말만 그 위에서 따로 눌린다. 올림은 줄 전체 면(가이드 「올림 = 줄 전체」) */
@@ -171,10 +160,6 @@
     text-align: right;
     white-space: nowrap;
 }
-/* 값은 이 페이지의 핵심 수치라 이름과 같은 굵기 — metric-value(500)보다 우선 */
-.noslog-ui .nl-player-row .nl-player-row__value {
-    font-weight: var(--nl-type-weight-semibold);
-}
 .noslog-ui .nl-player-row[data-current="true"] {
     background: var(--nl-surface-surface);
 }
@@ -191,12 +176,6 @@
     background: var(--nl-surface-surface);
     border-radius: var(--nl-radius-container);
 }
-.noslog-ui .nl-ranking-personal__rank {
-    font-size: var(--nl-type-size-20);
-    line-height: var(--nl-type-line-height-28);
-    font-weight: var(--nl-type-weight-semibold);
-    font-variant-numeric: tabular-nums;
-}
 /* 곡 상세 채보 랭킹(ranking.css)의 로그인 줄 — 이 페이지와 무관하지만 이 규칙에 기대고 있어 이전 그대로 둔다 */
 .noslog-ui .nl-ranking-login {
     display: flex;
@@ -211,7 +190,4 @@
     align-items: center;
     text-align: center;
     padding: 0;
-}
-.noslog-ui .nl-pagination__item[aria-disabled="true"] {
-    color: var(--nl-interaction-disabled-content);
 }

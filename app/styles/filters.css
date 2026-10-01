@@ -18,7 +18,7 @@
     align-items: center;
     justify-content: space-between;
     gap: var(--nl-spacing-8);
-    min-height: 24px;
+    min-height: var(--nl-type-line-height-24);
 }
 .noslog-ui .nl-filter-group__aside {
     display: flex;
@@ -38,13 +38,13 @@
 .noslog-ui .nl-filter-group__aside a::before {
     content: "";
     position: absolute;
-    inset: -12px 0;
+    inset: calc(var(--nl-spacing-12) * -1) 0;
 }
 @media (hover: hover) {
     .noslog-ui .nl-filter-group__aside button:hover,
     .noslog-ui .nl-filter-group__aside a:hover {
         text-decoration: underline;
-        text-underline-offset: 3px;
+        text-underline-offset: var(--nl-underline-offset);
     }
 }
 
@@ -165,8 +165,8 @@
 /* 정렬 메뉴: 팝오버 · 소제목 metadata subdued · 행 40 · 선택 = menu-set 면 + 굵기 + 체크 */
 .noslog-ui .nl-sort-menu {
     display: flex;
-    width: min(280px, calc(100vw - var(--nl-spacing-32)));
-    max-height: calc(100dvh - 96px);
+    width: min(240px, calc(100vw - var(--nl-spacing-32)));
+    max-height: var(--radix-popover-content-available-height);
     overflow-y: auto;
     flex-direction: column;
     padding: var(--nl-spacing-8);
@@ -186,7 +186,6 @@
     margin: 0;
     padding: var(--nl-spacing-8) var(--nl-spacing-12) var(--nl-spacing-4);
     color: var(--nl-content-subdued);
-    font-weight: var(--nl-type-weight-semibold);
 }
 .noslog-ui .nl-sort-menu__item {
     display: flex;
@@ -282,7 +281,7 @@
 .noslog-ui .nl-filter-toolbar--split .nl-filter-trigger > svg:last-child {
     margin-left: auto;
 }
-/* 검색줄 옆 아이콘 필터 트리거(폰) — 44 정사각, 적용 개수는 오른쪽 위 16 배지 (오락실 · 악곡 공용, 2026-09-16) */
+/* 검색줄 옆 아이콘 필터 트리거(폰) — 44 정사각, 적용 개수는 오른쪽 위 공용 배지 20 (오락실 · 악곡 · 서열표 공용, 2026-10-01 D6) */
 .noslog-ui .nl-filter-icon-trigger {
     position: relative;
 }
@@ -290,8 +289,6 @@
     position: absolute;
     top: var(--nl-spacing-4);
     right: var(--nl-spacing-4);
-    min-width: 16px;
-    min-height: 16px;
 }
 /* 컨트롤 묶음(툴바 + 결과 수 행) 안쪽 12 · 목록까지는 컨테이너 24 */
 .noslog-ui .nl-filter-control-block {

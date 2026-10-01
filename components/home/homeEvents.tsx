@@ -18,11 +18,11 @@ export default async function HomeEvents({
     const { locale, t } = await getServerI18n();
     return (
         <section className="nl-home-update nl-home-events">
-            <div className="nl-home-update__heading">
+            <div className="nl-heading-row">
                 <h2 className="nl-section-title">{t("home.liveEvents")}</h2>
                 <Link
                     href={getLocalizedHref("/events", locale)}
-                    className="nl-control"
+                    className="nl-heading-link nl-control"
                 >
                     {t("home.allEvents")}
                     <ChevronRight aria-hidden />

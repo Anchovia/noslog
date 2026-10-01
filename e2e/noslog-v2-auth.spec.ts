@@ -65,11 +65,12 @@ for (const locale of ["ko", "ja", "en"] as const) {
             await expect(
                 page.getByRole("alert").filter({ hasText: /.+/ }).first()
             ).toBeVisible();
+            // 오류는 「Discord로 계속하기」 바로 아래(2026-10-01 D5)
             const line = await page
-                .locator(".nl-auth-actions > p")
+                .locator(".nl-auth-actions > .nl-status")
                 .boundingBox();
             const action = await page.locator(".nl-auth-discord").boundingBox();
-            expect(line!.y + line!.height).toBeLessThanOrEqual(action!.y);
+            expect(action!.y + action!.height).toBeLessThanOrEqual(line!.y);
             expect(
                 await page.evaluate(
                     () => document.documentElement.scrollWidth <= innerWidth
@@ -87,7 +88,7 @@ for (const locale of ["ko", "ja", "en"] as const) {
         await page.goto(
             `/${locale}/login?returnTo=${encodeURIComponent("//example.com")}`
         );
-        await expect(page.locator(".nl-auth-actions > p")).toHaveText(
+        await expect(page.locator(".nl-auth-actions > .nl-status")).toHaveText(
             t["auth.error.destinationRejected"]
         );
         await expect(page.locator(".nl-auth-discord")).toHaveAttribute(

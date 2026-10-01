@@ -1,7 +1,5 @@
 "use client";
 
-import { Lock } from "lucide-react";
-
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
@@ -84,7 +82,6 @@ export default function PublicProfilePage({
             <div className="nl-profile-body nl-profile-body--single">
                 <div className="nl-profile-empty">
                     <StatusMessage
-                        icon={Lock}
                         title={t("profile.scoresPrivate")}
                         description={t("profile.scoresPrivateBody")}
                     />

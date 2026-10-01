@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
-import Button from "@/components/ui/Button";
+import Button, { foundationButtonClass } from "@/components/ui/Button";
 import ActionButton from "@/components/ui/actionButton";
 import ModalDialog from "@/components/ui/modalDialog";
 import { fieldDescription, FormField, Input } from "@/components/ui/formField";
@@ -213,7 +213,7 @@ export default function AccountSettings({
                             <h3 className="nl-metadata nl-muted">
                                 {t("settings.deletionHeading")}
                             </h3>
-                            <dl>
+                            <dl className="nl-body-secondary">
                                 {(
                                     Object.keys(
                                         summary
@@ -242,7 +242,7 @@ export default function AccountSettings({
                                 {!verified ? (
                                     <a
                                         // 로그인 화면과 같은 Discord 색 버튼(2026-10-01 사용자) — 어디로 가는지 색이 먼저 말한다
-                                        className="nl-button nl-auth-discord"
+                                        className={`${foundationButtonClass({ variant: "secondary" })} nl-auth-discord`}
                                         href={`/discord/start?${new URLSearchParams({ mode: "delete", returnTo: `${href("/settings")}?category=account` })}`}
                                     >
                                         {t("settings.reauthenticate")}

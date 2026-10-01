@@ -5,6 +5,7 @@ import { getServerI18n } from "@/lib/i18n/server";
 import { localizePath, stripLocaleFromPath } from "@/lib/i18n/routing";
 import { getUser } from "@/lib/user";
 import { getAuthReturnPath, getSafeAuthReturnPath } from "@/lib/authReturnPath";
+import { StatusMessage } from "@/components/ui/statusMessage";
 import AuthShell from "./authShell";
 import DiscordAction from "./discordAction";
 import { getAuthDestinationKey } from "@/features/auth/destination";
@@ -50,7 +51,7 @@ export default async function LoginPage({
     return (
         <AuthShell>
             <div className="nl-auth-head">
-                <h1 className="nl-display">
+                <h1 className="nl-page-title">
                     <Link
                         href={home}
                         prefetch={false}
@@ -62,19 +63,20 @@ export default async function LoginPage({
                 <p className="nl-body nl-muted">{t("home.tagline")}</p>
             </div>
             <div className="nl-auth-actions">
-                {errorKey ? (
-                    <p
-                        className="nl-body-secondary nl-field__error"
-                        role="alert"
-                    >
-                        {t(errorKey)}
-                    </p>
-                ) : destination ? (
+                {destination && !errorKey ? (
                     <p className="nl-body-secondary nl-muted">
                         {t("auth.destination", { destination: t(destination) })}
                     </p>
                 ) : null}
                 <DiscordAction returnPath={returnPath} />
+                {/* 오류는 누른 버튼 바로 아래(2026-10-01 D5) */}
+                {errorKey ? (
+                    <StatusMessage
+                        severity="danger"
+                        role="alert"
+                        title={t(errorKey)}
+                    />
+                ) : null}
             </div>
             <Link
                 prefetch={false}

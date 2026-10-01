@@ -32,7 +32,7 @@
 }
 .noslog-ui .nl-exam-badge::after {
     display: none;
-    inset: 2px;
+    inset: var(--nl-spacing-2);
     z-index: 1;
 }
 .noslog-ui .nl-exam-badge__arc {
@@ -45,32 +45,40 @@
     background:
         radial-gradient(
                 circle at 0 0,
-                var(--nl-exam-arc-fill) calc(var(--nl-exam-arc) - 1px),
-                var(--nl-exam-badge-metal) calc(var(--nl-exam-arc) - 1px)
+                var(--nl-exam-arc-fill)
+                    calc(var(--nl-exam-arc) - var(--nl-stroke-default)),
+                var(--nl-exam-badge-metal)
+                    calc(var(--nl-exam-arc) - var(--nl-stroke-default))
                     var(--nl-exam-arc),
                 transparent var(--nl-exam-arc)
             )
             top left / var(--nl-exam-arc) var(--nl-exam-arc) no-repeat,
         radial-gradient(
                 circle at 100% 0,
-                var(--nl-exam-arc-fill) calc(var(--nl-exam-arc) - 1px),
-                var(--nl-exam-badge-metal) calc(var(--nl-exam-arc) - 1px)
+                var(--nl-exam-arc-fill)
+                    calc(var(--nl-exam-arc) - var(--nl-stroke-default)),
+                var(--nl-exam-badge-metal)
+                    calc(var(--nl-exam-arc) - var(--nl-stroke-default))
                     var(--nl-exam-arc),
                 transparent var(--nl-exam-arc)
             )
             top right / var(--nl-exam-arc) var(--nl-exam-arc) no-repeat,
         radial-gradient(
                 circle at 0 100%,
-                var(--nl-exam-arc-fill) calc(var(--nl-exam-arc) - 1px),
-                var(--nl-exam-badge-metal) calc(var(--nl-exam-arc) - 1px)
+                var(--nl-exam-arc-fill)
+                    calc(var(--nl-exam-arc) - var(--nl-stroke-default)),
+                var(--nl-exam-badge-metal)
+                    calc(var(--nl-exam-arc) - var(--nl-stroke-default))
                     var(--nl-exam-arc),
                 transparent var(--nl-exam-arc)
             )
             bottom left / var(--nl-exam-arc) var(--nl-exam-arc) no-repeat,
         radial-gradient(
                 circle at 100% 100%,
-                var(--nl-exam-arc-fill) calc(var(--nl-exam-arc) - 1px),
-                var(--nl-exam-badge-metal) calc(var(--nl-exam-arc) - 1px)
+                var(--nl-exam-arc-fill)
+                    calc(var(--nl-exam-arc) - var(--nl-stroke-default)),
+                var(--nl-exam-badge-metal)
+                    calc(var(--nl-exam-arc) - var(--nl-stroke-default))
                     var(--nl-exam-arc),
                 transparent var(--nl-exam-arc)
             )
@@ -79,7 +87,7 @@
 .noslog-ui .nl-exam-badge__arc--inner {
     display: none;
     z-index: 2;
-    --nl-exam-arc: calc(var(--nl-radius-control) + 2px);
+    --nl-exam-arc: calc(var(--nl-radius-control) + var(--nl-spacing-2));
     --nl-exam-arc-fill: var(--nl-exam-badge-fill);
 }
 .noslog-ui .nl-exam-badge[data-tier="high"]::after,
@@ -193,7 +201,7 @@
     outline: none;
     box-shadow:
         inset 0 0 0 var(--nl-stroke-default) var(--nl-focus-ring),
-        0 0 0 var(--nl-spacing-4) var(--nl-state-halo);
+        0 0 0 var(--nl-halo-control) var(--nl-state-halo);
 }
 .noslog-ui .nl-compact-select--outlined svg {
     width: var(--nl-icon-medium);

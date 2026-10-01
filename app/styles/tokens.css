@@ -43,9 +43,29 @@
     --nl-grid-margin-intermediate: 24px;
     --nl-grid-margin-wide: 32px;
     --nl-container-reading: 768px;
-    --nl-elevation-overlay:
-        0 0 1px rgb(0 0 0 / 12%), 0 2px 3px rgb(0 0 0 / 4%),
-        0 4px 6px rgb(0 0 0 / 8%);
+    /* 좁은 그릇(2026-10-01) — 좁은 열 358(인증 · 미리보기 판) · 가운데 열 640(홈 검색 · 랭킹 · 설정 오른쪽 열) */
+    --nl-container-narrow: 358px;
+    --nl-container-compact: 640px;
+    /* 헤더 높이(2026-10-01) — 아래 붙는 것(목적지 메뉴 · sticky 머리)이 이 값에서 잰다 */
+    --nl-header-height: 60px;
+    /* 밑줄 링크의 글자 ~ 밑줄 간격(2026-10-01) */
+    --nl-underline-offset: 3px;
+    /* 포커스 · 올림 후광 두께(2026-10-01) — 입력 · 셀렉트 · 검색 · 버튼 4, 슬라이더 손잡이 6 */
+    --nl-halo-control: 4px;
+    --nl-halo-slider: 6px;
+    /* 쌓임 층(2026-10-01) — 전역 z-index 는 이 이름으로만. 부품 안쪽 쌓기는 calc(var(--nl-layer-above) + n) */
+    --nl-layer-above: 1;
+    --nl-layer-sticky: 10;
+    --nl-layer-search-preview: 30;
+    --nl-layer-bottom-bar: 40;
+    --nl-layer-header: 50;
+    --nl-layer-progress: 60;
+    --nl-layer-popover: 70;
+    --nl-layer-overlay: 80;
+    --nl-layer-dialog: 81;
+    --nl-layer-select: 90;
+    --nl-layer-fullscreen: 100;
+    --nl-layer-fullscreen-dialog: 110;
     --nl-surface-canvas: #111111;
     --nl-surface-surface: #1b1b1b;
     --nl-surface-sunken: #111111;
@@ -112,7 +132,6 @@
     --nl-local-data-categorical-4: #fa4f96;
     --nl-local-data-categorical-5: #8b47d7;
     --nl-local-data-personal: #3278be;
-    --nl-local-data-benchmark: #f2a634;
     --nl-border-empty-slot: var(--nl-border-divider);
     --nl-primary-pressed: #ffffff;
     --nl-feedback-destructive-border-pressed: #fd9891;
@@ -128,13 +147,7 @@
     --nl-brand-discord: #5865f2;
     --nl-brand-on-discord: #ffffff;
     --nl-feedback-destructive-surface: #ae2e24;
-    --nl-feedback-destructive-surface-hover: #ae2e24;
     --nl-feedback-on-destructive: #ffffff;
-    --nl-difficulty-09834A: #09834a;
-    --nl-difficulty-219563: #219563;
-    --nl-difficulty-BA5500: #ba5500;
-    --nl-difficulty-D85C4F: #d85c4f;
-    --nl-difficulty-9452CE: #9452ce;
     /* 색 글자는 누르는 면 surface/control(#2c2c2c) 위에서도 4.5 : 1 — 같은 색상각에서 명도만 한 칸(2026-09-30 A, 2026-09-18 의 연장) */
     --nl-difficulty-text-normal: #25a76f;
     --nl-difficulty-text-hard: #ef6b00;
@@ -227,7 +240,6 @@ html[data-theme="light"] .noslog-ui,
     --nl-local-data-categorical-4: #df1278;
     --nl-local-data-categorical-5: #8b47d7;
     --nl-local-data-personal: #168eff;
-    --nl-local-data-benchmark: #c87b00;
     --nl-border-empty-slot: #e9e9e9;
     --nl-primary-pressed: #000000;
     --nl-feedback-destructive-border-pressed: #ae2e24;
@@ -243,13 +255,7 @@ html[data-theme="light"] .noslog-ui,
     --nl-brand-discord: #5865f2;
     --nl-brand-on-discord: #ffffff;
     --nl-feedback-destructive-surface: #c9372c;
-    --nl-feedback-destructive-surface-hover: #ae2e24;
     --nl-feedback-on-destructive: #ffffff;
-    --nl-difficulty-09834A: #09834a;
-    --nl-difficulty-219563: #219563;
-    --nl-difficulty-BA5500: #ba5500;
-    --nl-difficulty-D85C4F: #d85c4f;
-    --nl-difficulty-9452CE: #9452ce;
     --nl-difficulty-text-normal: #09834a;
     --nl-difficulty-text-hard: #ba5500;
     --nl-difficulty-text-expert: #cd2e1d;

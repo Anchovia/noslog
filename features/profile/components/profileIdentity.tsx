@@ -196,7 +196,7 @@ export default function ProfileIdentity({
                                     aria-label={t("profile.settings")}
                                     className={ownerActionClass}
                                 >
-                                    <Settings size={20} aria-hidden />
+                                    <Settings className="nl-icon" aria-hidden />
                                 </Link>
                             </div>
                         ) : null}

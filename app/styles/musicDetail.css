@@ -145,17 +145,7 @@
     align-items: baseline;
     gap: var(--nl-spacing-4);
 }
-/* 정수 = 페이지 제목 조합(24/32 · 700) · 소수 = 상자 제목 조합(16/24 · 600) — 13종 밖 조합 · 고정폭 숫자를 쓰지 않는다 (2026-09-18 C) */
-.noslog-ui .nl-my-best__grd-value {
-    font-size: var(--nl-type-size-24);
-    line-height: var(--nl-type-line-height-32);
-    font-weight: var(--nl-type-weight-bold);
-}
-.noslog-ui .nl-my-best__grd-fraction {
-    font-size: var(--nl-type-size-16);
-    line-height: var(--nl-type-line-height-24);
-    font-weight: var(--nl-type-weight-semibold);
-}
+/* 정수 = nl-page-title nl-page-title--fixed(24/32 · 700) · 소수 = nl-component-title(16/24 · 600) — 글자 클래스로(2026-10-01) */
 /* 카테고리 배지 — 자켓 위가 아니라 제목 바로 위 왼쪽. 자켓 밖이라 크기는 태그 규격(높이 24 · 좌우 8 · 모서리 4),
    면(overlay)과 카테고리 글자색은 자켓 판 그대로 · 경계 없음. 배지 → 제목 4 (2026-09-18 C) */
 .noslog-ui .nl-music-entity__category {
@@ -281,9 +271,9 @@
     grid-template-columns: minmax(0, 1fr);
     gap: var(--nl-spacing-16);
 }
-/* 탭 불러오기 스켈레톤(2026-09-19 S1) — 최근 판정 추이 플롯(선 그래프 기본 높이 120) · 점수 자(72) 자리 */
+/* 탭 불러오기 스켈레톤(2026-09-19 S1) — 최근 판정 추이 플롯(선 그래프 기본 높이 200, 2026-10-01 C2) · 점수 자(72) 자리 */
 .noslog-ui .nl-detail-loading__trend {
-    height: 120px;
+    height: 200px;
 }
 .noslog-ui .nl-detail-loading__ruler {
     height: 72px;
@@ -431,7 +421,7 @@
     .noslog-ui .nl-music-detail__layout {
         display: grid;
         grid-template-columns:
-            calc((100% - 3 * var(--nl-spacing-16)) / 4)
+            calc((100% - 3 * var(--nl-grid-gutter-wide)) / 4)
             minmax(0, 1fr);
         gap: var(--nl-spacing-16);
         align-items: start;

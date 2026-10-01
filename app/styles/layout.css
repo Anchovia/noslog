@@ -76,7 +76,7 @@
     position: fixed;
     top: var(--nl-spacing-8);
     left: var(--nl-spacing-8);
-    z-index: 100;
+    z-index: var(--nl-layer-fullscreen);
     transform: translateY(-200%);
     padding: var(--nl-spacing-8) var(--nl-spacing-12);
     border-radius: var(--nl-radius-control);
@@ -89,8 +89,8 @@
 .noslog-ui .nl-header {
     position: sticky;
     top: 0;
-    z-index: 50;
-    height: 60px;
+    z-index: var(--nl-layer-header);
+    height: var(--nl-header-height);
     flex-shrink: 0;
     background: var(--nl-surface-surface);
     box-shadow: inset 0 calc(var(--nl-stroke-default) * -1)
@@ -109,11 +109,11 @@
 }
 .noslog-ui .nl-header__bar {
     position: relative;
-    z-index: 2;
+    z-index: calc(var(--nl-layer-above) + 1);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 60px;
+    height: var(--nl-header-height);
     padding: var(--nl-spacing-8) var(--nl-layout-margin);
     box-shadow: inset 0 calc(var(--nl-stroke-default) * -1)
         var(--nl-border-default);
@@ -132,24 +132,25 @@
     gap: var(--nl-spacing-8);
     align-items: center;
 }
+/* 헤더 오른쪽 프로필 · 로그인 · ≡ = 컨트롤 높이(폰 · 중간 폭 44, 1056 이상 40 — 같은 줄 메뉴와 한 단계, 2026-10-01 D7) */
 .noslog-ui .nl-account {
     display: flex;
-    width: 44px;
-    height: 44px;
+    width: var(--nl-control-height);
+    height: var(--nl-control-height);
     border-radius: var(--nl-radius-full);
 }
 .noslog-ui .nl-login {
     display: flex;
-    height: 44px;
+    height: var(--nl-control-height);
     align-items: center;
     justify-content: center;
     padding-inline: var(--nl-spacing-12);
-    border-radius: var(--nl-radius-control);
+    border-radius: var(--nl-radius-field);
 }
 .noslog-ui .nl-nav-trigger {
     display: flex;
-    width: 44px;
-    height: 44px;
+    width: var(--nl-control-height);
+    height: var(--nl-control-height);
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
@@ -171,15 +172,15 @@
 }
 .noslog-ui .nl-nav-scrim {
     position: fixed;
-    inset: 60px 0 0;
+    inset: var(--nl-header-height) 0 0;
     background: var(--nl-surface-scrim);
 }
 .noslog-ui .nl-destinations {
     position: absolute;
-    top: 60px;
+    top: var(--nl-header-height);
     left: var(--nl-spacing-16);
     right: var(--nl-spacing-16);
-    z-index: 1;
+    z-index: var(--nl-layer-above);
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--nl-spacing-4);
@@ -191,7 +192,7 @@
         inset calc(var(--nl-stroke-default) * -1) 0 var(--nl-border-overlay),
         inset 0 calc(var(--nl-stroke-default) * -1) var(--nl-border-overlay),
         var(--nl-overlay-shadow);
-    max-height: calc(100dvh - 60px - var(--nl-spacing-16));
+    max-height: calc(100dvh - var(--nl-header-height) - var(--nl-spacing-16));
     overflow-y: auto;
 }
 .noslog-ui .nl-destination {
@@ -255,7 +256,7 @@
     display: inline-flex;
     align-items: center;
     gap: var(--nl-spacing-4);
-    text-underline-offset: 3px;
+    text-underline-offset: var(--nl-underline-offset);
 }
 @media (hover: hover) {
     .noslog-ui .nl-footer__links a:hover {
@@ -310,7 +311,7 @@
         align-items: center;
         height: var(--nl-control-height);
         padding-inline: var(--nl-spacing-12);
-        border-radius: var(--nl-radius-control);
+        border-radius: var(--nl-radius-field);
         color: var(--nl-content-subdued);
         white-space: nowrap;
     }
@@ -324,7 +325,7 @@
         --nl-layout-margin: var(--nl-grid-margin-intermediate);
     }
     .noslog-ui .nl-destinations {
-        top: 68px;
+        top: calc(var(--nl-header-height) + var(--nl-spacing-8));
         right: var(--nl-layout-margin);
         left: auto;
         width: 488px;

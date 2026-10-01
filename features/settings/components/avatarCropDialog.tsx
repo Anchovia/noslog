@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import ModalDialog from "@/components/ui/modalDialog";
 import Button from "@/components/ui/Button";
+import ActionButton from "@/components/ui/actionButton";
 import { useTranslations } from "@/components/i18n/localeProvider";
 
 export default function AvatarCropDialog({
@@ -157,9 +158,13 @@ export default function AvatarCropDialog({
                     >
                         {t("settings.cancel")}
                     </Button>
-                    <Button disabled={!ready || busy} onClick={confirm}>
+                    <ActionButton
+                        disabled={!ready}
+                        busy={busy}
+                        onClick={confirm}
+                    >
                         {t("common.confirm")}
-                    </Button>
+                    </ActionButton>
                 </>
             }
         >

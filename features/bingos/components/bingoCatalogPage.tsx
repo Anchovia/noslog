@@ -9,6 +9,7 @@ import SearchField from "@/components/ui/searchField";
 import { SegmentedControl } from "@/components/ui/segmentedControl";
 import SortMenu from "@/components/ui/sortMenu";
 import useMediaQuery from "@/lib/hooks/useMediaQuery";
+import useWideLayout from "@/lib/hooks/useWideLayout";
 import BingoCatalogCard from "@/features/bingos/components/bingoCatalogCard";
 import {
     getBingoCatalog,
@@ -43,7 +44,9 @@ export default function BingoCatalogPage({
         setCommittedQuery(query.q);
         setSearch(query.q);
     }
+    // 672 = 머리 개수 메타 글줄 경계, 정렬 · 보기 전환 크기는 셸 경계 1056(폰 M · 1056 이상 L — 같은 줄은 한 단계)
     const wide = useMediaQuery("(min-width: 672px)");
+    const wideLayout = useWideLayout();
     const visible = getBingoCatalog(items, query);
     const searching = query.q.trim() !== "";
     // 검색 중에는 「최근 기록」 을 숨긴다 — 찾는 판과 상관없는 카드가 결과 앞에 끼지 않게
@@ -78,14 +81,14 @@ export default function BingoCatalogPage({
         setCommittedQuery(q);
         commit({ ...query, q }, true);
     }
-    // 보기 전환 — 악곡 목록과 같은 부품 · 문구(폰 M · 672 이상 L)
+    // 보기 전환 — 악곡 목록과 같은 부품 · 문구(폰 M · 1056 이상 L)
     const viewSwitch = (
         <SegmentedControl
             label={t("discovery.view")}
             value={query.view}
             onValueChange={(view) => commit({ ...query, view })}
             iconOnly
-            size={wide ? undefined : "sm"}
+            size={wideLayout ? undefined : "sm"}
             options={[
                 {
                     value: "grid",
@@ -160,7 +163,7 @@ export default function BingoCatalogPage({
                             value={query.sort}
                             options={sorts}
                             onValueChange={(sort) => commit({ ...query, sort })}
-                            size={wide ? undefined : "sm"}
+                            size={wideLayout ? undefined : "sm"}
                         />
                     ) : null}
                     {viewSwitch}

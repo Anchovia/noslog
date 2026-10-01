@@ -119,7 +119,7 @@ export default function TierRatingGuide({
                     <section className="nl-tier-weight">
                         <div className="nl-tier-weight__heading">
                             <div>
-                                <h3 className="nl-component-title">
+                                <h3 className="nl-metadata nl-muted">
                                     {t("tiers.weight.title")}
                                 </h3>
                                 <p className="nl-metadata">

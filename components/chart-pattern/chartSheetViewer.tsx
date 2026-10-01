@@ -474,14 +474,8 @@ export default function ChartSheetViewer({
                         </p>
                     ) : null}
                     <div className="nl-chart-viewer__legend">
-                        <Legend
-                            color={handColors.left}
-                            label={t("chart.leftHand")}
-                        />
-                        <Legend
-                            color={handColors.right}
-                            label={t("chart.rightHand")}
-                        />
+                        <Legend hand="left" label={t("chart.leftHand")} />
+                        <Legend hand="right" label={t("chart.rightHand")} />
                     </div>
                 </div>
             </header>
@@ -546,14 +540,8 @@ export default function ChartSheetViewer({
                     <div className="nl-chart-viewer__info">
                         {metadata}
                         <div className="nl-chart-viewer__legend">
-                            <Legend
-                                color={handColors.left}
-                                label={t("chart.leftHand")}
-                            />
-                            <Legend
-                                color={handColors.right}
-                                label={t("chart.rightHand")}
-                            />
+                            <Legend hand="left" label={t("chart.leftHand")} />
+                            <Legend hand="right" label={t("chart.rightHand")} />
                         </div>
                     </div>
                     {/* 출처(2026-09-26 M1) — 폰은 ⓘ 창 대신 여기 */}
@@ -576,13 +564,14 @@ export default function ChartSheetViewer({
     );
 }
 
-function Legend({ color, label }: { color: string; label: string }) {
+// 범례 점 색 = 손 토큰(--nl-hand-left · --nl-hand-right, chartViewer.css) — DOM 이라 토큰을 바로 쓴다
+function Legend({ hand, label }: { hand: ChartHand; label: string }) {
     return (
         <span className="nl-chart-viewer__legend-item nl-body-secondary">
             <span
                 className="nl-chart-viewer__legend-dot"
+                data-hand={hand}
                 aria-hidden
-                style={{ backgroundColor: color }}
             />
             {label}
         </span>

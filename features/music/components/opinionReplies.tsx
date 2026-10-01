@@ -150,6 +150,15 @@ export default function OpinionReplies({
                             severity="danger"
                             role="alert"
                             title={t("community.loadError")}
+                            action={
+                                <ActionButton
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => void replies.refetch()}
+                                >
+                                    {t("common.retry")}
+                                </ActionButton>
+                            }
                         />
                     ) : (
                         replies.data.items.map((reply) => (

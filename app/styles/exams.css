@@ -96,7 +96,7 @@
     border-radius: var(--nl-radius-overlay);
     box-shadow: var(--nl-overlay-shadow);
     color: var(--nl-content-default);
-    z-index: 70;
+    z-index: var(--nl-layer-popover);
     width: var(--radix-select-trigger-width);
     max-height: var(--radix-select-content-available-height);
     overflow: auto;
@@ -113,13 +113,10 @@
     justify-content: space-between;
     align-items: center;
     gap: var(--nl-spacing-12);
-    min-height: 44px;
+    min-height: var(--nl-control-height);
     padding: var(--nl-spacing-8) var(--nl-spacing-12);
     border-radius: var(--nl-radius-control);
     text-align: start;
-}
-.noslog-ui .nl-exam-select__option {
-    min-height: var(--nl-control-height);
 }
 .noslog-ui .nl-exam-select__option[data-highlighted] {
     --nl-state-layer: var(--nl-interaction-hover);
@@ -135,7 +132,7 @@
         var(--nl-state-layer),
         var(--nl-state-layer)
     );
-    font-weight: 600;
+    font-weight: var(--nl-type-weight-semibold);
 }
 .noslog-ui .nl-exam-rail {
     display: none;
@@ -202,7 +199,7 @@
     gap: var(--nl-spacing-12);
     padding-inline-end: var(--nl-spacing-16);
     width: 100%;
-    min-height: 64px;
+    min-height: var(--nl-exam-jacket-size);
     border-radius: var(--nl-radius-container);
     background: var(--nl-surface-surface);
     text-align: start;
@@ -384,13 +381,13 @@
 @media (min-width: 672px) {
     .noslog-ui .nl-exam-navigation > .nl-segments,
     .noslog-ui .nl-exam-select {
-        max-width: 358px;
+        max-width: var(--nl-container-narrow);
     }
 }
 @media (min-width: 1056px) {
     .noslog-ui .nl-exams {
         grid-template-columns:
-            calc((100% - 3 * var(--nl-spacing-16)) / 4)
+            calc((100% - 3 * var(--nl-grid-gutter-wide)) / 4)
             minmax(0, 1fr);
         grid-template-rows: auto 1fr;
         column-gap: var(--nl-spacing-16);
@@ -452,9 +449,6 @@
         padding: var(--nl-spacing-16);
     }
     .noslog-ui .nl-exam-proof > h3 {
-        font-size: var(--nl-type-size-16);
-        line-height: var(--nl-type-line-height-24);
-        font-weight: var(--nl-type-weight-semibold);
         margin-bottom: calc(var(--nl-spacing-8) - var(--nl-spacing-12));
     }
     /* 로그아웃 「로그인 후 인증 가능」 — 상자가 한 줄을 다 쓰므로 주 버튼은 내용 폭(2026-09-30 C1) */

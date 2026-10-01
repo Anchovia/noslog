@@ -494,7 +494,7 @@ export default function ArcadeDiscoveryPage({
                                         aria-label={t("arcades.filters")}
                                     >
                                         <ListFilter
-                                            className="nl-icon-small"
+                                            className="nl-icon"
                                             aria-hidden
                                         />
                                         {filterCount ? (

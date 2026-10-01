@@ -115,7 +115,7 @@ export default function PlayerRankingRow({
             aria-label={current ? t("rankings.myRank") : undefined}
         >
             <span
-                className={`nl-player-row__rank ${row.rank <= 3 ? "nl-emphasis-label" : "nl-metric-value"}`}
+                className="nl-player-row__rank nl-metric-value"
                 data-podium={row.rank <= 3 ? row.rank : undefined}
             >
                 {row.rank.toLocaleString(locale)}
@@ -131,7 +131,7 @@ export default function PlayerRankingRow({
                     <CountryMarker country={row.country} />
                     <Link
                         href={`${localizePath(`/profile/${row.id}`, locale)}?mode=${query.mode}`}
-                        className="nl-player-row__link nl-link"
+                        className="nl-player-row__link nl-link nl-emphasis-label"
                         title={name}
                     >
                         {name}
@@ -167,9 +167,12 @@ export function PlayerRankingRowSkeleton() {
             <span className="nl-player-row__rank">
                 <SkeletonText className="nl-metric-value" sample="00" />
             </span>
-            <span className="nl-avatar nl-skeleton" />
+            <span className="nl-avatar nl-avatar--compact nl-skeleton" />
             <div className="nl-player-row__identity">
-                <SkeletonText className="nl-player-row__link" width="m" />
+                <SkeletonText
+                    className="nl-player-row__link nl-emphasis-label"
+                    width="m"
+                />
             </div>
             <span className="nl-player-row__value">
                 <SkeletonText className="nl-metric-value" sample="0,000" />

@@ -6,7 +6,7 @@ import { useId, useState } from "react";
 import ActionButton from "@/components/ui/actionButton";
 import { Checkbox } from "@/components/ui/checkbox";
 import Disclosure from "@/components/ui/disclosure";
-import { FormField, Input } from "@/components/ui/formField";
+import { FormField, Input, TextArea } from "@/components/ui/formField";
 import IconButton from "@/components/ui/iconButton";
 import ResponsiveDialog from "@/components/ui/responsiveDialog";
 import { Select } from "@/components/ui/select";
@@ -330,9 +330,8 @@ export default function PollBuilderDialog({
                             label={labels.pasteOptions}
                             help={labels.pasteHelp}
                         >
-                            <textarea
+                            <TextArea
                                 id={`${id}-paste`}
-                                className="nl-input"
                                 rows={4}
                                 value={pasted}
                                 onChange={(event) =>

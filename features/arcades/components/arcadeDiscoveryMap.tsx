@@ -2,9 +2,10 @@
 
 import { useEffect, useEffectEvent, useRef, useState } from "react";
 import * as Popover from "@radix-ui/react-popover";
-import { CircleAlert, createLucideIcon } from "lucide-react";
+import { createLucideIcon } from "lucide-react";
 import { useTranslations } from "@/components/i18n/localeProvider";
 import Button from "@/components/ui/Button";
+import { StatusMessage } from "@/components/ui/statusMessage";
 import { sendAnalytics } from "@/lib/analyticsClient";
 import { loadKakaoMaps } from "@/lib/kakaoMaps";
 import type {
@@ -380,9 +381,6 @@ export default function ArcadeDiscoveryMap({
                     className="nl-arcade-map__status nl-body-secondary"
                     role="status"
                 >
-                    {inlineError && state === "error" ? (
-                        <CircleAlert className="nl-icon" aria-hidden />
-                    ) : null}
                     {state === "loading" ? (
                         // 모양을 모르는 한 덩어리 — 가운데 스피너 하나(2026-09-19 로딩 시안 결정 5), 문장은 화면 읽기에만
                         <>
@@ -396,23 +394,28 @@ export default function ArcadeDiscoveryMap({
                             </span>
                         </>
                     ) : (
-                        <p>
-                            {t(
+                        // 실패 = 공용 상태 메시지(N1) — 목록 지도는 오류 글자, 위치 지도는 흐린 한 줄(구역 불러오기 실패). 둘 다 고스트 M 「다시 시도」
+                        <StatusMessage
+                            severity={inlineError ? "danger" : "info"}
+                            tone={inlineError ? "inline" : "quiet"}
+                            title={t(
                                 inlineError
                                     ? "arcades.mapLoadError"
                                     : "arcades.mapListFallback"
                             )}
-                        </p>
+                            action={
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() =>
+                                        setAttempt((value) => value + 1)
+                                    }
+                                >
+                                    {t("common.retry")}
+                                </Button>
+                            }
+                        />
                     )}
-                    {state === "error" ? (
-                        <Button
-                            variant="secondary"
-                            size="sm"
-                            onClick={() => setAttempt((value) => value + 1)}
-                        >
-                            {t("common.retry")}
-                        </Button>
-                    ) : null}
                 </div>
             ) : (
                 <>

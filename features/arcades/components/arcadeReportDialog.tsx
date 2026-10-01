@@ -18,6 +18,7 @@ import {
 } from "@/components/i18n/localeProvider";
 import ActionButton from "@/components/ui/actionButton";
 import Button, { foundationButtonClass } from "@/components/ui/Button";
+import FileRow from "@/components/ui/fileRow";
 import LoginPrompt from "@/components/ui/loginPrompt";
 import RadioGroup from "@/components/ui/radioGroup";
 import {
@@ -299,13 +300,26 @@ export default function ArcadeReportDialog({
                     form.clearErrors("root");
                 }}
             />
-            <ActionButton
-                variant="secondary"
-                disabled={busy}
-                onClick={() => fileInput.current?.click()}
-            >
-                {file ? file.name : t("feedback.attachImage")}
-            </ActionButton>
+            {/* 첨부 = 보조 L 버튼 → 붙이면 같은 높이의 파일 줄(피드백 창과 같은 공용 부품) */}
+            {file ? (
+                <FileRow
+                    file={file}
+                    removeLabel={t("feedback.removeImage")}
+                    disabled={busy}
+                    onRemove={() => {
+                        setFile(null);
+                        if (fileInput.current) fileInput.current.value = "";
+                    }}
+                />
+            ) : (
+                <ActionButton
+                    variant="secondary"
+                    disabled={busy}
+                    onClick={() => fileInput.current?.click()}
+                >
+                    {t("feedback.attachImage")}
+                </ActionButton>
+            )}
             <p className="nl-metadata nl-muted">
                 {t("arcades.reportImageHelp")}
             </p>

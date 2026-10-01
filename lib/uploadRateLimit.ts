@@ -1,6 +1,8 @@
 import "server-only";
 
 import db from "@/lib/db";
+import { createTranslator, getMessages } from "@/lib/i18n/messages";
+import { DEFAULT_LOCALE, type Locale } from "@/lib/i18n/routing";
 
 export type UploadPurpose =
     | "profile-avatar"
@@ -84,6 +86,9 @@ export async function releaseUploadTokenQuota(userId: number, grantId: number) {
     });
 }
 
-export function getUploadLimitMessage() {
-    return "이미지는 한 시간에 최대 10회까지 업로드할 수 있습니다.";
+/** 업로드 한도 안내 — 공개 화면에서 쓰는 곳은 요청 언어를 넘긴다(관리자 화면은 한국어 기본) */
+export function getUploadLimitMessage(locale: Locale = DEFAULT_LOCALE) {
+    return createTranslator(getMessages(locale))("upload.limitReached", {
+        count: UPLOAD_LIMIT,
+    });
 }

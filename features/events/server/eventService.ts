@@ -332,7 +332,7 @@ async function requestEventUpload(
             kind === "banner" ? "event-banner" : "event-image"
         );
         if (!quota.allowed)
-            return { success: false, message: getUploadLimitMessage() };
+            return { success: false, message: getUploadLimitMessage(locale) };
         grantId = quota.grantId;
         const upload = await createImageUploadToken(
             kind === "banner"

@@ -72,9 +72,7 @@ export default async function SettingsPage({
             {category && category !== "experience" ? (
                 <Suspense
                     key={category}
-                    fallback={
-                        <SettingsLoading profile={category === "profile"} />
-                    }
+                    fallback={<SettingsLoading category={category} />}
                 >
                     <AccountSettingsContent
                         category={category}

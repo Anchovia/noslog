@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
+import ActionButton from "@/components/ui/actionButton";
 import Button from "@/components/ui/Button";
 import { SegmentedControl } from "@/components/ui/segmentedControl";
 import { LoadingStatus } from "@/components/ui/skeleton";
@@ -153,13 +154,14 @@ export default function ProfileRecords({
             ) : null}
             {!switching && result.hasNextPage ? (
                 <div className="nl-profile-list-actions">
-                    <Button
+                    <ActionButton
                         variant="secondary"
-                        disabled={result.isFetching}
+                        busy={result.isFetchingNextPage}
+                        busyLabel={t("discovery.loading")}
                         onClick={() => void result.fetchNextPage()}
                     >
                         {t("profile.more")}
-                    </Button>
+                    </ActionButton>
                 </div>
             ) : null}
         </section>

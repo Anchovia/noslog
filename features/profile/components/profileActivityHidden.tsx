@@ -1,7 +1,5 @@
 "use client";
 
-import { Lock } from "lucide-react";
-
 import { useTranslations } from "@/components/i18n/localeProvider";
 import { StatusMessage } from "@/components/ui/statusMessage";
 
@@ -10,7 +8,7 @@ export default function ProfileActivityHidden() {
     const t = useTranslations();
     return (
         <div className="nl-profile-empty">
-            <StatusMessage icon={Lock} title={t("profile.activity.hidden")} />
+            <StatusMessage title={t("profile.activity.hidden")} />
         </div>
     );
 }

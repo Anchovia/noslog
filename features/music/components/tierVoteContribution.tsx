@@ -157,7 +157,6 @@ export default function TierVoteContribution({
                         {scope.ownVote !== null ? deleteAction : null}
                         <ActionButton
                             variant="primary"
-                            size="sm"
                             type="submit"
                             busy={mutation.isPending}
                             busyLabel={t("community.saving")}

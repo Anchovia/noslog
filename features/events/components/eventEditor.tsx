@@ -446,7 +446,7 @@ export default function EventEditor({
                     {errors.root.server.message}
                 </p>
             ) : null}
-            <div className="nl-form-bar nl-events__form-actions">
+            <div className="nl-form-bar">
                 <div>
                     {event.id !== undefined ? (
                         <EventDeleteButton

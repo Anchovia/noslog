@@ -29,7 +29,7 @@ const DIFFICULTIES = [
 /** 칸 색 = 등급 색(랭크 분포와 같음, 2026-09-26 C2a · L1). 고른 칸 밖은 흐린 회색, 「안 함」 은 트랙 면 그대로 */
 const NONE = "var(--nl-surface-raised)";
 const DIMMED = "var(--nl-content-disabled)";
-const TIER_COLORS: Record<ProfileTierKey, string> = {
+export const PROFILE_TIER_COLORS: Record<ProfileTierKey, string> = {
     pianist: "var(--nl-score-goal-pianist)",
     fc: "var(--nl-achievement-full-combo)",
     S: "var(--nl-score-goal-s)",
@@ -39,6 +39,39 @@ const TIER_COLORS: Record<ProfileTierKey, string> = {
 };
 
 const LOW_LEVEL_MAX = 8;
+
+type Translate = ReturnType<typeof useTranslations>;
+
+/** 범례 · 화면 읽기 글의 칸 이름 — 스켈레톤(profileLoading)도 같은 글자를 쓴다 */
+export function profileTierLabel(key: ProfileTierKey, t: Translate) {
+    return key === "pianist"
+        ? "Pianist"
+        : key === "fc"
+          ? t("profile.fullComboShort")
+          : key === "B"
+            ? t("profile.levels.rankLow")
+            : key;
+}
+
+/** 통계 탭 난이도 세그먼트 칸 — 난이도 색 글자, 고른 칸은 기본 글자색(세그먼트 공용 규칙) */
+export function profileLevelDifficultyOptions(t: Translate) {
+    return [
+        { value: "all" as Difficulty, label: t("profile.all") },
+        ...DIFFICULTIES.map(([value, short]) => ({
+            value: value as Difficulty,
+            label: (
+                <span className={`nl-level--${value}`}>
+                    <span className="nl-profile-levels__full">
+                        {value.toUpperCase()}
+                    </span>
+                    <span className="nl-profile-levels__short" aria-hidden>
+                        {short}
+                    </span>
+                </span>
+            ),
+        })),
+    ];
+}
 
 type ProfileLevelGroup = ProfileLevelRow & {
     label: string;
@@ -99,10 +132,10 @@ export function profileLevelRows(
     return [...rows.values()].sort((a, b) => order(a) - order(b));
 }
 
-/** 레벨 글자 색 = 레벨 1–12 는 서열 값 색(악곡 상세 「공식 레벨」 과 같은 색), REAL 1–3 은 난이도 Real 보라(2026-09-30 사용자). 묶은 줄(「1–8」)은 난이도 Hard 색(2026-10-01 사용자) */
+/** 레벨 글자 색 = 레벨 1–12 는 서열 값 색(악곡 상세 「공식 레벨」 과 같은 색), REAL 1–3 은 난이도 Real 보라(2026-09-30 사용자). 묶은 줄(「1–8」)은 색이 하나로 정해지지 않아 막대 기본 subdued(2026-10-01 D1) */
 const levelColor = (row: ProfileLevelGroup) =>
     row.grouped
-        ? "var(--nl-difficulty-text-hard)"
+        ? undefined
         : row.difficulty === "real"
           ? "var(--nl-difficulty-text-real)"
           : tierValueColor(row.level);
@@ -139,14 +172,7 @@ export default function ProfileLevels({
             row.level >= 9
     );
     const listId = `profile-levels-${variant}-rows`;
-    const label = (key: ProfileTierKey) =>
-        key === "pianist"
-            ? "Pianist"
-            : key === "fc"
-              ? t("profile.fullComboShort")
-              : key === "B"
-                ? t("profile.levels.rankLow")
-                : key;
+    const label = (key: ProfileTierKey) => profileTierLabel(key, t);
     const percent = (value: number, total: number) =>
         `${(total ? Math.round((value / total) * 100) : 0).toLocaleString(locale)}%`;
     const played = (row: ProfileLevelRow) =>
@@ -182,26 +208,7 @@ export default function ProfileLevels({
                     label={t("profile.levels.difficultyLabel")}
                     value={difficulty}
                     onValueChange={setDifficulty}
-                    options={[
-                        { value: "all", label: t("profile.all") },
-                        ...DIFFICULTIES.map(([value, short]) => ({
-                            value,
-                            // 난이도 색 글자 — 고른 칸은 기본 글자색(세그먼트 공용 규칙)
-                            label: (
-                                <span className={`nl-level--${value}`}>
-                                    <span className="nl-profile-levels__full">
-                                        {value.toUpperCase()}
-                                    </span>
-                                    <span
-                                        className="nl-profile-levels__short"
-                                        aria-hidden
-                                    >
-                                        {short}
-                                    </span>
-                                </span>
-                            ),
-                        })),
-                    ]}
+                    options={profileLevelDifficultyOptions(t)}
                 />
             ) : null}
             <StackedBar
@@ -215,7 +222,7 @@ export default function ProfileLevels({
                             value: row.tiers[key],
                             color:
                                 selected === null || selected === key
-                                    ? TIER_COLORS[key]
+                                    ? PROFILE_TIER_COLORS[key]
                                     : DIMMED,
                         })),
                         {
@@ -263,7 +270,7 @@ export default function ProfileLevels({
                     >
                         <i
                             aria-hidden
-                            style={{ background: TIER_COLORS[key] }}
+                            style={{ background: PROFILE_TIER_COLORS[key] }}
                         />
                         {label(key)}
                     </button>

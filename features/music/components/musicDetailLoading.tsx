@@ -107,7 +107,7 @@ function OverviewLoading({ signedIn }: { signedIn: boolean }) {
             </section>
             <section className="nl-overview__section">
                 <h2 className="nl-section-title">{t("detail.chartInfo")}</h2>
-                <dl className="nl-facts nl-body-secondary nl-overview__card nl-overview__card--list">
+                <dl className="nl-facts nl-body-secondary">
                     {[
                         "BPM",
                         t("music.info.noteCount"),

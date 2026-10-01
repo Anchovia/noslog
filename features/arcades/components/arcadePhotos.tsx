@@ -114,7 +114,12 @@ export default function ArcadePhotos({
                             alt={lead.alt}
                             fill
                             loading="eager"
-                            sizes="(max-width: 959px) 100vw, 952px"
+                            // 페이지 모드 경계(672 · 1056)와 실제 칸 폭 — 1056+ 주 열 = (1136 − 24) × 2/3, 모자이크 큰 칸 = (주 열 − 8) / 2
+                            sizes={
+                                mosaic
+                                    ? "(max-width: 671px) 100vw, (max-width: 1055px) calc(100vw - 48px), 367px"
+                                    : "(max-width: 671px) 100vw, (max-width: 1055px) calc(100vw - 48px), 742px"
+                            }
                             onError={() => markFailed(lead.id)}
                         />
                     </button>

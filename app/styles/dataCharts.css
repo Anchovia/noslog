@@ -62,28 +62,24 @@
 .noslog-ui .nl-line-chart__state[data-placement="center"] {
     transform: translateY(-50%);
 }
-/* 평평한 선 아래에 문구: 선(중앙)과 점 마커를 가리지 않는다 */
-.noslog-ui .nl-line-chart__state[data-placement="below"] {
-    top: calc(50% + var(--nl-spacing-16));
-}
 /* 성장 추이 선 = 주황(osu! 계열, 2026-09-19 C1). 선이 하나라 「평균 · SLOW」 뜻과 부딪히지 않는다 */
 .noslog-ui .nl-line-chart[data-tone="growth"] {
     --nl-local-data-personal: var(--nl-local-data-categorical-2);
 }
 .noslog-ui .nl-line-chart__grid {
     stroke: var(--nl-border-divider);
-    stroke-width: 1;
+    stroke-width: var(--nl-stroke-default);
 }
 .noslog-ui .nl-line-chart__line {
     fill: none;
     stroke: var(--nl-local-data-personal);
-    stroke-width: 2;
+    stroke-width: var(--nl-stroke-strong);
     stroke-linejoin: round;
 }
 .noslog-ui .nl-line-chart__point {
     fill: var(--nl-surface-canvas);
     stroke: var(--nl-local-data-personal);
-    stroke-width: 2;
+    stroke-width: var(--nl-stroke-strong);
 }
 /* 가리킨 점(점을 끈 그래프) = 선 색으로 채운 반지름 4 (2026-09-19 P1) */
 .noslog-ui .nl-line-chart__point[data-active] {
@@ -132,6 +128,18 @@
     white-space: nowrap;
     width: max-content;
 }
+/* 눈금 자리를 정한 축 = 라벨 한 줄 높이 틀 안에 라벨마다 절대 위치(가로 위치만 그래프가 정한다) */
+.noslog-ui .nl-line-chart__x[data-ticks] {
+    position: relative;
+    height: var(--nl-type-line-height-16);
+}
+.noslog-ui .nl-line-chart__x[data-ticks] > span {
+    position: absolute;
+}
+/* 점 하나 = 라벨 가운데 */
+.noslog-ui .nl-line-chart__x[data-single] {
+    justify-content: center;
+}
 /* 점마다 놓인 보이지 않는 버튼 — 키보드 · 화면 읽기로 점을 옮기는 용도. 마우스는 올리기만 해도 툴팁이 뜨고
    누를 동작이 없으므로 손가락 커서를 쓰지 않는다(전역 button 규칙을 끈다, 2026-09-19) */
 .noslog-ui .nl-line-chart__target {
@@ -166,7 +174,7 @@
     width: max-content;
     max-width: 100%;
     pointer-events: none;
-    z-index: 2;
+    z-index: calc(var(--nl-layer-above) + 1);
 }
 .noslog-ui .nl-chart-table {
     width: 100%;

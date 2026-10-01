@@ -259,8 +259,7 @@
     flex-direction: column;
     gap: var(--nl-spacing-12);
 }
-/* 투표 입력 한 줄 = 카드 안 인라인 칸이라 **M 한 단계**(의견 작성 칸 · 평가 잠금 카드와 같음, 2026-09-18 사용자 지적).
-   셀렉트도 같은 줄이라 M — 높이 36(1056 이상 32) · 글자 14/20 · 안쪽은 입력 규격(좌우 12−1) */
+/* 투표 입력 한 줄 = 셀렉트 · 저장 · 삭제 모두 공용 기본 L 한 단계(2026-10-01 D3 — 페이지에서 크기를 덮어쓰지 않는다) */
 .noslog-ui .nl-vote-form__row {
     display: flex;
     align-items: center;
@@ -273,16 +272,6 @@
 }
 .noslog-ui .nl-vote-form__row > .nl-button {
     flex-shrink: 0;
-}
-/* 셀렉트 글자는 모든 폭 16/24(가이드 입력 규칙 — 2026-10-01 규칙 맞춤). 높이는 옆 버튼과 같은 M 이라 위아래 여백으로 맞춘다 */
-.noslog-ui .nl-vote-form .nl-select {
-    min-height: var(--nl-control-height-compact);
-    padding-block: calc(
-        (var(--nl-control-height-compact) - var(--nl-type-line-height-24)) / 2 -
-            var(--nl-stroke-default)
-    );
-    font-size: var(--nl-type-size-16);
-    line-height: var(--nl-type-line-height-24);
 }
 .noslog-ui .nl-opinions {
     min-width: 0;
@@ -378,7 +367,11 @@
     min-height: var(--nl-control-height);
     height: var(--nl-control-height);
     padding-block: calc(
-        (var(--nl-control-height) - 24px - var(--nl-stroke-default) * 2) / 2
+        (
+                var(--nl-control-height) - var(--nl-type-line-height-24) -
+                    var(--nl-stroke-default) * 2
+            ) /
+            2
     );
     overflow: hidden;
     resize: none;
@@ -401,13 +394,13 @@
 }
 .noslog-ui .nl-action-menu {
     min-width: 160px;
-    max-width: calc(100vw - 32px);
+    max-width: calc(100vw - var(--nl-spacing-32));
     padding: var(--nl-spacing-8);
     border-radius: var(--nl-radius-overlay);
     background: var(--nl-surface-overlay);
     box-shadow: var(--nl-overlay-shadow);
     border: var(--nl-stroke-default) solid var(--nl-border-overlay);
-    z-index: 70;
+    z-index: var(--nl-layer-popover);
 }
 /* 되돌릴 수 없는 항목은 위험 버튼과 같은 글자색 (2026-09-18 사용자 지적) */
 .noslog-ui .nl-action-menu__item[data-destructive] {
@@ -457,7 +450,6 @@
     border-radius: var(--nl-radius-control);
     background: none;
     color: var(--nl-content-subdued);
-    font-variant-numeric: tabular-nums;
     text-decoration: none;
 }
 /* 올림 · 누름 색은 공용 고스트 버튼과 같은 토큰, 포커스는 공용 :focus-visible 그대로 */

@@ -51,7 +51,7 @@ export default function AuthLanguage() {
                     aria-label={t("header.language")}
                     aria-busy={pending}
                 >
-                    <Globe className="nl-icon nl-icon--small" aria-hidden />
+                    <Globe className="nl-icon-small" aria-hidden />
                     <Select.Value>
                         {
                             PROFILE_LANGUAGES.find(
@@ -60,10 +60,7 @@ export default function AuthLanguage() {
                         }
                     </Select.Value>
                     <Select.Icon>
-                        <ChevronDown
-                            className="nl-icon nl-icon--small"
-                            aria-hidden
-                        />
+                        <ChevronDown className="nl-icon-small" aria-hidden />
                     </Select.Icon>
                 </Select.Trigger>
                 <Select.Portal>

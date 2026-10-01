@@ -1,6 +1,6 @@
 import { z } from "zod";
 import {
-    pollFormValueSchema,
+    createPollFormValueSchema,
     type PollInput,
 } from "@/features/polls/schemas/pollSchema";
 
@@ -82,7 +82,7 @@ export function createEventFormSchema(t: Translate) {
             endDate: z
                 .string()
                 .refine(validDate, t("events.form.dateRequired")),
-            poll: pollFormValueSchema.optional(),
+            poll: createPollFormValueSchema(t("poll.saveFailed")).optional(),
             bannerUrl: z.string().trim(),
         })
         .superRefine((value, ctx) => {

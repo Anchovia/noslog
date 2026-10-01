@@ -240,7 +240,9 @@ function ProposalListSkeleton({ count }: { count: number }) {
         <ul className="nl-profile-contribution__list" aria-busy="true">
             {Array.from({ length: count }, (_, index) => (
                 <li key={index} className="nl-profile-contribution__item">
-                    <SkeletonText className="nl-control" width="l" />
+                    <div className="nl-profile-contribution__item-head">
+                        <SkeletonText className="nl-entity-title" width="l" />
+                    </div>
                     <SkeletonText className="nl-metadata" width="s" />
                 </li>
             ))}

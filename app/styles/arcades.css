@@ -20,10 +20,6 @@
     align-items: center;
     gap: var(--nl-spacing-8);
 }
-.noslog-ui .nl-arcades__controls svg {
-    width: var(--nl-icon-small);
-    height: var(--nl-icon-small);
-}
 /* 672 미만 — 필터는 검색줄 오른쪽 아이콘 버튼(44), 정렬은 시트 요약 줄 오른쪽 ghost.
    지도 · 시트는 좌우 끝까지(실제 지도 서비스 4/4). 다른 목록 페이지의 정렬 | 필터 툴바는 그대로(2026-09-15) */
 .noslog-ui .nl-arcades__head[data-compact] {
@@ -59,12 +55,12 @@
 .noslog-ui .nl-arcades__map-region {
     min-width: 0;
     position: sticky;
-    top: 60px;
+    top: var(--nl-header-height);
     z-index: 0;
 }
 .noslog-ui .nl-arcades__catalog {
     position: relative;
-    z-index: 1;
+    z-index: var(--nl-layer-above);
     display: flex;
     flex-direction: column;
     min-width: 0;
@@ -101,7 +97,7 @@
 /* 요약 줄의 정렬 — 손잡이 줄을 덮는 투명 버튼 위에 있어야 눌린다 */
 .noslog-ui .nl-arcades__sort {
     position: relative;
-    z-index: 2;
+    z-index: calc(var(--nl-layer-above) + 1);
     flex-shrink: 0;
 }
 /* 시트 머리(손잡이 · 요약 줄)와 몸(적용 조건 · 목록 · 푸터) — 1056+ 와 지도 실패 시에는 보통 흐름 */
@@ -116,7 +112,7 @@
     display: none;
     position: absolute;
     inset: calc(-1 * var(--nl-spacing-8)) 0 0;
-    z-index: 1;
+    z-index: var(--nl-layer-above);
     border: 0;
     border-radius: var(--nl-radius-overlay) var(--nl-radius-overlay) 0 0;
     background: none;
@@ -350,7 +346,8 @@
     transform: translateX(-50%);
     min-height: 40px;
     padding-inline: var(--nl-spacing-12);
-    max-width: calc(100% - 120px);
+    /* 좌우 8 씩만 비운다 — 위 여백 8 · 범례 오른쪽 8 과 같은 값 */
+    max-width: calc(100% - 2 * var(--nl-spacing-8));
     white-space: nowrap;
 }
 /* 범례 — 오른쪽 아래 둥근 물음표 버튼(44). Compact 시트가 지도 아래 10 을 덮으므로 바닥 컨트롤은 24 위에 둔다 */
@@ -381,7 +378,7 @@
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-4);
-    z-index: 70;
+    z-index: var(--nl-layer-popover);
     max-width: min(280px, calc(100vw - 32px));
     padding: var(--nl-spacing-12);
     border-radius: var(--nl-radius-overlay);
@@ -396,7 +393,7 @@
     flex-direction: column;
     gap: var(--nl-spacing-4);
 }
-/* 마커 — 핀(오락실 하나) · 버블(범위 안 개수, 코로나 맵 언어). 타겟 44 */
+/* 마커 — 핀(오락실 하나) · 버블(범위 안 개수, 코로나 맵 언어). 타겟 44 · 핀 = 아이콘 강조 24(선택 40) */
 .noslog-ui .nl-arcade-marker {
     display: flex;
     min-width: 44px;
@@ -412,8 +409,8 @@
     align-items: flex-end;
 }
 .noslog-ui .nl-arcade-marker__pin {
-    width: 32px;
-    height: 32px;
+    width: var(--nl-icon-large);
+    height: var(--nl-icon-large);
     fill: var(--nl-feedback-warning-marker);
     stroke: var(--nl-surface-canvas);
     stroke-width: 1;
@@ -439,7 +436,7 @@
 }
 .noslog-ui .nl-arcade-marker:focus-visible > * {
     outline: var(--nl-stroke-strong) solid var(--nl-content-on-media);
-    outline-offset: 2px;
+    outline-offset: var(--nl-spacing-2);
 }
 /* 필터 레이어 */
 .noslog-ui .nl-arcades__filters {
@@ -463,25 +460,19 @@
 .noslog-ui .nl-arcade-map[data-inline-error] .nl-arcade-map__canvas {
     display: none;
 }
+/* 실패 — 공용 상태 메시지를 지도 자리 폭대로(가운데 정렬 없이) 세로 가운데에 */
+.noslog-ui .nl-arcade-map[data-state="error"] .nl-arcade-map__status {
+    align-items: stretch;
+    text-align: start;
+}
+/* 목록 지도 실패 — 지도 상자 없이 상태 메시지(오류 글자) 한 줄만(N1) */
+.noslog-ui .nl-arcade-map[data-inline-error] {
+    background: none;
+}
 .noslog-ui .nl-arcade-map[data-inline-error] .nl-arcade-map__status {
     position: static;
-    flex-direction: row;
-    justify-content: flex-start;
-    text-align: left;
-    gap: var(--nl-spacing-12);
-    background: var(--nl-feedback-danger-bg);
-    color: var(--nl-feedback-message-text);
-}
-.noslog-ui .nl-arcade-map[data-inline-error] .nl-arcade-map__status > svg {
-    flex-shrink: 0;
-    color: var(--nl-feedback-danger-marker);
-}
-.noslog-ui .nl-arcade-map[data-inline-error] .nl-arcade-map__status > p {
-    flex: 1;
-    min-width: 0;
-}
-.noslog-ui .nl-arcade-map[data-inline-error] .nl-arcade-map__status > button {
-    flex-shrink: 0;
+    padding: 0;
+    background: none;
 }
 /* 지도가 못 뜨면 시트도 sticky 를 풀고 보통 흐름으로 */
 .noslog-ui
@@ -512,7 +503,7 @@
     }
     /* 세로만 자른다 — 가로까지 자르면 가장자리에 붙은 검색창·버튼의 포커스 후광(바깥 4)이 잘린다 */
     .noslog-ui .nl-arcades[data-sheet-layout] {
-        height: calc(100dvh - 60px);
+        height: calc(100dvh - var(--nl-header-height));
         padding-bottom: 0;
         overflow-x: visible;
         overflow-y: clip;
@@ -603,10 +594,14 @@
         grid-column: 2;
         grid-row: 1;
         position: sticky;
-        top: 84px;
+        top: calc(var(--nl-header-height) + var(--nl-spacing-24));
     }
+    /* 헤더 + 위 24 + 아래 24 를 뺀 화면 높이 */
     .noslog-ui .nl-arcade-map {
-        height: min(680px, calc(100dvh - 120px));
+        height: min(
+            680px,
+            calc(100dvh - var(--nl-header-height) - 2 * var(--nl-spacing-24))
+        );
         min-height: 320px;
     }
     .noslog-ui .nl-arcade-map__legend {
@@ -645,11 +640,9 @@
 .noslog-ui .nl-arcade-detail__actions > .nl-arcade-detail__directions {
     flex: 1 1 0;
     min-width: 0;
-    min-height: var(--nl-control-height);
 }
 .noslog-ui .nl-arcade-detail__actions > .nl-arcade-detail__prefer {
     flex-shrink: 0;
-    min-height: var(--nl-control-height);
 }
 /* 선호 지정됨 — 채운 하트. 다시 누르면 해제 */
 .noslog-ui .nl-arcade-detail__actions [data-active] svg {
@@ -855,7 +848,7 @@
     flex: 1;
     align-items: center;
     min-width: 0;
-    min-height: 44px;
+    min-height: var(--nl-control-height);
     text-align: start;
 }
 .noslog-ui .nl-arcade-fact__value {
@@ -865,9 +858,12 @@
 .noslog-ui .nl-arcade-fact__tail {
     display: grid;
     place-items: center;
-    width: 44px;
-    height: 44px;
-    margin-inline-end: calc(var(--nl-spacing-12) * -1);
+    width: var(--nl-control-height);
+    height: var(--nl-control-height);
+    /* 칸 안 아이콘 잉크를 본문 오른쪽 선에 — (컨트롤 − 20) / 2 만큼 밖으로 */
+    margin-inline-end: calc(
+        (var(--nl-control-height) - var(--nl-icon-medium)) / -2
+    );
     flex-shrink: 0;
 }
 /* 영업시간 펼침 줄 — 펼침 올림 규칙(줄 전체 면, 좌우 12 를 넓혀 칠하고 글자 선은 그대로) */
@@ -893,7 +889,8 @@
 }
 /* 펼친 7일 표 — 보조 펼침 간격(위 8 · 아래 8), 들여쓰기는 아이콘 폭(20) + 간격(12) 만큼 값과 같은 선(Google 지도 · 캐치테이블과 같음) */
 .noslog-ui .nl-arcade-fact__detail {
-    padding: var(--nl-spacing-8) 0 var(--nl-spacing-8) var(--nl-spacing-32);
+    padding: var(--nl-spacing-8) 0 var(--nl-spacing-8)
+        calc(var(--nl-icon-medium) + var(--nl-spacing-12));
 }
 /* 펼친 7일 — 요일·날짜 칸(가장 긴 줄 폭) 바로 뒤에 시간. 휴무·미확인 줄은 흐리게 */
 .noslog-ui .nl-arcade-hours {
@@ -1055,7 +1052,7 @@
         grid-column: 2;
         grid-row: 1;
         position: sticky;
-        top: 84px;
+        top: calc(var(--nl-header-height) + var(--nl-spacing-24));
     }
     .noslog-ui .nl-arcade-detail__rail-only {
         display: flex;
@@ -1108,7 +1105,7 @@
     right: 0;
     bottom: 0;
     left: 0;
-    z-index: 40;
+    z-index: var(--nl-layer-bottom-bar);
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-12);
@@ -1133,9 +1130,13 @@
    토스터는 .noslog-ui 밖에 있고 sonner 가 오프셋을 인라인 변수로 넣어 !important 로 덮는다 */
 @media (max-width: 1055px) {
     html:has(.noslog-ui .nl-arcade-detail__bar) [data-sonner-toaster] {
-        --offset-bottom: calc(84px + env(safe-area-inset-bottom)) !important;
+        --offset-bottom: calc(
+            var(--nl-control-height) + var(--nl-spacing-12) * 2 +
+                var(--nl-spacing-16) + env(safe-area-inset-bottom)
+        ) !important;
         --mobile-offset-bottom: calc(
-            84px + env(safe-area-inset-bottom)
+            var(--nl-control-height) + var(--nl-spacing-12) * 2 +
+                var(--nl-spacing-16) + env(safe-area-inset-bottom)
         ) !important;
     }
 }

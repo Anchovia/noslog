@@ -15,6 +15,7 @@ import {
     useTranslations,
 } from "@/components/i18n/localeProvider";
 import Avatar from "@/components/ui/avatar";
+import ActionButton from "@/components/ui/actionButton";
 import Button from "@/components/ui/Button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { FormField, Input, fieldDescription } from "@/components/ui/formField";
@@ -356,19 +357,14 @@ export default function OnboardingForm({
                     </p>
                 ) : null}
                 <div className="nl-auth-steps">
-                    <Button
+                    <ActionButton
                         type="submit"
-                        disabled={isSubmitting}
+                        busy={step === 2 && isSubmitting}
+                        busyLabel={t("onboarding.setting")}
                         className="nl-auth-submit"
                     >
-                        {t(
-                            step === 1
-                                ? "onboarding.next"
-                                : isSubmitting
-                                  ? "onboarding.setting"
-                                  : "onboarding.start"
-                        )}
-                    </Button>
+                        {t(step === 1 ? "onboarding.next" : "onboarding.start")}
+                    </ActionButton>
                     {step === 2 ? (
                         <Button
                             variant="secondary"

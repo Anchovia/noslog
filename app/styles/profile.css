@@ -845,7 +845,7 @@
     display: flex;
     flex-direction: column;
     gap: var(--nl-spacing-4);
-    padding-block: var(--nl-spacing-12);
+    padding-block: var(--nl-spacing-8);
     border-top: var(--nl-stroke-default) solid var(--nl-border-divider);
 }
 .noslog-ui .nl-profile-contribution__item:first-child {
@@ -915,7 +915,9 @@
     }
 }
 /* 범례 — 칸 12 · 모서리 control 4, 항목 사이 12 */
+/* 범례 칸 12(가이드 「범례(칸 12 · 모서리 4)」) — 레벨별 달성 · 활동 달력 범례가 함께 쓴다 */
 .noslog-ui .nl-profile-legend {
+    --nl-profile-legend-swatch: 12px;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -930,8 +932,8 @@
     gap: var(--nl-spacing-4);
 }
 .noslog-ui .nl-profile-levels .nl-profile-legend i {
-    width: var(--nl-spacing-12);
-    height: var(--nl-spacing-12);
+    width: var(--nl-profile-legend-swatch);
+    height: var(--nl-profile-legend-swatch);
     border-radius: var(--nl-radius-control);
 }
 /* 레벨별 달성 범례 = 칸 강조 전환(2026-09-26 L1) — 글자 그대로 누르는 버튼, 고른 항목만 기본 글자색 */
@@ -1012,7 +1014,7 @@
 }
 /* 칸 16 · 사이 4 · 모서리 control 4(2026-09-26 T2 · T3 — 가이드 값만). 한 주 20 = 폰 약 17주 · 태블릿 약 36주 · 넓은 화면 53주 */
 .noslog-ui .nl-profile-calendar {
-    --nl-profile-calendar-cell: var(--nl-spacing-16);
+    --nl-profile-calendar-cell: 16px;
 }
 .noslog-ui .nl-profile-calendar__body {
     display: flex;
@@ -1047,8 +1049,8 @@
     background: var(--nl-surface-raised);
 }
 .noslog-ui .nl-profile-legend .nl-profile-calendar__cell {
-    width: var(--nl-spacing-12);
-    height: var(--nl-spacing-12);
+    width: var(--nl-profile-legend-swatch);
+    height: var(--nl-profile-legend-swatch);
 }
 .noslog-ui .nl-profile-calendar__cell[data-level="1"] {
     background: var(--nl-local-data-bucket-1);
@@ -1080,7 +1082,7 @@
     margin-inline-start: auto;
 }
 .noslog-ui .nl-profile-calendar__skeleton {
-    height: calc(var(--nl-spacing-16) * 7 + var(--nl-spacing-4) * 6);
+    height: calc(var(--nl-profile-calendar-cell) * 7 + var(--nl-spacing-4) * 6);
     border-radius: var(--nl-radius-control);
 }
 

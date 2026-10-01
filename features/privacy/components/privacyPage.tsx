@@ -41,11 +41,16 @@ function PolicyBlock({
         case "contact":
             return (
                 <dl className="nl-privacy-contact">
-                    <dt>{block.operatorLabel}</dt>
+                    <dt className="nl-body-secondary">{block.operatorLabel}</dt>
                     <dd>{block.operator}</dd>
-                    <dt>{block.emailLabel}</dt>
+                    <dt className="nl-body-secondary">{block.emailLabel}</dt>
                     <dd>
-                        <a href={`mailto:${block.email}`}>{block.email}</a>
+                        <a
+                            className="nl-link nl-text-link--underlined"
+                            href={`mailto:${block.email}`}
+                        >
+                            {block.email}
+                        </a>
                     </dd>
                 </dl>
             );
@@ -90,7 +95,7 @@ export default function PrivacyPage({
                         <h2 className="nl-component-title">{group.title}</h2>
                         <p className="nl-body-secondary">{group.text}</p>
                         <a
-                            className="nl-control"
+                            className="nl-control nl-link nl-text-link--underlined"
                             href={`#privacy-${group.target}`}
                             aria-label={`${copy.detailLabel}: ${group.title}`}
                         >
@@ -123,6 +128,7 @@ export default function PrivacyPage({
                         {section.id === "rights" ? (
                             <div className="nl-privacy-actions">
                                 <Link
+                                    className="nl-link nl-text-link--underlined"
                                     href={
                                         isAuthenticated
                                             ? settingsPath
@@ -135,6 +141,7 @@ export default function PrivacyPage({
                                 </Link>
                                 {isAuthenticated ? (
                                     <Link
+                                        className="nl-link nl-text-link--underlined"
                                         href={localizePath(
                                             "/settings?category=account",
                                             locale
@@ -147,6 +154,7 @@ export default function PrivacyPage({
                         ) : null}
                         {section.id === "history" ? (
                             <Link
+                                className="nl-link nl-text-link--underlined"
                                 href={localizePath("/privacy/history", locale)}
                             >
                                 {copy.historyLink}

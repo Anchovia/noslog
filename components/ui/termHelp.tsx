@@ -4,6 +4,11 @@ import * as Popover from "@radix-ui/react-popover";
 import { CircleHelp } from "lucide-react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 
+/** 닫은 직후 같은 손짓이 다시 여는 것을 무시하는 시간 — 셀렉트(useSelectOpen)와 같은 규칙 */
+const REOPEN_GUARD_MS = 200;
+/** 지금 열린 도움말의 닫기 함수 — 한 번에 하나만 연다(2026-10-01 V10) */
+let closeOpenTerm: (() => void) | null = null;
+
 /**
  * 용어 뜻 도움말 — 점선 밑줄 글자 + ? 16, 마우스 올림·포커스·탭으로 위쪽 작은 창(부품 결정 ④ 2026-09-15).
  * 빙고 용어(테누토 등) · 오락실 기체 상태 이유에 쓴다.
@@ -35,32 +40,53 @@ export default function TermHelp({
     const trigger = useRef<HTMLButtonElement>(null);
     /** 눌러서 연 창인지 — 올림으로 열린 창은 누름이 「고정」 이고, 고정된 창을 다시 누르면 닫는다(2026-10-01 사용자) */
     const pinned = useRef(false);
-    useEffect(
-        () => () => {
+    const closedAt = useRef(0);
+    /** 이 도움말을 곧바로 닫는다 — 다른 도움말이 열릴 때도 이것을 부른다 */
+    const closeNow = useRef(() => {
+        if (closeTimer.current) clearTimeout(closeTimer.current);
+        pinned.current = false;
+        closedAt.current = Date.now();
+        if (closeOpenTerm === closeNow.current) closeOpenTerm = null;
+        setOpen(false);
+    });
+    useEffect(() => {
+        const close = closeNow.current;
+        return () => {
             if (closeTimer.current) clearTimeout(closeTimer.current);
-        },
-        []
-    );
+            if (closeOpenTerm === close) closeOpenTerm = null;
+        };
+    }, []);
 
     function cancelClose() {
         if (closeTimer.current) clearTimeout(closeTimer.current);
     }
 
+    /** 열기 — 먼저 열린 다른 도움말은 바로 닫는다(늦게 닫혀 겹치면 번쩍인다). 닫은 직후 200ms 는 다시 열지 않는다 */
+    function openNow() {
+        cancelClose();
+        if (Date.now() - closedAt.current < REOPEN_GUARD_MS) return false;
+        if (closeOpenTerm && closeOpenTerm !== closeNow.current)
+            closeOpenTerm();
+        closeOpenTerm = closeNow.current;
+        setOpen(true);
+        return true;
+    }
+
     function scheduleClose() {
-        closeTimer.current = setTimeout(() => {
-            pinned.current = false;
-            setOpen(false);
-        }, 120);
+        closeTimer.current = setTimeout(closeNow.current, 120);
     }
 
     return (
-        <Popover.Root open={open} onOpenChange={setOpen}>
+        <Popover.Root
+            open={open}
+            onOpenChange={(next) => {
+                if (next) openNow();
+                else closeNow.current();
+            }}
+        >
             <span
                 className={plain ? "nl-term nl-term--plain" : "nl-term"}
-                onMouseEnter={() => {
-                    cancelClose();
-                    setOpen(true);
-                }}
+                onMouseEnter={openNow}
                 onMouseLeave={scheduleClose}
             >
                 <Popover.Trigger asChild>
@@ -73,18 +99,16 @@ export default function TermHelp({
                                 ? "nl-term__trigger nl-term__trigger--plain"
                                 : "nl-term__trigger"
                         }
-                        onFocus={() => setOpen(true)}
+                        onFocus={openNow}
                         onClick={(event) => {
                             // 올림 · 포커스로 이미 열려 있을 수 있다 — 첫 누름은 그 자리에 고정, 고정된 창을 누르면 닫는다
                             event.preventDefault();
                             cancelClose();
                             if (open && pinned.current) {
-                                pinned.current = false;
-                                setOpen(false);
+                                closeNow.current();
                                 return;
                             }
-                            pinned.current = true;
-                            setOpen(true);
+                            if (open || openNow()) pinned.current = true;
                         }}
                     >
                         <span>{children}</span>

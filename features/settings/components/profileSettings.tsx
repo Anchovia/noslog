@@ -9,6 +9,7 @@ import {
     useTranslations,
 } from "@/components/i18n/localeProvider";
 import Button from "@/components/ui/Button";
+import ActionButton from "@/components/ui/actionButton";
 import Avatar from "@/components/ui/avatar";
 import { FormField, Input, fieldDescription } from "@/components/ui/formField";
 import CompactSelect from "@/components/ui/compactSelect";
@@ -91,6 +92,8 @@ export default function ProfileSettings({
     const [country, setCountry] = useState<
         SettingsProfileValues["country"] | null
     >(null);
+    // 닉네임 「저장」 만 바쁨(스피너 + 진행형 라벨) — 다른 칸을 저장하는 동안은 비활성
+    const [savingUsername, setSavingUsername] = useState(false);
     const fileInput = useRef<HTMLInputElement>(null);
     const photoButton = useRef<HTMLButtonElement>(null);
     const arcadeButton = useRef<HTMLButtonElement>(null);
@@ -189,7 +192,12 @@ export default function ProfileSettings({
     }
     async function saveUsername() {
         if (!(await trigger("username"))) return;
-        await commit("username", { username: getValues("username") });
+        setSavingUsername(true);
+        try {
+            await commit("username", { username: getValues("username") });
+        } finally {
+            setSavingUsername(false);
+        }
     }
     // 사진 = 자르기 「적용」 에서 바로 올리고 저장(GitHub · Figma · osu! 식)
     async function saveAvatar(file: File) {
@@ -332,17 +340,15 @@ export default function ProfileSettings({
                                 }}
                             />
                             {usernameChanged ? (
-                                <Button
+                                <ActionButton
                                     type="submit"
                                     variant="secondary"
-                                    disabled={busy}
+                                    disabled={busy && !savingUsername}
+                                    busy={savingUsername}
+                                    busyLabel={t("settings.saving")}
                                 >
-                                    {t(
-                                        busy
-                                            ? "settings.saving"
-                                            : "settings.save"
-                                    )}
-                                </Button>
+                                    {t("settings.save")}
+                                </ActionButton>
                             ) : null}
                         </div>
                     </FormField>

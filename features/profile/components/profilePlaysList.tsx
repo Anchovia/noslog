@@ -13,6 +13,7 @@ import {
     useLocalizedHref,
     useTranslations,
 } from "@/components/i18n/localeProvider";
+import ActionButton from "@/components/ui/actionButton";
 import Button from "@/components/ui/Button";
 import { SegmentedControl } from "@/components/ui/segmentedControl";
 import { StatusMessage } from "@/components/ui/statusMessage";
@@ -237,13 +238,14 @@ export default function ProfilePlaysList({
             (result.hasNextPage || plays.length > batch) ? (
                 <div className="nl-profile-list-actions">
                     {result.hasNextPage ? (
-                        <Button
+                        <ActionButton
                             variant="secondary"
-                            disabled={busy}
+                            busy={result.isFetchingNextPage}
+                            busyLabel={t("discovery.loading")}
                             onClick={() => void result.fetchNextPage()}
                         >
                             {t("profile.more")}
-                        </Button>
+                        </ActionButton>
                     ) : null}
                     {plays.length > batch ? (
                         <Button

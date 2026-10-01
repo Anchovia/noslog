@@ -16,14 +16,14 @@ export default async function HomeAnnouncements({
     const { locale, t } = await getServerI18n();
     return (
         <section className="nl-home-update nl-home-announcements">
-            <div className="nl-home-update__heading">
+            <div className="nl-heading-row">
                 <h2 className="nl-section-title">{t("home.announcements")}</h2>
                 <Link
                     href={getLocalizedHref("/announcements", locale)}
-                    className="nl-control"
+                    className="nl-heading-link nl-control"
                 >
                     {t("home.allAnnouncements")}
-                    {/* 사이트 안 이동 — 옆 「공식 X ↗」(사이트 밖)와 같은 16 · 간격 4 */}
+                    {/* 공용 제목 링크(nl-heading-link) — 꺾쇠 16 · 간격 4 · 광학 −4 */}
                     <ChevronRight aria-hidden />
                 </Link>
             </div>

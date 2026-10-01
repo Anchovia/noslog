@@ -70,8 +70,6 @@ describe("NosLog design foundation", () => {
         const allowed = new Set([
             // 랭킹 행 명판 — 이름 글줄(20)에 맞춘 상자 여백 2/6
             "globalRankings.css: padding: var(--nl-spacing-2) 6px",
-            // 슬라이더 손잡이 세로 맞춤 — (트랙 4 − 손잡이 20) / 2
-            "chartViewer.css: margin-top: -8px",
             // 빙고 미니 판 칸(6) · 범례 네모(12) — 모서리 토큰 4 는 크기에 비해 크다
             "bingos.css: border-radius: 1px",
             "bingos.css: border-radius: 2px",
