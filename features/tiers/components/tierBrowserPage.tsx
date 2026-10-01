@@ -402,16 +402,21 @@ export default function TierBrowserPage({
         >
             <div className="nl-page-heading">
                 <div className="nl-page-heading__copy">
-                    {/* 제목 = 서열표 스위처(2026-09-22 ④) — 네 서열표를 여기서 고른다 */}
-                    <h1 className="nl-tier-heading">
-                        <span className="sr-only">{t("tiers.title")}</span>
+                    {/* 제목 = 서열표 스위처(2026-09-22 ④) — 네 서열표를 여기서 고른다.
+                        h1 은 화면 읽기용 「S 서열표」, 고르기 버튼은 h1 밖(2026-10-01 접근성 — 제목 안 버튼은 h1 이 「서열표 서열표 선택」 으로 읽혔다) */}
+                    <div className="nl-tier-heading">
+                        <h1 className="sr-only">
+                            {t("tiers.goalOption", {
+                                goal: tierListLabel(query.mode, query.goal),
+                            })}
+                        </h1>
                         <TierListSwitcher
                             value={query}
                             onValueChange={({ mode, goal }) =>
                                 commit({ ...query, mode, goal, bands: [] })
                             }
                         />
-                    </h1>
+                    </div>
                     {meta}
                 </div>
                 {moreMenu}
@@ -424,6 +429,8 @@ export default function TierBrowserPage({
                         className="nl-tier-rail"
                         aria-label={t("tiers.conditions")}
                     >
+                        {/* 필터 그룹 제목(h3) 위 단계 — 화면에 안 보이게(2026-10-01 접근성 heading-order) */}
+                        <h2 className="sr-only">{t("tiers.conditions")}</h2>
                         <TierFilterFields
                             query={query}
                             onChange={commit}

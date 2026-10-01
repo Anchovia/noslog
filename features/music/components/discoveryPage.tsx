@@ -521,6 +521,8 @@ export default function DiscoveryPage({
                         className="nl-discovery__rail"
                         aria-label={t("music.filter")}
                     >
+                        {/* 필터 그룹 제목(h3) 위 단계 — 창 · 팝오버의 h2 「필터」 와 같은 자리, 레일은 화면에 안 보이게(2026-10-01 접근성 heading-order) */}
+                        <h2 className="sr-only">{t("music.filter")}</h2>
                         <DiscoveryFilters
                             query={rangeDraft ?? query}
                             signedIn={Boolean(accountId)}
