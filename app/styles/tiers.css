@@ -1,5 +1,5 @@
 .noslog-ui .nl-tiers {
-    padding-block: var(--nl-spacing-24) var(--nl-spacing-32);
+    padding-block: var(--nl-spacing-24) var(--nl-spacing-48);
 }
 .noslog-ui .nl-tier-layout {
     display: flex;

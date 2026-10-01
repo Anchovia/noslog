@@ -6,7 +6,7 @@
     --nl-rank-2: var(--nl-exam-tier-high);
     --nl-rank-3: var(--nl-exam-tier-mid);
     --nl-ranking-inset: var(--nl-spacing-12);
-    padding-block: var(--nl-spacing-24) var(--nl-spacing-32);
+    padding-block: var(--nl-spacing-24) var(--nl-spacing-48);
 }
 .noslog-ui .nl-global-rankings__measure {
     display: flex;

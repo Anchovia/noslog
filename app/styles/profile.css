@@ -270,7 +270,8 @@
 }
 .noslog-ui .nl-profile {
     gap: var(--nl-spacing-32);
-    padding-block: var(--nl-spacing-32);
+    /* 아래 = 페이지 끝 48(2026-10-01 E1) */
+    padding-block: var(--nl-spacing-32) var(--nl-spacing-48);
 }
 /* 머리 →32→ 탭 →24→ 내용(2026-09-28 인상 점검 B1 — 탭은 아래 내용에 붙인다: NN/g · 실제 서비스 13곳 탭 → 내용 약 20) */
 .noslog-ui .nl-profile > .nl-tabs + * {
