@@ -27,6 +27,8 @@ export default async function HomePage() {
         "@context": "https://schema.org",
         "@type": "WebSite",
         name: SITE_NAME,
+        // 검색 결과의 사이트 이름 후보(Google 사이트 이름 — 2026-10-01 메타데이터 점검 S)
+        alternateName: "노스로그",
         url: `${SITE_URL}${homeHref}`,
         description: t("home.tagline"),
         inLanguage: locale,
