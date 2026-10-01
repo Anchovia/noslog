@@ -344,7 +344,7 @@ export default function DiscoveryPage({
             className="nl-filter-icon-trigger"
             aria-label={t("music.filter")}
         >
-            <ListFilter className="nl-icon-small" aria-hidden />
+            <ListFilter className="nl-icon" aria-hidden />
             {appliedCount ? (
                 <span className="nl-filter-count nl-metadata">
                     {appliedCount}

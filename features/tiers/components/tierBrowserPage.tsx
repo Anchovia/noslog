@@ -473,7 +473,7 @@ export default function TierBrowserPage({
                                             aria-label={t("music.filter")}
                                         >
                                             <ListFilter
-                                                className="nl-icon-small"
+                                                className="nl-icon"
                                                 aria-hidden
                                             />
                                             {filterCount ? (

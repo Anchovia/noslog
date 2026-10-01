@@ -86,7 +86,7 @@ export default function PrivacyContents({
     const links = sections.map((section) => (
         <li key={section.id}>
             <a
-                className="nl-body-secondary nl-link nl-text-link--underlined"
+                className="nl-body-secondary nl-link"
                 href={`#privacy-${section.id}`}
                 aria-current={
                     active === `privacy-${section.id}` ? "location" : undefined

@@ -1,15 +1,3 @@
-.noslog-ui .nl-metric {
-    display: flex;
-    min-width: 0;
-    flex-direction: column;
-    gap: var(--nl-spacing-4);
-}
-.noslog-ui .nl-metric__value {
-    display: flex;
-    align-items: baseline;
-    gap: var(--nl-spacing-4);
-    flex-wrap: wrap;
-}
 .noslog-ui .nl-line-chart {
     display: flex;
     flex-direction: column;

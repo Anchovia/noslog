@@ -1375,17 +1375,12 @@ html[data-theme="light"] .noslog-ui,
     justify-self: end;
     text-align: end;
 }
-/* 로그인 안내(2026-09-26 F1 · 2026-09-28 A5) — 제목 앞 자물쇠 16(→8→ 글자) →4→ 설명. 원 면 없음(피드백 「보냄」 과 같은 배치) */
+/* 로그인 안내(2026-09-26 F1 · 2026-09-28 A5) — 제목 →4→ 설명. 원 면 · 아이콘 없음(2026-10-01 — 안내 · 상태 글은 글자만) */
 .noslog-ui .nl-login-prompt {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: var(--nl-spacing-4);
-}
-.noslog-ui .nl-login-prompt__title {
-    display: flex;
-    align-items: center;
-    gap: var(--nl-spacing-8);
 }
 .noslog-ui .nl-login-prompt p {
     margin: 0;

@@ -1,12 +1,18 @@
 import { ImageResponse } from "next/og";
 
-const colors = {
-    background: "#0b0b10",
-    surface: "#121218",
-    border: "#2a2a35",
-    primary: "#f2f2f5",
-    secondary: "#a0a0aa",
-};
+/**
+ * 아이콘 · 공유 이미지 색 = tokens.css 다크 값(2026-10-01 D13). 이미지는 CSS 변수를 못 읽어 값을 옮겨 둔다 —
+ * 값이 토큰과 같은지는 tests/brand-image-colors.test.ts 가 tokens.css 를 읽어 확인한다
+ */
+export const BRAND_IMAGE_DARK_HEX = {
+    background: "#111111", // surface-canvas
+    surface: "#1b1b1b", // surface-surface
+    border: "#323232", // border-divider
+    primary: "#dbdbdb", // identity-mark (워드마크 · N 로고)
+    secondary: "#afafaf", // content-subdued
+} as const;
+
+const colors = BRAND_IMAGE_DARK_HEX;
 
 export function createBrandIcon(size: number) {
     return new ImageResponse(
