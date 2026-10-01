@@ -247,6 +247,8 @@ export const jaMessages = {
     "common.jacket": "{title}のジャケット",
     "common.notifications": "通知",
     "common.notFoundTitle": "ページが見つかりません。",
+    "privacy.metaDescription":
+        "NosLogがどの情報をなぜ集め、どのくらい保管し、どう削除できるかを説明します。",
     "common.notFoundDescription": "URLが変更されたか、存在しないページです。",
     "common.goHome": "ホームへ移動",
     "common.home": "ホーム",
@@ -363,6 +365,8 @@ export const jaMessages = {
     "announcements.newer": "次の記事",
     "announcements.backToList": "一覧へ",
     "events.title": "イベント",
+    "events.metaDescription":
+        "NOSTALGIAコミュニティのイベント・大会情報をまとめています。",
     "events.write": "書く",
     "events.mine": "自分の投稿",
     "events.tabs": "イベントの状態",
@@ -496,6 +500,8 @@ export const jaMessages = {
     "home.arcades": "ゲームセンター",
     "home.dataSyncGuide": "データ連携ガイド",
     "home.announcements": "お知らせ",
+    "announcements.metaDescription":
+        "NosLogのアップデート・メンテナンス・お知らせです。",
     "news.title": "ニュース",
     "news.tabs": "ニュースの掲示板",
     "home.officialNews": "NOSTALGIA 公式ニュース",
@@ -775,6 +781,8 @@ export const jaMessages = {
         "このニックネームはすでに使用されています。",
     "onboarding.error.generic": "プロフィール設定を完了できませんでした。",
     "rankings.title": "ユーザーランキング",
+    "rankings.metaDescription":
+        "NOSTALGIAプレイヤーをGrd・レーティングで並べた世界・国別ランキングです。",
     "rankings.showOfficialGrade": "公式Grdに戻る",
     "rankings.loadingInitial": "ランキングを読み込んでいます。",
     "rankings.examGrade": "{exam}級",
@@ -808,6 +816,8 @@ export const jaMessages = {
     "country.japan": "日本",
     "country.global": "グローバル",
     "tiers.title": "難易度表",
+    "tiers.metaDescription":
+        "NOSTALGIAの楽曲をS・990k・Pianist・Recitalの目標ごとに体感難易度順で並べた難易度表です。区間・難易度・レベルで絞り込めます。",
     "tiers.editCurrent": "現在の難易度表を編集",
     "tiers.conditions": "難易度表の条件",
     "tiers.modeNav": "難易度表モード",
@@ -886,6 +896,8 @@ export const jaMessages = {
     "tiers.guideRequirement": "達成条件",
     "tiers.guideMinScore": "{score}点以上",
     "bingo.title": "ビンゴ",
+    "bingo.metaDescription":
+        "NOSTALGIAのビンゴミッションと報酬を確認し、マスにチェックして進み具合を記録できます。",
     "bingo.requiredLinesLabel": "必要ライン {count}",
     "bingo.lineComplete": "完成したライン",
     "bingo.info": "ビンゴ情報",
@@ -1108,6 +1120,8 @@ export const jaMessages = {
     "exams.error.invalidUrl": "許可されていない画像URLです。",
     "exams.error.submit": "合格証明の提出に失敗しました。",
     "arcades.title": "ゲームセンター",
+    "arcades.metaDescription":
+        "NOSTALGIAの筐体があるゲームセンターを地図で探し、営業時間・筐体の状態を確認できます。",
     "arcades.mapRegion": "地図の地域",
     "arcades.scope.nationwide": "全国",
     "arcades.scope.seoul": "ソウル",
@@ -1302,10 +1316,11 @@ export const jaMessages = {
         "連携トークンを再発行できませんでした。もう一度お試しください。",
     "sync.gifPlaceholder": "{label} GIF用スペース",
     "sync.gifPending": "サンプルGIF準備中",
-    "profile.metaTitle": "{name}のプロフィール",
     "profile.fallbackTitle": "ユーザープロフィール",
+    "profile.metaDescriptionPrivate": "{name}のNosLogプロフィール",
+    "profile.shareImageAlt": "{name}のNosLogプロフィールカード",
     "profile.metaDescription":
-        "NosLogユーザーのNOSTALGIAプレー記録と実績です。",
+        "{name}のNOSTALGIA Grd・レーティング・ベスト記録・実績",
     "profile.settings": "プロフィール設定",
     "profile.joined": "{date} 登録",
     "profile.lastPlayed": "最終プレー {date}",
@@ -2117,8 +2132,6 @@ export const jaMessages = {
     "editor.zoomOut": "タイミング表示を縮小",
     // 업적(2026-09-24)
     "achievement.title": "実績",
-    "achievement.metaTitle": "{name}の実績",
-    "achievement.metaDescription": "NOSTALGIAの記録から自動で集まる実績と段階",
     "achievement.count": "実績 {earned} / {total}",
     "achievement.all": "すべて見る",
     "achievement.recent": "最近の達成",

@@ -25,6 +25,13 @@ old design-stage checklist. Changes to material behavior require a user decision
   Client-side hidden or disabled controls are not authorization.
 - Keep keyboard operation, labels, focus restoration, accessible errors and retries.
   Explicit destructive confirmation is separate from ordinary navigation or save.
+- Page metadata (2026-10-01): every page sets its own title, a description that
+  summarizes that page (posts use the first paragraph of the body, not the title), a
+  canonical URL, ko/ja/en alternates plus `x-default` (the unprefixed URL, which the
+  proxy sends to the browser language), `og:locale:alternate`, and a share image —
+  the site image by default, the chart jacket on chart details (small card), and the
+  profile card on profiles. Setting `openGraph` in a page replaces the parent's
+  images, so pages build metadata through `createPageMetadata`. No `keywords` meta.
 
 ## Authentication, profile settings and account deletion
 
@@ -74,6 +81,10 @@ old design-stage checklist. Changes to material behavior require a user decision
 - Apply visibility consistently to public profiles, incremental results, ranking
   identity, share cards and server-generated metadata. CSS hiding is insufficient.
   Do not leak private values through response payloads or generated images.
+- Profile share image (2026-10-01): `/profile/[id]/share-image` is the public Basic
+  card for link previews. When play scores are off it returns 404 and the profile
+  metadata uses the site image and a description without score words. The download
+  card `/profile/[id]/card` stays owner-only. Profiles remain `noindex`.
 - Basic and Recital retain their distinct record/grade meaning. Show the highest
   approved exam achievement per mode; do not introduce a generic `GRADE 57` badge.
 - The public profile (2026-09-25) is one head (identity, meta line, mode, headline

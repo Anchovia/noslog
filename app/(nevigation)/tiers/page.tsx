@@ -13,6 +13,7 @@ export async function generateMetadata() {
     const { locale, t } = await getServerI18n();
     return createPageMetadata({
         title: t("tiers.title"),
+        description: t("tiers.metaDescription"),
         path: `/${locale}/tiers`,
     });
 }
