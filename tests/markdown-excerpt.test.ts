@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { markdownExcerpt } from "@/lib/metadata/excerpt";
+import { markdownExcerpt, stripTags } from "@/lib/metadata/excerpt";
 
 describe("markdownExcerpt", () => {
     it("keeps only the text of the first paragraph", () => {
@@ -35,6 +35,12 @@ describe("markdownExcerpt", () => {
         )!;
         expect(result).not.toMatch(/[<>]/);
         expect(result).toContain("안내 굵게");
+    });
+    it("strips tags without ever leaving an angle bracket", () => {
+        expect(stripTags("<b>굵게</b> 글")).toBe("굵게 글");
+        expect(stripTags("<scr<script>ipt>")).not.toMatch(/[<>]/);
+        expect(stripTags("a < b")).toBe("a  b");
+        expect(stripTags("> 인용")).toBe(" 인용");
     });
     it("returns null when nothing readable is left", () => {
         expect(markdownExcerpt("![](a.png)\n\n```\nx\n```")).toBeNull();
