@@ -112,9 +112,6 @@
 .noslog-ui .nl-player-row__identity > .nl-term {
     flex-shrink: 0;
 }
-.noslog-ui .nl-player-row__identity {
-    position: relative;
-}
 .noslog-ui .nl-player-row__identity[data-contribution="hidden"] > .nl-term {
     position: absolute;
     inset-inline-start: 0;
@@ -136,6 +133,28 @@
     .nl-exam-badge[data-tier="peak"]
     .nl-exam-badge__divider::before {
     top: 2px;
+}
+/* 줄 전체 = 프로필 링크(2026-10-01 사용자) — 이름 링크의 누르는 자리를 줄 전체로 넓힌다.
+   기여 라벨 도움말만 그 위에서 따로 눌린다. 올림은 줄 전체 면(가이드 「올림 = 줄 전체」) */
+.noslog-ui .nl-player-row {
+    position: relative;
+}
+.noslog-ui .nl-player-row__link::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+}
+.noslog-ui .nl-player-row__identity > .nl-term {
+    position: relative;
+    z-index: 1;
+}
+@media (hover: hover) {
+    .noslog-ui .nl-player-row:has(.nl-player-row__link:hover) {
+        background-image: linear-gradient(
+            var(--nl-interaction-hover),
+            var(--nl-interaction-hover)
+        );
+    }
 }
 .noslog-ui .nl-player-row__link {
     min-width: 0;
