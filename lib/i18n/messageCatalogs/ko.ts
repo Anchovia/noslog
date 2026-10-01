@@ -1391,9 +1391,8 @@ export const koMessages = {
     "profile.activity.scrollHint": "최근 1년 기록",
     "profile.activity.hidden": "이 플레이어는 플레이 활동을 공개하지 않습니다.",
     "profile.pinned.title": "고정 기록",
-    "profile.pinned.auto": "자동 · 베스트 상위 3곡",
     "profile.pinned.help":
-        "프로필 개요 맨 위에 {max}개까지 고정하고, 기록마다 한 줄 소감을 적을 수 있습니다.",
+        "프로필에 {max}개까지 고정 가능하며, 기록마다 소감을 적을 수 있습니다.",
     "profile.pinned.search": "곡 이름으로 기록 찾기",
     "profile.pinned.results": "{count}개 기록",
     "profile.pinned.full": "{max}칸이 모두 찼습니다. 하나를 빼고 고르세요.",
@@ -2137,8 +2136,7 @@ export const koMessages = {
         "업적을 걸지 못했습니다. 잠시 후 다시 시도해 주세요.",
     "achievement.settings.label": "프로필 업적",
     "achievement.settings.change": "변경",
-    "achievement.settings.auto": "자동 · 높은 단계 순",
-    "achievement.settings.help": "프로필 이름 옆에 {max}개까지 걸립니다.",
+    "achievement.settings.help": "프로필에 {max}개까지 전시 가능합니다.",
     "achievement.settings.dialogHelp":
         "{max}개까지 고를 수 있고, 고른 순서대로 걸립니다.",
     "achievement.settings.emptySlot": "빈 칸",

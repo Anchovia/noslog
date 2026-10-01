@@ -97,16 +97,11 @@ export default function PinnedRecordsPicker({
             <p className="nl-control">{t("profile.pinned.title")}</p>
             <div className="nl-settings__arcade-row">
                 {records.length ? (
+                    // 고른 것이 없으면 값 자리는 비워 둔다(자동 = 베스트 상위 3곡, 글자 설명 없음 — 2026-10-01 사용자)
                     <p className="nl-body">
-                        {selected.length ? (
-                            selected
-                                .map((item) => byChart.get(item.chartId)!.title)
-                                .join(" · ")
-                        ) : (
-                            <span className="nl-metadata nl-muted">
-                                {t("profile.pinned.auto")}
-                            </span>
-                        )}
+                        {selected
+                            .map((item) => byChart.get(item.chartId)!.title)
+                            .join(" · ")}
                     </p>
                 ) : (
                     <p className="nl-body nl-muted">

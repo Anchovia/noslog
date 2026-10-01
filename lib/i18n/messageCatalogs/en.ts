@@ -1405,9 +1405,8 @@ export const enMessages = {
     "profile.activity.scrollHint": "Past year of plays",
     "profile.activity.hidden": "This player keeps their play activity private.",
     "profile.pinned.title": "Pinned records",
-    "profile.pinned.auto": "Automatic · top 3 bests",
     "profile.pinned.help":
-        "Pin up to {max} records at the top of your profile overview, each with an optional one-line note.",
+        "Pin up to {max} records to your profile and add a note to each.",
     "profile.pinned.search": "Find a record by song title",
     "profile.pinned.results": "{count} records",
     "profile.pinned.full":
@@ -2167,9 +2166,8 @@ export const enMessages = {
         "Couldn't update your profile achievements. Try again shortly.",
     "achievement.settings.label": "Profile achievements",
     "achievement.settings.change": "Change",
-    "achievement.settings.auto": "Automatic · highest tiers first",
     "achievement.settings.help":
-        "Up to {max} are shown next to your profile name.",
+        "Up to {max} can be displayed on your profile.",
     "achievement.settings.dialogHelp":
         "Pick up to {max}. They are shown in the order you pick them.",
     "achievement.settings.emptySlot": "Empty",

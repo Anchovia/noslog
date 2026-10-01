@@ -1395,9 +1395,8 @@ export const jaMessages = {
     "profile.activity.scrollHint": "直近1年の記録",
     "profile.activity.hidden": "このプレイヤーはプレイ活動を公開していません。",
     "profile.pinned.title": "固定記録",
-    "profile.pinned.auto": "自動 · ベスト上位3曲",
     "profile.pinned.help":
-        "プロフィール概要の上に{max}件まで固定し、記録ごとに一言コメントを付けられます。",
+        "プロフィールに{max}件まで固定でき、記録ごとにコメントを書けます。",
     "profile.pinned.search": "曲名で記録を探す",
     "profile.pinned.results": "{count}件の記録",
     "profile.pinned.full":
@@ -2157,9 +2156,7 @@ export const jaMessages = {
         "実績を更新できませんでした。しばらくしてからもう一度お試しください。",
     "achievement.settings.label": "プロフィールの実績",
     "achievement.settings.change": "変更",
-    "achievement.settings.auto": "自動 · 高い段階順",
-    "achievement.settings.help":
-        "プロフィール名の横に{max}個まで表示されます。",
+    "achievement.settings.help": "プロフィールに{max}個まで飾れます。",
     "achievement.settings.dialogHelp":
         "{max}個まで選べます。選んだ順に表示されます。",
     "achievement.settings.emptySlot": "空き",
