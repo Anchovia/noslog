@@ -29,6 +29,13 @@ describe("markdownExcerpt", () => {
         expect(result.endsWith("…")).toBe(true);
         expect(result).not.toMatch(/\s…$/);
     });
+    it("leaves no angle brackets behind, even from nested tags", () => {
+        const result = markdownExcerpt(
+            "<scr<script>ipt>alert(1)</script> 안내 <b>굵게</b> a < b"
+        )!;
+        expect(result).not.toMatch(/[<>]/);
+        expect(result).toContain("안내 굵게");
+    });
     it("returns null when nothing readable is left", () => {
         expect(markdownExcerpt("![](a.png)\n\n```\nx\n```")).toBeNull();
     });
