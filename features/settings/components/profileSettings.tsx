@@ -52,13 +52,15 @@ export default function ProfileSettings({
     const {
         register,
         control,
-        handleSubmit,
         setValue,
+        getValues,
         setError,
         clearErrors,
         reset,
+        resetField,
+        trigger,
         setFocus,
-        formState: { errors, isDirty, isValid, isSubmitting },
+        formState: { errors },
     } = useForm<SettingsProfileFormValues, unknown, SettingsProfileValues>({
         resolver: zodResolver(schema),
         mode: "onChange",
@@ -71,6 +73,14 @@ export default function ProfileSettings({
         name: "achievementShowcase",
     });
     const pinnedRecords = useWatch({ control, name: "pinnedRecords" });
+    const username = useWatch({ control, name: "username" });
+    // 칸마다 바로 저장(2026-10-01 B — Misskey 식) — 마지막으로 저장된 값. 한 칸을 저장할 때 나머지는 이 값 그대로 보낸다
+    const [savedProfile, setSavedProfile] = useState<SettingsProfileFormValues>(
+        user.profile
+    );
+    const [busy, setBusy] = useState(false);
+    // 닉네임만 명시 저장 — 바꿨을 때만 칸 옆 「저장」(Enter = 저장 · Esc = 되돌림)
+    const usernameChanged = username !== savedProfile.username;
     const [saved, setSaved] = useState("");
     const [crop, setCrop] = useState<File | null>(null);
     const [staged, setStaged] = useState<{ file: File; url: string } | null>(
@@ -111,61 +121,124 @@ export default function ProfileSettings({
         }
         setCrop(file);
     }
-    async function submit(values: SettingsProfileValues) {
+    /**
+     * 한 칸 저장 — 저장된 값에 이 칸만 바꿔 보낸다. 실패하면 그 칸을 되돌리고(닉네임은 쓴 글자를 남긴다) 알린다(공개 설정과 같은 규칙)
+     */
+    async function commit(
+        field: keyof SettingsProfileFormValues,
+        change: Partial<SettingsProfileFormValues>
+    ) {
         setSaved("");
         clearErrors("root");
+        clearErrors(field);
+        const revert = () => {
+            if (field !== "username")
+                setValue(field, savedProfile[field] ?? "");
+        };
         if (!navigator.onLine) {
+            revert();
             applyFormRootError(
                 setError,
-                `${t("settings.offline")} ${t("settings.offlineRetained")}`
+                field === "username"
+                    ? `${t("settings.offline")} ${t("settings.offlineRetained")}`
+                    : t("settings.offline")
             );
-            return;
+            return false;
         }
+        setBusy(true);
         try {
-            let nextAvatar = values.avatar;
-            if (staged && nextAvatar === staged.url) {
-                if (uploaded.current?.file !== staged.file) {
-                    const grant = await requestProfileAvatarUpload(
-                        staged.file.type,
-                        locale
-                    );
-                    if (!grant.success) {
-                        setError("avatar", { message: grant.message });
-                        return;
-                    }
-                    const url = await uploadGrantedImage(
-                        staged.file,
-                        grant,
-                        "public"
-                    );
-                    uploaded.current = { file: staged.file, url };
-                }
-                nextAvatar = uploaded.current.url;
-            }
             const result = await submitAction(
-                settingsFormData({ ...values, avatar: nextAvatar })
+                settingsFormData({
+                    ...savedProfile,
+                    ...change,
+                } as SettingsProfileValues)
             );
             if (!result.success) {
                 applyFormFieldErrors(setError, result.fieldErrors);
-                if (result.fieldErrors?.username) setFocus("username");
+                if (field === "username") setFocus("username");
+                else revert();
                 applyFormRootError(setError, result.message);
-                return;
+                return false;
             }
+            // 다른 칸을 저장해도 고치던 닉네임은 그대로 둔다
+            const pendingName = getValues("username");
+            setSavedProfile(result.values);
             reset(result.values);
-            setStaged(null);
-            uploaded.current = null;
+            if (field !== "username" && pendingName !== result.values.username)
+                setValue("username", pendingName);
             setSaved(result.message);
+            return true;
         } catch {
+            revert();
             applyFormRootError(setError, t("settings.saveError"));
+            return false;
+        } finally {
+            setBusy(false);
+        }
+    }
+    function change(
+        field:
+            | "avatar"
+            | "preferredArcadeId"
+            | "achievementShowcase"
+            | "pinnedRecords",
+        value: string
+    ) {
+        setValue(field, value);
+        void commit(field, { [field]: value });
+    }
+    async function saveUsername() {
+        if (!(await trigger("username"))) return;
+        await commit("username", { username: getValues("username") });
+    }
+    // 사진 = 자르기 「적용」 에서 바로 올리고 저장(GitHub · Figma · osu! 식)
+    async function saveAvatar(file: File) {
+        clearErrors("root");
+        clearErrors("avatar");
+        if (!navigator.onLine) {
+            applyFormRootError(setError, t("settings.offline"));
+            return;
+        }
+        const preview = URL.createObjectURL(file);
+        setStaged({ file, url: preview });
+        setValue("avatar", preview);
+        setBusy(true);
+        try {
+            if (uploaded.current?.file !== file) {
+                const grant = await requestProfileAvatarUpload(
+                    file.type,
+                    locale
+                );
+                if (!grant.success) {
+                    setValue("avatar", savedProfile.avatar);
+                    setError("avatar", { message: grant.message });
+                    return;
+                }
+                uploaded.current = {
+                    file,
+                    url: await uploadGrantedImage(file, grant, "public"),
+                };
+            }
+            if (await commit("avatar", { avatar: uploaded.current.url }))
+                uploaded.current = null;
+        } catch {
+            setValue("avatar", savedProfile.avatar);
+            setError("avatar", { message: t("settings.saveError") });
+        } finally {
+            setStaged(null);
+            setBusy(false);
         }
     }
     return (
         <>
             <form
                 className="nl-settings__form"
-                onSubmit={(event) => void handleSubmit(submit)(event)}
+                onSubmit={(event) => {
+                    event.preventDefault();
+                    if (usernameChanged && !busy) void saveUsername();
+                }}
                 noValidate
-                aria-busy={isSubmitting}
+                aria-busy={busy}
             >
                 {/* 줄 목록(2026-10-01 C1) — Canva · Discord · 넥슨 식. 라벨 · 값 왼쪽, 버튼 오른쪽, 입력칸만 라벨 위 */}
                 <div className="nl-settings__rows">
@@ -197,7 +270,7 @@ export default function ProfileSettings({
                             <Button
                                 ref={photoButton}
                                 variant="secondary"
-                                disabled={isSubmitting}
+                                disabled={busy}
                                 onClick={() => fileInput.current?.click()}
                             >
                                 {t("settings.changePhoto")}
@@ -205,14 +278,11 @@ export default function ProfileSettings({
                             {avatar ? (
                                 <Button
                                     variant="ghost"
-                                    disabled={isSubmitting}
+                                    disabled={busy}
                                     onClick={() => {
-                                        setValue("avatar", "", {
-                                            shouldDirty: true,
-                                            shouldValidate: true,
-                                        });
                                         setStaged(null);
                                         uploaded.current = null;
+                                        change("avatar", "");
                                     }}
                                 >
                                     {t("settings.removePhoto")}
@@ -236,17 +306,45 @@ export default function ProfileSettings({
                         help={t("settings.nicknameHelp")}
                         error={errors.username?.message}
                     >
-                        <Input
-                            id="settings-nickname"
-                            autoComplete="nickname"
-                            readOnly={isSubmitting}
-                            aria-invalid={Boolean(errors.username)}
-                            aria-describedby={fieldDescription(
-                                "settings-nickname",
-                                { help: true, error: Boolean(errors.username) }
-                            )}
-                            {...register("username")}
-                        />
+                        <div className="nl-settings__inline-save">
+                            <Input
+                                id="settings-nickname"
+                                autoComplete="nickname"
+                                readOnly={busy}
+                                aria-invalid={Boolean(errors.username)}
+                                aria-describedby={fieldDescription(
+                                    "settings-nickname",
+                                    {
+                                        help: true,
+                                        error: Boolean(errors.username),
+                                    }
+                                )}
+                                {...register("username")}
+                                onKeyDown={(event) => {
+                                    if (
+                                        event.key !== "Escape" ||
+                                        !usernameChanged
+                                    )
+                                        return;
+                                    event.preventDefault();
+                                    resetField("username");
+                                    clearErrors("username");
+                                }}
+                            />
+                            {usernameChanged ? (
+                                <Button
+                                    type="submit"
+                                    variant="secondary"
+                                    disabled={busy}
+                                >
+                                    {t(
+                                        busy
+                                            ? "settings.saving"
+                                            : "settings.save"
+                                    )}
+                                </Button>
+                            ) : null}
+                        </div>
                     </FormField>
                     <div className="nl-settings__row">
                         <p className="nl-control">
@@ -270,7 +368,7 @@ export default function ProfileSettings({
                                     outlined
                                     label={t("onboarding.country")}
                                     value={field.value}
-                                    disabled={isSubmitting}
+                                    disabled={busy}
                                     options={[
                                         {
                                             value: "ko-KR",
@@ -315,7 +413,7 @@ export default function ProfileSettings({
                                 <Button
                                     ref={arcadeButton}
                                     variant="secondary"
-                                    disabled={isSubmitting}
+                                    disabled={busy}
                                     onClick={() => setArcadeOpen(true)}
                                 >
                                     {t("settings.changeArcade")}
@@ -323,12 +421,9 @@ export default function ProfileSettings({
                                 {arcadeId ? (
                                     <Button
                                         variant="ghost"
-                                        disabled={isSubmitting}
+                                        disabled={busy}
                                         onClick={() =>
-                                            setValue("preferredArcadeId", "", {
-                                                shouldDirty: true,
-                                                shouldValidate: true,
-                                            })
+                                            change("preferredArcadeId", "")
                                         }
                                     >
                                         {t("settings.clearArcade")}
@@ -357,34 +452,22 @@ export default function ProfileSettings({
                         records={user.achievements}
                         value={achievementShowcase ?? ""}
                         onChange={(value) =>
-                            setValue("achievementShowcase", value, {
-                                shouldDirty: true,
-                                shouldValidate: true,
-                            })
+                            change("achievementShowcase", value)
                         }
-                        disabled={isSubmitting}
+                        disabled={busy}
                         error={errors.achievementShowcase?.message}
                     />
                     {/* 고정 기록(2026-09-26 S2) — 프로필 업적 칸과 같은 모양, 「저장」 때 함께 저장 */}
                     <PinnedRecordsPicker
                         records={user.pinnableRecords}
                         value={pinnedRecords ?? ""}
-                        onChange={(value) =>
-                            setValue("pinnedRecords", value, {
-                                shouldDirty: true,
-                                shouldValidate: true,
-                            })
-                        }
-                        disabled={isSubmitting}
+                        onChange={(value) => change("pinnedRecords", value)}
+                        disabled={busy}
                         error={errors.pinnedRecords?.message}
                     />
                 </div>
+                {/* 맨 아래 「저장」 없음(2026-10-01 B) — 칸마다 바로 저장, 성공은 바뀐 값 자체로 보이고 화면 읽기에만 알린다 */}
                 <div className="nl-settings__save">
-                    {isDirty ? (
-                        <p className="nl-body-secondary nl-muted">
-                            {t("settings.unsaved")}
-                        </p>
-                    ) : null}
                     {errors.root?.server ? (
                         <p
                             role="alert"
@@ -393,23 +476,10 @@ export default function ProfileSettings({
                             {errors.root.server.message}
                         </p>
                     ) : null}
-                    <p
-                        role="status"
-                        className={saved ? "nl-body-secondary" : "sr-only"}
-                    >
+                    <p role="status" className="sr-only">
                         {saved}
                     </p>
                     <div className="nl-settings__foot">
-                        <Button
-                            type="submit"
-                            disabled={!isDirty || !isValid || isSubmitting}
-                        >
-                            {t(
-                                isSubmitting
-                                    ? "settings.saving"
-                                    : "settings.save"
-                            )}
-                        </Button>
                         <a
                             href={href(`/profile/${user.id}`)}
                             className="nl-control"
@@ -424,12 +494,7 @@ export default function ProfileSettings({
                 onOpenChange={setArcadeOpen}
                 arcades={arcades}
                 selectedId={arcadeId}
-                onSelect={(id) =>
-                    setValue("preferredArcadeId", id, {
-                        shouldDirty: true,
-                        shouldValidate: true,
-                    })
-                }
+                onSelect={(id) => change("preferredArcadeId", id)}
                 onCloseAutoFocus={(event) => {
                     event.preventDefault();
                     arcadeButton.current?.focus();
@@ -440,14 +505,8 @@ export default function ProfileSettings({
                     file={crop}
                     onCancel={() => setCrop(null)}
                     onConfirm={(file) => {
-                        const url = URL.createObjectURL(file);
-                        setStaged({ file, url });
-                        uploaded.current = null;
-                        setValue("avatar", url, {
-                            shouldDirty: true,
-                            shouldValidate: true,
-                        });
                         setCrop(null);
+                        void saveAvatar(file);
                     }}
                     onCloseAutoFocus={(event) => {
                         event.preventDefault();
@@ -483,11 +542,10 @@ export default function ProfileSettings({
                         </Button>
                         <Button
                             onClick={() => {
-                                if (country)
-                                    setValue("country", country, {
-                                        shouldDirty: true,
-                                        shouldValidate: true,
-                                    });
+                                if (country) {
+                                    setValue("country", country);
+                                    void commit("country", { country });
+                                }
                                 setCountry(null);
                             }}
                         >
@@ -496,7 +554,7 @@ export default function ProfileSettings({
                     </>
                 }
             />
-            <UnsavedChangesGuard dirty={isDirty} busy={isSubmitting} />
+            <UnsavedChangesGuard dirty={usernameChanged} busy={busy} />
         </>
     );
 }

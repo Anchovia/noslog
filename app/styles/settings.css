@@ -367,6 +367,19 @@
     grid-column: 2;
     grid-row: 1 / span 2;
 }
+/* 닉네임 = 입력 칸 + 바꿨을 때만 옆에 「저장」(2026-10-01 B — Primer · Atlassian 인라인 편집: 저장은 입력칸 바로 옆) */
+.noslog-ui .nl-settings__inline-save {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-settings__inline-save > .nl-input {
+    flex: 1;
+    min-width: 0;
+}
+.noslog-ui .nl-settings__inline-save > .nl-button {
+    flex: none;
+}
 .noslog-ui .nl-settings__foot {
     display: flex;
     align-items: center;
