@@ -1503,15 +1503,13 @@ export const jaMessages = {
     "settings.removePhoto": "削除",
     "settings.nostalgiaName": "NOSTALGIA プレイヤー名",
     "settings.showNostalgiaName": "NOSTALGIA プレイヤー名を公開",
-    "settings.showDiscordIdentity": "Discord のニックネームを公開",
+    "settings.showDiscordIdentity": "Discord のタグとニックネームを公開",
     "settings.showPreferredArcade": "お気に入りゲームセンターを公開",
     "settings.showPlayCount": "総プレー回数を公開",
     "settings.showPlayActivity": "プレー活動を公開",
     "settings.showPlayScores": "プレースコアを公開",
     "settings.scoresCoupling":
-        "オフにするとランキングから外れ、プロフィールのスコア・記録がほかの人に表示されません。自分の順位は自分だけに表示されます。",
-    "settings.publicWhenOn":
-        "オンにすると他のユーザーに公開されます。変更はすぐに保存されます。",
+        "オフにするとランキングの集計から除外され、自分のプロフィールのスコア・記録がほかのプレイヤーに表示されません。",
     "settings.activityCoupling":
         "最終プレーと最近のプレーが一緒に公開されます。",
     "settings.changeArcade": "変更",

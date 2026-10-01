@@ -59,9 +59,6 @@ export default function PrivacySettings({
     }
     return (
         <div className="nl-settings__form" aria-busy={saving}>
-            <p className="nl-body-secondary nl-muted">
-                {t("settings.publicWhenOn")}
-            </p>
             <div className="nl-settings__rows">
                 {(
                     Object.keys(

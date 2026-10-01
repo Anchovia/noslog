@@ -1512,15 +1512,13 @@ export const enMessages = {
     "settings.removePhoto": "Remove",
     "settings.nostalgiaName": "NOSTALGIA player name",
     "settings.showNostalgiaName": "Show NOSTALGIA player name",
-    "settings.showDiscordIdentity": "Show Discord nickname",
+    "settings.showDiscordIdentity": "Show Discord tag and nickname",
     "settings.showPreferredArcade": "Show preferred arcade",
     "settings.showPlayCount": "Show total play count",
     "settings.showPlayActivity": "Show play activity",
     "settings.showPlayScores": "Show play scores",
     "settings.scoresCoupling":
-        "When off, you are left out of rankings and your scores and records are hidden from others on your profile. Only you can see your own rank.",
-    "settings.publicWhenOn":
-        "When enabled, this information is visible to others. Changes save right away.",
+        "When off, you are excluded from rankings and the scores and records on your profile are hidden from other players.",
     "settings.activityCoupling":
         "Last played and recent plays are published together.",
     "settings.changeArcade": "Change",
