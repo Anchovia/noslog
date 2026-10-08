@@ -124,3 +124,14 @@ export const ValidateAndRecover: Story = {
         await expect(input).not.toHaveAttribute("aria-invalid");
     },
 };
+
+export const ErrorOverridesSuccess: Story = {
+    args: { error: "입력 내용을 확인해 주세요.", success: "사용할 수 있어요." },
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+        await expect(canvas.getByRole("alert")).toHaveTextContent(
+            "입력 내용을 확인해 주세요."
+        );
+        await expect(canvas.queryByRole("status")).not.toBeInTheDocument();
+    },
+};

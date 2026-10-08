@@ -39,13 +39,16 @@ export function Select({
     "aria-labelledby": ariaLabelledBy,
     "aria-describedby": ariaDescribedBy,
 }: {
+    /** option value와 같은 제어 값. 빈 문자열 옵션도 지원한다. */
     value: string;
+    /** 선택한 외부 string 값을 전달한다. 내부 sentinel은 노출하지 않는다. */
     onValueChange: (value: string) => void;
     options: readonly SelectOption[];
     placeholder?: string;
     disabled?: boolean;
     invalid?: boolean;
     onBlur?: () => void;
+    /** RHF field.ref/오류 포커스를 연결할 실제 트리거 button ref. */
     triggerRef?: Ref<HTMLButtonElement>;
     id?: string;
     className?: string;

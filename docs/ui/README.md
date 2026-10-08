@@ -11,7 +11,7 @@ npm run test:storybook
 npm run build-storybook
 ```
 
-Storybook은 localhost:6006에서 공용 부품만 표시한다. 테스트는 별도 Vite 서버와
+Storybook은 localhost:6006에서 공용 부품과 격리된 기능 화면을 표시한다. 테스트는 별도 Vite 서버와
 Chromium을 사용하며 개발 서버·DB·로그인·외부 저장소를 사용하지 않는다.
 브라우저가 없는 환경에서는 먼저 `npx playwright install chromium`을 실행한다.
 실행 전 6006이 사용 중이면 다른 세션을 종료하지 말고 포트를 지정한다.
@@ -22,6 +22,8 @@ npm run storybook -- --port 6007
 
 기존 `npm test`는 Node 기반 단위 테스트를 그대로 실행한다. 브라우저 부품 검사는
 `npm run test:storybook`으로 별도 실행하며 CI에서도 필수 작업으로 실행한다.
+
+Props·상태·ref 계약은 [계약 문서](./contracts.md), 비교/적용 범위는 [frontend 비교 기록](./frontend-comparison.md)을 따른다.
 
 ## 부품 선택
 
@@ -116,3 +118,13 @@ Storybook의 axe 검사는 WCAG 2.0·2.1 A/AA 위반을 테스트 실패로 처�
 각 스토리의 예제이며 도구 모음이 임의 문자열을 자동 번역하지는 않는다.
 반응형 검증은 가이드의 320·390·768·1280 및 전환 경계 양쪽을 따른다.
 Storybook은 실제 페이지의 레이아웃·데이터·권한·저장 흐름 검증을 대신하지 않는다.
+
+## 기능 화면과 시각 비교
+
+`features/**/*.stories.tsx`는 실제 View를 쓰되 저장·확인·조회 콜백만 로컬 mock으로 바꾼다.
+온보딩은 두 단계·필수 오류·중복 닉네임·서버 칸 오류·저장 실패/재시도·중복 제출·이전 응답을,
+제보는 로그인 안내·입력 오류·완료·실패/재시도·네트워크 실패·닫기/재열기·내 제보·중복 제출을 검사한다.
+실제 DB·Blob·로그인·OAuth·redirect를 실행하지 않는다.
+
+스크린샷 비교 실행/기준 갱신은 [시각 검사](./visual-testing.md)를 따른다. 스타일 회귀와 동작/axe 검사는 별도다.
+기존 Badge 변형과 차트 툴팁의 대비 위반 2개는 현재 디자인 유지 결정으로 남아 있으며 자동 검사를 끄지 않는다.

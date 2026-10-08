@@ -16,9 +16,13 @@ export default function SearchField({
     ...props
 }: Omit<ComponentProps<"input">, "value"> & {
     leading?: ReactNode;
+    /** 제어된 문자열. 입력 onChange는 네이티브 input 이벤트다. */
     value: string;
+    /** 지우기 버튼의 번역된 접근성 이름. */
     clearLabel: string;
+    /** 값 지우기를 요청한다. 호출부가 value를 빈 문자열로 갱신한다. */
     onClear: () => void;
+    /** false 기본. 지우기보다 우선하지만 입력은 자동 잠그지 않는다. */
     busy?: boolean;
     busyLabel?: string;
 }) {

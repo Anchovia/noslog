@@ -46,7 +46,11 @@ const preview: Preview = {
             return (
                 <LocaleProvider locale={locale} messages={getMessages(locale)}>
                     <main
-                        className="noslog-ui bg-nl-canvas p-nl-16"
+                        className={
+                            context.parameters.layout === "fullscreen"
+                                ? "noslog-ui bg-nl-canvas"
+                                : "noslog-ui bg-nl-canvas p-nl-16"
+                        }
                         lang={locale}
                     >
                         <Story />

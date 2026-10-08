@@ -210,3 +210,17 @@ product behavior, visual design, external API contracts, or database data.
 
 Passing static checks does not mean every feature has completed browser
 verification. Report the actual checks and any unverified runtime conditions.
+
+## Feature view and connection boundaries
+
+Complex forms may keep rendering/local validation in a feature View and connect
+Server Actions, uploads, queries and navigation in a small adapter. A View gets
+typed callbacks/data; it does not replace server validation or authorization.
+Use the real View in feature stories with local mocks. Keep existing public entry
+points and product states; do not split every component preemptively.
+
+Guard form submission before asynchronous validation, rather than relying only on
+the submit button's busy state. Ignore obsolete asynchronous results using input
+revision or view lifetime. An ignored response does not cancel a completed server
+write. Preserve fields/files on failure and document callback/ref/state contracts
+in the [UI contracts](./ui/contracts.md).

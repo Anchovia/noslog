@@ -65,6 +65,11 @@ for (const locale of ["ko", "ja", "en"] as const) {
         await expect(input).toBeFocused();
         await expect(input).toHaveAttribute("aria-invalid", "true");
         await input.fill("Ｎos 한글カナ");
+        // blur 확인 결과가 도움말을 추가하므로 국가를 누르기 전에 화면이 안정된 상태를 검사한다.
+        await input.press("Tab");
+        await expect(
+            page.locator("#onboarding-nickname-success")
+        ).toBeVisible();
         await page
             .getByRole("radio", {
                 name: t["onboarding.country.jp"],
@@ -104,6 +109,10 @@ for (const locale of ["ko", "ja", "en"] as const) {
         await expect(page.locator("html")).toHaveAttribute("lang", locale);
         await page.goto(`/${locale}/p9-verification?state=duplicate`);
         await input.fill("Ｎos 한글カナ");
+        await input.press("Tab");
+        await expect(
+            page.locator("#onboarding-nickname-success")
+        ).toBeVisible();
         await page
             .getByRole("radio", {
                 name: t["onboarding.country.jp"],

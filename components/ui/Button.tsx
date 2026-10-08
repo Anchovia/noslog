@@ -7,7 +7,9 @@ type ButtonVariant = "primary" | "secondary" | "ghost" | "danger";
 type ButtonSize = "sm" | "md" | "lg" | "icon" | "icon-sm";
 
 interface ButtonProps extends ComponentPropsWithRef<"button"> {
+    /** primary 기본. null은 변형 클래스를 생략한다. */
     variant?: ButtonVariant | null;
+    /** sm/icon-sm은 M, 그 밖은 L. 네이티브 type 기본은 button이다. */
     size?: ButtonSize | null;
     /** 위험 버튼은 채운 빨강 하나 — variant="danger" 와 같은 모양(2026-10-01 V12) */
     destructiveFilled?: boolean;

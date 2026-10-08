@@ -103,6 +103,7 @@ npm run test:e2e
 | `npm run test:a11y`          | 접근성 E2E 테스트     |
 | `npm run storybook`          | 공용 UI 개발·문서     |
 | `npm run test:storybook`     | 부품 동작·접근성 검사 |
+| `npm run test:visual:docker` | Linux 기준 시각 비교  |
 | `npm run build-storybook`    | 공용 UI 문서 빌드     |
 | `npm run check:dependencies` | 사용 중인 의존성 검사 |
 | `npm run audit:production`   | 운영 의존성 보안 검사 |
@@ -199,3 +200,5 @@ NosLog는 Semantic Versioning을 따릅니다.
 현재 저장소에는 별도의 `LICENSE` 파일이 없습니다. 라이선스가 공표되기 전까지 코드를 재배포하거나 2차 프로젝트에 포함하려면 저장소 관리자에게 문의하세요.
 
 NOSTALGIA와 관련 상표·콘텐츠의 권리는 각 권리자에게 있습니다. NosLog는 팬 제작 비공식 서비스입니다.
+
+개발·CI는 Node 24(`.node-version`, engines)를 사용하며 패키지 매니저 기준은 `npm@11.16.0`이다. packageManager는 버전 메타데이터이고 자동 설치/강제 전환은 하지 않는다.

@@ -558,6 +558,7 @@ NosLog 는 데이터 서비스라 움직임은 **상태 · 위치 · 로딩**에
 
 ## 6. 확인
 
+- 기능 화면 스토리는 실제 View에 로컬 콜백을 연결해 제보·온보딩의 실패/재시도·중복 제출·이전 응답을 검사한다. 승인된 화면·저장·닫기 규칙을 바꾸지 않는다. 스크린샷 회귀 검사 절차는 [시각 검사](../ui/visual-testing.md)를 따른다.
 - 공용 UI의 사용 예·상태·키보드 동작은 [부품 가이드](../ui/README.md)와 Storybook에서 확인한다. `npm run test:storybook`은 부품 동작과 WCAG A·AA 자동 검사를 실행한다.
 - Tailwind 연결은 `app/styles/tailwindTheme.css`의 `nl` 별칭만 사용한다(`gap-nl-16`·`bg-nl-surface` 등). 기존 토큰 값·일반 Tailwind 스케일·글자 조합은 그대로이며 `.noslog-ui` 안에서만 쓴다. 부품 규격을 호출부에서 덮어쓰지 않는다.
 

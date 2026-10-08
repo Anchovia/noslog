@@ -6,7 +6,9 @@ interface SwitchProps extends Omit<
     ComponentProps<"button">,
     "role" | "type" | "onChange"
 > {
+    /** 현재 제어 값. defaultChecked를 대신 사용하지 않는다. */
     checked: boolean;
+    /** 누를 때 다음 boolean 값을 요청한다. 실제 저장/실패 복구는 호출부 책임이다. */
     onCheckedChange: (checked: boolean) => void;
 }
 

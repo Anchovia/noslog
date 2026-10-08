@@ -37,7 +37,9 @@
         "prepare": "husky",
         "storybook": "storybook dev -p 6006 --no-open",
         "build-storybook": "storybook build",
-        "test:storybook": "vitest run --config vitest.storybook.config.ts"
+        "test:storybook": "vitest run --config vitest.storybook.config.ts",
+        "test:visual": "playwright test --config playwright.storybook.config.ts",
+        "test:visual:docker": "node tooling/storybook/visual-docker.mjs"
     },
     "lint-staged": {
         "*.{js,jsx,ts,tsx,mjs}": [
@@ -124,5 +126,9 @@
         },
         "@types/react": "19.2.17",
         "@types/react-dom": "19.2.3"
-    }
+    },
+    "engines": {
+        "node": "24.x"
+    },
+    "packageManager": "npm@11.16.0"
 }

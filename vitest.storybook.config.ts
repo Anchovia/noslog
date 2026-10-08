@@ -5,6 +5,9 @@ import { playwright } from "@vitest/browser-playwright";
 import { defineConfig } from "vitest/config";
 
 export default defineConfig({
+    optimizeDeps: {
+        include: ["@hookform/resolvers/zod", "react-hook-form", "zod"],
+    },
     resolve: {
         alias: { "@": fileURLToPath(new URL("./", import.meta.url)) },
     },
