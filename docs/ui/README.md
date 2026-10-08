@@ -38,8 +38,23 @@ npm run storybook -- --port 6007
 | `Switch`           | 즉시 적용하는 켜기·끄기. 접근성 이름 필수                       |
 | `AreaTabs`         | 페이지 안 큰 구역 전환. 방향키 탐색 후 Enter/Space로 활성화     |
 
-초기 스토리는 위 부품과 토큰 연결을 다룬다. 나머지 공용 부품도 변경할 때 스토리를
-추가한다. 사용하지 않는 부품을 미리 만들거나 제품의 상태·동작을 새로 정의하지 않는다.
+`components/ui`의 실제 부품 파일 50개에 대응하는 스토리 50개와 토큰 예제 1개를 제공한다.
+폼 입력·스켈레톤·수치 목록의 이름 있는 부품은 해당 파일의 스토리에서 함께 다룬다.
+`useSelectOpen.ts` 같은 내부 훅은 이를 사용하는 Select·CompactSelect의 동작으로 검증한다.
+
+| 묶음        | 나머지 부품과 주요 검증                                                                                                                                                                                |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 비동기·메뉴 | `ActionButton` 중복 실행 차단 · `ActionMenu` 항목 이동/선택/포커스 복귀 · `SortMenu` 비활성/종속 옵션                                                                                                  |
+| 필터·선택   | `CompactSelect` 키보드/크기 · `FilterChips` 다중/배타 선택 · `SelectionList` radio/checkbox · `RadioGroup` 오류/disabled · `RangeSlider` 손잡이 값/확정 · `ScalePicker` 선택 해제/방향키               |
+| 검색·이동   | `SearchField` 지우기/대기 · `Pagination` 앞뒤/마지막/한 페이지/링크 · `MetricSwitch` 포커스와 적용 분리 · `BackLink`·`AreaTabLinks`·`FilterChipLinks` 주소/현재 위치                                   |
+| 조합·레이어 | `AppliedTokens` 개별/전체 해제 · `FilterGroup` 제목/보조 정보 · `FilterSurface` 팝오버/전체 화면 · `FullScreenDialog`·`ResponsiveDialog` 닫기/포커스 복귀 · `Disclosure` 펼침 · `TermHelp` 포커스/닫기 |
+| 편집·미디어 | `MarkdownEditor` 서식/미리보기/읽기 전용 · `FileRow` 임시 파일/삭제/긴 이름 · `PhotoViewer` 넘김/순환/한 장/빈 목록                                                                                    |
+| 데이터 표시 | `LineChart` 한 점/빈 상태/두 계열/정확한 표/키보드 · `BarList`·`StackedBar`·`StatStrip` 값 없음/로딩/수치 텍스트                                                                                       |
+| 이름·표식   | `Avatar` 사진/대체 표시/장식 · `CountryMarker` 국가/크기 · `ExamBadge`·`ExamBadgeGroup` 급수/표시 폭 · `JudgementMarker` 판정 · 기존 관리자용 `Badge` · `DiscordIcon` 장식 심볼                        |
+| 안내·로딩   | `LoginPrompt` · `ResultState` 상태/오류 · `StatusMessage` 지원 형태 · `SkeletonText`·`LoadingStatus` · `AppToaster` 로컬 알림                                                                          |
+
+공용 부품을 추가하거나 바꾸면 스토리도 함께 유지한다. 사용하지 않는 부품을 미리
+만들거나 제품의 상태·동작을 스토리를 위해 새로 정의하지 않는다.
 
 ## 폼 연결 예시
 
