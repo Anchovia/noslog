@@ -1,0 +1,32 @@
+name: 리팩터링
+description: 기존 동작을 유지하는 코드 구조·참조 경계 개선입니다.
+title: "[Refactor] "
+body:
+    - type: markdown
+      attributes:
+          value: |
+              기존 동작·외부 API·데이터 의미의 보존 조건과 영향받는 import를 적어주세요.
+    - type: textarea
+      id: problem
+      attributes:
+          label: 문제와 필요한 이유
+      validations:
+          required: true
+    - type: textarea
+      id: scope
+      attributes:
+          label: 작업 범위와 보존 조건
+          description: 대상 파일·화면과 유지해야 할 동작을 적어주세요.
+      validations:
+          required: true
+    - type: textarea
+      id: acceptance
+      attributes:
+          label: 완료 조건과 검증
+          description: 확인 가능한 결과, 검사 명령, 관련 화면 폭·언어·권한을 적어주세요.
+      validations:
+          required: true
+    - type: textarea
+      id: reference
+      attributes:
+          label: 관련 문서·이슈·예시

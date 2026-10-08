@@ -101,6 +101,9 @@ npm run test:e2e
 | `npm run build`              | 프로덕션 빌드         |
 | `npm run test:e2e`           | Playwright E2E 테스트 |
 | `npm run test:a11y`          | 접근성 E2E 테스트     |
+| `npm run storybook`          | 공용 UI 개발·문서     |
+| `npm run test:storybook`     | 부품 동작·접근성 검사 |
+| `npm run build-storybook`    | 공용 UI 문서 빌드     |
 | `npm run check:dependencies` | 사용 중인 의존성 검사 |
 | `npx prisma generate`        | Prisma Client 재생성  |
 
@@ -144,6 +147,10 @@ npm run build
 ```
 
 GitHub Actions의 `verify` 작업은 의존성 설치, 린트, Vitest, 타입 검사와 프로덕션 빌드를 확인합니다. E2E 작업은 저장소 변수 `RUN_E2E=true`일 때 로컬 PostgreSQL 16과 Playwright Chromium으로 실행됩니다.
+
+`storybook` CI 작업은 DB 없이 공용 UI의 동작·접근성 검사와 Storybook 빌드를 실행합니다.
+사용법은 [공용 UI 가이드](docs/ui/README.md), 협업 규칙은
+[CONVENTION.md](docs/CONVENTION.md), 코드 작성 규칙은 [코드 스타일](docs/code-style.md)을 따릅니다.
 
 ## 배포와 릴리스
 

@@ -2,7 +2,7 @@
 
 import * as Popover from "@radix-ui/react-popover";
 import { CircleHelp } from "lucide-react";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { type ReactNode, useEffect, useRef, useState } from "react";
 
 /** 닫은 직후 같은 손짓이 다시 여는 것을 무시하는 시간 — 셀렉트(useSelectOpen)와 같은 규칙 */
 const REOPEN_GUARD_MS = 200;

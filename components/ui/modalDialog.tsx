@@ -2,8 +2,8 @@
 
 import * as Dialog from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
-import { useId } from "react";
 import type { ReactNode } from "react";
+import { useId } from "react";
 
 import { useTranslations } from "@/components/i18n/localeProvider";
 import IconButton from "@/components/ui/iconButton";

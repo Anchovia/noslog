@@ -7,7 +7,7 @@ const mocks = vi.hoisted(() => ({
 }));
 
 vi.mock("@/lib/session", () => ({ default: mocks.getSession }));
-vi.mock("@/app/(nevigation)/profile/[id]/data", () => ({
+vi.mock("@/features/profile/server/publicProfileData", () => ({
     getCachedProfileData: mocks.getCachedProfileData,
 }));
 

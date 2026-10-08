@@ -1,9 +1,11 @@
 "use client";
 
+import "@/lib/inputModality";
+
 import * as SelectPrimitive from "@radix-ui/react-select";
 import { Check, ChevronDown } from "lucide-react";
 import type { Ref } from "react";
-import "@/lib/inputModality";
+
 import { useSelectOpen } from "@/components/ui/useSelectOpen";
 import { cn } from "@/lib/utils";
 

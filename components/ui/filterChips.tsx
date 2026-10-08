@@ -2,6 +2,7 @@
 
 import { Check } from "lucide-react";
 import type { ReactNode } from "react";
+
 import { cn } from "@/lib/utils";
 
 /** 항목 글자 색 — 난이도(DU-01 텍스트 램프) · 카테고리(자켓 레이블 색) · 성취(S·FC·Pianist) */

@@ -1,7 +1,7 @@
 "use client";
 
-import { useRef } from "react";
 import type { KeyboardEvent, Ref } from "react";
+import { useRef } from "react";
 
 import { cn } from "@/lib/utils";
 

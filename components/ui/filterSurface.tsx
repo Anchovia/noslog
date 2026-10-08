@@ -1,11 +1,11 @@
 "use client";
 
 import * as Popover from "@radix-ui/react-popover";
-import { useId, type ReactNode } from "react";
+import { type ReactNode, useId } from "react";
 
+import { useTranslations } from "@/components/i18n/localeProvider";
 import ActionButton from "@/components/ui/actionButton";
 import FullScreenDialog from "@/components/ui/fullScreenDialog";
-import { useTranslations } from "@/components/i18n/localeProvider";
 
 /**
  * 필터 그릇 — Compact 는 전체 레이어(배치 적용 · 하단 "결과 N개 보기"),

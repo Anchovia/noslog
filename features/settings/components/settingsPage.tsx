@@ -7,7 +7,7 @@ import PrivacySettings from "./privacySettings";
 import ConnectionSettings from "./connectionSettings";
 import SettingsLoading from "./settingsLoading";
 import AccountSettings from "./accountSettings";
-import { getAccountSettingsData } from "../server/accountSettingsService";
+import { getAccountSettingsData } from "@/features/settings/server/accountSettingsService";
 import { settingsCategorySchema } from "@/features/settings/schemas/settingsSchema";
 import { getSettingsPageData } from "@/features/settings/server/settingsPageService";
 import { getServerI18n } from "@/lib/i18n/server";

@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { ImageResponse } from "next/og";
 import type { NextRequest } from "next/server";
-import { getCachedProfileData } from "@/app/(nevigation)/profile/[id]/data";
+import { getCachedProfileData } from "@/features/profile/server/publicProfileData";
 import { getProfileCountryCode } from "@/components/profile/dashboard/profileUtils";
 import ProfileCardImage from "@/features/profile/components/profileCardImage";
 import { toCardAvatar } from "@/features/profile/server/profileCardAvatar";

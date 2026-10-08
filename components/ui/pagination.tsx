@@ -2,6 +2,7 @@
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { ReactNode } from "react";
+
 import useElementWidth from "@/lib/hooks/useElementWidth";
 
 export default function Pagination({

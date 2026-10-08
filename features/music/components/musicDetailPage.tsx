@@ -29,7 +29,7 @@ import { StatusMessage } from "@/components/ui/statusMessage";
 import {
     musicDetailQueryOptions,
     musicDetailQueryRootKey,
-} from "../api/musicDetail";
+} from "@/features/music/api/musicDetail";
 import OverviewPanel from "./overviewPanel";
 import DifficultySelector from "./difficultySelector";
 import MusicEntityHeader from "./musicEntityHeader";

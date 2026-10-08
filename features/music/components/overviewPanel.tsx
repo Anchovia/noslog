@@ -24,7 +24,7 @@ import {
     chartFieldValue,
     type ChartFieldProposalField,
 } from "@/features/contributions/schemas/chartFieldProposalSchema";
-import { communityPatternOptions } from "../api/community";
+import { communityPatternOptions } from "@/features/music/api/community";
 import PatternCriteriaDialog from "./patternCriteriaDialog";
 import TierHistory from "./tierHistory";
 

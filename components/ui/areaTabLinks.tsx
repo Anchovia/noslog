@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef } from "react";
 import type { ReactNode } from "react";
+import { useEffect, useRef } from "react";
 
 /**
  * 주소가 다른 구역을 잇는 1단 밑줄 탭(프로필 구역 탭, 2026-09-25) — 모양은 AreaTabs 와 같고(높이 48 · 항목이 줄 폭을 나눔 ·

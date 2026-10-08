@@ -3,6 +3,7 @@ node_modules
 out
 build
 coverage
+storybook-static
 .vercel
 lib/generated/prisma
 *.db

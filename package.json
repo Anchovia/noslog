@@ -33,14 +33,17 @@
         "lint": "eslint .",
         "format": "prettier --write .",
         "format:check": "prettier --check .",
-        "prepare": "husky"
+        "prepare": "husky",
+        "storybook": "storybook dev -p 6006 --no-open",
+        "build-storybook": "storybook build",
+        "test:storybook": "vitest run --config vitest.storybook.config.ts"
     },
     "lint-staged": {
         "*.{js,jsx,ts,tsx,mjs}": [
             "eslint --fix",
             "prettier --write"
         ],
-        "*.{json,css,md}": [
+        "*.{json,css,md,mdx,yml,yaml}": [
             "prettier --write"
         ]
     },
@@ -84,14 +87,21 @@
     "devDependencies": {
         "@axe-core/playwright": "^4.13.0",
         "@playwright/test": "^1.61.1",
+        "@storybook/addon-a11y": "10.6.0",
+        "@storybook/addon-docs": "10.6.0",
+        "@storybook/addon-vitest": "10.6.0",
+        "@storybook/nextjs-vite": "10.6.0",
         "@tailwindcss/postcss": "^4.3.2",
         "@tanstack/eslint-plugin-query": "^5.102.8",
         "@types/node": "^24.13.3",
         "@types/react": "19.2.17",
         "@types/react-dom": "19.2.3",
+        "@vitest/browser-playwright": "4.1.11",
         "eslint": "^9.39.4",
         "eslint-config-next": "16.3.4",
         "eslint-config-prettier": "^10.1.8",
+        "eslint-plugin-simple-import-sort": "14.0.0",
+        "eslint-plugin-storybook": "10.6.0",
         "husky": "^9.1.7",
         "jiti": "^2.7.0",
         "knip": "^6.34.0",
@@ -100,8 +110,10 @@
         "prettier": "^3.9.5",
         "prettier-plugin-tailwindcss": "^0.8.0",
         "prisma": "^6.19.3",
+        "storybook": "10.6.0",
         "tailwindcss": "^4.3.2",
         "typescript": "~5.9.3",
+        "vite": "8.3.0",
         "vitest": "^4.1.11"
     },
     "overrides": {

@@ -2,7 +2,7 @@ import { formatDistanceToNow } from "date-fns";
 import { enUS, ja, ko } from "date-fns/locale";
 import { notFound } from "next/navigation";
 
-import { getCachedProfileData } from "@/app/(nevigation)/profile/[id]/data";
+import { getCachedProfileData } from "@/features/profile/server/publicProfileData";
 import { summarizeAchievements } from "@/features/achievements/achievementDefinitions";
 import { getProfileHeaderContext } from "@/features/profile/server/profileOverviewService";
 import { getOwnerPrivateFields } from "@/features/profile/server/ownerPrivateService";

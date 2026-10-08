@@ -1,6 +1,6 @@
 "use client";
 
-import { useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import { type ReactNode, useLayoutEffect, useRef, useState } from "react";
 
 // 모드 이름(BASIC·RECITAL)은 칸에 다 들어갈 때만 쓰고 아니면 이니셜(B·R)로 줄인다.
 // 칸 폭이 위치·로케일·폰트마다 달라 고정 임계값 대신 실제 폭을 잰다.

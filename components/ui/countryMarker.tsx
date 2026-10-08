@@ -1,5 +1,6 @@
-import Image from "next/image";
 import { Globe } from "lucide-react";
+import Image from "next/image";
+
 import { useTranslations } from "@/components/i18n/localeProvider";
 
 /** 국기 칸 16(기본) · 24(large — 프로필 이름 옆, 2026-09-26 D5). 그림 높이는 칸의 3/4 */

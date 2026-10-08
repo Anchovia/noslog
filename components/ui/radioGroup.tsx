@@ -1,7 +1,7 @@
 "use client";
 
-import { useId } from "react";
 import type { ReactNode } from "react";
+import { useId } from "react";
 
 export default function RadioGroup<Value extends string>({
     label,

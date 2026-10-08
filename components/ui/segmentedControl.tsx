@@ -1,6 +1,7 @@
 "use client";
 
 import type { KeyboardEvent, ReactNode } from "react";
+
 import { cn } from "@/lib/utils";
 
 interface SegmentOption<Value extends string> {

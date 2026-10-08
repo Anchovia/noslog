@@ -1,0 +1,37 @@
+/* Tailwind aliases only: the existing --nl-* tokens remain the source of truth.
+   The nl namespace preserves the meaning of existing utilities such as gap-16.
+   Use these utilities inside noslog-ui, including existing portal wrappers. */
+@theme inline {
+    --color-nl-canvas: var(--nl-surface-canvas);
+    --color-nl-surface: var(--nl-surface-surface);
+    --color-nl-raised: var(--nl-surface-raised);
+    --color-nl-control: var(--nl-surface-control);
+    --color-nl-content: var(--nl-content-default);
+    --color-nl-subdued: var(--nl-content-subdued);
+    --color-nl-interactive: var(--nl-content-interactive);
+    --color-nl-divider: var(--nl-border-divider);
+    --color-nl-border: var(--nl-border-default);
+    --color-nl-input: var(--nl-border-input);
+    --color-nl-focus: var(--nl-focus-ring);
+    --color-nl-error: var(--nl-feedback-error-text);
+    --spacing-nl-0: var(--nl-spacing-0);
+    --spacing-nl-2: var(--nl-spacing-2);
+    --spacing-nl-4: var(--nl-spacing-4);
+    --spacing-nl-8: var(--nl-spacing-8);
+    --spacing-nl-12: var(--nl-spacing-12);
+    --spacing-nl-16: var(--nl-spacing-16);
+    --spacing-nl-24: var(--nl-spacing-24);
+    --spacing-nl-32: var(--nl-spacing-32);
+    --spacing-nl-48: var(--nl-spacing-48);
+    --spacing-nl-64: var(--nl-spacing-64);
+    --spacing-nl-section: var(--nl-section-gap);
+    --spacing-nl-section-title: var(--nl-section-title-gap);
+    --spacing-nl-control: var(--nl-control-height);
+    --spacing-nl-control-compact: var(--nl-control-height-compact);
+    --radius-nl-control: var(--nl-radius-control);
+    --radius-nl-field: var(--nl-radius-field);
+    --radius-nl-container: var(--nl-radius-container);
+    --radius-nl-overlay: var(--nl-radius-overlay);
+    --radius-nl-full: var(--nl-radius-full);
+    --font-nl-sans: var(--nl-font-family);
+}

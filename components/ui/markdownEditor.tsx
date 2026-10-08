@@ -14,9 +14,10 @@ import {
     Strikethrough,
     Table,
 } from "lucide-react";
-import { useEffect, useId, useRef, useState } from "react";
 import type { ClipboardEvent, DragEvent, ReactNode } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { toast } from "sonner";
+
 import ActionButton from "@/components/ui/actionButton";
 import ActionMenu from "@/components/ui/actionMenu";
 import FullScreenDialog from "@/components/ui/fullScreenDialog";

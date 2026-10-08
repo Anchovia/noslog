@@ -17,11 +17,11 @@ import {
 } from "@/components/i18n/localeProvider";
 import { logoutAccount } from "@/app/(nevigation)/settings/accountActions";
 import { deleteAccount } from "@/app/(nevigation)/profile/settings/securityActions";
-import { createAccountDeletionSchema } from "../schemas/accountDeletionSchema";
+import { createAccountDeletionSchema } from "@/features/settings/schemas/accountDeletionSchema";
 import type {
     AccountDeletionFormValues,
     AccountDeletionSummary,
-} from "../schemas/accountDeletionSchema";
+} from "@/features/settings/schemas/accountDeletionSchema";
 
 /**
  * 계정 설정 — 로그아웃 · 회원 탈퇴. 탈퇴 창은 입력 칸이 있는 폼 창(닫기 · 발 버튼, 2026-09-26 확인 창에서 옮김):

@@ -1,0 +1,32 @@
+name: 테스트 보강
+description: 동작·접근성·회귀 검증의 누락을 보강합니다.
+title: "[Test] "
+body:
+    - type: markdown
+      attributes:
+          value: |
+              자동 검사와 실제 동작 검증을 구분하고, E2E가 필요하면 격리 환경과 관련 스펙을 적어주세요.
+    - type: textarea
+      id: problem
+      attributes:
+          label: 문제와 필요한 이유
+      validations:
+          required: true
+    - type: textarea
+      id: scope
+      attributes:
+          label: 작업 범위와 보존 조건
+          description: 대상 파일·화면과 유지해야 할 동작을 적어주세요.
+      validations:
+          required: true
+    - type: textarea
+      id: acceptance
+      attributes:
+          label: 완료 조건과 검증
+          description: 확인 가능한 결과, 검사 명령, 관련 화면 폭·언어·권한을 적어주세요.
+      validations:
+          required: true
+    - type: textarea
+      id: reference
+      attributes:
+          label: 관련 문서·이슈·예시

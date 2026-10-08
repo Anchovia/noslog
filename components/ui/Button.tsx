@@ -1,5 +1,6 @@
-import { cn } from "@/lib/utils";
 import { type ComponentPropsWithRef } from "react";
+
+import { cn } from "@/lib/utils";
 
 type ButtonVariant = "primary" | "secondary" | "ghost" | "danger";
 // icon = 컨트롤 높이 정사각(L), icon-sm = 컴팩트 높이 정사각(M) — 아이콘 버튼은 자기 줄의 단계(2026-09-22)

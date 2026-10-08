@@ -1,6 +1,7 @@
 "use client";
 
 import { Toaster } from "sonner";
+
 import { useTranslations } from "@/components/i18n/localeProvider";
 import useAccountResultNotice from "@/features/settings/hooks/useAccountResultNotice";
 

@@ -53,11 +53,58 @@ Do not add a `src/` wrapper solely to resemble a Vite project.
 Formatting is controlled by Prettier. Do not manually align code against its
 output. ESLint owns code-quality rules; Prettier owns formatting rules.
 The existing type-import rule is enforced by ESLint for `features/**/*.{ts,tsx}`.
+Shared UI, Storybook, and tooling imports/exports are automatically sorted by
+`eslint-plugin-simple-import-sort`. Parent-relative imports in `features/` and
+`components/ui/` are rejected; imports within a local folder remain relative.
 This scoped check does not migrate or change the preserved chart viewer/editor.
 Application code may use `console.warn` and `console.error` when appropriate;
 prefer the structured observability helper for server failures. CLI imports,
 maintenance scripts, and server synchronization progress jobs may use console
 output because it is their operator-facing interface.
+
+## Dependency boundaries
+
+ESLint's `noslog/boundaries` rule checks imports, re-exports, and literal dynamic
+imports, resolving both `@/` aliases and relative paths.
+
+- `app` composes features, UI, and infrastructure. Private route folders remain
+  within their owning route. Features cannot import route pages or data helpers.
+- Features may call other domains' explicit services or consume their stable
+  schemas/types. NosLog domains are not FSD action slices; a blanket ban on
+  cross-domain imports does not apply. Do not reach into another domain's local
+  implementation just to avoid defining a clear reusable contract.
+- Features may import real module-level `"use server"` Server Actions from `app`.
+  This Next.js entry-point exception does not allow importing route UI or queries.
+- `lib` must not import runtime behavior from `app`, `features`, or `components`.
+- `components/ui` must not import `app` or feature behavior. The existing exam
+  badge's grade helper and AppToaster's account notice adapter are explicit,
+  file-and-target-specific exceptions in the rule. They do not create permission
+  for more domain imports in new UI primitives.
+- The existing `lib/music/maxGrade`, `unlockCondition`, and `scoreTone` imports of
+  UI types remain type-only exceptions. Runtime imports on those paths fail lint.
+- Client Components cannot directly import feature server services or modules
+  marked `server-only`; type-only imports and Server Actions remain valid.
+  Next.js build-time server/client checks also protect indirect imports.
+- Keep deliberate public APIs small. Separate server entry points when needed;
+  do not add a barrel solely to hide a dependency or collect every UI export.
+
+The profile public cache is owned by `features/profile/server/publicProfileData`.
+The existing route data module re-exports it for compatibility; its cache keys,
+visibility policy, and query behavior remain unchanged.
+
+## Shared UI and Storybook
+
+Use the [shared UI guide](./ui/README.md) for component selection, Props examples,
+token aliases, and story authoring. New or changed shared UI must include stories
+for its supported states and meaningful interaction tests where applicable.
+Existing untouched components may receive stories incrementally.
+
+`npm run test:storybook` runs Chromium component and accessibility tests separately
+from the Node unit suite. `npm run build-storybook` verifies the standalone UI
+documentation. Both run in CI, without DB-backed application flows.
+Preserve approved typography classes and existing UI dimensions when using
+`nl`-namespaced Tailwind aliases. Commit and PR rules live in
+[CONVENTION.md](./CONVENTION.md).
 
 ## API contracts
 
@@ -161,6 +208,5 @@ directory. Remove the legacy file only after all imports, tests, and runtime
 consumers have moved. Do not use code-style cleanup as authorization to change
 product behavior, visual design, external API contracts, or database data.
 
-The [code-style audit](./code-style-audit.md) records verified migration gaps,
-retained exceptions, and verification limitations. Passing static checks does
-not mean every legacy feature has completed migration or browser verification.
+Passing static checks does not mean every feature has completed browser
+verification. Report the actual checks and any unverified runtime conditions.

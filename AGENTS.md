@@ -24,6 +24,7 @@ Tailwind 4: 설정은 CSS(`app/globals.css`), `tailwind.config` 를 만들지 �
 폴더: `app/`(라우트 · Route Handler · Server Action 입구) · `features/<도메인>/{api,components,hooks,schemas,server}` ·
 `components/ui`(공용 부품) · `app/styles`(토큰 · 공용 스타일) · `lib/i18n/messageCatalogs` · `prisma/` · `tests/` · `e2e/`.
 자세한 경계는 [코드 스타일](docs/code-style.md).
+협업 양식은 [컨벤션](docs/CONVENTION.md), 공용 UI 사용·스토리는 [부품 가이드](docs/ui/README.md). 공용 UI를 바꾸면 `npm run test:storybook`도 실행한다.
 
 명령은 지어내지 않고 `package.json` 스크립트를 쓴다.
 

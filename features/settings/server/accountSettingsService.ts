@@ -2,11 +2,11 @@ import "server-only";
 
 import db from "@/lib/db";
 import getSession from "@/lib/session";
-import { accountDeletionSummarySchema } from "../schemas/accountDeletionSchema";
+import { accountDeletionSummarySchema } from "@/features/settings/schemas/accountDeletionSchema";
 import {
     DELETION_VERIFICATION_WINDOW_MS,
     hasRecentDeletionVerification,
-} from "../schemas/deletionVerification";
+} from "@/features/settings/schemas/deletionVerification";
 
 export async function getAccountSettingsData() {
     const session = await getSession();

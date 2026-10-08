@@ -1,8 +1,9 @@
 "use client";
 
 import { Check } from "lucide-react";
-import { useId } from "react";
 import type { ReactNode } from "react";
+import { useId } from "react";
+
 import type { ChoiceTone } from "@/components/ui/filterChips";
 
 export default function SelectionList<Value extends string>({

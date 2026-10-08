@@ -1,5 +1,6 @@
 import { Check } from "lucide-react";
 import type { ComponentProps, ReactNode } from "react";
+
 import { cn } from "@/lib/utils";
 
 interface CheckboxProps extends Omit<ComponentProps<"input">, "type"> {

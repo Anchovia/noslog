@@ -1,6 +1,6 @@
 import "server-only";
 import type { Metadata } from "next";
-import type { getCachedProfileData } from "@/app/(nevigation)/profile/[id]/data";
+import type { getCachedProfileData } from "@/features/profile/server/publicProfileData";
 import { localizePath, type Locale } from "@/lib/i18n/routing";
 import type { getServerI18n } from "@/lib/i18n/server";
 import { createPageMetadata } from "@/lib/metadata/site";

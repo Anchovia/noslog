@@ -1,8 +1,8 @@
 "use client";
 
 import * as Tabs from "@radix-ui/react-tabs";
-import { useEffect, useId, useRef } from "react";
 import type { ReactNode } from "react";
+import { useEffect, useId, useRef } from "react";
 
 /**
  * 페이지 안 큰 구역을 바꾸는 1단 밑줄 탭(악곡 상세). 항목이 줄 폭을 나눠 채우고(2026-09-16), 모든 폭에서 탭이며 넘치면 가로로 스크롤한다 —

@@ -3,6 +3,7 @@
 @import "./styles/pretendardJp.css";
 @import "./styles/tokens.css";
 @import "./styles/foundation.css";
+@import "./styles/tailwindTheme.css";
 @import "./styles/layout.css";
 @import "./styles/search.css";
 @import "./styles/entity.css";
@@ -216,43 +217,43 @@ html[data-theme="light"] {
 
 /* Figma 스타일 가이드 기준 타이포그래피 유틸리티 */
 @utility text-display {
-    @apply text-text-primary text-2xl leading-tight font-bold;
+    @apply text-2xl leading-tight font-bold text-text-primary;
 }
 
 @utility text-score-display {
-    @apply text-text-primary text-4xl leading-none font-black tabular-nums;
+    @apply text-4xl leading-none font-black text-text-primary tabular-nums;
 }
 
 @utility text-title {
-    @apply text-text-primary text-xl leading-snug font-bold;
+    @apply text-xl leading-snug font-bold text-text-primary;
 }
 
 @utility text-wordmark {
-    @apply text-text-primary text-lg leading-none font-bold;
+    @apply text-lg leading-none font-bold text-text-primary;
 }
 
 @utility text-section {
-    @apply text-text-primary text-base leading-snug font-semibold;
+    @apply text-base leading-snug font-semibold text-text-primary;
 }
 
 @utility text-body {
-    @apply text-text-primary text-sm leading-relaxed font-medium;
+    @apply text-sm leading-relaxed font-medium text-text-primary;
 }
 
 @utility text-body-muted {
-    @apply text-text-secondary text-sm leading-relaxed font-normal;
+    @apply text-sm leading-relaxed font-normal text-text-secondary;
 }
 
 @utility text-label {
-    @apply text-text-primary text-sm leading-normal font-semibold;
+    @apply text-sm leading-normal font-semibold text-text-primary;
 }
 
 @utility text-caption {
-    @apply text-text-secondary text-xs leading-normal font-normal;
+    @apply text-xs leading-normal font-normal text-text-secondary;
 }
 
 @utility text-micro {
-    @apply text-text-secondary text-[10px] leading-normal font-normal;
+    @apply text-[10px] leading-normal font-normal text-text-secondary;
 }
 
 @utility text-badge {
@@ -260,5 +261,5 @@ html[data-theme="light"] {
 }
 
 @utility text-input {
-    @apply text-text-primary text-base leading-normal font-medium;
+    @apply text-base leading-normal font-medium text-text-primary;
 }
