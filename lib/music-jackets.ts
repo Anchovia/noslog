@@ -1,5 +1,5 @@
-import { musicBG } from "@/lib/constants";
 import localJacketIndexes from "@/lib/generated/music-jacket-indexes.json";
+import { musicJacketFallbackUrls } from "@/lib/music/jacket-fallback-urls";
 
 const localJacketIndexSet = new Set<string>(localJacketIndexes);
 
@@ -36,7 +36,7 @@ export function getJacketCandidates(index: string, background: string | null) {
         isManualJacketUrl(background) ? background : null,
         getLocalJacketUrl(index),
         background,
-        musicBG[index],
+        musicJacketFallbackUrls[index],
     ]
         .filter((url): url is string => Boolean(url))
         .map(normalizeJacketUrl)

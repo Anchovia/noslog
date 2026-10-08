@@ -1,9 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import { RotateCcw } from "lucide-react";
-import { useEffect } from "react";
+import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useEffect } from "react";
+
 import {
     useLocalizedHref,
     useTranslations,

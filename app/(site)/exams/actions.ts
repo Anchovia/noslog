@@ -1,9 +1,9 @@
 "use server";
 
 import {
+    discardExamProofUpload as discardExamProofUploadService,
     requestExamProofUpload as requestExamProofUploadService,
     submitExamProof as submitExamProofService,
-    discardExamProofUpload as discardExamProofUploadService,
 } from "@/features/exams/server/exam-proof-service";
 import type { Locale } from "@/lib/i18n/routing";
 

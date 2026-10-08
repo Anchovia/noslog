@@ -3,6 +3,7 @@ import Link from "next/link";
 import PageContainer, { PageHeading } from "@/components/layout/page-container";
 import BackLink from "@/components/ui/back-link";
 import { foundationButtonClass } from "@/components/ui/button";
+import ButtonLink from "@/components/ui/button-link";
 import FilterChipLinks from "@/components/ui/filter-chip-links";
 import NewsTabs from "@/features/announcements/components/news-tabs";
 import {
@@ -45,15 +46,13 @@ export default async function EventBoard({
                 action={
                     <div className="nl-events__actions">
                         {writer.userId ? (
-                            <Link
+                            <ButtonLink
                                 href={localizePath("/events/mine", locale)}
-                                className={foundationButtonClass({
-                                    variant: "ghost",
-                                    size: "sm",
-                                })}
+                                variant="ghost"
+                                size="sm"
                             >
                                 {t("events.mine")}
-                            </Link>
+                            </ButtonLink>
                         ) : null}
                         {lock ? (
                             <button
@@ -67,15 +66,13 @@ export default async function EventBoard({
                                 {t("events.write")}
                             </button>
                         ) : (
-                            <Link
+                            <ButtonLink
                                 href={localizePath("/events/new", locale)}
-                                className={foundationButtonClass({
-                                    variant: "secondary",
-                                    size: "sm",
-                                })}
+                                variant="secondary"
+                                size="sm"
                             >
                                 {t("events.write")}
-                            </Link>
+                            </ButtonLink>
                         )}
                     </div>
                 }

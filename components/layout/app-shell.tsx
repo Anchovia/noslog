@@ -1,11 +1,11 @@
 "use client";
 
-import { Suspense } from "react";
 import type { ReactNode } from "react";
+import { Suspense } from "react";
 
 import { useTranslations } from "@/components/i18n/locale-provider";
-import AppHeader from "@/components/layout/app-header";
 import type { ShellAccount } from "@/components/layout/app-header";
+import AppHeader from "@/components/layout/app-header";
 import NavigationProgress from "@/components/layout/navigation-progress";
 import PageViewBeacon from "@/components/layout/page-view-beacon";
 import { FeedbackUnreadProvider } from "@/features/feedback/components/feedback-unread";

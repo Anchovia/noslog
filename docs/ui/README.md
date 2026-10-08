@@ -27,20 +27,21 @@ Props·상태·ref 계약은 [계약 문서](./contracts.md), 비교/적용 범�
 
 ## 부품 선택
 
-| 부품               | 사용 기준                                                       |
-| ------------------ | --------------------------------------------------------------- |
-| `Button`           | 동작용. 화면 이동은 링크. L 기본, M은 `size="sm"`               |
-| `IconButton`       | 아이콘만 있는 동작. `label` 필수, 내부 아이콘은 `aria-hidden`   |
-| `FormField`        | 라벨·도움말·오류·성공 메시지의 틀. 입력 `id`와 연결             |
-| `Input`·`TextArea` | 네이티브 입력. 검증·저장·권한은 호출부 책임                     |
-| `Select`           | 배타 선택. `value`·`onValueChange` 제어, 빈 문자열 옵션 지원    |
-| `SegmentedControl` | 짧은 배타 선택. 방향키·Home·End로 선택과 포커스 이동            |
-| `ModalDialog`      | 보호된 포커스가 필요한 창. 제목 필수, 트리거로 포커스 복귀 연결 |
-| `Checkbox`         | 저장하는 폼의 켜기·끄기. 보이는 `label` 필수                    |
-| `Switch`           | 즉시 적용하는 켜기·끄기. 접근성 이름 필수                       |
-| `AreaTabs`         | 페이지 안 큰 구역 전환. 방향키 탐색 후 Enter/Space로 활성화     |
+| 부품               | 사용 기준                                                          |
+| ------------------ | ------------------------------------------------------------------ |
+| `Button`           | 동작용. 화면 이동은 링크. L 기본, M은 `size="sm"`                  |
+| `ButtonLink`       | 버튼 모양 이동. Next Link 기본, OAuth·외부 주소·북마클릿은 `plain` |
+| `IconButton`       | 아이콘만 있는 동작. `label` 필수, 내부 아이콘은 `aria-hidden`      |
+| `FormField`        | 라벨·도움말·오류·성공 메시지의 틀. 입력 `id`와 연결                |
+| `Input`·`TextArea` | 네이티브 입력. 검증·저장·권한은 호출부 책임                        |
+| `Select`           | 배타 선택. `value`·`onValueChange` 제어, 빈 문자열 옵션 지원       |
+| `SegmentedControl` | 짧은 배타 선택. 방향키·Home·End로 선택과 포커스 이동               |
+| `ModalDialog`      | 보호된 포커스가 필요한 창. 제목 필수, 트리거로 포커스 복귀 연결    |
+| `Checkbox`         | 저장하는 폼의 켜기·끄기. 보이는 `label` 필수                       |
+| `Switch`           | 즉시 적용하는 켜기·끄기. 접근성 이름 필수                          |
+| `AreaTabs`         | 페이지 안 큰 구역 전환. 방향키 탐색 후 Enter/Space로 활성화        |
 
-`components/ui`의 실제 부품 파일 50개에 대응하는 스토리 50개와 토큰 예제 1개를 제공한다.
+`components/ui`의 실제 부품 파일 51개에 대응하는 스토리 51개와 토큰 예제 1개를 제공한다.
 폼 입력·스켈레톤·수치 목록의 이름 있는 부품은 해당 파일의 스토리에서 함께 다룬다.
 `use-select-open.ts` 같은 내부 훅은 이를 사용하는 Select·CompactSelect의 동작으로 검증한다.
 

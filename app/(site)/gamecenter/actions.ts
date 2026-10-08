@@ -1,11 +1,11 @@
 "use server";
 
+import { submitArcadeReport as submitArcadeReportService } from "@/features/arcades/server/arcade-report-service";
+import { confirmCabinetRunning as confirmCabinetRunningService } from "@/features/arcades/server/cabinet-check-service";
 import {
     clearPreferredArcade as clearPreferredArcadeService,
     setPreferredArcade as setPreferredArcadeService,
 } from "@/features/arcades/server/preferred-arcade-service";
-import { submitArcadeReport as submitArcadeReportService } from "@/features/arcades/server/arcade-report-service";
-import { confirmCabinetRunning as confirmCabinetRunningService } from "@/features/arcades/server/cabinet-check-service";
 
 export async function setPreferredArcade(
     arcadeId: number,

@@ -17,6 +17,7 @@ import type {
 import { formatProfileDate } from "@/components/profile/dashboard/profile-utils";
 import Avatar from "@/components/ui/avatar";
 import { foundationButtonClass } from "@/components/ui/button";
+import ButtonLink from "@/components/ui/button-link";
 import CompactSelect from "@/components/ui/compact-select";
 import CountryMarker from "@/components/ui/country-marker";
 import DiscordIcon from "@/components/ui/discord-icon";
@@ -484,14 +485,9 @@ export default function ProfileIdentity({
             </div>
             {showSyncAction ? (
                 <div className="nl-profile-identity__recovery">
-                    <Link
-                        className={foundationButtonClass({
-                            variant: "secondary",
-                        })}
-                        href={href("/bookmarklet")}
-                    >
+                    <ButtonLink variant="secondary" href={href("/bookmarklet")}>
                         {t("sync.title")}
-                    </Link>
+                    </ButtonLink>
                 </div>
             ) : null}
         </section>

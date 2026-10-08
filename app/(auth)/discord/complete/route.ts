@@ -1,11 +1,12 @@
-import db from "@/lib/db";
-import { CACHE_TAGS, getUserProfileTag } from "@/lib/cache-tags";
-import { serverEnv } from "@/lib/env/server";
-import { isLocale, localizePath, type Locale } from "@/lib/i18n/routing";
-import { getSafeAuthReturnPath } from "@/lib/auth-return-path";
-import getSession from "@/lib/session";
 import { revalidateTag } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
+
+import { getSafeAuthReturnPath } from "@/lib/auth-return-path";
+import { CACHE_TAGS, getUserProfileTag } from "@/lib/cache-tags";
+import db from "@/lib/db";
+import { serverEnv } from "@/lib/env/server";
+import { isLocale, type Locale, localizePath } from "@/lib/i18n/routing";
+import getSession from "@/lib/session";
 
 interface DiscordTokenResponse {
     access_token?: string;

@@ -1,5 +1,5 @@
-import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 
 import EventDetail from "@/features/events/components/event-detail";
 import {
@@ -7,8 +7,8 @@ import {
     getOwnEvent,
     getPublicEventDetail,
 } from "@/features/events/server/event-service";
-import { getServerI18n } from "@/lib/i18n/server";
 import { localizePath } from "@/lib/i18n/routing";
+import { getServerI18n } from "@/lib/i18n/server";
 import { markdownExcerpt } from "@/lib/metadata/excerpt";
 import { createPageMetadata } from "@/lib/metadata/site";
 

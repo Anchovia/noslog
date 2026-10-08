@@ -15,6 +15,7 @@ import {
 } from "@/app/admin/announcements/actions";
 import ActionButton from "@/components/ui/action-button";
 import { foundationButtonClass } from "@/components/ui/button";
+import ButtonLink from "@/components/ui/button-link";
 import { fieldDescription, FormField, Input } from "@/components/ui/form-field";
 import type { MarkdownEditorLabels } from "@/components/ui/markdown-editor";
 import MarkdownEditor from "@/components/ui/markdown-editor";
@@ -624,20 +625,19 @@ export default function AnnouncementEditor({
                         />
                     ) : null}
                     {!isCreate && wasPublished && announcement.publicSlug ? (
-                        <a
+                        <ButtonLink
                             href={`/announcements/${announcement.publicSlug}`}
                             target="_blank"
                             rel="noreferrer"
-                            className={foundationButtonClass({
-                                variant: "ghost",
-                            })}
+                            plain
+                            variant="ghost"
                         >
                             공개 페이지
                             <ExternalLink
                                 className="nl-icon-small"
                                 aria-hidden
                             />
-                        </a>
+                        </ButtonLink>
                     ) : null}
                 </div>
                 <div>

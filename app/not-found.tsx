@@ -1,7 +1,7 @@
 import NavigationLayout from "@/app/(site)/layout";
+import LegacyNotFound from "@/features/recovery/components/legacy-not-found";
 import RecoveryBoundary from "@/features/recovery/components/recovery-boundary";
 import RecoveryContent from "@/features/recovery/components/recovery-content";
-import LegacyNotFound from "@/features/recovery/components/legacy-not-found";
 import { getServerI18n } from "@/lib/i18n/server";
 
 export async function generateMetadata() {

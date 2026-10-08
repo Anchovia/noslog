@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server";
-import { createApiFailure, createApiSuccess } from "@/lib/api/response";
-import { logServerError } from "@/lib/observability/server";
-import getSession from "@/lib/session";
+
 import {
     opinionQuerySchema,
     opinionReplyQuerySchema,
@@ -12,6 +10,9 @@ import {
     getCommunityPattern,
     getOpinionReplies,
 } from "@/features/music/server/community-data";
+import { createApiFailure, createApiSuccess } from "@/lib/api/response";
+import { logServerError } from "@/lib/observability/server";
+import getSession from "@/lib/session";
 
 const headers = { "Cache-Control": "private, no-store" };
 

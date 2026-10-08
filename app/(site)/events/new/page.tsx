@@ -2,8 +2,8 @@ import { redirect } from "next/navigation";
 
 import EventEditorPage from "@/features/events/components/event-editor-page";
 import { getEventWriter } from "@/features/events/server/event-service";
-import { getServerI18n } from "@/lib/i18n/server";
 import { localizePath } from "@/lib/i18n/routing";
+import { getServerI18n } from "@/lib/i18n/server";
 import { createPageMetadata } from "@/lib/metadata/site";
 
 export async function generateMetadata() {

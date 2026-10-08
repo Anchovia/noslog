@@ -9,7 +9,8 @@ import {
     useTranslations,
 } from "@/components/i18n/locale-provider";
 import PageContainer from "@/components/layout/page-container";
-import Button, { foundationButtonClass } from "@/components/ui/button";
+import Button from "@/components/ui/button";
+import ButtonLink from "@/components/ui/button-link";
 import Disclosure from "@/components/ui/disclosure";
 import { StatusMessage } from "@/components/ui/status-message";
 import { syncStatusOptions } from "@/features/sync/api/sync-status";
@@ -139,12 +140,12 @@ export default function SyncPage({
                             <p className="nl-body-secondary nl-muted">
                                 {t("sync.loginToCreate")}
                             </p>
-                            <Link
+                            <ButtonLink
                                 href={href("/login?returnTo=/bookmarklet")}
-                                className={`${foundationButtonClass()} nl-sync-primary`}
+                                className="nl-sync-primary"
                             >
                                 {t("common.login")}
-                            </Link>
+                            </ButtonLink>
                         </section>
                         <section className="nl-sync-zone">
                             <h2 className="nl-section-title">

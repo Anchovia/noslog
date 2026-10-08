@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { useTranslations } from "@/components/i18n/locale-provider";
-import { foundationButtonClass } from "@/components/ui/button";
+import ButtonLink from "@/components/ui/button-link";
 import DiscordIcon from "@/components/ui/discord-icon";
 
 export default function DiscordAction({ returnPath }: { returnPath: string }) {
@@ -16,8 +16,10 @@ export default function DiscordAction({ returnPath }: { returnPath: string }) {
     }, []);
     return (
         <>
-            <a
-                className={`${foundationButtonClass({ variant: "secondary" })} nl-auth-discord`}
+            <ButtonLink
+                plain
+                variant="secondary"
+                className="nl-auth-discord"
                 href={`/discord/start?returnTo=${encodeURIComponent(returnPath)}`}
                 aria-disabled={pending || undefined}
                 aria-busy={pending}
@@ -37,7 +39,7 @@ export default function DiscordAction({ returnPath }: { returnPath: string }) {
             >
                 <DiscordIcon className="nl-icon" />
                 {t("auth.continueDiscord")}
-            </a>
+            </ButtonLink>
             <span className="sr-only" role="status">
                 {pending ? t("auth.openingDiscord") : ""}
             </span>

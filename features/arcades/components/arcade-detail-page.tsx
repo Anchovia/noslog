@@ -1,4 +1,5 @@
 "use client";
+
 import {
     ChevronDown,
     Clock,
@@ -28,7 +29,7 @@ import {
 import PageContainer from "@/components/layout/page-container";
 import ActionButton from "@/components/ui/action-button";
 import BackLink from "@/components/ui/back-link";
-import { foundationButtonClass } from "@/components/ui/button";
+import ButtonLink from "@/components/ui/button-link";
 import { StatusMessage } from "@/components/ui/status-message";
 import {
     arcadeCabinetSummary,
@@ -178,13 +179,14 @@ export default function ArcadeDetailPage({
     const actions = (
         <div className="nl-arcade-detail__actions">
             {directions ? (
-                <a
-                    className={`${foundationButtonClass()} nl-arcade-detail__directions`}
+                <ButtonLink
+                    plain
+                    className="nl-arcade-detail__directions"
                     href={directions}
                     aria-label={`${t("arcades.directions")} · ${t("shell.externalLink")}`}
                 >
                     {t("arcades.directions")}
-                </a>
+                </ButtonLink>
             ) : (
                 <ActionButton disabled className="nl-arcade-detail__directions">
                     {t("arcades.directions")}
@@ -210,11 +212,10 @@ export default function ArcadeDetailPage({
                     {heartContent}
                 </ActionButton>
             ) : (
-                <Link
-                    className={`${foundationButtonClass({
-                        variant: "secondary",
-                        size: preferredCount === null ? "icon" : undefined,
-                    })} nl-arcade-detail__prefer`}
+                <ButtonLink
+                    variant="secondary"
+                    size={preferredCount === null ? "icon" : undefined}
+                    className="nl-arcade-detail__prefer"
                     href={loginHref}
                     aria-label={withPreferredCount(
                         t("arcades.loginToSetPreferred")
@@ -222,7 +223,7 @@ export default function ArcadeDetailPage({
                     title={t("arcades.loginToSetPreferred")}
                 >
                     {heartContent}
-                </Link>
+                </ButtonLink>
             )}
             <ArcadeReportDialog
                 arcade={arcade}

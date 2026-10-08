@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createApiFailure, createApiSuccess } from "@/lib/api/response";
-import { logServerError } from "@/lib/observability/server";
-import getSession from "@/lib/session";
-import { scoresHiddenFrom } from "@/features/profile/server/score-visibility";
+
 import {
     profileIdSchema,
     profileRecordsQuerySchema,
 } from "@/features/profile/schemas/public-profile-schema";
 import { getPublicProfileRecords } from "@/features/profile/server/profile-records-service";
+import { scoresHiddenFrom } from "@/features/profile/server/score-visibility";
+import { createApiFailure, createApiSuccess } from "@/lib/api/response";
+import { logServerError } from "@/lib/observability/server";
+import getSession from "@/lib/session";
 
 /** 프로필 「기록」 탭 목록(2026-09-25) — 점수 비공개면 본인 말고는 403(기록 API 와 같은 규칙) */
 export async function GET(

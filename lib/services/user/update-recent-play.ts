@@ -1,8 +1,8 @@
 import db from "../../db";
 import {
+    type BemaniJudgeCounts,
     mapBemaniJudgeCounts,
     normalizeBemaniRank,
-    type BemaniJudgeCounts,
 } from "./bemani-record-mapping";
 
 interface RecentHistoryItem {

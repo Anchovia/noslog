@@ -2,9 +2,8 @@ import { randomBytes } from "node:crypto";
 
 import { NextRequest, NextResponse } from "next/server";
 
-import { serverEnv } from "@/lib/env/server";
-import getSession from "@/lib/session";
 import { getSafeAuthReturnPath } from "@/lib/auth-return-path";
+import { serverEnv } from "@/lib/env/server";
 import {
     getPathLocale,
     isLocale,
@@ -12,6 +11,7 @@ import {
     localeFromAcceptLanguage,
     localizePath,
 } from "@/lib/i18n/routing";
+import getSession from "@/lib/session";
 
 export async function GET(request: NextRequest) {
     const returnTo =

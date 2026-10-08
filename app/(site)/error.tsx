@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import { useEffect } from "react";
+
 import RecoveryContent from "@/features/recovery/components/recovery-content";
-import { recordClientError } from "@/lib/observability/client";
 import { stripLocaleFromPath } from "@/lib/i18n/routing";
+import { recordClientError } from "@/lib/observability/client";
 
 export default function OrdinaryError({
     error,

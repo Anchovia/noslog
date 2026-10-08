@@ -1,13 +1,11 @@
 "use client";
 
-import Link from "next/link";
-
 import {
     useLocalizedHref,
     useTranslations,
 } from "@/components/i18n/locale-provider";
 import PageContainer from "@/components/layout/page-container";
-import { foundationButtonClass } from "@/components/ui/button";
+import ButtonLink from "@/components/ui/button-link";
 
 import RecoveryAction from "./recovery-action";
 
@@ -31,14 +29,12 @@ export default function RecoveryContent({ reset }: { reset?: () => void }) {
                         reset={reset}
                     />
                 ) : null}
-                <Link
+                <ButtonLink
                     href={href("/")}
-                    className={foundationButtonClass({
-                        variant: reset ? "secondary" : "primary",
-                    })}
+                    variant={reset ? "secondary" : "primary"}
                 >
                     {t("common.goHome")}
-                </Link>
+                </ButtonLink>
             </div>
         </PageContainer>
     );

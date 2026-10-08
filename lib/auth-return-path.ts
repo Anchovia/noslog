@@ -1,5 +1,5 @@
-import { getLocalizedHref, stripLocaleFromPath } from "@/lib/i18n/routing";
 import type { Locale } from "@/lib/i18n/routing";
+import { getLocalizedHref, stripLocaleFromPath } from "@/lib/i18n/routing";
 
 export function getSafeAuthReturnPath(value: string | undefined) {
     if (

@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createApiFailure, createApiSuccess } from "@/lib/api/response";
-import { logServerError } from "@/lib/observability/server";
-import getSession from "@/lib/session";
-import { scoresHiddenFrom } from "@/features/profile/server/score-visibility";
+
 import {
     profileIdSchema,
     profileListQuerySchema,
 } from "@/features/profile/schemas/public-profile-schema";
 import { getPublicProfilePlays } from "@/features/profile/server/profile-plays-service";
+import { scoresHiddenFrom } from "@/features/profile/server/score-visibility";
+import { createApiFailure, createApiSuccess } from "@/lib/api/response";
+import { logServerError } from "@/lib/observability/server";
+import getSession from "@/lib/session";
 
 export async function GET(
     request: NextRequest,

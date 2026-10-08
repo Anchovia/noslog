@@ -1,5 +1,5 @@
-import AppShell from "@/components/layout/app-shell";
 import AppFooter from "@/components/layout/app-footer";
+import AppShell from "@/components/layout/app-shell";
 import { countUnreadFeedbackReplies } from "@/features/feedback/server/my-feedback-service";
 import { getUser } from "@/lib/user";
 

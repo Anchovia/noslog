@@ -1,12 +1,13 @@
 import { redirect } from "next/navigation";
+
 import GlobalRankingPage from "@/features/rankings/components/global-ranking-page";
-import { getGlobalRankingPage } from "@/features/rankings/server/global-ranking-data";
 import {
     parseGlobalRankingQuery,
     serializeGlobalRankingQuery,
 } from "@/features/rankings/schemas/global-ranking-schema";
-import { getServerI18n } from "@/lib/i18n/server";
+import { getGlobalRankingPage } from "@/features/rankings/server/global-ranking-data";
 import { localizePath } from "@/lib/i18n/routing";
+import { getServerI18n } from "@/lib/i18n/server";
 import { createPageMetadata } from "@/lib/metadata/site";
 import { logServerError } from "@/lib/observability/server";
 import { getUser } from "@/lib/user";

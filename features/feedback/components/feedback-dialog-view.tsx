@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MessageSquare } from "lucide-react";
-import Link from "next/link";
 import type { ChangeEvent, ReactNode } from "react";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
@@ -15,6 +14,7 @@ import {
 import ActionButton from "@/components/ui/action-button";
 import AreaTabs from "@/components/ui/area-tabs";
 import { foundationButtonClass } from "@/components/ui/button";
+import ButtonLink from "@/components/ui/button-link";
 import FileRow from "@/components/ui/file-row";
 import {
     fieldDescription,
@@ -352,12 +352,9 @@ export default function FeedbackDialogView({
 
     // 버튼 — 폰(전체 화면)은 닫기가 머리 ×라 주 액션 하나, 창은 취소 · 주 액션. 보내기는 늘 켜 둔다(비면 칸 아래 오류, D2)
     const loginAction = (
-        <Link
-            href={localizedHref("/login")}
-            className={foundationButtonClass()}
-        >
+        <ButtonLink href={localizedHref("/login")}>
             {t("common.login")}
-        </Link>
+        </ButtonLink>
     );
     const closeAction = (
         <ActionButton

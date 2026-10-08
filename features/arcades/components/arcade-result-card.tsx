@@ -2,7 +2,6 @@
 
 import { ChevronDown, MapPin } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 import { useId, useState } from "react";
 
 import {
@@ -11,6 +10,7 @@ import {
     useTranslations,
 } from "@/components/i18n/locale-provider";
 import { foundationButtonClass } from "@/components/ui/button";
+import ButtonLink from "@/components/ui/button-link";
 import {
     arcadeCabinetSummary,
     arcadeDirections,
@@ -308,14 +308,14 @@ function ArcadeResultMore({
                     Number(Boolean(directions))
                 }
             >
-                <Link
+                <ButtonLink
                     href={detailHref}
                     prefetch={false}
-                    className={foundationButtonClass()}
+
                     onClick={onOpenDetail}
                 >
                     {t("arcades.viewDetails")}
-                </Link>
+                </ButtonLink>
                 {onShowOnMap ? (
                     <button
                         type="button"
@@ -328,15 +328,14 @@ function ArcadeResultMore({
                     </button>
                 ) : null}
                 {directions ? (
-                    <a
-                        className={foundationButtonClass({
-                            variant: "secondary",
-                        })}
+                    <ButtonLink
+                        plain
+                        variant="secondary"
                         href={directions}
                         aria-label={`${t("arcades.directions")} · ${t("shell.externalLink")}`}
                     >
                         {t("arcades.directions")}
-                    </a>
+                    </ButtonLink>
                 ) : null}
             </div>
         </div>

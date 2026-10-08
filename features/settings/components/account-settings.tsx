@@ -15,7 +15,8 @@ import {
     useTranslations,
 } from "@/components/i18n/locale-provider";
 import ActionButton from "@/components/ui/action-button";
-import Button, { foundationButtonClass } from "@/components/ui/button";
+import Button from "@/components/ui/button";
+import ButtonLink from "@/components/ui/button-link";
 import { fieldDescription, FormField, Input } from "@/components/ui/form-field";
 import ModalDialog from "@/components/ui/modal-dialog";
 import type {
@@ -241,13 +242,15 @@ export default function AccountSettings({
                             </h3>
                             <div className="nl-account-reauth">
                                 {!verified ? (
-                                    <a
+                                    <ButtonLink
                                         // 로그인 화면과 같은 Discord 색 버튼(2026-10-01 사용자) — 어디로 가는지 색이 먼저 말한다
-                                        className={`${foundationButtonClass({ variant: "secondary" })} nl-auth-discord`}
+                                        plain
+                                        variant="secondary"
+                                        className="nl-auth-discord"
                                         href={`/discord/start?${new URLSearchParams({ mode: "delete", returnTo: `${href("/settings")}?category=account` })}`}
                                     >
                                         {t("settings.reauthenticate")}
-                                    </a>
+                                    </ButtonLink>
                                 ) : null}
                                 <p
                                     className={

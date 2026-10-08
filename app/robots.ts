@@ -1,6 +1,7 @@
-import { SITE_URL } from "@/lib/metadata/site";
-import { SUPPORTED_LOCALES } from "@/lib/i18n/routing";
 import type { MetadataRoute } from "next";
+
+import { SUPPORTED_LOCALES } from "@/lib/i18n/routing";
+import { SITE_URL } from "@/lib/metadata/site";
 
 export default function robots(): MetadataRoute.Robots {
     return {

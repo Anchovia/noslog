@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
-import getSession from "@/lib/session";
-import { getServerI18n } from "@/lib/i18n/server";
-import { createApiFailure, createApiSuccess } from "@/lib/api/response";
-import { logServerError } from "@/lib/observability/server";
+
 import { getSyncStatus } from "@/features/sync/server/sync-status-service";
+import { createApiFailure, createApiSuccess } from "@/lib/api/response";
+import { getServerI18n } from "@/lib/i18n/server";
+import { logServerError } from "@/lib/observability/server";
+import getSession from "@/lib/session";
 
 export async function GET() {
     const { t } = await getServerI18n();

@@ -1,7 +1,7 @@
 "use client";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MessageSquare } from "lucide-react";
-import Link from "next/link";
 import {
     type BaseSyntheticEvent,
     type ReactNode,
@@ -20,7 +20,8 @@ import {
     useTranslations,
 } from "@/components/i18n/locale-provider";
 import ActionButton from "@/components/ui/action-button";
-import Button, { foundationButtonClass } from "@/components/ui/button";
+import Button from "@/components/ui/button";
+import ButtonLink from "@/components/ui/button-link";
 import FileRow from "@/components/ui/file-row";
 import {
     fieldDescription,
@@ -179,9 +180,7 @@ export default function ArcadeReportDialog({
         />
     );
     const loginLink = (
-        <Link className={foundationButtonClass()} href={loginHref}>
-            {t("common.login")}
-        </Link>
+        <ButtonLink href={loginHref}>{t("common.login")}</ButtonLink>
     );
     const successMessage = (
         <StatusMessage

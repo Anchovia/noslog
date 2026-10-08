@@ -1,10 +1,11 @@
-import { cache } from "react";
-import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { cache } from "react";
+
 import AnnouncementDetail from "@/features/announcements/components/announcement-detail";
 import { getAnnouncement } from "@/features/announcements/server/public-announcement-service";
-import { getServerI18n } from "@/lib/i18n/server";
 import { localizePath } from "@/lib/i18n/routing";
+import { getServerI18n } from "@/lib/i18n/server";
 import { markdownExcerpt } from "@/lib/metadata/excerpt";
 import { createPageMetadata, SITE_NAME, SITE_URL } from "@/lib/metadata/site";
 

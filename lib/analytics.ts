@@ -4,9 +4,9 @@ import { createHash, randomBytes } from "node:crypto";
 
 import {
     apiRouteFromPath,
+    type ExternalEvent,
     isBotUserAgent,
     pageRouteFromPath,
-    type ExternalEvent,
 } from "@/lib/analytics-routes";
 import db from "@/lib/db";
 

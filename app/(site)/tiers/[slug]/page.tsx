@@ -1,8 +1,9 @@
-import db from "@/lib/db";
-import { getRequestLocale } from "@/lib/i18n/server";
-import { localizePath } from "@/lib/i18n/routing";
-import { isTierGoal } from "@/lib/tiers";
 import { redirect } from "next/navigation";
+
+import db from "@/lib/db";
+import { localizePath } from "@/lib/i18n/routing";
+import { getRequestLocale } from "@/lib/i18n/server";
+import { isTierGoal } from "@/lib/tiers";
 
 // 이전 서열표 상세 링크는 목표별 통합 서열표 화면으로 연결함
 export default async function LegacyTierDetailPage({

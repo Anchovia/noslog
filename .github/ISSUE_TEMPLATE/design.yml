@@ -10,6 +10,8 @@ body:
       id: problem
       attributes:
           label: 문제와 필요한 이유
+          placeholder: |
+              390px에서 같은 행의 이동 링크와 버튼 높이가 다릅니다.
       validations:
           required: true
     - type: textarea
@@ -17,6 +19,11 @@ body:
       attributes:
           label: 작업 범위와 보존 조건
           description: 대상 파일·화면과 유지해야 할 동작을 적어주세요.
+          placeholder: |
+              대상: 공개 화면의 기존 링크 조합
+              기준: docs/design/README.md의 높이·간격·상태 규칙
+              보존: 시각 값·문구·주소·기능 의미
+              새 결정이 필요하면 비교 시안·사용자 선택을 먼저 기록
       validations:
           required: true
     - type: textarea
@@ -24,9 +31,16 @@ body:
       attributes:
           label: 완료 조건과 검증
           description: 확인 가능한 결과, 검사 명령, 관련 화면 폭·언어·권한을 적어주세요.
+          placeholder: |
+              320/390/768/1280px·변경 경계 양쪽·ko/ja/en 확인
+              높이·간격·정렬·가로 넘침 실측
+              키보드 포커스·상태·Storybook play/axe 확인
+              토큰/규칙 결정 시 코드·가이드·decisions.md·기대값 정합
       validations:
           required: true
     - type: textarea
       id: reference
       attributes:
           label: 관련 문서·이슈·예시
+          placeholder: |
+              디자인 가이드 절 / 해당 스토리 / 측정 결과·사용자가 선택한 시안

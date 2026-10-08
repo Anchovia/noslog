@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useId, useRef, useState } from "react";
 
 import {
@@ -8,7 +7,7 @@ import {
     useTranslations,
 } from "@/components/i18n/locale-provider";
 import ActionButton from "@/components/ui/action-button";
-import { foundationButtonClass } from "@/components/ui/button";
+import ButtonLink from "@/components/ui/button-link";
 import Disclosure from "@/components/ui/disclosure";
 import ScalePicker from "@/components/ui/scale-picker";
 import useCommunityMutation from "@/features/music/hooks/use-community-mutation";
@@ -232,17 +231,15 @@ export default function PatternEvaluationForm({
                                 )}
                             </p>
                             {!accountId ? (
-                                <Link
+                                <ButtonLink
                                     href={href(
                                         `/login?returnTo=${encodeURIComponent(returnTo)}`
                                     )}
-                                    className={foundationButtonClass({
-                                        variant: "primary",
-                                        size: "sm",
-                                    })}
+                                    variant="primary"
+                                    size="sm"
                                 >
                                     {t("common.login")}
-                                </Link>
+                                </ButtonLink>
                             ) : null}
                         </div>
                     </div>

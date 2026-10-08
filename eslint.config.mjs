@@ -70,11 +70,21 @@ export default defineConfig([
     },
     {
         files: [
+            "app/**/*.{ts,tsx}",
+            "components/layout/**/*.{ts,tsx}",
+            "lib/**/*.{ts,tsx}",
             "features/**/*.{ts,tsx}",
             "components/ui/**/*.{ts,tsx}",
             ".storybook/**/*.{ts,tsx}",
             "vitest.storybook.config.ts",
             "tooling/**/*.mjs",
+        ],
+        ignores: [
+            "app/admin/**",
+            "app/**/pattern/**",
+            "lib/chart-pattern/**",
+            "lib/design/**",
+            "lib/generated/**",
         ],
         plugins: { "simple-import-sort": simpleImportSort },
         rules: {

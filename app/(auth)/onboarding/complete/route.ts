@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import db from "@/lib/db";
-import getSession from "@/lib/session";
 import { getAuthReturnPath } from "@/lib/auth-return-path";
+import db from "@/lib/db";
 import { localizePath } from "@/lib/i18n/routing";
+import getSession from "@/lib/session";
 
 // 완료 상태를 세션에 반영한 뒤 검증된 원래 목적지로 이동함
 export async function GET(request: NextRequest) {

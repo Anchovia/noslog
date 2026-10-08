@@ -14,19 +14,20 @@ Props의 타입과 기본값은 각 부품 소스가 원본이다. 여기에는 
 
 ## 버튼과 입력
 
-| 부품                                                          | 값·기본값·콜백·ref 계약                                                                                                                                                                                |
-| ------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `Button`                                                      | 네이티브 button Props/ref를 전달한다. `type` 기본은 `button`, variant 기본은 primary, sm은 M. 제출에는 `type="submit"`을 명시한다. `variant={null}`은 변형 클래스를 생략한다.                          |
-| `ActionButton`                                                | `busy=false` 기본. busy이면 스피너·aria-busy·aria-disabled를 붙이고 onClick을 막는다. `busyLabel`이 없으면 기존 children을 유지한다. form의 Enter/requestSubmit까지 막는 책임은 form 제출 잠금에 있다. |
-| `IconButton`                                                  | 번역된 `label` 필수, children은 장식 아이콘. ghost·L 기본, compact는 M. ref는 button에 전달된다.                                                                                                       |
-| `FormField`                                                   | id를 자식 입력 id와 맞춘다. help는 항상 별도 설명이고 error가 success보다 우선한다. Input의 aria-invalid/aria-describedby는 호출부가 설정한다.                                                         |
-| `Input`·`TextArea`                                            | 네이티브 Props/ref를 그대로 전달한다. RHF register로 비제어 입력을 연결할 수 있다. FormField가 입력 값을 소유하지 않는다.                                                                              |
-| `Checkbox`                                                    | label 필수. 네이티브 checked/onChange 또는 defaultChecked/register를 사용한다. ref는 내부 input에 전달된다. 저장하는 폼에 쓴다.                                                                        |
-| `Switch`                                                      | checked와 onCheckedChange 필수. 콜백은 다음 boolean 값이다. 즉시 적용되는 설정용이며 비제어 defaultChecked를 지원하지 않는다. 연결된 label 또는 aria-label이 필요하다.                                 |
-| `Select`                                                      | value/onValueChange 필수, 콜백은 option의 string value. 빈 문자열 옵션도 지원한다. 내부 sentinel은 외부로 노출되지 않는다. invalid는 트리거 aria-invalid, triggerRef는 button ref다.                   |
-| `SearchField`                                                 | value 필수. 입력 onChange는 네이티브 이벤트, onClear는 인자 없는 삭제 요청이다. busy가 지우기 버튼보다 우선하며 입력 자체를 자동 잠그지 않는다.                                                        |
-| `SegmentedControl`·`FilterChips`·`SelectionList`·`RadioGroup` | 값과 선택 콜백을 호출부에서 소유한다. radio/checkbox/탭 의미를 서로 바꾸지 않는다. 비활성 항목·선택 해제·다중 선택 지원은 각 Props와 스토리를 따른다.                                                  |
-| `RangeSlider`·`ScalePicker`                                   | 숫자 범위와 현재 값을 받는다. RangeSlider의 변경과 확정 콜백을 구분한다. ScalePicker 기본 범위는 0–4이며 같은 값을 다시 누르는 해제 동작을 보존한다.                                                   |
+| 부품                                                          | 값·기본값·콜백·ref 계약                                                                                                                                                                                                                                                                                                                                                          |
+| ------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Button`                                                      | 네이티브 button Props/ref를 전달한다. `type` 기본은 `button`, variant 기본은 primary, sm은 M. 제출에는 `type="submit"`을 명시한다. `variant={null}`은 변형 클래스를 생략한다.                                                                                                                                                                                                    |
+| `ButtonLink`                                                  | Button의 variant/size/destructiveFilled와 같은 모양. 기본 Next Link의 href(URL 객체 포함)·prefetch·replace·scroll·이벤트와 anchor ref를 전달한다. `plain=true`는 네이티브 a Props/ref를 전달하며 href 없이 쓰는 북마클릿도 허용한다. disabled/busy를 새로 만들지 않으며 aria-disabled만으로 이동은 차단되지 않는다. OAuth의 중복 이동 차단·북마클릿 href 연결은 호출부 책임이다. |
+| `ActionButton`                                                | `busy=false` 기본. busy이면 스피너·aria-busy·aria-disabled를 붙이고 onClick을 막는다. `busyLabel`이 없으면 기존 children을 유지한다. form의 Enter/requestSubmit까지 막는 책임은 form 제출 잠금에 있다.                                                                                                                                                                           |
+| `IconButton`                                                  | 번역된 `label` 필수, children은 장식 아이콘. ghost·L 기본, compact는 M. ref는 button에 전달된다.                                                                                                                                                                                                                                                                                 |
+| `FormField`                                                   | id를 자식 입력 id와 맞춘다. help는 항상 별도 설명이고 error가 success보다 우선한다. Input의 aria-invalid/aria-describedby는 호출부가 설정한다.                                                                                                                                                                                                                                   |
+| `Input`·`TextArea`                                            | 네이티브 Props/ref를 그대로 전달한다. RHF register로 비제어 입력을 연결할 수 있다. FormField가 입력 값을 소유하지 않는다.                                                                                                                                                                                                                                                        |
+| `Checkbox`                                                    | label 필수. 네이티브 checked/onChange 또는 defaultChecked/register를 사용한다. ref는 내부 input에 전달된다. 저장하는 폼에 쓴다.                                                                                                                                                                                                                                                  |
+| `Switch`                                                      | checked와 onCheckedChange 필수. 콜백은 다음 boolean 값이다. 즉시 적용되는 설정용이며 비제어 defaultChecked를 지원하지 않는다. 연결된 label 또는 aria-label이 필요하다.                                                                                                                                                                                                           |
+| `Select`                                                      | value/onValueChange 필수, 콜백은 option의 string value. 빈 문자열 옵션도 지원한다. 내부 sentinel은 외부로 노출되지 않는다. invalid는 트리거 aria-invalid, triggerRef는 button ref다.                                                                                                                                                                                             |
+| `SearchField`                                                 | value 필수. 입력 onChange는 네이티브 이벤트, onClear는 인자 없는 삭제 요청이다. busy가 지우기 버튼보다 우선하며 입력 자체를 자동 잠그지 않는다.                                                                                                                                                                                                                                  |
+| `SegmentedControl`·`FilterChips`·`SelectionList`·`RadioGroup` | 값과 선택 콜백을 호출부에서 소유한다. radio/checkbox/탭 의미를 서로 바꾸지 않는다. 비활성 항목·선택 해제·다중 선택 지원은 각 Props와 스토리를 따른다.                                                                                                                                                                                                                            |
+| `RangeSlider`·`ScalePicker`                                   | 숫자 범위와 현재 값을 받는다. RangeSlider의 변경과 확정 콜백을 구분한다. ScalePicker 기본 범위는 0–4이며 같은 값을 다시 누르는 해제 동작을 보존한다.                                                                                                                                                                                                                             |
 
 ```tsx
 <FormField
@@ -49,6 +50,15 @@ Props의 타입과 기본값은 각 부품 소스가 원본이다. 여기에는 
         }
     />
 </FormField>
+```
+
+```tsx
+<ButtonLink href={href("/music")} variant="secondary" size="sm">
+    {t("shell.music")}
+</ButtonLink>
+<ButtonLink plain href={externalUrl} target="_blank" rel="noopener noreferrer">
+    {externalLabel}
+</ButtonLink>
 ```
 
 ## 창·이동·표시

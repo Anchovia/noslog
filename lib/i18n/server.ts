@@ -4,8 +4,8 @@ import { createTranslator, getMessages, type Messages } from "./messages";
 import {
     DEFAULT_LOCALE,
     isLocale,
-    LOCALE_REQUEST_HEADER,
     type Locale,
+    LOCALE_REQUEST_HEADER,
 } from "./routing";
 
 export async function getRequestLocale(): Promise<Locale> {

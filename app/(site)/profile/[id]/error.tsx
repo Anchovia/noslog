@@ -1,10 +1,11 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+
+import { useTranslations } from "@/components/i18n/locale-provider";
 import PageContainer from "@/components/layout/page-container";
 import Button from "@/components/ui/button";
 import { StatusMessage } from "@/components/ui/status-message";
-import { useTranslations } from "@/components/i18n/locale-provider";
-import { useRouter } from "next/navigation";
 
 export default function ProfileError({
     reset,

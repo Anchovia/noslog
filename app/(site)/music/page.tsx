@@ -1,13 +1,13 @@
 import DiscoveryPage from "@/features/music/components/discovery-page";
+import { parseDiscoverySearchParams } from "@/features/music/schemas/discovery-schema";
 import {
     getDiscoveryPage,
     publicDiscoveryQuery,
 } from "@/features/music/server/discovery-service";
-import { parseDiscoverySearchParams } from "@/features/music/schemas/discovery-schema";
+import { localizePath } from "@/lib/i18n/routing";
+import { getServerI18n } from "@/lib/i18n/server";
 import { createPageMetadata } from "@/lib/metadata/site";
 import getSession from "@/lib/session";
-import { getServerI18n } from "@/lib/i18n/server";
-import { localizePath } from "@/lib/i18n/routing";
 
 export async function generateMetadata() {
     const { locale, t } = await getServerI18n();

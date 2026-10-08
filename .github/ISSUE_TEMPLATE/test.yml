@@ -10,6 +10,8 @@ body:
       id: problem
       attributes:
           label: 문제와 필요한 이유
+          placeholder: |
+              폼 제출 후 늦게 도착한 응답이 닫았다 다시 연 창의 상태를 덮어쓰는지 검증이 없습니다.
       validations:
           required: true
     - type: textarea
@@ -17,6 +19,12 @@ body:
       attributes:
           label: 작업 범위와 보존 조건
           description: 대상 파일·화면과 유지해야 할 동작을 적어주세요.
+          placeholder: |
+              시나리오: 제출 → 창 닫기 → 다시 열기 → 이전 응답 도착
+              기대: 새 창의 입력·오류·완료 상태 유지
+              층: Vitest / Storybook play·axe / 관련 E2E 중 필요한 곳
+              mock: 지연 promise·오류 응답·고정 시각; 실제 외부 호출 없음
+              환경: Storybook 격리 또는 AGENTS.md의 로컬 테스트 DB·3100
       validations:
           required: true
     - type: textarea
@@ -24,9 +32,16 @@ body:
       attributes:
           label: 완료 조건과 검증
           description: 확인 가능한 결과, 검사 명령, 관련 화면 폭·언어·권한을 적어주세요.
+          placeholder: |
+              성공·실패·재시도·중복 제출과 이전 응답 순서를 구분
+              명령: npm test / npm run test:storybook / 관련 E2E 스펙
+              권한·데이터·언어·폭: 이번 시나리오에 필요한 경우만 기입
+              실제 DB/Blob/로그인/OAuth mock 여부와 검사하지 않은 범위 명시
       validations:
           required: true
     - type: textarea
       id: reference
       attributes:
           label: 관련 문서·이슈·예시
+          placeholder: |
+              기능 규칙 / 기존 테스트 파일 / 문제를 재현하는 스토리

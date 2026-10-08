@@ -1,7 +1,7 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 
 import { serverEnv } from "@/lib/env/server";
-import { localizePath, type Locale } from "@/lib/i18n/routing";
+import { type Locale, localizePath } from "@/lib/i18n/routing";
 
 interface SyncTokenPayload {
     userId: number;

@@ -2,8 +2,8 @@
 
 import { saveLocalePreference } from "@/features/settings/server/locale-preference-service";
 import {
-    saveSettingsProfile,
     saveSettingsPrivacy,
+    saveSettingsProfile,
 } from "@/features/settings/server/settings-save-service";
 
 export async function changeLocale(input: unknown) {

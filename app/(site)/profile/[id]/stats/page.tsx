@@ -4,13 +4,14 @@ import { notFound } from "next/navigation";
 import ProfileStats from "@/features/profile/components/profile-stats";
 import PublicProfilePage from "@/features/profile/components/public-profile-page";
 import { profileIdSchema } from "@/features/profile/schemas/public-profile-schema";
+import { getOwnerPrivateFields } from "@/features/profile/server/owner-private-service";
+import { createProfileMetadata } from "@/features/profile/server/profile-metadata";
 import { getPublicProfileProgress } from "@/features/profile/server/profile-progress-service";
 import { getProfileStats } from "@/features/profile/server/profile-stats-service";
-import { getOwnerPrivateFields } from "@/features/profile/server/owner-private-service";
 import { hideProfileScores } from "@/features/profile/server/score-visibility";
 import { getServerI18n } from "@/lib/i18n/server";
-import { createProfileMetadata } from "@/features/profile/server/profile-metadata";
 import getSession from "@/lib/session";
+
 import { getCachedProfileData } from "../data";
 
 export async function generateMetadata({

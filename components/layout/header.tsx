@@ -1,8 +1,9 @@
-import { getUser } from "@/lib/user";
 import Link from "next/link";
+
 import ProfileAvatar from "@/components/profile/profile-avatar";
-import { getServerI18n } from "@/lib/i18n/server";
 import { getLocalizedHref } from "@/lib/i18n/routing";
+import { getServerI18n } from "@/lib/i18n/server";
+import { getUser } from "@/lib/user";
 
 import HeaderMenu, { HeaderPrimaryNavigation } from "./header-navigation";
 import ScrollAwareHeader from "./scroll-aware-header";

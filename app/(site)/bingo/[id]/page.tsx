@@ -1,9 +1,10 @@
 import { notFound } from "next/navigation";
+
 import BingoDetailPage from "@/features/bingos/components/bingo-detail-page";
-import { getPublicBingoDetail } from "@/features/bingos/server/public-bingo-service";
 import { getCachedBingoDetail } from "@/features/bingos/server/bingo-data";
-import { getServerI18n } from "@/lib/i18n/server";
+import { getPublicBingoDetail } from "@/features/bingos/server/public-bingo-service";
 import { localizePath } from "@/lib/i18n/routing";
+import { getServerI18n } from "@/lib/i18n/server";
 import { createPageMetadata } from "@/lib/metadata/site";
 
 export async function generateMetadata({

@@ -1,3 +1,10 @@
+import { revalidateTag } from "next/cache";
+import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
+
+import { evaluateUserAchievements } from "@/features/achievements/server/achievement-service";
+import { getMissingJacketIndexes } from "@/features/music/server/jacket-collection-service";
+import { recordProfileRatings } from "@/features/profile/server/profile-rating-history-service";
 import { verifySyncToken } from "@/lib/bookmarklet";
 import { CACHE_TAGS, getUserProfileTag } from "@/lib/cache-tags";
 import db from "@/lib/db";
@@ -10,12 +17,6 @@ import { updatePlayData } from "@/lib/services/user/update-play-data";
 import { updatePlayerProfile } from "@/lib/services/user/update-player-profile";
 import { updateRecentBestRecords } from "@/lib/services/user/update-recent-best-records";
 import { updateRecentPlay } from "@/lib/services/user/update-recent-play";
-import { evaluateUserAchievements } from "@/features/achievements/server/achievement-service";
-import { getMissingJacketIndexes } from "@/features/music/server/jacket-collection-service";
-import { recordProfileRatings } from "@/features/profile/server/profile-rating-history-service";
-import { NextRequest, NextResponse } from "next/server";
-import { revalidateTag } from "next/cache";
-import { z } from "zod";
 
 const EAGATE_ORIGIN = "https://p.eagate.573.jp";
 const MAX_SYNC_BODY_BYTES = 8 * 1024 * 1024;

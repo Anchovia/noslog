@@ -42,7 +42,8 @@ Do not add a `src/` wrapper solely to resemble a Vite project.
 
 Home-only UI belongs in `features/home/components`; `components/ui` remains
 shared UI. Import utilities by purpose: `@/lib/cn`, `@/lib/format-number`,
-`@/lib/format-date`, and `@/lib/music/stored-grade`. Do not collect unrelated
+`@/lib/format-date`, and `@/lib/music/stored-grade`. Jacket fallback URLs live in
+`@/lib/music/jacket-fallback-urls` as `musicJacketFallbackUrls`. Do not collect unrelated
 helpers in a generic `utils.ts` barrel.
 
 ## Naming and imports
@@ -65,8 +66,11 @@ helpers in a generic `utils.ts` barrel.
 Formatting is controlled by Prettier. Do not manually align code against its
 output. ESLint owns code-quality rules; Prettier owns formatting rules.
 The existing type-import rule is enforced by ESLint for `features/**/*.{ts,tsx}`.
-Feature, shared UI, Storybook, and tooling imports/exports are automatically sorted by
-`eslint-plugin-simple-import-sort`. Parent-relative imports in `features/` and
+Public route, layout, infrastructure, feature, shared UI, Storybook, and tooling
+imports/exports are automatically sorted by `eslint-plugin-simple-import-sort`.
+The expanded route/infrastructure scope excludes admin routes, pattern route entries,
+and preserved chart-pattern, design, and generated infrastructure. Existing feature
+and shared UI checks remain enabled. Parent-relative imports in `features/` and
 `components/ui/` are rejected; imports within a local folder remain relative.
 `noslog/filenames` rejects non-kebab code filenames and internal folder names;
 App Router URL folders and the preserved chart viewer/editor are explicit exceptions.
@@ -105,18 +109,54 @@ The profile public cache is owned by `features/profile/server/public-profile-dat
 The existing route data module re-exports it for compatibility; its cache keys,
 visibility policy, and query behavior remain unchanged.
 
+## Cache changes
+
+Before changing a cache, identify its owner and verify these contracts:
+
+- **Scope:** distinguish public data from account/session/permission-dependent data.
+  Never place private responses in a cache shared across users. Include every input
+  that changes a result (locale, filters, visibility, account where appropriate) in
+  the owning cache/query key; authorization remains a server responsibility.
+- **Freshness:** state when data may be stale, how it becomes fresh, and whether
+  loading/error/optimistic states are intentional. Preserve existing freshness
+  requirements rather than copying another project's timeout.
+- **Invalidation:** list the existing server tags/paths and TanStack Query keys
+  affected by a write. Use the owning service's current invalidation mechanism;
+  refreshing the router does not by itself invalidate every server/client cache.
+- **Derived views:** after create/update/delete, check the edited detail, lists,
+  counts, home/profile summaries, and any other actual dependent views. Verify
+  navigation away/back, active filters and relevant public/private visibility.
+- **Failure and races:** failed writes must not publish successful cached values;
+  optimistic changes must roll back or reconcile. Account changes and late
+  responses must not display a previous user's private result.
+
+Record the affected keys/tags/paths and the save-to-dependent-view scenario in
+regression tests or the PR validation. Do not conceal a missing invalidation with
+blanket `router.refresh()` calls or disabling all caching. This rule documents
+verification and does not change existing cache values or product semantics.
+
 ## Shared UI and Storybook
 
 Use the [shared UI guide](./ui/README.md) for component selection, Props examples,
 token aliases, and story authoring. New or changed shared UI must include stories
 for its supported states and meaningful interaction tests where applicable.
 Existing untouched components may receive stories incrementally.
+Use `ButtonLink` for navigation that already uses the foundation button appearance;
+use `plain` for native anchors (OAuth, external URLs and bookmarklets).
 
 `npm run test:storybook` runs Chromium component and accessibility tests separately
 from the Node unit suite. `npm run build-storybook` verifies the standalone UI
 documentation. Both run in CI, without DB-backed application flows.
 Preserve approved typography classes and existing UI dimensions when using
-`nl`-namespaced Tailwind aliases. Commit and PR rules live in
+`nl`-namespaced Tailwind aliases. `tests/design-tsx-tokens.test.ts` checks static token references, inline appearance
+values (including local style objects/spreads), and arbitrary color/spacing/radius/
+font utilities in public TSX. It validates dynamic token family prefixes, not runtime
+suffixes. Geometry, calculated sizes and data colors remain runtime contracts;
+unknown dynamic suffixes need domain validation. Preserved admin/editor/viewer,
+story canvases and the fixed Satori profile-card export have separate contracts.
+Metadata is not a JSX style and does not inherit browser CSS variables.
+
+Commit and PR rules live in
 [CONVENTION.md](./CONVENTION.md).
 
 ## API contracts

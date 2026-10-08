@@ -1,17 +1,19 @@
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+
 import PublicProfilePage from "@/features/profile/components/public-profile-page";
+import { profileIdSchema } from "@/features/profile/schemas/public-profile-schema";
+import { createProfileMetadata } from "@/features/profile/server/profile-metadata";
 import { getProfileOverviewContext } from "@/features/profile/server/profile-overview-service";
+import { getProfilePinnedRecords } from "@/features/profile/server/profile-pinned-service";
 import { getPublicProfilePlays } from "@/features/profile/server/profile-plays-service";
 import { getPublicProfileProgress } from "@/features/profile/server/profile-progress-service";
 import { getProfileStats } from "@/features/profile/server/profile-stats-service";
-import { getProfilePinnedRecords } from "@/features/profile/server/profile-pinned-service";
-import { profileIdSchema } from "@/features/profile/schemas/public-profile-schema";
-import { getServerI18n } from "@/lib/i18n/server";
-import { createProfileMetadata } from "@/features/profile/server/profile-metadata";
-import getSession from "@/lib/session";
-import type { Metadata } from "next";
-import { notFound } from "next/navigation";
-import { getCachedProfileData } from "./data";
 import { hideProfileScores } from "@/features/profile/server/score-visibility";
+import { getServerI18n } from "@/lib/i18n/server";
+import getSession from "@/lib/session";
+
+import { getCachedProfileData } from "./data";
 
 export async function generateMetadata({
     params,

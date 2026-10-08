@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import PageContainer from "@/components/layout/page-container";
 import BackLink from "@/components/ui/back-link";
-import { foundationButtonClass } from "@/components/ui/button";
+import ButtonLink from "@/components/ui/button-link";
 import type {
     PublicAnnouncement,
     PublicAnnouncementSummary,
@@ -114,14 +114,12 @@ export default async function AnnouncementDetail({
                             })}
                         </div>
                     ) : null}
-                    <Link
+                    <ButtonLink
                         href={localizePath("/announcements", locale)}
-                        className={foundationButtonClass({
-                            variant: "secondary",
-                        })}
+                        variant="secondary"
                     >
                         {t("announcements.backToList")}
-                    </Link>
+                    </ButtonLink>
                 </nav>
             </article>
         </PageContainer>

@@ -1,7 +1,9 @@
-import { musicBG } from "../../constants";
+import type { Prisma } from "@prisma/client";
+
+import { musicJacketFallbackUrls } from "@/lib/music/jacket-fallback-urls";
+
 import db from "../../db";
 import { getLocalJacketUrl, isManualJacketUrl } from "../../music-jackets";
-import type { Prisma } from "@prisma/client";
 
 interface SyncMusicSheet {
     difficulty: string;
@@ -91,7 +93,7 @@ export async function updateMusic(music: BemaniMusicCatalogInput[]) {
                     ? existing.background
                     : getLocalJacketUrl(index) ||
                       existing?.background ||
-                      musicBG[index] ||
+                      musicJacketFallbackUrls[index] ||
                       null,
         };
 

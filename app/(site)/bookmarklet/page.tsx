@@ -1,3 +1,5 @@
+import { headers } from "next/headers";
+
 import SyncPage from "@/features/sync/components/sync-page";
 import { getSyncStatus } from "@/features/sync/server/sync-status-service";
 import { createBookmarkletHref, createSyncToken } from "@/lib/bookmarklet";
@@ -6,7 +8,6 @@ import { localizePath } from "@/lib/i18n/routing";
 import { getServerI18n } from "@/lib/i18n/server";
 import { createPageMetadata } from "@/lib/metadata/site";
 import { getUser } from "@/lib/user";
-import { headers } from "next/headers";
 
 export async function generateMetadata() {
     const { locale, t } = await getServerI18n();

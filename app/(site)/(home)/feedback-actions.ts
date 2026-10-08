@@ -1,9 +1,9 @@
 "use server";
 
 import {
+    discardFeedbackImage as discardFeedbackImageService,
     requestFeedbackImageUpload as requestFeedbackImageUploadService,
     submitFeedbackReport as submitFeedbackReportService,
-    discardFeedbackImage as discardFeedbackImageService,
 } from "@/features/feedback/server/feedback-report-service";
 import { listMyFeedback as listMyFeedbackService } from "@/features/feedback/server/my-feedback-service";
 import type { Locale } from "@/lib/i18n/routing";

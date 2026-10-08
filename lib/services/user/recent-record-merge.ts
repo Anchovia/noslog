@@ -1,8 +1,9 @@
-import {
-    calculateBasicGrade,
-    type BasicGradeChart,
-} from "@/lib/music/basic-grade";
 import type { ChartPlayHistory, PlayData } from "@prisma/client";
+
+import {
+    type BasicGradeChart,
+    calculateBasicGrade,
+} from "@/lib/music/basic-grade";
 
 export type RecordValues = Omit<
     PlayData,

@@ -1,7 +1,8 @@
 "use client";
 
 import { useTranslations } from "@/components/i18n/locale-provider";
-import Button, { foundationButtonClass } from "@/components/ui/button";
+import Button from "@/components/ui/button";
+import ButtonLink from "@/components/ui/button-link";
 import { NOSTALGIA_PLAY_DATA_URL } from "@/features/sync/official-url";
 import type { SyncAttempt } from "@/features/sync/schemas/sync-status-schema";
 
@@ -72,19 +73,20 @@ export default function SyncStatusHeader({
                             </p>
                         </>
                     ) : (
-                        <a
+                        <ButtonLink
                             href={NOSTALGIA_PLAY_DATA_URL}
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={onOfficial}
-                            className={`${foundationButtonClass()} nl-sync-primary`}
+                            plain
+                            className="nl-sync-primary"
                         >
                             {t(
                                 completed
                                     ? "sync.openOfficial"
                                     : "sync.tryAgain"
                             )}
-                        </a>
+                        </ButtonLink>
                     )
                 ) : null}
             </section>

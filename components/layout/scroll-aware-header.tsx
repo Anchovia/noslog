@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import {
     type FocusEvent,
     type ReactNode,
@@ -7,7 +8,6 @@ import {
     useRef,
     useState,
 } from "react";
-import { usePathname } from "next/navigation";
 
 const DESKTOP_MEDIA_QUERY = "(min-width: 1024px)";
 const TOP_SCROLL_THRESHOLD = 8;

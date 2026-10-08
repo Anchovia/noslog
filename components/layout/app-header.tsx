@@ -3,8 +3,8 @@
 import { Menu, MessageSquare, Settings, ShieldUser, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
 import type { KeyboardEvent } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import {
     useLocalizedHref,

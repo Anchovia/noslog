@@ -1,9 +1,9 @@
 import ExamPage from "@/features/exams/components/exam-page";
-import { getCachedPublishedExams } from "@/features/exams/server/exam-data";
-import { getServerI18n } from "@/lib/i18n/server";
-import { localizePath } from "@/lib/i18n/routing";
-import { createPageMetadata } from "@/lib/metadata/site";
 import { getExamIdentity } from "@/features/exams/exam-identity";
+import { getCachedPublishedExams } from "@/features/exams/server/exam-data";
+import { localizePath } from "@/lib/i18n/routing";
+import { getServerI18n } from "@/lib/i18n/server";
+import { createPageMetadata } from "@/lib/metadata/site";
 
 type Props = { params: Promise<{ slug: string }> };
 

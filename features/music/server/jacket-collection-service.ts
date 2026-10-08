@@ -5,8 +5,8 @@ import { revalidateTag } from "next/cache";
 
 import { deleteBlobIfOwned } from "@/lib/blob";
 import { CACHE_TAGS } from "@/lib/cache-tags";
-import { musicBG } from "@/lib/constants";
 import db from "@/lib/db";
+import { musicJacketFallbackUrls } from "@/lib/music/jacket-fallback-urls";
 import { getLocalJacketUrl } from "@/lib/music-jackets";
 
 // 공식 자켓(약 100px)은 수 KB 라 넉넉히 잡아도 1MB 를 넘지 않는다
@@ -49,7 +49,7 @@ export async function getMissingJacketIndexes() {
             (index) =>
                 JACKET_INDEX_PATTERN.test(index) &&
                 !getLocalJacketUrl(index) &&
-                !musicBG[index]
+                !musicJacketFallbackUrls[index]
         );
 }
 
@@ -65,7 +65,8 @@ export async function saveCollectedJacket(
         return "invalid";
     const format = detectJacketFormat(bytes);
     if (!format) return "invalid";
-    if (getLocalJacketUrl(index) || musicBG[index]) return "skipped";
+    if (getLocalJacketUrl(index) || musicJacketFallbackUrls[index])
+        return "skipped";
 
     const music = await db.music.findUnique({
         where: { index },

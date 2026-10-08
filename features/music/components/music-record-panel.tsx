@@ -1,7 +1,5 @@
 "use client";
 
-import Link from "next/link";
-
 import {
     useLocale,
     useLocalizedHref,
@@ -9,7 +7,7 @@ import {
 } from "@/components/i18n/locale-provider";
 import { rankDisplayName } from "@/components/music/music-detail-config";
 import type { MusicDetailProps } from "@/components/music/music-detail-types";
-import { foundationButtonClass } from "@/components/ui/button";
+import ButtonLink from "@/components/ui/button-link";
 import Disclosure from "@/components/ui/disclosure";
 import StatStrip from "@/components/ui/stat-strip";
 import { gradeTone, scoreTone } from "@/lib/music/score-tone";
@@ -149,14 +147,14 @@ export function MusicRecordGuest({
     return (
         <div className="nl-record-state">
             <p className="nl-body-secondary nl-muted">{t("record.guest")}</p>
-            <Link
-                className={foundationButtonClass({ variant: "primary" })}
+            <ButtonLink
+                variant="primary"
                 href={href(
                     `/login?returnTo=${encodeURIComponent(href(`/music/${musicIndex}/${difficulty.toLowerCase()}?tab=record`))}`
                 )}
             >
                 {t("common.login")}
-            </Link>
+            </ButtonLink>
         </div>
     );
 }

@@ -8,10 +8,11 @@ import {
     profileIdSchema,
 } from "@/features/profile/schemas/public-profile-schema";
 import { getProfileActivity } from "@/features/profile/server/profile-activity-service";
+import { createProfileMetadata } from "@/features/profile/server/profile-metadata";
 import { getPublicProfilePlays } from "@/features/profile/server/profile-plays-service";
 import { getServerI18n } from "@/lib/i18n/server";
-import { createProfileMetadata } from "@/features/profile/server/profile-metadata";
 import getSession from "@/lib/session";
+
 import { getCachedProfileData } from "../data";
 
 export async function generateMetadata({

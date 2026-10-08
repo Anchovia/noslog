@@ -1,4 +1,5 @@
 import type { NextRequest } from "next/server";
+
 import { createProfileCardResponse } from "@/features/profile/server/profile-card-service";
 
 export const dynamic = "force-dynamic";

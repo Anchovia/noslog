@@ -5,7 +5,8 @@ import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { toast } from "sonner";
 
 import { useTranslations } from "@/components/i18n/locale-provider";
-import Button, { foundationButtonClass } from "@/components/ui/button";
+import Button from "@/components/ui/button";
+import ButtonLink from "@/components/ui/button-link";
 import Disclosure from "@/components/ui/disclosure";
 import ModalDialog from "@/components/ui/modal-dialog";
 import { StatusMessage } from "@/components/ui/status-message";
@@ -131,19 +132,19 @@ export default function SyncSetup({
                         </div>
                         <div className="nl-sync-install-card">
                             <div className="nl-sync-install-card__target">
-                                <a
+                                <ButtonLink
                                     ref={anchor}
                                     onClick={(event) => {
                                         event.preventDefault();
                                         void copy(true);
                                     }}
                                     draggable
-                                    className={`${foundationButtonClass({
-                                        variant: "secondary",
-                                    })} nl-sync-step-action`}
+                                    plain
+                                    variant="secondary"
+                                    className="nl-sync-step-action"
                                 >
                                     {t("sync.bookmarklet")}
-                                </a>
+                                </ButtonLink>
                             </div>
                             <p className="nl-body-secondary nl-muted">
                                 {t("sync.drag")}
@@ -226,17 +227,17 @@ export default function SyncSetup({
                         <p className="nl-body-secondary nl-muted">
                             {t("sync.loginInstruction")}
                         </p>
-                        <a
-                            className={`${foundationButtonClass({
-                                variant: "secondary",
-                            })} nl-sync-step-action`}
+                        <ButtonLink
+                            plain
+                            variant="secondary"
+                            className="nl-sync-step-action"
                             href={NOSTALGIA_PLAY_DATA_URL}
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={onOfficial}
                         >
                             {t("sync.openOfficial")}
-                        </a>
+                        </ButtonLink>
                         <Disclosure
                             title={t("sync.pegateLoginAlt")}
                             className="nl-sync-guide-detail"

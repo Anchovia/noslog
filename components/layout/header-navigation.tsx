@@ -14,13 +14,13 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 import {
+    type MessageKey,
     useLocalizedHref,
     useTranslations,
-    type MessageKey,
 } from "@/components/i18n/locale-provider";
 import LocaleSwitcher from "@/components/i18n/locale-switcher";
-import { stripLocaleFromPath } from "@/lib/i18n/routing";
 import { cn } from "@/lib/cn";
+import { stripLocaleFromPath } from "@/lib/i18n/routing";
 
 const primaryItems: {
     href: string;

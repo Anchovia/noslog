@@ -1,15 +1,16 @@
+import { NextResponse } from "next/server";
+
 import { getTierBandForUser } from "@/app/(site)/tiers/data";
+import { createApiFailure, createApiSuccess } from "@/lib/api/response";
 import { getMusicTitleDisplayPreference } from "@/lib/i18n/music-title";
 import { isLocale } from "@/lib/i18n/routing";
-import { getUser } from "@/lib/user";
+import { logServerError } from "@/lib/observability/server";
 import {
     isTierDifficulty,
     isTierLevelFilter,
     type TierDifficulty,
 } from "@/lib/tiers";
-import { NextResponse } from "next/server";
-import { createApiSuccess, createApiFailure } from "@/lib/api/response";
-import { logServerError } from "@/lib/observability/server";
+import { getUser } from "@/lib/user";
 
 const headers = { "Cache-Control": "private, no-store" };
 

@@ -8,9 +8,10 @@ import {
     getAchievementRecipientCounts,
 } from "@/features/achievements/server/achievement-service";
 import { profileIdSchema } from "@/features/profile/schemas/public-profile-schema";
-import { getServerI18n } from "@/lib/i18n/server";
 import { createProfileMetadata } from "@/features/profile/server/profile-metadata";
+import { getServerI18n } from "@/lib/i18n/server";
 import getSession from "@/lib/session";
+
 import { getCachedProfileData } from "../data";
 
 export async function generateMetadata({

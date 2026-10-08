@@ -1,8 +1,4 @@
-interface MusicBG {
-    [key: string]: string;
-}
-
-export const musicBG: MusicBG = {
+export const musicJacketFallbackUrls: Record<string, string> = {
     "818b48940c2d17325904fbab68689046":
         "http://p.eagate.573.jp//game/bemani/fansite/p/images/music/201703_jk/201703_nst_29.jpg",
     da66a50cafe70de2dd47a494c0f8f9d4:

@@ -1,9 +1,12 @@
 "use client";
 
+import "./globals.css";
+
 import { useEffect, useSyncExternalStore } from "react";
+
+import { foundationButtonClass } from "@/components/ui/button";
 import LegacyGlobalError from "@/features/recovery/components/legacy-global-error";
 import RecoveryAction from "@/features/recovery/components/recovery-action";
-import { foundationButtonClass } from "@/components/ui/button";
 import { createTranslator, getMessages } from "@/lib/i18n/messages";
 import {
     DEFAULT_LOCALE,
@@ -13,7 +16,6 @@ import {
     stripLocaleFromPath,
 } from "@/lib/i18n/routing";
 import { recordClientError } from "@/lib/observability/client";
-import "./globals.css";
 
 const subscribe = () => () => {};
 const serverPath = () => null;

@@ -1,7 +1,6 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import Link from "next/link";
 import { useId } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import type { z } from "zod";
@@ -11,7 +10,7 @@ import {
     useTranslations,
 } from "@/components/i18n/locale-provider";
 import ActionButton from "@/components/ui/action-button";
-import { foundationButtonClass } from "@/components/ui/button";
+import ButtonLink from "@/components/ui/button-link";
 import { FormField, TextArea } from "@/components/ui/form-field";
 import LoginPrompt from "@/components/ui/login-prompt";
 import ModalDialog from "@/components/ui/modal-dialog";
@@ -98,16 +97,14 @@ export default function ReportOpinionDialog({
                         <ActionButton variant="secondary" onClick={onClose}>
                             {t("community.cancel")}
                         </ActionButton>
-                        <Link
+                        <ButtonLink
                             href={href(
                                 `/login?returnTo=${encodeURIComponent(returnTo)}`
                             )}
-                            className={foundationButtonClass({
-                                variant: "primary",
-                            })}
+                            variant="primary"
                         >
                             {t("common.login")}
-                        </Link>
+                        </ButtonLink>
                     </>
                 )
             }

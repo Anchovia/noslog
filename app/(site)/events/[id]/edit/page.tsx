@@ -5,8 +5,8 @@ import {
     getEventWriter,
     getOwnEvent,
 } from "@/features/events/server/event-service";
-import { getServerI18n } from "@/lib/i18n/server";
 import { localizePath } from "@/lib/i18n/routing";
+import { getServerI18n } from "@/lib/i18n/server";
 
 export const metadata = { robots: { index: false, follow: false } };
 

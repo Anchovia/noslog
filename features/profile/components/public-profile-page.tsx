@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
 import {
@@ -8,7 +7,7 @@ import {
     useTranslations,
 } from "@/components/i18n/locale-provider";
 import type { ProfileUser } from "@/components/profile/dashboard/profile-types";
-import { foundationButtonClass } from "@/components/ui/button";
+import ButtonLink from "@/components/ui/button-link";
 import { StatusMessage } from "@/components/ui/status-message";
 import { summarizeAchievements } from "@/features/achievements/achievement-definitions";
 import ProfileAchievements from "@/features/achievements/components/profile-achievements";
@@ -106,14 +105,12 @@ export default function PublicProfilePage({
                 <div className="nl-profile-empty">
                     <StatusMessage title={t("profile.noSyncedRecords")} />
                     {isOwner ? (
-                        <Link
+                        <ButtonLink
                             href={href("/bookmarklet")}
-                            className={foundationButtonClass({
-                                variant: "primary",
-                            })}
+                            variant="primary"
                         >
                             {t("sync.title")}
-                        </Link>
+                        </ButtonLink>
                     ) : null}
                 </div>
                 {side}

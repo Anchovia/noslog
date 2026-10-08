@@ -1,13 +1,14 @@
 import { notFound, permanentRedirect } from "next/navigation";
+
 import ArcadeDetailPage from "@/features/arcades/components/arcade-detail-page";
-import { getPublicArcade } from "@/features/arcades/server/public-arcade-service";
 import {
     getRecentCabinetChecks,
     getUserCheckedCabinetIds,
 } from "@/features/arcades/server/cabinet-check-service";
+import { getPublicArcade } from "@/features/arcades/server/public-arcade-service";
 import { clientEnv } from "@/lib/env/client";
-import { getServerI18n } from "@/lib/i18n/server";
 import { getLocalizedHref } from "@/lib/i18n/routing";
+import { getServerI18n } from "@/lib/i18n/server";
 import { createPageMetadata } from "@/lib/metadata/site";
 import { getUser } from "@/lib/user";
 

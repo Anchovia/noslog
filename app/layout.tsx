@@ -1,10 +1,13 @@
+import "./globals.css";
+
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { headers } from "next/headers";
 import Script from "next/script";
-import AppToaster from "@/components/ui/app-toaster";
+
 import { LocaleProvider } from "@/components/i18n/locale-provider";
 import { AppProviders } from "@/components/providers/app-providers";
+import AppToaster from "@/components/ui/app-toaster";
 import { serverEnv } from "@/lib/env/server";
 import { getMessages } from "@/lib/i18n/messages";
 import {
@@ -13,7 +16,6 @@ import {
     LOCALE_REQUEST_HEADER,
 } from "@/lib/i18n/routing";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/metadata/site";
-import "./globals.css";
 
 // Pretendard 로컬 폰트를 전역 CSS 변수로 연결함
 const pretendard = localFont({

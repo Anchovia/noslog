@@ -1,8 +1,6 @@
-import Link from "next/link";
-
 import PageContainer from "@/components/layout/page-container";
 import BackLink from "@/components/ui/back-link";
-import { foundationButtonClass } from "@/components/ui/button";
+import ButtonLink from "@/components/ui/button-link";
 import { StatusMessage } from "@/components/ui/status-message";
 import AnnouncementBody from "@/features/announcements/components/announcement-body";
 import type { PublicEventItem } from "@/features/events/server/event-service";
@@ -79,14 +77,12 @@ export default async function EventDetail({
                     <PollWidget poll={poll} isAuthenticated={Boolean(user)} />
                 ) : null}
                 {own ? (
-                    <Link
+                    <ButtonLink
                         href={localizePath(`/events/${event.id}/edit`, locale)}
-                        className={foundationButtonClass({
-                            variant: "secondary",
-                        })}
+                        variant="secondary"
                     >
                         {t("events.editor.edit")}
-                    </Link>
+                    </ButtonLink>
                 ) : null}
             </article>
         </PageContainer>

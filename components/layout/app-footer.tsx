@@ -1,5 +1,6 @@
 import { getLocalizedHref } from "@/lib/i18n/routing";
 import { getServerI18n } from "@/lib/i18n/server";
+
 import FooterLinks from "./footer-links";
 
 export default async function AppFooter() {

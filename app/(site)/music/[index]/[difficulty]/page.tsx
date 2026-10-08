@@ -1,18 +1,19 @@
-import MusicDetail from "@/features/music/components/music-detail-page";
-import { createPageMetadata } from "@/lib/metadata/site";
-import { getJacketCandidates } from "@/lib/music-jackets";
-import getSession from "@/lib/session";
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
-import { getCachedMusicDetail } from "@/features/music/server/music-detail-data";
+
+import MusicDetail from "@/features/music/components/music-detail-page";
 import {
     loadMusicDetail,
     normalizeMusicDetailTab,
     normalizeMusicDifficulty,
 } from "@/features/music/server/load-music-detail";
-import { getServerI18n } from "@/lib/i18n/server";
-import { getLocalizedHref, localizePath } from "@/lib/i18n/routing";
+import { getCachedMusicDetail } from "@/features/music/server/music-detail-data";
 import { getMusicTitleDisplayPreference } from "@/lib/i18n/music-title";
+import { getLocalizedHref, localizePath } from "@/lib/i18n/routing";
+import { getServerI18n } from "@/lib/i18n/server";
+import { createPageMetadata } from "@/lib/metadata/site";
+import { getJacketCandidates } from "@/lib/music-jackets";
+import getSession from "@/lib/session";
 
 export async function generateMetadata({
     params,
