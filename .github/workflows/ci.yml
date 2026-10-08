@@ -32,6 +32,12 @@ jobs:
             - name: Install dependencies
               run: npm ci
 
+            - name: Check dependency declarations
+              run: npm run check:dependencies
+
+            - name: Audit production dependencies
+              run: npm run audit:production
+
             - name: Lint
               run: npm run lint
 

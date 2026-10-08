@@ -105,6 +105,7 @@ npm run test:e2e
 | `npm run test:storybook`     | 부품 동작·접근성 검사 |
 | `npm run build-storybook`    | 공용 UI 문서 빌드     |
 | `npm run check:dependencies` | 사용 중인 의존성 검사 |
+| `npm run audit:production`   | 운영 의존성 보안 검사 |
 | `npx prisma generate`        | Prisma Client 재생성  |
 
 카탈로그·서열표·빙고·검정 데이터를 가져오는 명령은 운영 데이터에 영향을 줄 수 있으므로 실행 전에 해당 스크립트와 운영 문서를 확인하세요.
@@ -146,11 +147,17 @@ npm test
 npm run build
 ```
 
-GitHub Actions의 `verify` 작업은 의존성 설치, 린트, Vitest, 타입 검사와 프로덕션 빌드를 확인합니다. E2E 작업은 저장소 변수 `RUN_E2E=true`일 때 로컬 PostgreSQL 16과 Playwright Chromium으로 실행됩니다.
+GitHub Actions의 `verify` 작업은 의존성 설치, 의존성 선언·운영 보안 검사, 린트, Vitest, 타입 검사와 프로덕션 빌드를 확인합니다. E2E 작업은 저장소 변수 `RUN_E2E=true`일 때 로컬 PostgreSQL 16과 Playwright Chromium으로 실행됩니다.
 
 `storybook` CI 작업은 DB 없이 공용 UI의 동작·접근성 검사와 Storybook 빌드를 실행합니다.
 사용법은 [공용 UI 가이드](docs/ui/README.md), 협업 규칙은
 [CONVENTION.md](docs/CONVENTION.md), 코드 작성 규칙은 [코드 스타일](docs/code-style.md)을 따릅니다.
+
+운영 의존성 검사는 moderate 이상 권고가 있으면 실패합니다. 전체 개발 의존성까지
+확인할 때는 `npm audit`를 실행합니다. 2026-10-08 보안 패치 후 운영 권고는 0건이며,
+전체 감사에는 ESLint의 `fast-glob → micromatch → braces` 경로에서 파생된 high 5건이
+남습니다. [braces 권고](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm)는 현재 수정 버전이
+없습니다. 기존 Next.js 16 스택을 유지하며 이 권고를 미해결로 기록합니다.
 
 ## 배포와 릴리스
 
