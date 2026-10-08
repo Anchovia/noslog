@@ -1,4 +1,4 @@
-import MaintenanceContent from "@/features/recovery/components/maintenanceContent";
+import MaintenanceContent from "@/features/recovery/components/maintenance-content";
 import { getServerI18n } from "@/lib/i18n/server";
 import { createPageMetadata } from "@/lib/metadata/site";
 import { localizePath } from "@/lib/i18n/routing";

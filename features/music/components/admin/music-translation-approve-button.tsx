@@ -1,0 +1,58 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+import { useTransition } from "react";
+import { toast } from "sonner";
+
+import { approveMusicTranslation } from "@/app/admin/music/actions";
+import {
+    createMusicTranslationApproveFormData,
+    type MusicTranslationLocale,
+} from "@/features/music/schemas/music-translation-admin-schema";
+
+interface MusicTranslationApproveButtonProps {
+    locale: MusicTranslationLocale;
+    musicIndex: string;
+    /** 승인 뒤 — 목록이 클라이언트에서 불러온 쪽을 다시 받게(2026-09-25 무한 스크롤) */
+    onApproved?: () => void;
+}
+
+export default function MusicTranslationApproveButton({
+    locale,
+    musicIndex,
+    onApproved,
+}: MusicTranslationApproveButtonProps) {
+    const router = useRouter();
+    const [isPending, startTransition] = useTransition();
+
+    function approve() {
+        startTransition(async () => {
+            try {
+                const result = await approveMusicTranslation(
+                    createMusicTranslationApproveFormData(musicIndex, locale)
+                );
+                if (!result.success) {
+                    toast.error(result.message);
+                    return;
+                }
+
+                toast.success(result.message);
+                onApproved?.();
+                router.refresh();
+            } catch {
+                toast.error("악곡 번역을 승인하지 못했습니다.");
+            }
+        });
+    }
+
+    return (
+        <button
+            type="button"
+            disabled={isPending}
+            onClick={approve}
+            className="h-9 shrink-0 cursor-pointer rounded-md border border-border px-2.5 text-xs font-bold hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-50"
+        >
+            {isPending ? "승인 중" : "승인"}
+        </button>
+    );
+}

@@ -8,11 +8,11 @@ const mocks = vi.hoisted(() => ({
     preference: vi.fn(),
     log: vi.fn(),
 }));
-vi.mock("@/app/(nevigation)/tiers/data", () => ({
+vi.mock("@/app/(site)/tiers/data", () => ({
     getTierBandForUser: mocks.band,
 }));
 vi.mock("@/lib/user", () => ({ getUser: mocks.user }));
-vi.mock("@/lib/i18n/musicTitle", () => ({
+vi.mock("@/lib/i18n/music-title", () => ({
     getMusicTitleDisplayPreference: mocks.preference,
 }));
 vi.mock("@/lib/observability/server", () => ({ logServerError: mocks.log }));
@@ -22,8 +22,8 @@ import {
     fetchTierBand,
     tierBandQueryKey,
     tierBandQueryOptions,
-} from "@/features/tiers/api/tierBands";
-import type { TierBandQuery } from "@/features/tiers/api/tierBands";
+} from "@/features/tiers/api/tier-bands";
+import type { TierBandQuery } from "@/features/tiers/api/tier-bands";
 import { createApiFailure, createApiSuccess } from "@/lib/api/response";
 
 const band: PublicTierBandPayload = {

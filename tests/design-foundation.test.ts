@@ -7,7 +7,7 @@ import { describe, expect, it } from "vitest";
 describe("NosLog design foundation", () => {
     const directory = resolve("app/styles");
     const files = readdirSync(directory).filter(
-        (name) => name.endsWith(".css") && name !== "pretendardJp.css"
+        (name) => name.endsWith(".css") && name !== "pretendard-jp.css"
     );
     const styles = files.map((name) =>
         readFileSync(resolve(directory, name), "utf8")
@@ -69,7 +69,7 @@ describe("NosLog design foundation", () => {
     describe("takes spacing, radius, color and font size from tokens", () => {
         const allowed = new Set([
             // 랭킹 행 명판 — 이름 글줄(20)에 맞춘 상자 여백 2/6
-            "globalRankings.css: padding: var(--nl-spacing-2) 6px",
+            "global-rankings.css: padding: var(--nl-spacing-2) 6px",
             // 빙고 미니 판 칸(6) · 범례 네모(12) — 모서리 토큰 4 는 크기에 비해 크다
             "bingos.css: border-radius: 1px",
             "bingos.css: border-radius: 2px",
@@ -139,11 +139,11 @@ describe("NosLog design foundation", () => {
 
     it("mounts the shared navigation progress in both application shells", () => {
         const appShell = readFileSync(
-            resolve("components/layout/appShell.tsx"),
+            resolve("components/layout/app-shell.tsx"),
             "utf8"
         );
         const adminShell = readFileSync(
-            resolve("components/admin/adminShell.tsx"),
+            resolve("components/admin/admin-shell.tsx"),
             "utf8"
         );
 
@@ -171,7 +171,7 @@ describe("NosLog design foundation", () => {
             readdirSync(fontDirectory).filter((name) => name.endsWith(".woff2"))
         ).toEqual(["PretendardJPVariable.woff2"]);
         const fontCss = postcss.parse(
-            readFileSync(resolve(directory, "pretendardJp.css"), "utf8")
+            readFileSync(resolve(directory, "pretendard-jp.css"), "utf8")
         );
         const faces: postcss.AtRule[] = [];
         fontCss.walkAtRules("font-face", (face) => {

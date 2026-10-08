@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 
-import LineChart from "@/components/ui/lineChart";
+import LineChart from "@/components/ui/line-chart";
 
 const base = {
     label: "chart",

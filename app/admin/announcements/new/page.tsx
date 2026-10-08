@@ -1,8 +1,8 @@
-import BackLink from "@/components/ui/backLink";
-import PageContainer, { PageHeading } from "@/components/layout/pageContainer";
+import BackLink from "@/components/ui/back-link";
+import PageContainer, { PageHeading } from "@/components/layout/page-container";
 import AnnouncementEditor, {
     emptyAnnouncementEditorData,
-} from "@/features/announcements/components/announcementEditor";
+} from "@/features/announcements/components/announcement-editor";
 import { SITE_URL } from "@/lib/metadata/site";
 
 export default function NewAnnouncementPage() {

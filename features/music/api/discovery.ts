@@ -1,12 +1,12 @@
 import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
 
-import { readApiResponse } from "@/lib/api/response";
+import type { DiscoveryQuery } from "@/features/music/schemas/discovery-schema";
 import {
     discoveryCountsSchema,
     discoveryPageSchema,
     discoverySearchParams,
-} from "@/features/music/schemas/discoverySchema";
-import type { DiscoveryQuery } from "@/features/music/schemas/discoverySchema";
+} from "@/features/music/schemas/discovery-schema";
+import { readApiResponse } from "@/lib/api/response";
 
 async function fetchDiscovery(
     query: DiscoveryQuery,

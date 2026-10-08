@@ -6,7 +6,7 @@ import {
     getMissCount,
     getSJustRate,
     selectScoreImprovements,
-} from "@/lib/music/scoreTrend";
+} from "@/lib/music/score-trend";
 
 describe("베스트 스코어 추이", () => {
     it("시간순 기록에서 최고점이 상승한 기록을 모두 남긴다", () => {

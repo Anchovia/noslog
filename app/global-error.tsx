@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useSyncExternalStore } from "react";
-import LegacyGlobalError from "@/features/recovery/components/legacyGlobalError";
-import RecoveryAction from "@/features/recovery/components/recoveryAction";
-import { foundationButtonClass } from "@/components/ui/Button";
+import LegacyGlobalError from "@/features/recovery/components/legacy-global-error";
+import RecoveryAction from "@/features/recovery/components/recovery-action";
+import { foundationButtonClass } from "@/components/ui/button";
 import { createTranslator, getMessages } from "@/lib/i18n/messages";
 import {
     DEFAULT_LOCALE,

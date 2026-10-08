@@ -1,4 +1,4 @@
-import ArcadeForm from "@/features/arcades/components/arcadeForm";
+import ArcadeForm from "@/features/arcades/components/arcade-form";
 import db from "@/lib/db";
 import { clientEnv } from "@/lib/env/client";
 
@@ -49,7 +49,7 @@ export default async function AdminArcadesPage() {
         <div className="flex flex-col gap-4 py-5">
             <section>
                 <h1 className="text-title">오락실 관리</h1>
-                <p className="text-caption mt-1">
+                <p className="mt-1 text-caption">
                     프로필에서 선택할 수 있는 오락실을 관리합니다.
                 </p>
             </section>
@@ -91,7 +91,7 @@ export default async function AdminArcadesPage() {
                     />
                 ))}
                 {arcades.length === 0 ? (
-                    <p className="bg-surface text-body-muted rounded-card py-12 text-center">
+                    <p className="rounded-card bg-surface py-12 text-center text-body-muted">
                         등록된 오락실이 없습니다.
                     </p>
                 ) : null}

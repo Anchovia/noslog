@@ -46,7 +46,7 @@ vi.mock("@/lib/blob", () => ({
     isImageContentType: (value: string) =>
         ["image/jpeg", "image/png", "image/webp"].includes(value),
 }));
-vi.mock("@/lib/uploadRateLimit", () => ({
+vi.mock("@/lib/upload-rate-limit", () => ({
     claimUploadTokenQuota: mocks.claimUploadTokenQuota,
     releaseUploadTokenQuota: mocks.releaseUploadTokenQuota,
     getUploadLimitMessage: () =>

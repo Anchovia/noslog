@@ -183,7 +183,7 @@
         var(--nl-state-layer)
     );
 }
-/* 마우스로 연 목록은 선택 항목에 흰 1px 을 그리지 않는다 — 키보드 위치 표시는 키보드일 때만(M2 · lib/inputModality) */
+/* 마우스로 연 목록은 선택 항목에 흰 1px 을 그리지 않는다 — 키보드 위치 표시는 키보드일 때만(M2 · lib/input-modality) */
 :root[data-input="pointer"] .noslog-ui .nl-select-option:focus-visible {
     outline: none;
 }

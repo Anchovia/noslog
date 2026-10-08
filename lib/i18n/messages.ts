@@ -1,7 +1,7 @@
-import { enMessages } from "./messageCatalogs/en";
-import { jaMessages } from "./messageCatalogs/ja";
-import { koMessages } from "./messageCatalogs/ko";
-import type { ClientMessages, MessageKey, Messages } from "./messageTypes";
+import { enMessages } from "./message-catalogs/en";
+import { jaMessages } from "./message-catalogs/ja";
+import { koMessages } from "./message-catalogs/ko";
+import type { ClientMessages, MessageKey, Messages } from "./message-types";
 import type { Locale } from "./routing";
 
 const messagesByLocale: Record<Locale, Messages> = {

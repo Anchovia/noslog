@@ -3,7 +3,7 @@
 import {
     checkOnboardingNickname,
     completeOnboarding as completeOnboardingService,
-} from "@/features/profile/server/onboardingService";
+} from "@/features/profile/server/onboarding-service";
 
 export async function completeOnboarding(formData: FormData) {
     return completeOnboardingService(formData);

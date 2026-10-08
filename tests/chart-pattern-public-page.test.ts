@@ -18,13 +18,13 @@ vi.mock("@/lib/db", () => ({
         },
     },
 }));
-vi.mock("@/features/contributions/server/chartDraftService", () => ({
+vi.mock("@/features/contributions/server/chart-draft-service", () => ({
     listChartComments: mocks.listChartComments,
 }));
-vi.mock("@/features/contributions/server/contributionPointService", () => ({
+vi.mock("@/features/contributions/server/contribution-point-service", () => ({
     getNameLabels: mocks.getNameLabels,
 }));
-vi.mock("@/lib/musicJackets", () => ({
+vi.mock("@/lib/music-jackets", () => ({
     getJacketUrl: mocks.getJacketUrl,
 }));
 vi.mock("@/lib/session", () => ({
@@ -34,7 +34,7 @@ vi.mock("@/lib/i18n/server", () => ({
     getServerI18n: vi.fn().mockResolvedValue({ locale: "ko" }),
 }));
 
-import PublicChartPatternPage from "@/app/(nevigation)/music/[index]/[difficulty]/pattern/page";
+import PublicChartPatternPage from "@/app/(site)/music/[index]/[difficulty]/pattern/page";
 
 const publishedDocument = {
     version: 1 as const,

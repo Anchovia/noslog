@@ -4,7 +4,7 @@ import {
     getStoredArcadeRegion,
     inferLegacyArcadeRegion,
     isArcadeRegion,
-} from "@/lib/arcadeRegions";
+} from "@/lib/arcade-regions";
 
 describe("오락실 지역", () => {
     it("관리자가 선택할 수 있는 고정 지역만 허용한다", () => {

@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 
-import StackedBar from "@/components/ui/stackedBar";
+import StackedBar from "@/components/ui/stacked-bar";
 
 const render = (rows: Parameters<typeof StackedBar>[0]["rows"]) =>
     renderToStaticMarkup(createElement(StackedBar, { rows }));

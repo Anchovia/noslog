@@ -5,7 +5,7 @@ import type { Page } from "@playwright/test";
 import type {
     CommunityData,
     OpinionPage,
-} from "@/features/music/schemas/communitySchema";
+} from "@/features/music/schemas/community-schema";
 
 const musicPath = "/music/bfdaadfb98501907925ecf41a076108d/expert";
 const axes = {

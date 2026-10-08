@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { Prisma } from "@prisma/client";
-import type { SyncMusicInput } from "@/lib/services/music/updateMusic";
+import type { SyncMusicInput } from "@/lib/services/music/update-music";
 import type {
     PendingRecordPlay,
     RecordValues,
-} from "@/lib/services/user/recentRecordMerge";
+} from "@/lib/services/user/recent-record-merge";
 
 const mocks = vi.hoisted(() => ({
     db: {
@@ -24,8 +24,8 @@ const mocks = vi.hoisted(() => ({
     },
 }));
 vi.mock("@/lib/db", () => ({ default: mocks.db }));
-import { updateRecentBestRecords } from "@/lib/services/user/updateRecentBestRecords";
-import { updatePlayData } from "@/lib/services/user/updatePlayData";
+import { updateRecentBestRecords } from "@/lib/services/user/update-recent-best-records";
+import { updatePlayData } from "@/lib/services/user/update-play-data";
 
 const chart = {
     id: 10,

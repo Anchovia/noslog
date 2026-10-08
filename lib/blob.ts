@@ -8,9 +8,9 @@ import {
     MAX_IMAGE_SIZE,
     isImageContentType,
     type ImageContentType,
-} from "@/lib/imageUploadRules";
+} from "@/lib/image-upload-rules";
 
-export { isImageContentType } from "@/lib/imageUploadRules";
+export { isImageContentType } from "@/lib/image-upload-rules";
 
 function imageExtension(contentType: ImageContentType) {
     return contentType === "image/jpeg" ? "jpg" : contentType.split("/")[1];

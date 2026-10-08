@@ -17,12 +17,12 @@ vi.mock("@/lib/db", () => ({
 import {
     getProfileStats,
     playTier,
-} from "@/features/profile/server/profileStatsService";
+} from "@/features/profile/server/profile-stats-service";
 import {
     currentStreak,
     getProfileActivity,
     playDay,
-} from "@/features/profile/server/profileActivityService";
+} from "@/features/profile/server/profile-activity-service";
 
 function play(
     difficulty: string,

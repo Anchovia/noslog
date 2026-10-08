@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
-import { parseTierBrowserQuery } from "@/features/tiers/schemas/tierBrowserSchema";
+import { parseTierBrowserQuery } from "@/features/tiers/schemas/tier-browser-schema";
 import {
     getTierBrowserBand,
     getTierBrowserOverview,
-} from "@/features/tiers/server/tierBrowserData";
+} from "@/features/tiers/server/tier-browser-data";
 import { createApiFailure, createApiSuccess } from "@/lib/api/response";
 import { isLocale } from "@/lib/i18n/routing";
 import { logServerError } from "@/lib/observability/server";

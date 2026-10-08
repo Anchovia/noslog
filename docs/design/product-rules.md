@@ -56,8 +56,8 @@ old design-stage checklist. Changes to material behavior require a user decision
 - Permanent account deletion requires fresh Discord verification for the same
   account, valid for **10 minutes**, followed by explicit deletion confirmation.
   The server rechecks expiry and identity at deletion time. See
-  [verification window](../../features/settings/schemas/deletionVerification.ts)
-  and [deletion service](../../features/profile/server/accountDeletionService.ts).
+  [verification window](../../features/settings/schemas/deletion-verification.ts)
+  and [deletion service](../../features/profile/server/account-deletion-service.ts).
 - Delete the account's linked personal records, contributions, submissions and
   owned uploads according to the existing deletion service. Shared catalogue
   definitions are not that user's personal progress. Do not describe personal
@@ -131,7 +131,7 @@ old design-stage checklist. Changes to material behavior require a user decision
   clipboard or native-share failure must offer a usable fallback without changing
   privacy settings. Respect the existing public-data policy on every request.
 - See [profile services](../../features/profile/server) and
-  [privacy controls](../../features/settings/components/privacySettings.tsx).
+  [privacy controls](../../features/settings/components/privacy-settings.tsx).
 
 ## Music discovery, details, tiers and rankings
 
@@ -204,8 +204,8 @@ old design-stage checklist. Changes to material behavior require a user decision
   existing region populations. Use competition ranks (`1, 2, 2, 4`) for equal
   published values, including ties across pages. Preserve 25-row pagination and
   reset the page when mode/metric/region changes as required by the existing query.
-- See [discovery service](../../features/music/server/discoveryService.ts),
-  [music-detail loading](../../features/music/server/loadMusicDetail.ts),
+- See [discovery service](../../features/music/server/discovery-service.ts),
+  [music-detail loading](../../features/music/server/load-music-detail.ts),
   [tier domain](../../lib/tiers.ts) and [rankings](../../features/rankings).
 
 ## Community voting and evaluation
@@ -236,7 +236,7 @@ old design-stage checklist. Changes to material behavior require a user decision
   pattern's strength compared with all charts, not its share of this chart
   (2026-09-23); the criteria dialog and the pattern form say so.
 - Preserve ownership, participation checks and edit/delete in
-  [community mutations](../../features/music/server/communityMutation.ts).
+  [community mutations](../../features/music/server/community-mutation.ts).
   Opinions are listed newest first. The helpful-vote control and helpful sort
   are removed from the UI (2026-09-16); stored helpful data and the API remain.
   Pattern ratings save as soon as a value is chosen (changes within a short
@@ -310,7 +310,7 @@ old design-stage checklist. Changes to material behavior require a user decision
   operator fills it. Syncing never overwrites an existing constant.
 - See [sync services](../../features/sync/server),
   [bookmarklet](../../lib/bookmarklet.ts) and
-  [token service](../../features/profile/server/syncTokenService.ts).
+  [token service](../../features/profile/server/sync-token-service.ts).
 
 ## Bingo
 
@@ -328,8 +328,8 @@ old design-stage checklist. Changes to material behavior require a user decision
 - Confirm reset for the selected board, clearing only that user's checks on that
   board. Preserve other boards and shared definitions. Do not add attempt history,
   official verification or shared-progress claims.
-- See [catalogue rules](../../features/bingos/bingoCatalog.ts) and
-  [progress service](../../features/bingos/server/bingoProgressService.ts).
+- See [catalogue rules](../../features/bingos/bingo-catalog.ts) and
+  [progress service](../../features/bingos/server/bingo-progress-service.ts).
 
 ## Exams
 
@@ -349,9 +349,9 @@ old design-stage checklist. Changes to material behavior require a user decision
 - Choose/preview precedes explicit upload/submit. Preserve pending, approved,
   rejected-with-reason and retry states. Validate authorization, eligibility and
   owned private storage paths on the server. Clean up failed temporary uploads.
-- See [eligibility](../../features/exams/examEligibility.ts),
-  [proof service](../../features/exams/server/examProofService.ts) and
-  [proof schema](../../features/exams/schemas/examProofSchema.ts).
+- See [eligibility](../../features/exams/exam-eligibility.ts),
+  [proof service](../../features/exams/server/exam-proof-service.ts) and
+  [proof schema](../../features/exams/schemas/exam-proof-schema.ts).
 
 ## Arcades, announcements, feedback and recovery
 
@@ -629,13 +629,13 @@ old design-stage checklist. Changes to material behavior require a user decision
 ## Data retention and operator facts
 
 - Operator display: **계롤(Anchovia)**. Keep the confirmed contact and provider facts
-  from [privacy content](../../features/privacy/content/privacyContent.ts); do not
+  from [privacy content](../../features/privacy/content/privacy-content.ts); do not
   invent a business identity, processor, retention period or legal claim.
 - Avatars are public; exam/feedback evidence is private with server-enforced access.
   Approved exam evidence and sensitive review notes expire six months after review
   while achievement remains. Rejected exam evidence and resolved feedback follow
   the existing six-month retention policy. Account deletion removes owned data and
-  uploads under the deletion contract. See [retention rules](../../lib/privacyRetention.ts).
+  uploads under the deletion contract. See [retention rules](../../lib/privacy-retention.ts).
 - Audio stays local to the browser. Never upload MP3 files to NosLog storage or DB.
 - Documentation consolidation does not declare unresolved real-provider, privacy
   copy or assisted-browser checks passed. Record actual verification separately.

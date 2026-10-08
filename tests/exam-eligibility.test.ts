@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getExamEligibility } from "@/features/exams/examEligibility";
+import { getExamEligibility } from "@/features/exams/exam-eligibility";
 
 const exam = { mode: "basic", grade: 8, requiredGrade: 2000 };
 const player = {

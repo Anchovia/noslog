@@ -14,19 +14,19 @@ vi.mock("@/lib/db", () => ({
         playData: { findMany: mocks.records },
     },
 }));
-vi.mock("@/features/tiers/server/tierBrowserData", () => ({
+vi.mock("@/features/tiers/server/tier-browser-data", () => ({
     getModePianistRatingBasis: mocks.basis,
 }));
-vi.mock("@/features/contributions/server/contributionPointService", () => ({
+vi.mock("@/features/contributions/server/contribution-point-service", () => ({
     getNameLabels: async () => new Map(),
 }));
-import { getGlobalRankingPage } from "@/features/rankings/server/globalRankingData";
+import { getGlobalRankingPage } from "@/features/rankings/server/global-ranking-data";
 import {
     parseGlobalRankingQuery,
     serializeGlobalRankingQuery,
-} from "@/features/rankings/schemas/globalRankingSchema";
-import type { GlobalRankingQuery } from "@/features/rankings/schemas/globalRankingSchema";
-import { BASIC_RATING_TOP_COUNT } from "@/lib/tiers/basicRating";
+} from "@/features/rankings/schemas/global-ranking-schema";
+import type { GlobalRankingQuery } from "@/features/rankings/schemas/global-ranking-schema";
+import { BASIC_RATING_TOP_COUNT } from "@/lib/tiers/basic-rating";
 
 const query: GlobalRankingQuery = {
     mode: "basic",

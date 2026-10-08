@@ -51,7 +51,7 @@ import {
     trillUnion,
 } from "@/lib/chart-pattern/trillShape";
 
-import { useTranslations } from "@/components/i18n/localeProvider";
+import { useTranslations } from "@/components/i18n/locale-provider";
 
 import { useChartEditorStore } from "./chartEditorStore";
 import { drawCommentLine, drawOffGridMarker } from "./snapCheckMarker";

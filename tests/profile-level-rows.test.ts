@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
-import { profileLevelRows } from "@/features/profile/components/profileLevels";
-import type { ProfileLevelRow } from "@/features/profile/schemas/profileStatsSchema";
+import { profileLevelRows } from "@/features/profile/components/profile-levels";
+import type { ProfileLevelRow } from "@/features/profile/schemas/profile-stats-schema";
 
 const row = (
     difficulty: ProfileLevelRow["difficulty"],

@@ -1,7 +1,7 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 import { getMessages } from "@/lib/i18n/messages";
-import { syncFixtureData } from "./fixtures/syncData";
+import { syncFixtureData } from "./fixtures/sync-data";
 
 test.skip(
     process.env.NOSLOG_SYNC_FIXTURE !== "true",

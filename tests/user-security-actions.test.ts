@@ -20,8 +20,8 @@ vi.mock("next/cache", () => ({
     revalidatePath: mocks.revalidatePath,
 }));
 
-import { regenerateSyncToken } from "@/app/(nevigation)/bookmarklet/action";
-import { setPreferredArcade } from "@/app/(nevigation)/gamecenter/actions";
+import { regenerateSyncToken } from "@/app/(site)/bookmarklet/action";
+import { setPreferredArcade } from "@/app/(site)/gamecenter/actions";
 
 describe("사용자 변경 Server Action 권한", () => {
     beforeEach(() => {

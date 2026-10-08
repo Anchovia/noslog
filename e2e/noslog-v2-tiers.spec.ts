@@ -5,7 +5,7 @@ import type { Page } from "@playwright/test";
 import type {
     TierBrowserBand,
     TierBrowserOverview,
-} from "@/features/tiers/schemas/tierBrowserSchema";
+} from "@/features/tiers/schemas/tier-browser-schema";
 
 const bands: TierBrowserBand[] = Array.from({ length: 136 }, (_, index) => ({
     id: 9000 + index,

@@ -5,7 +5,7 @@ import {
     feedbackStatusUpdateInputFromFormData,
     feedbackStatusUpdateSchema,
     normalizeFeedbackStatus,
-} from "@/features/feedback/schemas/feedbackAdminSchema";
+} from "@/features/feedback/schemas/feedback-admin-schema";
 
 describe("관리자 피드백 스키마", () => {
     it("지원하는 목록 상태만 유지한다", () => {

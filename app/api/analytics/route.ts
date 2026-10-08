@@ -1,7 +1,7 @@
 import { recordExternalCall, recordPageView } from "@/lib/analytics";
 import db from "@/lib/db";
 import getSession from "@/lib/session";
-import { isBotUserAgent, isExternalEvent } from "@/lib/analyticsRoutes";
+import { isBotUserAgent, isExternalEvent } from "@/lib/analytics-routes";
 import { logServerError } from "@/lib/observability/server";
 
 export const dynamic = "force-dynamic";

@@ -1,0 +1,202 @@
+import "server-only";
+
+import { updateTag } from "next/cache";
+
+import { setAchievementShowcase } from "@/features/achievements/server/achievement-service";
+import { pinnedRecordsValueSchema } from "@/features/profile/schemas/pinned-record-schema";
+import { setPinnedRecords } from "@/features/profile/server/profile-pinned-service";
+import type {
+    SettingsPrivacyValues,
+    SettingsProfileValues,
+} from "@/features/settings/schemas/settings-schema";
+import {
+    createSettingsProfileSchema,
+    settingsPrivacyInput,
+    settingsPrivacySchema,
+    settingsProfileInput,
+} from "@/features/settings/schemas/settings-schema";
+import type { ActionResult } from "@/lib/actions/result";
+import { actionValidationFailure } from "@/lib/actions/validation";
+import { deleteBlobIfOwned, isValidImageBlob } from "@/lib/blob";
+import { CACHE_TAGS, getUserProfileTag } from "@/lib/cache-tags";
+import db from "@/lib/db";
+import { getServerI18n } from "@/lib/i18n/server";
+import { logServerError } from "@/lib/observability/server";
+import getSession from "@/lib/session";
+
+function refreshPublicIdentity(userId: number) {
+    updateTag(getUserProfileTag(userId));
+    updateTag(CACHE_TAGS.userRankings);
+    updateTag(CACHE_TAGS.arcades);
+    // 점수 비공개를 바꾸면 악곡 랭킹 · 점수 분포 캐시도 다시(2026-09-18)
+    updateTag(CACHE_TAGS.chartRankings);
+}
+
+export async function saveSettingsProfile(
+    formData: FormData
+): Promise<
+    ActionResult<{ values: SettingsProfileValues }, keyof SettingsProfileValues>
+> {
+    const { t } = await getServerI18n();
+    const session = await getSession();
+    if (!session.id || !session.profileCompleted)
+        return { success: false, message: t("settings.loginRequired") };
+    const parsed = createSettingsProfileSchema(t).safeParse(
+        settingsProfileInput(formData)
+    );
+    if (!parsed.success)
+        return actionValidationFailure(parsed.error, {
+            message: t("settings.checkInput"),
+            alwaysIncludeFieldErrors: true,
+        });
+    const values = parsed.data;
+    const current = await db.user.findUnique({
+        where: { id: session.id },
+        select: { avatar: true, preferred_arcade_id: true },
+    });
+    if (!current)
+        return { success: false, message: t("settings.userNotFound") };
+    const avatarChanged = values.avatar !== (current.avatar ?? "");
+    if (
+        avatarChanged &&
+        values.avatar &&
+        !(await isValidImageBlob(
+            values.avatar,
+            `avatars/${session.id}/profile`
+        ))
+    ) {
+        return {
+            success: false,
+            message: t("settings.invalidAvatarUrl"),
+            fieldErrors: { avatar: [t("settings.invalidAvatarUrl")] },
+        };
+    }
+    const preferredId = values.preferredArcadeId
+        ? Number(values.preferredArcadeId)
+        : null;
+    if (preferredId !== null && preferredId !== current.preferred_arcade_id) {
+        const arcade = await db.arcade.findFirst({
+            where: { id: preferredId, is_active: true },
+            select: { id: true },
+        });
+        if (!arcade)
+            return {
+                success: false,
+                message: t("settings.arcadeNotFound"),
+                fieldErrors: {
+                    preferredArcadeId: [t("settings.arcadeNotFound")],
+                },
+            };
+    }
+    // 업적 진열(2026-09-25 D1) — 얻은 업적 · 3개까지만. 잘못된 값이면 프로필도 저장하지 않는다
+    const showcaseKeys =
+        values.achievementShowcase === undefined
+            ? null
+            : values.achievementShowcase.split(",").filter(Boolean);
+    try {
+        if (showcaseKeys) {
+            const showcase = await setAchievementShowcase(
+                session.id,
+                showcaseKeys
+            );
+            if (showcase.status !== "ok")
+                return {
+                    success: false,
+                    message: t("achievement.pin.failed"),
+                    fieldErrors: {
+                        achievementShowcase: [t("achievement.pin.failed")],
+                    },
+                };
+        }
+        // 고정 기록(2026-09-26 S2) — 점수가 있는 채보만. 잘못된 값이면 프로필도 저장하지 않는다
+        if (values.pinnedRecords !== undefined) {
+            const pinned = await setPinnedRecords(
+                session.id,
+                pinnedRecordsValueSchema.parse(values.pinnedRecords)
+            );
+            if (pinned.status !== "ok")
+                return {
+                    success: false,
+                    message: t("profile.pinned.failed"),
+                    fieldErrors: {
+                        pinnedRecords: [t("profile.pinned.failed")],
+                    },
+                };
+        }
+        await db.user.update({
+            where: { id: session.id, avatar: current.avatar },
+            data: {
+                username: values.username,
+                country: values.country,
+                preferred_arcade_id: preferredId,
+                ...(avatarChanged
+                    ? {
+                          avatar: values.avatar || null,
+                          avatar_user_managed: true,
+                      }
+                    : {}),
+            },
+        });
+    } catch (error) {
+        // Keep a staged upload after failure so it can be retried. Deleting it
+        // here could also remove the winning upload from a concurrent save.
+        if (
+            typeof error === "object" &&
+            error !== null &&
+            "code" in error &&
+            error.code === "P2002"
+        ) {
+            return {
+                success: false,
+                message: t("settings.nicknameTaken"),
+                fieldErrors: { username: [t("settings.nicknameTaken")] },
+            };
+        }
+        logServerError(error, {
+            event: "settings.profile.save.failed",
+            routePath: "/settings",
+            routeType: "action",
+        });
+        return { success: false, message: t("settings.saveError") };
+    }
+    refreshPublicIdentity(session.id);
+    if (avatarChanged) await deleteBlobIfOwned(current.avatar);
+    return { success: true, message: t("settings.saved"), values };
+}
+
+export async function saveSettingsPrivacy(
+    formData: FormData
+): Promise<ActionResult<{ values: SettingsPrivacyValues }>> {
+    const { t } = await getServerI18n();
+    const session = await getSession();
+    if (!session.id || !session.profileCompleted)
+        return { success: false, message: t("settings.loginRequired") };
+    const parsed = settingsPrivacySchema.safeParse(
+        settingsPrivacyInput(formData)
+    );
+    if (!parsed.success)
+        return { success: false, message: t("settings.checkInput") };
+    const values = parsed.data;
+    try {
+        await db.user.update({
+            where: { id: session.id },
+            data: {
+                hide_nostalgia_name: !values.showNostalgiaName,
+                hide_discord_name: !values.showDiscordIdentity,
+                hide_preferred_arcade: !values.showPreferredArcade,
+                hide_play_count: !values.showPlayCount,
+                hide_play_activity: !values.showPlayActivity,
+                hide_play_scores: !values.showPlayScores,
+            },
+        });
+    } catch (error) {
+        logServerError(error, {
+            event: "settings.privacy.save.failed",
+            routePath: "/settings",
+            routeType: "action",
+        });
+        return { success: false, message: t("settings.saveError") };
+    }
+    refreshPublicIdentity(session.id);
+    return { success: true, message: t("settings.saved"), values };
+}

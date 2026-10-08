@@ -41,7 +41,7 @@ const directory = new URL(
     "../public/fonts/pretendard-jp/" + version + "/",
     import.meta.url
 );
-const cssTarget = new URL("../app/styles/pretendardJp.css", import.meta.url);
+const cssTarget = new URL("../app/styles/pretendard-jp.css", import.meta.url);
 const css = [
     "/* One complete, unmodified Pretendard JP 1.3.9 variable font. */",
     "@font-face {",

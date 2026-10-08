@@ -35,7 +35,7 @@ vi.mock("@/lib/db", () => ({
     },
 }));
 
-import { getAdminSyncs } from "@/features/admin/server/adminSyncService";
+import { getAdminSyncs } from "@/features/admin/server/admin-sync-service";
 
 describe("admin monitoring server boundaries", () => {
     const now = new Date(2026, 8, 5, 12);

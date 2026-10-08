@@ -9,7 +9,7 @@ import {
 } from "@/lib/chart-pattern/snapCheck";
 import { tickToMilliseconds } from "@/lib/chart-pattern/timing";
 import { chartPositionLabel } from "@/lib/chart-pattern/vid2bmap";
-import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
+import { useLocale, useTranslations } from "@/components/i18n/locale-provider";
 
 import { useChartEditorStore } from "./chartEditorStore";
 
@@ -76,7 +76,7 @@ export default function SnapCheckSection() {
         replaceNotes(snapNotesToNearestGrid(document, new Set(ids)), ids);
 
     return (
-        <section className="border-divider flex max-h-[45%] shrink-0 flex-col gap-1.5 border-t px-3 py-2.5">
+        <section className="flex max-h-[45%] shrink-0 flex-col gap-1.5 border-t border-divider px-3 py-2.5">
             <div className="flex items-center justify-between gap-2">
                 <h3 className="flex items-center gap-2 text-xs font-bold">
                     {t("editor.snap.title")}
@@ -91,7 +91,7 @@ export default function SnapCheckSection() {
                         type="button"
                         onClick={() => moveFocus(-1)}
                         aria-label={t("editor.snap.previous")}
-                        className="border-border hover:bg-surface-muted flex size-6 items-center justify-center rounded border"
+                        className="flex size-6 items-center justify-center rounded border border-border hover:bg-surface-muted"
                     >
                         <ArrowUp className="size-3" />
                     </button>
@@ -99,7 +99,7 @@ export default function SnapCheckSection() {
                         type="button"
                         onClick={() => moveFocus(1)}
                         aria-label={t("editor.snap.next")}
-                        className="border-border hover:bg-surface-muted flex size-6 items-center justify-center rounded border"
+                        className="flex size-6 items-center justify-center rounded border border-border hover:bg-surface-muted"
                     >
                         <ArrowDown className="size-3" />
                     </button>
@@ -110,7 +110,7 @@ export default function SnapCheckSection() {
                 tabIndex={0}
                 onKeyDown={handleListKey}
                 aria-label={t("editor.snap.list")}
-                className="focus-visible:outline-focus flex min-h-0 flex-col gap-1 overflow-y-auto rounded-md focus-visible:outline-1"
+                className="flex min-h-0 flex-col gap-1 overflow-y-auto rounded-md focus-visible:outline-1 focus-visible:outline-focus"
             >
                 {items.map((item, index) => {
                     const note = notesById.get(item.id);
@@ -146,7 +146,7 @@ export default function SnapCheckSection() {
                                         ),
                                     })}
                                 </span>
-                                <span className="text-text-secondary min-w-0 text-right text-xs tabular-nums">
+                                <span className="min-w-0 text-right text-xs text-text-secondary tabular-nums">
                                     {note
                                         ? `${t(`editor.hand.${note.hand}`)} · ${t("editor.snap.lane", { lane: note.lane + 1 })} · `
                                         : ""}
@@ -160,7 +160,7 @@ export default function SnapCheckSection() {
                                 <button
                                     type="button"
                                     onClick={() => snap([item.id])}
-                                    className="border-text-primary bg-text-primary text-bg h-6 self-start rounded border px-2 text-xs font-semibold"
+                                    className="h-6 self-start rounded border border-text-primary bg-text-primary px-2 text-xs font-semibold text-bg"
                                 >
                                     {t("editor.snap.one")}
                                 </button>
@@ -172,7 +172,7 @@ export default function SnapCheckSection() {
             <button
                 type="button"
                 onClick={() => snap(items.map((item) => item.id))}
-                className="border-border hover:bg-surface-muted h-8 shrink-0 rounded-md border text-xs font-semibold"
+                className="h-8 shrink-0 rounded-md border border-border text-xs font-semibold hover:bg-surface-muted"
             >
                 {t("editor.snap.all")}
             </button>

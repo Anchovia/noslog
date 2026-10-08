@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
 
-import type { ExamDashboardItem } from "@/components/exams/dashboard/examDashboardTypes";
+import type { ExamDashboardItem } from "@/components/exams/dashboard/exam-dashboard-types";
 import {
     calculateExamSimulation,
     canEnterExam,
     getDefaultExam,
-} from "@/components/exams/dashboard/examDashboardUtils";
+} from "@/components/exams/dashboard/exam-dashboard-utils";
 
 function exam(changes: Partial<ExamDashboardItem> = {}): ExamDashboardItem {
     return {

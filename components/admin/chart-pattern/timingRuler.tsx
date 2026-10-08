@@ -17,7 +17,7 @@ import {
     getBeatMarkers,
 } from "@/lib/chart-pattern/timing";
 
-import { useTranslations } from "@/components/i18n/localeProvider";
+import { useTranslations } from "@/components/i18n/locale-provider";
 
 import { useChartEditorStore } from "./chartEditorStore";
 

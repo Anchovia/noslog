@@ -38,7 +38,7 @@ import {
     saveMyChartDraft,
     submitMyChartDraft,
     withdrawMyChartDraft,
-} from "@/app/(nevigation)/music/[index]/[difficulty]/draftActions";
+} from "@/app/(site)/music/[index]/[difficulty]/draft-actions";
 import { reviewChartDraft } from "@/app/admin/contributions/actions";
 import {
     createChartPatternRevision,
@@ -47,15 +47,15 @@ import {
     restoreChartPatternRevision,
     saveChartPatternDraft,
 } from "@/app/admin/music/[index]/[difficulty]/pattern/actions";
-import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
-import ContributionLabel from "@/features/contributions/components/contributionLabel";
-import type { NameLabel } from "@/features/contributions/contributionLevel";
-import type { ChartDraftStatus } from "@/features/contributions/schemas/chartDraftSchema";
+import { useLocale, useTranslations } from "@/components/i18n/locale-provider";
+import ContributionLabel from "@/features/contributions/components/contribution-label";
+import type { NameLabel } from "@/features/contributions/contribution-level";
+import type { ChartDraftStatus } from "@/features/contributions/schemas/chart-draft-schema";
 import {
     getBrowserSupportSnapshot,
     getServerBrowserSupportSnapshot,
     subscribeBrowserSupport,
-} from "@/lib/browserSupport";
+} from "@/lib/browser-support";
 import { findChartNoteConflicts } from "@/lib/chart-pattern/editor";
 import {
     chartDocumentSchema,
@@ -231,7 +231,7 @@ function EditorButton({
             title={label}
             disabled={disabled}
             onClick={onClick}
-            className="border-border hover:bg-surface-muted flex size-9 shrink-0 items-center justify-center rounded-md border disabled:cursor-not-allowed disabled:opacity-35"
+            className="flex size-9 shrink-0 items-center justify-center rounded-md border border-border hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-35"
         >
             {children}
         </button>
@@ -840,8 +840,8 @@ function ChartTimingEditorWorkspace({
 
     return (
         <>
-            <div className="bg-bg fixed inset-0 z-[100] hidden min-h-0 flex-col min-[1024px]:flex">
-                <header className="border-divider bg-surface flex h-14 shrink-0 items-center gap-3 border-b px-3">
+            <div className="fixed inset-0 z-[100] hidden min-h-0 flex-col bg-bg min-[1024px]:flex">
+                <header className="flex h-14 shrink-0 items-center gap-3 border-b border-divider bg-surface px-3">
                     <Link
                         href={
                             mode.kind === "admin"
@@ -855,7 +855,7 @@ function ChartTimingEditorWorkspace({
                                   ? "기여 채보 목록으로 돌아가기"
                                   : "악곡 관리로 돌아가기"
                         }
-                        className="border-border hover:bg-surface-muted flex size-9 shrink-0 items-center justify-center rounded-md border"
+                        className="flex size-9 shrink-0 items-center justify-center rounded-md border border-border hover:bg-surface-muted"
                     >
                         <ArrowLeft className="size-4" />
                     </Link>
@@ -864,11 +864,11 @@ function ChartTimingEditorWorkspace({
                             <h1 className="max-w-80 truncate text-sm font-bold">
                                 {metadata.title}
                             </h1>
-                            <span className="bg-surface-muted text-caption rounded px-1.5 py-0.5 font-semibold">
+                            <span className="rounded bg-surface-muted px-1.5 py-0.5 text-caption font-semibold">
                                 {metadata.difficulty} · Lv {metadata.level}
                             </span>
                         </div>
-                        <p className="text-micro mt-0.5 truncate">
+                        <p className="mt-0.5 truncate text-micro">
                             {mode.kind === "review"
                                 ? `채보 검토 · ${mode.author.name}`
                                 : t("editor.subtitle", {
@@ -913,7 +913,7 @@ function ChartTimingEditorWorkspace({
                                                   : t("editor.status.new")))}
                             </span>
                             {mode.kind === "admin" ? (
-                                <span className="text-micro block">
+                                <span className="block text-micro">
                                     저장 v{savedRevision}
                                     {publishedRevision
                                         ? ` · 공개 v${publishedRevision}`
@@ -953,7 +953,7 @@ function ChartTimingEditorWorkspace({
                                     <div
                                         role="menu"
                                         aria-label="채보 가져오기"
-                                        className="border-border bg-surface-muted absolute top-11 right-0 z-10 flex w-60 flex-col gap-0.5 rounded-lg border p-1 shadow-xl"
+                                        className="absolute top-11 right-0 z-10 flex w-60 flex-col gap-0.5 rounded-lg border border-border bg-surface-muted p-1 shadow-xl"
                                     >
                                         <button
                                             type="button"
@@ -962,12 +962,12 @@ function ChartTimingEditorWorkspace({
                                                 setImportMenuOpen(false);
                                                 importInputRef.current?.click();
                                             }}
-                                            className="hover:bg-border rounded-md px-2.5 py-2 text-left"
+                                            className="rounded-md px-2.5 py-2 text-left hover:bg-border"
                                         >
                                             <span className="block text-xs font-semibold">
                                                 NosLog 채보 파일
                                             </span>
-                                            <span className="text-micro block">
+                                            <span className="block text-micro">
                                                 .noslog-chart.json — 지금 초안을
                                                 교체
                                             </span>
@@ -979,12 +979,12 @@ function ChartTimingEditorWorkspace({
                                                 setImportMenuOpen(false);
                                                 vid2bmapInputRef.current?.click();
                                             }}
-                                            className="hover:bg-border rounded-md px-2.5 py-2 text-left"
+                                            className="rounded-md px-2.5 py-2 text-left hover:bg-border"
                                         >
                                             <span className="block text-xs font-semibold">
                                                 영상 추출 결과
                                             </span>
-                                            <span className="text-micro block">
+                                            <span className="block text-micro">
                                                 vid2bmap 결과 zip → 미리보고
                                                 초안에 넣기
                                             </span>
@@ -1015,7 +1015,7 @@ function ChartTimingEditorWorkspace({
                                     target="_blank"
                                     aria-label="전체 채보 미리보기"
                                     title="전체 채보 미리보기"
-                                    className="border-border hover:bg-surface-muted flex size-9 shrink-0 items-center justify-center rounded-md border"
+                                    className="flex size-9 shrink-0 items-center justify-center rounded-md border border-border hover:bg-surface-muted"
                                 >
                                     <Eye className="size-4" />
                                 </Link>
@@ -1033,7 +1033,7 @@ function ChartTimingEditorWorkspace({
                                     onClick={() =>
                                         void runExplicitSave("manual")
                                     }
-                                    className="border-border hover:bg-surface-muted flex h-9 items-center gap-1.5 rounded-md border px-3 text-xs font-bold disabled:opacity-40"
+                                    className="flex h-9 items-center gap-1.5 rounded-md border border-border px-3 text-xs font-bold hover:bg-surface-muted disabled:opacity-40"
                                 >
                                     {saveStatus === "saving" ? (
                                         <LoaderCircle className="size-3.5 animate-spin" />
@@ -1065,7 +1065,7 @@ function ChartTimingEditorWorkspace({
                                             void runExplicitSave("publish");
                                         }
                                     }}
-                                    className="bg-text-primary text-bg flex h-9 items-center rounded-md px-3 text-xs font-bold disabled:cursor-not-allowed disabled:opacity-35"
+                                    className="flex h-9 items-center rounded-md bg-text-primary px-3 text-xs font-bold text-bg disabled:cursor-not-allowed disabled:opacity-35"
                                 >
                                     공개
                                 </button>
@@ -1078,7 +1078,7 @@ function ChartTimingEditorWorkspace({
                                         type="button"
                                         disabled={statusPending}
                                         onClick={() => void withdrawDraft()}
-                                        className="border-border hover:bg-surface-muted flex h-9 items-center gap-1.5 rounded-md border px-3 text-xs font-bold disabled:opacity-40"
+                                        className="flex h-9 items-center gap-1.5 rounded-md border border-border px-3 text-xs font-bold hover:bg-surface-muted disabled:opacity-40"
                                     >
                                         {statusPending ? (
                                             <LoaderCircle className="size-3.5 animate-spin" />
@@ -1107,7 +1107,7 @@ function ChartTimingEditorWorkspace({
                                                   : undefined
                                         }
                                         onClick={() => void submitDraft()}
-                                        className="bg-text-primary text-bg flex h-9 items-center gap-1.5 rounded-md px-3 text-xs font-bold disabled:cursor-not-allowed disabled:opacity-35"
+                                        className="flex h-9 items-center gap-1.5 rounded-md bg-text-primary px-3 text-xs font-bold text-bg disabled:cursor-not-allowed disabled:opacity-35"
                                     >
                                         {statusPending ? (
                                             <LoaderCircle className="size-3.5 animate-spin" />
@@ -1119,7 +1119,7 @@ function ChartTimingEditorWorkspace({
                         ) : mode.kind === "review" && draftStatus ? (
                             <span className="flex items-center gap-2">
                                 <StatusTag status={draftStatus} />
-                                <span className="text-micro flex items-center gap-1.5">
+                                <span className="flex items-center gap-1.5 text-micro">
                                     {mode.author.name}
                                     <ContributionLabel
                                         label={mode.author.label}
@@ -1134,7 +1134,7 @@ function ChartTimingEditorWorkspace({
                                     onClick={() =>
                                         void decide("request_changes")
                                     }
-                                    className="border-border hover:bg-surface-muted flex h-9 items-center rounded-md border px-3 text-xs font-bold disabled:opacity-40"
+                                    className="flex h-9 items-center rounded-md border border-border px-3 text-xs font-bold hover:bg-surface-muted disabled:opacity-40"
                                 >
                                     수정 요청
                                 </button>
@@ -1146,7 +1146,7 @@ function ChartTimingEditorWorkspace({
                                         hasNoteConflicts
                                     }
                                     onClick={() => void decide("publish")}
-                                    className="bg-text-primary text-bg flex h-9 items-center rounded-md px-3 text-xs font-bold disabled:cursor-not-allowed disabled:opacity-35"
+                                    className="flex h-9 items-center rounded-md bg-text-primary px-3 text-xs font-bold text-bg disabled:cursor-not-allowed disabled:opacity-35"
                                 >
                                     공개
                                 </button>
@@ -1156,8 +1156,8 @@ function ChartTimingEditorWorkspace({
                 </header>
 
                 <div className="flex min-h-0 flex-1">
-                    <aside className="border-divider bg-surface flex w-48 shrink-0 flex-col border-r">
-                        <nav className="border-divider flex flex-col gap-1 border-b p-2">
+                    <aside className="flex w-48 shrink-0 flex-col border-r border-divider bg-surface">
+                        <nav className="flex flex-col gap-1 border-b border-divider p-2">
                             <button
                                 type="button"
                                 onClick={() => setEditorMode("timing")}
@@ -1222,8 +1222,8 @@ function ChartTimingEditorWorkspace({
                         ) : null}
 
                         {editorMode === "notes" && !readOnly ? (
-                            <section className="border-divider border-b p-2">
-                                <p className="text-micro mb-1.5 px-1">
+                            <section className="border-b border-divider p-2">
+                                <p className="mb-1.5 px-1 text-micro">
                                     {t("editor.tools")}
                                 </p>
                                 <button
@@ -1237,7 +1237,7 @@ function ChartTimingEditorWorkspace({
                                 >
                                     <MousePointer2 className="size-3.5" />
                                     {t("editor.toolSelect")}
-                                    <kbd className="text-micro ml-auto">1</kbd>
+                                    <kbd className="ml-auto text-micro">1</kbd>
                                 </button>
                                 <div className="mt-1 grid grid-cols-2 gap-1">
                                     {noteTypes.map((value) => (
@@ -1252,14 +1252,14 @@ function ChartTimingEditorWorkspace({
                                             }`}
                                         >
                                             {t(`editor.noteType.${value}`)}
-                                            <kbd className="text-micro ml-1">
+                                            <kbd className="ml-1 text-micro">
                                                 {noteToolShortcuts[value]}
                                             </kbd>
                                         </button>
                                     ))}
                                 </div>
 
-                                <p className="text-micro mt-3 mb-1.5 px-1">
+                                <p className="mt-3 mb-1.5 px-1 text-micro">
                                     {t("editor.note.hand")}
                                 </p>
                                 <div className="grid grid-cols-2 gap-1">
@@ -1285,7 +1285,7 @@ function ChartTimingEditorWorkspace({
                                     )}
                                 </div>
 
-                                <p className="text-micro mt-3 mb-1.5 px-1">
+                                <p className="mt-3 mb-1.5 px-1 text-micro">
                                     {t("editor.defaultWidth")}
                                 </p>
                                 <div className="grid grid-cols-4 gap-1">
@@ -1304,7 +1304,7 @@ function ChartTimingEditorWorkspace({
                                         </button>
                                     ))}
                                 </div>
-                                <p className="text-micro mt-2 px-1 leading-relaxed">
+                                <p className="mt-2 px-1 text-micro leading-relaxed">
                                     {t("editor.toolHelp")}
                                 </p>
                             </section>
@@ -1329,7 +1329,7 @@ function ChartTimingEditorWorkspace({
                                                         revision
                                                     )
                                                 }
-                                                className="hover:bg-surface-muted rounded-md px-2 py-2 text-left"
+                                                className="rounded-md px-2 py-2 text-left hover:bg-surface-muted"
                                             >
                                                 <span className="flex items-center justify-between text-xs">
                                                     <strong>
@@ -1348,7 +1348,7 @@ function ChartTimingEditorWorkspace({
                                                                 : "저장"}
                                                     </span>
                                                 </span>
-                                                <span className="text-micro mt-1 block">
+                                                <span className="mt-1 block text-micro">
                                                     {formatRevisionDateTime(
                                                         revision.createdAt
                                                     )}
@@ -1357,7 +1357,7 @@ function ChartTimingEditorWorkspace({
                                         ))}
                                     </div>
                                 ) : (
-                                    <p className="text-micro px-1 leading-relaxed">
+                                    <p className="px-1 text-micro leading-relaxed">
                                         Ctrl+S 또는 버전 저장을 누르면 복구
                                         지점이 만들어집니다.
                                     </p>
@@ -1390,33 +1390,33 @@ function ChartTimingEditorWorkspace({
                         {vid2bmapFile && editorMode === "notes" ? (
                             <dl
                                 aria-label="가져오기 미리보기 범례"
-                                className="border-border bg-bg/90 pointer-events-none absolute top-3 right-3 flex flex-col gap-1 rounded-md border px-2.5 py-2 text-xs shadow-lg"
+                                className="pointer-events-none absolute top-3 right-3 flex flex-col gap-1 rounded-md border border-border bg-bg/90 px-2.5 py-2 text-xs shadow-lg"
                             >
                                 <div className="flex items-center gap-2">
-                                    <dt className="bg-score h-2.5 w-5 rounded-sm" />
+                                    <dt className="h-2.5 w-5 rounded-sm bg-score" />
                                     <dd>넣을 노트</dd>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <dt className="bg-text-secondary/40 h-2.5 w-5 rounded-sm" />
+                                    <dt className="h-2.5 w-5 rounded-sm bg-text-secondary/40" />
                                     <dd>지금 초안(흐리게)</dd>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <dt className="border-danger h-2.5 w-5 rounded-sm border-2" />
+                                    <dt className="h-2.5 w-5 rounded-sm border-2 border-danger" />
                                     <dd>빠질 노트</dd>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <dt className="bg-text-primary/15 border-text-primary h-2.5 w-5 border-x-2" />
+                                    <dt className="h-2.5 w-5 border-x-2 border-text-primary bg-text-primary/15" />
                                     <dd>목록에서 고른 곳</dd>
                                 </div>
                                 {importTimingCount > 0 ? (
                                     <div className="flex items-center gap-2">
-                                        <dt className="border-score h-0 w-5 border-t-2 border-dashed" />
+                                        <dt className="h-0 w-5 border-t-2 border-dashed border-score" />
                                         <dd>넣을 타이밍 포인트</dd>
                                     </div>
                                 ) : null}
                             </dl>
                         ) : null}
-                        <div className="border-border bg-surface/95 absolute top-3 left-3 flex items-center gap-1 rounded-md border p-1 shadow-lg">
+                        <div className="absolute top-3 left-3 flex items-center gap-1 rounded-md border border-border bg-surface/95 p-1 shadow-lg">
                             <button
                                 type="button"
                                 onClick={() =>
@@ -1424,12 +1424,12 @@ function ChartTimingEditorWorkspace({
                                         Math.max(60, value - 30)
                                     )
                                 }
-                                className="hover:bg-surface-muted size-7 rounded text-sm"
+                                className="size-7 rounded text-sm hover:bg-surface-muted"
                                 aria-label={t("editor.zoomOut")}
                             >
                                 −
                             </button>
-                            <span className="text-micro w-14 text-center tabular-nums">
+                            <span className="w-14 text-center text-micro tabular-nums">
                                 {pixelsPerSecond}px/s
                             </span>
                             <button
@@ -1439,7 +1439,7 @@ function ChartTimingEditorWorkspace({
                                         Math.min(420, value + 30)
                                     )
                                 }
-                                className="hover:bg-surface-muted size-7 rounded text-sm"
+                                className="size-7 rounded text-sm hover:bg-surface-muted"
                                 aria-label={t("editor.zoomIn")}
                             >
                                 +
@@ -1467,7 +1467,7 @@ function ChartTimingEditorWorkspace({
                     )}
                 </div>
 
-                <footer className="border-divider bg-surface shrink-0 border-t">
+                <footer className="shrink-0 border-t border-divider bg-surface">
                     <div className="flex h-12 items-center gap-2 px-3">
                         <input
                             ref={audioInputRef}
@@ -1494,7 +1494,7 @@ function ChartTimingEditorWorkspace({
                             type="button"
                             disabled={isDecoding}
                             onClick={() => audioInputRef.current?.click()}
-                            className="border-border hover:bg-surface-muted flex h-8 max-w-48 items-center gap-1.5 rounded-md border px-2.5 text-xs font-semibold disabled:opacity-40"
+                            className="flex h-8 max-w-48 items-center gap-1.5 rounded-md border border-border px-2.5 text-xs font-semibold hover:bg-surface-muted disabled:opacity-40"
                         >
                             {isDecoding ? (
                                 <LoaderCircle className="size-3.5 animate-spin" />
@@ -1528,7 +1528,7 @@ function ChartTimingEditorWorkspace({
                             {formatEditorTime(currentTimeMs)}
                         </span>
 
-                        <label className="text-micro ml-1 flex items-center gap-1">
+                        <label className="ml-1 flex items-center gap-1 text-micro">
                             {t("editor.speed")}
                             <select
                                 value={playbackRate}
@@ -1539,7 +1539,7 @@ function ChartTimingEditorWorkspace({
                                         ) as ChartPlaybackRate
                                     )
                                 }
-                                className="border-border bg-bg h-8 rounded-md border px-2 text-xs"
+                                className="h-8 rounded-md border border-border bg-bg px-2 text-xs"
                             >
                                 {playbackRates.map((rate) => (
                                     <option key={rate} value={rate}>
@@ -1549,14 +1549,14 @@ function ChartTimingEditorWorkspace({
                             </select>
                         </label>
 
-                        <label className="text-micro flex items-center gap-1">
+                        <label className="flex items-center gap-1 text-micro">
                             {t("editor.snap")}
                             <select
                                 value={snapDivisor}
                                 onChange={(event) =>
                                     setSnapDivisor(Number(event.target.value))
                                 }
-                                className="border-border bg-bg h-8 rounded-md border px-2 text-xs"
+                                className="h-8 rounded-md border border-border bg-bg px-2 text-xs"
                             >
                                 {snapDivisors.map((divisor) => (
                                     <option key={divisor} value={divisor}>
@@ -1566,21 +1566,21 @@ function ChartTimingEditorWorkspace({
                             </select>
                         </label>
 
-                        <label className="hover:bg-surface-muted flex h-8 items-center gap-2 rounded-md px-2 text-xs font-semibold">
+                        <label className="flex h-8 items-center gap-2 rounded-md px-2 text-xs font-semibold hover:bg-surface-muted">
                             <input
                                 type="checkbox"
                                 checked={metronomeEnabled}
                                 onChange={(event) =>
                                     setMetronomeEnabled(event.target.checked)
                                 }
-                                className="accent-text-primary size-3.5"
+                                className="size-3.5 accent-text-primary"
                             />
                             {t("chart.metronome")}
                         </label>
 
-                        <label className="border-border flex h-8 items-center gap-1.5 rounded-md border px-2">
+                        <label className="flex h-8 items-center gap-1.5 rounded-md border border-border px-2">
                             <Volume2
-                                className="text-text-secondary size-3.5"
+                                className="size-3.5 text-text-secondary"
                                 aria-hidden
                             />
                             <input
@@ -1595,36 +1595,36 @@ function ChartTimingEditorWorkspace({
                                     )
                                 }
                                 aria-label={t("chart.metronomeVolume")}
-                                className="accent-text-primary w-16"
+                                className="w-16 accent-text-primary"
                             />
-                            <span className="text-micro w-8 text-right tabular-nums">
+                            <span className="w-8 text-right text-micro tabular-nums">
                                 {metronomeVolume}%
                             </span>
                         </label>
 
-                        <label className="hover:bg-surface-muted flex h-8 items-center gap-2 rounded-md px-2 text-xs font-semibold">
+                        <label className="flex h-8 items-center gap-2 rounded-md px-2 text-xs font-semibold hover:bg-surface-muted">
                             <input
                                 type="checkbox"
                                 checked={pianoVisible}
                                 onChange={(event) =>
                                     updatePianoVisibility(event.target.checked)
                                 }
-                                className="accent-text-primary size-3.5"
+                                className="size-3.5 accent-text-primary"
                             />
                             {t("editor.piano")}
                         </label>
 
                         {audioError ? (
-                            <span className="text-danger ml-auto max-w-72 truncate text-xs">
+                            <span className="ml-auto max-w-72 truncate text-xs text-danger">
                                 {audioError}
                             </span>
                         ) : (
-                            <span className="text-micro ml-auto">
+                            <span className="ml-auto text-micro">
                                 {t("editor.audioNote")}
                             </span>
                         )}
                     </div>
-                    <div className="border-divider border-t px-3 py-2">
+                    <div className="border-t border-divider px-3 py-2">
                         <WaveformTimeline
                             peaks={waveformPeaks}
                             onSeek={(time) => void seek(time)}
@@ -1633,15 +1633,15 @@ function ChartTimingEditorWorkspace({
                 </footer>
             </div>
 
-            <div className="bg-bg fixed inset-0 z-[100] flex items-center justify-center p-6 min-[1024px]:hidden">
+            <div className="fixed inset-0 z-[100] flex items-center justify-center bg-bg p-6 min-[1024px]:hidden">
                 <div className="max-w-sm text-center">
-                    <div className="bg-surface mx-auto flex size-12 items-center justify-center rounded-full">
+                    <div className="mx-auto flex size-12 items-center justify-center rounded-full bg-surface">
                         <Maximize2 className="size-5" />
                     </div>
-                    <h1 className="text-title mt-4">
+                    <h1 className="mt-4 text-title">
                         {t("editor.narrowTitle")}
                     </h1>
-                    <p className="text-body-muted mt-2">
+                    <p className="mt-2 text-body-muted">
                         {t("editor.narrowBody")}
                     </p>
                     <Link
@@ -1650,7 +1650,7 @@ function ChartTimingEditorWorkspace({
                                 ? `/admin/music/${encodeURIComponent(metadata.musicIndex)}`
                                 : mode.backHref
                         }
-                        className="border-border mt-5 inline-flex h-10 items-center rounded-md border px-4 text-sm font-semibold"
+                        className="mt-5 inline-flex h-10 items-center rounded-md border border-border px-4 text-sm font-semibold"
                     >
                         {t("editor.goBack")}
                     </Link>
@@ -1669,20 +1669,20 @@ export default function ChartTimingEditor(props: ChartTimingEditorProps) {
     );
 
     if (browserSupport === "checking") {
-        return <div className="bg-bg fixed inset-0 z-[100]" aria-hidden />;
+        return <div className="fixed inset-0 z-[100] bg-bg" aria-hidden />;
     }
 
     if (browserSupport === "safari") {
         return (
-            <div className="bg-bg fixed inset-0 z-[100] flex items-center justify-center p-6">
+            <div className="fixed inset-0 z-[100] flex items-center justify-center bg-bg p-6">
                 <div className="max-w-sm text-center">
-                    <div className="bg-surface mx-auto flex size-12 items-center justify-center rounded-full">
+                    <div className="mx-auto flex size-12 items-center justify-center rounded-full bg-surface">
                         <Maximize2 className="size-5" />
                     </div>
-                    <h1 className="text-title mt-4">
+                    <h1 className="mt-4 text-title">
                         {t("editor.safariTitle")}
                     </h1>
-                    <p className="text-body-muted mt-2">
+                    <p className="mt-2 text-body-muted">
                         {t("editor.safariBody")}
                     </p>
                     <Link
@@ -1691,7 +1691,7 @@ export default function ChartTimingEditor(props: ChartTimingEditorProps) {
                                 ? `/admin/music/${encodeURIComponent(props.metadata.musicIndex)}`
                                 : props.mode.backHref
                         }
-                        className="border-border mt-5 inline-flex h-10 items-center rounded-md border px-4 text-sm font-semibold"
+                        className="mt-5 inline-flex h-10 items-center rounded-md border border-border px-4 text-sm font-semibold"
                     >
                         {t("editor.goBack")}
                     </Link>

@@ -11,8 +11,8 @@ vi.mock("@/lib/db", async () => {
     return { default: new PrismaClient({ datasourceUrl: url }) };
 });
 import db from "@/lib/db";
-import { getGlobalRankingPage } from "@/features/rankings/server/globalRankingData";
-import { getUserRankingPosition } from "@/features/rankings/server/rankingPosition";
+import { getGlobalRankingPage } from "@/features/rankings/server/global-ranking-data";
+import { getUserRankingPosition } from "@/features/rankings/server/ranking-position";
 
 describe.skipIf(!process.env.COMMUNITY_TEST_DATABASE_URL)(
     "global competition ranking with local PostgreSQL",

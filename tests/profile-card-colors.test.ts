@@ -2,8 +2,8 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
-import { PROFILE_CARD_DARK_HEX } from "@/features/profile/profileCardColors";
-import { profileCardGlobe } from "@/features/profile/profileCardGlobe";
+import { PROFILE_CARD_DARK_HEX } from "@/features/profile/profile-card-colors";
+import { profileCardGlobe } from "@/features/profile/profile-card-globe";
 
 describe("프로필 공유 카드 색", () => {
     const css = readFileSync(resolve("app/styles/tokens.css"), "utf8");

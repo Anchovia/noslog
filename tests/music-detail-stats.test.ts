@@ -10,7 +10,7 @@ vi.mock("@/lib/db", () => ({
         chartEvaluation: { aggregate: mocks.evaluation },
     },
 }));
-import { getCachedChartDetailStats } from "@/features/music/server/musicDetailData";
+import { getCachedChartDetailStats } from "@/features/music/server/music-detail-data";
 describe("detail score stats", () => {
     it.each([0, 7])(
         "only reads positive visible scores, including self %s",

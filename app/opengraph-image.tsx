@@ -1,4 +1,4 @@
-import { createSocialImage } from "@/lib/metadata/brandImage";
+import { createSocialImage } from "@/lib/metadata/brand-image";
 
 export const alt = "NosLog - NOSTALGIA 플레이 기록·랭킹·서열 아카이브";
 export const size = {

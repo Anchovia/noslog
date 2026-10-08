@@ -8,7 +8,7 @@ import { describe, expect, it } from "vitest";
 describe("NosLog Tailwind aliases", () => {
     it("compiles aliases without changing default utility names or approved typography", async () => {
         const aliases = readFileSync(
-            resolve("app/styles/tailwindTheme.css"),
+            resolve("app/styles/tailwind-theme.css"),
             "utf8"
         );
         const theme = readFileSync(

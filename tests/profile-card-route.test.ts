@@ -7,11 +7,11 @@ const mocks = vi.hoisted(() => ({
 }));
 
 vi.mock("@/lib/session", () => ({ default: mocks.getSession }));
-vi.mock("@/features/profile/server/publicProfileData", () => ({
+vi.mock("@/features/profile/server/public-profile-data", () => ({
     getCachedProfileData: mocks.getCachedProfileData,
 }));
 
-import { GET } from "@/app/(nevigation)/profile/[id]/card/route";
+import { GET } from "@/app/(site)/profile/[id]/card/route";
 
 describe("프로필 카드 이미지", () => {
     beforeEach(() => {

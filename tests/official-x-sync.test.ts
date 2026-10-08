@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { storedPost } from "./fixtures/officialX";
+import { storedPost } from "./fixtures/official-x";
 const { claim, updateMany, fetchLatest, translate, revalidateTag, env } =
     vi.hoisted(() => ({
         claim: vi.fn(),
@@ -20,13 +20,13 @@ vi.mock("next/cache", () => ({
     revalidateTag,
     unstable_cache: (fn: () => unknown) => fn,
 }));
-vi.mock("@/features/home/server/officialXTimeline", () => ({
+vi.mock("@/features/home/server/official-x-timeline", () => ({
     fetchOfficialXLatestPost: fetchLatest,
 }));
-vi.mock("@/features/home/server/officialXPostTranslation", () => ({
+vi.mock("@/features/home/server/official-x-post-translation", () => ({
     translateOfficialXPost: translate,
 }));
-import { syncOfficialXFeed } from "@/features/home/server/officialXSync";
+import { syncOfficialXFeed } from "@/features/home/server/official-x-sync";
 
 beforeEach(() => {
     vi.useFakeTimers();

@@ -1,6 +1,6 @@
 import BingoEditor, {
     type BingoEditorData,
-} from "@/features/bingos/components/bingoEditor";
+} from "@/features/bingos/components/bingo-editor";
 import db from "@/lib/db";
 
 export default async function NewBingoPage() {

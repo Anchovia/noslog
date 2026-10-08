@@ -25,10 +25,10 @@ vi.mock("@/lib/blob", () => ({
     deleteBlobIfOwned: mocks.deleteBlob,
 }));
 vi.mock("@/lib/observability/server", () => ({ logServerError: mocks.log }));
-vi.mock("@/features/achievements/server/achievementService", () => ({
+vi.mock("@/features/achievements/server/achievement-service", () => ({
     setAchievementShowcase: mocks.setShowcase,
 }));
-vi.mock("@/features/profile/server/profilePinnedService", () => ({
+vi.mock("@/features/profile/server/profile-pinned-service", () => ({
     setPinnedRecords: mocks.setPinned,
 }));
 vi.mock("@/lib/i18n/server", () => ({
@@ -38,8 +38,8 @@ vi.mock("@/lib/i18n/server", () => ({
 import {
     saveSettingsProfile,
     saveSettingsPrivacy,
-} from "@/features/settings/server/settingsSaveService";
-import { settingsFormData } from "@/features/settings/schemas/settingsSchema";
+} from "@/features/settings/server/settings-save-service";
+import { settingsFormData } from "@/features/settings/schemas/settings-schema";
 
 const profile = {
     username: "Ｎos 한글カナ",

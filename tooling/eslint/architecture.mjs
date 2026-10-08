@@ -5,13 +5,13 @@ import ts from "typescript";
 
 // Existing type contracts and application adapters; no general upward-import exemption.
 const retainedImports = new Map([
-    ["lib/music/maxGrade.ts", "components/music/musicDetailTypes"],
-    ["lib/music/unlockCondition.ts", "components/music/musicDetailTypes"],
-    ["lib/music/scoreTone.ts", "components/ui/statStrip"],
-    ["components/ui/examBadge.tsx", "features/exams/examGrades"],
+    ["lib/music/max-grade.ts", "components/music/music-detail-types"],
+    ["lib/music/unlock-condition.ts", "components/music/music-detail-types"],
+    ["lib/music/score-tone.ts", "components/ui/stat-strip"],
+    ["components/ui/exam-badge.tsx", "features/exams/exam-grades"],
     [
-        "components/ui/AppToaster.tsx",
-        "features/settings/hooks/useAccountResultNotice",
+        "components/ui/app-toaster.tsx",
+        "features/settings/hooks/use-account-result-notice",
     ],
 ]);
 
@@ -159,5 +159,57 @@ const boundaries = {
     },
 };
 
-const architecture = { rules: { boundaries } };
+const filenames = {
+    meta: {
+        type: "suggestion",
+        schema: [],
+        messages: {
+            filename: "코드 파일명은 kebab-case를 사용하세요: {{name}}",
+            directory: "내부 폴더명은 kebab-case를 사용하세요: {{name}}",
+        },
+    },
+    create(context) {
+        const owner = path
+            .relative(context.cwd, context.filename)
+            .split(path.sep)
+            .join("/");
+        // Public App Router segments and the preserved editor/viewer keep their names.
+        if (owner.startsWith("../") || owner.includes("/chart-pattern/"))
+            return {};
+        const parts = owner.split("/");
+        const valid = (part) => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(part);
+        return {
+            Program(node) {
+                const filename = parts.at(-1);
+                if (!filename.split(".").every(valid)) {
+                    context.report({
+                        node,
+                        messageId: "filename",
+                        data: { name: filename },
+                    });
+                }
+                for (const part of parts.slice(1, -1)) {
+                    if (
+                        parts[0] === "app" &&
+                        !part.startsWith("(") &&
+                        !part.startsWith("_")
+                    )
+                        continue;
+                    const name = part.startsWith("(")
+                        ? part.slice(1, -1)
+                        : part.replace(/^_+|_+$/g, "");
+                    if (!valid(name)) {
+                        context.report({
+                            node,
+                            messageId: "directory",
+                            data: { name: part },
+                        });
+                    }
+                }
+            },
+        };
+    },
+};
+
+const architecture = { rules: { boundaries, filenames } };
 export default architecture;

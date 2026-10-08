@@ -1,8 +1,8 @@
 import db from "@/lib/db";
-import { CACHE_TAGS, getUserProfileTag } from "@/lib/cacheTags";
+import { CACHE_TAGS, getUserProfileTag } from "@/lib/cache-tags";
 import { serverEnv } from "@/lib/env/server";
 import { isLocale, localizePath, type Locale } from "@/lib/i18n/routing";
-import { getSafeAuthReturnPath } from "@/lib/authReturnPath";
+import { getSafeAuthReturnPath } from "@/lib/auth-return-path";
 import getSession from "@/lib/session";
 import { revalidateTag } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";

@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 
-import AppliedTokens from "@/components/ui/appliedTokens";
+import AppliedTokens from "@/components/ui/applied-tokens";
 
 const render = (tokens: Parameters<typeof AppliedTokens>[0]["tokens"]) =>
     renderToStaticMarkup(

@@ -14,14 +14,14 @@ vi.mock("@/lib/db", () => ({
         playData: { findMany: mocks.records },
     },
 }));
-vi.mock("@/features/tiers/server/tierBrowserData", () => ({
+vi.mock("@/features/tiers/server/tier-browser-data", () => ({
     getModePianistRatingBasis: mocks.basis,
 }));
-vi.mock("@/features/contributions/server/contributionPointService", () => ({
+vi.mock("@/features/contributions/server/contribution-point-service", () => ({
     getNameLabels: async () => new Map(),
 }));
 
-import { getProfileRatingStanding } from "@/features/rankings/server/globalRankingData";
+import { getProfileRatingStanding } from "@/features/rankings/server/global-ranking-data";
 
 const player = (id: number, country: string, hidden = false) => ({
     id,

@@ -8,7 +8,7 @@ import {
     discoverySearchParams,
     getDiscoverySort,
     parseDiscoverySearchParams,
-} from "@/features/music/schemas/discoverySchema";
+} from "@/features/music/schemas/discovery-schema";
 
 const { queryRaw } = vi.hoisted(() => ({ queryRaw: vi.fn() }));
 vi.mock("server-only", () => ({}));
@@ -17,7 +17,7 @@ import {
     getDiscoveryCounts,
     getDiscoveryPage,
     publicDiscoveryQuery,
-} from "@/features/music/server/discoveryService";
+} from "@/features/music/server/discovery-service";
 
 describe("Discovery URL and filter contract", () => {
     it("browses the complete catalog without an implicit Expert restriction", () => {

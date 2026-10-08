@@ -7,7 +7,7 @@ const { env, sync } = vi.hoisted(() => ({
     sync: vi.fn(),
 }));
 vi.mock("@/lib/env/server", () => ({ serverEnv: env }));
-vi.mock("@/features/home/server/officialXSync", () => ({
+vi.mock("@/features/home/server/official-x-sync", () => ({
     syncOfficialXFeed: sync,
 }));
 vi.mock("@/lib/observability/server", () => ({ logServerError: vi.fn() }));

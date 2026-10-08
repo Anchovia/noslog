@@ -5,7 +5,7 @@ import {
     PRIVACY_PREVIOUS_VERSIONS,
     privacyHistoryCopy,
     privacyVersionPeriod,
-} from "@/features/privacy/content/privacyContent";
+} from "@/features/privacy/content/privacy-content";
 
 for (const locale of ["ko", "ja", "en"] as const) {
     test(`P15 ${locale} contents selection follows navigation and reading`, async ({

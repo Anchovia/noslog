@@ -7,7 +7,7 @@ import {
     createChartFieldProposalSchema,
     formatProposalValue,
     normalizeProposalValue,
-} from "@/features/contributions/schemas/chartFieldProposalSchema";
+} from "@/features/contributions/schemas/chart-field-proposal-schema";
 import { createTranslator, getMessages } from "@/lib/i18n/messages";
 
 const schema = createChartFieldProposalSchema(

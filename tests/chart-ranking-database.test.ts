@@ -16,7 +16,7 @@ import db from "@/lib/db";
 import {
     getChartRanking,
     normalizeRankingPage,
-} from "@/features/music/server/chartRanking";
+} from "@/features/music/server/chart-ranking";
 
 it("normalizes invalid and out-of-range ranking pages to the first page", () => {
     for (const page of [NaN, Infinity, -1, 0, 1.5, 3])

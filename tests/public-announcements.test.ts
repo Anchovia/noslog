@@ -11,10 +11,10 @@ import {
     announcementCategoryFromQuery,
     announcementsQuery,
     ANNOUNCEMENTS_PAGE_SIZE,
-} from "@/features/announcements/schemas/publicAnnouncementSchema";
+} from "@/features/announcements/schemas/public-announcement-schema";
 import AnnouncementBody, {
     announcementLink,
-} from "@/features/announcements/components/announcementBody";
+} from "@/features/announcements/components/announcement-body";
 
 const now = new Date("2026-09-07T12:00:00Z");
 const record = () => ({

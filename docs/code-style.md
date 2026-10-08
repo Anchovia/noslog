@@ -40,10 +40,22 @@ page when no other route imports it. Code moves to `features/<domain>/` when it
 is reused, owns domain behavior, or needs an independently testable boundary.
 Do not add a `src/` wrapper solely to resemble a Vite project.
 
+Home-only UI belongs in `features/home/components`; `components/ui` remains
+shared UI. Import utilities by purpose: `@/lib/cn`, `@/lib/format-number`,
+`@/lib/format-date`, and `@/lib/music/stored-grade`. Do not collect unrelated
+helpers in a generic `utils.ts` barrel.
+
 ## Naming and imports
 
 - React components and component types use PascalCase.
-- Functions, hooks, values, and files use camelCase. Hooks begin with `use`.
+- Functions, hooks, and values use camelCase. Hooks begin with `use`.
+- Code and stylesheet filenames and internal directories use kebab-case
+  (`app-shell.tsx`, `use-account-result-notice.ts`, `tailwind-theme.css`).
+  React exports remain PascalCase. Dotted suffixes such as `.stories.tsx`,
+  `.test.ts`, and `.config.ts` are retained.
+- Keep Next.js reserved filenames, existing public URL segments and dynamic
+  parameter names, and preserved chart viewer/editor filenames. Route groups
+  describe their role: `(site)` contains the public site shell.
 - Zod values end in `Schema`; form types use `<Feature>FormValues`.
 - Use `@/` absolute imports across directories and relative imports only within
   a tightly coupled local folder.
@@ -53,10 +65,11 @@ Do not add a `src/` wrapper solely to resemble a Vite project.
 Formatting is controlled by Prettier. Do not manually align code against its
 output. ESLint owns code-quality rules; Prettier owns formatting rules.
 The existing type-import rule is enforced by ESLint for `features/**/*.{ts,tsx}`.
-Shared UI, Storybook, and tooling imports/exports are automatically sorted by
+Feature, shared UI, Storybook, and tooling imports/exports are automatically sorted by
 `eslint-plugin-simple-import-sort`. Parent-relative imports in `features/` and
 `components/ui/` are rejected; imports within a local folder remain relative.
-This scoped check does not migrate or change the preserved chart viewer/editor.
+`noslog/filenames` rejects non-kebab code filenames and internal folder names;
+App Router URL folders and the preserved chart viewer/editor are explicit exceptions.
 Application code may use `console.warn` and `console.error` when appropriate;
 prefer the structured observability helper for server failures. CLI imports,
 maintenance scripts, and server synchronization progress jobs may use console
@@ -80,7 +93,7 @@ imports, resolving both `@/` aliases and relative paths.
   badge's grade helper and AppToaster's account notice adapter are explicit,
   file-and-target-specific exceptions in the rule. They do not create permission
   for more domain imports in new UI primitives.
-- The existing `lib/music/maxGrade`, `unlockCondition`, and `scoreTone` imports of
+- The existing `lib/music/max-grade`, `unlock-condition`, and `score-tone` imports of
   UI types remain type-only exceptions. Runtime imports on those paths fail lint.
 - Client Components cannot directly import feature server services or modules
   marked `server-only`; type-only imports and Server Actions remain valid.
@@ -88,7 +101,7 @@ imports, resolving both `@/` aliases and relative paths.
 - Keep deliberate public APIs small. Separate server entry points when needed;
   do not add a barrel solely to hide a dependency or collect every UI export.
 
-The profile public cache is owned by `features/profile/server/publicProfileData`.
+The profile public cache is owned by `features/profile/server/public-profile-data`.
 The existing route data module re-exports it for compatibility; its cache keys,
 visibility policy, and query behavior remain unchanged.
 

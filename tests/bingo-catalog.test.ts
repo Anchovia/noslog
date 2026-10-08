@@ -2,11 +2,11 @@ import { describe, expect, it } from "vitest";
 import {
     getBingoCatalog,
     getRecentBingo,
-} from "@/features/bingos/bingoCatalog";
+} from "@/features/bingos/bingo-catalog";
 import {
     bingoCatalogQuerySchema,
     type BingoCatalogItem,
-} from "@/features/bingos/schemas/publicBingoSchema";
+} from "@/features/bingos/schemas/public-bingo-schema";
 
 const board = (id: number, cells: number, lines: number): BingoCatalogItem => ({
     id,

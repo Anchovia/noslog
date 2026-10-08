@@ -39,25 +39,25 @@ vi.mock("@/lib/db", () => ({
         musicChart: { findMany: mocks.musicChartFindMany },
     },
 }));
-vi.mock("@/lib/services/user/updateGrade", () => ({
+vi.mock("@/lib/services/user/update-grade", () => ({
     updateGrade: mocks.updateGrade,
 }));
-vi.mock("@/features/profile/server/profileRatingHistoryService", () => ({
+vi.mock("@/features/profile/server/profile-rating-history-service", () => ({
     recordProfileRatings: mocks.recordProfileRatings,
 }));
-vi.mock("@/lib/services/music/catalogSync", () => ({
+vi.mock("@/lib/services/music/catalog-sync", () => ({
     processBemaniCatalogUpdates: mocks.processBemaniCatalogUpdates,
 }));
-vi.mock("@/lib/services/user/updatePlayerProfile", () => ({
+vi.mock("@/lib/services/user/update-player-profile", () => ({
     updatePlayerProfile: mocks.updatePlayerProfile,
 }));
-vi.mock("@/lib/services/user/updatePlayData", () => ({
+vi.mock("@/lib/services/user/update-play-data", () => ({
     updatePlayData: mocks.updatePlayData,
 }));
-vi.mock("@/lib/services/user/updateRecentBestRecords", () => ({
+vi.mock("@/lib/services/user/update-recent-best-records", () => ({
     updateRecentBestRecords: mocks.updateRecentBestRecords,
 }));
-vi.mock("@/lib/services/user/updateRecentPlay", () => ({
+vi.mock("@/lib/services/user/update-recent-play", () => ({
     updateRecentPlay: mocks.updateRecentPlay,
 }));
 vi.mock("@/lib/dummy/bingo", () => ({
@@ -66,10 +66,10 @@ vi.mock("@/lib/dummy/bingo", () => ({
 vi.mock("next/cache", () => ({
     revalidateTag: mocks.revalidateTag,
 }));
-vi.mock("@/features/music/server/jacketCollectionService", () => ({
+vi.mock("@/features/music/server/jacket-collection-service", () => ({
     getMissingJacketIndexes: mocks.getMissingJacketIndexes,
 }));
-vi.mock("@/features/achievements/server/achievementService", () => ({
+vi.mock("@/features/achievements/server/achievement-service", () => ({
     evaluateUserAchievements: mocks.evaluateUserAchievements,
 }));
 

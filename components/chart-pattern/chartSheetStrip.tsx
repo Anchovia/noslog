@@ -11,16 +11,16 @@ import {
 import type { KeyboardEvent, PointerEvent as ReactPointerEvent } from "react";
 import { Maximize, Minimize } from "lucide-react";
 
-import { useTranslations } from "@/components/i18n/localeProvider";
+import { useTranslations } from "@/components/i18n/locale-provider";
 import type { ChartDocument } from "@/lib/chart-pattern/schema";
 import {
     formatBpm,
     formatEditorTime,
     type MeasureMarker,
 } from "@/lib/chart-pattern/timing";
-import Button from "@/components/ui/Button";
-import useMediaQuery from "@/lib/hooks/useMediaQuery";
-import { cn } from "@/lib/utils";
+import Button from "@/components/ui/button";
+import useMediaQuery from "@/lib/hooks/use-media-query";
+import { cn } from "@/lib/cn";
 
 import {
     PADDING_BOTTOM,

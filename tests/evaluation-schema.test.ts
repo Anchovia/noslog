@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
     chartEvaluationReactionSchema,
     createChartEvaluationSchema,
-} from "@/features/music/schemas/chartEvaluationSchema";
+} from "@/features/music/schemas/chart-evaluation-schema";
 import { createTranslator, getMessages } from "@/lib/i18n/messages";
 
 const chartEvaluationSchema = createChartEvaluationSchema(

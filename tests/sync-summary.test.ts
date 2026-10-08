@@ -21,7 +21,7 @@ vi.mock("@/lib/db", () => ({
     },
 }));
 
-import { getLatestSyncSummary } from "@/app/(nevigation)/bookmarklet/data";
+import { getLatestSyncSummary } from "@/app/(site)/bookmarklet/data";
 
 describe("최근 동기화 결과", () => {
     beforeEach(() => {

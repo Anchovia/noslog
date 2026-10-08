@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
     getSyncAttemptHealth,
     getUserSyncHealth,
-} from "@/lib/admin/syncHealth";
+} from "@/lib/admin/sync-health";
 
 const now = new Date("2026-07-27T12:00:00.000Z");
 

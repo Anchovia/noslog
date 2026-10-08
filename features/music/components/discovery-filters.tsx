@@ -1,0 +1,477 @@
+"use client";
+
+import Link from "next/link";
+import { useState } from "react";
+
+import {
+    useLocalizedHref,
+    useTranslations,
+} from "@/components/i18n/locale-provider";
+import type {
+    ChoiceTone,
+    FilterChipOption,
+} from "@/components/ui/filter-chips";
+import FilterChips from "@/components/ui/filter-chips";
+import FilterGroup from "@/components/ui/filter-group";
+import { FormField, Input } from "@/components/ui/form-field";
+import RangeSlider from "@/components/ui/range-slider";
+import SelectionList from "@/components/ui/selection-list";
+import SortMenu, { SortMenuSection } from "@/components/ui/sort-menu";
+import type {
+    DiscoveryQuery,
+    DiscoverySort,
+} from "@/features/music/schemas/discovery-schema";
+import {
+    discoveryDifficulties,
+    discoveryLevelBounds,
+    discoveryQuerySchema,
+    getDiscoveryOrder,
+    getDiscoverySort,
+} from "@/features/music/schemas/discovery-schema";
+import { MUSIC_CATEGORY_VALUES } from "@/lib/music-categories";
+
+type Difficulty = (typeof discoveryDifficulties)[number];
+const difficultyTone = (
+    difficulty: Difficulty
+): FilterChipOption<Difficulty>["tone"] =>
+    difficulty.toLowerCase() as FilterChipOption<Difficulty>["tone"];
+// 카테고리 → 글자 색(자켓 카테고리 레이블과 같은 색)
+export const categoryTone = {
+    pops: "pops",
+    anime: "anime",
+    BM: "bm",
+    Org: "org",
+    Var: "var",
+    "Cl/Jz": "cljz",
+} as const satisfies Record<(typeof MUSIC_CATEGORY_VALUES)[number], ChoiceTone>;
+
+/**
+ * 정렬 메뉴 — 전 폭 공통 · 즉시 적용. 방향은 따로 고르지 않고 항목에 녹인다(2026-09-23 D2 —
+ * 「레벨 높은 순 / 레벨 낮은 순」). 레벨 순은 정렬할 난이도가 종속 섹션으로 붙는다
+ */
+export function DiscoverySortMenu({
+    query,
+    onChange,
+    signedIn,
+    variant,
+    size,
+}: {
+    query: DiscoveryQuery;
+    onChange: (query: DiscoveryQuery) => void;
+    signedIn: boolean;
+    variant?: "secondary" | "ghost";
+    size?: "sm";
+}) {
+    const t = useTranslations();
+    // 레벨 순은 정렬할 난이도가 있어야 성립한다 — 난이도를 고를 때까지 메뉴 안에서만 보류하고, 닫으면 버린다
+    const [pendingLevel, setPendingLevel] = useState(false);
+    const unplayed = query.records.includes("unplayed");
+    // 항목 = 기준 + 방향 한 쌍. 자연스러운 방향을 먼저 둔다(관련도는 방향이 없다)
+    const entries: {
+        key: string;
+        sort: DiscoverySort;
+        order?: "asc" | "desc";
+        label: string;
+    }[] = [
+        ...(query.q
+            ? [
+                  {
+                      key: "relevance",
+                      sort: "relevance" as const,
+                      label: t("discovery.sort.relevance"),
+                  },
+              ]
+            : []),
+        ...(query.scope === "chart"
+            ? [
+                  {
+                      key: "published-desc",
+                      sort: "published" as const,
+                      order: "desc" as const,
+                      label: t("discovery.sort.published"),
+                  },
+                  {
+                      key: "published-asc",
+                      sort: "published" as const,
+                      order: "asc" as const,
+                      label: t("discovery.sort.publishedAsc"),
+                  },
+              ]
+            : []),
+        {
+            key: "name-asc",
+            sort: "name",
+            order: "asc",
+            label: t("discovery.sort.name"),
+        },
+        {
+            key: "name-desc",
+            sort: "name",
+            order: "desc",
+            label: t("discovery.sort.nameDesc"),
+        },
+        {
+            key: "level-desc",
+            sort: "level",
+            order: "desc",
+            label: t("discovery.sort.levelDesc"),
+        },
+        {
+            key: "level-asc",
+            sort: "level",
+            order: "asc",
+            label: t("discovery.sort.levelAsc"),
+        },
+        ...(signedIn
+            ? [
+                  {
+                      key: "recent-desc",
+                      sort: "recent" as const,
+                      order: "desc" as const,
+                      label: t("discovery.sort.recent"),
+                  },
+                  {
+                      key: "recent-asc",
+                      sort: "recent" as const,
+                      order: "asc" as const,
+                      label: t("discovery.sort.recentAsc"),
+                  },
+              ]
+            : []),
+    ];
+    const sort = pendingLevel ? "level" : getDiscoverySort(query);
+    const order = getDiscoveryOrder(query);
+    const value =
+        entries.find(
+            (entry) =>
+                entry.sort === sort &&
+                (entry.order === undefined || entry.order === order)
+        )?.key ?? entries[0].key;
+    const change = (next: DiscoveryQuery) => {
+        if (discoveryQuerySchema.safeParse(next).success) onChange(next);
+    };
+    return (
+        <SortMenu
+            variant={variant}
+            size={size}
+            label={t("discovery.sortLabel")}
+            value={value}
+            options={entries.map((entry) => ({
+                value: entry.key,
+                label: entry.label,
+                disabled: entry.sort === "recent" && unplayed,
+                description:
+                    entry.sort === "recent" && unplayed
+                        ? t("discovery.unplayedReason")
+                        : undefined,
+                hasDependent: entry.sort === "level",
+            }))}
+            onOpenChange={(open) => {
+                if (!open) setPendingLevel(false);
+            }}
+            onValueChange={(next) => {
+                const entry = entries.find((item) => item.key === next);
+                if (!entry) return;
+                const pending = entry.sort === "level" && !query.sortDifficulty;
+                setPendingLevel(pending);
+                if (!pending)
+                    change({ ...query, sort: entry.sort, order: entry.order });
+            }}
+        >
+            {sort === "level" ? (
+                <SortMenuSection label={t("discovery.sortDifficulty")}>
+                    <FilterChips
+                        label={t("discovery.sortDifficulty")}
+                        multiple={false}
+                        value={
+                            query.sortDifficulty && !pendingLevel
+                                ? [query.sortDifficulty]
+                                : []
+                        }
+                        onValueChange={([sortDifficulty]) => {
+                            if (!sortDifficulty) return;
+                            setPendingLevel(false);
+                            change({
+                                ...query,
+                                sort: "level",
+                                sortDifficulty,
+                                order: pendingLevel
+                                    ? entries.find(
+                                          (entry) => entry.key === "level-desc"
+                                      )?.order
+                                    : query.order,
+                            });
+                        }}
+                        options={discoveryDifficulties.map((difficulty) => ({
+                            value: difficulty,
+                            label: difficulty,
+                            tone: difficultyTone(difficulty),
+                        }))}
+                    />
+                </SortMenuSection>
+            ) : null}
+        </SortMenu>
+    );
+}
+
+/**
+ * 필터 본문 — variant="layer" 는 전체 레이어(칩 · 배치 적용), variant="rail" 은 Wide 레일
+ * (세로 체크박스 목록 · 즉시 적용). 두 변이는 같은 FilterGroup 문법을 쓰고 선택지 그림만 다르다.
+ */
+export default function DiscoveryFilters({
+    query,
+    onChange,
+    onRangeChange,
+    onRangeCommit,
+    signedIn,
+    variant,
+}: {
+    query: DiscoveryQuery;
+    onChange: (query: DiscoveryQuery) => void;
+    onRangeChange?: (query: DiscoveryQuery) => void;
+    onRangeCommit?: (query: DiscoveryQuery) => void;
+    signedIn: boolean;
+    variant: "layer" | "rail";
+}) {
+    const t = useTranslations();
+    const href = useLocalizedHref();
+    const rail = variant === "rail";
+    function changeRecords(records: DiscoveryQuery["records"]) {
+        const addedUnplayed =
+            records.includes("unplayed") && !query.records.includes("unplayed");
+        const nextRecords = addedUnplayed
+            ? ["unplayed" as const]
+            : records.filter(
+                  (value) => value !== "unplayed" || records.length === 1
+              );
+        onChange({
+            ...query,
+            records: nextRecords,
+            missMin: addedUnplayed ? undefined : query.missMin,
+            missMax: addedUnplayed ? undefined : query.missMax,
+            sort:
+                addedUnplayed && query.sort === "recent"
+                    ? undefined
+                    : query.sort,
+            order:
+                addedUnplayed && query.sort === "recent"
+                    ? undefined
+                    : query.order,
+        });
+    }
+    function changeDifficulties(difficulties: Difficulty[]) {
+        onChange({
+            ...query,
+            difficulties: discoveryDifficulties
+                .filter((difficulty) => difficulties.includes(difficulty))
+                .map(
+                    (difficulty) =>
+                        query.difficulties.find(
+                            (range) => range.difficulty === difficulty
+                        ) ?? {
+                            difficulty,
+                            min: 1,
+                            max: discoveryLevelBounds[difficulty],
+                        }
+                ),
+        });
+    }
+    function changeRange(
+        difficulty: Difficulty,
+        values: number[],
+        commit: boolean
+    ) {
+        const next = {
+            ...query,
+            difficulties: query.difficulties.map((range) =>
+                range.difficulty === difficulty
+                    ? { difficulty, min: values[0], max: values[1] }
+                    : range
+            ),
+        };
+        if (commit && onRangeCommit) onRangeCommit(next);
+        else if (onRangeChange) onRangeChange(next);
+        else onChange(next);
+    }
+    // 그룹 오른쪽 슬롯: 레이어(배치)는 선택 수, 레일(즉시)은 지우기
+    const aside = (count: number, clear: () => void) =>
+        !count ? null : rail ? (
+            <button type="button" onClick={clear}>
+                {t("discovery.clearGroup")}
+            </button>
+        ) : (
+            <span className="nl-metadata">
+                {t("discovery.selectedCount", { count })}
+            </span>
+        );
+    // 항목 글자 색 — 카테고리는 자켓 레이블 색, 성취는 S = 판정 JUST 노랑 · FC·Pianist = achievement 색(2026-09-14 사용자 결정)
+    const categoryOptions = MUSIC_CATEGORY_VALUES.map((category) => ({
+        value: category,
+        label: category,
+        tone: categoryTone[category],
+    }));
+    const difficultyOptions = discoveryDifficulties.map((difficulty) => ({
+        value: difficulty,
+        label: difficulty,
+        tone: difficultyTone(difficulty),
+    }));
+    const recordOptions = [
+        { value: "unplayed" as const, label: t("music.filter.unplayed") },
+        { value: "s" as const, label: "S", tone: "s" as const },
+        { value: "fc" as const, label: "FC", tone: "fc" as const },
+        {
+            value: "pianist" as const,
+            label: "Pianist",
+            tone: "pianist" as const,
+        },
+    ].map((option) => ({ ...option, disabled: !signedIn }));
+    const selectedDifficulties = query.difficulties.map(
+        (range) => range.difficulty
+    );
+    const Choice = rail ? SelectionList : FilterChips;
+    return (
+        <>
+            <FilterGroup
+                label={t("music.category")}
+                aside={aside(query.categories.length, () =>
+                    onChange({ ...query, categories: [] })
+                )}
+            >
+                <Choice
+                    hideLabel
+                    label={t("music.category")}
+                    options={categoryOptions}
+                    multiple
+                    value={query.categories}
+                    onValueChange={(categories) =>
+                        onChange({ ...query, categories })
+                    }
+                />
+            </FilterGroup>
+            <FilterGroup
+                label={t("music.difficulty")}
+                aside={aside(selectedDifficulties.length, () =>
+                    onChange({ ...query, difficulties: [] })
+                )}
+            >
+                <Choice
+                    hideLabel
+                    label={t("music.difficulty")}
+                    options={difficultyOptions}
+                    multiple
+                    value={selectedDifficulties}
+                    onValueChange={changeDifficulties}
+                />
+                {query.difficulties.map((range) => (
+                    <RangeSlider
+                        key={range.difficulty}
+                        label={t("discovery.levelLabel", {
+                            difficulty: range.difficulty,
+                        })}
+                        minimumLabel={t("music.minimumLevel", {
+                            difficulty: range.difficulty,
+                        })}
+                        maximumLabel={t("music.maximumLevel", {
+                            difficulty: range.difficulty,
+                        })}
+                        max={discoveryLevelBounds[range.difficulty]}
+                        value={[range.min, range.max]}
+                        accent={`var(--nl-difficulty-${range.difficulty.toLowerCase()})`}
+                        onValueChange={(values) =>
+                            changeRange(range.difficulty, values, false)
+                        }
+                        onValueCommit={(values) =>
+                            changeRange(range.difficulty, values, true)
+                        }
+                    />
+                ))}
+            </FilterGroup>
+            <FilterGroup
+                label={t("discovery.personalRecords")}
+                aside={
+                    signedIn ? (
+                        aside(
+                            query.records.length +
+                                (query.missMin !== undefined ||
+                                query.missMax !== undefined
+                                    ? 1
+                                    : 0),
+                            () =>
+                                onChange({
+                                    ...query,
+                                    records: [],
+                                    missMin: undefined,
+                                    missMax: undefined,
+                                })
+                        )
+                    ) : (
+                        <Link href={href("/login")}>{t("common.login")}</Link>
+                    )
+                }
+            >
+                <Choice
+                    hideLabel
+                    label={t("music.filter.status")}
+                    multiple
+                    value={query.records}
+                    onValueChange={changeRecords}
+                    options={recordOptions}
+                />
+            </FilterGroup>
+            {/* MISS 수는 「내 기록」 과 다른 조건이라 제 구역으로(2026-10-01 사용자) — 카테고리 · 난이도와 같은 제목 · 간격 */}
+            {signedIn && !query.records.includes("unplayed") ? (
+                <FilterGroup
+                    label={t("discovery.missCount")}
+                    aside={aside(
+                        (query.missMin !== undefined ? 1 : 0) +
+                            (query.missMax !== undefined ? 1 : 0),
+                        () =>
+                            onChange({
+                                ...query,
+                                missMin: undefined,
+                                missMax: undefined,
+                            })
+                    )}
+                >
+                    <div className="nl-filter-miss">
+                        {(["missMin", "missMax"] as const).map((key) => (
+                            <FormField
+                                key={key}
+                                label={t(`discovery.${key}`)}
+                                id={`discovery-${variant}-${key}`}
+                            >
+                                <Input
+                                    id={`discovery-${variant}-${key}`}
+                                    type="number"
+                                    min={0}
+                                    max={99999}
+                                    inputMode="numeric"
+                                    placeholder={t("discovery.unbounded")}
+                                    value={query[key] ?? ""}
+                                    onChange={(event) =>
+                                        onChange({
+                                            ...query,
+                                            [key]:
+                                                event.target.value === ""
+                                                    ? undefined
+                                                    : Math.max(
+                                                          0,
+                                                          Math.min(
+                                                              99999,
+                                                              Number(
+                                                                  event.target
+                                                                      .value
+                                                              )
+                                                          )
+                                                      ),
+                                        })
+                                    }
+                                />
+                            </FormField>
+                        ))}
+                    </div>
+                </FilterGroup>
+            ) : null}
+        </>
+    );
+}

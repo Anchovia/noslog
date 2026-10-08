@@ -7,7 +7,7 @@ vi.mock("@/lib/db", () => ({
     default: { user: { findMany: mocks.users } },
 }));
 
-import * as service from "@/features/achievements/server/achievementService";
+import * as service from "@/features/achievements/server/achievement-service";
 
 describe("업적 다시 판정 묶음(2026-09-25 B1)", () => {
     beforeEach(() => vi.clearAllMocks());

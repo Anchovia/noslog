@@ -21,7 +21,7 @@ vi.mock("@/lib/db", () => ({
 import {
     getTierBandForUser,
     getUserTierListProgress,
-} from "@/app/(nevigation)/tiers/data";
+} from "@/app/(site)/tiers/data";
 
 describe("공개 서열표 데이터 최적화", () => {
     beforeEach(() => {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getAuthReturnPath } from "@/lib/authReturnPath";
+import { getAuthReturnPath } from "@/lib/auth-return-path";
 
 describe("localized authentication return destination", () => {
     it.each([

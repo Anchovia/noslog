@@ -11,7 +11,7 @@ import {
     groupPublicEvents,
     publicEvent,
     reviewUpdate,
-} from "@/features/events/schemas/eventSchema";
+} from "@/features/events/schemas/event-schema";
 import { createTranslator, getMessages } from "@/lib/i18n/messages";
 
 const t = createTranslator(getMessages("ko"));

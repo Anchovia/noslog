@@ -31,7 +31,7 @@ vi.mock("@/lib/blob", () => ({
     isValidImageBlob: mocks.isValidImageBlob,
 }));
 
-vi.mock("@/lib/uploadRateLimit", () => ({
+vi.mock("@/lib/upload-rate-limit", () => ({
     claimUploadTokenQuota: mocks.claimUploadTokenQuota,
     getUploadLimitMessage: () =>
         "이미지는 한 시간에 최대 10회까지 업로드할 수 있습니다.",
@@ -56,7 +56,7 @@ vi.mock("@/lib/observability/server", () => ({
 import {
     requestProfileAvatarUpload,
     uploadUserSetting,
-} from "@/app/(nevigation)/profile/settings/actions";
+} from "@/app/(site)/profile/settings/actions";
 
 const oldAvatar =
     "https://store.public.blob.vercel-storage.com/avatars/2/profile-old.png";

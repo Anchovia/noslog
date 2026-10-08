@@ -4,7 +4,7 @@ import {
     examSubmissionReviewInputFromFormData,
     examSubmissionReviewSchema,
     normalizeExamSubmissionStatus,
-} from "@/features/exams/schemas/examSubmissionAdminSchema";
+} from "@/features/exams/schemas/exam-submission-admin-schema";
 
 describe("관리자 검정 인증 심사 스키마", () => {
     it("지원하는 목록 상태만 유지한다", () => {

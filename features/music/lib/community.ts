@@ -1,10 +1,10 @@
-import { isTierGoalAchieved, isTierModeGoal } from "@/lib/tiers";
-import type { TierGoal, TierMode, TierRecord } from "@/lib/tiers";
-import { PATTERN_AXES } from "@/features/music/schemas/communitySchema";
 import type {
     PatternRatings,
     PatternSummary,
-} from "@/features/music/schemas/communitySchema";
+} from "@/features/music/schemas/community-schema";
+import { PATTERN_AXES } from "@/features/music/schemas/community-schema";
+import type { TierGoal, TierMode, TierRecord } from "@/lib/tiers";
+import { isTierGoalAchieved, isTierModeGoal } from "@/lib/tiers";
 
 export function canContributeGoalVote(
     record: (TierRecord & { grade_recital: number | null }) | null,

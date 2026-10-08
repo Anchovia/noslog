@@ -1,11 +1,11 @@
 import { getUser } from "@/lib/user";
 import Link from "next/link";
-import ProfileAvatar from "@/components/profile/profileAvatar";
+import ProfileAvatar from "@/components/profile/profile-avatar";
 import { getServerI18n } from "@/lib/i18n/server";
 import { getLocalizedHref } from "@/lib/i18n/routing";
 
-import HeaderMenu, { HeaderPrimaryNavigation } from "./headerNavigation";
-import ScrollAwareHeader from "./scrollAwareHeader";
+import HeaderMenu, { HeaderPrimaryNavigation } from "./header-navigation";
+import ScrollAwareHeader from "./scroll-aware-header";
 
 export default async function Header() {
     const [user, { locale, t }] = await Promise.all([
@@ -45,7 +45,7 @@ export default async function Header() {
                     ) : (
                         <Link
                             href={getLocalizedHref("/login", locale)}
-                            className="rounded-card border-border text-text-primary hover:bg-surface-muted mx-1 flex h-10 shrink-0 items-center border px-3 text-sm font-bold transition-colors"
+                            className="mx-1 flex h-10 shrink-0 items-center rounded-card border border-border px-3 text-sm font-bold text-text-primary transition-colors hover:bg-surface-muted"
                         >
                             {t("common.login")}
                         </Link>

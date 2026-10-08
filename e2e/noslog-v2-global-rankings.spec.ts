@@ -2,12 +2,12 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 import { reviewThemes } from "./helpers";
 import type { Page, Route } from "@playwright/test";
-import { parseGlobalRankingQuery } from "@/features/rankings/schemas/globalRankingSchema";
+import { parseGlobalRankingQuery } from "@/features/rankings/schemas/global-ranking-schema";
 import type {
     GlobalRankingPayload,
     GlobalRankingQuery,
     GlobalRankingRow,
-} from "@/features/rankings/schemas/globalRankingSchema";
+} from "@/features/rankings/schemas/global-ranking-schema";
 
 function fixture(
     query: GlobalRankingQuery,

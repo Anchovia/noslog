@@ -2,7 +2,7 @@ import "server-only";
 
 import { unstable_cache } from "next/cache";
 
-import { CACHE_TAGS } from "./cacheTags";
+import { CACHE_TAGS } from "./cache-tags";
 import db from "./db";
 
 async function queryActiveArcades() {

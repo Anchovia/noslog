@@ -7,7 +7,7 @@ import {
     getJudgementPercentage,
     getJudgementTotal,
     hasJudgementData,
-} from "@/lib/music/judgementStats";
+} from "@/lib/music/judgement-stats";
 
 const counts = {
     judge_sjust: 500,

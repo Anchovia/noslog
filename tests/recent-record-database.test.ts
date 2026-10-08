@@ -15,13 +15,13 @@ vi.mock("@/lib/db", async () => {
 });
 vi.mock("next/cache", () => ({ unstable_cache: (fn: unknown) => fn }));
 import db from "@/lib/db";
-import { updateRecentPlay } from "@/lib/services/user/updateRecentPlay";
-import { updateRecentBestRecords } from "@/lib/services/user/updateRecentBestRecords";
-import { updatePlayData } from "@/lib/services/user/updatePlayData";
-import { updateGrade } from "@/lib/services/user/updateGrade";
-import { getUserChartScoreTrend } from "@/features/music/server/musicDetailData";
-import { getGlobalRankingPage } from "@/features/rankings/server/globalRankingData";
-import type { SyncMusicInput } from "@/lib/services/music/updateMusic";
+import { updateRecentPlay } from "@/lib/services/user/update-recent-play";
+import { updateRecentBestRecords } from "@/lib/services/user/update-recent-best-records";
+import { updatePlayData } from "@/lib/services/user/update-play-data";
+import { updateGrade } from "@/lib/services/user/update-grade";
+import { getUserChartScoreTrend } from "@/features/music/server/music-detail-data";
+import { getGlobalRankingPage } from "@/features/rankings/server/global-ranking-data";
+import type { SyncMusicInput } from "@/lib/services/music/update-music";
 
 describe.skipIf(!process.env.NOSLOG_RECENT_TEST_DATABASE_URL)(
     "recent record pipeline on isolated PostgreSQL",

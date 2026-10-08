@@ -3,19 +3,19 @@ import { describe, expect, it } from "vitest";
 import {
     getBingoEditorCellLabel,
     getBingoEditorCellPrefix,
-} from "@/features/bingos/components/bingoEditorUtils";
+} from "@/features/bingos/components/bingo-editor-utils";
 import {
     filterBingoMissions,
     getBingoCellLabel,
     getBingoLineCoordinates,
     getBingoMissionLink,
-} from "@/components/bingo/plate/bingoPlateUtils";
-import type { BingoListItem } from "@/components/bingo/list/bingoListTypes";
+} from "@/components/bingo/plate/bingo-plate-utils";
+import type { BingoListItem } from "@/components/bingo/list/bingo-list-types";
 import {
     getBingoStatusCounts,
     getContinueBingo,
     getVisibleBingos,
-} from "@/components/bingo/list/bingoListUtils";
+} from "@/components/bingo/list/bingo-list-utils";
 import { getBingoProgress } from "@/lib/bingo";
 
 function board(completedPositions: number[]) {

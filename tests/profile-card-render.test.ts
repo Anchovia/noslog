@@ -2,13 +2,13 @@ import { createElement } from "react";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { ImageResponse } from "next/og";
 import { describe, expect, it } from "vitest";
-import type { ProfileUser } from "@/components/profile/dashboard/profileTypes";
-import ProfileCardImage from "@/features/profile/components/profileCardImage";
+import type { ProfileUser } from "@/components/profile/dashboard/profile-types";
+import ProfileCardImage from "@/features/profile/components/profile-card-image";
 import {
     getProfileCardFullComboCount,
     getProfileCardInitial,
     getProfileCardMode,
-} from "@/features/profile/profileCardModel";
+} from "@/features/profile/profile-card-model";
 
 const base: ProfileUser = {
     id: 1,

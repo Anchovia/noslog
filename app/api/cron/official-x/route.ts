@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { createApiFailure, createApiSuccess } from "@/lib/api/response";
 import { serverEnv } from "@/lib/env/server";
 import { logServerError } from "@/lib/observability/server";
-import { syncOfficialXFeed } from "@/features/home/server/officialXSync";
+import { syncOfficialXFeed } from "@/features/home/server/official-x-sync";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 120;

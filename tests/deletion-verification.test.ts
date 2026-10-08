@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { hasRecentDeletionVerification } from "@/features/settings/schemas/deletionVerification";
+import { hasRecentDeletionVerification } from "@/features/settings/schemas/deletion-verification";
 
 describe("fixed deletion-specific verification window", () => {
     const verifiedAt = 1_000_000;

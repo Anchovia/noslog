@@ -3,20 +3,20 @@
 import {
     saveChartMetadata as saveChartMetadataService,
     saveMusicMetadata as saveMusicMetadataService,
-} from "@/features/music/server/musicAdminService";
+} from "@/features/music/server/music-admin-service";
 import {
     requestMusicJacketUpload as requestMusicJacketUploadService,
     resetMusicJacket as resetMusicJacketService,
     saveMusicJacket as saveMusicJacketService,
-} from "@/features/music/server/musicJacketAdminService";
+} from "@/features/music/server/music-jacket-admin-service";
 import {
     approveMusicTranslation as approveMusicTranslationService,
     getAdminMusicPage,
     importMusicTranslationsCsv as importMusicTranslationsCsvService,
     saveMusicTranslation as saveMusicTranslationService,
     validateMusicTranslationsCsv as validateMusicTranslationsCsvService,
-} from "@/features/music/server/musicTranslationAdminService";
-import type { AdminMusicListParams } from "@/features/music/server/musicTranslationAdminService";
+} from "@/features/music/server/music-translation-admin-service";
+import type { AdminMusicListParams } from "@/features/music/server/music-translation-admin-service";
 
 export async function saveMusicMetadata(formData: FormData) {
     return saveMusicMetadataService(formData);

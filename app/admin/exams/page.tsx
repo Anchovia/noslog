@@ -1,7 +1,7 @@
 import { ChevronRight, Plus, Search } from "lucide-react";
 import Link from "next/link";
 
-import Badge from "@/components/ui/Badge";
+import Badge from "@/components/ui/badge";
 import { Prisma } from "@prisma/client";
 import db from "@/lib/db";
 
@@ -61,11 +61,11 @@ export default async function AdminExamsPage({
             <div className="flex items-center justify-between gap-3">
                 <div>
                     <h1 className="text-title">검정 관리</h1>
-                    <p className="text-caption mt-1">총 {exams.length}개</p>
+                    <p className="mt-1 text-caption">총 {exams.length}개</p>
                 </div>
                 <Link
                     href="/admin/exams/new"
-                    className="bg-text-primary text-bg flex size-10 items-center justify-center rounded-md"
+                    className="flex size-10 items-center justify-center rounded-md bg-text-primary text-bg"
                     aria-label="검정 추가"
                     title="검정 추가"
                 >
@@ -74,20 +74,20 @@ export default async function AdminExamsPage({
             </div>
 
             <form className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_2.75rem] gap-2">
-                <label className="border-border bg-surface col-span-3 flex h-11 min-w-0 items-center gap-2 rounded-md border px-3">
-                    <Search className="text-text-disabled size-4 shrink-0" />
+                <label className="col-span-3 flex h-11 min-w-0 items-center gap-2 rounded-md border border-border bg-surface px-3">
+                    <Search className="size-4 shrink-0 text-text-disabled" />
                     <input
                         name="q"
                         defaultValue={query}
                         placeholder="제목 검색"
-                        className="text-input min-w-0 flex-1 bg-transparent outline-none"
+                        className="min-w-0 flex-1 bg-transparent text-input outline-none"
                     />
                 </label>
                 <select
                     name="mode"
                     defaultValue={mode}
                     aria-label="모드 필터"
-                    className="border-border bg-surface text-input h-11 min-w-0 rounded-md border px-2"
+                    className="h-11 min-w-0 rounded-md border border-border bg-surface px-2 text-input"
                 >
                     <option value="">전체</option>
                     <option value="basic">Basic</option>
@@ -98,7 +98,7 @@ export default async function AdminExamsPage({
                     name="status"
                     defaultValue={status}
                     aria-label="상태 필터"
-                    className="border-border bg-surface text-input h-11 min-w-0 rounded-md border px-2"
+                    className="h-11 min-w-0 rounded-md border border-border bg-surface px-2 text-input"
                 >
                     <option value="">모든 상태</option>
                     <option value="draft">초안</option>
@@ -106,7 +106,7 @@ export default async function AdminExamsPage({
                 </select>
                 <button
                     type="submit"
-                    className="border-border bg-surface text-text-primary hover:bg-surface-muted flex size-11 items-center justify-center rounded-md border transition-colors"
+                    className="flex size-11 items-center justify-center rounded-md border border-border bg-surface text-text-primary transition-colors hover:bg-surface-muted"
                     aria-label="필터 적용"
                     title="필터 적용"
                 >
@@ -115,12 +115,12 @@ export default async function AdminExamsPage({
             </form>
 
             {exams.length > 0 ? (
-                <section className="bg-surface rounded-card overflow-hidden">
+                <section className="overflow-hidden rounded-card bg-surface">
                     {exams.map((exam) => (
                         <Link
                             key={exam.id}
                             href={`/admin/exams/${exam.id}`}
-                            className="border-divider hover:bg-surface-muted flex min-h-17 items-center gap-3 border-b px-3 py-2.5 transition-colors last:border-b-0"
+                            className="flex min-h-17 items-center gap-3 border-b border-divider px-3 py-2.5 transition-colors last:border-b-0 hover:bg-surface-muted"
                         >
                             <div className="min-w-0 flex-1">
                                 <div className="flex items-center gap-1.5">
@@ -146,19 +146,19 @@ export default async function AdminExamsPage({
                                         </Badge>
                                     ) : null}
                                 </div>
-                                <p className="text-body mt-1.5 truncate font-bold">
+                                <p className="mt-1.5 truncate text-body font-bold">
                                     {exam.title}
                                 </p>
-                                <p className="text-caption mt-0.5 truncate">
+                                <p className="mt-0.5 truncate text-caption">
                                     {exam.slug} · 과제곡 {exam._count.stages}개
                                 </p>
                             </div>
-                            <ChevronRight className="text-text-disabled size-4 shrink-0" />
+                            <ChevronRight className="size-4 shrink-0 text-text-disabled" />
                         </Link>
                     ))}
                 </section>
             ) : (
-                <div className="bg-surface rounded-card text-caption flex min-h-40 items-center justify-center px-6 text-center">
+                <div className="flex min-h-40 items-center justify-center rounded-card bg-surface px-6 text-center text-caption">
                     조건에 맞는 검정이 없습니다.
                 </div>
             )}

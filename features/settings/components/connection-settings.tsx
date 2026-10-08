@@ -1,0 +1,163 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+
+import {
+    useLocalizedHref,
+    useTranslations,
+} from "@/components/i18n/locale-provider";
+import ActionButton from "@/components/ui/action-button";
+import Button from "@/components/ui/button";
+import DiscordIcon from "@/components/ui/discord-icon";
+import ModalDialog from "@/components/ui/modal-dialog";
+
+export default function ConnectionSettings({
+    displayName,
+    error,
+    result,
+}: {
+    displayName: string;
+    error?: string;
+    result?: string;
+}) {
+    const t = useTranslations();
+    const href = useLocalizedHref();
+    const [confirmChange, setConfirmChange] = useState(false);
+    const [pending, setPending] = useState<"refresh" | "change" | null>(null);
+    const [localError, setLocalError] = useState("");
+    const changeButton = useRef<HTMLButtonElement>(null);
+    const cancelButton = useRef<HTMLButtonElement>(null);
+    useEffect(() => {
+        const restore = () => setPending(null);
+        window.addEventListener("pageshow", restore);
+        return () => window.removeEventListener("pageshow", restore);
+    }, []);
+    function authenticate(mode: "refresh" | "change") {
+        if (pending) return;
+        if (!navigator.onLine) {
+            setLocalError(t("settings.offline"));
+            return;
+        }
+        setLocalError("");
+        setPending(mode);
+        const params = new URLSearchParams({
+            mode,
+            returnTo: `${href("/settings")}?category=connections`,
+        });
+        // OAuth requires a top-level document navigation to the provider.
+        window.location.assign(
+            new URL(`/discord/start?${params}`, window.location.origin).href
+        );
+    }
+    const errorMessage =
+        localError ||
+        (error
+            ? t(
+                  error === "identity_mismatch"
+                      ? "settings.discordIdentityMismatch"
+                      : error === "session_expired"
+                        ? "settings.loginRequired"
+                        : "settings.discordError"
+              )
+            : "");
+    return (
+        <div className="nl-settings__form" aria-busy={pending !== null}>
+            {/* 연결 줄(2026-10-01 D1) — Discord · GitHub · Twitch 식. 로고 · 이름 왼쪽, 버튼 오른쪽 */}
+            <div className="nl-settings__rows">
+                <div className="nl-settings__row nl-settings__row--stack">
+                    <div className="nl-settings__row-lead">
+                        <span className="nl-settings__logo" aria-hidden>
+                            <DiscordIcon />
+                        </span>
+                        <div className="nl-settings__row-copy">
+                            <p className="nl-control">{displayName}</p>
+                            <p className="nl-metadata nl-muted">
+                                Discord · {t("settings.loginAccount")}
+                            </p>
+                        </div>
+                    </div>
+                    <div className="nl-settings__actions">
+                        {/* Discord 로 가는 버튼은 Discord 색(2026-10-01 사용자) — 로그인 화면 · 다시 인증과 같은 부품 */}
+                        <ActionButton
+                            variant="secondary"
+                            className="nl-auth-discord"
+                            disabled={pending === "change"}
+                            busy={pending === "refresh"}
+                            busyLabel={t("settings.refreshingDiscord")}
+                            onClick={() => authenticate("refresh")}
+                        >
+                            {t("settings.refreshDiscord")}
+                        </ActionButton>
+                        <Button
+                            ref={changeButton}
+                            variant="secondary"
+                            disabled={pending !== null}
+                            onClick={() => setConfirmChange(true)}
+                        >
+                            {t("settings.changeLoginAccount")}
+                        </Button>
+                    </div>
+                </div>
+            </div>
+            {errorMessage && !confirmChange ? (
+                <p role="alert" className="nl-body-secondary nl-field__error">
+                    {errorMessage}
+                </p>
+            ) : null}
+            {!error && (result === "refresh" || result === "change") ? (
+                <p role="status" className="nl-body-secondary">
+                    {t(
+                        result === "refresh"
+                            ? "settings.discordRefreshComplete"
+                            : "settings.discordChangeComplete"
+                    )}
+                </p>
+            ) : null}
+            <ModalDialog
+                className="nl-settings-dialog"
+                open={confirmChange}
+                onOpenChange={(open) => {
+                    if (!pending) setConfirmChange(open);
+                }}
+                title={t("settings.changeLoginAccount")}
+                description={t("settings.changeLoginAccountWarning")}
+                variant="confirm"
+                onOpenAutoFocus={(event) => {
+                    event.preventDefault();
+                    cancelButton.current?.focus();
+                }}
+                onCloseAutoFocus={(event) => {
+                    event.preventDefault();
+                    changeButton.current?.focus();
+                }}
+                footer={
+                    <>
+                        <Button
+                            ref={cancelButton}
+                            variant="secondary"
+                            disabled={pending !== null}
+                            onClick={() => setConfirmChange(false)}
+                        >
+                            {t("settings.cancel")}
+                        </Button>
+                        <ActionButton
+                            busy={pending === "change"}
+                            onClick={() => authenticate("change")}
+                        >
+                            {t("settings.continue")}
+                        </ActionButton>
+                    </>
+                }
+            >
+                {localError ? (
+                    <p
+                        role="alert"
+                        className="nl-body-secondary nl-field__error"
+                    >
+                        {localError}
+                    </p>
+                ) : null}
+            </ModalDialog>
+        </div>
+    );
+}

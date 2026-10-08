@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
     parseTierBrowserQuery,
     serializeTierBrowserQuery,
-} from "@/features/tiers/schemas/tierBrowserSchema";
+} from "@/features/tiers/schemas/tier-browser-schema";
 
 const mocks = vi.hoisted(() => ({
     list: vi.fn(),
@@ -21,24 +21,24 @@ vi.mock("@/lib/db", () => ({
         music: { findMany: mocks.music },
     },
 }));
-vi.mock("@/features/tiers/server/publicTierData", () => ({
+vi.mock("@/features/tiers/server/public-tier-data", () => ({
     getCachedTierBand: mocks.band,
 }));
-vi.mock("@/lib/i18n/musicTitle", () => ({
+vi.mock("@/lib/i18n/music-title", () => ({
     getMusicTitleDisplayPreference: mocks.preference,
     getLocalizedMusicTitle: () => null,
 }));
 import {
     getTierBrowserBand,
     getTierBrowserOverview,
-} from "@/features/tiers/server/tierBrowserData";
-import { tierStripValue } from "@/features/tiers/components/tierBrowserCard";
+} from "@/features/tiers/server/tier-browser-data";
+import { tierStripValue } from "@/features/tiers/components/tier-browser-card";
 import {
     nextTierBrowserVisibleCount,
     sortTierBrowserEntries,
     tierBrowserSkeletonCount,
     TIER_BROWSER_BATCH_SIZE,
-} from "@/features/tiers/components/tierBrowserBands";
+} from "@/features/tiers/components/tier-browser-bands";
 
 const query = () => parseTierBrowserQuery(new URLSearchParams());
 const chart = {

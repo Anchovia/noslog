@@ -2,7 +2,7 @@ import "@/app/globals.css";
 
 import type { Preview } from "@storybook/nextjs-vite";
 
-import { LocaleProvider } from "@/components/i18n/localeProvider";
+import { LocaleProvider } from "@/components/i18n/locale-provider";
 import { getMessages } from "@/lib/i18n/messages";
 import { isLocale } from "@/lib/i18n/routing";
 

@@ -25,7 +25,7 @@ vi.mock("@/lib/observability/server", () => ({
 }));
 
 import { updateFeedbackStatus } from "@/app/admin/feedback/actions";
-import { listFeedbackReports } from "@/features/feedback/server/feedbackAdminService";
+import { listFeedbackReports } from "@/features/feedback/server/feedback-admin-service";
 
 function statusForm(status: "open" | "resolved") {
     const formData = new FormData();

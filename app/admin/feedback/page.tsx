@@ -1,11 +1,11 @@
 import Link from "next/link";
 
-import FeedbackReportCard from "@/features/feedback/components/admin/feedbackReportCard";
+import FeedbackReportCard from "@/features/feedback/components/admin/feedback-report-card";
 import {
     feedbackStatusSchema,
     normalizeFeedbackStatus,
-} from "@/features/feedback/schemas/feedbackAdminSchema";
-import { listFeedbackReports } from "@/features/feedback/server/feedbackAdminService";
+} from "@/features/feedback/schemas/feedback-admin-schema";
+import { listFeedbackReports } from "@/features/feedback/server/feedback-admin-service";
 
 const statuses = feedbackStatusSchema.options;
 
@@ -22,7 +22,7 @@ export default async function AdminFeedbackPage({
         <div className="flex flex-col gap-4 py-5">
             <section>
                 <h1 className="text-title">피드백 관리</h1>
-                <p className="text-caption mt-1">
+                <p className="mt-1 text-caption">
                     사용자가 제출한 피드백과 오류 제보를 확인합니다.
                 </p>
             </section>
@@ -44,7 +44,7 @@ export default async function AdminFeedbackPage({
                     <FeedbackReportCard key={report.id} report={report} />
                 ))}
                 {reports.length === 0 ? (
-                    <p className="bg-surface text-body-muted rounded-card py-12 text-center">
+                    <p className="rounded-card bg-surface py-12 text-center text-body-muted">
                         해당하는 피드백이 없습니다.
                     </p>
                 ) : null}

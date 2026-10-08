@@ -1,0 +1,365 @@
+"use client";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { PencilRuler } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+
+import {
+    saveChartMetadata,
+    saveMusicMetadata,
+} from "@/app/admin/music/actions";
+import {
+    AdminFieldError,
+    adminInputClass as inputClass,
+    AdminSubmitButton,
+    adminTextareaClass,
+} from "@/components/admin/admin-form";
+import {
+    type ChartMetadataFormValues,
+    chartMetadataSchema,
+    type ChartMetadataValues,
+    createChartMetadataFormData,
+    createMusicMetadataFormData,
+    type MusicMetadataFormValues,
+    musicMetadataSchema,
+    type MusicMetadataValues,
+} from "@/features/music/schemas/music-admin-schema";
+import type { AdminMusicChart } from "@/features/music/types/music-admin";
+import { applyFormActionFailure, applyFormRootError } from "@/lib/forms/errors";
+
+const difficultyColor: Record<string, string> = {
+    normal: "text-normal",
+    hard: "text-hard",
+    expert: "text-expert",
+    real: "text-real",
+};
+
+function FieldError({ message }: { message?: string }) {
+    return (
+        <AdminFieldError message={message} className="text-xs text-danger" />
+    );
+}
+
+interface MusicMetadataFormProps {
+    defaultValues: MusicMetadataFormValues;
+}
+
+function musicMetadataFormValues(
+    values: MusicMetadataValues
+): MusicMetadataFormValues {
+    return {
+        musicIndex: values.musicIndex,
+        description: values.description ?? "",
+        bpmMin: values.bpmMin?.toString() ?? "",
+        bpmMax: values.bpmMax?.toString() ?? "",
+        durationSeconds: values.durationSeconds?.toString() ?? "",
+    };
+}
+
+export function MusicMetadataForm({ defaultValues }: MusicMetadataFormProps) {
+    const router = useRouter();
+    const {
+        clearErrors,
+        formState: { errors, isSubmitting },
+        handleSubmit,
+        register,
+        reset,
+        setError,
+    } = useForm<MusicMetadataFormValues, unknown, MusicMetadataValues>({
+        resolver: zodResolver(musicMetadataSchema),
+        defaultValues,
+        shouldFocusError: false,
+    });
+
+    async function handleMusicMetadataSubmit(values: MusicMetadataValues) {
+        clearErrors();
+
+        try {
+            const result = await saveMusicMetadata(
+                createMusicMetadataFormData(values)
+            );
+            if (!result.success) {
+                applyFormActionFailure(setError, result, toast.error);
+                return;
+            }
+
+            reset(musicMetadataFormValues(values));
+            toast.success(result.message);
+            router.refresh();
+        } catch {
+            const message = "악곡 공통 정보를 저장하지 못했습니다.";
+            applyFormRootError(setError, message, toast.error);
+        }
+    }
+
+    return (
+        <form
+            noValidate
+            onSubmit={handleSubmit(handleMusicMetadataSubmit, () =>
+                toast.error("악곡 공통 정보 입력을 확인해주세요.")
+            )}
+            className="flex flex-col gap-2 rounded-card bg-surface p-3"
+        >
+            <input type="hidden" {...register("musicIndex")} />
+            <h2 className="text-section font-bold">공통 정보</h2>
+            <label className="text-caption" htmlFor="description">
+                악곡 설명
+            </label>
+            <textarea
+                id="description"
+                rows={3}
+                className={adminTextareaClass}
+                {...register("description")}
+            />
+            <FieldError message={errors.description?.message} />
+            <div className="grid grid-cols-2 gap-2">
+                <label className="flex flex-col gap-1 text-caption">
+                    최소 BPM
+                    <input
+                        type="number"
+                        min="1"
+                        step="1"
+                        aria-invalid={Boolean(errors.bpmMin)}
+                        className={inputClass}
+                        {...register("bpmMin")}
+                    />
+                    <FieldError message={errors.bpmMin?.message} />
+                </label>
+                <label className="flex flex-col gap-1 text-caption">
+                    최대 BPM
+                    <input
+                        type="number"
+                        min="1"
+                        step="1"
+                        aria-invalid={Boolean(errors.bpmMax)}
+                        className={inputClass}
+                        {...register("bpmMax")}
+                    />
+                    <FieldError message={errors.bpmMax?.message} />
+                </label>
+                <label className="col-span-2 flex flex-col gap-1 text-caption">
+                    길이(초)
+                    <input
+                        type="number"
+                        min="0"
+                        step="1"
+                        aria-invalid={Boolean(errors.durationSeconds)}
+                        className={inputClass}
+                        {...register("durationSeconds")}
+                    />
+                    <FieldError message={errors.durationSeconds?.message} />
+                </label>
+            </div>
+            <AdminFieldError
+                message={errors.root?.server?.message}
+                className="text-xs text-danger"
+            />
+            <AdminSubmitButton
+                idleLabel="공통 정보 저장"
+                isSubmitting={isSubmitting}
+            />
+        </form>
+    );
+}
+
+interface ChartMetadataFormProps {
+    chart: AdminMusicChart;
+    musicIndex: string;
+}
+
+function chartMetadataDefaultValues(
+    chart: AdminMusicChart,
+    musicIndex: string
+): ChartMetadataFormValues {
+    return {
+        chartId: chart.id,
+        musicIndex,
+        levelConstant: chart.levelConstant?.toString() ?? "",
+        noteCount: chart.noteCount?.toString() ?? "",
+        releasedAt: chart.releasedAt,
+        unlockCondition: chart.unlockCondition,
+        playVideoUrl: chart.playVideoUrl,
+        chartPreviewUrl: chart.chartPreviewUrl,
+    };
+}
+
+function parsedChartMetadataFormValues(
+    values: ChartMetadataValues
+): ChartMetadataFormValues {
+    return {
+        chartId: values.chartId,
+        musicIndex: values.musicIndex,
+        levelConstant: values.levelConstant?.toString() ?? "",
+        noteCount: values.noteCount?.toString() ?? "",
+        releasedAt: values.releasedAt?.toISOString().slice(0, 10) ?? "",
+        unlockCondition: values.unlockCondition ?? "",
+        playVideoUrl: values.playVideoUrl ?? "",
+        chartPreviewUrl: values.chartPreviewUrl ?? "",
+    };
+}
+
+export function ChartMetadataForm({
+    chart,
+    musicIndex,
+}: ChartMetadataFormProps) {
+    const router = useRouter();
+    const {
+        clearErrors,
+        formState: { errors, isSubmitting },
+        handleSubmit,
+        register,
+        reset,
+        setError,
+    } = useForm<ChartMetadataFormValues, unknown, ChartMetadataValues>({
+        resolver: zodResolver(chartMetadataSchema),
+        defaultValues: chartMetadataDefaultValues(chart, musicIndex),
+        shouldFocusError: false,
+    });
+
+    async function handleChartMetadataSubmit(values: ChartMetadataValues) {
+        clearErrors();
+
+        try {
+            const result = await saveChartMetadata(
+                createChartMetadataFormData(values)
+            );
+            if (!result.success) {
+                applyFormActionFailure(setError, result, toast.error);
+                return;
+            }
+
+            reset(parsedChartMetadataFormValues(values));
+            toast.success(result.message);
+            router.refresh();
+        } catch {
+            const message = "채보 정보를 저장하지 못했습니다.";
+            applyFormRootError(setError, message, toast.error);
+        }
+    }
+
+    const difficulty = chart.difficulty.toLowerCase();
+
+    return (
+        <form
+            noValidate
+            onSubmit={handleSubmit(handleChartMetadataSubmit, () =>
+                toast.error("채보 정보 입력을 확인해주세요.")
+            )}
+            className="flex flex-col gap-3 rounded-card bg-surface p-3"
+        >
+            <input type="hidden" {...register("chartId")} />
+            <input type="hidden" {...register("musicIndex")} />
+            <header className="flex items-center justify-between">
+                <h2
+                    className={
+                        "text-section font-bold capitalize " +
+                        (difficultyColor[difficulty] ?? "")
+                    }
+                >
+                    {chart.difficulty}
+                </h2>
+                <div className="flex items-center gap-2">
+                    <span className="text-caption">Lv {chart.level}</span>
+                    <Link
+                        href={
+                            "/admin/music/" +
+                            encodeURIComponent(musicIndex) +
+                            "/" +
+                            difficulty +
+                            "/pattern"
+                        }
+                        className="flex h-8 items-center gap-1 rounded-md border border-border px-2 text-xs font-semibold hover:bg-surface-muted"
+                    >
+                        <PencilRuler className="size-3.5" aria-hidden />
+                        채보 편집
+                    </Link>
+                </div>
+            </header>
+            <div className="grid grid-cols-2 gap-2">
+                <label className="flex flex-col gap-1 text-caption">
+                    공식 레벨 상수
+                    <input
+                        type="number"
+                        min="1"
+                        max="14"
+                        step="0.01"
+                        aria-invalid={Boolean(errors.levelConstant)}
+                        className={inputClass}
+                        {...register("levelConstant")}
+                    />
+                    <FieldError message={errors.levelConstant?.message} />
+                </label>
+                <label className="flex flex-col gap-1 text-caption">
+                    노트 수
+                    <input
+                        type="number"
+                        min="0"
+                        step="1"
+                        aria-invalid={Boolean(errors.noteCount)}
+                        className={inputClass}
+                        {...register("noteCount")}
+                    />
+                    <FieldError message={errors.noteCount?.message} />
+                </label>
+                <label className="flex flex-col gap-1 text-caption">
+                    수록일
+                    <input
+                        type="date"
+                        aria-invalid={Boolean(errors.releasedAt)}
+                        className={inputClass}
+                        {...register("releasedAt")}
+                    />
+                    <FieldError message={errors.releasedAt?.message} />
+                </label>
+            </div>
+            <label className="flex flex-col gap-1 text-caption">
+                해금 조건
+                <input
+                    aria-invalid={Boolean(errors.unlockCondition)}
+                    className={inputClass}
+                    {...register("unlockCondition")}
+                />
+                <FieldError message={errors.unlockCondition?.message} />
+            </label>
+            <label className="flex flex-col gap-1 text-caption">
+                플레이 영상 URL
+                <input
+                    type="url"
+                    aria-invalid={Boolean(errors.playVideoUrl)}
+                    className={inputClass}
+                    {...register("playVideoUrl")}
+                />
+                <FieldError message={errors.playVideoUrl?.message} />
+            </label>
+            <label className="flex flex-col gap-1 text-caption">
+                채보 미리보기 URL
+                <input
+                    type="url"
+                    aria-invalid={Boolean(errors.chartPreviewUrl)}
+                    className={inputClass}
+                    {...register("chartPreviewUrl")}
+                />
+                <FieldError message={errors.chartPreviewUrl?.message} />
+            </label>
+            {chart.history.length > 0 ? (
+                <p className="text-caption">
+                    최근 공식 상수:{" "}
+                    {chart.history
+                        .map((history) => history.toFixed(2))
+                        .join(" · ")}
+                </p>
+            ) : null}
+            <AdminFieldError
+                message={errors.root?.server?.message}
+                className="text-xs text-danger"
+            />
+            <AdminSubmitButton
+                idleLabel="채보 저장"
+                isSubmitting={isSubmitting}
+            />
+        </form>
+    );
+}

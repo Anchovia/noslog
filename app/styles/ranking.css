@@ -143,7 +143,7 @@
     outline-offset: var(--nl-spacing-4);
     border-radius: 50%;
 }
-/* 곡 상세 랭킹 탭 순위표 — 유저 랭킹 페이지와 같은 목록 규격(nl-ranking-head · nl-player-row, globalRankings.css) · 2026-09-14.
+/* 곡 상세 랭킹 탭 순위표 — 유저 랭킹 페이지와 같은 목록 규격(nl-ranking-head · nl-player-row, global-rankings.css) · 2026-09-14.
    순위 · 아바타 · 국기 · 이름 · 명판, 오른쪽 끝은 등급 메달 · 점수 · FC */
 .noslog-ui .nl-chart-leaderboard {
     --nl-rank-1: var(--nl-exam-tier-top);

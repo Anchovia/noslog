@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
     getBestExamGrade,
     getBestExamGrades,
-} from "@/features/exams/examGrades";
+} from "@/features/exams/exam-grades";
 
 describe("best passed exam grade", () => {
     it("picks the smallest grade number per mode (1 is the highest)", () => {

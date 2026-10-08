@@ -22,7 +22,7 @@ Next.js 는 기억 대신 설치된 버전 문서(`node_modules/next/dist/docs/`
 Tailwind 4: 설정은 CSS(`app/globals.css`), `tailwind.config` 를 만들지 않는다.
 
 폴더: `app/`(라우트 · Route Handler · Server Action 입구) · `features/<도메인>/{api,components,hooks,schemas,server}` ·
-`components/ui`(공용 부품) · `app/styles`(토큰 · 공용 스타일) · `lib/i18n/messageCatalogs` · `prisma/` · `tests/` · `e2e/`.
+`components/ui`(공용 부품) · `app/styles`(토큰 · 공용 스타일) · `lib/i18n/message-catalogs` · `prisma/` · `tests/` · `e2e/`.
 자세한 경계는 [코드 스타일](docs/code-style.md).
 협업 양식은 [컨벤션](docs/CONVENTION.md), 공용 UI 사용·스토리는 [부품 가이드](docs/ui/README.md). 공용 UI를 바꾸면 `npm run test:storybook`도 실행한다.
 
@@ -58,7 +58,7 @@ Tailwind 4: 설정은 CSS(`app/globals.css`), `tailwind.config` 를 만들지 �
 
 - 임시 파일 · 스크립트 · 스크린샷은 리포 밖 임시 폴더(Claude 는 세션 스크래치패드)에만 만든다. 프로젝트 안에 두지 않는다.
 - 주는 `git add` 명령에는 내가 바꾼 파일 이름을 하나씩 적는다. `git add -A` · `git add .` 는 주지 않는다.
-- 여럿이 함께 고치는 파일(`docs/design/decisions.md` · `lib/i18n/messageCatalogs/*` · 공용 스타일)은 내 줄만 고치고,
+- 여럿이 함께 고치는 파일(`docs/design/decisions.md` · `lib/i18n/message-catalogs/*` · 공용 스타일)은 내 줄만 고치고,
   보고할 때 스테이징 전에 `git diff` 로 다른 세션 변경이 섞였는지 보라고 적는다.
 
 ## 먼저 묻는다 · 하지 않는다
@@ -106,7 +106,7 @@ Tailwind 4: 설정은 CSS(`app/globals.css`), `tailwind.config` 를 만들지 �
     - 화면 · CSS · 토큰: + 가이드 「확인」 실측. Prisma 스키마: + `npx prisma generate` 먼저.
     - `next.config` · 의존성 · 라우트 구조 · 환경 변수: + `npm run build`.
     - 문서만(md): `npx prettier --check <파일>`.
-- **끝내기 전 정리** — 결정이 났으면 가이드 · `decisions.md` · 테스트 기대값 → 공개 화면의 새 문구는 `lib/i18n/messageCatalogs` 의
+- **끝내기 전 정리** — 결정이 났으면 가이드 · `decisions.md` · 테스트 기대값 → 공개 화면의 새 문구는 `lib/i18n/message-catalogs` 의
   ko · en · ja 세 곳 모두 → 커밋 제목 · 파일별 `git add`.
 - 보고에는 실제로 한 것만 쓴다. 안 한 검사는 「안 함」, 남은 한계는 그대로 적는다.
 - 이 파일은 짧게 둔다 — 같은 실수가 두 번 나오면 한 줄 더하고, 이미 지켜져 필요 없어진 줄은 뺀다.

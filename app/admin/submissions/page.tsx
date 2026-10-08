@@ -1,11 +1,11 @@
 import Link from "next/link";
 
-import ExamSubmissionCard from "@/features/exams/components/admin/examSubmissionCard";
+import ExamSubmissionCard from "@/features/exams/components/admin/exam-submission-card";
 import {
     examSubmissionStatusSchema,
     normalizeExamSubmissionStatus,
-} from "@/features/exams/schemas/examSubmissionAdminSchema";
-import { listExamSubmissions } from "@/features/exams/server/examSubmissionAdminService";
+} from "@/features/exams/schemas/exam-submission-admin-schema";
+import { listExamSubmissions } from "@/features/exams/server/exam-submission-admin-service";
 
 const statuses = examSubmissionStatusSchema.options;
 
@@ -22,7 +22,7 @@ export default async function AdminSubmissionsPage({
         <div className="flex flex-col gap-4 py-5">
             <section>
                 <h1 className="text-title">인증 심사</h1>
-                <p className="text-caption mt-1">
+                <p className="mt-1 text-caption">
                     검정 합격 증빙을 확인하고 승인하거나 반려합니다.
                 </p>
             </section>
@@ -51,7 +51,7 @@ export default async function AdminSubmissionsPage({
                     />
                 ))}
                 {submissions.length === 0 ? (
-                    <p className="text-body-muted bg-surface rounded-card py-12 text-center">
+                    <p className="rounded-card bg-surface py-12 text-center text-body-muted">
                         해당하는 인증이 없습니다.
                     </p>
                 ) : null}

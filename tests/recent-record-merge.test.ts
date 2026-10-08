@@ -4,11 +4,11 @@ import {
     mergeRecentRecord,
     planRecentRecordMerge,
     recentPlayTimestamp,
-} from "@/lib/services/user/recentRecordMerge";
+} from "@/lib/services/user/recent-record-merge";
 import type {
     PendingRecordPlay,
     RecordValues,
-} from "@/lib/services/user/recentRecordMerge";
+} from "@/lib/services/user/recent-record-merge";
 
 const chart = { level: 12, note_count: 1000 };
 const attempt = (

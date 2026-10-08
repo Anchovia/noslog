@@ -1,16 +1,16 @@
 import Link from "next/link";
 
-import ChartDraftReviewList from "@/features/contributions/components/admin/chartDraftReviewList";
-import ChartFieldProposalReview from "@/features/contributions/components/admin/chartFieldProposalReview";
+import ChartDraftReviewList from "@/features/contributions/components/admin/chart-draft-review-list";
+import ChartFieldProposalReview from "@/features/contributions/components/admin/chart-field-proposal-review";
 import {
     CHART_FIELD_PROPOSAL_STATUSES,
     type ChartFieldProposalStatus,
-} from "@/features/contributions/schemas/chartFieldProposalSchema";
-import { listChartDraftsForReview } from "@/features/contributions/server/chartDraftService";
+} from "@/features/contributions/schemas/chart-field-proposal-schema";
+import { listChartDraftsForReview } from "@/features/contributions/server/chart-draft-service";
 import {
     getChartFieldQueueStatus,
     listChartFieldProposals,
-} from "@/features/contributions/server/chartFieldProposalService";
+} from "@/features/contributions/server/chart-field-proposal-service";
 
 const DRAFT_STATUSES = ["submitted", "changes_requested", "published"] as const;
 type DraftStatus = (typeof DRAFT_STATUSES)[number];
@@ -52,7 +52,7 @@ export default async function AdminContributionsPage({
         <div className="flex flex-col gap-4 py-5">
             <section>
                 <h1 className="text-title">기여</h1>
-                <p className="text-caption mt-1">
+                <p className="mt-1 text-caption">
                     {kind === "field"
                         ? "유저가 제안한 채보 정보를 확인하고 반영하거나 반려합니다. 반영하면 곡 상세에 바로 보이고 출처가 제안으로 남습니다."
                         : "유저가 만든 채보 초안을 검토합니다. 에디터 검토 모드에서 시각 댓글을 달고 수정을 요청하거나 공개합니다."}
@@ -118,7 +118,7 @@ async function FieldProposals({ status: raw }: { status?: string }) {
                     reviewable={status === "pending"}
                 />
             ) : (
-                <p className="bg-surface text-body-muted rounded-card py-12 text-center">
+                <p className="rounded-card bg-surface py-12 text-center text-body-muted">
                     해당하는 제안이 없습니다.
                 </p>
             )}
@@ -145,7 +145,7 @@ async function ChartDrafts({ status: raw }: { status?: string }) {
             {drafts.length ? (
                 <ChartDraftReviewList drafts={drafts} />
             ) : (
-                <p className="bg-surface text-body-muted rounded-card py-12 text-center">
+                <p className="rounded-card bg-surface py-12 text-center text-body-muted">
                     해당하는 채보 초안이 없습니다.
                 </p>
             )}

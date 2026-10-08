@@ -2,15 +2,15 @@ import { notFound } from "next/navigation";
 
 import BingoEditor, {
     type BingoEditorData,
-} from "@/features/bingos/components/bingoEditor";
+} from "@/features/bingos/components/bingo-editor";
 import {
     normalizeBingoDifficulty,
     normalizeBingoMissionType,
     normalizeBingoRuleType,
     normalizeBingoStatus,
-} from "@/features/bingos/schemas/bingoEditorSchema";
+} from "@/features/bingos/schemas/bingo-editor-schema";
 import db from "@/lib/db";
-import { formatDateInput } from "@/lib/utils";
+import { formatDateInput } from "@/lib/format-date";
 
 export default async function EditBingoPage({
     params,

@@ -1,0 +1,183 @@
+import Link from "next/link";
+import { useLayoutEffect, useRef, useState } from "react";
+
+import { useLocale, useTranslations } from "@/components/i18n/locale-provider";
+import Avatar from "@/components/ui/avatar";
+import CountryMarker from "@/components/ui/country-marker";
+import ExamBadge, { isExamGrade } from "@/components/ui/exam-badge";
+import { SkeletonText } from "@/components/ui/skeleton";
+import ContributionLabel from "@/features/contributions/components/contribution-label";
+import type {
+    GlobalRankingQuery,
+    GlobalRankingRow,
+} from "@/features/rankings/schemas/global-ranking-schema";
+import { localizePath } from "@/lib/i18n/routing";
+import { gradeBandTone } from "@/lib/music/score-tone";
+
+// 명판은 이름 칸에 다 들어가면 BASIC·RECITAL, 넘치면 먼저 B·R 로 줄이고
+// 그래도 넘치면 닉네임을 말줄임한다. 행마다 실제 폭을 잰다.
+// 명판 뒤 기여 라벨(2026-09-24)은 이름 · 명판보다 뒤 — 명판을 B·R 로 줄여도 안 들어가면 라벨을 숨긴다
+function useBadgeLabelFit() {
+    const ref = useRef<HTMLDivElement>(null);
+    const [label, setLabel] = useState<"full" | "short">("short");
+    const [contribution, setContribution] = useState<"shown" | "hidden">(
+        "shown"
+    );
+    useLayoutEffect(() => {
+        const identity = ref.current;
+        if (!identity) return;
+        const measure = () => {
+            const name = identity.querySelector<HTMLElement>(
+                ".nl-player-row__name"
+            );
+            const link = identity.querySelector<HTMLElement>(
+                ".nl-player-row__link"
+            );
+            if (!name || !link) return;
+            const badge = identity.querySelector<HTMLElement>(".nl-exam-badge");
+            const full = badge?.querySelector<HTMLElement>(
+                ".nl-exam-badge__full"
+            );
+            const short = badge?.querySelector<HTMLElement>(
+                ".nl-exam-badge__short"
+            );
+            const shown = identity.dataset.examLabel === "full" ? full : short;
+            const badgeBase =
+                badge && shown
+                    ? badge.getBoundingClientRect().width -
+                      shown.getBoundingClientRect().width
+                    : 0;
+            const badgeFull = full
+                ? badgeBase + full.getBoundingClientRect().width
+                : 0;
+            const badgeShort = short
+                ? badgeBase + short.getBoundingClientRect().width
+                : 0;
+            // 숨겨도 폭은 잴 수 있게 둔다(보이지 않게 겹쳐 둠)
+            const extra =
+                identity.querySelector<HTMLElement>(":scope > .nl-term");
+            // 이름 묶음의 자연 폭 = 국기 + 간격 + 닉네임 전체 글자 폭(말줄임 전)
+            const nameFull =
+                name.getBoundingClientRect().width -
+                link.getBoundingClientRect().width +
+                link.scrollWidth;
+            const gap = parseFloat(getComputedStyle(identity).columnGap) || 0;
+            const badgeGap = badge ? gap : 0;
+            const extraWidth = extra
+                ? extra.getBoundingClientRect().width + gap
+                : 0;
+            const room = identity.clientWidth;
+            const fits = (badgeWidth: number, withExtra: boolean) =>
+                nameFull +
+                    badgeGap +
+                    badgeWidth +
+                    (withExtra ? extraWidth : 0) <=
+                room;
+            const keepExtra = !extra || fits(badgeShort, true);
+            setContribution(keepExtra ? "shown" : "hidden");
+            setLabel(fits(badgeFull, keepExtra) ? "full" : "short");
+        };
+        measure();
+        const observer = new ResizeObserver(measure);
+        observer.observe(identity);
+        void document.fonts?.ready.then(measure);
+        return () => observer.disconnect();
+    }, []);
+    return { ref, label, contribution };
+}
+
+// 순위 · 아바타 · 국기 · 이름 · 명판 · 기여 라벨 · 값.
+// 국기를 이름 앞에 두어 국기 열과 이름 시작선이 행마다 맞고, 명판은 이름 꼬리표로 붙는다.
+// 명판은 탭이 고른 모드의 급수만 보여 준다.
+export default function PlayerRankingRow({
+    row,
+    query,
+    current,
+}: {
+    row: GlobalRankingRow;
+    query: GlobalRankingQuery;
+    current: boolean;
+}) {
+    const locale = useLocale();
+    const t = useTranslations();
+    const {
+        ref: identityRef,
+        label: badgeLabel,
+        contribution,
+    } = useBadgeLabelFit();
+    const name = row.username || t("common.unknownUser");
+    return (
+        <li
+            id={`ranking-player-${row.id}`}
+            className="nl-player-row"
+            value={row.rank}
+            data-current={current}
+            tabIndex={-1}
+            aria-label={current ? t("rankings.myRank") : undefined}
+        >
+            <span
+                className="nl-player-row__rank nl-metric-value"
+                data-podium={row.rank <= 3 ? row.rank : undefined}
+            >
+                {row.rank.toLocaleString(locale)}
+            </span>
+            <Avatar src={row.avatar} fallbackName={row.username} size={32} />
+            <div
+                ref={identityRef}
+                className="nl-player-row__identity"
+                data-exam-label={badgeLabel}
+                data-contribution={contribution}
+            >
+                <div className="nl-player-row__name">
+                    <CountryMarker country={row.country} />
+                    <Link
+                        href={`${localizePath(`/profile/${row.id}`, locale)}?mode=${query.mode}`}
+                        className="nl-player-row__link nl-link nl-emphasis-label"
+                        title={name}
+                    >
+                        {name}
+                    </Link>
+                </div>
+                {isExamGrade(row.exam) ? (
+                    <ExamBadge mode={query.mode} exam={row.exam} />
+                ) : null}
+                <ContributionLabel label={row.label} />
+            </div>
+            {/* 단위는 머리글(공식 Grd · NosLog 레이팅)이 말한다 — 화면에서는 빼고 낭독용으로만 둔다 */}
+            <span
+                className="nl-player-row__value nl-metric-value nl-toned"
+                data-tone={gradeBandTone(row.value)}
+            >
+                {row.value.toLocaleString(locale)}
+                <span className="sr-only">
+                    {" "}
+                    {query.metric === "rating" ? "pt" : "Grd"}
+                </span>
+            </span>
+        </li>
+    );
+}
+
+/**
+ * 순위 줄 스켈레톤(2026-09-19 로딩 시안 S1) — 같은 줄 틀(48 높이 · 순위 32 · 사진 32 · 이름 · 값)에
+ * 순위 · 사진 · 이름 · 값 자리. 값 · 순위는 흔한 자리 수의 폭만큼
+ */
+export function PlayerRankingRowSkeleton() {
+    return (
+        <li className="nl-player-row" aria-hidden="true">
+            <span className="nl-player-row__rank">
+                <SkeletonText className="nl-metric-value" sample="00" />
+            </span>
+            <span className="nl-avatar nl-avatar--compact nl-skeleton" />
+            <div className="nl-player-row__identity">
+                <SkeletonText
+                    className="nl-player-row__link nl-emphasis-label"
+                    width="m"
+                />
+            </div>
+            <span className="nl-player-row__value">
+                <SkeletonText className="nl-metric-value" sample="0,000" />
+            </span>
+        </li>
+    );
+}

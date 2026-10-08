@@ -11,10 +11,10 @@ vi.mock("@/lib/db", () => ({
         dataSync: { findFirst: mocks.sync },
     },
 }));
-vi.mock("@/features/profile/server/profilePlaysService", () => ({
+vi.mock("@/features/profile/server/profile-plays-service", () => ({
     getProfileRating: mocks.rating,
 }));
-import { getProfileOverviewContext } from "@/features/profile/server/profileOverviewService";
+import { getProfileOverviewContext } from "@/features/profile/server/profile-overview-service";
 
 describe("profile overview", () => {
     beforeEach(() => {

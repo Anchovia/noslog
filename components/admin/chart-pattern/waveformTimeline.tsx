@@ -5,7 +5,7 @@ import { useCallback, useEffect, useRef } from "react";
 import { getChartEditorNavigationDurationMs } from "@/lib/chart-pattern/editor";
 import { formatEditorTime } from "@/lib/chart-pattern/timing";
 
-import { useTranslations } from "@/components/i18n/localeProvider";
+import { useTranslations } from "@/components/i18n/locale-provider";
 
 import { useChartEditorStore } from "./chartEditorStore";
 

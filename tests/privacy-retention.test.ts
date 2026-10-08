@@ -29,7 +29,7 @@ vi.mock("@/lib/blob", () => ({
     deleteBlobStrict: mocks.deleteBlobStrict,
 }));
 
-import { runPrivacyRetention } from "@/lib/privacyRetention";
+import { runPrivacyRetention } from "@/lib/privacy-retention";
 
 describe("개인정보 6개월 보관 정리", () => {
     beforeEach(() => {

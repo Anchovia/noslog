@@ -17,7 +17,7 @@ import {
     type ChartPathPoint,
 } from "@/lib/chart-pattern/schema";
 import { millisecondsToTick } from "@/lib/chart-pattern/timing";
-import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
+import { useLocale, useTranslations } from "@/components/i18n/locale-provider";
 
 import { useChartEditorStore } from "./chartEditorStore";
 import SnapCheckSection from "./snapCheckSection";
@@ -242,10 +242,10 @@ export default function NoteInspector() {
     }
 
     return (
-        <aside className="border-divider bg-surface flex h-full w-80 shrink-0 flex-col border-l">
-            <header className="border-divider border-b px-3 py-2.5">
+        <aside className="flex h-full w-80 shrink-0 flex-col border-l border-divider bg-surface">
+            <header className="border-b border-divider px-3 py-2.5">
                 <h2 className="text-sm font-bold">{t("editor.note.title")}</h2>
-                <p className="text-micro mt-0.5">{t("editor.note.subtitle")}</p>
+                <p className="mt-0.5 text-micro">{t("editor.note.subtitle")}</p>
             </header>
 
             <fieldset
@@ -254,19 +254,19 @@ export default function NoteInspector() {
             >
                 {selectedNotes.length === 0 ? (
                     <div className="flex min-h-0 flex-1 flex-col items-center justify-center px-6 text-center">
-                        <div className="bg-surface-muted flex size-11 items-center justify-center rounded-full">
-                            <GitBranch className="text-text-secondary size-4" />
+                        <div className="flex size-11 items-center justify-center rounded-full bg-surface-muted">
+                            <GitBranch className="size-4 text-text-secondary" />
                         </div>
                         <p className="mt-3 text-sm font-semibold">
                             {t("editor.note.emptyTitle")}
                         </p>
-                        <p className="text-micro mt-1 leading-relaxed">
+                        <p className="mt-1 text-micro leading-relaxed">
                             {t("editor.note.emptyBody")}
                         </p>
                     </div>
                 ) : selectedNotes.length > 1 ? (
                     <div className="min-h-0 flex-1 overflow-y-auto p-3">
-                        <div className="border-border bg-bg rounded-md border p-3">
+                        <div className="rounded-md border border-border bg-bg p-3">
                             <strong className="text-sm">
                                 {t("editor.note.multiSelected", {
                                     count: selectedNotes.length.toLocaleString(
@@ -274,11 +274,11 @@ export default function NoteInspector() {
                                     ),
                                 })}
                             </strong>
-                            <p className="text-micro mt-1 leading-relaxed">
+                            <p className="mt-1 text-micro leading-relaxed">
                                 {t("editor.note.multiHelp")}
                             </p>
                         </div>
-                        <label className="text-caption mt-4 flex flex-col gap-1">
+                        <label className="mt-4 flex flex-col gap-1 text-caption">
                             {t("editor.note.bulkHand")}
                             <HandSelector
                                 value={selectedNotes[0].hand}
@@ -288,7 +288,7 @@ export default function NoteInspector() {
                         <button
                             type="button"
                             onClick={deleteSelected}
-                            className="border-danger/40 text-danger mt-4 flex h-9 w-full items-center justify-center gap-1 rounded-md border text-xs font-semibold"
+                            className="mt-4 flex h-9 w-full items-center justify-center gap-1 rounded-md border border-danger/40 text-xs font-semibold text-danger"
                         >
                             <Trash2 className="size-3.5" />
                             {t("editor.note.deleteMany", {
@@ -301,7 +301,7 @@ export default function NoteInspector() {
                 ) : selected ? (
                     <div className="min-h-0 flex-1 overflow-y-auto p-3">
                         <div className="grid grid-cols-2 gap-3">
-                            <label className="text-caption col-span-2 flex flex-col gap-1">
+                            <label className="col-span-2 flex flex-col gap-1 text-caption">
                                 {t("editor.note.type")}
                                 <select
                                     value={selected.type}
@@ -320,7 +320,7 @@ export default function NoteInspector() {
                                 </select>
                             </label>
 
-                            <label className="text-caption col-span-2 flex flex-col gap-1">
+                            <label className="col-span-2 flex flex-col gap-1 text-caption">
                                 {t("editor.note.hand")}
                                 <HandSelector
                                     value={selected.hand}
@@ -328,7 +328,7 @@ export default function NoteInspector() {
                                 />
                             </label>
 
-                            <label className="text-caption flex flex-col gap-1">
+                            <label className="flex flex-col gap-1 text-caption">
                                 {t("editor.note.lane")}
                                 <input
                                     type="number"
@@ -348,7 +348,7 @@ export default function NoteInspector() {
                                 />
                             </label>
 
-                            <label className="text-caption flex flex-col gap-1">
+                            <label className="flex flex-col gap-1 text-caption">
                                 {t("editor.note.width")}
                                 <input
                                     type="number"
@@ -368,7 +368,7 @@ export default function NoteInspector() {
                                 />
                             </label>
 
-                            <label className="text-caption flex flex-col gap-1">
+                            <label className="flex flex-col gap-1 text-caption">
                                 {t("editor.note.tick")}
                                 <input
                                     key={`${selected.id}-tick-${selected.tick}`}
@@ -387,7 +387,7 @@ export default function NoteInspector() {
                                 />
                             </label>
 
-                            <label className="text-caption flex flex-col gap-1">
+                            <label className="flex flex-col gap-1 text-caption">
                                 {t("editor.note.duration")}
                                 <input
                                     key={`${selected.id}-duration-${selected.durationTicks}`}
@@ -418,7 +418,7 @@ export default function NoteInspector() {
 
                             {selected.type === "trill" ? (
                                 <>
-                                    <label className="text-caption flex flex-col gap-1">
+                                    <label className="flex flex-col gap-1 text-caption">
                                         {t("editor.note.pairLane")}
                                         <input
                                             key={`${selected.id}-pair-lane-${selected.pairLane}`}
@@ -445,7 +445,7 @@ export default function NoteInspector() {
                                             className={inputClass}
                                         />
                                     </label>
-                                    <label className="text-caption flex flex-col gap-1">
+                                    <label className="flex flex-col gap-1 text-caption">
                                         {t("editor.note.pairWidth")}
                                         <input
                                             key={`${selected.id}-pair-width-${selected.pairWidth}`}
@@ -473,7 +473,7 @@ export default function NoteInspector() {
                                             className={inputClass}
                                         />
                                     </label>
-                                    <label className="text-caption col-span-2 flex flex-col gap-1">
+                                    <label className="col-span-2 flex flex-col gap-1 text-caption">
                                         {t("editor.note.trillStep")}
                                         <select
                                             value={
@@ -504,7 +504,7 @@ export default function NoteInspector() {
                             ) : null}
 
                             {selected.type === "glissando" ? (
-                                <label className="text-caption col-span-2 flex flex-col gap-1">
+                                <label className="col-span-2 flex flex-col gap-1 text-caption">
                                     {t("editor.note.glissandoStep")}
                                     <select
                                         value={
@@ -543,13 +543,13 @@ export default function NoteInspector() {
 
                         {selected.type === "tenuto" ||
                         selected.type === "glissando" ? (
-                            <section className="border-divider mt-4 border-t pt-4">
+                            <section className="mt-4 border-t border-divider pt-4">
                                 <div className="flex items-center justify-between gap-2">
                                     <div>
                                         <h3 className="text-xs font-semibold">
                                             {t("editor.note.path")}
                                         </h3>
-                                        <p className="text-micro mt-0.5">
+                                        <p className="mt-0.5 text-micro">
                                             {selected.type === "glissando"
                                                 ? t(
                                                       "editor.note.pathHelpGlissando"
@@ -562,7 +562,7 @@ export default function NoteInspector() {
                                     <button
                                         type="button"
                                         onClick={addPathPoint}
-                                        className="border-border hover:bg-surface-muted flex h-8 shrink-0 items-center gap-1 rounded-md border px-2 text-xs font-semibold"
+                                        className="flex h-8 shrink-0 items-center gap-1 rounded-md border border-border px-2 text-xs font-semibold hover:bg-surface-muted"
                                     >
                                         <Plus className="size-3.5" />
                                         {t("editor.add")}
@@ -592,7 +592,7 @@ export default function NoteInspector() {
                                         ))}
                                     </div>
                                 ) : (
-                                    <p className="text-micro mt-3">
+                                    <p className="mt-3 text-micro">
                                         {selected.type === "glissando"
                                             ? t(
                                                   "editor.note.pathEmptyGlissando"
@@ -606,7 +606,7 @@ export default function NoteInspector() {
                         <button
                             type="button"
                             onClick={deleteSelected}
-                            className="border-danger/40 text-danger mt-4 flex h-9 w-full items-center justify-center gap-1 rounded-md border text-xs font-semibold"
+                            className="mt-4 flex h-9 w-full items-center justify-center gap-1 rounded-md border border-danger/40 text-xs font-semibold text-danger"
                         >
                             <Trash2 className="size-3.5" />
                             {t("editor.note.delete")}
@@ -617,7 +617,7 @@ export default function NoteInspector() {
                 <SnapCheckSection />
             </fieldset>
 
-            <footer className="border-divider text-micro border-t px-3 py-2">
+            <footer className="border-t border-divider px-3 py-2 text-micro">
                 {t("editor.note.total", {
                     count: notes.length.toLocaleString(locale),
                 })}
@@ -674,7 +674,7 @@ function PathPointEditor({
 }) {
     const t = useTranslations();
     return (
-        <div className="border-border bg-bg rounded-md border p-2">
+        <div className="rounded-md border border-border bg-bg p-2">
             <div className="mb-2 flex items-center justify-between">
                 <strong className="text-xs">
                     {t("editor.point.title", { index: index + 1 })}
@@ -683,13 +683,13 @@ function PathPointEditor({
                     type="button"
                     onClick={onDelete}
                     aria-label={t("editor.point.delete", { index: index + 1 })}
-                    className="text-danger hover:bg-surface-muted flex size-7 items-center justify-center rounded"
+                    className="flex size-7 items-center justify-center rounded text-danger hover:bg-surface-muted"
                 >
                     <Trash2 className="size-3.5" />
                 </button>
             </div>
             <div className="grid grid-cols-3 gap-2">
-                <label className="text-micro flex flex-col gap-1">
+                <label className="flex flex-col gap-1 text-micro">
                     {t("editor.point.tick")}
                     <input
                         key={`tick-${point.tickOffset}`}
@@ -703,7 +703,7 @@ function PathPointEditor({
                         className={inputClass}
                     />
                 </label>
-                <label className="text-micro flex flex-col gap-1">
+                <label className="flex flex-col gap-1 text-micro">
                     {t("editor.point.lane")}
                     <input
                         key={`lane-${point.lane}`}
@@ -719,7 +719,7 @@ function PathPointEditor({
                         className={inputClass}
                     />
                 </label>
-                <label className="text-micro flex flex-col gap-1">
+                <label className="flex flex-col gap-1 text-micro">
                     {t("editor.note.width")}
                     <input
                         key={`width-${point.width}`}
@@ -736,7 +736,7 @@ function PathPointEditor({
                     />
                 </label>
             </div>
-            <label className="text-micro mt-2 flex flex-col gap-1">
+            <label className="mt-2 flex flex-col gap-1 text-micro">
                 {t("editor.point.hand")}
                 <select
                     value={point.hand ?? ""}

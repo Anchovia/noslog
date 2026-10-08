@@ -29,7 +29,7 @@ vi.mock("@/lib/observability/server", () => ({
 }));
 
 import { resetUserSyncToken, updateUserRole } from "@/app/admin/users/actions";
-import { listAdminUsers } from "@/features/users/server/userAdminService";
+import { listAdminUsers } from "@/features/users/server/user-admin-service";
 
 function roleForm(userId = "2", role = "admin") {
     const formData = new FormData();

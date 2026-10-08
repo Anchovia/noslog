@@ -2,9 +2,9 @@ import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { headers } from "next/headers";
 import Script from "next/script";
-import AppToaster from "@/components/ui/AppToaster";
-import { LocaleProvider } from "@/components/i18n/localeProvider";
-import { AppProviders } from "@/components/providers/appProviders";
+import AppToaster from "@/components/ui/app-toaster";
+import { LocaleProvider } from "@/components/i18n/locale-provider";
+import { AppProviders } from "@/components/providers/app-providers";
 import { serverEnv } from "@/lib/env/server";
 import { getMessages } from "@/lib/i18n/messages";
 import {

@@ -1,13 +1,13 @@
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 
-import PageContainer, { PageHeading } from "@/components/layout/pageContainer";
+import PageContainer, { PageHeading } from "@/components/layout/page-container";
 import {
     ADMIN_EVENT_TABS,
     getAdminEventList,
-} from "@/features/events/server/eventAdminService";
-import type { EventStatus } from "@/features/events/schemas/eventSchema";
-import { eventPeriod } from "@/features/events/components/eventParts";
+} from "@/features/events/server/event-admin-service";
+import type { EventStatus } from "@/features/events/schemas/event-schema";
+import { eventPeriod } from "@/features/events/components/event-parts";
 
 const LABELS: Record<EventStatus, string> = {
     DRAFT: "임시저장",

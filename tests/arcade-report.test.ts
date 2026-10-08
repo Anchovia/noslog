@@ -19,7 +19,7 @@ vi.mock("@/lib/blob", () => ({ isValidPrivateImageBlob: mocks.image }));
 vi.mock("next/cache", () => ({ revalidatePath: mocks.invalidate }));
 vi.mock("@/lib/observability/server", () => ({ logServerError: vi.fn() }));
 
-import { submitArcadeReport } from "@/features/arcades/server/arcadeReportService";
+import { submitArcadeReport } from "@/features/arcades/server/arcade-report-service";
 
 const submissionId = "12a66f29-6f4e-41b1-a8e1-e4f4c52b6c46";
 function report(overrides: Record<string, string> = {}) {

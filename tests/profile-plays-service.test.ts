@@ -16,15 +16,15 @@ vi.mock("@/lib/db", () => ({
         $queryRaw: mocks.ranks,
     },
 }));
-vi.mock("@/features/tiers/server/tierBrowserData", () => ({
+vi.mock("@/features/tiers/server/tier-browser-data", () => ({
     getModePianistRatingBasis: mocks.basis,
 }));
 
 import {
     getProfileRating,
     getPublicProfilePlays,
-} from "@/features/profile/server/profilePlaysService";
-import { profileListQuerySchema } from "@/features/profile/schemas/publicProfileSchema";
+} from "@/features/profile/server/profile-plays-service";
+import { profileListQuerySchema } from "@/features/profile/schemas/public-profile-schema";
 
 function play(id: number) {
     return {

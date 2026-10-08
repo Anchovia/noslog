@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { gradeTone, rankTone, scoreTone } from "@/lib/music/scoreTone";
+import { gradeTone, rankTone, scoreTone } from "@/lib/music/score-tone";
 
 describe("score tones", () => {
     it("colours scores by goal band", () => {

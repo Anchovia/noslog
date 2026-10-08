@@ -44,7 +44,7 @@ import {
     deleteChartEvaluation,
     submitChartEvaluation,
     toggleChartEvaluationReaction,
-} from "@/app/(nevigation)/music/[index]/[difficulty]/action";
+} from "@/app/(site)/music/[index]/[difficulty]/action";
 import { createTranslator, getMessages } from "@/lib/i18n/messages";
 import { SUPPORTED_LOCALES } from "@/lib/i18n/routing";
 

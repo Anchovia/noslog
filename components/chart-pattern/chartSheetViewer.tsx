@@ -4,22 +4,22 @@ import { Info, Pencil, Share2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { useQuery } from "@tanstack/react-query";
-import BackLink from "@/components/ui/backLink";
+import BackLink from "@/components/ui/back-link";
 import { useMemo, useRef, useState } from "react";
 
-import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
-import PageContainer from "@/components/layout/pageContainer";
+import { useLocale, useTranslations } from "@/components/i18n/locale-provider";
+import PageContainer from "@/components/layout/page-container";
 import Avatar from "@/components/ui/avatar";
-import { foundationButtonClass } from "@/components/ui/Button";
-import ModalDialog from "@/components/ui/modalDialog";
-import { SegmentedControl } from "@/components/ui/segmentedControl";
+import { foundationButtonClass } from "@/components/ui/button";
+import ModalDialog from "@/components/ui/modal-dialog";
+import { SegmentedControl } from "@/components/ui/segmented-control";
 import ChartComments, {
     chartCommentsOptions,
-} from "@/features/contributions/components/chartComments";
-import ChartDraftEntry from "@/features/contributions/components/chartDraftEntry";
-import ContributionLabel from "@/features/contributions/components/contributionLabel";
-import type { NameLabel } from "@/features/contributions/contributionLevel";
-import type { ChartCommentItem } from "@/features/contributions/server/chartDraftService";
+} from "@/features/contributions/components/chart-comments";
+import ChartDraftEntry from "@/features/contributions/components/chart-draft-entry";
+import ContributionLabel from "@/features/contributions/components/contribution-label";
+import type { NameLabel } from "@/features/contributions/contribution-level";
+import type { ChartCommentItem } from "@/features/contributions/server/chart-draft-service";
 import {
     getChartNoteRenderPoints,
     getGlissandoSnapRenderPoints,

@@ -7,7 +7,7 @@ import {
     createMusicMetadataFormData,
     musicMetadataInputFromFormData,
     musicMetadataSchema,
-} from "@/features/music/schemas/musicAdminSchema";
+} from "@/features/music/schemas/music-admin-schema";
 
 describe("관리자 악곡 메타데이터 스키마", () => {
     it("공통 텍스트와 숫자를 저장 형식으로 정규화한다", () => {

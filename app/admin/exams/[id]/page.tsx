@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 
-import ExamEditor from "@/features/exams/components/editor/examEditor";
-import { getExamEditorData } from "@/features/exams/server/examAdminService";
+import ExamEditor from "@/features/exams/components/editor/exam-editor";
+import { getExamEditorData } from "@/features/exams/server/exam-admin-service";
 
 export default async function EditExamPage({
     params,

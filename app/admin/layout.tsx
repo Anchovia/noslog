@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 
-import AdminShell from "@/components/admin/adminShell";
-import AppFooter from "@/components/layout/appFooter";
+import AdminShell from "@/components/admin/admin-shell";
+import AppFooter from "@/components/layout/app-footer";
 import Footer from "@/components/layout/footer";
 import Header from "@/components/layout/header";
-import SkipLink from "@/components/layout/skipLink";
+import SkipLink from "@/components/layout/skip-link";
 import { requireAdmin } from "@/lib/admin";
 
 export const metadata: Metadata = {

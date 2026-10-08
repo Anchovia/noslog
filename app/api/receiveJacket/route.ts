@@ -5,7 +5,7 @@ import {
     JACKET_INDEX_PATTERN,
     MAX_COLLECTED_JACKET_BYTES,
     saveCollectedJacket,
-} from "@/features/music/server/jacketCollectionService";
+} from "@/features/music/server/jacket-collection-service";
 import { verifySyncToken } from "@/lib/bookmarklet";
 import db from "@/lib/db";
 

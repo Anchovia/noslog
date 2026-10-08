@@ -4,9 +4,9 @@ import {
     loadMusicDetail,
     normalizeMusicDetailTab,
     normalizeMusicDifficulty,
-} from "@/features/music/server/loadMusicDetail";
+} from "@/features/music/server/load-music-detail";
 import { getRequestLocale } from "@/lib/i18n/server";
-import { getMusicTitleDisplayPreference } from "@/lib/i18n/musicTitle";
+import { getMusicTitleDisplayPreference } from "@/lib/i18n/music-title";
 import { isLocale } from "@/lib/i18n/routing";
 import { createApiFailure, createApiSuccess } from "@/lib/api/response";
 import { logServerError } from "@/lib/observability/server";

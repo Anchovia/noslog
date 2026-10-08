@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
     GRADE_PROGRESS_STOPS,
     gradeProgressColor,
-} from "@/lib/music/gradeProgressColor";
+} from "@/lib/music/grade-progress-color";
 
 describe("gradeProgressColor", () => {
     it("uses the rank color inside a flat band", () => {

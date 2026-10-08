@@ -21,15 +21,15 @@ vi.mock("@/lib/db", () => ({
     },
 }));
 
-vi.mock("@/lib/services/music/updateMusic", () => ({
+vi.mock("@/lib/services/music/update-music", () => ({
     updateMusic: mocks.updateMusic,
 }));
 
 import {
     describeMusicCatalogChanges,
     processBemaniCatalogUpdates,
-} from "@/lib/services/music/catalogSync";
-import type { SyncMusicInput } from "@/lib/services/music/updateMusic";
+} from "@/lib/services/music/catalog-sync";
+import type { SyncMusicInput } from "@/lib/services/music/update-music";
 
 function chart(
     difficulty: "Normal" | "Hard" | "Expert" | "Real",

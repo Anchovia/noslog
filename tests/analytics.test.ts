@@ -22,11 +22,11 @@ import {
     isBotUserAgent,
     isExternalEvent,
     pageRouteFromPath,
-} from "@/lib/analyticsRoutes";
+} from "@/lib/analytics-routes";
 import {
     getPrivacyCopy,
     PRIVACY_PREVIOUS_VERSIONS,
-} from "@/features/privacy/content/privacyContent";
+} from "@/features/privacy/content/privacy-content";
 
 const CHROME =
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0 Safari/537.36";

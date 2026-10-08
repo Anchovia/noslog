@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
-import { searchPreviewQuerySchema } from "@/features/music/schemas/searchPreviewSchema";
-import { getSearchPreview } from "@/features/music/server/searchPreviewService";
+import { searchPreviewQuerySchema } from "@/features/music/schemas/search-preview-schema";
+import { getSearchPreview } from "@/features/music/server/search-preview-service";
 import { createApiFailure, createApiSuccess } from "@/lib/api/response";
 import { logServerError } from "@/lib/observability/server";
 

@@ -43,10 +43,10 @@ vi.mock("recharts", async () => {
 
 import AdminDashboardChart, {
     AdminDashboardHours,
-} from "@/features/admin/components/adminDashboardChart";
-import AdminDashboard from "@/features/admin/components/adminDashboard";
-import AdminDashboardLoading from "@/features/admin/components/adminDashboardLoading";
-import type { AdminDashboardData } from "@/features/admin/server/adminDashboardService";
+} from "@/features/admin/components/admin-dashboard-chart";
+import AdminDashboard from "@/features/admin/components/admin-dashboard";
+import AdminDashboardLoading from "@/features/admin/components/admin-dashboard-loading";
+import type { AdminDashboardData } from "@/features/admin/server/admin-dashboard-service";
 
 describe("관리자 대시보드 그래프 움직임", () => {
     it("추이 선은 Recharts 움직임을 끄고 공용 드러남 클래스를 쓴다", () => {

@@ -2,15 +2,15 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import TierBoard from "@/features/tiers/components/tierBoard";
-import TierListDeleteButton from "@/features/tiers/components/tierListDeleteButton";
-import TierListForm from "@/features/tiers/components/tierListForm";
-import TierPlacementEditor from "@/features/tiers/components/tierPlacementEditor";
+import TierBoard from "@/features/tiers/components/tier-board";
+import TierListDeleteButton from "@/features/tiers/components/tier-list-delete-button";
+import TierListForm from "@/features/tiers/components/tier-list-form";
+import TierPlacementEditor from "@/features/tiers/components/tier-placement-editor";
 import db from "@/lib/db";
 import {
     MUSIC_CATEGORY_VALUES,
     normalizeMusicCategory,
-} from "@/lib/musicCategories";
+} from "@/lib/music-categories";
 import {
     TIER_REAL_LEVELS,
     TIER_REGULAR_LEVELS,
@@ -193,13 +193,13 @@ export default async function EditTierListPage({
                 <Link
                     href="/admin/tiers"
                     aria-label="서열표 목록으로 이동"
-                    className="border-border flex size-9 shrink-0 items-center justify-center rounded-md border"
+                    className="flex size-9 shrink-0 items-center justify-center rounded-md border border-border"
                 >
                     <ArrowLeft className="size-4" />
                 </Link>
                 <div className="min-w-0">
                     <h1 className="text-title">{tierList.title}</h1>
-                    <p className="text-caption mt-1">
+                    <p className="mt-1 text-caption">
                         {current
                             ? "채보를 검색하고 목표별 서열 상수를 변경합니다."
                             : tierList.goal
@@ -210,11 +210,11 @@ export default async function EditTierListPage({
             </section>
 
             {current ? (
-                <details className="bg-surface rounded-card group p-3">
-                    <summary className="text-body cursor-pointer list-none font-bold">
+                <details className="group rounded-card bg-surface p-3">
+                    <summary className="cursor-pointer list-none text-body font-bold">
                         서열표 정보
                     </summary>
-                    <div className="border-divider mt-3 border-t pt-3">
+                    <div className="mt-3 border-t border-divider pt-3">
                         <TierListForm
                             tierList={{
                                 id: tierList.id,
@@ -234,20 +234,20 @@ export default async function EditTierListPage({
                 <>
                     <form
                         method="get"
-                        className="bg-surface rounded-card grid grid-cols-2 gap-2 p-3"
+                        className="grid grid-cols-2 gap-2 rounded-card bg-surface p-3"
                     >
                         <input
                             name="q"
                             defaultValue={keyword}
                             placeholder="곡 제목 · 아티스트 · 식별자"
-                            className="border-border bg-bg text-input col-span-2 h-11 rounded-md border px-3"
+                            className="col-span-2 h-11 rounded-md border border-border bg-bg px-3 text-input"
                         />
                         <div className="col-span-2 grid grid-cols-1 gap-2 md:grid-cols-3">
                             <select
                                 name="difficulty"
                                 defaultValue={difficulty}
                                 aria-label="난이도 필터"
-                                className="border-border bg-bg text-input h-11 rounded-md border px-3"
+                                className="h-11 rounded-md border border-border bg-bg px-3 text-input"
                             >
                                 <option value="">전체 난이도</option>
                                 {(
@@ -267,7 +267,7 @@ export default async function EditTierListPage({
                                 name="level"
                                 defaultValue={level}
                                 aria-label="공식 레벨 필터"
-                                className="border-border bg-bg text-input h-11 rounded-md border px-3"
+                                className="h-11 rounded-md border border-border bg-bg px-3 text-input"
                             >
                                 <option value="">전체 공식 레벨</option>
                                 {TIER_REGULAR_LEVELS.map((item) => (
@@ -285,7 +285,7 @@ export default async function EditTierListPage({
                                 name="category"
                                 defaultValue={category}
                                 aria-label="카테고리 필터"
-                                className="border-border bg-bg text-input h-11 rounded-md border px-3"
+                                className="h-11 rounded-md border border-border bg-bg px-3 text-input"
                             >
                                 <option value="">전체 카테고리</option>
                                 {MUSIC_CATEGORY_VALUES.map((item) => (
@@ -295,12 +295,12 @@ export default async function EditTierListPage({
                                 ))}
                             </select>
                         </div>
-                        <button className="bg-text-primary text-bg h-10 rounded-md text-sm font-bold">
+                        <button className="h-10 rounded-md bg-text-primary text-sm font-bold text-bg">
                             검색
                         </button>
                         <Link
                             href={`/admin/tiers/${tierListId}`}
-                            className="border-border text-text-secondary flex h-10 items-center justify-center rounded-md border text-sm font-semibold"
+                            className="flex h-10 items-center justify-center rounded-md border border-border text-sm font-semibold text-text-secondary"
                         >
                             초기화
                         </Link>
@@ -324,7 +324,7 @@ export default async function EditTierListPage({
                             {page > 1 ? (
                                 <Link
                                     href={pageHref(page - 1)}
-                                    className="border-border text-text-secondary flex h-10 items-center rounded-md border px-3 text-sm font-semibold"
+                                    className="flex h-10 items-center rounded-md border border-border px-3 text-sm font-semibold text-text-secondary"
                                 >
                                     이전
                                 </Link>
@@ -337,7 +337,7 @@ export default async function EditTierListPage({
                             {page < pageCount ? (
                                 <Link
                                     href={pageHref(page + 1)}
-                                    className="border-border text-text-secondary flex h-10 items-center rounded-md border px-3 text-sm font-semibold"
+                                    className="flex h-10 items-center rounded-md border border-border px-3 text-sm font-semibold text-text-secondary"
                                 >
                                     다음
                                 </Link>
@@ -368,7 +368,7 @@ export default async function EditTierListPage({
             ) : null}
 
             {!current ? (
-                <div className="border-divider border-t pt-5">
+                <div className="border-t border-divider pt-5">
                     <TierListDeleteButton tierListId={tierList.id} />
                 </div>
             ) : null}

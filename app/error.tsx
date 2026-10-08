@@ -7,9 +7,9 @@ import { usePathname, useRouter } from "next/navigation";
 import {
     useLocalizedHref,
     useTranslations,
-} from "@/components/i18n/localeProvider";
-import { foundationButtonClass } from "@/components/ui/Button";
-import RecoveryAction from "@/features/recovery/components/recoveryAction";
+} from "@/components/i18n/locale-provider";
+import { foundationButtonClass } from "@/components/ui/button";
+import RecoveryAction from "@/features/recovery/components/recovery-action";
 import { stripLocaleFromPath } from "@/lib/i18n/routing";
 import { recordClientError } from "@/lib/observability/client";
 
@@ -24,7 +24,7 @@ export default function ErrorPage({
     const href = useLocalizedHref();
     const router = useRouter();
     const path = stripLocaleFromPath(usePathname());
-    // 관리자 · 채보 에디터는 원래 오류 화면 그대로((nevigation)/error.tsx 가 이 경계로 넘긴다)
+    // 관리자 · 채보 에디터는 원래 오류 화면 그대로((site)/error.tsx 가 이 경계로 넘긴다)
     const preserved =
         /^\/admin(?:\/|$)/.test(path) ||
         /^\/music\/[^/]+\/[^/]+\/pattern(?:\/|$)/.test(path);
@@ -38,14 +38,14 @@ export default function ErrorPage({
             <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 px-6 text-center">
                 <div>
                     <h1 className="text-title">{t("common.pageError")}</h1>
-                    <p className="text-body-muted mt-2">
+                    <p className="mt-2 text-body-muted">
                         {t("common.retryLater")}
                     </p>
                 </div>
                 <button
                     type="button"
                     onClick={reset}
-                    className="border-border bg-surface text-text-primary flex h-10 cursor-pointer items-center gap-2 rounded-md border px-4 text-sm font-semibold"
+                    className="flex h-10 cursor-pointer items-center gap-2 rounded-md border border-border bg-surface px-4 text-sm font-semibold text-text-primary"
                 >
                     <RotateCcw className="size-4" aria-hidden />
                     {t("common.retry")}

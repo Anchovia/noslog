@@ -5,10 +5,10 @@ import { notFound } from "next/navigation";
 import {
     ChartMetadataForm,
     MusicMetadataForm,
-} from "@/features/music/components/admin/musicMetadataForms";
-import MusicJacketForm from "@/features/music/components/admin/musicJacketForm";
-import MusicTranslationForm from "@/features/music/components/admin/musicTranslationForm";
-import { getAdminMusicDetail } from "@/features/music/server/musicAdminService";
+} from "@/features/music/components/admin/music-metadata-forms";
+import MusicJacketForm from "@/features/music/components/admin/music-jacket-form";
+import MusicTranslationForm from "@/features/music/components/admin/music-translation-form";
+import { getAdminMusicDetail } from "@/features/music/server/music-admin-service";
 
 export default async function AdminMusicDetailPage({
     params,
@@ -25,13 +25,13 @@ export default async function AdminMusicDetailPage({
                 <Link
                     href="/admin/music"
                     aria-label="악곡 목록으로 이동"
-                    className="border-border flex size-9 shrink-0 items-center justify-center rounded-md border"
+                    className="flex size-9 shrink-0 items-center justify-center rounded-md border border-border"
                 >
                     <ArrowLeft className="size-4" />
                 </Link>
                 <div className="min-w-0">
-                    <h1 className="text-title truncate">{music.title}</h1>
-                    <p className="text-caption truncate">
+                    <h1 className="truncate text-title">{music.title}</h1>
+                    <p className="truncate text-caption">
                         {music.artist ?? "아티스트 미상"} ·{" "}
                         {music.categoryShort}
                     </p>
@@ -53,10 +53,10 @@ export default async function AdminMusicDetailPage({
                 }}
             />
 
-            <section className="bg-surface rounded-card flex flex-col gap-3 p-3">
+            <section className="flex flex-col gap-3 rounded-card bg-surface p-3">
                 <div>
                     <h2 className="text-section font-bold">번역 제목</h2>
-                    <p className="text-caption mt-1">
+                    <p className="mt-1 text-caption">
                         승인 상태인 제목만 사용자 화면에 표시됩니다. 제목을
                         비우고 저장하면 삭제됩니다.
                     </p>

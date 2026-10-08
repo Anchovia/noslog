@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { serverEnv } from "@/lib/env/server";
 import getSession from "@/lib/session";
-import { getSafeAuthReturnPath } from "@/lib/authReturnPath";
+import { getSafeAuthReturnPath } from "@/lib/auth-return-path";
 import {
     getPathLocale,
     isLocale,

@@ -4,7 +4,7 @@ import {
     deleteExam as deleteExamService,
     saveExam as saveExamService,
     searchAdminMusic as searchAdminMusicService,
-} from "@/features/exams/server/examAdminService";
+} from "@/features/exams/server/exam-admin-service";
 
 export async function searchAdminMusic(query: string) {
     return searchAdminMusicService(query);

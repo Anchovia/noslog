@@ -9,12 +9,12 @@ import {
     deleteMyChartComment,
     listChartComments,
     resolveChartComment,
-} from "@/app/(nevigation)/music/[index]/[difficulty]/draftActions";
+} from "@/app/(site)/music/[index]/[difficulty]/draft-actions";
 import { formatCommentTime } from "@/components/chart-pattern/playbackClock";
-import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
-import type { ChartDraftStatus } from "@/features/contributions/schemas/chartDraftSchema";
-import { CHART_COMMENT_MAX_LENGTH } from "@/features/contributions/schemas/chartDraftSchema";
-import type { ChartCommentItem } from "@/features/contributions/server/chartDraftService";
+import { useLocale, useTranslations } from "@/components/i18n/locale-provider";
+import type { ChartDraftStatus } from "@/features/contributions/schemas/chart-draft-schema";
+import { CHART_COMMENT_MAX_LENGTH } from "@/features/contributions/schemas/chart-draft-schema";
+import type { ChartCommentItem } from "@/features/contributions/server/chart-draft-service";
 import { formatEditorTime } from "@/lib/chart-pattern/timing";
 
 import { useChartEditorStore } from "./chartEditorStore";
@@ -132,7 +132,7 @@ export default function ChartReviewPanel({
                     <li
                         key={step}
                         aria-current={index === stepIndex ? "step" : undefined}
-                        className={`text-micro flex flex-col gap-1 text-center font-semibold ${
+                        className={`flex flex-col gap-1 text-center text-micro font-semibold ${
                             index === stepIndex
                                 ? "text-text-primary"
                                 : index < stepIndex
@@ -176,12 +176,12 @@ export default function ChartReviewPanel({
                     readOnly={add.isPending}
                     onChange={(event) => setBody(event.target.value)}
                     placeholder={t("editor.review.placeholder")}
-                    className="border-border bg-bg text-text-primary focus:border-text-secondary w-full resize-none rounded-md border px-2 py-1.5 text-xs outline-none"
+                    className="w-full resize-none rounded-md border border-border bg-bg px-2 py-1.5 text-xs text-text-primary outline-none focus:border-text-secondary"
                 />
                 <button
                     type="submit"
                     disabled={!body.trim() || add.isPending}
-                    className="bg-text-primary text-bg h-8 rounded-md text-xs font-bold disabled:opacity-35"
+                    className="h-8 rounded-md bg-text-primary text-xs font-bold text-bg disabled:opacity-35"
                 >
                     {add.isPending
                         ? t("contribution.comment.sending")
@@ -194,9 +194,9 @@ export default function ChartReviewPanel({
                     {comments.map((comment) => (
                         <li
                             key={comment.id}
-                            className="bg-bg flex flex-col gap-1 rounded-md px-2 py-1.5"
+                            className="flex flex-col gap-1 rounded-md bg-bg px-2 py-1.5"
                         >
-                            <div className="text-micro flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
+                            <div className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-micro">
                                 <button
                                     type="button"
                                     onClick={() => onSeek(comment.timeMs)}
@@ -207,7 +207,7 @@ export default function ChartReviewPanel({
                                 >
                                     {formatCommentTime(comment.timeMs)}
                                 </button>
-                                <span className="text-text-secondary min-w-0 truncate">
+                                <span className="min-w-0 truncate text-text-secondary">
                                     {comment.user.username ??
                                         t("ranking.unknownPlayer")}
                                 </span>
@@ -233,7 +233,7 @@ export default function ChartReviewPanel({
                                                     action: "resolve",
                                                 })
                                             }
-                                            className="border-border hover:bg-surface-muted text-micro h-6 rounded border px-2 font-semibold"
+                                            className="h-6 rounded border border-border px-2 text-micro font-semibold hover:bg-surface-muted"
                                         >
                                             {t("editor.review.resolve")}
                                         </button>
@@ -248,7 +248,7 @@ export default function ChartReviewPanel({
                                                     action: "delete",
                                                 })
                                             }
-                                            className="text-danger hover:bg-surface-muted text-micro h-6 rounded px-2 font-semibold"
+                                            className="h-6 rounded px-2 text-micro font-semibold text-danger hover:bg-surface-muted"
                                         >
                                             {t("editor.review.delete")}
                                         </button>

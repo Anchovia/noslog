@@ -8,7 +8,7 @@ const mocks = vi.hoisted(() => ({
 vi.mock("@/lib/session", () => ({ default: mocks.getSession }));
 
 import { proxy } from "@/proxy";
-import { getMaintenanceConfig } from "@/features/recovery/server/maintenanceConfig";
+import { getMaintenanceConfig } from "@/features/recovery/server/maintenance-config";
 
 describe("점검 모드", () => {
     const originalMaintenanceMode = process.env.MAINTENANCE_MODE;

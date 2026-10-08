@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { formatDaysAgo } from "@/lib/music/scoreTrend";
+import { formatDaysAgo } from "@/lib/music/score-trend";
 
 describe("formatDaysAgo", () => {
     const now = new Date(2026, 8, 17, 23, 30);

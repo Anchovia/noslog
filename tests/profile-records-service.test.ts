@@ -18,8 +18,8 @@ vi.mock("@/lib/db", () => ({
 import {
     getPublicProfileRecords,
     recordPlayedAt,
-} from "@/features/profile/server/profileRecordsService";
-import { profileRecordsQuerySchema } from "@/features/profile/schemas/publicProfileSchema";
+} from "@/features/profile/server/profile-records-service";
+import { profileRecordsQuerySchema } from "@/features/profile/schemas/public-profile-schema";
 
 function play(id: number) {
     return {

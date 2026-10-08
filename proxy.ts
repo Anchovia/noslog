@@ -14,9 +14,12 @@ import {
 import db from "./lib/db";
 import getSession from "./lib/session";
 import { recordApiCall } from "./lib/analytics";
-import { getMaintenanceConfig } from "./features/recovery/server/maintenanceConfig";
+import { getMaintenanceConfig } from "./features/recovery/server/maintenance-config";
 import { createTranslator, getMessages } from "./lib/i18n/messages";
-import { getAuthReturnPath, getSafeAuthReturnPath } from "./lib/authReturnPath";
+import {
+    getAuthReturnPath,
+    getSafeAuthReturnPath,
+} from "./lib/auth-return-path";
 
 interface Routes {
     [key: string]: boolean;

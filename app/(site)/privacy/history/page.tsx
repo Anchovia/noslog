@@ -1,0 +1,51 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import BackLink from "@/components/ui/back-link";
+import {
+    getPrivacyCopy,
+    PRIVACY_PREVIOUS_VERSIONS,
+    privacyHistoryCopy,
+    privacyVersionPeriod,
+} from "@/features/privacy/content/privacy-content";
+import { getServerI18n } from "@/lib/i18n/server";
+import { localizePath } from "@/lib/i18n/routing";
+import { createPageMetadata } from "@/lib/metadata/site";
+
+export async function generateMetadata(): Promise<Metadata> {
+    const { locale } = await getServerI18n();
+    return createPageMetadata({
+        title: privacyHistoryCopy[locale].title,
+        path: localizePath("/privacy/history", locale),
+    });
+}
+export default async function PrivacyHistoryPage() {
+    const { locale } = await getServerI18n();
+    const copy = privacyHistoryCopy[locale];
+    return (
+        <div className="nl-privacy-history">
+            <BackLink href={localizePath("/privacy", locale)}>
+                {getPrivacyCopy(locale).title}
+            </BackLink>
+            <h1 className="nl-page-title">{copy.title}</h1>
+            {PRIVACY_PREVIOUS_VERSIONS.length > 0 ? (
+                <ul className="nl-privacy-history__list nl-body">
+                    {PRIVACY_PREVIOUS_VERSIONS.map((version) => (
+                        <li key={version.id}>
+                            <Link
+                                className="nl-link nl-text-link--underlined"
+                                href={localizePath(
+                                    `/privacy/history/${version.id}`,
+                                    locale
+                                )}
+                            >
+                                {privacyVersionPeriod(version, locale)}
+                            </Link>
+                        </li>
+                    ))}
+                </ul>
+            ) : (
+                <p className="nl-body nl-muted">{copy.empty}</p>
+            )}
+        </div>
+    );
+}

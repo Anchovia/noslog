@@ -27,7 +27,7 @@ vi.mock("@/lib/blob", () => ({
     deleteBlobStrict: mocks.deleteBlobStrict,
 }));
 
-import { deleteAccount } from "@/app/(nevigation)/profile/settings/securityActions";
+import { deleteAccount } from "@/app/(site)/profile/settings/security-actions";
 
 describe("회원 탈퇴", () => {
     beforeEach(() => {

@@ -22,9 +22,9 @@ import {
 } from "react";
 import type { Application, Graphics } from "pixi.js";
 
-import { useTranslations } from "@/components/i18n/localeProvider";
+import { useTranslations } from "@/components/i18n/locale-provider";
 import { Checkbox } from "@/components/ui/checkbox";
-import CompactSelect from "@/components/ui/compactSelect";
+import CompactSelect from "@/components/ui/compact-select";
 import { getMetronomePeakGain } from "@/lib/chart-pattern/metronome";
 import { chartPianoColors } from "@/lib/chart-pattern/piano";
 import {

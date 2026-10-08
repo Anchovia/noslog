@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
     getRankingTopPercent,
     getVisibleRankingPages,
-} from "@/components/music/ranking/musicRankingUtils";
+} from "@/components/music/ranking/music-ranking-utils";
 
 describe("악곡 랭킹 표시 계산", () => {
     it("현재 페이지 주변의 페이지 번호를 최대 세 개 표시한다", () => {

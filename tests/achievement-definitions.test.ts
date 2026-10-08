@@ -17,7 +17,7 @@ import {
     summarizeAchievements,
     visibleAchievementDefinitions,
     type AchievementRecords,
-} from "@/features/achievements/achievementDefinitions";
+} from "@/features/achievements/achievement-definitions";
 
 const sRank = getAchievementDefinition("s-rank")!;
 const categoryBM = getAchievementDefinition("category-bm")!;

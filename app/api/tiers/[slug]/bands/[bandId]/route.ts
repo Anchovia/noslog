@@ -1,5 +1,5 @@
-import { getTierBandForUser } from "@/app/(nevigation)/tiers/data";
-import { getMusicTitleDisplayPreference } from "@/lib/i18n/musicTitle";
+import { getTierBandForUser } from "@/app/(site)/tiers/data";
+import { getMusicTitleDisplayPreference } from "@/lib/i18n/music-title";
 import { isLocale } from "@/lib/i18n/routing";
 import { getUser } from "@/lib/user";
 import {

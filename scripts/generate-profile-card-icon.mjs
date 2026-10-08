@@ -10,7 +10,7 @@ const svg = renderToStaticMarkup(
     createElement(Globe, { size: 24, color: "#afafaf", strokeWidth: 2 }) // content-subdued 다크(PROFILE_CARD_DARK_HEX.subdued)
 );
 const destination = new URL(
-    "../features/profile/profileCardGlobe.ts",
+    "../features/profile/profile-card-globe.ts",
     import.meta.url
 );
 const source =

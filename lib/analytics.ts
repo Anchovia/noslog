@@ -7,7 +7,7 @@ import {
     isBotUserAgent,
     pageRouteFromPath,
     type ExternalEvent,
-} from "@/lib/analyticsRoutes";
+} from "@/lib/analytics-routes";
 import db from "@/lib/db";
 
 // 날짜별 합계의 종류 — visitors·pageviews 는 열쇠 없이 하루 합계, page·api·external 은 경로·이름별,

@@ -2,8 +2,8 @@ import db from "@/lib/db";
 import { localizePath, SUPPORTED_LOCALES } from "@/lib/i18n/routing";
 import { SITE_URL } from "@/lib/metadata/site";
 import type { MetadataRoute } from "next";
-import { getPublicAnnouncements } from "@/features/announcements/server/publicAnnouncementService";
-import { getSitemapEvents } from "@/features/events/server/eventService";
+import { getPublicAnnouncements } from "@/features/announcements/server/public-announcement-service";
+import { getSitemapEvents } from "@/features/events/server/event-service";
 
 export const revalidate = 3600;
 

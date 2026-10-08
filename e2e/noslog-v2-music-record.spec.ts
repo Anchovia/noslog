@@ -1,7 +1,7 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 import type { Page } from "@playwright/test";
-import type { MusicDetailProps } from "@/components/music/musicDetailTypes";
+import type { MusicDetailProps } from "@/components/music/music-detail-types";
 
 const musicPath = "/music/bfdaadfb98501907925ecf41a076108d/expert";
 const counts = {

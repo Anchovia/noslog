@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { unlockStepsFor } from "@/lib/music/unlockCondition";
+import { unlockStepsFor } from "@/lib/music/unlock-condition";
 
 const step = (name: string, stardust: number | null, moved = false) => ({
     name,

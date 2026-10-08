@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
-import { BRAND_IMAGE_DARK_HEX } from "@/lib/metadata/brandImage";
+import { BRAND_IMAGE_DARK_HEX } from "@/lib/metadata/brand-image";
 
 describe("아이콘 · 공유 이미지 색", () => {
     const css = readFileSync(resolve("app/styles/tokens.css"), "utf8");

@@ -1,6 +1,6 @@
 "use server";
 
-import type { TierEntryPlacement } from "@/features/tiers/schemas/tierAdminSchema";
+import type { TierEntryPlacement } from "@/features/tiers/schemas/tier-admin-schema";
 import {
     addTierBand as addTierBandService,
     addTierEntry as addTierEntryService,
@@ -13,7 +13,7 @@ import {
     searchTierCharts as searchTierChartsService,
     updateTierBand as updateTierBandService,
     updateTierList as updateTierListService,
-} from "@/features/tiers/server/tierAdminService";
+} from "@/features/tiers/server/tier-admin-service";
 
 export async function searchTierCharts(query: string, tierListId: number) {
     return searchTierChartsService(query, tierListId);

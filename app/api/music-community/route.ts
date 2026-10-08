@@ -5,13 +5,13 @@ import getSession from "@/lib/session";
 import {
     opinionQuerySchema,
     opinionReplyQuerySchema,
-} from "@/features/music/schemas/communitySchema";
+} from "@/features/music/schemas/community-schema";
 import {
     getCommunityData,
     getCommunityOpinions,
     getCommunityPattern,
     getOpinionReplies,
-} from "@/features/music/server/communityData";
+} from "@/features/music/server/community-data";
 
 const headers = { "Cache-Control": "private, no-store" };
 

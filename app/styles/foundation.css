@@ -1705,7 +1705,7 @@ html[data-theme="light"] .noslog-ui,
 .noslog-ui :is(.nl-stat-strip__value, .nl-toned)[data-tone="fc"] {
     color: var(--nl-achievement-full-combo);
 }
-/* Grd · 레이팅 구간 색(2026-09-19 R1) — 판정 색에서 점수 목표 색으로. 기준값은 lib/music/scoreTone GRADE_BAND_CUTS */
+/* Grd · 레이팅 구간 색(2026-09-19 R1) — 판정 색에서 점수 목표 색으로. 기준값은 lib/music/score-tone GRADE_BAND_CUTS */
 .noslog-ui :is(.nl-stat-strip__value, .nl-toned)[data-tone="grade-1"] {
     color: var(--nl-grade-band-1);
 }

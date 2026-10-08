@@ -1,15 +1,15 @@
 import { notFound } from "next/navigation";
 
-import PageContainer, { PageHeading } from "@/components/layout/pageContainer";
-import BackLink from "@/components/ui/backLink";
-import { StatusMessage } from "@/components/ui/statusMessage";
-import AnnouncementBody from "@/features/announcements/components/announcementBody";
-import EventReviewForm from "@/features/events/components/eventReviewForm";
+import PageContainer, { PageHeading } from "@/components/layout/page-container";
+import BackLink from "@/components/ui/back-link";
+import { StatusMessage } from "@/components/ui/status-message";
+import AnnouncementBody from "@/features/announcements/components/announcement-body";
+import EventReviewForm from "@/features/events/components/event-review-form";
 import {
     EventBanner,
     eventPeriod,
-} from "@/features/events/components/eventParts";
-import { getAdminEvent } from "@/features/events/server/eventAdminService";
+} from "@/features/events/components/event-parts";
+import { getAdminEvent } from "@/features/events/server/event-admin-service";
 import { SITE_URL } from "@/lib/metadata/site";
 
 const LABELS = {

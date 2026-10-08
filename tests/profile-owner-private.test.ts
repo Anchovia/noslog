@@ -9,7 +9,7 @@ vi.mock("@/lib/db", () => ({
     },
 }));
 
-import { getOwnerPrivateFields } from "@/features/profile/server/ownerPrivateService";
+import { getOwnerPrivateFields } from "@/features/profile/server/owner-private-service";
 
 const base = {
     nostalgia_name: "CAROL",

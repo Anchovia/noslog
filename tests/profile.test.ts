@@ -1,13 +1,13 @@
 import { describe, expect, it } from "vitest";
 
-import type { ProfileUser } from "@/components/profile/dashboard/profileTypes";
+import type { ProfileUser } from "@/components/profile/dashboard/profile-types";
 import {
     formatProfileDate,
     formatProfileGrade,
     getProfileCountryCode,
     getProfileDifficultyColor,
     getProfileRankRows,
-} from "@/components/profile/dashboard/profileUtils";
+} from "@/components/profile/dashboard/profile-utils";
 
 function profileUser(): ProfileUser {
     return {

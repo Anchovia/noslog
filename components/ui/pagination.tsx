@@ -3,7 +3,7 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { ReactNode } from "react";
 
-import useElementWidth from "@/lib/hooks/useElementWidth";
+import useElementWidth from "@/lib/hooks/use-element-width";
 
 export default function Pagination({
     page,

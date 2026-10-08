@@ -12,13 +12,13 @@ vi.mock("@/lib/db", async () => {
 });
 
 import db from "@/lib/db";
-import { mutateChartCommunity } from "@/features/music/server/communityMutation";
+import { mutateChartCommunity } from "@/features/music/server/community-mutation";
 import {
     getCommunityData,
     getCommunityOpinions,
     getCommunityPattern,
-} from "@/features/music/server/communityData";
-import { EMPTY_PATTERN_RATINGS } from "@/features/music/schemas/communitySchema";
+} from "@/features/music/server/community-data";
+import { EMPTY_PATTERN_RATINGS } from "@/features/music/schemas/community-schema";
 
 describe.skipIf(!process.env.COMMUNITY_TEST_DATABASE_URL)(
     "community persistence in an isolated local database",

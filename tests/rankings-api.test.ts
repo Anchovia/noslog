@@ -7,7 +7,7 @@ const mocks = vi.hoisted(() => ({
     logServerError: vi.fn(),
 }));
 
-vi.mock("@/features/rankings/server/globalRankingData", () => ({
+vi.mock("@/features/rankings/server/global-ranking-data", () => ({
     getGlobalRankingPage: mocks.getGlobalRankingPage,
 }));
 

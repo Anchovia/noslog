@@ -6,7 +6,7 @@ import {
     EXAM_TIER_DARK_HEX,
     gradeBandTone,
     STAT_TONE_DARK_HEX,
-} from "@/lib/music/scoreTone";
+} from "@/lib/music/score-tone";
 
 describe("Grd · 레이팅 구간 색", () => {
     it("6,000 · 6,500 · 7,000 · 7,500 · 8,000 에서 한 단계씩 오른다", () => {

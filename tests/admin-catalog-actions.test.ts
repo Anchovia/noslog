@@ -21,7 +21,7 @@ vi.mock("@/lib/db", () => ({
         },
     },
 }));
-vi.mock("@/lib/services/music/catalogSync", () => ({
+vi.mock("@/lib/services/music/catalog-sync", () => ({
     parseMusicCatalogSnapshot: mocks.parseMusicCatalogSnapshot,
     applyMusicCatalogSnapshot: mocks.applyMusicCatalogSnapshot,
 }));

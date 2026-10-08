@@ -1,12 +1,12 @@
 import Link from "next/link";
 
-import MusicCatalogReviewActions from "@/features/music/components/admin/musicCatalogReviewActions";
+import MusicCatalogReviewActions from "@/features/music/components/admin/music-catalog-review-actions";
 import {
     MUSIC_CATALOG_STATUSES,
     normalizeMusicCatalogStatus,
     type MusicCatalogStatus,
-} from "@/features/music/schemas/musicCatalogAdminSchema";
-import { listMusicCatalogCandidates } from "@/features/music/server/musicCatalogAdminService";
+} from "@/features/music/schemas/music-catalog-admin-schema";
+import { listMusicCatalogCandidates } from "@/features/music/server/music-catalog-admin-service";
 
 function statusLabel(status: MusicCatalogStatus) {
     if (status === "pending") return "검토 대기";
@@ -27,7 +27,7 @@ export default async function AdminCatalogPage({
         <div className="flex flex-col gap-4 py-5">
             <section>
                 <h1 className="text-title">악곡 업데이트</h1>
-                <p className="text-caption mt-1">
+                <p className="mt-1 text-caption">
                     BEMANI 연동에서 감지한 공식 악곡과 채보 변경을 관리합니다.
                 </p>
             </section>
@@ -53,18 +53,18 @@ export default async function AdminCatalogPage({
                 {candidates.map((candidate) => (
                     <article
                         key={candidate.id}
-                        className="bg-surface rounded-card flex flex-col gap-3 p-4"
+                        className="flex flex-col gap-3 rounded-card bg-surface p-4"
                     >
                         <div className="flex items-start justify-between gap-3">
                             <div className="min-w-0">
-                                <h2 className="text-section truncate">
+                                <h2 className="truncate text-section">
                                     {candidate.title}
                                 </h2>
-                                <p className="text-caption mt-1 truncate">
+                                <p className="mt-1 truncate text-caption">
                                     {candidate.artist ?? "아티스트 미상"}
                                 </p>
                             </div>
-                            <span className="bg-surface-muted text-caption shrink-0 rounded px-2 py-1">
+                            <span className="shrink-0 rounded bg-surface-muted px-2 py-1 text-caption">
                                 {statusLabel(candidate.status)}
                             </span>
                         </div>
@@ -73,16 +73,16 @@ export default async function AdminCatalogPage({
                             {candidate.changes.map((change) => (
                                 <li
                                     key={change}
-                                    className="bg-basic/10 text-basic rounded px-2 py-1 text-xs font-semibold"
+                                    className="rounded bg-basic/10 px-2 py-1 text-xs font-semibold text-basic"
                                 >
                                     {change}
                                 </li>
                             ))}
                         </ul>
 
-                        <dl className="text-caption grid grid-cols-[auto_1fr] gap-x-3 gap-y-1">
+                        <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-caption">
                             <dt>악곡 ID</dt>
-                            <dd className="text-text-primary truncate font-mono">
+                            <dd className="truncate font-mono text-text-primary">
                                 {candidate.musicIndex}
                             </dd>
                             <dt>감지 횟수</dt>
@@ -103,7 +103,7 @@ export default async function AdminCatalogPage({
                     </article>
                 ))}
                 {candidates.length === 0 ? (
-                    <p className="bg-surface text-body-muted rounded-card py-12 text-center">
+                    <p className="rounded-card bg-surface py-12 text-center text-body-muted">
                         해당하는 악곡 업데이트가 없습니다.
                     </p>
                 ) : null}

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { createArcadeAddressQueries } from "@/features/arcades/api/geocodeArcadeAddress";
+import { createArcadeAddressQueries } from "@/features/arcades/api/geocode-arcade-address";
 import {
     arcadeFormInputFromFormData,
     arcadeFormSchema,
@@ -9,11 +9,11 @@ import {
     createArcadeFormData,
     createArcadeFormDefaultValues,
     type ArcadeFormValues,
-} from "@/features/arcades/schemas/arcadeSchema";
+} from "@/features/arcades/schemas/arcade-schema";
 import {
     fromPublicArcadeWeekly,
     toPublicArcadeWeekly,
-} from "@/lib/arcadeDetails";
+} from "@/lib/arcade-details";
 
 const offDay = { enabled: false, open: "", close: "" };
 

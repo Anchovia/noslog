@@ -31,10 +31,24 @@ export default defineConfig([
         files: [
             "app/**/*.{ts,tsx}",
             "features/**/*.{ts,tsx}",
+            "components/**/*.{ts,tsx}",
+            "lib/**/*.{ts,tsx}",
+            "tests/**/*.{ts,tsx}",
+            "e2e/**/*.{ts,tsx}",
+            "scripts/**/*.{ts,mjs}",
+            "tooling/**/*.mjs",
+            ".storybook/**/*.{ts,tsx}",
+        ],
+        plugins: { noslog: architecture },
+        rules: { "noslog/filenames": "error" },
+    },
+    {
+        files: [
+            "app/**/*.{ts,tsx}",
+            "features/**/*.{ts,tsx}",
             "components/ui/**/*.{ts,tsx}",
             "lib/**/*.{ts,tsx}",
         ],
-        plugins: { noslog: architecture },
         rules: { "noslog/boundaries": "error" },
     },
     {
@@ -56,6 +70,7 @@ export default defineConfig([
     },
     {
         files: [
+            "features/**/*.{ts,tsx}",
             "components/ui/**/*.{ts,tsx}",
             ".storybook/**/*.{ts,tsx}",
             "vitest.storybook.config.ts",

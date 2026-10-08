@@ -23,11 +23,11 @@ vi.mock("@/lib/db", () => ({
     },
 }));
 
-import { pinnedRecordsValueSchema } from "@/features/profile/schemas/pinnedRecordSchema";
+import { pinnedRecordsValueSchema } from "@/features/profile/schemas/pinned-record-schema";
 import {
     getProfilePinnedRecords,
     setPinnedRecords,
-} from "@/features/profile/server/profilePinnedService";
+} from "@/features/profile/server/profile-pinned-service";
 
 function play(chart: number) {
     return {

@@ -25,10 +25,10 @@ vi.mock("@/lib/observability/server", () => ({ logServerError: mocks.log }));
 import {
     clearPreferredArcade,
     setPreferredArcade,
-} from "@/app/(nevigation)/gamecenter/actions";
-import { regenerateSyncToken } from "@/app/(nevigation)/bookmarklet/action";
+} from "@/app/(site)/gamecenter/actions";
+import { regenerateSyncToken } from "@/app/(site)/bookmarklet/action";
 import { createTranslator, getMessages } from "@/lib/i18n/messages";
-import { CACHE_TAGS, getUserProfileTag } from "@/lib/cacheTags";
+import { CACHE_TAGS, getUserProfileTag } from "@/lib/cache-tags";
 import type { Locale } from "@/lib/i18n/routing";
 
 describe("profile preference action boundaries", () => {

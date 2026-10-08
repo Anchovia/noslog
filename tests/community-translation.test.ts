@@ -31,11 +31,11 @@ vi.mock("@/lib/db", () => ({
     },
 }));
 
-import { detectTextLanguage } from "@/lib/i18n/textLanguage";
+import { detectTextLanguage } from "@/lib/i18n/text-language";
 import {
     fillCommunityTranslations,
     getCommunityTranslation,
-} from "@/features/music/server/communityTranslation";
+} from "@/features/music/server/community-translation";
 
 describe("의견 글 언어 판별", () => {
     it("글자 종류로 가린다", () => {

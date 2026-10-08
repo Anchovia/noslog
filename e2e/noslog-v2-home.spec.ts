@@ -128,7 +128,9 @@ for (const locale of ["ko", "ja", "en"]) {
                     expect(tile.iconWidth).toBe(20);
                     expect(tile.gap).toBe(8);
                     expect([12, 14]).toContain(tile.textSize);
-                    expect(tile.textWeight).toBe("500");
+                    expect(tile.textWeight).toBe(
+                        tile.textSize === 12 ? "400" : "500"
+                    );
                     expect(tile.radius).toBe("8px");
                     expect(tile.background).toBe(
                         theme === "dark"

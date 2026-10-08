@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { createApiFailure, createApiSuccess } from "@/lib/api/response";
 import { logServerError } from "@/lib/observability/server";
 import { getUser } from "@/lib/user";
-import { parseGlobalRankingQuery } from "@/features/rankings/schemas/globalRankingSchema";
-import { getGlobalRankingPage } from "@/features/rankings/server/globalRankingData";
+import { parseGlobalRankingQuery } from "@/features/rankings/schemas/global-ranking-schema";
+import { getGlobalRankingPage } from "@/features/rankings/server/global-ranking-data";
 
 export async function GET(request: NextRequest) {
     try {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import type { TierBandData } from "@/features/tiers/components/tierBoard/tierBoardTypes";
+import type { TierBandData } from "@/features/tiers/components/tier-board/tier-board-types";
 import {
     getTierBoardChangeCount,
     getBandDropId,
@@ -9,7 +9,7 @@ import {
     getTierEntryPlacements,
     moveTierEntryInBoard,
     resolveTierDropTarget,
-} from "@/features/tiers/components/tierBoard/tierBoardUtils";
+} from "@/features/tiers/components/tier-board/tier-board-utils";
 
 function bands(): TierBandData[] {
     return [

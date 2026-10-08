@@ -14,7 +14,7 @@ import {
     calculateBasicRatingTheoreticalMax,
     type BasicRatingCurveId,
     type BasicRatingRecord,
-} from "../lib/tiers/basicRating";
+} from "../lib/tiers/basic-rating";
 
 const envFile = process.argv
     .find((argument) => argument.startsWith("--env-file="))

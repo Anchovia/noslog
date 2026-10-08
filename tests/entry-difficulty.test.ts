@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { entryDifficulty } from "@/features/music/lib/entryDifficulty";
+import { entryDifficulty } from "@/features/music/lib/entry-difficulty";
 
 describe("악곡에 들어가는 난이도", () => {
     it("그 곡의 가장 높은 난이도로 들어간다", () => {

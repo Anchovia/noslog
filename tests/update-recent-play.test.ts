@@ -18,7 +18,7 @@ vi.mock("@/lib/db", () => ({
     },
 }));
 
-import { updateRecentPlay } from "@/lib/services/user/updateRecentPlay";
+import { updateRecentPlay } from "@/lib/services/user/update-recent-play";
 
 const history = [
     {

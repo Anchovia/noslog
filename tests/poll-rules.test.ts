@@ -7,7 +7,7 @@ import {
     pollLockedChange,
     validatePollInput,
     type PollInput,
-} from "@/features/polls/schemas/pollSchema";
+} from "@/features/polls/schemas/poll-schema";
 
 const now = new Date("2026-09-23T00:00:00.000Z");
 const base: PollInput = {

@@ -1,13 +1,13 @@
 "use client";
 
-import "@/lib/inputModality";
+import "@/lib/input-modality";
 
 import * as SelectPrimitive from "@radix-ui/react-select";
 import { Check, ChevronDown } from "lucide-react";
 import type { Ref } from "react";
 
-import { useSelectOpen } from "@/components/ui/useSelectOpen";
-import { cn } from "@/lib/utils";
+import { useSelectOpen } from "@/components/ui/use-select-open";
+import { cn } from "@/lib/cn";
 
 // Radix 항목은 빈 문자열 값을 쓸 수 없어서 "" 선택지(전국 · — 등)는 안에서만 이 값으로 바꿔 쓴다
 const EMPTY = "__nl-select-empty__";

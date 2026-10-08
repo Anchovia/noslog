@@ -21,7 +21,7 @@ vi.mock("next/cache", () => ({
 }));
 vi.mock("@/lib/observability/server", () => ({ logServerError: vi.fn() }));
 
-import { confirmCabinetRunning } from "@/features/arcades/server/cabinetCheckService";
+import { confirmCabinetRunning } from "@/features/arcades/server/cabinet-check-service";
 
 describe("cabinet running check", () => {
     beforeEach(() => {

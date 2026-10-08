@@ -25,7 +25,7 @@ vi.mock("@/lib/db", () => ({
         playData: { count: mocks.count },
     },
 }));
-vi.mock("@/features/music/server/musicDetailData", () => ({
+vi.mock("@/features/music/server/music-detail-data", () => ({
     getCachedMusicDetail: mocks.music,
     getUserChartRecord: mocks.record,
     getCachedChartDetailStats: mocks.stats,
@@ -35,17 +35,17 @@ vi.mock("@/features/music/server/musicDetailData", () => ({
     getUserChartPerformanceTrend: mocks.performance,
     getUserChartPeerScoreComparison: mocks.peers,
 }));
-vi.mock("@/features/music/server/chartRanking", () => ({
+vi.mock("@/features/music/server/chart-ranking", () => ({
     getChartRanking: mocks.ranking,
     getChartScorePlayers: mocks.players,
     getChartScorePlayer: mocks.player,
     MUSIC_RANKING_PAGE_SIZE: 25,
 }));
-vi.mock("@/features/music/server/communityData", () => ({
+vi.mock("@/features/music/server/community-data", () => ({
     getCommunityData: mocks.community,
 }));
 vi.mock("@/lib/observability/server", () => ({ logServerError: mocks.log }));
-import { loadMusicDetail } from "@/features/music/server/loadMusicDetail";
+import { loadMusicDetail } from "@/features/music/server/load-music-detail";
 
 describe("music detail query orchestration", () => {
     beforeEach(() => {

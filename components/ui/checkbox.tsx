@@ -1,7 +1,7 @@
 import { Check } from "lucide-react";
 import type { ComponentProps, ReactNode } from "react";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/cn";
 
 interface CheckboxProps extends Omit<ComponentProps<"input">, "type"> {
     /** 보이는 이름. checked/onChange 또는 defaultChecked/register를 네이티브 input에 연결한다. */

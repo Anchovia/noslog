@@ -3,9 +3,9 @@
 import { updateTag } from "next/cache";
 import { z } from "zod";
 
-import { rejudgeAchievementsBatch } from "@/features/achievements/server/achievementService";
+import { rejudgeAchievementsBatch } from "@/features/achievements/server/achievement-service";
 import { requireAdmin } from "@/lib/admin";
-import { CACHE_TAGS, getUserProfileTag } from "@/lib/cacheTags";
+import { CACHE_TAGS, getUserProfileTag } from "@/lib/cache-tags";
 import { logServerError } from "@/lib/observability/server";
 
 const cursorSchema = z.number().int().min(0);

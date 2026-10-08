@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 
-import { groupPins } from "@/features/music/components/scorePins";
-import { scoreDomainMin } from "@/features/music/components/scoreScatter";
-import type { ChartScorePlayer } from "@/features/music/schemas/chartRankingSchema";
+import { groupPins } from "@/features/music/components/score-pins";
+import { scoreDomainMin } from "@/features/music/components/score-scatter";
+import type { ChartScorePlayer } from "@/features/music/schemas/chart-ranking-schema";
 
 const player = (score: number, user_id: number): ChartScorePlayer => ({
     position: user_id,

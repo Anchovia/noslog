@@ -27,7 +27,7 @@ vi.mock("next/link", () => ({
         );
     },
 }));
-vi.mock("@/features/admin/components/adminDashboardChart", () => ({
+vi.mock("@/features/admin/components/admin-dashboard-chart", () => ({
     default: (props: unknown) => {
         mocks.chart(props);
         return null;
@@ -37,12 +37,12 @@ vi.mock("@/features/admin/components/adminDashboardChart", () => ({
         return null;
     },
 }));
-import { DASHBOARD_METRIC_COLORS } from "@/features/admin/dashboardParams";
+import { DASHBOARD_METRIC_COLORS } from "@/features/admin/dashboard-params";
 import {
     AdminDashboardMetricLink,
     AdminDashboardRangeLink,
     AdminDashboardTrend,
-} from "@/features/admin/components/adminDashboardMetric";
+} from "@/features/admin/components/admin-dashboard-metric";
 
 describe("dashboard metric navigation", () => {
     beforeEach(() => {

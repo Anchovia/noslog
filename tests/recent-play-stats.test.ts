@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
     getBestScoreDifference,
     getTimingBias,
-} from "@/lib/music/recentPlayStats";
+} from "@/lib/music/recent-play-stats";
 
 describe("최근 플레이 통계", () => {
     it("현재 베스트 점수 대비 차이를 계산한다", () => {

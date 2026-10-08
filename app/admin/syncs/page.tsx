@@ -8,10 +8,10 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-import { getSyncHealthClassName } from "@/lib/admin/syncHealth";
-import { getAdminSyncs } from "@/features/admin/server/adminSyncService";
-import { ADMIN_SYNC_STATUSES as statuses } from "@/features/admin/schemas/adminSyncSchema";
-import AchievementRejudgePanel from "@/features/achievements/components/admin/achievementRejudgePanel";
+import { getSyncHealthClassName } from "@/lib/admin/sync-health";
+import { getAdminSyncs } from "@/features/admin/server/admin-sync-service";
+import { ADMIN_SYNC_STATUSES as statuses } from "@/features/admin/schemas/admin-sync-schema";
+import AchievementRejudgePanel from "@/features/achievements/components/admin/achievement-rejudge-panel";
 
 export default async function AdminSyncsPage({
     searchParams,
@@ -53,7 +53,7 @@ export default async function AdminSyncsPage({
         <div className="flex flex-col gap-4 py-5">
             <section>
                 <h1 className="text-title">동기화 내역</h1>
-                <p className="text-caption mt-1">
+                <p className="mt-1 text-caption">
                     데이터 수집 범위와 처리 결과, 오류를 확인합니다.
                 </p>
             </section>
@@ -63,11 +63,11 @@ export default async function AdminSyncsPage({
                 {summaries.map((summary) => (
                     <div
                         key={summary.label}
-                        className="bg-surface rounded-card p-3"
+                        className="rounded-card bg-surface p-3"
                     >
                         <p className="text-caption">{summary.label}</p>
                         <strong
-                            className={`${summary.className} text-section mt-1 block tabular-nums`}
+                            className={`${summary.className} mt-1 block text-section tabular-nums`}
                         >
                             {summary.value.toLocaleString("ko-KR")}
                         </strong>
@@ -119,7 +119,7 @@ export default async function AdminSyncsPage({
                     return (
                         <article
                             key={sync.id}
-                            className="bg-surface rounded-card flex flex-col gap-3 p-3"
+                            className="flex flex-col gap-3 rounded-card bg-surface p-3"
                         >
                             <div className="flex items-start gap-3">
                                 <span
@@ -128,7 +128,7 @@ export default async function AdminSyncsPage({
                                     <Icon className="size-4" />
                                 </span>
                                 <div className="min-w-0 flex-1">
-                                    <p className="text-body truncate font-bold">
+                                    <p className="truncate text-body font-bold">
                                         {sync.user.nostalgia_name ??
                                             sync.user.username ??
                                             `유저 ${sync.user.id}`}
@@ -151,32 +151,32 @@ export default async function AdminSyncsPage({
                                 </span>
                             </div>
                             <div className="grid grid-cols-3 gap-2 text-center">
-                                <div className="bg-bg rounded-md p-2">
+                                <div className="rounded-md bg-bg p-2">
                                     <p className="text-caption">수신</p>
                                     <strong className="text-sm tabular-nums">
                                         {sync.received_plays}
                                     </strong>
                                 </div>
-                                <div className="bg-bg rounded-md p-2">
+                                <div className="rounded-md bg-bg p-2">
                                     <p className="text-caption">추가</p>
                                     <strong className="text-sm tabular-nums">
                                         {sync.inserted_plays}
                                     </strong>
                                 </div>
-                                <div className="bg-bg rounded-md p-2">
+                                <div className="rounded-md bg-bg p-2">
                                     <p className="text-caption">변경</p>
                                     <strong className="text-sm tabular-nums">
                                         {sync.changed_records}
                                     </strong>
                                 </div>
                             </div>
-                            <details className="border-border border-t pt-3">
-                                <summary className="text-label flex cursor-pointer list-none items-center justify-between font-semibold">
+                            <details className="border-t border-border pt-3">
+                                <summary className="flex cursor-pointer list-none items-center justify-between text-label font-semibold">
                                     <span className="flex items-center gap-1.5">
                                         <DatabaseZap className="size-3.5" />
                                         수신 데이터 상태
                                     </span>
-                                    <Activity className="text-text-disabled size-3.5" />
+                                    <Activity className="size-3.5 text-text-disabled" />
                                 </summary>
                                 <dl className="mt-3 grid grid-cols-2 gap-x-3 gap-y-2">
                                     <div>
@@ -243,7 +243,7 @@ export default async function AdminSyncsPage({
                                 </pre>
                             ) : null}
                             {sync.completed_at ? (
-                                <p className="text-caption text-right">
+                                <p className="text-right text-caption">
                                     완료{" "}
                                     {sync.completed_at.toLocaleString("ko-KR")}
                                 </p>
@@ -252,7 +252,7 @@ export default async function AdminSyncsPage({
                     );
                 })}
                 {syncs.length === 0 ? (
-                    <p className="text-body-muted bg-surface rounded-card py-12 text-center">
+                    <p className="rounded-card bg-surface py-12 text-center text-body-muted">
                         동기화 내역이 없습니다.
                     </p>
                 ) : null}
