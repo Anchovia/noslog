@@ -138,7 +138,7 @@
 /* 의견 시각을 누르면 캔버스 위 끝으로 올린다 — 고정 머리(60) + 16 만큼 비운다(의견 줄과 같은 값) */
 .noslog-ui .nl-chart-viewer__stage {
     min-width: 0;
-    scroll-margin-top: 76px;
+    scroll-margin-top: calc(var(--nl-header-height) + var(--nl-spacing-16));
 }
 /* 출처 창 목록 — 항목 사이 16 · 제목 → 내용 8, 항목 사이 구분선(2026-09-26 I1 — 정보 창 줄 목록과 같은 선) */
 .noslog-ui .nl-chart-viewer__sources {

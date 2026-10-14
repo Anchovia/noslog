@@ -6,7 +6,12 @@ import { defineConfig } from "vitest/config";
 
 export default defineConfig({
     optimizeDeps: {
-        include: ["@hookform/resolvers/zod", "react-hook-form", "zod"],
+        include: [
+            "@hookform/resolvers/zod",
+            "@tanstack/react-query",
+            "react-hook-form",
+            "zod",
+        ],
     },
     resolve: {
         alias: { "@": fileURLToPath(new URL("./", import.meta.url)) },

@@ -739,7 +739,7 @@ function drawMeasureAnnotations(
         )
             continue;
         let detailY = y + 2;
-        context.fillStyle = "#90909d";
+        context.fillStyle = "#8e8e9a";
         context.font = "9px ui-monospace, monospace";
         context.textBaseline = "top";
         if (marker.showBpm) {

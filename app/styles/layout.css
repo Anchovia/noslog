@@ -151,6 +151,11 @@
     height: var(--nl-control-height);
     border-radius: var(--nl-radius-full);
 }
+/* 사진은 칸을 채운다 — 1056 이상 40 에서 44 로 넘치지 않게(2026-10-15 토큰 점검 A) */
+.noslog-ui .nl-account > .nl-avatar {
+    width: 100%;
+    height: 100%;
+}
 .noslog-ui .nl-login {
     display: flex;
     height: var(--nl-control-height);
@@ -300,10 +305,13 @@
         --nl-layout-margin: var(--nl-grid-margin-wide);
     }
 }
+/* 12 로 줄이면 굵기도 metadata 400 — 지금 줄은 menu-set 면이 표시한다(2026-10-15 토큰 점검 A, 12 굵게 금지) */
 @media (max-width: 359px) {
-    .noslog-ui .nl-destination {
+    .noslog-ui .nl-destination,
+    .noslog-ui .nl-destination[aria-current="page"] {
         font-size: var(--nl-type-size-12);
         line-height: var(--nl-type-line-height-16);
+        font-weight: var(--nl-type-weight-regular);
     }
 }
 /* 헤더 메뉴 이동 줄 — 폰 48 · 데스크톱 컨트롤 높이(40). 부품 결정 ⑥ */

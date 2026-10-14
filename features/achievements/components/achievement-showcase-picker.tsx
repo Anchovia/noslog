@@ -107,7 +107,7 @@ export default function AchievementShowcasePicker({
                 })}
             </p>
             {error ? (
-                <p role="alert" className="nl-metadata nl-field__error">
+                <p role="alert" className="nl-field__help nl-field__error">
                     {error}
                 </p>
             ) : null}

@@ -349,6 +349,12 @@ export const jaMessages = {
     "poll.error.maxChoices": "最大数を確認してください。",
     "poll.error.closesAt": "締め切りは今より後にしてください。",
     "shell.externalLink": "外部サイト",
+    "announcements.tierRebalance.imageAlt":
+        "難易度表の全体再配置: {date} · 計{total}件の配置 · 変更{changed}件 · 新規{added}件 · 維持{retained}件 · 各表{charts}譜面 · {bands}区分 · 0.1刻み · {rows}",
+    "announcements.tierRebalance.rowAlt":
+        "{label}: 変更{changed}件、新規{added}件、区分内の最大譜面数 {before} → {after}",
+    "announcements.tierChange.imageAlt":
+        "難易度表変更: {title} · {date} · {changes}",
     "announcements.empty": "お知らせはありません。",
     "announcements.pageLabel": "お知らせ {page}ページ",
     "announcements.published": "掲載日",

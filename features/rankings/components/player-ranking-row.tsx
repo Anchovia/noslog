@@ -121,7 +121,11 @@ export default function PlayerRankingRow({
             >
                 {row.rank.toLocaleString(locale)}
             </span>
-            <Avatar src={row.avatar} fallbackName={row.username} size={32} />
+            <Avatar
+                className="nl-avatar--compact"
+                src={row.avatar}
+                fallbackName={row.username}
+            />
             <div
                 ref={identityRef}
                 className="nl-player-row__identity"

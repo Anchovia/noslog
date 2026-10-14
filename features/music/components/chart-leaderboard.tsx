@@ -21,10 +21,10 @@ import { scoreTone } from "@/lib/music/score-tone";
 /** 등급 메달 — 순위표는 18(공용 순위표 규격 그대로), 악곡 상세 핀 창은 아이콘 규격 16 */
 export function ScoreGrade({
     rank,
-    size = 18,
+    size = 20,
 }: {
     rank: string;
-    size?: 16 | 18;
+    size?: 16 | 20;
 }) {
     const t = useTranslations();
     const asset = rankAssetNames[rank.toUpperCase()];

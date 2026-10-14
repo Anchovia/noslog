@@ -174,7 +174,7 @@
     border-radius: var(--nl-radius-overlay);
     background: var(--nl-surface-overlay);
     box-shadow: var(--nl-overlay-shadow);
-    z-index: 86;
+    z-index: var(--nl-layer-select);
 }
 .noslog-ui .nl-sort-menu__group,
 .noslog-ui .nl-sort-menu__section {
@@ -387,7 +387,7 @@
     border-radius: var(--nl-radius-overlay);
     background: var(--nl-surface-overlay);
     box-shadow: var(--nl-overlay-shadow);
-    z-index: 60;
+    z-index: var(--nl-layer-popover);
 }
 /* 머리 줄 — 왼쪽 제목 · 오른쪽 초기화(전체 레이어 머리 줄과 같은 구성) */
 .noslog-ui .nl-filter-popover__head {

@@ -272,7 +272,7 @@ export default function ProfileSettings({
                                 {errors.avatar ? (
                                     <p
                                         role="alert"
-                                        className="nl-metadata nl-field__error"
+                                        className="nl-field__help nl-field__error"
                                     >
                                         {errors.avatar.message}
                                     </p>
@@ -452,7 +452,7 @@ export default function ProfileSettings({
                         {errors.preferredArcadeId ? (
                             <p
                                 role="alert"
-                                className="nl-metadata nl-field__error"
+                                className="nl-field__help nl-field__error"
                             >
                                 {errors.preferredArcadeId.message}
                             </p>

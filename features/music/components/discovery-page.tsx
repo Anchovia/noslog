@@ -54,6 +54,7 @@ import type { MusicSearchFormValues } from "@/features/music/schemas/music-searc
 import { musicSearchSchema } from "@/features/music/schemas/music-search-schema";
 import { cn } from "@/lib/cn";
 import useDebouncedValue from "@/lib/hooks/use-debounced-value";
+import useDelayedFlag from "@/lib/hooks/use-delayed-flag";
 import useWideLayout from "@/lib/hooks/use-wide-layout";
 
 // 스크롤 자동 로딩은 첫 묶음 뒤 세 번까지 — 그다음은 버튼이라 푸터에 닿을 수 있다
@@ -93,7 +94,6 @@ export default function DiscoveryPage({
     const focusCommittedSummary = useRef(false);
     const [draft, setDraft] = useState(query);
     const [rangeDraft, setRangeDraft] = useState<DiscoveryQuery | null>(null);
-    const [slowKey, setSlowKey] = useState<string | null>(null);
     const [announcement, setAnnouncement] = useState("");
     const searchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
     const rangeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -139,7 +139,8 @@ export default function DiscoveryPage({
     const total = collection.data?.pages[0]?.total ?? 0;
     const chartTotal = collection.data?.pages[0]?.chartTotal ?? 0;
     const replacing = collection.isFetching && !collection.isFetchingNextPage;
-    const pending = replacing && slowKey === queryKey;
+    // 화면 안 다시 불러오기 — 스켈레톤 지연 토큰 한 번만 기다린다(스켈레톤에 nl-loading-delay 를 겹치지 않는다)
+    const pending = useDelayedFlag(replacing, queryKey);
     const appliedCount = discoveryFilterCount(query);
     const nextAmount = Math.min(20, total - items.length);
     // 불러온 묶음 수로 센다 — 뒤로가기로 캐시된 목록이 돌아와도 다시 세지 않는다
@@ -185,13 +186,6 @@ export default function DiscoveryPage({
             appendedFocus.current = null;
         }
     }, [items.length, queryKey, collection.isFetchingNextPage]);
-    useEffect(() => {
-        const timer = setTimeout(
-            () => setSlowKey(replacing ? queryKey : null),
-            replacing ? 300 : 0
-        );
-        return () => clearTimeout(timer);
-    }, [queryKey, replacing]);
     useEffect(
         () => () => {
             if (searchTimer.current) clearTimeout(searchTimer.current);
@@ -208,7 +202,6 @@ export default function DiscoveryPage({
         const url = href(`/music${urlParams.size ? `?${urlParams}` : ""}`);
         if (`${window.location.pathname}${window.location.search}` === url)
             return;
-        setSlowKey(null);
         window.history[replace || open ? "replaceState" : "pushState"](
             {},
             "",
@@ -687,10 +680,10 @@ export default function DiscoveryPage({
                             />
                         ) : collection.isPending && pending ? (
                             // 결과가 아직 하나도 없을 때 — 결과 목록과 같은 틀 · 같은 보기(목록 · 격자 · 촘촘)의 스켈레톤.
-                            // 화면 안 다시 불러오기라 짧게 끝나면 보이지 않는다(nl-loading-delay)
+                            // 화면 안 다시 불러오기라 짧게 끝나면 보이지 않는다(pending 이 이미 지연을 기다림)
                             <div
                                 className={cn(
-                                    "nl-discovery__items nl-loading-delay",
+                                    "nl-discovery__items",
                                     query.scope === "chart" &&
                                         "nl-discovery__items--chart",
                                     query.scope !== "chart" &&

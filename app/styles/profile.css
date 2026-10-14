@@ -367,7 +367,7 @@
     flex-direction: column;
     min-width: 0;
     gap: var(--nl-section-title-gap);
-    scroll-margin-top: 76px;
+    scroll-margin-top: calc(var(--nl-header-height) + var(--nl-spacing-16));
     container: profile-section / inline-size;
 }
 .noslog-ui .nl-profile-section__header {

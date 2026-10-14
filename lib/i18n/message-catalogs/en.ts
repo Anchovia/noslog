@@ -353,6 +353,12 @@ export const enMessages = {
     "poll.error.maxChoices": "Check the maximum number of choices.",
     "poll.error.closesAt": "The deadline has to be in the future.",
     "shell.externalLink": "External site",
+    "announcements.tierRebalance.imageAlt":
+        "Full tier rebalance: {date} · {total} placements · {changed} changed · {added} added · {retained} retained · {charts} charts per tier · {bands} bands · 0.1 increments · {rows}",
+    "announcements.tierRebalance.rowAlt":
+        "{label}: {changed} changed, {added} added, maximum charts per band {before} → {after}",
+    "announcements.tierChange.imageAlt":
+        "Tier changes: {title} · {date} · {changes}",
     "announcements.empty": "No announcements.",
     "announcements.pageLabel": "Announcements page {page}",
     "announcements.published": "Published",

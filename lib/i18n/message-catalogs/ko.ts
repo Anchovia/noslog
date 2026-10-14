@@ -350,6 +350,12 @@ export const koMessages = {
     "poll.error.maxChoices": "최대 개수를 다시 확인해주세요.",
     "poll.error.closesAt": "마감은 지금보다 뒤여야 합니다.",
     "shell.externalLink": "외부 사이트",
+    "announcements.tierRebalance.imageAlt":
+        "서열표 전체 재배치: {date} · 총 {total}개 배치 · 값 변경 {changed}건 · 신규 {added}건 · 값 유지 {retained}건 · 서열표마다 {charts}개 채보 · {bands}개 구간 · 0.1 단위 · {rows}",
+    "announcements.tierRebalance.rowAlt":
+        "{label}: 값 변경 {changed}건, 신규 {added}건, 구간별 최대 채보 수 {before} → {after}",
+    "announcements.tierChange.imageAlt":
+        "서열 변경: {title} · {date} · {changes}",
     "announcements.empty": "공지사항이 없습니다.",
     "announcements.pageLabel": "공지사항 {page}페이지",
     "announcements.published": "게시일",

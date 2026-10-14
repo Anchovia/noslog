@@ -96,7 +96,7 @@ html[data-theme="light"] .noslog-ui,
     outline-offset: calc(var(--nl-stroke-default) * -1);
 }
 .noslog-ui :is(a, button, input, textarea, select) {
-    scroll-margin-block: 76px;
+    scroll-margin-block: calc(var(--nl-header-height) + var(--nl-spacing-16));
 }
 .noslog-ui .nl-muted {
     color: var(--nl-content-subdued);

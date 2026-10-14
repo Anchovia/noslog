@@ -114,7 +114,7 @@
 .noslog-ui .nl-full-dialog {
     position: fixed;
     inset: 0;
-    z-index: 85;
+    z-index: var(--nl-layer-dialog);
     display: flex;
     flex-direction: column;
     height: 100dvh;

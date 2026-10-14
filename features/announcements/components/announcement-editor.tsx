@@ -24,6 +24,13 @@ import { SegmentedControl } from "@/components/ui/segmented-control";
 import { Select } from "@/components/ui/select";
 import AnnouncementBody from "@/features/announcements/components/announcement-body";
 import AnnouncementDeleteButton from "@/features/announcements/components/announcement-delete-button";
+import TierChangeImageBuilder from "@/features/announcements/components/tier-change-image-builder";
+import TierRebalanceImageBuilder from "@/features/announcements/components/tier-rebalance-image-builder";
+import {
+    attachAnnouncementImage,
+    attachTierChangeImage,
+} from "@/features/announcements/lib/attach-tier-change-image";
+import { tierRebalanceImageAlt } from "@/features/announcements/lib/tier-rebalance-image";
 import {
     ANNOUNCEMENT_CATEGORY_LABELS,
     ANNOUNCEMENT_CONTENT_MAX_LENGTH,
@@ -142,6 +149,9 @@ export default function AnnouncementEditor({
         announcement.poll?.input ?? null
     );
     const [dialog, setDialog] = useState<SaveMode | null>(null);
+    const [songImageBusy, setSongImageBusy] = useState(false);
+    const [summaryImageBusy, setSummaryImageBusy] = useState(false);
+    const tierImageBusy = songImageBusy || summaryImageBusy;
     const [pending, setPending] = useState<SaveMode | null>(null);
     // 저장 상태(2026-09-23 L2) — 저장 안 한 변경 · 저장 중 · 저장됨 · 저장 실패
     const [saveState, setSaveState] = useState<"saved" | "failed" | null>(null);
@@ -199,6 +209,7 @@ export default function AnnouncementEditor({
     }
 
     function save(mode: SaveMode, publish: boolean) {
+        if (tierImageBusy) return;
         clearErrors();
         // 주소를 비워 뒀으면 제목에서 만든다 — 임시저장도 주소가 필요하다(저장 규칙은 그대로)
         if (!getValues("publicSlug").trim()) {
@@ -434,6 +445,7 @@ export default function AnnouncementEditor({
     );
     const confirm = (
         <ActionButton
+            disabled={tierImageBusy}
             busy={pending !== null}
             busyLabel="저장 중"
             onClick={() =>
@@ -563,6 +575,7 @@ export default function AnnouncementEditor({
                                         labels={EDITOR_LABELS}
                                         onUploadImage={uploadAnnouncementImage}
                                         onPrimaryAction={() => {
+                                            if (tierImageBusy) return;
                                             clearErrors();
                                             setDialog("publish");
                                         }}
@@ -600,6 +613,55 @@ export default function AnnouncementEditor({
                     </div>
                 );
             })}
+
+            <TierChangeImageBuilder
+                locale={locale}
+                disabled={pending !== null || summaryImageBusy}
+                onBusyChange={setSongImageBusy}
+                onAttach={async (file, data) => {
+                    const targetLocale = locale;
+                    const name =
+                        `translations.${targetLocale}.content` as const;
+                    await attachTierChangeImage({
+                        file,
+                        data,
+                        locale: targetLocale,
+                        upload: uploadAnnouncementImage,
+                        getContent: () => getValues(name),
+                        setContent: (content) =>
+                            setValue(name, content, {
+                                shouldDirty: true,
+                                shouldValidate: true,
+                            }),
+                    });
+                    toast.success("서열 변경 이미지를 본문에 첨부했습니다.");
+                }}
+            />
+
+            <TierRebalanceImageBuilder
+                locale={locale}
+                disabled={pending !== null || songImageBusy}
+                onBusyChange={setSummaryImageBusy}
+                onAttach={async (file, data) => {
+                    const targetLocale = locale;
+                    const name =
+                        `translations.${targetLocale}.content` as const;
+                    await attachAnnouncementImage({
+                        file,
+                        alt: tierRebalanceImageAlt(data, targetLocale),
+                        upload: uploadAnnouncementImage,
+                        getContent: () => getValues(name),
+                        setContent: (content) =>
+                            setValue(name, content, {
+                                shouldDirty: true,
+                                shouldValidate: true,
+                            }),
+                    });
+                    toast.success(
+                        "서열 전체 재배치 요약 이미지를 본문에 첨부했습니다."
+                    );
+                }}
+            />
 
             <PollFormSection
                 value={poll}
@@ -665,6 +727,7 @@ export default function AnnouncementEditor({
                     ) : null}
                     <ActionButton
                         variant="secondary"
+                        disabled={tierImageBusy}
                         busy={pending !== null && dialog === null}
                         busyLabel="저장 중"
                         onClick={() => save("draft", false)}
@@ -672,6 +735,7 @@ export default function AnnouncementEditor({
                         {draftLabel}
                     </ActionButton>
                     <ActionButton
+                        disabled={tierImageBusy}
                         onClick={() => {
                             clearErrors();
                             setDialog("publish");

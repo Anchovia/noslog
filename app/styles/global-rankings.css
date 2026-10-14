@@ -63,7 +63,7 @@
 .noslog-ui .nl-player-row {
     height: 48px;
     border-bottom: var(--nl-stroke-default) solid var(--nl-border-divider);
-    scroll-margin-block: 76px;
+    scroll-margin-block: calc(var(--nl-header-height) + var(--nl-spacing-16));
 }
 .noslog-ui .nl-player-row__rank {
     white-space: nowrap;
