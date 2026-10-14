@@ -4,6 +4,7 @@ import "./globals.css";
 
 import { useEffect, useSyncExternalStore } from "react";
 
+import Wordmark from "@/components/layout/wordmark";
 import { foundationButtonClass } from "@/components/ui/button";
 import LegacyGlobalError from "@/features/recovery/components/legacy-global-error";
 import RecoveryAction from "@/features/recovery/components/recovery-action";
@@ -63,7 +64,9 @@ export default function GlobalError({
             <body className="noslog-ui nl-recovery-minimal">
                 <main id="main-content">
                     <div className="nl-recovery-minimal__content">
-                        <p className="nl-page-title">NosLog</p>
+                        <p className="nl-page-title">
+                            <Wordmark />
+                        </p>
                         {path !== null ? (
                             <>
                                 <h1 className="nl-page-title">

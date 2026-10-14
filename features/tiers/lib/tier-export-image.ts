@@ -2,6 +2,7 @@ import type {
     TierBrowserEntry,
     TierBrowserStrip,
 } from "@/features/tiers/schemas/tier-browser-schema";
+import { drawWordmark, wordmarkSize } from "@/lib/metadata/wordmark";
 import { tierValueColor } from "@/lib/music/tier-value-color";
 import { getJacketCandidates } from "@/lib/music-jackets";
 import type { TierGoal } from "@/lib/tiers";
@@ -283,10 +284,9 @@ export async function drawTierImage(input: TierExportInput) {
         // 머리 — 왼쪽 서열표 · 조건 / 아래 달성 요약, 오른쪽 NosLog · 날짜
         context.fillStyle = colors.text;
         context.font = titleFont;
-        const brandWidth = (() => {
-            context.font = bandFont;
-            return context.measureText("NosLog").width;
-        })();
+        // 워드마크 로고(2026-10-14) = 헤더와 같은 크기(section-title 글자 자리 × 17/16)
+        const logo = wordmarkSize(size(20));
+        const brandWidth = logo.width;
         context.font = titleFont;
         context.fillText(
             ellipsize(
@@ -306,15 +306,15 @@ export async function drawTierImage(input: TierExportInput) {
                 padding + line(40) + space(4) + (line(20) - size(14)) / 2
             );
         }
-        // NosLog = 헤더 워드마크와 같은 규격(section-title · identity/mark)
-        context.textAlign = "right";
+        // NosLog = 헤더 워드마크와 같은 로고 · 색(identity/mark), 날짜와 오른쪽 끝을 맞춘다
         context.fillStyle = colors.wordmark;
-        context.font = bandFont;
-        context.fillText(
-            "NosLog",
-            TIER_EXPORT_WIDTH - padding,
-            padding + (line(28) - size(20)) / 2
+        drawWordmark(
+            context,
+            TIER_EXPORT_WIDTH - padding - logo.width,
+            padding + (line(28) - logo.height) / 2,
+            logo.height
         );
+        context.textAlign = "right";
         context.font = metaFont;
         context.fillStyle = colors.subdued;
         context.fillText(

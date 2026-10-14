@@ -1,5 +1,11 @@
 import { ImageResponse } from "next/og";
 
+import {
+    WORDMARK_PATH,
+    WORDMARK_VIEWBOX,
+    wordmarkSize,
+} from "@/lib/metadata/wordmark";
+
 /**
  * 아이콘 · 공유 이미지 색 = tokens.css 다크 값(2026-10-01 D13). 이미지는 CSS 변수를 못 읽어 값을 옮겨 둔다 —
  * 값이 토큰과 같은지는 tests/brand-image-colors.test.ts 가 tokens.css 를 읽어 확인한다
@@ -13,6 +19,7 @@ export const BRAND_IMAGE_DARK_HEX = {
 } as const;
 
 const colors = BRAND_IMAGE_DARK_HEX;
+const wordmark = wordmarkSize(72);
 
 export function createBrandIcon(size: number) {
     return new ImageResponse(
@@ -81,15 +88,18 @@ export function createSocialImage() {
                         gap: "20px",
                     }}
                 >
-                    <div
-                        style={{
-                            display: "flex",
-                            fontSize: 72,
-                            fontWeight: 700,
-                        }}
+                    {/* 워드마크 로고(2026-10-14) — 글자 72 자리의 크기(× 17/16) */}
+                    <svg
+                        width={wordmark.width}
+                        height={wordmark.height}
+                        viewBox={`${WORDMARK_VIEWBOX.x} ${WORDMARK_VIEWBOX.y} ${WORDMARK_VIEWBOX.width} ${WORDMARK_VIEWBOX.height}`}
                     >
-                        NosLog
-                    </div>
+                        <path
+                            d={WORDMARK_PATH}
+                            fill={colors.primary}
+                            fillRule="evenodd"
+                        />
+                    </svg>
                     <div
                         style={{
                             color: colors.secondary,

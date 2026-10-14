@@ -1,4 +1,5 @@
 import PageContainer from "@/components/layout/page-container";
+import Wordmark from "@/components/layout/wordmark";
 import { getHomeAnnouncements } from "@/features/announcements/server/public-announcement-service";
 import { getHomeLiveEvents } from "@/features/events/server/event-service";
 import HomeAnnouncements from "@/features/home/components/home-announcements";
@@ -51,16 +52,9 @@ export default async function HomePage() {
             />
             <section className="nl-home-hero">
                 <div className="nl-home-identity">
-                    <span
-                        className="nl-home-mark nl-section-title"
-                        aria-hidden
-                        lang="en"
-                    >
-                        N
-                    </span>
                     <div className="nl-home-identity__copy">
                         <h1 className="nl-page-title" lang="en">
-                            NosLog
+                            <Wordmark />
                         </h1>
                         <p className="nl-body-secondary nl-muted">
                             {t("home.tagline")}

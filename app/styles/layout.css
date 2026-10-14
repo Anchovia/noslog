@@ -120,8 +120,24 @@
     background: var(--nl-surface-surface);
 }
 .noslog-ui .nl-wordmark {
+    display: flex;
     color: var(--nl-identity-mark);
     flex-shrink: 0;
+}
+/* 워드마크 로고(2026-10-14 A) — 높이 = 그 자리 글자 크기 × 17/16(글자 「NosLog」 의 대문자 높이에 맞춘 크기), 색 = 로고 색.
+   글자 자리(헤더 section-title · 홈 · 로그인 · 복구 page-title)의 글자 크기를 그대로 받는다 */
+.noslog-ui .nl-logo {
+    display: block;
+    width: auto;
+    height: calc(1em * 17 / 16);
+    aspect-ratio: 1399 / 400;
+    color: var(--nl-identity-mark);
+    fill: currentColor;
+}
+/* 로고만 든 링크(로그인 · 온보딩 머리)는 로고 폭만큼만 — 포커스 선이 로고를 감싸게 */
+.noslog-ui a:has(> .nl-logo:only-child) {
+    display: flex;
+    width: fit-content;
 }
 /* 넓은 화면 헤더 메뉴(2026-09-30 A1 · P1) — 1056 이상에서 이동 메뉴를 로고 옆에 나란히. 그 아래 폭은 ≡ 안에만 */
 .noslog-ui .nl-header__nav {

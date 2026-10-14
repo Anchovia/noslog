@@ -14,6 +14,7 @@ import {
     useLocalizedHref,
     useTranslations,
 } from "@/components/i18n/locale-provider";
+import Wordmark from "@/components/layout/wordmark";
 import ActionButton from "@/components/ui/action-button";
 import Avatar from "@/components/ui/avatar";
 import Button from "@/components/ui/button";
@@ -216,7 +217,7 @@ export default function OnboardingFormView({
                     href={href("/")}
                     aria-label={t("auth.home")}
                 >
-                    NosLog
+                    <Wordmark decorative />
                 </Link>
                 <h1 ref={heading} tabIndex={-1} className="nl-section-title">
                     {t(step === 1 ? "onboarding.title" : "settings.privacy")}
