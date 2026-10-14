@@ -31,9 +31,11 @@
     gap: var(--nl-spacing-12);
     text-align: center;
 }
-/* 워드마크 로고는 블록이라 글자 가운데 정렬을 받지 않는다 — 가운데로(2026-10-14) */
-.noslog-ui .nl-home-identity .nl-logo {
-    margin-inline: auto;
+/* 홈 머리 마크 = 앱 아이콘과 같은 고양이 원(2026-10-15 B) — 크기 40 은 예전 N 원 그대로 */
+.noslog-ui .nl-home-mark {
+    display: flex;
+    width: 40px;
+    height: 40px;
 }
 /* 제목 → 설명 글줄 8(가이드 역할값 — 2026-10-01 규칙 맞춤) */
 .noslog-ui .nl-home-identity__copy {

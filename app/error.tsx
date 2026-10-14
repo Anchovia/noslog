@@ -9,7 +9,6 @@ import {
     useLocalizedHref,
     useTranslations,
 } from "@/components/i18n/locale-provider";
-import Wordmark from "@/components/layout/wordmark";
 import { foundationButtonClass } from "@/components/ui/button";
 import RecoveryAction from "@/features/recovery/components/recovery-action";
 import { stripLocaleFromPath } from "@/lib/i18n/routing";
@@ -63,9 +62,7 @@ export default function ErrorPage({
                 <div className="nl-recovery-minimal__content">
                     <title>{`${t("common.pageError")} | NosLog`}</title>
                     <meta name="robots" content="noindex" />
-                    <p className="nl-page-title">
-                        <Wordmark />
-                    </p>
+                    <p className="nl-page-title">NosLog</p>
                     <h1 className="nl-page-title">{t("common.pageError")}</h1>
                     <p className="nl-body nl-muted">{t("common.retryLater")}</p>
                     <div className="nl-recovery__actions">

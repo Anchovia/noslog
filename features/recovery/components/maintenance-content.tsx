@@ -1,4 +1,3 @@
-import Wordmark from "@/components/layout/wordmark";
 import { getMaintenanceConfig } from "@/features/recovery/server/maintenance-config";
 import { getServerI18n } from "@/lib/i18n/server";
 
@@ -21,9 +20,7 @@ export default async function MaintenanceContent() {
         <div className="noslog-ui nl-recovery-minimal">
             <main id="main-content">
                 <div className="nl-recovery-minimal__content">
-                    <p className="nl-page-title">
-                        <Wordmark />
-                    </p>
+                    <p className="nl-page-title">NosLog</p>
                     <h1 className="nl-page-title">
                         {t("maintenance.heading")}
                     </h1>

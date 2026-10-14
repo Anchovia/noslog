@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import Wordmark from "@/components/layout/wordmark";
 import { StatusMessage } from "@/components/ui/status-message";
 import { getAuthDestinationKey } from "@/features/auth/destination";
 import {
@@ -63,7 +62,7 @@ export default async function LoginPage({
                         prefetch={false}
                         aria-label={t("auth.home")}
                     >
-                        <Wordmark decorative />
+                        NosLog
                     </Link>
                 </h1>
                 <p className="nl-body nl-muted">{t("home.tagline")}</p>

@@ -1,10 +1,10 @@
 import { ImageResponse } from "next/og";
 
 import {
-    WORDMARK_PATH,
-    WORDMARK_VIEWBOX,
-    wordmarkSize,
-} from "@/lib/metadata/wordmark";
+    BRAND_MARK_CAT_PATH,
+    BRAND_MARK_CIRCLE,
+    BRAND_MARK_SIZE,
+} from "@/lib/metadata/brand-mark";
 
 /**
  * 아이콘 · 공유 이미지 색 = tokens.css 다크 값(2026-10-01 D13). 이미지는 CSS 변수를 못 읽어 값을 옮겨 둔다 —
@@ -19,7 +19,33 @@ export const BRAND_IMAGE_DARK_HEX = {
 } as const;
 
 const colors = BRAND_IMAGE_DARK_HEX;
-const wordmark = wordmarkSize(72);
+
+/** 이미지용 NosLog 아이콘(2026-10-15 B) — 채운 원(로고 색) 안의 고양이(바탕색). 화면은 components/layout/brand-mark.tsx */
+export function BrandMarkImage({
+    size,
+    circle = colors.primary,
+    cat = colors.background,
+}: {
+    size: number;
+    circle?: string;
+    cat?: string;
+}) {
+    return (
+        <svg
+            width={size}
+            height={size}
+            viewBox={`0 0 ${BRAND_MARK_SIZE} ${BRAND_MARK_SIZE}`}
+        >
+            <circle
+                cx={BRAND_MARK_CIRCLE.cx}
+                cy={BRAND_MARK_CIRCLE.cy}
+                r={BRAND_MARK_CIRCLE.r}
+                fill={circle}
+            />
+            <path d={BRAND_MARK_CAT_PATH} fill={cat} fillRule="evenodd" />
+        </svg>
+    );
+}
 
 export function createBrandIcon(size: number) {
     return new ImageResponse(
@@ -34,21 +60,8 @@ export function createBrandIcon(size: number) {
                 width: "100%",
             }}
         >
-            <div
-                style={{
-                    alignItems: "center",
-                    border: `${Math.max(4, Math.round(size * 0.018))}px solid ${colors.primary}`,
-                    borderRadius: "50%",
-                    display: "flex",
-                    fontSize: Math.round(size * 0.42),
-                    fontWeight: 700,
-                    height: "68%",
-                    justifyContent: "center",
-                    width: "68%",
-                }}
-            >
-                N
-            </div>
+            {/* 고양이 원 = 지름 68% 상자(maskable 안전 영역 80% 안, 2026-10-15 B) */}
+            <BrandMarkImage size={Math.round(size * 0.68)} />
         </div>,
         { height: size, width: size }
     );
@@ -88,18 +101,15 @@ export function createSocialImage() {
                         gap: "20px",
                     }}
                 >
-                    {/* 워드마크 로고(2026-10-14) — 글자 72 자리의 크기(× 17/16) */}
-                    <svg
-                        width={wordmark.width}
-                        height={wordmark.height}
-                        viewBox={`${WORDMARK_VIEWBOX.x} ${WORDMARK_VIEWBOX.y} ${WORDMARK_VIEWBOX.width} ${WORDMARK_VIEWBOX.height}`}
+                    <div
+                        style={{
+                            display: "flex",
+                            fontSize: 72,
+                            fontWeight: 700,
+                        }}
                     >
-                        <path
-                            d={WORDMARK_PATH}
-                            fill={colors.primary}
-                            fillRule="evenodd"
-                        />
-                    </svg>
+                        NosLog
+                    </div>
                     <div
                         style={{
                             color: colors.secondary,
@@ -120,21 +130,8 @@ export function createSocialImage() {
                         noslog.app
                     </div>
                 </div>
-                <div
-                    style={{
-                        alignItems: "center",
-                        border: `5px solid ${colors.primary}`,
-                        borderRadius: "50%",
-                        display: "flex",
-                        fontSize: 96,
-                        fontWeight: 700,
-                        height: 220,
-                        justifyContent: "center",
-                        width: 220,
-                    }}
-                >
-                    N
-                </div>
+                {/* 오른쪽 = 앱 아이콘과 같은 고양이 원(2026-10-15 B) */}
+                <BrandMarkImage size={220} />
             </div>
         </div>,
         { height: 630, width: 1200 }

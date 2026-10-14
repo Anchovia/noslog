@@ -27,20 +27,13 @@ import {
 import { formatToComma } from "@/lib/format-number";
 import { createTranslator, getMessages } from "@/lib/i18n/messages";
 import type { Locale } from "@/lib/i18n/routing";
-import {
-    WORDMARK_PATH,
-    WORDMARK_VIEWBOX,
-    wordmarkSize,
-} from "@/lib/metadata/wordmark";
+import { BrandMarkImage } from "@/lib/metadata/brand-image";
 import {
     EXAM_TIER_DARK_HEX,
     gradeBandTone,
     rankTone,
     STAT_TONE_DARK_HEX,
 } from "@/lib/music/score-tone";
-
-// 워드마크 = 글자 28 자리의 크기(× 17/16, 2026-10-14)
-const WORDMARK_CARD = wordmarkSize(28);
 
 // P16 is a fixed-size generated image, not ordinary UI. ImageResponse requires
 // inline styles and cannot use global CSS — 색은 토큰 다크 값(PROFILE_CARD_DARK_HEX, 테스트 대조 · 2026-10-01 D9)
@@ -527,15 +520,20 @@ export default function ProfileCardImage({
                         </span>
                     </div>
                 </div>
-                {/* 워드마크 로고(2026-10-14) — 글자 28 자리의 크기(× 17/16), N 원 마크는 뺐다(홈과 같은 결정) */}
-                <svg
-                    width={WORDMARK_CARD.width}
-                    height={WORDMARK_CARD.height}
-                    viewBox={`${WORDMARK_VIEWBOX.x} ${WORDMARK_VIEWBOX.y} ${WORDMARK_VIEWBOX.width} ${WORDMARK_VIEWBOX.height}`}
-                    style={{ flexShrink: 0 }}
+                <div
+                    style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 16,
+                        flexShrink: 0,
+                    }}
                 >
-                    <path d={WORDMARK_PATH} fill={ink} fillRule="evenodd" />
-                </svg>
+                    {/* 앱 아이콘과 같은 고양이 원(2026-10-15 B) + 글자 「NosLog」 */}
+                    <BrandMarkImage size={54} circle={ink} />
+                    <span style={{ fontSize: 28, fontWeight: 700 }}>
+                        NosLog
+                    </span>
+                </div>
             </div>
             <div
                 style={{

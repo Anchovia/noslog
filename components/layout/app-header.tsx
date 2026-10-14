@@ -14,7 +14,6 @@ import {
     isDestinationActive,
     productDestinations,
 } from "@/components/layout/destinations";
-import Wordmark from "@/components/layout/wordmark";
 import Avatar from "@/components/ui/avatar";
 import FeedbackDialog from "@/features/feedback/components/feedback-dialog";
 import { useFeedbackUnread } from "@/features/feedback/components/feedback-unread";
@@ -167,7 +166,7 @@ function HeaderContent({ account }: { account: ShellAccount | null }) {
                             className="nl-wordmark nl-section-title"
                             lang="en"
                         >
-                            <Wordmark />
+                            NosLog
                         </Link>
                         {/* 1056 이상에서만 보인다(CSS) — 그 아래 폭은 ≡ 안(2026-09-30 A1 · P1) */}
                         <nav
