@@ -11,6 +11,7 @@ import {
     AdminFieldError,
     adminTextareaClass,
 } from "@/components/admin/admin-form";
+import Button from "@/components/ui/button";
 import {
     createExamSubmissionReviewFormData,
     type ExamSubmissionReviewFormValues,
@@ -98,14 +99,13 @@ export default function ExamSubmissionReviewForm({
                 className="text-xs text-danger"
             />
             <div className="grid grid-cols-2 gap-2">
-                <button
-                    type="button"
+                <Button
+                    variant="danger"
                     disabled={isSubmitting}
                     onClick={() => submitReview("rejected")}
-                    className="flex h-10 cursor-pointer items-center justify-center gap-1 rounded-md border border-danger/40 text-sm font-bold text-danger disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                    <X className="size-4" /> 반려
-                </button>
+                    <X className="nl-icon-small" aria-hidden /> 반려
+                </Button>
                 <button
                     type="button"
                     disabled={isSubmitting}

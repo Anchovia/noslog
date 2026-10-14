@@ -101,7 +101,7 @@ export default async function RootLayout({
             lang={locale}
             data-theme="dark"
             suppressHydrationWarning
-            className={`${pretendard.variable} bg-bg text-text-primary`}
+            className={pretendard.variable}
         >
             <head>
                 <Script

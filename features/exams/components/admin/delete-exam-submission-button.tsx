@@ -6,6 +6,7 @@ import { useTransition } from "react";
 import { toast } from "sonner";
 
 import { deleteExamSubmission } from "@/app/admin/submissions/actions";
+import Button from "@/components/ui/button";
 import { createExamSubmissionDeleteFormData } from "@/features/exams/schemas/exam-submission-admin-schema";
 
 interface DeleteExamSubmissionButtonProps {
@@ -40,14 +41,14 @@ export default function DeleteExamSubmissionButton({
     }
 
     return (
-        <button
-            type="button"
+        <Button
+            variant="danger"
+            className="w-full"
             disabled={isPending}
             onClick={handleDelete}
-            className="flex h-10 w-full cursor-pointer items-center justify-center gap-1 rounded-md border border-danger/40 text-sm font-bold text-danger disabled:cursor-not-allowed disabled:opacity-50"
         >
-            <Trash2 className="size-4" />
+            <Trash2 className="nl-icon-small" aria-hidden />
             {isApproved ? "합격 이력 및 제출 삭제" : "제출 기록 삭제"}
-        </button>
+        </Button>
     );
 }

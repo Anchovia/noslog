@@ -21,6 +21,7 @@ import { useLocale, useTranslations } from "@/components/i18n/locale-provider";
 
 import { useChartEditorStore } from "./chartEditorStore";
 import SnapCheckSection from "./snapCheckSection";
+import Button from "@/components/ui/button";
 
 const inputClass =
     "border-border bg-bg text-text-primary h-9 w-full rounded-md border px-2 text-sm tabular-nums outline-none focus:border-text-secondary";
@@ -285,18 +286,19 @@ export default function NoteInspector() {
                                 onChange={changeSelectedGroupHand}
                             />
                         </label>
-                        <button
-                            type="button"
+                        <Button
+                            variant="danger"
+                            size="sm"
+                            className="mt-nl-16 w-full"
                             onClick={deleteSelected}
-                            className="mt-4 flex h-9 w-full items-center justify-center gap-1 rounded-md border border-danger/40 text-xs font-semibold text-danger"
                         >
-                            <Trash2 className="size-3.5" />
+                            <Trash2 className="nl-icon-small" aria-hidden />
                             {t("editor.note.deleteMany", {
                                 count: selectedNotes.length.toLocaleString(
                                     locale
                                 ),
                             })}
-                        </button>
+                        </Button>
                     </div>
                 ) : selected ? (
                     <div className="min-h-0 flex-1 overflow-y-auto p-3">
@@ -603,14 +605,15 @@ export default function NoteInspector() {
                             </section>
                         ) : null}
 
-                        <button
-                            type="button"
+                        <Button
+                            variant="danger"
+                            size="sm"
+                            className="mt-nl-16 w-full"
                             onClick={deleteSelected}
-                            className="mt-4 flex h-9 w-full items-center justify-center gap-1 rounded-md border border-danger/40 text-xs font-semibold text-danger"
                         >
-                            <Trash2 className="size-3.5" />
+                            <Trash2 className="nl-icon-small" aria-hidden />
                             {t("editor.note.delete")}
-                        </button>
+                        </Button>
                     </div>
                 ) : null}
 

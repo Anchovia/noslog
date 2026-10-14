@@ -251,12 +251,6 @@
 .noslog-ui .nl-facts__value[data-verified="false"] {
     color: var(--nl-content-pending);
 }
-.noslog-ui .nl-facts__tag {
-    margin-block: calc(
-        (var(--nl-type-line-height-20) - var(--nl-spacing-24)) / 2
-    );
-    font-variant-numeric: normal;
-}
 .noslog-ui .nl-facts__action {
     display: flex;
     margin-block: calc(

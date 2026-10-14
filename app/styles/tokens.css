@@ -379,6 +379,16 @@ html[data-theme="light"] .noslog-ui,
     letter-spacing: 0;
     font-variant-numeric: normal;
 }
+/* 태그 글자(2026-10-15 B1 — 2026-09-23 사용자 결정 600 을 표에 올림) — 태그 · 배지 안에서만. 12 굵게는 이 조합 하나뿐이다.
+   공용 태그 nl-tag 가 이 조합을 그대로 쓴다 */
+.noslog-ui .nl-tag-label,
+.noslog-ui .nl-tag {
+    font-size: var(--nl-type-size-12);
+    line-height: var(--nl-type-line-height-16);
+    font-weight: var(--nl-type-weight-semibold);
+    letter-spacing: 0;
+    font-variant-numeric: normal;
+}
 /* 구역 간격 — 넓은 화면(1056 이상)만 넓힌다(2026-10-01 D1 · 왓챠피디아 · KRDS 방식). 폰 · 중간 폭은 그대로 */
 @media (min-width: 1056px) {
     .noslog-ui {

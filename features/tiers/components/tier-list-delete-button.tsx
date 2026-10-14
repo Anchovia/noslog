@@ -5,6 +5,7 @@ import { useTransition } from "react";
 import { toast } from "sonner";
 
 import { deleteTierList } from "@/app/admin/tiers/actions";
+import Button from "@/components/ui/button";
 import { createTierIdFormData } from "@/features/tiers/schemas/tier-admin-schema";
 
 export default function TierListDeleteButton({
@@ -36,13 +37,13 @@ export default function TierListDeleteButton({
     }
 
     return (
-        <button
-            type="button"
+        <Button
+            variant="danger"
+            className="w-full"
             disabled={isPending}
             onClick={handleDelete}
-            className="h-10 w-full cursor-pointer rounded-md border border-danger/60 text-sm font-bold text-danger hover:bg-danger/10 disabled:cursor-not-allowed disabled:opacity-50"
         >
             {isPending ? "삭제 중..." : "보관 서열표 삭제"}
-        </button>
+        </Button>
     );
 }

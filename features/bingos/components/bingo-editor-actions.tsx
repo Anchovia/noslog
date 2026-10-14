@@ -6,6 +6,7 @@ import { useTransition } from "react";
 import { toast } from "sonner";
 
 import { deleteBingo } from "@/app/admin/bingos/actions";
+import Button from "@/components/ui/button";
 import { createBingoDeleteFormData } from "@/features/bingos/schemas/bingo-editor-schema";
 
 export function SaveBingoButton({ isSubmitting }: { isSubmitting: boolean }) {
@@ -46,14 +47,14 @@ export function DeleteBingoButton({ bingoId }: { bingoId: number }) {
     }
 
     return (
-        <button
-            type="button"
+        <Button
+            variant="danger"
+            className="w-full"
             disabled={isPending}
             onClick={handleDelete}
-            className="flex h-10 w-full cursor-pointer items-center justify-center gap-2 rounded-md border border-danger/50 text-sm font-bold text-danger disabled:cursor-not-allowed disabled:opacity-50"
         >
-            <Trash2 className="size-4" aria-hidden />
+            <Trash2 className="nl-icon-small" aria-hidden />
             {isPending ? "삭제 중" : "진행 기록이 없을 때 삭제"}
-        </button>
+        </Button>
     );
 }

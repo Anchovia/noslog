@@ -13,6 +13,7 @@ import {
     saveExam,
     searchAdminMusic,
 } from "@/app/admin/exams/actions";
+import Button from "@/components/ui/button";
 import {
     type ExamEditorFormValues,
     examEditorSchema,
@@ -375,14 +376,13 @@ export default function ExamEditor({
                         </p>
                     ) : null}
                     {examId ? (
-                        <button
-                            type="button"
+                        <Button
+                            variant="danger"
                             onClick={handleDelete}
                             disabled={isDeleting || isSubmitting}
-                            className="h-11 rounded-md border border-danger/50 text-sm font-semibold text-danger disabled:opacity-50"
                         >
                             검정 삭제
-                        </button>
+                        </Button>
                     ) : null}
                 </div>
 

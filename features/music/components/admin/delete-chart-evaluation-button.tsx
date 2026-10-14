@@ -6,6 +6,7 @@ import { useTransition } from "react";
 import { toast } from "sonner";
 
 import { deleteEvaluation } from "@/app/admin/community/actions";
+import Button from "@/components/ui/button";
 import { createChartEvaluationAdminDeleteFormData } from "@/features/music/schemas/chart-evaluation-admin-schema";
 
 export default function DeleteChartEvaluationButton({
@@ -36,14 +37,15 @@ export default function DeleteChartEvaluationButton({
     }
 
     return (
-        <button
-            type="button"
+        <Button
+            variant="danger"
+            size="sm"
+            className="w-full"
             disabled={isPending}
             onClick={handleDelete}
-            className="flex h-9 w-full cursor-pointer items-center justify-center gap-1 rounded-md border border-danger/40 text-xs font-bold text-danger disabled:cursor-not-allowed disabled:opacity-50"
         >
-            <Trash2 className="size-3.5" aria-hidden />
+            <Trash2 className="nl-icon-small" aria-hidden />
             {isPending ? "삭제 중" : "평가 전체 삭제"}
-        </button>
+        </Button>
     );
 }

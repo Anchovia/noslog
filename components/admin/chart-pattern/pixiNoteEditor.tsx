@@ -12,6 +12,11 @@ import type { Application, Graphics } from "pixi.js";
 
 import { chartPianoColors } from "@/lib/chart-pattern/piano";
 import {
+    HAND_COLORS,
+    hexToNumber,
+    STAGE_CANVAS,
+} from "@/lib/chart-pattern/stageColors";
+import {
     chartNoteContainsPoint,
     chartNoteIntersectsRect,
     chartNoteRangeAtTick,
@@ -156,7 +161,8 @@ const DURATION_RESIZE_HIT_RADIUS_PX = 7;
 const MOVE_DRAG_THRESHOLD_PX = 4;
 
 const colors = {
-    background: 0x080a0f,
+    // 무대 바탕 · 손 색 = 공개 뷰어와 같은 토큰 값(2026-10-15 B5)
+    background: hexToNumber(STAGE_CANVAS),
     laneStrong: 0x30333c,
     laneWeak: 0x1b1f27,
     snapWhite: 0xe7e9ee,
@@ -168,8 +174,8 @@ const colors = {
     snapGrayStrong: 0x555a63,
     snapGray: 0x464b54,
     snapGrayWeak: 0x383d45,
-    left: 0x52d9e8,
-    right: 0xf05d5d,
+    left: hexToNumber(HAND_COLORS.left),
+    right: hexToNumber(HAND_COLORS.right),
     noteFace: 0xf7f7f2,
     noteShadow: 0x121820,
     judgment: 0x79df62,

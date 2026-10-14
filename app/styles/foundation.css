@@ -1891,11 +1891,14 @@ html[data-theme="light"] .noslog-ui,
     border-radius: var(--nl-radius-control);
     background: var(--nl-surface-raised);
     color: var(--nl-content-default);
-    /* 글자 metadata 12/16 · 600 — 부모 글자 크기를 물려받지 않는다(2026-10-01 V1) */
-    font-size: var(--nl-type-size-12);
-    line-height: var(--nl-type-line-height-16);
-    font-weight: var(--nl-type-weight-semibold);
+    /* 글자 = 태그 글자 12/16 · 600(tokens.css nl-tag-label, 2026-10-15 B1) — 부모 글자 크기를 물려받지 않는다(2026-10-01 V1) */
     white-space: nowrap;
+}
+/* 글줄 안 태그(2026-10-15 B4) — 글줄(20) 안에서 태그(24)가 줄을 늘리지 않게 위아래로 당긴다. 높이는 24 그대로 */
+.noslog-ui .nl-tag--inline {
+    margin-block: calc(
+        (var(--nl-type-line-height-20) - var(--nl-spacing-24)) / 2
+    );
 }
 /* 하나만 세게 — 반전(면 = 글자색 · 글자 = 캔버스). 한 줄에 하나까지만 쓴다 */
 .noslog-ui .nl-tag--strong {
