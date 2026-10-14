@@ -130,7 +130,7 @@
     display: block;
     width: auto;
     height: calc(1em * 17 / 16);
-    aspect-ratio: 1399 / 400;
+    aspect-ratio: 1409 / 400;
     color: var(--nl-identity-mark);
     fill: currentColor;
 }
