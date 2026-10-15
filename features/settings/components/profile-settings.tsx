@@ -266,7 +266,7 @@ export default function ProfileSettings({
                                 <p className="nl-control">
                                     {t("settings.avatar")}
                                 </p>
-                                <p className="nl-metadata nl-muted">
+                                <p className="nl-field__help">
                                     {t("settings.avatarFormat")}
                                 </p>
                                 {errors.avatar ? (
@@ -445,7 +445,7 @@ export default function ProfileSettings({
                         {selectedArcade &&
                         "is_active" in selectedArcade &&
                         !selectedArcade.is_active ? (
-                            <p className="nl-metadata nl-muted">
+                            <p className="nl-field__help">
                                 {t("settings.arcadeUnavailable")}
                             </p>
                         ) : null}

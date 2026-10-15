@@ -492,7 +492,7 @@ export default function LineChart({
                                         </span>
                                     )}
                                     <span className="nl-control">
-                                        {/* 이름은 선 색, 값은 기본 글자색(2026-09-19 T1) */}
+                                        {/* 이름 · 값은 기본 글자색, 이름 앞 선 색 점 8(2026-10-15 — 선 색 글자는 대비 4.5 미달) */}
                                         {tooltipValueLabel ? (
                                             <>
                                                 <span
@@ -503,6 +503,7 @@ export default function LineChart({
                                                             : "personal"
                                                     }
                                                 >
+                                                    <i aria-hidden />
                                                     {valueLabel}
                                                 </span>
                                                 {" · "}
@@ -516,6 +517,7 @@ export default function LineChart({
                                                 className="nl-line-chart__series-name"
                                                 data-series="slow"
                                             >
+                                                <i aria-hidden />
                                                 {secondaryLabel}
                                             </span>
                                             {" · "}

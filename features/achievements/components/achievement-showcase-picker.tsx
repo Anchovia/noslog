@@ -101,7 +101,7 @@ export default function AchievementShowcasePicker({
                     </div>
                 ) : null}
             </div>
-            <p className="nl-metadata nl-muted">
+            <p className="nl-field__help">
                 {t("achievement.settings.help", {
                     max: ACHIEVEMENT_SHOWCASE_SIZE,
                 })}

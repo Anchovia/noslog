@@ -127,7 +127,7 @@ export default function PinnedRecordsPicker({
                     </div>
                 ) : null}
             </div>
-            <p className="nl-metadata nl-muted">
+            <p className="nl-field__help">
                 {t("profile.pinned.help", { max: PINNED_RECORD_LIMIT })}
             </p>
             {error ? (
