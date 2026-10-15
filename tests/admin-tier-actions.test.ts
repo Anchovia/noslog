@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
@@ -23,6 +24,7 @@ const mocks = vi.hoisted(() => ({
     entryCreate: vi.fn(),
     historyCreate: vi.fn(),
     transaction: vi.fn(),
+    executeRaw: vi.fn(),
     txEntryUpdate: vi.fn(),
     txHistoryCreate: vi.fn(),
     updateTag: vi.fn(),
@@ -47,6 +49,7 @@ vi.mock("@/features/rankings/server/player-rating-service", () => ({
 vi.mock("@/lib/db", () => ({
     default: {
         $transaction: mocks.transaction,
+        $executeRaw: mocks.executeRaw,
         tierList: {
             findFirst: mocks.listFindFirst,
             create: mocks.listCreate,
@@ -90,6 +93,29 @@ import {
     moveTierEntryToBand,
     searchTierCharts,
 } from "@/app/admin/tiers/actions";
+
+// 순번 다시 매기기는 문장 두 개(음수로 비키기 · 한 번에 제자리로, 2026-10-16) — 보낸 SQL 과 값을 꺼내 본다
+const rawStatements = () =>
+    mocks.executeRaw.mock.calls.map(([strings, ...values]) =>
+        Prisma.sql(strings as TemplateStringsArray, ...values)
+    );
+const parked = () =>
+    rawStatements()
+        .filter((statement) => statement.sql.includes('= -"id"'))
+        .flatMap((statement) => statement.values);
+const placed = () =>
+    rawStatements()
+        .filter((statement) => statement.sql.includes("FROM (VALUES"))
+        .flatMap((statement) => {
+            const rows: { id: number; position: number; band: unknown }[] = [];
+            for (let i = 0; i < statement.values.length; i += 3)
+                rows.push({
+                    id: statement.values[i] as number,
+                    position: statement.values[i + 1] as number,
+                    band: statement.values[i + 2],
+                });
+            return rows;
+        });
 
 describe("관리자 서열표 액션", () => {
     beforeEach(() => {
@@ -290,14 +316,12 @@ describe("관리자 서열표 액션", () => {
         expect(mocks.bandCreate).toHaveBeenCalledWith({
             data: { tierListId: 5, value: 11.4, position: 2 },
         });
-        expect(mocks.bandUpdate).toHaveBeenCalledWith({
-            where: { id: 10 },
-            data: { position: -10 },
-        });
-        expect(mocks.bandUpdate).toHaveBeenCalledWith({
-            where: { id: 11 },
-            data: { position: 3 },
-        });
+        expect(parked()).toEqual([10, 11]);
+        expect(placed()).toEqual([
+            { id: 10, position: 1, band: null },
+            { id: 11, position: 3, band: null },
+        ]);
+        expect(rawStatements()).toHaveLength(2);
         expect(Array.isArray(mocks.transaction.mock.calls[0]?.[0])).toBe(true);
     });
 
@@ -364,18 +388,11 @@ describe("관리자 서열표 액션", () => {
             { id: 1, tierBandId: 11, position: 2 },
         ]);
 
-        expect(mocks.txEntryUpdate).toHaveBeenCalledWith({
-            where: { id: 1 },
-            data: { position: -1 },
-        });
-        expect(mocks.txEntryUpdate).toHaveBeenCalledWith({
-            where: { id: 2 },
-            data: { position: -2 },
-        });
-        expect(mocks.txEntryUpdate).toHaveBeenCalledWith({
-            where: { id: 1 },
-            data: { tierBandId: 11, position: 2 },
-        });
+        expect(parked()).toEqual([2, 1]);
+        expect(placed()).toEqual([
+            { id: 2, position: 1, band: 10 },
+            { id: 1, position: 2, band: 11 },
+        ]);
         expect(mocks.historyCreate).toHaveBeenCalledWith({
             data: { tierListId: 5, chartId: 20, bandValue: 12.4 },
         });
@@ -390,10 +407,12 @@ describe("관리자 서열표 액션", () => {
 
         await moveTierEntryToBand(formData);
 
-        expect(mocks.txEntryUpdate).toHaveBeenCalledWith({
-            where: { id: 1 },
-            data: { tierBandId: 11, position: 5 },
-        });
+        expect(parked()).toEqual([2, 3, 1]);
+        expect(placed()).toEqual([
+            { id: 2, position: 1, band: null },
+            { id: 3, position: 2, band: null },
+            { id: 1, position: 5, band: 11 },
+        ]);
         expect(mocks.historyCreate).toHaveBeenCalledWith({
             data: { tierListId: 5, chartId: 20, bandValue: 12.4 },
         });
