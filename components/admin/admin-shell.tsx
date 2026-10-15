@@ -31,8 +31,9 @@ export default function AdminShell({
 
     if (/^\/admin\/music\/[^/]+\/[^/]+\/pattern\/?$/.test(pathname)) {
         return (
-            <div className="min-h-screen bg-bg">
-                <div className="mx-auto flex min-h-screen w-full max-w-97.5 flex-col bg-bg">
+            // 에디터 옛 셸도 .noslog-ui 안 — 밖이면 nl 토큰이 풀리지 않는다(2026-10-15 B5 2단계)
+            <div className="noslog-ui min-h-screen bg-nl-canvas">
+                <div className="nl-admin-phone-frame mx-auto flex min-h-screen w-full flex-col bg-nl-canvas">
                     {legacySkipLink}
                     {legacyHeader}
                     <main id="main-content" className="flex-1" tabIndex={-1}>

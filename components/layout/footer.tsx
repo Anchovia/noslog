@@ -7,17 +7,17 @@ export default async function Footer() {
     const { locale, t } = await getServerI18n();
 
     return (
-        <footer className="flex min-h-9 items-center gap-3 border-t border-divider bg-surface px-4 py-2 text-xs text-text-secondary">
+        <footer className="nl-metadata flex min-h-nl-control-compact items-center gap-nl-12 border-t-nl-stroke border-nl-divider bg-nl-surface px-nl-16 py-nl-8 text-nl-subdued">
             <span>&copy; 2026 NosLog</span>
             <Link
                 href={getLocalizedHref("/privacy", locale)}
-                className="transition-colors hover:text-text-primary"
+                className="transition-colors duration-nl-state hover:text-nl-content"
             >
                 {t("footer.privacy")}
             </Link>
             <Link
                 href="https://github.com/Anchovia/noslog"
-                className="font-medium text-text-primary"
+                className="nl-control text-nl-content"
             >
                 GitHub
             </Link>

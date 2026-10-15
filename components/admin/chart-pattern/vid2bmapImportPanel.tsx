@@ -7,7 +7,6 @@ import {
     ChevronLeft,
     ChevronRight,
     FileArchive,
-    LoaderCircle,
     TriangleAlert,
     X,
 } from "lucide-react";
@@ -63,6 +62,8 @@ import {
     useChartEditorStore,
     useChartEditorStoreApi,
 } from "./chartEditorStore";
+import { foundationButtonClass } from "@/components/ui/button";
+import { cn } from "@/lib/cn";
 
 /** 패널에 보여 줄 격자(한 박 나누기). 추천 격자가 여기 없으면 끝에 더한다 */
 const GRID_OPTIONS = [4, 6, 8, 12];
@@ -278,9 +279,9 @@ function Section({
     children: React.ReactNode;
 }) {
     return (
-        <section className="flex flex-col gap-1.5">
-            <div className="flex items-center justify-between gap-2">
-                <h3 className="text-micro font-semibold">{label}</h3>
+        <section className="flex flex-col gap-nl-8">
+            <div className="flex items-center justify-between gap-nl-8">
+                <h3 className="nl-metadata text-nl-subdued">{label}</h3>
                 {aside}
             </div>
             {children}
@@ -826,11 +827,11 @@ export default function Vid2bmapImportPanel({
         : GRID_OPTIONS;
 
     return (
-        <aside className="border-divider bg-surface flex h-full w-80 shrink-0 flex-col border-l">
-            <header className="border-divider flex items-start justify-between border-b px-3 py-2.5">
+        <aside className="nl-editor-panel flex h-full shrink-0 flex-col border-l-nl-stroke border-nl-divider bg-nl-surface">
+            <header className="flex items-start justify-between border-b-nl-stroke border-nl-divider px-nl-12 py-nl-12">
                 <div>
-                    <h2 className="text-sm font-bold">영상 추출 가져오기</h2>
-                    <p className="text-micro mt-0.5">
+                    <h2 className="nl-emphasis-label">영상 추출 가져오기</h2>
+                    <p className="nl-metadata mt-nl-4 text-nl-subdued">
                         vid2bmap 결과 → 미리보기 → 초안
                     </p>
                 </div>
@@ -838,29 +839,32 @@ export default function Vid2bmapImportPanel({
                     type="button"
                     onClick={onClose}
                     aria-label="가져오기 닫기"
-                    className="hover:bg-surface-muted flex size-8 items-center justify-center rounded-md"
+                    className={foundationButtonClass({
+                        variant: "ghost",
+                        size: "icon-sm",
+                    })}
                 >
-                    <X className="size-4" />
+                    <X className="nl-icon-small" />
                 </button>
             </header>
 
-            <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto p-3">
+            <div className="flex min-h-0 flex-1 flex-col gap-nl-16 overflow-y-auto p-nl-12">
                 <Section label="파일">
-                    <div className="border-border flex items-center gap-2 rounded-md border px-2 py-1.5">
+                    <div className="flex items-center gap-nl-8 rounded-nl-field border-nl-stroke border-nl-border px-nl-8 py-nl-8">
                         <FileArchive
-                            className="text-text-secondary size-3.5 shrink-0"
+                            className="nl-icon-small shrink-0 text-nl-subdued"
                             aria-hidden
                         />
-                        <span className="min-w-0 flex-1 truncate text-xs font-semibold">
+                        <span className="nl-metadata min-w-0 flex-1 truncate">
                             {file.name}
                         </span>
-                        <span className="text-micro shrink-0">
+                        <span className="nl-metadata shrink-0 text-nl-subdued">
                             {formatFileSize(file.size)}
                         </span>
                         <button
                             type="button"
                             onClick={onReplaceFile}
-                            className="border-border hover:bg-surface-muted h-6 shrink-0 rounded border px-2 text-xs font-semibold"
+                            className="nl-metadata nl-hover-layer h-nl-24 shrink-0 rounded-nl-control border-nl-stroke border-nl-border px-nl-8"
                         >
                             바꾸기
                         </button>
@@ -868,12 +872,12 @@ export default function Vid2bmapImportPanel({
                 </Section>
 
                 {loadError ? (
-                    <p className="text-danger text-xs leading-relaxed">
+                    <p className="nl-metadata nl-metadata--long text-nl-error">
                         {loadError}
                     </p>
                 ) : !loaded || !counts || !conversion ? (
-                    <p className="text-micro flex items-center gap-1.5">
-                        <LoaderCircle className="size-3.5 animate-spin" />
+                    <p className="nl-metadata flex items-center gap-nl-8 text-nl-subdued">
+                        <span className="nl-spinner" aria-hidden />
                         결과 파일을 읽는 중
                     </p>
                 ) : (
@@ -881,7 +885,7 @@ export default function Vid2bmapImportPanel({
                         <Section
                             label={`찾은 것${counts.duplicates > 0 ? ` (중복 ${counts.duplicates}개 합침)` : ""}`}
                         >
-                            <dl className="bg-divider grid grid-cols-4 gap-px overflow-hidden rounded-md">
+                            <dl className="grid grid-cols-4 gap-nl-stroke overflow-hidden rounded-nl-field bg-nl-divider">
                                 {(
                                     [
                                         ["일반", counts.standard],
@@ -892,12 +896,14 @@ export default function Vid2bmapImportPanel({
                                 ).map(([label, value]) => (
                                     <div
                                         key={label}
-                                        className="bg-surface-muted px-1 py-1.5 text-center"
+                                        className="bg-nl-raised px-nl-4 py-nl-8 text-center"
                                     >
-                                        <dd className="text-sm font-bold tabular-nums">
+                                        <dd className="nl-emphasis-label">
                                             {value.toLocaleString("ko-KR")}
                                         </dd>
-                                        <dt className="text-micro">{label}</dt>
+                                        <dt className="nl-metadata text-nl-subdued">
+                                            {label}
+                                        </dt>
                                     </div>
                                 ))}
                             </dl>
@@ -906,9 +912,9 @@ export default function Vid2bmapImportPanel({
                             !warnings.some(
                                 (warning) => warning.kind === "bpmMismatch"
                             ) ? (
-                                <p className="text-text-secondary flex gap-1.5 text-xs leading-relaxed">
+                                <p className="nl-metadata nl-metadata--long flex gap-nl-8 text-nl-subdued">
                                     <Check
-                                        className="text-success mt-0.5 size-3.5 shrink-0"
+                                        className="nl-icon-small mt-nl-4 shrink-0 text-nl-success"
                                         aria-hidden
                                     />
                                     박자선 {counts.bars.toLocaleString("ko-KR")}
@@ -917,15 +923,15 @@ export default function Vid2bmapImportPanel({
                                 </p>
                             ) : null}
                             {officialNoteCount !== null ? (
-                                <p className="text-text-secondary flex gap-1.5 text-xs leading-relaxed">
+                                <p className="nl-metadata nl-metadata--long flex gap-nl-8 text-nl-subdued">
                                     {judgments === officialNoteCount ? (
                                         <Check
-                                            className="text-success mt-0.5 size-3.5 shrink-0"
+                                            className="nl-icon-small mt-nl-4 shrink-0 text-nl-success"
                                             aria-hidden
                                         />
                                     ) : (
                                         <TriangleAlert
-                                            className="text-score mt-0.5 size-3.5 shrink-0"
+                                            className="nl-icon-small mt-nl-4 shrink-0 text-nl-warning"
                                             aria-hidden
                                         />
                                     )}
@@ -936,17 +942,17 @@ export default function Vid2bmapImportPanel({
                             ) : null}
                             {replaceProposal ? (
                                 // 영상과 어긋난 기존 타이밍 포인트(2026-09-25 B) — 템포 제안과 같은 카드
-                                <div className="border-score/40 bg-score/10 flex flex-col gap-1 rounded-md border px-2 py-1.5">
-                                    <p className="flex items-center gap-1.5 text-xs font-bold">
+                                <div className="flex flex-col gap-nl-4">
+                                    <p className="nl-metadata flex items-center gap-nl-8">
                                         <TriangleAlert
-                                            className="text-score size-3.5 shrink-0"
+                                            className="nl-icon-small shrink-0 text-nl-warning"
                                             aria-hidden
                                         />
                                         {replaceTiming
                                             ? "기존 타이밍 포인트를 영상 타이밍으로"
                                             : `기존 타이밍 포인트 ${extraTimingPoints.length}개가 제안을 막았어요`}
                                     </p>
-                                    <p className="text-micro">
+                                    <p className="nl-metadata text-nl-subdued">
                                         지금 초안 {extraTimingPoints.length}개 —{" "}
                                         {extraTimingPoints.map(
                                             (point, index) => (
@@ -973,7 +979,7 @@ export default function Vid2bmapImportPanel({
                                             ? `시작 타이밍(${chartPositionLabel(draftOrigin.tick, document.timingPoints)})은 그대로`
                                             : "그 자리 제안은 빠져요 — 타이밍 모드에서 지우고 다시 넣거나 여기서 바꾸기"}
                                     </p>
-                                    <label className="flex items-center gap-2 text-xs font-semibold">
+                                    <label className="nl-check nl-control">
                                         <input
                                             type="checkbox"
                                             checked={replaceTiming}
@@ -982,8 +988,13 @@ export default function Vid2bmapImportPanel({
                                                     event.target.checked
                                                 )
                                             }
-                                            className="accent-text-primary size-3.5"
                                         />
+                                        <span
+                                            className="nl-check__box"
+                                            aria-hidden="true"
+                                        >
+                                            <Check />
+                                        </span>
                                         기존 포인트 {extraTimingPoints.length}개
                                         지우고 아래 제안으로
                                     </label>
@@ -993,10 +1004,10 @@ export default function Vid2bmapImportPanel({
                             meterProposal ||
                             offsetProposal ? (
                                 // 시작 BPM · 박자 제안(2026-09-24 A) — 템포 변화 제안과 같은 카드
-                                <div className="border-score/40 bg-score/10 flex flex-col gap-1 rounded-md border px-2 py-1.5">
-                                    <p className="flex items-center gap-1.5 text-xs font-bold">
+                                <div className="flex flex-col gap-nl-4">
+                                    <p className="nl-metadata flex items-center gap-nl-8">
                                         <TriangleAlert
-                                            className="text-score size-3.5 shrink-0"
+                                            className="nl-icon-small shrink-0 text-nl-warning"
                                             aria-hidden
                                         />
                                         {chartPositionLabel(
@@ -1007,7 +1018,7 @@ export default function Vid2bmapImportPanel({
                                     </p>
                                     {tempo?.startMismatch ? (
                                         <>
-                                            <p className="text-micro">
+                                            <p className="nl-metadata text-nl-subdued">
                                                 영상 박자선{" "}
                                                 {tempo.startMismatch.beats}
                                                 박으로 잰 BPM{" "}
@@ -1025,7 +1036,7 @@ export default function Vid2bmapImportPanel({
                                                         .integerDriftFrames
                                                 )}
                                             </p>
-                                            <label className="flex items-center gap-2 text-xs font-semibold">
+                                            <label className="nl-check nl-control">
                                                 <input
                                                     type="checkbox"
                                                     checked={
@@ -1037,8 +1048,13 @@ export default function Vid2bmapImportPanel({
                                                             event.target.checked
                                                         )
                                                     }
-                                                    className="accent-text-primary size-3.5"
                                                 />
+                                                <span
+                                                    className="nl-check__box"
+                                                    aria-hidden="true"
+                                                >
+                                                    <Check />
+                                                </span>
                                                 시작 타이밍을 BPM{" "}
                                                 {tempo.startMismatch.bpm} 로
                                             </label>
@@ -1046,7 +1062,7 @@ export default function Vid2bmapImportPanel({
                                     ) : null}
                                     {meterProposal ? (
                                         <>
-                                            <p className="text-micro">
+                                            <p className="nl-metadata text-nl-subdued">
                                                 강세가 {meterProposal.numerator}
                                                 박마다(
                                                 {meterProposal.clear
@@ -1055,7 +1071,7 @@ export default function Vid2bmapImportPanel({
                                                 ) — 지금 {baseOrigin.numerator}/
                                                 {baseOrigin.denominator}
                                             </p>
-                                            <label className="flex items-center gap-2 text-xs font-semibold">
+                                            <label className="nl-check nl-control">
                                                 <input
                                                     type="checkbox"
                                                     checked={
@@ -1067,8 +1083,13 @@ export default function Vid2bmapImportPanel({
                                                             event.target.checked
                                                         )
                                                     }
-                                                    className="accent-text-primary size-3.5"
                                                 />
+                                                <span
+                                                    className="nl-check__box"
+                                                    aria-hidden="true"
+                                                >
+                                                    <Check />
+                                                </span>
                                                 박자를 {meterProposal.numerator}
                                                 /4 로
                                             </label>
@@ -1076,11 +1097,11 @@ export default function Vid2bmapImportPanel({
                                     ) : null}
                                     {offsetProposal ? (
                                         <>
-                                            <p className="text-micro">
+                                            <p className="nl-metadata text-nl-subdued">
                                                 시작 시각 0ms — 1마디 1박 노트가
                                                 재생과 동시에 판정선에 있어요
                                             </p>
-                                            <label className="flex items-center gap-2 text-xs font-semibold">
+                                            <label className="nl-check nl-control">
                                                 <input
                                                     type="checkbox"
                                                     checked={
@@ -1092,8 +1113,13 @@ export default function Vid2bmapImportPanel({
                                                             event.target.checked
                                                         )
                                                     }
-                                                    className="accent-text-primary size-3.5"
                                                 />
+                                                <span
+                                                    className="nl-check__box"
+                                                    aria-hidden="true"
+                                                >
+                                                    <Check />
+                                                </span>
                                                 시작 시각을{" "}
                                                 {DEFAULT_CHART_OFFSET_MS}ms 로
                                             </label>
@@ -1109,7 +1135,7 @@ export default function Vid2bmapImportPanel({
                                 return (
                                     <div
                                         key={change.tick}
-                                        className="border-score/40 bg-score/10 flex flex-col gap-1 rounded-md border px-2 py-1.5"
+                                        className="flex flex-col gap-nl-4"
                                     >
                                         <button
                                             type="button"
@@ -1126,18 +1152,18 @@ export default function Vid2bmapImportPanel({
                                                 )
                                             }
                                             title="캔버스에서 이 위치 보기"
-                                            className="flex items-center gap-1.5 text-left text-xs font-bold underline-offset-2 hover:underline"
+                                            className="nl-metadata nl-link flex items-center gap-nl-8 text-left hover:underline"
                                         >
                                             <TriangleAlert
-                                                className="text-score size-3.5 shrink-0"
+                                                className="nl-icon-small shrink-0 text-nl-warning"
                                                 aria-hidden
                                             />
                                             {tempoTitle(change, timingPoints)}
                                         </button>
-                                        <p className="text-micro">
+                                        <p className="nl-metadata text-nl-subdued">
                                             {tempoDetail(change)}
                                         </p>
-                                        <label className="flex items-center gap-2 text-xs font-semibold">
+                                        <label className="nl-check nl-control">
                                             <input
                                                 type="checkbox"
                                                 checked={checked}
@@ -1151,8 +1177,13 @@ export default function Vid2bmapImportPanel({
                                                         })
                                                     )
                                                 }
-                                                className="accent-text-primary size-3.5"
                                             />
+                                            <span
+                                                className="nl-check__box"
+                                                aria-hidden="true"
+                                            >
+                                                <Check />
+                                            </span>
                                             {change.points.length === 1
                                                 ? `타이밍 포인트 넣기 · BPM ${change.bpm}`
                                                 : `타이밍 포인트 ${change.points.length}개 넣기 · ${change.points.map((point) => point.bpm).join(" → ")}`}
@@ -1166,10 +1197,10 @@ export default function Vid2bmapImportPanel({
                             {visibleWarnings.map((warning, index) => (
                                 <p
                                     key={`${warning.kind}-${index}`}
-                                    className="text-text-secondary flex gap-1.5 text-xs leading-relaxed"
+                                    className="nl-metadata nl-metadata--long flex gap-nl-8 text-nl-subdued"
                                 >
                                     <TriangleAlert
-                                        className="text-score mt-0.5 size-3.5 shrink-0"
+                                        className="nl-icon-small mt-nl-4 shrink-0 text-nl-warning"
                                         aria-hidden
                                     />
                                     {warningText(warning, timingPoints)}
@@ -1181,7 +1212,7 @@ export default function Vid2bmapImportPanel({
                                     onClick={() =>
                                         setShowAllWarnings((value) => !value)
                                     }
-                                    className="text-micro self-start underline underline-offset-2"
+                                    className="nl-metadata nl-link self-start text-nl-subdued underline"
                                 >
                                     {showAllWarnings
                                         ? "경고 접기"
@@ -1191,17 +1222,23 @@ export default function Vid2bmapImportPanel({
                         </Section>
 
                         <Section label="첫 박 맞추기">
-                            <div className="flex items-center gap-1.5">
+                            <div className="flex items-center gap-nl-8">
                                 <button
                                     type="button"
                                     onClick={() => nudge(-1)}
                                     aria-label="한 박 앞으로"
-                                    className="border-border hover:bg-surface-muted flex h-8 shrink-0 items-center gap-0.5 rounded-md border px-2 text-xs font-semibold"
+                                    className={cn(
+                                        foundationButtonClass({
+                                            variant: "secondary",
+                                            size: "sm",
+                                        }),
+                                        "shrink-0"
+                                    )}
                                 >
-                                    <ChevronLeft className="size-3.5" />
+                                    <ChevronLeft className="nl-icon-small" />
                                     1박
                                 </button>
-                                <output className="border-border flex h-8 flex-1 items-center justify-center rounded-md border text-xs font-bold tabular-nums">
+                                <output className="nl-metadata flex h-nl-32 flex-1 items-center justify-center rounded-nl-field border-nl-stroke border-nl-border">
                                     첫 박자선 ={" "}
                                     {chartPositionLabel(
                                         loaded.firstBarTick,
@@ -1212,13 +1249,19 @@ export default function Vid2bmapImportPanel({
                                     type="button"
                                     onClick={() => nudge(1)}
                                     aria-label="한 박 뒤로"
-                                    className="border-border hover:bg-surface-muted flex h-8 shrink-0 items-center gap-0.5 rounded-md border px-2 text-xs font-semibold"
+                                    className={cn(
+                                        foundationButtonClass({
+                                            variant: "secondary",
+                                            size: "sm",
+                                        }),
+                                        "shrink-0"
+                                    )}
                                 >
                                     1박
-                                    <ChevronRight className="size-3.5" />
+                                    <ChevronRight className="nl-icon-small" />
                                 </button>
                             </div>
-                            <p className="text-micro leading-relaxed">
+                            <p className="nl-metadata nl-metadata--long text-nl-subdued">
                                 {firstNote
                                     ? `첫 노트 → ${chartPositionLabel(firstNote.tick, timingPoints)}. `
                                     : ""}
@@ -1232,7 +1275,7 @@ export default function Vid2bmapImportPanel({
 
                         <Section label="격자">
                             <div
-                                className={`grid gap-1 ${grids.length > 4 ? "grid-cols-5" : "grid-cols-4"}`}
+                                className={`grid gap-nl-4 ${grids.length > 4 ? "grid-cols-5" : "grid-cols-4"}`}
                             >
                                 {grids.map((divisor) => {
                                     const drift =
@@ -1253,14 +1296,14 @@ export default function Vid2bmapImportPanel({
                                                     snapDivisor: divisor,
                                                 })
                                             }
-                                            className={`flex h-9 flex-col items-center justify-center rounded-md border text-xs leading-tight font-semibold ${
+                                            className={`nl-metadata flex min-h-nl-control-compact flex-col items-center justify-center rounded-nl-field border-nl-stroke ${
                                                 selected
-                                                    ? "border-text-secondary bg-surface-muted"
-                                                    : "border-border hover:bg-surface-muted/60"
+                                                    ? "border-nl-subdued bg-nl-raised"
+                                                    : "nl-hover-layer border-nl-border"
                                             }`}
                                         >
                                             1/{divisor}박
-                                            <span className="text-micro font-normal">
+                                            <span className="nl-metadata text-nl-subdued">
                                                 {suggestion?.divisor === divisor
                                                     ? "추천 · "
                                                     : ""}
@@ -1274,7 +1317,7 @@ export default function Vid2bmapImportPanel({
                         </Section>
 
                         <Section label="가져올 것">
-                            <div className="grid grid-cols-2 gap-x-2 gap-y-1">
+                            <div className="grid grid-cols-2 gap-x-nl-8 gap-y-nl-4">
                                 {(
                                     [
                                         ["standard", "일반"],
@@ -1285,7 +1328,7 @@ export default function Vid2bmapImportPanel({
                                 ).map(([key, label]) => (
                                     <label
                                         key={key}
-                                        className="flex h-6 items-center gap-2 text-xs font-semibold"
+                                        className="nl-check nl-control"
                                     >
                                         <input
                                             type="checkbox"
@@ -1296,31 +1339,41 @@ export default function Vid2bmapImportPanel({
                                                     [key]: event.target.checked,
                                                 }))
                                             }
-                                            className="accent-text-primary size-3.5"
                                         />
+                                        <span
+                                            className="nl-check__box"
+                                            aria-hidden="true"
+                                        >
+                                            <Check />
+                                        </span>
                                         {label}
                                         {key === "trill" ||
                                         key === "glissando" ? (
-                                            <span className="text-micro font-normal">
+                                            <span className="nl-metadata text-nl-subdued">
                                                 확인 필요
                                             </span>
                                         ) : null}
                                     </label>
                                 ))}
                             </div>
-                            <label className="flex items-start gap-2 text-xs font-semibold">
+                            <label className="nl-check nl-control">
                                 <input
                                     type="checkbox"
                                     checked={selectCenter}
                                     onChange={(event) =>
                                         setSelectCenter(event.target.checked)
                                     }
-                                    className="accent-text-primary mt-0.5 size-3.5"
                                 />
+                                <span
+                                    className="nl-check__box"
+                                    aria-hidden="true"
+                                >
+                                    <Check />
+                                </span>
                                 <span>
                                     넣은 뒤 손을 추정한 가운데(12~16번 칸) 노트
                                     선택해 두기
-                                    <span className="text-micro block font-normal">
+                                    <span className="nl-metadata block text-nl-subdued">
                                         {conversion.handKnownIds.length > 0
                                             ? `손은 영상에서 읽음 ${conversion.handKnownIds.length.toLocaleString("ko-KR")}개 · 나머지는 칸 위치로 추정`
                                             : "손은 칸 위치로 추정"}{" "}
@@ -1332,18 +1385,23 @@ export default function Vid2bmapImportPanel({
                                     </span>
                                 </span>
                             </label>
-                            <label className="flex items-start gap-2 text-xs font-semibold">
+                            <label className="nl-check nl-control">
                                 <input
                                     type="checkbox"
                                     checked={selectGridCheck}
                                     onChange={(event) =>
                                         setSelectGridCheck(event.target.checked)
                                     }
-                                    className="accent-text-primary mt-0.5 size-3.5"
                                 />
+                                <span
+                                    className="nl-check__box"
+                                    aria-hidden="true"
+                                >
+                                    <Check />
+                                </span>
                                 <span>
                                     넣은 뒤 박 격자를 따로 맞춘 노트 선택해 두기
-                                    <span className="text-micro block font-normal">
+                                    <span className="nl-metadata block text-nl-subdued">
                                         그 박의 격자로 맞춰 곡 전체 격자와
                                         자리가 달라졌거나 영상 위치 그대로 둔
                                         노트 — 확인 필요 (
@@ -1360,48 +1418,48 @@ export default function Vid2bmapImportPanel({
                             <Section
                                 label="지금 초안과 비교"
                                 aside={
-                                    <span className="text-micro">
+                                    <span className="nl-metadata text-nl-subdued">
                                         ↑ ↓ 로 이동
                                     </span>
                                 }
                             >
-                                <dl className="grid grid-cols-2 gap-1">
+                                <dl className="grid grid-cols-2 gap-nl-4">
                                     {(
                                         [
                                             [
                                                 "같음",
                                                 diff.same.length,
-                                                "bg-text-disabled",
+                                                "bg-nl-disabled",
                                             ],
                                             [
                                                 "달라짐",
                                                 diff.changed.length,
-                                                "bg-score",
+                                                "bg-nl-warning",
                                             ],
                                             [
                                                 "내 초안에만",
                                                 diff.onlyCurrent.length,
-                                                "border-danger border border-dashed",
+                                                "border-nl-error border-nl-stroke border-dashed",
                                             ],
                                             [
                                                 "가져온 것에만",
                                                 diff.onlyIncoming.length,
-                                                "bg-score/60",
+                                                "border-nl-warning border-nl-stroke",
                                             ],
                                         ] as const
                                     ).map(([label, value, swatch]) => (
                                         <div
                                             key={label}
-                                            className="border-border flex items-center justify-between rounded-md border px-2 py-1"
+                                            className="flex items-center justify-between rounded-nl-field border-nl-stroke border-nl-border px-nl-8 py-nl-4"
                                         >
-                                            <dt className="flex items-center gap-1.5 text-xs">
+                                            <dt className="nl-metadata flex items-center gap-nl-8">
                                                 <span
-                                                    className={`size-2.5 rounded-[2px] ${swatch}`}
+                                                    className={`size-nl-8 ${swatch}`}
                                                     aria-hidden
                                                 />
                                                 {label}
                                             </dt>
-                                            <dd className="text-xs font-bold tabular-nums">
+                                            <dd className="nl-metadata">
                                                 {value.toLocaleString("ko-KR")}
                                             </dd>
                                         </div>
@@ -1411,30 +1469,30 @@ export default function Vid2bmapImportPanel({
                                 {items.length > 0 ? (
                                     <>
                                         <div className="flex items-center justify-between">
-                                            <span className="text-micro">
+                                            <span className="nl-metadata text-nl-subdued">
                                                 달라진 곳 {items.length}
                                                 {focusIndex !== null
                                                     ? ` · ${focusIndex + 1} / ${items.length}`
                                                     : ""}
                                             </span>
-                                            <span className="flex gap-1">
+                                            <span className="flex gap-nl-4">
                                                 <button
                                                     type="button"
                                                     onClick={() =>
                                                         moveFocus(-1)
                                                     }
                                                     aria-label="이전 곳"
-                                                    className="border-border hover:bg-surface-muted flex size-6 items-center justify-center rounded border"
+                                                    className="nl-hover-layer flex size-nl-24 items-center justify-center rounded-nl-control border-nl-stroke border-nl-border"
                                                 >
-                                                    <ArrowUp className="size-3" />
+                                                    <ArrowUp className="nl-icon-small" />
                                                 </button>
                                                 <button
                                                     type="button"
                                                     onClick={() => moveFocus(1)}
                                                     aria-label="다음 곳"
-                                                    className="border-border hover:bg-surface-muted flex size-6 items-center justify-center rounded border"
+                                                    className="nl-hover-layer flex size-nl-24 items-center justify-center rounded-nl-control border-nl-stroke border-nl-border"
                                                 >
-                                                    <ArrowDown className="size-3" />
+                                                    <ArrowDown className="nl-icon-small" />
                                                 </button>
                                             </span>
                                         </div>
@@ -1443,7 +1501,7 @@ export default function Vid2bmapImportPanel({
                                             tabIndex={0}
                                             onKeyDown={handleListKey}
                                             aria-label="달라진 곳"
-                                            className="focus-visible:outline-focus flex max-h-72 flex-col gap-1 overflow-y-auto rounded-md focus-visible:outline-1"
+                                            className="nl-editor-file-list flex flex-col gap-nl-4 overflow-y-auto rounded-nl-field focus-visible:outline-nl-stroke focus-visible:outline-nl-focus"
                                         >
                                             {items.map((item, index) => {
                                                 const choice =
@@ -1459,10 +1517,10 @@ export default function Vid2bmapImportPanel({
                                                     <div
                                                         key={item.key}
                                                         role="listitem"
-                                                        className={`flex flex-col gap-1 rounded-md border px-2 py-1.5 ${
+                                                        className={`flex flex-col gap-nl-4 rounded-nl-field border-nl-stroke px-nl-8 py-nl-8 ${
                                                             focused
-                                                                ? "border-text-secondary bg-surface-muted"
-                                                                : "border-border"
+                                                                ? "border-nl-subdued bg-nl-raised"
+                                                                : "border-nl-border"
                                                         }`}
                                                     >
                                                         <button
@@ -1470,15 +1528,15 @@ export default function Vid2bmapImportPanel({
                                                             onClick={() =>
                                                                 focusOn(index)
                                                             }
-                                                            className="flex items-baseline justify-between gap-2 text-left"
+                                                            className="flex items-baseline justify-between gap-nl-8 text-left"
                                                         >
-                                                            <span className="shrink-0 text-xs font-bold tabular-nums">
+                                                            <span className="nl-metadata shrink-0">
                                                                 {chartPositionLabel(
                                                                     item.tick,
                                                                     timingPoints
                                                                 )}
                                                             </span>
-                                                            <span className="text-text-secondary min-w-0 text-right text-xs">
+                                                            <span className="nl-metadata min-w-0 text-right text-nl-subdued">
                                                                 {describeItem(
                                                                     item,
                                                                     timingPoints
@@ -1488,7 +1546,7 @@ export default function Vid2bmapImportPanel({
                                                         <div
                                                             role="radiogroup"
                                                             aria-label="고르기"
-                                                            className="grid grid-cols-2 gap-1"
+                                                            className="grid grid-cols-2 gap-nl-4"
                                                         >
                                                             {(
                                                                 [
@@ -1525,11 +1583,11 @@ export default function Vid2bmapImportPanel({
                                                                                 index
                                                                             );
                                                                         }}
-                                                                        className={`h-6 rounded border text-xs font-semibold ${
+                                                                        className={`nl-metadata h-nl-24 rounded-nl-control border-nl-stroke ${
                                                                             choice ===
                                                                             value
-                                                                                ? "border-text-primary bg-text-primary text-bg"
-                                                                                : "border-border hover:bg-surface-muted"
+                                                                                ? "border-nl-content bg-nl-primary text-nl-on-primary"
+                                                                                : "nl-hover-layer border-nl-border"
                                                                         }`}
                                                                     >
                                                                         {label}
@@ -1541,13 +1599,18 @@ export default function Vid2bmapImportPanel({
                                                 );
                                             })}
                                         </div>
-                                        <div className="grid grid-cols-2 gap-1">
+                                        <div className="grid grid-cols-2 gap-nl-4">
                                             <button
                                                 type="button"
                                                 onClick={() =>
                                                     chooseAll("current")
                                                 }
-                                                className="border-border hover:bg-surface-muted h-8 rounded-md border text-xs font-semibold"
+                                                className={foundationButtonClass(
+                                                    {
+                                                        variant: "secondary",
+                                                        size: "sm",
+                                                    }
+                                                )}
                                             >
                                                 달라진 곳 모두 내 것
                                             </button>
@@ -1556,21 +1619,26 @@ export default function Vid2bmapImportPanel({
                                                 onClick={() =>
                                                     chooseAll("incoming")
                                                 }
-                                                className="border-border hover:bg-surface-muted h-8 rounded-md border text-xs font-semibold"
+                                                className={foundationButtonClass(
+                                                    {
+                                                        variant: "secondary",
+                                                        size: "sm",
+                                                    }
+                                                )}
                                             >
                                                 모두 가져온 것
                                             </button>
                                         </div>
                                     </>
                                 ) : (
-                                    <p className="text-micro">
+                                    <p className="nl-metadata text-nl-subdued">
                                         초안과 겹치는 구간에서 달라진 곳이
                                         없습니다.
                                     </p>
                                 )}
 
                                 {plan.newSection.length > 0 ? (
-                                    <label className="flex items-start gap-2 text-xs font-semibold">
+                                    <label className="nl-check nl-control">
                                         <input
                                             type="checkbox"
                                             checked={includeNewSection}
@@ -1579,15 +1647,20 @@ export default function Vid2bmapImportPanel({
                                                     event.target.checked
                                                 )
                                             }
-                                            className="accent-text-primary mt-0.5 size-3.5"
                                         />
+                                        <span
+                                            className="nl-check__box"
+                                            aria-hidden="true"
+                                        >
+                                            <Check />
+                                        </span>
                                         <span>
                                             초안 뒤 새 구간{" "}
                                             {plan.newSection.length.toLocaleString(
                                                 "ko-KR"
                                             )}
                                             개 넣기
-                                            <span className="text-micro block font-normal">
+                                            <span className="nl-metadata block text-nl-subdued">
                                                 {chartPositionLabel(
                                                     plan.newSection[0].tick,
                                                     timingPoints
@@ -1603,9 +1676,9 @@ export default function Vid2bmapImportPanel({
                 )}
             </div>
 
-            <footer className="border-divider flex flex-col gap-2 border-t px-3 py-2.5">
+            <footer className="flex flex-col gap-nl-8 border-t-nl-stroke border-nl-divider px-nl-12 py-nl-12">
                 {newConflicts.withDraft > 0 ? (
-                    <p className="text-danger text-xs leading-relaxed">
+                    <p className="nl-metadata nl-metadata--long text-nl-error">
                         기존 초안 노트와 겹칩니다(
                         {newConflicts.withDraft.toLocaleString("ko-KR")}건
                         {newConflicts.ticks.length > 0
@@ -1615,7 +1688,7 @@ export default function Vid2bmapImportPanel({
                         노트를 비운 뒤 넣어 주세요.
                     </p>
                 ) : newConflicts.count > 0 ? (
-                    <p className="text-danger text-xs leading-relaxed">
+                    <p className="nl-metadata nl-metadata--long text-nl-error">
                         겹치는 노트 {newConflicts.count.toLocaleString("ko-KR")}
                         곳
                         {newConflicts.ticks.length > 0
@@ -1626,11 +1699,17 @@ export default function Vid2bmapImportPanel({
                         뒤 버전을 저장하세요(겹친 채로는 저장 안 됨).
                     </p>
                 ) : null}
-                <div className="flex gap-2">
+                <div className="flex gap-nl-8">
                     <button
                         type="button"
                         onClick={onClose}
-                        className="border-border hover:bg-surface-muted flex h-9 flex-1 items-center justify-center rounded-md border text-xs font-bold"
+                        className={cn(
+                            foundationButtonClass({
+                                variant: "secondary",
+                                size: "sm",
+                            }),
+                            "flex-1"
+                        )}
                     >
                         취소
                     </button>
@@ -1640,10 +1719,13 @@ export default function Vid2bmapImportPanel({
                             !merged || applying || newConflicts.withDraft > 0
                         }
                         onClick={() => void apply()}
-                        className="bg-text-primary text-bg flex h-9 flex-[1.4] items-center justify-center gap-1.5 rounded-md text-xs font-bold disabled:cursor-not-allowed disabled:opacity-35"
+                        className={cn(
+                            foundationButtonClass({ size: "sm" }),
+                            "flex-1"
+                        )}
                     >
                         {applying ? (
-                            <LoaderCircle className="size-3.5 animate-spin" />
+                            <span className="nl-spinner" aria-hidden />
                         ) : null}
                         초안에 넣기
                         {merged &&
@@ -1658,12 +1740,12 @@ export default function Vid2bmapImportPanel({
                             : ""}
                     </button>
                 </div>
-                <p className="text-micro">
+                <p className="nl-metadata text-nl-subdued">
                     {merged && hasDraft
                         ? `새로 ${merged.addedIds.length.toLocaleString("ko-KR")} · 뺌 ${merged.removedIds.length.toLocaleString("ko-KR")}${timingCount > 0 ? ` · 타이밍 ${timingCount}` : ""} — 넣기 전 지금 초안을 버전으로 저장합니다.`
                         : "초안에만 들어갑니다. 공개는 따로 합니다."}
                 </p>
-                <p className="text-micro">
+                <p className="nl-metadata text-nl-subdued">
                     추출: vid2bmap — 김영훈 · 최성희(KAIST), MIT
                 </p>
             </footer>

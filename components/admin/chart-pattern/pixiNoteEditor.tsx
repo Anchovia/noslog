@@ -1844,7 +1844,7 @@ export default function PixiNoteEditor({
             role="application"
             aria-label={t("editor.canvasLabel")}
             tabIndex={0}
-            className={`h-full min-h-80 w-full overflow-hidden outline-none ${
+            className={`nl-editor-canvas-min h-full w-full overflow-hidden outline-none ${
                 (gesture?.kind === "resize" && gesture.action === "end") ||
                 (tool === "select" && isDurationHandleHovered)
                     ? "cursor-ns-resize"

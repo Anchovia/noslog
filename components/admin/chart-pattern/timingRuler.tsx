@@ -237,7 +237,7 @@ export default function TimingRuler({
             role="application"
             aria-label={t("editor.rulerLabel")}
             tabIndex={0}
-            className="h-full min-h-80 w-full touch-none"
+            className="nl-editor-canvas-min h-full w-full touch-none"
             onPointerDown={(event) => {
                 event.currentTarget.setPointerCapture(event.pointerId);
                 seekFromY(event.clientY);

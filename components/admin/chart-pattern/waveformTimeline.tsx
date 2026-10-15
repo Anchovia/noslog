@@ -184,7 +184,7 @@ export default function WaveformTimeline({
                 aria-valuenow={Math.round(currentTimeMs)}
                 aria-valuetext={formatEditorTime(currentTimeMs)}
                 tabIndex={0}
-                className="h-20 w-full touch-none rounded-md"
+                className="nl-editor-waveform w-full touch-none rounded-nl-field"
                 onPointerDown={(event) => {
                     event.currentTarget.setPointerCapture(event.pointerId);
                     seekFromClientX(event.clientX);

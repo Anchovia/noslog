@@ -19,10 +19,10 @@ import {
 import { useTranslations } from "@/components/i18n/locale-provider";
 
 import { useChartEditorStore } from "./chartEditorStore";
-import Button from "@/components/ui/button";
+import Button, { foundationButtonClass } from "@/components/ui/button";
+import { cn } from "@/lib/cn";
 
-const inputClass =
-    "border-border bg-bg text-text-primary h-9 w-full rounded-md border px-2 text-sm tabular-nums outline-none focus:border-text-secondary";
+const inputClass = "nl-input";
 
 function roundedBpm(value: number) {
     return Math.round(value * 1_000) / 1_000;
@@ -160,13 +160,13 @@ export default function TimingInspector() {
     }
 
     return (
-        <aside className="flex h-full w-80 shrink-0 flex-col border-l border-divider bg-surface">
-            <header className="flex items-center justify-between border-b border-divider px-3 py-2.5">
+        <aside className="nl-editor-panel flex h-full shrink-0 flex-col border-l-nl-stroke border-nl-divider bg-nl-surface">
+            <header className="flex items-center justify-between border-b-nl-stroke border-nl-divider px-nl-12 py-nl-12">
                 <div>
-                    <h2 className="text-sm font-bold">
+                    <h2 className="nl-emphasis-label">
                         {t("editor.timing.title")}
                     </h2>
-                    <p className="mt-0.5 text-micro">
+                    <p className="nl-metadata mt-nl-4 text-nl-subdued">
                         {t("editor.timing.subtitle")}
                     </p>
                 </div>
@@ -174,39 +174,40 @@ export default function TimingInspector() {
                     type="button"
                     onClick={addTimingPoint}
                     disabled={readOnly}
-                    className="flex h-8 items-center gap-1 rounded-md border border-border px-2 text-xs font-semibold hover:bg-surface-muted"
+                    className={foundationButtonClass({
+                        variant: "secondary",
+                        size: "sm",
+                    })}
                 >
-                    <Plus className="size-3.5" />
+                    <Plus className="nl-icon-small" />
                     {t("editor.add")}
                 </button>
             </header>
 
-            <div className="max-h-48 overflow-y-auto border-b border-divider p-2">
-                <div className="flex flex-col gap-1">
+            <div className="nl-editor-point-list overflow-y-auto border-b-nl-stroke border-nl-divider p-nl-8">
+                <div className="flex flex-col gap-nl-4">
                     {sortedPoints.map((point, index) => (
                         <button
                             key={point.id}
                             type="button"
                             onClick={() => selectTimingPoint(point.id)}
-                            className={`rounded-md px-2.5 py-2 text-left transition-colors ${
+                            className={`rounded-nl-field px-nl-12 py-nl-8 text-left transition-colors duration-nl-state ${
                                 point.id === selected.id
-                                    ? "bg-surface-muted text-text-primary"
-                                    : "text-text-secondary hover:bg-surface-muted/60"
+                                    ? "bg-nl-raised text-nl-content"
+                                    : "nl-hover-layer text-nl-subdued"
                             }`}
                         >
-                            <span className="flex items-center justify-between gap-2 text-xs">
-                                <strong className="font-semibold">
+                            <span className="nl-metadata flex items-center justify-between gap-nl-8">
+                                <strong className="nl-metadata">
                                     {index === 0
                                         ? t("editor.timing.first")
                                         : t("editor.timing.nth", {
                                               index: index + 1,
                                           })}
                                 </strong>
-                                <span className="tabular-nums">
-                                    {formatEditorTime(point.timeMs)}
-                                </span>
+                                <span>{formatEditorTime(point.timeMs)}</span>
                             </span>
-                            <span className="mt-1 block text-micro">
+                            <span className="nl-metadata mt-nl-4 block text-nl-subdued">
                                 {formatBpm(point.bpm)} BPM · {point.numerator}/
                                 {point.denominator}
                             </span>
@@ -217,10 +218,10 @@ export default function TimingInspector() {
 
             <fieldset
                 disabled={readOnly}
-                className="m-0 min-h-0 min-w-0 flex-1 overflow-y-auto border-0 p-3"
+                className="m-0 min-h-0 min-w-0 flex-1 overflow-y-auto border-0 p-nl-12"
             >
-                <div className="grid grid-cols-2 gap-3">
-                    <label className="col-span-2 flex flex-col gap-1 text-caption">
+                <div className="grid grid-cols-2 gap-nl-12">
+                    <label className="nl-metadata col-span-2 flex flex-col gap-nl-4 text-nl-subdued">
                         {selectedIndex === 0
                             ? t("editor.timing.offset")
                             : t("editor.timing.audioTime")}
@@ -236,22 +237,28 @@ export default function TimingInspector() {
                                         updateSelected({ timeMs: value });
                                     }
                                 }}
-                                className={`${inputClass} pr-10`}
+                                className={`${inputClass} pr-nl-48`}
                             />
-                            <span className="pointer-events-none absolute top-1/2 right-2 -translate-y-1/2 text-micro">
+                            <span className="nl-metadata pointer-events-none absolute top-1/2 right-nl-8 -translate-y-1/2 text-nl-subdued">
                                 ms
                             </span>
                         </div>
                         <button
                             type="button"
                             onClick={useCurrentTime}
-                            className="mt-1 h-8 rounded-md border border-border text-xs font-semibold hover:bg-surface-muted"
+                            className={cn(
+                                foundationButtonClass({
+                                    variant: "secondary",
+                                    size: "sm",
+                                }),
+                                "mt-nl-4"
+                            )}
                         >
                             {t("editor.timing.useCurrent")}
                         </button>
                     </label>
 
-                    <label className="col-span-2 flex flex-col gap-1 text-caption">
+                    <label className="nl-metadata col-span-2 flex flex-col gap-nl-4 text-nl-subdued">
                         BPM
                         <input
                             key={`${selected.id}-bpm-${selected.bpm}`}
@@ -277,15 +284,15 @@ export default function TimingInspector() {
                     </label>
 
                     <fieldset className="col-span-2">
-                        <legend className="mb-1.5 text-caption">
+                        <legend className="nl-metadata mb-nl-8 text-nl-subdued">
                             {t("editor.timing.signature")}
                         </legend>
-                        <div className="flex flex-col gap-1.5">
+                        <div className="flex flex-col gap-nl-8">
                             <label
-                                className={`flex h-9 cursor-pointer items-center gap-2 rounded-md border border-border px-2.5 hover:bg-surface-muted ${
+                                className={`nl-radio-group__option nl-hover-layer rounded-nl-field border-nl-stroke border-nl-border px-nl-12 ${
                                     signaturePreset === "3/4"
-                                        ? "bg-surface-muted text-text-primary"
-                                        : "text-text-secondary"
+                                        ? "bg-nl-raised text-nl-content"
+                                        : "text-nl-subdued"
                                 }`}
                             >
                                 <input
@@ -294,19 +301,18 @@ export default function TimingInspector() {
                                     value="3/4"
                                     checked={signaturePreset === "3/4"}
                                     onChange={() => applySignaturePreset(3)}
-                                    className="size-3.5 accent-text-primary"
                                 />
-                                <strong className="text-xs">3/4</strong>
-                                <span className="text-micro">
+                                <strong className="nl-metadata">3/4</strong>
+                                <span className="nl-metadata text-nl-subdued">
                                     {t("editor.timing.waltz")}
                                 </span>
                             </label>
 
                             <label
-                                className={`flex h-9 cursor-pointer items-center gap-2 rounded-md border border-border px-2.5 hover:bg-surface-muted ${
+                                className={`nl-radio-group__option nl-hover-layer rounded-nl-field border-nl-stroke border-nl-border px-nl-12 ${
                                     signaturePreset === "4/4"
-                                        ? "bg-surface-muted text-text-primary"
-                                        : "text-text-secondary"
+                                        ? "bg-nl-raised text-nl-content"
+                                        : "text-nl-subdued"
                                 }`}
                             >
                                 <input
@@ -315,22 +321,21 @@ export default function TimingInspector() {
                                     value="4/4"
                                     checked={signaturePreset === "4/4"}
                                     onChange={() => applySignaturePreset(4)}
-                                    className="size-3.5 accent-text-primary"
                                 />
-                                <strong className="text-xs">4/4</strong>
-                                <span className="text-micro">
+                                <strong className="nl-metadata">4/4</strong>
+                                <span className="nl-metadata text-nl-subdued">
                                     {t("editor.timing.common")}
                                 </span>
                             </label>
 
                             <div
-                                className={`rounded-md border border-border p-2.5 ${
+                                className={`rounded-nl-field border-nl-stroke border-nl-border p-nl-12 ${
                                     signaturePreset === "other"
-                                        ? "bg-surface-muted"
+                                        ? "bg-nl-raised"
                                         : ""
                                 }`}
                             >
-                                <label className="mb-2 flex cursor-pointer items-center gap-2">
+                                <label className="nl-radio-group__option mb-nl-8">
                                     <input
                                         type="radio"
                                         name={`time-signature-${selected.id}`}
@@ -341,15 +346,14 @@ export default function TimingInspector() {
                                                 selected.id
                                             )
                                         }
-                                        className="size-3.5 accent-text-primary"
                                     />
-                                    <strong className="text-xs">
+                                    <strong className="nl-metadata">
                                         {t("editor.timing.other")}
                                     </strong>
                                 </label>
 
-                                <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
-                                    <label className="flex flex-col gap-1 text-caption">
+                                <div className="nl-admin-ratio-row items-center gap-nl-8">
+                                    <label className="nl-metadata flex flex-col gap-nl-4 text-nl-subdued">
                                         {t("editor.timing.numerator")}
                                         <input
                                             key={`${selected.id}-numerator-${selected.numerator}`}
@@ -380,10 +384,10 @@ export default function TimingInspector() {
                                             className={inputClass}
                                         />
                                     </label>
-                                    <span className="mt-5 text-sm font-semibold">
+                                    <span className="nl-emphasis-label mt-nl-24">
                                         /
                                     </span>
-                                    <label className="flex flex-col gap-1 text-caption">
+                                    <label className="nl-metadata flex flex-col gap-nl-4 text-nl-subdued">
                                         {t("editor.timing.denominator")}
                                         <select
                                             key={`${selected.id}-denominator-${selected.denominator}`}
@@ -426,7 +430,7 @@ export default function TimingInspector() {
                         </div>
                     </fieldset>
 
-                    <label className="col-span-2 flex flex-col gap-1 text-caption">
+                    <label className="nl-metadata col-span-2 flex flex-col gap-nl-4 text-nl-subdued">
                         {t("editor.timing.tick")}
                         <input
                             key={`${selected.id}-tick-${selected.tick}`}
@@ -444,24 +448,27 @@ export default function TimingInspector() {
                     </label>
                 </div>
 
-                <section className="mt-4 border-t border-divider pt-4">
+                <section className="mt-nl-16 border-t-nl-stroke border-nl-divider pt-nl-16">
                     <div className="flex items-center justify-between">
                         <div>
-                            <h3 className="text-xs font-semibold">Tap BPM</h3>
-                            <p className="mt-0.5 text-micro">
+                            <h3 className="nl-metadata">Tap BPM</h3>
+                            <p className="nl-metadata mt-nl-4 text-nl-subdued">
                                 {t("editor.timing.tapHelp")}
                             </p>
                         </div>
-                        <span className="text-sm font-bold tabular-nums">
+                        <span className="nl-emphasis-label">
                             {tapBpm === null ? "-" : formatBpm(tapBpm)}
                         </span>
                     </div>
                     <button
                         type="button"
                         onClick={registerTap}
-                        className="mt-2 flex h-12 w-full items-center justify-center gap-2 rounded-md border border-border bg-bg text-sm font-bold hover:bg-surface-muted"
+                        className={cn(
+                            foundationButtonClass({ variant: "secondary" }),
+                            "mt-nl-8 w-full"
+                        )}
                     >
-                        <Gauge className="size-4" />
+                        <Gauge className="nl-icon-small" />
                         {t("editor.timing.tap")}
                     </button>
                 </section>

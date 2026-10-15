@@ -103,7 +103,7 @@ function ScrollAwareHeaderContent({ children }: { children: ReactNode }) {
             data-scroll-state={isVisible ? "visible" : "hidden"}
             onFocusCapture={handleFocus}
             onBlurCapture={handleBlur}
-            className={`sticky top-0 z-50 flex h-14 items-center border-b border-divider bg-surface px-3 transition-transform duration-200 ease-out motion-reduce:transition-none min-[390px]:px-4 lg:translate-y-0 ${
+            className={`sticky top-0 z-nl-header flex h-nl-header items-center border-b-nl-stroke border-nl-divider bg-nl-surface px-nl-12 transition-transform duration-nl-move ease-nl-enter motion-reduce:transition-none min-[390px]:px-nl-16 lg:translate-y-0 ${
                 isVisible ? "translate-y-0" : "-translate-y-full"
             }`}
         >

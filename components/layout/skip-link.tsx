@@ -6,7 +6,7 @@ export default async function SkipLink() {
     return (
         <a
             href="#main-content"
-            className="fixed top-2 left-2 z-50 -translate-y-16 rounded-md bg-text-primary px-3 py-2 text-sm font-semibold text-bg transition-transform focus:translate-y-0"
+            className="nl-control fixed top-nl-8 left-nl-8 z-nl-header -translate-y-nl-64 rounded-nl-field bg-nl-primary px-nl-12 py-nl-8 text-nl-on-primary focus:translate-y-0"
         >
             {t("skip.main")}
         </a>

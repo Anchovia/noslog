@@ -6,22 +6,25 @@ import {
     useLocalizedHref,
     useTranslations,
 } from "@/components/i18n/locale-provider";
+import { foundationButtonClass } from "@/components/ui/button";
 
 export default function NotFound() {
     const href = useLocalizedHref();
     const t = useTranslations();
 
     return (
-        <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 px-6 text-center">
+        <div className="noslog-ui flex flex-col items-center justify-center gap-nl-16 px-nl-24 py-nl-64 text-center">
             <div>
-                <h1 className="text-title">{t("common.notFoundTitle")}</h1>
-                <p className="mt-2 text-body-muted">
+                <h1 className="nl-section-title">
+                    {t("common.notFoundTitle")}
+                </h1>
+                <p className="nl-body-secondary mt-nl-8 text-nl-subdued">
                     {t("common.notFoundDescription")}
                 </p>
             </div>
             <Link
                 href={href("/")}
-                className="flex h-10 items-center rounded-md border border-border bg-surface px-4 text-sm font-semibold text-text-primary"
+                className={foundationButtonClass({ variant: "secondary" })}
             >
                 {t("common.goHome")}
             </Link>

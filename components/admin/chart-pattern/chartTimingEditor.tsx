@@ -2,12 +2,12 @@
 
 import {
     ArrowLeft,
+    Check,
     Clock3,
     Download,
     Eye,
     FileAudio,
     History,
-    LoaderCircle,
     Maximize2,
     MessageSquare,
     MousePointer2,
@@ -85,6 +85,8 @@ import TimingRuler from "./timingRuler";
 import Vid2bmapImportPanel from "./vid2bmapImportPanel";
 import { useChartAudio } from "./useChartAudio";
 import WaveformTimeline from "./waveformTimeline";
+import { foundationButtonClass } from "@/components/ui/button";
+import { cn } from "@/lib/cn";
 
 export interface ChartEditorRevision {
     id: number;
@@ -195,7 +197,9 @@ function StatusTag({ status }: { status: ChartDraftStatus }) {
         <span
             // 태그 글자 12/600(가이드) — 에디터 셸에는 글자 크기를 물려줄 부모가 없다
             className={
-                tone ? "nl-tag nl-tag--status text-xs" : "nl-tag text-xs"
+                tone
+                    ? "nl-tag nl-tag--status nl-metadata"
+                    : "nl-tag nl-metadata"
             }
             data-tone={tone}
         >
@@ -231,7 +235,13 @@ function EditorButton({
             title={label}
             disabled={disabled}
             onClick={onClick}
-            className="flex size-9 shrink-0 items-center justify-center rounded-md border border-border hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-35"
+            className={cn(
+                foundationButtonClass({
+                    variant: "secondary",
+                    size: "icon-sm",
+                }),
+                "shrink-0"
+            )}
         >
             {children}
         </button>
@@ -840,8 +850,8 @@ function ChartTimingEditorWorkspace({
 
     return (
         <>
-            <div className="fixed inset-0 z-[100] hidden min-h-0 flex-col bg-bg min-[1024px]:flex">
-                <header className="flex h-14 shrink-0 items-center gap-3 border-b border-divider bg-surface px-3">
+            <div className="fixed inset-0 z-nl-fullscreen hidden min-h-0 flex-col bg-nl-canvas min-[1024px]:flex">
+                <header className="flex h-nl-header shrink-0 items-center gap-nl-12 border-b-nl-stroke border-nl-divider bg-nl-surface px-nl-12">
                     <Link
                         href={
                             mode.kind === "admin"
@@ -855,20 +865,26 @@ function ChartTimingEditorWorkspace({
                                   ? "기여 채보 목록으로 돌아가기"
                                   : "악곡 관리로 돌아가기"
                         }
-                        className="flex size-9 shrink-0 items-center justify-center rounded-md border border-border hover:bg-surface-muted"
+                        className={cn(
+                            foundationButtonClass({
+                                variant: "secondary",
+                                size: "icon-sm",
+                            }),
+                            "shrink-0"
+                        )}
                     >
-                        <ArrowLeft className="size-4" />
+                        <ArrowLeft className="nl-icon-small" />
                     </Link>
                     <div className="min-w-0">
-                        <div className="flex items-center gap-2">
-                            <h1 className="max-w-80 truncate text-sm font-bold">
+                        <div className="flex items-center gap-nl-8">
+                            <h1 className="nl-editor-title nl-emphasis-label truncate">
                                 {metadata.title}
                             </h1>
-                            <span className="rounded bg-surface-muted px-1.5 py-0.5 text-caption font-semibold">
+                            <span className="nl-metadata rounded-nl-control bg-nl-raised px-nl-8 py-nl-4 text-nl-subdued">
                                 {metadata.difficulty} · Lv {metadata.level}
                             </span>
                         </div>
-                        <p className="mt-0.5 truncate text-micro">
+                        <p className="nl-metadata mt-nl-4 truncate text-nl-subdued">
                             {mode.kind === "review"
                                 ? `채보 검토 · ${mode.author.name}`
                                 : t("editor.subtitle", {
@@ -880,12 +896,12 @@ function ChartTimingEditorWorkspace({
                         </p>
                     </div>
 
-                    <div className="ml-auto flex min-w-0 items-center gap-2">
+                    <div className="ml-auto flex min-w-0 items-center gap-nl-8">
                         <div
-                            className={`mr-1 min-w-36 text-right text-xs ${
+                            className={`nl-editor-status nl-metadata mr-nl-4 text-right ${
                                 saveStatus === "error" || hasNoteConflicts
-                                    ? "text-danger"
-                                    : "text-text-secondary"
+                                    ? "text-nl-error"
+                                    : "text-nl-subdued"
                             }`}
                         >
                             <span className="block truncate">
@@ -913,7 +929,7 @@ function ChartTimingEditorWorkspace({
                                                   : t("editor.status.new")))}
                             </span>
                             {mode.kind === "admin" ? (
-                                <span className="block text-micro">
+                                <span className="nl-metadata block text-nl-subdued">
                                     저장 v{savedRevision}
                                     {publishedRevision
                                         ? ` · 공개 v${publishedRevision}`
@@ -928,14 +944,14 @@ function ChartTimingEditorWorkspace({
                                     disabled={readOnly || undoStackLength === 0}
                                     onClick={undo}
                                 >
-                                    <Undo2 className="size-4" />
+                                    <Undo2 className="nl-icon-small" />
                                 </EditorButton>
                                 <EditorButton
                                     label={t("editor.redo")}
                                     disabled={readOnly || redoStackLength === 0}
                                     onClick={redo}
                                 >
-                                    <Redo2 className="size-4" />
+                                    <Redo2 className="nl-icon-small" />
                                 </EditorButton>
                             </>
                         )}
@@ -947,13 +963,13 @@ function ChartTimingEditorWorkspace({
                                         setImportMenuOpen((open) => !open)
                                     }
                                 >
-                                    <Upload className="size-4" />
+                                    <Upload className="nl-icon-small" />
                                 </EditorButton>
                                 {importMenuOpen ? (
                                     <div
                                         role="menu"
                                         aria-label="채보 가져오기"
-                                        className="absolute top-11 right-0 z-10 flex w-60 flex-col gap-0.5 rounded-lg border border-border bg-surface-muted p-1 shadow-xl"
+                                        className="nl-editor-menu absolute top-full right-0 z-nl-popover mt-nl-8 flex flex-col gap-nl-4 rounded-nl-overlay border-nl-stroke border-nl-border bg-nl-raised p-nl-4 shadow-nl-overlay"
                                     >
                                         <button
                                             type="button"
@@ -962,12 +978,12 @@ function ChartTimingEditorWorkspace({
                                                 setImportMenuOpen(false);
                                                 importInputRef.current?.click();
                                             }}
-                                            className="rounded-md px-2.5 py-2 text-left hover:bg-border"
+                                            className="nl-hover-layer rounded-nl-field px-nl-12 py-nl-8 text-left"
                                         >
-                                            <span className="block text-xs font-semibold">
+                                            <span className="nl-metadata block">
                                                 NosLog 채보 파일
                                             </span>
-                                            <span className="block text-micro">
+                                            <span className="nl-metadata block text-nl-subdued">
                                                 .noslog-chart.json — 지금 초안을
                                                 교체
                                             </span>
@@ -979,12 +995,12 @@ function ChartTimingEditorWorkspace({
                                                 setImportMenuOpen(false);
                                                 vid2bmapInputRef.current?.click();
                                             }}
-                                            className="rounded-md px-2.5 py-2 text-left hover:bg-border"
+                                            className="nl-hover-layer rounded-nl-field px-nl-12 py-nl-8 text-left"
                                         >
-                                            <span className="block text-xs font-semibold">
+                                            <span className="nl-metadata block">
                                                 영상 추출 결과
                                             </span>
-                                            <span className="block text-micro">
+                                            <span className="nl-metadata block text-nl-subdued">
                                                 vid2bmap 결과 zip → 미리보고
                                                 초안에 넣기
                                             </span>
@@ -999,14 +1015,14 @@ function ChartTimingEditorWorkspace({
                                 disabled={readOnly}
                                 onClick={() => importInputRef.current?.click()}
                             >
-                                <Upload className="size-4" />
+                                <Upload className="nl-icon-small" />
                             </EditorButton>
                         ) : null}
                         <EditorButton
                             label={t("editor.file.export")}
                             onClick={exportChart}
                         >
-                            <Download className="size-4" />
+                            <Download className="nl-icon-small" />
                         </EditorButton>
                         {mode.kind === "admin" ? (
                             <>
@@ -1015,9 +1031,15 @@ function ChartTimingEditorWorkspace({
                                     target="_blank"
                                     aria-label="전체 채보 미리보기"
                                     title="전체 채보 미리보기"
-                                    className="flex size-9 shrink-0 items-center justify-center rounded-md border border-border hover:bg-surface-muted"
+                                    className={cn(
+                                        foundationButtonClass({
+                                            variant: "secondary",
+                                            size: "icon-sm",
+                                        }),
+                                        "shrink-0"
+                                    )}
                                 >
-                                    <Eye className="size-4" />
+                                    <Eye className="nl-icon-small" />
                                 </Link>
                                 <button
                                     type="button"
@@ -1033,12 +1055,18 @@ function ChartTimingEditorWorkspace({
                                     onClick={() =>
                                         void runExplicitSave("manual")
                                     }
-                                    className="flex h-9 items-center gap-1.5 rounded-md border border-border px-3 text-xs font-bold hover:bg-surface-muted disabled:opacity-40"
+                                    className={foundationButtonClass({
+                                        variant: "secondary",
+                                        size: "sm",
+                                    })}
                                 >
                                     {saveStatus === "saving" ? (
-                                        <LoaderCircle className="size-3.5 animate-spin" />
+                                        <span
+                                            className="nl-spinner"
+                                            aria-hidden
+                                        />
                                     ) : (
-                                        <Save className="size-3.5" />
+                                        <Save className="nl-icon-small" />
                                     )}
                                     버전 저장
                                 </button>
@@ -1065,23 +1093,31 @@ function ChartTimingEditorWorkspace({
                                             void runExplicitSave("publish");
                                         }
                                     }}
-                                    className="flex h-9 items-center rounded-md bg-text-primary px-3 text-xs font-bold text-bg disabled:cursor-not-allowed disabled:opacity-35"
+                                    className={foundationButtonClass({
+                                        size: "sm",
+                                    })}
                                 >
                                     공개
                                 </button>
                             </>
                         ) : mode.kind === "contributor" && draftStatus ? (
-                            <span className="flex items-center gap-2">
+                            <span className="flex items-center gap-nl-8">
                                 <StatusTag status={draftStatus} />
                                 {draftStatus === "submitted" ? (
                                     <button
                                         type="button"
                                         disabled={statusPending}
                                         onClick={() => void withdrawDraft()}
-                                        className="flex h-9 items-center gap-1.5 rounded-md border border-border px-3 text-xs font-bold hover:bg-surface-muted disabled:opacity-40"
+                                        className={foundationButtonClass({
+                                            variant: "secondary",
+                                            size: "sm",
+                                        })}
                                     >
                                         {statusPending ? (
-                                            <LoaderCircle className="size-3.5 animate-spin" />
+                                            <span
+                                                className="nl-spinner"
+                                                aria-hidden
+                                            />
                                         ) : null}
                                         {t("editor.contributor.withdraw")}
                                     </button>
@@ -1107,19 +1143,24 @@ function ChartTimingEditorWorkspace({
                                                   : undefined
                                         }
                                         onClick={() => void submitDraft()}
-                                        className="flex h-9 items-center gap-1.5 rounded-md bg-text-primary px-3 text-xs font-bold text-bg disabled:cursor-not-allowed disabled:opacity-35"
+                                        className={foundationButtonClass({
+                                            size: "sm",
+                                        })}
                                     >
                                         {statusPending ? (
-                                            <LoaderCircle className="size-3.5 animate-spin" />
+                                            <span
+                                                className="nl-spinner"
+                                                aria-hidden
+                                            />
                                         ) : null}
                                         {t("editor.contributor.submit")}
                                     </button>
                                 )}
                             </span>
                         ) : mode.kind === "review" && draftStatus ? (
-                            <span className="flex items-center gap-2">
+                            <span className="flex items-center gap-nl-8">
                                 <StatusTag status={draftStatus} />
-                                <span className="flex items-center gap-1.5 text-micro">
+                                <span className="nl-metadata flex items-center gap-nl-8 text-nl-subdued">
                                     {mode.author.name}
                                     <ContributionLabel
                                         label={mode.author.label}
@@ -1134,7 +1175,10 @@ function ChartTimingEditorWorkspace({
                                     onClick={() =>
                                         void decide("request_changes")
                                     }
-                                    className="flex h-9 items-center rounded-md border border-border px-3 text-xs font-bold hover:bg-surface-muted disabled:opacity-40"
+                                    className={foundationButtonClass({
+                                        variant: "secondary",
+                                        size: "sm",
+                                    })}
                                 >
                                     수정 요청
                                 </button>
@@ -1146,7 +1190,9 @@ function ChartTimingEditorWorkspace({
                                         hasNoteConflicts
                                     }
                                     onClick={() => void decide("publish")}
-                                    className="flex h-9 items-center rounded-md bg-text-primary px-3 text-xs font-bold text-bg disabled:cursor-not-allowed disabled:opacity-35"
+                                    className={foundationButtonClass({
+                                        size: "sm",
+                                    })}
                                 >
                                     공개
                                 </button>
@@ -1156,21 +1202,21 @@ function ChartTimingEditorWorkspace({
                 </header>
 
                 <div className="flex min-h-0 flex-1">
-                    <aside className="flex w-48 shrink-0 flex-col border-r border-divider bg-surface">
-                        <nav className="flex flex-col gap-1 border-b border-divider p-2">
+                    <aside className="nl-editor-rail flex shrink-0 flex-col border-r-nl-stroke border-nl-divider bg-nl-surface">
+                        <nav className="flex flex-col gap-nl-4 border-b-nl-stroke border-nl-divider p-nl-8">
                             <button
                                 type="button"
                                 onClick={() => setEditorMode("timing")}
-                                className={`flex h-10 items-center gap-2 rounded-md px-3 text-left text-xs font-bold ${
+                                className={`nl-metadata flex min-h-nl-control items-center gap-nl-8 rounded-nl-field px-nl-12 text-left ${
                                     editorMode === "timing"
-                                        ? "bg-surface-muted"
-                                        : "text-text-secondary hover:bg-surface-muted/60"
+                                        ? "bg-nl-raised"
+                                        : "nl-hover-layer text-nl-subdued"
                                 }`}
                             >
                                 <Clock3
-                                    className={`size-4 ${
+                                    className={`nl-icon-small ${
                                         editorMode === "timing"
-                                            ? "text-chart"
+                                            ? "text-nl-chart"
                                             : ""
                                     }`}
                                 />
@@ -1179,13 +1225,13 @@ function ChartTimingEditorWorkspace({
                             <button
                                 type="button"
                                 onClick={() => setEditorMode("notes")}
-                                className={`flex h-10 items-center gap-2 rounded-md px-3 text-left text-xs font-bold ${
+                                className={`nl-metadata flex min-h-nl-control items-center gap-nl-8 rounded-nl-field px-nl-12 text-left ${
                                     editorMode === "notes"
-                                        ? "bg-surface-muted"
-                                        : "text-text-secondary hover:bg-surface-muted/60"
+                                        ? "bg-nl-raised"
+                                        : "nl-hover-layer text-nl-subdued"
                                 }`}
                             >
-                                <Maximize2 className="size-4" />
+                                <Maximize2 className="nl-icon-small" />
                                 {t("editor.tab.notes")}
                             </button>
                             {draftId !== null ? (
@@ -1193,14 +1239,14 @@ function ChartTimingEditorWorkspace({
                                 <button
                                     type="button"
                                     onClick={() => setEditorMode("review")}
-                                    className={`flex h-10 items-center gap-2 rounded-md px-3 text-left text-xs font-bold ${
+                                    className={`nl-metadata flex min-h-nl-control items-center gap-nl-8 rounded-nl-field px-nl-12 text-left ${
                                         editorMode === "review"
-                                            ? "bg-surface-muted"
-                                            : "text-text-secondary hover:bg-surface-muted/60"
+                                            ? "bg-nl-raised"
+                                            : "nl-hover-layer text-nl-subdued"
                                     }`}
                                 >
-                                    <MessageSquare className="size-4" />
-                                    <span className="tabular-nums">
+                                    <MessageSquare className="nl-icon-small" />
+                                    <span>
                                         {t("editor.tab.review")}
                                         {openComments.length
                                             ? ` · ${openComments.length}`
@@ -1222,47 +1268,49 @@ function ChartTimingEditorWorkspace({
                         ) : null}
 
                         {editorMode === "notes" && !readOnly ? (
-                            <section className="border-b border-divider p-2">
-                                <p className="mb-1.5 px-1 text-micro">
+                            <section className="border-b-nl-stroke border-nl-divider p-nl-8">
+                                <p className="nl-metadata mb-nl-8 px-nl-4 text-nl-subdued">
                                     {t("editor.tools")}
                                 </p>
                                 <button
                                     type="button"
                                     onClick={() => setNoteTool("select")}
-                                    className={`flex h-9 w-full items-center gap-2 rounded-md px-2 text-left text-xs font-semibold ${
+                                    className={`nl-metadata flex min-h-nl-control-compact w-full items-center gap-nl-8 rounded-nl-field px-nl-8 text-left ${
                                         noteTool === "select"
-                                            ? "bg-surface-muted text-text-primary"
-                                            : "text-text-secondary hover:bg-surface-muted/60"
+                                            ? "bg-nl-raised text-nl-content"
+                                            : "nl-hover-layer text-nl-subdued"
                                     }`}
                                 >
-                                    <MousePointer2 className="size-3.5" />
+                                    <MousePointer2 className="nl-icon-small" />
                                     {t("editor.toolSelect")}
-                                    <kbd className="ml-auto text-micro">1</kbd>
+                                    <kbd className="nl-metadata ml-auto text-nl-subdued">
+                                        1
+                                    </kbd>
                                 </button>
-                                <div className="mt-1 grid grid-cols-2 gap-1">
+                                <div className="mt-nl-4 grid grid-cols-2 gap-nl-4">
                                     {noteTypes.map((value) => (
                                         <button
                                             key={value}
                                             type="button"
                                             onClick={() => setNoteTool(value)}
-                                            className={`h-9 rounded-md px-1 text-xs font-semibold ${
+                                            className={`nl-metadata min-h-nl-control-compact rounded-nl-field px-nl-4 ${
                                                 noteTool === value
-                                                    ? "bg-surface-muted text-text-primary"
-                                                    : "text-text-secondary hover:bg-surface-muted/60"
+                                                    ? "bg-nl-raised text-nl-content"
+                                                    : "nl-hover-layer text-nl-subdued"
                                             }`}
                                         >
                                             {t(`editor.noteType.${value}`)}
-                                            <kbd className="ml-1 text-micro">
+                                            <kbd className="nl-metadata ml-nl-4 text-nl-subdued">
                                                 {noteToolShortcuts[value]}
                                             </kbd>
                                         </button>
                                     ))}
                                 </div>
 
-                                <p className="mt-3 mb-1.5 px-1 text-micro">
+                                <p className="nl-metadata mt-nl-12 mb-nl-8 px-nl-4 text-nl-subdued">
                                     {t("editor.note.hand")}
                                 </p>
-                                <div className="grid grid-cols-2 gap-1">
+                                <div className="grid grid-cols-2 gap-nl-4">
                                     {(["left", "right"] as const).map(
                                         (hand) => (
                                             <button
@@ -1271,12 +1319,12 @@ function ChartTimingEditorWorkspace({
                                                 onClick={() =>
                                                     setNoteHand(hand)
                                                 }
-                                                className={`h-8 rounded-md border text-xs font-semibold ${
+                                                className={`nl-metadata h-nl-32 rounded-nl-field border-nl-stroke ${
                                                     noteHand === hand
                                                         ? hand === "left"
                                                             ? "border-cyan-400/50 bg-cyan-400/10 text-cyan-200"
                                                             : "border-red-400/50 bg-red-400/10 text-red-200"
-                                                        : "border-border text-text-secondary"
+                                                        : "border-nl-border text-nl-subdued"
                                                 }`}
                                             >
                                                 {t(`editor.hand.${hand}`)}
@@ -1285,41 +1333,39 @@ function ChartTimingEditorWorkspace({
                                     )}
                                 </div>
 
-                                <p className="mt-3 mb-1.5 px-1 text-micro">
+                                <p className="nl-metadata mt-nl-12 mb-nl-8 px-nl-4 text-nl-subdued">
                                     {t("editor.defaultWidth")}
                                 </p>
-                                <div className="grid grid-cols-4 gap-1">
+                                <div className="grid grid-cols-4 gap-nl-4">
                                     {[1, 2, 3, 4].map((width) => (
                                         <button
                                             key={width}
                                             type="button"
                                             onClick={() => setNoteWidth(width)}
-                                            className={`h-8 rounded-md border text-xs font-semibold ${
+                                            className={`nl-metadata h-nl-32 rounded-nl-field border-nl-stroke ${
                                                 noteWidth === width
-                                                    ? "border-text-secondary bg-surface-muted"
-                                                    : "border-border text-text-secondary"
+                                                    ? "border-nl-subdued bg-nl-raised"
+                                                    : "border-nl-border text-nl-subdued"
                                             }`}
                                         >
                                             {width}
                                         </button>
                                     ))}
                                 </div>
-                                <p className="mt-2 px-1 text-micro leading-relaxed">
+                                <p className="nl-metadata nl-metadata--long mt-nl-8 px-nl-4 text-nl-subdued">
                                     {t("editor.toolHelp")}
                                 </p>
                             </section>
                         ) : null}
 
                         {mode.kind === "admin" ? (
-                            <section className="min-h-0 flex-1 overflow-y-auto p-2">
-                                <div className="mb-2 flex items-center gap-1.5 px-1">
-                                    <History className="size-3.5" />
-                                    <h2 className="text-xs font-semibold">
-                                        저장 이력
-                                    </h2>
+                            <section className="min-h-0 flex-1 overflow-y-auto p-nl-8">
+                                <div className="mb-nl-8 flex items-center gap-nl-8 px-nl-4">
+                                    <History className="nl-icon-small" />
+                                    <h2 className="nl-metadata">저장 이력</h2>
                                 </div>
                                 {revisionHistory.length > 0 ? (
-                                    <div className="flex flex-col gap-1">
+                                    <div className="flex flex-col gap-nl-4">
                                         {revisionHistory.map((revision) => (
                                             <button
                                                 key={revision.id}
@@ -1329,13 +1375,13 @@ function ChartTimingEditorWorkspace({
                                                         revision
                                                     )
                                                 }
-                                                className="rounded-md px-2 py-2 text-left hover:bg-surface-muted"
+                                                className="nl-hover-layer rounded-nl-field px-nl-8 py-nl-8 text-left"
                                             >
-                                                <span className="flex items-center justify-between text-xs">
+                                                <span className="nl-metadata flex items-center justify-between">
                                                     <strong>
                                                         v{revision.number}
                                                     </strong>
-                                                    <span className="text-micro">
+                                                    <span className="nl-metadata text-nl-subdued">
                                                         {revision.kind ===
                                                         "publish"
                                                             ? "공개"
@@ -1348,7 +1394,7 @@ function ChartTimingEditorWorkspace({
                                                                 : "저장"}
                                                     </span>
                                                 </span>
-                                                <span className="mt-1 block text-micro">
+                                                <span className="nl-metadata mt-nl-4 block text-nl-subdued">
                                                     {formatRevisionDateTime(
                                                         revision.createdAt
                                                     )}
@@ -1357,7 +1403,7 @@ function ChartTimingEditorWorkspace({
                                         ))}
                                     </div>
                                 ) : (
-                                    <p className="px-1 text-micro leading-relaxed">
+                                    <p className="nl-metadata nl-metadata--long px-nl-4 text-nl-subdued">
                                         Ctrl+S 또는 버전 저장을 누르면 복구
                                         지점이 만들어집니다.
                                     </p>
@@ -1390,33 +1436,33 @@ function ChartTimingEditorWorkspace({
                         {vid2bmapFile && editorMode === "notes" ? (
                             <dl
                                 aria-label="가져오기 미리보기 범례"
-                                className="pointer-events-none absolute top-3 right-3 flex flex-col gap-1 rounded-md border border-border bg-bg/90 px-2.5 py-2 text-xs shadow-lg"
+                                className="nl-metadata pointer-events-none absolute top-nl-12 right-nl-12 flex flex-col gap-nl-4 rounded-nl-field border-nl-stroke border-nl-border bg-nl-canvas px-nl-12 py-nl-8 shadow-nl-overlay"
                             >
-                                <div className="flex items-center gap-2">
-                                    <dt className="h-2.5 w-5 rounded-sm bg-score" />
+                                <div className="flex items-center gap-nl-8">
+                                    <dt className="h-nl-8 w-nl-16 bg-nl-warning" />
                                     <dd>넣을 노트</dd>
                                 </div>
-                                <div className="flex items-center gap-2">
-                                    <dt className="h-2.5 w-5 rounded-sm bg-text-secondary/40" />
+                                <div className="flex items-center gap-nl-8">
+                                    <dt className="h-nl-8 w-nl-16 bg-nl-disabled" />
                                     <dd>지금 초안(흐리게)</dd>
                                 </div>
-                                <div className="flex items-center gap-2">
-                                    <dt className="h-2.5 w-5 rounded-sm border-2 border-danger" />
+                                <div className="flex items-center gap-nl-8">
+                                    <dt className="h-nl-8 w-nl-16 border-nl-stroke-strong border-nl-error" />
                                     <dd>빠질 노트</dd>
                                 </div>
-                                <div className="flex items-center gap-2">
-                                    <dt className="h-2.5 w-5 border-x-2 border-text-primary bg-text-primary/15" />
+                                <div className="flex items-center gap-nl-8">
+                                    <dt className="h-nl-8 w-nl-16 border-x-nl-stroke-strong border-nl-content bg-nl-raised" />
                                     <dd>목록에서 고른 곳</dd>
                                 </div>
                                 {importTimingCount > 0 ? (
-                                    <div className="flex items-center gap-2">
-                                        <dt className="h-0 w-5 border-t-2 border-dashed border-score" />
+                                    <div className="flex items-center gap-nl-8">
+                                        <dt className="h-0 w-nl-16 border-t-nl-stroke-strong border-dashed border-nl-warning" />
                                         <dd>넣을 타이밍 포인트</dd>
                                     </div>
                                 ) : null}
                             </dl>
                         ) : null}
-                        <div className="absolute top-3 left-3 flex items-center gap-1 rounded-md border border-border bg-surface/95 p-1 shadow-lg">
+                        <div className="absolute top-nl-12 left-nl-12 flex items-center gap-nl-4 rounded-nl-field border-nl-stroke border-nl-border bg-nl-surface p-nl-4 shadow-nl-overlay">
                             <button
                                 type="button"
                                 onClick={() =>
@@ -1424,12 +1470,15 @@ function ChartTimingEditorWorkspace({
                                         Math.max(60, value - 30)
                                     )
                                 }
-                                className="size-7 rounded text-sm hover:bg-surface-muted"
+                                className={foundationButtonClass({
+                                    variant: "ghost",
+                                    size: "icon-sm",
+                                })}
                                 aria-label={t("editor.zoomOut")}
                             >
                                 −
                             </button>
-                            <span className="w-14 text-center text-micro tabular-nums">
+                            <span className="nl-metadata w-nl-64 text-center text-nl-subdued">
                                 {pixelsPerSecond}px/s
                             </span>
                             <button
@@ -1439,7 +1488,10 @@ function ChartTimingEditorWorkspace({
                                         Math.min(420, value + 30)
                                     )
                                 }
-                                className="size-7 rounded text-sm hover:bg-surface-muted"
+                                className={foundationButtonClass({
+                                    variant: "ghost",
+                                    size: "icon-sm",
+                                })}
                                 aria-label={t("editor.zoomIn")}
                             >
                                 +
@@ -1467,8 +1519,8 @@ function ChartTimingEditorWorkspace({
                     )}
                 </div>
 
-                <footer className="shrink-0 border-t border-divider bg-surface">
-                    <div className="flex h-12 items-center gap-2 px-3">
+                <footer className="shrink-0 border-t-nl-stroke border-nl-divider bg-nl-surface">
+                    <div className="flex h-nl-48 items-center gap-nl-8 px-nl-12">
                         <input
                             ref={audioInputRef}
                             type="file"
@@ -1494,12 +1546,18 @@ function ChartTimingEditorWorkspace({
                             type="button"
                             disabled={isDecoding}
                             onClick={() => audioInputRef.current?.click()}
-                            className="flex h-8 max-w-48 items-center gap-1.5 rounded-md border border-border px-2.5 text-xs font-semibold hover:bg-surface-muted disabled:opacity-40"
+                            className={cn(
+                                foundationButtonClass({
+                                    variant: "secondary",
+                                    size: "sm",
+                                }),
+                                "nl-admin-cell"
+                            )}
                         >
                             {isDecoding ? (
-                                <LoaderCircle className="size-3.5 animate-spin" />
+                                <span className="nl-spinner" aria-hidden />
                             ) : (
-                                <FileAudio className="size-3.5" />
+                                <FileAudio className="nl-icon-small" />
                             )}
                             <span className="truncate">
                                 {fileName ?? t("editor.loadAudio")}
@@ -1512,9 +1570,9 @@ function ChartTimingEditorWorkspace({
                             onClick={() => void togglePlayback()}
                         >
                             {isPlaying ? (
-                                <Pause className="size-4" />
+                                <Pause className="nl-icon-small" />
                             ) : (
-                                <Play className="size-4" />
+                                <Play className="nl-icon-small" />
                             )}
                         </EditorButton>
                         <EditorButton
@@ -1522,13 +1580,13 @@ function ChartTimingEditorWorkspace({
                             disabled={currentTimeMs <= 0}
                             onClick={() => void seek(0)}
                         >
-                            <RotateCcw className="size-4" />
+                            <RotateCcw className="nl-icon-small" />
                         </EditorButton>
-                        <span className="w-23 text-center font-mono text-xs tabular-nums">
+                        <span className="nl-admin-number-input nl-metadata text-center font-nl-mono">
                             {formatEditorTime(currentTimeMs)}
                         </span>
 
-                        <label className="ml-1 flex items-center gap-1 text-micro">
+                        <label className="nl-metadata ml-nl-4 flex items-center gap-nl-4 text-nl-subdued">
                             {t("editor.speed")}
                             <select
                                 value={playbackRate}
@@ -1539,7 +1597,7 @@ function ChartTimingEditorWorkspace({
                                         ) as ChartPlaybackRate
                                     )
                                 }
-                                className="h-8 rounded-md border border-border bg-bg px-2 text-xs"
+                                className="nl-input"
                             >
                                 {playbackRates.map((rate) => (
                                     <option key={rate} value={rate}>
@@ -1549,14 +1607,14 @@ function ChartTimingEditorWorkspace({
                             </select>
                         </label>
 
-                        <label className="flex items-center gap-1 text-micro">
+                        <label className="nl-metadata flex items-center gap-nl-4 text-nl-subdued">
                             {t("editor.snap")}
                             <select
                                 value={snapDivisor}
                                 onChange={(event) =>
                                     setSnapDivisor(Number(event.target.value))
                                 }
-                                className="h-8 rounded-md border border-border bg-bg px-2 text-xs"
+                                className="nl-input"
                             >
                                 {snapDivisors.map((divisor) => (
                                     <option key={divisor} value={divisor}>
@@ -1566,21 +1624,23 @@ function ChartTimingEditorWorkspace({
                             </select>
                         </label>
 
-                        <label className="flex h-8 items-center gap-2 rounded-md px-2 text-xs font-semibold hover:bg-surface-muted">
+                        <label className="nl-check nl-control nl-hover-layer rounded-nl-field px-nl-8">
                             <input
                                 type="checkbox"
                                 checked={metronomeEnabled}
                                 onChange={(event) =>
                                     setMetronomeEnabled(event.target.checked)
                                 }
-                                className="size-3.5 accent-text-primary"
                             />
+                            <span className="nl-check__box" aria-hidden="true">
+                                <Check />
+                            </span>
                             {t("chart.metronome")}
                         </label>
 
-                        <label className="flex h-8 items-center gap-1.5 rounded-md border border-border px-2">
+                        <label className="flex h-nl-32 items-center gap-nl-8 rounded-nl-field border-nl-stroke border-nl-border px-nl-8">
                             <Volume2
-                                className="size-3.5 text-text-secondary"
+                                className="nl-icon-small text-nl-subdued"
                                 aria-hidden
                             />
                             <input
@@ -1595,36 +1655,38 @@ function ChartTimingEditorWorkspace({
                                     )
                                 }
                                 aria-label={t("chart.metronomeVolume")}
-                                className="w-16 accent-text-primary"
+                                className="w-nl-64 accent-nl-primary"
                             />
-                            <span className="w-8 text-right text-micro tabular-nums">
+                            <span className="nl-metadata w-nl-32 text-right text-nl-subdued">
                                 {metronomeVolume}%
                             </span>
                         </label>
 
-                        <label className="flex h-8 items-center gap-2 rounded-md px-2 text-xs font-semibold hover:bg-surface-muted">
+                        <label className="nl-check nl-control nl-hover-layer rounded-nl-field px-nl-8">
                             <input
                                 type="checkbox"
                                 checked={pianoVisible}
                                 onChange={(event) =>
                                     updatePianoVisibility(event.target.checked)
                                 }
-                                className="size-3.5 accent-text-primary"
                             />
+                            <span className="nl-check__box" aria-hidden="true">
+                                <Check />
+                            </span>
                             {t("editor.piano")}
                         </label>
 
                         {audioError ? (
-                            <span className="ml-auto max-w-72 truncate text-xs text-danger">
+                            <span className="nl-editor-error nl-metadata ml-auto truncate text-nl-error">
                                 {audioError}
                             </span>
                         ) : (
-                            <span className="ml-auto text-micro">
+                            <span className="nl-metadata ml-auto text-nl-subdued">
                                 {t("editor.audioNote")}
                             </span>
                         )}
                     </div>
-                    <div className="border-t border-divider px-3 py-2">
+                    <div className="border-t-nl-stroke border-nl-divider px-nl-12 py-nl-8">
                         <WaveformTimeline
                             peaks={waveformPeaks}
                             onSeek={(time) => void seek(time)}
@@ -1633,15 +1695,15 @@ function ChartTimingEditorWorkspace({
                 </footer>
             </div>
 
-            <div className="fixed inset-0 z-[100] flex items-center justify-center bg-bg p-6 min-[1024px]:hidden">
-                <div className="max-w-sm text-center">
-                    <div className="mx-auto flex size-12 items-center justify-center rounded-full bg-surface">
-                        <Maximize2 className="size-5" />
+            <div className="fixed inset-0 z-nl-fullscreen flex items-center justify-center bg-nl-canvas p-nl-24 min-[1024px]:hidden">
+                <div className="nl-admin-phone-frame text-center">
+                    <div className="mx-auto flex size-nl-48 items-center justify-center rounded-nl-full bg-nl-surface">
+                        <Maximize2 className="nl-icon" />
                     </div>
-                    <h1 className="mt-4 text-title">
+                    <h1 className="nl-section-title mt-nl-16 text-nl-content">
                         {t("editor.narrowTitle")}
                     </h1>
-                    <p className="mt-2 text-body-muted">
+                    <p className="nl-body-secondary mt-nl-8 text-nl-subdued">
                         {t("editor.narrowBody")}
                     </p>
                     <Link
@@ -1650,7 +1712,10 @@ function ChartTimingEditorWorkspace({
                                 ? `/admin/music/${encodeURIComponent(metadata.musicIndex)}`
                                 : mode.backHref
                         }
-                        className="mt-5 inline-flex h-10 items-center rounded-md border border-border px-4 text-sm font-semibold"
+                        className={cn(
+                            foundationButtonClass({ variant: "secondary" }),
+                            "mt-nl-24"
+                        )}
                     >
                         {t("editor.goBack")}
                     </Link>
@@ -1669,20 +1734,25 @@ export default function ChartTimingEditor(props: ChartTimingEditorProps) {
     );
 
     if (browserSupport === "checking") {
-        return <div className="fixed inset-0 z-[100] bg-bg" aria-hidden />;
+        return (
+            <div
+                className="fixed inset-0 z-nl-fullscreen bg-nl-canvas"
+                aria-hidden
+            />
+        );
     }
 
     if (browserSupport === "safari") {
         return (
-            <div className="fixed inset-0 z-[100] flex items-center justify-center bg-bg p-6">
-                <div className="max-w-sm text-center">
-                    <div className="mx-auto flex size-12 items-center justify-center rounded-full bg-surface">
-                        <Maximize2 className="size-5" />
+            <div className="fixed inset-0 z-nl-fullscreen flex items-center justify-center bg-nl-canvas p-nl-24">
+                <div className="nl-admin-phone-frame text-center">
+                    <div className="mx-auto flex size-nl-48 items-center justify-center rounded-nl-full bg-nl-surface">
+                        <Maximize2 className="nl-icon" />
                     </div>
-                    <h1 className="mt-4 text-title">
+                    <h1 className="nl-section-title mt-nl-16 text-nl-content">
                         {t("editor.safariTitle")}
                     </h1>
-                    <p className="mt-2 text-body-muted">
+                    <p className="nl-body-secondary mt-nl-8 text-nl-subdued">
                         {t("editor.safariBody")}
                     </p>
                     <Link
@@ -1691,7 +1761,10 @@ export default function ChartTimingEditor(props: ChartTimingEditorProps) {
                                 ? `/admin/music/${encodeURIComponent(props.metadata.musicIndex)}`
                                 : props.mode.backHref
                         }
-                        className="mt-5 inline-flex h-10 items-center rounded-md border border-border px-4 text-sm font-semibold"
+                        className={cn(
+                            foundationButtonClass({ variant: "secondary" }),
+                            "mt-nl-24"
+                        )}
                     >
                         {t("editor.goBack")}
                     </Link>

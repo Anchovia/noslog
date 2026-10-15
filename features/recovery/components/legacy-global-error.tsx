@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 
+import { foundationButtonClass } from "@/components/ui/button";
 import { recordClientError } from "@/lib/observability/client";
 
 const errorCopy = {
@@ -46,18 +47,20 @@ export default function GlobalError({
 
     return (
         <html lang={locale}>
-            <body className="bg-bg text-text-primary">
-                <main className="flex min-h-screen flex-col items-center justify-center gap-4 px-6 text-center">
+            <body className="noslog-ui bg-nl-canvas text-nl-content">
+                <main className="flex min-h-screen flex-col items-center justify-center gap-nl-16 px-nl-24 text-center">
                     <div>
-                        <h1 className="text-title">{copy.title}</h1>
-                        <p className="mt-2 text-sm text-text-secondary">
+                        <h1 className="nl-section-title">{copy.title}</h1>
+                        <p className="nl-body-secondary mt-nl-8 text-nl-subdued">
                             {copy.description}
                         </p>
                     </div>
                     <button
                         type="button"
                         onClick={reset}
-                        className="h-10 cursor-pointer rounded-md border border-border bg-surface px-4 text-sm font-semibold text-text-primary"
+                        className={foundationButtonClass({
+                            variant: "secondary",
+                        })}
                     >
                         {copy.retry}
                     </button>

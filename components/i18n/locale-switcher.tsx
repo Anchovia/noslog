@@ -8,7 +8,6 @@ import {
     stripLocaleFromPath,
     type Locale,
 } from "@/lib/i18n/routing";
-import { cn } from "@/lib/cn";
 
 const localeOptions: {
     value: Locale;
@@ -34,11 +33,13 @@ export default function LocaleSwitcher({
 
     return (
         <section
-            className="col-span-2 border-t border-divider pt-3"
+            className="col-span-2 border-t-nl-stroke border-nl-divider pt-nl-12"
             aria-label={t("header.language")}
         >
-            <p className="mb-2 text-caption">{t("header.language")}</p>
-            <div className="grid grid-cols-3 gap-2">
+            <p className="nl-metadata mb-nl-8 text-nl-subdued">
+                {t("header.language")}
+            </p>
+            <div className="grid grid-cols-3 gap-nl-8">
                 {localeOptions.map((option) => {
                     const selected = option.value === locale;
 
@@ -52,11 +53,7 @@ export default function LocaleSwitcher({
                             lang={option.languageTag}
                             aria-current={selected ? "page" : undefined}
                             onClick={onNavigate}
-                            className={cn(
-                                "flex h-10 items-center justify-center rounded-md border border-border bg-bg text-xs font-semibold text-text-secondary transition-colors",
-                                selected &&
-                                    "border-chart bg-surface-muted text-text-primary"
-                            )}
+                            className="nl-chip nl-control"
                         >
                             {option.label}
                         </a>

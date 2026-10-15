@@ -19,6 +19,7 @@ import {
     useTranslations,
 } from "@/components/i18n/locale-provider";
 import LocaleSwitcher from "@/components/i18n/locale-switcher";
+import { foundationButtonClass } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
 import { stripLocaleFromPath } from "@/lib/i18n/routing";
 
@@ -85,8 +86,8 @@ export function HeaderPrimaryNavigation() {
                         href={localizedHref(item.href)}
                         aria-current={isActive ? "page" : undefined}
                         className={cn(
-                            "flex size-11 shrink-0 items-center justify-center text-xs font-semibold whitespace-nowrap text-text-secondary transition-colors hover:text-text-primary",
-                            isActive && "text-text-primary"
+                            "nl-metadata flex min-h-nl-control shrink-0 items-center justify-center px-nl-8 whitespace-nowrap text-nl-subdued transition-colors duration-nl-state hover:text-nl-content",
+                            isActive && "text-nl-content"
                         )}
                     >
                         {t(item.labelKey)}
@@ -110,9 +111,6 @@ export default function HeaderMenu({
     const [openPathname, setOpenPathname] = useState<string | null>(null);
     const isOpen = openPathname === pathname;
     const menuItems = isAdmin ? [...secondaryItems, adminItem] : secondaryItems;
-    const hasActiveSecondaryItem = menuItems.some((item) =>
-        isActiveRoute(pathname, item.href)
-    );
 
     useEffect(() => {
         if (!isOpen) return;
@@ -148,15 +146,15 @@ export default function HeaderMenu({
                         current === pathname ? null : pathname
                     )
                 }
-                className={cn(
-                    "flex size-11 shrink-0 items-center justify-center rounded-md text-text-secondary transition-colors hover:text-text-primary focus-visible:ring-2 focus-visible:ring-focus/40 focus-visible:outline-none",
-                    (isOpen || hasActiveSecondaryItem) && "text-text-primary"
-                )}
+                className={foundationButtonClass({
+                    variant: "ghost",
+                    size: "icon",
+                })}
             >
                 {isOpen ? (
-                    <X className="size-5" aria-hidden="true" />
+                    <X className="nl-icon" aria-hidden="true" />
                 ) : (
-                    <Menu className="size-5" aria-hidden="true" />
+                    <Menu className="nl-icon" aria-hidden="true" />
                 )}
             </button>
 
@@ -166,12 +164,12 @@ export default function HeaderMenu({
                         type="button"
                         aria-label={t("header.closeMenu")}
                         onClick={() => setOpenPathname(null)}
-                        className="fixed inset-x-0 top-14 bottom-0 bg-black/40"
+                        className="fixed inset-x-0 top-nl-header bottom-0 bg-nl-scrim"
                     />
                     <nav
                         id="header-secondary-menu"
                         aria-label={t("header.fullMenu")}
-                        className="fixed top-14 left-1/2 grid w-full max-w-97.5 -translate-x-1/2 grid-cols-2 gap-2 border-b border-divider bg-surface p-3 shadow-xl"
+                        className="nl-admin-phone-frame fixed top-nl-header left-1/2 grid w-full -translate-x-1/2 grid-cols-2 gap-nl-8 border-b-nl-stroke border-nl-divider bg-nl-surface p-nl-12 shadow-nl-overlay"
                     >
                         {menuItems.map((item) => {
                             const Icon = item.icon;
@@ -183,17 +181,17 @@ export default function HeaderMenu({
                                     aria-current={isActive ? "page" : undefined}
                                     onClick={() => setOpenPathname(null)}
                                     className={cn(
-                                        "flex h-11 items-center gap-2 rounded-md border border-border bg-bg px-3 text-text-secondary transition-colors hover:bg-surface-muted hover:text-text-primary",
+                                        "nl-hover-layer flex min-h-nl-control items-center gap-nl-8 rounded-nl-field border-nl-stroke border-nl-border bg-nl-canvas px-nl-12 text-nl-subdued transition-colors duration-nl-state hover:text-nl-content",
                                         isActive &&
-                                            "border-chart bg-surface-muted text-text-primary",
+                                            "border-nl-chart bg-nl-raised text-nl-content",
                                         item.href === "/admin" && "col-span-2"
                                     )}
                                 >
                                     <Icon
-                                        className="size-4 shrink-0 text-text-primary"
+                                        className="nl-icon-small shrink-0 text-nl-content"
                                         aria-hidden="true"
                                     />
-                                    <span className="text-section">
+                                    <span className="nl-component-title text-nl-content">
                                         {t(item.labelKey)}
                                     </span>
                                 </Link>
