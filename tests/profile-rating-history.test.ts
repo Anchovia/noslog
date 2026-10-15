@@ -5,10 +5,10 @@ vi.mock("server-only", () => ({}));
 vi.mock("@/lib/db", () => ({
     default: { userRatingHistory: { createMany: mocks.create } },
 }));
-vi.mock("@/features/profile/server/profilePlaysService", () => ({
+vi.mock("@/features/profile/server/profile-plays-service", () => ({
     getProfileRating: mocks.rating,
 }));
-import { recordProfileRatings } from "@/features/profile/server/profileRatingHistoryService";
+import { recordProfileRatings } from "@/features/profile/server/profile-rating-history-service";
 
 describe("profile rating observations", () => {
     beforeEach(() => {

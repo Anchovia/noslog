@@ -57,20 +57,26 @@ test("비로그인 통합 서열표에서 모드와 목표 필터를 제공한�
     await page.goto("/ko/tiers");
     await expectPageLoaded(page);
 
+    // 모드 · 목표는 제목 스위처 하나로 고른다(2026-09-22 ④ — tier-list-switcher.tsx)
     await expect(
-        page.getByRole("radio", { name: "Basic", exact: true })
-    ).toHaveAttribute("aria-checked", "true");
-    const goalSelect = page.getByRole("combobox", { name: "목표" });
-    await expect(goalSelect).toHaveText("S");
+        page.getByRole("heading", { level: 1, name: "S 서열표", exact: true })
+    ).toBeVisible();
+    const listSelect = page.getByRole("combobox", {
+        name: "서열표 선택",
+        exact: true,
+    });
+    await expect(listSelect).toHaveText("S 서열표");
     await expect(
         page.getByRole("button", { name: "필터", exact: true })
     ).toBeVisible();
     await expect(
-        page.getByRole("checkbox", { name: "상세 보기", exact: true })
+        page.getByRole("radiogroup", { name: "보기 방식", exact: true })
     ).toBeVisible();
-    await goalSelect.click();
-    await page.getByRole("option", { name: "990k", exact: true }).click();
+    await listSelect.click();
+    await page
+        .getByRole("option", { name: "990k 서열표", exact: true })
+        .click();
     await expect(page).toHaveURL(/(?:\?|&)goal=990k(?:&|$)/);
-    await expect(goalSelect).toHaveText("990k");
+    await expect(listSelect).toHaveText("990k 서열표");
     await expectNoHorizontalOverflow(page);
 });

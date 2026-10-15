@@ -33,7 +33,7 @@ vi.mock("@/lib/blob", () => ({
         ["image/jpeg", "image/png", "image/webp"].includes(value),
 }));
 vi.mock("@vercel/blob", () => ({ put: vi.fn() }));
-vi.mock("@/lib/uploadRateLimit", () => ({
+vi.mock("@/lib/upload-rate-limit", () => ({
     claimUploadTokenQuota: mocks.claimUploadTokenQuota,
     releaseUploadTokenQuota: mocks.releaseUploadTokenQuota,
     getUploadLimitMessage: () => "limit",
@@ -51,7 +51,7 @@ import {
     requestMusicJacketUpload,
     resetMusicJacket,
     saveMusicJacket,
-} from "@/features/music/server/musicJacketAdminService";
+} from "@/features/music/server/music-jacket-admin-service";
 
 const manual =
     "https://store.public.blob.vercel-storage.com/jackets/manual/abc/jacket-new.png";

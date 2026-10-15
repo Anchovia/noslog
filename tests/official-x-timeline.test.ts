@@ -1,13 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { buildOfficialXPostSegments } from "@/features/home/officialXPostContent";
-import { realTimeline } from "./fixtures/officialX";
+import { buildOfficialXPostSegments } from "@/features/home/official-x-post-content";
+import { realTimeline } from "./fixtures/official-x";
 const { env, recordExternalCall } = vi.hoisted(() => ({
     env: { X_BEARER_TOKEN: "token" as string | undefined },
     recordExternalCall: vi.fn(async () => {}),
 }));
 vi.mock("@/lib/env/server", () => ({ serverEnv: env }));
 vi.mock("@/lib/analytics", () => ({ recordExternalCall }));
-import { fetchOfficialXLatestPost } from "@/features/home/server/officialXTimeline";
+import { fetchOfficialXLatestPost } from "@/features/home/server/official-x-timeline";
 const fetchMock = vi.fn<typeof fetch>();
 function respond(body: unknown, status = 200) {
     fetchMock.mockResolvedValue(new Response(JSON.stringify(body), { status }));

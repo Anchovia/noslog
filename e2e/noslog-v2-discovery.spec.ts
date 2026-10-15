@@ -17,7 +17,10 @@ test("Discovery appends three batches on scroll, then only from the explicit but
     await page.evaluate(() =>
         window.scrollTo(0, document.documentElement.scrollHeight)
     );
-    await page.waitForLoadState("networkidle");
+    // 자동 로딩이 멈추면 더 보기 버튼이 바쁘지 않은 상태로 남는다
+    await expect(
+        page.getByRole("button", { name: "결과 20개 더 보기", exact: true })
+    ).toBeEnabled();
     await expect(results).toHaveCount(80);
     await expect(page.locator(".nl-footer__notice")).toBeInViewport();
     await page
@@ -87,6 +90,8 @@ test("Discovery commits completed IME text and ignores an obsolete response", as
             },
         });
     });
+    // 입력 대기(300ms)를 실제 시간 대신 가짜 시계로 넘긴다
+    await page.clock.install();
     await page.goto("/ko/music");
     const search = page.getByRole("searchbox", {
         name: "악곡 제목·아티스트 검색",
@@ -111,7 +116,7 @@ test("Discovery commits completed IME text and ignores an obsolete response", as
             })
         );
     });
-    await page.waitForTimeout(450);
+    await page.clock.runFor(450);
     expect(queries).toEqual([]);
     await search.dispatchEvent("compositionend");
     await expect.poll(() => queries).toContain("서열");
@@ -133,13 +138,7 @@ test("Discovery commits completed IME text and ignores an obsolete response", as
 
 test("Compact filters stage changes, cancel with Escape and Back, and commit one result set", async ({
     page,
-}, testInfo) => {
-    test.skip(
-        !["mobile-chromium", "desktop-firefox", "desktop-webkit"].includes(
-            testInfo.project.name
-        ),
-        "Checked once per browser."
-    );
+}) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("/ko/music");
     const trigger = page.getByRole("button", {
@@ -158,8 +157,8 @@ test("Compact filters stage changes, cancel with Escape and Back, and commit one
     await expect(trigger).toBeFocused();
     await trigger.click();
     await expect(
-        dialog.getByRole("checkbox", { name: "pops", exact: true })
-    ).not.toBeChecked();
+        dialog.getByRole("button", { name: "pops", exact: true })
+    ).toHaveAttribute("aria-pressed", "false");
     await page.goBack();
     await expect(dialog).not.toBeVisible();
     await expect(page).toHaveURL(/\/ko\/music$/);
@@ -189,7 +188,7 @@ test("Intermediate filters stage changes and require a difficulty for level sort
         .getByRole("button", { name: "정렬: 일본어 읽기 순", exact: true })
         .click();
     await page
-        .getByRole("menuitemradio", { name: "레벨 순", exact: true })
+        .getByRole("menuitemradio", { name: "레벨 높은 순", exact: true })
         .click();
     // 레벨 순은 난이도를 고를 때까지 적용하지 않고 메뉴 안에서 보류한다
     await expect(page).not.toHaveURL(/sort=level/);
@@ -268,12 +267,6 @@ for (const locale of ["ko", "ja", "en"]) {
     test(`${locale} Discovery reflows from 320 to 1600 and meets WCAG AA`, async ({
         page,
     }, testInfo) => {
-        test.skip(
-            !["mobile-chromium", "desktop-firefox", "desktop-webkit"].includes(
-                testInfo.project.name
-            ),
-            "This matrix sets all target widths explicitly."
-        );
         await page.goto(`/${locale}/music?view=grid`);
         await expect(page.locator("[data-result]")).toHaveCount(20);
         for (const [width, columns] of [

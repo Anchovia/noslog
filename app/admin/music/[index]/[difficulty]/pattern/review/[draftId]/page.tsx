@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
 
 import ChartTimingEditor from "@/components/admin/chart-pattern/chartTimingEditor";
-import { getChartDraftForReview } from "@/features/contributions/server/chartDraftService";
-import { getNameLabels } from "@/features/contributions/server/contributionPointService";
+import { getChartDraftForReview } from "@/features/contributions/server/chart-draft-service";
+import { getNameLabels } from "@/features/contributions/server/contribution-point-service";
 import db from "@/lib/db";
 
 /**

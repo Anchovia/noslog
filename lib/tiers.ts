@@ -1,4 +1,4 @@
-export { getJacketUrl } from "@/lib/musicJackets";
+export { getJacketUrl } from "@/lib/music-jackets";
 
 export type TierRecord = {
     score: number;

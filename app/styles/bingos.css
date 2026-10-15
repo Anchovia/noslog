@@ -77,6 +77,13 @@
     width: 100%;
     min-width: 0;
 }
+/* 올림 = 제목 밑줄 — 이벤트 카드와 같은 그림 카드 규칙(2026-10-15 hover 점검) */
+@media (hover: hover) {
+    .noslog-ui .nl-bingo-card:hover .nl-bingo-card__title {
+        text-decoration: underline;
+        text-underline-position: under;
+    }
+}
 .noslog-ui .nl-bingo-card__cover {
     display: block;
     width: 100%;
@@ -289,7 +296,7 @@
     border-radius: var(--nl-radius-overlay);
     background: var(--nl-surface-overlay);
     box-shadow: var(--nl-overlay-shadow);
-    z-index: 60;
+    z-index: var(--nl-layer-popover);
 }
 .noslog-ui .nl-bingo-cell-detail {
     display: flex;
@@ -379,6 +386,19 @@
     color: var(--nl-content-default);
     text-align: start;
 }
+/* 올림 = 칸 면 위 6% — 줄 칸(이미 겹침) · 완성 칸(채운 면)은 그대로 */
+@media (hover: hover) {
+    .noslog-ui
+        .nl-bingo-board__cell:not([data-line="true"]):not(
+            [data-completed="true"]
+        ):hover {
+        --nl-state-layer: var(--nl-interaction-hover);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
+    }
+}
 .noslog-ui .nl-bingo-board__text {
     display: -webkit-box;
     -webkit-box-orient: vertical;
@@ -392,7 +412,7 @@
         -webkit-line-clamp: 2;
     }
 }
-/* 판 가장자리 줄 진행(넓은 화면 · 로그인) — 왼쪽 가로 5 · 위 세로 5 · 대각 두 모서리, 완성 ✓ · 찬스(4/5)는 기본 글자색 */
+/* 판 가장자리 줄 진행(넓은 화면 · 로그인) — 왼쪽 가로 5 · 위 세로 5 · 대각 두 모서리, 완성 ✓ · 찬스(4/5)는 기본 글자색(굵기는 metadata 400 그대로, 2026-10-15 B2) */
 .noslog-ui .nl-bingo-board[data-lines] {
     grid-template-columns: var(--nl-spacing-32) repeat(5, minmax(0, 1fr));
 }
@@ -404,9 +424,6 @@
 }
 .noslog-ui .nl-bingo-board__line[data-state] {
     color: var(--nl-content-default);
-}
-.noslog-ui .nl-bingo-board__line[data-state="complete"] {
-    font-weight: var(--nl-type-weight-semibold);
 }
 /* 완성된 줄 — 면 menu-set + 테두리 strong (새 토큰 없음) */
 .noslog-ui .nl-bingo-board__cell[data-line="true"] {
@@ -479,7 +496,8 @@
     padding: var(--nl-spacing-12) var(--nl-spacing-16);
     border-radius: var(--nl-radius-container);
     background: var(--nl-surface-surface);
-    scroll-margin-block: 80px var(--nl-spacing-16);
+    scroll-margin-block: calc(var(--nl-header-height) + var(--nl-spacing-16))
+        var(--nl-spacing-16);
 }
 .noslog-ui .nl-bingo-mission[data-selected="true"] {
     --nl-state-layer: var(--nl-interaction-menu-set);

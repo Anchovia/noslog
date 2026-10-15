@@ -22,7 +22,7 @@ vi.mock("@/lib/db", () => ({
             }),
     },
 }));
-import { updateGrade } from "@/lib/services/user/updateGrade";
+import { updateGrade } from "@/lib/services/user/update-grade";
 
 describe("profile Grd history retention", () => {
     beforeEach(() => {

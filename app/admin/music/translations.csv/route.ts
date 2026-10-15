@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 
-import { createMusicTranslationCsvExport } from "@/features/music/server/musicTranslationAdminService";
+import { createMusicTranslationCsvExport } from "@/features/music/server/music-translation-admin-service";
 
 export const runtime = "nodejs";
 

@@ -9,9 +9,11 @@ import {
 } from "@/lib/chart-pattern/snapCheck";
 import { tickToMilliseconds } from "@/lib/chart-pattern/timing";
 import { chartPositionLabel } from "@/lib/chart-pattern/vid2bmap";
-import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
+import { useLocale, useTranslations } from "@/components/i18n/locale-provider";
 
 import { useChartEditorStore } from "./chartEditorStore";
+import { foundationButtonClass } from "@/components/ui/button";
+import { cn } from "@/lib/cn";
 
 /** 「12마디 3½박」(관리자 영상 추출 창과 같은 표기) → 에디터 언어로(ko · ja · en) */
 function localizedPosition(
@@ -76,32 +78,32 @@ export default function SnapCheckSection() {
         replaceNotes(snapNotesToNearestGrid(document, new Set(ids)), ids);
 
     return (
-        <section className="border-divider flex max-h-[45%] shrink-0 flex-col gap-1.5 border-t px-3 py-2.5">
-            <div className="flex items-center justify-between gap-2">
-                <h3 className="flex items-center gap-2 text-xs font-bold">
+        <section className="nl-editor-snap flex shrink-0 flex-col gap-nl-8 border-t-nl-stroke border-nl-divider px-nl-12 py-nl-12">
+            <div className="flex items-center justify-between gap-nl-8">
+                <h3 className="nl-metadata flex items-center gap-nl-8">
                     {t("editor.snap.title")}
-                    <span className="nl-admin-chip nl-admin-chip--warning tabular-nums">
+                    <span className="nl-admin-chip nl-admin-chip--warning">
                         {t("editor.snap.count", {
                             count: items.length.toLocaleString(locale),
                         })}
                     </span>
                 </h3>
-                <span className="flex gap-1">
+                <span className="flex gap-nl-4">
                     <button
                         type="button"
                         onClick={() => moveFocus(-1)}
                         aria-label={t("editor.snap.previous")}
-                        className="border-border hover:bg-surface-muted flex size-6 items-center justify-center rounded border"
+                        className="nl-hover-layer flex size-nl-24 items-center justify-center rounded-nl-control border-nl-stroke border-nl-border"
                     >
-                        <ArrowUp className="size-3" />
+                        <ArrowUp className="nl-icon-small" />
                     </button>
                     <button
                         type="button"
                         onClick={() => moveFocus(1)}
                         aria-label={t("editor.snap.next")}
-                        className="border-border hover:bg-surface-muted flex size-6 items-center justify-center rounded border"
+                        className="nl-hover-layer flex size-nl-24 items-center justify-center rounded-nl-control border-nl-stroke border-nl-border"
                     >
-                        <ArrowDown className="size-3" />
+                        <ArrowDown className="nl-icon-small" />
                     </button>
                 </span>
             </div>
@@ -110,7 +112,7 @@ export default function SnapCheckSection() {
                 tabIndex={0}
                 onKeyDown={handleListKey}
                 aria-label={t("editor.snap.list")}
-                className="focus-visible:outline-focus flex min-h-0 flex-col gap-1 overflow-y-auto rounded-md focus-visible:outline-1"
+                className="flex min-h-0 flex-col gap-nl-4 overflow-y-auto rounded-nl-field focus-visible:outline-nl-stroke focus-visible:outline-nl-focus"
             >
                 {items.map((item, index) => {
                     const note = notesById.get(item.id);
@@ -120,18 +122,18 @@ export default function SnapCheckSection() {
                         <div
                             key={item.id}
                             role="listitem"
-                            className={`flex flex-col gap-1 rounded-md border px-2 py-1.5 ${
+                            className={`flex flex-col gap-nl-4 rounded-nl-field border-nl-stroke px-nl-8 py-nl-8 ${
                                 isFocused
-                                    ? "border-text-secondary bg-surface-muted"
-                                    : "border-border"
+                                    ? "border-nl-subdued bg-nl-raised"
+                                    : "border-nl-border"
                             }`}
                         >
                             <button
                                 type="button"
                                 onClick={() => focusOn(index)}
-                                className="flex items-baseline justify-between gap-2 text-left"
+                                className="flex items-baseline justify-between gap-nl-8 text-left"
                             >
-                                <span className="shrink-0 text-xs font-bold tabular-nums">
+                                <span className="nl-metadata shrink-0">
                                     {t("editor.snap.near", {
                                         position: localizedPosition(
                                             chartPositionLabel(
@@ -146,7 +148,7 @@ export default function SnapCheckSection() {
                                         ),
                                     })}
                                 </span>
-                                <span className="text-text-secondary min-w-0 text-right text-xs tabular-nums">
+                                <span className="nl-metadata min-w-0 text-right text-nl-subdued">
                                     {note
                                         ? `${t(`editor.hand.${note.hand}`)} · ${t("editor.snap.lane", { lane: note.lane + 1 })} · `
                                         : ""}
@@ -160,7 +162,7 @@ export default function SnapCheckSection() {
                                 <button
                                     type="button"
                                     onClick={() => snap([item.id])}
-                                    className="border-text-primary bg-text-primary text-bg h-6 self-start rounded border px-2 text-xs font-semibold"
+                                    className="nl-metadata h-nl-24 self-start rounded-nl-control border-nl-stroke border-nl-content bg-nl-primary px-nl-8 text-nl-on-primary"
                                 >
                                     {t("editor.snap.one")}
                                 </button>
@@ -172,7 +174,10 @@ export default function SnapCheckSection() {
             <button
                 type="button"
                 onClick={() => snap(items.map((item) => item.id))}
-                className="border-border hover:bg-surface-muted h-8 shrink-0 rounded-md border text-xs font-semibold"
+                className={cn(
+                    foundationButtonClass({ variant: "secondary", size: "sm" }),
+                    "shrink-0"
+                )}
             >
                 {t("editor.snap.all")}
             </button>

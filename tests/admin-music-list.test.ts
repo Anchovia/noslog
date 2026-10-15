@@ -13,7 +13,7 @@ vi.mock("next/cache", () => ({ revalidatePath: vi.fn(), updateTag: vi.fn() }));
 import {
     ADMIN_MUSIC_PAGE_SIZE,
     getAdminMusicPage,
-} from "@/features/music/server/musicTranslationAdminService";
+} from "@/features/music/server/music-translation-admin-service";
 
 const row = (index: number) => ({
     index: `m-${index}`,

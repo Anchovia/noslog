@@ -8,16 +8,17 @@ import {
     discoverySearchParams,
     getDiscoverySort,
     parseDiscoverySearchParams,
-} from "@/features/music/schemas/discoverySchema";
+} from "@/features/music/schemas/discovery-schema";
 
 const { queryRaw } = vi.hoisted(() => ({ queryRaw: vi.fn() }));
 vi.mock("server-only", () => ({}));
+vi.mock("next/cache", () => ({ unstable_cache: (fn: unknown) => fn }));
 vi.mock("@/lib/db", () => ({ default: { $queryRaw: queryRaw } }));
 import {
     getDiscoveryCounts,
     getDiscoveryPage,
     publicDiscoveryQuery,
-} from "@/features/music/server/discoveryService";
+} from "@/features/music/server/discovery-service";
 
 describe("Discovery URL and filter contract", () => {
     it("browses the complete catalog without an implicit Expert restriction", () => {
@@ -182,7 +183,11 @@ describe("Discovery data boundary", () => {
         expect(statement.sql).toContain(
             'pattern."published_content" IS NOT NULL'
         );
-        expect(statement.sql).toContain("'null'::jsonb");
+        // 공개 버전 번호로 판단 — 공개본 JSON 값을 비교하지 않는다(2026-10-15 S13)
+        expect(statement.sql).toContain(
+            'pattern."published_revision" IS NOT NULL'
+        );
+        expect(statement.sql).not.toContain("'null'::jsonb");
         expect(statement.sql).toContain("published DESC NULLS LAST");
     });
     it("uses best-record MISS bounds and parameterized literal text", async () => {

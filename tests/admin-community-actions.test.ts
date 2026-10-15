@@ -29,7 +29,7 @@ vi.mock("@/lib/observability/server", () => ({
 }));
 
 import { deleteEvaluation } from "@/app/admin/community/actions";
-import { listAdminChartEvaluations } from "@/features/music/server/chartEvaluationAdminService";
+import { listAdminChartEvaluations } from "@/features/music/server/chart-evaluation-admin-service";
 
 function deleteForm(evaluationId = "20") {
     const formData = new FormData();

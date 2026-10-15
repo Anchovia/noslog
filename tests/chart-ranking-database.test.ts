@@ -4,7 +4,7 @@ vi.mock("next/cache", () => ({
     unstable_cache: (callback: unknown) => callback,
 }));
 vi.mock("@/lib/db", async () => {
-    const url = process.env.COMMUNITY_TEST_DATABASE_URL;
+    const url = process.env.TEST_DATABASE_URL;
     if (!url) return { default: {} };
     if (!["localhost", "127.0.0.1"].includes(new URL(url).hostname))
         throw new Error("Ranking integration tests require a local database.");
@@ -16,7 +16,7 @@ import db from "@/lib/db";
 import {
     getChartRanking,
     normalizeRankingPage,
-} from "@/features/music/server/chartRanking";
+} from "@/features/music/server/chart-ranking";
 
 it("normalizes invalid and out-of-range ranking pages to the first page", () => {
     for (const page of [NaN, Infinity, -1, 0, 1.5, 3])
@@ -25,7 +25,7 @@ it("normalizes invalid and out-of-range ranking pages to the first page", () => 
     expect(normalizeRankingPage(1, 0)).toBe(1);
 });
 
-describe.skipIf(!process.env.COMMUNITY_TEST_DATABASE_URL)(
+describe.skipIf(!process.env.TEST_DATABASE_URL)(
     "chart competition ranking in an isolated database",
     () => {
         const index = `e2e-ranking-${Date.now()}`;
@@ -85,11 +85,11 @@ describe.skipIf(!process.env.COMMUNITY_TEST_DATABASE_URL)(
             await db.music.deleteMany({ where: { index } });
             await db.$disconnect();
         });
-        it("keeps shared ranks across the 25-row boundary and sorts ties by achievement time", async () => {
+        it("keeps shared ranks across the 20-row page boundary and sorts ties by achievement time", async () => {
             const first = await getChartRanking(chartId, 1);
             const second = await getChartRanking(chartId, 2);
             expect(first.totalCount).toBe(28);
-            expect(first.rows).toHaveLength(25);
+            expect(first.rows).toHaveLength(20);
             expect(first.rows[0]).toMatchObject({
                 position: 1,
                 user_id: users[0],
@@ -101,8 +101,15 @@ describe.skipIf(!process.env.COMMUNITY_TEST_DATABASE_URL)(
             expect(first.rows.slice(1).every((row) => row.position === 2)).toBe(
                 true
             );
-            expect(second.rows.map((row) => row.position)).toEqual([2, 2, 28]);
+            expect(second.rows.map((row) => row.position)).toEqual([
+                2, 2, 2, 2, 2, 2, 2, 28,
+            ]);
             expect(second.rows.map((row) => row.user_id)).toEqual([
+                users[7],
+                users[6],
+                users[5],
+                users[4],
+                users[3],
                 users[2],
                 users[1],
                 users[27],

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { examEditorSchema } from "@/features/exams/schemas/examEditorSchema";
+import { examEditorSchema } from "@/features/exams/schemas/exam-editor-schema";
 
 function createExamValues(overrides: Record<string, unknown> = {}) {
     return {

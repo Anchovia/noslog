@@ -5,7 +5,7 @@ import {
     updateAnnouncement as updateAnnouncementService,
     deleteAnnouncement as deleteAnnouncementService,
     requestAnnouncementImageUpload as requestAnnouncementImageUploadService,
-} from "@/features/announcements/server/announcementAdminService";
+} from "@/features/announcements/server/announcement-admin-service";
 
 export async function createAnnouncement(formData: FormData) {
     return createAnnouncementService(formData);

@@ -9,15 +9,15 @@ import {
     arcadeWeekHours,
     formatArcadeClose,
     formatArcadeTime,
-} from "@/features/arcades/arcadeDiscovery";
+} from "@/features/arcades/arcade-discovery";
 import {
     arcadeCabinetSchema,
     arcadeDiscoverySchema,
     arcadeHoursSchema,
     publicArcadeSchema,
-} from "@/features/arcades/schemas/publicArcadeSchema";
-import type { PublicArcade } from "@/features/arcades/schemas/publicArcadeSchema";
-import { legacyToPublicArcadeHours } from "@/lib/arcadeDetails";
+} from "@/features/arcades/schemas/public-arcade-schema";
+import type { PublicArcade } from "@/features/arcades/schemas/public-arcade-schema";
+import { legacyToPublicArcadeHours } from "@/lib/arcade-details";
 
 const now = new Date("2026-09-07T15:30:00Z"); // Tuesday 00:30 in Tokyo/Seoul.
 const base: PublicArcade = {

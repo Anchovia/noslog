@@ -35,9 +35,9 @@ vi.mock("@/lib/db", () => ({
     },
 }));
 
-import { currentAdminSection } from "@/components/admin/adminNav";
-import { getAdminDashboard } from "@/features/admin/server/adminDashboardService";
-import { parseDashboardParams } from "@/features/admin/dashboardParams";
+import { currentAdminSection } from "@/components/admin/admin-nav";
+import { getAdminDashboard } from "@/features/admin/server/admin-dashboard-service";
+import { parseDashboardParams } from "@/features/admin/dashboard-params";
 
 const NOW = new Date("2026-09-13T03:00:00Z"); // 서울 9/13 12:00
 

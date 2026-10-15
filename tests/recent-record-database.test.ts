@@ -1,29 +1,26 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 vi.mock("@/lib/db", async () => {
-    const value = process.env.NOSLOG_RECENT_TEST_DATABASE_URL;
+    const value = process.env.TEST_DATABASE_URL;
     if (!value) return { default: {} };
     const url = new URL(value);
-    if (
-        !["localhost", "127.0.0.1"].includes(url.hostname) ||
-        url.pathname !== "/noslog_recent_test"
-    )
+    if (!["localhost", "127.0.0.1"].includes(url.hostname))
         throw new Error(
-            "Recent-record integration tests require the isolated local noslog_recent_test database."
+            "Recent-record integration tests require a local database."
         );
     const { PrismaClient } = await import("@prisma/client");
     return { default: new PrismaClient({ datasourceUrl: value }) };
 });
 vi.mock("next/cache", () => ({ unstable_cache: (fn: unknown) => fn }));
 import db from "@/lib/db";
-import { updateRecentPlay } from "@/lib/services/user/updateRecentPlay";
-import { updateRecentBestRecords } from "@/lib/services/user/updateRecentBestRecords";
-import { updatePlayData } from "@/lib/services/user/updatePlayData";
-import { updateGrade } from "@/lib/services/user/updateGrade";
-import { getUserChartScoreTrend } from "@/features/music/server/musicDetailData";
-import { getGlobalRankingPage } from "@/features/rankings/server/globalRankingData";
-import type { SyncMusicInput } from "@/lib/services/music/updateMusic";
+import { updateRecentPlay } from "@/lib/services/user/update-recent-play";
+import { updateRecentBestRecords } from "@/lib/services/user/update-recent-best-records";
+import { updatePlayData } from "@/lib/services/user/update-play-data";
+import { updateGrade } from "@/lib/services/user/update-grade";
+import { getUserChartScoreTrend } from "@/features/music/server/music-detail-data";
+import { getGlobalRankingPage } from "@/features/rankings/server/global-ranking-data";
+import type { SyncMusicInput } from "@/lib/services/music/update-music";
 
-describe.skipIf(!process.env.NOSLOG_RECENT_TEST_DATABASE_URL)(
+describe.skipIf(!process.env.TEST_DATABASE_URL)(
     "recent record pipeline on isolated PostgreSQL",
     () => {
         let userId: number;
@@ -113,7 +110,9 @@ describe.skipIf(!process.env.NOSLOG_RECENT_TEST_DATABASE_URL)(
                 ],
                 first.id
             );
-            expect(await updateRecentBestRecords(userId, first.id)).toBe(1);
+            expect(
+                (await updateRecentBestRecords(userId, first.id)).changedRecords
+            ).toBe(1);
             await updateGrade(userId);
             expect(await record()).toMatchObject({
                 score: 970000,
@@ -156,7 +155,10 @@ describe.skipIf(!process.env.NOSLOG_RECENT_TEST_DATABASE_URL)(
                 second.id
             );
             expect(result.insertedPlays).toBe(0);
-            expect(await updateRecentBestRecords(userId, second.id)).toBe(0);
+            expect(
+                (await updateRecentBestRecords(userId, second.id))
+                    .changedRecords
+            ).toBe(0);
             expect((await record()).play_count).toBe(2);
         });
         it("rolls back real record writes and receipts when a database constraint fails", async () => {
@@ -184,7 +186,9 @@ describe.skipIf(!process.env.NOSLOG_RECENT_TEST_DATABASE_URL)(
             await db.$executeRawUnsafe(
                 'ALTER TABLE "PlayData" DROP CONSTRAINT "recent_test_count_limit"'
             );
-            expect(await updateRecentBestRecords(userId, next.id)).toBe(1);
+            expect(
+                (await updateRecentBestRecords(userId, next.id)).changedRecords
+            ).toBe(1);
             expect(await record()).toMatchObject({
                 play_count: 3,
                 score: 980000,
@@ -226,6 +230,8 @@ describe.skipIf(!process.env.NOSLOG_RECENT_TEST_DATABASE_URL)(
                 },
             ];
             await updatePlayData(userId, full, fullSync.id);
+            // 전체 기록은 바뀐 줄만 고친다 — 같은 줄(id)이 그대로 남는다(2026-10-15 D6)
+            const firstRowId = (await record()).id;
             const recentSync = await sync("2026-09-21T04:00:00Z");
             await updateRecentPlay(
                 userId,
@@ -262,7 +268,10 @@ describe.skipIf(!process.env.NOSLOG_RECENT_TEST_DATABASE_URL)(
             full[0].sheet[0].score = 995000;
             full[0].sheet[0].besttime = "2026/09/21 12:00";
             await updatePlayData(userId, full, newerFull.id);
-            expect((await record()).play_count).toBe(200);
+            expect(await record()).toMatchObject({
+                id: firstRowId,
+                play_count: 200,
+            });
             expect(
                 await db.chartPlayHistory.count({ where: { user_id: userId } })
             ).toBe(5);

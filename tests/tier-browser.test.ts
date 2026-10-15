@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
     parseTierBrowserQuery,
     serializeTierBrowserQuery,
-} from "@/features/tiers/schemas/tierBrowserSchema";
+} from "@/features/tiers/schemas/tier-browser-schema";
 
 const mocks = vi.hoisted(() => ({
     list: vi.fn(),
@@ -21,24 +21,26 @@ vi.mock("@/lib/db", () => ({
         music: { findMany: mocks.music },
     },
 }));
-vi.mock("@/features/tiers/server/publicTierData", () => ({
+vi.mock("@/features/tiers/server/public-tier-data", () => ({
     getCachedTierBand: mocks.band,
 }));
-vi.mock("@/lib/i18n/musicTitle", () => ({
+vi.mock("@/lib/i18n/music-title", () => ({
     getMusicTitleDisplayPreference: mocks.preference,
     getLocalizedMusicTitle: () => null,
 }));
 import {
+    getPublicTierBrowserBand,
     getTierBrowserBand,
+    getTierBrowserBandRecords,
     getTierBrowserOverview,
-} from "@/features/tiers/server/tierBrowserData";
-import { tierStripValue } from "@/features/tiers/components/tierBrowserCard";
+} from "@/features/tiers/server/tier-browser-data";
+import { tierStripValue } from "@/features/tiers/components/tier-browser-card";
 import {
     nextTierBrowserVisibleCount,
     sortTierBrowserEntries,
     tierBrowserSkeletonCount,
     TIER_BROWSER_BATCH_SIZE,
-} from "@/features/tiers/components/tierBrowserBands";
+} from "@/features/tiers/components/tier-browser-bands";
 
 const query = () => parseTierBrowserQuery(new URLSearchParams());
 const chart = {
@@ -330,6 +332,23 @@ describe("Tier browser request and data contract", () => {
                 where: { user_id: 9, chart_id: { in: [1, 80] } },
             })
         );
+    });
+    it("serves the public band without reading anyone's session or records", async () => {
+        const band = await getPublicTierBrowserBand(query(), 11, "ko", true);
+        expect(band?.entries.length).toBeGreaterThan(0);
+        expect(band?.entries.every((entry) => entry.record === null)).toBe(
+            true
+        );
+        expect(mocks.records).not.toHaveBeenCalled();
+        expect(mocks.preference).not.toHaveBeenCalled();
+    });
+    it("returns the viewer's records keyed by chart, matching the combined band", async () => {
+        const records = await getTierBrowserBandRecords(query(), 11, 9);
+        const combined = await getTierBrowserBand(query(), 11, 9, "ko");
+        expect(Object.keys(records ?? {}).length).toBeGreaterThan(0);
+        for (const entry of combined!.entries)
+            expect(records?.[entry.chartId] ?? null).toEqual(entry.record);
+        expect(await getTierBrowserBandRecords(query(), 22, 9)).toBeNull();
     });
     it("omits personal rows for guests and unplayed Recital charts", async () => {
         expect(

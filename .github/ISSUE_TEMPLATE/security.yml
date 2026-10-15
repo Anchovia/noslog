@@ -1,0 +1,33 @@
+name: 보안 작업
+description: 인증·인가·입력 검증·의존성 보안 작업을 정리합니다.
+title: "[Security] "
+body:
+    - type: markdown
+      attributes:
+          value: |
+              공개 이슈에 실제 비밀값·개인정보·악용 가능한 취약점 상세를 적지 않습니다. 의존성 작업은 공개된 advisory를 연결하세요.
+    - type: textarea
+      id: problem
+      attributes:
+          label: 문제와 영향 범위
+          description: 대상 기능·권한·환경과 공개할 수 있는 근거를 적어주세요.
+      validations:
+          required: true
+    - type: textarea
+      id: scope
+      attributes:
+          label: 대응 범위와 보존 조건
+          description: 인증·외부 API 계약·기존 데이터 의미에 미치는 영향을 적어주세요.
+      validations:
+          required: true
+    - type: textarea
+      id: acceptance
+      attributes:
+          label: 완료 조건과 검증
+          description: 정상·거부·만료·재시도 시나리오와 실제 검사 결과를 적어주세요.
+      validations:
+          required: true
+    - type: textarea
+      id: reference
+      attributes:
+          label: 공개 advisory·관련 문서

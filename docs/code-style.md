@@ -40,10 +40,23 @@ page when no other route imports it. Code moves to `features/<domain>/` when it
 is reused, owns domain behavior, or needs an independently testable boundary.
 Do not add a `src/` wrapper solely to resemble a Vite project.
 
+Home-only UI belongs in `features/home/components`; `components/ui` remains
+shared UI. Import utilities by purpose: `@/lib/cn`, `@/lib/format-number`,
+`@/lib/format-date`, and `@/lib/music/stored-grade`. Jacket fallback URLs live in
+`@/lib/music/jacket-fallback-urls` as `musicJacketFallbackUrls`. Do not collect unrelated
+helpers in a generic `utils.ts` barrel.
+
 ## Naming and imports
 
 - React components and component types use PascalCase.
-- Functions, hooks, values, and files use camelCase. Hooks begin with `use`.
+- Functions, hooks, and values use camelCase. Hooks begin with `use`.
+- Code and stylesheet filenames and internal directories use kebab-case
+  (`app-shell.tsx`, `use-account-result-notice.ts`, `tailwind-theme.css`).
+  React exports remain PascalCase. Dotted suffixes such as `.stories.tsx`,
+  `.test.ts`, and `.config.ts` are retained.
+- Keep Next.js reserved filenames, existing public URL segments and dynamic
+  parameter names, and preserved chart viewer/editor filenames. Route groups
+  describe their role: `(site)` contains the public site shell.
 - Zod values end in `Schema`; form types use `<Feature>FormValues`.
 - Use `@/` absolute imports across directories and relative imports only within
   a tightly coupled local folder.
@@ -53,11 +66,98 @@ Do not add a `src/` wrapper solely to resemble a Vite project.
 Formatting is controlled by Prettier. Do not manually align code against its
 output. ESLint owns code-quality rules; Prettier owns formatting rules.
 The existing type-import rule is enforced by ESLint for `features/**/*.{ts,tsx}`.
-This scoped check does not migrate or change the preserved chart viewer/editor.
+Public route, layout, infrastructure, feature, shared UI, Storybook, and tooling
+imports/exports are automatically sorted by `eslint-plugin-simple-import-sort`.
+The expanded route/infrastructure scope excludes admin routes, pattern route entries,
+and preserved chart-pattern, design, and generated infrastructure. Existing feature
+and shared UI checks remain enabled. Parent-relative imports in `features/` and
+`components/ui/` are rejected; imports within a local folder remain relative.
+`noslog/filenames` rejects non-kebab code filenames and internal folder names;
+App Router URL folders and the preserved chart viewer/editor are explicit exceptions.
 Application code may use `console.warn` and `console.error` when appropriate;
 prefer the structured observability helper for server failures. CLI imports,
 maintenance scripts, and server synchronization progress jobs may use console
 output because it is their operator-facing interface.
+
+## Dependency boundaries
+
+ESLint's `noslog/boundaries` rule checks imports, re-exports, and literal dynamic
+imports, resolving both `@/` aliases and relative paths.
+
+- `app` composes features, UI, and infrastructure. Private route folders remain
+  within their owning route. Features cannot import route pages or data helpers.
+- Features may call other domains' explicit services or consume their stable
+  schemas/types. NosLog domains are not FSD action slices; a blanket ban on
+  cross-domain imports does not apply. Do not reach into another domain's local
+  implementation just to avoid defining a clear reusable contract.
+- Features may import real module-level `"use server"` Server Actions from `app`.
+  This Next.js entry-point exception does not allow importing route UI or queries.
+- `lib` must not import runtime behavior from `app`, `features`, or `components`.
+- `components/ui` must not import `app` or feature behavior. The existing exam
+  badge's grade helper and AppToaster's account notice adapter are explicit,
+  file-and-target-specific exceptions in the rule. They do not create permission
+  for more domain imports in new UI primitives.
+- The existing `lib/music/max-grade`, `unlock-condition`, and `score-tone` imports of
+  UI types remain type-only exceptions. Runtime imports on those paths fail lint.
+- Client Components cannot directly import feature server services or modules
+  marked `server-only`; type-only imports and Server Actions remain valid.
+  Next.js build-time server/client checks also protect indirect imports.
+- Keep deliberate public APIs small. Separate server entry points when needed;
+  do not add a barrel solely to hide a dependency or collect every UI export.
+
+The profile public cache is owned by `features/profile/server/public-profile-data`.
+The existing route data module re-exports it for compatibility; its cache keys,
+visibility policy, and query behavior remain unchanged.
+
+## Cache changes
+
+Before changing a cache, identify its owner and verify these contracts:
+
+- **Scope:** distinguish public data from account/session/permission-dependent data.
+  Never place private responses in a cache shared across users. Include every input
+  that changes a result (locale, filters, visibility, account where appropriate) in
+  the owning cache/query key; authorization remains a server responsibility.
+- **Freshness:** state when data may be stale, how it becomes fresh, and whether
+  loading/error/optimistic states are intentional. Preserve existing freshness
+  requirements rather than copying another project's timeout.
+- **Invalidation:** list the existing server tags/paths and TanStack Query keys
+  affected by a write. Use the owning service's current invalidation mechanism;
+  refreshing the router does not by itself invalidate every server/client cache.
+- **Derived views:** after create/update/delete, check the edited detail, lists,
+  counts, home/profile summaries, and any other actual dependent views. Verify
+  navigation away/back, active filters and relevant public/private visibility.
+- **Failure and races:** failed writes must not publish successful cached values;
+  optimistic changes must roll back or reconcile. Account changes and late
+  responses must not display a previous user's private result.
+
+Record the affected keys/tags/paths and the save-to-dependent-view scenario in
+regression tests or the PR validation. Do not conceal a missing invalidation with
+blanket `router.refresh()` calls or disabling all caching. This rule documents
+verification and does not change existing cache values or product semantics.
+
+## Shared UI and Storybook
+
+Use the [shared UI guide](./ui/README.md) for component selection, Props examples,
+token aliases, and story authoring. New or changed shared UI must include stories
+for its supported states and meaningful interaction tests where applicable.
+Existing untouched components may receive stories incrementally.
+Use `ButtonLink` for navigation that already uses the foundation button appearance;
+use `plain` for native anchors (OAuth, external URLs and bookmarklets).
+
+`npm run test:storybook` runs Chromium component and accessibility tests separately
+from the Node unit suite. `npm run build-storybook` verifies the standalone UI
+documentation. Both run in CI, without DB-backed application flows.
+Preserve approved typography classes and existing UI dimensions when using
+`nl`-namespaced Tailwind aliases. `tests/design-tsx-tokens.test.ts` checks static token references, inline appearance
+values (including local style objects/spreads), and arbitrary color/spacing/radius/
+font utilities in public TSX. It validates dynamic token family prefixes, not runtime
+suffixes. Geometry, calculated sizes and data colors remain runtime contracts;
+unknown dynamic suffixes need domain validation. Preserved admin/editor/viewer,
+story canvases and the fixed Satori profile-card export have separate contracts.
+Metadata is not a JSX style and does not inherit browser CSS variables.
+
+Commit and PR rules live in
+[CONVENTION.md](./CONVENTION.md).
 
 ## API contracts
 
@@ -161,6 +261,19 @@ directory. Remove the legacy file only after all imports, tests, and runtime
 consumers have moved. Do not use code-style cleanup as authorization to change
 product behavior, visual design, external API contracts, or database data.
 
-The [code-style audit](./code-style-audit.md) records verified migration gaps,
-retained exceptions, and verification limitations. Passing static checks does
-not mean every legacy feature has completed migration or browser verification.
+Passing static checks does not mean every feature has completed browser
+verification. Report the actual checks and any unverified runtime conditions.
+
+## Feature view and connection boundaries
+
+Complex forms may keep rendering/local validation in a feature View and connect
+Server Actions, uploads, queries and navigation in a small adapter. A View gets
+typed callbacks/data; it does not replace server validation or authorization.
+Use the real View in feature stories with local mocks. Keep existing public entry
+points and product states; do not split every component preemptively.
+
+Guard form submission before asynchronous validation, rather than relying only on
+the submit button's busy state. Ignore obsolete asynchronous results using input
+revision or view lifetime. An ignored response does not cancel a completed server
+write. Preserve fields/files on failure and document callback/ref/state contracts
+in the [UI contracts](./ui/contracts.md).

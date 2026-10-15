@@ -20,13 +20,13 @@ vi.mock("@/lib/db", () => ({
         $transaction: mocks.transaction,
     },
 }));
-vi.mock("@/lib/musicJackets", () => ({
+vi.mock("@/lib/music-jackets", () => ({
     getLocalJacketUrl: mocks.getLocalJacketUrl,
     isManualJacketUrl: (url: string | null | undefined) =>
         Boolean(url?.includes("/jackets/manual/")),
 }));
 
-import { updateMusic } from "@/lib/services/music/updateMusic";
+import { updateMusic } from "@/lib/services/music/update-music";
 
 describe("BEMANI 악곡 카탈로그 반영", () => {
     beforeEach(() => {

@@ -1,0 +1,282 @@
+"use client";
+
+import {
+    keepPreviousData,
+    useQuery,
+    useQueryClient,
+} from "@tanstack/react-query";
+import { useEffect, useRef, useState } from "react";
+
+import {
+    useLocale,
+    useLocalizedHref,
+    useTranslations,
+} from "@/components/i18n/locale-provider";
+import PageContainer from "@/components/layout/page-container";
+import type {
+    DetailTab,
+    Difficulty,
+    MusicDetailProps,
+} from "@/components/music/music-detail-types";
+import ActionButton from "@/components/ui/action-button";
+import AreaTabs from "@/components/ui/area-tabs";
+import BackLink from "@/components/ui/back-link";
+import ResultState from "@/components/ui/result-state";
+import { StatusMessage } from "@/components/ui/status-message";
+import {
+    musicDetailQueryOptions,
+    musicDetailQueryRootKey,
+} from "@/features/music/api/music-detail";
+
+import DifficultySelector from "./difficulty-selector";
+import MusicCommunityPanel from "./music-community-panel";
+import MusicDetailLoading from "./music-detail-loading";
+import MusicEntityHeader from "./music-entity-header";
+import MusicRankingPanel from "./music-ranking-panel";
+import MusicRecordPanel from "./music-record-panel";
+import OverviewPanel from "./overview-panel";
+
+const areas: DetailTab[] = ["detail", "record", "ranking", "tier"];
+const difficultyValues: Difficulty[] = ["Normal", "Hard", "Expert", "Real"];
+const labels = {
+    detail: "detail.info",
+    record: "detail.record",
+    ranking: "detail.ranking",
+    tier: "detail.tier",
+} as const;
+
+export default function MusicDetailPage({
+    initialData,
+}: {
+    initialData: MusicDetailProps;
+}) {
+    const locale = useLocale();
+    const href = useLocalizedHref();
+    const t = useTranslations();
+    // 목록이 남긴 마지막 검색 조건 — 뒤로가기가 그 조건으로 돌아간다 (오락실 discoveryQuery 선례). SSR 에는 없으므로 hydration 뒤 한 번 읽는다
+    const [listQuery, setListQuery] = useState("");
+    useEffect(() => {
+        let stored = "";
+        try {
+            stored = sessionStorage.getItem("noslog:music-discovery") ?? "";
+        } catch {}
+        if (stored) queueMicrotask(() => setListQuery(stored));
+    }, []);
+    const client = useQueryClient();
+    const [selection, setSelection] = useState({
+        difficulty: initialData.difficulty,
+        tab: initialData.activeTab,
+        page: initialData.ranking.page,
+    });
+    const initialTarget =
+        selection.difficulty === initialData.difficulty &&
+        selection.tab === initialData.activeTab &&
+        selection.page === initialData.ranking.page;
+    const query = useQuery({
+        ...musicDetailQueryOptions({
+            index: initialData.music.index,
+            ...selection,
+            locale,
+            accountId: initialData.accountId,
+        }),
+        initialData: initialTarget ? initialData : undefined,
+        // 바꾸는 동안 머리는 이전 값을 pending 색으로 유지(느린 교체 규칙) — 탭 내용은 새 값이 올 때까지 스켈레톤
+        placeholderData: keepPreviousData,
+    });
+    const data = query.isPlaceholderData ? undefined : query.data;
+    const headerData = query.data;
+    const focusRanking = useRef(false);
+    const change = (difficulty: Difficulty, tab: DetailTab, page = 1) => {
+        focusRanking.current =
+            tab === "ranking" &&
+            selection.tab === "ranking" &&
+            page !== selection.page;
+        const params = new URLSearchParams();
+        const origin = new URLSearchParams(window.location.search);
+        if (origin.get("source") === "tiers") {
+            for (const key of ["source", "mode", "goal", "returnTo"]) {
+                const value = origin.get(key);
+                if (value) params.set(key, value);
+            }
+        }
+        if (tab !== "detail") params.set("tab", tab);
+        if (tab === "ranking" && page > 1) params.set("page", String(page));
+        window.history.pushState(
+            null,
+            "",
+            href(
+                `/music/${encodeURIComponent(initialData.music.index)}/${difficulty.toLowerCase()}${params.size ? `?${params}` : ""}`
+            )
+        );
+        setSelection({ difficulty, tab, page });
+    };
+    useEffect(() => {
+        if (selection.tab !== "ranking" || !data) return;
+        const url = new URL(window.location.href);
+        const canonicalPage =
+            data.ranking.page > 1 ? String(data.ranking.page) : null;
+        if (url.searchParams.get("page") === canonicalPage) return;
+        if (canonicalPage) url.searchParams.set("page", canonicalPage);
+        else url.searchParams.delete("page");
+        window.history.replaceState(null, "", `${url.pathname}${url.search}`);
+    }, [data, selection.tab]);
+    useEffect(() => {
+        const pop = () => {
+            const difficulty = difficultyValues.find(
+                (item) =>
+                    item.toLowerCase() ===
+                    window.location.pathname.split("/").at(-1)
+            );
+            if (!difficulty) return;
+            const params = new URLSearchParams(window.location.search);
+            const tab =
+                areas.find((area) => area === params.get("tab")) ?? "detail";
+            const pageValue = Number(params.get("page"));
+            const page =
+                tab === "ranking" &&
+                Number.isSafeInteger(pageValue) &&
+                pageValue > 0
+                    ? pageValue
+                    : 1;
+            setSelection({ difficulty, tab, page });
+        };
+        const invalidate = () =>
+            void client.invalidateQueries({
+                queryKey: musicDetailQueryRootKey(initialData.music.index),
+            });
+        window.addEventListener("popstate", pop);
+        window.addEventListener("music-detail:invalidate", invalidate);
+        return () => {
+            window.removeEventListener("popstate", pop);
+            window.removeEventListener("music-detail:invalidate", invalidate);
+        };
+    }, [client, initialData.music.index]);
+    return (
+        <PageContainer className="nl-music-detail">
+            {/* SET-42 뒤로가기 — 라벨은 목적지 제목(악곡). 공지·오락실·빙고 상세와 같은 자리 */}
+            <BackLink href={href(`/music${listQuery}`)}>
+                {t("discovery.music")}
+            </BackLink>
+            {/* 1056 미만: 머리 → 탭 세로. 1056+: 왼쪽 열(머리 카드, 레일 폭) + 오른쪽 탭 내용 (2026-09-16 데스크톱 B) */}
+            <div className="nl-music-detail__layout">
+                <MusicEntityHeader
+                    music={initialData.music}
+                    difficulty={selection.difficulty}
+                    chart={headerData?.chartDetail ?? null}
+                    pending={!data}
+                    record={headerData?.userPlayData ?? null}
+                    signedIn={headerData?.isLoggedIn ?? initialData.isLoggedIn}
+                    loginHref={href(
+                        `/login?returnTo=${encodeURIComponent(
+                            href(
+                                `/music/${initialData.music.index}/${selection.difficulty.toLowerCase()}`
+                            )
+                        )}`
+                    )}
+                >
+                    <DifficultySelector
+                        music={initialData.music}
+                        value={selection.difficulty}
+                        onValueChange={(difficulty) =>
+                            change(difficulty, selection.tab)
+                        }
+                    />
+                </MusicEntityHeader>
+                <AreaTabs
+                    value={selection.tab}
+                    onValueChange={(tab) => change(selection.difficulty, tab)}
+                    label={t("detail.area")}
+                    options={areas.map((value) => ({
+                        value,
+                        label: t(labels[value]),
+                    }))}
+                    busy={query.isFetching}
+                >
+                    <span className="sr-only" role="status">
+                        {t(
+                            query.isError
+                                ? "detail.error"
+                                : query.isFetching
+                                  ? "detail.loading"
+                                  : "detail.ready",
+                            {
+                                difficulty: selection.difficulty,
+                                area: t(labels[selection.tab]),
+                            }
+                        )}
+                    </span>
+                    {data && query.isError ? (
+                        <StatusMessage
+                            severity="danger"
+                            role="alert"
+                            title={t("detail.error")}
+                            action={
+                                <ActionButton
+                                    size="sm"
+                                    onClick={() => void query.refetch()}
+                                >
+                                    {t("common.retry")}
+                                </ActionButton>
+                            }
+                        />
+                    ) : null}
+                    {!data ? (
+                        query.isError ? (
+                            <ResultState
+                                error
+                                message={t("detail.error")}
+                                action={
+                                    <ActionButton
+                                        onClick={() => void query.refetch()}
+                                    >
+                                        {t("common.retry")}
+                                    </ActionButton>
+                                }
+                            />
+                        ) : (
+                            <MusicDetailLoading
+                                tab={selection.tab}
+                                signedIn={
+                                    headerData?.isLoggedIn ??
+                                    initialData.isLoggedIn
+                                }
+                                musicIndex={initialData.music.index}
+                                difficulty={selection.difficulty}
+                            />
+                        )
+                    ) : null}
+                    {data && selection.tab === "detail" ? (
+                        <OverviewPanel
+                            data={data}
+                            onEvaluate={() =>
+                                change(selection.difficulty, "tier")
+                            }
+                        />
+                    ) : null}
+                    {data && selection.tab === "record" ? (
+                        <MusicRecordPanel data={data} />
+                    ) : null}
+                    {data && selection.tab === "ranking" ? (
+                        <MusicRankingPanel
+                            data={data}
+                            focusRequested={() => focusRanking.current}
+                            onFocused={() => {
+                                focusRanking.current = false;
+                            }}
+                            onPageChange={(page) =>
+                                change(selection.difficulty, "ranking", page)
+                            }
+                            busy={query.isFetching}
+                        />
+                    ) : null}
+                    {data && selection.tab === "tier" ? (
+                        <MusicCommunityPanel
+                            key={data.chartDetail.id}
+                            music={data}
+                        />
+                    ) : null}
+                </AreaTabs>
+            </div>
+        </PageContainer>
+    );
+}

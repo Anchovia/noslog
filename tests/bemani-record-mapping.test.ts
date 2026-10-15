@@ -5,7 +5,7 @@ import {
     mapBemaniJudgeCounts,
     mapBemaniNoteSuccessRates,
     normalizeBemaniRank,
-} from "@/lib/services/user/bemaniRecordMapping";
+} from "@/lib/services/user/bemani-record-mapping";
 
 describe("BEMANI 기록 필드 매핑", () => {
     it("최근 기록의 소문자 랭크를 전체 기록 형식으로 정규화한다", () => {

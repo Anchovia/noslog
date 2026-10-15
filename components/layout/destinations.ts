@@ -1,3 +1,4 @@
+import type { LucideIcon } from "lucide-react";
 import {
     GraduationCap,
     Grid3X3,
@@ -8,7 +9,6 @@ import {
     RefreshCw,
     Trophy,
 } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
 
 import type { MessageKey } from "@/lib/i18n/messages";
 

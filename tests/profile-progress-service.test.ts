@@ -14,11 +14,11 @@ vi.mock("@/lib/db", () => ({
         userRatingHistory: { findMany: mocks.history },
     },
 }));
-vi.mock("@/features/profile/server/profilePlaysService", () => ({
+vi.mock("@/features/profile/server/profile-plays-service", () => ({
     getProfileRating: mocks.rating,
 }));
-import { getPublicProfileProgress } from "@/features/profile/server/profileProgressService";
-import { profileProgressQuerySchema } from "@/features/profile/schemas/publicProfileSchema";
+import { getPublicProfileProgress } from "@/features/profile/server/profile-progress-service";
+import { profileProgressQuerySchema } from "@/features/profile/schemas/public-profile-schema";
 
 describe("profile progress sources", () => {
     const now = new Date("2026-09-07T12:00:00Z");

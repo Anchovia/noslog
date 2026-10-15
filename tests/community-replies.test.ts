@@ -30,11 +30,11 @@ vi.mock("@/lib/db", () => ({
     },
 }));
 
-import { mutateChartCommunity } from "@/features/music/server/communityMutation";
+import { mutateChartCommunity } from "@/features/music/server/community-mutation";
 import {
     communityMutationSchema,
     opinionReportSchema,
-} from "@/features/music/schemas/communitySchema";
+} from "@/features/music/schemas/community-schema";
 
 const ME = 7;
 

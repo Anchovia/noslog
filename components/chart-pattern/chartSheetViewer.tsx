@@ -4,22 +4,24 @@ import { Info, Pencil, Share2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { useQuery } from "@tanstack/react-query";
-import BackLink from "@/components/ui/backLink";
+import BackLink from "@/components/ui/back-link";
 import { useMemo, useRef, useState } from "react";
 
-import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
-import PageContainer from "@/components/layout/pageContainer";
+import { useLocale, useTranslations } from "@/components/i18n/locale-provider";
+import PageContainer from "@/components/layout/page-container";
 import Avatar from "@/components/ui/avatar";
-import { foundationButtonClass } from "@/components/ui/Button";
-import ModalDialog from "@/components/ui/modalDialog";
-import { SegmentedControl } from "@/components/ui/segmentedControl";
+import { foundationButtonClass } from "@/components/ui/button";
+import ModalDialog from "@/components/ui/modal-dialog";
+import { SegmentedControl } from "@/components/ui/segmented-control";
 import ChartComments, {
+    ChartCommentStageEntry,
     chartCommentsOptions,
-} from "@/features/contributions/components/chartComments";
-import ChartDraftEntry from "@/features/contributions/components/chartDraftEntry";
-import ContributionLabel from "@/features/contributions/components/contributionLabel";
-import type { NameLabel } from "@/features/contributions/contributionLevel";
-import type { ChartCommentItem } from "@/features/contributions/server/chartDraftService";
+    useChartCommentDraft,
+} from "@/features/contributions/components/chart-comments";
+import ChartDraftEntry from "@/features/contributions/components/chart-draft-entry";
+import ContributionLabel from "@/features/contributions/components/contribution-label";
+import type { NameLabel } from "@/features/contributions/contribution-level";
+import type { ChartCommentItem } from "@/features/contributions/server/chart-draft-service";
 import {
     getChartNoteRenderPoints,
     getGlissandoSnapRenderPoints,
@@ -163,6 +165,8 @@ export default function ChartSheetViewer({
         ),
         enabled: Boolean(contribution),
     }).data;
+    // 쓰기 칸 상태 — 무대 아래(1056 이상) · 의견 구역(1055 이하) 두 자리가 나눠 쓴다(2026-10-15 L2)
+    const commentDraft = useChartCommentDraft(contribution?.chartId ?? 0);
     const markers = useMemo(
         () =>
             comments
@@ -395,7 +399,10 @@ export default function ChartSheetViewer({
     }
 
     return (
-        <PageContainer className="noslog-ui nl-chart-viewer">
+        <PageContainer
+            className="noslog-ui nl-chart-viewer"
+            data-comment-entry={contribution ? "" : undefined}
+        >
             <BackLink href={backHref}>{t("chart.back")}</BackLink>
             {/* 무대 먼저(2026-09-26 A, 유튜브 시청 페이지) — 조작은 무대 위에 겹치고, 곡 정보 · 동작은 무대 아래.
                 보기 방식 세그먼트는 무대 바로 위에 늘 보이게(2026-09-26 V1 — 조작 줄 아이콘은 안 보여 되돌림) */}
@@ -437,6 +444,15 @@ export default function ChartSheetViewer({
                         />
                     )}
                 </div>
+                {/* 쓰기 줄은 무대 바로 아래(2026-10-15 L2, SoundCloud · 니코니코) — 재생을 보면서 쓴다. 1055 이하는 의견 구역 안 */}
+                {contribution ? (
+                    <ChartCommentStageEntry
+                        signedIn={contribution.signedIn}
+                        returnTo={contribution.returnTo}
+                        draft={commentDraft}
+                        clock={clock}
+                    />
+                ) : null}
             </div>
             {/* 넓은 화면(1056+) 머리 — 제목 묶음 → 채보 줄(작성자 · 동작) → 정보 상자 */}
             <header className="nl-chart-viewer__head nl-chart-viewer__head--wide">
@@ -557,6 +573,7 @@ export default function ChartSheetViewer({
                     canModerate={contribution.canModerate}
                     returnTo={contribution.returnTo}
                     clock={clock}
+                    draft={commentDraft}
                     onSeek={seekTo}
                 />
             ) : null}
@@ -739,7 +756,7 @@ function drawMeasureAnnotations(
         )
             continue;
         let detailY = y + 2;
-        context.fillStyle = "#90909d";
+        context.fillStyle = "#8e8e9a";
         context.font = "9px ui-monospace, monospace";
         context.textBaseline = "top";
         if (marker.showBpm) {

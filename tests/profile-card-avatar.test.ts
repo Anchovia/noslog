@@ -2,7 +2,7 @@ import { createElement } from "react";
 import { ImageResponse } from "next/og";
 import sharp from "sharp";
 import { describe, expect, it } from "vitest";
-import { toCardAvatar } from "@/features/profile/server/profileCardAvatar";
+import { toCardAvatar } from "@/features/profile/server/profile-card-avatar";
 
 const PNG_SIGNATURE = "89504e470d0a1a0a";
 

@@ -93,7 +93,7 @@ import {
     deleteExamSubmission,
     reviewExamSubmission,
 } from "@/app/admin/submissions/actions";
-import { listExamSubmissions } from "@/features/exams/server/examSubmissionAdminService";
+import { listExamSubmissions } from "@/features/exams/server/exam-submission-admin-service";
 
 describe("관리자 액션", () => {
     beforeEach(() => {

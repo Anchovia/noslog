@@ -1,0 +1,39 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+
+import { useTranslations } from "@/components/i18n/locale-provider";
+import PageContainer from "@/components/layout/page-container";
+import Button from "@/components/ui/button";
+import { StatusMessage } from "@/components/ui/status-message";
+
+export default function ProfileError({
+    reset,
+}: {
+    error: Error & { digest?: string };
+    reset: () => void;
+}) {
+    const t = useTranslations();
+    const router = useRouter();
+    return (
+        <PageContainer className="nl-profile">
+            <StatusMessage
+                severity="danger"
+                role="alert"
+                title={t("profile.loadFailed")}
+                description={t("profile.recordsUnchanged")}
+                action={
+                    <Button
+                        variant="secondary"
+                        onClick={() => {
+                            router.refresh();
+                            reset();
+                        }}
+                    >
+                        {t("common.retry")}
+                    </Button>
+                }
+            />
+        </PageContainer>
+    );
+}

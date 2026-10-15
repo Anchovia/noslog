@@ -1,16 +1,19 @@
 "use client";
 
-import Image from "next/image";
 import { User } from "lucide-react";
-import { useState } from "react";
+import Image from "next/image";
 import type { CSSProperties } from "react";
+import { useState } from "react";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/cn";
+
+/** 그림 원본 크기 힌트(next/image). 그리는 크기는 `size` 를 주지 않으면 CSS 클래스가 정한다 */
+const IMAGE_SIZE_HINT = 44;
 
 export default function Avatar({
     src,
     alt = "",
-    size = 44,
+    size,
     className,
     fallbackName,
     fallbackInitial,
@@ -20,6 +23,7 @@ export default function Avatar({
 }: {
     src?: string | null;
     alt?: string;
+    /** 숫자 크기 — 없으면 자리(부모 · 크기 클래스)가 정한다(헤더는 칸을 채움, 2026-10-15) */
     size?: number;
     className?: string;
     fallbackName?: string | null;
@@ -34,7 +38,11 @@ export default function Avatar({
     return (
         <span
             className={cn("nl-avatar", className)}
-            style={{ width: size, height: size, ...style }}
+            style={
+                size === undefined
+                    ? style
+                    : { width: size, height: size, ...style }
+            }
             role={!src || failedSource === src ? "img" : undefined}
             aria-label={
                 !src || failedSource === src ? alt || undefined : undefined
@@ -45,8 +53,8 @@ export default function Avatar({
                 <Image
                     src={src}
                     alt={alt}
-                    width={size}
-                    height={size}
+                    width={size ?? IMAGE_SIZE_HINT}
+                    height={size ?? IMAGE_SIZE_HINT}
                     loading={loading}
                     onError={() => setFailedSource(src)}
                 />

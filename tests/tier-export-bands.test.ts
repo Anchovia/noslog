@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
     defaultExportBands,
     TIER_EXPORT_MAX,
-} from "@/features/tiers/lib/tierExportImage";
+} from "@/features/tiers/lib/tier-export-image";
 
 // S 서열표 실제 구간 수(2026-09-22, 위 = 높은 구간)
 const S_LIST = [

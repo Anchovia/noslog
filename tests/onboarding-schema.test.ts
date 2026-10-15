@@ -4,7 +4,7 @@ import {
     createOnboardingFormData,
     createOnboardingSchema,
     onboardingInputFromFormData,
-} from "@/features/profile/schemas/profileSettingsSchema";
+} from "@/features/profile/schemas/profile-settings-schema";
 import { createTranslator, getMessages } from "@/lib/i18n/messages";
 import type { Locale } from "@/lib/i18n/routing";
 

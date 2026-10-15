@@ -5,8 +5,8 @@ import {
     getInitialMusicDifficultyRanges,
     getInitialMusicDifficultyState,
     parseMusicCategories,
-} from "@/components/music/search/musicSearchUtils";
-import { musicSearchSchema } from "@/features/music/schemas/musicSearchSchema";
+} from "@/components/music/search/music-search-utils";
+import { musicSearchSchema } from "@/features/music/schemas/music-search-schema";
 
 describe("악곡 검색 폼 스키마", () => {
     it("문자열 검색어를 폼 입력으로 허용한다", () => {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { isSafariUserAgent } from "@/lib/browserSupport";
+import { isSafariUserAgent } from "@/lib/browser-support";
 
 describe("isSafariUserAgent", () => {
     it("macOS Safari를 감지한다", () => {

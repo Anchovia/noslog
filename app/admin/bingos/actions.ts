@@ -3,7 +3,7 @@
 import {
     saveBingo as saveBingoService,
     deleteBingo as deleteBingoService,
-} from "@/features/bingos/server/bingoAdminService";
+} from "@/features/bingos/server/bingo-admin-service";
 
 export async function saveBingo(formData: FormData) {
     return saveBingoService(formData);

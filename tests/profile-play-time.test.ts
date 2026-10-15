@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatProfilePlayTime } from "@/lib/profile/profilePlayTime";
+import { formatProfilePlayTime } from "@/lib/profile/profile-play-time";
 
 describe("profile play time", () => {
     it("uses stable localized literals and an explicit Korean game timezone", () => {

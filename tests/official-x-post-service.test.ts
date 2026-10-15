@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { storedPost } from "./fixtures/officialX";
+import { storedPost } from "./fixtures/official-x";
 const { findUnique, cacheOptions, translate } = vi.hoisted(() => ({
     findUnique: vi.fn(),
     cacheOptions: vi.fn(),
@@ -12,7 +12,7 @@ vi.mock("next/cache", () => ({
         return fn;
     },
 }));
-vi.mock("@/features/home/server/officialXPostTranslation", () => ({
+vi.mock("@/features/home/server/official-x-post-translation", () => ({
     translateOfficialXPost: translate,
 }));
 const fetchMock = vi.fn();
@@ -27,7 +27,7 @@ afterEach(() => {
 });
 async function read() {
     return (
-        await import("@/features/home/server/officialXPostService")
+        await import("@/features/home/server/official-x-post-service")
     ).getOfficialXLatestPost();
 }
 describe("home reads persisted official news only", () => {

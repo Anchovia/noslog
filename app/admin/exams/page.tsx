@@ -1,7 +1,8 @@
 import { ChevronRight, Plus, Search } from "lucide-react";
 import Link from "next/link";
 
-import Badge from "@/components/ui/Badge";
+import Badge from "@/components/ui/badge";
+import { foundationButtonClass } from "@/components/ui/button";
 import { Prisma } from "@prisma/client";
 import db from "@/lib/db";
 
@@ -57,37 +58,41 @@ export default async function AdminExamsPage({
     });
 
     return (
-        <div className="flex flex-col gap-4 py-5">
-            <div className="flex items-center justify-between gap-3">
+        <div className="flex flex-col gap-nl-16 py-nl-24">
+            <div className="flex items-center justify-between gap-nl-12">
                 <div>
-                    <h1 className="text-title">검정 관리</h1>
-                    <p className="text-caption mt-1">총 {exams.length}개</p>
+                    <h1 className="nl-section-title text-nl-content">
+                        검정 관리
+                    </h1>
+                    <p className="nl-metadata mt-nl-4 text-nl-subdued">
+                        총 {exams.length}개
+                    </p>
                 </div>
                 <Link
                     href="/admin/exams/new"
-                    className="bg-text-primary text-bg flex size-10 items-center justify-center rounded-md"
+                    className={foundationButtonClass({ size: "icon" })}
                     aria-label="검정 추가"
                     title="검정 추가"
                 >
-                    <Plus className="size-5" />
+                    <Plus className="nl-icon" />
                 </Link>
             </div>
 
-            <form className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_2.75rem] gap-2">
-                <label className="border-border bg-surface col-span-3 flex h-11 min-w-0 items-center gap-2 rounded-md border px-3">
-                    <Search className="text-text-disabled size-4 shrink-0" />
+            <form className="flex flex-wrap gap-nl-8">
+                <label className="nl-search w-full">
+                    <Search className="nl-icon" aria-hidden />
                     <input
                         name="q"
                         defaultValue={query}
                         placeholder="제목 검색"
-                        className="text-input min-w-0 flex-1 bg-transparent outline-none"
+                        className="nl-search__input nl-body"
                     />
                 </label>
                 <select
                     name="mode"
                     defaultValue={mode}
                     aria-label="모드 필터"
-                    className="border-border bg-surface text-input h-11 min-w-0 rounded-md border px-2"
+                    className="nl-input min-w-0 flex-1"
                 >
                     <option value="">전체</option>
                     <option value="basic">Basic</option>
@@ -98,7 +103,7 @@ export default async function AdminExamsPage({
                     name="status"
                     defaultValue={status}
                     aria-label="상태 필터"
-                    className="border-border bg-surface text-input h-11 min-w-0 rounded-md border px-2"
+                    className="nl-input min-w-0 flex-1"
                 >
                     <option value="">모든 상태</option>
                     <option value="draft">초안</option>
@@ -106,24 +111,27 @@ export default async function AdminExamsPage({
                 </select>
                 <button
                     type="submit"
-                    className="border-border bg-surface text-text-primary hover:bg-surface-muted flex size-11 items-center justify-center rounded-md border transition-colors"
+                    className={foundationButtonClass({
+                        variant: "secondary",
+                        size: "icon",
+                    })}
                     aria-label="필터 적용"
                     title="필터 적용"
                 >
-                    <Search className="size-4" />
+                    <Search className="nl-icon" aria-hidden />
                 </button>
             </form>
 
             {exams.length > 0 ? (
-                <section className="bg-surface rounded-card overflow-hidden">
+                <section className="overflow-hidden rounded-nl-container bg-nl-surface">
                     {exams.map((exam) => (
                         <Link
                             key={exam.id}
                             href={`/admin/exams/${exam.id}`}
-                            className="border-divider hover:bg-surface-muted flex min-h-17 items-center gap-3 border-b px-3 py-2.5 transition-colors last:border-b-0"
+                            className="nl-hover-layer flex min-h-nl-64 items-center gap-nl-12 border-b-nl-stroke border-nl-divider px-nl-12 py-nl-12 transition-colors duration-nl-state last:border-b-0"
                         >
                             <div className="min-w-0 flex-1">
-                                <div className="flex items-center gap-1.5">
+                                <div className="flex items-center gap-nl-8">
                                     <Badge variant={getModeVariant(exam.mode)}>
                                         {exam.mode === "event"
                                             ? "Event"
@@ -146,19 +154,19 @@ export default async function AdminExamsPage({
                                         </Badge>
                                     ) : null}
                                 </div>
-                                <p className="text-body mt-1.5 truncate font-bold">
+                                <p className="nl-emphasis-label mt-nl-8 truncate text-nl-content">
                                     {exam.title}
                                 </p>
-                                <p className="text-caption mt-0.5 truncate">
+                                <p className="nl-metadata mt-nl-4 truncate text-nl-subdued">
                                     {exam.slug} · 과제곡 {exam._count.stages}개
                                 </p>
                             </div>
-                            <ChevronRight className="text-text-disabled size-4 shrink-0" />
+                            <ChevronRight className="nl-icon-small shrink-0 text-nl-disabled" />
                         </Link>
                     ))}
                 </section>
             ) : (
-                <div className="bg-surface rounded-card text-caption flex min-h-40 items-center justify-center px-6 text-center">
+                <div className="nl-metadata rounded-nl-container bg-nl-surface px-nl-24 py-nl-64 text-center text-nl-subdued">
                     조건에 맞는 검정이 없습니다.
                 </div>
             )}

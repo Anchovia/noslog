@@ -5,7 +5,7 @@ import {
     musicCatalogReviewInputFromFormData,
     musicCatalogReviewSchema,
     normalizeMusicCatalogStatus,
-} from "@/features/music/schemas/musicCatalogAdminSchema";
+} from "@/features/music/schemas/music-catalog-admin-schema";
 
 describe("관리자 악곡 카탈로그 스키마", () => {
     it("지원하는 목록 상태만 유지한다", () => {

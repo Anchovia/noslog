@@ -4,7 +4,7 @@ import {
     chartEvaluationAdminDeleteInputFromFormData,
     chartEvaluationAdminDeleteSchema,
     createChartEvaluationAdminDeleteFormData,
-} from "@/features/music/schemas/chartEvaluationAdminSchema";
+} from "@/features/music/schemas/chart-evaluation-admin-schema";
 
 describe("관리자 커뮤니티 평가 스키마", () => {
     it("삭제 FormData를 양의 정수 ID로 정규화한다", () => {

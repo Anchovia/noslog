@@ -1,0 +1,32 @@
+name: 배포·운영 자동화
+description: CI·배포·운영 자동화와 실패 복구 작업을 정리합니다.
+title: "[DevOps] "
+body:
+    - type: textarea
+      id: problem
+      attributes:
+          label: 문제와 대상 환경
+          description: 로컬·CI·개발·운영 중 어느 환경인지와 필요한 이유를 적어주세요. 비밀값은 쓰지 않습니다.
+      validations:
+          required: true
+    - type: textarea
+      id: scope
+      attributes:
+          label: 작업 범위와 영향
+          description: 빌드·테스트·배포·외부 서비스·권한·비용에 미치는 영향을 적어주세요.
+      validations:
+          required: true
+    - type: textarea
+      id: recovery
+      attributes:
+          label: 실패 시 확인·복구 방법
+          description: 확인할 로그·되돌릴 설정·사용자가 실행할 작업을 적어주세요. 운영 DB 변경은 사용자 실행 규칙을 따릅니다.
+      validations:
+          required: true
+    - type: textarea
+      id: acceptance
+      attributes:
+          label: 완료 조건과 검증
+          description: 검증 명령·실행 환경·완료 증거를 적어주세요.
+      validations:
+          required: true

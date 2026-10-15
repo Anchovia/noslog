@@ -33,7 +33,7 @@ import { OPTIONS, POST } from "@/app/api/receiveJacket/route";
 import {
     detectJacketFormat,
     getMissingJacketIndexes,
-} from "@/features/music/server/jacketCollectionService";
+} from "@/features/music/server/jacket-collection-service";
 
 const origin = "https://p.eagate.573.jp";
 // 로컬 /bg 에 파일이 있는 곡(tests/tiers.test.ts 와 같은 곡)

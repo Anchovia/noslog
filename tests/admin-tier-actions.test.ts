@@ -1,6 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
+    after: vi.fn(),
+    rebuildStalePlayerRatings: vi.fn(),
     requireAdmin: vi.fn(),
     listFindFirst: vi.fn(),
     listCreate: vi.fn(),
@@ -38,6 +40,10 @@ const transactionClient = {
 };
 
 vi.mock("@/lib/admin", () => ({ requireAdmin: mocks.requireAdmin }));
+vi.mock("next/server", () => ({ after: mocks.after }));
+vi.mock("@/features/rankings/server/player-rating-service", () => ({
+    rebuildStalePlayerRatings: mocks.rebuildStalePlayerRatings,
+}));
 vi.mock("@/lib/db", () => ({
     default: {
         $transaction: mocks.transaction,
@@ -332,7 +338,13 @@ describe("관리자 서열표 액션", () => {
             expect.any(Promise),
         ]);
         expect(mocks.updateTag).toHaveBeenCalledWith("tier-lists");
-        expect(mocks.updateTag).toHaveBeenCalledWith("user-rankings");
+        // 랭킹 레이팅 캐시는 tier-lists 태그로 함께 비워진다(2026-10-15 S4)
+        expect(mocks.updateTag).not.toHaveBeenCalledWith("user-rankings");
+        // 저장해 둔 레이팅은 응답 뒤에 기준이 바뀐 모드만 다시 센다(2026-10-15 L2-A2)
+        expect(mocks.after).toHaveBeenCalledOnce();
+        mocks.rebuildStalePlayerRatings.mockResolvedValue(undefined);
+        await mocks.after.mock.calls[0][0]();
+        expect(mocks.rebuildStalePlayerRatings).toHaveBeenCalledOnce();
     });
 
     it("변경한 전체 배치를 한 번에 저장하고 구간 이동 이력을 남긴다", async () => {

@@ -1,15 +1,16 @@
-import getSession from "@/lib/session";
 import { NextResponse } from "next/server";
+
 import {
     loadMusicDetail,
     normalizeMusicDetailTab,
     normalizeMusicDifficulty,
-} from "@/features/music/server/loadMusicDetail";
-import { getRequestLocale } from "@/lib/i18n/server";
-import { getMusicTitleDisplayPreference } from "@/lib/i18n/musicTitle";
-import { isLocale } from "@/lib/i18n/routing";
+} from "@/features/music/server/load-music-detail";
 import { createApiFailure, createApiSuccess } from "@/lib/api/response";
+import { getMusicTitleDisplayPreference } from "@/lib/i18n/music-title";
+import { isLocale } from "@/lib/i18n/routing";
+import { getRequestLocale } from "@/lib/i18n/server";
 import { logServerError } from "@/lib/observability/server";
+import getSession from "@/lib/session";
 
 const PRIVATE_NO_STORE_HEADERS = {
     "Cache-Control": "private, no-store",

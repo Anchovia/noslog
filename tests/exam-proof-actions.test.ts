@@ -31,7 +31,7 @@ vi.mock("@/lib/blob", () => ({
     isValidPrivateImageBlob: mocks.isValidPrivateImageBlob,
 }));
 
-vi.mock("@/lib/uploadRateLimit", () => ({
+vi.mock("@/lib/upload-rate-limit", () => ({
     claimUploadTokenQuota: mocks.claimUploadTokenQuota,
     getUploadLimitMessage: () =>
         "이미지는 한 시간에 최대 10회까지 업로드할 수 있습니다.",
@@ -62,7 +62,7 @@ import {
     discardExamProofUpload,
     requestExamProofUpload,
     submitExamProof,
-} from "@/app/(nevigation)/exams/actions";
+} from "@/app/(site)/exams/actions";
 
 const proofUrl =
     "https://store.private.blob.vercel-storage.com/exam-proofs/2/30/proof-new.jpg";

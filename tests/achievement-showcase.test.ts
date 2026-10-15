@@ -17,7 +17,7 @@ vi.mock("@/lib/db", () => ({
     },
 }));
 
-import { setAchievementShowcase } from "@/features/achievements/server/achievementService";
+import { setAchievementShowcase } from "@/features/achievements/server/achievement-service";
 
 describe("프로필 업적 진열 저장(2026-09-25 D1)", () => {
     beforeEach(() => {

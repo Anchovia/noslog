@@ -4,29 +4,58 @@ const mocks = vi.hoisted(() => ({
     users: vi.fn(),
     records: vi.fn(),
     basis: vi.fn(),
+    // 레이팅 저장 표(2026-10-15 L2-A2) — 랭킹이 비어 있으면 기록에서 다시 세어 채운다
+    ratings: [] as { user_id: number; mode: string }[],
 }));
 vi.mock("next/cache", () => ({
     unstable_cache: (callback: unknown) => callback,
 }));
-vi.mock("@/lib/db", () => ({
-    default: {
+vi.mock("@/lib/db", () => {
+    const db = {
         user: { findMany: mocks.users },
         playData: { findMany: mocks.records },
-    },
-}));
-vi.mock("@/features/tiers/server/tierBrowserData", () => ({
+        playerRating: {
+            findMany: async ({ where }: { where: { mode: string } }) => {
+                const users: { id: number }[] = (await mocks.users()) ?? [];
+                return mocks.ratings
+                    .filter((row) => row.mode === where.mode)
+                    .flatMap((row) => {
+                        const user = users.find((u) => u.id === row.user_id);
+                        return user ? [{ ...row, user }] : [];
+                    });
+            },
+            deleteMany: async ({ where }: { where: { mode: string } }) => {
+                mocks.ratings = mocks.ratings.filter(
+                    (row) => row.mode !== where.mode
+                );
+            },
+            createMany: async ({
+                data,
+            }: {
+                data: { user_id: number; mode: string }[];
+            }) => {
+                mocks.ratings.push(...data);
+            },
+        },
+        $executeRaw: async () => 0,
+        $transaction: async (callback: (tx: unknown) => unknown) =>
+            callback(db),
+    };
+    return { default: db };
+});
+vi.mock("@/features/tiers/server/tier-browser-data", () => ({
     getModePianistRatingBasis: mocks.basis,
 }));
-vi.mock("@/features/contributions/server/contributionPointService", () => ({
+vi.mock("@/features/contributions/server/contribution-point-service", () => ({
     getNameLabels: async () => new Map(),
 }));
-import { getGlobalRankingPage } from "@/features/rankings/server/globalRankingData";
+import { getGlobalRankingPage } from "@/features/rankings/server/global-ranking-data";
 import {
     parseGlobalRankingQuery,
     serializeGlobalRankingQuery,
-} from "@/features/rankings/schemas/globalRankingSchema";
-import type { GlobalRankingQuery } from "@/features/rankings/schemas/globalRankingSchema";
-import { BASIC_RATING_TOP_COUNT } from "@/lib/tiers/basicRating";
+} from "@/features/rankings/schemas/global-ranking-schema";
+import type { GlobalRankingQuery } from "@/features/rankings/schemas/global-ranking-schema";
+import { BASIC_RATING_TOP_COUNT } from "@/lib/tiers/basic-rating";
 
 const query: GlobalRankingQuery = {
     mode: "basic",
@@ -58,6 +87,7 @@ const users = Array.from({ length: 29 }, (_, index) => ({
 
 beforeEach(() => {
     vi.resetAllMocks();
+    mocks.ratings = [];
     mocks.users.mockResolvedValue(users.filter((user) => user.grade_basic > 0));
     mocks.records.mockResolvedValue([]);
     mocks.basis.mockResolvedValue({
@@ -151,10 +181,12 @@ describe("global ranking contract", () => {
     it("shares published Grd across page boundaries and finds the containing row rather than its shared rank", async () => {
         const first = await getGlobalRankingPage(query, 27);
         const second = await getGlobalRankingPage({ ...query, page: 2 }, 27);
-        expect(first.rows).toHaveLength(25);
+        expect(first.rows).toHaveLength(20);
         expect(first.rows[0]).toMatchObject({ id: 1, rank: 1, value: 6000 });
         expect(first.rows.at(-1)).toMatchObject({ rank: 2, value: 5000 });
-        expect(second.rows.map((row) => row.rank)).toEqual([2, 2, 28]);
+        expect(second.rows.map((row) => row.rank)).toEqual([
+            2, 2, 2, 2, 2, 2, 2, 28,
+        ]);
         expect(first.currentUser).toMatchObject({ id: 27, rank: 2, page: 2 });
         expect(first.rows[0]).not.toHaveProperty("rawValue");
     });

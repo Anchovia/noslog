@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import type { TierBandData } from "@/features/tiers/components/tierBoard/tierBoardTypes";
+import type { TierBandData } from "@/features/tiers/components/tier-board/tier-board-types";
 import {
     getTierBoardChangeCount,
     getBandDropId,
@@ -9,7 +9,7 @@ import {
     getTierEntryPlacements,
     moveTierEntryInBoard,
     resolveTierDropTarget,
-} from "@/features/tiers/components/tierBoard/tierBoardUtils";
+} from "@/features/tiers/components/tier-board/tier-board-utils";
 
 function bands(): TierBandData[] {
     return [
@@ -59,8 +59,12 @@ function bands(): TierBandData[] {
 
 describe("서열표 드래그 대상 계산", () => {
     it("Real과 Expert 채보의 테두리 색상을 구분한다", () => {
-        expect(getTierDifficultyBorder("Real")).toBe("border-real");
-        expect(getTierDifficultyBorder("expert")).toBe("border-expert");
+        expect(getTierDifficultyBorder("Real")).toBe(
+            "border-nl-difficulty-real"
+        );
+        expect(getTierDifficultyBorder("expert")).toBe(
+            "border-nl-difficulty-expert"
+        );
         expect(getTierDifficultyBorder("Hard")).toBe("border-transparent");
     });
 

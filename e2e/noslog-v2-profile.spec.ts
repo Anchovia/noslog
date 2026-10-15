@@ -43,6 +43,9 @@ test("P6 progress uses real dates, retains content on failure and supports keybo
         name: "성장 추이",
         exact: true,
     });
+    // 첫 그래프(Grade · 90일)는 서버가 그린다(profile-progress.ts staleTime) — 지표를 바꿔야 API 를 부른다.
+    // 지표 전환 = 세그먼트(2026-09-25 G2, 짧은 라벨)
+    await progress.getByRole("radio", { name: "Rating", exact: true }).click();
     await expect(progress.locator(".nl-line-chart__target")).toHaveCount(3);
     const target = progress.locator(".nl-line-chart__target").last();
     await target.focus();
@@ -50,7 +53,7 @@ test("P6 progress uses real dates, retains content on failure and supports keybo
     await expect(
         progress.locator(".nl-line-chart__target").first()
     ).toBeFocused();
-    await expect(progress.getByRole("tooltip")).toContainText("5,000 Grd");
+    await expect(progress.getByRole("tooltip")).toContainText("2,000 pt");
     await progress.locator(".nl-line-chart__target").first().press("End");
     await expect(target).toBeFocused();
     // Unequally spaced observation dates must not become equally spaced points.
@@ -62,14 +65,17 @@ test("P6 progress uses real dates, retains content on failure and supports keybo
             )
         );
     expect(x[1] - x[0]).toBeLessThan((x[2] - x[0]) / 10);
-    // 지표 전환 = 세그먼트(2026-09-25 G2, 짧은 라벨)
-    await progress.getByRole("radio", { name: "Rating", exact: true }).click();
     await expect(progress.getByRole("table")).toContainText("2,070 pt");
     // 기간 = 공용 셀렉트(Radix 콤보박스) — 열고 항목을 고른다
     const range = progress.getByRole("combobox");
+    // 닫힌 직후 잠깐은 다시 열지 않는다(useSelectOpen 의 REOPEN_GUARD_MS) — 열릴 때까지 다시 누른다
     const choose = async (label: string) => {
-        await range.click();
-        await page.getByRole("option", { name: label, exact: true }).click();
+        const option = page.getByRole("option", { name: label, exact: true });
+        await expect(async () => {
+            await range.click();
+            await expect(option).toBeVisible({ timeout: 1_000 });
+        }).toPass();
+        await option.click();
     };
     await choose("30일");
     await expect(range).toHaveText("30일");
@@ -138,6 +144,8 @@ test("P6 Best expands by five, retries the failed batch and collapses to five", 
     });
     await page.goto("/ko/profile/1");
     const best = page.getByRole("region", { name: "베스트 성과", exact: true });
+    // 첫 목록은 서버가 그린다(profile-plays.ts staleTime) — 지표를 바꿔야 API 를 부른다
+    await best.getByRole("radio", { name: "Rating", exact: true }).click();
     await expect(best.getByRole("list").getByRole("link")).toHaveCount(5);
     await best.getByRole("button", { name: "더 보기", exact: true }).click();
     await expect(best.getByRole("alert")).toBeVisible();
@@ -238,8 +246,9 @@ for (const locale of ["ko", "ja", "en"]) {
                 );
                 expect(best.x).toBeCloseTo(progress.x, 0);
                 if (recent) expect(recent.x).toBeCloseTo(progress.x, 0);
+                // 구역 사이 = --nl-section-gap, 1056 이상 48(가이드 · 2026-10-01 D1)
                 expect(best.y - progress.y - progress.height).toBeCloseTo(
-                    32,
+                    48,
                     0
                 );
                 if (recent) expect(recent.y).toBeGreaterThan(best.y);

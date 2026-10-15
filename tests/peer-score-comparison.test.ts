@@ -3,7 +3,7 @@ import {
     MIN_PEER_SCORE_SAMPLE,
     PEER_GRADE_RANGE,
     PEER_STORED_GRADE_RANGE,
-} from "@/lib/music/peerScoreComparison";
+} from "@/lib/music/peer-score-comparison";
 import { describe, expect, it } from "vitest";
 
 describe("유사 그레이드 점수 비교", () => {

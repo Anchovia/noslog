@@ -9,15 +9,16 @@ import {
     deleteMyChartComment,
     listChartComments,
     resolveChartComment,
-} from "@/app/(nevigation)/music/[index]/[difficulty]/draftActions";
+} from "@/app/(site)/music/[index]/[difficulty]/draft-actions";
 import { formatCommentTime } from "@/components/chart-pattern/playbackClock";
-import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
-import type { ChartDraftStatus } from "@/features/contributions/schemas/chartDraftSchema";
-import { CHART_COMMENT_MAX_LENGTH } from "@/features/contributions/schemas/chartDraftSchema";
-import type { ChartCommentItem } from "@/features/contributions/server/chartDraftService";
+import { useLocale, useTranslations } from "@/components/i18n/locale-provider";
+import type { ChartDraftStatus } from "@/features/contributions/schemas/chart-draft-schema";
+import { CHART_COMMENT_MAX_LENGTH } from "@/features/contributions/schemas/chart-draft-schema";
+import type { ChartCommentItem } from "@/features/contributions/server/chart-draft-service";
 import { formatEditorTime } from "@/lib/chart-pattern/timing";
 
 import { useChartEditorStore } from "./chartEditorStore";
+import { foundationButtonClass } from "@/components/ui/button";
 
 const STEPS: ChartDraftStatus[] = [
     "draft",
@@ -123,29 +124,29 @@ export default function ChartReviewPanel({
     const stepIndex = STEPS.indexOf(status);
 
     return (
-        <section className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto p-2">
+        <section className="flex min-h-0 flex-1 flex-col gap-nl-12 overflow-y-auto p-nl-8">
             <ol
                 aria-label={t("editor.review.steps")}
-                className="grid grid-cols-4 gap-1"
+                className="grid grid-cols-4 gap-nl-4"
             >
                 {STEPS.map((step, index) => (
                     <li
                         key={step}
                         aria-current={index === stepIndex ? "step" : undefined}
-                        className={`text-micro flex flex-col gap-1 text-center font-semibold ${
+                        className={`nl-metadata flex flex-col gap-nl-4 text-center ${
                             index === stepIndex
-                                ? "text-text-primary"
+                                ? "text-nl-content"
                                 : index < stepIndex
-                                  ? "text-text-secondary"
-                                  : "text-text-disabled"
+                                  ? "text-nl-subdued"
+                                  : "text-nl-disabled"
                         }`}
                     >
                         <span
                             aria-hidden
-                            className={`h-1 rounded-full ${
+                            className={`h-nl-4 rounded-nl-full ${
                                 index <= stepIndex
-                                    ? "bg-text-primary"
-                                    : "bg-border"
+                                    ? "bg-nl-primary"
+                                    : "bg-nl-border"
                             }`}
                         />
                         {t(`contribution.draftStatus.${step}`)}
@@ -154,7 +155,7 @@ export default function ChartReviewPanel({
             </ol>
 
             <form
-                className="flex flex-col gap-1.5"
+                className="flex flex-col gap-nl-8"
                 onSubmit={(event) => {
                     event.preventDefault();
                     if (body.trim() && !add.isPending) add.mutate();
@@ -162,7 +163,7 @@ export default function ChartReviewPanel({
             >
                 <label
                     htmlFor="chart-review-comment"
-                    className="text-micro tabular-nums"
+                    className="nl-metadata text-nl-subdued"
                 >
                     {t("editor.review.commentAt", {
                         time: formatEditorTime(currentTimeMs),
@@ -176,12 +177,12 @@ export default function ChartReviewPanel({
                     readOnly={add.isPending}
                     onChange={(event) => setBody(event.target.value)}
                     placeholder={t("editor.review.placeholder")}
-                    className="border-border bg-bg text-text-primary focus:border-text-secondary w-full resize-none rounded-md border px-2 py-1.5 text-xs outline-none"
+                    className="nl-input resize-none"
                 />
                 <button
                     type="submit"
                     disabled={!body.trim() || add.isPending}
-                    className="bg-text-primary text-bg h-8 rounded-md text-xs font-bold disabled:opacity-35"
+                    className={foundationButtonClass({ size: "sm" })}
                 >
                     {add.isPending
                         ? t("contribution.comment.sending")
@@ -190,24 +191,24 @@ export default function ChartReviewPanel({
             </form>
 
             {comments.length ? (
-                <ul className="flex flex-col gap-1.5">
+                <ul className="flex flex-col gap-nl-8">
                     {comments.map((comment) => (
                         <li
                             key={comment.id}
-                            className="bg-bg flex flex-col gap-1 rounded-md px-2 py-1.5"
+                            className="flex flex-col gap-nl-4 rounded-nl-field bg-nl-canvas px-nl-8 py-nl-8"
                         >
-                            <div className="text-micro flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
+                            <div className="nl-metadata flex flex-wrap items-center gap-x-nl-8 gap-y-nl-4 text-nl-subdued">
                                 <button
                                     type="button"
                                     onClick={() => onSeek(comment.timeMs)}
                                     aria-label={t("contribution.comment.seek", {
                                         time: formatCommentTime(comment.timeMs),
                                     })}
-                                    className="font-semibold tabular-nums underline underline-offset-2"
+                                    className="nl-metric-value nl-link underline"
                                 >
                                     {formatCommentTime(comment.timeMs)}
                                 </button>
-                                <span className="text-text-secondary min-w-0 truncate">
+                                <span className="min-w-0 truncate text-nl-subdued">
                                     {comment.user.username ??
                                         t("ranking.unknownPlayer")}
                                 </span>
@@ -217,12 +218,12 @@ export default function ChartReviewPanel({
                                     </span>
                                 ) : null}
                             </div>
-                            <p className="text-xs leading-snug break-words whitespace-pre-wrap">
+                            <p className="nl-metadata break-words whitespace-pre-wrap">
                                 {comment.body}
                             </p>
                             {!comment.resolved &&
                             (canModerate || comment.own) ? (
-                                <div className="flex gap-1">
+                                <div className="flex gap-nl-4">
                                     {canModerate ? (
                                         <button
                                             type="button"
@@ -233,7 +234,7 @@ export default function ChartReviewPanel({
                                                     action: "resolve",
                                                 })
                                             }
-                                            className="border-border hover:bg-surface-muted text-micro h-6 rounded border px-2 font-semibold"
+                                            className="nl-metadata nl-hover-layer h-nl-24 rounded-nl-control border-nl-stroke border-nl-border px-nl-8 text-nl-subdued"
                                         >
                                             {t("editor.review.resolve")}
                                         </button>
@@ -248,7 +249,7 @@ export default function ChartReviewPanel({
                                                     action: "delete",
                                                 })
                                             }
-                                            className="text-danger hover:bg-surface-muted text-micro h-6 rounded px-2 font-semibold"
+                                            className="nl-metadata nl-hover-layer h-nl-24 rounded-nl-control px-nl-8 text-nl-error"
                                         >
                                             {t("editor.review.delete")}
                                         </button>
@@ -259,7 +260,7 @@ export default function ChartReviewPanel({
                     ))}
                 </ul>
             ) : (
-                <p className="text-micro leading-relaxed">
+                <p className="nl-metadata nl-metadata--long text-nl-subdued">
                     {t("editor.review.empty")}
                 </p>
             )}

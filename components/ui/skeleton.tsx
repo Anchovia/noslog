@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/cn";
 
 /**
  * 스켈레톤 글자 자리(2026-09-19 로딩 시안 S1) — 실제 글자 스타일 클래스(`nl-body` · `nl-entity-title` …)를 넘기면

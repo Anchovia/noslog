@@ -7,7 +7,7 @@ import {
     createExamProofUploadRequestSchema,
     examProofSubmissionInputFromFormData,
     MAX_EXAM_PROOF_IMAGE_SIZE,
-} from "@/features/exams/schemas/examProofSchema";
+} from "@/features/exams/schemas/exam-proof-schema";
 import { createTranslator, getMessages } from "@/lib/i18n/messages";
 import type { Locale } from "@/lib/i18n/routing";
 

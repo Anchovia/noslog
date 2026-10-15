@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { tierValueColor } from "@/lib/music/tierValueColor";
+import { tierValueColor } from "@/lib/music/tier-value-color";
 
 describe("tierValueColor", () => {
     it("uses the anchor colours at anchor values and clamps the ends", () => {

@@ -1,16 +1,16 @@
 import { notFound } from "next/navigation";
-import { getPollInput } from "@/features/polls/server/pollService";
+import { getPollInput } from "@/features/polls/server/poll-service";
 
-import BackLink from "@/components/ui/backLink";
-import PageContainer, { PageHeading } from "@/components/layout/pageContainer";
+import BackLink from "@/components/ui/back-link";
+import PageContainer, { PageHeading } from "@/components/layout/page-container";
 import AnnouncementEditor, {
     type AnnouncementEditorData,
-} from "@/features/announcements/components/announcementEditor";
+} from "@/features/announcements/components/announcement-editor";
 import {
     ANNOUNCEMENT_LOCALES,
     announcementIdSchema,
     toDateTimeLocalValue,
-} from "@/features/announcements/schemas/announcementSchema";
+} from "@/features/announcements/schemas/announcement-schema";
 import db from "@/lib/db";
 import { SITE_URL } from "@/lib/metadata/site";
 

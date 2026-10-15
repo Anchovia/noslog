@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { serverEnv } from "@/lib/env/server";
-import { runPrivacyRetention } from "@/lib/privacyRetention";
+import { runPrivacyRetention } from "@/lib/privacy-retention";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;

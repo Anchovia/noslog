@@ -1,7 +1,7 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 
 import { serverEnv } from "@/lib/env/server";
-import { localizePath, type Locale } from "@/lib/i18n/routing";
+import { type Locale, localizePath } from "@/lib/i18n/routing";
 
 interface SyncTokenPayload {
     userId: number;
@@ -151,6 +151,7 @@ export function createBookmarkletHref(
 }
 
 // 로더가 불러오는 동기화 본체 — 토큰은 담지 않고, 자기를 불러온 스크립트 태그에서 읽는다
+// 창 모양은 공용 규칙 값을 그대로 옮긴다(공식 사이트 위라 CSS 변수를 못 읽음) — 상태는 글자만(실패만 오류 글자색, 바쁠 때만 스피너) · 버튼 44 · 모서리 8 · 닫기 = 떠 있는 면 위 보조 버튼(2026-10-15)
 export function createBookmarkletScript(
     appOrigin: string,
     locale: Locale = "ko",
@@ -199,10 +200,10 @@ export function createBookmarkletScript(
                 position:"fixed",top:"16px",right:"16px",zIndex:"2147483647",
                 width:"334px",maxWidth:"calc(100vw - 32px)",padding:"24px",boxSizing:"border-box",border:"1px solid #444444",
                 borderRadius:"10px",background:"#222222",color:"#DBDBDB",
-                font:'14px/20px "NosLog Pretendard JP","Pretendard JP Variable","Pretendard JP",Pretendard,system-ui,sans-serif',boxShadow:"0 8px 24px rgba(0,0,0,.4)",
+                font:'14px/20px "NosLog Pretendard JP","Pretendard JP Variable","Pretendard JP",Pretendard,system-ui,sans-serif',boxShadow:"0 0 2px rgb(0 0 0 / 36%), 0 2px 6px rgb(0 0 0 / 12%), 0 4px 12px rgb(0 0 0 / 24%)",
                 display:"flex",flexDirection:"column",gap:"16px",maxHeight:"calc(100dvh - 32px)",overflowY:"auto"
             });
-            overlay.innerHTML='<style>#noslog-sync-overlay *{box-sizing:border-box}#noslog-sync-overlay a:focus-visible,#noslog-sync-overlay button:focus-visible{outline:1px solid #FFFFFF;outline-offset:-1px}@keyframes noslog-sync-spin{to{transform:rotate(360deg)}}@media(prefers-reduced-motion:reduce){#noslog-sync-overlay #noslog-sync-marker{animation:none!important}}</style><strong id="noslog-sync-title" style="font-size:16px;line-height:24px;font-weight:600"></strong><div id="noslog-sync-status-row" role="status" aria-live="polite" style="display:flex;align-items:flex-start;gap:8px;padding:12px;border-radius:4px"><span aria-hidden="true" style="display:flex;align-items:center;justify-content:center;width:20px;height:20px;flex-shrink:0"><span id="noslog-sync-marker"></span></span><span id="noslog-sync-status" style="min-width:0;overflow-wrap:anywhere"></span></div><div id="noslog-sync-track" aria-hidden="true" style="height:2px;background:#444444"><div id="noslog-sync-progress" style="height:100%;width:0;background:#DBDBDB"></div></div><div id="noslog-sync-actions" style="display:none;gap:8px;width:100%"></div>';
+            overlay.innerHTML='<style>#noslog-sync-overlay *{box-sizing:border-box}#noslog-sync-overlay a:focus-visible,#noslog-sync-overlay button:focus-visible{outline:1px solid #FFFFFF;outline-offset:-1px}@keyframes noslog-sync-spin{to{transform:rotate(360deg)}}@media(prefers-reduced-motion:reduce){#noslog-sync-overlay #noslog-sync-marker{animation:none!important}}</style><strong id="noslog-sync-title" style="font-size:16px;line-height:24px;font-weight:600"></strong><div id="noslog-sync-status-row" role="status" aria-live="polite" style="display:flex;align-items:flex-start;gap:8px"><span aria-hidden="true" style="display:flex;align-items:center;justify-content:center;width:20px;height:20px;flex-shrink:0"><span id="noslog-sync-marker"></span></span><span id="noslog-sync-status" style="min-width:0;overflow-wrap:anywhere"></span></div><div id="noslog-sync-track" aria-hidden="true" style="height:2px;background:#444444"><div id="noslog-sync-progress" style="height:100%;width:0;background:#DBDBDB"></div></div><div id="noslog-sync-actions" style="display:none;gap:8px;width:100%"></div>';
             document.body.appendChild(overlay);
 
             overlay.querySelector("#noslog-sync-title").textContent=copy.title;
@@ -215,18 +216,19 @@ export function createBookmarkletScript(
             const setStatus=(message,state="busy")=>{
                 status.textContent=message;
                 overlay.dataset.state=state;
-                statusRow.style.background=state==="success"?"#28311B":state==="failure"?"#42221F":"transparent";
-                Object.assign(marker.style,{width:state==="busy"?"16px":"8px",height:state==="busy"?"16px":"8px",borderRadius:"50%",border:state==="busy"?"2px solid #444444":"none",borderTopColor:state==="busy"?"#AFAFAF":"transparent",background:state==="success"?"#82B536":state==="failure"?"#F15B50":"transparent",animation:state==="busy"?"noslog-sync-spin 1s linear infinite":"none"});
+                status.style.color=state==="failure"?"#FD9891":"#DBDBDB";
+                statusRow.firstElementChild.style.display=state==="busy"?"flex":"none";
+                Object.assign(marker.style,{width:"16px",height:"16px",borderRadius:"50%",border:"2px solid #444444",borderTopColor:"#AFAFAF",animation:state==="busy"?"noslog-sync-spin 1s linear infinite":"none"});
                 track.style.display=state==="busy"?"block":"none";
             };
             setStatus(copy.preparing);
-            const buttonStyle={display:"flex",alignItems:"center",justifyContent:"center",minHeight:"40px",padding:"8px 16px",borderRadius:"4px",font:"inherit",fontWeight:"500",textDecoration:"none",flex:"1 1 0",minWidth:"0",textAlign:"center",cursor:"pointer"};
+            const buttonStyle={display:"flex",alignItems:"center",justifyContent:"center",minHeight:"44px",padding:"8px 16px",borderRadius:"8px",font:"inherit",fontWeight:"500",textDecoration:"none",flex:"1 1 0",minWidth:"0",textAlign:"center",cursor:"pointer"};
             const fitActions=()=>{
                 if(!actions.children.length)return;
                 actions.style.display="flex";
                 actions.style.flexDirection="row";
                 for(const button of actions.children){
-                    if(button.scrollWidth>button.clientWidth||button.getBoundingClientRect().height>42){actions.style.flexDirection="column";break;}
+                    if(button.scrollWidth>button.clientWidth||button.getBoundingClientRect().height>46){actions.style.flexDirection="column";break;}
                 }
             };
             const resizeObserver=new ResizeObserver(fitActions);
@@ -246,7 +248,7 @@ export function createBookmarkletScript(
                 const close=document.createElement("button");
                 close.textContent=copy.close;
                 close.type="button";
-                Object.assign(close.style,buttonStyle,{border:"1px solid #8A8A8A",background:"transparent",color:"#DBDBDB"});
+                Object.assign(close.style,buttonStyle,{border:"1px solid #444444",background:"#2C2C2C",color:"#DBDBDB"});
                 close.onclick=()=>{resizeObserver.disconnect();overlay.remove();};
                 actions.appendChild(close);
                 fitActions();

@@ -36,7 +36,7 @@ vi.mock("next/cache", () => ({ revalidatePath: mocks.revalidatePath }));
 import {
     setBingoCellCompletion,
     resetBingoProgress,
-} from "@/app/(nevigation)/bingo/[id]/actions";
+} from "@/app/(site)/bingo/[id]/actions";
 
 const availableCell = {
     bingoId: 5,

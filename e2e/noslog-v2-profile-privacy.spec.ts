@@ -1,15 +1,16 @@
 import { PrismaClient } from "@prisma/client";
 import { expect, test } from "@playwright/test";
 
-const databaseUrl = process.env.PROFILE_TEST_DATABASE_URL;
+// 앱 서버와 같은 e2e DB(CI 의 Postgres 서비스 · 로컬 noslog_e2e)에 테스트용 사용자를 만들고 지운다.
+const databaseUrl = process.env.DATABASE_URL;
 const safeLocalDatabase =
     databaseUrl &&
-    new URL(databaseUrl).hostname === "127.0.0.1" &&
-    new URL(databaseUrl).port === "55432" &&
-    new URL(databaseUrl).pathname === "/noslog_v2";
+    ["localhost", "127.0.0.1", "postgres"].includes(
+        new URL(databaseUrl).hostname
+    );
 test.skip(
     !safeLocalDatabase,
-    "Requires the explicit local NosLog E2E database; never runs against a shared database."
+    "Set DATABASE_URL to the local e2e database; never runs against a shared database."
 );
 const db = safeLocalDatabase
     ? new PrismaClient({ datasources: { db: { url: databaseUrl } } })
@@ -44,13 +45,14 @@ test("P6 actual stored history honors the selected range and empty users have on
             exact: true,
         });
         await expect(progress.locator(".nl-line-chart__target")).toHaveCount(3);
-        await progress.getByRole("combobox").selectOption("30");
-        await expect(progress.locator(".nl-line-chart__target")).toHaveCount(0);
-        await expect(
-            progress.getByText("More history is needed to show a trend.", {
-                exact: true,
-            })
-        ).toBeVisible();
+        // 기간 = 공용 셀렉트(Radix 콤보박스). 30일 안의 관측은 10일 전 하나 — 점 하나로 그린다(line-chart points.length === 1)
+        await progress
+            .getByRole("combobox", { name: "Trend period", exact: true })
+            .click();
+        await page
+            .getByRole("option", { name: "30 days", exact: true })
+            .click();
+        await expect(progress.locator(".nl-line-chart__target")).toHaveCount(1);
         await page.goto(`/ko/profile/${empty.id}`);
         await expect(
             page.getByText("아직 동기화된 기록이 없습니다.", { exact: true })

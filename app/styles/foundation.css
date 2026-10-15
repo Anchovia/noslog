@@ -96,7 +96,7 @@ html[data-theme="light"] .noslog-ui,
     outline-offset: calc(var(--nl-stroke-default) * -1);
 }
 .noslog-ui :is(a, button, input, textarea, select) {
-    scroll-margin-block: 76px;
+    scroll-margin-block: calc(var(--nl-header-height) + var(--nl-spacing-16));
 }
 .noslog-ui .nl-muted {
     color: var(--nl-content-subdued);
@@ -527,6 +527,28 @@ html[data-theme="light"] .noslog-ui,
     font-size: var(--nl-type-size-14);
     line-height: var(--nl-type-line-height-20);
     font-weight: var(--nl-type-weight-medium);
+}
+/* 공용 올림 면 — 제 면 위 6% 겹침만 더한다(모서리 · 면 색은 요소 것 그대로). 전용 부품 클래스가 없는 줄 · 버튼에 쓴다
+   (관리자 · 에디터의 Tailwind 줄 — 면을 raised 로 바꾸던 hover:bg-nl-raised 대신, 2026-10-15 hover 점검) */
+@media (hover: hover) {
+    .noslog-ui .nl-hover-layer:not(:disabled):hover {
+        --nl-state-layer: var(--nl-interaction-hover);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
+    }
+}
+/* 고르지 않은 칸 올림 = 제 판 위 6%(2026-10-15 hover 점검) — 고른 칸은 고른 칩처럼 반응 없음 */
+@media (hover: hover) {
+    .noslog-ui
+        .nl-segments__item:not([aria-checked="true"]):not(:disabled):hover {
+        --nl-state-layer: var(--nl-interaction-hover);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
+    }
 }
 /* 고른 칸 = 면 한 단계 위 · 선 없음(2026-09-30 K1) */
 .noslog-ui .nl-segments__item[aria-checked="true"] {
@@ -1054,7 +1076,7 @@ html[data-theme="light"] .noslog-ui,
             )
         )
         > .nl-dialog__header {
-        min-height: 60px;
+        min-height: var(--nl-header-height);
         padding: var(--nl-spacing-8) var(--nl-spacing-8) var(--nl-spacing-8)
             var(--nl-spacing-16);
     }
@@ -1705,7 +1727,7 @@ html[data-theme="light"] .noslog-ui,
 .noslog-ui :is(.nl-stat-strip__value, .nl-toned)[data-tone="fc"] {
     color: var(--nl-achievement-full-combo);
 }
-/* Grd · 레이팅 구간 색(2026-09-19 R1) — 판정 색에서 점수 목표 색으로. 기준값은 lib/music/scoreTone GRADE_BAND_CUTS */
+/* Grd · 레이팅 구간 색(2026-09-19 R1) — 판정 색에서 점수 목표 색으로. 기준값은 lib/music/score-tone GRADE_BAND_CUTS */
 .noslog-ui :is(.nl-stat-strip__value, .nl-toned)[data-tone="grade-1"] {
     color: var(--nl-grade-band-1);
 }
@@ -1891,11 +1913,14 @@ html[data-theme="light"] .noslog-ui,
     border-radius: var(--nl-radius-control);
     background: var(--nl-surface-raised);
     color: var(--nl-content-default);
-    /* 글자 metadata 12/16 · 600 — 부모 글자 크기를 물려받지 않는다(2026-10-01 V1) */
-    font-size: var(--nl-type-size-12);
-    line-height: var(--nl-type-line-height-16);
-    font-weight: var(--nl-type-weight-semibold);
+    /* 글자 = 태그 글자 12/16 · 600(tokens.css nl-tag-label, 2026-10-15 B1) — 부모 글자 크기를 물려받지 않는다(2026-10-01 V1) */
     white-space: nowrap;
+}
+/* 글줄 안 태그(2026-10-15 B4) — 글줄(20) 안에서 태그(24)가 줄을 늘리지 않게 위아래로 당긴다. 높이는 24 그대로 */
+.noslog-ui .nl-tag--inline {
+    margin-block: calc(
+        (var(--nl-type-line-height-20) - var(--nl-spacing-24)) / 2
+    );
 }
 /* 하나만 세게 — 반전(면 = 글자색 · 글자 = 캔버스). 한 줄에 하나까지만 쓴다 */
 .noslog-ui .nl-tag--strong {
@@ -2127,7 +2152,7 @@ html[data-theme="light"] .noslog-ui,
    목록 밖(탭 밑줄 · 펼침 · 툴팁 · 체크박스 · 누름 크기 · 스크롤 연출 · 페이지 이동)은 즉시 바뀐다 */
 
 /* ① 올림 · 누름 색 — 누를 수 있는 모든 것에 같은 값. 배경 · 글자색만(포커스 선 · 경계는 즉시).
-   label 로 만든 줄(체크 목록 · 밴드 선택 · 첨부 버튼), 누를 줄을 품고 올림 면을 칠하는 카드(펼침 카드 · 오락실 결과),
+   label 로 만든 줄(체크 목록 · 밴드 선택 · 첨부 버튼), 누를 줄을 품고 올림 면을 칠하는 카드(펼침 카드 · 오락실 결과 · 순위표 줄),
    올림 면을 ::before 로 그리는 버튼(검색 안 셀렉트 · 지우기)도 같은 값 */
 .noslog-ui
     :is(
@@ -2140,7 +2165,8 @@ html[data-theme="light"] .noslog-ui,
         [role="option"],
         [role="menuitem"],
         [role="tab"],
-        .nl-arcade-result
+        .nl-arcade-result,
+        .nl-player-row
     ),
 .noslog-ui :is(a, button)::before {
     transition:
@@ -2321,7 +2347,7 @@ html:has(.noslog-ui) [data-sonner-toaster] [data-sonner-toast] > * {
     }
     /* 머리 = 전체 화면 창과 같은 60 */
     .noslog-ui .nl-image-share > .nl-dialog__header {
-        min-height: 60px;
+        min-height: var(--nl-header-height);
         padding: var(--nl-spacing-8) var(--nl-spacing-8) var(--nl-spacing-8)
             var(--nl-spacing-16);
     }

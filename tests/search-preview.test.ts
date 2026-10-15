@@ -8,8 +8,8 @@ vi.mock("@/lib/db", () => ({
     },
 }));
 
-import { searchPreviewQuerySchema } from "@/features/music/schemas/searchPreviewSchema";
-import { getSearchPreview } from "@/features/music/server/searchPreviewService";
+import { searchPreviewQuerySchema } from "@/features/music/schemas/search-preview-schema";
+import { getSearchPreview } from "@/features/music/server/search-preview-service";
 
 describe("Home search preview", () => {
     beforeEach(() => {

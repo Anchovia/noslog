@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { getGradeProgress, getMaxBasicGrade } from "@/lib/music/maxGrade";
+import { getGradeProgress, getMaxBasicGrade } from "@/lib/music/max-grade";
 
 describe("getMaxBasicGrade", () => {
     it("matches recorded Pianist grades", () => {

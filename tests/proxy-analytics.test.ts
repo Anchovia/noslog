@@ -29,7 +29,8 @@ describe("API 통계 수집", () => {
     });
 
     it("관리자의 API 호출은 기록하지 않는다", async () => {
-        mocks.getSession.mockResolvedValue({ id: 1, locale: "ko" });
+        const session = { id: 1, locale: "ko", save: vi.fn() };
+        mocks.getSession.mockResolvedValue(session);
         mocks.userFindUnique.mockResolvedValue({
             locale: "ko",
             role: "admin",
@@ -47,10 +48,35 @@ describe("API 통계 수집", () => {
         });
         expect(mocks.recordApiCall).not.toHaveBeenCalled();
         expect(event.waitUntil).not.toHaveBeenCalled();
+        // 역할을 세션에 채워 다음 호출부터는 DB 를 읽지 않는다(2026-10-15 S8)
+        expect(session).toMatchObject({ role: "admin" });
+        expect(session.save).toHaveBeenCalledOnce();
+    });
+
+    it("세션에 역할이 있으면 DB 를 읽지 않는다", async () => {
+        mocks.getSession.mockResolvedValue({
+            id: 2,
+            locale: "ko",
+            role: "user",
+            save: vi.fn(),
+        });
+        const event = { waitUntil: vi.fn() };
+
+        await proxy(
+            new NextRequest("http://localhost:3000/api/rankings"),
+            event as never
+        );
+
+        expect(mocks.userFindUnique).not.toHaveBeenCalled();
+        expect(mocks.recordApiCall).toHaveBeenCalledWith("/api/rankings");
     });
 
     it("일반 회원의 API 호출은 응답 뒤에 기록한다", async () => {
-        mocks.getSession.mockResolvedValue({ id: 2, locale: "ko" });
+        mocks.getSession.mockResolvedValue({
+            id: 2,
+            locale: "ko",
+            save: vi.fn(),
+        });
         const event = { waitUntil: vi.fn() };
 
         await proxy(

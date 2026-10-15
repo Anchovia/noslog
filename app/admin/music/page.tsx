@@ -1,7 +1,7 @@
-import AdminMusicList from "@/features/music/components/admin/adminMusicList";
-import MusicTranslationCoverage from "@/features/music/components/admin/musicTranslationCoverage";
-import MusicTranslationCsvImport from "@/features/music/components/admin/musicTranslationCsvImport";
-import { getAdminMusicList } from "@/features/music/server/musicTranslationAdminService";
+import AdminMusicList from "@/features/music/components/admin/admin-music-list";
+import MusicTranslationCoverage from "@/features/music/components/admin/music-translation-coverage";
+import MusicTranslationCsvImport from "@/features/music/components/admin/music-translation-csv-import";
+import { getAdminMusicList } from "@/features/music/server/music-translation-admin-service";
 
 export default async function AdminMusicPage({
     searchParams,
@@ -16,10 +16,10 @@ export default async function AdminMusicPage({
     const data = await getAdminMusicList(await searchParams);
 
     return (
-        <div className="flex flex-col gap-4 py-5">
+        <div className="flex flex-col gap-nl-16 py-nl-24">
             <section>
-                <h1 className="text-title">악곡 정보</h1>
-                <p className="text-caption mt-1">
+                <h1 className="nl-section-title text-nl-content">악곡 정보</h1>
+                <p className="nl-metadata mt-nl-4 text-nl-subdued">
                     채보별 상세 정보와 공식 레벨 상수를 관리합니다.
                 </p>
             </section>

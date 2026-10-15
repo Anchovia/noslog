@@ -35,7 +35,7 @@ vi.mock("@/lib/observability/server", () => ({
     logServerError: mocks.logServerError,
 }));
 import { saveBingo } from "@/app/admin/bingos/actions";
-import { getBingoEditorCellLabel } from "@/features/bingos/components/bingoEditorUtils";
+import { getBingoEditorCellLabel } from "@/features/bingos/components/bingo-editor-utils";
 
 function createBingoFormData() {
     const formData = new FormData();

@@ -35,7 +35,7 @@ import {
     importMusicTranslationsCsv,
     saveMusicTranslation,
     validateMusicTranslationsCsv,
-} from "@/features/music/server/musicTranslationAdminService";
+} from "@/features/music/server/music-translation-admin-service";
 
 function translationForm(title: string, status = "draft") {
     const formData = new FormData();

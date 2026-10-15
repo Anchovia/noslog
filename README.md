@@ -7,7 +7,7 @@
 
 [서비스 바로가기](https://noslog.app/ko) · [이슈 제보](https://github.com/Anchovia/noslog/issues) · [최신 Release](https://github.com/Anchovia/noslog/releases/latest)
 
-NosLog는 NOSTALGIA 플레이 데이터를 한곳에서 확인하고 기록을 돌아볼 수 있도록 만든 웹 서비스입니다. 한국어·일본어·영어 화면을 제공하며, 현재 서비스 버전은 **v2.15.3**입니다.
+NosLog는 NOSTALGIA 플레이 데이터를 한곳에서 확인하고 기록을 돌아볼 수 있도록 만든 웹 서비스입니다. 한국어·일본어·영어 화면을 제공하며, 현재 서비스 버전은 **v2.16.0**입니다.
 
 > NosLog는 KONAMI 및 공식 NOSTALGIA 서비스와 관련이 없습니다.
 
@@ -82,7 +82,8 @@ npm run dev
 
 개발 서버는 [http://localhost:3000](http://localhost:3000)에서 실행됩니다.
 
-E2E 테스트는 공유 DB가 아닌 로컬 PostgreSQL에서만 실행합니다.
+E2E 테스트는 공유 DB가 아닌 로컬 PostgreSQL에서, 운영 빌드(`next start`)를 3100 포트에 띄워 실행합니다.
+개발 서버(3000)와 겹치지 않게 리포 밖 복사본에서 서버를 띄우는 절차는 [AGENTS.md](AGENTS.md)의 e2e 항목을 따릅니다.
 
 ```bash
 npm run db:migrate:deploy
@@ -101,7 +102,11 @@ npm run test:e2e
 | `npm run build`              | 프로덕션 빌드         |
 | `npm run test:e2e`           | Playwright E2E 테스트 |
 | `npm run test:a11y`          | 접근성 E2E 테스트     |
+| `npm run storybook`          | 공용 UI 개발·문서     |
+| `npm run test:storybook`     | 부품 동작·접근성 검사 |
+| `npm run build-storybook`    | 공용 UI 문서 빌드     |
 | `npm run check:dependencies` | 사용 중인 의존성 검사 |
+| `npm run audit:production`   | 운영 의존성 보안 검사 |
 | `npx prisma generate`        | Prisma Client 재생성  |
 
 카탈로그·서열표·빙고·검정 데이터를 가져오는 명령은 운영 데이터에 영향을 줄 수 있으므로 실행 전에 해당 스크립트와 운영 문서를 확인하세요.
@@ -134,7 +139,7 @@ README에는 프로젝트를 시작하는 데 필요한 내용만 두고, 화면
 
 ## 테스트와 CI
 
-로컬에서 변경을 확인할 때 다음 명령을 순서대로 실행합니다.
+로컬에서 변경을 확인할 때 다음 명령을 실행합니다.
 
 ```bash
 npm run lint
@@ -143,7 +148,27 @@ npm test
 npm run build
 ```
 
-GitHub Actions의 `verify` 작업은 의존성 설치, 린트, Vitest, 타입 검사와 프로덕션 빌드를 확인합니다. E2E 작업은 저장소 변수 `RUN_E2E=true`일 때 로컬 PostgreSQL 16과 Playwright Chromium으로 실행됩니다.
+`npm test`는 단위 테스트와 DB 통합 테스트를 함께 돌립니다. DB 통합 테스트는 `TEST_DATABASE_URL`(로컬 PostgreSQL)이 있을 때만 실행되고 없으면 건너뜁니다.
+
+GitHub Actions `CI`는 `dev`·`main` 푸시마다 다음 잡을 나란히 실행하고, 마지막 `ci-ok`가 그 결과를 모읍니다. `main` 병합에는 `ci-ok`만 필수입니다.
+
+| 잡          | 내용                                                          |
+| ----------- | ------------------------------------------------------------- |
+| `lint`      | ESLint · Prettier · 의존성 선언                               |
+| `unit`      | Vitest 단위 테스트 + PostgreSQL 16 DB 통합 테스트             |
+| `build`     | 프로덕션 빌드(프로젝트 전체 타입 검사 포함)                   |
+| `storybook` | 공용 UI 동작·접근성·폭 계약 검사와 Storybook 빌드             |
+| `e2e`       | 운영 빌드 대상 Playwright(PostgreSQL 16, 모바일 기본 + 두 폭) |
+
+의존성 보안은 `Dependencies` 워크플로가 PR의 새 의존성 검토와 주 1회 운영 의존성 감사로 따로 확인합니다.
+사용법은 [공용 UI 가이드](docs/ui/README.md), 협업 규칙은
+[CONVENTION.md](docs/CONVENTION.md), 코드 작성 규칙은 [코드 스타일](docs/code-style.md)을 따릅니다.
+
+주간 운영 의존성 감사는 moderate 이상 권고가 있으면 실패합니다. 전체 개발 의존성까지
+확인할 때는 `npm audit`를 실행합니다. 2026-10-08 보안 패치 후 운영 권고는 0건이며,
+전체 감사에는 ESLint의 `fast-glob → micromatch → braces` 경로에서 파생된 high 5건이
+남습니다. [braces 권고](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm)는 현재 수정 버전이
+없습니다. 기존 Next.js 16 스택을 유지하며 이 권고를 미해결로 기록합니다.
 
 ## 배포와 릴리스
 
@@ -185,3 +210,5 @@ NosLog는 Semantic Versioning을 따릅니다.
 현재 저장소에는 별도의 `LICENSE` 파일이 없습니다. 라이선스가 공표되기 전까지 코드를 재배포하거나 2차 프로젝트에 포함하려면 저장소 관리자에게 문의하세요.
 
 NOSTALGIA와 관련 상표·콘텐츠의 권리는 각 권리자에게 있습니다. NosLog는 팬 제작 비공식 서비스입니다.
+
+개발·CI는 Node 24(`.node-version`, engines)를 사용하며 패키지 매니저 기준은 `npm@11.16.0`이다. packageManager는 버전 메타데이터이고 자동 설치/강제 전환은 하지 않는다.

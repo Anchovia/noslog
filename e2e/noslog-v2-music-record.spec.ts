@@ -1,7 +1,7 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 import type { Page } from "@playwright/test";
-import type { MusicDetailProps } from "@/components/music/musicDetailTypes";
+import type { MusicDetailProps } from "@/components/music/music-detail-types";
 
 const musicPath = "/music/bfdaadfb98501907925ecf41a076108d/expert";
 const counts = {
@@ -117,23 +117,8 @@ async function openRecord(
         await route.fulfill({ json: { ...body, result } });
     });
     await page.goto(`/${locale}${musicPath}`);
-    const picker = page.getByRole("combobox");
-    if ((page.viewportSize()?.width ?? 390) < 768) {
-        await picker.click();
-        await page
-            .getByRole("option", {
-                name:
-                    locale === "ko"
-                        ? "내 기록"
-                        : locale === "ja"
-                          ? "プレー記録"
-                          : "My Record",
-                exact: true,
-            })
-            .click();
-    } else {
-        await page.getByRole("tab").nth(1).click();
-    }
+    // 영역 탭은 모든 폭에서 탭(좁으면 가로 스크롤) — 부품 결정 ② 2026-09-14
+    await page.getByRole("tab").nth(1).click();
     await expect(page).toHaveURL(/tab=record/);
 }
 
@@ -200,25 +185,33 @@ test("Record preserves primary order and exposes exact values to keyboard and to
         "height",
         "8px"
     );
-    await expect(page.locator(".nl-record-panel h2")).toHaveText([
+    // 다섯 구역이 한 목록(구역 펼침) — 최고 기록 · 누적 요약 · 판정 분석은 기본 펼침,
+    // 성장 추이 · 최근 플레이는 기본 접힘 (2026-09-17 · 2026-09-18 R1)
+    const sections = page.locator(".nl-record-disclosures > details");
+    await expect(sections.locator("> summary")).toHaveText([
         "최고 기록",
         "누적 요약",
+        "판정 분석",
+        "성장 추이",
+        "최근 플레이",
     ]);
-    // 판정 분석이 맨 위 · 기본 펼침, 성장 추이 · 최근 플레이는 기본 접힘 (2026-09-17)
-    await expect(
-        page.locator(".nl-record-disclosures > details").first()
-    ).toHaveClass(/nl-record-analysis/);
-    await expect(page.locator(".nl-record-progress")).not.toHaveAttribute(
-        "open"
+    await expect(sections.nth(2)).toHaveClass(/nl-record-analysis/);
+    await expect(sections.nth(3)).not.toHaveAttribute("open");
+    await expect(sections.nth(4)).not.toHaveAttribute("open");
+    // 접히는 구역 사이도 구역 사이 32 (2026-09-18)
+    await expect(page.locator(".nl-record-disclosures")).toHaveCSS(
+        "gap",
+        "32px"
     );
-    await expect(page.locator(".nl-record-recent")).not.toHaveAttribute("open");
-    await expect(page.locator(".nl-record-panel")).toHaveCSS("gap", "32px");
     await expect(page.locator(".nl-record-analysis")).toHaveAttribute("open");
-    // 최고 기록 띠 — 최대 콤보는 「1,204x」 (2026-09-17)
+    // 최고 기록 띠 — 최대 콤보는 숫자만, 「x」 를 붙이지 않는다 (2026-09-18)
     await expect(
         page.locator(".nl-record-panel .nl-stat-strip").first()
-    ).toContainText("1,204x");
-    await page.locator(".nl-record-progress > summary").click();
+    ).toContainText("1,204");
+    await expect(
+        page.locator(".nl-record-panel .nl-stat-strip").first()
+    ).not.toContainText("1,204x");
+    await sections.nth(3).locator("> summary").click();
     const chart = page.getByRole("figure", {
         name: "최고 점수",
         exact: true,
@@ -242,7 +235,7 @@ test("Record preserves primary order and exposes exact values to keyboard and to
     await expect(chart.getByRole("tooltip")).toHaveCount(0);
     await chart.getByRole("button").first().click();
     await expect(chart.getByRole("tooltip")).toContainText("962,880점");
-    await page.locator(".nl-record-recent > summary").click();
+    await sections.nth(4).locator("> summary").click();
     await page.locator(".nl-recent-play").first().click();
     await expect(
         page.locator(".nl-recent-play__details").first()
@@ -298,7 +291,12 @@ for (const variant of ["empty", "single", "guest", "partial"] as const) {
                 0
             );
         } else if (variant === "single") {
-            await page.locator(".nl-record-progress > summary").click();
+            // 성장 추이 = 다섯 구역 중 넷째(기본 접힘)
+            await page
+                .locator(".nl-record-disclosures > details")
+                .nth(3)
+                .locator("> summary")
+                .click();
             const chart = page.getByRole("figure", {
                 name: "최고 점수",
                 exact: true,
@@ -340,17 +338,14 @@ for (const locale of ["ko", "ja", "en"]) {
     test(`${locale} record matches responsive geometry and has no accessibility violations`, async ({
         page,
     }, testInfo) => {
-        test.skip(
-            testInfo.project.name !== "mobile-chromium",
-            "Explicit width matrix is run once."
-        );
         await openRecord(page, locale);
         for (const width of [320, 390, 768, 1024, 1055, 1056, 1280, 1470]) {
             await page.setViewportSize({ width, height: 900 });
+            // 내 기록은 모든 폭에서 한 열 — 판정 분석의 두 소구역도 세로로 쌓는다
             await expect
                 .poll(() =>
                     page
-                        .locator(".nl-record-panel > .nl-detail-columns")
+                        .locator(".nl-record-analysis .nl-detail-columns")
                         .first()
                         .evaluate(
                             (element) =>
@@ -359,7 +354,7 @@ for (const locale of ["ko", "ja", "en"]) {
                                 ).gridTemplateColumns.split(" ").length
                         )
                 )
-                .toBe(width >= 1056 ? 2 : 1);
+                .toBe(1);
             await expect
                 .poll(() =>
                     page.evaluate(
@@ -369,9 +364,10 @@ for (const locale of ["ko", "ja", "en"]) {
                     )
                 )
                 .toBe(true);
+            // 구역 펼침 요약 줄 = 48
             await expect(
                 page.locator(".nl-record-analysis > summary")
-            ).toHaveCSS("min-height", "52px");
+            ).toHaveCSS("min-height", "48px");
             await page.screenshot({
                 path: testInfo.outputPath(`${locale}-record-${width}.png`),
                 fullPage: true,

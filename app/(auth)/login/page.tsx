@@ -1,4 +1,4 @@
-import LoginPage from "@/features/auth/components/loginPage";
+import LoginPage from "@/features/auth/components/login-page";
 
 export default async function LoginRoute({
     searchParams,

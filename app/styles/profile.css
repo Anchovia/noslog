@@ -367,7 +367,7 @@
     flex-direction: column;
     min-width: 0;
     gap: var(--nl-section-title-gap);
-    scroll-margin-top: 76px;
+    scroll-margin-top: calc(var(--nl-header-height) + var(--nl-spacing-16));
     container: profile-section / inline-size;
 }
 .noslog-ui .nl-profile-section__header {
@@ -433,8 +433,21 @@
     justify-self: end;
     white-space: nowrap;
 }
+/* 올림 = 좌우 12 를 넓혀 칠한 면 — 글자 선 · 구분선은 그대로(가이드 펼침 줄 규칙, 2026-10-15 hover 점검) */
+.noslog-ui :is(.nl-profile-play-row, .nl-profile-pinned__row) {
+    position: relative;
+    isolation: isolate;
+}
+.noslog-ui :is(.nl-profile-play-row, .nl-profile-pinned__row)::before {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    inset-inline: calc(var(--nl-spacing-12) * -1);
+    z-index: calc(var(--nl-layer-above) * -1);
+    pointer-events: none;
+}
 @media (hover: hover) {
-    .noslog-ui .nl-profile-play-row:hover {
+    .noslog-ui .nl-profile-play-row:hover::before {
         --nl-state-layer: var(--nl-interaction-hover);
         background-image: linear-gradient(
             var(--nl-state-layer),
@@ -646,6 +659,12 @@
     gap: var(--nl-spacing-4);
     align-self: flex-start;
     min-height: 24px;
+}
+@media (hover: hover) {
+    .noslog-ui .nl-profile-disclosure:hover {
+        text-decoration: underline;
+        text-underline-offset: var(--nl-underline-offset);
+    }
 }
 .noslog-ui .nl-profile-disclosure svg {
     width: var(--nl-icon-small);
@@ -1104,7 +1123,7 @@
     border-bottom: var(--nl-stroke-default) solid var(--nl-border-divider);
 }
 @media (hover: hover) {
-    .noslog-ui .nl-profile-pinned__row:hover {
+    .noslog-ui .nl-profile-pinned__row:hover::before {
         --nl-state-layer: var(--nl-interaction-hover);
         background-image: linear-gradient(
             var(--nl-state-layer),

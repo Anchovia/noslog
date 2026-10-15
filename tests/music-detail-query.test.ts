@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { musicDetailQueryKey } from "@/features/music/api/musicDetail";
+import { musicDetailQueryKey } from "@/features/music/api/music-detail";
 
 describe("musicDetailQueryKey", () => {
     it("랭킹 탭은 페이지별 캐시를 구분한다", () => {

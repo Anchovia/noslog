@@ -9,7 +9,7 @@ import {
     musicTranslationInputFromFormData,
     normalizeMusicTranslationLocale,
     normalizeMusicTranslationStatus,
-} from "@/features/music/schemas/musicTranslationAdminSchema";
+} from "@/features/music/schemas/music-translation-admin-schema";
 
 describe("관리자 악곡 번역 스키마", () => {
     it("지원하는 번역 언어와 검수 상태만 유지한다", () => {

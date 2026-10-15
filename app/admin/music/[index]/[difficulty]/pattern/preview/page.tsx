@@ -4,7 +4,7 @@ import ChartSheetViewer from "@/components/chart-pattern/chartSheetViewer";
 import { requireAdmin } from "@/lib/admin";
 import { chartDocumentSchema } from "@/lib/chart-pattern/schema";
 import db from "@/lib/db";
-import { getJacketUrl } from "@/lib/musicJackets";
+import { getJacketUrl } from "@/lib/music-jackets";
 
 export default async function AdminChartPatternPreviewPage({
     params,

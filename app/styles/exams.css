@@ -204,6 +204,15 @@
     background: var(--nl-surface-surface);
     text-align: start;
 }
+@media (hover: hover) {
+    .noslog-ui .nl-exam-stage__row:hover {
+        --nl-state-layer: var(--nl-interaction-hover);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
+    }
+}
 .noslog-ui .nl-exam-stage__jacket {
     width: var(--nl-exam-jacket-size);
     height: var(--nl-exam-jacket-size);

@@ -7,6 +7,7 @@ const mocks = vi.hoisted(() => ({
     save: vi.fn(),
     image: vi.fn(),
     invalidate: vi.fn(),
+    tag: vi.fn(),
 }));
 vi.mock("@/lib/session", () => ({ default: async () => mocks.session }));
 vi.mock("@/lib/db", () => ({
@@ -16,10 +17,13 @@ vi.mock("@/lib/db", () => ({
     },
 }));
 vi.mock("@/lib/blob", () => ({ isValidPrivateImageBlob: mocks.image }));
-vi.mock("next/cache", () => ({ revalidatePath: mocks.invalidate }));
+vi.mock("next/cache", () => ({
+    revalidatePath: mocks.invalidate,
+    updateTag: mocks.tag,
+}));
 vi.mock("@/lib/observability/server", () => ({ logServerError: vi.fn() }));
 
-import { submitArcadeReport } from "@/features/arcades/server/arcadeReportService";
+import { submitArcadeReport } from "@/features/arcades/server/arcade-report-service";
 
 const submissionId = "12a66f29-6f4e-41b1-a8e1-e4f4c52b6c46";
 function report(overrides: Record<string, string> = {}) {
@@ -121,6 +125,8 @@ describe("P12 arcade report authorization and retries", () => {
         expect(mocks.save.mock.calls[0][0].create.content).toContain(
             "Test arcade"
         );
+        // 공개 오락실 화면의 열린 신고 수(캐시)도 비운다
+        expect(mocks.tag).toHaveBeenCalledWith("arcades");
     });
     it("acknowledges the same user's completed submission without another write", async () => {
         mocks.existing.mockResolvedValue({ id: 1 });

@@ -27,7 +27,7 @@ vi.mock("@/lib/db", () => ({
 import {
     claimUploadTokenQuota,
     releaseUploadTokenQuota,
-} from "@/lib/uploadRateLimit";
+} from "@/lib/upload-rate-limit";
 
 describe("이미지 업로드 토큰 발급 제한", () => {
     beforeEach(() => {

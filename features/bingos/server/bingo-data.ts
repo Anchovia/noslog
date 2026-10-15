@@ -1,0 +1,171 @@
+import "server-only";
+
+import { unstable_cache } from "next/cache";
+
+import { CACHE_TAGS } from "@/lib/cache-tags";
+import db from "@/lib/db";
+
+// 공개 빙고 목록과 셀 위치는 모든 사용자에게 동일하므로 캐시함
+export const getCachedPublishedBingos = unstable_cache(
+    async () => {
+        const bingos = await db.bingo.findMany({
+            where: { status: "published" },
+            select: {
+                id: true,
+                title: true,
+                coverMusicIndex: true,
+                rewardNos: true,
+                requiredLines: true,
+                sourceVersion: true,
+                lineRewardNos: true,
+                completionRewardNos: true,
+                startsAt: true,
+                endsAt: true,
+                coverMusic: {
+                    select: {
+                        title: true,
+                        title_kana: true,
+                        artist: true,
+                        background: true,
+                        translations: {
+                            where: {
+                                status: "approved",
+                                locale: { in: ["ko", "en"] },
+                            },
+                            select: {
+                                locale: true,
+                                title: true,
+                                status: true,
+                            },
+                        },
+                    },
+                },
+                cells: {
+                    select: { id: true, position: true },
+                    orderBy: { position: "asc" },
+                },
+            },
+            orderBy: { id: "asc" },
+        });
+
+        return bingos.map((bingo) => ({
+            ...bingo,
+            startsAt: bingo.startsAt?.toISOString() ?? null,
+            endsAt: bingo.endsAt?.toISOString() ?? null,
+        }));
+    },
+    // 검색에 쓰는 과제곡 아티스트를 더하며 v3 — 캐시된 옛 모양을 읽지 않게
+    ["published-bingos", "public-v3"],
+    {
+        revalidate: 3600,
+        tags: [CACHE_TAGS.bingos],
+    }
+);
+
+// 빙고판과 미션 구성은 id별로 캐시함
+export const getCachedBingoDetail = unstable_cache(
+    async (bingoId: number) => {
+        const bingo = await db.bingo.findFirst({
+            where: { id: bingoId, status: "published" },
+            select: {
+                id: true,
+                title: true,
+                description: true,
+                coverMusicIndex: true,
+                requiredLines: true,
+                sourceVersion: true,
+                lineRewardNos: true,
+                completionRewardNos: true,
+                rewardNos: true,
+                startsAt: true,
+                endsAt: true,
+                coverMusic: {
+                    select: {
+                        title: true,
+                        title_kana: true,
+                        background: true,
+                        description: true,
+                        translations: {
+                            where: {
+                                status: "approved",
+                                locale: { in: ["ko", "en"] },
+                            },
+                            select: {
+                                locale: true,
+                                title: true,
+                                status: true,
+                            },
+                        },
+                    },
+                },
+                cells: {
+                    select: {
+                        id: true,
+                        title: true,
+                        missionType: true,
+                        musicIndex: true,
+                        position: true,
+                        categoryShort: true,
+                        music: {
+                            select: {
+                                title: true,
+                                title_kana: true,
+                                charts: { select: { difficulty: true } },
+                                translations: {
+                                    where: {
+                                        status: "approved",
+                                        locale: { in: ["ko", "en"] },
+                                    },
+                                    select: {
+                                        locale: true,
+                                        title: true,
+                                        status: true,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    orderBy: { position: "asc" },
+                },
+            },
+        });
+
+        return bingo
+            ? {
+                  ...bingo,
+                  startsAt: bingo.startsAt?.toISOString() ?? null,
+                  endsAt: bingo.endsAt?.toISOString() ?? null,
+              }
+            : null;
+    },
+    ["bingo-detail", "public-v3"],
+    {
+        revalidate: 3600,
+        tags: [CACHE_TAGS.bingos],
+    }
+);
+
+// 완료 상태는 로그인 사용자마다 다르므로 공유 캐시를 사용하지 않음
+export async function getUserBingoCellProgress(
+    userId: number,
+    cellIds: number[]
+) {
+    if (cellIds.length === 0) return [];
+
+    const progress = await db.bingoCellProgress.findMany({
+        where: {
+            userId,
+            bingoCellId: { in: cellIds },
+        },
+        select: {
+            bingoCellId: true,
+            isCompleted: true,
+            updatedAt: true,
+        },
+    });
+
+    return progress.map((item) => ({
+        ...item,
+        updatedAt: item.updatedAt.toISOString(),
+    }));
+}

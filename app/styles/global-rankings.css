@@ -1,0 +1,191 @@
+/* 랭킹 페이지 — 2026-09-13 재설계. 정보가 적은 목록이라 폭을 채우지 않고 640 가운데에 둔다.
+   상단(제목 · 모드 세그먼트 · 지표 탭과 지역)은 이전 그대로, 표는 모든 폭에서 한 규격이다. */
+.noslog-ui .nl-global-rankings {
+    /* 1~3위 순위 숫자는 검정 명판의 금속색(골드·실버·브론즈) */
+    --nl-rank-1: var(--nl-exam-tier-top);
+    --nl-rank-2: var(--nl-exam-tier-high);
+    --nl-rank-3: var(--nl-exam-tier-mid);
+    --nl-ranking-inset: var(--nl-spacing-12);
+    padding-block: var(--nl-spacing-24) var(--nl-spacing-48);
+}
+.noslog-ui .nl-global-rankings__measure {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-24);
+    width: 100%;
+    max-width: var(--nl-container-compact);
+    margin-inline: auto;
+}
+/* 페이지 제목 → 첫 내용(세그먼트) 16 — 폭 · 가운데 정렬은 이 줄이 아니라 위 묶음이 맡는다(2026-09-23:
+   2026-09-16 간격 통일 때 폭 선언이 제목으로 옮겨 가 목록만 폭을 채우고 제목만 640 가운데에 남았다) */
+.noslog-ui .nl-global-rankings__measure > .nl-page-title {
+    margin-bottom: calc(var(--nl-spacing-16) - var(--nl-spacing-24));
+}
+.noslog-ui .nl-global-ranking-controls {
+    container: metric-controls / inline-size;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-global-ranking-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-16);
+}
+/* 표 — 모든 폭 같은 규격: 행 48 · 아바타 32 · 글자 14/20.
+   묶음 사이 12(순위 → 아바타 → 이름 묶음), 묶음 안 8(국기 → 이름 → 명판) */
+.noslog-ui .nl-ranking-head,
+.noslog-ui .nl-player-row {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-12);
+    padding-inline: var(--nl-ranking-inset);
+}
+.noslog-ui .nl-ranking-head {
+    padding-bottom: var(--nl-spacing-8);
+    border-bottom: var(--nl-stroke-default) solid var(--nl-border-default);
+}
+.noslog-ui .nl-ranking-head__rank,
+.noslog-ui .nl-player-row__rank {
+    width: var(--nl-spacing-32);
+    flex-shrink: 0;
+    text-align: center;
+}
+.noslog-ui .nl-ranking-head__value {
+    margin-left: auto;
+}
+.noslog-ui .nl-global-ranking-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.noslog-ui .nl-player-row {
+    height: 48px;
+    border-bottom: var(--nl-stroke-default) solid var(--nl-border-divider);
+    scroll-margin-block: calc(var(--nl-header-height) + var(--nl-spacing-16));
+}
+.noslog-ui .nl-player-row__rank {
+    white-space: nowrap;
+    color: var(--nl-content-subdued);
+}
+.noslog-ui .nl-player-row__rank[data-podium="1"] {
+    color: var(--nl-rank-1);
+}
+.noslog-ui .nl-player-row__rank[data-podium="2"] {
+    color: var(--nl-rank-2);
+}
+.noslog-ui .nl-player-row__rank[data-podium="3"] {
+    color: var(--nl-rank-3);
+}
+.noslog-ui .nl-player-row .nl-avatar {
+    width: var(--nl-spacing-32);
+    height: var(--nl-spacing-32);
+    flex-shrink: 0;
+    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-empty-slot);
+}
+.noslog-ui .nl-player-row__identity,
+.noslog-ui .nl-player-row__name {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+    min-width: 0;
+}
+/* 이름 칸이 남는 폭을 모두 가져야 그 폭이 곧 명판·닉네임이 쓸 수 있는 폭이 된다 */
+.noslog-ui .nl-player-row__identity {
+    flex: 1 1 auto;
+}
+.noslog-ui .nl-player-row__name .nl-country-marker,
+.noslog-ui .nl-player-row__identity > .nl-exam-badge {
+    flex-shrink: 0;
+}
+/* 명판 뒤 기여 라벨(2026-09-24) — 줄지 않고, 명판처럼 이름 글줄(20) 높이로.
+   이름 · 명판(B·R)까지 넣고 남는 자리가 없으면 라벨을 숨긴다 — 폭은 계속 재도록 보이지 않게 겹쳐 둔다 */
+.noslog-ui .nl-player-row__identity > .nl-term {
+    flex-shrink: 0;
+}
+.noslog-ui .nl-player-row__identity[data-contribution="hidden"] > .nl-term {
+    position: absolute;
+    inset-inline-start: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+/* 랭킹 행의 명판은 이름 글줄(20)과 같은 높이 — 글자 12 그대로, 상자 여백만 2/6 */
+.noslog-ui .nl-player-row .nl-exam-badge {
+    padding: var(--nl-spacing-2) 6px;
+}
+.noslog-ui
+    .nl-player-row
+    .nl-exam-badge[data-tier="peak"]
+    .nl-exam-badge__divider::before {
+    top: var(--nl-spacing-2);
+}
+/* 줄 전체 = 프로필 링크(2026-10-01 사용자) — 이름 링크의 누르는 자리를 줄 전체로 넓힌다.
+   기여 라벨 도움말만 그 위에서 따로 눌린다. 올림은 줄 전체 면(가이드 「올림 = 줄 전체」) */
+.noslog-ui .nl-player-row {
+    position: relative;
+}
+.noslog-ui .nl-player-row__link::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+}
+.noslog-ui .nl-player-row__identity > .nl-term {
+    position: relative;
+    z-index: var(--nl-layer-above);
+}
+@media (hover: hover) {
+    .noslog-ui .nl-player-row:has(.nl-player-row__link:hover) {
+        --nl-state-layer: var(--nl-interaction-hover);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
+    }
+}
+.noslog-ui .nl-player-row__link {
+    min-width: 0;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    font-size: var(--nl-type-size-14);
+    line-height: var(--nl-type-line-height-20);
+    font-weight: var(--nl-type-weight-semibold);
+}
+.noslog-ui .nl-player-row__value {
+    margin-left: auto;
+    flex-shrink: 0;
+    text-align: right;
+    white-space: nowrap;
+}
+.noslog-ui .nl-player-row[data-current="true"] {
+    background: var(--nl-surface-surface);
+}
+/* 내 행은 면이 한 단계 밝아 Recital 명판의 파인 모서리도 같은 면으로 칠한다 */
+.noslog-ui .nl-player-row[data-current="true"] .nl-exam-badge {
+    --nl-exam-badge-ground: var(--nl-surface-surface);
+}
+/* 내 행이 이 페이지에 없을 때만 나오는 한 줄 — 「내 순위 127 / 1,284」, 순위 숫자가 내 행으로 가는 링크 */
+.noslog-ui .nl-ranking-personal {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-12);
+    padding: var(--nl-spacing-12) var(--nl-spacing-16);
+    background: var(--nl-surface-surface);
+    border-radius: var(--nl-radius-container);
+}
+/* 곡 상세 채보 랭킹(ranking.css)의 로그인 줄 — 이 페이지와 무관하지만 이 규칙에 기대고 있어 이전 그대로 둔다 */
+.noslog-ui .nl-ranking-login {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-ranking-login .nl-button {
+    flex-shrink: 0;
+}
+.noslog-ui .nl-global-ranking-content .nl-result-state {
+    align-items: center;
+    text-align: center;
+    padding: 0;
+}

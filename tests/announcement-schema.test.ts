@@ -13,7 +13,7 @@ import {
     createAnnouncementFormData,
     suggestAnnouncementSlug,
     toDateTimeLocalValue,
-} from "@/features/announcements/schemas/announcementSchema";
+} from "@/features/announcements/schemas/announcement-schema";
 
 const translation = { title: "서비스 공지", content: "공지 내용입니다." };
 const validInput = {

@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
+
 import { serverEnv } from "@/lib/env/server";
 import {
     getPathLocale,
+    type Locale,
     localizePath,
     SUPPORTED_LOCALES,
-    type Locale,
 } from "@/lib/i18n/routing";
 
 export const SITE_NAME = "NosLog";

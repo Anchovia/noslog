@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 
-import { parseDiscoverySearchParams } from "@/features/music/schemas/discoverySchema";
+import { parseDiscoverySearchParams } from "@/features/music/schemas/discovery-schema";
 import {
     getDiscoveryCounts,
     getDiscoveryPage,
-} from "@/features/music/server/discoveryService";
+} from "@/features/music/server/discovery-service";
 import { createApiFailure, createApiSuccess } from "@/lib/api/response";
 import { logServerError } from "@/lib/observability/server";
 import getSession from "@/lib/session";

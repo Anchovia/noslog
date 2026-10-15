@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
     parseMusicTranslationCsv,
     serializeMusicTranslationCsv,
-} from "@/features/music/csv/musicTranslationCsv";
+} from "@/features/music/csv/music-translation-csv";
 
 describe("parseMusicTranslationCsv", () => {
     it("index 기준 번역 행과 따옴표 안의 쉼표를 읽는다", () => {

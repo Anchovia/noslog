@@ -1,21 +1,22 @@
 /* Shared UI foundations and feature layouts, including settings, profiles and data sync, are isolated from preserved routes. */
 @import "tailwindcss";
-@import "./styles/pretendardJp.css";
+@import "./styles/pretendard-jp.css";
 @import "./styles/tokens.css";
 @import "./styles/foundation.css";
+@import "./styles/tailwind-theme.css";
 @import "./styles/layout.css";
 @import "./styles/search.css";
 @import "./styles/entity.css";
 @import "./styles/home.css";
 @import "./styles/discovery.css";
 @import "./styles/filters.css";
-@import "./styles/musicDetail.css";
-@import "./styles/dataCharts.css";
+@import "./styles/music-detail.css";
+@import "./styles/data-charts.css";
 @import "./styles/ranking.css";
 @import "./styles/community.css";
 @import "./styles/tiers.css";
-@import "./styles/playerIdentity.css";
-@import "./styles/globalRankings.css";
+@import "./styles/player-identity.css";
+@import "./styles/global-rankings.css";
 @import "./styles/settings.css";
 @import "./styles/profile.css";
 @import "./styles/achievements.css";
@@ -33,73 +34,11 @@
 @import "./styles/admin.css";
 
 @theme {
-    /* 폰트 */
+    /* 폰트 — 셸 밖 글자도 셸 안과 같이 화면 글꼴(분할판) 다음 기기 글꼴로(2026-10-15 D1).
+       분할판에 없는 기호 때문에 2MB 글꼴 파일을 따로 받지 않게 웹 글꼴을 하나만 둔다 */
     --font-sans:
-        var(--font-pretendard), "Pretendard Variable", Pretendard, system-ui,
+        "Pretendard JP Variable", "Pretendard Variable", Pretendard, system-ui,
         -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-
-    /* 배경 / 표면 */
-    --color-bg: #0b0b10;
-    --color-surface: #121218;
-    --color-surface-muted: #1a1a22;
-    --color-divider: #20202a;
-    --color-border: #2a2a35;
-
-    /* 텍스트 */
-    --color-text-primary: #f2f2f5;
-    --color-text-secondary: #a0a0aa;
-    --color-text-disabled: #666674;
-
-    /* 상호작용 */
-    --color-interactive: #f2f2f5;
-    --color-on-interactive: #0b0b10;
-    --color-focus: #f2f2f5;
-    --color-switch-track: #20202a;
-    --color-switch-active: #f2f2f5;
-    --color-switch-thumb: #f2f2f5;
-    --color-switch-thumb-active: #0b0b10;
-
-    /* 상태 / 데이터 */
-    --color-success: #22c55e;
-    --color-danger: #ef4444;
-    /* 채운 위험 버튼(2026-10-01) — 공개 화면 토큰과 같은 값. #ef4444 위 흰 글자는 3.76 : 1 로 기준 미달 */
-    --color-danger-surface: #ae2e24;
-    --color-on-danger: #ffffff;
-    --color-chart: #38bdf8;
-    --color-score: #facc15;
-    --color-bronze: #b87333;
-
-    /* 랭크 */
-    --color-rank-p-start: #f5d98b;
-    --color-rank-p-end: #e8a9c9;
-    --color-rank-fc: #a3e635;
-    --color-rank-s: #d8b54f;
-    --color-rank-a-plus: #c97b72;
-    --color-rank-a: #b06565;
-
-    /* 난이도 */
-    --color-normal: #6e9a7c;
-    --color-hard: #b08a5e;
-    --color-expert: #b06565;
-    --color-real: #8f7fb8;
-
-    /* 검정 */
-    --color-basic: #7c9cc6;
-    --color-recital: #c98fb0;
-
-    /* 장르 */
-    --color-genre-pops: #b06565;
-    --color-genre-anime: #b0708f;
-    --color-genre-bm: #6e87b0;
-    --color-genre-original: #b08165;
-    --color-genre-classic-jazz: #b09365;
-    --color-genre-variety: #6e9a7c;
-
-    /* 브랜드 */
-    --color-discord: #5865f2;
-
-    /* 모서리 */
-    --radius-card: 0.5rem;
 }
 
 html {
@@ -108,62 +47,6 @@ html {
 
 html[data-theme="light"] {
     color-scheme: light;
-
-    /* 배경 / 표면 */
-    --color-bg: #f2f4f6;
-    --color-surface: #ffffff;
-    --color-surface-muted: #f9fafb;
-    --color-divider: #f2f4f6;
-    --color-border: #e5e8eb;
-
-    /* 텍스트 */
-    --color-text-primary: #191f28;
-    --color-text-secondary: #4e5968;
-    --color-text-disabled: #8b95a1;
-
-    /* 상호작용 */
-    --color-interactive: #3182f6;
-    --color-on-interactive: #ffffff;
-    --color-focus: #3182f6;
-    --color-switch-track: #d1d6db;
-    --color-switch-active: #3182f6;
-    --color-switch-thumb: #ffffff;
-    --color-switch-thumb-active: #ffffff;
-
-    /* 상태 / 데이터 */
-    --color-success: #028450;
-    --color-danger: #d22030;
-    --color-danger-surface: #ae2e24;
-    --color-on-danger: #ffffff;
-    --color-chart: #1b64da;
-    --color-score: #8a5f00;
-    --color-bronze: #8a4c22;
-
-    /* 랭크 */
-    --color-rank-p-start: #c79a3e;
-    --color-rank-p-end: #c56e9e;
-    --color-rank-fc: #3f7a00;
-    --color-rank-s: #7a5d17;
-    --color-rank-a-plus: #a5433a;
-    --color-rank-a: #a24a4a;
-
-    /* 난이도 */
-    --color-normal: #237547;
-    --color-hard: #8a5f25;
-    --color-expert: #b0413b;
-    --color-real: #6e5aa0;
-
-    /* 검정 */
-    --color-basic: #3f6fa8;
-    --color-recital: #984a79;
-
-    /* 장르 */
-    --color-genre-pops: #b0413b;
-    --color-genre-anime: #984a79;
-    --color-genre-bm: #3f6fa8;
-    --color-genre-original: #8f5f35;
-    --color-genre-classic-jazz: #7a5d17;
-    --color-genre-variety: #237547;
 }
 
 @layer base {
@@ -173,15 +56,16 @@ html[data-theme="light"] {
     ::before,
     ::backdrop,
     ::file-selector-button {
-        border-color: var(--color-border);
+        border-color: var(--nl-border-default);
     }
 
     /* 앱 전체에 선택된 테마와 기본 폰트를 적용 */
     html,
     body {
         min-height: 100vh;
-        background: var(--color-bg);
-        color: var(--color-text-primary);
+        /* 셸(.noslog-ui) 바깥이라 토큰을 못 읽는다 — surface/canvas · content/default 다크 값(테스트가 tokens.css 와 대조) */
+        background: #111111;
+        color: #dbdbdb;
         font-family: var(--font-sans);
         font-synthesis: none;
     }
@@ -208,57 +92,8 @@ html[data-theme="light"] {
     /* 입력 안내 문구는 크기를 유지하고 색과 굵기로 위계를 낮춤 */
     input::placeholder,
     textarea::placeholder {
-        color: var(--color-text-disabled);
-        font-weight: 400;
+        color: var(--nl-content-subdued);
+        font-weight: var(--nl-type-weight-regular);
         opacity: 1;
     }
-}
-
-/* Figma 스타일 가이드 기준 타이포그래피 유틸리티 */
-@utility text-display {
-    @apply text-text-primary text-2xl leading-tight font-bold;
-}
-
-@utility text-score-display {
-    @apply text-text-primary text-4xl leading-none font-black tabular-nums;
-}
-
-@utility text-title {
-    @apply text-text-primary text-xl leading-snug font-bold;
-}
-
-@utility text-wordmark {
-    @apply text-text-primary text-lg leading-none font-bold;
-}
-
-@utility text-section {
-    @apply text-text-primary text-base leading-snug font-semibold;
-}
-
-@utility text-body {
-    @apply text-text-primary text-sm leading-relaxed font-medium;
-}
-
-@utility text-body-muted {
-    @apply text-text-secondary text-sm leading-relaxed font-normal;
-}
-
-@utility text-label {
-    @apply text-text-primary text-sm leading-normal font-semibold;
-}
-
-@utility text-caption {
-    @apply text-text-secondary text-xs leading-normal font-normal;
-}
-
-@utility text-micro {
-    @apply text-text-secondary text-[10px] leading-normal font-normal;
-}
-
-@utility text-badge {
-    @apply text-xs leading-none font-extrabold;
-}
-
-@utility text-input {
-    @apply text-text-primary text-base leading-normal font-medium;
 }

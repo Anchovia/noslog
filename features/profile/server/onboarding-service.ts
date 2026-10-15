@@ -1,0 +1,138 @@
+import "server-only";
+
+import { updateTag } from "next/cache";
+import { redirect } from "next/navigation";
+
+import {
+    createOnboardingSchema,
+    type OnboardingFormValues,
+    onboardingInputFromFormData,
+} from "@/features/profile/schemas/profile-settings-schema";
+import type { ActionFailure } from "@/lib/actions/result";
+import { actionValidationFailure } from "@/lib/actions/validation";
+import { getAuthReturnPath } from "@/lib/auth-return-path";
+import { CACHE_TAGS, getUserProfileTag } from "@/lib/cache-tags";
+import db from "@/lib/db";
+import { createTranslator, getMessages } from "@/lib/i18n/messages";
+import { DEFAULT_LOCALE, isLocale } from "@/lib/i18n/routing";
+import { logServerError } from "@/lib/observability/server";
+import getSession from "@/lib/session";
+
+type OnboardingFieldName = Extract<keyof OnboardingFormValues, string>;
+type OnboardingActionResult = ActionFailure<OnboardingFieldName>;
+
+export async function completeOnboarding(
+    formData: FormData
+): Promise<OnboardingActionResult | never> {
+    const requestedLocale = String(formData.get("locale") ?? "");
+    const formLocale = isLocale(requestedLocale)
+        ? requestedLocale
+        : DEFAULT_LOCALE;
+    const t = createTranslator(getMessages(formLocale));
+    const session = await getSession();
+    if (!session.id) {
+        return {
+            success: false,
+            message: t("onboarding.error.loginRequired"),
+        };
+    }
+
+    const result = createOnboardingSchema(t).safeParse(
+        onboardingInputFromFormData(formData)
+    );
+    if (!result.success)
+        return actionValidationFailure(result.error, {
+            message: t("onboarding.error.invalid"),
+            alwaysIncludeFieldErrors: true,
+        });
+
+    const locale = formLocale;
+
+    try {
+        await db.user.update({
+            where: { id: session.id, profile_completed_at: null },
+            data: {
+                username: result.data.username,
+                country: result.data.country,
+                locale,
+                hide_nostalgia_name: !result.data.showNostalgiaName,
+                hide_discord_name: !result.data.showDiscordIdentity,
+                hide_preferred_arcade: !result.data.showPreferredArcade,
+                hide_play_count: !result.data.showPlayCount,
+                hide_play_activity: !result.data.showPlayActivity,
+                hide_play_scores: !result.data.showPlayScores,
+                profile_completed_at: new Date(),
+            },
+        });
+    } catch (error) {
+        const code =
+            typeof error === "object" && error !== null && "code" in error
+                ? String(error.code)
+                : null;
+
+        if (code !== "P2002") {
+            logServerError(error, {
+                event: "profile.onboarding.save.failed",
+                routePath: "/onboarding",
+                routeType: "action",
+            });
+        }
+
+        return {
+            success: false,
+            ...(code === "P2002"
+                ? {
+                      fieldErrors: {
+                          username: [t("onboarding.error.nicknameTaken")],
+                      },
+                  }
+                : {}),
+            message:
+                code === "P2002"
+                    ? t("onboarding.error.nicknameTaken")
+                    : t("onboarding.error.generic"),
+        };
+    }
+
+    session.profileCompleted = true;
+    session.locale = locale;
+    const returnTo = getAuthReturnPath(session.onboardingReturnTo, locale);
+    delete session.onboardingReturnTo;
+    await session.save();
+    updateTag(CACHE_TAGS.userRankings);
+    updateTag(getUserProfileTag(session.id));
+    redirect(returnTo);
+}
+
+/**
+ * 닉네임을 쓸 수 있는지 미리 확인(2026-10-01 온보딩 ② — Discord 식, 칸을 떠날 때).
+ * 저장 때의 고유 제약과 같은 기준(검증 뒤 값이 똑같은 다른 계정이 있는지)이고, 최종 판단은 저장 때 다시 한다
+ */
+export async function checkOnboardingNickname(
+    username: string,
+    requestedLocale: string
+): Promise<{ available: boolean; message: string }> {
+    const locale = isLocale(requestedLocale) ? requestedLocale : DEFAULT_LOCALE;
+    const t = createTranslator(getMessages(locale));
+    const session = await getSession();
+    if (!session.id)
+        return {
+            available: false,
+            message: t("onboarding.error.loginRequired"),
+        };
+    const parsed = createOnboardingSchema(t).shape.username.safeParse(username);
+    if (!parsed.success)
+        return {
+            available: false,
+            message:
+                parsed.error.issues[0]?.message ??
+                t("onboarding.error.invalid"),
+        };
+    const taken = await db.user.findFirst({
+        where: { username: parsed.data, NOT: { id: session.id } },
+        select: { id: true },
+    });
+    return taken
+        ? { available: false, message: t("onboarding.error.nicknameTaken") }
+        : { available: true, message: t("onboarding.nicknameAvailable") };
+}

@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { globalRankingPayloadSchema } from "@/features/rankings/schemas/globalRankingSchema";
+import { globalRankingPayloadSchema } from "@/features/rankings/schemas/global-ranking-schema";
 import { expectNoHorizontalOverflow } from "./helpers";
 
 for (const locale of ["ko", "ja", "en"] as const) {

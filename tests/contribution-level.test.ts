@@ -5,7 +5,7 @@ import {
     contributionProgress,
     nameLabelFor,
     seoulDateKey,
-} from "@/features/contributions/contributionLevel";
+} from "@/features/contributions/contribution-level";
 
 describe("contributionLevel", () => {
     it("점수 기준 1 · 10 · 30 · 100 · 300 · 1,000 으로 Lv.1–6", () => {

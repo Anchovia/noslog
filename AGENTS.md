@@ -22,19 +22,21 @@ Next.js 는 기억 대신 설치된 버전 문서(`node_modules/next/dist/docs/`
 Tailwind 4: 설정은 CSS(`app/globals.css`), `tailwind.config` 를 만들지 않는다.
 
 폴더: `app/`(라우트 · Route Handler · Server Action 입구) · `features/<도메인>/{api,components,hooks,schemas,server}` ·
-`components/ui`(공용 부품) · `app/styles`(토큰 · 공용 스타일) · `lib/i18n/messageCatalogs` · `prisma/` · `tests/` · `e2e/`.
-자세한 경계는 [코드 스타일](docs/code-style.md).
+`components/ui`(공용 부품) · `app/styles`(토큰 · 공용 스타일) · `lib/i18n/message-catalogs` · `prisma/` · `tests/` · `e2e/`.
+자세한 경계와 캐시 변경 검증(공개 범위·최신성·무효화·저장 후 파생 화면)은 [코드 스타일](docs/code-style.md)을 따른다.
+협업 양식은 [컨벤션](docs/CONVENTION.md), 공용 UI 사용·스토리는 [부품 가이드](docs/ui/README.md). 공용 UI를 바꾸면 `npm run test:storybook`도 실행한다.
 
 명령은 지어내지 않고 `package.json` 스크립트를 쓴다.
 
 - `npm run typecheck` · `npm run lint` · `npm test`(파일 하나는 `npx vitest run tests/<파일>`) · `npm run build`
 - **e2e** — 화면 · 흐름을 바꿨고 관련 스펙이 있으면 그 스펙 하나를 로컬에서 돌린다(전체는 먼저 묻는다). 사용자의 localhost:3000 에는 돌리지 않는다
-  (`PLAYWRIGHT_BASE_URL` 이 없으면 그리로 간다). 한 번에 한 세션 — 포트 3100 이 쓰이고 있으면 기다린다. 확인된 절차(2026-09-22):
+  (설정 기본값은 3100). 한 번에 한 세션 — 포트 3100 이 쓰이고 있으면 기다린다. 확인된 절차(2026-10-15):
     1. 리포를 리포 밖 임시 폴더로 복사(`.git` · `.next` · `node_modules` · `.env*` 제외), `node_modules` 는 `cp -c -R` 로 복제(링크는 Turbopack 이 거부).
        `.env` 는 e2e 값만 새로 쓴다(`DATABASE_URL=postgresql://<사용자>@localhost:5432/noslog_e2e` · 임시 `COOKIE_PASSWORD` · `BOOKMARKLET_SECRET`) —
        실제 `.env*` 를 가져오지 않는다(`.env.production.local` 에 운영 값이 있다).
     2. 복사본에서 `npx prisma migrate deploy` → `E2E_SEED=1 npm run db:seed:e2e` → `node prisma/import-music-catalog.mjs --apply`.
-    3. 복사본에서 `npx next dev -p 3100`, `PLAYWRIGHT_BASE_URL=http://localhost:3100 npx playwright test e2e/<스펙>`. 끝나면 3100 서버를 끈다.
+    3. 복사본에서 `npx next build && npx next start -p 3100`(운영 빌드 — CI 와 같다), 리포에서
+       `DATABASE_URL=<위 e2e 주소> npx playwright test e2e/<스펙>`. 기본은 모바일 한 폭, 두 폭이 필요한 테스트만 `@responsive` · `@desktop` 태그. 끝나면 3100 서버를 끈다.
 
 ## 사용자 규칙
 
@@ -57,7 +59,7 @@ Tailwind 4: 설정은 CSS(`app/globals.css`), `tailwind.config` 를 만들지 �
 
 - 임시 파일 · 스크립트 · 스크린샷은 리포 밖 임시 폴더(Claude 는 세션 스크래치패드)에만 만든다. 프로젝트 안에 두지 않는다.
 - 주는 `git add` 명령에는 내가 바꾼 파일 이름을 하나씩 적는다. `git add -A` · `git add .` 는 주지 않는다.
-- 여럿이 함께 고치는 파일(`docs/design/decisions.md` · `lib/i18n/messageCatalogs/*` · 공용 스타일)은 내 줄만 고치고,
+- 여럿이 함께 고치는 파일(`docs/design/decisions.md` · `lib/i18n/message-catalogs/*` · 공용 스타일)은 내 줄만 고치고,
   보고할 때 스테이징 전에 `git diff` 로 다른 세션 변경이 섞였는지 보라고 적는다.
 
 ## 먼저 묻는다 · 하지 않는다
@@ -93,6 +95,9 @@ Tailwind 4: 설정은 CSS(`app/globals.css`), `tailwind.config` 를 만들지 �
 - **가이드에 없는 시각 · 동작 결정은 만들지 않는다.** 비교 시안을 그려 보여 주고, 추천 하나를 표시하고, 사용자가 고른다.
   근거는 실측과 공식 문서로 대고, 확인하지 못한 것은 「미확인」 이라고 쓴다. 인용을 결론에 끼워 맞추지 않는다.
 - 사용자가 고른 안을 임의로 절충하지 않는다. 사용자가 지적한 범위만 고치고, 넓힐 때는 먼저 묻는다.
+- **토큰 · 공용 부품으로만 만든다(2026-10-15 사용자)** — 반복되는 요소는 되도록 공용 부품(`components/ui`)으로 만들고, 모든 시각 수치
+  (간격 · 안쪽/바깥 여백 · 모서리 · 선 · 색 · 글자 · 높이 · 층)는 토큰으로 쓴다. Tailwind 도 `nl` 별칭만 — 기본 스케일(`p-3` · `rounded-md` · `text-sm`) ·
+  임의값(`w-[13px]`) · 인라인 숫자를 쓰지 않는다. 토큰에 없는 값은 쓰지 않는다. 본문은 [디자인 가이드](docs/design/README.md) 1절.
 - **새 토큰을 만들지 않는다** — 있는 토큰을 불러와 쓴다. 새 토큰 · 가이드 값 밖 숫자 · 새 색 · 새 움직임이 필요해 보이면
   멈추고, 비교 시안을 그려 사용자 허락을 받은 뒤에만 더한다.
 - 로딩 · 움직임은 가이드 「로딩」 · 「움직임」 절의 기존 스켈레톤 · 공용 클래스를 따른다. 새로 만들지 않는다.
@@ -105,7 +110,7 @@ Tailwind 4: 설정은 CSS(`app/globals.css`), `tailwind.config` 를 만들지 �
     - 화면 · CSS · 토큰: + 가이드 「확인」 실측. Prisma 스키마: + `npx prisma generate` 먼저.
     - `next.config` · 의존성 · 라우트 구조 · 환경 변수: + `npm run build`.
     - 문서만(md): `npx prettier --check <파일>`.
-- **끝내기 전 정리** — 결정이 났으면 가이드 · `decisions.md` · 테스트 기대값 → 공개 화면의 새 문구는 `lib/i18n/messageCatalogs` 의
+- **끝내기 전 정리** — 결정이 났으면 가이드 · `decisions.md` · 테스트 기대값 → 공개 화면의 새 문구는 `lib/i18n/message-catalogs` 의
   ko · en · ja 세 곳 모두 → 커밋 제목 · 파일별 `git add`.
 - 보고에는 실제로 한 것만 쓴다. 안 한 검사는 「안 함」, 남은 한계는 그대로 적는다.
 - 이 파일은 짧게 둔다 — 같은 실수가 두 번 나오면 한 줄 더하고, 이미 지켜져 필요 없어진 줄은 뺀다.

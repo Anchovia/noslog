@@ -121,13 +121,16 @@
     color: inherit;
     text-decoration: none;
 }
-.noslog-ui .nl-dashboard__kpi:hover {
-    --nl-state-layer: var(--nl-interaction-hover);
-    background-image: linear-gradient(
-        var(--nl-state-layer),
-        var(--nl-state-layer)
-    );
+@media (hover: hover) {
+    .noslog-ui .nl-dashboard__kpi:hover {
+        --nl-state-layer: var(--nl-interaction-hover);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
+    }
 }
+
 .noslog-ui .nl-dashboard__kpi[aria-current="true"] {
     border-color: var(--nl-border-strong);
     background: var(--nl-surface-raised);
@@ -202,13 +205,16 @@
     color: inherit;
     text-decoration: none;
 }
-.noslog-ui .nl-dashboard__todo-item:hover {
-    --nl-state-layer: var(--nl-interaction-hover);
-    background-image: linear-gradient(
-        var(--nl-state-layer),
-        var(--nl-state-layer)
-    );
+@media (hover: hover) {
+    .noslog-ui .nl-dashboard__todo-item:hover {
+        --nl-state-layer: var(--nl-interaction-hover);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
+    }
 }
+
 .noslog-ui .nl-dashboard__todo-item .nl-metric-value {
     margin-left: auto;
 }
@@ -297,9 +303,12 @@
     box-shadow: inset 0 calc(var(--nl-stroke-strong) * -1) transparent;
     white-space: nowrap;
 }
-.noslog-ui .nl-admin-nav__tab:hover {
-    color: var(--nl-content-default);
+@media (hover: hover) {
+    .noslog-ui .nl-admin-nav__tab:hover {
+        color: var(--nl-content-default);
+    }
 }
+
 .noslog-ui .nl-admin-nav__tab--current {
     color: var(--nl-content-default);
     font-weight: var(--nl-type-weight-semibold);
@@ -327,10 +336,13 @@
         var(--nl-border-divider);
     color: inherit;
 }
-.noslog-ui .nl-admin-row:hover .nl-admin-row__title {
-    text-decoration: underline;
-    text-underline-position: under;
+@media (hover: hover) {
+    .noslog-ui .nl-admin-row:hover .nl-admin-row__title {
+        text-decoration: underline;
+        text-underline-position: under;
+    }
 }
+
 .noslog-ui .nl-admin-row__body {
     display: flex;
     flex: 1;
@@ -498,4 +510,85 @@
 }
 .noslog-ui [data-side="guest"]:is(.nl-chart-bar, .nl-dashboard__legend-dot) {
     background: var(--nl-local-data-bucket-5);
+}
+
+/* 관리자 · 채보 에디터 폭 · 격자(2026-10-15 B5 2단계) — Tailwind 기본 스케일 · 임의값 대신 토큰으로 만든 식(값 그대로) */
+/* 폰 폭 = 좁은 열 358 + 양옆 16(가이드 1절) — 에디터 옛 셸 · 옛 헤더 메뉴 */
+.noslog-ui .nl-admin-phone-frame {
+    max-width: calc(var(--nl-container-narrow) + var(--nl-spacing-16) * 2);
+}
+/* 라벨 : 값 두 칸 */
+.noslog-ui .nl-admin-pairs {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+}
+/* 요일 · 여는 시각 · 닫는 시각 */
+.noslog-ui .nl-admin-hours-row {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr);
+}
+/* 짧은 숫자 입력(구간값 · 레벨) 96 */
+.noslog-ui .nl-admin-number-input {
+    width: calc(var(--nl-spacing-48) * 2);
+}
+/* 펼친 검색 결과 · 오류 목록의 최대 높이 256 · 128 */
+.noslog-ui .nl-admin-scroll-list {
+    max-height: calc(var(--nl-spacing-64) * 4);
+}
+.noslog-ui .nl-admin-scroll-list--short {
+    max-height: calc(var(--nl-spacing-64) * 2);
+}
+/* 넓은 표 — 좁은 화면에서 가로로 민다 */
+.noslog-ui .nl-admin-table-wide {
+    min-width: var(--nl-container-compact);
+}
+/* 표 칸 줄임 폭 144 · 192 */
+.noslog-ui .nl-admin-cell-short {
+    max-width: calc(var(--nl-spacing-48) * 3);
+}
+.noslog-ui .nl-admin-cell {
+    max-width: calc(var(--nl-spacing-64) * 3);
+}
+/* 분자 / 분모 */
+.noslog-ui .nl-admin-ratio-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+}
+/* 채보 에디터 — 캔버스 옆 패널 · 레일 · 메뉴 폭은 편집 조작과 맞물려 값 그대로(320 · 192 · 240) */
+.noslog-ui .nl-editor-panel {
+    width: calc(var(--nl-spacing-64) * 5);
+}
+.noslog-ui .nl-editor-rail {
+    width: calc(var(--nl-spacing-64) * 3);
+}
+.noslog-ui .nl-editor-menu {
+    width: calc(var(--nl-spacing-48) * 5);
+}
+/* 위 막대 제목 · 저장 상태 · 오류 한 줄의 폭 */
+.noslog-ui .nl-editor-title {
+    max-width: calc(var(--nl-spacing-64) * 5);
+}
+.noslog-ui .nl-editor-status {
+    min-width: calc(var(--nl-spacing-48) * 3);
+}
+.noslog-ui .nl-editor-error {
+    max-width: calc(var(--nl-spacing-48) * 6);
+}
+/* 캔버스 · 눈금자 최소 높이 320 · 파형 높이 80 */
+.noslog-ui .nl-editor-canvas-min {
+    min-height: calc(var(--nl-spacing-64) * 5);
+}
+.noslog-ui .nl-editor-waveform {
+    height: calc(var(--nl-spacing-64) + var(--nl-spacing-16));
+}
+/* 목록 최대 높이 — 타이밍 포인트 192 · 영상 추출 노트 목록 288 */
+.noslog-ui .nl-editor-point-list {
+    max-height: calc(var(--nl-spacing-64) * 3);
+}
+.noslog-ui .nl-editor-file-list {
+    max-height: calc(var(--nl-spacing-48) * 6);
+}
+/* 스냅 확인 구역 — 속성 칸 높이의 비율(45%)이라 토큰 밖 길이가 아니다 */
+.noslog-ui .nl-editor-snap {
+    max-height: 45%;
 }

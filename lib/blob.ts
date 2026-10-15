@@ -5,12 +5,12 @@ import { generateClientTokenFromReadWriteToken } from "@vercel/blob/client";
 
 import { serverEnv } from "@/lib/env/server";
 import {
-    MAX_IMAGE_SIZE,
-    isImageContentType,
     type ImageContentType,
-} from "@/lib/imageUploadRules";
+    isImageContentType,
+    MAX_IMAGE_SIZE,
+} from "@/lib/image-upload-rules";
 
-export { isImageContentType } from "@/lib/imageUploadRules";
+export { isImageContentType } from "@/lib/image-upload-rules";
 
 function imageExtension(contentType: ImageContentType) {
     return contentType === "image/jpeg" ? "jpg" : contentType.split("/")[1];

@@ -31,7 +31,7 @@ vi.mock("@/lib/i18n/server", () => ({
 import {
     classifySyncAttempt,
     getSyncStatus,
-} from "@/features/sync/server/syncStatusService";
+} from "@/features/sync/server/sync-status-service";
 import { GET } from "@/app/api/sync/status/route";
 
 const now = new Date("2026-09-07T00:00:00.000Z");

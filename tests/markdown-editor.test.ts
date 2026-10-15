@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { applyMarkdownTool } from "@/components/ui/markdownEditor";
+import { applyMarkdownTool } from "@/components/ui/markdown-editor";
 
 describe("마크다운 입력 서식 버튼", () => {
     it("wraps the selection in bold and keeps the text selected", () => {

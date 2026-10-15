@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { maskOfficialXPostLinks } from "@/features/home/officialXPostContent";
+import { maskOfficialXPostLinks } from "@/features/home/official-x-post-content";
 
 const { env, generateContent } = vi.hoisted(() => ({
     env: { GEMINI_API_KEY: undefined as string | undefined },
@@ -40,7 +40,7 @@ const text =
 
 async function load() {
     vi.resetModules();
-    return import("@/features/home/server/officialXPostTranslation");
+    return import("@/features/home/server/official-x-post-translation");
 }
 
 describe("official X post link masking", () => {
@@ -128,7 +128,7 @@ describe("official X post translation", () => {
             en: "en",
         });
         expect(generateContent.mock.calls.map((call) => call[0].model)).toEqual(
-            [...OFFICIAL_X_TRANSLATION_MODELS]
+            OFFICIAL_X_TRANSLATION_MODELS.slice(0, 3)
         );
     });
 
@@ -176,7 +176,7 @@ describe("official X post translation", () => {
             en: "en",
         });
         expect(generateContent.mock.calls.map((call) => call[0].model)).toEqual(
-            [...OFFICIAL_X_TRANSLATION_MODELS]
+            OFFICIAL_X_TRANSLATION_MODELS.slice(0, 3)
         );
 
         generateContent.mockReset();

@@ -4,7 +4,7 @@ import {
     eligibleAnnouncementSummaries,
     localizeAnnouncement,
     localizeAnnouncementSummary,
-} from "@/features/announcements/schemas/publicAnnouncementSchema";
+} from "@/features/announcements/schemas/public-announcement-schema";
 
 const mocks = vi.hoisted(() => ({
     summaries: vi.fn(),
@@ -30,7 +30,7 @@ import {
     getAnnouncement,
     getAnnouncementArchive,
     getHomeAnnouncements,
-} from "@/features/announcements/server/publicAnnouncementService";
+} from "@/features/announcements/server/public-announcement-service";
 
 const record = (id: number) => ({
     id,

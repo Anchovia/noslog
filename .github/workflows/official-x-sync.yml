@@ -39,6 +39,11 @@ jobs:
                       --output "$response_file" --write-out '%{http_code}' "$SYNC_URL")
                   # 실패하면 왜 실패했는지 남긴다 — 응답의 code · message 만(비밀값은 본문에 없다).
                   # 2026-09-23 두 번 실패했을 때 로그에 이유가 없어 원인을 좁히지 못했다
+                  # 번역 대기는 원문을 보관하고 다음 주기에 다시 하는 정상 상황이라 경고로만 남긴다(2026-10-15 D9).
+                  if [ "$status" = "503" ] && [ "$(jq -r '.code // ""' "$response_file")" = "TRANSLATION_PENDING" ]; then
+                      echo "::warning::$(jq -r '.message // "translation pending"' "$response_file")"
+                      exit 0
+                  fi
                   if [ "$status" != "200" ]; then
                       echo "HTTP $status" >&2
                       jq -r '"\(.code // "UNKNOWN"): \(.message // "no message")"' \

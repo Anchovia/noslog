@@ -8,7 +8,7 @@ vi.mock("@/lib/db", () => ({
     default: { user: { count: mocks.count } },
 }));
 
-import { getUserRankingPosition } from "@/features/rankings/server/rankingPosition";
+import { getUserRankingPosition } from "@/features/rankings/server/ranking-position";
 
 describe("getUserRankingPosition", () => {
     beforeEach(() => {

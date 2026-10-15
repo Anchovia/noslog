@@ -50,6 +50,12 @@
     gap: var(--nl-spacing-8);
     min-height: 44px;
 }
+@media (hover: hover) {
+    .noslog-ui .nl-back-link:hover {
+        text-decoration: underline;
+        text-underline-offset: var(--nl-underline-offset);
+    }
+}
 .noslog-ui .nl-back-link svg {
     width: var(--nl-icon-small);
     height: var(--nl-icon-small);
@@ -123,6 +129,18 @@
     color: var(--nl-identity-mark);
     flex-shrink: 0;
 }
+/* NosLog 아이콘(2026-10-15 B) — 채운 원 = 로고 색, 고양이 = 바탕색. 크기는 감싼 칸이 정한다 */
+.noslog-ui .nl-brand-mark {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+.noslog-ui .nl-brand-mark__circle {
+    fill: var(--nl-identity-mark);
+}
+.noslog-ui .nl-brand-mark__cat {
+    fill: var(--nl-surface-canvas);
+}
 /* 넓은 화면 헤더 메뉴(2026-09-30 A1 · P1) — 1056 이상에서 이동 메뉴를 로고 옆에 나란히. 그 아래 폭은 ≡ 안에만 */
 .noslog-ui .nl-header__nav {
     display: none;
@@ -139,6 +157,11 @@
     height: var(--nl-control-height);
     border-radius: var(--nl-radius-full);
 }
+/* 사진은 칸을 채운다 — 1056 이상 40 에서 44 로 넘치지 않게(2026-10-15 토큰 점검 A) */
+.noslog-ui .nl-account > .nl-avatar {
+    width: 100%;
+    height: 100%;
+}
 .noslog-ui .nl-login {
     display: flex;
     height: var(--nl-control-height);
@@ -154,6 +177,7 @@
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    border-radius: var(--nl-radius-field);
 }
 .noslog-ui .nl-nav-trigger > svg {
     width: var(--nl-icon-large);
@@ -288,10 +312,13 @@
         --nl-layout-margin: var(--nl-grid-margin-wide);
     }
 }
+/* 12 로 줄이면 굵기도 metadata 400 — 지금 줄은 menu-set 면이 표시한다(2026-10-15 토큰 점검 A, 12 굵게 금지) */
 @media (max-width: 359px) {
-    .noslog-ui .nl-destination {
+    .noslog-ui .nl-destination,
+    .noslog-ui .nl-destination[aria-current="page"] {
         font-size: var(--nl-type-size-12);
         line-height: var(--nl-type-line-height-16);
+        font-weight: var(--nl-type-weight-regular);
     }
 }
 /* 헤더 메뉴 이동 줄 — 폰 48 · 데스크톱 컨트롤 높이(40). 부품 결정 ⑥ */

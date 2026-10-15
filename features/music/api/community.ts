@@ -1,12 +1,13 @@
 import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
-import { readApiResponse } from "@/lib/api/response";
+
+import type { OpinionQuery } from "@/features/music/schemas/community-schema";
 import {
     communityDataSchema,
     opinionPageSchema,
     opinionReplyListSchema,
     patternDataSchema,
-} from "@/features/music/schemas/communitySchema";
-import type { OpinionQuery } from "@/features/music/schemas/communitySchema";
+} from "@/features/music/schemas/community-schema";
+import { readApiResponse } from "@/lib/api/response";
 
 async function getCommunity(params: URLSearchParams, signal: AbortSignal) {
     return readApiResponse<unknown>(

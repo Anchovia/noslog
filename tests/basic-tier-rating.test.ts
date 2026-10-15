@@ -8,7 +8,7 @@ import {
     getBasicRatingBasePower,
     getBasicRatingCoefficient,
     getBasicRatingMaxContribution,
-} from "@/lib/tiers/basicRating";
+} from "@/lib/tiers/basic-rating";
 import { describe, expect, it } from "vitest";
 
 describe("Basic 서열 레이팅", () => {

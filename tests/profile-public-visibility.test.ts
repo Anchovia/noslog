@@ -15,10 +15,10 @@ vi.mock("@/lib/db", () => ({
         chartPlayHistory: { findMany: mocks.recent },
     },
 }));
-vi.mock("@/features/rankings/server/rankingPosition", () => ({
+vi.mock("@/features/rankings/server/ranking-position", () => ({
     getUserRankingPosition: vi.fn().mockResolvedValue(1),
 }));
-vi.mock("@/features/contributions/server/contributionPointService", () => ({
+vi.mock("@/features/contributions/server/contribution-point-service", () => ({
     getContributionTotal: vi.fn().mockResolvedValue({
         points: 0,
         chart_field: 0,
@@ -27,13 +27,13 @@ vi.mock("@/features/contributions/server/contributionPointService", () => ({
     }),
 }));
 
-vi.mock("@/features/achievements/server/achievementService", () => ({
+vi.mock("@/features/achievements/server/achievement-service", () => ({
     getAchievementRecords: vi
         .fn()
         .mockResolvedValue({ earned: [], pins: [], recipients: {} }),
 }));
 
-import { getCachedProfileData } from "@/app/(nevigation)/profile/[id]/data";
+import { getCachedProfileData } from "@/app/(site)/profile/[id]/data";
 
 const sourceUser = {
     id: 7,

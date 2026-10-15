@@ -7,8 +7,8 @@ import {
     chartCommentInputSchema,
     draftReviewSchema,
     saveUserDraftSchema,
-} from "@/features/contributions/schemas/chartDraftSchema";
-import { CONTRIBUTION_POINTS } from "@/features/contributions/contributionLevel";
+} from "@/features/contributions/schemas/chart-draft-schema";
+import { CONTRIBUTION_POINTS } from "@/features/contributions/contribution-level";
 import { createDefaultChartDocument } from "@/lib/chart-pattern/schema";
 
 const document = createDefaultChartDocument({ bpm: 120, durationMs: 60_000 });

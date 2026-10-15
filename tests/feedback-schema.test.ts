@@ -4,7 +4,7 @@ import {
     createFeedbackReportFormData,
     createFeedbackReportSchema,
     feedbackReportInputFromFormData,
-} from "@/features/feedback/schemas/feedbackReportSchema";
+} from "@/features/feedback/schemas/feedback-report-schema";
 import { createTranslator, getMessages } from "@/lib/i18n/messages";
 import type { Locale } from "@/lib/i18n/routing";
 

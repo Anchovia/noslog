@@ -6,7 +6,7 @@ import {
     getPrivacyVersionCopy,
     PRIVACY_PREVIOUS_VERSIONS,
     privacyVersionPeriod,
-} from "@/features/privacy/content/privacyContent";
+} from "@/features/privacy/content/privacy-content";
 
 describe("개인정보처리방침 이전 버전", () => {
     it("보관한 버전은 세 언어 모두 방침 형식을 지킨다", () => {

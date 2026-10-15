@@ -7,7 +7,7 @@ import {
     createChartEvaluationSchema,
     type ChartEvaluationFormValues,
     type ChartEvaluationValues,
-} from "@/features/music/schemas/chartEvaluationSchema";
+} from "@/features/music/schemas/chart-evaluation-schema";
 import { createTranslator, getMessages } from "@/lib/i18n/messages";
 import { SUPPORTED_LOCALES } from "@/lib/i18n/routing";
 

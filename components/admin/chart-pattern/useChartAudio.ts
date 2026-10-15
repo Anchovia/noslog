@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { useTranslations } from "@/components/i18n/localeProvider";
+import { useTranslations } from "@/components/i18n/locale-provider";
 
 import { getChartEditorNavigationDurationMs } from "@/lib/chart-pattern/editor";
 import { getMetronomePeakGain } from "@/lib/chart-pattern/metronome";

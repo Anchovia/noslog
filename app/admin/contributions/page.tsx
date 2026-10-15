@@ -1,16 +1,16 @@
 import Link from "next/link";
 
-import ChartDraftReviewList from "@/features/contributions/components/admin/chartDraftReviewList";
-import ChartFieldProposalReview from "@/features/contributions/components/admin/chartFieldProposalReview";
+import ChartDraftReviewList from "@/features/contributions/components/admin/chart-draft-review-list";
+import ChartFieldProposalReview from "@/features/contributions/components/admin/chart-field-proposal-review";
 import {
     CHART_FIELD_PROPOSAL_STATUSES,
     type ChartFieldProposalStatus,
-} from "@/features/contributions/schemas/chartFieldProposalSchema";
-import { listChartDraftsForReview } from "@/features/contributions/server/chartDraftService";
+} from "@/features/contributions/schemas/chart-field-proposal-schema";
+import { listChartDraftsForReview } from "@/features/contributions/server/chart-draft-service";
 import {
     getChartFieldQueueStatus,
     listChartFieldProposals,
-} from "@/features/contributions/server/chartFieldProposalService";
+} from "@/features/contributions/server/chart-field-proposal-service";
 
 const DRAFT_STATUSES = ["submitted", "changes_requested", "published"] as const;
 type DraftStatus = (typeof DRAFT_STATUSES)[number];
@@ -29,10 +29,10 @@ function draftStatusLabel(status: DraftStatus) {
 
 function tabClass(active: boolean) {
     return (
-        "rounded-md px-3 py-2 text-sm font-semibold transition-colors " +
+        "rounded-nl-field px-nl-12 py-nl-8 nl-emphasis-label  transition-colors duration-nl-state " +
         (active
-            ? "bg-text-primary text-bg"
-            : "bg-surface text-text-secondary hover:bg-surface-muted")
+            ? "bg-nl-primary text-nl-on-primary"
+            : "bg-nl-surface text-nl-subdued nl-hover-layer")
     );
 }
 
@@ -49,17 +49,17 @@ export default async function AdminContributionsPage({
     const kind = params.kind === "chart" ? "chart" : "field";
 
     return (
-        <div className="flex flex-col gap-4 py-5">
+        <div className="flex flex-col gap-nl-16 py-nl-24">
             <section>
-                <h1 className="text-title">기여</h1>
-                <p className="text-caption mt-1">
+                <h1 className="nl-section-title text-nl-content">기여</h1>
+                <p className="nl-metadata mt-nl-4 text-nl-subdued">
                     {kind === "field"
                         ? "유저가 제안한 채보 정보를 확인하고 반영하거나 반려합니다. 반영하면 곡 상세에 바로 보이고 출처가 제안으로 남습니다."
                         : "유저가 만든 채보 초안을 검토합니다. 에디터 검토 모드에서 시각 댓글을 달고 수정을 요청하거나 공개합니다."}
                 </p>
             </section>
 
-            <nav className="flex gap-2" aria-label="기여 종류">
+            <nav className="flex gap-nl-8" aria-label="기여 종류">
                 <Link
                     href="/admin/contributions"
                     className={tabClass(kind === "field")}
@@ -92,7 +92,7 @@ async function FieldProposals({ status: raw }: { status?: string }) {
     ]);
     return (
         <>
-            <nav className="flex gap-2" aria-label="처리 상태">
+            <nav className="flex gap-nl-8" aria-label="처리 상태">
                 {CHART_FIELD_PROPOSAL_STATUSES.map((item) => (
                     <Link
                         key={item}
@@ -105,7 +105,7 @@ async function FieldProposals({ status: raw }: { status?: string }) {
             </nav>
             {/* 대기 현황(2026-10-01 G1) — 기여자 쪽 제안 창과 같은 숫자를 운영자도 본다 */}
             {queue.pending ? (
-                <p className="text-caption">
+                <p className="nl-metadata text-nl-subdued">
                     검토 대기 {queue.pending.toLocaleString("ko-KR")}건
                     {queue.oldestDays
                         ? ` · 가장 오래 기다린 제안 ${queue.oldestDays.toLocaleString("ko-KR")}일`
@@ -118,7 +118,7 @@ async function FieldProposals({ status: raw }: { status?: string }) {
                     reviewable={status === "pending"}
                 />
             ) : (
-                <p className="bg-surface text-body-muted rounded-card py-12 text-center">
+                <p className="nl-body-secondary rounded-nl-container bg-nl-surface py-nl-48 text-center text-nl-subdued">
                     해당하는 제안이 없습니다.
                 </p>
             )}
@@ -131,7 +131,7 @@ async function ChartDrafts({ status: raw }: { status?: string }) {
     const drafts = await listChartDraftsForReview(status);
     return (
         <>
-            <nav className="flex gap-2" aria-label="처리 상태">
+            <nav className="flex gap-nl-8" aria-label="처리 상태">
                 {DRAFT_STATUSES.map((item) => (
                     <Link
                         key={item}
@@ -145,7 +145,7 @@ async function ChartDrafts({ status: raw }: { status?: string }) {
             {drafts.length ? (
                 <ChartDraftReviewList drafts={drafts} />
             ) : (
-                <p className="bg-surface text-body-muted rounded-card py-12 text-center">
+                <p className="nl-body-secondary rounded-nl-container bg-nl-surface py-nl-48 text-center text-nl-subdued">
                     해당하는 채보 초안이 없습니다.
                 </p>
             )}

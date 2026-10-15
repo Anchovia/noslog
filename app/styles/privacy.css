@@ -43,7 +43,7 @@
     gap: var(--nl-section-title-gap);
 }
 .noslog-ui .nl-privacy-section h2 {
-    scroll-margin-top: calc(var(--nl-header-height) + var(--nl-spacing-24));
+    scroll-margin-top: calc(var(--nl-header-height) + var(--nl-spacing-16));
 }
 .noslog-ui .nl-privacy-item {
     display: flex;

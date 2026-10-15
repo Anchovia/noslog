@@ -8,7 +8,7 @@ import {
     communityEvaluationInputSchema,
     EMPTY_PATTERN_RATINGS,
     goalVoteInputSchema,
-} from "@/features/music/schemas/communitySchema";
+} from "@/features/music/schemas/community-schema";
 
 describe("2.0 chart community contract", () => {
     it("keeps a selected zero distinct from an omitted axis", () => {

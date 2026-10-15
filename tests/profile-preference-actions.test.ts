@@ -25,10 +25,10 @@ vi.mock("@/lib/observability/server", () => ({ logServerError: mocks.log }));
 import {
     clearPreferredArcade,
     setPreferredArcade,
-} from "@/app/(nevigation)/gamecenter/actions";
-import { regenerateSyncToken } from "@/app/(nevigation)/bookmarklet/action";
+} from "@/app/(site)/gamecenter/actions";
+import { regenerateSyncToken } from "@/app/(site)/bookmarklet/action";
 import { createTranslator, getMessages } from "@/lib/i18n/messages";
-import { CACHE_TAGS, getUserProfileTag } from "@/lib/cacheTags";
+import { CACHE_TAGS, getUserProfileTag } from "@/lib/cache-tags";
 import type { Locale } from "@/lib/i18n/routing";
 
 describe("profile preference action boundaries", () => {
@@ -83,7 +83,6 @@ describe("profile preference action boundaries", () => {
         });
         expect(mocks.tag.mock.calls).toEqual([
             [CACHE_TAGS.arcades],
-            [CACHE_TAGS.userProfiles],
             [getUserProfileTag(7)],
         ]);
         expect(mocks.revalidate.mock.calls).toEqual([
@@ -159,7 +158,6 @@ describe("profile preference action boundaries", () => {
         expect(mocks.update).not.toHaveBeenCalled();
         expect(mocks.tag.mock.calls).toEqual([
             [CACHE_TAGS.arcades],
-            [CACHE_TAGS.userProfiles],
             [getUserProfileTag(7)],
         ]);
         expect(mocks.revalidate.mock.calls).toEqual([

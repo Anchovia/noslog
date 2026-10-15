@@ -4,10 +4,10 @@ import { createHash, randomBytes } from "node:crypto";
 
 import {
     apiRouteFromPath,
+    type ExternalEvent,
     isBotUserAgent,
     pageRouteFromPath,
-    type ExternalEvent,
-} from "@/lib/analyticsRoutes";
+} from "@/lib/analytics-routes";
 import db from "@/lib/db";
 
 // 날짜별 합계의 종류 — visitors·pageviews 는 열쇠 없이 하루 합계, page·api·external 은 경로·이름별,
@@ -110,21 +110,29 @@ export async function recordPageView({
     const hash = createHash("sha256")
         .update(`${salt}|${ip ?? ""}|${userAgent ?? ""}`)
         .digest("hex");
-    const firstVisit = await db.$executeRaw`
-        INSERT INTO "analytics_visitors" ("date", "hash")
-        VALUES (${date}::date, ${hash})
-        ON CONFLICT DO NOTHING`;
     const audience: AnalyticsAudience = signedIn ? "member" : "guest";
-    await Promise.all([
-        incrementAnalytics("pageviews", "", now),
-        incrementAnalytics("page", route, now),
-        incrementAnalytics("hour", analyticsHourKey(now), now),
-        incrementAnalytics("audience", audience, now),
-        firstVisit > 0 ? incrementAnalytics("visitors", "", now) : null,
-        firstVisit > 0
-            ? incrementAnalytics("audienceVisitor", audience, now)
-            : null,
-    ]);
+    const hour = analyticsHourKey(now);
+    // 방문자 기록과 합계 넷(그날 처음이면 여섯)을 한 문장으로(2026-10-15 S8) — DB 왕복 1번.
+    // 방문자 해시가 새로 들어간 때만(visitor 가 한 줄) 방문자 · 가입자/손님 방문자 합계를 더한다.
+    // 행을 늘 같은 순서로 잠그도록 정렬해 동시 요청끼리 교착되지 않게 한다
+    await db.$executeRaw`
+        WITH visitor AS (
+            INSERT INTO "analytics_visitors" ("date", "hash")
+            VALUES (${date}::date, ${hash})
+            ON CONFLICT DO NOTHING
+            RETURNING 1
+        ), counted ("kind", "key") AS (
+            VALUES ('pageviews'::text, ''::text),
+                ('page', ${route}::text),
+                ('hour', ${hour}::text),
+                ('audience', ${audience}::text)
+            UNION ALL SELECT 'visitors', '' FROM visitor
+            UNION ALL SELECT 'audienceVisitor', ${audience}::text FROM visitor
+        )
+        INSERT INTO "analytics_daily_counts" ("date", "kind", "key", "count")
+        SELECT ${date}::date, "kind", "key", 1 FROM counted ORDER BY "kind", "key"
+        ON CONFLICT ("date", "kind", "key")
+        DO UPDATE SET "count" = "analytics_daily_counts"."count" + 1`;
     return true;
 }
 

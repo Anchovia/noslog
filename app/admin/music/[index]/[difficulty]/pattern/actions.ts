@@ -5,7 +5,7 @@ import { revalidatePath, revalidateTag } from "next/cache";
 import { z } from "zod";
 
 import { requireAdmin } from "@/lib/admin";
-import { CACHE_TAGS } from "@/lib/cacheTags";
+import { CACHE_TAGS } from "@/lib/cache-tags";
 import { findChartNoteConflicts } from "@/lib/chart-pattern/editor";
 import {
     chartDocumentSchema,

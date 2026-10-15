@@ -1,26 +1,20 @@
 import { notFound, redirect } from "next/navigation";
 
-import db from "@/lib/db";
-import getSession from "@/lib/session";
+import { getSessionUser } from "@/lib/user";
 
-// 관리자 페이지와 Server Action에서 동일한 권한 검사를 사용함
+// 관리자 페이지와 Server Action에서 동일한 권한 검사를 사용함.
+// 사용자 조회는 같은 요청의 헤더 등과 함께 한 번만 한다(React cache, 2026-10-15 CORE-15)
 export async function requireAdmin() {
-    const session = await getSession();
+    const { session, user } = await getSessionUser();
 
     if (!session.id) redirect("/login");
-
-    const user = await db.user.findUnique({
-        where: { id: session.id },
-        select: {
-            id: true,
-            username: true,
-            nostalgia_name: true,
-            avatar: true,
-            role: true,
-        },
-    });
-
     if (!user || user.role !== "admin") notFound();
 
-    return user;
+    return {
+        id: user.id,
+        username: user.username,
+        nostalgia_name: user.nostalgia_name,
+        avatar: user.avatar,
+        role: user.role,
+    };
 }

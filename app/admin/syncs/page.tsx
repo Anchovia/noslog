@@ -6,12 +6,12 @@ import {
     DatabaseZap,
     LoaderCircle,
 } from "lucide-react";
-import Link from "next/link";
+import FilterChipLinks from "@/components/ui/filter-chip-links";
 
-import { getSyncHealthClassName } from "@/lib/admin/syncHealth";
-import { getAdminSyncs } from "@/features/admin/server/adminSyncService";
-import { ADMIN_SYNC_STATUSES as statuses } from "@/features/admin/schemas/adminSyncSchema";
-import AchievementRejudgePanel from "@/features/achievements/components/admin/achievementRejudgePanel";
+import { getSyncHealthTagTone } from "@/lib/admin/sync-health";
+import { getAdminSyncs } from "@/features/admin/server/admin-sync-service";
+import { ADMIN_SYNC_STATUSES as statuses } from "@/features/admin/schemas/admin-sync-schema";
+import AchievementRejudgePanel from "@/features/achievements/components/admin/achievement-rejudge-panel";
 
 export default async function AdminSyncsPage({
     searchParams,
@@ -30,68 +30,71 @@ export default async function AdminSyncsPage({
         {
             label: "24시간 완료",
             value: completedCount,
-            className: "text-success",
+            className: "text-nl-success",
         },
         {
             label: "24시간 실패",
             value: failedCount,
-            className: "text-danger",
+            className: "text-nl-error",
         },
         {
             label: "처리 중",
             value: processingCount,
-            className: "text-basic",
+            className: "text-nl-content",
         },
         {
             label: "10분 이상 지연",
             value: staleCount,
-            className: "text-score",
+            className: "text-nl-warning",
         },
     ];
 
     return (
-        <div className="flex flex-col gap-4 py-5">
+        <div className="flex flex-col gap-nl-16 py-nl-24">
             <section>
-                <h1 className="text-title">동기화 내역</h1>
-                <p className="text-caption mt-1">
+                <h1 className="nl-section-title text-nl-content">
+                    동기화 내역
+                </h1>
+                <p className="nl-metadata mt-nl-4 text-nl-subdued">
                     데이터 수집 범위와 처리 결과, 오류를 확인합니다.
                 </p>
             </section>
             {/* 업적 다시 판정(2026-09-25 B1) — 배포 뒤 첫 판정 · 기준 수치를 바꾼 뒤 */}
             <AchievementRejudgePanel />
-            <section className="grid grid-cols-2 gap-2">
+            <section className="grid grid-cols-2 gap-nl-8">
                 {summaries.map((summary) => (
                     <div
                         key={summary.label}
-                        className="bg-surface rounded-card p-3"
+                        className="rounded-nl-container bg-nl-surface p-nl-12"
                     >
-                        <p className="text-caption">{summary.label}</p>
+                        <p className="nl-metadata text-nl-subdued">
+                            {summary.label}
+                        </p>
                         <strong
-                            className={`${summary.className} text-section mt-1 block tabular-nums`}
+                            className={`${summary.className} nl-component-title mt-nl-4 block`}
                         >
                             {summary.value.toLocaleString("ko-KR")}
                         </strong>
                     </div>
                 ))}
             </section>
-            <nav className="flex gap-2 overflow-x-auto">
-                {statuses.map((item) => (
-                    <Link
-                        key={item}
-                        href={`/admin/syncs?status=${item}`}
-                        className={`shrink-0 rounded-md px-3 py-2 text-sm font-semibold ${status === item ? "bg-text-primary text-bg" : "bg-surface text-text-secondary"}`}
-                    >
-                        {item === "all"
+            <FilterChipLinks
+                label="동기화 상태"
+                options={statuses.map((item) => ({
+                    key: item,
+                    href: `/admin/syncs?status=${item}`,
+                    selected: status === item,
+                    label:
+                        item === "all"
                             ? "전체"
                             : item === "processing"
                               ? "처리 중"
                               : item === "completed"
                                 ? "완료"
-                                : "실패"}
-                    </Link>
-                ))}
-            </nav>
-            <section className="flex flex-col gap-2">
+                                : "실패",
+                }))}
+            />
+            <section className="flex flex-col gap-nl-8">
                 {syncs.map((sync) => {
                     const {
                         storedRecentCount,
@@ -112,28 +115,28 @@ export default async function AdminSyncsPage({
                                 : Clock3;
                     const color =
                         sync.status === "failed"
-                            ? "text-danger bg-danger/10"
+                            ? "text-nl-error"
                             : sync.status === "completed"
-                              ? "text-success bg-success/10"
-                              : "text-score bg-score/10";
+                              ? "text-nl-success"
+                              : "text-nl-warning";
                     return (
                         <article
                             key={sync.id}
-                            className="bg-surface rounded-card flex flex-col gap-3 p-3"
+                            className="flex flex-col gap-nl-12 rounded-nl-container bg-nl-surface p-nl-12"
                         >
-                            <div className="flex items-start gap-3">
+                            <div className="flex items-start gap-nl-12">
                                 <span
-                                    className={`${color} flex size-9 shrink-0 items-center justify-center rounded-md`}
+                                    className={`${color} flex size-nl-32 shrink-0 items-center justify-center rounded-nl-field bg-nl-raised`}
                                 >
-                                    <Icon className="size-4" />
+                                    <Icon className="nl-icon-small" />
                                 </span>
                                 <div className="min-w-0 flex-1">
-                                    <p className="text-body truncate font-bold">
+                                    <p className="nl-emphasis-label truncate text-nl-content">
                                         {sync.user.nostalgia_name ??
                                             sync.user.username ??
                                             `유저 ${sync.user.id}`}
                                     </p>
-                                    <p className="text-caption">
+                                    <p className="nl-metadata text-nl-subdued">
                                         #{sync.id} ·{" "}
                                         {sync.sync_scope === "full"
                                             ? "전체 기록"
@@ -145,90 +148,99 @@ export default async function AdminSyncsPage({
                                     </p>
                                 </div>
                                 <span
-                                    className={`${getSyncHealthClassName(health.tone)} shrink-0 rounded-full px-2 py-1 text-xs font-semibold`}
+                                    className="nl-tag nl-tag--status shrink-0"
+                                    data-tone={getSyncHealthTagTone(
+                                        health.tone
+                                    )}
                                 >
                                     {health.label}
                                 </span>
                             </div>
-                            <div className="grid grid-cols-3 gap-2 text-center">
-                                <div className="bg-bg rounded-md p-2">
-                                    <p className="text-caption">수신</p>
-                                    <strong className="text-sm tabular-nums">
+                            <div className="grid grid-cols-3 gap-nl-8 text-center">
+                                <div className="rounded-nl-field bg-nl-canvas p-nl-8">
+                                    <p className="nl-metadata text-nl-subdued">
+                                        수신
+                                    </p>
+                                    <strong className="nl-metric-value">
                                         {sync.received_plays}
                                     </strong>
                                 </div>
-                                <div className="bg-bg rounded-md p-2">
-                                    <p className="text-caption">추가</p>
-                                    <strong className="text-sm tabular-nums">
+                                <div className="rounded-nl-field bg-nl-canvas p-nl-8">
+                                    <p className="nl-metadata text-nl-subdued">
+                                        추가
+                                    </p>
+                                    <strong className="nl-metric-value">
                                         {sync.inserted_plays}
                                     </strong>
                                 </div>
-                                <div className="bg-bg rounded-md p-2">
-                                    <p className="text-caption">변경</p>
-                                    <strong className="text-sm tabular-nums">
+                                <div className="rounded-nl-field bg-nl-canvas p-nl-8">
+                                    <p className="nl-metadata text-nl-subdued">
+                                        변경
+                                    </p>
+                                    <strong className="nl-metric-value">
                                         {sync.changed_records}
                                     </strong>
                                 </div>
                             </div>
-                            <details className="border-border border-t pt-3">
-                                <summary className="text-label flex cursor-pointer list-none items-center justify-between font-semibold">
-                                    <span className="flex items-center gap-1.5">
-                                        <DatabaseZap className="size-3.5" />
+                            <details className="border-t-nl-stroke border-nl-border pt-nl-12">
+                                <summary className="nl-emphasis-label flex cursor-pointer list-none items-center justify-between text-nl-content">
+                                    <span className="flex items-center gap-nl-8">
+                                        <DatabaseZap className="nl-icon-small" />
                                         수신 데이터 상태
                                     </span>
-                                    <Activity className="text-text-disabled size-3.5" />
+                                    <Activity className="nl-icon-small text-nl-disabled" />
                                 </summary>
-                                <dl className="mt-3 grid grid-cols-2 gap-x-3 gap-y-2">
+                                <dl className="mt-nl-12 grid grid-cols-2 gap-x-nl-12 gap-y-nl-8">
                                     <div>
-                                        <dt className="text-micro">
+                                        <dt className="nl-metadata text-nl-subdued">
                                             최근 기록 저장
                                         </dt>
-                                        <dd className="text-label tabular-nums">
+                                        <dd className="nl-metric-value text-nl-content">
                                             {storedRecentCount} /{" "}
                                             {sync.inserted_plays}
                                         </dd>
                                     </div>
                                     <div>
-                                        <dt className="text-micro">
+                                        <dt className="nl-metadata text-nl-subdued">
                                             최근 기록 판정
                                         </dt>
-                                        <dd className="text-label tabular-nums">
+                                        <dd className="nl-metric-value text-nl-content">
                                             {recentJudgementCount} /{" "}
                                             {storedRecentCount}
                                         </dd>
                                     </div>
                                     <div>
-                                        <dt className="text-micro">
+                                        <dt className="nl-metadata text-nl-subdued">
                                             FAST/SLOW
                                         </dt>
-                                        <dd className="text-label tabular-nums">
+                                        <dd className="nl-metric-value text-nl-content">
                                             {recentFastSlowCount} /{" "}
                                             {storedRecentCount}
                                         </dd>
                                     </div>
                                     <div>
-                                        <dt className="text-micro">
+                                        <dt className="nl-metadata text-nl-subdued">
                                             변경 기록 저장
                                         </dt>
-                                        <dd className="text-label tabular-nums">
+                                        <dd className="nl-metric-value text-nl-content">
                                             {storedSnapshotCount} /{" "}
                                             {sync.changed_records}
                                         </dd>
                                     </div>
                                     <div>
-                                        <dt className="text-micro">
+                                        <dt className="nl-metadata text-nl-subdued">
                                             변경 기록 판정
                                         </dt>
-                                        <dd className="text-label tabular-nums">
+                                        <dd className="nl-metric-value text-nl-content">
                                             {snapshotJudgementCount} /{" "}
                                             {storedSnapshotCount}
                                         </dd>
                                     </div>
                                     <div>
-                                        <dt className="text-micro">
+                                        <dt className="nl-metadata text-nl-subdued">
                                             음표 성공률
                                         </dt>
-                                        <dd className="text-label tabular-nums">
+                                        <dd className="nl-metric-value text-nl-content">
                                             {snapshotNoteRateCount} /{" "}
                                             {storedSnapshotCount}
                                         </dd>
@@ -237,13 +249,13 @@ export default async function AdminSyncsPage({
                             </details>
                             {sync.error_message ? (
                                 <pre
-                                    className={`${sync.status === "completed" ? "border-score/30 bg-score/5 text-score" : "border-danger/30 bg-danger/5 text-danger"} overflow-x-auto rounded-md border p-2 text-xs whitespace-pre-wrap`}
+                                    className={`${sync.status === "completed" ? "text-nl-warning" : "text-nl-error"} nl-metadata overflow-x-auto whitespace-pre-wrap`}
                                 >
                                     {sync.error_message}
                                 </pre>
                             ) : null}
                             {sync.completed_at ? (
-                                <p className="text-caption text-right">
+                                <p className="nl-metadata text-right text-nl-subdued">
                                     완료{" "}
                                     {sync.completed_at.toLocaleString("ko-KR")}
                                 </p>
@@ -252,7 +264,7 @@ export default async function AdminSyncsPage({
                     );
                 })}
                 {syncs.length === 0 ? (
-                    <p className="text-body-muted bg-surface rounded-card py-12 text-center">
+                    <p className="nl-body-secondary rounded-nl-container bg-nl-surface py-nl-48 text-center text-nl-subdued">
                         동기화 내역이 없습니다.
                     </p>
                 ) : null}

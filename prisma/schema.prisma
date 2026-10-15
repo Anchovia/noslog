@@ -96,6 +96,7 @@ model User {
   achievements               UserAchievement[]
   achievementShowcase        UserAchievementShowcase[]
   pinnedRecords              UserPinnedRecord[]
+  ratings                    PlayerRating[]
 
   @@index([grade_basic, id])
   @@index([grade_recital, id])
@@ -855,7 +856,9 @@ model ChartPlayHistory {
   created_at       DateTime   @default(now())
 
   @@unique([user_id, chart_id, source_play_time, score, max_combo, rank])
-  @@index([user_id, chart_id, source_play_time])
+  // 최근 플레이 목록(사람별 최신순) · 동기화 기록 정리(2026-10-15 D7). [user_id, chart_id, source_play_time] 는 위 unique 앞부분과 같아 뺐다
+  @@index([user_id, source_play_time(sort: Desc), id(sort: Desc)])
+  @@index([first_sync_id])
   @@index([user_id, record_applied])
 }
 
@@ -940,7 +943,6 @@ model TierBand {
 
   @@unique([tierListId, value])
   @@unique([tierListId, position])
-  @@index([tierListId, value])
 }
 
 // 채보가 어느 서열표 구간의 몇 번째에 배치되는지 관리함
@@ -1042,6 +1044,7 @@ model CommunityChartEvaluation {
 
   @@unique([chartId, userId])
   @@index([chartId, excluded, opinionUpdatedAt])
+  @@index([userId, excluded])
 }
 
 model CommunityOpinionHelpful {
@@ -1434,6 +1437,24 @@ model UserAchievementShowcase {
 
   @@id([user_id, position])
   @@unique([user_id, key])
+}
+
+// 레이팅 랭킹용 — 사람 · 모드마다 동기화 때 계산해 둔 값(2026-10-15 L2-A2).
+// 랭킹은 이 값을 정렬해 한 쪽만 읽는다. 값은 calculateBasicRating 결과 그대로(표시할 때 반올림)
+// basis_version = 계산식 판 + 피아니스트 서열 상수의 지문. 기준이 바뀌면 전원을 한 트랜잭션으로 다시 써서
+// 다 셀 때까지는 옛 값을 보여 주고, 옛 값과 새 값이 섞이지 않게 한다
+model PlayerRating {
+  user_id       Int
+  user          User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  // basic | recital
+  mode          String
+  rating        Float
+  filled_slots  Int
+  basis_version String
+  computed_at   DateTime @default(now())
+
+  @@id([user_id, mode])
+  @@index([mode, rating(sort: Desc)])
 }
 
 // 프로필 개요에 고정한 기록(최대 3칸 · 한 줄 소감, 2026-09-26 S2). 비어 있으면 베스트 상위 3곡을 보인다.

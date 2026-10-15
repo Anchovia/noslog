@@ -6,7 +6,7 @@ import {
     tierBoardLayoutSchema,
     tierListFormSchema,
     tierListSaveInputFromFormData,
-} from "@/features/tiers/schemas/tierAdminSchema";
+} from "@/features/tiers/schemas/tier-admin-schema";
 
 describe("관리자 서열표 스키마", () => {
     it("서열표 기본값을 정리하고 타입을 제한한다", () => {

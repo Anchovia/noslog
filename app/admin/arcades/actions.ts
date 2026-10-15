@@ -3,13 +3,13 @@
 import {
     createArcade as createArcadeService,
     updateArcade as updateArcadeService,
-} from "@/features/arcades/server/arcadeAdminService";
+} from "@/features/arcades/server/arcade-admin-service";
 import {
     deleteArcadePhoto as deleteArcadePhotoService,
     requestArcadePhotoUpload as requestArcadePhotoUploadService,
     saveArcadePhoto as saveArcadePhotoService,
     setArcadeMainPhoto as setArcadeMainPhotoService,
-} from "@/features/arcades/server/arcadePhotoAdminService";
+} from "@/features/arcades/server/arcade-photo-admin-service";
 
 export async function createArcade(formData: FormData) {
     return createArcadeService(formData);

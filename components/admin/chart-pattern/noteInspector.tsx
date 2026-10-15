@@ -17,13 +17,14 @@ import {
     type ChartPathPoint,
 } from "@/lib/chart-pattern/schema";
 import { millisecondsToTick } from "@/lib/chart-pattern/timing";
-import { useLocale, useTranslations } from "@/components/i18n/localeProvider";
+import { useLocale, useTranslations } from "@/components/i18n/locale-provider";
 
 import { useChartEditorStore } from "./chartEditorStore";
 import SnapCheckSection from "./snapCheckSection";
+import Button, { foundationButtonClass } from "@/components/ui/button";
+import { cn } from "@/lib/cn";
 
-const inputClass =
-    "border-border bg-bg text-text-primary h-9 w-full rounded-md border px-2 text-sm tabular-nums outline-none focus:border-text-secondary";
+const inputClass = "nl-input";
 
 const noteTypes: ChartNoteType[] = ["standard", "tenuto", "glissando", "trill"];
 
@@ -242,10 +243,12 @@ export default function NoteInspector() {
     }
 
     return (
-        <aside className="border-divider bg-surface flex h-full w-80 shrink-0 flex-col border-l">
-            <header className="border-divider border-b px-3 py-2.5">
-                <h2 className="text-sm font-bold">{t("editor.note.title")}</h2>
-                <p className="text-micro mt-0.5">{t("editor.note.subtitle")}</p>
+        <aside className="nl-editor-panel flex h-full shrink-0 flex-col border-l-nl-stroke border-nl-divider bg-nl-surface">
+            <header className="border-b-nl-stroke border-nl-divider px-nl-12 py-nl-12">
+                <h2 className="nl-emphasis-label">{t("editor.note.title")}</h2>
+                <p className="nl-metadata mt-nl-4 text-nl-subdued">
+                    {t("editor.note.subtitle")}
+                </p>
             </header>
 
             <fieldset
@@ -253,55 +256,56 @@ export default function NoteInspector() {
                 className="m-0 flex min-h-0 min-w-0 flex-1 flex-col border-0 p-0"
             >
                 {selectedNotes.length === 0 ? (
-                    <div className="flex min-h-0 flex-1 flex-col items-center justify-center px-6 text-center">
-                        <div className="bg-surface-muted flex size-11 items-center justify-center rounded-full">
-                            <GitBranch className="text-text-secondary size-4" />
+                    <div className="flex min-h-0 flex-1 flex-col items-center justify-center px-nl-24 text-center">
+                        <div className="flex size-nl-48 items-center justify-center rounded-nl-full bg-nl-raised">
+                            <GitBranch className="nl-icon-small text-nl-subdued" />
                         </div>
-                        <p className="mt-3 text-sm font-semibold">
+                        <p className="nl-emphasis-label mt-nl-12">
                             {t("editor.note.emptyTitle")}
                         </p>
-                        <p className="text-micro mt-1 leading-relaxed">
+                        <p className="nl-metadata nl-metadata--long mt-nl-4 text-nl-subdued">
                             {t("editor.note.emptyBody")}
                         </p>
                     </div>
                 ) : selectedNotes.length > 1 ? (
-                    <div className="min-h-0 flex-1 overflow-y-auto p-3">
-                        <div className="border-border bg-bg rounded-md border p-3">
-                            <strong className="text-sm">
+                    <div className="min-h-0 flex-1 overflow-y-auto p-nl-12">
+                        <div className="rounded-nl-field border-nl-stroke border-nl-border bg-nl-canvas p-nl-12">
+                            <strong className="nl-body-secondary">
                                 {t("editor.note.multiSelected", {
                                     count: selectedNotes.length.toLocaleString(
                                         locale
                                     ),
                                 })}
                             </strong>
-                            <p className="text-micro mt-1 leading-relaxed">
+                            <p className="nl-metadata nl-metadata--long mt-nl-4 text-nl-subdued">
                                 {t("editor.note.multiHelp")}
                             </p>
                         </div>
-                        <label className="text-caption mt-4 flex flex-col gap-1">
+                        <label className="nl-metadata mt-nl-16 flex flex-col gap-nl-4 text-nl-subdued">
                             {t("editor.note.bulkHand")}
                             <HandSelector
                                 value={selectedNotes[0].hand}
                                 onChange={changeSelectedGroupHand}
                             />
                         </label>
-                        <button
-                            type="button"
+                        <Button
+                            variant="danger"
+                            size="sm"
+                            className="mt-nl-16 w-full"
                             onClick={deleteSelected}
-                            className="border-danger/40 text-danger mt-4 flex h-9 w-full items-center justify-center gap-1 rounded-md border text-xs font-semibold"
                         >
-                            <Trash2 className="size-3.5" />
+                            <Trash2 className="nl-icon-small" aria-hidden />
                             {t("editor.note.deleteMany", {
                                 count: selectedNotes.length.toLocaleString(
                                     locale
                                 ),
                             })}
-                        </button>
+                        </Button>
                     </div>
                 ) : selected ? (
-                    <div className="min-h-0 flex-1 overflow-y-auto p-3">
-                        <div className="grid grid-cols-2 gap-3">
-                            <label className="text-caption col-span-2 flex flex-col gap-1">
+                    <div className="min-h-0 flex-1 overflow-y-auto p-nl-12">
+                        <div className="grid grid-cols-2 gap-nl-12">
+                            <label className="nl-metadata col-span-2 flex flex-col gap-nl-4 text-nl-subdued">
                                 {t("editor.note.type")}
                                 <select
                                     value={selected.type}
@@ -320,7 +324,7 @@ export default function NoteInspector() {
                                 </select>
                             </label>
 
-                            <label className="text-caption col-span-2 flex flex-col gap-1">
+                            <label className="nl-metadata col-span-2 flex flex-col gap-nl-4 text-nl-subdued">
                                 {t("editor.note.hand")}
                                 <HandSelector
                                     value={selected.hand}
@@ -328,7 +332,7 @@ export default function NoteInspector() {
                                 />
                             </label>
 
-                            <label className="text-caption flex flex-col gap-1">
+                            <label className="nl-metadata flex flex-col gap-nl-4 text-nl-subdued">
                                 {t("editor.note.lane")}
                                 <input
                                     type="number"
@@ -348,7 +352,7 @@ export default function NoteInspector() {
                                 />
                             </label>
 
-                            <label className="text-caption flex flex-col gap-1">
+                            <label className="nl-metadata flex flex-col gap-nl-4 text-nl-subdued">
                                 {t("editor.note.width")}
                                 <input
                                     type="number"
@@ -368,7 +372,7 @@ export default function NoteInspector() {
                                 />
                             </label>
 
-                            <label className="text-caption flex flex-col gap-1">
+                            <label className="nl-metadata flex flex-col gap-nl-4 text-nl-subdued">
                                 {t("editor.note.tick")}
                                 <input
                                     key={`${selected.id}-tick-${selected.tick}`}
@@ -387,7 +391,7 @@ export default function NoteInspector() {
                                 />
                             </label>
 
-                            <label className="text-caption flex flex-col gap-1">
+                            <label className="nl-metadata flex flex-col gap-nl-4 text-nl-subdued">
                                 {t("editor.note.duration")}
                                 <input
                                     key={`${selected.id}-duration-${selected.durationTicks}`}
@@ -418,7 +422,7 @@ export default function NoteInspector() {
 
                             {selected.type === "trill" ? (
                                 <>
-                                    <label className="text-caption flex flex-col gap-1">
+                                    <label className="nl-metadata flex flex-col gap-nl-4 text-nl-subdued">
                                         {t("editor.note.pairLane")}
                                         <input
                                             key={`${selected.id}-pair-lane-${selected.pairLane}`}
@@ -445,7 +449,7 @@ export default function NoteInspector() {
                                             className={inputClass}
                                         />
                                     </label>
-                                    <label className="text-caption flex flex-col gap-1">
+                                    <label className="nl-metadata flex flex-col gap-nl-4 text-nl-subdued">
                                         {t("editor.note.pairWidth")}
                                         <input
                                             key={`${selected.id}-pair-width-${selected.pairWidth}`}
@@ -473,7 +477,7 @@ export default function NoteInspector() {
                                             className={inputClass}
                                         />
                                     </label>
-                                    <label className="text-caption col-span-2 flex flex-col gap-1">
+                                    <label className="nl-metadata col-span-2 flex flex-col gap-nl-4 text-nl-subdued">
                                         {t("editor.note.trillStep")}
                                         <select
                                             value={
@@ -504,7 +508,7 @@ export default function NoteInspector() {
                             ) : null}
 
                             {selected.type === "glissando" ? (
-                                <label className="text-caption col-span-2 flex flex-col gap-1">
+                                <label className="nl-metadata col-span-2 flex flex-col gap-nl-4 text-nl-subdued">
                                     {t("editor.note.glissandoStep")}
                                     <select
                                         value={
@@ -543,13 +547,13 @@ export default function NoteInspector() {
 
                         {selected.type === "tenuto" ||
                         selected.type === "glissando" ? (
-                            <section className="border-divider mt-4 border-t pt-4">
-                                <div className="flex items-center justify-between gap-2">
+                            <section className="mt-nl-16 border-t-nl-stroke border-nl-divider pt-nl-16">
+                                <div className="flex items-center justify-between gap-nl-8">
                                     <div>
-                                        <h3 className="text-xs font-semibold">
+                                        <h3 className="nl-metadata">
                                             {t("editor.note.path")}
                                         </h3>
-                                        <p className="text-micro mt-0.5">
+                                        <p className="nl-metadata mt-nl-4 text-nl-subdued">
                                             {selected.type === "glissando"
                                                 ? t(
                                                       "editor.note.pathHelpGlissando"
@@ -562,15 +566,21 @@ export default function NoteInspector() {
                                     <button
                                         type="button"
                                         onClick={addPathPoint}
-                                        className="border-border hover:bg-surface-muted flex h-8 shrink-0 items-center gap-1 rounded-md border px-2 text-xs font-semibold"
+                                        className={cn(
+                                            foundationButtonClass({
+                                                variant: "secondary",
+                                                size: "sm",
+                                            }),
+                                            "shrink-0"
+                                        )}
                                     >
-                                        <Plus className="size-3.5" />
+                                        <Plus className="nl-icon-small" />
                                         {t("editor.add")}
                                     </button>
                                 </div>
 
                                 {selected.points.length > 0 ? (
-                                    <div className="mt-3 flex flex-col gap-2">
+                                    <div className="mt-nl-12 flex flex-col gap-nl-8">
                                         {selected.points.map((point, index) => (
                                             <PathPointEditor
                                                 key={`${selected.id}-${point.tickOffset}-${index}`}
@@ -592,7 +602,7 @@ export default function NoteInspector() {
                                         ))}
                                     </div>
                                 ) : (
-                                    <p className="text-micro mt-3">
+                                    <p className="nl-metadata mt-nl-12 text-nl-subdued">
                                         {selected.type === "glissando"
                                             ? t(
                                                   "editor.note.pathEmptyGlissando"
@@ -603,21 +613,22 @@ export default function NoteInspector() {
                             </section>
                         ) : null}
 
-                        <button
-                            type="button"
+                        <Button
+                            variant="danger"
+                            size="sm"
+                            className="mt-nl-16 w-full"
                             onClick={deleteSelected}
-                            className="border-danger/40 text-danger mt-4 flex h-9 w-full items-center justify-center gap-1 rounded-md border text-xs font-semibold"
                         >
-                            <Trash2 className="size-3.5" />
+                            <Trash2 className="nl-icon-small" aria-hidden />
                             {t("editor.note.delete")}
-                        </button>
+                        </Button>
                     </div>
                 ) : null}
 
                 <SnapCheckSection />
             </fieldset>
 
-            <footer className="border-divider text-micro border-t px-3 py-2">
+            <footer className="nl-metadata border-t-nl-stroke border-nl-divider px-nl-12 py-nl-8 text-nl-subdued">
                 {t("editor.note.total", {
                     count: notes.length.toLocaleString(locale),
                 })}
@@ -640,18 +651,18 @@ function HandSelector({
 }) {
     const t = useTranslations();
     return (
-        <div className="grid grid-cols-2 gap-1">
+        <div className="grid grid-cols-2 gap-nl-4">
             {(["left", "right"] as const).map((hand) => (
                 <button
                     key={hand}
                     type="button"
                     onClick={() => onChange(hand)}
-                    className={`h-9 rounded-md border text-xs font-semibold ${
+                    className={`nl-metadata min-h-nl-control-compact rounded-nl-field border-nl-stroke ${
                         value === hand
                             ? hand === "left"
                                 ? "border-cyan-400/50 bg-cyan-400/10 text-cyan-200"
                                 : "border-red-400/50 bg-red-400/10 text-red-200"
-                            : "border-border text-text-secondary"
+                            : "border-nl-border text-nl-subdued"
                     }`}
                 >
                     {t(`editor.hand.${hand}`)}
@@ -674,22 +685,25 @@ function PathPointEditor({
 }) {
     const t = useTranslations();
     return (
-        <div className="border-border bg-bg rounded-md border p-2">
-            <div className="mb-2 flex items-center justify-between">
-                <strong className="text-xs">
+        <div className="rounded-nl-field border-nl-stroke border-nl-border bg-nl-canvas p-nl-8">
+            <div className="mb-nl-8 flex items-center justify-between">
+                <strong className="nl-metadata">
                     {t("editor.point.title", { index: index + 1 })}
                 </strong>
                 <button
                     type="button"
                     onClick={onDelete}
                     aria-label={t("editor.point.delete", { index: index + 1 })}
-                    className="text-danger hover:bg-surface-muted flex size-7 items-center justify-center rounded"
+                    className={foundationButtonClass({
+                        variant: "ghost",
+                        size: "icon-sm",
+                    })}
                 >
-                    <Trash2 className="size-3.5" />
+                    <Trash2 className="nl-icon-small" />
                 </button>
             </div>
-            <div className="grid grid-cols-3 gap-2">
-                <label className="text-micro flex flex-col gap-1">
+            <div className="grid grid-cols-3 gap-nl-8">
+                <label className="nl-metadata flex flex-col gap-nl-4 text-nl-subdued">
                     {t("editor.point.tick")}
                     <input
                         key={`tick-${point.tickOffset}`}
@@ -703,7 +717,7 @@ function PathPointEditor({
                         className={inputClass}
                     />
                 </label>
-                <label className="text-micro flex flex-col gap-1">
+                <label className="nl-metadata flex flex-col gap-nl-4 text-nl-subdued">
                     {t("editor.point.lane")}
                     <input
                         key={`lane-${point.lane}`}
@@ -719,7 +733,7 @@ function PathPointEditor({
                         className={inputClass}
                     />
                 </label>
-                <label className="text-micro flex flex-col gap-1">
+                <label className="nl-metadata flex flex-col gap-nl-4 text-nl-subdued">
                     {t("editor.note.width")}
                     <input
                         key={`width-${point.width}`}
@@ -736,7 +750,7 @@ function PathPointEditor({
                     />
                 </label>
             </div>
-            <label className="text-micro mt-2 flex flex-col gap-1">
+            <label className="nl-metadata mt-nl-8 flex flex-col gap-nl-4 text-nl-subdued">
                 {t("editor.point.hand")}
                 <select
                     value={point.hand ?? ""}

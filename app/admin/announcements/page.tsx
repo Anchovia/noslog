@@ -1,19 +1,19 @@
 import { ChevronRight, Plus } from "lucide-react";
 import Link from "next/link";
 
-import PageContainer, { PageHeading } from "@/components/layout/pageContainer";
-import { foundationButtonClass } from "@/components/ui/Button";
+import PageContainer, { PageHeading } from "@/components/layout/page-container";
+import { foundationButtonClass } from "@/components/ui/button";
 import {
     ANNOUNCEMENT_LOCALES,
     ANNOUNCEMENT_CATEGORY_LABELS,
     ANNOUNCEMENT_PLACEMENT_LABELS,
-} from "@/features/announcements/schemas/announcementSchema";
+} from "@/features/announcements/schemas/announcement-schema";
 import {
     eligibleAnnouncements,
     selectHomeAnnouncements,
-} from "@/features/announcements/schemas/publicAnnouncementSchema";
+} from "@/features/announcements/schemas/public-announcement-schema";
 import db from "@/lib/db";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/cn";
 
 // 관리자 화면의 시각은 서버 시간대와 무관하게 한국 시간으로 (2026-09-16)
 const dateFormat = new Intl.DateTimeFormat("ko-KR", {

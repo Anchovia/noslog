@@ -3,7 +3,7 @@
 import {
     resetAdminUserSyncToken,
     updateAdminUserRole,
-} from "@/features/users/server/userAdminService";
+} from "@/features/users/server/user-admin-service";
 
 export async function updateUserRole(formData: FormData) {
     return updateAdminUserRole(formData);

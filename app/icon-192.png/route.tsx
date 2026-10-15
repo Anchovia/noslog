@@ -1,4 +1,4 @@
-import { createBrandIcon } from "@/lib/metadata/brandImage";
+import { createBrandIcon } from "@/lib/metadata/brand-image";
 
 export const dynamic = "force-static";
 

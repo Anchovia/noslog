@@ -20,7 +20,7 @@ vi.mock("@/lib/blob", () => ({
     isImageContentType: (value: string) => value === "image/png",
     isValidPrivateImageBlob: mocks.isValidPrivateImageBlob,
 }));
-vi.mock("@/lib/uploadRateLimit", () => ({
+vi.mock("@/lib/upload-rate-limit", () => ({
     claimUploadTokenQuota: mocks.claimUploadTokenQuota,
     getUploadLimitMessage: () =>
         "이미지는 한 시간에 최대 10회까지 업로드할 수 있습니다.",
@@ -40,7 +40,7 @@ import {
     discardFeedbackImage,
     requestFeedbackImageUpload,
     submitFeedbackReport,
-} from "@/app/(nevigation)/(home)/feedbackActions";
+} from "@/app/(site)/(home)/feedback-actions";
 
 const feedbackImage =
     "https://store.private.blob.vercel-storage.com/feedback/2/report.png";

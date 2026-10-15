@@ -16,11 +16,11 @@ vi.mock("@/lib/i18n/server", () => ({
     getRequestLocale: mocks.getRequestLocale,
 }));
 
-vi.mock("@/lib/i18n/musicTitle", () => ({
+vi.mock("@/lib/i18n/music-title", () => ({
     getMusicTitleDisplayPreference: mocks.getMusicTitleDisplayPreference,
 }));
 
-vi.mock("@/features/music/server/loadMusicDetail", () => ({
+vi.mock("@/features/music/server/load-music-detail", () => ({
     loadMusicDetail: mocks.loadMusicDetail,
     normalizeMusicDetailTab: (value?: string) =>
         ["record", "detail", "ranking", "tier"].includes(value ?? "")

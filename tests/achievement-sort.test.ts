@@ -4,8 +4,8 @@ import {
     ACHIEVEMENT_DEFINITIONS,
     type AchievementMetrics,
     type AchievementRecords,
-} from "@/features/achievements/achievementDefinitions";
-import { sortAchievementDefinitions } from "@/features/achievements/achievementSort";
+} from "@/features/achievements/achievement-definitions";
+import { sortAchievementDefinitions } from "@/features/achievements/achievement-sort";
 
 const pick = (...keys: string[]) =>
     ACHIEVEMENT_DEFINITIONS.filter((item) => keys.includes(item.key));

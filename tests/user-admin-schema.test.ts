@@ -8,7 +8,7 @@ import {
     userRoleUpdateSchema,
     userSyncTokenResetInputFromFormData,
     userSyncTokenResetSchema,
-} from "@/features/users/schemas/userAdminSchema";
+} from "@/features/users/schemas/user-admin-schema";
 
 describe("관리자 사용자 스키마", () => {
     it("검색어를 다듬고 지원하는 상태만 유지한다", () => {

@@ -113,7 +113,7 @@
 }
 .noslog-ui .nl-score-pin[data-me] {
     --nl-pin-size: 32px;
-    z-index: 1;
+    z-index: var(--nl-layer-above);
 }
 .noslog-ui .nl-score-pin__shape {
     position: absolute;
@@ -143,7 +143,7 @@
     outline-offset: var(--nl-spacing-4);
     border-radius: 50%;
 }
-/* 곡 상세 랭킹 탭 순위표 — 유저 랭킹 페이지와 같은 목록 규격(nl-ranking-head · nl-player-row, globalRankings.css) · 2026-09-14.
+/* 곡 상세 랭킹 탭 순위표 — 유저 랭킹 페이지와 같은 목록 규격(nl-ranking-head · nl-player-row, global-rankings.css) · 2026-09-14.
    순위 · 아바타 · 국기 · 이름 · 명판, 오른쪽 끝은 등급 메달 · 점수 · FC */
 .noslog-ui .nl-chart-leaderboard {
     --nl-rank-1: var(--nl-exam-tier-top);
@@ -190,10 +190,11 @@
     font-weight: var(--nl-type-weight-regular);
     white-space: nowrap;
 }
+/* 순위표 줄 메달 = 기본 아이콘 20(2026-10-15 토큰 점검 A — 18 은 아이콘 단계 밖) */
 .noslog-ui .nl-score-grade {
     display: block;
-    width: 18px;
-    height: 18px;
+    width: var(--nl-icon-medium);
+    height: var(--nl-icon-medium);
 }
 /* 핀 창 메달 = 아이콘 16 — 칸도 16 이라 양옆 간격이 8 로 같다 */
 .noslog-ui .nl-score-grade[data-size="small"] {
@@ -227,7 +228,7 @@
     min-width: 0;
 }
 .noslog-ui .nl-ranking-list {
-    scroll-margin-top: 76px;
+    scroll-margin-top: calc(var(--nl-header-height) + var(--nl-spacing-16));
 }
 /* 기록 0명 — 머리 줄 아래 줄 한 칸(48) 자리 가운데 안내 (2026-09-19 사용자) */
 .noslog-ui .nl-chart-leaderboard__empty {

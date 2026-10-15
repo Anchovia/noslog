@@ -4,7 +4,7 @@ import {
     BINGO_CELL_COUNT,
     bingoFormSchema,
     type BingoFormValues,
-} from "@/features/bingos/schemas/bingoEditorSchema";
+} from "@/features/bingos/schemas/bingo-editor-schema";
 
 function createValidInput(): BingoFormValues {
     return {

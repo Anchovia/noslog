@@ -5,6 +5,10 @@ const mocks = vi.hoisted(() => ({
     candidateFindUnique: vi.fn(),
     candidateCreate: vi.fn(),
     candidateUpdate: vi.fn(),
+    candidateFindMany: vi.fn(),
+    candidateCreateMany: vi.fn(),
+    candidateUpdateMany: vi.fn(),
+    transaction: vi.fn(),
     updateMusic: vi.fn(),
 }));
 
@@ -12,24 +16,28 @@ vi.mock("server-only", () => ({}));
 
 vi.mock("@/lib/db", () => ({
     default: {
+        $transaction: mocks.transaction,
         music: { findMany: mocks.musicFindMany },
         musicCatalogCandidate: {
             findUnique: mocks.candidateFindUnique,
             create: mocks.candidateCreate,
             update: mocks.candidateUpdate,
+            findMany: mocks.candidateFindMany,
+            createMany: mocks.candidateCreateMany,
+            updateMany: mocks.candidateUpdateMany,
         },
     },
 }));
 
-vi.mock("@/lib/services/music/updateMusic", () => ({
+vi.mock("@/lib/services/music/update-music", () => ({
     updateMusic: mocks.updateMusic,
 }));
 
 import {
     describeMusicCatalogChanges,
     processBemaniCatalogUpdates,
-} from "@/lib/services/music/catalogSync";
-import type { SyncMusicInput } from "@/lib/services/music/updateMusic";
+} from "@/lib/services/music/catalog-sync";
+import type { SyncMusicInput } from "@/lib/services/music/update-music";
 
 function chart(
     difficulty: "Normal" | "Hard" | "Expert" | "Real",
@@ -101,6 +109,10 @@ describe("BEMANI 악곡 카탈로그 자동 감지", () => {
         mocks.candidateFindUnique.mockResolvedValue(null);
         mocks.candidateCreate.mockResolvedValue({ id: 1 });
         mocks.candidateUpdate.mockResolvedValue({ id: 1 });
+        mocks.candidateFindMany.mockResolvedValue([]);
+        mocks.candidateCreateMany.mockResolvedValue({ count: 1 });
+        mocks.candidateUpdateMany.mockResolvedValue({ count: 1 });
+        mocks.transaction.mockImplementation((queries) => Promise.all(queries));
     });
 
     it("일반 사용자에게서 발견한 신규 채보는 검토 대기로 저장한다", async () => {
@@ -111,17 +123,42 @@ describe("BEMANI 악곡 카탈로그 자동 감지", () => {
 
         expect(result).toEqual({ detected: 1, pending: 1, applied: 0 });
         expect(mocks.updateMusic).not.toHaveBeenCalled();
-        expect(mocks.candidateCreate).toHaveBeenCalledWith({
-            data: expect.objectContaining({
-                musicIndex: "sasoribi",
-                status: "pending",
-                payload: expect.objectContaining({
-                    charts: expect.arrayContaining([
-                        { difficulty: "Real", level: 3 },
-                    ]),
+        // 한 번 읽고 묶어서 쓴다(2026-10-15 S9)
+        expect(mocks.candidateFindMany).toHaveBeenCalledOnce();
+        expect(mocks.candidateCreateMany).toHaveBeenCalledWith({
+            data: [
+                expect.objectContaining({
+                    musicIndex: "sasoribi",
+                    status: "pending",
+                    payload: expect.objectContaining({
+                        charts: expect.arrayContaining([
+                            { difficulty: "Real", level: 3 },
+                        ]),
+                    }),
                 }),
-            }),
-            select: { id: true },
+            ],
+            skipDuplicates: true,
+        });
+    });
+
+    it("다시 본 후보는 횟수만 더하고 반려된 후보는 상태를 그대로 둔다", async () => {
+        mocks.candidateFindMany.mockImplementation(
+            async ({ where }: { where: { OR: { fingerprint: string }[] } }) => [
+                {
+                    id: 5,
+                    musicIndex: "sasoribi",
+                    fingerprint: where.OR[0].fingerprint,
+                    status: "rejected",
+                },
+            ]
+        );
+        await processBemaniCatalogUpdates([bemaniMusic()], false);
+
+        expect(mocks.candidateCreateMany).not.toHaveBeenCalled();
+        expect(mocks.candidateUpdateMany).toHaveBeenCalledOnce();
+        expect(mocks.candidateUpdateMany).toHaveBeenCalledWith({
+            where: { id: { in: [5] } },
+            data: { seenCount: { increment: 1 }, lastSeenAt: expect.any(Date) },
         });
     });
 

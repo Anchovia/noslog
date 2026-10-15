@@ -294,6 +294,38 @@ async function seed() {
             },
         ],
     });
+
+    // 홈의 공식 X 소식은 저장본만 읽는다. 동기화(X · Gemini 호출) 없이 카드가 그려지게 한 건을 둔다.
+    const officialPost = {
+        id: "1900000000000000000",
+        url: "https://x.com/NOSTALGIA_573/status/1900000000000000000",
+        text: "E2E 공식 소식 본문 https://t.co/e2e",
+        createdAt: "2026-10-01T09:00:00.000Z",
+        author: {
+            name: "NOSTALGIA公式",
+            username: "NOSTALGIA_573",
+            avatarUrl: null,
+        },
+        image: null,
+        links: [
+            {
+                url: "https://t.co/e2e",
+                expandedUrl: "https://p.eagate.573.jp/game/nostalgia/",
+                displayUrl: "p.eagate.573.jp/game/nostalgia/",
+                isMedia: false,
+            },
+        ],
+        translations: null,
+    };
+    await prisma.officialXFeed.upsert({
+        where: { id: "NOSTALGIA_573" },
+        update: { content: officialPost, lastSuccessAt: new Date() },
+        create: {
+            id: "NOSTALGIA_573",
+            content: officialPost,
+            lastSuccessAt: new Date(),
+        },
+    });
 }
 
 try {

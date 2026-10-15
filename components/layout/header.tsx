@@ -1,11 +1,14 @@
-import { getUser } from "@/lib/user";
 import Link from "next/link";
-import ProfileAvatar from "@/components/profile/profileAvatar";
-import { getServerI18n } from "@/lib/i18n/server";
-import { getLocalizedHref } from "@/lib/i18n/routing";
 
-import HeaderMenu, { HeaderPrimaryNavigation } from "./headerNavigation";
-import ScrollAwareHeader from "./scrollAwareHeader";
+import ProfileAvatar from "@/components/profile/profile-avatar";
+import { foundationButtonClass } from "@/components/ui/button";
+import { cn } from "@/lib/cn";
+import { getLocalizedHref } from "@/lib/i18n/routing";
+import { getServerI18n } from "@/lib/i18n/server";
+import { getUser } from "@/lib/user";
+
+import HeaderMenu, { HeaderPrimaryNavigation } from "./header-navigation";
+import ScrollAwareHeader from "./scroll-aware-header";
 
 export default async function Header() {
     const [user, { locale, t }] = await Promise.all([
@@ -17,9 +20,9 @@ export default async function Header() {
         <ScrollAwareHeader>
             <Link
                 href={getLocalizedHref("/", locale)}
-                className="flex shrink-0 items-center gap-2"
+                className="flex shrink-0 items-center gap-nl-8"
             >
-                <span className="text-wordmark tracking-normal">NosLog</span>
+                <span className="nl-section-title text-nl-content">NosLog</span>
             </Link>
             <div className="ml-auto flex min-w-0 items-center">
                 <HeaderPrimaryNavigation />
@@ -31,7 +34,7 @@ export default async function Header() {
                                 `/profile/${user.id}`,
                                 locale
                             )}
-                            className="mx-1.5 shrink-0"
+                            className="mx-nl-8 shrink-0"
                             aria-label={t("header.profileLabel", {
                                 name: user.username ?? t("common.unknownUser"),
                             })}
@@ -45,7 +48,10 @@ export default async function Header() {
                     ) : (
                         <Link
                             href={getLocalizedHref("/login", locale)}
-                            className="rounded-card border-border text-text-primary hover:bg-surface-muted mx-1 flex h-10 shrink-0 items-center border px-3 text-sm font-bold transition-colors"
+                            className={cn(
+                                foundationButtonClass({ variant: "secondary" }),
+                                "mx-nl-4 shrink-0"
+                            )}
                         >
                             {t("common.login")}
                         </Link>

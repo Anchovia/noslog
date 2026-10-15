@@ -5,10 +5,12 @@ import { notFound } from "next/navigation";
 import {
     ChartMetadataForm,
     MusicMetadataForm,
-} from "@/features/music/components/admin/musicMetadataForms";
-import MusicJacketForm from "@/features/music/components/admin/musicJacketForm";
-import MusicTranslationForm from "@/features/music/components/admin/musicTranslationForm";
-import { getAdminMusicDetail } from "@/features/music/server/musicAdminService";
+} from "@/features/music/components/admin/music-metadata-forms";
+import MusicJacketForm from "@/features/music/components/admin/music-jacket-form";
+import MusicTranslationForm from "@/features/music/components/admin/music-translation-form";
+import { getAdminMusicDetail } from "@/features/music/server/music-admin-service";
+import { foundationButtonClass } from "@/components/ui/button";
+import { cn } from "@/lib/cn";
 
 export default async function AdminMusicDetailPage({
     params,
@@ -20,18 +22,26 @@ export default async function AdminMusicDetailPage({
     if (!music) notFound();
 
     return (
-        <div className="flex flex-col gap-4 py-5">
-            <section className="flex items-start gap-3">
+        <div className="flex flex-col gap-nl-16 py-nl-24">
+            <section className="flex items-start gap-nl-12">
                 <Link
                     href="/admin/music"
                     aria-label="악곡 목록으로 이동"
-                    className="border-border flex size-9 shrink-0 items-center justify-center rounded-md border"
+                    className={cn(
+                        foundationButtonClass({
+                            variant: "secondary",
+                            size: "icon-sm",
+                        }),
+                        "shrink-0"
+                    )}
                 >
-                    <ArrowLeft className="size-4" />
+                    <ArrowLeft className="nl-icon-small" />
                 </Link>
                 <div className="min-w-0">
-                    <h1 className="text-title truncate">{music.title}</h1>
-                    <p className="text-caption truncate">
+                    <h1 className="nl-section-title truncate text-nl-content">
+                        {music.title}
+                    </h1>
+                    <p className="nl-metadata truncate text-nl-subdued">
                         {music.artist ?? "아티스트 미상"} ·{" "}
                         {music.categoryShort}
                     </p>
@@ -53,10 +63,12 @@ export default async function AdminMusicDetailPage({
                 }}
             />
 
-            <section className="bg-surface rounded-card flex flex-col gap-3 p-3">
+            <section className="flex flex-col gap-nl-12 rounded-nl-container bg-nl-surface p-nl-12">
                 <div>
-                    <h2 className="text-section font-bold">번역 제목</h2>
-                    <p className="text-caption mt-1">
+                    <h2 className="nl-component-title text-nl-content">
+                        번역 제목
+                    </h2>
+                    <p className="nl-metadata mt-nl-4 text-nl-subdued">
                         승인 상태인 제목만 사용자 화면에 표시됩니다. 제목을
                         비우고 저장하면 삭제됩니다.
                     </p>

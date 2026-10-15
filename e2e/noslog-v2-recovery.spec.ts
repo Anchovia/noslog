@@ -109,9 +109,10 @@ for (const locale of ["ko", "ja", "en"] as const) {
                     )
                 )
                 .toBe(true);
+            // 셸 폭 = --nl-layout-max 1200(가이드 레이아웃 · recovery.css 최소 셸 main)
             expect(
                 (await page.getByRole("main").boundingBox())!.width
-            ).toBeLessThanOrEqual(1000);
+            ).toBeLessThanOrEqual(1200);
         }
         await page
             .getByRole("button", { name: copy[locale].check, exact: true })

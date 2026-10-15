@@ -26,7 +26,7 @@ vi.mock("next/cache", () => ({
 import {
     countMyChartFieldProposals,
     getChartFieldQueueStatus,
-} from "@/features/contributions/server/chartFieldProposalService";
+} from "@/features/contributions/server/chart-field-proposal-service";
 
 const NOW = new Date("2026-10-01T03:00:00Z"); // 서울 10/1 12:00
 

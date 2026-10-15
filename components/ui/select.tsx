@@ -1,11 +1,14 @@
 "use client";
 
+import "@/lib/input-modality";
+
 import * as SelectPrimitive from "@radix-ui/react-select";
 import { Check, ChevronDown } from "lucide-react";
 import type { Ref } from "react";
-import "@/lib/inputModality";
-import { useSelectOpen } from "@/components/ui/useSelectOpen";
-import { cn } from "@/lib/utils";
+
+import { overlayPosition } from "@/components/ui/overlay-position";
+import { useSelectOpen } from "@/components/ui/use-select-open";
+import { cn } from "@/lib/cn";
 
 // Radix 항목은 빈 문자열 값을 쓸 수 없어서 "" 선택지(전국 · — 등)는 안에서만 이 값으로 바꿔 쓴다
 const EMPTY = "__nl-select-empty__";
@@ -37,13 +40,16 @@ export function Select({
     "aria-labelledby": ariaLabelledBy,
     "aria-describedby": ariaDescribedBy,
 }: {
+    /** option value와 같은 제어 값. 빈 문자열 옵션도 지원한다. */
     value: string;
+    /** 선택한 외부 string 값을 전달한다. 내부 sentinel은 노출하지 않는다. */
     onValueChange: (value: string) => void;
     options: readonly SelectOption[];
     placeholder?: string;
     disabled?: boolean;
     invalid?: boolean;
     onBlur?: () => void;
+    /** RHF field.ref/오류 포커스를 연결할 실제 트리거 button ref. */
     triggerRef?: Ref<HTMLButtonElement>;
     id?: string;
     className?: string;
@@ -80,9 +86,9 @@ export function Select({
                     <SelectPrimitive.Content
                         className="nl-select-menu nl-select-menu--field"
                         position="popper"
-                        sideOffset={8}
+                        sideOffset={overlayPosition.sideOffset}
                         align="start"
-                        collisionPadding={16}
+                        collisionPadding={overlayPosition.collisionPadding}
                     >
                         <SelectPrimitive.Viewport>
                             {options.map((option) => (

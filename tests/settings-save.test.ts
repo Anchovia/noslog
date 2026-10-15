@@ -25,10 +25,10 @@ vi.mock("@/lib/blob", () => ({
     deleteBlobIfOwned: mocks.deleteBlob,
 }));
 vi.mock("@/lib/observability/server", () => ({ logServerError: mocks.log }));
-vi.mock("@/features/achievements/server/achievementService", () => ({
+vi.mock("@/features/achievements/server/achievement-service", () => ({
     setAchievementShowcase: mocks.setShowcase,
 }));
-vi.mock("@/features/profile/server/profilePinnedService", () => ({
+vi.mock("@/features/profile/server/profile-pinned-service", () => ({
     setPinnedRecords: mocks.setPinned,
 }));
 vi.mock("@/lib/i18n/server", () => ({
@@ -38,8 +38,8 @@ vi.mock("@/lib/i18n/server", () => ({
 import {
     saveSettingsProfile,
     saveSettingsPrivacy,
-} from "@/features/settings/server/settingsSaveService";
-import { settingsFormData } from "@/features/settings/schemas/settingsSchema";
+} from "@/features/settings/server/settings-save-service";
+import { settingsFormData } from "@/features/settings/schemas/settings-schema";
 
 const profile = {
     username: "Ｎos 한글カナ",
@@ -62,8 +62,11 @@ describe("P10 settings save boundaries", () => {
         mocks.session.id = 9;
         mocks.session.profileCompleted = true;
         mocks.findUser.mockResolvedValue({
+            username: profile.username,
+            country: "ja-JP",
             avatar: null,
             preferred_arcade_id: null,
+            hide_play_scores: true,
         });
         mocks.updateUser.mockResolvedValue({ id: 9 });
         mocks.findArcade.mockResolvedValue({ id: 3 });
@@ -203,6 +206,45 @@ describe("P10 settings save boundaries", () => {
         });
         expect(mocks.deleteBlob).not.toHaveBeenCalled();
         expect(mocks.updateTag).not.toHaveBeenCalled();
+    });
+    describe("바뀐 값이 들어 있는 캐시만 비운다(2026-10-15 S4)", () => {
+        it("닉네임 · 국가 · 아바타가 그대로면 본인 프로필만", async () => {
+            await saveSettingsProfile(settingsFormData(profile));
+            expect(mocks.updateTag.mock.calls).toEqual([["user-profile-9"]]);
+        });
+        it("닉네임이 바뀌면 랭킹 · 악곡 랭킹도", async () => {
+            await saveSettingsProfile(
+                settingsFormData({ ...profile, username: "새이름" })
+            );
+            expect(mocks.updateTag.mock.calls).toEqual([
+                ["user-profile-9"],
+                ["user-rankings"],
+                ["chart-rankings"],
+            ]);
+        });
+        it("선호 오락실이 바뀌면 오락실 정보도", async () => {
+            await saveSettingsProfile(
+                settingsFormData({ ...profile, preferredArcadeId: "3" })
+            );
+            expect(mocks.updateTag.mock.calls).toEqual([
+                ["user-profile-9"],
+                ["arcades"],
+            ]);
+        });
+        it("점수 비공개를 그대로 두고 다른 스위치만 바꾸면 본인 프로필만", async () => {
+            await saveSettingsPrivacy(settingsFormData(privacy));
+            expect(mocks.updateTag.mock.calls).toEqual([["user-profile-9"]]);
+        });
+        it("점수 비공개를 바꾸면 랭킹 · 악곡 랭킹도", async () => {
+            await saveSettingsPrivacy(
+                settingsFormData({ ...privacy, showPlayScores: true })
+            );
+            expect(mocks.updateTag.mock.calls).toEqual([
+                ["user-profile-9"],
+                ["user-rankings"],
+                ["chart-rankings"],
+            ]);
+        });
     });
     it("requires every privacy choice instead of treating omitted fields as private", async () => {
         const data = settingsFormData(privacy);

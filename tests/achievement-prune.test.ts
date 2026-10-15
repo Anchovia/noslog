@@ -4,7 +4,7 @@ import {
     examGradeScore,
     staleAchievementRows,
     type AchievementMetrics,
-} from "@/features/achievements/achievementDefinitions";
+} from "@/features/achievements/achievement-definitions";
 
 const metrics = {
     pianistCharts: { value: 6 },

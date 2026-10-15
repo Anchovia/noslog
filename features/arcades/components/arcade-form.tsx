@@ -1,0 +1,735 @@
+"use client";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { MapPin, Plus, Save, Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
+import { useFieldArray, useForm, useWatch } from "react-hook-form";
+import { toast } from "sonner";
+
+import { createArcade, updateArcade } from "@/app/admin/arcades/actions";
+import {
+    adminCompactInputClass as inputClass,
+    AdminFieldError,
+    adminSecondaryButtonClass as secondaryButtonClass,
+} from "@/components/admin/admin-form";
+import { foundationButtonClass } from "@/components/ui/button";
+import { geocodeArcadeAddress } from "@/features/arcades/api/geocode-arcade-address";
+import {
+    ARCADE_ADDRESS_MAX_LENGTH,
+    ARCADE_CABINET_LABEL_MAX_LENGTH,
+    ARCADE_CABINET_MAX,
+    ARCADE_CABINET_NOTE_MAX_LENGTH,
+    ARCADE_CREDIT_LABEL_MAX_LENGTH,
+    ARCADE_NAME_MAX_LENGTH,
+    ARCADE_NOTES_MAX_LENGTH,
+    ARCADE_PHONE_MAX_LENGTH,
+    ARCADE_WEBSITE_MAX_LENGTH,
+    arcadeFormSchema,
+    type ArcadeFormValues,
+    type ArcadeValues,
+    createArcadeFormData,
+    createArcadeFormDefaultValues,
+} from "@/features/arcades/schemas/arcade-schema";
+import {
+    ARCADE_CABINET_AVAILABILITIES,
+    ARCADE_CABINET_CONDITIONS,
+    ARCADE_CABINET_FEATURE_NOTE_MAX_LENGTH,
+    ARCADE_CABINET_FEATURES,
+    ARCADE_CABINET_TAGS,
+    ARCADE_FACILITIES,
+    normalizeArcadeBusinessHours,
+} from "@/lib/arcade-details";
+import { ARCADE_REGIONS } from "@/lib/arcade-regions";
+import { applyFormActionFailure, applyFormRootError } from "@/lib/forms/errors";
+
+import ArcadeBusinessHoursFields from "./arcade-business-hours-fields";
+import ArcadeHoursExceptionsFields from "./arcade-hours-exceptions-fields";
+import ArcadePhotoManager, {
+    type ArcadeFormPhoto,
+} from "./arcade-photo-manager";
+
+const textareaClass = "nl-input min-w-0 resize-y";
+
+// 관리자 화면은 서버·브라우저 시간대가 달라도 같은 날짜가 나오도록 서울 기준으로 적는다
+const verifiedDateFormat = new Intl.DateTimeFormat("ko-KR", {
+    timeZone: "Asia/Seoul",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+});
+
+function verifiedLabel(value: string | null) {
+    return value
+        ? `확인 ${verifiedDateFormat.format(new Date(value))}`
+        : "확인 기록 없음";
+}
+
+interface ArcadeFormCabinet {
+    id: number;
+    label: string | null;
+    note: string | null;
+    conditionNote: string | null;
+    tags: string[];
+    keyWeight: string | null;
+    screenLag: string | null;
+    soundVolume: string | null;
+    featureNote: string | null;
+    availability: string;
+    condition: string;
+    position: number;
+    verifiedAt: string | null;
+}
+
+interface ArcadeFormRecord {
+    id: number;
+    name: string;
+    region: string | null;
+    address: string | null;
+    latitude: number | null;
+    longitude: number | null;
+    playPrice: number | null;
+    coinCount: number | null;
+    businessHours: unknown;
+    hours: unknown;
+    phone: string | null;
+    website: string | null;
+    creditLabel: string | null;
+    facilities: string[];
+    photos: ArcadeFormPhoto[];
+    cabinets: ArcadeFormCabinet[];
+    notes: string | null;
+    isActive: boolean;
+    userCount: number;
+}
+
+type ArcadeFormProps =
+    | { mode: "create"; appKey: string }
+    | { mode: "update"; appKey: string; arcade: ArcadeFormRecord };
+
+function FieldError({ message }: { message?: string }) {
+    return <AdminFieldError message={message} role={null} />;
+}
+
+export default function ArcadeForm(props: ArcadeFormProps) {
+    const router = useRouter();
+    const isCreate = props.mode === "create";
+    const arcade = props.mode === "update" ? props.arcade : undefined;
+    const formKey = `arcade-${arcade?.id ?? "new"}`;
+    const defaultValues = useMemo(
+        () =>
+            createArcadeFormDefaultValues(
+                arcade
+                    ? {
+                          name: arcade.name,
+                          region: arcade.region,
+                          address: arcade.address,
+                          latitude: arcade.latitude,
+                          longitude: arcade.longitude,
+                          playPrice: arcade.playPrice,
+                          coinCount: arcade.coinCount,
+                          businessHours: arcade.businessHours,
+                          hours: arcade.hours,
+                          phone: arcade.phone,
+                          website: arcade.website,
+                          creditLabel: arcade.creditLabel,
+                          facilities: arcade.facilities,
+                          cabinets: arcade.cabinets,
+                          notes: arcade.notes,
+                          isActive: arcade.isActive,
+                      }
+                    : undefined
+            ),
+        [arcade]
+    );
+    const savedCabinets = useMemo(
+        () =>
+            new Map(
+                (arcade?.cabinets ?? []).map((cabinet) => [
+                    String(cabinet.id),
+                    cabinet,
+                ])
+            ),
+        [arcade]
+    );
+    const legacyNote = normalizeArcadeBusinessHours(
+        arcade?.businessHours
+    )?.legacyNote;
+    const [statusMessage, setStatusMessage] = useState("");
+    const {
+        register,
+        control,
+        handleSubmit,
+        reset,
+        setValue,
+        setError,
+        clearErrors,
+        formState: { errors, isSubmitting },
+    } = useForm<ArcadeFormValues, unknown, ArcadeValues>({
+        resolver: zodResolver(arcadeFormSchema),
+        defaultValues,
+    });
+    const { fields, append, remove } = useFieldArray({
+        control,
+        name: "cabinets",
+        keyName: "key",
+    });
+    const cabinetValues = useWatch({ control, name: "cabinets" });
+
+    // 저장 뒤 새로고침으로 받은 기체 ID·확인 날짜로 폼을 다시 맞춘다 — 방금 추가한 기체가 다음 저장에서 또 생기지 않게
+    useEffect(() => {
+        reset(defaultValues);
+    }, [defaultValues, reset]);
+
+    async function handleArcadeSubmit(values: ArcadeValues) {
+        clearErrors();
+        let latitude = values.latitude;
+        let longitude = values.longitude;
+
+        try {
+            const canReuseCoordinates =
+                props.mode === "update" &&
+                values.address === (props.arcade.address ?? "") &&
+                latitude !== null &&
+                longitude !== null;
+
+            if (!canReuseCoordinates) {
+                setStatusMessage("주소에서 위치를 찾는 중입니다.");
+                const coordinates = await geocodeArcadeAddress(
+                    props.appKey,
+                    values.address
+                );
+                if (!coordinates) {
+                    const message = "주소에 맞는 위치를 찾지 못했습니다.";
+                    setError("address", { type: "manual", message });
+                    setStatusMessage(message);
+                    return;
+                }
+
+                latitude = coordinates.latitude;
+                longitude = coordinates.longitude;
+                setValue("latitude", String(latitude));
+                setValue("longitude", String(longitude));
+            }
+
+            setStatusMessage("위치를 확인했습니다. 저장 중입니다.");
+            const formData = createArcadeFormData(
+                { ...values, latitude, longitude },
+                arcade?.id
+            );
+            const result = isCreate
+                ? await createArcade(formData)
+                : await updateArcade(formData);
+
+            if (!result.success) {
+                applyFormActionFailure(setError, result);
+                setStatusMessage(result.message);
+                toast.error(result.message);
+                return;
+            }
+
+            setStatusMessage(result.message);
+            toast.success(result.message);
+            if (isCreate) reset(defaultValues);
+            router.refresh();
+        } catch (error) {
+            const message =
+                error instanceof Error && error.message === "GEOCODING_TIMEOUT"
+                    ? "주소 검색 응답이 지연되고 있습니다. 다시 시도해주세요."
+                    : "저장하지 못했습니다. 카카오맵 설정과 입력 내용을 확인해주세요.";
+            applyFormRootError(setError, message);
+            setStatusMessage(message);
+            toast.error(message);
+        }
+    }
+
+    const submit = handleSubmit(handleArcadeSubmit);
+
+    return (
+        <form
+            onSubmit={submit}
+            noValidate
+            className="grid gap-nl-8 rounded-nl-container bg-nl-surface p-nl-12"
+        >
+            {isCreate ? (
+                <h2 className="nl-component-title flex items-center gap-nl-8 text-nl-content">
+                    <Plus className="nl-icon-small" aria-hidden /> 오락실 추가
+                </h2>
+            ) : null}
+            <input type="hidden" {...register("latitude")} />
+            <input type="hidden" {...register("longitude")} />
+            {isCreate ? (
+                <input
+                    type="checkbox"
+                    className="hidden"
+                    tabIndex={-1}
+                    aria-hidden="true"
+                    {...register("isActive")}
+                />
+            ) : null}
+            <label className="sr-only" htmlFor={`${formKey}-name`}>
+                오락실 이름
+            </label>
+            <div
+                className={
+                    isCreate ? undefined : "flex min-w-0 items-center gap-nl-8"
+                }
+            >
+                {!isCreate ? (
+                    <MapPin
+                        className="nl-icon-small shrink-0 text-nl-chart"
+                        aria-hidden
+                    />
+                ) : null}
+                <input
+                    id={`${formKey}-name`}
+                    maxLength={ARCADE_NAME_MAX_LENGTH}
+                    placeholder="오락실 이름"
+                    aria-invalid={Boolean(errors.name)}
+                    className={`${inputClass} ${isCreate ? "w-full" : "flex-1"}`}
+                    {...register("name")}
+                />
+            </div>
+            <FieldError message={errors.name?.message} />
+            <label className="sr-only" htmlFor={`${formKey}-region`}>
+                지역
+            </label>
+            <select
+                id={`${formKey}-region`}
+                aria-invalid={Boolean(errors.region)}
+                className={inputClass}
+                {...register("region")}
+            >
+                <option value="" disabled>
+                    지역 선택
+                </option>
+                {ARCADE_REGIONS.map((region) => (
+                    <option key={region} value={region}>
+                        {region}
+                    </option>
+                ))}
+            </select>
+            <FieldError message={errors.region?.message} />
+            <label className="sr-only" htmlFor={`${formKey}-address`}>
+                주소
+            </label>
+            <input
+                id={`${formKey}-address`}
+                maxLength={ARCADE_ADDRESS_MAX_LENGTH}
+                placeholder="주소"
+                aria-invalid={Boolean(
+                    errors.address || errors.latitude || errors.longitude
+                )}
+                className={inputClass}
+                {...register("address")}
+            />
+            <FieldError
+                message={
+                    errors.address?.message ??
+                    errors.latitude?.message ??
+                    errors.longitude?.message
+                }
+            />
+            <div className="grid grid-cols-2 gap-nl-8">
+                <label className="nl-metadata flex min-w-0 flex-col gap-nl-4 text-nl-subdued">
+                    플레이 요금 (원)
+                    <input
+                        type="number"
+                        min={1}
+                        max={100000}
+                        placeholder="예: 500"
+                        aria-invalid={Boolean(errors.playPrice)}
+                        className={inputClass}
+                        {...register("playPrice")}
+                    />
+                    <FieldError message={errors.playPrice?.message} />
+                </label>
+                <label className="nl-metadata flex min-w-0 flex-col gap-nl-4 text-nl-subdued">
+                    1회 플레이 코인 수
+                    <input
+                        type="number"
+                        min={1}
+                        max={100}
+                        placeholder="예: 1"
+                        aria-invalid={Boolean(errors.coinCount)}
+                        className={inputClass}
+                        {...register("coinCount")}
+                    />
+                    <FieldError message={errors.coinCount?.message} />
+                </label>
+            </div>
+            {/* 공개 요금 줄 「₩500 / 1크레딧」 의 단위 자리 — 비우면 코인 수로 적는다 */}
+            <label className="nl-metadata flex min-w-0 flex-col gap-nl-4 text-nl-subdued">
+                요금 단위 표기 (선택)
+                <input
+                    maxLength={ARCADE_CREDIT_LABEL_MAX_LENGTH}
+                    placeholder="예: 1크레딧 · 비우면 「1코인」"
+                    aria-invalid={Boolean(errors.creditLabel)}
+                    className={inputClass}
+                    {...register("creditLabel")}
+                />
+                <FieldError message={errors.creditLabel?.message} />
+            </label>
+            <div className="grid grid-cols-2 gap-nl-8">
+                <label className="nl-metadata flex min-w-0 flex-col gap-nl-4 text-nl-subdued">
+                    전화번호 (선택)
+                    <input
+                        type="tel"
+                        inputMode="tel"
+                        maxLength={ARCADE_PHONE_MAX_LENGTH}
+                        placeholder="예: 02-123-4567"
+                        aria-invalid={Boolean(errors.phone)}
+                        className={inputClass}
+                        {...register("phone")}
+                    />
+                    <FieldError message={errors.phone?.message} />
+                </label>
+                <label className="nl-metadata flex min-w-0 flex-col gap-nl-4 text-nl-subdued">
+                    웹사이트 (선택)
+                    <input
+                        type="url"
+                        inputMode="url"
+                        maxLength={ARCADE_WEBSITE_MAX_LENGTH}
+                        placeholder="https://"
+                        aria-invalid={Boolean(errors.website)}
+                        className={inputClass}
+                        {...register("website")}
+                    />
+                    <FieldError message={errors.website?.message} />
+                </label>
+            </div>
+            {/* 시설 — 공개 상세 「시설」 구역(아이콘 + 글자)에 보인다 */}
+            <fieldset className="grid min-w-0 grid-cols-1 gap-nl-8 rounded-nl-container border-nl-stroke border-nl-border p-nl-12">
+                <legend className="nl-emphasis-label px-nl-4 text-nl-content">
+                    시설 (선택)
+                </legend>
+                <div className="grid grid-cols-2 gap-nl-8">
+                    {ARCADE_FACILITIES.map((option) => (
+                        <label
+                            key={option.value}
+                            className="nl-body-secondary flex items-center gap-nl-8 text-nl-subdued"
+                        >
+                            <input
+                                type="checkbox"
+                                value={option.value}
+                                {...register("facilities")}
+                            />
+                            {option.label}
+                        </label>
+                    ))}
+                </div>
+                <FieldError message={errors.facilities?.message} />
+            </fieldset>
+            <ArcadeBusinessHoursFields
+                formKey={formKey}
+                register={register}
+                errors={errors}
+                legacyNote={legacyNote}
+            />
+            <ArcadeHoursExceptionsFields
+                control={control}
+                register={register}
+                errors={errors}
+            />
+            <fieldset className="grid min-w-0 grid-cols-1 gap-nl-8 rounded-nl-container border-nl-stroke border-nl-border p-nl-12">
+                <legend className="nl-emphasis-label px-nl-4 text-nl-content">
+                    기체
+                </legend>
+                <p className="nl-metadata text-nl-subdued">
+                    가동·상태·메모를 바꾸거나 「오늘 확인」 을 체크하고 저장하면
+                    그 기체의 확인 날짜가 오늘로 기록됩니다.
+                </p>
+                {fields.map((field, index) => {
+                    const saved = savedCabinets.get(field.cabinetId);
+                    const name = saved
+                        ? `${saved.position + 1}번기`
+                        : "새 기체";
+                    const available =
+                        cabinetValues?.[index]?.availability === "available";
+                    const rowErrors = errors.cabinets?.[index];
+                    return (
+                        <div
+                            key={field.key}
+                            className="grid gap-nl-8 rounded-nl-field border-nl-stroke border-nl-border p-nl-8"
+                        >
+                            <div className="flex items-center gap-nl-8">
+                                <span className="nl-emphasis-label text-nl-content">
+                                    {name}
+                                </span>
+                                <span className="nl-metadata ml-auto text-nl-subdued">
+                                    {saved
+                                        ? verifiedLabel(saved.verifiedAt)
+                                        : "저장하면 추가됩니다"}
+                                </span>
+                                <button
+                                    type="button"
+                                    aria-label={`${name} 삭제`}
+                                    onClick={() => remove(index)}
+                                    className={foundationButtonClass({
+                                        variant: "ghost",
+                                        size: "icon-sm",
+                                    })}
+                                >
+                                    <Trash2
+                                        className="nl-icon-small"
+                                        aria-hidden
+                                    />
+                                </button>
+                            </div>
+                            <input
+                                maxLength={ARCADE_CABINET_LABEL_MAX_LENGTH}
+                                placeholder={
+                                    saved
+                                        ? `이름 · 비우면 ${name}`
+                                        : "이름 · 비우면 번호로 표시"
+                                }
+                                aria-label={`${name} 이름`}
+                                aria-invalid={Boolean(rowErrors?.label)}
+                                className={inputClass}
+                                {...register(`cabinets.${index}.label`)}
+                            />
+                            <div
+                                className={
+                                    available
+                                        ? "grid grid-cols-2 gap-nl-8"
+                                        : "grid gap-nl-8"
+                                }
+                            >
+                                <select
+                                    aria-label={`${name} 가동`}
+                                    className={inputClass}
+                                    {...register(
+                                        `cabinets.${index}.availability`
+                                    )}
+                                >
+                                    {ARCADE_CABINET_AVAILABILITIES.map(
+                                        (option) => (
+                                            <option
+                                                key={option.value}
+                                                value={option.value}
+                                            >
+                                                {option.label}
+                                            </option>
+                                        )
+                                    )}
+                                </select>
+                                {available ? (
+                                    <select
+                                        aria-label={`${name} 상태`}
+                                        className={inputClass}
+                                        {...register(
+                                            `cabinets.${index}.condition`
+                                        )}
+                                    >
+                                        {ARCADE_CABINET_CONDITIONS.map(
+                                            (option) => (
+                                                <option
+                                                    key={option.value}
+                                                    value={option.value}
+                                                >
+                                                    {option.label}
+                                                </option>
+                                            )
+                                        )}
+                                    </select>
+                                ) : null}
+                            </div>
+                            {/* 위치 메모는 공개 기체 이름 옆, 상태 이유는 상태 라벨 팝오버에 보인다 */}
+                            <input
+                                maxLength={ARCADE_CABINET_NOTE_MAX_LENGTH}
+                                placeholder="위치 메모 · 예: 안쪽 벽"
+                                aria-label={`${name} 위치 메모`}
+                                aria-invalid={Boolean(rowErrors?.note)}
+                                className={inputClass}
+                                {...register(`cabinets.${index}.note`)}
+                            />
+                            {available ? (
+                                <input
+                                    maxLength={ARCADE_CABINET_NOTE_MAX_LENGTH}
+                                    placeholder="상태 이유 · 보통·주의일 때 필수"
+                                    aria-label={`${name} 상태 이유`}
+                                    aria-invalid={Boolean(
+                                        rowErrors?.conditionNote
+                                    )}
+                                    className={inputClass}
+                                    {...register(
+                                        `cabinets.${index}.conditionNote`
+                                    )}
+                                />
+                            ) : null}
+                            {/* 태그 · 특징은 공개 기체 카드에 보인다 — 바꿔도 확인 날짜는 그대로 */}
+                            <div className="grid grid-cols-2 gap-nl-8">
+                                {ARCADE_CABINET_TAGS.map((option) => (
+                                    <label
+                                        key={option.value}
+                                        className="nl-body-secondary flex items-center gap-nl-8 text-nl-subdued"
+                                    >
+                                        <input
+                                            type="checkbox"
+                                            value={option.value}
+                                            {...register(
+                                                `cabinets.${index}.tags`
+                                            )}
+                                        />
+                                        {option.label}
+                                    </label>
+                                ))}
+                            </div>
+                            <div className="grid grid-cols-3 gap-nl-8">
+                                {ARCADE_CABINET_FEATURES.map((feature) => (
+                                    <select
+                                        key={feature.key}
+                                        aria-label={`${name} ${feature.label}`}
+                                        className={inputClass}
+                                        {...register(
+                                            `cabinets.${index}.${feature.key}`
+                                        )}
+                                    >
+                                        <option value="">
+                                            {feature.label} · 모름
+                                        </option>
+                                        {feature.options.map((option) => (
+                                            <option
+                                                key={option.value}
+                                                value={option.value}
+                                            >
+                                                {feature.label} · {option.label}
+                                            </option>
+                                        ))}
+                                    </select>
+                                ))}
+                            </div>
+                            <input
+                                maxLength={
+                                    ARCADE_CABINET_FEATURE_NOTE_MAX_LENGTH
+                                }
+                                placeholder="기체 특징 기타 (선택) · 예: 방송용 카메라는 오른쪽 위"
+                                aria-label={`${name} 기체 특징 기타`}
+                                aria-invalid={Boolean(rowErrors?.featureNote)}
+                                className={inputClass}
+                                {...register(`cabinets.${index}.featureNote`)}
+                            />
+                            <FieldError
+                                message={
+                                    rowErrors?.conditionNote?.message ??
+                                    rowErrors?.note?.message ??
+                                    rowErrors?.label?.message ??
+                                    rowErrors?.featureNote?.message ??
+                                    rowErrors?.tags?.message ??
+                                    rowErrors?.keyWeight?.message ??
+                                    rowErrors?.screenLag?.message ??
+                                    rowErrors?.soundVolume?.message
+                                }
+                            />
+                            {saved ? (
+                                <label className="nl-body-secondary flex items-center gap-nl-8 text-nl-subdued">
+                                    <input
+                                        type="checkbox"
+                                        {...register(
+                                            `cabinets.${index}.confirm`
+                                        )}
+                                    />
+                                    오늘 확인
+                                </label>
+                            ) : null}
+                        </div>
+                    );
+                })}
+                {fields.length === 0 ? (
+                    <p className="nl-metadata text-nl-subdued">
+                        등록된 기체가 없습니다.
+                    </p>
+                ) : null}
+                <button
+                    type="button"
+                    disabled={fields.length >= ARCADE_CABINET_MAX}
+                    onClick={() =>
+                        append({
+                            cabinetId: "",
+                            label: "",
+                            note: "",
+                            conditionNote: "",
+                            availability: "unknown",
+                            condition: "unknown",
+                            tags: [],
+                            keyWeight: "",
+                            screenLag: "",
+                            soundVolume: "",
+                            featureNote: "",
+                            confirm: false,
+                        })
+                    }
+                    className={secondaryButtonClass}
+                >
+                    <Plus className="nl-icon-small" aria-hidden /> 기체 추가
+                </button>
+                <FieldError
+                    message={
+                        errors.cabinets?.message ??
+                        errors.cabinets?.root?.message
+                    }
+                />
+            </fieldset>
+            {/* 사진은 오락실 id 가 있어야 올릴 수 있어 수정 폼에만 — 추가·삭제는 저장 버튼과 따로 바로 반영 */}
+            {props.mode === "update" ? (
+                <ArcadePhotoManager
+                    arcadeId={props.arcade.id}
+                    arcadeName={props.arcade.name}
+                    photos={props.arcade.photos}
+                />
+            ) : null}
+            <label className="nl-metadata flex flex-col gap-nl-4 text-nl-subdued">
+                비고
+                <textarea
+                    maxLength={ARCADE_NOTES_MAX_LENGTH}
+                    placeholder="예: 이벤트 기체, 이어폰 단자 지원"
+                    aria-invalid={Boolean(errors.notes)}
+                    className={textareaClass}
+                    {...register("notes")}
+                />
+                <FieldError message={errors.notes?.message} />
+            </label>
+            {props.mode === "update" ? (
+                <div className="flex items-start justify-between gap-nl-8">
+                    <label className="nl-body-secondary flex cursor-pointer items-center gap-nl-8 text-nl-subdued">
+                        <input type="checkbox" {...register("isActive")} />
+                        선택 목록에 표시
+                    </label>
+                    <span className="nl-metadata text-nl-subdued">
+                        선택 {props.arcade.userCount}명
+                    </span>
+                </div>
+            ) : null}
+            <AdminFieldError
+                message={errors.root?.server?.message}
+                className="nl-metadata text-nl-error"
+            />
+            <div className="flex min-w-0 flex-col items-stretch gap-nl-4">
+                <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className={
+                        isCreate
+                            ? foundationButtonClass()
+                            : secondaryButtonClass
+                    }
+                >
+                    {isCreate ? (
+                        <Plus className="nl-icon-small" aria-hidden />
+                    ) : (
+                        <Save className="nl-icon-small" aria-hidden />
+                    )}
+                    {isSubmitting ? "위치 확인 중" : isCreate ? "추가" : "저장"}
+                </button>
+                {statusMessage ? (
+                    <span
+                        className="nl-metadata text-center text-nl-subdued"
+                        role="status"
+                    >
+                        {statusMessage}
+                    </span>
+                ) : null}
+            </div>
+        </form>
+    );
+}

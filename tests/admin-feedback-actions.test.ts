@@ -6,6 +6,7 @@ const mocks = vi.hoisted(() => ({
     feedbackFindUnique: vi.fn(),
     feedbackUpdate: vi.fn(),
     revalidatePath: vi.fn(),
+    updateTag: vi.fn(),
     logServerError: vi.fn(),
 }));
 
@@ -19,13 +20,16 @@ vi.mock("@/lib/db", () => ({
         },
     },
 }));
-vi.mock("next/cache", () => ({ revalidatePath: mocks.revalidatePath }));
+vi.mock("next/cache", () => ({
+    revalidatePath: mocks.revalidatePath,
+    updateTag: mocks.updateTag,
+}));
 vi.mock("@/lib/observability/server", () => ({
     logServerError: mocks.logServerError,
 }));
 
 import { updateFeedbackStatus } from "@/app/admin/feedback/actions";
-import { listFeedbackReports } from "@/features/feedback/server/feedbackAdminService";
+import { listFeedbackReports } from "@/features/feedback/server/feedback-admin-service";
 
 function statusForm(status: "open" | "resolved") {
     const formData = new FormData();

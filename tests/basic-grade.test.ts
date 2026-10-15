@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { calculateBasicGrade } from "@/lib/music/basicGrade";
-import { getMaxBasicGrade } from "@/lib/music/maxGrade";
+import { calculateBasicGrade } from "@/lib/music/basic-grade";
+import { getMaxBasicGrade } from "@/lib/music/max-grade";
 
 const play = {
     rank: "A",
