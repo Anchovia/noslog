@@ -1,6 +1,5 @@
 "use client";
 
-import { RotateCcw } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -10,6 +9,7 @@ import {
     useTranslations,
 } from "@/components/i18n/locale-provider";
 import { foundationButtonClass } from "@/components/ui/button";
+import LegacyRouteError from "@/features/recovery/components/legacy-route-error";
 import RecoveryAction from "@/features/recovery/components/recovery-action";
 import { stripLocaleFromPath } from "@/lib/i18n/routing";
 import { recordClientError } from "@/lib/observability/client";
@@ -34,26 +34,7 @@ export default function ErrorPage({
         console.error(error);
     }, [error]);
 
-    if (preserved) {
-        return (
-            <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 px-6 text-center">
-                <div>
-                    <h1 className="text-title">{t("common.pageError")}</h1>
-                    <p className="mt-2 text-body-muted">
-                        {t("common.retryLater")}
-                    </p>
-                </div>
-                <button
-                    type="button"
-                    onClick={reset}
-                    className="flex h-10 cursor-pointer items-center gap-2 rounded-md border border-border bg-surface px-4 text-sm font-semibold text-text-primary"
-                >
-                    <RotateCcw className="size-4" aria-hidden />
-                    {t("common.retry")}
-                </button>
-            </div>
-        );
-    }
+    if (preserved) return <LegacyRouteError reset={reset} />;
 
     // 그 밖(로그인 · 온보딩 · 점검 · 레이아웃 실패)은 헤더가 없는 오류 화면(global-error)과 같은 모양 — 토큰 · 공용 버튼(2026-10-01)
     return (

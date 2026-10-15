@@ -6,6 +6,7 @@ import { type ReactNode, useId } from "react";
 import { useTranslations } from "@/components/i18n/locale-provider";
 import ActionButton from "@/components/ui/action-button";
 import FullScreenDialog from "@/components/ui/full-screen-dialog";
+import { overlayPosition } from "@/components/ui/overlay-position";
 
 /**
  * 필터 그릇 — Compact 는 전체 레이어(배치 적용 · 하단 "결과 N개 보기"),
@@ -61,8 +62,8 @@ export default function FilterSurface({
                     <Popover.Content
                         className="nl-filter-popover"
                         align="start"
-                        sideOffset={8}
-                        collisionPadding={16}
+                        sideOffset={overlayPosition.sideOffset}
+                        collisionPadding={overlayPosition.collisionPadding}
                         aria-labelledby={titleId}
                     >
                         <div className="nl-filter-popover__head">

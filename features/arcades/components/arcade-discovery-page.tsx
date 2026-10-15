@@ -42,6 +42,7 @@ import type {
     PublicArcade,
 } from "@/features/arcades/schemas/public-arcade-schema";
 import { arcadeDiscoverySchema } from "@/features/arcades/schemas/public-arcade-schema";
+import { readTokenPixels } from "@/lib/design-tokens";
 import useMediaQuery from "@/lib/hooks/use-media-query";
 
 import ArcadeDiscoveryMap from "./arcade-discovery-map";
@@ -53,8 +54,6 @@ const SORTS = ["distance", "name", "preferred"] as const;
 const SHEET_SLOP = 8;
 const SHEET_DRAG = 24;
 const SHEET_PULL = 48;
-// 내린 시트에서 첫 카드 아래 여백 — compact component inset
-const SHEET_PEEK_INSET = 16;
 
 /**
  * 오락실 찾기 — 지도와 목록이 한 집합이다.
@@ -403,7 +402,8 @@ export default function ArcadeDiscoveryPage({
                     anchor.getBoundingClientRect().bottom +
                         body.scrollTop -
                         catalog.getBoundingClientRect().top +
-                        SHEET_PEEK_INSET
+                        // 첫 카드 아래 여백 — compact component inset
+                        readTokenPixels(catalog, "--nl-spacing-16")
                 )
             );
         measure();

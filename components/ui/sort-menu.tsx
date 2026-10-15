@@ -9,6 +9,7 @@ import { Children, useState } from "react";
 
 import { useTranslations } from "@/components/i18n/locale-provider";
 import ActionButton from "@/components/ui/action-button";
+import { overlayPosition } from "@/components/ui/overlay-position";
 
 export interface SortMenuOption<Value extends string> {
     value: Value;
@@ -94,8 +95,8 @@ export default function SortMenu<Value extends string>({
                     <Popover.Content
                         className="nl-sort-menu"
                         align="start"
-                        sideOffset={8}
-                        collisionPadding={16}
+                        sideOffset={overlayPosition.sideOffset}
+                        collisionPadding={overlayPosition.collisionPadding}
                         aria-label={label}
                     >
                         <div

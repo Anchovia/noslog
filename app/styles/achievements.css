@@ -50,7 +50,7 @@
 }
 .noslog-ui .nl-achievement-hex__icon {
     position: relative;
-    z-index: 1;
+    z-index: var(--nl-layer-above);
 }
 /* 목록 48 · 그림 24(강조) */
 .noslog-ui .nl-achievement-hex[data-size="row"] {
@@ -76,7 +76,7 @@
     position: absolute;
     right: calc(var(--nl-spacing-4) * -1);
     bottom: calc(var(--nl-spacing-2) * -1);
-    z-index: 2;
+    z-index: calc(var(--nl-layer-above) + 1);
     min-width: 16px;
     height: 16px;
     padding-inline: var(--nl-spacing-4);

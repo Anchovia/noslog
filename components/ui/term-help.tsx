@@ -4,6 +4,8 @@ import * as Popover from "@radix-ui/react-popover";
 import { CircleHelp } from "lucide-react";
 import { type ReactNode, useEffect, useRef, useState } from "react";
 
+import { overlayPosition } from "@/components/ui/overlay-position";
+
 /** 닫은 직후 같은 손짓이 다시 여는 것을 무시하는 시간 — 셀렉트(useSelectOpen)와 같은 규칙 */
 const REOPEN_GUARD_MS = 200;
 /** 지금 열린 도움말의 닫기 함수 — 한 번에 하나만 연다(2026-10-01 V10) */
@@ -121,8 +123,8 @@ export default function TermHelp({
             <Popover.Portal>
                 <Popover.Content
                     side="top"
-                    sideOffset={8}
-                    collisionPadding={16}
+                    sideOffset={overlayPosition.sideOffset}
+                    collisionPadding={overlayPosition.collisionPadding}
                     onPointerDownOutside={(event) => {
                         // 제 트리거를 누른 것은 바깥 누름이 아니다 — 여기서 닫으면 눌러 여는 것과 부딪혀 깜빡인다
                         if (trigger.current?.contains(event.target as Node))

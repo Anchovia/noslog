@@ -113,7 +113,7 @@
 }
 .noslog-ui .nl-score-pin[data-me] {
     --nl-pin-size: 32px;
-    z-index: 1;
+    z-index: var(--nl-layer-above);
 }
 .noslog-ui .nl-score-pin__shape {
     position: absolute;

@@ -9,6 +9,7 @@ import { useState, useTransition } from "react";
 
 import { changeLocale } from "@/app/(site)/settings/actions";
 import { useLocale, useTranslations } from "@/components/i18n/locale-provider";
+import { overlayPosition } from "@/components/ui/overlay-position";
 import { PROFILE_LANGUAGES } from "@/features/profile/schemas/profile-settings-schema";
 import { getLocalizedHref, isLocale } from "@/lib/i18n/routing";
 
@@ -71,8 +72,8 @@ export default function AuthLanguage() {
                             className="nl-select-menu"
                             position="popper"
                             side="top"
-                            sideOffset={8}
-                            collisionPadding={16}
+                            sideOffset={overlayPosition.sideOffset}
+                            collisionPadding={overlayPosition.collisionPadding}
                         >
                             <Select.Viewport>
                                 {PROFILE_LANGUAGES.map((option) => (

@@ -5,6 +5,7 @@ import { Ellipsis } from "lucide-react";
 import { type ReactNode, type Ref, useRef, useState } from "react";
 
 import IconButton from "@/components/ui/icon-button";
+import { overlayPosition } from "@/components/ui/overlay-position";
 
 export default function ActionMenu({
     label,
@@ -42,9 +43,9 @@ export default function ActionMenu({
                         className="nl-action-menu"
                         role="menu"
                         aria-label={label}
-                        sideOffset={8}
+                        sideOffset={overlayPosition.sideOffset}
                         align="end"
-                        collisionPadding={16}
+                        collisionPadding={overlayPosition.collisionPadding}
                         onKeyDown={(event) => {
                             if (event.key === "Tab") {
                                 setOpen(false);

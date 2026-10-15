@@ -23,6 +23,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import Disclosure from "@/components/ui/disclosure";
 import FilterChips from "@/components/ui/filter-chips";
 import ModalDialog from "@/components/ui/modal-dialog";
+import { overlayPosition } from "@/components/ui/overlay-position";
 import { StatusMessage } from "@/components/ui/status-message";
 import BingoCoordinateBoard, {
     useBingoPosition,
@@ -199,8 +200,10 @@ export default function BingoDetailPage({
                                         className="nl-bingo-cell-popover"
                                         side="bottom"
                                         align="center"
-                                        sideOffset={8}
-                                        collisionPadding={16}
+                                        sideOffset={overlayPosition.sideOffset}
+                                        collisionPadding={
+                                            overlayPosition.collisionPadding
+                                        }
                                         aria-label={t("bingo.selectedMission")}
                                         onInteractOutside={(event) => {
                                             // 다른 칸을 누르는 건 닫기가 아니라 앵커 이동 — 팝오버를 유지하고 선택만 바뀐다

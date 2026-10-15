@@ -74,7 +74,7 @@
     content: "";
     position: absolute;
     inset: var(--nl-spacing-4) 0;
-    z-index: -1;
+    z-index: calc(var(--nl-layer-above) * -1);
     border-radius: var(--nl-radius-control);
 }
 @media (hover: hover) {

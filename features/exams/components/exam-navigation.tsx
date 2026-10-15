@@ -9,6 +9,7 @@ import type {
     ExamMode,
 } from "@/components/exams/dashboard/exam-dashboard-types";
 import { useTranslations } from "@/components/i18n/locale-provider";
+import { overlayPosition } from "@/components/ui/overlay-position";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 
 export default function ExamNavigation({
@@ -75,8 +76,10 @@ export default function ExamNavigation({
                             <Select.Content
                                 className="noslog-ui nl-exam-select__popup"
                                 position="popper"
-                                sideOffset={8}
-                                collisionPadding={16}
+                                sideOffset={overlayPosition.sideOffset}
+                                collisionPadding={
+                                    overlayPosition.collisionPadding
+                                }
                             >
                                 <Select.Viewport>
                                     {exams.map((exam) => (

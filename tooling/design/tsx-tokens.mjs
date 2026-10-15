@@ -1,3 +1,6 @@
+import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
+import { dirname, join, relative } from "node:path";
+
 import ts from "typescript";
 
 const appearanceProperty =
@@ -7,6 +10,46 @@ const colorValueProperty =
     /^(?:color|.*Color|background(?:Image)?|border(?:Top|Right|Bottom|Left)?|outline|boxShadow|textShadow|fill|stroke)$/;
 const rawColor = /#[\da-f]{3,8}\b|\b(?:rgb|hsl)a?\(/i;
 const lengths = /(-?\d*\.?\d+)(?:px|rem|em)\b/g;
+
+// Tailwind default scales and arbitrary values: only nl aliases, zero and keyword values pass (2026-10-15).
+const classContext = /^(?:cn|clsx|cva|cx|twMerge)$/;
+const scaleUtility =
+    /^-?(?:p[xytrblse]?|m[xytrblse]?|gap(?:-[xy])?|space-[xy]|(?:min-|max-)?[wh]|size|inset(?:-[xy])?|top|right|bottom|left|start|end|translate-[xy]|basis|indent|scroll-[mp][xytrblse]?|border(?:-[xytrblse])?|outline(?:-offset)?|ring(?:-offset)?|divide-[xy]|underline-offset|decoration|z|opacity|duration|delay|scale(?:-[xy])?|rotate|skew-[xy]|blur|leading)-(\d+(?:\.\d+)?|px)$/;
+const namedUtility =
+    /^(?:rounded(?:-[trblse]{1,2})?(?:-(?:xs|sm|md|lg|xl|\dxl|full))?|text-(?:xs|sm|base|lg|xl|\dxl)|font-(?:thin|extralight|light|normal|medium|semibold|bold|extrabold|black)|(?:drop-|inset-|text-)?shadow(?:-(?:\dxs|xs|sm|md|lg|xl|\dxl|inner))?|leading-(?:none|tight|snug|normal|relaxed|loose)|tracking-(?:tighter|tight|wide|wider|widest)|blur(?:-(?:xs|sm|md|lg|xl|\dxl))?|ease-(?:linear|in|out|in-out)|max-w-(?:xs|sm|md|lg|xl|\dxl|prose|screen-\w+)|border(?:-[xytrblse])?|ring|outline)$/;
+
+/** The utility part of a class, without variants (`md:`, `data-[x]:`) or importance. */
+function utilityOf(token) {
+    let depth = 0;
+    let start = 0;
+    for (let index = 0; index < token.length; index += 1) {
+        if (token[index] === "[") depth += 1;
+        else if (token[index] === "]") depth -= 1;
+        else if (token[index] === ":" && depth === 0) start = index + 1;
+    }
+    return token.slice(start).replace(/^!|!$/g, "");
+}
+
+function tailwindProblem(token) {
+    const utility = utilityOf(token);
+    if (!utility || utility.startsWith("nl-") || /^[\w-]+-nl-/.test(utility))
+        return null;
+    if (/^-?[a-z][\w-]*-\[.*\]$|^\[.*\]$/.test(utility))
+        return `arbitrary Tailwind value ${token} must use an nl alias`;
+    const scale = utility.match(scaleUtility);
+    if (scale) {
+        const value = Number(scale[1]);
+        if (
+            value === 0 ||
+            (/^(?:opacity|scale(?:-[xy])?)-/.test(utility) && value === 100)
+        )
+            return null;
+        return `Tailwind default scale ${token} must use an nl alias`;
+    }
+    if (namedUtility.test(utility))
+        return `Tailwind default scale ${token} must use an nl alias`;
+    return null;
+}
 
 /** Inspect literal presentation values; runtime geometry/data remains the caller's responsibility. */
 export function inspectTsxTokens(filename, source, declaredTokens) {
@@ -157,6 +200,7 @@ export function inspectTsxTokens(filename, source, declaredTokens) {
             )
                 report(node, `unknown token ${name}${complete ? "" : "…"}`);
         }
+        if (classStrings.has(node)) return;
         for (const match of value.matchAll(
             /(?:^|\s)(?:[\w-]+:)*(gap|gap-x|gap-y|p[trblxy]?|m[trblxy]?|rounded(?:-[trbl])?|text|bg|border|fill|stroke)-\[([^\]]+)\]/g
         )) {
@@ -175,7 +219,50 @@ export function inspectTsxTokens(filename, source, declaredTokens) {
                 );
         }
     }
+    // Class strings get the stricter Tailwind check below instead of the arbitrary-value check.
+    const classStrings = new Set();
+    function inspectClasses(node) {
+        if (
+            ts.isStringLiteralLike(node) ||
+            ts.isTemplateHead(node) ||
+            ts.isTemplateMiddle(node) ||
+            ts.isTemplateTail(node)
+        ) {
+            classStrings.add(node);
+            for (const token of node.text.split(/\s+/)) {
+                const problem = token && tailwindProblem(token);
+                if (problem) report(node, problem);
+            }
+        }
+        if (ts.isTemplateExpression(node)) {
+            inspectClasses(node.head);
+            node.templateSpans.forEach((span) => {
+                inspectClasses(span.expression);
+                inspectClasses(span.literal);
+            });
+            return;
+        }
+        ts.forEachChild(node, inspectClasses);
+    }
+    function isClassContext(node) {
+        const name =
+            (ts.isJsxAttribute(node) ||
+                ts.isPropertyAssignment(node) ||
+                ts.isVariableDeclaration(node)) &&
+            node.name.getText(ast).replace(/^['"]|['"]$/g, "");
+        if (name && /class(?:name|es)?$/i.test(name)) return true;
+        return (
+            ts.isCallExpression(node) &&
+            ts.isIdentifier(node.expression) &&
+            classContext.test(node.expression.text)
+        );
+    }
     function visit(node) {
+        if (isClassContext(node)) {
+            inspectClasses(
+                ts.isCallExpression(node) ? node : (node.initializer ?? node)
+            );
+        }
         if (ts.isStringLiteralLike(node)) inspectText(node, node.text);
         if (ts.isTemplateExpression(node)) {
             inspectText(node.head, node.head.text, true);
@@ -187,6 +274,22 @@ export function inspectTsxTokens(filename, source, declaredTokens) {
                 )
             );
         }
+        // Floating overlay offsets come from components/ui/overlay-position, not per-component numbers.
+        if (
+            ts.isJsxAttribute(node) &&
+            /^(?:sideOffset|alignOffset|collisionPadding)$/.test(
+                node.name.getText(ast)
+            ) &&
+            node.initializer &&
+            ts.isJsxExpression(node.initializer) &&
+            node.initializer.expression &&
+            /[1-9]/.test(node.initializer.expression.getText(ast)) &&
+            !/[A-Za-z_]/.test(node.initializer.expression.getText(ast))
+        )
+            report(
+                node,
+                `${node.name.getText(ast)} must use overlayPosition, not ${node.initializer.expression.getText(ast)}`
+            );
         if (
             ts.isJsxAttribute(node) &&
             node.name.getText(ast) === "style" &&
@@ -199,4 +302,76 @@ export function inspectTsxTokens(filename, source, declaredTokens) {
     }
     visit(ast);
     return [...new Set(violations)];
+}
+
+const sourceExtensions = [".tsx", ".ts", ".jsx", ".js", ".mjs"];
+
+function resolveImport(root, from, specifier) {
+    let base;
+    if (specifier.startsWith("@/")) base = join(root, specifier.slice(2));
+    else if (specifier.startsWith(".")) base = join(dirname(from), specifier);
+    else return null;
+    const candidates = [
+        base,
+        ...sourceExtensions.map((extension) => base + extension),
+        ...sourceExtensions.map((extension) => join(base, `index${extension}`)),
+    ];
+    return (
+        candidates.find(
+            (candidate) => existsSync(candidate) && statSync(candidate).isFile()
+        ) ?? null
+    );
+}
+
+/**
+ * TSX files reachable by imports from routes outside `excludedRoutes`.
+ * Components that only an excluded route (e.g. /admin) imports are left out on their own.
+ */
+export function reachableTsxFiles(root, { routes = "app", excludedRoutes }) {
+    const entries = [];
+    (function walk(directory) {
+        for (const entry of readdirSync(directory, { withFileTypes: true })) {
+            const path = join(directory, entry.name);
+            if (excludedRoutes.test(relative(root, path))) continue;
+            if (entry.isDirectory()) walk(path);
+            else if (
+                sourceExtensions.some((extension) => path.endsWith(extension))
+            )
+                entries.push(path);
+        }
+    })(join(root, routes));
+    const seen = new Set();
+    const queue = [...entries];
+    while (queue.length) {
+        const file = queue.pop();
+        if (seen.has(file)) continue;
+        seen.add(file);
+        const ast = ts.createSourceFile(
+            file,
+            readFileSync(file, "utf8"),
+            ts.ScriptTarget.Latest,
+            false,
+            file.endsWith("x") ? ts.ScriptKind.TSX : ts.ScriptKind.TS
+        );
+        (function collect(node) {
+            const specifier =
+                (ts.isImportDeclaration(node) ||
+                    ts.isExportDeclaration(node)) &&
+                node.moduleSpecifier
+                    ? node.moduleSpecifier
+                    : ts.isCallExpression(node) &&
+                        node.expression.kind === ts.SyntaxKind.ImportKeyword
+                      ? node.arguments[0]
+                      : null;
+            if (specifier && ts.isStringLiteralLike(specifier)) {
+                const target = resolveImport(root, file, specifier.text);
+                if (target && !seen.has(target)) queue.push(target);
+            }
+            ts.forEachChild(node, collect);
+        })(ast);
+    }
+    return [...seen]
+        .filter((file) => file.endsWith(".tsx"))
+        .map((file) => relative(root, file))
+        .sort();
 }

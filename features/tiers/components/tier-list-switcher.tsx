@@ -4,6 +4,7 @@ import * as Select from "@radix-ui/react-select";
 import { Check, ChevronDown } from "lucide-react";
 
 import { useTranslations } from "@/components/i18n/locale-provider";
+import { overlayPosition } from "@/components/ui/overlay-position";
 import type { TierBrowserQuery } from "@/features/tiers/schemas/tier-browser-schema";
 import {
     normalizeTierModeGoal,
@@ -59,9 +60,9 @@ export default function TierListSwitcher({
                     <Select.Content
                         className="nl-select-menu"
                         position="popper"
-                        sideOffset={8}
+                        sideOffset={overlayPosition.sideOffset}
                         align="start"
-                        collisionPadding={16}
+                        collisionPadding={overlayPosition.collisionPadding}
                     >
                         <Select.Viewport>
                             {TIER_MODES.map((mode) => (

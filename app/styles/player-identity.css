@@ -28,19 +28,19 @@
 }
 .noslog-ui .nl-exam-badge::before {
     inset: 0;
-    z-index: 3;
+    z-index: calc(var(--nl-layer-above) + 2);
 }
 .noslog-ui .nl-exam-badge::after {
     display: none;
     inset: var(--nl-spacing-2);
-    z-index: 1;
+    z-index: var(--nl-layer-above);
 }
 .noslog-ui .nl-exam-badge__arc {
     --nl-exam-arc: var(--nl-radius-control);
     --nl-exam-arc-fill: var(--nl-exam-badge-ground);
     position: absolute;
     inset: 0;
-    z-index: 4;
+    z-index: calc(var(--nl-layer-above) + 3);
     pointer-events: none;
     background:
         radial-gradient(
@@ -86,7 +86,7 @@
 }
 .noslog-ui .nl-exam-badge__arc--inner {
     display: none;
-    z-index: 2;
+    z-index: calc(var(--nl-layer-above) + 1);
     --nl-exam-arc: calc(var(--nl-radius-control) + var(--nl-spacing-2));
     --nl-exam-arc-fill: var(--nl-exam-badge-fill);
 }
@@ -102,7 +102,7 @@
 .noslog-ui .nl-exam-badge__divider,
 .noslog-ui .nl-exam-badge__grade {
     position: relative;
-    z-index: 5;
+    z-index: calc(var(--nl-layer-above) + 4);
 }
 .noslog-ui .nl-exam-badge__mode {
     display: inline-flex;

@@ -6,6 +6,7 @@ import * as SelectPrimitive from "@radix-ui/react-select";
 import { Check, ChevronDown } from "lucide-react";
 import type { Ref } from "react";
 
+import { overlayPosition } from "@/components/ui/overlay-position";
 import { useSelectOpen } from "@/components/ui/use-select-open";
 import { cn } from "@/lib/cn";
 
@@ -85,9 +86,9 @@ export function Select({
                     <SelectPrimitive.Content
                         className="nl-select-menu nl-select-menu--field"
                         position="popper"
-                        sideOffset={8}
+                        sideOffset={overlayPosition.sideOffset}
                         align="start"
-                        collisionPadding={16}
+                        collisionPadding={overlayPosition.collisionPadding}
                     >
                         <SelectPrimitive.Viewport>
                             {options.map((option) => (

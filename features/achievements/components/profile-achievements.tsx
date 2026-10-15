@@ -22,12 +22,11 @@ export function formatAchievementDate(value: string, locale: string) {
     });
 }
 
-/** 한 줄 칸(육각 44 · 사이 8) — 칸 수는 구역 폭으로 정한다(2026-09-26 A1). 처음 그릴 때는 옆 열 · 폰 폭(356 = 7칸) 기준 */
+/** 한 줄 칸(육각 44 · 사이 = 줄의 gap) — 칸 수는 구역 폭으로 정한다(2026-09-26 A1). 처음 그릴 때는 옆 열 · 폰 폭(356 = 7칸) 기준 */
 const HEX_WIDTH = 44;
-const HEX_GAP = 8;
 const DEFAULT_SLOTS = 7;
-const slotsFor = (width: number) =>
-    Math.max(1, Math.floor((width + HEX_GAP) / (HEX_WIDTH + HEX_GAP)));
+const slotsFor = (width: number, gap: number) =>
+    Math.max(1, Math.floor((width + gap) / (HEX_WIDTH + gap)));
 
 /**
  * 프로필 「업적」 구역(2026-09-25 A2) — 넓은 화면은 옆 열(기록 개요 아래 · 기여 위), 폰은 기여 위.
@@ -54,7 +53,12 @@ export default function ProfileAchievements({
         const element = stripRef.current;
         if (!element) return;
         const observer = new ResizeObserver(([entry]) =>
-            setSlots(slotsFor(entry.contentRect.width))
+            setSlots(
+                slotsFor(
+                    entry.contentRect.width,
+                    Number.parseFloat(getComputedStyle(element).columnGap) || 0
+                )
+            )
         );
         observer.observe(element);
         return () => observer.disconnect();
