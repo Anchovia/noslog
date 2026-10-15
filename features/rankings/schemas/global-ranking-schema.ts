@@ -2,7 +2,8 @@ import { z } from "zod";
 
 import { nameLabelSchema } from "@/features/contributions/schemas/contribution-label-schema";
 
-export const GLOBAL_RANKING_PAGE_SIZE = 25;
+// 한 쪽 20명 — 곡 순위표와 같은 순위표 부품 · 사이트 목록과 같은 단위(2026-10-15)
+export const GLOBAL_RANKING_PAGE_SIZE = 20;
 const globalRankingQuerySchema = z.object({
     mode: z.enum(["basic", "recital"]).catch("basic"),
     metric: z.enum(["grade", "rating"]).catch("grade"),

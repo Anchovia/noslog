@@ -40,7 +40,7 @@ describe.skipIf(!process.env.COMMUNITY_TEST_DATABASE_URL)(
             await db.user.deleteMany({ where: { id: { in: ids } } });
             await db.$disconnect();
         });
-        it("retains rounded-value ties across the 25-player boundary and locates the actual personal page", async () => {
+        it("retains rounded-value ties across the 20-player page boundary and locates the actual personal page", async () => {
             const query = {
                 mode: "basic" as const,
                 metric: "grade" as const,
@@ -52,16 +52,16 @@ describe.skipIf(!process.env.COMMUNITY_TEST_DATABASE_URL)(
                 { ...query, page: 2 },
                 ids[26]
             );
-            expect(first.rows).toHaveLength(25);
+            expect(first.rows).toHaveLength(20);
             expect(first.rows[0]).toMatchObject({
                 id: ids[0],
                 rank: 1,
                 value: 9000,
                 exam: null,
             });
-            expect(first.rows[24]).toMatchObject({ rank: 2, value: 8000 });
-            expect(second.rows.slice(0, 3).map((row) => row.rank)).toEqual([
-                2, 2, 28,
+            expect(first.rows[19]).toMatchObject({ rank: 2, value: 8000 });
+            expect(second.rows.map((row) => row.rank)).toEqual([
+                2, 2, 2, 2, 2, 2, 2, 28,
             ]);
             expect(first.currentUser).toMatchObject({
                 id: ids[26],

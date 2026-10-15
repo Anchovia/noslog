@@ -85,11 +85,11 @@ describe.skipIf(!process.env.COMMUNITY_TEST_DATABASE_URL)(
             await db.music.deleteMany({ where: { index } });
             await db.$disconnect();
         });
-        it("keeps shared ranks across the 25-row boundary and sorts ties by achievement time", async () => {
+        it("keeps shared ranks across the 20-row page boundary and sorts ties by achievement time", async () => {
             const first = await getChartRanking(chartId, 1);
             const second = await getChartRanking(chartId, 2);
             expect(first.totalCount).toBe(28);
-            expect(first.rows).toHaveLength(25);
+            expect(first.rows).toHaveLength(20);
             expect(first.rows[0]).toMatchObject({
                 position: 1,
                 user_id: users[0],
@@ -101,8 +101,15 @@ describe.skipIf(!process.env.COMMUNITY_TEST_DATABASE_URL)(
             expect(first.rows.slice(1).every((row) => row.position === 2)).toBe(
                 true
             );
-            expect(second.rows.map((row) => row.position)).toEqual([2, 2, 28]);
+            expect(second.rows.map((row) => row.position)).toEqual([
+                2, 2, 2, 2, 2, 2, 2, 28,
+            ]);
             expect(second.rows.map((row) => row.user_id)).toEqual([
+                users[7],
+                users[6],
+                users[5],
+                users[4],
+                users[3],
                 users[2],
                 users[1],
                 users[27],
