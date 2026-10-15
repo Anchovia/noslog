@@ -128,7 +128,7 @@ describe("official X post translation", () => {
             en: "en",
         });
         expect(generateContent.mock.calls.map((call) => call[0].model)).toEqual(
-            [...OFFICIAL_X_TRANSLATION_MODELS]
+            OFFICIAL_X_TRANSLATION_MODELS.slice(0, 3)
         );
     });
 
@@ -176,7 +176,7 @@ describe("official X post translation", () => {
             en: "en",
         });
         expect(generateContent.mock.calls.map((call) => call[0].model)).toEqual(
-            [...OFFICIAL_X_TRANSLATION_MODELS]
+            OFFICIAL_X_TRANSLATION_MODELS.slice(0, 3)
         );
 
         generateContent.mockReset();

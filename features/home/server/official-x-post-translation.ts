@@ -14,10 +14,14 @@ import { serverEnv } from "@/lib/env/server";
 // so the next model in the list is tried before giving up.
 export const OFFICIAL_X_TRANSLATION_MODELS = [
     // 앞에서부터 시도. 3.6 을 맨 앞에 — 2026-09-22 실측(같은 지시문 4회)에서 3.6 4/4 · 3.8 1/4 · 3.5 0/4 성공.
-    // 2.5 는 새 사용자에게 더는 제공되지 않는다(404)
+    // 무료 한도는 모델마다 따로다(2026-10-15 AI Studio: Flash 하루 20회 · Flash Lite 하루 500회).
+    // 이용자 글 번역도 같은 키 · 같은 목록이라 Flash 둘이 바닥나면 Lite 가 받친다. 3.5 Flash 는 무료 한도 표에 없어 뺐다
     "gemini-3.6-flash",
     "gemini-3.8-flash",
-    "gemini-3.5-flash",
+    "gemini-3.5-flash-lite",
+    "gemini-3.1-flash-lite",
+    "gemini-3.7-flash",
+    "gemini-3-flash-preview",
 ] as const;
 export const OFFICIAL_X_TRANSLATION_MODEL = OFFICIAL_X_TRANSLATION_MODELS[0];
 const TRANSLATION_TIMEOUT_MS = 20_000;
