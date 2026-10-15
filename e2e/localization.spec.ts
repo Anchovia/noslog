@@ -19,6 +19,13 @@ const coreRoutes = [
     { path: "/tiers", heading: "tiers" },
 ] as const;
 
+// 서열표 h1 은 고른 서열표 이름(기본 S) — tiers.goalOption(2026-09-22 ④ 스위처 제목)
+const tierListHeading: Record<TestLocale, string> = {
+    ko: "S 서열표",
+    ja: "S難易度表",
+    en: "S Tier List",
+};
+
 const secondaryRoutes = [
     "/bingo",
     "/exams",
@@ -29,32 +36,35 @@ const secondaryRoutes = [
 ] as const;
 
 for (const locale of locales) {
-    test(`${locale} 핵심 공개 페이지가 번역된 경로로 열린다`, async ({
-        page,
-    }) => {
-        for (const route of coreRoutes) {
-            await test.step(`${locale}${route.path || "/"}`, async () => {
-                await page.goto(`/${locale}${route.path}`);
-                await expectPageLoaded(page);
-                await expectLocalizedDocument(page, locale);
-                await expect(
-                    page.getByRole("heading", {
-                        name: localeCopy[locale][route.heading],
-                        exact: true,
-                    })
-                ).toBeVisible();
-                await expectNoHorizontalOverflow(page);
-                await expectAccessiblePageStructure(page);
-            });
+    test(
+        `${locale} 핵심 공개 페이지가 번역된 경로로 열린다`,
+        { tag: "@responsive" },
+        async ({ page }) => {
+            for (const route of coreRoutes) {
+                await test.step(`${locale}${route.path || "/"}`, async () => {
+                    await page.goto(`/${locale}${route.path}`);
+                    await expectPageLoaded(page);
+                    await expectLocalizedDocument(page, locale);
+                    await expect(
+                        page.getByRole("heading", {
+                            name:
+                                route.heading === "tiers"
+                                    ? tierListHeading[locale]
+                                    : localeCopy[locale][route.heading],
+                            exact: true,
+                        })
+                    ).toBeVisible();
+                    await expectNoHorizontalOverflow(page);
+                    await expectAccessiblePageStructure(page);
+                });
+            }
         }
-    });
+    );
 }
 
 test("모바일에서 모든 보조 공개 페이지의 다국어 경로를 확인한다", async ({
     page,
-}, testInfo) => {
-    test.skip(testInfo.project.name !== "mobile-chromium");
-
+}) => {
     for (const locale of locales) {
         for (const path of secondaryRoutes) {
             await test.step(`${locale}${path}`, async () => {
@@ -68,27 +78,31 @@ test("모바일에서 모든 보조 공개 페이지의 다국어 경로를 확�
     }
 });
 
-test("비로그인 사용자가 전체 메뉴에서 언어를 변경한다", async ({ page }) => {
-    await page.goto("/ko/music?sort=level&view=grid");
-    await expectPageLoaded(page);
+test(
+    "비로그인 사용자가 전체 메뉴에서 언어를 변경한다",
+    { tag: "@responsive" },
+    async ({ page }) => {
+        await page.goto("/ko/music?sort=level&view=grid");
+        await expectPageLoaded(page);
 
-    const copy = headerMenuCopy(page, "ko");
-    await page.getByRole("button", { name: copy.open }).click();
-    const menu = page.getByRole("navigation", { name: copy.menu });
-    await menu.getByRole("link", { name: "설정", exact: true }).click();
-    await page.getByRole("link", { name: /^화면 설정/ }).click();
-    // 언어 = 줄 오른쪽 드롭다운(2026-10-01 B1)
-    await page.getByRole("combobox", { name: "언어", exact: true }).click();
-    await page.getByRole("option", { name: "日本語", exact: true }).click();
+        const copy = headerMenuCopy(page, "ko");
+        await page.getByRole("button", { name: copy.open }).click();
+        const menu = page.getByRole("navigation", { name: copy.menu });
+        await menu.getByRole("link", { name: "설정", exact: true }).click();
+        await page.getByRole("link", { name: /^화면 설정/ }).click();
+        // 언어 = 줄 오른쪽 드롭다운(2026-10-01 B1)
+        await page.getByRole("combobox", { name: "언어", exact: true }).click();
+        await page.getByRole("option", { name: "日本語", exact: true }).click();
 
-    await expect(page).toHaveURL(/\/ja\/settings\?category=experience/, {
-        timeout: 20_000,
-    });
-    await expectLocalizedDocument(page, "ja");
-    await expect(
-        page.getByRole("button", { name: headerMenuCopy(page, "ja").open })
-    ).toBeVisible();
-});
+        await expect(page).toHaveURL(/\/ja\/settings\?category=experience/, {
+            timeout: 20_000,
+        });
+        await expectLocalizedDocument(page, "ja");
+        await expect(
+            page.getByRole("button", { name: headerMenuCopy(page, "ja").open })
+        ).toBeVisible();
+    }
+);
 
 test("비로그인 설정 접근은 같은 언어의 로그인 화면으로 연결한다", async ({
     page,

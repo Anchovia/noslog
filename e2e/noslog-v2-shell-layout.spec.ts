@@ -21,13 +21,6 @@ const routes = [
     "/bookmarklet",
 ];
 
-test.beforeEach(({}, testInfo) => {
-    test.skip(
-        !testInfo.project.name.startsWith("desktop-"),
-        "This matrix explicitly covers mobile through ultrawide viewports."
-    );
-});
-
 for (const locale of ["ko", "ja", "en"] as const) {
     test(`${locale} ordinary routes share a centered 1200px shell and content alignment`, async ({
         page,
@@ -123,10 +116,13 @@ for (const locale of ["ko", "ja", "en"] as const) {
                 expect(layout.content.paddingRight).toBe(padding);
                 expect(layout.pageRoot.paddingLeft).toBe(0);
                 expect(layout.pageRoot.paddingRight).toBe(0);
-                const pageWidth =
-                    route === "/privacy" && width < 1056
-                        ? Math.min(expectedWidth - padding * 2, 768)
-                        : expectedWidth - padding * 2;
+                // 읽기 폭 768 가운데 — 개인정보(1056 미만) · 데이터 동기화(모든 폭, 가이드 「데이터 동기화」)
+                const reading =
+                    route === "/bookmarklet" ||
+                    (route === "/privacy" && width < 1056);
+                const pageWidth = reading
+                    ? Math.min(expectedWidth - padding * 2, 768)
+                    : expectedWidth - padding * 2;
                 expect(layout.pageRoot.x, `${route} at ${width}`).toBeCloseTo(
                     (layout.viewport - pageWidth) / 2,
                     1

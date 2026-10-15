@@ -3,6 +3,8 @@ import { expect, test } from "@playwright/test";
 import type { Page } from "@playwright/test";
 
 const musicPath = "/music/bfdaadfb98501907925ecf41a076108d/expert";
+// 한 쪽 20명(2026-10-15 — features/music/server/chart-ranking.ts MUSIC_RANKING_PAGE_SIZE)
+const pageSize = 20;
 const names = [
     "PLAYER-01",
     "노스탤지어",
@@ -47,13 +49,18 @@ async function openRanking(
         const response = await route.fetch();
         const body = await response.json();
         const current =
-            requestedPage > 0 && requestedPage <= Math.ceil(total / 25)
+            requestedPage > 0 && requestedPage <= Math.ceil(total / pageSize)
                 ? requestedPage
                 : 1;
         const rows = Array.from(
-            { length: Math.max(0, Math.min(25, total - (current - 1) * 25)) },
+            {
+                length: Math.max(
+                    0,
+                    Math.min(pageSize, total - (current - 1) * pageSize)
+                ),
+            },
             (_, i) => {
-                const position = (current - 1) * 25 + i + 1;
+                const position = (current - 1) * pageSize + i + 1;
                 return {
                     position,
                     user_id: 1000 + position,
@@ -86,7 +93,7 @@ async function openRanking(
                     ranking: {
                         rows,
                         page: current,
-                        pageSize: 25,
+                        pageSize,
                         totalCount: total,
                         userRank: ownRank,
                     },
@@ -123,12 +130,12 @@ async function openRanking(
     ).toBeVisible();
 }
 
-test("Public ranking keeps 25 rows, fixed columns, Pianist/FC meaning and explicit page navigation", async ({
+test("Public ranking keeps 20 rows, fixed columns, Pianist/FC meaning and explicit page navigation", async ({
     page,
 }) => {
     await openRanking(page);
     const table = page.locator(".nl-chart-leaderboard");
-    await expect(table.locator(".nl-player-row")).toHaveCount(25);
+    await expect(table.locator(".nl-player-row")).toHaveCount(20);
     await expect(page.locator(".nl-score-distribution__count")).toHaveText([
         "9",
         "7",
@@ -137,12 +144,17 @@ test("Public ranking keeps 25 rows, fixed columns, Pianist/FC meaning and explic
         "3",
         "1",
     ]);
+    // 구간별 인원 표 = 이름은 caption, 「S 이상 · N명」 은 설명(score-scatter.tsx)
     await expect(
-        page.getByRole("table", { name: "S 이상 · 30명", exact: true })
-    ).toHaveCount(1);
-    // 카드 제목 하나만 — 「참가자 N명」 · 「순위」 · 「내 순위 N / M」 글자는 두지 않는다 (2026-09-18)
+        page.getByRole("table", { name: "순위별 점수", exact: true })
+    ).toHaveAccessibleDescription("S 이상 · 30명");
+    // 제목도 카드 면도 없이 점수 자 → 순위표(가이드 악곡 상세 「랭킹」) — 이름은 점수 자 figure 의 접근 이름,
+    // 「참가자 N명」 · 「내 순위 N / M」 글자는 두지 않는다 (2026-09-18)
     await expect(
-        page.getByRole("heading", { name: "악곡 랭킹", exact: true })
+        page.getByRole("figure", {
+            name: "악곡 랭킹 · S 이상 · 30명",
+            exact: true,
+        })
     ).toBeVisible();
     await expect(page.getByText("참가자 53명")).toHaveCount(0);
     await expect(
@@ -172,20 +184,20 @@ test("Public ranking keeps 25 rows, fixed columns, Pianist/FC meaning and explic
     await expect(page).toHaveURL(/tab=ranking&page=2/);
     await expect(
         table.locator(".nl-player-row").first().locator(".nl-player-row__rank")
-    ).toHaveText("26");
+    ).toHaveText("21");
     await expect(page.locator(".nl-ranking-list")).toBeFocused();
     await expect(page.locator(".nl-ranking-list [role=status]")).toHaveText(
-        "전체 53명 중 26–50번째 기록"
+        "전체 53명 중 21–40번째 기록"
     );
     await page
         .getByRole("button", { name: "다음 페이지", exact: true })
         .click();
-    await expect(table.locator(".nl-player-row")).toHaveCount(3);
+    await expect(table.locator(".nl-player-row")).toHaveCount(13);
     await expect(
         page.getByRole("button", { name: "다음 페이지", exact: true })
     ).toBeDisabled();
     await page.goBack();
-    await expect(table.locator(".nl-player-row")).toHaveCount(25);
+    await expect(table.locator(".nl-player-row")).toHaveCount(20);
     await expect(
         page.getByRole("button", { name: "2페이지", exact: true })
     ).toHaveAttribute("aria-current", "page");
@@ -232,7 +244,7 @@ test("A failed page request offers retry and never presents stale rows as curren
             .locator(".nl-chart-leaderboard .nl-player-row")
             .first()
             .locator(".nl-player-row__rank")
-    ).toHaveText("26");
+    ).toHaveText("21");
     await expect(page.locator(".nl-ranking-list")).toBeFocused();
 });
 
@@ -249,12 +261,16 @@ test("Public empty and no-rank states avoid duplicate messaging and unneeded pag
     await expect(page.locator(".nl-pagination")).toHaveCount(0);
     await expect(page.getByText("순위 없음", { exact: true })).toHaveCount(0);
     await page.unrouteAll({ behavior: "wait" });
-    await openRanking(page, { total: 25, signedIn: true, ownRank: null });
+    await openRanking(page, {
+        total: pageSize,
+        signedIn: true,
+        ownRank: null,
+    });
     await expect(page.getByText("순위 없음", { exact: true })).toBeVisible();
     await expect(page.locator(".nl-pagination")).toHaveCount(0);
     await expect(
         page.locator(".nl-chart-leaderboard .nl-player-row")
-    ).toHaveCount(25);
+    ).toHaveCount(pageSize);
 });
 
 test("Invalid direct ranking pages normalize to the first page", async ({
@@ -271,10 +287,6 @@ for (const locale of ["ko", "ja", "en"]) {
     test(`${locale} ranking keeps all columns and reflows without accessibility failures`, async ({
         page,
     }, testInfo) => {
-        test.skip(
-            !testInfo.project.name.startsWith("mobile-"),
-            "Explicit width matrix is run once per browser."
-        );
         await openRanking(page, { locale, signedIn: true, ownRank: 3 });
         for (const width of [320, 390, 768, 1024, 1280]) {
             await page.setViewportSize({ width, height: 900 });
@@ -306,8 +318,8 @@ for (const locale of ["ko", "ja", "en"]) {
                             (element) => element.getBoundingClientRect().height
                         )
                 )
-                // 점수 자 카드 = svg 80(핀 줄 · 자 · 라벨 줄) + 안쪽 16×2 (2026-09-18 V1+V4)
-                .toBe(112);
+                // 점수 자 = 핀 줄 48 + 자 → 라벨 8 + 라벨 줄 16, 면 · 위아래 안쪽 없음(score-scatter.tsx HEIGHT · ranking.css)
+                .toBe(72);
             // 자 아래 글자는 기준 점수 3개(S 950k · 990k · Pianist)뿐 — 세로축도, 내 위치 글자도 없다
             await expect(page.locator(".nl-score-scatter__label")).toHaveCount(
                 3

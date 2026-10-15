@@ -76,7 +76,7 @@ export async function expectNoHorizontalOverflow(page: Page) {
 }
 
 export async function expectPageLoaded(page: Page) {
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("load");
     const body = page.locator("body");
 
     for (const errorText of [

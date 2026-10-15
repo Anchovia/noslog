@@ -43,7 +43,20 @@ for (const locale of ["ko", "ja", "en"] as const) {
                 .getByRole("banner")
                 .getByRole("link", { name: "NosLog", exact: true })
                 .boundingBox();
-            expect(Math.abs(heading!.x - logo!.x)).toBeLessThan(1);
+            // 페이지 = 읽기 폭 768 · 가운데(가이드 「데이터 동기화」, PageContainer width="reading") —
+            // 768 보다 좁으면 공용 여백에 붙고, 넓으면 가운데에 놓인다
+            const container = (await main
+                .locator(".nl-container--reading")
+                .boundingBox())!;
+            if (container.width < 768)
+                expect(Math.abs(heading!.x - logo!.x)).toBeLessThan(1);
+            else {
+                expect(container.x + container.width / 2).toBeCloseTo(
+                    width / 2,
+                    0
+                );
+                expect(heading!.x).toBeCloseTo(container.x, 0);
+            }
         }
         expect(
             (await new AxeBuilder({ page }).include(".nl-app").analyze())

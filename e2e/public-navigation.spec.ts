@@ -9,7 +9,8 @@ import {
 const publicRoutes = [
     { label: "악곡", path: "/ko/music", heading: "악곡" },
     { label: "랭킹", path: "/ko/rankings", heading: "유저 랭킹" },
-    { label: "서열", path: "/ko/tiers", heading: "서열표" },
+    // 서열표 제목은 스위처 — h1 은 화면 읽기용 「{목표} 서열표」(기본 S)
+    { label: "서열", path: "/ko/tiers", heading: "S 서열표" },
     {
         label: "빙고",
         path: "/ko/bingo",
@@ -17,35 +18,43 @@ const publicRoutes = [
     },
 ];
 
-test("헤더에서 주요 공개 페이지로 이동한다", async ({ page }) => {
-    await page.goto("/ko");
-    await expectPageLoaded(page);
-
-    const banner = page.getByRole("banner");
-    await expect(banner.getByRole("link", { name: "로그인" })).toBeVisible();
-    const copy = headerMenuCopy(page, "ko");
-    for (const route of publicRoutes) {
-        // 넓은 화면은 헤더에 나란한 「주요 메뉴」, 그 아래 폭은 ≡ 안
-        if (!copy.wide)
-            await banner.getByRole("button", { name: copy.open }).click();
-        const navigation = banner.getByRole("navigation", {
-            name: copy.wide ? "주요 메뉴" : copy.menu,
-        });
-        await expect(navigation).toBeVisible();
-        await navigation
-            .getByRole("link", { name: route.label, exact: true })
-            .click();
-        await expect(page).toHaveURL(new RegExp(`${route.path}(?:\\?.*)?$`));
-        await expect(
-            page.getByRole("heading", { name: route.heading, exact: true })
-        ).toBeVisible();
+test(
+    "헤더에서 주요 공개 페이지로 이동한다",
+    { tag: "@responsive" },
+    async ({ page }) => {
+        await page.goto("/ko");
         await expectPageLoaded(page);
-        await expectNoHorizontalOverflow(page);
+
+        const banner = page.getByRole("banner");
         await expect(
-            banner.getByRole("button", { name: copy.open })
+            banner.getByRole("link", { name: "로그인" })
         ).toBeVisible();
+        const copy = headerMenuCopy(page, "ko");
+        for (const route of publicRoutes) {
+            // 넓은 화면은 헤더에 나란한 「주요 메뉴」, 그 아래 폭은 ≡ 안
+            if (!copy.wide)
+                await banner.getByRole("button", { name: copy.open }).click();
+            const navigation = banner.getByRole("navigation", {
+                name: copy.wide ? "주요 메뉴" : copy.menu,
+            });
+            await expect(navigation).toBeVisible();
+            await navigation
+                .getByRole("link", { name: route.label, exact: true })
+                .click();
+            await expect(page).toHaveURL(
+                new RegExp(`${route.path}(?:\\?.*)?$`)
+            );
+            await expect(
+                page.getByRole("heading", { name: route.heading, exact: true })
+            ).toBeVisible();
+            await expectPageLoaded(page);
+            await expectNoHorizontalOverflow(page);
+            await expect(
+                banner.getByRole("button", { name: copy.open })
+            ).toBeVisible();
+        }
     }
-});
+);
 
 test("로그인 페이지에서 Discord 로그인과 비회원 이동을 제공한다", async ({
     page,

@@ -8,6 +8,9 @@ import type {
 let createHref: typeof createBookmarkletHref;
 let createScript: typeof createBookmarkletScript;
 test.beforeAll(async () => {
+    // 그리기 전용 — 같은 워커의 다른 스펙이 Prisma 를 불러오면 .env 가 process.env 에 실려
+    // DATABASE_EXPECTED_HOST 확인(lib/env/server.ts)이 로컬 DATABASE_URL 과 어긋난다. 여기서는 DB 를 쓰지 않는다
+    delete process.env.DATABASE_EXPECTED_HOST;
     process.env.DATABASE_URL ??=
         "postgresql://fixture:fixture@localhost:5432/fixture";
     process.env.COOKIE_PASSWORD ??= "render-only-cookie-password-32-characters";

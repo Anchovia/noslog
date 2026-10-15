@@ -15,7 +15,7 @@ test("악곡 목록의 정렬과 보기 방식을 URL에 반영한다", async ({
         .getByRole("button", { name: "정렬: 일본어 읽기 순", exact: true })
         .click();
     await page
-        .getByRole("menuitemradio", { name: "레벨 순", exact: true })
+        .getByRole("menuitemradio", { name: "레벨 높은 순", exact: true })
         .click();
     await page
         .getByRole("group", { name: "정렬할 난이도", exact: true })

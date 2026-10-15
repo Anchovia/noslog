@@ -49,6 +49,22 @@ const bands: TierBrowserBand[] = Array.from({ length: 136 }, (_, index) => ({
     ),
 }));
 
+// 구간은 공개 본문(기록 없음)과 내 기록(part=records)을 따로 받는다(2026-10-15 S7 — features/tiers/api/tier-browser.ts)
+function bandResult(band: TierBrowserBand, params: URLSearchParams) {
+    if (params.get("part") === "records")
+        return {
+            records: Object.fromEntries(
+                band.entries
+                    .filter((entry) => entry.record)
+                    .map((entry) => [entry.chartId, entry.record])
+            ),
+        };
+    return {
+        ...band,
+        entries: band.entries.map((entry) => ({ ...entry, record: null })),
+    };
+}
+
 async function prepare(
     page: Page,
     {
@@ -105,11 +121,14 @@ async function prepare(
                     record: guest ? null : entry.record,
                 })),
         }));
-        const result: TierBrowserOverview | TierBrowserBand = params.has(
-            "bandId"
-        )
-            ? selected.find((band) => band.id === Number(params.get("bandId")))!
-            : {
+        const result = params.has("bandId")
+            ? bandResult(
+                  selected.find(
+                      (band) => band.id === Number(params.get("bandId"))
+                  )!,
+                  params
+              )
+            : ({
                   viewerId: guest ? null : 900,
                   showLocalizedTitle: true,
                   theoreticalMax: 11830,
@@ -133,7 +152,7 @@ async function prepare(
                                       ).length,
                             })),
                         },
-              };
+              } satisfies TierBrowserOverview);
         await route.fulfill({
             json: { isSuccess: true, code: "SUCCESS", message: "", result },
         });
@@ -389,9 +408,10 @@ test("Back restores a list band scan and its practical scroll position", async (
     await card.click();
     await expect(page).toHaveURL(/\/music\/.*tab=tier.*mode=basic.*goal=s/);
     await expect(page.locator(".nl-community-panel")).toBeVisible();
+    // 투표 · 평균이 없는 범위는 펼치지 않는 보통 줄(2026-10-01 D3 — community-tier-votes.tsx), 고른 범위 줄만 확인
     await expect(
-        page.locator('.nl-vote-row[aria-expanded="true"]')
-    ).toContainText("S");
+        page.locator(".nl-vote-row").filter({ hasText: "Basic · S" })
+    ).toBeVisible();
     await page.goBack();
     await expect(page).toHaveURL(url);
     await expect(
@@ -516,8 +536,13 @@ test("unachieved jackets turn grey and the jacket strip follows the select in th
     );
     // 레이팅이 없는 곡(4번째) · 기록 없는 곡은 띠 없음 — 다른 값으로 채우지 않는다
     await expect(band.locator(".nl-tier-card__strip")).toHaveCount(13);
-    await select.click();
-    await page.getByRole("option", { name: "표시 안 함", exact: true }).click();
+    // 닫힌 직후 200ms 는 다시 열기를 받지 않는다(use-select-open.ts) — 열릴 때까지 다시 누른다
+    const off = page.getByRole("option", { name: "표시 안 함", exact: true });
+    await expect(async () => {
+        await select.click();
+        await expect(off).toBeVisible({ timeout: 1_000 });
+    }).toPass();
+    await off.click();
     await expect(page).toHaveURL(/strip=off/);
     await expect(page.locator(".nl-tier-card__strip")).toHaveCount(0);
     // 목록 보기에는 띠가 없어 셀렉트도 없다
@@ -657,7 +682,10 @@ test("band failures stay local and retry without losing the selected scope", asy
                 isSuccess: true,
                 code: "SUCCESS",
                 message: "",
-                result: bands[0],
+                result: bandResult(
+                    bands[0],
+                    new URL(route.request().url()).searchParams
+                ),
             },
         });
     });
@@ -673,10 +701,6 @@ for (const locale of ["ko", "ja", "en"])
         test(`${locale} ${theme} reflows grid cards and list rows at six widths`, async ({
             page,
         }, testInfo) => {
-            test.skip(
-                testInfo.project.name !== "mobile-chromium",
-                "Locale/theme matrix runs once."
-            );
             await page.emulateMedia({ colorScheme: theme });
             await page.addInitScript(
                 (value) => localStorage.setItem("noslog-theme", value),

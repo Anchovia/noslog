@@ -168,6 +168,7 @@ async function openCommunity(
                       total: rows.length,
                       nextOffset:
                           offset + 10 < rows.length ? offset + 10 : null,
+                      translationEnabled: false,
                   }
                 : data;
         await route.fulfill({
@@ -247,7 +248,7 @@ test("Guest, missing-record, and unachieved-goal states keep the public evidence
     ).toBeDisabled();
     // 평가할 수 없으면 목록을 흐리고 가운데 카드로 이유 · 로그인 (2026-09-17 L2)
     const lock = page.locator(".nl-pattern-lock");
-    await expect(lock).toHaveAttribute("data-locked", "");
+    await expect(lock).toHaveAttribute("data-locked");
     await expect(lock.locator(".nl-pattern-axes")).toHaveCSS(
         "filter",
         "blur(5px)"
@@ -355,7 +356,12 @@ test("Aggregating rows open with keyboard and offer the first vote without expos
         await expect(page.locator(".nl-vote-form")).toBeVisible();
         await expect(page.locator(".nl-vote-distribution")).toHaveCount(0);
         const input = page.locator(".nl-vote-form select");
-        await expect(input).toHaveValue("");
+        // 고르기 전에는 셀렉트 트리거가 자리표시 선택지를 보인다
+        await expect(
+            page
+                .locator(".nl-vote-form")
+                .getByRole("combobox", { name: "투표 값", exact: true })
+        ).toHaveText("값 선택");
         await page
             .getByRole("button", { name: "투표 저장", exact: true })
             .click();
@@ -505,7 +511,7 @@ test("Opinions append ten at a time and expose contextual author and report acti
     await expect(own.getByRole("button", { name: /^추천/ })).toHaveCount(0);
     // 내 의견이 있으면 맨 위 새 작성 칸은 없다
     await expect(
-        page.locator(".nl-opinions > .nl-opinion-composer")
+        page.locator(".nl-opinions__body > .nl-opinion-composer")
     ).toHaveCount(0);
     await own.getByRole("button", { name: /의견 더보기/ }).click();
     await page.getByRole("menuitem", { name: "수정", exact: true }).click();
@@ -521,7 +527,11 @@ test("Opinions append ten at a time and expose contextual author and report acti
         .click();
     await page.getByRole("menuitem", { name: "신고", exact: true }).click();
     await expect(page.getByRole("dialog")).toBeVisible();
-    await page.getByRole("dialog").getByRole("combobox").selectOption("other");
+    // 신고 사유는 라디오 묶음
+    await page
+        .getByRole("dialog")
+        .getByRole("radio", { name: "기타", exact: true })
+        .check();
     await expect(
         page.getByRole("textbox", { name: "추가 설명 (선택)" })
     ).toBeVisible();
@@ -534,10 +544,6 @@ for (const locale of ["ko", "ja", "en"])
         test(`${locale} ${theme} community reflows and preserves accessible controls`, async ({
             page,
         }, testInfo) => {
-            test.skip(
-                testInfo.project.name !== "mobile-chromium",
-                "The same multi-width matrix runs once per locale and theme."
-            );
             await page.addInitScript(
                 (theme) => localStorage.setItem("noslog-theme", theme),
                 theme
@@ -605,8 +611,8 @@ for (const locale of ["ko", "ja", "en"])
                         fullPage: true,
                     });
                 }
-                // Pianist 두 줄은 집계 중 · 자격 없음이라 누르지 않는 줄 — 펼칠 수 있는 줄은 둘
-                await expect(page.locator("button.nl-vote-row")).toHaveCount(2);
+                // Recital Pianist 는 집계 중 · 자격 없음이라 누르지 않는 줄, Basic Pianist 는 첫 투표를 받는 줄 — 펼칠 수 있는 줄은 셋
+                await expect(page.locator("button.nl-vote-row")).toHaveCount(3);
                 await page.locator("button.nl-vote-row").first().click();
                 await expect(page.locator(".nl-vote-form__row")).toBeVisible();
                 await expect(page.locator(".nl-vote-distribution")).toHaveCount(
@@ -645,7 +651,7 @@ test("A new opinion starts as one line, expands on focus, and cancels back", asy
     data.currentEvaluation = { ...data.currentEvaluation!, opinion: "" };
     await openCommunity(page, { data });
     const input = page
-        .locator(".nl-opinions > .nl-opinion-composer")
+        .locator(".nl-opinions__body > .nl-opinion-composer")
         .getByRole("textbox", { name: "의견", exact: true });
     // 쉬는 상태 = 한 줄 입력(컨트롤 높이)
     await expect

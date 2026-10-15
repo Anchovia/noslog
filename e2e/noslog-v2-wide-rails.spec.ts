@@ -3,9 +3,9 @@ import { expect, test } from "@playwright/test";
 import { expectNoHorizontalOverflow } from "./helpers";
 
 for (const [locale, label, name, level] of [
-    ["ko", "정렬", "일본어 읽기 순", "레벨 순"],
-    ["ja", "並べ替え", "読み仮名順", "レベル順"],
-    ["en", "Sort", "Japanese reading order", "Level order"],
+    ["ko", "정렬", "일본어 읽기 순", "레벨 높은 순"],
+    ["ja", "並べ替え", "読み仮名順", "レベルが高い順"],
+    ["en", "Sort", "Japanese reading order", "Highest level"],
 ]) {
     test(`${locale} discovery sort announces its current criterion after keyboard selection`, async ({
         page,
@@ -23,6 +23,8 @@ for (const [locale, label, name, level] of [
             await group
                 .getByRole("menuitemradio", { name: name, exact: true })
                 .focus();
+            // 이름 순 → 이름 역순 → 레벨 높은 순(방향을 항목에 녹인 목록, 2026-09-23 D2)
+            await page.keyboard.press("ArrowDown");
             await page.keyboard.press("ArrowDown");
             await page.keyboard.press("Enter");
             await page
@@ -63,11 +65,12 @@ for (const path of ["music", "music?scope=chart", "tiers"]) {
         });
         await trigger.click();
         const dialog = page.getByRole("dialog");
-        const option = tier
-            ? dialog.getByRole("button", { name: "Expert", exact: true })
-            : dialog.getByRole("checkbox", { name: "pops", exact: true });
-        if (tier) await option.click();
-        else await dialog.getByText("pops", { exact: true }).click();
+        // 창은 칩(누름 버튼), 레일은 체크박스 목록
+        const option = dialog.getByRole("button", {
+            name: tier ? "Expert" : "pops",
+            exact: true,
+        });
+        await option.click();
         expect(
             new URL(page.url()).searchParams.has(
                 tier ? "difficulty" : "categories"
@@ -91,8 +94,7 @@ for (const path of ["music", "music?scope=chart", "tiers"]) {
         await expect(trigger).toBeVisible();
         await expect(dialog).toHaveCount(0);
         await trigger.click();
-        if (tier) await expect(option).toHaveAttribute("aria-pressed", "true");
-        else await expect(option).toBeChecked();
+        await expect(option).toHaveAttribute("aria-pressed", "true");
         await page.keyboard.press("Escape");
         await expect(dialog).toHaveCount(0);
         await expect(trigger).toBeFocused();
@@ -123,29 +125,38 @@ for (const locale of ["ko", "ja", "en"]) {
                 await expect(rail).toHaveCount(width >= 1056 ? 1 : 0);
                 expect(
                     (await page.locator(".nl-main").boundingBox())!.width
-                ).toBeLessThanOrEqual(1000);
+                ).toBeLessThanOrEqual(1200);
                 await expectNoHorizontalOverflow(page);
                 if (tier) {
-                    const toolbar = page.locator(".nl-tier-toolbar");
-                    await expect(toolbar.getByRole("status")).toHaveCount(
+                    // Wide = 정렬 · 띠 값 · 보기 전환 툴바 →12→ 결과 수(가이드 「서열표」), 그 아래 폭은 결과 수 없음
+                    const results = page.locator(".nl-tier-results");
+                    const toolbar = results.locator(".nl-tier-toolbar");
+                    await expect(results.getByRole("status")).toHaveCount(
                         width >= 1056 ? 1 : 0
                     );
                     if (width >= 1056) {
-                        const count = (await toolbar
+                        const sort = (await toolbar
+                            .locator(".nl-filter-trigger")
+                            .first()
+                            .boundingBox())!;
+                        const view = (await toolbar
+                            .locator(".nl-segments")
+                            .boundingBox())!;
+                        const count = (await results
                             .getByRole("status")
                             .boundingBox())!;
-                        const toggle = (await toolbar
-                            .locator(".nl-check")
-                            .boundingBox())!;
                         const row = (await toolbar.boundingBox())!;
-                        expect(count.x).toBeCloseTo(row.x, 1);
-                        expect(toggle.x + toggle.width).toBeCloseTo(
+                        expect(sort.x).toBeCloseTo(row.x, 1);
+                        expect(view.x + view.width).toBeCloseTo(
                             row.x + row.width,
                             1
                         );
-                        expect(count.y + count.height / 2).toBeCloseTo(
-                            toggle.y + toggle.height / 2,
+                        expect(sort.y + sort.height / 2).toBeCloseTo(
+                            view.y + view.height / 2,
                             1
+                        );
+                        expect(count.y).toBeGreaterThanOrEqual(
+                            row.y + row.height
                         );
                     }
                 }

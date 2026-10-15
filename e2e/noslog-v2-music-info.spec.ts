@@ -1,5 +1,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
+import type { Page } from "@playwright/test";
 
 const musicPath = "/music/bfdaadfb98501907925ecf41a076108d/expert";
 const pattern = {
@@ -9,6 +10,26 @@ const pattern = {
     offset: { count: 39, average: 2.1 },
     chords: { count: 41, average: 3.7 },
 };
+
+// 개요의 패턴 경향은 서버가 상세와 함께 그린다(2026-10-15 S5) — 고정 데이터를 보이려면
+// 서버 요약이 빠진 상세(클라가 따로 받는 경우)를 주고 다른 탭에서 개요로 옮겨 온다
+async function openOverviewWithClientPattern(page: Page, locale = "ko") {
+    await page.route("**/api/music-detail?**", async (route) => {
+        const response = await route.fetch();
+        const body = await response.json();
+        await route.fulfill({
+            json: {
+                ...body,
+                result: { ...body.result, patternSummary: undefined },
+            },
+        });
+    });
+    await page.goto(`/${locale}${musicPath}?tab=record`);
+    await page.getByRole("tab").first().click();
+    // 개요를 받은 뒤의 상세 요청(다른 탭 · 난이도)은 그대로 서버로 보낸다
+    await expect(page.locator(".nl-overview")).toBeVisible();
+    await page.unroute("**/api/music-detail?**");
+}
 
 test("Music detail enters Overview and keeps the four difficulty choices on one row", async ({
     page,
@@ -20,7 +41,8 @@ test("Music detail enters Overview and keeps the four difficulty choices on one 
     await expect(page.getByRole("radio")).toHaveCount(4);
     for (const width of [320, 360, 390, 430, 768, 1024, 1280]) {
         await page.setViewportSize({ width, height: 900 });
-        // 1056 미만은 자켓 80 옆에 제목(가운데 맞춤), 1056+ 는 왼쪽 열에 세로로 쌓는다 (2026-09-16)
+        // 1056 미만은 자켓 80 옆에 제목 — 글자 묶음이 80 이하면 세로 가운데, 길면 위에 맞추고 아래로 늘어난다.
+        // 1056+ 는 왼쪽 열에 세로로 쌓는다 (2026-09-16 · 2026-09-17)
         if (width < 1056)
             await expect
                 .poll(() =>
@@ -33,12 +55,14 @@ test("Music detail enters Overview and keeps the four difficulty choices on one 
                             const copy = element
                                 .querySelector(".nl-music-entity__copy")!
                                 .getBoundingClientRect();
-                            return Math.abs(
-                                jacket.y +
-                                    jacket.height / 2 -
-                                    copy.y -
-                                    copy.height / 2
-                            );
+                            return copy.height > jacket.height
+                                ? Math.abs(jacket.y - copy.y)
+                                : Math.abs(
+                                      jacket.y +
+                                          jacket.height / 2 -
+                                          copy.y -
+                                          copy.height / 2
+                                  );
                         })
                 )
                 .toBeLessThan(0.5);
@@ -99,7 +123,7 @@ test("Pattern trend lists five exact values as bars with a keyboard dismissible 
             },
         })
     );
-    await page.goto(`/ko${musicPath}`);
+    await openOverviewWithClientPattern(page);
     const bars = page.locator(".nl-overview .nl-bar-list");
     await expect(bars.locator("dt")).toHaveText([
         "계단",
@@ -117,9 +141,10 @@ test("Pattern trend lists five exact values as bars with a keyboard dismissible 
     ]);
     await expect(bars.locator(".nl-bar-list__fill")).toHaveCount(5);
     // 평가 인원은 제목 줄에, 「평가하기 ›」 는 같은 줄 오른쪽 끝 — 누르면 평가 탭
-    await expect(page.locator(".nl-overview .nl-heading-row")).toContainText(
-        "평가 41명"
-    );
+    // 내 기록 구역도 제목 줄(로그인 링크)을 가지므로 패턴 경향 제목 줄은 첫 줄이다
+    await expect(
+        page.locator(".nl-overview .nl-heading-row").first()
+    ).toContainText("평가 41명");
     const help = page.getByRole("button", {
         name: "패턴 경향 기준",
         exact: true,
@@ -153,7 +178,7 @@ test("An incomplete pattern aggregate keeps the other bars and marks only the mi
             },
         })
     );
-    await page.goto(`/ko${musicPath}`);
+    await openOverviewWithClientPattern(page);
     const bars = page.locator(".nl-overview .nl-bar-list");
     await expect(bars.locator(".nl-bar-list__value").nth(2)).toHaveText("—");
     await expect(bars.locator(".nl-bar-list__fill")).toHaveCount(4);
@@ -175,7 +200,7 @@ test("Axes without an average still draw the empty bar graph without a sentence"
             },
         })
     );
-    await page.goto(`/ko${musicPath}`);
+    await openOverviewWithClientPattern(page);
     // 집계가 없어도 빈 막대 5줄 + 값 「—」, 문장 없음 (2026-09-16)
     const bars = page.locator(".nl-overview .nl-bar-list");
     await expect(bars.locator(".nl-bar-list__row")).toHaveCount(5);
@@ -208,7 +233,7 @@ test("Pattern request failure keeps the page and retries only its region", async
                   },
               })
     );
-    await page.goto(`/ko${musicPath}`);
+    await openOverviewWithClientPattern(page);
     const error = page
         .getByRole("alert")
         .filter({ hasText: "악곡 정보를 불러오지 못했습니다." });
@@ -299,10 +324,6 @@ for (const locale of ["ko", "ja", "en"]) {
     test(`${locale} Overview keeps readable labels at every width and passes accessibility checks`, async ({
         page,
     }, testInfo) => {
-        test.skip(
-            testInfo.project.name !== "mobile-chromium",
-            "Explicit width matrix is run once."
-        );
         await page.route("**/api/music-community?**", (route) =>
             route.fulfill({
                 json: {
@@ -313,7 +334,7 @@ for (const locale of ["ko", "ja", "en"]) {
                 },
             })
         );
-        await page.goto(`/${locale}${musicPath}`);
+        await openOverviewWithClientPattern(page, locale);
         await expect(page.locator(".nl-bar-list__fill")).toHaveCount(5);
         for (const width of [320, 390, 768, 1024, 1055, 1056, 1280, 1470]) {
             await page.setViewportSize({ width, height: 900 });

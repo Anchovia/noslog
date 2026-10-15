@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 
-const fontPath = "/fonts/pretendard-jp/1.3.9/PretendardJPVariable.woff2";
+// 화면은 공식 분할판(unicode-range 조각)만 받는다 — 한 파일 원본은 북마클릿 오버레이용(가이드 「테마 · 글꼴」)
+const subsetPath = "/fonts/pretendard-jp/1.3.9/dynamic-subset/";
 const samples = {
     ko: "한글 악곡 랭킹 0123456789",
     ja: "楽曲ランキング 日本語 0123456789",
@@ -8,7 +9,7 @@ const samples = {
 };
 
 for (const locale of ["ko", "ja", "en"] as const) {
-    test(`${locale} ordinary UI loads one complete JP font across all implemented page families`, async ({
+    test(`${locale} ordinary UI loads only the official JP font subsets across all implemented page families`, async ({
         page,
     }, testInfo) => {
         const fontRequests = new Set<string>();
@@ -83,13 +84,21 @@ for (const locale of ["ko", "ja", "en"] as const) {
                 "Pretendard JP Variable"
             );
             expect(result.feature).toBe(locale === "ko" ? '"ss05"' : "normal");
-            expect(result.faces).toEqual([
-                { status: "loaded", weight: "45 920" },
-            ]);
+            // 조각마다 같은 가변 굵기 45–920 · 쓰인 조각만 받고 실패는 없다
+            expect(result.faces.length).toBeGreaterThan(1);
+            for (const face of result.faces) {
+                expect(face.weight).toBe("45 920");
+                expect(face.status).not.toBe("error");
+            }
+            expect(result.faces.some((face) => face.status === "loaded")).toBe(
+                true
+            );
             expect(result.weightsLoaded).toBe(true);
             expect(result.scrollWidth).toBeLessThanOrEqual(result.clientWidth);
         }
-        expect([...fontRequests]).toEqual([fontPath]);
+        expect(fontRequests.size).toBeGreaterThan(0);
+        for (const pathname of fontRequests)
+            expect(pathname.startsWith(subsetPath), pathname).toBe(true);
         expect(fontStatuses.has(200)).toBe(true);
         expect(fontFailures).toEqual([]);
         await page.screenshot({

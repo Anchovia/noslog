@@ -6,7 +6,7 @@ for (const locale of ["ko", "ja", "en"]) {
     }, testInfo) => {
         test.setTimeout(120_000);
         await page.goto(`/${locale}/music/e2e-music-001/real`);
-        await expect(page.locator(".nl-detail-columns")).toBeVisible();
+        await expect(page.locator(".nl-music-detail__layout")).toBeVisible();
         const widths = [
             320,
             390,
@@ -49,7 +49,9 @@ for (const locale of ["ko", "ja", "en"]) {
                     layout: width >= 1056 ? "grid" : "flex",
                     // 영역 탭은 모든 폭에서 탭 — 좁으면 탭 줄만 가로 스크롤(부품 결정 ② 2026-09-14)
                     tabs: true,
-                    padding: width >= 672 ? "24px" : "16px",
+                    // 전역 좌우 여백 16 / 24 / 32(1056 이상) — 가이드 「셸과 레이아웃」
+                    padding:
+                        width >= 1056 ? "32px" : width >= 672 ? "24px" : "16px",
                     overflow: false,
                 });
             if ([390, 672, 1470].includes(width)) {
@@ -63,6 +65,12 @@ for (const locale of ["ko", "ja", "en"]) {
         await page.locator('[role="tab"]').nth(3).click();
         await expect(page).toHaveURL(/tab=tier/);
         await page.setViewportSize({ width: 320, height: 900 });
+        await expect(page.locator('[role="tab"]').nth(3)).toHaveAttribute(
+            "aria-selected",
+            "true"
+        );
+        // 고른 탭을 보이는 곳으로 옮기는 건 값이 정해질 때(AreaTabs) — 좁은 폭에서 그 탭으로 열어 잰다
+        await page.goto(`/${locale}/music/e2e-music-001/real?tab=tier`);
         await expect(page.locator('[role="tab"]').nth(3)).toHaveAttribute(
             "aria-selected",
             "true"
@@ -86,16 +94,24 @@ for (const locale of ["ko", "ja", "en"]) {
         page,
     }, testInfo) => {
         test.setTimeout(120_000);
+        // 빙고 id 는 시드마다 새로 매겨진다 — 목록에서 첫 빙고 주소를 읽는다
+        await page.goto(`/${locale}/bingo`);
+        const bingoHref = await page
+            .getByRole("link", { name: /E2E 빙고/ })
+            .first()
+            .getAttribute("href");
+        expect(bingoHref).toMatch(new RegExp(`^/${locale}/bingo/\\d+$`));
         const cases = [
             { route: "/exams", selector: ".nl-exams", compact: 1, wide: 2 },
+            // 격자는 폭 따라 auto-fill(672 이상 최소 156)이라 목록형으로 잰다 — 1056 이상 두 열
             {
-                route: "/bingo",
-                selector: ".nl-bingo-catalog__grid",
-                compact: 3,
-                wide: 4,
+                route: "/bingo?view=list",
+                selector: ".nl-bingo-catalog__list",
+                compact: 1,
+                wide: 2,
             },
             {
-                route: "/bingo/1",
+                route: bingoHref!.slice(`/${locale}`.length),
                 selector: ".nl-bingo-detail__layout",
                 compact: 1,
                 wide: 2,

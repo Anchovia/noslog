@@ -114,13 +114,19 @@ test("the detail keeps the approved version while an edit is under review", asyn
     await expectPageLoaded(page);
     await expect(page.locator("h1")).toHaveText("E2E 공개판 유지 이벤트");
     await expect(page.locator("body")).not.toContainText("고친 본문");
-    // 상태 태그 = 테두리 태그 + 색 점(T3)
+    // 상태 태그 = 같은 면에 글자만 알림 표시색(2026-09-23 S-c — foundation.css, 옛 T3 색 점을 대체)
     const tag = page.locator(".nl-tag--status");
     await expect(tag).toHaveText(t["events.phase.live"]);
     await expect(tag).toHaveAttribute("data-tone", "success");
-    expect(
-        await tag.evaluate((el) => getComputedStyle(el, "::before").width)
-    ).toBe("8px");
+    const [color, success] = await tag.evaluate((el) => {
+        const probe = document.createElement("span");
+        probe.style.color = "var(--nl-feedback-success-marker)";
+        el.after(probe);
+        const expected = getComputedStyle(probe).color;
+        probe.remove();
+        return [getComputedStyle(el).color, expected];
+    });
+    expect(color).toBe(success);
     await expect(page.locator(".nl-announcement-body h2")).toHaveText("규칙");
     // 작성자가 아니면 고치기 · 검토 안내 없음
     await expect(page.locator(".nl-status")).toHaveCount(0);

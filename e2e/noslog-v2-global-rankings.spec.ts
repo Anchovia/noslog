@@ -2,7 +2,10 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 import { reviewThemes } from "./helpers";
 import type { Page, Route } from "@playwright/test";
-import { parseGlobalRankingQuery } from "@/features/rankings/schemas/global-ranking-schema";
+import {
+    GLOBAL_RANKING_PAGE_SIZE,
+    parseGlobalRankingQuery,
+} from "@/features/rankings/schemas/global-ranking-schema";
 import type {
     GlobalRankingPayload,
     GlobalRankingQuery,
@@ -13,7 +16,9 @@ function fixture(
     query: GlobalRankingQuery,
     { count = 28, guest = false, mine = 926, unavailable = false } = {}
 ): GlobalRankingPayload {
-    const page = Math.min(query.page, Math.max(1, Math.ceil(count / 25)));
+    // 한 쪽 20명(2026-10-15 — global-ranking-schema.ts GLOBAL_RANKING_PAGE_SIZE)
+    const size = GLOBAL_RANKING_PAGE_SIZE;
+    const page = Math.min(query.page, Math.max(1, Math.ceil(count / size)));
     const players: GlobalRankingRow[] = Array.from(
         { length: count },
         (_, index) => ({
@@ -53,11 +58,14 @@ function fixture(
         totalCount: unavailable ? 0 : count,
         status: unavailable ? "unavailable" : "available",
         viewerId: guest ? null : mine,
-        rows: unavailable ? [] : players.slice((page - 1) * 25, page * 25),
+        rows: unavailable ? [] : players.slice((page - 1) * size, page * size),
         currentUser:
             guest || !current || unavailable
                 ? null
-                : { ...current, page: Math.floor((current.id - 900) / 25) + 1 },
+                : {
+                      ...current,
+                      page: Math.floor((current.id - 900) / size) + 1,
+                  },
     };
 }
 type FixtureOptions = Parameters<typeof fixture>[1];
@@ -98,28 +106,29 @@ async function prepare(
     );
 }
 
-test("shows 25 tied rows, reaches the containing page, and returns with Back", async ({
+test("shows 20 tied rows, reaches the containing page, and returns with Back", async ({
     page,
 }) => {
     await prepare(page);
-    await expect(page.locator(".nl-player-row")).toHaveCount(25);
+    await expect(page.locator(".nl-player-row")).toHaveCount(20);
     await expect(page.getByText(/^참가자 \d+명$/)).toHaveCount(0);
-    await expect(page.locator(".nl-ranking-personal__rank")).toHaveText("2");
+    // 내 순위 숫자 = 내 행으로 가는 링크(ranking-personal-position.tsx)
+    await expect(page.locator(".nl-ranking-personal a")).toHaveText("2");
     await expect(page.locator(".nl-ranking-personal")).toContainText("/ 28");
     const mine = page.getByRole("link", { name: "내 위치 2", exact: true });
     await expect(mine).toHaveAttribute("href", /page=2#ranking-player-926$/);
     await mine.click();
-    await expect(page.locator(".nl-player-row")).toHaveCount(3);
+    await expect(page.locator(".nl-player-row")).toHaveCount(8);
     await expect(page.locator("#ranking-player-926")).toBeFocused();
     await expect(
         page.locator("#ranking-player-926 .nl-player-row__rank")
     ).toHaveText("2");
     await expect(page.locator(".nl-ranking-personal")).toHaveCount(0);
     await page.goBack();
-    await expect(page.locator(".nl-player-row")).toHaveCount(25);
+    await expect(page.locator(".nl-player-row")).toHaveCount(20);
     await expect(page.locator(".nl-ranking-personal")).toBeVisible();
     await page.goForward();
-    await expect(page.locator(".nl-player-row")).toHaveCount(3);
+    await expect(page.locator(".nl-player-row")).toHaveCount(8);
     await expect(page).toHaveURL(/page=2$/);
 });
 
@@ -141,8 +150,15 @@ test("retains the selected metric across Basic and Recital and scopes Other regi
         "aria-label",
         "Recital 1급"
     );
-    await page.locator(".nl-global-ranking-controls [role=combobox]").click();
-    await page.getByRole("option", { name: "기타 지역", exact: true }).click();
+    // 닫힌 직후 200ms 는 다시 열기를 받지 않는다(use-select-open.ts) — 열릴 때까지 다시 누른다
+    const other = page.getByRole("option", { name: "기타 지역", exact: true });
+    await expect(async () => {
+        await page
+            .locator(".nl-global-ranking-controls [role=combobox]")
+            .click();
+        await expect(other).toBeVisible({ timeout: 1_000 });
+    }).toPass();
+    await other.click();
     await expect(page).toHaveURL(/region=global&page=1/);
     await page.getByRole("button", { name: "공식 Grd", exact: true }).click();
     await expect(page.locator(".nl-player-row__value").first()).toHaveText(
@@ -241,7 +257,7 @@ test("failed replacements keep the rows, resolve the pending controls, and retry
     await expect(
         page.locator(".nl-global-rankings [role=alert]")
     ).toContainText("랭킹을 불러오지 못했습니다.");
-    await expect(page.locator(".nl-player-row")).toHaveCount(25);
+    await expect(page.locator(".nl-player-row")).toHaveCount(20);
     await expect(
         page.getByRole("button", { name: "공식 Grd", exact: true })
     ).toHaveAttribute("aria-pressed", "true");
@@ -256,17 +272,17 @@ test("failed replacements keep the rows, resolve the pending controls, and retry
     await expect(page.locator("#global-ranking-results")).toBeFocused();
 });
 
-for (const count of [0, 1, 25, 26])
+for (const count of [0, 1, 20, 21])
     test(`${count} players retain correct empty and pagination boundaries`, async ({
         page,
     }) => {
         await prepare(page, { count, mine: 999 });
         await expect(page.locator(".nl-player-row")).toHaveCount(
-            Math.min(count, 25)
+            Math.min(count, GLOBAL_RANKING_PAGE_SIZE)
         );
         await expect(page.locator(".nl-pagination")).toHaveCount(count ? 1 : 0);
         await expect(page.locator(".nl-pagination__item")).toHaveCount(
-            count > 25 ? 4 : count ? 3 : 0
+            count > GLOBAL_RANKING_PAGE_SIZE ? 4 : count ? 3 : 0
         );
         await expect(page.locator(".nl-ranking-personal")).toHaveCount(
             count ? 1 : 0
@@ -300,7 +316,7 @@ test("unavailable Rating has a distinct recovery action and guests see no person
         .locator("#global-ranking-results")
         .getByRole("button", { name: "공식 Grd 보기", exact: true })
         .click();
-    await expect(page.locator(".nl-player-row")).toHaveCount(25);
+    await expect(page.locator(".nl-player-row")).toHaveCount(20);
 });
 
 for (const locale of ["ko", "ja", "en"])
@@ -308,10 +324,6 @@ for (const locale of ["ko", "ja", "en"])
         test(`${locale} ${theme} keeps the ranking table geometry, text styles, and accessible reflow`, async ({
             page,
         }, testInfo) => {
-            test.skip(
-                testInfo.project.name === "desktop-chromium",
-                "This matrix explicitly covers narrow and wide widths."
-            );
             await page.addInitScript(
                 (value) => localStorage.setItem("noslog-theme", value),
                 theme
@@ -434,9 +446,9 @@ for (const locale of ["ko", "ja", "en"])
                             height: box(personal).height,
                             overflow:
                                 personal.scrollWidth - personal.clientWidth,
-                            rankTag: personal.querySelector(
-                                ".nl-ranking-personal__rank"
-                            )!.tagName,
+                            rankTag:
+                                personal.querySelector(".nl-metric-value")!
+                                    .tagName,
                             buttons:
                                 personal.querySelectorAll(".nl-button").length,
                         },
@@ -452,7 +464,8 @@ for (const locale of ["ko", "ja", "en"])
                     expect(row.rankWidth).toBe(32);
                     expect(row.rankOffset).toBeLessThanOrEqual(0.5);
                     expect(row.name).toEqual(["14px", "20px", "600"]);
-                    expect(row.value).toEqual(["14px", "20px", "600"]);
+                    // 값 = metric-value 14/20 · 500(가이드 1절 글자 표)
+                    expect(row.value).toEqual(["14px", "20px", "500"]);
                     if (!row.badge) continue;
                     expect(row.badge.height).toBe(20);
                     expect(row.badge.offset).toBeLessThanOrEqual(0.5);
@@ -477,10 +490,12 @@ for (const locale of ["ko", "ja", "en"])
                 expect(geometry.regionFill).toBe(
                     theme === "dark" ? "rgb(44, 44, 44)" : "rgb(233, 233, 233)"
                 );
-                expect(geometry.firstWeight).toBe("600");
+                // 순위도 metric-value(500) — 1 · 2 · 3위는 굵기 대신 시상 색(global-rankings.css)
+                expect(geometry.firstWeight).toBe("500");
                 expect(geometry.font).toContain("Pretendard JP Variable");
+                // 내 순위 줄 = 위아래 12 + body-secondary 20(global-rankings.css .nl-ranking-personal)
                 expect(geometry.personal).toEqual({
-                    height: 52,
+                    height: 44,
                     overflow: 0,
                     rankTag: "A",
                     buttons: 0,

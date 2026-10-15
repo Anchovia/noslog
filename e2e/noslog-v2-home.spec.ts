@@ -19,10 +19,6 @@ for (const locale of ["ko", "ja", "en"]) {
         test(`${locale} ${theme} Home matches HOME-23 at compact and bounded widths`, async ({
             page,
         }, testInfo) => {
-            test.skip(
-                !testInfo.project.name.startsWith("desktop-"),
-                "The matrix explicitly sets every viewport."
-            );
             await page.addInitScript(
                 (value) => localStorage.setItem("noslog-theme", value),
                 theme
@@ -218,9 +214,8 @@ test("Home search preview overlays the bounded navigation and remains keyboard o
     await expect(page).toHaveURL(/\/ko\/music\?q=STULTI$/);
 });
 
-// "ready": the dev server has a working X_BEARER_TOKEN, so the card renders.
-// "error": the dev server has no X_BEARER_TOKEN.
-const officialNewsFixture = process.env.NOSLOG_OFFICIAL_NEWS_FIXTURE;
+// 홈은 저장된 공식 X 글만 읽는다. e2e 시드(prisma/seed-e2e.mjs)가 한 건을 넣는다.
+// 불러오지 못한 상태는 tests/official-x-post-service.test.ts 가 검사한다.
 const officialNewsHeading = "NOSTALGIA 공식 소식";
 
 async function expectOfficialNewsShell(page: import("@playwright/test").Page) {
@@ -241,10 +236,6 @@ async function expectOfficialNewsShell(page: import("@playwright/test").Page) {
 test("Official news card fills the bounded column with author, time, and source link", async ({
     page,
 }) => {
-    test.skip(
-        officialNewsFixture !== "ready",
-        "Requires NOSLOG_OFFICIAL_NEWS_FIXTURE=ready with a working X_BEARER_TOKEN on the dev server."
-    );
     await page.goto("/ko");
     const news = await expectOfficialNewsShell(page);
     const card = news.locator(".nl-official-post");
@@ -261,21 +252,6 @@ test("Official news card fills the bounded column with author, time, and source 
     await expect(card.locator('a[href^="https://t.co/"]')).toHaveCount(0);
     await expect(news.locator(".nl-home-news-state")).toHaveCount(0);
     await expect(news.locator("iframe")).toHaveCount(0);
-});
-
-test("Official news without a configured token shows the load error and keeps the link", async ({
-    page,
-}) => {
-    test.skip(
-        officialNewsFixture !== "error",
-        "Requires NOSLOG_OFFICIAL_NEWS_FIXTURE=error with no X_BEARER_TOKEN on the dev server."
-    );
-    await page.goto("/ko");
-    const news = await expectOfficialNewsShell(page);
-    await expect(news.locator(".nl-home-news-state")).toContainText(
-        "불러오지 못했습니다"
-    );
-    await expect(news.locator(".nl-official-post")).toHaveCount(0);
 });
 
 test("Home search preserves input when hydration scripts arrive late", async ({
@@ -340,6 +316,8 @@ test("Home preview waits for IME completion and retries an empty response", asyn
                   }
         );
     });
+    // 검색 대기(300ms)를 실제로 기다리지 않고 가짜 시계로 넘긴다.
+    await page.clock.install();
     await page.goto("/ko");
     const input = page.getByRole("combobox", {
         name: "악곡 제목·아티스트 검색",
@@ -363,7 +341,7 @@ test("Home preview waits for IME completion and retries an empty response", asyn
             })
         );
     });
-    await page.waitForTimeout(450);
+    await page.clock.runFor(450);
     expect(requests).toEqual([]);
     await input.dispatchEvent("compositionend");
     const popup = page.locator(".nl-search-preview");
