@@ -1,6 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { expect, fn, userEvent, waitFor, within } from "storybook/test";
 
+import {
+    contractStory,
+    type ContractWidth,
+    expectFormContract,
+} from "@/.storybook/responsive-contract";
 import { getMessages } from "@/lib/i18n/messages";
 import { isLocale } from "@/lib/i18n/routing";
 
@@ -270,3 +275,23 @@ export const NicknameCheckUnavailable: Story = {
         await expect(args.submitAction).not.toHaveBeenCalled();
     },
 };
+
+// 폭 계약: 입력 글자 16px · 가로 넘침 없음 · 입력 높이는 1056 이상 40px, 미만 44px.
+function contract(width: ContractWidth, locale?: string): Story {
+    return {
+        ...contractStory(width, locale),
+        play: async ({ canvasElement }) => {
+            await expectFormContract(
+                within(canvasElement).getAllByRole("textbox")[0],
+                { height: width >= 1056 ? "40px" : "44px" }
+            );
+        },
+    };
+}
+export const Contract320 = contract(320);
+export const Contract320Ja = contract(320, "ja");
+export const Contract320En = contract(320, "en");
+export const Contract671 = contract(671);
+export const Contract672 = contract(672);
+export const Contract1055 = contract(1055);
+export const Contract1056 = contract(1056);

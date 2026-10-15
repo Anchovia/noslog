@@ -2,6 +2,11 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { useEffect, useState } from "react";
 import { expect, fn, screen, userEvent, waitFor, within } from "storybook/test";
 
+import {
+    contractStory,
+    type ContractWidth,
+    expectFormContract,
+} from "@/.storybook/responsive-contract";
 import { useTranslations } from "@/components/i18n/locale-provider";
 import { getMessages } from "@/lib/i18n/messages";
 import { isLocale } from "@/lib/i18n/routing";
@@ -322,3 +327,26 @@ export const ExternalReopenWhileSubmitting: Story = {
         ).toHaveValue("이전 요청의 응답");
     },
 };
+
+// 폭 계약: 입력 글자 16px · 가로 넘침 없음 · 672 미만은 전체 화면 창, 이상은 가운데 창.
+function contract(width: ContractWidth, locale?: string): Story {
+    return {
+        ...contractStory(width, locale),
+        play: async () => {
+            const dialog = await screen.findByRole("dialog");
+            await expectFormContract(within(dialog).getAllByRole("textbox")[0]);
+            expect(
+                document.querySelector(
+                    width < 672 ? ".nl-full-dialog" : ".nl-dialog"
+                )
+            ).not.toBeNull();
+        },
+    };
+}
+export const Contract320 = contract(320);
+export const Contract320Ja = contract(320, "ja");
+export const Contract320En = contract(320, "en");
+export const Contract671 = contract(671);
+export const Contract672 = contract(672);
+export const Contract1055 = contract(1055);
+export const Contract1056 = contract(1056);

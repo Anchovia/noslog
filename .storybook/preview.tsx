@@ -6,6 +6,8 @@ import { LocaleProvider } from "@/components/i18n/locale-provider";
 import { getMessages } from "@/lib/i18n/messages";
 import { isLocale } from "@/lib/i18n/routing";
 
+import { contractViewports } from "./responsive-contract";
+
 const preview: Preview = {
     tags: ["autodocs"],
     initialGlobals: { locale: "ko" },
@@ -25,6 +27,7 @@ const preview: Preview = {
     },
     parameters: {
         layout: "padded",
+        viewport: { options: contractViewports },
         a11y: {
             test: "error",
             options: {
