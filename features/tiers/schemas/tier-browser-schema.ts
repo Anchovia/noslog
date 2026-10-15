@@ -104,6 +104,17 @@ export const tierBrowserOverviewSchema = z.object({
     viewerId: z.number().int().nullable(),
     showLocalizedTitle: z.boolean(),
 });
+const tierBrowserRecordSchema = z.object({
+    score: z.number(),
+    rank: z.string(),
+    fc_type: z.number(),
+    grade: z.number().nullable(),
+    rating: z.number().nullable(),
+});
+// 구간 안 내 기록(채보 id → 기록) — 공개 구간 응답과 따로 받는다(2026-10-15 S7)
+export const tierBrowserBandRecordsSchema = z.object({
+    records: z.record(z.string(), tierBrowserRecordSchema),
+});
 const tierBrowserEntrySchema = z.object({
     id: z.number().int(),
     chartId: z.number().int(),
@@ -121,15 +132,7 @@ const tierBrowserEntrySchema = z.object({
             background: z.string().nullable(),
         }),
     }),
-    record: z
-        .object({
-            score: z.number(),
-            rank: z.string(),
-            fc_type: z.number(),
-            grade: z.number().nullable(),
-            rating: z.number().nullable(),
-        })
-        .nullable(),
+    record: tierBrowserRecordSchema.nullable(),
 });
 export const tierBrowserBandSchema = z.object({
     id: z.number().int(),

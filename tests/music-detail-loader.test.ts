@@ -39,12 +39,14 @@ vi.mock("@/features/music/server/chart-ranking", () => ({
     getChartRanking: mocks.ranking,
     getChartScorePlayers: mocks.players,
     getChartScorePlayer: mocks.player,
-    MUSIC_RANKING_PAGE_SIZE: 25,
+    MUSIC_RANKING_PAGE_SIZE: 20,
 }));
 vi.mock("@/features/music/server/community-data", () => ({
     getCommunityData: mocks.community,
+    getCachedCommunityPattern: async () => undefined,
 }));
 vi.mock("@/lib/observability/server", () => ({ logServerError: mocks.log }));
+vi.mock("next/cache", () => ({ unstable_cache: (fn: unknown) => fn }));
 import { loadMusicDetail } from "@/features/music/server/load-music-detail";
 
 describe("music detail query orchestration", () => {
@@ -74,7 +76,7 @@ describe("music detail query orchestration", () => {
         mocks.ranking.mockResolvedValue({
             rows: [],
             page: 2,
-            pageSize: 25,
+            pageSize: 20,
             totalCount: 31,
         });
         mocks.count.mockResolvedValue(4);

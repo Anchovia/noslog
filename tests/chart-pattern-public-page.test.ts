@@ -8,6 +8,7 @@ const mocks = vi.hoisted(() => ({
     getNameLabels: vi.fn(),
 }));
 
+vi.mock("next/cache", () => ({ unstable_cache: (fn: unknown) => fn }));
 vi.mock("next/navigation", () => ({
     notFound: mocks.notFound,
 }));

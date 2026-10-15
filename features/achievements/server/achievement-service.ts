@@ -1,6 +1,7 @@
 import "server-only";
 
 import { Prisma } from "@prisma/client";
+import { unstable_cache } from "next/cache";
 
 import {
     ACHIEVEMENT_DEFINITIONS,
@@ -19,6 +20,8 @@ import {
     examAchievementGradeSelect,
     getBestExamGrade,
 } from "@/features/exams/exam-grades";
+import { PUBLIC_DATA_REVALIDATE_SECONDS } from "@/lib/cache-policy";
+import { CACHE_TAGS } from "@/lib/cache-tags";
 import db from "@/lib/db";
 
 // S 이상 = 등급 S · P(1,000,000). 풀콤보 = fc_type 2 이상 또는 1,000,000(순위표 FC 표시와 같은 기준)
@@ -258,16 +261,29 @@ export async function getAchievementRecords(
     };
 }
 
-/** 업적 페이지 — 정의별 달성 인원(얻지 않은 단계 포함, 상세 사다리용) */
-export async function getAchievementRecipientCounts() {
-    const rows = await db.userAchievement.groupBy({
-        by: ["key", "tier"],
-        _count: { _all: true },
-    });
-    return Object.fromEntries(
-        rows.map((row) => [recipientKey(row.key, row.tier), row._count._all])
-    );
-}
+/**
+ * 업적 페이지 — 정의별 달성 인원(얻지 않은 단계 포함, 상세 사다리용).
+ * 모두에게 같아 새 업적 · 다시 판정 때 비워지는 userProfiles 태그로 캐시(2026-10-15 S7)
+ */
+export const getAchievementRecipientCounts = unstable_cache(
+    async () => {
+        const rows = await db.userAchievement.groupBy({
+            by: ["key", "tier"],
+            _count: { _all: true },
+        });
+        return Object.fromEntries(
+            rows.map((row) => [
+                recipientKey(row.key, row.tier),
+                row._count._all,
+            ])
+        );
+    },
+    ["achievement-recipient-counts-v1"],
+    {
+        tags: [CACHE_TAGS.userProfiles],
+        revalidate: PUBLIC_DATA_REVALIDATE_SECONDS,
+    }
+);
 
 export type AchievementShowcaseResult =
     | { status: "ok"; keys: string[] }

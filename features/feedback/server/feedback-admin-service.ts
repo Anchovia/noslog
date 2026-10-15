@@ -1,4 +1,4 @@
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 
 import { awardContribution } from "@/features/contributions/server/contribution-point-service";
 import {
@@ -10,6 +10,7 @@ import type { AdminFeedbackReport } from "@/features/feedback/types/feedback-adm
 import type { ActionResult } from "@/lib/actions/result";
 import { actionValidationFailure } from "@/lib/actions/validation";
 import { requireAdmin } from "@/lib/admin";
+import { CACHE_TAGS } from "@/lib/cache-tags";
 import db from "@/lib/db";
 import { logServerError } from "@/lib/observability/server";
 
@@ -162,6 +163,8 @@ export async function updateFeedbackStatus(
                     : {}),
             },
         });
+        // 오락실 제보면 공개 오락실 화면의 열린 신고 수(캐시)도 바뀐다
+        if (feedback.arcadeId !== null) updateTag(CACHE_TAGS.arcades);
         // 오락실 제보를 처리 완료하면 제보한 사람에게 기여 1점 — 다시 열었다 닫아도 한 번만
         if (input.status === "resolved" && feedback.arcadeId !== null) {
             await awardContribution({

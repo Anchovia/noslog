@@ -1,11 +1,35 @@
 import "server-only";
 
+import { unstable_cache } from "next/cache";
+
 import {
     PROFILE_TIER_KEYS,
     profileStatsSchema,
     type ProfileTierKey,
 } from "@/features/profile/schemas/profile-stats-schema";
+import { PUBLIC_DATA_REVALIDATE_SECONDS } from "@/lib/cache-policy";
+import { CACHE_TAGS } from "@/lib/cache-tags";
 import db from "@/lib/db";
+
+// 난이도 · 레벨별 수록 채보 수 — 모두에게 같아 곡 목록이 바뀔 때 비워지는 musicCatalog 태그로 캐시(2026-10-15 S7)
+const getCachedChartLevelCounts = unstable_cache(
+    async () =>
+        (
+            await db.musicChart.groupBy({
+                by: ["difficulty", "level"],
+                _count: { _all: true },
+            })
+        ).map((row) => ({
+            difficulty: row.difficulty,
+            level: row.level,
+            count: row._count._all,
+        })),
+    ["chart-level-counts-v1"],
+    {
+        tags: [CACHE_TAGS.musicCatalog],
+        revalidate: PUBLIC_DATA_REVALIDATE_SECONDS,
+    }
+);
 
 /** 레벨별 달성 칸(2026-09-26 L1) — Pianist(FC 램프 3 · P 랭크) > FC(FC 램프 2) > 랭크 S · A+ · A · B 이하 */
 export function playTier(play: {
@@ -26,10 +50,7 @@ export function playTier(play: {
  */
 export async function getProfileStats(userId: number) {
     const [charts, plays] = await Promise.all([
-        db.musicChart.groupBy({
-            by: ["difficulty", "level"],
-            _count: { _all: true },
-        }),
+        getCachedChartLevelCounts(),
         db.playData.findMany({
             where: { user_id: userId, score: { gt: 0 } },
             select: {
@@ -50,7 +71,7 @@ export async function getProfileStats(userId: number) {
             {
                 difficulty: chart.difficulty.toLowerCase(),
                 level: chart.level,
-                total: chart._count._all,
+                total: chart.count,
                 tiers: Object.fromEntries(
                     PROFILE_TIER_KEYS.map((key) => [key, 0])
                 ) as Record<ProfileTierKey, number>,

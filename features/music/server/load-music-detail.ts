@@ -1,8 +1,12 @@
+import { unstable_cache } from "next/cache";
+
 import type {
     DetailTab,
     Difficulty,
     MusicDetailProps,
 } from "@/components/music/music-detail-types";
+import { PUBLIC_DATA_REVALIDATE_SECONDS } from "@/lib/cache-policy";
+import { CACHE_TAGS } from "@/lib/cache-tags";
 import db from "@/lib/db";
 import { getLocalizedMusicTitle } from "@/lib/i18n/music-title";
 import type { Locale } from "@/lib/i18n/routing";
@@ -23,7 +27,7 @@ import {
     getChartScorePlayers,
     MUSIC_RANKING_PAGE_SIZE,
 } from "./chart-ranking";
-import { getCommunityData } from "./community-data";
+import { getCachedCommunityPattern, getCommunityData } from "./community-data";
 import {
     getCachedChartDetailStats,
     getCachedMusicDetail,
@@ -38,6 +42,30 @@ import {
 const MUSIC_DIFFICULTIES: Difficulty[] = ["Normal", "Hard", "Expert", "Real"];
 const MUSIC_DETAIL_TABS: DetailTab[] = ["record", "detail", "ranking", "tier"];
 const EMPTY_UNLOCK_NAMES: Record<string, string> = {};
+
+// 서열 값 · 서열 이력은 모두에게 같다 — 서열표 저장 때 비워지는 tierLists 태그로 캐시(2026-10-15 S7)
+const getCachedChartTierLists = unstable_cache(
+    (chartId: number) =>
+        db.tierList.findMany({
+            where: {
+                mode: { in: [...TIER_MODES] },
+                goal: { in: [...TIER_GOALS] },
+                status: "published",
+            },
+            orderBy: [{ updatedAt: "desc" }, { id: "desc" }],
+            select: {
+                mode: true,
+                goal: true,
+                entries: {
+                    where: { chartId },
+                    select: { tierBand: { select: { value: true } } },
+                },
+            },
+        }),
+    ["music-detail-tier-values-v1"],
+    { tags: [CACHE_TAGS.tierLists], revalidate: PUBLIC_DATA_REVALIDATE_SECONDS }
+);
+
 const emptyDistribution = [
     { key: "950", label: "950k", count: 0 },
     { key: "960", label: "960k", count: 0 },
@@ -103,119 +131,119 @@ export async function loadMusicDetail(
     const userRecord = userId
         ? getUserChartRecord(userId, chart.id)
         : Promise.resolve(null);
-    const [unlockNames, tierLists, tierHistory, community, personal] =
-        await Promise.all([
-            unlockSources.length && locale !== "ja"
-                ? getCachedUnlockTranslations(locale)
-                : EMPTY_UNLOCK_NAMES,
-            db.tierList.findMany({
-                where: {
-                    mode: { in: [...TIER_MODES] },
-                    goal: { in: [...TIER_GOALS] },
-                    status: "published",
-                },
-                orderBy: [{ updatedAt: "desc" }, { id: "desc" }],
-                select: {
-                    mode: true,
-                    goal: true,
-                    entries: {
-                        where: { chartId: chart.id },
-                        select: { tierBand: { select: { value: true } } },
-                    },
-                },
-            }),
-            activeTab === "detail"
-                ? loadTierHistory(chart.id).catch((error) => {
-                      logServerError(error, {
-                          event: "music-detail.tier-history.failed",
-                      });
-                      return [];
-                  })
-                : [],
-            activeTab === "tier"
-                ? getCommunityData(chart.id, userId).catch((error) => {
-                      logServerError(error, {
-                          event: "music-community.initial.failed",
-                      });
-                      return undefined;
-                  })
-                : undefined,
-            userRecord.then(async (userPlayData) => {
-                // 비공개인 본인이 볼 때만 자기 점수를 포함한다.
-                const includeSelf =
-                    userId && userPlayData?.user.hide_play_scores ? userId : 0;
-                const [
-                    recentChartPlays,
-                    scoreTrend,
-                    performanceTrend,
-                    peerScoreComparison,
-                    stats,
-                    ranking,
-                    higherCount,
-                ] = await Promise.all([
-                    userId && activeTab === "record"
-                        ? getRecentUserChartPlays(userId, chart.id)
-                        : [],
-                    userId && activeTab === "record"
-                        ? getUserChartScoreTrend(userId, chart.id, userPlayData)
-                        : [],
-                    userId && activeTab === "record"
-                        ? getUserChartPerformanceTrend(userId, chart.id)
-                        : [],
-                    userId && activeTab === "record"
-                        ? getUserChartPeerScoreComparison(
-                              userId,
-                              chart.id,
-                              userPlayData
-                                  ? userPlayData.user.grade_basic
-                                  : undefined
-                          )
-                        : null,
-                    activeTab === "detail" || activeTab === "ranking"
-                        ? getCachedChartDetailStats(chart.id, includeSelf)
-                        : { scores: [] },
-                    activeTab === "ranking"
-                        ? loadRanking(
-                              chart.id,
-                              rankingPage,
-                              includeSelf,
-                              userPlayData ? userId : undefined
-                          )
-                        : {
-                              rows: [],
-                              page: rankingPage,
-                              pageSize: MUSIC_RANKING_PAGE_SIZE,
-                              totalCount: 0,
-                              userRank: null,
-                              players: [],
+    const [
+        unlockNames,
+        tierLists,
+        tierHistory,
+        community,
+        patternSummary,
+        personal,
+    ] = await Promise.all([
+        unlockSources.length && locale !== "ja"
+            ? getCachedUnlockTranslations(locale)
+            : EMPTY_UNLOCK_NAMES,
+        getCachedChartTierLists(chart.id),
+        activeTab === "detail"
+            ? getCachedTierHistory(chart.id).catch((error) => {
+                  logServerError(error, {
+                      event: "music-detail.tier-history.failed",
+                  });
+                  return [];
+              })
+            : [],
+        activeTab === "tier"
+            ? getCommunityData(chart.id, userId).catch((error) => {
+                  logServerError(error, {
+                      event: "music-community.initial.failed",
+                  });
+                  return undefined;
+              })
+            : undefined,
+        // 개요의 패턴 평가 요약 — 화면을 띄운 뒤 따로 받지 않게 함께 읽는다(2026-10-15 S5). 실패하면 클라가 받는다
+        activeTab === "detail"
+            ? getCachedCommunityPattern(chart.id).catch((error) => {
+                  logServerError(error, {
+                      event: "music-community.pattern.initial.failed",
+                  });
+                  return undefined;
+              })
+            : undefined,
+        userRecord.then(async (userPlayData) => {
+            // 비공개인 본인이 볼 때만 자기 점수를 포함한다.
+            const includeSelf =
+                userId && userPlayData?.user.hide_play_scores ? userId : 0;
+            const [
+                recentChartPlays,
+                scoreTrend,
+                performanceTrend,
+                peerScoreComparison,
+                stats,
+                ranking,
+                higherCount,
+            ] = await Promise.all([
+                userId && activeTab === "record"
+                    ? getRecentUserChartPlays(userId, chart.id)
+                    : [],
+                userId && activeTab === "record"
+                    ? getUserChartScoreTrend(userId, chart.id, userPlayData)
+                    : [],
+                userId && activeTab === "record"
+                    ? getUserChartPerformanceTrend(userId, chart.id)
+                    : [],
+                userId && activeTab === "record"
+                    ? getUserChartPeerScoreComparison(
+                          userId,
+                          chart.id,
+                          userPlayData
+                              ? userPlayData.user.grade_basic
+                              : undefined
+                      )
+                    : null,
+                activeTab === "detail" || activeTab === "ranking"
+                    ? getCachedChartDetailStats(chart.id, includeSelf)
+                    : { scores: [] },
+                activeTab === "ranking"
+                    ? loadRanking(
+                          chart.id,
+                          rankingPage,
+                          includeSelf,
+                          userPlayData ? userId : undefined
+                      )
+                    : {
+                          rows: [],
+                          page: rankingPage,
+                          pageSize: MUSIC_RANKING_PAGE_SIZE,
+                          totalCount: 0,
+                          userRank: null,
+                          players: [],
+                      },
+                userPlayData &&
+                (activeTab === "ranking" || activeTab === "detail")
+                    ? db.playData.count({
+                          where: {
+                              chart_id: chart.id,
+                              score: { gt: userPlayData.score },
+                              user: { hide_play_scores: false },
                           },
-                    userPlayData &&
-                    (activeTab === "ranking" || activeTab === "detail")
-                        ? db.playData.count({
-                              where: {
-                                  chart_id: chart.id,
-                                  score: { gt: userPlayData.score },
-                                  user: { hide_play_scores: false },
-                              },
-                          })
-                        : null,
-                ]);
-                if (higherCount !== null) {
-                    ranking.userRank = higherCount + 1;
-                    if (activeTab === "detail")
-                        ranking.totalCount = stats.scores.length;
-                }
-                return {
-                    userPlayData,
-                    recentChartPlays,
-                    scoreTrend,
-                    performanceTrend,
-                    peerScoreComparison,
-                    stats,
-                    ranking,
-                };
-            }),
-        ]);
+                      })
+                    : null,
+            ]);
+            if (higherCount !== null) {
+                ranking.userRank = higherCount + 1;
+                if (activeTab === "detail")
+                    ranking.totalCount = stats.scores.length;
+            }
+            return {
+                userPlayData,
+                recentChartPlays,
+                scoreTrend,
+                performanceTrend,
+                peerScoreComparison,
+                stats,
+                ranking,
+            };
+        }),
+    ]);
     const {
         userPlayData,
         recentChartPlays,
@@ -290,6 +318,7 @@ export async function loadMusicDetail(
         ranking,
         tier,
         community,
+        patternSummary,
     };
 }
 
@@ -318,6 +347,12 @@ async function loadRanking(
 }
 
 // 공개 서열표의 배치 변경 이력 — communityData 와 같은 계산(이전 값 → 새 값)
+const getCachedTierHistory = unstable_cache(
+    (chartId: number) => loadTierHistory(chartId),
+    ["music-detail-tier-history-v1"],
+    { tags: [CACHE_TAGS.tierLists], revalidate: PUBLIC_DATA_REVALIDATE_SECONDS }
+);
+
 async function loadTierHistory(chartId: number) {
     const history = await db.tierPlacementHistory.findMany({
         where: { chartId, tierList: { status: "published" } },

@@ -29,7 +29,9 @@ vi.mock("@/lib/i18n/music-title", () => ({
     getLocalizedMusicTitle: () => null,
 }));
 import {
+    getPublicTierBrowserBand,
     getTierBrowserBand,
+    getTierBrowserBandRecords,
     getTierBrowserOverview,
 } from "@/features/tiers/server/tier-browser-data";
 import { tierStripValue } from "@/features/tiers/components/tier-browser-card";
@@ -330,6 +332,23 @@ describe("Tier browser request and data contract", () => {
                 where: { user_id: 9, chart_id: { in: [1, 80] } },
             })
         );
+    });
+    it("serves the public band without reading anyone's session or records", async () => {
+        const band = await getPublicTierBrowserBand(query(), 11, "ko", true);
+        expect(band?.entries.length).toBeGreaterThan(0);
+        expect(band?.entries.every((entry) => entry.record === null)).toBe(
+            true
+        );
+        expect(mocks.records).not.toHaveBeenCalled();
+        expect(mocks.preference).not.toHaveBeenCalled();
+    });
+    it("returns the viewer's records keyed by chart, matching the combined band", async () => {
+        const records = await getTierBrowserBandRecords(query(), 11, 9);
+        const combined = await getTierBrowserBand(query(), 11, 9, "ko");
+        expect(Object.keys(records ?? {}).length).toBeGreaterThan(0);
+        for (const entry of combined!.entries)
+            expect(records?.[entry.chartId] ?? null).toEqual(entry.record);
+        expect(await getTierBrowserBandRecords(query(), 22, 9)).toBeNull();
     });
     it("omits personal rows for guests and unplayed Recital charts", async () => {
         expect(

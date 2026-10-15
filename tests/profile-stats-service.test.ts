@@ -13,6 +13,7 @@ vi.mock("@/lib/db", () => ({
         chartPlayHistory: { findMany: mocks.history },
     },
 }));
+vi.mock("next/cache", () => ({ unstable_cache: (fn: unknown) => fn }));
 
 import {
     getProfileStats,

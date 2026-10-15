@@ -1,6 +1,7 @@
 import "server-only";
 
 import type { Prisma } from "@prisma/client";
+import { unstable_cache } from "next/cache";
 import { cache } from "react";
 
 import {
@@ -15,6 +16,8 @@ import {
     knownFeatureValue,
     legacyToPublicArcadeHours,
 } from "@/lib/arcade-details";
+import { PUBLIC_DATA_REVALIDATE_SECONDS } from "@/lib/cache-policy";
+import { CACHE_TAGS } from "@/lib/cache-tags";
 import db from "@/lib/db";
 
 // 이용자 확인은 30일, 미처리 신고는 60일 창으로 본다
@@ -239,35 +242,52 @@ function toPublicArcade(record: ArcadeRecord, now: Date) {
     });
 }
 
-export const getPublicArcades = cache(async () => {
-    const now = new Date();
-    const records = await db.arcade.findMany({
-        where: { is_active: true },
-        include: publicInclude(now),
-    });
-    return records.map((record) => toPublicArcade(record, now));
-});
+/*
+ * 공개 오락실은 모두에게 같다 — arcades 태그로 캐시하고(2026-10-15 S7) 확인 · 신고 · 선호 · 관리자 저장 때 비운다.
+ * 30일 확인 · 60일 신고 창과 예약 공개(사진 · 다른 이름) · 유효 기간은 캐시를 만든 시각 기준이라 최대 한 시간 늦게 바뀔 수 있다.
+ * 내 확인 기체는 사람마다 달라 캐시 밖에서 따로 읽는다
+ */
+const queryPublicArcades = unstable_cache(
+    async () => {
+        const now = new Date();
+        const records = await db.arcade.findMany({
+            where: { is_active: true },
+            include: publicInclude(now),
+        });
+        return records.map((record) => toPublicArcade(record, now));
+    },
+    ["public-arcades-v1"],
+    { tags: [CACHE_TAGS.arcades], revalidate: PUBLIC_DATA_REVALIDATE_SECONDS }
+);
 
-export const getPublicArcade = cache(async (slug: string) => {
-    const numericId =
-        /^[1-9]\d*$/.test(slug) && Number.isSafeInteger(Number(slug))
-            ? Number(slug)
-            : null;
-    const now = new Date();
-    const include = publicInclude(now);
-    // Canonical URLs win over historical aliases and legacy numeric URLs.
-    let record = await db.arcade.findFirst({
-        where: { is_active: true, publicDetails: { is: { slug } } },
-        include,
-    });
-    record ??= await db.arcade.findFirst({
-        where: { is_active: true, slugAliases: { some: { slug } } },
-        include,
-    });
-    if (!record && numericId !== null)
-        record = await db.arcade.findFirst({
-            where: { is_active: true, id: numericId },
+export const getPublicArcades = cache(() => queryPublicArcades());
+
+const queryPublicArcade = unstable_cache(
+    async (slug: string) => {
+        const numericId =
+            /^[1-9]\d*$/.test(slug) && Number.isSafeInteger(Number(slug))
+                ? Number(slug)
+                : null;
+        const now = new Date();
+        const include = publicInclude(now);
+        // Canonical URLs win over historical aliases and legacy numeric URLs.
+        let record = await db.arcade.findFirst({
+            where: { is_active: true, publicDetails: { is: { slug } } },
             include,
         });
-    return record ? toPublicArcade(record, now) : null;
-});
+        record ??= await db.arcade.findFirst({
+            where: { is_active: true, slugAliases: { some: { slug } } },
+            include,
+        });
+        if (!record && numericId !== null)
+            record = await db.arcade.findFirst({
+                where: { is_active: true, id: numericId },
+                include,
+            });
+        return record ? toPublicArcade(record, now) : null;
+    },
+    ["public-arcade-v1"],
+    { tags: [CACHE_TAGS.arcades], revalidate: PUBLIC_DATA_REVALIDATE_SECONDS }
+);
+
+export const getPublicArcade = cache((slug: string) => queryPublicArcade(slug));

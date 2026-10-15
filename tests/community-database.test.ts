@@ -1,5 +1,10 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 
+// 공개 커뮤니티 캐시(2026-10-15 S7)는 Next 밖이라 그대로 부른다
+vi.mock("next/cache", async (importOriginal) => ({
+    ...(await importOriginal<typeof import("next/cache")>()),
+    unstable_cache: (fn: unknown) => fn,
+}));
 vi.mock("@/lib/db", async () => {
     const url = process.env.COMMUNITY_TEST_DATABASE_URL;
     if (!url) return { default: {} };

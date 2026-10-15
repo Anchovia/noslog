@@ -5,9 +5,9 @@ import {
     opinionReplyQuerySchema,
 } from "@/features/music/schemas/community-schema";
 import {
+    getCachedCommunityPattern,
     getCommunityData,
     getCommunityOpinions,
-    getCommunityPattern,
     getOpinionReplies,
 } from "@/features/music/server/community-data";
 import { createApiFailure, createApiSuccess } from "@/lib/api/response";
@@ -51,7 +51,11 @@ export async function GET(request: Request) {
         }
         const data =
             params.get("area") === "pattern"
-                ? { pattern: await getCommunityPattern(parsed.data.chartId) }
+                ? {
+                      pattern: await getCachedCommunityPattern(
+                          parsed.data.chartId
+                      ),
+                  }
                 : params.get("area") === "opinions"
                   ? await getCommunityOpinions(parsed.data, session.id)
                   : await getCommunityData(parsed.data.chartId, session.id);

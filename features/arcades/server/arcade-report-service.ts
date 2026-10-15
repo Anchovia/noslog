@@ -1,6 +1,6 @@
 import "server-only";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 
 import type { ArcadeReportFormValues } from "@/features/arcades/schemas/arcade-report-schema";
 import {
@@ -10,6 +10,7 @@ import {
 import type { ActionResult } from "@/lib/actions/result";
 import { actionValidationFailure } from "@/lib/actions/validation";
 import { isValidPrivateImageBlob } from "@/lib/blob";
+import { CACHE_TAGS } from "@/lib/cache-tags";
 import db from "@/lib/db";
 import { createTranslator, getMessages } from "@/lib/i18n/messages";
 import { isLocale } from "@/lib/i18n/routing";
@@ -95,6 +96,8 @@ export async function submitArcadeReport(
             select: { id: true },
         });
         revalidatePath("/admin/feedback");
+        // 공개 오락실 화면의 열린 신고 수(캐시)도 바로 바뀌게
+        updateTag(CACHE_TAGS.arcades);
         return { success: true, message: t("feedback.success") };
     } catch (error) {
         logServerError(error, {

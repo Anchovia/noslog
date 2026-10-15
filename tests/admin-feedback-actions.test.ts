@@ -6,6 +6,7 @@ const mocks = vi.hoisted(() => ({
     feedbackFindUnique: vi.fn(),
     feedbackUpdate: vi.fn(),
     revalidatePath: vi.fn(),
+    updateTag: vi.fn(),
     logServerError: vi.fn(),
 }));
 
@@ -19,7 +20,10 @@ vi.mock("@/lib/db", () => ({
         },
     },
 }));
-vi.mock("next/cache", () => ({ revalidatePath: mocks.revalidatePath }));
+vi.mock("next/cache", () => ({
+    revalidatePath: mocks.revalidatePath,
+    updateTag: mocks.updateTag,
+}));
 vi.mock("@/lib/observability/server", () => ({
     logServerError: mocks.logServerError,
 }));
