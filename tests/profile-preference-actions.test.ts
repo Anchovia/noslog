@@ -83,7 +83,6 @@ describe("profile preference action boundaries", () => {
         });
         expect(mocks.tag.mock.calls).toEqual([
             [CACHE_TAGS.arcades],
-            [CACHE_TAGS.userProfiles],
             [getUserProfileTag(7)],
         ]);
         expect(mocks.revalidate.mock.calls).toEqual([
@@ -159,7 +158,6 @@ describe("profile preference action boundaries", () => {
         expect(mocks.update).not.toHaveBeenCalled();
         expect(mocks.tag.mock.calls).toEqual([
             [CACHE_TAGS.arcades],
-            [CACHE_TAGS.userProfiles],
             [getUserProfileTag(7)],
         ]);
         expect(mocks.revalidate.mock.calls).toEqual([

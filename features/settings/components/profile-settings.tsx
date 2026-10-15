@@ -155,9 +155,16 @@ export default function ProfileSettings({
         }
         setBusy(true);
         try {
+            // 업적 진열 · 고정 기록은 그 칸을 바꿀 때만 보낸다 — 안 보내면 서버가 그대로 두어 다시 쓰지 않는다
+            const base = Object.fromEntries(
+                Object.entries(savedProfile).filter(
+                    ([key]) =>
+                        key !== "achievementShowcase" && key !== "pinnedRecords"
+                )
+            );
             const result = await submitAction(
                 settingsFormData({
-                    ...savedProfile,
+                    ...base,
                     ...change,
                 } as SettingsProfileValues)
             );
@@ -170,9 +177,10 @@ export default function ProfileSettings({
             }
             // 다른 칸을 저장해도 고치던 닉네임은 그대로 둔다
             const pendingName = getValues("username");
-            setSavedProfile(result.values);
-            reset(result.values);
-            if (field !== "username" && pendingName !== result.values.username)
+            const nextProfile = { ...savedProfile, ...result.values };
+            setSavedProfile(nextProfile);
+            reset(nextProfile);
+            if (field !== "username" && pendingName !== nextProfile.username)
                 setValue("username", pendingName);
             setSaved(result.message);
             return true;

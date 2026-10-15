@@ -24,12 +24,21 @@ import { getServerI18n } from "@/lib/i18n/server";
 import { logServerError } from "@/lib/observability/server";
 import getSession from "@/lib/session";
 
-function refreshPublicIdentity(userId: number) {
+/**
+ * 바뀐 값이 들어 있는 캐시만 비운다(2026-10-15 S4) — 본인 프로필은 늘.
+ * ranking: 랭킹 · 악곡 랭킹 · 점수 분포 줄에 나오는 닉네임 · 아바타 · 국가 · 점수 비공개(2026-09-18)
+ * arcade: 선호 오락실(오락실 공개 정보)
+ */
+function refreshPublicIdentity(
+    userId: number,
+    changed: { ranking: boolean; arcade: boolean }
+) {
     updateTag(getUserProfileTag(userId));
-    updateTag(CACHE_TAGS.userRankings);
-    updateTag(CACHE_TAGS.arcades);
-    // 점수 비공개를 바꾸면 악곡 랭킹 · 점수 분포 캐시도 다시(2026-09-18)
-    updateTag(CACHE_TAGS.chartRankings);
+    if (changed.ranking) {
+        updateTag(CACHE_TAGS.userRankings);
+        updateTag(CACHE_TAGS.chartRankings);
+    }
+    if (changed.arcade) updateTag(CACHE_TAGS.arcades);
 }
 
 export async function saveSettingsProfile(
@@ -52,7 +61,12 @@ export async function saveSettingsProfile(
     const values = parsed.data;
     const current = await db.user.findUnique({
         where: { id: session.id },
-        select: { avatar: true, preferred_arcade_id: true },
+        select: {
+            username: true,
+            country: true,
+            avatar: true,
+            preferred_arcade_id: true,
+        },
     });
     if (!current)
         return { success: false, message: t("settings.userNotFound") };
@@ -159,7 +173,13 @@ export async function saveSettingsProfile(
         });
         return { success: false, message: t("settings.saveError") };
     }
-    refreshPublicIdentity(session.id);
+    refreshPublicIdentity(session.id, {
+        ranking:
+            avatarChanged ||
+            values.username !== current.username ||
+            values.country !== current.country,
+        arcade: preferredId !== current.preferred_arcade_id,
+    });
     if (avatarChanged) await deleteBlobIfOwned(current.avatar);
     return { success: true, message: t("settings.saved"), values };
 }
@@ -177,7 +197,14 @@ export async function saveSettingsPrivacy(
     if (!parsed.success)
         return { success: false, message: t("settings.checkInput") };
     const values = parsed.data;
+    let scoresVisibilityChanged: boolean;
     try {
+        const current = await db.user.findUnique({
+            where: { id: session.id },
+            select: { hide_play_scores: true },
+        });
+        scoresVisibilityChanged =
+            current?.hide_play_scores !== !values.showPlayScores;
         await db.user.update({
             where: { id: session.id },
             data: {
@@ -197,6 +224,10 @@ export async function saveSettingsPrivacy(
         });
         return { success: false, message: t("settings.saveError") };
     }
-    refreshPublicIdentity(session.id);
+    // 랭킹 줄에 영향을 주는 건 점수 비공개뿐 — 나머지 스위치는 본인 프로필만
+    refreshPublicIdentity(session.id, {
+        ranking: scoresVisibilityChanged,
+        arcade: false,
+    });
     return { success: true, message: t("settings.saved"), values };
 }

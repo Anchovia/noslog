@@ -13,10 +13,9 @@ import getSession from "@/lib/session";
 
 export type PreferredArcadeActionResult = ActionResult;
 
-// 선호 오락실이 바뀌면 오락실 목록·프로필·설정이 함께 바뀐다
+// 선호 오락실이 바뀌면 오락실 목록·내 프로필·설정이 함께 바뀐다 — 다른 사람 프로필에는 내 오락실이 없어 모든 프로필은 비우지 않는다(2026-10-15 S4)
 function invalidatePreferredArcade(userId: number, locale: Locale) {
     updateTag(CACHE_TAGS.arcades);
-    updateTag(CACHE_TAGS.userProfiles);
     updateTag(getUserProfileTag(userId));
     revalidatePath("/gamecenter");
     revalidatePath(localizePath("/gamecenter", locale));

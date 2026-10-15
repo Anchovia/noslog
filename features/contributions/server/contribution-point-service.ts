@@ -9,7 +9,7 @@ import {
     type NameLabel,
     nameLabelFor,
 } from "@/features/contributions/contribution-level";
-import { CACHE_TAGS, getUserProfileTag } from "@/lib/cache-tags";
+import { getUserProfileTag } from "@/lib/cache-tags";
 import db from "@/lib/db";
 import { logServerError } from "@/lib/observability/server";
 
@@ -33,9 +33,11 @@ export function contributionAwardQuery(awards: ContributionAward[]) {
     });
 }
 
-/** 적립 뒤 공개 캐시(프로필 · 랭킹) 갱신 — 라벨이 바로 바뀌게 */
+/**
+ * 적립 뒤 그 사람 프로필 캐시 갱신 — 라벨이 바로 바뀌게.
+ * 랭킹 캐시에는 기여 정보가 없고 라벨은 캐시 밖에서 읽어(global-ranking-data) 랭킹은 비우지 않는다(2026-10-15 S4)
+ */
 export function refreshContributionViews(userIds: number[]) {
-    updateTag(CACHE_TAGS.userRankings);
     for (const userId of new Set(userIds)) updateTag(getUserProfileTag(userId));
 }
 
