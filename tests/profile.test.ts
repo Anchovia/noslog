@@ -68,8 +68,12 @@ describe("프로필 표시 유틸리티", () => {
     });
 
     it("난이도 표기는 대소문자를 구분하지 않는다", () => {
-        expect(getProfileDifficultyColor("Expert")).toBe("text-expert");
-        expect(getProfileDifficultyColor("real")).toBe("text-real");
+        expect(getProfileDifficultyColor("Expert")).toBe(
+            "text-nl-difficulty-expert"
+        );
+        expect(getProfileDifficultyColor("real")).toBe(
+            "text-nl-difficulty-real"
+        );
     });
 
     it("랭크 카운트를 화면 순서대로 만든다", () => {
