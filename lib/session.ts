@@ -10,6 +10,8 @@ interface SessionContent {
     id?: number;
     profileCompleted?: boolean;
     locale?: Locale;
+    /** 통계에서 운영자 방문을 빼는 데만 쓴다(2026-10-15 S8) — 권한 확인은 늘 DB 로. 로그인 때 채우고, 바뀐 역할은 다시 로그인하면 반영 */
+    role?: string;
     discordOAuthState?: string;
     discordOAuthReturnTo?: string;
     discordOAuthMode?: "refresh" | "change" | "delete";

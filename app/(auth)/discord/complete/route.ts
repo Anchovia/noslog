@@ -194,6 +194,7 @@ export async function GET(request: NextRequest) {
                 discord_username: true,
                 profile_completed_at: true,
                 locale: true,
+                role: true,
             },
         });
 
@@ -231,24 +232,40 @@ export async function GET(request: NextRequest) {
             return NextResponse.redirect(destination);
         }
 
+        // 다시 로그인할 때 값이 그대로면 쓰지 않는다 — 랭킹 줄에 나오는 아바타가 바뀐 경우만 랭킹을 비운다(2026-10-15 S4)
+        const linkedValues = linkedUser
+            ? {
+                  discord_name: linkedUser.discord_name ?? discordName,
+                  discord_username:
+                      linkedUser.discord_username ?? discordUser.username,
+                  avatar:
+                      avatar &&
+                      shouldUseDiscordAvatar(
+                          linkedUser.avatar,
+                          linkedUser.avatar_user_managed
+                      )
+                          ? avatar
+                          : linkedUser.avatar,
+              }
+            : null;
+        const linkedChanged =
+            linkedUser !== null &&
+            linkedValues !== null &&
+            (linkedValues.discord_name !== linkedUser.discord_name ||
+                linkedValues.discord_username !== linkedUser.discord_username ||
+                linkedValues.avatar !== linkedUser.avatar);
         const user = linkedUser
-            ? await db.user.update({
-                  where: { id: linkedUser.id },
-                  data: {
-                      discord_name: linkedUser.discord_name ?? discordName,
-                      discord_username:
-                          linkedUser.discord_username ?? discordUser.username,
-                      avatar:
-                          avatar &&
-                          shouldUseDiscordAvatar(
-                              linkedUser.avatar,
-                              linkedUser.avatar_user_managed
-                          )
-                              ? avatar
-                              : linkedUser.avatar,
-                  },
-                  select: { id: true, locale: true },
-              })
+            ? linkedChanged
+                ? await db.user.update({
+                      where: { id: linkedUser.id },
+                      data: linkedValues!,
+                      select: { id: true, locale: true, role: true },
+                  })
+                : {
+                      id: linkedUser.id,
+                      locale: linkedUser.locale,
+                      role: linkedUser.role,
+                  }
             : await db.user.create({
                   data: {
                       discord_id: discordUser.id,
@@ -256,13 +273,17 @@ export async function GET(request: NextRequest) {
                       discord_username: discordUser.username,
                       avatar,
                   },
-                  select: { id: true, locale: true },
+                  select: { id: true, locale: true, role: true },
               });
         const profileCompleted = Boolean(linkedUser?.profile_completed_at);
 
-        revalidateTag(getUserProfileTag(user.id), "max");
-        revalidateTag(CACHE_TAGS.userRankings, "max");
+        // 새 계정은 그 id 로 캐시된 「없는 프로필」 을 비운다
+        if (linkedChanged || !linkedUser)
+            revalidateTag(getUserProfileTag(user.id), "max");
+        if (linkedChanged && linkedValues?.avatar !== linkedUser?.avatar)
+            revalidateTag(CACHE_TAGS.userRankings, "max");
         session.id = user.id;
+        session.role = user.role;
         session.profileCompleted = profileCompleted;
         if (!profileCompleted) session.onboardingReturnTo = returnTo;
         if (profileCompleted && isLocale(user.locale)) {

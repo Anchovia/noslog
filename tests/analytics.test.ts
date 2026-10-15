@@ -177,7 +177,14 @@ describe("방문·API 기록", () => {
         }
     });
 
-    it("그날 처음 온 사람은 방문자·페이지뷰·페이지를 함께 센다", async () => {
+    // 방문자 기록과 합계를 한 문장으로(2026-10-15 S8)
+    function pageViewStatement() {
+        return inserts().find((row) =>
+            row.sql.includes('"analytics_daily_counts"')
+        )!;
+    }
+
+    it("그날 처음 온 사람은 방문자·페이지뷰·페이지를 한 문장으로 함께 센다", async () => {
         const now = new Date("2026-09-13T03:00:00Z");
         await expect(
             recordPageView({
@@ -189,10 +196,13 @@ describe("방문·API 기록", () => {
         ).resolves.toBe(true);
 
         const rows = inserts();
-        // 그날의 무작위 값 → 방문자 해시 → 합계 셋
-        expect(rows[0].sql).toContain('"analytics_salts"');
-        expect(rows[1].sql).toContain('"analytics_visitors"');
-        const hash = rows[1].values[1] as string;
+        // 그날의 무작위 값(인스턴스 처음 한 번) 뒤에는 문장 하나
+        expect(
+            rows.filter((row) => row.sql.includes('"analytics_daily_counts"'))
+        ).toHaveLength(1);
+        const statement = pageViewStatement();
+        expect(statement.sql).toContain('"analytics_visitors"');
+        const hash = statement.values[1] as string;
         expect(hash).toMatch(/^[0-9a-f]{64}$/);
         // IP·브라우저 정보 자체는 어디에도 넘기지 않는다
         for (const row of rows)
@@ -200,19 +210,11 @@ describe("방문·API 기록", () => {
                 expect(String(value)).not.toContain("203.0.113.7");
                 expect(String(value)).not.toContain("Chrome");
             }
-        const counts = rows
-            .filter((row) => row.sql.includes('"analytics_daily_counts"'))
-            .map((row) => row.values.slice(1, 3));
-        expect(counts).toEqual(
-            expect.arrayContaining([
-                ["pageviews", ""],
-                ["page", "/music"],
-                ["visitors", ""],
-                // 시각(서울 12시)과 로그인 여부 — 누가 왔는지는 남기지 않는다 (2026-09-20)
-                ["hour", "12"],
-                ["audience", "guest"],
-                ["audienceVisitor", "guest"],
-            ])
+        // 합계 넷 + 그날 처음이면 둘 — 시각(서울 12시)과 로그인 여부만, 누가 왔는지는 남기지 않는다 (2026-09-20)
+        for (const kind of ["pageviews", "page", "hour", "audience"])
+            expect(statement.sql).toContain(`'${kind}'`);
+        expect(statement.values).toEqual(
+            expect.arrayContaining(["/music", "12", "guest"])
         );
     });
 
@@ -225,28 +227,16 @@ describe("방문·API 기록", () => {
             now: new Date("2026-09-13T20:30:00Z"),
         });
 
-        const counts = inserts()
-            .filter((row) => row.sql.includes('"analytics_daily_counts"'))
-            .map((row) => row.values.slice(1, 3));
-        expect(counts).toEqual(
-            expect.arrayContaining([
-                ["audience", "member"],
-                ["audienceVisitor", "member"],
-                // 서울 기준 다음 날 05시
-                ["hour", "05"],
-            ])
+        // 서울 기준 다음 날 05시
+        expect(pageViewStatement().values).toEqual(
+            expect.arrayContaining(["member", "05"])
         );
         // 계정 번호 같은 것은 어디에도 넣지 않는다
         for (const row of inserts())
             expect(row.values.some((value) => value === true)).toBe(false);
     });
 
-    it("같은 날 다시 온 사람은 방문자로 두 번 세지 않는다", async () => {
-        // 방문자 해시가 이미 있으면 INSERT … DO NOTHING 이 0 을 돌려준다
-        mocks.executeRaw.mockImplementation(async (strings: string[]) =>
-            strings.join("?").includes('"analytics_visitors"') ? 0 : 1
-        );
-
+    it("방문자 합계는 그날 처음 들어간 방문자 해시가 있을 때만 더한다", async () => {
         await recordPageView({
             path: "/ko/tiers",
             ip: "203.0.113.7",
@@ -254,11 +244,15 @@ describe("방문·API 기록", () => {
             now: new Date("2026-09-13T03:10:00Z"),
         });
 
-        const kinds = inserts()
-            .filter((row) => row.sql.includes('"analytics_daily_counts"'))
-            .map((row) => row.values[1]);
-        expect(kinds).toEqual(expect.arrayContaining(["pageviews", "page"]));
-        expect(kinds).not.toContain("visitors");
+        // INSERT … DO NOTHING … RETURNING 이 새로 들어간 때만 한 줄 → 그때만 방문자 줄이 생긴다
+        const sql = pageViewStatement().sql;
+        expect(sql).toMatch(/ON CONFLICT DO NOTHING\s+RETURNING 1/);
+        expect(sql).toMatch(/SELECT 'visitors', '' FROM visitor/);
+        expect(sql).toMatch(
+            /SELECT 'audienceVisitor', \? ?(::text)? ?FROM visitor/
+        );
+        // 행을 늘 같은 순서로 잠근다
+        expect(sql).toContain('ORDER BY "kind", "key"');
     });
 
     it("봇이나 목록에 없는 페이지는 아무것도 쓰지 않는다", async () => {

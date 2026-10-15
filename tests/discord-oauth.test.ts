@@ -439,7 +439,7 @@ describe("Discord OAuth", () => {
                 discord_name: "Discord User",
                 discord_username: "discord-user",
             }),
-            select: { id: true, locale: true },
+            select: { id: true, locale: true, role: true },
         });
         expect(mocks.session.id).toBe(7);
         expect(mocks.session.profileCompleted).toBe(false);
@@ -492,5 +492,27 @@ describe("Discord OAuth", () => {
         expect(new URL(response.headers.get("location")!).pathname).toBe(
             "/music"
         );
+    });
+
+    it("다시 로그인할 때 값이 그대로면 쓰지 않고 캐시도 비우지 않는다", async () => {
+        mocks.session.discordOAuthState = "state";
+        mockDiscordSuccess();
+        mocks.userFindUnique.mockResolvedValueOnce({
+            id: 3,
+            avatar: "https://blob.example/avatar.webp",
+            avatar_user_managed: true,
+            discord_name: "Saved",
+            discord_username: "saved",
+            profile_completed_at: new Date("2026-07-19"),
+            locale: "ko",
+        });
+
+        await completeDiscordOAuth(
+            request("/discord/complete?code=code&state=state")
+        );
+
+        expect(mocks.userUpdate).not.toHaveBeenCalled();
+        expect(mocks.revalidateTag).not.toHaveBeenCalled();
+        expect(mocks.session.id).toBe(3);
     });
 });

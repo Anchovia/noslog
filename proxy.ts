@@ -121,20 +121,28 @@ export async function proxy(request: NextRequest, event?: NextFetchEvent) {
     }
 
     const session = await getSession();
+    // 언어 · 통계용 역할이 세션에 없을 때만 DB 를 읽어 세션에 채운다 — 로그인 API 호출마다 읽지 않게(2026-10-15 S8)
+    const needsLocale = Boolean(session.id) && !isLocale(session.locale);
+    const needsRole =
+        shouldRecordApiCall && Boolean(session.id) && !session.role;
     const sessionUser =
-        session.id && (!isLocale(session.locale) || shouldRecordApiCall)
+        session.id && (needsLocale || needsRole)
             ? await db.user.findUnique({
                   where: { id: session.id },
                   select: { locale: true, role: true },
               })
             : null;
-    if (session.id && !isLocale(session.locale)) {
-        if (isLocale(sessionUser?.locale)) {
-            session.locale = sessionUser.locale;
-            await session.save();
-        }
+    let sessionChanged = false;
+    if (needsLocale && isLocale(sessionUser?.locale)) {
+        session.locale = sessionUser.locale;
+        sessionChanged = true;
     }
-    if (shouldRecordApiCall && sessionUser?.role !== "admin") {
+    if (needsRole && sessionUser) {
+        session.role = sessionUser.role;
+        sessionChanged = true;
+    }
+    if (sessionChanged) await session.save();
+    if (shouldRecordApiCall && session.role !== "admin") {
         event!.waitUntil(recordApiCall(requestedPathname).catch(() => null));
     }
     const localeCookie = request.cookies.get(LOCALE_COOKIE_NAME)?.value;

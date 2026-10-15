@@ -48,7 +48,7 @@ describe("브라우저 통계 수집", () => {
     });
 
     it("관리자의 방문과 외부 서비스 호출은 기록하지 않는다", async () => {
-        mocks.getSession.mockResolvedValue({ id: 1 });
+        mocks.getSession.mockResolvedValue({ id: 1, save: vi.fn() });
         mocks.userFindUnique.mockResolvedValue({ role: "admin" });
 
         const view = await POST(request({ type: "view", path: "/ko/music" }));
@@ -61,7 +61,7 @@ describe("브라우저 통계 수집", () => {
     });
 
     it("일반 회원의 방문은 로그인 이용자로 기록한다", async () => {
-        mocks.getSession.mockResolvedValue({ id: 2 });
+        mocks.getSession.mockResolvedValue({ id: 2, save: vi.fn() });
 
         await POST(request({ type: "view", path: "/ko/music" }));
 
@@ -75,6 +75,19 @@ describe("브라우저 통계 수집", () => {
             userAgent: CHROME,
             signedIn: true,
         });
+    });
+
+    it("세션에 역할이 있으면 계정을 다시 읽지 않는다(2026-10-15 S8)", async () => {
+        mocks.getSession.mockResolvedValue({
+            id: 2,
+            role: "user",
+            save: vi.fn(),
+        });
+
+        await POST(request({ type: "view", path: "/ko/music" }));
+
+        expect(mocks.userFindUnique).not.toHaveBeenCalled();
+        expect(mocks.recordPageView).toHaveBeenCalledOnce();
     });
 
     it("비회원의 외부 서비스 호출은 계정 조회 없이 기록한다", async () => {
