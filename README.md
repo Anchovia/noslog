@@ -82,7 +82,8 @@ npm run dev
 
 개발 서버는 [http://localhost:3000](http://localhost:3000)에서 실행됩니다.
 
-E2E 테스트는 공유 DB가 아닌 로컬 PostgreSQL에서만 실행합니다.
+E2E 테스트는 공유 DB가 아닌 로컬 PostgreSQL에서, 운영 빌드(`next start`)를 3100 포트에 띄워 실행합니다.
+개발 서버(3000)와 겹치지 않게 리포 밖 복사본에서 서버를 띄우는 절차는 [AGENTS.md](AGENTS.md)의 e2e 항목을 따릅니다.
 
 ```bash
 npm run db:migrate:deploy
@@ -103,7 +104,6 @@ npm run test:e2e
 | `npm run test:a11y`          | 접근성 E2E 테스트     |
 | `npm run storybook`          | 공용 UI 개발·문서     |
 | `npm run test:storybook`     | 부품 동작·접근성 검사 |
-| `npm run test:visual:docker` | Linux 기준 시각 비교  |
 | `npm run build-storybook`    | 공용 UI 문서 빌드     |
 | `npm run check:dependencies` | 사용 중인 의존성 검사 |
 | `npm run audit:production`   | 운영 의존성 보안 검사 |
@@ -139,7 +139,7 @@ README에는 프로젝트를 시작하는 데 필요한 내용만 두고, 화면
 
 ## 테스트와 CI
 
-로컬에서 변경을 확인할 때 다음 명령을 순서대로 실행합니다.
+로컬에서 변경을 확인할 때 다음 명령을 실행합니다.
 
 ```bash
 npm run lint
@@ -148,13 +148,23 @@ npm test
 npm run build
 ```
 
-GitHub Actions의 `verify` 작업은 의존성 설치, 의존성 선언·운영 보안 검사, 린트, Vitest, 타입 검사와 프로덕션 빌드를 확인합니다. E2E 작업은 저장소 변수 `RUN_E2E=true`일 때 로컬 PostgreSQL 16과 Playwright Chromium으로 실행됩니다.
+`npm test`는 단위 테스트와 DB 통합 테스트를 함께 돌립니다. DB 통합 테스트는 `TEST_DATABASE_URL`(로컬 PostgreSQL)이 있을 때만 실행되고 없으면 건너뜁니다.
 
-`storybook` CI 작업은 DB 없이 공용 UI의 동작·접근성 검사와 Storybook 빌드를 실행합니다.
+GitHub Actions `CI`는 `dev`·`main` 푸시마다 다음 잡을 나란히 실행하고, 마지막 `ci-ok`가 그 결과를 모읍니다. `main` 병합에는 `ci-ok`만 필수입니다.
+
+| 잡          | 내용                                                          |
+| ----------- | ------------------------------------------------------------- |
+| `lint`      | ESLint · Prettier · 의존성 선언                               |
+| `unit`      | Vitest 단위 테스트 + PostgreSQL 16 DB 통합 테스트             |
+| `build`     | 프로덕션 빌드(프로젝트 전체 타입 검사 포함)                   |
+| `storybook` | 공용 UI 동작·접근성·폭 계약 검사와 Storybook 빌드             |
+| `e2e`       | 운영 빌드 대상 Playwright(PostgreSQL 16, 모바일 기본 + 두 폭) |
+
+의존성 보안은 `Dependencies` 워크플로가 PR의 새 의존성 검토와 주 1회 운영 의존성 감사로 따로 확인합니다.
 사용법은 [공용 UI 가이드](docs/ui/README.md), 협업 규칙은
 [CONVENTION.md](docs/CONVENTION.md), 코드 작성 규칙은 [코드 스타일](docs/code-style.md)을 따릅니다.
 
-운영 의존성 검사는 moderate 이상 권고가 있으면 실패합니다. 전체 개발 의존성까지
+주간 운영 의존성 감사는 moderate 이상 권고가 있으면 실패합니다. 전체 개발 의존성까지
 확인할 때는 `npm audit`를 실행합니다. 2026-10-08 보안 패치 후 운영 권고는 0건이며,
 전체 감사에는 ESLint의 `fast-glob → micromatch → braces` 경로에서 파생된 high 5건이
 남습니다. [braces 권고](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm)는 현재 수정 버전이

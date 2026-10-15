@@ -30,12 +30,13 @@ Tailwind 4: 설정은 CSS(`app/globals.css`), `tailwind.config` 를 만들지 �
 
 - `npm run typecheck` · `npm run lint` · `npm test`(파일 하나는 `npx vitest run tests/<파일>`) · `npm run build`
 - **e2e** — 화면 · 흐름을 바꿨고 관련 스펙이 있으면 그 스펙 하나를 로컬에서 돌린다(전체는 먼저 묻는다). 사용자의 localhost:3000 에는 돌리지 않는다
-  (`PLAYWRIGHT_BASE_URL` 이 없으면 그리로 간다). 한 번에 한 세션 — 포트 3100 이 쓰이고 있으면 기다린다. 확인된 절차(2026-09-22):
+  (설정 기본값은 3100). 한 번에 한 세션 — 포트 3100 이 쓰이고 있으면 기다린다. 확인된 절차(2026-10-15):
     1. 리포를 리포 밖 임시 폴더로 복사(`.git` · `.next` · `node_modules` · `.env*` 제외), `node_modules` 는 `cp -c -R` 로 복제(링크는 Turbopack 이 거부).
        `.env` 는 e2e 값만 새로 쓴다(`DATABASE_URL=postgresql://<사용자>@localhost:5432/noslog_e2e` · 임시 `COOKIE_PASSWORD` · `BOOKMARKLET_SECRET`) —
        실제 `.env*` 를 가져오지 않는다(`.env.production.local` 에 운영 값이 있다).
     2. 복사본에서 `npx prisma migrate deploy` → `E2E_SEED=1 npm run db:seed:e2e` → `node prisma/import-music-catalog.mjs --apply`.
-    3. 복사본에서 `npx next dev -p 3100`, `PLAYWRIGHT_BASE_URL=http://localhost:3100 npx playwright test e2e/<스펙>`. 끝나면 3100 서버를 끈다.
+    3. 복사본에서 `npx next build && npx next start -p 3100`(운영 빌드 — CI 와 같다), 리포에서
+       `DATABASE_URL=<위 e2e 주소> npx playwright test e2e/<스펙>`. 기본은 모바일 한 폭, 두 폭이 필요한 테스트만 `@responsive` · `@desktop` 태그. 끝나면 3100 서버를 끈다.
 
 ## 사용자 규칙
 
