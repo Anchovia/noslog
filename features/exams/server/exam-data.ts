@@ -103,15 +103,19 @@ export async function getUserExamState(
     examIds: number[],
     chartIds: number[]
 ) {
-    const [user, records, achievements, submissions] = await Promise.all([
+    const [user, records, submissions] = await Promise.all([
         db.user.findUnique({
             where: { id: userId },
             select: {
                 grade_basic: true,
                 grade_recital: true,
                 nostalgia_name: true,
+                // 합격 기록은 여기서 한 번만 읽는다 — 이 검정들의 합격 여부도 이 목록에서(2026-10-15 S6)
                 examAchievements: {
-                    select: { exam: { select: { mode: true, grade: true } } },
+                    select: {
+                        examId: true,
+                        exam: { select: { mode: true, grade: true } },
+                    },
                 },
             },
         }),
@@ -138,12 +142,6 @@ export async function getUserExamState(
               })
             : Promise.resolve([]),
         examIds.length > 0
-            ? db.examAchievement.findMany({
-                  where: { userId, examId: { in: examIds } },
-                  select: { examId: true },
-              })
-            : Promise.resolve([]),
-        examIds.length > 0
             ? db.examSubmission.findMany({
                   where: { userId, examId: { in: examIds } },
                   select: {
@@ -156,5 +154,8 @@ export async function getUserExamState(
             : Promise.resolve([]),
     ]);
 
+    const wanted = new Set(examIds);
+    const achievements =
+        user?.examAchievements.filter((item) => wanted.has(item.examId)) ?? [];
     return { user, records, achievements, submissions };
 }

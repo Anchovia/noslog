@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useMemo, useRef, useState } from "react";
 
 import {
@@ -21,7 +20,6 @@ export function useBingoProgress(
 ) {
     const locale = useLocale();
     const t = useTranslations();
-    const router = useRouter();
     const [completed, setCompleted] = useState(
         () => new Set(bingo.completedCellIds)
     );
@@ -120,7 +118,6 @@ export function useBingoProgress(
         } else {
             setMessage(t("bingo.saved"));
             setHasSavedProgress(true);
-            router.refresh();
         }
     }
     async function reset() {
@@ -147,7 +144,6 @@ export function useBingoProgress(
         setHasSavedProgress(false);
         setFailed(null);
         setMessage(t("bingo.resetSuccess"));
-        router.refresh();
         return true;
     }
     return {

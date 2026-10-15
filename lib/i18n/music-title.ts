@@ -1,4 +1,5 @@
 import db from "@/lib/db";
+import { getSessionUser } from "@/lib/user";
 
 import type { Locale } from "./routing";
 
@@ -6,6 +7,11 @@ export async function getMusicTitleDisplayPreference(
     userId: number | null | undefined
 ) {
     if (!userId) return true;
+
+    // 로그인한 본인이면 레이아웃이 이미 읽은 행을 쓴다(React cache) — 같은 요청에서 User 를 다시 읽지 않게(2026-10-15 S6)
+    const { user: sessionUser } = await getSessionUser();
+    if (sessionUser?.id === userId)
+        return sessionUser.show_localized_music_title ?? true;
 
     const user = await db.user.findUnique({
         where: { id: userId },

@@ -1,6 +1,7 @@
 import "server-only";
 
 import { unstable_cache } from "next/cache";
+import { cache } from "react";
 
 import { getAchievementRecords } from "@/features/achievements/server/achievement-service";
 import { getContributionTotal } from "@/features/contributions/server/contribution-point-service";
@@ -126,14 +127,15 @@ async function queryProfileData(id: number) {
     };
 }
 
-// 프로필 공개 데이터는 사용자 ID별로 캐시함
-export function getCachedProfileData(id: number) {
-    return unstable_cache(
+// 프로필 공개 데이터는 사용자 ID별로 캐시함.
+// 한 요청 안의 메타데이터 · 레이아웃 · 페이지가 같은 결과를 나눠 쓴다(React cache) — 캐시가 비었을 때 계산이 겹치지 않게(2026-10-15 S6)
+export const getCachedProfileData = cache((id: number) =>
+    unstable_cache(
         () => queryProfileData(id),
         ["profile-public-visibility-v6", String(id)],
         {
             revalidate: PUBLIC_DATA_REVALIDATE_SECONDS,
             tags: [CACHE_TAGS.userProfiles, getUserProfileTag(id)],
         }
-    )();
-}
+    )()
+);

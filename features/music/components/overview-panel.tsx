@@ -45,7 +45,12 @@ export default function OverviewPanel({
     const locale = useLocale();
     const href = useLocalizedHref();
     const chart = data.chartDetail;
-    const pattern = useQuery(communityPatternOptions(chart.id));
+    const pattern = useQuery({
+        ...communityPatternOptions(chart.id),
+        initialData: data.patternSummary
+            ? { pattern: data.patternSummary }
+            : undefined,
+    });
     const id = useId();
     const summary = pattern.data?.pattern;
     const evaluatorCount = summary

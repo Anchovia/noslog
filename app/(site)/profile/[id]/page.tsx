@@ -78,7 +78,7 @@ export default async function ProfilePage({
         stats,
         pinned,
     ] = await Promise.all([
-        getProfileOverviewContext(id, isOwner),
+        getProfileOverviewContext(id),
         getPublicProfilePlays(id, {
             kind: "best",
             mode,
