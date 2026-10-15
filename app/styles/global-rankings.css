@@ -132,13 +132,14 @@
 }
 .noslog-ui .nl-player-row__identity > .nl-term {
     position: relative;
-    z-index: 1;
+    z-index: var(--nl-layer-above);
 }
 @media (hover: hover) {
     .noslog-ui .nl-player-row:has(.nl-player-row__link:hover) {
+        --nl-state-layer: var(--nl-interaction-hover);
         background-image: linear-gradient(
-            var(--nl-interaction-hover),
-            var(--nl-interaction-hover)
+            var(--nl-state-layer),
+            var(--nl-state-layer)
         );
     }
 }

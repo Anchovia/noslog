@@ -77,6 +77,13 @@
     width: 100%;
     min-width: 0;
 }
+/* 올림 = 제목 밑줄 — 이벤트 카드와 같은 그림 카드 규칙(2026-10-15 hover 점검) */
+@media (hover: hover) {
+    .noslog-ui .nl-bingo-card:hover .nl-bingo-card__title {
+        text-decoration: underline;
+        text-underline-position: under;
+    }
+}
 .noslog-ui .nl-bingo-card__cover {
     display: block;
     width: 100%;
@@ -378,6 +385,19 @@
     border-radius: var(--nl-radius-control);
     color: var(--nl-content-default);
     text-align: start;
+}
+/* 올림 = 칸 면 위 6% — 줄 칸(이미 겹침) · 완성 칸(채운 면)은 그대로 */
+@media (hover: hover) {
+    .noslog-ui
+        .nl-bingo-board__cell:not([data-line="true"]):not(
+            [data-completed="true"]
+        ):hover {
+        --nl-state-layer: var(--nl-interaction-hover);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
+    }
 }
 .noslog-ui .nl-bingo-board__text {
     display: -webkit-box;

@@ -528,6 +528,28 @@ html[data-theme="light"] .noslog-ui,
     line-height: var(--nl-type-line-height-20);
     font-weight: var(--nl-type-weight-medium);
 }
+/* 공용 올림 면 — 제 면 위 6% 겹침만 더한다(모서리 · 면 색은 요소 것 그대로). 전용 부품 클래스가 없는 줄 · 버튼에 쓴다
+   (관리자 · 에디터의 Tailwind 줄 — 면을 raised 로 바꾸던 hover:bg-nl-raised 대신, 2026-10-15 hover 점검) */
+@media (hover: hover) {
+    .noslog-ui .nl-hover-layer:not(:disabled):hover {
+        --nl-state-layer: var(--nl-interaction-hover);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
+    }
+}
+/* 고르지 않은 칸 올림 = 제 판 위 6%(2026-10-15 hover 점검) — 고른 칸은 고른 칩처럼 반응 없음 */
+@media (hover: hover) {
+    .noslog-ui
+        .nl-segments__item:not([aria-checked="true"]):not(:disabled):hover {
+        --nl-state-layer: var(--nl-interaction-hover);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
+    }
+}
 /* 고른 칸 = 면 한 단계 위 · 선 없음(2026-09-30 K1) */
 .noslog-ui .nl-segments__item[aria-checked="true"] {
     background: var(--nl-surface-control-selected);
@@ -1054,7 +1076,7 @@ html[data-theme="light"] .noslog-ui,
             )
         )
         > .nl-dialog__header {
-        min-height: 60px;
+        min-height: var(--nl-header-height);
         padding: var(--nl-spacing-8) var(--nl-spacing-8) var(--nl-spacing-8)
             var(--nl-spacing-16);
     }
@@ -2130,7 +2152,7 @@ html[data-theme="light"] .noslog-ui,
    목록 밖(탭 밑줄 · 펼침 · 툴팁 · 체크박스 · 누름 크기 · 스크롤 연출 · 페이지 이동)은 즉시 바뀐다 */
 
 /* ① 올림 · 누름 색 — 누를 수 있는 모든 것에 같은 값. 배경 · 글자색만(포커스 선 · 경계는 즉시).
-   label 로 만든 줄(체크 목록 · 밴드 선택 · 첨부 버튼), 누를 줄을 품고 올림 면을 칠하는 카드(펼침 카드 · 오락실 결과),
+   label 로 만든 줄(체크 목록 · 밴드 선택 · 첨부 버튼), 누를 줄을 품고 올림 면을 칠하는 카드(펼침 카드 · 오락실 결과 · 순위표 줄),
    올림 면을 ::before 로 그리는 버튼(검색 안 셀렉트 · 지우기)도 같은 값 */
 .noslog-ui
     :is(
@@ -2143,7 +2165,8 @@ html[data-theme="light"] .noslog-ui,
         [role="option"],
         [role="menuitem"],
         [role="tab"],
-        .nl-arcade-result
+        .nl-arcade-result,
+        .nl-player-row
     ),
 .noslog-ui :is(a, button)::before {
     transition:
@@ -2324,7 +2347,7 @@ html:has(.noslog-ui) [data-sonner-toaster] [data-sonner-toast] > * {
     }
     /* 머리 = 전체 화면 창과 같은 60 */
     .noslog-ui .nl-image-share > .nl-dialog__header {
-        min-height: 60px;
+        min-height: var(--nl-header-height);
         padding: var(--nl-spacing-8) var(--nl-spacing-8) var(--nl-spacing-8)
             var(--nl-spacing-16);
     }

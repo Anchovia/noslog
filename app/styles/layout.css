@@ -50,6 +50,12 @@
     gap: var(--nl-spacing-8);
     min-height: 44px;
 }
+@media (hover: hover) {
+    .noslog-ui .nl-back-link:hover {
+        text-decoration: underline;
+        text-underline-offset: var(--nl-underline-offset);
+    }
+}
 .noslog-ui .nl-back-link svg {
     width: var(--nl-icon-small);
     height: var(--nl-icon-small);
@@ -171,6 +177,7 @@
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    border-radius: var(--nl-radius-field);
 }
 .noslog-ui .nl-nav-trigger > svg {
     width: var(--nl-icon-large);

@@ -164,6 +164,7 @@
 .noslog-ui .nl-tier-band-option {
     width: 100%;
     padding-inline: var(--nl-spacing-12);
+    border-radius: var(--nl-radius-control);
 }
 .noslog-ui .nl-tier-band-option > span:last-child {
     display: flex;
