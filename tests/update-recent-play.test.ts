@@ -4,6 +4,7 @@ const mocks = vi.hoisted(() => ({
     musicChartFindMany: vi.fn(),
     historyFindMany: vi.fn(),
     historyUpsert: vi.fn(),
+    historyCreateMany: vi.fn(),
     transaction: vi.fn(),
 }));
 
@@ -13,6 +14,7 @@ vi.mock("@/lib/db", () => ({
         chartPlayHistory: {
             findMany: mocks.historyFindMany,
             upsert: mocks.historyUpsert,
+            createMany: mocks.historyCreateMany,
         },
         $transaction: mocks.transaction,
     },
@@ -56,42 +58,66 @@ describe("최근 플레이 저장", () => {
         ]);
         mocks.historyFindMany.mockResolvedValue([]);
         mocks.historyUpsert.mockResolvedValue({ id: 1 });
+        mocks.historyCreateMany.mockResolvedValue({ count: 1 });
         mocks.transaction.mockImplementation((queries) => Promise.all(queries));
     });
 
-    it("신규 최근 플레이를 상세 판정과 함께 저장한다", async () => {
+    it("신규 최근 플레이를 상세 판정과 함께 한 문장으로 저장한다", async () => {
         const inserted = await updateRecentPlay(1, history, 10);
 
         expect(inserted).toEqual({ insertedPlays: 1, skippedCharts: [] });
-        expect(mocks.historyUpsert).toHaveBeenCalledWith({
-            where: {
-                user_id_chart_id_source_play_time_score_max_combo_rank: {
+        expect(mocks.historyCreateMany).toHaveBeenCalledWith({
+            data: [
+                expect.objectContaining({
                     user_id: 1,
                     chart_id: 7,
                     source_play_time: "2026/07/14 14:19",
                     score: 973886,
                     max_combo: 637,
                     rank: "S",
-                },
-            },
-            create: expect.objectContaining({
-                best_score: 976654,
-                class_basic: "03",
-                fast_count: 89,
-                slow_count: 15,
-                judge_sjust: 1485,
-                judge_near: 0,
-                first_sync_id: 10,
-            }),
-            update: expect.objectContaining({
-                best_score: 976654,
-                class_basic: "03",
-                fast_count: 89,
-                slow_count: 15,
-                judge_sjust: 1485,
-                judge_near: 0,
-            }),
+                    best_score: 976654,
+                    class_basic: "03",
+                    fast_count: 89,
+                    slow_count: 15,
+                    judge_sjust: 1485,
+                    judge_near: 0,
+                    first_sync_id: 10,
+                }),
+            ],
+            skipDuplicates: true,
         });
+        // 새 플레이에는 upsert 를 쓰지 않는다(2026-10-15 S9)
+        expect(mocks.historyUpsert).not.toHaveBeenCalled();
+    });
+
+    it("이미 저장된 플레이의 값이 같으면 아무것도 쓰지 않는다", async () => {
+        mocks.historyFindMany.mockResolvedValue([
+            {
+                chart_id: 7,
+                source_play_time: "2026/07/14 14:19",
+                score: 973886,
+                max_combo: 637,
+                rank: "S",
+                level: 2,
+                best_score: 976654,
+                grade_basic: 11120,
+                class_basic: "03",
+                fast_count: 89,
+                slow_count: 15,
+                is_onehand: false,
+                judge_sjust: 1485,
+                judge_just: 77,
+                judge_good: 27,
+                judge_miss: 15,
+                judge_near: 0,
+            },
+        ]);
+
+        const inserted = await updateRecentPlay(1, history, 11);
+
+        expect(inserted).toEqual({ insertedPlays: 0, skippedCharts: [] });
+        expect(mocks.historyCreateMany).not.toHaveBeenCalled();
+        expect(mocks.historyUpsert).not.toHaveBeenCalled();
     });
 
     it("기존 최근 플레이도 재연동 시 상세 필드를 갱신한다", async () => {
@@ -131,7 +157,10 @@ describe("최근 플레이 저장", () => {
                 insertedPlays: 1,
                 skippedCharts: [{ musicIndex: "unknown", difficulty: "Real" }],
             });
-            expect(mocks.historyUpsert).toHaveBeenCalledOnce();
+            expect(mocks.historyCreateMany).toHaveBeenCalledOnce();
+            expect(mocks.historyCreateMany.mock.calls[0][0].data).toHaveLength(
+                1
+            );
             expect(info).toHaveBeenCalledWith("Recent play ingestion", {
                 syncId: 12,
                 received: 3,

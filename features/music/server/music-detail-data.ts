@@ -3,7 +3,7 @@ import "server-only";
 import { unstable_cache } from "next/cache";
 
 import { PUBLIC_DATA_REVALIDATE_SECONDS } from "@/lib/cache-policy";
-import { CACHE_TAGS } from "@/lib/cache-tags";
+import { CACHE_TAGS, getChartRankingTag } from "@/lib/cache-tags";
 import db from "@/lib/db";
 import {
     buildPeerScoreComparison,
@@ -101,27 +101,28 @@ export const getCachedMusicDetail = unstable_cache(
 
 // 상세 탭에서 사용하는 점수 분포를 캐시함
 // 점수 분포(점수 자 위 점)도 점수 비공개 플레이어를 뺀다 — 비공개인 본인이 볼 때만 자기 점수를 넣는다
-export const getCachedChartDetailStats = unstable_cache(
-    async (chartId: number, includeUserId = 0) => {
-        const scores = await db.playData.findMany({
-            where: {
-                chart_id: chartId,
-                score: { gt: 0 },
-                user: {
-                    OR: [{ hide_play_scores: false }, { id: includeUserId }],
-                },
+const queryChartDetailStats = async (chartId: number, includeUserId = 0) => {
+    const scores = await db.playData.findMany({
+        where: {
+            chart_id: chartId,
+            score: { gt: 0 },
+            user: {
+                OR: [{ hide_play_scores: false }, { id: includeUserId }],
             },
-            select: { score: true, fc_type: true },
-        });
+        },
+        select: { score: true, fc_type: true },
+    });
 
-        return { scores };
-    },
-    ["music-detail-stats-v2"],
-    {
+    return { scores };
+};
+
+// 채보별 태그로 동기화가 바뀐 채보만 비운다(chart-ranking.ts 와 같은 방식)
+export function getCachedChartDetailStats(chartId: number, includeUserId = 0) {
+    return unstable_cache(queryChartDetailStats, ["music-detail-stats-v3"], {
         revalidate: PUBLIC_DATA_REVALIDATE_SECONDS,
-        tags: [CACHE_TAGS.chartRankings],
-    }
-);
+        tags: [CACHE_TAGS.chartRankings, getChartRankingTag(chartId)],
+    })(chartId, includeUserId);
+}
 
 export function getUserChartRecord(userId: number, chartId: number) {
     return db.playData.findFirst({

@@ -16,3 +16,8 @@ export const CACHE_TAGS = {
 export function getUserProfileTag(userId: number) {
     return `user-profile-${userId}`;
 }
+
+// 채보 하나의 순위 · 점수 분포 — 동기화는 바뀐 채보만 비운다(전체는 CACHE_TAGS.chartRankings)
+export function getChartRankingTag(chartId: number) {
+    return `chart-ranking-${chartId}`;
+}

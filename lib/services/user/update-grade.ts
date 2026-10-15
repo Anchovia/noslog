@@ -59,8 +59,10 @@ export async function updateGrade(user_id: number) {
         console.info("(5)유저 그레이드 업데이트 완료");
 
         // 유저 베스트 그레이드 생성 및 같은 날짜 데이터인 경우 높은값으로 처리
+        // 오늘 날짜 행만 읽는다(2026-10-15 S9) — 예전에는 날마다 쌓이는 이력 전체를 읽고 걸렀다.
+        // besttime 은 「YYYY-MM-DD」 로 시작하므로 앞부분 일치로 같은 행을 고른다(@@index([user_id, besttime]))
         const gradeHistory = await tx.userBestGrade.findMany({
-            where: { user_id },
+            where: { user_id, besttime: { startsWith: today } },
             select: { id: true, besttime: true },
             orderBy: [{ besttime: "asc" }, { id: "asc" }],
         });
@@ -106,4 +108,5 @@ export async function updateGrade(user_id: number) {
     console.info(
         `===[유저 그레이드 및 베스트 플레이 데이터 업데이트 완료(${duration}ms)]===`
     );
+    return { grade_basic: basicGrade, grade_recital: recitalGrade };
 }

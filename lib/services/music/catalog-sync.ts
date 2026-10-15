@@ -239,6 +239,81 @@ async function recordCatalogCandidate(
     });
 }
 
+/**
+ * 일반 사용자 동기화가 본 카탈로그 차이 — 한 번 읽고 묶어서 쓴다(2026-10-15 S9, 예전에는 곡마다 읽기 + 쓰기를 동시에).
+ * 같은 지문이면 payload 도 같아(지문 = payload 해시) 다시 쓰지 않는다. 상태 규칙은 recordCatalogCandidate 와 같다
+ */
+async function recordPendingCatalogCandidates(
+    updates: DetectedCatalogUpdate[]
+) {
+    const key = (musicIndex: string, fingerprint: string) =>
+        `${musicIndex}:${fingerprint}`;
+    const existing = await db.musicCatalogCandidate.findMany({
+        where: {
+            OR: updates.map((update) => ({
+                musicIndex: update.payload.musicIndex,
+                fingerprint: update.fingerprint,
+            })),
+        },
+        select: { id: true, musicIndex: true, fingerprint: true, status: true },
+    });
+    const found = new Set(
+        existing.map((item) => key(item.musicIndex, item.fingerprint))
+    );
+    const created = updates.filter(
+        (update) =>
+            !found.has(key(update.payload.musicIndex, update.fingerprint))
+    );
+    const reopened = existing
+        .filter((item) => item.status !== "rejected")
+        .map((item) => item.id);
+    const rejected = existing
+        .filter((item) => item.status === "rejected")
+        .map((item) => item.id);
+    const now = new Date();
+    await db.$transaction([
+        ...(created.length
+            ? [
+                  db.musicCatalogCandidate.createMany({
+                      data: created.map((update) => ({
+                          musicIndex: update.payload.musicIndex,
+                          fingerprint: update.fingerprint,
+                          payload: update.payload as Prisma.InputJsonValue,
+                          ...(update.beforeSnapshot
+                              ? {
+                                    beforeSnapshot:
+                                        update.beforeSnapshot as Prisma.InputJsonValue,
+                                }
+                              : {}),
+                          status: "pending" as const,
+                      })),
+                      skipDuplicates: true,
+                  }),
+              ]
+            : []),
+        ...(reopened.length
+            ? [
+                  db.musicCatalogCandidate.updateMany({
+                      where: { id: { in: reopened } },
+                      data: {
+                          seenCount: { increment: 1 },
+                          lastSeenAt: now,
+                          status: "pending",
+                      },
+                  }),
+              ]
+            : []),
+        ...(rejected.length
+            ? [
+                  db.musicCatalogCandidate.updateMany({
+                      where: { id: { in: rejected } },
+                      data: { seenCount: { increment: 1 }, lastSeenAt: now },
+                  }),
+              ]
+            : []),
+    ]);
+}
+
 export async function processBemaniCatalogUpdates(
     music: SyncMusicInput[],
     trustedAdminSync: boolean
@@ -249,9 +324,7 @@ export async function processBemaniCatalogUpdates(
     }
 
     if (!trustedAdminSync) {
-        await Promise.all(
-            updates.map((update) => recordCatalogCandidate(update, "pending"))
-        );
+        await recordPendingCatalogCandidates(updates);
         return {
             detected: updates.length,
             pending: updates.length,

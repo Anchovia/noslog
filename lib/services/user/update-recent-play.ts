@@ -130,12 +130,58 @@ export async function updateRecentPlay(
             score: true,
             max_combo: true,
             rank: true,
+            level: true,
+            best_score: true,
+            grade_basic: true,
+            class_basic: true,
+            fast_count: true,
+            slow_count: true,
+            is_onehand: true,
+            judge_sjust: true,
+            judge_just: true,
+            judge_good: true,
+            judge_miss: true,
+            judge_near: true,
         },
     });
     const existingKeys = new Set(existingRows.map(identityKey));
+    const existingByKey = new Map(
+        existingRows.map((row) => [identityKey(row), row] as const)
+    );
+    // 새 플레이는 한 문장으로 넣고, 이미 있는 플레이는 값이 다를 때만 고친다(2026-10-15 S9) —
+    // 예전처럼 받은 100건을 모두 upsert 하지 않는다. 고치는 열 · 결과 행은 예전과 같다
+    const newRows = historyRows.filter(
+        (row) => !existingKeys.has(identityKey(row))
+    );
+    const changedRows = historyRows.filter((row) => {
+        const current = existingByKey.get(identityKey(row));
+        return (
+            current !== undefined &&
+            (current.level !== row.level ||
+                current.best_score !== row.best_score ||
+                current.grade_basic !== row.grade_basic ||
+                current.class_basic !== row.class_basic ||
+                current.fast_count !== row.fast_count ||
+                current.slow_count !== row.slow_count ||
+                current.is_onehand !== row.is_onehand ||
+                current.judge_sjust !== row.judge_sjust ||
+                current.judge_just !== row.judge_just ||
+                current.judge_good !== row.judge_good ||
+                current.judge_miss !== row.judge_miss ||
+                current.judge_near !== row.judge_near)
+        );
+    });
 
-    await db.$transaction(
-        historyRows.map((row) =>
+    await db.$transaction([
+        ...(newRows.length
+            ? [
+                  db.chartPlayHistory.createMany({
+                      data: newRows,
+                      skipDuplicates: true,
+                  }),
+              ]
+            : []),
+        ...changedRows.map((row) =>
             db.chartPlayHistory.upsert({
                 where: {
                     user_id_chart_id_source_play_time_score_max_combo_rank: {
@@ -163,13 +209,11 @@ export async function updateRecentPlay(
                     judge_near: row.judge_near,
                 },
             })
-        )
-    );
+        ),
+    ]);
 
     const duration = Date.now() - startTime;
-    const inserted = historyRows.filter(
-        (row) => !existingKeys.has(identityKey(row))
-    ).length;
+    const inserted = newRows.length;
     console.info("Recent play ingestion", {
         ...diagnostic,
         existing: historyRows.length - inserted,

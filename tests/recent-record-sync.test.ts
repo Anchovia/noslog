@@ -9,6 +9,7 @@ import type {
 const mocks = vi.hoisted(() => ({
     db: {
         $queryRaw: vi.fn(),
+        $executeRaw: vi.fn(),
         $transaction: vi.fn(),
         musicChart: { findMany: vi.fn() },
         dataSync: { findUniqueOrThrow: vi.fn() },
@@ -129,6 +130,31 @@ beforeEach(() => {
         started_at: syncTime,
     }));
     mocks.db.musicChart.findMany.mockResolvedValue([chart]);
+    // 랭크별 수(2026-10-15 S9) — 서비스가 SQL 로 세는 값을 같은 규칙으로 메모리에서 센다. 그 밖(행 잠금)은 빈 결과
+    mocks.db.$queryRaw.mockImplementation(
+        async (strings: TemplateStringsArray, ...values: unknown[]) => {
+            if (!strings.join("?").includes("FILTER")) return [];
+            const played = state.records.filter(
+                (record) =>
+                    record.user_id === values[0] && record.play_count > 0
+            );
+            const rank = (value: string) =>
+                played.filter((record) => record.rank === value).length;
+            return [
+                {
+                    p: rank("P"),
+                    s: rank("S"),
+                    a2: rank("A2"),
+                    a: rank("A"),
+                    b2: rank("B2"),
+                    b: rank("B"),
+                    c: rank("C"),
+                    d: rank("D"),
+                    f: played.filter((record) => record.fc_type === 2).length,
+                },
+            ];
+        }
+    );
     mocks.db.user.findUniqueOrThrow.mockImplementation(async () => ({
         last_full_record_at: state.fullAt,
     }));
@@ -160,16 +186,70 @@ beforeEach(() => {
             else state.records.push(structuredClone(create));
         }
     );
+    // 전체 기록(2026-10-15 D6) — 응답에 없는 채보만 지우고, 바뀐 줄은 (user_id, chart_id) 로 넣거나 고친다
     mocks.db.playData.deleteMany.mockImplementation(
-        async ({ where }: { where: { user_id: number } }) => {
+        async ({
+            where,
+        }: {
+            where: {
+                user_id: number;
+                OR: [unknown, { chart_id: { notIn: number[] } }];
+            };
+        }) => {
+            const kept = where.OR[1].chart_id.notIn;
             state.records = state.records.filter(
-                (r) => r.user_id !== where.user_id
+                (r) => r.user_id !== where.user_id || kept.includes(r.chart_id)
             );
         }
     );
-    mocks.db.playData.createMany.mockImplementation(
-        async ({ data }: { data: StoredRecord[] }) => {
-            state.records.push(...structuredClone(data));
+    const upsertColumns = [
+        "user_id",
+        "chart_id",
+        "music_idx",
+        "difficulty",
+        "level",
+        "score",
+        "rank",
+        "fc_type",
+        "play_count",
+        "clear_count",
+        "clear_flag",
+        "fullcombo_count",
+        "pianistic_count",
+        "max_combo",
+        "grade_basic",
+        "grade_recital",
+        "judge_sjust",
+        "judge_just",
+        "judge_good",
+        "judge_miss",
+        "judge_near",
+        "note_rate_standard",
+        "note_rate_tenuto",
+        "note_rate_glissando",
+        "note_rate_trill",
+        "besttime",
+    ] as const;
+    mocks.db.$executeRaw.mockImplementation(
+        async (_strings: TemplateStringsArray, rows: Prisma.Sql) => {
+            for (
+                let start = 0;
+                start < rows.values.length;
+                start += upsertColumns.length
+            ) {
+                const row = Object.fromEntries(
+                    upsertColumns.map((column, index) => [
+                        column,
+                        rows.values[start + index],
+                    ])
+                ) as StoredRecord;
+                const existing = state.records.find(
+                    (r) =>
+                        r.chart_id === row.chart_id && r.user_id === row.user_id
+                );
+                if (existing) Object.assign(existing, row);
+                else state.records.push(row);
+            }
         }
     );
     mocks.db.chartPlayHistory.findMany.mockImplementation(
@@ -228,7 +308,10 @@ describe("recent/full record persistence with an isolated transaction double", (
             history(2, "2026/09/20 10:10", 990000),
             { ...history(3, "2026/09/20 10:20"), user_id: 2 }
         );
-        expect(await updateRecentBestRecords(1, 1)).toBe(1);
+        expect(await updateRecentBestRecords(1, 1)).toEqual({
+            changedRecords: 1,
+            changedChartIds: [10],
+        });
         expect(state.records[0]).toMatchObject({
             play_count: 2,
             score: 990000,
@@ -236,7 +319,10 @@ describe("recent/full record persistence with an isolated transaction double", (
         });
         expect(state.stats.score_s).toBe(1);
         expect(state.history[2].record_applied).toBe(false);
-        expect(await updateRecentBestRecords(1, 2)).toBe(0);
+        expect(await updateRecentBestRecords(1, 2)).toEqual({
+            changedRecords: 0,
+            changedChartIds: [],
+        });
         expect(state.records[0].play_count).toBe(2);
         expect(state.snapshots).toHaveLength(1);
         expect(mocks.db.$queryRaw).toHaveBeenCalled();
@@ -268,7 +354,10 @@ describe("recent/full record persistence with an isolated transaction double", (
         state.history.push(history(1, "2026/09/20 10:00"));
         await updateRecentBestRecords(1, 1);
         expect(state.records[0].play_count).toBe(1);
-        await updatePlayData(1, full(), 2);
+        expect(await updatePlayData(1, full(), 2)).toEqual({
+            changedRecords: 1,
+            changedChartIds: [10],
+        });
         expect(state.records[0]).toMatchObject({
             play_count: 100,
             score: 980000,
@@ -306,11 +395,22 @@ describe("recent/full record persistence with an isolated transaction double", (
         });
         expect(state.snapshots).toHaveLength(5);
     });
+    it("writes only changed full records and keeps unchanged rows in place", async () => {
+        await updatePlayData(1, full(), 2);
+        mocks.db.$executeRaw.mockClear();
+        expect(await updatePlayData(1, full(), 3)).toEqual({
+            changedRecords: 0,
+            changedChartIds: [],
+        });
+        expect(mocks.db.$executeRaw).not.toHaveBeenCalled();
+        expect(state.records).toHaveLength(1);
+        expect(state.snapshots).toHaveLength(1);
+    });
     it("rolls back a failed full replacement without losing existing partial records", async () => {
         state.history.push(history(1, "2026/09/20 10:00"));
         await updateRecentBestRecords(1, 1);
         const before = structuredClone(state);
-        mocks.db.playData.createMany.mockRejectedValueOnce(
+        mocks.db.$executeRaw.mockRejectedValueOnce(
             new Error("full import failed")
         );
         await expect(updatePlayData(1, full(), 2)).rejects.toThrow(
@@ -346,9 +446,9 @@ it("repairs already applied zero Grd transactionally without incrementing attemp
     const record = state.records.find((r) => r.chart_id === 10)!;
     record.grade_basic = 0;
     const counts = record.play_count;
-    expect(await updateRecentBestRecords(1, 2)).toBe(1);
+    expect((await updateRecentBestRecords(1, 2)).changedRecords).toBe(1);
     expect(record.grade_basic).toBeGreaterThan(0);
     expect(record.play_count).toBe(counts);
     expect(state.history.find((h) => h.id === 900)?.grade_basic).toBe(0);
-    expect(await updateRecentBestRecords(1, 3)).toBe(0);
+    expect((await updateRecentBestRecords(1, 3)).changedRecords).toBe(0);
 });

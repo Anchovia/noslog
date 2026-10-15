@@ -8,10 +8,11 @@ import {
     chartScorePlayerSchema,
 } from "@/features/music/schemas/chart-ranking-schema";
 import { PUBLIC_DATA_REVALIDATE_SECONDS } from "@/lib/cache-policy";
-import { CACHE_TAGS } from "@/lib/cache-tags";
+import { CACHE_TAGS, getChartRankingTag } from "@/lib/cache-tags";
 import db from "@/lib/db";
 
-export const MUSIC_RANKING_PAGE_SIZE = 25;
+// 한 쪽 20명 — 사이트 목록과 같은 단위(공지 · 기록 · 서열표 · 탐색, 2026-10-15)
+export const MUSIC_RANKING_PAGE_SIZE = 20;
 
 export function normalizeRankingPage(page: number, total: number) {
     return Number.isSafeInteger(page) &&
@@ -27,25 +28,28 @@ function visiblePlayers(includeUserId: number) {
     return Prisma.sql`(u.hide_play_scores = false OR u.id = ${includeUserId})`;
 }
 
-export const getChartRanking = unstable_cache(
-    async (chartId: number, requestedPage: number, includeUserId = 0) =>
-        db.$transaction(
-            async (transaction) => {
-                const totalCount = await transaction.playData.count({
-                    where: {
-                        chart_id: chartId,
-                        score: { gt: 0 },
-                        user: {
-                            OR: [
-                                { hide_play_scores: false },
-                                { id: includeUserId },
-                            ],
-                        },
+const queryChartRanking = (
+    chartId: number,
+    requestedPage: number,
+    includeUserId = 0
+) =>
+    db.$transaction(
+        async (transaction) => {
+            const totalCount = await transaction.playData.count({
+                where: {
+                    chart_id: chartId,
+                    score: { gt: 0 },
+                    user: {
+                        OR: [
+                            { hide_play_scores: false },
+                            { id: includeUserId },
+                        ],
                     },
-                });
-                const page = normalizeRankingPage(requestedPage, totalCount);
-                // Imported besttime is the achievement time; account creation and synchronization times are unrelated.
-                const rows = await transaction.$queryRaw<unknown[]>`
+                },
+            });
+            const page = normalizeRankingPage(requestedPage, totalCount);
+            // Imported besttime is the achievement time; account creation and synchronization times are unrelated.
+            const rows = await transaction.$queryRaw<unknown[]>`
             WITH ranked AS (
                 SELECT p.user_id, p.rank, p.score, p.fc_type,
                     (RANK() OVER (ORDER BY p.score DESC))::integer AS position,
@@ -61,21 +65,27 @@ export const getChartRanking = unstable_cache(
             ORDER BY r.row_number
             OFFSET ${(page - 1) * MUSIC_RANKING_PAGE_SIZE} LIMIT ${MUSIC_RANKING_PAGE_SIZE}
         `;
-                return {
-                    rows: chartRankingRowSchema.array().parse(rows),
-                    totalCount,
-                    page,
-                    pageSize: MUSIC_RANKING_PAGE_SIZE,
-                };
-            },
-            { isolationLevel: Prisma.TransactionIsolationLevel.RepeatableRead }
-        ),
-    ["music-detail-ranking-v3"],
-    {
+            return {
+                rows: chartRankingRowSchema.array().parse(rows),
+                totalCount,
+                page,
+                pageSize: MUSIC_RANKING_PAGE_SIZE,
+            };
+        },
+        { isolationLevel: Prisma.TransactionIsolationLevel.RepeatableRead }
+    );
+
+// 채보별 태그는 인자로 정해지므로 부를 때마다 감싼다 — 동기화가 바뀐 채보만 비울 수 있게
+export function getChartRanking(
+    chartId: number,
+    requestedPage: number,
+    includeUserId = 0
+) {
+    return unstable_cache(queryChartRanking, ["music-detail-ranking-v4"], {
         revalidate: PUBLIC_DATA_REVALIDATE_SECONDS,
-        tags: [CACHE_TAGS.chartRankings],
-    }
-);
+        tags: [CACHE_TAGS.chartRankings, getChartRankingTag(chartId)],
+    })(chartId, requestedPage, includeUserId);
+}
 
 /** 곡선 위 사진 — 참가자가 이 수 이하면 모두, 넘으면 상위 몇 명(+ 나)만 (2026-09-17 사용자 결정) */
 const SCORE_PLAYERS_ALL_LIMIT = 30;
@@ -106,23 +116,35 @@ function scorePlayersQuery(
     `;
 }
 
-export const getChartScorePlayers = unstable_cache(
-    async (chartId: number, totalCount: number, includeUserId = 0) => {
-        const limit =
-            totalCount <= SCORE_PLAYERS_ALL_LIMIT
-                ? SCORE_PLAYERS_ALL_LIMIT
-                : SCORE_PLAYERS_TOP;
-        const rows = await db.$queryRaw<unknown[]>(
-            scorePlayersQuery(chartId, Prisma.empty, limit, includeUserId)
-        );
-        return chartScorePlayerSchema.array().parse(rows);
-    },
-    ["music-detail-score-players-v1"],
-    {
-        revalidate: PUBLIC_DATA_REVALIDATE_SECONDS,
-        tags: [CACHE_TAGS.chartRankings],
-    }
-);
+const queryChartScorePlayers = async (
+    chartId: number,
+    totalCount: number,
+    includeUserId = 0
+) => {
+    const limit =
+        totalCount <= SCORE_PLAYERS_ALL_LIMIT
+            ? SCORE_PLAYERS_ALL_LIMIT
+            : SCORE_PLAYERS_TOP;
+    const rows = await db.$queryRaw<unknown[]>(
+        scorePlayersQuery(chartId, Prisma.empty, limit, includeUserId)
+    );
+    return chartScorePlayerSchema.array().parse(rows);
+};
+
+export function getChartScorePlayers(
+    chartId: number,
+    totalCount: number,
+    includeUserId = 0
+) {
+    return unstable_cache(
+        queryChartScorePlayers,
+        ["music-detail-score-players-v2"],
+        {
+            revalidate: PUBLIC_DATA_REVALIDATE_SECONDS,
+            tags: [CACHE_TAGS.chartRankings, getChartRankingTag(chartId)],
+        }
+    )(chartId, totalCount, includeUserId);
+}
 
 /** 상위 목록에 없는 나 한 줄 — 사람마다 달라 캐시하지 않는다. 순위는 공개된 사람들 사이 내 자리 */
 export async function getChartScorePlayer(chartId: number, userId: number) {

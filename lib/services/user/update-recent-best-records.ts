@@ -35,7 +35,8 @@ export async function updateRecentBestRecords(userId: number, syncId: number) {
                     },
                 },
             });
-            if (!history.length) return 0;
+            if (!history.length)
+                return { changedRecords: 0, changedChartIds: [] };
             const oldRecords = await tx.playData.findMany({
                 where: {
                     user_id: userId,
@@ -108,30 +109,50 @@ export async function updateRecentBestRecords(userId: number, syncId: number) {
                 data: { record_applied: true },
             });
             if (changed.size) {
-                const allRecords = await tx.playData.findMany({
-                    where: { user_id: userId, play_count: { gt: 0 } },
-                    select: { rank: true, fc_type: true },
-                });
-                const count = (rank: string) =>
-                    allRecords.filter((record) => record.rank === rank).length;
+                // 랭크별 수는 DB 에서 센다(2026-10-15 S9) — 예전에는 기록 전부를 받아 JS 로 셌다
+                const [counts] = await tx.$queryRaw<
+                    {
+                        p: number;
+                        s: number;
+                        a2: number;
+                        a: number;
+                        b2: number;
+                        b: number;
+                        c: number;
+                        d: number;
+                        f: number;
+                    }[]
+                >`
+                    SELECT COUNT(*) FILTER (WHERE "rank" = 'P')::int AS p,
+                        COUNT(*) FILTER (WHERE "rank" = 'S')::int AS s,
+                        COUNT(*) FILTER (WHERE "rank" = 'A2')::int AS a2,
+                        COUNT(*) FILTER (WHERE "rank" = 'A')::int AS a,
+                        COUNT(*) FILTER (WHERE "rank" = 'B2')::int AS b2,
+                        COUNT(*) FILTER (WHERE "rank" = 'B')::int AS b,
+                        COUNT(*) FILTER (WHERE "rank" = 'C')::int AS c,
+                        COUNT(*) FILTER (WHERE "rank" = 'D')::int AS d,
+                        COUNT(*) FILTER (WHERE "fc_type" = 2)::int AS f
+                    FROM "PlayData"
+                    WHERE "user_id" = ${userId} AND "play_count" > 0`;
                 await tx.user.update({
                     where: { id: userId },
                     data: {
-                        score_p: count("P"),
-                        score_s: count("S"),
-                        score_a2: count("A2"),
-                        score_a: count("A"),
-                        score_b2: count("B2"),
-                        score_b: count("B"),
-                        score_c: count("C"),
-                        score_d: count("D"),
-                        score_f: allRecords.filter(
-                            (record) => record.fc_type === 2
-                        ).length,
+                        score_p: counts.p,
+                        score_s: counts.s,
+                        score_a2: counts.a2,
+                        score_a: counts.a,
+                        score_b2: counts.b2,
+                        score_b: counts.b,
+                        score_c: counts.c,
+                        score_d: counts.d,
+                        score_f: counts.f,
                     },
                 });
             }
-            return changed.size;
+            return {
+                changedRecords: changed.size,
+                changedChartIds: [...changed.keys()],
+            };
         },
         { timeout: 30000 }
     );

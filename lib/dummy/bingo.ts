@@ -1,7 +1,12 @@
 import db from "../db";
 
+// 빙고가 있다고 한 번 확인되면 이 서버 인스턴스에서는 다시 묻지 않는다(2026-10-15 S9 — 전체 동기화마다 1쿼리)
+let bingoSeeded = false;
+
 export async function updateDummy() {
-    const bingoSession = await db.bingo.findFirst();
+    if (bingoSeeded) return;
+    const bingoSession = await db.bingo.findFirst({ select: { id: true } });
+    bingoSeeded = true;
 
     if (!bingoSession) {
         await db.bingo.createMany({
