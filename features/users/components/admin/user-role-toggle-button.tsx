@@ -1,12 +1,13 @@
 "use client";
 
 import { ShieldCheck } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { toast } from "sonner";
 
 import { updateUserRole } from "@/app/admin/users/actions";
+import { foundationButtonClass } from "@/components/ui/button";
 import { createUserRoleUpdateFormData } from "@/features/users/schemas/user-admin-schema";
+import { cn } from "@/lib/cn";
 
 interface UserRoleToggleButtonProps {
     isAdmin: boolean;
@@ -19,7 +20,6 @@ export default function UserRoleToggleButton({
     userId,
     userLabel,
 }: UserRoleToggleButtonProps) {
-    const router = useRouter();
     const [isPending, startTransition] = useTransition();
     const role = isAdmin ? "user" : "admin";
     const actionLabel = isAdmin ? "권한 해제" : "관리자 지정";
@@ -40,8 +40,8 @@ export default function UserRoleToggleButton({
                     return;
                 }
 
+                // 액션의 revalidatePath 가 같은 응답에 목록을 다시 그려 보낸다 — router.refresh 를 또 부르면 목록 조회가 두 번(2026-10-15 HOME-19)
                 toast.success(result.message);
-                router.refresh();
             } catch {
                 toast.error("사용자 권한을 변경하지 못했습니다.");
             }
@@ -53,9 +53,12 @@ export default function UserRoleToggleButton({
             type="button"
             disabled={isPending}
             onClick={handleRoleUpdate}
-            className="flex h-9 w-full cursor-pointer items-center justify-center gap-1 rounded-md border border-border text-xs font-bold disabled:cursor-not-allowed disabled:opacity-50"
+            className={cn(
+                foundationButtonClass({ variant: "secondary", size: "sm" }),
+                "w-full"
+            )}
         >
-            <ShieldCheck className="size-3.5" aria-hidden />
+            <ShieldCheck className="nl-icon-small" aria-hidden />
             {isPending ? "처리 중" : actionLabel}
         </button>
     );

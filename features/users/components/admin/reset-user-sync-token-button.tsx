@@ -1,12 +1,13 @@
 "use client";
 
 import { KeyRound } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { toast } from "sonner";
 
 import { resetUserSyncToken } from "@/app/admin/users/actions";
+import { foundationButtonClass } from "@/components/ui/button";
 import { createUserSyncTokenResetFormData } from "@/features/users/schemas/user-admin-schema";
+import { cn } from "@/lib/cn";
 
 interface ResetUserSyncTokenButtonProps {
     syncTokenVersion: number;
@@ -17,7 +18,6 @@ export default function ResetUserSyncTokenButton({
     syncTokenVersion,
     userId,
 }: ResetUserSyncTokenButtonProps) {
-    const router = useRouter();
     const [isPending, startTransition] = useTransition();
 
     function handleReset() {
@@ -31,8 +31,8 @@ export default function ResetUserSyncTokenButton({
                     return;
                 }
 
+                // 액션의 revalidatePath 가 같은 응답에 목록을 다시 그려 보낸다 — router.refresh 를 또 부르면 목록 조회가 두 번(2026-10-15 HOME-19)
                 toast.success(result.message);
-                router.refresh();
             } catch {
                 toast.error("연동 토큰을 초기화하지 못했습니다.");
             }
@@ -44,9 +44,12 @@ export default function ResetUserSyncTokenButton({
             type="button"
             disabled={isPending}
             onClick={handleReset}
-            className="flex h-9 w-full cursor-pointer items-center justify-center gap-1 rounded-md border border-border text-xs font-bold disabled:cursor-not-allowed disabled:opacity-50"
+            className={cn(
+                foundationButtonClass({ variant: "secondary", size: "sm" }),
+                "w-full"
+            )}
         >
-            <KeyRound className="size-3.5" aria-hidden />
+            <KeyRound className="nl-icon-small" aria-hidden />
             {isPending ? "초기화 중" : `연동 토큰 초기화 (${syncTokenVersion})`}
         </button>
     );
