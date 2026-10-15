@@ -1,7 +1,6 @@
 import "./globals.css";
 
 import type { Metadata, Viewport } from "next";
-import localFont from "next/font/local";
 import { headers } from "next/headers";
 import Script from "next/script";
 
@@ -16,15 +15,6 @@ import {
     LOCALE_REQUEST_HEADER,
 } from "@/lib/i18n/routing";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/metadata/site";
-
-// Pretendard 로컬 폰트를 전역 CSS 변수로 연결함
-const pretendard = localFont({
-    src: "./fonts/PretendardVariable.woff2",
-    variable: "--font-pretendard",
-    weight: "45 920",
-    display: "swap",
-    preload: false,
-});
 
 const themeScript =
     process.env.NEXT_PUBLIC_ENABLE_THEME_SWITCHING === "true"
@@ -97,12 +87,7 @@ export default async function RootLayout({
     const locale = isLocale(requestLocale) ? requestLocale : DEFAULT_LOCALE;
 
     return (
-        <html
-            lang={locale}
-            data-theme="dark"
-            suppressHydrationWarning
-            className={pretendard.variable}
-        >
+        <html lang={locale} data-theme="dark" suppressHydrationWarning>
             <head>
                 <Script
                     id="noslog-theme"
