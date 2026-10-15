@@ -8,12 +8,9 @@ import {
     type ReactNode,
 } from "react";
 
-import {
-    createTranslator,
-    type ClientMessages,
-    type MessageKey,
-} from "@/lib/i18n/messages";
+import type { ClientMessages, MessageKey } from "@/lib/i18n/message-types";
 import { getLocalizedHref, type Locale } from "@/lib/i18n/routing";
+import { createTranslator } from "@/lib/i18n/translator";
 
 interface LocaleContextValue {
     locale: Locale;
