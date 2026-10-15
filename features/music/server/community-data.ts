@@ -26,7 +26,7 @@ import {
     isCommunityTranslationEnabled,
 } from "@/features/music/server/community-translation";
 import { PUBLIC_DATA_REVALIDATE_SECONDS } from "@/lib/cache-policy";
-import { CACHE_TAGS } from "@/lib/cache-tags";
+import { CACHE_TAGS, getChartEvaluationTag } from "@/lib/cache-tags";
 import db from "@/lib/db";
 import { detectTextLanguage } from "@/lib/i18n/text-language";
 import {
@@ -72,15 +72,16 @@ export async function getCommunityPattern(chartId: number) {
     );
 }
 
-// 패턴 평가 요약은 모두에게 같다 — 평가를 저장 · 정리할 때 비워지는 chartEvaluations 태그로 캐시(2026-10-15 S7)
-export const getCachedCommunityPattern = unstable_cache(
-    (chartId: number) => getCommunityPattern(chartId),
-    ["community-pattern-v1"],
-    {
-        tags: [CACHE_TAGS.chartEvaluations],
-        revalidate: PUBLIC_DATA_REVALIDATE_SECONDS,
-    }
-);
+// 패턴 평가 요약은 모두에게 같다 — 그 채보의 평가를 저장 · 정리할 때 채보 태그로 비운다(2026-10-15 S7, 채보별 2026-10-16)
+export const getCachedCommunityPattern = (chartId: number) =>
+    unstable_cache(
+        () => getCommunityPattern(chartId),
+        ["community-pattern-v2", String(chartId)],
+        {
+            tags: [CACHE_TAGS.chartEvaluations, getChartEvaluationTag(chartId)],
+            revalidate: PUBLIC_DATA_REVALIDATE_SECONDS,
+        }
+    )();
 
 export async function getCommunityOpinions(
     query: OpinionQuery,
@@ -181,78 +182,88 @@ export async function getCommunityOpinions(
 }
 
 /*
- * 모두에게 같은 부분 — 서열 값 · 목표 투표 · 서열 이력(2026-10-15 S7). 서열표 저장(tierLists)과 커뮤니티 저장(chartEvaluations) 때 비운다.
+ * 모두에게 같은 부분 — 서열 값 · 목표 투표 · 서열 이력(2026-10-15 S7). 서열표 저장(tierLists)과 그 채보의 목표 투표 저장(채보 태그) 때 비운다.
  * 투표 행의 userId 는 「내 투표」 를 고르는 데만 쓰고 응답에는 싣지 않는다
  */
-const getCachedCommunityPublic = unstable_cache(
-    async (chartId: number) => {
-        const [lists, votes, history] = await Promise.all([
-            db.tierList.findMany({
-                where: {
-                    mode: { in: [...TIER_MODES] },
-                    goal: { in: [...TIER_GOALS] },
-                    status: "published",
-                },
-                orderBy: [{ updatedAt: "desc" }, { id: "desc" }],
-                select: {
-                    id: true,
-                    mode: true,
-                    goal: true,
-                    entries: {
-                        where: { chartId },
-                        select: { tierBand: { select: { value: true } } },
+const getCachedCommunityPublic = (chartId: number) =>
+    unstable_cache(
+        async () => {
+            const [lists, votes, history] = await Promise.all([
+                db.tierList.findMany({
+                    where: {
+                        mode: { in: [...TIER_MODES] },
+                        goal: { in: [...TIER_GOALS] },
+                        status: "published",
                     },
-                },
-            }),
-            db.chartGoalVote.findMany({
-                where: { chartId, excluded: false },
-                select: { mode: true, goal: true, value: true, userId: true },
-            }),
-            db.tierPlacementHistory.findMany({
-                where: { chartId, tierList: { status: "published" } },
-                orderBy: [{ effectiveAt: "asc" }, { id: "asc" }],
-                select: {
-                    id: true,
-                    bandValue: true,
-                    effectiveAt: true,
-                    tierList: { select: { mode: true, goal: true } },
-                },
-            }),
-        ]);
-        const previous = new Map<string, number | null>();
-        const events = history
-            .flatMap((event) => {
-                const { mode, goal } = event.tierList;
-                if (
-                    !isTierMode(mode) ||
-                    !goal ||
-                    !isTierGoal(goal) ||
-                    !isTierModeGoal(mode, goal)
-                )
-                    return [];
-                const key = `${mode}:${goal}`;
-                const previousValue = previous.get(key) ?? null;
-                previous.set(key, event.bandValue);
-                return [
-                    {
-                        id: event.id,
-                        mode,
-                        goal,
-                        previousValue,
-                        value: event.bandValue,
-                        effectiveAt: event.effectiveAt.toISOString(),
+                    orderBy: [{ updatedAt: "desc" }, { id: "desc" }],
+                    select: {
+                        id: true,
+                        mode: true,
+                        goal: true,
+                        entries: {
+                            where: { chartId },
+                            select: { tierBand: { select: { value: true } } },
+                        },
                     },
-                ];
-            })
-            .reverse();
-        return { lists, votes, events };
-    },
-    ["community-public-v1"],
-    {
-        tags: [CACHE_TAGS.tierLists, CACHE_TAGS.chartEvaluations],
-        revalidate: PUBLIC_DATA_REVALIDATE_SECONDS,
-    }
-);
+                }),
+                db.chartGoalVote.findMany({
+                    where: { chartId, excluded: false },
+                    select: {
+                        mode: true,
+                        goal: true,
+                        value: true,
+                        userId: true,
+                    },
+                }),
+                db.tierPlacementHistory.findMany({
+                    where: { chartId, tierList: { status: "published" } },
+                    orderBy: [{ effectiveAt: "asc" }, { id: "asc" }],
+                    select: {
+                        id: true,
+                        bandValue: true,
+                        effectiveAt: true,
+                        tierList: { select: { mode: true, goal: true } },
+                    },
+                }),
+            ]);
+            const previous = new Map<string, number | null>();
+            const events = history
+                .flatMap((event) => {
+                    const { mode, goal } = event.tierList;
+                    if (
+                        !isTierMode(mode) ||
+                        !goal ||
+                        !isTierGoal(goal) ||
+                        !isTierModeGoal(mode, goal)
+                    )
+                        return [];
+                    const key = `${mode}:${goal}`;
+                    const previousValue = previous.get(key) ?? null;
+                    previous.set(key, event.bandValue);
+                    return [
+                        {
+                            id: event.id,
+                            mode,
+                            goal,
+                            previousValue,
+                            value: event.bandValue,
+                            effectiveAt: event.effectiveAt.toISOString(),
+                        },
+                    ];
+                })
+                .reverse();
+            return { lists, votes, events };
+        },
+        ["community-public-v2", String(chartId)],
+        {
+            tags: [
+                CACHE_TAGS.tierLists,
+                CACHE_TAGS.chartEvaluations,
+                getChartEvaluationTag(chartId),
+            ],
+            revalidate: PUBLIC_DATA_REVALIDATE_SECONDS,
+        }
+    )();
 
 export async function getCommunityData(
     chartId: number,

@@ -1,5 +1,6 @@
 import db from "@/lib/db";
 
+import { writePlayerStats } from "./player-stats";
 import type { RecordValues } from "./recent-record-merge";
 import { planRecentRecordMerge } from "./recent-record-merge";
 
@@ -147,6 +148,17 @@ export async function updateRecentBestRecords(userId: number, syncId: number) {
                         score_d: counts.d,
                         score_f: counts.f,
                     },
+                });
+                await writePlayerStats(tx, userId, {
+                    scoreP: counts.p,
+                    scoreS: counts.s,
+                    scoreA2: counts.a2,
+                    scoreA: counts.a,
+                    scoreB2: counts.b2,
+                    scoreB: counts.b,
+                    scoreC: counts.c,
+                    scoreD: counts.d,
+                    scoreF: counts.f,
                 });
             }
             return {

@@ -97,6 +97,7 @@ model User {
   achievementShowcase        UserAchievementShowcase[]
   pinnedRecords              UserPinnedRecord[]
   ratings                    PlayerRating[]
+  stats                      PlayerStats?
 
   @@index([grade_basic, id])
   @@index([grade_recital, id])
@@ -104,6 +105,8 @@ model User {
   @@index([country, grade_recital, id])
   @@index([preferred_arcade_id])
   @@index([equipped_brooch_index])
+  // 관리자 대시보드 가입자 집계(2026-10-16 DB 재설계 P2)
+  @@index([created_at])
 }
 
 // NOSTALGIA가 제공하는 브로치 카탈로그
@@ -156,6 +159,9 @@ model FeedbackReport {
   @@unique([userId, submissionId])
   @@index([status, createdAt])
   @@index([userId, createdAt])
+  // 외래 키 — 오락실 공개 화면이 기체별 열린 제보를 센다(2026-10-16 P2)
+  @@index([arcadeId])
+  @@index([cabinetId])
 }
 
 // 관리자가 작성하고 홈에 공개하는 서비스 공지사항
@@ -235,6 +241,7 @@ model CommunityEvent {
   @@index([status, submittedAt])
   @@index([authorId, updatedAt])
   @@index([publishedStartsAt])
+  @@index([reviewerId])
 }
 
 // 이벤트 글 상태 — 작성 중인 판의 상태. 공개 여부는 공개판(publishedAt)이 따로 말한다
@@ -458,6 +465,8 @@ model ArcadeSlugAlias {
   slug     String @id
   arcadeId Int
   arcade   Arcade @relation(fields: [arcadeId], references: [id], onDelete: Cascade)
+
+  @@index([arcadeId])
 }
 
 // 방문·API 통계 — 날짜(서울)·종류·열쇠별 합계만 둔다. 90일 뒤 지운다(privacyRetention)
@@ -585,6 +594,8 @@ model ChartFieldProposal {
   @@index([userId, createdAt])
   @@index([chartId, field, status])
   @@index([reviewedById])
+  // 스키마 밖 — "chart_field_proposals_one_pending": (user_id, chart_id, field) WHERE status = 'pending'.
+  // 같은 사람 · 채보 · 칸의 대기 중 제안은 하나(위 주석의 규칙). 존재는 tests/schema-objects-database.test.ts 가 확인한다
   @@map("chart_field_proposals")
 }
 
@@ -661,8 +672,8 @@ model ContributionPoint {
   points    Int
   createdAt DateTime @default(now()) @map("created_at")
 
+  // userId 만으로 찾는 질의는 위 유일 키 앞부분이 맡는다(2026-10-16 P2 — 따로 둔 [userId] 인덱스는 뺐다)
   @@unique([userId, kind, sourceKey])
-  @@index([userId])
   @@map("contribution_points")
 }
 
@@ -787,6 +798,7 @@ model ChartPattern {
   @@index([createdById])
   @@index([updatedById])
   @@index([publishedById])
+  @@index([authorId])
 }
 
 // 명시적 저장과 공개 시점의 채보 문서를 복구 가능한 버전으로 보존함
@@ -823,8 +835,12 @@ model DataSync {
   playHistory     ChartPlayHistory[]
   recordSnapshots ChartRecordSnapshot[]
   ratingHistory   UserRatingHistory[]
+  // 스키마 밖(Prisma 6 은 부분 인덱스를 쓰지 못함) — "DataSync_one_processing_per_user": user_id WHERE status = 'processing'.
+  // 사람당 처리 중 동기화는 하나. 존재는 tests/schema-objects-database.test.ts 가 확인한다
 
   @@index([user_id, started_at])
+  // 관리자 대시보드 · 동기화 목록(상태별 최근순, 2026-10-16 P2)
+  @@index([status, started_at])
 }
 
 // 공식 최근 플레이 응답을 중복 없이 누적해 점수 추이에 사용함
@@ -846,6 +862,8 @@ model ChartPlayHistory {
   judge_miss       Int?
   judge_near       Int?
   source_play_time String
+  // 플레이 시각(source_play_time 을 KST 로 읽은 값, 2026-10-16 늘리기 — P4 에서 정렬 · 유일 키를 이 열로 옮긴다)
+  playedAt         DateTime?  @map("played_at") @db.Timestamptz(3)
   chart_id         Int
   chart            MusicChart @relation(fields: [chart_id], references: [id], onDelete: Cascade)
   user_id          Int
@@ -860,6 +878,8 @@ model ChartPlayHistory {
   @@index([user_id, source_play_time(sort: Desc), id(sort: Desc)])
   @@index([first_sync_id])
   @@index([user_id, record_applied])
+  // 외래 키 — 채보를 지울 때 표 전체를 훑지 않게. 큰 표라 CONCURRENTLY 단독 마이그레이션으로 만든다(2026-10-16 P2)
+  @@index([chart_id])
 }
 
 // 전체·최근 연동에서 개인 기록이 변경된 시점의 상태를 저장함
@@ -887,6 +907,8 @@ model ChartRecordSnapshot {
   note_rate_glissando Int?
   note_rate_trill     Int?
   besttime            String
+  // PlayData.bestAt 과 같은 뜻(2026-10-16 늘리기)
+  bestAt              DateTime?  @map("best_at") @db.Timestamptz(3)
   chart_id            Int
   chart               MusicChart @relation(fields: [chart_id], references: [id], onDelete: Cascade)
   user_id             Int
@@ -897,6 +919,8 @@ model ChartRecordSnapshot {
 
   @@unique([sync_id, chart_id])
   @@index([user_id, chart_id, created_at])
+  // 외래 키 — 위와 같은 이유, CONCURRENTLY 단독 마이그레이션(2026-10-16 P2)
+  @@index([chart_id])
 }
 
 // 공식 레벨 상수 변경 이력을 시점별로 관리함
@@ -1080,6 +1104,9 @@ model CommunityOpinionReport {
   @@unique([evaluationId, userId])
   @@unique([replyId, userId])
   @@index([status, createdAt])
+  // 외래 키 — 탈퇴 연쇄 삭제 · 설정 화면 개수(2026-10-16 P2)
+  @@index([userId])
+  @@index([authorId])
 }
 
 // 의견에 다는 답글(2026-09-22 R1 — 한 단계). 답글에 답할 때는 본문 앞에 @이름을 붙인다
@@ -1130,6 +1157,8 @@ model ChartGoalVote {
 
   @@unique([chartId, userId, mode, goal])
   @@index([chartId, mode, goal, excluded, value])
+  // 외래 키 — 탈퇴 연쇄 삭제 · 설정 화면 개수(2026-10-16 P2)
+  @@index([userId])
 }
 
 model ChartGoalVoteAudit {
@@ -1171,16 +1200,19 @@ model ChartGoalVoteReview {
 }
 
 model UserBestGrade {
-  id            Int      @id @default(autoincrement())
+  id            Int       @id @default(autoincrement())
   grade_basic   Int
   grade_recital Int?
   besttime      String
-  created_at    DateTime @default(now())
-  updated_at    DateTime @updatedAt
+  // 그 날짜(besttime 「YYYY-MM-DD」, 서울 날짜). 2026-10-16 늘리기 — P4 에서 하루 한 줄 유일 키를 이 열로 옮긴다
+  day           DateTime? @map("day") @db.Date
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @updatedAt
   user_id       Int
-  user          User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user          User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
-  @@index([user_id, besttime])
+  // 사람당 하루 한 줄(besttime = 「YYYY-MM-DD」) — 코드 규칙을 DB 도 지킨다(2026-10-16 DB 재설계 P2)
+  @@unique([user_id, besttime])
 }
 
 // 실제 동기화 시점의 레이팅을 보관하며 과거 값을 소급 추정하지 않음
@@ -1223,6 +1255,8 @@ model PlayData {
   note_rate_glissando Int?
   note_rate_trill     Int?
   besttime            String
+  // 기록 시각(besttime 을 KST 로 읽은 값, 모르면 NULL — 「1970-01-01 09:00」 자리표시도 NULL). 2026-10-16 늘리기 단계라 besttime 과 함께 쓴다
+  bestAt              DateTime?   @map("best_at") @db.Timestamptz(3)
   created_at          DateTime    @default(now())
   updated_at          DateTime    @updatedAt
   user_id             Int
@@ -1253,10 +1287,11 @@ model Bingo {
   createdAt           DateTime    @default(now()) @map("created_at")
   updatedAt           DateTime    @updatedAt @map("updated_at")
   coverMusicIndex     String      @map("music_idx")
-  coverMusic          Music       @relation("BingoCoverMusic", fields: [coverMusicIndex], references: [index])
+  coverMusic          Music       @relation("BingoCoverMusic", fields: [coverMusicIndex], references: [index], onDelete: Restrict)
   cells               BingoCell[]
 
   @@index([status, startsAt, endsAt])
+  @@index([coverMusicIndex])
 }
 
 model BingoCell {
@@ -1278,7 +1313,6 @@ model BingoCell {
   updatedAt        DateTime            @updatedAt @map("updated_at")
 
   @@unique([bingoId, position])
-  @@index([missionType])
   @@index([musicIndex])
 }
 
@@ -1292,7 +1326,8 @@ model BingoCellProgress {
   userId           Int       @map("user_id")
   user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   bingoCellId      Int       @map("bingo_cell_id")
-  cell             BingoCell @relation(fields: [bingoCellId], references: [id], onDelete: Cascade)
+  // 진행 기록이 있는 빙고는 지우지 않는다 — 앱 규칙을 DB 도 지킨다(2026-10-16 P2, 예전 Cascade)
+  cell             BingoCell @relation(fields: [bingoCellId], references: [id], onDelete: Restrict)
 
   @@unique([userId, bingoCellId])
   @@index([bingoCellId])
@@ -1381,11 +1416,13 @@ model ExamSubmission {
   userId        Int              @map("user_id")
   user          User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   examId        Int              @map("exam_id")
-  exam          Exam             @relation(fields: [examId], references: [id], onDelete: Cascade)
+  // 인증 이력이 있는 검정은 지우지 않는다 — 앱 규칙을 DB 도 지킨다(2026-10-16 P2, 예전 Cascade)
+  exam          Exam             @relation(fields: [examId], references: [id], onDelete: Restrict)
   achievement   ExamAchievement?
 
   @@index([userId, examId, submittedAt])
   @@index([status, submittedAt])
+  @@index([examId])
 }
 
 // 승인된 검정 급수를 사용자별로 정규화해 보관함
@@ -1396,7 +1433,7 @@ model ExamAchievement {
   userId       Int            @map("user_id")
   user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   examId       Int            @map("exam_id")
-  exam         Exam           @relation(fields: [examId], references: [id], onDelete: Cascade)
+  exam         Exam           @relation(fields: [examId], references: [id], onDelete: Restrict)
   submissionId Int            @unique @map("submission_id")
   submission   ExamSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
 
@@ -1439,6 +1476,35 @@ model UserAchievementShowcase {
   @@unique([user_id, key])
 }
 
+// 동기화가 계산해 두는 사람별 값(2026-10-16 DB 재설계 D2-B). 예전에는 User 에 섞여 있었다 —
+// 로그인한 모든 요청이 읽고 동기화 동안 잠그는 User 행을 작게 두려고 옮긴다. 지금은 늘리기 단계라
+// 동기화가 User 의 같은 열과 이 표에 함께 쓰고(양쪽 쓰기), 읽기는 아직 User 다(P4 에서 전환).
+// 「score*」 = 그 랭크로 끝낸 채보 수(scoreF 는 풀콤보 수). 값의 뜻은 User 의 같은 이름 열과 같다
+model PlayerStats {
+  userId           Int       @id @map("user_id")
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  gradeBasic       Int?      @map("grade_basic")
+  gradeRecital     Int?      @map("grade_recital")
+  scoreP           Int?      @map("score_p")
+  scoreF           Int?      @map("score_f")
+  scoreS           Int?      @map("score_s")
+  scoreA2          Int?      @map("score_a2")
+  scoreA           Int?      @map("score_a")
+  scoreB2          Int?      @map("score_b2")
+  scoreB           Int?      @map("score_b")
+  scoreC           Int?      @map("score_c")
+  scoreD           Int?      @map("score_d")
+  // 공식 플레이 횟수 · 마지막 플레이(공식 사이트 시각, KST 를 timestamptz 로)
+  playCount        Int?      @map("play_count")
+  lastPlayedAt     DateTime? @map("last_played_at") @db.Timestamptz(3)
+  lastFullRecordAt DateTime? @map("last_full_record_at") @db.Timestamptz(3)
+  updatedAt        DateTime  @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@index([gradeBasic])
+  @@index([gradeRecital])
+  @@map("player_stats")
+}
+
 // 레이팅 랭킹용 — 사람 · 모드마다 동기화 때 계산해 둔 값(2026-10-15 L2-A2).
 // 랭킹은 이 값을 정렬해 한 쪽만 읽는다. 값은 calculateBasicRating 결과 그대로(표시할 때 반올림)
 // basis_version = 계산식 판 + 피아니스트 서열 상수의 지문. 기준이 바뀌면 전원을 한 트랜잭션으로 다시 써서
@@ -1473,4 +1539,5 @@ model UserPinnedRecord {
 
   @@unique([user_id, position])
   @@unique([user_id, chart_id])
+  @@index([chart_id])
 }

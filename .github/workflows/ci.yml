@@ -41,6 +41,11 @@ jobs:
               run: npm run format:check
             - name: Dependency declarations
               run: npm run check:dependencies
+            # 스키마 문법 · 정렬(2026-10-16 DB 재설계 P0). format --check 는 도움말에 없지만 Prisma 6.19 에서 동작한다
+            - name: Prisma schema
+              run: |
+                  npx prisma validate
+                  npx prisma format --check
 
     # unit + db 프로젝트. db 는 아래 Postgres 에 마이그레이션을 올린 뒤 TEST_DATABASE_URL 로 돈다.
     unit:
@@ -73,6 +78,9 @@ jobs:
               run: npx prisma migrate deploy
               env:
                   DATABASE_URL: ${{ env.TEST_DATABASE_URL }}
+            # 스키마를 고치고 마이그레이션을 안 만들면 여기서 막힌다(exit 2). 손으로 넣은 CHECK · 부분 인덱스는 Prisma 가 보지 못해 잡지 않는다
+            - name: Schema matches migrations
+              run: npx prisma migrate diff --from-url "$TEST_DATABASE_URL" --to-schema-datamodel prisma/schema.prisma --exit-code
             - run: npm test
 
     # next build 가 프로젝트 전체(tests · e2e 포함) 타입 검사를 한다. 따로 tsc 를 돌리지 않는다.
@@ -151,13 +159,20 @@ jobs:
                   npm run db:migrate:deploy
                   npm run db:seed:e2e
                   node prisma/import-music-catalog.mjs --apply
+            # 빌드 캐시만 넘긴다. fetch-cache(unstable_cache 데이터)는 빼야 한다 — e2e DB 는 매번 새로 만들어 id 가 되풀이되므로,
+            # 지난 실행의 「프로필 id 10」 캐시가 남으면 다른 사용자를 보여 준다(2026-10-16 프로필 e2e 실패 원인)
             - name: Restore Next.js build cache
               uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
               with:
-                  path: .next/cache
+                  path: |
+                      .next/cache
+                      !.next/cache/fetch-cache
                   key: nextjs-e2e-${{ hashFiles('package-lock.json') }}-${{ hashFiles('app/**', 'components/**', 'features/**', 'lib/**', 'public/**', 'proxy.ts', 'next.config.mjs', 'prisma/schema.prisma') }}
                   restore-keys: |
                       nextjs-e2e-${{ hashFiles('package-lock.json') }}-
+            # 이미 저장된 옛 캐시에는 fetch-cache 가 들어 있다 — 복원 뒤 지운다
+            - name: Drop restored data cache
+              run: rm -rf .next/cache/fetch-cache
             - run: npm run build
             - name: Playwright
               run: npm run test:e2e

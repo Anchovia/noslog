@@ -111,6 +111,16 @@ export async function savePollWithPost(
     const invalid = validatePollInput(poll, now);
     if (invalid) return invalid;
 
+    // 선택지 id 는 폼에서 오므로 이 투표의 것만 받는다 — 다른 글의 선택지를 고치지 못하게(2026-10-16)
+    const ownOptionIds = new Set(current?.options.map((option) => option.id));
+    if (
+        poll.options.some(
+            (option) => option.id !== undefined && !ownOptionIds.has(option.id)
+        )
+    ) {
+        return "invalid";
+    }
+
     if (current) {
         // 마감한 투표는 아무것도 고치지 못한다(조사한 모든 서비스가 같다)
         if (closed) return "closed";

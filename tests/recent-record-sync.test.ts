@@ -14,6 +14,7 @@ const mocks = vi.hoisted(() => ({
         musicChart: { findMany: vi.fn() },
         dataSync: { findUniqueOrThrow: vi.fn() },
         user: { findUniqueOrThrow: vi.fn(), update: vi.fn() },
+        playerStats: { upsert: vi.fn() },
         playData: {
             findMany: vi.fn(),
             upsert: vi.fn(),
@@ -229,6 +230,7 @@ beforeEach(() => {
         "note_rate_glissando",
         "note_rate_trill",
         "besttime",
+        "bestAt",
     ] as const;
     mocks.db.$executeRaw.mockImplementation(
         async (_strings: TemplateStringsArray, rows: Prisma.Sql) => {
@@ -397,6 +399,13 @@ describe("recent/full record persistence with an isolated transaction double", (
     });
     it("writes only changed full records and keeps unchanged rows in place", async () => {
         await updatePlayData(1, full(), 2);
+        // 늘리기 단계 — User 와 같은 값을 player_stats 에도 쓴다(2026-10-16 P3)
+        expect(mocks.db.playerStats.upsert).toHaveBeenCalledWith(
+            expect.objectContaining({
+                where: { userId: 1 },
+                update: expect.objectContaining({ lastFullRecordAt: syncTime }),
+            })
+        );
         mocks.db.$executeRaw.mockClear();
         expect(await updatePlayData(1, full(), 3)).toEqual({
             changedRecords: 0,

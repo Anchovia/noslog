@@ -1,4 +1,5 @@
 import db from "@/lib/db";
+import { writePlayerStats } from "@/lib/services/user/player-stats";
 
 function getKoreanDate() {
     return new Intl.DateTimeFormat("en-CA", {
@@ -56,6 +57,10 @@ export async function updateGrade(user_id: number) {
                 grade_recital: recitalGrade,
             },
         });
+        await writePlayerStats(tx, user_id, {
+            gradeBasic: basicGrade,
+            gradeRecital: recitalGrade,
+        });
         console.info("(5)유저 그레이드 업데이트 완료");
 
         // 유저 베스트 그레이드 생성 및 같은 날짜 데이터인 경우 높은값으로 처리
@@ -76,6 +81,7 @@ export async function updateGrade(user_id: number) {
                 where: { id: latestTodayHistory.id },
                 data: {
                     besttime: today,
+                    day: new Date(`${today}T00:00:00Z`),
                     grade_basic: basicGrade,
                     grade_recital: recitalGrade,
                 },
@@ -94,6 +100,8 @@ export async function updateGrade(user_id: number) {
                 data: {
                     user_id,
                     besttime: today,
+                    // 서울 날짜(@db.Date) — 늘리기 단계라 besttime 과 함께 쓴다(2026-10-16 P3)
+                    day: new Date(`${today}T00:00:00Z`),
                     grade_basic: basicGrade,
                     grade_recital: recitalGrade,
                 },
@@ -109,4 +117,17 @@ export async function updateGrade(user_id: number) {
         `===[유저 그레이드 및 베스트 플레이 데이터 업데이트 완료(${duration}ms)]===`
     );
     return { grade_basic: basicGrade, grade_recital: recitalGrade };
+}
+
+/**
+ * 바뀐 기록이 없는 동기화 — Grd 를 다시 세지 않고 오늘 「하루 한 줄」 만 지금 값으로 남긴다(2026-10-16 P4).
+ * 오늘 줄이 이미 있으면 그대로 둔다(유일 키 UserBestGrade_user_id_besttime_key)
+ */
+export async function keepTodayGrade(user_id: number) {
+    const today = getKoreanDate();
+    await db.$executeRaw`
+        INSERT INTO "UserBestGrade" ("user_id", "besttime", "day", "grade_basic", "grade_recital", "updated_at")
+        SELECT "id", ${today}, ${today}::date, COALESCE("grade_basic", 0), "grade_recital", CURRENT_TIMESTAMP
+        FROM "User" WHERE "id" = ${user_id}
+        ON CONFLICT ("user_id", "besttime") DO NOTHING`;
 }

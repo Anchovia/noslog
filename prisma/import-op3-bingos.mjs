@@ -1,20 +1,11 @@
 import { createHash } from "node:crypto";
 import fs from "node:fs";
-import { loadEnvFile } from "node:process";
 
 import { PrismaClient } from "@prisma/client";
 
-const envFile = process.argv
-    .find((argument) => argument.startsWith("--env-file="))
-    ?.split("=")
-    .slice(1)
-    .join("=");
+import { loadScriptDatabaseEnv } from "./script-env.mjs";
 
-if (envFile) {
-    loadEnvFile(envFile);
-} else if (!process.env.DATABASE_URL) {
-    loadEnvFile(".env");
-}
+loadScriptDatabaseEnv();
 
 const shouldApply = process.argv.includes("--apply");
 const db = new PrismaClient();

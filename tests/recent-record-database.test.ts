@@ -51,8 +51,13 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
             title: "Test",
             grade_basic: Math.floor(score / 100),
         });
-        const sync = (time: string, scope = "recent") =>
-            db.dataSync.create({
+        // 실제 경로처럼 앞 동기화를 닫고 새로 연다 — 사람당 처리 중은 하나(DataSync_one_processing_per_user, 2026-10-16)
+        const sync = async (time: string, scope = "recent") => {
+            await db.dataSync.updateMany({
+                where: { user_id: userId, status: "processing" },
+                data: { status: "completed", completed_at: new Date(time) },
+            });
+            return db.dataSync.create({
                 data: {
                     user_id: userId,
                     sync_scope: scope,
@@ -60,6 +65,7 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
                     status: "processing",
                 },
             });
+        };
         const record = () =>
             db.playData.findUniqueOrThrow({
                 where: {
@@ -128,6 +134,15 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
                 grade_recital: null,
                 score_s: 1,
             });
+            // 늘리기 단계(2026-10-16 P3) — 같은 값이 player_stats 와 새 시각 열에도 들어간다
+            expect(
+                await db.playerStats.findUniqueOrThrow({ where: { userId } })
+            ).toMatchObject({
+                gradeBasic: 9700,
+                gradeRecital: null,
+                scoreS: 1,
+            });
+            expect((await record()).bestAt).toBeInstanceOf(Date);
             const ranking = await getGlobalRankingPage(
                 { mode: "basic", metric: "grade", region: "all", page: 1 },
                 userId
@@ -141,9 +156,10 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
             expect(points.map((point) => point.score)).toEqual([
                 950000, 970000,
             ]);
+            // 앞 점은 최근 플레이 원문, 뒤 점은 기록 스냅샷 — 기록 시각은 전체 동기화 형식으로 쓴다(2026-10-16 B3)
             expect(points.map((point) => point.play_time)).toEqual([
                 "2026/09/20 10:00",
-                "2026/09/20 10:10",
+                "2026-09-20 10:10",
             ]);
             const second = await sync("2026-09-20T03:00:00Z");
             const result = await updateRecentPlay(

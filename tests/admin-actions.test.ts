@@ -417,6 +417,7 @@ describe("관리자 액션", () => {
     it("검정 제출과 연결된 합격 이력을 함께 삭제한 뒤 Blob을 정리한다", async () => {
         mocks.examSubmissionFindUnique.mockResolvedValue({
             id: 50,
+            userId: 7,
             proofImageUrl:
                 "https://store.public.blob.vercel-storage.com/proof.jpg",
         });
@@ -439,5 +440,8 @@ describe("관리자 액션", () => {
         );
         expect(mocks.revalidatePath).toHaveBeenCalledWith("/admin/submissions");
         expect(mocks.revalidatePath).toHaveBeenCalledWith("/exams");
+        // 합격 기록이 지워졌으니 그 사람 프로필 · 랭킹도 새로 그린다
+        expect(mocks.updateTag).toHaveBeenCalledWith("user-profile-7");
+        expect(mocks.updateTag).toHaveBeenCalledWith("user-rankings");
     });
 });

@@ -151,26 +151,31 @@ export async function refreshUserPlayerRatings(userId: number) {
     for (const mode of TIER_MODES) {
         const basis = await getRatingBasis(mode);
         if (!basis) continue;
-        await db.$transaction(async (tx) => {
-            await lockMode(tx, mode);
-            const [row] = await computeRatings(tx, mode, basis, userId);
-            if (!row) {
-                await tx.playerRating.deleteMany({
-                    where: { user_id: userId, mode },
+        await db.$transaction(
+            async (tx) => {
+                await lockMode(tx, mode);
+                const [row] = await computeRatings(tx, mode, basis, userId);
+                if (!row) {
+                    await tx.playerRating.deleteMany({
+                        where: { user_id: userId, mode },
+                    });
+                    return;
+                }
+                await tx.playerRating.upsert({
+                    where: { user_id_mode: { user_id: userId, mode } },
+                    create: row,
+                    update: {
+                        rating: row.rating,
+                        filled_slots: row.filled_slots,
+                        basis_version: row.basis_version,
+                        computed_at: new Date(),
+                    },
                 });
-                return;
-            }
-            await tx.playerRating.upsert({
-                where: { user_id_mode: { user_id: userId, mode } },
-                create: row,
-                update: {
-                    rating: row.rating,
-                    filled_slots: row.filled_slots,
-                    basis_version: row.basis_version,
-                    computed_at: new Date(),
-                },
-            });
-        });
+            },
+            // 전원 재계산(rebuildPlayerRatings, 최대 30초)이 같은 모드 잠금을 쥐고 있으면 끝날 때까지 기다린다 —
+            // 기본 5초 안에 못 잡으면 기록은 저장됐는데 동기화가 실패로 남았다(2026-10-16 DB 재설계 B2)
+            { timeout: 35000 }
+        );
     }
 }
 

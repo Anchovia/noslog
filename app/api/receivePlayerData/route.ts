@@ -17,7 +17,8 @@ import { updateDummy } from "@/lib/dummy/bingo";
 import { isLocale, type Locale } from "@/lib/i18n/routing";
 import { processBemaniCatalogUpdates } from "@/lib/services/music/catalog-sync";
 import { type SyncMusicInput } from "@/lib/services/music/update-music";
-import { updateGrade } from "@/lib/services/user/update-grade";
+import { type ChartIdMap, loadChartIds } from "@/lib/services/user/chart-ids";
+import { keepTodayGrade, updateGrade } from "@/lib/services/user/update-grade";
 import { updatePlayData } from "@/lib/services/user/update-play-data";
 import { updatePlayerProfile } from "@/lib/services/user/update-player-profile";
 import { updateRecentBestRecords } from "@/lib/services/user/update-recent-best-records";
@@ -238,7 +239,7 @@ function json(
 }
 
 type SyncAttemptResult =
-    | { allowed: true; syncId: number }
+    | { allowed: true; syncId: number; previousCompleted: boolean }
     | { allowed: false; reason: "processing" | "cooldown"; retryAfter: number };
 
 type SkippedChart = {
@@ -246,18 +247,7 @@ type SkippedChart = {
     difficulty: string;
 };
 
-async function filterKnownMusic(music: SyncMusicInput[]) {
-    const charts = await db.musicChart.findMany({
-        where: {
-            music_idx: {
-                in: [...new Set(music.map((item) => item["@index"]))],
-            },
-        },
-        select: { music_idx: true, difficulty: true },
-    });
-    const knownCharts = new Set(
-        charts.map((chart) => `${chart.music_idx}:${chart.difficulty}`)
-    );
+function filterKnownMusic(music: SyncMusicInput[], knownCharts: ChartIdMap) {
     const skippedCharts: SkippedChart[] = [];
     const knownMusic = music.flatMap((item) => {
         const sheet = item.sheet.filter((chart) => {
@@ -361,7 +351,11 @@ async function createSyncAttempt(
             },
             select: { id: true },
         });
-        return { allowed: true, syncId: sync.id };
+        return {
+            allowed: true,
+            syncId: sync.id,
+            previousCompleted: latestSync?.status === "completed",
+        };
     });
 }
 
@@ -450,6 +444,22 @@ export async function POST(request: NextRequest) {
     }
 
     const syncId = syncAttempt.syncId;
+    // 바뀐 기록이 없고 직전 동기화가 끝까지 됐으면 Grd · 랭킹 레이팅을 다시 세지 않는다(2026-10-16 DB 재설계 P4 Q1).
+    // 직전 시도가 실패로 끝났으면 기록만 커밋되고 파생 계산 전에 멈췄을 수 있어 예전처럼 다시 센다.
+    // 랭킹 레이팅은 서열표를 저장할 때 전원 다시 세므로(rebuildStalePlayerRatings) 기록이 그대로면 값도 그대로다.
+    // 프로필 레이팅 이력은 그래프 점이라 예전처럼 동기화마다 남기고, Grd 「하루 한 줄」 은 지금 값으로 남긴다
+    const refreshDerived = async (changed: number[]) => {
+        if (changed.length === 0 && syncAttempt.previousCompleted) {
+            await keepTodayGrade(user.id);
+            await recordProfileRatings(user.id, syncId);
+            return null;
+        }
+        const result = await updateGrade(user.id);
+        await recordProfileRatings(user.id, syncId);
+        // 랭킹용 저장 레이팅 — 이 사람만 다시 센다(2026-10-15 L2-A2)
+        await refreshUserPlayerRatings(user.id);
+        return result;
+    };
 
     try {
         await updatePlayerProfile(user.id, player);
@@ -466,7 +476,12 @@ export async function POST(request: NextRequest) {
                 music,
                 user.role === "admin"
             );
-            const { knownMusic, skippedCharts } = await filterKnownMusic(music);
+            // 곡 목록 반영 뒤 채보 지도를 한 번 읽어 확인 · 저장이 같이 쓴다(2026-10-16 Q2 — 예전에는 두 번 더 읽었다)
+            const chartIds = await loadChartIds();
+            const { knownMusic, skippedCharts } = filterKnownMusic(
+                music,
+                chartIds
+            );
             syncNotice = formatSkippedCharts([
                 ...skippedRecentCharts,
                 ...skippedCharts,
@@ -476,22 +491,16 @@ export async function POST(request: NextRequest) {
                 ({ changedRecords, changedChartIds } = await updatePlayData(
                     user.id,
                     knownMusic,
-                    syncId
+                    syncId,
+                    chartIds
                 ));
-                grades = await updateGrade(user.id);
-                await recordProfileRatings(user.id, syncId);
-                // 랭킹용 저장 레이팅 — 이 사람만 다시 센다(2026-10-15 L2-A2)
-                await refreshUserPlayerRatings(user.id);
+                grades = await refreshDerived(changedChartIds);
                 await updateDummy();
             }
         } else {
             ({ changedRecords, changedChartIds } =
                 await updateRecentBestRecords(user.id, syncId));
-            // Repair derived stats even when a previous attempt committed the
-            // projection but failed before computing Grd or rating history.
-            grades = await updateGrade(user.id);
-            await recordProfileRatings(user.id, syncId);
-            await refreshUserPlayerRatings(user.id);
+            grades = await refreshDerived(changedChartIds);
         }
 
         // 업적 판정(2026-09-24 N1) — 실패해도 동기화 결과는 그대로. 새 단계는 동기화 결과 화면이 달성 시각으로 모아 보인다

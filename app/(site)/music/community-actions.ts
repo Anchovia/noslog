@@ -11,11 +11,19 @@ import {
 } from "@/features/music/server/community-translation";
 import type { ActionResult } from "@/lib/actions/result";
 import { ApiError } from "@/lib/api/response";
-import { CACHE_TAGS } from "@/lib/cache-tags";
+import { getChartEvaluationTag } from "@/lib/cache-tags";
 import { createTranslator, getMessages } from "@/lib/i18n/messages";
 import { isLocale } from "@/lib/i18n/routing";
 import { logServerError } from "@/lib/observability/server";
 import getSession from "@/lib/session";
+
+// 모두에게 같은 캐시(패턴 요약 · 목표 투표)를 바꾸는 쓰기 — 의견 · 답글 · 좋아요 · 신고는 그 캐시에 없다(2026-10-16 K1)
+const SHARED_CACHE_ACTIONS = new Set([
+    "save-evaluation",
+    "delete-evaluation",
+    "save-vote",
+    "delete-vote",
+]);
 
 export async function saveChartContribution(
     input: unknown,
@@ -42,7 +50,9 @@ export async function saveChartContribution(
         )) as Awaited<ReturnType<typeof mutateChartCommunity>> & {
             translate?: { kind: "opinion" | "reply"; id: number };
         };
-        updateTag(CACHE_TAGS.chartEvaluations);
+        const action = (input as { action?: unknown }).action;
+        if (typeof action === "string" && SHARED_CACHE_ACTIONS.has(action))
+            updateTag(getChartEvaluationTag(result.chartId));
         // 의견 · 답글을 쓰거나 고쳤으면 응답을 늦추지 않고 뒤에서 나머지 두 언어로 번역해 저장한다(실패하면 「번역 보기」 때 다시)
         if (translate)
             after(async () => {

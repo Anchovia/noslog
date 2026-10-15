@@ -627,6 +627,8 @@ export async function reviewChartDraft(
                 status: "changes_requested",
                 reviewedAt: now,
                 reviewedById: admin.id,
+                // 결과를 새로 알린다 — 전에 결과를 봤어도 다시 점이 뜬다(곡 정보 제안과 같게, 2026-10-16)
+                seenAt: null,
             },
         });
         revalidatePath("/admin/contributions");
@@ -725,6 +727,7 @@ export async function reviewChartDraft(
                     reviewedAt: now,
                     reviewedById: admin.id,
                     publishedAt: now,
+                    seenAt: null,
                 },
             });
             // 공개 버전마다 한 번 — 같은 트랜잭션에서 적립

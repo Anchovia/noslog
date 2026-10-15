@@ -264,6 +264,23 @@ product behavior, visual design, external API contracts, or database data.
 Passing static checks does not mean every feature has completed browser
 verification. Report the actual checks and any unverified runtime conditions.
 
+### Database changes
+
+- CI checks the schema with `prisma validate`, `prisma format --check`, and
+  `prisma migrate diff --exit-code` against a freshly migrated database. Prisma
+  does not see hand-written CHECK constraints or partial indexes, so keep their
+  names and meaning in a schema comment and cover them with a database test.
+- Count queries per screen with `npm run measure:queries`. Start a dev server
+  with `NOSLOG_QUERY_LOG=<file>` (ignored in production builds) and pass the same
+  file with `--log`. Send logged-in cookies only through
+  `NOSLOG_MEASURE_COOKIE`.
+- Import scripts in `prisma/` load their environment through
+  `prisma/script-env.mjs`. A non-local `DATABASE_URL` runs only when
+  `DATABASE_EXPECTED_HOST` names the same host.
+- Write migrations so the previous deployment can run against the new schema
+  (expand, switch, then contract). Put `CREATE INDEX CONCURRENTLY` alone in its
+  own migration file: Prisma 6.19 sends a file as one implicit transaction.
+
 ## Feature view and connection boundaries
 
 Complex forms may keep rendering/local validation in a feature View and connect
