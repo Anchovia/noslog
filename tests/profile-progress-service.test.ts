@@ -24,7 +24,9 @@ describe("profile progress sources", () => {
     const now = new Date("2026-09-07T12:00:00Z");
     beforeEach(() => {
         vi.resetAllMocks();
-        mocks.user.mockResolvedValue({ grade_basic: 568300, grade_recital: 0 });
+        mocks.user.mockResolvedValue({
+            stats: { gradeBasic: 568300, gradeRecital: 0 },
+        });
         mocks.grades.mockResolvedValue([]);
         mocks.history.mockResolvedValue([]);
         mocks.rating.mockResolvedValue(null);
@@ -39,10 +41,22 @@ describe("profile progress sources", () => {
     });
     it("filters the selected period in Korean calendar time and excludes absent modes and invalid dates", async () => {
         mocks.grades.mockResolvedValue([
-            { besttime: "2025-08-01", grade_basic: 100, grade_recital: 0 },
-            { besttime: "2026-08-20", grade_basic: 568301, grade_recital: 0 },
-            { besttime: "invalid", grade_basic: 600000, grade_recital: 0 },
-            { besttime: "2026-10-01", grade_basic: 700000, grade_recital: 0 },
+            {
+                day: new Date("2025-08-01T00:00:00Z"),
+                grade_basic: 100,
+                grade_recital: 0,
+            },
+            {
+                day: new Date("2026-08-20T00:00:00Z"),
+                grade_basic: 568301,
+                grade_recital: 0,
+            },
+            { day: null, grade_basic: 600000, grade_recital: 0 },
+            {
+                day: new Date("2026-10-01T00:00:00Z"),
+                grade_basic: 700000,
+                grade_recital: 0,
+            },
         ]);
         const query = profileProgressQuerySchema.parse({ range: "30" });
         expect((await getPublicProfileProgress(1, query, now))?.points).toEqual(

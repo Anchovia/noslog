@@ -43,10 +43,9 @@ const sourceUser = {
     discord_name: "private-discord-name",
     discord_username: "private-discord-username",
     preferredArcade: { name: "private-arcade" },
-    play_count: 1234567,
+    // 동기화 결과는 player_stats 에서(2026-10-16 DB 재설계 P4)
+    stats: { playCount: 1234567, gradeBasic: 500000, gradeRecital: 100000 },
     created_at: new Date("2026-01-01T00:00:00Z"),
-    grade_basic: 500000,
-    grade_recital: 100000,
     hide_nostalgia_name: false,
     hide_discord_name: false,
     hide_play_count: false,
@@ -116,12 +115,16 @@ describe("public profile visibility boundary", () => {
         });
         const profile = await getCachedProfileData(7);
         expect(profile?.user.preferredArcade).toBeNull();
-        expect(profile?.user.play_count).toBe(sourceUser.play_count);
+        expect(profile?.user.play_count).toBe(sourceUser.stats.playCount);
         expect(profile?.user.last_played_at).toBe(sourcePlay.source_play_time);
         expect(mocks.recent).toHaveBeenCalledWith({
             where: { user_id: 7 },
             select: { source_play_time: true },
-            orderBy: [{ source_play_time: "desc" }, { id: "desc" }],
+            // 최신순은 played_at(2026-10-16 P4)
+            orderBy: [
+                { playedAt: { sort: "desc", nulls: "last" } },
+                { id: "desc" },
+            ],
             take: 1,
         });
     });
@@ -133,8 +136,8 @@ describe("public profile visibility boundary", () => {
         const profile = await getCachedProfileData(7);
         expect(mocks.best).not.toHaveBeenCalled();
         expect(mocks.grades).not.toHaveBeenCalled();
-        expect(profile?.user.grade_basic).toBe(sourceUser.grade_basic);
-        expect(profile?.user.grade_recital).toBe(sourceUser.grade_recital);
+        expect(profile?.user.grade_basic).toBe(sourceUser.stats.gradeBasic);
+        expect(profile?.user.grade_recital).toBe(sourceUser.stats.gradeRecital);
         expect(profile?.user.last_played_at).toBeNull();
         expect(Object.keys(profile!)).toEqual(["user"]);
     });

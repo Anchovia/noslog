@@ -13,6 +13,7 @@ vi.mock("@/lib/db", async () => {
 });
 
 import db from "@/lib/db";
+import { recordBestAt } from "@/lib/services/user/recent-record-merge";
 import {
     getChartRanking,
     normalizeRankingPage,
@@ -24,6 +25,12 @@ it("normalizes invalid and out-of-range ranking pages to the first page", () => 
     expect(normalizeRankingPage(2, 26)).toBe(2);
     expect(normalizeRankingPage(1, 0)).toBe(1);
 });
+
+// 예전 두 형식(빗금 · T)을 섞어 넣는다 — 순서는 best_at 으로 정해져야 한다
+const besttimeOf = (i: number) =>
+    i % 2
+        ? `2026/08/${String(30 - i).padStart(2, "0")} 10:00`
+        : `2026-08-${String(30 - i).padStart(2, "0")}T10:00`;
 
 describe.skipIf(!process.env.TEST_DATABASE_URL)(
     "chart competition ranking in an isolated database",
@@ -72,10 +79,9 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
                         max_combo: 1000,
                         grade_basic: 1000,
                         grade_recital: 0,
-                        besttime:
-                            i % 2
-                                ? `2026/08/${String(30 - i).padStart(2, "0")} 10:00`
-                                : `2026-08-${String(30 - i).padStart(2, "0")}T10:00`,
+                        besttime: besttimeOf(i),
+                        // 동기화는 기록 시각을 best_at 에도 쓴다 — 같은 점수 순서는 이 열로 정한다(2026-10-16 P4)
+                        bestAt: recordBestAt(besttimeOf(i)),
                     },
                 });
             }
@@ -131,7 +137,10 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
                     user_id: { in: [users[25], users[26]] },
                     chart_id: chartId,
                 },
-                data: { besttime: "2026-08-01 10:00" },
+                data: {
+                    besttime: "2026-08-01 10:00",
+                    bestAt: recordBestAt("2026-08-01 10:00"),
+                },
             });
             const data = await getChartRanking(chartId, 1);
             expect(

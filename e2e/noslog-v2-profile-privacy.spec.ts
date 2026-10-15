@@ -23,21 +23,29 @@ test("P6 actual stored history honors the selected range and empty users have on
     page,
 }) => {
     const user = await db!.user.create({
-        data: { username: `p6-history-${Date.now()}`, grade_basic: 10000 },
+        data: {
+            username: `p6-history-${Date.now()}`,
+            stats: { create: { gradeBasic: 10000 } },
+        },
     });
     const empty = await db!.user.create({
         data: { username: `p6-empty-${Date.now()}` },
     });
     try {
         await db!.userBestGrade.createMany({
-            data: [80, 50, 10].map((days, index) => ({
-                user_id: user.id,
-                besttime: new Date(Date.now() - days * 86400000)
+            data: [80, 50, 10].map((days, index) => {
+                const besttime = new Date(Date.now() - days * 86400000)
                     .toISOString()
-                    .slice(0, 10),
-                grade_basic: 8000 + index * 1000,
-                grade_recital: 0,
-            })),
+                    .slice(0, 10);
+                // 동기화처럼 날짜 열(day)도 함께 쓴다 — 추이는 day 로 읽는다(2026-10-16 DB 재설계 P4)
+                return {
+                    user_id: user.id,
+                    besttime,
+                    day: new Date(`${besttime}T00:00:00Z`),
+                    grade_basic: 8000 + index * 1000,
+                    grade_recital: 0,
+                };
+            }),
         });
         await page.goto(`/en/profile/${user.id}`);
         const progress = page.getByRole("region", {
@@ -133,9 +141,14 @@ for (const flag of flags) {
                     discord_name: `${marker}-discord`,
                     discord_username: `${marker}-handle`,
                     preferred_arcade_id: arcade.id,
-                    play_count: 987654,
-                    grade_basic: 10000,
-                    grade_recital: 0,
+                    // 동기화 결과는 player_stats 에서(2026-10-16 DB 재설계 P4)
+                    stats: {
+                        create: {
+                            playCount: 987654,
+                            gradeBasic: 10000,
+                            gradeRecital: 0,
+                        },
+                    },
                     hide_nostalgia_name: hidden("hide_nostalgia_name"),
                     hide_discord_name: hidden("hide_discord_name"),
                     hide_play_count: hidden("hide_play_count"),

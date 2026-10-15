@@ -212,7 +212,7 @@ async function queryDiscoveryPage(
                 (SELECT MAX(chart."level") FROM "MusicChart" chart WHERE chart."music_idx" = music."index" AND chart."difficulty" = 'Real') AS real,
                 CASE WHEN eligible."difficulty" = ${query.sortDifficulty ?? null} THEN eligible."level" END AS sort_level,
                 eligible."published_at" AS published,
-                ${sort === "recent" ? Prisma.sql`(SELECT MAX(REPLACE(history."source_play_time", '/', '.')) FROM "ChartPlayHistory" AS history WHERE history."user_id" = ${userId} AND history."chart_id" = eligible."id")` : Prisma.sql`NULL::text`} AS recent,
+                ${sort === "recent" ? Prisma.sql`(SELECT MAX(history."played_at") FROM "ChartPlayHistory" AS history WHERE history."user_id" = ${userId} AND history."chart_id" = eligible."id")` : Prisma.sql`NULL::timestamptz`} AS recent,
                 CASE WHEN LOWER(music."index") = LOWER(${query.q}) OR LOWER(music."title") = LOWER(${query.q}) OR LOWER(music."title_kana") = LOWER(${query.q})
                     OR EXISTS (SELECT 1 FROM "MusicTranslation" t WHERE t."music_index" = music."index" AND t."status" = 'approved' AND LOWER(t."title") = LOWER(${query.q})) THEN 4
                     WHEN music."title" ILIKE ${prefix} OR music."title_kana" ILIKE ${prefix} THEN 3
@@ -237,7 +237,7 @@ async function queryDiscoveryPage(
                 (SELECT MAX(chart."level") FROM "MusicChart" chart WHERE chart."music_idx" = music."index" AND chart."difficulty" = 'Real') AS real,
                 (SELECT MAX(chart."level") FROM "MusicChart" chart WHERE chart."music_idx" = music."index" AND chart."difficulty" = ${query.sortDifficulty ?? null}) AS sort_level,
                 MAX(eligible."published_at") AS published,
-                ${sort === "recent" ? Prisma.sql`(SELECT MAX(REPLACE(history."source_play_time", '/', '.')) FROM "ChartPlayHistory" AS history JOIN eligible AS target ON target."id" = history."chart_id" WHERE history."user_id" = ${userId} AND target."music_idx" = music."index")` : Prisma.sql`NULL::text`} AS recent,
+                ${sort === "recent" ? Prisma.sql`(SELECT MAX(history."played_at") FROM "ChartPlayHistory" AS history JOIN eligible AS target ON target."id" = history."chart_id" WHERE history."user_id" = ${userId} AND target."music_idx" = music."index")` : Prisma.sql`NULL::timestamptz`} AS recent,
                 CASE WHEN LOWER(music."index") = LOWER(${query.q}) OR LOWER(music."title") = LOWER(${query.q}) OR LOWER(music."title_kana") = LOWER(${query.q})
                     OR EXISTS (SELECT 1 FROM "MusicTranslation" t WHERE t."music_index" = music."index" AND t."status" = 'approved' AND LOWER(t."title") = LOWER(${query.q})) THEN 4
                     WHEN music."title" ILIKE ${prefix} OR music."title_kana" ILIKE ${prefix} THEN 3

@@ -4,6 +4,7 @@ import type { Prisma } from "@prisma/client";
 
 import type { GlobalRankingQuery } from "@/features/rankings/schemas/global-ranking-schema";
 import db from "@/lib/db";
+import { statsGradeField } from "@/lib/player-stats";
 
 interface RankingPositionOptions {
     userId: number;
@@ -20,17 +21,19 @@ export async function getUserRankingPosition({
 }: RankingPositionOptions) {
     if (!grade || grade <= 0) return null;
 
-    const gradeField = mode === "basic" ? "grade_basic" : "grade_recital";
+    const gradeField = statsGradeField(mode);
     const higherUserCount = await db.user.count({
         where: {
             AND: [
                 scope,
                 // 점수 비공개 플레이어는 순위에서 빠진다 — 남은 사람 가운데 몇 등인지(2026-09-18 S3)
                 { hide_play_scores: false },
-                { [gradeField]: { gt: 0 } },
                 {
-                    [gradeField]: {
-                        gte: (Math.round(grade / 100) + 0.5) * 100,
+                    stats: {
+                        [gradeField]: {
+                            gt: 0,
+                            gte: (Math.round(grade / 100) + 0.5) * 100,
+                        },
                     },
                 },
             ],

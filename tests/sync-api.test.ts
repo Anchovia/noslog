@@ -241,8 +241,7 @@ describe("POST /api/receivePlayerData", () => {
             id: 1,
             sync_token_version: 0,
             role: "user",
-            grade_basic: 1000,
-            grade_recital: null,
+            stats: { gradeBasic: 1000, gradeRecital: null },
         });
         mocks.updateGrade.mockResolvedValue({
             grade_basic: 1000,
@@ -770,8 +769,7 @@ describe("POST /api/receivePlayerData", () => {
             id: 1,
             sync_token_version: 0,
             role: "admin",
-            grade_basic: 1000,
-            grade_recital: null,
+            stats: { gradeBasic: 1000, gradeRecital: null },
         });
         mocks.processBemaniCatalogUpdates.mockResolvedValue({
             detected: 1,
@@ -810,8 +808,7 @@ describe("POST /api/receivePlayerData", () => {
             id: 1,
             sync_token_version: 0,
             role: "admin",
-            grade_basic: 1000,
-            grade_recital: null,
+            stats: { gradeBasic: 1000, gradeRecital: null },
         });
         mocks.getMissingJacketIndexes.mockRejectedValue(new Error("db down"));
 

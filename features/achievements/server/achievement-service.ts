@@ -44,7 +44,7 @@ export async function collectAchievementMetrics(
         [plays],
         categories,
         oneHand,
-        user,
+        stats,
         exams,
         opinions,
         patternEvaluations,
@@ -75,9 +75,9 @@ export async function collectAchievementMetrics(
             distinct: ["chart_id"],
             select: { chart_id: true },
         }),
-        db.user.findUnique({
-            where: { id: userId },
-            select: { grade_basic: true },
+        db.playerStats.findUnique({
+            where: { userId },
+            select: { gradeBasic: true },
         }),
         db.examAchievement.findMany({
             where: { userId },
@@ -125,7 +125,7 @@ export async function collectAchievementMetrics(
         realSRankCharts: { value: plays?.real_s_rank ?? 0 },
         oneHandSRankCharts: { value: oneHand.length },
         // User.grade_basic 은 100 배 정수(화면은 /100)
-        basicGrade: { value: Math.floor((user?.grade_basic ?? 0) / 100) },
+        basicGrade: { value: Math.floor((stats?.gradeBasic ?? 0) / 100) },
         examBasic: {
             value: examGradeScore(getBestExamGrade(exams, "basic")),
         },

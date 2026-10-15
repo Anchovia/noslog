@@ -23,14 +23,18 @@ import {
 import { PUBLIC_DATA_REVALIDATE_SECONDS } from "@/lib/cache-policy";
 import { CACHE_TAGS } from "@/lib/cache-tags";
 import db from "@/lib/db";
+import {
+    STATS_GRADE_SELECT,
+    statsGrade,
+    statsGradeField,
+} from "@/lib/player-stats";
 
 const playerFields = {
     id: true,
     username: true,
     avatar: true,
     country: true,
-    grade_basic: true,
-    grade_recital: true,
+    stats: { select: STATS_GRADE_SELECT },
     hide_play_scores: true,
     examAchievements: examAchievementGradeSelect,
 } as const;
@@ -48,12 +52,12 @@ const getPublicRankingPopulation = unstable_cache(
         status: GlobalRankingPayload["status"];
         rows: PopulationRow[];
     }> => {
-        const gradeField = mode === "basic" ? "grade_basic" : "grade_recital";
+        const gradeField = statsGradeField(mode);
         if (metric === "grade") {
             const users = await db.user.findMany({
-                where: { [gradeField]: { gt: 0 } },
+                where: { stats: { [gradeField]: { gt: 0 } } },
                 select: playerFields,
-                orderBy: [{ [gradeField]: "desc" }, { id: "asc" }],
+                orderBy: [{ stats: { [gradeField]: "desc" } }, { id: "asc" }],
             });
             return {
                 status: "available",
@@ -63,9 +67,11 @@ const getPublicRankingPopulation = unstable_cache(
                     avatar: user.avatar,
                     country: user.country,
                     exam: getBestExamGrade(user.examAchievements, mode),
-                    grade: user[gradeField] ?? 0,
-                    value: Math.round((user[gradeField] ?? 0) / 100),
-                    rawValue: user[gradeField] ?? 0,
+                    grade: statsGrade(user.stats, mode) ?? 0,
+                    value: Math.round(
+                        (statsGrade(user.stats, mode) ?? 0) / 100
+                    ),
+                    rawValue: statsGrade(user.stats, mode) ?? 0,
                     hidden: user.hide_play_scores,
                 })),
             };
@@ -102,7 +108,7 @@ const getPublicRankingPopulation = unstable_cache(
                     avatar: user.avatar,
                     country: user.country,
                     exam: getBestExamGrade(user.examAchievements, mode),
-                    grade: user[gradeField] ?? 0,
+                    grade: statsGrade(user.stats, mode) ?? 0,
                     value,
                     rating: value,
                     filledSlots: filled_slots,

@@ -14,9 +14,10 @@ export async function updateRecentBestRecords(userId: number, syncId: number) {
                 where: { id: syncId, user_id: userId, status: "processing" },
                 select: { id: true },
             });
-            const user = await tx.user.findUniqueOrThrow({
-                where: { id: userId },
-                select: { last_full_record_at: true },
+            // 마지막 전체 기록 시각은 player_stats 에서(2026-10-16 DB 재설계 P4)
+            const stats = await tx.playerStats.findUnique({
+                where: { userId },
+                select: { lastFullRecordAt: true },
             });
             const history = await tx.chartPlayHistory.findMany({
                 where: {
@@ -63,7 +64,7 @@ export async function updateRecentBestRecords(userId: number, syncId: number) {
             const plan = planRecentRecordMerge(
                 previous,
                 history,
-                user.last_full_record_at
+                stats?.lastFullRecordAt ?? null
             );
             const records = plan.changes;
             const changed = new Map(

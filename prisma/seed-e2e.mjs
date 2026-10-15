@@ -63,18 +63,20 @@ async function seed() {
         charts.set(chart.difficulty, savedChart);
     }
 
+    // Grd 는 player_stats 에서 읽는다(2026-10-16 DB 재설계 P4)
+    const rankerGrades = { gradeBasic: 568_300, gradeRecital: 521_000 };
     const ranker = await prisma.user.upsert({
         where: { username: "E2E_RANKER" },
         update: {
             country: "ko-KR",
-            grade_basic: 568_300,
-            grade_recital: 521_000,
+            stats: {
+                upsert: { create: rankerGrades, update: rankerGrades },
+            },
         },
         create: {
             username: "E2E_RANKER",
             country: "ko-KR",
-            grade_basic: 568_300,
-            grade_recital: 521_000,
+            stats: { create: rankerGrades },
         },
     });
 

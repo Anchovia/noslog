@@ -10,6 +10,7 @@ import {
     PEER_STORED_GRADE_RANGE,
 } from "@/lib/music/peer-score-comparison";
 import { selectScoreImprovements } from "@/lib/music/score-trend";
+import { STATS_GRADE_SELECT, withStatsGrades } from "@/lib/player-stats";
 import { recentPlayTimestamp } from "@/lib/services/user/recent-record-merge";
 
 // 모든 탭에서 공통으로 사용하는 악곡과 채보 정보만 캐시함
@@ -124,8 +125,8 @@ export function getCachedChartDetailStats(chartId: number, includeUserId = 0) {
     })(chartId, includeUserId);
 }
 
-export function getUserChartRecord(userId: number, chartId: number) {
-    return db.playData.findFirst({
+export async function getUserChartRecord(userId: number, chartId: number) {
+    const record = await db.playData.findFirst({
         where: { user_id: userId, chart_id: chartId, score: { gt: 0 } },
         select: {
             user_id: true,
@@ -134,7 +135,8 @@ export function getUserChartRecord(userId: number, chartId: number) {
                     id: true,
                     username: true,
                     avatar: true,
-                    grade_basic: true,
+                    // 사람 Grd 는 player_stats 에서(2026-10-16 DB 재설계 P4) — 화면에는 예전 이름으로
+                    stats: { select: STATS_GRADE_SELECT },
                     hide_play_scores: true,
                 },
             },
@@ -161,6 +163,7 @@ export function getUserChartRecord(userId: number, chartId: number) {
             besttime: true,
         },
     });
+    return record && { ...record, user: withStatsGrades(record.user) };
 }
 
 export async function getUserChartPeerScoreComparison(
@@ -172,11 +175,11 @@ export async function getUserChartPeerScoreComparison(
     if (gradeBasic === undefined)
         gradeBasic =
             (
-                await db.user.findUnique({
-                    where: { id: userId },
-                    select: { grade_basic: true },
+                await db.playerStats.findUnique({
+                    where: { userId },
+                    select: { gradeBasic: true },
                 })
-            )?.grade_basic ?? null;
+            )?.gradeBasic ?? null;
     if (gradeBasic === null) return null;
 
     const records = await db.playData.findMany({
@@ -188,9 +191,11 @@ export async function getUserChartPeerScoreComparison(
             // 점수 비공개 플레이어는 비교 평균에도 넣지 않는다(비교 대상 1명이면 그 사람 점수가 그대로 보인다)
             user: {
                 hide_play_scores: false,
-                grade_basic: {
-                    gte: Math.max(0, gradeBasic - PEER_STORED_GRADE_RANGE),
-                    lte: gradeBasic + PEER_STORED_GRADE_RANGE,
+                stats: {
+                    gradeBasic: {
+                        gte: Math.max(0, gradeBasic - PEER_STORED_GRADE_RANGE),
+                        lte: gradeBasic + PEER_STORED_GRADE_RANGE,
+                    },
                 },
             },
         },
@@ -231,7 +236,10 @@ export async function getRecentUserChartPlays(userId: number, chartId: number) {
             judge_near: true,
             source_play_time: true,
         },
-        orderBy: [{ source_play_time: "desc" }, { id: "desc" }],
+        orderBy: [
+            { playedAt: { sort: "desc", nulls: "last" } },
+            { id: "desc" },
+        ],
         take: 4,
     });
 
@@ -273,7 +281,10 @@ export async function getUserChartPerformanceTrend(
             judge_near: true,
             source_play_time: true,
         },
-        orderBy: [{ source_play_time: "desc" }, { id: "desc" }],
+        orderBy: [
+            { playedAt: { sort: "desc", nulls: "last" } },
+            { id: "desc" },
+        ],
         take: 30,
     });
 

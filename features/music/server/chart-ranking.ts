@@ -49,12 +49,13 @@ const queryChartRanking = (
             });
             const page = normalizeRankingPage(requestedPage, totalCount);
             // Imported besttime is the achievement time; account creation and synchronization times are unrelated.
+            // 같은 점수는 먼저 달성한 사람이 앞 — best_at(2026-10-16 P4). 시각 모름(예전 「1970」 자리표시)은 예전처럼 가장 이른 값으로
             const rows = await transaction.$queryRaw<unknown[]>`
             WITH ranked AS (
                 SELECT p.user_id, p.rank, p.score, p.fc_type,
                     (RANK() OVER (ORDER BY p.score DESC))::integer AS position,
                     ROW_NUMBER() OVER (ORDER BY p.score DESC,
-                        NULLIF(REPLACE(REPLACE(BTRIM(p.besttime), '/', '-'), 'T', ' '), '') ASC NULLS LAST,
+                        p.best_at ASC NULLS FIRST,
                         p.user_id ASC) AS row_number
                 FROM "PlayData" p JOIN "User" u ON u.id = p.user_id
                 WHERE p.chart_id = ${chartId} AND p.score > 0 AND ${visiblePlayers(includeUserId)}
@@ -102,7 +103,7 @@ function scorePlayersQuery(
             SELECT p.user_id, p.rank, p.score, p.fc_type,
                 (RANK() OVER (ORDER BY p.score DESC))::integer AS position,
                 (ROW_NUMBER() OVER (ORDER BY p.score DESC,
-                    NULLIF(REPLACE(REPLACE(BTRIM(p.besttime), '/', '-'), 'T', ' '), '') ASC NULLS LAST,
+                    p.best_at ASC NULLS FIRST,
                     p.user_id ASC))::integer AS row_number
             FROM "PlayData" p JOIN "User" u ON u.id = p.user_id
             WHERE p.chart_id = ${chartId} AND p.score > 0 AND ${visiblePlayers(includeUserId)}

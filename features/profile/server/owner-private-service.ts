@@ -14,7 +14,7 @@ export async function getOwnerPrivateFields(userId: number) {
                 nostalgia_name: true,
                 discord_name: true,
                 discord_username: true,
-                play_count: true,
+                stats: { select: { playCount: true } },
                 hide_nostalgia_name: true,
                 hide_discord_name: true,
                 hide_preferred_arcade: true,
@@ -25,7 +25,10 @@ export async function getOwnerPrivateFields(userId: number) {
         }),
         db.chartPlayHistory.findFirst({
             where: { user_id: userId },
-            orderBy: [{ source_play_time: "desc" }, { id: "desc" }],
+            orderBy: [
+                { playedAt: { sort: "desc", nulls: "last" } },
+                { id: "desc" },
+            ],
             select: { source_play_time: true },
         }),
     ]);
@@ -42,7 +45,9 @@ export async function getOwnerPrivateFields(userId: number) {
         arcade: user.hide_preferred_arcade
             ? (user.preferredArcade?.name ?? null)
             : null,
-        playCount: user.hide_play_count ? user.play_count : null,
+        playCount: user.hide_play_count
+            ? (user.stats?.playCount ?? null)
+            : null,
         lastPlayedAt: user.hide_play_activity
             ? (lastPlay?.source_play_time ?? null)
             : null,

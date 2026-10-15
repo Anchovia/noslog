@@ -15,7 +15,7 @@ const base = {
     nostalgia_name: "CAROL",
     discord_name: "병훈",
     discord_username: "hoonie71",
-    play_count: 951,
+    stats: { playCount: 951 },
     hide_nostalgia_name: false,
     hide_discord_name: false,
     hide_preferred_arcade: false,

@@ -398,8 +398,8 @@ export async function POST(request: NextRequest) {
             id: true,
             sync_token_version: true,
             role: true,
-            grade_basic: true,
-            grade_recital: true,
+            // 동기화 전 Grd — 바뀌었는지로 공용 캐시를 비운다(2026-10-16 P4, player_stats 에서)
+            stats: { select: { gradeBasic: true, gradeRecital: true } },
         },
     });
     if (!user || user.sync_token_version !== tokenPayload.version) {
@@ -525,8 +525,8 @@ export async function POST(request: NextRequest) {
         // 공용 캐시는 이번 동기화로 실제로 바뀐 만큼만 비운다(2026-10-15 S3) — 바뀐 게 없으면 본인 프로필만
         const gradeChanged =
             grades !== null &&
-            (grades.grade_basic !== user.grade_basic ||
-                grades.grade_recital !== user.grade_recital);
+            (grades.grade_basic !== (user.stats?.gradeBasic ?? null) ||
+                grades.grade_recital !== (user.stats?.gradeRecital ?? null));
         revalidateTag(getUserProfileTag(user.id), "max");
         if (changedChartIds.length > CHART_TAG_REVALIDATE_LIMIT) {
             revalidateTag(CACHE_TAGS.chartRankings, "max");
