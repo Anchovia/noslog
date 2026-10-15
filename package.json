@@ -16,6 +16,7 @@
         "db:import:musics": "node prisma/import-music-catalog.mjs --env-file=.env",
         "db:import:tiers:official": "node prisma/import-official-tiers.mjs --env-file=.env",
         "simulate:rating:basic": "jiti scripts/simulate-basic-tier-rating.ts --env-file=.env",
+        "measure:queries": "node scripts/measure-queries.mjs",
         "generate:profile-card-icon": "node scripts/generate-profile-card-icon.mjs",
         "convert:jackets": "node scripts/convert-music-jackets.mjs && node scripts/generate-music-jacket-manifest.mjs",
         "generate:jacket-manifest": "node scripts/generate-music-jacket-manifest.mjs",
