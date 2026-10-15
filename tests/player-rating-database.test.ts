@@ -8,15 +8,12 @@ import {
     vi,
 } from "vitest";
 vi.mock("@/lib/db", async () => {
-    const value = process.env.NOSLOG_RECENT_TEST_DATABASE_URL;
+    const value = process.env.TEST_DATABASE_URL;
     if (!value) return { default: {} };
     const url = new URL(value);
-    if (
-        !["localhost", "127.0.0.1"].includes(url.hostname) ||
-        url.pathname !== "/noslog_recent_test"
-    )
+    if (!["localhost", "127.0.0.1"].includes(url.hostname))
         throw new Error(
-            "Player rating integration tests require the isolated local noslog_recent_test database."
+            "Player rating integration tests require a local database."
         );
     const { PrismaClient } = await import("@prisma/client");
     return { default: new PrismaClient({ datasourceUrl: value }) };
@@ -47,7 +44,7 @@ import {
 } from "@/lib/tiers/basic-rating";
 
 // 레이팅 저장 표(2026-10-15 L2-A2) — 저장 값이 예전 집계(그 자리에서 모든 기록으로 계산)와 같은지 실제 Postgres 로 본다
-describe.skipIf(!process.env.NOSLOG_RECENT_TEST_DATABASE_URL)(
+describe.skipIf(!process.env.TEST_DATABASE_URL)(
     "player ratings on isolated PostgreSQL",
     () => {
         const musicIndex = `rating-test-${Date.now()}`;

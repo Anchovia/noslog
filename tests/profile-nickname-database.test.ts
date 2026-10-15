@@ -2,18 +2,16 @@ import { randomUUID } from "node:crypto";
 import { PrismaClient } from "@prisma/client";
 import { describe, expect, it } from "vitest";
 
-const databaseUrl = process.env.NOSLOG_NICKNAME_TEST_DATABASE_URL;
+const databaseUrl = process.env.TEST_DATABASE_URL;
 describe.skipIf(!databaseUrl)(
     "nickname normalization database invariant",
     () => {
         it("retains display spelling and rejects case/width collisions atomically", async () => {
             const target = new URL(databaseUrl!);
-            if (
-                target.hostname !== "127.0.0.1" ||
-                target.port !== "55432" ||
-                target.pathname !== "/noslog_v2"
-            )
-                throw new Error("Use only the local NosLog E2E database.");
+            if (!["localhost", "127.0.0.1"].includes(target.hostname))
+                throw new Error(
+                    "Nickname integration tests require a local database."
+                );
             const db = new PrismaClient({ datasourceUrl: databaseUrl });
             const prefix = randomUUID().replaceAll("-", "").slice(0, 8);
             const ids: number[] = [];

@@ -3,7 +3,7 @@ vi.mock("next/cache", () => ({
     unstable_cache: (callback: unknown) => callback,
 }));
 vi.mock("@/lib/db", async () => {
-    const url = process.env.COMMUNITY_TEST_DATABASE_URL;
+    const url = process.env.TEST_DATABASE_URL;
     if (!url) return { default: {} };
     if (!["localhost", "127.0.0.1"].includes(new URL(url).hostname))
         throw new Error("Ranking integration tests require a local database.");
@@ -14,7 +14,7 @@ import db from "@/lib/db";
 import { getGlobalRankingPage } from "@/features/rankings/server/global-ranking-data";
 import { getUserRankingPosition } from "@/features/rankings/server/ranking-position";
 
-describe.skipIf(!process.env.COMMUNITY_TEST_DATABASE_URL)(
+describe.skipIf(!process.env.TEST_DATABASE_URL)(
     "global competition ranking with local PostgreSQL",
     () => {
         const ids: number[] = [];
@@ -69,7 +69,8 @@ describe.skipIf(!process.env.COMMUNITY_TEST_DATABASE_URL)(
                 page: 2,
             });
         });
-        it("keeps profile rank consistent with the published ranking and uses the active-mode exam", async () => {
+        // 검정 배지는 승인된 합격 기록에서만 나온다(d7772509). 여기서는 합격 기록이 없으니 null.
+        it("keeps profile rank consistent with the published ranking", async () => {
             expect(
                 await getUserRankingPosition({
                     userId: ids[26],
@@ -82,7 +83,7 @@ describe.skipIf(!process.env.COMMUNITY_TEST_DATABASE_URL)(
                 { mode: "recital", metric: "grade", region: "jp", page: 1 },
                 ids[26]
             );
-            expect(result.rows[0]).toMatchObject({ value: 7000, exam: 3 });
+            expect(result.rows[0]).toMatchObject({ value: 7000, exam: null });
             expect(result.currentUser).toMatchObject({ rank: 2, page: 2 });
         });
     }

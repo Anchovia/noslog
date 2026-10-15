@@ -1,14 +1,11 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 vi.mock("@/lib/db", async () => {
-    const value = process.env.NOSLOG_RECENT_TEST_DATABASE_URL;
+    const value = process.env.TEST_DATABASE_URL;
     if (!value) return { default: {} };
     const url = new URL(value);
-    if (
-        !["localhost", "127.0.0.1"].includes(url.hostname) ||
-        url.pathname !== "/noslog_recent_test"
-    )
+    if (!["localhost", "127.0.0.1"].includes(url.hostname))
         throw new Error(
-            "Recent-record integration tests require the isolated local noslog_recent_test database."
+            "Recent-record integration tests require a local database."
         );
     const { PrismaClient } = await import("@prisma/client");
     return { default: new PrismaClient({ datasourceUrl: value }) };
@@ -23,7 +20,7 @@ import { getUserChartScoreTrend } from "@/features/music/server/music-detail-dat
 import { getGlobalRankingPage } from "@/features/rankings/server/global-ranking-data";
 import type { SyncMusicInput } from "@/lib/services/music/update-music";
 
-describe.skipIf(!process.env.NOSLOG_RECENT_TEST_DATABASE_URL)(
+describe.skipIf(!process.env.TEST_DATABASE_URL)(
     "recent record pipeline on isolated PostgreSQL",
     () => {
         let userId: number;

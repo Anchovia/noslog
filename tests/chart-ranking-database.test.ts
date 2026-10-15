@@ -4,7 +4,7 @@ vi.mock("next/cache", () => ({
     unstable_cache: (callback: unknown) => callback,
 }));
 vi.mock("@/lib/db", async () => {
-    const url = process.env.COMMUNITY_TEST_DATABASE_URL;
+    const url = process.env.TEST_DATABASE_URL;
     if (!url) return { default: {} };
     if (!["localhost", "127.0.0.1"].includes(new URL(url).hostname))
         throw new Error("Ranking integration tests require a local database.");
@@ -25,7 +25,7 @@ it("normalizes invalid and out-of-range ranking pages to the first page", () => 
     expect(normalizeRankingPage(1, 0)).toBe(1);
 });
 
-describe.skipIf(!process.env.COMMUNITY_TEST_DATABASE_URL)(
+describe.skipIf(!process.env.TEST_DATABASE_URL)(
     "chart competition ranking in an isolated database",
     () => {
         const index = `e2e-ranking-${Date.now()}`;

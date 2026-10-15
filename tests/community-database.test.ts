@@ -6,7 +6,7 @@ vi.mock("next/cache", async (importOriginal) => ({
     unstable_cache: (fn: unknown) => fn,
 }));
 vi.mock("@/lib/db", async () => {
-    const url = process.env.COMMUNITY_TEST_DATABASE_URL;
+    const url = process.env.TEST_DATABASE_URL;
     if (!url) return { default: {} };
     if (!["localhost", "127.0.0.1"].includes(new URL(url).hostname))
         throw new Error(
@@ -25,7 +25,7 @@ import {
 } from "@/features/music/server/community-data";
 import { EMPTY_PATTERN_RATINGS } from "@/features/music/schemas/community-schema";
 
-describe.skipIf(!process.env.COMMUNITY_TEST_DATABASE_URL)(
+describe.skipIf(!process.env.TEST_DATABASE_URL)(
     "community persistence in an isolated local database",
     () => {
         const index = `e2e-community-${Date.now()}`;
