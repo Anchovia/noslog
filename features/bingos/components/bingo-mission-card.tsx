@@ -47,27 +47,29 @@ export default function BingoMissionCard({
 
     return (
         <details
-            className="group rounded-card bg-surface p-3"
+            className="group rounded-nl-container bg-nl-surface p-nl-12"
             open={isOpen || shouldOpen}
             onToggle={(event) => setIsOpen(event.currentTarget.open)}
         >
-            <summary className="flex cursor-pointer list-none items-center gap-3">
-                <span className="flex size-9 shrink-0 items-center justify-center rounded-md bg-surface-muted text-sm font-bold">
+            <summary className="flex cursor-pointer list-none items-center gap-nl-12">
+                <span className="nl-emphasis-label flex size-nl-32 shrink-0 items-center justify-center rounded-nl-field bg-nl-raised">
                     {getBingoEditorCellLabel(position)}
                 </span>
-                <strong className="min-w-0 flex-1 truncate text-body font-bold">
+                <strong className="nl-emphasis-label min-w-0 flex-1 truncate text-nl-content">
                     {title || "미션 입력"}
                 </strong>
-                <span className="text-caption">{missionType}</span>
+                <span className="nl-metadata text-nl-subdued">
+                    {missionType}
+                </span>
             </summary>
-            <div className="mt-3 grid grid-cols-2 gap-2 border-t border-divider pt-3">
+            <div className="mt-nl-12 grid grid-cols-2 gap-nl-8 border-t-nl-stroke border-nl-divider pt-nl-12">
                 <input
                     type="hidden"
                     {...register(`${fieldPrefix}.position`, {
                         valueAsNumber: true,
                     })}
                 />
-                <label className="col-span-2 flex flex-col gap-1 text-caption">
+                <label className="nl-metadata col-span-2 flex flex-col gap-nl-4 text-nl-subdued">
                     미션 내용
                     <input
                         aria-invalid={Boolean(cellErrors?.title)}
@@ -76,7 +78,7 @@ export default function BingoMissionCard({
                     />
                     <BingoFieldError message={cellErrors?.title?.message} />
                 </label>
-                <label className="flex flex-col gap-1 text-caption">
+                <label className="nl-metadata flex flex-col gap-nl-4 text-nl-subdued">
                     미션 종류
                     <select
                         aria-invalid={Boolean(cellErrors?.missionType)}
@@ -92,7 +94,7 @@ export default function BingoMissionCard({
                         message={cellErrors?.missionType?.message}
                     />
                 </label>
-                <label className="flex flex-col gap-1 text-caption">
+                <label className="nl-metadata flex flex-col gap-nl-4 text-nl-subdued">
                     판정 규칙
                     <select
                         aria-invalid={Boolean(cellErrors?.ruleType)}
@@ -107,7 +109,7 @@ export default function BingoMissionCard({
                     </select>
                     <BingoFieldError message={cellErrors?.ruleType?.message} />
                 </label>
-                <label className="col-span-2 flex flex-col gap-1 text-caption">
+                <label className="nl-metadata col-span-2 flex flex-col gap-nl-4 text-nl-subdued">
                     대상 악곡
                     <select
                         aria-invalid={Boolean(cellErrors?.musicIndex)}
@@ -125,7 +127,7 @@ export default function BingoMissionCard({
                         message={cellErrors?.musicIndex?.message}
                     />
                 </label>
-                <label className="flex flex-col gap-1 text-caption">
+                <label className="nl-metadata flex flex-col gap-nl-4 text-nl-subdued">
                     카테고리
                     <input
                         aria-invalid={Boolean(cellErrors?.categoryShort)}
@@ -136,7 +138,7 @@ export default function BingoMissionCard({
                         message={cellErrors?.categoryShort?.message}
                     />
                 </label>
-                <label className="flex flex-col gap-1 text-caption">
+                <label className="nl-metadata flex flex-col gap-nl-4 text-nl-subdued">
                     난이도
                     <select
                         aria-invalid={Boolean(cellErrors?.targetDifficulty)}
@@ -153,7 +155,7 @@ export default function BingoMissionCard({
                         message={cellErrors?.targetDifficulty?.message}
                     />
                 </label>
-                <label className="flex flex-col gap-1 text-caption">
+                <label className="nl-metadata flex flex-col gap-nl-4 text-nl-subdued">
                     레벨
                     <input
                         type="number"
@@ -168,7 +170,7 @@ export default function BingoMissionCard({
                         message={cellErrors?.targetLevel?.message}
                     />
                 </label>
-                <label className="flex flex-col gap-1 text-caption">
+                <label className="nl-metadata flex flex-col gap-nl-4 text-nl-subdued">
                     규칙 값(JSON)
                     <input
                         placeholder='{"score": 950000}'

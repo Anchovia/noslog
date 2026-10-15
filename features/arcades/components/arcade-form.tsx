@@ -13,6 +13,7 @@ import {
     AdminFieldError,
     adminSecondaryButtonClass as secondaryButtonClass,
 } from "@/components/admin/admin-form";
+import { foundationButtonClass } from "@/components/ui/button";
 import { geocodeArcadeAddress } from "@/features/arcades/api/geocode-arcade-address";
 import {
     ARCADE_ADDRESS_MAX_LENGTH,
@@ -48,8 +49,7 @@ import ArcadePhotoManager, {
     type ArcadeFormPhoto,
 } from "./arcade-photo-manager";
 
-const textareaClass =
-    "border-border bg-bg text-body min-h-20 min-w-0 resize-y rounded-md border px-3 py-2 outline-none focus:border-focus";
+const textareaClass = "nl-input min-w-0 resize-y";
 
 // 관리자 화면은 서버·브라우저 시간대가 달라도 같은 날짜가 나오도록 서울 기준으로 적는다
 const verifiedDateFormat = new Intl.DateTimeFormat("ko-KR", {
@@ -249,11 +249,11 @@ export default function ArcadeForm(props: ArcadeFormProps) {
         <form
             onSubmit={submit}
             noValidate
-            className="grid gap-2 rounded-card bg-surface p-3"
+            className="grid gap-nl-8 rounded-nl-container bg-nl-surface p-nl-12"
         >
             {isCreate ? (
-                <h2 className="flex items-center gap-2 text-section">
-                    <Plus className="size-4" aria-hidden /> 오락실 추가
+                <h2 className="nl-component-title flex items-center gap-nl-8 text-nl-content">
+                    <Plus className="nl-icon-small" aria-hidden /> 오락실 추가
                 </h2>
             ) : null}
             <input type="hidden" {...register("latitude")} />
@@ -272,12 +272,12 @@ export default function ArcadeForm(props: ArcadeFormProps) {
             </label>
             <div
                 className={
-                    isCreate ? undefined : "flex min-w-0 items-center gap-2"
+                    isCreate ? undefined : "flex min-w-0 items-center gap-nl-8"
                 }
             >
                 {!isCreate ? (
                     <MapPin
-                        className="size-4 shrink-0 text-chart"
+                        className="nl-icon-small shrink-0 text-nl-chart"
                         aria-hidden
                     />
                 ) : null}
@@ -330,8 +330,8 @@ export default function ArcadeForm(props: ArcadeFormProps) {
                     errors.longitude?.message
                 }
             />
-            <div className="grid grid-cols-2 gap-2">
-                <label className="flex min-w-0 flex-col gap-1 text-caption">
+            <div className="grid grid-cols-2 gap-nl-8">
+                <label className="nl-metadata flex min-w-0 flex-col gap-nl-4 text-nl-subdued">
                     플레이 요금 (원)
                     <input
                         type="number"
@@ -344,7 +344,7 @@ export default function ArcadeForm(props: ArcadeFormProps) {
                     />
                     <FieldError message={errors.playPrice?.message} />
                 </label>
-                <label className="flex min-w-0 flex-col gap-1 text-caption">
+                <label className="nl-metadata flex min-w-0 flex-col gap-nl-4 text-nl-subdued">
                     1회 플레이 코인 수
                     <input
                         type="number"
@@ -359,7 +359,7 @@ export default function ArcadeForm(props: ArcadeFormProps) {
                 </label>
             </div>
             {/* 공개 요금 줄 「₩500 / 1크레딧」 의 단위 자리 — 비우면 코인 수로 적는다 */}
-            <label className="flex min-w-0 flex-col gap-1 text-caption">
+            <label className="nl-metadata flex min-w-0 flex-col gap-nl-4 text-nl-subdued">
                 요금 단위 표기 (선택)
                 <input
                     maxLength={ARCADE_CREDIT_LABEL_MAX_LENGTH}
@@ -370,8 +370,8 @@ export default function ArcadeForm(props: ArcadeFormProps) {
                 />
                 <FieldError message={errors.creditLabel?.message} />
             </label>
-            <div className="grid grid-cols-2 gap-2">
-                <label className="flex min-w-0 flex-col gap-1 text-caption">
+            <div className="grid grid-cols-2 gap-nl-8">
+                <label className="nl-metadata flex min-w-0 flex-col gap-nl-4 text-nl-subdued">
                     전화번호 (선택)
                     <input
                         type="tel"
@@ -384,7 +384,7 @@ export default function ArcadeForm(props: ArcadeFormProps) {
                     />
                     <FieldError message={errors.phone?.message} />
                 </label>
-                <label className="flex min-w-0 flex-col gap-1 text-caption">
+                <label className="nl-metadata flex min-w-0 flex-col gap-nl-4 text-nl-subdued">
                     웹사이트 (선택)
                     <input
                         type="url"
@@ -399,13 +399,15 @@ export default function ArcadeForm(props: ArcadeFormProps) {
                 </label>
             </div>
             {/* 시설 — 공개 상세 「시설」 구역(아이콘 + 글자)에 보인다 */}
-            <fieldset className="grid min-w-0 grid-cols-1 gap-2 rounded-card border border-border p-3">
-                <legend className="px-1 text-label">시설 (선택)</legend>
-                <div className="grid grid-cols-2 gap-2">
+            <fieldset className="grid min-w-0 grid-cols-1 gap-nl-8 rounded-nl-container border-nl-stroke border-nl-border p-nl-12">
+                <legend className="nl-emphasis-label px-nl-4 text-nl-content">
+                    시설 (선택)
+                </legend>
+                <div className="grid grid-cols-2 gap-nl-8">
                     {ARCADE_FACILITIES.map((option) => (
                         <label
                             key={option.value}
-                            className="flex items-center gap-2 text-body-muted"
+                            className="nl-body-secondary flex items-center gap-nl-8 text-nl-subdued"
                         >
                             <input
                                 type="checkbox"
@@ -429,9 +431,11 @@ export default function ArcadeForm(props: ArcadeFormProps) {
                 register={register}
                 errors={errors}
             />
-            <fieldset className="grid min-w-0 grid-cols-1 gap-2 rounded-card border border-border p-3">
-                <legend className="px-1 text-label">기체</legend>
-                <p className="text-caption">
+            <fieldset className="grid min-w-0 grid-cols-1 gap-nl-8 rounded-nl-container border-nl-stroke border-nl-border p-nl-12">
+                <legend className="nl-emphasis-label px-nl-4 text-nl-content">
+                    기체
+                </legend>
+                <p className="nl-metadata text-nl-subdued">
                     가동·상태·메모를 바꾸거나 「오늘 확인」 을 체크하고 저장하면
                     그 기체의 확인 날짜가 오늘로 기록됩니다.
                 </p>
@@ -446,11 +450,13 @@ export default function ArcadeForm(props: ArcadeFormProps) {
                     return (
                         <div
                             key={field.key}
-                            className="grid gap-2 rounded-md border border-border p-2"
+                            className="grid gap-nl-8 rounded-nl-field border-nl-stroke border-nl-border p-nl-8"
                         >
-                            <div className="flex items-center gap-2">
-                                <span className="text-label">{name}</span>
-                                <span className="ml-auto text-caption">
+                            <div className="flex items-center gap-nl-8">
+                                <span className="nl-emphasis-label text-nl-content">
+                                    {name}
+                                </span>
+                                <span className="nl-metadata ml-auto text-nl-subdued">
                                     {saved
                                         ? verifiedLabel(saved.verifiedAt)
                                         : "저장하면 추가됩니다"}
@@ -459,9 +465,15 @@ export default function ArcadeForm(props: ArcadeFormProps) {
                                     type="button"
                                     aria-label={`${name} 삭제`}
                                     onClick={() => remove(index)}
-                                    className="flex size-9 items-center justify-center rounded-md text-body-muted hover:text-danger focus-visible:ring-2 focus-visible:ring-focus/40 focus-visible:outline-none"
+                                    className={foundationButtonClass({
+                                        variant: "ghost",
+                                        size: "icon-sm",
+                                    })}
                                 >
-                                    <Trash2 className="size-4" aria-hidden />
+                                    <Trash2
+                                        className="nl-icon-small"
+                                        aria-hidden
+                                    />
                                 </button>
                             </div>
                             <input
@@ -479,8 +491,8 @@ export default function ArcadeForm(props: ArcadeFormProps) {
                             <div
                                 className={
                                     available
-                                        ? "grid grid-cols-2 gap-2"
-                                        : "grid gap-2"
+                                        ? "grid grid-cols-2 gap-nl-8"
+                                        : "grid gap-nl-8"
                                 }
                             >
                                 <select
@@ -546,11 +558,11 @@ export default function ArcadeForm(props: ArcadeFormProps) {
                                 />
                             ) : null}
                             {/* 태그 · 특징은 공개 기체 카드에 보인다 — 바꿔도 확인 날짜는 그대로 */}
-                            <div className="grid grid-cols-2 gap-2">
+                            <div className="grid grid-cols-2 gap-nl-8">
                                 {ARCADE_CABINET_TAGS.map((option) => (
                                     <label
                                         key={option.value}
-                                        className="flex items-center gap-2 text-body-muted"
+                                        className="nl-body-secondary flex items-center gap-nl-8 text-nl-subdued"
                                     >
                                         <input
                                             type="checkbox"
@@ -563,7 +575,7 @@ export default function ArcadeForm(props: ArcadeFormProps) {
                                     </label>
                                 ))}
                             </div>
-                            <div className="grid grid-cols-3 gap-2">
+                            <div className="grid grid-cols-3 gap-nl-8">
                                 {ARCADE_CABINET_FEATURES.map((feature) => (
                                     <select
                                         key={feature.key}
@@ -610,7 +622,7 @@ export default function ArcadeForm(props: ArcadeFormProps) {
                                 }
                             />
                             {saved ? (
-                                <label className="flex items-center gap-2 text-body-muted">
+                                <label className="nl-body-secondary flex items-center gap-nl-8 text-nl-subdued">
                                     <input
                                         type="checkbox"
                                         {...register(
@@ -624,7 +636,9 @@ export default function ArcadeForm(props: ArcadeFormProps) {
                     );
                 })}
                 {fields.length === 0 ? (
-                    <p className="text-caption">등록된 기체가 없습니다.</p>
+                    <p className="nl-metadata text-nl-subdued">
+                        등록된 기체가 없습니다.
+                    </p>
                 ) : null}
                 <button
                     type="button"
@@ -647,7 +661,7 @@ export default function ArcadeForm(props: ArcadeFormProps) {
                     }
                     className={secondaryButtonClass}
                 >
-                    <Plus className="size-4" aria-hidden /> 기체 추가
+                    <Plus className="nl-icon-small" aria-hidden /> 기체 추가
                 </button>
                 <FieldError
                     message={
@@ -664,7 +678,7 @@ export default function ArcadeForm(props: ArcadeFormProps) {
                     photos={props.arcade.photos}
                 />
             ) : null}
-            <label className="flex flex-col gap-1 text-caption">
+            <label className="nl-metadata flex flex-col gap-nl-4 text-nl-subdued">
                 비고
                 <textarea
                     maxLength={ARCADE_NOTES_MAX_LENGTH}
@@ -676,39 +690,42 @@ export default function ArcadeForm(props: ArcadeFormProps) {
                 <FieldError message={errors.notes?.message} />
             </label>
             {props.mode === "update" ? (
-                <div className="flex items-start justify-between gap-2">
-                    <label className="flex cursor-pointer items-center gap-2 text-body-muted">
+                <div className="flex items-start justify-between gap-nl-8">
+                    <label className="nl-body-secondary flex cursor-pointer items-center gap-nl-8 text-nl-subdued">
                         <input type="checkbox" {...register("isActive")} />
                         선택 목록에 표시
                     </label>
-                    <span className="text-caption">
+                    <span className="nl-metadata text-nl-subdued">
                         선택 {props.arcade.userCount}명
                     </span>
                 </div>
             ) : null}
             <AdminFieldError
                 message={errors.root?.server?.message}
-                className="text-xs text-danger"
+                className="nl-metadata text-nl-error"
             />
-            <div className="flex min-w-0 flex-col items-stretch gap-1">
+            <div className="flex min-w-0 flex-col items-stretch gap-nl-4">
                 <button
                     type="submit"
                     disabled={isSubmitting}
                     className={
                         isCreate
-                            ? "flex h-10 items-center justify-center gap-1.5 rounded-md bg-text-primary text-sm font-bold text-bg focus-visible:ring-2 focus-visible:ring-focus/40 focus-visible:outline-none disabled:opacity-50"
+                            ? foundationButtonClass()
                             : secondaryButtonClass
                     }
                 >
                     {isCreate ? (
-                        <Plus className="size-4" aria-hidden />
+                        <Plus className="nl-icon-small" aria-hidden />
                     ) : (
-                        <Save className="size-4" aria-hidden />
+                        <Save className="nl-icon-small" aria-hidden />
                     )}
                     {isSubmitting ? "위치 확인 중" : isCreate ? "추가" : "저장"}
                 </button>
                 {statusMessage ? (
-                    <span className="text-center text-caption" role="status">
+                    <span
+                        className="nl-metadata text-center text-nl-subdued"
+                        role="status"
+                    >
                         {statusMessage}
                     </span>
                 ) : null}

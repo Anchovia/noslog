@@ -79,7 +79,7 @@ export default function ExamSubmissionReviewForm({
     }
 
     return (
-        <form noValidate className="flex flex-col gap-2">
+        <form noValidate className="flex flex-col gap-nl-8">
             <input type="hidden" {...register("submissionId")} />
             <input type="hidden" {...register("status")} />
             <textarea
@@ -92,13 +92,13 @@ export default function ExamSubmissionReviewForm({
             />
             <AdminFieldError
                 message={errors.reviewerNote?.message}
-                className="text-xs text-danger"
+                className="nl-metadata text-nl-error"
             />
             <AdminFieldError
                 message={errors.root?.server?.message}
-                className="text-xs text-danger"
+                className="nl-metadata text-nl-error"
             />
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-nl-8">
                 <Button
                     variant="danger"
                     disabled={isSubmitting}
@@ -106,14 +106,12 @@ export default function ExamSubmissionReviewForm({
                 >
                     <X className="nl-icon-small" aria-hidden /> 반려
                 </Button>
-                <button
-                    type="button"
+                <Button
                     disabled={isSubmitting}
                     onClick={() => submitReview("approved")}
-                    className="flex h-10 cursor-pointer items-center justify-center gap-1 rounded-md bg-success text-sm font-bold text-bg disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                    <Check className="size-4" /> 승인
-                </button>
+                    <Check className="nl-icon-small" aria-hidden /> 승인
+                </Button>
             </div>
         </form>
     );

@@ -1,6 +1,8 @@
 import Link from "next/link";
 
+import { foundationButtonClass } from "@/components/ui/button";
 import type { AdminChartDraft } from "@/features/contributions/server/chart-draft-service";
+import { cn } from "@/lib/cn";
 
 const STATUS_LABELS: Record<string, string> = {
     submitted: "검토 대기",
@@ -19,7 +21,7 @@ export default function ChartDraftReviewList({
     drafts: AdminChartDraft[];
 }) {
     return (
-        <section className="flex flex-col gap-3">
+        <section className="flex flex-col gap-nl-12">
             {drafts.map((draft) => {
                 const reviewHref = `/admin/music/${encodeURIComponent(draft.chart.musicIndex)}/${draft.chart.difficulty.toLowerCase()}/pattern/review/${draft.id}`;
                 const level =
@@ -32,17 +34,17 @@ export default function ChartDraftReviewList({
                 return (
                     <article
                         key={draft.id}
-                        className="flex items-center gap-3 rounded-card bg-surface p-4"
+                        className="flex items-center gap-nl-12 rounded-nl-container bg-nl-surface p-nl-16"
                     >
-                        <div className="flex min-w-0 flex-1 flex-col gap-1">
+                        <div className="flex min-w-0 flex-1 flex-col gap-nl-4">
                             <Link
                                 href={reviewHref}
-                                className="min-w-0 truncate text-section hover:underline"
+                                className="nl-component-title min-w-0 truncate text-nl-content hover:underline"
                             >
                                 {draft.chart.title} · {draft.chart.difficulty}{" "}
                                 {draft.chart.level}
                             </Link>
-                            <p className="text-caption">
+                            <p className="nl-metadata text-nl-subdued">
                                 {draft.user.username ?? "이름 없음"}
                                 {level} · 노트{" "}
                                 {draft.noteCount.toLocaleString("ko-KR")}개
@@ -55,12 +57,15 @@ export default function ChartDraftReviewList({
                                 {at ? ` · ${at.toLocaleString("ko-KR")}` : ""}
                             </p>
                         </div>
-                        <span className="shrink-0 rounded bg-surface-muted px-2 py-1 text-caption">
+                        <span className="nl-tag shrink-0">
                             {STATUS_LABELS[draft.status] ?? draft.status}
                         </span>
                         <Link
                             href={reviewHref}
-                            className="flex h-10 shrink-0 items-center rounded-md border border-border px-3 text-sm font-bold text-text-primary"
+                            className={cn(
+                                foundationButtonClass({ variant: "secondary" }),
+                                "shrink-0"
+                            )}
                         >
                             검토
                         </Link>

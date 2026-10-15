@@ -3,43 +3,46 @@ import { DatabaseZap, ShieldCheck, UserRound } from "lucide-react";
 import ResetUserSyncTokenButton from "@/features/users/components/admin/reset-user-sync-token-button";
 import UserRoleToggleButton from "@/features/users/components/admin/user-role-toggle-button";
 import type { AdminUserRow } from "@/features/users/types/user-admin";
-import { getSyncHealthClassName } from "@/lib/admin/sync-health";
+import { getSyncHealthTagTone } from "@/lib/admin/sync-health";
 
 export default function AdminUserCard({ user }: { user: AdminUserRow }) {
     return (
-        <article className="flex flex-col gap-3 rounded-card bg-surface p-3">
-            <div className="flex items-start gap-3">
+        <article className="flex flex-col gap-nl-12 rounded-nl-container bg-nl-surface p-nl-12">
+            <div className="flex items-start gap-nl-12">
                 <span
-                    className={`flex size-9 shrink-0 items-center justify-center rounded-full ${user.role === "admin" ? "bg-basic/10 text-basic" : "bg-surface-muted text-text-secondary"}`}
+                    className={`flex size-nl-32 shrink-0 items-center justify-center rounded-nl-full bg-nl-raised ${user.role === "admin" ? "text-nl-content" : "text-nl-subdued"}`}
                 >
                     {user.role === "admin" ? (
-                        <ShieldCheck className="size-4" aria-hidden />
+                        <ShieldCheck className="nl-icon-small" aria-hidden />
                     ) : (
-                        <UserRound className="size-4" aria-hidden />
+                        <UserRound className="nl-icon-small" aria-hidden />
                     )}
                 </span>
                 <div className="min-w-0 flex-1">
-                    <p className="truncate text-body font-bold">{user.name}</p>
-                    <p className="text-caption">
+                    <p className="nl-emphasis-label truncate text-nl-content">
+                        {user.name}
+                    </p>
+                    <p className="nl-metadata text-nl-subdued">
                         #{user.id} · {user.country} · 가입{" "}
                         {new Date(user.createdAt).toLocaleDateString("ko-KR")}
                     </p>
                 </div>
                 <span
-                    className={`${getSyncHealthClassName(user.health.tone)} shrink-0 rounded-full px-2 py-1 text-xs font-semibold`}
+                    className="nl-tag nl-tag--status shrink-0"
+                    data-tone={getSyncHealthTagTone(user.health.tone)}
                 >
                     {user.health.label}
                 </span>
             </div>
-            <p className="text-caption">
+            <p className="nl-metadata text-nl-subdued">
                 플레이 {user.playCount}회 · 동기화 {user.counts.dataSyncs}회 ·
                 평가 {user.counts.chartEvaluations}개 · 검정{" "}
                 {user.counts.examAchievements}개
             </p>
-            <div className="grid grid-cols-2 gap-2">
-                <div className="rounded-md bg-bg p-2">
-                    <p className="text-micro">마지막 동기화</p>
-                    <strong className="mt-0.5 block text-caption font-semibold">
+            <div className="grid grid-cols-2 gap-nl-8">
+                <div className="rounded-nl-field bg-nl-canvas p-nl-8">
+                    <p className="nl-metadata text-nl-subdued">마지막 동기화</p>
+                    <strong className="nl-metadata mt-nl-4 block text-nl-subdued">
                         {user.latestSyncAt
                             ? new Date(user.latestSyncAt).toLocaleString(
                                   "ko-KR"
@@ -47,62 +50,76 @@ export default function AdminUserCard({ user }: { user: AdminUserRow }) {
                             : "-"}
                     </strong>
                 </div>
-                <div className="rounded-md bg-bg p-2">
-                    <p className="text-micro">공식 마지막 플레이</p>
-                    <strong className="mt-0.5 block text-caption font-semibold">
+                <div className="rounded-nl-field bg-nl-canvas p-nl-8">
+                    <p className="nl-metadata text-nl-subdued">
+                        공식 마지막 플레이
+                    </p>
+                    <strong className="nl-metadata mt-nl-4 block text-nl-subdued">
                         {user.nostalgiaLastPlaytime ?? "-"}
                     </strong>
                 </div>
-                <div className="rounded-md bg-bg p-2">
-                    <p className="text-micro">전체 채보 기록</p>
-                    <strong className="mt-0.5 block text-label tabular-nums">
+                <div className="rounded-nl-field bg-nl-canvas p-nl-8">
+                    <p className="nl-metadata text-nl-subdued">
+                        전체 채보 기록
+                    </p>
+                    <strong className="nl-metric-value mt-nl-4 block text-nl-content">
                         {user.counts.playData.toLocaleString("ko-KR")}
                     </strong>
                 </div>
-                <div className="rounded-md bg-bg p-2">
-                    <p className="text-micro">최근 플레이 기록</p>
-                    <strong className="mt-0.5 block text-label tabular-nums">
+                <div className="rounded-nl-field bg-nl-canvas p-nl-8">
+                    <p className="nl-metadata text-nl-subdued">
+                        최근 플레이 기록
+                    </p>
+                    <strong className="nl-metric-value mt-nl-4 block text-nl-content">
                         {user.counts.recentPlayHistory.toLocaleString("ko-KR")}
                     </strong>
                 </div>
             </div>
-            <details className="border-t border-border pt-3">
-                <summary className="flex cursor-pointer list-none items-center gap-1.5 text-label font-semibold">
-                    <DatabaseZap className="size-3.5" aria-hidden />
+            <details className="border-t-nl-stroke border-nl-border pt-nl-12">
+                <summary className="nl-emphasis-label flex cursor-pointer list-none items-center gap-nl-8 text-nl-content">
+                    <DatabaseZap className="nl-icon-small" aria-hidden />
                     상세 데이터 적재율
                 </summary>
-                <dl className="mt-3 grid grid-cols-2 gap-x-3 gap-y-2">
+                <dl className="mt-nl-12 grid grid-cols-2 gap-x-nl-12 gap-y-nl-8">
                     <div>
-                        <dt className="text-micro">채보 판정</dt>
-                        <dd className="text-label tabular-nums">
+                        <dt className="nl-metadata text-nl-subdued">
+                            채보 판정
+                        </dt>
+                        <dd className="nl-metric-value text-nl-content">
                             {user.coverage.judgementRecords} /{" "}
                             {user.counts.playData}
                         </dd>
                     </div>
                     <div>
-                        <dt className="text-micro">음표 성공률</dt>
-                        <dd className="text-label tabular-nums">
+                        <dt className="nl-metadata text-nl-subdued">
+                            음표 성공률
+                        </dt>
+                        <dd className="nl-metric-value text-nl-content">
                             {user.coverage.noteRateRecords} /{" "}
                             {user.counts.playData}
                         </dd>
                     </div>
                     <div>
-                        <dt className="text-micro">최근 플레이 판정</dt>
-                        <dd className="text-label tabular-nums">
+                        <dt className="nl-metadata text-nl-subdued">
+                            최근 플레이 판정
+                        </dt>
+                        <dd className="nl-metric-value text-nl-content">
                             {user.coverage.recentJudgementRecords} /{" "}
                             {user.counts.recentPlayHistory}
                         </dd>
                     </div>
                     <div>
-                        <dt className="text-micro">FAST/SLOW</dt>
-                        <dd className="text-label tabular-nums">
+                        <dt className="nl-metadata text-nl-subdued">
+                            FAST/SLOW
+                        </dt>
+                        <dd className="nl-metric-value text-nl-content">
                             {user.coverage.recentFastSlowRecords} /{" "}
                             {user.counts.recentPlayHistory}
                         </dd>
                     </div>
                 </dl>
             </details>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-nl-8">
                 <UserRoleToggleButton
                     isAdmin={user.role === "admin"}
                     userId={user.id}

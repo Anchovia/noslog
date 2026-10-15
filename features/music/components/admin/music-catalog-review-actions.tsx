@@ -6,6 +6,7 @@ import { useTransition } from "react";
 import { toast } from "sonner";
 
 import { reviewMusicCatalogCandidate } from "@/app/admin/catalog/actions";
+import { foundationButtonClass } from "@/components/ui/button";
 import {
     createMusicCatalogReviewFormData,
     type MusicCatalogDecision,
@@ -39,23 +40,23 @@ export default function MusicCatalogReviewActions({
     }
 
     return (
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-2 gap-nl-8">
             <button
                 type="button"
                 disabled={isPending}
                 onClick={() => review("reject")}
-                className="flex h-10 cursor-pointer items-center justify-center gap-2 rounded-md border border-border text-sm font-bold text-text-secondary hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-50"
+                className={foundationButtonClass({ variant: "secondary" })}
             >
-                <X className="size-4" aria-hidden />
+                <X className="nl-icon-small" aria-hidden />
                 {isPending ? "처리 중" : "반려"}
             </button>
             <button
                 type="button"
                 disabled={isPending}
                 onClick={() => review("approve")}
-                className="flex h-10 cursor-pointer items-center justify-center gap-2 rounded-md bg-text-primary text-sm font-bold text-bg disabled:cursor-not-allowed disabled:opacity-50"
+                className={foundationButtonClass()}
             >
-                <Check className="size-4" aria-hidden />
+                <Check className="nl-icon-small" aria-hidden />
                 {isPending ? "처리 중" : "반영"}
             </button>
         </div>

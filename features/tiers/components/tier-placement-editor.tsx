@@ -7,15 +7,17 @@ import { toast } from "sonner";
 
 import { moveTierEntryToBand } from "@/app/admin/tiers/actions";
 import MusicJacket from "@/components/music/music-jacket";
+import { foundationButtonClass } from "@/components/ui/button";
 import { createTierEntryMoveFormData } from "@/features/tiers/schemas/tier-admin-schema";
+import { cn } from "@/lib/cn";
 import { formatOfficialChartLevel, formatTierValue } from "@/lib/tiers";
 
 // 관리자 악곡 관리(musicMetadataForms)와 같은 난이도 색
 const difficultyColor: Record<string, string> = {
-    normal: "text-normal",
-    hard: "text-hard",
-    expert: "text-expert",
-    real: "text-real",
+    normal: "text-nl-difficulty-normal",
+    hard: "text-nl-difficulty-hard",
+    expert: "text-nl-difficulty-expert",
+    real: "text-nl-difficulty-real",
 };
 
 interface TierPlacementEditorProps {
@@ -74,28 +76,28 @@ export default function TierPlacementEditor({
     }
 
     return (
-        <section className="flex flex-col gap-3">
-            <p className="px-1 text-caption">
+        <section className="flex flex-col gap-nl-12">
+            <p className="nl-metadata px-nl-4 text-nl-subdued">
                 검색 결과 {totalCount}곡 · 한 페이지에 최대 100곡
             </p>
-            <div className="overflow-hidden rounded-card bg-surface">
+            <div className="overflow-hidden rounded-nl-container bg-nl-surface">
                 {entries.map((entry, index) => (
                     <form
                         key={entry.id}
                         onSubmit={(event) => handleSubmit(event, entry.id)}
-                        className={`flex min-h-18 items-center gap-2 p-3 ${index > 0 ? "border-t border-divider" : ""}`}
+                        className={`flex min-h-nl-64 items-center gap-nl-8 p-nl-12 ${index > 0 ? "border-t-nl-stroke border-nl-divider" : ""}`}
                     >
                         <MusicJacket
                             index={entry.chart.music.index}
                             background={entry.chart.music.background}
                             title={entry.chart.music.title}
-                            className="size-11 shrink-0 rounded-md"
+                            className="size-nl-48 shrink-0 rounded-nl-field"
                         />
                         <span className="min-w-0 flex-1">
-                            <strong className="block truncate text-sm">
+                            <strong className="nl-body-secondary block truncate">
                                 {entry.chart.music.title}
                             </strong>
-                            <span className="block truncate text-caption">
+                            <span className="nl-metadata block truncate text-nl-subdued">
                                 <span
                                     className={
                                         difficultyColor[
@@ -115,7 +117,7 @@ export default function TierPlacementEditor({
                             name="tierBandId"
                             defaultValue={entry.tierBandId}
                             aria-label={`${entry.chart.music.title} 서열 상수`}
-                            className="h-10 w-22 shrink-0 rounded-md border border-border bg-bg px-2 text-input text-xs font-semibold tabular-nums"
+                            className="nl-input nl-admin-number-input shrink-0"
                         >
                             {bands.map((band) => (
                                 <option key={band.id} value={band.id}>
@@ -128,9 +130,15 @@ export default function TierPlacementEditor({
                             disabled={isPending}
                             aria-label={`${entry.chart.music.title} 서열 상수 저장`}
                             title="서열 상수 저장"
-                            className="flex size-10 shrink-0 items-center justify-center rounded-md text-text-secondary hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-50"
+                            className={cn(
+                                foundationButtonClass({
+                                    variant: "ghost",
+                                    size: "icon",
+                                }),
+                                "shrink-0"
+                            )}
                         >
-                            <Save className="size-4" aria-hidden />
+                            <Save className="nl-icon-small" aria-hidden />
                             <span className="sr-only">
                                 {pendingEntryId === entry.id
                                     ? "저장 중"
@@ -140,7 +148,7 @@ export default function TierPlacementEditor({
                     </form>
                 ))}
                 {entries.length === 0 ? (
-                    <p className="py-12 text-center text-body-muted">
+                    <p className="nl-body-secondary py-nl-48 text-center text-nl-subdued">
                         조건에 해당하는 채보가 없습니다.
                     </p>
                 ) : null}

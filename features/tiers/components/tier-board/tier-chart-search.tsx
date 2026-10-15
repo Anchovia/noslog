@@ -1,6 +1,7 @@
 import { Plus, Search, X } from "lucide-react";
 
 import MusicJacket from "@/components/music/music-jacket";
+import { foundationButtonClass } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
 
 import type { TierChartSearchResult } from "./tier-board-types";
@@ -28,16 +29,16 @@ export default function TierChartSearch({
     onAdd,
 }: TierChartSearchProps) {
     return (
-        <div className="border-t border-divider p-3">
-            <div className="flex items-center gap-2">
+        <div className="border-t-nl-stroke border-nl-divider p-nl-12">
+            <div className="flex items-center gap-nl-8">
                 <div className="relative min-w-0 flex-1">
-                    <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-text-disabled" />
+                    <Search className="nl-icon-small pointer-events-none absolute top-1/2 left-nl-12 -translate-y-1/2 text-nl-disabled" />
                     <input
                         autoFocus
                         value={query}
                         onChange={(event) => onQueryChange(event.target.value)}
                         placeholder="곡 제목 · 아티스트 · 식별자 검색"
-                        className="h-11 w-full rounded-md border border-border bg-bg pr-3 pl-10 text-input"
+                        className="nl-input"
                     />
                 </div>
                 <button
@@ -45,21 +46,27 @@ export default function TierChartSearch({
                     onClick={onClose}
                     aria-label="검색 닫기"
                     title="닫기"
-                    className="flex size-11 shrink-0 items-center justify-center rounded-md text-text-secondary hover:bg-surface-muted"
+                    className={cn(
+                        foundationButtonClass({
+                            variant: "ghost",
+                            size: "icon",
+                        }),
+                        "shrink-0"
+                    )}
                 >
-                    <X className="size-4" />
+                    <X className="nl-icon-small" />
                 </button>
             </div>
 
             {query.trim() ? (
-                <div className="mt-2 max-h-64 overflow-y-auto rounded-md border border-divider">
+                <div className="nl-admin-scroll-list mt-nl-8 overflow-y-auto rounded-nl-field border-nl-stroke border-nl-divider">
                     {isSearching ? (
-                        <p className="py-6 text-center text-body-muted">
+                        <p className="nl-body-secondary py-nl-24 text-center text-nl-subdued">
                             검색 중...
                         </p>
                     ) : null}
                     {!isSearching && results.length === 0 ? (
-                        <p className="py-6 text-center text-body-muted">
+                        <p className="nl-body-secondary py-nl-24 text-center text-nl-subdued">
                             배치할 수 있는 채보가 없습니다.
                         </p>
                     ) : null}
@@ -70,8 +77,9 @@ export default function TierChartSearch({
                                   type="button"
                                   onClick={() => onAdd(chart.id)}
                                   className={cn(
-                                      "flex min-h-14 w-full cursor-pointer items-center gap-2 p-2 text-left hover:bg-surface-muted",
-                                      index > 0 && "border-t border-divider"
+                                      "nl-hover-layer flex min-h-nl-64 w-full cursor-pointer items-center gap-nl-8 p-nl-8 text-left",
+                                      index > 0 &&
+                                          "border-t-nl-stroke border-nl-divider"
                                   )}
                               >
                                   <MusicJacket
@@ -79,19 +87,19 @@ export default function TierChartSearch({
                                       background={chart.jacket}
                                       title={chart.title}
                                       className={cn(
-                                          "size-10 shrink-0 rounded-md border-2",
+                                          "size-nl-48 shrink-0 rounded-nl-field border-nl-stroke-strong",
                                           getTierDifficultyBorder(
                                               chart.difficulty
                                           )
                                       )}
                                   />
                                   <span className="min-w-0 flex-1">
-                                      <strong className="block truncate text-sm">
+                                      <strong className="nl-body-secondary block truncate">
                                           {chart.title}
                                       </strong>
                                       <span
                                           className={cn(
-                                              "block truncate text-caption font-semibold",
+                                              "nl-metadata block truncate text-nl-subdued",
                                               getTierDifficultyColor(
                                                   chart.difficulty
                                               )
@@ -103,7 +111,7 @@ export default function TierChartSearch({
                                               : ""}
                                       </span>
                                   </span>
-                                  <Plus className="size-4 shrink-0 text-text-secondary" />
+                                  <Plus className="nl-icon-small shrink-0 text-nl-subdued" />
                               </button>
                           ))
                         : null}

@@ -22,10 +22,10 @@ export default function ProfileAvatar({
     return (
         <span
             className={cn(
-                "flex shrink-0 items-center justify-center overflow-hidden rounded-full border bg-cover bg-center font-bold",
+                "flex shrink-0 items-center justify-center overflow-hidden rounded-nl-full border-nl-stroke bg-cover bg-center",
                 avatar
-                    ? "border-border bg-surface-muted"
-                    : "border-text-primary bg-bg text-text-primary",
+                    ? "border-nl-border bg-nl-raised"
+                    : "border-nl-content bg-nl-canvas text-nl-content",
                 className
             )}
             style={{

@@ -1,5 +1,5 @@
+import { Switch } from "@/components/ui/switch";
 import type { ExamStatus } from "@/features/exams/schemas/exam-editor-schema";
-import { cn } from "@/lib/cn";
 
 import ExamFieldError from "./exam-field-error";
 
@@ -17,37 +17,24 @@ export default function ExamPublicationSection({
     const isPublished = status === "published";
 
     return (
-        <section className="border-t border-divider pt-5">
-            <div className="flex items-center justify-between gap-4">
+        <section className="border-t-nl-stroke border-nl-divider pt-nl-24">
+            <div className="flex items-center justify-between gap-nl-16">
                 <div>
-                    <h2 className="text-body font-bold">공개 상태</h2>
-                    <p className="mt-0.5 text-caption">
+                    <h2 className="nl-emphasis-label text-nl-content">
+                        공개 상태
+                    </h2>
+                    <p className="nl-metadata mt-nl-4 text-nl-subdued">
                         공개하려면 과제곡 세 곡과 필수 정보를 입력해야 합니다.
                     </p>
                 </div>
-                <button
-                    type="button"
-                    role="switch"
+                <Switch
                     aria-label="검정 공개 상태"
-                    aria-checked={isPublished}
                     aria-invalid={Boolean(error)}
-                    onClick={() =>
-                        onChange(isPublished ? "draft" : "published")
+                    checked={isPublished}
+                    onCheckedChange={(checked) =>
+                        onChange(checked ? "published" : "draft")
                     }
-                    className={cn(
-                        "relative h-7 w-12 shrink-0 rounded-full bg-surface-muted",
-                        isPublished && "bg-success"
-                    )}
-                >
-                    <span
-                        className={cn(
-                            "absolute top-1 left-1 size-5 rounded-full transition-transform",
-                            isPublished
-                                ? "translate-x-5 bg-switch-thumb-active"
-                                : "bg-switch-thumb"
-                        )}
-                    />
-                </button>
+                />
             </div>
             <ExamFieldError message={error} />
         </section>

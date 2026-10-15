@@ -45,27 +45,27 @@ export default function AchievementRejudgePanel() {
     }
 
     return (
-        <section className="flex flex-wrap items-center justify-between gap-3 rounded-card bg-surface p-3">
+        <section className="flex flex-wrap items-center justify-between gap-nl-12 rounded-nl-container bg-nl-surface p-nl-12">
             <div className="min-w-0">
-                <p className="text-sm font-bold">업적 다시 판정</p>
-                <p className="mt-1 text-caption">
+                <p className="nl-emphasis-label">업적 다시 판정</p>
+                <p className="nl-metadata mt-nl-4 text-nl-subdued">
                     기록이 있는 사용자 모두의 업적을 지금 기준으로 판정합니다.
                     얻은 단계는 빼지 않습니다.
                 </p>
-                <label className="mt-2 flex cursor-pointer items-center gap-2 text-caption">
+                <label className="nl-metadata mt-nl-8 flex cursor-pointer items-center gap-nl-8 text-nl-subdued">
                     <input
                         type="checkbox"
                         checked={prune}
                         disabled={pending}
                         onChange={(event) => setPrune(event.target.checked)}
-                        className="size-4"
+                        className="size-nl-16"
                     />
                     기준에 못 미치는 단계도 빼기(기준을 바꾼 뒤에만)
                 </label>
                 {status ? (
                     <p
                         role="status"
-                        className={`mt-1 text-xs ${failed ? "text-danger" : "text-text-secondary"}`}
+                        className={`nl-metadata mt-nl-4 ${failed ? "text-nl-error" : "text-nl-subdued"}`}
                     >
                         {status}
                     </p>
@@ -77,7 +77,7 @@ export default function AchievementRejudgePanel() {
                 disabled={pending}
                 className={adminSecondaryButtonClass}
             >
-                <Award className="size-4" aria-hidden />
+                <Award className="nl-icon-small" aria-hidden />
                 {pending ? "판정 중..." : "다시 판정"}
             </button>
         </section>

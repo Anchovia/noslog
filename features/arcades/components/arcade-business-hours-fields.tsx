@@ -41,18 +41,20 @@ export default function ArcadeBusinessHoursFields({
     const errorMessage = businessHoursErrorMessage(errors);
 
     return (
-        <fieldset className="grid min-w-0 grid-cols-1 gap-2 rounded-card border border-border p-3">
-            <legend className="px-1 text-label">영업시간</legend>
-            <p className="text-caption">
+        <fieldset className="grid min-w-0 grid-cols-1 gap-nl-8 rounded-nl-container border-nl-stroke border-nl-border p-nl-12">
+            <legend className="nl-emphasis-label px-nl-4 text-nl-content">
+                영업시간
+            </legend>
+            <p className="nl-metadata text-nl-subdued">
                 체크를 해제한 요일은 휴무로 표시됩니다. 자정을 넘겨 영업하면
                 종료 시간을 다음 날 시간으로 입력합니다.
             </p>
             {ARCADE_WEEKDAYS.map(({ key, label }) => (
                 <div
                     key={key}
-                    className="grid grid-cols-[auto_1fr_1fr] items-center gap-2"
+                    className="nl-admin-hours-row items-center gap-nl-8"
                 >
-                    <label className="flex items-center gap-1.5 text-label">
+                    <label className="nl-emphasis-label flex items-center gap-nl-8 text-nl-content">
                         <input
                             type="checkbox"
                             {...register(`businessHours.${key}.enabled`)}
@@ -82,13 +84,13 @@ export default function ArcadeBusinessHoursFields({
                 </div>
             ))}
             {legacyNote ? (
-                <p className="text-caption whitespace-pre-wrap">
+                <p className="nl-metadata whitespace-pre-wrap text-nl-subdued">
                     기존 입력: {legacyNote}
                 </p>
             ) : null}
             <AdminFieldError
                 message={errorMessage}
-                className="text-xs text-danger"
+                className="nl-metadata text-nl-error"
             />
         </fieldset>
     );

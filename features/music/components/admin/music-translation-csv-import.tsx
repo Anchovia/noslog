@@ -11,6 +11,7 @@ import {
     validateMusicTranslationsCsv,
 } from "@/app/admin/music/actions";
 import { AdminFieldError } from "@/components/admin/admin-form";
+import { foundationButtonClass } from "@/components/ui/button";
 import {
     type MusicTranslationCsvFormValues,
     musicTranslationCsvTextSchema,
@@ -116,17 +117,21 @@ export default function MusicTranslationCsvImport() {
     }
 
     return (
-        <section className="flex flex-col gap-3 rounded-card bg-surface p-4">
+        <section className="flex flex-col gap-nl-12 rounded-nl-container bg-nl-surface p-nl-16">
             <div>
-                <h2 className="text-section">악곡 번역 CSV</h2>
-                <p className="mt-1 text-caption">
+                <h2 className="nl-component-title text-nl-content">
+                    악곡 번역 CSV
+                </h2>
+                <p className="nl-metadata mt-nl-4 text-nl-subdued">
                     Music.index 기준 · locale은 ko/en · approved만 사용자에게
                     표시됩니다.
                 </p>
             </div>
-            <div className="flex gap-2">
-                <label className="flex h-10 cursor-pointer items-center gap-2 rounded-card border border-border px-3 text-sm font-semibold hover:bg-surface-muted">
-                    <Upload className="size-4" aria-hidden />
+            <div className="flex gap-nl-8">
+                <label
+                    className={foundationButtonClass({ variant: "secondary" })}
+                >
+                    <Upload className="nl-icon-small" aria-hidden />
                     CSV 선택
                     <input
                         type="file"
@@ -141,7 +146,7 @@ export default function MusicTranslationCsvImport() {
                         encodeURIComponent(templateCsv)
                     }
                     download="noslog-music-translations.csv"
-                    className="flex h-10 items-center rounded-card border border-border px-3 text-sm font-semibold hover:bg-surface-muted"
+                    className={foundationButtonClass({ variant: "secondary" })}
                 >
                     템플릿
                 </a>
@@ -149,13 +154,13 @@ export default function MusicTranslationCsvImport() {
             <form
                 noValidate
                 onSubmit={handleSubmit(validate)}
-                className="flex flex-col gap-3"
+                className="flex flex-col gap-nl-12"
             >
                 <textarea
                     rows={6}
                     placeholder="index,locale,title,status"
                     aria-invalid={Boolean(errors.csv)}
-                    className="w-full resize-y rounded-card border border-border bg-bg px-3 py-2 font-mono text-input text-xs"
+                    className="nl-input resize-y"
                     {...csvField}
                     onChange={(event) => {
                         void csvField.onChange(event);
@@ -170,20 +175,20 @@ export default function MusicTranslationCsvImport() {
                             ? errors.csv?.message
                             : undefined
                     }
-                    className="text-xs text-danger"
+                    className="nl-metadata text-nl-error"
                 />
                 <button
                     type="submit"
                     disabled={isSubmitting || isApplying || !csv.trim()}
-                    className="flex h-10 cursor-pointer items-center justify-center gap-2 rounded-card border border-border text-sm font-bold hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-50"
+                    className={foundationButtonClass({ variant: "secondary" })}
                 >
-                    <FileCheck2 className="size-4" aria-hidden />
+                    <FileCheck2 className="nl-icon-small" aria-hidden />
                     {isSubmitting ? "검증 중" : "CSV 검증"}
                 </button>
             </form>
             {validationErrors.length > 0 ? (
                 <ul
-                    className="max-h-32 list-disc overflow-y-auto pl-5 text-xs text-danger"
+                    className="nl-admin-scroll-list--short nl-metadata list-disc overflow-y-auto pl-nl-24 text-nl-error"
                     role="alert"
                 >
                     {validationErrors.map((error, index) => (
@@ -192,42 +197,42 @@ export default function MusicTranslationCsvImport() {
                 </ul>
             ) : null}
             {preview ? (
-                <div className="flex flex-col gap-2">
-                    <div className="overflow-x-auto rounded-md border border-border">
-                        <table className="w-full min-w-140 text-left text-xs">
-                            <thead className="bg-surface-muted">
+                <div className="flex flex-col gap-nl-8">
+                    <div className="overflow-x-auto rounded-nl-field border-nl-stroke border-nl-border">
+                        <table className="nl-admin-table-wide nl-metadata w-full text-left">
+                            <thead className="bg-nl-raised">
                                 <tr>
-                                    <th className="p-2">index</th>
-                                    <th className="p-2">원제</th>
-                                    <th className="p-2">언어</th>
-                                    <th className="p-2">번역</th>
-                                    <th className="p-2">상태</th>
+                                    <th className="p-nl-8">index</th>
+                                    <th className="p-nl-8">원제</th>
+                                    <th className="p-nl-8">언어</th>
+                                    <th className="p-nl-8">번역</th>
+                                    <th className="p-nl-8">상태</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {preview.previews.map((row) => (
                                     <tr
                                         key={row.index + ":" + row.locale}
-                                        className="border-t border-divider"
+                                        className="border-t-nl-stroke border-nl-divider"
                                     >
-                                        <td className="max-w-36 truncate p-2 font-mono">
+                                        <td className="nl-admin-cell-short truncate p-nl-8 font-nl-mono">
                                             {row.index}
                                         </td>
-                                        <td className="max-w-36 truncate p-2">
+                                        <td className="nl-admin-cell-short truncate p-nl-8">
                                             {row.originalTitle}
                                         </td>
-                                        <td className="p-2">{row.locale}</td>
-                                        <td className="max-w-48 truncate p-2">
+                                        <td className="p-nl-8">{row.locale}</td>
+                                        <td className="nl-admin-cell truncate p-nl-8">
                                             {row.title}
                                         </td>
-                                        <td className="p-2">{row.status}</td>
+                                        <td className="p-nl-8">{row.status}</td>
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
                     </div>
                     {preview.totalCount > preview.previews.length ? (
-                        <p className="text-caption">
+                        <p className="nl-metadata text-nl-subdued">
                             앞 {preview.previews.length}개만 미리봅니다.
                         </p>
                     ) : null}
@@ -235,7 +240,7 @@ export default function MusicTranslationCsvImport() {
                         type="button"
                         disabled={isApplying || isSubmitting}
                         onClick={apply}
-                        className="h-10 cursor-pointer rounded-card bg-text-primary text-sm font-bold text-bg disabled:cursor-not-allowed disabled:opacity-50"
+                        className={foundationButtonClass()}
                     >
                         {isApplying
                             ? "반영 중"
@@ -244,7 +249,7 @@ export default function MusicTranslationCsvImport() {
                 </div>
             ) : null}
             {message ? (
-                <p className="text-caption" role="status">
+                <p className="nl-metadata text-nl-subdued" role="status">
                     {message}
                 </p>
             ) : null}

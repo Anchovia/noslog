@@ -16,10 +16,10 @@ export default async function AdminMusicPage({
     const data = await getAdminMusicList(await searchParams);
 
     return (
-        <div className="flex flex-col gap-4 py-5">
+        <div className="flex flex-col gap-nl-16 py-nl-24">
             <section>
-                <h1 className="text-title">악곡 정보</h1>
-                <p className="mt-1 text-caption">
+                <h1 className="nl-section-title text-nl-content">악곡 정보</h1>
+                <p className="nl-metadata mt-nl-4 text-nl-subdued">
                     채보별 상세 정보와 공식 레벨 상수를 관리합니다.
                 </p>
             </section>

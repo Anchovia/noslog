@@ -16,11 +16,11 @@ export default function TierDragOverlay({
             background={entry.chart.music.background}
             title={entry.chart.music.title}
             className={cn(
-                "size-11 rounded-md border-2 shadow-lg",
+                "size-nl-48 rounded-nl-field border-nl-stroke-strong shadow-nl-overlay",
                 getTierDifficultyBorder(entry.chart.difficulty)
             )}
             fallback={
-                <span className="m-auto text-xs font-semibold text-text-disabled">
+                <span className="nl-metadata m-auto text-nl-disabled">
                     {entry.chart.level}
                 </span>
             }

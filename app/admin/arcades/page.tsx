@@ -46,17 +46,19 @@ export default async function AdminArcadesPage() {
     });
 
     return (
-        <div className="flex flex-col gap-4 py-5">
+        <div className="flex flex-col gap-nl-16 py-nl-24">
             <section>
-                <h1 className="text-title">오락실 관리</h1>
-                <p className="mt-1 text-caption">
+                <h1 className="nl-section-title text-nl-content">
+                    오락실 관리
+                </h1>
+                <p className="nl-metadata mt-nl-4 text-nl-subdued">
                     프로필에서 선택할 수 있는 오락실을 관리합니다.
                 </p>
             </section>
 
             <ArcadeForm mode="create" appKey={kakaoMapAppKey} />
 
-            <section className="flex flex-col gap-2">
+            <section className="flex flex-col gap-nl-8">
                 {arcades.map((arcade) => (
                     <ArcadeForm
                         key={arcade.id}
@@ -91,7 +93,7 @@ export default async function AdminArcadesPage() {
                     />
                 ))}
                 {arcades.length === 0 ? (
-                    <p className="rounded-card bg-surface py-12 text-center text-body-muted">
+                    <p className="nl-body-secondary rounded-nl-container bg-nl-surface py-nl-48 text-center text-nl-subdued">
                         등록된 오락실이 없습니다.
                     </p>
                 ) : null}

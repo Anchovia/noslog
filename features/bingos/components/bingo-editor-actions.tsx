@@ -6,17 +6,21 @@ import { useTransition } from "react";
 import { toast } from "sonner";
 
 import { deleteBingo } from "@/app/admin/bingos/actions";
-import Button from "@/components/ui/button";
+import Button, { foundationButtonClass } from "@/components/ui/button";
 import { createBingoDeleteFormData } from "@/features/bingos/schemas/bingo-editor-schema";
+import { cn } from "@/lib/cn";
 
 export function SaveBingoButton({ isSubmitting }: { isSubmitting: boolean }) {
     return (
         <button
             type="submit"
             disabled={isSubmitting}
-            className="sticky bottom-3 z-10 flex h-11 cursor-pointer items-center justify-center gap-2 rounded-md bg-text-primary text-sm font-bold text-bg shadow-lg disabled:cursor-not-allowed disabled:opacity-50"
+            className={cn(
+                foundationButtonClass(),
+                "sticky bottom-nl-12 z-nl-sticky shadow-nl-overlay"
+            )}
         >
-            <Save className="size-4" aria-hidden />
+            <Save className="nl-icon-small" aria-hidden />
             {isSubmitting ? "저장 중" : "빙고 저장"}
         </button>
     );

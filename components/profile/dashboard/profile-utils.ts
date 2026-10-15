@@ -1,10 +1,10 @@
 import type { ProfileRankRow, ProfileUser } from "./profile-types";
 
 const DIFFICULTY_COLORS: Record<string, string> = {
-    normal: "text-normal",
-    hard: "text-hard",
-    expert: "text-expert",
-    real: "text-real",
+    normal: "text-nl-difficulty-normal",
+    hard: "text-nl-difficulty-hard",
+    expert: "text-nl-difficulty-expert",
+    real: "text-nl-difficulty-real",
 };
 
 export function getProfileDifficultyColor(difficulty: string) {

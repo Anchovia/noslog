@@ -6,6 +6,7 @@ import { useTransition } from "react";
 import { toast } from "sonner";
 
 import { deleteTierEntry } from "@/app/admin/tiers/actions";
+import { foundationButtonClass } from "@/components/ui/button";
 import { createTierIdFormData } from "@/features/tiers/schemas/tier-admin-schema";
 import { cn } from "@/lib/cn";
 
@@ -36,14 +37,14 @@ export default function TierSelectedEntry({ entry }: { entry: TierEntryData }) {
     }
 
     return (
-        <div className="mx-3 flex items-center gap-2 border-t border-divider py-2">
+        <div className="mx-nl-12 flex items-center gap-nl-8 border-t-nl-stroke border-nl-divider py-nl-8">
             <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-bold">
+                <p className="nl-emphasis-label truncate">
                     {entry.chart.music.title}
                 </p>
                 <p
                     className={cn(
-                        "text-caption font-semibold",
+                        "nl-metadata text-nl-subdued",
                         getTierDifficultyColor(entry.chart.difficulty)
                     )}
                 >
@@ -56,9 +57,12 @@ export default function TierSelectedEntry({ entry }: { entry: TierEntryData }) {
                 onClick={handleDelete}
                 aria-label="채보 제거"
                 title="채보 제거"
-                className="flex size-9 cursor-pointer items-center justify-center rounded-md text-danger hover:bg-danger/10 disabled:cursor-not-allowed disabled:opacity-50"
+                className={foundationButtonClass({
+                    variant: "ghost",
+                    size: "icon-sm",
+                })}
             >
-                <Trash2 className="size-4" aria-hidden />
+                <Trash2 className="nl-icon-small" aria-hidden />
             </button>
         </div>
     );

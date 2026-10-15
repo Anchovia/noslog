@@ -17,6 +17,7 @@ import {
     AdminSubmitButton,
     adminTextareaClass,
 } from "@/components/admin/admin-form";
+import { foundationButtonClass } from "@/components/ui/button";
 import {
     type ChartMetadataFormValues,
     chartMetadataSchema,
@@ -31,15 +32,18 @@ import type { AdminMusicChart } from "@/features/music/types/music-admin";
 import { applyFormActionFailure, applyFormRootError } from "@/lib/forms/errors";
 
 const difficultyColor: Record<string, string> = {
-    normal: "text-normal",
-    hard: "text-hard",
-    expert: "text-expert",
-    real: "text-real",
+    normal: "text-nl-difficulty-normal",
+    hard: "text-nl-difficulty-hard",
+    expert: "text-nl-difficulty-expert",
+    real: "text-nl-difficulty-real",
 };
 
 function FieldError({ message }: { message?: string }) {
     return (
-        <AdminFieldError message={message} className="text-xs text-danger" />
+        <AdminFieldError
+            message={message}
+            className="nl-metadata text-nl-error"
+        />
     );
 }
 
@@ -101,11 +105,14 @@ export function MusicMetadataForm({ defaultValues }: MusicMetadataFormProps) {
             onSubmit={handleSubmit(handleMusicMetadataSubmit, () =>
                 toast.error("악곡 공통 정보 입력을 확인해주세요.")
             )}
-            className="flex flex-col gap-2 rounded-card bg-surface p-3"
+            className="flex flex-col gap-nl-8 rounded-nl-container bg-nl-surface p-nl-12"
         >
             <input type="hidden" {...register("musicIndex")} />
-            <h2 className="text-section font-bold">공통 정보</h2>
-            <label className="text-caption" htmlFor="description">
+            <h2 className="nl-component-title text-nl-content">공통 정보</h2>
+            <label
+                className="nl-metadata text-nl-subdued"
+                htmlFor="description"
+            >
                 악곡 설명
             </label>
             <textarea
@@ -115,8 +122,8 @@ export function MusicMetadataForm({ defaultValues }: MusicMetadataFormProps) {
                 {...register("description")}
             />
             <FieldError message={errors.description?.message} />
-            <div className="grid grid-cols-2 gap-2">
-                <label className="flex flex-col gap-1 text-caption">
+            <div className="grid grid-cols-2 gap-nl-8">
+                <label className="nl-metadata flex flex-col gap-nl-4 text-nl-subdued">
                     최소 BPM
                     <input
                         type="number"
@@ -128,7 +135,7 @@ export function MusicMetadataForm({ defaultValues }: MusicMetadataFormProps) {
                     />
                     <FieldError message={errors.bpmMin?.message} />
                 </label>
-                <label className="flex flex-col gap-1 text-caption">
+                <label className="nl-metadata flex flex-col gap-nl-4 text-nl-subdued">
                     최대 BPM
                     <input
                         type="number"
@@ -140,7 +147,7 @@ export function MusicMetadataForm({ defaultValues }: MusicMetadataFormProps) {
                     />
                     <FieldError message={errors.bpmMax?.message} />
                 </label>
-                <label className="col-span-2 flex flex-col gap-1 text-caption">
+                <label className="nl-metadata col-span-2 flex flex-col gap-nl-4 text-nl-subdued">
                     길이(초)
                     <input
                         type="number"
@@ -155,7 +162,7 @@ export function MusicMetadataForm({ defaultValues }: MusicMetadataFormProps) {
             </div>
             <AdminFieldError
                 message={errors.root?.server?.message}
-                className="text-xs text-danger"
+                className="nl-metadata text-nl-error"
             />
             <AdminSubmitButton
                 idleLabel="공통 정보 저장"
@@ -248,21 +255,23 @@ export function ChartMetadataForm({
             onSubmit={handleSubmit(handleChartMetadataSubmit, () =>
                 toast.error("채보 정보 입력을 확인해주세요.")
             )}
-            className="flex flex-col gap-3 rounded-card bg-surface p-3"
+            className="flex flex-col gap-nl-12 rounded-nl-container bg-nl-surface p-nl-12"
         >
             <input type="hidden" {...register("chartId")} />
             <input type="hidden" {...register("musicIndex")} />
             <header className="flex items-center justify-between">
                 <h2
                     className={
-                        "text-section font-bold capitalize " +
+                        "nl-component-title text-nl-content capitalize " +
                         (difficultyColor[difficulty] ?? "")
                     }
                 >
                     {chart.difficulty}
                 </h2>
-                <div className="flex items-center gap-2">
-                    <span className="text-caption">Lv {chart.level}</span>
+                <div className="flex items-center gap-nl-8">
+                    <span className="nl-metadata text-nl-subdued">
+                        Lv {chart.level}
+                    </span>
                     <Link
                         href={
                             "/admin/music/" +
@@ -271,15 +280,18 @@ export function ChartMetadataForm({
                             difficulty +
                             "/pattern"
                         }
-                        className="flex h-8 items-center gap-1 rounded-md border border-border px-2 text-xs font-semibold hover:bg-surface-muted"
+                        className={foundationButtonClass({
+                            variant: "secondary",
+                            size: "sm",
+                        })}
                     >
-                        <PencilRuler className="size-3.5" aria-hidden />
+                        <PencilRuler className="nl-icon-small" aria-hidden />
                         채보 편집
                     </Link>
                 </div>
             </header>
-            <div className="grid grid-cols-2 gap-2">
-                <label className="flex flex-col gap-1 text-caption">
+            <div className="grid grid-cols-2 gap-nl-8">
+                <label className="nl-metadata flex flex-col gap-nl-4 text-nl-subdued">
                     공식 레벨 상수
                     <input
                         type="number"
@@ -292,7 +304,7 @@ export function ChartMetadataForm({
                     />
                     <FieldError message={errors.levelConstant?.message} />
                 </label>
-                <label className="flex flex-col gap-1 text-caption">
+                <label className="nl-metadata flex flex-col gap-nl-4 text-nl-subdued">
                     노트 수
                     <input
                         type="number"
@@ -304,7 +316,7 @@ export function ChartMetadataForm({
                     />
                     <FieldError message={errors.noteCount?.message} />
                 </label>
-                <label className="flex flex-col gap-1 text-caption">
+                <label className="nl-metadata flex flex-col gap-nl-4 text-nl-subdued">
                     수록일
                     <input
                         type="date"
@@ -315,7 +327,7 @@ export function ChartMetadataForm({
                     <FieldError message={errors.releasedAt?.message} />
                 </label>
             </div>
-            <label className="flex flex-col gap-1 text-caption">
+            <label className="nl-metadata flex flex-col gap-nl-4 text-nl-subdued">
                 해금 조건
                 <input
                     aria-invalid={Boolean(errors.unlockCondition)}
@@ -324,7 +336,7 @@ export function ChartMetadataForm({
                 />
                 <FieldError message={errors.unlockCondition?.message} />
             </label>
-            <label className="flex flex-col gap-1 text-caption">
+            <label className="nl-metadata flex flex-col gap-nl-4 text-nl-subdued">
                 플레이 영상 URL
                 <input
                     type="url"
@@ -334,7 +346,7 @@ export function ChartMetadataForm({
                 />
                 <FieldError message={errors.playVideoUrl?.message} />
             </label>
-            <label className="flex flex-col gap-1 text-caption">
+            <label className="nl-metadata flex flex-col gap-nl-4 text-nl-subdued">
                 채보 미리보기 URL
                 <input
                     type="url"
@@ -345,7 +357,7 @@ export function ChartMetadataForm({
                 <FieldError message={errors.chartPreviewUrl?.message} />
             </label>
             {chart.history.length > 0 ? (
-                <p className="text-caption">
+                <p className="nl-metadata text-nl-subdued">
                     최근 공식 상수:{" "}
                     {chart.history
                         .map((history) => history.toFixed(2))
@@ -354,7 +366,7 @@ export function ChartMetadataForm({
             ) : null}
             <AdminFieldError
                 message={errors.root?.server?.message}
-                className="text-xs text-danger"
+                className="nl-metadata text-nl-error"
             />
             <AdminSubmitButton
                 idleLabel="채보 저장"

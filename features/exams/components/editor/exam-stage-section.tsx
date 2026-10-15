@@ -1,18 +1,14 @@
-import { ArrowDown, ArrowUp, Plus, Trash2 } from "lucide-react";
+import { ArrowDown, ArrowUp, Check, Plus, Trash2 } from "lucide-react";
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
 
+import { foundationButtonClass } from "@/components/ui/button";
 import type {
     ExamEditorFormValues,
     ExamStageEditor,
     ScoringType,
 } from "@/features/exams/schemas/exam-editor-schema";
-import { cn } from "@/lib/cn";
 
-import {
-    EXAM_INPUT_CLASS,
-    EXAM_LABEL_CLASS,
-    getDifficultyColor,
-} from "./exam-editor-types";
+import { EXAM_INPUT_CLASS, EXAM_LABEL_CLASS } from "./exam-editor-types";
 import ExamFieldError from "./exam-field-error";
 
 interface ExamStageSectionProps {
@@ -45,10 +41,12 @@ export default function ExamStageSection({
 }: ExamStageSectionProps) {
     return (
         <section>
-            <div className="mb-3 flex items-center justify-between">
+            <div className="mb-nl-12 flex items-center justify-between">
                 <div>
-                    <h2 className="text-section font-bold">과제곡</h2>
-                    <p className="mt-0.5 text-caption">
+                    <h2 className="nl-component-title text-nl-content">
+                        과제곡
+                    </h2>
+                    <p className="nl-metadata mt-nl-4 text-nl-subdued">
                         곡별 허용 난이도와 통과 조건을 설정합니다.
                     </p>
                 </div>
@@ -56,28 +54,28 @@ export default function ExamStageSection({
                     type="button"
                     onClick={onAdd}
                     disabled={stages.length >= 3}
-                    className="flex size-9 items-center justify-center rounded-md bg-text-primary text-bg disabled:opacity-40"
+                    className={foundationButtonClass({ size: "icon-sm" })}
                     aria-label="과제곡 추가"
                 >
-                    <Plus className="size-4" />
+                    <Plus className="nl-icon-small" />
                 </button>
             </div>
 
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-nl-8">
                 {stages.map((stage, index) => (
                     <article
                         key={stage.id ?? stage.musicIndex}
-                        className="rounded-card bg-surface p-3"
+                        className="rounded-nl-container bg-nl-surface p-nl-12"
                     >
-                        <div className="flex items-start gap-2">
-                            <span className="mt-1 w-7 shrink-0 text-caption">
+                        <div className="flex items-start gap-nl-8">
+                            <span className="nl-metadata mt-nl-4 w-nl-32 shrink-0 text-nl-subdued">
                                 {getStageLabel(index)}
                             </span>
                             <div className="min-w-0 flex-1">
-                                <p className="truncate text-body font-bold">
+                                <p className="nl-emphasis-label truncate text-nl-content">
                                     {stage.title}
                                 </p>
-                                <p className="truncate text-caption">
+                                <p className="nl-metadata truncate text-nl-subdued">
                                     {stage.artist ?? "아티스트 정보 없음"}
                                 </p>
                             </div>
@@ -85,31 +83,40 @@ export default function ExamStageSection({
                                 type="button"
                                 onClick={() => onMove(index, -1)}
                                 disabled={index === 0}
-                                className="p-1 text-text-secondary disabled:opacity-25"
+                                className={foundationButtonClass({
+                                    variant: "ghost",
+                                    size: "icon-sm",
+                                })}
                                 aria-label="과제곡 위로 이동"
                             >
-                                <ArrowUp className="size-4" />
+                                <ArrowUp className="nl-icon-small" />
                             </button>
                             <button
                                 type="button"
                                 onClick={() => onMove(index, 1)}
                                 disabled={index === stages.length - 1}
-                                className="p-1 text-text-secondary disabled:opacity-25"
+                                className={foundationButtonClass({
+                                    variant: "ghost",
+                                    size: "icon-sm",
+                                })}
                                 aria-label="과제곡 아래로 이동"
                             >
-                                <ArrowDown className="size-4" />
+                                <ArrowDown className="nl-icon-small" />
                             </button>
                             <button
                                 type="button"
                                 onClick={() => onRemove(index)}
-                                className="p-1 text-danger"
+                                className={foundationButtonClass({
+                                    variant: "ghost",
+                                    size: "icon-sm",
+                                })}
                                 aria-label="과제곡 삭제"
                             >
-                                <Trash2 className="size-4" />
+                                <Trash2 className="nl-icon-small" />
                             </button>
                         </div>
 
-                        <div className="mt-3 flex flex-wrap gap-1.5">
+                        <div className="mt-nl-12 flex flex-wrap gap-nl-8">
                             {stage.charts.map((chart) => {
                                 const selected = stage.allowedChartIds.includes(
                                     chart.chartId
@@ -123,13 +130,15 @@ export default function ExamStageSection({
                                         onClick={() =>
                                             onToggleChart(index, chart.chartId)
                                         }
-                                        className={cn(
-                                            "rounded-full border border-border px-2.5 py-1 text-xs font-semibold capitalize opacity-45",
-                                            selected &&
-                                                "bg-surface-muted opacity-100 ring-1 ring-current",
-                                            getDifficultyColor(chart.difficulty)
-                                        )}
+                                        className="nl-chip nl-control capitalize"
+                                        data-tone={chart.difficulty.toLowerCase()}
                                     >
+                                        {selected ? (
+                                            <Check
+                                                className="nl-icon-small"
+                                                aria-hidden
+                                            />
+                                        ) : null}
                                         {chart.difficulty} {chart.level}
                                     </button>
                                 );
@@ -141,7 +150,7 @@ export default function ExamStageSection({
                             }
                         />
 
-                        <div className="mt-3 grid grid-cols-2 gap-2">
+                        <div className="mt-nl-12 grid grid-cols-2 gap-nl-8">
                             <label>
                                 <span className={EXAM_LABEL_CLASS}>조건</span>
                                 <select
@@ -197,7 +206,7 @@ export default function ExamStageSection({
                 ))}
 
                 {stages.length === 0 ? (
-                    <div className="flex min-h-24 items-center justify-center rounded-md border border-dashed border-border text-caption">
+                    <div className="nl-metadata rounded-nl-field border-nl-stroke border-dashed border-nl-border py-nl-32 text-center text-nl-subdued">
                         과제곡을 추가해주세요.
                     </div>
                 ) : null}

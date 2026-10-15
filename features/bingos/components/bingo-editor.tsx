@@ -67,12 +67,12 @@ export default function BingoEditor({ bingo, musics }: BingoEditorProps) {
     }
 
     return (
-        <div className="flex flex-col gap-4 px-4 py-5">
+        <div className="flex flex-col gap-nl-16 px-nl-16 py-nl-24">
             <section>
-                <h1 className="text-title">
+                <h1 className="nl-section-title text-nl-content">
                     {bingo.id ? "빙고 수정" : "빙고 추가"}
                 </h1>
-                <p className="mt-1 text-caption">
+                <p className="nl-metadata mt-nl-4 text-nl-subdued">
                     빙고 정보와 25개 미션을 한곳에서 관리합니다.
                 </p>
             </section>
@@ -81,7 +81,7 @@ export default function BingoEditor({ bingo, musics }: BingoEditorProps) {
                 onSubmit={handleSubmit(handleBingoSubmit, () =>
                     toast.error("빙고 입력을 확인해주세요.")
                 )}
-                className="flex flex-col gap-4"
+                className="flex flex-col gap-nl-16"
             >
                 <BingoBasicFields
                     errors={errors}
@@ -97,7 +97,7 @@ export default function BingoEditor({ bingo, musics }: BingoEditorProps) {
                 />
                 <AdminFieldError
                     message={errors.root?.server?.message}
-                    className="text-xs text-danger"
+                    className="nl-metadata text-nl-error"
                 />
                 <SaveBingoButton isSubmitting={isSubmitting} />
             </form>

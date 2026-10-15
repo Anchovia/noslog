@@ -28,8 +28,8 @@ export default function BingoMissionList({
         : -1;
 
     return (
-        <section className="flex flex-col gap-2">
-            <h2 className="text-section font-bold">미션 25칸</h2>
+        <section className="flex flex-col gap-nl-8">
+            <h2 className="nl-component-title text-nl-content">미션 25칸</h2>
             {cells.map((cell, index) => (
                 <BingoMissionCard
                     key={cell.position}

@@ -14,11 +14,13 @@ import {
     AdminFieldError,
     adminSecondaryButtonClass as secondaryButtonClass,
 } from "@/components/admin/admin-form";
+import { foundationButtonClass } from "@/components/ui/button";
 import {
     ARCADE_HOURS_EXCEPTION_MAX,
     type ArcadeFormValues,
     type ArcadeValues,
 } from "@/features/arcades/schemas/arcade-schema";
+import { cn } from "@/lib/cn";
 
 // 새 예외 줄의 기본 날짜 — 서버·브라우저 시간대가 달라도 서울 기준 오늘(en-CA 는 YYYY-MM-DD)
 function todayInSeoul() {
@@ -52,9 +54,11 @@ export default function ArcadeHoursExceptionsFields({
         errors.hoursExceptions?.root?.message;
 
     return (
-        <fieldset className="grid min-w-0 grid-cols-1 gap-2 rounded-card border border-border p-3">
-            <legend className="px-1 text-label">날짜별 예외</legend>
-            <p className="text-caption">
+        <fieldset className="grid min-w-0 grid-cols-1 gap-nl-8 rounded-nl-container border-nl-stroke border-nl-border p-nl-12">
+            <legend className="nl-emphasis-label px-nl-4 text-nl-content">
+                날짜별 예외
+            </legend>
+            <p className="nl-metadata text-nl-subdued">
                 임시 휴무나 특별 영업시간처럼 그날만 다른 날을 적습니다. 공개
                 영업시간 표에서 요일 기본값보다 먼저 쓰입니다. 자정을 넘겨
                 영업하면 종료 시간을 다음 날 시간으로 입력합니다.
@@ -68,8 +72,8 @@ export default function ArcadeHoursExceptionsFields({
                     rowErrors?.close?.message;
                 const name = `예외 ${index + 1}`;
                 return (
-                    <div key={field.key} className="grid gap-2">
-                        <div className="flex items-center gap-2">
+                    <div key={field.key} className="grid gap-nl-8">
+                        <div className="flex items-center gap-nl-8">
                             <input
                                 type="date"
                                 aria-label={`${name} 날짜`}
@@ -77,7 +81,7 @@ export default function ArcadeHoursExceptionsFields({
                                 className={`${inputClass} flex-1`}
                                 {...register(`hoursExceptions.${index}.date`)}
                             />
-                            <label className="flex shrink-0 items-center gap-1.5 text-body-muted">
+                            <label className="nl-body-secondary flex shrink-0 items-center gap-nl-8 text-nl-subdued">
                                 <input
                                     type="checkbox"
                                     {...register(
@@ -90,13 +94,19 @@ export default function ArcadeHoursExceptionsFields({
                                 type="button"
                                 aria-label={`${name} 삭제`}
                                 onClick={() => remove(index)}
-                                className="flex size-9 shrink-0 items-center justify-center rounded-md text-body-muted hover:text-danger focus-visible:ring-2 focus-visible:ring-focus/40 focus-visible:outline-none"
+                                className={cn(
+                                    foundationButtonClass({
+                                        variant: "ghost",
+                                        size: "icon-sm",
+                                    }),
+                                    "shrink-0"
+                                )}
                             >
-                                <Trash2 className="size-4" aria-hidden />
+                                <Trash2 className="nl-icon-small" aria-hidden />
                             </button>
                         </div>
                         {!closed ? (
-                            <div className="grid grid-cols-2 gap-2">
+                            <div className="grid grid-cols-2 gap-nl-8">
                                 <input
                                     type="time"
                                     aria-label={`${name} 영업 시작`}
@@ -119,14 +129,16 @@ export default function ArcadeHoursExceptionsFields({
                         ) : null}
                         <AdminFieldError
                             message={message}
-                            className="text-xs text-danger"
+                            className="nl-metadata text-nl-error"
                             role={null}
                         />
                     </div>
                 );
             })}
             {fields.length === 0 ? (
-                <p className="text-caption">등록된 예외가 없습니다.</p>
+                <p className="nl-metadata text-nl-subdued">
+                    등록된 예외가 없습니다.
+                </p>
             ) : null}
             <button
                 type="button"
@@ -141,11 +153,11 @@ export default function ArcadeHoursExceptionsFields({
                 }
                 className={secondaryButtonClass}
             >
-                <Plus className="size-4" aria-hidden /> 날짜 추가
+                <Plus className="nl-icon-small" aria-hidden /> 날짜 추가
             </button>
             <AdminFieldError
                 message={listError}
-                className="text-xs text-danger"
+                className="nl-metadata text-nl-error"
             />
         </fieldset>
     );

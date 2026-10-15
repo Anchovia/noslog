@@ -85,11 +85,11 @@ export default function MusicTranslationForm({
             onSubmit={handleSubmit(handleMusicTranslationSubmit, () =>
                 toast.error("악곡 번역 입력을 확인해주세요.")
             )}
-            className="flex flex-col gap-2 border-t border-divider pt-3 first:border-t-0 first:pt-0"
+            className="flex flex-col gap-nl-8 border-t-nl-stroke border-nl-divider pt-nl-12 first:border-t-0 first:pt-0"
         >
             <input type="hidden" {...register("musicIndex")} />
             <input type="hidden" {...register("locale")} />
-            <label className="flex flex-col gap-1 text-caption">
+            <label className="nl-metadata flex flex-col gap-nl-4 text-nl-subdued">
                 {label} 제목
                 <input
                     maxLength={MUSIC_TRANSLATION_TITLE_MAX_LENGTH}
@@ -100,9 +100,9 @@ export default function MusicTranslationForm({
             </label>
             <AdminFieldError
                 message={errors.title?.message}
-                className="text-xs text-danger"
+                className="nl-metadata text-nl-error"
             />
-            <label className="flex flex-col gap-1 text-caption">
+            <label className="nl-metadata flex flex-col gap-nl-4 text-nl-subdued">
                 검수 상태
                 <select
                     aria-invalid={Boolean(errors.status)}
@@ -115,11 +115,11 @@ export default function MusicTranslationForm({
             </label>
             <AdminFieldError
                 message={errors.status?.message}
-                className="text-xs text-danger"
+                className="nl-metadata text-nl-error"
             />
             <AdminFieldError
                 message={errors.root?.server?.message}
-                className="text-xs text-danger"
+                className="nl-metadata text-nl-error"
             />
             <AdminSubmitButton
                 idleLabel={label + " 번역 저장"}

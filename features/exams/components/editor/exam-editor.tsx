@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeft, LoaderCircle, Save } from "lucide-react";
+import { ArrowLeft, Save } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { type FormEvent, useState, useTransition } from "react";
@@ -13,7 +13,7 @@ import {
     saveExam,
     searchAdminMusic,
 } from "@/app/admin/exams/actions";
-import Button from "@/components/ui/button";
+import Button, { foundationButtonClass } from "@/components/ui/button";
 import {
     type ExamEditorFormValues,
     examEditorSchema,
@@ -21,6 +21,7 @@ import {
     type ExamMode,
     type ExamStatus,
 } from "@/features/exams/schemas/exam-editor-schema";
+import { cn } from "@/lib/cn";
 import { applyFormActionFailure, applyFormRootError } from "@/lib/forms/errors";
 
 import ExamBasicFields from "./exam-basic-fields";
@@ -312,22 +313,24 @@ export default function ExamEditor({
                 onSubmit={handleSubmit(handleExamSubmit, () =>
                     toast.error("검정 입력을 확인해주세요.")
                 )}
-                className="pb-24"
             >
-                <div className="flex flex-col gap-6 px-4 py-5">
-                    <div className="flex items-center gap-3">
+                <div className="flex flex-col gap-nl-24 px-nl-16 py-nl-24">
+                    <div className="flex items-center gap-nl-12">
                         <Link
                             href="/admin/exams"
                             aria-label="검정 목록으로 이동"
-                            className="flex size-10 items-center justify-center rounded-md border border-border"
+                            className={foundationButtonClass({
+                                variant: "secondary",
+                                size: "icon",
+                            })}
                         >
-                            <ArrowLeft className="size-4" />
+                            <ArrowLeft className="nl-icon-small" />
                         </Link>
                         <div className="min-w-0">
-                            <h1 className="text-title">
+                            <h1 className="nl-section-title text-nl-content">
                                 {examId ? "검정 수정" : "검정 추가"}
                             </h1>
-                            <p className="mt-0.5 truncate text-caption">
+                            <p className="nl-metadata mt-nl-4 truncate text-nl-subdued">
                                 {title}
                             </p>
                         </div>
@@ -371,7 +374,10 @@ export default function ExamEditor({
                     />
 
                     {errors.root?.server?.message ? (
-                        <p className="text-sm text-danger" role="alert">
+                        <p
+                            className="nl-body-secondary text-nl-error"
+                            role="alert"
+                        >
                             {errors.root.server.message}
                         </p>
                     ) : null}
@@ -386,16 +392,16 @@ export default function ExamEditor({
                     ) : null}
                 </div>
 
-                <div className="fixed inset-x-0 bottom-0 z-20 mx-auto max-w-97.5 border-t border-divider bg-bg p-3">
+                <div className="sticky bottom-0 z-nl-sticky border-t-nl-stroke border-nl-divider bg-nl-canvas p-nl-12">
                     <button
                         type="submit"
                         disabled={isSubmitting || isDeleting}
-                        className="flex h-11 w-full items-center justify-center gap-2 rounded-md bg-text-primary text-sm font-bold text-bg disabled:opacity-50"
+                        className={cn(foundationButtonClass(), "w-full")}
                     >
                         {isSubmitting ? (
-                            <LoaderCircle className="size-4 animate-spin" />
+                            <span className="nl-spinner" aria-hidden />
                         ) : (
-                            <Save className="size-4" />
+                            <Save className="nl-icon-small" />
                         )}
                         저장
                     </button>

@@ -8,22 +8,22 @@ export default function ChartEvaluationAdminCard({
     evaluation: AdminChartEvaluation;
 }) {
     return (
-        <article className="flex flex-col gap-3 rounded-card bg-surface p-3">
+        <article className="flex flex-col gap-nl-12 rounded-nl-container bg-nl-surface p-nl-12">
             <div>
-                <p className="truncate text-body font-bold">
+                <p className="nl-emphasis-label truncate text-nl-content">
                     {evaluation.chart.musicTitle}
                 </p>
-                <p className="text-caption capitalize">
+                <p className="nl-metadata text-nl-subdued capitalize">
                     {evaluation.chart.difficulty} · {evaluation.userName} · 체감{" "}
                     {evaluation.perceivedConstant.toFixed(1)}
                 </p>
             </div>
             <p
-                className={`text-sm leading-relaxed ${evaluation.comment ? "text-text-primary" : "text-text-disabled"}`}
+                className={`nl-body-secondary ${evaluation.comment ? "text-nl-content" : "text-nl-disabled"}`}
             >
                 {evaluation.comment ?? "등록된 의견 없음"}
             </p>
-            <p className="text-caption">
+            <p className="nl-metadata text-nl-subdued">
                 추천 {evaluation.reactions.up} · 비추천{" "}
                 {evaluation.reactions.down}
                 {" · 계단 "}

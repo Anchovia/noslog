@@ -1,6 +1,7 @@
 import { Plus, X } from "lucide-react";
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
 
+import { foundationButtonClass } from "@/components/ui/button";
 import type {
     ExamEditorFormValues,
     ExamRewardEditor,
@@ -27,27 +28,32 @@ export default function ExamRewardSection({
 }: ExamRewardSectionProps) {
     return (
         <section>
-            <div className="mb-3 flex items-center justify-between">
+            <div className="mb-nl-12 flex items-center justify-between">
                 <div>
-                    <h2 className="text-section font-bold">합격 보상</h2>
-                    <p className="mt-0.5 text-caption">
+                    <h2 className="nl-component-title text-nl-content">
+                        합격 보상
+                    </h2>
+                    <p className="nl-metadata mt-nl-4 text-nl-subdued">
                         악곡 보상은 실제 악곡과 연결합니다.
                     </p>
                 </div>
                 <button
                     type="button"
                     onClick={onAddMusic}
-                    className="flex h-9 items-center gap-1.5 rounded-md border border-border px-3 text-xs font-semibold"
+                    className={foundationButtonClass({
+                        variant: "secondary",
+                        size: "sm",
+                    })}
                 >
-                    <Plus className="size-3.5" /> 악곡
+                    <Plus className="nl-icon-small" /> 악곡
                 </button>
             </div>
 
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-nl-8">
                 {rewards.map((reward, index) => (
                     <div key={`${reward.type}-${reward.musicIndex ?? index}`}>
-                        <div className="flex min-h-12 items-center gap-3 rounded-md bg-surface px-3 py-2">
-                            <span className="shrink-0 text-caption">
+                        <div className="flex min-h-nl-48 items-center gap-nl-12 rounded-nl-field bg-nl-surface px-nl-12 py-nl-8">
+                            <span className="nl-metadata shrink-0 text-nl-subdued">
                                 {reward.type === "music_unlock"
                                     ? "악곡"
                                     : "급수"}
@@ -57,16 +63,16 @@ export default function ExamRewardSection({
                                 aria-invalid={Boolean(
                                     errors.rewards?.[index]?.label
                                 )}
-                                className="min-w-0 flex-1 bg-transparent text-body outline-none"
+                                className="nl-control min-w-0 flex-1 bg-transparent text-nl-content outline-none"
                                 {...register(`rewards.${index}.label`)}
                             />
                             <button
                                 type="button"
                                 onClick={() => onRemove(index)}
-                                className="p-1 text-danger"
+                                className="p-nl-4 text-nl-error"
                                 aria-label="보상 삭제"
                             >
-                                <X className="size-4" />
+                                <X className="nl-icon-small" />
                             </button>
                         </div>
                         <ExamFieldError
@@ -79,7 +85,9 @@ export default function ExamRewardSection({
                 ))}
 
                 {rewards.length === 0 ? (
-                    <p className="text-caption">등록된 합격 보상이 없습니다.</p>
+                    <p className="nl-metadata text-nl-subdued">
+                        등록된 합격 보상이 없습니다.
+                    </p>
                 ) : null}
             </div>
             <ExamFieldError message={error} />

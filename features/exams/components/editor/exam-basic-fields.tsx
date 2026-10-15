@@ -1,10 +1,10 @@
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
 
+import { SegmentedControl } from "@/components/ui/segmented-control";
 import type {
     ExamEditorFormValues,
     ExamMode,
 } from "@/features/exams/schemas/exam-editor-schema";
-import { cn } from "@/lib/cn";
 
 import {
     EXAM_INPUT_CLASS,
@@ -30,27 +30,21 @@ export default function ExamBasicFields({
 }: ExamBasicFieldsProps) {
     return (
         <section>
-            <h2 className="mb-3 text-section font-bold">기본 정보</h2>
+            <h2 className="nl-component-title mb-nl-12 text-nl-content">
+                기본 정보
+            </h2>
             <input type="hidden" {...register("mode")} />
-            <div className="grid grid-cols-3 gap-2">
-                {(["basic", "recital", "event"] as const).map((value) => (
-                    <button
-                        key={value}
-                        type="button"
-                        aria-pressed={mode === value}
-                        onClick={() => onModeChange(value)}
-                        className={cn(
-                            "h-10 rounded-md bg-surface text-sm font-semibold text-text-secondary",
-                            mode === value && "bg-text-primary text-bg"
-                        )}
-                    >
-                        {getExamModeLabel(value)}
-                    </button>
-                ))}
-            </div>
+            <SegmentedControl
+                label="검정 모드"
+                value={mode}
+                onValueChange={onModeChange}
+                options={(["basic", "recital", "event"] as const).map(
+                    (value) => ({ value, label: getExamModeLabel(value) })
+                )}
+            />
             <ExamFieldError message={errors.mode?.message} />
 
-            <div className="mt-3 grid grid-cols-2 gap-3">
+            <div className="mt-nl-12 grid grid-cols-2 gap-nl-12">
                 {mode !== "event" ? (
                     <label>
                         <span className={EXAM_LABEL_CLASS}>급수</span>
@@ -97,7 +91,7 @@ export default function ExamBasicFields({
                 </label>
             </div>
 
-            <label className="mt-3 block">
+            <label className="mt-nl-12 block">
                 <span className={EXAM_LABEL_CLASS}>선택 라벨</span>
                 <input
                     placeholder="예: 7th KAC"
@@ -107,7 +101,7 @@ export default function ExamBasicFields({
                 />
                 <ExamFieldError message={errors.shortLabel?.message} />
             </label>
-            <label className="mt-3 block">
+            <label className="mt-nl-12 block">
                 <span className={EXAM_LABEL_CLASS}>검정명</span>
                 <input
                     placeholder="예: The 7th KAC 스페셜 검정"
@@ -117,17 +111,17 @@ export default function ExamBasicFields({
                 />
                 <ExamFieldError message={errors.title?.message} />
             </label>
-            <label className="mt-3 block">
+            <label className="mt-nl-12 block">
                 <span className={EXAM_LABEL_CLASS}>설명</span>
                 <textarea
                     rows={3}
                     aria-invalid={Boolean(errors.description)}
-                    className="w-full resize-none rounded-md border border-border bg-surface p-3 text-body outline-none"
+                    className="nl-input resize-none"
                     {...register("description")}
                 />
                 <ExamFieldError message={errors.description?.message} />
             </label>
-            <div className="mt-3 grid grid-cols-2 gap-3">
+            <div className="mt-nl-12 grid grid-cols-2 gap-nl-12">
                 <label>
                     <span className={EXAM_LABEL_CLASS}>요구 Grd.</span>
                     <input

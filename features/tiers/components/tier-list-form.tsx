@@ -11,6 +11,7 @@ import {
     AdminFieldError,
     adminInputClass as inputClass,
 } from "@/components/admin/admin-form";
+import { foundationButtonClass } from "@/components/ui/button";
 import {
     createTierListFormData,
     normalizeTierGoal,
@@ -20,6 +21,7 @@ import {
     type TierListFormValues,
     type TierListValues,
 } from "@/features/tiers/schemas/tier-admin-schema";
+import { cn } from "@/lib/cn";
 import { applyFormActionFailure, applyFormRootError } from "@/lib/forms/errors";
 
 export interface TierListFormData {
@@ -37,7 +39,7 @@ function FieldError({ message }: { message?: string }) {
         <AdminFieldError
             message={message}
             as="span"
-            className="text-xs text-danger"
+            className="nl-metadata text-nl-error"
         />
     );
 }
@@ -98,10 +100,10 @@ export default function TierListForm({
             onSubmit={handleSubmit(handleTierListSubmit, () =>
                 toast.error("서열표 입력을 확인해주세요.")
             )}
-            className="flex flex-col gap-4"
+            className="flex flex-col gap-nl-16"
         >
-            <section className="grid grid-cols-2 gap-3 rounded-card bg-surface p-3">
-                <label className="col-span-2 flex flex-col gap-1 text-caption">
+            <section className="grid grid-cols-2 gap-nl-12 rounded-nl-container bg-nl-surface p-nl-12">
+                <label className="nl-metadata col-span-2 flex flex-col gap-nl-4 text-nl-subdued">
                     서열표 이름
                     <input
                         {...register("title")}
@@ -110,7 +112,7 @@ export default function TierListForm({
                     />
                     <FieldError message={errors.title?.message} />
                 </label>
-                <label className="col-span-2 flex flex-col gap-1 text-caption">
+                <label className="nl-metadata col-span-2 flex flex-col gap-nl-4 text-nl-subdued">
                     식별자
                     <input
                         {...register("slug")}
@@ -119,7 +121,7 @@ export default function TierListForm({
                     />
                     <FieldError message={errors.slug?.message} />
                 </label>
-                <label className="col-span-2 flex flex-col gap-1 text-caption">
+                <label className="nl-metadata col-span-2 flex flex-col gap-nl-4 text-nl-subdued">
                     모드
                     <select {...register("mode")} className={inputClass}>
                         <option value="basic">Basic</option>
@@ -127,7 +129,7 @@ export default function TierListForm({
                     </select>
                     <FieldError message={errors.mode?.message} />
                 </label>
-                <label className="col-span-2 flex flex-col gap-1 text-caption">
+                <label className="nl-metadata col-span-2 flex flex-col gap-nl-4 text-nl-subdued">
                     목표
                     <select {...register("goal")} className={inputClass}>
                         <option value="s">S</option>
@@ -136,16 +138,16 @@ export default function TierListForm({
                     </select>
                     <FieldError message={errors.goal?.message} />
                 </label>
-                <label className="col-span-2 flex flex-col gap-1 text-caption">
+                <label className="nl-metadata col-span-2 flex flex-col gap-nl-4 text-nl-subdued">
                     설명
                     <textarea
                         {...register("description")}
                         rows={3}
-                        className="w-full resize-y rounded-md border border-border bg-bg p-3 text-input"
+                        className="nl-input resize-y"
                     />
                     <FieldError message={errors.description?.message} />
                 </label>
-                <label className="col-span-2 flex flex-col gap-1 text-caption">
+                <label className="nl-metadata col-span-2 flex flex-col gap-nl-4 text-nl-subdued">
                     상태
                     <select {...register("status")} className={inputClass}>
                         <option value="draft">임시 저장</option>
@@ -157,14 +159,14 @@ export default function TierListForm({
             </section>
             <AdminFieldError
                 message={errors.root?.server?.message}
-                className="text-xs text-danger"
+                className="nl-metadata text-nl-error"
             />
             <button
                 type="submit"
                 disabled={isSubmitting}
-                className="ml-auto flex h-10 items-center gap-1 rounded-md bg-text-primary px-3 text-sm font-bold text-bg disabled:cursor-wait disabled:opacity-60"
+                className={cn(foundationButtonClass(), "ml-auto")}
             >
-                <Save className="size-4" aria-hidden />
+                <Save className="nl-icon-small" aria-hidden />
                 {isSubmitting
                     ? "저장 중..."
                     : tierList.id

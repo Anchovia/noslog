@@ -18,10 +18,12 @@ import {
     AdminFieldError,
     adminSecondaryButtonClass as secondaryButtonClass,
 } from "@/components/admin/admin-form";
+import { foundationButtonClass } from "@/components/ui/button";
 import {
     ARCADE_PHOTO_ALT_MAX_LENGTH,
     ARCADE_PHOTO_MAX,
 } from "@/features/arcades/schemas/arcade-schema";
+import { cn } from "@/lib/cn";
 import useObjectUrl from "@/lib/hooks/use-object-url";
 import {
     IMAGE_ACCEPT,
@@ -143,16 +145,18 @@ export default function ArcadePhotoManager({
     }
 
     return (
-        <fieldset className="grid min-w-0 grid-cols-1 gap-2 rounded-card border border-border p-3">
-            <legend className="px-1 text-label">사진</legend>
-            <p className="text-caption">
+        <fieldset className="grid min-w-0 grid-cols-1 gap-nl-8 rounded-nl-container border-nl-stroke border-nl-border p-nl-12">
+            <legend className="nl-emphasis-label px-nl-4 text-nl-content">
+                사진
+            </legend>
+            <p className="nl-metadata text-nl-subdued">
                 공개 상세 맨 위에 보입니다. 첫 번째 사진이 대표 사진이며{" "}
                 {ARCADE_PHOTO_MAX}장까지 올릴 수 있습니다. 사진 추가·삭제는 바로
                 반영됩니다.
             </p>
             {photos.map((photo, index) => (
-                <div key={photo.id} className="flex items-center gap-2">
-                    <div className="relative size-16 shrink-0 overflow-hidden rounded-md bg-surface-muted">
+                <div key={photo.id} className="flex items-center gap-nl-8">
+                    <div className="relative size-nl-64 shrink-0 overflow-hidden rounded-nl-field bg-nl-raised">
                         <Image
                             src={photo.url}
                             alt={photo.alt}
@@ -162,8 +166,10 @@ export default function ArcadePhotoManager({
                         />
                     </div>
                     <div className="min-w-0 flex-1">
-                        <p className="truncate text-body">{photo.alt}</p>
-                        <p className="text-caption">
+                        <p className="nl-control truncate text-nl-content">
+                            {photo.alt}
+                        </p>
+                        <p className="nl-metadata text-nl-subdued">
                             {index === 0 ? "대표 사진" : `${index + 1}번째`}
                         </p>
                     </div>
@@ -189,14 +195,22 @@ export default function ArcadePhotoManager({
                             )
                                 change(deleteArcadePhoto, photo.id);
                         }}
-                        className="flex size-9 shrink-0 items-center justify-center rounded-md text-body-muted hover:text-danger focus-visible:ring-2 focus-visible:ring-focus/40 focus-visible:outline-none disabled:opacity-50"
+                        className={cn(
+                            foundationButtonClass({
+                                variant: "ghost",
+                                size: "icon-sm",
+                            }),
+                            "shrink-0"
+                        )}
                     >
-                        <Trash2 className="size-4" aria-hidden />
+                        <Trash2 className="nl-icon-small" aria-hidden />
                     </button>
                 </div>
             ))}
             {photos.length === 0 ? (
-                <p className="text-caption">등록된 사진이 없습니다.</p>
+                <p className="nl-metadata text-nl-subdued">
+                    등록된 사진이 없습니다.
+                </p>
             ) : null}
             <input
                 ref={fileInput}
@@ -207,8 +221,8 @@ export default function ArcadePhotoManager({
                 onChange={(event) => choose(event.target.files?.[0])}
             />
             {file && preview ? (
-                <div className="grid gap-2 rounded-md border border-border p-2">
-                    <div className="relative aspect-video overflow-hidden rounded-md bg-surface-muted">
+                <div className="grid gap-nl-8 rounded-nl-field border-nl-stroke border-nl-border p-nl-8">
+                    <div className="relative aspect-video overflow-hidden rounded-nl-field bg-nl-raised">
                         <Image
                             src={preview}
                             alt=""
@@ -218,7 +232,7 @@ export default function ArcadePhotoManager({
                             className="object-cover"
                         />
                     </div>
-                    <label className="flex flex-col gap-1 text-caption">
+                    <label className="nl-metadata flex flex-col gap-nl-4 text-nl-subdued">
                         사진 설명 (화면 읽기용)
                         <input
                             value={alt}
@@ -232,7 +246,7 @@ export default function ArcadePhotoManager({
                             className={inputClass}
                         />
                     </label>
-                    <label className="flex flex-col gap-1 text-caption">
+                    <label className="nl-metadata flex flex-col gap-nl-4 text-nl-subdued">
                         촬영 날짜 (선택)
                         <input
                             type="date"
@@ -243,10 +257,10 @@ export default function ArcadePhotoManager({
                             className={inputClass}
                         />
                     </label>
-                    <label className="flex items-start gap-2 text-body-muted">
+                    <label className="nl-body-secondary flex items-start gap-nl-8 text-nl-subdued">
                         <input
                             type="checkbox"
-                            className="mt-1"
+                            className="mt-nl-4"
                             checked={consent}
                             onChange={(event) =>
                                 setConsent(event.target.checked)
@@ -254,7 +268,7 @@ export default function ArcadePhotoManager({
                         />
                         촬영자에게 게시 권리와 공개 동의를 받았습니다
                     </label>
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="grid grid-cols-2 gap-nl-8">
                         <button
                             type="button"
                             disabled={busy}
@@ -280,10 +294,14 @@ export default function ArcadePhotoManager({
                     onClick={() => fileInput.current?.click()}
                     className={secondaryButtonClass}
                 >
-                    <ImagePlus className="size-4" aria-hidden /> 사진 추가
+                    <ImagePlus className="nl-icon-small" aria-hidden /> 사진
+                    추가
                 </button>
             ) : null}
-            <AdminFieldError message={error} className="text-xs text-danger" />
+            <AdminFieldError
+                message={error}
+                className="nl-metadata text-nl-error"
+            />
         </fieldset>
     );
 }

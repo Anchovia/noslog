@@ -114,10 +114,10 @@ export function getUserSyncHealth(
     return { label: "정상", tone: "healthy", needsAttention: false };
 }
 
-export function getSyncHealthClassName(tone: SyncHealthTone) {
-    if (tone === "healthy") return "bg-success/10 text-success";
-    if (tone === "danger") return "bg-danger/10 text-danger";
-    if (tone === "warning") return "bg-score/10 text-score";
-    if (tone === "processing") return "bg-basic/10 text-basic";
-    return "bg-surface-muted text-text-secondary";
+// 공용 상태 태그(nl-tag--status)의 data-tone — 처리 중 · 대기는 색 없는 태그(2026-10-15 B5 2단계)
+export function getSyncHealthTagTone(tone: SyncHealthTone) {
+    if (tone === "healthy") return "success";
+    if (tone === "danger") return "danger";
+    if (tone === "warning") return "warning";
+    return undefined;
 }

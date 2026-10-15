@@ -17,23 +17,13 @@ export interface MusicSearchResult {
     charts: ChartOption[];
 }
 
-export const EXAM_INPUT_CLASS =
-    "border-border bg-surface text-input placeholder:text-text-disabled h-11 w-full rounded-md border px-3 outline-none focus:border-focus";
-export const EXAM_LABEL_CLASS = "text-caption mb-1.5 block font-semibold";
+export const EXAM_INPUT_CLASS = "nl-input";
+export const EXAM_LABEL_CLASS = "nl-metadata text-nl-subdued mb-nl-8 block ";
 
 export function getExamModeLabel(mode: ExamMode) {
     if (mode === "basic") return "Basic";
     if (mode === "recital") return "Recital";
     return "Event";
-}
-
-export function getDifficultyColor(difficulty: string) {
-    const normalizedDifficulty = difficulty.toLowerCase();
-
-    if (normalizedDifficulty === "normal") return "text-normal";
-    if (normalizedDifficulty === "hard") return "text-hard";
-    if (normalizedDifficulty === "expert") return "text-expert";
-    return "text-real";
 }
 
 export function cloneExamValues(values: ExamEditorFormValues) {

@@ -41,11 +41,14 @@ function jacketSource(index: string, background: string | null) {
 
 function JacketBox({ src }: { src: string | null }) {
     return (
-        <div className="flex size-24 shrink-0 items-center justify-center overflow-hidden rounded-md bg-surface-muted">
+        <div className="flex size-nl-64 shrink-0 items-center justify-center overflow-hidden rounded-nl-field bg-nl-raised">
             {src ? (
                 <img src={src} alt="" className="size-full object-cover" />
             ) : (
-                <ImageOff className="size-6 text-text-disabled" aria-hidden />
+                <ImageOff
+                    className="nl-icon nl-icon--large text-nl-disabled"
+                    aria-hidden
+                />
             )}
         </div>
     );
@@ -140,19 +143,19 @@ export default function MusicJacketForm({
     }
 
     return (
-        <section className="flex flex-col gap-3 rounded-card bg-surface p-3">
+        <section className="flex flex-col gap-nl-12 rounded-nl-container bg-nl-surface p-nl-12">
             <div>
-                <h2 className="text-section font-bold">자켓</h2>
-                <p className="mt-1 text-caption">
+                <h2 className="nl-component-title text-nl-content">자켓</h2>
+                <p className="nl-metadata mt-nl-4 text-nl-subdued">
                     직접 올린 자켓은 로컬 파일·수집한 자켓보다 먼저 보이고 바로
                     반영됩니다. 정사각 이미지를 올려주세요.
                 </p>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-nl-12">
                 <JacketBox src={getJacketUrl(musicIndex, background)} />
                 <div className="min-w-0 flex-1">
-                    <p className="text-caption">현재 자켓</p>
-                    <p className="text-body">
+                    <p className="nl-metadata text-nl-subdued">현재 자켓</p>
+                    <p className="nl-control text-nl-content">
                         {jacketSource(musicIndex, background)}
                     </p>
                 </div>
@@ -166,14 +169,14 @@ export default function MusicJacketForm({
                 onChange={(event) => choose(event.target.files?.[0])}
             />
             {file && preview ? (
-                <div className="grid gap-2 rounded-md border border-border p-2">
-                    <div className="flex items-center gap-3">
+                <div className="grid gap-nl-8 rounded-nl-field border-nl-stroke border-nl-border p-nl-8">
+                    <div className="flex items-center gap-nl-12">
                         <JacketBox src={preview} />
-                        <p className="min-w-0 flex-1 text-caption break-all">
+                        <p className="nl-metadata min-w-0 flex-1 break-all text-nl-subdued">
                             새 자켓 · {file.name}
                         </p>
                     </div>
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="grid grid-cols-2 gap-nl-8">
                         <button
                             type="button"
                             disabled={busy}
@@ -193,14 +196,15 @@ export default function MusicJacketForm({
                     </div>
                 </div>
             ) : (
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-nl-8">
                     <button
                         type="button"
                         disabled={busy}
                         onClick={() => fileInput.current?.click()}
                         className={secondaryButtonClass}
                     >
-                        <ImagePlus className="size-4" aria-hidden /> 자켓 바꾸기
+                        <ImagePlus className="nl-icon-small" aria-hidden /> 자켓
+                        바꾸기
                     </button>
                     {manual ? (
                         <button
@@ -209,13 +213,16 @@ export default function MusicJacketForm({
                             onClick={reset}
                             className={secondaryButtonClass}
                         >
-                            <RotateCcw className="size-4" aria-hidden /> 기본
-                            자켓으로 되돌리기
+                            <RotateCcw className="nl-icon-small" aria-hidden />{" "}
+                            기본 자켓으로 되돌리기
                         </button>
                     ) : null}
                 </div>
             )}
-            <AdminFieldError message={error} className="text-xs text-danger" />
+            <AdminFieldError
+                message={error}
+                className="nl-metadata text-nl-error"
+            />
         </section>
     );
 }

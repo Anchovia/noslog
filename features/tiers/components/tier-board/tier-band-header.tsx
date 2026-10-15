@@ -6,6 +6,7 @@ import { type FormEvent, useTransition } from "react";
 import { toast } from "sonner";
 
 import { deleteTierBand, updateTierBand } from "@/app/admin/tiers/actions";
+import { foundationButtonClass } from "@/components/ui/button";
 import {
     createTierBandFormData,
     createTierIdFormData,
@@ -60,21 +61,21 @@ export default function TierBandHeader({ band }: { band: TierBandData }) {
     }
 
     return (
-        <header className="flex items-start gap-2 bg-surface-muted px-3 py-2">
+        <header className="flex items-start gap-nl-8 bg-nl-raised px-nl-12 py-nl-8">
             <details className="group min-w-0 flex-1">
                 <summary
                     title="구간값 수정"
-                    className="flex h-8 w-fit cursor-pointer list-none items-center gap-2"
+                    className="flex h-nl-32 w-fit cursor-pointer list-none items-center gap-nl-8"
                 >
-                    <strong className="text-body font-bold tabular-nums">
+                    <strong className="nl-metric-value text-nl-content">
                         {formatTierValue(band.value)}
                     </strong>
-                    <Pencil className="size-3.5 text-text-disabled group-open:text-text-primary" />
+                    <Pencil className="nl-icon-small text-nl-disabled group-open:text-nl-content" />
                 </summary>
                 <form
                     noValidate
                     onSubmit={handleUpdate}
-                    className="mt-2 flex items-center gap-1"
+                    className="mt-nl-8 flex items-center gap-nl-4"
                 >
                     <input
                         name="value"
@@ -85,20 +86,23 @@ export default function TierBandHeader({ band }: { band: TierBandData }) {
                         required
                         defaultValue={band.value}
                         aria-label="서열표 구간값"
-                        className="h-11 w-24 rounded-md border border-border bg-bg px-2 text-right text-input font-bold tabular-nums"
+                        className="nl-input nl-admin-number-input"
                     />
                     <button
                         type="submit"
                         disabled={isPending}
                         aria-label={`${band.value} 구간값 저장`}
                         title="구간값 저장"
-                        className="flex size-11 items-center justify-center rounded-md border border-border hover:bg-bg disabled:cursor-not-allowed disabled:opacity-50"
+                        className={foundationButtonClass({
+                            variant: "secondary",
+                            size: "icon",
+                        })}
                     >
-                        <Check className="size-4" aria-hidden />
+                        <Check className="nl-icon-small" aria-hidden />
                     </button>
                 </form>
             </details>
-            <span className="flex h-8 items-center text-caption">
+            <span className="nl-metadata flex h-nl-32 items-center text-nl-subdued">
                 {band.entries.length}곡
             </span>
             <button
@@ -107,9 +111,12 @@ export default function TierBandHeader({ band }: { band: TierBandData }) {
                 onClick={handleDelete}
                 aria-label={`${band.value} 구간 삭제`}
                 title="구간 삭제"
-                className="flex size-8 cursor-pointer items-center justify-center rounded-md text-danger hover:bg-danger/10 disabled:cursor-not-allowed disabled:opacity-50"
+                className={foundationButtonClass({
+                    variant: "ghost",
+                    size: "icon-sm",
+                })}
             >
-                <Trash2 className="size-4" aria-hidden />
+                <Trash2 className="nl-icon-small" aria-hidden />
             </button>
         </header>
     );

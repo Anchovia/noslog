@@ -1,5 +1,5 @@
 import { Search } from "lucide-react";
-import Link from "next/link";
+import FilterChipLinks from "@/components/ui/filter-chip-links";
 
 import AdminUserCard from "@/features/users/components/admin/admin-user-card";
 import { normalizeUserAdminFilters } from "@/features/users/schemas/user-admin-schema";
@@ -15,48 +15,51 @@ export default async function AdminUsersPage({
     const result = await listAdminUsers(filters);
 
     return (
-        <div className="flex flex-col gap-4 py-5">
+        <div className="flex flex-col gap-nl-16 py-nl-24">
             <section>
-                <h1 className="text-title">유저 관리</h1>
-                <p className="mt-1 text-caption">
+                <h1 className="nl-section-title text-nl-content">유저 관리</h1>
+                <p className="nl-metadata mt-nl-4 text-nl-subdued">
                     계정 권한과 데이터 연동 토큰을 관리합니다.
                 </p>
             </section>
-            <form className="relative">
+            <form>
                 {filters.state === "attention" ? (
                     <input type="hidden" name="state" value="attention" />
                 ) : null}
-                <Search
-                    className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-text-disabled"
-                    aria-hidden
-                />
-                <input
-                    name="q"
-                    defaultValue={filters.q}
-                    placeholder="닉네임 · NOSTALGIA 이름 · Discord 검색"
-                    className="h-11 w-full rounded-md border border-border bg-surface pr-3 pl-10 text-input"
-                />
+                <label className="nl-search">
+                    <Search className="nl-icon" aria-hidden />
+                    <input
+                        name="q"
+                        defaultValue={filters.q}
+                        placeholder="닉네임 · NOSTALGIA 이름 · Discord 검색"
+                        aria-label="유저 검색"
+                        className="nl-search__input nl-body"
+                    />
+                </label>
             </form>
-            <nav className="flex gap-2">
-                <Link
-                    href={`/admin/users?q=${encodeURIComponent(filters.q)}`}
-                    className={`rounded-md px-3 py-2 text-sm font-semibold ${filters.state !== "attention" ? "bg-text-primary text-bg" : "bg-surface text-text-secondary"}`}
-                >
-                    전체 {result.totalCount}
-                </Link>
-                <Link
-                    href={`/admin/users?state=attention&q=${encodeURIComponent(filters.q)}`}
-                    className={`rounded-md px-3 py-2 text-sm font-semibold ${filters.state === "attention" ? "bg-score text-bg" : "bg-surface text-text-secondary"}`}
-                >
-                    점검 필요 {result.attentionCount}
-                </Link>
-            </nav>
-            <section className="flex flex-col gap-2">
+            <FilterChipLinks
+                label="사용자 상태"
+                options={[
+                    {
+                        key: "all",
+                        href: `/admin/users?q=${encodeURIComponent(filters.q)}`,
+                        selected: filters.state !== "attention",
+                        label: `전체 ${result.totalCount}`,
+                    },
+                    {
+                        key: "attention",
+                        href: `/admin/users?state=attention&q=${encodeURIComponent(filters.q)}`,
+                        selected: filters.state === "attention",
+                        label: `점검 필요 ${result.attentionCount}`,
+                    },
+                ]}
+            />
+            <section className="flex flex-col gap-nl-8">
                 {result.users.map((user) => (
                     <AdminUserCard key={user.id} user={user} />
                 ))}
                 {result.users.length === 0 ? (
-                    <p className="rounded-card bg-surface py-12 text-center text-body-muted">
+                    <p className="nl-body-secondary rounded-nl-container bg-nl-surface py-nl-48 text-center text-nl-subdued">
                         조건에 맞는 유저가 없습니다.
                     </p>
                 ) : null}

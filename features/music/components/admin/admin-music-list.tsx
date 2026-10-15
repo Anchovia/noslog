@@ -1,11 +1,12 @@
 "use client";
 
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { ChevronRight, LoaderCircle, Search } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 import { listAdminMusic } from "@/app/admin/music/actions";
+import SearchField from "@/components/ui/search-field";
 import MusicTranslationApproveButton from "@/features/music/components/admin/music-translation-approve-button";
 import type { AdminMusicListParams } from "@/features/music/server/music-translation-admin-service";
 import type {
@@ -79,33 +80,30 @@ export default function AdminMusicList({
 
     return (
         <>
-            <div className="relative" role="search">
-                <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-text-disabled" />
-                <input
-                    type="search"
+            <div role="search">
+                <SearchField
                     value={draft}
                     onChange={(event) => setDraft(event.target.value)}
+                    onClear={() => setDraft("")}
+                    clearLabel="검색어 지우기"
+                    busy={searching}
+                    busyLabel="검색 중"
                     placeholder="곡 제목 · 한국어 · 영어 번역 · 아티스트 · 식별자 검색"
                     aria-label="악곡 검색"
-                    className="h-11 w-full rounded-md border border-border bg-surface pr-10 pl-10 text-input"
                 />
-                {searching ? (
-                    <LoaderCircle
-                        aria-hidden
-                        className="absolute top-1/2 right-3 size-4 -translate-y-1/2 animate-spin text-text-disabled"
-                    />
-                ) : null}
             </div>
             <section
-                className="overflow-hidden rounded-card bg-surface"
+                className="overflow-hidden rounded-nl-container bg-nl-surface"
                 aria-busy={searching}
             >
                 {musics.map((music, index) => (
                     <div
                         key={music.index}
                         className={
-                            "flex min-h-16 items-center gap-2 px-3 " +
-                            (index > 0 ? "border-t border-divider" : "")
+                            "flex min-h-nl-64 items-center gap-nl-8 px-nl-12 " +
+                            (index > 0
+                                ? "border-t-nl-stroke border-nl-divider"
+                                : "")
                         }
                     >
                         <Link
@@ -113,17 +111,17 @@ export default function AdminMusicList({
                                 "/admin/music/" +
                                 encodeURIComponent(music.index)
                             }
-                            className="-mx-1 flex min-w-0 flex-1 items-center gap-3 rounded-md px-1 py-2 hover:bg-surface-muted"
+                            className="nl-hover-layer -mx-nl-4 flex min-w-0 flex-1 items-center gap-nl-12 rounded-nl-field px-nl-4 py-nl-8"
                         >
-                            <span className="flex size-9 shrink-0 items-center justify-center rounded-md bg-surface-muted text-xs font-bold text-text-secondary">
+                            <span className="nl-metadata flex size-nl-32 shrink-0 items-center justify-center rounded-nl-field bg-nl-raised text-nl-subdued">
                                 {music.categoryShort}
                             </span>
                             <span className="min-w-0 flex-1">
-                                <strong className="block truncate text-body font-bold">
+                                <strong className="nl-emphasis-label block truncate text-nl-content">
                                     {music.title}
                                 </strong>
                                 {initial.activeLocale ? (
-                                    <span className="block truncate text-caption">
+                                    <span className="nl-metadata block truncate text-nl-subdued">
                                         {music.translation
                                             ? music.translation.title +
                                               " · " +
@@ -135,14 +133,14 @@ export default function AdminMusicList({
                                               " 번역 없음"}
                                     </span>
                                 ) : (
-                                    <span className="block truncate text-caption">
+                                    <span className="nl-metadata block truncate text-nl-subdued">
                                         {music.artist ?? "아티스트 미상"} · 상수{" "}
                                         {music.configuredChartCount}/
                                         {music.chartCount}
                                     </span>
                                 )}
                             </span>
-                            <ChevronRight className="size-4 shrink-0 text-text-disabled" />
+                            <ChevronRight className="nl-icon-small shrink-0 text-nl-disabled" />
                         </Link>
                         {initial.activeLocale &&
                         music.translation?.status === "draft" ? (
@@ -155,7 +153,7 @@ export default function AdminMusicList({
                     </div>
                 ))}
                 {musics.length === 0 && !list.isFetching ? (
-                    <p className="py-12 text-center text-body-muted">
+                    <p className="nl-body-secondary py-nl-48 text-center text-nl-subdued">
                         {list.isError
                             ? "목록을 불러오지 못했습니다."
                             : "검색 결과가 없습니다."}
@@ -163,7 +161,7 @@ export default function AdminMusicList({
                 ) : null}
                 <div ref={sentinel} aria-hidden />
                 {isFetchingNextPage ? (
-                    <p className="border-t border-divider py-3 text-center text-caption">
+                    <p className="nl-metadata border-t-nl-stroke border-nl-divider py-nl-12 text-center text-nl-subdued">
                         불러오는 중...
                     </p>
                 ) : null}

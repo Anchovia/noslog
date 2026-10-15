@@ -23,6 +23,7 @@ import {
     applyTierBoardLayout,
     searchTierCharts,
 } from "@/app/admin/tiers/actions";
+import { foundationButtonClass } from "@/components/ui/button";
 import {
     type TierBandData,
     type TierChartSearchResult,
@@ -195,7 +196,7 @@ export default function TierBoard({
 
     if (bands.length === 0) {
         return (
-            <p className="rounded-card bg-surface py-12 text-center text-body-muted">
+            <p className="nl-body-secondary rounded-nl-container bg-nl-surface py-nl-48 text-center text-nl-subdued">
                 먼저 서열표 상수 구간을 추가해주세요.
             </p>
         );
@@ -212,12 +213,12 @@ export default function TierBoard({
         >
             <div
                 className={cn(
-                    "flex flex-col gap-3",
-                    isMutating && "pointer-events-none opacity-70"
+                    "flex flex-col gap-nl-12",
+                    isMutating && "pointer-events-none text-nl-pending"
                 )}
             >
-                <div className="sticky top-16 z-10 flex min-h-11 items-center justify-between gap-3 rounded-card border border-border bg-surface px-3 py-2 shadow-lg">
-                    <span className="text-caption">
+                <div className="sticky top-nl-64 z-nl-sticky flex min-h-nl-control items-center justify-between gap-nl-12 rounded-nl-container border-nl-stroke border-nl-border bg-nl-surface px-nl-12 py-nl-8 shadow-nl-overlay">
+                    <span className="nl-metadata text-nl-subdued">
                         {changeCount > 0
                             ? `배치 변경 ${changeCount}건`
                             : "배치 변경 없음"}
@@ -226,9 +227,12 @@ export default function TierBoard({
                         type="button"
                         onClick={applyLayout}
                         disabled={changeCount === 0 || isMutating}
-                        className="flex h-9 shrink-0 items-center gap-1.5 rounded-md bg-text-primary px-3 text-xs font-bold text-bg hover:bg-text-primary/90 disabled:cursor-not-allowed disabled:opacity-40"
+                        className={cn(
+                            foundationButtonClass({ size: "sm" }),
+                            "shrink-0"
+                        )}
                     >
-                        <Save className="size-3.5" />
+                        <Save className="nl-icon-small" />
                         {isMutating ? "적용 중..." : "일괄 적용"}
                     </button>
                 </div>

@@ -7,6 +7,7 @@ import { useState, useTransition } from "react";
 import { toast } from "sonner";
 
 import { reviewChartFieldProposals } from "@/app/admin/contributions/actions";
+import { foundationButtonClass } from "@/components/ui/button";
 import {
     type ChartFieldProposalField,
     formatProposalValue,
@@ -106,11 +107,11 @@ export default function ChartFieldProposalReview({
         proposals.length > 0 && selected.size === proposals.length;
 
     return (
-        <section className="flex flex-col gap-3">
+        <section className="flex flex-col gap-nl-12">
             {reviewable ? (
-                <div className="flex flex-col gap-3 rounded-card bg-surface p-3">
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                        <label className="flex items-center gap-2 text-caption">
+                <div className="flex flex-col gap-nl-12 rounded-nl-container bg-nl-surface p-nl-12">
+                    <div className="flex flex-wrap items-center justify-between gap-nl-8">
+                        <label className="nl-metadata flex items-center gap-nl-8 text-nl-subdued">
                             <input
                                 type="checkbox"
                                 checked={allSelected}
@@ -128,23 +129,25 @@ export default function ChartFieldProposalReview({
                             />
                             전체 선택 · {selected.size}건 선택
                         </label>
-                        <div className="flex gap-2">
+                        <div className="flex gap-nl-8">
                             <button
                                 type="button"
                                 disabled={isPending || !selected.size}
                                 onClick={() => setRejecting((value) => !value)}
-                                className="flex h-10 cursor-pointer items-center gap-2 rounded-md bg-danger-surface px-3 text-sm font-bold text-on-danger disabled:cursor-not-allowed disabled:opacity-50"
+                                className={foundationButtonClass({
+                                    variant: "danger",
+                                })}
                             >
-                                <X className="size-4" aria-hidden />
+                                <X className="nl-icon-small" aria-hidden />
                                 반려
                             </button>
                             <button
                                 type="button"
                                 disabled={isPending || !selected.size}
                                 onClick={() => review("apply")}
-                                className="flex h-10 cursor-pointer items-center gap-2 rounded-md bg-text-primary px-3 text-sm font-bold text-bg disabled:cursor-not-allowed disabled:opacity-50"
+                                className={foundationButtonClass()}
                             >
-                                <Check className="size-4" aria-hidden />
+                                <Check className="nl-icon-small" aria-hidden />
                                 {isPending
                                     ? "처리 중"
                                     : `선택 ${selected.size}건 반영`}
@@ -152,13 +155,13 @@ export default function ChartFieldProposalReview({
                         </div>
                     </div>
                     {rejecting ? (
-                        <div className="flex flex-col gap-2">
+                        <div className="flex flex-col gap-nl-8">
                             {/* 정해 둔 사유(2026-10-01 D2) — 고른 사유가 기여자 화면에 그대로 보인다 */}
-                            <div className="flex flex-col gap-1">
+                            <div className="flex flex-col gap-nl-4">
                                 {PROPOSAL_REJECT_REASONS.map((code) => (
                                     <label
                                         key={code}
-                                        className="flex items-center gap-2 text-sm"
+                                        className="nl-body-secondary flex items-center gap-nl-8"
                                     >
                                         <input
                                             type="radio"
@@ -171,7 +174,7 @@ export default function ChartFieldProposalReview({
                                     </label>
                                 ))}
                             </div>
-                            <div className="flex flex-wrap gap-2">
+                            <div className="flex flex-wrap gap-nl-8">
                                 <input
                                     value={reason}
                                     maxLength={PROPOSAL_REJECT_REASON_MAX}
@@ -184,7 +187,7 @@ export default function ChartFieldProposalReview({
                                             : "덧붙일 말(선택)"
                                     }
                                     aria-label="덧붙일 말"
-                                    className="h-10 min-w-0 flex-1 rounded-md border border-border bg-bg px-3 text-sm"
+                                    className="nl-input min-w-0 flex-1"
                                 />
                                 <button
                                     type="button"
@@ -194,7 +197,9 @@ export default function ChartFieldProposalReview({
                                             !reason.trim())
                                     }
                                     onClick={() => review("reject")}
-                                    className="h-10 cursor-pointer rounded-md bg-danger-surface px-3 text-sm font-bold text-on-danger disabled:cursor-not-allowed disabled:opacity-50"
+                                    className={foundationButtonClass({
+                                        variant: "danger",
+                                    })}
                                 >
                                     {`선택 ${selected.size}건 반려`}
                                 </button>
@@ -214,45 +219,45 @@ export default function ChartFieldProposalReview({
                 return (
                     <article
                         key={item.id}
-                        className="flex items-start gap-3 rounded-card bg-surface p-4"
+                        className="flex items-start gap-nl-12 rounded-nl-container bg-nl-surface p-nl-16"
                     >
                         {reviewable ? (
                             <input
                                 type="checkbox"
-                                className="mt-1 shrink-0"
+                                className="mt-nl-4 shrink-0"
                                 checked={selected.has(item.id)}
                                 onChange={() => toggle(item.id)}
                                 aria-label={`${item.chart.title} ${item.chart.difficulty} ${FIELD_LABELS[item.field]} 선택`}
                             />
                         ) : null}
-                        <div className="flex min-w-0 flex-1 flex-col gap-2">
-                            <div className="flex items-start justify-between gap-3">
+                        <div className="flex min-w-0 flex-1 flex-col gap-nl-8">
+                            <div className="flex items-start justify-between gap-nl-12">
                                 <Link
                                     href={`/music/${encodeURIComponent(item.chart.musicIndex)}/${item.chart.difficulty.toLowerCase()}`}
-                                    className="min-w-0 truncate text-section hover:underline"
+                                    className="nl-component-title min-w-0 truncate text-nl-content hover:underline"
                                 >
                                     {item.chart.title} · {item.chart.difficulty}{" "}
                                     {item.chart.level} ·{" "}
                                     {FIELD_LABELS[item.field]}
                                 </Link>
-                                <span className="shrink-0 text-caption">
+                                <span className="nl-metadata shrink-0 text-nl-subdued">
                                     {item.createdAt.toLocaleString("ko-KR")}
                                 </span>
                             </div>
-                            <p className="text-sm tabular-nums">
-                                <span className="text-text-secondary">
+                            <p className="nl-metric-value">
+                                <span className="text-nl-subdued">
                                     {shown(item.field, before)}
                                 </span>
                                 {" → "}
                                 <strong>{shown(item.field, item.value)}</strong>
                                 {changed ? (
-                                    <span className="ml-2 text-xs font-semibold text-danger">
+                                    <span className="nl-metadata ml-nl-8 text-nl-error">
                                         제안 뒤 값이 바뀜(제안 당시{" "}
                                         {shown(item.field, item.previousValue)})
                                     </span>
                                 ) : null}
                             </p>
-                            <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-caption break-all">
+                            <p className="nl-metadata flex flex-wrap items-center gap-x-nl-8 gap-y-nl-4 break-all text-nl-subdued">
                                 <span>
                                     {EVIDENCE_LABELS[item.evidenceKind] ??
                                         item.evidenceKind}
@@ -262,22 +267,22 @@ export default function ChartFieldProposalReview({
                                         href={item.evidenceUrl}
                                         target="_blank"
                                         rel="noreferrer noopener"
-                                        className="inline-flex items-center gap-1 text-text-primary underline"
+                                        className="inline-flex items-center gap-nl-4 text-nl-content underline"
                                     >
                                         {item.evidenceUrl}
                                         <ExternalLink
-                                            className="size-3"
+                                            className="nl-icon-small"
                                             aria-hidden
                                         />
                                     </a>
                                 ) : null}
                                 {item.evidenceNote ? (
-                                    <span className="text-text-primary">
+                                    <span className="text-nl-content">
                                         「{item.evidenceNote}」
                                     </span>
                                 ) : null}
                             </p>
-                            <p className="text-caption">
+                            <p className="nl-metadata text-nl-subdued">
                                 {item.user.username ?? "이름 없음"} · 반영{" "}
                                 {item.authorApplied} · 반려{" "}
                                 {item.authorRejected}
@@ -287,14 +292,14 @@ export default function ChartFieldProposalReview({
                             </p>
                             {/* 고쳐서 반영(2026-10-01 C2) — 값이 살짝 틀렸을 때 반려 → 재제출 왕복을 없앤다 */}
                             {reviewable && editing === item.id ? (
-                                <div className="flex flex-wrap gap-2">
+                                <div className="flex flex-wrap gap-nl-8">
                                     <input
                                         value={editValue}
                                         onChange={(event) =>
                                             setEditValue(event.target.value)
                                         }
                                         aria-label="고쳐서 반영할 값"
-                                        className="h-10 min-w-0 flex-1 rounded-md border border-border bg-bg px-3 text-sm"
+                                        className="nl-input min-w-0 flex-1"
                                     />
                                     <button
                                         type="button"
@@ -304,14 +309,16 @@ export default function ChartFieldProposalReview({
                                         onClick={() =>
                                             review("apply", item.id, editValue)
                                         }
-                                        className="h-10 cursor-pointer rounded-md bg-text-primary px-3 text-sm font-bold text-bg disabled:cursor-not-allowed disabled:opacity-50"
+                                        className={foundationButtonClass()}
                                     >
                                         이 값으로 반영
                                     </button>
                                     <button
                                         type="button"
                                         onClick={() => setEditing(null)}
-                                        className="h-10 cursor-pointer rounded-md border border-border px-3 text-sm font-bold text-text-secondary"
+                                        className={foundationButtonClass({
+                                            variant: "secondary",
+                                        })}
                                     >
                                         취소
                                     </button>
@@ -319,14 +326,17 @@ export default function ChartFieldProposalReview({
                             ) : null}
                             {/* 건별 처리(2026-10-01 C2) — 한 건만 볼 때 고르기 → 위쪽 버튼 두 단계를 없앤다 */}
                             {reviewable ? (
-                                <div className="flex flex-wrap gap-2">
+                                <div className="flex flex-wrap gap-nl-8">
                                     <button
                                         type="button"
                                         disabled={isPending}
                                         onClick={() => review("apply", item.id)}
-                                        className="flex h-10 cursor-pointer items-center gap-2 rounded-md bg-text-primary px-3 text-sm font-bold text-bg disabled:cursor-not-allowed disabled:opacity-50"
+                                        className={foundationButtonClass()}
                                     >
-                                        <Check className="size-4" aria-hidden />
+                                        <Check
+                                            className="nl-icon-small"
+                                            aria-hidden
+                                        />
                                         반영
                                     </button>
                                     <button
@@ -341,7 +351,9 @@ export default function ChartFieldProposalReview({
                                                 )
                                             );
                                         }}
-                                        className="h-10 cursor-pointer rounded-md border border-border px-3 text-sm font-bold text-text-primary disabled:cursor-not-allowed disabled:opacity-50"
+                                        className={foundationButtonClass({
+                                            variant: "secondary",
+                                        })}
                                     >
                                         고쳐서 반영
                                     </button>
@@ -352,9 +364,14 @@ export default function ChartFieldProposalReview({
                                             setSelected(new Set([item.id]));
                                             setRejecting(true);
                                         }}
-                                        className="flex h-10 cursor-pointer items-center gap-2 rounded-md bg-danger-surface px-3 text-sm font-bold text-on-danger disabled:cursor-not-allowed disabled:opacity-50"
+                                        className={foundationButtonClass({
+                                            variant: "danger",
+                                        })}
                                     >
-                                        <X className="size-4" aria-hidden />
+                                        <X
+                                            className="nl-icon-small"
+                                            aria-hidden
+                                        />
                                         반려
                                     </button>
                                 </div>

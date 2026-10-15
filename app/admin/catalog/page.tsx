@@ -24,24 +24,26 @@ export default async function AdminCatalogPage({
     const candidates = await listMusicCatalogCandidates(status);
 
     return (
-        <div className="flex flex-col gap-4 py-5">
+        <div className="flex flex-col gap-nl-16 py-nl-24">
             <section>
-                <h1 className="text-title">악곡 업데이트</h1>
-                <p className="mt-1 text-caption">
+                <h1 className="nl-section-title text-nl-content">
+                    악곡 업데이트
+                </h1>
+                <p className="nl-metadata mt-nl-4 text-nl-subdued">
                     BEMANI 연동에서 감지한 공식 악곡과 채보 변경을 관리합니다.
                 </p>
             </section>
 
-            <nav className="flex gap-2">
+            <nav className="flex gap-nl-8">
                 {MUSIC_CATALOG_STATUSES.map((item) => (
                     <Link
                         key={item}
                         href={"/admin/catalog?status=" + item}
                         className={
-                            "rounded-md px-3 py-2 text-sm font-semibold transition-colors " +
+                            "nl-emphasis-label rounded-nl-field px-nl-12 py-nl-8 transition-colors duration-nl-state " +
                             (status === item
-                                ? "bg-text-primary text-bg"
-                                : "bg-surface text-text-secondary hover:bg-surface-muted")
+                                ? "bg-nl-primary text-nl-on-primary"
+                                : "nl-hover-layer bg-nl-surface text-nl-subdued")
                         }
                     >
                         {statusLabel(item)}
@@ -49,48 +51,45 @@ export default async function AdminCatalogPage({
                 ))}
             </nav>
 
-            <section className="flex flex-col gap-3">
+            <section className="flex flex-col gap-nl-12">
                 {candidates.map((candidate) => (
                     <article
                         key={candidate.id}
-                        className="flex flex-col gap-3 rounded-card bg-surface p-4"
+                        className="flex flex-col gap-nl-12 rounded-nl-container bg-nl-surface p-nl-16"
                     >
-                        <div className="flex items-start justify-between gap-3">
+                        <div className="flex items-start justify-between gap-nl-12">
                             <div className="min-w-0">
-                                <h2 className="truncate text-section">
+                                <h2 className="nl-component-title truncate text-nl-content">
                                     {candidate.title}
                                 </h2>
-                                <p className="mt-1 truncate text-caption">
+                                <p className="nl-metadata mt-nl-4 truncate text-nl-subdued">
                                     {candidate.artist ?? "아티스트 미상"}
                                 </p>
                             </div>
-                            <span className="shrink-0 rounded bg-surface-muted px-2 py-1 text-caption">
+                            <span className="nl-tag shrink-0">
                                 {statusLabel(candidate.status)}
                             </span>
                         </div>
 
-                        <ul className="flex flex-wrap gap-1.5">
+                        <ul className="flex flex-wrap gap-nl-8">
                             {candidate.changes.map((change) => (
-                                <li
-                                    key={change}
-                                    className="rounded bg-basic/10 px-2 py-1 text-xs font-semibold text-basic"
-                                >
+                                <li key={change} className="nl-tag">
                                     {change}
                                 </li>
                             ))}
                         </ul>
 
-                        <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-caption">
+                        <dl className="nl-admin-pairs nl-metadata gap-x-nl-12 gap-y-nl-4 text-nl-subdued">
                             <dt>악곡 ID</dt>
-                            <dd className="truncate font-mono text-text-primary">
+                            <dd className="truncate font-nl-mono text-nl-content">
                                 {candidate.musicIndex}
                             </dd>
                             <dt>감지 횟수</dt>
-                            <dd className="text-text-primary tabular-nums">
+                            <dd className="text-nl-content">
                                 {candidate.seenCount.toLocaleString("ko-KR")}회
                             </dd>
                             <dt>최근 감지</dt>
-                            <dd className="text-text-primary">
+                            <dd className="text-nl-content">
                                 {candidate.lastSeenAt.toLocaleString("ko-KR")}
                             </dd>
                         </dl>
@@ -103,7 +102,7 @@ export default async function AdminCatalogPage({
                     </article>
                 ))}
                 {candidates.length === 0 ? (
-                    <p className="rounded-card bg-surface py-12 text-center text-body-muted">
+                    <p className="nl-body-secondary rounded-nl-container bg-nl-surface py-nl-48 text-center text-nl-subdued">
                         해당하는 악곡 업데이트가 없습니다.
                     </p>
                 ) : null}

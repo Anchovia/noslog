@@ -18,8 +18,8 @@ export default function BingoBasicFields({
     register,
 }: BingoBasicFieldsProps) {
     return (
-        <section className="grid grid-cols-2 gap-3 rounded-card bg-surface p-3">
-            <label className="col-span-2 flex flex-col gap-1 text-caption">
+        <section className="grid grid-cols-2 gap-nl-12 rounded-nl-container bg-nl-surface p-nl-12">
+            <label className="nl-metadata col-span-2 flex flex-col gap-nl-4 text-nl-subdued">
                 제목
                 <input
                     aria-invalid={Boolean(errors.title)}
@@ -28,17 +28,17 @@ export default function BingoBasicFields({
                 />
                 <BingoFieldError message={errors.title?.message} />
             </label>
-            <label className="col-span-2 flex flex-col gap-1 text-caption">
+            <label className="nl-metadata col-span-2 flex flex-col gap-nl-4 text-nl-subdued">
                 설명
                 <textarea
                     rows={2}
                     aria-invalid={Boolean(errors.description)}
-                    className="w-full resize-none rounded-md border border-border bg-bg px-3 py-2 text-input outline-none focus:border-focus"
+                    className="nl-input resize-none"
                     {...register("description")}
                 />
                 <BingoFieldError message={errors.description?.message} />
             </label>
-            <label className="col-span-2 flex flex-col gap-1 text-caption">
+            <label className="nl-metadata col-span-2 flex flex-col gap-nl-4 text-nl-subdued">
                 표지 악곡
                 <select
                     aria-invalid={Boolean(errors.coverMusicIndex)}
@@ -54,7 +54,7 @@ export default function BingoBasicFields({
                 </select>
                 <BingoFieldError message={errors.coverMusicIndex?.message} />
             </label>
-            <label className="flex flex-col gap-1 text-caption">
+            <label className="nl-metadata flex flex-col gap-nl-4 text-nl-subdued">
                 보상 nos
                 <input
                     type="number"
@@ -67,7 +67,7 @@ export default function BingoBasicFields({
                 />
                 <BingoFieldError message={errors.rewardNos?.message} />
             </label>
-            <label className="flex flex-col gap-1 text-caption">
+            <label className="nl-metadata flex flex-col gap-nl-4 text-nl-subdued">
                 필요 줄 수
                 <input
                     type="number"
@@ -81,7 +81,7 @@ export default function BingoBasicFields({
                 />
                 <BingoFieldError message={errors.requiredLines?.message} />
             </label>
-            <label className="flex flex-col gap-1 text-caption">
+            <label className="nl-metadata flex flex-col gap-nl-4 text-nl-subdued">
                 상태
                 <select
                     aria-invalid={Boolean(errors.status)}
@@ -95,7 +95,7 @@ export default function BingoBasicFields({
                 <BingoFieldError message={errors.status?.message} />
             </label>
             <span />
-            <label className="flex flex-col gap-1 text-caption">
+            <label className="nl-metadata flex flex-col gap-nl-4 text-nl-subdued">
                 시작일
                 <input
                     type="date"
@@ -105,7 +105,7 @@ export default function BingoBasicFields({
                 />
                 <BingoFieldError message={errors.startsAt?.message} />
             </label>
-            <label className="flex flex-col gap-1 text-caption">
+            <label className="nl-metadata flex flex-col gap-nl-4 text-nl-subdued">
                 종료일
                 <input
                     type="date"

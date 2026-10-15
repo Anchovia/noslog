@@ -5,10 +5,12 @@ import { useTransition } from "react";
 import { toast } from "sonner";
 
 import { approveMusicTranslation } from "@/app/admin/music/actions";
+import { foundationButtonClass } from "@/components/ui/button";
 import {
     createMusicTranslationApproveFormData,
     type MusicTranslationLocale,
 } from "@/features/music/schemas/music-translation-admin-schema";
+import { cn } from "@/lib/cn";
 
 interface MusicTranslationApproveButtonProps {
     locale: MusicTranslationLocale;
@@ -50,7 +52,10 @@ export default function MusicTranslationApproveButton({
             type="button"
             disabled={isPending}
             onClick={approve}
-            className="h-9 shrink-0 cursor-pointer rounded-md border border-border px-2.5 text-xs font-bold hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-50"
+            className={cn(
+                foundationButtonClass({ variant: "secondary", size: "sm" }),
+                "shrink-0"
+            )}
         >
             {isPending ? "승인 중" : "승인"}
         </button>

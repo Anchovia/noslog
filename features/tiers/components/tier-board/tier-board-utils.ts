@@ -6,15 +6,15 @@ import type {
 } from "./tier-board-types";
 
 const DIFFICULTY_COLORS: Record<string, string> = {
-    normal: "text-normal",
-    hard: "text-hard",
-    expert: "text-expert",
-    real: "text-real",
+    normal: "text-nl-difficulty-normal",
+    hard: "text-nl-difficulty-hard",
+    expert: "text-nl-difficulty-expert",
+    real: "text-nl-difficulty-real",
 };
 
 const DIFFICULTY_BORDERS: Record<string, string> = {
-    expert: "border-expert",
-    real: "border-real",
+    expert: "border-nl-difficulty-expert",
+    real: "border-nl-difficulty-real",
 };
 
 export function getTierDifficultyColor(difficulty: string) {

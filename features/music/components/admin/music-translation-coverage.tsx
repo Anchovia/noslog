@@ -1,11 +1,13 @@
 import { Download } from "lucide-react";
 import Link from "next/link";
 
+import { foundationButtonClass } from "@/components/ui/button";
 import type {
     MusicTranslationLocale,
     MusicTranslationStatus,
 } from "@/features/music/schemas/music-translation-admin-schema";
 import type { AdminMusicTranslationCoverage } from "@/features/music/types/music-admin";
+import { cn } from "@/lib/cn";
 
 function filterHref(
     locale: MusicTranslationLocale,
@@ -28,23 +30,31 @@ export default function MusicTranslationCoverage({
     activeStatus?: MusicTranslationStatus | "missing";
 }) {
     return (
-        <section className="flex flex-col gap-3 rounded-card bg-surface p-4">
-            <div className="flex items-start justify-between gap-3">
+        <section className="flex flex-col gap-nl-12 rounded-nl-container bg-nl-surface p-nl-16">
+            <div className="flex items-start justify-between gap-nl-12">
                 <div>
-                    <h2 className="text-section">번역 현황</h2>
-                    <p className="mt-1 text-caption">
+                    <h2 className="nl-component-title text-nl-content">
+                        번역 현황
+                    </h2>
+                    <p className="nl-metadata mt-nl-4 text-nl-subdued">
                         언어별 승인·초안·미번역 악곡을 확인합니다.
                     </p>
                 </div>
                 <Link
                     href="/admin/music/translations.csv"
-                    className="flex h-9 shrink-0 items-center gap-1.5 rounded-md border border-border px-3 text-xs font-semibold hover:bg-surface-muted"
+                    className={cn(
+                        foundationButtonClass({
+                            variant: "secondary",
+                            size: "sm",
+                        }),
+                        "shrink-0"
+                    )}
                 >
-                    <Download className="size-3.5" aria-hidden />
+                    <Download className="nl-icon-small" aria-hidden />
                     전체 CSV
                 </Link>
             </div>
-            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-nl-8 sm:grid-cols-2">
                 {coverage.map((item) => {
                     const completion =
                         item.total > 0
@@ -54,23 +64,23 @@ export default function MusicTranslationCoverage({
                     return (
                         <article
                             key={item.locale}
-                            className="rounded-md border border-border bg-bg p-3"
+                            className="rounded-nl-field border-nl-stroke border-nl-border bg-nl-canvas p-nl-12"
                         >
-                            <div className="flex items-center justify-between gap-2">
-                                <strong className="text-body font-bold">
+                            <div className="flex items-center justify-between gap-nl-8">
+                                <strong className="nl-emphasis-label text-nl-content">
                                     {item.label}
                                 </strong>
-                                <span className="text-caption">
+                                <span className="nl-metadata text-nl-subdued">
                                     승인 {completion}%
                                 </span>
                             </div>
-                            <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-surface-muted">
+                            <div className="mt-nl-8 h-nl-4 overflow-hidden rounded-nl-full bg-nl-raised">
                                 <div
-                                    className="h-full rounded-full bg-chart"
+                                    className="h-full rounded-nl-full bg-nl-chart"
                                     style={{ width: completion + "%" }}
                                 />
                             </div>
-                            <div className="mt-3 grid grid-cols-3 gap-1.5">
+                            <div className="mt-nl-12 grid grid-cols-3 gap-nl-8">
                                 {(
                                     [
                                         ["approved", "승인", item.approved],
@@ -93,13 +103,13 @@ export default function MusicTranslationCoverage({
                                                 active ? "page" : undefined
                                             }
                                             className={
-                                                "rounded-md px-2 py-2 text-center text-xs " +
+                                                "nl-metadata rounded-nl-field px-nl-8 py-nl-8 text-center " +
                                                 (active
-                                                    ? "bg-text-primary text-bg"
-                                                    : "bg-surface-muted text-text-secondary hover:text-text-primary")
+                                                    ? "bg-nl-primary text-nl-on-primary"
+                                                    : "bg-nl-raised text-nl-subdued hover:text-nl-content")
                                             }
                                         >
-                                            <span className="block font-bold">
+                                            <span className="nl-emphasis-label block">
                                                 {count}
                                             </span>
                                             <span>{label}</span>
@@ -112,7 +122,7 @@ export default function MusicTranslationCoverage({
                                     "/admin/music/translations.csv?locale=" +
                                     item.locale
                                 }
-                                className="mt-2 block text-right text-caption hover:text-text-primary"
+                                className="nl-metadata mt-nl-8 block text-right hover:text-nl-content"
                             >
                                 {item.label} CSV 내보내기
                             </Link>
@@ -123,7 +133,7 @@ export default function MusicTranslationCoverage({
             {activeLocale && activeStatus ? (
                 <Link
                     href="/admin/music"
-                    className="self-start text-caption hover:text-text-primary"
+                    className="nl-metadata self-start hover:text-nl-content"
                 >
                     번역 필터 해제
                 </Link>
