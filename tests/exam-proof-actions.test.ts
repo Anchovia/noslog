@@ -96,8 +96,7 @@ describe("검정 증빙 업로드 액션", () => {
         });
         mocks.userFindUnique.mockResolvedValue({
             nostalgia_name: "PLAYER",
-            grade_basic: 235000,
-            grade_recital: 100000,
+            stats: { gradeBasic: 235000, gradeRecital: 100000 },
             examAchievements: [],
         });
         mocks.submissionFindMany.mockResolvedValue([]);
@@ -423,8 +422,7 @@ describe("검정 증빙 업로드 액션", () => {
     it("동기화된 이름이 없으면 요구 Grd.가 0이어도 업로드를 허용하지 않는다", async () => {
         mocks.userFindUnique.mockResolvedValue({
             nostalgia_name: null,
-            grade_basic: 0,
-            grade_recital: null,
+            stats: { gradeBasic: 0, gradeRecital: null },
             examAchievements: [],
         });
         expect((await requestExamProofUpload(30, "image/jpeg")).success).toBe(

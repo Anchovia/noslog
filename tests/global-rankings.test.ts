@@ -63,20 +63,23 @@ const query: GlobalRankingQuery = {
     region: "all",
     page: 1,
 };
+// Grd 는 player_stats 에서 읽는다(2026-10-16 DB 재설계 P4)
 const users = Array.from({ length: 29 }, (_, index) => ({
     id: index + 1,
     username: `Player ${index + 1}`,
     avatar: null,
     country: index < 27 ? "ko-KR" : index === 27 ? "ja-JP" : "global",
-    grade_basic:
-        index === 0
-            ? 600_000
-            : index === 28
-              ? 0
-              : index === 27
-                ? 400_000
-                : 500_049 - index,
-    grade_recital: 450_000,
+    stats: {
+        gradeBasic:
+            index === 0
+                ? 600_000
+                : index === 28
+                  ? 0
+                  : index === 27
+                    ? 400_000
+                    : 500_049 - index,
+        gradeRecital: 450_000,
+    },
     examAchievements: [
         { exam: { mode: "basic", grade: 4 } },
         { exam: { mode: "basic", grade: 2 } },
@@ -88,7 +91,9 @@ const users = Array.from({ length: 29 }, (_, index) => ({
 beforeEach(() => {
     vi.resetAllMocks();
     mocks.ratings = [];
-    mocks.users.mockResolvedValue(users.filter((user) => user.grade_basic > 0));
+    mocks.users.mockResolvedValue(
+        users.filter((user) => user.stats.gradeBasic > 0)
+    );
     mocks.records.mockResolvedValue([]);
     mocks.basis.mockResolvedValue({
         entries: Array.from({ length: 70 }, (_, index) => ({

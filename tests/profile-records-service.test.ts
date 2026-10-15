@@ -96,8 +96,9 @@ describe("profile records tab", () => {
             user_id: 7,
             score: { gt: 0 },
         });
+        // 최근순은 기록 시각 best_at(2026-10-16 P4), 시각 모름은 맨 뒤
         expect(mocks.findMany.mock.calls[0][0].orderBy[0]).toEqual({
-            besttime: "desc",
+            bestAt: { sort: "desc", nulls: "last" },
         });
         expect(result?.items[0].position).toBeNull();
     });

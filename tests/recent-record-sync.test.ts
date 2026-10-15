@@ -14,7 +14,7 @@ const mocks = vi.hoisted(() => ({
         musicChart: { findMany: vi.fn() },
         dataSync: { findUniqueOrThrow: vi.fn() },
         user: { findUniqueOrThrow: vi.fn(), update: vi.fn() },
-        playerStats: { upsert: vi.fn() },
+        playerStats: { upsert: vi.fn(), findUnique: vi.fn() },
         playData: {
             findMany: vi.fn(),
             upsert: vi.fn(),
@@ -156,8 +156,8 @@ beforeEach(() => {
             ];
         }
     );
-    mocks.db.user.findUniqueOrThrow.mockImplementation(async () => ({
-        last_full_record_at: state.fullAt,
+    mocks.db.playerStats.findUnique.mockImplementation(async () => ({
+        lastFullRecordAt: state.fullAt,
     }));
     mocks.db.user.update.mockImplementation(
         async ({ data }: { data: Record<string, unknown> }) => {

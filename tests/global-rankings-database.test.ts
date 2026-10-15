@@ -24,13 +24,18 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
                     data: {
                         username: `rank-${Date.now()}-${i}`,
                         country: "ja-JP",
-                        grade_basic:
-                            i === 0
-                                ? 900_000
-                                : i === 27
-                                  ? 700_000
-                                  : 800_049 - i,
-                        grade_recital: i === 0 ? 700_000 : 600_000,
+                        // Grd 는 player_stats 에서 읽는다(2026-10-16 P4)
+                        stats: {
+                            create: {
+                                gradeBasic:
+                                    i === 0
+                                        ? 900_000
+                                        : i === 27
+                                          ? 700_000
+                                          : 800_049 - i,
+                                gradeRecital: i === 0 ? 700_000 : 600_000,
+                            },
+                        },
                     },
                 });
                 ids.push(user.id);

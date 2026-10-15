@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
     user: vi.fn(),
+    stats: vi.fn(),
     plays: vi.fn(),
     recent: vi.fn(),
     basis: vi.fn(),
@@ -11,6 +12,7 @@ vi.mock("server-only", () => ({}));
 vi.mock("@/lib/db", () => ({
     default: {
         user: { findUnique: mocks.user },
+        playerStats: { findUnique: mocks.stats },
         playData: { findMany: mocks.plays },
         chartPlayHistory: { findMany: mocks.recent },
         $queryRaw: mocks.ranks,
@@ -45,10 +47,8 @@ function play(id: number) {
 describe("profile incremental public plays", () => {
     beforeEach(() => {
         vi.clearAllMocks();
-        mocks.user.mockResolvedValue({
-            hide_play_activity: false,
-            grade_recital: 20000,
-        });
+        mocks.user.mockResolvedValue({ hide_play_activity: false });
+        mocks.stats.mockResolvedValue({ gradeRecital: 20000 });
         mocks.plays.mockResolvedValue([]);
         mocks.recent.mockResolvedValue([]);
         mocks.basis.mockResolvedValue({ theoreticalMax: null, entries: [] });
@@ -236,7 +236,7 @@ describe("profile incremental public plays", () => {
         );
     });
     it("최근 기록만 있는 사용자의 Recital Rating은 0으로 만들지 않는다", async () => {
-        mocks.user.mockResolvedValue({ grade_recital: null });
+        mocks.stats.mockResolvedValue({ gradeRecital: null });
         expect(await getProfileRating(7, "recital")).toBeNull();
         expect(mocks.plays).not.toHaveBeenCalled();
     });

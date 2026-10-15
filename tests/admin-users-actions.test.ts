@@ -68,8 +68,11 @@ describe("관리자 사용자 관리", () => {
                 nostalgia_name: "NOSTALGIA USER",
                 country: "ko-KR",
                 role: "user",
-                play_count: 20,
-                nostalgia_last_playtime: "2026-09-04 12:00",
+                // 플레이 수 · 마지막 플레이는 player_stats 에서(2026-10-16 P4) — KST 12:00 = UTC 03:00
+                stats: {
+                    playCount: 20,
+                    lastPlayedAt: new Date("2026-09-04T03:00:00.000Z"),
+                },
                 sync_token_version: 3,
                 created_at: createdAt,
                 dataSyncs: [{ status: "completed", started_at: syncedAt }],
@@ -152,8 +155,7 @@ describe("관리자 사용자 관리", () => {
                 nostalgia_name: null,
                 country: "ko-KR",
                 role: "user",
-                play_count: null,
-                nostalgia_last_playtime: null,
+                stats: null,
                 sync_token_version: 0,
                 created_at: new Date("2026-01-01T00:00:00.000Z"),
                 dataSyncs: [],
