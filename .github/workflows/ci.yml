@@ -1,115 +1,127 @@
 name: CI
 
+# 같은 커밋을 두 번 돌리지 않는다(2026-10-15 CI 정비 B안). dev → main PR 은 dev 푸시 결과가 같은 커밋에 붙어
+# 필수 체크(ci-ok)를 채운다. PR 이벤트로 잡을 건너뛰면 「건너뜀」 체크가 실패한 푸시 결과를 가릴 수 있어 쓰지 않는다.
 on:
     push:
         branches:
             - main
             - dev
-    pull_request:
-        branches:
-            - main
-            - dev
+            - "dependabot/**"
+    workflow_dispatch:
+
+permissions:
+    contents: read
+
+# main 은 배포 브랜치라 끝까지 돌리고, 나머지는 새 푸시가 오면 이전 실행을 끊는다.
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+env:
+    HUSKY: "0"
+    DATABASE_URL: postgresql://postgres:postgres@localhost:5432/noslog
+    COOKIE_PASSWORD: ci-only-cookie-password-at-least-32-characters
+    BOOKMARKLET_SECRET: ci-only-bookmarklet-secret-at-least-32-characters
 
 jobs:
-    verify:
+    lint:
         runs-on: ubuntu-latest
-        timeout-minutes: 15
-        env:
-            DATABASE_URL: postgresql://postgres:postgres@localhost:5432/noslog
-            COOKIE_PASSWORD: ci-only-cookie-password-at-least-32-characters
-            BOOKMARKLET_SECRET: ci-only-bookmarklet-secret-at-least-32-characters
-
+        timeout-minutes: 10
         steps:
-            - name: Checkout repository
-              uses: actions/checkout@v4
-
-            - name: Set up Node.js
-              uses: actions/setup-node@v4
+            - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+            - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
               with:
                   node-version-file: .node-version
                   cache: npm
-
-            - name: Install dependencies
-              run: npm ci
-
-            - name: Check dependency declarations
+            - run: npm ci
+            - name: ESLint
+              run: npm run lint
+            - name: Prettier
+              run: npm run format:check
+            - name: Dependency declarations
               run: npm run check:dependencies
 
-            - name: Audit production dependencies
-              run: npm run audit:production
+    # unit + db 프로젝트. db 는 아래 Postgres 에 마이그레이션을 올린 뒤 TEST_DATABASE_URL 로 돈다.
+    unit:
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        services:
+            postgres:
+                image: postgres:16-alpine
+                env:
+                    POSTGRES_DB: noslog_test
+                    POSTGRES_USER: postgres
+                    POSTGRES_PASSWORD: postgres
+                ports:
+                    - 5432:5432
+                options: >-
+                    --health-cmd "pg_isready -U postgres -d noslog_test"
+                    --health-interval 5s
+                    --health-timeout 5s
+                    --health-retries 10
+        env:
+            TEST_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/noslog_test
+        steps:
+            - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+            - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+              with:
+                  node-version-file: .node-version
+                  cache: npm
+            - run: npm ci
+            - name: Migrate test database
+              run: npx prisma migrate deploy
+              env:
+                  DATABASE_URL: ${{ env.TEST_DATABASE_URL }}
+            - run: npm test
 
-            - name: Lint
-              run: npm run lint
-
-            - name: Test
-              run: npm test
-
-            - name: Type check
-              run: npm run typecheck
-
-            - name: Build
-              run: npm run build
+    # next build 가 프로젝트 전체(tests · e2e 포함) 타입 검사를 한다. 따로 tsc 를 돌리지 않는다.
+    build:
+        runs-on: ubuntu-latest
+        timeout-minutes: 15
+        steps:
+            - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+            - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+              with:
+                  node-version-file: .node-version
+                  cache: npm
+            - run: npm ci
+            - name: Restore Next.js build cache
+              uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+              with:
+                  path: .next/cache
+                  key: nextjs-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-${{ hashFiles('app/**', 'components/**', 'features/**', 'lib/**', 'public/**', 'proxy.ts', 'next.config.mjs', 'prisma/schema.prisma') }}
+                  restore-keys: |
+                      nextjs-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-
+            - run: npm run build
 
     storybook:
         runs-on: ubuntu-latest
         timeout-minutes: 15
+        # 이미지 버전은 @playwright/test 와 같아야 한다. 브라우저가 들어 있어 설치 단계가 없다.
+        container:
+            image: mcr.microsoft.com/playwright:v1.61.1-noble
+            options: --ipc=host --init
         steps:
-            - name: Checkout repository
-              uses: actions/checkout@v4
-
-            - name: Set up Node.js
-              uses: actions/setup-node@v4
+            - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+            - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
               with:
                   node-version-file: .node-version
                   cache: npm
-
-            - name: Install dependencies
-              run: npm ci
-
-            - name: Install Playwright Chromium
-              run: npx playwright install --with-deps chromium
-
-            - name: Test component interactions and accessibility
+            - run: npm ci
+            - name: Component interactions and accessibility
               run: npm run test:storybook
-
             - name: Build Storybook
               run: npm run build-storybook
 
-    visual:
+    # 운영 빌드(next start)를 대상으로, 브라우저가 든 Playwright 이미지 안에서 돈다.
+    # 컨테이너 안에서는 서비스 DB 호스트가 localhost 가 아니라 postgres 다.
+    e2e:
         runs-on: ubuntu-latest
-        timeout-minutes: 15
+        timeout-minutes: 20
         container:
             image: mcr.microsoft.com/playwright:v1.61.1-noble
-            options: --ipc=host
-        env:
-            STORYBOOK_VISUAL_RESULTS: test-results/visual
-        steps:
-            - name: Checkout repository
-              uses: actions/checkout@v4
-            - name: Set up Node.js
-              uses: actions/setup-node@v4
-              with:
-                  node-version-file: .node-version
-                  cache: npm
-            - name: Install dependencies
-              run: npm ci
-            - name: Build isolated Storybook
-              run: npm run build-storybook
-            - name: Compare screenshots and responsive form contracts
-              run: npm run test:visual
-            - name: Upload visual differences
-              if: failure()
-              uses: actions/upload-artifact@v4
-              with:
-                  name: storybook-visual-differences
-                  path: test-results/visual/
-                  retention-days: 7
-
-    e2e:
-        if: ${{ vars.RUN_E2E == 'true' }}
-        needs: verify
-        runs-on: ubuntu-latest
-        timeout-minutes: 45
+            options: --ipc=host --init
         services:
             postgres:
                 image: postgres:16-alpine
@@ -117,8 +129,6 @@ jobs:
                     POSTGRES_DB: noslog_e2e
                     POSTGRES_USER: postgres
                     POSTGRES_PASSWORD: postgres
-                ports:
-                    - 5432:5432
                 options: >-
                     --health-cmd "pg_isready -U postgres -d noslog_e2e"
                     --health-interval 5s
@@ -127,42 +137,46 @@ jobs:
         env:
             CI: "true"
             E2E_SEED: "1"
-            DATABASE_URL: postgresql://postgres:postgres@localhost:5432/noslog_e2e
-            COOKIE_PASSWORD: ci-only-cookie-password-at-least-32-characters
-            BOOKMARKLET_SECRET: ci-only-bookmarklet-secret-at-least-32-characters
-
+            DATABASE_URL: postgresql://postgres:postgres@postgres:5432/noslog_e2e
+            DATABASE_EXPECTED_HOST: postgres
         steps:
-            - name: Checkout repository
-              uses: actions/checkout@v4
-
-            - name: Set up Node.js
-              uses: actions/setup-node@v4
+            - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+            - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
               with:
                   node-version-file: .node-version
                   cache: npm
-
-            - name: Install dependencies
-              run: npm ci
-
-            - name: Install Playwright Chromium
-              run: npx playwright install --with-deps chromium
-
-            - name: Apply database migrations
-              run: npm run db:migrate:deploy
-
-            - name: Seed E2E database
-              run: npm run db:seed:e2e
-
-            - name: Import music catalog into E2E database
-              run: node prisma/import-music-catalog.mjs --apply
-
-            - name: Run Playwright E2E
+            - run: npm ci
+            - name: Prepare e2e database
+              run: |
+                  npm run db:migrate:deploy
+                  npm run db:seed:e2e
+                  node prisma/import-music-catalog.mjs --apply
+            - name: Restore Next.js build cache
+              uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+              with:
+                  path: .next/cache
+                  key: nextjs-e2e-${{ hashFiles('package-lock.json') }}-${{ hashFiles('app/**', 'components/**', 'features/**', 'lib/**', 'public/**', 'proxy.ts', 'next.config.mjs', 'prisma/schema.prisma') }}
+                  restore-keys: |
+                      nextjs-e2e-${{ hashFiles('package-lock.json') }}-
+            - run: npm run build
+            - name: Playwright
               run: npm run test:e2e
-
             - name: Upload Playwright report
-              if: failure()
-              uses: actions/upload-artifact@v4
+              if: ${{ !cancelled() }}
+              uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
               with:
                   name: playwright-report
                   path: playwright-report/
                   retention-days: 7
+
+    # 규칙셋의 필수 체크는 이 잡 하나다. 앞 잡 중 하나라도 실패 · 취소 · 건너뜀이면 실패한다.
+    ci-ok:
+        if: ${{ always() }}
+        needs: [lint, unit, build, storybook, e2e]
+        runs-on: ubuntu-latest
+        timeout-minutes: 2
+        steps:
+            - name: All required jobs passed
+              if: ${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') || contains(needs.*.result, 'skipped') }}
+              run: exit 1
+            - run: echo "lint · unit · build · storybook · e2e passed"

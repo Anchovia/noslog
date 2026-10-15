@@ -1,0 +1,40 @@
+name: Dependencies
+
+# 의존성 보안 검사는 CI 관문과 분리한다(2026-10-15 CI 정비 D6).
+# PR 은 그 PR 이 들여오는 의존성만 검토하고, 이미 있는 권고는 주 1회 운영 의존성 감사로 알린다.
+on:
+    pull_request:
+        branches:
+            - main
+            - dev
+    schedule:
+        # 월요일 UTC 00:23 = KST 09:23. 정각을 피한다.
+        - cron: "23 0 * * 1"
+    workflow_dispatch:
+
+permissions:
+    contents: read
+
+jobs:
+    review:
+        if: ${{ github.event_name == 'pull_request' }}
+        runs-on: ubuntu-latest
+        timeout-minutes: 5
+        steps:
+            - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+            - uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
+              with:
+                  fail-on-severity: moderate
+                  fail-on-scopes: runtime
+
+    audit:
+        if: ${{ github.event_name != 'pull_request' }}
+        runs-on: ubuntu-latest
+        timeout-minutes: 5
+        steps:
+            - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+            - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+              with:
+                  node-version-file: .node-version
+            - name: Production dependency audit
+              run: npm run audit:production

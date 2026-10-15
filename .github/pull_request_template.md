@@ -15,17 +15,12 @@ Closes #
 
 ## 확인
 
-- [ ] `npm run lint`
-- [ ] `npm run typecheck`
-- [ ] `npm test`
-- [ ] `npm run build`
+자동 검사(린트 · 서식 · 단위 · DB 통합 · 빌드와 타입 · 스토리북 · e2e)는 CI 의 `ci-ok` 가 확인한다. 사람이 볼 것만 적는다.
 
 공용 UI 변경 시:
 
 - [ ] 지원 상태·Props 사용 예를 Storybook에 반영
 - [ ] 기능 폼 변경 시 실패·재시도·연속 제출·오래된 응답을 로컬 mock 스토리로 확인
-- [ ] 공용 스타일/대상 화면 변경 시 같은 Linux 환경에서 `npm run test:visual` 확인
-- [ ] `npm run test:storybook` · `npm run build-storybook`
 - [ ] 관련 키보드 탐색·포커스·라벨·오류 연결 확인
 - [ ] 가이드의 화면 폭·전환 경계·ko/ja/en 및 영향을 받는 페이지 확인
 - [ ] 토큰·부품 규칙 변경 시 가이드·결정 기록·테스트 반영

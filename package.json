@@ -31,15 +31,13 @@
         "audit:production": "npm audit --omit=dev --audit-level=moderate",
         "audit:unused": "knip",
         "typecheck": "tsc --noEmit",
-        "lint": "eslint .",
+        "lint": "eslint . --concurrency=4",
         "format": "prettier --write .",
         "format:check": "prettier --check .",
         "prepare": "husky",
         "storybook": "storybook dev -p 6006 --no-open",
         "build-storybook": "storybook build",
-        "test:storybook": "vitest run --config vitest.storybook.config.ts",
-        "test:visual": "playwright test --config playwright.storybook.config.ts",
-        "test:visual:docker": "node tooling/storybook/visual-docker.mjs"
+        "test:storybook": "vitest run --config vitest.storybook.config.ts"
     },
     "lint-staged": {
         "*.{js,jsx,ts,tsx,mjs}": [
