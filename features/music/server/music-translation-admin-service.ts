@@ -88,18 +88,18 @@ function adminMusicFilters(params: AdminMusicListParams) {
             : normalizeMusicTranslationStatus(params.translationStatus);
     const missingLevelConstant = params.missing === "1";
     const translationFilter =
-        activeLocale && activeStatus === "missing"
-            ? { translations: { none: { locale: activeLocale } } }
-            : activeLocale && activeStatus
-              ? {
+        !activeLocale || !activeStatus
+            ? {}
+            : activeStatus === "missing"
+              ? { translations: { none: { locale: activeLocale } } }
+              : {
                     translations: {
                         some: {
                             locale: activeLocale,
                             status: activeStatus,
                         },
                     },
-                }
-              : {};
+                };
     // 검색(2026-09-25) — 사용자 악곡 검색과 같게 대소문자를 가리지 않고(ILIKE) 식별자 · 제목 · 읽기(가나) ·
     // 아티스트 · 번역 제목(관리자는 초안 번역도)에서 찾는다
     const insensitive = { contains: keyword, mode: "insensitive" as const };

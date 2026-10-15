@@ -280,6 +280,14 @@ verification. Report the actual checks and any unverified runtime conditions.
 - Write migrations so the previous deployment can run against the new schema
   (expand, switch, then contract). Put `CREATE INDEX CONCURRENTLY` alone in its
   own migration file: Prisma 6.19 sends a file as one implicit transaction.
+- Store closed value lists (status, mode, kind, role, locale) as Prisma enums,
+  not strings with CHECK constraints. Keep each value identical to the string
+  the code already uses, and list values alphabetically: Postgres sorts an enum
+  by declaration order, so this keeps `orderBy` results the same as for text.
+  Add a new value with `ALTER TYPE … ADD VALUE` in its own migration, and start
+  writing it only in a later deployment. Raw SQL that compares an enum column
+  with a bound parameter needs a cast (`${value}::"EnumName"`). Open values
+  from the game (rank) and free text stay strings.
 
 ## Feature view and connection boundaries
 

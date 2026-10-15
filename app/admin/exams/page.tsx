@@ -19,12 +19,14 @@ export default async function AdminExamsPage({
 }) {
     const params = await searchParams;
     const query = params.q?.trim() ?? "";
-    const mode = ["basic", "recital", "event"].includes(params.mode ?? "")
-        ? params.mode
-        : "";
-    const status = ["draft", "published"].includes(params.status ?? "")
-        ? params.status
-        : "";
+    const mode =
+        (["basic", "recital", "event"] as const).find(
+            (value) => value === params.mode
+        ) ?? "";
+    const status =
+        (["draft", "published"] as const).find(
+            (value) => value === params.status
+        ) ?? "";
     const where: Prisma.ExamWhereInput = {
         ...(query
             ? {

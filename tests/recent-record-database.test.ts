@@ -52,7 +52,10 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
             grade_basic: Math.floor(score / 100),
         });
         // 실제 경로처럼 앞 동기화를 닫고 새로 연다 — 사람당 처리 중은 하나(DataSync_one_processing_per_user, 2026-10-16)
-        const sync = async (time: string, scope = "recent") => {
+        const sync = async (
+            time: string,
+            scope: "full" | "recent" = "recent"
+        ) => {
             await db.dataSync.updateMany({
                 where: { user_id: userId, status: "processing" },
                 data: { status: "completed", completed_at: new Date(time) },
