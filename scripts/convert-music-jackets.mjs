@@ -1,4 +1,4 @@
-import { readdir, stat, unlink, writeFile } from "node:fs/promises";
+import { mkdir, readdir, stat, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 import sharp from "sharp";
@@ -37,3 +37,30 @@ const mb = (bytes) => (bytes / 1024 / 1024).toFixed(1);
 console.info(
     `Converted ${pngs.length} jackets: ${mb(before)}MB → ${mb(after)}MB`
 );
+
+// 작은 칸용 축소판(2026-10-15 S11) — 목록 · 카드(44~111px)는 512px 원본 대신 이것을 받는다(img srcset · sizes="auto").
+// public/bg/{128,256}/{index}.webp, 없는 것만 만든다
+const THUMB_SIZES = [128, 256];
+const webps = (await readdir(directory)).filter((name) =>
+    name.toLowerCase().endsWith(".webp")
+);
+let thumbs = 0;
+for (const size of THUMB_SIZES) {
+    const thumbDirectory = path.join(directory, String(size));
+    await mkdir(thumbDirectory, { recursive: true });
+    const existing = new Set(await readdir(thumbDirectory));
+    for (const name of webps) {
+        if (existing.has(name)) continue;
+        await sharp(path.join(directory, name))
+            .resize({
+                width: size,
+                height: size,
+                fit: "inside",
+                withoutEnlargement: true,
+            })
+            .webp({ quality: QUALITY })
+            .toFile(path.join(thumbDirectory, name));
+        thumbs += 1;
+    }
+}
+console.info(`Created ${thumbs} jacket thumbnails`);

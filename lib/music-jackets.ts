@@ -12,6 +12,17 @@ export function getLocalJacketUrl(index: string) {
     return localJacketIndexSet.has(index) ? `/bg/${index}.webp` : null;
 }
 
+/**
+ * 로컬 자켓의 축소판 srcset(2026-10-15 S11) — 128 · 256 · 512px. 로컬 파일이 아니면 null(Blob · 외부 주소는 원본 그대로)
+ * scripts/convert-music-jackets.mjs 가 public/bg/{128,256} 에 만든다
+ */
+export function getLocalJacketSrcSet(url: string) {
+    const match = /^\/bg\/([^/]+\.webp)$/.exec(url);
+    if (!match) return null;
+    const file = match[1];
+    return `/bg/128/${file} 128w, /bg/256/${file} 256w, /bg/${file} 512w`;
+}
+
 // 관리자가 직접 올린 자켓의 공개 Blob 경로 — 잘못된 로컬 파일·수집 자켓을 바로잡는 값이라 무엇보다 먼저 쓴다
 export const MANUAL_JACKET_PREFIX = "jackets/manual/";
 
