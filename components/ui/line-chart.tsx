@@ -102,12 +102,15 @@ export default function LineChart({
                     domain[0]) /
                 range
         );
+    // 렌더마다 한 번만 계산해 점 위치마다 다시 만들지 않는다(2026-10-15 S14 — 예전에는 점 수의 제곱)
+    const primaryHeights = heights(false);
+    const secondaryHeights = heights(true);
     const signature = points.map((point) => point.id).join("|");
-    const heightKey = [...heights(false), ...heights(true)].join(",");
+    const heightKey = [...primaryHeights, ...secondaryHeights].join(",");
     const figure = useRef<HTMLElement>(null);
     const morph = useMorph(figure, signature, heightKey);
     const position = (index: number, secondary = false) => {
-        const target = heights(secondary)[index];
+        const target = (secondary ? secondaryHeights : primaryHeights)[index];
         const from = morph.from?.[secondary ? 1 : 0][index];
         const height =
             from === undefined

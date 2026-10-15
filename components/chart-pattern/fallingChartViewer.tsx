@@ -25,6 +25,7 @@ import type { Application, Graphics } from "pixi.js";
 import { useTranslations } from "@/components/i18n/locale-provider";
 import { Checkbox } from "@/components/ui/checkbox";
 import CompactSelect from "@/components/ui/compact-select";
+import { overlayPosition } from "@/components/ui/overlay-position";
 import { getMetronomePeakGain } from "@/lib/chart-pattern/metronome";
 import { chartPianoColors } from "@/lib/chart-pattern/piano";
 import {
@@ -891,11 +892,14 @@ export default function FallingChartViewer({
         points: document.timingPoints,
         ticksPerQuarter: document.ticksPerQuarter,
     });
+    // 타이밍이 바뀌면 멈춰 있어도 다시 그린다(아래 frameKey)
+    const timingVersionRef = useRef(0);
     useEffect(() => {
         timingRef.current = {
             points: document.timingPoints,
             ticksPerQuarter: document.ticksPerQuarter,
         };
+        timingVersionRef.current += 1;
     }, [document.ticksPerQuarter, document.timingPoints]);
     const strictPerformanceRef = useRef(false);
     const clockAnchorRef = useRef<PlaybackClockAnchor | null>(null);
@@ -1019,6 +1023,8 @@ export default function FallingChartViewer({
             resizeObserver = new ResizeObserver(() => nextApplication.resize());
             resizeObserver.observe(host);
 
+            // 그릴 내용을 정하는 값이 지난 프레임과 같으면 다시 그리지 않는다 — 멈춰 있을 때 매 프레임 모든 노트를 돌지 않게(2026-10-15 S14)
+            let lastFrameKey = "";
             nextApplication.ticker.add(() => {
                 if (!scene || !application) return;
                 const now = performance.now();
@@ -1056,6 +1062,9 @@ export default function FallingChartViewer({
                     noteSpeedRef.current
                 );
                 const playhead = currentTimeRef.current;
+                const frameKey = `${playhead}|${application.screen.width}|${application.screen.height}|${approachDurationMs}|${strictPerformanceRef.current}|${timingVersionRef.current}`;
+                if (frameKey === lastFrameKey) return;
+                lastFrameKey = frameKey;
                 renderPlaybackFrame({
                     graphics: scene,
                     notes: preparedNotes,
@@ -1550,8 +1559,10 @@ export default function FallingChartViewer({
                                     <Popover.Content
                                         side="top"
                                         align="end"
-                                        sideOffset={8}
-                                        collisionPadding={16}
+                                        sideOffset={overlayPosition.sideOffset}
+                                        collisionPadding={
+                                            overlayPosition.collisionPadding
+                                        }
                                         className="nl-chart-stage__settings"
                                         onPointerDownOutside={(event) => {
                                             const target = event.detail

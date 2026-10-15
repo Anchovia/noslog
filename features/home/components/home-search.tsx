@@ -25,6 +25,7 @@ import MusicResultCard, {
 import type { MusicSearchFormValues } from "@/features/music/schemas/music-search-schema";
 import { musicSearchSchema } from "@/features/music/schemas/music-search-schema";
 import type { SearchScope } from "@/features/music/schemas/search-preview-schema";
+import { readTokenPixels } from "@/lib/design-tokens";
 import useDebouncedValue from "@/lib/hooks/use-debounced-value";
 
 export default function HomeSearch() {
@@ -85,23 +86,34 @@ export default function HomeSearch() {
     const total = data?.total ?? 0;
     useEffect(() => {
         const anchor = regionRef.current;
-        if (!anchor) return;
+        // 미리보기가 열려 있을 때만 잰다 — 닫혀 있으면 스크롤마다 레이아웃을 다시 읽지 않는다(2026-10-15 S14)
+        if (!anchor || !open) return;
         function measure() {
             const viewport = window.visualViewport;
             const bottom =
                 (viewport?.offsetTop ?? 0) +
                 (viewport?.height ?? window.innerHeight);
+            // 미리보기 = 검색칸 아래 8 · 안쪽 16 위아래 · 화면 끝 16, 카드 64 사이 8(home.css · entity.css)
+            // 「전체 결과」 줄 = 큰 L 높이(1055 이하 44 · 1056 이상 40, 2026-10-15 사용자 B)
+            const gap = readTokenPixels(anchor!, "--nl-spacing-8");
+            const inset = readTokenPixels(anchor!, "--nl-spacing-16");
+            const row = readTokenPixels(anchor!, "--nl-spacing-64") + gap;
+            const handoff = readTokenPixels(anchor!, "--nl-control-height");
             const available =
-                bottom - anchor!.getBoundingClientRect().bottom - 8 - 32 - 16;
+                bottom -
+                anchor!.getBoundingClientRect().bottom -
+                gap -
+                inset * 2 -
+                inset;
             const withoutHandoff = Math.min(
                 5,
-                Math.max(0, Math.floor((available + 8) / 72))
+                Math.max(0, Math.floor((available + gap) / row))
             );
             setCapacity(
                 total > withoutHandoff
                     ? Math.min(
                           5,
-                          Math.max(0, Math.floor((available - 44) / 72))
+                          Math.max(0, Math.floor((available - handoff) / row))
                       )
                     : withoutHandoff
             );
@@ -117,7 +129,7 @@ export default function HomeSearch() {
             window.visualViewport?.removeEventListener("scroll", measure);
             window.removeEventListener("scroll", measure);
         };
-    }, [total]);
+    }, [total, open]);
 
     const items = data?.items.slice(0, capacity) ?? [];
     const allParams = new URLSearchParams();

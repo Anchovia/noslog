@@ -13,8 +13,7 @@ import {
     Phone,
 } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect, useId, useState, useTransition } from "react";
+import { useEffect, useId, useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
 
 import {
@@ -73,7 +72,6 @@ export default function ArcadeDetailPage({
     const locale = useLocale();
     const href = useLocalizedHref();
     const t = useTranslations();
-    const router = useRouter();
     const hoursId = useId();
     const discoveryQuery = useArcadeSession((state) => state.discoveryQuery);
     const [now, setNow] = useState(() => new Date());
@@ -138,8 +136,8 @@ export default function ArcadeDetailPage({
             else if (result.success) toast.success(result.message);
             else toast.error(result.message);
             if (!result.success) return;
+            // 액션이 updateTag 를 불러 같은 응답에 이 페이지를 다시 그려 온다(선호 인원 포함)
             setPreferred(!clearing);
-            router.refresh();
         });
     }
     // 주소 복사 결과는 공용 토스트 — 정보 행 사이에 글줄을 끼워 배치를 흔들지 않는다
@@ -156,7 +154,6 @@ export default function ArcadeDetailPage({
         setChecked((ids) =>
             ids.includes(cabinetId) ? ids : [...ids, cabinetId]
         );
-        router.refresh();
     }
 
     // 선호 인원 — 3명 이상일 때만 하트 옆 숫자(개인이 드러나지 않게 서버가 3명 미만은 null)
@@ -437,13 +434,15 @@ export default function ArcadeDetailPage({
                                 </h2>
                             </div>
                             <div className="nl-arcade-detail__map">
-                                <ArcadeDiscoveryMap
-                                    appKey={appKey}
-                                    arcades={[arcade]}
-                                    selectedId={null}
-                                    onSelect={() => {}}
-                                    focusLevel={4}
-                                />
+                                <LazyLocationMap>
+                                    <ArcadeDiscoveryMap
+                                        appKey={appKey}
+                                        arcades={[arcade]}
+                                        selectedId={null}
+                                        onSelect={() => {}}
+                                        focusLevel={4}
+                                    />
+                                </LazyLocationMap>
                             </div>
                         </section>
                     ) : null}
@@ -544,5 +543,34 @@ export default function ArcadeDetailPage({
             {/* 1056 미만 — 화면 아래 고정 바 */}
             <div className="nl-arcade-detail__bar">{actions}</div>
         </PageContainer>
+    );
+}
+
+/**
+ * 위치 지도는 화면 가까이(200px) 올 때 만든다 — 아래쪽에 있어 안 보는 방문에도 지도 SDK · 지도 · 통계 신호가 나가지 않게(2026-10-15 S14).
+ * 그 전에는 지도와 같은 상자(nl-arcade-map)로 자리를 지킨다
+ */
+function LazyLocationMap({ children }: { children: React.ReactNode }) {
+    const placeholder = useRef<HTMLDivElement>(null);
+    const [near, setNear] = useState(false);
+    useEffect(() => {
+        const element = placeholder.current;
+        if (near || !element) return;
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    setNear(true);
+                    observer.disconnect();
+                }
+            },
+            { rootMargin: "200px 0px" }
+        );
+        observer.observe(element);
+        return () => observer.disconnect();
+    }, [near]);
+    return near ? (
+        children
+    ) : (
+        <div ref={placeholder} className="nl-arcade-map" aria-hidden />
     );
 }
