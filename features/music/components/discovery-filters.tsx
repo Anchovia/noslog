@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
 
 import {
@@ -14,6 +13,7 @@ import type {
 import FilterChips from "@/components/ui/filter-chips";
 import FilterGroup from "@/components/ui/filter-group";
 import { FormField, Input } from "@/components/ui/form-field";
+import IntentLink from "@/components/ui/intent-link";
 import RangeSlider from "@/components/ui/range-slider";
 import SelectionList from "@/components/ui/selection-list";
 import SortMenu, { SortMenuSection } from "@/components/ui/sort-menu";
@@ -405,7 +405,9 @@ export default function DiscoveryFilters({
                                 })
                         )
                     ) : (
-                        <Link href={href("/login")}>{t("common.login")}</Link>
+                        <IntentLink href={href("/login")}>
+                            {t("common.login")}
+                        </IntentLink>
                     )
                 }
             >

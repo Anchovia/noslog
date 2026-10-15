@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import type { ComponentProps } from "react";
 
 import {
@@ -8,6 +7,7 @@ import {
     useTranslations,
 } from "@/components/i18n/locale-provider";
 import MusicJacket from "@/components/music/music-jacket";
+import IntentLink from "@/components/ui/intent-link";
 import { SkeletonText } from "@/components/ui/skeleton";
 import { entryDifficulty } from "@/features/music/lib/entry-difficulty";
 import type { MusicResult } from "@/features/music/schemas/music-result-schema";
@@ -48,7 +48,7 @@ export default function MusicResultCard({
     pending = false,
     className,
     ...props
-}: Omit<ComponentProps<typeof Link>, "href"> & {
+}: Omit<ComponentProps<typeof IntentLink>, "href"> & {
     music: MusicResult;
     view?: "list" | "grid" | "dense";
     showLevels?: boolean;
@@ -60,7 +60,7 @@ export default function MusicResultCard({
     // 목록에서 들어가는 난이도 = 그 곡의 가장 높은 난이도(2026-09-19 사용자)
     const entry = entryDifficulty((difficulty) => Boolean(music[difficulty]));
     return (
-        <Link
+        <IntentLink
             {...props}
             href={href(destination ?? `/music/${music.index}/${entry}`)}
             className={cn(
@@ -129,7 +129,7 @@ export default function MusicResultCard({
                 </span>
                 {showLevels ? <DifficultyLevels music={music} /> : null}
             </span>
-        </Link>
+        </IntentLink>
     );
 }
 

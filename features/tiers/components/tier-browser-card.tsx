@@ -1,13 +1,12 @@
 "use client";
 
-import Link from "next/link";
-
 import {
     useLocale,
     useLocalizedHref,
     useTranslations,
 } from "@/components/i18n/locale-provider";
 import MusicJacket from "@/components/music/music-jacket";
+import IntentLink from "@/components/ui/intent-link";
 import { SkeletonText } from "@/components/ui/skeleton";
 import type {
     TierBrowserEntry,
@@ -123,7 +122,7 @@ export default function TierBrowserCard({
         labelWithStrip,
     } = useTierEntry(entry, query, signedIn);
     return (
-        <Link
+        <IntentLink
             className="nl-tier-card"
             data-goal={query.goal}
             data-unachieved={(signedIn && !goalAchieved) || undefined}
@@ -177,7 +176,7 @@ export default function TierBrowserCard({
                     {score}
                 </span>
             ) : null}
-        </Link>
+        </IntentLink>
     );
 }
 
@@ -226,7 +225,7 @@ export function TierBrowserRow({
                 )}`
               : null;
     return (
-        <Link
+        <IntentLink
             className="nl-tier-row"
             data-goal={query.goal}
             data-unachieved={(signedIn && !goalAchieved) || undefined}
@@ -282,7 +281,7 @@ export function TierBrowserRow({
                     ) : null}
                 </span>
             ) : null}
-        </Link>
+        </IntentLink>
     );
 }
 

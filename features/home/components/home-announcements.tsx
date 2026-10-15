@@ -1,6 +1,6 @@
 import { ChevronRight } from "lucide-react";
-import Link from "next/link";
 
+import IntentLink from "@/components/ui/intent-link";
 import AnnouncementRow from "@/features/announcements/components/announcement-row";
 import type { PublicAnnouncementSummary } from "@/features/announcements/schemas/public-announcement-schema";
 import { getLocalizedHref } from "@/lib/i18n/routing";
@@ -19,14 +19,14 @@ export default async function HomeAnnouncements({
         <section className="nl-home-update nl-home-announcements">
             <div className="nl-heading-row">
                 <h2 className="nl-section-title">{t("home.announcements")}</h2>
-                <Link
+                <IntentLink
                     href={getLocalizedHref("/announcements", locale)}
                     className="nl-heading-link nl-control"
                 >
                     {t("home.allAnnouncements")}
                     {/* 공용 제목 링크(nl-heading-link) — 꺾쇠 16 · 간격 4 · 광학 −4 */}
                     <ChevronRight aria-hidden />
-                </Link>
+                </IntentLink>
             </div>
             <ul>
                 {items.map(({ announcement, pinned }) => (

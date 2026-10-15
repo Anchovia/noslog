@@ -1,12 +1,11 @@
 "use client";
 
-import Link from "next/link";
-
 import {
     useLocalizedHref,
     useTranslations,
 } from "@/components/i18n/locale-provider";
 import MusicJacket from "@/components/music/music-jacket";
+import IntentLink from "@/components/ui/intent-link";
 import { SkeletonText } from "@/components/ui/skeleton";
 import type { DiscoveryResult } from "@/features/music/schemas/discovery-schema";
 
@@ -25,7 +24,7 @@ export default function ChartResultRows({
     const href = useLocalizedHref();
     const t = useTranslations();
     return music.targets.map((target) => (
-        <Link
+        <IntentLink
             key={target.difficulty}
             href={href(
                 `/music/${music.index}/${target.difficulty.toLowerCase()}/pattern`
@@ -72,7 +71,7 @@ export default function ChartResultRows({
                     <span className="nl-metric-value">{target.level}</span>
                 </span>
             </span>
-        </Link>
+        </IntentLink>
     ));
 }
 

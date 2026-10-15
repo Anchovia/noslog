@@ -1,7 +1,7 @@
 import { ChevronRight } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 
+import IntentLink from "@/components/ui/intent-link";
 import { eventPeriod } from "@/features/events/components/event-parts";
 import type { PublicEventItem } from "@/features/events/server/event-service";
 import { getLocalizedHref } from "@/lib/i18n/routing";
@@ -20,19 +20,19 @@ export default async function HomeEvents({
         <section className="nl-home-update nl-home-events">
             <div className="nl-heading-row">
                 <h2 className="nl-section-title">{t("home.liveEvents")}</h2>
-                <Link
+                <IntentLink
                     href={getLocalizedHref("/events", locale)}
                     className="nl-heading-link nl-control"
                 >
                     {t("home.allEvents")}
                     <ChevronRight aria-hidden />
-                </Link>
+                </IntentLink>
             </div>
             {events.length ? (
                 <ul className="nl-home-events__list">
                     {events.map((event, index) => (
                         <li key={event.id}>
-                            <Link
+                            <IntentLink
                                 prefetch={false}
                                 href={getLocalizedHref(
                                     `/events/${event.id}`,
@@ -61,7 +61,7 @@ export default async function HomeEvents({
                                         )}
                                     </span>
                                 </span>
-                            </Link>
+                            </IntentLink>
                         </li>
                     ))}
                 </ul>

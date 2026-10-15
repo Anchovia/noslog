@@ -1,10 +1,10 @@
-import Link from "next/link";
 import { useLayoutEffect, useRef, useState } from "react";
 
 import { useLocale, useTranslations } from "@/components/i18n/locale-provider";
 import Avatar from "@/components/ui/avatar";
 import CountryMarker from "@/components/ui/country-marker";
 import ExamBadge, { isExamGrade } from "@/components/ui/exam-badge";
+import IntentLink from "@/components/ui/intent-link";
 import { SkeletonText } from "@/components/ui/skeleton";
 import ContributionLabel from "@/features/contributions/components/contribution-label";
 import type {
@@ -134,13 +134,13 @@ export default function PlayerRankingRow({
             >
                 <div className="nl-player-row__name">
                     <CountryMarker country={row.country} />
-                    <Link
+                    <IntentLink
                         href={`${localizePath(`/profile/${row.id}`, locale)}?mode=${query.mode}`}
                         className="nl-player-row__link nl-link nl-emphasis-label"
                         title={name}
                     >
                         {name}
-                    </Link>
+                    </IntentLink>
                 </div>
                 {isExamGrade(row.exam) ? (
                     <ExamBadge mode={query.mode} exam={row.exam} />

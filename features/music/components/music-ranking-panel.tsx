@@ -1,7 +1,6 @@
 "use client";
 
 import { ChevronRight } from "lucide-react";
-import Link from "next/link";
 import { useEffect, useId, useRef } from "react";
 
 import {
@@ -10,6 +9,7 @@ import {
     useTranslations,
 } from "@/components/i18n/locale-provider";
 import type { MusicDetailProps } from "@/components/music/music-detail-types";
+import IntentLink from "@/components/ui/intent-link";
 import Pagination from "@/components/ui/pagination";
 import type { ChartScorePlayer } from "@/features/music/schemas/chart-ranking-schema";
 
@@ -90,7 +90,7 @@ export default function MusicRankingPanel({
                 </h2>
                 {!data.isLoggedIn ? (
                     <div className="nl-heading-row">
-                        <Link
+                        <IntentLink
                             className="nl-heading-link nl-control"
                             href={href(
                                 `/login?returnTo=${encodeURIComponent(returnPath)}`
@@ -98,7 +98,7 @@ export default function MusicRankingPanel({
                         >
                             {t("ranking.signIn")}
                             <ChevronRight aria-hidden />
-                        </Link>
+                        </IntentLink>
                     </div>
                 ) : null}
                 {!data.isLoggedIn || empty ? null : !user ? (

@@ -1,7 +1,6 @@
 "use client";
 
 import { Menu, MessageSquare, Settings, ShieldUser, X } from "lucide-react";
-import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import type { KeyboardEvent } from "react";
 import { useEffect, useRef, useState } from "react";
@@ -15,8 +14,12 @@ import {
     productDestinations,
 } from "@/components/layout/destinations";
 import Avatar from "@/components/ui/avatar";
-import FeedbackDialog from "@/features/feedback/components/feedback-dialog";
+import IntentLink from "@/components/ui/intent-link";
 import { useFeedbackUnread } from "@/features/feedback/components/feedback-unread";
+import LazyFeedbackDialog, {
+    preloadFeedbackDialog,
+} from "@/features/feedback/components/lazy-feedback-dialog";
+import { readTokenPixels } from "@/lib/design-tokens";
 import useMediaQuery from "@/lib/hooks/use-media-query";
 import { stripLocaleFromPath } from "@/lib/i18n/routing";
 
@@ -34,22 +37,27 @@ export default function AppHeader({
 }: {
     account: ShellAccount | null;
 }) {
-    const pathname = usePathname();
-    const query = useSearchParams().toString();
-    return <HeaderContent key={`${pathname}?${query}`} account={account} />;
-}
-
-function HeaderContent({ account }: { account: ShellAccount | null }) {
     const t = useTranslations();
     const href = useLocalizedHref();
-    const pathname = stripLocaleFromPath(usePathname());
-    const chartScope = useSearchParams().get("scope") === "chart";
+    const fullPathname = usePathname();
+    const searchParams = useSearchParams();
+    const pathname = stripLocaleFromPath(fullPathname);
+    const chartScope = searchParams.get("scope") === "chart";
     const wide = useMediaQuery("(min-width: 672px)");
     const desktop = useMediaQuery("(min-width: 1056px)");
     const [open, setOpen] = useState(false);
     const [feedbackOpen, setFeedbackOpen] = useState(false);
     const { count: feedbackUnread } = useFeedbackUnread();
     const [visible, setVisible] = useState(true);
+    // 이동하면 메뉴 · 창을 닫고 숨김 상태를 처음으로 — 헤더를 통째로 다시 마운트하지 않고 상태만 되돌린다
+    const route = `${fullPathname}?${searchParams.toString()}`;
+    const [seenRoute, setSeenRoute] = useState(route);
+    if (seenRoute !== route) {
+        setSeenRoute(route);
+        setOpen(false);
+        setFeedbackOpen(false);
+        setVisible(true);
+    }
     const headerRef = useRef<HTMLElement>(null);
     const triggerRef = useRef<HTMLButtonElement>(null);
     const panelRef = useRef<HTMLElement>(null);
@@ -70,6 +78,8 @@ function HeaderContent({ account }: { account: ShellAccount | null }) {
             });
         }
         panelRef.current?.querySelector<HTMLAnchorElement>("a")?.focus();
+        // 메뉴 안 「피드백」 을 누르기 전에 창 코드를 받아 둔다
+        preloadFeedbackDialog();
 
         function closeOutside(event: PointerEvent) {
             if (
@@ -100,6 +110,10 @@ function HeaderContent({ account }: { account: ShellAccount | null }) {
         if (desktop || open) return;
         let previous = window.scrollY;
         let frame = 0;
+        // 헤더 높이만큼 내려간 뒤부터 숨긴다
+        const hideAfter = headerRef.current
+            ? readTokenPixels(headerRef.current, "--nl-header-height")
+            : 0;
         function onScroll() {
             if (frame) return;
             frame = requestAnimationFrame(() => {
@@ -109,7 +123,7 @@ function HeaderContent({ account }: { account: ShellAccount | null }) {
                     current <= 8
                 )
                     setVisible(true);
-                else if (current > 60 && current - previous > 4)
+                else if (current > hideAfter && current - previous > 4)
                     setVisible(false);
                 else if (current - previous < -4) setVisible(true);
                 previous = current;
@@ -121,7 +135,7 @@ function HeaderContent({ account }: { account: ShellAccount | null }) {
             window.removeEventListener("scroll", onScroll);
             cancelAnimationFrame(frame);
         };
-    }, [desktop, open]);
+    }, [desktop, open, route]);
 
     function containFocus(event: KeyboardEvent<HTMLElement>) {
         if (!open || wide || event.key !== "Tab") return;
@@ -161,13 +175,13 @@ function HeaderContent({ account }: { account: ShellAccount | null }) {
                     }
                 >
                     <div className="nl-header__bar">
-                        <Link
+                        <IntentLink
                             href={href("/")}
                             className="nl-wordmark nl-section-title"
                             lang="en"
                         >
                             NosLog
-                        </Link>
+                        </IntentLink>
                         {/* 1056 이상에서만 보인다(CSS) — 그 아래 폭은 ≡ 안(2026-09-30 A1 · P1) */}
                         <nav
                             className="nl-header__nav"
@@ -175,7 +189,7 @@ function HeaderContent({ account }: { account: ShellAccount | null }) {
                         >
                             {productDestinations.map(
                                 ({ href: destination, labelKey }) => (
-                                    <Link
+                                    <IntentLink
                                         key={destination}
                                         href={href(destination)}
                                         className="nl-header__nav-item nl-control"
@@ -190,13 +204,13 @@ function HeaderContent({ account }: { account: ShellAccount | null }) {
                                         }
                                     >
                                         {t(labelKey)}
-                                    </Link>
+                                    </IntentLink>
                                 )
                             )}
                         </nav>
                         <div className="nl-header__controls">
                             {account ? (
-                                <Link
+                                <IntentLink
                                     href={href(`/profile/${account.id}`)}
                                     className="nl-account"
                                     aria-label={t("header.profileLabel", {
@@ -206,14 +220,14 @@ function HeaderContent({ account }: { account: ShellAccount | null }) {
                                     })}
                                 >
                                     <Avatar src={account.avatar} />
-                                </Link>
+                                </IntentLink>
                             ) : (
-                                <Link
+                                <IntentLink
                                     href={href("/login")}
                                     className="nl-login nl-control"
                                 >
                                     {t("common.login")}
-                                </Link>
+                                </IntentLink>
                             )}
                             <button
                                 ref={triggerRef}
@@ -270,7 +284,7 @@ function HeaderContent({ account }: { account: ShellAccount | null }) {
                                               labelKey,
                                               icon: Icon,
                                           }) => (
-                                              <Link
+                                              <IntentLink
                                                   key={destination}
                                                   href={href(destination)}
                                                   className="nl-destination nl-control"
@@ -290,13 +304,13 @@ function HeaderContent({ account }: { account: ShellAccount | null }) {
                                                       aria-hidden
                                                   />
                                                   <span>{t(labelKey)}</span>
-                                              </Link>
+                                              </IntentLink>
                                           )
                                       )}
                                 {desktop ? null : (
                                     <div className="nl-destinations__divider" />
                                 )}
-                                <Link
+                                <IntentLink
                                     href={href("/settings")}
                                     className="nl-destination nl-control"
                                     aria-current={
@@ -309,7 +323,7 @@ function HeaderContent({ account }: { account: ShellAccount | null }) {
                                 >
                                     <Settings className="nl-icon" aria-hidden />
                                     <span>{t("shell.settings")}</span>
-                                </Link>
+                                </IntentLink>
                                 <button
                                     className="nl-destination nl-control"
                                     onClick={() => {
@@ -331,7 +345,7 @@ function HeaderContent({ account }: { account: ShellAccount | null }) {
                                     ) : null}
                                 </button>
                                 {account?.role === "admin" ? (
-                                    <Link
+                                    <IntentLink
                                         href="/admin"
                                         className="nl-destination nl-control"
                                         onClick={() => setOpen(false)}
@@ -341,18 +355,19 @@ function HeaderContent({ account }: { account: ShellAccount | null }) {
                                             aria-hidden
                                         />
                                         <span>{t("header.admin")}</span>
-                                    </Link>
+                                    </IntentLink>
                                 ) : null}
                             </nav>
                         </>
                     ) : null}
                 </div>
             </header>
-            <FeedbackDialog
+            {/* 이동하면 쓰던 내용도 처음으로(전에 헤더를 다시 마운트하던 동작 그대로) */}
+            <LazyFeedbackDialog
+                key={route}
                 isAuthenticated={Boolean(account)}
                 open={feedbackOpen}
                 onOpenChange={setFeedbackOpen}
-                trigger={null}
                 onCloseAutoFocus={(event) => {
                     event.preventDefault();
                     triggerRef.current?.focus();

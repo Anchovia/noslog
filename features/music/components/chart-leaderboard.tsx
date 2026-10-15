@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 
 import {
     useLocale,
@@ -14,6 +13,7 @@ import {
 } from "@/components/music/music-detail-config";
 import Avatar from "@/components/ui/avatar";
 import CountryMarker from "@/components/ui/country-marker";
+import IntentLink from "@/components/ui/intent-link";
 import { SkeletonText } from "@/components/ui/skeleton";
 import type { ChartRankingRow } from "@/features/music/schemas/chart-ranking-schema";
 import { scoreTone } from "@/lib/music/score-tone";
@@ -99,14 +99,14 @@ function ChartLeaderboardRow({
             <div className="nl-player-row__identity">
                 <div className="nl-player-row__name">
                     <CountryMarker country={row.user.country ?? ""} />
-                    <Link
+                    <IntentLink
                         href={href(`/profile/${row.user_id}`)}
                         className="nl-player-row__link nl-link"
                         lang={language}
                         title={name}
                     >
                         {name}
-                    </Link>
+                    </IntentLink>
                     {current ? (
                         <span className="sr-only">{t("rankings.myRank")}</span>
                     ) : null}
