@@ -688,7 +688,8 @@
 }
 
 /* 채보 의견(2026-09-24 D1) — 의견 구역 문법: 제목 줄 →12→ 쓰기 칸 →16→ 목록(줄 사이 16 · 상자 없음 · 아바타 없음).
-   쓰기 칸 = 시각(제목 링크 글자) · 한 줄 입력 · 주 버튼, 사이 8 */
+   쓰기 칸(2026-10-15 C2) = 시각(링크색 · 고정폭 숫자) · 한 줄 입력, 사이 8 → 누르면 아래 8 에 종류 세그먼트(왼쪽) · 「취소 · 남기기」(오른쪽).
+   자리(2026-10-15 L2) = 1056 이상은 무대 바로 아래(보기 묶음 안, 무대 →12→), 1055 이하는 의견 구역 제목 줄 아래 */
 .noslog-ui .nl-chart-comments {
     display: flex;
     flex-direction: column;
@@ -722,6 +723,58 @@
 }
 .noslog-ui .nl-chart-comments__composer-row > .nl-chart-comments__time {
     min-height: var(--nl-control-height);
+}
+/* 펼친 줄 — 세그먼트 칸은 균등 분할 그대로(제목 줄 필터 세그먼트와 같은 묶음 폭), 좁으면 버튼이 다음 줄 오른쪽으로 */
+.noslog-ui .nl-chart-comments__composer-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+    min-width: 0;
+}
+.noslog-ui .nl-chart-comments__composer-buttons {
+    display: flex;
+    gap: var(--nl-spacing-8);
+    margin-left: auto;
+}
+/* 무대 아래 쓰기 줄 — 무대와 같은 폭 · 가운데. 로그아웃 링크도 컨트롤 높이 줄에 세워 무대 크기가 로그인 여부로 바뀌지 않게 */
+.noslog-ui .nl-chart-viewer__comment-entry {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: var(--nl-control-height);
+}
+@media (max-width: 1055px) {
+    .noslog-ui .nl-chart-viewer__comment-entry {
+        display: none;
+    }
+}
+@media (min-width: 1056px) {
+    .noslog-ui .nl-chart-comments__composer-slot,
+    .noslog-ui .nl-chart-comments__login {
+        display: none;
+    }
+    /* 무대 아래 쓰기 줄(컨트롤 높이 + 간격 12)만큼 무대를 줄여 쓰기 줄까지 첫 화면에 들어오게. 낙하형이면 쓰기 줄도 무대 폭 · 가운데 */
+    .noslog-ui .nl-chart-viewer[data-comment-entry] .nl-chart-stage,
+    .noslog-ui
+        .nl-chart-viewer[data-comment-entry]
+        .nl-chart-viewer__stage[data-view="falling"]
+        + .nl-chart-viewer__comment-entry {
+        width: min(
+            100%,
+            calc(
+                (
+                        100dvh - var(--nl-header-height) -
+                            var(--nl-spacing-24) - 44px - var(--nl-spacing-24) -
+                            var(--nl-control-height) - var(--nl-spacing-12) -
+                            var(--nl-control-height) - var(--nl-spacing-12) -
+                            var(--nl-spacing-16)
+                    ) *
+                    16 / 9
+            )
+        );
+        margin-inline: auto;
+    }
 }
 /* 이름 줄은 글자 줄 20 그대로 — 태그(24)는 공용 nl-tag--inline 이 당긴다. 줄이 좁아도 태그는 줄지 않는다 */
 .noslog-ui .nl-chart-comments .nl-opinion-row__header > .nl-tag,

@@ -3,7 +3,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
-import { useId, useState, useSyncExternalStore } from "react";
+import { useId, useRef, useState, useSyncExternalStore } from "react";
 import { toast } from "sonner";
 
 import {
@@ -54,8 +54,8 @@ export function chartCommentsOptions(
 }
 
 /**
- * 공개 채보 뷰어의 「채보 의견」 구역(2026-09-24 D1) — 조작부 아래 구역 하나.
- * 제목 줄 →12→ 쓰기 칸(지금 재생 시각 + 한 줄 입력 + 「남기기」) →8→ 목록(의견 목록 줄 문법, 아바타 없이).
+ * 공개 채보 뷰어의 「채보 의견」 구역(2026-09-24 D1) — 머리 아래 구역 하나.
+ * 제목 줄 →12→ 쓰기 칸(1055 이하만 — 1056 이상은 무대 바로 아래, 2026-10-15 L2) →16→ 목록(의견 목록 줄 문법, 아바타 없이).
  * 시각을 누르면 뷰어가 그 시각으로 가고 주소에 `?t=` 가 붙는다. 「해결」 · 가리기는 운영자만.
  */
 export default function ChartComments({
@@ -65,6 +65,7 @@ export default function ChartComments({
     canModerate,
     returnTo,
     clock,
+    draft,
     onSeek,
 }: {
     chartId: number;
@@ -73,6 +74,7 @@ export default function ChartComments({
     canModerate: boolean;
     returnTo: string;
     clock: PlaybackClock;
+    draft: ChartCommentDraft;
     onSeek: (timeMs: number) => void;
 }) {
     const t = useTranslations();
@@ -115,7 +117,7 @@ export default function ChartComments({
                 ) : null}
                 {signedIn ? null : (
                     <Link
-                        className="nl-heading-link nl-control"
+                        className="nl-heading-link nl-control nl-chart-comments__login"
                         href={href(
                             `/login?returnTo=${encodeURIComponent(returnTo)}`
                         )}
@@ -127,7 +129,9 @@ export default function ChartComments({
             </div>
             <div className="nl-chart-comments__body">
                 {signedIn ? (
-                    <ChartCommentComposer chartId={chartId} clock={clock} />
+                    <div className="nl-chart-comments__composer-slot">
+                        <ChartCommentComposer draft={draft} clock={clock} />
+                    </div>
                 ) : null}
                 {comments.length ? (
                     <div className="nl-opinions__list">
@@ -152,28 +156,23 @@ export default function ChartComments({
 }
 
 /**
- * 쓰기 칸 — 시각은 지금 재생 위치를 따라가다가 글을 쓰기 시작하면 멈춘다.
- * 시각을 누르면 지금 재생 위치로 다시 맞춘다(재생 막대로 옮긴 뒤 누르면 그 자리).
+ * 쓰기 칸 상태 — 무대 아래(1056 이상)와 의견 구역(1055 이하) 두 자리가 나눠 쓴다(2026-10-15 L2).
+ * 폭을 바꿔 자리가 바뀌어도 쓰던 글 · 종류 · 고정한 시각이 유지된다.
  */
-function ChartCommentComposer({
-    chartId,
-    clock,
-}: {
-    chartId: number;
-    clock: PlaybackClock;
-}) {
-    const t = useTranslations();
+export function useChartCommentDraft(chartId: number) {
     const locale = useLocale();
-    const id = useId();
     const queryClient = useQueryClient();
-    const live = useSyncExternalStore(clock.subscribe, clock.get, () => 0);
     const [pinned, setPinned] = useState<number | null>(null);
     const [body, setBody] = useState("");
     const [kind, setKind] = useState<ChartCommentKind>("problem");
     const [error, setError] = useState<string | null>(null);
-    const timeMs = pinned ?? live;
+    const reset = () => {
+        setBody("");
+        setPinned(null);
+        setError(null);
+    };
     const mutation = useMutation({
-        mutationFn: async () => {
+        mutationFn: async (timeMs: number) => {
             const result = await addChartComment(
                 { chartId, timeMs: Math.round(timeMs), body, kind },
                 locale
@@ -182,9 +181,7 @@ function ChartCommentComposer({
             return result;
         },
         onSuccess: (result) => {
-            setBody("");
-            setPinned(null);
-            setError(null);
+            reset();
             toast.success(result.message);
             void queryClient.invalidateQueries({
                 queryKey: chartCommentsKey(chartId),
@@ -192,30 +189,101 @@ function ChartCommentComposer({
         },
         onError: (reason) => setError(reason.message),
     });
+    return {
+        body,
+        setBody,
+        kind,
+        setKind,
+        pinned,
+        setPinned,
+        error,
+        reset,
+        mutation,
+    };
+}
+
+export type ChartCommentDraft = ReturnType<typeof useChartCommentDraft>;
+
+/**
+ * 무대 바로 아래 쓰기 줄(2026-10-15 L2, 1056 이상만 보임) — 재생을 보면서 쓴다.
+ * 로그아웃이면 같은 자리에 「로그인하고 의견 남기기 ›」(제목 줄의 같은 링크는 이 폭에서 숨김).
+ */
+export function ChartCommentStageEntry({
+    signedIn,
+    returnTo,
+    draft,
+    clock,
+}: {
+    signedIn: boolean;
+    returnTo: string;
+    draft: ChartCommentDraft;
+    clock: PlaybackClock;
+}) {
+    const t = useTranslations();
+    const href = useLocalizedHref();
+    return (
+        <div className="nl-chart-viewer__comment-entry">
+            {signedIn ? (
+                <ChartCommentComposer draft={draft} clock={clock} />
+            ) : (
+                <Link
+                    className="nl-heading-link nl-control"
+                    href={href(
+                        `/login?returnTo=${encodeURIComponent(returnTo)}`
+                    )}
+                >
+                    {t("contribution.comment.login")}
+                    <ChevronRight aria-hidden />
+                </Link>
+            )}
+        </div>
+    );
+}
+
+/**
+ * 쓰기 칸 — 시각(고정폭 숫자) + 한 줄 입력으로 쉬고, 누르면 아래 8 에 종류 세그먼트 · 「취소 · 남기기」 가 펼쳐진다
+ * (2026-10-15 C2, 평가 의견 작성 칸과 같은 문법 · Esc 로 접힘).
+ * 시각은 지금 재생 위치를 따라가다가 글을 쓰기 시작하면 멈춘다. 시각을 누르면 지금 재생 위치로 다시 맞춘다.
+ */
+export function ChartCommentComposer({
+    draft,
+    clock,
+}: {
+    draft: ChartCommentDraft;
+    clock: PlaybackClock;
+}) {
+    const t = useTranslations();
+    const id = useId();
+    const container = useRef<HTMLFormElement>(null);
+    const live = useSyncExternalStore(clock.subscribe, clock.get, () => 0);
+    const [focused, setFocused] = useState(false);
+    const { body, setBody, kind, setKind, pinned, setPinned, error, mutation } =
+        draft;
+    const timeMs = pinned ?? live;
     const trimmed = body.trim();
+    const expanded = focused || body !== "";
+    const close = () => {
+        draft.reset();
+        setFocused(false);
+    };
     return (
         <form
+            ref={container}
             className="nl-chart-comments__composer"
             onSubmit={(event) => {
                 event.preventDefault();
-                if (trimmed && !mutation.isPending) mutation.mutate();
+                if (trimmed && !mutation.isPending) mutation.mutate(timeMs);
+            }}
+            onBlur={(event) => {
+                if (!container.current?.contains(event.relatedTarget as Node))
+                    setFocused(false);
             }}
         >
-            {/* 종류는 제 줄에 — 좁은 화면에서 입력칸과 한 줄이면 글자가 세로로 눌린다(2026-10-01) */}
-            <SegmentedControl
-                size="sm"
-                label={t("contribution.comment.kindLabel")}
-                value={kind}
-                onValueChange={setKind}
-                options={CHART_COMMENT_KINDS.map((value) => ({
-                    value,
-                    label: t(`contribution.comment.kind.${value}`),
-                }))}
-            />
             <div className="nl-chart-comments__composer-row">
+                {/* 고정폭 숫자(2026-10-15 T1) — 재생 중 글자 폭이 바뀌어 입력칸이 흔들리지 않게. 무대 재생 시간과 같은 글자 */}
                 <button
                     type="button"
-                    className="nl-link nl-control nl-chart-comments__time"
+                    className="nl-link nl-metric-value nl-chart-comments__time"
                     aria-label={t("contribution.comment.timeSync", {
                         time: formatCommentTime(timeMs),
                     })}
@@ -234,22 +302,53 @@ function ChartCommentComposer({
                     aria-label={t("contribution.comment.label")}
                     aria-invalid={Boolean(error) || undefined}
                     readOnly={mutation.isPending}
+                    onFocus={() => setFocused(true)}
                     onChange={(event) => {
                         const next = event.target.value;
                         if (!body && next) setPinned(Math.round(clock.get()));
                         if (!next) setPinned(null);
                         setBody(next);
                     }}
+                    onKeyDown={(event) => {
+                        if (event.key === "Escape") {
+                            event.preventDefault();
+                            close();
+                            event.currentTarget.blur();
+                        }
+                    }}
                 />
-                <ActionButton
-                    type="submit"
-                    disabled={!trimmed}
-                    busy={mutation.isPending}
-                    busyLabel={t("contribution.comment.sending")}
-                >
-                    {t("contribution.comment.send")}
-                </ActionButton>
             </div>
+            {expanded ? (
+                <div className="nl-chart-comments__composer-actions">
+                    <SegmentedControl
+                        size="sm"
+                        label={t("contribution.comment.kindLabel")}
+                        value={kind}
+                        onValueChange={setKind}
+                        options={CHART_COMMENT_KINDS.map((value) => ({
+                            value,
+                            label: t(`contribution.comment.kind.${value}`),
+                        }))}
+                    />
+                    <div className="nl-chart-comments__composer-buttons">
+                        <ActionButton
+                            variant="ghost"
+                            disabled={mutation.isPending}
+                            onClick={close}
+                        >
+                            {t("community.cancel")}
+                        </ActionButton>
+                        <ActionButton
+                            type="submit"
+                            disabled={!trimmed}
+                            busy={mutation.isPending}
+                            busyLabel={t("contribution.comment.sending")}
+                        >
+                            {t("contribution.comment.send")}
+                        </ActionButton>
+                    </div>
+                </div>
+            ) : null}
             {error ? (
                 <StatusMessage severity="danger" role="alert" title={error} />
             ) : null}
