@@ -1,4 +1,6 @@
 import db from "@/lib/db";
+import { writePlayerStats } from "@/lib/services/user/player-stats";
+import { recordBestAt } from "@/lib/services/user/recent-record-merge";
 
 interface SyncBrooch {
     "@index": string;
@@ -86,6 +88,10 @@ export async function updatePlayerProfile(
                 nostalgia_last_playtime: player.last.playtime,
                 equipped_brooch_index: equippedBroochIndex,
             },
+        });
+        await writePlayerStats(tx, userId, {
+            playCount: player.play_count,
+            lastPlayedAt: recordBestAt(player.last.playtime),
         });
 
         // 보유 목록 — 빠진 것만 지우고 새것만 넣고, 남는 것은 확인 시각만 이번 동기화로(결과 행은 예전과 같다)

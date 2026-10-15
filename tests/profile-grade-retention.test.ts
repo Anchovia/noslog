@@ -6,6 +6,7 @@ const mocks = vi.hoisted(() => ({
     update: vi.fn(),
     remove: vi.fn(),
     user: vi.fn(),
+    stats: vi.fn(),
 }));
 vi.mock("@/lib/db", () => ({
     default: {
@@ -13,6 +14,7 @@ vi.mock("@/lib/db", () => ({
         $transaction: (operation: (tx: unknown) => unknown) =>
             operation({
                 user: { update: mocks.user },
+                playerStats: { upsert: mocks.stats },
                 userBestGrade: {
                     findMany: mocks.find,
                     create: mocks.create,
@@ -49,6 +51,7 @@ describe("profile Grd history retention", () => {
             data: {
                 user_id: 7,
                 besttime: "2026-09-07",
+                day: new Date("2026-09-07T00:00:00.000Z"),
                 grade_basic: 0,
                 grade_recital: null,
             },

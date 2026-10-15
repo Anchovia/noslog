@@ -134,6 +134,15 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
                 grade_recital: null,
                 score_s: 1,
             });
+            // 늘리기 단계(2026-10-16 P3) — 같은 값이 player_stats 와 새 시각 열에도 들어간다
+            expect(
+                await db.playerStats.findUniqueOrThrow({ where: { userId } })
+            ).toMatchObject({
+                gradeBasic: 9700,
+                gradeRecital: null,
+                scoreS: 1,
+            });
+            expect((await record()).bestAt).toBeInstanceOf(Date);
             const ranking = await getGlobalRankingPage(
                 { mode: "basic", metric: "grade", region: "all", page: 1 },
                 userId

@@ -12,6 +12,7 @@ const mocks = vi.hoisted(() => ({
     musicChartFindMany: vi.fn(),
     processBemaniCatalogUpdates: vi.fn(),
     updateGrade: vi.fn(),
+    keepTodayGrade: vi.fn(),
     recordProfileRatings: vi.fn(),
     refreshUserPlayerRatings: vi.fn(),
     updatePlayerProfile: vi.fn(),
@@ -42,6 +43,7 @@ vi.mock("@/lib/db", () => ({
 }));
 vi.mock("@/lib/services/user/update-grade", () => ({
     updateGrade: mocks.updateGrade,
+    keepTodayGrade: mocks.keepTodayGrade,
 }));
 vi.mock("@/features/profile/server/profile-rating-history-service", () => ({
     recordProfileRatings: mocks.recordProfileRatings,
@@ -529,6 +531,25 @@ describe("POST /api/receivePlayerData", () => {
         expect(mocks.refreshUserPlayerRatings).toHaveBeenCalledWith(1);
     });
 
+    it("바뀐 기록이 없고 직전 동기화가 완료됐으면 Grd · 랭킹 레이팅을 다시 세지 않는다", async () => {
+        mocks.dataSyncFindFirst.mockResolvedValueOnce({
+            id: 9,
+            status: "completed",
+            started_at: new Date(Date.now() - 60 * 60 * 1000),
+        });
+        mocks.updateRecentBestRecords.mockResolvedValueOnce({
+            changedRecords: 0,
+            changedChartIds: [],
+        });
+        const response = await POST(createRequest(requestBody()));
+        expect(response.status).toBe(200);
+        expect(mocks.updateGrade).not.toHaveBeenCalled();
+        expect(mocks.refreshUserPlayerRatings).not.toHaveBeenCalled();
+        // 그래프 점(레이팅 이력)과 Grd 「하루 한 줄」 은 남긴다
+        expect(mocks.keepTodayGrade).toHaveBeenCalledWith(1);
+        expect(mocks.recordProfileRatings).toHaveBeenCalledWith(1, 10);
+    });
+
     it("최근 기록 병합 실패를 성공으로 표시하지 않는다", async () => {
         mocks.updateRecentBestRecords.mockRejectedValueOnce(
             new Error("projection failed")
@@ -609,7 +630,9 @@ describe("POST /api/receivePlayerData", () => {
         expect(mocks.updatePlayData).toHaveBeenCalledWith(
             1,
             requestBody(true).totalData?.data.music,
-            10
+            10,
+            // 곡 목록 반영 뒤 한 번 읽은 채보 지도를 넘긴다(2026-10-16 Q2)
+            expect.any(Map)
         );
         expect(mocks.updateGrade).toHaveBeenCalledWith(1);
         expect(mocks.updateDummy).toHaveBeenCalledOnce();
@@ -654,7 +677,8 @@ describe("POST /api/receivePlayerData", () => {
                     sheet: [musicSheet("Normal"), musicSheet("Hard")],
                 }),
             ],
-            10
+            10,
+            expect.any(Map)
         );
         expect(mocks.dataSyncUpdate).toHaveBeenCalledWith({
             where: { id: 10 },

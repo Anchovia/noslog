@@ -8,6 +8,9 @@ import {
     mapBemaniNoteSuccessRates,
     normalizeBemaniRank,
 } from "@/lib/services/user/bemani-record-mapping";
+import { type ChartIdMap, loadChartIds } from "@/lib/services/user/chart-ids";
+import { writePlayerStats } from "@/lib/services/user/player-stats";
+import { recordBestAt } from "@/lib/services/user/recent-record-merge";
 
 // 한 문장에 넣는 줄 수 — 줄마다 값 27개라 Postgres 인자 한도(65535) 안에 넉넉히 든다
 const UPSERT_CHUNK = 500;
@@ -30,7 +33,7 @@ function upsertPlayData(tx: Prisma.TransactionClient, rows: PlayDataRow[]) {
             ${row.judge_miss ?? null}::int, ${row.judge_near ?? null}::int,
             ${row.note_rate_standard ?? null}::int, ${row.note_rate_tenuto ?? null}::int,
             ${row.note_rate_glissando ?? null}::int, ${row.note_rate_trill ?? null}::int,
-            ${row.besttime}::text, CURRENT_TIMESTAMP
+            ${row.besttime}::text, ${row.bestAt ?? null}::timestamptz, CURRENT_TIMESTAMP
         )`
     );
     return tx.$executeRaw`
@@ -42,7 +45,7 @@ function upsertPlayData(tx: Prisma.TransactionClient, rows: PlayDataRow[]) {
             "grade_basic", "grade_recital",
             "judge_sjust", "judge_just", "judge_good", "judge_miss", "judge_near",
             "note_rate_standard", "note_rate_tenuto", "note_rate_glissando", "note_rate_trill",
-            "besttime", "updated_at"
+            "besttime", "best_at", "updated_at"
         )
         VALUES ${Prisma.join(values)}
         ON CONFLICT ("user_id", "chart_id") DO UPDATE SET
@@ -70,24 +73,19 @@ function upsertPlayData(tx: Prisma.TransactionClient, rows: PlayDataRow[]) {
             "note_rate_glissando" = EXCLUDED."note_rate_glissando",
             "note_rate_trill" = EXCLUDED."note_rate_trill",
             "besttime" = EXCLUDED."besttime",
+            "best_at" = EXCLUDED."best_at",
             "updated_at" = EXCLUDED."updated_at"`;
 }
 
 export async function updatePlayData(
     user_id: number,
     music: SyncMusicInput[],
-    sync_id: number
+    sync_id: number,
+    // 동기화 라우트가 곡 목록 반영 뒤 한 번 읽어 넘긴다 — 없으면 여기서 읽는다
+    knownChartIds?: ChartIdMap
 ) {
     const startTime = Date.now(); // 시작 시간
-    const charts = await db.musicChart.findMany({
-        select: { id: true, music_idx: true, difficulty: true },
-    });
-    const chartIds = new Map(
-        charts.map((chart) => [
-            `${chart.music_idx}:${chart.difficulty}`,
-            chart.id,
-        ])
-    );
+    const chartIds = knownChartIds ?? (await loadChartIds());
     const previousRecords = await db.playData.findMany({
         where: { user_id, chart_id: { not: null } },
         select: {
@@ -173,6 +171,7 @@ export async function updatePlayData(
                     ...mapBemaniJudgeCounts(sheet.judge),
                     ...mapBemaniNoteSuccessRates(sheet.note_success_rate),
                     besttime: sheet.besttime,
+                    bestAt: recordBestAt(sheet.besttime),
                 };
                 newPlayData.push(record);
 
@@ -228,6 +227,7 @@ export async function updatePlayData(
                         note_rate_glissando: record.note_rate_glissando,
                         note_rate_trill: record.note_rate_trill,
                         besttime: record.besttime,
+                        bestAt: record.bestAt,
                         chart_id,
                         user_id,
                         sync_id,
@@ -293,6 +293,18 @@ export async function updatePlayData(
                         score_c: score.C,
                         score_d: score.D,
                     },
+                });
+                await writePlayerStats(tx, user_id, {
+                    lastFullRecordAt: sync.started_at,
+                    scoreP: score.P,
+                    scoreF: score.F,
+                    scoreS: score.S,
+                    scoreA2: score.A2,
+                    scoreA: score.A,
+                    scoreB2: score.B2,
+                    scoreB: score.B,
+                    scoreC: score.C,
+                    scoreD: score.D,
                 });
             },
             { timeout: 30000 }

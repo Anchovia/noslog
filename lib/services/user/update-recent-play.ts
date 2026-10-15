@@ -4,6 +4,7 @@ import {
     mapBemaniJudgeCounts,
     normalizeBemaniRank,
 } from "./bemani-record-mapping";
+import { recordBestAt } from "./recent-record-merge";
 
 interface RecentHistoryItem {
     artist: string;
@@ -67,6 +68,8 @@ export async function updateRecentPlay(
                       chart_id,
                       level: data.level,
                       source_play_time: data.play_time,
+                      // 같은 시각을 timestamptz 로(2026-10-16 P3 늘리기 — 공식 시각은 KST)
+                      playedAt: recordBestAt(data.play_time),
                       score: data.score,
                       best_score: data.best_score,
                       max_combo: data.max_combo,

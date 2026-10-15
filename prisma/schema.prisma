@@ -97,6 +97,7 @@ model User {
   achievementShowcase        UserAchievementShowcase[]
   pinnedRecords              UserPinnedRecord[]
   ratings                    PlayerRating[]
+  stats                      PlayerStats?
 
   @@index([grade_basic, id])
   @@index([grade_recital, id])
@@ -861,6 +862,8 @@ model ChartPlayHistory {
   judge_miss       Int?
   judge_near       Int?
   source_play_time String
+  // 플레이 시각(source_play_time 을 KST 로 읽은 값, 2026-10-16 늘리기 — P4 에서 정렬 · 유일 키를 이 열로 옮긴다)
+  playedAt         DateTime?  @map("played_at") @db.Timestamptz(3)
   chart_id         Int
   chart            MusicChart @relation(fields: [chart_id], references: [id], onDelete: Cascade)
   user_id          Int
@@ -904,6 +907,8 @@ model ChartRecordSnapshot {
   note_rate_glissando Int?
   note_rate_trill     Int?
   besttime            String
+  // PlayData.bestAt 과 같은 뜻(2026-10-16 늘리기)
+  bestAt              DateTime?  @map("best_at") @db.Timestamptz(3)
   chart_id            Int
   chart               MusicChart @relation(fields: [chart_id], references: [id], onDelete: Cascade)
   user_id             Int
@@ -1195,14 +1200,16 @@ model ChartGoalVoteReview {
 }
 
 model UserBestGrade {
-  id            Int      @id @default(autoincrement())
+  id            Int       @id @default(autoincrement())
   grade_basic   Int
   grade_recital Int?
   besttime      String
-  created_at    DateTime @default(now())
-  updated_at    DateTime @updatedAt
+  // 그 날짜(besttime 「YYYY-MM-DD」, 서울 날짜). 2026-10-16 늘리기 — P4 에서 하루 한 줄 유일 키를 이 열로 옮긴다
+  day           DateTime? @map("day") @db.Date
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @updatedAt
   user_id       Int
-  user          User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user          User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   // 사람당 하루 한 줄(besttime = 「YYYY-MM-DD」) — 코드 규칙을 DB 도 지킨다(2026-10-16 DB 재설계 P2)
   @@unique([user_id, besttime])
@@ -1248,6 +1255,8 @@ model PlayData {
   note_rate_glissando Int?
   note_rate_trill     Int?
   besttime            String
+  // 기록 시각(besttime 을 KST 로 읽은 값, 모르면 NULL — 「1970-01-01 09:00」 자리표시도 NULL). 2026-10-16 늘리기 단계라 besttime 과 함께 쓴다
+  bestAt              DateTime?   @map("best_at") @db.Timestamptz(3)
   created_at          DateTime    @default(now())
   updated_at          DateTime    @updatedAt
   user_id             Int
@@ -1465,6 +1474,35 @@ model UserAchievementShowcase {
 
   @@id([user_id, position])
   @@unique([user_id, key])
+}
+
+// 동기화가 계산해 두는 사람별 값(2026-10-16 DB 재설계 D2-B). 예전에는 User 에 섞여 있었다 —
+// 로그인한 모든 요청이 읽고 동기화 동안 잠그는 User 행을 작게 두려고 옮긴다. 지금은 늘리기 단계라
+// 동기화가 User 의 같은 열과 이 표에 함께 쓰고(양쪽 쓰기), 읽기는 아직 User 다(P4 에서 전환).
+// 「score*」 = 그 랭크로 끝낸 채보 수(scoreF 는 풀콤보 수). 값의 뜻은 User 의 같은 이름 열과 같다
+model PlayerStats {
+  userId           Int       @id @map("user_id")
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  gradeBasic       Int?      @map("grade_basic")
+  gradeRecital     Int?      @map("grade_recital")
+  scoreP           Int?      @map("score_p")
+  scoreF           Int?      @map("score_f")
+  scoreS           Int?      @map("score_s")
+  scoreA2          Int?      @map("score_a2")
+  scoreA           Int?      @map("score_a")
+  scoreB2          Int?      @map("score_b2")
+  scoreB           Int?      @map("score_b")
+  scoreC           Int?      @map("score_c")
+  scoreD           Int?      @map("score_d")
+  // 공식 플레이 횟수 · 마지막 플레이(공식 사이트 시각, KST 를 timestamptz 로)
+  playCount        Int?      @map("play_count")
+  lastPlayedAt     DateTime? @map("last_played_at") @db.Timestamptz(3)
+  lastFullRecordAt DateTime? @map("last_full_record_at") @db.Timestamptz(3)
+  updatedAt        DateTime  @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@index([gradeBasic])
+  @@index([gradeRecital])
+  @@map("player_stats")
 }
 
 // 레이팅 랭킹용 — 사람 · 모드마다 동기화 때 계산해 둔 값(2026-10-15 L2-A2).

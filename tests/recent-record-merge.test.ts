@@ -4,6 +4,8 @@ import {
     mergeRecentRecord,
     planRecentRecordMerge,
     recentPlayTimestamp,
+    recordBestAt,
+    toRecordBesttime,
 } from "@/lib/services/user/recent-record-merge";
 import type {
     PendingRecordPlay,
@@ -62,7 +64,7 @@ describe("recent-only record merge (no database writes)", () => {
             clear_count: null,
             clear_flag: null,
             note_rate_standard: null,
-            besttime: "2026/09/20 10:00",
+            besttime: "2026-09-20 10:00",
         });
     });
     it("retains independent best values and official metadata after Pass expiry", () => {
@@ -88,7 +90,8 @@ describe("recent-only record merge (no database writes)", () => {
             ...previous,
             score: 995000,
             play_count: 101,
-            besttime: play.source_play_time,
+            besttime: "2026-09-20 11:00",
+            bestAt: new Date("2026-09-20T02:00:00.000Z"),
             judge_sjust: 980,
             judge_just: 80,
             judge_good: 10,
@@ -280,7 +283,7 @@ describe("recent-only record merge (no database writes)", () => {
         expect(result.changes.get(10)).toMatchObject({
             score: 980000,
             play_count: 3,
-            besttime: "2026/09/20 11:00",
+            besttime: "2026-09-20 11:00",
         });
     });
     it("leaves the source data untouched and fails before planning any invalid timestamp", () => {
@@ -346,5 +349,30 @@ describe("zero Grd repair", () => {
             planRecentRecordMerge(new Map([[10, fullRecord()]]), [play], null)
                 .changes.size
         ).toBe(0);
+    });
+});
+
+describe("기록 시각 형식", () => {
+    it("writes recent-play times in the full-sync form", () => {
+        expect(toRecordBesttime("2026/09/20 11:00")).toBe("2026-09-20 11:00");
+        expect(toRecordBesttime("2026.09.20 11:00:30")).toBe(
+            "2026-09-20 11:00"
+        );
+        expect(toRecordBesttime("2026-09-20 11:00")).toBe("2026-09-20 11:00");
+        expect(toRecordBesttime("unknown")).toBe("unknown");
+    });
+});
+
+describe("기록 시각 timestamptz", () => {
+    it("reads official KST times and keeps unknown times empty", () => {
+        expect(recordBestAt("2026-09-20 11:00")).toEqual(
+            new Date("2026-09-20T02:00:00.000Z")
+        );
+        expect(recordBestAt("2026/09/20 11:00")).toEqual(
+            new Date("2026-09-20T02:00:00.000Z")
+        );
+        expect(recordBestAt("1970-01-01 09:00")).toBeNull();
+        expect(recordBestAt("2026-02-30 11:00")).toBeNull();
+        expect(recordBestAt("")).toBeNull();
     });
 });
