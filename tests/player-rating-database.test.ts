@@ -42,6 +42,7 @@ import {
     BASIC_RATING_TOP_COUNT,
     calculateBasicRating,
 } from "@/lib/tiers/basic-rating";
+import type { TierMode } from "@/lib/tiers";
 
 // 레이팅 저장 표(2026-10-15 L2-A2) — 저장 값이 예전 집계(그 자리에서 모든 기록으로 계산)와 같은지 실제 Postgres 로 본다
 describe.skipIf(!process.env.TEST_DATABASE_URL)(
@@ -86,7 +87,7 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
                 chartIds.length * basis.value ** 2,
                 BASIC_RATING_ACTIVE_CURVE
             );
-        const stored = (mode: string) =>
+        const stored = (mode: TierMode) =>
             db.playerRating.findMany({
                 where: { mode, user_id: { in: userIds } },
                 orderBy: { user_id: "asc" },

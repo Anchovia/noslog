@@ -10,6 +10,7 @@ import type { CommunityMutation } from "@/features/music/schemas/community-schem
 import { communityMutationSchema } from "@/features/music/schemas/community-schema";
 import { ApiError } from "@/lib/api/response";
 import db from "@/lib/db";
+import type { TierMode } from "@/lib/tiers";
 
 async function detachDeletedOpinion(
     transaction: Prisma.TransactionClient,
@@ -27,7 +28,7 @@ async function detachDeletedOpinion(
 async function updateVoteReview(
     transaction: Prisma.TransactionClient,
     chartId: number,
-    mode: string,
+    mode: TierMode,
     goal: string
 ) {
     const list = await transaction.tierList.findFirst({

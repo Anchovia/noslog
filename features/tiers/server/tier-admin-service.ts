@@ -220,7 +220,7 @@ export async function createTierList(
                               {
                                   mode: input.mode,
                                   goal: input.goal,
-                                  status: "published",
+                                  status: "published" as const,
                               },
                           ]
                         : []),
@@ -280,7 +280,7 @@ export async function updateTierList(
                               {
                                   mode: input.mode,
                                   goal: input.goal,
-                                  status: "published",
+                                  status: "published" as const,
                               },
                           ]
                         : []),
