@@ -13,6 +13,10 @@ import { getUserRankingPosition } from "@/features/rankings/server/ranking-posit
 import { PUBLIC_DATA_REVALIDATE_SECONDS } from "@/lib/cache-policy";
 import { CACHE_TAGS, getUserProfileTag } from "@/lib/cache-tags";
 import db from "@/lib/db";
+import {
+    STATS_GRADE_SELECT,
+    STATS_RANK_COUNT_SELECT,
+} from "@/lib/player-stats";
 
 async function queryProfileData(id: number) {
     const [user, recentPlays] = await Promise.all([
@@ -26,25 +30,21 @@ async function queryProfileData(id: number) {
                 discord_username: true,
                 avatar: true,
                 country: true,
-                grade_basic: true,
-                grade_recital: true,
+                // 동기화 결과는 player_stats 에서(2026-10-16 DB 재설계 P4) — 화면에는 예전 이름으로 넘긴다
+                stats: {
+                    select: {
+                        ...STATS_GRADE_SELECT,
+                        ...STATS_RANK_COUNT_SELECT,
+                        playCount: true,
+                    },
+                },
                 examAchievements: examAchievementGradeSelect,
-                play_count: true,
                 hide_nostalgia_name: true,
                 hide_discord_name: true,
                 hide_play_count: true,
                 hide_preferred_arcade: true,
                 hide_play_activity: true,
                 hide_play_scores: true,
-                score_p: true,
-                score_f: true,
-                score_s: true,
-                score_a2: true,
-                score_a: true,
-                score_b2: true,
-                score_b: true,
-                score_c: true,
-                score_d: true,
                 created_at: true,
                 role: true,
                 preferredArcade: { select: { name: true } },
@@ -53,12 +53,19 @@ async function queryProfileData(id: number) {
         db.chartPlayHistory.findMany({
             where: { user_id: id },
             select: { source_play_time: true },
-            orderBy: [{ source_play_time: "desc" }, { id: "desc" }],
+            orderBy: [
+                { playedAt: { sort: "desc", nulls: "last" } },
+                { id: "desc" },
+            ],
             take: 1,
         }),
     ]);
 
     if (!user) return null;
+    // 검정 급수는 승인된 합격 기록이 유일한 출처 — 공개 데이터에는 모드별 최고 급수만 싣는다
+    const { examAchievements, stats, ...publicUser } = user;
+    const grade_basic = stats?.gradeBasic ?? null;
+    const grade_recital = stats?.gradeRecital ?? null;
 
     const [
         rankBasic,
@@ -70,23 +77,23 @@ async function queryProfileData(id: number) {
     ] = await Promise.all([
         getUserRankingPosition({
             userId: user.id,
-            grade: user.grade_basic,
+            grade: grade_basic,
             mode: "basic",
         }),
         getUserRankingPosition({
             userId: user.id,
-            grade: user.grade_basic,
+            grade: grade_basic,
             mode: "basic",
             scope: { country: user.country },
         }),
         getUserRankingPosition({
             userId: user.id,
-            grade: user.grade_recital,
+            grade: grade_recital,
             mode: "recital",
         }),
         getUserRankingPosition({
             userId: user.id,
-            grade: user.grade_recital,
+            grade: grade_recital,
             mode: "recital",
             scope: { country: user.country },
         }),
@@ -96,11 +103,20 @@ async function queryProfileData(id: number) {
         getAchievementRecords(user.id),
     ]);
 
-    // 검정 급수는 승인된 합격 기록이 유일한 출처 — 공개 데이터에는 모드별 최고 급수만 싣는다
-    const { examAchievements, ...publicUser } = user;
     return {
         user: {
             ...publicUser,
+            grade_basic,
+            grade_recital,
+            score_p: stats?.scoreP ?? null,
+            score_f: stats?.scoreF ?? null,
+            score_s: stats?.scoreS ?? null,
+            score_a2: stats?.scoreA2 ?? null,
+            score_a: stats?.scoreA ?? null,
+            score_b2: stats?.scoreB2 ?? null,
+            score_b: stats?.scoreB ?? null,
+            score_c: stats?.scoreC ?? null,
+            score_d: stats?.scoreD ?? null,
             ...getBestExamGrades(examAchievements),
             nostalgia_name: user.hide_nostalgia_name
                 ? null
@@ -109,7 +125,9 @@ async function queryProfileData(id: number) {
             discord_username: user.hide_discord_name
                 ? null
                 : user.discord_username,
-            play_count: user.hide_play_count ? null : user.play_count,
+            play_count: user.hide_play_count
+                ? null
+                : (stats?.playCount ?? null),
             preferredArcade: user.hide_preferred_arcade
                 ? null
                 : user.preferredArcade,

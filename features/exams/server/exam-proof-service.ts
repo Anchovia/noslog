@@ -20,6 +20,7 @@ import db from "@/lib/db";
 import { createTranslator, getMessages } from "@/lib/i18n/messages";
 import { isLocale, type Locale } from "@/lib/i18n/routing";
 import { logServerError } from "@/lib/observability/server";
+import { STATS_GRADE_SELECT, withStatsGrades } from "@/lib/player-stats";
 import getSession from "@/lib/session";
 import {
     claimUploadTokenQuota,
@@ -64,17 +65,17 @@ async function getAvailableExam(examId: number, userId: number) {
     if (!exam || (exam.mode !== "basic" && exam.mode !== "recital"))
         return null;
 
-    const user = await db.user.findUnique({
+    const userRow = await db.user.findUnique({
         where: { id: userId },
         select: {
             nostalgia_name: true,
-            grade_basic: true,
-            grade_recital: true,
+            stats: { select: STATS_GRADE_SELECT },
             examAchievements: {
                 select: { exam: { select: { mode: true, grade: true } } },
             },
         },
     });
+    const user = userRow && withStatsGrades(userRow);
     const eligibility = getExamEligibility(exam, user);
     if (eligibility === "achieved") {
         return { ...exam, alreadyAchieved: true };

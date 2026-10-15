@@ -39,11 +39,11 @@ const playFields = {
 
 export async function getProfileRating(userId: number, mode: ProfileMode) {
     if (mode === "recital") {
-        const user = await db.user.findUnique({
-            where: { id: userId },
-            select: { grade_recital: true },
+        const stats = await db.playerStats.findUnique({
+            where: { userId },
+            select: { gradeRecital: true },
         });
-        if (user?.grade_recital == null) return null;
+        if (stats?.gradeRecital == null) return null;
     }
     const basis = await getModePianistRatingBasis(mode);
     if (
@@ -127,7 +127,10 @@ export async function getPublicProfilePlays(
                     },
                 },
             },
-            orderBy: [{ source_play_time: "desc" }, { id: "desc" }],
+            orderBy: [
+                { playedAt: { sort: "desc", nulls: "last" } },
+                { id: "desc" },
+            ],
             skip: query.offset,
             take: query.limit + 1,
         });

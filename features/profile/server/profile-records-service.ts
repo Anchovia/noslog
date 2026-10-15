@@ -71,7 +71,8 @@ export async function getPublicProfileRecords(
         query.sort === "score"
             ? [{ score: "desc" }, { [field]: "desc" }, { id: "asc" }]
             : query.sort === "recent"
-              ? [{ besttime: "desc" }, { id: "asc" }]
+              ? // 기록 시각(best_at, 2026-10-16 P4) — 시각 모름은 예전 「1970」 처럼 맨 뒤
+                [{ bestAt: { sort: "desc", nulls: "last" } }, { id: "asc" }]
               : query.sort === "title"
                 ? [{ music: { title: "asc" } }, { id: "asc" }]
                 : [

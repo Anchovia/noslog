@@ -876,6 +876,8 @@ model ChartPlayHistory {
   @@unique([user_id, chart_id, source_play_time, score, max_combo, rank])
   // 최근 플레이 목록(사람별 최신순) · 동기화 기록 정리(2026-10-15 D7). [user_id, chart_id, source_play_time] 는 위 unique 앞부분과 같아 뺐다
   @@index([user_id, source_play_time(sort: Desc), id(sort: Desc)])
+  // 최신순 정렬을 played_at 으로(2026-10-16 P4 전환) — 위 문자열 인덱스는 P5 에서 뺀다
+  @@index([user_id, playedAt(sort: Desc), id(sort: Desc)])
   @@index([first_sync_id])
   @@index([user_id, record_applied])
   // 외래 키 — 채보를 지울 때 표 전체를 훑지 않게. 큰 표라 CONCURRENTLY 단독 마이그레이션으로 만든다(2026-10-16 P2)

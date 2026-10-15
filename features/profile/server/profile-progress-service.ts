@@ -4,6 +4,7 @@ import type { ProfileProgressQuery } from "@/features/profile/schemas/public-pro
 import { profileProgressPayloadSchema } from "@/features/profile/schemas/public-profile-schema";
 import { getProfileRating } from "@/features/profile/server/profile-plays-service";
 import db from "@/lib/db";
+import { STATS_GRADE_SELECT, statsGrade } from "@/lib/player-stats";
 
 export async function getPublicProfileProgress(
     userId: number,
@@ -12,9 +13,11 @@ export async function getPublicProfileProgress(
 ) {
     const user = await db.user.findUnique({
         where: { id: userId },
-        select: { grade_basic: true, grade_recital: true },
+        // 지금 Grd 는 player_stats 에서(2026-10-16 DB 재설계 P4)
+        select: { stats: { select: STATS_GRADE_SELECT } },
     });
     if (!user) return null;
+    const currentGrade = statsGrade(user.stats, query.mode);
     const since = new Date(now);
     if (query.range === "year")
         since.setUTCFullYear(since.getUTCFullYear() - 1);
@@ -48,7 +51,7 @@ export async function getPublicProfileProgress(
     } else {
         const field = query.mode === "basic" ? "grade_basic" : "grade_recital";
         // 기간 앞 하루를 넉넉히 둔 날짜부터만 읽는다(2026-10-15 S13) — 정확한 경계는 아래에서 지금처럼 가린다.
-        // besttime 은 「YYYY-MM-DD」 로 시작해 문자열 비교가 날짜 순서와 같다(@@index([user_id, besttime]))
+        // 날짜는 day(@db.Date, 서울 날짜, 2026-10-16 P4)로 고른다
         const lowerDay =
             query.range === "all"
                 ? null
@@ -58,16 +61,18 @@ export async function getPublicProfileProgress(
         const history = await db.userBestGrade.findMany({
             where: {
                 user_id: userId,
-                ...(lowerDay ? { besttime: { gte: lowerDay } } : {}),
+                day: lowerDay
+                    ? { gte: new Date(`${lowerDay}T00:00:00Z`) }
+                    : { not: null },
             },
-            select: { besttime: true, grade_basic: true, grade_recital: true },
-            orderBy: [{ besttime: "asc" }, { id: "asc" }],
+            select: { day: true, grade_basic: true, grade_recital: true },
+            orderBy: [{ day: "asc" }, { id: "asc" }],
         });
-        current = user[field] && user[field] > 0 ? user[field] / 100 : null;
+        current = currentGrade && currentGrade > 0 ? currentGrade / 100 : null;
         points = history.flatMap((row) => {
             // Existing history uses the Korean sync calendar, not the reader's timezone.
             const date = new Date(
-                `${row.besttime.slice(0, 10)}T00:00:00+09:00`
+                `${row.day?.toISOString().slice(0, 10)}T00:00:00+09:00`
             );
             return Number.isFinite(date.getTime()) &&
                 date.getTime() >= cutoff &&

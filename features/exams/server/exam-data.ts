@@ -4,6 +4,7 @@ import { unstable_cache } from "next/cache";
 
 import { CACHE_TAGS } from "@/lib/cache-tags";
 import db from "@/lib/db";
+import { STATS_GRADE_SELECT, withStatsGrades } from "@/lib/player-stats";
 
 // 검정 정의, 과제곡과 보상은 모든 사용자에게 동일하므로 캐시함
 export const getCachedPublishedExams = unstable_cache(
@@ -103,12 +104,12 @@ export async function getUserExamState(
     examIds: number[],
     chartIds: number[]
 ) {
-    const [user, records, submissions] = await Promise.all([
+    const [userRow, records, submissions] = await Promise.all([
         db.user.findUnique({
             where: { id: userId },
             select: {
-                grade_basic: true,
-                grade_recital: true,
+                // 지금 Grd 는 player_stats 에서(2026-10-16 DB 재설계 P4)
+                stats: { select: STATS_GRADE_SELECT },
                 nostalgia_name: true,
                 // 합격 기록은 여기서 한 번만 읽는다 — 이 검정들의 합격 여부도 이 목록에서(2026-10-15 S6)
                 examAchievements: {
@@ -153,6 +154,7 @@ export async function getUserExamState(
               })
             : Promise.resolve([]),
     ]);
+    const user = userRow && withStatsGrades(userRow);
 
     const wanted = new Set(examIds);
     const achievements =

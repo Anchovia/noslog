@@ -18,6 +18,7 @@ import { requireAdmin } from "@/lib/admin";
 import { getUserSyncHealth } from "@/lib/admin/sync-health";
 import db from "@/lib/db";
 import { logServerError } from "@/lib/observability/server";
+import { formatKstMinute } from "@/lib/player-stats";
 
 type UserRoleUpdateResult = ActionResult<{ role: UserRole }>;
 type UserSyncTokenResetResult = ActionResult<{ syncTokenVersion: number }>;
@@ -62,8 +63,8 @@ export async function listAdminUsers(
                 nostalgia_name: true,
                 country: true,
                 role: true,
-                play_count: true,
-                nostalgia_last_playtime: true,
+                // 플레이 수 · 마지막 플레이는 player_stats 에서(2026-10-16 DB 재설계 P4)
+                stats: { select: { playCount: true, lastPlayedAt: true } },
                 sync_token_version: true,
                 created_at: true,
                 dataSyncs: {
@@ -161,8 +162,10 @@ export async function listAdminUsers(
                 name: user.nostalgia_name ?? user.username ?? `유저 ${user.id}`,
                 country: user.country,
                 role: user.role === "admin" ? "admin" : "user",
-                playCount: user.play_count ?? 0,
-                nostalgiaLastPlaytime: user.nostalgia_last_playtime,
+                playCount: user.stats?.playCount ?? 0,
+                nostalgiaLastPlaytime: formatKstMinute(
+                    user.stats?.lastPlayedAt
+                ),
                 syncTokenVersion: user.sync_token_version,
                 createdAt: user.created_at.toISOString(),
                 latestSyncAt: latestSync?.started_at.toISOString() ?? null,
