@@ -1,7 +1,9 @@
 import type { Prisma } from "@prisma/client";
 import { revalidatePath, updateTag } from "next/cache";
+import { after } from "next/server";
 import type { ZodError } from "zod";
 
+import { rebuildStalePlayerRatings } from "@/features/rankings/server/player-rating-service";
 import {
     tierBandCreateInputFromFormData,
     tierBandCreateSchema,
@@ -69,9 +71,24 @@ function logTierActionError(error: unknown, event: string) {
     });
 }
 
+// 피아니스트 서열 상수가 바뀌었으면 저장해 둔 레이팅을 응답 뒤에 다시 센다(2026-10-15 L2-A2).
+// 기준이 그대로면(초안 · 다른 목표 서열표) 한 줄 확인으로 끝난다
+function rebuildRatingsAfterResponse() {
+    after(() =>
+        rebuildStalePlayerRatings().catch((error) =>
+            logServerError(error, {
+                event: "admin.tiers.player-ratings.rebuild",
+                routePath: "/admin/tiers",
+                routeType: "action",
+            })
+        )
+    );
+}
+
 function revalidateTierList(id: number) {
+    // 랭킹 레이팅 캐시도 tierLists 태그를 달고 있어 함께 비워진다(userRankings 따로 안 비움)
     updateTag(CACHE_TAGS.tierLists);
-    updateTag(CACHE_TAGS.userRankings);
+    rebuildRatingsAfterResponse();
     revalidatePath("/admin");
     revalidatePath("/admin/tiers");
     revalidatePath(`/admin/tiers/${id}`);
@@ -80,8 +97,9 @@ function revalidateTierList(id: number) {
 }
 
 function revalidateTierListIndex() {
+    // 랭킹 레이팅 캐시도 tierLists 태그를 달고 있어 함께 비워진다(userRankings 따로 안 비움)
     updateTag(CACHE_TAGS.tierLists);
-    updateTag(CACHE_TAGS.userRankings);
+    rebuildRatingsAfterResponse();
     revalidatePath("/admin");
     revalidatePath("/admin/tiers");
     revalidatePath("/tiers");

@@ -1,0 +1,188 @@
+import "server-only";
+
+import { createHash } from "node:crypto";
+
+import type { Prisma } from "@prisma/client";
+
+import { getModePianistRatingBasis } from "@/features/tiers/server/tier-browser-data";
+import db from "@/lib/db";
+import type { TierMode } from "@/lib/tiers";
+import { TIER_MODES } from "@/lib/tiers";
+import type { BasicRatingRecord } from "@/lib/tiers/basic-rating";
+import {
+    BASIC_RATING_ACTIVE_CURVE,
+    BASIC_RATING_POLICY_VERSION,
+    BASIC_RATING_SCORE_FLOOR,
+    calculateBasicRating,
+} from "@/lib/tiers/basic-rating";
+
+/**
+ * 레이팅 랭킹용 저장 값(2026-10-15 L2-A2) — 사람 · 모드마다 계산해 둔 레이팅.
+ * 예전에는 랭킹 캐시가 빌 때마다 모든 사람의 기록(500명이면 약 45만 줄)을 읽어 다시 셌다.
+ * 계산 규칙은 그때와 같다: 서열 상수가 있는 채보 · 95만 점 이상 · Recital 은 그 기록의 Recital Grd 가 있을 때만
+ */
+export interface RatingBasis {
+    constants: Map<number, number>;
+    theoreticalMax: number;
+    /** 계산식 판 + 피아니스트 서열 상수의 지문 — 기준이 바뀌면 달라진다 */
+    version: string;
+}
+
+export interface PlayerRatingValue {
+    user_id: number;
+    mode: TierMode;
+    rating: number;
+    filled_slots: number;
+    basis_version: string;
+}
+
+/** 랭킹에 쓸 수 있는 기준인지 — 상수가 비었거나 이상하면 null(랭킹은 「준비 중」) */
+export async function getRatingBasis(
+    mode: TierMode
+): Promise<RatingBasis | null> {
+    const basis = await getModePianistRatingBasis(mode);
+    if (
+        !basis.theoreticalMax ||
+        basis.entries.some(
+            (entry) =>
+                !Number.isFinite(entry.value) ||
+                entry.value < 1 ||
+                entry.value > 14.5
+        ) ||
+        new Set(basis.entries.map((entry) => entry.chartId)).size !==
+            basis.entries.length
+    )
+        return null;
+    const entries = [...basis.entries].sort(
+        (left, right) => left.chartId - right.chartId
+    );
+    const version = createHash("sha256")
+        .update(
+            JSON.stringify([
+                BASIC_RATING_POLICY_VERSION,
+                BASIC_RATING_ACTIVE_CURVE,
+                mode,
+                entries.map((entry) => [entry.chartId, entry.value]),
+            ])
+        )
+        .digest("hex")
+        .slice(0, 16);
+    return {
+        constants: new Map(
+            entries.map((entry) => [entry.chartId, entry.value])
+        ),
+        theoreticalMax: basis.theoreticalMax,
+        version,
+    };
+}
+
+async function computeRatings(
+    tx: Prisma.TransactionClient,
+    mode: TierMode,
+    basis: RatingBasis,
+    userId?: number
+): Promise<PlayerRatingValue[]> {
+    const records = await tx.playData.findMany({
+        where: {
+            ...(userId === undefined ? {} : { user_id: userId }),
+            chart_id: { in: [...basis.constants.keys()] },
+            score: { gte: BASIC_RATING_SCORE_FLOOR },
+            ...(mode === "recital" ? { grade_recital: { gt: 0 } } : {}),
+        },
+        select: { user_id: true, chart_id: true, score: true },
+    });
+    const byUser = new Map<number, BasicRatingRecord[]>();
+    for (const record of records) {
+        if (record.chart_id === null) continue;
+        const tierConstant = basis.constants.get(record.chart_id);
+        if (tierConstant === undefined) continue;
+        const playerRecords = byUser.get(record.user_id) ?? [];
+        playerRecords.push({
+            chartId: record.chart_id,
+            score: record.score,
+            tierConstant,
+        });
+        byUser.set(record.user_id, playerRecords);
+    }
+    return [...byUser].flatMap(([user_id, playerRecords]) => {
+        const result = calculateBasicRating(
+            playerRecords,
+            basis.theoreticalMax,
+            BASIC_RATING_ACTIVE_CURVE
+        );
+        // 레이팅 0 은 랭킹에 넣지 않는다(예전 집계와 같음)
+        if (result.rating <= 0) return [];
+        return [
+            {
+                user_id,
+                mode,
+                rating: result.rating,
+                filled_slots: result.filledSlots,
+                basis_version: basis.version,
+            },
+        ];
+    });
+}
+
+// 같은 모드를 동시에 다시 쓰지 않게 — 트랜잭션이 끝나면 풀린다
+function lockMode(tx: Prisma.TransactionClient, mode: TierMode) {
+    return tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${`player-rating:${mode}`}))`;
+}
+
+/**
+ * 한 모드의 모든 사람을 다시 센다 — 한 트랜잭션으로 바꿔 끼우므로 다 셀 때까지는 옛 값이 보이고,
+ * 옛 값과 새 값이 섞이지 않는다. 서열 상수 · 계산식이 바뀌었거나 표가 비었을 때
+ */
+export async function rebuildPlayerRatings(mode: TierMode, basis: RatingBasis) {
+    return db.$transaction(
+        async (tx) => {
+            await lockMode(tx, mode);
+            const rows = await computeRatings(tx, mode, basis);
+            await tx.playerRating.deleteMany({ where: { mode } });
+            if (rows.length) await tx.playerRating.createMany({ data: rows });
+            return rows;
+        },
+        { timeout: 30000 }
+    );
+}
+
+/** 동기화로 기록이 바뀐 사람의 두 모드 값을 다시 센다(한 사람 약 30ms) */
+export async function refreshUserPlayerRatings(userId: number) {
+    for (const mode of TIER_MODES) {
+        const basis = await getRatingBasis(mode);
+        if (!basis) continue;
+        await db.$transaction(async (tx) => {
+            await lockMode(tx, mode);
+            const [row] = await computeRatings(tx, mode, basis, userId);
+            if (!row) {
+                await tx.playerRating.deleteMany({
+                    where: { user_id: userId, mode },
+                });
+                return;
+            }
+            await tx.playerRating.upsert({
+                where: { user_id_mode: { user_id: userId, mode } },
+                create: row,
+                update: {
+                    rating: row.rating,
+                    filled_slots: row.filled_slots,
+                    basis_version: row.basis_version,
+                    computed_at: new Date(),
+                },
+            });
+        });
+    }
+}
+
+/** 서열표를 저장한 뒤 — 기준이 바뀐 모드만 다시 센다(응답 뒤 after() 에서 부른다) */
+export async function rebuildStalePlayerRatings() {
+    for (const mode of TIER_MODES) {
+        const basis = await getRatingBasis(mode);
+        if (!basis) continue;
+        const stale = await db.playerRating.findFirst({
+            where: { mode, basis_version: { not: basis.version } },
+            select: { user_id: true },
+        });
+        if (stale) await rebuildPlayerRatings(mode, basis);
+    }
+}

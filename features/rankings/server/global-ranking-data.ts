@@ -16,16 +16,13 @@ import {
     GLOBAL_RANKING_PAGE_SIZE,
     globalRankingPayloadSchema,
 } from "@/features/rankings/schemas/global-ranking-schema";
-import { getModePianistRatingBasis } from "@/features/tiers/server/tier-browser-data";
+import {
+    getRatingBasis,
+    rebuildPlayerRatings,
+} from "@/features/rankings/server/player-rating-service";
 import { PUBLIC_DATA_REVALIDATE_SECONDS } from "@/lib/cache-policy";
 import { CACHE_TAGS } from "@/lib/cache-tags";
 import db from "@/lib/db";
-import type { BasicRatingRecord } from "@/lib/tiers/basic-rating";
-import {
-    BASIC_RATING_ACTIVE_CURVE,
-    BASIC_RATING_SCORE_FLOOR,
-    calculateBasicRating,
-} from "@/lib/tiers/basic-rating";
 
 const playerFields = {
     id: true,
@@ -73,78 +70,49 @@ const getPublicRankingPopulation = unstable_cache(
                 })),
             };
         }
-        const basis = await getModePianistRatingBasis(mode);
-        if (
-            !basis.theoreticalMax ||
-            basis.entries.some(
-                (entry) =>
-                    !Number.isFinite(entry.value) ||
-                    entry.value < 1 ||
-                    entry.value > 14.5
-            ) ||
-            new Set(basis.entries.map((entry) => entry.chartId)).size !==
-                basis.entries.length
-        )
-            return { status: "unavailable", rows: [] };
-        const constants = new Map(
-            basis.entries.map((entry) => [entry.chartId, entry.value])
-        );
-        const records = await db.playData.findMany({
-            where: {
-                chart_id: { in: [...constants.keys()] },
-                score: { gte: BASIC_RATING_SCORE_FLOOR },
-                ...(mode === "recital" ? { grade_recital: { gt: 0 } } : {}),
-            },
-            select: { user_id: true, chart_id: true, score: true },
-        });
-        const byUser = new Map<number, BasicRatingRecord[]>();
-        for (const record of records) {
-            if (record.chart_id === null) continue;
-            const tierConstant = constants.get(record.chart_id);
-            if (tierConstant === undefined) continue;
-            const playerRecords = byUser.get(record.user_id) ?? [];
-            playerRecords.push({
-                chartId: record.chart_id,
-                score: record.score,
-                tierConstant,
+        // 레이팅은 사람마다 저장해 둔 값을 읽는다(2026-10-15 L2-A2). 표가 비었거나 기준(서열 상수 · 계산식)이
+        // 바뀌었으면 여기서 한 번 모두 다시 센다 — 배포 뒤 첫 방문 · 서열표 저장 뒤 after() 가 끝나기 전
+        const basis = await getRatingBasis(mode);
+        if (!basis) return { status: "unavailable", rows: [] };
+        const readStored = () =>
+            db.playerRating.findMany({
+                where: { mode },
+                select: {
+                    rating: true,
+                    filled_slots: true,
+                    basis_version: true,
+                    user: { select: playerFields },
+                },
             });
-            byUser.set(record.user_id, playerRecords);
+        let stored = await readStored();
+        if (
+            !stored.length ||
+            stored.some((row) => row.basis_version !== basis.version)
+        ) {
+            await rebuildPlayerRatings(mode, basis);
+            stored = await readStored();
         }
-        const users = byUser.size
-            ? await db.user.findMany({
-                  where: { id: { in: [...byUser.keys()] } },
-                  select: playerFields,
-              })
-            : [];
         return {
             status: "available",
-            rows: users.flatMap((user) => {
-                const result = calculateBasicRating(
-                    byUser.get(user.id) ?? [],
-                    basis.theoreticalMax!,
-                    BASIC_RATING_ACTIVE_CURVE
-                );
-                if (result.rating <= 0) return [];
-                const value = Math.round(result.rating);
-                return [
-                    {
-                        id: user.id,
-                        username: user.username,
-                        avatar: user.avatar,
-                        country: user.country,
-                        exam: getBestExamGrade(user.examAchievements, mode),
-                        grade: user[gradeField] ?? 0,
-                        value,
-                        rating: value,
-                        filledSlots: result.filledSlots,
-                        rawValue: result.rating,
-                        hidden: user.hide_play_scores,
-                    },
-                ];
+            rows: stored.map(({ rating, filled_slots, user }) => {
+                const value = Math.round(rating);
+                return {
+                    id: user.id,
+                    username: user.username,
+                    avatar: user.avatar,
+                    country: user.country,
+                    exam: getBestExamGrade(user.examAchievements, mode),
+                    grade: user[gradeField] ?? 0,
+                    value,
+                    rating: value,
+                    filledSlots: filled_slots,
+                    rawValue: rating,
+                    hidden: user.hide_play_scores,
+                };
             }),
         };
     },
-    ["global-ranking-population-v4"],
+    ["global-ranking-population-v5"],
     {
         revalidate: PUBLIC_DATA_REVALIDATE_SECONDS,
         tags: [CACHE_TAGS.userRankings, CACHE_TAGS.tierLists],

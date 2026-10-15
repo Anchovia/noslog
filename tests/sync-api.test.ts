@@ -13,6 +13,7 @@ const mocks = vi.hoisted(() => ({
     processBemaniCatalogUpdates: vi.fn(),
     updateGrade: vi.fn(),
     recordProfileRatings: vi.fn(),
+    refreshUserPlayerRatings: vi.fn(),
     updatePlayerProfile: vi.fn(),
     updatePlayData: vi.fn(),
     updateRecentPlay: vi.fn(),
@@ -44,6 +45,9 @@ vi.mock("@/lib/services/user/update-grade", () => ({
 }));
 vi.mock("@/features/profile/server/profile-rating-history-service", () => ({
     recordProfileRatings: mocks.recordProfileRatings,
+}));
+vi.mock("@/features/rankings/server/player-rating-service", () => ({
+    refreshUserPlayerRatings: mocks.refreshUserPlayerRatings,
 }));
 vi.mock("@/lib/services/music/catalog-sync", () => ({
     processBemaniCatalogUpdates: mocks.processBemaniCatalogUpdates,
@@ -235,6 +239,12 @@ describe("POST /api/receivePlayerData", () => {
             id: 1,
             sync_token_version: 0,
             role: "user",
+            grade_basic: 1000,
+            grade_recital: null,
+        });
+        mocks.updateGrade.mockResolvedValue({
+            grade_basic: 1000,
+            grade_recital: null,
         });
         mocks.transaction.mockImplementation((callback) =>
             callback({
@@ -258,8 +268,14 @@ describe("POST /api/receivePlayerData", () => {
             insertedPlays: 1,
             skippedCharts: [],
         });
-        mocks.updatePlayData.mockResolvedValue(3);
-        mocks.updateRecentBestRecords.mockResolvedValue(0);
+        mocks.updatePlayData.mockResolvedValue({
+            changedRecords: 3,
+            changedChartIds: [11, 12, 13],
+        });
+        mocks.updateRecentBestRecords.mockResolvedValue({
+            changedRecords: 0,
+            changedChartIds: [],
+        });
         mocks.processBemaniCatalogUpdates.mockResolvedValue({
             detected: 0,
             pending: 0,
@@ -421,7 +437,10 @@ describe("POST /api/receivePlayerData", () => {
     });
 
     it("최근 기록만 동기화하고 개인 기록·Grd·Rating과 캐시를 갱신한다", async () => {
-        mocks.updateRecentBestRecords.mockResolvedValue(1);
+        mocks.updateRecentBestRecords.mockResolvedValue({
+            changedRecords: 1,
+            changedChartIds: [21],
+        });
         const response = await POST(createRequest(requestBody()));
         const data = await response.json();
 
@@ -445,10 +464,19 @@ describe("POST /api/receivePlayerData", () => {
         expect(mocks.updateRecentBestRecords).toHaveBeenCalledWith(1, 10);
         expect(mocks.updateGrade).toHaveBeenCalledWith(1);
         expect(mocks.recordProfileRatings).toHaveBeenCalledWith(1, 10);
+        // 랭킹용 저장 레이팅도 이 사람만 다시 센다(2026-10-15 L2-A2)
+        expect(mocks.refreshUserPlayerRatings).toHaveBeenCalledWith(1);
+        // 바뀐 채보 하나만 — 전체 순위 · 모든 프로필 · 빙고는 그대로
         expect(mocks.revalidateTag).toHaveBeenCalledWith(
-            "chart-rankings",
+            "chart-ranking-21",
             "max"
         );
+        expect(mocks.revalidateTag).toHaveBeenCalledWith(
+            "user-rankings",
+            "max"
+        );
+        for (const tag of ["chart-rankings", "user-profiles", "bingos"])
+            expect(mocks.revalidateTag).not.toHaveBeenCalledWith(tag, "max");
         expect(mocks.dataSyncUpdate).toHaveBeenCalledWith({
             where: { id: 10 },
             data: expect.objectContaining({
@@ -493,11 +521,12 @@ describe("POST /api/receivePlayerData", () => {
     });
 
     it("중복 연동이어도 이전 실패로 빠진 Grd·Rating 계산을 복구한다", async () => {
-        mocks.updateRecentBestRecords.mockResolvedValue(0);
         const response = await POST(createRequest(requestBody()));
         expect(response.status).toBe(200);
         expect(mocks.updateGrade).toHaveBeenCalledWith(1);
         expect(mocks.recordProfileRatings).toHaveBeenCalledWith(1, 10);
+        // 랭킹용 저장 레이팅도 이 사람만 다시 센다(2026-10-15 L2-A2)
+        expect(mocks.refreshUserPlayerRatings).toHaveBeenCalledWith(1);
     });
 
     it("최근 기록 병합 실패를 성공으로 표시하지 않는다", async () => {
@@ -562,7 +591,7 @@ describe("POST /api/receivePlayerData", () => {
         expect(mocks.updatePlayData).toHaveBeenCalledOnce();
     });
 
-    it("전체 기록 동기화 후 관련 공개 캐시를 모두 갱신한다", async () => {
+    it("전체 기록 동기화 후 바뀐 채보와 전체 랭킹만 갱신한다", async () => {
         const response = await POST(createRequest(requestBody(true)));
         const data = await response.json();
 
@@ -585,13 +614,17 @@ describe("POST /api/receivePlayerData", () => {
         expect(mocks.updateGrade).toHaveBeenCalledWith(1);
         expect(mocks.updateDummy).toHaveBeenCalledOnce();
         for (const tag of [
-            "chart-rankings",
+            "user-profile-1",
+            "chart-ranking-11",
+            "chart-ranking-12",
+            "chart-ranking-13",
             "user-rankings",
-            "bingos",
-            "user-profiles",
         ]) {
             expect(mocks.revalidateTag).toHaveBeenCalledWith(tag, "max");
         }
+        // Grd 가 그대로이고 새 업적 · 카탈로그 변경이 없으면 전체 순위 · 모든 프로필 · 빙고는 두고
+        for (const tag of ["chart-rankings", "user-profiles", "bingos"])
+            expect(mocks.revalidateTag).not.toHaveBeenCalledWith(tag, "max");
         expect(mocks.revalidateTag).not.toHaveBeenCalledWith(
             "music-catalog",
             "max"
@@ -656,11 +689,65 @@ describe("POST /api/receivePlayerData", () => {
         });
     });
 
+    it("바뀐 기록 · Grd · 업적이 없으면 본인 프로필 캐시만 비운다", async () => {
+        const response = await POST(createRequest(requestBody()));
+        expect(response.status).toBe(200);
+        expect(mocks.revalidateTag.mock.calls).toEqual([
+            ["user-profile-1", "max"],
+        ]);
+    });
+
+    it("Grd 가 바뀌면 전체 랭킹과 모든 프로필의 순위를 비운다", async () => {
+        mocks.updateGrade.mockResolvedValue({
+            grade_basic: 1001,
+            grade_recital: null,
+        });
+        const response = await POST(createRequest(requestBody()));
+        expect(response.status).toBe(200);
+        for (const tag of ["user-rankings", "user-profiles"])
+            expect(mocks.revalidateTag).toHaveBeenCalledWith(tag, "max");
+    });
+
+    it("새 업적을 얻으면 모든 프로필의 달성 인원을 비운다", async () => {
+        mocks.evaluateUserAchievements.mockResolvedValueOnce([
+            { key: "s-rank", tier: 1 },
+        ]);
+        const response = await POST(createRequest(requestBody()));
+        expect(response.status).toBe(200);
+        expect(mocks.revalidateTag).toHaveBeenCalledWith(
+            "user-profiles",
+            "max"
+        );
+        expect(mocks.revalidateTag).not.toHaveBeenCalledWith(
+            "user-rankings",
+            "max"
+        );
+    });
+
+    it("바뀐 채보가 아주 많으면 채보별 대신 전체 순위 태그 하나로 비운다", async () => {
+        mocks.updatePlayData.mockResolvedValue({
+            changedRecords: 300,
+            changedChartIds: Array.from({ length: 300 }, (_, i) => i + 1),
+        });
+        const response = await POST(createRequest(requestBody(true)));
+        expect(response.status).toBe(200);
+        expect(mocks.revalidateTag).toHaveBeenCalledWith(
+            "chart-rankings",
+            "max"
+        );
+        expect(mocks.revalidateTag).not.toHaveBeenCalledWith(
+            "chart-ranking-1",
+            "max"
+        );
+    });
+
     it("관리자 전체 연동은 감지한 카탈로그 변경을 즉시 반영한다", async () => {
         mocks.userFindUnique.mockResolvedValue({
             id: 1,
             sync_token_version: 0,
             role: "admin",
+            grade_basic: 1000,
+            grade_recital: null,
         });
         mocks.processBemaniCatalogUpdates.mockResolvedValue({
             detected: 1,
@@ -689,6 +776,7 @@ describe("POST /api/receivePlayerData", () => {
             "music-details",
             "max"
         );
+        expect(mocks.revalidateTag).toHaveBeenCalledWith("bingos", "max");
         expect(data.missingJackets).toEqual(["missing-a"]);
     });
 
@@ -698,6 +786,8 @@ describe("POST /api/receivePlayerData", () => {
             id: 1,
             sync_token_version: 0,
             role: "admin",
+            grade_basic: 1000,
+            grade_recital: null,
         });
         mocks.getMissingJacketIndexes.mockRejectedValue(new Error("db down"));
 

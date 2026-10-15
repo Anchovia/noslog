@@ -5,8 +5,13 @@ import { z } from "zod";
 import { evaluateUserAchievements } from "@/features/achievements/server/achievement-service";
 import { getMissingJacketIndexes } from "@/features/music/server/jacket-collection-service";
 import { recordProfileRatings } from "@/features/profile/server/profile-rating-history-service";
+import { refreshUserPlayerRatings } from "@/features/rankings/server/player-rating-service";
 import { verifySyncToken } from "@/lib/bookmarklet";
-import { CACHE_TAGS, getUserProfileTag } from "@/lib/cache-tags";
+import {
+    CACHE_TAGS,
+    getChartRankingTag,
+    getUserProfileTag,
+} from "@/lib/cache-tags";
 import db from "@/lib/db";
 import { updateDummy } from "@/lib/dummy/bingo";
 import { isLocale, type Locale } from "@/lib/i18n/routing";
@@ -22,6 +27,8 @@ const EAGATE_ORIGIN = "https://p.eagate.573.jp";
 const MAX_SYNC_BODY_BYTES = 8 * 1024 * 1024;
 const SYNC_COOLDOWN_MS = 30 * 1000;
 const SYNC_PROCESSING_TIMEOUT_MS = 5 * 60 * 1000;
+// 바뀐 채보가 이보다 많으면(첫 전체 동기화 등) 채보별 대신 전체 순위 태그 하나로 비운다
+const CHART_TAG_REVALIDATE_LIMIT = 200;
 const responseCopy = {
     ko: {
         forbidden: "허용되지 않은 요청입니다.",
@@ -393,7 +400,13 @@ export async function POST(request: NextRequest) {
 
     const user = await db.user.findUnique({
         where: { id: tokenPayload.userId },
-        select: { id: true, sync_token_version: true, role: true },
+        select: {
+            id: true,
+            sync_token_version: true,
+            role: true,
+            grade_basic: true,
+            grade_recital: true,
+        },
     });
     if (!user || user.sync_token_version !== tokenPayload.version) {
         return json(copy.expiredToken, 401);
@@ -444,6 +457,8 @@ export async function POST(request: NextRequest) {
         const { insertedPlays, skippedCharts: skippedRecentCharts } =
             await updateRecentPlay(user.id, history, syncId);
         let changedRecords = 0;
+        let changedChartIds: number[] = [];
+        let grades: Awaited<ReturnType<typeof updateGrade>> | null = null;
         let syncNotice = formatSkippedCharts(skippedRecentCharts);
         let catalogUpdates = { detected: 0, pending: 0, applied: 0 };
         if (music) {
@@ -458,21 +473,25 @@ export async function POST(request: NextRequest) {
             ]);
 
             if (knownMusic.length > 0) {
-                changedRecords = await updatePlayData(
+                ({ changedRecords, changedChartIds } = await updatePlayData(
                     user.id,
                     knownMusic,
                     syncId
-                );
-                await updateGrade(user.id);
+                ));
+                grades = await updateGrade(user.id);
                 await recordProfileRatings(user.id, syncId);
+                // 랭킹용 저장 레이팅 — 이 사람만 다시 센다(2026-10-15 L2-A2)
+                await refreshUserPlayerRatings(user.id);
                 await updateDummy();
             }
         } else {
-            changedRecords = await updateRecentBestRecords(user.id, syncId);
+            ({ changedRecords, changedChartIds } =
+                await updateRecentBestRecords(user.id, syncId));
             // Repair derived stats even when a previous attempt committed the
             // projection but failed before computing Grd or rating history.
-            await updateGrade(user.id);
+            grades = await updateGrade(user.id);
             await recordProfileRatings(user.id, syncId);
+            await refreshUserPlayerRatings(user.id);
         }
 
         // 업적 판정(2026-09-24 N1) — 실패해도 동기화 결과는 그대로. 새 단계는 동기화 결과 화면이 달성 시각으로 모아 보인다
@@ -494,17 +513,29 @@ export async function POST(request: NextRequest) {
             },
         });
 
+        // 공용 캐시는 이번 동기화로 실제로 바뀐 만큼만 비운다(2026-10-15 S3) — 바뀐 게 없으면 본인 프로필만
+        const gradeChanged =
+            grades !== null &&
+            (grades.grade_basic !== user.grade_basic ||
+                grades.grade_recital !== user.grade_recital);
         revalidateTag(getUserProfileTag(user.id), "max");
-
-        revalidateTag(CACHE_TAGS.chartRankings, "max");
-        revalidateTag(CACHE_TAGS.userRankings, "max");
-        revalidateTag(CACHE_TAGS.userProfiles, "max");
-        if (music) {
+        if (changedChartIds.length > CHART_TAG_REVALIDATE_LIMIT) {
+            revalidateTag(CACHE_TAGS.chartRankings, "max");
+        } else {
+            for (const chartId of changedChartIds)
+                revalidateTag(getChartRankingTag(chartId), "max");
+        }
+        // 전체 랭킹 = Grd · 기록에서 나온 레이팅
+        if (gradeChanged || changedChartIds.length > 0)
+            revalidateTag(CACHE_TAGS.userRankings, "max");
+        // 모든 프로필 = 각자의 Grd 순위 · 업적 달성 인원
+        if (gradeChanged || newAchievements.length > 0)
+            revalidateTag(CACHE_TAGS.userProfiles, "max");
+        // 빙고 · 악곡 정보는 곡 목록이 바뀐 경우만
+        if (catalogUpdates.applied > 0) {
             revalidateTag(CACHE_TAGS.bingos, "max");
-            if (catalogUpdates.applied > 0) {
-                revalidateTag(CACHE_TAGS.musicCatalog, "max");
-                revalidateTag(CACHE_TAGS.musicDetails, "max");
-            }
+            revalidateTag(CACHE_TAGS.musicCatalog, "max");
+            revalidateTag(CACHE_TAGS.musicDetails, "max");
         }
 
         // 관리자 동기화만 자켓 없는 곡 목록을 받아 북마클릿이 공식 사이트에서 채운다 — 목록 실패가 동기화 결과를 뒤집지 않게

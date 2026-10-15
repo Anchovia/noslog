@@ -202,8 +202,15 @@ old design-stage checklist. Changes to material behavior require a user decision
   community vote never directly changes an official placement.
 - Global rankings support Official Grd and NosLog Rating for both modes, with the
   existing region populations. Use competition ranks (`1, 2, 2, 4`) for equal
-  published values, including ties across pages. Preserve 25-row pagination and
+  published values, including ties across pages. Paginate 20 rows per page — the
+  chart leaderboard uses the same 20 (2026-10-15, same unit as other lists) — and
   reset the page when mode/metric/region changes as required by the existing query.
+- NosLog Rating rankings read a per-player stored value (`PlayerRating`,
+  2026-10-15) computed with the same top-70 rule. A sync recomputes only that
+  player, saving a tier list recomputes every player after the response when the
+  Pianist basis changed, and a ranking read rebuilds once when the table is empty
+  or its basis version differs. A rebuild replaces a whole mode in one
+  transaction, so the old values stay visible until it finishes.
 - See [discovery service](../../features/music/server/discovery-service.ts),
   [music-detail loading](../../features/music/server/load-music-detail.ts),
   [tier domain](../../lib/tiers.ts) and [rankings](../../features/rankings).

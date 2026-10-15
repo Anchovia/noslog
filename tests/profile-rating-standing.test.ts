@@ -4,16 +4,45 @@ const mocks = vi.hoisted(() => ({
     users: vi.fn(),
     records: vi.fn(),
     basis: vi.fn(),
+    // 레이팅 저장 표(2026-10-15 L2-A2) — 랭킹이 비어 있으면 기록에서 다시 세어 채운다
+    ratings: [] as { user_id: number; mode: string }[],
 }));
 vi.mock("next/cache", () => ({
     unstable_cache: (callback: unknown) => callback,
 }));
-vi.mock("@/lib/db", () => ({
-    default: {
+vi.mock("@/lib/db", () => {
+    const db = {
         user: { findMany: mocks.users },
         playData: { findMany: mocks.records },
-    },
-}));
+        playerRating: {
+            findMany: async ({ where }: { where: { mode: string } }) => {
+                const users: { id: number }[] = (await mocks.users()) ?? [];
+                return mocks.ratings
+                    .filter((row) => row.mode === where.mode)
+                    .flatMap((row) => {
+                        const user = users.find((u) => u.id === row.user_id);
+                        return user ? [{ ...row, user }] : [];
+                    });
+            },
+            deleteMany: async ({ where }: { where: { mode: string } }) => {
+                mocks.ratings = mocks.ratings.filter(
+                    (row) => row.mode !== where.mode
+                );
+            },
+            createMany: async ({
+                data,
+            }: {
+                data: { user_id: number; mode: string }[];
+            }) => {
+                mocks.ratings.push(...data);
+            },
+        },
+        $executeRaw: async () => 0,
+        $transaction: async (callback: (tx: unknown) => unknown) =>
+            callback(db),
+    };
+    return { default: db };
+});
 vi.mock("@/features/tiers/server/tier-browser-data", () => ({
     getModePianistRatingBasis: mocks.basis,
 }));
@@ -37,6 +66,7 @@ const player = (id: number, country: string, hidden = false) => ({
 describe("profile rating standing (2026-09-26 T1)", () => {
     beforeEach(() => {
         vi.resetAllMocks();
+        mocks.ratings = [];
         mocks.basis.mockResolvedValue({
             entries: [1, 2, 3].map((chartId) => ({ chartId, value: 14 })),
             theoreticalMax: 3 * 14 ** 2,
