@@ -53,7 +53,7 @@ Props·상태·ref 계약은 [계약 문서](./contracts.md), 비교/적용 범�
 | 조합·레이어 | `AppliedTokens` 개별/전체 해제 · `FilterGroup` 제목/보조 정보 · `FilterSurface` 팝오버/전체 화면 · `FullScreenDialog`·`ResponsiveDialog` 닫기/포커스 복귀 · `Disclosure` 펼침 · `TermHelp` 포커스/닫기 |
 | 편집·미디어 | `MarkdownEditor` 서식/미리보기/읽기 전용 · `FileRow` 임시 파일/삭제/긴 이름 · `PhotoViewer` 넘김/순환/한 장/빈 목록                                                                                    |
 | 데이터 표시 | `LineChart` 한 점/빈 상태/두 계열/정확한 표/키보드 · `BarList`·`StackedBar`·`StatStrip` 값 없음/로딩/수치 텍스트                                                                                       |
-| 이름·표식   | `Avatar` 사진/대체 표시/장식 · `CountryMarker` 국가/크기 · `ExamBadge`·`ExamBadgeGroup` 급수/표시 폭 · `JudgementMarker` 판정 · 기존 관리자용 `Badge` · `DiscordIcon` 장식 심볼                        |
+| 이름·표식   | `Avatar` 사진/대체 표시/장식 · `CountryMarker` 국가/크기 · `ExamBadge`·`ExamBadgeGroup` 급수/표시 폭 · `JudgementMarker` 판정 · 관리자용 `Badge`(= 공용 태그) · `DiscordIcon` 장식 심볼                |
 | 안내·로딩   | `LoginPrompt` · `ResultState` 상태/오류 · `StatusMessage` 지원 형태 · `SkeletonText`·`LoadingStatus` · `AppToaster` 로컬 알림                                                                          |
 
 공용 부품을 추가하거나 바꾸면 스토리도 함께 유지한다. 사용하지 않는 부품을 미리
@@ -129,6 +129,6 @@ Storybook은 실제 페이지의 레이아웃·데이터·권한·저장 흐름 
 실제 DB·Blob·로그인·OAuth·redirect를 실행하지 않는다.
 
 스크린샷 비교 실행/기준 갱신은 [시각 검사](./visual-testing.md)를 따른다. 스타일 회귀와 동작/axe 검사는 별도다.
-기존 Badge 변형과 차트 툴팁의 대비 위반 2개는 현재 디자인 유지 결정으로 남아 있으며 자동 검사를 끄지 않는다.
+차트 툴팁의 대비 위반은 현재 디자인 유지 결정으로 남아 있으며 자동 검사를 끄지 않는다. 관리자용 `Badge` 는 공용 태그(`nl-tag`)로 옮겨 대비 위반이 없다(2026-10-15 B5 2단계).
 
 전체 재배치의 한글 A안은 `Features/Announcements/TierRebalanceImageBuilder`에서 확인한다. [서열 변경 공지 이미지](tier-change-images.md)의 입력 계약과 전체 CSV 안내를 따른다.

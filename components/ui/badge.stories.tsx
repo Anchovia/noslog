@@ -26,10 +26,7 @@ export const Variants: Story = {
                     "outline",
                     "success",
                     "danger",
-                    "normal",
-                    "hard",
-                    "expert",
-                    "real",
+                    "score",
                     "basic",
                     "recital",
                 ] as const
