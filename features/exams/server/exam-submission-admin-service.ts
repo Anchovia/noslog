@@ -178,10 +178,11 @@ export async function deleteExamSubmission(
         });
     }
 
+    let deletedUserId: number;
     try {
         const submission = await db.examSubmission.findUnique({
             where: { id: result.data.submissionId },
-            select: { id: true, proofImageUrl: true },
+            select: { id: true, proofImageUrl: true, userId: true },
         });
         if (!submission) {
             return {
@@ -199,6 +200,7 @@ export async function deleteExamSubmission(
             });
         });
         await deleteBlobIfOwned(submission.proofImageUrl);
+        deletedUserId = submission.userId;
     } catch (error) {
         logExamSubmissionError(error, "admin.exam-submission.delete.failed");
         return {
@@ -208,5 +210,8 @@ export async function deleteExamSubmission(
     }
 
     refreshExamSubmissions();
+    // 승인된 인증이면 합격 기록도 함께 지워지므로, 심사 때와 같이 프로필 · 랭킹을 새로 그린다(2026-10-16)
+    updateTag(getUserProfileTag(deletedUserId));
+    updateTag(CACHE_TAGS.userRankings);
     return { success: true, message: "검정 인증을 삭제했습니다." };
 }
