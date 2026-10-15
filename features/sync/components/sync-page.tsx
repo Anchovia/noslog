@@ -2,7 +2,8 @@
 
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 
 import {
     useLocalizedHref,
@@ -33,14 +34,25 @@ export default function SyncPage({
 }) {
     const t = useTranslations();
     const href = useLocalizedHref();
+    const router = useRouter();
     const [setupOpen, setSetupOpen] = useState(true);
     const [reinstall, setReinstall] = useState(false);
     const watchUntil = useRef(0);
     const watchedAttempt = useRef<number | null>(null);
     const setupRef = useRef<HTMLDivElement>(null);
+    // 브라우저 시계가 늦어도 새것으로 보는 시간이 길어지지 않게 지금 시각으로 자른다(마운트 때 한 번)
+    const [initialDataUpdatedAt] = useState(() =>
+        initialData
+            ? Math.min(Date.parse(initialData.observedAt), Date.now())
+            : undefined
+    );
     const result = useQuery({
         ...syncStatusOptions(userId),
         initialData: initialData ?? undefined,
+        // 서버가 방금 본 상태를 마운트하자마자 다시 받지 않는다 — 관측 시각 기준 몇 초는 새것(2026-10-15 S5).
+        // 폴링 · 공식 사이트에서 돌아올 때(창 포커스)의 재요청은 그대로
+        initialDataUpdatedAt,
+        staleTime: 5_000,
         enabled: Boolean(bookmarklet),
         retry: (count, error) =>
             !(error instanceof ApiError && error.status === 401) && count < 2,
@@ -53,18 +65,50 @@ export default function SyncPage({
             );
             if (latest && latest.id !== watchedAttempt.current && !active)
                 watchUntil.current = 0;
-            return active || Date.now() < watchUntil.current
-                ? 5000
-                : data?.retryAfter
-                  ? 1000
-                  : false;
+            // 처리 중이거나 공식 사이트를 연 뒤 2분만 서버에 묻는다 — 쿨다운 초읽기는 아래 화면 타이머로(2026-10-15 S10)
+            return active || Date.now() < watchUntil.current ? 5000 : false;
         },
     });
     const data = result.data;
+    // 쿨다운(다시 누를 수 있을 때까지 남은 초)은 받은 시각부터 화면에서 센다 — 예전에는 1초마다 서버에 다시 물었다
+    const cooldownEnd = data?.retryAfter
+        ? result.dataUpdatedAt + data.retryAfter * 1000
+        : 0;
+    const [now, setNow] = useState(() => Date.now());
+    useEffect(() => {
+        if (!cooldownEnd) return;
+        const timer = window.setInterval(() => {
+            const current = Date.now();
+            setNow(current);
+            if (current >= cooldownEnd) window.clearInterval(timer);
+        }, 1000);
+        return () => window.clearInterval(timer);
+    }, [cooldownEnd]);
+    const retryAfter = cooldownEnd
+        ? Math.min(
+              data?.retryAfter ?? 0,
+              Math.max(0, Math.ceil((cooldownEnd - now) / 1000))
+          )
+        : 0;
     const attempt = data?.attempts[0];
     const firstUse = !attempt;
     const completed =
         attempt?.status === "completed" || attempt?.status === "partial";
+    // 이 화면에서 새로 끝난 동기화를 본 순간 한 번 — 앞서 둘러본 화면(프로필 · 랭킹 등)의 클라이언트 캐시를 비운다.
+    // staleTimes.dynamic(1시간)은 그대로 두고, 기록이 바뀐 때만 새로 받게 한다(2026-10-15 D8)
+    const mountedAttempt = initialData?.attempts[0];
+    const refreshedAttempt = useRef(
+        mountedAttempt?.status === "completed" ||
+            mountedAttempt?.status === "partial"
+            ? mountedAttempt.id
+            : null
+    );
+    useEffect(() => {
+        if (!completed || !attempt || refreshedAttempt.current === attempt.id)
+            return;
+        refreshedAttempt.current = attempt.id;
+        router.refresh();
+    }, [attempt, completed, router]);
     const official = () => {
         watchedAttempt.current = attempt?.id ?? null;
         watchUntil.current = Date.now() + 120000;
@@ -211,7 +255,7 @@ export default function SyncPage({
                     {(!completed && !firstUse) || reinstall ? (
                         <SyncStatusHeader
                             attempt={attempt}
-                            retryAfter={data?.retryAfter ?? 0}
+                            retryAfter={retryAfter}
                             reinstall={reinstall}
                             onReinstall={revealSetup}
                             onOfficial={official}
