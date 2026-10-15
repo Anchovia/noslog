@@ -231,16 +231,18 @@ export async function getPublicPoll(
         },
     });
     if (!poll) return null;
-    const mine = userId
-        ? await db.pollVote.findMany({
-              where: { pollId: poll.id, userId },
-              select: { optionId: true },
-          })
-        : [];
-    const voters = await db.pollVote.groupBy({
-        by: ["userId"],
-        where: { pollId: poll.id },
-    });
+    // 내 표 · 투표자 수를 함께 — 투표자 수는 DB 에서 센다(2026-10-15 S13, 예전에는 투표자 행 전부를 받아 셌다)
+    const [mine, [voters]] = await Promise.all([
+        userId
+            ? db.pollVote.findMany({
+                  where: { pollId: poll.id, userId },
+                  select: { optionId: true },
+              })
+            : [],
+        db.$queryRaw<{ count: number }[]>`
+            SELECT COUNT(DISTINCT "user_id")::int AS count
+            FROM "PollVote" WHERE "poll_id" = ${poll.id}`,
+    ]);
     const closed = poll.closesAt ? poll.closesAt <= now : false;
     const voted = mine.length > 0;
     return {
@@ -263,7 +265,7 @@ export async function getPublicPoll(
             (poll.results === "AFTER_VOTE" && voted) ||
             (poll.results === "AFTER_CLOSE" && closed),
         showVoters: poll.showVoters,
-        voterCount: voters.length,
+        voterCount: voters?.count ?? 0,
         myOptionIds: mine.map((row) => row.optionId),
         options: poll.options.map((option) => ({
             id: option.id,

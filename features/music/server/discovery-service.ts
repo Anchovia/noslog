@@ -1,6 +1,7 @@
 import "server-only";
 
 import { Prisma } from "@prisma/client";
+import { unstable_cache } from "next/cache";
 
 import { getNameLabels } from "@/features/contributions/server/contribution-point-service";
 import type {
@@ -15,6 +16,8 @@ import {
     getDiscoveryOrder,
     getDiscoverySort,
 } from "@/features/music/schemas/discovery-schema";
+import { PUBLIC_DATA_REVALIDATE_SECONDS } from "@/lib/cache-policy";
+import { CACHE_TAGS } from "@/lib/cache-tags";
 import {
     contributionBaseRevision,
     isExtractedChart,
@@ -38,9 +41,10 @@ export function publicDiscoveryQuery(
 
 function chartConditions(query: DiscoveryQuery, userId: number | null) {
     const conditions: Prisma.Sql[] = [];
+    // 공개 채보 — 공개 버전 번호로 판단한다(2026-10-15 S13). 공개본 JSON 은 늘 번호와 함께 써져 큰 값을 비교하지 않는다
     if (query.scope === "chart")
         conditions.push(
-            Prisma.sql`pattern."published_content" IS NOT NULL AND pattern."published_content" != 'null'::jsonb`
+            Prisma.sql`pattern."published_revision" IS NOT NULL AND pattern."published_content" IS NOT NULL`
         );
     if (query.difficulties.length)
         conditions.push(
@@ -115,9 +119,51 @@ function discoveryCriteria(input: DiscoveryQuery, userId: number | null) {
     };
 }
 
-export async function getDiscoveryCounts(
+/*
+ * 비로그인 탐색은 같은 질의면 누구에게나 같다 — 곡 · 공개 채보가 바뀔 때 비워지는 태그로 캐시(2026-10-15 S7).
+ * 로그인하면 내 기록 조건이 붙어 캐시하지 않는다. 채보 줄 작성자 라벨(기여 Lv)은 최대 한 시간 늦게 바뀔 수 있다
+ */
+const PUBLIC_DISCOVERY_CACHE = {
+    tags: [CACHE_TAGS.musicCatalog, CACHE_TAGS.musicDetails],
+    revalidate: PUBLIC_DATA_REVALIDATE_SECONDS,
+};
+const getCachedPublicDiscoveryCounts = unstable_cache(
+    (input: DiscoveryQuery) => queryDiscoveryCounts(input, null),
+    ["public-discovery-counts-v1"],
+    PUBLIC_DISCOVERY_CACHE
+);
+const getCachedPublicDiscoveryPage = unstable_cache(
+    (input: DiscoveryQuery, offset: number) =>
+        queryDiscoveryPage(input, offset, null),
+    ["public-discovery-page-v1"],
+    PUBLIC_DISCOVERY_CACHE
+);
+
+export function getDiscoveryCounts(
     input: DiscoveryQuery,
     userId: number | null = null
+): Promise<DiscoveryCounts> {
+    return userId === null
+        ? getCachedPublicDiscoveryCounts(publicDiscoveryQuery(input, null))
+        : queryDiscoveryCounts(input, userId);
+}
+
+export function getDiscoveryPage(
+    input: DiscoveryQuery,
+    offset = 0,
+    userId: number | null = null
+): Promise<DiscoveryPage> {
+    return userId === null
+        ? getCachedPublicDiscoveryPage(
+              publicDiscoveryQuery(input, null),
+              Math.max(0, Math.min(100000, Math.floor(offset)))
+          )
+        : queryDiscoveryPage(input, offset, userId);
+}
+
+async function queryDiscoveryCounts(
+    input: DiscoveryQuery,
+    userId: number | null
 ): Promise<DiscoveryCounts> {
     const { eligible, musicWhere } = discoveryCriteria(input, userId);
     const rows = await db.$queryRaw<DiscoveryCounts[]>(Prisma.sql`
@@ -130,10 +176,10 @@ export async function getDiscoveryCounts(
     return discoveryCountsSchema.parse(rows[0] ?? { total: 0, chartTotal: 0 });
 }
 
-export async function getDiscoveryPage(
+async function queryDiscoveryPage(
     input: DiscoveryQuery,
-    offset = 0,
-    userId: number | null = null
+    offset: number,
+    userId: number | null
 ): Promise<DiscoveryPage> {
     const { query, prefix, contains, eligible, musicWhere } = discoveryCriteria(
         input,

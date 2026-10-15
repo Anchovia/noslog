@@ -22,8 +22,10 @@ export default async function EventDetail({
     /** 작성자가 보는 중 — 공개판과 다른 고친 판이 있으면 안내, 고치기 링크 */
     own: { editing: boolean } | null;
 }) {
-    const { locale, t } = await getServerI18n();
-    const user = await getUser();
+    const [{ locale, t }, user] = await Promise.all([
+        getServerI18n(),
+        getUser(),
+    ]);
     const poll = await getPublicPoll(
         { eventId: event.id },
         locale,

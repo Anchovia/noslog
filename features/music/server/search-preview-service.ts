@@ -39,7 +39,7 @@ export async function getSearchPreview(
                 chartScope
                     ? Prisma.sql`JOIN "MusicChart" AS chart ON chart."music_idx" = music."index"
                 JOIN "ChartPattern" AS pattern ON pattern."chart_id" = chart."id"
-                AND pattern."published_content" IS NOT NULL AND pattern."published_content" != 'null'::jsonb`
+                AND pattern."published_revision" IS NOT NULL AND pattern."published_content" IS NOT NULL`
                     : Prisma.empty
             }
             WHERE music."title" ILIKE ${contains} OR music."artist" ILIKE ${contains}

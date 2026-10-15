@@ -47,8 +47,19 @@ export async function getPublicProfileProgress(
         }));
     } else {
         const field = query.mode === "basic" ? "grade_basic" : "grade_recital";
+        // 기간 앞 하루를 넉넉히 둔 날짜부터만 읽는다(2026-10-15 S13) — 정확한 경계는 아래에서 지금처럼 가린다.
+        // besttime 은 「YYYY-MM-DD」 로 시작해 문자열 비교가 날짜 순서와 같다(@@index([user_id, besttime]))
+        const lowerDay =
+            query.range === "all"
+                ? null
+                : new Date(since.getTime() + 9 * 60 * 60 * 1000 - 86400000)
+                      .toISOString()
+                      .slice(0, 10);
         const history = await db.userBestGrade.findMany({
-            where: { user_id: userId },
+            where: {
+                user_id: userId,
+                ...(lowerDay ? { besttime: { gte: lowerDay } } : {}),
+            },
             select: { besttime: true, grade_basic: true, grade_recital: true },
             orderBy: [{ besttime: "asc" }, { id: "asc" }],
         });
