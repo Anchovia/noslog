@@ -16,6 +16,11 @@ const farthest = Math.max(
 );
 
 describe("NosLog brand mark", () => {
+    it("고양이는 닫힌 한 덩어리다(2026-10-15 확정 04A flat-base — 아래 홈을 메운 모양)", () => {
+        expect(BRAND_MARK_CAT_PATH.match(/M/g)).toHaveLength(1);
+        expect(BRAND_MARK_CAT_PATH.trim().endsWith("Z")).toBe(true);
+    });
+
     it("고양이가 원 안에 있다", () => {
         expect(points.length).toBeGreaterThan(100);
         expect(farthest).toBeLessThan(BRAND_MARK_CIRCLE.r);
