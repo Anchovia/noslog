@@ -49,10 +49,29 @@ export function withStatsGrades<T extends { stats: GradeStats }>(row: T) {
 }
 
 /** 공식 사이트 표기와 같은 「YYYY-MM-DD HH:MM」(KST) — timestamptz 로 옮긴 시각을 예전 글자 그대로 보일 때 */
+export function formatKstMinute(value: Date): string;
+export function formatKstMinute(value: Date | null | undefined): string | null;
 export function formatKstMinute(value: Date | null | undefined) {
     if (!value) return null;
     return new Date(value.getTime() + 9 * 60 * 60 * 1000)
         .toISOString()
         .slice(0, 16)
         .replace("T", " ");
+}
+
+// 예전 문자열 besttime 의 「시각 없음」 자리표시 — bestAt 이 NULL 인 기록을 응답에서 예전 값 그대로 보일 때(2026-10-16 P5-1)
+const LEGACY_EMPTY_BESTTIME = "1970-01-01 09:00";
+
+/** 응답의 besttime 글자 — 화면 · API 가 받던 값과 같게(bestAt 이 없으면 옛 자리표시) */
+export function legacyBesttime(bestAt: Date | null | undefined) {
+    return formatKstMinute(bestAt) ?? LEGACY_EMPTY_BESTTIME;
+}
+
+/** 최근 플레이 시각 글자 — 공식 플레이 이력 표기 그대로 「YYYY/MM/DD HH:MM」(KST, 옛 source_play_time 과 같은 값) */
+export function formatKstPlayTime(value: Date): string;
+export function formatKstPlayTime(
+    value: Date | null | undefined
+): string | null;
+export function formatKstPlayTime(value: Date | null | undefined) {
+    return formatKstMinute(value)?.replaceAll("-", "/") ?? null;
 }

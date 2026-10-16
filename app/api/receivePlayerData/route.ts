@@ -89,11 +89,6 @@ const sourceStatusSchema = z.object({
     status: z.number().int().optional(),
     fail_code: z.number().int().optional(),
 });
-const broochSchema = z.object({
-    "@index": z.string().max(128),
-    name: z.string().max(256),
-    description: z.string().max(5_000),
-});
 const recentHistorySchema = z.object({
     artist: z.string().max(256),
     best_score: z.number().int().min(0).max(1_000_000),
@@ -174,15 +169,9 @@ const syncRequestSchema = z.object({
                 z.object({
                     name: z.string().min(1).max(64),
                     play_count: z.number().int().min(0).max(10_000_000),
-                    travel_info: z.object({
-                        money: z.number().int().min(0).max(1_000_000_000),
-                    }),
+                    // 북마클릿이 함께 보내는 NOS(travel_info) · 브로치는 읽는 곳이 없어 받지 않는다(2026-10-16 K5)
                     last: z.object({
                         playtime: z.string().max(64),
-                        brooch: broochSchema,
-                    }),
-                    brooch_list: z.object({
-                        brooch: z.array(broochSchema).max(1_000),
                     }),
                 })
             ),

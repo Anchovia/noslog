@@ -48,68 +48,31 @@ export async function updateGrade(user_id: number) {
     // 트랜잭션으로 모든 DB 작업을 원자적으로 처리
     await db.$transaction(async (tx) => {
         const today = getKoreanDate();
+        const day = new Date(`${today}T00:00:00Z`);
 
-        // 그레이드 업데이트
-        await tx.user.update({
-            where: { id: user_id },
-            data: {
-                grade_basic: basicGrade,
-                grade_recital: recitalGrade,
-            },
-        });
+        // 그레이드는 player_stats 에만 쓴다(2026-10-16 DB 재설계 P5-1 — User 옛 열 쓰기 중단)
         await writePlayerStats(tx, user_id, {
             gradeBasic: basicGrade,
             gradeRecital: recitalGrade,
         });
         console.info("(5)유저 그레이드 업데이트 완료");
 
-        // 유저 베스트 그레이드 생성 및 같은 날짜 데이터인 경우 높은값으로 처리
-        // 오늘 날짜 행만 읽는다(2026-10-15 S9) — 예전에는 날마다 쌓이는 이력 전체를 읽고 걸렀다.
-        // besttime 은 「YYYY-MM-DD」 로 시작하므로 앞부분 일치로 같은 행을 고른다(@@index([user_id, besttime]))
-        const gradeHistory = await tx.userBestGrade.findMany({
-            where: { user_id, besttime: { startsWith: today } },
-            select: { id: true, besttime: true },
-            orderBy: [{ besttime: "asc" }, { id: "asc" }],
+        // 사람당 하루(서울 날짜) 한 줄 — 같은 날 다시 동기화하면 그 줄을 지금 값으로(유일 키 user_id · day)
+        await tx.userBestGrade.upsert({
+            where: { user_id_day: { user_id, day } },
+            create: {
+                user_id,
+                day,
+                grade_basic: basicGrade,
+                grade_recital: recitalGrade,
+            },
+            update: {
+                grade_basic: basicGrade,
+                grade_recital: recitalGrade,
+            },
         });
-        const todayHistory = gradeHistory.filter(
-            (history) => history.besttime.split(" ")[0] === today
-        );
-        const latestTodayHistory = todayHistory.at(-1);
 
-        if (latestTodayHistory) {
-            await tx.userBestGrade.update({
-                where: { id: latestTodayHistory.id },
-                data: {
-                    besttime: today,
-                    day: new Date(`${today}T00:00:00Z`),
-                    grade_basic: basicGrade,
-                    grade_recital: recitalGrade,
-                },
-            });
-
-            const duplicateIds = todayHistory
-                .filter((history) => history.id !== latestTodayHistory.id)
-                .map((history) => history.id);
-            if (duplicateIds.length > 0) {
-                await tx.userBestGrade.deleteMany({
-                    where: { id: { in: duplicateIds } },
-                });
-            }
-        } else {
-            await tx.userBestGrade.create({
-                data: {
-                    user_id,
-                    besttime: today,
-                    // 서울 날짜(@db.Date) — 늘리기 단계라 besttime 과 함께 쓴다(2026-10-16 P3)
-                    day: new Date(`${today}T00:00:00Z`),
-                    grade_basic: basicGrade,
-                    grade_recital: recitalGrade,
-                },
-            });
-        }
-
-        // P6 supports 90-day, yearly and full history. Only duplicate entries
-        // from the same day are removed above; older observations remain intact.
+        // P6 supports 90-day, yearly and full history. Older observations remain intact.
     });
 
     const duration = Date.now() - startTime;
@@ -121,13 +84,13 @@ export async function updateGrade(user_id: number) {
 
 /**
  * 바뀐 기록이 없는 동기화 — Grd 를 다시 세지 않고 오늘 「하루 한 줄」 만 지금 값으로 남긴다(2026-10-16 P4).
- * 오늘 줄이 이미 있으면 그대로 둔다(유일 키 UserBestGrade_user_id_besttime_key)
+ * 오늘 줄이 이미 있으면 그대로 둔다(유일 키 UserBestGrade_user_id_day_key). 지금 값은 player_stats 에서(P5-1)
  */
 export async function keepTodayGrade(user_id: number) {
     const today = getKoreanDate();
     await db.$executeRaw`
-        INSERT INTO "UserBestGrade" ("user_id", "besttime", "day", "grade_basic", "grade_recital", "updated_at")
-        SELECT "id", ${today}, ${today}::date, COALESCE("grade_basic", 0), "grade_recital", CURRENT_TIMESTAMP
-        FROM "User" WHERE "id" = ${user_id}
-        ON CONFLICT ("user_id", "besttime") DO NOTHING`;
+        INSERT INTO "UserBestGrade" ("user_id", "day", "grade_basic", "grade_recital", "updated_at")
+        SELECT "user_id", ${today}::date, COALESCE("grade_basic", 0), "grade_recital", CURRENT_TIMESTAMP
+        FROM "player_stats" WHERE "user_id" = ${user_id}
+        ON CONFLICT ("user_id", "day") DO NOTHING`;
 }

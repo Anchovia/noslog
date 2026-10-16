@@ -76,13 +76,17 @@ export async function getRatingBasis(
     };
 }
 
-async function computeRatings(
-    tx: Prisma.TransactionClient,
+/**
+ * 레이팅 계산 한 벌(2026-10-16 DB 재설계 K3) — 랭킹 저장 값 · 프로필 기여 목록 · 레이팅 이력이 같은 기록을 같은 규칙으로 센다.
+ * 레이팅 0(기준표 채보에 95만 이상 기록이 없음)은 「레이팅 없음」 — 랭킹에 넣지 않고 프로필 · 이력도 null(예전 집계와 같음)
+ */
+async function calculateRatings(
+    client: Prisma.TransactionClient,
     mode: TierMode,
     basis: RatingBasis,
     userId?: number
-): Promise<PlayerRatingValue[]> {
-    const records = await tx.playData.findMany({
+) {
+    const records = await client.playData.findMany({
         where: {
             ...(userId === undefined ? {} : { user_id: userId }),
             chart_id: { in: [...basis.constants.keys()] },
@@ -93,7 +97,6 @@ async function computeRatings(
     });
     const byUser = new Map<number, BasicRatingRecord[]>();
     for (const record of records) {
-        if (record.chart_id === null) continue;
         const tierConstant = basis.constants.get(record.chart_id);
         if (tierConstant === undefined) continue;
         const playerRecords = byUser.get(record.user_id) ?? [];
@@ -110,18 +113,32 @@ async function computeRatings(
             basis.theoreticalMax,
             BASIC_RATING_ACTIVE_CURVE
         );
-        // 레이팅 0 은 랭킹에 넣지 않는다(예전 집계와 같음)
-        if (result.rating <= 0) return [];
-        return [
-            {
-                user_id,
-                mode,
-                rating: result.rating,
-                filled_slots: result.filledSlots,
-                basis_version: basis.version,
-            },
-        ];
+        return result.rating > 0 ? [{ user_id, result }] : [];
     });
+}
+
+/** 한 사람 · 한 모드의 레이팅과 곡별 기여 — 기준이 없거나 레이팅이 0 이면 null */
+export async function calculateUserRating(userId: number, mode: TierMode) {
+    const basis = await getRatingBasis(mode);
+    if (!basis) return null;
+    const [row] = await calculateRatings(db, mode, basis, userId);
+    return row?.result ?? null;
+}
+
+async function computeRatings(
+    tx: Prisma.TransactionClient,
+    mode: TierMode,
+    basis: RatingBasis,
+    userId?: number
+): Promise<PlayerRatingValue[]> {
+    const rows = await calculateRatings(tx, mode, basis, userId);
+    return rows.map(({ user_id, result }) => ({
+        user_id,
+        mode,
+        rating: result.rating,
+        filled_slots: result.filledSlots,
+        basis_version: basis.version,
+    }));
 }
 
 // 같은 모드를 동시에 다시 쓰지 않게 — 트랜잭션이 끝나면 풀린다

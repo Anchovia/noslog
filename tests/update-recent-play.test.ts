@@ -22,6 +22,8 @@ vi.mock("@/lib/db", () => ({
 
 import { updateRecentPlay } from "@/lib/services/user/update-recent-play";
 
+// 2026/07/14 14:19 KST — 같은 플레이는 played_at 으로 가른다(2026-10-16 P5-1)
+const playedAt = new Date("2026-07-14T05:19:00Z");
 const history = [
     {
         artist: "削除",
@@ -71,7 +73,7 @@ describe("최근 플레이 저장", () => {
                 expect.objectContaining({
                     user_id: 1,
                     chart_id: 7,
-                    source_play_time: "2026/07/14 14:19",
+                    playedAt,
                     score: 973886,
                     max_combo: 637,
                     rank: "S",
@@ -94,7 +96,7 @@ describe("최근 플레이 저장", () => {
         mocks.historyFindMany.mockResolvedValue([
             {
                 chart_id: 7,
-                source_play_time: "2026/07/14 14:19",
+                playedAt,
                 score: 973886,
                 max_combo: 637,
                 rank: "S",
@@ -124,7 +126,7 @@ describe("최근 플레이 저장", () => {
         mocks.historyFindMany.mockResolvedValue([
             {
                 chart_id: 7,
-                source_play_time: "2026/07/14 14:19",
+                playedAt,
                 score: 973886,
                 max_combo: 637,
                 rank: "S",
@@ -165,10 +167,31 @@ describe("최근 플레이 저장", () => {
                 syncId: 12,
                 received: 3,
                 unmapped: 1,
+                untimed: 0,
                 duplicate: 1,
                 existing: 0,
                 inserted: 1,
             });
+        } finally {
+            info.mockRestore();
+        }
+    });
+
+    it("시각을 읽지 못한 플레이는 같은 플레이를 가를 수 없어 저장하지 않는다", async () => {
+        const info = vi.spyOn(console, "info").mockImplementation(() => {});
+        try {
+            expect(
+                await updateRecentPlay(
+                    1,
+                    [{ ...history[0], play_time: "unknown" }],
+                    13
+                )
+            ).toEqual({ insertedPlays: 0, skippedCharts: [] });
+            expect(mocks.historyCreateMany).not.toHaveBeenCalled();
+            expect(info).toHaveBeenCalledWith(
+                "Recent play ingestion",
+                expect.objectContaining({ unmapped: 0, untimed: 1 })
+            );
         } finally {
             info.mockRestore();
         }

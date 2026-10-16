@@ -9,19 +9,26 @@ import {
 } from "@/features/profile/server/profile-records-service";
 import db from "@/lib/db";
 
+// 곡 · 난이도는 채보 연결에서(2026-10-16 P5-1 — PlayData 의 곡 사본 열은 지운다)
+const chartMusicSelect = {
+    select: {
+        music_idx: true,
+        difficulty: true,
+        music: { select: { title: true, background: true } },
+    },
+} as const;
+
 const playSelect = {
     id: true,
     chart_id: true,
-    music_idx: true,
-    difficulty: true,
     level: true,
     score: true,
     rank: true,
     fc_type: true,
-    besttime: true,
+    bestAt: true,
     grade_basic: true,
     grade_recital: true,
-    music: { select: { title: true, background: true } },
+    chart: chartMusicSelect,
 } as const;
 
 export type ProfilePinnedRecord = ProfilePlay & {
@@ -76,16 +83,16 @@ export async function getProfilePinnedRecords(userId: number) {
         auto,
         items: rows.map(({ play, comment }): ProfilePinnedRecord => ({
             id: play.id,
-            musicIndex: play.music_idx,
-            title: play.music.title,
-            background: play.music.background,
-            difficulty: play.difficulty,
+            musicIndex: play.chart.music_idx,
+            title: play.chart.music.title,
+            background: play.chart.music.background,
+            difficulty: play.chart.difficulty,
             level: play.level,
             score: play.score,
             rank: play.rank,
             fullCombo: play.fc_type >= 2,
             contribution: null,
-            playedAt: recordPlayedAt(play.besttime),
+            playedAt: recordPlayedAt(play.bestAt),
             chartRank: ranks.get(play.id) ?? null,
             position: null,
             newBest: false,
@@ -108,19 +115,13 @@ export type ProfilePinnedRecords = Awaited<
 export async function getPinnableRecords(userId: number) {
     const [plays, pins] = await Promise.all([
         db.playData.findMany({
-            where: {
-                user_id: userId,
-                score: { gt: 0 },
-                chart_id: { not: null },
-            },
-            orderBy: [{ music: { title: "asc" } }, { level: "asc" }],
+            where: { user_id: userId, score: { gt: 0 } },
+            orderBy: [{ chart: { music: { title: "asc" } } }, { level: "asc" }],
             select: {
                 chart_id: true,
-                music_idx: true,
-                difficulty: true,
                 level: true,
                 score: true,
-                music: { select: { title: true, background: true } },
+                chart: chartMusicSelect,
             },
         }),
         db.userPinnedRecord.findMany({
@@ -131,11 +132,11 @@ export async function getPinnableRecords(userId: number) {
     ]);
     return {
         records: plays.map((play) => ({
-            chartId: play.chart_id!,
-            musicIndex: play.music_idx,
-            title: play.music.title,
-            background: play.music.background,
-            difficulty: play.difficulty,
+            chartId: play.chart_id,
+            musicIndex: play.chart.music_idx,
+            title: play.chart.music.title,
+            background: play.chart.music.background,
+            difficulty: play.chart.difficulty,
             level: play.level,
             score: play.score,
         })),

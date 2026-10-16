@@ -32,16 +32,19 @@ function play(id: number) {
     return {
         id,
         chart_id: id,
-        music_idx: String(id),
-        difficulty: "expert",
         level: 12,
         score: 940000,
         rank: "A",
         fc_type: 0,
         grade_basic: 10000,
         grade_recital: 20000,
-        besttime: id === 1 ? "2026-09-19 01:01" : "1970-01-01 09:00",
-        music: { title: `Music ${id}`, background: null },
+        // 옛 「1970-01-01 09:00」 자리표시는 best_at NULL
+        bestAt: id === 1 ? new Date("2026-09-18T16:01:00Z") : null,
+        chart: {
+            music_idx: String(id),
+            difficulty: "expert",
+            music: { title: `Music ${id}`, background: null },
+        },
     };
 }
 describe("profile incremental public plays", () => {
@@ -152,7 +155,7 @@ describe("profile incremental public plays", () => {
             best_score: number | null
         ) => ({
             id,
-            source_play_time: "2026/09/19 01:01",
+            playedAt: new Date("2026-09-18T16:01:00Z"),
             score,
             best_score,
             rank: "S",

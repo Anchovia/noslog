@@ -10,7 +10,12 @@ import {
     PEER_STORED_GRADE_RANGE,
 } from "@/lib/music/peer-score-comparison";
 import { selectScoreImprovements } from "@/lib/music/score-trend";
-import { STATS_GRADE_SELECT, withStatsGrades } from "@/lib/player-stats";
+import {
+    formatKstPlayTime,
+    legacyBesttime,
+    STATS_GRADE_SELECT,
+    withStatsGrades,
+} from "@/lib/player-stats";
 import { recentPlayTimestamp } from "@/lib/services/user/recent-record-merge";
 
 // 모든 탭에서 공통으로 사용하는 악곡과 채보 정보만 캐시함
@@ -160,10 +165,17 @@ export async function getUserChartRecord(userId: number, chartId: number) {
             note_rate_tenuto: true,
             note_rate_glissando: true,
             note_rate_trill: true,
-            besttime: true,
+            bestAt: true,
         },
     });
-    return record && { ...record, user: withStatsGrades(record.user) };
+    if (!record) return record;
+    const { bestAt, ...values } = record;
+    // 응답 모양은 그대로 besttime 글자(2026-10-16 P5-1 — 값은 best_at 에서)
+    return {
+        ...values,
+        besttime: legacyBesttime(bestAt),
+        user: withStatsGrades(record.user),
+    };
 }
 
 export async function getUserChartPeerScoreComparison(
@@ -234,12 +246,9 @@ export async function getRecentUserChartPlays(userId: number, chartId: number) {
             judge_good: true,
             judge_miss: true,
             judge_near: true,
-            source_play_time: true,
+            playedAt: true,
         },
-        orderBy: [
-            { playedAt: { sort: "desc", nulls: "last" } },
-            { id: "desc" },
-        ],
+        orderBy: [{ playedAt: "desc" }, { id: "desc" }],
         take: 4,
     });
 
@@ -258,7 +267,7 @@ export async function getRecentUserChartPlays(userId: number, chartId: number) {
         judge_good: play.judge_good,
         judge_miss: play.judge_miss,
         judge_near: play.judge_near,
-        play_time: play.source_play_time,
+        play_time: formatKstPlayTime(play.playedAt),
     }));
 }
 
@@ -279,12 +288,9 @@ export async function getUserChartPerformanceTrend(
             judge_good: true,
             judge_miss: true,
             judge_near: true,
-            source_play_time: true,
+            playedAt: true,
         },
-        orderBy: [
-            { playedAt: { sort: "desc", nulls: "last" } },
-            { id: "desc" },
-        ],
+        orderBy: [{ playedAt: "desc" }, { id: "desc" }],
         take: 30,
     });
 
@@ -299,7 +305,7 @@ export async function getUserChartPerformanceTrend(
         judge_good: play.judge_good,
         judge_miss: play.judge_miss,
         judge_near: play.judge_near,
-        play_time: play.source_play_time,
+        play_time: formatKstPlayTime(play.playedAt),
     }));
 }
 
@@ -315,7 +321,7 @@ export async function getUserChartScoreTrend(
                 id: true,
                 score: true,
                 rank: true,
-                besttime: true,
+                bestAt: true,
                 created_at: true,
             },
             orderBy: [{ created_at: "asc" }, { id: "asc" }],
@@ -326,7 +332,7 @@ export async function getUserChartScoreTrend(
                 id: true,
                 score: true,
                 rank: true,
-                source_play_time: true,
+                playedAt: true,
             },
         }),
     ]);
@@ -335,17 +341,15 @@ export async function getUserChartScoreTrend(
             id: snapshot.id,
             score: snapshot.score,
             rank: snapshot.rank,
-            play_time:
-                recentPlayTimestamp(snapshot.besttime) !== null
-                    ? snapshot.besttime
-                    : snapshot.created_at.toISOString(),
+            // 옛 besttime 과 같은 글자(시각이 없던 줄은 옛 자리표시 그대로)
+            play_time: legacyBesttime(snapshot.bestAt),
         })),
         ...history.map((play) => ({
             // Distinct IDs across the two tables and the current best record.
             id: -play.id - 1,
             score: play.score,
             rank: play.rank,
-            play_time: play.source_play_time,
+            play_time: formatKstPlayTime(play.playedAt),
         })),
         ...(currentRecord?.score
             ? [

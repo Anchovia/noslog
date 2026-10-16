@@ -24,16 +24,18 @@ import { profileRecordsQuerySchema } from "@/features/profile/schemas/public-pro
 function play(id: number) {
     return {
         id,
-        music_idx: String(id),
-        difficulty: "Real",
         level: 3,
         score: 970000,
         rank: "S",
         fc_type: 2,
-        besttime: "2026-09-19 01:01",
+        bestAt: new Date("2026-09-18T16:01:00Z"),
         grade_basic: 12000,
         grade_recital: 0,
-        music: { title: `Music ${id}`, background: null },
+        chart: {
+            music_idx: String(id),
+            difficulty: "Real",
+            music: { title: `Music ${id}`, background: null },
+        },
     };
 }
 
@@ -103,9 +105,11 @@ describe("profile records tab", () => {
         expect(result?.items[0].position).toBeNull();
     });
 
-    it("treats the never-played placeholder time as no date", () => {
-        expect(recordPlayedAt("1970-01-01 09:00")).toBeNull();
-        expect(recordPlayedAt(" 2025-03-13 20:34 ")).toBe("2025-03-13 20:34");
-        expect(recordPlayedAt("")).toBeNull();
+    it("shows the KST minute and treats an unknown record time as no date", () => {
+        // 옛 「1970-01-01 09:00」 자리표시는 best_at 이 NULL(2026-10-16 P5-1)
+        expect(recordPlayedAt(null)).toBeNull();
+        expect(recordPlayedAt(new Date("2025-03-13T11:34:00Z"))).toBe(
+            "2025-03-13 20:34"
+        );
     });
 });

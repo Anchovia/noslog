@@ -27,7 +27,9 @@ const base = {
 describe("owner private fields (2026-09-26 P1)", () => {
     beforeEach(() => {
         vi.clearAllMocks();
-        mocks.last.mockResolvedValue({ source_play_time: "2026/09/12 22:30" });
+        mocks.last.mockResolvedValue({
+            playedAt: new Date("2026-09-12T13:30:00Z"),
+        });
     });
     it("returns only the values hidden by privacy settings", async () => {
         mocks.user.mockResolvedValue(base);

@@ -163,9 +163,8 @@ export default function ExamDashboard({
         selected &&
         selected.grade !== null &&
         selected.rewards.length > 0 &&
-        selected.rewards.every(
-            (reward) => reward.type === "title" || reward.type === "grade"
-        )
+        // 보상 종류는 grade · music_unlock 둘뿐(2026-10-16 ExamRewardType)
+        selected.rewards.every((reward) => reward.type === "grade")
     );
 
     return (

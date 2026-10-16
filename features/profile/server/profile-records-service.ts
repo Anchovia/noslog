@@ -8,12 +8,13 @@ import {
     type ProfileRecordsQuery,
 } from "@/features/profile/schemas/public-profile-schema";
 import db from "@/lib/db";
+import { formatKstMinute } from "@/lib/player-stats";
 
 const BEST_LIMIT = 50;
 /** 가져온 기록의 「달성 시각」 — 한 번도 안 한 채보의 자리 값(1970 년)은 날짜가 없는 것으로 */
-export function recordPlayedAt(besttime: string | null | undefined) {
-    const value = besttime?.trim();
-    return value && !value.startsWith("1970-") ? value : null;
+// 기록 시각 글자 — 모르면 null(옛 「1970-01-01 09:00」 자리표시는 bestAt 이 NULL, 2026-10-16 P5-1)
+export function recordPlayedAt(bestAt: Date | null | undefined) {
+    return formatKstMinute(bestAt);
 }
 
 /**
@@ -74,7 +75,7 @@ export async function getPublicProfileRecords(
               ? // 기록 시각(best_at, 2026-10-16 P4) — 시각 모름은 예전 「1970」 처럼 맨 뒤
                 [{ bestAt: { sort: "desc", nulls: "last" } }, { id: "asc" }]
               : query.sort === "title"
-                ? [{ music: { title: "asc" } }, { id: "asc" }]
+                ? [{ chart: { music: { title: "asc" } } }, { id: "asc" }]
                 : [
                       { [field]: "desc" },
                       { score: "desc" },
@@ -90,16 +91,21 @@ export async function getPublicProfileRecords(
             take: PROFILE_RECORDS_PAGE_SIZE,
             select: {
                 id: true,
-                music_idx: true,
-                difficulty: true,
                 level: true,
                 score: true,
                 rank: true,
                 fc_type: true,
-                besttime: true,
+                bestAt: true,
                 grade_basic: true,
                 grade_recital: true,
-                music: { select: { title: true, background: true } },
+                // 곡 · 난이도는 채보 연결에서(2026-10-16 P5-1)
+                chart: {
+                    select: {
+                        music_idx: true,
+                        difficulty: true,
+                        music: { select: { title: true, background: true } },
+                    },
+                },
             },
         }),
     ]);
@@ -110,16 +116,16 @@ export async function getPublicProfileRecords(
         hasMore: query.offset + plays.length < total,
         items: plays.map((play) => ({
             id: play.id,
-            musicIndex: play.music_idx,
-            title: play.music.title,
-            background: play.music.background,
-            difficulty: play.difficulty,
+            musicIndex: play.chart.music_idx,
+            title: play.chart.music.title,
+            background: play.chart.music.background,
+            difficulty: play.chart.difficulty,
             level: play.level,
             score: play.score,
             rank: play.rank,
             fullCombo: play.fc_type >= 2,
             contribution: (play[field] ?? 0) > 0 ? play[field]! / 100 : null,
-            playedAt: recordPlayedAt(play.besttime),
+            playedAt: recordPlayedAt(play.bestAt),
             chartRank: ranks.get(play.id) ?? null,
             position: positions.get(play.id) ?? null,
         })),

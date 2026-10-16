@@ -12,10 +12,9 @@ vi.mock("@/lib/db", () => ({
         user: { findUnique: mocks.user },
         userBestGrade: { findMany: mocks.grades },
         userRatingHistory: { findMany: mocks.history },
+        // 지금 레이팅은 헤더 · 랭킹과 같은 저장 값(2026-10-16 K3)
+        playerRating: { findUnique: mocks.rating },
     },
-}));
-vi.mock("@/features/profile/server/profile-plays-service", () => ({
-    getProfileRating: mocks.rating,
 }));
 import { getPublicProfileProgress } from "@/features/profile/server/profile-progress-service";
 import { profileProgressQuerySchema } from "@/features/profile/schemas/public-profile-schema";

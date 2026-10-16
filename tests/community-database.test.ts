@@ -53,9 +53,7 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
                 await db.playData.create({
                     data: {
                         user_id: user.id,
-                        music_idx: index,
                         chart_id: chartId,
-                        difficulty: "Expert",
                         level: 12,
                         score: number === 5 ? 0 : 990_000,
                         rank: "S",
@@ -66,7 +64,6 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
                         max_combo: 1000,
                         grade_basic: 1000,
                         grade_recital: 0,
-                        besttime: "2026-09-06",
                     },
                 });
             }

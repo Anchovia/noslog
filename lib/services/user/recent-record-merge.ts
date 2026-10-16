@@ -10,8 +10,6 @@ export type RecordValues = Omit<
     | "id"
     | "user_id"
     | "chart_id"
-    | "music_idx"
-    | "difficulty"
     | "created_at"
     | "updated_at"
     | "grade_recital"
@@ -23,7 +21,7 @@ export type RecentRecordPlay = Pick<
     | "level"
     | "grade_basic"
     | "max_combo"
-    | "source_play_time"
+    | "playedAt"
     | "judge_sjust"
     | "judge_just"
     | "judge_good"
@@ -51,28 +49,14 @@ export function recentPlayTimestamp(value: string): number | null {
     return timestamp;
 }
 
-// 기록 시각(besttime)은 전체 동기화와 같은 「YYYY-MM-DD HH:MM」(KST) 한 형식으로 쓴다. 최근 플레이의
-// 「YYYY/MM/DD HH:MM」 을 그대로 쓰면 문자열 정렬 · 비교가 틀어진다(2026-10-16 DB 재설계 B3)
-export function toRecordBesttime(value: string) {
-    const match = /^(\d{4})[-/.](\d{2})[-/.](\d{2})[ T](\d{2}):(\d{2})/.exec(
-        value
-    );
-    if (!match) return value;
-    const [, year, month, day, hour, minute] = match;
-    return `${year}-${month}-${day} ${hour}:${minute}`;
-}
-
 // 기록 시각을 timestamptz 로(2026-10-16 DB 재설계 P3) — 모르면 null. 「1970-01-01 09:00」(= 0) 은 시각 없음 자리표시다
 export function recordBestAt(besttime: string): Date | null {
     const timestamp = recentPlayTimestamp(besttime);
     return timestamp === null || timestamp <= 0 ? null : new Date(timestamp);
 }
 
-export function isAfterFullRecord(playTime: string, fullAt: Date | null) {
-    const timestamp = recentPlayTimestamp(playTime);
-    return (
-        timestamp !== null && (fullAt === null || timestamp > fullAt.getTime())
-    );
+export function isAfterFullRecord(playedAt: Date, fullAt: Date | null) {
+    return fullAt === null || playedAt.getTime() > fullAt.getTime();
 }
 
 export function mergeRecentRecord(
@@ -117,12 +101,8 @@ export function mergeRecentRecord(
         note_rate_tenuto: previous?.note_rate_tenuto ?? null,
         note_rate_glissando: previous?.note_rate_glissando ?? null,
         note_rate_trill: previous?.note_rate_trill ?? null,
-        besttime: improved
-            ? toRecordBesttime(play.source_play_time)
-            : previous!.besttime,
-        bestAt: improved
-            ? recordBestAt(play.source_play_time)
-            : (previous!.bestAt ?? recordBestAt(previous!.besttime)),
+        // 기록 시각은 timestamptz 하나로(2026-10-16 P5-1 — 문자열 besttime 은 쓰지 않는다)
+        bestAt: improved ? play.playedAt : previous!.bestAt,
     };
 }
 
@@ -146,19 +126,12 @@ export function planRecentRecordMerge(
                 .map((play) => [play.id, play])
         ).values(),
     ];
-    for (const play of pending) {
-        if (recentPlayTimestamp(play.source_play_time) === null) {
-            throw new RangeError("Invalid recent play timestamp");
-        }
-    }
     pending.sort(
-        (a, b) =>
-            recentPlayTimestamp(a.source_play_time)! -
-                recentPlayTimestamp(b.source_play_time)! || a.id - b.id
+        (a, b) => a.playedAt.getTime() - b.playedAt.getTime() || a.id - b.id
     );
     const changes = new Map<number, RecordValues>();
     for (const play of pending) {
-        if (!isAfterFullRecord(play.source_play_time, fullAt)) continue;
+        if (!isAfterFullRecord(play.playedAt, fullAt)) continue;
         const record =
             changes.get(play.chart_id) ?? previous.get(play.chart_id) ?? null;
         changes.set(play.chart_id, mergeRecentRecord(record, play, play.chart));
@@ -169,7 +142,7 @@ export function planRecentRecordMerge(
         if (
             !play.record_applied ||
             play.grade_basic !== 0 ||
-            !isAfterFullRecord(play.source_play_time, fullAt)
+            !isAfterFullRecord(play.playedAt, fullAt)
         )
             continue;
         const record =

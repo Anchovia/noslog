@@ -6,6 +6,7 @@ const mocks = vi.hoisted(() => ({
     rebuildStalePlayerRatings: vi.fn(),
     requireAdmin: vi.fn(),
     listFindFirst: vi.fn(),
+    listFindUnique: vi.fn(),
     listCreate: vi.fn(),
     listUpdate: vi.fn(),
     listDelete: vi.fn(),
@@ -52,6 +53,7 @@ vi.mock("@/lib/db", () => ({
         $executeRaw: mocks.executeRaw,
         tierList: {
             findFirst: mocks.listFindFirst,
+            findUnique: mocks.listFindUnique,
             create: mocks.listCreate,
             update: mocks.listUpdate,
             delete: mocks.listDelete,
@@ -122,6 +124,8 @@ describe("관리자 서열표 액션", () => {
         vi.clearAllMocks();
         mocks.requireAdmin.mockResolvedValue({ id: 1, role: "admin" });
         mocks.listFindFirst.mockResolvedValue(null);
+        // 기본은 지금 쓰는 서열표(Basic S)
+        mocks.listFindUnique.mockResolvedValue({ mode: "basic", goal: "s" });
         mocks.listCreate.mockResolvedValue({ id: 5 });
         mocks.listUpdate.mockResolvedValue({ id: 5 });
         mocks.listDelete.mockResolvedValue({ id: 5 });
@@ -282,6 +286,20 @@ describe("관리자 서열표 액션", () => {
                 status: "draft",
             },
         });
+    });
+
+    it("보관 서열표(옛 Recital FC)는 구간 · 채보를 고치지 않는다", async () => {
+        mocks.listFindUnique.mockResolvedValue({ mode: "recital", goal: "fc" });
+        const formData = new FormData();
+        formData.set("tierListId", "5");
+        formData.set("value", "12.3");
+
+        await expect(addTierBand(formData)).resolves.toEqual({
+            success: false,
+            message: "보관된 서열표는 고칠 수 없습니다.",
+        });
+        expect(mocks.bandFindMany).not.toHaveBeenCalled();
+        expect(mocks.transaction).not.toHaveBeenCalled();
     });
 
     it("같은 서열 상수 구간을 중복 추가하지 않는다", async () => {

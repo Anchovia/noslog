@@ -111,7 +111,8 @@ describe("공개 서열표 데이터 최적화", () => {
                 note_rate_tenuto: 9600,
                 note_rate_glissando: null,
                 note_rate_trill: 9000,
-                besttime: "2026.07.20 12:00",
+                // 2026-07-20 12:00 KST
+                bestAt: new Date("2026-07-20T03:00:00Z"),
             },
         ]);
         mocks.queryRaw.mockResolvedValue([
@@ -119,7 +120,7 @@ describe("공개 서열표 데이터 최적화", () => {
                 chart_id: 201,
                 fast_count: 12,
                 slow_count: 8,
-                source_play_time: "2026.07.20 12:00",
+                source_play_time: "2026/07/20 12:00",
             },
         ]);
 
@@ -146,12 +147,14 @@ describe("공개 서열표 데이터 최적화", () => {
                 note_rate_tenuto: true,
                 note_rate_glissando: true,
                 note_rate_trill: true,
-                besttime: true,
+                bestAt: true,
             },
         });
         expect(band?.entries[0].record).toMatchObject({
             chart_id: 201,
             score: 950000,
+            // 응답 모양은 그대로 besttime 글자(2026-10-16 P5-1)
+            besttime: "2026-07-20 12:00",
             latestPlay: {
                 fast_count: 12,
                 slow_count: 8,

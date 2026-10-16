@@ -1,10 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 const mocks = vi.hoisted(() => ({
     plays: vi.fn(),
-    find: vi.fn(),
-    create: vi.fn(),
-    update: vi.fn(),
-    remove: vi.fn(),
+    upsert: vi.fn(),
     user: vi.fn(),
     stats: vi.fn(),
 }));
@@ -15,12 +12,7 @@ vi.mock("@/lib/db", () => ({
             operation({
                 user: { update: mocks.user },
                 playerStats: { upsert: mocks.stats },
-                userBestGrade: {
-                    findMany: mocks.find,
-                    create: mocks.create,
-                    update: mocks.update,
-                    deleteMany: mocks.remove,
-                },
+                userBestGrade: { upsert: mocks.upsert },
             }),
     },
 }));
@@ -38,37 +30,39 @@ describe("profile Grd history retention", () => {
         vi.useRealTimers();
         vi.restoreAllMocks();
     });
-    const older = Array.from({ length: 40 }, (_, id) => ({
-        id: id + 1,
-        besttime: new Date(Date.UTC(2026, 6, id + 1))
-            .toISOString()
-            .slice(0, 10),
-    }));
-    it("keeps older meaningful history beyond thirty records", async () => {
-        mocks.find.mockResolvedValue(older);
+    // 사람당 하루(서울 날짜) 한 줄은 유일 키 (user_id, day) 가 지킨다 — 지난 날짜 줄은 읽지도 지우지도 않는다(2026-10-16 P5-1)
+    it("writes only today's Korean-day row and keeps older history untouched", async () => {
         await updateGrade(7);
-        expect(mocks.create).toHaveBeenCalledWith({
-            data: {
+        const day = new Date("2026-09-07T00:00:00.000Z");
+        expect(mocks.upsert).toHaveBeenCalledWith({
+            where: { user_id_day: { user_id: 7, day } },
+            create: {
                 user_id: 7,
-                besttime: "2026-09-07",
-                day: new Date("2026-09-07T00:00:00.000Z"),
+                day,
                 grade_basic: 0,
                 grade_recital: null,
             },
+            update: { grade_basic: 0, grade_recital: null },
         });
-        expect(mocks.remove).not.toHaveBeenCalled();
+        expect(mocks.upsert).toHaveBeenCalledTimes(1);
     });
-    it("removes only duplicate observations on the current Korean calendar day", async () => {
-        mocks.find.mockResolvedValue([
-            ...older,
-            { id: 100, besttime: "2026-09-07 01:00" },
-            { id: 101, besttime: "2026-09-07 09:00" },
-        ]);
-        await updateGrade(7);
-        expect(mocks.remove).toHaveBeenCalledTimes(1);
-        expect(mocks.remove).toHaveBeenCalledWith({
-            where: { id: { in: [100] } },
+    it("stores the current Grd only in player_stats", async () => {
+        mocks.plays.mockImplementation(({ where }) =>
+            Promise.resolve(
+                where.grade_recital
+                    ? [{ grade_recital: 300 }]
+                    : [{ grade_basic: 500 }, { grade_basic: 400 }]
+            )
+        );
+        await expect(updateGrade(7)).resolves.toEqual({
+            grade_basic: 900,
+            grade_recital: 300,
         });
-        expect(mocks.create).not.toHaveBeenCalled();
+        expect(mocks.stats).toHaveBeenCalledWith({
+            where: { userId: 7 },
+            create: { userId: 7, gradeBasic: 900, gradeRecital: 300 },
+            update: { gradeBasic: 900, gradeRecital: 300 },
+        });
+        expect(mocks.user).not.toHaveBeenCalled();
     });
 });

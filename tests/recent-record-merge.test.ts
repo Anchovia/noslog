@@ -5,7 +5,6 @@ import {
     planRecentRecordMerge,
     recentPlayTimestamp,
     recordBestAt,
-    toRecordBesttime,
 } from "@/lib/services/user/recent-record-merge";
 import type {
     PendingRecordPlay,
@@ -13,6 +12,8 @@ import type {
 } from "@/lib/services/user/recent-record-merge";
 
 const chart = { level: 12, note_count: 1000 };
+// 최근 플레이 시각은 played_at(timestamptz) — 공식 KST 글자를 그대로 읽어 만든다(2026-10-16 P5-1)
+const at = (value: string) => recordBestAt(value)!;
 const attempt = (
     overrides: Partial<PendingRecordPlay> = {}
 ): PendingRecordPlay => ({
@@ -25,7 +26,7 @@ const attempt = (
     rank: "S",
     grade_basic: 10000,
     max_combo: 800,
-    source_play_time: "2026/09/20 10:00",
+    playedAt: at("2026/09/20 10:00"),
     judge_sjust: 900,
     judge_just: 80,
     judge_good: 10,
@@ -64,7 +65,7 @@ describe("recent-only record merge (no database writes)", () => {
             clear_count: null,
             clear_flag: null,
             note_rate_standard: null,
-            besttime: "2026-09-20 10:00",
+            bestAt: at("2026-09-20 10:00"),
         });
     });
     it("retains independent best values and official metadata after Pass expiry", () => {
@@ -84,13 +85,12 @@ describe("recent-only record merge (no database writes)", () => {
             grade_basic: 11000,
             max_combo: 900,
             judge_sjust: 980,
-            source_play_time: "2026/09/20 11:00",
+            playedAt: at("2026/09/20 11:00"),
         });
         expect(mergeRecentRecord(previous, play, chart)).toEqual({
             ...previous,
             score: 995000,
             play_count: 101,
-            besttime: "2026-09-20 11:00",
             bestAt: new Date("2026-09-20T02:00:00.000Z"),
             judge_sjust: 980,
             judge_just: 80,
@@ -112,8 +112,8 @@ describe("recent-only record merge (no database writes)", () => {
                 previous,
                 attempt({ score: previous.score, judge_sjust: 999 }),
                 chart
-            ).besttime
-        ).toBe(previous.besttime);
+            ).bestAt
+        ).toBe(previous.bestAt);
         expect(
             mergeRecentRecord(
                 previous,
@@ -169,9 +169,9 @@ describe("recent-only record merge (no database writes)", () => {
     });
     it("excludes an overlap at the full import's minute boundary", () => {
         const fullAt = new Date("2026-09-20T01:00:30Z");
-        expect(isAfterFullRecord("2026/09/20 09:59", fullAt)).toBe(false);
-        expect(isAfterFullRecord("2026/09/20 10:00", fullAt)).toBe(false);
-        expect(isAfterFullRecord("2026/09/20 10:01", fullAt)).toBe(true);
+        expect(isAfterFullRecord(at("2026/09/20 09:59"), fullAt)).toBe(false);
+        expect(isAfterFullRecord(at("2026/09/20 10:00"), fullAt)).toBe(false);
+        expect(isAfterFullRecord(at("2026/09/20 10:01"), fullAt)).toBe(true);
     });
     it("deduplicates receipts and does not increment again after retry", () => {
         const play = attempt();
@@ -196,7 +196,7 @@ describe("recent-only record merge (no database writes)", () => {
                 attempt({
                     id: 2,
                     score: 980000,
-                    source_play_time: "2026/09/20 11:00",
+                    playedAt: at("2026/09/20 11:00"),
                 }),
                 attempt({ id: 3, chart_id: 20, score: 900000, rank: "A" }),
             ],
@@ -232,12 +232,12 @@ describe("recent-only record merge (no database writes)", () => {
                 attempt({
                     id: 2,
                     score: 995000,
-                    source_play_time: "2026/09/20 11:00",
+                    playedAt: at("2026/09/20 11:00"),
                 }),
                 attempt({
                     id: 3,
                     chart_id: 20,
-                    source_play_time: "2026/09/19 10:00",
+                    playedAt: at("2026/09/19 10:00"),
                 }),
             ],
             fullAt
@@ -255,8 +255,8 @@ describe("recent-only record merge (no database writes)", () => {
         const result = planRecentRecordMerge(
             new Map([[10, corrected]]),
             [
-                attempt({ id: 3, source_play_time: "2026/09/21 10:00" }),
-                attempt({ id: 4, source_play_time: "2026/09/21 12:00" }),
+                attempt({ id: 3, playedAt: at("2026/09/21 10:00") }),
+                attempt({ id: 4, playedAt: at("2026/09/21 12:00") }),
             ],
             new Date("2026-09-21T02:00:00Z")
         );
@@ -269,12 +269,12 @@ describe("recent-only record merge (no database writes)", () => {
                 attempt({
                     id: 3,
                     score: 980000,
-                    source_play_time: "2026/09/20 12:00",
+                    playedAt: at("2026/09/20 12:00"),
                 }),
                 attempt({
                     id: 2,
                     score: 980000,
-                    source_play_time: "2026/09/20 11:00",
+                    playedAt: at("2026/09/20 11:00"),
                 }),
                 attempt(),
             ],
@@ -283,21 +283,8 @@ describe("recent-only record merge (no database writes)", () => {
         expect(result.changes.get(10)).toMatchObject({
             score: 980000,
             play_count: 3,
-            besttime: "2026-09-20 11:00",
+            bestAt: at("2026-09-20 11:00"),
         });
-    });
-    it("leaves the source data untouched and fails before planning any invalid timestamp", () => {
-        const previous = fullRecord();
-        const records = new Map([[10, previous]]);
-        expect(() =>
-            planRecentRecordMerge(
-                records,
-                [attempt(), attempt({ id: 2, source_play_time: "invalid" })],
-                null
-            )
-        ).toThrow(RangeError);
-        expect(records.get(10)).toEqual(previous);
-        expect(previous.play_count).toBe(100);
     });
 });
 
@@ -349,17 +336,6 @@ describe("zero Grd repair", () => {
             planRecentRecordMerge(new Map([[10, fullRecord()]]), [play], null)
                 .changes.size
         ).toBe(0);
-    });
-});
-
-describe("기록 시각 형식", () => {
-    it("writes recent-play times in the full-sync form", () => {
-        expect(toRecordBesttime("2026/09/20 11:00")).toBe("2026-09-20 11:00");
-        expect(toRecordBesttime("2026.09.20 11:00:30")).toBe(
-            "2026-09-20 11:00"
-        );
-        expect(toRecordBesttime("2026-09-20 11:00")).toBe("2026-09-20 11:00");
-        expect(toRecordBesttime("unknown")).toBe("unknown");
     });
 });
 

@@ -33,14 +33,16 @@ function play(chart: number) {
     return {
         id: chart * 10,
         chart_id: chart,
-        music_idx: `m${chart}`,
-        difficulty: "Real",
         level: 3,
         score: 950000,
         rank: "S",
         fc_type: 2,
-        besttime: "2026-09-12 21:00",
-        music: { title: `Song ${chart}`, background: null },
+        bestAt: new Date("2026-09-12T12:00:00Z"),
+        chart: {
+            music_idx: `m${chart}`,
+            difficulty: "Real",
+            music: { title: `Song ${chart}`, background: null },
+        },
     };
 }
 

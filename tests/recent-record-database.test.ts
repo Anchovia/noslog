@@ -19,6 +19,7 @@ import { updateGrade } from "@/lib/services/user/update-grade";
 import { getUserChartScoreTrend } from "@/features/music/server/music-detail-data";
 import { getGlobalRankingPage } from "@/features/rankings/server/global-ranking-data";
 import type { SyncMusicInput } from "@/lib/services/music/update-music";
+import { legacyBesttime } from "@/lib/player-stats";
 
 describe.skipIf(!process.env.TEST_DATABASE_URL)(
     "recent record pipeline on isolated PostgreSQL",
@@ -69,12 +70,15 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
                 },
             });
         };
-        const record = () =>
-            db.playData.findUniqueOrThrow({
+        // 곡 상세가 넘기는 지금 기록 모양(besttime 글자는 best_at 에서, 2026-10-16 P5-1)
+        const record = async () => {
+            const row = await db.playData.findUniqueOrThrow({
                 where: {
                     user_id_chart_id: { user_id: userId, chart_id: chartId },
                 },
             });
+            return { ...row, besttime: legacyBesttime(row.bestAt) };
+        };
         beforeAll(async () => {
             userId = (
                 await db.user.create({
@@ -129,15 +133,7 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
                 grade_basic: 9700,
                 grade_recital: null,
             });
-            const user = await db.user.findUniqueOrThrow({
-                where: { id: userId },
-            });
-            expect(user).toMatchObject({
-                grade_basic: 9700,
-                grade_recital: null,
-                score_s: 1,
-            });
-            // 늘리기 단계(2026-10-16 P3) — 같은 값이 player_stats 와 새 시각 열에도 들어간다
+            // 동기화 결과는 player_stats 에(2026-10-16 P5-1 — User 옛 열에는 쓰지 않는다)
             expect(
                 await db.playerStats.findUniqueOrThrow({ where: { userId } })
             ).toMatchObject({

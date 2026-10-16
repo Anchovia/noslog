@@ -106,7 +106,9 @@ describe("profile activity", () => {
                 "2026/09/26 08:00",
                 "2026/08/30 10:00",
                 "2024/01/01 10:00",
-            ].map((source_play_time) => ({ source_play_time }))
+            ].map((time) => ({
+                playedAt: new Date(`${time.replaceAll("/", "-")}:00+09:00`),
+            }))
         );
         // 2026-09-26 (토) 12:00 KST
         const activity = await getProfileActivity(

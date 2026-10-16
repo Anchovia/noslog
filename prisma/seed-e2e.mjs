@@ -213,7 +213,7 @@ async function seed() {
                 create: [
                     {
                         position: 1,
-                        type: "music",
+                        type: "music_unlock",
                         label: music.title,
                         musicIndex: music.index,
                     },

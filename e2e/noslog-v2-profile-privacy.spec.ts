@@ -34,14 +34,13 @@ test("P6 actual stored history honors the selected range and empty users have on
     try {
         await db!.userBestGrade.createMany({
             data: [80, 50, 10].map((days, index) => {
-                const besttime = new Date(Date.now() - days * 86400000)
+                const date = new Date(Date.now() - days * 86400000)
                     .toISOString()
                     .slice(0, 10);
-                // 동기화처럼 날짜 열(day)도 함께 쓴다 — 추이는 day 로 읽는다(2026-10-16 DB 재설계 P4)
+                // 하루 한 줄은 날짜 열(day)로(2026-10-16 DB 재설계 P5-1)
                 return {
                     user_id: user.id,
-                    besttime,
-                    day: new Date(`${besttime}T00:00:00Z`),
+                    day: new Date(`${date}T00:00:00Z`),
                     grade_basic: 8000 + index * 1000,
                     grade_recital: 0,
                 };
@@ -161,8 +160,6 @@ for (const flag of flags) {
                 data: {
                     user_id: user.id,
                     chart_id: chart.id,
-                    music_idx: chart.music_idx,
-                    difficulty: chart.difficulty,
                     level: chart.level,
                     score: 976654,
                     rank: "S",
@@ -173,7 +170,6 @@ for (const flag of flags) {
                     max_combo: 100,
                     grade_basic: 10000,
                     grade_recital: 0,
-                    besttime: "2026-08-11",
                     judge_sjust: 90,
                     judge_just: 5,
                     judge_good: 3,
@@ -189,7 +185,8 @@ for (const flag of flags) {
                     rank: "S",
                     max_combo: 100,
                     grade_basic: 10000,
-                    source_play_time: "2026-08-11 21:04:00",
+                    // 2026-08-11 21:04 KST
+                    playedAt: new Date("2026-08-11T12:04:00Z"),
                 },
             });
             const response = await page.goto(`/ko/profile/${user.id}`);
