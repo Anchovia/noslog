@@ -1,4 +1,6 @@
+import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@prisma/client";
+import { PRISMA_PG_SESSION_OPTIONS } from "@/lib/prisma-pg";
 import { afterAll, describe, expect, it } from "vitest";
 
 // Prisma 6 스키마가 표현하지 못해 마이그레이션 SQL 에만 있는 DB 객체(2026-10-16 DB 재설계 C1).
@@ -8,34 +10,47 @@ import { afterAll, describe, expect, it } from "vitest";
 const url = process.env.TEST_DATABASE_URL;
 
 const CHECKS: Record<string, string[]> = {
-    CommunityChartEvaluation_rating_range: ["stairs", "chords"],
-    ChartGoalVote_scope_value: ["'990k'", "'pianist'"],
+    community_chart_evaluations_rating_range: ["stairs", "chords"],
+    chart_goal_votes_scope_value: ["'990k'", "'pianist'"],
     // 목표 값 목록 — 990k 는 enum 이름이 될 수 없어 CHECK(2026-10-16 K2)
-    TierList_goal_check: ["'990k'", "'pianist'"],
-    ChartGoalVoteAudit_goal_check: ["'990k'", "'pianist'"],
-    UserRatingHistory_rating_check: ["rating"],
-    ArcadeCabinet_state_check: ["condition_note"],
-    ArcadePublicPhoto_slot_check: ["slot"],
-    Poll_single_owner_check: ["num_nonnulls"],
+    tier_lists_goal_check: ["'990k'", "'pianist'"],
+    chart_goal_vote_audits_goal_check: ["'990k'", "'pianist'"],
+    user_rating_histories_rating_check: ["rating"],
+    arcade_cabinets_state_check: ["condition_note"],
+    arcade_public_photos_slot_check: ["slot"],
+    polls_single_owner_check: ["num_nonnulls"],
 };
 
 const INDEXES: Record<string, string[]> = {
-    TierList_published_mode_goal_key: ["UNIQUE", "WHERE", "'published'"],
-    User_username_normalized_key: ["UNIQUE", "lower", "NFKC"],
-    DataSync_one_processing_per_user: ["UNIQUE", "WHERE", "'processing'"],
+    tier_lists_published_mode_goal_key: ["UNIQUE", "WHERE", "'published'"],
+    users_username_normalized_key: ["UNIQUE", "lower", "NFKC"],
+    data_syncs_one_processing_per_user: ["UNIQUE", "WHERE", "'processing'"],
     chart_field_proposals_one_pending: ["UNIQUE", "WHERE", "'pending'"],
-    ExamSubmission_one_pending: ["UNIQUE", "WHERE", "'pending'"],
+    exam_submissions_one_pending: ["UNIQUE", "WHERE", "'pending'"],
 };
 
 describe.skipIf(!url)("스키마 밖 DB 객체", () => {
     if (url && !["localhost", "127.0.0.1"].includes(new URL(url).hostname))
         throw new Error("Schema object tests require a local database.");
-    const db = new PrismaClient({ datasourceUrl: url });
+    const db = new PrismaClient({
+        adapter: new PrismaPg({
+            connectionString: url,
+            options: PRISMA_PG_SESSION_OPTIONS,
+        }),
+    });
 
     afterAll(async () => {
         await db.$disconnect();
     });
 
+    it("reads timestamptz in UTC sessions so times do not shift(Prisma 7 pg 어댑터)", async () => {
+        const [row] = await db.$queryRaw<{ zone: string; at: Date }[]>`
+            SELECT current_setting('TimeZone') AS zone,
+                   '2026-01-01 09:00:00+09'::timestamptz AS at
+        `;
+        expect(row.zone).toBe("UTC");
+        expect(row.at.toISOString()).toBe("2026-01-01T00:00:00.000Z");
+    });
     it("keeps every hand-written CHECK constraint", async () => {
         const rows = await db.$queryRaw<{ name: string; def: string }[]>`
             SELECT conname AS name, pg_get_constraintdef(oid) AS def

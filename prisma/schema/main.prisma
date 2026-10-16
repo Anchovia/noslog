@@ -1,0 +1,14 @@
+// Prisma 7 설정 — 생성기와 DB 종류. DB 주소는 prisma.config.ts · lib/db.ts(2026-10-16 D9: 스키마를 영역별 파일로 나눔)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// DB 주소는 prisma.config.ts(마이그레이션 CLI)와 lib/db.ts(앱, pg 어댑터)가 준다 — Prisma 7
+datasource db {
+  provider = "postgresql"
+}
+
+// 닫힌 값 목록(2026-10-16 DB 재설계 D4-C 1차)은 영역 파일마다 그 영역 enum 으로 둔다. 값은 DB 에 쓰던 문자열 그대로, 알파벳 순 —
+// Postgres 는 enum 을 선언 순서로 정렬하므로 문자열 때와 orderBy 결과가 같다. 새 값도 알파벳 자리에 넣는다
+// (D5 에서 이름만 바꾼 검토 상태 값은 옛 자리를 그대로 지킨다)

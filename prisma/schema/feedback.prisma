@@ -1,0 +1,48 @@
+// 제보(피드백 · 오락실 제보)
+
+// 사용자가 제출한 오류 제보와 처리 상태를 관리함
+model FeedbackReport {
+  id               Int               @id @default(autoincrement())
+  // 제보 종류 「bug」 · 「idea」 — 오락실 제보 · 2026-09-18 이전 제보는 비어 있음
+  category         FeedbackCategory?
+  content          String
+  imageUrl         String?           @map("image_url")
+  status           FeedbackStatus    @default(open)
+  userId           Int               @map("user_id")
+  user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt        DateTime          @default(now()) @map("created_at")
+  updatedAt        DateTime          @updatedAt @map("updated_at")
+  reviewedAt       DateTime?         @map("resolved_at")
+  // 관리자 답변(2026-09-18) — 처리 완료 때 쓰면 제보한 사람의 「내 제보」 에 보인다. authorSeenAt = 제보한 사람이 읽은 때(새 답변 점)
+  reply            String?
+  repliedAt        DateTime?         @map("replied_at")
+  authorSeenAt     DateTime?         @map("reply_seen_at")
+  arcadeId         Int?              @map("arcade_id")
+  arcade           Arcade?           @relation(fields: [arcadeId], references: [id], onDelete: SetNull)
+  cabinetId        Int?              @map("cabinet_id")
+  cabinet          ArcadeCabinet?    @relation(fields: [cabinetId], references: [id], onDelete: SetNull)
+  arcadeReportType ArcadeReportType? @map("arcade_report_type")
+  submissionId     String?           @map("submission_id")
+
+  @@unique([userId, submissionId])
+  @@index([status, createdAt])
+  @@index([userId, createdAt])
+  // 외래 키 — 오락실 공개 화면이 기체별 열린 제보를 센다(2026-10-16 P2)
+  @@index([arcadeId])
+  @@index([cabinetId])
+  @@map("feedback_reports")
+}
+
+enum FeedbackCategory {
+  bug
+  idea
+
+  @@map("feedback_category")
+}
+
+enum FeedbackStatus {
+  open
+  resolved
+
+  @@map("feedback_status")
+}

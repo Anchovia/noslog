@@ -51,7 +51,7 @@ function chartConditions(query: DiscoveryQuery, userId: number | null) {
             Prisma.sql`(${Prisma.join(
                 query.difficulties.map(
                     (range) =>
-                        Prisma.sql`(chart."difficulty" = ${range.difficulty}::"ChartDifficulty" AND chart."level" BETWEEN ${range.min} AND ${range.max})`
+                        Prisma.sql`(chart."difficulty" = ${range.difficulty}::chart_difficulty AND chart."level" BETWEEN ${range.min} AND ${range.max})`
                 ),
                 " OR "
             )})`
@@ -102,16 +102,16 @@ function discoveryCriteria(input: DiscoveryQuery, userId: number | null) {
         );
     if (query.q)
         filters.push(Prisma.sql`(music."index" ILIKE ${contains} OR music."title" ILIKE ${contains} OR music."title_kana" ILIKE ${contains} OR music."artist" ILIKE ${contains}
-        OR EXISTS (SELECT 1 FROM "MusicTranslation" AS translation WHERE translation."music_index" = music."index" AND translation."status" = 'approved' AND translation."title" ILIKE ${contains}))`);
+        OR EXISTS (SELECT 1 FROM music_translations AS translation WHERE translation."music_index" = music."index" AND translation."status" = 'approved' AND translation."title" ILIKE ${contains}))`);
     return {
         query,
         prefix,
         contains,
         eligible: Prisma.sql`
             SELECT chart."id", chart."music_idx", chart."difficulty", chart."level", pattern."published_at"
-            FROM "MusicChart" AS chart
-            LEFT JOIN "ChartPattern" AS pattern ON pattern."chart_id" = chart."id"
-            LEFT JOIN "PlayData" AS play ON play."chart_id" = chart."id" AND play."user_id" = ${userId}
+            FROM music_charts AS chart
+            LEFT JOIN chart_patterns AS pattern ON pattern."chart_id" = chart."id"
+            LEFT JOIN play_data AS play ON play."chart_id" = chart."id" AND play."user_id" = ${userId}
             ${chartConditions(query, userId)}
         `,
         musicWhere: filters.length
@@ -171,7 +171,7 @@ async function queryDiscoveryCounts(
         WITH eligible AS (${eligible})
         SELECT COUNT(DISTINCT music."index")::int AS total,
             COUNT(eligible."id")::int AS "chartTotal"
-        FROM "Music" AS music JOIN eligible ON eligible."music_idx" = music."index"
+        FROM music AS music JOIN eligible ON eligible."music_idx" = music."index"
         ${musicWhere}
     `);
     return discoveryCountsSchema.parse(rows[0] ?? { total: 0, chartTotal: 0 });
@@ -207,15 +207,15 @@ async function queryDiscoveryPage(
             SELECT music."index", music."title", music."artist", music."category_short", music."background",
                 NULL::text AS "localizedTitle",
                 COALESCE(NULLIF(TRIM(music."title_kana"), ''), music."title") AS reading,
-                (SELECT MAX(chart."level") FROM "MusicChart" chart WHERE chart."music_idx" = music."index" AND chart."difficulty" = 'Normal') AS normal,
-                (SELECT MAX(chart."level") FROM "MusicChart" chart WHERE chart."music_idx" = music."index" AND chart."difficulty" = 'Hard') AS hard,
-                (SELECT MAX(chart."level") FROM "MusicChart" chart WHERE chart."music_idx" = music."index" AND chart."difficulty" = 'Expert') AS expert,
-                (SELECT MAX(chart."level") FROM "MusicChart" chart WHERE chart."music_idx" = music."index" AND chart."difficulty" = 'Real') AS real,
-                CASE WHEN eligible."difficulty" = ${query.sortDifficulty ?? null}::"ChartDifficulty" THEN eligible."level" END AS sort_level,
+                (SELECT MAX(chart."level") FROM music_charts chart WHERE chart."music_idx" = music."index" AND chart."difficulty" = 'Normal') AS normal,
+                (SELECT MAX(chart."level") FROM music_charts chart WHERE chart."music_idx" = music."index" AND chart."difficulty" = 'Hard') AS hard,
+                (SELECT MAX(chart."level") FROM music_charts chart WHERE chart."music_idx" = music."index" AND chart."difficulty" = 'Expert') AS expert,
+                (SELECT MAX(chart."level") FROM music_charts chart WHERE chart."music_idx" = music."index" AND chart."difficulty" = 'Real') AS real,
+                CASE WHEN eligible."difficulty" = ${query.sortDifficulty ?? null}::chart_difficulty THEN eligible."level" END AS sort_level,
                 eligible."published_at" AS published,
-                ${sort === "recent" ? Prisma.sql`(SELECT MAX(history."played_at") FROM "ChartPlayHistory" AS history WHERE history."user_id" = ${userId} AND history."chart_id" = eligible."id")` : Prisma.sql`NULL::timestamptz`} AS recent,
+                ${sort === "recent" ? Prisma.sql`(SELECT MAX(history."played_at") FROM chart_play_histories AS history WHERE history."user_id" = ${userId} AND history."chart_id" = eligible."id")` : Prisma.sql`NULL::timestamptz`} AS recent,
                 CASE WHEN LOWER(music."index") = LOWER(${query.q}) OR LOWER(music."title") = LOWER(${query.q}) OR LOWER(music."title_kana") = LOWER(${query.q})
-                    OR EXISTS (SELECT 1 FROM "MusicTranslation" t WHERE t."music_index" = music."index" AND t."status" = 'approved' AND LOWER(t."title") = LOWER(${query.q})) THEN 4
+                    OR EXISTS (SELECT 1 FROM music_translations t WHERE t."music_index" = music."index" AND t."status" = 'approved' AND LOWER(t."title") = LOWER(${query.q})) THEN 4
                     WHEN music."title" ILIKE ${prefix} OR music."title_kana" ILIKE ${prefix} THEN 3
                     WHEN music."title" ILIKE ${contains} OR music."title_kana" ILIKE ${contains} THEN 2
                     WHEN LOWER(music."artist") = LOWER(${query.q}) THEN 2 ELSE 1 END AS relevance,
@@ -223,7 +223,7 @@ async function queryDiscoveryPage(
                 CASE eligible."difficulty" WHEN 'Normal' THEN 0 WHEN 'Hard' THEN 1 WHEN 'Expert' THEN 2 ELSE 3 END AS difficulty_order,
                 eligible."id" AS "chartId",
                 jsonb_build_array(jsonb_build_object('difficulty', eligible."difficulty", 'level', eligible."level")) AS targets
-            FROM "Music" AS music JOIN eligible ON eligible."music_idx" = music."index"
+            FROM music AS music JOIN eligible ON eligible."music_idx" = music."index"
             ${musicWhere}
             GROUP BY music."index", music."title", music."title_kana", music."artist", music."category_short", music."background",
                 eligible."id", eligible."difficulty", eligible."level", eligible."published_at"
@@ -232,22 +232,22 @@ async function queryDiscoveryPage(
             SELECT music."index", music."title", music."artist", music."category_short", music."background",
                 NULL::text AS "localizedTitle",
                 COALESCE(NULLIF(TRIM(music."title_kana"), ''), music."title") AS reading,
-                (SELECT MAX(chart."level") FROM "MusicChart" chart WHERE chart."music_idx" = music."index" AND chart."difficulty" = 'Normal') AS normal,
-                (SELECT MAX(chart."level") FROM "MusicChart" chart WHERE chart."music_idx" = music."index" AND chart."difficulty" = 'Hard') AS hard,
-                (SELECT MAX(chart."level") FROM "MusicChart" chart WHERE chart."music_idx" = music."index" AND chart."difficulty" = 'Expert') AS expert,
-                (SELECT MAX(chart."level") FROM "MusicChart" chart WHERE chart."music_idx" = music."index" AND chart."difficulty" = 'Real') AS real,
-                (SELECT MAX(chart."level") FROM "MusicChart" chart WHERE chart."music_idx" = music."index" AND chart."difficulty" = ${query.sortDifficulty ?? null}::"ChartDifficulty") AS sort_level,
+                (SELECT MAX(chart."level") FROM music_charts chart WHERE chart."music_idx" = music."index" AND chart."difficulty" = 'Normal') AS normal,
+                (SELECT MAX(chart."level") FROM music_charts chart WHERE chart."music_idx" = music."index" AND chart."difficulty" = 'Hard') AS hard,
+                (SELECT MAX(chart."level") FROM music_charts chart WHERE chart."music_idx" = music."index" AND chart."difficulty" = 'Expert') AS expert,
+                (SELECT MAX(chart."level") FROM music_charts chart WHERE chart."music_idx" = music."index" AND chart."difficulty" = 'Real') AS real,
+                (SELECT MAX(chart."level") FROM music_charts chart WHERE chart."music_idx" = music."index" AND chart."difficulty" = ${query.sortDifficulty ?? null}::chart_difficulty) AS sort_level,
                 MAX(eligible."published_at") AS published,
-                ${sort === "recent" ? Prisma.sql`(SELECT MAX(history."played_at") FROM "ChartPlayHistory" AS history JOIN eligible AS target ON target."id" = history."chart_id" WHERE history."user_id" = ${userId} AND target."music_idx" = music."index")` : Prisma.sql`NULL::timestamptz`} AS recent,
+                ${sort === "recent" ? Prisma.sql`(SELECT MAX(history."played_at") FROM chart_play_histories AS history JOIN eligible AS target ON target."id" = history."chart_id" WHERE history."user_id" = ${userId} AND target."music_idx" = music."index")` : Prisma.sql`NULL::timestamptz`} AS recent,
                 CASE WHEN LOWER(music."index") = LOWER(${query.q}) OR LOWER(music."title") = LOWER(${query.q}) OR LOWER(music."title_kana") = LOWER(${query.q})
-                    OR EXISTS (SELECT 1 FROM "MusicTranslation" t WHERE t."music_index" = music."index" AND t."status" = 'approved' AND LOWER(t."title") = LOWER(${query.q})) THEN 4
+                    OR EXISTS (SELECT 1 FROM music_translations t WHERE t."music_index" = music."index" AND t."status" = 'approved' AND LOWER(t."title") = LOWER(${query.q})) THEN 4
                     WHEN music."title" ILIKE ${prefix} OR music."title_kana" ILIKE ${prefix} THEN 3
                     WHEN music."title" ILIKE ${contains} OR music."title_kana" ILIKE ${contains} THEN 2
                     WHEN LOWER(music."artist") = LOWER(${query.q}) THEN 2 ELSE 1 END AS relevance,
                 COUNT(eligible."id")::int AS target_count,
                 jsonb_agg(jsonb_build_object('difficulty', eligible."difficulty", 'level', eligible."level")
                     ORDER BY CASE eligible."difficulty" WHEN 'Normal' THEN 0 WHEN 'Hard' THEN 1 WHEN 'Expert' THEN 2 ELSE 3 END) AS targets
-            FROM "Music" AS music JOIN eligible ON eligible."music_idx" = music."index"
+            FROM music AS music JOIN eligible ON eligible."music_idx" = music."index"
             ${musicWhere}
             GROUP BY music."index", music."title", music."title_kana", music."artist", music."category_short", music."background"
         `;

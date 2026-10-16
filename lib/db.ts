@@ -2,9 +2,11 @@ import "server-only";
 
 import { appendFileSync } from "node:fs";
 
+import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@prisma/client";
 
 import { serverEnv } from "@/lib/env/server";
+import { PRISMA_PG_SESSION_OPTIONS } from "@/lib/prisma-pg";
 
 const globalForPrisma = globalThis as unknown as {
     prisma: PrismaClient | undefined;
@@ -17,13 +19,22 @@ const queryLogFile =
         ? undefined
         : process.env.NOSLOG_QUERY_LOG;
 
+// Prisma 7 은 DB 연결을 드라이버 어댑터(pg)로 한다(2026-10-16 D10) — 세션 시간대 UTC 고정은 lib/prisma-pg.ts
+
+function adapter() {
+    return new PrismaPg({
+        connectionString: serverEnv.DATABASE_URL,
+        options: PRISMA_PG_SESSION_OPTIONS,
+    });
+}
+
 function createClient() {
     if (!queryLogFile) {
-        return new PrismaClient({ datasourceUrl: serverEnv.DATABASE_URL });
+        return new PrismaClient({ adapter: adapter() });
     }
 
     const client = new PrismaClient({
-        datasourceUrl: serverEnv.DATABASE_URL,
+        adapter: adapter(),
         log: [{ emit: "event", level: "query" }],
     });
     client.$on("query", (event) => {

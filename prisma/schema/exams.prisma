@@ -1,0 +1,165 @@
+// 검정 · 합격 기록
+
+// 검정 모드별 급수와 응시 조건을 관리함
+model Exam {
+  id            Int               @id @default(autoincrement())
+  slug          String            @unique
+  mode          ExamMode
+  shortLabel    String            @map("short_label")
+  scoringType   ExamScoringType   @default(score) @map("scoring_type")
+  grade         Int?
+  title         String
+  description   String?
+  feeNos        Int               @default(0) @map("fee_nos")
+  requiredGrade Int               @default(0) @map("required_grade")
+  status        ExamStatus        @default(draft)
+  createdAt     DateTime          @default(now()) @map("created_at")
+  updatedAt     DateTime          @updatedAt @map("updated_at")
+  stages        ExamStage[]
+  rewards       ExamReward[]
+  submissions   ExamSubmission[]
+  achievements  ExamAchievement[]
+
+  @@unique([mode, grade])
+  @@index([status])
+  @@map("exams")
+}
+
+// 검정의 과제곡과 단계별 통과 조건을 관리함
+model ExamStage {
+  id              Int                 @id @default(autoincrement())
+  position        Int
+  label           String?
+  requirementType ExamRequirementType @default(single) @map("requirement_type")
+  requiredValue   Float               @map("required_value")
+  examId          Int                 @map("exam_id")
+  exam            Exam                @relation(fields: [examId], references: [id], onDelete: Cascade)
+  musicIndex      String              @map("music_idx")
+  music           Music               @relation(fields: [musicIndex], references: [index], onDelete: Restrict)
+  allowedCharts   ExamStageChart[]
+  createdAt       DateTime            @default(now()) @map("created_at")
+  updatedAt       DateTime            @updatedAt @map("updated_at")
+
+  @@unique([examId, position])
+  @@index([musicIndex])
+  @@map("exam_stages")
+}
+
+// 이벤트 검정 등에서 한 과제곡에 허용되는 여러 난이도 채보를 관리함
+model ExamStageChart {
+  // 외래 키가 복합 기본 키(@@id)의 앞 칸이라 이미 인덱스가 있다 — prisma-lint 가 @@id 를 인덱스로 보지 않는다
+  /// prisma-lint-ignore-model require-field-index
+  stageId Int        @map("stage_id")
+  stage   ExamStage  @relation(fields: [stageId], references: [id], onDelete: Cascade)
+  chartId Int        @map("chart_id")
+  chart   MusicChart @relation(fields: [chartId], references: [id], onDelete: Restrict)
+
+  @@id([stageId, chartId])
+  @@index([chartId])
+  @@map("exam_stage_charts")
+}
+
+// 검정 합격 보상을 복수 악곡까지 지원하도록 관리함
+model ExamReward {
+  id         Int            @id @default(autoincrement())
+  position   Int
+  type       ExamRewardType
+  label      String?
+  examId     Int            @map("exam_id")
+  exam       Exam           @relation(fields: [examId], references: [id], onDelete: Cascade)
+  musicIndex String?        @map("music_idx")
+  music      Music?         @relation(fields: [musicIndex], references: [index], onDelete: Restrict)
+
+  @@unique([examId, position])
+  @@index([musicIndex])
+  @@map("exam_rewards")
+}
+
+// 사용자가 제출한 합격 증빙과 심사 상태를 관리함
+model ExamSubmission {
+  id            Int                  @id @default(autoincrement())
+  proofImageUrl String?              @map("proof_image_url")
+  status        ExamSubmissionStatus @default(pending)
+  reviewNote    String?              @map("reviewer_note")
+  submittedAt   DateTime             @default(now()) @map("submitted_at")
+  reviewedAt    DateTime?            @map("reviewed_at")
+  // 승인 · 반려한 운영자(2026-10-16 D5) — 이 날 전 기록은 비어 있다
+  reviewedById  Int?                 @map("reviewed_by_id")
+  reviewedBy    User?                @relation("ExamSubmissionReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+  createdAt     DateTime             @default(now()) @map("created_at")
+  updatedAt     DateTime             @updatedAt @map("updated_at")
+  userId        Int                  @map("user_id")
+  user          User                 @relation("ExamSubmissionAuthor", fields: [userId], references: [id], onDelete: Cascade)
+  examId        Int                  @map("exam_id")
+  // 인증 이력이 있는 검정은 지우지 않는다 — 앱 규칙을 DB 도 지킨다(2026-10-16 P2, 예전 Cascade)
+  exam          Exam                 @relation(fields: [examId], references: [id], onDelete: Restrict)
+  achievement   ExamAchievement?
+  // 스키마 밖 — "exam_submissions_one_pending": (user_id, exam_id) WHERE status = 'pending'(2026-10-16 D5)
+
+  @@index([userId, examId, submittedAt])
+  @@index([status, submittedAt])
+  @@index([examId])
+  @@index([reviewedById])
+  @@map("exam_submissions")
+}
+
+// 승인된 검정 급수를 사용자별로 정규화해 보관함
+model ExamAchievement {
+  id           Int            @id @default(autoincrement())
+  achievedAt   DateTime       @default(now()) @map("achieved_at")
+  createdAt    DateTime       @default(now()) @map("created_at")
+  userId       Int            @map("user_id")
+  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  examId       Int            @map("exam_id")
+  exam         Exam           @relation(fields: [examId], references: [id], onDelete: Restrict)
+  submissionId Int            @unique @map("submission_id")
+  submission   ExamSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, examId])
+  @@index([examId, achievedAt])
+  @@map("exam_achievements")
+}
+
+enum ExamMode {
+  basic
+  event
+  recital
+
+  @@map("exam_mode")
+}
+
+enum ExamScoringType {
+  recital_point
+  score
+
+  @@map("exam_scoring_type")
+}
+
+enum ExamStatus {
+  draft
+  published
+
+  @@map("exam_status")
+}
+
+enum ExamRequirementType {
+  cumulative
+  single
+
+  @@map("exam_requirement_type")
+}
+
+enum ExamRewardType {
+  grade
+  music_unlock
+
+  @@map("exam_reward_type")
+}
+
+enum ExamSubmissionStatus {
+  approved
+  pending
+  rejected
+
+  @@map("exam_submission_status")
+}

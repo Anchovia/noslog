@@ -1,0 +1,199 @@
+// 공지 · 이벤트 · 투표 · 공식 X 피드
+
+// 관리자가 작성하고 홈에 공개하는 서비스 공지사항
+model Announcement {
+  id           Int                       @id @default(autoincrement())
+  isPublished  Boolean                   @default(false) @map("is_published")
+  publishedAt  DateTime?                 @map("published_at")
+  createdAt    DateTime                  @default(now()) @map("created_at")
+  updatedAt    DateTime                  @updatedAt @map("updated_at")
+  publicSlug   String?                   @unique @map("public_slug")
+  placement    AnnouncementPlacement     @default(ROUTINE)
+  category     AnnouncementCategory      @default(NOTICE)
+  priority     Int                       @default(0)
+  activeFrom   DateTime?                 @map("active_from")
+  expiresAt    DateTime?                 @map("expires_at")
+  translations AnnouncementTranslation[]
+  poll         Poll?
+
+  @@index([isPublished, publishedAt])
+  @@map("announcements")
+}
+
+enum AnnouncementPlacement {
+  ROUTINE
+  SERVICE_CRITICAL
+
+  @@map("announcement_placement")
+}
+
+// 일상 공지의 분류 태그. 중대 공지 여부는 placement 가 따로 가짐
+enum AnnouncementCategory {
+  UPDATE
+  MAINTENANCE
+  DATA
+  NOTICE
+
+  @@map("announcement_category")
+}
+
+model AnnouncementTranslation {
+  id             Int          @id @default(autoincrement())
+  announcementId Int          @map("announcement_id")
+  locale         LocaleCode
+  title          String
+  content        String
+  modifiedAt     DateTime?    @map("modified_at")
+  announcement   Announcement @relation(fields: [announcementId], references: [id], onDelete: Cascade)
+
+  @@unique([announcementId, locale])
+  @@map("announcement_translations")
+}
+
+// 유저가 쓰고 관리자가 승인해 공개하는 이벤트 글 (2026-09-18).
+// 작성 중인 판(title · content · 기간 · 배너)과 승인된 공개판(published*)을 따로 둔다 —
+// 공개된 글을 고치는 동안에도 승인 전까지 이전 공개판이 보인다. 기간은 한국 날짜, endsAt 은 끝 날 다음 날 0시(미포함)
+model CommunityEvent {
+  id                 Int                  @id @default(autoincrement())
+  authorId           Int                  @map("author_id")
+  author             User                 @relation("CommunityEventAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  status             CommunityEventStatus @default(draft)
+  title              String
+  content            String
+  startsAt           DateTime             @map("starts_at")
+  endsAt             DateTime             @map("ends_at")
+  bannerUrl          String?              @map("banner_url")
+  publishedTitle     String?              @map("published_title")
+  publishedContent   String?              @map("published_content")
+  publishedStartsAt  DateTime?            @map("published_starts_at")
+  publishedEndsAt    DateTime?            @map("published_ends_at")
+  publishedBannerUrl String?              @map("published_banner_url")
+  publishedAt        DateTime?            @map("published_at")
+  submittedAt        DateTime?            @map("submitted_at")
+  reviewNote         String?              @map("review_note")
+  reviewedAt         DateTime?            @map("reviewed_at")
+  reviewedById       Int?                 @map("reviewer_id")
+  reviewedBy         User?                @relation("CommunityEventReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+  createdAt          DateTime             @default(now()) @map("created_at")
+  updatedAt          DateTime             @updatedAt @map("updated_at")
+  poll               Poll?
+
+  @@index([status, submittedAt])
+  @@index([authorId, updatedAt])
+  @@index([publishedStartsAt])
+  @@index([reviewedById])
+  @@map("community_events")
+}
+
+// 이벤트 글 상태 — 작성 중인 판의 상태. 공개 여부는 공개판(publishedAt)이 따로 말한다
+enum CommunityEventStatus {
+  draft
+  pending
+  changes_requested
+  approved
+  rejected
+
+  @@map("community_event_status")
+}
+
+// 글에 딸린 투표 (2026-09-23 V2) — 본문에 흔적을 남기지 않고 글 하나에 하나씩 딸린다.
+// 질문 · 선택지 글은 번역 표에 두고(공지는 ko · ja · en 세 벌, 이벤트는 쓴 언어 한 벌), 표는 PollVote 가 센다.
+// 표가 하나라도 들어오면 질문 · 선택지를 잠그고(추가만 허용) 마감 시각만 바꿀 수 있다 — 규칙은 서버에서 지킨다
+model Poll {
+  id              Int                   @id @default(autoincrement())
+  announcementId  Int?                  @unique @map("announcement_id")
+  announcement    Announcement?         @relation(fields: [announcementId], references: [id], onDelete: Cascade)
+  eventId         Int?                  @unique @map("event_id")
+  event           CommunityEvent?       @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  /// 여러 개 고르기 — 끄면 누르는 즉시 한 표, 켜면 「투표하기」 버튼으로 모아서 낸다
+  multiple        Boolean               @default(false)
+  /// 여러 개 고르기일 때 최대 개수. 비우면 선택지 수만큼
+  maxChoices      Int?                  @map("max_choices")
+  closesAt        DateTime?             @map("closes_at")
+  results         PollResultsVisibility @default(ALWAYS)
+  /// 누가 무엇을 골랐는지 보여 줄지. 기본은 숨김(익명)
+  showVoters      Boolean               @default(false) @map("show_voters")
+  /// 게시한 뒤에도 선택지를 더할 수 있게 할지
+  allowAddOptions Boolean               @default(false) @map("allow_add_options")
+  createdAt       DateTime              @default(now()) @map("created_at")
+  updatedAt       DateTime              @updatedAt @map("updated_at")
+  translations    PollTranslation[]
+  options         PollOption[]
+  votes           PollVote[]
+
+  @@index([closesAt])
+  @@map("polls")
+}
+
+// 결과를 언제 보여 줄지 — 항상 · 투표한 뒤 · 마감한 뒤
+enum PollResultsVisibility {
+  ALWAYS
+  AFTER_VOTE
+  AFTER_CLOSE
+
+  @@map("poll_results_visibility")
+}
+
+model PollTranslation {
+  id       Int        @id @default(autoincrement())
+  pollId   Int        @map("poll_id")
+  poll     Poll       @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  locale   LocaleCode
+  question String
+
+  @@unique([pollId, locale])
+  @@map("poll_translations")
+}
+
+model PollOption {
+  id           Int                     @id @default(autoincrement())
+  pollId       Int                     @map("poll_id")
+  poll         Poll                    @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  /// 보이는 차례 — 글쓴이가 넣은 순서 그대로 둔다(득표순으로 바꾸지 않는다)
+  position     Int
+  createdAt    DateTime                @default(now()) @map("created_at")
+  translations PollOptionTranslation[]
+  votes        PollVote[]
+
+  @@unique([pollId, position])
+  @@map("poll_options")
+}
+
+model PollOptionTranslation {
+  id       Int        @id @default(autoincrement())
+  optionId Int        @map("option_id")
+  option   PollOption @relation(fields: [optionId], references: [id], onDelete: Cascade)
+  locale   LocaleCode
+  text     String
+
+  @@unique([optionId, locale])
+  @@map("poll_option_translations")
+}
+
+// 한 사람이 한 선택지에 한 표 — 여러 개 고르기면 줄이 여러 개 생긴다
+model PollVote {
+  // 외래 키가 복합 기본 키(@@id)의 앞 칸이라 이미 인덱스가 있다 — prisma-lint 가 @@id 를 인덱스로 보지 않는다
+  /// prisma-lint-ignore-model require-field-index
+  pollId    Int        @map("poll_id")
+  poll      Poll       @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  optionId  Int        @map("option_id")
+  option    PollOption @relation(fields: [optionId], references: [id], onDelete: Cascade)
+  userId    Int        @map("user_id")
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime   @default(now()) @map("created_at")
+
+  @@id([optionId, userId])
+  @@index([pollId, userId])
+  @@index([userId])
+  @@map("poll_votes")
+}
+
+// 공식 X 최신 원문·번역과 12시간 실행 중복 방지 상태. 홈에서는 읽기만 한다.
+model OfficialXFeed {
+  id            String    @id
+  content       Json?
+  lastAttemptAt DateTime? @map("last_attempt_at")
+  lastSuccessAt DateTime? @map("last_success_at")
+
+  @@map("official_x_feeds")
+}

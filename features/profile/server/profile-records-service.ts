@@ -26,11 +26,11 @@ export async function getChartRanks(playIds: readonly number[]) {
     if (!playIds.length) return new Map<number, number>();
     const rows = await db.$queryRaw<{ id: number; position: number }[]>`
         SELECT p.id, (1 + (
-            SELECT COUNT(*) FROM "PlayData" q JOIN "User" u ON u.id = q.user_id
+            SELECT COUNT(*) FROM play_data q JOIN users u ON u.id = q.user_id
             WHERE q.chart_id = p.chart_id AND q.score > p.score
                 AND q.user_id <> p.user_id AND u.hide_play_scores = false
         ))::integer AS position
-        FROM "PlayData" p
+        FROM play_data p
         WHERE p.id IN (${Prisma.join(playIds)}) AND p.chart_id IS NOT NULL AND p.score > 0
     `;
     return new Map(rows.map((row) => [row.id, row.position]));

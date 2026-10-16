@@ -57,17 +57,17 @@ export async function collectAchievementMetrics(
                 count(*) FILTER (WHERE play.fc_type >= 2 OR play.score >= 1000000)::int AS full_combo,
                 count(*) FILTER (WHERE play.fc_type = 3 OR play.score >= 1000000)::int AS pianist,
                 count(*) FILTER (WHERE chart.difficulty = 'Real' AND play.rank IN (${Prisma.join(S_RANKS)}))::int AS real_s_rank
-            FROM "PlayData" play
+            FROM play_data play
             -- 난이도는 채보에서(2026-10-16 P5-2 에서 PlayData 의 난이도 사본을 지웠다)
-            JOIN "MusicChart" chart ON chart.id = play.chart_id
+            JOIN music_charts chart ON chart.id = play.chart_id
             WHERE play.user_id = ${userId}`,
         db.$queryRaw<{ category: string; got: number; total: number }[]>`
             SELECT m.category_short AS category,
                 count(DISTINCT m.index) FILTER (WHERE p.id IS NOT NULL)::int AS got,
                 count(DISTINCT m.index)::int AS total
-            FROM "Music" m
+            FROM music m
             -- 곡은 채보 연결로(2026-10-16 P5-2 에서 PlayData 의 곡 사본을 지웠다)
-            LEFT JOIN ("PlayData" p JOIN "MusicChart" c ON c.id = p.chart_id)
+            LEFT JOIN (play_data p JOIN music_charts c ON c.id = p.chart_id)
                 ON c.music_idx = m.index AND p.user_id = ${userId}
                 AND p.rank IN (${Prisma.join(S_RANKS)})
             WHERE m.category_short IN (${Prisma.join(categoryCodes)})

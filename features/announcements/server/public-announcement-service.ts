@@ -35,9 +35,9 @@ const queryCandidates = unstable_cache(
                     'modifiedAt', to_char(t.modified_at, 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"'),
                     'contentLength', char_length(t.content),
                     'hasContent', length(btrim(t.content, ${CONTENT_WHITESPACE})) > 0
-                )) FROM "AnnouncementTranslation" t WHERE t.announcement_id = a.id
+                )) FROM announcement_translations t WHERE t.announcement_id = a.id
             ), '[]'::jsonb) AS translations
-        FROM "Announcement" a
+        FROM announcements a
         WHERE a.is_published = true AND a.public_slug IS NOT NULL
     `,
     ["public-announcement-summaries-v1"],

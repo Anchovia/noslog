@@ -86,7 +86,7 @@ export async function updateGrade(user_id: number) {
 export async function keepTodayGrade(user_id: number) {
     const today = getKoreanDate();
     await db.$executeRaw`
-        INSERT INTO "UserBestGrade" ("user_id", "day", "grade_basic", "grade_recital", "updated_at")
+        INSERT INTO user_best_grades ("user_id", "day", "grade_basic", "grade_recital", "updated_at")
         SELECT "user_id", ${today}::date, COALESCE("grade_basic", 0), "grade_recital", CURRENT_TIMESTAMP
         FROM "player_stats" WHERE "user_id" = ${user_id}
         ON CONFLICT ("user_id", "day") DO NOTHING`;

@@ -119,6 +119,11 @@ function revalidateTierListIndex() {
 }
 
 type TierPositionTable = "TierBand" | "TierEntry";
+// DB 표 이름(2026-10-16 P7 — snake 복수)
+const POSITION_TABLE_NAMES: Record<TierPositionTable, string> = {
+    TierBand: "tier_bands",
+    TierEntry: "tier_entries",
+};
 
 /*
  * 순번을 문장 두 개로 다시 매긴다(2026-10-16 DB 재설계 P4 Q5) — 예전에는 줄마다 UPDATE 를 두 번(2N) 보냈다.
@@ -128,7 +133,7 @@ type TierPositionTable = "TierBand" | "TierEntry";
 function parkPositions(table: TierPositionTable, ids: number[]) {
     if (ids.length === 0) return [];
     return [
-        db.$executeRaw`UPDATE ${Prisma.raw(`"${table}"`)} SET "position" = -"id", "updated_at" = CURRENT_TIMESTAMP WHERE "id" IN (${Prisma.join(ids)})`,
+        db.$executeRaw`UPDATE ${Prisma.raw(POSITION_TABLE_NAMES[table])} SET "position" = -"id", "updated_at" = CURRENT_TIMESTAMP WHERE "id" IN (${Prisma.join(ids)})`,
     ];
 }
 
@@ -149,7 +154,7 @@ function placePositions(
             ? Prisma.sql`, "tier_band_id" = COALESCE(v.band, t."tier_band_id")`
             : Prisma.empty;
     return [
-        db.$executeRaw`UPDATE ${Prisma.raw(`"${table}"`)} AS t SET "position" = v.position, "updated_at" = CURRENT_TIMESTAMP${band} FROM (VALUES ${values}) AS v(id, position, band) WHERE t."id" = v.id`,
+        db.$executeRaw`UPDATE ${Prisma.raw(POSITION_TABLE_NAMES[table])} AS t SET "position" = v.position, "updated_at" = CURRENT_TIMESTAMP${band} FROM (VALUES ${values}) AS v(id, position, band) WHERE t."id" = v.id`,
     ];
 }
 

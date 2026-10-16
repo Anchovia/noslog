@@ -9,7 +9,7 @@ import { planRecentRecordMerge } from "./recent-record-merge";
 export async function updateRecentBestRecords(userId: number, syncId: number) {
     return db.$transaction(
         async (tx) => {
-            await tx.$queryRaw`SELECT id FROM "User" WHERE id = ${userId} FOR UPDATE`;
+            await tx.$queryRaw`SELECT id FROM users WHERE id = ${userId} FOR UPDATE`;
             await tx.dataSync.findUniqueOrThrow({
                 where: { id: syncId, userId: userId, status: "processing" },
                 select: { id: true },
@@ -128,7 +128,7 @@ export async function updateRecentBestRecords(userId: number, syncId: number) {
                         COUNT(*) FILTER (WHERE "rank" = 'C')::int AS c,
                         COUNT(*) FILTER (WHERE "rank" = 'D')::int AS d,
                         COUNT(*) FILTER (WHERE "fc_type" = 2)::int AS f
-                    FROM "PlayData"
+                    FROM play_data
                     WHERE "user_id" = ${userId} AND "play_count" > 0`;
                 await writePlayerStats(tx, userId, {
                     scoreP: counts.p,

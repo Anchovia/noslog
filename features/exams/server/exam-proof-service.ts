@@ -278,7 +278,7 @@ export async function submitExamProof(
 
         await db.$transaction(async (tx) => {
             // 같은 사용자의 동시 제출을 직렬화하고 잠금 안에서 중복을 다시 확인함
-            await tx.$queryRaw`SELECT id FROM "User" WHERE id = ${userId} FOR UPDATE`;
+            await tx.$queryRaw`SELECT id FROM users WHERE id = ${userId} FOR UPDATE`;
             const pending = await tx.examSubmission.findFirst({
                 where: { userId, examId: exam.id, status: "pending" },
                 select: { proofImageUrl: true },

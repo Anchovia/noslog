@@ -1,0 +1,104 @@
+// 빙고
+
+model Bingo {
+  id                  Int         @id @default(autoincrement())
+  title               String?
+  description         String?
+  sourceVersion       String?     @map("source_version")
+  rewardNos           Int         @map("nos")
+  lineRewardNos       Int         @default(0) @map("line_reward_nos")
+  completionRewardNos Int         @default(0) @map("completion_reward_nos")
+  requiredLines       Int         @map("line")
+  status              BingoStatus @default(draft)
+  startsAt            DateTime?   @map("starts_at")
+  endsAt              DateTime?   @map("ends_at")
+  createdAt           DateTime    @default(now()) @map("created_at")
+  updatedAt           DateTime    @updatedAt @map("updated_at")
+  coverMusicIndex     String      @map("music_idx")
+  coverMusic          Music       @relation("BingoCoverMusic", fields: [coverMusicIndex], references: [index], onDelete: Restrict)
+  cells               BingoCell[]
+
+  @@index([status, startsAt, endsAt])
+  @@index([coverMusicIndex])
+  @@map("bingos")
+}
+
+model BingoCell {
+  id               Int                 @id @default(autoincrement())
+  position         Int // 칸 위치(1~25)
+  title            String              @map("challenge")
+  missionType      BingoMissionType    @default(record) @map("mission_type")
+  ruleType         BingoRuleType       @default(manual) @map("rule_type")
+  ruleConfig       Json?               @map("rule_config")
+  categoryShort    String?             @map("category_short")
+  targetDifficulty BingoDifficulty?    @map("target_difficulty")
+  targetLevel      Int?                @map("target_level")
+  musicIndex       String?             @map("music_idx")
+  music            Music?              @relation("BingoMissionMusic", fields: [musicIndex], references: [index], onDelete: SetNull)
+  bingoId          Int                 @map("bingo_id")
+  bingo            Bingo               @relation(fields: [bingoId], references: [id], onDelete: Cascade)
+  progress         BingoCellProgress[]
+  createdAt        DateTime            @default(now()) @map("created_at")
+  updatedAt        DateTime            @updatedAt @map("updated_at")
+
+  @@unique([bingoId, position])
+  @@index([musicIndex])
+  @@map("bingo_cells")
+}
+
+model BingoCellProgress {
+  id               Int       @id @default(autoincrement())
+  isCompleted      Boolean   @default(false) @map("is_completed")
+  completionSource String    @default("manual") @map("completion_source")
+  completedAt      DateTime? @map("completed_at")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+  userId           Int       @map("user_id")
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bingoCellId      Int       @map("bingo_cell_id")
+  // 진행 기록이 있는 빙고는 지우지 않는다 — 앱 규칙을 DB 도 지킨다(2026-10-16 P2, 예전 Cascade)
+  cell             BingoCell @relation(fields: [bingoCellId], references: [id], onDelete: Restrict)
+
+  @@unique([userId, bingoCellId])
+  @@index([bingoCellId])
+  @@map("bingo_cell_progress")
+}
+
+enum BingoStatus {
+  archived
+  draft
+  published
+
+  @@map("bingo_status")
+}
+
+enum BingoMissionType {
+  category
+  exam
+  music
+  record
+
+  @@map("bingo_mission_type")
+}
+
+enum BingoRuleType {
+  full_combo
+  manual
+  play_category
+  play_count
+  play_music
+  rank
+  score
+
+  @@map("bingo_rule_type")
+}
+
+// 빙고 칸 목표 난이도 — 빙고 편집기가 쓰는 소문자 값 그대로
+enum BingoDifficulty {
+  expert
+  hard
+  normal
+  real
+
+  @@map("bingo_difficulty")
+}

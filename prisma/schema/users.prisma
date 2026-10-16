@@ -1,0 +1,151 @@
+// 사용자 · 계정 · 업적 · 고정 기록
+
+model User {
+  id                       Int                         @id @default(autoincrement())
+  username                 String?                     @unique
+  nostalgiaName            String?                     @map("nostalgia_name")
+  discordId                String?                     @unique @map("discord_id")
+  discordName              String?                     @map("discord_name")
+  discordUsername          String?                     @map("discord_username")
+  avatar                   String?
+  avatarUserManaged        Boolean                     @default(false) @map("avatar_user_managed")
+  country                  String                      @default("ko-KR")
+  locale                   LocaleCode                  @default(ko)
+  showLocalizedMusicTitle  Boolean                     @default(true) @map("show_localized_music_title")
+  profileCompletedAt       DateTime?                   @map("profile_completed_at")
+  preferredArcadeId        Int?                        @map("preferred_arcade_id")
+  hideNostalgiaName        Boolean                     @default(true) @map("hide_nostalgia_name")
+  hideDiscordName          Boolean                     @default(true) @map("hide_discord_name")
+  hidePlayCount            Boolean                     @default(true) @map("hide_play_count")
+  hidePreferredArcade      Boolean                     @default(true) @map("hide_preferred_arcade")
+  hidePlayActivity         Boolean                     @default(true) @map("hide_play_activity")
+  // 플레이 점수 공개(2026-09-18) — 켜면 랭킹에서 빠지고 프로필의 점수 · 기록이 남에게 가려진다. 기본 공개
+  hidePlayScores           Boolean                     @default(false) @map("hide_play_scores")
+  preferredArcade          Arcade?                     @relation(fields: [preferredArcadeId], references: [id], onDelete: SetNull)
+  role                     UserRole                    @default(user)
+  syncTokenVersion         Int                         @default(0) @map("sync_token_version")
+  createdAt                DateTime                    @default(now()) @map("created_at")
+  updatedAt                DateTime                    @updatedAt @map("updated_at")
+  playData                 PlayData[]
+  bestGrades               UserBestGrade[]
+  ratingHistory            UserRatingHistory[]
+  bingoProgress            BingoCellProgress[]
+  communityEvaluations     CommunityChartEvaluation[]
+  communityHelpful         CommunityOpinionHelpful[]
+  communityReplies         CommunityOpinionReply[]
+  communityReplyLikes      CommunityOpinionReplyLike[]
+  communityReports         CommunityOpinionReport[]    @relation("CommunityReportReporter")
+  communityReportsAuthored CommunityOpinionReport[]    @relation("CommunityReportAuthor")
+  chartGoalVotes           ChartGoalVote[]
+  chartGoalVoteAudit       ChartGoalVoteAudit[]
+  dataSyncs                DataSync[]
+  chartPlayHistory         ChartPlayHistory[]
+  chartRecordSnapshots     ChartRecordSnapshot[]
+  examSubmissions          ExamSubmission[]            @relation("ExamSubmissionAuthor")
+  examSubmissionsReviewed  ExamSubmission[]            @relation("ExamSubmissionReviewer")
+  examAchievements         ExamAchievement[]
+  uploadTokenGrants        UploadTokenGrant[]
+  feedbackReports          FeedbackReport[]
+  cabinetChecks            ArcadeCabinetCheck[]
+  chartPatternsCreated     ChartPattern[]              @relation("ChartPatternCreatedBy")
+  chartPatternsUpdated     ChartPattern[]              @relation("ChartPatternUpdatedBy")
+  chartPatternsPublished   ChartPattern[]              @relation("ChartPatternPublishedBy")
+  chartPatternRevisions    ChartPatternRevision[]      @relation("ChartPatternRevisionCreatedBy")
+  communityEvents          CommunityEvent[]            @relation("CommunityEventAuthor")
+  communityEventsReviewed  CommunityEvent[]            @relation("CommunityEventReviewer")
+  pollVotes                PollVote[]
+  fieldProposals           ChartFieldProposal[]        @relation("ChartFieldProposalAuthor")
+  fieldProposalsReviewed   ChartFieldProposal[]        @relation("ChartFieldProposalReviewer")
+  contributionPoints       ContributionPoint[]
+  chartDrafts              ChartDraft[]                @relation("ChartDraftAuthor")
+  chartDraftsReviewed      ChartDraft[]                @relation("ChartDraftReviewer")
+  chartComments            ChartComment[]              @relation("ChartCommentAuthor")
+  chartCommentsResolved    ChartComment[]              @relation("ChartCommentResolver")
+  chartPatternsAuthored    ChartPattern[]              @relation("ChartPatternAuthor")
+  achievements             UserAchievement[]
+  achievementShowcase      UserAchievementShowcase[]
+  pinnedRecords            UserPinnedRecord[]
+  ratings                  PlayerRating[]
+  stats                    PlayerStats?
+
+  @@index([preferredArcadeId])
+  // 관리자 대시보드 가입자 집계(2026-10-16 DB 재설계 P2)
+  @@index([createdAt])
+  @@map("users")
+}
+
+// 사용자별 이미지 업로드 토큰 발급 횟수를 제한함
+model UploadTokenGrant {
+  id        Int      @id @default(autoincrement())
+  purpose   String
+  createdAt DateTime @default(now()) @map("created_at")
+  userId    Int      @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, purpose, createdAt])
+  @@map("upload_token_grants")
+}
+
+// 업적 단계 획득 기록(2026-09-24). 업적 정의(키 · 기준)는 코드(features/achievements)에 둔다.
+// 동기화 때 판정해 새 단계만 더한다. 기준을 넘었다가 내려가도 지우지 않는다. 날짜는 NosLog 가 확인한 때
+model UserAchievement {
+  id         Int      @id @default(autoincrement())
+  userId     Int      @map("user_id")
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  key        String
+  // 1 동 · 2 은 · 3 금
+  tier       Int
+  achievedAt DateTime @default(now()) @map("achieved_at")
+
+  @@unique([userId, key, tier])
+  @@index([key, tier])
+  @@map("user_achievements")
+}
+
+// 프로필 머리에 거는 업적(최대 3칸). 비어 있으면 높은 단계를 자동으로 보인다
+model UserAchievementShowcase {
+  userId   Int    @map("user_id")
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // 1~3
+  position Int
+  key      String
+
+  @@id([userId, position])
+  @@unique([userId, key])
+  @@map("user_achievement_showcases")
+}
+
+// 프로필 개요에 고정한 기록(최대 3칸 · 한 줄 소감, 2026-09-26 S2). 비어 있으면 베스트 상위 3곡을 보인다.
+// 동기화 때마다 기록 행이 바뀔 수 있어 채보 기준으로 고정한다
+model UserPinnedRecord {
+  id        Int        @id @default(autoincrement())
+  userId    Int        @map("user_id")
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chartId   Int        @map("chart_id")
+  chart     MusicChart @relation(fields: [chartId], references: [id], onDelete: Cascade)
+  // 1~3
+  position  Int
+  comment   String?    @db.VarChar(80)
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+
+  @@unique([userId, position])
+  @@unique([userId, chartId])
+  @@index([chartId])
+  @@map("user_pinned_records")
+}
+
+enum UserRole {
+  admin
+  user
+
+  @@map("user_role")
+}
+
+enum LocaleCode {
+  en
+  ja
+  ko
+
+  @@map("locale_code")
+}

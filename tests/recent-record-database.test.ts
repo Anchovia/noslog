@@ -8,7 +8,16 @@ vi.mock("@/lib/db", async () => {
             "Recent-record integration tests require a local database."
         );
     const { PrismaClient } = await import("@prisma/client");
-    return { default: new PrismaClient({ datasourceUrl: value }) };
+    const { PrismaPg } = await import("@prisma/adapter-pg");
+    const { PRISMA_PG_SESSION_OPTIONS } = await import("@/lib/prisma-pg");
+    return {
+        default: new PrismaClient({
+            adapter: new PrismaPg({
+                connectionString: value,
+                options: PRISMA_PG_SESSION_OPTIONS,
+            }),
+        }),
+    };
 });
 vi.mock("next/cache", () => ({ unstable_cache: (fn: unknown) => fn }));
 import db from "@/lib/db";
@@ -52,7 +61,7 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
             title: "Test",
             grade_basic: Math.floor(score / 100),
         });
-        // 실제 경로처럼 앞 동기화를 닫고 새로 연다 — 사람당 처리 중은 하나(DataSync_one_processing_per_user, 2026-10-16)
+        // 실제 경로처럼 앞 동기화를 닫고 새로 연다 — 사람당 처리 중은 하나(data_syncs_one_processing_per_user, 2026-10-16)
         const sync = async (
             time: string,
             scope: "full" | "recent" = "recent"
@@ -107,7 +116,7 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
         });
         afterAll(async () => {
             await db.$executeRawUnsafe(
-                'ALTER TABLE "PlayData" DROP CONSTRAINT IF EXISTS "recent_test_count_limit"'
+                'ALTER TABLE play_data DROP CONSTRAINT IF EXISTS "recent_test_count_limit"'
             );
             if (userId) await db.user.delete({ where: { id: userId } });
             await db.music.deleteMany({ where: { index: musicIndex } });
@@ -184,7 +193,7 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
                 next.id
             );
             await db.$executeRawUnsafe(
-                'ALTER TABLE "PlayData" ADD CONSTRAINT "recent_test_count_limit" CHECK (play_count <= 2)'
+                'ALTER TABLE play_data ADD CONSTRAINT "recent_test_count_limit" CHECK (play_count <= 2)'
             );
             await expect(
                 updateRecentBestRecords(userId, next.id)
@@ -199,7 +208,7 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
                 })
             ).toBe(1);
             await db.$executeRawUnsafe(
-                'ALTER TABLE "PlayData" DROP CONSTRAINT "recent_test_count_limit"'
+                'ALTER TABLE play_data DROP CONSTRAINT "recent_test_count_limit"'
             );
             expect(
                 (await updateRecentBestRecords(userId, next.id)).changedRecords

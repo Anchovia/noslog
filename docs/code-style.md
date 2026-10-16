@@ -285,6 +285,12 @@ verification. Report the actual checks and any unverified runtime conditions.
 - Import scripts in `prisma/` load their environment through
   `prisma/script-env.mjs`. A non-local `DATABASE_URL` runs only when
   `DATABASE_EXPECTED_HOST` names the same host.
+- Database names are snake_case (2026-10-16 P7): tables are plural
+  (`users`, `music_charts`; uncountable words stay: `play_data`,
+  `player_stats`, `music`), columns and enum types singular (`user_id`,
+  `chart_difficulty`). Prisma models stay PascalCase and fields camelCase, with
+  `@@map` / `@map` to the database name. Raw SQL writes these names without
+  quotes. Name a hand-written index or CHECK `<table>_<purpose>`.
 - Prisma model fields are camelCase and keep the database column name with
   `@map` (2026-10-16 D1-B). API and page payloads keep their existing
   snake_case keys: map each key explicitly instead of spreading a database row
@@ -307,15 +313,26 @@ verification. Report the actual checks and any unverified runtime conditions.
   `Prisma.sql`) for it: the type checker does not see raw SQL. Cover each raw
   query with a database test that runs it against the migrated schema.
 - Write migrations so the previous deployment can run against the new schema
-  (expand, switch, then contract). Put `CREATE INDEX CONCURRENTLY` alone in its
-  own migration file: Prisma 6.19 sends a file as one implicit transaction.
+  (expand, switch, then contract). Prisma 7 runs each statement of a migration
+  on its own (prisma/prisma#30640), so start every new migration with
+  `BEGIN;` and end it with `COMMIT;`; a failure then leaves nothing applied.
+  Put `CREATE INDEX CONCURRENTLY` alone in its own file without them
+  (`npm run lint:migrations` checks both).
+- The schema lives in `prisma/schema/*.prisma`, one file per area (users,
+  records, music, contributions, tiers, community, content, feedback, arcades,
+  bingos, exams, analytics). `prisma.config.ts` gives the CLI the schema folder,
+  the migrations folder, and `DATABASE_URL`; the app connects through the `pg`
+  driver adapter in `lib/db.ts`, and scripts use `createScriptPrismaClient()`.
+  Every adapter passes `PRISMA_PG_SESSION_OPTIONS` (`lib/prisma-pg.ts`), which
+  fixes the session time zone to UTC: adapter-pg 7.10 reads a `timestamptz`
+  offset as `+00:00`, so a non-UTC session shifts times.
 - Store closed value lists (status, mode, kind, role, locale) as Prisma enums,
   not strings with CHECK constraints. Keep each value identical to the string
   the code already uses, and list values alphabetically: Postgres sorts an enum
   by declaration order, so this keeps `orderBy` results the same as for text.
   Add a new value with `ALTER TYPE … ADD VALUE` in its own migration, and start
   writing it only in a later deployment. Raw SQL that compares an enum column
-  with a bound parameter needs a cast (`${value}::"EnumName"`). Open values
+  with a bound parameter needs a cast (`${value}::enum_name`). Open values
   from the game (rank) and free text stay strings.
 
 ## Feature view and connection boundaries

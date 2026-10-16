@@ -54,12 +54,12 @@ const queryChartRanking = (
                     ROW_NUMBER() OVER (ORDER BY p.score DESC,
                         p.best_at ASC NULLS FIRST,
                         p.user_id ASC) AS row_number
-                FROM "PlayData" p JOIN "User" u ON u.id = p.user_id
+                FROM play_data p JOIN users u ON u.id = p.user_id
                 WHERE p.chart_id = ${chartId} AND p.score > 0 AND ${visiblePlayers(includeUserId)}
             )
             SELECT r.position, r.rank, r.score, r.fc_type, r.user_id,
                 JSON_BUILD_OBJECT('id', u.id, 'username', u.username, 'avatar', u.avatar, 'country', u.country) AS "user"
-            FROM ranked r JOIN "User" u ON u.id = r.user_id
+            FROM ranked r JOIN users u ON u.id = r.user_id
             ORDER BY r.row_number
             OFFSET ${(page - 1) * MUSIC_RANKING_PAGE_SIZE} LIMIT ${MUSIC_RANKING_PAGE_SIZE}
         `;
@@ -102,12 +102,12 @@ function scorePlayersQuery(
                 (ROW_NUMBER() OVER (ORDER BY p.score DESC,
                     p.best_at ASC NULLS FIRST,
                     p.user_id ASC))::integer AS row_number
-            FROM "PlayData" p JOIN "User" u ON u.id = p.user_id
+            FROM play_data p JOIN users u ON u.id = p.user_id
             WHERE p.chart_id = ${chartId} AND p.score > 0 AND ${visiblePlayers(includeUserId)}
         )
         SELECT r.position, r.row_number, r.rank, r.score, r.fc_type, r.user_id,
             JSON_BUILD_OBJECT('id', u.id, 'username', u.username, 'avatar', u.avatar, 'country', u.country) AS "user"
-        FROM ranked r JOIN "User" u ON u.id = r.user_id
+        FROM ranked r JOIN users u ON u.id = r.user_id
         ${filter}
         ORDER BY r.row_number
         LIMIT ${limit}

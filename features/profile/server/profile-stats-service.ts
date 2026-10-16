@@ -71,8 +71,8 @@ export async function getProfileStats(userId: number) {
                        ELSE 'B'
                    END AS tier,
                    count(*)::int AS count
-            FROM "PlayData" play
-            JOIN "MusicChart" chart ON chart.id = play.chart_id
+            FROM play_data play
+            JOIN music_charts chart ON chart.id = play.chart_id
             WHERE play.user_id = ${userId} AND play.score > 0
             GROUP BY 1, 2, 3
         `,
@@ -103,7 +103,7 @@ export async function getProfileStats(userId: number) {
                            AND judge_sjust + judge_just + judge_good + judge_near + judge_miss > 0,
                            false
                        ) AS judged
-                FROM "PlayData"
+                FROM play_data
                 WHERE user_id = ${userId} AND score > 0
             ) play
         `,

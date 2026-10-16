@@ -84,7 +84,9 @@ jobs:
                   DATABASE_URL: ${{ env.TEST_DATABASE_URL }}
             # 스키마를 고치고 마이그레이션을 안 만들면 여기서 막힌다(exit 2). 손으로 넣은 CHECK · 부분 인덱스는 Prisma 가 보지 못해 잡지 않는다
             - name: Schema matches migrations
-              run: npx prisma migrate diff --from-url "$TEST_DATABASE_URL" --to-schema-datamodel prisma/schema.prisma --exit-code
+              run: npx prisma migrate diff --from-config-datasource --to-schema prisma/schema --exit-code
+              env:
+                  DATABASE_URL: ${{ env.TEST_DATABASE_URL }}
             - run: npm test
 
     # next build 가 프로젝트 전체(tests · e2e 포함) 타입 검사를 한다. 따로 tsc 를 돌리지 않는다.
@@ -102,7 +104,7 @@ jobs:
               uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
               with:
                   path: .next/cache
-                  key: nextjs-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-${{ hashFiles('app/**', 'components/**', 'features/**', 'lib/**', 'public/**', 'proxy.ts', 'next.config.mjs', 'prisma/schema.prisma') }}
+                  key: nextjs-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-${{ hashFiles('app/**', 'components/**', 'features/**', 'lib/**', 'public/**', 'proxy.ts', 'next.config.mjs', 'prisma/schema/**') }}
                   restore-keys: |
                       nextjs-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-
             - run: npm run build
@@ -171,7 +173,7 @@ jobs:
                   path: |
                       .next/cache
                       !.next/cache/fetch-cache
-                  key: nextjs-e2e-${{ hashFiles('package-lock.json') }}-${{ hashFiles('app/**', 'components/**', 'features/**', 'lib/**', 'public/**', 'proxy.ts', 'next.config.mjs', 'prisma/schema.prisma') }}
+                  key: nextjs-e2e-${{ hashFiles('package-lock.json') }}-${{ hashFiles('app/**', 'components/**', 'features/**', 'lib/**', 'public/**', 'proxy.ts', 'next.config.mjs', 'prisma/schema/**') }}
                   restore-keys: |
                       nextjs-e2e-${{ hashFiles('package-lock.json') }}-
             # 이미 저장된 옛 캐시에는 fetch-cache 가 들어 있다 — 복원 뒤 지운다

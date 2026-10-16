@@ -34,17 +34,17 @@ export async function getSearchPreview(
                 CASE WHEN LOWER(music."title") = LOWER(${query.q}) THEN 0
                      WHEN music."title" ILIKE ${prefix} THEN 1
                      WHEN music."title" ILIKE ${contains} THEN 2 ELSE 3 END AS relevance
-            FROM "Music" AS music
+            FROM music AS music
             ${
                 chartScope
-                    ? Prisma.sql`JOIN "MusicChart" AS chart ON chart."music_idx" = music."index"
-                JOIN "ChartPattern" AS pattern ON pattern."chart_id" = chart."id"
+                    ? Prisma.sql`JOIN music_charts AS chart ON chart."music_idx" = music."index"
+                JOIN chart_patterns AS pattern ON pattern."chart_id" = chart."id"
                 AND pattern."published_revision" IS NOT NULL AND pattern."published_content" IS NOT NULL`
                     : Prisma.empty
             }
             WHERE music."title" ILIKE ${contains} OR music."artist" ILIKE ${contains}
                 OR music."title_kana" ILIKE ${contains}
-                OR EXISTS (SELECT 1 FROM "MusicTranslation" AS translation
+                OR EXISTS (SELECT 1 FROM music_translations AS translation
                     WHERE translation."music_index" = music."index" AND translation."status" = 'approved'
                     AND translation."title" ILIKE ${contains})
         )

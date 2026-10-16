@@ -37,7 +37,7 @@ function upsertPlayData(tx: Prisma.TransactionClient, rows: PlayDataRow[]) {
         )`
     );
     return tx.$executeRaw`
-        INSERT INTO "PlayData" (
+        INSERT INTO play_data (
             "user_id", "chart_id",
             "level", "score", "rank", "fc_type",
             "play_count", "clear_count", "clear_flag",
@@ -232,7 +232,7 @@ export async function updatePlayData(
 
         await db.$transaction(
             async (tx) => {
-                await tx.$queryRaw`SELECT id FROM "User" WHERE id = ${user_id} FOR UPDATE`;
+                await tx.$queryRaw`SELECT id FROM users WHERE id = ${user_id} FOR UPDATE`;
                 const sync = await tx.dataSync.findUniqueOrThrow({
                     where: {
                         id: sync_id,

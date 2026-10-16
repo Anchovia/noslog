@@ -1,5 +1,6 @@
 import { loadEnvFile } from "node:process";
 
+import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@prisma/client";
 
 import {
@@ -41,7 +42,14 @@ if (requestedCurve && !curveIds.includes(requestedCurve)) {
 }
 
 const selectedCurveIds = requestedCurve ? [requestedCurve] : curveIds;
-const db = new PrismaClient();
+// Prisma 7 은 pg 어댑터로 연결하고 .env 를 스스로 읽지 않는다(2026-10-16)
+if (!process.env.DATABASE_URL) process.loadEnvFile(".env");
+const db = new PrismaClient({
+    adapter: new PrismaPg({
+        connectionString: process.env.DATABASE_URL,
+        options: "-c TimeZone=UTC",
+    }),
+});
 
 function round(value: number, digits = 2) {
     const scale = 10 ** digits;

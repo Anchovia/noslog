@@ -8,7 +8,16 @@ vi.mock("@/lib/db", async () => {
     if (!["localhost", "127.0.0.1"].includes(new URL(value).hostname))
         throw new Error("Tier position tests require a local database.");
     const { PrismaClient } = await import("@prisma/client");
-    return { default: new PrismaClient({ datasourceUrl: value }) };
+    const { PrismaPg } = await import("@prisma/adapter-pg");
+    const { PRISMA_PG_SESSION_OPTIONS } = await import("@/lib/prisma-pg");
+    return {
+        default: new PrismaClient({
+            adapter: new PrismaPg({
+                connectionString: value,
+                options: PRISMA_PG_SESSION_OPTIONS,
+            }),
+        }),
+    };
 });
 vi.mock("@/lib/admin", () => ({ requireAdmin: async () => ({ id: 1 }) }));
 vi.mock("next/cache", () => ({ updateTag: vi.fn(), revalidatePath: vi.fn() }));

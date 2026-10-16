@@ -1,0 +1,251 @@
+// 기록 영역 세 층 — 현재 기록(PlayData) · 이력 · 파생 값(player_stats) · 동기화
+
+// 유저의 데이터 연동 실행 단위와 처리 결과를 관리함
+model DataSync {
+  id              Int                   @id @default(autoincrement())
+  status          DataSyncStatus        @default(processing)
+  syncScope       SyncScope             @default(full) @map("sync_scope")
+  receivedPlays   Int                   @default(0) @map("received_plays")
+  insertedPlays   Int                   @default(0) @map("inserted_plays")
+  changedRecords  Int                   @default(0) @map("changed_records")
+  errorMessage    String?               @map("error_message")
+  userId          Int                   @map("user_id")
+  user            User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  startedAt       DateTime              @default(now()) @map("started_at")
+  completedAt     DateTime?             @map("completed_at")
+  playHistory     ChartPlayHistory[]
+  recordSnapshots ChartRecordSnapshot[]
+  ratingHistory   UserRatingHistory[]
+  // 스키마 밖(Prisma 6 은 부분 인덱스를 쓰지 못함) — "data_syncs_one_processing_per_user": user_id WHERE status = 'processing'.
+  // 사람당 처리 중 동기화는 하나. 존재는 tests/schema-objects-database.test.ts 가 확인한다
+
+  @@index([userId, startedAt])
+  // 관리자 대시보드 · 동기화 목록(상태별 최근순, 2026-10-16 P2)
+  @@index([status, startedAt])
+  @@map("data_syncs")
+}
+
+// 공식 최근 플레이 응답을 중복 없이 누적해 점수 추이에 사용함
+model ChartPlayHistory {
+  id            Int        @id @default(autoincrement())
+  level         Int?
+  score         Int
+  bestScore     Int?       @map("best_score")
+  maxCombo      Int        @map("max_combo")
+  rank          String
+  gradeBasic    Int        @map("grade_basic")
+  classBasic    String?    @map("class_basic")
+  fastCount     Int?       @map("fast_count")
+  slowCount     Int?       @map("slow_count")
+  isOnehand     Boolean?   @map("is_onehand")
+  judgeSjust    Int?       @map("judge_sjust")
+  judgeJust     Int?       @map("judge_just")
+  judgeGood     Int?       @map("judge_good")
+  judgeMiss     Int?       @map("judge_miss")
+  judgeNear     Int?       @map("judge_near")
+  // 플레이 시각(공식 KST 시각을 timestamptz 로) — 같은 플레이를 가르는 유일 키의 일부
+  playedAt      DateTime   @map("played_at") @db.Timestamptz(3)
+  chartId       Int        @map("chart_id")
+  chart         MusicChart @relation(fields: [chartId], references: [id], onDelete: Cascade)
+  userId        Int        @map("user_id")
+  user          User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  recordApplied Boolean    @default(false) @map("record_applied")
+  firstSyncId   Int?       @map("first_sync_id")
+  firstSync     DataSync?  @relation(fields: [firstSyncId], references: [id], onDelete: SetNull)
+  createdAt     DateTime   @default(now()) @map("created_at")
+
+  // 같은 플레이 하나(2026-10-16 P5-1 — 문자열 시각 키에서 played_at 으로)
+  @@unique([userId, chartId, playedAt, score, maxCombo, rank])
+  // 최근 플레이 목록(사람별 최신순)
+  @@index([userId, playedAt(sort: Desc), id(sort: Desc)])
+  @@index([firstSyncId])
+  @@index([userId, recordApplied])
+  // 외래 키 — 채보를 지울 때 표 전체를 훑지 않게. 큰 표라 CONCURRENTLY 단독 마이그레이션으로 만든다(2026-10-16 P2)
+  @@index([chartId])
+  @@map("chart_play_histories")
+}
+
+// 전체·최근 연동에서 개인 기록이 변경된 시점의 상태를 저장함
+model ChartRecordSnapshot {
+  id                Int        @id @default(autoincrement())
+  level             Int
+  score             Int
+  rank              String
+  fcType            Int        @map("fc_type")
+  playCount         Int        @map("play_count")
+  clearCount        Int?       @map("clear_count")
+  clearFlag         Int?       @map("clear_flag")
+  fullcomboCount    Int        @map("fullcombo_count")
+  pianisticCount    Int        @map("pianistic_count")
+  maxCombo          Int        @map("max_combo")
+  gradeBasic        Int        @map("grade_basic")
+  gradeRecital      Int?       @map("grade_recital")
+  judgeSjust        Int?       @map("judge_sjust")
+  judgeJust         Int?       @map("judge_just")
+  judgeGood         Int?       @map("judge_good")
+  judgeMiss         Int?       @map("judge_miss")
+  judgeNear         Int?       @map("judge_near")
+  noteRateStandard  Int?       @map("note_rate_standard")
+  noteRateTenuto    Int?       @map("note_rate_tenuto")
+  noteRateGlissando Int?       @map("note_rate_glissando")
+  noteRateTrill     Int?       @map("note_rate_trill")
+  // PlayData.bestAt 과 같은 뜻
+  bestAt            DateTime?  @map("best_at") @db.Timestamptz(3)
+  chartId           Int        @map("chart_id")
+  chart             MusicChart @relation(fields: [chartId], references: [id], onDelete: Cascade)
+  userId            Int        @map("user_id")
+  user              User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  syncId            Int        @map("sync_id")
+  sync              DataSync   @relation(fields: [syncId], references: [id], onDelete: Cascade)
+  createdAt         DateTime   @default(now()) @map("created_at")
+
+  @@unique([syncId, chartId])
+  @@index([userId, chartId, createdAt])
+  // 외래 키 — 위와 같은 이유, CONCURRENTLY 단독 마이그레이션(2026-10-16 P2)
+  @@index([chartId])
+  @@map("chart_record_snapshots")
+}
+
+model UserBestGrade {
+  id           Int      @id @default(autoincrement())
+  gradeBasic   Int      @map("grade_basic")
+  gradeRecital Int?     @map("grade_recital")
+  // 그 날짜(서울 날짜)
+  day          DateTime @map("day") @db.Date
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  userId       Int      @map("user_id")
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // 사람당 하루 한 줄 — 코드 규칙을 DB 도 지킨다(2026-10-16 DB 재설계 P2, P5-1 에서 day 로)
+  @@unique([userId, day])
+  @@map("user_best_grades")
+}
+
+// 실제 동기화 시점의 레이팅을 보관하며 과거 값을 소급 추정하지 않음
+model UserRatingHistory {
+  id         Int      @id @default(autoincrement())
+  userId     Int      @map("user_id")
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  syncId     Int      @map("sync_id")
+  sync       DataSync @relation(fields: [syncId], references: [id], onDelete: Cascade)
+  mode       PlayMode
+  rating     Float
+  observedAt DateTime @default(now()) @map("observed_at")
+
+  @@unique([syncId, mode])
+  @@index([userId, mode, observedAt])
+  @@map("user_rating_histories")
+}
+
+model PlayData {
+  id                Int        @id @default(autoincrement())
+  level             Int
+  score             Int
+  rank              String
+  fcType            Int        @map("fc_type")
+  playCount         Int        @map("play_count")
+  clearCount        Int?       @map("clear_count")
+  clearFlag         Int?       @map("clear_flag")
+  fullcomboCount    Int        @map("fullcombo_count")
+  pianisticCount    Int        @map("pianistic_count")
+  maxCombo          Int        @map("max_combo")
+  gradeBasic        Int        @map("grade_basic")
+  gradeRecital      Int?       @map("grade_recital")
+  judgeSjust        Int?       @map("judge_sjust")
+  judgeJust         Int?       @map("judge_just")
+  judgeGood         Int?       @map("judge_good")
+  judgeMiss         Int?       @map("judge_miss")
+  judgeNear         Int?       @map("judge_near")
+  noteRateStandard  Int?       @map("note_rate_standard")
+  noteRateTenuto    Int?       @map("note_rate_tenuto")
+  noteRateGlissando Int?       @map("note_rate_glissando")
+  noteRateTrill     Int?       @map("note_rate_trill")
+  // 기록 시각(KST 공식 시각을 timestamptz 로, 모르면 NULL — 옛 「1970-01-01 09:00」 자리표시도 NULL)
+  bestAt            DateTime?  @map("best_at") @db.Timestamptz(3)
+  createdAt         DateTime   @default(now()) @map("created_at")
+  updatedAt         DateTime   @updatedAt @map("updated_at")
+  userId            Int        @map("user_id")
+  user              User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // 기록은 채보에 묶인다(2026-10-16 D2-B) — 기록이 있는 채보는 지우지 못한다(앱에 채보 삭제 경로는 없음)
+  chartId           Int        @map("chart_id")
+  chart             MusicChart @relation(fields: [chartId], references: [id], onDelete: Restrict)
+
+  @@unique([userId, chartId])
+  @@index([chartId, score, userId])
+  @@index([userId, gradeBasic])
+  @@index([userId, gradeRecital])
+  @@map("play_data")
+}
+
+// 동기화가 계산해 두는 사람별 값(2026-10-16 DB 재설계 D2-B). 예전에는 User 에 섞여 있었다 —
+// 로그인한 모든 요청이 읽고 동기화 동안 잠그는 User 행을 작게 두려고 옮긴다. 지금은 늘리기 단계라
+// 동기화가 User 의 같은 열과 이 표에 함께 쓰고(양쪽 쓰기), 읽기는 아직 User 다(P4 에서 전환).
+// 「score*」 = 그 랭크로 끝낸 채보 수(scoreF 는 풀콤보 수). 값의 뜻은 User 의 같은 이름 열과 같다
+model PlayerStats {
+  userId           Int       @id @map("user_id")
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  gradeBasic       Int?      @map("grade_basic")
+  gradeRecital     Int?      @map("grade_recital")
+  scoreP           Int?      @map("score_p")
+  scoreF           Int?      @map("score_f")
+  scoreS           Int?      @map("score_s")
+  scoreA2          Int?      @map("score_a2")
+  scoreA           Int?      @map("score_a")
+  scoreB2          Int?      @map("score_b2")
+  scoreB           Int?      @map("score_b")
+  scoreC           Int?      @map("score_c")
+  scoreD           Int?      @map("score_d")
+  // 공식 플레이 횟수 · 마지막 플레이(공식 사이트 시각, KST 를 timestamptz 로)
+  playCount        Int?      @map("play_count")
+  lastPlayedAt     DateTime? @map("last_played_at") @db.Timestamptz(3)
+  lastFullRecordAt DateTime? @map("last_full_record_at") @db.Timestamptz(3)
+  updatedAt        DateTime  @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@index([gradeBasic])
+  @@index([gradeRecital])
+  @@map("player_stats")
+}
+
+// 레이팅 랭킹용 — 사람 · 모드마다 동기화 때 계산해 둔 값(2026-10-15 L2-A2).
+// 랭킹은 이 값을 정렬해 한 쪽만 읽는다. 값은 calculateBasicRating 결과 그대로(표시할 때 반올림)
+// basis_version = 계산식 판 + 피아니스트 서열 상수의 지문. 기준이 바뀌면 전원을 한 트랜잭션으로 다시 써서
+// 다 셀 때까지는 옛 값을 보여 주고, 옛 값과 새 값이 섞이지 않게 한다
+model PlayerRating {
+  // 외래 키가 복합 기본 키(@@id)의 앞 칸이라 이미 인덱스가 있다 — prisma-lint 가 @@id 를 인덱스로 보지 않는다
+  /// prisma-lint-ignore-model require-field-index
+  userId       Int      @map("user_id")
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // basic | recital
+  mode         PlayMode
+  rating       Float
+  filledSlots  Int      @map("filled_slots")
+  basisVersion String   @map("basis_version")
+  computedAt   DateTime @default(now()) @map("computed_at")
+
+  @@id([userId, mode])
+  @@index([mode, rating(sort: Desc)])
+  @@map("player_ratings")
+}
+
+enum DataSyncStatus {
+  completed
+  failed
+  processing
+
+  @@map("data_sync_status")
+}
+
+enum SyncScope {
+  full
+  recent
+
+  @@map("sync_scope")
+}
+
+enum PlayMode {
+  basic
+  recital
+
+  @@map("play_mode")
+}
