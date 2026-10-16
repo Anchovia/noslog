@@ -8,6 +8,7 @@ import {
     type ProfileRecordsQuery,
 } from "@/features/profile/schemas/public-profile-schema";
 import db from "@/lib/db";
+import { hasFullComboLamp } from "@/lib/music/clear-mark";
 import { formatKstMinute } from "@/lib/player-stats";
 
 const BEST_LIMIT = 50;
@@ -45,16 +46,16 @@ export async function getPublicProfileRecords(
         select: { id: true },
     });
     if (!user) return null;
-    const field = query.mode === "basic" ? "grade_basic" : "grade_recital";
+    const field = query.mode === "basic" ? "gradeBasic" : "gradeRecital";
     const best =
         query.view === "best"
             ? await db.playData.findMany({
-                  where: { user_id: userId, [field]: { gt: 0 } },
+                  where: { userId: userId, [field]: { gt: 0 } },
                   select: { id: true },
                   orderBy: [
                       { [field]: "desc" },
                       { score: "desc" },
-                      { chart_id: "asc" },
+                      { chartId: "asc" },
                       { id: "asc" },
                   ],
                   take: BEST_LIMIT,
@@ -64,7 +65,7 @@ export async function getPublicProfileRecords(
         (best ?? []).map((play, index) => [play.id, index + 1])
     );
     const where: Prisma.PlayDataWhereInput = {
-        user_id: userId,
+        userId: userId,
         score: { gt: 0 },
         ...(best ? { id: { in: best.map((play) => play.id) } } : {}),
     };
@@ -79,7 +80,7 @@ export async function getPublicProfileRecords(
                 : [
                       { [field]: "desc" },
                       { score: "desc" },
-                      { chart_id: "asc" },
+                      { chartId: "asc" },
                       { id: "asc" },
                   ];
     const [total, plays] = await Promise.all([
@@ -94,14 +95,14 @@ export async function getPublicProfileRecords(
                 level: true,
                 score: true,
                 rank: true,
-                fc_type: true,
+                fcType: true,
                 bestAt: true,
-                grade_basic: true,
-                grade_recital: true,
+                gradeBasic: true,
+                gradeRecital: true,
                 // 곡 · 난이도는 채보 연결에서(2026-10-16 P5-1)
                 chart: {
                     select: {
-                        music_idx: true,
+                        musicIdx: true,
                         difficulty: true,
                         music: { select: { title: true, background: true } },
                     },
@@ -116,18 +117,31 @@ export async function getPublicProfileRecords(
         hasMore: query.offset + plays.length < total,
         items: plays.map((play) => ({
             id: play.id,
-            musicIndex: play.chart.music_idx,
+            musicIndex: play.chart.musicIdx,
             title: play.chart.music.title,
             background: play.chart.music.background,
             difficulty: play.chart.difficulty,
             level: play.level,
             score: play.score,
             rank: play.rank,
-            fullCombo: play.fc_type >= 2,
+            fullCombo: hasFullComboLamp(play.fcType),
             contribution: (play[field] ?? 0) > 0 ? play[field]! / 100 : null,
             playedAt: recordPlayedAt(play.bestAt),
             chartRank: ranks.get(play.id) ?? null,
             position: positions.get(play.id) ?? null,
         })),
     });
+}
+
+/** 기록 탭 머리의 수 — 그 모드 Grd 가 있는 기록(2026-10-16 D8 — 화면에서 옮김) */
+export function countRecordsWithGrade(
+    userId: number,
+    field: "gradeBasic" | "gradeRecital"
+) {
+    return db.playData.count({ where: { userId, [field]: { gt: 0 } } });
+}
+
+/** 점수가 있는 기록 수 */
+export function countPlayedRecords(userId: number) {
+    return db.playData.count({ where: { userId, score: { gt: 0 } } });
 }

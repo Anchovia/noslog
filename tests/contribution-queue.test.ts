@@ -67,13 +67,13 @@ describe("기여 대기 현황 · 내 제안 수", () => {
     it("내 제안은 상태별로 세고, 없는 상태는 0 으로 남긴다", async () => {
         mocks.groupBy.mockResolvedValue([
             { status: "pending", _count: { _all: 2 } },
-            { status: "applied", _count: { _all: 7 } },
+            { status: "approved", _count: { _all: 7 } },
             // 모르는 상태는 버린다
             { status: "withdrawn", _count: { _all: 3 } },
         ]);
         expect(await countMyChartFieldProposals()).toEqual({
             pending: 2,
-            applied: 7,
+            approved: 7,
             rejected: 0,
         });
     });
@@ -82,7 +82,7 @@ describe("기여 대기 현황 · 내 제안 수", () => {
         mocks.session.mockResolvedValue({});
         expect(await countMyChartFieldProposals()).toEqual({
             pending: 0,
-            applied: 0,
+            approved: 0,
             rejected: 0,
         });
         expect(mocks.groupBy).not.toHaveBeenCalled();

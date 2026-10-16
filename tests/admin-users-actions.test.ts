@@ -52,7 +52,7 @@ describe("관리자 사용자 관리", () => {
         mocks.userFindUnique.mockResolvedValue({ id: 2 });
         mocks.userUpdate.mockResolvedValue({
             id: 2,
-            sync_token_version: 4,
+            syncTokenVersion: 4,
         });
         mocks.playDataGroupBy.mockResolvedValue([]);
         mocks.chartPlayHistoryGroupBy.mockResolvedValue([]);
@@ -65,7 +65,7 @@ describe("관리자 사용자 관리", () => {
             {
                 id: 2,
                 username: "noslog-user",
-                nostalgia_name: "NOSTALGIA USER",
+                nostalgiaName: "NOSTALGIA USER",
                 country: "ko-KR",
                 role: "user",
                 // 플레이 수 · 마지막 플레이는 player_stats 에서(2026-10-16 P4) — KST 12:00 = UTC 03:00
@@ -73,12 +73,12 @@ describe("관리자 사용자 관리", () => {
                     playCount: 20,
                     lastPlayedAt: new Date("2026-09-04T03:00:00.000Z"),
                 },
-                sync_token_version: 3,
-                created_at: createdAt,
-                dataSyncs: [{ status: "completed", started_at: syncedAt }],
+                syncTokenVersion: 3,
+                createdAt: createdAt,
+                dataSyncs: [{ status: "completed", startedAt: syncedAt }],
                 _count: {
                     dataSyncs: 4,
-                    PlayData: 2,
+                    playData: 2,
                     chartPlayHistory: 3,
                     communityEvaluations: 1,
                     examAchievements: 1,
@@ -86,11 +86,11 @@ describe("관리자 사용자 관리", () => {
             },
         ]);
         mocks.playDataGroupBy
-            .mockResolvedValueOnce([{ user_id: 2, _count: { _all: 2 } }])
-            .mockResolvedValueOnce([{ user_id: 2, _count: { _all: 2 } }]);
+            .mockResolvedValueOnce([{ userId: 2, _count: { _all: 2 } }])
+            .mockResolvedValueOnce([{ userId: 2, _count: { _all: 2 } }]);
         mocks.chartPlayHistoryGroupBy
-            .mockResolvedValueOnce([{ user_id: 2, _count: { _all: 3 } }])
-            .mockResolvedValueOnce([{ user_id: 2, _count: { _all: 2 } }]);
+            .mockResolvedValueOnce([{ userId: 2, _count: { _all: 3 } }])
+            .mockResolvedValueOnce([{ userId: 2, _count: { _all: 2 } }]);
 
         await expect(
             listAdminUsers(
@@ -137,9 +137,9 @@ describe("관리자 사용자 관리", () => {
                 where: {
                     OR: [
                         { username: { contains: "NOSTALGIA" } },
-                        { nostalgia_name: { contains: "NOSTALGIA" } },
-                        { discord_name: { contains: "NOSTALGIA" } },
-                        { discord_username: { contains: "NOSTALGIA" } },
+                        { nostalgiaName: { contains: "NOSTALGIA" } },
+                        { discordName: { contains: "NOSTALGIA" } },
+                        { discordUsername: { contains: "NOSTALGIA" } },
                     ],
                 },
                 take: 100,
@@ -152,16 +152,16 @@ describe("관리자 사용자 관리", () => {
             {
                 id: 2,
                 username: "noslog-user",
-                nostalgia_name: null,
+                nostalgiaName: null,
                 country: "ko-KR",
                 role: "user",
                 stats: null,
-                sync_token_version: 0,
-                created_at: new Date("2026-01-01T00:00:00.000Z"),
+                syncTokenVersion: 0,
+                createdAt: new Date("2026-01-01T00:00:00.000Z"),
                 dataSyncs: [],
                 _count: {
                     dataSyncs: 0,
-                    PlayData: 0,
+                    playData: 0,
                     chartPlayHistory: 0,
                     chartEvaluations: 0,
                     examAchievements: 0,
@@ -215,8 +215,8 @@ describe("관리자 사용자 관리", () => {
         });
         expect(mocks.userUpdate).toHaveBeenCalledWith({
             where: { id: 2 },
-            data: { sync_token_version: { increment: 1 } },
-            select: { sync_token_version: true },
+            data: { syncTokenVersion: { increment: 1 } },
+            select: { syncTokenVersion: true },
         });
     });
 

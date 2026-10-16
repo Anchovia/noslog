@@ -64,19 +64,19 @@ describe("관리자 대시보드", () => {
         ]);
         mocks.userFindMany
             .mockResolvedValueOnce([
-                { created_at: new Date("2026-09-12T01:00:00Z") },
+                { createdAt: new Date("2026-09-12T01:00:00Z") },
             ])
             // 전환 흐름 — 기간에 가입한 사람의 연동 · 기록 유무
             .mockResolvedValueOnce([
-                { id: 1, dataSyncs: [{ id: 1 }], PlayData: [{ id: 1 }] },
-                { id: 2, dataSyncs: [], PlayData: [] },
+                { id: 1, dataSyncs: [{ id: 1 }], playData: [{ id: 1 }] },
+                { id: 2, dataSyncs: [], playData: [] },
             ]);
         mocks.syncFindMany.mockResolvedValue([
             {
-                started_at: new Date("2026-09-13T02:00:00Z"),
+                startedAt: new Date("2026-09-13T02:00:00Z"),
                 status: "completed",
             },
-            { started_at: new Date("2026-09-10T02:00:00Z"), status: "failed" },
+            { startedAt: new Date("2026-09-10T02:00:00Z"), status: "failed" },
         ]);
         // 실패(24시간) → 지연 순서로 불린다
         mocks.syncCount.mockResolvedValueOnce(0).mockResolvedValueOnce(2);
@@ -241,8 +241,8 @@ describe("관리자 대시보드", () => {
         mocks.userFindMany
             .mockResolvedValueOnce([
                 // 서울 9/13 10:30 · 어제 10:00 은 빠진다
-                { created_at: new Date("2026-09-13T01:30:00Z") },
-                { created_at: new Date("2026-09-12T01:00:00Z") },
+                { createdAt: new Date("2026-09-13T01:30:00Z") },
+                { createdAt: new Date("2026-09-12T01:00:00Z") },
             ])
             .mockResolvedValueOnce([]);
         const data = await getAdminDashboard(

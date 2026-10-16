@@ -74,9 +74,9 @@ function arcadeData(input: ArcadeValues) {
         // 지역 · 주소는 공개 정보(ArcadePublicDetails)가 정본(2026-10-16 DB 재설계 D6)
         latitude: input.latitude,
         longitude: input.longitude,
-        play_price: input.playPrice,
-        coin_count: input.coinCount,
-        business_hours:
+        playPrice: input.playPrice,
+        coinCount: input.coinCount,
+        businessHours:
             input.businessHours === null
                 ? Prisma.DbNull
                 : (input.businessHours as Prisma.InputJsonValue),
@@ -360,7 +360,7 @@ export async function updateArcade(
         slug = await db.$transaction(async (tx) => {
             await tx.arcade.update({
                 where: { id },
-                data: { ...arcadeData(input), is_active: input.isActive },
+                data: { ...arcadeData(input), isActive: input.isActive },
             });
             return syncPublicFacts(tx, id, input, now);
         });

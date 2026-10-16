@@ -10,6 +10,7 @@ import type { MusicDetailProps } from "@/components/music/music-detail-types";
 import ButtonLink from "@/components/ui/button-link";
 import Disclosure from "@/components/ui/disclosure";
 import StatStrip from "@/components/ui/stat-strip";
+import { hasFullComboLamp, isPianist } from "@/lib/music/clear-mark";
 import { gradeTone, scoreTone } from "@/lib/music/score-tone";
 
 import JudgementAnalysis from "./judgement-analysis";
@@ -32,9 +33,7 @@ export default function MusicRecordPanel({ data }: { data: MusicDetailProps }) {
     const empty = <span className="nl-muted">—</span>;
     const count = (value: number | undefined) =>
         record ? value!.toLocaleString(locale) : empty;
-    const pianist = record
-        ? record.fc_type === 3 || record.score >= 1_000_000
-        : false;
+    const pianist = record ? isPianist(record.fc_type, record.score) : false;
     // 등급 코드(A2 · B2)는 화면 표기(A+ · B+)로
     const grade = record
         ? pianist
@@ -42,7 +41,9 @@ export default function MusicRecordPanel({ data }: { data: MusicDetailProps }) {
             : rankDisplayName(record.rank)
         : null;
     // 순위표 FC 표시와 같은 기준(fc_type 2 이상 · Pianist)
-    const fullCombo = record ? pianist || record.fc_type >= 2 : false;
+    const fullCombo = record
+        ? pianist || hasFullComboLamp(record.fc_type)
+        : false;
     // 큰 숫자(32px) 대신 수치 띠 16/600 — 새 글자 단계를 만들지 않는다(2026-09-16 사용자 결정)
     return (
         <div className="nl-record-panel">

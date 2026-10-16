@@ -62,7 +62,7 @@ async function incrementAnalytics(
     const date = analyticsDateKey(now);
     await db.$executeRaw`
         INSERT INTO "analytics_daily_counts" ("date", "kind", "key", "count")
-        VALUES (${date}::date, ${kind}, ${key}, 1)
+        VALUES (${date}::date, ${kind}::"AnalyticsKind", ${key}, 1)
         ON CONFLICT ("date", "kind", "key")
         DO UPDATE SET "count" = "analytics_daily_counts"."count" + 1`;
 }
@@ -130,7 +130,7 @@ export async function recordPageView({
             UNION ALL SELECT 'audienceVisitor', ${audience}::text FROM visitor
         )
         INSERT INTO "analytics_daily_counts" ("date", "kind", "key", "count")
-        SELECT ${date}::date, "kind", "key", 1 FROM counted ORDER BY "kind", "key"
+        SELECT ${date}::date, "kind"::"AnalyticsKind", "key", 1 FROM counted ORDER BY "kind", "key"
         ON CONFLICT ("date", "kind", "key")
         DO UPDATE SET "count" = "analytics_daily_counts"."count" + 1`;
     return true;

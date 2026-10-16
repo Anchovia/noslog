@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 
+import { getPrivateImageUrl } from "@/features/admin/server/private-image-data";
+import { getUserRole } from "@/features/users/server/user-data";
 import { getPrivateImageBlob } from "@/lib/blob";
-import db from "@/lib/db";
 import getSession from "@/lib/session";
 
 export const dynamic = "force-dynamic";
@@ -22,10 +23,7 @@ export async function GET(
         );
     }
 
-    const admin = await db.user.findUnique({
-        where: { id: session.id },
-        select: { role: true },
-    });
+    const admin = await getUserRole(session.id);
     if (admin?.role !== "admin") {
         return NextResponse.json(
             { message: "접근할 수 없습니다." },
@@ -42,20 +40,10 @@ export async function GET(
         );
     }
 
-    const imageUrl =
-        kind === "feedback"
-            ? (
-                  await db.feedbackReport.findUnique({
-                      where: { id },
-                      select: { imageUrl: true },
-                  })
-              )?.imageUrl
-            : (
-                  await db.examSubmission.findUnique({
-                      where: { id },
-                      select: { proofImageUrl: true },
-                  })
-              )?.proofImageUrl;
+    const imageUrl = await getPrivateImageUrl(
+        kind === "feedback" ? "feedback" : "exam",
+        id
+    );
 
     if (!imageUrl) {
         return NextResponse.json(

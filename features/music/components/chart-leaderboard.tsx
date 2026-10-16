@@ -16,6 +16,7 @@ import CountryMarker from "@/components/ui/country-marker";
 import IntentLink from "@/components/ui/intent-link";
 import { SkeletonText } from "@/components/ui/skeleton";
 import type { ChartRankingRow } from "@/features/music/schemas/chart-ranking-schema";
+import { hasFullComboLamp, isPianist } from "@/lib/music/clear-mark";
 import { scoreTone } from "@/lib/music/score-tone";
 
 /** 등급 메달 — 순위표는 18(공용 순위표 규격 그대로), 악곡 상세 핀 창은 아이콘 규격 16 */
@@ -52,7 +53,7 @@ export function ScoreGrade({
 export function FullComboMark({ fcType }: { fcType: number }) {
     return (
         <span className="nl-full-combo-slot">
-            {fcType >= 2 ? (
+            {hasFullComboLamp(fcType) ? (
                 <span className="nl-full-combo nl-metadata">FC</span>
             ) : null}
         </span>
@@ -77,7 +78,7 @@ function ChartLeaderboardRow({
         : /[\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Han}]/u.test(name)
           ? "ja"
           : "en";
-    const pianist = row.fc_type === 3 || row.score >= 1_000_000;
+    const pianist = isPianist(row.fc_type, row.score);
     return (
         <li
             id={`chart-rank-${row.user_id}`}

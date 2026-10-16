@@ -132,19 +132,17 @@ export default async function AdminSyncsPage({
                                 </span>
                                 <div className="min-w-0 flex-1">
                                     <p className="nl-emphasis-label truncate text-nl-content">
-                                        {sync.user.nostalgia_name ??
+                                        {sync.user.nostalgiaName ??
                                             sync.user.username ??
                                             `유저 ${sync.user.id}`}
                                     </p>
                                     <p className="nl-metadata text-nl-subdued">
                                         #{sync.id} ·{" "}
-                                        {sync.sync_scope === "full"
+                                        {sync.syncScope === "full"
                                             ? "전체 기록"
                                             : "최근 기록"}{" "}
                                         ·{" "}
-                                        {sync.started_at.toLocaleString(
-                                            "ko-KR"
-                                        )}
+                                        {sync.startedAt.toLocaleString("ko-KR")}
                                     </p>
                                 </div>
                                 <span
@@ -162,7 +160,7 @@ export default async function AdminSyncsPage({
                                         수신
                                     </p>
                                     <strong className="nl-metric-value">
-                                        {sync.received_plays}
+                                        {sync.receivedPlays}
                                     </strong>
                                 </div>
                                 <div className="rounded-nl-field bg-nl-canvas p-nl-8">
@@ -170,7 +168,7 @@ export default async function AdminSyncsPage({
                                         추가
                                     </p>
                                     <strong className="nl-metric-value">
-                                        {sync.inserted_plays}
+                                        {sync.insertedPlays}
                                     </strong>
                                 </div>
                                 <div className="rounded-nl-field bg-nl-canvas p-nl-8">
@@ -178,7 +176,7 @@ export default async function AdminSyncsPage({
                                         변경
                                     </p>
                                     <strong className="nl-metric-value">
-                                        {sync.changed_records}
+                                        {sync.changedRecords}
                                     </strong>
                                 </div>
                             </div>
@@ -197,7 +195,7 @@ export default async function AdminSyncsPage({
                                         </dt>
                                         <dd className="nl-metric-value text-nl-content">
                                             {storedRecentCount} /{" "}
-                                            {sync.inserted_plays}
+                                            {sync.insertedPlays}
                                         </dd>
                                     </div>
                                     <div>
@@ -224,7 +222,7 @@ export default async function AdminSyncsPage({
                                         </dt>
                                         <dd className="nl-metric-value text-nl-content">
                                             {storedSnapshotCount} /{" "}
-                                            {sync.changed_records}
+                                            {sync.changedRecords}
                                         </dd>
                                     </div>
                                     <div>
@@ -247,17 +245,17 @@ export default async function AdminSyncsPage({
                                     </div>
                                 </dl>
                             </details>
-                            {sync.error_message ? (
+                            {sync.errorMessage ? (
                                 <pre
                                     className={`${sync.status === "completed" ? "text-nl-warning" : "text-nl-error"} nl-metadata overflow-x-auto whitespace-pre-wrap`}
                                 >
-                                    {sync.error_message}
+                                    {sync.errorMessage}
                                 </pre>
                             ) : null}
-                            {sync.completed_at ? (
+                            {sync.completedAt ? (
                                 <p className="nl-metadata text-right text-nl-subdued">
                                     완료{" "}
-                                    {sync.completed_at.toLocaleString("ko-KR")}
+                                    {sync.completedAt.toLocaleString("ko-KR")}
                                 </p>
                             ) : null}
                         </article>

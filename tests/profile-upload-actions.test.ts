@@ -103,7 +103,7 @@ describe("프로필 이미지 업로드 토큰", () => {
         mocks.isValidImageBlob.mockResolvedValue(true);
         mocks.userFindUnique.mockResolvedValue({
             avatar: oldAvatar,
-            discord_id: "discord-id",
+            discordId: "discord-id",
         });
         mocks.userUpdate.mockResolvedValue({ id: 2 });
     });
@@ -178,14 +178,14 @@ describe("프로필 이미지 업로드 토큰", () => {
                 username: "CAROL",
                 country: "ko-KR",
                 locale: "ko",
-                show_localized_music_title: true,
+                showLocalizedMusicTitle: true,
                 avatar: newAvatar,
-                discord_name: "병훈",
-                discord_username: "hoonie71",
-                preferred_arcade_id: null,
-                hide_nostalgia_name: false,
-                hide_discord_name: false,
-                hide_play_count: false,
+                discordName: "병훈",
+                discordUsername: "hoonie71",
+                preferredArcadeId: null,
+                hideNostalgiaName: false,
+                hideDiscordName: false,
+                hidePlayCount: false,
             },
         });
         expect(mocks.deleteBlobIfOwned).toHaveBeenCalledWith(oldAvatar);

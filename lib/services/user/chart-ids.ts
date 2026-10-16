@@ -5,11 +5,11 @@ export type ChartIdMap = Map<string, number>;
 
 export async function loadChartIds(): Promise<ChartIdMap> {
     const charts = await db.musicChart.findMany({
-        select: { id: true, music_idx: true, difficulty: true },
+        select: { id: true, musicIdx: true, difficulty: true },
     });
     return new Map(
         charts.map((chart) => [
-            `${chart.music_idx}:${chart.difficulty}`,
+            `${chart.musicIdx}:${chart.difficulty}`,
             chart.id,
         ])
     );

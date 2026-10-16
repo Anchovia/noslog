@@ -100,11 +100,9 @@ function toPublicArcade(record: ArcadeRecord, now: Date) {
         longitude: record.longitude,
         phone: details?.phone ?? null,
         website: publicWebsite(details?.website),
-        playPrice: record.play_price,
+        playPrice: record.playPrice,
         coinCount:
-            record.coin_count && record.coin_count > 0
-                ? record.coin_count
-                : null,
+            record.coinCount && record.coinCount > 0 ? record.coinCount : null,
         creditLabel: details?.creditLabel ?? null,
         facilities: knownArcadeValues(ARCADE_FACILITIES, details?.facilities),
         notes: record.notes,
@@ -210,10 +208,10 @@ function toPublicArcade(record: ArcadeRecord, now: Date) {
         // 공개 영업시간이 없으면 옛 영업시간을 옮겨 쓴다 — 영업 중·종료와 7일 표가 같은 값을 본다
         hours: hours.success
             ? hours.data
-            : legacyToPublicArcadeHours(record.business_hours),
+            : legacyToPublicArcadeHours(record.businessHours),
         hoursVerifiedAt: details?.hoursVerifiedAt?.toISOString() ?? null,
         hoursValidUntil: details?.hoursValidUntil?.toISOString() ?? null,
-        legacyHours: record.business_hours,
+        legacyHours: record.businessHours,
         photos: record.publicPhotos
             .filter((photo) => {
                 if (
@@ -252,7 +250,7 @@ const queryPublicArcades = unstable_cache(
     async () => {
         const now = new Date();
         const records = await db.arcade.findMany({
-            where: { is_active: true },
+            where: { isActive: true },
             include: publicInclude(now),
         });
         return records.map((record) => toPublicArcade(record, now));
@@ -273,16 +271,16 @@ const queryPublicArcade = unstable_cache(
         const include = publicInclude(now);
         // Canonical URLs win over historical aliases and legacy numeric URLs.
         let record = await db.arcade.findFirst({
-            where: { is_active: true, publicDetails: { is: { slug } } },
+            where: { isActive: true, publicDetails: { is: { slug } } },
             include,
         });
         record ??= await db.arcade.findFirst({
-            where: { is_active: true, slugAliases: { some: { slug } } },
+            where: { isActive: true, slugAliases: { some: { slug } } },
             include,
         });
         if (!record && numericId !== null)
             record = await db.arcade.findFirst({
-                where: { is_active: true, id: numericId },
+                where: { isActive: true, id: numericId },
                 include,
             });
         return record ? toPublicArcade(record, now) : null;

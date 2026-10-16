@@ -11,7 +11,7 @@ interface ExamEligibilityInput {
 }
 
 interface ExamPlayerInput {
-    nostalgia_name: string | null;
+    nostalgiaName: string | null;
     grade_basic: number | null;
     grade_recital: number | null;
     examAchievements: ExamAchievementGrade[];
@@ -32,7 +32,6 @@ export function getExamEligibility(
     const grade = normalizeStoredGrade(
         exam.mode === "basic" ? player.grade_basic : player.grade_recital
     );
-    if (!player.nostalgia_name?.trim() || grade === null)
-        return "sync-required";
+    if (!player.nostalgiaName?.trim() || grade === null) return "sync-required";
     return grade >= exam.requiredGrade ? "eligible" : "insufficient";
 }

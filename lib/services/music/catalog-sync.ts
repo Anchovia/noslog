@@ -83,25 +83,25 @@ function createMusicCatalogSnapshot(
 function storedMusicSnapshot(music: {
     index: string;
     title: string;
-    title_kana: string;
+    titleKana: string;
     artist: string | null;
     category: string;
-    category_short: string;
+    categoryShort: string;
     description: string | null;
     license: string | null;
-    unlock_type: number | null;
+    unlockType: number | null;
     charts: { difficulty: string; level: number }[];
 }): MusicCatalogSnapshot {
     return {
         musicIndex: music.index,
         title: music.title,
-        titleKana: music.title_kana,
+        titleKana: music.titleKana,
         artist: music.artist,
         category: music.category,
-        categoryShort: music.category_short,
+        categoryShort: music.categoryShort,
         description: music.description,
         license: music.license ?? "",
-        unlockType: music.unlock_type ?? 0,
+        unlockType: music.unlockType ?? 0,
         charts: sortCharts(
             music.charts.map((chart) => ({
                 difficulty: difficultySchema.parse(chart.difficulty),
@@ -151,13 +151,13 @@ async function detectCatalogUpdates(
         select: {
             index: true,
             title: true,
-            title_kana: true,
+            titleKana: true,
             artist: true,
             category: true,
-            category_short: true,
+            categoryShort: true,
             description: true,
             license: true,
-            unlock_type: true,
+            unlockType: true,
             charts: {
                 select: { difficulty: true, level: true },
             },

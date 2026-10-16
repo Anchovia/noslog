@@ -1,4 +1,4 @@
-import db from "@/lib/db";
+import { pingDatabase } from "@/lib/db-health";
 import { logServerError } from "@/lib/observability/server";
 
 export const dynamic = "force-dynamic";
@@ -8,7 +8,7 @@ export async function GET() {
     const startedAt = performance.now();
 
     try {
-        await db.$queryRaw`SELECT 1`;
+        await pingDatabase();
 
         return Response.json(
             {

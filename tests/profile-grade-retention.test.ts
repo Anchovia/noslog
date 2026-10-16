@@ -30,28 +30,28 @@ describe("profile Grd history retention", () => {
         vi.useRealTimers();
         vi.restoreAllMocks();
     });
-    // 사람당 하루(서울 날짜) 한 줄은 유일 키 (user_id, day) 가 지킨다 — 지난 날짜 줄은 읽지도 지우지도 않는다(2026-10-16 P5-1)
+    // 사람당 하루(서울 날짜) 한 줄은 유일 키 (userId, day) 가 지킨다 — 지난 날짜 줄은 읽지도 지우지도 않는다(2026-10-16 P5-1)
     it("writes only today's Korean-day row and keeps older history untouched", async () => {
         await updateGrade(7);
         const day = new Date("2026-09-07T00:00:00.000Z");
         expect(mocks.upsert).toHaveBeenCalledWith({
-            where: { user_id_day: { user_id: 7, day } },
+            where: { userId_day: { userId: 7, day } },
             create: {
-                user_id: 7,
+                userId: 7,
                 day,
-                grade_basic: 0,
-                grade_recital: null,
+                gradeBasic: 0,
+                gradeRecital: null,
             },
-            update: { grade_basic: 0, grade_recital: null },
+            update: { gradeBasic: 0, gradeRecital: null },
         });
         expect(mocks.upsert).toHaveBeenCalledTimes(1);
     });
     it("stores the current Grd only in player_stats", async () => {
         mocks.plays.mockImplementation(({ where }) =>
             Promise.resolve(
-                where.grade_recital
-                    ? [{ grade_recital: 300 }]
-                    : [{ grade_basic: 500 }, { grade_basic: 400 }]
+                where.gradeRecital
+                    ? [{ gradeRecital: 300 }]
+                    : [{ gradeBasic: 500 }, { gradeBasic: 400 }]
             )
         );
         await expect(updateGrade(7)).resolves.toEqual({

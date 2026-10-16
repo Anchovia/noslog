@@ -44,6 +44,7 @@ import {
     calculateBasicRating,
 } from "@/lib/tiers/basic-rating";
 import type { TierMode } from "@/lib/tiers";
+import { TIER_DIFFICULTIES } from "@/lib/tiers";
 
 // 레이팅 저장 표(2026-10-15 L2-A2) — 저장 값이 예전 집계(그 자리에서 모든 기록으로 계산)와 같은지 실제 Postgres 로 본다
 describe.skipIf(!process.env.TEST_DATABASE_URL)(
@@ -61,18 +62,18 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
             score: number,
             recital: number | null
         ) => ({
-            user_id: userId,
-            chart_id: chartId,
+            userId: userId,
+            chartId: chartId,
             level: 12,
             score,
             rank: "S",
-            fc_type: 0,
-            play_count: 1,
-            fullcombo_count: 0,
-            pianistic_count: 0,
-            max_combo: 1000,
-            grade_basic: 10000,
-            grade_recital: recital,
+            fcType: 0,
+            playCount: 1,
+            fullcomboCount: 0,
+            pianisticCount: 0,
+            maxCombo: 1000,
+            gradeBasic: 10000,
+            gradeRecital: recital,
             bestAt: new Date("2026-10-15T01:00:00Z"),
         });
         // 비교 기준 — 예전 global-ranking-data 가 하던 계산을 그대로
@@ -88,29 +89,36 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
             );
         const stored = (mode: TierMode) =>
             db.playerRating.findMany({
-                where: { mode, user_id: { in: userIds } },
-                orderBy: { user_id: "asc" },
+                where: { mode, userId: { in: userIds } },
+                orderBy: { userId: "asc" },
             });
 
         beforeAll(async () => {
-            await db.music.create({
-                data: {
-                    index: musicIndex,
+            // 난이도는 enum(곡마다 4개) — 기준표 채보 수만큼 곡을 나눠 만든다(2026-10-16 D4-C 2차)
+            const groups = Math.ceil(
+                BASIC_RATING_TOP_COUNT / TIER_DIFFICULTIES.length
+            );
+            await db.music.createMany({
+                data: Array.from({ length: groups }, (_, group) => ({
+                    index: `${musicIndex}-${group}`,
                     title: "Test",
-                    title_kana: "Test",
+                    titleKana: "Test",
                     category: "Test",
-                    category_short: "T",
-                },
+                    categoryShort: "T",
+                })),
             });
             for (let index = 0; index < BASIC_RATING_TOP_COUNT; index += 1) {
                 chartIds.push(
                     (
                         await db.musicChart.create({
                             data: {
-                                music_idx: musicIndex,
-                                difficulty: `Test-${index}`,
+                                musicIdx: `${musicIndex}-${Math.floor(index / TIER_DIFFICULTIES.length)}`,
+                                difficulty:
+                                    TIER_DIFFICULTIES[
+                                        index % TIER_DIFFICULTIES.length
+                                    ],
                                 level: 12,
-                                note_count: 1000,
+                                noteCount: 1000,
                             },
                         })
                     ).id
@@ -122,7 +130,7 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
                     await db.user.create({
                         data: {
                             username: `${musicIndex}-${index}`,
-                            hide_play_scores: false,
+                            hidePlayScores: false,
                         },
                     })
                 ).id;
@@ -142,16 +150,18 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
         beforeEach(async () => {
             basis.value = 14;
             await db.playerRating.deleteMany({
-                where: { user_id: { in: userIds } },
+                where: { userId: { in: userIds } },
             });
         });
         afterAll(async () => {
             if (userIds.length)
                 await db.user.deleteMany({ where: { id: { in: userIds } } });
             await db.musicChart.deleteMany({
-                where: { music_idx: musicIndex },
+                where: { musicIdx: { startsWith: musicIndex } },
             });
-            await db.music.deleteMany({ where: { index: musicIndex } });
+            await db.music.deleteMany({
+                where: { index: { startsWith: musicIndex } },
+            });
             await db.$disconnect();
         });
 
@@ -161,16 +171,14 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
                 await rebuildPlayerRatings(mode, current!);
             }
             const basic = await stored("basic");
-            expect(basic.map((row) => row.user_id)).toEqual(
-                userIds.slice(0, 2)
-            );
+            expect(basic.map((row) => row.userId)).toEqual(userIds.slice(0, 2));
             for (const [index, row] of basic.entries()) {
                 const result = expected(scores[index]);
                 expect(row.rating).toBeCloseTo(result.rating, 9);
-                expect(row.filled_slots).toBe(result.filledSlots);
+                expect(row.filledSlots).toBe(result.filledSlots);
             }
             const recital = await stored("recital");
-            expect(recital.map((row) => row.user_id)).toEqual([userIds[0]]);
+            expect(recital.map((row) => row.userId)).toEqual([userIds[0]]);
             // 프로필도 같은 계산 한 벌 — 저장 값과 같고, 레이팅 0 은 「없음」(2026-10-16 K3)
             const profile = await calculateUserRating(userIds[0], "basic");
             expect(profile?.rating).toBeCloseTo(basic[0].rating, 9);
@@ -183,18 +191,18 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
             await rebuildPlayerRatings("basic", current!);
             const before = await stored("basic");
             await db.playData.updateMany({
-                where: { user_id: userIds[1] },
+                where: { userId: userIds[1] },
                 data: { score: 940_000 },
             });
             await refreshUserPlayerRatings(userIds[1]);
             const after = await stored("basic");
             expect(after).toHaveLength(1);
             expect(after[0]).toMatchObject({
-                user_id: userIds[0],
+                userId: userIds[0],
                 rating: before[0].rating,
             });
             await db.playData.updateMany({
-                where: { user_id: userIds[1] },
+                where: { userId: userIds[1] },
                 data: { score: scores[1] },
             });
             await refreshUserPlayerRatings(userIds[1]);
@@ -207,13 +215,13 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
             const before = await stored("basic");
             // 기준 그대로면 다시 쓰지 않는다
             await rebuildStalePlayerRatings();
-            expect((await stored("basic"))[0].computed_at).toEqual(
-                before[0].computed_at
+            expect((await stored("basic"))[0].computedAt).toEqual(
+                before[0].computedAt
             );
             basis.value = 13;
             await rebuildStalePlayerRatings();
             const changed = await stored("basic");
-            expect(changed[0].basis_version).not.toBe(before[0].basis_version);
+            expect(changed[0].basisVersion).not.toBe(before[0].basisVersion);
             expect(changed[0].rating).toBeCloseTo(
                 expected(scores[0]).rating,
                 9

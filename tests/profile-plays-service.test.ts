@@ -31,17 +31,17 @@ import { profileListQuerySchema } from "@/features/profile/schemas/public-profil
 function play(id: number) {
     return {
         id,
-        chart_id: id,
+        chartId: id,
         level: 12,
         score: 940000,
         rank: "A",
-        fc_type: 0,
-        grade_basic: 10000,
-        grade_recital: 20000,
+        fcType: 0,
+        gradeBasic: 10000,
+        gradeRecital: 20000,
         // 옛 「1970-01-01 09:00」 자리표시는 best_at NULL
         bestAt: id === 1 ? new Date("2026-09-18T16:01:00Z") : null,
         chart: {
-            music_idx: String(id),
+            musicIdx: String(id),
             difficulty: "expert",
             music: { title: `Music ${id}`, background: null },
         },
@@ -50,7 +50,7 @@ function play(id: number) {
 describe("profile incremental public plays", () => {
     beforeEach(() => {
         vi.clearAllMocks();
-        mocks.user.mockResolvedValue({ hide_play_activity: false });
+        mocks.user.mockResolvedValue({ hidePlayActivity: false });
         mocks.stats.mockResolvedValue({ gradeRecital: 20000 });
         mocks.plays.mockResolvedValue([]);
         mocks.recent.mockResolvedValue([]);
@@ -70,11 +70,11 @@ describe("profile incremental public plays", () => {
         expect(result?.items[0].contribution).toBe(200);
         expect(mocks.plays).toHaveBeenCalledWith(
             expect.objectContaining({
-                where: { user_id: 7, grade_recital: { gt: 0 } },
+                where: { userId: 7, gradeRecital: { gt: 0 } },
                 orderBy: [
-                    { grade_recital: "desc" },
+                    { gradeRecital: "desc" },
                     { score: "desc" },
-                    { chart_id: "asc" },
+                    { chartId: "asc" },
                     { id: "asc" },
                 ],
                 skip: 0,
@@ -114,7 +114,7 @@ describe("profile incremental public plays", () => {
     });
     it("distinguishes assisted clear from Full Combo in best-play rows", async () => {
         mocks.plays.mockResolvedValue(
-            [1, 2, 3].map((fc_type) => ({ ...play(fc_type), fc_type }))
+            [1, 2, 3].map((fcType) => ({ ...play(fcType), fcType }))
         );
         const result = await getPublicProfilePlays(
             7,
@@ -127,7 +127,7 @@ describe("profile incremental public plays", () => {
         ]);
     });
     it("shows hidden recent plays only to the owner", async () => {
-        mocks.user.mockResolvedValue({ hide_play_activity: true });
+        mocks.user.mockResolvedValue({ hidePlayActivity: true });
         mocks.recent.mockResolvedValue([]);
         const owner = await getPublicProfilePlays(
             7,
@@ -138,7 +138,7 @@ describe("profile incremental public plays", () => {
         expect(mocks.recent).toHaveBeenCalled();
     });
     it("checks current privacy before any expanded history query", async () => {
-        mocks.user.mockResolvedValue({ hide_play_activity: true });
+        mocks.user.mockResolvedValue({ hidePlayActivity: true });
         const result = await getPublicProfilePlays(
             7,
             profileListQuerySchema.parse({ kind: "recent", offset: 5 })
@@ -152,19 +152,19 @@ describe("profile incremental public plays", () => {
         const recent = (
             id: number,
             score: number,
-            best_score: number | null
+            bestScore: number | null
         ) => ({
             id,
             playedAt: new Date("2026-09-18T16:01:00Z"),
             score,
-            best_score,
+            bestScore,
             rank: "S",
-            max_combo: 10,
+            maxCombo: 10,
             chart: {
                 difficulty: "Real",
                 level: 3,
-                music_idx: String(id),
-                note_count: 100,
+                musicIdx: String(id),
+                noteCount: 100,
                 music: { title: `Music ${id}`, background: null },
             },
         });
@@ -211,7 +211,7 @@ describe("profile incremental public plays", () => {
         mocks.plays
             .mockResolvedValueOnce(
                 Array.from({ length: 7 }, (_, index) => ({
-                    chart_id: index + 1,
+                    chartId: index + 1,
                     score: 950000 + index * 5000,
                 }))
             )
@@ -230,10 +230,10 @@ describe("profile incremental public plays", () => {
         expect(mocks.plays.mock.calls[0][0].where).toEqual(
             expect.objectContaining({
                 score: { gte: 950000 },
-                grade_recital: { gt: 0 },
+                gradeRecital: { gt: 0 },
             })
         );
-        expect(mocks.plays.mock.calls[1][0].where.chart_id.in).toHaveLength(5);
+        expect(mocks.plays.mock.calls[1][0].where.chartId.in).toHaveLength(5);
         expect(result!.items[0].contribution!).toBeGreaterThan(
             result!.items[1].contribution!
         );

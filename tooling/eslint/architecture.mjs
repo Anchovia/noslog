@@ -75,6 +75,7 @@ const boundaries = {
             private:
                 "다른 라우트의 private 폴더를 참조할 수 없습니다: {{target}}",
             server: "Client Component에서 서버 구현을 직접 참조할 수 없습니다. Server Action 또는 브라우저 API를 사용하세요: {{target}}",
+            db: "DB 는 features/<도메인>/server 의 data · service 모듈에서만 읽고 씁니다(2026-10-16 D8). 그 모듈의 함수를 부르세요: {{target}}",
         },
     },
     create(context) {
@@ -126,6 +127,17 @@ const boundaries = {
                     /^(app|features)\//.test(target))
             ) {
                 context.report({ node, messageId: "upward", data: { target } });
+                return;
+            }
+
+            // DB 접근은 도메인 server 모듈(과 lib 기반 코드)에만 — 화면 · 라우트 · 부품은 그 함수를 부른다
+            if (
+                !typeOnly &&
+                /^lib\/db(\.[cm]?[jt]sx?)?$/.test(target) &&
+                !owner.startsWith("lib/") &&
+                !/^features\/[^/]+\/server\//.test(owner)
+            ) {
+                context.report({ node, messageId: "db", data: { target } });
                 return;
             }
 

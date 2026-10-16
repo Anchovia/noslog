@@ -65,10 +65,10 @@ describe("getMissingJacketIndexes", () => {
         ]);
 
         await expect(getMissingJacketIndexes()).resolves.toEqual(["missing-a"]);
-        // unlock_type 이 빈 곡은 공식 사이트에도 자켓이 없어(404) 묻지 않는다
+        // unlockType 이 빈 곡은 공식 사이트에도 자켓이 없어(404) 묻지 않는다
         expect(mocks.musicFindMany).toHaveBeenCalledWith(
             expect.objectContaining({
-                where: { background: null, unlock_type: { not: null } },
+                where: { background: null, unlockType: { not: null } },
             })
         );
     });
@@ -98,7 +98,7 @@ describe("POST /api/receiveJacket", () => {
         vi.clearAllMocks();
         mocks.verifySyncToken.mockReturnValue({ userId: 1, version: 0 });
         mocks.userFindUnique.mockResolvedValue({
-            sync_token_version: 0,
+            syncTokenVersion: 0,
             role: "admin",
         });
         mocks.musicFindUnique.mockResolvedValue({ background: null });
@@ -117,7 +117,7 @@ describe("POST /api/receiveJacket", () => {
 
     it("관리자가 아니면 저장하지 않는다", async () => {
         mocks.userFindUnique.mockResolvedValue({
-            sync_token_version: 0,
+            syncTokenVersion: 0,
             role: "user",
         });
 
@@ -129,7 +129,7 @@ describe("POST /api/receiveJacket", () => {
 
     it("재발급으로 무효가 된 토큰은 거부한다", async () => {
         mocks.userFindUnique.mockResolvedValue({
-            sync_token_version: 1,
+            syncTokenVersion: 1,
             role: "admin",
         });
 

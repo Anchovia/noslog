@@ -39,10 +39,10 @@ test("P6 actual stored history honors the selected range and empty users have on
                     .slice(0, 10);
                 // 하루 한 줄은 날짜 열(day)로(2026-10-16 DB 재설계 P5-1)
                 return {
-                    user_id: user.id,
+                    userId: user.id,
                     day: new Date(`${date}T00:00:00Z`),
-                    grade_basic: 8000 + index * 1000,
-                    grade_recital: 0,
+                    gradeBasic: 8000 + index * 1000,
+                    gradeRecital: 0,
                 };
             }),
         });
@@ -122,24 +122,24 @@ for (const flag of flags) {
     }) => {
         const marker = `p6-${Date.now()}-${flag}`;
         const arcade = await db!.arcade.create({
-            data: { name: `${marker}-arcade`, is_active: false },
+            data: { name: `${marker}-arcade`, isActive: false },
         });
         let userId: number | undefined;
         try {
             const chart = await db!.musicChart.findFirstOrThrow({
                 where: {
-                    music_idx: "bfdaadfb98501907925ecf41a076108d",
-                    difficulty: { equals: "Expert", mode: "insensitive" },
+                    musicIdx: "bfdaadfb98501907925ecf41a076108d",
+                    difficulty: "Expert",
                 },
             });
             const hidden = (name: string) => flag === name || flag === "all";
             const user = await db!.user.create({
                 data: {
                     username: `${marker}-public`,
-                    nostalgia_name: `${marker}-game`,
-                    discord_name: `${marker}-discord`,
-                    discord_username: `${marker}-handle`,
-                    preferred_arcade_id: arcade.id,
+                    nostalgiaName: `${marker}-game`,
+                    discordName: `${marker}-discord`,
+                    discordUsername: `${marker}-handle`,
+                    preferredArcadeId: arcade.id,
                     // 동기화 결과는 player_stats 에서(2026-10-16 DB 재설계 P4)
                     stats: {
                         create: {
@@ -148,43 +148,43 @@ for (const flag of flags) {
                             gradeRecital: 0,
                         },
                     },
-                    hide_nostalgia_name: hidden("hide_nostalgia_name"),
-                    hide_discord_name: hidden("hide_discord_name"),
-                    hide_play_count: hidden("hide_play_count"),
-                    hide_preferred_arcade: hidden("hide_preferred_arcade"),
-                    hide_play_activity: hidden("hide_play_activity"),
+                    hideNostalgiaName: hidden("hide_nostalgia_name"),
+                    hideDiscordName: hidden("hide_discord_name"),
+                    hidePlayCount: hidden("hide_play_count"),
+                    hidePreferredArcade: hidden("hide_preferred_arcade"),
+                    hidePlayActivity: hidden("hide_play_activity"),
                 },
             });
             userId = user.id;
             await db!.playData.create({
                 data: {
-                    user_id: user.id,
-                    chart_id: chart.id,
+                    userId: user.id,
+                    chartId: chart.id,
                     level: chart.level,
                     score: 976654,
                     rank: "S",
-                    fc_type: 2,
-                    play_count: 1,
-                    fullcombo_count: 1,
-                    pianistic_count: 0,
-                    max_combo: 100,
-                    grade_basic: 10000,
-                    grade_recital: 0,
-                    judge_sjust: 90,
-                    judge_just: 5,
-                    judge_good: 3,
-                    judge_near: 1,
-                    judge_miss: 1,
+                    fcType: 2,
+                    playCount: 1,
+                    fullcomboCount: 1,
+                    pianisticCount: 0,
+                    maxCombo: 100,
+                    gradeBasic: 10000,
+                    gradeRecital: 0,
+                    judgeSjust: 90,
+                    judgeJust: 5,
+                    judgeGood: 3,
+                    judgeNear: 1,
+                    judgeMiss: 1,
                 },
             });
             await db!.chartPlayHistory.create({
                 data: {
-                    user_id: user.id,
-                    chart_id: chart.id,
+                    userId: user.id,
+                    chartId: chart.id,
                     score: 976654,
                     rank: "S",
-                    max_combo: 100,
-                    grade_basic: 10000,
+                    maxCombo: 100,
+                    gradeBasic: 10000,
                     // 2026-08-11 21:04 KST
                     playedAt: new Date("2026-08-11T12:04:00Z"),
                 },
@@ -210,9 +210,9 @@ for (const flag of flags) {
             ).toHaveCount(0);
             const html = await response!.text();
             for (const [name, secret] of [
-                ["hide_nostalgia_name", user.nostalgia_name!],
-                ["hide_discord_name", user.discord_name!],
-                ["hide_discord_name", user.discord_username!],
+                ["hide_nostalgia_name", user.nostalgiaName!],
+                ["hide_discord_name", user.discordName!],
+                ["hide_discord_name", user.discordUsername!],
                 ["hide_preferred_arcade", arcade.name],
                 ["hide_play_count", "987654"],
             ]) {

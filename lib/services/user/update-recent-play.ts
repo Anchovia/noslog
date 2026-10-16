@@ -27,10 +27,10 @@ interface RecentHistoryItem {
 }
 
 interface RecentHistoryIdentity {
-    chart_id: number;
+    chartId: number;
     playedAt: Date;
     score: number;
-    max_combo: number;
+    maxCombo: number;
     rank: string;
 }
 
@@ -41,11 +41,11 @@ export async function updateRecentPlay(
 ) {
     const startTime = Date.now(); // 시작 시간
     const charts = await db.musicChart.findMany({
-        select: { id: true, music_idx: true, difficulty: true },
+        select: { id: true, musicIdx: true, difficulty: true },
     });
     const chartIds = new Map(
         charts.map((chart) => [
-            `${chart.music_idx}:${chart.difficulty}`,
+            `${chart.musicIdx}:${chart.difficulty}`,
             chart.id,
         ])
     );
@@ -68,21 +68,21 @@ export async function updateRecentPlay(
         return chart_id && playedAt
             ? [
                   {
-                      user_id,
-                      chart_id,
+                      userId: user_id,
+                      chartId: chart_id,
                       level: data.level,
                       playedAt,
                       score: data.score,
-                      best_score: data.best_score,
-                      max_combo: data.max_combo,
+                      bestScore: data.best_score,
+                      maxCombo: data.max_combo,
                       rank: normalizeBemaniRank(data.rank),
-                      grade_basic: data.grade_basic,
-                      class_basic: data.class_basic,
-                      fast_count: data.fast_count,
-                      slow_count: data.slow_count,
-                      is_onehand: data.is_onehand,
+                      gradeBasic: data.grade_basic,
+                      classBasic: data.class_basic,
+                      fastCount: data.fast_count,
+                      slowCount: data.slow_count,
+                      isOnehand: data.is_onehand,
                       ...mapBemaniJudgeCounts(data.judge_count),
-                      first_sync_id: sync_id,
+                      firstSyncId: sync_id,
                   },
               ]
             : [];
@@ -90,10 +90,10 @@ export async function updateRecentPlay(
 
     const identityKey = (row: RecentHistoryIdentity) =>
         [
-            row.chart_id,
+            row.chartId,
             row.playedAt.getTime(),
             row.score,
-            row.max_combo,
+            row.maxCombo,
             row.rank,
         ].join(":");
     const historyRows = [
@@ -121,33 +121,33 @@ export async function updateRecentPlay(
 
     const existingRows = await db.chartPlayHistory.findMany({
         where: {
-            user_id,
+            userId: user_id,
             OR: historyRows.map((row) => ({
-                chart_id: row.chart_id,
+                chartId: row.chartId,
                 playedAt: row.playedAt,
                 score: row.score,
-                max_combo: row.max_combo,
+                maxCombo: row.maxCombo,
                 rank: row.rank,
             })),
         },
         select: {
-            chart_id: true,
+            chartId: true,
             playedAt: true,
             score: true,
-            max_combo: true,
+            maxCombo: true,
             rank: true,
             level: true,
-            best_score: true,
-            grade_basic: true,
-            class_basic: true,
-            fast_count: true,
-            slow_count: true,
-            is_onehand: true,
-            judge_sjust: true,
-            judge_just: true,
-            judge_good: true,
-            judge_miss: true,
-            judge_near: true,
+            bestScore: true,
+            gradeBasic: true,
+            classBasic: true,
+            fastCount: true,
+            slowCount: true,
+            isOnehand: true,
+            judgeSjust: true,
+            judgeJust: true,
+            judgeGood: true,
+            judgeMiss: true,
+            judgeNear: true,
         },
     });
     const existingKeys = new Set(existingRows.map(identityKey));
@@ -164,17 +164,17 @@ export async function updateRecentPlay(
         return (
             current !== undefined &&
             (current.level !== row.level ||
-                current.best_score !== row.best_score ||
-                current.grade_basic !== row.grade_basic ||
-                current.class_basic !== row.class_basic ||
-                current.fast_count !== row.fast_count ||
-                current.slow_count !== row.slow_count ||
-                current.is_onehand !== row.is_onehand ||
-                current.judge_sjust !== row.judge_sjust ||
-                current.judge_just !== row.judge_just ||
-                current.judge_good !== row.judge_good ||
-                current.judge_miss !== row.judge_miss ||
-                current.judge_near !== row.judge_near)
+                current.bestScore !== row.bestScore ||
+                current.gradeBasic !== row.gradeBasic ||
+                current.classBasic !== row.classBasic ||
+                current.fastCount !== row.fastCount ||
+                current.slowCount !== row.slowCount ||
+                current.isOnehand !== row.isOnehand ||
+                current.judgeSjust !== row.judgeSjust ||
+                current.judgeJust !== row.judgeJust ||
+                current.judgeGood !== row.judgeGood ||
+                current.judgeMiss !== row.judgeMiss ||
+                current.judgeNear !== row.judgeNear)
         );
     });
 
@@ -190,29 +190,29 @@ export async function updateRecentPlay(
         ...changedRows.map((row) =>
             db.chartPlayHistory.upsert({
                 where: {
-                    user_id_chart_id_playedAt_score_max_combo_rank: {
-                        user_id,
-                        chart_id: row.chart_id,
+                    userId_chartId_playedAt_score_maxCombo_rank: {
+                        userId: user_id,
+                        chartId: row.chartId,
                         playedAt: row.playedAt,
                         score: row.score,
-                        max_combo: row.max_combo,
+                        maxCombo: row.maxCombo,
                         rank: row.rank,
                     },
                 },
                 create: row,
                 update: {
                     level: row.level,
-                    best_score: row.best_score,
-                    grade_basic: row.grade_basic,
-                    class_basic: row.class_basic,
-                    fast_count: row.fast_count,
-                    slow_count: row.slow_count,
-                    is_onehand: row.is_onehand,
-                    judge_sjust: row.judge_sjust,
-                    judge_just: row.judge_just,
-                    judge_good: row.judge_good,
-                    judge_miss: row.judge_miss,
-                    judge_near: row.judge_near,
+                    bestScore: row.bestScore,
+                    gradeBasic: row.gradeBasic,
+                    classBasic: row.classBasic,
+                    fastCount: row.fastCount,
+                    slowCount: row.slowCount,
+                    isOnehand: row.isOnehand,
+                    judgeSjust: row.judgeSjust,
+                    judgeJust: row.judgeJust,
+                    judgeGood: row.judgeGood,
+                    judgeMiss: row.judgeMiss,
+                    judgeNear: row.judgeNear,
                 },
             })
         ),

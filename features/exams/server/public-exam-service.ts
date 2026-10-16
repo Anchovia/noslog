@@ -50,14 +50,14 @@ export async function getPublicExamData() {
         if (!latestSubmissionByExam.has(submission.examId)) {
             latestSubmissionByExam.set(submission.examId, {
                 status: submission.status,
-                reviewerNote: submission.reviewerNote,
+                reviewerNote: submission.reviewNote,
             });
         }
     }
     const recordByChart = new Map<number, (typeof records)[number]>();
     for (const record of records) {
-        if (!record.chart_id) continue;
-        recordByChart.set(record.chart_id, record);
+        if (!record.chartId) continue;
+        recordByChart.set(record.chartId, record);
     }
 
     const items: ExamDashboardItem[] = exams.map((exam) => {
@@ -91,7 +91,7 @@ export async function getPublicExamData() {
             isAchieved:
                 achievedExamIds.has(exam.id) ||
                 getExamEligibility(exam, user) === "achieved",
-            hasSyncedIdentity: Boolean(user?.nostalgia_name?.trim()),
+            hasSyncedIdentity: Boolean(user?.nostalgiaName?.trim()),
             submissionStatus: latestSubmission?.status ?? null,
             submissionReviewerNote: latestSubmission?.reviewerNote ?? null,
             playerGrade:
@@ -102,7 +102,7 @@ export async function getPublicExamData() {
                 const bestRecord = stage.allowedCharts
                     .map((item) => recordByChart.get(item.chart.id))
                     .filter((record): record is NonNullable<typeof record> =>
-                        Boolean(record && record.play_count > 0)
+                        Boolean(record && record.playCount > 0)
                     )
                     .sort((a, b) => b.score - a.score)[0];
 
@@ -120,17 +120,17 @@ export async function getPublicExamData() {
                         ? {
                               score: bestRecord.score,
                               rank: bestRecord.rank,
-                              fcType: bestRecord.fc_type,
-                              maxCombo: bestRecord.max_combo,
-                              judgeSjust: bestRecord.judge_sjust,
-                              judgeJust: bestRecord.judge_just,
-                              judgeGood: bestRecord.judge_good,
-                              judgeMiss: bestRecord.judge_miss,
-                              judgeNear: bestRecord.judge_near,
-                              noteRateStandard: bestRecord.note_rate_standard,
-                              noteRateTenuto: bestRecord.note_rate_tenuto,
-                              noteRateGlissando: bestRecord.note_rate_glissando,
-                              noteRateTrill: bestRecord.note_rate_trill,
+                              fcType: bestRecord.fcType,
+                              maxCombo: bestRecord.maxCombo,
+                              judgeSjust: bestRecord.judgeSjust,
+                              judgeJust: bestRecord.judgeJust,
+                              judgeGood: bestRecord.judgeGood,
+                              judgeMiss: bestRecord.judgeMiss,
+                              judgeNear: bestRecord.judgeNear,
+                              noteRateStandard: bestRecord.noteRateStandard,
+                              noteRateTenuto: bestRecord.noteRateTenuto,
+                              noteRateGlissando: bestRecord.noteRateGlissando,
+                              noteRateTrill: bestRecord.noteRateTrill,
                           }
                         : null,
                     musicIndex: stage.music.index,

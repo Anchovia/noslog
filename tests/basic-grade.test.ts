@@ -4,15 +4,15 @@ import { getMaxBasicGrade } from "@/lib/music/max-grade";
 
 const play = {
     rank: "A",
-    max_combo: 156,
-    is_onehand: false,
-    judge_sjust: 1451,
-    judge_just: 198,
-    judge_good: 55,
-    judge_near: 0,
-    judge_miss: 124,
+    maxCombo: 156,
+    isOnehand: false,
+    judgeSjust: 1451,
+    judgeJust: 198,
+    judgeGood: 55,
+    judgeNear: 0,
+    judgeMiss: 124,
 };
-const chart = { difficulty: "Expert", level_constant: 12, note_count: 1828 };
+const chart = { difficulty: "Expert", levelConstant: 12, noteCount: 1828 };
 describe("Basic Grd fallback", () => {
     it("matches an official A record, including truncation", () => {
         expect(calculateBasicGrade(play, chart)).toBe(7780);
@@ -23,13 +23,13 @@ describe("Basic Grd fallback", () => {
                 {
                     ...play,
                     rank: "S",
-                    max_combo: 903,
-                    judge_sjust: 1440,
-                    judge_just: 91,
-                    judge_good: 26,
-                    judge_miss: 7,
+                    maxCombo: 903,
+                    judgeSjust: 1440,
+                    judgeJust: 91,
+                    judgeGood: 26,
+                    judgeMiss: 7,
                 },
-                { ...chart, note_count: 1564 }
+                { ...chart, noteCount: 1564 }
             )
         ).toBe(11366);
     });
@@ -39,11 +39,11 @@ describe("Basic Grd fallback", () => {
                 {
                     ...play,
                     rank: "P",
-                    max_combo: 1828,
-                    judge_sjust: 1828,
-                    judge_just: 0,
-                    judge_good: 0,
-                    judge_miss: 0,
+                    maxCombo: 1828,
+                    judgeSjust: 1828,
+                    judgeJust: 0,
+                    judgeGood: 0,
+                    judgeMiss: 0,
                 },
                 chart
             )
@@ -51,23 +51,23 @@ describe("Basic Grd fallback", () => {
     });
     it("does not guess with missing, inconsistent or unsupported inputs", () => {
         expect(
-            calculateBasicGrade({ ...play, is_onehand: true }, chart)
+            calculateBasicGrade({ ...play, isOnehand: true }, chart)
         ).toBeNull();
         expect(
-            calculateBasicGrade({ ...play, is_onehand: null }, chart)
+            calculateBasicGrade({ ...play, isOnehand: null }, chart)
         ).toBeNull();
         expect(
-            calculateBasicGrade({ ...play, judge_just: null }, chart)
+            calculateBasicGrade({ ...play, judgeJust: null }, chart)
         ).toBeNull();
         expect(
-            calculateBasicGrade({ ...play, max_combo: 2000 }, chart)
+            calculateBasicGrade({ ...play, maxCombo: 2000 }, chart)
         ).toBeNull();
         expect(calculateBasicGrade({ ...play, rank: "B" }, chart)).toBeNull();
         expect(
-            calculateBasicGrade(play, { ...chart, note_count: 1829 })
+            calculateBasicGrade(play, { ...chart, noteCount: 1829 })
         ).toBeNull();
         expect(
-            calculateBasicGrade(play, { ...chart, level_constant: null })
+            calculateBasicGrade(play, { ...chart, levelConstant: null })
         ).toBeNull();
     });
 });
@@ -86,15 +86,15 @@ it.each([
             calculateBasicGrade(
                 {
                     rank,
-                    max_combo: combo,
-                    is_onehand: false,
-                    judge_sjust: sjust,
-                    judge_just: just,
-                    judge_good: good,
-                    judge_miss: miss,
-                    judge_near: 0,
+                    maxCombo: combo,
+                    isOnehand: false,
+                    judgeSjust: sjust,
+                    judgeJust: just,
+                    judgeGood: good,
+                    judgeMiss: miss,
+                    judgeNear: 0,
                 },
-                { difficulty: "Hard", level_constant: level, note_count: notes }
+                { difficulty: "Hard", levelConstant: level, noteCount: notes }
             )
         ).toBe(expected);
     }

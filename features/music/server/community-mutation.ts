@@ -35,7 +35,7 @@ async function executeReplyMutation(
     const hasRecord = async (chartId: number) =>
         Boolean(
             await transaction.playData.findFirst({
-                where: { chart_id: chartId, user_id: userId, score: { gt: 0 } },
+                where: { chartId: chartId, userId: userId, score: { gt: 0 } },
                 select: { id: true },
             })
         );
@@ -213,8 +213,8 @@ async function executeMutation(
         if (!opinion) throw new ApiError("opinion_unavailable", "unavailable");
         const record = await transaction.playData.findFirst({
             where: {
-                chart_id: opinion.chartId,
-                user_id: userId,
+                chartId: opinion.chartId,
+                userId: userId,
                 score: { gt: 0 },
             },
             select: { id: true },
@@ -306,13 +306,13 @@ async function executeMutation(
         return { chartId };
     }
     const record = await transaction.playData.findFirst({
-        where: { chart_id: chartId, user_id: userId },
+        where: { chartId: chartId, userId: userId },
         select: {
             id: true,
             score: true,
             rank: true,
-            fc_type: true,
-            grade_recital: true,
+            fcType: true,
+            gradeRecital: true,
         },
     });
     if (input.action === "save-evaluation") {
@@ -407,8 +407,8 @@ async function executeMutation(
                 ? {
                       playDataId: record.id,
                       score: record.score,
-                      fcType: record.fc_type,
-                      gradeRecital: record.grade_recital,
+                      fcType: record.fcType,
+                      gradeRecital: record.gradeRecital,
                   }
                 : {},
         },

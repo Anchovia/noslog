@@ -14,24 +14,25 @@ import {
 } from "@/features/profile/server/profile-records-service";
 import { calculateUserRating } from "@/features/rankings/server/player-rating-service";
 import db from "@/lib/db";
+import { hasFullComboLamp } from "@/lib/music/clear-mark";
 import { formatKstPlayTime } from "@/lib/player-stats";
 import { BASIC_RATING_MAX } from "@/lib/tiers/basic-rating";
 
 const musicFields = { title: true, background: true } as const;
 const playFields = {
     id: true,
-    chart_id: true,
+    chartId: true,
     level: true,
     score: true,
     rank: true,
-    fc_type: true,
-    grade_basic: true,
-    grade_recital: true,
+    fcType: true,
+    gradeBasic: true,
+    gradeRecital: true,
     bestAt: true,
     // 곡 · 난이도는 채보 연결에서(2026-10-16 P5-1)
     chart: {
         select: {
-            music_idx: true,
+            musicIdx: true,
             difficulty: true,
             music: { select: musicFields },
         },
@@ -53,11 +54,11 @@ export async function getPublicProfilePlays(
     // opened tab. Hidden history is never fetched or returned to other viewers.
     const user = await db.user.findUnique({
         where: { id: userId },
-        select: { hide_play_activity: true },
+        select: { hidePlayActivity: true },
     });
     if (!user) return null;
     if (query.kind === "recent") {
-        if (user.hide_play_activity && !owner)
+        if (user.hidePlayActivity && !owner)
             return profileListPayloadSchema.parse({
                 query,
                 status: "hidden",
@@ -65,21 +66,21 @@ export async function getPublicProfilePlays(
                 hasMore: false,
             });
         const plays = await db.chartPlayHistory.findMany({
-            where: { user_id: userId },
+            where: { userId: userId },
             select: {
                 id: true,
                 playedAt: true,
                 score: true,
-                best_score: true,
+                bestScore: true,
                 rank: true,
-                max_combo: true,
-                judge_near: true,
+                maxCombo: true,
+                judgeNear: true,
                 chart: {
                     select: {
                         difficulty: true,
                         level: true,
-                        music_idx: true,
-                        note_count: true,
+                        musicIdx: true,
+                        noteCount: true,
                         music: { select: musicFields },
                     },
                 },
@@ -94,7 +95,7 @@ export async function getPublicProfilePlays(
             hasMore: plays.length > query.limit,
             items: plays.slice(0, query.limit).map((play) => ({
                 id: play.id,
-                musicIndex: play.chart.music_idx,
+                musicIndex: play.chart.musicIdx,
                 title: play.chart.music.title,
                 background: play.chart.music.background,
                 difficulty: play.chart.difficulty,
@@ -104,31 +105,30 @@ export async function getPublicProfilePlays(
                 // FC = NEAR 없는 풀콤보(무지개 F) — NEAR 섞인 풀콤보는 세지 않는다(2026-10-16 K1)
                 fullCombo:
                     play.rank === "P" ||
-                    (play.chart.note_count !== null &&
-                        play.chart.note_count > 0 &&
-                        play.max_combo >= play.chart.note_count &&
-                        (play.judge_near ?? 0) === 0),
+                    (play.chart.noteCount !== null &&
+                        play.chart.noteCount > 0 &&
+                        play.maxCombo >= play.chart.noteCount &&
+                        (play.judgeNear ?? 0) === 0),
                 contribution: null,
                 playedAt: formatKstPlayTime(play.playedAt),
                 // best_score = 그 판 직전까지의 최고 점수(첫 플레이는 0). 모르면 표시하지 않는다
-                newBest:
-                    play.best_score !== null && play.score > play.best_score,
+                newBest: play.bestScore !== null && play.score > play.bestScore,
             })),
         });
     }
-    const field = query.mode === "basic" ? "grade_basic" : "grade_recital";
+    const field = query.mode === "basic" ? "gradeBasic" : "gradeRecital";
     if (query.metric === "grade") {
         const limit = 50;
         const plays =
             query.offset >= limit
                 ? []
                 : await db.playData.findMany({
-                      where: { user_id: userId, [field]: { gt: 0 } },
+                      where: { userId: userId, [field]: { gt: 0 } },
                       select: playFields,
                       orderBy: [
                           { [field]: "desc" },
                           { score: "desc" },
-                          { chart_id: "asc" },
+                          { chartId: "asc" },
                           { id: "asc" },
                       ],
                       skip: query.offset,
@@ -145,14 +145,14 @@ export async function getPublicProfilePlays(
             hasMore: plays.length > PROFILE_BATCH_SIZE,
             items: shown.map((play, index) => ({
                 id: play.id,
-                musicIndex: play.chart.music_idx,
+                musicIndex: play.chart.musicIdx,
                 title: play.chart.music.title,
                 background: play.chart.music.background,
                 difficulty: play.chart.difficulty,
                 level: play.level,
                 score: play.score,
                 rank: play.rank,
-                fullCombo: play.fc_type >= 2,
+                fullCombo: hasFullComboLamp(play.fcType),
                 contribution: (play[field] ?? 0) / 100,
                 playedAt: recordPlayedAt(play.bestAt),
                 chartRank: ranks.get(play.id) ?? null,
@@ -175,13 +175,13 @@ export async function getPublicProfilePlays(
     const plays = selected.length
         ? await db.playData.findMany({
               where: {
-                  user_id: userId,
-                  chart_id: { in: selected.map((item) => item.chartId) },
+                  userId: userId,
+                  chartId: { in: selected.map((item) => item.chartId) },
               },
               select: playFields,
           })
         : [];
-    const byChart = new Map(plays.map((play) => [play.chart_id, play]));
+    const byChart = new Map(plays.map((play) => [play.chartId, play]));
     const ranks = await getChartRanks(plays.map((play) => play.id));
     return profileListPayloadSchema.parse({
         query,
@@ -194,14 +194,14 @@ export async function getPublicProfilePlays(
                 ? [
                       {
                           id: play.id,
-                          musicIndex: play.chart.music_idx,
+                          musicIndex: play.chart.musicIdx,
                           title: play.chart.music.title,
                           background: play.chart.music.background,
                           difficulty: play.chart.difficulty,
                           level: play.level,
                           score: play.score,
                           rank: play.rank,
-                          fullCombo: play.fc_type >= 2,
+                          fullCombo: hasFullComboLamp(play.fcType),
                           contribution:
                               (item.points / rating.theoreticalMax) *
                               BASIC_RATING_MAX,

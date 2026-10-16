@@ -53,14 +53,14 @@ describe("music detail query orchestration", () => {
     beforeEach(() => {
         vi.resetAllMocks();
         mocks.music.mockResolvedValue({
-            music: { index: "song", title: "Song", title_kana: "", charts: [] },
-            chart: { id: 12, unlock_condition: null },
+            music: { index: "song", title: "Song", titleKana: "", charts: [] },
+            chart: { id: 12, unlockCondition: null },
         });
         mocks.record.mockResolvedValue(null);
         mocks.stats.mockResolvedValue({
             scores: [
-                { score: 960000, fc_type: 0 },
-                { score: 999000, fc_type: 3 },
+                { score: 960000, fcType: 0 },
+                { score: 999000, fcType: 3 },
             ],
         });
         for (const mock of [
@@ -80,7 +80,7 @@ describe("music detail query orchestration", () => {
             totalCount: 31,
         });
         mocks.count.mockResolvedValue(4);
-        mocks.player.mockResolvedValue({ user_id: 7, score: 980000 });
+        mocks.player.mockResolvedValue({ userId: 7, score: 980000 });
     });
 
     it("loads independent sections while tier values are still pending", async () => {
@@ -132,14 +132,14 @@ describe("music detail query orchestration", () => {
             expect(mocks.players).toHaveBeenCalledWith(12, 31, hidden ? 7 : 0);
             expect(mocks.count).toHaveBeenCalledWith({
                 where: {
-                    chart_id: 12,
+                    chartId: 12,
                     score: { gt: 980000 },
-                    user: { hide_play_scores: false },
+                    user: { hidePlayScores: false },
                 },
             });
             expect(result?.ranking.userRank).toBe(5);
             expect(result?.ranking.players).toEqual([
-                { user_id: 7, score: 980000 },
+                { userId: 7, score: 980000 },
             ]);
             expect(result?.chartDetail.scoreSeries).toEqual([999000, 960000]);
             expect(mocks.history).not.toHaveBeenCalled();

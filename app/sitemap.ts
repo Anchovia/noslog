@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 
 import { getPublicAnnouncements } from "@/features/announcements/server/public-announcement-service";
 import { getSitemapEvents } from "@/features/events/server/event-service";
-import db from "@/lib/db";
+import { getSitemapSources } from "@/features/home/server/sitemap-data";
 import { localizePath, SUPPORTED_LOCALES } from "@/lib/i18n/routing";
 import { SITE_URL } from "@/lib/metadata/site";
 
@@ -57,37 +57,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     try {
         const now = new Date();
-        const [musics, tierLists, bingos, announcements] = await Promise.all([
-            db.music.findMany({
-                select: {
-                    index: true,
-                    updated_at: true,
-                    charts: {
-                        select: { difficulty: true, updated_at: true },
-                    },
-                },
-            }),
-            db.tierList.findMany({
-                where: { status: "published" },
-                select: { slug: true, updatedAt: true },
-            }),
-            db.bingo.findMany({
-                where: {
-                    status: "published",
-                    AND: [
-                        {
-                            OR: [
-                                { startsAt: null },
-                                { startsAt: { lte: now } },
-                            ],
-                        },
-                        { OR: [{ endsAt: null }, { endsAt: { gte: now } }] },
-                    ],
-                },
-                select: { id: true, updatedAt: true },
-            }),
-            getPublicAnnouncements(),
-        ]);
+        const [{ musics, tierLists, bingos }, announcements] =
+            await Promise.all([
+                getSitemapSources(now),
+                getPublicAnnouncements(),
+            ]);
 
         const musicEntries: MetadataRoute.Sitemap = musics.flatMap((music) =>
             music.charts.flatMap((chart) =>
@@ -95,9 +69,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
                     `/music/${encodeURIComponent(music.index)}/${chart.difficulty.toLowerCase()}`,
                     {
                         lastModified:
-                            chart.updated_at > music.updated_at
-                                ? chart.updated_at
-                                : music.updated_at,
+                            chart.updatedAt > music.updatedAt
+                                ? chart.updatedAt
+                                : music.updatedAt,
                         changeFrequency: "monthly",
                         priority: 0.7,
                     }

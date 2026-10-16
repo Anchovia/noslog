@@ -37,9 +37,9 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
                 data: {
                     index,
                     title: "Community integration fixture",
-                    title_kana: "コミュニティ",
+                    titleKana: "コミュニティ",
                     category: "Original",
-                    category_short: "Org",
+                    categoryShort: "Org",
                     charts: { create: { difficulty: "Expert", level: 12 } },
                 },
                 include: { charts: true },
@@ -52,18 +52,18 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
                 userIds.push(user.id);
                 await db.playData.create({
                     data: {
-                        user_id: user.id,
-                        chart_id: chartId,
+                        userId: user.id,
+                        chartId: chartId,
                         level: 12,
                         score: number === 5 ? 0 : 990_000,
                         rank: "S",
-                        fc_type: 2,
-                        play_count: 1,
-                        fullcombo_count: 1,
-                        pianistic_count: 0,
-                        max_combo: 1000,
-                        grade_basic: 1000,
-                        grade_recital: 0,
+                        fcType: 2,
+                        playCount: 1,
+                        fullcomboCount: 1,
+                        pianisticCount: 0,
+                        maxCombo: 1000,
+                        gradeBasic: 1000,
+                        gradeRecital: 0,
                     },
                 });
             }

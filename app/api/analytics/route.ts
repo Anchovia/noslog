@@ -1,6 +1,6 @@
+import { getUserRole } from "@/features/users/server/user-data";
 import { recordExternalCall, recordPageView } from "@/lib/analytics";
 import { isBotUserAgent, isExternalEvent } from "@/lib/analytics-routes";
-import db from "@/lib/db";
 import { logServerError } from "@/lib/observability/server";
 import getSession from "@/lib/session";
 
@@ -41,10 +41,7 @@ export async function POST(request: Request) {
         // 운영자가 공개 화면을 확인한 방문·동작은 서비스 이용 통계에서 제외한다.
         // 역할은 세션에서 — 이 기능 전에 로그인한 세션만 한 번 DB 에서 읽어 채운다(2026-10-15 S8)
         if (session.id && !session.role) {
-            const account = await db.user.findUnique({
-                where: { id: session.id },
-                select: { role: true },
-            });
+            const account = await getUserRole(session.id);
             if (account) {
                 session.role = account.role;
                 await session.save();

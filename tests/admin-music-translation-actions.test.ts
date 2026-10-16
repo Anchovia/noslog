@@ -174,7 +174,7 @@ describe("관리자 악곡 번역 액션", () => {
             {
                 index: "music-1",
                 title: "Original title",
-                title_kana: "オリジナル",
+                titleKana: "オリジナル",
                 translations: [
                     {
                         locale: "en",

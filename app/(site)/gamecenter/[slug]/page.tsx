@@ -47,7 +47,7 @@ export default async function ArcadeDetailRoute({ params }: Props) {
             arcade={arcade}
             appKey={clientEnv.NEXT_PUBLIC_KAKAO_MAP_APP_KEY ?? ""}
             isAuthenticated={Boolean(user)}
-            preferredArcadeId={user?.preferred_arcade_id ?? null}
+            preferredArcadeId={user?.preferredArcadeId ?? null}
             checkedCabinetIds={checkedCabinetIds}
             recentChecks={recentChecks}
         />

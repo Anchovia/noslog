@@ -1,9 +1,9 @@
+import { getChartHeader } from "@/features/music/server/chart-pattern-data";
 import { notFound } from "next/navigation";
 
 import ChartTimingEditor from "@/components/admin/chart-pattern/chartTimingEditor";
 import { getChartDraftForReview } from "@/features/contributions/server/chart-draft-service";
 import { getNameLabels } from "@/features/contributions/server/contribution-point-service";
-import db from "@/lib/db";
 
 /**
  * 유저 채보 초안 검토(2026-09-24 C1) — 같은 에디터를 읽기 전용 검토 모드로.
@@ -20,15 +20,7 @@ export default async function AdminChartDraftReviewPage({
     const draft = await getChartDraftForReview(id);
     if (!draft) notFound();
     const [chart, labels] = await Promise.all([
-        db.musicChart.findUnique({
-            where: { id: draft.chartId },
-            select: {
-                id: true,
-                difficulty: true,
-                level: true,
-                music: { select: { index: true, title: true, artist: true } },
-            },
-        }),
+        getChartHeader(draft.chartId),
         getNameLabels([draft.user.id], 1),
     ]);
     if (!chart) notFound();

@@ -63,7 +63,7 @@ describe("최초 프로필 설정", () => {
         mocks.session.onboardingReturnTo = undefined;
         mocks.getSession.mockResolvedValue(mocks.session);
         mocks.userFindUnique.mockResolvedValue({
-            profile_completed_at: new Date("2026-07-19"),
+            profileCompletedAt: new Date("2026-07-19"),
         });
         mocks.userUpdate.mockResolvedValue({ id: 9 });
     });
@@ -72,18 +72,18 @@ describe("최초 프로필 설정", () => {
         await completeOnboarding(onboardingForm());
 
         expect(mocks.userUpdate).toHaveBeenCalledWith({
-            where: { id: 9, profile_completed_at: null },
+            where: { id: 9, profileCompletedAt: null },
             data: {
                 username: "carol",
                 country: "ko-KR",
                 locale: "ko",
-                hide_nostalgia_name: true,
-                hide_discord_name: true,
-                hide_preferred_arcade: true,
-                hide_play_count: true,
-                hide_play_activity: true,
-                hide_play_scores: false,
-                profile_completed_at: expect.any(Date),
+                hideNostalgiaName: true,
+                hideDiscordName: true,
+                hidePreferredArcade: true,
+                hidePlayCount: true,
+                hidePlayActivity: true,
+                hidePlayScores: false,
+                profileCompletedAt: expect.any(Date),
             },
         });
         expect(mocks.session.profileCompleted).toBe(true);
@@ -98,14 +98,14 @@ describe("최초 프로필 설정", () => {
         await completeOnboarding(formData);
 
         expect(mocks.userUpdate).toHaveBeenCalledWith({
-            where: { id: 9, profile_completed_at: null },
+            where: { id: 9, profileCompletedAt: null },
             data: expect.objectContaining({
-                hide_nostalgia_name: true,
-                hide_discord_name: false,
-                hide_preferred_arcade: true,
-                hide_play_count: false,
-                hide_play_activity: true,
-                hide_play_scores: false,
+                hideNostalgiaName: true,
+                hideDiscordName: false,
+                hidePreferredArcade: true,
+                hidePlayCount: false,
+                hidePlayActivity: true,
+                hidePlayScores: false,
             }),
         });
     });
@@ -114,18 +114,18 @@ describe("최초 프로필 설정", () => {
         await completeOnboarding(onboardingForm("n"));
 
         expect(mocks.userUpdate).toHaveBeenCalledWith({
-            where: { id: 9, profile_completed_at: null },
+            where: { id: 9, profileCompletedAt: null },
             data: {
                 username: "n",
                 country: "ko-KR",
                 locale: "ko",
-                hide_nostalgia_name: true,
-                hide_discord_name: true,
-                hide_preferred_arcade: true,
-                hide_play_count: true,
-                hide_play_activity: true,
-                hide_play_scores: false,
-                profile_completed_at: expect.any(Date),
+                hideNostalgiaName: true,
+                hideDiscordName: true,
+                hidePreferredArcade: true,
+                hidePlayCount: true,
+                hidePlayActivity: true,
+                hidePlayScores: false,
+                profileCompletedAt: expect.any(Date),
             },
         });
     });
@@ -136,7 +136,7 @@ describe("최초 프로필 설정", () => {
             onboardingForm("Ｎos 한글カナ", "ja-JP", "en")
         );
         expect(mocks.userUpdate).toHaveBeenCalledWith({
-            where: { id: 9, profile_completed_at: null },
+            where: { id: 9, profileCompletedAt: null },
             data: expect.objectContaining({
                 username: "Ｎos 한글カナ",
                 country: "ja-JP",
@@ -298,7 +298,7 @@ describe("최초 프로필 설정", () => {
     });
 
     it("DB 프로필이 미완료라면 설정 화면으로 되돌린다", async () => {
-        mocks.userFindUnique.mockResolvedValue({ profile_completed_at: null });
+        mocks.userFindUnique.mockResolvedValue({ profileCompletedAt: null });
 
         const response = await completeOnboardingSession(
             new NextRequest("http://localhost:3000/onboarding/complete")

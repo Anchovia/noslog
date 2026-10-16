@@ -179,9 +179,9 @@ describe("관리자 오락실 액션", () => {
                 name: "테스트 오락실",
                 latitude: 37.5665,
                 longitude: 126.978,
-                play_price: 500,
-                coin_count: 1,
-                business_hours: Prisma.DbNull,
+                playPrice: 500,
+                coinCount: 1,
+                businessHours: Prisma.DbNull,
                 notes: "이어폰 단자 지원",
             },
             select: { id: true },
@@ -302,7 +302,7 @@ describe("관리자 오락실 액션", () => {
             where: { id: 10 },
             data: expect.objectContaining({
                 name: "테스트 오락실",
-                is_active: false,
+                isActive: false,
             }),
         });
         // 바뀌지 않았고 「오늘 확인」 도 아니면 확인 시각을 건드리지 않는다

@@ -2,6 +2,7 @@ import type {
     TierBrowserEntry,
     TierBrowserStrip,
 } from "@/features/tiers/schemas/tier-browser-schema";
+import { hasFullComboLamp, isPianist } from "@/lib/music/clear-mark";
 import { tierValueColor } from "@/lib/music/tier-value-color";
 import { getJacketCandidates } from "@/lib/music-jackets";
 import type { TierGoal } from "@/lib/tiers";
@@ -356,10 +357,11 @@ export async function drawTierImage(input: TierExportInput) {
                 const achieved = isTierGoalAchieved(entry.record, input.goal);
                 const record = entry.record;
                 const pianist = Boolean(
-                    record &&
-                    (record.fc_type === 3 || record.score >= 1_000_000)
+                    record && isPianist(record.fc_type, record.score)
                 );
-                const fc = Boolean(record && record.fc_type >= 2 && !pianist);
+                const fc = Boolean(
+                    record && hasFullComboLamp(record.fc_type) && !pianist
+                );
 
                 context.save();
                 roundedRect(context, x, top, cell, cell, radius);

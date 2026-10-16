@@ -39,18 +39,18 @@ const sourceUser = {
     id: 7,
     username: "Public player",
     country: "ko-KR",
-    nostalgia_name: "private-game-identity",
-    discord_name: "private-discord-name",
-    discord_username: "private-discord-username",
+    nostalgiaName: "private-game-identity",
+    discordName: "private-discord-name",
+    discordUsername: "private-discord-username",
     preferredArcade: { name: "private-arcade" },
     // 동기화 결과는 player_stats 에서(2026-10-16 DB 재설계 P4)
     stats: { playCount: 1234567, gradeBasic: 500000, gradeRecital: 100000 },
-    created_at: new Date("2026-01-01T00:00:00Z"),
-    hide_nostalgia_name: false,
-    hide_discord_name: false,
-    hide_play_count: false,
-    hide_preferred_arcade: false,
-    hide_play_activity: false,
+    createdAt: new Date("2026-01-01T00:00:00Z"),
+    hideNostalgiaName: false,
+    hideDiscordName: false,
+    hidePlayCount: false,
+    hidePreferredArcade: false,
+    hidePlayActivity: false,
     examAchievements: [
         { exam: { mode: "basic", grade: 5 } },
         { exam: { mode: "basic", grade: 2 } },
@@ -63,11 +63,11 @@ const sourcePlay = {
     playedAt: new Date("2026-09-06T14:59:00Z"),
     score: 987654,
     rank: "S",
-    grade_basic: 100,
+    gradeBasic: 100,
     chart: {
         difficulty: "expert",
         level: 12,
-        music_idx: "private-recent-music",
+        musicIdx: "private-recent-music",
         music: { title: "Private recent title" },
     },
 };
@@ -83,11 +83,11 @@ describe("public profile visibility boundary", () => {
     it("removes protected identity and activity values from the entire public payload", async () => {
         mocks.user.mockResolvedValue({
             ...sourceUser,
-            hide_nostalgia_name: true,
-            hide_discord_name: true,
-            hide_play_count: true,
-            hide_preferred_arcade: true,
-            hide_play_activity: true,
+            hideNostalgiaName: true,
+            hideDiscordName: true,
+            hidePlayCount: true,
+            hidePreferredArcade: true,
+            hidePlayActivity: true,
         });
         const profile = await getCachedProfileData(7);
         const payload = JSON.stringify(profile);
@@ -113,14 +113,14 @@ describe("public profile visibility boundary", () => {
     it("keeps arcade, play count and activity independent", async () => {
         mocks.user.mockResolvedValue({
             ...sourceUser,
-            hide_preferred_arcade: true,
+            hidePreferredArcade: true,
         });
         const profile = await getCachedProfileData(7);
         expect(profile?.user.preferredArcade).toBeNull();
         expect(profile?.user.play_count).toBe(sourceUser.stats.playCount);
         expect(profile?.user.last_played_at).toBe(sourcePlayTime);
         expect(mocks.recent).toHaveBeenCalledWith({
-            where: { user_id: 7 },
+            where: { userId: 7 },
             select: { playedAt: true },
             // 최신순은 played_at(2026-10-16 P4)
             orderBy: [{ playedAt: "desc" }, { id: "desc" }],
@@ -130,7 +130,7 @@ describe("public profile visibility boundary", () => {
     it("does not fetch unused best performances or growth history", async () => {
         mocks.user.mockResolvedValue({
             ...sourceUser,
-            hide_play_activity: true,
+            hidePlayActivity: true,
         });
         const profile = await getCachedProfileData(7);
         expect(mocks.best).not.toHaveBeenCalled();

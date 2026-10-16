@@ -22,6 +22,7 @@ import MusicJacket from "@/components/music/music-jacket";
 import StatStrip from "@/components/ui/stat-strip";
 import ChartDraftEntry from "@/features/contributions/components/chart-draft-entry";
 import { cn } from "@/lib/cn";
+import { isPianist } from "@/lib/music/clear-mark";
 import {
     GRADE_PROGRESS_STOPS,
     gradeProgressColor,
@@ -179,7 +180,7 @@ export default function MusicEntityHeader({
     // 바꾸는 동안에도 이전 기록을 둔다 — 값은 수치 상자 data-pending 으로 흐린 색 (2026-09-18)
     const shownRecord = record;
     const medal = shownRecord
-        ? shownRecord.fc_type === 3 || shownRecord.score >= 1_000_000
+        ? isPianist(shownRecord.fc_type, shownRecord.score)
             ? "p"
             : rankAssetNames[shownRecord.rank.toUpperCase()]
         : undefined;

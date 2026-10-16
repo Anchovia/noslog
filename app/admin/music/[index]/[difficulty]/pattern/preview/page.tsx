@@ -1,9 +1,10 @@
+import { getAdminChartPatternPreview } from "@/features/music/server/chart-pattern-data";
 import { notFound } from "next/navigation";
 
 import ChartSheetViewer from "@/components/chart-pattern/chartSheetViewer";
 import { requireAdmin } from "@/lib/admin";
 import { chartDocumentSchema } from "@/lib/chart-pattern/schema";
-import db from "@/lib/db";
+import { parseChartDifficulty } from "@/lib/tiers";
 import { getJacketUrl } from "@/lib/music-jackets";
 
 export default async function AdminChartPatternPreviewPage({
@@ -14,33 +15,14 @@ export default async function AdminChartPatternPreviewPage({
     await requireAdmin();
     const { index, difficulty } = await params;
     const musicIndex = decodeURIComponent(index);
-    const chart = await db.musicChart.findFirst({
-        where: {
-            music_idx: musicIndex,
-            difficulty: {
-                equals: decodeURIComponent(difficulty),
-                mode: "insensitive",
-            },
-        },
-        select: {
-            difficulty: true,
-            level: true,
-            music: {
-                select: {
-                    index: true,
-                    title: true,
-                    artist: true,
-                    background: true,
-                },
-            },
-            pattern: {
-                select: {
-                    draftContent: true,
-                    savedRevision: true,
-                },
-            },
-        },
-    });
+    const chartDifficulty = parseChartDifficulty(
+        decodeURIComponent(difficulty)
+    );
+    if (!chartDifficulty) notFound();
+    const chart = await getAdminChartPatternPreview(
+        musicIndex,
+        chartDifficulty
+    );
     if (!chart?.pattern) notFound();
 
     const document = chartDocumentSchema.safeParse(chart.pattern.draftContent);

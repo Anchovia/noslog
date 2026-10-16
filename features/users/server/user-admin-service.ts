@@ -51,31 +51,31 @@ export async function listAdminUsers(
                 ? {
                       OR: [
                           { username: { contains: filters.q } },
-                          { nostalgia_name: { contains: filters.q } },
-                          { discord_name: { contains: filters.q } },
-                          { discord_username: { contains: filters.q } },
+                          { nostalgiaName: { contains: filters.q } },
+                          { discordName: { contains: filters.q } },
+                          { discordUsername: { contains: filters.q } },
                       ],
                   }
                 : undefined,
             select: {
                 id: true,
                 username: true,
-                nostalgia_name: true,
+                nostalgiaName: true,
                 country: true,
                 role: true,
                 // 플레이 수 · 마지막 플레이는 player_stats 에서(2026-10-16 DB 재설계 P4)
                 stats: { select: { playCount: true, lastPlayedAt: true } },
-                sync_token_version: true,
-                created_at: true,
+                syncTokenVersion: true,
+                createdAt: true,
                 dataSyncs: {
-                    select: { status: true, started_at: true },
-                    orderBy: { started_at: "desc" },
+                    select: { status: true, startedAt: true },
+                    orderBy: { startedAt: "desc" },
                     take: 1,
                 },
                 _count: {
                     select: {
                         dataSyncs: true,
-                        PlayData: true,
+                        playData: true,
                         chartPlayHistory: true,
                         // 「평가」 는 지금 쓰는 채보 의견 · 평가(옛 ChartEvaluation 은 지웠다, 2026-10-16 D6)
                         communityEvaluations: true,
@@ -83,7 +83,7 @@ export async function listAdminUsers(
                     },
                 },
             },
-            orderBy: { updated_at: "desc" },
+            orderBy: { updatedAt: "desc" },
             take: 100,
         });
         const userIds = users.map((user) => user.id);
@@ -94,63 +94,61 @@ export async function listAdminUsers(
             recentFastSlowGroups,
         ] = await Promise.all([
             db.playData.groupBy({
-                by: ["user_id"],
+                by: ["userId"],
                 where: {
-                    user_id: { in: userIds },
-                    judge_sjust: { not: null },
-                    judge_just: { not: null },
-                    judge_good: { not: null },
-                    judge_miss: { not: null },
-                    judge_near: { not: null },
+                    userId: { in: userIds },
+                    judgeSjust: { not: null },
+                    judgeJust: { not: null },
+                    judgeGood: { not: null },
+                    judgeMiss: { not: null },
+                    judgeNear: { not: null },
                 },
                 _count: { _all: true },
             }),
             db.playData.groupBy({
-                by: ["user_id"],
+                by: ["userId"],
                 where: {
-                    user_id: { in: userIds },
-                    note_rate_standard: { not: null },
+                    userId: { in: userIds },
+                    noteRateStandard: { not: null },
                 },
                 _count: { _all: true },
             }),
             db.chartPlayHistory.groupBy({
-                by: ["user_id"],
+                by: ["userId"],
                 where: {
-                    user_id: { in: userIds },
-                    judge_sjust: { not: null },
-                    judge_just: { not: null },
-                    judge_good: { not: null },
-                    judge_miss: { not: null },
-                    judge_near: { not: null },
+                    userId: { in: userIds },
+                    judgeSjust: { not: null },
+                    judgeJust: { not: null },
+                    judgeGood: { not: null },
+                    judgeMiss: { not: null },
+                    judgeNear: { not: null },
                 },
                 _count: { _all: true },
             }),
             db.chartPlayHistory.groupBy({
-                by: ["user_id"],
+                by: ["userId"],
                 where: {
-                    user_id: { in: userIds },
-                    fast_count: { not: null },
-                    slow_count: { not: null },
+                    userId: { in: userIds },
+                    fastCount: { not: null },
+                    slowCount: { not: null },
                 },
                 _count: { _all: true },
             }),
         ]);
         const judgementByUser = new Map(
-            judgementGroups.map(
-                (row) => [row.user_id, row._count._all] as const
-            )
+            judgementGroups.map((row) => [row.userId, row._count._all] as const)
         );
         const noteRateByUser = new Map(
-            noteRateGroups.map((row) => [row.user_id, row._count._all] as const)
+            noteRateGroups.map((row) => [row.userId, row._count._all] as const)
         );
         const recentJudgementByUser = new Map(
             recentJudgementGroups.map(
-                (row) => [row.user_id, row._count._all] as const
+                (row) => [row.userId, row._count._all] as const
             )
         );
         const recentFastSlowByUser = new Map(
             recentFastSlowGroups.map(
-                (row) => [row.user_id, row._count._all] as const
+                (row) => [row.userId, row._count._all] as const
             )
         );
         const userRows: AdminUserRow[] = users.map((user) => {
@@ -160,19 +158,19 @@ export async function listAdminUsers(
 
             return {
                 id: user.id,
-                name: user.nostalgia_name ?? user.username ?? `유저 ${user.id}`,
+                name: user.nostalgiaName ?? user.username ?? `유저 ${user.id}`,
                 country: user.country,
                 role: user.role === "admin" ? "admin" : "user",
                 playCount: user.stats?.playCount ?? 0,
                 nostalgiaLastPlaytime: formatKstMinute(
                     user.stats?.lastPlayedAt
                 ),
-                syncTokenVersion: user.sync_token_version,
-                createdAt: user.created_at.toISOString(),
-                latestSyncAt: latestSync?.started_at.toISOString() ?? null,
+                syncTokenVersion: user.syncTokenVersion,
+                createdAt: user.createdAt.toISOString(),
+                latestSyncAt: latestSync?.startedAt.toISOString() ?? null,
                 counts: {
                     dataSyncs: user._count.dataSyncs,
-                    playData: user._count.PlayData,
+                    playData: user._count.playData,
                     recentPlayHistory: user._count.chartPlayHistory,
                     chartEvaluations: user._count.communityEvaluations,
                     examAchievements: user._count.examAchievements,
@@ -188,8 +186,8 @@ export async function listAdminUsers(
                 health: getUserSyncHealth(
                     {
                         latestStatus: latestSync?.status ?? null,
-                        latestStartedAt: latestSync?.started_at ?? null,
-                        totalRecords: user._count.PlayData,
+                        latestStartedAt: latestSync?.startedAt ?? null,
+                        totalRecords: user._count.playData,
                         judgementRecords,
                         noteRateRecords,
                     },
@@ -296,10 +294,10 @@ export async function resetAdminUserSyncToken(
 
         const updated = await db.user.update({
             where: { id: user.id },
-            data: { sync_token_version: { increment: 1 } },
-            select: { sync_token_version: true },
+            data: { syncTokenVersion: { increment: 1 } },
+            select: { syncTokenVersion: true },
         });
-        syncTokenVersion = updated.sync_token_version;
+        syncTokenVersion = updated.syncTokenVersion;
     } catch (error) {
         logUserAdminError(error, "admin.user.sync-token-reset.failed");
         return {

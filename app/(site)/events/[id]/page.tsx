@@ -49,7 +49,7 @@ export default async function EventPage({ params }: { params: Params }) {
                 own
                     ? {
                           // 공개판과 다른 작성 중인 판이 있다 = 공개 상태가 아닌 채로 고치는 중
-                          editing: own.status !== "PUBLISHED",
+                          editing: own.status !== "approved",
                       }
                     : null
             }

@@ -1,3 +1,4 @@
+import { getAdminAnnouncement } from "@/features/announcements/server/announcement-admin-data";
 import { notFound } from "next/navigation";
 import { getPollInput } from "@/features/polls/server/poll-service";
 
@@ -11,7 +12,6 @@ import {
     announcementIdSchema,
     toDateTimeLocalValue,
 } from "@/features/announcements/schemas/announcement-schema";
-import db from "@/lib/db";
 import { SITE_URL } from "@/lib/metadata/site";
 
 // 관리자 화면의 시각은 서버 시간대와 무관하게 한국 시간으로 (2026-09-16)
@@ -28,19 +28,7 @@ export default async function EditAnnouncementPage({
 }) {
     const parsed = announcementIdSchema.safeParse((await params).id);
     if (!parsed.success) notFound();
-    const announcement = await db.announcement.findUnique({
-        where: { id: parsed.data },
-        include: {
-            translations: {
-                select: {
-                    locale: true,
-                    title: true,
-                    content: true,
-                    modifiedAt: true,
-                },
-            },
-        },
-    });
+    const announcement = await getAdminAnnouncement(parsed.data);
     if (!announcement) notFound();
 
     // 다국어 모델 이전에 만든 공지는 legacy 제목·본문을 한국어 초안으로 끌어옴

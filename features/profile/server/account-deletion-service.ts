@@ -49,7 +49,7 @@ export async function deleteAccount(
     const user = await db.user.findUnique({
         where: { id: session.id },
         select: {
-            discord_id: true,
+            discordId: true,
             avatar: true,
             feedbackReports: { select: { imageUrl: true } },
             examSubmissions: { select: { proofImageUrl: true } },
@@ -65,7 +65,7 @@ export async function deleteAccount(
         !hasRecentDeletionVerification(
             session.deletionVerification,
             session.id,
-            user.discord_id
+            user.discordId
         )
     ) {
         return {

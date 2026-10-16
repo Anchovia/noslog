@@ -12,15 +12,15 @@ vi.mock("@/lib/db", () => ({
 import { getOwnerPrivateFields } from "@/features/profile/server/owner-private-service";
 
 const base = {
-    nostalgia_name: "CAROL",
-    discord_name: "병훈",
-    discord_username: "hoonie71",
+    nostalgiaName: "CAROL",
+    discordName: "병훈",
+    discordUsername: "hoonie71",
     stats: { playCount: 951 },
-    hide_nostalgia_name: false,
-    hide_discord_name: false,
-    hide_preferred_arcade: false,
-    hide_play_count: false,
-    hide_play_activity: false,
+    hideNostalgiaName: false,
+    hideDiscordName: false,
+    hidePreferredArcade: false,
+    hidePlayCount: false,
+    hidePlayActivity: false,
     preferredArcade: { name: "짱구게임장" },
 };
 
@@ -43,11 +43,11 @@ describe("owner private fields (2026-09-26 P1)", () => {
         });
         mocks.user.mockResolvedValue({
             ...base,
-            hide_nostalgia_name: true,
-            hide_discord_name: true,
-            hide_preferred_arcade: true,
-            hide_play_count: true,
-            hide_play_activity: true,
+            hideNostalgiaName: true,
+            hideDiscordName: true,
+            hidePreferredArcade: true,
+            hidePlayCount: true,
+            hidePlayActivity: true,
         });
         expect(await getOwnerPrivateFields(1)).toEqual({
             nostalgiaName: "CAROL",

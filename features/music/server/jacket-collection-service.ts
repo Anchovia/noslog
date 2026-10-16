@@ -39,7 +39,7 @@ export function detectJacketFormat(bytes: Uint8Array): JacketFormat | null {
 // 그런 곡이 목록에 나타나면 동기화가 unlock_type 을 채워 자동으로 대상이 된다
 export async function getMissingJacketIndexes() {
     const music = await db.music.findMany({
-        where: { background: null, unlock_type: { not: null } },
+        where: { background: null, unlockType: { not: null } },
         select: { index: true },
         orderBy: { index: "asc" },
     });
@@ -95,5 +95,7 @@ export async function saveCollectedJacket(
     revalidateTag(CACHE_TAGS.musicCatalog, "max");
     revalidateTag(CACHE_TAGS.musicDetails, "max");
     revalidateTag(CACHE_TAGS.bingos, "max");
+    // 서열표 구간 · 목록도 자켓을 싣는다(2026-10-16 D8 · B6 — 관리자 자켓 교체와 같게)
+    revalidateTag(CACHE_TAGS.tierLists, "max");
     return "saved";
 }

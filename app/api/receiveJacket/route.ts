@@ -6,8 +6,8 @@ import {
     MAX_COLLECTED_JACKET_BYTES,
     saveCollectedJacket,
 } from "@/features/music/server/jacket-collection-service";
+import { getUserSyncAuth } from "@/features/users/server/user-data";
 import { verifySyncToken } from "@/lib/bookmarklet";
-import db from "@/lib/db";
 
 // 관리자 동기화 중 북마클릿이 공식 사이트(로그인 필요)에서 받은 자켓 한 장을 저장한다
 const EAGATE_ORIGIN = "https://p.eagate.573.jp";
@@ -58,13 +58,10 @@ export async function POST(request: NextRequest) {
 
     const tokenPayload = verifySyncToken(parsed.data.token);
     if (!tokenPayload) return json(401, { saved: false });
-    const user = await db.user.findUnique({
-        where: { id: tokenPayload.userId },
-        select: { sync_token_version: true, role: true },
-    });
+    const user = await getUserSyncAuth(tokenPayload.userId);
     if (
         !user ||
-        user.sync_token_version !== tokenPayload.version ||
+        user.syncTokenVersion !== tokenPayload.version ||
         user.role !== "admin"
     ) {
         return json(403, { saved: false });

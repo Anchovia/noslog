@@ -11,20 +11,20 @@ export async function getMusicTitleDisplayPreference(
     // 로그인한 본인이면 레이아웃이 이미 읽은 행을 쓴다(React cache) — 같은 요청에서 User 를 다시 읽지 않게(2026-10-15 S6)
     const { user: sessionUser } = await getSessionUser();
     if (sessionUser?.id === userId)
-        return sessionUser.show_localized_music_title ?? true;
+        return sessionUser.showLocalizedMusicTitle ?? true;
 
     const user = await db.user.findUnique({
         where: { id: userId },
-        select: { show_localized_music_title: true },
+        select: { showLocalizedMusicTitle: true },
     });
 
-    return user?.show_localized_music_title ?? true;
+    return user?.showLocalizedMusicTitle ?? true;
 }
 
 export function getLocalizedMusicTitle(
     music: {
         title: string;
-        title_kana: string;
+        titleKana: string;
         translations?: {
             locale: string;
             title: string;
@@ -38,7 +38,7 @@ export function getLocalizedMusicTitle(
 
     const localizedTitle =
         locale === "ja"
-            ? music.title_kana
+            ? music.titleKana
             : music.translations?.find(
                   (translation) =>
                       translation.locale === locale &&

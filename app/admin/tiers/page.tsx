@@ -1,7 +1,7 @@
+import { listAdminTierLists } from "@/features/tiers/server/tier-admin-data";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 
-import db from "@/lib/db";
 import {
     TIER_MODE_GOALS,
     TIER_MODES,
@@ -23,12 +23,7 @@ function scopeOrder(mode: TierMode, goal: TierGoal) {
 }
 
 export default async function AdminTiersPage() {
-    const tierLists = await db.tierList.findMany({
-        include: {
-            _count: { select: { bands: true, entries: true } },
-        },
-        orderBy: [{ mode: "asc" }, { goal: "asc" }, { updatedAt: "desc" }],
-    });
+    const tierLists = await listAdminTierLists();
     // 지금 쓰는 서열표만 위에, 목표가 없거나 모드별 목록에서 빠진 표(Recital S·FC 등)는 보관으로
     const activeTierLists = tierLists
         .filter((tierList) => isCurrentTierScope(tierList.mode, tierList.goal))

@@ -11,7 +11,7 @@ export async function updateRecentBestRecords(userId: number, syncId: number) {
         async (tx) => {
             await tx.$queryRaw`SELECT id FROM "User" WHERE id = ${userId} FOR UPDATE`;
             await tx.dataSync.findUniqueOrThrow({
-                where: { id: syncId, user_id: userId, status: "processing" },
+                where: { id: syncId, userId: userId, status: "processing" },
                 select: { id: true },
             });
             // 마지막 전체 기록 시각은 player_stats 에서(2026-10-16 DB 재설계 P4)
@@ -21,16 +21,16 @@ export async function updateRecentBestRecords(userId: number, syncId: number) {
             });
             const history = await tx.chartPlayHistory.findMany({
                 where: {
-                    user_id: userId,
-                    OR: [{ record_applied: false }, { grade_basic: 0 }],
+                    userId: userId,
+                    OR: [{ recordApplied: false }, { gradeBasic: 0 }],
                 },
                 include: {
                     chart: {
                         select: {
                             id: true,
                             level: true,
-                            level_constant: true,
-                            note_count: true,
+                            levelConstant: true,
+                            noteCount: true,
                         },
                     },
                 },
@@ -39,9 +39,9 @@ export async function updateRecentBestRecords(userId: number, syncId: number) {
                 return { changedRecords: 0, changedChartIds: [] };
             const oldRecords = await tx.playData.findMany({
                 where: {
-                    user_id: userId,
-                    chart_id: {
-                        in: [...new Set(history.map((p) => p.chart_id))],
+                    userId: userId,
+                    chartId: {
+                        in: [...new Set(history.map((p) => p.chartId))],
                     },
                 },
             });
@@ -49,10 +49,10 @@ export async function updateRecentBestRecords(userId: number, syncId: number) {
                 oldRecords.flatMap(
                     ({
                         id: _id,
-                        created_at: _created,
-                        updated_at: _updated,
-                        user_id: _user,
-                        chart_id,
+                        createdAt: _created,
+                        updatedAt: _updated,
+                        userId: _user,
+                        chartId: chart_id,
                         ...values
                     }) => [[chart_id, values]]
                 )
@@ -65,44 +65,44 @@ export async function updateRecentBestRecords(userId: number, syncId: number) {
             const records = plan.changes;
             const changed = new Map(
                 history
-                    .filter((play) => records.has(play.chart_id))
-                    .map((play) => [play.chart_id, play.chart])
+                    .filter((play) => records.has(play.chartId))
+                    .map((play) => [play.chartId, play.chart])
             );
             for (const chartId of changed.keys()) {
                 const values = records.get(chartId)!;
                 await tx.playData.upsert({
                     where: {
-                        user_id_chart_id: {
-                            user_id: userId,
-                            chart_id: chartId,
+                        userId_chartId: {
+                            userId: userId,
+                            chartId: chartId,
                         },
                     },
                     create: {
                         ...values,
-                        user_id: userId,
-                        chart_id: chartId,
+                        userId: userId,
+                        chartId: chartId,
                     },
                     update: values,
                 });
                 await tx.chartRecordSnapshot.upsert({
                     where: {
-                        sync_id_chart_id: {
-                            sync_id: syncId,
-                            chart_id: chartId,
+                        syncId_chartId: {
+                            syncId: syncId,
+                            chartId: chartId,
                         },
                     },
                     create: {
                         ...values,
-                        user_id: userId,
-                        chart_id: chartId,
-                        sync_id: syncId,
+                        userId: userId,
+                        chartId: chartId,
+                        syncId: syncId,
                     },
                     update: values,
                 });
             }
             await tx.chartPlayHistory.updateMany({
-                where: { user_id: userId, id: { in: plan.appliedIds } },
-                data: { record_applied: true },
+                where: { userId: userId, id: { in: plan.appliedIds } },
+                data: { recordApplied: true },
             });
             if (changed.size) {
                 // 랭크별 수는 DB 에서 센다(2026-10-15 S9) — 예전에는 기록 전부를 받아 JS 로 셌다

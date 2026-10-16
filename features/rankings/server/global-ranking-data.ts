@@ -35,7 +35,7 @@ const playerFields = {
     avatar: true,
     country: true,
     stats: { select: STATS_GRADE_SELECT },
-    hide_play_scores: true,
+    hidePlayScores: true,
     examAchievements: examAchievementGradeSelect,
 } as const;
 // hidden = 점수 비공개 — 캐시에는 담아 두되 응답 전에 뺀다(본인이 볼 때만 남김, 2026-09-18 S3)
@@ -72,7 +72,7 @@ const getPublicRankingPopulation = unstable_cache(
                         (statsGrade(user.stats, mode) ?? 0) / 100
                     ),
                     rawValue: statsGrade(user.stats, mode) ?? 0,
-                    hidden: user.hide_play_scores,
+                    hidden: user.hidePlayScores,
                 })),
             };
         }
@@ -85,22 +85,22 @@ const getPublicRankingPopulation = unstable_cache(
                 where: { mode },
                 select: {
                     rating: true,
-                    filled_slots: true,
-                    basis_version: true,
+                    filledSlots: true,
+                    basisVersion: true,
                     user: { select: playerFields },
                 },
             });
         let stored = await readStored();
         if (
             !stored.length ||
-            stored.some((row) => row.basis_version !== basis.version)
+            stored.some((row) => row.basisVersion !== basis.version)
         ) {
             await rebuildPlayerRatings(mode, basis);
             stored = await readStored();
         }
         return {
             status: "available",
-            rows: stored.map(({ rating, filled_slots, user }) => {
+            rows: stored.map(({ rating, filledSlots: filled_slots, user }) => {
                 const value = Math.round(rating);
                 return {
                     id: user.id,
@@ -113,7 +113,7 @@ const getPublicRankingPopulation = unstable_cache(
                     rating: value,
                     filledSlots: filled_slots,
                     rawValue: rating,
-                    hidden: user.hide_play_scores,
+                    hidden: user.hidePlayScores,
                 };
             }),
         };

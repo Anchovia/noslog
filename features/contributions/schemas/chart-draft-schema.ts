@@ -5,9 +5,9 @@ import { chartDocumentSchema } from "@/lib/chart-pattern/schema";
 /** 유저 초안 상태(2026-09-24 3단계) */
 export const CHART_DRAFT_STATUSES = [
     "draft",
-    "submitted",
+    "pending",
     "changes_requested",
-    "published",
+    "approved",
 ] as const;
 export type ChartDraftStatus = (typeof CHART_DRAFT_STATUSES)[number];
 

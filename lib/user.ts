@@ -12,10 +12,10 @@ export const SESSION_USER_SELECT = {
     avatar: true,
     role: true,
     locale: true,
-    nostalgia_name: true,
-    show_localized_music_title: true,
-    preferred_arcade_id: true,
-    sync_token_version: true,
+    nostalgiaName: true,
+    showLocalizedMusicTitle: true,
+    preferredArcadeId: true,
+    syncTokenVersion: true,
 } satisfies Prisma.UserSelect;
 
 export type SessionUser = Prisma.UserGetPayload<{

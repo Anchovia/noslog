@@ -95,7 +95,7 @@ describe("검정 증빙 업로드 액션", () => {
             submissions: [],
         });
         mocks.userFindUnique.mockResolvedValue({
-            nostalgia_name: "PLAYER",
+            nostalgiaName: "PLAYER",
             stats: { gradeBasic: 235000, gradeRecital: 100000 },
             examAchievements: [],
         });
@@ -421,7 +421,7 @@ describe("검정 증빙 업로드 액션", () => {
 
     it("동기화된 이름이 없으면 요구 Grd.가 0이어도 업로드를 허용하지 않는다", async () => {
         mocks.userFindUnique.mockResolvedValue({
-            nostalgia_name: null,
+            nostalgiaName: null,
             stats: { gradeBasic: 0, gradeRecital: null },
             examAchievements: [],
         });

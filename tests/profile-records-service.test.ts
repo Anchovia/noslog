@@ -27,12 +27,12 @@ function play(id: number) {
         level: 3,
         score: 970000,
         rank: "S",
-        fc_type: 2,
+        fcType: 2,
         bestAt: new Date("2026-09-18T16:01:00Z"),
-        grade_basic: 12000,
-        grade_recital: 0,
+        gradeBasic: 12000,
+        gradeRecital: 0,
         chart: {
-            music_idx: String(id),
+            musicIdx: String(id),
             difficulty: "Real",
             music: { title: `Music ${id}`, background: null },
         },
@@ -68,12 +68,12 @@ describe("profile records tab", () => {
             profileRecordsQuerySchema.parse({ view: "best", sort: "score" })
         );
         expect(mocks.findMany.mock.calls[0][0]).toMatchObject({
-            where: { user_id: 7, grade_basic: { gt: 0 } },
+            where: { userId: 7, gradeBasic: { gt: 0 } },
             take: 50,
         });
         const second = mocks.findMany.mock.calls[1][0];
         expect(second.where).toEqual({
-            user_id: 7,
+            userId: 7,
             score: { gt: 0 },
             id: { in: [11, 12, 13] },
         });
@@ -95,7 +95,7 @@ describe("profile records tab", () => {
         );
         expect(mocks.findMany).toHaveBeenCalledTimes(1);
         expect(mocks.findMany.mock.calls[0][0].where).toEqual({
-            user_id: 7,
+            userId: 7,
             score: { gt: 0 },
         });
         // 최근순은 기록 시각 best_at(2026-10-16 P4), 시각 모름은 맨 뒤

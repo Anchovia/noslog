@@ -20,11 +20,11 @@ describe("detail score stats", () => {
             });
             expect(mocks.scores).toHaveBeenCalledWith({
                 where: {
-                    chart_id: 12,
+                    chartId: 12,
                     score: { gt: 0 },
-                    user: { OR: [{ hide_play_scores: false }, { id }] },
+                    user: { OR: [{ hidePlayScores: false }, { id }] },
                 },
-                select: { score: true, fc_type: true },
+                select: { score: true, fcType: true },
             });
             expect(mocks.evaluation).not.toHaveBeenCalled();
         }

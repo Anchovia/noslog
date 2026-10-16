@@ -66,8 +66,8 @@ describe("2.0 chart community contract", () => {
         const record = {
             score: 990_000,
             rank: "S",
-            fc_type: 0,
-            grade_recital: 0,
+            fcType: 0,
+            gradeRecital: 0,
         };
         expect(canContributeGoalVote(record, "basic", "s")).toBe(true);
         expect(canContributeGoalVote(record, "basic", "990k")).toBe(true);
@@ -81,7 +81,7 @@ describe("2.0 chart community contract", () => {
         ).toBe(false);
         expect(
             canContributeGoalVote(
-                { ...record, score: 1_000_000, grade_recital: 123 },
+                { ...record, score: 1_000_000, gradeRecital: 123 },
                 "recital",
                 "pianist"
             )
@@ -89,7 +89,7 @@ describe("2.0 chart community contract", () => {
         // Recital 은 서열표가 하나라 S·990k 투표는 받지 않는다
         expect(
             canContributeGoalVote(
-                { ...record, grade_recital: 123 },
+                { ...record, gradeRecital: 123 },
                 "recital",
                 "s"
             )

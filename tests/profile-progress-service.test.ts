@@ -42,19 +42,19 @@ describe("profile progress sources", () => {
         mocks.grades.mockResolvedValue([
             {
                 day: new Date("2025-08-01T00:00:00Z"),
-                grade_basic: 100,
-                grade_recital: 0,
+                gradeBasic: 100,
+                gradeRecital: 0,
             },
             {
                 day: new Date("2026-08-20T00:00:00Z"),
-                grade_basic: 568301,
-                grade_recital: 0,
+                gradeBasic: 568301,
+                gradeRecital: 0,
             },
-            { day: null, grade_basic: 600000, grade_recital: 0 },
+            { day: null, gradeBasic: 600000, gradeRecital: 0 },
             {
                 day: new Date("2026-10-01T00:00:00Z"),
-                grade_basic: 700000,
-                grade_recital: 0,
+                gradeBasic: 700000,
+                gradeRecital: 0,
             },
         ]);
         const query = profileProgressQuerySchema.parse({ range: "30" });
@@ -92,10 +92,10 @@ describe("profile progress sources", () => {
         expect(mocks.history).toHaveBeenCalledWith(
             expect.objectContaining({
                 where: {
-                    user_id: 1,
+                    userId: 1,
                     mode: "basic",
                     sync: { status: "completed" },
-                    observed_at: {
+                    observedAt: {
                         gte: new Date("2025-09-07T12:00:00Z"),
                         lte: now,
                     },
@@ -106,7 +106,7 @@ describe("profile progress sources", () => {
     it("preserves observed rating values even when today's constants change the current rating", async () => {
         mocks.rating.mockResolvedValue({ rating: 3000.25 });
         mocks.history.mockResolvedValue([
-            { observed_at: new Date("2026-09-01T01:23:00Z"), rating: 2900.5 },
+            { observedAt: new Date("2026-09-01T01:23:00Z"), rating: 2900.5 },
         ]);
         const result = await getPublicProfileProgress(
             1,
@@ -121,11 +121,11 @@ describe("profile progress sources", () => {
     it("keeps the final Korean-day observation and preserves plateau boundaries", async () => {
         mocks.rating.mockResolvedValue({ rating: 2100 });
         mocks.history.mockResolvedValue([
-            { observed_at: new Date("2026-08-31T16:00:00Z"), rating: 1900 },
-            { observed_at: new Date("2026-09-01T10:00:00Z"), rating: 2000 },
-            { observed_at: new Date("2026-09-02T10:00:00Z"), rating: 2000 },
-            { observed_at: new Date("2026-09-03T10:00:00Z"), rating: 2000 },
-            { observed_at: new Date("2026-09-04T10:00:00Z"), rating: 2100 },
+            { observedAt: new Date("2026-08-31T16:00:00Z"), rating: 1900 },
+            { observedAt: new Date("2026-09-01T10:00:00Z"), rating: 2000 },
+            { observedAt: new Date("2026-09-02T10:00:00Z"), rating: 2000 },
+            { observedAt: new Date("2026-09-03T10:00:00Z"), rating: 2000 },
+            { observedAt: new Date("2026-09-04T10:00:00Z"), rating: 2100 },
         ]);
         const result = await getPublicProfileProgress(
             1,

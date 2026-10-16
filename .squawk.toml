@@ -1,0 +1,6 @@
+# 마이그레이션 잠금 · 호환 위험 검사(2026-10-16 DB 재설계 D11). CI 는 이 이후에 만든 마이그레이션만 본다(scripts/lint-migrations.mjs).
+# Prisma 는 마이그레이션 파일 하나를 한 트랜잭션으로 보낸다. 의도한 위험(작은 표 재작성 · 줄이기 DROP)은
+# 그 문장 앞에 `-- squawk-ignore <규칙>` 과 이유를 적어 검토자에게 보이게 한다.
+assume_in_transaction = true
+# Prisma 마이그레이션은 다시 돌리지 않고 실패하면 트랜잭션째 되돌아가 IF EXISTS 류 권고가 맞지 않는다
+excluded_rules = ["prefer-robust-stmts"]

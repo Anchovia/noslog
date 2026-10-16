@@ -37,13 +37,10 @@ const queryChartRanking = (
         async (transaction) => {
             const totalCount = await transaction.playData.count({
                 where: {
-                    chart_id: chartId,
+                    chartId: chartId,
                     score: { gt: 0 },
                     user: {
-                        OR: [
-                            { hide_play_scores: false },
-                            { id: includeUserId },
-                        ],
+                        OR: [{ hidePlayScores: false }, { id: includeUserId }],
                     },
                 },
             });

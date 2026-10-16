@@ -32,7 +32,7 @@ describe("profile overview", () => {
             hasRecords: true,
         });
         expect(mocks.record).toHaveBeenCalledWith({
-            where: { user_id: 7, play_count: { gt: 0 } },
+            where: { userId: 7, playCount: { gt: 0 } },
             select: { id: true },
         });
         mocks.record.mockResolvedValue(null);
@@ -49,9 +49,9 @@ describe("profile overview", () => {
     it("maps partial imports to owner-safe status without exposing technical error text", async () => {
         mocks.sync.mockResolvedValue({
             status: "completed",
-            started_at: new Date("2026-09-07T00:00:00Z"),
-            completed_at: new Date("2026-09-07T00:01:00Z"),
-            error_message: "private-import-details",
+            startedAt: new Date("2026-09-07T00:00:00Z"),
+            completedAt: new Date("2026-09-07T00:01:00Z"),
+            errorMessage: "private-import-details",
         });
         const result = await getProfileHeaderContext(7, true);
         expect(result.sync?.status).toBe("partial");

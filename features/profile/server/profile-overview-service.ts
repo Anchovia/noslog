@@ -6,7 +6,7 @@ import db from "@/lib/db";
 /** 개요 — 기록이 하나라도 있는지만(2026-10-15 S6: 화면이 쓰지 않던 레이팅 · 판정 합계 · 동기화 상태 계산을 뺌) */
 export async function getProfileOverviewContext(userId: number) {
     const record = await db.playData.findFirst({
-        where: { user_id: userId, play_count: { gt: 0 } },
+        where: { userId: userId, playCount: { gt: 0 } },
         select: { id: true },
     });
     return { hasRecords: record !== null };
@@ -28,13 +28,13 @@ export async function getProfileHeaderContext(
         getProfileRatingStanding(userId, "recital", country),
         isOwner
             ? db.dataSync.findFirst({
-                  where: { user_id: userId },
-                  orderBy: [{ started_at: "desc" }, { id: "desc" }],
+                  where: { userId: userId },
+                  orderBy: [{ startedAt: "desc" }, { id: "desc" }],
                   select: {
                       status: true,
-                      started_at: true,
-                      completed_at: true,
-                      error_message: true,
+                      startedAt: true,
+                      completedAt: true,
+                      errorMessage: true,
                   },
               })
             : null,
@@ -44,11 +44,11 @@ export async function getProfileHeaderContext(
         sync: sync
             ? {
                   status:
-                      sync.status === "completed" && sync.error_message
+                      sync.status === "completed" && sync.errorMessage
                           ? "partial"
                           : sync.status,
-                  startedAt: sync.started_at.toISOString(),
-                  completedAt: sync.completed_at?.toISOString() ?? null,
+                  startedAt: sync.startedAt.toISOString(),
+                  completedAt: sync.completedAt?.toISOString() ?? null,
               }
             : null,
     };

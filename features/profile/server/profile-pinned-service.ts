@@ -8,11 +8,12 @@ import {
     recordPlayedAt,
 } from "@/features/profile/server/profile-records-service";
 import db from "@/lib/db";
+import { hasFullComboLamp } from "@/lib/music/clear-mark";
 
 // 곡 · 난이도는 채보 연결에서(2026-10-16 P5-1 — PlayData 의 곡 사본 열은 지운다)
 const chartMusicSelect = {
     select: {
-        music_idx: true,
+        musicIdx: true,
         difficulty: true,
         music: { select: { title: true, background: true } },
     },
@@ -20,14 +21,14 @@ const chartMusicSelect = {
 
 const playSelect = {
     id: true,
-    chart_id: true,
+    chartId: true,
     level: true,
     score: true,
     rank: true,
-    fc_type: true,
+    fcType: true,
     bestAt: true,
-    grade_basic: true,
-    grade_recital: true,
+    gradeBasic: true,
+    gradeRecital: true,
     chart: chartMusicSelect,
 } as const;
 
@@ -43,34 +44,34 @@ export type ProfilePinnedRecord = ProfilePlay & {
  */
 export async function getProfilePinnedRecords(userId: number) {
     const pins = await db.userPinnedRecord.findMany({
-        where: { user_id: userId },
+        where: { userId: userId },
         orderBy: { position: "asc" },
-        select: { chart_id: true, comment: true },
+        select: { chartId: true, comment: true },
     });
     const pinnedPlays = pins.length
         ? await db.playData.findMany({
               where: {
-                  user_id: userId,
-                  chart_id: { in: pins.map((pin) => pin.chart_id) },
+                  userId: userId,
+                  chartId: { in: pins.map((pin) => pin.chartId) },
                   score: { gt: 0 },
               },
               select: playSelect,
           })
         : [];
-    const byChart = new Map(pinnedPlays.map((play) => [play.chart_id, play]));
+    const byChart = new Map(pinnedPlays.map((play) => [play.chartId, play]));
     const chosen = pins.flatMap((pin) => {
-        const play = byChart.get(pin.chart_id);
+        const play = byChart.get(pin.chartId);
         return play ? [{ play, comment: pin.comment }] : [];
     });
     const auto = !chosen.length;
     const rows = auto
         ? (
               await db.playData.findMany({
-                  where: { user_id: userId, grade_basic: { gt: 0 } },
+                  where: { userId: userId, gradeBasic: { gt: 0 } },
                   orderBy: [
-                      { grade_basic: "desc" },
+                      { gradeBasic: "desc" },
                       { score: "desc" },
-                      { chart_id: "asc" },
+                      { chartId: "asc" },
                       { id: "asc" },
                   ],
                   take: PINNED_RECORD_LIMIT,
@@ -83,14 +84,14 @@ export async function getProfilePinnedRecords(userId: number) {
         auto,
         items: rows.map(({ play, comment }): ProfilePinnedRecord => ({
             id: play.id,
-            musicIndex: play.chart.music_idx,
+            musicIndex: play.chart.musicIdx,
             title: play.chart.music.title,
             background: play.chart.music.background,
             difficulty: play.chart.difficulty,
             level: play.level,
             score: play.score,
             rank: play.rank,
-            fullCombo: play.fc_type >= 2,
+            fullCombo: hasFullComboLamp(play.fcType),
             contribution: null,
             playedAt: recordPlayedAt(play.bestAt),
             chartRank: ranks.get(play.id) ?? null,
@@ -98,10 +99,10 @@ export async function getProfilePinnedRecords(userId: number) {
             newBest: false,
             comment,
             grades: {
-                basic: play.grade_basic > 0 ? play.grade_basic / 100 : null,
+                basic: play.gradeBasic > 0 ? play.gradeBasic / 100 : null,
                 recital:
-                    (play.grade_recital ?? 0) > 0
-                        ? play.grade_recital! / 100
+                    (play.gradeRecital ?? 0) > 0
+                        ? play.gradeRecital! / 100
                         : null,
             },
         })),
@@ -115,25 +116,25 @@ export type ProfilePinnedRecords = Awaited<
 export async function getPinnableRecords(userId: number) {
     const [plays, pins] = await Promise.all([
         db.playData.findMany({
-            where: { user_id: userId, score: { gt: 0 } },
+            where: { userId: userId, score: { gt: 0 } },
             orderBy: [{ chart: { music: { title: "asc" } } }, { level: "asc" }],
             select: {
-                chart_id: true,
+                chartId: true,
                 level: true,
                 score: true,
                 chart: chartMusicSelect,
             },
         }),
         db.userPinnedRecord.findMany({
-            where: { user_id: userId },
+            where: { userId: userId },
             orderBy: { position: "asc" },
-            select: { chart_id: true, comment: true },
+            select: { chartId: true, comment: true },
         }),
     ]);
     return {
         records: plays.map((play) => ({
-            chartId: play.chart_id,
-            musicIndex: play.chart.music_idx,
+            chartId: play.chartId,
+            musicIndex: play.chart.musicIdx,
             title: play.chart.music.title,
             background: play.chart.music.background,
             difficulty: play.chart.difficulty,
@@ -141,7 +142,7 @@ export async function getPinnableRecords(userId: number) {
             score: play.score,
         })),
         pins: pins.map((pin) => ({
-            chartId: pin.chart_id,
+            chartId: pin.chartId,
             comment: pin.comment,
         })),
     };
@@ -155,19 +156,19 @@ export async function setPinnedRecords(
     if (items.length) {
         const played = await db.playData.count({
             where: {
-                user_id: userId,
-                chart_id: { in: items.map((item) => item.chartId) },
+                userId: userId,
+                chartId: { in: items.map((item) => item.chartId) },
                 score: { gt: 0 },
             },
         });
         if (played !== items.length) return { status: "not-played" };
     }
     await db.$transaction([
-        db.userPinnedRecord.deleteMany({ where: { user_id: userId } }),
+        db.userPinnedRecord.deleteMany({ where: { userId: userId } }),
         db.userPinnedRecord.createMany({
             data: items.map((item, index) => ({
-                user_id: userId,
-                chart_id: item.chartId,
+                userId: userId,
+                chartId: item.chartId,
                 position: index + 1,
                 comment: item.comment,
             })),

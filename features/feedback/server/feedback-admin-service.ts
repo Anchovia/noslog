@@ -57,7 +57,7 @@ export async function listFeedbackReports(
                     select: {
                         id: true,
                         username: true,
-                        nostalgia_name: true,
+                        nostalgiaName: true,
                     },
                 },
                 arcade: {
@@ -85,7 +85,7 @@ export async function listFeedbackReports(
                 id: report.user.id,
                 name:
                     report.user.username ??
-                    report.user.nostalgia_name ??
+                    report.user.nostalgiaName ??
                     `유저 ${report.user.id}`,
             },
             // 어느 오락실·기체의 무슨 제보인지 — 처리 완료로 바꾸면 공개 기체 줄의 「고장 신고 N」 이 줄어든다
@@ -153,12 +153,12 @@ export async function updateFeedbackStatus(
             // 처리 완료 + 답변 = 제보한 사람에게 새 답변(읽음 초기화). 다시 열면 답변은 남겨 둔다
             data: {
                 status: input.status,
-                resolvedAt: input.status === "resolved" ? new Date() : null,
+                reviewedAt: input.status === "resolved" ? new Date() : null,
                 ...(input.status === "resolved" && input.reply
                     ? {
                           reply: input.reply,
                           repliedAt: new Date(),
-                          replySeenAt: null,
+                          authorSeenAt: null,
                       }
                     : {}),
             },

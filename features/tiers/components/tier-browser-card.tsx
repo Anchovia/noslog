@@ -14,6 +14,7 @@ import type {
     TierBrowserStrip,
 } from "@/features/tiers/schemas/tier-browser-schema";
 import { serializeTierBrowserQuery } from "@/features/tiers/schemas/tier-browser-schema";
+import { hasFullComboLamp, isPianist } from "@/lib/music/clear-mark";
 import { isTierGoalAchieved } from "@/lib/tiers";
 
 // 375 미만 4열 카드(66)는 「Expert 10」 판을 못 담아 약칭 — 악곡 상세 난이도 선택과 같은 N · H · EX · R (2026-09-22)
@@ -56,10 +57,8 @@ function useTierEntry(
     const href = useLocalizedHref();
     const t = useTranslations();
     const { chart, record } = entry;
-    const pianist = Boolean(
-        record && (record.fc_type === 3 || record.score >= 1_000_000)
-    );
-    const fc = Boolean(record && record.fc_type >= 2 && !pianist);
+    const pianist = Boolean(record && isPianist(record.fc_type, record.score));
+    const fc = Boolean(record && hasFullComboLamp(record.fc_type) && !pianist);
     const score = record
         ? record.score.toLocaleString(locale)
         : t("tiers.unplayed");

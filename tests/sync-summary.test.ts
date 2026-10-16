@@ -21,7 +21,7 @@ vi.mock("@/lib/db", () => ({
     },
 }));
 
-import { getLatestSyncSummary } from "@/app/(site)/bookmarklet/data";
+import { getLatestSyncSummary } from "@/features/sync/server/sync-summary-data";
 
 describe("최근 동기화 결과", () => {
     beforeEach(() => {
@@ -42,20 +42,20 @@ describe("최근 동기화 결과", () => {
         mocks.dataSyncFindFirst.mockResolvedValue({
             id: 10,
             status: "completed",
-            sync_scope: "full",
-            received_plays: 20,
-            inserted_plays: 3,
-            changed_records: 14,
-            error_message: "일부 채보 제외",
-            started_at: startedAt,
-            completed_at: completedAt,
+            syncScope: "full",
+            receivedPlays: 20,
+            insertedPlays: 3,
+            changedRecords: 14,
+            errorMessage: "일부 채보 제외",
+            startedAt: startedAt,
+            completedAt: completedAt,
         });
         mocks.playDataCount
             .mockResolvedValueOnce(1200)
             .mockResolvedValueOnce(1180);
         mocks.chartPlayHistoryGroupBy.mockResolvedValue([
-            { chart_id: 1 },
-            { chart_id: 2 },
+            { chartId: 1 },
+            { chartId: 2 },
         ]);
 
         await expect(getLatestSyncSummary(1)).resolves.toEqual({
@@ -74,16 +74,16 @@ describe("최근 동기화 결과", () => {
         });
         expect(mocks.playDataCount).toHaveBeenNthCalledWith(1, {
             where: {
-                user_id: 1,
-                play_count: { gt: 0 },
+                userId: 1,
+                playCount: { gt: 0 },
             },
         });
         expect(mocks.chartPlayHistoryGroupBy).toHaveBeenCalledWith({
-            by: ["chart_id"],
+            by: ["chartId"],
             where: {
-                user_id: 1,
-                fast_count: { not: null },
-                slow_count: { not: null },
+                userId: 1,
+                fastCount: { not: null },
+                slowCount: { not: null },
             },
         });
     });

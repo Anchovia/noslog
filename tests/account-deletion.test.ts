@@ -42,7 +42,7 @@ describe("회원 탈퇴", () => {
             destroy: mocks.destroy,
         });
         mocks.userFindUnique.mockResolvedValue({
-            discord_id: "discord-7",
+            discordId: "discord-7",
             avatar: "https://avatar.public.blob.vercel-storage.com/users/7.jpg",
             feedbackReports: [
                 {

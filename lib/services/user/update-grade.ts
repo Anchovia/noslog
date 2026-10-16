@@ -15,15 +15,15 @@ export async function updateGrade(user_id: number) {
 
     const [basicBestData, recitalBestData] = await Promise.all([
         db.playData.findMany({
-            where: { user_id },
-            select: { grade_basic: true },
-            orderBy: [{ grade_basic: "desc" }],
+            where: { userId: user_id },
+            select: { gradeBasic: true },
+            orderBy: [{ gradeBasic: "desc" }],
             take: 50,
         }),
         db.playData.findMany({
-            where: { user_id, grade_recital: { not: null } },
-            select: { grade_recital: true },
-            orderBy: [{ grade_recital: "desc" }],
+            where: { userId: user_id, gradeRecital: { not: null } },
+            select: { gradeRecital: true },
+            orderBy: [{ gradeRecital: "desc" }],
             take: 50,
         }),
     ]);
@@ -31,17 +31,14 @@ export async function updateGrade(user_id: number) {
 
     // 베이직 그레이드 합산
     const basicGrade = basicBestData.reduce(
-        (acc, cur) => acc + cur.grade_basic,
+        (acc, cur) => acc + cur.gradeBasic,
         0
     );
     console.info("(2)베이직 그레이드 합산 완료");
 
     // 리사이틀 그레이드 합산
     const recitalGrade = recitalBestData.length
-        ? recitalBestData.reduce(
-              (acc, cur) => acc + (cur.grade_recital ?? 0),
-              0
-          )
+        ? recitalBestData.reduce((acc, cur) => acc + (cur.gradeRecital ?? 0), 0)
         : null;
     console.info("(4)리사이틀 그레이드 합산 완료");
 
@@ -59,16 +56,16 @@ export async function updateGrade(user_id: number) {
 
         // 사람당 하루(서울 날짜) 한 줄 — 같은 날 다시 동기화하면 그 줄을 지금 값으로(유일 키 user_id · day)
         await tx.userBestGrade.upsert({
-            where: { user_id_day: { user_id, day } },
+            where: { userId_day: { userId: user_id, day } },
             create: {
-                user_id,
+                userId: user_id,
                 day,
-                grade_basic: basicGrade,
-                grade_recital: recitalGrade,
+                gradeBasic: basicGrade,
+                gradeRecital: recitalGrade,
             },
             update: {
-                grade_basic: basicGrade,
-                grade_recital: recitalGrade,
+                gradeBasic: basicGrade,
+                gradeRecital: recitalGrade,
             },
         });
 

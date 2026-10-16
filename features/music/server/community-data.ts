@@ -83,9 +83,11 @@ export const getCachedCommunityPattern = (chartId: number) =>
         }
     )();
 
+/** hasRecord: 부른 쪽이 이미 이 사람 기록을 읽었으면 넘긴다 — 같은 요청에서 다시 읽지 않는다(2026-10-16 D8 · Q4) */
 export async function getCommunityOpinions(
     query: OpinionQuery,
-    userId?: number
+    userId?: number,
+    hasRecord?: boolean
 ) {
     // 지운 의견이라도 남의 답글이 남아 있으면 자리를 남긴다(2026-09-22)
     const where: Prisma.CommunityChartEvaluationWhereInput = {
@@ -135,16 +137,18 @@ export async function getCommunityOpinions(
             },
         }),
         db.communityChartEvaluation.count({ where }),
-        userId
-            ? db.playData.findFirst({
-                  where: {
-                      chart_id: query.chartId,
-                      user_id: userId,
-                      score: { gt: 0 },
-                  },
-                  select: { id: true },
-              })
-            : null,
+        hasRecord !== undefined
+            ? hasRecord || null
+            : userId
+              ? db.playData.findFirst({
+                    where: {
+                        chartId: query.chartId,
+                        userId: userId,
+                        score: { gt: 0 },
+                    },
+                    select: { id: true },
+                })
+              : null,
     ]);
     const labels = await getNameLabels(rows.map((row) => row.user.id));
     return opinionPageSchema.parse({
@@ -265,25 +269,36 @@ const getCachedCommunityPublic = (chartId: number) =>
         }
     )();
 
+/** 곡 상세 서열 탭에서 부를 때는 이미 읽은 이 사람 기록을 넘긴다(없으면 null) — 같은 PlayData 를 세 번 읽지 않는다(2026-10-16 D8 · Q4) */
+export interface CommunityViewerRecord {
+    score: number;
+    fcType: number;
+    rank: string;
+    gradeRecital: number | null;
+}
+
 export async function getCommunityData(
     chartId: number,
-    userId?: number
+    userId?: number,
+    viewerRecord?: CommunityViewerRecord | null
 ): Promise<CommunityData> {
     const [pattern, { lists, votes, events }, record, evaluation, opinions] =
         await Promise.all([
             getCachedCommunityPattern(chartId),
             getCachedCommunityPublic(chartId),
-            userId
-                ? db.playData.findFirst({
-                      where: { user_id: userId, chart_id: chartId },
-                      select: {
-                          score: true,
-                          fc_type: true,
-                          rank: true,
-                          grade_recital: true,
-                      },
-                  })
-                : null,
+            viewerRecord !== undefined
+                ? viewerRecord
+                : userId
+                  ? db.playData.findFirst({
+                        where: { userId: userId, chartId: chartId },
+                        select: {
+                            score: true,
+                            fcType: true,
+                            rank: true,
+                            gradeRecital: true,
+                        },
+                    })
+                  : null,
             userId
                 ? db.communityChartEvaluation.findUnique({
                       where: { chartId_userId: { chartId, userId } },
@@ -300,7 +315,10 @@ export async function getCommunityData(
                 : null,
             getCommunityOpinions(
                 { chartId, sort: "newest", offset: 0 },
-                userId
+                userId,
+                viewerRecord !== undefined
+                    ? Boolean(viewerRecord && viewerRecord.score > 0)
+                    : undefined
             ),
         ]);
     return communityDataSchema.parse({
@@ -390,8 +408,8 @@ export async function getOpinionReplies(
         userId
             ? db.playData.findFirst({
                   where: {
-                      chart_id: query.chartId,
-                      user_id: userId,
+                      chartId: query.chartId,
+                      userId: userId,
                       score: { gt: 0 },
                   },
                   select: { id: true },

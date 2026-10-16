@@ -48,7 +48,7 @@ const getPublishedTierInventory = unstable_cache(
                                     select: {
                                         difficulty: true,
                                         level: true,
-                                        music_idx: true,
+                                        musicIdx: true,
                                     },
                                 },
                             },
@@ -100,7 +100,7 @@ const findMatchingMusic = cache(async (q: string) => {
             OR: [
                 { index: contains },
                 { title: contains },
-                { title_kana: contains },
+                { titleKana: contains },
                 { artist: contains },
                 {
                     translations: {
@@ -141,10 +141,10 @@ export async function getTierBrowserOverview(
         findMatchingMusic(query.q),
     ]);
     const matches = (entry: {
-        chart: { difficulty: string; level: number; music_idx: string };
+        chart: { difficulty: string; level: number; musicIdx: string };
     }) =>
         matchesChart(entry.chart, query) &&
-        (!music || music.has(entry.chart.music_idx));
+        (!music || music.has(entry.chart.musicIdx));
     const chartIds =
         list?.bands.flatMap((band) =>
             band.entries.filter(matches).map((entry) => entry.chartId)
@@ -152,17 +152,17 @@ export async function getTierBrowserOverview(
     const records =
         viewerId && chartIds.length
             ? await db.playData.findMany({
-                  where: { user_id: viewerId, chart_id: { in: chartIds } },
+                  where: { userId: viewerId, chartId: { in: chartIds } },
                   select: {
-                      chart_id: true,
+                      chartId: true,
                       score: true,
                       rank: true,
-                      fc_type: true,
-                      grade_recital: true,
+                      fcType: true,
+                      gradeRecital: true,
                   },
               })
             : [];
-    const byChart = new Map(records.map((record) => [record.chart_id, record]));
+    const byChart = new Map(records.map((record) => [record.chartId, record]));
     return {
         viewerId,
         showLocalizedTitle,
@@ -185,11 +185,15 @@ export async function getTierBrowserOverview(
                                     const record = byChart.get(entry.chartId);
                                     return (
                                         isTierGoalAchieved(
-                                            record,
+                                            record && {
+                                                score: record.score,
+                                                rank: record.rank,
+                                                fc_type: record.fcType,
+                                            },
                                             query.goal
                                         ) &&
                                         (query.mode === "basic" ||
-                                            (record?.grade_recital ?? 0) > 0)
+                                            (record?.gradeRecital ?? 0) > 0)
                                     );
                                 }).length
                               : null,
@@ -256,7 +260,7 @@ export async function getPublicTierBrowserBand(
                     index: entry.chart.music.index,
                     title: entry.chart.music.title,
                     reading:
-                        entry.chart.music.title_kana?.trim() ||
+                        entry.chart.music.titleKana?.trim() ||
                         entry.chart.music.title,
                     background: entry.chart.music.background,
                     localizedTitle: getLocalizedMusicTitle(
@@ -283,18 +287,18 @@ export async function getTierBrowserBandRecords(
     const records = band.entries.length
         ? await db.playData.findMany({
               where: {
-                  user_id: viewerId,
-                  chart_id: {
+                  userId: viewerId,
+                  chartId: {
                       in: band.entries.map((entry) => entry.chartId),
                   },
               },
               select: {
-                  chart_id: true,
+                  chartId: true,
                   score: true,
                   rank: true,
-                  fc_type: true,
-                  grade_basic: true,
-                  grade_recital: true,
+                  fcType: true,
+                  gradeBasic: true,
+                  gradeRecital: true,
               },
           })
         : [];
@@ -303,20 +307,20 @@ export async function getTierBrowserBandRecords(
     );
     const result: Record<number, TierBrowserRecord> = {};
     for (const record of records) {
-        if (record.chart_id === null) continue;
+        if (record.chartId === null) continue;
         const played =
             record.score > 0 &&
-            (query.mode === "basic" || (record.grade_recital ?? 0) > 0);
+            (query.mode === "basic" || (record.gradeRecital ?? 0) > 0);
         if (!played) continue;
-        const constant = constants.get(record.chart_id);
-        result[record.chart_id] = {
+        const constant = constants.get(record.chartId);
+        result[record.chartId] = {
             score: record.score,
             rank: record.rank,
-            fc_type: record.fc_type,
+            fc_type: record.fcType,
             grade:
                 (query.mode === "basic"
-                    ? record.grade_basic
-                    : (record.grade_recital ?? 0)) / 100,
+                    ? record.gradeBasic
+                    : (record.gradeRecital ?? 0)) / 100,
             rating:
                 constant !== undefined && basis.theoreticalMax
                     ? getBasicRatingMaxContribution(
@@ -355,4 +359,12 @@ export async function getTierBrowserBand(
             record: records[entry.chartId] ?? null,
         })),
     };
+}
+
+/** 옛 서열표 주소(/tiers/{slug})를 모드 · 목표 주소로 넘길 때 쓰는 표의 범위(2026-10-16 D8 — 화면에서 옮김) */
+export function getTierListScope(slug: string) {
+    return db.tierList.findUnique({
+        where: { slug },
+        select: { mode: true, goal: true },
+    });
 }

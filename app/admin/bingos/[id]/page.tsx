@@ -1,3 +1,7 @@
+import {
+    getAdminBingo,
+    listBingoMusicOptions,
+} from "@/features/bingos/server/bingo-admin-data";
 import { notFound } from "next/navigation";
 
 import BingoEditor, {
@@ -9,7 +13,6 @@ import {
     normalizeBingoRuleType,
     normalizeBingoStatus,
 } from "@/features/bingos/schemas/bingo-editor-schema";
-import db from "@/lib/db";
 import { formatDateInput } from "@/lib/format-date";
 
 export default async function EditBingoPage({
@@ -22,14 +25,8 @@ export default async function EditBingoPage({
     if (!Number.isInteger(bingoId)) notFound();
 
     const [bingo, musics] = await Promise.all([
-        db.bingo.findUnique({
-            where: { id: bingoId },
-            include: { cells: { orderBy: { position: "asc" } } },
-        }),
-        db.music.findMany({
-            select: { index: true, title: true },
-            orderBy: { title: "asc" },
-        }),
+        getAdminBingo(bingoId),
+        listBingoMusicOptions(),
     ]);
     if (!bingo) notFound();
 

@@ -1,3 +1,4 @@
+import { getAdminChartPatternEditor } from "@/features/music/server/chart-pattern-data";
 import { notFound } from "next/navigation";
 
 import ChartTimingEditor from "@/components/admin/chart-pattern/chartTimingEditor";
@@ -5,7 +6,7 @@ import {
     chartDocumentSchema,
     createDefaultChartDocument,
 } from "@/lib/chart-pattern/schema";
-import db from "@/lib/db";
+import { parseChartDifficulty } from "@/lib/tiers";
 
 export default async function AdminChartPatternEditorPage({
     params,
@@ -14,56 +15,11 @@ export default async function AdminChartPatternEditorPage({
 }) {
     const { index, difficulty } = await params;
     const musicIndex = decodeURIComponent(index);
-    const chart = await db.musicChart.findFirst({
-        where: {
-            music_idx: musicIndex,
-            difficulty: {
-                equals: decodeURIComponent(difficulty),
-                mode: "insensitive",
-            },
-        },
-        select: {
-            id: true,
-            difficulty: true,
-            level: true,
-            bpm_min: true,
-            note_count: true,
-            duration_seconds: true,
-            music: {
-                select: {
-                    index: true,
-                    title: true,
-                    artist: true,
-                },
-            },
-            pattern: {
-                select: {
-                    draftContent: true,
-                    draftVersion: true,
-                    savedRevision: true,
-                    publishedRevision: true,
-                    updatedAt: true,
-                    revisions: {
-                        orderBy: { number: "desc" },
-                        take: 20,
-                        select: {
-                            id: true,
-                            number: true,
-                            kind: true,
-                            message: true,
-                            createdAt: true,
-                            createdBy: {
-                                select: {
-                                    username: true,
-                                    nostalgia_name: true,
-                                },
-                            },
-                        },
-                    },
-                },
-            },
-        },
-    });
+    const chartDifficulty = parseChartDifficulty(
+        decodeURIComponent(difficulty)
+    );
+    if (!chartDifficulty) notFound();
+    const chart = await getAdminChartPatternEditor(musicIndex, chartDifficulty);
     if (!chart) notFound();
 
     const storedDocument = chart.pattern
@@ -73,11 +29,11 @@ export default async function AdminChartPatternEditorPage({
         storedDocument?.success === true
             ? storedDocument.data
             : createDefaultChartDocument({
-                  bpm: chart.bpm_min,
+                  bpm: chart.bpmMin,
                   durationMs:
-                      chart.duration_seconds === null
+                      chart.durationSeconds === null
                           ? 0
-                          : chart.duration_seconds * 1_000,
+                          : chart.durationSeconds * 1_000,
               });
 
     return (
@@ -89,7 +45,7 @@ export default async function AdminChartPatternEditorPage({
                 artist: chart.music.artist,
                 difficulty: chart.difficulty,
                 level: chart.level,
-                noteCount: chart.note_count,
+                noteCount: chart.noteCount,
             }}
             initialDocument={initialDocument}
             draftVersion={chart.pattern?.draftVersion ?? 0}
@@ -106,7 +62,7 @@ export default async function AdminChartPatternEditorPage({
                         message: revision.message,
                         createdAt: revision.createdAt.toISOString(),
                         createdBy:
-                            revision.createdBy?.nostalgia_name ??
+                            revision.createdBy?.nostalgiaName ??
                             revision.createdBy?.username ??
                             null,
                     })) ?? [],

@@ -19,8 +19,8 @@ const row = (index: number) => ({
     index: `m-${index}`,
     title: `Song ${index}`,
     artist: null,
-    category_short: "BM",
-    charts: [{ level_constant: 12.3 }, { level_constant: null }],
+    categoryShort: "BM",
+    charts: [{ levelConstant: 12.3 }, { levelConstant: null }],
     translations: [],
 });
 
@@ -37,7 +37,7 @@ describe("관리자 악곡 목록 — 검색 · 무한 스크롤(2026-09-25)", (
         const insensitive = { contains: "altale", mode: "insensitive" };
         expect(where.OR).toEqual([
             { title: insensitive },
-            { title_kana: insensitive },
+            { titleKana: insensitive },
             { artist: insensitive },
             { index: insensitive },
             { translations: { some: { title: insensitive } } },

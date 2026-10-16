@@ -116,7 +116,7 @@ export async function saveBingo(
                     ruleType: cell.ruleType,
                     ruleConfig: parseRuleConfig(cell.ruleConfig),
                     categoryShort: toNullableText(cell.categoryShort),
-                    targetDifficulty: toNullableText(cell.targetDifficulty),
+                    targetDifficulty: cell.targetDifficulty || null,
                     targetLevel: cell.targetLevel,
                     musicIndex: toNullableText(cell.musicIndex),
                 };

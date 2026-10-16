@@ -48,7 +48,7 @@ export async function runPrivacyRetention(
             db.feedbackReport.findMany({
                 where: {
                     status: "resolved",
-                    resolvedAt: { lte: cutoff },
+                    reviewedAt: { lte: cutoff },
                 },
                 select: { id: true, imageUrl: true },
                 take: BATCH_SIZE,
@@ -59,7 +59,7 @@ export async function runPrivacyRetention(
                     reviewedAt: { lte: cutoff },
                     OR: [
                         { proofImageUrl: { not: null } },
-                        { reviewerNote: { not: null } },
+                        { reviewNote: { not: null } },
                     ],
                 },
                 select: { id: true, proofImageUrl: true },
@@ -93,7 +93,7 @@ export async function runPrivacyRetention(
                 where: {
                     id: report.id,
                     status: "resolved",
-                    resolvedAt: { lte: cutoff },
+                    reviewedAt: { lte: cutoff },
                 },
             });
             result.feedbackDeleted += deleted.count;
@@ -114,7 +114,7 @@ export async function runPrivacyRetention(
                 },
                 data: {
                     proofImageUrl: null,
-                    reviewerNote: null,
+                    reviewNote: null,
                 },
             });
             result.approvedExamRedacted += updated.count;

@@ -26,9 +26,9 @@ async function queryProfileData(id: number) {
             select: {
                 id: true,
                 username: true,
-                nostalgia_name: true,
-                discord_name: true,
-                discord_username: true,
+                nostalgiaName: true,
+                discordName: true,
+                discordUsername: true,
                 avatar: true,
                 country: true,
                 // 동기화 결과는 player_stats 에서(2026-10-16 DB 재설계 P4) — 화면에는 예전 이름으로 넘긴다
@@ -40,19 +40,19 @@ async function queryProfileData(id: number) {
                     },
                 },
                 examAchievements: examAchievementGradeSelect,
-                hide_nostalgia_name: true,
-                hide_discord_name: true,
-                hide_play_count: true,
-                hide_preferred_arcade: true,
-                hide_play_activity: true,
-                hide_play_scores: true,
-                created_at: true,
+                hideNostalgiaName: true,
+                hideDiscordName: true,
+                hidePlayCount: true,
+                hidePreferredArcade: true,
+                hidePlayActivity: true,
+                hidePlayScores: true,
+                createdAt: true,
                 role: true,
                 preferredArcade: { select: { name: true } },
             },
         }),
         db.chartPlayHistory.findMany({
-            where: { user_id: id },
+            where: { userId: id },
             select: { playedAt: true },
             orderBy: [{ playedAt: "desc" }, { id: "desc" }],
             take: 1,
@@ -61,7 +61,7 @@ async function queryProfileData(id: number) {
 
     if (!user) return null;
     // 검정 급수는 승인된 합격 기록이 유일한 출처 — 공개 데이터에는 모드별 최고 급수만 싣는다
-    const { examAchievements, stats, ...publicUser } = user;
+    const { examAchievements, stats } = user;
     const grade_basic = stats?.gradeBasic ?? null;
     const grade_recital = stats?.gradeRecital ?? null;
 
@@ -102,8 +102,19 @@ async function queryProfileData(id: number) {
     ]);
 
     return {
+        // 화면이 받는 프로필 모양은 예전 이름 그대로(2026-10-16 D1-B — Prisma 이름만 camelCase)
         user: {
-            ...publicUser,
+            id: user.id,
+            username: user.username,
+            avatar: user.avatar,
+            country: user.country,
+            role: user.role,
+            hide_nostalgia_name: user.hideNostalgiaName,
+            hide_discord_name: user.hideDiscordName,
+            hide_play_count: user.hidePlayCount,
+            hide_preferred_arcade: user.hidePreferredArcade,
+            hide_play_activity: user.hidePlayActivity,
+            hide_play_scores: user.hidePlayScores,
             grade_basic,
             grade_recital,
             score_p: stats?.scoreP ?? null,
@@ -116,17 +127,13 @@ async function queryProfileData(id: number) {
             score_c: stats?.scoreC ?? null,
             score_d: stats?.scoreD ?? null,
             ...getBestExamGrades(examAchievements),
-            nostalgia_name: user.hide_nostalgia_name
+            nostalgia_name: user.hideNostalgiaName ? null : user.nostalgiaName,
+            discord_name: user.hideDiscordName ? null : user.discordName,
+            discord_username: user.hideDiscordName
                 ? null
-                : user.nostalgia_name,
-            discord_name: user.hide_discord_name ? null : user.discord_name,
-            discord_username: user.hide_discord_name
-                ? null
-                : user.discord_username,
-            play_count: user.hide_play_count
-                ? null
-                : (stats?.playCount ?? null),
-            preferredArcade: user.hide_preferred_arcade
+                : user.discordUsername,
+            play_count: user.hidePlayCount ? null : (stats?.playCount ?? null),
+            preferredArcade: user.hidePreferredArcade
                 ? null
                 : user.preferredArcade,
             rank_basic: rankBasic,
@@ -135,8 +142,8 @@ async function queryProfileData(id: number) {
             rank_recital_country: rankRecitalCountry,
             contribution,
             achievements,
-            created_at: user.created_at.toISOString(),
-            last_played_at: user.hide_play_activity
+            created_at: user.createdAt.toISOString(),
+            last_played_at: user.hidePlayActivity
                 ? null
                 : formatKstPlayTime(recentPlays[0]?.playedAt),
         },

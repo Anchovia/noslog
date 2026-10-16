@@ -14,11 +14,11 @@ export async function recordProfileRatings(userId: number, syncId: number) {
         result
             ? [
                   {
-                      user_id: userId,
-                      sync_id: syncId,
+                      userId: userId,
+                      syncId: syncId,
                       mode: modes[index],
                       rating: result.rating,
-                      observed_at: observedAt,
+                      observedAt: observedAt,
                   },
               ]
             : []

@@ -13,7 +13,7 @@ export async function requireAdmin() {
     return {
         id: user.id,
         username: user.username,
-        nostalgia_name: user.nostalgia_name,
+        nostalgia_name: user.nostalgiaName,
         avatar: user.avatar,
         role: user.role,
     };

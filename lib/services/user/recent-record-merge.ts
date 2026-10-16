@@ -7,27 +7,22 @@ import {
 
 export type RecordValues = Omit<
     PlayData,
-    | "id"
-    | "user_id"
-    | "chart_id"
-    | "created_at"
-    | "updated_at"
-    | "grade_recital"
-> & { grade_recital: number | null };
+    "id" | "userId" | "chartId" | "createdAt" | "updatedAt" | "gradeRecital"
+> & { gradeRecital: number | null };
 export type RecentRecordPlay = Pick<
     ChartPlayHistory,
     | "score"
     | "rank"
     | "level"
-    | "grade_basic"
-    | "max_combo"
+    | "gradeBasic"
+    | "maxCombo"
     | "playedAt"
-    | "judge_sjust"
-    | "judge_just"
-    | "judge_good"
-    | "judge_miss"
-    | "judge_near"
-> & { is_onehand?: boolean | null };
+    | "judgeSjust"
+    | "judgeJust"
+    | "judgeGood"
+    | "judgeMiss"
+    | "judgeNear"
+> & { isOnehand?: boolean | null };
 
 // BEMANI timestamps have minute precision and use the Korean/Japanese calendar.
 export function recentPlayTimestamp(value: string): number | null {
@@ -67,43 +62,43 @@ export function mergeRecentRecord(
     const pianist = play.score === 1_000_000 || play.rank === "P";
     const comboKept =
         pianist ||
-        (chart.note_count !== null &&
-            chart.note_count > 0 &&
-            play.max_combo >= chart.note_count);
+        (chart.noteCount !== null &&
+            chart.noteCount > 0 &&
+            play.maxCombo >= chart.noteCount);
     // 공식 램프와 같게(2026-10-16 K1): NEAR 가 섞이면 1(노란 F, FC 로 세지 않음), 없으면 2(무지개 F)
-    const nearFullCombo = comboKept && !pianist && (play.judge_near ?? 0) > 0;
+    const nearFullCombo = comboKept && !pianist && (play.judgeNear ?? 0) > 0;
     const fullCombo = comboKept && !nearFullCombo;
     const improved = previous === null || play.score > previous.score;
     return {
         level: previous?.level ?? play.level ?? chart.level,
         score: Math.max(previous?.score ?? 0, play.score),
         rank: improved ? play.rank : previous!.rank,
-        fc_type: Math.max(
-            previous?.fc_type ?? 0,
+        fcType: Math.max(
+            previous?.fcType ?? 0,
             pianist ? 3 : fullCombo ? 2 : nearFullCombo ? 1 : 0
         ),
-        play_count: (previous?.play_count ?? 0) + 1,
-        clear_count: previous?.clear_count ?? null,
-        clear_flag: previous?.clear_flag ?? null,
-        fullcombo_count: (previous?.fullcombo_count ?? 0) + Number(fullCombo),
-        pianistic_count: (previous?.pianistic_count ?? 0) + Number(pianist),
-        max_combo: Math.max(previous?.max_combo ?? 0, play.max_combo),
-        grade_basic: Math.max(
-            previous?.grade_basic ?? 0,
-            play.grade_basic > 0
-                ? play.grade_basic
+        playCount: (previous?.playCount ?? 0) + 1,
+        clearCount: previous?.clearCount ?? null,
+        clearFlag: previous?.clearFlag ?? null,
+        fullcomboCount: (previous?.fullcomboCount ?? 0) + Number(fullCombo),
+        pianisticCount: (previous?.pianisticCount ?? 0) + Number(pianist),
+        maxCombo: Math.max(previous?.maxCombo ?? 0, play.maxCombo),
+        gradeBasic: Math.max(
+            previous?.gradeBasic ?? 0,
+            play.gradeBasic > 0
+                ? play.gradeBasic
                 : (calculateBasicGrade(play, chart) ?? 0)
         ),
-        grade_recital: previous?.grade_recital ?? null,
-        judge_sjust: improved ? play.judge_sjust : previous!.judge_sjust,
-        judge_just: improved ? play.judge_just : previous!.judge_just,
-        judge_good: improved ? play.judge_good : previous!.judge_good,
-        judge_miss: improved ? play.judge_miss : previous!.judge_miss,
-        judge_near: improved ? play.judge_near : previous!.judge_near,
-        note_rate_standard: previous?.note_rate_standard ?? null,
-        note_rate_tenuto: previous?.note_rate_tenuto ?? null,
-        note_rate_glissando: previous?.note_rate_glissando ?? null,
-        note_rate_trill: previous?.note_rate_trill ?? null,
+        gradeRecital: previous?.gradeRecital ?? null,
+        judgeSjust: improved ? play.judgeSjust : previous!.judgeSjust,
+        judgeJust: improved ? play.judgeJust : previous!.judgeJust,
+        judgeGood: improved ? play.judgeGood : previous!.judgeGood,
+        judgeMiss: improved ? play.judgeMiss : previous!.judgeMiss,
+        judgeNear: improved ? play.judgeNear : previous!.judgeNear,
+        noteRateStandard: previous?.noteRateStandard ?? null,
+        noteRateTenuto: previous?.noteRateTenuto ?? null,
+        noteRateGlissando: previous?.noteRateGlissando ?? null,
+        noteRateTrill: previous?.noteRateTrill ?? null,
         // 기록 시각은 timestamptz 하나로(2026-10-16 P5-1 — 문자열 besttime 은 쓰지 않는다)
         bestAt: improved ? play.playedAt : previous!.bestAt,
     };
@@ -111,8 +106,8 @@ export function mergeRecentRecord(
 
 export interface PendingRecordPlay extends RecentRecordPlay {
     id: number;
-    chart_id: number;
-    record_applied: boolean;
+    chartId: number;
+    recordApplied: boolean;
     chart: { level: number } & BasicGradeChart;
 }
 
@@ -125,7 +120,7 @@ export function planRecentRecordMerge(
     const pending = [
         ...new Map(
             history
-                .filter((play) => !play.record_applied)
+                .filter((play) => !play.recordApplied)
                 .map((play) => [play.id, play])
         ).values(),
     ];
@@ -136,24 +131,23 @@ export function planRecentRecordMerge(
     for (const play of pending) {
         if (!isAfterFullRecord(play.playedAt, fullAt)) continue;
         const record =
-            changes.get(play.chart_id) ?? previous.get(play.chart_id) ?? null;
-        changes.set(play.chart_id, mergeRecentRecord(record, play, play.chart));
+            changes.get(play.chartId) ?? previous.get(play.chartId) ?? null;
+        changes.set(play.chartId, mergeRecentRecord(record, play, play.chart));
     }
     // Repair already counted zero-Grd attempts without replaying their count/score updates.
     // Full-import baselines remain authoritative, including after a Pass renewal.
     for (const play of history) {
         if (
-            !play.record_applied ||
-            play.grade_basic !== 0 ||
+            !play.recordApplied ||
+            play.gradeBasic !== 0 ||
             !isAfterFullRecord(play.playedAt, fullAt)
         )
             continue;
-        const record =
-            changes.get(play.chart_id) ?? previous.get(play.chart_id);
+        const record = changes.get(play.chartId) ?? previous.get(play.chartId);
         if (!record) continue;
         const grade = calculateBasicGrade(play, play.chart);
-        if (grade !== null && grade > record.grade_basic) {
-            changes.set(play.chart_id, { ...record, grade_basic: grade });
+        if (grade !== null && grade > record.gradeBasic) {
+            changes.set(play.chartId, { ...record, gradeBasic: grade });
         }
     }
     return { changes, appliedIds: pending.map((play) => play.id) };

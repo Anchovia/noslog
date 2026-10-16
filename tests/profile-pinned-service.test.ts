@@ -32,14 +32,14 @@ import {
 function play(chart: number) {
     return {
         id: chart * 10,
-        chart_id: chart,
+        chartId: chart,
         level: 3,
         score: 950000,
         rank: "S",
-        fc_type: 2,
+        fcType: 2,
         bestAt: new Date("2026-09-12T12:00:00Z"),
         chart: {
-            music_idx: `m${chart}`,
+            musicIdx: `m${chart}`,
             difficulty: "Real",
             music: { title: `Song ${chart}`, background: null },
         },
@@ -81,9 +81,9 @@ describe("profile pinned records", () => {
     });
     it("shows the chosen charts' current records in pinned order with notes", async () => {
         mocks.pins.mockResolvedValue([
-            { chart_id: 2, comment: "좋아하는 곡" },
-            { chart_id: 1, comment: null },
-            { chart_id: 9, comment: "기록이 사라진 채보" },
+            { chartId: 2, comment: "좋아하는 곡" },
+            { chartId: 1, comment: null },
+            { chartId: 9, comment: "기록이 사라진 채보" },
         ]);
         mocks.plays.mockResolvedValue([play(1), play(2)]);
         const result = await getProfilePinnedRecords(7);
@@ -101,7 +101,7 @@ describe("profile pinned records", () => {
         expect(result.items).toHaveLength(3);
         expect(mocks.plays).toHaveBeenCalledWith(
             expect.objectContaining({
-                where: { user_id: 7, grade_basic: { gt: 0 } },
+                where: { userId: 7, gradeBasic: { gt: 0 } },
                 take: 3,
             })
         );
@@ -124,8 +124,8 @@ describe("profile pinned records", () => {
         ).toEqual({ status: "ok" });
         expect(mocks.createMany).toHaveBeenCalledWith({
             data: [
-                { user_id: 7, chart_id: 1, position: 1, comment: null },
-                { user_id: 7, chart_id: 2, position: 2, comment: "x" },
+                { userId: 7, chartId: 1, position: 1, comment: null },
+                { userId: 7, chartId: 2, position: 2, comment: "x" },
             ],
         });
         expect(await setPinnedRecords(7, [])).toEqual({ status: "ok" });

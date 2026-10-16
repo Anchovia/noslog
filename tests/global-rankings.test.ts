@@ -5,7 +5,7 @@ const mocks = vi.hoisted(() => ({
     records: vi.fn(),
     basis: vi.fn(),
     // 레이팅 저장 표(2026-10-15 L2-A2) — 랭킹이 비어 있으면 기록에서 다시 세어 채운다
-    ratings: [] as { user_id: number; mode: string }[],
+    ratings: [] as { userId: number; mode: string }[],
 }));
 vi.mock("next/cache", () => ({
     unstable_cache: (callback: unknown) => callback,
@@ -20,7 +20,7 @@ vi.mock("@/lib/db", () => {
                 return mocks.ratings
                     .filter((row) => row.mode === where.mode)
                     .flatMap((row) => {
-                        const user = users.find((u) => u.id === row.user_id);
+                        const user = users.find((u) => u.id === row.userId);
                         return user ? [{ ...row, user }] : [];
                     });
             },
@@ -32,7 +32,7 @@ vi.mock("@/lib/db", () => {
             createMany: async ({
                 data,
             }: {
-                data: { user_id: number; mode: string }[];
+                data: { userId: number; mode: string }[];
             }) => {
                 mocks.ratings.push(...data);
             },
@@ -112,11 +112,11 @@ describe("Basic NosLog rating population", () => {
         ]);
         mocks.records.mockResolvedValue([
             ...Array.from({ length: BASIC_RATING_TOP_COUNT }, (_, index) => ({
-                user_id: 1,
-                chart_id: index + 1,
+                userId: 1,
+                chartId: index + 1,
                 score: 1_000_000,
             })),
-            { user_id: 2, chart_id: 1, score: 990_000 },
+            { userId: 2, chartId: 1, score: 990_000 },
         ]);
     });
 
@@ -222,15 +222,15 @@ describe("global ranking contract", () => {
     it("uses each mode's Pianist basis and requires a Recital record for Recital Rating", async () => {
         mocks.users.mockResolvedValue(users.slice(0, 2));
         mocks.records.mockResolvedValue([
-            { user_id: 1, chart_id: 1, score: 990_000 },
-            { user_id: 2, chart_id: 1, score: 990_001 },
+            { userId: 1, chartId: 1, score: 990_000 },
+            { userId: 2, chartId: 1, score: 990_001 },
         ]);
         const result = await getGlobalRankingPage(
             { ...query, mode: "recital", metric: "rating" },
             1
         );
         expect(mocks.basis).toHaveBeenCalledWith("recital");
-        expect(mocks.records.mock.calls[0][0].where.grade_recital).toEqual({
+        expect(mocks.records.mock.calls[0][0].where.gradeRecital).toEqual({
             gt: 0,
         });
         expect(

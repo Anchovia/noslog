@@ -267,10 +267,10 @@ export async function saveExam(input: unknown): Promise<ExamActionResult> {
         ];
         const charts = await db.musicChart.findMany({
             where: { id: { in: chartIds } },
-            select: { id: true, music_idx: true },
+            select: { id: true, musicIdx: true },
         });
         const chartMusic = new Map(
-            charts.map((chart) => [chart.id, chart.music_idx])
+            charts.map((chart) => [chart.id, chart.musicIdx])
         );
         const invalidStage = data.stages.find((stage) =>
             stage.allowedChartIds.some(

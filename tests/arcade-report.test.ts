@@ -85,7 +85,7 @@ describe("P12 arcade report authorization and retries", () => {
             ).success
         ).toBe(false);
         expect(mocks.arcade).toHaveBeenLastCalledWith({
-            where: { id: 3, is_active: true },
+            where: { id: 3, isActive: true },
             select: {
                 name: true,
                 cabinets: {

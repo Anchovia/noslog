@@ -270,6 +270,14 @@ verification. Report the actual checks and any unverified runtime conditions.
   `prisma migrate diff --exit-code` against a freshly migrated database. Prisma
   does not see hand-written CHECK constraints or partial indexes, so keep their
   names and meaning in a schema comment and cover them with a database test.
+- `npm run lint:schema` (prisma-lint) requires an index on every foreign key;
+  mark a model whose composite `@@id` already starts with that key with
+  `/// prisma-lint-ignore-model require-field-index` and say why.
+  `npm run lint:migrations` runs Squawk on migrations created from the
+  baseline in `scripts/lint-migrations.mjs`. For an intended risk (rewriting a
+  small table, dropping a column the previous deployment stopped using), put the
+  reason on its own comment line and `-- squawk-ignore <rule>` right before the
+  statement. CI runs both in the lint job.
 - Count queries per screen with `npm run measure:queries`. Start a dev server
   with `NOSLOG_QUERY_LOG=<file>` (ignored in production builds) and pass the same
   file with `--log`. Send logged-in cookies only through
@@ -277,6 +285,27 @@ verification. Report the actual checks and any unverified runtime conditions.
 - Import scripts in `prisma/` load their environment through
   `prisma/script-env.mjs`. A non-local `DATABASE_URL` runs only when
   `DATABASE_EXPECTED_HOST` names the same host.
+- Prisma model fields are camelCase and keep the database column name with
+  `@map` (2026-10-16 D1-B). API and page payloads keep their existing
+  snake_case keys: map each key explicitly instead of spreading a database row
+  into a response. Payloads from the official site (bookmarklet sync) stay
+  snake_case as received.
+- The type checker does not see objects built outside a Prisma call (a
+  variable, a `.map()` callback, a spread) or the `.mjs` scripts in `prisma/`.
+  After renaming a field, run those scripts with `checkJs` and cover such
+  queries with a database test.
+- Only `features/<domain>/server` modules and `lib/` infrastructure import
+  `@/lib/db` (enforced by `noslog/boundaries`). Routes, pages, and components
+  call those modules. Share a row read within one request with React `cache()`
+  or by passing the record you already loaded, instead of querying it again.
+- Clear marks use `lib/music/clear-mark.ts` (`isPianist`, `hasFullComboLamp`).
+  SQL that counts them writes the same rule.
+- Review writes (approve, reject, request changes) claim the row with
+  `updateMany({ where: { id, status: pending } })` and stop when the count is
+  0, inside the same transaction as their side effects.
+- Before dropping a column, search raw SQL (`$queryRaw`, `$executeRaw`,
+  `Prisma.sql`) for it: the type checker does not see raw SQL. Cover each raw
+  query with a database test that runs it against the migrated schema.
 - Write migrations so the previous deployment can run against the new schema
   (expand, switch, then contract). Put `CREATE INDEX CONCURRENTLY` alone in its
   own migration file: Prisma 6.19 sends a file as one implicit transaction.

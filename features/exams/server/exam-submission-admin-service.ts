@@ -49,7 +49,7 @@ export async function listExamSubmissions(
                 user: {
                     select: {
                         username: true,
-                        nostalgia_name: true,
+                        nostalgiaName: true,
                     },
                 },
                 exam: { select: { title: true } },
@@ -61,11 +61,11 @@ export async function listExamSubmissions(
         return submissions.map((submission) => ({
             id: submission.id,
             status: submission.status as ExamSubmissionStatus,
-            reviewerNote: submission.reviewerNote,
+            reviewerNote: submission.reviewNote,
             submittedAt: submission.submittedAt.toISOString(),
             hasProofImage: Boolean(submission.proofImageUrl),
             userName:
-                submission.user.nostalgia_name ??
+                submission.user.nostalgiaName ??
                 submission.user.username ??
                 `유저 ${submission.userId}`,
             examTitle: submission.exam.title,
@@ -107,15 +107,17 @@ export async function reviewExamSubmission(
         }
         reviewedUserId = submission.userId;
 
-        await db.$transaction(async (transaction) => {
-            await transaction.examSubmission.update({
-                where: { id: submission.id },
+        // 대기 중일 때만 — 다른 운영자가 먼저 처리했으면 합격 기록을 건드리지 않는다(2026-10-16 D5)
+        const claimed = await db.$transaction(async (transaction) => {
+            const changed = await transaction.examSubmission.updateMany({
+                where: { id: submission.id, status: "pending" },
                 data: {
                     status: input.status,
-                    reviewerNote: input.reviewerNote || null,
+                    reviewNote: input.reviewerNote || null,
                     reviewedAt: new Date(),
                 },
             });
+            if (!changed.count) return false;
 
             if (input.status === "approved") {
                 await transaction.examAchievement.upsert({
@@ -140,7 +142,13 @@ export async function reviewExamSubmission(
                     where: { submissionId: submission.id },
                 });
             }
+            return true;
         });
+        if (!claimed)
+            return {
+                success: false,
+                message: "대기 중인 검정 인증을 찾을 수 없습니다.",
+            };
     } catch (error) {
         logExamSubmissionError(error, "admin.exam-submission.review.failed");
         return {

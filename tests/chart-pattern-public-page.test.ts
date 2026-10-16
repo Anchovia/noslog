@@ -128,11 +128,9 @@ describe("공개 채보 페이지", () => {
         expect(mocks.findFirst).toHaveBeenCalledWith(
             expect.objectContaining({
                 where: {
-                    music_idx: "music-index",
-                    difficulty: {
-                        equals: "normal",
-                        mode: "insensitive",
-                    },
+                    musicIdx: "music-index",
+                    // 주소의 소문자 난이도를 enum 값으로(2026-10-16 D4-C 2차)
+                    difficulty: "Normal",
                 },
                 select: expect.objectContaining({
                     pattern: {

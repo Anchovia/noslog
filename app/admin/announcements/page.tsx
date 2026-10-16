@@ -1,3 +1,4 @@
+import { listAdminAnnouncements } from "@/features/announcements/server/announcement-admin-data";
 import { ChevronRight, Plus } from "lucide-react";
 import Link from "next/link";
 
@@ -12,7 +13,6 @@ import {
     eligibleAnnouncements,
     selectHomeAnnouncements,
 } from "@/features/announcements/schemas/public-announcement-schema";
-import db from "@/lib/db";
 import { cn } from "@/lib/cn";
 
 // 관리자 화면의 시각은 서버 시간대와 무관하게 한국 시간으로 (2026-09-16)
@@ -43,24 +43,7 @@ function Chip({
 
 export default async function AdminAnnouncementsPage() {
     const now = new Date();
-    const announcements = await db.announcement.findMany({
-        orderBy: [
-            { publishedAt: "desc" },
-            { createdAt: "desc" },
-            { id: "desc" },
-        ],
-        take: 100,
-        include: {
-            translations: {
-                select: {
-                    locale: true,
-                    title: true,
-                    content: true,
-                    modifiedAt: true,
-                },
-            },
-        },
-    });
+    const announcements = await listAdminAnnouncements();
     // 공개 화면과 같은 판정으로 "실제로 보이는가" 를 계산함
     const visible = eligibleAnnouncements(announcements, now);
     const home = selectHomeAnnouncements(visible, now);

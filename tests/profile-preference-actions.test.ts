@@ -69,7 +69,7 @@ describe("profile preference action boundaries", () => {
         mocks.arcade.mockResolvedValue(null);
         expect((await setPreferredArcade(4)).success).toBe(false);
         expect(mocks.arcade).toHaveBeenCalledWith({
-            where: { id: 4, is_active: true },
+            where: { id: 4, isActive: true },
             select: { id: true, name: true },
         });
         expect(mocks.update).not.toHaveBeenCalled();
@@ -79,7 +79,7 @@ describe("profile preference action boundaries", () => {
         expect((await setPreferredArcade(4, "ja")).success).toBe(true);
         expect(mocks.update).toHaveBeenCalledWith({
             where: { id: 7 },
-            data: { preferred_arcade_id: 4 },
+            data: { preferredArcadeId: 4 },
         });
         expect(mocks.tag.mock.calls).toEqual([
             [CACHE_TAGS.arcades],
@@ -116,7 +116,7 @@ describe("profile preference action boundaries", () => {
             expect((await regenerateSyncToken(locale)).success).toBe(true);
             expect(mocks.update).toHaveBeenCalledExactlyOnceWith({
                 where: { id: 7 },
-                data: { sync_token_version: { increment: 1 } },
+                data: { syncTokenVersion: { increment: 1 } },
             });
             expect(mocks.revalidate).toHaveBeenCalledWith(
                 `/${locale}/bookmarklet`
@@ -152,8 +152,8 @@ describe("profile preference action boundaries", () => {
             message: t("arcades.preferredCleared"),
         });
         expect(mocks.updateMany).toHaveBeenCalledExactlyOnceWith({
-            where: { id: 7, preferred_arcade_id: 4 },
-            data: { preferred_arcade_id: null },
+            where: { id: 7, preferredArcadeId: 4 },
+            data: { preferredArcadeId: null },
         });
         expect(mocks.update).not.toHaveBeenCalled();
         expect(mocks.tag.mock.calls).toEqual([

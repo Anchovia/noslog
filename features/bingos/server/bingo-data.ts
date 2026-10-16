@@ -24,7 +24,7 @@ export const getCachedPublishedBingos = unstable_cache(
                 coverMusic: {
                     select: {
                         title: true,
-                        title_kana: true,
+                        titleKana: true,
                         artist: true,
                         background: true,
                         translations: {
@@ -82,7 +82,7 @@ export const getCachedBingoDetail = unstable_cache(
                 coverMusic: {
                     select: {
                         title: true,
-                        title_kana: true,
+                        titleKana: true,
                         background: true,
                         description: true,
                         translations: {
@@ -109,7 +109,7 @@ export const getCachedBingoDetail = unstable_cache(
                         music: {
                             select: {
                                 title: true,
-                                title_kana: true,
+                                titleKana: true,
                                 charts: { select: { difficulty: true } },
                                 translations: {
                                     where: {

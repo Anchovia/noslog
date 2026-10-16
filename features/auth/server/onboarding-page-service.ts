@@ -16,17 +16,17 @@ export async function getOnboardingPageData() {
         where: { id: session.id },
         select: {
             avatar: true,
-            discord_name: true,
-            discord_username: true,
-            profile_completed_at: true,
+            discordName: true,
+            discordUsername: true,
+            profileCompletedAt: true,
         },
     });
     if (!user) redirect(localizePath("/onboarding/complete", locale));
-    if (user.profile_completed_at)
+    if (user.profileCompletedAt)
         redirect(localizePath("/onboarding/complete", locale));
     return {
         avatar: user.avatar,
-        displayName: user.discord_name ?? user.discord_username ?? "Discord",
+        displayName: user.discordName ?? user.discordUsername ?? "Discord",
         returnTo: getAuthReturnPath(session.onboardingReturnTo, locale),
     };
 }

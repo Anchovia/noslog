@@ -42,7 +42,7 @@ export async function getProfileActivity(userId: number, now = new Date()) {
     const last = day(today);
     const rows = await db.chartPlayHistory.findMany({
         where: {
-            user_id: userId,
+            userId: userId,
             // 그 주 첫날 0시(KST)부터만 읽는다 — 예전에는 연도 앞부분으로 걸러 최대 23개월치를 읽었다(2026-10-16 P4)
             playedAt: { gte: new Date(start.getTime() - KST) },
         },

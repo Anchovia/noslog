@@ -48,16 +48,16 @@ const FIELD_LABEL_KEYS: Record<ChartFieldProposalField, MessageKey | null> = {
 
 const STATUS_TONES: Record<string, "warning" | "success" | "danger"> = {
     pending: "warning",
-    applied: "success",
+    approved: "success",
     rejected: "danger",
 };
 // 채보 초안 상태 — 가이드 상태 태그: 검토 대기 = 경고 · 수정 요청 = 정보 · 공개 = 성공 · 작성 중 = 중립
 const DRAFT_TONES: Record<string, "warning" | "info" | "success" | undefined> =
     {
         draft: undefined,
-        submitted: "warning",
+        pending: "warning",
         changes_requested: "info",
-        published: "success",
+        approved: "success",
     };
 
 type MineItem =
@@ -97,7 +97,7 @@ function DraftRow({ item }: { item: MyChartDraftItem }) {
             <div className="nl-profile-contribution__item-head">
                 <Link
                     href={href(
-                        item.status === "published" ? base : `${base}/draft`
+                        item.status === "approved" ? base : `${base}/draft`
                     )}
                     className="nl-profile-contribution__what nl-entity-title nl-link"
                 >
@@ -120,7 +120,7 @@ function DraftRow({ item }: { item: MyChartDraftItem }) {
                 {" · "}
                 {t("contribution.section.chartItem")}
                 {" · "}
-                {item.status === "published" && item.publishedAt
+                {item.status === "approved" && item.publishedAt
                     ? `${t("contribution.section.publishedPoints", { points: 20 })} · ${item.publishedAt.slice(0, 10)}`
                     : item.openComments
                       ? t("contribution.section.openComments", {
@@ -179,7 +179,7 @@ function ProposalList({ items }: { items: MineItem[] }) {
                                 data-tone={tone}
                             >
                                 {t(
-                                    `contribution.status.${item.status === "applied" || item.status === "rejected" ? item.status : "pending"}`
+                                    `contribution.status.${item.status === "approved" || item.status === "rejected" ? item.status : "pending"}`
                                 )}
                             </span>
                         </div>
@@ -199,7 +199,7 @@ function ProposalList({ items }: { items: MineItem[] }) {
                                 locale
                             )}
                         </p>
-                        {item.status === "applied" && item.appliedValue ? (
+                        {item.status === "approved" && item.appliedValue ? (
                             <p className="nl-metadata nl-muted">
                                 {t("contribution.section.appliedEdited", {
                                     value: formatProposalValue(

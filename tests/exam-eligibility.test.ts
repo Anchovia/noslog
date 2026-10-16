@@ -3,7 +3,7 @@ import { getExamEligibility } from "@/features/exams/exam-eligibility";
 
 const exam = { mode: "basic", grade: 8, requiredGrade: 2000 };
 const player = {
-    nostalgia_name: "PLAYER",
+    nostalgiaName: "PLAYER",
     grade_basic: 235000,
     grade_recital: null,
     examAchievements: [] as { exam: { mode: string; grade: number | null } }[],
@@ -21,7 +21,7 @@ describe("public exam certification eligibility", () => {
     it("requires both synchronized grade and a nonblank private player name", () => {
         expect(getExamEligibility(exam, null)).toBe("signed-out");
         expect(
-            getExamEligibility(exam, { ...player, nostalgia_name: "  " })
+            getExamEligibility(exam, { ...player, nostalgiaName: "  " })
         ).toBe("sync-required");
         expect(
             getExamEligibility(

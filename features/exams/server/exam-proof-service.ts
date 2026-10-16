@@ -68,7 +68,7 @@ async function getAvailableExam(examId: number, userId: number) {
     const userRow = await db.user.findUnique({
         where: { id: userId },
         select: {
-            nostalgia_name: true,
+            nostalgiaName: true,
             stats: { select: STATS_GRADE_SELECT },
             examAchievements: {
                 select: { exam: { select: { mode: true, grade: true } } },

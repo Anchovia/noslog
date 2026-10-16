@@ -5,9 +5,12 @@ import ProfileRecords from "@/features/profile/components/profile-records";
 import PublicProfilePage from "@/features/profile/components/public-profile-page";
 import { profileIdSchema } from "@/features/profile/schemas/public-profile-schema";
 import { createProfileMetadata } from "@/features/profile/server/profile-metadata";
+import {
+    countPlayedRecords,
+    countRecordsWithGrade,
+} from "@/features/profile/server/profile-records-service";
 import { getPublicProfileRecords } from "@/features/profile/server/profile-records-service";
 import { hideProfileScores } from "@/features/profile/server/score-visibility";
-import db from "@/lib/db";
 import { getServerI18n } from "@/lib/i18n/server";
 import getSession from "@/lib/session";
 
@@ -66,10 +69,10 @@ export default async function ProfileRecordsRoute({
             />
         );
     const mode = query.mode === "recital" ? "recital" : "basic";
-    const field = mode === "basic" ? "grade_basic" : "grade_recital";
+    const field = mode === "basic" ? "gradeBasic" : "gradeRecital";
     const [best, all, initialData] = await Promise.all([
-        db.playData.count({ where: { user_id: id, [field]: { gt: 0 } } }),
-        db.playData.count({ where: { user_id: id, score: { gt: 0 } } }),
+        countRecordsWithGrade(id, field),
+        countPlayedRecords(id),
         getPublicProfileRecords(id, {
             view: "best",
             mode,

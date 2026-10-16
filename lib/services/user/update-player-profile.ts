@@ -19,7 +19,7 @@ export async function updatePlayerProfile(
     await db.$transaction(async (tx) => {
         await tx.user.update({
             where: { id: userId },
-            data: { nostalgia_name: player.name },
+            data: { nostalgiaName: player.name },
         });
         await writePlayerStats(tx, userId, {
             playCount: player.play_count,

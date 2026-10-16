@@ -58,14 +58,14 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
             scope: "full" | "recent" = "recent"
         ) => {
             await db.dataSync.updateMany({
-                where: { user_id: userId, status: "processing" },
-                data: { status: "completed", completed_at: new Date(time) },
+                where: { userId: userId, status: "processing" },
+                data: { status: "completed", completedAt: new Date(time) },
             });
             return db.dataSync.create({
                 data: {
-                    user_id: userId,
-                    sync_scope: scope,
-                    started_at: new Date(time),
+                    userId: userId,
+                    syncScope: scope,
+                    startedAt: new Date(time),
                     status: "processing",
                 },
             });
@@ -74,7 +74,7 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
         const record = async () => {
             const row = await db.playData.findUniqueOrThrow({
                 where: {
-                    user_id_chart_id: { user_id: userId, chart_id: chartId },
+                    userId_chartId: { userId: userId, chartId: chartId },
                 },
             });
             return { ...row, besttime: legacyBesttime(row.bestAt) };
@@ -82,25 +82,25 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
         beforeAll(async () => {
             userId = (
                 await db.user.create({
-                    data: { username: musicIndex, hide_play_scores: false },
+                    data: { username: musicIndex, hidePlayScores: false },
                 })
             ).id;
             await db.music.create({
                 data: {
                     index: musicIndex,
                     title: "Test",
-                    title_kana: "Test",
+                    titleKana: "Test",
                     category: "Test",
-                    category_short: "T",
+                    categoryShort: "T",
                 },
             });
             chartId = (
                 await db.musicChart.create({
                     data: {
-                        music_idx: musicIndex,
+                        musicIdx: musicIndex,
                         difficulty: "Expert",
                         level: 12,
-                        note_count: 1000,
+                        noteCount: 1000,
                     },
                 })
             ).id;
@@ -129,9 +129,9 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
             await updateGrade(userId);
             expect(await record()).toMatchObject({
                 score: 970000,
-                play_count: 2,
-                grade_basic: 9700,
-                grade_recital: null,
+                playCount: 2,
+                gradeBasic: 9700,
+                gradeRecital: null,
             });
             // 동기화 결과는 player_stats 에(2026-10-16 P5-1 — User 옛 열에는 쓰지 않는다)
             expect(
@@ -174,7 +174,7 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
                 (await updateRecentBestRecords(userId, second.id))
                     .changedRecords
             ).toBe(0);
-            expect((await record()).play_count).toBe(2);
+            expect((await record()).playCount).toBe(2);
         });
         it("rolls back real record writes and receipts when a database constraint fails", async () => {
             const next = await sync("2026-09-20T04:00:00Z");
@@ -190,12 +190,12 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
                 updateRecentBestRecords(userId, next.id)
             ).rejects.toThrow();
             expect(await record()).toMatchObject({
-                play_count: 2,
+                playCount: 2,
                 score: 970000,
             });
             expect(
                 await db.chartPlayHistory.count({
-                    where: { user_id: userId, record_applied: false },
+                    where: { userId: userId, recordApplied: false },
                 })
             ).toBe(1);
             await db.$executeRawUnsafe(
@@ -205,7 +205,7 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
                 (await updateRecentBestRecords(userId, next.id)).changedRecords
             ).toBe(1);
             expect(await record()).toMatchObject({
-                play_count: 3,
+                playCount: 3,
                 score: 980000,
             });
         });
@@ -259,15 +259,15 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
             await updateRecentBestRecords(userId, recentSync.id);
             await updateGrade(userId);
             expect(await record()).toMatchObject({
-                play_count: 101,
+                playCount: 101,
                 score: 995000,
-                grade_basic: 12000,
-                grade_recital: 5000,
-                fullcombo_count: 10,
-                note_rate_standard: 9900,
+                gradeBasic: 12000,
+                gradeRecital: 5000,
+                fullcomboCount: 10,
+                noteRateStandard: 9900,
             });
             expect(
-                await db.chartPlayHistory.count({ where: { user_id: userId } })
+                await db.chartPlayHistory.count({ where: { userId: userId } })
             ).toBe(5);
             expect(
                 (
@@ -285,10 +285,10 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
             await updatePlayData(userId, full, newerFull.id);
             expect(await record()).toMatchObject({
                 id: firstRowId,
-                play_count: 200,
+                playCount: 200,
             });
             expect(
-                await db.chartPlayHistory.count({ where: { user_id: userId } })
+                await db.chartPlayHistory.count({ where: { userId: userId } })
             ).toBe(5);
         });
     }

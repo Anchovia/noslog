@@ -29,30 +29,30 @@ export async function getPublicProfileProgress(
         const [rating, history] = await Promise.all([
             // 지금 값은 헤더 · 랭킹과 같은 저장 레이팅(2026-10-16 K3) — 없으면(0 포함) 「레이팅 없음」
             db.playerRating.findUnique({
-                where: { user_id_mode: { user_id: userId, mode: query.mode } },
+                where: { userId_mode: { userId: userId, mode: query.mode } },
                 select: { rating: true },
             }),
             db.userRatingHistory.findMany({
                 where: {
-                    user_id: userId,
+                    userId: userId,
                     mode: query.mode,
                     sync: { status: "completed" },
-                    observed_at: {
+                    observedAt: {
                         ...(query.range === "all" ? {} : { gte: since }),
                         lte: now,
                     },
                 },
-                select: { observed_at: true, rating: true },
-                orderBy: [{ observed_at: "asc" }, { id: "asc" }],
+                select: { observedAt: true, rating: true },
+                orderBy: [{ observedAt: "asc" }, { id: "asc" }],
             }),
         ]);
         current = rating?.rating ?? null;
         points = history.map((row) => ({
-            date: row.observed_at.toISOString(),
+            date: row.observedAt.toISOString(),
             value: row.rating,
         }));
     } else {
-        const field = query.mode === "basic" ? "grade_basic" : "grade_recital";
+        const field = query.mode === "basic" ? "gradeBasic" : "gradeRecital";
         // 기간 앞 하루를 넉넉히 둔 날짜부터만 읽는다(2026-10-15 S13) — 정확한 경계는 아래에서 지금처럼 가린다.
         // 날짜는 day(@db.Date, 서울 날짜, 2026-10-16 P4)로 고른다
         const lowerDay =
@@ -63,12 +63,12 @@ export async function getPublicProfileProgress(
                       .slice(0, 10);
         const history = await db.userBestGrade.findMany({
             where: {
-                user_id: userId,
+                userId: userId,
                 ...(lowerDay
                     ? { day: { gte: new Date(`${lowerDay}T00:00:00Z`) } }
                     : {}),
             },
-            select: { day: true, grade_basic: true, grade_recital: true },
+            select: { day: true, gradeBasic: true, gradeRecital: true },
             orderBy: [{ day: "asc" }, { id: "asc" }],
         });
         current = currentGrade && currentGrade > 0 ? currentGrade / 100 : null;

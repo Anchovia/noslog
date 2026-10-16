@@ -58,7 +58,7 @@ describe("관리자 피드백 처리", () => {
                 user: {
                     id: 2,
                     username: "noslog-user",
-                    nostalgia_name: "NOSTALGIA USER",
+                    nostalgiaName: "NOSTALGIA USER",
                 },
             },
         ]);
@@ -81,7 +81,7 @@ describe("관리자 피드백 처리", () => {
                     select: {
                         id: true,
                         username: true,
-                        nostalgia_name: true,
+                        nostalgiaName: true,
                     },
                 },
                 arcade: {
@@ -100,7 +100,7 @@ describe("관리자 피드백 처리", () => {
 
     it("오락실 제보는 오락실·기체·제보 종류를 함께 넘긴다", async () => {
         const createdAt = new Date("2026-09-12T00:00:00.000Z");
-        const user = { id: 2, username: "noslog-user", nostalgia_name: null };
+        const user = { id: 2, username: "noslog-user", nostalgiaName: null };
         mocks.feedbackFindMany.mockResolvedValue([
             {
                 id: 8,
@@ -159,7 +159,7 @@ describe("관리자 피드백 처리", () => {
             where: { id: 7 },
             data: {
                 status: "resolved",
-                resolvedAt: expect.any(Date),
+                reviewedAt: expect.any(Date),
             },
         });
         expect(mocks.revalidatePath).toHaveBeenCalledWith("/admin");
@@ -181,7 +181,7 @@ describe("관리자 피드백 처리", () => {
         );
         expect(mocks.feedbackUpdate).toHaveBeenCalledWith({
             where: { id: 7 },
-            data: { status: "open", resolvedAt: null },
+            data: { status: "open", reviewedAt: null },
         });
     });
 

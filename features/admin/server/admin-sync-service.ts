@@ -23,7 +23,7 @@ export async function getAdminSyncs(input: unknown) {
                         select: {
                             id: true,
                             username: true,
-                            nostalgia_name: true,
+                            nostalgiaName: true,
                         },
                     },
                     _count: {
@@ -33,23 +33,23 @@ export async function getAdminSyncs(input: unknown) {
                         },
                     },
                 },
-                orderBy: { started_at: "desc" },
+                orderBy: { startedAt: "desc" },
                 take: 100,
             }),
             db.dataSync.count({
                 where: {
                     status: "completed",
-                    started_at: { gte: recentStart },
+                    startedAt: { gte: recentStart },
                 },
             }),
             db.dataSync.count({
-                where: { status: "failed", started_at: { gte: recentStart } },
+                where: { status: "failed", startedAt: { gte: recentStart } },
             }),
             db.dataSync.count({ where: { status: "processing" } }),
             db.dataSync.count({
                 where: {
                     status: "processing",
-                    started_at: { lte: staleBefore },
+                    startedAt: { lte: staleBefore },
                 },
             }),
         ]);
@@ -61,69 +61,69 @@ export async function getAdminSyncs(input: unknown) {
         snapshotNoteRateGroups,
     ] = await Promise.all([
         db.chartPlayHistory.groupBy({
-            by: ["first_sync_id"],
+            by: ["firstSyncId"],
             where: {
-                first_sync_id: { in: syncIds },
-                judge_sjust: { not: null },
-                judge_just: { not: null },
-                judge_good: { not: null },
-                judge_miss: { not: null },
-                judge_near: { not: null },
+                firstSyncId: { in: syncIds },
+                judgeSjust: { not: null },
+                judgeJust: { not: null },
+                judgeGood: { not: null },
+                judgeMiss: { not: null },
+                judgeNear: { not: null },
             },
             _count: { _all: true },
         }),
         db.chartPlayHistory.groupBy({
-            by: ["first_sync_id"],
+            by: ["firstSyncId"],
             where: {
-                first_sync_id: { in: syncIds },
-                fast_count: { not: null },
-                slow_count: { not: null },
+                firstSyncId: { in: syncIds },
+                fastCount: { not: null },
+                slowCount: { not: null },
             },
             _count: { _all: true },
         }),
         db.chartRecordSnapshot.groupBy({
-            by: ["sync_id"],
+            by: ["syncId"],
             where: {
-                sync_id: { in: syncIds },
-                judge_sjust: { not: null },
-                judge_just: { not: null },
-                judge_good: { not: null },
-                judge_miss: { not: null },
-                judge_near: { not: null },
+                syncId: { in: syncIds },
+                judgeSjust: { not: null },
+                judgeJust: { not: null },
+                judgeGood: { not: null },
+                judgeMiss: { not: null },
+                judgeNear: { not: null },
             },
             _count: { _all: true },
         }),
         db.chartRecordSnapshot.groupBy({
-            by: ["sync_id"],
+            by: ["syncId"],
             where: {
-                sync_id: { in: syncIds },
-                note_rate_standard: { not: null },
+                syncId: { in: syncIds },
+                noteRateStandard: { not: null },
             },
             _count: { _all: true },
         }),
     ]);
     const recentJudgementBySync = new Map(
         recentJudgementGroups.flatMap((row) =>
-            row.first_sync_id === null
+            row.firstSyncId === null
                 ? []
-                : [[row.first_sync_id, row._count._all] as const]
+                : [[row.firstSyncId, row._count._all] as const]
         )
     );
     const recentFastSlowBySync = new Map(
         recentFastSlowGroups.flatMap((row) =>
-            row.first_sync_id === null
+            row.firstSyncId === null
                 ? []
-                : [[row.first_sync_id, row._count._all] as const]
+                : [[row.firstSyncId, row._count._all] as const]
         )
     );
     const snapshotJudgementBySync = new Map(
         snapshotJudgementGroups.map(
-            (row) => [row.sync_id, row._count._all] as const
+            (row) => [row.syncId, row._count._all] as const
         )
     );
     const snapshotNoteRateBySync = new Map(
         snapshotNoteRateGroups.map(
-            (row) => [row.sync_id, row._count._all] as const
+            (row) => [row.syncId, row._count._all] as const
         )
     );
     const rows = syncs.map((sync) => {
@@ -137,9 +137,9 @@ export async function getAdminSyncs(input: unknown) {
         const health = getSyncAttemptHealth(
             {
                 status: sync.status,
-                startedAt: sync.started_at,
-                insertedPlays: sync.inserted_plays,
-                changedRecords: sync.changed_records,
+                startedAt: sync.startedAt,
+                insertedPlays: sync.insertedPlays,
+                changedRecords: sync.changedRecords,
                 playHistoryCount: storedRecentCount,
                 snapshotCount: storedSnapshotCount,
             },
