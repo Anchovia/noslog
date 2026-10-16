@@ -452,10 +452,12 @@ describe("POST /api/receivePlayerData", () => {
             insertedPlays: 1,
             changedRecords: 1,
         });
-        expect(mocks.updatePlayerProfile).toHaveBeenCalledWith(
-            1,
-            requestBody().playerData.data.player
-        );
+        // 북마클릿이 보내는 브로치 · NOS 는 받은 뒤 버린다(2026-10-16 K5)
+        expect(mocks.updatePlayerProfile).toHaveBeenCalledWith(1, {
+            name: "CAROL",
+            play_count: 100,
+            last: { playtime: "2026-07-17 12:00" },
+        });
         expect(mocks.updateRecentPlay).toHaveBeenCalledWith(
             1,
             requestBody().recentData.data.player.history_list.history,

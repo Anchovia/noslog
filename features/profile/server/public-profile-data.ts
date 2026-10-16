@@ -14,6 +14,7 @@ import { PUBLIC_DATA_REVALIDATE_SECONDS } from "@/lib/cache-policy";
 import { CACHE_TAGS, getUserProfileTag } from "@/lib/cache-tags";
 import db from "@/lib/db";
 import {
+    formatKstPlayTime,
     STATS_GRADE_SELECT,
     STATS_RANK_COUNT_SELECT,
 } from "@/lib/player-stats";
@@ -52,11 +53,8 @@ async function queryProfileData(id: number) {
         }),
         db.chartPlayHistory.findMany({
             where: { user_id: id },
-            select: { source_play_time: true },
-            orderBy: [
-                { playedAt: { sort: "desc", nulls: "last" } },
-                { id: "desc" },
-            ],
+            select: { playedAt: true },
+            orderBy: [{ playedAt: "desc" }, { id: "desc" }],
             take: 1,
         }),
     ]);
@@ -140,7 +138,7 @@ async function queryProfileData(id: number) {
             created_at: user.created_at.toISOString(),
             last_played_at: user.hide_play_activity
                 ? null
-                : (recentPlays[0]?.source_play_time ?? null),
+                : formatKstPlayTime(recentPlays[0]?.playedAt),
         },
     };
 }

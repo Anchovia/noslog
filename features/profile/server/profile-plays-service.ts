@@ -12,79 +12,35 @@ import {
     getChartRanks,
     recordPlayedAt,
 } from "@/features/profile/server/profile-records-service";
-import { getModePianistRatingBasis } from "@/features/tiers/server/tier-browser-data";
+import { calculateUserRating } from "@/features/rankings/server/player-rating-service";
 import db from "@/lib/db";
-import {
-    BASIC_RATING_ACTIVE_CURVE,
-    BASIC_RATING_MAX,
-    BASIC_RATING_SCORE_FLOOR,
-    calculateBasicRating,
-} from "@/lib/tiers/basic-rating";
+import { formatKstPlayTime } from "@/lib/player-stats";
+import { BASIC_RATING_MAX } from "@/lib/tiers/basic-rating";
 
 const musicFields = { title: true, background: true } as const;
 const playFields = {
     id: true,
     chart_id: true,
-    music_idx: true,
-    difficulty: true,
     level: true,
     score: true,
     rank: true,
     fc_type: true,
     grade_basic: true,
     grade_recital: true,
-    besttime: true,
-    music: { select: musicFields },
+    bestAt: true,
+    // 곡 · 난이도는 채보 연결에서(2026-10-16 P5-1)
+    chart: {
+        select: {
+            music_idx: true,
+            difficulty: true,
+            music: { select: musicFields },
+        },
+    },
 } as const;
 
-export async function getProfileRating(userId: number, mode: ProfileMode) {
-    if (mode === "recital") {
-        const stats = await db.playerStats.findUnique({
-            where: { userId },
-            select: { gradeRecital: true },
-        });
-        if (stats?.gradeRecital == null) return null;
-    }
-    const basis = await getModePianistRatingBasis(mode);
-    if (
-        !basis.theoreticalMax ||
-        basis.entries.some(
-            (entry) =>
-                !Number.isFinite(entry.value) ||
-                entry.value < 1 ||
-                entry.value > 14.5
-        ) ||
-        new Set(basis.entries.map((entry) => entry.chartId)).size !==
-            basis.entries.length
-    )
-        return null;
-    const constants = new Map(
-        basis.entries.map((entry) => [entry.chartId, entry.value])
-    );
-    const plays = await db.playData.findMany({
-        where: {
-            user_id: userId,
-            chart_id: { in: [...constants.keys()] },
-            score: { gte: BASIC_RATING_SCORE_FLOOR },
-            ...(mode === "recital" ? { grade_recital: { gt: 0 } } : {}),
-        },
-        select: { chart_id: true, score: true },
-    });
-    return calculateBasicRating(
-        plays.flatMap((play) =>
-            play.chart_id === null
-                ? []
-                : [
-                      {
-                          chartId: play.chart_id,
-                          score: play.score,
-                          tierConstant: constants.get(play.chart_id)!,
-                      },
-                  ]
-        ),
-        basis.theoreticalMax,
-        BASIC_RATING_ACTIVE_CURVE
-    );
+/** 프로필 레이팅(기여 목록 · 이력) — 랭킹과 같은 계산 한 벌, 0 이면 「레이팅 없음」(2026-10-16 K3) */
+export function getProfileRating(userId: number, mode: ProfileMode) {
+    return calculateUserRating(userId, mode);
 }
 
 export async function getPublicProfilePlays(
@@ -112,11 +68,12 @@ export async function getPublicProfilePlays(
             where: { user_id: userId },
             select: {
                 id: true,
-                source_play_time: true,
+                playedAt: true,
                 score: true,
                 best_score: true,
                 rank: true,
                 max_combo: true,
+                judge_near: true,
                 chart: {
                     select: {
                         difficulty: true,
@@ -127,10 +84,7 @@ export async function getPublicProfilePlays(
                     },
                 },
             },
-            orderBy: [
-                { playedAt: { sort: "desc", nulls: "last" } },
-                { id: "desc" },
-            ],
+            orderBy: [{ playedAt: "desc" }, { id: "desc" }],
             skip: query.offset,
             take: query.limit + 1,
         });
@@ -147,13 +101,15 @@ export async function getPublicProfilePlays(
                 level: play.chart.level,
                 score: play.score,
                 rank: play.rank,
+                // FC = NEAR 없는 풀콤보(무지개 F) — NEAR 섞인 풀콤보는 세지 않는다(2026-10-16 K1)
                 fullCombo:
                     play.rank === "P" ||
                     (play.chart.note_count !== null &&
                         play.chart.note_count > 0 &&
-                        play.max_combo >= play.chart.note_count),
+                        play.max_combo >= play.chart.note_count &&
+                        (play.judge_near ?? 0) === 0),
                 contribution: null,
-                playedAt: play.source_play_time,
+                playedAt: formatKstPlayTime(play.playedAt),
                 // best_score = 그 판 직전까지의 최고 점수(첫 플레이는 0). 모르면 표시하지 않는다
                 newBest:
                     play.best_score !== null && play.score > play.best_score,
@@ -189,16 +145,16 @@ export async function getPublicProfilePlays(
             hasMore: plays.length > PROFILE_BATCH_SIZE,
             items: shown.map((play, index) => ({
                 id: play.id,
-                musicIndex: play.music_idx,
-                title: play.music.title,
-                background: play.music.background,
-                difficulty: play.difficulty,
+                musicIndex: play.chart.music_idx,
+                title: play.chart.music.title,
+                background: play.chart.music.background,
+                difficulty: play.chart.difficulty,
                 level: play.level,
                 score: play.score,
                 rank: play.rank,
                 fullCombo: play.fc_type >= 2,
                 contribution: (play[field] ?? 0) / 100,
-                playedAt: recordPlayedAt(play.besttime),
+                playedAt: recordPlayedAt(play.bestAt),
                 chartRank: ranks.get(play.id) ?? null,
                 position: query.offset + index + 1,
             })),
@@ -238,10 +194,10 @@ export async function getPublicProfilePlays(
                 ? [
                       {
                           id: play.id,
-                          musicIndex: play.music_idx,
-                          title: play.music.title,
-                          background: play.music.background,
-                          difficulty: play.difficulty,
+                          musicIndex: play.chart.music_idx,
+                          title: play.chart.music.title,
+                          background: play.chart.music.background,
+                          difficulty: play.chart.difficulty,
                           level: play.level,
                           score: play.score,
                           rank: play.rank,
@@ -249,7 +205,7 @@ export async function getPublicProfilePlays(
                           contribution:
                               (item.points / rating.theoreticalMax) *
                               BASIC_RATING_MAX,
-                          playedAt: recordPlayedAt(play.besttime),
+                          playedAt: recordPlayedAt(play.bestAt),
                           chartRank: ranks.get(play.id) ?? null,
                       },
                   ]

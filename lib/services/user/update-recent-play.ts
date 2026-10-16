@@ -28,7 +28,7 @@ interface RecentHistoryItem {
 
 interface RecentHistoryIdentity {
     chart_id: number;
-    source_play_time: string;
+    playedAt: Date;
     score: number;
     max_combo: number;
     rank: string;
@@ -51,6 +51,7 @@ export async function updateRecentPlay(
     );
 
     const skippedCharts: { musicIndex: string; difficulty: string }[] = [];
+    let untimed = 0;
     const mappedRows = history.flatMap((data) => {
         const chart_id =
             chartIds.get(`${data.music}:${data.difficulty}`) ?? null;
@@ -61,15 +62,16 @@ export async function updateRecentPlay(
                 difficulty: data.difficulty,
             });
         }
-        return chart_id
+        // 플레이 시각(공식 KST)을 timestamptz 로 — 같은 플레이를 가르는 키라 시각을 못 읽은 줄은 넣지 않는다(2026-10-16 P5-1)
+        const playedAt = recordBestAt(data.play_time);
+        if (chart_id && !playedAt) untimed += 1;
+        return chart_id && playedAt
             ? [
                   {
                       user_id,
                       chart_id,
                       level: data.level,
-                      source_play_time: data.play_time,
-                      // 같은 시각을 timestamptz 로(2026-10-16 P3 늘리기 — 공식 시각은 KST)
-                      playedAt: recordBestAt(data.play_time),
+                      playedAt,
                       score: data.score,
                       best_score: data.best_score,
                       max_combo: data.max_combo,
@@ -89,7 +91,7 @@ export async function updateRecentPlay(
     const identityKey = (row: RecentHistoryIdentity) =>
         [
             row.chart_id,
-            row.source_play_time,
+            row.playedAt.getTime(),
             row.score,
             row.max_combo,
             row.rank,
@@ -103,7 +105,8 @@ export async function updateRecentPlay(
     const diagnostic = {
         syncId: sync_id,
         received: history.length,
-        unmapped: history.length - mappedRows.length,
+        unmapped: history.length - mappedRows.length - untimed,
+        untimed,
         duplicate: mappedRows.length - historyRows.length,
     };
 
@@ -121,7 +124,7 @@ export async function updateRecentPlay(
             user_id,
             OR: historyRows.map((row) => ({
                 chart_id: row.chart_id,
-                source_play_time: row.source_play_time,
+                playedAt: row.playedAt,
                 score: row.score,
                 max_combo: row.max_combo,
                 rank: row.rank,
@@ -129,7 +132,7 @@ export async function updateRecentPlay(
         },
         select: {
             chart_id: true,
-            source_play_time: true,
+            playedAt: true,
             score: true,
             max_combo: true,
             rank: true,
@@ -187,10 +190,10 @@ export async function updateRecentPlay(
         ...changedRows.map((row) =>
             db.chartPlayHistory.upsert({
                 where: {
-                    user_id_chart_id_source_play_time_score_max_combo_rank: {
+                    user_id_chart_id_playedAt_score_max_combo_rank: {
                         user_id,
                         chart_id: row.chart_id,
-                        source_play_time: row.source_play_time,
+                        playedAt: row.playedAt,
                         score: row.score,
                         max_combo: row.max_combo,
                         rank: row.rank,

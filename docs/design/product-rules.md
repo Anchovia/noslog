@@ -220,6 +220,10 @@ old design-stage checklist. Changes to material behavior require a user decision
 - Six independent goal-vote scopes: Basic and Recital × S, Full Combo and Pianist.
   One editable/deletable vote per user, exact chart, mode and goal; accept 1.0–14.5
   in 0.1 increments. Do not expand an old unscoped rating into six votes.
+- `fc_type` is the official Op.3 lamp: 0 none, 1 Full Combo with NEAR (yellow F),
+  2 Full Combo without NEAR (rainbow F), 3 Perfect (1,000,000; same rainbow mark).
+  NosLog counts Full Combo as `fc_type >= 2` everywhere — a NEAR Full Combo (1) is
+  stored but never shown or counted as FC (2026-10-16 K1).
 - Eligibility uses the exact chart's verified record: S requires score ≥950,000;
   Full Combo requires `fc_type >= 2` or 1,000,000; Pianist requires `fc_type === 3`
   or 1,000,000. Recital additionally requires `grade_recital > 0`. This does not

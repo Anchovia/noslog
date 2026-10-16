@@ -2,7 +2,6 @@ import "server-only";
 
 import type { ProfileProgressQuery } from "@/features/profile/schemas/public-profile-schema";
 import { profileProgressPayloadSchema } from "@/features/profile/schemas/public-profile-schema";
-import { getProfileRating } from "@/features/profile/server/profile-plays-service";
 import db from "@/lib/db";
 import { STATS_GRADE_SELECT, statsGrade } from "@/lib/player-stats";
 
@@ -28,7 +27,11 @@ export async function getPublicProfileProgress(
     let current: number | null;
     if (query.metric === "rating") {
         const [rating, history] = await Promise.all([
-            getProfileRating(userId, query.mode),
+            // 지금 값은 헤더 · 랭킹과 같은 저장 레이팅(2026-10-16 K3) — 없으면(0 포함) 「레이팅 없음」
+            db.playerRating.findUnique({
+                where: { user_id_mode: { user_id: userId, mode: query.mode } },
+                select: { rating: true },
+            }),
             db.userRatingHistory.findMany({
                 where: {
                     user_id: userId,
@@ -61,9 +64,9 @@ export async function getPublicProfileProgress(
         const history = await db.userBestGrade.findMany({
             where: {
                 user_id: userId,
-                day: lowerDay
-                    ? { gte: new Date(`${lowerDay}T00:00:00Z`) }
-                    : { not: null },
+                ...(lowerDay
+                    ? { day: { gte: new Date(`${lowerDay}T00:00:00Z`) } }
+                    : {}),
             },
             select: { day: true, grade_basic: true, grade_recital: true },
             orderBy: [{ day: "asc" }, { id: "asc" }],

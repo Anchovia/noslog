@@ -10,6 +10,10 @@ const url = process.env.TEST_DATABASE_URL;
 const CHECKS: Record<string, string[]> = {
     CommunityChartEvaluation_rating_range: ["stairs", "chords"],
     ChartGoalVote_scope_value: ["'990k'", "'pianist'"],
+    // 목표 값 목록 — 990k 는 enum 이름이 될 수 없어 CHECK(2026-10-16 K2)
+    TierList_goal_check: ["'990k'", "'pianist'"],
+    ChartGoalVoteAudit_goal_check: ["'990k'", "'pianist'"],
+    ChartGoalVoteReview_goal_check: ["'990k'", "'pianist'"],
     UserRatingHistory_rating_check: ["rating"],
     ArcadeCabinet_state_check: ["condition_note"],
     ArcadePublicPhoto_slot_check: ["slot"],

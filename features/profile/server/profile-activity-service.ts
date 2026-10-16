@@ -46,12 +46,15 @@ export async function getProfileActivity(userId: number, now = new Date()) {
             // 그 주 첫날 0시(KST)부터만 읽는다 — 예전에는 연도 앞부분으로 걸러 최대 23개월치를 읽었다(2026-10-16 P4)
             playedAt: { gte: new Date(start.getTime() - KST) },
         },
-        select: { source_play_time: true },
+        select: { playedAt: true },
     });
     const counts = new Map<string, number>();
     for (const row of rows) {
-        const date = playDay(row.source_play_time);
-        if (date && date >= first && date <= last)
+        // 플레이한 서울 날짜(2026-10-16 P5-1 — 문자열 시각 대신 played_at)
+        const date = new Date(row.playedAt.getTime() + KST)
+            .toISOString()
+            .slice(0, 10);
+        if (date >= first && date <= last)
             counts.set(date, (counts.get(date) ?? 0) + 1);
     }
     const days: { date: string; count: number }[] = [];

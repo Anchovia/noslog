@@ -32,6 +32,7 @@ vi.mock("@/features/tiers/server/tier-browser-data", () => ({
 
 import db from "@/lib/db";
 import {
+    calculateUserRating,
     rebuildPlayerRatings,
     getRatingBasis,
     rebuildStalePlayerRatings,
@@ -62,8 +63,6 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
         ) => ({
             user_id: userId,
             chart_id: chartId,
-            music_idx: musicIndex,
-            difficulty: "Expert",
             level: 12,
             score,
             rank: "S",
@@ -74,7 +73,7 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
             max_combo: 1000,
             grade_basic: 10000,
             grade_recital: recital,
-            besttime: "2026/10/15 10:00",
+            bestAt: new Date("2026-10-15T01:00:00Z"),
         });
         // 비교 기준 — 예전 global-ranking-data 가 하던 계산을 그대로
         const expected = (score: number) =>
@@ -172,6 +171,11 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
             }
             const recital = await stored("recital");
             expect(recital.map((row) => row.user_id)).toEqual([userIds[0]]);
+            // 프로필도 같은 계산 한 벌 — 저장 값과 같고, 레이팅 0 은 「없음」(2026-10-16 K3)
+            const profile = await calculateUserRating(userIds[0], "basic");
+            expect(profile?.rating).toBeCloseTo(basic[0].rating, 9);
+            expect(await calculateUserRating(userIds[2], "basic")).toBeNull();
+            expect(await calculateUserRating(userIds[1], "recital")).toBeNull();
         });
 
         it("동기화 때는 그 사람 값만 바뀌고, 바닥 아래로 떨어지면 줄을 지운다", async () => {

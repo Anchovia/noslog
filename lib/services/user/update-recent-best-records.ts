@@ -28,8 +28,6 @@ export async function updateRecentBestRecords(userId: number, syncId: number) {
                     chart: {
                         select: {
                             id: true,
-                            music_idx: true,
-                            difficulty: true,
                             level: true,
                             level_constant: true,
                             note_count: true,
@@ -55,10 +53,8 @@ export async function updateRecentBestRecords(userId: number, syncId: number) {
                         updated_at: _updated,
                         user_id: _user,
                         chart_id,
-                        music_idx: _music,
-                        difficulty: _difficulty,
                         ...values
-                    }) => (chart_id === null ? [] : [[chart_id, values]])
+                    }) => [[chart_id, values]]
                 )
             );
             const plan = planRecentRecordMerge(
@@ -72,7 +68,7 @@ export async function updateRecentBestRecords(userId: number, syncId: number) {
                     .filter((play) => records.has(play.chart_id))
                     .map((play) => [play.chart_id, play.chart])
             );
-            for (const [chartId, chart] of changed) {
+            for (const chartId of changed.keys()) {
                 const values = records.get(chartId)!;
                 await tx.playData.upsert({
                     where: {
@@ -85,8 +81,6 @@ export async function updateRecentBestRecords(userId: number, syncId: number) {
                         ...values,
                         user_id: userId,
                         chart_id: chartId,
-                        music_idx: chart.music_idx,
-                        difficulty: chart.difficulty,
                     },
                     update: values,
                 });
@@ -136,20 +130,6 @@ export async function updateRecentBestRecords(userId: number, syncId: number) {
                         COUNT(*) FILTER (WHERE "fc_type" = 2)::int AS f
                     FROM "PlayData"
                     WHERE "user_id" = ${userId} AND "play_count" > 0`;
-                await tx.user.update({
-                    where: { id: userId },
-                    data: {
-                        score_p: counts.p,
-                        score_s: counts.s,
-                        score_a2: counts.a2,
-                        score_a: counts.a,
-                        score_b2: counts.b2,
-                        score_b: counts.b,
-                        score_c: counts.c,
-                        score_d: counts.d,
-                        score_f: counts.f,
-                    },
-                });
                 await writePlayerStats(tx, userId, {
                     scoreP: counts.p,
                     scoreS: counts.s,

@@ -131,7 +131,7 @@ try {
                 select: {
                     username: true,
                     nostalgia_name: true,
-                    grade_basic: true,
+                    stats: { select: { gradeBasic: true } },
                 },
             },
         },
@@ -148,7 +148,6 @@ try {
     >();
 
     for (const record of playRecords) {
-        if (record.chart_id === null) continue;
         const entry = entryByChartId.get(record.chart_id);
         if (!entry) continue;
 
@@ -158,7 +157,7 @@ try {
                 record.user.nostalgia_name ??
                 record.user.username ??
                 `User ${record.user_id}`,
-            gradeBasic: record.user.grade_basic,
+            gradeBasic: record.user.stats?.gradeBasic ?? null,
             records: [],
         };
         user.records.push({

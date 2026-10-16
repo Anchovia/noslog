@@ -1,6 +1,7 @@
 import "server-only";
 
 import db from "@/lib/db";
+import { formatKstPlayTime } from "@/lib/player-stats";
 
 /**
  * 본인에게만 보이는 비공개 항목(2026-09-26 P1) — 공개 설정으로 숨긴 값만 돌려준다(공개된 값은 공개 캐시가 이미 가짐).
@@ -25,11 +26,8 @@ export async function getOwnerPrivateFields(userId: number) {
         }),
         db.chartPlayHistory.findFirst({
             where: { user_id: userId },
-            orderBy: [
-                { playedAt: { sort: "desc", nulls: "last" } },
-                { id: "desc" },
-            ],
-            select: { source_play_time: true },
+            orderBy: [{ playedAt: "desc" }, { id: "desc" }],
+            select: { playedAt: true },
         }),
     ]);
     if (!user) return null;
@@ -49,7 +47,7 @@ export async function getOwnerPrivateFields(userId: number) {
             ? (user.stats?.playCount ?? null)
             : null,
         lastPlayedAt: user.hide_play_activity
-            ? (lastPlay?.source_play_time ?? null)
+            ? formatKstPlayTime(lastPlay?.playedAt)
             : null,
         activityHidden: user.hide_play_activity,
     };

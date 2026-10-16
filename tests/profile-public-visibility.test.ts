@@ -56,9 +56,11 @@ const sourceUser = {
         { exam: { mode: "basic", grade: 2 } },
     ],
 };
+// 최근 플레이 시각은 played_at — 응답에는 공식 표기 글자로 나간다(2026-10-16 P5-1)
+const sourcePlayTime = "2026/09/06 23:59";
 const sourcePlay = {
     id: 5,
-    source_play_time: "2026-09-06 23:59:00",
+    playedAt: new Date("2026-09-06T14:59:00Z"),
     score: 987654,
     rank: "S",
     grade_basic: 100,
@@ -95,7 +97,7 @@ describe("public profile visibility boundary", () => {
             "private-discord-username",
             "private-arcade",
             "1234567",
-            sourcePlay.source_play_time,
+            sourcePlayTime,
             "private-recent-music",
             "Private recent title",
         ])
@@ -116,15 +118,12 @@ describe("public profile visibility boundary", () => {
         const profile = await getCachedProfileData(7);
         expect(profile?.user.preferredArcade).toBeNull();
         expect(profile?.user.play_count).toBe(sourceUser.stats.playCount);
-        expect(profile?.user.last_played_at).toBe(sourcePlay.source_play_time);
+        expect(profile?.user.last_played_at).toBe(sourcePlayTime);
         expect(mocks.recent).toHaveBeenCalledWith({
             where: { user_id: 7 },
-            select: { source_play_time: true },
+            select: { playedAt: true },
             // 최신순은 played_at(2026-10-16 P4)
-            orderBy: [
-                { playedAt: { sort: "desc", nulls: "last" } },
-                { id: "desc" },
-            ],
+            orderBy: [{ playedAt: "desc" }, { id: "desc" }],
             take: 1,
         });
     });

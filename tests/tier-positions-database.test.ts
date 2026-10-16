@@ -82,7 +82,13 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
                 orderBy: { level: "asc" },
             });
             const list = await db.tierList.create({
-                data: { slug: musicIndex, title: "T", mode: "basic" },
+                // 지금 쓰는 서열표(Basic S, 초안) — 보관 서열표는 고칠 수 없다(2026-10-16)
+                data: {
+                    slug: musicIndex,
+                    title: "T",
+                    mode: "basic",
+                    goal: "s",
+                },
             });
             tierListId = list.id;
             high = (

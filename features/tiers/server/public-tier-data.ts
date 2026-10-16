@@ -5,6 +5,7 @@ import { CACHE_TAGS } from "@/lib/cache-tags";
 import db from "@/lib/db";
 import { getLocalizedMusicTitle } from "@/lib/i18n/music-title";
 import type { Locale } from "@/lib/i18n/routing";
+import { legacyBesttime } from "@/lib/player-stats";
 import type { PublicTierBandPayload, TierDifficulty } from "@/lib/tiers";
 
 function getTierChartWhere(
@@ -151,10 +152,10 @@ export async function getUserTierListProgress(
     }));
 }
 
-function getUserTierRecords(userId: number, chartIds: number[]) {
-    if (chartIds.length === 0) return Promise.resolve([]);
+async function getUserTierRecords(userId: number, chartIds: number[]) {
+    if (chartIds.length === 0) return [];
 
-    return db.playData.findMany({
+    const records = await db.playData.findMany({
         where: { user_id: userId, chart_id: { in: chartIds } },
         select: {
             chart_id: true,
@@ -175,9 +176,14 @@ function getUserTierRecords(userId: number, chartIds: number[]) {
             note_rate_tenuto: true,
             note_rate_glissando: true,
             note_rate_trill: true,
-            besttime: true,
+            bestAt: true,
         },
     });
+    // 응답 모양은 그대로 besttime 글자(2026-10-16 P5-1 — 값은 best_at 에서)
+    return records.map(({ bestAt, ...record }) => ({
+        ...record,
+        besttime: legacyBesttime(bestAt),
+    }));
 }
 
 interface LatestTierPlayRow {
@@ -195,11 +201,12 @@ function getLatestUserTierPlays(userId: number, chartIds: number[]) {
             "chart_id",
             "fast_count",
             "slow_count",
-            "source_play_time"
+            -- 응답 모양은 그대로 공식 표기 「YYYY/MM/DD HH:MM」(KST) 글자 — 정렬 · 값은 played_at 에서(2026-10-16 P5-1)
+            to_char("played_at" AT TIME ZONE 'Asia/Seoul', 'YYYY/MM/DD HH24:MI') AS "source_play_time"
         FROM "ChartPlayHistory"
         WHERE "user_id" = ${userId}
           AND "chart_id" IN (${Prisma.join(chartIds)})
-        ORDER BY "chart_id", "source_play_time" DESC, "id" DESC
+        ORDER BY "chart_id", "played_at" DESC, "id" DESC
     `);
 }
 
@@ -223,9 +230,7 @@ export async function getTierBandForUser(
           ])
         : [[], []];
     const recordByChartId = new Map(
-        records.flatMap((record) =>
-            record.chart_id === null ? [] : [[record.chart_id, record] as const]
-        )
+        records.map((record) => [record.chart_id, record] as const)
     );
     const latestPlayByChartId = new Map(
         latestPlays.map((play) => [play.chart_id, play] as const)

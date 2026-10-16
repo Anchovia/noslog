@@ -31,7 +31,7 @@ import { requireAdmin } from "@/lib/admin";
 import { CACHE_TAGS } from "@/lib/cache-tags";
 import db from "@/lib/db";
 import { logServerError } from "@/lib/observability/server";
-import { getJacketUrl } from "@/lib/tiers";
+import { getJacketUrl, isCurrentTierScope } from "@/lib/tiers";
 
 type TierListActionResult = ActionResult<{ id: number }, TierListFormFieldName>;
 type TierMutationActionResult = ActionResult;
@@ -61,6 +61,19 @@ function tierListData(input: TierListSaveValues) {
         description: input.description || null,
         status: input.status,
     };
+}
+
+// 지금 쓰는 서열표만 고친다 — 보관 서열표(옛 Recital FC 등)는 화면이 없어도 직접 호출로 바뀌지 않게(2026-10-16)
+const ARCHIVED_TIER_LIST: TierMutationActionResult = {
+    success: false,
+    message: "보관된 서열표는 고칠 수 없습니다.",
+};
+async function isEditableTierList(tierListId: number) {
+    const list = await db.tierList.findUnique({
+        where: { id: tierListId },
+        select: { mode: true, goal: true },
+    });
+    return !!list && isCurrentTierScope(list.mode, list.goal);
 }
 
 function logTierActionError(error: unknown, event: string) {
@@ -347,6 +360,7 @@ export async function addTierBand(
     const { tierListId, value } = result.data;
 
     try {
+        if (!(await isEditableTierList(tierListId))) return ARCHIVED_TIER_LIST;
         const bands = await db.tierBand.findMany({
             where: { tierListId },
             select: { id: true, value: true },
@@ -410,6 +424,8 @@ export async function updateTierBand(
         if (!band) {
             return { success: false, message: "서열 상수 구간이 없습니다." };
         }
+        if (!(await isEditableTierList(band.tierListId)))
+            return ARCHIVED_TIER_LIST;
         if (band.value === value) {
             return { success: true, message: "변경 사항이 없습니다." };
         }
@@ -484,6 +500,8 @@ export async function deleteTierBand(
         if (!band) {
             return { success: false, message: "서열 상수 구간이 없습니다." };
         }
+        if (!(await isEditableTierList(band.tierListId)))
+            return ARCHIVED_TIER_LIST;
 
         const remainingBands = await db.tierBand.findMany({
             where: { tierListId: band.tierListId, NOT: { id } },
@@ -536,6 +554,7 @@ export async function addTierEntry(
     const { tierListId, tierBandId, chartId } = result.data;
 
     try {
+        if (!(await isEditableTierList(tierListId))) return ARCHIVED_TIER_LIST;
         const [band, chart, duplicate] = await Promise.all([
             db.tierBand.findFirst({
                 where: { id: tierBandId, tierListId },
@@ -596,6 +615,8 @@ export async function applyTierBoardLayout(
     const input = result.data;
 
     try {
+        if (!(await isEditableTierList(input.tierListId)))
+            return ARCHIVED_TIER_LIST;
         const [bands, entries] = await Promise.all([
             db.tierBand.findMany({
                 where: { tierListId: input.tierListId },
@@ -718,6 +739,8 @@ export async function deleteTierEntry(
         if (!entry) {
             return { success: false, message: "서열표 채보가 없습니다." };
         }
+        if (!(await isEditableTierList(entry.tierListId)))
+            return ARCHIVED_TIER_LIST;
 
         const remainingEntries = await db.tierEntry.findMany({
             where: { tierBandId: entry.tierBandId, NOT: { id } },
@@ -779,6 +802,8 @@ export async function moveTierEntryToBand(
                 message: "채보 또는 이동할 구간을 찾을 수 없습니다.",
             };
         }
+        if (!(await isEditableTierList(entry.tierListId)))
+            return ARCHIVED_TIER_LIST;
         if (entry.tierListId !== targetBand.tierListId) {
             return {
                 success: false,

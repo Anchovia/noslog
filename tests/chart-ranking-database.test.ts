@@ -60,8 +60,6 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
                     data: {
                         user_id: user.id,
                         chart_id: chartId,
-                        music_idx: index,
-                        difficulty: "Expert",
                         level: 12,
                         score:
                             i === 0
@@ -79,7 +77,6 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
                         max_combo: 1000,
                         grade_basic: 1000,
                         grade_recital: 0,
-                        besttime: besttimeOf(i),
                         // 동기화는 기록 시각을 best_at 에도 쓴다 — 같은 점수 순서는 이 열로 정한다(2026-10-16 P4)
                         bestAt: recordBestAt(besttimeOf(i)),
                     },
@@ -138,7 +135,6 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
                     chart_id: chartId,
                 },
                 data: {
-                    besttime: "2026-08-01 10:00",
                     bestAt: recordBestAt("2026-08-01 10:00"),
                 },
             });

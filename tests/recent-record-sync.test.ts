@@ -28,6 +28,7 @@ const mocks = vi.hoisted(() => ({
 vi.mock("@/lib/db", () => ({ default: mocks.db }));
 import { updateRecentBestRecords } from "@/lib/services/user/update-recent-best-records";
 import { updatePlayData } from "@/lib/services/user/update-play-data";
+import { recordBestAt } from "@/lib/services/user/recent-record-merge";
 
 const chart = {
     id: 10,
@@ -40,8 +41,6 @@ const chart = {
 type StoredRecord = RecordValues & {
     user_id: number;
     chart_id: number;
-    music_idx: string;
-    difficulty: string;
 };
 type History = PendingRecordPlay & { user_id: number; chart: typeof chart };
 type State = {
@@ -64,7 +63,7 @@ const history = (id: number, date: string, score = 950000): History => ({
     rank: "S",
     max_combo: 900,
     grade_basic: 10000,
-    source_play_time: date,
+    playedAt: recordBestAt(date)!,
     judge_sjust: 900,
     judge_just: 80,
     judge_good: 10,
@@ -159,11 +158,12 @@ beforeEach(() => {
     mocks.db.playerStats.findUnique.mockImplementation(async () => ({
         lastFullRecordAt: state.fullAt,
     }));
-    mocks.db.user.update.mockImplementation(
-        async ({ data }: { data: Record<string, unknown> }) => {
-            if (data.last_full_record_at instanceof Date)
-                state.fullAt = data.last_full_record_at;
-            state.stats = { ...state.stats, ...data };
+    // 동기화 결과는 player_stats 에만 쓴다(2026-10-16 P5-1)
+    mocks.db.playerStats.upsert.mockImplementation(
+        async ({ update }: { update: Record<string, unknown> }) => {
+            if (update.lastFullRecordAt instanceof Date)
+                state.fullAt = update.lastFullRecordAt;
+            state.stats = { ...state.stats, ...update };
         }
     );
     mocks.db.playData.findMany.mockImplementation(
@@ -194,10 +194,10 @@ beforeEach(() => {
         }: {
             where: {
                 user_id: number;
-                OR: [unknown, { chart_id: { notIn: number[] } }];
+                chart_id: { notIn: number[] };
             };
         }) => {
-            const kept = where.OR[1].chart_id.notIn;
+            const kept = where.chart_id.notIn;
             state.records = state.records.filter(
                 (r) => r.user_id !== where.user_id || kept.includes(r.chart_id)
             );
@@ -206,8 +206,6 @@ beforeEach(() => {
     const upsertColumns = [
         "user_id",
         "chart_id",
-        "music_idx",
-        "difficulty",
         "level",
         "score",
         "rank",
@@ -229,7 +227,6 @@ beforeEach(() => {
         "note_rate_tenuto",
         "note_rate_glissando",
         "note_rate_trill",
-        "besttime",
         "bestAt",
     ] as const;
     mocks.db.$executeRaw.mockImplementation(
@@ -319,7 +316,7 @@ describe("recent/full record persistence with an isolated transaction double", (
             score: 990000,
             grade_recital: null,
         });
-        expect(state.stats.score_s).toBe(1);
+        expect(state.stats.scoreS).toBe(1);
         expect(state.history[2].record_applied).toBe(false);
         expect(await updateRecentBestRecords(1, 2)).toEqual({
             changedRecords: 0,
@@ -345,7 +342,9 @@ describe("recent/full record persistence with an isolated transaction double", (
     });
     it("does not consume receipts if the distribution update fails", async () => {
         state.history.push(history(1, "2026/09/20 10:00"));
-        mocks.db.user.update.mockRejectedValueOnce(new Error("stats failed"));
+        mocks.db.playerStats.upsert.mockRejectedValueOnce(
+            new Error("stats failed")
+        );
         await expect(updateRecentBestRecords(1, 1)).rejects.toThrow(
             "stats failed"
         );

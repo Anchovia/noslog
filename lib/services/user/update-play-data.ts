@@ -24,7 +24,7 @@ type PlayDataRow = Prisma.PlayDataCreateManyInput & { chart_id: number };
 function upsertPlayData(tx: Prisma.TransactionClient, rows: PlayDataRow[]) {
     const values = rows.map(
         (row) => Prisma.sql`(
-            ${row.user_id}::int, ${row.chart_id}::int, ${row.music_idx}::text, ${row.difficulty}::text,
+            ${row.user_id}::int, ${row.chart_id}::int,
             ${row.level}::int, ${row.score}::int, ${row.rank}::text, ${row.fc_type}::int,
             ${row.play_count}::int, ${row.clear_count ?? null}::int, ${row.clear_flag ?? null}::int,
             ${row.fullcombo_count}::int, ${row.pianistic_count}::int, ${row.max_combo}::int,
@@ -33,24 +33,22 @@ function upsertPlayData(tx: Prisma.TransactionClient, rows: PlayDataRow[]) {
             ${row.judge_miss ?? null}::int, ${row.judge_near ?? null}::int,
             ${row.note_rate_standard ?? null}::int, ${row.note_rate_tenuto ?? null}::int,
             ${row.note_rate_glissando ?? null}::int, ${row.note_rate_trill ?? null}::int,
-            ${row.besttime}::text, ${row.bestAt ?? null}::timestamptz, CURRENT_TIMESTAMP
+            ${row.bestAt ?? null}::timestamptz, CURRENT_TIMESTAMP
         )`
     );
     return tx.$executeRaw`
         INSERT INTO "PlayData" (
-            "user_id", "chart_id", "music_idx", "difficulty",
+            "user_id", "chart_id",
             "level", "score", "rank", "fc_type",
             "play_count", "clear_count", "clear_flag",
             "fullcombo_count", "pianistic_count", "max_combo",
             "grade_basic", "grade_recital",
             "judge_sjust", "judge_just", "judge_good", "judge_miss", "judge_near",
             "note_rate_standard", "note_rate_tenuto", "note_rate_glissando", "note_rate_trill",
-            "besttime", "best_at", "updated_at"
+            "best_at", "updated_at"
         )
         VALUES ${Prisma.join(values)}
         ON CONFLICT ("user_id", "chart_id") DO UPDATE SET
-            "music_idx" = EXCLUDED."music_idx",
-            "difficulty" = EXCLUDED."difficulty",
             "level" = EXCLUDED."level",
             "score" = EXCLUDED."score",
             "rank" = EXCLUDED."rank",
@@ -72,7 +70,6 @@ function upsertPlayData(tx: Prisma.TransactionClient, rows: PlayDataRow[]) {
             "note_rate_tenuto" = EXCLUDED."note_rate_tenuto",
             "note_rate_glissando" = EXCLUDED."note_rate_glissando",
             "note_rate_trill" = EXCLUDED."note_rate_trill",
-            "besttime" = EXCLUDED."besttime",
             "best_at" = EXCLUDED."best_at",
             "updated_at" = EXCLUDED."updated_at"`;
 }
@@ -87,7 +84,7 @@ export async function updatePlayData(
     const startTime = Date.now(); // 시작 시간
     const chartIds = knownChartIds ?? (await loadChartIds());
     const previousRecords = await db.playData.findMany({
-        where: { user_id, chart_id: { not: null } },
+        where: { user_id },
         select: {
             chart_id: true,
             level: true,
@@ -111,7 +108,7 @@ export async function updatePlayData(
             note_rate_tenuto: true,
             note_rate_glissando: true,
             note_rate_trill: true,
-            besttime: true,
+            bestAt: true,
         },
     });
     const previousByChart = new Map(
@@ -153,10 +150,8 @@ export async function updatePlayData(
                 }
                 const record = {
                     user_id,
-                    music_idx: data["@index"],
                     chart_id,
                     level: sheet.level,
-                    difficulty: sheet.difficulty,
                     score: sheet.score,
                     rank: normalizedRank,
                     fc_type: sheet.fc_type,
@@ -170,7 +165,7 @@ export async function updatePlayData(
                     grade_recital: sheet.grade_recital,
                     ...mapBemaniJudgeCounts(sheet.judge),
                     ...mapBemaniNoteSuccessRates(sheet.note_success_rate),
-                    besttime: sheet.besttime,
+                    // 공식 문자열 시각은 timestamptz 로만 남긴다(2026-10-16 P5-1)
                     bestAt: recordBestAt(sheet.besttime),
                 };
                 newPlayData.push(record);
@@ -200,7 +195,8 @@ export async function updatePlayData(
                     previous.note_rate_glissando !==
                         record.note_rate_glissando ||
                     previous.note_rate_trill !== record.note_rate_trill ||
-                    previous.besttime !== record.besttime;
+                    (previous.bestAt?.getTime() ?? null) !==
+                        (record.bestAt?.getTime() ?? null);
 
                 if (changed) {
                     changedPlayData.push(record);
@@ -226,7 +222,6 @@ export async function updatePlayData(
                         note_rate_tenuto: record.note_rate_tenuto,
                         note_rate_glissando: record.note_rate_glissando,
                         note_rate_trill: record.note_rate_trill,
-                        besttime: record.besttime,
                         bestAt: record.bestAt,
                         chart_id,
                         user_id,
@@ -243,20 +238,13 @@ export async function updatePlayData(
                     where: { id: sync_id, user_id, status: "processing" },
                     select: { started_at: true },
                 });
-                // 이번 응답에 없는 채보 · 채보가 지워져 비어 버린 기록만 지운다
+                // 이번 응답에 없는 채보의 기록만 지운다(기록은 채보에 묶여 chart_id 가 비지 않는다 — P5-1)
                 await tx.playData.deleteMany({
                     where: {
                         user_id,
-                        OR: [
-                            { chart_id: null },
-                            {
-                                chart_id: {
-                                    notIn: newPlayData.map(
-                                        (record) => record.chart_id
-                                    ),
-                                },
-                            },
-                        ],
+                        chart_id: {
+                            notIn: newPlayData.map((record) => record.chart_id),
+                        },
                     },
                 });
                 // 잠금 순서를 고정해 같은 줄을 다른 순서로 잡지 않게 채보 순으로 넣는다
@@ -278,21 +266,6 @@ export async function updatePlayData(
                 await tx.chartPlayHistory.updateMany({
                     where: { user_id, record_applied: false },
                     data: { record_applied: true },
-                });
-                await tx.user.update({
-                    where: { id: user_id },
-                    data: {
-                        last_full_record_at: sync.started_at,
-                        score_p: score.P,
-                        score_f: score.F,
-                        score_s: score.S,
-                        score_a2: score.A2,
-                        score_a: score.A,
-                        score_b2: score.B2,
-                        score_b: score.B,
-                        score_c: score.C,
-                        score_d: score.D,
-                    },
                 });
                 await writePlayerStats(tx, user_id, {
                     lastFullRecordAt: sync.started_at,
