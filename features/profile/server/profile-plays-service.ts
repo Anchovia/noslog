@@ -73,6 +73,7 @@ export async function getPublicProfilePlays(
                 best_score: true,
                 rank: true,
                 max_combo: true,
+                judge_near: true,
                 chart: {
                     select: {
                         difficulty: true,
@@ -100,11 +101,13 @@ export async function getPublicProfilePlays(
                 level: play.chart.level,
                 score: play.score,
                 rank: play.rank,
+                // FC = NEAR 없는 풀콤보(무지개 F) — NEAR 섞인 풀콤보는 세지 않는다(2026-10-16 K1)
                 fullCombo:
                     play.rank === "P" ||
                     (play.chart.note_count !== null &&
                         play.chart.note_count > 0 &&
-                        play.max_combo >= play.chart.note_count),
+                        play.max_combo >= play.chart.note_count &&
+                        (play.judge_near ?? 0) === 0),
                 contribution: null,
                 playedAt: formatKstPlayTime(play.playedAt),
                 // best_score = 그 판 직전까지의 최고 점수(첫 플레이는 0). 모르면 표시하지 않는다

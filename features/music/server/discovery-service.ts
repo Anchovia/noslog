@@ -64,7 +64,8 @@ function chartConditions(query: DiscoveryQuery, userId: number | null) {
             .map((record) => {
                 if (record === "s") return Prisma.sql`UPPER(play."rank") = 'S'`;
                 if (record === "fc")
-                    return Prisma.sql`(play."fc_type" > 0 OR play."fullcombo_count" > 0)`;
+                    // FC = 무지개 F(fc_type 2 · 3) — NEAR 섞인 풀콤보(1)는 세지 않는다(2026-10-16 K1, 다른 화면과 같은 기준)
+                    return Prisma.sql`play."fc_type" >= 2`;
                 return Prisma.sql`(play."score" >= 1000000 OR play."pianistic_count" > 0)`;
             });
         if (achieved.length)

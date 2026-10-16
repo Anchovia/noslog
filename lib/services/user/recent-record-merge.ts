@@ -65,11 +65,14 @@ export function mergeRecentRecord(
     chart: { level: number } & BasicGradeChart
 ): RecordValues {
     const pianist = play.score === 1_000_000 || play.rank === "P";
-    const fullCombo =
+    const comboKept =
         pianist ||
         (chart.note_count !== null &&
             chart.note_count > 0 &&
             play.max_combo >= chart.note_count);
+    // 공식 램프와 같게(2026-10-16 K1): NEAR 가 섞이면 1(노란 F, FC 로 세지 않음), 없으면 2(무지개 F)
+    const nearFullCombo = comboKept && !pianist && (play.judge_near ?? 0) > 0;
+    const fullCombo = comboKept && !nearFullCombo;
     const improved = previous === null || play.score > previous.score;
     return {
         level: previous?.level ?? play.level ?? chart.level,
@@ -77,7 +80,7 @@ export function mergeRecentRecord(
         rank: improved ? play.rank : previous!.rank,
         fc_type: Math.max(
             previous?.fc_type ?? 0,
-            pianist ? 3 : fullCombo ? 2 : 0
+            pianist ? 3 : fullCombo ? 2 : nearFullCombo ? 1 : 0
         ),
         play_count: (previous?.play_count ?? 0) + 1,
         clear_count: previous?.clear_count ?? null,

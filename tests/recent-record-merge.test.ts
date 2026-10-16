@@ -137,6 +137,23 @@ describe("recent-only record merge (no database writes)", () => {
             fc_type: 3,
         });
     });
+    it("records a NEAR full combo as the yellow-F lamp without counting it as a full combo", () => {
+        // 공식 Op.3: 1 = NEAR 섞인 풀콤보(노란 F), 2 = 무지개 F — FC 는 2 이상만 센다(2026-10-16 K1)
+        expect(
+            mergeRecentRecord(
+                null,
+                attempt({ max_combo: 1000, judge_near: 2 }),
+                chart
+            )
+        ).toMatchObject({ fc_type: 1, fullcombo_count: 0 });
+        expect(
+            mergeRecentRecord(
+                null,
+                attempt({ max_combo: 1000, judge_near: 0 }),
+                chart
+            )
+        ).toMatchObject({ fc_type: 2, fullcombo_count: 1 });
+    });
     it("does not invent a full combo from an unknown note count", () => {
         expect(
             mergeRecentRecord(null, attempt({ max_combo: 9999 }), {
