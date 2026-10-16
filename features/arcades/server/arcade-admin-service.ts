@@ -22,6 +22,7 @@ import {
     readPublicArcadeWeekly,
     toPublicArcadeWeekly,
 } from "@/lib/arcade-details";
+import { inferLegacyArcadeRegion } from "@/lib/arcade-regions";
 import { CACHE_TAGS } from "@/lib/cache-tags";
 import db from "@/lib/db";
 import { localizePath, SUPPORTED_LOCALES } from "@/lib/i18n/routing";
@@ -70,12 +71,9 @@ function invalidArcadeInput(error: ZodError): ArcadeActionResult {
 function arcadeData(input: ArcadeValues) {
     return {
         name: input.name,
-        region: input.region,
-        address: input.address,
+        // 지역 · 주소는 공개 정보(ArcadePublicDetails)가 정본(2026-10-16 DB 재설계 D6)
         latitude: input.latitude,
         longitude: input.longitude,
-        // 기체 수는 기체 목록에서 센다(옛 칸을 쓰는 곳을 위해 계속 채운다)
-        machine_count: input.cabinets.length || null,
         play_price: input.playPrice,
         coin_count: input.coinCount,
         business_hours:
@@ -194,6 +192,8 @@ async function syncPublicFacts(
         select: {
             slug: true,
             hours: true,
+            administrativeArea: true,
+            addressLines: true,
             phone: true,
             website: true,
             creditLabel: true,
@@ -221,6 +221,24 @@ async function syncPublicFacts(
     };
     // 시설 칸 없이 온 저장(옛 화면)은 저장된 시설을 그대로 둔다
     const facilities = input.facilities ?? details?.facilities ?? [];
+    // 지역 · 주소(공개 정보가 정본) — 주소는 줄마다 한 칸, 화면은 줄바꿈으로 다시 잇는다.
+    // 공개 지역은 관리자 목록(7개)보다 자세할 수 있어(울산 · 부산 …) 편집 화면은 「기타」 로 보여 준다 —
+    // 관리자가 지역을 바꿨을 때만 덮어써서, 다른 칸만 고친 저장이 공개 지역을 「기타」 로 바꾸지 않게 한다
+    const storedAddress = (details?.addressLines ?? []).join("\n");
+    const shownRegion = inferLegacyArcadeRegion(
+        details?.administrativeArea,
+        storedAddress
+    );
+    const location = {
+        administrativeArea:
+            details?.administrativeArea && input.region === shownRegion
+                ? details.administrativeArea
+                : input.region || null,
+        addressLines: input.address ? input.address.split("\n") : [],
+    };
+    const locationChanged =
+        (details?.administrativeArea ?? null) !== location.administrativeArea ||
+        storedAddress !== location.addressLines.join("\n");
     const contactChanged =
         (details?.phone ?? null) !== contact.phone ||
         (details?.website ?? null) !== contact.website ||
@@ -231,7 +249,8 @@ async function syncPublicFacts(
         hoursChanged ||
         exceptionsChanged ||
         cabinetVerified ||
-        contactChanged
+        contactChanged ||
+        locationChanged
     ) {
         const hasExceptions = Object.keys(exceptions).length > 0;
         const data = {
@@ -248,6 +267,7 @@ async function syncPublicFacts(
                 : {}),
             ...(cabinetVerified ? { cabinetVerifiedAt: now } : {}),
             ...(contactChanged ? { ...contact, facilities } : {}),
+            ...(locationChanged ? location : {}),
         };
         await tx.arcadePublicDetails.upsert({
             where: { arcadeId },

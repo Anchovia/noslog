@@ -155,9 +155,8 @@ describe("관리자 공지사항 액션", () => {
         });
 
         expect(mocks.announcementCreate).toHaveBeenCalledWith({
+            // 본문은 번역 표에만(2026-10-16 D6 — 공지 표의 ko 사본은 쓰지 않는다)
             data: {
-                title: "서비스 공지 ko",
-                content: "공지 내용입니다. ko",
                 publicSlug: "service-notice",
                 placement: "ROUTINE",
                 category: "NOTICE",
@@ -249,8 +248,8 @@ describe("관리자 공지사항 액션", () => {
 
         const call = mocks.announcementUpdate.mock.calls[0][0];
         expect(call.where).toEqual({ id: 10 });
+        expect(call.data).not.toHaveProperty("title");
         expect(call.data).toMatchObject({
-            title: "서비스 공지 ko",
             publicSlug: "service-notice",
             isPublished: true,
             publishedAt,

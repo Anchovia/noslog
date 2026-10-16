@@ -2,15 +2,11 @@ import "server-only";
 
 import { Prisma } from "@prisma/client";
 
-import {
-    canContributeGoalVote,
-    summarizeGoalVotes,
-} from "@/features/music/lib/community";
+import { canContributeGoalVote } from "@/features/music/lib/community";
 import type { CommunityMutation } from "@/features/music/schemas/community-schema";
 import { communityMutationSchema } from "@/features/music/schemas/community-schema";
 import { ApiError } from "@/lib/api/response";
 import db from "@/lib/db";
-import type { TierMode } from "@/lib/tiers";
 
 async function detachDeletedOpinion(
     transaction: Prisma.TransactionClient,
@@ -23,54 +19,6 @@ async function detachDeletedOpinion(
         where: { evaluationId },
         data: { evaluationId: null },
     });
-}
-
-async function updateVoteReview(
-    transaction: Prisma.TransactionClient,
-    chartId: number,
-    mode: TierMode,
-    goal: string
-) {
-    const list = await transaction.tierList.findFirst({
-        where: { mode, goal, status: "published" },
-        orderBy: [{ updatedAt: "desc" }, { id: "desc" }],
-        select: {
-            entries: {
-                where: { chartId },
-                select: { tierBand: { select: { value: true } } },
-            },
-        },
-    });
-    const officialValue = list?.entries[0]?.tierBand.value;
-    if (officialValue === undefined) return;
-    const votes = await transaction.chartGoalVote.findMany({
-        where: { chartId, mode, goal, excluded: false },
-        select: { value: true },
-    });
-    const summary = summarizeGoalVotes(votes.map((vote) => vote.value));
-    const evidence = {
-        officialValue,
-        count: summary.count,
-        mean: summary.mean,
-        median: summary.median,
-        distribution: summary.distribution,
-    };
-    const disagreement =
-        summary.count >= 5 &&
-        (officialValue < summary.lowerQuartile! ||
-            officialValue > summary.upperQuartile!);
-    if (disagreement) {
-        await transaction.chartGoalVoteReview.upsert({
-            where: { chartId_mode_goal: { chartId, mode, goal } },
-            create: { chartId, mode, goal, ...evidence },
-            update: evidence,
-        });
-    } else {
-        await transaction.chartGoalVoteReview.updateMany({
-            where: { chartId, mode, goal },
-            data: evidence,
-        });
-    }
 }
 
 type ReplyMutation = Extract<
@@ -465,7 +413,6 @@ async function executeMutation(
                 : {},
         },
     });
-    await updateVoteReview(transaction, chartId, mode, goal);
     return { chartId };
 }
 

@@ -30,6 +30,8 @@ export default async function AdminArcadesPage() {
             publicDetails: {
                 select: {
                     hours: true,
+                    administrativeArea: true,
+                    addressLines: true,
                     phone: true,
                     website: true,
                     creditLabel: true,
@@ -67,8 +69,13 @@ export default async function AdminArcadesPage() {
                         arcade={{
                             id: arcade.id,
                             name: arcade.name,
-                            region: arcade.region,
-                            address: arcade.address,
+                            // 지역 · 주소는 공개 정보가 정본(2026-10-16 D6)
+                            region:
+                                arcade.publicDetails?.administrativeArea ??
+                                null,
+                            address:
+                                arcade.publicDetails?.addressLines.join("\n") ||
+                                null,
                             latitude: arcade.latitude,
                             longitude: arcade.longitude,
                             playPrice: arcade.play_price,

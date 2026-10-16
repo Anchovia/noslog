@@ -136,20 +136,7 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
             ).toBe(3);
         });
 
-        it("keeps optional axis zero, writes independent opinions, and does not repurpose legacy axes", async () => {
-            await db.chartEvaluation.create({
-                data: {
-                    chart_id: chartId,
-                    user_id: userIds[0],
-                    perceived_constant: 12.5,
-                    stairs: 4,
-                    chord: 3,
-                    trill: 2,
-                    glissando: 1,
-                    repetition: 0,
-                    comment: "Legacy opinion",
-                },
-            });
+        it("keeps optional axis zero and writes independent opinions", async () => {
             await mutateChartCommunity(
                 {
                     action: "save-evaluation",
@@ -189,23 +176,6 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
             const data = await getCommunityPattern(chartId);
             expect(data.stairs).toEqual({ count: 3, average: 1 });
             expect(data.polyrhythm).toEqual({ count: 0, average: null });
-            expect(
-                await db.chartEvaluation.findUnique({
-                    where: {
-                        chart_id_user_id: {
-                            chart_id: chartId,
-                            user_id: userIds[0],
-                        },
-                    },
-                })
-            ).toMatchObject({
-                stairs: 4,
-                chord: 3,
-                trill: 2,
-                glissando: 1,
-                perceived_constant: 12.5,
-                comment: "Legacy opinion",
-            });
         });
 
         it("enforces positive-only, idempotent Helpful and deduplicates private reports", async () => {
@@ -281,9 +251,6 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
                 count: 5,
             });
             expect(summary.scopes[0].average).toBeCloseTo(13.12);
-            expect(
-                await db.chartGoalVoteReview.count({ where: { chartId } })
-            ).toBe(1);
             await mutateChartCommunity(
                 {
                     action: "save-vote",
@@ -291,9 +258,6 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
                 },
                 userIds[0]
             );
-            expect(
-                await db.chartGoalVoteReview.count({ where: { chartId } })
-            ).toBe(1);
             const entry = await db.tierEntry.findUniqueOrThrow({
                 where: { tierListId_chartId: { tierListId: listId, chartId } },
                 include: { tierBand: true },
@@ -481,34 +445,6 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
                     where: { authorId: userId },
                 })
             ).toBe(0);
-        });
-
-        it("updates an existing advisory review to an empty distribution after every vote is removed", async () => {
-            for (const userId of userIds.filter((id) => id !== userIds[3])) {
-                await mutateChartCommunity(
-                    {
-                        action: "delete-vote",
-                        input: { chartId, mode: "basic", goal: "s" },
-                    },
-                    userId
-                );
-            }
-            expect(
-                await db.chartGoalVoteReview.findUnique({
-                    where: {
-                        chartId_mode_goal: {
-                            chartId,
-                            mode: "basic",
-                            goal: "s",
-                        },
-                    },
-                })
-            ).toMatchObject({
-                count: 0,
-                mean: null,
-                median: null,
-                distribution: [],
-            });
         });
     }
 );

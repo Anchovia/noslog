@@ -29,29 +29,7 @@ model User {
   // 플레이 점수 공개(2026-09-18) — 켜면 랭킹에서 빠지고 프로필의 점수 · 기록이 남에게 가려진다. 기본 공개
   hide_play_scores           Boolean                     @default(false)
   preferredArcade            Arcade?                     @relation(fields: [preferred_arcade_id], references: [id], onDelete: SetNull)
-  rank_basic                 Int?                        @ignore
-  rank_recital               Int?                        @ignore
-  rank_basic_country         Int?                        @ignore
-  rank_recital_country       Int?                        @ignore
-  play_count                 Int?                        @ignore
-  nostalgia_nos              Int?                        @ignore
-  nostalgia_last_playtime    String?                     @ignore
-  equipped_brooch_index      String?                     @ignore
-  equippedBrooch             Brooch?                     @relation("EquippedBrooch", fields: [equipped_brooch_index], references: [index], onDelete: SetNull) @ignore
-  // 아래 @ignore 열은 player_stats 로 옮긴 옛 값 · 쓰지 않는 값(2026-10-16 DB 재설계 P5-1). 코드는 읽지도 쓰지도 않고, P5-2 에서 지운다
-  score_p                    Int?                        @ignore
-  score_f                    Int?                        @ignore
-  score_s                    Int?                        @ignore
-  score_a2                   Int?                        @ignore
-  score_a                    Int?                        @ignore
-  score_b2                   Int?                        @ignore
-  score_b                    Int?                        @ignore
-  score_c                    Int?                        @ignore
-  score_d                    Int?                        @ignore
   role                       UserRole                    @default(user)
-  grade_basic                Int?                        @ignore
-  grade_recital              Int?                        @ignore
-  last_full_record_at        DateTime?                   @ignore
   sync_token_version         Int                         @default(0)
   created_at                 DateTime                    @default(now())
   updated_at                 DateTime                    @updatedAt
@@ -59,8 +37,8 @@ model User {
   UserBestGrade              UserBestGrade[]
   ratingHistory              UserRatingHistory[]
   bingoProgress              BingoCellProgress[]
-  chartEvaluations           ChartEvaluation[]
-  chartReactions             ChartEvaluationReaction[]
+  chartEvaluations           ChartEvaluation[]           @ignore
+  chartReactions             ChartEvaluationReaction[]   @ignore
   communityEvaluations       CommunityChartEvaluation[]
   communityHelpful           CommunityOpinionHelpful[]
   communityReplies           CommunityOpinionReply[]
@@ -77,7 +55,6 @@ model User {
   uploadTokenGrants          UploadTokenGrant[]
   feedbackReports            FeedbackReport[]
   cabinetChecks              ArcadeCabinetCheck[]
-  brooches                   UserBrooch[]                @ignore
   chartPatternsCreated       ChartPattern[]              @relation("ChartPatternCreatedBy")
   chartPatternsUpdated       ChartPattern[]              @relation("ChartPatternUpdatedBy")
   chartPatternsPublished     ChartPattern[]              @relation("ChartPatternPublishedBy")
@@ -102,33 +79,6 @@ model User {
   @@index([preferred_arcade_id])
   // 관리자 대시보드 가입자 집계(2026-10-16 DB 재설계 P2)
   @@index([created_at])
-}
-
-// NOSTALGIA가 제공하는 브로치 카탈로그
-model Brooch {
-  index         String       @id
-  name          String
-  description   String
-  created_at    DateTime     @default(now())
-  updated_at    DateTime     @updatedAt
-  owners        UserBrooch[]
-  equippedUsers User[]       @relation("EquippedBrooch")
-
-  // 동기화가 모으기만 하고 읽는 곳이 없어 모으기를 멈췄다(2026-10-16 K5). P5-2 에서 지운다
-  @@ignore
-}
-
-// 사용자가 보유한 브로치를 카탈로그와 연결함
-model UserBrooch {
-  user_id      Int
-  user         User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  brooch_index String
-  brooch       Brooch   @relation(fields: [brooch_index], references: [index], onDelete: Cascade)
-  synced_at    DateTime @default(now())
-
-  @@id([user_id, brooch_index])
-  @@index([brooch_index])
-  @@ignore
 }
 
 // 사용자가 제출한 오류 제보와 처리 상태를 관리함
@@ -166,8 +116,9 @@ model FeedbackReport {
 // 관리자가 작성하고 홈에 공개하는 서비스 공지사항
 model Announcement {
   id           Int                       @id @default(autoincrement())
-  title        String
-  content      String
+  // ko 번역 사본 — 번역 표(AnnouncementTranslation)가 정본이라 쓰지 않는다(2026-10-16 D6, P5-3 에서 지움)
+  title        String?                   @ignore
+  content      String?                   @ignore
   isPublished  Boolean                   @default(false) @map("is_published")
   publishedAt  DateTime?                 @map("published_at")
   createdAt    DateTime                  @default(now()) @map("created_at")
@@ -339,16 +290,18 @@ model PollVote {
 model Arcade {
   id             Int      @id @default(autoincrement())
   name           String   @unique
-  region         String?
-  address        String?
+  // 지역 · 주소는 공개 정보(ArcadePublicDetails)로 옮겨 쓰지 않는다(2026-10-16 D6, P5-3 에서 지움)
+  region         String?  @ignore
+  address        String?  @ignore
   latitude       Float?
   longitude      Float?
-  machine_count  Int?
+  // 쓰지 않는 칸 — 코드는 읽지도 쓰지도 않는다(2026-10-16 DB 재설계 D6, P5-3 에서 지움)
+  machine_count  Int?     @ignore
   play_price     Int?
   coin_count     Int?
   business_hours Json?
-  machine_status String   @default("unknown")
-  status_note    String?
+  machine_status String   @default("unknown") @ignore
+  status_note    String?  @ignore
   notes          String?
   is_active      Boolean  @default(true)
   created_at     DateTime @default(now())
@@ -522,7 +475,6 @@ model Music {
   background     String? // 변수명 jacket으로 변경 필요
   created_at     DateTime           @default(now())
   updated_at     DateTime           @updatedAt
-  PlayData       PlayData[]         @ignore
   bingoCovers    Bingo[]            @relation("BingoCoverMusic")
   bingoMissions  BingoCell[]        @relation("BingoMissionMusic")
   charts         MusicChart[]
@@ -714,7 +666,7 @@ model MusicCatalogCandidate {
   beforeSnapshot Json?                  @map("before_snapshot")
   status         CatalogCandidateStatus @default(pending)
   seenCount      Int                    @default(1) @map("seen_count")
-  firstSeenAt    DateTime               @default(now()) @map("first_seen_at")
+  firstSeenAt    DateTime               @default(now()) @map("first_seen_at") @ignore
   lastSeenAt     DateTime               @default(now()) @map("last_seen_at")
   reviewedAt     DateTime?              @map("reviewed_at")
   appliedAt      DateTime?              @map("applied_at")
@@ -746,11 +698,11 @@ model MusicChart {
 
   levelConstantHistory ChartLevelConstantHistory[]
   fieldSources         ChartFieldSource[]
-  evaluations          ChartEvaluation[]
+  evaluations          ChartEvaluation[]           @ignore
   communityEvaluations CommunityChartEvaluation[]
   goalVotes            ChartGoalVote[]
   goalVoteAudit        ChartGoalVoteAudit[]
-  goalVoteReviews      ChartGoalVoteReview[]
+  goalVoteReviews      ChartGoalVoteReview[]       @ignore
   PlayData             PlayData[]
   playHistory          ChartPlayHistory[]
   recordSnapshots      ChartRecordSnapshot[]
@@ -844,37 +796,34 @@ model DataSync {
 
 // 공식 최근 플레이 응답을 중복 없이 누적해 점수 추이에 사용함
 model ChartPlayHistory {
-  id               Int        @id @default(autoincrement())
-  level            Int?
-  score            Int
-  best_score       Int?
-  max_combo        Int
-  rank             String
-  grade_basic      Int
-  class_basic      String?
-  fast_count       Int?
-  slow_count       Int?
-  is_onehand       Boolean?
-  judge_sjust      Int?
-  judge_just       Int?
-  judge_good       Int?
-  judge_miss       Int?
-  judge_near       Int?
-  // 공식 문자열 시각 — played_at 으로 옮겨 쓰지 않는다(2026-10-16 P5-1). 옛 유일 키 때문에 P5-2 까지 남긴다
-  source_play_time String?    @ignore
+  id             Int        @id @default(autoincrement())
+  level          Int?
+  score          Int
+  best_score     Int?
+  max_combo      Int
+  rank           String
+  grade_basic    Int
+  class_basic    String?
+  fast_count     Int?
+  slow_count     Int?
+  is_onehand     Boolean?
+  judge_sjust    Int?
+  judge_just     Int?
+  judge_good     Int?
+  judge_miss     Int?
+  judge_near     Int?
   // 플레이 시각(공식 KST 시각을 timestamptz 로) — 같은 플레이를 가르는 유일 키의 일부
-  playedAt         DateTime   @map("played_at") @db.Timestamptz(3)
-  chart_id         Int
-  chart            MusicChart @relation(fields: [chart_id], references: [id], onDelete: Cascade)
-  user_id          Int
-  user             User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  record_applied   Boolean    @default(false)
-  first_sync_id    Int?
-  firstSync        DataSync?  @relation(fields: [first_sync_id], references: [id], onDelete: SetNull)
-  created_at       DateTime   @default(now())
+  playedAt       DateTime   @map("played_at") @db.Timestamptz(3)
+  chart_id       Int
+  chart          MusicChart @relation(fields: [chart_id], references: [id], onDelete: Cascade)
+  user_id        Int
+  user           User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  record_applied Boolean    @default(false)
+  first_sync_id  Int?
+  firstSync      DataSync?  @relation(fields: [first_sync_id], references: [id], onDelete: SetNull)
+  created_at     DateTime   @default(now())
 
-  @@unique([user_id, chart_id, source_play_time, score, max_combo, rank])
-  // 같은 플레이 하나(2026-10-16 P5-1) — 위 문자열 키는 배포 순간 옛 코드를 위해 P5-2 까지 둔다
+  // 같은 플레이 하나(2026-10-16 P5-1 — 문자열 시각 키에서 played_at 으로)
   @@unique([user_id, chart_id, playedAt, score, max_combo, rank])
   // 최근 플레이 목록(사람별 최신순)
   @@index([user_id, playedAt(sort: Desc), id(sort: Desc)])
@@ -908,8 +857,7 @@ model ChartRecordSnapshot {
   note_rate_tenuto    Int?
   note_rate_glissando Int?
   note_rate_trill     Int?
-  besttime            String?    @ignore
-  // PlayData.bestAt 과 같은 뜻(2026-10-16 늘리기, 문자열 besttime 은 P5-2 에서 지움)
+  // PlayData.bestAt 과 같은 뜻
   bestAt              DateTime?  @map("best_at") @db.Timestamptz(3)
   chart_id            Int
   chart               MusicChart @relation(fields: [chart_id], references: [id], onDelete: Cascade)
@@ -1026,6 +974,8 @@ model ChartEvaluation {
 
   @@unique([chart_id, user_id])
   @@index([chart_id, perceived_constant])
+  // 옛 채보 평가 — 쓰는 길이 없어 코드를 지웠다(운영 0줄, 2026-10-16 D6). P5-3 에서 표를 지운다
+  @@ignore
 }
 
 // 의견의 추천·비추천을 사용자별 한 건으로 제한함
@@ -1041,6 +991,8 @@ model ChartEvaluationReaction {
 
   @@unique([evaluation_id, user_id])
   @@index([evaluation_id, value])
+  // 옛 채보 평가 — 쓰는 길이 없어 코드를 지웠다(운영 0줄, 2026-10-16 D6). P5-3 에서 표를 지운다
+  @@ignore
 }
 
 // 2.0 패턴 평가는 기존 ChartEvaluation의 서로 다른 축 값을 재해석하지 않음.
@@ -1056,7 +1008,7 @@ model CommunityChartEvaluation {
   opinion             String?
   opinionHidden       Boolean                   @default(false)
   excluded            Boolean                   @default(false)
-  moderationReason    String?
+  moderationReason    String?                   @ignore
   createdAt           DateTime                  @default(now())
   updatedAt           DateTime                  @updatedAt
   opinionUpdatedAt    DateTime?
@@ -1096,7 +1048,7 @@ model CommunityOpinionReport {
   reason          OpinionReportReason
   explanation     String?
   status          String                    @default("pending")
-  reviewReason    String?
+  reviewReason    String?                   @ignore
   createdAt       DateTime                  @default(now())
   updatedAt       DateTime                  @updatedAt
   evaluation      CommunityChartEvaluation? @relation(fields: [evaluationId], references: [id], onDelete: SetNull)
@@ -1153,7 +1105,7 @@ model ChartGoalVote {
   goal        String
   value       Float
   excluded    Boolean    @default(false)
-  auditReason String?
+  auditReason String?    @ignore
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
   chart       MusicChart @relation(fields: [chartId], references: [id], onDelete: Cascade)
@@ -1203,14 +1155,14 @@ model ChartGoalVoteReview {
 
   @@unique([chartId, mode, goal])
   @@index([status, updatedAt])
+  // 쓰기만 하고 읽는 화면이 없어 쓰기를 멈췄다(2026-10-16 D6, P5-3 에서 지움)
+  @@ignore
 }
 
 model UserBestGrade {
   id            Int      @id @default(autoincrement())
   grade_basic   Int
   grade_recital Int?
-  // 옛 날짜 문자열 — day 로 옮겨 쓰지 않는다(2026-10-16 P5-1). 옛 유일 키 때문에 P5-2 까지 남긴다
-  besttime      String?  @ignore
   // 그 날짜(서울 날짜)
   day           DateTime @map("day") @db.Date
   created_at    DateTime @default(now())
@@ -1219,7 +1171,6 @@ model UserBestGrade {
   user          User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   // 사람당 하루 한 줄 — 코드 규칙을 DB 도 지킨다(2026-10-16 DB 재설계 P2, P5-1 에서 day 로)
-  @@unique([user_id, besttime])
   @@unique([user_id, day])
 }
 
@@ -1241,8 +1192,6 @@ model UserRatingHistory {
 model PlayData {
   id                  Int        @id @default(autoincrement())
   level               Int
-  // 채보 사본(music_idx · difficulty) · 문자열 시각(besttime)은 chart_id · bestAt 으로 옮겨 쓰지 않는다(2026-10-16 P5-1, P5-2 에서 지움)
-  difficulty          String?    @ignore
   score               Int
   rank                String
   fc_type             Int
@@ -1263,15 +1212,12 @@ model PlayData {
   note_rate_tenuto    Int?
   note_rate_glissando Int?
   note_rate_trill     Int?
-  besttime            String?    @ignore
   // 기록 시각(KST 공식 시각을 timestamptz 로, 모르면 NULL — 옛 「1970-01-01 09:00」 자리표시도 NULL)
   bestAt              DateTime?  @map("best_at") @db.Timestamptz(3)
   created_at          DateTime   @default(now())
   updated_at          DateTime   @updatedAt
   user_id             Int
   user                User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  music_idx           String?    @ignore
-  music               Music?     @relation(fields: [music_idx], references: [index]) @ignore
   // 기록은 채보에 묶인다(2026-10-16 D2-B) — 기록이 있는 채보는 지우지 못한다(앱에 채보 삭제 경로는 없음)
   chart_id            Int
   chart               MusicChart @relation(fields: [chart_id], references: [id], onDelete: Restrict)

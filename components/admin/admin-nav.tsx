@@ -22,7 +22,6 @@ const adminSections = [
     { href: "/admin/submissions", label: "인증" },
     { href: "/admin/bingos", label: "빙고" },
     { href: "/admin/arcades", label: "오락실" },
-    { href: "/admin/community", label: "의견" },
 ] as const;
 
 // 대시보드(/admin)는 모든 관리 주소의 앞부분이라 정확히 같을 때만 현재 구역이다

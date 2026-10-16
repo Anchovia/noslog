@@ -77,7 +77,8 @@ export async function listAdminUsers(
                         dataSyncs: true,
                         PlayData: true,
                         chartPlayHistory: true,
-                        chartEvaluations: true,
+                        // 「평가」 는 지금 쓰는 채보 의견 · 평가(옛 ChartEvaluation 은 지웠다, 2026-10-16 D6)
+                        communityEvaluations: true,
                         examAchievements: true,
                     },
                 },
@@ -173,7 +174,7 @@ export async function listAdminUsers(
                     dataSyncs: user._count.dataSyncs,
                     playData: user._count.PlayData,
                     recentPlayHistory: user._count.chartPlayHistory,
-                    chartEvaluations: user._count.chartEvaluations,
+                    chartEvaluations: user._count.communityEvaluations,
                     examAchievements: user._count.examAchievements,
                 },
                 coverage: {

@@ -27,8 +27,6 @@ export async function getAccountSettingsData() {
                     chartRecordSnapshots: true,
                     UserBestGrade: true,
                     ratingHistory: true,
-                    chartEvaluations: true,
-                    chartReactions: true,
                     communityEvaluations: true,
                     communityHelpful: true,
                     communityReports: true,
@@ -69,8 +67,6 @@ export async function getAccountSettingsData() {
                 counts.chartRecordSnapshots,
             growth: counts.UserBestGrade + counts.ratingHistory,
             community:
-                counts.chartEvaluations +
-                counts.chartReactions +
                 counts.communityEvaluations +
                 counts.communityHelpful +
                 counts.communityReports +

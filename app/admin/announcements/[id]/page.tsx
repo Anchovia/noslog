@@ -53,12 +53,7 @@ export default async function EditAnnouncementPage({
                 locale,
                 row
                     ? { title: row.title, content: row.content }
-                    : locale === "ko"
-                      ? {
-                            title: announcement.title,
-                            content: announcement.content,
-                        }
-                      : { title: "", content: "" },
+                    : { title: "", content: "" },
             ];
         })
     ) as AnnouncementEditorData["translations"];
