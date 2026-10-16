@@ -1,0 +1,164 @@
+// 유저 기여 — 곡 정보 제안 · 채보 초안 · 댓글 · 기여 점수
+
+// 유저가 제안한 채보 정보 값(BPM · 노트 수 · 길이 · 수록일) — 운영자가 반영하거나 사유와 함께 반려한다(2026-09-23)
+// 같은 사람 · 같은 채보 · 같은 칸의 대기 중 제안은 하나 — 다시 내면 값을 바꾼다
+model ChartFieldProposal {
+  id               Int                   @id @default(autoincrement())
+  userId           Int                   @map("user_id")
+  user             User                  @relation("ChartFieldProposalAuthor", fields: [userId], references: [id], onDelete: Cascade)
+  chartId          Int                   @map("chart_id")
+  chart            MusicChart            @relation(fields: [chartId], references: [id], onDelete: Cascade)
+  // bpm | note_count | duration | released_at
+  field            String
+  // 제안 값 — BPM 「60」 · 「60-120」, 노트 수 정수, 길이 초, 수록일 YYYY-MM-DD
+  value            String
+  // 제안할 때 화면에 있던 값(비어 있었으면 null) — 그 사이 값이 바뀌었는지 검토에서 본다
+  previousValue    String?               @map("previous_value")
+  // video | official | direct
+  evidenceKind     ProposalEvidenceKind  @map("evidence_kind")
+  evidenceUrl      String?               @map("evidence_url")
+  evidenceNote     String?               @map("evidence_note")
+  // pending | applied | rejected | withdrawn
+  status           ProposalStatus        @default(pending)
+  // 반려 사유 — 정해진 코드(evidence | url | duplicate | format | other)와 덧붙인 말(2026-10-01 D2)
+  rejectReasonCode ProposalRejectReason? @map("reject_reason_code")
+  reviewNote       String?               @map("reject_reason")
+  // 운영자가 값을 고쳐 반영했으면 그 값 — 제안 값과 다르면 기여자에게 그대로 보여 준다(2026-10-01 C2)
+  appliedValue     String?               @map("applied_value")
+  // 기여자가 처리 결과를 본 시각 — 「새 결과」 점(2026-10-01 A2)
+  authorSeenAt     DateTime?             @map("seen_at")
+  reviewedById     Int?                  @map("reviewed_by_id")
+  reviewedBy       User?                 @relation("ChartFieldProposalReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+  reviewedAt       DateTime?             @map("reviewed_at")
+  createdAt        DateTime              @default(now()) @map("created_at")
+  updatedAt        DateTime              @updatedAt @map("updated_at")
+  source           ChartFieldSource?
+
+  @@index([status, createdAt])
+  @@index([userId, createdAt])
+  @@index([chartId, field, status])
+  @@index([reviewedById])
+  // 스키마 밖 — "chart_field_proposals_one_pending": (user_id, chart_id, field) WHERE status = 'pending'.
+  // 같은 사람 · 채보 · 칸의 대기 중 제안은 하나(위 주석의 규칙). 존재는 tests/schema-objects-database.test.ts 가 확인한다
+  @@map("chart_field_proposals")
+}
+
+// 유저별 채보 초안(2026-09-24 3단계) — 한 사람 · 한 채보에 하나. 작성자와 운영자만 본다.
+// status: draft(작성 중) · submitted(검토 요청) · changes_requested(수정 요청) · published(공개됨 — 다시 고치면 draft)
+model ChartDraft {
+  id           Int              @id @default(autoincrement())
+  userId       Int              @map("user_id")
+  user         User             @relation("ChartDraftAuthor", fields: [userId], references: [id], onDelete: Cascade)
+  chartId      Int              @map("chart_id")
+  chart        MusicChart       @relation(fields: [chartId], references: [id], onDelete: Cascade)
+  content      Json
+  // 자동 저장 충돌 방지 — 관리자 에디터의 draftVersion 과 같은 방식
+  version      Int              @default(0)
+  status       ChartDraftStatus @default(draft)
+  // 공개본에서 시작했으면 그 공개 버전 — 검토 때 「공개본 대비」 비교
+  baseRevision Int?             @map("base_revision")
+  submittedAt  DateTime?        @map("submitted_at")
+  reviewedAt   DateTime?        @map("reviewed_at")
+  reviewedById Int?             @map("reviewed_by_id")
+  reviewedBy   User?            @relation("ChartDraftReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+  publishedAt  DateTime?        @map("published_at")
+  // 작성자가 검토 결과(수정 요청 · 공개)를 본 시각 — 「새 결과」 점(2026-10-01 A2)
+  authorSeenAt DateTime?        @map("seen_at")
+  createdAt    DateTime         @default(now()) @map("created_at")
+  updatedAt    DateTime         @updatedAt @map("updated_at")
+  comments     ChartComment[]
+
+  @@unique([userId, chartId])
+  @@index([status, submittedAt])
+  @@index([chartId])
+  @@index([reviewedById])
+  @@map("chart_drafts")
+}
+
+// 채보 시각 댓글(2026-09-24 3단계) — 초안 검토(draftId 있음 · 작성자와 운영자만) 또는 공개 채보(draftId 없음 · 누구나 읽음).
+// 「해결」 은 운영자만, 공개 채보 댓글이 해결되면 쓴 사람에게 기여 1점
+model ChartComment {
+  id           Int              @id @default(autoincrement())
+  chartId      Int              @map("chart_id")
+  chart        MusicChart       @relation(fields: [chartId], references: [id], onDelete: Cascade)
+  draftId      Int?             @map("draft_id")
+  draft        ChartDraft?      @relation(fields: [draftId], references: [id], onDelete: Cascade)
+  userId       Int              @map("user_id")
+  user         User             @relation("ChartCommentAuthor", fields: [userId], references: [id], onDelete: Cascade)
+  timeMs       Int              @map("time_ms")
+  // problem | suggestion | praise — 무엇이 고칠 것인지 한눈에(2026-10-01 H2, osu! 글쓰기 3종)
+  kind         ChartCommentKind @default(problem)
+  body         String
+  resolved     Boolean          @default(false)
+  resolvedAt   DateTime?        @map("resolved_at")
+  resolvedById Int?             @map("resolved_by_id")
+  resolvedBy   User?            @relation("ChartCommentResolver", fields: [resolvedById], references: [id], onDelete: SetNull)
+  // 운영자가 가린 댓글(신고 · 장난 대응) — 목록에서 빠진다
+  hidden       Boolean          @default(false)
+  createdAt    DateTime         @default(now()) @map("created_at")
+  updatedAt    DateTime         @updatedAt @map("updated_at")
+
+  @@index([chartId, draftId, timeMs])
+  @@index([draftId])
+  @@index([userId, createdAt])
+  @@index([resolvedById])
+  @@map("chart_comments")
+}
+
+// 기여 점수 기록 — 반영 · 처리된 기여마다 한 줄(2026-09-24). 원본(제보 등)이 보관 기간으로 지워져도 점수는 남는다.
+// kind: chart_field(제안 번호) · arcade_report(제보 번호) · cabinet_check(서울 날짜, 하루 1점). 같은 기여는 한 번만
+model ContributionPoint {
+  id        Int              @id @default(autoincrement())
+  userId    Int              @map("user_id")
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  kind      ContributionKind
+  sourceKey String           @map("source_key")
+  points    Int
+  createdAt DateTime         @default(now()) @map("created_at")
+
+  // userId 만으로 찾는 질의는 위 유일 키 앞부분이 맡는다(2026-10-16 P2 — 따로 둔 [userId] 인덱스는 뺐다)
+  @@unique([userId, kind, sourceKey])
+  @@map("contribution_points")
+}
+
+enum ProposalEvidenceKind {
+  direct
+  official
+  video
+}
+
+enum ProposalStatus {
+  approved
+  pending
+  rejected
+}
+
+enum ProposalRejectReason {
+  duplicate
+  evidence
+  format
+  other
+  url
+}
+
+// 값 순서는 DB 선언 순서(이름만 바꿈, 2026-10-16 D5) — 상태로 정렬하는 곳은 없다
+enum ChartDraftStatus {
+  changes_requested
+  draft
+  approved
+  pending
+}
+
+enum ChartCommentKind {
+  praise
+  problem
+  suggestion
+}
+
+enum ContributionKind {
+  arcade_report
+  cabinet_check
+  chart
+  chart_comment
+  chart_field
+}

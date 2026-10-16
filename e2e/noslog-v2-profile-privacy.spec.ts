@@ -1,3 +1,4 @@
+import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@prisma/client";
 import { expect, test } from "@playwright/test";
 
@@ -13,7 +14,12 @@ test.skip(
     "Set DATABASE_URL to the local e2e database; never runs against a shared database."
 );
 const db = safeLocalDatabase
-    ? new PrismaClient({ datasources: { db: { url: databaseUrl } } })
+    ? new PrismaClient({
+          adapter: new PrismaPg({
+              connectionString: databaseUrl,
+              options: "-c TimeZone=UTC",
+          }),
+      })
     : null;
 test.afterAll(async () => {
     await db?.$disconnect();

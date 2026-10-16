@@ -1,5 +1,7 @@
 import { randomUUID } from "node:crypto";
+import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@prisma/client";
+import { PRISMA_PG_SESSION_OPTIONS } from "@/lib/prisma-pg";
 import { describe, expect, it } from "vitest";
 
 const databaseUrl = process.env.TEST_DATABASE_URL;
@@ -12,7 +14,12 @@ describe.skipIf(!databaseUrl)(
                 throw new Error(
                     "Nickname integration tests require a local database."
                 );
-            const db = new PrismaClient({ datasourceUrl: databaseUrl });
+            const db = new PrismaClient({
+                adapter: new PrismaPg({
+                    connectionString: databaseUrl,
+                    options: PRISMA_PG_SESSION_OPTIONS,
+                }),
+            });
             const prefix = randomUUID().replaceAll("-", "").slice(0, 8);
             const ids: number[] = [];
             try {

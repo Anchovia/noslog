@@ -1,13 +1,14 @@
 import { createHash } from "node:crypto";
 
-import { PrismaClient } from "@prisma/client";
-
-import { loadScriptDatabaseEnv } from "./script-env.mjs";
+import {
+    createScriptPrismaClient,
+    loadScriptDatabaseEnv,
+} from "./script-env.mjs";
 
 loadScriptDatabaseEnv();
 
 const shouldApply = process.argv.includes("--apply");
-const db = new PrismaClient();
+const db = createScriptPrismaClient();
 
 const labels = ["1st", "2nd", "Fin"];
 const difficultyOrder = ["Normal", "Hard", "Expert", "Real"];

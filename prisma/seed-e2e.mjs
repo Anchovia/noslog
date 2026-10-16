@@ -1,6 +1,11 @@
-import { PrismaClient } from "@prisma/client";
+import {
+    createScriptPrismaClient,
+    loadScriptDatabaseEnv,
+} from "./script-env.mjs";
 
-const prisma = new PrismaClient();
+// Prisma 7 클라이언트는 .env 를 스스로 읽지 않는다 — 가져오기 스크립트와 같은 방법으로 읽고 대상 DB 를 확인한다
+loadScriptDatabaseEnv();
+const prisma = createScriptPrismaClient();
 const databaseUrl = process.env.DATABASE_URL;
 
 function assertSafeDatabase() {

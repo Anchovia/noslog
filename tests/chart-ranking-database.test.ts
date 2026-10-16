@@ -9,7 +9,16 @@ vi.mock("@/lib/db", async () => {
     if (!["localhost", "127.0.0.1"].includes(new URL(url).hostname))
         throw new Error("Ranking integration tests require a local database.");
     const { PrismaClient } = await import("@prisma/client");
-    return { default: new PrismaClient({ datasourceUrl: url }) };
+    const { PrismaPg } = await import("@prisma/adapter-pg");
+    const { PRISMA_PG_SESSION_OPTIONS } = await import("@/lib/prisma-pg");
+    return {
+        default: new PrismaClient({
+            adapter: new PrismaPg({
+                connectionString: url,
+                options: PRISMA_PG_SESSION_OPTIONS,
+            }),
+        }),
+    };
 });
 
 import db from "@/lib/db";

@@ -1,0 +1,139 @@
+// 오락실 · 기체 · 공개 정보
+
+// 유저가 선택할 수 있는 오락실 목록을 관리자 데이터로 관리함
+model Arcade {
+  id            Int      @id @default(autoincrement())
+  name          String   @unique
+  latitude      Float?
+  longitude     Float?
+  playPrice     Int?     @map("play_price")
+  coinCount     Int?     @map("coin_count")
+  businessHours Json?    @map("business_hours")
+  notes         String?
+  isActive      Boolean  @default(true) @map("is_active")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+  users         User[]
+
+  publicDetails ArcadePublicDetails?
+  cabinets      ArcadeCabinet[]
+  publicPhotos  ArcadePublicPhoto[]
+  identities    ArcadeLocalizedIdentity[]
+  slugAliases   ArcadeSlugAlias[]
+  reports       FeedbackReport[]
+
+  @@index([isActive, name])
+}
+
+// Optional verified public facts; legacy editor fields remain intact.
+model ArcadePublicDetails {
+  arcadeId           Int       @id
+  arcade             Arcade    @relation(fields: [arcadeId], references: [id], onDelete: Cascade)
+  slug               String    @unique
+  countryCode        String
+  timeZone           String
+  currencyCode       String
+  nativeLanguage     String?
+  administrativeArea String?
+  locality           String?
+  addressLines       String[]  @default([])
+  phone              String?
+  website            String?
+  creditLabel        String?
+  // 시설(주차 · 흡연실 …) — lib/arcadeDetails ARCADE_FACILITIES 의 값
+  facilities         String[]  @default([])
+  hours              Json?
+  hoursVerifiedAt    DateTime?
+  hoursValidUntil    DateTime?
+  cabinetVerifiedAt  DateTime?
+  priceVerifiedAt    DateTime?
+  locationVerifiedAt DateTime?
+  verificationSource String?
+}
+
+model ArcadeCabinet {
+  id                 Int                  @id @default(autoincrement())
+  arcadeId           Int
+  arcade             Arcade               @relation(fields: [arcadeId], references: [id], onDelete: Cascade)
+  label              String?
+  position           Int
+  isActive           Boolean              @default(true)
+  availability       String               @default("unknown")
+  condition          String               @default("unknown")
+  // 위치 메모(「안쪽 벽」) — 이름 옆에 보인다
+  note               String?
+  // 상태 이유(「우측 건반 씹힘」) — 보통·주의일 때 상태 라벨 팝오버로 보인다
+  conditionNote      String?              @map("condition_note")
+  // 태그(방송기체 · 헤드폰 단자 …) — lib/arcadeDetails ARCADE_CABINET_TAGS 의 값
+  tags               String[]             @default([])
+  // 특징(정해진 보기 3단계 · 모르면 비움) — ARCADE_CABINET_FEATURES, 그 밖의 이야기는 featureNote(100자)
+  keyWeight          String?              @map("key_weight")
+  screenLag          String?              @map("screen_lag")
+  soundVolume        String?              @map("sound_volume")
+  featureNote        String?              @map("feature_note")
+  verifiedAt         DateTime?
+  validUntil         DateTime?
+  verificationSource String?
+  reports            FeedbackReport[]
+  checks             ArcadeCabinetCheck[]
+
+  @@unique([arcadeId, position])
+  @@index([arcadeId, isActive])
+}
+
+// 이용자가 「지금 가동 중」 을 한 번 눌러 남기는 기체 확인 기록. 관리자 검증과 별개의 신선도 출처
+model ArcadeCabinetCheck {
+  id        Int           @id @default(autoincrement())
+  cabinetId Int           @map("cabinet_id")
+  cabinet   ArcadeCabinet @relation(fields: [cabinetId], references: [id], onDelete: Cascade)
+  userId    Int           @map("user_id")
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  checkedAt DateTime      @default(now()) @map("checked_at")
+
+  @@index([cabinetId, checkedAt])
+  @@index([userId, checkedAt])
+}
+
+model ArcadePublicPhoto {
+  id                Int       @id @default(autoincrement())
+  arcadeId          Int
+  arcade            Arcade    @relation(fields: [arcadeId], references: [id], onDelete: Cascade)
+  slot              Int
+  url               String
+  alt               String
+  capturedAt        DateTime?
+  rightsConfirmedAt DateTime
+  publicConsentAt   DateTime
+
+  @@unique([arcadeId, slot])
+}
+
+model ArcadeLocalizedIdentity {
+  id         Int        @id @default(autoincrement())
+  arcadeId   Int
+  arcade     Arcade     @relation(fields: [arcadeId], references: [id], onDelete: Cascade)
+  locale     LocaleCode
+  name       String
+  aliases    String[]   @default([])
+  reviewedAt DateTime
+
+  @@unique([arcadeId, locale])
+}
+
+model ArcadeSlugAlias {
+  slug     String @id
+  arcadeId Int
+  arcade   Arcade @relation(fields: [arcadeId], references: [id], onDelete: Cascade)
+
+  @@index([arcadeId])
+}
+
+enum ArcadeReportType {
+  address
+  condition
+  count
+  hours
+  other
+  price
+  unavailable
+}

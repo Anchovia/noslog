@@ -15,8 +15,8 @@ git 기록에서 옛 문서나 「남은 일」 을 되살리지 않는다(사�
 
 ## 스택 · 명령
 
-Next.js 16.3(App Router) · React 19.2 · Prisma 6.19 · Zod 4 · TanStack Query 5 · Tailwind 4 · Vitest 4 · Playwright.
-Next.js 는 기억 대신 설치된 버전 문서(`node_modules/next/dist/docs/`)를, Prisma 는 v6 문서를 본다(웹 문서 기본값은 v7).
+Next.js 16.3(App Router) · React 19.2 · Prisma 7.10(pg 어댑터) · Zod 4 · TanStack Query 5 · Tailwind 4 · Vitest 4 · Playwright.
+Next.js 는 기억 대신 설치된 버전 문서(`node_modules/next/dist/docs/`)를, Prisma 는 v7 문서를 본다(2026-10-16 v7 로 올림 — npm `latest` 는 8.0 rc 라 버전을 꼭 붙여 설치).
 옛 버전 문법을 옮기지 않는다 — Next 16: 미들웨어는 `proxy.ts` · `params` · `searchParams` · `cookies()` · `headers()` 는 `await` ·
 `revalidateTag(tag, "max")` 두 번째 인자 · `next lint` 없음(ESLint 직접). Zod 4: `z.email()` 같은 최상위 형식 · 옵션 이름은 `error`.
 Tailwind 4: 설정은 CSS(`app/globals.css`), `tailwind.config` 를 만들지 않는다.
@@ -64,7 +64,7 @@ Tailwind 4: 설정은 CSS(`app/globals.css`), `tailwind.config` 를 만들지 �
 
 ## 먼저 묻는다 · 하지 않는다
 
-- **먼저 묻는다:** 의존성 추가 · 업그레이드, `prisma/schema.prisma` 변경 · 마이그레이션 만들기, 파일 삭제 · 이름 바꾸기, e2e 전체 실행.
+- **먼저 묻는다:** 의존성 추가 · 업그레이드, `prisma/schema/*.prisma` 변경 · 마이그레이션 만들기, 파일 삭제 · 이름 바꾸기, e2e 전체 실행.
 - 스키마 변경을 허락받으면 `npx prisma migrate dev --create-only` 로 파일만 만들어 사용자가 검토하게 하고, 적용은 개발 DB 까지만. 뒤에 `npx prisma generate`.
 - **하지 않는다:** `prisma migrate reset` · `prisma db push` · 운영 대상 `migrate deploy` · `--force` · `--accept-data-loss`.
   `PRISMA_USER_CONSENT_FOR_DANGEROUS_AI_ACTION` 을 스스로 켜지 않는다 — 막혔다는 뜻이니 멈추고 묻는다.

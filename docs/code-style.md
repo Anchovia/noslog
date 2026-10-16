@@ -307,8 +307,19 @@ verification. Report the actual checks and any unverified runtime conditions.
   `Prisma.sql`) for it: the type checker does not see raw SQL. Cover each raw
   query with a database test that runs it against the migrated schema.
 - Write migrations so the previous deployment can run against the new schema
-  (expand, switch, then contract). Put `CREATE INDEX CONCURRENTLY` alone in its
-  own migration file: Prisma 6.19 sends a file as one implicit transaction.
+  (expand, switch, then contract). Prisma 7 runs each statement of a migration
+  on its own (prisma/prisma#30640), so start every new migration with
+  `BEGIN;` and end it with `COMMIT;`; a failure then leaves nothing applied.
+  Put `CREATE INDEX CONCURRENTLY` alone in its own file without them
+  (`npm run lint:migrations` checks both).
+- The schema lives in `prisma/schema/*.prisma`, one file per area (users,
+  records, music, contributions, tiers, community, content, feedback, arcades,
+  bingos, exams, analytics). `prisma.config.ts` gives the CLI the schema folder,
+  the migrations folder, and `DATABASE_URL`; the app connects through the `pg`
+  driver adapter in `lib/db.ts`, and scripts use `createScriptPrismaClient()`.
+  Every adapter passes `PRISMA_PG_SESSION_OPTIONS` (`lib/prisma-pg.ts`), which
+  fixes the session time zone to UTC: adapter-pg 7.10 reads a `timestamptz`
+  offset as `+00:00`, so a non-UTC session shifts times.
 - Store closed value lists (status, mode, kind, role, locale) as Prisma enums,
   not strings with CHECK constraints. Keep each value identical to the string
   the code already uses, and list values alphabetically: Postgres sorts an enum

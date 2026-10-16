@@ -1,13 +1,14 @@
 import fs from "node:fs";
 
-import { PrismaClient } from "@prisma/client";
-
-import { loadScriptDatabaseEnv } from "./script-env.mjs";
+import {
+    createScriptPrismaClient,
+    loadScriptDatabaseEnv,
+} from "./script-env.mjs";
 
 loadScriptDatabaseEnv();
 
 const shouldApply = process.argv.includes("--apply");
-const db = new PrismaClient();
+const db = createScriptPrismaClient();
 const definitions = JSON.parse(
     fs.readFileSync(
         new URL("./data/official-tier-lists.json", import.meta.url),

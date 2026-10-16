@@ -16,7 +16,16 @@ vi.mock("@/lib/db", async () => {
             "Player rating integration tests require a local database."
         );
     const { PrismaClient } = await import("@prisma/client");
-    return { default: new PrismaClient({ datasourceUrl: value }) };
+    const { PrismaPg } = await import("@prisma/adapter-pg");
+    const { PRISMA_PG_SESSION_OPTIONS } = await import("@/lib/prisma-pg");
+    return {
+        default: new PrismaClient({
+            adapter: new PrismaPg({
+                connectionString: value,
+                options: PRISMA_PG_SESSION_OPTIONS,
+            }),
+        }),
+    };
 });
 vi.mock("next/cache", () => ({ unstable_cache: (fn: unknown) => fn }));
 const basis = vi.hoisted(() => ({ value: 14, chartIds: [] as number[] }));

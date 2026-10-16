@@ -1,0 +1,225 @@
+// 악곡 · 채보 · 번역 · 카탈로그 · 채보 패턴
+
+model Music {
+  id            Int                @id @default(autoincrement())
+  index         String             @unique
+  title         String
+  titleKana     String             @map("title_kana")
+  artist        String?
+  category      String
+  categoryShort String             @map("category_short")
+  description   String?
+  license       String?
+  unlockType    Int?               @map("unlock_type")
+  background    String? // 변수명 jacket으로 변경 필요
+  createdAt     DateTime           @default(now()) @map("created_at")
+  updatedAt     DateTime           @updatedAt @map("updated_at")
+  bingoCovers   Bingo[]            @relation("BingoCoverMusic")
+  bingoMissions BingoCell[]        @relation("BingoMissionMusic")
+  charts        MusicChart[]
+  examStages    ExamStage[]
+  examRewards   ExamReward[]
+  translations  MusicTranslation[]
+  fieldSources  ChartFieldSource[]
+}
+
+// 악곡 · 채보 데이터 칸(노트 수 · 공식 레벨 · BPM · 길이 · 수록일 · 해금 조건)에 값을 넣을 때마다 출처를 한 줄씩 쌓음
+// source: play_records(사용자 기록 역산) · bemaniwiki · remywiki · manual. 위키 값은 기록으로 다시 구한 값이 생기면 바꿀 수 있다
+model ChartFieldSource {
+  id         Int                 @id @default(autoincrement())
+  chartId    Int?                @map("chart_id")
+  chart      MusicChart?         @relation(fields: [chartId], references: [id], onDelete: Cascade)
+  musicIndex String?             @map("music_index")
+  music      Music?              @relation(fields: [musicIndex], references: [index], onDelete: Cascade)
+  field      String
+  value      String
+  source     String
+  sourceUrl  String?             @map("source_url")
+  note       String?
+  // 유저 기여로 반영된 값이면 그 제안(누가 · 근거) — 「출처 보기」 가 여기로 이어진다(2026-09-23)
+  proposalId Int?                @unique @map("proposal_id")
+  proposal   ChartFieldProposal? @relation(fields: [proposalId], references: [id], onDelete: SetNull)
+  createdAt  DateTime            @default(now()) @map("created_at")
+
+  @@index([chartId, field])
+  @@index([musicIndex, field])
+  @@map("chart_field_sources")
+}
+
+// 해금 조건 원문(이벤트 · 곡 묶음 이름, 일본어)의 언어별 번역 사전 — 이름 하나를 한 번만 번역한다
+model UnlockConditionTranslation {
+  id         Int      @id @default(autoincrement())
+  sourceText String   @map("source_text")
+  locale     String
+  text       String
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@unique([sourceText, locale])
+  @@map("unlock_condition_translations")
+}
+
+// 검수 상태를 포함한 악곡 번역 제목을 언어별로 관리함
+model MusicTranslation {
+  id         Int                    @id @default(autoincrement())
+  musicIndex String                 @map("music_index")
+  locale     LocaleCode
+  title      String
+  status     MusicTranslationStatus @default(draft)
+  reviewedAt DateTime?              @map("reviewed_at")
+  createdAt  DateTime               @default(now()) @map("created_at")
+  updatedAt  DateTime               @updatedAt @map("updated_at")
+  music      Music                  @relation(fields: [musicIndex], references: [index], onDelete: Cascade)
+
+  @@unique([musicIndex, locale])
+  @@index([locale, status, title])
+}
+
+// 사용자 연동에서 감지한 공식 악곡 카탈로그 변경 후보와 처리 이력을 보존함
+model MusicCatalogCandidate {
+  id             Int                    @id @default(autoincrement())
+  musicIndex     String                 @map("music_index")
+  fingerprint    String
+  payload        Json
+  beforeSnapshot Json?                  @map("before_snapshot")
+  status         CatalogCandidateStatus @default(pending)
+  seenCount      Int                    @default(1) @map("seen_count")
+  lastSeenAt     DateTime               @default(now()) @map("last_seen_at")
+  reviewedAt     DateTime?              @map("reviewed_at")
+  appliedAt      DateTime?              @map("applied_at")
+  createdAt      DateTime               @default(now()) @map("created_at")
+  updatedAt      DateTime               @updatedAt @map("updated_at")
+
+  @@unique([musicIndex, fingerprint])
+  @@index([status, lastSeenAt])
+}
+
+// 악곡별 채보 정보를 난이도 컬럼과 분리해 관리함
+model MusicChart {
+  id              Int             @id @default(autoincrement())
+  difficulty      ChartDifficulty
+  level           Int
+  levelConstant   Float?          @map("level_constant")
+  bpmMin          Int?            @map("bpm_min")
+  bpmMax          Int?            @map("bpm_max")
+  noteCount       Int?            @map("note_count")
+  durationSeconds Int?            @map("duration_seconds")
+  releasedAt      DateTime?       @map("released_at")
+  unlockCondition String?         @map("unlock_condition")
+  playVideoUrl    String?         @map("play_video_url")
+  chartPreviewUrl String?         @map("chart_preview_url")
+  musicIdx        String          @map("music_idx")
+  music           Music           @relation(fields: [musicIdx], references: [index], onDelete: Cascade)
+  createdAt       DateTime        @default(now()) @map("created_at")
+  updatedAt       DateTime        @updatedAt @map("updated_at")
+
+  levelConstantHistory ChartLevelConstantHistory[]
+  fieldSources         ChartFieldSource[]
+  communityEvaluations CommunityChartEvaluation[]
+  goalVotes            ChartGoalVote[]
+  goalVoteAudit        ChartGoalVoteAudit[]
+  playData             PlayData[]
+  playHistory          ChartPlayHistory[]
+  recordSnapshots      ChartRecordSnapshot[]
+  examStageOptions     ExamStageChart[]
+  tierEntries          TierEntry[]
+  tierPlacementHistory TierPlacementHistory[]
+  pattern              ChartPattern?
+  fieldProposals       ChartFieldProposal[]
+  drafts               ChartDraft[]
+  comments             ChartComment[]
+  pinnedBy             UserPinnedRecord[]
+
+  @@unique([musicIdx, difficulty])
+  @@index([level])
+  @@index([levelConstant])
+}
+
+// 악곡 채보 편집기의 현재 초안과 공개 스냅샷을 관리함
+model ChartPattern {
+  id                Int                    @id @default(autoincrement())
+  chartId           Int                    @unique @map("chart_id")
+  chart             MusicChart             @relation(fields: [chartId], references: [id], onDelete: Cascade)
+  formatVersion     Int                    @default(1) @map("format_version")
+  draftContent      Json                   @map("draft_content")
+  publishedContent  Json?                  @map("published_content")
+  draftVersion      Int                    @default(0) @map("draft_version")
+  savedRevision     Int                    @default(0) @map("saved_revision")
+  publishedRevision Int?                   @map("published_revision")
+  createdById       Int?                   @map("created_by_id")
+  createdBy         User?                  @relation("ChartPatternCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  updatedById       Int?                   @map("updated_by_id")
+  updatedBy         User?                  @relation("ChartPatternUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+  publishedById     Int?                   @map("published_by_id")
+  publishedBy       User?                  @relation("ChartPatternPublishedBy", fields: [publishedById], references: [id], onDelete: SetNull)
+  // 유저 초안을 공개한 채보의 실제 작성자(2026-09-24 3단계) — 비어 있으면 작성자 줄은 공개한 사람
+  authorId          Int?                   @map("author_id")
+  author            User?                  @relation("ChartPatternAuthor", fields: [authorId], references: [id], onDelete: SetNull)
+  publishedAt       DateTime?              @map("published_at")
+  createdAt         DateTime               @default(now()) @map("created_at")
+  updatedAt         DateTime               @updatedAt @map("updated_at")
+  revisions         ChartPatternRevision[]
+
+  @@index([publishedAt])
+  @@index([createdById])
+  @@index([updatedById])
+  @@index([publishedById])
+  @@index([authorId])
+}
+
+// 명시적 저장과 공개 시점의 채보 문서를 복구 가능한 버전으로 보존함
+model ChartPatternRevision {
+  id          Int                      @id @default(autoincrement())
+  patternId   Int                      @map("pattern_id")
+  pattern     ChartPattern             @relation(fields: [patternId], references: [id], onDelete: Cascade)
+  number      Int
+  kind        ChartPatternRevisionKind @default(manual)
+  message     String?
+  content     Json
+  createdById Int?                     @map("created_by_id")
+  createdBy   User?                    @relation("ChartPatternRevisionCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt   DateTime                 @default(now()) @map("created_at")
+
+  @@unique([patternId, number])
+  @@index([patternId, createdAt])
+  @@index([createdById])
+}
+
+// 공식 레벨 상수 변경 이력을 시점별로 관리함
+model ChartLevelConstantHistory {
+  id          Int        @id @default(autoincrement())
+  value       Float
+  effectiveAt DateTime   @default(now()) @map("effective_at")
+  chartId     Int        @map("chart_id")
+  chart       MusicChart @relation(fields: [chartId], references: [id], onDelete: Cascade)
+  createdAt   DateTime   @default(now()) @map("created_at")
+
+  @@index([chartId, effectiveAt])
+  @@map("ChartConstantHistory")
+}
+
+enum MusicTranslationStatus {
+  approved
+  draft
+}
+
+enum CatalogCandidateStatus {
+  applied
+  pending
+  rejected
+}
+
+// 채보 난이도 — 공식 표기(첫 글자 대문자) 그대로
+enum ChartDifficulty {
+  Expert
+  Hard
+  Normal
+  Real
+}
+
+enum ChartPatternRevisionKind {
+  contribution
+  manual
+  publish
+  vid2bmap
+}

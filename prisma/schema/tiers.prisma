@@ -1,0 +1,121 @@
+// 서열표 · 목표 투표
+
+// Basic/Recital 등 독립된 서열표의 공개 상태와 구성을 관리함
+model TierList {
+  id          Int                    @id @default(autoincrement())
+  slug        String                 @unique
+  title       String
+  mode        PlayMode
+  // 목표 값 목록은 CHECK 로 지킨다(s · fc · 990k · pianist — fc 는 보관된 옛 Recital FC 표). 990k 가 enum 이름이 될 수 없어 enum 이 아니다(2026-10-16 K2)
+  goal        String?
+  description String?
+  status      TierListStatus         @default(draft)
+  createdAt   DateTime               @default(now()) @map("created_at")
+  updatedAt   DateTime               @updatedAt @map("updated_at")
+  bands       TierBand[]
+  entries     TierEntry[]
+  history     TierPlacementHistory[]
+
+  @@index([mode, goal, status, updatedAt])
+}
+
+// 서열표 안의 12.9, 12.8 같은 상수 구간을 관리함
+model TierBand {
+  id         Int         @id @default(autoincrement())
+  value      Float
+  position   Int
+  tierListId Int         @map("tier_list_id")
+  tierList   TierList    @relation(fields: [tierListId], references: [id], onDelete: Cascade)
+  entries    TierEntry[]
+  createdAt  DateTime    @default(now()) @map("created_at")
+  updatedAt  DateTime    @updatedAt @map("updated_at")
+
+  @@unique([tierListId, value])
+  @@unique([tierListId, position])
+}
+
+// 채보가 어느 서열표 구간의 몇 번째에 배치되는지 관리함
+model TierEntry {
+  id         Int        @id @default(autoincrement())
+  position   Int
+  tierListId Int        @map("tier_list_id")
+  tierList   TierList   @relation(fields: [tierListId], references: [id], onDelete: Cascade)
+  tierBandId Int        @map("tier_band_id")
+  tierBand   TierBand   @relation(fields: [tierBandId], references: [id], onDelete: Cascade)
+  chartId    Int        @map("chart_id")
+  chart      MusicChart @relation(fields: [chartId], references: [id], onDelete: Restrict)
+  createdAt  DateTime   @default(now()) @map("created_at")
+  updatedAt  DateTime   @updatedAt @map("updated_at")
+
+  @@unique([tierListId, chartId])
+  @@unique([tierBandId, position])
+  @@index([tierListId, tierBandId])
+  @@index([chartId])
+}
+
+// 채보의 서열표 구간 이동과 제거 이력을 보존함
+model TierPlacementHistory {
+  id          Int        @id @default(autoincrement())
+  bandValue   Float?     @map("band_value")
+  effectiveAt DateTime   @default(now()) @map("effective_at")
+  tierListId  Int        @map("tier_list_id")
+  tierList    TierList   @relation(fields: [tierListId], references: [id], onDelete: Cascade)
+  chartId     Int        @map("chart_id")
+  chart       MusicChart @relation(fields: [chartId], references: [id], onDelete: Cascade)
+  createdAt   DateTime   @default(now()) @map("created_at")
+
+  @@index([tierListId, chartId, effectiveAt])
+  @@index([chartId, effectiveAt])
+}
+
+// 목표 투표는 관리자 서열표 버전 및 일반 패턴 평가와 독립적으로 유지함.
+model ChartGoalVote {
+  id        Int        @id @default(autoincrement())
+  chartId   Int
+  userId    Int
+  mode      PlayMode
+  // 목표 값 목록은 CHECK 로 지킨다(s · fc · 990k · pianist — fc 는 보관된 옛 Recital FC 표). 990k 가 enum 이름이 될 수 없어 enum 이 아니다(2026-10-16 K2)
+  goal      String
+  value     Float
+  excluded  Boolean    @default(false)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  chart     MusicChart @relation(fields: [chartId], references: [id], onDelete: Cascade)
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([chartId, userId, mode, goal])
+  @@index([chartId, mode, goal, excluded, value])
+  // 외래 키 — 탈퇴 연쇄 삭제 · 설정 화면 개수(2026-10-16 P2)
+  @@index([userId])
+}
+
+model ChartGoalVoteAudit {
+  id            Int                 @id @default(autoincrement())
+  chartId       Int
+  userId        Int
+  mode          PlayMode
+  // 목표 값 목록은 CHECK 로 지킨다(s · fc · 990k · pianist — fc 는 보관된 옛 Recital FC 표). 990k 가 enum 이름이 될 수 없어 enum 이 아니다(2026-10-16 K2)
+  goal          String
+  action        GoalVoteAuditAction
+  previousValue Float?
+  value         Float?
+  evidence      Json
+  createdAt     DateTime            @default(now())
+  chart         MusicChart          @relation(fields: [chartId], references: [id], onDelete: Cascade)
+  user          User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([chartId, mode, goal, createdAt])
+  @@index([userId])
+}
+
+enum TierListStatus {
+  archived
+  draft
+  published
+}
+
+enum GoalVoteAuditAction {
+  create
+  delete
+  edit
+}
