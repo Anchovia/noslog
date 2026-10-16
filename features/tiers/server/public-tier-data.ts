@@ -135,8 +135,8 @@ export async function getUserTierListProgress(
                   AND pd."fc_type" < 2
             ) AS "s_count",
             COUNT(*) FILTER (WHERE pd."score" > 0) AS "cleared_count"
-        FROM "TierEntry" te
-        LEFT JOIN "PlayData" pd
+        FROM tier_entries te
+        LEFT JOIN play_data pd
           ON pd."chart_id" = te."chart_id"
          AND pd."user_id" = ${userId}
         WHERE te."tier_list_id" IN (${Prisma.join(tierListIds)})
@@ -220,7 +220,7 @@ function getLatestUserTierPlays(userId: number, chartIds: number[]) {
             "slow_count",
             -- 응답 모양은 그대로 공식 표기 「YYYY/MM/DD HH:MM」(KST) 글자 — 정렬 · 값은 played_at 에서(2026-10-16 P5-1)
             to_char("played_at" AT TIME ZONE 'Asia/Seoul', 'YYYY/MM/DD HH24:MI') AS "source_play_time"
-        FROM "ChartPlayHistory"
+        FROM chart_play_histories
         WHERE "user_id" = ${userId}
           AND "chart_id" IN (${Prisma.join(chartIds)})
         ORDER BY "chart_id", "played_at" DESC, "id" DESC

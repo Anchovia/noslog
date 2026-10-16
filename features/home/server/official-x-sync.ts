@@ -36,12 +36,12 @@ export async function syncOfficialXFeed(): Promise<OfficialXSyncResult> {
     // One atomic DB claim across processes/deployments, including duplicate deliveries.
     // Failures consume this slot too: no automatic paid retries until the next slot.
     const [feed] = await db.$queryRaw<ClaimedFeed[]>`
-        INSERT INTO "OfficialXFeed" ("id", "last_attempt_at")
+        INSERT INTO official_x_feeds ("id", "last_attempt_at")
         VALUES (${OFFICIAL_X_FEED_ID}, ${now})
         ON CONFLICT ("id") DO UPDATE SET "last_attempt_at" = EXCLUDED."last_attempt_at"
-        WHERE "OfficialXFeed"."last_attempt_at" IS NULL
-            OR ("OfficialXFeed"."last_attempt_at" < ${slot}
-                AND "OfficialXFeed"."last_attempt_at" < ${guard})
+        WHERE official_x_feeds."last_attempt_at" IS NULL
+            OR (official_x_feeds."last_attempt_at" < ${slot}
+                AND official_x_feeds."last_attempt_at" < ${guard})
         RETURNING "content", "last_success_at" AS "lastSuccessAt"
     `;
     if (!feed) return { status: "skipped" };

@@ -22,6 +22,7 @@ model Exam {
 
   @@unique([mode, grade])
   @@index([status])
+  @@map("exams")
 }
 
 // 검정의 과제곡과 단계별 통과 조건을 관리함
@@ -41,6 +42,7 @@ model ExamStage {
 
   @@unique([examId, position])
   @@index([musicIndex])
+  @@map("exam_stages")
 }
 
 // 이벤트 검정 등에서 한 과제곡에 허용되는 여러 난이도 채보를 관리함
@@ -54,6 +56,7 @@ model ExamStageChart {
 
   @@id([stageId, chartId])
   @@index([chartId])
+  @@map("exam_stage_charts")
 }
 
 // 검정 합격 보상을 복수 악곡까지 지원하도록 관리함
@@ -69,6 +72,7 @@ model ExamReward {
 
   @@unique([examId, position])
   @@index([musicIndex])
+  @@map("exam_rewards")
 }
 
 // 사용자가 제출한 합격 증빙과 심사 상태를 관리함
@@ -90,12 +94,13 @@ model ExamSubmission {
   // 인증 이력이 있는 검정은 지우지 않는다 — 앱 규칙을 DB 도 지킨다(2026-10-16 P2, 예전 Cascade)
   exam          Exam                 @relation(fields: [examId], references: [id], onDelete: Restrict)
   achievement   ExamAchievement?
-  // 스키마 밖 — "ExamSubmission_one_pending": (user_id, exam_id) WHERE status = 'pending'(2026-10-16 D5)
+  // 스키마 밖 — "exam_submissions_one_pending": (user_id, exam_id) WHERE status = 'pending'(2026-10-16 D5)
 
   @@index([userId, examId, submittedAt])
   @@index([status, submittedAt])
   @@index([examId])
   @@index([reviewedById])
+  @@map("exam_submissions")
 }
 
 // 승인된 검정 급수를 사용자별로 정규화해 보관함
@@ -112,36 +117,49 @@ model ExamAchievement {
 
   @@unique([userId, examId])
   @@index([examId, achievedAt])
+  @@map("exam_achievements")
 }
 
 enum ExamMode {
   basic
   event
   recital
+
+  @@map("exam_mode")
 }
 
 enum ExamScoringType {
   recital_point
   score
+
+  @@map("exam_scoring_type")
 }
 
 enum ExamStatus {
   draft
   published
+
+  @@map("exam_status")
 }
 
 enum ExamRequirementType {
   cumulative
   single
+
+  @@map("exam_requirement_type")
 }
 
 enum ExamRewardType {
   grade
   music_unlock
+
+  @@map("exam_reward_type")
 }
 
 enum ExamSubmissionStatus {
   approved
   pending
   rejected
+
+  @@map("exam_submission_status")
 }

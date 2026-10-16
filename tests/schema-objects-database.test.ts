@@ -10,23 +10,23 @@ import { afterAll, describe, expect, it } from "vitest";
 const url = process.env.TEST_DATABASE_URL;
 
 const CHECKS: Record<string, string[]> = {
-    CommunityChartEvaluation_rating_range: ["stairs", "chords"],
-    ChartGoalVote_scope_value: ["'990k'", "'pianist'"],
+    community_chart_evaluations_rating_range: ["stairs", "chords"],
+    chart_goal_votes_scope_value: ["'990k'", "'pianist'"],
     // 목표 값 목록 — 990k 는 enum 이름이 될 수 없어 CHECK(2026-10-16 K2)
-    TierList_goal_check: ["'990k'", "'pianist'"],
-    ChartGoalVoteAudit_goal_check: ["'990k'", "'pianist'"],
-    UserRatingHistory_rating_check: ["rating"],
-    ArcadeCabinet_state_check: ["condition_note"],
-    ArcadePublicPhoto_slot_check: ["slot"],
-    Poll_single_owner_check: ["num_nonnulls"],
+    tier_lists_goal_check: ["'990k'", "'pianist'"],
+    chart_goal_vote_audits_goal_check: ["'990k'", "'pianist'"],
+    user_rating_histories_rating_check: ["rating"],
+    arcade_cabinets_state_check: ["condition_note"],
+    arcade_public_photos_slot_check: ["slot"],
+    polls_single_owner_check: ["num_nonnulls"],
 };
 
 const INDEXES: Record<string, string[]> = {
-    TierList_published_mode_goal_key: ["UNIQUE", "WHERE", "'published'"],
-    User_username_normalized_key: ["UNIQUE", "lower", "NFKC"],
-    DataSync_one_processing_per_user: ["UNIQUE", "WHERE", "'processing'"],
+    tier_lists_published_mode_goal_key: ["UNIQUE", "WHERE", "'published'"],
+    users_username_normalized_key: ["UNIQUE", "lower", "NFKC"],
+    data_syncs_one_processing_per_user: ["UNIQUE", "WHERE", "'processing'"],
     chart_field_proposals_one_pending: ["UNIQUE", "WHERE", "'pending'"],
-    ExamSubmission_one_pending: ["UNIQUE", "WHERE", "'pending'"],
+    exam_submissions_one_pending: ["UNIQUE", "WHERE", "'pending'"],
 };
 
 describe.skipIf(!url)("스키마 밖 DB 객체", () => {

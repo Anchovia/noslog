@@ -125,12 +125,16 @@ enum ProposalEvidenceKind {
   direct
   official
   video
+
+  @@map("proposal_evidence_kind")
 }
 
 enum ProposalStatus {
   approved
   pending
   rejected
+
+  @@map("proposal_status")
 }
 
 enum ProposalRejectReason {
@@ -139,6 +143,8 @@ enum ProposalRejectReason {
   format
   other
   url
+
+  @@map("proposal_reject_reason")
 }
 
 // 값 순서는 DB 선언 순서(이름만 바꿈, 2026-10-16 D5) — 상태로 정렬하는 곳은 없다
@@ -147,12 +153,16 @@ enum ChartDraftStatus {
   draft
   approved
   pending
+
+  @@map("chart_draft_status")
 }
 
 enum ChartCommentKind {
   praise
   problem
   suggestion
+
+  @@map("chart_comment_kind")
 }
 
 enum ContributionKind {
@@ -161,4 +171,6 @@ enum ContributionKind {
   chart
   chart_comment
   chart_field
+
+  @@map("contribution_kind")
 }

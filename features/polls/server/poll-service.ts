@@ -251,7 +251,7 @@ export async function getPublicPoll(
             : [],
         db.$queryRaw<{ count: number }[]>`
             SELECT COUNT(DISTINCT "user_id")::int AS count
-            FROM "PollVote" WHERE "poll_id" = ${poll.id}`,
+            FROM poll_votes WHERE "poll_id" = ${poll.id}`,
     ]);
     const closed = poll.closesAt ? poll.closesAt <= now : false;
     const voted = mine.length > 0;

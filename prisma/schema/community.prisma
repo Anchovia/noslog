@@ -3,22 +3,22 @@
 // 2.0 패턴 평가는 기존 ChartEvaluation의 서로 다른 축 값을 재해석하지 않음.
 model CommunityChartEvaluation {
   id                  Int                       @id @default(autoincrement())
-  chartId             Int
-  userId              Int
+  chartId             Int                       @map("chart_id")
+  userId              Int                       @map("user_id")
   stairs              Int?
   repetition          Int?
   polyrhythm          Int?
   offset              Int?
   chords              Int?
   opinion             String?
-  opinionHidden       Boolean                   @default(false)
+  opinionHidden       Boolean                   @default(false) @map("opinion_hidden")
   excluded            Boolean                   @default(false)
-  createdAt           DateTime                  @default(now())
-  updatedAt           DateTime                  @updatedAt
-  opinionUpdatedAt    DateTime?
-  opinionCreatedAt    DateTime?
+  createdAt           DateTime                  @default(now()) @map("created_at")
+  updatedAt           DateTime                  @updatedAt @map("updated_at")
+  opinionUpdatedAt    DateTime?                 @map("opinion_updated_at")
+  opinionCreatedAt    DateTime?                 @map("opinion_created_at")
   // 처음 누를 때 만든 번역 { ko?, ja?, en? } — 글을 고치면 비운다. 글 언어는 읽을 때 글자 종류로 판별(2026-09-22)
-  opinionTranslations Json?
+  opinionTranslations Json?                     @map("opinion_translations")
   chart               MusicChart                @relation(fields: [chartId], references: [id], onDelete: Cascade)
   user                User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
   helpful             CommunityOpinionHelpful[]
@@ -28,34 +28,36 @@ model CommunityChartEvaluation {
   @@unique([chartId, userId])
   @@index([chartId, excluded, opinionUpdatedAt])
   @@index([userId, excluded])
+  @@map("community_chart_evaluations")
 }
 
 model CommunityOpinionHelpful {
   // 외래 키가 복합 기본 키(@@id)의 앞 칸이라 이미 인덱스가 있다 — prisma-lint 가 @@id 를 인덱스로 보지 않는다
   /// prisma-lint-ignore-model require-field-index
-  evaluationId Int
-  userId       Int
-  createdAt    DateTime                 @default(now())
+  evaluationId Int                      @map("evaluation_id")
+  userId       Int                      @map("user_id")
+  createdAt    DateTime                 @default(now()) @map("created_at")
   evaluation   CommunityChartEvaluation @relation(fields: [evaluationId], references: [id], onDelete: Cascade)
   user         User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([evaluationId, userId])
   @@index([userId])
+  @@map("community_opinion_helpful_votes")
 }
 
 model CommunityOpinionReport {
   id              Int                       @id @default(autoincrement())
-  evaluationId    Int?
+  evaluationId    Int?                      @map("evaluation_id")
   // 답글 신고면 답글 번호(2026-09-22). 의견 신고는 null
-  replyId         Int?
-  userId          Int
-  authorId        Int
-  opinionSnapshot String
+  replyId         Int?                      @map("reply_id")
+  userId          Int                       @map("user_id")
+  authorId        Int                       @map("author_id")
+  opinionSnapshot String                    @map("opinion_snapshot")
   reason          OpinionReportReason
   explanation     String?
   status          String                    @default("pending")
-  createdAt       DateTime                  @default(now())
-  updatedAt       DateTime                  @updatedAt
+  createdAt       DateTime                  @default(now()) @map("created_at")
+  updatedAt       DateTime                  @updatedAt @map("updated_at")
   evaluation      CommunityChartEvaluation? @relation(fields: [evaluationId], references: [id], onDelete: SetNull)
   reply           CommunityOpinionReply?    @relation(fields: [replyId], references: [id], onDelete: SetNull)
   user            User                      @relation("CommunityReportReporter", fields: [userId], references: [id], onDelete: Cascade)
@@ -67,19 +69,20 @@ model CommunityOpinionReport {
   // 외래 키 — 탈퇴 연쇄 삭제 · 설정 화면 개수(2026-10-16 P2)
   @@index([userId])
   @@index([authorId])
+  @@map("community_opinion_reports")
 }
 
 // 의견에 다는 답글(2026-09-22 R1 — 한 단계). 답글에 답할 때는 본문 앞에 @이름을 붙인다
 model CommunityOpinionReply {
   id           Int                         @id @default(autoincrement())
-  evaluationId Int
-  userId       Int
+  evaluationId Int                         @map("evaluation_id")
+  userId       Int                         @map("user_id")
   body         String
   // 답글 번역 — 의견과 같은 방식(2026-09-22)
   translations Json?
   hidden       Boolean                     @default(false)
-  createdAt    DateTime                    @default(now())
-  updatedAt    DateTime                    @updatedAt
+  createdAt    DateTime                    @default(now()) @map("created_at")
+  updatedAt    DateTime                    @updatedAt @map("updated_at")
   evaluation   CommunityChartEvaluation    @relation(fields: [evaluationId], references: [id], onDelete: Cascade)
   user         User                        @relation(fields: [userId], references: [id], onDelete: Cascade)
   likes        CommunityOpinionReplyLike[]
@@ -87,19 +90,21 @@ model CommunityOpinionReply {
 
   @@index([evaluationId, createdAt])
   @@index([userId])
+  @@map("community_opinion_replies")
 }
 
 model CommunityOpinionReplyLike {
   // 외래 키가 복합 기본 키(@@id)의 앞 칸이라 이미 인덱스가 있다 — prisma-lint 가 @@id 를 인덱스로 보지 않는다
   /// prisma-lint-ignore-model require-field-index
-  replyId   Int
-  userId    Int
-  createdAt DateTime              @default(now())
+  replyId   Int                   @map("reply_id")
+  userId    Int                   @map("user_id")
+  createdAt DateTime              @default(now()) @map("created_at")
   reply     CommunityOpinionReply @relation(fields: [replyId], references: [id], onDelete: Cascade)
   user      User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([replyId, userId])
   @@index([userId])
+  @@map("community_opinion_reply_likes")
 }
 
 enum OpinionReportReason {
@@ -107,4 +112,6 @@ enum OpinionReportReason {
   other
   sensitive
   spam
+
+  @@map("opinion_report_reason")
 }

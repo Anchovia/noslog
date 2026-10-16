@@ -140,7 +140,7 @@ describe("Discovery data boundary", () => {
             const musicFilters = (sql: string) =>
                 sql
                     .split(
-                        'FROM "Music" AS music JOIN eligible ON eligible."music_idx" = music."index"'
+                        'FROM music AS music JOIN eligible ON eligible."music_idx" = music."index"'
                     )[1]
                     .split("GROUP BY")[0]
                     .trim();

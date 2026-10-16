@@ -71,6 +71,7 @@ model User {
   @@index([preferredArcadeId])
   // 관리자 대시보드 가입자 집계(2026-10-16 DB 재설계 P2)
   @@index([createdAt])
+  @@map("users")
 }
 
 // 사용자별 이미지 업로드 토큰 발급 횟수를 제한함
@@ -82,6 +83,7 @@ model UploadTokenGrant {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, purpose, createdAt])
+  @@map("upload_token_grants")
 }
 
 // 업적 단계 획득 기록(2026-09-24). 업적 정의(키 · 기준)는 코드(features/achievements)에 둔다.
@@ -97,6 +99,7 @@ model UserAchievement {
 
   @@unique([userId, key, tier])
   @@index([key, tier])
+  @@map("user_achievements")
 }
 
 // 프로필 머리에 거는 업적(최대 3칸). 비어 있으면 높은 단계를 자동으로 보인다
@@ -109,6 +112,7 @@ model UserAchievementShowcase {
 
   @@id([userId, position])
   @@unique([userId, key])
+  @@map("user_achievement_showcases")
 }
 
 // 프로필 개요에 고정한 기록(최대 3칸 · 한 줄 소감, 2026-09-26 S2). 비어 있으면 베스트 상위 3곡을 보인다.
@@ -128,15 +132,20 @@ model UserPinnedRecord {
   @@unique([userId, position])
   @@unique([userId, chartId])
   @@index([chartId])
+  @@map("user_pinned_records")
 }
 
 enum UserRole {
   admin
   user
+
+  @@map("user_role")
 }
 
 enum LocaleCode {
   en
   ja
   ko
+
+  @@map("locale_code")
 }

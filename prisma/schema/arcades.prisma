@@ -23,41 +23,44 @@ model Arcade {
   reports       FeedbackReport[]
 
   @@index([isActive, name])
+  @@map("arcades")
 }
 
 // Optional verified public facts; legacy editor fields remain intact.
 model ArcadePublicDetails {
-  arcadeId           Int       @id
+  arcadeId           Int       @id @map("arcade_id")
   arcade             Arcade    @relation(fields: [arcadeId], references: [id], onDelete: Cascade)
   slug               String    @unique
-  countryCode        String
-  timeZone           String
-  currencyCode       String
-  nativeLanguage     String?
-  administrativeArea String?
+  countryCode        String    @map("country_code")
+  timeZone           String    @map("time_zone")
+  currencyCode       String    @map("currency_code")
+  nativeLanguage     String?   @map("native_language")
+  administrativeArea String?   @map("administrative_area")
   locality           String?
-  addressLines       String[]  @default([])
+  addressLines       String[]  @default([]) @map("address_lines")
   phone              String?
   website            String?
-  creditLabel        String?
+  creditLabel        String?   @map("credit_label")
   // 시설(주차 · 흡연실 …) — lib/arcadeDetails ARCADE_FACILITIES 의 값
   facilities         String[]  @default([])
   hours              Json?
-  hoursVerifiedAt    DateTime?
-  hoursValidUntil    DateTime?
-  cabinetVerifiedAt  DateTime?
-  priceVerifiedAt    DateTime?
-  locationVerifiedAt DateTime?
-  verificationSource String?
+  hoursVerifiedAt    DateTime? @map("hours_verified_at")
+  hoursValidUntil    DateTime? @map("hours_valid_until")
+  cabinetVerifiedAt  DateTime? @map("cabinet_verified_at")
+  priceVerifiedAt    DateTime? @map("price_verified_at")
+  locationVerifiedAt DateTime? @map("location_verified_at")
+  verificationSource String?   @map("verification_source")
+
+  @@map("arcade_public_details")
 }
 
 model ArcadeCabinet {
   id                 Int                  @id @default(autoincrement())
-  arcadeId           Int
+  arcadeId           Int                  @map("arcade_id")
   arcade             Arcade               @relation(fields: [arcadeId], references: [id], onDelete: Cascade)
   label              String?
   position           Int
-  isActive           Boolean              @default(true)
+  isActive           Boolean              @default(true) @map("is_active")
   availability       String               @default("unknown")
   condition          String               @default("unknown")
   // 위치 메모(「안쪽 벽」) — 이름 옆에 보인다
@@ -71,14 +74,15 @@ model ArcadeCabinet {
   screenLag          String?              @map("screen_lag")
   soundVolume        String?              @map("sound_volume")
   featureNote        String?              @map("feature_note")
-  verifiedAt         DateTime?
-  validUntil         DateTime?
-  verificationSource String?
+  verifiedAt         DateTime?            @map("verified_at")
+  validUntil         DateTime?            @map("valid_until")
+  verificationSource String?              @map("verification_source")
   reports            FeedbackReport[]
   checks             ArcadeCabinetCheck[]
 
   @@unique([arcadeId, position])
   @@index([arcadeId, isActive])
+  @@map("arcade_cabinets")
 }
 
 // 이용자가 「지금 가동 중」 을 한 번 눌러 남기는 기체 확인 기록. 관리자 검증과 별개의 신선도 출처
@@ -92,40 +96,44 @@ model ArcadeCabinetCheck {
 
   @@index([cabinetId, checkedAt])
   @@index([userId, checkedAt])
+  @@map("arcade_cabinet_checks")
 }
 
 model ArcadePublicPhoto {
   id                Int       @id @default(autoincrement())
-  arcadeId          Int
+  arcadeId          Int       @map("arcade_id")
   arcade            Arcade    @relation(fields: [arcadeId], references: [id], onDelete: Cascade)
   slot              Int
   url               String
   alt               String
-  capturedAt        DateTime?
-  rightsConfirmedAt DateTime
-  publicConsentAt   DateTime
+  capturedAt        DateTime? @map("captured_at")
+  rightsConfirmedAt DateTime  @map("rights_confirmed_at")
+  publicConsentAt   DateTime  @map("public_consent_at")
 
   @@unique([arcadeId, slot])
+  @@map("arcade_public_photos")
 }
 
 model ArcadeLocalizedIdentity {
   id         Int        @id @default(autoincrement())
-  arcadeId   Int
+  arcadeId   Int        @map("arcade_id")
   arcade     Arcade     @relation(fields: [arcadeId], references: [id], onDelete: Cascade)
   locale     LocaleCode
   name       String
   aliases    String[]   @default([])
-  reviewedAt DateTime
+  reviewedAt DateTime   @map("reviewed_at")
 
   @@unique([arcadeId, locale])
+  @@map("arcade_localized_identities")
 }
 
 model ArcadeSlugAlias {
   slug     String @id
-  arcadeId Int
+  arcadeId Int    @map("arcade_id")
   arcade   Arcade @relation(fields: [arcadeId], references: [id], onDelete: Cascade)
 
   @@index([arcadeId])
+  @@map("arcade_slug_aliases")
 }
 
 enum ArcadeReportType {
@@ -136,4 +144,6 @@ enum ArcadeReportType {
   other
   price
   unavailable
+
+  @@map("arcade_report_type")
 }

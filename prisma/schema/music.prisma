@@ -21,6 +21,8 @@ model Music {
   examRewards   ExamReward[]
   translations  MusicTranslation[]
   fieldSources  ChartFieldSource[]
+
+  @@map("music")
 }
 
 // 악곡 · 채보 데이터 칸(노트 수 · 공식 레벨 · BPM · 길이 · 수록일 · 해금 조건)에 값을 넣을 때마다 출처를 한 줄씩 쌓음
@@ -73,6 +75,7 @@ model MusicTranslation {
 
   @@unique([musicIndex, locale])
   @@index([locale, status, title])
+  @@map("music_translations")
 }
 
 // 사용자 연동에서 감지한 공식 악곡 카탈로그 변경 후보와 처리 이력을 보존함
@@ -92,6 +95,7 @@ model MusicCatalogCandidate {
 
   @@unique([musicIndex, fingerprint])
   @@index([status, lastSeenAt])
+  @@map("music_catalog_candidates")
 }
 
 // 악곡별 채보 정보를 난이도 컬럼과 분리해 관리함
@@ -133,6 +137,7 @@ model MusicChart {
   @@unique([musicIdx, difficulty])
   @@index([level])
   @@index([levelConstant])
+  @@map("music_charts")
 }
 
 // 악곡 채보 편집기의 현재 초안과 공개 스냅샷을 관리함
@@ -165,6 +170,7 @@ model ChartPattern {
   @@index([updatedById])
   @@index([publishedById])
   @@index([authorId])
+  @@map("chart_patterns")
 }
 
 // 명시적 저장과 공개 시점의 채보 문서를 복구 가능한 버전으로 보존함
@@ -183,6 +189,7 @@ model ChartPatternRevision {
   @@unique([patternId, number])
   @@index([patternId, createdAt])
   @@index([createdById])
+  @@map("chart_pattern_revisions")
 }
 
 // 공식 레벨 상수 변경 이력을 시점별로 관리함
@@ -195,18 +202,22 @@ model ChartLevelConstantHistory {
   createdAt   DateTime   @default(now()) @map("created_at")
 
   @@index([chartId, effectiveAt])
-  @@map("ChartConstantHistory")
+  @@map("chart_level_constant_histories")
 }
 
 enum MusicTranslationStatus {
   approved
   draft
+
+  @@map("music_translation_status")
 }
 
 enum CatalogCandidateStatus {
   applied
   pending
   rejected
+
+  @@map("catalog_candidate_status")
 }
 
 // 채보 난이도 — 공식 표기(첫 글자 대문자) 그대로
@@ -215,6 +226,8 @@ enum ChartDifficulty {
   Hard
   Normal
   Real
+
+  @@map("chart_difficulty")
 }
 
 enum ChartPatternRevisionKind {
@@ -222,4 +235,6 @@ enum ChartPatternRevisionKind {
   manual
   publish
   vid2bmap
+
+  @@map("chart_pattern_revision_kind")
 }

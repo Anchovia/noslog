@@ -16,12 +16,13 @@ model DataSync {
   playHistory     ChartPlayHistory[]
   recordSnapshots ChartRecordSnapshot[]
   ratingHistory   UserRatingHistory[]
-  // 스키마 밖(Prisma 6 은 부분 인덱스를 쓰지 못함) — "DataSync_one_processing_per_user": user_id WHERE status = 'processing'.
+  // 스키마 밖(Prisma 6 은 부분 인덱스를 쓰지 못함) — "data_syncs_one_processing_per_user": user_id WHERE status = 'processing'.
   // 사람당 처리 중 동기화는 하나. 존재는 tests/schema-objects-database.test.ts 가 확인한다
 
   @@index([userId, startedAt])
   // 관리자 대시보드 · 동기화 목록(상태별 최근순, 2026-10-16 P2)
   @@index([status, startedAt])
+  @@map("data_syncs")
 }
 
 // 공식 최근 플레이 응답을 중복 없이 누적해 점수 추이에 사용함
@@ -61,6 +62,7 @@ model ChartPlayHistory {
   @@index([userId, recordApplied])
   // 외래 키 — 채보를 지울 때 표 전체를 훑지 않게. 큰 표라 CONCURRENTLY 단독 마이그레이션으로 만든다(2026-10-16 P2)
   @@index([chartId])
+  @@map("chart_play_histories")
 }
 
 // 전체·최근 연동에서 개인 기록이 변경된 시점의 상태를 저장함
@@ -101,6 +103,7 @@ model ChartRecordSnapshot {
   @@index([userId, chartId, createdAt])
   // 외래 키 — 위와 같은 이유, CONCURRENTLY 단독 마이그레이션(2026-10-16 P2)
   @@index([chartId])
+  @@map("chart_record_snapshots")
 }
 
 model UserBestGrade {
@@ -116,6 +119,7 @@ model UserBestGrade {
 
   // 사람당 하루 한 줄 — 코드 규칙을 DB 도 지킨다(2026-10-16 DB 재설계 P2, P5-1 에서 day 로)
   @@unique([userId, day])
+  @@map("user_best_grades")
 }
 
 // 실제 동기화 시점의 레이팅을 보관하며 과거 값을 소급 추정하지 않음
@@ -131,6 +135,7 @@ model UserRatingHistory {
 
   @@unique([syncId, mode])
   @@index([userId, mode, observedAt])
+  @@map("user_rating_histories")
 }
 
 model PlayData {
@@ -170,6 +175,7 @@ model PlayData {
   @@index([chartId, score, userId])
   @@index([userId, gradeBasic])
   @@index([userId, gradeRecital])
+  @@map("play_data")
 }
 
 // 동기화가 계산해 두는 사람별 값(2026-10-16 DB 재설계 D2-B). 예전에는 User 에 섞여 있었다 —
@@ -219,20 +225,27 @@ model PlayerRating {
 
   @@id([userId, mode])
   @@index([mode, rating(sort: Desc)])
+  @@map("player_ratings")
 }
 
 enum DataSyncStatus {
   completed
   failed
   processing
+
+  @@map("data_sync_status")
 }
 
 enum SyncScope {
   full
   recent
+
+  @@map("sync_scope")
 }
 
 enum PlayMode {
   basic
   recital
+
+  @@map("play_mode")
 }

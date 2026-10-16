@@ -17,6 +17,7 @@ model TierList {
   history     TierPlacementHistory[]
 
   @@index([mode, goal, status, updatedAt])
+  @@map("tier_lists")
 }
 
 // 서열표 안의 12.9, 12.8 같은 상수 구간을 관리함
@@ -32,6 +33,7 @@ model TierBand {
 
   @@unique([tierListId, value])
   @@unique([tierListId, position])
+  @@map("tier_bands")
 }
 
 // 채보가 어느 서열표 구간의 몇 번째에 배치되는지 관리함
@@ -51,6 +53,7 @@ model TierEntry {
   @@unique([tierBandId, position])
   @@index([tierListId, tierBandId])
   @@index([chartId])
+  @@map("tier_entries")
 }
 
 // 채보의 서열표 구간 이동과 제거 이력을 보존함
@@ -66,20 +69,21 @@ model TierPlacementHistory {
 
   @@index([tierListId, chartId, effectiveAt])
   @@index([chartId, effectiveAt])
+  @@map("tier_placement_histories")
 }
 
 // 목표 투표는 관리자 서열표 버전 및 일반 패턴 평가와 독립적으로 유지함.
 model ChartGoalVote {
   id        Int        @id @default(autoincrement())
-  chartId   Int
-  userId    Int
+  chartId   Int        @map("chart_id")
+  userId    Int        @map("user_id")
   mode      PlayMode
   // 목표 값 목록은 CHECK 로 지킨다(s · fc · 990k · pianist — fc 는 보관된 옛 Recital FC 표). 990k 가 enum 이름이 될 수 없어 enum 이 아니다(2026-10-16 K2)
   goal      String
   value     Float
   excluded  Boolean    @default(false)
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
   chart     MusicChart @relation(fields: [chartId], references: [id], onDelete: Cascade)
   user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -87,35 +91,41 @@ model ChartGoalVote {
   @@index([chartId, mode, goal, excluded, value])
   // 외래 키 — 탈퇴 연쇄 삭제 · 설정 화면 개수(2026-10-16 P2)
   @@index([userId])
+  @@map("chart_goal_votes")
 }
 
 model ChartGoalVoteAudit {
   id            Int                 @id @default(autoincrement())
-  chartId       Int
-  userId        Int
+  chartId       Int                 @map("chart_id")
+  userId        Int                 @map("user_id")
   mode          PlayMode
   // 목표 값 목록은 CHECK 로 지킨다(s · fc · 990k · pianist — fc 는 보관된 옛 Recital FC 표). 990k 가 enum 이름이 될 수 없어 enum 이 아니다(2026-10-16 K2)
   goal          String
   action        GoalVoteAuditAction
-  previousValue Float?
+  previousValue Float?              @map("previous_value")
   value         Float?
   evidence      Json
-  createdAt     DateTime            @default(now())
+  createdAt     DateTime            @default(now()) @map("created_at")
   chart         MusicChart          @relation(fields: [chartId], references: [id], onDelete: Cascade)
   user          User                @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([chartId, mode, goal, createdAt])
   @@index([userId])
+  @@map("chart_goal_vote_audits")
 }
 
 enum TierListStatus {
   archived
   draft
   published
+
+  @@map("tier_list_status")
 }
 
 enum GoalVoteAuditAction {
   create
   delete
   edit
+
+  @@map("goal_vote_audit_action")
 }
