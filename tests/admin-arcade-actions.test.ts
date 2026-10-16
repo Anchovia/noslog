@@ -78,6 +78,7 @@ function cabinet(input: CabinetInput = {}) {
 function arcadeFormData({
     id,
     name = "테스트 오락실",
+    region = "서울",
     address = "서울특별시 중구 세종대로 110",
     coinCount = "1",
     isActive = true,
@@ -86,6 +87,7 @@ function arcadeFormData({
 }: {
     id?: number | string;
     name?: string;
+    region?: string;
     address?: string;
     coinCount?: string;
     isActive?: boolean;
@@ -95,7 +97,7 @@ function arcadeFormData({
     const formData = new FormData();
     if (id !== undefined) formData.set("id", String(id));
     formData.set("name", name);
-    formData.set("region", "서울");
+    formData.set("region", region);
     formData.set("address", address);
     formData.set("latitude", "37.5665");
     formData.set("longitude", "126.978");
@@ -175,11 +177,8 @@ describe("관리자 오락실 액션", () => {
         expect(mocks.arcadeCreate).toHaveBeenCalledWith({
             data: {
                 name: "테스트 오락실",
-                region: "서울",
-                address: "서울특별시 중구 세종대로 110",
                 latitude: 37.5665,
                 longitude: 126.978,
-                machine_count: 1,
                 play_price: 500,
                 coin_count: 1,
                 business_hours: Prisma.DbNull,
@@ -214,8 +213,15 @@ describe("관리자 오락실 액션", () => {
                 timeZone: "Asia/Seoul",
                 currencyCode: "KRW",
                 cabinetVerifiedAt: expect.any(Date),
+                // 지역 · 주소는 공개 정보가 정본(2026-10-16 D6)
+                administrativeArea: "서울",
+                addressLines: ["서울특별시 중구 세종대로 110"],
             },
-            update: { cabinetVerifiedAt: expect.any(Date) },
+            update: {
+                cabinetVerifiedAt: expect.any(Date),
+                administrativeArea: "서울",
+                addressLines: ["서울특별시 중구 세종대로 110"],
+            },
         });
         expect(mocks.updateTag).toHaveBeenCalledWith("arcades");
         expect(mocks.updateTag).not.toHaveBeenCalledWith("user-profiles");
@@ -270,6 +276,8 @@ describe("관리자 오락실 액션", () => {
         ]);
         mocks.detailsFindUnique.mockResolvedValue({
             slug: "jjanggu",
+            administrativeArea: "서울",
+            addressLines: ["서울특별시 중구 세종대로 110"],
             hours: null,
         });
 
@@ -294,7 +302,6 @@ describe("관리자 오락실 액션", () => {
             where: { id: 10 },
             data: expect.objectContaining({
                 name: "테스트 오락실",
-                machine_count: 2,
                 is_active: false,
             }),
         });
@@ -353,6 +360,8 @@ describe("관리자 오락실 액션", () => {
         ]);
         mocks.detailsFindUnique.mockResolvedValue({
             slug: "10",
+            administrativeArea: "서울",
+            addressLines: ["서울특별시 중구 세종대로 110"],
             hours: {
                 weekly: {
                     "0": { open: 600, close: 1440 },
@@ -390,6 +399,47 @@ describe("관리자 오락실 액션", () => {
         );
     });
 
+    it("공개 지역이 관리자 목록보다 자세하면(부산) 지역을 바꿀 때만 덮어쓴다", async () => {
+        // 운영 오락실 5곳 — 편집 화면은 목록에 없는 공개 지역을 「기타」 로 보여 준다(2026-10-16 D6)
+        mocks.cabinetFindMany.mockResolvedValue([
+            { ...savedCabinet, id: 1, position: 0 },
+        ]);
+        const address = "부산 남구 용소로7번길 6-1";
+        mocks.detailsFindUnique.mockResolvedValue({
+            slug: "10",
+            administrativeArea: "부산",
+            addressLines: [address],
+            hours: null,
+        });
+
+        await updateArcade(
+            arcadeFormData({
+                id: 10,
+                region: "기타",
+                address,
+                cabinets: [cabinet({ cabinetId: "1", confirm: true })],
+            })
+        );
+        expect(
+            mocks.detailsUpsert.mock.calls[0]?.[0].update
+        ).not.toHaveProperty("administrativeArea");
+
+        mocks.detailsUpsert.mockClear();
+        await updateArcade(
+            arcadeFormData({
+                id: 10,
+                region: "서울",
+                address,
+                cabinets: [cabinet({ cabinetId: "1" })],
+            })
+        );
+        expect(mocks.detailsUpsert).toHaveBeenCalledWith(
+            expect.objectContaining({
+                update: expect.objectContaining({ administrativeArea: "서울" }),
+            })
+        );
+    });
+
     it("연락처·요금 단위와 날짜별 예외를 공개 정보에 쓴다", async () => {
         mocks.cabinetFindMany.mockResolvedValue([
             { ...savedCabinet, id: 1, position: 0 },
@@ -405,6 +455,8 @@ describe("관리자 오락실 액션", () => {
         };
         mocks.detailsFindUnique.mockResolvedValue({
             slug: "10",
+            administrativeArea: "서울",
+            addressLines: ["서울특별시 중구 세종대로 110"],
             hours: { weekly, exceptions: {} },
             phone: null,
             website: null,

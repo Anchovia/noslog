@@ -87,14 +87,15 @@ function toPublicArcade(record: ArcadeRecord, now: Date) {
         identities: record.identities
             .filter((item) => item.reviewedAt <= now)
             .map(({ locale, name, aliases }) => ({ locale, name, aliases })),
-        region: details?.administrativeArea ?? record.region,
+        // 지역 · 주소는 공개 정보가 정본(2026-10-16 D6 — 옛 칸은 백필 뒤 쓰지 않는다)
+        region: details?.administrativeArea ?? null,
         locality: details?.locality ?? null,
         countryCode: details?.countryCode ?? "KR",
         timeZone: details?.timeZone ?? "Asia/Seoul",
         currencyCode: details?.currencyCode ?? "KRW",
         address: details?.addressLines.length
             ? details.addressLines.join("\n")
-            : record.address,
+            : null,
         latitude: record.latitude,
         longitude: record.longitude,
         phone: details?.phone ?? null,

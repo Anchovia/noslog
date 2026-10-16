@@ -113,7 +113,7 @@ export default async function AdminAnnouncementsPage() {
                                 >
                                     <div className="nl-admin-row__body">
                                         <span className="nl-admin-row__title nl-entity-title">
-                                            {ko?.title || announcement.title}
+                                            {ko?.title}
                                         </span>
                                         <div className="nl-admin-row__meta nl-metadata">
                                             {announcement.isPublished ? (

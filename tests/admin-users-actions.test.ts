@@ -80,7 +80,7 @@ describe("관리자 사용자 관리", () => {
                     dataSyncs: 4,
                     PlayData: 2,
                     chartPlayHistory: 3,
-                    chartEvaluations: 1,
+                    communityEvaluations: 1,
                     examAchievements: 1,
                 },
             },

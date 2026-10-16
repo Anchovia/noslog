@@ -26,8 +26,10 @@ export async function getSettingsPageData() {
                     select: {
                         id: true,
                         name: true,
-                        region: true,
                         is_active: true,
+                        publicDetails: {
+                            select: { administrativeArea: true },
+                        },
                     },
                 },
                 hide_nostalgia_name: true,
@@ -63,7 +65,14 @@ export async function getSettingsPageData() {
             achievements,
             pinnableRecords: pinned.records,
             nostalgiaName: user.nostalgia_name,
-            preferredArcade: user.preferredArcade,
+            preferredArcade: user.preferredArcade && {
+                id: user.preferredArcade.id,
+                name: user.preferredArcade.name,
+                is_active: user.preferredArcade.is_active,
+                region:
+                    user.preferredArcade.publicDetails?.administrativeArea ??
+                    null,
+            },
             discordName:
                 user.discord_name ?? user.discord_username ?? "Discord",
             privacy: {

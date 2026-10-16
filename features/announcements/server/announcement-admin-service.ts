@@ -141,8 +141,7 @@ export async function createAnnouncement(
         const created = await db.$transaction(async (tx) => {
             const row = await tx.announcement.create({
                 data: {
-                    title: input.translations.ko.title,
-                    content: input.translations.ko.content,
+                    // 본문은 번역 표가 정본 — 공지 표에 ko 사본을 쓰지 않는다(2026-10-16 D6)
                     publicSlug: input.publicSlug,
                     placement: input.placement,
                     category: input.category,
@@ -222,8 +221,7 @@ export async function updateAnnouncement(
             await tx.announcement.update({
                 where: { id },
                 data: {
-                    title: input.translations.ko.title,
-                    content: input.translations.ko.content,
+                    // 본문은 번역 표가 정본 — 공지 표에 ko 사본을 쓰지 않는다(2026-10-16 D6)
                     publicSlug: input.publicSlug,
                     placement: input.placement,
                     category: input.category,
