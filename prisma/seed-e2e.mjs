@@ -21,43 +21,43 @@ async function seed() {
         where: { index: "e2e-music-001" },
         update: {
             title: "E2E Music",
-            title_kana: "E2E Music",
+            titleKana: "E2E Music",
             artist: "NosLog Test",
             category: "Original",
-            category_short: "Org",
+            categoryShort: "Org",
             background: "/bg/0ff2ac56c4fd26219090d5b5cfcad29c.webp",
         },
         create: {
             index: "e2e-music-001",
             title: "E2E Music",
-            title_kana: "E2E Music",
+            titleKana: "E2E Music",
             artist: "NosLog Test",
             category: "Original",
-            category_short: "Org",
+            categoryShort: "Org",
             background: "/bg/0ff2ac56c4fd26219090d5b5cfcad29c.webp",
         },
     });
 
     const chartDefinitions = [
-        { difficulty: "Normal", level: 4, level_constant: 4 },
-        { difficulty: "Hard", level: 7, level_constant: 7 },
-        { difficulty: "Expert", level: 10, level_constant: 10.2 },
-        { difficulty: "Real", level: 2, level_constant: 12 },
+        { difficulty: "Normal", level: 4, levelConstant: 4 },
+        { difficulty: "Hard", level: 7, levelConstant: 7 },
+        { difficulty: "Expert", level: 10, levelConstant: 10.2 },
+        { difficulty: "Real", level: 2, levelConstant: 12 },
     ];
     const charts = new Map();
 
     for (const chart of chartDefinitions) {
         const savedChart = await prisma.musicChart.upsert({
             where: {
-                music_idx_difficulty: {
-                    music_idx: music.index,
+                musicIdx_difficulty: {
+                    musicIdx: music.index,
                     difficulty: chart.difficulty,
                 },
             },
             update: chart,
             create: {
                 ...chart,
-                music_idx: music.index,
+                musicIdx: music.index,
             },
         });
         charts.set(chart.difficulty, savedChart);
@@ -238,14 +238,14 @@ async function seed() {
     const eventFixtures = [
         [
             "E2E 진행 중 이벤트 — 오래 열림",
-            "PUBLISHED",
+            "approved",
             -3,
             5,
             "/bg/0ff2ac56c4fd26219090d5b5cfcad29c.webp",
         ],
-        ["E2E 진행 중 이벤트 — 곧 끝남", "PUBLISHED", -1, 2, null],
-        ["E2E 예정 이벤트", "PUBLISHED", 10, 14, null],
-        ["E2E 종료 이벤트", "PUBLISHED", -10, -3, null],
+        ["E2E 진행 중 이벤트 — 곧 끝남", "approved", -1, 2, null],
+        ["E2E 예정 이벤트", "approved", 10, 14, null],
+        ["E2E 종료 이벤트", "approved", -10, -3, null],
     ];
     await prisma.communityEvent.deleteMany({ where: { authorId: ranker.id } });
     for (const [title, status, start, end, bannerUrl] of eventFixtures) {
@@ -266,7 +266,7 @@ async function seed() {
     await prisma.communityEvent.create({
         data: {
             authorId: ranker.id,
-            status: "PENDING",
+            status: "pending",
             title: "E2E 고친 판(검토 중)",
             content: "고친 본문",
             startsAt: at(-2),
@@ -279,7 +279,7 @@ async function seed() {
         data: [
             {
                 authorId: ranker.id,
-                status: "REJECTED",
+                status: "rejected",
                 title: "E2E 반려 이벤트",
                 content: "x",
                 startsAt: at(-1),
@@ -288,7 +288,7 @@ async function seed() {
             },
             {
                 authorId: ranker.id,
-                status: "DRAFT",
+                status: "draft",
                 title: "E2E 임시저장 이벤트",
                 content: "x",
                 startsAt: at(-1),

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { getProfileCompletedAt } from "@/features/users/server/user-data";
 import { getAuthReturnPath } from "@/lib/auth-return-path";
-import db from "@/lib/db";
 import { localizePath } from "@/lib/i18n/routing";
 import getSession from "@/lib/session";
 
@@ -15,10 +15,7 @@ export async function GET(request: NextRequest) {
         );
     }
 
-    const user = await db.user.findUnique({
-        where: { id: session.id },
-        select: { profile_completed_at: true },
-    });
+    const user = await getProfileCompletedAt(session.id);
     if (!user) {
         session.destroy();
         return NextResponse.redirect(
@@ -28,7 +25,7 @@ export async function GET(request: NextRequest) {
             )
         );
     }
-    if (!user.profile_completed_at) {
+    if (!user.profileCompletedAt) {
         return NextResponse.redirect(
             new URL(localizePath("/onboarding", locale), request.url)
         );

@@ -77,9 +77,9 @@ function validateSource() {
 function hasSourceDifference(stored, source) {
     if (stored.title !== source.title) return true;
     if ((stored.artist ?? null) !== source.artist) return true;
-    if (stored.title_kana !== source.titleKana) return true;
+    if (stored.titleKana !== source.titleKana) return true;
     if ((stored.description ?? null) !== source.description) return true;
-    if (stored.category_short !== source.categoryShort) return true;
+    if (stored.categoryShort !== source.categoryShort) return true;
 
     const charts = new Map(
         stored.charts.map((chart) => [chart.difficulty, chart])
@@ -93,7 +93,7 @@ function hasSourceDifference(stored, source) {
         return (
             storedChart?.level !== chart.level ||
             (expectedConstant !== null &&
-                storedChart?.level_constant !== expectedConstant)
+                storedChart?.levelConstant !== expectedConstant)
         );
     });
 }
@@ -136,14 +136,14 @@ async function buildPlan() {
             index: true,
             title: true,
             artist: true,
-            title_kana: true,
+            titleKana: true,
             description: true,
-            category_short: true,
+            categoryShort: true,
             charts: {
                 select: {
                     difficulty: true,
                     level: true,
-                    level_constant: true,
+                    levelConstant: true,
                 },
             },
         },
@@ -195,7 +195,7 @@ function getChartCreateData(chart) {
     return {
         difficulty: chart.difficulty,
         level: chart.level,
-        level_constant:
+        levelConstant:
             chart.constant ??
             (chart.difficulty === "Real" ? null : chart.level),
     };
@@ -204,10 +204,10 @@ function getChartCreateData(chart) {
 async function saveMusic(item) {
     const data = {
         title: item.source.title,
-        title_kana: item.source.titleKana,
+        titleKana: item.source.titleKana,
         artist: item.source.artist,
         category: categoryNames[item.source.categoryShort],
-        category_short: item.source.categoryShort,
+        categoryShort: item.source.categoryShort,
         description: item.source.description,
     };
 
@@ -242,8 +242,8 @@ async function saveMusic(item) {
                 (chart.difficulty === "Real" ? undefined : chart.level);
             await transaction.musicChart.upsert({
                 where: {
-                    music_idx_difficulty: {
-                        music_idx: item.source.index,
+                    musicIdx_difficulty: {
+                        musicIdx: item.source.index,
                         difficulty: chart.difficulty,
                     },
                 },
@@ -251,10 +251,10 @@ async function saveMusic(item) {
                     level: chart.level,
                     ...(levelConstant === undefined
                         ? {}
-                        : { level_constant: levelConstant }),
+                        : { levelConstant: levelConstant }),
                 },
                 create: {
-                    music_idx: item.source.index,
+                    musicIdx: item.source.index,
                     ...getChartCreateData(chart),
                 },
             });

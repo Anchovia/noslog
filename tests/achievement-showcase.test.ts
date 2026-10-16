@@ -33,12 +33,12 @@ describe("프로필 업적 진열 저장(2026-09-25 D1)", () => {
             await setAchievementShowcase(7, ["pianist", "s-rank", "pianist"])
         ).toEqual({ status: "ok", keys: ["pianist", "s-rank"] });
         expect(mocks.deleteMany).toHaveBeenCalledWith({
-            where: { user_id: 7 },
+            where: { userId: 7 },
         });
         expect(mocks.createMany).toHaveBeenCalledWith({
             data: [
-                { user_id: 7, position: 1, key: "pianist" },
-                { user_id: 7, position: 2, key: "s-rank" },
+                { userId: 7, position: 1, key: "pianist" },
+                { userId: 7, position: 2, key: "s-rank" },
             ],
         });
         expect(mocks.transaction).toHaveBeenCalledWith(["delete", "create"]);

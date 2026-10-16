@@ -55,7 +55,7 @@ export async function getPublicBingoCatalog() {
                 requiredLines: bingo.requiredLines,
                 searchNames: [
                     bingo.coverMusic.title,
-                    bingo.coverMusic.title_kana,
+                    bingo.coverMusic.titleKana,
                     bingo.coverMusic.artist,
                     ...bingo.coverMusic.translations.map(
                         (translation) => translation.title

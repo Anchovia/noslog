@@ -35,13 +35,13 @@ describe("BEMANI 악곡 카탈로그 반영", () => {
             {
                 index: "sasoribi",
                 title: "ピアノ協奏曲第1番“蠍火”",
-                title_kana: "ピアノキョウソウキョク",
+                titleKana: "ピアノキョウソウキョク",
                 artist: "Virkato Wakhmaninov",
                 category: "BEMANI楽曲",
-                category_short: "BM",
+                categoryShort: "BM",
                 description: null,
                 license: "",
-                unlock_type: 0,
+                unlockType: 0,
                 background: null,
             },
         ]);
@@ -58,13 +58,13 @@ describe("BEMANI 악곡 카탈로그 반영", () => {
             {
                 index: "sasoribi",
                 title: "ピアノ協奏曲第1番“蠍火”",
-                title_kana: "ピアノキョウソウキョク",
+                titleKana: "ピアノキョウソウキョク",
                 artist: "Virkato Wakhmaninov",
                 category: "BEMANI楽曲",
-                category_short: "BM",
+                categoryShort: "BM",
                 description: null,
                 license: "",
-                unlock_type: 0,
+                unlockType: 0,
                 background: manual,
             },
         ]);
@@ -105,16 +105,16 @@ describe("BEMANI 악곡 카탈로그 반영", () => {
 
         expect(mocks.chartUpsert).toHaveBeenCalledWith({
             where: {
-                music_idx_difficulty: {
-                    music_idx: "sasoribi",
+                musicIdx_difficulty: {
+                    musicIdx: "sasoribi",
                     difficulty: "Real",
                 },
             },
             create: {
-                music_idx: "sasoribi",
+                musicIdx: "sasoribi",
                 difficulty: "Real",
                 level: 3,
-                level_constant: null,
+                levelConstant: null,
             },
             update: { level: 3 },
         });

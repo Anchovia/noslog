@@ -48,7 +48,7 @@ export async function submitArcadeReport(
         });
         if (existing) return { success: true, message: t("feedback.success") };
         const arcade = await db.arcade.findFirst({
-            where: { id: arcadeId, is_active: true },
+            where: { id: arcadeId, isActive: true },
             select: {
                 name: true,
                 cabinets: {

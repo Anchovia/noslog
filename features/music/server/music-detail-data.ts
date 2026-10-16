@@ -1,6 +1,7 @@
 import "server-only";
 
 import { unstable_cache } from "next/cache";
+import { cache } from "react";
 
 import { PUBLIC_DATA_REVALIDATE_SECONDS } from "@/lib/cache-policy";
 import { CACHE_TAGS, getChartRankingTag } from "@/lib/cache-tags";
@@ -17,10 +18,13 @@ import {
     withStatsGrades,
 } from "@/lib/player-stats";
 import { recentPlayTimestamp } from "@/lib/services/user/recent-record-merge";
+import { parseChartDifficulty } from "@/lib/tiers";
 
 // 모든 탭에서 공통으로 사용하는 악곡과 채보 정보만 캐시함
 export const getCachedMusicDetail = unstable_cache(
     async (index: string, difficulty: string) => {
+        // 난이도는 enum — 모르는 난이도면 채보 없음(2026-10-16 D4-C 2차)
+        const chartDifficulty = parseChartDifficulty(difficulty);
         const [music, chart] = await Promise.all([
             db.music.findUnique({
                 where: { index },
@@ -28,9 +32,9 @@ export const getCachedMusicDetail = unstable_cache(
                     index: true,
                     background: true,
                     title: true,
-                    title_kana: true,
+                    titleKana: true,
                     artist: true,
-                    category_short: true,
+                    categoryShort: true,
                     translations: {
                         where: { status: "approved" },
                         select: {
@@ -43,46 +47,58 @@ export const getCachedMusicDetail = unstable_cache(
                         select: {
                             difficulty: true,
                             level: true,
-                            level_constant: true,
+                            levelConstant: true,
                         },
                     },
                 },
             }),
-            db.musicChart.findUnique({
-                where: {
-                    music_idx_difficulty: {
-                        music_idx: index,
-                        difficulty,
-                    },
-                },
-                select: {
-                    id: true,
-                    level: true,
-                    level_constant: true,
-                    bpm_min: true,
-                    bpm_max: true,
-                    note_count: true,
-                    duration_seconds: true,
-                    released_at: true,
-                    unlock_condition: true,
-                    play_video_url: true,
-                    chart_preview_url: true,
-                    pattern: {
-                        select: {
-                            publishedRevision: true,
-                        },
-                    },
-                    // 출처가 있는 칸(2026-10-01 E2) — 출처가 없는 값은 「확인 전」 으로 흐리게 보여 준다
-                    fieldSources: { select: { field: true } },
-                },
-            }),
+            chartDifficulty === undefined
+                ? null
+                : db.musicChart.findUnique({
+                      where: {
+                          musicIdx_difficulty: {
+                              musicIdx: index,
+                              difficulty: chartDifficulty,
+                          },
+                      },
+                      select: {
+                          id: true,
+                          level: true,
+                          levelConstant: true,
+                          bpmMin: true,
+                          bpmMax: true,
+                          noteCount: true,
+                          durationSeconds: true,
+                          releasedAt: true,
+                          unlockCondition: true,
+                          playVideoUrl: true,
+                          chartPreviewUrl: true,
+                          pattern: {
+                              select: {
+                                  publishedRevision: true,
+                              },
+                          },
+                          // 출처가 있는 칸(2026-10-01 E2) — 출처가 없는 값은 「확인 전」 으로 흐리게 보여 준다
+                          fieldSources: { select: { field: true } },
+                      },
+                  }),
         ]);
 
         return {
             music,
+            // 응답의 채보 모양은 예전 이름 그대로(2026-10-16 D1-B — Prisma 이름만 camelCase)
             chart: chart
                 ? {
-                      ...chart,
+                      id: chart.id,
+                      level: chart.level,
+                      level_constant: chart.levelConstant,
+                      bpm_min: chart.bpmMin,
+                      bpm_max: chart.bpmMax,
+                      note_count: chart.noteCount,
+                      duration_seconds: chart.durationSeconds,
+                      unlock_condition: chart.unlockCondition,
+                      play_video_url: chart.playVideoUrl,
+                      chart_preview_url: chart.chartPreviewUrl,
                       has_published_pattern:
                           chart.pattern?.publishedRevision !== null &&
                           chart.pattern?.publishedRevision !== undefined,
@@ -91,9 +107,7 @@ export const getCachedMusicDetail = unstable_cache(
                               chart.fieldSources.map((row) => row.field)
                           ),
                       ],
-                      fieldSources: undefined,
-                      pattern: undefined,
-                      released_at: chart.released_at?.toISOString() ?? null,
+                      released_at: chart.releasedAt?.toISOString() ?? null,
                   }
                 : null,
         };
@@ -110,13 +124,13 @@ export const getCachedMusicDetail = unstable_cache(
 const queryChartDetailStats = async (chartId: number, includeUserId = 0) => {
     const scores = await db.playData.findMany({
         where: {
-            chart_id: chartId,
+            chartId: chartId,
             score: { gt: 0 },
             user: {
-                OR: [{ hide_play_scores: false }, { id: includeUserId }],
+                OR: [{ hidePlayScores: false }, { id: includeUserId }],
             },
         },
-        select: { score: true, fc_type: true },
+        select: { score: true, fcType: true },
     });
 
     return { scores };
@@ -132,9 +146,9 @@ export function getCachedChartDetailStats(chartId: number, includeUserId = 0) {
 
 export async function getUserChartRecord(userId: number, chartId: number) {
     const record = await db.playData.findFirst({
-        where: { user_id: userId, chart_id: chartId, score: { gt: 0 } },
+        where: { userId: userId, chartId: chartId, score: { gt: 0 } },
         select: {
-            user_id: true,
+            userId: true,
             user: {
                 select: {
                     id: true,
@@ -142,39 +156,63 @@ export async function getUserChartRecord(userId: number, chartId: number) {
                     avatar: true,
                     // 사람 Grd 는 player_stats 에서(2026-10-16 DB 재설계 P4) — 화면에는 예전 이름으로
                     stats: { select: STATS_GRADE_SELECT },
-                    hide_play_scores: true,
+                    hidePlayScores: true,
                 },
             },
             rank: true,
-            fc_type: true,
-            grade_basic: true,
-            grade_recital: true,
+            fcType: true,
+            gradeBasic: true,
+            gradeRecital: true,
             level: true,
             score: true,
-            max_combo: true,
-            play_count: true,
-            clear_count: true,
-            fullcombo_count: true,
-            pianistic_count: true,
-            judge_sjust: true,
-            judge_just: true,
-            judge_good: true,
-            judge_miss: true,
-            judge_near: true,
-            note_rate_standard: true,
-            note_rate_tenuto: true,
-            note_rate_glissando: true,
-            note_rate_trill: true,
+            maxCombo: true,
+            playCount: true,
+            clearCount: true,
+            fullcomboCount: true,
+            pianisticCount: true,
+            judgeSjust: true,
+            judgeJust: true,
+            judgeGood: true,
+            judgeMiss: true,
+            judgeNear: true,
+            noteRateStandard: true,
+            noteRateTenuto: true,
+            noteRateGlissando: true,
+            noteRateTrill: true,
             bestAt: true,
         },
     });
     if (!record) return record;
-    const { bestAt, ...values } = record;
-    // 응답 모양은 그대로 besttime 글자(2026-10-16 P5-1 — 값은 best_at 에서)
+    // 응답 모양은 예전 이름 그대로(2026-10-16 D1-B) · besttime 글자는 best_at 에서(P5-1)
+    const { stats, hidePlayScores, ...user } = record.user;
     return {
-        ...values,
-        besttime: legacyBesttime(bestAt),
-        user: withStatsGrades(record.user),
+        user_id: record.userId,
+        user: {
+            ...user,
+            hide_play_scores: hidePlayScores,
+            ...withStatsGrades({ stats }),
+        },
+        rank: record.rank,
+        fc_type: record.fcType,
+        grade_basic: record.gradeBasic,
+        grade_recital: record.gradeRecital,
+        level: record.level,
+        score: record.score,
+        max_combo: record.maxCombo,
+        play_count: record.playCount,
+        clear_count: record.clearCount,
+        fullcombo_count: record.fullcomboCount,
+        pianistic_count: record.pianisticCount,
+        judge_sjust: record.judgeSjust,
+        judge_just: record.judgeJust,
+        judge_good: record.judgeGood,
+        judge_miss: record.judgeMiss,
+        judge_near: record.judgeNear,
+        note_rate_standard: record.noteRateStandard,
+        note_rate_tenuto: record.noteRateTenuto,
+        note_rate_glissando: record.noteRateGlissando,
+        note_rate_trill: record.noteRateTrill,
+        besttime: legacyBesttime(record.bestAt),
     };
 }
 
@@ -196,13 +234,13 @@ export async function getUserChartPeerScoreComparison(
 
     const records = await db.playData.findMany({
         where: {
-            chart_id: chartId,
-            user_id: { not: userId },
-            play_count: { gt: 0 },
+            chartId: chartId,
+            userId: { not: userId },
+            playCount: { gt: 0 },
             score: { gt: 0 },
             // 점수 비공개 플레이어는 비교 평균에도 넣지 않는다(비교 대상 1명이면 그 사람 점수가 그대로 보인다)
             user: {
-                hide_play_scores: false,
+                hidePlayScores: false,
                 stats: {
                     gradeBasic: {
                         gte: Math.max(0, gradeBasic - PEER_STORED_GRADE_RANGE),
@@ -213,60 +251,78 @@ export async function getUserChartPeerScoreComparison(
         },
         select: {
             score: true,
-            judge_sjust: true,
-            judge_just: true,
-            judge_good: true,
-            judge_miss: true,
-            judge_near: true,
-            note_rate_standard: true,
-            note_rate_tenuto: true,
-            note_rate_glissando: true,
-            note_rate_trill: true,
+            judgeSjust: true,
+            judgeJust: true,
+            judgeGood: true,
+            judgeMiss: true,
+            judgeNear: true,
+            noteRateStandard: true,
+            noteRateTenuto: true,
+            noteRateGlissando: true,
+            noteRateTrill: true,
         },
     });
 
-    return buildPeerScoreComparison(records);
+    // 비교 결과는 응답 이름(judge_sjust 등) 그대로 — Prisma 이름을 옮겨 넣는다(2026-10-16 D1-B)
+    return buildPeerScoreComparison(
+        records.map((record) => ({
+            score: record.score,
+            judge_sjust: record.judgeSjust,
+            judge_just: record.judgeJust,
+            judge_good: record.judgeGood,
+            judge_miss: record.judgeMiss,
+            judge_near: record.judgeNear,
+            note_rate_standard: record.noteRateStandard,
+            note_rate_tenuto: record.noteRateTenuto,
+            note_rate_glissando: record.noteRateGlissando,
+            note_rate_trill: record.noteRateTrill,
+        }))
+    );
 }
 
-export async function getRecentUserChartPlays(userId: number, chartId: number) {
-    const plays = await db.chartPlayHistory.findMany({
-        where: { user_id: userId, chart_id: chartId },
+// 기록 탭의 최근 4판 · 판정 추이 30판 · 점수 추이가 같은 최근 플레이를 쓴다 — 한 요청에서 한 번만 읽는다(2026-10-16 D8 · Q4)
+const loadChartPlayHistory = cache(async (userId: number, chartId: number) =>
+    db.chartPlayHistory.findMany({
+        where: { userId, chartId },
         select: {
             id: true,
             score: true,
-            best_score: true,
-            max_combo: true,
+            bestScore: true,
+            maxCombo: true,
             rank: true,
-            grade_basic: true,
-            class_basic: true,
-            fast_count: true,
-            slow_count: true,
-            judge_sjust: true,
-            judge_just: true,
-            judge_good: true,
-            judge_miss: true,
-            judge_near: true,
+            gradeBasic: true,
+            classBasic: true,
+            fastCount: true,
+            slowCount: true,
+            judgeSjust: true,
+            judgeJust: true,
+            judgeGood: true,
+            judgeMiss: true,
+            judgeNear: true,
             playedAt: true,
         },
         orderBy: [{ playedAt: "desc" }, { id: "desc" }],
-        take: 4,
-    });
+    })
+);
+
+export async function getRecentUserChartPlays(userId: number, chartId: number) {
+    const plays = (await loadChartPlayHistory(userId, chartId)).slice(0, 4);
 
     return plays.reverse().map((play) => ({
         id: play.id,
         score: play.score,
-        best_score: play.best_score,
-        max_combo: play.max_combo,
+        best_score: play.bestScore,
+        max_combo: play.maxCombo,
         rank: play.rank,
-        grade_basic: play.grade_basic,
-        class_basic: play.class_basic,
-        fast_count: play.fast_count,
-        slow_count: play.slow_count,
-        judge_sjust: play.judge_sjust,
-        judge_just: play.judge_just,
-        judge_good: play.judge_good,
-        judge_miss: play.judge_miss,
-        judge_near: play.judge_near,
+        grade_basic: play.gradeBasic,
+        class_basic: play.classBasic,
+        fast_count: play.fastCount,
+        slow_count: play.slowCount,
+        judge_sjust: play.judgeSjust,
+        judge_just: play.judgeJust,
+        judge_good: play.judgeGood,
+        judge_miss: play.judgeMiss,
+        judge_near: play.judgeNear,
         play_time: formatKstPlayTime(play.playedAt),
     }));
 }
@@ -275,36 +331,19 @@ export async function getUserChartPerformanceTrend(
     userId: number,
     chartId: number
 ) {
-    const plays = await db.chartPlayHistory.findMany({
-        where: { user_id: userId, chart_id: chartId },
-        select: {
-            id: true,
-            score: true,
-            best_score: true,
-            fast_count: true,
-            slow_count: true,
-            judge_sjust: true,
-            judge_just: true,
-            judge_good: true,
-            judge_miss: true,
-            judge_near: true,
-            playedAt: true,
-        },
-        orderBy: [{ playedAt: "desc" }, { id: "desc" }],
-        take: 30,
-    });
+    const plays = (await loadChartPlayHistory(userId, chartId)).slice(0, 30);
 
     return plays.reverse().map((play) => ({
         id: play.id,
         score: play.score,
-        best_score: play.best_score,
-        fast_count: play.fast_count,
-        slow_count: play.slow_count,
-        judge_sjust: play.judge_sjust,
-        judge_just: play.judge_just,
-        judge_good: play.judge_good,
-        judge_miss: play.judge_miss,
-        judge_near: play.judge_near,
+        best_score: play.bestScore,
+        fast_count: play.fastCount,
+        slow_count: play.slowCount,
+        judge_sjust: play.judgeSjust,
+        judge_just: play.judgeJust,
+        judge_good: play.judgeGood,
+        judge_miss: play.judgeMiss,
+        judge_near: play.judgeNear,
         play_time: formatKstPlayTime(play.playedAt),
     }));
 }
@@ -316,25 +355,19 @@ export async function getUserChartScoreTrend(
 ) {
     const [snapshots, history] = await Promise.all([
         db.chartRecordSnapshot.findMany({
-            where: { user_id: userId, chart_id: chartId, score: { gt: 0 } },
+            where: { userId: userId, chartId: chartId, score: { gt: 0 } },
             select: {
                 id: true,
                 score: true,
                 rank: true,
                 bestAt: true,
-                created_at: true,
+                createdAt: true,
             },
-            orderBy: [{ created_at: "asc" }, { id: "asc" }],
+            orderBy: [{ createdAt: "asc" }, { id: "asc" }],
         }),
-        db.chartPlayHistory.findMany({
-            where: { user_id: userId, chart_id: chartId, score: { gt: 0 } },
-            select: {
-                id: true,
-                score: true,
-                rank: true,
-                playedAt: true,
-            },
-        }),
+        loadChartPlayHistory(userId, chartId).then((plays) =>
+            plays.filter((play) => play.score > 0)
+        ),
     ]);
     const records = [
         ...snapshots.map((snapshot) => ({

@@ -13,10 +13,10 @@ import db from "@/lib/db";
 import { logServerError } from "@/lib/observability/server";
 
 export const ADMIN_EVENT_TABS = [
-    "PENDING",
-    "CHANGES_REQUESTED",
-    "PUBLISHED",
-    "REJECTED",
+    "pending",
+    "changes_requested",
+    "approved",
+    "rejected",
 ] as const satisfies readonly EventStatus[];
 
 export async function getAdminEventList(status: EventStatus) {
@@ -53,7 +53,7 @@ export async function getAdminEvent(id: number) {
         where: { id },
         include: {
             author: { select: { id: true, username: true } },
-            reviewer: { select: { username: true } },
+            reviewedBy: { select: { username: true } },
         },
     });
 }
@@ -89,7 +89,7 @@ export async function reviewEvent(
         },
     });
     if (!event) return { success: false, message: "글을 찾을 수 없습니다." };
-    if (event.status !== "PENDING")
+    if (event.status !== "pending")
         return {
             success: false,
             message: "검토 대기인 글만 처리할 수 있습니다. 새로고침해 주세요.",
@@ -104,7 +104,7 @@ export async function reviewEvent(
             event.publishedAt
         );
         const changed = await db.communityEvent.updateMany({
-            where: { id: parsed.data.id, status: "PENDING" },
+            where: { id: parsed.data.id, status: "pending" },
             data: update,
         });
         if (!changed.count)

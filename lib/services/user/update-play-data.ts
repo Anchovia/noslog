@@ -15,7 +15,7 @@ import { recordBestAt } from "@/lib/services/user/recent-record-merge";
 // 한 문장에 넣는 줄 수 — 줄마다 값 27개라 Postgres 인자 한도(65535) 안에 넉넉히 든다
 const UPSERT_CHUNK = 500;
 
-type PlayDataRow = Prisma.PlayDataCreateManyInput & { chart_id: number };
+type PlayDataRow = Prisma.PlayDataCreateManyInput & { chartId: number };
 
 /**
  * 바뀐 기록만 (user_id, chart_id) 기준으로 넣거나 고친다 — id · created_at 은 그대로 남는다(2026-10-15 D6).
@@ -24,15 +24,15 @@ type PlayDataRow = Prisma.PlayDataCreateManyInput & { chart_id: number };
 function upsertPlayData(tx: Prisma.TransactionClient, rows: PlayDataRow[]) {
     const values = rows.map(
         (row) => Prisma.sql`(
-            ${row.user_id}::int, ${row.chart_id}::int,
-            ${row.level}::int, ${row.score}::int, ${row.rank}::text, ${row.fc_type}::int,
-            ${row.play_count}::int, ${row.clear_count ?? null}::int, ${row.clear_flag ?? null}::int,
-            ${row.fullcombo_count}::int, ${row.pianistic_count}::int, ${row.max_combo}::int,
-            ${row.grade_basic}::int, ${row.grade_recital ?? null}::int,
-            ${row.judge_sjust ?? null}::int, ${row.judge_just ?? null}::int, ${row.judge_good ?? null}::int,
-            ${row.judge_miss ?? null}::int, ${row.judge_near ?? null}::int,
-            ${row.note_rate_standard ?? null}::int, ${row.note_rate_tenuto ?? null}::int,
-            ${row.note_rate_glissando ?? null}::int, ${row.note_rate_trill ?? null}::int,
+            ${row.userId}::int, ${row.chartId}::int,
+            ${row.level}::int, ${row.score}::int, ${row.rank}::text, ${row.fcType}::int,
+            ${row.playCount}::int, ${row.clearCount ?? null}::int, ${row.clearFlag ?? null}::int,
+            ${row.fullcomboCount}::int, ${row.pianisticCount}::int, ${row.maxCombo}::int,
+            ${row.gradeBasic}::int, ${row.gradeRecital ?? null}::int,
+            ${row.judgeSjust ?? null}::int, ${row.judgeJust ?? null}::int, ${row.judgeGood ?? null}::int,
+            ${row.judgeMiss ?? null}::int, ${row.judgeNear ?? null}::int,
+            ${row.noteRateStandard ?? null}::int, ${row.noteRateTenuto ?? null}::int,
+            ${row.noteRateGlissando ?? null}::int, ${row.noteRateTrill ?? null}::int,
             ${row.bestAt ?? null}::timestamptz, CURRENT_TIMESTAMP
         )`
     );
@@ -84,35 +84,35 @@ export async function updatePlayData(
     const startTime = Date.now(); // 시작 시간
     const chartIds = knownChartIds ?? (await loadChartIds());
     const previousRecords = await db.playData.findMany({
-        where: { user_id },
+        where: { userId: user_id },
         select: {
-            chart_id: true,
+            chartId: true,
             level: true,
             score: true,
             rank: true,
-            fc_type: true,
-            play_count: true,
-            clear_count: true,
-            clear_flag: true,
-            fullcombo_count: true,
-            pianistic_count: true,
-            max_combo: true,
-            grade_basic: true,
-            grade_recital: true,
-            judge_sjust: true,
-            judge_just: true,
-            judge_good: true,
-            judge_miss: true,
-            judge_near: true,
-            note_rate_standard: true,
-            note_rate_tenuto: true,
-            note_rate_glissando: true,
-            note_rate_trill: true,
+            fcType: true,
+            playCount: true,
+            clearCount: true,
+            clearFlag: true,
+            fullcomboCount: true,
+            pianisticCount: true,
+            maxCombo: true,
+            gradeBasic: true,
+            gradeRecital: true,
+            judgeSjust: true,
+            judgeJust: true,
+            judgeGood: true,
+            judgeMiss: true,
+            judgeNear: true,
+            noteRateStandard: true,
+            noteRateTenuto: true,
+            noteRateGlissando: true,
+            noteRateTrill: true,
             bestAt: true,
         },
     });
     const previousByChart = new Map(
-        previousRecords.map((record) => [record.chart_id, record])
+        previousRecords.map((record) => [record.chartId, record])
     );
 
     const changedSnapshots: Prisma.ChartRecordSnapshotCreateManyInput[] = [];
@@ -149,20 +149,20 @@ export async function updatePlayData(
                     score["F"]++;
                 }
                 const record = {
-                    user_id,
-                    chart_id,
+                    userId: user_id,
+                    chartId: chart_id,
                     level: sheet.level,
                     score: sheet.score,
                     rank: normalizedRank,
-                    fc_type: sheet.fc_type,
-                    play_count: sheet.play_count,
-                    clear_count: sheet.clear_count,
-                    clear_flag: getBemaniClearFlag(sheet.clear_flag),
-                    fullcombo_count: sheet.fullcombo_count,
-                    pianistic_count: sheet.pianistic_count,
-                    max_combo: sheet.max_combo,
-                    grade_basic: sheet.grade_basic,
-                    grade_recital: sheet.grade_recital,
+                    fcType: sheet.fc_type,
+                    playCount: sheet.play_count,
+                    clearCount: sheet.clear_count,
+                    clearFlag: getBemaniClearFlag(sheet.clear_flag),
+                    fullcomboCount: sheet.fullcombo_count,
+                    pianisticCount: sheet.pianistic_count,
+                    maxCombo: sheet.max_combo,
+                    gradeBasic: sheet.grade_basic,
+                    gradeRecital: sheet.grade_recital,
                     ...mapBemaniJudgeCounts(sheet.judge),
                     ...mapBemaniNoteSuccessRates(sheet.note_success_rate),
                     // 공식 문자열 시각은 timestamptz 로만 남긴다(2026-10-16 P5-1)
@@ -176,25 +176,24 @@ export async function updatePlayData(
                     previous.level !== record.level ||
                     previous.score !== record.score ||
                     previous.rank !== record.rank ||
-                    previous.fc_type !== record.fc_type ||
-                    previous.play_count !== record.play_count ||
-                    previous.clear_count !== record.clear_count ||
-                    previous.clear_flag !== record.clear_flag ||
-                    previous.fullcombo_count !== record.fullcombo_count ||
-                    previous.pianistic_count !== record.pianistic_count ||
-                    previous.max_combo !== record.max_combo ||
-                    previous.grade_basic !== record.grade_basic ||
-                    previous.grade_recital !== record.grade_recital ||
-                    previous.judge_sjust !== record.judge_sjust ||
-                    previous.judge_just !== record.judge_just ||
-                    previous.judge_good !== record.judge_good ||
-                    previous.judge_miss !== record.judge_miss ||
-                    previous.judge_near !== record.judge_near ||
-                    previous.note_rate_standard !== record.note_rate_standard ||
-                    previous.note_rate_tenuto !== record.note_rate_tenuto ||
-                    previous.note_rate_glissando !==
-                        record.note_rate_glissando ||
-                    previous.note_rate_trill !== record.note_rate_trill ||
+                    previous.fcType !== record.fcType ||
+                    previous.playCount !== record.playCount ||
+                    previous.clearCount !== record.clearCount ||
+                    previous.clearFlag !== record.clearFlag ||
+                    previous.fullcomboCount !== record.fullcomboCount ||
+                    previous.pianisticCount !== record.pianisticCount ||
+                    previous.maxCombo !== record.maxCombo ||
+                    previous.gradeBasic !== record.gradeBasic ||
+                    previous.gradeRecital !== record.gradeRecital ||
+                    previous.judgeSjust !== record.judgeSjust ||
+                    previous.judgeJust !== record.judgeJust ||
+                    previous.judgeGood !== record.judgeGood ||
+                    previous.judgeMiss !== record.judgeMiss ||
+                    previous.judgeNear !== record.judgeNear ||
+                    previous.noteRateStandard !== record.noteRateStandard ||
+                    previous.noteRateTenuto !== record.noteRateTenuto ||
+                    previous.noteRateGlissando !== record.noteRateGlissando ||
+                    previous.noteRateTrill !== record.noteRateTrill ||
                     (previous.bestAt?.getTime() ?? null) !==
                         (record.bestAt?.getTime() ?? null);
 
@@ -204,28 +203,28 @@ export async function updatePlayData(
                         level: record.level,
                         score: record.score,
                         rank: record.rank,
-                        fc_type: record.fc_type,
-                        play_count: record.play_count,
-                        clear_count: record.clear_count,
-                        clear_flag: record.clear_flag,
-                        fullcombo_count: record.fullcombo_count,
-                        pianistic_count: record.pianistic_count,
-                        max_combo: record.max_combo,
-                        grade_basic: record.grade_basic,
-                        grade_recital: record.grade_recital,
-                        judge_sjust: record.judge_sjust,
-                        judge_just: record.judge_just,
-                        judge_good: record.judge_good,
-                        judge_miss: record.judge_miss,
-                        judge_near: record.judge_near,
-                        note_rate_standard: record.note_rate_standard,
-                        note_rate_tenuto: record.note_rate_tenuto,
-                        note_rate_glissando: record.note_rate_glissando,
-                        note_rate_trill: record.note_rate_trill,
+                        fcType: record.fcType,
+                        playCount: record.playCount,
+                        clearCount: record.clearCount,
+                        clearFlag: record.clearFlag,
+                        fullcomboCount: record.fullcomboCount,
+                        pianisticCount: record.pianisticCount,
+                        maxCombo: record.maxCombo,
+                        gradeBasic: record.gradeBasic,
+                        gradeRecital: record.gradeRecital,
+                        judgeSjust: record.judgeSjust,
+                        judgeJust: record.judgeJust,
+                        judgeGood: record.judgeGood,
+                        judgeMiss: record.judgeMiss,
+                        judgeNear: record.judgeNear,
+                        noteRateStandard: record.noteRateStandard,
+                        noteRateTenuto: record.noteRateTenuto,
+                        noteRateGlissando: record.noteRateGlissando,
+                        noteRateTrill: record.noteRateTrill,
                         bestAt: record.bestAt,
-                        chart_id,
-                        user_id,
-                        sync_id,
+                        chartId: chart_id,
+                        userId: user_id,
+                        syncId: sync_id,
                     });
                 }
             }
@@ -235,20 +234,24 @@ export async function updatePlayData(
             async (tx) => {
                 await tx.$queryRaw`SELECT id FROM "User" WHERE id = ${user_id} FOR UPDATE`;
                 const sync = await tx.dataSync.findUniqueOrThrow({
-                    where: { id: sync_id, user_id, status: "processing" },
-                    select: { started_at: true },
+                    where: {
+                        id: sync_id,
+                        userId: user_id,
+                        status: "processing",
+                    },
+                    select: { startedAt: true },
                 });
                 // 이번 응답에 없는 채보의 기록만 지운다(기록은 채보에 묶여 chart_id 가 비지 않는다 — P5-1)
                 await tx.playData.deleteMany({
                     where: {
-                        user_id,
-                        chart_id: {
-                            notIn: newPlayData.map((record) => record.chart_id),
+                        userId: user_id,
+                        chartId: {
+                            notIn: newPlayData.map((record) => record.chartId),
                         },
                     },
                 });
                 // 잠금 순서를 고정해 같은 줄을 다른 순서로 잡지 않게 채보 순으로 넣는다
-                changedPlayData.sort((a, b) => a.chart_id - b.chart_id);
+                changedPlayData.sort((a, b) => a.chartId - b.chartId);
                 for (
                     let start = 0;
                     start < changedPlayData.length;
@@ -264,11 +267,11 @@ export async function updatePlayData(
                     });
                 }
                 await tx.chartPlayHistory.updateMany({
-                    where: { user_id, record_applied: false },
-                    data: { record_applied: true },
+                    where: { userId: user_id, recordApplied: false },
+                    data: { recordApplied: true },
                 });
                 await writePlayerStats(tx, user_id, {
-                    lastFullRecordAt: sync.started_at,
+                    lastFullRecordAt: sync.startedAt,
                     scoreP: score.P,
                     scoreF: score.F,
                     scoreS: score.S,
@@ -287,21 +290,21 @@ export async function updatePlayData(
         console.info(`===[플레이 데이터 업데이트 성공(${duration}ms)]===`);
         // 순위 · 점수 분포 캐시를 비울 채보 — 바뀐 기록과 이번 응답에서 빠져 지워진 기록
         const nextChartIds = new Set(
-            newPlayData.map((record) => record.chart_id)
+            newPlayData.map((record) => record.chartId)
         );
         const removedChartIds = previousRecords
-            .map((record) => record.chart_id)
+            .map((record) => record.chartId)
             .filter(
                 (chartId): chartId is number =>
                     chartId !== null && !nextChartIds.has(chartId)
             );
         return {
             changedRecords: changedSnapshots.filter(
-                (record) => record.play_count > 0
+                (record) => record.playCount > 0
             ).length,
             changedChartIds: [
                 ...new Set([
-                    ...changedSnapshots.map((record) => record.chart_id),
+                    ...changedSnapshots.map((record) => record.chartId),
                     ...removedChartIds,
                 ]),
             ],

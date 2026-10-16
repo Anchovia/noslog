@@ -33,11 +33,11 @@ export function eventPeriod(startsAt: string, endsAt: string, locale: Locale) {
 
 // 상태 태그 = 태그 가족의 면 변형(높이 24 · 좌우 8 · 모서리 4). 색은 알림 면 토큰 (2026-09-18 결정 4)
 const STATUS_TONE: Record<EventStatus | EventPhase, string> = {
-    DRAFT: "neutral",
-    PENDING: "warning",
-    CHANGES_REQUESTED: "info",
-    PUBLISHED: "success",
-    REJECTED: "danger",
+    draft: "neutral",
+    pending: "warning",
+    changes_requested: "info",
+    approved: "success",
+    rejected: "danger",
     live: "success",
     upcoming: "info",
     ended: "neutral",

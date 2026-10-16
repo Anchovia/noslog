@@ -1,3 +1,4 @@
+import { getPublicChartPattern } from "@/features/music/server/chart-pattern-data";
 import { unstable_cache } from "next/cache";
 import { notFound } from "next/navigation";
 
@@ -12,7 +13,7 @@ import {
 import { chartDocumentSchema } from "@/lib/chart-pattern/schema";
 import { PUBLIC_DATA_REVALIDATE_SECONDS } from "@/lib/cache-policy";
 import { CACHE_TAGS } from "@/lib/cache-tags";
-import db from "@/lib/db";
+import { parseChartDifficulty } from "@/lib/tiers";
 import {
     getLocalizedMusicTitle,
     getMusicTitleDisplayPreference,
@@ -29,67 +30,10 @@ import { getUser } from "@/lib/user";
  */
 const getPublishedChartPattern = unstable_cache(
     async (musicIndex: string, difficulty: string) => {
-        const chart = await db.musicChart.findFirst({
-            where: {
-                music_idx: musicIndex,
-                difficulty: {
-                    equals: difficulty,
-                    mode: "insensitive",
-                },
-            },
-            select: {
-                id: true,
-                difficulty: true,
-                level: true,
-                music: {
-                    select: {
-                        index: true,
-                        title: true,
-                        title_kana: true,
-                        artist: true,
-                        background: true,
-                        translations: {
-                            where: {
-                                status: "approved",
-                                locale: { in: ["ko", "en"] },
-                            },
-                            select: {
-                                locale: true,
-                                title: true,
-                                status: true,
-                            },
-                        },
-                    },
-                },
-                pattern: {
-                    select: {
-                        publishedContent: true,
-                        publishedRevision: true,
-                        publishedAt: true,
-                        publishedBy: {
-                            select: {
-                                username: true,
-                                role: true,
-                                avatar: true,
-                            },
-                        },
-                        // 유저 기여 채보면 실제 작성자(2026-09-24 E1)
-                        author: {
-                            select: { id: true, username: true, avatar: true },
-                        },
-                        // 출처 표기(2026-09-24 C2) — 공개 채보 줄기에 「영상 추출」 버전이 있으면 영상에서 추출한 채보.
-                        // 기여 버전은 기준 공개 버전에서 갈라지므로 함께 읽는다(lib/chart-pattern/chartSource)
-                        revisions: {
-                            where: {
-                                kind: { in: ["vid2bmap", "contribution"] },
-                            },
-                            select: { number: true, kind: true, message: true },
-                            orderBy: { number: "desc" },
-                        },
-                    },
-                },
-            },
-        });
+        // 난이도는 enum — 주소의 소문자 난이도를 값으로 바꿔 찾는다(2026-10-16 D4-C 2차)
+        const chartDifficulty = parseChartDifficulty(difficulty);
+        if (!chartDifficulty) return null;
+        const chart = await getPublicChartPattern(musicIndex, chartDifficulty);
         if (!chart) return null;
         if (!chart.pattern) return { ...chart, pattern: null };
         return {

@@ -53,8 +53,8 @@ export async function getSearchPreview(
     `);
     const charts = rows.length
         ? await db.musicChart.findMany({
-              where: { music_idx: { in: rows.map((row) => row.index) } },
-              select: { music_idx: true, difficulty: true, level: true },
+              where: { musicIdx: { in: rows.map((row) => row.index) } },
+              select: { musicIdx: true, difficulty: true, level: true },
           })
         : [];
     return {
@@ -71,7 +71,7 @@ export async function getSearchPreview(
             }) => {
                 const levels = Object.fromEntries(
                     charts
-                        .filter((chart) => chart.music_idx === index)
+                        .filter((chart) => chart.musicIdx === index)
                         .map((chart) => [
                             chart.difficulty.toLowerCase(),
                             chart.level,

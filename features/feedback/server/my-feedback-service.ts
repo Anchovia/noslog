@@ -33,16 +33,16 @@ export async function listMyFeedback(): Promise<MyFeedbackItem[] | null> {
             status: true,
             reply: true,
             repliedAt: true,
-            replySeenAt: true,
+            authorSeenAt: true,
         },
     });
     const unreadIds = reports
-        .filter((report) => report.reply && !report.replySeenAt)
+        .filter((report) => report.reply && !report.authorSeenAt)
         .map((report) => report.id);
     if (unreadIds.length)
         await db.feedbackReport.updateMany({
             where: { id: { in: unreadIds }, userId: session.id },
-            data: { replySeenAt: new Date() },
+            data: { authorSeenAt: new Date() },
         });
     return reports.map((report) => ({
         id: report.id,
@@ -60,6 +60,6 @@ export async function listMyFeedback(): Promise<MyFeedbackItem[] | null> {
 // 헤더 메뉴의 새 답변 점 — 읽지 않은 답변 수
 export async function countUnreadFeedbackReplies(userId: number) {
     return db.feedbackReport.count({
-        where: { userId, reply: { not: null }, replySeenAt: null },
+        where: { userId, reply: { not: null }, authorSeenAt: null },
     });
 }

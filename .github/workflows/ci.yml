@@ -45,6 +45,11 @@ jobs:
               run: |
                   npx prisma validate
                   npx prisma format --check
+            # 외래 키 인덱스 누락(prisma-lint) · 새 마이그레이션의 잠금 위험(Squawk) — 2026-10-16 DB 재설계 D11
+            - name: Schema and migration lint
+              run: |
+                  npm run lint:schema
+                  npm run lint:migrations
 
     # unit + db 프로젝트. db 는 아래 Postgres 에 마이그레이션을 올린 뒤 TEST_DATABASE_URL 로 돈다.
     unit:

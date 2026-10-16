@@ -38,13 +38,13 @@ const now = new Date("2026-09-07T00:00:00.000Z");
 const attempt = {
     id: 40,
     status: "completed",
-    sync_scope: "full",
-    received_plays: 30,
-    inserted_plays: 0,
-    changed_records: 1,
-    error_message: null as string | null,
-    started_at: new Date(now.getTime() - 120000),
-    completed_at: new Date(now.getTime() - 110000),
+    syncScope: "full",
+    receivedPlays: 30,
+    insertedPlays: 0,
+    changedRecords: 1,
+    errorMessage: null as string | null,
+    startedAt: new Date(now.getTime() - 120000),
+    completedAt: new Date(now.getTime() - 110000),
 };
 beforeEach(() => {
     vi.clearAllMocks();
@@ -52,11 +52,9 @@ beforeEach(() => {
     mocks.attempts.mockResolvedValue([attempt]);
     mocks.previous.mockResolvedValue({ id: 39 });
     mocks.count.mockResolvedValue(12);
-    mocks.timing.mockResolvedValue([{ chart_id: 1 }]);
+    mocks.timing.mockResolvedValue([{ chartId: 1 }]);
     mocks.records.mockResolvedValue([]);
-    mocks.recordCounts.mockResolvedValue([
-        { sync_id: 40, _count: { _all: 1 } },
-    ]);
+    mocks.recordCounts.mockResolvedValue([{ syncId: 40, _count: { _all: 1 } }]);
     mocks.recent.mockResolvedValue([]);
     mocks.session.mockResolvedValue({ id: 7 });
 });
@@ -64,21 +62,21 @@ beforeEach(() => {
 describe("P8 safe own-account sync status", () => {
     it("excludes unplayed snapshots from historical best-record counts and previews", async () => {
         mocks.attempts.mockResolvedValue([
-            { ...attempt, changed_records: 1715 },
+            { ...attempt, changedRecords: 1715 },
         ]);
         mocks.recordCounts.mockResolvedValue([
-            { sync_id: 40, _count: { _all: 725 } },
+            { syncId: 40, _count: { _all: 725 } },
         ]);
         const result = await getSyncStatus(7, now);
         expect(result.attempts[0].changedRecords).toBe(725);
         expect(mocks.recordCounts).toHaveBeenCalledWith({
-            by: ["sync_id"],
-            where: { user_id: 7, sync_id: { in: [40] }, play_count: { gt: 0 } },
+            by: ["syncId"],
+            where: { userId: 7, syncId: { in: [40] }, playCount: { gt: 0 } },
             _count: { _all: true },
         });
         expect(mocks.records).toHaveBeenCalledWith(
             expect.objectContaining({
-                where: { user_id: 7, sync_id: 40, play_count: { gt: 0 } },
+                where: { userId: 7, syncId: 40, playCount: { gt: 0 } },
             })
         );
     });
@@ -90,28 +88,28 @@ describe("P8 safe own-account sync status", () => {
             where: {
                 OR: [
                     {
-                        PlayData: {
-                            some: { user_id: 7, play_count: { gt: 0 } },
+                        playData: {
+                            some: { userId: 7, playCount: { gt: 0 } },
                         },
                     },
-                    { playHistory: { some: { user_id: 7 } } },
+                    { playHistory: { some: { userId: 7 } } },
                 ],
             },
         });
         const complete = {
-            user_id: 7,
-            judge_sjust: { not: null },
-            judge_just: { not: null },
-            judge_good: { not: null },
-            judge_miss: { not: null },
-            judge_near: { not: null },
+            userId: 7,
+            judgeSjust: { not: null },
+            judgeJust: { not: null },
+            judgeGood: { not: null },
+            judgeMiss: { not: null },
+            judgeNear: { not: null },
         };
         expect(mocks.count).toHaveBeenNthCalledWith(2, {
             where: {
                 OR: [
                     {
-                        PlayData: {
-                            some: { ...complete, play_count: { gt: 0 } },
+                        playData: {
+                            some: { ...complete, playCount: { gt: 0 } },
                         },
                     },
                     { playHistory: { some: complete } },
@@ -129,8 +127,8 @@ describe("P8 safe own-account sync status", () => {
             classifySyncAttempt(
                 {
                     status: "processing",
-                    error_message: null,
-                    started_at: new Date(now.getTime() - Number(age)),
+                    errorMessage: null,
+                    startedAt: new Date(now.getTime() - Number(age)),
                 },
                 now
             )
@@ -156,10 +154,10 @@ describe("P8 safe own-account sync status", () => {
         expect(mocks.achievements).toHaveBeenCalledWith(
             expect.objectContaining({
                 where: {
-                    user_id: 7,
-                    achieved_at: {
-                        gte: attempt.started_at,
-                        lte: attempt.completed_at,
+                    userId: 7,
+                    achievedAt: {
+                        gte: attempt.startedAt,
+                        lte: attempt.completedAt,
                     },
                 },
             })
@@ -171,7 +169,7 @@ describe("P8 safe own-account sync status", () => {
     });
     it("완료되지 않은 시도에는 업적을 찾지 않는다", async () => {
         mocks.attempts.mockResolvedValue([
-            { ...attempt, status: "processing", completed_at: null },
+            { ...attempt, status: "processing", completedAt: null },
         ]);
         const result = await getSyncStatus(7, now);
         expect(mocks.achievements).not.toHaveBeenCalled();
@@ -181,7 +179,7 @@ describe("P8 safe own-account sync status", () => {
         mocks.attempts.mockResolvedValue([
             {
                 ...attempt,
-                error_message:
+                errorMessage:
                     "DB에 등록되지 않은 채보 3개를 건너뛰었습니다: SECRET_CHART_IDS",
             },
         ]);
@@ -197,7 +195,7 @@ describe("P8 safe own-account sync status", () => {
             {
                 ...attempt,
                 status: "failed",
-                error_message: "SECRET TOKEN database error",
+                errorMessage: "SECRET TOKEN database error",
             },
         ]);
         const result = await getSyncStatus(7, now);
@@ -209,14 +207,12 @@ describe("P8 safe own-account sync status", () => {
         expect(mocks.records).not.toHaveBeenCalled();
     });
     it("uses newly stored recent plays for recent-only previews and preserves coverage", async () => {
-        mocks.attempts.mockResolvedValue([
-            { ...attempt, sync_scope: "recent" },
-        ]);
+        mocks.attempts.mockResolvedValue([{ ...attempt, syncScope: "recent" }]);
         mocks.recent.mockResolvedValue([
             {
                 score: 900000,
                 chart: {
-                    music_idx: "music",
+                    musicIdx: "music",
                     difficulty: "EXPERT",
                     level: 12,
                     music: { title: "曲" },
@@ -231,7 +227,7 @@ describe("P8 safe own-account sync status", () => {
         });
         expect(mocks.recent).toHaveBeenCalledWith(
             expect.objectContaining({
-                where: { user_id: 7, first_sync_id: 40 },
+                where: { userId: 7, firstSyncId: 40 },
                 take: 3,
             })
         );
@@ -241,22 +237,20 @@ describe("P8 safe own-account sync status", () => {
     it("summarizes a first full import beyond the three-preview capacity", async () => {
         mocks.previous.mockResolvedValue(null);
         mocks.recordCounts.mockResolvedValue([
-            { sync_id: 40, _count: { _all: 500 } },
+            { syncId: 40, _count: { _all: 500 } },
         ]);
-        mocks.attempts.mockResolvedValue([
-            { ...attempt, changed_records: 500 },
-        ]);
+        mocks.attempts.mockResolvedValue([{ ...attempt, changedRecords: 500 }]);
         const result = await getSyncStatus(7, now);
         expect(result.firstFullImport).toBe(true);
         expect(result.previews).toEqual([]);
     });
     it("derives cooldown from the server clock and clamps future timestamps", async () => {
         mocks.attempts.mockResolvedValue([
-            { ...attempt, started_at: new Date(now.getTime() - 18000) },
+            { ...attempt, startedAt: new Date(now.getTime() - 18000) },
         ]);
         expect((await getSyncStatus(7, now)).retryAfter).toBe(12);
         mocks.attempts.mockResolvedValue([
-            { ...attempt, started_at: new Date(now.getTime() + 1000) },
+            { ...attempt, startedAt: new Date(now.getTime() + 1000) },
         ]);
         expect((await getSyncStatus(7, now)).retryAfter).toBe(30);
     });
@@ -271,7 +265,7 @@ describe("P8 safe own-account sync status", () => {
         const response = await GET();
         expect(response.status).toBe(200);
         expect(mocks.attempts).toHaveBeenCalledWith(
-            expect.objectContaining({ where: { user_id: 7 }, take: 5 })
+            expect.objectContaining({ where: { userId: 7 }, take: 5 })
         );
         expect(await response.json()).toMatchObject({
             isSuccess: true,

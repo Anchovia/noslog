@@ -35,7 +35,7 @@ export default async function MyEvents({
                                         label={t(`events.status.${status}`)}
                                     />
                                     {event.publishedAt &&
-                                    status !== "PUBLISHED" ? (
+                                    status !== "approved" ? (
                                         <span className="nl-metadata nl-muted">
                                             {t("events.mine.public")}
                                         </span>
@@ -45,7 +45,7 @@ export default async function MyEvents({
                                     <Link
                                         prefetch={false}
                                         href={localizePath(
-                                            status === "PUBLISHED"
+                                            status === "approved"
                                                 ? `/events/${event.id}`
                                                 : `/events/${event.id}/edit`,
                                             locale

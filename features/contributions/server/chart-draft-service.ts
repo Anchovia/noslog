@@ -47,6 +47,9 @@ function isEditable(status: string) {
     return EDITABLE_DRAFT_STATUSES.includes(status as ChartDraftStatus);
 }
 
+/** 공개 트랜잭션 안에서 초안이 이미 처리된 것을 알았을 때 — 되돌리고 「대기 중 아님」 으로 답한다 */
+class DraftAlreadyReviewedError extends Error {}
+
 function logDraftError(error: unknown, event: string, routePath: string) {
     logServerError(error, { event, routePath, routeType: "action" });
 }
@@ -134,8 +137,8 @@ export async function openMyChartDraft(
         where: { id: chartId },
         select: {
             id: true,
-            bpm_min: true,
-            duration_seconds: true,
+            bpmMin: true,
+            durationSeconds: true,
             pattern: {
                 select: { publishedContent: true, publishedRevision: true },
             },
@@ -149,8 +152,8 @@ export async function openMyChartDraft(
     const start = published.success
         ? published.data
         : createDefaultChartDocument({
-              bpm: chart.bpm_min ?? 120,
-              durationMs: (chart.duration_seconds ?? 0) * 1000,
+              bpm: chart.bpmMin ?? 120,
+              durationMs: (chart.durationSeconds ?? 0) * 1000,
           });
     const baseRevision = published.success
         ? (chart.pattern?.publishedRevision ?? null)
@@ -160,7 +163,7 @@ export async function openMyChartDraft(
         where: { userId_chartId: { userId: session.id, chartId } },
         select: draftSelect,
     });
-    if (existing && existing.status !== "published") return toMyDraft(existing);
+    if (existing && existing.status !== "approved") return toMyDraft(existing);
     const row = existing
         ? await db.chartDraft.update({
               where: { id: existing.id },
@@ -271,7 +274,7 @@ export async function submitMyChartDraft(
             };
         await db.chartDraft.update({
             where: { id: draft.id },
-            data: { status: "submitted", submittedAt: new Date() },
+            data: { status: "pending", submittedAt: new Date() },
         });
         revalidatePath("/admin");
         revalidatePath("/admin/contributions");
@@ -296,7 +299,7 @@ export async function withdrawMyChartDraft(
     if (!session.id)
         return { success: false, message: t("contribution.loginRequired") };
     const updated = await db.chartDraft.updateMany({
-        where: { userId: session.id, chartId, status: "submitted" },
+        where: { userId: session.id, chartId, status: "pending" },
         data: { status: "draft", submittedAt: null },
     });
     if (!updated.count)
@@ -503,13 +506,13 @@ export function changedNoteCount(next: ChartDocument, base: ChartDocument) {
 }
 
 export async function listChartDraftsForReview(
-    status: "submitted" | "changes_requested" | "published"
+    status: "pending" | "changes_requested" | "approved"
 ): Promise<AdminChartDraft[]> {
     await requireAdmin();
     const rows = await db.chartDraft.findMany({
         where: { status },
         orderBy:
-            status === "submitted"
+            status === "pending"
                 ? { submittedAt: "asc" }
                 : { updatedAt: "desc" },
         take: 100,
@@ -525,7 +528,7 @@ export async function listChartDraftsForReview(
                     id: true,
                     difficulty: true,
                     level: true,
-                    music_idx: true,
+                    musicIdx: true,
                     music: { select: { title: true } },
                     pattern: { select: { publishedContent: true } },
                 },
@@ -562,7 +565,7 @@ export async function listChartDraftsForReview(
                     id: row.chart.id,
                     difficulty: row.chart.difficulty,
                     level: row.chart.level,
-                    musicIndex: row.chart.music_idx,
+                    musicIndex: row.chart.musicIdx,
                     title: row.chart.music.title,
                 },
                 openComments: row._count.comments,
@@ -572,7 +575,7 @@ export async function listChartDraftsForReview(
 }
 
 export async function countSubmittedChartDrafts() {
-    return db.chartDraft.count({ where: { status: "submitted" } });
+    return db.chartDraft.count({ where: { status: "pending" } });
 }
 
 /** 운영자 검토용 초안 전체(에디터 검토 모드에 넘긴다) */
@@ -613,24 +616,30 @@ export async function reviewChartDraft(
             userId: true,
             baseRevision: true,
             user: { select: { username: true } },
-            chart: { select: { music_idx: true, difficulty: true } },
+            chart: { select: { musicIdx: true, difficulty: true } },
         },
     });
-    if (!draft || draft.status !== "submitted")
+    if (!draft || draft.status !== "pending")
         return { success: false, message: "검토 대기 중인 초안이 아닙니다." };
     const now = new Date();
 
     if (decision === "request_changes") {
-        await db.chartDraft.update({
-            where: { id: draft.id },
+        // 대기 중일 때만 — 다른 운영자가 먼저 처리했으면 건너뛴다(2026-10-16 D5)
+        const changed = await db.chartDraft.updateMany({
+            where: { id: draft.id, status: "pending" },
             data: {
                 status: "changes_requested",
                 reviewedAt: now,
                 reviewedById: admin.id,
                 // 결과를 새로 알린다 — 전에 결과를 봤어도 다시 점이 뜬다(곡 정보 제안과 같게, 2026-10-16)
-                seenAt: null,
+                authorSeenAt: null,
             },
         });
+        if (!changed.count)
+            return {
+                success: false,
+                message: "검토 대기 중인 초안이 아닙니다.",
+            };
         revalidatePath("/admin/contributions");
         return { success: true, message: "수정을 요청했습니다." };
     }
@@ -651,6 +660,18 @@ export async function reviewChartDraft(
 
     try {
         const publishedRevision = await db.$transaction(async (tx) => {
+            // 먼저 대기 중인 초안을 차지한다 — 이미 처리됐으면 공개본 · 이력 · 점수를 쓰지 않고 되돌린다(2026-10-16 D5)
+            const claimed = await tx.chartDraft.updateMany({
+                where: { id: draft.id, status: "pending" },
+                data: {
+                    status: "approved",
+                    reviewedAt: now,
+                    reviewedById: admin.id,
+                    publishedAt: now,
+                    authorSeenAt: null,
+                },
+            });
+            if (!claimed.count) throw new DraftAlreadyReviewedError();
             const current = await tx.chartPattern.findUnique({
                 where: { chartId: draft.chartId },
                 select: {
@@ -720,16 +741,6 @@ export async function reviewChartDraft(
                     createdById: admin.id,
                 },
             });
-            await tx.chartDraft.update({
-                where: { id: draft.id },
-                data: {
-                    status: "published",
-                    reviewedAt: now,
-                    reviewedById: admin.id,
-                    publishedAt: now,
-                    seenAt: null,
-                },
-            });
             // 공개 버전마다 한 번 — 같은 트랜잭션에서 적립
             await tx.contributionPoint.createMany({
                 data: [
@@ -748,7 +759,7 @@ export async function reviewChartDraft(
         updateTag(CACHE_TAGS.musicDetails);
         revalidatePath("/music");
         revalidatePath(
-            `/music/${encodeURIComponent(draft.chart.music_idx)}/${draft.chart.difficulty.toLowerCase()}/pattern`
+            `/music/${encodeURIComponent(draft.chart.musicIdx)}/${draft.chart.difficulty.toLowerCase()}/pattern`
         );
         revalidatePath("/admin/contributions");
         return {
@@ -757,6 +768,11 @@ export async function reviewChartDraft(
             publishedRevision,
         };
     } catch (error) {
+        if (error instanceof DraftAlreadyReviewedError)
+            return {
+                success: false,
+                message: "검토 대기 중인 초안이 아닙니다.",
+            };
         logDraftError(
             error,
             "contribution.draft.publish.failed",
@@ -849,7 +865,7 @@ export async function listMyChartDrafts(
                 select: {
                     difficulty: true,
                     level: true,
-                    music_idx: true,
+                    musicIdx: true,
                     music: { select: { title: true } },
                 },
             },
@@ -869,7 +885,7 @@ export async function listMyChartDrafts(
         chart: {
             difficulty: row.chart.difficulty,
             level: row.chart.level,
-            musicIndex: row.chart.music_idx,
+            musicIndex: row.chart.musicIdx,
             title: row.chart.music.title,
         },
     }));

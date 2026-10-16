@@ -1,5 +1,6 @@
 import "server-only";
 
+import type { Prisma } from "@prisma/client";
 import { updateTag } from "next/cache";
 
 import {
@@ -20,9 +21,12 @@ export interface ContributionAward {
     points?: number;
 }
 
-/** 적립 한 줄 — 트랜잭션에 넣을 때 쓴다. 같은 기여는 한 번만(유일 키) */
-export function contributionAwardQuery(awards: ContributionAward[]) {
-    return db.contributionPoint.createMany({
+/** 적립 한 줄 — 트랜잭션에 넣을 때 쓴다(대화형 트랜잭션이면 그 tx 를 넘긴다). 같은 기여는 한 번만(유일 키) */
+export function contributionAwardQuery(
+    awards: ContributionAward[],
+    client: Pick<Prisma.TransactionClient, "contributionPoint"> = db
+) {
+    return client.contributionPoint.createMany({
         data: awards.map((award) => ({
             userId: award.userId,
             kind: award.kind,

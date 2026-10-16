@@ -74,9 +74,9 @@ export async function collectAchievementMetrics(
             GROUP BY m.category_short`,
         // 한 손 여부는 최근 플레이 응답에만 있다 — 최근 기록 누적(ChartPlayHistory)에서 센다
         db.chartPlayHistory.findMany({
-            where: { user_id: userId, is_onehand: true, rank: { in: S_RANKS } },
-            distinct: ["chart_id"],
-            select: { chart_id: true },
+            where: { userId: userId, isOnehand: true, rank: { in: S_RANKS } },
+            distinct: ["chartId"],
+            select: { chartId: true },
         }),
         db.playerStats.findUnique({
             where: { userId },
@@ -178,7 +178,7 @@ export async function judgeUserAchievements(
     const [metrics, earnedRows] = await Promise.all([
         collectAchievementMetrics(userId),
         db.userAchievement.findMany({
-            where: { user_id: userId },
+            where: { userId: userId },
             select: { id: true, key: true, tier: true },
         }),
     ]);
@@ -209,7 +209,7 @@ export async function judgeUserAchievements(
     if (awarded.length)
         await db.userAchievement.createMany({
             data: awarded.map((item) => ({
-                user_id: userId,
+                userId: userId,
                 key: item.key,
                 tier: item.tier,
             })),
@@ -224,12 +224,12 @@ export async function getAchievementRecords(
 ): Promise<AchievementRecords> {
     const [earned, pins] = await Promise.all([
         db.userAchievement.findMany({
-            where: { user_id: userId },
-            select: { key: true, tier: true, achieved_at: true },
-            orderBy: [{ achieved_at: "desc" }, { tier: "desc" }],
+            where: { userId: userId },
+            select: { key: true, tier: true, achievedAt: true },
+            orderBy: [{ achievedAt: "desc" }, { tier: "desc" }],
         }),
         db.userAchievementShowcase.findMany({
-            where: { user_id: userId },
+            where: { userId: userId },
             select: { key: true },
             orderBy: { position: "asc" },
         }),
@@ -252,7 +252,7 @@ export async function getAchievementRecords(
             .map((item) => ({
                 key: item.key,
                 tier: item.tier,
-                achievedAt: item.achieved_at.toISOString(),
+                achievedAt: item.achievedAt.toISOString(),
             })),
         pins: pins.map((item) => item.key),
         recipients: Object.fromEntries(
@@ -307,17 +307,17 @@ export async function setAchievementShowcase(
         return { status: "unknown" };
     if (unique.length) {
         const earned = await db.userAchievement.findMany({
-            where: { user_id: userId, key: { in: unique } },
+            where: { userId: userId, key: { in: unique } },
             distinct: ["key"],
             select: { key: true },
         });
         if (earned.length !== unique.length) return { status: "not-earned" };
     }
     await db.$transaction([
-        db.userAchievementShowcase.deleteMany({ where: { user_id: userId } }),
+        db.userAchievementShowcase.deleteMany({ where: { userId: userId } }),
         db.userAchievementShowcase.createMany({
             data: unique.map((key, index) => ({
-                user_id: userId,
+                userId: userId,
                 position: index + 1,
                 key,
             })),
@@ -359,7 +359,7 @@ export async function rejudgeAchievementsBatch(
         where: {
             id: { gt: afterUserId },
             OR: [
-                { PlayData: { some: {} } },
+                { playData: { some: {} } },
                 { chartPlayHistory: { some: {} } },
                 { examAchievements: { some: {} } },
                 { communityEvaluations: { some: {} } },

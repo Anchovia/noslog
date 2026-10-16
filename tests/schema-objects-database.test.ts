@@ -13,7 +13,6 @@ const CHECKS: Record<string, string[]> = {
     // 목표 값 목록 — 990k 는 enum 이름이 될 수 없어 CHECK(2026-10-16 K2)
     TierList_goal_check: ["'990k'", "'pianist'"],
     ChartGoalVoteAudit_goal_check: ["'990k'", "'pianist'"],
-    ChartGoalVoteReview_goal_check: ["'990k'", "'pianist'"],
     UserRatingHistory_rating_check: ["rating"],
     ArcadeCabinet_state_check: ["condition_note"],
     ArcadePublicPhoto_slot_check: ["slot"],
@@ -25,6 +24,7 @@ const INDEXES: Record<string, string[]> = {
     User_username_normalized_key: ["UNIQUE", "lower", "NFKC"],
     DataSync_one_processing_per_user: ["UNIQUE", "WHERE", "'processing'"],
     chart_field_proposals_one_pending: ["UNIQUE", "WHERE", "'pending'"],
+    ExamSubmission_one_pending: ["UNIQUE", "WHERE", "'pending'"],
 };
 
 describe.skipIf(!url)("스키마 밖 DB 객체", () => {

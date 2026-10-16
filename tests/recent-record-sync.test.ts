@@ -32,17 +32,17 @@ import { recordBestAt } from "@/lib/services/user/recent-record-merge";
 
 const chart = {
     id: 10,
-    music_idx: "test",
+    musicIdx: "test",
     difficulty: "Expert",
     level: 12,
-    note_count: 1000,
-    level_constant: 12,
+    noteCount: 1000,
+    levelConstant: 12,
 };
 type StoredRecord = RecordValues & {
-    user_id: number;
-    chart_id: number;
+    userId: number;
+    chartId: number;
 };
-type History = PendingRecordPlay & { user_id: number; chart: typeof chart };
+type History = PendingRecordPlay & { userId: number; chart: typeof chart };
 type State = {
     records: StoredRecord[];
     history: History[];
@@ -54,21 +54,21 @@ let state: State;
 let syncTime: Date;
 const history = (id: number, date: string, score = 950000): History => ({
     id,
-    chart_id: 10,
-    user_id: 1,
-    record_applied: false,
+    chartId: 10,
+    userId: 1,
+    recordApplied: false,
     chart,
     level: 12,
     score,
     rank: "S",
-    max_combo: 900,
-    grade_basic: 10000,
+    maxCombo: 900,
+    gradeBasic: 10000,
     playedAt: recordBestAt(date)!,
-    judge_sjust: 900,
-    judge_just: 80,
-    judge_good: 10,
-    judge_miss: 10,
-    judge_near: 0,
+    judgeSjust: 900,
+    judgeJust: 80,
+    judgeGood: 10,
+    judgeMiss: 10,
+    judgeNear: 0,
 });
 const full = (count = 100): SyncMusicInput[] => [
     {
@@ -127,7 +127,7 @@ beforeEach(() => {
     );
     mocks.db.dataSync.findUniqueOrThrow.mockImplementation(async () => ({
         id: 1,
-        started_at: syncTime,
+        startedAt: syncTime,
     }));
     mocks.db.musicChart.findMany.mockResolvedValue([chart]);
     // 랭크별 수(2026-10-15 S9) — 서비스가 SQL 로 세는 값을 같은 규칙으로 메모리에서 센다. 그 밖(행 잠금)은 빈 결과
@@ -135,8 +135,7 @@ beforeEach(() => {
         async (strings: TemplateStringsArray, ...values: unknown[]) => {
             if (!strings.join("?").includes("FILTER")) return [];
             const played = state.records.filter(
-                (record) =>
-                    record.user_id === values[0] && record.play_count > 0
+                (record) => record.userId === values[0] && record.playCount > 0
             );
             const rank = (value: string) =>
                 played.filter((record) => record.rank === value).length;
@@ -150,7 +149,7 @@ beforeEach(() => {
                     b: rank("B"),
                     c: rank("C"),
                     d: rank("D"),
-                    f: played.filter((record) => record.fc_type === 2).length,
+                    f: played.filter((record) => record.fcType === 2).length,
                 },
             ];
         }
@@ -167,8 +166,8 @@ beforeEach(() => {
         }
     );
     mocks.db.playData.findMany.mockImplementation(
-        async ({ where }: { where: { user_id: number } }) =>
-            state.records.filter((r) => r.user_id === where.user_id)
+        async ({ where }: { where: { userId: number } }) =>
+            state.records.filter((r) => r.userId === where.userId)
     );
     mocks.db.playData.upsert.mockImplementation(
         async ({
@@ -180,53 +179,52 @@ beforeEach(() => {
         }) => {
             const existing = state.records.find(
                 (r) =>
-                    r.chart_id === create.chart_id &&
-                    r.user_id === create.user_id
+                    r.chartId === create.chartId && r.userId === create.userId
             );
             if (existing) Object.assign(existing, update);
             else state.records.push(structuredClone(create));
         }
     );
-    // 전체 기록(2026-10-15 D6) — 응답에 없는 채보만 지우고, 바뀐 줄은 (user_id, chart_id) 로 넣거나 고친다
+    // 전체 기록(2026-10-15 D6) — 응답에 없는 채보만 지우고, 바뀐 줄은 (userId, chartId) 로 넣거나 고친다
     mocks.db.playData.deleteMany.mockImplementation(
         async ({
             where,
         }: {
             where: {
-                user_id: number;
-                chart_id: { notIn: number[] };
+                userId: number;
+                chartId: { notIn: number[] };
             };
         }) => {
-            const kept = where.chart_id.notIn;
+            const kept = where.chartId.notIn;
             state.records = state.records.filter(
-                (r) => r.user_id !== where.user_id || kept.includes(r.chart_id)
+                (r) => r.userId !== where.userId || kept.includes(r.chartId)
             );
         }
     );
     const upsertColumns = [
-        "user_id",
-        "chart_id",
+        "userId",
+        "chartId",
         "level",
         "score",
         "rank",
-        "fc_type",
-        "play_count",
-        "clear_count",
-        "clear_flag",
-        "fullcombo_count",
-        "pianistic_count",
-        "max_combo",
-        "grade_basic",
-        "grade_recital",
-        "judge_sjust",
-        "judge_just",
-        "judge_good",
-        "judge_miss",
-        "judge_near",
-        "note_rate_standard",
-        "note_rate_tenuto",
-        "note_rate_glissando",
-        "note_rate_trill",
+        "fcType",
+        "playCount",
+        "clearCount",
+        "clearFlag",
+        "fullcomboCount",
+        "pianisticCount",
+        "maxCombo",
+        "gradeBasic",
+        "gradeRecital",
+        "judgeSjust",
+        "judgeJust",
+        "judgeGood",
+        "judgeMiss",
+        "judgeNear",
+        "noteRateStandard",
+        "noteRateTenuto",
+        "noteRateGlissando",
+        "noteRateTrill",
         "bestAt",
     ] as const;
     mocks.db.$executeRaw.mockImplementation(
@@ -243,8 +241,7 @@ beforeEach(() => {
                     ])
                 ) as StoredRecord;
                 const existing = state.records.find(
-                    (r) =>
-                        r.chart_id === row.chart_id && r.user_id === row.user_id
+                    (r) => r.chartId === row.chartId && r.userId === row.userId
                 );
                 if (existing) Object.assign(existing, row);
                 else state.records.push(row);
@@ -252,25 +249,25 @@ beforeEach(() => {
         }
     );
     mocks.db.chartPlayHistory.findMany.mockImplementation(
-        async ({ where }: { where: { user_id: number } }) =>
+        async ({ where }: { where: { userId: number } }) =>
             state.history.filter(
                 (h) =>
-                    h.user_id === where.user_id &&
-                    (!h.record_applied || h.grade_basic === 0)
+                    h.userId === where.userId &&
+                    (!h.recordApplied || h.gradeBasic === 0)
             )
     );
     mocks.db.chartPlayHistory.updateMany.mockImplementation(
         async ({
             where,
         }: {
-            where: { user_id: number; id?: { in: number[] } };
+            where: { userId: number; id?: { in: number[] } };
         }) => {
             state.history.forEach((h) => {
                 if (
-                    h.user_id === where.user_id &&
+                    h.userId === where.userId &&
                     (!where.id || where.id.in.includes(h.id))
                 )
-                    h.record_applied = true;
+                    h.recordApplied = true;
             });
         }
     );
@@ -282,8 +279,7 @@ beforeEach(() => {
         }) => {
             const existing = state.snapshots.find(
                 (s) =>
-                    s.chart_id === create.chart_id &&
-                    s.sync_id === create.sync_id
+                    s.chartId === create.chartId && s.syncId === create.syncId
             );
             if (existing) Object.assign(existing, create);
             else state.snapshots.push(structuredClone(create));
@@ -305,24 +301,24 @@ describe("recent/full record persistence with an isolated transaction double", (
         state.history.push(
             history(1, "2026/09/20 10:00"),
             history(2, "2026/09/20 10:10", 990000),
-            { ...history(3, "2026/09/20 10:20"), user_id: 2 }
+            { ...history(3, "2026/09/20 10:20"), userId: 2 }
         );
         expect(await updateRecentBestRecords(1, 1)).toEqual({
             changedRecords: 1,
             changedChartIds: [10],
         });
         expect(state.records[0]).toMatchObject({
-            play_count: 2,
+            playCount: 2,
             score: 990000,
-            grade_recital: null,
+            gradeRecital: null,
         });
         expect(state.stats.scoreS).toBe(1);
-        expect(state.history[2].record_applied).toBe(false);
+        expect(state.history[2].recordApplied).toBe(false);
         expect(await updateRecentBestRecords(1, 2)).toEqual({
             changedRecords: 0,
             changedChartIds: [],
         });
-        expect(state.records[0].play_count).toBe(2);
+        expect(state.records[0].playCount).toBe(2);
         expect(state.snapshots).toHaveLength(1);
         expect(mocks.db.$queryRaw).toHaveBeenCalled();
     });
@@ -336,9 +332,9 @@ describe("recent/full record persistence with an isolated transaction double", (
         );
         expect(state.records).toEqual([]);
         expect(state.snapshots).toEqual([]);
-        expect(state.history[0].record_applied).toBe(false);
+        expect(state.history[0].recordApplied).toBe(false);
         await updateRecentBestRecords(1, 2);
-        expect(state.records[0].play_count).toBe(1);
+        expect(state.records[0].playCount).toBe(1);
     });
     it("does not consume receipts if the distribution update fails", async () => {
         state.history.push(history(1, "2026/09/20 10:00"));
@@ -348,21 +344,21 @@ describe("recent/full record persistence with an isolated transaction double", (
         await expect(updateRecentBestRecords(1, 1)).rejects.toThrow(
             "stats failed"
         );
-        expect(state.history[0].record_applied).toBe(false);
+        expect(state.history[0].recordApplied).toBe(false);
         expect(state.records).toHaveLength(0);
     });
     it("handles never-subscribed → full → expired → renewed → expired", async () => {
         state.history.push(history(1, "2026/09/20 10:00"));
         await updateRecentBestRecords(1, 1);
-        expect(state.records[0].play_count).toBe(1);
+        expect(state.records[0].playCount).toBe(1);
         expect(await updatePlayData(1, full(), 2)).toEqual({
             changedRecords: 1,
             changedChartIds: [10],
         });
         expect(state.records[0]).toMatchObject({
-            play_count: 100,
+            playCount: 100,
             score: 980000,
-            grade_recital: 8000,
+            gradeRecital: 8000,
         });
         expect(state.fullAt).toEqual(syncTime);
         // A newly discovered overlap is not a new lifetime play.
@@ -372,17 +368,17 @@ describe("recent/full record persistence with an isolated transaction double", (
         );
         await updateRecentBestRecords(1, 3);
         expect(state.records[0]).toMatchObject({
-            play_count: 101,
+            playCount: 101,
             score: 995000,
-            grade_recital: 8000,
-            note_rate_standard: 9800,
+            gradeRecital: 8000,
+            noteRateStandard: 9800,
         });
         const beforeRenewalHistory = state.history.length;
         syncTime = new Date("2026-09-21T02:00:00Z");
         const renewed = full(200);
         renewed[0].sheet[0].score = 995000;
         await updatePlayData(1, renewed, 4);
-        expect(state.records[0].play_count).toBe(200);
+        expect(state.records[0].playCount).toBe(200);
         expect(state.history).toHaveLength(beforeRenewalHistory);
         state.history.push(
             history(4, "2026/09/21 10:00"),
@@ -390,9 +386,9 @@ describe("recent/full record persistence with an isolated transaction double", (
         );
         await updateRecentBestRecords(1, 5);
         expect(state.records[0]).toMatchObject({
-            play_count: 201,
+            playCount: 201,
             score: 999000,
-            grade_recital: 8000,
+            gradeRecital: 8000,
         });
         expect(state.snapshots).toHaveLength(5);
     });
@@ -437,7 +433,7 @@ describe("recent/full record persistence with an isolated transaction double", (
         expect(state.records).toEqual([]);
         expect(mocks.db.dataSync.findUniqueOrThrow).toHaveBeenCalledWith(
             expect.objectContaining({
-                where: { id: 2, user_id: 1, status: "processing" },
+                where: { id: 2, userId: 1, status: "processing" },
             })
         );
     });
@@ -446,17 +442,17 @@ describe("recent/full record persistence with an isolated transaction double", (
 it("repairs already applied zero Grd transactionally without incrementing attempts", async () => {
     const play = {
         ...history(900, "2026/09/20 10:00"),
-        grade_basic: 0,
-        is_onehand: false,
+        gradeBasic: 0,
+        isOnehand: false,
     };
     state.history.push(play);
     await updateRecentBestRecords(1, 1);
-    const record = state.records.find((r) => r.chart_id === 10)!;
-    record.grade_basic = 0;
-    const counts = record.play_count;
+    const record = state.records.find((r) => r.chartId === 10)!;
+    record.gradeBasic = 0;
+    const counts = record.playCount;
     expect((await updateRecentBestRecords(1, 2)).changedRecords).toBe(1);
-    expect(record.grade_basic).toBeGreaterThan(0);
-    expect(record.play_count).toBe(counts);
-    expect(state.history.find((h) => h.id === 900)?.grade_basic).toBe(0);
+    expect(record.gradeBasic).toBeGreaterThan(0);
+    expect(record.playCount).toBe(counts);
+    expect(state.history.find((h) => h.id === 900)?.gradeBasic).toBe(0);
     expect((await updateRecentBestRecords(1, 3)).changedRecords).toBe(0);
 });

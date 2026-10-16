@@ -81,15 +81,15 @@ describe("chart value helpers", () => {
         expect(formatProposalValue("duration", "124")).toBe("2:04");
         expect(formatProposalValue("note_count", "1284")).toBe("1,284");
         expect(chartFieldUpdate("bpm", "150")).toEqual({
-            bpm_min: 150,
-            bpm_max: 150,
+            bpmMin: 150,
+            bpmMax: 150,
         });
         expect(chartFieldUpdate("bpm", "120-180")).toEqual({
-            bpm_min: 120,
-            bpm_max: 180,
+            bpmMin: 120,
+            bpmMax: 180,
         });
         expect(chartFieldUpdate("released_at", "2019-03-14")).toEqual({
-            released_at: new Date("2019-03-14T00:00:00Z"),
+            releasedAt: new Date("2019-03-14T00:00:00Z"),
         });
     });
 });

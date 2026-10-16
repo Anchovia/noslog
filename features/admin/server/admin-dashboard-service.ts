@@ -101,16 +101,16 @@ export async function getAdminDashboard(
         db.user.findMany({
             where: {
                 role: { not: "admin" },
-                created_at: { gte: since },
+                createdAt: { gte: since },
             },
-            select: { created_at: true },
+            select: { createdAt: true },
         }),
         db.dataSync.findMany({
             where: {
                 user: { role: { not: "admin" } },
-                started_at: { gte: since },
+                startedAt: { gte: since },
             },
-            select: { started_at: true, status: true },
+            select: { startedAt: true, status: true },
         }),
         db.examSubmission.count({ where: { status: "pending" } }),
         db.feedbackReport.count({ where: { status: "open", arcadeId: null } }),
@@ -120,30 +120,30 @@ export async function getAdminDashboard(
         db.dataSync.count({
             where: {
                 status: "failed",
-                started_at: { gte: new Date(now.getTime() - DAY_MS) },
+                startedAt: { gte: new Date(now.getTime() - DAY_MS) },
             },
         }),
         db.dataSync.count({
             where: {
                 status: "processing",
-                started_at: {
+                startedAt: {
                     lte: new Date(now.getTime() - STALE_SYNC_THRESHOLD_MS),
                 },
             },
         }),
         db.musicCatalogCandidate.count({ where: { status: "pending" } }),
         db.chartFieldProposal.count({ where: { status: "pending" } }),
-        db.chartDraft.count({ where: { status: "submitted" } }),
+        db.chartDraft.count({ where: { status: "pending" } }),
         // 전환 흐름 — 기간에 가입한 사람이 연동 · 기록까지 갔는지(이미 있는 데이터만 센다, 2026-09-20)
         db.user.findMany({
             where: {
                 role: { not: "admin" },
-                created_at: { gte: new Date(`${current[0]}T00:00:00+09:00`) },
+                createdAt: { gte: new Date(`${current[0]}T00:00:00+09:00`) },
             },
             select: {
                 id: true,
                 dataSyncs: { select: { id: true }, take: 1 },
-                PlayData: { select: { id: true }, take: 1 },
+                playData: { select: { id: true }, take: 1 },
             },
         }),
         // 기여 활동 — 기간에 새로 쓰거나 고친 것
@@ -241,14 +241,14 @@ export async function getAdminDashboard(
         counts.set(key, (counts.get(key) ?? 0) + 1);
     };
     for (const user of users) {
-        day(analyticsDateKey(user.created_at)).signups += 1;
-        countHour(hourlySignups, user.created_at);
+        day(analyticsDateKey(user.createdAt)).signups += 1;
+        countHour(hourlySignups, user.createdAt);
     }
     for (const sync of syncs) {
-        const entry = day(analyticsDateKey(sync.started_at));
+        const entry = day(analyticsDateKey(sync.startedAt));
         entry.syncs += 1;
         if (sync.status === "failed") entry.failed += 1;
-        countHour(hourlySyncs, sync.started_at);
+        countHour(hourlySyncs, sync.startedAt);
     }
     const sum = (keys: string[], field: keyof DayTotals) =>
         keys.reduce((total, key) => total + (totals.get(key)?.[field] ?? 0), 0);
@@ -292,7 +292,7 @@ export async function getAdminDashboard(
             { label: "기록 연동", count: syncedUsers },
             {
                 label: "기록 등록",
-                count: cohort.filter((user) => user.PlayData.length).length,
+                count: cohort.filter((user) => user.playData.length).length,
             },
         ],
         contributions: [

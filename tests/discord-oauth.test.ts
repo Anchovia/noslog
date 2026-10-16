@@ -127,7 +127,7 @@ describe("Discord OAuth", () => {
         expect(mocks.session.discordOAuthUserId).toBe(7);
         mocks.userFindUnique.mockResolvedValue({
             id: 7,
-            discord_id: "discord-1",
+            discordId: "discord-1",
             avatar: null,
         });
         mockDiscordSuccess();
@@ -161,7 +161,7 @@ describe("Discord OAuth", () => {
             const state = mocks.session.discordOAuthState;
             mocks.userFindUnique.mockResolvedValue({
                 id: mismatch === "session" ? 8 : 7,
-                discord_id: "discord-1",
+                discordId: "discord-1",
                 avatar: null,
             });
             mockDiscordSuccess({
@@ -279,7 +279,7 @@ describe("Discord OAuth", () => {
             .mockResolvedValueOnce({
                 id: 2,
                 avatar: null,
-                profile_completed_at: new Date(),
+                profileCompletedAt: new Date(),
             });
 
         const response = await completeDiscordOAuth(
@@ -309,10 +309,12 @@ describe("Discord OAuth", () => {
             request("/discord/complete?code=code&state=state")
         );
 
-        expect(mocks.userUpdate).toHaveBeenCalledWith({
-            where: { id: 1 },
-            data: expect.objectContaining({ avatar: customAvatar }),
-        });
+        expect(mocks.userUpdate).toHaveBeenCalledWith(
+            expect.objectContaining({
+                where: { id: 1 },
+                data: expect.objectContaining({ avatar: customAvatar }),
+            })
+        );
         expect(new URL(response.headers.get("location")!).pathname).toBe(
             "/profile/settings"
         );
@@ -327,16 +329,18 @@ describe("Discord OAuth", () => {
             .mockResolvedValueOnce({
                 id: 1,
                 avatar: null,
-                avatar_user_managed: true,
+                avatarUserManaged: true,
             })
             .mockResolvedValueOnce(null);
         await completeDiscordOAuth(
             request("/discord/complete?code=code&state=state")
         );
-        expect(mocks.userUpdate).toHaveBeenCalledWith({
-            where: { id: 1 },
-            data: expect.objectContaining({ avatar: null }),
-        });
+        expect(mocks.userUpdate).toHaveBeenCalledWith(
+            expect.objectContaining({
+                where: { id: 1 },
+                data: expect.objectContaining({ avatar: null }),
+            })
+        );
     });
 
     it("정보 새로고침은 현재 연결된 Discord 표시 정보만 갱신한다", async () => {
@@ -350,7 +354,7 @@ describe("Discord OAuth", () => {
         mocks.userFindUnique
             .mockResolvedValueOnce({
                 id: 1,
-                discord_id: "same-discord",
+                discordId: "same-discord",
                 avatar: null,
             })
             .mockResolvedValueOnce({ id: 1 });
@@ -358,8 +362,8 @@ describe("Discord OAuth", () => {
             request("/discord/complete?code=code&state=state")
         );
         expect(mocks.userUpdate.mock.calls[0][0].data).toEqual({
-            discord_name: expect.any(String),
-            discord_username: expect.any(String),
+            discordName: expect.any(String),
+            discordUsername: expect.any(String),
         });
         expect(mocks.session.discordOAuthMode).toBeUndefined();
         expect(mocks.session.discordOAuthUserId).toBeUndefined();
@@ -375,7 +379,7 @@ describe("Discord OAuth", () => {
         mockDiscordSuccess({ id: "another-discord" });
         mocks.userFindUnique.mockResolvedValueOnce({
             id: 1,
-            discord_id: "original-discord",
+            discordId: "original-discord",
             avatar: null,
         });
         const response = await completeDiscordOAuth(
@@ -435,9 +439,9 @@ describe("Discord OAuth", () => {
 
         expect(mocks.userCreate).toHaveBeenCalledWith({
             data: expect.objectContaining({
-                discord_id: "new-discord",
-                discord_name: "Discord User",
-                discord_username: "discord-user",
+                discordId: "new-discord",
+                discordName: "Discord User",
+                discordUsername: "discord-user",
             }),
             select: { id: true, locale: true, role: true },
         });
@@ -480,7 +484,7 @@ describe("Discord OAuth", () => {
         mocks.userFindUnique.mockResolvedValueOnce({
             id: 3,
             avatar: null,
-            profile_completed_at: new Date("2026-07-19"),
+            profileCompletedAt: new Date("2026-07-19"),
         });
         mocks.userUpdate.mockResolvedValueOnce({ id: 3 });
 
@@ -500,10 +504,10 @@ describe("Discord OAuth", () => {
         mocks.userFindUnique.mockResolvedValueOnce({
             id: 3,
             avatar: "https://blob.example/avatar.webp",
-            avatar_user_managed: true,
-            discord_name: "Saved",
-            discord_username: "saved",
-            profile_completed_at: new Date("2026-07-19"),
+            avatarUserManaged: true,
+            discordName: "Saved",
+            discordUsername: "saved",
+            profileCompletedAt: new Date("2026-07-19"),
             locale: "ko",
         });
 

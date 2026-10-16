@@ -50,18 +50,18 @@ export async function completeOnboarding(
 
     try {
         await db.user.update({
-            where: { id: session.id, profile_completed_at: null },
+            where: { id: session.id, profileCompletedAt: null },
             data: {
                 username: result.data.username,
                 country: result.data.country,
                 locale,
-                hide_nostalgia_name: !result.data.showNostalgiaName,
-                hide_discord_name: !result.data.showDiscordIdentity,
-                hide_preferred_arcade: !result.data.showPreferredArcade,
-                hide_play_count: !result.data.showPlayCount,
-                hide_play_activity: !result.data.showPlayActivity,
-                hide_play_scores: !result.data.showPlayScores,
-                profile_completed_at: new Date(),
+                hideNostalgiaName: !result.data.showNostalgiaName,
+                hideDiscordName: !result.data.showDiscordIdentity,
+                hidePreferredArcade: !result.data.showPreferredArcade,
+                hidePlayCount: !result.data.showPlayCount,
+                hidePlayActivity: !result.data.showPlayActivity,
+                hidePlayScores: !result.data.showPlayScores,
+                profileCompletedAt: new Date(),
             },
         });
     } catch (error) {

@@ -31,7 +31,7 @@ export const getCachedPublishedExams = unstable_cache(
                             select: {
                                 index: true,
                                 title: true,
-                                title_kana: true,
+                                titleKana: true,
                                 translations: {
                                     where: {
                                         status: "approved",
@@ -59,7 +59,7 @@ export const getCachedPublishedExams = unstable_cache(
                             select: {
                                 index: true,
                                 title: true,
-                                title_kana: true,
+                                titleKana: true,
                                 artist: true,
                                 translations: {
                                     where: {
@@ -110,7 +110,7 @@ export async function getUserExamState(
             select: {
                 // 지금 Grd 는 player_stats 에서(2026-10-16 DB 재설계 P4)
                 stats: { select: STATS_GRADE_SELECT },
-                nostalgia_name: true,
+                nostalgiaName: true,
                 // 합격 기록은 여기서 한 번만 읽는다 — 이 검정들의 합격 여부도 이 목록에서(2026-10-15 S6)
                 examAchievements: {
                     select: {
@@ -122,23 +122,23 @@ export async function getUserExamState(
         }),
         chartIds.length > 0
             ? db.playData.findMany({
-                  where: { user_id: userId, chart_id: { in: chartIds } },
+                  where: { userId: userId, chartId: { in: chartIds } },
                   select: {
-                      chart_id: true,
+                      chartId: true,
                       score: true,
                       rank: true,
-                      fc_type: true,
-                      play_count: true,
-                      max_combo: true,
-                      judge_sjust: true,
-                      judge_just: true,
-                      judge_good: true,
-                      judge_miss: true,
-                      judge_near: true,
-                      note_rate_standard: true,
-                      note_rate_tenuto: true,
-                      note_rate_glissando: true,
-                      note_rate_trill: true,
+                      fcType: true,
+                      playCount: true,
+                      maxCombo: true,
+                      judgeSjust: true,
+                      judgeJust: true,
+                      judgeGood: true,
+                      judgeMiss: true,
+                      judgeNear: true,
+                      noteRateStandard: true,
+                      noteRateTenuto: true,
+                      noteRateGlissando: true,
+                      noteRateTrill: true,
                   },
               })
             : Promise.resolve([]),
@@ -148,7 +148,7 @@ export async function getUserExamState(
                   select: {
                       examId: true,
                       status: true,
-                      reviewerNote: true,
+                      reviewNote: true,
                   },
                   orderBy: { submittedAt: "desc" },
               })

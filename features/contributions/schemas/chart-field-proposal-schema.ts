@@ -19,7 +19,7 @@ export type ProposalEvidenceKind = (typeof PROPOSAL_EVIDENCE_KINDS)[number];
 
 export const CHART_FIELD_PROPOSAL_STATUSES = [
     "pending",
-    "applied",
+    "approved",
     "rejected",
 ] as const;
 export type ChartFieldProposalStatus =
@@ -109,6 +109,23 @@ export interface ChartFieldValues {
     released_at: Date | string | null;
 }
 
+/** Prisma 채보 값(camelCase)을 위 모양으로 — 화면 응답과 같은 이름(2026-10-16 D1-B) */
+export function toChartFieldValues(chart: {
+    bpmMin: number | null;
+    bpmMax: number | null;
+    noteCount: number | null;
+    durationSeconds: number | null;
+    releasedAt: Date | null;
+}): ChartFieldValues {
+    return {
+        bpm_min: chart.bpmMin,
+        bpm_max: chart.bpmMax,
+        note_count: chart.noteCount,
+        duration_seconds: chart.durationSeconds,
+        released_at: chart.releasedAt,
+    };
+}
+
 /** 지금 채보의 값을 제안과 같은 저장 형식으로 — 비어 있으면 null */
 export function chartFieldValue(
     chart: ChartFieldValues,
@@ -156,19 +173,20 @@ export function chartFieldUpdate(
     field: ChartFieldProposalField,
     value: string
 ): {
-    bpm_min?: number;
-    bpm_max?: number;
-    note_count?: number;
-    duration_seconds?: number;
-    released_at?: Date;
+    bpmMin?: number;
+    bpmMax?: number;
+    noteCount?: number;
+    durationSeconds?: number;
+    releasedAt?: Date;
 } {
+    // Prisma 채보 칸 이름으로(2026-10-16 D1-B) — 제안의 field 값(note_count 등)은 저장된 값이라 그대로
     if (field === "bpm") {
         const [min, max = min] = value.split("-").map(Number);
-        return { bpm_min: min, bpm_max: max };
+        return { bpmMin: min, bpmMax: max };
     }
-    if (field === "note_count") return { note_count: Number(value) };
-    if (field === "duration") return { duration_seconds: Number(value) };
-    return { released_at: new Date(`${value}T00:00:00Z`) };
+    if (field === "note_count") return { noteCount: Number(value) };
+    if (field === "duration") return { durationSeconds: Number(value) };
+    return { releasedAt: new Date(`${value}T00:00:00Z`) };
 }
 
 function isHttpUrl(value: string) {

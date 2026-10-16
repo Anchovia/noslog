@@ -85,14 +85,14 @@ describe("admin monitoring server boundaries", () => {
                 expect.objectContaining({
                     where:
                         expected === "all" ? undefined : { status: expected },
-                    orderBy: { started_at: "desc" },
+                    orderBy: { startedAt: "desc" },
                     take: 100,
                 })
             );
             expect(mocks.history).toHaveBeenCalledWith(
                 expect.objectContaining({
                     where: expect.objectContaining({
-                        first_sync_id: { in: [] },
+                        firstSyncId: { in: [] },
                     }),
                 })
             );
@@ -102,20 +102,20 @@ describe("admin monitoring server boundaries", () => {
         const row = {
             id: 9,
             status: "processing",
-            started_at: new Date(now.getTime() - 600000),
-            inserted_plays: 2,
-            changed_records: 1,
+            startedAt: new Date(now.getTime() - 600000),
+            insertedPlays: 2,
+            changedRecords: 1,
             _count: { playHistory: 2, recordSnapshots: 1 },
         };
         mocks.syncs.mockResolvedValue([row]);
         mocks.history
             .mockResolvedValueOnce([
-                { first_sync_id: null, _count: { _all: 20 } },
-                { first_sync_id: 9, _count: { _all: 2 } },
+                { firstSyncId: null, _count: { _all: 20 } },
+                { firstSyncId: 9, _count: { _all: 2 } },
             ])
             .mockResolvedValueOnce([]);
         mocks.snapshot
-            .mockResolvedValueOnce([{ sync_id: 9, _count: { _all: 1 } }])
+            .mockResolvedValueOnce([{ syncId: 9, _count: { _all: 1 } }])
             .mockResolvedValueOnce([]);
         const data = await getAdminSyncs({ status: "processing" });
         expect(data.syncs[0]).toMatchObject({
@@ -130,7 +130,7 @@ describe("admin monitoring server boundaries", () => {
         });
         expect(mocks.history).toHaveBeenCalledWith(
             expect.objectContaining({
-                where: expect.objectContaining({ first_sync_id: { in: [9] } }),
+                where: expect.objectContaining({ firstSyncId: { in: [9] } }),
             })
         );
     });

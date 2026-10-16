@@ -24,7 +24,7 @@ const working = {
 };
 const published = (overrides = {}) => ({
     id: 1,
-    status: "PUBLISHED" as const,
+    status: "approved" as const,
     publishedTitle: "공개 제목",
     publishedContent: "공개 본문",
     publishedStartsAt: eventDateStart("2026-09-20"),
@@ -111,7 +111,7 @@ describe("이벤트 검토", () => {
         expect(
             reviewUpdate("approve", working, "", 9, now, first)
         ).toMatchObject({
-            status: "PUBLISHED",
+            status: "approved",
             publishedTitle: working.title,
             publishedAt: first,
             reviewNote: null,
@@ -132,10 +132,10 @@ describe("이벤트 검토", () => {
             now
         );
         expect(changes).not.toHaveProperty("publishedTitle");
-        expect(changes.status).toBe("CHANGES_REQUESTED");
+        expect(changes.status).toBe("changes_requested");
         const rejected = reviewUpdate("reject", working, "광고", 9, now, now);
         expect(rejected).toMatchObject({
-            status: "REJECTED",
+            status: "rejected",
             publishedTitle: null,
             publishedAt: null,
         });
@@ -145,11 +145,11 @@ describe("이벤트 검토", () => {
 describe("공개 이벤트", () => {
     const now = new Date("2026-09-25T00:00:00Z");
     it("shows the approved version while a newer edit is under review", () => {
-        const event = publicEvent(published({ status: "PENDING" }), now);
+        const event = publicEvent(published({ status: "pending" }), now);
         expect(event).toMatchObject({ title: "공개 제목", phase: "live" });
     });
     it("hides drafts, rejected posts and posts never approved", () => {
-        expect(publicEvent(published({ status: "REJECTED" }), now)).toBeNull();
+        expect(publicEvent(published({ status: "rejected" }), now)).toBeNull();
         expect(
             publicEvent(
                 published({ publishedAt: null, publishedTitle: null }),

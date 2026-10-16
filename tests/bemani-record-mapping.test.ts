@@ -15,20 +15,20 @@ describe("BEMANI 기록 필드 매핑", () => {
 
     it("판정 배열을 S-Just, Just, Good, Miss, Near 순서로 보존한다", () => {
         expect(mapBemaniJudgeCounts([500, 40, 30, 20, 10])).toEqual({
-            judge_sjust: 500,
-            judge_just: 40,
-            judge_good: 30,
-            judge_miss: 20,
-            judge_near: 10,
+            judgeSjust: 500,
+            judgeJust: 40,
+            judgeGood: 30,
+            judgeMiss: 20,
+            judgeNear: 10,
         });
     });
 
     it("노트 성공률을 일반, 테누토, 글리산도, 트릴 순서로 보존한다", () => {
         expect(mapBemaniNoteSuccessRates([9900, 9800, -1, 9700])).toEqual({
-            note_rate_standard: 9900,
-            note_rate_tenuto: 9800,
-            note_rate_glissando: null,
-            note_rate_trill: 9700,
+            noteRateStandard: 9900,
+            noteRateTenuto: 9800,
+            noteRateGlissando: null,
+            noteRateTrill: 9700,
         });
     });
 

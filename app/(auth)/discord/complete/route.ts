@@ -1,9 +1,14 @@
 import { revalidateTag } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
+import {
+    createDiscordUser,
+    findUserByDiscordId,
+    getDiscordLinkingUser,
+    updateDiscordIdentity,
+} from "@/features/users/server/user-data";
 import { getSafeAuthReturnPath } from "@/lib/auth-return-path";
 import { CACHE_TAGS, getUserProfileTag } from "@/lib/cache-tags";
-import db from "@/lib/db";
 import { serverEnv } from "@/lib/env/server";
 import { isLocale, type Locale, localizePath } from "@/lib/i18n/routing";
 import getSession from "@/lib/session";
@@ -66,15 +71,7 @@ export async function GET(request: NextRequest) {
     const state = request.nextUrl.searchParams.get("state");
     const session = await getSession();
     const currentUser = session.id
-        ? await db.user.findUnique({
-              where: { id: session.id },
-              select: {
-                  id: true,
-                  discord_id: true,
-                  avatar: true,
-                  avatar_user_managed: true,
-              },
-          })
+        ? await getDiscordLinkingUser(session.id)
         : null;
     if (session.id && !currentUser) {
         delete session.id;
@@ -169,7 +166,7 @@ export async function GET(request: NextRequest) {
         const discordName = discordUser.global_name ?? discordUser.username;
         if (
             (mode === "refresh" || mode === "delete") &&
-            currentUser?.discord_id !== discordUser.id
+            currentUser?.discordId !== discordUser.id
         )
             return errorResponse("identity_mismatch");
         if (mode === "delete" && currentUser) {
@@ -184,49 +181,34 @@ export async function GET(request: NextRequest) {
             return NextResponse.redirect(destination);
         }
         const avatar = discordAvatar(discordUser);
-        const linkedUser = await db.user.findUnique({
-            where: { discord_id: discordUser.id },
-            select: {
-                id: true,
-                avatar: true,
-                avatar_user_managed: true,
-                discord_name: true,
-                discord_username: true,
-                profile_completed_at: true,
-                locale: true,
-                role: true,
-            },
-        });
+        const linkedUser = await findUserByDiscordId(discordUser.id);
 
         if (currentUser) {
             if (linkedUser && linkedUser.id !== currentUser.id) {
                 return errorResponse("already_linked");
             }
 
-            await db.user.update({
-                where: { id: currentUser.id },
-                data: {
-                    ...(mode === "refresh"
-                        ? {}
-                        : { discord_id: discordUser.id }),
-                    discord_name: discordName,
-                    discord_username: discordUser.username,
-                    ...(mode === "refresh"
-                        ? {}
-                        : {
-                              avatar:
-                                  avatar &&
-                                  shouldUseDiscordAvatar(
-                                      currentUser.avatar,
-                                      currentUser.avatar_user_managed
-                                  )
-                                      ? avatar
-                                      : currentUser.avatar,
-                          }),
-                },
+            await updateDiscordIdentity(currentUser.id, {
+                ...(mode === "refresh" ? {} : { discordId: discordUser.id }),
+                discordName: discordName,
+                discordUsername: discordUser.username,
+                ...(mode === "refresh"
+                    ? {}
+                    : {
+                          avatar:
+                              avatar &&
+                              shouldUseDiscordAvatar(
+                                  currentUser.avatar,
+                                  currentUser.avatarUserManaged
+                              )
+                                  ? avatar
+                                  : currentUser.avatar,
+                      }),
             });
+            // 이름 · 아바타는 랭킹 줄과 악곡 순위 줄에도 나온다(2026-10-16 D8 · B6 — 설정 저장과 같게)
             revalidateTag(getUserProfileTag(currentUser.id), "max");
             revalidateTag(CACHE_TAGS.userRankings, "max");
+            revalidateTag(CACHE_TAGS.chartRankings, "max");
             const destination = new URL(returnTo, request.url);
             if (mode) destination.searchParams.set("discordResult", mode);
             return NextResponse.redirect(destination);
@@ -235,14 +217,14 @@ export async function GET(request: NextRequest) {
         // 다시 로그인할 때 값이 그대로면 쓰지 않는다 — 랭킹 줄에 나오는 아바타가 바뀐 경우만 랭킹을 비운다(2026-10-15 S4)
         const linkedValues = linkedUser
             ? {
-                  discord_name: linkedUser.discord_name ?? discordName,
-                  discord_username:
-                      linkedUser.discord_username ?? discordUser.username,
+                  discordName: linkedUser.discordName ?? discordName,
+                  discordUsername:
+                      linkedUser.discordUsername ?? discordUser.username,
                   avatar:
                       avatar &&
                       shouldUseDiscordAvatar(
                           linkedUser.avatar,
-                          linkedUser.avatar_user_managed
+                          linkedUser.avatarUserManaged
                       )
                           ? avatar
                           : linkedUser.avatar,
@@ -251,37 +233,32 @@ export async function GET(request: NextRequest) {
         const linkedChanged =
             linkedUser !== null &&
             linkedValues !== null &&
-            (linkedValues.discord_name !== linkedUser.discord_name ||
-                linkedValues.discord_username !== linkedUser.discord_username ||
+            (linkedValues.discordName !== linkedUser.discordName ||
+                linkedValues.discordUsername !== linkedUser.discordUsername ||
                 linkedValues.avatar !== linkedUser.avatar);
         const user = linkedUser
             ? linkedChanged
-                ? await db.user.update({
-                      where: { id: linkedUser.id },
-                      data: linkedValues!,
-                      select: { id: true, locale: true, role: true },
-                  })
+                ? await updateDiscordIdentity(linkedUser.id, linkedValues!)
                 : {
                       id: linkedUser.id,
                       locale: linkedUser.locale,
                       role: linkedUser.role,
                   }
-            : await db.user.create({
-                  data: {
-                      discord_id: discordUser.id,
-                      discord_name: discordName,
-                      discord_username: discordUser.username,
-                      avatar,
-                  },
-                  select: { id: true, locale: true, role: true },
+            : await createDiscordUser({
+                  discordId: discordUser.id,
+                  discordName: discordName,
+                  discordUsername: discordUser.username,
+                  avatar,
               });
-        const profileCompleted = Boolean(linkedUser?.profile_completed_at);
+        const profileCompleted = Boolean(linkedUser?.profileCompletedAt);
 
         // 새 계정은 그 id 로 캐시된 「없는 프로필」 을 비운다
         if (linkedChanged || !linkedUser)
             revalidateTag(getUserProfileTag(user.id), "max");
-        if (linkedChanged && linkedValues?.avatar !== linkedUser?.avatar)
+        if (linkedChanged && linkedValues?.avatar !== linkedUser?.avatar) {
             revalidateTag(CACHE_TAGS.userRankings, "max");
+            revalidateTag(CACHE_TAGS.chartRankings, "max");
+        }
         session.id = user.id;
         session.role = user.role;
         session.profileCompleted = profileCompleted;

@@ -6,15 +6,26 @@ import { PATTERN_AXES } from "@/features/music/schemas/community-schema";
 import type { TierGoal, TierMode, TierRecord } from "@/lib/tiers";
 import { isTierGoalAchieved, isTierModeGoal } from "@/lib/tiers";
 
+// 지금 기록(Prisma 이름, 2026-10-16 D1-B) — 달성 판정은 서열표 응답과 같은 TierRecord 모양으로 본다
 export function canContributeGoalVote(
-    record: (TierRecord & { grade_recital: number | null }) | null,
+    record: {
+        score: number;
+        rank: string;
+        fcType: number;
+        gradeRecital: number | null;
+    } | null,
     mode: TierMode,
     goal: TierGoal
 ) {
+    const tierRecord: TierRecord | null = record && {
+        score: record.score,
+        rank: record.rank,
+        fc_type: record.fcType,
+    };
     return (
         isTierModeGoal(mode, goal) &&
-        isTierGoalAchieved(record, goal) &&
-        (mode === "basic" || (record?.grade_recital ?? 0) > 0)
+        isTierGoalAchieved(tierRecord, goal) &&
+        (mode === "basic" || (record?.gradeRecital ?? 0) > 0)
     );
 }
 

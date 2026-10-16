@@ -25,15 +25,15 @@ describe("profile rating observations", () => {
         expect(options.skipDuplicates).toBe(true);
         expect(options.data).toHaveLength(1);
         expect(options.data[0]).toMatchObject({
-            user_id: 7,
-            sync_id: 12,
+            userId: 7,
+            syncId: 12,
             mode: "basic",
             rating: 4123.45,
         });
-        expect(options.data[0].observed_at.getTime()).toBeGreaterThanOrEqual(
+        expect(options.data[0].observedAt.getTime()).toBeGreaterThanOrEqual(
             before
         );
-        expect(options.data[0].observed_at.getTime()).toBeLessThanOrEqual(
+        expect(options.data[0].observedAt.getTime()).toBeLessThanOrEqual(
             Date.now()
         );
     });

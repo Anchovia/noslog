@@ -5,9 +5,9 @@ import type { AdminChartDraft } from "@/features/contributions/server/chart-draf
 import { cn } from "@/lib/cn";
 
 const STATUS_LABELS: Record<string, string> = {
-    submitted: "검토 대기",
+    pending: "검토 대기",
     changes_requested: "수정 요청",
-    published: "공개",
+    approved: "공개",
     draft: "작성 중",
 };
 

@@ -17,7 +17,7 @@ const mocks = vi.hoisted(() => ({
     examSubmissionFindMany: vi.fn(),
     examSubmissionFindUnique: vi.fn(),
     examSubmissionDelete: vi.fn(),
-    examSubmissionUpdate: vi.fn(),
+    examSubmissionUpdateMany: vi.fn(),
     examAchievementUpsert: vi.fn(),
     examAchievementDeleteMany: vi.fn(),
     updateTag: vi.fn(),
@@ -30,7 +30,7 @@ const transactionClient = {
     musicChart: { update: mocks.musicChartUpdate },
     chartLevelConstantHistory: { create: mocks.constantHistoryCreate },
     examSubmission: {
-        update: mocks.examSubmissionUpdate,
+        updateMany: mocks.examSubmissionUpdateMany,
         delete: mocks.examSubmissionDelete,
     },
     examAchievement: {
@@ -106,7 +106,7 @@ describe("관리자 액션", () => {
         mocks.musicTranslationUpdateMany.mockResolvedValue({ count: 1 });
         mocks.examDelete.mockResolvedValue({ id: 30 });
         mocks.bingoDelete.mockResolvedValue({ id: 40 });
-        mocks.examSubmissionUpdate.mockResolvedValue({ id: 50 });
+        mocks.examSubmissionUpdateMany.mockResolvedValue({ count: 1 });
         mocks.examSubmissionFindMany.mockResolvedValue([]);
         mocks.examSubmissionDelete.mockResolvedValue({ id: 50 });
         mocks.examAchievementUpsert.mockResolvedValue({ id: 60 });
@@ -146,8 +146,8 @@ describe("관리자 액션", () => {
             data: { description: "악곡 설명" },
         });
         expect(mocks.musicChartUpdateMany).toHaveBeenCalledWith({
-            where: { music_idx: "test-music" },
-            data: { bpm_min: 120, bpm_max: 181, duration_seconds: 126 },
+            where: { musicIdx: "test-music" },
+            data: { bpmMin: 120, bpmMax: 181, durationSeconds: 126 },
         });
         expect(mocks.updateTag).toHaveBeenCalledWith("music-catalog");
         expect(mocks.updateTag).toHaveBeenCalledWith("music-details");
@@ -170,9 +170,9 @@ describe("관리자 액션", () => {
 
     it("채보 저장 시 레벨 상수 변경 이력을 생성한다", async () => {
         mocks.musicChartFindUnique.mockResolvedValue({
-            level_constant: 11,
+            levelConstant: 11,
             difficulty: "Expert",
-            music_idx: "test-music",
+            musicIdx: "test-music",
         });
         const formData = new FormData();
         formData.set("chartId", "10");
@@ -189,21 +189,21 @@ describe("관리자 액션", () => {
         expect(mocks.musicChartUpdate).toHaveBeenCalledWith({
             where: { id: 10 },
             data: expect.objectContaining({
-                level_constant: 11.2,
-                note_count: 1000,
-                released_at: new Date("2026-07-17T00:00:00.000Z"),
+                levelConstant: 11.2,
+                noteCount: 1000,
+                releasedAt: new Date("2026-07-17T00:00:00.000Z"),
             }),
         });
         expect(mocks.constantHistoryCreate).toHaveBeenCalledWith({
-            data: { chart_id: 10, value: 11.2 },
+            data: { chartId: 10, value: 11.2 },
         });
     });
 
     it("다른 악곡의 채보는 수정하지 않는다", async () => {
         mocks.musicChartFindUnique.mockResolvedValue({
-            level_constant: 11,
+            levelConstant: 11,
             difficulty: "Expert",
-            music_idx: "other-music",
+            musicIdx: "other-music",
         });
         const formData = new FormData();
         formData.set("chartId", "10");
@@ -320,12 +320,12 @@ describe("관리자 액션", () => {
             {
                 id: 50,
                 status: "pending",
-                reviewerNote: null,
+                reviewNote: null,
                 submittedAt: new Date("2026-09-03T00:00:00.000Z"),
                 proofImageUrl:
                     "https://store.private.blob.vercel-storage.com/proof.jpg",
                 userId: 2,
-                user: { nostalgia_name: "NOSTALGIA", username: "user" },
+                user: { nostalgiaName: "NOSTALGIA", username: "user" },
                 exam: { title: "Basic 10급" },
             },
         ]);
@@ -375,8 +375,8 @@ describe("관리자 액션", () => {
             status: "approved",
         });
 
-        expect(mocks.examSubmissionUpdate).toHaveBeenCalledWith({
-            where: { id: 50 },
+        expect(mocks.examSubmissionUpdateMany).toHaveBeenCalledWith({
+            where: { id: 50, status: "pending" },
             data: expect.objectContaining({ status: "approved" }),
         });
         expect(mocks.examAchievementUpsert).toHaveBeenCalledWith(
@@ -384,6 +384,24 @@ describe("관리자 액션", () => {
                 where: { userId_examId: { userId: 2, examId: 30 } },
             })
         );
+    });
+
+    it("다른 운영자가 먼저 처리한 제출은 합격 이력을 건드리지 않는다(D5)", async () => {
+        mocks.examSubmissionFindFirst.mockResolvedValue({
+            id: 50,
+            userId: 2,
+            examId: 30,
+        });
+        mocks.examSubmissionUpdateMany.mockResolvedValue({ count: 0 });
+        const formData = new FormData();
+        formData.set("submissionId", "50");
+        formData.set("status", "approved");
+
+        await expect(reviewExamSubmission(formData)).resolves.toEqual({
+            success: false,
+            message: "대기 중인 검정 인증을 찾을 수 없습니다.",
+        });
+        expect(mocks.examAchievementUpsert).not.toHaveBeenCalled();
     });
 
     it("대기 중인 검정 제출을 반려하고 연결된 합격 이력을 제거한다", async () => {
@@ -402,11 +420,11 @@ describe("관리자 액션", () => {
             message: "검정 인증을 반려했습니다.",
             status: "rejected",
         });
-        expect(mocks.examSubmissionUpdate).toHaveBeenCalledWith({
-            where: { id: 50 },
+        expect(mocks.examSubmissionUpdateMany).toHaveBeenCalledWith({
+            where: { id: 50, status: "pending" },
             data: expect.objectContaining({
                 status: "rejected",
-                reviewerNote: "증빙을 확인해주세요.",
+                reviewNote: "증빙을 확인해주세요.",
             }),
         });
         expect(mocks.examAchievementDeleteMany).toHaveBeenCalledWith({

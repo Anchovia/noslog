@@ -14,18 +14,18 @@ export async function getAccountSettingsData() {
     const user = await db.user.findUnique({
         where: { id: session.id },
         select: {
-            discord_id: true,
+            discordId: true,
             avatar: true,
-            avatar_user_managed: true,
+            avatarUserManaged: true,
             feedbackReports: { select: { imageUrl: true } },
             examSubmissions: { select: { proofImageUrl: true } },
             _count: {
                 select: {
-                    PlayData: true,
+                    playData: true,
                     dataSyncs: true,
                     chartPlayHistory: true,
                     chartRecordSnapshots: true,
-                    UserBestGrade: true,
+                    bestGrades: true,
                     ratingHistory: true,
                     communityEvaluations: true,
                     communityHelpful: true,
@@ -44,7 +44,7 @@ export async function getAccountSettingsData() {
     const counts = user._count;
     const uploads = new Set(
         [
-            user.avatar_user_managed ? user.avatar : null,
+            user.avatarUserManaged ? user.avatar : null,
             ...user.feedbackReports.map((row) => row.imageUrl),
             ...user.examSubmissions.map((row) => row.proofImageUrl),
         ].filter(Boolean)
@@ -52,7 +52,7 @@ export async function getAccountSettingsData() {
     const verified = hasRecentDeletionVerification(
         session.deletionVerification,
         session.id,
-        user.discord_id
+        user.discordId
     );
     return {
         expiresAt: verified
@@ -61,11 +61,11 @@ export async function getAccountSettingsData() {
             : null,
         summary: accountDeletionSummarySchema.parse({
             plays:
-                counts.PlayData +
+                counts.playData +
                 counts.dataSyncs +
                 counts.chartPlayHistory +
                 counts.chartRecordSnapshots,
-            growth: counts.UserBestGrade + counts.ratingHistory,
+            growth: counts.bestGrades + counts.ratingHistory,
             community:
                 counts.communityEvaluations +
                 counts.communityHelpful +

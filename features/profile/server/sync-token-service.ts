@@ -28,7 +28,7 @@ export async function regenerateSyncToken(
     try {
         await db.user.update({
             where: { id: session.id },
-            data: { sync_token_version: { increment: 1 } },
+            data: { syncTokenVersion: { increment: 1 } },
         });
 
         revalidatePath(localizePath("/bookmarklet", locale));

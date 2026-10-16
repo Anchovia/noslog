@@ -239,7 +239,7 @@ describe("POST /api/receivePlayerData", () => {
         mocks.verifySyncToken.mockReturnValue({ userId: 1, version: 0 });
         mocks.userFindUnique.mockResolvedValue({
             id: 1,
-            sync_token_version: 0,
+            syncTokenVersion: 0,
             role: "user",
             stats: { gradeBasic: 1000, gradeRecital: null },
         });
@@ -261,9 +261,9 @@ describe("POST /api/receivePlayerData", () => {
         mocks.dataSyncCreate.mockResolvedValue({ id: 10 });
         mocks.dataSyncUpdate.mockResolvedValue({ id: 10 });
         mocks.musicChartFindMany.mockResolvedValue([
-            { music_idx: "test-music", difficulty: "Normal" },
-            { music_idx: "test-music", difficulty: "Hard" },
-            { music_idx: "test-music", difficulty: "Expert" },
+            { musicIdx: "test-music", difficulty: "Normal" },
+            { musicIdx: "test-music", difficulty: "Hard" },
+            { musicIdx: "test-music", difficulty: "Expert" },
         ]);
         mocks.updateRecentPlay.mockResolvedValue({
             insertedPlays: 1,
@@ -355,7 +355,7 @@ describe("POST /api/receivePlayerData", () => {
         mocks.dataSyncFindFirst.mockResolvedValue({
             id: 9,
             status: "processing",
-            started_at: new Date(),
+            startedAt: new Date(),
         });
 
         const response = await POST(createRequest(requestBody()));
@@ -382,7 +382,7 @@ describe("POST /api/receivePlayerData", () => {
         mocks.dataSyncFindFirst.mockResolvedValue({
             id: 9,
             status: "completed",
-            started_at: new Date(),
+            startedAt: new Date(),
         });
 
         const response = await POST(createRequest(requestBody()));
@@ -396,7 +396,7 @@ describe("POST /api/receivePlayerData", () => {
         mocks.dataSyncFindFirst.mockResolvedValue({
             id: 9,
             status: "processing",
-            started_at: new Date(Date.now() - 6 * 60 * 1000),
+            startedAt: new Date(Date.now() - 6 * 60 * 1000),
         });
 
         const response = await POST(createRequest(requestBody()));
@@ -406,7 +406,7 @@ describe("POST /api/receivePlayerData", () => {
             where: { id: 9 },
             data: expect.objectContaining({
                 status: "failed",
-                error_message: "동기화 처리 시간이 초과되었습니다.",
+                errorMessage: "동기화 처리 시간이 초과되었습니다.",
             }),
         });
         expect(mocks.dataSyncCreate).toHaveBeenCalledOnce();
@@ -430,7 +430,7 @@ describe("POST /api/receivePlayerData", () => {
             where: { id: 10 },
             data: expect.objectContaining({
                 status: "completed",
-                error_message:
+                errorMessage:
                     "DB에 등록되지 않은 채보 1개를 건너뛰었습니다: unknown (Expert)",
             }),
         });
@@ -484,8 +484,8 @@ describe("POST /api/receivePlayerData", () => {
             where: { id: 10 },
             data: expect.objectContaining({
                 status: "completed",
-                inserted_plays: 1,
-                changed_records: 1,
+                insertedPlays: 1,
+                changedRecords: 1,
             }),
         });
         expect(mocks.revalidateTag).toHaveBeenCalledWith(
@@ -536,7 +536,7 @@ describe("POST /api/receivePlayerData", () => {
         mocks.dataSyncFindFirst.mockResolvedValueOnce({
             id: 9,
             status: "completed",
-            started_at: new Date(Date.now() - 60 * 60 * 1000),
+            startedAt: new Date(Date.now() - 60 * 60 * 1000),
         });
         mocks.updateRecentBestRecords.mockResolvedValueOnce({
             changedRecords: 0,
@@ -663,8 +663,8 @@ describe("POST /api/receivePlayerData", () => {
 
     it("미등록 채보는 개인 기록에서 제외하고 동기화 내역에 남긴다", async () => {
         mocks.musicChartFindMany.mockResolvedValue([
-            { music_idx: "test-music", difficulty: "Normal" },
-            { music_idx: "test-music", difficulty: "Hard" },
+            { musicIdx: "test-music", difficulty: "Normal" },
+            { musicIdx: "test-music", difficulty: "Hard" },
         ]);
 
         const response = await POST(createRequest(requestBody(true)));
@@ -685,7 +685,7 @@ describe("POST /api/receivePlayerData", () => {
             where: { id: 10 },
             data: expect.objectContaining({
                 status: "completed",
-                error_message: expect.stringContaining("test-music (Expert)"),
+                errorMessage: expect.stringContaining("test-music (Expert)"),
             }),
         });
     });
@@ -707,8 +707,8 @@ describe("POST /api/receivePlayerData", () => {
             where: { id: 10 },
             data: expect.objectContaining({
                 status: "completed",
-                changed_records: 0,
-                error_message:
+                changedRecords: 0,
+                errorMessage:
                     expect.stringContaining("DB에 등록되지 않은 채보 3개"),
             }),
         });
@@ -769,7 +769,7 @@ describe("POST /api/receivePlayerData", () => {
     it("관리자 전체 연동은 감지한 카탈로그 변경을 즉시 반영한다", async () => {
         mocks.userFindUnique.mockResolvedValue({
             id: 1,
-            sync_token_version: 0,
+            syncTokenVersion: 0,
             role: "admin",
             stats: { gradeBasic: 1000, gradeRecital: null },
         });
@@ -808,7 +808,7 @@ describe("POST /api/receivePlayerData", () => {
         vi.spyOn(console, "error").mockImplementation(() => undefined);
         mocks.userFindUnique.mockResolvedValue({
             id: 1,
-            sync_token_version: 0,
+            syncTokenVersion: 0,
             role: "admin",
             stats: { gradeBasic: 1000, gradeRecital: null },
         });
@@ -834,7 +834,7 @@ describe("POST /api/receivePlayerData", () => {
             where: { id: 10 },
             data: expect.objectContaining({
                 status: "failed",
-                error_message: "sync failed",
+                errorMessage: "sync failed",
             }),
         });
     });

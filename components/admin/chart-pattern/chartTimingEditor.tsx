@@ -185,9 +185,9 @@ function safeFileName(value: string) {
 }
 
 const STATUS_TONES: Partial<Record<ChartDraftStatus, string>> = {
-    submitted: "warning",
+    pending: "warning",
     changes_requested: "info",
-    published: "success",
+    approved: "success",
 };
 
 function StatusTag({ status }: { status: ChartDraftStatus }) {
@@ -470,7 +470,7 @@ function ChartTimingEditorWorkspace({
                 return;
             }
             toast.success(result.message);
-            setDraftStatus("submitted");
+            setDraftStatus("pending");
             setReadOnly(true);
             setNoteTool("select");
         } catch {
@@ -1103,7 +1103,7 @@ function ChartTimingEditorWorkspace({
                         ) : mode.kind === "contributor" && draftStatus ? (
                             <span className="flex items-center gap-nl-8">
                                 <StatusTag status={draftStatus} />
-                                {draftStatus === "submitted" ? (
+                                {draftStatus === "pending" ? (
                                     <button
                                         type="button"
                                         disabled={statusPending}
@@ -1170,7 +1170,7 @@ function ChartTimingEditorWorkspace({
                                     type="button"
                                     disabled={
                                         statusPending ||
-                                        draftStatus !== "submitted"
+                                        draftStatus !== "pending"
                                     }
                                     onClick={() =>
                                         void decide("request_changes")
@@ -1186,7 +1186,7 @@ function ChartTimingEditorWorkspace({
                                     type="button"
                                     disabled={
                                         statusPending ||
-                                        draftStatus !== "submitted" ||
+                                        draftStatus !== "pending" ||
                                         hasNoteConflicts
                                     }
                                     onClick={() => void decide("publish")}
@@ -1780,7 +1780,7 @@ export default function ChartTimingEditor(props: ChartTimingEditorProps) {
                 readOnly:
                     props.mode.kind === "review" ||
                     (props.mode.kind === "contributor" &&
-                        props.mode.status === "submitted"),
+                        props.mode.status === "pending"),
                 text: {
                     overlap: t("editor.overlap"),
                     saving: t("editor.saving"),

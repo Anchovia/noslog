@@ -50,7 +50,7 @@ describe("사용자 변경 Server Action 권한", () => {
         expect(result.success).toBe(true);
         expect(mocks.userUpdate).toHaveBeenCalledWith({
             where: { id: 7 },
-            data: { preferred_arcade_id: 10 },
+            data: { preferredArcadeId: 10 },
         });
     });
 
@@ -75,7 +75,7 @@ describe("사용자 변경 Server Action 권한", () => {
         );
         expect(mocks.userUpdate).toHaveBeenCalledWith({
             where: { id: 7 },
-            data: { sync_token_version: { increment: 1 } },
+            data: { syncTokenVersion: { increment: 1 } },
         });
     });
 });

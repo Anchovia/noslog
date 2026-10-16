@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
-import db from "@/lib/db";
+import { getTierListScope } from "@/features/tiers/server/tier-browser-data";
 import { localizePath } from "@/lib/i18n/routing";
 import { getRequestLocale } from "@/lib/i18n/server";
 import { isTierGoal } from "@/lib/tiers";
@@ -13,10 +13,7 @@ export default async function LegacyTierDetailPage({
 }) {
     const locale = await getRequestLocale();
     const { slug } = await params;
-    const tierList = await db.tierList.findUnique({
-        where: { slug },
-        select: { mode: true, goal: true },
-    });
+    const tierList = await getTierListScope(slug);
     const mode = tierList?.mode === "recital" ? "recital" : "basic";
     const goal =
         tierList?.goal && isTierGoal(tierList.goal) ? tierList.goal : "s";

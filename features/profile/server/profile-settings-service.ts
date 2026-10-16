@@ -62,7 +62,7 @@ export async function uploadUserSetting(
 
     const currentUser = await db.user.findUnique({
         where: { id: session.id },
-        select: { avatar: true, discord_id: true },
+        select: { avatar: true, discordId: true },
     });
     if (!currentUser) {
         return { success: false, message: t("settings.userNotFound") };
@@ -90,7 +90,7 @@ export async function uploadUserSetting(
         : null;
     if (preferredArcadeId !== null) {
         const arcade = await db.arcade.findFirst({
-            where: { id: preferredArcadeId, is_active: true },
+            where: { id: preferredArcadeId, isActive: true },
             select: { id: true },
         });
         if (!arcade) {
@@ -108,18 +108,18 @@ export async function uploadUserSetting(
                 username: result.data.username,
                 country: result.data.country,
                 locale: result.data.locale,
-                show_localized_music_title: result.data.showLocalizedMusicTitle,
+                showLocalizedMusicTitle: result.data.showLocalizedMusicTitle,
                 avatar: nextAvatar,
-                discord_name: currentUser.discord_id
+                discordName: currentUser.discordId
                     ? result.data.discordName || null
                     : null,
-                discord_username: currentUser.discord_id
+                discordUsername: currentUser.discordId
                     ? result.data.discordUsername || null
                     : null,
-                preferred_arcade_id: preferredArcadeId,
-                hide_nostalgia_name: result.data.hideNostalgiaName,
-                hide_discord_name: result.data.hideDiscordName,
-                hide_play_count: result.data.hidePlayCount,
+                preferredArcadeId: preferredArcadeId,
+                hideNostalgiaName: result.data.hideNostalgiaName,
+                hideDiscordName: result.data.hideDiscordName,
+                hidePlayCount: result.data.hidePlayCount,
             },
         });
         updateTag(CACHE_TAGS.userRankings);

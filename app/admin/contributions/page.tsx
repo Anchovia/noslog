@@ -12,17 +12,17 @@ import {
     listChartFieldProposals,
 } from "@/features/contributions/server/chart-field-proposal-service";
 
-const DRAFT_STATUSES = ["submitted", "changes_requested", "published"] as const;
+const DRAFT_STATUSES = ["pending", "changes_requested", "approved"] as const;
 type DraftStatus = (typeof DRAFT_STATUSES)[number];
 
 function fieldStatusLabel(status: ChartFieldProposalStatus) {
     if (status === "pending") return "검토 대기";
-    if (status === "applied") return "반영";
+    if (status === "approved") return "반영";
     return "반려";
 }
 
 function draftStatusLabel(status: DraftStatus) {
-    if (status === "submitted") return "검토 대기";
+    if (status === "pending") return "검토 대기";
     if (status === "changes_requested") return "수정 요청";
     return "공개";
 }
@@ -127,7 +127,7 @@ async function FieldProposals({ status: raw }: { status?: string }) {
 }
 
 async function ChartDrafts({ status: raw }: { status?: string }) {
-    const status = DRAFT_STATUSES.find((item) => item === raw) ?? "submitted";
+    const status = DRAFT_STATUSES.find((item) => item === raw) ?? "pending";
     const drafts = await listChartDraftsForReview(status);
     return (
         <>

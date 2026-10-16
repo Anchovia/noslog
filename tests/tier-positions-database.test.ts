@@ -64,21 +64,21 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
                 data: {
                     index: musicIndex,
                     title: "T",
-                    title_kana: "T",
+                    titleKana: "T",
                     category: "C",
-                    category_short: "C",
+                    categoryShort: "C",
                     charts: {
-                        create: ["Normal", "Hard", "Expert", "Real"].map(
-                            (difficulty, index) => ({
-                                difficulty,
-                                level: index + 1,
-                            })
-                        ),
+                        create: (
+                            ["Normal", "Hard", "Expert", "Real"] as const
+                        ).map((difficulty, index) => ({
+                            difficulty,
+                            level: index + 1,
+                        })),
                     },
                 },
             });
             const charts = await db.musicChart.findMany({
-                where: { music_idx: musicIndex },
+                where: { musicIdx: musicIndex },
                 orderBy: { level: "asc" },
             });
             const list = await db.tierList.create({

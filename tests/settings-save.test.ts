@@ -65,8 +65,8 @@ describe("P10 settings save boundaries", () => {
             username: profile.username,
             country: "ja-JP",
             avatar: null,
-            preferred_arcade_id: null,
-            hide_play_scores: true,
+            preferredArcadeId: null,
+            hidePlayScores: true,
         });
         mocks.updateUser.mockResolvedValue({ id: 9 });
         mocks.findArcade.mockResolvedValue({ id: 3 });
@@ -95,8 +95,8 @@ describe("P10 settings save boundaries", () => {
         const data = settingsFormData({
             ...profile,
             locale: "ko",
-            hide_discord_name: "false",
-            discord_id: "another",
+            hideDiscordName: "false",
+            discordId: "another",
         });
         expect((await saveSettingsProfile(data)).success).toBe(true);
         expect(mocks.updateUser).toHaveBeenCalledWith({
@@ -104,7 +104,7 @@ describe("P10 settings save boundaries", () => {
             data: {
                 username: profile.username,
                 country: "ja-JP",
-                preferred_arcade_id: null,
+                preferredArcadeId: null,
             },
         });
     });
@@ -120,7 +120,7 @@ describe("P10 settings save boundaries", () => {
         expect(mocks.updateUser).not.toHaveBeenCalled();
         mocks.findUser.mockResolvedValue({
             avatar: null,
-            preferred_arcade_id: 3,
+            preferredArcadeId: 3,
         });
         expect(
             (
@@ -166,7 +166,7 @@ describe("P10 settings save boundaries", () => {
     it("records explicit removal and deletes the old upload only after the database accepts it", async () => {
         mocks.findUser.mockResolvedValue({
             avatar: "https://example.com/old.png",
-            preferred_arcade_id: null,
+            preferredArcadeId: null,
         });
         expect(
             (await saveSettingsProfile(settingsFormData(profile))).success
@@ -176,9 +176,9 @@ describe("P10 settings save boundaries", () => {
             data: {
                 username: profile.username,
                 country: "ja-JP",
-                preferred_arcade_id: null,
+                preferredArcadeId: null,
                 avatar: null,
-                avatar_user_managed: true,
+                avatarUserManaged: true,
             },
         });
         expect(mocks.deleteBlob).toHaveBeenCalledWith(
@@ -191,7 +191,7 @@ describe("P10 settings save boundaries", () => {
     it("keeps existing and staged images after a rejected save for safe retry", async () => {
         mocks.findUser.mockResolvedValue({
             avatar: "https://example.com/old.png",
-            preferred_arcade_id: null,
+            preferredArcadeId: null,
         });
         mocks.updateUser.mockRejectedValue({ code: "P2002" });
         const result = await saveSettingsProfile(
@@ -222,6 +222,17 @@ describe("P10 settings save boundaries", () => {
                 ["chart-rankings"],
             ]);
         });
+        it("국가가 바뀌면 남의 국가 순위 숫자도(D8 · B6)", async () => {
+            await saveSettingsProfile(
+                settingsFormData({ ...profile, country: "ko-KR" })
+            );
+            expect(mocks.updateTag.mock.calls).toEqual([
+                ["user-profile-9"],
+                ["user-rankings"],
+                ["chart-rankings"],
+                ["user-profiles"],
+            ]);
+        });
         it("선호 오락실이 바뀌면 오락실 정보도", async () => {
             await saveSettingsProfile(
                 settingsFormData({ ...profile, preferredArcadeId: "3" })
@@ -235,7 +246,7 @@ describe("P10 settings save boundaries", () => {
             await saveSettingsPrivacy(settingsFormData(privacy));
             expect(mocks.updateTag.mock.calls).toEqual([["user-profile-9"]]);
         });
-        it("점수 비공개를 바꾸면 랭킹 · 악곡 랭킹도", async () => {
+        it("점수 비공개를 바꾸면 랭킹 · 악곡 랭킹 · 남의 순위 숫자도", async () => {
             await saveSettingsPrivacy(
                 settingsFormData({ ...privacy, showPlayScores: true })
             );
@@ -243,6 +254,7 @@ describe("P10 settings save boundaries", () => {
                 ["user-profile-9"],
                 ["user-rankings"],
                 ["chart-rankings"],
+                ["user-profiles"],
             ]);
         });
     });
@@ -269,12 +281,12 @@ describe("P10 settings save boundaries", () => {
         expect(mocks.updateUser).toHaveBeenCalledWith({
             where: { id: 9 },
             data: {
-                hide_nostalgia_name: false,
-                hide_discord_name: true,
-                hide_preferred_arcade: false,
-                hide_play_count: true,
-                hide_play_activity: true,
-                hide_play_scores: true,
+                hideNostalgiaName: false,
+                hideDiscordName: true,
+                hidePreferredArcade: false,
+                hidePlayCount: true,
+                hidePlayActivity: true,
+                hidePlayScores: true,
             },
         });
         expect(mocks.deleteBlob).not.toHaveBeenCalled();

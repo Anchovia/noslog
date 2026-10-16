@@ -1,3 +1,4 @@
+import { hasFullComboLamp, isPianist } from "@/lib/music/clear-mark";
 export { getJacketUrl } from "@/lib/music-jackets";
 
 export type TierRecord = {
@@ -89,6 +90,16 @@ export function isTierDifficulty(value: string): value is TierDifficulty {
     return TIER_DIFFICULTIES.includes(value as TierDifficulty);
 }
 
+// 주소의 난이도(소문자 등)를 채보 난이도 값으로 — 난이도는 enum 이라 대소문자 무시 조회를 못 한다(2026-10-16 D4-C 2차)
+export function parseChartDifficulty(
+    value: string
+): TierDifficulty | undefined {
+    const lower = value.toLowerCase();
+    return TIER_DIFFICULTIES.find(
+        (difficulty) => difficulty.toLowerCase() === lower
+    );
+}
+
 export function isTierLevelFilter(value: string) {
     return (
         TIER_REGULAR_LEVELS.includes(value) ||
@@ -103,7 +114,7 @@ export function isTierGoalAchieved(
     if (!record || record.score <= 0) return false;
     if (goal === "s") return record.score >= 950_000;
     if (goal === "990k") return record.score >= 990_000;
-    return record.fc_type === 3 || record.score >= 1_000_000;
+    return isPianist(record.fc_type, record.score);
 }
 
 export function formatOfficialChartLevel(difficulty: string, level: number) {
@@ -174,8 +185,8 @@ export function getTierRecordStatus(
     record: TierRecord | null | undefined
 ): TierRecordStatus {
     if (!record || record.score <= 0) return "unplayed";
-    if (record.fc_type === 3 || record.score >= 1_000_000) return "pianist";
-    if (record.fc_type >= 2) return "fc";
+    if (isPianist(record.fc_type, record.score)) return "pianist";
+    if (hasFullComboLamp(record.fc_type)) return "fc";
     if (record.score >= 950_000) return "s";
     if (record.score >= 900_000) return "a_plus";
     return "played";

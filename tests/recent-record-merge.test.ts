@@ -11,45 +11,45 @@ import type {
     RecordValues,
 } from "@/lib/services/user/recent-record-merge";
 
-const chart = { level: 12, note_count: 1000 };
+const chart = { level: 12, noteCount: 1000 };
 // 최근 플레이 시각은 played_at(timestamptz) — 공식 KST 글자를 그대로 읽어 만든다(2026-10-16 P5-1)
 const at = (value: string) => recordBestAt(value)!;
 const attempt = (
     overrides: Partial<PendingRecordPlay> = {}
 ): PendingRecordPlay => ({
     id: 1,
-    chart_id: 10,
-    record_applied: false,
+    chartId: 10,
+    recordApplied: false,
     chart,
     level: 12,
     score: 950000,
     rank: "S",
-    grade_basic: 10000,
-    max_combo: 800,
+    gradeBasic: 10000,
+    maxCombo: 800,
     playedAt: at("2026/09/20 10:00"),
-    judge_sjust: 900,
-    judge_just: 80,
-    judge_good: 10,
-    judge_miss: 10,
-    judge_near: 0,
+    judgeSjust: 900,
+    judgeJust: 80,
+    judgeGood: 10,
+    judgeMiss: 10,
+    judgeNear: 0,
     ...overrides,
 });
 const fullRecord = (): RecordValues => ({
     ...mergeRecentRecord(null, attempt(), chart),
-    play_count: 100,
-    fullcombo_count: 20,
-    pianistic_count: 4,
+    playCount: 100,
+    fullcomboCount: 20,
+    pianisticCount: 4,
     score: 990000,
-    fc_type: 2,
-    max_combo: 1000,
-    grade_basic: 12000,
-    grade_recital: 5000,
-    clear_count: 90,
-    clear_flag: 2,
-    note_rate_standard: 9900,
-    note_rate_tenuto: 9800,
-    note_rate_glissando: 9700,
-    note_rate_trill: 9600,
+    fcType: 2,
+    maxCombo: 1000,
+    gradeBasic: 12000,
+    gradeRecital: 5000,
+    clearCount: 90,
+    clearFlag: 2,
+    noteRateStandard: 9900,
+    noteRateTenuto: 9800,
+    noteRateGlissando: 9700,
+    noteRateTrill: 9600,
 });
 
 describe("recent-only record merge (no database writes)", () => {
@@ -57,14 +57,14 @@ describe("recent-only record merge (no database writes)", () => {
         expect(mergeRecentRecord(null, attempt(), chart)).toMatchObject({
             score: 950000,
             rank: "S",
-            grade_basic: 10000,
-            play_count: 1,
-            fullcombo_count: 0,
-            pianistic_count: 0,
-            grade_recital: null,
-            clear_count: null,
-            clear_flag: null,
-            note_rate_standard: null,
+            gradeBasic: 10000,
+            playCount: 1,
+            fullcomboCount: 0,
+            pianisticCount: 0,
+            gradeRecital: null,
+            clearCount: null,
+            clearFlag: null,
+            noteRateStandard: null,
             bestAt: at("2026-09-20 10:00"),
         });
     });
@@ -72,69 +72,69 @@ describe("recent-only record merge (no database writes)", () => {
         const previous = fullRecord();
         const result = mergeRecentRecord(
             previous,
-            attempt({ score: 900000, rank: "A", grade_basic: 9000 }),
+            attempt({ score: 900000, rank: "A", gradeBasic: 9000 }),
             chart
         );
-        expect(result).toEqual({ ...previous, play_count: 101 });
-        expect(previous.play_count).toBe(100);
+        expect(result).toEqual({ ...previous, playCount: 101 });
+        expect(previous.playCount).toBe(100);
     });
     it("updates score and its judgement/date without erasing a higher Grd or combo", () => {
         const previous = fullRecord();
         const play = attempt({
             score: 995000,
-            grade_basic: 11000,
-            max_combo: 900,
-            judge_sjust: 980,
+            gradeBasic: 11000,
+            maxCombo: 900,
+            judgeSjust: 980,
             playedAt: at("2026/09/20 11:00"),
         });
         expect(mergeRecentRecord(previous, play, chart)).toEqual({
             ...previous,
             score: 995000,
-            play_count: 101,
+            playCount: 101,
             bestAt: new Date("2026-09-20T02:00:00.000Z"),
-            judge_sjust: 980,
-            judge_just: 80,
-            judge_good: 10,
-            judge_miss: 10,
-            judge_near: 0,
+            judgeSjust: 980,
+            judgeJust: 80,
+            judgeGood: 10,
+            judgeMiss: 10,
+            judgeNear: 0,
         });
     });
     it("updates a higher Grd even when the score does not improve", () => {
         const previous = fullRecord();
         expect(
-            mergeRecentRecord(previous, attempt({ grade_basic: 13000 }), chart)
-        ).toEqual({ ...previous, grade_basic: 13000, play_count: 101 });
+            mergeRecentRecord(previous, attempt({ gradeBasic: 13000 }), chart)
+        ).toEqual({ ...previous, gradeBasic: 13000, playCount: 101 });
     });
     it("retains the original achievement date and judgements on an equal score", () => {
         const previous = fullRecord();
         expect(
             mergeRecentRecord(
                 previous,
-                attempt({ score: previous.score, judge_sjust: 999 }),
+                attempt({ score: previous.score, judgeSjust: 999 }),
                 chart
             ).bestAt
         ).toBe(previous.bestAt);
         expect(
             mergeRecentRecord(
                 previous,
-                attempt({ score: previous.score, judge_sjust: 999 }),
+                attempt({ score: previous.score, judgeSjust: 999 }),
                 chart
-            ).judge_sjust
-        ).toBe(previous.judge_sjust);
+            ).judgeSjust
+        ).toBe(previous.judgeSjust);
     });
     it("increments observed full combo and Pianist counts without lowering official counts", () => {
         const previous = fullRecord();
         expect(
             mergeRecentRecord(
                 previous,
-                attempt({ score: 1000000, rank: "P", max_combo: 1000 }),
+                attempt({ score: 1000000, rank: "P", maxCombo: 1000 }),
                 chart
             )
         ).toMatchObject({
-            play_count: 101,
-            fullcombo_count: 21,
-            pianistic_count: 5,
-            fc_type: 3,
+            playCount: 101,
+            fullcomboCount: 21,
+            pianisticCount: 5,
+            fcType: 3,
         });
     });
     it("records a NEAR full combo as the yellow-F lamp without counting it as a full combo", () => {
@@ -142,28 +142,28 @@ describe("recent-only record merge (no database writes)", () => {
         expect(
             mergeRecentRecord(
                 null,
-                attempt({ max_combo: 1000, judge_near: 2 }),
+                attempt({ maxCombo: 1000, judgeNear: 2 }),
                 chart
             )
-        ).toMatchObject({ fc_type: 1, fullcombo_count: 0 });
+        ).toMatchObject({ fcType: 1, fullcomboCount: 0 });
         expect(
             mergeRecentRecord(
                 null,
-                attempt({ max_combo: 1000, judge_near: 0 }),
+                attempt({ maxCombo: 1000, judgeNear: 0 }),
                 chart
             )
-        ).toMatchObject({ fc_type: 2, fullcombo_count: 1 });
+        ).toMatchObject({ fcType: 2, fullcomboCount: 1 });
     });
     it("does not invent a full combo from an unknown note count", () => {
         expect(
-            mergeRecentRecord(null, attempt({ max_combo: 9999 }), {
+            mergeRecentRecord(null, attempt({ maxCombo: 9999 }), {
                 ...chart,
-                note_count: null,
+                noteCount: null,
             })
-        ).toMatchObject({ fc_type: 0, fullcombo_count: 0 });
+        ).toMatchObject({ fcType: 0, fullcomboCount: 0 });
     });
-    it("does not use historical best_score without the accompanying Grd and judgement", () => {
-        const play = { ...attempt(), best_score: 999999 };
+    it("does not use historical bestScore without the accompanying Grd and judgement", () => {
+        const play = { ...attempt(), bestScore: 999999 };
         expect(mergeRecentRecord(null, play, chart).score).toBe(play.score);
     });
     it.each([
@@ -193,11 +193,11 @@ describe("recent-only record merge (no database writes)", () => {
     it("deduplicates receipts and does not increment again after retry", () => {
         const play = attempt();
         const first = planRecentRecordMerge(new Map(), [play, play], null);
-        expect(first.changes.get(10)?.play_count).toBe(1);
+        expect(first.changes.get(10)?.playCount).toBe(1);
         expect(first.appliedIds).toEqual([1]);
         const retry = planRecentRecordMerge(
             first.changes,
-            [{ ...play, record_applied: true }],
+            [{ ...play, recordApplied: true }],
             null
         );
         expect(retry.changes.size).toBe(0);
@@ -209,23 +209,23 @@ describe("recent-only record merge (no database writes)", () => {
         const second = planRecentRecordMerge(
             first.changes,
             [
-                { ...firstPlay, record_applied: true },
+                { ...firstPlay, recordApplied: true },
                 attempt({
                     id: 2,
                     score: 980000,
                     playedAt: at("2026/09/20 11:00"),
                 }),
-                attempt({ id: 3, chart_id: 20, score: 900000, rank: "A" }),
+                attempt({ id: 3, chartId: 20, score: 900000, rank: "A" }),
             ],
             null
         );
         expect(second.changes.get(10)).toMatchObject({
             score: 980000,
-            play_count: 2,
+            playCount: 2,
         });
         expect(second.changes.get(20)).toMatchObject({
             score: 900000,
-            play_count: 1,
+            playCount: 1,
         });
         expect(second.appliedIds.sort()).toEqual([2, 3]);
     });
@@ -237,7 +237,7 @@ describe("recent-only record merge (no database writes)", () => {
         );
         expect(result.changes.get(10)).toMatchObject({
             score: 960000,
-            play_count: 2,
+            playCount: 2,
         });
     });
     it("preserves full records, consumes overlap, and adds only post-expiry plays", () => {
@@ -253,7 +253,7 @@ describe("recent-only record merge (no database writes)", () => {
                 }),
                 attempt({
                     id: 3,
-                    chart_id: 20,
+                    chartId: 20,
                     playedAt: at("2026/09/19 10:00"),
                 }),
             ],
@@ -261,14 +261,14 @@ describe("recent-only record merge (no database writes)", () => {
         );
         expect(result.changes.get(10)).toMatchObject({
             score: 995000,
-            play_count: 101,
-            grade_recital: 5000,
+            playCount: 101,
+            gradeRecital: 5000,
         });
         expect(result.changes.has(20)).toBe(false);
         expect(result.appliedIds).toHaveLength(3);
     });
     it("uses the new authoritative counts after Pass renewal instead of adding the old partial counts", () => {
-        const corrected = { ...fullRecord(), play_count: 250 };
+        const corrected = { ...fullRecord(), playCount: 250 };
         const result = planRecentRecordMerge(
             new Map([[10, corrected]]),
             [
@@ -277,7 +277,7 @@ describe("recent-only record merge (no database writes)", () => {
             ],
             new Date("2026-09-21T02:00:00Z")
         );
-        expect(result.changes.get(10)?.play_count).toBe(251);
+        expect(result.changes.get(10)?.playCount).toBe(251);
     });
     it("sorts history by play time before selecting a best achievement date", () => {
         const result = planRecentRecordMerge(
@@ -299,7 +299,7 @@ describe("recent-only record merge (no database writes)", () => {
         );
         expect(result.changes.get(10)).toMatchObject({
             score: 980000,
-            play_count: 3,
+            playCount: 3,
             bestAt: at("2026-09-20 11:00"),
         });
     });
@@ -308,31 +308,31 @@ describe("recent-only record merge (no database writes)", () => {
 describe("zero Grd repair", () => {
     const zero = () =>
         attempt({
-            grade_basic: 0,
-            is_onehand: false,
-            chart: { ...chart, difficulty: "Expert", level_constant: 12 },
+            gradeBasic: 0,
+            isOnehand: false,
+            chart: { ...chart, difficulty: "Expert", levelConstant: 12 },
         });
     it("fills a new zero record but retains an official positive value", () => {
         const play = zero();
         expect(
-            mergeRecentRecord(null, play, play.chart).grade_basic
+            mergeRecentRecord(null, play, play.chart).gradeBasic
         ).toBeGreaterThan(0);
         expect(
-            mergeRecentRecord(null, { ...play, grade_basic: 12345 }, play.chart)
-                .grade_basic
+            mergeRecentRecord(null, { ...play, gradeBasic: 12345 }, play.chart)
+                .gradeBasic
         ).toBe(12345);
     });
     it("repairs an applied record once without changing counts or other bests", () => {
-        const play = { ...zero(), record_applied: true };
-        const record = { ...fullRecord(), grade_basic: 0 };
+        const play = { ...zero(), recordApplied: true };
+        const record = { ...fullRecord(), gradeBasic: 0 };
         const plan = planRecentRecordMerge(
             new Map([[10, record]]),
             [play],
             null
         );
         const fixed = plan.changes.get(10)!;
-        expect(fixed.grade_basic).toBeGreaterThan(0);
-        expect({ ...fixed, grade_basic: 0 }).toEqual(record);
+        expect(fixed.gradeBasic).toBeGreaterThan(0);
+        expect({ ...fixed, gradeBasic: 0 }).toEqual(record);
         expect(plan.appliedIds).toEqual([]);
         expect(
             planRecentRecordMerge(new Map([[10, fixed]]), [play], null).changes
@@ -340,8 +340,8 @@ describe("zero Grd repair", () => {
         ).toBe(0);
     });
     it("does not supersede full-import coverage or a better official Grd", () => {
-        const play = { ...zero(), record_applied: true };
-        const records = new Map([[10, { ...fullRecord(), grade_basic: 0 }]]);
+        const play = { ...zero(), recordApplied: true };
+        const records = new Map([[10, { ...fullRecord(), gradeBasic: 0 }]]);
         expect(
             planRecentRecordMerge(
                 records,

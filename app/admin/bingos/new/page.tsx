@@ -1,13 +1,10 @@
+import { listBingoMusicOptions } from "@/features/bingos/server/bingo-admin-data";
 import BingoEditor, {
     type BingoEditorData,
 } from "@/features/bingos/components/bingo-editor";
-import db from "@/lib/db";
 
 export default async function NewBingoPage() {
-    const musics = await db.music.findMany({
-        select: { index: true, title: true },
-        orderBy: { title: "asc" },
-    });
+    const musics = await listBingoMusicOptions();
     const bingo: BingoEditorData = {
         title: "",
         description: "",

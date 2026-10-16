@@ -11,7 +11,7 @@ export const EVENT_TITLE_MAX_LENGTH = 80;
 export const EVENT_CONTENT_MAX_LENGTH = 5000;
 export const EVENT_REVIEW_NOTE_MAX_LENGTH = 500;
 export type EventStatus =
-    "DRAFT" | "PENDING" | "CHANGES_REQUESTED" | "PUBLISHED" | "REJECTED";
+    "draft" | "pending" | "changes_requested" | "approved" | "rejected";
 export const EVENT_PHASES = ["live", "upcoming", "ended"] as const;
 export type EventPhase = (typeof EVENT_PHASES)[number];
 const EVENT_REVIEW_DECISIONS = ["approve", "requestChanges", "reject"] as const;
@@ -163,7 +163,7 @@ export const eventReviewSchema = z
 
 // 작성자가 고칠 수 있는 상태 — 반려된 글은 다시 요청할 수 없다(2026-09-18 결정 1)
 export function canAuthorEdit(status: EventStatus) {
-    return status !== "REJECTED";
+    return status !== "rejected";
 }
 
 export interface EventWorkingCopy {
@@ -188,7 +188,7 @@ export function reviewUpdate(
     if (decision === "approve")
         return {
             ...reviewed,
-            status: "PUBLISHED" as const,
+            status: "approved" as const,
             reviewNote: null,
             publishedTitle: working.title,
             publishedContent: working.content,
@@ -200,12 +200,12 @@ export function reviewUpdate(
     if (decision === "requestChanges")
         return {
             ...reviewed,
-            status: "CHANGES_REQUESTED" as const,
+            status: "changes_requested" as const,
             reviewNote: note,
         };
     return {
         ...reviewed,
-        status: "REJECTED" as const,
+        status: "rejected" as const,
         reviewNote: note,
         publishedTitle: null,
         publishedContent: null,
@@ -230,7 +230,7 @@ export interface PublishedEventRecord {
 // 공개판이 있는 글만 공개 화면에 — 작성 중인 판의 상태(검토 대기 · 수정 요청)와 관계없이
 export function publicEvent(record: PublishedEventRecord, now: Date) {
     if (
-        record.status === "REJECTED" ||
+        record.status === "rejected" ||
         !record.publishedAt ||
         record.publishedTitle === null ||
         record.publishedContent === null ||

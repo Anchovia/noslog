@@ -79,7 +79,7 @@ export async function getAdminMusicDetail(
                 charts: {
                     include: {
                         levelConstantHistory: {
-                            orderBy: { effective_at: "desc" },
+                            orderBy: { effectiveAt: "desc" },
                             take: 5,
                         },
                     },
@@ -98,21 +98,21 @@ export async function getAdminMusicDetail(
             index: music.index,
             title: music.title,
             artist: music.artist,
-            categoryShort: music.category_short,
+            categoryShort: music.categoryShort,
             background: music.background,
             description: music.description ?? "",
             bpmMin:
                 charts
-                    .find((chart) => chart.bpm_min !== null)
-                    ?.bpm_min?.toString() ?? "",
+                    .find((chart) => chart.bpmMin !== null)
+                    ?.bpmMin?.toString() ?? "",
             bpmMax:
                 charts
-                    .find((chart) => chart.bpm_max !== null)
-                    ?.bpm_max?.toString() ?? "",
+                    .find((chart) => chart.bpmMax !== null)
+                    ?.bpmMax?.toString() ?? "",
             durationSeconds:
                 charts
-                    .find((chart) => chart.duration_seconds !== null)
-                    ?.duration_seconds?.toString() ?? "",
+                    .find((chart) => chart.durationSeconds !== null)
+                    ?.durationSeconds?.toString() ?? "",
             translations: music.translations.flatMap((translation) => {
                 const locale = normalizeMusicTranslationLocale(
                     translation.locale
@@ -134,12 +134,12 @@ export async function getAdminMusicDetail(
                 id: chart.id,
                 difficulty: chart.difficulty,
                 level: chart.level,
-                levelConstant: chart.level_constant,
-                noteCount: chart.note_count,
-                releasedAt: formatDateInput(chart.released_at),
-                unlockCondition: chart.unlock_condition ?? "",
-                playVideoUrl: chart.play_video_url ?? "",
-                chartPreviewUrl: chart.chart_preview_url ?? "",
+                levelConstant: chart.levelConstant,
+                noteCount: chart.noteCount,
+                releasedAt: formatDateInput(chart.releasedAt),
+                unlockCondition: chart.unlockCondition ?? "",
+                playVideoUrl: chart.playVideoUrl ?? "",
+                chartPreviewUrl: chart.chartPreviewUrl ?? "",
                 history: chart.levelConstantHistory.map(
                     (history) => history.value
                 ),
@@ -178,11 +178,11 @@ export async function saveMusicMetadata(
                 data: { description: input.description },
             }),
             db.musicChart.updateMany({
-                where: { music_idx: input.musicIndex },
+                where: { musicIdx: input.musicIndex },
                 data: {
-                    bpm_min: input.bpmMin,
-                    bpm_max: input.bpmMax,
-                    duration_seconds: input.durationSeconds,
+                    bpmMin: input.bpmMin,
+                    bpmMax: input.bpmMax,
+                    durationSeconds: input.durationSeconds,
                 },
             }),
         ]);
@@ -221,12 +221,12 @@ export async function saveChartMetadata(
         const current = await db.musicChart.findUnique({
             where: { id: input.chartId },
             select: {
-                level_constant: true,
+                levelConstant: true,
                 difficulty: true,
-                music_idx: true,
+                musicIdx: true,
             },
         });
-        if (!current || current.music_idx !== input.musicIndex) {
+        if (!current || current.musicIdx !== input.musicIndex) {
             return {
                 success: false,
                 message: "저장할 채보를 찾을 수 없습니다.",
@@ -237,22 +237,22 @@ export async function saveChartMetadata(
             await transaction.musicChart.update({
                 where: { id: input.chartId },
                 data: {
-                    level_constant: input.levelConstant,
-                    note_count: input.noteCount,
-                    released_at: input.releasedAt,
-                    unlock_condition: input.unlockCondition,
-                    play_video_url: input.playVideoUrl,
-                    chart_preview_url: input.chartPreviewUrl,
+                    levelConstant: input.levelConstant,
+                    noteCount: input.noteCount,
+                    releasedAt: input.releasedAt,
+                    unlockCondition: input.unlockCondition,
+                    playVideoUrl: input.playVideoUrl,
+                    chartPreviewUrl: input.chartPreviewUrl,
                 },
             });
 
             if (
                 input.levelConstant !== null &&
-                input.levelConstant !== current.level_constant
+                input.levelConstant !== current.levelConstant
             ) {
                 await transaction.chartLevelConstantHistory.create({
                     data: {
-                        chart_id: input.chartId,
+                        chartId: input.chartId,
                         value: input.levelConstant,
                     },
                 });

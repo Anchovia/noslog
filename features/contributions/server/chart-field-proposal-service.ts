@@ -14,6 +14,7 @@ import {
     isChartFieldProposalField,
     isChartFieldProposalStatus,
     normalizeProposalValue,
+    toChartFieldValues,
 } from "@/features/contributions/schemas/chart-field-proposal-schema";
 import {
     contributionAwardQuery,
@@ -32,12 +33,12 @@ import getSession from "@/lib/session";
 const chartValueSelect = {
     id: true,
     difficulty: true,
-    bpm_min: true,
-    bpm_max: true,
-    note_count: true,
-    duration_seconds: true,
-    released_at: true,
-    music_idx: true,
+    bpmMin: true,
+    bpmMax: true,
+    noteCount: true,
+    durationSeconds: true,
+    releasedAt: true,
+    musicIdx: true,
 } as const;
 
 function translatorFor(requestedLocale: string) {
@@ -84,7 +85,7 @@ export async function submitChartFieldProposal(
         if (!chart) {
             return { success: false, message: t("contribution.submitError") };
         }
-        const current = chartFieldValue(chart, data.field);
+        const current = chartFieldValue(toChartFieldValues(chart), data.field);
         if (current === data.value) {
             return {
                 success: false,
@@ -226,7 +227,7 @@ export async function listChartFieldProposals(
               by: ["userId", "status"],
               where: {
                   userId: { in: authorIds },
-                  status: { in: ["applied", "rejected"] },
+                  status: { in: ["approved", "rejected"] },
               },
               _count: { _all: true },
           })
@@ -243,12 +244,15 @@ export async function listChartFieldProposals(
                       field: row.field,
                       value: row.value,
                       previousValue: row.previousValue,
-                      currentValue: chartFieldValue(row.chart, row.field),
+                      currentValue: chartFieldValue(
+                          toChartFieldValues(row.chart),
+                          row.field
+                      ),
                       evidenceKind: row.evidenceKind,
                       evidenceUrl: row.evidenceUrl,
                       evidenceNote: row.evidenceNote,
                       status: row.status,
-                      rejectReason: row.rejectReason,
+                      rejectReason: row.reviewNote,
                       createdAt: row.createdAt,
                       reviewedAt: row.reviewedAt,
                       user: row.user,
@@ -256,10 +260,10 @@ export async function listChartFieldProposals(
                           id: row.chart.id,
                           difficulty: row.chart.difficulty,
                           level: row.chart.level,
-                          musicIndex: row.chart.music_idx,
+                          musicIndex: row.chart.musicIdx,
                           title: row.chart.music.title,
                       },
-                      authorApplied: countOf(row.userId, "applied"),
+                      authorApplied: countOf(row.userId, "approved"),
                       authorRejected: countOf(row.userId, "rejected"),
                   },
               ]
@@ -353,31 +357,38 @@ export async function reviewChartFieldProposals(
         const proposals = await db.chartFieldProposal.findMany({
             where: { id: { in: review.ids }, status: "pending" },
             include: {
-                chart: { select: { difficulty: true, music_idx: true } },
+                chart: { select: { difficulty: true, musicIdx: true } },
             },
         });
 
+        // 처리한 건만 센다 — 같은 제안을 두 운영자가 동시에 처리하면 늦은 쪽은 건너뛴다(2026-10-16 D5)
+        let processed = 0;
         if (review.decision === "reject") {
-            await db.chartFieldProposal.updateMany({
-                where: { id: { in: proposals.map((item) => item.id) } },
+            const rejected = await db.chartFieldProposal.updateMany({
+                where: {
+                    id: { in: proposals.map((item) => item.id) },
+                    status: "pending",
+                },
                 data: {
                     status: "rejected",
                     rejectReasonCode: review.reasonCode,
-                    rejectReason: review.reason || null,
+                    reviewNote: review.reason || null,
                     reviewedById: admin.id,
                     reviewedAt: now,
                     // 결과를 새로 알린다 — 전에 본 제안이라도 다시 점이 뜬다
-                    seenAt: null,
+                    authorSeenAt: null,
                 },
             });
+            processed = rejected.count;
         } else {
             // 고쳐서 반영(C2)은 한 건만 고를 때 — 여러 건을 한 값으로 덮어쓰지 않는다
             const edited =
                 proposals.length === 1 && review.value ? review.value : null;
             for (const proposal of proposals) {
-                if (!isChartFieldProposalField(proposal.field)) continue;
+                const field = proposal.field;
+                if (!isChartFieldProposalField(field)) continue;
                 const parsed = edited
-                    ? normalizeProposalValue(proposal.field, edited)
+                    ? normalizeProposalValue(field, edited)
                     : proposal.value;
                 if (parsed === null) {
                     return {
@@ -385,49 +396,56 @@ export async function reviewChartFieldProposals(
                         message: "고친 값을 확인해 주세요.",
                     };
                 }
-                await db.$transaction([
-                    db.musicChart.update({
+                // 먼저 대기 중인 제안을 차지한다 — 이미 처리됐으면 값 · 출처 · 점수를 쓰지 않는다(2026-10-16 D5)
+                const applied = await db.$transaction(async (tx) => {
+                    const claimed = await tx.chartFieldProposal.updateMany({
+                        where: { id: proposal.id, status: "pending" },
+                        data: {
+                            status: "approved",
+                            appliedValue:
+                                parsed === proposal.value ? null : parsed,
+                            reviewedById: admin.id,
+                            reviewedAt: now,
+                            authorSeenAt: null,
+                        },
+                    });
+                    if (!claimed.count) return false;
+                    await tx.musicChart.update({
                         where: { id: proposal.chartId },
-                        data: chartFieldUpdate(proposal.field, parsed),
-                    }),
-                    db.chartFieldSource.create({
+                        data: chartFieldUpdate(field, parsed),
+                    });
+                    await tx.chartFieldSource.create({
                         data: {
                             chartId: proposal.chartId,
-                            field: proposal.field,
+                            field,
                             value: parsed,
                             source: "contribution",
                             sourceUrl: proposal.evidenceUrl,
                             note: proposal.evidenceNote,
                             proposalId: proposal.id,
                         },
-                    }),
-                    db.chartFieldProposal.update({
-                        where: { id: proposal.id },
-                        data: {
-                            status: "applied",
-                            appliedValue:
-                                parsed === proposal.value ? null : parsed,
-                            reviewedById: admin.id,
-                            reviewedAt: now,
-                            seenAt: null,
-                        },
-                    }),
+                    });
                     // 반영 1건 = 기여 1점(같은 제안은 한 번만)
-                    contributionAwardQuery([
-                        {
-                            userId: proposal.userId,
-                            kind: "chart_field",
-                            sourceKey: String(proposal.id),
-                        },
-                    ]),
-                ]);
+                    await contributionAwardQuery(
+                        [
+                            {
+                                userId: proposal.userId,
+                                kind: "chart_field",
+                                sourceKey: String(proposal.id),
+                            },
+                        ],
+                        tx
+                    );
+                    return true;
+                });
+                if (applied) processed += 1;
             }
             if (proposals.length)
                 refreshContributionViews(proposals.map((item) => item.userId));
             for (const chart of new Map(
                 proposals.map((item) => [item.chartId, item.chart])
             ).values()) {
-                refreshChart(chart.music_idx, chart.difficulty);
+                refreshChart(chart.musicIdx, chart.difficulty);
             }
         }
         revalidatePath("/admin");
@@ -435,8 +453,8 @@ export async function reviewChartFieldProposals(
         const verb = review.decision === "apply" ? "반영" : "반려";
         return {
             success: true,
-            message: `${proposals.length}건을 ${verb}했습니다.`,
-            processed: proposals.length,
+            message: `${processed}건을 ${verb}했습니다.`,
+            processed,
         };
     } catch (error) {
         logServerError(error, {
@@ -486,13 +504,13 @@ export async function listMyChartFieldProposals(
             status: true,
             appliedValue: true,
             rejectReasonCode: true,
-            rejectReason: true,
+            reviewNote: true,
             createdAt: true,
             chart: {
                 select: {
                     difficulty: true,
                     level: true,
-                    music_idx: true,
+                    musicIdx: true,
                     music: { select: { title: true } },
                 },
             },
@@ -509,12 +527,12 @@ export async function listMyChartFieldProposals(
                       status: row.status,
                       appliedValue: row.appliedValue,
                       rejectReasonCode: row.rejectReasonCode,
-                      rejectReason: row.rejectReason,
+                      rejectReason: row.reviewNote,
                       createdAt: row.createdAt.toISOString(),
                       chart: {
                           difficulty: row.chart.difficulty,
                           level: row.chart.level,
-                          musicIndex: row.chart.music_idx,
+                          musicIndex: row.chart.musicIdx,
                           title: row.chart.music.title,
                       },
                   },
@@ -534,17 +552,17 @@ export async function countUnseenContributionResults(): Promise<number> {
         db.chartFieldProposal.count({
             where: {
                 userId: session.id,
-                status: { in: ["applied", "rejected"] },
+                status: { in: ["approved", "rejected"] },
                 reviewedAt: { not: null },
-                seenAt: null,
+                authorSeenAt: null,
             },
         }),
         db.chartDraft.count({
             where: {
                 userId: session.id,
-                status: { in: ["changes_requested", "published"] },
+                status: { in: ["changes_requested", "approved"] },
                 reviewedAt: { not: null },
-                seenAt: null,
+                authorSeenAt: null,
             },
         }),
     ]);
@@ -559,18 +577,18 @@ export async function markContributionResultsSeen(now = new Date()) {
         db.chartFieldProposal.updateMany({
             where: {
                 userId: session.id,
-                status: { in: ["applied", "rejected"] },
-                seenAt: null,
+                status: { in: ["approved", "rejected"] },
+                authorSeenAt: null,
             },
-            data: { seenAt: now },
+            data: { authorSeenAt: now },
         }),
         db.chartDraft.updateMany({
             where: {
                 userId: session.id,
-                status: { in: ["changes_requested", "published"] },
-                seenAt: null,
+                status: { in: ["changes_requested", "approved"] },
+                authorSeenAt: null,
             },
-            data: { seenAt: now },
+            data: { authorSeenAt: now },
         }),
     ]);
 }

@@ -51,7 +51,7 @@ export function invalidateEvents() {
 const queryPublished = unstable_cache(
     async () =>
         db.communityEvent.findMany({
-            where: { publishedAt: { not: null }, status: { not: "REJECTED" } },
+            where: { publishedAt: { not: null }, status: { not: "rejected" } },
             select: {
                 id: true,
                 status: true,
@@ -102,13 +102,13 @@ export async function getEventBoard() {
 // (승인 상태면 마지막 검토 시각, 고친 판을 검토 중이면 그 전 공개 시각을 알 수 없어 처음 공개 시각)
 export async function getSitemapEvents() {
     const rows = await db.communityEvent.findMany({
-        where: { publishedAt: { not: null }, status: { not: "REJECTED" } },
+        where: { publishedAt: { not: null }, status: { not: "rejected" } },
         select: { id: true, status: true, publishedAt: true, reviewedAt: true },
     });
     return rows.map((row) => ({
         id: row.id,
         lastModified:
-            row.status === "PUBLISHED" && row.reviewedAt
+            row.status === "approved" && row.reviewedAt
                 ? row.reviewedAt
                 : row.publishedAt!,
     }));
@@ -136,7 +136,7 @@ export async function getEventWriter() {
     const session = await getSession();
     if (!session.id) return { userId: null, eligible: false } as const;
     const synced = await db.dataSync.findFirst({
-        where: { user_id: session.id, status: "completed" },
+        where: { userId: session.id, status: "completed" },
         select: { id: true },
     });
     return { userId: session.id, eligible: Boolean(synced) } as const;
@@ -245,10 +245,10 @@ export async function saveEvent(
         bannerUrl,
         // 임시저장은 「수정 요청」 을 그대로 둔다 — 사유가 다시 요청할 때까지 편집 화면 맨 위에 남는다
         status: (submit
-            ? "PENDING"
-            : existing?.status === "CHANGES_REQUESTED"
-              ? "CHANGES_REQUESTED"
-              : "DRAFT") as EventStatus,
+            ? "pending"
+            : existing?.status === "changes_requested"
+              ? "changes_requested"
+              : "draft") as EventStatus,
         ...(submit ? { submittedAt: now } : {}),
     };
     try {

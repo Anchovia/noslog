@@ -21,10 +21,10 @@ import { requireAdmin } from "@/lib/admin";
 const admin = {
     id: 1,
     username: "admin",
-    nostalgia_name: "ADMIN",
+    nostalgiaName: "ADMIN",
     avatar: null,
     role: "admin",
-    hide_play_scores: false,
+    hidePlayScores: false,
 };
 
 describe("관리자 권한 검사", () => {

@@ -66,6 +66,8 @@ function logMusicTranslationError(
 function refreshMusicTranslations(musicIndex?: string) {
     updateTag(CACHE_TAGS.musicCatalog);
     updateTag(CACHE_TAGS.musicDetails);
+    // 서열표 구간도 번역 제목을 싣는다(2026-10-16 D8 · B6)
+    updateTag(CACHE_TAGS.tierLists);
     revalidatePath("/admin/music");
     if (musicIndex) {
         revalidatePath("/admin/music/" + encodeURIComponent(musicIndex));
@@ -111,13 +113,13 @@ function adminMusicFilters(params: AdminMusicListParams) {
         where: {
             ...translationFilter,
             ...(missingLevelConstant
-                ? { charts: { some: { level_constant: null } } }
+                ? { charts: { some: { levelConstant: null } } }
                 : {}),
             ...(keyword
                 ? {
                       OR: [
                           { title: insensitive },
-                          { title_kana: insensitive },
+                          { titleKana: insensitive },
                           { artist: insensitive },
                           { index: insensitive },
                           { translations: { some: { title: insensitive } } },
@@ -139,8 +141,8 @@ async function queryAdminMusicPage(
             index: true,
             title: true,
             artist: true,
-            category_short: true,
-            charts: { select: { level_constant: true } },
+            categoryShort: true,
+            charts: { select: { levelConstant: true } },
             translations: {
                 where: filters.activeLocale
                     ? { locale: filters.activeLocale }
@@ -165,10 +167,10 @@ async function queryAdminMusicPage(
                 index: music.index,
                 title: music.title,
                 artist: music.artist,
-                categoryShort: music.category_short,
+                categoryShort: music.categoryShort,
                 chartCount: music.charts.length,
                 configuredChartCount: music.charts.filter(
-                    (chart) => chart.level_constant !== null
+                    (chart) => chart.levelConstant !== null
                 ).length,
                 translation: translation
                     ? {
@@ -544,7 +546,7 @@ export async function createMusicTranslationCsvExport(
         select: {
             index: true,
             title: true,
-            title_kana: true,
+            titleKana: true,
             translations: {
                 where: {
                     locale: { in: locales },
@@ -571,7 +573,7 @@ export async function createMusicTranslationCsvExport(
                 {
                     index: music.index,
                     originalTitle: music.title,
-                    titleKana: music.title_kana,
+                    titleKana: music.titleKana,
                     locale: translationLocale,
                     title: translation?.title ?? "",
                     status:

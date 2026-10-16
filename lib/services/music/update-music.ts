@@ -1,12 +1,14 @@
 import type { Prisma } from "@prisma/client";
 
 import { musicJacketFallbackUrls } from "@/lib/music/jacket-fallback-urls";
+import type { TierDifficulty } from "@/lib/tiers";
 
 import db from "../../db";
 import { getLocalJacketUrl, isManualJacketUrl } from "../../music-jackets";
 
 interface SyncMusicSheet {
-    difficulty: string;
+    // 동기화 입력 검사가 네 난이도만 받는다 — DB 는 enum(2026-10-16 D4-C 2차)
+    difficulty: TierDifficulty;
     level: number;
     score: number;
     rank: string;
@@ -43,14 +45,15 @@ export interface SyncMusicInput extends Omit<BemaniMusicCatalogInput, "sheet"> {
 
 function bemaniMetadata(data: BemaniMusicCatalogInput) {
     return {
+        // 공식 응답(snake) → Prisma 이름(2026-10-16 D1-B)
         title: data.title,
-        title_kana: data.title_kana,
+        titleKana: data.title_kana,
         artist: data.artist,
         category: data.category,
-        category_short: data.category_short,
+        categoryShort: data.category_short,
         description: data.description,
         license: data.license,
-        unlock_type: data.unlock_type,
+        unlockType: data.unlock_type,
     };
 }
 
@@ -66,13 +69,13 @@ export async function updateMusic(music: BemaniMusicCatalogInput[]) {
         select: {
             index: true,
             title: true,
-            title_kana: true,
+            titleKana: true,
             artist: true,
             category: true,
-            category_short: true,
+            categoryShort: true,
             description: true,
             license: true,
-            unlock_type: true,
+            unlockType: true,
             background: true,
         },
     });
@@ -127,17 +130,17 @@ export async function updateMusic(music: BemaniMusicCatalogInput[]) {
         data.sheet.map((sheet) =>
             db.musicChart.upsert({
                 where: {
-                    music_idx_difficulty: {
-                        music_idx: data["@index"],
+                    musicIdx_difficulty: {
+                        musicIdx: data["@index"],
                         difficulty: sheet.difficulty,
                     },
                 },
                 create: {
-                    music_idx: data["@index"],
+                    musicIdx: data["@index"],
                     difficulty: sheet.difficulty,
                     level: sheet.level,
                     // Real 상수는 ◆ 레벨로 알 수 없어 비워 두고 나중에 채움
-                    level_constant:
+                    levelConstant:
                         sheet.difficulty === "Real" ? null : sheet.level,
                 },
                 update: {

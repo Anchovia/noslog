@@ -12,9 +12,9 @@ export async function scoresHiddenFrom(
     if (viewerId === targetUserId) return false;
     const user = await db.user.findUnique({
         where: { id: targetUserId },
-        select: { hide_play_scores: true },
+        select: { hidePlayScores: true },
     });
-    return Boolean(user?.hide_play_scores);
+    return Boolean(user?.hidePlayScores);
 }
 
 /** 점수 비공개(2026-09-18 S3) — 본인이 아니면 점수 · 순위 · 점수에서 나온 업적을 넘기지 않는다 */

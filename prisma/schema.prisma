@@ -8,77 +8,76 @@ datasource db {
 }
 
 model User {
-  id                         Int                         @id @default(autoincrement())
-  username                   String?                     @unique
-  nostalgia_name             String?
-  discord_id                 String?                     @unique
-  discord_name               String?
-  discord_username           String?
-  avatar                     String?
-  avatar_user_managed        Boolean                     @default(false)
-  country                    String                      @default("ko-KR")
-  locale                     LocaleCode                  @default(ko)
-  show_localized_music_title Boolean                     @default(true)
-  profile_completed_at       DateTime?
-  preferred_arcade_id        Int?
-  hide_nostalgia_name        Boolean                     @default(true)
-  hide_discord_name          Boolean                     @default(true)
-  hide_play_count            Boolean                     @default(true)
-  hide_preferred_arcade      Boolean                     @default(true)
-  hide_play_activity         Boolean                     @default(true)
+  id                       Int                         @id @default(autoincrement())
+  username                 String?                     @unique
+  nostalgiaName            String?                     @map("nostalgia_name")
+  discordId                String?                     @unique @map("discord_id")
+  discordName              String?                     @map("discord_name")
+  discordUsername          String?                     @map("discord_username")
+  avatar                   String?
+  avatarUserManaged        Boolean                     @default(false) @map("avatar_user_managed")
+  country                  String                      @default("ko-KR")
+  locale                   LocaleCode                  @default(ko)
+  showLocalizedMusicTitle  Boolean                     @default(true) @map("show_localized_music_title")
+  profileCompletedAt       DateTime?                   @map("profile_completed_at")
+  preferredArcadeId        Int?                        @map("preferred_arcade_id")
+  hideNostalgiaName        Boolean                     @default(true) @map("hide_nostalgia_name")
+  hideDiscordName          Boolean                     @default(true) @map("hide_discord_name")
+  hidePlayCount            Boolean                     @default(true) @map("hide_play_count")
+  hidePreferredArcade      Boolean                     @default(true) @map("hide_preferred_arcade")
+  hidePlayActivity         Boolean                     @default(true) @map("hide_play_activity")
   // 플레이 점수 공개(2026-09-18) — 켜면 랭킹에서 빠지고 프로필의 점수 · 기록이 남에게 가려진다. 기본 공개
-  hide_play_scores           Boolean                     @default(false)
-  preferredArcade            Arcade?                     @relation(fields: [preferred_arcade_id], references: [id], onDelete: SetNull)
-  role                       UserRole                    @default(user)
-  sync_token_version         Int                         @default(0)
-  created_at                 DateTime                    @default(now())
-  updated_at                 DateTime                    @updatedAt
-  PlayData                   PlayData[]
-  UserBestGrade              UserBestGrade[]
-  ratingHistory              UserRatingHistory[]
-  bingoProgress              BingoCellProgress[]
-  chartEvaluations           ChartEvaluation[]           @ignore
-  chartReactions             ChartEvaluationReaction[]   @ignore
-  communityEvaluations       CommunityChartEvaluation[]
-  communityHelpful           CommunityOpinionHelpful[]
-  communityReplies           CommunityOpinionReply[]
-  communityReplyLikes        CommunityOpinionReplyLike[]
-  communityReports           CommunityOpinionReport[]    @relation("CommunityReportReporter")
-  communityReportsAuthored   CommunityOpinionReport[]    @relation("CommunityReportAuthor")
-  chartGoalVotes             ChartGoalVote[]
-  chartGoalVoteAudit         ChartGoalVoteAudit[]
-  dataSyncs                  DataSync[]
-  chartPlayHistory           ChartPlayHistory[]
-  chartRecordSnapshots       ChartRecordSnapshot[]
-  examSubmissions            ExamSubmission[]
-  examAchievements           ExamAchievement[]
-  uploadTokenGrants          UploadTokenGrant[]
-  feedbackReports            FeedbackReport[]
-  cabinetChecks              ArcadeCabinetCheck[]
-  chartPatternsCreated       ChartPattern[]              @relation("ChartPatternCreatedBy")
-  chartPatternsUpdated       ChartPattern[]              @relation("ChartPatternUpdatedBy")
-  chartPatternsPublished     ChartPattern[]              @relation("ChartPatternPublishedBy")
-  chartPatternRevisions      ChartPatternRevision[]      @relation("ChartPatternRevisionCreatedBy")
-  communityEvents            CommunityEvent[]            @relation("CommunityEventAuthor")
-  communityEventsReviewed    CommunityEvent[]            @relation("CommunityEventReviewer")
-  pollVotes                  PollVote[]
-  fieldProposals             ChartFieldProposal[]        @relation("ChartFieldProposalAuthor")
-  fieldProposalsReviewed     ChartFieldProposal[]        @relation("ChartFieldProposalReviewer")
-  contributionPoints         ContributionPoint[]
-  chartDrafts                ChartDraft[]                @relation("ChartDraftAuthor")
-  chartDraftsReviewed        ChartDraft[]                @relation("ChartDraftReviewer")
-  chartComments              ChartComment[]              @relation("ChartCommentAuthor")
-  chartCommentsResolved      ChartComment[]              @relation("ChartCommentResolver")
-  chartPatternsAuthored      ChartPattern[]              @relation("ChartPatternAuthor")
-  achievements               UserAchievement[]
-  achievementShowcase        UserAchievementShowcase[]
-  pinnedRecords              UserPinnedRecord[]
-  ratings                    PlayerRating[]
-  stats                      PlayerStats?
+  hidePlayScores           Boolean                     @default(false) @map("hide_play_scores")
+  preferredArcade          Arcade?                     @relation(fields: [preferredArcadeId], references: [id], onDelete: SetNull)
+  role                     UserRole                    @default(user)
+  syncTokenVersion         Int                         @default(0) @map("sync_token_version")
+  createdAt                DateTime                    @default(now()) @map("created_at")
+  updatedAt                DateTime                    @updatedAt @map("updated_at")
+  playData                 PlayData[]
+  bestGrades               UserBestGrade[]
+  ratingHistory            UserRatingHistory[]
+  bingoProgress            BingoCellProgress[]
+  communityEvaluations     CommunityChartEvaluation[]
+  communityHelpful         CommunityOpinionHelpful[]
+  communityReplies         CommunityOpinionReply[]
+  communityReplyLikes      CommunityOpinionReplyLike[]
+  communityReports         CommunityOpinionReport[]    @relation("CommunityReportReporter")
+  communityReportsAuthored CommunityOpinionReport[]    @relation("CommunityReportAuthor")
+  chartGoalVotes           ChartGoalVote[]
+  chartGoalVoteAudit       ChartGoalVoteAudit[]
+  dataSyncs                DataSync[]
+  chartPlayHistory         ChartPlayHistory[]
+  chartRecordSnapshots     ChartRecordSnapshot[]
+  examSubmissions          ExamSubmission[]            @relation("ExamSubmissionAuthor")
+  examSubmissionsReviewed  ExamSubmission[]            @relation("ExamSubmissionReviewer")
+  examAchievements         ExamAchievement[]
+  uploadTokenGrants        UploadTokenGrant[]
+  feedbackReports          FeedbackReport[]
+  cabinetChecks            ArcadeCabinetCheck[]
+  chartPatternsCreated     ChartPattern[]              @relation("ChartPatternCreatedBy")
+  chartPatternsUpdated     ChartPattern[]              @relation("ChartPatternUpdatedBy")
+  chartPatternsPublished   ChartPattern[]              @relation("ChartPatternPublishedBy")
+  chartPatternRevisions    ChartPatternRevision[]      @relation("ChartPatternRevisionCreatedBy")
+  communityEvents          CommunityEvent[]            @relation("CommunityEventAuthor")
+  communityEventsReviewed  CommunityEvent[]            @relation("CommunityEventReviewer")
+  pollVotes                PollVote[]
+  fieldProposals           ChartFieldProposal[]        @relation("ChartFieldProposalAuthor")
+  fieldProposalsReviewed   ChartFieldProposal[]        @relation("ChartFieldProposalReviewer")
+  contributionPoints       ContributionPoint[]
+  chartDrafts              ChartDraft[]                @relation("ChartDraftAuthor")
+  chartDraftsReviewed      ChartDraft[]                @relation("ChartDraftReviewer")
+  chartComments            ChartComment[]              @relation("ChartCommentAuthor")
+  chartCommentsResolved    ChartComment[]              @relation("ChartCommentResolver")
+  chartPatternsAuthored    ChartPattern[]              @relation("ChartPatternAuthor")
+  achievements             UserAchievement[]
+  achievementShowcase      UserAchievementShowcase[]
+  pinnedRecords            UserPinnedRecord[]
+  ratings                  PlayerRating[]
+  stats                    PlayerStats?
 
-  @@index([preferred_arcade_id])
+  @@index([preferredArcadeId])
   // 관리자 대시보드 가입자 집계(2026-10-16 DB 재설계 P2)
-  @@index([created_at])
+  @@index([createdAt])
 }
 
 // 사용자가 제출한 오류 제보와 처리 상태를 관리함
@@ -93,11 +92,11 @@ model FeedbackReport {
   user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt        DateTime          @default(now()) @map("created_at")
   updatedAt        DateTime          @updatedAt @map("updated_at")
-  resolvedAt       DateTime?         @map("resolved_at")
-  // 관리자 답변(2026-09-18) — 처리 완료 때 쓰면 제보한 사람의 「내 제보」 에 보인다. replySeenAt = 제보한 사람이 읽은 때(새 답변 점)
+  reviewedAt       DateTime?         @map("resolved_at")
+  // 관리자 답변(2026-09-18) — 처리 완료 때 쓰면 제보한 사람의 「내 제보」 에 보인다. authorSeenAt = 제보한 사람이 읽은 때(새 답변 점)
   reply            String?
   repliedAt        DateTime?         @map("replied_at")
-  replySeenAt      DateTime?         @map("reply_seen_at")
+  authorSeenAt     DateTime?         @map("reply_seen_at")
   arcadeId         Int?
   arcade           Arcade?           @relation(fields: [arcadeId], references: [id], onDelete: SetNull)
   cabinetId        Int?
@@ -116,9 +115,6 @@ model FeedbackReport {
 // 관리자가 작성하고 홈에 공개하는 서비스 공지사항
 model Announcement {
   id           Int                       @id @default(autoincrement())
-  // ko 번역 사본 — 번역 표(AnnouncementTranslation)가 정본이라 쓰지 않는다(2026-10-16 D6, P5-3 에서 지움)
-  title        String?                   @ignore
-  content      String?                   @ignore
   isPublished  Boolean                   @default(false) @map("is_published")
   publishedAt  DateTime?                 @map("published_at")
   createdAt    DateTime                  @default(now()) @map("created_at")
@@ -167,7 +163,7 @@ model CommunityEvent {
   id                 Int                  @id @default(autoincrement())
   authorId           Int                  @map("author_id")
   author             User                 @relation("CommunityEventAuthor", fields: [authorId], references: [id], onDelete: Cascade)
-  status             CommunityEventStatus @default(DRAFT)
+  status             CommunityEventStatus @default(draft)
   title              String
   content            String
   startsAt           DateTime             @map("starts_at")
@@ -182,8 +178,8 @@ model CommunityEvent {
   submittedAt        DateTime?            @map("submitted_at")
   reviewNote         String?              @map("review_note")
   reviewedAt         DateTime?            @map("reviewed_at")
-  reviewerId         Int?                 @map("reviewer_id")
-  reviewer           User?                @relation("CommunityEventReviewer", fields: [reviewerId], references: [id], onDelete: SetNull)
+  reviewedById       Int?                 @map("reviewer_id")
+  reviewedBy         User?                @relation("CommunityEventReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
   createdAt          DateTime             @default(now()) @map("created_at")
   updatedAt          DateTime             @updatedAt @map("updated_at")
   poll               Poll?
@@ -191,16 +187,16 @@ model CommunityEvent {
   @@index([status, submittedAt])
   @@index([authorId, updatedAt])
   @@index([publishedStartsAt])
-  @@index([reviewerId])
+  @@index([reviewedById])
 }
 
 // 이벤트 글 상태 — 작성 중인 판의 상태. 공개 여부는 공개판(publishedAt)이 따로 말한다
 enum CommunityEventStatus {
-  DRAFT
-  PENDING
-  CHANGES_REQUESTED
-  PUBLISHED
-  REJECTED
+  draft
+  pending
+  changes_requested
+  approved
+  rejected
 }
 
 // 글에 딸린 투표 (2026-09-23 V2) — 본문에 흔적을 남기지 않고 글 하나에 하나씩 딸린다.
@@ -273,6 +269,8 @@ model PollOptionTranslation {
 
 // 한 사람이 한 선택지에 한 표 — 여러 개 고르기면 줄이 여러 개 생긴다
 model PollVote {
+  // 외래 키가 복합 기본 키(@@id)의 앞 칸이라 이미 인덱스가 있다 — prisma-lint 가 @@id 를 인덱스로 보지 않는다
+  /// prisma-lint-ignore-model require-field-index
   pollId    Int        @map("poll_id")
   poll      Poll       @relation(fields: [pollId], references: [id], onDelete: Cascade)
   optionId  Int        @map("option_id")
@@ -288,25 +286,18 @@ model PollVote {
 
 // 유저가 선택할 수 있는 오락실 목록을 관리자 데이터로 관리함
 model Arcade {
-  id             Int      @id @default(autoincrement())
-  name           String   @unique
-  // 지역 · 주소는 공개 정보(ArcadePublicDetails)로 옮겨 쓰지 않는다(2026-10-16 D6, P5-3 에서 지움)
-  region         String?  @ignore
-  address        String?  @ignore
-  latitude       Float?
-  longitude      Float?
-  // 쓰지 않는 칸 — 코드는 읽지도 쓰지도 않는다(2026-10-16 DB 재설계 D6, P5-3 에서 지움)
-  machine_count  Int?     @ignore
-  play_price     Int?
-  coin_count     Int?
-  business_hours Json?
-  machine_status String   @default("unknown") @ignore
-  status_note    String?  @ignore
-  notes          String?
-  is_active      Boolean  @default(true)
-  created_at     DateTime @default(now())
-  updated_at     DateTime @updatedAt
-  users          User[]
+  id            Int      @id @default(autoincrement())
+  name          String   @unique
+  latitude      Float?
+  longitude     Float?
+  playPrice     Int?     @map("play_price")
+  coinCount     Int?     @map("coin_count")
+  businessHours Json?    @map("business_hours")
+  notes         String?
+  isActive      Boolean  @default(true) @map("is_active")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+  users         User[]
 
   publicDetails ArcadePublicDetails?
   cabinets      ArcadeCabinet[]
@@ -315,7 +306,7 @@ model Arcade {
   slugAliases   ArcadeSlugAlias[]
   reports       FeedbackReport[]
 
-  @@index([is_active, name])
+  @@index([isActive, name])
 }
 
 // Optional verified public facts; legacy editor fields remain intact.
@@ -423,10 +414,10 @@ model ArcadeSlugAlias {
 
 // 방문·API 통계 — 날짜(서울)·종류·열쇠별 합계만 둔다. 90일 뒤 지운다(privacyRetention)
 model AnalyticsDailyCount {
-  date  DateTime @db.Date
-  kind  String
-  key   String   @default("")
-  count Int      @default(0)
+  date  DateTime      @db.Date
+  kind  AnalyticsKind
+  key   String        @default("")
+  count Int           @default(0)
 
   @@id([date, kind, key])
   @@index([kind, date])
@@ -462,26 +453,26 @@ model UploadTokenGrant {
 }
 
 model Music {
-  id             Int                @id @default(autoincrement())
-  index          String             @unique
-  title          String
-  title_kana     String
-  artist         String?
-  category       String
-  category_short String
-  description    String?
-  license        String?
-  unlock_type    Int?
-  background     String? // 변수명 jacket으로 변경 필요
-  created_at     DateTime           @default(now())
-  updated_at     DateTime           @updatedAt
-  bingoCovers    Bingo[]            @relation("BingoCoverMusic")
-  bingoMissions  BingoCell[]        @relation("BingoMissionMusic")
-  charts         MusicChart[]
-  examStages     ExamStage[]
-  examRewards    ExamReward[]
-  translations   MusicTranslation[]
-  fieldSources   ChartFieldSource[]
+  id            Int                @id @default(autoincrement())
+  index         String             @unique
+  title         String
+  titleKana     String             @map("title_kana")
+  artist        String?
+  category      String
+  categoryShort String             @map("category_short")
+  description   String?
+  license       String?
+  unlockType    Int?               @map("unlock_type")
+  background    String? // 변수명 jacket으로 변경 필요
+  createdAt     DateTime           @default(now()) @map("created_at")
+  updatedAt     DateTime           @updatedAt @map("updated_at")
+  bingoCovers   Bingo[]            @relation("BingoCoverMusic")
+  bingoMissions BingoCell[]        @relation("BingoMissionMusic")
+  charts        MusicChart[]
+  examStages    ExamStage[]
+  examRewards   ExamReward[]
+  translations  MusicTranslation[]
+  fieldSources  ChartFieldSource[]
 }
 
 // 악곡 · 채보 데이터 칸(노트 수 · 공식 레벨 · BPM · 길이 · 수록일 · 해금 조건)에 값을 넣을 때마다 출처를 한 줄씩 쌓음
@@ -529,11 +520,11 @@ model ChartFieldProposal {
   status           ProposalStatus        @default(pending)
   // 반려 사유 — 정해진 코드(evidence | url | duplicate | format | other)와 덧붙인 말(2026-10-01 D2)
   rejectReasonCode ProposalRejectReason? @map("reject_reason_code")
-  rejectReason     String?               @map("reject_reason")
+  reviewNote       String?               @map("reject_reason")
   // 운영자가 값을 고쳐 반영했으면 그 값 — 제안 값과 다르면 기여자에게 그대로 보여 준다(2026-10-01 C2)
   appliedValue     String?               @map("applied_value")
   // 기여자가 처리 결과를 본 시각 — 「새 결과」 점(2026-10-01 A2)
-  seenAt           DateTime?             @map("seen_at")
+  authorSeenAt     DateTime?             @map("seen_at")
   reviewedById     Int?                  @map("reviewed_by_id")
   reviewedBy       User?                 @relation("ChartFieldProposalReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
   reviewedAt       DateTime?             @map("reviewed_at")
@@ -570,7 +561,7 @@ model ChartDraft {
   reviewedBy   User?            @relation("ChartDraftReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
   publishedAt  DateTime?        @map("published_at")
   // 작성자가 검토 결과(수정 요청 · 공개)를 본 시각 — 「새 결과」 점(2026-10-01 A2)
-  seenAt       DateTime?        @map("seen_at")
+  authorSeenAt DateTime?        @map("seen_at")
   createdAt    DateTime         @default(now()) @map("created_at")
   updatedAt    DateTime         @updatedAt @map("updated_at")
   comments     ChartComment[]
@@ -666,7 +657,6 @@ model MusicCatalogCandidate {
   beforeSnapshot Json?                  @map("before_snapshot")
   status         CatalogCandidateStatus @default(pending)
   seenCount      Int                    @default(1) @map("seen_count")
-  firstSeenAt    DateTime               @default(now()) @map("first_seen_at") @ignore
   lastSeenAt     DateTime               @default(now()) @map("last_seen_at")
   reviewedAt     DateTime?              @map("reviewed_at")
   appliedAt      DateTime?              @map("applied_at")
@@ -679,31 +669,29 @@ model MusicCatalogCandidate {
 
 // 악곡별 채보 정보를 난이도 컬럼과 분리해 관리함
 model MusicChart {
-  id                Int       @id @default(autoincrement())
-  difficulty        String
-  level             Int
-  level_constant    Float?
-  bpm_min           Int?
-  bpm_max           Int?
-  note_count        Int?
-  duration_seconds  Int?
-  released_at       DateTime?
-  unlock_condition  String?
-  play_video_url    String?
-  chart_preview_url String?
-  music_idx         String
-  music             Music     @relation(fields: [music_idx], references: [index], onDelete: Cascade)
-  created_at        DateTime  @default(now())
-  updated_at        DateTime  @updatedAt
+  id              Int             @id @default(autoincrement())
+  difficulty      ChartDifficulty
+  level           Int
+  levelConstant   Float?          @map("level_constant")
+  bpmMin          Int?            @map("bpm_min")
+  bpmMax          Int?            @map("bpm_max")
+  noteCount       Int?            @map("note_count")
+  durationSeconds Int?            @map("duration_seconds")
+  releasedAt      DateTime?       @map("released_at")
+  unlockCondition String?         @map("unlock_condition")
+  playVideoUrl    String?         @map("play_video_url")
+  chartPreviewUrl String?         @map("chart_preview_url")
+  musicIdx        String          @map("music_idx")
+  music           Music           @relation(fields: [musicIdx], references: [index], onDelete: Cascade)
+  createdAt       DateTime        @default(now()) @map("created_at")
+  updatedAt       DateTime        @updatedAt @map("updated_at")
 
   levelConstantHistory ChartLevelConstantHistory[]
   fieldSources         ChartFieldSource[]
-  evaluations          ChartEvaluation[]           @ignore
   communityEvaluations CommunityChartEvaluation[]
   goalVotes            ChartGoalVote[]
   goalVoteAudit        ChartGoalVoteAudit[]
-  goalVoteReviews      ChartGoalVoteReview[]       @ignore
-  PlayData             PlayData[]
+  playData             PlayData[]
   playHistory          ChartPlayHistory[]
   recordSnapshots      ChartRecordSnapshot[]
   examStageOptions     ExamStageChart[]
@@ -715,9 +703,9 @@ model MusicChart {
   comments             ChartComment[]
   pinnedBy             UserPinnedRecord[]
 
-  @@unique([music_idx, difficulty])
+  @@unique([musicIdx, difficulty])
   @@index([level])
-  @@index([level_constant])
+  @@index([levelConstant])
 }
 
 // 악곡 채보 편집기의 현재 초안과 공개 스냅샷을 관리함
@@ -754,16 +742,16 @@ model ChartPattern {
 
 // 명시적 저장과 공개 시점의 채보 문서를 복구 가능한 버전으로 보존함
 model ChartPatternRevision {
-  id          Int          @id @default(autoincrement())
-  patternId   Int          @map("pattern_id")
-  pattern     ChartPattern @relation(fields: [patternId], references: [id], onDelete: Cascade)
+  id          Int                      @id @default(autoincrement())
+  patternId   Int                      @map("pattern_id")
+  pattern     ChartPattern             @relation(fields: [patternId], references: [id], onDelete: Cascade)
   number      Int
-  kind        String       @default("manual")
+  kind        ChartPatternRevisionKind @default(manual)
   message     String?
   content     Json
-  createdById Int?         @map("created_by_id")
-  createdBy   User?        @relation("ChartPatternRevisionCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
-  createdAt   DateTime     @default(now()) @map("created_at")
+  createdById Int?                     @map("created_by_id")
+  createdBy   User?                    @relation("ChartPatternRevisionCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt   DateTime                 @default(now()) @map("created_at")
 
   @@unique([patternId, number])
   @@index([patternId, createdAt])
@@ -774,115 +762,115 @@ model ChartPatternRevision {
 model DataSync {
   id              Int                   @id @default(autoincrement())
   status          DataSyncStatus        @default(processing)
-  sync_scope      SyncScope             @default(full)
-  received_plays  Int                   @default(0)
-  inserted_plays  Int                   @default(0)
-  changed_records Int                   @default(0)
-  error_message   String?
-  user_id         Int
-  user            User                  @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  started_at      DateTime              @default(now())
-  completed_at    DateTime?
+  syncScope       SyncScope             @default(full) @map("sync_scope")
+  receivedPlays   Int                   @default(0) @map("received_plays")
+  insertedPlays   Int                   @default(0) @map("inserted_plays")
+  changedRecords  Int                   @default(0) @map("changed_records")
+  errorMessage    String?               @map("error_message")
+  userId          Int                   @map("user_id")
+  user            User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  startedAt       DateTime              @default(now()) @map("started_at")
+  completedAt     DateTime?             @map("completed_at")
   playHistory     ChartPlayHistory[]
   recordSnapshots ChartRecordSnapshot[]
   ratingHistory   UserRatingHistory[]
   // 스키마 밖(Prisma 6 은 부분 인덱스를 쓰지 못함) — "DataSync_one_processing_per_user": user_id WHERE status = 'processing'.
   // 사람당 처리 중 동기화는 하나. 존재는 tests/schema-objects-database.test.ts 가 확인한다
 
-  @@index([user_id, started_at])
+  @@index([userId, startedAt])
   // 관리자 대시보드 · 동기화 목록(상태별 최근순, 2026-10-16 P2)
-  @@index([status, started_at])
+  @@index([status, startedAt])
 }
 
 // 공식 최근 플레이 응답을 중복 없이 누적해 점수 추이에 사용함
 model ChartPlayHistory {
-  id             Int        @id @default(autoincrement())
-  level          Int?
-  score          Int
-  best_score     Int?
-  max_combo      Int
-  rank           String
-  grade_basic    Int
-  class_basic    String?
-  fast_count     Int?
-  slow_count     Int?
-  is_onehand     Boolean?
-  judge_sjust    Int?
-  judge_just     Int?
-  judge_good     Int?
-  judge_miss     Int?
-  judge_near     Int?
+  id            Int        @id @default(autoincrement())
+  level         Int?
+  score         Int
+  bestScore     Int?       @map("best_score")
+  maxCombo      Int        @map("max_combo")
+  rank          String
+  gradeBasic    Int        @map("grade_basic")
+  classBasic    String?    @map("class_basic")
+  fastCount     Int?       @map("fast_count")
+  slowCount     Int?       @map("slow_count")
+  isOnehand     Boolean?   @map("is_onehand")
+  judgeSjust    Int?       @map("judge_sjust")
+  judgeJust     Int?       @map("judge_just")
+  judgeGood     Int?       @map("judge_good")
+  judgeMiss     Int?       @map("judge_miss")
+  judgeNear     Int?       @map("judge_near")
   // 플레이 시각(공식 KST 시각을 timestamptz 로) — 같은 플레이를 가르는 유일 키의 일부
-  playedAt       DateTime   @map("played_at") @db.Timestamptz(3)
-  chart_id       Int
-  chart          MusicChart @relation(fields: [chart_id], references: [id], onDelete: Cascade)
-  user_id        Int
-  user           User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  record_applied Boolean    @default(false)
-  first_sync_id  Int?
-  firstSync      DataSync?  @relation(fields: [first_sync_id], references: [id], onDelete: SetNull)
-  created_at     DateTime   @default(now())
+  playedAt      DateTime   @map("played_at") @db.Timestamptz(3)
+  chartId       Int        @map("chart_id")
+  chart         MusicChart @relation(fields: [chartId], references: [id], onDelete: Cascade)
+  userId        Int        @map("user_id")
+  user          User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  recordApplied Boolean    @default(false) @map("record_applied")
+  firstSyncId   Int?       @map("first_sync_id")
+  firstSync     DataSync?  @relation(fields: [firstSyncId], references: [id], onDelete: SetNull)
+  createdAt     DateTime   @default(now()) @map("created_at")
 
   // 같은 플레이 하나(2026-10-16 P5-1 — 문자열 시각 키에서 played_at 으로)
-  @@unique([user_id, chart_id, playedAt, score, max_combo, rank])
+  @@unique([userId, chartId, playedAt, score, maxCombo, rank])
   // 최근 플레이 목록(사람별 최신순)
-  @@index([user_id, playedAt(sort: Desc), id(sort: Desc)])
-  @@index([first_sync_id])
-  @@index([user_id, record_applied])
+  @@index([userId, playedAt(sort: Desc), id(sort: Desc)])
+  @@index([firstSyncId])
+  @@index([userId, recordApplied])
   // 외래 키 — 채보를 지울 때 표 전체를 훑지 않게. 큰 표라 CONCURRENTLY 단독 마이그레이션으로 만든다(2026-10-16 P2)
-  @@index([chart_id])
+  @@index([chartId])
 }
 
 // 전체·최근 연동에서 개인 기록이 변경된 시점의 상태를 저장함
 model ChartRecordSnapshot {
-  id                  Int        @id @default(autoincrement())
-  level               Int
-  score               Int
-  rank                String
-  fc_type             Int
-  play_count          Int
-  clear_count         Int?
-  clear_flag          Int?
-  fullcombo_count     Int
-  pianistic_count     Int
-  max_combo           Int
-  grade_basic         Int
-  grade_recital       Int?
-  judge_sjust         Int?
-  judge_just          Int?
-  judge_good          Int?
-  judge_miss          Int?
-  judge_near          Int?
-  note_rate_standard  Int?
-  note_rate_tenuto    Int?
-  note_rate_glissando Int?
-  note_rate_trill     Int?
+  id                Int        @id @default(autoincrement())
+  level             Int
+  score             Int
+  rank              String
+  fcType            Int        @map("fc_type")
+  playCount         Int        @map("play_count")
+  clearCount        Int?       @map("clear_count")
+  clearFlag         Int?       @map("clear_flag")
+  fullcomboCount    Int        @map("fullcombo_count")
+  pianisticCount    Int        @map("pianistic_count")
+  maxCombo          Int        @map("max_combo")
+  gradeBasic        Int        @map("grade_basic")
+  gradeRecital      Int?       @map("grade_recital")
+  judgeSjust        Int?       @map("judge_sjust")
+  judgeJust         Int?       @map("judge_just")
+  judgeGood         Int?       @map("judge_good")
+  judgeMiss         Int?       @map("judge_miss")
+  judgeNear         Int?       @map("judge_near")
+  noteRateStandard  Int?       @map("note_rate_standard")
+  noteRateTenuto    Int?       @map("note_rate_tenuto")
+  noteRateGlissando Int?       @map("note_rate_glissando")
+  noteRateTrill     Int?       @map("note_rate_trill")
   // PlayData.bestAt 과 같은 뜻
-  bestAt              DateTime?  @map("best_at") @db.Timestamptz(3)
-  chart_id            Int
-  chart               MusicChart @relation(fields: [chart_id], references: [id], onDelete: Cascade)
-  user_id             Int
-  user                User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  sync_id             Int
-  sync                DataSync   @relation(fields: [sync_id], references: [id], onDelete: Cascade)
-  created_at          DateTime   @default(now())
+  bestAt            DateTime?  @map("best_at") @db.Timestamptz(3)
+  chartId           Int        @map("chart_id")
+  chart             MusicChart @relation(fields: [chartId], references: [id], onDelete: Cascade)
+  userId            Int        @map("user_id")
+  user              User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  syncId            Int        @map("sync_id")
+  sync              DataSync   @relation(fields: [syncId], references: [id], onDelete: Cascade)
+  createdAt         DateTime   @default(now()) @map("created_at")
 
-  @@unique([sync_id, chart_id])
-  @@index([user_id, chart_id, created_at])
+  @@unique([syncId, chartId])
+  @@index([userId, chartId, createdAt])
   // 외래 키 — 위와 같은 이유, CONCURRENTLY 단독 마이그레이션(2026-10-16 P2)
-  @@index([chart_id])
+  @@index([chartId])
 }
 
 // 공식 레벨 상수 변경 이력을 시점별로 관리함
 model ChartLevelConstantHistory {
-  id           Int        @id @default(autoincrement())
-  value        Float
-  effective_at DateTime   @default(now())
-  chart_id     Int
-  chart        MusicChart @relation(fields: [chart_id], references: [id], onDelete: Cascade)
-  created_at   DateTime   @default(now())
+  id          Int        @id @default(autoincrement())
+  value       Float
+  effectiveAt DateTime   @default(now()) @map("effective_at")
+  chartId     Int        @map("chart_id")
+  chart       MusicChart @relation(fields: [chartId], references: [id], onDelete: Cascade)
+  createdAt   DateTime   @default(now()) @map("created_at")
 
-  @@index([chart_id, effective_at])
+  @@index([chartId, effectiveAt])
   @@map("ChartConstantHistory")
 }
 
@@ -954,47 +942,6 @@ model TierPlacementHistory {
   @@index([chartId, effectiveAt])
 }
 
-// 사용자의 체감 상수·패턴 평가·짧은 의견을 한 행에서 관리함
-model ChartEvaluation {
-  id                 Int                       @id @default(autoincrement())
-  perceived_constant Float
-  stairs             Int
-  chord              Int
-  trill              Int
-  glissando          Int
-  repetition         Int
-  comment            String?
-  chart_id           Int
-  chart              MusicChart                @relation(fields: [chart_id], references: [id], onDelete: Cascade)
-  user_id            Int
-  user               User                      @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  created_at         DateTime                  @default(now())
-  updated_at         DateTime                  @updatedAt
-  reactions          ChartEvaluationReaction[]
-
-  @@unique([chart_id, user_id])
-  @@index([chart_id, perceived_constant])
-  // 옛 채보 평가 — 쓰는 길이 없어 코드를 지웠다(운영 0줄, 2026-10-16 D6). P5-3 에서 표를 지운다
-  @@ignore
-}
-
-// 의견의 추천·비추천을 사용자별 한 건으로 제한함
-model ChartEvaluationReaction {
-  id            Int             @id @default(autoincrement())
-  value         Int
-  evaluation_id Int
-  evaluation    ChartEvaluation @relation(fields: [evaluation_id], references: [id], onDelete: Cascade)
-  user_id       Int
-  user          User            @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  created_at    DateTime        @default(now())
-  updated_at    DateTime        @updatedAt
-
-  @@unique([evaluation_id, user_id])
-  @@index([evaluation_id, value])
-  // 옛 채보 평가 — 쓰는 길이 없어 코드를 지웠다(운영 0줄, 2026-10-16 D6). P5-3 에서 표를 지운다
-  @@ignore
-}
-
 // 2.0 패턴 평가는 기존 ChartEvaluation의 서로 다른 축 값을 재해석하지 않음.
 model CommunityChartEvaluation {
   id                  Int                       @id @default(autoincrement())
@@ -1008,7 +955,6 @@ model CommunityChartEvaluation {
   opinion             String?
   opinionHidden       Boolean                   @default(false)
   excluded            Boolean                   @default(false)
-  moderationReason    String?                   @ignore
   createdAt           DateTime                  @default(now())
   updatedAt           DateTime                  @updatedAt
   opinionUpdatedAt    DateTime?
@@ -1027,6 +973,8 @@ model CommunityChartEvaluation {
 }
 
 model CommunityOpinionHelpful {
+  // 외래 키가 복합 기본 키(@@id)의 앞 칸이라 이미 인덱스가 있다 — prisma-lint 가 @@id 를 인덱스로 보지 않는다
+  /// prisma-lint-ignore-model require-field-index
   evaluationId Int
   userId       Int
   createdAt    DateTime                 @default(now())
@@ -1048,7 +996,6 @@ model CommunityOpinionReport {
   reason          OpinionReportReason
   explanation     String?
   status          String                    @default("pending")
-  reviewReason    String?                   @ignore
   createdAt       DateTime                  @default(now())
   updatedAt       DateTime                  @updatedAt
   evaluation      CommunityChartEvaluation? @relation(fields: [evaluationId], references: [id], onDelete: SetNull)
@@ -1085,6 +1032,8 @@ model CommunityOpinionReply {
 }
 
 model CommunityOpinionReplyLike {
+  // 외래 키가 복합 기본 키(@@id)의 앞 칸이라 이미 인덱스가 있다 — prisma-lint 가 @@id 를 인덱스로 보지 않는다
+  /// prisma-lint-ignore-model require-field-index
   replyId   Int
   userId    Int
   createdAt DateTime              @default(now())
@@ -1097,19 +1046,18 @@ model CommunityOpinionReplyLike {
 
 // 목표 투표는 관리자 서열표 버전 및 일반 패턴 평가와 독립적으로 유지함.
 model ChartGoalVote {
-  id          Int        @id @default(autoincrement())
-  chartId     Int
-  userId      Int
-  mode        PlayMode
+  id        Int        @id @default(autoincrement())
+  chartId   Int
+  userId    Int
+  mode      PlayMode
   // 목표 값 목록은 CHECK 로 지킨다(s · fc · 990k · pianist — fc 는 보관된 옛 Recital FC 표). 990k 가 enum 이름이 될 수 없어 enum 이 아니다(2026-10-16 K2)
-  goal        String
-  value       Float
-  excluded    Boolean    @default(false)
-  auditReason String?    @ignore
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  chart       MusicChart @relation(fields: [chartId], references: [id], onDelete: Cascade)
-  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  goal      String
+  value     Float
+  excluded  Boolean    @default(false)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  chart     MusicChart @relation(fields: [chartId], references: [id], onDelete: Cascade)
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([chartId, userId, mode, goal])
   @@index([chartId, mode, goal, excluded, value])
@@ -1136,96 +1084,73 @@ model ChartGoalVoteAudit {
   @@index([userId])
 }
 
-model ChartGoalVoteReview {
-  id            Int        @id @default(autoincrement())
-  chartId       Int
-  mode          PlayMode
-  // 목표 값 목록은 CHECK 로 지킨다(s · fc · 990k · pianist — fc 는 보관된 옛 Recital FC 표). 990k 가 enum 이름이 될 수 없어 enum 이 아니다(2026-10-16 K2)
-  goal          String
-  status        String     @default("in_review")
-  officialValue Float
-  count         Int
-  mean          Float?
-  median        Float?
-  distribution  Json
-  reviewReason  String?
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
-  chart         MusicChart @relation(fields: [chartId], references: [id], onDelete: Cascade)
-
-  @@unique([chartId, mode, goal])
-  @@index([status, updatedAt])
-  // 쓰기만 하고 읽는 화면이 없어 쓰기를 멈췄다(2026-10-16 D6, P5-3 에서 지움)
-  @@ignore
-}
-
 model UserBestGrade {
-  id            Int      @id @default(autoincrement())
-  grade_basic   Int
-  grade_recital Int?
+  id           Int      @id @default(autoincrement())
+  gradeBasic   Int      @map("grade_basic")
+  gradeRecital Int?     @map("grade_recital")
   // 그 날짜(서울 날짜)
-  day           DateTime @map("day") @db.Date
-  created_at    DateTime @default(now())
-  updated_at    DateTime @updatedAt
-  user_id       Int
-  user          User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  day          DateTime @map("day") @db.Date
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  userId       Int      @map("user_id")
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   // 사람당 하루 한 줄 — 코드 규칙을 DB 도 지킨다(2026-10-16 DB 재설계 P2, P5-1 에서 day 로)
-  @@unique([user_id, day])
+  @@unique([userId, day])
 }
 
 // 실제 동기화 시점의 레이팅을 보관하며 과거 값을 소급 추정하지 않음
 model UserRatingHistory {
-  id          Int      @id @default(autoincrement())
-  user_id     Int
-  user        User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  sync_id     Int
-  sync        DataSync @relation(fields: [sync_id], references: [id], onDelete: Cascade)
-  mode        PlayMode
-  rating      Float
-  observed_at DateTime @default(now())
+  id         Int      @id @default(autoincrement())
+  userId     Int      @map("user_id")
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  syncId     Int      @map("sync_id")
+  sync       DataSync @relation(fields: [syncId], references: [id], onDelete: Cascade)
+  mode       PlayMode
+  rating     Float
+  observedAt DateTime @default(now()) @map("observed_at")
 
-  @@unique([sync_id, mode])
-  @@index([user_id, mode, observed_at])
+  @@unique([syncId, mode])
+  @@index([userId, mode, observedAt])
 }
 
 model PlayData {
-  id                  Int        @id @default(autoincrement())
-  level               Int
-  score               Int
-  rank                String
-  fc_type             Int
-  play_count          Int
-  clear_count         Int?
-  clear_flag          Int?
-  fullcombo_count     Int
-  pianistic_count     Int
-  max_combo           Int
-  grade_basic         Int
-  grade_recital       Int?
-  judge_sjust         Int?
-  judge_just          Int?
-  judge_good          Int?
-  judge_miss          Int?
-  judge_near          Int?
-  note_rate_standard  Int?
-  note_rate_tenuto    Int?
-  note_rate_glissando Int?
-  note_rate_trill     Int?
+  id                Int        @id @default(autoincrement())
+  level             Int
+  score             Int
+  rank              String
+  fcType            Int        @map("fc_type")
+  playCount         Int        @map("play_count")
+  clearCount        Int?       @map("clear_count")
+  clearFlag         Int?       @map("clear_flag")
+  fullcomboCount    Int        @map("fullcombo_count")
+  pianisticCount    Int        @map("pianistic_count")
+  maxCombo          Int        @map("max_combo")
+  gradeBasic        Int        @map("grade_basic")
+  gradeRecital      Int?       @map("grade_recital")
+  judgeSjust        Int?       @map("judge_sjust")
+  judgeJust         Int?       @map("judge_just")
+  judgeGood         Int?       @map("judge_good")
+  judgeMiss         Int?       @map("judge_miss")
+  judgeNear         Int?       @map("judge_near")
+  noteRateStandard  Int?       @map("note_rate_standard")
+  noteRateTenuto    Int?       @map("note_rate_tenuto")
+  noteRateGlissando Int?       @map("note_rate_glissando")
+  noteRateTrill     Int?       @map("note_rate_trill")
   // 기록 시각(KST 공식 시각을 timestamptz 로, 모르면 NULL — 옛 「1970-01-01 09:00」 자리표시도 NULL)
-  bestAt              DateTime?  @map("best_at") @db.Timestamptz(3)
-  created_at          DateTime   @default(now())
-  updated_at          DateTime   @updatedAt
-  user_id             Int
-  user                User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  bestAt            DateTime?  @map("best_at") @db.Timestamptz(3)
+  createdAt         DateTime   @default(now()) @map("created_at")
+  updatedAt         DateTime   @updatedAt @map("updated_at")
+  userId            Int        @map("user_id")
+  user              User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   // 기록은 채보에 묶인다(2026-10-16 D2-B) — 기록이 있는 채보는 지우지 못한다(앱에 채보 삭제 경로는 없음)
-  chart_id            Int
-  chart               MusicChart @relation(fields: [chart_id], references: [id], onDelete: Restrict)
+  chartId           Int        @map("chart_id")
+  chart             MusicChart @relation(fields: [chartId], references: [id], onDelete: Restrict)
 
-  @@unique([user_id, chart_id])
-  @@index([chart_id, score, user_id])
-  @@index([user_id, grade_basic])
-  @@index([user_id, grade_recital])
+  @@unique([userId, chartId])
+  @@index([chartId, score, userId])
+  @@index([userId, gradeBasic])
+  @@index([userId, gradeRecital])
 }
 
 model Bingo {
@@ -1258,7 +1183,7 @@ model BingoCell {
   ruleType         BingoRuleType       @default(manual) @map("rule_type")
   ruleConfig       Json?               @map("rule_config")
   categoryShort    String?             @map("category_short")
-  targetDifficulty String?             @map("target_difficulty")
+  targetDifficulty BingoDifficulty?    @map("target_difficulty")
   targetLevel      Int?                @map("target_level")
   musicIndex       String?             @map("music_idx")
   music            Music?              @relation("BingoMissionMusic", fields: [musicIndex], references: [index], onDelete: SetNull)
@@ -1335,6 +1260,8 @@ model ExamStage {
 
 // 이벤트 검정 등에서 한 과제곡에 허용되는 여러 난이도 채보를 관리함
 model ExamStageChart {
+  // 외래 키가 복합 기본 키(@@id)의 앞 칸이라 이미 인덱스가 있다 — prisma-lint 가 @@id 를 인덱스로 보지 않는다
+  /// prisma-lint-ignore-model require-field-index
   stageId Int        @map("stage_id")
   stage   ExamStage  @relation(fields: [stageId], references: [id], onDelete: Cascade)
   chartId Int        @map("chart_id")
@@ -1364,21 +1291,26 @@ model ExamSubmission {
   id            Int                  @id @default(autoincrement())
   proofImageUrl String?              @map("proof_image_url")
   status        ExamSubmissionStatus @default(pending)
-  reviewerNote  String?              @map("reviewer_note")
+  reviewNote    String?              @map("reviewer_note")
   submittedAt   DateTime             @default(now()) @map("submitted_at")
   reviewedAt    DateTime?            @map("reviewed_at")
+  // 승인 · 반려한 운영자(2026-10-16 D5) — 이 날 전 기록은 비어 있다
+  reviewedById  Int?                 @map("reviewed_by_id")
+  reviewedBy    User?                @relation("ExamSubmissionReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
   createdAt     DateTime             @default(now()) @map("created_at")
   updatedAt     DateTime             @updatedAt @map("updated_at")
   userId        Int                  @map("user_id")
-  user          User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user          User                 @relation("ExamSubmissionAuthor", fields: [userId], references: [id], onDelete: Cascade)
   examId        Int                  @map("exam_id")
   // 인증 이력이 있는 검정은 지우지 않는다 — 앱 규칙을 DB 도 지킨다(2026-10-16 P2, 예전 Cascade)
   exam          Exam                 @relation(fields: [examId], references: [id], onDelete: Restrict)
   achievement   ExamAchievement?
+  // 스키마 밖 — "ExamSubmission_one_pending": (user_id, exam_id) WHERE status = 'pending'(2026-10-16 D5)
 
   @@index([userId, examId, submittedAt])
   @@index([status, submittedAt])
   @@index([examId])
+  @@index([reviewedById])
 }
 
 // 승인된 검정 급수를 사용자별로 정규화해 보관함
@@ -1408,28 +1340,28 @@ model OfficialXFeed {
 // 업적 단계 획득 기록(2026-09-24). 업적 정의(키 · 기준)는 코드(features/achievements)에 둔다.
 // 동기화 때 판정해 새 단계만 더한다. 기준을 넘었다가 내려가도 지우지 않는다. 날짜는 NosLog 가 확인한 때
 model UserAchievement {
-  id          Int      @id @default(autoincrement())
-  user_id     Int
-  user        User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  key         String
+  id         Int      @id @default(autoincrement())
+  userId     Int      @map("user_id")
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  key        String
   // 1 동 · 2 은 · 3 금
-  tier        Int
-  achieved_at DateTime @default(now())
+  tier       Int
+  achievedAt DateTime @default(now()) @map("achieved_at")
 
-  @@unique([user_id, key, tier])
+  @@unique([userId, key, tier])
   @@index([key, tier])
 }
 
 // 프로필 머리에 거는 업적(최대 3칸). 비어 있으면 높은 단계를 자동으로 보인다
 model UserAchievementShowcase {
-  user_id  Int
-  user     User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  userId   Int    @map("user_id")
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   // 1~3
   position Int
   key      String
 
-  @@id([user_id, position])
-  @@unique([user_id, key])
+  @@id([userId, position])
+  @@unique([userId, key])
 }
 
 // 동기화가 계산해 두는 사람별 값(2026-10-16 DB 재설계 D2-B). 예전에는 User 에 섞여 있었다 —
@@ -1466,36 +1398,38 @@ model PlayerStats {
 // basis_version = 계산식 판 + 피아니스트 서열 상수의 지문. 기준이 바뀌면 전원을 한 트랜잭션으로 다시 써서
 // 다 셀 때까지는 옛 값을 보여 주고, 옛 값과 새 값이 섞이지 않게 한다
 model PlayerRating {
-  user_id       Int
-  user          User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  // 외래 키가 복합 기본 키(@@id)의 앞 칸이라 이미 인덱스가 있다 — prisma-lint 가 @@id 를 인덱스로 보지 않는다
+  /// prisma-lint-ignore-model require-field-index
+  userId       Int      @map("user_id")
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   // basic | recital
-  mode          PlayMode
-  rating        Float
-  filled_slots  Int
-  basis_version String
-  computed_at   DateTime @default(now())
+  mode         PlayMode
+  rating       Float
+  filledSlots  Int      @map("filled_slots")
+  basisVersion String   @map("basis_version")
+  computedAt   DateTime @default(now()) @map("computed_at")
 
-  @@id([user_id, mode])
+  @@id([userId, mode])
   @@index([mode, rating(sort: Desc)])
 }
 
 // 프로필 개요에 고정한 기록(최대 3칸 · 한 줄 소감, 2026-09-26 S2). 비어 있으면 베스트 상위 3곡을 보인다.
 // 동기화 때마다 기록 행이 바뀔 수 있어 채보 기준으로 고정한다
 model UserPinnedRecord {
-  id         Int        @id @default(autoincrement())
-  user_id    Int
-  user       User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  chart_id   Int
-  chart      MusicChart @relation(fields: [chart_id], references: [id], onDelete: Cascade)
+  id        Int        @id @default(autoincrement())
+  userId    Int        @map("user_id")
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chartId   Int        @map("chart_id")
+  chart     MusicChart @relation(fields: [chartId], references: [id], onDelete: Cascade)
   // 1~3
-  position   Int
-  comment    String?    @db.VarChar(80)
-  created_at DateTime   @default(now())
-  updated_at DateTime   @updatedAt
+  position  Int
+  comment   String?    @db.VarChar(80)
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
 
-  @@unique([user_id, position])
-  @@unique([user_id, chart_id])
-  @@index([chart_id])
+  @@unique([userId, position])
+  @@unique([userId, chartId])
+  @@index([chartId])
 }
 
 // 닫힌 값 목록(2026-10-16 DB 재설계 D4-C 1차). 값은 DB 에 쓰던 문자열 그대로, 알파벳 순 —
@@ -1539,7 +1473,7 @@ enum ProposalEvidenceKind {
 }
 
 enum ProposalStatus {
-  applied
+  approved
   pending
   rejected
 }
@@ -1552,11 +1486,12 @@ enum ProposalRejectReason {
   url
 }
 
+// 값 순서는 DB 선언 순서(이름만 바꿈, 2026-10-16 D5) — 상태로 정렬하는 곳은 없다
 enum ChartDraftStatus {
   changes_requested
   draft
-  published
-  submitted
+  approved
+  pending
 }
 
 enum ChartCommentKind {
@@ -1661,6 +1596,40 @@ enum ExamStatus {
 enum ExamRequirementType {
   cumulative
   single
+}
+
+// 채보 난이도 — 공식 표기(첫 글자 대문자) 그대로
+enum ChartDifficulty {
+  Expert
+  Hard
+  Normal
+  Real
+}
+
+// 빙고 칸 목표 난이도 — 빙고 편집기가 쓰는 소문자 값 그대로
+enum BingoDifficulty {
+  expert
+  hard
+  normal
+  real
+}
+
+enum AnalyticsKind {
+  api
+  audience
+  audienceVisitor
+  external
+  hour
+  page
+  pageviews
+  visitors
+}
+
+enum ChartPatternRevisionKind {
+  contribution
+  manual
+  publish
+  vid2bmap
 }
 
 enum ExamRewardType {

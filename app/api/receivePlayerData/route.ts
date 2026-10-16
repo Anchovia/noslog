@@ -6,13 +6,18 @@ import { evaluateUserAchievements } from "@/features/achievements/server/achieve
 import { getMissingJacketIndexes } from "@/features/music/server/jacket-collection-service";
 import { recordProfileRatings } from "@/features/profile/server/profile-rating-history-service";
 import { refreshUserPlayerRatings } from "@/features/rankings/server/player-rating-service";
+import {
+    completeSyncAttempt,
+    createSyncAttempt,
+    failSyncAttempt,
+    getSyncUser,
+} from "@/features/sync/server/sync-attempt-data";
 import { verifySyncToken } from "@/lib/bookmarklet";
 import {
     CACHE_TAGS,
     getChartRankingTag,
     getUserProfileTag,
 } from "@/lib/cache-tags";
-import db from "@/lib/db";
 import { updateDummy } from "@/lib/dummy/bingo";
 import { isLocale, type Locale } from "@/lib/i18n/routing";
 import { processBemaniCatalogUpdates } from "@/lib/services/music/catalog-sync";
@@ -26,8 +31,6 @@ import { updateRecentPlay } from "@/lib/services/user/update-recent-play";
 
 const EAGATE_ORIGIN = "https://p.eagate.573.jp";
 const MAX_SYNC_BODY_BYTES = 8 * 1024 * 1024;
-const SYNC_COOLDOWN_MS = 30 * 1000;
-const SYNC_PROCESSING_TIMEOUT_MS = 5 * 60 * 1000;
 // 바뀐 채보가 이보다 많으면(첫 전체 동기화 등) 채보별 대신 전체 순위 태그 하나로 비운다
 const CHART_TAG_REVALIDATE_LIMIT = 200;
 const responseCopy = {
@@ -227,10 +230,6 @@ function json(
     );
 }
 
-type SyncAttemptResult =
-    | { allowed: true; syncId: number; previousCompleted: boolean }
-    | { allowed: false; reason: "processing" | "cooldown"; retryAfter: number };
-
 type SkippedChart = {
     musicIndex: string;
     difficulty: string;
@@ -278,76 +277,6 @@ function formatSkippedCharts(skippedCharts: SkippedChart[]) {
     return `DB에 등록되지 않은 채보 ${skippedCharts.length}개를 건너뛰었습니다: ${preview}${remainder > 0 ? ` 외 ${remainder}개` : ""}`;
 }
 
-// 사용자별 DB 잠금으로 여러 서버 인스턴스에서도 동기화 시작을 직렬화함
-async function createSyncAttempt(
-    userId: number,
-    syncScope: "full" | "recent",
-    receivedPlays: number
-): Promise<SyncAttemptResult> {
-    return db.$transaction(async (tx) => {
-        await tx.$executeRaw`SELECT pg_advisory_xact_lock(73051, ${userId}::integer)`;
-
-        const now = new Date();
-        const latestSync = await tx.dataSync.findFirst({
-            where: { user_id: userId },
-            select: { id: true, status: true, started_at: true },
-            orderBy: { started_at: "desc" },
-        });
-
-        if (latestSync?.status === "processing") {
-            const processingAge =
-                now.getTime() - latestSync.started_at.getTime();
-            if (processingAge < SYNC_PROCESSING_TIMEOUT_MS) {
-                return {
-                    allowed: false,
-                    reason: "processing",
-                    retryAfter: Math.max(
-                        1,
-                        Math.ceil(
-                            (SYNC_PROCESSING_TIMEOUT_MS - processingAge) / 1000
-                        )
-                    ),
-                };
-            }
-
-            await tx.dataSync.update({
-                where: { id: latestSync.id },
-                data: {
-                    status: "failed",
-                    error_message: "동기화 처리 시간이 초과되었습니다.",
-                    completed_at: now,
-                },
-            });
-        } else if (latestSync) {
-            const elapsed = now.getTime() - latestSync.started_at.getTime();
-            if (elapsed < SYNC_COOLDOWN_MS) {
-                return {
-                    allowed: false,
-                    reason: "cooldown",
-                    retryAfter: Math.max(
-                        1,
-                        Math.ceil((SYNC_COOLDOWN_MS - elapsed) / 1000)
-                    ),
-                };
-            }
-        }
-
-        const sync = await tx.dataSync.create({
-            data: {
-                user_id: userId,
-                sync_scope: syncScope,
-                received_plays: receivedPlays,
-            },
-            select: { id: true },
-        });
-        return {
-            allowed: true,
-            syncId: sync.id,
-            previousCompleted: latestSync?.status === "completed",
-        };
-    });
-}
-
 export async function POST(request: NextRequest) {
     const copy = getResponseCopy(request);
 
@@ -381,17 +310,8 @@ export async function POST(request: NextRequest) {
         return json(copy.invalidToken, 401);
     }
 
-    const user = await db.user.findUnique({
-        where: { id: tokenPayload.userId },
-        select: {
-            id: true,
-            sync_token_version: true,
-            role: true,
-            // 동기화 전 Grd — 바뀌었는지로 공용 캐시를 비운다(2026-10-16 P4, player_stats 에서)
-            stats: { select: { gradeBasic: true, gradeRecital: true } },
-        },
-    });
-    if (!user || user.sync_token_version !== tokenPayload.version) {
+    const user = await getSyncUser(tokenPayload.userId);
+    if (!user || user.syncTokenVersion !== tokenPayload.version) {
         return json(copy.expiredToken, 401);
     }
 
@@ -500,15 +420,10 @@ export async function POST(request: NextRequest) {
             }
         );
 
-        await db.dataSync.update({
-            where: { id: syncId },
-            data: {
-                status: "completed",
-                inserted_plays: insertedPlays,
-                changed_records: changedRecords,
-                error_message: syncNotice,
-                completed_at: new Date(),
-            },
+        await completeSyncAttempt(syncId, {
+            insertedPlays,
+            changedRecords,
+            notice: syncNotice,
         });
 
         // 공용 캐시는 이번 동기화로 실제로 바뀐 만큼만 비운다(2026-10-15 S3) — 바뀐 게 없으면 본인 프로필만
@@ -557,15 +472,10 @@ export async function POST(request: NextRequest) {
     } catch (error) {
         console.error("BEMANI data synchronization failed", error);
 
-        await db.dataSync.update({
-            where: { id: syncId },
-            data: {
-                status: "failed",
-                error_message:
-                    error instanceof Error ? error.message : "Unknown error",
-                completed_at: new Date(),
-            },
-        });
+        await failSyncAttempt(
+            syncId,
+            error instanceof Error ? error.message : "Unknown error"
+        );
 
         return json(copy.processFailed, 500);
     }

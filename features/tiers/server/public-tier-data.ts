@@ -72,7 +72,7 @@ export const getCachedTierBand = unstable_cache(
                                     select: {
                                         index: true,
                                         title: true,
-                                        title_kana: true,
+                                        titleKana: true,
                                         background: true,
                                         translations: {
                                             where: {
@@ -156,33 +156,50 @@ async function getUserTierRecords(userId: number, chartIds: number[]) {
     if (chartIds.length === 0) return [];
 
     const records = await db.playData.findMany({
-        where: { user_id: userId, chart_id: { in: chartIds } },
+        where: { userId: userId, chartId: { in: chartIds } },
         select: {
-            chart_id: true,
+            chartId: true,
             score: true,
             rank: true,
-            fc_type: true,
-            max_combo: true,
-            play_count: true,
-            clear_count: true,
-            fullcombo_count: true,
-            pianistic_count: true,
-            judge_sjust: true,
-            judge_just: true,
-            judge_good: true,
-            judge_miss: true,
-            judge_near: true,
-            note_rate_standard: true,
-            note_rate_tenuto: true,
-            note_rate_glissando: true,
-            note_rate_trill: true,
+            fcType: true,
+            maxCombo: true,
+            playCount: true,
+            clearCount: true,
+            fullcomboCount: true,
+            pianisticCount: true,
+            judgeSjust: true,
+            judgeJust: true,
+            judgeGood: true,
+            judgeMiss: true,
+            judgeNear: true,
+            noteRateStandard: true,
+            noteRateTenuto: true,
+            noteRateGlissando: true,
+            noteRateTrill: true,
             bestAt: true,
         },
     });
-    // 응답 모양은 그대로 besttime 글자(2026-10-16 P5-1 — 값은 best_at 에서)
-    return records.map(({ bestAt, ...record }) => ({
-        ...record,
-        besttime: legacyBesttime(bestAt),
+    // 응답 모양은 예전 이름 그대로(2026-10-16 D1-B) · besttime 글자(P5-1 — 값은 best_at 에서)
+    return records.map((record) => ({
+        chart_id: record.chartId,
+        score: record.score,
+        rank: record.rank,
+        fc_type: record.fcType,
+        max_combo: record.maxCombo,
+        play_count: record.playCount,
+        clear_count: record.clearCount,
+        fullcombo_count: record.fullcomboCount,
+        pianistic_count: record.pianisticCount,
+        judge_sjust: record.judgeSjust,
+        judge_just: record.judgeJust,
+        judge_good: record.judgeGood,
+        judge_miss: record.judgeMiss,
+        judge_near: record.judgeNear,
+        note_rate_standard: record.noteRateStandard,
+        note_rate_tenuto: record.noteRateTenuto,
+        note_rate_glissando: record.noteRateGlissando,
+        note_rate_trill: record.noteRateTrill,
+        besttime: legacyBesttime(record.bestAt),
     }));
 }
 

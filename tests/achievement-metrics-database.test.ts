@@ -25,9 +25,9 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
                 data: {
                     index: musicIndex,
                     title: "T",
-                    title_kana: "T",
+                    titleKana: "T",
                     category: "BM",
-                    category_short: "BM",
+                    categoryShort: "BM",
                     charts: {
                         create: [
                             { difficulty: "Expert", level: 12 },
@@ -37,24 +37,24 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
                 },
             });
             const charts = await db.musicChart.findMany({
-                where: { music_idx: musicIndex },
+                where: { musicIdx: musicIndex },
                 orderBy: { id: "asc" },
             });
             userId = (await db.user.create({ data: { username: musicIndex } }))
                 .id;
             await db.playData.createMany({
                 data: charts.map((chart, index) => ({
-                    user_id: userId,
-                    chart_id: chart.id,
+                    userId: userId,
+                    chartId: chart.id,
                     level: chart.level,
                     score: index === 0 ? 1_000_000 : 960_000,
                     rank: index === 0 ? "P" : "S",
-                    fc_type: index === 0 ? 3 : 1,
-                    play_count: 1,
-                    fullcombo_count: 0,
-                    pianistic_count: 0,
-                    max_combo: 100,
-                    grade_basic: 10_000,
+                    fcType: index === 0 ? 3 : 1,
+                    playCount: 1,
+                    fullcomboCount: 0,
+                    pianisticCount: 0,
+                    maxCombo: 100,
+                    gradeBasic: 10_000,
                 })),
             });
         });
@@ -62,7 +62,7 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
         afterAll(async () => {
             if (userId) await db.user.delete({ where: { id: userId } });
             await db.musicChart.deleteMany({
-                where: { music_idx: musicIndex },
+                where: { musicIdx: musicIndex },
             });
             await db.music.deleteMany({ where: { index: musicIndex } });
             await db.$disconnect();

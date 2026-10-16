@@ -90,8 +90,8 @@ describe("관리자 검정 저장 액션", () => {
         mocks.examFindFirst.mockResolvedValue(null);
         mocks.examFindUnique.mockResolvedValue(null);
         mocks.chartFindMany.mockResolvedValue([
-            { id: 11, music_idx: "music-1" },
-            { id: 12, music_idx: "music-1" },
+            { id: 11, musicIdx: "music-1" },
+            { id: 12, musicIdx: "music-1" },
         ]);
         mocks.musicCount.mockResolvedValue(0);
         mocks.examCreate.mockResolvedValue({ id: 30 });
@@ -142,8 +142,8 @@ describe("관리자 검정 저장 액션", () => {
 
     it("선택한 채보가 과제곡 소속이 아니면 거부한다", async () => {
         mocks.chartFindMany.mockResolvedValue([
-            { id: 11, music_idx: "other-music" },
-            { id: 12, music_idx: "music-1" },
+            { id: 11, musicIdx: "other-music" },
+            { id: 12, musicIdx: "music-1" },
         ]);
 
         await expect(saveExam(createExamInput())).resolves.toEqual({

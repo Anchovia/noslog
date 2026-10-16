@@ -87,13 +87,13 @@ function storedMusic() {
     return {
         index: "sasoribi",
         title: "ピアノ協奏曲第1番“蠍火”",
-        title_kana: "ピアノキョウソウキョク",
+        titleKana: "ピアノキョウソウキョク",
         artist: "Virkato Wakhmaninov",
         category: "BEMANI楽曲",
-        category_short: "BM",
+        categoryShort: "BM",
         description: null,
         license: "",
-        unlock_type: 0,
+        unlockType: 0,
         charts: [
             { difficulty: "Normal", level: 6 },
             { difficulty: "Hard", level: 9 },

@@ -120,17 +120,17 @@ try {
 
     const playRecords = await db.playData.findMany({
         where: {
-            chart_id: { in: [...entryByChartId.keys()] },
+            chartId: { in: [...entryByChartId.keys()] },
             score: { gte: BASIC_RATING_SCORE_FLOOR },
         },
         select: {
-            user_id: true,
-            chart_id: true,
+            userId: true,
+            chartId: true,
             score: true,
             user: {
                 select: {
                     username: true,
-                    nostalgia_name: true,
+                    nostalgiaName: true,
                     stats: { select: { gradeBasic: true } },
                 },
             },
@@ -148,24 +148,24 @@ try {
     >();
 
     for (const record of playRecords) {
-        const entry = entryByChartId.get(record.chart_id);
+        const entry = entryByChartId.get(record.chartId);
         if (!entry) continue;
 
-        const user = users.get(record.user_id) ?? {
-            userId: record.user_id,
+        const user = users.get(record.userId) ?? {
+            userId: record.userId,
             name:
-                record.user.nostalgia_name ??
+                record.user.nostalgiaName ??
                 record.user.username ??
-                `User ${record.user_id}`,
+                `User ${record.userId}`,
             gradeBasic: record.user.stats?.gradeBasic ?? null,
             records: [],
         };
         user.records.push({
-            chartId: record.chart_id,
+            chartId: record.chartId,
             score: record.score,
             tierConstant: entry.tierConstant,
         });
-        users.set(record.user_id, user);
+        users.set(record.userId, user);
     }
 
     const rankings = Object.fromEntries(

@@ -1,3 +1,9 @@
+import {
+    countAdminTierEntries,
+    getAdminTierList,
+    getLegacyTierListWithEntries,
+    listAdminTierEntries,
+} from "@/features/tiers/server/tier-admin-data";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -6,7 +12,6 @@ import TierBoard from "@/features/tiers/components/tier-board";
 import TierListDeleteButton from "@/features/tiers/components/tier-list-delete-button";
 import TierListForm from "@/features/tiers/components/tier-list-form";
 import TierPlacementEditor from "@/features/tiers/components/tier-placement-editor";
-import db from "@/lib/db";
 import {
     MUSIC_CATEGORY_VALUES,
     normalizeMusicCategory,
@@ -17,6 +22,7 @@ import {
     isCurrentTierScope,
     isTierDifficulty,
     isTierLevelFilter,
+    type TierDifficulty,
 } from "@/lib/tiers";
 import type { Prisma } from "@prisma/client";
 import { foundationButtonClass } from "@/components/ui/button";
@@ -41,22 +47,14 @@ export default async function EditTierListPage({
     const tierListId = Number(id);
     if (!Number.isInteger(tierListId)) notFound();
 
-    const tierList = await db.tierList.findUnique({
-        where: { id: tierListId },
-        include: {
-            bands: {
-                orderBy: { position: "asc" },
-                include: { _count: { select: { entries: true } } },
-            },
-        },
-    });
+    const tierList = await getAdminTierList(tierListId);
     if (!tierList) notFound();
     // 지금 쓰는 서열표만 편집. 모드별 목록에서 빠진 목표 표(Recital S·FC 등)는 보관 서열표로 다룬다
     const current = isCurrentTierScope(tierList.mode, tierList.goal);
 
     const keyword = (query.q ?? "").trim().slice(0, 100);
     const difficulty = isTierDifficulty(query.difficulty ?? "")
-        ? query.difficulty
+        ? (query.difficulty as TierDifficulty)
         : "";
     const level = isTierLevelFilter(query.level ?? "") ? query.level! : "";
     // 공개 악곡 필터와 같은 6개 카테고리(pops·anime·BM·Org·Var·Cl/Jz). DB 값과 표기가 같다
@@ -77,7 +75,7 @@ export default async function EditTierListPage({
         ...(keyword || category
             ? {
                   music: {
-                      ...(category ? { category_short: category } : {}),
+                      ...(category ? { categoryShort: category } : {}),
                       ...(keyword
                           ? {
                                 OR: [
@@ -109,36 +107,8 @@ export default async function EditTierListPage({
 
     const [goalEntries, goalEntryCount, legacyTierList] = current
         ? await Promise.all([
-              db.tierEntry.findMany({
-                  where: { tierListId, chart: chartWhere },
-                  select: {
-                      id: true,
-                      tierBandId: true,
-                      chart: {
-                          select: {
-                              difficulty: true,
-                              level: true,
-                              music: {
-                                  select: {
-                                      index: true,
-                                      title: true,
-                                      artist: true,
-                                      background: true,
-                                  },
-                              },
-                          },
-                      },
-                  },
-                  orderBy: [
-                      { chart: { music: { title: "asc" } } },
-                      { chart: { difficulty: "asc" } },
-                  ],
-                  skip: (page - 1) * pageSize,
-                  take: pageSize,
-              }),
-              db.tierEntry.count({
-                  where: { tierListId, chart: chartWhere },
-              }),
+              listAdminTierEntries(tierListId, chartWhere, page, pageSize),
+              countAdminTierEntries(tierListId, chartWhere),
               Promise.resolve(null),
           ])
         : await Promise.all([
@@ -146,33 +116,7 @@ export default async function EditTierListPage({
               Promise.resolve(0),
               tierList.goal
                   ? Promise.resolve(null)
-                  : db.tierList.findUnique({
-                        where: { id: tierListId },
-                        include: {
-                            bands: {
-                                include: {
-                                    entries: {
-                                        include: {
-                                            chart: {
-                                                include: {
-                                                    music: {
-                                                        select: {
-                                                            index: true,
-                                                            title: true,
-                                                            artist: true,
-                                                            background: true,
-                                                        },
-                                                    },
-                                                },
-                                            },
-                                        },
-                                        orderBy: { position: "asc" },
-                                    },
-                                },
-                                orderBy: { position: "asc" },
-                            },
-                        },
-                    }),
+                  : getLegacyTierListWithEntries(tierListId),
           ]);
 
     const filterParams = new URLSearchParams({

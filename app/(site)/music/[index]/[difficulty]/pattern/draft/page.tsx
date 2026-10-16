@@ -1,8 +1,9 @@
+import { getChartForDraft } from "@/features/music/server/chart-pattern-data";
 import { notFound, redirect } from "next/navigation";
 
 import ChartTimingEditor from "@/components/admin/chart-pattern/chartTimingEditor";
 import { openMyChartDraft } from "@/features/contributions/server/chart-draft-service";
-import db from "@/lib/db";
+import { parseChartDifficulty } from "@/lib/tiers";
 import { localizePath } from "@/lib/i18n/routing";
 import { getServerI18n } from "@/lib/i18n/server";
 import getSession from "@/lib/session";
@@ -41,21 +42,11 @@ export default async function ChartDraftPage({
             )
         );
     }
-    const chart = await db.musicChart.findFirst({
-        where: {
-            music_idx: musicIndex,
-            difficulty: {
-                equals: decodeURIComponent(difficulty),
-                mode: "insensitive",
-            },
-        },
-        select: {
-            id: true,
-            difficulty: true,
-            level: true,
-            music: { select: { index: true, title: true, artist: true } },
-        },
-    });
+    const chartDifficulty = parseChartDifficulty(
+        decodeURIComponent(difficulty)
+    );
+    if (!chartDifficulty) notFound();
+    const chart = await getChartForDraft(musicIndex, chartDifficulty);
     if (!chart) notFound();
     const draft = await openMyChartDraft(chart.id);
     if (!draft) notFound();

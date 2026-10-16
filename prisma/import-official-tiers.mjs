@@ -32,7 +32,7 @@ function groupCharts(charts) {
     }
 
     for (const chart of charts) {
-        const value = Number(chart.level_constant);
+        const value = Number(chart.levelConstant);
         const key = constantKey(value);
         const group = groups.get(key);
         if (!group) {
@@ -64,16 +64,16 @@ function validateDefinitions() {
 
 async function loadCharts() {
     const charts = await db.musicChart.findMany({
-        where: { level_constant: { not: null } },
+        where: { levelConstant: { not: null } },
         select: {
             id: true,
             difficulty: true,
-            level_constant: true,
+            levelConstant: true,
             music: {
                 select: {
                     index: true,
                     title: true,
-                    title_kana: true,
+                    titleKana: true,
                 },
             },
         },
@@ -81,8 +81,8 @@ async function loadCharts() {
 
     charts.sort((left, right) => {
         const titleResult = titleCollator.compare(
-            left.music.title_kana || left.music.title,
-            right.music.title_kana || right.music.title
+            left.music.titleKana || left.music.title,
+            right.music.titleKana || right.music.title
         );
         return (
             titleResult ||

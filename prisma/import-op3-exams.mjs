@@ -475,15 +475,15 @@ async function ensureArchiveMusics() {
             data: {
                 index: music.index,
                 title: music.title,
-                title_kana: music.title,
+                titleKana: music.title,
                 artist: music.artist,
                 category: music.category,
-                category_short: music.categoryShort,
+                categoryShort: music.categoryShort,
                 charts: {
                     create: music.levels.map((level, index) => ({
                         difficulty: difficultyOrder[index],
                         level,
-                        level_constant:
+                        levelConstant:
                             difficultyOrder[index] === "Real"
                                 ? (realConstantOverrides.get(music.title) ??
                                   level + 10)

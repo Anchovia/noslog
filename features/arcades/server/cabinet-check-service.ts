@@ -41,7 +41,7 @@ export async function confirmCabinetRunning(
             where: {
                 id: cabinetId,
                 isActive: true,
-                arcade: { is_active: true },
+                arcade: { isActive: true },
             },
             select: {
                 id: true,

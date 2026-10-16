@@ -47,7 +47,7 @@ export default async function EventEditorPage({
           };
     const showNote =
         event?.reviewNote &&
-        (status === "CHANGES_REQUESTED" || status === "REJECTED");
+        (status === "changes_requested" || status === "rejected");
     return (
         <PageContainer width="reading" className="nl-events">
             <BackLink href={localizePath("/events/mine", locale)}>
@@ -58,16 +58,16 @@ export default async function EventEditorPage({
             />
             {showNote ? (
                 <StatusMessage
-                    severity={status === "REJECTED" ? "danger" : "info"}
+                    severity={status === "rejected" ? "danger" : "info"}
                     title={
-                        status === "REJECTED"
+                        status === "rejected"
                             ? t("events.rejected.title")
                             : t("events.changes.title")
                     }
                     description={event.reviewNote}
                 />
             ) : null}
-            {status === "REJECTED" && event ? (
+            {status === "rejected" && event ? (
                 <div className="nl-events__rejected">
                     <p className="nl-body nl-muted">
                         {t("events.rejected.body")}

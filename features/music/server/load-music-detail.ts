@@ -10,6 +10,7 @@ import { CACHE_TAGS } from "@/lib/cache-tags";
 import db from "@/lib/db";
 import { getLocalizedMusicTitle } from "@/lib/i18n/music-title";
 import type { Locale } from "@/lib/i18n/routing";
+import { isPianist } from "@/lib/music/clear-mark";
 import { unlockStepsFor } from "@/lib/music/unlock-condition";
 import { logServerError } from "@/lib/observability/server";
 import {
@@ -112,7 +113,7 @@ export async function loadMusicDetail(
             showLocalizedTitle
         ),
         artist: music.artist,
-        category_short: music.category_short,
+        category_short: music.categoryShort,
         normal: chartLevels.get("Normal") ?? 0,
         hard: chartLevels.get("Hard") ?? 0,
         expert: chartLevels.get("Expert") ?? 0,
@@ -120,7 +121,7 @@ export async function loadMusicDetail(
         constants: Object.fromEntries(
             music.charts.map((chart) => [
                 chart.difficulty,
-                chart.level_constant ?? null,
+                chart.levelConstant ?? null,
             ])
         ),
     };
@@ -152,12 +153,28 @@ export async function loadMusicDetail(
               })
             : [],
         activeTab === "tier"
-            ? getCommunityData(chart.id, userId).catch((error) => {
-                  logServerError(error, {
-                      event: "music-community.initial.failed",
-                  });
-                  return undefined;
-              })
+            ? userRecord
+                  .then((record) =>
+                      getCommunityData(
+                          chart.id,
+                          userId,
+                          // 위에서 읽은 기록을 그대로 — 점수가 있는 기록만 오므로 없으면 null
+                          userId
+                              ? record && {
+                                    score: record.score,
+                                    fcType: record.fc_type,
+                                    rank: record.rank,
+                                    gradeRecital: record.grade_recital,
+                                }
+                              : undefined
+                      )
+                  )
+                  .catch((error) => {
+                      logServerError(error, {
+                          event: "music-community.initial.failed",
+                      });
+                      return undefined;
+                  })
             : undefined,
         // 개요의 패턴 평가 요약 — 화면을 띄운 뒤 따로 받지 않게 함께 읽는다(2026-10-15 S5). 실패하면 클라가 받는다
         activeTab === "detail"
@@ -221,9 +238,9 @@ export async function loadMusicDetail(
                 (activeTab === "ranking" || activeTab === "detail")
                     ? db.playData.count({
                           where: {
-                              chart_id: chart.id,
+                              chartId: chart.id,
                               score: { gt: userPlayData.score },
-                              user: { hide_play_scores: false },
+                              user: { hidePlayScores: false },
                           },
                       })
                     : null,
@@ -277,7 +294,7 @@ export async function loadMusicDetail(
 
     for (const record of stats.scores) {
         let bucket: number | null = null;
-        if (record.fc_type === 3 || record.score >= 1000000) bucket = 5;
+        if (isPianist(record.fcType, record.score)) bucket = 5;
         else if (record.score >= 990000) bucket = 4;
         else if (record.score >= 980000) bucket = 3;
         else if (record.score >= 970000) bucket = 2;

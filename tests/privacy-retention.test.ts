@@ -70,7 +70,7 @@ describe("개인정보 6개월 보관 정리", () => {
                     id: 2,
                     status: "approved",
                 }),
-                data: { proofImageUrl: null, reviewerNote: null },
+                data: { proofImageUrl: null, reviewNote: null },
             })
         );
         expect(mocks.submissionDeleteMany).toHaveBeenCalledWith(

@@ -56,7 +56,7 @@ export default function ChartDraftEntry({
     const [narrow, setNarrow] = useState(false);
     // 공개까지 끝난 초안은 다시 열면 지금 공개본으로 새로 시작하므로 상태 대신 원래 글(「고치기」)
     const found = useQuery(myChartDraftOptions(chartId, signedIn)).data;
-    const draft = found?.status === "published" ? null : found;
+    const draft = found?.status === "approved" ? null : found;
     const text = draft
         ? t("contribution.entry.myDraft", {
               status: t(`contribution.draftStatus.${draft.status}`),

@@ -43,9 +43,9 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
                 data: {
                     index,
                     title: "Ranking fixture",
-                    title_kana: "ランキング",
+                    titleKana: "ランキング",
                     category: "Original",
-                    category_short: "Org",
+                    categoryShort: "Org",
                     charts: { create: { difficulty: "Expert", level: 12 } },
                 },
                 include: { charts: true },
@@ -58,8 +58,8 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
                 users.push(user.id);
                 await db.playData.create({
                     data: {
-                        user_id: user.id,
-                        chart_id: chartId,
+                        userId: user.id,
+                        chartId: chartId,
                         level: 12,
                         score:
                             i === 0
@@ -70,13 +70,13 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
                                     ? 0
                                     : 980000,
                         rank: i === 0 ? "P" : "S",
-                        fc_type: i === 0 ? 3 : 2,
-                        play_count: 1,
-                        fullcombo_count: 1,
-                        pianistic_count: i === 0 ? 1 : 0,
-                        max_combo: 1000,
-                        grade_basic: 1000,
-                        grade_recital: 0,
+                        fcType: i === 0 ? 3 : 2,
+                        playCount: 1,
+                        fullcomboCount: 1,
+                        pianisticCount: i === 0 ? 1 : 0,
+                        maxCombo: 1000,
+                        gradeBasic: 1000,
+                        gradeRecital: 0,
                         // 동기화는 기록 시각을 best_at 에도 쓴다 — 같은 점수 순서는 이 열로 정한다(2026-10-16 P4)
                         bestAt: recordBestAt(besttimeOf(i)),
                     },
@@ -131,8 +131,8 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
         it("uses the internal ID only to order a tied achievement time", async () => {
             await db.playData.updateMany({
                 where: {
-                    user_id: { in: [users[25], users[26]] },
-                    chart_id: chartId,
+                    userId: { in: [users[25], users[26]] },
+                    chartId: chartId,
                 },
                 data: {
                     bestAt: recordBestAt("2026-08-01 10:00"),

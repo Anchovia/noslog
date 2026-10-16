@@ -65,7 +65,7 @@ function inventory(goal: string, mode: string) {
                         ...chart,
                         difficulty: index === 1 ? "Real" : "Expert",
                         level: index === 1 ? 3 : 12,
-                        music_idx: index === 0 ? "stulti" : `other-${index}`,
+                        musicIdx: index === 0 ? "stulti" : `other-${index}`,
                     },
                 })),
             },
@@ -81,12 +81,12 @@ beforeEach(() => {
     );
     mocks.records.mockResolvedValue([
         {
-            chart_id: 1,
+            chartId: 1,
             score: 970_000,
             rank: "S",
-            fc_type: 2,
-            grade_basic: 42,
-            grade_recital: 0,
+            fcType: 2,
+            gradeBasic: 42,
+            gradeRecital: 0,
         },
     ]);
     mocks.band.mockResolvedValue({
@@ -287,7 +287,7 @@ describe("Tier browser request and data contract", () => {
                     position: 0,
                     chart: {
                         ...chart,
-                        music: { ...chart.music, title_kana: " すとぅるてぃ " },
+                        music: { ...chart.music, titleKana: " すとぅるてぃ " },
                     },
                 },
                 {
@@ -296,7 +296,7 @@ describe("Tier browser request and data contract", () => {
                     position: 1,
                     chart: {
                         ...chart,
-                        music: { ...chart.music, title_kana: "" },
+                        music: { ...chart.music, titleKana: "" },
                     },
                 },
             ],
@@ -329,7 +329,7 @@ describe("Tier browser request and data contract", () => {
         );
         expect(mocks.records).toHaveBeenCalledWith(
             expect.objectContaining({
-                where: { user_id: 9, chart_id: { in: [1, 80] } },
+                where: { userId: 9, chartId: { in: [1, 80] } },
             })
         );
     });
@@ -368,12 +368,12 @@ describe("Tier browser request and data contract", () => {
         ).toBeNull();
         mocks.records.mockResolvedValue([
             {
-                chart_id: 1,
+                chartId: 1,
                 score: 970_000,
                 rank: "S",
-                fc_type: 2,
-                grade_basic: 42,
-                grade_recital: 58,
+                fcType: 2,
+                gradeBasic: 42,
+                gradeRecital: 58,
             },
         ]);
         expect(

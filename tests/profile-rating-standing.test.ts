@@ -5,7 +5,7 @@ const mocks = vi.hoisted(() => ({
     records: vi.fn(),
     basis: vi.fn(),
     // 레이팅 저장 표(2026-10-15 L2-A2) — 랭킹이 비어 있으면 기록에서 다시 세어 채운다
-    ratings: [] as { user_id: number; mode: string }[],
+    ratings: [] as { userId: number; mode: string }[],
 }));
 vi.mock("next/cache", () => ({
     unstable_cache: (callback: unknown) => callback,
@@ -20,7 +20,7 @@ vi.mock("@/lib/db", () => {
                 return mocks.ratings
                     .filter((row) => row.mode === where.mode)
                     .flatMap((row) => {
-                        const user = users.find((u) => u.id === row.user_id);
+                        const user = users.find((u) => u.id === row.userId);
                         return user ? [{ ...row, user }] : [];
                     });
             },
@@ -32,7 +32,7 @@ vi.mock("@/lib/db", () => {
             createMany: async ({
                 data,
             }: {
-                data: { user_id: number; mode: string }[];
+                data: { userId: number; mode: string }[];
             }) => {
                 mocks.ratings.push(...data);
             },
@@ -57,9 +57,9 @@ const player = (id: number, country: string, hidden = false) => ({
     username: `P${id}`,
     avatar: null,
     country,
-    grade_basic: 500_000,
-    grade_recital: null,
-    hide_play_scores: hidden,
+    gradeBasic: 500_000,
+    gradeRecital: null,
+    hidePlayScores: hidden,
     examAchievements: [],
 });
 
@@ -80,11 +80,11 @@ describe("profile rating standing (2026-09-26 T1)", () => {
         // 높은 점수일수록 레이팅이 높다: 2 > 3(비공개) > 1 > 4
         const score = { 1: 990000, 2: 1000000, 3: 995000, 4: 980000 } as const;
         mocks.records.mockResolvedValue(
-            [1, 2, 3, 4].flatMap((user_id) =>
-                [1, 2, 3].map((chart_id) => ({
-                    user_id,
-                    chart_id,
-                    score: score[user_id as 1 | 2 | 3 | 4],
+            [1, 2, 3, 4].flatMap((userId) =>
+                [1, 2, 3].map((chartId) => ({
+                    userId,
+                    chartId,
+                    score: score[userId as 1 | 2 | 3 | 4],
                 }))
             )
         );

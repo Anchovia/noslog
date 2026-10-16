@@ -13,11 +13,11 @@ import { getAdminEvent } from "@/features/events/server/event-admin-service";
 import { SITE_URL } from "@/lib/metadata/site";
 
 const LABELS = {
-    DRAFT: "임시저장",
-    PENDING: "검토 대기",
-    CHANGES_REQUESTED: "수정 요청",
-    PUBLISHED: "공개",
-    REJECTED: "반려",
+    draft: "임시저장",
+    pending: "검토 대기",
+    changes_requested: "수정 요청",
+    approved: "공개",
+    rejected: "반려",
 } as const;
 const dateFormat = new Intl.DateTimeFormat("ko-KR", {
     dateStyle: "medium",
@@ -36,7 +36,7 @@ export default async function AdminEventPage({
     const event = await getAdminEvent(id);
     if (!event) notFound();
     const editingPublished =
-        event.publishedAt !== null && event.status !== "PUBLISHED";
+        event.publishedAt !== null && event.status !== "approved";
     return (
         <PageContainer width="reading">
             <BackLink href="/admin/events">이벤트</BackLink>
@@ -65,7 +65,7 @@ export default async function AdminEventPage({
                 <StatusMessage
                     tone="boxed"
                     severity="warning"
-                    title={`지난 검토 사유${event.reviewer?.username ? ` · ${event.reviewer.username}` : ""}`}
+                    title={`지난 검토 사유${event.reviewedBy?.username ? ` · ${event.reviewedBy.username}` : ""}`}
                     description={event.reviewNote}
                 />
             ) : null}
@@ -78,7 +78,7 @@ export default async function AdminEventPage({
                 siteUrl={SITE_URL}
                 externalLabel="외부 링크"
             />
-            {event.status === "PENDING" ? (
+            {event.status === "pending" ? (
                 <EventReviewForm id={event.id} />
             ) : (
                 <p className="nl-body-secondary nl-muted">

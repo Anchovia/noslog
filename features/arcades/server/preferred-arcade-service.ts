@@ -43,7 +43,7 @@ export async function setPreferredArcade(
     let arcade: { id: number; name: string };
     try {
         const availableArcade = await db.arcade.findFirst({
-            where: { id: arcadeId, is_active: true },
+            where: { id: arcadeId, isActive: true },
             select: { id: true, name: true },
         });
         if (!availableArcade) {
@@ -56,7 +56,7 @@ export async function setPreferredArcade(
         arcade = availableArcade;
         await db.user.update({
             where: { id: session.id },
-            data: { preferred_arcade_id: arcade.id },
+            data: { preferredArcadeId: arcade.id },
         });
     } catch (error) {
         logServerError(error, {
@@ -98,8 +98,8 @@ export async function clearPreferredArcade(
 
     try {
         await db.user.updateMany({
-            where: { id: session.id, preferred_arcade_id: arcadeId },
-            data: { preferred_arcade_id: null },
+            where: { id: session.id, preferredArcadeId: arcadeId },
+            data: { preferredArcadeId: null },
         });
     } catch (error) {
         logServerError(error, {

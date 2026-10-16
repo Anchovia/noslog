@@ -1,10 +1,10 @@
+import { listAdminExams } from "@/features/exams/server/exam-admin-data";
 import { ChevronRight, Plus, Search } from "lucide-react";
 import Link from "next/link";
 
 import Badge from "@/components/ui/badge";
 import { foundationButtonClass } from "@/components/ui/button";
 import { Prisma } from "@prisma/client";
-import db from "@/lib/db";
 
 function getModeVariant(mode: string) {
     if (mode === "basic") return "basic" as const;
@@ -39,25 +39,7 @@ export default async function AdminExamsPage({
         ...(mode ? { mode } : {}),
         ...(status ? { status } : {}),
     };
-    const exams = await db.exam.findMany({
-        where,
-        select: {
-            id: true,
-            title: true,
-            slug: true,
-            mode: true,
-            grade: true,
-            status: true,
-            updatedAt: true,
-            _count: {
-                select: {
-                    stages: true,
-                    submissions: { where: { status: "pending" } },
-                },
-            },
-        },
-        orderBy: [{ mode: "asc" }, { grade: "desc" }, { id: "desc" }],
-    });
+    const exams = await listAdminExams(where);
 
     return (
         <div className="flex flex-col gap-nl-16 py-nl-24">

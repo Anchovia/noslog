@@ -1,19 +1,19 @@
 /** Basic Grd ×100. Only coefficients verified against stored official plays are enabled. */
 export interface BasicGradeAttempt {
     rank: string;
-    max_combo: number;
-    is_onehand?: boolean | null;
-    judge_sjust: number | null;
-    judge_just: number | null;
-    judge_good: number | null;
-    judge_near: number | null;
-    judge_miss: number | null;
+    maxCombo: number;
+    isOnehand?: boolean | null;
+    judgeSjust: number | null;
+    judgeJust: number | null;
+    judgeGood: number | null;
+    judgeNear: number | null;
+    judgeMiss: number | null;
 }
 
 export interface BasicGradeChart {
     difficulty?: string;
-    level_constant?: number | null;
-    note_count: number | null;
+    levelConstant?: number | null;
+    noteCount: number | null;
 }
 
 export function calculateBasicGrade(
@@ -26,19 +26,19 @@ export function calculateBasicGrade(
     const difficulty = (
         { Normal: 4, Hard: 5, Expert: 6, Real: 6 } as Record<string, number>
     )[chart.difficulty ?? ""];
-    const level = chart.level_constant;
-    const notes = chart.note_count;
+    const level = chart.levelConstant;
+    const notes = chart.noteCount;
     const judges = [
-        play.judge_sjust,
-        play.judge_just,
-        play.judge_good,
-        play.judge_near,
-        play.judge_miss,
+        play.judgeSjust,
+        play.judgeJust,
+        play.judgeGood,
+        play.judgeNear,
+        play.judgeMiss,
     ];
     if (
         !rank ||
         !difficulty ||
-        play.is_onehand !== false ||
+        play.isOnehand !== false ||
         level == null ||
         !Number.isFinite(level) ||
         level <= 0 ||
@@ -51,9 +51,9 @@ export function calculateBasicGrade(
             (value) =>
                 value == null || !Number.isSafeInteger(value) || value < 0
         ) ||
-        !Number.isSafeInteger(play.max_combo) ||
-        play.max_combo < 0 ||
-        play.max_combo > notes
+        !Number.isSafeInteger(play.maxCombo) ||
+        play.maxCombo < 0 ||
+        play.maxCombo > notes
     )
         return null;
     const [sjust, just, good, near, miss] = judges as number[];
@@ -67,7 +67,7 @@ export function calculateBasicGrade(
     const performance =
         BigInt(85500) * achievement +
         BigInt(10000 + Math.floor(notes / 10) * 10) *
-            BigInt(play.max_combo) *
+            BigInt(play.maxCombo) *
             BigInt(20);
     return Number(
         (BigInt(Math.round(level * 10)) *

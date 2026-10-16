@@ -56,7 +56,7 @@ describe("최근 플레이 저장", () => {
     beforeEach(() => {
         vi.clearAllMocks();
         mocks.musicChartFindMany.mockResolvedValue([
-            { id: 7, music_idx: "altale", difficulty: "Real" },
+            { id: 7, musicIdx: "altale", difficulty: "Real" },
         ]);
         mocks.historyFindMany.mockResolvedValue([]);
         mocks.historyUpsert.mockResolvedValue({ id: 1 });
@@ -71,19 +71,19 @@ describe("최근 플레이 저장", () => {
         expect(mocks.historyCreateMany).toHaveBeenCalledWith({
             data: [
                 expect.objectContaining({
-                    user_id: 1,
-                    chart_id: 7,
+                    userId: 1,
+                    chartId: 7,
                     playedAt,
                     score: 973886,
-                    max_combo: 637,
+                    maxCombo: 637,
                     rank: "S",
-                    best_score: 976654,
-                    class_basic: "03",
-                    fast_count: 89,
-                    slow_count: 15,
-                    judge_sjust: 1485,
-                    judge_near: 0,
-                    first_sync_id: 10,
+                    bestScore: 976654,
+                    classBasic: "03",
+                    fastCount: 89,
+                    slowCount: 15,
+                    judgeSjust: 1485,
+                    judgeNear: 0,
+                    firstSyncId: 10,
                 }),
             ],
             skipDuplicates: true,
@@ -95,23 +95,23 @@ describe("최근 플레이 저장", () => {
     it("이미 저장된 플레이의 값이 같으면 아무것도 쓰지 않는다", async () => {
         mocks.historyFindMany.mockResolvedValue([
             {
-                chart_id: 7,
+                chartId: 7,
                 playedAt,
                 score: 973886,
-                max_combo: 637,
+                maxCombo: 637,
                 rank: "S",
                 level: 2,
-                best_score: 976654,
-                grade_basic: 11120,
-                class_basic: "03",
-                fast_count: 89,
-                slow_count: 15,
-                is_onehand: false,
-                judge_sjust: 1485,
-                judge_just: 77,
-                judge_good: 27,
-                judge_miss: 15,
-                judge_near: 0,
+                bestScore: 976654,
+                gradeBasic: 11120,
+                classBasic: "03",
+                fastCount: 89,
+                slowCount: 15,
+                isOnehand: false,
+                judgeSjust: 1485,
+                judgeJust: 77,
+                judgeGood: 27,
+                judgeMiss: 15,
+                judgeNear: 0,
             },
         ]);
 
@@ -125,10 +125,10 @@ describe("최근 플레이 저장", () => {
     it("기존 최근 플레이도 재연동 시 상세 필드를 갱신한다", async () => {
         mocks.historyFindMany.mockResolvedValue([
             {
-                chart_id: 7,
+                chartId: 7,
                 playedAt,
                 score: 973886,
-                max_combo: 637,
+                maxCombo: 637,
                 rank: "S",
             },
         ]);
@@ -138,7 +138,7 @@ describe("최근 플레이 저장", () => {
         expect(inserted).toEqual({ insertedPlays: 0, skippedCharts: [] });
         expect(mocks.historyUpsert).toHaveBeenCalledOnce();
         expect(mocks.historyUpsert.mock.calls[0][0].update).not.toHaveProperty(
-            "first_sync_id"
+            "firstSyncId"
         );
     });
 

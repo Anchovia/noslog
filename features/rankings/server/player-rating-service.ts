@@ -29,11 +29,11 @@ export interface RatingBasis {
 }
 
 export interface PlayerRatingValue {
-    user_id: number;
+    userId: number;
     mode: TierMode;
     rating: number;
-    filled_slots: number;
-    basis_version: string;
+    filledSlots: number;
+    basisVersion: string;
 }
 
 /** 랭킹에 쓸 수 있는 기준인지 — 상수가 비었거나 이상하면 null(랭킹은 「준비 중」) */
@@ -88,32 +88,32 @@ async function calculateRatings(
 ) {
     const records = await client.playData.findMany({
         where: {
-            ...(userId === undefined ? {} : { user_id: userId }),
-            chart_id: { in: [...basis.constants.keys()] },
+            ...(userId === undefined ? {} : { userId: userId }),
+            chartId: { in: [...basis.constants.keys()] },
             score: { gte: BASIC_RATING_SCORE_FLOOR },
-            ...(mode === "recital" ? { grade_recital: { gt: 0 } } : {}),
+            ...(mode === "recital" ? { gradeRecital: { gt: 0 } } : {}),
         },
-        select: { user_id: true, chart_id: true, score: true },
+        select: { userId: true, chartId: true, score: true },
     });
     const byUser = new Map<number, BasicRatingRecord[]>();
     for (const record of records) {
-        const tierConstant = basis.constants.get(record.chart_id);
+        const tierConstant = basis.constants.get(record.chartId);
         if (tierConstant === undefined) continue;
-        const playerRecords = byUser.get(record.user_id) ?? [];
+        const playerRecords = byUser.get(record.userId) ?? [];
         playerRecords.push({
-            chartId: record.chart_id,
+            chartId: record.chartId,
             score: record.score,
             tierConstant,
         });
-        byUser.set(record.user_id, playerRecords);
+        byUser.set(record.userId, playerRecords);
     }
-    return [...byUser].flatMap(([user_id, playerRecords]) => {
+    return [...byUser].flatMap(([userId, playerRecords]) => {
         const result = calculateBasicRating(
             playerRecords,
             basis.theoreticalMax,
             BASIC_RATING_ACTIVE_CURVE
         );
-        return result.rating > 0 ? [{ user_id, result }] : [];
+        return result.rating > 0 ? [{ userId, result }] : [];
     });
 }
 
@@ -132,12 +132,12 @@ async function computeRatings(
     userId?: number
 ): Promise<PlayerRatingValue[]> {
     const rows = await calculateRatings(tx, mode, basis, userId);
-    return rows.map(({ user_id, result }) => ({
-        user_id,
+    return rows.map(({ userId, result }) => ({
+        userId,
         mode,
         rating: result.rating,
-        filled_slots: result.filledSlots,
-        basis_version: basis.version,
+        filledSlots: result.filledSlots,
+        basisVersion: basis.version,
     }));
 }
 
@@ -174,18 +174,18 @@ export async function refreshUserPlayerRatings(userId: number) {
                 const [row] = await computeRatings(tx, mode, basis, userId);
                 if (!row) {
                     await tx.playerRating.deleteMany({
-                        where: { user_id: userId, mode },
+                        where: { userId: userId, mode },
                     });
                     return;
                 }
                 await tx.playerRating.upsert({
-                    where: { user_id_mode: { user_id: userId, mode } },
+                    where: { userId_mode: { userId: userId, mode } },
                     create: row,
                     update: {
                         rating: row.rating,
-                        filled_slots: row.filled_slots,
-                        basis_version: row.basis_version,
-                        computed_at: new Date(),
+                        filledSlots: row.filledSlots,
+                        basisVersion: row.basisVersion,
+                        computedAt: new Date(),
                     },
                 });
             },
@@ -202,8 +202,8 @@ export async function rebuildStalePlayerRatings() {
         const basis = await getRatingBasis(mode);
         if (!basis) continue;
         const stale = await db.playerRating.findFirst({
-            where: { mode, basis_version: { not: basis.version } },
-            select: { user_id: true },
+            where: { mode, basisVersion: { not: basis.version } },
+            select: { userId: true },
         });
         if (stale) await rebuildPlayerRatings(mode, basis);
     }

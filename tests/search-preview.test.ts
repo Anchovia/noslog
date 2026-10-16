@@ -60,15 +60,15 @@ describe("Home search preview", () => {
                 title: "STULTI",
                 artist: "Artist",
                 background: null,
-                category_short: "BM",
+                categoryShort: "BM",
                 difficulty: null,
                 level: null,
                 total: 18,
             },
         ]);
         mocks.findMany.mockResolvedValue([
-            { music_idx: "song", difficulty: "Normal", level: 4 },
-            { music_idx: "song", difficulty: "Expert", level: 12 },
+            { musicIdx: "song", difficulty: "Normal", level: 4 },
+            { musicIdx: "song", difficulty: "Expert", level: 12 },
         ]);
         const result = await getSearchPreview({
             q: "STULTI",

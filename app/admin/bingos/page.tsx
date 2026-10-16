@@ -1,17 +1,11 @@
+import { listAdminBingos } from "@/features/bingos/server/bingo-admin-data";
 import { ChevronRight, Plus } from "lucide-react";
 import Link from "next/link";
 
-import db from "@/lib/db";
 import { foundationButtonClass } from "@/components/ui/button";
 
 export default async function AdminBingosPage() {
-    const bingos = await db.bingo.findMany({
-        include: {
-            coverMusic: { select: { title: true } },
-            _count: { select: { cells: true } },
-        },
-        orderBy: { updatedAt: "desc" },
-    });
+    const bingos = await listAdminBingos();
 
     return (
         <div className="flex flex-col gap-nl-16 py-nl-24">

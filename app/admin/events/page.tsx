@@ -10,11 +10,11 @@ import type { EventStatus } from "@/features/events/schemas/event-schema";
 import { eventPeriod } from "@/features/events/components/event-parts";
 
 const LABELS: Record<EventStatus, string> = {
-    DRAFT: "임시저장",
-    PENDING: "검토 대기",
-    CHANGES_REQUESTED: "수정 요청",
-    PUBLISHED: "공개",
-    REJECTED: "반려",
+    draft: "임시저장",
+    pending: "검토 대기",
+    changes_requested: "수정 요청",
+    approved: "공개",
+    rejected: "반려",
 };
 // 관리자 화면의 시각은 한국 시간으로 (2026-09-16)
 const dateFormat = new Intl.DateTimeFormat("ko-KR", {
@@ -31,7 +31,7 @@ export default async function AdminEventsPage({
 }) {
     const query = await searchParams;
     const status =
-        ADMIN_EVENT_TABS.find((item) => item === query.status) ?? "PENDING";
+        ADMIN_EVENT_TABS.find((item) => item === query.status) ?? "pending";
     const { items, counts } = await getAdminEventList(status);
     return (
         <PageContainer>
@@ -44,7 +44,7 @@ export default async function AdminEventsPage({
                     <Link
                         key={item}
                         href={
-                            item === "PENDING"
+                            item === "pending"
                                 ? "/admin/events"
                                 : `/admin/events?status=${item}`
                         }
@@ -77,7 +77,7 @@ export default async function AdminEventsPage({
                                     </span>
                                     <div className="nl-admin-row__meta nl-metadata">
                                         {item.publishedAt &&
-                                        status !== "PUBLISHED" ? (
+                                        status !== "approved" ? (
                                             <span className="nl-admin-chip nl-admin-chip--live nl-metadata">
                                                 공개 중
                                             </span>

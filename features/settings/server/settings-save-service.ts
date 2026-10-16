@@ -27,17 +27,19 @@ import getSession from "@/lib/session";
 /**
  * 바뀐 값이 들어 있는 캐시만 비운다(2026-10-15 S4) — 본인 프로필은 늘.
  * ranking: 랭킹 · 악곡 랭킹 · 점수 분포 줄에 나오는 닉네임 · 아바타 · 국가 · 점수 비공개(2026-09-18)
+ * positions: 다른 사람 프로필의 순위 숫자 — 점수 비공개 · 국가가 바뀌면 남의 (국가) 순위가 한 칸 움직인다(2026-10-16 D8 · B6)
  * arcade: 선호 오락실(오락실 공개 정보)
  */
 function refreshPublicIdentity(
     userId: number,
-    changed: { ranking: boolean; arcade: boolean }
+    changed: { ranking: boolean; positions: boolean; arcade: boolean }
 ) {
     updateTag(getUserProfileTag(userId));
     if (changed.ranking) {
         updateTag(CACHE_TAGS.userRankings);
         updateTag(CACHE_TAGS.chartRankings);
     }
+    if (changed.positions) updateTag(CACHE_TAGS.userProfiles);
     if (changed.arcade) updateTag(CACHE_TAGS.arcades);
 }
 
@@ -65,7 +67,7 @@ export async function saveSettingsProfile(
             username: true,
             country: true,
             avatar: true,
-            preferred_arcade_id: true,
+            preferredArcadeId: true,
         },
     });
     if (!current)
@@ -88,9 +90,9 @@ export async function saveSettingsProfile(
     const preferredId = values.preferredArcadeId
         ? Number(values.preferredArcadeId)
         : null;
-    if (preferredId !== null && preferredId !== current.preferred_arcade_id) {
+    if (preferredId !== null && preferredId !== current.preferredArcadeId) {
         const arcade = await db.arcade.findFirst({
-            where: { id: preferredId, is_active: true },
+            where: { id: preferredId, isActive: true },
             select: { id: true },
         });
         if (!arcade)
@@ -142,11 +144,11 @@ export async function saveSettingsProfile(
             data: {
                 username: values.username,
                 country: values.country,
-                preferred_arcade_id: preferredId,
+                preferredArcadeId: preferredId,
                 ...(avatarChanged
                     ? {
                           avatar: values.avatar || null,
-                          avatar_user_managed: true,
+                          avatarUserManaged: true,
                       }
                     : {}),
             },
@@ -178,7 +180,8 @@ export async function saveSettingsProfile(
             avatarChanged ||
             values.username !== current.username ||
             values.country !== current.country,
-        arcade: preferredId !== current.preferred_arcade_id,
+        positions: values.country !== current.country,
+        arcade: preferredId !== current.preferredArcadeId,
     });
     if (avatarChanged) await deleteBlobIfOwned(current.avatar);
     return { success: true, message: t("settings.saved"), values };
@@ -201,19 +204,19 @@ export async function saveSettingsPrivacy(
     try {
         const current = await db.user.findUnique({
             where: { id: session.id },
-            select: { hide_play_scores: true },
+            select: { hidePlayScores: true },
         });
         scoresVisibilityChanged =
-            current?.hide_play_scores !== !values.showPlayScores;
+            current?.hidePlayScores !== !values.showPlayScores;
         await db.user.update({
             where: { id: session.id },
             data: {
-                hide_nostalgia_name: !values.showNostalgiaName,
-                hide_discord_name: !values.showDiscordIdentity,
-                hide_preferred_arcade: !values.showPreferredArcade,
-                hide_play_count: !values.showPlayCount,
-                hide_play_activity: !values.showPlayActivity,
-                hide_play_scores: !values.showPlayScores,
+                hideNostalgiaName: !values.showNostalgiaName,
+                hideDiscordName: !values.showDiscordIdentity,
+                hidePreferredArcade: !values.showPreferredArcade,
+                hidePlayCount: !values.showPlayCount,
+                hidePlayActivity: !values.showPlayActivity,
+                hidePlayScores: !values.showPlayScores,
             },
         });
     } catch (error) {
@@ -227,6 +230,7 @@ export async function saveSettingsPrivacy(
     // 랭킹 줄에 영향을 주는 건 점수 비공개뿐 — 나머지 스위치는 본인 프로필만
     refreshPublicIdentity(session.id, {
         ranking: scoresVisibilityChanged,
+        positions: scoresVisibilityChanged,
         arcade: false,
     });
     return { success: true, message: t("settings.saved"), values };

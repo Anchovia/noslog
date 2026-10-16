@@ -1,51 +1,10 @@
+import { listAdminArcades } from "@/features/arcades/server/arcade-admin-data";
 import ArcadeForm from "@/features/arcades/components/arcade-form";
-import db from "@/lib/db";
 import { clientEnv } from "@/lib/env/client";
 
 export default async function AdminArcadesPage() {
     const kakaoMapAppKey = clientEnv.NEXT_PUBLIC_KAKAO_MAP_APP_KEY ?? "";
-    const arcades = await db.arcade.findMany({
-        include: {
-            _count: { select: { users: true } },
-            // 공개 페이지가 읽는 기체·영업시간을 그대로 편집한다
-            cabinets: {
-                where: { isActive: true },
-                orderBy: { position: "asc" },
-                select: {
-                    id: true,
-                    label: true,
-                    note: true,
-                    conditionNote: true,
-                    tags: true,
-                    keyWeight: true,
-                    screenLag: true,
-                    soundVolume: true,
-                    featureNote: true,
-                    availability: true,
-                    condition: true,
-                    position: true,
-                    verifiedAt: true,
-                },
-            },
-            publicDetails: {
-                select: {
-                    hours: true,
-                    administrativeArea: true,
-                    addressLines: true,
-                    phone: true,
-                    website: true,
-                    creditLabel: true,
-                    facilities: true,
-                },
-            },
-            // 공개 상세 맨 위 사진 — 자리(slot) 순서가 공개 순서
-            publicPhotos: {
-                orderBy: { slot: "asc" },
-                select: { id: true, url: true, alt: true },
-            },
-        },
-        orderBy: [{ is_active: "desc" }, { name: "asc" }],
-    });
+    const arcades = await listAdminArcades();
 
     return (
         <div className="flex flex-col gap-nl-16 py-nl-24">
@@ -78,9 +37,9 @@ export default async function AdminArcadesPage() {
                                 null,
                             latitude: arcade.latitude,
                             longitude: arcade.longitude,
-                            playPrice: arcade.play_price,
-                            coinCount: arcade.coin_count,
-                            businessHours: arcade.business_hours,
+                            playPrice: arcade.playPrice,
+                            coinCount: arcade.coinCount,
+                            businessHours: arcade.businessHours,
                             hours: arcade.publicDetails?.hours ?? null,
                             phone: arcade.publicDetails?.phone ?? null,
                             website: arcade.publicDetails?.website ?? null,
@@ -94,7 +53,7 @@ export default async function AdminArcadesPage() {
                                     cabinet.verifiedAt?.toISOString() ?? null,
                             })),
                             notes: arcade.notes,
-                            isActive: arcade.is_active,
+                            isActive: arcade.isActive,
                             userCount: arcade._count.users,
                         }}
                     />

@@ -22,9 +22,9 @@ import { foundationButtonClass } from "@/components/ui/button";
 
 const STEPS: ChartDraftStatus[] = [
     "draft",
-    "submitted",
+    "pending",
     "changes_requested",
-    "published",
+    "approved",
 ];
 
 /** 초안 시각 댓글 — 레일 탭 이름(개수)과 캔버스 · 파형 표시가 함께 쓴다 */

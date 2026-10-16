@@ -37,6 +37,30 @@ describe("architecture boundaries", () => {
             ).toHaveLength(1);
         }
     });
+    it("keeps database access in domain server modules", async () => {
+        for (const filePath of [
+            "app/admin/example/page.tsx",
+            "features/music/components/boundary-example.tsx",
+        ]) {
+            expect(
+                await violations(
+                    'import db from "@/lib/db"; export default db;',
+                    filePath
+                )
+            ).toHaveLength(1);
+        }
+        for (const filePath of [
+            "features/music/server/boundary-example.ts",
+            "lib/services/boundary-example.ts",
+        ]) {
+            expect(
+                await violations(
+                    'import db from "@/lib/db"; export default db;',
+                    filePath
+                )
+            ).toEqual([]);
+        }
+    });
     it("allows private helpers inside their owning route", async () => {
         expect(
             await violations(
