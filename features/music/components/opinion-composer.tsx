@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useId, useRef, useState } from "react";
 
 import {
@@ -9,6 +8,7 @@ import {
 } from "@/components/i18n/locale-provider";
 import ActionButton from "@/components/ui/action-button";
 import Avatar from "@/components/ui/avatar";
+import IntentLink from "@/components/ui/intent-link";
 import { StatusMessage } from "@/components/ui/status-message";
 import useCommunityMutation from "@/features/music/hooks/use-community-mutation";
 import type { CommunityData } from "@/features/music/schemas/community-schema";
@@ -67,14 +67,14 @@ export default function OpinionComposer({
                 {!accountId ? (
                     <>
                         {" "}
-                        <Link
+                        <IntentLink
                             className="nl-link"
                             href={href(
                                 `/login?returnTo=${encodeURIComponent(returnTo)}`
                             )}
                         >
                             {t("common.login")}
-                        </Link>
+                        </IntentLink>
                     </>
                 ) : null}
             </p>

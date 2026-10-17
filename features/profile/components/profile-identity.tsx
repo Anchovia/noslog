@@ -1,7 +1,6 @@
 "use client";
 
 import { Globe, Lock, MapPin, Settings } from "lucide-react";
-import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
@@ -23,6 +22,7 @@ import CountryMarker from "@/components/ui/country-marker";
 import DiscordIcon from "@/components/ui/discord-icon";
 import ExamBadge from "@/components/ui/exam-badge";
 import ExamBadgeGroup from "@/components/ui/exam-badge-group";
+import IntentLink from "@/components/ui/intent-link";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import type { AchievementSummary } from "@/features/achievements/achievement-definitions";
 import AchievementShowcase from "@/features/achievements/components/achievement-showcase";
@@ -193,13 +193,13 @@ export default function ProfileIdentity({
                                     mode={mode}
                                     triggerClassName={ownerActionClass}
                                 />
-                                <Link
+                                <IntentLink
                                     href={href("/settings")}
                                     aria-label={t("profile.settings")}
                                     className={ownerActionClass}
                                 >
                                     <Settings className="nl-icon" aria-hidden />
-                                </Link>
+                                </IntentLink>
                             </div>
                         ) : null}
                     </div>

@@ -143,6 +143,13 @@ for its supported states and meaningful interaction tests where applicable.
 Existing untouched components may receive stories incrementally.
 Use `ButtonLink` for navigation that already uses the foundation button appearance;
 use `plain` for native anchors (OAuth, external URLs and bookmarklets).
+Public screens link with `IntentLink` (or `ButtonLink`, which uses it), not a bare
+`next/link` `Link`. Pages are dynamic, so every prefetch renders the page on the
+server: a bare `Link` prefetches whatever scrolls into view (2026-10-17 measurement:
+chart detail opened 307 times, invoked 30,695 times). `IntentLink` prefetches only
+after the mouse rests on it for 100ms or on visible keyboard focus; touch never
+prefetches and a scroll cancels a pending hover. Keep `prefetch={false}` where a
+link must never prefetch.
 
 `npm run test:storybook` runs Chromium component and accessibility tests separately
 from the Node unit suite. `npm run build-storybook` verifies the standalone UI

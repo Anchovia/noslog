@@ -1,8 +1,7 @@
 "use client";
 
-import Link from "next/link";
-
 import { useLocale, useTranslations } from "@/components/i18n/locale-provider";
+import IntentLink from "@/components/ui/intent-link";
 import { StatusMessage } from "@/components/ui/status-message";
 import AchievementHex from "@/features/achievements/components/achievement-hex";
 import { useAchievementText } from "@/features/achievements/components/use-achievement-text";
@@ -83,12 +82,12 @@ function SyncNewAchievements({
                 </span>
             ) : null}
             {href ? (
-                <Link
+                <IntentLink
                     href={href}
                     className="nl-body-secondary nl-link nl-text-link--underlined"
                 >
                     {t("achievement.sync.view")}
-                </Link>
+                </IntentLink>
             ) : null}
         </p>
     );

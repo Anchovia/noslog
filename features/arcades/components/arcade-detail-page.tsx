@@ -12,7 +12,6 @@ import {
     MapPin,
     Phone,
 } from "lucide-react";
-import Link from "next/link";
 import { useEffect, useId, useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
 
@@ -29,6 +28,7 @@ import PageContainer from "@/components/layout/page-container";
 import ActionButton from "@/components/ui/action-button";
 import BackLink from "@/components/ui/back-link";
 import ButtonLink from "@/components/ui/button-link";
+import IntentLink from "@/components/ui/intent-link";
 import { StatusMessage } from "@/components/ui/status-message";
 import {
     arcadeCabinetSummary,
@@ -508,7 +508,7 @@ export default function ArcadeDetailPage({
                                                       })}
                                             </span>
                                             {" · "}
-                                            <Link
+                                            <IntentLink
                                                 className="nl-link"
                                                 href={href(
                                                     `/profile/${check.userId}`
@@ -516,7 +516,7 @@ export default function ArcadeDetailPage({
                                             >
                                                 {check.username ??
                                                     t("common.unknownUser")}
-                                            </Link>
+                                            </IntentLink>
                                             {" · "}
                                             {check.cabinetLabel ??
                                                 t("arcades.cabinetNumber", {

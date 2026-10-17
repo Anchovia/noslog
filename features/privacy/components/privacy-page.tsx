@@ -1,6 +1,6 @@
-import Link from "next/link";
 import type { ReactNode } from "react";
 
+import IntentLink from "@/components/ui/intent-link";
 import { StatusMessage } from "@/components/ui/status-message";
 import PrivacyContents from "@/features/privacy/components/privacy-contents";
 import { getPrivacyCopy } from "@/features/privacy/content/privacy-content";
@@ -128,7 +128,7 @@ export default function PrivacyPage({
                         ))}
                         {section.id === "rights" ? (
                             <div className="nl-privacy-actions">
-                                <Link
+                                <IntentLink
                                     className="nl-link nl-text-link--underlined"
                                     href={
                                         isAuthenticated
@@ -139,9 +139,9 @@ export default function PrivacyPage({
                                     {isAuthenticated
                                         ? t("settings.title")
                                         : copy.settingsLogin}
-                                </Link>
+                                </IntentLink>
                                 {isAuthenticated ? (
-                                    <Link
+                                    <IntentLink
                                         className="nl-link nl-text-link--underlined"
                                         href={localizePath(
                                             "/settings?category=account",
@@ -149,17 +149,17 @@ export default function PrivacyPage({
                                         )}
                                     >
                                         {t("settings.deleteTitle")}
-                                    </Link>
+                                    </IntentLink>
                                 ) : null}
                             </div>
                         ) : null}
                         {section.id === "history" ? (
-                            <Link
+                            <IntentLink
                                 className="nl-link nl-text-link--underlined"
                                 href={localizePath("/privacy/history", locale)}
                             >
                                 {copy.historyLink}
-                            </Link>
+                            </IntentLink>
                         ) : null}
                     </section>
                 ))}

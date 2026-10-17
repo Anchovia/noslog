@@ -1,13 +1,13 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import Link from "next/link";
 import { type ReactNode, useState } from "react";
 import { toast } from "sonner";
 
 import { getMyChartDraftStatus } from "@/app/(site)/music/[index]/[difficulty]/draft-actions";
 import { useTranslations } from "@/components/i18n/locale-provider";
 import Button from "@/components/ui/button";
+import IntentLink from "@/components/ui/intent-link";
 import ModalDialog from "@/components/ui/modal-dialog";
 
 /** 에디터는 넓은 화면 도구 — 이 폭 아래에서는 들어가는 대신 안내(2026-09-24 F1) */
@@ -64,7 +64,7 @@ export default function ChartDraftEntry({
         : label;
     if (!signedIn)
         return (
-            <Link
+            <IntentLink
                 href={loginHref}
                 className={className}
                 title={iconOnly ? label : undefined}
@@ -72,11 +72,11 @@ export default function ChartDraftEntry({
                 {icon}
                 {iconOnly ? <span className="sr-only">{label}</span> : label}
                 {chevron}
-            </Link>
+            </IntentLink>
         );
     return (
         <>
-            <Link
+            <IntentLink
                 href={draftHref}
                 className={className}
                 title={iconOnly ? text : undefined}
@@ -90,7 +90,7 @@ export default function ChartDraftEntry({
                 {icon}
                 {iconOnly ? <span className="sr-only">{text}</span> : text}
                 {chevron}
-            </Link>
+            </IntentLink>
             <ModalDialog
                 open={narrow}
                 onOpenChange={setNarrow}

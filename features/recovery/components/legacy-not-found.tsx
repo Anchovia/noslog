@@ -1,12 +1,11 @@
 "use client";
 
-import Link from "next/link";
-
 import {
     useLocalizedHref,
     useTranslations,
 } from "@/components/i18n/locale-provider";
 import { foundationButtonClass } from "@/components/ui/button";
+import IntentLink from "@/components/ui/intent-link";
 
 export default function NotFound() {
     const href = useLocalizedHref();
@@ -22,12 +21,12 @@ export default function NotFound() {
                     {t("common.notFoundDescription")}
                 </p>
             </div>
-            <Link
+            <IntentLink
                 href={href("/")}
                 className={foundationButtonClass({ variant: "secondary" })}
             >
                 {t("common.goHome")}
-            </Link>
+            </IntentLink>
         </div>
     );
 }

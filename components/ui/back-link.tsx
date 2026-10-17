@@ -1,7 +1,7 @@
 import { ChevronLeft } from "lucide-react";
-import Link from "next/link";
 import type { ReactNode } from "react";
 
+import IntentLink from "@/components/ui/intent-link";
 import { cn } from "@/lib/cn";
 
 // 상위 페이지로 돌아가는 링크 (SET-42 규격): chevron-left 16 + 라벨 `control` · 타겟 44 · gap 8 · muted.
@@ -31,6 +31,6 @@ export default function BackLink({
     return plain ? (
         <a {...props}>{content}</a>
     ) : (
-        <Link {...props}>{content}</Link>
+        <IntentLink {...props}>{content}</IntentLink>
     );
 }

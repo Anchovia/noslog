@@ -7,7 +7,6 @@ import {
     useQueryClient,
 } from "@tanstack/react-query";
 import { ChevronRight } from "lucide-react";
-import Link from "next/link";
 import { useRef, useState } from "react";
 
 import {
@@ -16,6 +15,7 @@ import {
 } from "@/components/i18n/locale-provider";
 import ActionButton from "@/components/ui/action-button";
 import Button from "@/components/ui/button";
+import IntentLink from "@/components/ui/intent-link";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { LoadingStatus } from "@/components/ui/skeleton";
 import { StatusMessage } from "@/components/ui/status-message";
@@ -131,7 +131,7 @@ export default function ProfilePlaysList({
                     </h2>
                     {/* 베스트 전체는 「기록」 탭(2026-09-25 2단계, 모드를 그대로 넘긴다) · 최근 플레이 전체는 「활동」 탭(2026-09-26) */}
                     {batch === PROFILE_BATCH_SIZE ? (
-                        <Link
+                        <IntentLink
                             href={href(
                                 kind === "best"
                                     ? `/profile/${userId}/records${mode === "recital" ? "?mode=recital" : ""}`
@@ -141,7 +141,7 @@ export default function ProfilePlaysList({
                         >
                             {t("achievement.all")}
                             <ChevronRight aria-hidden />
-                        </Link>
+                        </IntentLink>
                     ) : null}
                 </div>
                 {kind === "best" ? (

@@ -1,9 +1,10 @@
-import Link from "next/link";
+import type Link from "next/link";
 import type { ComponentPropsWithRef } from "react";
 
 import { cn } from "@/lib/cn";
 
 import { foundationButtonClass } from "./button";
+import IntentLink from "./intent-link";
 
 type ButtonAppearance = NonNullable<
     Parameters<typeof foundationButtonClass>[0]
@@ -33,5 +34,5 @@ export default function ButtonLink({
     }
     const { plain: _plain, ...linkProps } = props;
     void _plain;
-    return <Link className={classes} {...linkProps} />;
+    return <IntentLink className={classes} {...linkProps} />;
 }

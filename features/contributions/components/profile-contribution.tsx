@@ -1,7 +1,6 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import {
@@ -17,6 +16,7 @@ import {
     useTranslations,
 } from "@/components/i18n/locale-provider";
 import Button from "@/components/ui/button";
+import IntentLink from "@/components/ui/intent-link";
 import ModalDialog from "@/components/ui/modal-dialog";
 import { SkeletonText } from "@/components/ui/skeleton";
 import StatStrip from "@/components/ui/stat-strip";
@@ -95,14 +95,14 @@ function DraftRow({ item }: { item: MyChartDraftItem }) {
     return (
         <li className="nl-profile-contribution__item">
             <div className="nl-profile-contribution__item-head">
-                <Link
+                <IntentLink
                     href={href(
                         item.status === "approved" ? base : `${base}/draft`
                     )}
                     className="nl-profile-contribution__what nl-entity-title nl-link"
                 >
                     {item.chart.title}
-                </Link>
+                </IntentLink>
                 <span
                     className={tone ? "nl-tag nl-tag--status" : "nl-tag"}
                     data-tone={tone}
@@ -166,14 +166,14 @@ function ProposalList({ items }: { items: MineItem[] }) {
                         className="nl-profile-contribution__item"
                     >
                         <div className="nl-profile-contribution__item-head">
-                            <Link
+                            <IntentLink
                                 href={href(
                                     `/music/${item.chart.musicIndex}/${item.chart.difficulty.toLowerCase()}`
                                 )}
                                 className="nl-profile-contribution__what nl-entity-title nl-link"
                             >
                                 {item.chart.title}
-                            </Link>
+                            </IntentLink>
                             <span
                                 className="nl-tag nl-tag--status"
                                 data-tone={tone}

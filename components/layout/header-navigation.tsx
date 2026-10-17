@@ -9,7 +9,6 @@ import {
     Trophy,
     X,
 } from "lucide-react";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
@@ -20,6 +19,7 @@ import {
 } from "@/components/i18n/locale-provider";
 import LocaleSwitcher from "@/components/i18n/locale-switcher";
 import { foundationButtonClass } from "@/components/ui/button";
+import IntentLink from "@/components/ui/intent-link";
 import { cn } from "@/lib/cn";
 import { stripLocaleFromPath } from "@/lib/i18n/routing";
 
@@ -81,7 +81,7 @@ export function HeaderPrimaryNavigation() {
             {primaryItems.map((item) => {
                 const isActive = isActiveRoute(pathname, item.href);
                 return (
-                    <Link
+                    <IntentLink
                         key={item.href}
                         href={localizedHref(item.href)}
                         aria-current={isActive ? "page" : undefined}
@@ -91,7 +91,7 @@ export function HeaderPrimaryNavigation() {
                         )}
                     >
                         {t(item.labelKey)}
-                    </Link>
+                    </IntentLink>
                 );
             })}
         </nav>
@@ -175,7 +175,7 @@ export default function HeaderMenu({
                             const Icon = item.icon;
                             const isActive = isActiveRoute(pathname, item.href);
                             return (
-                                <Link
+                                <IntentLink
                                     key={item.href}
                                     href={localizedHref(item.href)}
                                     aria-current={isActive ? "page" : undefined}
@@ -194,7 +194,7 @@ export default function HeaderMenu({
                                     <span className="nl-component-title text-nl-content">
                                         {t(item.labelKey)}
                                     </span>
-                                </Link>
+                                </IntentLink>
                             );
                         })}
                         {showLocaleSwitcher ? (

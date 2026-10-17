@@ -2,7 +2,6 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ChevronRight } from "lucide-react";
-import Link from "next/link";
 import { useId, useRef, useState, useSyncExternalStore } from "react";
 import { toast } from "sonner";
 
@@ -24,6 +23,7 @@ import {
 } from "@/components/i18n/locale-provider";
 import ActionButton from "@/components/ui/action-button";
 import ActionMenu from "@/components/ui/action-menu";
+import IntentLink from "@/components/ui/intent-link";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { StatusMessage } from "@/components/ui/status-message";
 import ContributionLabel from "@/features/contributions/components/contribution-label";
@@ -116,7 +116,7 @@ export default function ChartComments({
                     />
                 ) : null}
                 {signedIn ? null : (
-                    <Link
+                    <IntentLink
                         className="nl-heading-link nl-control nl-chart-comments__login"
                         href={href(
                             `/login?returnTo=${encodeURIComponent(returnTo)}`
@@ -124,7 +124,7 @@ export default function ChartComments({
                     >
                         {t("contribution.comment.login")}
                         <ChevronRight aria-hidden />
-                    </Link>
+                    </IntentLink>
                 )}
             </div>
             <div className="nl-chart-comments__body">
@@ -226,7 +226,7 @@ export function ChartCommentStageEntry({
             {signedIn ? (
                 <ChartCommentComposer draft={draft} clock={clock} />
             ) : (
-                <Link
+                <IntentLink
                     className="nl-heading-link nl-control"
                     href={href(
                         `/login?returnTo=${encodeURIComponent(returnTo)}`
@@ -234,7 +234,7 @@ export function ChartCommentStageEntry({
                 >
                     {t("contribution.comment.login")}
                     <ChevronRight aria-hidden />
-                </Link>
+                </IntentLink>
             )}
         </div>
     );
@@ -438,13 +438,13 @@ function ChartCommentRow({
                 >
                     {formatCommentTime(comment.timeMs)}
                 </button>
-                <Link
+                <IntentLink
                     id={`${id}-name`}
                     href={href(`/profile/${comment.user.id}`)}
                     className="nl-opinion-row__name nl-emphasis-label"
                 >
                     {name}
-                </Link>
+                </IntentLink>
                 <ContributionLabel label={comment.user.label} />
                 <span className="nl-metadata nl-muted">
                     <time

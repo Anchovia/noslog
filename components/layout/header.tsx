@@ -1,7 +1,6 @@
-import Link from "next/link";
-
 import ProfileAvatar from "@/components/profile/profile-avatar";
 import { foundationButtonClass } from "@/components/ui/button";
+import IntentLink from "@/components/ui/intent-link";
 import { cn } from "@/lib/cn";
 import { getLocalizedHref } from "@/lib/i18n/routing";
 import { getServerI18n } from "@/lib/i18n/server";
@@ -18,18 +17,18 @@ export default async function Header() {
 
     return (
         <ScrollAwareHeader>
-            <Link
+            <IntentLink
                 href={getLocalizedHref("/", locale)}
                 className="flex shrink-0 items-center gap-nl-8"
             >
                 <span className="nl-section-title text-nl-content">NosLog</span>
-            </Link>
+            </IntentLink>
             <div className="ml-auto flex min-w-0 items-center">
                 <HeaderPrimaryNavigation />
 
                 <div className="flex shrink-0 items-center">
                     {user ? (
-                        <Link
+                        <IntentLink
                             href={getLocalizedHref(
                                 `/profile/${user.id}`,
                                 locale
@@ -44,9 +43,9 @@ export default async function Header() {
                                 username={user.username}
                                 size={32}
                             />
-                        </Link>
+                        </IntentLink>
                     ) : (
-                        <Link
+                        <IntentLink
                             href={getLocalizedHref("/login", locale)}
                             className={cn(
                                 foundationButtonClass({ variant: "secondary" }),
@@ -54,7 +53,7 @@ export default async function Header() {
                             )}
                         >
                             {t("common.login")}
-                        </Link>
+                        </IntentLink>
                     )}
                     <HeaderMenu
                         isAdmin={user?.role === "admin"}

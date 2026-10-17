@@ -1,7 +1,6 @@
 "use client";
 
 import { ChevronDown, ChevronRight } from "lucide-react";
-import Link from "next/link";
 import { useState } from "react";
 
 import {
@@ -9,6 +8,7 @@ import {
     useLocalizedHref,
     useTranslations,
 } from "@/components/i18n/locale-provider";
+import IntentLink from "@/components/ui/intent-link";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import StackedBar from "@/components/ui/stacked-bar";
 import {
@@ -192,13 +192,13 @@ export default function ProfileLevels({
                     {t("profile.levels.title")}
                 </h2>
                 {variant === "summary" ? (
-                    <Link
+                    <IntentLink
                         href={pageHref}
                         className="nl-heading-link nl-control"
                     >
                         {t("achievement.all")}
                         <ChevronRight aria-hidden />
-                    </Link>
+                    </IntentLink>
                 ) : null}
             </div>
             {variant === "full" ? (

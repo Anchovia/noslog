@@ -1,7 +1,6 @@
 "use client";
 
 import { ChevronRight, Ellipsis } from "lucide-react";
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 import {
@@ -9,6 +8,7 @@ import {
     useLocalizedHref,
     useTranslations,
 } from "@/components/i18n/locale-provider";
+import IntentLink from "@/components/ui/intent-link";
 import {
     type AchievementSummary,
     highestAchievementTiers,
@@ -90,7 +90,7 @@ export default function ProfileAchievements({
                 >
                     {t("achievement.title")}
                 </h2>
-                <Link
+                <IntentLink
                     href={href(`/profile/${userId}/achievements`)}
                     className="nl-heading-link nl-control"
                     aria-label={`${t("achievement.all")} · ${t(
@@ -104,7 +104,7 @@ export default function ProfileAchievements({
                     {summary.earned.toLocaleString(locale)} /{" "}
                     {summary.total.toLocaleString(locale)}
                     <ChevronRight aria-hidden />
-                </Link>
+                </IntentLink>
             </div>
             {strip.length ? (
                 <>
@@ -123,14 +123,14 @@ export default function ProfileAchievements({
                         ))}
                         {more ? (
                             <li className="nl-profile-achievements__more">
-                                <Link
+                                <IntentLink
                                     href={href(
                                         `/profile/${userId}/achievements`
                                     )}
                                     aria-label={t("achievement.all")}
                                 >
                                     <Ellipsis aria-hidden />
-                                </Link>
+                                </IntentLink>
                             </li>
                         ) : null}
                     </ul>

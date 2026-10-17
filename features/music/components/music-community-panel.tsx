@@ -2,7 +2,6 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { ChevronRight } from "lucide-react";
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 
@@ -12,6 +11,7 @@ import {
 } from "@/components/i18n/locale-provider";
 import type { MusicDetailProps } from "@/components/music/music-detail-types";
 import ActionButton from "@/components/ui/action-button";
+import IntentLink from "@/components/ui/intent-link";
 import { StatusMessage } from "@/components/ui/status-message";
 import { communityOptions } from "@/features/music/api/community";
 
@@ -84,7 +84,7 @@ export default function MusicCommunityPanel({
                         // 로그아웃이면 작성 칸 대신 제목 줄 오른쪽 끝 제목 링크(가이드 2절)
                         headerAction={
                             music.accountId ? null : (
-                                <Link
+                                <IntentLink
                                     className="nl-heading-link nl-control"
                                     href={href(
                                         `/login?returnTo=${encodeURIComponent(returnTo)}`
@@ -92,7 +92,7 @@ export default function MusicCommunityPanel({
                                 >
                                     {t("community.opinionLoginAction")}
                                     <ChevronRight aria-hidden />
-                                </Link>
+                                </IntentLink>
                             )
                         }
                         composer={
