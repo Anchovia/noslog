@@ -1,12 +1,10 @@
 import { subDays, subMonths } from "date-fns";
 
-import { analyticsDateKey } from "@/lib/analytics";
+import { ANALYTICS_RETENTION_DAYS, analyticsDateKey } from "@/lib/analytics";
 import { deleteBlobStrict } from "@/lib/blob";
 import db from "@/lib/db";
 
 const RETENTION_MONTHS = 6;
-// 방문·API 통계의 날짜별 합계 보관 기간(2026-09-13 사용자 결정)
-const ANALYTICS_RETENTION_DAYS = 90;
 const BATCH_SIZE = 500;
 
 export interface PrivacyRetentionResult {

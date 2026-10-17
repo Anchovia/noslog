@@ -1,3 +1,6 @@
+import { readdirSync } from "node:fs";
+import path from "node:path";
+
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
@@ -21,6 +24,7 @@ import {
     apiRouteFromPath,
     isBotUserAgent,
     isExternalEvent,
+    PAGE_ROUTES,
     pageRouteFromPath,
 } from "@/lib/analytics-routes";
 import {
@@ -63,6 +67,29 @@ describe("통계 경로 묶음", () => {
         expect(pageRouteFromPath("/ko/admin")).toBeNull();
         expect(pageRouteFromPath("/ko/wp-login.php")).toBeNull();
         expect(pageRouteFromPath("https://evil.example/ko")).toBeNull();
+    });
+
+    it("공개 셸의 페이지는 모두 페이지 목록에 있다 — 새 탭이 페이지뷰에서 빠지지 않게", () => {
+        const root = path.join(process.cwd(), "app/(site)");
+        const routes = readdirSync(root, { recursive: true })
+            .map(String)
+            .filter((file) => path.basename(file) === "page.tsx")
+            .map((file) => {
+                const segments = path
+                    .dirname(file)
+                    .split(path.sep)
+                    .filter(
+                        (segment) =>
+                            segment !== "." && !/^\(.+\)$/.test(segment)
+                    );
+                return `/${segments.join("/")}`;
+            });
+        expect(routes.length).toBeGreaterThan(0);
+        const patterns = new Set(PAGE_ROUTES.map((route) => route.pattern));
+        expect(routes.filter((route) => !patterns.has(route))).toEqual([]);
+        expect(pageRouteFromPath("/ko/profile/42/stats")).toBe(
+            "/profile/[id]/stats"
+        );
     });
 
     it("API 는 동적 칸을 패턴으로 묶고 목록에 없는 경로는 버린다", () => {

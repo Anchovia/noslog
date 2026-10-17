@@ -616,7 +616,7 @@ old design-stage checklist. Changes to material behavior require a user decision
   and page reloads fetch a new snapshot. Direct links, back/forward navigation,
   admin authorization and today's hourly chart remain supported. Today's hourly
   bars follow the selected metric: page views from the hour bucket, signups and
-  syncs from their existing timestamps (Seoul hour). Visitors are counted per day
+  people who completed a sync from their existing timestamps (Seoul hour). Visitors are counted per day
   only, so today keeps the empty hourly frame with a centered note (2026-09-22).
 
 - Accounts whose current role is `admin` are excluded at collection time from
@@ -636,6 +636,31 @@ old design-stage checklist. Changes to material behavior require a user decision
   signed-in split were announced in the 2026-09-20 version.
 - Dashboard panels that use existing tables only (conversion, contributions) collect
   nothing new. Real-time presence and error trends need extra storage; they are out.
+- Metric definitions (2026-10-17). **Visitors** over several days are the sum of
+  daily visitors — the daily hash cannot join days, so someone who comes back on
+  another day is counted again, as in Plausible and Fathom; the dashboard states this
+  under the KPI row. **Page views** count every public route in `app/(site)`; a test
+  fails when a page is missing from `PAGE_ROUTES`. **Signups** are accounts created
+  (Discord sign-in), counted among accounts that still exist; the funnel adds
+  onboarding completed (`profile_completed_at`) and only successful syncs count as
+  linked. **Syncs** are people who completed at least one sync (a day, an hour or
+  the whole period counts each person once); attempts and failures are shown
+  beside it, and the rail's sync status lists completed / failed / processing and the
+  top three failure reasons (first line, 80 characters) — all excluding admins.
+  **Contributions** count new rows only (`created_at`, opinions by
+  `opinion_created_at`, pattern ratings only when a pattern value exists), so edits,
+  translations and moderation do not count.
+- Comparisons (2026-10-17). Today compares with yesterday up to the same Seoul hour
+  (:59) — page views from the hour bucket, signups and syncs from timestamps;
+  visitors have no hourly bucket, so today's visitor change is `-`. When the previous
+  period starts before collection began (2026-09-13) or before the 90-day retention,
+  visitor and page-view changes are `-` and days before collection are empty in the
+  chart, not zero. Signup and sync comparisons always use their tables.
+- Active users and new contributors (2026-10-17) use existing tables only: active =
+  non-admin people who completed a sync or created a contribution in the last 7 and
+  28 Seoul days (up to today, independent of the selected period), plus 7 ÷ 28 in
+  percent; new contributors = people whose first contribution falls in the period.
+  Visits are never joined to accounts.
 
 ## Data retention and operator facts
 

@@ -1,5 +1,6 @@
 // 방문·API 통계의 경로 묶음 — 실제 주소(/ko/music/123/hard)를 라우트 한 칸(/music/[index]/[difficulty])으로 모은다.
-// 목록에 없는 경로는 세지 않는다(오타·공격성 요청이 표를 채우지 않게). 서버·브라우저 어디서나 쓰는 순수 모듈
+// 목록에 없는 경로는 세지 않는다(오타·공격성 요청이 표를 채우지 않게). 서버·브라우저 어디서나 쓰는 순수 모듈.
+// 방문 신호를 보내는 공개 셸(app/(site))의 페이지는 모두 목록에 있어야 한다 — tests/analytics.test.ts 가 맞춰 본다(2026-10-17 P1)
 
 export interface AnalyticsRoute {
     pattern: string;
@@ -11,6 +12,10 @@ export const PAGE_ROUTES: readonly AnalyticsRoute[] = [
     { pattern: "/music", label: "악곡" },
     { pattern: "/music/[index]/[difficulty]", label: "악곡 상세" },
     { pattern: "/music/[index]/[difficulty]/pattern", label: "채보 뷰어" },
+    {
+        pattern: "/music/[index]/[difficulty]/pattern/draft",
+        label: "채보 초안",
+    },
     { pattern: "/tiers", label: "서열표" },
     { pattern: "/tiers/[slug]", label: "서열표 상세" },
     { pattern: "/rankings", label: "랭킹" },
@@ -28,6 +33,10 @@ export const PAGE_ROUTES: readonly AnalyticsRoute[] = [
     { pattern: "/events/mine", label: "내 이벤트 글" },
     { pattern: "/events/[id]/edit", label: "이벤트 고치기" },
     { pattern: "/profile/[id]", label: "프로필" },
+    { pattern: "/profile/[id]/achievements", label: "프로필 업적" },
+    { pattern: "/profile/[id]/records", label: "프로필 기록" },
+    { pattern: "/profile/[id]/stats", label: "프로필 통계" },
+    { pattern: "/profile/[id]/activity", label: "프로필 활동" },
     { pattern: "/profile/settings", label: "프로필 설정" },
     { pattern: "/settings", label: "설정" },
     { pattern: "/bookmarklet", label: "동기화" },

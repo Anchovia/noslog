@@ -29,6 +29,9 @@ type AnalyticsAudience = "member" | "guest";
 // 바꾸면 policyCopy.json 의 시행일과 PRIVACY_PREVIOUS_VERSIONS 의 until 도 같이 바꾼다(테스트가 맞춰 본다)
 export const ANALYTICS_START_DATE = "2026-09-13";
 
+// 날짜별 합계 보관 기간(2026-09-13 사용자 결정) — 정리 작업이 지우고, 대시보드는 이보다 오래된 기간과 비교하지 않는다
+export const ANALYTICS_RETENTION_DAYS = 90;
+
 // 운영 배포에서만 센다 — 로컬 개발·미리보기 배포도 같은 DB 를 쓰므로 그 방문이 운영 통계에 섞이지 않게.
 // 테스트는 ANALYTICS_FORCE=true 로 켠다(시행일과 무관)
 export function isAnalyticsEnabled(now = new Date()) {

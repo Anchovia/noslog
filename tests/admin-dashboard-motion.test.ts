@@ -114,6 +114,15 @@ describe("관리자 대시보드 그래프 움직임", () => {
             },
             funnel: [{ label: "가입", count: 5 }],
             contributions: [{ key: "goalVotes", label: "서열 투표", count: 3 }],
+            comparison: { untilHour: null, visitsComparable: true },
+            newContributors: 1,
+            active: { week: 2, month: 4, ratio: 50 },
+            syncHealth: {
+                rows: [
+                    { key: "completed", label: "완료", detail: "", count: 3 },
+                ],
+                reasons: [],
+            },
             from: "2026-09-15",
             to: "2026-09-21",
             kpis: [
@@ -122,6 +131,7 @@ describe("관리자 대시보드 그래프 움직임", () => {
                     label: "방문자",
                     value: 5,
                     previous: 4,
+                    attempts: null,
                     failed: null,
                 },
             ],
@@ -166,6 +176,15 @@ describe("관리자 대시보드 그래프 움직임", () => {
             },
             funnel: [{ label: "가입", count: 5 }],
             contributions: [{ key: "goalVotes", label: "서열 투표", count: 3 }],
+            comparison: { untilHour: null, visitsComparable: true },
+            newContributors: 1,
+            active: { week: 2, month: 4, ratio: 50 },
+            syncHealth: {
+                rows: [
+                    { key: "completed", label: "완료", detail: "", count: 3 },
+                ],
+                reasons: [],
+            },
             from: "2026-09-15",
             to: "2026-09-21",
             kpis: [
@@ -174,6 +193,7 @@ describe("관리자 대시보드 그래프 움직임", () => {
                     label: "방문자",
                     value: 5,
                     previous: 4,
+                    attempts: null,
                     failed: null,
                 },
             ],
