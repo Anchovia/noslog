@@ -40,7 +40,20 @@ function shiftKey(key: string, days: number) {
 
 // 앞 같은 길이 기간 대비 증감 — 화살표 모양과 「증가·감소」 글자가 함께 말한다(색만으로 말하지 않는다).
 // 비교 기간은 카드마다 반복하지 않고 카드 묶음 아래 한 줄로 적는다(좁은 카드에서 줄바꿈 방지)
-function Delta({ value, previous }: { value: number; previous: number }) {
+// 비교할 기록이 없으면(오늘 방문자 · 수집 전 · 보관 기간 밖) 빈 값 「-」 (2026-10-17 K2)
+function Delta({
+    value,
+    previous,
+}: {
+    value: number;
+    previous: number | null;
+}) {
+    if (previous === null)
+        return (
+            <span className="nl-body-secondary nl-muted" aria-label="비교 없음">
+                -
+            </span>
+        );
     if (value === previous)
         return <span className="nl-body-secondary nl-muted">변화 없음</span>;
     const up = value > previous;
@@ -151,9 +164,41 @@ function AudienceSplit({
     );
 }
 
+// 활성 사용자 — 7일 · 28일 · 그 비율. 비율은 28일 활성이 없으면 「-」
+function ActiveUsers({ active }: { active: AdminDashboardData["active"] }) {
+    const stats = [
+        {
+            key: "week",
+            label: "7일",
+            value: active.week.toLocaleString("ko-KR"),
+        },
+        {
+            key: "month",
+            label: "28일",
+            value: active.month.toLocaleString("ko-KR"),
+        },
+        {
+            key: "ratio",
+            label: "7일 ÷ 28일",
+            value: active.ratio === null ? "-" : `${active.ratio}%`,
+        },
+    ];
+    return (
+        <dl className="nl-dashboard__stats">
+            {stats.map((stat) => (
+                <div key={stat.key}>
+                    <dt className="nl-control nl-muted">{stat.label}</dt>
+                    <dd className="nl-metric-display">{stat.value}</dd>
+                </div>
+            ))}
+        </dl>
+    );
+}
+
 /**
  * 관리자 대시보드 — C안(2026-09-13 사용자 결정). 넓은 화면은 본문 8(숫자·그래프·자주 보는 페이지) : 레일 4(처리할 일·API),
- * 좁은 화면은 처리할 일 → 지표 → API 순서로 쌓는다. 기간·그래프 지표는 주소(?range=·?metric=)로 바꾼다
+ * 좁은 화면은 처리할 일 → 지표 → 동기화 상태 → API 순서로 쌓는다. 기간·그래프 지표는 주소(?range=·?metric=)로 바꾼다.
+ * 활성 사용자 · 새 기여자 · 동기화 상태는 같은 틀에 패널만 더했다(2026-10-17 L1)
  */
 export default function AdminDashboard({ data }: { data: AdminDashboardData }) {
     const rangeLabel = DASHBOARD_RANGES[data.range].label;
@@ -163,10 +208,25 @@ export default function AdminDashboard({ data }: { data: AdminDashboardData }) {
             : `최근 ${data.days}일 · ${shortDate(data.from)}–${shortDate(data.to)}`;
     const previousFrom = shiftKey(data.from, -data.days);
     const previousTo = shiftKey(data.from, -1);
-    const comparison =
+    // 오늘은 어제 같은 시각까지(T1), 방문 합계가 없는 직전 기간은 비교하지 않는다(K2).
+    // 여러 날 방문자는 하루 방문자의 합 — 다른 날 다시 오면 다시 센다는 정의를 보이는 줄로 둔다(2026-10-17 V1)
+    const comparison = [
+        data.days > 1
+            ? "방문자는 하루 방문자의 합 · 다른 날 다시 오면 다시 셉니다"
+            : null,
+        data.comparison.untilHour !== null
+            ? `증감은 어제(${shortDate(previousTo)}) ${data.comparison.untilHour}시 59분까지 대비`
+            : `증감은 지난 ${data.days}일(${shortDate(previousFrom)}–${shortDate(previousTo)}) 대비`,
         data.days === 1
-            ? `증감은 어제(${shortDate(previousTo)}) 대비`
-            : `증감은 지난 ${data.days}일(${shortDate(previousFrom)}–${shortDate(previousTo)}) 대비`;
+            ? data.comparison.visitsComparable
+                ? "방문자는 시간대별로 모으지 않아 비교하지 않음"
+                : "방문자 · 페이지뷰는 어제 기록이 없어 비교하지 않음"
+            : data.comparison.visitsComparable
+              ? null
+              : "방문자 · 페이지뷰는 직전 기간 기록이 없어 비교하지 않음",
+    ]
+        .filter(Boolean)
+        .join(" · ");
     const active = data.todo.filter((item) => item.count > 0);
     const clear = data.todo.filter((item) => item.count === 0);
     const todoTotal = active.reduce((total, item) => total + item.count, 0);
@@ -291,9 +351,16 @@ export default function AdminDashboard({ data }: { data: AdminDashboardData }) {
                                                 data-metric={kpi.metric}
                                                 aria-hidden
                                             />
-                                            {kpi.failed ? (
+                                            {kpi.attempts ? (
                                                 <span className="nl-metadata nl-muted">
-                                                    실패 {kpi.failed}
+                                                    시도{" "}
+                                                    {kpi.attempts.toLocaleString(
+                                                        "ko-KR"
+                                                    )}{" "}
+                                                    · 실패{" "}
+                                                    {(
+                                                        kpi.failed ?? 0
+                                                    ).toLocaleString("ko-KR")}
                                                 </span>
                                             ) : null}
                                         </AdminDashboardMetricLink>
@@ -313,19 +380,20 @@ export default function AdminDashboard({ data }: { data: AdminDashboardData }) {
 
                             <section
                                 className="nl-dashboard__panel"
-                                aria-labelledby="dashboard-audience"
+                                aria-labelledby="dashboard-active"
                             >
                                 <div className="nl-dashboard__panel-head">
                                     <h2
-                                        id="dashboard-audience"
+                                        id="dashboard-active"
                                         className="nl-component-title"
                                     >
-                                        가입자 · 손님
+                                        활성 사용자
                                     </h2>
                                 </div>
-                                <AudienceSplit audience={data.audience} />
+                                <ActiveUsers active={data.active} />
                                 <p className="nl-metadata nl-muted">
-                                    로그인 여부만 셉니다 · {rangeLabel}
+                                    동기화를 끝냈거나 새로 기여한 사람 ·
+                                    오늘까지 · 방문 기록은 쓰지 않습니다
                                 </p>
                             </section>
 
@@ -352,6 +420,7 @@ export default function AdminDashboard({ data }: { data: AdminDashboardData }) {
                                 />
                                 <p className="nl-metadata nl-muted">
                                     {rangeLabel}에 가입한 사람이 어디까지 갔는지
+                                    · 지금 남아 있는 계정 기준
                                 </p>
                             </section>
 
@@ -367,6 +436,14 @@ export default function AdminDashboard({ data }: { data: AdminDashboardData }) {
                                         기여 활동
                                     </h2>
                                 </div>
+                                <p className="nl-dashboard__stat-line nl-body-secondary">
+                                    <span className="nl-muted">새 기여자</span>
+                                    <span className="nl-metric-value">
+                                        {data.newContributors.toLocaleString(
+                                            "ko-KR"
+                                        )}
+                                    </span>
+                                </p>
                                 <CountList
                                     rows={data.contributions.map((row) => ({
                                         ...row,
@@ -375,7 +452,26 @@ export default function AdminDashboard({ data }: { data: AdminDashboardData }) {
                                     empty="기록 없음"
                                 />
                                 <p className="nl-metadata nl-muted">
-                                    새로 쓰거나 고친 수 · {rangeLabel}
+                                    새로 쓴 수 · 새 기여자는 처음 기여한 사람 ·{" "}
+                                    {rangeLabel}
+                                </p>
+                            </section>
+
+                            <section
+                                className="nl-dashboard__panel"
+                                aria-labelledby="dashboard-audience"
+                            >
+                                <div className="nl-dashboard__panel-head">
+                                    <h2
+                                        id="dashboard-audience"
+                                        className="nl-component-title"
+                                    >
+                                        가입자 · 손님
+                                    </h2>
+                                </div>
+                                <AudienceSplit audience={data.audience} />
+                                <p className="nl-metadata nl-muted">
+                                    로그인 여부만 셉니다 · {rangeLabel}
                                 </p>
                             </section>
 
@@ -400,6 +496,38 @@ export default function AdminDashboard({ data }: { data: AdminDashboardData }) {
                                 </p>
                             </section>
                         </div>
+
+                        <section
+                            className="nl-dashboard__panel nl-dashboard__sync"
+                            aria-labelledby="dashboard-sync"
+                        >
+                            <div className="nl-dashboard__panel-head">
+                                <h2
+                                    id="dashboard-sync"
+                                    className="nl-component-title"
+                                >
+                                    동기화 상태
+                                </h2>
+                            </div>
+                            <CountList
+                                rows={data.syncHealth.rows}
+                                empty="기간에 동기화 시도가 없습니다."
+                            />
+                            {data.syncHealth.reasons.length ? (
+                                <div>
+                                    <h3 className="nl-dashboard__group nl-control nl-muted">
+                                        실패 사유
+                                    </h3>
+                                    <CountList
+                                        rows={data.syncHealth.reasons}
+                                        empty="기록 없음"
+                                    />
+                                </div>
+                            ) : null}
+                            <p className="nl-metadata nl-muted">
+                                시도 수 · 관리자 제외 · {rangeLabel}
+                            </p>
+                        </section>
 
                         <section
                             className="nl-dashboard__panel nl-dashboard__api"

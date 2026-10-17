@@ -16,7 +16,7 @@ model DataSync {
   playHistory     ChartPlayHistory[]
   recordSnapshots ChartRecordSnapshot[]
   ratingHistory   UserRatingHistory[]
-  // 스키마 밖(Prisma 6 은 부분 인덱스를 쓰지 못함) — "data_syncs_one_processing_per_user": user_id WHERE status = 'processing'.
+  // 스키마 밖(Prisma 스키마로 부분 인덱스를 적지 않음) — "data_syncs_one_processing_per_user": user_id WHERE status = 'processing'.
   // 사람당 처리 중 동기화는 하나. 존재는 tests/schema-objects-database.test.ts 가 확인한다
 
   @@index([userId, startedAt])
@@ -179,9 +179,8 @@ model PlayData {
 }
 
 // 동기화가 계산해 두는 사람별 값(2026-10-16 DB 재설계 D2-B). 예전에는 User 에 섞여 있었다 —
-// 로그인한 모든 요청이 읽고 동기화 동안 잠그는 User 행을 작게 두려고 옮긴다. 지금은 늘리기 단계라
-// 동기화가 User 의 같은 열과 이 표에 함께 쓰고(양쪽 쓰기), 읽기는 아직 User 다(P4 에서 전환).
-// 「score*」 = 그 랭크로 끝낸 채보 수(scoreF 는 풀콤보 수). 값의 뜻은 User 의 같은 이름 열과 같다
+// 로그인한 모든 요청이 읽고 동기화 동안 잠그는 User 행을 작게 두려고 옮겼다(User 의 옛 열은 P5 에서 지움).
+// 「score*」 = 그 랭크로 끝낸 채보 수(scoreF 는 풀콤보 수)
 model PlayerStats {
   userId           Int       @id @map("user_id")
   user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)

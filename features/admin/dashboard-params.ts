@@ -11,7 +11,7 @@ export const DASHBOARD_METRICS = {
     visitors: "방문자",
     pageviews: "페이지뷰",
     signups: "가입",
-    syncs: "동기화",
+    syncs: "동기화한 사람",
 } as const;
 export type DashboardMetric = keyof typeof DASHBOARD_METRICS;
 

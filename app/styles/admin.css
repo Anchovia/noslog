@@ -68,7 +68,7 @@
 }
 .noslog-ui .nl-dashboard__grid {
     display: grid;
-    grid-template-areas: "todo" "main" "api";
+    grid-template-areas: "todo" "main" "sync" "api";
     gap: var(--nl-spacing-16);
 }
 .noslog-ui .nl-dashboard__todo {
@@ -83,6 +83,30 @@
 }
 .noslog-ui .nl-dashboard__api {
     grid-area: api;
+}
+.noslog-ui .nl-dashboard__sync {
+    grid-area: sync;
+}
+/* 활성 사용자 숫자 셋(2026-10-17) — 지표 칸과 같은 글자 · 간격, 누르는 칸이 아니라 틀 없이 */
+.noslog-ui .nl-dashboard__stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--nl-spacing-12);
+    margin: 0;
+}
+.noslog-ui .nl-dashboard__stats > div {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: var(--nl-spacing-4);
+}
+.noslog-ui .nl-dashboard__stats dd {
+    margin: 0;
+}
+.noslog-ui .nl-dashboard__stat-line {
+    display: flex;
+    align-items: baseline;
+    gap: var(--nl-spacing-8);
 }
 .noslog-ui .nl-dashboard__panel {
     display: flex;
@@ -258,8 +282,8 @@
 @media (min-width: 1056px) {
     .noslog-ui .nl-dashboard__grid {
         grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
-        grid-template-rows: auto 1fr;
-        grid-template-areas: "main todo" "main api";
+        grid-template-rows: auto auto 1fr;
+        grid-template-areas: "main todo" "main sync" "main api";
         align-items: start;
     }
     .noslog-ui .nl-dashboard__panel {

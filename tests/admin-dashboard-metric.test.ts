@@ -150,7 +150,7 @@ describe("dashboard metric navigation", () => {
         for (const [metric, label] of [
             ["pageviews", "페이지뷰"],
             ["signups", "가입"],
-            ["syncs", "동기화"],
+            ["syncs", "동기화한 사람"],
         ] as const) {
             mocks.params = new URLSearchParams(`range=today&metric=${metric}`);
             const html = renderToStaticMarkup(

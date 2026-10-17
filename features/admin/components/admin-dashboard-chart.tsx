@@ -23,6 +23,8 @@ const TOOLTIP_STYLE = {
     fontSize: "var(--nl-type-size-14)",
 };
 
+const NO_RECORD = "기록 없음";
+
 // 대시보드 추이 그래프 — 한 계열 선 · 격자 border/divider(공용 선 그래프와 같은 값, 2026-10-01 A).
 // 선 색은 보고 있는 수치의 색(2026-09-20 C2), 움직임은 공용 그래프 클래스만 쓴다(2026-09-21)
 export default function AdminDashboardChart({
@@ -30,7 +32,8 @@ export default function AdminDashboardChart({
     label,
     color = "var(--nl-local-data-single)",
 }: {
-    data: { date: string; label: string; value: number }[];
+    // null = 기록이 없는 날(수집 시작 전) — 0 으로 그리지 않고 선을 끊는다(2026-10-17 K2)
+    data: { date: string; label: string; value: number | null }[];
     label: string;
     color?: string;
 }) {
@@ -39,7 +42,7 @@ export default function AdminDashboardChart({
             className="nl-dashboard__chart"
             role="img"
             aria-label={`${label} 날짜별 추이 — ${data
-                .map((point) => `${point.label} ${point.value}`)
+                .map((point) => `${point.label} ${point.value ?? NO_RECORD}`)
                 .join(", ")}`}
         >
             <ResponsiveContainer width="100%" height="100%">
@@ -78,7 +81,9 @@ export default function AdminDashboardChart({
                         contentStyle={TOOLTIP_STYLE}
                         labelStyle={{ color: "var(--nl-content-subdued)" }}
                         formatter={(value) => [
-                            Number(value).toLocaleString("ko-KR"),
+                            value === null || value === undefined
+                                ? NO_RECORD
+                                : Number(value).toLocaleString("ko-KR"),
                             label,
                         ]}
                     />

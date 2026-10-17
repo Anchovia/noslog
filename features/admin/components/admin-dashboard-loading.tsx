@@ -95,7 +95,7 @@ function KpiLoading({ data }: { data: AdminDashboardData }) {
                         />
                         <SkeletonText className="nl-body-secondary" width="m" />
                         <span className="nl-dashboard__kpi-tone nl-skeleton" />
-                        {kpi.failed ? (
+                        {kpi.attempts ? (
                             <SkeletonText className="nl-metadata" width="s" />
                         ) : null}
                     </div>
@@ -149,22 +149,81 @@ function AudienceLoading({ data }: { data: AdminDashboardData }) {
     );
 }
 
+function ActiveLoading() {
+    return (
+        <section className="nl-dashboard__panel">
+            <div className="nl-dashboard__panel-head">
+                <h2 className="nl-component-title">활성 사용자</h2>
+            </div>
+            <dl className="nl-dashboard__stats">
+                {["7일", "28일", "7일 ÷ 28일"].map((label) => (
+                    <div key={label}>
+                        <dt className="nl-control nl-muted">{label}</dt>
+                        <dd>
+                            <SkeletonText
+                                className="nl-metric-display"
+                                sample="0,000"
+                            />
+                        </dd>
+                    </div>
+                ))}
+            </dl>
+            <p className="nl-metadata nl-muted">
+                동기화를 끝냈거나 새로 기여한 사람 · 오늘까지 · 방문 기록은 쓰지
+                않습니다
+            </p>
+        </section>
+    );
+}
+
+function SyncHealthLoading({ data }: { data: AdminDashboardData }) {
+    const rangeLabel = DASHBOARD_RANGES[data.range].label;
+    return (
+        <section className="nl-dashboard__panel nl-dashboard__sync">
+            <div className="nl-dashboard__panel-head">
+                <h2 className="nl-component-title">동기화 상태</h2>
+            </div>
+            <CountListLoading rows={data.syncHealth.rows} keepLabels />
+            {data.syncHealth.reasons.length ? (
+                <div>
+                    <h3 className="nl-dashboard__group nl-control nl-muted">
+                        실패 사유
+                    </h3>
+                    <CountListLoading rows={data.syncHealth.reasons} />
+                </div>
+            ) : null}
+            <p className="nl-metadata nl-muted">
+                시도 수 · 관리자 제외 ·{" "}
+                <SkeletonText className="nl-metadata" sample={rangeLabel} />
+            </p>
+        </section>
+    );
+}
+
 function ListPanelLoading({
     title,
     rows,
     note,
     keepLabels = false,
+    lead,
 }: {
     title: string;
     rows: DashboardRow[];
     note: string;
     keepLabels?: boolean;
+    lead?: string;
 }) {
     return (
         <section className="nl-dashboard__panel">
             <div className="nl-dashboard__panel-head">
                 <h2 className="nl-component-title">{title}</h2>
             </div>
+            {lead ? (
+                <p className="nl-dashboard__stat-line nl-body-secondary">
+                    <span className="nl-muted">{lead}</span>
+                    <SkeletonText className="nl-metric-value" sample="00" />
+                </p>
+            ) : null}
             <CountListLoading rows={rows} keepLabels={keepLabels} />
             <p className="nl-metadata nl-muted">{note}</p>
         </section>
@@ -201,26 +260,31 @@ export default function AdminDashboardLoading({
                     hourly={Boolean(data.hourly)}
                 />
 
-                <AudienceLoading data={data} />
+                <ActiveLoading />
 
                 <ListPanelLoading
                     title="전환 흐름"
                     rows={funnelRows}
                     keepLabels
-                    note={`${rangeLabel}에 가입한 사람이 어디까지 갔는지`}
+                    note={`${rangeLabel}에 가입한 사람이 어디까지 갔는지 · 지금 남아 있는 계정 기준`}
                 />
                 <ListPanelLoading
                     title="기여 활동"
                     rows={contributionRows}
                     keepLabels
-                    note={`새로 쓰거나 고친 수 · ${rangeLabel}`}
+                    lead="새 기여자"
+                    note={`새로 쓴 수 · 새 기여자는 처음 기여한 사람 · ${rangeLabel}`}
                 />
+
+                <AudienceLoading data={data} />
                 <ListPanelLoading
                     title="자주 보는 페이지"
                     rows={data.topPages}
                     note={`페이지뷰 · ${rangeLabel}`}
                 />
             </div>
+
+            <SyncHealthLoading data={data} />
 
             <section className="nl-dashboard__panel nl-dashboard__api">
                 <div className="nl-dashboard__panel-head">

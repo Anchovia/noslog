@@ -83,13 +83,6 @@ export const publicArcadeSchema = z.object({
     slug: z.string().min(1),
     name: z.string().min(1),
     nativeLanguage: z.string().nullable(),
-    identities: z.array(
-        z.object({
-            locale: z.string(),
-            name: z.string(),
-            aliases: z.array(z.string()),
-        })
-    ),
     region: z.string().nullable(),
     locality: z.string().nullable(),
     countryCode: z.string().length(2),

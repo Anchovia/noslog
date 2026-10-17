@@ -253,13 +253,7 @@ export function selectArcades(
     const query = normalized(values.q);
     const relevance = (arcade: PublicArcade) => {
         if (!query) return 0;
-        const names = [
-            arcade.name,
-            ...arcade.identities.flatMap((item) => [
-                item.name,
-                ...item.aliases,
-            ]),
-        ].map(normalized);
+        const names = [normalized(arcade.name)];
         if (names.some((name) => name === query)) return 3;
         if (names.some((name) => name.startsWith(query))) return 2;
         return [...names, arcade.region, arcade.locality, arcade.address].some(
