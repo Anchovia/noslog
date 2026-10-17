@@ -18,9 +18,6 @@ model Arcade {
   publicDetails ArcadePublicDetails?
   cabinets      ArcadeCabinet[]
   publicPhotos  ArcadePublicPhoto[]
-  // 줄이기 1단계(2026-10-17) — 넣는 곳이 없어 비어 있던 두 표. 코드는 읽지 않고 다음 배포에서 DROP
-  identities    ArcadeLocalizedIdentity[] @ignore
-  slugAliases   ArcadeSlugAlias[]         @ignore
   reports       FeedbackReport[]
 
   @@index([isActive, name])
@@ -48,9 +45,6 @@ model ArcadePublicDetails {
   hoursVerifiedAt    DateTime? @map("hours_verified_at")
   hoursValidUntil    DateTime? @map("hours_valid_until")
   cabinetVerifiedAt  DateTime? @map("cabinet_verified_at")
-  // 줄이기 1단계(2026-10-17) — 만든 뒤로 읽고 쓰는 곳이 없던 칸. 다음 배포에서 DROP
-  priceVerifiedAt    DateTime? @map("price_verified_at") @ignore
-  locationVerifiedAt DateTime? @map("location_verified_at") @ignore
   verificationSource String?   @map("verification_source")
 
   @@map("arcade_public_details")
@@ -114,30 +108,6 @@ model ArcadePublicPhoto {
 
   @@unique([arcadeId, slot])
   @@map("arcade_public_photos")
-}
-
-model ArcadeLocalizedIdentity {
-  id         Int        @id @default(autoincrement())
-  arcadeId   Int        @map("arcade_id")
-  arcade     Arcade     @relation(fields: [arcadeId], references: [id], onDelete: Cascade)
-  locale     LocaleCode
-  name       String
-  aliases    String[]   @default([])
-  reviewedAt DateTime   @map("reviewed_at")
-
-  @@unique([arcadeId, locale])
-  @@map("arcade_localized_identities")
-  @@ignore
-}
-
-model ArcadeSlugAlias {
-  slug     String @id
-  arcadeId Int    @map("arcade_id")
-  arcade   Arcade @relation(fields: [arcadeId], references: [id], onDelete: Cascade)
-
-  @@index([arcadeId])
-  @@map("arcade_slug_aliases")
-  @@ignore
 }
 
 enum ArcadeReportType {
