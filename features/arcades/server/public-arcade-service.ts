@@ -57,7 +57,6 @@ function publicInclude(now: Date) {
             },
         },
         publicPhotos: { orderBy: { slot: "asc" as const } },
-        identities: true,
         _count: { select: { users: true } },
     } satisfies Prisma.ArcadeInclude;
 }
@@ -84,9 +83,6 @@ function toPublicArcade(record: ArcadeRecord, now: Date) {
         slug: details?.slug ?? String(record.id),
         name: record.name,
         nativeLanguage: details?.nativeLanguage ?? null,
-        identities: record.identities
-            .filter((item) => item.reviewedAt <= now)
-            .map(({ locale, name, aliases }) => ({ locale, name, aliases })),
         // 지역 · 주소는 공개 정보가 정본(2026-10-16 D6 — 옛 칸은 백필 뒤 쓰지 않는다)
         region: details?.administrativeArea ?? null,
         locality: details?.locality ?? null,
@@ -269,13 +265,9 @@ const queryPublicArcade = unstable_cache(
                 : null;
         const now = new Date();
         const include = publicInclude(now);
-        // Canonical URLs win over historical aliases and legacy numeric URLs.
+        // 공개 주소가 먼저, 없으면 예전 번호 주소
         let record = await db.arcade.findFirst({
             where: { isActive: true, publicDetails: { is: { slug } } },
-            include,
-        });
-        record ??= await db.arcade.findFirst({
-            where: { isActive: true, slugAliases: { some: { slug } } },
             include,
         });
         if (!record && numericId !== null)

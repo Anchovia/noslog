@@ -265,7 +265,9 @@ old design-stage checklist. Changes to material behavior require a user decision
   Replies are one level deep (`CommunityOpinionReply`); replying to a reply
   prefixes `@name`. Writing a reply needs the same chart record as writing an
   opinion; the author may edit or delete their reply, and replies can be reported
-  (same report table with `replyId`). When an opinion with replies is deleted, its
+  (same report table with `replyId`). Admins review opinion and reply reports in
+  the admin feedback screen ("의견 신고" tab, 2026-10-17): the card keeps the text
+  as it was when reported, and the admin only marks it resolved or reopens it. When an opinion with replies is deleted, its
   row stays as "deleted by author" so others' replies remain; no new replies are
   accepted there. Clearing a whole evaluation that has replies keeps the row with
   ratings and opinion emptied. Account deletion cascades the author's replies.

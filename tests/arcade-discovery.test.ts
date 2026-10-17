@@ -25,9 +25,6 @@ const base: PublicArcade = {
     slug: "1",
     name: "ラウンドワン 梅田店",
     nativeLanguage: "ja",
-    identities: [
-        { locale: "en", name: "Round1 Umeda", aliases: ["ROUND ONE"] },
-    ],
     region: "大阪府",
     locality: "大阪市",
     countryCode: "JP",
@@ -283,11 +280,11 @@ describe("public arcade truth and discovery", () => {
             "distance"
         );
     });
-    it("searches reviewed aliases with Unicode normalization", () => {
+    it("searches names with Unicode normalization", () => {
         expect(
             selectArcades(
                 [base],
-                { ...values, q: "ＲＯＵＮＤ ＯＮＥ" },
+                { ...values, q: "ﾗｳﾝﾄﾞﾜﾝ" },
                 "en",
                 null,
                 null,

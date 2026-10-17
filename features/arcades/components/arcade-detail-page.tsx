@@ -90,9 +90,6 @@ export default function ArcadeDetailPage({
     const directions = arcadeDirections(arcade);
     const open = arcadeOpenState(arcade, now);
     const hint = arcadeScheduleHint(arcade, now);
-    const alias = arcade.identities.find(
-        (item) => item.locale === locale
-    )?.name;
     const summary = arcadeCabinetSummary(arcade);
     const loginHref = `${href("/login")}?returnTo=${encodeURIComponent(href(`/gamecenter/${arcade.slug}`))}`;
     const price = formatArcadePrice(arcade, locale, (count) =>
@@ -249,11 +246,6 @@ export default function ArcadeDetailPage({
                         >
                             {arcade.name}
                         </h1>
-                        {alias && alias !== arcade.name ? (
-                            <p className="nl-body-secondary nl-muted">
-                                {alias}
-                            </p>
-                        ) : null}
                         {/* 영업 상태 · 지역 줄은 두지 않는다 — 바로 아래 정보 행(주소 · 영업시간)과 같은 글이 겹친다(2026-09-15) */}
                     </div>
 
