@@ -1,7 +1,6 @@
 "use client";
 
 import { ChevronDown, ChevronRight } from "lucide-react";
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Fragment, useId, useState } from "react";
 
@@ -10,6 +9,7 @@ import {
     useTranslations,
 } from "@/components/i18n/locale-provider";
 import Disclosure from "@/components/ui/disclosure";
+import IntentLink from "@/components/ui/intent-link";
 import type { CommunityData } from "@/features/music/schemas/community-schema";
 
 import TierVoteContribution from "./tier-vote-contribution";
@@ -54,7 +54,7 @@ export default function CommunityTierVotes({
             {/* 제목 줄이 펼침 줄이 되면서 로그인 링크는 내용 첫 줄로 (2026-09-18 아코디언) */}
             {!accountId ? (
                 <div className="nl-heading-row">
-                    <Link
+                    <IntentLink
                         className="nl-heading-link nl-control"
                         href={href(
                             `/login?returnTo=${encodeURIComponent(returnTo)}`
@@ -62,7 +62,7 @@ export default function CommunityTierVotes({
                     >
                         {t("community.voteLoginLink")}
                         <ChevronRight aria-hidden />
-                    </Link>
+                    </IntentLink>
                 </div>
             ) : null}
             {/* 여섯이 아닌 네 범위(Basic S · 990k · Pianist · Recital)를 카드 하나 안 선 목록으로 — 줄 = 컨트롤 높이 (2026-09-16) */}

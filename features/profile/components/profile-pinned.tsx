@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
 import {
@@ -9,6 +8,7 @@ import {
     useTranslations,
 } from "@/components/i18n/locale-provider";
 import MusicJacket from "@/components/music/music-jacket";
+import IntentLink from "@/components/ui/intent-link";
 import { ScoreGrade } from "@/features/music/components/chart-leaderboard";
 import { formatProfileContribution } from "@/features/profile/components/profile-play-row";
 import type { ProfilePinnedRecords } from "@/features/profile/server/profile-pinned-service";
@@ -40,7 +40,7 @@ export default function ProfilePinned({
             <ol className="nl-profile-pinned__list">
                 {pinned.items.map((play) => (
                     <li key={play.id}>
-                        <Link
+                        <IntentLink
                             className="nl-profile-pinned__row"
                             href={href(
                                 `/music/${play.musicIndex}/${play.difficulty.toLowerCase()}`
@@ -113,7 +113,7 @@ export default function ProfilePinned({
                                     </span>
                                 ) : null}
                             </span>
-                        </Link>
+                        </IntentLink>
                     </li>
                 ))}
             </ol>

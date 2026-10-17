@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import type { ReactNode } from "react";
 import { useId, useState } from "react";
 
@@ -11,6 +10,7 @@ import {
 } from "@/components/i18n/locale-provider";
 import ActionMenu from "@/components/ui/action-menu";
 import Avatar from "@/components/ui/avatar";
+import IntentLink from "@/components/ui/intent-link";
 import { SkeletonText } from "@/components/ui/skeleton";
 import { StatusMessage } from "@/components/ui/status-message";
 import ContributionLabel from "@/features/contributions/components/contribution-label";
@@ -75,13 +75,13 @@ export default function CommunityOpinionRow({
             <Avatar src={item.user.avatar} size={32} />
             <div className="nl-opinion-row__content">
                 <div className="nl-opinion-row__header">
-                    <Link
+                    <IntentLink
                         id={`${id}-name`}
                         href={href(`/profile/${item.user.id}`)}
                         className="nl-opinion-row__name nl-emphasis-label"
                     >
                         {name}
-                    </Link>
+                    </IntentLink>
                     <ContributionLabel label={item.user.label} />
                     <span className="nl-metadata nl-muted">
                         <time

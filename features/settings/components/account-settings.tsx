@@ -3,7 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
 import { ChevronRight } from "lucide-react";
-import Link from "next/link";
 import { useEffect, useId, useRef, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 
@@ -18,6 +17,7 @@ import ActionButton from "@/components/ui/action-button";
 import Button from "@/components/ui/button";
 import ButtonLink from "@/components/ui/button-link";
 import { fieldDescription, FormField, Input } from "@/components/ui/form-field";
+import IntentLink from "@/components/ui/intent-link";
 import ModalDialog from "@/components/ui/modal-dialog";
 import type {
     AccountDeletionFormValues,
@@ -319,17 +319,17 @@ export default function AccountSettings({
                                     className="nl-body-secondary nl-field__error"
                                 >
                                     <p>{deleteError}</p>
-                                    <Link href={href("/privacy")}>
+                                    <IntentLink href={href("/privacy")}>
                                         {t("footer.privacy")}
-                                    </Link>
+                                    </IntentLink>
                                 </div>
                             ) : null}
                         </form>
                     </ModalDialog>
                 </div>
-                <Link href={href("/privacy")} className="nl-control">
+                <IntentLink href={href("/privacy")} className="nl-control">
                     {t("footer.privacy")}
-                </Link>
+                </IntentLink>
             </section>
         </div>
     );

@@ -1,7 +1,6 @@
 "use client";
 
 import * as Popover from "@radix-ui/react-popover";
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 import type {
@@ -22,6 +21,7 @@ import Button from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import Disclosure from "@/components/ui/disclosure";
 import FilterChips from "@/components/ui/filter-chips";
+import IntentLink from "@/components/ui/intent-link";
 import ModalDialog from "@/components/ui/modal-dialog";
 import { overlayPosition } from "@/components/ui/overlay-position";
 import { StatusMessage } from "@/components/ui/status-message";
@@ -426,7 +426,7 @@ export default function BingoDetailPage({
                                                     {!busy && missionLink ? (
                                                         <>
                                                             {" · "}
-                                                            <Link
+                                                            <IntentLink
                                                                 className="nl-bingo-mission__link"
                                                                 href={href(
                                                                     missionLink
@@ -438,7 +438,7 @@ export default function BingoDetailPage({
                                                                         ? "bingo.viewMusic"
                                                                         : "bingo.move"
                                                                 )}
-                                                            </Link>
+                                                            </IntentLink>
                                                         </>
                                                     ) : null}
                                                 </p>
@@ -482,14 +482,14 @@ export default function BingoDetailPage({
                         ) : null}
                     </Disclosure>
                     {!bingo.isAuthenticated ? (
-                        <Link
+                        <IntentLink
                             className="nl-button nl-button--primary"
                             href={href(
                                 `/login?returnTo=${encodeURIComponent(href(`/bingo/${bingo.id}`))}`
                             )}
                         >
                             {t("bingo.loginToSave")}
-                        </Link>
+                        </IntentLink>
                     ) : null}
                     {bingo.isAuthenticated ? (
                         <ModalDialog

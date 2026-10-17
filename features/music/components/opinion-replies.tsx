@@ -2,7 +2,6 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { ChevronDown, ChevronUp, CornerDownRight } from "lucide-react";
-import Link from "next/link";
 import type { ReactNode } from "react";
 import { useId, useRef, useState } from "react";
 
@@ -14,6 +13,7 @@ import {
 import ActionButton from "@/components/ui/action-button";
 import ActionMenu from "@/components/ui/action-menu";
 import Avatar from "@/components/ui/avatar";
+import IntentLink from "@/components/ui/intent-link";
 import { SkeletonText } from "@/components/ui/skeleton";
 import { StatusMessage } from "@/components/ui/status-message";
 import ContributionLabel from "@/features/contributions/components/contribution-label";
@@ -97,7 +97,7 @@ export default function OpinionReplies({
                         </button>
                     ) : null
                 ) : (
-                    <Link
+                    <IntentLink
                         href={href(
                             `/login?returnTo=${encodeURIComponent(returnTo)}`
                         )}
@@ -109,7 +109,7 @@ export default function OpinionReplies({
                             aria-hidden
                         />
                         <span>{t("community.reply")}</span>
-                    </Link>
+                    </IntentLink>
                 )}
             </div>
             {opinion.replyCount > 0 ? (
@@ -239,12 +239,12 @@ function ReplyRow({
             <Avatar src={reply.user.avatar} size={24} />
             <div className="nl-opinion-row__content">
                 <div className="nl-opinion-row__header">
-                    <Link
+                    <IntentLink
                         href={href(`/profile/${reply.user.id}`)}
                         className="nl-opinion-row__name nl-emphasis-label"
                     >
                         {name}
-                    </Link>
+                    </IntentLink>
                     <ContributionLabel label={reply.user.label} />
                     <span className="nl-metadata nl-muted">
                         <time

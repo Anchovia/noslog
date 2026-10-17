@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -9,6 +8,7 @@ import {
     useTranslations,
 } from "@/components/i18n/locale-provider";
 import { foundationButtonClass } from "@/components/ui/button";
+import IntentLink from "@/components/ui/intent-link";
 import LegacyRouteError from "@/features/recovery/components/legacy-route-error";
 import RecoveryAction from "@/features/recovery/components/recovery-action";
 import { stripLocaleFromPath } from "@/lib/i18n/routing";
@@ -55,14 +55,14 @@ export default function ErrorPage({
                                 reset();
                             }}
                         />
-                        <Link
+                        <IntentLink
                             href={href("/")}
                             className={foundationButtonClass({
                                 variant: "secondary",
                             })}
                         >
                             {t("common.goHome")}
-                        </Link>
+                        </IntentLink>
                     </div>
                 </div>
             </main>

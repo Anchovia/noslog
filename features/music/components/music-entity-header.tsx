@@ -2,7 +2,6 @@
 
 import { ChevronRight } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 import type { CSSProperties, ReactNode } from "react";
 import { useLayoutEffect, useRef, useState } from "react";
 
@@ -19,6 +18,7 @@ import type {
     UserPlayData,
 } from "@/components/music/music-detail-types";
 import MusicJacket from "@/components/music/music-jacket";
+import IntentLink from "@/components/ui/intent-link";
 import StatStrip from "@/components/ui/stat-strip";
 import ChartDraftEntry from "@/features/contributions/components/chart-draft-entry";
 import { cn } from "@/lib/cn";
@@ -133,7 +133,7 @@ export default function MusicEntityHeader({
     );
     const actions = [
         !pending && chart?.has_published_pattern ? (
-            <Link
+            <IntentLink
                 key="chart"
                 href={href(
                     `/music/${music.index}/${difficulty.toLowerCase()}/pattern`
@@ -142,7 +142,7 @@ export default function MusicEntityHeader({
             >
                 {t("detail.viewChart")}
                 {chevron}
-            </Link>
+            </IntentLink>
         ) : !pending && chart ? (
             // 공개 채보가 없으면 「채보 만들기 ›」 — 내 초안이 있으면 그 상태(2026-09-24 A1)
             <ChartDraftEntry
@@ -223,13 +223,13 @@ export default function MusicEntityHeader({
                         </span>
                     </span>
                 ) : !signedIn ? (
-                    <Link
+                    <IntentLink
                         className="nl-heading-link nl-control"
                         href={loginHref}
                     >
                         {t("detail.myBestLogin")}
                         <ChevronRight aria-hidden />
-                    </Link>
+                    </IntentLink>
                 ) : (
                     <span className="nl-body nl-muted">—</span>
                 )}

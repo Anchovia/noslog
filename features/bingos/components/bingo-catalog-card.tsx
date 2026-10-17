@@ -1,13 +1,12 @@
 "use client";
 
-import Link from "next/link";
-
 import {
     useLocale,
     useLocalizedHref,
     useTranslations,
 } from "@/components/i18n/locale-provider";
 import MusicJacket from "@/components/music/music-jacket";
+import IntentLink from "@/components/ui/intent-link";
 import { SkeletonText } from "@/components/ui/skeleton";
 import type { BingoCatalogItem } from "@/features/bingos/schemas/public-bingo-schema";
 
@@ -72,7 +71,7 @@ export default function BingoCatalogCard({
     );
     if (view === "list")
         return (
-            <Link
+            <IntentLink
                 href={href(`/bingo/${item.id}`)}
                 className="nl-bingo-row-item"
             >
@@ -114,10 +113,10 @@ export default function BingoCatalogCard({
                     ) : null}
                 </span>
                 {isAuthenticated ? <BingoMini completed={completed} /> : null}
-            </Link>
+            </IntentLink>
         );
     return (
-        <Link href={href(`/bingo/${item.id}`)} className="nl-bingo-card">
+        <IntentLink href={href(`/bingo/${item.id}`)} className="nl-bingo-card">
             <MusicJacket
                 appearance="foundation"
                 index={item.musicIndex}
@@ -138,7 +137,7 @@ export default function BingoCatalogCard({
                 </span>
                 {meta}
             </span>
-        </Link>
+        </IntentLink>
     );
 }
 

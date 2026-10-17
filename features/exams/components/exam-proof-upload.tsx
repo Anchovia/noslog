@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Camera, Check } from "lucide-react";
-import Link from "next/link";
 import { type ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 
@@ -10,6 +9,7 @@ import type { ExamDashboardItem } from "@/components/exams/dashboard/exam-dashbo
 import { useLocale, useTranslations } from "@/components/i18n/locale-provider";
 import ActionButton from "@/components/ui/action-button";
 import Button from "@/components/ui/button";
+import IntentLink from "@/components/ui/intent-link";
 import { StatusMessage } from "@/components/ui/status-message";
 import {
     createExamProofFileSchema,
@@ -114,7 +114,7 @@ export default function ExamProofUpload({
                 {t("exams.proof.title")}
             </h3>
             {!isAuthenticated ? (
-                <Link
+                <IntentLink
                     className="nl-button nl-button--primary"
                     href={localizePath(
                         `/login?returnTo=${encodeURIComponent(returnPath)}`,
@@ -122,7 +122,7 @@ export default function ExamProofUpload({
                     )}
                 >
                     {t("exams.proof.login")}
-                </Link>
+                </IntentLink>
             ) : complete || pending ? (
                 // 결과 한 줄 = 상태 메시지 inline(2026-10-01) — 완료는 성공 체크, 심사 중은 안내
                 <StatusMessage
@@ -143,12 +143,12 @@ export default function ExamProofUpload({
                                 : "exams.simulation.notEligible"
                         )}
                     </p>
-                    <Link
+                    <IntentLink
                         className="nl-button"
                         href={localizePath("/bookmarklet", locale)}
                     >
                         {t("sync.title")}
-                    </Link>
+                    </IntentLink>
                 </div>
             ) : (
                 <form
@@ -281,7 +281,7 @@ export default function ExamProofUpload({
                         />
                     ) : null}
                     {requiresLogin ? (
-                        <Link
+                        <IntentLink
                             className="nl-button nl-button--primary"
                             href={localizePath(
                                 `/login?returnTo=${encodeURIComponent(returnPath)}`,
@@ -289,7 +289,7 @@ export default function ExamProofUpload({
                             )}
                         >
                             {t("exams.proof.login")}
-                        </Link>
+                        </IntentLink>
                     ) : null}
                 </form>
             )}

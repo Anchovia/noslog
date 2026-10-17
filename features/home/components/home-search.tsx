@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { KeyboardEvent } from "react";
 import { useEffect, useId, useRef, useState } from "react";
@@ -15,6 +14,7 @@ import {
 } from "@/components/i18n/locale-provider";
 import ActionButton from "@/components/ui/action-button";
 import CompactSelect from "@/components/ui/compact-select";
+import IntentLink from "@/components/ui/intent-link";
 import SearchField from "@/components/ui/search-field";
 import { LoadingStatus } from "@/components/ui/skeleton";
 import { StatusMessage } from "@/components/ui/status-message";
@@ -288,7 +288,7 @@ export default function HomeSearch() {
                         />
                     ))}
                     {showHandoff ? (
-                        <Link
+                        <IntentLink
                             href={allHref}
                             id={`${resultsId}-${items.length}`}
                             role="option"
@@ -298,7 +298,7 @@ export default function HomeSearch() {
                             onClick={() => setOpen(false)}
                         >
                             {t("home.allResults", { count: total })}
-                        </Link>
+                        </IntentLink>
                     ) : null}
                 </div>
                 {pending && !data ? (

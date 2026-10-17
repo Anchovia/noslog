@@ -2,7 +2,6 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { ChevronRight } from "lucide-react";
-import Link from "next/link";
 import { Fragment, type ReactNode, useId } from "react";
 
 import {
@@ -13,6 +12,7 @@ import {
 import type { MusicDetailProps } from "@/components/music/music-detail-types";
 import ActionButton from "@/components/ui/action-button";
 import BarList, { BarListSkeleton } from "@/components/ui/bar-list";
+import IntentLink from "@/components/ui/intent-link";
 import ResultState from "@/components/ui/result-state";
 import { LoadingStatus } from "@/components/ui/skeleton";
 import StatStrip from "@/components/ui/stat-strip";
@@ -214,7 +214,7 @@ export default function OverviewPanel({
                         {t("detail.record")}
                     </h2>
                     {!data.isLoggedIn ? (
-                        <Link
+                        <IntentLink
                             className="nl-heading-link nl-control"
                             href={href(
                                 `/login?returnTo=${encodeURIComponent(href(`/music/${data.music.index}/${data.difficulty.toLowerCase()}`))}`
@@ -223,7 +223,7 @@ export default function OverviewPanel({
                         >
                             {t("detail.myBestLogin")}
                             <ChevronRight aria-hidden />
-                        </Link>
+                        </IntentLink>
                     ) : null}
                 </div>
                 {!data.isLoggedIn ? null : !record || record.score <= 0 ? (

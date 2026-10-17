@@ -1,9 +1,9 @@
 "use client";
 
 import { Heart } from "lucide-react";
-import Link from "next/link";
 
 import { useLocale, useTranslations } from "@/components/i18n/locale-provider";
+import IntentLink from "@/components/ui/intent-link";
 
 /**
  * 좋아요(2026-09-22 L1) — 의견 · 답글 본문 아래 동작 줄. 윤곽 하트 → 누르면 채운 하트(모양으로도 말한다) + 수,
@@ -46,14 +46,14 @@ export default function OpinionLike({
     );
     if (!signedIn)
         return (
-            <Link
+            <IntentLink
                 href={loginHref}
                 className="nl-opinion-like nl-control"
                 title={t("community.likeLogin")}
             >
                 {icon}
                 {content}
-            </Link>
+            </IntentLink>
         );
     if (!canReact)
         return count ? (

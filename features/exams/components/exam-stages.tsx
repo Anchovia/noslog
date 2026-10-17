@@ -1,7 +1,6 @@
 "use client";
 
 import { CircleCheck, CircleX } from "lucide-react";
-import Link from "next/link";
 import { Fragment, useRef, useState } from "react";
 
 import type {
@@ -11,6 +10,7 @@ import type {
 import { getStageLabel } from "@/components/exams/dashboard/exam-dashboard-utils";
 import { useLocale, useTranslations } from "@/components/i18n/locale-provider";
 import MusicJacket from "@/components/music/music-jacket";
+import IntentLink from "@/components/ui/intent-link";
 import ModalDialog from "@/components/ui/modal-dialog";
 import { getExamPractice } from "@/features/exams/exam-practice";
 import { localizePath } from "@/lib/i18n/routing";
@@ -94,12 +94,12 @@ function StageRow({
     return (
         <li className="nl-exam-stage">
             {stage.charts.length === 1 ? (
-                <Link
+                <IntentLink
                     className="nl-exam-stage__row"
                     href={chartHref(stage.charts[0].difficulty)}
                 >
                     {content}
-                </Link>
+                </IntentLink>
             ) : stage.charts.length > 1 ? (
                 <button
                     className="nl-exam-stage__row"
@@ -126,7 +126,7 @@ function StageRow({
                 {/* 채보 고르기(2026-09-26 P1) — 고르기 목록 줄: 난이도(글자색) · 레벨 */}
                 <div className="nl-pick-list">
                     {stage.charts.map((chart) => (
-                        <Link
+                        <IntentLink
                             key={chart.chartId}
                             className="nl-pick-row"
                             href={chartHref(chart.difficulty)}
@@ -138,7 +138,7 @@ function StageRow({
                                     {chart.difficulty} {chart.level}
                                 </span>
                             </span>
-                        </Link>
+                        </IntentLink>
                     ))}
                 </div>
             </ModalDialog>

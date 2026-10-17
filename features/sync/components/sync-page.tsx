@@ -1,7 +1,6 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
@@ -13,6 +12,7 @@ import PageContainer from "@/components/layout/page-container";
 import Button from "@/components/ui/button";
 import ButtonLink from "@/components/ui/button-link";
 import Disclosure from "@/components/ui/disclosure";
+import IntentLink from "@/components/ui/intent-link";
 import { StatusMessage } from "@/components/ui/status-message";
 import { syncStatusOptions } from "@/features/sync/api/sync-status";
 import type { SyncStatus } from "@/features/sync/schemas/sync-status-schema";
@@ -300,7 +300,7 @@ export default function SyncPage({
                                     <li
                                         key={`${item.musicId}-${item.difficulty}-${index}`}
                                     >
-                                        <Link
+                                        <IntentLink
                                             href={href(
                                                 `/music/${item.musicId}/${item.difficulty.toLowerCase()}`
                                             )}
@@ -323,7 +323,7 @@ export default function SyncPage({
                                                         : "sync.previewRecent"
                                                 )}
                                             </span>
-                                        </Link>
+                                        </IntentLink>
                                     </li>
                                 ))}
                             </ul>

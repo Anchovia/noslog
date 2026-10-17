@@ -1,13 +1,12 @@
 "use client";
 
-import Link from "next/link";
-
 import {
     useLocale,
     useLocalizedHref,
     useTranslations,
 } from "@/components/i18n/locale-provider";
 import MusicJacket from "@/components/music/music-jacket";
+import IntentLink from "@/components/ui/intent-link";
 import { SkeletonText } from "@/components/ui/skeleton";
 import { ScoreGrade } from "@/features/music/components/chart-leaderboard";
 import type {
@@ -47,7 +46,7 @@ export default function ProfilePlayRow({
             : formatProfilePlayTime(play.playedAt, locale);
     return (
         <li>
-            <Link
+            <IntentLink
                 className="nl-profile-play-row"
                 href={href(
                     `/music/${play.musicIndex}/${play.difficulty.toLowerCase()}`
@@ -123,7 +122,7 @@ export default function ProfilePlayRow({
                         {metric === "grade" ? "Grd" : "pt"}
                     </span>
                 ) : null}
-            </Link>
+            </IntentLink>
         </li>
     );
 }

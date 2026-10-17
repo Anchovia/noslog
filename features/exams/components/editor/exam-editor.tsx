@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft, Save } from "lucide-react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { type FormEvent, useState, useTransition } from "react";
 import { useFieldArray, useForm, useWatch } from "react-hook-form";
@@ -14,6 +13,7 @@ import {
     searchAdminMusic,
 } from "@/app/admin/exams/actions";
 import Button, { foundationButtonClass } from "@/components/ui/button";
+import IntentLink from "@/components/ui/intent-link";
 import {
     type ExamEditorFormValues,
     examEditorSchema,
@@ -316,7 +316,7 @@ export default function ExamEditor({
             >
                 <div className="flex flex-col gap-nl-24 px-nl-16 py-nl-24">
                     <div className="flex items-center gap-nl-12">
-                        <Link
+                        <IntentLink
                             href="/admin/exams"
                             aria-label="검정 목록으로 이동"
                             className={foundationButtonClass({
@@ -325,7 +325,7 @@ export default function ExamEditor({
                             })}
                         >
                             <ArrowLeft className="nl-icon-small" />
-                        </Link>
+                        </IntentLink>
                         <div className="min-w-0">
                             <h1 className="nl-section-title text-nl-content">
                                 {examId ? "검정 수정" : "검정 추가"}

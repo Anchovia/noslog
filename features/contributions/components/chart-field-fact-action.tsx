@@ -1,10 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import { useRef, useState } from "react";
 
 import { useTranslations } from "@/components/i18n/locale-provider";
 import ActionMenu from "@/components/ui/action-menu";
+import IntentLink from "@/components/ui/intent-link";
 import type { ChartFieldProposalField } from "@/features/contributions/schemas/chart-field-proposal-schema";
 
 import ChartFieldProposalDialog from "./chart-field-proposal-dialog";
@@ -54,7 +54,7 @@ export default function ChartFieldFactAction({
                 </span>
             ) : null}
             {empty && !signedIn ? (
-                <Link
+                <IntentLink
                     href={loginHref}
                     className="nl-link nl-text-link--underlined"
                     aria-label={t("contribution.addLabel", {
@@ -62,7 +62,7 @@ export default function ChartFieldFactAction({
                     })}
                 >
                     {t("contribution.add")}
-                </Link>
+                </IntentLink>
             ) : empty ? (
                 <button
                     ref={trigger}
