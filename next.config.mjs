@@ -65,6 +65,16 @@ const nextConfig = {
                     },
                 ],
             },
+            // 파트너 동의 화면은 다른 사이트 안에 끼워 넣지 못하게 CSP 로 강제(RFC 9700 §4.16, 2026-10-20) — 나머지는 Report-Only
+            ...["/authorize", "/:locale(ko|ja|en)/authorize"].map((source) => ({
+                source,
+                headers: [
+                    {
+                        key: "Content-Security-Policy",
+                        value: "frame-ancestors 'none'",
+                    },
+                ],
+            })),
             {
                 source: "/(.*)",
                 headers: [
@@ -78,8 +88,9 @@ const nextConfig = {
                         value: "strict-origin-when-cross-origin",
                     },
                     {
+                        // 위치는 이 사이트에서만(오락실 「내 주변」 · 내 위치 조준선, 2026-10-21) — 전부 막혀 있어 내 주변 찾기가 늘 실패했다
                         key: "Permissions-Policy",
-                        value: "camera=(), microphone=(), geolocation=()",
+                        value: "camera=(), microphone=(), geolocation=(self)",
                     },
                     {
                         key: "Strict-Transport-Security",

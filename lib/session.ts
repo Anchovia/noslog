@@ -22,6 +22,24 @@ interface SessionContent {
         verifiedAt: number;
     };
     onboardingReturnTo?: string;
+    /** 파트너 OAuth 동의 대기(뮤즈캣 연동 B, 2026-10-20) — /oauth/authorize 가 검사한 요청을 동의 화면까지 들고 간다 */
+    oauthAuthorize?: {
+        clientId: string;
+        redirectUri: string;
+        scopes: string[];
+        state: string | null;
+        codeChallenge: string;
+        createdAt: number;
+    };
+    /** 뮤즈캣 연결(A 방향) 진행 중 — PKCE verifier · state · 돌아갈 곳(live) */
+    musecatConnect?: {
+        state: string;
+        verifier: string;
+        returnTo: string;
+        createdAt: number;
+    };
+    /** MUSECAT_MODE=mock 의 흉내 연결 — DB 없이 화면 흐름만 확인한다 */
+    musecatMock?: { username: string; connectedAt: number };
 }
 
 const SESSION_TTL_SECONDS = 14 * 24 * 60 * 60;

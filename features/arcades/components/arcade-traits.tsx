@@ -42,7 +42,7 @@ const CABINET_TAG_ICONS: Record<ArcadeCabinet["tags"][number], LucideIcon> = {
 };
 
 // 특징 보기의 번역 키 — 항목마다 보기가 달라 조합 대신 표로 둔다(없는 조합을 타입으로 막음)
-const FEATURE_VALUE_KEYS = {
+export const FEATURE_VALUE_KEYS = {
     keyWeight: {
         light: "arcades.feature.keyWeight.light",
         normal: "arcades.feature.keyWeight.normal",

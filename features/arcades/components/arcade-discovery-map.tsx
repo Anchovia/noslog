@@ -1,7 +1,12 @@
 "use client";
 
 import * as Popover from "@radix-ui/react-popover";
-import { createLucideIcon } from "lucide-react";
+import {
+    createLucideIcon,
+    LocateFixed,
+    LocateIcon,
+    LocateOff,
+} from "lucide-react";
 import { useEffect, useEffectEvent, useRef, useState } from "react";
 
 import { useTranslations } from "@/components/i18n/locale-provider";
@@ -9,6 +14,7 @@ import Button from "@/components/ui/button";
 import { overlayPosition } from "@/components/ui/overlay-position";
 import { StatusMessage } from "@/components/ui/status-message";
 import { sendAnalytics } from "@/lib/analytics-client";
+import { readTokenPixels } from "@/lib/design-tokens";
 import type {
     KakaoCustomOverlay,
     KakaoMapInstance,
@@ -52,6 +58,11 @@ export default function ArcadeDiscoveryMap({
     focusLevel = 5,
     focusRequest = null,
     wheelZoom = false,
+    onCenterChange,
+    centerRequest = null,
+    locate,
+    labels = false,
+    onBackgroundClick,
 }: {
     appKey: string;
     arcades: PublicArcade[];
@@ -67,6 +78,22 @@ export default function ArcadeDiscoveryMap({
     focusRequest?: { id: number; seq: number } | null;
     /** 마우스 휠 확대·축소 — 지도 전용 영역(목록 페이지)에서만. 페이지 흐름에 끼인 지도는 스크롤이 걸려 끈다 */
     wheelZoom?: boolean;
+    /** 지도 중심이 멈출 때마다(뮤즈캣 목록 「지도에서 고르기」) */
+    onCenterChange?: (center: { latitude: number; longitude: number }) => void;
+    /** 이 좌표로 옮기기(주소 검색 결과) — seq 가 바뀔 때마다 한 번 */
+    centerRequest?: { latitude: number; longitude: number; seq: number } | null;
+    /**
+     * 내 위치 버튼(2026-10-21 뮤즈캣 목록 안 A — 구글 지도 · 카카오맵 · 스타벅스 실측과 같은 조준선 하나).
+     * 범례 「?」 위에 같은 둥근 버튼으로 쌓는다. 상태 = 대기 · 찾는 중(빈 조준선) · 내 위치(채운 조준선 · 정보색) · 거부(사선)
+     */
+    locate?: {
+        state: "idle" | "busy" | "active" | "denied";
+        onLocate: () => void;
+    };
+    /** 핀 옆 이름 판(2026-10-21 전면 대조 ③ — 지도 앱 실측). 다른 이름 판과 겹치면 뒤에 그린 것을 숨긴다 */
+    labels?: boolean;
+    /** 핀 · 버블이 아닌 지도 바탕을 눌렀을 때(고른 오락실 풀기) */
+    onBackgroundClick?: () => void;
 }) {
     const t = useTranslations();
     const container = useRef<HTMLDivElement>(null);
@@ -80,6 +107,11 @@ export default function ArcadeDiscoveryMap({
     );
     const renderRef = useRef<(() => void) | null>(null);
     const selectionRef = useRef<(() => void) | null>(null);
+    // 지도 중심이 멈출 때 알림(뮤즈캣 목록 「지도에서 고르기」) — 지도 만드는 효과 안에서 부른다
+    const centerChanged = useEffectEvent(
+        (center: { latitude: number; longitude: number }) =>
+            onCenterChange?.(center)
+    );
     const [state, setState] = useState<"loading" | "ready" | "error">(
         "loading"
     );
@@ -88,6 +120,8 @@ export default function ArcadeDiscoveryMap({
     );
     const [attempt, setAttempt] = useState(0);
     const select = useEffectEvent(onSelect);
+    const backgroundClick = useEffectEvent(() => onBackgroundClick?.());
+    const showLabels = useEffectEvent(() => labels);
     const currentArcades = useEffectEvent(() => arcades);
     const currentSelected = useEffectEvent(() => selectedId);
     const reportState = useEffectEvent((next: "loading" | "ready" | "error") =>
@@ -160,6 +194,10 @@ export default function ArcadeDiscoveryMap({
                             ),
                             arcade,
                         }));
+                    // 버블 지름은 토큰에서(2026-10-21 — 32 에서 48 까지)
+                    const smallest = readTokenPixels(canvas, "--nl-spacing-32");
+                    const largest = readTokenPixels(canvas, "--nl-spacing-48");
+                    const named: HTMLElement[] = [];
                     for (const group of groupMapPoints(points)) {
                         const cluster = group.points.length > 1;
                         const arcade = group.points[0].arcade;
@@ -187,7 +225,9 @@ export default function ArcadeDiscoveryMap({
                             face.className =
                                 "nl-arcade-marker__bubble nl-control";
                             const diameter = clusterDiameter(
-                                group.points.length
+                                group.points.length,
+                                smallest,
+                                largest
                             );
                             face.style.width = `${diameter}px`;
                             face.style.height = `${diameter}px`;
@@ -212,6 +252,16 @@ export default function ArcadeDiscoveryMap({
                             path.setAttribute("d", PIN_PATH);
                             svg.append(path);
                             button.append(svg);
+                            if (showLabels()) {
+                                // 이름은 버튼의 접근성 이름이 이미 말한다 — 판은 보이기만
+                                const label = document.createElement("span");
+                                label.className =
+                                    "nl-arcade-marker__label nl-metadata";
+                                label.setAttribute("aria-hidden", "true");
+                                label.textContent = arcade.name;
+                                button.append(label);
+                                named.push(label);
+                            }
                         }
                         button.addEventListener("click", () => {
                             if (cluster) {
@@ -251,6 +301,37 @@ export default function ArcadeDiscoveryMap({
                         if (focused === button.dataset.markerKey)
                             button.focus({ preventScroll: true });
                     }
+                    // 이름 판끼리 겹치면 고른 핀 · 먼저 그린 핀 것을 남기고 나머지는 숨긴다
+                    if (named.length)
+                        requestAnimationFrame(() => {
+                            const kept: DOMRect[] = [];
+                            const ordered = [...named].sort(
+                                (a, b) =>
+                                    Number(
+                                        b.parentElement?.getAttribute(
+                                            "aria-pressed"
+                                        ) === "true"
+                                    ) -
+                                    Number(
+                                        a.parentElement?.getAttribute(
+                                            "aria-pressed"
+                                        ) === "true"
+                                    )
+                            );
+                            for (const label of ordered) {
+                                label.hidden = false;
+                                const box = label.getBoundingClientRect();
+                                const hit = kept.some(
+                                    (other) =>
+                                        box.left < other.right &&
+                                        box.right > other.left &&
+                                        box.top < other.bottom &&
+                                        box.bottom > other.top
+                                );
+                                if (hit) label.hidden = true;
+                                else kept.push(box);
+                            }
+                        });
                 };
                 renderRef.current = render;
                 // 선택만 바뀌면 기존 핀의 상태와 겹침 순서만 갱신한다. 포커스와 DOM은 유지한다.
@@ -267,6 +348,7 @@ export default function ArcadeDiscoveryMap({
                         pin.overlay.setZIndex(id === selected ? 3 : 2);
                     }
                     previousSelected = selected;
+                    if (showLabels()) render();
                 };
                 const markBounds = () => {
                     if (programmaticMove.current) return;
@@ -284,9 +366,18 @@ export default function ArcadeDiscoveryMap({
                 const settle = () => {
                     programmaticMove.current = false;
                 };
+                const reportCenter = () => {
+                    const center = map.getCenter();
+                    centerChanged({
+                        latitude: center.getLat(),
+                        longitude: center.getLng(),
+                    });
+                };
                 api.maps.event.addListener(map, "idle", render);
                 api.maps.event.addListener(map, "idle", settle);
+                api.maps.event.addListener(map, "idle", reportCenter);
                 api.maps.event.addListener(map, "dragend", markBounds);
+                api.maps.event.addListener(map, "click", backgroundClick);
                 api.maps.event.addListener(map, "zoom_changed", markBounds);
                 const observer = new ResizeObserver(() => {
                     map.relayout();
@@ -305,7 +396,13 @@ export default function ArcadeDiscoveryMap({
                     observer.disconnect();
                     api.maps.event.removeListener(map, "idle", render);
                     api.maps.event.removeListener(map, "idle", settle);
+                    api.maps.event.removeListener(map, "idle", reportCenter);
                     api.maps.event.removeListener(map, "dragend", markBounds);
+                    api.maps.event.removeListener(
+                        map,
+                        "click",
+                        backgroundClick
+                    );
                     api.maps.event.removeListener(
                         map,
                         "zoom_changed",
@@ -369,6 +466,19 @@ export default function ArcadeDiscoveryMap({
     useEffect(() => {
         if (focusRequest && state === "ready") focusArcade(focusRequest.id);
     }, [focusRequest, state]);
+    const moveTo = useEffectEvent((latitude: number, longitude: number) => {
+        const map = mapRef.current;
+        const api = apiRef.current;
+        if (!map || !api) return;
+        programmaticMove.current = true;
+        focusedPoint.current = { latitude, longitude };
+        if (map.getLevel() > FOCUS_CARD_LEVEL) map.setLevel(FOCUS_CARD_LEVEL);
+        map.setCenter(new api.maps.LatLng(latitude, longitude));
+    });
+    useEffect(() => {
+        if (centerRequest && state === "ready")
+            moveTo(centerRequest.latitude, centerRequest.longitude);
+    }, [centerRequest, state]);
 
     return (
         <div
@@ -436,44 +546,78 @@ export default function ArcadeDiscoveryMap({
                     ) : null}
                 </>
             )}
-            {/* 범례 — 오른쪽 아래 둥근 물음표 버튼, 누르면 버튼 위로 팝오버(바깥을 누르거나 Esc 로 닫힌다) */}
-            {onSearchArea && !(inlineError && state === "error") ? (
-                <Popover.Root>
-                    <Popover.Trigger asChild>
-                        <button
-                            type="button"
-                            className="nl-arcade-map__legend"
-                            aria-label={t("arcades.legend")}
-                        >
-                            <QuestionMark className="nl-icon" aria-hidden />
-                        </button>
-                    </Popover.Trigger>
-                    <Popover.Portal>
-                        <Popover.Content
-                            side="top"
-                            align="end"
-                            sideOffset={overlayPosition.sideOffset}
-                            collisionPadding={overlayPosition.collisionPadding}
-                            className="noslog-ui nl-arcade-map__legend-popover nl-body-secondary"
-                        >
-                            <strong className="nl-control">
-                                {t("arcades.legend")}
-                            </strong>
-                            <ul>
-                                {(
-                                    [
-                                        "arcades.legendPin",
-                                        "arcades.legendBubble",
-                                        "arcades.legendSelected",
-                                    ] as const
-                                ).map((key) => (
-                                    <li key={key}>{t(key)}</li>
-                                ))}
-                            </ul>
-                        </Popover.Content>
-                    </Popover.Portal>
-                </Popover.Root>
-            ) : null}
+            {/* 오른쪽 아래 둥근 버튼 묶음 — 내 위치(있으면) 위 · 범례 아래 */}
+            <div className="nl-arcade-map__controls">
+                {locate && !(inlineError && state === "error") ? (
+                    <button
+                        type="button"
+                        className="nl-arcade-map__legend nl-arcade-map__locate"
+                        data-state={locate.state}
+                        aria-label={t(
+                            locate.state === "busy"
+                                ? "arcades.nearMeBusy"
+                                : locate.state === "denied"
+                                  ? "arcades.myLocationDenied"
+                                  : "arcades.myLocation"
+                        )}
+                        title={t(
+                            locate.state === "denied"
+                                ? "arcades.myLocationDenied"
+                                : "arcades.myLocation"
+                        )}
+                        aria-busy={locate.state === "busy" || undefined}
+                        onClick={locate.onLocate}
+                    >
+                        {locate.state === "busy" ? (
+                            <LocateIcon className="nl-icon" aria-hidden />
+                        ) : locate.state === "denied" ? (
+                            <LocateOff className="nl-icon" aria-hidden />
+                        ) : (
+                            <LocateFixed className="nl-icon" aria-hidden />
+                        )}
+                    </button>
+                ) : null}
+                {/* 범례 — 오른쪽 아래 둥근 물음표 버튼, 누르면 버튼 위로 팝오버(바깥을 누르거나 Esc 로 닫힌다) */}
+                {onSearchArea && !(inlineError && state === "error") ? (
+                    <Popover.Root>
+                        <Popover.Trigger asChild>
+                            <button
+                                type="button"
+                                className="nl-arcade-map__legend"
+                                aria-label={t("arcades.legend")}
+                            >
+                                <QuestionMark className="nl-icon" aria-hidden />
+                            </button>
+                        </Popover.Trigger>
+                        <Popover.Portal>
+                            <Popover.Content
+                                side="top"
+                                align="end"
+                                sideOffset={overlayPosition.sideOffset}
+                                collisionPadding={
+                                    overlayPosition.collisionPadding
+                                }
+                                className="noslog-ui nl-arcade-map__legend-popover nl-body-secondary"
+                            >
+                                <strong className="nl-control">
+                                    {t("arcades.legend")}
+                                </strong>
+                                <ul>
+                                    {(
+                                        [
+                                            "arcades.legendPin",
+                                            "arcades.legendBubble",
+                                            "arcades.legendSelected",
+                                        ] as const
+                                    ).map((key) => (
+                                        <li key={key}>{t(key)}</li>
+                                    ))}
+                                </ul>
+                            </Popover.Content>
+                        </Popover.Portal>
+                    </Popover.Root>
+                ) : null}
+            </div>
         </div>
     );
 }

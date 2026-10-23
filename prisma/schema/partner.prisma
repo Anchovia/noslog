@@ -1,0 +1,213 @@
+// 파트너 OAuth 인가 서버 — 뮤즈캣이 사용자가 동의한 NosLog 기록을 읽는다(뮤즈캣 연동 B 방향, 2026-10-20 결정 · 직접 구현안).
+// 비밀값(클라이언트 비밀 · code · 토큰)은 SHA-256 해시만 둔다. 사용자에게 주는 식별자는 숫자 id 가 아니라 oauth_subjects.subject.
+
+// 파트너가 요청할 수 있는 권한 — 값은 RFC 6749 scope 문자열 그대로
+enum OAuthScope {
+  nostalgia_read @map("nostalgia:read")
+  profile
+
+  @@map("oauth_scope")
+}
+
+// 동의 화면에서 사용자가 고르는 기록 항목(기본 프로필은 필수라 항목이 아니다)
+enum PartnerShareItem {
+  ranks
+  recent_plays
+  song_records
+  summary
+
+  @@map("partner_share_item")
+}
+
+// 연결이 끝난 이유
+enum OAuthGrantRevokeReason {
+  partner // 파트너가 해제를 알림
+  replay // 이미 쓴 code · refresh 토큰이 다시 와서 연결을 폐기
+  security // 운영자 조치
+  user // 사용자가 NosLog 에서 끊음
+
+  @@map("oauth_grant_revoke_reason")
+}
+
+enum PartnerOutboxKind {
+  records_invalidation // 공개 범위 · 항목을 줄였을 때 뮤즈캣 캐시 무효화
+  revocation // 연결 해제 알림(24시간 이상 재시도)
+
+  @@map("partner_outbox_kind")
+}
+
+enum PartnerOutboxStatus {
+  dead
+  delivered
+  pending
+
+  @@map("partner_outbox_status")
+}
+
+// 운영자가 발급하는 파트너 클라이언트(셀프 등록 없음). id 가 곧 공개 client_id
+model OAuthClient {
+  id                      String                  @id
+  name                    String
+  secretHash              String                  @map("secret_hash")
+  // 비밀값 교체 동안 옛 비밀도 받는다
+  previousSecretHash      String?                 @map("previous_secret_hash")
+  previousSecretExpiresAt DateTime?               @map("previous_secret_expires_at")
+  // 문자열 그대로 정확히 비교한다(RFC 9700 §2.1)
+  redirectUris            String[]                @map("redirect_uris")
+  allowedScopes           OAuthScope[]            @map("allowed_scopes")
+  disabledAt              DateTime?               @map("disabled_at")
+  createdAt               DateTime                @default(now()) @map("created_at")
+  updatedAt               DateTime                @updatedAt @map("updated_at")
+  subjects                OAuthSubject[]
+  grants                  OAuthGrant[]
+  receipts                PartnerRequestReceipt[]
+  outbox                  PartnerOutboxMessage[]
+
+  @@map("oauth_clients")
+}
+
+// 클라이언트마다 다른 사용자 식별자(pairwise) — 숫자 · 이메일이 아니고 다시 쓰지 않는다
+model OAuthSubject {
+  id        Int         @id @default(autoincrement())
+  userId    Int         @map("user_id")
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  clientId  String      @map("client_id")
+  client    OAuthClient @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  subject   String      @unique
+  createdAt DateTime    @default(now()) @map("created_at")
+
+  @@unique([userId, clientId])
+  @@map("oauth_subjects")
+}
+
+// 사용자의 동의 한 번 = 연결 하나. 활성 연결은 (사용자, 클라이언트)마다 하나 — 서비스가 트랜잭션으로 지킨다
+model OAuthGrant {
+  id              Int                      @id @default(autoincrement())
+  userId          Int                      @map("user_id")
+  user            User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  clientId        String                   @map("client_id")
+  client          OAuthClient              @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  scopes          OAuthScope[]
+  sharedItems     PartnerShareItem[]       @map("shared_items")
+  // 공동 연결 세대 — 다시 연결할 때마다 올린다(옛 세대의 호출 · 해제는 무시)
+  generation      Int                      @default(1)
+  // refresh 토큰 묶음의 절대 만료(뮤즈캣 spec: 30일 이상) — refresh 로 늘지 않는다
+  familyExpiresAt DateTime                 @map("family_expires_at")
+  lastUsedAt      DateTime?                @map("last_used_at")
+  revokedAt       DateTime?                @map("revoked_at")
+  revokedReason   OAuthGrantRevokeReason?  @map("revoked_reason")
+  createdAt       DateTime                 @default(now()) @map("created_at")
+  updatedAt       DateTime                 @updatedAt @map("updated_at")
+  codes           OAuthAuthorizationCode[]
+  refreshTokens   OAuthRefreshToken[]
+  accessTokens    OAuthAccessToken[]
+  outbox          PartnerOutboxMessage[]
+
+  @@index([userId, clientId])
+  @@index([clientId])
+  @@map("oauth_grants")
+}
+
+// 인가 code — 한 번만 쓴다(consumed_at 이 비어 있을 때만 조건부 UPDATE). 10분 이하
+model OAuthAuthorizationCode {
+  id            Int          @id @default(autoincrement())
+  codeHash      String       @unique @map("code_hash")
+  grantId       Int          @map("grant_id")
+  grant         OAuthGrant   @relation(fields: [grantId], references: [id], onDelete: Cascade)
+  redirectUri   String       @map("redirect_uri")
+  codeChallenge String       @map("code_challenge")
+  scopes        OAuthScope[]
+  expiresAt     DateTime     @map("expires_at")
+  consumedAt    DateTime?    @map("consumed_at")
+  createdAt     DateTime     @default(now()) @map("created_at")
+
+  @@index([grantId])
+  @@index([expiresAt])
+  @@map("oauth_authorization_codes")
+}
+
+// refresh 토큰 — 쓸 때마다 새 토큰으로 바꾸고(parent 로 잇는다), 바뀐 토큰이 다시 오면 연결을 폐기한다(RFC 9700 §4.14.2)
+model OAuthRefreshToken {
+  id           Int                 @id @default(autoincrement())
+  tokenHash    String              @unique @map("token_hash")
+  grantId      Int                 @map("grant_id")
+  grant        OAuthGrant          @relation(fields: [grantId], references: [id], onDelete: Cascade)
+  parentId     Int?                @map("parent_id")
+  parent       OAuthRefreshToken?  @relation("OAuthRefreshTokenRotation", fields: [parentId], references: [id], onDelete: SetNull)
+  children     OAuthRefreshToken[] @relation("OAuthRefreshTokenRotation")
+  expiresAt    DateTime            @map("expires_at")
+  rotatedAt    DateTime?           @map("rotated_at")
+  revokedAt    DateTime?           @map("revoked_at")
+  createdAt    DateTime            @default(now()) @map("created_at")
+  accessTokens OAuthAccessToken[]
+
+  @@index([grantId])
+  @@index([parentId])
+  @@index([expiresAt])
+  @@map("oauth_refresh_tokens")
+}
+
+// access 토큰 — opaque(인가 서버 = 기록 API 라 바로 폐기할 수 있게). 300초 이상
+model OAuthAccessToken {
+  id             Int                @id @default(autoincrement())
+  tokenHash      String             @unique @map("token_hash")
+  grantId        Int                @map("grant_id")
+  grant          OAuthGrant         @relation(fields: [grantId], references: [id], onDelete: Cascade)
+  refreshTokenId Int?               @map("refresh_token_id")
+  refreshToken   OAuthRefreshToken? @relation(fields: [refreshTokenId], references: [id], onDelete: SetNull)
+  scopes         OAuthScope[]
+  expiresAt      DateTime           @map("expires_at")
+  revokedAt      DateTime?          @map("revoked_at")
+  createdAt      DateTime           @default(now()) @map("created_at")
+
+  @@index([grantId])
+  @@index([refreshTokenId])
+  @@index([expiresAt])
+  @@map("oauth_access_tokens")
+}
+
+// 공동 연결 요청 멱등(X-Request-Id, 뮤즈캣 spec 10분) — 같은 id 로 다시 오면 저장한 응답을 돌려준다
+model PartnerRequestReceipt {
+  id             Int         @id @default(autoincrement())
+  clientId       String      @map("client_id")
+  client         OAuthClient @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  requestId      String      @map("request_id")
+  endpoint       String
+  requestHash    String      @map("request_hash")
+  responseStatus Int?        @map("response_status")
+  responseBody   Json?       @map("response_body")
+  expiresAt      DateTime    @map("expires_at")
+  createdAt      DateTime    @default(now()) @map("created_at")
+
+  @@unique([clientId, requestId])
+  @@index([expiresAt])
+  @@map("partner_request_receipts")
+}
+
+// 파트너에게 꼭 보내야 하는 일 — 상태를 바꾸는 같은 트랜잭션에서 넣고, 바로 한 번 + cron 이 다시 보낸다(transactional outbox).
+// id 를 그대로 X-Request-Id 로 쓴다
+model PartnerOutboxMessage {
+  id             String              @id @default(uuid())
+  clientId       String              @map("client_id")
+  client         OAuthClient         @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  grantId        Int?                @map("grant_id")
+  grant          OAuthGrant?         @relation(fields: [grantId], references: [id], onDelete: SetNull)
+  kind           PartnerOutboxKind
+  generation     Int?
+  payload        Json
+  status         PartnerOutboxStatus @default(pending)
+  attempts       Int                 @default(0)
+  nextAttemptAt  DateTime            @default(now()) @map("next_attempt_at")
+  // 보내는 중인 줄 — 이 시각이 지나면 다른 실행이 다시 집는다
+  lockedUntil    DateTime?           @map("locked_until")
+  lastHttpStatus Int?                @map("last_http_status")
+  lastError      String?             @map("last_error")
+  // 이 시각까지 재시도(해제 알림은 만든 뒤 24시간 이상)
+  giveUpAt       DateTime            @map("give_up_at")
+  deliveredAt    DateTime?           @map("delivered_at")
+  createdAt      DateTime            @default(now()) @map("created_at")
+
+  @@index([status, nextAttemptAt])
+  @@index([grantId])
+  @@map("partner_outbox_messages")
+}

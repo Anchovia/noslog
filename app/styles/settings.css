@@ -403,3 +403,12 @@
         margin-top: calc(var(--nl-spacing-12) - var(--nl-spacing-4));
     }
 }
+/* 뮤즈캣 로고 원(2026-10-21 시안) — 같은 원 40 에 밝은 면 · 캔버스 글자 「M」 */
+.noslog-ui .nl-settings__logo--mark {
+    background: var(--nl-content-interactive);
+    color: var(--nl-surface-canvas);
+}
+/* 촘촘한 설정 구역(뮤즈캣 상세 시안) — 제목 · 내용 사이 8 */
+.noslog-ui .nl-settings__zone--compact {
+    gap: var(--nl-spacing-8);
+}

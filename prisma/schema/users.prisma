@@ -1,72 +1,78 @@
 // 사용자 · 계정 · 업적 · 고정 기록
 
 model User {
-  id                       Int                         @id @default(autoincrement())
-  username                 String?                     @unique
-  nostalgiaName            String?                     @map("nostalgia_name")
-  discordId                String?                     @unique @map("discord_id")
-  discordName              String?                     @map("discord_name")
-  discordUsername          String?                     @map("discord_username")
-  avatar                   String?
-  avatarUserManaged        Boolean                     @default(false) @map("avatar_user_managed")
-  country                  String                      @default("ko-KR")
-  locale                   LocaleCode                  @default(ko)
-  showLocalizedMusicTitle  Boolean                     @default(true) @map("show_localized_music_title")
-  profileCompletedAt       DateTime?                   @map("profile_completed_at")
-  preferredArcadeId        Int?                        @map("preferred_arcade_id")
-  hideNostalgiaName        Boolean                     @default(true) @map("hide_nostalgia_name")
-  hideDiscordName          Boolean                     @default(true) @map("hide_discord_name")
-  hidePlayCount            Boolean                     @default(true) @map("hide_play_count")
-  hidePreferredArcade      Boolean                     @default(true) @map("hide_preferred_arcade")
-  hidePlayActivity         Boolean                     @default(true) @map("hide_play_activity")
+  id                        Int                         @id @default(autoincrement())
+  username                  String?                     @unique
+  nostalgiaName             String?                     @map("nostalgia_name")
+  discordId                 String?                     @unique @map("discord_id")
+  discordName               String?                     @map("discord_name")
+  discordUsername           String?                     @map("discord_username")
+  avatar                    String?
+  avatarUserManaged         Boolean                     @default(false) @map("avatar_user_managed")
+  country                   String                      @default("ko-KR")
+  locale                    LocaleCode                  @default(ko)
+  showLocalizedMusicTitle   Boolean                     @default(true) @map("show_localized_music_title")
+  profileCompletedAt        DateTime?                   @map("profile_completed_at")
+  preferredArcadeId         Int?                        @map("preferred_arcade_id")
+  hideNostalgiaName         Boolean                     @default(true) @map("hide_nostalgia_name")
+  hideDiscordName           Boolean                     @default(true) @map("hide_discord_name")
+  hidePlayCount             Boolean                     @default(true) @map("hide_play_count")
+  hidePreferredArcade       Boolean                     @default(true) @map("hide_preferred_arcade")
+  hidePlayActivity          Boolean                     @default(true) @map("hide_play_activity")
   // 플레이 점수 공개(2026-09-18) — 켜면 랭킹에서 빠지고 프로필의 점수 · 기록이 남에게 가려진다. 기본 공개
-  hidePlayScores           Boolean                     @default(false) @map("hide_play_scores")
-  preferredArcade          Arcade?                     @relation(fields: [preferredArcadeId], references: [id], onDelete: SetNull)
-  role                     UserRole                    @default(user)
-  syncTokenVersion         Int                         @default(0) @map("sync_token_version")
-  createdAt                DateTime                    @default(now()) @map("created_at")
-  updatedAt                DateTime                    @updatedAt @map("updated_at")
-  playData                 PlayData[]
-  bestGrades               UserBestGrade[]
-  ratingHistory            UserRatingHistory[]
-  bingoProgress            BingoCellProgress[]
-  communityEvaluations     CommunityChartEvaluation[]
-  communityHelpful         CommunityOpinionHelpful[]
-  communityReplies         CommunityOpinionReply[]
-  communityReplyLikes      CommunityOpinionReplyLike[]
-  communityReports         CommunityOpinionReport[]    @relation("CommunityReportReporter")
-  communityReportsAuthored CommunityOpinionReport[]    @relation("CommunityReportAuthor")
-  chartGoalVotes           ChartGoalVote[]
-  chartGoalVoteAudit       ChartGoalVoteAudit[]
-  dataSyncs                DataSync[]
-  chartPlayHistory         ChartPlayHistory[]
-  chartRecordSnapshots     ChartRecordSnapshot[]
-  examSubmissions          ExamSubmission[]            @relation("ExamSubmissionAuthor")
-  examSubmissionsReviewed  ExamSubmission[]            @relation("ExamSubmissionReviewer")
-  examAchievements         ExamAchievement[]
-  uploadTokenGrants        UploadTokenGrant[]
-  feedbackReports          FeedbackReport[]
-  cabinetChecks            ArcadeCabinetCheck[]
-  chartPatternsCreated     ChartPattern[]              @relation("ChartPatternCreatedBy")
-  chartPatternsUpdated     ChartPattern[]              @relation("ChartPatternUpdatedBy")
-  chartPatternsPublished   ChartPattern[]              @relation("ChartPatternPublishedBy")
-  chartPatternRevisions    ChartPatternRevision[]      @relation("ChartPatternRevisionCreatedBy")
-  communityEvents          CommunityEvent[]            @relation("CommunityEventAuthor")
-  communityEventsReviewed  CommunityEvent[]            @relation("CommunityEventReviewer")
-  pollVotes                PollVote[]
-  fieldProposals           ChartFieldProposal[]        @relation("ChartFieldProposalAuthor")
-  fieldProposalsReviewed   ChartFieldProposal[]        @relation("ChartFieldProposalReviewer")
-  contributionPoints       ContributionPoint[]
-  chartDrafts              ChartDraft[]                @relation("ChartDraftAuthor")
-  chartDraftsReviewed      ChartDraft[]                @relation("ChartDraftReviewer")
-  chartComments            ChartComment[]              @relation("ChartCommentAuthor")
-  chartCommentsResolved    ChartComment[]              @relation("ChartCommentResolver")
-  chartPatternsAuthored    ChartPattern[]              @relation("ChartPatternAuthor")
-  achievements             UserAchievement[]
-  achievementShowcase      UserAchievementShowcase[]
-  pinnedRecords            UserPinnedRecord[]
-  ratings                  PlayerRating[]
-  stats                    PlayerStats?
+  hidePlayScores            Boolean                     @default(false) @map("hide_play_scores")
+  preferredArcade           Arcade?                     @relation(fields: [preferredArcadeId], references: [id], onDelete: SetNull)
+  role                      UserRole                    @default(user)
+  syncTokenVersion          Int                         @default(0) @map("sync_token_version")
+  createdAt                 DateTime                    @default(now()) @map("created_at")
+  updatedAt                 DateTime                    @updatedAt @map("updated_at")
+  playData                  PlayData[]
+  bestGrades                UserBestGrade[]
+  ratingHistory             UserRatingHistory[]
+  bingoProgress             BingoCellProgress[]
+  communityEvaluations      CommunityChartEvaluation[]
+  communityHelpful          CommunityOpinionHelpful[]
+  communityReplies          CommunityOpinionReply[]
+  communityReplyLikes       CommunityOpinionReplyLike[]
+  communityReports          CommunityOpinionReport[]    @relation("CommunityReportReporter")
+  communityReportsAuthored  CommunityOpinionReport[]    @relation("CommunityReportAuthor")
+  chartGoalVotes            ChartGoalVote[]
+  chartGoalVoteAudit        ChartGoalVoteAudit[]
+  dataSyncs                 DataSync[]
+  chartPlayHistory          ChartPlayHistory[]
+  chartRecordSnapshots      ChartRecordSnapshot[]
+  examSubmissions           ExamSubmission[]            @relation("ExamSubmissionAuthor")
+  examSubmissionsReviewed   ExamSubmission[]            @relation("ExamSubmissionReviewer")
+  examAchievements          ExamAchievement[]
+  uploadTokenGrants         UploadTokenGrant[]
+  feedbackReports           FeedbackReport[]
+  cabinetChecks             ArcadeCabinetCheck[]
+  chartPatternsCreated      ChartPattern[]              @relation("ChartPatternCreatedBy")
+  chartPatternsUpdated      ChartPattern[]              @relation("ChartPatternUpdatedBy")
+  chartPatternsPublished    ChartPattern[]              @relation("ChartPatternPublishedBy")
+  chartPatternRevisions     ChartPatternRevision[]      @relation("ChartPatternRevisionCreatedBy")
+  communityEvents           CommunityEvent[]            @relation("CommunityEventAuthor")
+  communityEventsReviewed   CommunityEvent[]            @relation("CommunityEventReviewer")
+  pollVotes                 PollVote[]
+  fieldProposals            ChartFieldProposal[]        @relation("ChartFieldProposalAuthor")
+  fieldProposalsReviewed    ChartFieldProposal[]        @relation("ChartFieldProposalReviewer")
+  contributionPoints        ContributionPoint[]
+  chartDrafts               ChartDraft[]                @relation("ChartDraftAuthor")
+  chartDraftsReviewed       ChartDraft[]                @relation("ChartDraftReviewer")
+  chartComments             ChartComment[]              @relation("ChartCommentAuthor")
+  chartCommentsResolved     ChartComment[]              @relation("ChartCommentResolver")
+  chartPatternsAuthored     ChartPattern[]              @relation("ChartPatternAuthor")
+  achievements              UserAchievement[]
+  achievementShowcase       UserAchievementShowcase[]
+  pinnedRecords             UserPinnedRecord[]
+  ratings                   PlayerRating[]
+  stats                     PlayerStats?
+  oauthSubjects             OAuthSubject[]
+  oauthGrants               OAuthGrant[]
+  musecatConnection         MusecatConnection?
+  musecatActions            MusecatAction[]
+  arcadeExternalIdsVerified ArcadeExternalId[]          @relation("ArcadeExternalIdVerifier")
+  musecatCabinetNotes       MusecatCabinetNote[]        @relation("MusecatCabinetNoteEditor")
 
   @@index([preferredArcadeId])
   // 관리자 대시보드 가입자 집계(2026-10-16 DB 재설계 P2)

@@ -21,8 +21,17 @@ import useMediaQuery from "@/lib/hooks/use-media-query";
  */
 export default function ArcadePhotos({
     photos,
+    credits,
+    strip = false,
 }: {
     photos: PublicArcade["photos"];
+    /**
+     * 제목 아래 사진 줄(2026-10-22 사용자 — 네이버 지도 장소 화면 그대로): 둥근 정사각 사진을 가로로 늘어놓고 옆으로 밀어 본다.
+     * 누르면 그 사진이 전체 화면 뷰어에서 열린다. 사진이 없으면 같은 높이의 자리표시자 한 칸
+     */
+    strip?: boolean;
+    /** 사진 출처 칩(뮤즈캣 시안 「작성자 · 날짜」) — 사진 id 별 글, 한 장 보기의 지금 사진에만 */
+    credits?: Record<number, string>;
 }) {
     const t = useTranslations();
     const wide = useMediaQuery("(min-width: 1056px)");
@@ -38,10 +47,74 @@ export default function ArcadePhotos({
     // 사진이 없거나 전부 못 불러오면 같은 자리에 자리표시자 — 모든 오락실이 같은 틀
     if (!visible.length)
         return (
-            <div className="nl-arcade-photos nl-arcade-photos--empty nl-body-secondary">
+            <div
+                className={
+                    strip
+                        ? "nl-arcade-photos nl-arcade-photos--empty nl-arcade-photos--strip-empty nl-body-secondary"
+                        : "nl-arcade-photos nl-arcade-photos--empty nl-body-secondary"
+                }
+            >
                 <ImageIcon className="nl-icon nl-icon--large" aria-hidden />
                 <p>{t("arcades.photoPending")}</p>
             </div>
+        );
+    const viewer = (
+        <PhotoViewer
+            photos={visible}
+            index={active}
+            open={open}
+            onIndexChange={setIndex}
+            onOpenChange={setOpen}
+            onError={markFailed}
+            onCloseAutoFocus={(event) => {
+                event.preventDefault();
+                opener.current?.focus();
+            }}
+            label={(position, total) =>
+                t("arcades.photo", { index: position, total })
+            }
+            previousLabel={t("arcades.photoPrevious")}
+            nextLabel={t("arcades.photoNext")}
+        />
+    );
+    if (strip)
+        return (
+            <>
+                <ul className="nl-arcade-photos-strip">
+                    {visible.map((photo, photoIndex) => (
+                        <li key={photo.id}>
+                            <button
+                                type="button"
+                                className="nl-arcade-photos-strip__item"
+                                aria-label={t("arcades.photo", {
+                                    index: photoIndex + 1,
+                                    total: visible.length,
+                                })}
+                                onClick={(event) =>
+                                    openViewer(event.currentTarget, photoIndex)
+                                }
+                            >
+                                <Image
+                                    src={photo.url}
+                                    alt={photo.alt}
+                                    fill
+                                    sizes="160px"
+                                    loading={
+                                        photoIndex === 0 ? "eager" : "lazy"
+                                    }
+                                    onError={() => markFailed(photo.id)}
+                                />
+                                {credits?.[photo.id] ? (
+                                    <span className="nl-tag nl-arcade-photos__credit">
+                                        {credits[photo.id]}
+                                    </span>
+                                ) : null}
+                            </button>
+                        </li>
+                    ))}
+                </ul>
+                {viewer}
+            </>
         );
     const mosaic = wide && visible.length > 1;
     // 모자이크는 순서 고정(첫 장이 큰 사진) — 넘기지 않으니 같은 사진이 두 번 보이지 않는다
@@ -136,6 +209,11 @@ export default function ArcadePhotos({
                             {active + 1} / {visible.length}
                         </span>
                     )}
+                    {!mosaic && credits?.[visible[active].id] ? (
+                        <span className="nl-tag nl-arcade-photos__credit">
+                            {credits[visible[active].id]}
+                        </span>
+                    ) : null}
                     {!mosaic && visible.length > 1 ? (
                         <>
                             <button
@@ -198,23 +276,7 @@ export default function ArcadePhotos({
                     </>
                 ) : null}
             </div>
-            <PhotoViewer
-                photos={visible}
-                index={active}
-                open={open}
-                onIndexChange={setIndex}
-                onOpenChange={setOpen}
-                onError={markFailed}
-                onCloseAutoFocus={(event) => {
-                    event.preventDefault();
-                    opener.current?.focus();
-                }}
-                label={(position, total) =>
-                    t("arcades.photo", { index: position, total })
-                }
-                previousLabel={t("arcades.photoPrevious")}
-                nextLabel={t("arcades.photoNext")}
-            />
+            {viewer}
         </>
     );
 }

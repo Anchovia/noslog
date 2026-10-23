@@ -7,6 +7,9 @@ export const LOCALE_COOKIE_NAME = "noslog-locale";
 export const LOCALE_REQUEST_HEADER = "x-noslog-locale";
 
 const NON_LOCALIZED_PATH_PREFIXES = [
+    // 파트너가 부르는 OAuth · 메타데이터 주소(뮤즈캣 연동 B, 2026-10-20) — 언어를 붙이지 않는다
+    "/.well-known",
+    "/oauth",
     "/admin",
     "/api",
     "/discord",

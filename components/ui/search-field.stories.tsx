@@ -58,3 +58,5 @@ export const Busy: Story = {
     args: { value: "NOSTALGIA", busy: true, busyLabel: "검색 중" },
 };
 export const Disabled: Story = { args: { disabled: true } };
+/** 지도 위에 떠 있는 검색 — 떠 있는 창 경계 · 그림자 */
+export const Floating: Story = { args: { floating: true } };

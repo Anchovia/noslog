@@ -12,6 +12,7 @@ export interface KakaoMapInstance {
         };
     };
     setBounds(bounds: KakaoLatLngBounds): void;
+    getCenter(): KakaoLatLng;
     panTo(position: KakaoLatLng): void;
     setCenter(position: KakaoLatLng): void;
     relayout(): void;
@@ -42,6 +43,23 @@ interface KakaoGeocoder {
     addressSearch(
         address: string,
         callback: (result: GeocoderResult[], status: string) => void
+    ): void;
+    /** 좌표 → 주소(경도 · 위도 순) — 뮤즈캣 목록의 기준 위치 이름 */
+    coord2Address(
+        longitude: number,
+        latitude: number,
+        callback: (
+            result: {
+                address: {
+                    address_name: string;
+                    region_1depth_name: string;
+                    region_2depth_name: string;
+                    region_3depth_name: string;
+                } | null;
+                road_address: { address_name: string } | null;
+            }[],
+            status: string
+        ) => void
     ): void;
 }
 
@@ -84,6 +102,13 @@ export interface KakaoMapsApi {
         }) => KakaoCustomOverlay;
         services: {
             Geocoder: new () => KakaoGeocoder;
+            /** 장소 이름 검색(역 · 가게) — 뮤즈캣 목록 검색칸이 주소로 못 찾을 때 */
+            Places: new () => {
+                keywordSearch(
+                    keyword: string,
+                    callback: (result: GeocoderResult[], status: string) => void
+                ): void;
+            };
             Status: { OK: string };
         };
     };
