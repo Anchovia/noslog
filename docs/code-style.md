@@ -16,7 +16,7 @@ NosLog's existing runtime contracts, and the chart viewer/editor boundary.
 - Use native `fetch` for HTTP. Axios is not part of the NosLog stack.
 - Make migrations feature by feature. Do not perform a repository-wide move
   without verifying every import, route, test, and external consumer.
-- Preserve the existing chart viewer and chart editor in their entirety.
+- Keep the chart editor's canvas and editing controls; its admin, contributor and review modes differ only in the shell (see `AGENTS.md`).
 
 ## Directory responsibilities
 

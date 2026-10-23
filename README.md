@@ -148,9 +148,10 @@ docs/                 디자인, 기능, 운영, 코드 스타일 문서
 
 ## 문서 안내
 
-- [디자인 가이드](docs/design/README.md): 토큰, 레이아웃, 공용 부품, 로딩과 화면 확인 기준
+- [디자인 가이드](docs/design/README.md): 기초값 · 공용 부품 · 패턴 · 화면별 규칙과 화면 확인 기준
 - [기능 규칙](docs/design/product-rules.md): 기록·동기화·투표·개인정보 동작
-- [결정 기록](docs/design/decisions.md): 화면 · 동작 · 구조 결정과 이유
+- [결정 기록](docs/decisions/README.md): 화면 · 동작 · 구조 결정과 이유
+- [AI 티 확인](docs/ai-check.md): 작업마다 보는 확인 목록
 - [코드 스타일](docs/code-style.md): 디렉터리, API 응답, Server Action, 폼과 스키마 · 마이그레이션 규칙
 - [공용 UI 가이드](docs/ui/README.md): 부품 선택과 스토리 작성
 - [협업 컨벤션](docs/CONVENTION.md): 브랜치 · 커밋 · PR 규칙

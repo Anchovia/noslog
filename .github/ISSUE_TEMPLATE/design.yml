@@ -35,7 +35,7 @@ body:
               320/390/768/1280px·변경 경계 양쪽·ko/ja/en 확인
               높이·간격·정렬·가로 넘침 실측
               키보드 포커스·상태·Storybook play/axe 확인
-              토큰/규칙 결정 시 코드·가이드·decisions.md·기대값 정합
+              토큰/규칙 결정 시 코드·가이드·결정 파일(docs/decisions)·기대값 정합
       validations:
           required: true
     - type: textarea

@@ -1,6 +1,6 @@
 # 공용 UI 사용과 검증
 
-디자인 값의 원본은 [디자인 가이드](../design/README.md)와 `app/styles/tokens.css`다.
+디자인 값의 원본은 `app/styles/tokens.css`, 부품 모양 · 상태는 [디자인 가이드의 부품 문서](../design/README.md#부품)다.
 이 문서는 공용 부품 사용법과 Storybook 검증 방법만 관리한다.
 
 ## 실행
@@ -23,7 +23,7 @@ npm run storybook -- --port 6007
 기존 `npm test`는 Node 기반 단위 테스트를 그대로 실행한다. 브라우저 부품 검사는
 `npm run test:storybook`으로 별도 실행하며 CI에서도 필수 작업으로 실행한다.
 
-Props·상태·ref 계약은 [계약 문서](./contracts.md), 비교/적용 범위는 [frontend 비교 기록](./frontend-comparison.md)을 따른다.
+Props·상태·ref 계약은 [계약 문서](./contracts.md)를 따른다. 다른 리포와 비교한 옛 기록은 [보관 문서](../archive/frontend-comparison.md)에 있다.
 
 ## 부품 선택
 
@@ -41,8 +41,13 @@ Props·상태·ref 계약은 [계약 문서](./contracts.md), 비교/적용 범�
 | `Checkbox`         | 저장하는 폼의 켜기·끄기. 보이는 `label` 필수                                |
 | `Switch`           | 즉시 적용하는 켜기·끄기. 접근성 이름 필수                                   |
 | `AreaTabs`         | 페이지 안 큰 구역 전환. 방향키 탐색 후 Enter/Space로 활성화                 |
+| `SurfaceCard`      | 면 카드(면 · 모서리 container · 안쪽 12/16, `roomy` 16)                     |
+| `StatusDot`        | 상태 색 점 8. 늘 상태 글자와 함께                                           |
+| `UnitInput`        | 단위 붙은 입력칸(「1 대」 · 「500 원」)                                     |
+| `IconRow`          | 아이콘 정보 줄(아이콘 · 본문 + 보조 줄 · 끝 동작), `IconRows` 안에서 구분선 |
+| `Stepper`          | 작은 정수 − · 값 · + 한 줄(대수)                                            |
 
-`components/ui`의 실제 부품 파일 51개에 대응하는 스토리 51개와 토큰 예제 1개를 제공한다.
+`components/ui`의 실제 부품 파일 56개에 대응하는 스토리 56개와 토큰 예제 1개를 제공한다.
 폼 입력·스켈레톤·수치 목록의 이름 있는 부품은 해당 파일의 스토리에서 함께 다룬다.
 `use-select-open.ts` 같은 내부 훅은 이를 사용하는 Select·CompactSelect의 동작으로 검증한다.
 
@@ -50,7 +55,7 @@ Props·상태·ref 계약은 [계약 문서](./contracts.md), 비교/적용 범�
 | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | 비동기·메뉴 | `ActionButton` 중복 실행 차단 · `ActionMenu` 항목 이동/선택/포커스 복귀 · `SortMenu` 비활성/종속 옵션                                                                                                  |
 | 필터·선택   | `CompactSelect` 키보드/크기 · `FilterChips` 다중/배타 선택 · `SelectionList` radio/checkbox · `RadioGroup` 오류/disabled · `RangeSlider` 손잡이 값/확정 · `ScalePicker` 선택 해제/방향키               |
-| 검색·이동   | `SearchField` 지우기/대기 · `Pagination` 앞뒤/마지막/한 페이지/링크 · `MetricSwitch` 포커스와 적용 분리 · `BackLink`·`AreaTabLinks`·`FilterChipLinks` 주소/현재 위치                                   |
+| 검색·이동   | `SearchField` 지우기/대기 · 떠 있는 변형 · `Pagination` 앞뒤/마지막/한 페이지/링크 · `MetricSwitch` 포커스와 적용 분리 · `BackLink`·`AreaTabLinks`·`FilterChipLinks` 주소/현재 위치                    |
 | 조합·레이어 | `AppliedTokens` 개별/전체 해제 · `FilterGroup` 제목/보조 정보 · `FilterSurface` 팝오버/전체 화면 · `FullScreenDialog`·`ResponsiveDialog` 닫기/포커스 복귀 · `Disclosure` 펼침 · `TermHelp` 포커스/닫기 |
 | 편집·미디어 | `MarkdownEditor` 서식/미리보기/읽기 전용 · `FileRow` 임시 파일/삭제/긴 이름 · `PhotoViewer` 넘김/순환/한 장/빈 목록                                                                                    |
 | 데이터 표시 | `LineChart` 한 점/빈 상태/두 계열/정확한 표/키보드 · `BarList`·`StackedBar`·`StatStrip` 값 없음/로딩/수치 텍스트                                                                                       |
@@ -130,6 +135,6 @@ Storybook은 실제 페이지의 레이아웃·데이터·권한·저장 흐름 
 실제 DB·Blob·로그인·OAuth·redirect를 실행하지 않는다.
 
 온보딩 · 제보 스토리의 `Contract*`(사이드바에 숨김)는 320 · 671 · 672 · 1055 · 1056px에서 입력 글자 16px · 가로 넘침 · 입력 높이 · 창 전환 경계를 검사한다. 스크린샷 비교는 2026-10-15 폐지했다.
-차트 툴팁의 대비 위반은 현재 디자인 유지 결정으로 남아 있으며 자동 검사를 끄지 않는다. 관리자용 `Badge` 는 공용 태그(`nl-tag`)로 옮겨 대비 위반이 없다(2026-10-15 B5 2단계).
+관리자용 `Badge` 는 공용 태그(`nl-tag`)와 같다. 자동 검사를 끄거나 예외를 늘려 통과시키지 않는다.
 
 전체 재배치의 한글 A안은 `Features/Announcements/TierRebalanceImageBuilder`에서 확인한다. [서열 변경 공지 이미지](tier-change-images.md)의 입력 계약과 전체 CSV 안내를 따른다.
