@@ -517,6 +517,13 @@ function snapByBeat(
 /** 글리산도 조각 사이 최대 간격(영상 프레임) · 한 조각에서 다음 조각까지 최대 칸 이동 — Altale 은 약 5프레임 · 1~2칸, 빠진 조각이 있어도 11프레임 */
 export const VID2BMAP_GLISSANDO_GAP_FRAMES = 12;
 export const VID2BMAP_GLISSANDO_LANE_STEP = 4;
+/**
+ * AI 가 가로대를 건너뛰었다고 보는 조건 — 가로대 간격이 이만큼(프레임) 이상인 느린 글리산도에서, 간격의 RATIO 배 넘게 벌어진 곳만.
+ * 빠른 글리산도(2~3프레임)는 간격이 원래 들쭉날쭉해 채우면 판정 수가 넘쳤다(2026-10-19 — 연구실 데이터셋 글리산도 곡
+ * 114곡 중 83 → 104곡, 우리 추출 35곡 중 26 → 31곡이 공식 · 콤보와 일치. Altale 34마디 11 · 4프레임은 그대로 채움)
+ */
+export const VID2BMAP_GLISSANDO_SKIP_MIN_FRAMES = 4;
+export const VID2BMAP_GLISSANDO_SKIP_RATIO = 2.5;
 
 /**
  * 글리산도 조각 → 줄기. vid2bmap 은 대각선 노트를 가로대(조각)마다 [y, x1, x2] 로 준다(Altale 42조각 = 6줄기).
@@ -575,7 +582,6 @@ function simplifyPath<T extends { tick: number; lane: number }>(
     ];
 }
 
-/** 추출 결과 → 초안에 넣을 노트 · 손 확인 목록 · 경고 */
 /** 뒤에 시작하는 노트와 겹치는 테누토를 그 노트 한 격자 앞에서 끝낸다(겹침이 여럿이면 가장 앞 노트 기준) */
 function trimVid2bmapTenutos(
     notes: ChartNote[],
@@ -627,6 +633,7 @@ function trimVid2bmapTenutos(
     };
 }
 
+/** 추출 결과 → 초안에 넣을 노트 · 손 확인 목록 · 경고 */
 export function convertVid2bmap(
     result: Vid2bmapResult,
     notes: Vid2bmapRawNote[],
@@ -852,7 +859,7 @@ export function convertVid2bmap(
                 }))
             );
             // 가로대 하나 = 판정 하나(アルストロメリア 6 · Gaia 10 모두 조각 수 = 판정 수와 맞음, 2026-09-25).
-            // 가로대 수 = 조각 수 + AI 가 건너뛴 자리(보통 간격의 2배 이상 벌어진 곳을 내림으로 — Altale 34마디 11 · 4 · 11 · 4프레임은 하나씩).
+            // 가로대 수 = 조각 수 + AI 가 건너뛴 자리(느린 글리산도에서 보통 간격의 2.5배 넘게 벌어진 곳을 내림으로 — Altale 34마디 11 · 4 · 11 · 4프레임은 하나씩).
             // 세 곡 판정 수와 모두 일치: Altale 1,604 · アルストロメリア 1,394 · Gaia 1,539
             // 게임의 가로대 간격은 표준 격자에 딱 맞지 않아(Gaia 180 BPM: 약 1/9박) 첫 · 끝 조각 사이를 그 수로 나눈다
             const frameGaps = chain
@@ -866,14 +873,17 @@ export function convertVid2bmap(
             );
             const typical =
                 shortest[Math.floor(shortest.length / 2)] ?? regular[0] ?? 1;
-            const missing = frameGaps.reduce(
-                (sum, frames) =>
-                    sum +
-                    (frames >= typical * 2
-                        ? Math.floor(frames / typical) - 1
-                        : 0),
-                0
-            );
+            const missing =
+                typical >= VID2BMAP_GLISSANDO_SKIP_MIN_FRAMES
+                    ? frameGaps.reduce(
+                          (sum, frames) =>
+                              sum +
+                              (frames >= typical * VID2BMAP_GLISSANDO_SKIP_RATIO
+                                  ? Math.floor(frames / typical) - 1
+                                  : 0),
+                          0
+                      )
+                    : 0;
             const rungCount = chain.length + missing;
             const spanTicks = Math.max(
                 rungCount - 1,

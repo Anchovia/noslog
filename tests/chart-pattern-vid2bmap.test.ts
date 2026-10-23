@@ -1314,6 +1314,34 @@ describe("vid2bmap glissando", () => {
         ).toHaveLength(7);
     });
 
+    it("does not fill gaps in a fast glissando whose spacing is uneven by nature (2026-10-19)", () => {
+        // 2~3프레임 간격 사이에 5프레임 — 빠른 글리산도는 간격이 원래 들쭉날쭉해 건너뛴 가로대로 보지 않는다(조각 수 = 판정 수)
+        const ys = [0, 2, 4, 7, 12, 14, 16, 19];
+        const fast: Vid2bmapResult = {
+            ...result,
+            simple: [],
+            glissando: ys.map((y, index) => [40 + y, index, index + 2]),
+        };
+        const conversion = convertVid2bmap(
+            fast,
+            collectVid2bmapNotes(fast).notes,
+            {
+                timingPoints: [point(0, 0, 90, 3, 4)],
+                firstBarTick: 0,
+                snapDivisor: 6,
+                include: {
+                    standard: true,
+                    tenuto: true,
+                    trill: true,
+                    glissando: true,
+                },
+            }
+        );
+        expect(
+            getGlissandoSnapRenderPoints(conversion.notes[0], 480)
+        ).toHaveLength(8);
+    });
+
     it("leaves glissando out unless asked", () => {
         const conversion = convertVid2bmap(result, collected.notes, {
             timingPoints: [point(0, 0, 90, 3, 4)],
