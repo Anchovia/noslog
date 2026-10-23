@@ -69,7 +69,7 @@
     content: "";
     position: absolute;
     inset: 0;
-    border: var(--nl-stroke-default) solid var(--nl-focus-ring);
+    border: var(--nl-stroke-strong) solid var(--nl-focus-ring);
     border-radius: inherit;
     pointer-events: none;
 }

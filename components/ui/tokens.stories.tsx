@@ -43,7 +43,7 @@ export const Default: Story = {
         const sample = canvas.getByTestId("token-sample");
         await expect(getComputedStyle(sample).gap).toBe("16px");
         await expect(getComputedStyle(sample).paddingTop).toBe("16px");
-        await expect(getComputedStyle(sample).borderRadius).toBe("8px");
+        await expect(getComputedStyle(sample).borderRadius).toBe("12px");
         const control = canvas.getByTestId("control-size");
         const expectedHeight = window.matchMedia("(min-width: 1056px)").matches
             ? "40px"

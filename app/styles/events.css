@@ -41,7 +41,7 @@
     }
 }
 .noslog-ui .nl-event-card:focus-visible {
-    outline: var(--nl-stroke-default) solid var(--nl-focus-ring);
+    outline: var(--nl-stroke-strong) solid var(--nl-focus-ring);
     outline-offset: var(--nl-spacing-4);
     border-radius: var(--nl-radius-container);
 }

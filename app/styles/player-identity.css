@@ -200,7 +200,7 @@
 .noslog-ui .nl-compact-select.nl-compact-select--outlined:focus-visible {
     outline: none;
     box-shadow:
-        inset 0 0 0 var(--nl-stroke-default) var(--nl-focus-ring),
+        inset 0 0 0 var(--nl-stroke-strong) var(--nl-focus-ring),
         0 0 0 var(--nl-halo-control) var(--nl-state-halo);
 }
 .noslog-ui .nl-compact-select--outlined svg {

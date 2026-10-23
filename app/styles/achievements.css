@@ -260,8 +260,8 @@
     }
 }
 .noslog-ui .nl-achievement-picker__choice:focus-visible {
-    outline: var(--nl-stroke-default) solid var(--nl-focus-ring);
-    outline-offset: calc(var(--nl-stroke-default) * -1);
+    outline: var(--nl-stroke-strong) solid var(--nl-focus-ring);
+    outline-offset: calc(var(--nl-stroke-strong) * -1);
 }
 
 /* 배지 정보 창 큰 육각(2026-09-25 M1) — 58 × 64 · 선 2 · 그림 32 */

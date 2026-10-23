@@ -39,7 +39,7 @@
     }
 }
 .noslog-ui .nl-selection-list__option:has(:focus-visible) {
-    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-focus-ring);
+    box-shadow: inset 0 0 0 var(--nl-stroke-strong) var(--nl-focus-ring);
 }
 .noslog-ui .nl-selection-list__option[data-selected="true"] {
     font-weight: var(--nl-type-weight-semibold);
