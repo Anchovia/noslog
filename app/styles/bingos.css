@@ -313,9 +313,6 @@
     gap: var(--nl-spacing-8);
     flex-wrap: wrap;
 }
-.noslog-ui .nl-bingo-cell-detail__pos {
-    font-variant-numeric: tabular-nums;
-}
 .noslog-ui .nl-bingo-cell-detail__nav {
     display: inline-flex;
     margin-left: auto;

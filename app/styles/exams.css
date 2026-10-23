@@ -147,7 +147,7 @@
 .noslog-ui .nl-exam-stages > h3 {
     margin-bottom: calc(var(--nl-section-title-gap) - var(--nl-spacing-12));
 }
-/* 통과선 줄(2026-09-22 T7) — 곡 카드 사이. 자켓 가운데를 지나는 세로 선 위에 ✓/✗ 16, 합격선 글자 · 오른쪽 여유(±) */
+/* 통과선 줄(2026-09-22 T7) — 곡 카드 사이. 자켓 가운데를 지나는 세로 선 위에 ✓/✗ 16, 합격선 글자(여유 숫자는 두지 않는다 — 여유는 「합격까지」 눈금 아래) */
 .noslog-ui .nl-exam-passline {
     display: grid;
     grid-template-columns: var(--nl-exam-jacket-size) minmax(0, 1fr) auto;

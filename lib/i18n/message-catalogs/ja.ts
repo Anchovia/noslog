@@ -1005,7 +1005,7 @@ export const jaMessages = {
     "exams.scope.single": "この曲",
     "exams.scope.cumulative": "{stages} 累計",
     "exams.scope.total": "{count}曲累計",
-    "exams.recital.explanation": "4つの評価項目 × 10点 — 1曲40点、3曲合計120点",
+    "exams.recital.explanation": "4つの評価項目 × 10点。1曲40点、3曲合計120点",
     "exams.none": "なし",
     "exams.insufficient": "Grd. 不足",
     "exams.chooseChart": "譜面選択",
@@ -1046,7 +1046,7 @@ export const jaMessages = {
     "exams.status.locked": "ロック中",
     "exams.status.available": "受検可能",
     "exams.status.insufficientBy": "Grd. {value} 不足",
-    "exams.event.reference": "イベント検定は参考用です — 認証はしません。",
+    "exams.event.reference": "イベント検定は参考用のため、認証はしません。",
     "exams.margin.ahead": "余裕 {value}",
     "exams.margin.behind": "不足 {value}",
     "exams.progress.title": "合格まで",
@@ -1707,7 +1707,7 @@ export const jaMessages = {
     "chart.source.notesBody":
         "プレイ動画から自動で抽出し、運営が確認しました。",
     "chart.source.tool":
-        "vid2bmap — キム・ヨンフン · チェ・ソンヒ(KAIST) · MIT ライセンス",
+        "vid2bmap(キム・ヨンフン · チェ・ソンヒ、KAIST) · MIT ライセンス",
     "chart.source.paper": "論文(KSC 2023)",
     "chart.audioError": "このブラウザでは音源を再生できません。",
     "record.analysis": "判定分析",
@@ -1861,7 +1861,7 @@ export const jaMessages = {
     "contribution.proposal.titleEdit": "{field}の修正を提案",
     "contribution.proposal.current": "現在の値",
     "contribution.proposal.pendingNotice":
-        "確認中の提案 {value} — もう一度送ると新しい値に置き換わります。",
+        "確認中の提案: {value}。もう一度送ると新しい値に置き換わります。",
     "contribution.proposal.help.bpm": "ソフランがあれば最小–最大(例: 120-180)",
     "contribution.proposal.help.note_count": "リザルト画面の総ノート数",
     "contribution.proposal.help.duration": "分:秒(例: 2:04)",
@@ -1907,7 +1907,7 @@ export const jaMessages = {
     "contribution.label.level": "貢献 Lv.{level}",
     "contribution.label.points": "{points}pt",
     "contribution.label.help":
-        "Lv.{next}まであと{remaining}pt — 楽曲情報やゲームセンター情報を提供するほど上がります。",
+        "Lv.{next}まであと{remaining}pt。楽曲情報やゲームセンター情報を提供するほど上がります。",
     "contribution.label.helpMax": "最高ランクです。",
     "contribution.label.operator": "Admin",
     "contribution.label.operatorHelp":
@@ -2230,7 +2230,7 @@ export const jaMessages = {
     "partner.consent.item.ranks.help": "国内 · 全体の順位",
     "partner.consent.item.song_records": "曲ごとの記録",
     "partner.consent.item.song_records.help":
-        "譜面ごとのベストスコア · Grd · ランク — 形式を調整中のため、まだ共有できません",
+        "譜面ごとのベストスコア · Grd · ランク。形式を調整中のため、まだ共有できません",
     "partner.consent.item.recent_plays": "最近のプレー",
     "partner.consent.item.recent_plays.help": "直近50曲 · プレー日時",
     "partner.consent.privateScores":
@@ -2325,7 +2325,7 @@ export const jaMessages = {
     "musecat.edit.traitsNote":
         "筐体の特徴は店舗報告として送られ、運営者が確認してから反映されます。",
     "musecat.edit.traitsReport":
-        "NosLog 筐体の特徴の提案（Musecat 筐体情報の編集）— {items}",
+        "NosLog 筐体の特徴の提案（Musecat 筐体情報の編集）: {items}",
     "musecat.edit.traitsFailed":
         "筐体の特徴の報告を送信できませんでした。もう一度お試しください。",
     "musecat.edit.unitCount": "台",

@@ -68,7 +68,7 @@ export default function EventDeleteButton({
             )}
             variant="confirm"
             trigger={
-                <ActionButton variant="danger">
+                <ActionButton variant="secondary">
                     {t("events.delete.button")}
                 </ActionButton>
             }

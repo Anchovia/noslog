@@ -3,7 +3,6 @@
 /* eslint-disable @next/next/no-img-element */
 
 import { useQueryClient } from "@tanstack/react-query";
-import { Check } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
 
 import { useLocale, useTranslations } from "@/components/i18n/locale-provider";
@@ -497,17 +496,9 @@ function TierExportPreview({
                                 disabled={disabled || !canCopy}
                                 onClick={() => void copy()}
                             >
-                                {status === "copied" ? (
-                                    <>
-                                        <Check
-                                            className="nl-icon-small"
-                                            aria-hidden
-                                        />
-                                        {t("common.copied")}
-                                    </>
-                                ) : (
-                                    t("profile.copyImage")
-                                )}
+                                {status === "copied"
+                                    ? t("common.copied")
+                                    : t("profile.copyImage")}
                             </Button>
                             <Button
                                 variant="secondary"

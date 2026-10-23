@@ -1,55 +1,5 @@
 /* Ordinary NosLog UI only. Viewer/editor and administrative routes never enter this scope. */
 .noslog-ui {
-    /* 점수 목표 색 — S(950k) = JUST 노랑 · 990k = 노랑과 ◆JUST 분홍 사이 · Pianist = ◆JUST 분홍.
-       서열표 테두리 · 악곡 상세 수치 띠가 같이 쓴다 (2026-09-14 · 2026-09-17) */
-    --nl-score-goal-s: var(--nl-judgement-just);
-    --nl-score-goal-990k: color-mix(
-        in srgb,
-        var(--nl-judgement-just) 50%,
-        var(--nl-judgement-s-just)
-    );
-    --nl-score-goal-pianist: var(--nl-judgement-s-just);
-    /* Grd · 레이팅 구간 색(2026-09-19 R1) — 아래 두 칸은 판정 색(NEAR · GOOD)을 빌리고, 위 세 칸은 점수 목표 색 */
-    --nl-grade-band-1: var(--nl-judgement-near);
-    --nl-grade-band-2: var(--nl-judgement-good);
-    --nl-grade-band-3: var(--nl-score-goal-s);
-    --nl-grade-band-4: var(--nl-score-goal-990k);
-    --nl-grade-band-5: var(--nl-score-goal-pianist);
-    /* 등급 색(2026-09-26 C2a) — 게임 등급 아이콘 색을 있는 토큰으로 빌린다(새 값 없음). S · P 는 점수 목표 색,
-       A+ = 난이도 글자 빨강(한 단계 밝게) · A = 난이도 빨강 · B = 차트 파랑, C · D 는 정하지 않음(흐린 글자색) */
-    --nl-score-grade-a-plus: var(--nl-difficulty-text-expert);
-    --nl-score-grade-a: var(--nl-difficulty-expert);
-    --nl-score-grade-b: var(--nl-local-data-single);
-    --nl-font-family:
-        "Pretendard JP Variable", "Pretendard JP", Pretendard, -apple-system,
-        BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI",
-        "Hiragino Sans", "Apple SD Gothic Neo", Meiryo, "Noto Sans JP",
-        "Noto Sans KR", "Malgun Gothic", Osaka, "Apple Color Emoji",
-        "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
-    /* 고정폭(2026-09-23 M1) — 기기에 있는 글자만 쓰고 글꼴 파일을 더 싣지 않는다. 한글은 위 본문 글꼴로 떨어진다 */
-    --nl-font-family-mono:
-        ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
-        "Liberation Mono", "Roboto Mono", monospace;
-    --nl-overlay-shadow:
-        0 0 2px rgb(0 0 0 / 36%), 0 2px 6px rgb(0 0 0 / 12%),
-        0 4px 12px rgb(0 0 0 / 24%);
-    /* 슬라이더 손잡이의 마우스·끄는 중·포커스 후광 — primary 16% (2026-09-12 사용자 승인) */
-    --nl-state-halo: color-mix(
-        in srgb,
-        var(--nl-primary-default) 16%,
-        transparent
-    );
-    /* 컨트롤 높이 두 단계(2026-09-15) — 큰 L: 입력·셀렉트·검색·필터 트리거·페이지 주 액션 = 44 (1056 이상 40)
-       중간 M: 카드 안 버튼·상자 없는 인라인 보조(초기화·전체 지우기)·칩 = 36 (1056 이상 32). 한 줄은 한 단계 */
-    --nl-control-height: 44px;
-    --nl-control-height-compact: 36px;
-    --nl-icon-small: 16px;
-    --nl-icon-medium: 20px;
-    --nl-icon-large: 24px;
-    /* 선 두께 두 단계(2026-09-22) — 기본: 구분선 · 경계 · 포커스 선 · 칸 사이 선 = 1
-       강조: 선택 밑줄 · 강조 테두리(달성 · 체크박스 · 라디오 링) · 진행 막대 = 2. 테두리를 빼는 여백 보정도 이 값으로 */
-    --nl-stroke-default: 1px;
-    --nl-stroke-strong: 2px;
     color: var(--nl-content-default);
     font-family: var(--nl-font-family);
     font-size: var(--nl-type-size-16);
@@ -61,6 +11,9 @@
     letter-spacing: normal;
     overflow-wrap: anywhere;
     color-scheme: dark;
+    /* 글자 다듬기(2026-10-21 전면 대조 ⑦) — 맥 데스크톱에서만 차이 */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 html[lang="ko"] .noslog-ui,
@@ -75,9 +28,6 @@ html[lang="ko"] .noslog-ui,
 html[data-theme="light"] .noslog-ui,
 .noslog-ui[data-theme="light"] {
     color-scheme: light;
-    --nl-overlay-shadow:
-        0 0 2px rgb(0 0 0 / 12%), 0 2px 6px rgb(0 0 0 / 4%),
-        0 4px 12px rgb(0 0 0 / 8%);
 }
 .noslog-ui ::selection {
     /* ::selection 은 배경 그림을 받지 않아 색으로 — 반투명이라 밑면 위에 그대로 겹친다 */
@@ -88,12 +38,12 @@ html[data-theme="light"] .noslog-ui,
     caret-color: var(--nl-content-default);
 }
 .noslog-ui :is(input, textarea)::placeholder {
-    color: var(--nl-content-subdued);
+    color: var(--nl-content-placeholder);
     opacity: 1;
 }
 .noslog-ui :focus-visible {
-    outline: var(--nl-stroke-default) solid var(--nl-focus-ring);
-    outline-offset: calc(var(--nl-stroke-default) * -1);
+    outline: var(--nl-stroke-strong) solid var(--nl-focus-ring);
+    outline-offset: calc(var(--nl-stroke-strong) * -1);
 }
 .noslog-ui :is(a, button, input, textarea, select) {
     scroll-margin-block: calc(var(--nl-header-height) + var(--nl-spacing-16));
@@ -197,11 +147,14 @@ html[data-theme="light"] .noslog-ui,
 .noslog-ui .nl-button:active {
     background: var(--nl-primary-pressed);
 }
-/* 포커스 = 1px 경계 색 교체 + 바깥 후광 4(--nl-state-halo) — 2026-09-14 F2 */
+/* 포커스 = 2px 경계(1px 경계 색 + 안쪽 1px) + 바깥 후광 4(--nl-state-halo) — 2026-09-14 F2 · 2026-10-21 두께 2 */
 .noslog-ui .nl-button:focus-visible {
-    border-color: var(--nl-primary-on-primary);
+    --nl-focus-edge: var(--nl-primary-on-primary);
+    border-color: var(--nl-focus-edge);
     outline: none;
-    box-shadow: 0 0 0 var(--nl-halo-control) var(--nl-state-halo);
+    box-shadow:
+        inset 0 0 0 var(--nl-stroke-default) var(--nl-focus-edge),
+        0 0 0 var(--nl-halo-control) var(--nl-state-halo);
 }
 /* 보조 = 옅은 면 · 선 없음(2026-09-30 K1 — Spectrum 2 보조 버튼 · shadcn secondary · YouTube). 경계는 포커스 때만 */
 .noslog-ui .nl-button--secondary {
@@ -240,7 +193,7 @@ html[data-theme="light"] .noslog-ui,
 }
 .noslog-ui .nl-button--secondary:focus-visible,
 .noslog-ui .nl-button--ghost:focus-visible {
-    border-color: var(--nl-focus-ring);
+    --nl-focus-edge: var(--nl-focus-ring);
 }
 .noslog-ui .nl-button--danger,
 .noslog-ui .nl-button--danger-filled {
@@ -274,7 +227,7 @@ html[data-theme="light"] .noslog-ui,
 }
 .noslog-ui .nl-button--danger:focus-visible,
 .noslog-ui .nl-button--danger-filled:focus-visible {
-    border-color: var(--nl-feedback-on-destructive);
+    --nl-focus-edge: var(--nl-feedback-on-destructive);
 }
 .noslog-ui .nl-button--icon {
     width: var(--nl-control-height);
@@ -379,7 +332,9 @@ html[data-theme="light"] .noslog-ui,
 .noslog-ui .nl-input:focus-visible {
     border-color: var(--nl-focus-ring);
     outline: none;
-    box-shadow: 0 0 0 var(--nl-halo-control) var(--nl-state-halo);
+    box-shadow:
+        inset 0 0 0 var(--nl-stroke-default) var(--nl-focus-ring),
+        0 0 0 var(--nl-halo-control) var(--nl-state-halo);
 }
 .noslog-ui .nl-input[aria-invalid="true"] {
     border-color: var(--nl-feedback-destructive-border);
@@ -414,7 +369,7 @@ html[data-theme="light"] .noslog-ui,
     white-space: nowrap;
 }
 .noslog-ui .nl-select[data-placeholder] {
-    color: var(--nl-content-subdued);
+    color: var(--nl-content-placeholder);
 }
 .noslog-ui .nl-check {
     display: flex;
@@ -477,7 +432,9 @@ html[data-theme="light"] .noslog-ui,
     height: var(--nl-icon-large);
     padding: 0;
     border-radius: var(--nl-radius-full);
-    background: var(--nl-border-default);
+    /* 꺼짐 = 누르는 면 + 안쪽 입력칸 선(2026-10-21 전면 대조 ⑦ — 바탕 3.87, 떠 있는 창 위에서도 보인다) */
+    background: var(--nl-surface-control);
+    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-input);
 }
 .noslog-ui .nl-switch::after {
     content: "";
@@ -491,6 +448,7 @@ html[data-theme="light"] .noslog-ui,
 }
 .noslog-ui .nl-switch[aria-checked="true"] {
     background: var(--nl-primary-default);
+    box-shadow: none;
 }
 .noslog-ui .nl-switch[aria-checked="true"]::after {
     left: calc(100% - var(--nl-icon-small) - var(--nl-spacing-4));
@@ -498,6 +456,7 @@ html[data-theme="light"] .noslog-ui,
 }
 .noslog-ui .nl-switch:disabled {
     background: var(--nl-interaction-disabled-bg);
+    box-shadow: none;
 }
 .noslog-ui .nl-switch:disabled::after {
     background: var(--nl-interaction-disabled-content);
@@ -509,10 +468,10 @@ html[data-theme="light"] .noslog-ui,
     min-width: 0;
     min-height: var(--nl-control-height);
     padding: calc(var(--nl-spacing-4) - var(--nl-stroke-default));
-    /* 판 = 카드 면 · 선 없음(2026-09-30 K1) — 자리는 그대로 두려고 투명 경계를 남긴다 */
-    border: var(--nl-stroke-default) solid transparent;
-    border-radius: var(--nl-radius-container);
-    background: var(--nl-surface-surface);
+    /* 판 = 꺼진 면 + 구분선(2026-10-21 전면 대조 ⑦ — 카드 위에서도 판이 보이게). 모서리는 칸과 같은 8 */
+    border: var(--nl-stroke-default) solid var(--nl-border-divider);
+    border-radius: var(--nl-radius-field);
+    background: var(--nl-surface-sunken);
 }
 .noslog-ui .nl-segments__item {
     display: flex;
@@ -563,6 +522,7 @@ html[data-theme="light"] .noslog-ui,
 .noslog-ui .nl-segments__item:focus-visible {
     border-color: var(--nl-focus-ring);
     outline: none;
+    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-focus-ring);
 }
 .noslog-ui .nl-segments__item:disabled {
     color: var(--nl-interaction-disabled-content);
@@ -678,10 +638,10 @@ html[data-theme="light"] .noslog-ui,
     height: var(--nl-stroke-strong);
     background: var(--nl-content-default);
 }
-/* FOCUS-1B — 탭 자신의 1px 안쪽 경계 */
+/* 탭 포커스 — 탭 자신의 안쪽 흰 선(stroke-strong) */
 .noslog-ui .nl-tabs__item:focus-visible {
     outline: none;
-    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-focus-ring);
+    box-shadow: inset 0 0 0 var(--nl-stroke-strong) var(--nl-focus-ring);
 }
 /* 1단 탭 구역(AreaTabs) — 탭 →24→ 내용. 악곡 상세 · 피드백 창(2026-09-19) */
 .noslog-ui .nl-area {
@@ -722,6 +682,16 @@ html[data-theme="light"] .noslog-ui,
 .noslog-ui .nl-disclosure > summary > span:first-child {
     flex: 1;
     min-width: 0;
+}
+/* 요약 meta 가 길면 meta 가 말줄임으로 줄고 제목은 줄지 않는다(2026-10-21 — 제목이 한 글자씩 꺾이던 문제) */
+.noslog-ui .nl-disclosure > summary:has(> .nl-metadata) > span:first-child {
+    flex: 1 0 auto;
+}
+.noslog-ui .nl-disclosure > summary > .nl-metadata {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 @media (hover: hover) {
     .noslog-ui .nl-disclosure > summary:hover {
@@ -804,7 +774,7 @@ html[data-theme="light"] .noslog-ui,
     column-gap: var(--nl-spacing-12);
     color: var(--nl-content-subdued);
 }
-/* 알림 토스트(2026-10-01) = 떠 있는 창 규격(면 overlay · 경계 border/overlay · 모서리 10 · 그림자) · 안쪽 12 16 · 글자 emphasis-label.
+/* 알림 토스트(2026-10-01) = 떠 있는 창 규격(면 overlay · 경계 border/overlay · 모서리 overlay · 그림자) · 안쪽 12 16 · 글자 emphasis-label.
    상태 메시지와 같이 색 아이콘 없이 글자만(2026-10-01 N1) */
 .noslog-ui .nl-toast {
     display: flex;
@@ -932,7 +902,14 @@ html[data-theme="light"] .noslog-ui,
    overlay 위에서 surface/control 면은 1.14 라 면만으로는 안 보인다 — 선 = border/default(1.63).
    보조 버튼 · 칩 · 상자 고르기 · 고르기 슬롯 · 업적 고르기 칸이 이 값을 읽는다. 누르는 면을 담는 떠 있는 그릇은 여기에 더하고,
    바탕색으로 바뀌는 창(폰 전체 화면 입력 창 · 이미지 내보내기 1055 이하)은 아래에서 되돌린다 */
-.noslog-ui :is(.nl-dialog, .nl-filter-popover, .nl-chart-stage__settings) {
+.noslog-ui
+    :is(
+        .nl-dialog,
+        .nl-filter-popover,
+        .nl-chart-stage__settings,
+        .nl-sort-menu,
+        .nl-bingo-cell-popover
+    ) {
     --nl-control-line: var(--nl-border-default);
 }
 .noslog-ui .nl-dialog--small {
@@ -1891,12 +1868,6 @@ html[data-theme="light"] .noslog-ui,
     }
 }
 
-@media (min-width: 1056px) {
-    .noslog-ui {
-        --nl-control-height: 40px;
-        --nl-control-height-compact: 32px;
-    }
-}
 /* 태그 — 누르지 않는 라벨(공지 분류 · 빙고 미션 종류 · 상태). 부품 결정 ⑤(2026-09-15).
    높이 24 · 모서리 4 · 1px 아웃라인 · 글자 metadata 흐림 / --strong = 글자 기본 · 경계 진하게 */
 /* 태그 · 배지(2026-09-23 N3 · R1 · S-c · C-a — 다크 실측 15곳 · 가이드 8종).
@@ -2049,7 +2020,9 @@ html[data-theme="light"] .noslog-ui,
 }
 .noslog-ui .nl-markdown-editor:has(.nl-markdown-editor__input:focus-visible) {
     border-color: var(--nl-focus-ring);
-    box-shadow: 0 0 0 var(--nl-halo-control) var(--nl-state-halo);
+    box-shadow:
+        inset 0 0 0 var(--nl-stroke-default) var(--nl-focus-ring),
+        0 0 0 var(--nl-halo-control) var(--nl-state-halo);
 }
 .noslog-ui .nl-markdown-editor[data-invalid] {
     border-color: var(--nl-feedback-destructive-border);
@@ -2471,4 +2444,157 @@ html:has(.noslog-ui) [data-sonner-toaster] [data-sonner-toast] > * {
 .noslog-ui .nl-file-row > .nl-button--icon {
     margin-right: calc((var(--nl-control-height) - var(--nl-icon-medium)) / -2);
     margin-block: calc(var(--nl-stroke-default) * -1);
+}
+
+/* 면 카드 SurfaceCard — 면 · 모서리 container · 안 사이 8 · 안쪽 12/16(목록 항목 카드), roomy = 16 */
+.noslog-ui .nl-surface-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
+    min-width: 0;
+    padding: var(--nl-spacing-12) var(--nl-spacing-16);
+    border-radius: var(--nl-radius-container);
+    background: var(--nl-surface-surface);
+}
+.noslog-ui .nl-surface-card--roomy {
+    padding: var(--nl-spacing-16);
+}
+/* 숫자 스테퍼 Stepper(2026-10-21 전면 대조 ⑩) — 입력칸과 같은 선 · 모서리 · 높이, 버튼 = 컨트롤 높이 정사각, 값 칸 최소 64 */
+.noslog-ui .nl-stepper {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    height: var(--nl-control-height);
+    border-radius: var(--nl-radius-field);
+    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-input);
+}
+.noslog-ui .nl-stepper__button {
+    display: grid;
+    place-items: center;
+    width: var(--nl-control-height);
+    height: 100%;
+    border-radius: var(--nl-radius-field);
+    color: var(--nl-content-interactive);
+}
+@media (hover: hover) {
+    .noslog-ui .nl-stepper__button:not(:disabled):hover {
+        --nl-state-layer: var(--nl-interaction-hover);
+        background-image: linear-gradient(
+            var(--nl-state-layer),
+            var(--nl-state-layer)
+        );
+    }
+}
+.noslog-ui .nl-stepper__button:focus-visible {
+    outline: none;
+    box-shadow: inset 0 0 0 var(--nl-stroke-strong) var(--nl-focus-ring);
+}
+.noslog-ui .nl-stepper__button:disabled {
+    color: var(--nl-interaction-disabled-content);
+}
+.noslog-ui .nl-stepper__value {
+    min-width: var(--nl-spacing-64);
+    text-align: center;
+}
+/* 아이콘 정보 줄 IconRow(2026-10-21 전면 대조 ① — Google 지도 · 카카오맵 · 네이버 장소 화면) — 아이콘 20 흐림 →12→ 본문 16 · 보조 14,
+   끝 동작은 첫 줄 가운데에 맞춘다. 줄 높이 최소 컨트롤 높이 · 위아래 12 · 줄 사이 구분선 */
+.noslog-ui .nl-icon-rows {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.noslog-ui .nl-icon-rows > li + li {
+    box-shadow: inset 0 var(--nl-stroke-default) var(--nl-border-divider);
+}
+.noslog-ui .nl-icon-row {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    column-gap: var(--nl-spacing-12);
+    align-items: start;
+    min-height: var(--nl-control-height);
+    padding-block: var(--nl-spacing-12);
+}
+.noslog-ui .nl-icon-row__icon {
+    margin-top: calc(
+        (var(--nl-type-line-height-24) - var(--nl-icon-medium)) / 2
+    );
+    color: var(--nl-content-subdued);
+}
+.noslog-ui .nl-icon-row__copy {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+.noslog-ui .nl-icon-row__action {
+    display: flex;
+    align-items: center;
+    margin-block: calc(
+        (var(--nl-type-line-height-24) - var(--nl-control-height-compact)) / 2
+    );
+}
+/* 상태 색 점 StatusDot(2026-10-21) — 8 원, 알림 표시색 · 빈 원은 경계 strong */
+.noslog-ui .nl-status-dot {
+    display: inline-block;
+    flex-shrink: 0;
+    width: var(--nl-spacing-8);
+    height: var(--nl-spacing-8);
+    border-radius: var(--nl-radius-full);
+    background: var(--nl-feedback-success-marker);
+}
+.noslog-ui .nl-status-dot[data-tone="warning"] {
+    background: var(--nl-feedback-warning-marker);
+}
+.noslog-ui .nl-status-dot[data-tone="danger"] {
+    background: var(--nl-feedback-danger-marker);
+}
+.noslog-ui .nl-status-dot[data-tone="info"] {
+    background: var(--nl-feedback-info-marker);
+}
+.noslog-ui .nl-status-dot[data-tone="empty"] {
+    background: transparent;
+    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-border-strong);
+}
+/* 버튼 줄(2026-10-21) — 버튼이 하나면 폭 가득, 둘이면 같은 폭 둘(사이 8). 카드 안 「고장 내용 보기 · 고장 신고」 등 */
+.noslog-ui .nl-button-row {
+    display: grid;
+    grid-auto-columns: minmax(0, 1fr);
+    grid-auto-flow: column;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-button-row > * {
+    width: 100%;
+    min-width: 0;
+}
+/* 단위 붙은 입력칸 UnitInput(2026-10-21) — 겉 상자 = nl-input, 포커스는 안 입력이 잡고 겉 상자에 같은 포커스 표시 */
+.noslog-ui .nl-unit-input {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-unit-input:focus-within {
+    border-color: var(--nl-focus-ring);
+    box-shadow:
+        inset 0 0 0 var(--nl-stroke-default) var(--nl-focus-ring),
+        0 0 0 var(--nl-halo-control) var(--nl-state-halo);
+}
+.noslog-ui .nl-unit-input[data-disabled] {
+    border-color: var(--nl-interaction-disabled-border);
+    color: var(--nl-interaction-disabled-content);
+    background: var(--nl-interaction-disabled-bg);
+}
+.noslog-ui .nl-unit-input__field {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    outline: none;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+}
+.noslog-ui .nl-unit-input__unit {
+    flex-shrink: 0;
+    color: var(--nl-content-subdued);
 }

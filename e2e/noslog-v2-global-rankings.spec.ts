@@ -341,9 +341,15 @@ for (const locale of ["ko", "ja", "en"])
                     .evaluate(
                         (element) => element.getBoundingClientRect().width
                     );
+                // 쪽 번호 칸 = 컨트롤 높이(1056 이상 40), 사이 8 — 다섯 칸 또는 일곱 칸
+                const item = width >= 1056 ? 40 : 44;
+                const wide = item * 7 + 8 * 6;
                 await expect(
                     page.locator(".nl-pagination__controls")
-                ).toHaveCSS("width", paginationWidth < 356 ? "252px" : "356px");
+                ).toHaveCSS(
+                    "width",
+                    `${paginationWidth < wide ? item * 5 + 8 * 4 : wide}px`
+                );
                 // 폭이 바뀌면 명판 라벨을 다시 재므로 한 프레임 넘긴 뒤 읽는다
                 await page.evaluate(
                     () =>

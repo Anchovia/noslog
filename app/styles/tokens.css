@@ -1,4 +1,4 @@
-/* NosLog 디자인 토큰 원본 — 이 파일을 직접 고친다(생성 스크립트 없음). 쓰임과 규칙은 docs/design/README.md 1절 */
+/* NosLog 디자인 토큰 원본 — 이 파일을 직접 고친다(생성 스크립트 없음). 쓰임과 규칙은 docs/design/foundations.md */
 .noslog-ui {
     --nl-spacing-0: 0px;
     --nl-spacing-2: 2px;
@@ -15,8 +15,9 @@
     --nl-section-title-gap: var(--nl-spacing-12);
     --nl-radius-control: 4px;
     --nl-radius-field: 8px;
-    --nl-radius-container: 8px;
-    --nl-radius-overlay: 10px;
+    /* 그릇(카드) 12 > 칸 8 — 카드가 입력칸처럼 보이지 않게, 떠 있는 창도 12(2026-10-21 전면 대조 ⑦) */
+    --nl-radius-container: 12px;
+    --nl-radius-overlay: 12px;
     --nl-radius-full: 9999px;
     --nl-type-size-12: 12px;
     --nl-type-size-14: 14px;
@@ -97,13 +98,9 @@
     --nl-primary-default: #dbdbdb;
     --nl-primary-hover: #f2f2f2;
     --nl-primary-on-primary: #111111;
-    --nl-feedback-info-bg: #1c2b42;
     --nl-feedback-info-marker: #4688ec;
-    --nl-feedback-success-bg: #28311b;
     --nl-feedback-success-marker: #82b536;
-    --nl-feedback-warning-bg: #3a2c1f;
     --nl-feedback-warning-marker: #fbc828;
-    --nl-feedback-danger-bg: #42221f;
     --nl-feedback-danger-marker: #f15b50;
     --nl-feedback-message-text: #dbdbdb;
     --nl-feedback-error-text: #fd9891;
@@ -138,6 +135,13 @@
     --nl-achievement-full-combo: #b4ce35;
     --nl-achievement-pianist: #f2a634;
     --nl-content-pending: #8a8a8a;
+    /* 글자 계층 별칭(2026-10-21 전면 대조 ⑤) — 제목 = 동작 글자와 같은 밝기, 3차(흐린 메타 줄) = 대기 글자 값.
+       3차는 control 면 위에서 4.05 라 쓰지 않는다 · 자리표시자도 3차 값 */
+    --nl-content-strong: var(--nl-content-interactive);
+    --nl-content-tertiary: var(--nl-content-pending);
+    --nl-content-placeholder: var(--nl-content-pending);
+    /* 큰 제목(20 이상) · 큰 숫자 자간(2026-10-21 전면 대조 ⑦) */
+    --nl-type-tracking-title: -0.02em;
     --nl-surface-media-scrim: #00000099;
     --nl-content-on-media: #ffffff;
     /* 채보 무대(2026-09-26) — 테마와 무관하게 늘 어둡다. 캔버스 값은 lib/chart-pattern/stageColors.ts 와 같게 */
@@ -174,6 +178,57 @@
         white
     );
     --nl-tier-value-end: #ff5fd2;
+    /* 아래는 foundation.css 에 있던 토큰을 값 그대로 옮긴 것 — 별칭 색 · 글꼴 · 그림자 · 후광 · 높이 · 아이콘 · 선 */
+    /* 점수 목표 색 — S(950k) = JUST 노랑 · 990k = 노랑과 ◆JUST 분홍 사이 · Pianist = ◆JUST 분홍.
+       서열표 테두리 · 악곡 상세 수치 띠가 같이 쓴다 (2026-09-14 · 2026-09-17) */
+    --nl-score-goal-s: var(--nl-judgement-just);
+    --nl-score-goal-990k: color-mix(
+        in srgb,
+        var(--nl-judgement-just) 50%,
+        var(--nl-judgement-s-just)
+    );
+    --nl-score-goal-pianist: var(--nl-judgement-s-just);
+    /* Grd · 레이팅 구간 색(2026-09-19 R1) — 아래 두 칸은 판정 색(NEAR · GOOD)을 빌리고, 위 세 칸은 점수 목표 색 */
+    --nl-grade-band-1: var(--nl-judgement-near);
+    --nl-grade-band-2: var(--nl-judgement-good);
+    --nl-grade-band-3: var(--nl-score-goal-s);
+    --nl-grade-band-4: var(--nl-score-goal-990k);
+    --nl-grade-band-5: var(--nl-score-goal-pianist);
+    /* 등급 색(2026-09-26 C2a) — 게임 등급 아이콘 색을 있는 토큰으로 빌린다(새 값 없음). S · P 는 점수 목표 색,
+       A+ = 난이도 글자 빨강(한 단계 밝게) · A = 난이도 빨강 · B = 차트 파랑, C · D 는 정하지 않음(흐린 글자색) */
+    --nl-score-grade-a-plus: var(--nl-difficulty-text-expert);
+    --nl-score-grade-a: var(--nl-difficulty-expert);
+    --nl-score-grade-b: var(--nl-local-data-single);
+    --nl-font-family:
+        "Pretendard JP Variable", "Pretendard JP", Pretendard, -apple-system,
+        BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI",
+        "Hiragino Sans", "Apple SD Gothic Neo", Meiryo, "Noto Sans JP",
+        "Noto Sans KR", "Malgun Gothic", Osaka, "Apple Color Emoji",
+        "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+    /* 고정폭(2026-09-23 M1) — 기기에 있는 글자만 쓰고 글꼴 파일을 더 싣지 않는다. 한글은 위 본문 글꼴로 떨어진다 */
+    --nl-font-family-mono:
+        ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+        "Liberation Mono", "Roboto Mono", monospace;
+    /* 떠 있는 창 그림자(2026-10-21 전면 대조 ⑦ — Primer · Atlassian · Spotify 처럼 넓고 진하게) */
+    --nl-overlay-shadow:
+        0 2px 6px rgb(0 0 0 / 24%), 0 8px 24px rgb(0 0 0 / 48%);
+    /* 슬라이더 손잡이의 마우스·끄는 중·포커스 후광 — primary 16% (2026-09-12 사용자 승인) */
+    --nl-state-halo: color-mix(
+        in srgb,
+        var(--nl-primary-default) 16%,
+        transparent
+    );
+    /* 컨트롤 높이 두 단계(2026-09-15) — 큰 L: 입력·셀렉트·검색·필터 트리거·페이지 주 액션 = 44 (1056 이상 40)
+       중간 M: 카드 안 버튼·상자 없는 인라인 보조(초기화·전체 지우기)·칩 = 36 (1056 이상 32). 한 줄은 한 단계 */
+    --nl-control-height: 44px;
+    --nl-control-height-compact: 36px;
+    --nl-icon-small: 16px;
+    --nl-icon-medium: 20px;
+    --nl-icon-large: 24px;
+    /* 선 두께 두 단계 — 기본: 구분선 · 경계 · 칸 사이 선 = 1
+       강조: 선택 밑줄 · 강조 테두리(달성 · 체크박스 · 라디오 링) · 진행 막대 · 포커스 선 = 2. 테두리를 빼는 여백 보정도 이 값으로 */
+    --nl-stroke-default: 1px;
+    --nl-stroke-strong: 2px;
 }
 html[data-theme="light"] .noslog-ui,
 .noslog-ui[data-theme="light"] {
@@ -205,13 +260,9 @@ html[data-theme="light"] .noslog-ui,
     --nl-primary-default: #292929;
     --nl-primary-hover: #131313;
     --nl-primary-on-primary: #ffffff;
-    --nl-feedback-info-bg: #e9f2fe;
     --nl-feedback-info-marker: #357de8;
-    --nl-feedback-success-bg: #efffd6;
     --nl-feedback-success-marker: #6a9a23;
-    --nl-feedback-warning-bg: #fff5db;
     --nl-feedback-warning-marker: #e06c00;
-    --nl-feedback-danger-bg: #ffeceb;
     --nl-feedback-danger-marker: #c9372c;
     --nl-feedback-message-text: #292929;
     --nl-feedback-error-text: #ae2e24;
@@ -246,6 +297,9 @@ html[data-theme="light"] .noslog-ui,
     --nl-achievement-full-combo: #75980b;
     --nl-achievement-pianist: #c87b00;
     --nl-content-pending: #717171;
+    --nl-content-strong: var(--nl-content-interactive);
+    --nl-content-tertiary: var(--nl-content-pending);
+    --nl-content-placeholder: var(--nl-content-pending);
     --nl-surface-media-scrim: #00000099;
     --nl-content-on-media: #ffffff;
     /* 채보 무대(2026-09-26) — 테마와 무관하게 늘 어둡다. 캔버스 값은 lib/chart-pattern/stageColors.ts 와 같게 */
@@ -281,28 +335,33 @@ html[data-theme="light"] .noslog-ui,
         var(--nl-content-default)
     );
     --nl-tier-value-end: var(--nl-judgement-s-just);
+    --nl-overlay-shadow:
+        0 0 2px rgb(0 0 0 / 12%), 0 2px 6px rgb(0 0 0 / 4%),
+        0 4px 12px rgb(0 0 0 / 8%);
 }
 .noslog-ui .nl-display {
     font-size: var(--nl-type-size-40);
     line-height: var(--nl-type-line-height-48);
     font-weight: var(--nl-type-weight-bold);
-    letter-spacing: 0;
+    letter-spacing: var(--nl-type-tracking-title);
     font-variant-numeric: normal;
 }
 .noslog-ui .nl-page-title {
     font-size: var(--nl-type-size-24);
     line-height: var(--nl-type-line-height-32);
     font-weight: var(--nl-type-weight-bold);
-    letter-spacing: 0;
+    letter-spacing: var(--nl-type-tracking-title);
     font-variant-numeric: normal;
+    color: var(--nl-content-strong);
 }
 /* 구역 제목은 페이지 제목과 같은 700(2026-10-01 D2) — 목록 이름 · 상자 제목(600)과 굵기로도 갈린다 */
 .noslog-ui .nl-section-title {
     font-size: var(--nl-type-size-20);
     line-height: var(--nl-type-line-height-28);
     font-weight: var(--nl-type-weight-bold);
-    letter-spacing: 0;
+    letter-spacing: var(--nl-type-tracking-title);
     font-variant-numeric: normal;
+    color: var(--nl-content-strong);
 }
 .noslog-ui .nl-component-title {
     font-size: var(--nl-type-size-16);
@@ -310,6 +369,7 @@ html[data-theme="light"] .noslog-ui,
     font-weight: var(--nl-type-weight-semibold);
     letter-spacing: 0;
     font-variant-numeric: normal;
+    color: var(--nl-content-strong);
 }
 .noslog-ui .nl-entity-title {
     font-size: var(--nl-type-size-16);
@@ -317,6 +377,7 @@ html[data-theme="light"] .noslog-ui,
     font-weight: var(--nl-type-weight-semibold);
     letter-spacing: 0;
     font-variant-numeric: normal;
+    color: var(--nl-content-strong);
 }
 .noslog-ui .nl-body {
     font-size: var(--nl-type-size-16);
@@ -354,6 +415,13 @@ html[data-theme="light"] .noslog-ui,
     letter-spacing: 0;
     font-variant-numeric: normal;
 }
+/* 흐린 메타 줄 = 3차 글자(2026-10-21 전면 대조 ⑤) — 누르는 면(칩 · 버튼 · 세그먼트) 안은 대비가 모자라 2차 그대로 */
+.noslog-ui
+    .nl-metadata:is(.nl-muted, .text-nl-subdued):not(
+        :is(.nl-chip, .nl-button, .nl-segments__item) *
+    ) {
+    color: var(--nl-content-tertiary);
+}
 /* 여러 줄로 읽는 12 설명(칸 도움말 · 창 안 설명 문단)은 줄 높이만 18 — 한 줄 라벨 · 표 · 목록 줄 안 12 는 16 그대로(2026-10-01 D4) */
 .noslog-ui .nl-metadata--long {
     line-height: var(--nl-type-line-height-18);
@@ -362,7 +430,7 @@ html[data-theme="light"] .noslog-ui,
     font-size: var(--nl-type-size-32);
     line-height: var(--nl-type-line-height-40);
     font-weight: var(--nl-type-weight-bold);
-    letter-spacing: 0;
+    letter-spacing: var(--nl-type-tracking-title);
     font-variant-numeric: tabular-nums;
 }
 .noslog-ui .nl-metric-value {
@@ -389,11 +457,14 @@ html[data-theme="light"] .noslog-ui,
     letter-spacing: 0;
     font-variant-numeric: normal;
 }
-/* 구역 간격 — 넓은 화면(1056 이상)만 넓힌다(2026-10-01 D1 · 왓챠피디아 · KRDS 방식). 폰 · 중간 폭은 그대로 */
+/* 넓은 폭(1056 이상) — 구역 간격은 넓히고 컨트롤 높이는 낮춘다. 좁은 · 중간 폭은 위 값 그대로 */
 @media (min-width: 1056px) {
     .noslog-ui {
         --nl-section-gap: var(--nl-spacing-48);
         --nl-section-title-gap: var(--nl-spacing-16);
+        /* 컨트롤 높이 — 넓은 폭은 한 단계 낮게 */
+        --nl-control-height: 40px;
+        --nl-control-height-compact: 32px;
     }
 }
 /* 페이지 제목은 데스크톱(1056 이상)에서 32/40 — 모든 페이지 같은 규칙(글자 결정 ① 2026-09-15).

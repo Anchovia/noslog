@@ -121,7 +121,7 @@
 }
 .noslog-ui .nl-arcades__sheet-toggle:focus-visible {
     outline: none;
-    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-focus-ring);
+    box-shadow: inset 0 0 0 var(--nl-stroke-strong) var(--nl-focus-ring);
 }
 .noslog-ui .nl-arcades__sheet-body {
     display: flex;
@@ -168,7 +168,7 @@
 }
 /* FOCUS-1B — 카드 자신의 1px INSIDE 경계 색만 바꾼다 */
 .noslog-ui .nl-arcade-result:has(> .nl-arcade-result__summary:focus-visible) {
-    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-focus-ring);
+    box-shadow: inset 0 0 0 var(--nl-stroke-strong) var(--nl-focus-ring);
 }
 .noslog-ui .nl-arcade-result__summary {
     display: flex;
@@ -366,14 +366,35 @@
     color: var(--nl-content-default);
     cursor: pointer;
 }
+/* 오른쪽 아래 둥근 버튼 묶음(2026-10-21) — 내 위치 위 · 범례 아래, 사이 8. 자리는 범례가 있던 그대로(아래 24 · 오른쪽 8) */
+.noslog-ui .nl-arcade-map__controls {
+    position: absolute;
+    right: var(--nl-spacing-8);
+    bottom: var(--nl-spacing-24);
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-arcade-map__controls > .nl-arcade-map__legend {
+    position: static;
+}
+/* 내 위치 — 내 위치를 보고 있으면 채운 조준선 · 정보 표시색(구글 지도 · 카카오맵과 같은 파랑 계열), 찾는 중 · 거부는 흐림 */
+.noslog-ui .nl-arcade-map .nl-arcade-map__locate[data-state="active"] {
+    color: var(--nl-feedback-info-marker);
+}
+.noslog-ui
+    .nl-arcade-map
+    .nl-arcade-map__locate:is([data-state="busy"], [data-state="denied"]) {
+    color: var(--nl-content-subdued);
+}
 /* FOCUS-1B — 자신의 1px INSIDE 경계 색만 바꾼다 */
 .noslog-ui .nl-arcade-map .nl-arcade-map__legend:focus-visible {
     outline: none;
     box-shadow:
-        inset 0 0 0 var(--nl-stroke-default) var(--nl-focus-ring),
+        inset 0 0 0 var(--nl-stroke-strong) var(--nl-focus-ring),
         var(--nl-overlay-shadow);
 }
-/* 범례 팝오버 — 버튼 위 오른쪽 맞춤 · 오버레이 계약(면 · 경계 · radius 10 · 그림자) */
+/* 범례 팝오버 — 버튼 위 오른쪽 맞춤 · 떠 있는 창 규격(면 · 경계 · 모서리 overlay · 그림자) */
 .noslog-ui.nl-arcade-map__legend-popover {
     display: flex;
     flex-direction: column;
@@ -437,6 +458,32 @@
 .noslog-ui .nl-arcade-marker:focus-visible > * {
     outline: var(--nl-stroke-strong) solid var(--nl-content-on-media);
     outline-offset: var(--nl-spacing-2);
+}
+/* 핀 이름 판(2026-10-21 전면 대조 ③) — 핀 오른쪽 위, 떠 있는 면 · 12 글자. 누르는 자리는 핀 버튼 그대로 */
+.noslog-ui .nl-arcade-marker--pin {
+    position: relative;
+}
+.noslog-ui .nl-arcade-marker__label {
+    position: absolute;
+    bottom: var(--nl-spacing-16);
+    left: calc(50% + var(--nl-spacing-8));
+    max-width: calc(var(--nl-spacing-64) * 2);
+    overflow: hidden;
+    padding: var(--nl-spacing-2) var(--nl-spacing-4);
+    border-radius: var(--nl-radius-control);
+    background: var(--nl-surface-overlay);
+    box-shadow: var(--nl-overlay-shadow);
+    color: var(--nl-content-default);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    pointer-events: none;
+}
+.noslog-ui
+    .nl-arcade-marker--pin[aria-pressed="true"]
+    .nl-arcade-marker__label {
+    bottom: var(--nl-spacing-24);
+    left: calc(50% + var(--nl-spacing-16));
+    font-weight: var(--nl-type-weight-semibold);
 }
 /* 필터 레이어 */
 .noslog-ui .nl-arcades__filters {
@@ -523,11 +570,15 @@
     }
     /* 시트는 늘 올린 높이로 두고 내림은 아래로 밀어 둔다 — 두 단계 사이를 ⑫ 위치 이동으로 움직인다(화면 안 이동 = 감속).
        끄는 동안은 손가락을 따라가야 하므로 움직임 없이 페이지가 위치를 인라인으로 넣는다 */
+    /* 시트 면 = 떠 있는 면 + 위 그림자(2026-10-21 전면 대조 ③ — 가이드 떠 있는 창 규격, 칩은 W1 약한 선) */
     .noslog-ui .nl-arcades[data-sheet-layout] .nl-arcades__catalog {
+        --nl-control-line: var(--nl-border-default);
         position: absolute;
         inset: 0;
         margin-top: 0;
         overflow: hidden;
+        background: var(--nl-surface-overlay);
+        box-shadow: var(--nl-overlay-shadow);
         transform: translateY(calc(100% - var(--nl-sheet-peek)));
         transition: transform var(--nl-motion-duration-move)
             var(--nl-ease-enter);
@@ -604,7 +655,8 @@
         );
         min-height: 320px;
     }
-    .noslog-ui .nl-arcade-map__legend {
+    .noslog-ui .nl-arcade-map__legend,
+    .noslog-ui .nl-arcade-map__controls {
         bottom: var(--nl-spacing-8);
     }
 }
@@ -937,6 +989,34 @@
     overflow: hidden;
     background: var(--nl-surface-sunken);
 }
+/* 제목 아래 사진 줄(2026-10-22 사용자 — 네이버 지도 장소 화면): 정사각 160(64 × 2 + 32) · 모서리 그릇 · 사이 8, 옆으로 밀고 오른쪽은 화면 끝까지 */
+.noslog-ui .nl-arcade-photos-strip {
+    display: flex;
+    gap: var(--nl-spacing-8);
+    margin: 0 calc(var(--nl-layout-margin) * -1) 0 0;
+    padding: 0 var(--nl-layout-margin) 0 0;
+    overflow-x: auto;
+    list-style: none;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+}
+.noslog-ui .nl-arcade-photos-strip > li {
+    flex-shrink: 0;
+    scroll-snap-align: start;
+}
+.noslog-ui .nl-arcade-photos-strip__item {
+    display: block;
+    position: relative;
+    width: calc(var(--nl-spacing-64) * 2 + var(--nl-spacing-32));
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: var(--nl-radius-container);
+    background: var(--nl-surface-sunken);
+}
+.noslog-ui .nl-arcade-photos-strip__item img {
+    object-fit: cover;
+}
+
 /* 무대 = 큰 사진 + 카운터 + 넘김 버튼 — 1056+ 격자에서 썸네일 열과 나뉜다 */
 .noslog-ui .nl-arcade-photos__stage {
     position: relative;
@@ -1099,6 +1179,12 @@
         box-shadow: none;
     }
 }
+/* 사진 줄의 자리표시자 — 사진 한 칸 높이(160) · 모서리 그릇 · 화면 여백 안(네이버 사진 줄 자리) */
+.noslog-ui .nl-arcade-photos.nl-arcade-photos--strip-empty {
+    height: calc(var(--nl-spacing-64) * 2 + var(--nl-spacing-32));
+    margin-inline: 0;
+    border-radius: var(--nl-radius-container);
+}
 /* 1056 미만 하단 고정 바 — 위아래 12 + 컨트롤 44. 헤더(50)·메뉴 가림막보다 아래, 다이얼로그보다 아래 */
 .noslog-ui .nl-arcade-detail__bar {
     position: fixed;
@@ -1146,5 +1232,487 @@
     }
     .noslog-ui.nl-app:has(.nl-arcade-detail__bar) {
         padding-bottom: 0;
+    }
+}
+
+/* 사진 출처 칩(뮤즈캣 시안) — 사진 왼쪽 아래, 장 수 표시와 같은 여백 12 */
+.noslog-ui .nl-arcade-photos__credit {
+    position: absolute;
+    left: var(--nl-spacing-12);
+    bottom: var(--nl-spacing-12);
+}
+/* 뮤즈캣 오락실(연동 A · 2026-10-21 전면 대조 ①) — 값은 모두 토큰. 카드 = SurfaceCard · 점 = StatusDot · 정보 줄 = IconRow */
+/* 본문 = 한 줄로 쌓기 16(시안 화면 안 간격), 큰 구역 사이는 구분선 */
+.noslog-ui .nl-musecat-body,
+.noslog-ui .nl-musecat-head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-16);
+    min-width: 0;
+}
+.noslog-ui .nl-musecat-head {
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-musecat-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-section-title-gap);
+    min-width: 0;
+}
+.noslog-ui .nl-musecat-rule {
+    width: 100%;
+    height: var(--nl-stroke-default);
+    margin: 0;
+    border: 0;
+    background: var(--nl-border-divider);
+}
+.noslog-ui .nl-musecat-tags,
+.noslog-ui .nl-musecat-status {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-musecat-status {
+    flex-wrap: nowrap;
+}
+/* 줄 목록(소셜 · 뮤즈캣에서 더 보기 · 시설) — 줄 사이 구분선, framed 는 위아래도 */
+.noslog-ui .nl-musecat-lines {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.noslog-ui .nl-musecat-lines > li + li {
+    box-shadow: inset 0 var(--nl-stroke-default) var(--nl-border-divider);
+}
+.noslog-ui .nl-musecat-lines--framed {
+    box-shadow:
+        inset 0 var(--nl-stroke-default) var(--nl-border-divider),
+        inset 0 calc(var(--nl-stroke-default) * -1) var(--nl-border-divider);
+}
+.noslog-ui .nl-musecat-line {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-12);
+    min-height: var(--nl-control-height);
+    padding-block: var(--nl-spacing-4);
+    color: inherit;
+    text-decoration: none;
+}
+.noslog-ui .nl-musecat-line__copy {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-width: 0;
+}
+/* 소셜 아이콘 원 — 기존 작은 원 32(아바타 compact 와 같은 값). 시안 28 은 토큰에 없어 결정 대기 */
+.noslog-ui .nl-musecat-line__icon {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: var(--nl-spacing-32);
+    height: var(--nl-spacing-32);
+    border-radius: var(--nl-radius-full);
+    background: var(--nl-content-default);
+    color: var(--nl-surface-canvas);
+}
+/* 시설 줄 — 이름 · 값 글자만(색 없음), 값 = 있음 기본 · 없음 흐림 · 모름 대기색 */
+.noslog-ui .nl-musecat-lines > .nl-musecat-facility {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--nl-spacing-12);
+    padding-block: var(--nl-spacing-8);
+}
+.noslog-ui .nl-musecat-facility > [data-state="no"] {
+    color: var(--nl-content-subdued);
+}
+.noslog-ui .nl-musecat-facility > [data-state="unknown"] {
+    color: var(--nl-content-pending);
+}
+/* 길찾기 앱 줄의 앱 표시 — 아이콘 L(24) 정사각 · 누르는 면 · 첫 글자(2026-10-21 전면 대조 ⑨) */
+.noslog-ui .nl-musecat-app-mark {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: var(--nl-icon-large);
+    height: var(--nl-icon-large);
+    border-radius: var(--nl-radius-control);
+    background: var(--nl-surface-control);
+}
+/* 줄이 버튼일 때(공지 펼치기) — 줄 폭 가득 · 글자 왼쪽 */
+.noslog-ui button.nl-musecat-line {
+    width: 100%;
+    text-align: start;
+}
+.noslog-ui .nl-musecat-notice-link {
+    margin-bottom: var(--nl-spacing-8);
+}
+/* 정보 줄 안 — 요일별 영업시간은 보조 줄 자리에서 펼친다 · 별명은 한 줄 아래 */
+.noslog-ui .nl-musecat-weekly {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
+    margin-top: var(--nl-spacing-8);
+}
+.noslog-ui .nl-musecat-block {
+    display: block;
+}
+/* 시설 묶음 — 묶음 이름 →8→ 있음 태그 */
+.noslog-ui .nl-musecat-facility-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
+}
+/* 글 안 바깥 링크 아이콘 — 글자 줄 가운데 */
+.noslog-ui .nl-musecat-inline-icon {
+    display: inline;
+    margin-inline-start: var(--nl-spacing-4);
+    vertical-align: middle;
+}
+/* 공지 본문 — 접으면 두 줄 */
+.noslog-ui .nl-musecat-clamp {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+.noslog-ui .nl-musecat-pre {
+    white-space: pre-line;
+}
+/* 게임 목록(2026-10-23 게임 목록 시안 안 A — 장소 상세 안 항목 목록 21곳 실측) — 구분선 줄, 줄 = 이름 · 대수(오른쪽) →4→ 요금 · 위치 →4→
+   고장 상태 색 글자 →8→ 「자세히」(폭 가득 옅은 면 · Pinball Map 「Machine details」). 펼치면 그 사이에 고장 내용 · 새 버전 확인 · 기체 특징 · 고장 신고 */
+.noslog-ui .nl-musecat-games {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.noslog-ui .nl-musecat-games > li + li {
+    box-shadow: inset 0 var(--nl-stroke-default) var(--nl-border-divider);
+}
+.noslog-ui .nl-musecat-game {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-4);
+    padding-block: var(--nl-spacing-16);
+}
+.noslog-ui .nl-musecat-game__top {
+    display: flex;
+    align-items: baseline;
+    gap: var(--nl-spacing-8);
+}
+.noslog-ui .nl-musecat-game__top > .nl-entity-title {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+.noslog-ui .nl-musecat-game__top > :last-child {
+    flex-shrink: 0;
+}
+.noslog-ui .nl-musecat-game__status[data-state="fault"] {
+    color: var(--nl-feedback-error-text);
+}
+.noslog-ui .nl-musecat-game__status[data-state="ok"] {
+    color: var(--nl-feedback-success-marker);
+}
+.noslog-ui .nl-musecat-game__details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-8);
+    margin-top: var(--nl-spacing-8);
+    padding: var(--nl-spacing-12);
+    border-radius: var(--nl-radius-field);
+    background: var(--nl-surface-surface);
+}
+.noslog-ui .nl-musecat-game__toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--nl-spacing-4);
+    min-height: var(--nl-control-height-compact);
+    margin-top: var(--nl-spacing-8);
+    border-radius: var(--nl-radius-field);
+    background: var(--nl-interaction-hover);
+    color: var(--nl-content-subdued);
+}
+@media (hover: hover) {
+    .noslog-ui .nl-musecat-game__toggle:hover {
+        color: var(--nl-content-default);
+    }
+}
+.noslog-ui .nl-musecat-game__toggle:focus-visible {
+    outline: none;
+    box-shadow: inset 0 0 0 var(--nl-stroke-strong) var(--nl-focus-ring);
+}
+.noslog-ui .nl-musecat-games__more {
+    width: 100%;
+}
+/* 고장 한 건 — 정도 →4→ 내용 →4→ 메타 */
+.noslog-ui .nl-musecat-flag {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-4);
+}
+/* 목록 줄(2026-10-22 목록 시안 안 A — 지도 · 장소 찾기 23곳 실측 그대로) — 왼쪽 썸네일 96(64 + 32, MapQuest 96 · 다이소 88 · 올리브영 105) →12→
+   이름 + 뮤즈캣 로고 + 거리 / 태그 / 주소 한 줄 / 영업 상태(로고 = 이름 오른쪽, 사용자 2026-10-22). 위아래 16 · 줄 사이 1px 선 · 고른 줄 = 메뉴 고른 면 */
+.noslog-ui .nl-musecat-result {
+    display: grid;
+    grid-template-columns:
+        calc(var(--nl-spacing-64) + var(--nl-spacing-32))
+        minmax(0, 1fr);
+    column-gap: var(--nl-spacing-12);
+    align-items: start;
+    padding-block: var(--nl-spacing-16);
+    color: inherit;
+    text-decoration: none;
+}
+.noslog-ui .nl-musecat-result[data-selected] {
+    background: var(--nl-interaction-menu-set);
+}
+/* 사진이 없으면 회색 칸 + 핀(MapQuest) */
+.noslog-ui .nl-musecat-result__thumb {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: var(--nl-radius-field);
+    background: var(--nl-surface-control);
+    color: var(--nl-content-subdued);
+}
+.noslog-ui .nl-musecat-result__thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.noslog-ui .nl-musecat-result__copy {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-4);
+    min-width: 0;
+}
+.noslog-ui .nl-musecat-result__name {
+    display: flex;
+    align-items: baseline;
+    gap: var(--nl-spacing-8);
+    min-width: 0;
+}
+.noslog-ui .nl-musecat-result__name > .nl-entity-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.noslog-ui .nl-musecat-result__name > :not(.nl-entity-title) {
+    flex-shrink: 0;
+}
+/* 이름 오른쪽 로고 — 글자 줄 가운데 */
+.noslog-ui .nl-musecat-result__name > .nl-musecat-logo {
+    align-self: center;
+}
+.noslog-ui .nl-musecat-result__source {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--nl-spacing-4);
+}
+/* 뮤즈캣 로고 자리(사용 허가 전 — 글자 「M」) — 아이콘 S 정사각 · 모서리 4 · 동작 글자 면 */
+.noslog-ui .nl-musecat-logo {
+    display: grid;
+    place-items: center;
+    width: var(--nl-icon-small);
+    height: var(--nl-icon-small);
+    flex-shrink: 0;
+    border-radius: var(--nl-radius-control);
+    background: var(--nl-content-interactive);
+    color: var(--nl-surface-canvas);
+}
+.noslog-ui .nl-musecat-result__address {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+/* 영업 상태 글자 — 영업 중 초록 · 영업 종료 빨강(Google · Yahoo · Bing) */
+.noslog-ui .nl-musecat-result__state {
+    font-weight: var(--nl-type-weight-semibold);
+}
+.noslog-ui .nl-musecat-result__state[data-open="open"] {
+    color: var(--nl-feedback-success-marker);
+}
+.noslog-ui .nl-musecat-result__state[data-open="closed"] {
+    color: var(--nl-feedback-error-text);
+}
+/* 목록 지도 — 폰에서는 좌우 끝까지(오락실 목록 지도와 같은 규칙) */
+.noslog-ui .nl-musecat-map {
+    min-width: 0;
+}
+@media (max-width: 671px) {
+    .noslog-ui .nl-musecat-map {
+        margin-inline: calc(var(--nl-grid-margin-compact) * -1);
+    }
+    .noslog-ui .nl-musecat-map .nl-arcade-map {
+        border-radius: 0;
+    }
+}
+/* 고치기 창 구역 머리 — 제목 →4→ 설명(2026-10-21 전면 대조 ⑩) */
+.noslog-ui .nl-musecat-form-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nl-spacing-4);
+}
+/* 기체 정보 고치기 — 요금 한 줄 = 이름 · 금액 · 지우기 */
+.noslog-ui .nl-musecat-price-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+    gap: var(--nl-spacing-8);
+    align-items: center;
+}
+/* 요금 열 머리 — 지우기 버튼 칸만큼 끝을 비워 아래 줄과 열을 맞춘다 */
+.noslog-ui .nl-musecat-price-row--head::after {
+    content: "";
+    width: var(--nl-control-height);
+}
+/* 목록 줄의 고장 건수 — 오류 글자색(시안), 색 상자 · 아이콘 없음 */
+.noslog-ui .nl-musecat-flagged {
+    color: var(--nl-feedback-error-text);
+}
+/* 보내지 않는 항목 · 대기 글자(설정 뮤즈캣 상세) */
+.noslog-ui .nl-musecat-pending {
+    color: var(--nl-content-pending);
+}
+/* 접고 펴기 글자 버튼(공지 「펼치기」 · 「요일별 보기」) — 글자 control + 꺾쇠 16 · 사이 4, 줄 왼쪽 */
+.noslog-ui .nl-musecat-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--nl-spacing-4);
+    color: var(--nl-content-interactive);
+}
+/* 뮤즈캣 오락실 목록(검색칸 자리 안 2, 2026-10-21) — 오락실 찾기의 지도 + 아래 시트 틀(nl-arcades)을 그대로 쓰고 두 곳만 다르다.
+   ① 1056 미만: 검색이 지도 위에 떠 있다(위 12 · 좌우 화면 여백, 공용 SearchField floating). 「이 지역에서 검색」 은 검색 아래로 내린다 */
+.noslog-ui .nl-musecat-float {
+    position: absolute;
+    top: var(--nl-spacing-12);
+    right: var(--nl-grid-margin-compact);
+    left: var(--nl-grid-margin-compact);
+    z-index: calc(var(--nl-layer-above) + 1);
+}
+/* 목록 위 「◎ 위치 ○○」 줄(2026-10-22 사용자 — 카카오맵 목록 그대로) — 조준선 16 · 「위치」 굵게 정보 파랑(카카오 파랑 자리, 떠 있는 면 위 4.54) · 기준 위치 기본 글자, 넘치면 말줄임 */
+.noslog-ui .nl-musecat-where {
+    display: flex;
+    align-items: center;
+    gap: var(--nl-spacing-4);
+    min-width: 0;
+}
+.noslog-ui .nl-musecat-where > svg,
+.noslog-ui .nl-musecat-where__label {
+    flex-shrink: 0;
+    color: var(--nl-feedback-info-marker);
+}
+.noslog-ui .nl-musecat-where__value {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+/* 지도가 셸 헤더 바로 아래부터 — 시트 배치에서는 페이지 위 여백을 두지 않는다(검색이 지도 위에 떠 있어서).
+   NosLog 헤더는 지도 화면에서도 그대로(2026-10-22 사용자 — 전면 대조 ③ 안 ②) */
+@media (max-width: 1055px) {
+    .noslog-ui .nl-musecat-arcades[data-sheet-layout] {
+        padding-top: 0;
+    }
+    /* 시트를 다 올려도 검색은 맨 위에 남는다(구글 지도 · Bing) — 시트는 검색 아래(위 12 + 검색 높이 + 12)까지만 올라온다 */
+    .noslog-ui .nl-musecat-arcades[data-sheet-layout] .nl-arcades__catalog {
+        top: calc(
+            var(--nl-spacing-12) + var(--nl-control-height) +
+                var(--nl-spacing-12)
+        );
+    }
+    .noslog-ui
+        .nl-musecat-arcades[data-sheet-layout][data-sheet="expanded"]
+        .nl-musecat-float {
+        visibility: visible;
+    }
+}
+.noslog-ui .nl-musecat-arcades .nl-arcade-map__area {
+    top: calc(
+        var(--nl-spacing-12) + var(--nl-control-height) + var(--nl-spacing-8)
+    );
+}
+/* ② 1056 이상(2026-10-21 전면 대조 ④ — Google 지도 · 네이버 지도 웹): 지도가 헤더 아래 화면을 좌우 끝까지 채우고(모서리 0),
+   왼쪽에 떠 있는 패널 — 머리(검색 · 요약)는 고정, 목록만 스크롤. 줄 면은 패널 폭 가득(줄 안쪽 16). 지도 화면에는 사이트 푸터를 두지 않는다(지도 앱 실측 — 2026-10-22) */
+@media (min-width: 1056px) {
+    .noslog-ui:has(.nl-musecat-arcades) .nl-main {
+        max-width: none;
+    }
+    .noslog-ui:has(.nl-musecat-arcades) .nl-main__content {
+        padding-inline: 0;
+    }
+    .noslog-ui:has(.nl-musecat-arcades) .nl-footer {
+        display: none;
+    }
+    .noslog-ui .nl-musecat-arcades {
+        max-width: none;
+        height: calc(100dvh - var(--nl-header-height));
+        padding-block: 0;
+    }
+    .noslog-ui .nl-musecat-arcades .nl-arcades__results {
+        display: block;
+        position: relative;
+        height: 100%;
+    }
+    .noslog-ui .nl-musecat-arcades .nl-arcades__map-region {
+        position: absolute;
+        inset: 0;
+    }
+    .noslog-ui .nl-musecat-arcades .nl-arcade-map {
+        height: 100%;
+        min-height: 0;
+        border-radius: 0;
+    }
+    /* 「이 지역에서 검색」 은 패널을 뺀 지도 가운데 */
+    .noslog-ui .nl-musecat-arcades .nl-arcade-map__area {
+        top: var(--nl-spacing-16);
+        left: calc(
+            (100% + var(--nl-spacing-16) + var(--nl-container-narrow)) / 2
+        );
+    }
+    .noslog-ui .nl-musecat-arcades .nl-arcades__catalog {
+        --nl-control-line: var(--nl-border-default);
+        position: absolute;
+        top: var(--nl-spacing-16);
+        bottom: var(--nl-spacing-16);
+        left: var(--nl-spacing-16);
+        width: var(--nl-container-narrow);
+        gap: 0;
+        padding: 0;
+        overflow: hidden;
+        border-radius: var(--nl-radius-overlay);
+        background: var(--nl-surface-overlay);
+        box-shadow:
+            inset 0 0 0 var(--nl-stroke-default) var(--nl-border-overlay),
+            var(--nl-overlay-shadow);
+    }
+    .noslog-ui .nl-musecat-arcades .nl-arcades__sheet-head {
+        gap: var(--nl-spacing-12);
+        padding: var(--nl-spacing-16);
+        box-shadow: inset 0 calc(var(--nl-stroke-default) * -1)
+            var(--nl-border-divider);
+    }
+    .noslog-ui .nl-musecat-arcades .nl-arcades__sheet-body {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        padding-block: var(--nl-spacing-8) 0;
+    }
+    .noslog-ui
+        .nl-musecat-arcades
+        .nl-arcades__sheet-body
+        > :not(.nl-musecat-section),
+    .noslog-ui .nl-musecat-arcades .nl-musecat-section > .nl-pagination {
+        padding-inline: var(--nl-spacing-16);
+    }
+    .noslog-ui .nl-musecat-arcades .nl-musecat-result {
+        padding-inline: var(--nl-spacing-16);
     }
 }

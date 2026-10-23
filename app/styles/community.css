@@ -183,7 +183,7 @@
 .noslog-ui .nl-pattern-form__error {
     color: var(--nl-feedback-error-text);
 }
-/* 평가할 수 없을 때 — 목록 흐림 5px(투명도는 그대로) + 가운데 떠 있는 카드(떠 있는 창 규격: overlay 면 · 경계 · 모서리 10 · 그림자).
+/* 평가할 수 없을 때 — 목록 흐림 5px(투명도는 그대로) + 가운데 떠 있는 카드(떠 있는 창 규격: overlay 면 · 경계 · 모서리 overlay · 그림자).
    입력 영역 잠금에만 쓴다 (2026-09-17 L2) */
 .noslog-ui .nl-pattern-lock {
     position: relative;
@@ -280,7 +280,7 @@
 .noslog-ui .nl-opinions > .nl-disclosure__body > .nl-heading-row {
     margin-bottom: var(--nl-spacing-8);
 }
-/* 의견 제목 줄(공용 제목 줄) → 12 → 작성 칸 → 8 → 목록 · 빈 안내 (2026-09-16 · 09-18 · 정렬은 최신순 하나라 메뉴 없음) */
+/* 의견 제목 줄(공용 제목 줄) → 12 → 작성 칸 → 8 → 목록 · 빈 안내 (의견이 둘 이상이면 목록 위 왼쪽에 정렬 — 최신순 · 좋아요순) */
 .noslog-ui .nl-opinions__body {
     display: flex;
     flex-direction: column;

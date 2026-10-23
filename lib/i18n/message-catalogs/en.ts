@@ -151,7 +151,7 @@ export const enMessages = {
     "pattern.scale":
         "An average is published from the first rating. An omitted rating is distinct from zero.",
     "pattern.basis":
-        "Rate how strong each pattern is from 0–4 compared with all charts — not how much of this chart it takes up.",
+        "Rate how strong each pattern is from 0–4 compared with all charts, not how much of this chart it takes up.",
     "pattern.basisShort": "Compared with all charts",
     "pattern.basisLow": "none",
     "pattern.basisHigh": "a lot",
@@ -912,7 +912,7 @@ export const enMessages = {
     "tiers.guideMinScore": "{score} or higher",
     "bingo.title": "Bingo",
     "bingo.metaDescription":
-        "NOSTALGIA bingo missions and rewards — check off cells to track your progress.",
+        "NOSTALGIA bingo missions and rewards. Check off cells to track your progress.",
     "bingo.requiredLinesLabel": "Lines needed {count}",
     "bingo.lineComplete": "Completed line",
     "bingo.info": "Bingo details",
@@ -1015,7 +1015,7 @@ export const enMessages = {
     "exams.scope.cumulative": "{stages} cumulative",
     "exams.scope.total": "All {count} tunes",
     "exams.recital.explanation":
-        "Four categories × 10 points — 40 per tune, 120 across three tunes",
+        "Four categories × 10 points. 40 per tune, 120 across three tunes",
     "exams.none": "None",
     "exams.insufficient": "Grd. too low",
     "exams.chooseChart": "Choose a chart",
@@ -1057,7 +1057,7 @@ export const enMessages = {
     "exams.status.available": "Available",
     "exams.status.insufficientBy": "Grd. {value} short",
     "exams.event.reference":
-        "Event exams are for reference only — no certification.",
+        "Event exams are for reference only and can't be certified.",
     "exams.margin.ahead": "{value} ahead",
     "exams.margin.behind": "{value} short",
     "exams.progress.title": "To Pass",
@@ -1711,7 +1711,7 @@ export const enMessages = {
     "chart.source.notesBody":
         "Extracted automatically from a play video, then reviewed by an operator.",
     "chart.source.tool":
-        "vid2bmap — Yeonghun Kim · Sunghee Choi (KAIST) · MIT License",
+        "vid2bmap (Yeonghun Kim, Sunghee Choi, KAIST) · MIT License",
     "chart.source.paper": "Paper (KSC 2023)",
     "chart.audioError": "This browser cannot play the selected audio.",
     "record.analysis": "Judgement analysis",
@@ -1867,7 +1867,7 @@ export const enMessages = {
     "contribution.proposal.titleEdit": "Suggest a fix for {field}",
     "contribution.proposal.current": "Current value",
     "contribution.proposal.pendingNotice":
-        "Your suggestion {value} is in review — sending again replaces it.",
+        "Your suggestion {value} is in review. Sending again replaces it.",
     "contribution.proposal.help.bpm":
         "Use min–max if the tempo changes (e.g. 120-180)",
     "contribution.proposal.help.note_count":
@@ -1914,7 +1914,7 @@ export const enMessages = {
     "contribution.label.level": "Contributor Lv.{level}",
     "contribution.label.points": "{points} pts",
     "contribution.label.help":
-        "{remaining} pts to Lv.{next} — grows as you add music and arcade information.",
+        "{remaining} pts to Lv.{next}. It grows as you add music and arcade information.",
     "contribution.label.helpMax": "This is the highest level.",
     "contribution.label.operator": "Admin",
     "contribution.label.operatorHelp":
@@ -2242,7 +2242,7 @@ export const enMessages = {
     "partner.consent.item.ranks.help": "Country and overall rank",
     "partner.consent.item.song_records": "Per-song records",
     "partner.consent.item.song_records.help":
-        "Best score, Grd and rank per chart — not available yet while the format is agreed",
+        "Best score, Grd and rank per chart. Not available yet while the format is agreed",
     "partner.consent.item.recent_plays": "Recent plays",
     "partner.consent.item.recent_plays.help": "Last 50 plays with play times",
     "partner.consent.privateScores":
@@ -2336,7 +2336,7 @@ export const enMessages = {
     "musecat.edit.traitsNote":
         "Traits are sent as an arcade report and applied after an operator checks them.",
     "musecat.edit.traitsReport":
-        "NosLog cabinet trait suggestion (Musecat cabinet edit) — {items}",
+        "NosLog cabinet trait suggestion (Musecat cabinet edit): {items}",
     "musecat.edit.traitsFailed": "Couldn't send the trait report. Try again.",
     "musecat.edit.unitCount": "units",
     "musecat.edit.unitWon": "KRW",
@@ -2442,7 +2442,7 @@ export const enMessages = {
     "musecat.campaign.stillOld": "Not yet",
     "musecat.campaign.updated": "Updated",
     "musecat.campaign.thanks": "Thanks for letting us know.",
-    "musecat.campaign.thanksXp": "Thanks! Musecat XP +{xp}",
+    "musecat.campaign.thanksXp": "Thanks for letting us know. Musecat XP +{xp}",
     "musecat.edit.title": "Edit NOSTALGIA cabinet info",
     "musecat.edit.game": "Version · cabinet",
     "musecat.edit.quantity": "Count",

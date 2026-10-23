@@ -89,15 +89,15 @@
         );
     }
 }
-/* 선택 = 버튼 칩은 aria-pressed, 링크 칩(FilterChipLinks)은 aria-current */
+/* 선택 = 버튼 칩은 aria-pressed, 링크 칩(FilterChipLinks)은 aria-current.
+   고른 칩 = 주 면 + 그 위 글자로 뒤집는다(2026-10-21 전면 대조 ⑥ — YouTube · Spotify 다크). 굵기는 그대로 500 — 고를 때 폭이 늘어 줄이 다시 흐르지 않게 */
 .noslog-ui .nl-chip:is([aria-pressed="true"], [aria-current="page"]) {
-    background: var(--nl-surface-control-selected);
-    color: var(--nl-content-interactive);
-    font-weight: var(--nl-type-weight-semibold);
+    background: var(--nl-primary-default);
+    color: var(--nl-primary-on-primary);
 }
 .noslog-ui .nl-chip:focus-visible {
     outline: none;
-    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-focus-ring);
+    box-shadow: inset 0 0 0 var(--nl-stroke-strong) var(--nl-focus-ring);
 }
 .noslog-ui .nl-chip:disabled {
     color: var(--nl-interaction-disabled-content);
@@ -147,7 +147,9 @@
 }
 /* 마우스를 올리면 기본 글자색 — hover 면(#2c2c2c) 위에서는 카테고리·난이도 색의 대비가 4.5 아래로 내려간다(2026-09-14 사용자 결정) */
 .noslog-ui
-    .nl-chip[data-tone]:not([aria-pressed="true"]):not(:disabled):not(:hover) {
+    .nl-chip[data-tone]:not([aria-pressed="true"], [aria-current]):not(
+        :disabled
+    ):not(:hover) {
     color: var(--nl-tone);
 }
 .noslog-ui
@@ -160,6 +162,12 @@
 .noslog-ui .nl-chip__count {
     color: var(--nl-content-subdued);
     font-weight: var(--nl-type-weight-regular);
+}
+/* 고른 칩(주 면) 안 개수는 칩 글자색 그대로 — 흐린 글자는 밝은 면 위에서 대비가 모자란다 */
+.noslog-ui
+    .nl-chip:is([aria-pressed="true"], [aria-current="page"])
+    .nl-chip__count {
+    color: inherit;
 }
 
 /* 정렬 메뉴: 팝오버 · 소제목 metadata subdued · 행 40 · 선택 = menu-set 면 + 굵기 + 체크 */
@@ -222,7 +230,7 @@
 }
 .noslog-ui .nl-sort-menu__item:focus-visible {
     outline: none;
-    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-focus-ring);
+    box-shadow: inset 0 0 0 var(--nl-stroke-strong) var(--nl-focus-ring);
 }
 /* 마우스로 연 메뉴는 첫 항목에 흰 1px 을 그리지 않는다 — 셀렉트 목록과 같은 규칙(lib/input-modality) */
 :root[data-input="pointer"] .noslog-ui .nl-sort-menu__item:focus-visible {
@@ -370,10 +378,10 @@
 }
 .noslog-ui .nl-applied__token:focus-visible {
     outline: none;
-    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-focus-ring);
+    box-shadow: inset 0 0 0 var(--nl-stroke-strong) var(--nl-focus-ring);
 }
 
-/* 팝오버 그릇(672+) — DestinationPanel 계약: overlay 면 + border/overlay + radius 10 + 그림자 */
+/* 팝오버 그릇(672+) — 떠 있는 창 규격: overlay 면 + border/overlay + 모서리 overlay + 그림자 */
 .noslog-ui .nl-filter-popover {
     display: flex;
     flex-direction: column;

@@ -8,7 +8,7 @@
 }
 /* 제목 = 서열표 스위처(2026-09-22 ④) — 글자는 페이지 제목 그대로 + 꺾쇠 24 흐림.
    누르는 영역은 컨트롤 높이(줄 높이는 늘리지 않게 위아래로 당김), 올림 면이 칠해질 좌우 8 은 잉크가 제목 선에 서게 왼쪽으로 당긴다.
-   테두리 없는 컨트롤이라 포커스에서만 1px 흰 선 */
+   테두리 없는 컨트롤이라 포커스에서만 흰 선(stroke-strong) */
 .noslog-ui .nl-tier-heading {
     display: flex;
     min-width: 0;
@@ -52,7 +52,7 @@
 }
 .noslog-ui .nl-tier-switch:focus-visible {
     outline: none;
-    box-shadow: inset 0 0 0 var(--nl-stroke-default) var(--nl-focus-ring);
+    box-shadow: inset 0 0 0 var(--nl-stroke-strong) var(--nl-focus-ring);
 }
 .noslog-ui .nl-tier-switch[data-state="open"] {
     --nl-state-layer: var(--nl-interaction-selected-pressed);
@@ -130,11 +130,8 @@
     width: calc((100% - 3 * var(--nl-grid-gutter-wide)) / 4);
     flex: none;
     flex-direction: column;
-    gap: var(--nl-spacing-32);
-}
-/* 레일 안 필터 그룹끼리는 구역 사이(32)가 아니라 선 위아래 16 — 그룹 padding 16 과 합쳐 위아래가 같다 */
-.noslog-ui .nl-tier-rail > .nl-filter-group + .nl-filter-group {
-    margin-top: calc(var(--nl-spacing-16) - var(--nl-spacing-32));
+    /* 필터 그룹 사이 16 — 그룹 padding 16 과 합쳐 선 위아래가 같다(악곡 레일과 같은 값) */
+    gap: var(--nl-spacing-16);
 }
 .noslog-ui .nl-tier-results {
     flex: 1;

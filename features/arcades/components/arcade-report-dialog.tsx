@@ -56,7 +56,6 @@ export default function ArcadeReportDialog({
     triggerLabel,
     triggerAriaLabel,
     triggerSuffix,
-    triggerVariant = "secondary",
     iconOnly = false,
 }: {
     arcade: PublicArcade;
@@ -70,7 +69,6 @@ export default function ArcadeReportDialog({
     /** 없으면 기본 트리거의 말풍선 아이콘 */
     /** 글자 오른쪽에 붙는 것 — 기체 행 「고장 신고」 의 흐린 신고 건수 */
     triggerSuffix?: ReactNode;
-    triggerVariant?: "secondary" | "danger";
     /** 상세 하단 바·레일 — 선호 하트처럼 말풍선 아이콘만. 이름·툴팁은 「오락실 제보」 */
     iconOnly?: boolean;
 }) {
@@ -160,11 +158,7 @@ export default function ArcadeReportDialog({
             <MessageSquare className="nl-icon" aria-hidden />
         </Button>
     ) : (
-        <Button
-            variant={triggerVariant}
-            size="sm"
-            aria-label={triggerAriaLabel}
-        >
+        <Button variant="secondary" size="sm" aria-label={triggerAriaLabel}>
             {/* 기본 트리거는 말풍선 16 + 글자 · 기체 카드 「고장 신고」 는 글자만 */}
             {triggerLabel ? null : (
                 <MessageSquare className="nl-icon-small" aria-hidden />

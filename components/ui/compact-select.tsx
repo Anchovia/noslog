@@ -87,7 +87,7 @@ export default function CompactSelect<Value extends string>({
                                     </Select.ItemText>
                                     <Select.ItemIndicator>
                                         <Check
-                                            className="nl-icon"
+                                            className="nl-icon-small"
                                             aria-hidden
                                         />
                                     </Select.ItemIndicator>

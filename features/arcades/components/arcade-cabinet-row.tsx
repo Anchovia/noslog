@@ -221,7 +221,6 @@ export default function ArcadeCabinetRow({
                     initialCabinetId={cabinet.id}
                     initialReportType="unavailable"
                     triggerLabel={t("arcades.reportBroken")}
-                    triggerVariant="danger"
                     triggerSuffix={
                         cabinet.openReports ? (
                             <span className="nl-metric-value nl-arcade-cabinet__count">

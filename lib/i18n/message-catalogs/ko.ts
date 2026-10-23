@@ -1007,7 +1007,7 @@ export const koMessages = {
     "exams.scope.cumulative": "{stages} 누적",
     "exams.scope.total": "{count}곡 누적",
     "exams.recital.explanation":
-        "4개 평가 항목 × 10점 — 곡당 40점, 3곡 합계 120점",
+        "4개 평가 항목 × 10점. 곡당 40점, 3곡 합계 120점",
     "exams.none": "없음",
     "exams.insufficient": "Grd. 부족",
     "exams.chooseChart": "채보 선택",
@@ -1047,7 +1047,7 @@ export const koMessages = {
     "exams.status.locked": "잠김",
     "exams.status.available": "응시 가능",
     "exams.status.insufficientBy": "Grd. {value} 부족",
-    "exams.event.reference": "이벤트 검정은 참고용 — 인증하지 않습니다.",
+    "exams.event.reference": "이벤트 검정은 참고용이라 인증하지 않습니다.",
     "exams.margin.ahead": "여유 {value}",
     "exams.margin.behind": "부족 {value}",
     "exams.progress.title": "합격까지",
@@ -1692,7 +1692,7 @@ export const koMessages = {
     "chart.source.notes": "노트 배치",
     "chart.source.notesBody":
         "플레이 영상에서 자동 추출한 뒤 운영자가 검수했습니다.",
-    "chart.source.tool": "vid2bmap — 김영훈 · 최성희(KAIST) · MIT 라이선스",
+    "chart.source.tool": "vid2bmap(김영훈 · 최성희, KAIST) · MIT 라이선스",
     "chart.source.paper": "논문(KSC 2023)",
     "chart.audioError": "브라우저에서 이 음원을 재생할 수 없습니다.",
     "record.analysis": "판정 분석",
@@ -1846,7 +1846,7 @@ export const koMessages = {
     "contribution.proposal.titleEdit": "{field} 수정 제안",
     "contribution.proposal.current": "지금 값",
     "contribution.proposal.pendingNotice":
-        "검토 중인 내 제안 {value} — 다시 내면 새 값으로 바뀝니다.",
+        "검토 중인 내 제안: {value}. 다시 내면 새 값으로 바뀝니다.",
     "contribution.proposal.help.bpm": "변속이 있으면 최소–최대(예: 120-180)",
     "contribution.proposal.help.note_count": "결과 화면의 총 노트 수",
     "contribution.proposal.help.duration": "분:초(예: 2:04)",
@@ -1889,7 +1889,7 @@ export const koMessages = {
     "contribution.label.level": "기여 Lv.{level}",
     "contribution.label.points": "{points}점",
     "contribution.label.help":
-        "Lv.{next}까지 {remaining}점 — 곡 정보와 오락실 정보를 채운 만큼 오릅니다.",
+        "Lv.{next}까지 {remaining}점. 곡 정보와 오락실 정보를 채운 만큼 오릅니다.",
     "contribution.label.helpMax": "가장 높은 등급입니다.",
     "contribution.label.operator": "Admin",
     "contribution.label.operatorHelp":
@@ -2209,7 +2209,7 @@ export const koMessages = {
     "partner.consent.item.ranks.help": "국가 · 전체 순위",
     "partner.consent.item.song_records": "곡별 기록",
     "partner.consent.item.song_records.help":
-        "곡 · 난이도마다 최고 점수 · Grd · 등급 — 형식을 맞추는 중이라 아직 보낼 수 없어요",
+        "곡 · 난이도마다 최고 점수 · Grd · 등급. 형식을 맞추는 중이라 아직 보낼 수 없어요",
     "partner.consent.item.recent_plays": "최근 플레이",
     "partner.consent.item.recent_plays.help": "최근 50곡 · 플레이 시각",
     "partner.consent.privateScores":
@@ -2303,7 +2303,7 @@ export const koMessages = {
     "musecat.edit.traitsNote":
         "기체 특징은 오락실 제보로 보내져 운영자가 확인한 뒤 반영돼요.",
     "musecat.edit.traitsReport":
-        "NosLog 기체 특징 제안(뮤즈캣 기체 정보 고치기) — {items}",
+        "NosLog 기체 특징 제안(뮤즈캣 기체 정보 고치기): {items}",
     "musecat.edit.traitsFailed":
         "기체 특징 제보를 보내지 못했어요. 다시 시도해 주세요.",
     "musecat.edit.unitCount": "대",
