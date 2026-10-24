@@ -6,7 +6,7 @@ context: fork
 
 # NosLog AI 티 검사
 
-바뀐 것을 [`docs/ai-check.md`](../../../docs/ai-check.md) 32줄과 아래 참조 목록에 대어 보고, 걸린 것을 보고한다. 파일을 고치지 않는다.
+바뀐 것을 [`docs/ai-check.md`](../../../docs/ai-check.md) 32항목과 아래 참조 목록에 대어 보고, 걸린 것을 보고한다. 파일을 고치지 않는다.
 
 ## 순서
 

@@ -5,7 +5,7 @@ NosLog — NOSTALGIA 비공식 기록 · 랭킹 · 아카이브 서비스. 모�
 
 ## 시작할 때
 
-1. 이 파일과 [AI 티 확인](docs/ai-check.md)을 읽는다.
+1. 이 파일과 [AI 티 확인](docs/ai-check.md)을 읽는다(Claude 는 `CLAUDE.md` 가 둘 다 싣는다).
 2. `git status` 로 지금 변경을 본다. 다른 세션의 변경은 건드리지 않는다.
 3. 작업할 화면 · 부품의 가이드 문서만 골라 읽는다([디자인 가이드 색인](docs/design/README.md)).
 
@@ -46,7 +46,7 @@ Tailwind 4: 설정은 CSS(`app/globals.css`), `tailwind.config` 를 만들지 �
 
 ## 사용자 규칙
 
-- 답은 한국어.
+- 답은 한국어. 중간 안내 · 표 · 마무리 정리 · 버튼 글까지.
 - git 은 사용자가 한다 — 커밋 · 푸시 · 스테이징 · 브랜치 · PR 모두. 상태 조회만 한다.
   끝나면 커밋 제목(영어 type + 한국어 설명, 예 `fix: 악곡 상세 반응형 전환 기준 통일`)과 묶음별 `git add` 명령을 준다.
   커밋 · PR · 릴리스 글에 「Generated with Claude Code」 · `Co-Authored-By` 같은 서명 줄을 넣지 않는다.
@@ -58,7 +58,7 @@ Tailwind 4: 설정은 CSS(`app/globals.css`), `tailwind.config` 를 만들지 �
 - 로그인은 사용자가 한다. 인증을 우회하지 않는다. 로그인 상태로 검수할 때 저장 · 제출 · 삭제를 누르지 않는다.
   다른 서비스 계정 화면을 조사하려고 로그인을 부탁하지 않는다(로그인 뒤 화면은 공개 스크린샷 · 공식 문서로).
 - 개발 서버는 사용자가 켜 둔 localhost:3000 을 쓴다.
-- 고른 계획은 단계마다 묻지 않고 끝까지 한다. 사용자만 할 수 있는 일이 막을 때만 멈춘다. 작업은 크게 묶고 날짜로 쪼개지 않는다.
+- 고른 계획은 단계마다 묻지 않고 끝까지 한다. 사용자만 할 수 있는 일이 막을 때만 멈춘다. 작업은 크게 묶고 날짜로 쪼개지 않는다. 범위를 줄이거나 미루는 안을 추천하지 않는다(배포 순서가 강제할 때만 나눈다).
 
 ## 동시 세션
 
@@ -66,16 +66,19 @@ Tailwind 4: 설정은 CSS(`app/globals.css`), `tailwind.config` 를 만들지 �
 
 - 임시 파일 · 스크립트 · 스크린샷은 리포 밖 임시 폴더(Claude 는 세션 스크래치패드)에만 만든다.
 - 주는 `git add` 명령에는 내가 바꾼 파일 이름을 하나씩 적는다. `git add -A` · `git add .` 는 주지 않는다.
+  묶음이 아직 추적되지 않은 다른 세션 파일을 불러오지 않는지 본다(커밋된 상태만으로 빌드되게).
 - 여럿이 함께 고치는 파일(`lib/i18n/message-catalogs/*` · 공용 스타일 · `docs/design/README.md` 색인)은 내 줄만 고치고,
   보고할 때 스테이징 전에 `git diff` 로 다른 세션 변경이 섞였는지 보라고 적는다.
 - 결정 기록은 결정마다 새 파일이라 겹치지 않는다. 남의 결정 파일 본문은 고치지 않는다.
 
 ## 먼저 묻는다 · 하지 않는다
 
-- 먼저 묻는다: 의존성 추가 · 업그레이드, `prisma/schema/*.prisma` 변경 · 마이그레이션 만들기, 파일 삭제 · 이름 바꾸기 · 옮기기, e2e 전체 실행, 새 토큰 · 가이드 밖 값 · 새 색 · 새 움직임.
+- 먼저 묻는다: 의존성 추가 · 업그레이드, `prisma/schema/*.prisma` 변경 · 마이그레이션 만들기, 파일 삭제 · 이름 바꾸기 · 옮기기, e2e 전체 실행, 새 토큰 · 가이드 밖 값 · 새 색 · 새 움직임,
+  플러그인 · 전역 훅 · MCP 서버 · 토큰 절약 도구 설치.
 - 스키마 변경을 허락받으면 `npx prisma migrate dev --create-only` 로 파일만 만들어 사용자가 검토하게 하고, 적용은 개발 DB 까지만. 뒤에 `npx prisma generate`.
-- 하지 않는다: `prisma migrate reset` · `prisma db push` · 운영 대상 `migrate deploy` · `--force` · `--accept-data-loss` · Dependabot 설정 추가.
+- 하지 않는다: `prisma migrate reset` · `prisma db push` · 운영 대상 `migrate deploy` · `--force` · `--accept-data-loss` · Dependabot · Renovate 같은 자동 의존성 PR 설정 추가.
   `PRISMA_USER_CONSENT_FOR_DANGEROUS_AI_ACTION` 을 스스로 켜지 않는다 — 막혔다는 뜻이니 멈추고 묻는다.
+- git 스테이징 · 커밋 · 푸시, 위의 위험한 prisma 명령, `.env.production.local` 읽기는 `.claude/settings.json` deny 로도 막혀 있다. 막히면 우회하지 않고 사용자에게 넘긴다.
 
 ## 릴리스
 
@@ -111,6 +114,7 @@ Tailwind 4: 설정은 CSS(`app/globals.css`), `tailwind.config` 를 만들지 �
 ## 일하는 방식
 
 - 리포지토리로 알 수 있는 사실은 묻지 않고 코드 · 테스트 · 실제 브라우저로 확인한다.
+- 컨텍스트를 작게 둔다. 넓은 조사 · 파일 훑기는 서브에이전트에 맡기고, 작업이 바뀌면 새 세션으로 넘긴다([결정](docs/decisions/2026-10-24-claude-efficiency.md)).
 - 토큰 · 공용 부품으로만 만든다. 규칙은 [기초값 — 토큰 · 공용 부품으로만](docs/design/foundations.md#토큰--공용-부품으로만). 공통 규칙은 공용 소스(`tokens.css` · `foundation.css` · `components/ui`)에서 고친다.
 - 결정이 나면 같은 작업에서 코드 → 가이드 해당 문서 한 곳 → [결정 파일](docs/decisions/README.md) 하나 → 테스트 기대값을 맞춘다.
 - 바꾼 화면은 [가이드 「확인」](docs/design/README.md#확인)대로 잰다. 시안이 있으면 같은 폭으로 나란히 대조하고 바꾼 동작을 눌러 본다. 실패는 원래 있던 것과 이번에 생긴 것을 구분한다.
@@ -118,7 +122,7 @@ Tailwind 4: 설정은 CSS(`app/globals.css`), `tailwind.config` 를 만들지 �
     - 코드(ts · tsx · css): `npm run typecheck` · `npm run lint` · `npm test` 전체(관련 파일만 고르지 않는다).
     - 화면 · CSS · 토큰: + 가이드 「확인」 실측. Prisma 스키마: + `npx prisma generate` 먼저.
     - `next.config` · 의존성 · 라우트 구조 · 환경 변수: + `npm run build`.
-    - 문서만(md): `npx prettier --check <파일>`.
+    - 문서만(md): `npx prettier --check <파일>` · `npx vitest run tests/docs-links.test.ts`(링크 · 경로 · 결정 목록).
 - 끝내기 전 정리 — 공개 화면의 새 문구는 `lib/i18n/message-catalogs` 의 ko · en · ja 세 곳 모두 → [AI 티 확인](docs/ai-check.md) 다시 보기 → 커밋 제목 · 파일별 `git add`.
 - 보고에는 실제로 한 것만 쓴다. 안 한 검사는 「안 함」, 남은 한계는 그대로 적는다.
 - 이 파일은 짧게 둔다 — 같은 실수가 두 번 나오면 한 줄 더하고, 지켜져 필요 없어진 줄은 뺀다.
