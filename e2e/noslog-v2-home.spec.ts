@@ -127,11 +127,11 @@ for (const locale of ["ko", "ja", "en"]) {
                     expect(tile.textWeight).toBe(
                         tile.textSize === 12 ? "400" : "500"
                     );
-                    expect(tile.radius).toBe("8px");
+                    expect(tile.radius).toBe("12px");
                     expect(tile.background).toBe(
                         theme === "dark"
-                            ? "rgb(27, 27, 27)"
-                            : "rgb(248, 248, 248)"
+                            ? "rgb(23, 23, 23)"
+                            : "rgb(255, 255, 255)"
                     );
                     expect(tile.height).toBe(
                         (columns === 3 ? 24 : 48) + 20 + 8 + tile.line

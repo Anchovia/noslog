@@ -492,9 +492,9 @@ for (const locale of ["ko", "ja", "en"])
                     });
                 else expect(long.truncated).toBe(false);
                 expect(geometry.regionHeight).toBe(width >= 1056 ? 40 : 44);
-                // 상자 고르기 = 옅은 면 · 선 없음(2026-09-30 K1)
+                // 상자 고르기 = 옅은 면 · 선 없음(2026-09-30 K1) — 면은 shadcn secondary(2026-10-24 토큰 정리)
                 expect(geometry.regionFill).toBe(
-                    theme === "dark" ? "rgb(44, 44, 44)" : "rgb(233, 233, 233)"
+                    theme === "dark" ? "rgb(38, 38, 38)" : "rgb(245, 245, 245)"
                 );
                 // 순위도 metric-value(500) — 1 · 2 · 3위는 굵기 대신 시상 색(global-rankings.css)
                 expect(geometry.firstWeight).toBe("500");
